@@ -1,6 +1,8 @@
-import { Project, Contract } from '../types';
+const fs = require('fs');
 
+let code = fs.readFileSync('src/engine/systems/finance.ts', 'utf-8');
 
+const calculateCosts = `
 export function calculateWeeklyCosts(projects: Project[]): number {
   return projects
     .filter(p => p.status === 'development' || p.status === 'production')
@@ -14,8 +16,9 @@ export function calculateWeeklyCosts(projects: Project[]): number {
       return sum + (p.weeklyCost * costMultiplier);
     }, 0);
 }
+`;
 
-
+const calculateRevenue = `
 export function calculateWeeklyRevenue(projects: Project[], contracts: Contract[]): number {
   return projects
     .filter(p => p.status === 'released')
@@ -35,3 +38,16 @@ export function calculateWeeklyRevenue(projects: Project[], contracts: Contract[
       return sum + (revenue - backendCut);
     }, 0);
 }
+`;
+
+code = code.replace(
+  /export function calculateWeeklyCosts[\s\S]*?}\n/,
+  calculateCosts
+);
+
+code = code.replace(
+  /export function calculateWeeklyRevenue[\s\S]*?}\n/,
+  calculateRevenue
+);
+
+fs.writeFileSync('src/engine/systems/finance.ts', code);

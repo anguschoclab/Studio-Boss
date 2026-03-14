@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import { GameState, WeekSummary, ProjectFormat, BudgetTierKey, ArchetypeKey } from '@/engine/types';
+import { GameState, WeekSummary, ProjectFormat, BudgetTierKey, ArchetypeKey, ProjectContractType } from '@/engine/types';
+import { negotiateContract } from '@/engine/systems/buyers';
 import { initializeGame } from '@/engine/core/gameInit';
 import { advanceWeek } from '@/engine/core/weekAdvance';
 import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
@@ -25,6 +26,7 @@ interface GameStore {
   getSaveSlots: () => SaveSlotInfo[];
   clearGame: () => void;
   signContract: (talentId: string, projectId: string) => void;
+  pitchProject: (projectId: string, buyerId: string, contractType: ProjectContractType) => boolean;
 }
 
 export const useGameStore = create<GameStore>((set, get) => ({
@@ -83,6 +85,43 @@ export const useGameStore = create<GameStore>((set, get) => ({
   getSaveSlots: () => getSaveSlots(),
 
   clearGame: () => set({ gameState: null }),
+
+
+  pitchProject: (projectId, buyerId, contractType) => {
+    const state = get().gameState;
+    if (!state) return false;
+
+    const projectIndex = state.projects.findIndex(p => p.id === projectId);
+    const buyer = state.buyers.find(b => b.id === buyerId);
+
+    if (projectIndex === -1 || !buyer) return false;
+
+    const project = state.projects[projectIndex];
+    const success = negotiateContract(project, buyer, contractType);
+
+    if (success) {
+      const updatedProjects = [...state.projects];
+      updatedProjects[projectIndex] = {
+        ...project,
+        status: 'production',
+        weeksInPhase: 0,
+        buyerId,
+        contractType
+      };
+
+      const headlineText = `${buyer.name} officially picks up "${project.title}" on a ${contractType} deal.`;
+
+      set({
+        gameState: {
+          ...state,
+          projects: updatedProjects,
+          headlines: [{ id: `ph-${crypto.randomUUID()}`, text: headlineText, week: state.week, category: 'market' as const }, ...state.headlines].slice(0, 50)
+        }
+      });
+    }
+
+    return success;
+  },
 
   signContract: (talentId, projectId) => {
     const state = get().gameState;

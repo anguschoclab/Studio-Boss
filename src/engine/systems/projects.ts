@@ -15,9 +15,15 @@ export function advanceProject(
   let update: string | null = null;
 
   if (p.status === 'development' && p.weeksInPhase >= p.developmentWeeks) {
-    p.status = 'production';
-    p.weeksInPhase = 0;
-    update = `"${p.title}" enters production`;
+    if (p.format === 'tv') {
+      p.status = 'pitching';
+      p.weeksInPhase = 0;
+      update = `"${p.title}" is ready to be pitched to networks/streamers.`;
+    } else {
+      p.status = 'production';
+      p.weeksInPhase = 0;
+      update = `"${p.title}" enters production`;
+    }
   } else if (p.status === 'production' && p.weeksInPhase >= p.productionWeeks) {
     p.status = 'released';
     p.weeksInPhase = 0;

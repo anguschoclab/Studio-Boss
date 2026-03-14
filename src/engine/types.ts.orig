@@ -1,7 +1,7 @@
 // Domain models for Studio Boss simulation engine
 
 export type ArchetypeKey = 'major' | 'mid-tier' | 'indie';
-export type ProjectStatus = 'development' | 'pitching' | 'production' | 'released' | 'archived';
+export type ProjectStatus = 'development' | 'production' | 'released' | 'archived';
 export type ProjectFormat = 'film' | 'tv';
 export type BudgetTierKey = 'low' | 'mid' | 'high' | 'blockbuster';
 export type HeadlineCategory = 'rival' | 'market' | 'talent' | 'awards' | 'general';
@@ -69,21 +69,6 @@ export interface Award {
   year: number;
 }
 
-
-export type ProjectContractType = 'upfront' | 'deficit';
-export type MandateType = 'sci-fi' | 'comedy' | 'drama' | 'budget_freeze' | 'broad_appeal' | 'prestige';
-
-export interface Mandate {
-  type: MandateType;
-  activeUntilWeek: number;
-}
-
-export interface Buyer {
-  id: string;
-  name: string;
-  archetype: 'network' | 'streamer' | 'premium';
-  currentMandate?: Mandate;
-}
 export interface Project {
   id: string;
   title: string;
@@ -103,8 +88,6 @@ export interface Project {
   weeklyRevenue: number;
   releaseWeek: number | null;
   awardsProfile?: AwardsProfile;
-  contractType?: ProjectContractType;
-  buyerId?: string;
 }
 
 export interface RivalStudio {
@@ -153,10 +136,6 @@ export interface GameState {
   week: number;
   cash: number;
   financeHistory: FinanceRecord[];
-  buyers: Buyer[];
-  contracts: Contract[];
-  talentPool: TalentProfile[];
-  awards?: Award[];
 }
 
 export interface SaveSlotMeta {
