@@ -54,9 +54,15 @@ describe("utils", () => {
   });
 
   describe("clamp", () => {
-    it("clamps values", () => {
-      expect(clamp(5, 1, 10)).toBe(5);
+    it("returns the minimum when value is below min", () => {
       expect(clamp(0, 1, 10)).toBe(1);
+    });
+
+    it("returns the value when within range", () => {
+      expect(clamp(5, 1, 10)).toBe(5);
+    });
+
+    it("returns the maximum when value is above max", () => {
       expect(clamp(15, 1, 10)).toBe(10);
     });
   });
