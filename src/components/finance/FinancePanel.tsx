@@ -3,7 +3,6 @@ import { formatMoney } from '@/engine/utils';
 import { calculateWeeklyCosts, calculateWeeklyRevenue } from '@/engine/systems/finance';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
 
 export const FinancePanel = () => {
   const gameState = useGameStore(s => s.gameState);
