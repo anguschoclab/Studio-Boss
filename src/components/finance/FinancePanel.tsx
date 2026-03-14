@@ -15,6 +15,7 @@ export const FinancePanel = () => {
   const weeklyRevenue = useMemo(() => calculateWeeklyRevenue(projects, contracts), [projects, contracts]);
   const netDelta = useMemo(() => weeklyRevenue - weeklyCosts, [weeklyRevenue, weeklyCosts]);
 
+  // Memoize active projects calculation to prevent expensive array filtering on every render
   const activeProjects = useMemo(() =>
     projects.filter(p => p.status === 'development' || p.status === 'production'),
     [projects]
