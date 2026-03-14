@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
@@ -28,7 +28,7 @@ export const TopBar = () => {
 
   const handleExit = () => {
     clearGame();
-    navigate('/');
+    navigate({ to: '/' });
   };
 
   return (
