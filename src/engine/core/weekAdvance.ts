@@ -3,6 +3,7 @@ import { calculateWeeklyCosts, calculateWeeklyRevenue } from '../systems/finance
 import { advanceProject } from '../systems/projects';
 import { updateRival } from '../systems/rivals';
 import { generateHeadlines } from '../generators/headlines';
+import { generateAwardsProfile, runAwardsCeremony } from '../systems/awards';
 import { pick } from '../utils';
 
 const EVENT_POOL = [
@@ -24,6 +25,12 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
     const projectContracts = state.contracts.filter(c => c.projectId === p.id);
     const { project, update } = advanceProject(p, nextWeek, state.studio.prestige, projectContracts, state.talentPool);
     if (update) projectUpdates.push(update);
+
+    // Generate awards profile if newly released
+    if (project.status === 'released' && p.status !== 'released' && !project.awardsProfile) {
+      project.awardsProfile = generateAwardsProfile(project);
+    }
+
     return project;
   });
 
@@ -44,48 +51,19 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
     events.push(pick(EVENT_POOL));
   }
 
-  // Awards logic (Week 52)
-  let prestigeChange = 0;
-  const newAwards: Award[] = [];
-  if (nextWeek % 52 === 0) {
-    const year = Math.floor(nextWeek / 52);
-    events.push(`Year ${year} Awards Ceremony!`);
+    // Run any awards ceremonies scheduled for this week
+  const year = Math.floor(nextWeek / 52) + 1; // 1-indexed year
+  const ceremonyResult = runAwardsCeremony(state, nextWeek, year);
 
-    // Simple logic: projects released this year with high total quality/buzz have a chance to win
-    const eligibleProjects = state.projects.filter(p => p.status === 'released' || p.status === 'archived');
-    // Only count projects released roughly in the last 52 weeks
-    const recentProjects = eligibleProjects.filter(p => p.releaseWeek !== null && p.releaseWeek > nextWeek - 52);
+  const newAwards = ceremonyResult.newAwards;
+  const prestigeChange = ceremonyResult.prestigeChange;
 
-    if (recentProjects.length > 0) {
-        // Find best project
-        const bestProject = recentProjects.sort((a, b) => {
-            const aContracts = state.contracts.filter(c => c.projectId === a.id);
-            const aCraft = aContracts.reduce((sum, c) => {
-                const t = state.talentPool.find(tp => tp.id === c.talentId);
-                return sum + (t ? t.craft : 0);
-            }, 0);
+  if (newAwards.length > 0) {
+    projectUpdates.push(...ceremonyResult.projectUpdates);
 
-            const bContracts = state.contracts.filter(c => c.projectId === b.id);
-            const bCraft = bContracts.reduce((sum, c) => {
-                const t = state.talentPool.find(tp => tp.id === c.talentId);
-                return sum + (t ? t.craft : 0);
-            }, 0);
-            return (b.revenue + bCraft * 1000000) - (a.revenue + aCraft * 1000000);
-        })[0];
-
-        // If it's somewhat good, award it
-        if (bestProject && Math.random() < 0.3 + (state.studio.prestige / 200)) {
-            newAwards.push({
-                id: `award-${crypto.randomUUID()}`,
-                projectId: bestProject.id,
-                name: 'Best Picture',
-                category: 'Top Honor',
-                year,
-            });
-            prestigeChange += 5;
-            projectUpdates.push(`🏆 "${bestProject.title}" wins Best Picture at the annual awards!`);
-        }
-    }
+    // Check which bodies fired to announce it
+    const uniqueBodies = [...new Set(newAwards.map(a => a.body))];
+    events.push(`The ${uniqueBodies.join(' and ')} took place this week!`);
   }
 
   const newState: GameState = {
@@ -95,7 +73,7 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
     studio: { ...state.studio, prestige: state.studio.prestige + prestigeChange },
     projects: updatedProjects,
     rivals: updatedRivals,
-    awards: [...state.awards, ...newAwards],
+    awards: [...(state.awards || []), ...newAwards],
     headlines: [...newHeadlines, ...state.headlines].slice(0, 50),
     financeHistory: [
       ...state.financeHistory,
