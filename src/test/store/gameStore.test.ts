@@ -1,11 +1,11 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeEach, vi, mock } from "vitest";
 import { useGameStore } from "../../store/gameStore";
 import { GameState } from "../../engine/types";
-import { saveGame } from "../../persistence/saveLoad";
+import { saveGame, loadGame, getSaveSlots } from "../../persistence/saveLoad";
 import { initializeGame } from "../../engine/core/gameInit";
 
-// Mock saveLoad and crypto
-vi.mock("../../persistence/saveLoad", () => ({
+// Mock saveLoad
+mock.module("../../persistence/saveLoad", () => ({
   saveGame: vi.fn(),
   loadGame: vi.fn((slot) => {
     if (slot === 1) return { studio: { name: "Loaded Studio" } };
