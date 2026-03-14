@@ -1,5 +1,6 @@
 import { Project, Contract, TalentProfile } from '../types';
 import { BUDGET_TIERS } from '../data/budgetTiers';
+import { TV_FORMATS } from '../data/tvFormats';
 import { clamp, randRange } from '../utils';
 
 export function advanceProject(
@@ -22,6 +23,8 @@ export function advanceProject(
     p.status = 'released';
     p.weeksInPhase = 0;
     p.releaseWeek = currentWeek;
+    p.revenue = 0;
+
     const tier = BUDGET_TIERS[p.budgetTier];
     const [minRev, maxRev] = tier.revenueRange;
     const buzzFactor = p.buzz / 100;
@@ -32,17 +35,97 @@ export function advanceProject(
     const attachedTalent = projectContracts.map(c => talentPool.find(t => t.id === c.talentId)).filter(t => t !== undefined) as TalentProfile[];
     const talentDrawFactor = attachedTalent.reduce((sum, t) => sum + (t.draw / 100), 1);
 
-    const totalGross = (minRev + (maxRev - minRev) * buzzFactor * prestigeFactor * randomFactor) * talentDrawFactor;
-    p.weeklyRevenue = totalGross * 0.35;
-    p.revenue = 0;
-    const strength = p.weeklyRevenue > totalGross * 0.25 ? 'strong' : 'modest';
-    update = `"${p.title}" releases to a ${strength} opening!`;
+    const baseGross = (minRev + (maxRev - minRev) * buzzFactor * prestigeFactor * randomFactor) * talentDrawFactor;
+
+    if (p.format === 'tv' && p.tvFormat) {
+      // TV Release logic
+      p.episodesReleased = 0;
+
+      const tvFormatData = TV_FORMATS[p.tvFormat];
+      const eps = p.episodes || tvFormatData.defaultEpisodes;
+      const episodeMultiplier = Math.sqrt(eps / 10); // More episodes = more total revenue, but diminishing returns
+
+      const totalTvGross = baseGross * episodeMultiplier;
+
+      if (p.releaseModel === 'binge') {
+        p.weeklyRevenue = totalTvGross * 0.6; // Massive opening
+        p.episodesReleased = eps;
+        update = `"${p.title}" Season ${p.season} drops! Huge binge viewership.`;
+      } else if (p.releaseModel === 'split') {
+        p.weeklyRevenue = totalTvGross * 0.35; // Big opening for part 1
+        p.episodesReleased = Math.ceil(eps / 2);
+        update = `"${p.title}" Season ${p.season} Part 1 premieres!`;
+      } else { // weekly
+        p.weeklyRevenue = (totalTvGross * 0.15); // Smaller opening, sustained
+        p.episodesReleased = 1;
+        update = `"${p.title}" Season ${p.season} premieres its first episode!`;
+      }
+    } else {
+      // Film release logic
+      p.weeklyRevenue = baseGross * 0.35;
+      const strength = p.weeklyRevenue > baseGross * 0.25 ? 'strong' : 'modest';
+      update = `"${p.title}" releases to a ${strength} opening!`;
+    }
+
   } else if (p.status === 'released') {
     p.revenue += p.weeklyRevenue;
-    p.weeklyRevenue *= randRange(0.5, 0.7);
-    if (p.weeklyRevenue < 100_000 || p.weeksInPhase > 12) {
-      p.status = 'archived';
-      update = `"${p.title}" completes its run — total gross: $${(p.revenue / 1_000_000).toFixed(1)}M`;
+
+    if (p.format === 'tv' && p.tvFormat) {
+      const tvFormatData = TV_FORMATS[p.tvFormat];
+      const eps = p.episodes || tvFormatData.defaultEpisodes;
+
+      if (p.releaseModel === 'binge') {
+        p.weeklyRevenue *= randRange(tvFormatData.revenueDecayBinge - 0.1, tvFormatData.revenueDecayBinge + 0.1);
+
+        if (p.weeklyRevenue < 50_000 || p.weeksInPhase > 8) {
+           p.status = 'archived';
+           update = `"${p.title}" Season ${p.season} finishes its run.`;
+        }
+      } else if (p.releaseModel === 'split') {
+        // Drop part 2 halfway through the season run length
+        const part2DropWeek = Math.ceil(eps / 2) + 2;
+
+        if (p.weeksInPhase === part2DropWeek) {
+          p.episodesReleased = eps;
+          p.weeklyRevenue *= 2.5; // Spike for part 2
+          update = `"${p.title}" Season ${p.season} Part 2 drops!`;
+        } else if (p.weeksInPhase > part2DropWeek) {
+          p.weeklyRevenue *= randRange(tvFormatData.revenueDecayBinge - 0.1, tvFormatData.revenueDecayBinge + 0.1);
+        } else {
+           p.weeklyRevenue *= randRange(0.6, 0.8); // decay between parts
+        }
+
+        if (p.weeksInPhase > part2DropWeek + 6 && p.weeklyRevenue < 50_000) {
+           p.status = 'archived';
+           update = `"${p.title}" Season ${p.season} finishes its run.`;
+        }
+
+      } else { // weekly
+        if (p.episodesReleased !== undefined && p.episodesReleased < eps) {
+           p.episodesReleased += 1;
+           // Maintain steady revenue, maybe slight decay or slight boost
+           p.weeklyRevenue *= randRange(tvFormatData.revenueDecayWeekly - 0.05, tvFormatData.revenueDecayWeekly + 0.05);
+
+           if (p.episodesReleased === eps) {
+              update = `"${p.title}" Season ${p.season} airs its finale!`;
+              p.weeklyRevenue *= 1.3; // Finale bump
+           }
+        } else {
+           // Post-finale decay
+           p.weeklyRevenue *= 0.6;
+           if (p.weeklyRevenue < 50_000 || p.weeksInPhase > eps + 4) {
+             p.status = 'archived';
+             update = `"${p.title}" Season ${p.season} finishes its run.`;
+           }
+        }
+      }
+    } else {
+      // Film decay
+      p.weeklyRevenue *= randRange(0.5, 0.7);
+      if (p.weeklyRevenue < 100_000 || p.weeksInPhase > 12) {
+        p.status = 'archived';
+        update = `"${p.title}" completes its run — total gross: $${(p.revenue / 1_000_000).toFixed(1)}M`;
+      }
     }
   }
 

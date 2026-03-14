@@ -2,6 +2,7 @@ import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { formatMoney } from '@/engine/utils';
 import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
+import { TV_FORMATS } from '@/engine/data/tvFormats';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
@@ -11,6 +12,7 @@ export const ProjectDetailModal = () => {
   const { selectedProjectId, selectProject } = useUIStore();
   const gameState = useGameStore(s => s.gameState);
   const signContract = useGameStore(s => s.signContract);
+  const renewProject = useGameStore(s => s.renewProject);
   const projects = gameState?.projects || [];
   const project = projects.find(p => p.id === selectedProjectId);
   const talentPool = gameState?.talentPool || [];
@@ -24,12 +26,23 @@ export const ProjectDetailModal = () => {
     <Dialog open={!!selectedProjectId} onOpenChange={() => selectProject(null)}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle className="font-display text-xl">{project.title}</DialogTitle>
+          <DialogTitle className="font-display text-xl">
+              {project.title}
+              {project.format === 'tv' && project.season && (
+                  <span className="text-muted-foreground text-sm ml-2">Season {project.season}</span>
+              )}
+          </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
           <div className="flex items-center gap-2 flex-wrap">
             <Badge variant="outline">{project.format.toUpperCase()}</Badge>
+            {project.format === 'tv' && project.tvFormat && (
+                <Badge variant="secondary">{TV_FORMATS[project.tvFormat].name}</Badge>
+            )}
+            {project.format === 'tv' && project.releaseModel && (
+                <Badge variant="outline" className="capitalize">{project.releaseModel}</Badge>
+            )}
             <Badge variant="outline">{project.genre}</Badge>
             <Badge variant="outline">{tier.name}</Badge>
             <Badge variant="outline" className="capitalize">{project.status}</Badge>
@@ -95,10 +108,12 @@ export const ProjectDetailModal = () => {
               <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Buzz</p>
               <p className="text-sm font-semibold text-secondary">{Math.round(project.buzz)}%</p>
             </div>
-            <div className="p-3 rounded bg-accent/50">
-              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Target</p>
-              <p className="text-sm font-semibold text-foreground">{project.targetAudience}</p>
-            </div>
+            {project.format === 'tv' && (
+                <div className="p-3 rounded bg-accent/50">
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Episodes</p>
+                  <p className="text-sm font-semibold text-foreground">{project.episodes}</p>
+                </div>
+            )}
           </div>
 
           {/* Progress */}
@@ -127,8 +142,28 @@ export const ProjectDetailModal = () => {
               <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Total Gross</p>
               <p className="text-lg font-display font-bold text-success">{formatMoney(project.revenue)}</p>
               {project.status === 'released' && (
-                <p className="text-xs text-muted-foreground">Current weekly: {formatMoney(project.weeklyRevenue)}</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                    Current weekly: {formatMoney(project.weeklyRevenue)}
+                    {project.format === 'tv' && project.episodesReleased !== undefined && (
+                        <span className="ml-2">| Released: {project.episodesReleased}/{project.episodes}</span>
+                    )}
+                </p>
               )}
+            </div>
+          )}
+
+          {/* Renew Button */}
+          {project.status === 'archived' && project.format === 'tv' && project.renewable && (
+            <div className="pt-4 border-t border-border flex justify-end">
+                <Button
+                    onClick={() => {
+                        renewProject(project.id);
+                        selectProject(null);
+                    }}
+                    className="font-display w-full"
+                >
+                    Renew for Season {(project.season || 1) + 1}
+                </Button>
             </div>
           )}
         </div>
