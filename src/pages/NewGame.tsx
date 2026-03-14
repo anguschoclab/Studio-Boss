@@ -1,0 +1,104 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { useGameStore } from '@/store/gameStore';
+import { ARCHETYPES, ArchetypeData } from '@/engine/data/archetypes';
+import { ArchetypeKey } from '@/engine/types';
+import { formatMoney } from '@/engine/utils';
+
+const archetypeIcons: Record<ArchetypeKey, string> = {
+  major: '🏛️',
+  'mid-tier': '🎬',
+  indie: '🎭',
+};
+
+const NewGame = () => {
+  const navigate = useNavigate();
+  const { newGame } = useGameStore();
+  const [studioName, setStudioName] = useState('');
+  const [selectedArchetype, setSelectedArchetype] = useState<ArchetypeKey | null>(null);
+
+  const handleLaunch = () => {
+    if (!studioName.trim() || !selectedArchetype) return;
+    newGame(studioName.trim(), selectedArchetype);
+    navigate('/dashboard');
+  };
+
+  return (
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-8">
+      <div className="w-full max-w-4xl space-y-10">
+        {/* Header */}
+        <div className="text-center space-y-2">
+          <h1 className="font-display text-4xl font-bold text-foreground">Found Your Studio</h1>
+          <p className="text-muted-foreground">Name your studio and choose your starting identity.</p>
+        </div>
+
+        {/* Studio Name */}
+        <div className="max-w-md mx-auto space-y-2">
+          <label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Studio Name</label>
+          <Input
+            value={studioName}
+            onChange={e => setStudioName(e.target.value)}
+            placeholder="Enter your studio name..."
+            className="h-14 text-lg text-center font-display font-semibold bg-card border-border"
+            maxLength={30}
+          />
+        </div>
+
+        {/* Archetypes */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {(Object.values(ARCHETYPES) as ArchetypeData[]).map(arch => {
+            const selected = selectedArchetype === arch.key;
+            return (
+              <button
+                key={arch.key}
+                onClick={() => setSelectedArchetype(arch.key)}
+                className={`relative p-6 rounded-lg border-2 text-left transition-all duration-200 ${
+                  selected
+                    ? 'border-primary bg-primary/10 shadow-lg shadow-primary/10'
+                    : 'border-border bg-card hover:border-muted-foreground/30 hover:bg-accent/50'
+                }`}
+              >
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <span className="text-3xl">{archetypeIcons[arch.key]}</span>
+                    <div>
+                      <h3 className="font-display font-bold text-lg text-foreground">{arch.name}</h3>
+                      <p className="text-xs text-primary font-medium tracking-wider uppercase">{arch.tagline}</p>
+                    </div>
+                  </div>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{arch.description}</p>
+                  <div className="pt-2 border-t border-border flex justify-between text-xs text-muted-foreground">
+                    <span>Cash: <span className="text-primary font-semibold">{formatMoney(arch.startingCash)}</span></span>
+                    <span>Prestige: <span className="text-secondary font-semibold">{arch.startingPrestige}</span></span>
+                  </div>
+                </div>
+                {selected && (
+                  <div className="absolute top-3 right-3 w-3 h-3 rounded-full bg-primary" />
+                )}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Launch */}
+        <div className="flex justify-center gap-4">
+          <Button variant="outline" onClick={() => navigate('/')} className="font-display">
+            Back
+          </Button>
+          <Button
+            onClick={handleLaunch}
+            disabled={!studioName.trim() || !selectedArchetype}
+            size="lg"
+            className="px-12 font-display font-bold text-lg"
+          >
+            Launch Studio →
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default NewGame;
