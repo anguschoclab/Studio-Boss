@@ -1,11 +1,18 @@
 // Shared utilities for the engine layer — no React imports
 
 export function formatMoney(amount: number): string {
+  if (Number.isNaN(amount)) return "$NaN";
+
   const abs = Math.abs(amount);
-  const sign = amount < 0 ? '-' : '';
-  if (abs >= 1_000_000_000) return `${sign}$${(abs / 1_000_000_000).toFixed(1)}B`;
-  if (abs >= 1_000_000) return `${sign}$${(abs / 1_000_000).toFixed(1)}M`;
-  if (abs >= 1_000) return `${sign}$${(abs / 1_000).toFixed(0)}K`;
+  const sign = amount < 0 || Object.is(amount, -0) ? '-' : '';
+
+  if (!Number.isFinite(amount)) return `${sign}$InfinityB`;
+
+  // Handle edge case rounding errors where .toFixed bumps up the number into the next tier
+  // e.g. 999_999_999.9 becomes "1000.0M" if we don't catch it.
+  if (abs >= 999_950_000) return `${sign}$${(abs / 1_000_000_000).toFixed(1)}B`;
+  if (abs >= 999_950) return `${sign}$${(abs / 1_000_000).toFixed(1)}M`;
+  if (abs >= 999.5) return `${sign}$${(abs / 1_000).toFixed(0)}K`;
   return `${sign}$${abs.toFixed(0)}`;
 }
 
