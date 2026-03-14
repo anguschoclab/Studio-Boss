@@ -1,10 +1,43 @@
-# Welcome to your Lovable project
+# STUDIO BOSS
 
-## Project info
+<div align="center">
+  <h3>A Hollywood Studio Management Simulation</h3>
+  <p>Build your empire. Control the narrative.</p>
+</div>
+
+---
+
+**STUDIO BOSS** is a dynamic simulation game where you take the helm of a film and television studio. Navigate the cutthroat entertainment industry, manage your project pipeline, handle the finances, and compete against rival studios to become the ultimate powerhouse in Hollywood.
+
+## Features
+
+- **Studio Management:** Choose your studio's archetype (Major, Mid-tier, Indie), start with initial capital, and build prestige.
+- **Project Slate & Pipeline:** Greenlight and oversee film and TV projects through various stages (Development, Production, Released).
+- **Financial Strategy:** Balance your checkbook with different budget tiers (Low, Mid, High, Blockbuster) and weekly operating costs. Track your weekly revenue vs expenses.
+- **Dynamic Rivals:** Compete against procedurally generated rival studios that are constantly making their own moves.
+- **News Feed & Events:** Stay updated with industry headlines spanning rival activities, market changes, talent updates, and award shows.
+- **Save & Load:** Persistent saves allow you to pick up your studio empire right where you left off.
+
+## Tech Stack
+
+This project is built using a modern frontend stack:
+- **Vite** - Build tool
+- **TypeScript** - Type safety
+- **React** - UI Library
+- **Zustand** - State Management
+- **React Router** - Navigation
+- **shadcn-ui** - Component Library
+- **Tailwind CSS** - Styling
+
+---
+
+## Welcome to your Lovable project
+
+### Project info
 
 **URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
 
-## How can I edit this code?
+### How can I edit this code?
 
 There are several ways of editing your application.
 
@@ -33,7 +66,7 @@ cd <YOUR_PROJECT_NAME>
 npm i
 
 # Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+npm run dev # (run in background)
 ```
 
 **Edit a file directly in GitHub**
@@ -50,21 +83,11 @@ npm run dev
 - Click on "New codespace" to launch a new Codespace environment.
 - Edit files directly within the Codespace and commit and push your changes once you're done.
 
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
+### How can I deploy this project?
 
 Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
 
-## Can I connect a custom domain to my Lovable project?
+### Can I connect a custom domain to my Lovable project?
 
 Yes, you can!
 
