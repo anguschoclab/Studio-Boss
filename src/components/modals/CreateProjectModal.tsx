@@ -17,9 +17,9 @@ export const CreateProjectModal = () => {
 
   const [title, setTitle] = useState('');
   const [format, setFormat] = useState<ProjectFormat>('film');
-  const [genre, setGenre] = useState(GENRES[0]);
+  const [genre, setGenre] = useState<string>(GENRES[0]);
   const [budgetTier, setBudgetTier] = useState<BudgetTierKey>('mid');
-  const [targetAudience, setTargetAudience] = useState(TARGET_AUDIENCES[0]);
+  const [targetAudience, setTargetAudience] = useState<string>(TARGET_AUDIENCES[0]);
   const [flavor, setFlavor] = useState('');
 
   const tier = BUDGET_TIERS[budgetTier];

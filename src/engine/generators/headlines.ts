@@ -35,7 +35,7 @@ const RIVAL_TEMPLATES = [
 function fill(template: string, vars: Record<string, string>): string {
   let result = template;
   for (const [key, val] of Object.entries(vars)) {
-    result = result.replaceAll(`{${key}}`, val);
+    result = result.split(`{${key}}`).join(val);
   }
   return result;
 }
