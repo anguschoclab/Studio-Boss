@@ -3,7 +3,6 @@ import { saveGame, loadGame, getSaveSlots } from "../../persistence/saveLoad";
 import { GameState } from "../../engine/types";
 import { initializeGame } from "../../engine/core/gameInit";
 
-
 const localStorageMock = (() => {
   let store: Record<string, string> = {};
   return {
@@ -14,20 +13,26 @@ const localStorageMock = (() => {
     clear: vi.fn(() => {
       store = {};
     }),
+    removeItem: vi.fn((key: string) => {
+      delete store[key];
+    }),
   };
 })();
 
-Object.defineProperty(global, 'localStorage', {
+Object.defineProperty(globalThis, "localStorage", {
   value: localStorageMock,
+  writable: true,
 });
 
 describe("saveLoad", () => {
   beforeEach(() => {
     localStorage.clear();
+    vi.clearAllMocks();
   });
 
   afterEach(() => {
     localStorage.clear();
+    vi.clearAllMocks();
   });
 
   it("returns null when loading an empty slot", () => {
@@ -35,7 +40,7 @@ describe("saveLoad", () => {
   });
 
   it("handles malformed save data", () => {
-    localStorage.setItem("studioboss_save_1", "invalid json");
+    vi.spyOn(Storage.prototype, "getItem").mockReturnValueOnce("malformed json");
     expect(loadGame(1)).toBeNull();
   });
 
@@ -51,7 +56,7 @@ describe("saveLoad", () => {
   it("retrieves save slots info", () => {
     const slotsBefore = getSaveSlots();
     expect(slotsBefore).toHaveLength(3);
-    expect(slotsBefore.every(s => !s.exists)).toBe(true);
+    expect(slotsBefore.every((s) => !s.exists)).toBe(true);
 
     const state: GameState = initializeGame("Save Studio", "major");
     saveGame(1, state);
@@ -62,33 +67,68 @@ describe("saveLoad", () => {
     expect(slotsAfter[0].exists).toBe(false);
   });
 
-  it("initializes empty slots correctly when no saved data exists", () => {
-    (localStorage.getItem as any).mockReturnValueOnce(null);
-    const slots = getSaveSlots();
+  it("interacts with localStorage correctly when saving a game", () => {
+    const state: GameState = initializeGame("Save Studio", "major");
+    // Mock Date.now() to have a predictable timestamp if necessary, but we can just check properties.
+    const originalDateNow = Date.now;
+    const mockNow = 1234567890;
+    Date.now = vi.fn(() => mockNow);
 
-    expect(slots).toHaveLength(3);
-    slots.forEach((slot, index) => {
-      expect(slot.slot).toBe(index);
-      expect(slot.exists).toBe(false);
-      expect(slot.studioName).toBe('');
-      expect(slot.archetype).toBe('indie');
-      expect(slot.week).toBe(0);
-      expect(slot.cash).toBe(0);
-      expect(slot.timestamp).toBe(0);
-    });
+    saveGame(2, state);
 
-    (localStorage.getItem as any).mockReturnValueOnce('{}');
-    const slotsEmptyObj = getSaveSlots();
+    expect(localStorageMock.setItem).toHaveBeenCalledWith("studioboss_save_2", JSON.stringify(state));
 
-    expect(slotsEmptyObj).toHaveLength(3);
-    slotsEmptyObj.forEach((slot, index) => {
-      expect(slot.slot).toBe(index);
-      expect(slot.exists).toBe(false);
-      expect(slot.studioName).toBe('');
-      expect(slot.archetype).toBe('indie');
-      expect(slot.week).toBe(0);
-      expect(slot.cash).toBe(0);
-      expect(slot.timestamp).toBe(0);
-    });
+    // Check if it saved slots correctly
+    const expectedSlots = {
+      2: {
+        slot: 2,
+        studioName: state.studio.name,
+        archetype: state.studio.archetype,
+        week: state.week,
+        cash: state.cash,
+        timestamp: mockNow,
+      }
+    };
+    expect(localStorageMock.setItem).toHaveBeenCalledWith("studioboss_slots", JSON.stringify(expectedSlots));
+
+    // Restore Date.now
+    Date.now = originalDateNow;
+  });
+
+  it("preserves existing save slots when saving to a new slot", () => {
+    const state1: GameState = initializeGame("Studio 1", "indie");
+    const state2: GameState = initializeGame("Studio 2", "major");
+
+    saveGame(0, state1);
+
+    // Clear mock calls to check just the second save's behavior
+    vi.clearAllMocks();
+
+    const originalDateNow = Date.now;
+    const mockNow = 9876543210;
+    Date.now = vi.fn(() => mockNow);
+
+    saveGame(1, state2);
+
+    // It should have called setItem for the state
+    expect(localStorageMock.setItem).toHaveBeenCalledWith("studioboss_save_1", JSON.stringify(state2));
+
+    // It should have called getItem for the slots first to merge
+    expect(localStorageMock.getItem).toHaveBeenCalledWith("studioboss_slots");
+
+    // We can't know the exact timestamp of state1 without more mocking,
+    // but we can parse the second setItem call to check if it preserved both slots.
+    const calls = localStorageMock.setItem.mock.calls;
+    const slotsCall = calls.find(call => call[0] === "studioboss_slots");
+    expect(slotsCall).toBeDefined();
+
+    const savedSlots = JSON.parse(slotsCall![1]);
+    expect(savedSlots[0]).toBeDefined();
+    expect(savedSlots[0].studioName).toBe("Studio 1");
+    expect(savedSlots[1]).toBeDefined();
+    expect(savedSlots[1].studioName).toBe("Studio 2");
+    expect(savedSlots[1].timestamp).toBe(mockNow);
+
+    Date.now = originalDateNow;
   });
 });

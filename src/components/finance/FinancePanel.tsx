@@ -9,9 +9,10 @@ export const FinancePanel = () => {
   const gameState = useGameStore(s => s.gameState);
 
   const projects = useMemo(() => gameState?.projects || [], [gameState?.projects]);
+  const contracts = useMemo(() => gameState?.contracts || [], [gameState?.contracts]);
 
   const weeklyCosts = useMemo(() => calculateWeeklyCosts(projects), [projects]);
-  const weeklyRevenue = useMemo(() => calculateWeeklyRevenue(projects), [projects]);
+  const weeklyRevenue = useMemo(() => calculateWeeklyRevenue(projects, contracts), [projects, contracts]);
   const netDelta = useMemo(() => weeklyRevenue - weeklyCosts, [weeklyRevenue, weeklyCosts]);
 
   const activeProjects = useMemo(() =>
