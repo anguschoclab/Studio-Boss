@@ -33,5 +33,37 @@ describe("finance", () => {
       const revenue = calculateWeeklyRevenue([mockProjectDev, mockProjectProd], []);
       expect(revenue).toBe(0);
     });
+
+    it("sums revenue of multiple released projects without contracts", () => {
+      const mockProjectReleased2: Project = { ...mockProjectReleased, id: "proj-5", weeklyRevenue: 50000 };
+      const revenue = calculateWeeklyRevenue([mockProjectReleased, mockProjectReleased2], []);
+      expect(revenue).toBe(150000);
+    });
+
+    it("sums backend percentages from multiple contracts on the same project", () => {
+      const contracts: Contract[] = [
+        { id: "c1", projectId: "proj-3", talentId: "t1", status: "active", upfrontFee: 0, backendPercent: 10 },
+        { id: "c2", projectId: "proj-3", talentId: "t2", status: "active", upfrontFee: 0, backendPercent: 5 }
+      ];
+      const revenue = calculateWeeklyRevenue([mockProjectReleased], contracts);
+      expect(revenue).toBe(85000); // 100k - 15%
+    });
+
+    it("ignores contracts that belong to a different project", () => {
+      const contracts: Contract[] = [
+        { id: "c1", projectId: "proj-99", talentId: "t1", status: "active", upfrontFee: 0, backendPercent: 50 }
+      ];
+      const revenue = calculateWeeklyRevenue([mockProjectReleased], contracts);
+      expect(revenue).toBe(100000); // No reduction
+    });
+
+    it("handles a released project with zero weekly revenue", () => {
+      const mockProjectReleasedZero: Project = { ...mockProjectReleased, id: "proj-6", weeklyRevenue: 0 };
+      const contracts: Contract[] = [
+        { id: "c1", projectId: "proj-6", talentId: "t1", status: "active", upfrontFee: 0, backendPercent: 10 }
+      ];
+      const revenue = calculateWeeklyRevenue([mockProjectReleasedZero], contracts);
+      expect(revenue).toBe(0);
+    });
   });
 });
