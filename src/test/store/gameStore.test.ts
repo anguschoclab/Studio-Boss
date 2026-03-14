@@ -1,16 +1,19 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeEach, vi, mock } from "vitest";
 import { useGameStore } from "../../store/gameStore";
 import { GameState } from "../../engine/types";
+import { saveGame, loadGame, getSaveSlots } from "../../persistence/saveLoad";
 import { initializeGame } from "../../engine/core/gameInit";
 import * as saveLoad from "../../persistence/saveLoad";
 
-// Spy on the methods directly instead of using vi.mock
-const saveGameMock = vi.spyOn(saveLoad, 'saveGame').mockImplementation(() => {});
-const loadGameMock = vi.spyOn(saveLoad, 'loadGame').mockImplementation((slot) => {
-  if (slot === 1) return { studio: { name: "Loaded Studio" } };
-  return null;
-});
-const getSaveSlotsMock = vi.spyOn(saveLoad, 'getSaveSlots').mockImplementation(() => [{ exists: true }]);
+// Mock saveLoad
+mock.module("../../persistence/saveLoad", () => ({
+  saveGame: vi.fn(),
+  loadGame: vi.fn((slot) => {
+    if (slot === 1) return { studio: { name: "Loaded Studio" } };
+    return null;
+  }),
+  getSaveSlots: vi.fn(() => [{ exists: true }]),
+}));
 
 Object.defineProperty(global, 'crypto', {
   value: {

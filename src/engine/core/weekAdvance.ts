@@ -1,7 +1,8 @@
-import { GameState, WeekSummary, Award } from '../types';
+import { GameState, WeekSummary, Award, Contract } from '../types';
 import { calculateWeeklyCosts, calculateWeeklyRevenue } from '../systems/finance';
 import { advanceProject } from '../systems/projects';
 import { updateRival } from '../systems/rivals';
+import { updateBuyers } from '../systems/buyers';
 import { generateHeadlines } from '../generators/headlines';
 import { generateAwardsProfile, runAwardsCeremony } from '../systems/awards';
 import { pick } from '../utils';
@@ -20,9 +21,18 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
   const projectUpdates: string[] = [];
   const nextWeek = state.week + 1;
 
+  // Group contracts by projectId for O(1) lookup
+  const contractsByProject = new Map<string, Contract[]>();
+  for (const contract of state.contracts) {
+    if (!contractsByProject.has(contract.projectId)) {
+      contractsByProject.set(contract.projectId, []);
+    }
+    contractsByProject.get(contract.projectId)!.push(contract);
+  }
+
   // Advance projects
   const updatedProjects = state.projects.map(p => {
-    const projectContracts = state.contracts.filter(c => c.projectId === p.id);
+    const projectContracts = contractsByProject.get(p.id) || [];
     const { project, update } = advanceProject(p, nextWeek, state.studio.prestige, projectContracts, state.talentPool);
     if (update) projectUpdates.push(update);
 
@@ -41,6 +51,18 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
 
   // Update rivals
   const updatedRivals = state.rivals.map(updateRival);
+
+
+  // Update buyers and mandates
+  const { updatedBuyers, newHeadlines: buyerHeadlines } = updateBuyers(state.buyers || [], nextWeek);
+
+  // Merge buyer headlines into normal headlines
+  const formattedBuyerHeadlines = buyerHeadlines.map(text => ({
+    id: `bh-${crypto.randomUUID()}`,
+    text,
+    week: nextWeek,
+    category: 'market' as const,
+  }));
 
   // Generate headlines
   const newHeadlines = generateHeadlines(nextWeek, updatedRivals);
@@ -71,9 +93,10 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
     cash: newCash,
     studio: { ...state.studio, prestige: state.studio.prestige + prestigeChange },
     projects: updatedProjects,
+    buyers: updatedBuyers,
     rivals: updatedRivals,
     awards: [...(state.awards || []), ...newAwards],
-    headlines: [...newHeadlines, ...state.headlines].slice(0, 50),
+    headlines: [...formattedBuyerHeadlines, ...newHeadlines, ...state.headlines].slice(0, 50),
     financeHistory: [
       ...state.financeHistory,
       { week: nextWeek, cash: newCash, revenue, costs },

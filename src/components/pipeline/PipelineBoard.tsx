@@ -7,6 +7,7 @@ import { ProjectStatus } from '@/engine/types';
 
 const COLUMNS: { status: ProjectStatus[]; title: string; color: string }[] = [
   { status: ['development'], title: 'Development', color: 'bg-secondary' },
+  { status: ['pitching'], title: 'Pitching', color: 'bg-warning' },
   { status: ['production'], title: 'Production', color: 'bg-primary' },
   { status: ['released', 'archived'], title: 'Released', color: 'bg-success' },
 ];
@@ -25,7 +26,7 @@ export const PipelineBoard = () => {
         </Button>
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-4 gap-4">
         {COLUMNS.map(col => {
           const colProjects = projects.filter(p => col.status.includes(p.status));
           return (
