@@ -35,7 +35,7 @@ describe("uiStore", () => {
   });
 
   it("shows and closes week summary", () => {
-    const summary: any = { fromWeek: 1, toWeek: 2 };
+    const summary = { fromWeek: 1, toWeek: 2 } as unknown as import('../../engine/types').WeekSummary;
     useUIStore.getState().showSummary(summary);
     expect(useUIStore.getState().showWeekSummary).toBe(true);
     expect(useUIStore.getState().weekSummary).toBe(summary);

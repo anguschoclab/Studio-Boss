@@ -152,12 +152,13 @@ const LOCATIONS = [
 ];
 
 export function generateStudioName(existing: string[]): string {
+  const existingSet = new Set(existing);
   let name: string;
   let attempts = 0;
   do {
     name = `${pick(PREFIXES)} ${pick(SUFFIXES)}`;
     attempts++;
-  } while (existing.includes(name) && attempts < 50);
+  } while (existingSet.has(name) && attempts < 50);
   return name;
 }
 
