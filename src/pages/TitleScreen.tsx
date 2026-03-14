@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useGameStore } from '@/store/gameStore';
@@ -14,7 +14,7 @@ const TitleScreen = () => {
 
   const handleLoad = (slot: number) => {
     if (loadFromSlot(slot)) {
-      navigate('/dashboard');
+      navigate({ to: '/dashboard' });
     }
   };
 
@@ -36,7 +36,7 @@ const TitleScreen = () => {
 
         <div className="flex flex-col gap-3 w-72 mx-auto">
           <Button
-            onClick={() => navigate('/new-game')}
+            onClick={() => navigate({ to: '/new-game' })}
             size="lg"
             className="w-full text-lg h-14 font-display font-bold tracking-wide"
           >

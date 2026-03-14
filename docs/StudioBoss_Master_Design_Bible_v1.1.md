@@ -1,6 +1,6 @@
 # Studio Boss — Master Design Bible
 
-**Version:** Master Draft 1.0  
+**Version:** Master Draft 1.1
 **Status:** Living Design Document  
 **Project:** Studio Boss  
 **Genre:** Single-player Hollywood studio management simulation  
@@ -339,6 +339,47 @@ Each project should support a detail modal or full view containing tabs such as:
 ### 12.5 Design Intent
 The pipeline should make the player feel like an executive surveying a live slate, not a spreadsheet operator lost in menus.
 
+### 12.6 Talent Assignment UX on the Pipeline
+The pipeline should support direct talent assignment rather than forcing the player through abstract menus alone.
+
+This means project cards in **Development** can act as drop targets for talent, allowing the player to build a package by dragging talent directly onto a project.
+
+Key interaction goals:
+
+- make packaging feel tactile and immediate
+- reduce friction between scouting and attaching talent
+- let the player compare multiple possible packages quickly
+- reinforce the fantasy of assembling a movie from a live slate board
+
+### 12.7 Talent Cards
+Talent should be represented by compact, readable cards that can live in side panels, roster views, and selection drawers.
+
+Each card should surface at least:
+
+- name
+- role type
+- prestige
+- salary expectation
+- temperament
+- availability window
+- chemistry tags
+- agency affiliation
+- special traits such as awards heat, box office draw, auteur status, or controversy risk
+
+### 12.8 Pipeline Feedback for Packaging
+When talent is dropped onto a project, the project card should update immediately to show package impact.
+
+Visible feedback can include:
+
+- projected budget change
+- prestige shift
+- projected commercial appeal shift
+- chemistry warnings
+- scheduling conflicts
+- contract risk indicators
+
+The player should be able to understand within seconds whether a package makes the project stronger, riskier, more expensive, or more awards-friendly.
+
 ---
 
 ## 13. Film and Television Model
@@ -561,6 +602,93 @@ Earlier versions mention descriptor-based personalities. This should remain the 
 ### 17.5 Design Intent
 Talent should feel like people with leverage and history, not stat containers.
 
+### 17.6 The Talent Agency Layer
+A dedicated **Talent Agency** system should sit on top of the existing talent and packaging model. This is not only a database of people. It is a playable management layer where the player discovers, courts, signs, and manages high-profile creative talent with competing goals and egos.
+
+The Talent Agency layer should include:
+
+- discoverable actors, directors, writers, showrunners, and marquee producers
+- agency relationships and representation strength
+- talent availability windows and exclusivity pressure
+- package-friendly chemistry between specific collaborators
+- contract negotiations with both guaranteed cash and backend participation
+- temperament-driven instability such as diva behavior, walk-off threats, or public complaints
+
+### 17.7 Drag-and-Drop Casting and Packaging
+One of the signature UX interactions should be drag-and-drop casting.
+
+The player opens a **Talent Roster** tab from the dashboard, browses or filters available talent cards, and drags them directly onto projects sitting in the **Development** column of the Pipeline Board.
+
+This interaction should support several goals at once:
+
+- faster project packaging
+- clearer relationship between talent choice and project identity
+- more playful experimentation with different casts and creative teams
+- immediate visual feedback on prestige, cost, chemistry, and risk
+
+Dropping talent onto a project should trigger one of three states:
+
+- **Soft Attach**: the player is testing a package and seeing projected outcomes
+- **Offer Out**: the studio is actively negotiating terms
+- **Signed**: the deal is completed and the project stats are updated permanently unless the contract is broken
+
+### 17.8 Talent Card Data Model
+Each talent card should communicate executive-relevant information in a glanceable format.
+
+Recommended card properties:
+
+- **Prestige**: awards credibility, critic heat, cultural cachet
+- **Salary**: expected upfront fee or episodic/weekly cost
+- **Temperament**: reliability, ego volatility, collaboration difficulty, public meltdown risk
+- **Draw**: box office or subscriber-pull estimate
+- **Craft**: expected quality lift to script, direction, or performance
+- **Chemistry**: known positive or negative relationships with other talent
+- **Availability**: scheduling window and competing commitments
+- **Agency leverage**: how difficult the negotiation will be
+
+Card iconography should be simple and immediately readable, leaning on a small set of consistent symbols so the roster feels premium rather than cluttered.
+
+### 17.9 Contract Structure and Negotiation Depth
+Contract negotiation should move beyond a single salary number.
+
+Core contract levers should include:
+
+- upfront fee
+- backend points
+- bonuses tied to awards, box office, delivery, or renewals
+- approval rights
+- exclusivity period
+- optional sequel or crossover commitments
+- publicity obligations such as festival attendance or talk-show appearances
+
+The player should frequently choose between safer short-term spending and riskier backend-heavy deals that can preserve cash but become expensive if the project breaks out.
+
+### 17.10 Diva Events and Personality Chaos
+High-value talent should create operational drama, not just upside.
+
+A **Diva Event** framework should inject random or semi-predictable disruptions such as:
+
+- refusing rewrites
+- demanding a larger trailer vanity package equivalent in game terms
+- threatening to leave unless billing changes
+- reigniting a feud with another attached collaborator
+- refusing marketing appearances
+- clashing with a director over cut, tone, or schedule
+- generating tabloid noise that hurts morale or hype
+
+These events should not be pure punishment. In some cases, indulging a difficult star may preserve buzz, protect awards chances, or keep a valuable package alive.
+
+### 17.11 Strategic Purpose
+The Talent Agency system gives the player another authentic Hollywood tension point: talent can be your greatest accelerator and your greatest source of chaos.
+
+The intended story outcomes include:
+
+- assembling a dream package that instantly legitimizes a project
+- risking the budget on prestige talent for awards upside
+- juggling multiple giant personalities on the same production
+- preserving cash through backend-heavy deals and regretting it after a breakout
+- losing weeks of momentum because a temperamental star freezes production at the worst moment
+
 ---
 
 ## 18. Negotiation Systems
@@ -780,6 +908,79 @@ The roadmap explicitly references prestige and commercial meters. These should n
 ### 23.4 Recovery and Reappraisal
 Some projects should improve in reputation over time, allowing “cult recovery” stories or rediscovery arcs.
 
+### 23.5 Dynamic Hype Campaigns
+Buzz should not remain a mostly passive output. It should become a controllable strategic layer during production and the run-up to release.
+
+A **Dynamic Hype Campaign** system allows the player to actively shape opening demand by allocating marketing spend across channels while a project is in **Production**, **Post**, and **Pre-Release** phases.
+
+### 23.6 Marketing Spend Channels
+When the player opens a project in the **Production** column, the Project Detail Modal should expose a dedicated **Marketing Spend** section.
+
+The player can allocate budget across channels such as:
+
+- trailer placements
+- digital ads
+- viral social campaigns
+- convention appearances
+- talk-show/publicity tour bookings
+- outdoor advertising
+- prestige trade campaign spending
+- event advertising such as Super Bowl spots or major sports tie-ins
+
+Different channels should have different strengths, costs, volatility, and audience affinities.
+
+### 23.7 Hype Meter and Forecasting
+As the player adjusts spend sliders, a live **Hype Meter** should update in real time.
+
+The meter should forecast variables such as:
+
+- opening weekend potential
+- awareness level
+- audience-fit confidence
+- prestige awareness versus broad commercial awareness
+- risk of overexposure or backlash
+- likely lift in pre-sales, reviews visibility, or awards chatter
+
+This system should not promise certainty. It should present a high-confidence forecast band so the player can feel informed without seeing behind the curtain too perfectly.
+
+### 23.8 Word-of-Mouth vs Paid Awareness
+The player should be able to choose between very different campaign philosophies.
+
+Examples:
+
+- a low-cost, confidence-heavy word-of-mouth strategy for prestige releases
+- an aggressive four-quadrant spend designed to secure a huge opening weekend
+- a niche-targeted campaign tuned for specific age, gender, or regional audiences
+- an awards-first campaign that boosts prestige and long-tail legs more than day-one revenue
+
+This creates a meaningful tension between conserving capital and manufacturing event status.
+
+### 23.9 Diminishing Returns and Backlash
+Marketing spend should not scale linearly forever.
+
+The system should account for:
+
+- diminishing returns after saturation
+- poor channel-project fit
+- mismatch between hype and actual quality
+- controversy or overexposure penalties
+- competitive crowding when rivals buy the same release window attention
+
+A weak movie with massive hype may still open strong, but it should be more likely to suffer steep second-weekend collapse, hostile audience sentiment, or meme-driven backlash.
+
+### 23.10 UX Intent
+The marketing interface should feel sleek and modern rather than spreadsheet-heavy.
+
+Recommended UX traits:
+
+- intuitive sliders with instant response
+- lightweight channel descriptions on hover
+- forecast deltas displayed beside each channel
+- clear readout of remaining discretionary marketing budget
+- strong visual connection between spend decisions and the project’s commercial outlook
+
+This turns marketing from a hidden formula into a satisfying executive decision surface.
+
 ---
 
 ## 24. Festivals and Awards
@@ -818,6 +1019,74 @@ The roadmap highlights a **Festival Buzz Meter**, implying a focused sub-layer w
 
 ### 24.5 Red Carpet and Flavor Sequences
 Awards season and red-carpet sequences are called out as flavor-rich presentation opportunities. These should heighten emotional payoff without drowning the player in ceremony.
+
+### 24.6 Annual Awards Season Event
+Every **52 in-game weeks**, the simulation should pause for a major **Awards Season** event that reviews the studio year as a whole.
+
+This event creates a long-horizon objective beyond raw revenue and gives prestige-focused strategies a visible annual payoff.
+
+Projects released during the previous award year become eligible for nomination based on factors such as:
+
+- underlying project quality
+- prestige profile
+- critic response
+- campaign spending and visibility
+- festival performance
+- talent stature
+- genre-specific strength in applicable categories
+
+### 24.7 Awards Categories and Nomination Logic
+The awards framework should support headline categories first, with room to expand later.
+
+Examples include:
+
+- Best Picture / Best Series
+- Best Director
+- Best Actor / Actress / Ensemble equivalents
+- Best Screenplay
+- Best Editing / Score / Craft buckets in lighter simulation form
+- Breakthrough or festival-specific honors where appropriate
+
+Nomination chances should be driven by weighted systems rather than fixed scripts, so unexpected underdogs and sweeps remain possible.
+
+### 24.8 Ceremony UX and Presentation
+Awards Season should interrupt the standard weekly flow with a cinematic full-screen modal using gold-accented presentation and suspenseful reveal pacing.
+
+Recommended presentation beats:
+
+- category-by-category nomination reveals
+- short dramatic pauses before winners
+- clean, premium motion design that respects reduced-motion settings
+- immediate callouts when the player, rivals, or recurring collaborators win
+- summary panel at the end showing total nominations, wins, and prestige change
+
+This should feel like an annual payoff ritual, not a spreadsheet report.
+
+### 24.9 Award Bump and Lasting Effects
+Winning or even being nominated should have meaningful long-tail effects.
+
+Possible outcomes include:
+
+- permanent studio prestige increase
+- improved future negotiations with top-tier talent
+- stronger festival access or campaign credibility
+- renewed revenue lift on nominated or winning projects
+- catalog value increase for library titles
+- morale boosts inside the studio culture layer
+
+A major winner should receive an **Award Bump**, which can revive theatrical legs, premium VOD interest, streaming demand, press attention, and catalog rediscovery.
+
+### 24.10 Persistent Awards Memory
+Winning projects should retain a permanent visual mark in the pipeline and archive.
+
+Recommended signals:
+
+- a shiny **Award** badge on released project cards
+- expanded project detail history showing award nominations and wins
+- studio timeline entries memorializing major award nights
+- talent cards reflecting major wins in their prestige profile
+
+This gives awards meaning beyond a one-night animation and turns prestige into visible studio legacy.
 
 ---
 
@@ -1246,6 +1515,7 @@ Goals:
 - actors, directors, writers, showrunners
 - agents and agencies with traits
 - casting and negotiations
+- drag-and-drop Talent Roster workflow
 - project pipeline board
 
 Outcome:
@@ -1282,6 +1552,9 @@ The player must think about rights and survival, not just project quality.
 Goals:
 
 - stronger packaging systems
+- Talent Agency layer and talent card UX
+- upfront-fee vs backend contract depth
+- diva events and package chemistry rules
 - first-look logic
 - co-production hooks
 - IP retention model
@@ -1306,7 +1579,8 @@ Goals:
 
 - festival valuation effects
 - marketplace opportunities
-- awards season flavor
+- annual Awards Season event
+- award badges and award-bump revenue logic
 - rumor mill
 - casting gossip
 - production catastrophes
@@ -1330,8 +1604,10 @@ The player must think about what form of the project is commercially and cultura
 Goals:
 
 - age, gender, and region model
-- marketing targeting systems
+- Dynamic Hype Campaign system
+- channel-based marketing targeting systems
 - Weighted Audience Index
+- Hype Meter and opening-weekend forecasts
 - audience response projections
 
 Outcome:
@@ -1487,6 +1763,7 @@ This master bible was synthesized from the following attached project documents:
 - `StudioBoss_DesignBible_v4.9.md`
 - `StudioBoss_DesignBible_v7.6.md`
 - `StudioBoss_Roadmap_v5.1.md`
+- feature additions for Talent Agency, Awards Season, and Dynamic Hype Campaigns
 
 General reconciliation rules applied:
 
