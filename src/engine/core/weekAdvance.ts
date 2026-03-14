@@ -14,6 +14,11 @@ const EVENT_POOL = [
   'Film festival announces lineup — buzz is building.',
   'Regulators announce new content distribution guidelines.',
   'A viral social media trend boosts genre film interest.',
+  'Nepotism debate dominates the weekly trades.',
+  'Sibling duo announces unexpected co-production.',
+  'Famous dynasty patriarch announces retirement.',
+  'Former child star attempts a serious prestige comeback.',
+  'Public family feud leaks during an awards press tour.'
 ];
 
 export function advanceWeek(state: GameState): { newState: GameState; summary: WeekSummary } {

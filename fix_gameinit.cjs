@@ -1,4 +1,5 @@
-import { GameState, ArchetypeKey, RivalStudio } from '../types';
+const fs = require('fs');
+const content = `import { GameState, ArchetypeKey, RivalStudio } from '../types';
 import { ARCHETYPES } from '../data/archetypes';
 import { generateStudioName, generateMotto } from '../generators/names';
 import { generateFamilies, generateTalentPool } from '../generators/talent';
@@ -15,7 +16,7 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
     const rArch = pick(rivalArchetypes);
     const rArchData = ARCHETYPES[rArch];
     return {
-      id: `rival-${i}`,
+      id: \`rival-\${i}\`,
       name,
       motto: generateMotto(),
       archetype: rArch,
@@ -37,7 +38,7 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
     headlines: [
       {
         id: 'h-init',
-        text: `${studioName} launches operations — the industry takes notice.`,
+        text: \`\${studioName} launches operations — the industry takes notice.\`,
         week: 1,
         category: 'general',
       },
@@ -51,3 +52,6 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
     awards: [],
   };
 }
+`;
+
+fs.writeFileSync('src/engine/core/gameInit.ts', content);

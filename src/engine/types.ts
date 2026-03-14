@@ -145,6 +145,7 @@ export interface GameState {
   week: number;
   cash: number;
   financeHistory: FinanceRecord[];
+  families: Family[];
   talentPool: TalentProfile[];
   contracts: Contract[];
   awards?: Award[];
@@ -159,6 +160,20 @@ export interface SaveSlotMeta {
   timestamp: number;
 }
 
+
+export type AccessLevel = 'outsider' | 'soft-access' | 'legacy' | 'dynasty' | 'comeback';
+
+export interface Family {
+  id: string;
+  name: string;
+  recognition: number; // 0-100
+  prestigeLegacy: number; // 0-100
+  commercialLegacy: number; // 0-100
+  scandalLegacy: number; // 0-100
+  volatility: number; // 0-100
+  status: 'respected' | 'chaotic' | 'overexposed' | 'revived' | 'faded' | 'rising';
+}
+
 // Future system stubs
 export interface TalentProfile {
   id: string;
@@ -167,6 +182,10 @@ export interface TalentProfile {
   prestige: number;
   fee: number;
   draw: number;
+  temperament: string; // Used by UI
+  // Lineage properties
+  familyId?: string;
+  accessLevel: AccessLevel;
 }
 
 export interface Contract {

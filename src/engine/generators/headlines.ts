@@ -21,6 +21,10 @@ const TALENT_HEADLINES = [
   'Casting controversy sparks social media debate over upcoming tentpole',
   'Major talent agency announces restructuring amid industry shifts',
   'Acclaimed cinematographer signs exclusive deal with rival studio',
+  'Legacy child demands a rewrite to emphasize their leading role',
+  'Industry royalty family packages a prestige drama on their terms',
+  'Audiences reject transparent nepotism casting in new blockbuster',
+  'Dynasty heir throws a tantrum on set, causing production delays'
 ];
 
 const RIVAL_TEMPLATES = [
