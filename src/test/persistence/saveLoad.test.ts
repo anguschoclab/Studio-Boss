@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { saveGame, loadGame, getSaveSlots } from "../../persistence/saveLoad";
 import { GameState } from "../../engine/types";
 import { initializeGame } from "../../engine/core/gameInit";
@@ -10,6 +10,7 @@ describe("saveLoad", () => {
 
   afterEach(() => {
     localStorage.clear();
+    vi.restoreAllMocks();
   });
 
   it("returns null when loading an empty slot", () => {
@@ -17,7 +18,7 @@ describe("saveLoad", () => {
   });
 
   it("handles malformed save data", () => {
-    localStorage.setItem("studioboss_save_1", "invalid json");
+    vi.spyOn(Storage.prototype, "getItem").mockReturnValueOnce("malformed json");
     expect(loadGame(1)).toBeNull();
   });
 
