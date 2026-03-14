@@ -5,6 +5,8 @@ export type ProjectStatus = 'development' | 'pitching' | 'production' | 'release
 export type ProjectFormat = 'film' | 'tv';
 export type BudgetTierKey = 'low' | 'mid' | 'high' | 'blockbuster';
 export type HeadlineCategory = 'rival' | 'market' | 'talent' | 'awards' | 'general';
+export type TvFormatKey = 'sitcom' | 'procedural' | 'prestige_drama' | 'limited_series' | 'animated_comedy' | 'animated_prestige';
+export type ReleaseModelKey = 'weekly' | 'binge' | 'split';
 
 export interface Studio {
   name: string;
@@ -103,8 +105,13 @@ export interface Project {
   weeklyRevenue: number;
   releaseWeek: number | null;
   awardsProfile?: AwardsProfile;
-  contractType?: ProjectContractType;
-  buyerId?: string;
+  // TV specific fields
+  tvFormat?: TvFormatKey;
+  episodes?: number;
+  season?: number;
+  releaseModel?: ReleaseModelKey;
+  episodesReleased?: number;
+  renewable?: boolean;
 }
 
 export interface RivalStudio {
@@ -153,9 +160,8 @@ export interface GameState {
   week: number;
   cash: number;
   financeHistory: FinanceRecord[];
-  buyers: Buyer[];
-  contracts: Contract[];
   talentPool: TalentProfile[];
+  contracts: Contract[];
   awards?: Award[];
 }
 
@@ -175,13 +181,13 @@ export interface TalentProfile {
   type: 'director' | 'actor' | 'writer' | 'producer';
   prestige: number;
   fee: number;
+  draw: number;
 }
-
-
 
 export interface Contract {
   id: string;
   talentId: string;
   projectId: string;
-  terms: Record<string, unknown>;
+  fee: number;
+  backendPercent: number;
 }

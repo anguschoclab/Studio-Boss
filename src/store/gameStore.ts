@@ -1,9 +1,9 @@
 import { create } from 'zustand';
-import { GameState, WeekSummary, ProjectFormat, BudgetTierKey, ArchetypeKey, ProjectContractType } from '@/engine/types';
-import { negotiateContract } from '@/engine/systems/buyers';
+import { GameState, WeekSummary, ProjectFormat, BudgetTierKey, ArchetypeKey, TvFormatKey, ReleaseModelKey } from '@/engine/types';
 import { initializeGame } from '@/engine/core/gameInit';
 import { advanceWeek } from '@/engine/core/weekAdvance';
 import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
+import { TV_FORMATS } from '@/engine/data/tvFormats';
 import { saveGame, loadGame, getSaveSlots, SaveSlotInfo } from '@/persistence/saveLoad';
 import { randRange } from '@/engine/utils';
 
@@ -14,6 +14,9 @@ interface CreateProjectParams {
   budgetTier: BudgetTierKey;
   targetAudience: string;
   flavor: string;
+  tvFormat?: TvFormatKey;
+  episodes?: number;
+  releaseModel?: ReleaseModelKey;
 }
 
 interface GameStore {
@@ -21,6 +24,7 @@ interface GameStore {
   newGame: (studioName: string, archetype: ArchetypeKey) => void;
   doAdvanceWeek: () => WeekSummary;
   createProject: (params: CreateProjectParams) => void;
+  renewProject: (id: string) => void;
   saveToSlot: (slot: number) => void;
   loadFromSlot: (slot: number) => boolean;
   getSaveSlots: () => SaveSlotInfo[];
@@ -51,21 +55,67 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const state = get().gameState;
     if (!state) return;
     const tier = BUDGET_TIERS[params.budgetTier];
+
+    let budget = tier.budget;
+    let weeklyCost = tier.weeklyCost;
+    let developmentWeeks = tier.developmentWeeks;
+    let productionWeeks = tier.productionWeeks;
+    let renewable = false;
+
+    if (params.format === 'tv' && params.tvFormat && params.episodes) {
+      const tvFormatData = TV_FORMATS[params.tvFormat];
+      weeklyCost = tier.weeklyCost * tvFormatData.productionCostMultiplier;
+      developmentWeeks = Math.ceil(tier.developmentWeeks * tvFormatData.developmentWeeksModifier);
+      productionWeeks = Math.ceil(params.episodes * tvFormatData.productionWeeksPerEpisode);
+      budget = weeklyCost * productionWeeks + (tier.budget * 0.2); // Rough budget estimate
+      renewable = tvFormatData.renewable;
+    }
+
     const project = {
       id: crypto.randomUUID(),
       ...params,
-      budget: tier.budget,
-      weeklyCost: tier.weeklyCost,
+      budget,
+      weeklyCost,
       status: 'development' as const,
       buzz: Math.floor(randRange(30, 70)),
       weeksInPhase: 0,
-      developmentWeeks: tier.developmentWeeks,
-      productionWeeks: tier.productionWeeks,
+      developmentWeeks,
+      productionWeeks,
       revenue: 0,
       weeklyRevenue: 0,
       releaseWeek: null,
+      season: params.format === 'tv' ? 1 : undefined,
+      episodesReleased: params.format === 'tv' ? 0 : undefined,
+      renewable,
     };
+
     set({ gameState: { ...state, projects: [...state.projects, project] } });
+  },
+
+  renewProject: (id: string) => {
+    const state = get().gameState;
+    if (!state) return;
+
+    set({
+      gameState: {
+        ...state,
+        projects: state.projects.map((p) => {
+          if (p.id === id && p.format === 'tv' && p.renewable && p.season !== undefined) {
+            return {
+              ...p,
+              status: 'development',
+              weeksInPhase: 0,
+              season: p.season + 1,
+              revenue: 0,
+              weeklyRevenue: 0,
+              releaseWeek: null,
+              episodesReleased: 0,
+            };
+          }
+          return p;
+        }),
+      },
+    });
   },
 
   saveToSlot: (slot) => {

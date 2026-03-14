@@ -1,4 +1,4 @@
-import { GameState, WeekSummary, Award } from '../types';
+import { GameState, WeekSummary, Award, Contract } from '../types';
 import { calculateWeeklyCosts, calculateWeeklyRevenue } from '../systems/finance';
 import { advanceProject } from '../systems/projects';
 import { updateRival } from '../systems/rivals';
@@ -21,9 +21,18 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
   const projectUpdates: string[] = [];
   const nextWeek = state.week + 1;
 
+  // Group contracts by projectId for O(1) lookup
+  const contractsByProject = new Map<string, Contract[]>();
+  for (const contract of state.contracts) {
+    if (!contractsByProject.has(contract.projectId)) {
+      contractsByProject.set(contract.projectId, []);
+    }
+    contractsByProject.get(contract.projectId)!.push(contract);
+  }
+
   // Advance projects
   const updatedProjects = state.projects.map(p => {
-    const projectContracts = state.contracts.filter(c => c.projectId === p.id);
+    const projectContracts = contractsByProject.get(p.id) || [];
     const { project, update } = advanceProject(p, nextWeek, state.studio.prestige, projectContracts, state.talentPool);
     if (update) projectUpdates.push(update);
 

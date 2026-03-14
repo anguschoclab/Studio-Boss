@@ -10,7 +10,7 @@
 
 ## 1. Purpose of This Document
 
-This document collates and reconciles the currently attached design and roadmap materials into a single master design bible for **Studio Boss**. It is intended to serve as the canonical reference for the project going forward.
+This document collates and reconciles the currently attached design and roadmap materials into a single master design bible for **Studio Boss**. It is the unified non-lossy edition, intended to preserve all current canonical systems while also retaining useful implementation notes, roadmap framing, and legacy reference material from earlier drafts. It is intended to serve as the canonical reference for the project going forward.
 
 This file is designed to be a **living document**. As new systems are designed, features are revised, or implementation priorities change, this bible should be updated rather than replaced. The goal is to keep one organized source of truth that captures:
 
@@ -1886,6 +1886,365 @@ Talent should feel like people with leverage and history, not stat containers.
 
 ---
 
+### 17.6 Family, Lineage, and Hollywood Dynasty System
+Studio Boss should explicitly model entertainment families and lineage networks as a major sub-layer of the talent ecosystem. The real-world industry repeatedly produces sibling collaborations, multi-generation dynasties, famous surnames, child stars who grow into adult performers, and “nepo baby” debates. This system should capture the strategic upside of family networks while also generating jealousy, entitlement, legacy pressure, and public skepticism.
+
+The design goal is not celebrity parody. It is to represent a recurring Hollywood truth: talent does not enter the industry on a level playing field, and family ties often act as both accelerant and curse.
+
+### 17.7 Core Design Goals of the Lineage System
+The family and lineage layer should:
+
+- make some talent enter the world with pre-existing access, reputation, or pressure
+- create collaboration patterns such as sibling duos, parent-child pipelines, and entire family creative circles
+- generate rivalry, resentment, and succession drama within families
+- deepen child-star arcs and long-term career evolution
+- create richer PR stories around nepotism, favoritism, and “legacy expectations”
+- produce meaningful differences between earned breakout stars and heavily connected insiders
+- interact with awards, fandom, press, agent leverage, and studio culture
+
+### 17.8 Family Entities and Lineage Data Model
+Each talent character may optionally belong to a **Family / Lineage entity**.
+
+A family entity should track:
+
+- family name and public recognition level
+- industry branches represented in the family, such as acting, directing, writing, producing, music, or executive power
+- prestige legacy, commercial legacy, scandal legacy, and volatility legacy
+- notable living members and deceased legends
+- internal relationship graph between family members
+- whether the family is considered respected, chaotic, overexposed, revived, faded, or newly rising
+
+This allows the game to create several recognizable dynasty patterns:
+
+- old-money acting dynasties
+- writer-director sibling teams
+- powerful producer families
+- actor-director parent/child chains
+- child-star households that turn into mini-empires
+- chaotic tabloid families with recurring PR blowups
+
+### 17.9 Family Archetypes
+Families should be generated or authored around archetypes so they feel distinct.
+
+Suggested archetypes include:
+
+**Classic Dynasty**  
+Old industry bloodline with awards pedigree, strong prestige gravity, and intense expectations. Great for awards campaigns, harder for rebellious reinvention.
+
+**Prestige Clan**  
+Known for filmmakers, auteurs, and festival credibility. Strong critic upside, high ego friction, often resistant to crass commercial notes.
+
+**Commercial Hitmakers**  
+A family associated with broad audience instincts, franchise savvy, and highly bankable names. Good return on investment, somewhat less awards heat.
+
+**Child-Star Factory**  
+A family that pushes children into the spotlight early. High early earning potential but elevated burnout, addiction, scandal, and identity-crisis risk.
+
+**Chaotic Tabloid Family**  
+Massive name recognition, erratic behavior, unstable loyalty, and recurring PR fires. Great headline generation; terrible predictability.
+
+**Rebuilder Lineage**  
+A once-famous family trying to reclaim relevance through one breakout member. Strong comeback storytelling and legacy-pressure hooks.
+
+### 17.10 Relationship Types Within Families
+Family ties should be more specific than a generic “related to” flag.
+
+Supported relationships should include:
+
+- siblings
+- half-siblings / step-siblings
+- parent-child
+- cousins
+- spouses / ex-spouses within entertainment families
+- mentor-relative relationships such as aunt/uncle stewardship
+- family manager / guardian dynamics for minors
+
+Each relationship should track affinity, rivalry, trust, dependency, and public narrative.
+
+This enables combinations such as:
+
+- supportive siblings who demand package deals together
+- estranged siblings competing for the same awards lane
+- a powerful parent overshadowing an adult child’s career
+- cousins who quietly sabotage each other through agencies and gossip
+- a former child star protecting a younger sibling from exploitation
+
+### 17.11 Sibling Collaborations and Duos
+A major expression of the system should be **sibling collaboration teams**, inspired by real-world patterns such as the Coen brothers’ long-running partnership and other family-based creative duos. Sibling teams should not be limited to directing. They can appear as:
+
+- co-director siblings
+- director-writer siblings
+- producer-director siblings
+- actor-director sibling pairs
+- actor ensembles from the same family
+
+Sibling teams should gain special bonuses when paired correctly:
+
+- shared shorthand bonus, reducing development friction
+- unified taste bonus, improving tonal consistency
+- press-story bonus, increasing pre-release interest
+- loyalty bonus, making them less likely to split for small financial differences
+
+But sibling teams should also carry special risks:
+
+- one sibling overshadowing the other
+- co-credit disputes
+- public breakup risk after a failure
+- resentment if the studio attempts to separate them
+- family loyalty overriding studio schedule needs
+
+### 17.12 Family Rivalries and Succession Drama
+Not all lineage is cooperative. Rivalries are one of the most fertile drama generators in the system.
+
+Possible rivalry forms include:
+
+- sibling rivalry over artistic legitimacy
+- “golden child” resentment inside a famous family
+- parent-child conflict over career direction
+- public feuds over remakes, franchises, or casting
+- competing family branches pursuing the same awards lane
+- ex-child-star bitterness toward a younger relative receiving better launch support
+
+Rivalries should affect:
+
+- negotiation difficulty
+- package stability
+- gossip frequency
+- awards campaign sabotage risk
+- set morale when both relatives are attached to one project
+- press tone if the feud becomes public
+
+Families should also experience **succession pressure**. When an elder legend retires, dies, or becomes inactive, the family may enter a volatile phase where heirs compete to define the next chapter of the brand.
+
+### 17.13 Nepotism, Access, and the “Nepo Baby” Layer
+The game should include an explicit but nuanced **Access / Nepotism** model.
+
+Talent may enter the simulation with one of several access origins:
+
+- self-made outsider
+- connected outsider with soft access
+- legacy child with strong access
+- dynasty heir with extreme access
+- rescued comeback from a faded family
+
+This should not function as a moral judgment meter alone. Instead, access affects the starting conditions of a career:
+
+- easier agency representation
+- earlier audition and meeting access
+- better odds of early packaging consideration
+- higher baseline media attention
+- stronger safety net after a flop
+- inherited goodwill in some circles and skepticism in others
+
+To balance this, high-access talent should often carry additional burdens:
+
+- elevated press scrutiny around favoritism
+- harsher backlash when underperforming
+- comparisons to famous relatives
+- entitlement risk or underdeveloped craft
+- family brand damage after scandals
+
+The player should frequently face strategic questions such as:
+
+- is this talent genuinely excellent, or merely well-connected?
+- can the studio survive the bad PR of obvious favoritism?
+- is it worth betting on a raw but famous surname for marketing value?
+- does pairing a nepo baby with a respected veteran legitimize them or create resentment?
+
+### 17.14 Talent Attribute Expansion for Lineage Play
+To support family dynamics, the talent model should expand beyond basic reputation and skill.
+
+Recommended additional attributes:
+
+- **Raw Talent**: natural creative or performance ability
+- **Craft Discipline**: work ethic, training, and reliability
+- **Instinct / Taste**: quality of creative choices and project fit
+- **Charisma**: interview strength, public magnetism, and campaign charm
+- **Legacy Burden**: psychological pressure of living up to a family name
+- **Entitlement**: expectation of special treatment
+- **Hunger**: drive to prove oneself independently
+- **Family Loyalty**: willingness to prioritize relatives over career efficiency
+- **Reinvention Capacity**: ability to escape typecasting or family comparison
+- **Guardian Influence**: how much a parent, agent, or manager controls choices
+
+These values should combine with the existing descriptor-based personality system rather than replace it.
+
+### 17.15 Child Stars and Early-Career Family Pipelines
+Child stars should become a dedicated sub-system, especially because they are one of the clearest ways lineage, access, exploitation risk, and long-term career arcs intersect.
+
+A child performer should track:
+
+- age band
+- stage-schooling / training quality
+- guardian stability
+- public cuteness / breakout appeal
+- resilience and emotional maturity
+- burnout risk
+- scandal exposure risk through family or entourage
+- transition potential into teen and adult roles
+
+Child stars may originate from:
+
+- entertainment dynasties
+- ambitious stage-parent households
+- studio discovery programs
+- viral or advertising breakouts
+- prestige-family protégés being launched carefully
+
+#### Child Star Lifecycle
+A child-star career should evolve through multiple phases:
+
+1. **Discovery / Cute Novelty**  
+   Fast audience affection, limited craft, highly guardian-controlled.
+
+2. **Teen Transition**  
+   High volatility phase where many careers collapse or go sideways. Image management becomes crucial.
+
+3. **Adult Reinvention**  
+   The performer either becomes a respected adult talent, settles into nostalgia casting, or burns out.
+
+4. **Legacy Echo**  
+   Former child stars may become producers, directors, scandal magnets, comeback stories, or guardians to a new generation.
+
+#### Child Star Design Tensions
+This system should generate stories such as:
+
+- a child actor carrying a prestige film with shocking maturity
+- a famous surname getting a fast launch but collapsing under pressure
+- a former child star making an awards-season comeback as an adult
+- a parent pushing a child too hard and triggering PR backlash
+- siblings forced into direct competition for “next generation” branding
+
+### 17.16 Family Packaging and Slate Strategy
+Families should matter at the dealmaking layer, not just in biography text.
+
+Possible package behaviors:
+
+- a parent insists a child be cast alongside a veteran relative
+- siblings only sign if they can produce together
+- one family member unlocks access to others at a reduced deal premium
+- a family package provides marketing heat but concentrates scandal risk
+- a family name boosts financing confidence for prestige projects or nostalgic commercial plays
+
+Family packages can also create negative leverage:
+
+- one problematic relative contaminates the whole package
+- legacy interference from parents or managers increases notes friction
+- tabloids focus on dynasty casting over the actual project
+- rival studios accuse the player of favoritism and insider dealing
+
+### 17.17 Public Perception, PR, and Fandom Effects
+The lineage system should heavily interact with the press and fandom loops.
+
+Public narratives may include:
+
+- beloved dynasty returns
+- industry royalty takes on prestige material
+- shameless nepo casting backlash
+- sibling feud explodes during awards season
+- tragic child-star spiral
+- family redemption arc after rehab, scandal, or flop streak
+
+PR posture should matter. The studio may choose to:
+
+- openly celebrate the family legacy
+- avoid discussing the connection and emphasize merit
+- pair the relative with respected outsiders to counter nepotism narratives
+- lean into “a family affair” marketing for awards or nostalgia appeal
+- distance the studio from volatile relatives while keeping the bankable one
+
+Fandom reactions should differ by audience segment. Some viewers adore legacy casting; others punish anything that feels inherited rather than earned.
+
+### 17.18 Awards, Prestige, and Backlash Interactions
+Lineage should matter during festivals and awards season.
+
+Potential effects include:
+
+- dynasty names getting easier media coverage and campaign bookings
+- backlash narratives if a connected performer is viewed as unworthy
+- sentimental appeal around comeback stories or multi-generation firsts
+- critics reacting more harshly to perceived coasting on family reputation
+- sibling or parent-child collaborations becoming irresistible awards stories if the work is great
+
+In other words, lineage should amplify both triumph and humiliation.
+
+### 17.19 Rival Studio Use of Family Systems
+Rival AI studios should actively exploit dynasty logic.
+
+They should be able to:
+
+- build projects around famous surnames
+- weaponize family gossip against the player
+- poach one member of a family to destabilize another deal
+- pursue comeback vehicles for fallen child stars
+- sign rising younger relatives before the player notices them
+- create “family business” boutique labels or vanity deals
+
+This ensures the lineage system affects the whole industry, not only the player’s roster.
+
+### 17.20 Studio Culture Interactions
+Different studio identities should interpret family-driven talent differently.
+
+Examples:
+
+- **Auteur Haven** may value respected filmmaking dynasties but hate entitlement-heavy actor heirs.
+- **Commercial Machine** may embrace famous surnames if they lift opening weekend.
+- **Indie Tastemaker** may prefer “reclaimed” nepo babies who are proving themselves through craft.
+- **Creative Chaos** may accidentally become the home of imploding tabloid families and former child stars.
+
+This makes lineage feel native to the broader culture system already defined in the bible.
+
+### 17.21 Example Event and Story Hooks
+This system should generate reusable event patterns such as:
+
+- “Sibling Duo Wants Joint Credit”
+- “Legend’s Child Demands Shortcut to Lead Role”
+- “Former Child Star Seeks Serious Reinvention”
+- “Family Feud Leaks Into Press Tour”
+- “Parent-Producer Wants Script Approval”
+- “Younger Sibling Outshines Established Star”
+- “Dynasty Documentary Revives Family Brand”
+- “Awards Narrative Turns Into Nepotism Debate”
+
+### 17.22 Design Balance Rules
+To keep the system interesting and fair:
+
+- lineage should provide access, not guaranteed excellence
+- outsiders should retain powerful breakthrough paths through raw talent, timing, and studio support
+- famous surnames should widen variance rather than simply add power
+- child stars should be lucrative but fragile assets
+- family packages should create concentrated upside and concentrated risk
+- rivalry and loyalty should both be capable of driving major outcomes
+
+### 17.23 Implementation Notes
+At the simulation level, the family system should be a lightweight graph layer connected to the talent database.
+
+Each talent record should support:
+
+- family_id
+- relationship links to other talent ids
+- access origin
+- lineage modifiers
+- family perception tags
+- family event hooks
+- child-star phase, if applicable
+
+This allows the existing talent, negotiation, PR, awards, and rival systems to query family state without requiring a separate heavy simulation.
+
+### 17.24 Why This System Matters
+The family and lineage system is a strong fit for Studio Boss because it reinforces nearly every major pillar already established in the project:
+
+- talent with memory and leverage
+- prestige versus profit tension
+- PR and gossip storytelling
+- awards-season narrative heat
+- rival ecosystem behavior
+- long-term legacy arcs across generations
+
+It turns the roster from a flat talent marketplace into a truly Hollywood social web.
+
+---
+
 ## 18. Negotiation Systems
 
 Negotiation is one of the game’s signature dramatic layers.
@@ -2107,40 +2466,548 @@ Some projects should improve in reputation over time, allowing “cult recovery�
 
 ## 24. Festivals and Awards
 
-The game’s prestige layer is heavily tied to festivals and awards.
+The game’s prestige layer is heavily tied to festivals and awards. This system should function as a full annual prestige metagame rather than a light cosmetic bonus layer. It should connect release strategy, campaign spending, critical reception, creative risk, talent leverage, studio identity, and long-tail catalog value.
 
-### 24.1 Festivals Named in Source Materials
-The currently referenced festival set includes:
+### 24.1 Goals of the Awards System
+The awards system should do five jobs at once:
+
+- reward prestige-minded projects and elite craft execution
+- create meaningful strategic choices around release timing, campaign spending, platform format, and creative positioning
+- give smaller, riskier, or more artistic projects a path to success that is not purely box office driven
+- create emotional highs and lows through nominations, wins, snubs, scandals, and comeback narratives
+- feed long-term studio legacy, not just short-term prestige points
+
+Awards should never be only decorative. A nomination or win should have downstream effects on business outcomes, studio culture, future development choices, and talent relationships.
+
+### 24.2 Annual Awards Cycle
+The system should run on a recurring yearly structure with five stages.
+
+#### 24.2.1 Eligibility Stage
+Projects first need to qualify for a given award body. Qualification should be determined by project format, release method, release window, distribution scale, budget bracket, campaign support, and category fit.
+
+#### 24.2.2 Awards Profile Generation
+Every film and television project should generate a hidden awards profile based on the project’s creative and market identity. Suggested attributes include:
+
+- prestige score
+- critic score
+- guild appeal
+- audience passion
+- cultural heat
+- craft excellence
+- campaign strength
+- controversy risk
+- studio reputation bonus
+- festival momentum
+
+#### 24.2.3 Nomination Stage
+Each award body should evaluate projects according to its own preferences. Some institutions should skew toward prestige dramas and serious auteurs, while others should favor accessible star vehicles, indie credibility, audience warmth, or television craft.
+
+#### 24.2.4 Campaign Stage
+The player should be able to campaign actively. Campaign actions may include:
+
+- For Your Consideration pushes
+- guild screenings
+- Q and A events
+- critic outreach
+- red carpet appearances
+- talent press tours
+- damage control after scandals
+- strategic festival placement
+- selective category campaigning
+
+Campaigning should consume money, executive attention, PR bandwidth, and sometimes reputation. Over-campaigning should risk backlash.
+
+#### 24.2.5 Outcome and Aftermath Stage
+Nominations, wins, and losses should change the simulation. Even a high-profile snub should create consequences, such as morale shifts, ego clashes, press narratives, and market reassessments.
+
+### 24.3 Core Awards Stats
+The awards system should draw from a blend of visible and hidden values.
+
+#### 24.3.1 Visible Values
+- critic score
+- audience score
+- buzz
+- prestige
+- profit
+- controversy
+- campaign spend
+- festival performance
+
+#### 24.3.2 Hidden Values
+- academy appeal
+- guild appeal
+- foreign appeal
+- populist appeal
+- indie credibility
+- craft depth
+- social resonance
+- ensemble strength
+- campaign efficiency
+- industry narrative score
+
+The industry narrative score is especially important. Awards momentum often depends on factors such as comeback stories, overdue veterans, breakout newcomers, scandal drag, and a studio’s broader reputation in a given season.
+
+### 24.4 Festival Pipeline
+Festivals should feed awards momentum, project valuation, and studio identity.
+
+#### 24.4.1 Festivals Included
+The festival layer should include at minimum:
 
 - Cannes
+- Venice
+- Berlin
+- Telluride
 - TIFF
 - Sundance
 - SXSW
 - Tribeca
 
-### 24.2 Awards Referenced in Source Materials
-The currently referenced awards set includes:
+#### 24.4.2 Festival Identities
+Each festival should tilt toward different project types.
 
-- Oscars
-- BAFTAs
-- Golden Globes
-- Emmys
+- **Cannes**: auteur cinema, prestige drama, international art film, high-status premieres
+- **Venice**: serious prestige launches, awards-season starters, visually ambitious work
+- **Berlin**: international, political, art-forward, socially resonant cinema
+- **Telluride**: elite awards launch platform with heavy prestige signaling
+- **TIFF**: prestige-plus-audience crossover, major awards momentum builder
+- **Sundance**: indie discovery, documentary breakout, debut filmmaker launches
+- **SXSW**: younger-skewing buzz, genre breakouts, offbeat audience energy
+- **Tribeca**: urban prestige, indie credibility, strong launch support for smaller titles
 
-### 24.3 Purpose of the System
-Festivals and awards should matter because they can:
+#### 24.4.3 Festival Outcomes
+Festival play should create changes to:
 
-- increase prestige
-- alter valuation and release prospects
-- improve future talent negotiations
-- influence PR tone
-- shape studio identity
-- rescue or elevate projects that are not direct commercial monsters
+- critic score reveal or revision
+- buzz trajectory
+- awards profile bonuses
+- acquisition or distribution value
+- cast and director heat
+- press narrative
+- rival imitation or poaching pressure
 
-### 24.4 Festival Buzz
-The roadmap highlights a **Festival Buzz Meter**, implying a focused sub-layer where projects can bomb, break out, or go viral in prestige circles.
+#### 24.4.4 Festival Buzz Meter
+The roadmap highlights a **Festival Buzz Meter**. That meter should represent the project’s momentum in prestige circles and should react to premiere response, critic sentiment, audience warmth, deal chatter, and scandal noise.
 
-### 24.5 Red Carpet and Flavor Sequences
-Awards season and red-carpet sequences are called out as flavor-rich presentation opportunities. These should heighten emotional payoff without drowning the player in ceremony.
+### 24.5 Award Bodies Included
+The game should support multiple overlapping award ecosystems so that more project types can find meaningful success.
+
+#### 24.5.1 Major Film Awards
+- **Academy Awards / Oscars**
+- **BAFTA Film Awards**
+- **Golden Globes** (film)
+- **Independent Spirit Awards**
+- **Critics Choice Awards**
+- **Screen Actors Guild Awards**
+- **Writers Guild Awards**
+- **Directors Guild Awards**
+- **Producers Guild Awards**
+- **Annie Awards**
+- **ASC Awards**
+- **Art Directors Guild Awards**
+- **ACE Eddie Awards**
+- **VES Awards**
+
+#### 24.5.2 Major Television Awards
+- **Primetime Emmys**
+- **BAFTA Television Awards**
+- **Golden Globes** (television)
+- **Critics Choice Television Awards**
+- **Screen Actors Guild Awards**
+- **Writers Guild Awards**
+- **Directors Guild Awards**
+- **Producers Guild Awards**
+- **Peabody Awards**
+- **Television Critics Association Awards**
+
+#### 24.5.3 Specialty and Flavor Awards
+These should expand the emotional and strategic texture of the system:
+
+- **Gotham Awards**
+- **National Board of Review**
+- **Satellite Awards**
+- **People’s Choice Awards**
+- **Kids’ Choice Awards**
+- **MTV Movie & TV Awards**
+- **GLAAD Media Awards**
+- **NAACP Image Awards**
+- **IDA Awards** for documentary recognition
+
+These do not all need the same depth as the Oscars or Emmys, but they help different genres, demographics, and studio identities feel recognized.
+
+### 24.6 Gameplay Award Categories
+The awards system should include the categories that make the most gameplay sense, rather than only mirroring reality in a narrow way.
+
+#### 24.6.1 Universal Top-Line Categories
+- Best Picture / Best Series
+- Best Director
+- Best Original Screenplay
+- Best Adapted Screenplay
+- Best Lead Actor
+- Best Lead Actress
+- Best Supporting Actor
+- Best Supporting Actress
+- Best Ensemble
+
+#### 24.6.2 Film Craft Categories
+- Cinematography
+- Editing
+- Production Design
+- Costume Design
+- Makeup and Hairstyling
+- Visual Effects
+- Sound
+- Original Score
+- Original Song
+- Casting
+- Animated Feature
+- Documentary Feature
+- International Feature
+- Debut Feature
+
+#### 24.6.3 Television Categories
+- Best Drama Series
+- Best Comedy Series
+- Best Limited Series
+- Best TV Movie
+- Lead performance categories by format
+- Supporting performance categories by format
+- Writing for Drama, Comedy, and Limited Series
+- Directing for Drama, Comedy, and Limited Series
+- Casting
+- Editing
+- Production Design
+- Sound
+- Score or Music Supervision
+- Animated Program
+- Documentary or Nonfiction Series
+
+#### 24.6.4 Audience and Market-Facing Meta Categories
+These can be game-specific abstraction categories used by press, fan communities, or lower-prestige shows:
+
+- Breakout Hit
+- Audience Favorite
+- Cult Sensation
+- Best Family Release
+- Best Franchise Launch
+- Most Buzzworthy Release
+- Best Debut Creator
+
+### 24.7 Award-Specific Requirements and Preferences
+Each major body should have both a qualification gate and a taste profile.
+
+#### 24.7.1 Academy Awards / Oscars
+**Best for:** prestige films, major craft showcases, serious dramas, prestige animation, and auteur work.
+
+**Gameplay requirements:**
+- must be a film rather than a television project
+- must receive a qualifying theatrical release
+- must release within the eligible awards window
+- must carry enough visibility or campaign support to enter the race seriously
+- must match category-specific identity for categories such as Animated Feature, Documentary Feature, International Feature, Original Song, and Original Score
+
+**Preference profile:**
+- critic score
+- prestige score
+- festival momentum
+- campaign spend
+- craft excellence
+- awards-friendly genre and tone
+- strong studio reputation
+
+**Gameplay effects:**
+- very large prestige gain
+- stronger talent leverage
+- improved investor and distributor confidence
+- long-tail library value increase
+- major legacy milestone tracking
+
+#### 24.7.2 Primetime Emmys
+**Best for:** prestige television drama, comedy, limited series, and TV movies.
+
+**Gameplay requirements:**
+- must be an eligible television-format project
+- must air or release in the eligible TV window
+- must fit format buckets such as drama series, comedy series, limited series, or TV movie
+- acting, writing, and directing bids should depend on episode-level strength and season-wide momentum
+
+**Preference profile:**
+- season consistency
+- critic score
+- platform strength
+- audience loyalty
+- ensemble quality
+- campaign support
+
+**Gameplay effects:**
+- improves renewal and ordering confidence
+- raises value of showrunners, TV writers, and lead casts
+- increases series library value
+- strengthens streamer or network leverage
+
+#### 24.7.3 BAFTAs
+**Best for:** prestige film and prestige television with strong craft and international resonance.
+
+**Gameplay requirements:**
+- must match film or television eligibility
+- must release within the correct timing window
+- performs best with proper awards support and strong creative identity
+
+**Preference profile:**
+- craft excellence
+- critic score
+- prestige score
+- international appeal
+- director reputation
+
+**Gameplay effects:**
+- strong international prestige bonus
+- improved overseas sales positioning
+- greater value for craft-led productions
+
+#### 24.7.4 Golden Globes
+**Best for:** star-driven prestige, accessible dramas, comedy-musicals, and glamorous, highly visible film and television projects.
+
+**Gameplay requirements:**
+- must release in-window
+- must fit correct drama, comedy, musical, or television category bucket
+- benefits from strong PR and celebrity visibility
+
+**Preference profile:**
+- star power
+- media buzz
+- critic score
+- accessibility
+- campaign charm
+- glamour factor
+
+**Gameplay effects:**
+- major PR burst
+- audience awareness boost
+- can elevate commercial projects into prestige conversation
+
+#### 24.7.5 Independent Spirit Awards
+**Best for:** indie films, lower-budget prestige projects, unconventional auteur work, and breakout debuts.
+
+**Gameplay requirements:**
+- must be a film
+- must fall under an indie budget or scale threshold in gameplay terms
+- should generally benefit from lower-budget positioning, strong critic support, and festival breakout status
+
+**Preference profile:**
+- indie credibility
+- originality
+- critic score
+- festival buzz
+- debut energy
+
+**Gameplay effects:**
+- creates a real prestige path for smaller studios
+- increases discovery value for emerging talent
+- can define the studio as an indie tastemaker
+
+#### 24.7.6 SAG Awards
+**Best for:** performance-driven projects and ensemble showcases.
+
+**Gameplay requirements:**
+- must feature standout acting metrics
+- ensemble categories require multiple strong cast performances
+- film and TV categories should be tracked separately
+
+**Preference profile:**
+- cast quality
+- ensemble chemistry
+- emotional accessibility
+- role showcase strength
+
+**Gameplay effects:**
+- raises actor quote demands
+- improves future casting leverage
+- can push momentum into Oscars and Emmys
+
+#### 24.7.7 Writers Guild Awards
+**Best for:** script- and writer-driven projects.
+
+**Gameplay requirements:**
+- requires strong writing metrics
+- should split original versus adapted for film and major format buckets for television
+
+**Preference profile:**
+- script quality
+- structure
+- dialogue
+- originality or adaptation strength
+
+**Gameplay effects:**
+- boosts writer prestige
+- raises value of writer-first projects
+- improves later top-tier awards positioning
+
+#### 24.7.8 Directors Guild Awards
+**Best for:** auteur projects and films or shows with a clear directorial signature.
+
+**Gameplay requirements:**
+- requires high directing score and project coherence
+- works especially well for prestige and visually confident projects
+
+**Preference profile:**
+- directing score
+- visual identity
+- critical acclaim
+- creative control payoff
+
+**Gameplay effects:**
+- increases director leverage in future negotiations
+- strengthens final-cut pressure from auteurs
+- raises director market price
+
+#### 24.7.9 Producers Guild Awards
+**Best for:** holistically successful projects with strong execution and awards-season professionalism.
+
+**Gameplay requirements:**
+- strong overall project package
+- disciplined campaign operation
+- broad industry respect
+
+**Preference profile:**
+- production execution
+- package quality
+- awards consistency
+- campaign professionalism
+
+**Gameplay effects:**
+- boosts studio-wide reputation
+- improves co-financing and investor confidence
+- supports Best Picture or Best Series momentum
+
+#### 24.7.10 Critics Choice Awards
+**Best for:** critic-friendly projects with enough visibility to break through.
+
+**Gameplay requirements:**
+- must release in-window on film or television side
+- best supported by strong review averages and baseline visibility
+
+**Preference profile:**
+- critic score
+- craft score
+- prestige score
+
+**Gameplay effects:**
+- early momentum support
+- improves nomination chains into larger shows
+
+#### 24.7.11 Annie Awards
+**Best for:** animated films and animated television.
+
+**Gameplay requirements:**
+- must be an animated project
+- should demonstrate strong animation craft and either family appeal or artistic distinction
+
+**Preference profile:**
+- animation quality
+- visual identity
+- family or demographic fit
+- music and voice-cast appeal
+
+**Gameplay effects:**
+- boosts animation brand value
+- supports awards runs in animation categories elsewhere
+- improves sequel and franchise confidence for animated IP
+
+#### 24.7.12 Peabody Awards
+**Best for:** culturally significant television, nonfiction, and issue-driven storytelling.
+
+**Gameplay requirements:**
+- best suited to television, documentary, or socially resonant projects
+- cultural and thematic impact should matter more than glamour
+
+**Preference profile:**
+- thematic depth
+- social resonance
+- writing quality
+- prestige seriousness
+
+**Gameplay effects:**
+- prestige gain without relying on mainstream popularity
+- strengthens the studio’s identity in serious storytelling
+
+### 24.8 Release Strategy and Eligibility Logic
+Awards should push the player to think carefully about how a project is released.
+
+The system should consider:
+
+- theatrical versus television or streaming identity
+- release quarter and late-year awards positioning
+- platform strength and campaign support
+- prestige festival premiere before general release
+- category-fit decisions for limited series versus ongoing series
+- budget bracket for indie-specific awards
+- whether the studio chooses to spend enough to be visible during awards season
+
+This should create meaningful strategic tension. A project released for pure commercial optimization may weaken its awards chances, while an awards-first release path may reduce short-term financial efficiency.
+
+### 24.9 Campaigning and Trade-Offs
+Awards campaigning should be a deliberate executive system, not an automatic bonus.
+
+The player should make choices about:
+
+- how much to spend on campaigning
+- which projects to prioritize in a crowded season
+- which categories to target aggressively
+- whether to position a title as prestige drama, crowd-pleaser, comedy, or craft play
+- whether to pull back if scandal or backlash makes a campaign risky
+
+Possible campaign outcomes include:
+
+- momentum gain
+- wasted spend
+- narrative backlash
+- category confusion
+- talent fatigue
+- improved industry goodwill
+
+### 24.10 Awards Consequences
+Awards should matter immediately, in the medium term, and over the life of the studio.
+
+#### 24.10.1 Immediate Effects
+- PR burst
+- morale increase
+- revenue or viewership bump
+- stronger sequel or spinoff confidence
+- better negotiating position on late distribution or licensing deals
+
+#### 24.10.2 Medium-Term Effects
+- talent quote inflation
+- more inbound scripts and packages
+- greater trust from agencies, investors, and co-production partners
+- stronger leverage in future financing and platform negotiations
+
+#### 24.10.3 Long-Term Effects
+- permanent studio legacy gains
+- catalog value increase
+- studio culture drift toward prestige, indie, or commercial identity
+- timeline recognition for banner titles and landmark seasons
+
+### 24.11 Snubs, Scandals, and Drama
+To preserve the emotional unpredictability of Hollywood, the awards system should also support negative and chaotic outcomes.
+
+Possible events include:
+
+- shocking snub after strong festival play
+- campaign scandal or resurfaced controversy
+- vote splitting between two titles from the same studio
+- commercial smash ignored by prestige institutions
+- over-campaigned project triggering backlash
+- actor victory inflating ego and future salary demands
+- director loss reigniting final-cut resentment on the next project
+- critics darling fading before televised awards season
+
+These outcomes should reinforce the broader design pillar that Studio Boss is a story-generating system where intersecting mechanics create memorable industry drama.
+
+### 24.12 Red Carpet and Presentation Flavor
+Awards season should be visually and tonally rewarding. Red carpet beats, acceptance speech flavor text, gossip headlines, and prestige dashboards should heighten emotion without forcing long non-interactive ceremonies.
+
+### 24.13 Summary of the Awards System
+The awards system should be understood as an annual prestige metagame in which film and television projects qualify for specific award bodies based on format, release path, scale, campaign choices, and creative profile, then compete across performance, writing, directing, craft, audience, and prestige categories. Success should reshape studio reputation, finances, talent leverage, future negotiations, and long-term legacy.
 
 ---
 
@@ -2848,3 +3715,77 @@ General reconciliation rules applied:
 Build the slate. Package the talent. Survive the quarter. Win the awards. Outlast the rivals.
 
 Studio Boss is a Hollywood studio sim about making great bets under pressure and living with the consequences.
+
+
+## Appendix C — Legacy Technical Snapshot (v7.6)
+
+The following points are preserved from the v7.6 design/delivery sync because they contain implementation-facing detail that remains useful even where the main bible already reflects the same direction:
+
+### C.1 Final Tech Stack Snapshot
+- **Language:** TypeScript
+- **Framework:** React SPA with Vite
+- **State:** Zustand with Immer
+- **Routing:** React Router
+- **Styling:** TailwindCSS + Radix UI
+- **Narrative scripting:** Ink.js
+- **Icons:** Lucide
+- **Audio:** howler.js
+- **Animation:** Framer Motion
+- **Charts:** Recharts, with targeted D3 helpers where needed
+- **Game logic:** pure TypeScript modules
+- **Parallelism:** Web Workers via Comlink
+- **Deterministic RNG:** seedrandom
+- **Validation:** Zod
+- **Persistence:** Dexie.js with versioned migrations
+- **Export/Import:** JSZip (+ pako)
+- **Offline runtime:** Vite PWA plugin
+- **Testing:** Vitest + React Testing Library
+- **Delivery:** offline macOS ZIP with one-click launcher
+
+### C.2 Why Next.js Was Removed
+- SSR and ISR add little value in an offline ZIP product.
+- Vite produces smaller bundles and simpler worker setup.
+- The packaging path for macOS builds is cleaner.
+
+### C.3 Acceptance Checklist Preserved from v7.6
+- repo/game assumes Vite-only client
+- Worker/Comlink config verified under Vite
+- PWA offline install works from ZIP
+- Dexie migration scripts scaffolded
+- docs updated and placed in `/docs/`
+
+## Appendix D — Legacy Finance UI Sketch (v4.9)
+
+This component sketch is preserved verbatim in spirit because it is a concise implementation aid for the finance screen.
+
+```
+FinancePanel
+ ├── CashflowChart (D3 stacked bars)
+ ├── CategoryHeatmap
+ ├── VarianceBars
+ ├── CategoryDrawer
+ ├── ProjectPnlModal
+ │    ├── WaterfallChart
+ │    └── Tabs [Overview | Cashflow | Contracts | Episodes]
+ └── AlertsBanner / ThresholdWatcher
+```
+
+## Appendix E — Legacy Roadmap Matrix Snapshot (v5.1)
+
+The roadmap in the main body is canonical. This appendix preserves the older A→K framing because it is still useful as a milestone compression view for planning conversations.
+
+### E.1 Sprint Compression View
+- **A:** playable core prototype
+- **B:** talent and production loop
+- **C:** finance and cash flow simulation
+- **D:** liquidity, loans, and bankruptcy
+- **E:** press, fandom, and PR dynamics
+- **F:** rival AI and industry simulation
+- **G:** culture, awards, and flavor systems
+- **H:** legacy, universes, and crossovers
+- **I:** UI/UX thematic polish
+- **J:** refactor, stabilization, and tech debt
+- **K:** gold master and epilogue
+
+### E.2 Guiding Principle Preserved
+Every sprint should ship a fully playable macOS ZIP, using “Coming Soon” placeholders only for future systems.
