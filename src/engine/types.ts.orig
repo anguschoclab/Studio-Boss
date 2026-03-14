@@ -1,12 +1,10 @@
 // Domain models for Studio Boss simulation engine
 
 export type ArchetypeKey = 'major' | 'mid-tier' | 'indie';
-export type ProjectStatus = 'development' | 'pitching' | 'production' | 'released' | 'archived';
+export type ProjectStatus = 'development' | 'production' | 'released' | 'archived';
 export type ProjectFormat = 'film' | 'tv';
 export type BudgetTierKey = 'low' | 'mid' | 'high' | 'blockbuster';
 export type HeadlineCategory = 'rival' | 'market' | 'talent' | 'awards' | 'general';
-export type TvFormatKey = 'sitcom' | 'procedural' | 'prestige_drama' | 'limited_series' | 'animated_comedy' | 'animated_prestige';
-export type ReleaseModelKey = 'weekly' | 'binge' | 'split';
 
 export interface Studio {
   name: string;
@@ -71,21 +69,6 @@ export interface Award {
   year: number;
 }
 
-
-export type ProjectContractType = 'upfront' | 'deficit';
-export type MandateType = 'sci-fi' | 'comedy' | 'drama' | 'budget_freeze' | 'broad_appeal' | 'prestige';
-
-export interface Mandate {
-  type: MandateType;
-  activeUntilWeek: number;
-}
-
-export interface Buyer {
-  id: string;
-  name: string;
-  archetype: 'network' | 'streamer' | 'premium';
-  currentMandate?: Mandate;
-}
 export interface Project {
   id: string;
   title: string;
@@ -105,13 +88,6 @@ export interface Project {
   weeklyRevenue: number;
   releaseWeek: number | null;
   awardsProfile?: AwardsProfile;
-  // TV specific fields
-  tvFormat?: TvFormatKey;
-  episodes?: number;
-  season?: number;
-  releaseModel?: ReleaseModelKey;
-  episodesReleased?: number;
-  renewable?: boolean;
 }
 
 export interface RivalStudio {
@@ -160,9 +136,6 @@ export interface GameState {
   week: number;
   cash: number;
   financeHistory: FinanceRecord[];
-  talentPool: TalentProfile[];
-  contracts: Contract[];
-  awards?: Award[];
 }
 
 export interface SaveSlotMeta {
@@ -181,13 +154,13 @@ export interface TalentProfile {
   type: 'director' | 'actor' | 'writer' | 'producer';
   prestige: number;
   fee: number;
-  draw: number;
 }
+
+
 
 export interface Contract {
   id: string;
   talentId: string;
   projectId: string;
-  fee: number;
-  backendPercent: number;
+  terms: Record<string, unknown>;
 }

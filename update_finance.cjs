@@ -1,6 +1,8 @@
-import { Project, Contract } from '../types';
+const fs = require('fs');
 
+let code = fs.readFileSync('src/engine/systems/finance.ts', 'utf-8');
 
+const calculateCosts = `
 export function calculateWeeklyCosts(projects: Project[]): number {
   return projects
     .filter(p => p.status === 'development' || p.status === 'production')
@@ -14,17 +16,10 @@ export function calculateWeeklyCosts(projects: Project[]): number {
       return sum + (p.weeklyCost * costMultiplier);
     }, 0);
 }
+`;
 
-export function calculateWeeklyRevenue(projects: Project[], contracts: Contract[] = []): number {
-  // Group contracts by projectId for O(1) lookup
-  const contractsByProject = new Map<string, Contract[]>();
-  for (const contract of contracts) {
-    if (!contractsByProject.has(contract.projectId)) {
-      contractsByProject.set(contract.projectId, []);
-    }
-    contractsByProject.get(contract.projectId)!.push(contract);
-  }
-
+const calculateRevenue = `
+export function calculateWeeklyRevenue(projects: Project[], contracts: Contract[]): number {
   return projects
     .filter(p => p.status === 'released')
     .reduce((sum, p) => {
@@ -37,9 +32,22 @@ export function calculateWeeklyRevenue(projects: Project[], contracts: Contract[
       }
 
       // Subtract backend participation
-      const projectContracts = contractsByProject.get(p.id) || [];
+      const projectContracts = contracts.filter(c => c.projectId === p.id);
       const totalBackendPercent = projectContracts.reduce((total, c) => total + c.backendPercent, 0);
       const backendCut = revenue * (totalBackendPercent / 100);
       return sum + (revenue - backendCut);
     }, 0);
 }
+`;
+
+code = code.replace(
+  /export function calculateWeeklyCosts[\s\S]*?}\n/,
+  calculateCosts
+);
+
+code = code.replace(
+  /export function calculateWeeklyRevenue[\s\S]*?}\n/,
+  calculateRevenue
+);
+
+fs.writeFileSync('src/engine/systems/finance.ts', code);
