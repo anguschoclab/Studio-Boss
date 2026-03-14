@@ -21,13 +21,21 @@
 ## Tech Stack
 
 This project is built using a modern frontend stack:
-- **Vite** - Build tool
 - **TypeScript** - Type safety
-- **React** - UI Library
-- **Zustand** - State Management
-- **React Router** - Navigation
-- **shadcn-ui** - Component Library
-- **Tailwind CSS** - Styling
+- **React + Vite** - UI Library and Build tool
+- **TanStack Router** - Navigation
+- **Zustand + Immer** - State Management
+- **Zod** - Schema validation
+- **Web Workers + Comlink** - Multithreading
+- **Dexie** - IndexedDB wrapper
+- **Tailwind CSS + Radix** - Styling and Headless UI
+- **Framer Motion** - Animations
+- **Ink.js** - Interactive narrative
+- **Lucide** - Icons
+- **howler.js** - Audio
+- **Recharts** - Charts (with visx for advanced dashboards)
+- **Vitest + React Testing Library** - Unit and Integration Testing
+- **Playwright** - End-to-End Testing
 
 ---
 

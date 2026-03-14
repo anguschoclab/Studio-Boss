@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useGameStore } from '@/store/gameStore';
@@ -22,7 +22,7 @@ const NewGame = () => {
   const handleLaunch = () => {
     if (!studioName.trim() || !selectedArchetype) return;
     newGame(studioName.trim(), selectedArchetype);
-    navigate('/dashboard');
+    navigate({ to: '/dashboard' });
   };
 
   return (
@@ -84,7 +84,7 @@ const NewGame = () => {
 
         {/* Launch */}
         <div className="flex justify-center gap-4">
-          <Button variant="outline" onClick={() => navigate('/')} className="font-display">
+          <Button variant="outline" onClick={() => navigate({ to: '/' })} className="font-display">
             Back
           </Button>
           <Button

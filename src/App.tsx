@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { RouterProvider, createRouter, createRoute, createRootRoute } from "@tanstack/react-router";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -10,19 +10,48 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
+const rootRoute = createRootRoute({
+  component: () => (
+    <>
+      <Toaster />
+      <Sonner />
+    </>
+  ),
+  notFoundComponent: () => <NotFound />
+});
+
+const indexRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/',
+  component: TitleScreen,
+});
+
+const newGameRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/new-game',
+  component: NewGame,
+});
+
+const dashboardRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/dashboard',
+  component: Dashboard,
+});
+
+const routeTree = rootRoute.addChildren([indexRoute, newGameRoute, dashboardRoute]);
+
+const router = createRouter({ routeTree });
+
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router
+  }
+}
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<TitleScreen />} />
-          <Route path="/new-game" element={<NewGame />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <RouterProvider router={router} />
     </TooltipProvider>
   </QueryClientProvider>
 );
