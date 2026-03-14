@@ -40,7 +40,7 @@ describe("saveLoad", () => {
   });
 
   it("handles malformed save data", () => {
-    localStorage.setItem("studioboss_save_1", "invalid json");
+    vi.spyOn(Storage.prototype, "getItem").mockReturnValueOnce("malformed json");
     expect(loadGame(1)).toBeNull();
   });
 
