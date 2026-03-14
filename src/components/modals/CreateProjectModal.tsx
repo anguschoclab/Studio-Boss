@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { GENRES, TARGET_AUDIENCES } from '@/engine/data/genres';
 import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
+import { generateProjectTitle } from '@/engine/generators/titles';
 import { BudgetTierKey, ProjectFormat } from '@/engine/types';
 import { formatMoney } from '@/engine/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
@@ -10,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Dices } from 'lucide-react';
 
 export const CreateProjectModal = () => {
   const { showCreateProject, closeCreateProject } = useUIStore();
@@ -21,6 +23,14 @@ export const CreateProjectModal = () => {
   const [budgetTier, setBudgetTier] = useState<BudgetTierKey>('mid');
   const [targetAudience, setTargetAudience] = useState<string>(TARGET_AUDIENCES[0]);
   const [flavor, setFlavor] = useState('');
+
+  // Auto-generate title when modal opens if title is empty
+  useEffect(() => {
+    if (showCreateProject && !title) {
+      setTitle(generateProjectTitle(genre));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showCreateProject, genre]);
 
   const tier = BUDGET_TIERS[budgetTier];
 
@@ -43,7 +53,12 @@ export const CreateProjectModal = () => {
         <div className="space-y-4">
           <div className="space-y-1.5">
             <Label className="text-xs uppercase tracking-wider">Title</Label>
-            <Input value={title} onChange={e => setTitle(e.target.value)} placeholder="Untitled Project" />
+            <div className="flex gap-2">
+              <Input value={title} onChange={e => setTitle(e.target.value)} placeholder="Untitled Project" className="flex-1" />
+              <Button type="button" variant="outline" size="icon" onClick={() => setTitle(generateProjectTitle(genre))} title="Generate Random Title">
+                <Dices className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
 
           {/* Format */}
