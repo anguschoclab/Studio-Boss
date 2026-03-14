@@ -7,12 +7,19 @@ import TitleScreen from "./pages/TitleScreen";
 import NewGame from "./pages/NewGame";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
+import { useArchetypeTheme } from "./hooks/useArchetypeTheme";
 
 const queryClient = new QueryClient();
+
+const ThemeApplier = () => {
+  useArchetypeTheme();
+  return null;
+};
 
 const rootRoute = createRootRoute({
   component: () => (
     <>
+      <ThemeApplier />
       <Toaster />
       <Sonner />
     </>
