@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { formatMoney } from '@/engine/utils';
 import { calculateWeeklyCosts, calculateWeeklyRevenue } from '@/engine/systems/finance';
@@ -10,11 +11,15 @@ export const FinancePanel = () => {
   if (!gameState) return null;
 
   const { cash, financeHistory, projects } = gameState;
-  const weeklyCosts = calculateWeeklyCosts(projects);
-  const weeklyRevenue = calculateWeeklyRevenue(projects);
-  const netDelta = weeklyRevenue - weeklyCosts;
 
-  const activeProjects = projects.filter(p => p.status === 'development' || p.status === 'production');
+  const weeklyCosts = useMemo(() => calculateWeeklyCosts(projects), [projects]);
+  const weeklyRevenue = useMemo(() => calculateWeeklyRevenue(projects), [projects]);
+  const netDelta = useMemo(() => weeklyRevenue - weeklyCosts, [weeklyRevenue, weeklyCosts]);
+
+  const activeProjects = useMemo(() =>
+    projects.filter(p => p.status === 'development' || p.status === 'production'),
+    [projects]
+  );
 
   return (
     <div className="space-y-6">
