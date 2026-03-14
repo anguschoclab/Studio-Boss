@@ -24,6 +24,7 @@ interface GameStore {
   loadFromSlot: (slot: number) => boolean;
   getSaveSlots: () => SaveSlotInfo[];
   clearGame: () => void;
+  signContract: (talentId: string, projectId: string) => void;
 }
 
 export const useGameStore = create<GameStore>((set, get) => ({
@@ -82,4 +83,30 @@ export const useGameStore = create<GameStore>((set, get) => ({
   getSaveSlots: () => getSaveSlots(),
 
   clearGame: () => set({ gameState: null }),
+
+  signContract: (talentId, projectId) => {
+    const state = get().gameState;
+    if (!state) return;
+
+    const talent = state.talentPool.find(t => t.id === talentId);
+    if (!talent) return;
+
+    if (state.cash < talent.fee) return;
+
+    const newContract = {
+      id: `contract-${crypto.randomUUID()}`,
+      talentId,
+      projectId,
+      fee: talent.fee,
+      backendPercent: talent.prestige > 80 ? 10 : 0,
+    };
+
+    set({
+      gameState: {
+        ...state,
+        cash: state.cash - talent.fee,
+        contracts: [...state.contracts, newContract],
+      },
+    });
+  },
 }));

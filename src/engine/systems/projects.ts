@@ -1,4 +1,4 @@
-import { Project } from '../types';
+import { Project, Contract, TalentProfile } from '../types';
 import { BUDGET_TIERS } from '../data/budgetTiers';
 import { clamp, randRange } from '../utils';
 
@@ -6,6 +6,8 @@ export function advanceProject(
   project: Project,
   currentWeek: number,
   studioPrestige: number,
+  projectContracts: Contract[],
+  talentPool: TalentProfile[]
 ): { project: Project; update: string | null } {
   if (project.status === 'archived') return { project, update: null };
 
@@ -25,7 +27,12 @@ export function advanceProject(
     const buzzFactor = p.buzz / 100;
     const prestigeFactor = 0.5 + studioPrestige / 200;
     const randomFactor = randRange(0.7, 1.3);
-    const totalGross = minRev + (maxRev - minRev) * buzzFactor * prestigeFactor * randomFactor;
+
+    // Talent impact
+    const attachedTalent = projectContracts.map(c => talentPool.find(t => t.id === c.talentId)).filter(t => t !== undefined) as TalentProfile[];
+    const talentDrawFactor = attachedTalent.reduce((sum, t) => sum + (t.draw / 100), 1);
+
+    const totalGross = (minRev + (maxRev - minRev) * buzzFactor * prestigeFactor * randomFactor) * talentDrawFactor;
     p.weeklyRevenue = totalGross * 0.35;
     p.revenue = 0;
     const strength = p.weeklyRevenue > totalGross * 0.25 ? 'strong' : 'modest';
@@ -41,7 +48,9 @@ export function advanceProject(
 
   // Buzz drift during active phases
   if (p.status === 'development' || p.status === 'production') {
-    p.buzz = clamp(p.buzz + randRange(-4, 6), 0, 100);
+    const attachedTalent = projectContracts.map(c => talentPool.find(t => t.id === c.talentId)).filter(t => t !== undefined) as TalentProfile[];
+    const talentBuzzBonus = attachedTalent.reduce((sum, t) => sum + (t.draw / 50), 0);
+    p.buzz = clamp(p.buzz + randRange(-4, 6) + talentBuzzBonus, 0, 100);
   }
 
   return { project: p, update };

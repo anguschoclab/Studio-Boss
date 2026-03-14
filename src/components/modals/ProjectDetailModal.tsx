@@ -3,12 +3,18 @@ import { useUIStore } from '@/store/uiStore';
 import { formatMoney } from '@/engine/utils';
 import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
 export const ProjectDetailModal = () => {
   const { selectedProjectId, selectProject } = useUIStore();
-  const projects = useGameStore(s => s.gameState?.projects || []);
+  const gameState = useGameStore(s => s.gameState);
+  const signContract = useGameStore(s => s.signContract);
+  const projects = gameState?.projects || [];
   const project = projects.find(p => p.id === selectedProjectId);
+  const talentPool = gameState?.talentPool || [];
+  const contracts = gameState?.contracts || [];
 
   if (!project) return null;
 
@@ -32,6 +38,49 @@ export const ProjectDetailModal = () => {
           {project.flavor && (
             <p className="text-sm text-muted-foreground italic">"{project.flavor}"</p>
           )}
+
+          {/* Casting Section */}
+          <div className="space-y-2 border-t border-border pt-4">
+            <h4 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Cast & Crew</h4>
+            {['director', 'actor', 'writer', 'producer'].map(role => {
+              const roleContracts = contracts.filter(c => c.projectId === project.id);
+              const roleTalentIds = roleContracts.map(c => c.talentId);
+              const attachedTalent = talentPool.filter(t => roleTalentIds.includes(t.id) && t.type === role);
+              const availableTalent = talentPool.filter(t => t.type === role && !roleTalentIds.includes(t.id));
+
+              return (
+                <div key={role} className="flex items-center justify-between text-xs p-2 bg-accent/30 rounded">
+                  <span className="capitalize w-16">{role}</span>
+                  {attachedTalent.length > 0 ? (
+                    <div className="flex flex-col gap-1 w-full max-w-[200px]">
+                      {attachedTalent.map(t => (
+                        <span key={t.id} className="text-foreground font-semibold">{t.name}</span>
+                      ))}
+                    </div>
+                  ) : project.status === 'development' ? (
+                    <Select onValueChange={(val) => {
+                      if (val && gameState && gameState.cash >= talentPool.find(t => t.id === val)!.fee) {
+                        signContract(val, project.id);
+                      }
+                    }}>
+                      <SelectTrigger className="h-6 w-[200px] text-xs">
+                        <SelectValue placeholder="Cast Role..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {availableTalent.map(t => (
+                          <SelectItem key={t.id} value={t.id} disabled={gameState ? gameState.cash < t.fee : true}>
+                            {t.name} ({formatMoney(t.fee)})
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    <span className="text-muted-foreground w-[200px] text-right">None</span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div className="p-3 rounded bg-accent/50">
