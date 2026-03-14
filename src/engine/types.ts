@@ -12,6 +12,63 @@ export interface Studio {
   prestige: number;
 }
 
+export interface AwardsProfile {
+  criticScore: number;
+  audienceScore: number;
+  prestigeScore: number;
+  craftScore: number;
+  culturalHeat: number;
+  campaignStrength: number;
+  controversyRisk: number;
+  festivalBuzz: number;
+  // Hidden values
+  academyAppeal: number;
+  guildAppeal: number;
+  populistAppeal: number;
+  indieCredibility: number;
+  industryNarrativeScore: number;
+}
+
+export type AwardBody =
+  | 'Academy Awards'
+  | 'Primetime Emmys'
+  | 'BAFTAs'
+  | 'Golden Globes'
+  | 'Independent Spirit Awards'
+  | 'SAG Awards'
+  | 'Writers Guild Awards'
+  | 'Directors Guild Awards'
+  | 'Producers Guild Awards'
+  | 'Critics Choice Awards'
+  | 'Annie Awards'
+  | 'Peabody Awards';
+
+export type AwardCategory =
+  | 'Best Picture'
+  | 'Best Series'
+  | 'Best Director'
+  | 'Best Actor'
+  | 'Best Actress'
+  | 'Best Supporting Actor'
+  | 'Best Supporting Actress'
+  | 'Best Screenplay'
+  | 'Best Ensemble'
+  | 'Best Animated Feature'
+  | 'Best Documentary'
+  | 'Special Achievement';
+
+export type AwardStatus = 'won' | 'nominated';
+
+export interface Award {
+  id: string;
+  projectId: string;
+  name: string;      // The name of the award category (e.g., "Best Picture")
+  category: string;  // Sometimes used broadly
+  body: AwardBody;   // The institution
+  status: AwardStatus;
+  year: number;
+}
+
 export interface Project {
   id: string;
   title: string;
@@ -30,6 +87,7 @@ export interface Project {
   revenue: number;
   weeklyRevenue: number;
   releaseWeek: number | null;
+  awardsProfile?: AwardsProfile;
 }
 
 export interface RivalStudio {
@@ -98,11 +156,7 @@ export interface TalentProfile {
   fee: number;
 }
 
-export interface Award {
-  id: string;
-  name: string;
-  category: string;
-}
+
 
 export interface Contract {
   id: string;
