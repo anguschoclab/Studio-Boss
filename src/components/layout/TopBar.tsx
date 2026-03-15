@@ -70,7 +70,7 @@ export const TopBar = () => {
 
       {/* Actions */}
       <div className="flex items-center gap-2">
-        <Button variant="ghost" size="sm" onClick={handleSave} title="Save Game">
+        <Button variant="ghost" size="sm" onClick={handleSave} aria-label="Save Game" title="Save Game">
           <Save className="h-4 w-4" />
         </Button>
         <Button size="sm" onClick={handleAdvanceWeek} className="font-display font-semibold gap-1.5">

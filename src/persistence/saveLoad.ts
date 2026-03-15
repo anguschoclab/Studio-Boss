@@ -3,26 +3,47 @@ import { GameState, SaveSlotMeta } from '@/engine/types';
 const SAVE_PREFIX = 'studioboss_save_';
 const SLOTS_KEY = 'studioboss_slots';
 
+function loadSaveSlots(): Record<number, SaveSlotMeta> {
+  let slots: Record<number, SaveSlotMeta> = {};
+  try {
+    const slotsData = localStorage.getItem(SLOTS_KEY);
+    if (slotsData) {
+      slots = JSON.parse(slotsData);
+    }
+  } catch (e) {
+    console.error('Failed to load save slots metadata', e);
+  }
+  return slots;
+}
+
 export function saveGame(slot: number, state: GameState): void {
-  localStorage.setItem(`${SAVE_PREFIX}${slot}`, JSON.stringify(state));
-  const slots: Record<number, SaveSlotMeta> = JSON.parse(localStorage.getItem(SLOTS_KEY) || '{}');
-  slots[slot] = {
-    slot,
-    studioName: state.studio.name,
-    archetype: state.studio.archetype,
-    week: state.week,
-    cash: state.cash,
-    timestamp: Date.now(),
-  };
-  localStorage.setItem(SLOTS_KEY, JSON.stringify(slots));
+  try {
+    localStorage.setItem(`${SAVE_PREFIX}${slot}`, JSON.stringify(state));
+
+    const slots = loadSaveSlots();
+
+    slots[slot] = {
+      slot,
+      studioName: state.studio.name,
+      archetype: state.studio.archetype,
+      week: state.week,
+      cash: state.cash,
+      timestamp: Date.now(),
+    };
+
+    localStorage.setItem(SLOTS_KEY, JSON.stringify(slots));
+  } catch (e) {
+    console.error('Failed to save game state', e);
+  }
 }
 
 export function loadGame(slot: number): GameState | null {
-  const data = localStorage.getItem(`${SAVE_PREFIX}${slot}`);
-  if (!data) return null;
   try {
+    const data = localStorage.getItem(`${SAVE_PREFIX}${slot}`);
+    if (!data) return null;
     return JSON.parse(data) as GameState;
-  } catch {
+  } catch (e) {
+    console.error('Failed to load game state', e);
     return null;
   }
 }
@@ -32,7 +53,8 @@ export interface SaveSlotInfo extends SaveSlotMeta {
 }
 
 export function getSaveSlots(): SaveSlotInfo[] {
-  const slots: Record<number, SaveSlotMeta> = JSON.parse(localStorage.getItem(SLOTS_KEY) || '{}');
+  const slots = loadSaveSlots();
+
   return [0, 1, 2].map(i => ({
     slot: i,
     exists: !!slots[i],

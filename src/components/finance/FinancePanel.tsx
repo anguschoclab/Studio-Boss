@@ -7,7 +7,6 @@ import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'rec
 
 export const FinancePanel = () => {
   const gameState = useGameStore(s => s.gameState);
-  if (!gameState) return null;
 
   const { cash, financeHistory, projects } = gameState;
 

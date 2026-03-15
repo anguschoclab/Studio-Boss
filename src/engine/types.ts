@@ -1,10 +1,12 @@
 // Domain models for Studio Boss simulation engine
 
 export type ArchetypeKey = 'major' | 'mid-tier' | 'indie';
-export type ProjectStatus = 'development' | 'production' | 'released' | 'archived';
+export type ProjectStatus = 'development' | 'pitching' | 'production' | 'released' | 'archived';
 export type ProjectFormat = 'film' | 'tv';
 export type BudgetTierKey = 'low' | 'mid' | 'high' | 'blockbuster';
 export type HeadlineCategory = 'rival' | 'market' | 'talent' | 'awards' | 'general';
+export type TvFormatKey = 'sitcom' | 'procedural' | 'prestige_drama' | 'limited_series' | 'animated_comedy' | 'animated_prestige';
+export type ReleaseModelKey = 'weekly' | 'binge' | 'split';
 
 export interface Studio {
   name: string;
@@ -12,6 +14,78 @@ export interface Studio {
   prestige: number;
 }
 
+export interface AwardsProfile {
+  criticScore: number;
+  audienceScore: number;
+  prestigeScore: number;
+  craftScore: number;
+  culturalHeat: number;
+  campaignStrength: number;
+  controversyRisk: number;
+  festivalBuzz: number;
+  // Hidden values
+  academyAppeal: number;
+  guildAppeal: number;
+  populistAppeal: number;
+  indieCredibility: number;
+  industryNarrativeScore: number;
+}
+
+export type AwardBody =
+  | 'Academy Awards'
+  | 'Primetime Emmys'
+  | 'BAFTAs'
+  | 'Golden Globes'
+  | 'Independent Spirit Awards'
+  | 'SAG Awards'
+  | 'Writers Guild Awards'
+  | 'Directors Guild Awards'
+  | 'Producers Guild Awards'
+  | 'Critics Choice Awards'
+  | 'Annie Awards'
+  | 'Peabody Awards';
+
+export type AwardCategory =
+  | 'Best Picture'
+  | 'Best Series'
+  | 'Best Director'
+  | 'Best Actor'
+  | 'Best Actress'
+  | 'Best Supporting Actor'
+  | 'Best Supporting Actress'
+  | 'Best Screenplay'
+  | 'Best Ensemble'
+  | 'Best Animated Feature'
+  | 'Best Documentary'
+  | 'Special Achievement';
+
+export type AwardStatus = 'won' | 'nominated';
+
+export interface Award {
+  id: string;
+  projectId: string;
+  name: string;      // The name of the award category (e.g., "Best Picture")
+  category: string;  // Sometimes used broadly
+  body: AwardBody;   // The institution
+  status: AwardStatus;
+  year: number;
+}
+
+
+export type ProjectContractType = 'upfront' | 'deficit';
+export type MandateType = 'sci-fi' | 'comedy' | 'drama' | 'budget_freeze' | 'broad_appeal' | 'prestige';
+
+export interface Mandate {
+  type: MandateType;
+  activeUntilWeek: number;
+}
+
+export interface Buyer {
+  id: string;
+  name: string;
+  archetype: 'network' | 'streamer' | 'premium';
+  currentMandate?: Mandate;
+}
 export interface Project {
   id: string;
   title: string;
@@ -30,6 +104,16 @@ export interface Project {
   revenue: number;
   weeklyRevenue: number;
   releaseWeek: number | null;
+  awardsProfile?: AwardsProfile;
+  // TV specific fields
+  tvFormat?: TvFormatKey;
+  episodes?: number;
+  season?: number;
+  releaseModel?: ReleaseModelKey;
+  episodesReleased?: number;
+  contractType?: ProjectContractType;
+  buyerId?: string;
+  renewable?: boolean;
 }
 
 export interface RivalStudio {
@@ -70,7 +154,30 @@ export interface WeekSummary {
   events: string[];
 }
 
+
+export type OpportunityType = 'script' | 'package' | 'pitch' | 'rights';
+export type DiscoveryOrigin = 'open_spec' | 'agency_package' | 'writer_sample' | 'heat_list' | 'annual_list' | 'passion_project';
+
+export interface Opportunity {
+  id: string;
+  type: OpportunityType;
+  title: string;
+  format: ProjectFormat;
+  genre: string;
+  budgetTier: BudgetTierKey;
+  targetAudience: string;
+  flavor: string;
+  origin: DiscoveryOrigin;
+  costToAcquire: number;
+  weeksUntilExpiry: number;
+  attachedTalentIds?: string[];
+  tvFormat?: TvFormatKey;
+  episodes?: number;
+  releaseModel?: ReleaseModelKey;
+}
+
 export interface GameState {
+  opportunities: Opportunity[];
   studio: Studio;
   projects: Project[];
   rivals: RivalStudio[];
@@ -78,6 +185,13 @@ export interface GameState {
   week: number;
   cash: number;
   financeHistory: FinanceRecord[];
+  families: Family[];
+  agencies: Agency[];
+  agents: Agent[];
+  talentPool: TalentProfile[];
+  contracts: Contract[];
+  buyers: Buyer[];
+  awards?: Award[];
 }
 
 export interface SaveSlotMeta {
@@ -89,24 +203,64 @@ export interface SaveSlotMeta {
   timestamp: number;
 }
 
+
+export type AccessLevel = 'outsider' | 'soft-access' | 'legacy' | 'dynasty' | 'comeback';
+
+export type TalentRole = 'director' | 'actor' | 'writer' | 'producer' | 'showrunner';
+export type AgencyTier = 'powerhouse' | 'major' | 'mid-tier' | 'boutique' | 'specialist';
+export type AgencyCulture = 'shark' | 'family' | 'volume' | 'prestige';
+export type AgentSpecialty = 'film_packaging' | 'tv_packaging' | 'literary' | 'talent' | 'comedy' | 'unscripted';
+
+export interface Agency {
+  id: string;
+  name: string;
+  tier: AgencyTier;
+  culture: AgencyCulture;
+  prestige: number;
+  leverage: number; // 0-100
+}
+
+export interface Agent {
+  id: string;
+  agencyId: string;
+  name: string;
+  specialty: AgentSpecialty;
+  skill: number; // 0-100
+  aggression: number; // 0-100
+}
+
+export interface Family {
+  id: string;
+  name: string;
+  recognition: number; // 0-100
+  prestigeLegacy: number; // 0-100
+  commercialLegacy: number; // 0-100
+  scandalLegacy: number; // 0-100
+  volatility: number; // 0-100
+  status: 'respected' | 'chaotic' | 'overexposed' | 'revived' | 'faded' | 'rising';
+}
+
 // Future system stubs
 export interface TalentProfile {
   id: string;
   name: string;
-  type: 'director' | 'actor' | 'writer' | 'producer';
+  roles: TalentRole[]; // Changed from type
   prestige: number;
   fee: number;
-}
-
-export interface Award {
-  id: string;
-  name: string;
-  category: string;
+  draw: number;
+  temperament: string; // Used by UI
+  // Lineage properties
+  familyId?: string;
+  accessLevel: AccessLevel;
+  // Representation
+  agencyId?: string;
+  agentId?: string;
 }
 
 export interface Contract {
   id: string;
   talentId: string;
   projectId: string;
-  terms: Record<string, unknown>;
+  fee: number;
+  backendPercent: number;
 }

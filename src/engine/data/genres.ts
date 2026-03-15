@@ -1,3 +1,9 @@
+export const UNSCRIPTED_GENRES = [
+  'Competition Reality', 'Docuseries', 'True Crime', 'Lifestyle / Makeover',
+  'Food / Travel', 'Talent Competition', 'Survival / Adventure', 'Social Experiment',
+  'Ensemble Reality', 'Game Show / Quiz', 'Talk Show'
+] as const;
+
 export const GENRES = [
   'Action', 'Comedy', 'Drama', 'Horror', 'Sci-Fi', 'Thriller',
   'Romance', 'Animation', 'Documentary', 'Fantasy', 'Crime', 'Musical',

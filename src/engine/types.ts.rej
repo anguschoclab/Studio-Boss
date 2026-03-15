@@ -1,0 +1,11 @@
+--- types.ts
++++ types.ts
+@@ -48,6 +48,8 @@
+   category: string;  // Sometimes used broadly
+   body: AwardBody;   // The institution
+   status: AwardStatus;
+   year: number;
+ }
+
++export type ProjectContractType = 'upfront' | 'deficit';
++

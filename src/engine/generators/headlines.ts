@@ -21,6 +21,10 @@ const TALENT_HEADLINES = [
   'Casting controversy sparks social media debate over upcoming tentpole',
   'Major talent agency announces restructuring amid industry shifts',
   'Acclaimed cinematographer signs exclusive deal with rival studio',
+  'Legacy child demands a rewrite to emphasize their leading role',
+  'Industry royalty family packages a prestige drama on their terms',
+  'Audiences reject transparent nepotism casting in new blockbuster',
+  'Dynasty heir throws a tantrum on set, causing production delays'
 ];
 
 const RIVAL_TEMPLATES = [
@@ -33,11 +37,9 @@ const RIVAL_TEMPLATES = [
 ];
 
 function fill(template: string, vars: Record<string, string>): string {
-  let result = template;
-  for (const [key, val] of Object.entries(vars)) {
-    result = result.split(`{${key}}`).join(val);
-  }
-  return result;
+  return template.replace(/\{([^}]+)\}/g, (match, key) => {
+    return vars[key] !== undefined ? String(vars[key]) : match;
+  });
 }
 
 let counter = 0;

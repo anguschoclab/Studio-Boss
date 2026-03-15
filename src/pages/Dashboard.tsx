@@ -3,12 +3,15 @@ import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { TopBar } from '@/components/layout/TopBar';
 import { PipelineBoard } from '@/components/pipeline/PipelineBoard';
+import { DiscoveryBoard } from '@/components/discovery/DiscoveryBoard';
 import { FinancePanel } from '@/components/finance/FinancePanel';
+import { TalentPanel } from '@/components/talent/TalentPanel';
 import { NewsFeed } from '@/components/news/NewsFeed';
 import { RivalsPanel } from '@/components/rivals/RivalsPanel';
 import { CreateProjectModal } from '@/components/modals/CreateProjectModal';
 import { WeekSummaryModal } from '@/components/modals/WeekSummaryModal';
 import { ProjectDetailModal } from '@/components/modals/ProjectDetailModal';
+import { PitchProjectModal } from '@/components/modals/PitchProjectModal';
 
 const Dashboard = () => {
   const gameState = useGameStore(s => s.gameState);
@@ -24,7 +27,7 @@ const Dashboard = () => {
         <main className="flex-1 overflow-y-auto">
           {/* Tab bar */}
           <div className="border-b border-border px-6 flex gap-1 bg-card/50">
-            {(['pipeline', 'finance'] as const).map(tab => (
+            {(['discovery', 'pipeline', 'finance', 'talent'] as const).map(tab => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -34,7 +37,7 @@ const Dashboard = () => {
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                {tab === 'pipeline' ? 'Project Slate' : 'Finances'}
+                {tab === 'discovery' ? 'Discovery' : tab === 'pipeline' ? 'Project Slate' : tab === 'finance' ? 'Finances' : 'Talent Roster'}
                 {activeTab === tab && (
                   <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />
                 )}
@@ -43,7 +46,7 @@ const Dashboard = () => {
           </div>
 
           <div className="p-6">
-            {activeTab === 'pipeline' ? <PipelineBoard /> : <FinancePanel />}
+            {activeTab === 'discovery' ? <DiscoveryBoard /> : activeTab === 'pipeline' ? <PipelineBoard /> : activeTab === 'finance' ? <FinancePanel /> : <TalentPanel />}
           </div>
         </main>
 
@@ -60,6 +63,7 @@ const Dashboard = () => {
       <CreateProjectModal />
       <WeekSummaryModal />
       <ProjectDetailModal />
+      <PitchProjectModal />
     </div>
   );
 };
