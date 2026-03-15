@@ -29,19 +29,19 @@ describe('talent generator', () => {
     it('assigns multiple roles occasionally (multi-hyphenates)', () => {
         // Mock random to guarantee a secondary role
         vi.spyOn(Math, 'random').mockReturnValue(0.1);
-
+        
         const pool = generateTalentPool(1, [], [], []);
         expect(pool[0].roles.length).toBeGreaterThan(0);
-
+        
         vi.restoreAllMocks();
     });
 
     it('assigns nepo babies to families', () => {
         const families: Family[] = [{ id: 'fam-1', name: 'Coppola', recognition: 90, prestigeLegacy: 90, commercialLegacy: 90, scandalLegacy: 10, volatility: 10, status: 'respected' }];
-
+        
         // Mock random so they are guaranteed to be nepo
-        vi.spyOn(Math, 'random').mockReturnValue(0.1);
-
+        vi.spyOn(Math, 'random').mockReturnValue(0.1); 
+        
         const pool = generateTalentPool(1, families, [], []);
         expect(pool[0].familyId).toBe('fam-1');
         expect(pool[0].accessLevel).toBe('dynasty');
@@ -58,10 +58,10 @@ describe('talent generator', () => {
         ];
 
         // Mock random to guarantee they get an agent
-        vi.spyOn(Math, 'random').mockReturnValue(0.5);
+        vi.spyOn(Math, 'random').mockReturnValue(0.5); 
 
         const pool = generateTalentPool(10, [], agents, agencies);
-
+        
         // 80% should have representation, mocked at 0.5 < 0.8
         const assigned = pool.filter(t => t.agencyId === 'ag-1');
         expect(assigned.length).toBeGreaterThan(0);

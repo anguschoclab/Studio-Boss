@@ -30,7 +30,7 @@ describe('agencies generator', () => {
       const agents = generateAgents(agencies, 2);
       // powerhouse gets countPerAgency * 2 = 4 agents each
       expect(agents).toHaveLength(8);
-
+      
       const agencyId1 = agencies[0].id;
       const agency1Agents = agents.filter(a => a.agencyId === agencyId1);
       expect(agency1Agents).toHaveLength(4);
@@ -40,7 +40,7 @@ describe('agencies generator', () => {
       const agencies = generateAgencies(1);
       agencies[0].culture = 'shark';
       const agents = generateAgents(agencies, 1);
-
+      
       for (const agent of agents) {
         expect(agent.aggression).toBeGreaterThanOrEqual(70);
       }
