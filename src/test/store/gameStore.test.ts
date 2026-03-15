@@ -1,9 +1,8 @@
-import { mock } from "bun:test";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { useGameStore } from "../../store/gameStore";
-import { GameState } from "../../engine/types";
-import { saveGame, loadGame, getSaveSlots } from "../../persistence/saveLoad";
-import { initializeGame } from "../../engine/core/gameInit";
+
+
+
 import * as saveLoad from "../../persistence/saveLoad";
 
 // Mock saveLoad
@@ -13,7 +12,7 @@ vi.mock("../../persistence/saveLoad", () => ({
     if (slot === 1) return { studio: { name: "Loaded Studio" } };
     return null;
   }),
-  getSaveSlots: mock(() => [{ exists: true }]),
+  getSaveSlots: vi.fn(() => [{ exists: true }]),
 }));
 
 Object.defineProperty(global, 'crypto', {
@@ -69,7 +68,7 @@ describe("gameStore", () => {
     useGameStore.getState().newGame("My Studio", "major");
     useGameStore.getState().createProject({
       title: "Test Project",
-      format: "Film",
+      format: "film",
       genre: "Comedy",
       budgetTier: "low",
       targetAudience: "All",
@@ -84,7 +83,7 @@ describe("gameStore", () => {
   it("handles creating project when no game state exists", () => {
     useGameStore.getState().createProject({
       title: "Test Project",
-      format: "Film",
+      format: "film",
       genre: "Comedy",
       budgetTier: "low",
       targetAudience: "All",
@@ -121,7 +120,7 @@ describe("gameStore", () => {
     state.cash = 1000;
     state.contracts = [];
     state.talentPool = [
-      { id: "t1", name: "Star", role: "actor", skill: 90, prestige: 85, draw: 80, fee: 500, projects: [], history: [] }
+      { id: "t1", name: "Star", type: "actor", prestige: 85, draw: 80, fee: 500, accessLevel: "outsider", temperament: "normal" }
     ];
     useGameStore.setState({ gameState: state });
 
@@ -142,7 +141,7 @@ describe("gameStore", () => {
     state.cash = 100; // Not enough for fee of 500
     state.contracts = [];
     state.talentPool = [
-      { id: "t1", name: "Star", role: "actor", skill: 90, prestige: 85, draw: 80, fee: 500, projects: [], history: [] }
+      { id: "t1", name: "Star", type: "actor", prestige: 85, draw: 80, fee: 500, accessLevel: "outsider", temperament: "normal" }
     ];
     useGameStore.setState({ gameState: state });
 

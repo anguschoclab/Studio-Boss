@@ -31,7 +31,7 @@ describe("awards system", () => {
     it("should generate a profile with all scores between 0 and 100", () => {
       const profile = generateAwardsProfile(mockProject);
 
-      Object.entries(profile).forEach(([key, value]) => {
+      Object.entries(profile).forEach(([, value]) => {
         expect(value).toBeGreaterThanOrEqual(0);
         expect(value).toBeLessThanOrEqual(100);
       });
@@ -83,7 +83,9 @@ describe("awards system", () => {
       financeHistory: [],
       talentPool: [],
       contracts: [],
-      awards: []
+      awards: [],
+    buyers: [],
+    families: []
     };
 
     const eligibleProject: Project = {

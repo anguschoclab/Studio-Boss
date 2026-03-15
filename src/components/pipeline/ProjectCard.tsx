@@ -4,6 +4,7 @@ import { formatMoney } from '@/engine/utils';
 import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
 import { TV_FORMATS } from '@/engine/data/tvFormats';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 
 interface ProjectCardProps {
   project: Project;

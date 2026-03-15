@@ -2,14 +2,14 @@ import { create } from 'zustand';
 import { WeekSummary } from '@/engine/types';
 
 interface UIStore {
-  activeTab: 'pipeline' | 'finance';
+  activeTab: 'pipeline' | 'finance' | 'talent';
   showCreateProject: boolean;
   showPitchProject: boolean;
   pitchingProjectId: string | null;
   showWeekSummary: boolean;
   weekSummary: WeekSummary | null;
   selectedProjectId: string | null;
-  setActiveTab: (tab: 'pipeline' | 'finance') => void;
+  setActiveTab: (tab: 'pipeline' | 'finance' | 'talent') => void;
   openCreateProject: () => void;
   closeCreateProject: () => void;
   openPitchProject: (projectId: string) => void;
