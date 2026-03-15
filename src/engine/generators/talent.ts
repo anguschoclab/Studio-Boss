@@ -61,7 +61,7 @@ export function generateTalentPool(size: number, families: Family[], agents: Age
     const isNepo = Math.random() < 0.2 && families.length > 0; // 20% chance to be from a family
     let familyId: string | undefined = undefined;
     let lastName: string;
-    let accessLevel: AccessLevel = 'outsider';
+    let accessLevel: AccessLevel;
 
     if (isNepo) {
       const family = pick(families);
