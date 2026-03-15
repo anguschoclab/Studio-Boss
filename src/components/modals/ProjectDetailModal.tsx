@@ -56,11 +56,25 @@ export const ProjectDetailModal = () => {
           {/* Casting Section */}
           <div className="space-y-2 border-t border-border pt-4">
             <h4 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Cast & Crew</h4>
-            {['director', 'actor', 'writer', 'producer'].map(role => {
-              const roleContracts = contracts.filter(c => c.projectId === project.id);
-              const roleTalentIds = roleContracts.map(c => c.talentId);
-              const attachedTalent = talentPool.filter(t => roleTalentIds.includes(t.id) && t.roles.includes(role as import('@/engine/types').TalentRole));
-              const availableTalent = talentPool.filter(t => t.roles.includes(role as import('@/engine/types').TalentRole) && !roleTalentIds.includes(t.id));
+            {(() => {
+              const projectContracts = contracts.filter(c => c.projectId === project.id);
+              const projectTalentIds = new Set(projectContracts.map(c => c.talentId));
+
+              return ['director', 'actor', 'writer', 'producer'].map(role => {
+                const roleEnum = role as import('@/engine/types').TalentRole;
+                const attachedTalent = [];
+                const availableTalent = [];
+
+                for (const t of talentPool) {
+                  if (t.roles.includes(roleEnum)) {
+                    if (projectTalentIds.has(t.id)) {
+                      attachedTalent.push(t);
+                    } else {
+                      availableTalent.push(t);
+                    }
+                  }
+                }
+
 
               return (
                 <div key={role} className="flex items-center justify-between text-xs p-2 bg-accent/30 rounded">
@@ -93,7 +107,7 @@ export const ProjectDetailModal = () => {
                   )}
                 </div>
               );
-            })}
+            })})()}
           </div>
 
           <div className="grid grid-cols-2 gap-3">

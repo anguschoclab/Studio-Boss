@@ -10,7 +10,9 @@ export const TalentPanel = () => {
   const agencies = useMemo(() => state?.agencies || [], [state?.agencies]);
   const [filter, setFilter] = useState<string>('all');
 
-  const filteredTalent = talentPool.filter(t => filter === 'all' || t.roles.includes(filter as import('@/engine/types').TalentRole));
+  const filteredTalent = useMemo(() => {
+    return talentPool.filter(t => filter === 'all' || t.roles.includes(filter as import('@/engine/types').TalentRole));
+  }, [talentPool, filter]);
 
   return (
     <div className="space-y-4 h-full flex flex-col">

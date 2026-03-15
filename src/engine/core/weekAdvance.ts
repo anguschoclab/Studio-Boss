@@ -84,9 +84,13 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
 
 
   // Update opportunities
-  const updatedOpportunities = state.opportunities
-    .map(opp => ({ ...opp, weeksUntilExpiry: opp.weeksUntilExpiry - 1 }))
-    .filter(opp => opp.weeksUntilExpiry > 0);
+  const updatedOpportunities = state.opportunities.reduce((acc, opp) => {
+    const weeksUntilExpiry = opp.weeksUntilExpiry - 1;
+    if (weeksUntilExpiry > 0) {
+      acc.push({ ...opp, weeksUntilExpiry });
+    }
+    return acc;
+  }, [] as typeof state.opportunities);
 
   // Maybe spawn a new opportunity
   if (Math.random() < 0.3) {
