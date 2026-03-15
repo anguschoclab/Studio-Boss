@@ -2,9 +2,8 @@ import { Project, Contract } from '../types';
 
 
 export function calculateWeeklyCosts(projects: Project[]): number {
-  return projects
-    .filter(p => p.status === 'development' || p.status === 'production')
-    .reduce((sum, p) => {
+  return projects.reduce((sum, p) => {
+    if (p.status === 'development' || p.status === 'production') {
       let costMultiplier = 1;
       if (p.status === 'production' && p.contractType === 'upfront') {
          costMultiplier = 0; // The network/streamer is paying for the production entirely
@@ -12,7 +11,9 @@ export function calculateWeeklyCosts(projects: Project[]): number {
          costMultiplier = 0.3; // Studio pays 30% to retain backend rights
       }
       return sum + (p.weeklyCost * costMultiplier);
-    }, 0);
+    }
+    return sum;
+  }, 0);
 }
 
 export function calculateWeeklyRevenue(projects: Project[], contracts: Contract[] = []): number {
@@ -25,9 +26,8 @@ export function calculateWeeklyRevenue(projects: Project[], contracts: Contract[
     contractsByProject.get(contract.projectId)!.push(contract);
   }
 
-  return projects
-    .filter(p => p.status === 'released')
-    .reduce((sum, p) => {
+  return projects.reduce((sum, p) => {
+    if (p.status === 'released') {
       let revenue = p.weeklyRevenue;
 
       if (p.contractType === 'upfront') {
@@ -41,5 +41,7 @@ export function calculateWeeklyRevenue(projects: Project[], contracts: Contract[
       const totalBackendPercent = projectContracts.reduce((total, c) => total + c.backendPercent, 0);
       const backendCut = revenue * (totalBackendPercent / 100);
       return sum + (revenue - backendCut);
-    }, 0);
+    }
+    return sum;
+  }, 0);
 }
