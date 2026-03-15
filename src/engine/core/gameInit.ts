@@ -2,6 +2,7 @@ import { GameState, ArchetypeKey, RivalStudio } from '../types';
 import { ARCHETYPES } from '../data/archetypes';
 import { generateStudioName, generateMotto } from '../generators/names';
 import { generateFamilies, generateTalentPool } from '../generators/talent';
+import { generateAgencies, generateAgents } from '../generators/agencies';
 import { pick, randRange } from '../utils';
 import { generateOpportunity } from '../generators/opportunities';
 
@@ -28,8 +29,10 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
     };
   });
 
+  const agencies = generateAgencies(5);
+  const agents = generateAgents(agencies, 4);
   const families = generateFamilies(5);
-  const talentPool = generateTalentPool(50, families);
+  const talentPool = generateTalentPool(50, families, agents, agencies);
 
   return {
     studio: { name: studioName, archetype, prestige: arch.startingPrestige },
