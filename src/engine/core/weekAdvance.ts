@@ -84,18 +84,19 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
     events.push(pick(EVENT_POOL));
   }
 
-    // Awards logic (Week 52)
-  let prestigeChange = 0;
-  let newAwards: Award[] = [];
-  if (nextWeek % 52 === 0) {
-    const year = Math.floor(nextWeek / 52);
-    events.push(`Year ${year} Awards Ceremony!`);
+    // Run any awards ceremonies scheduled for this week
+  const year = Math.floor(nextWeek / 52) + 1; // 1-indexed year
+  const ceremonyResult = runAwardsCeremony(state, nextWeek, year);
 
-    const ceremonyResult = runAwardsCeremony(state, year);
+  const newAwards = ceremonyResult.newAwards;
+  const prestigeChange = ceremonyResult.prestigeChange;
 
-    newAwards = ceremonyResult.newAwards;
-    prestigeChange = ceremonyResult.prestigeChange;
+  if (newAwards.length > 0) {
     projectUpdates.push(...ceremonyResult.projectUpdates);
+
+    // Check which bodies fired to announce it
+    const uniqueBodies = [...new Set(newAwards.map(a => a.body))];
+    events.push(`The ${uniqueBodies.join(' and ')} took place this week!`);
   }
 
   const newState: GameState = {
@@ -105,6 +106,7 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
     studio: { ...state.studio, prestige: state.studio.prestige + prestigeChange },
     projects: updatedProjects,
     buyers: updatedBuyers,
+    talentPool: Array.from(talentPoolMap.values()),
     rivals: updatedRivals,
     awards: [...(state.awards || []), ...newAwards],
     headlines: [...formattedBuyerHeadlines, ...newHeadlines, ...state.headlines].slice(0, 50),
@@ -127,4 +129,24 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
   };
 
   return { newState, summary };
+}
+
+function handleAwardsCeremony(state: GameState, nextWeek: number) {
+  let prestigeChange = 0;
+  let newAwards: Award[] = [];
+  const events: string[] = [];
+  const projectUpdates: string[] = [];
+
+  if (nextWeek % 52 === 0) {
+    const year = Math.floor(nextWeek / 52);
+    events.push(`Year ${year} Awards Ceremony!`);
+
+    const ceremonyResult = runAwardsCeremony(state, year);
+
+    newAwards = ceremonyResult.newAwards;
+    prestigeChange = ceremonyResult.prestigeChange;
+    projectUpdates.push(...ceremonyResult.projectUpdates);
+  }
+
+  return { prestigeChange, newAwards, events, projectUpdates };
 }

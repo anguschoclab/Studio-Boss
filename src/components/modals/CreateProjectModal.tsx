@@ -15,7 +15,8 @@ import { Slider } from '@/components/ui/slider';
 
 export const CreateProjectModal = () => {
   const { showCreateProject, closeCreateProject } = useUIStore();
-  const { createProject } = useGameStore();
+  const { createProject, gameState } = useGameStore();
+  const [selectedTalent, setSelectedTalent] = useState<string[]>([]);
 
   const [title, setTitle] = useState('');
   const [format, setFormat] = useState<ProjectFormat>('film');
@@ -40,6 +41,12 @@ export const CreateProjectModal = () => {
   let calculatedDevWeeks = tier.developmentWeeks;
   let calculatedProdWeeks = tier.productionWeeks;
   let calculatedBudget = tier.budget;
+  const talentPool = gameState?.talentPool || [];
+  const talentFees = selectedTalent.reduce((sum, id) => {
+    const t = talentPool.find(t => t.id === id);
+    return sum + (t?.fee || 0);
+  }, 0);
+
 
   if (format === 'tv') {
       const tvData = TV_FORMATS[tvFormat];
@@ -53,14 +60,15 @@ export const CreateProjectModal = () => {
     if (!title.trim()) return;
 
     if (format === 'tv') {
-        createProject({ title: title.trim(), format, genre, budgetTier, targetAudience, flavor, tvFormat, episodes, releaseModel });
+        createProject({ title: title.trim(), format, genre, budgetTier, targetAudience, flavor, tvFormat, episodes, releaseModel, attachedTalentIds: selectedTalent });
     } else {
-        createProject({ title: title.trim(), format, genre, budgetTier, targetAudience, flavor });
+        createProject({ title: title.trim(), format, genre, budgetTier, targetAudience, flavor, attachedTalentIds: selectedTalent });
     }
 
     closeCreateProject();
     setTitle('');
     setFlavor('');
+    setSelectedTalent([]);
   };
 
   return (
@@ -166,7 +174,9 @@ export const CreateProjectModal = () => {
             </Select>
             <p className="text-[10px] text-muted-foreground bg-muted p-2 rounded">
               Est. Weekly Cost: {formatMoney(calculatedWeeklyCost)}<br />
-              Est. Total Budget: {formatMoney(calculatedBudget)}<br />
+              Est. Base Budget: {formatMoney(calculatedBudget)}<br />
+              Talent Fees: {formatMoney(talentFees)}<br />
+              Est. Total Budget: {formatMoney(calculatedBudget + talentFees)}<br />
               Schedule: Dev {calculatedDevWeeks}wk / Prod {calculatedProdWeeks}wk
             </p>
           </div>
@@ -181,6 +191,31 @@ export const CreateProjectModal = () => {
               </SelectContent>
             </Select>
           </div>
+
+
+          {/* Talent Selection */}
+          <div className="space-y-1.5">
+            <Label className="text-xs uppercase tracking-wider">Attach Talent</Label>
+            <div className="max-h-40 overflow-y-auto space-y-1 border rounded p-2">
+              {talentPool.map(t => (
+                <div key={t.id} className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id={t.id}
+                    checked={selectedTalent.includes(t.id)}
+                    onChange={(e) => {
+                      if (e.target.checked) setSelectedTalent([...selectedTalent, t.id]);
+                      else setSelectedTalent(selectedTalent.filter(id => id !== t.id));
+                    }}
+                  />
+                  <Label htmlFor={t.id} className="text-sm cursor-pointer flex-1">
+                    {t.name} ({t.type}) - {formatMoney(t.fee)}
+                  </Label>
+                </div>
+              ))}
+            </div>
+          </div>
+
 
           {/* Flavor */}
           <div className="space-y-1.5">

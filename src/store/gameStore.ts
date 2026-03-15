@@ -15,6 +15,7 @@ interface CreateProjectParams {
   budgetTier: BudgetTierKey;
   targetAudience: string;
   flavor: string;
+  attachedTalentIds?: string[];
   tvFormat?: TvFormatKey;
   episodes?: number;
   releaseModel?: ReleaseModelKey;
@@ -32,6 +33,30 @@ interface GameStore {
   clearGame: () => void;
   signContract: (talentId: string, projectId: string) => void;
   pitchProject: (projectId: string, buyerId: string, contractType: ProjectContractType) => boolean;
+}
+
+
+function getFilmStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS]) {
+  return {
+    budget: tier.budget,
+    weeklyCost: tier.weeklyCost,
+    developmentWeeks: tier.developmentWeeks,
+    productionWeeks: tier.productionWeeks,
+    renewable: false,
+  };
+}
+
+function getTvStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS], tvFormatData: typeof TV_FORMATS[keyof typeof TV_FORMATS], episodes: number) {
+  const weeklyCost = tier.weeklyCost * tvFormatData.productionCostMultiplier;
+  const productionWeeks = Math.ceil(episodes * tvFormatData.productionWeeksPerEpisode);
+
+  return {
+    weeklyCost,
+    productionWeeks,
+    developmentWeeks: Math.ceil(tier.developmentWeeks * tvFormatData.developmentWeeksModifier),
+    budget: weeklyCost * productionWeeks + (tier.budget * 0.2), // Rough budget estimate
+    renewable: tvFormatData.renewable,
+  };
 }
 
 export const useGameStore = create<GameStore>((set, get) => ({
@@ -57,25 +82,35 @@ export const useGameStore = create<GameStore>((set, get) => ({
     if (!state) return;
     const tier = BUDGET_TIERS[params.budgetTier];
 
-    let budget = tier.budget;
-    let weeklyCost = tier.weeklyCost;
-    let developmentWeeks = tier.developmentWeeks;
-    let productionWeeks = tier.productionWeeks;
-    let renewable = false;
+    const stats = params.format === 'tv' && params.tvFormat && params.episodes
+      ? getTvStats(tier, TV_FORMATS[params.tvFormat], params.episodes)
+      : getFilmStats(tier);
 
-    if (params.format === 'tv' && params.tvFormat && params.episodes) {
-      const tvFormatData = TV_FORMATS[params.tvFormat];
-      weeklyCost = tier.weeklyCost * tvFormatData.productionCostMultiplier;
-      developmentWeeks = Math.ceil(tier.developmentWeeks * tvFormatData.developmentWeeksModifier);
-      productionWeeks = Math.ceil(params.episodes * tvFormatData.productionWeeksPerEpisode);
-      budget = weeklyCost * productionWeeks + (tier.budget * 0.2); // Rough budget estimate
-      renewable = tvFormatData.renewable;
-    }
+    const { budget, weeklyCost, developmentWeeks, productionWeeks, renewable } = stats;
+
+    // Calculate talent costs
+    const attachedTalentIds = params.attachedTalentIds || [];
+    const attachedTalent = attachedTalentIds
+      .map(id => state.talentPool.find(t => t.id === id))
+      .filter(t => t !== undefined);
+
+    const talentFees = attachedTalent.reduce((sum, t) => sum + (t?.fee || 0), 0);
+    const totalBudget = budget + talentFees;
+
+    const projectId = crypto.randomUUID();
+
+    const newContracts = attachedTalent.map(t => ({
+      id: `contract-${crypto.randomUUID()}`,
+      talentId: t.id,
+      projectId,
+      fee: t.fee,
+      backendPercent: t.prestige > 80 ? 10 : 0,
+    }));
 
     const project = {
-      id: crypto.randomUUID(),
+      id: projectId,
       ...params,
-      budget,
+      budget: totalBudget,
       weeklyCost,
       status: 'development' as const,
       buzz: Math.floor(randRange(30, 70)),
@@ -90,7 +125,14 @@ export const useGameStore = create<GameStore>((set, get) => ({
       renewable,
     };
 
-    set({ gameState: { ...state, projects: [...state.projects, project] } });
+    set({
+      gameState: {
+        ...state,
+        projects: [...state.projects, project],
+        contracts: [...state.contracts, ...newContracts],
+        cash: state.cash - talentFees // Deduct upfront talent fees immediately
+      }
+    });
   },
 
   renewProject: (id: string) => {
