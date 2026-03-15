@@ -195,5 +195,112 @@ describe("awards system", () => {
       expect(result.newAwards.some(a => a.body === "Primetime Emmys")).toBe(true);
       expect(result.newAwards.some(a => a.body === "Academy Awards")).toBe(false);
     });
+    it("should award the highest scoring project when multiple are eligible", () => {
+      const losingProject = {
+        ...eligibleProject,
+        id: "proj-loser",
+        title: "Runner Up",
+        awardsProfile: {
+          ...eligibleProject.awardsProfile!,
+          academyAppeal: 50,
+          prestigeScore: 50,
+          industryNarrativeScore: 50,
+        }
+      };
+
+      const winningProject = {
+        ...eligibleProject,
+        id: "proj-winner",
+        title: "The Champion",
+        awardsProfile: {
+          ...eligibleProject.awardsProfile!,
+          academyAppeal: 100,
+          prestigeScore: 100,
+          industryNarrativeScore: 100,
+        }
+      };
+
+      const state = { ...mockState, projects: [losingProject, winningProject] };
+      const result = runAwardsCeremony(state, 2024);
+
+      const bestPictureAwards = result.newAwards.filter(a => a.category === "Best Picture" && a.body === "Academy Awards");
+      // One winner
+      expect(bestPictureAwards.find(a => a.status === "won")?.projectId).toBe("proj-winner");
+      // The loser might get a nomination depending on the threshold
+      expect(bestPictureAwards.find(a => a.status === "nominated")).toBeUndefined();
+    });
+    it("should exclude projects that are not released or archived", () => {
+      const inDevProject = {
+        ...eligibleProject,
+        id: "proj-dev",
+        status: "development" as const,
+      };
+
+      const inProdProject = {
+        ...eligibleProject,
+        id: "proj-prod",
+        status: "production" as const,
+      };
+
+      const state = { ...mockState, projects: [inDevProject, inProdProject] };
+      const result = runAwardsCeremony(state, 2024);
+
+      expect(result.newAwards).toHaveLength(0);
+      expect(result.prestigeChange).toBe(0);
+    });
+
+    it("should include projects that are archived and within the 52 week window", () => {
+      const archivedProject = {
+        ...eligibleProject,
+        id: "proj-archived",
+        status: "archived" as const,
+      };
+
+      const state = { ...mockState, projects: [archivedProject] };
+      const result = runAwardsCeremony(state, 2024);
+
+      expect(result.newAwards.length).toBeGreaterThan(0);
+    });
+    it("should allow a project with high campaignStrength to win against an identical project with low campaignStrength", () => {
+      const lowCampaignProject = {
+        ...eligibleProject,
+        id: "proj-low-camp",
+        title: "Low Campaign",
+        awardsProfile: {
+          ...eligibleProject.awardsProfile!,
+          campaignStrength: 0,
+        }
+      };
+
+      const highCampaignProject = {
+        ...eligibleProject,
+        id: "proj-high-camp",
+        title: "High Campaign",
+        awardsProfile: {
+          ...eligibleProject.awardsProfile!,
+          campaignStrength: 50,
+        }
+      };
+
+      const state = { ...mockState, projects: [lowCampaignProject, highCampaignProject] };
+      const result = runAwardsCeremony(state, 2024);
+
+      const bestPictureAwards = result.newAwards.filter(a => a.category === "Best Picture" && a.body === "Academy Awards");
+      // The high campaign project should win due to the boost
+      expect(bestPictureAwards.find(a => a.status === "won")?.projectId).toBe("proj-high-camp");
+    });
+
+    it("should exclude projects that do not have an awardsProfile", () => {
+      const noProfileProject = {
+        ...eligibleProject,
+        id: "proj-no-profile",
+        awardsProfile: undefined,
+      };
+
+      const state = { ...mockState, projects: [noProfileProject] };
+      const result = runAwardsCeremony(state, 2024);
+
+      expect(result.newAwards).toHaveLength(0);
+    });
   });
 });
