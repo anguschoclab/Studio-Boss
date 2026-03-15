@@ -6,6 +6,7 @@ import { updateBuyers } from '../systems/buyers';
 import { generateHeadlines } from '../generators/headlines';
 import { generateAwardsProfile, runAwardsCeremony } from '../systems/awards';
 import { pick } from '../utils';
+import { generateOpportunity } from '../generators/opportunities';
 
 const EVENT_POOL = [
   'Market analysts upgrade entertainment sector outlook.',
@@ -88,7 +89,21 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
   const year = Math.floor(nextWeek / 52) + 1; // 1-indexed year
   const ceremonyResult = runAwardsCeremony(state, nextWeek, year);
 
+
+  // Update opportunities
+  const updatedOpportunities = state.opportunities
+    .map(opp => ({ ...opp, weeksUntilExpiry: opp.weeksUntilExpiry - 1 }))
+    .filter(opp => opp.weeksUntilExpiry > 0);
+
+  // Maybe spawn a new opportunity
+  if (Math.random() < 0.3) {
+    const newOpp = generateOpportunity(state.talentPool.map(t => t.id));
+    updatedOpportunities.push(newOpp);
+    events.push(`A new ${newOpp.genre} ${newOpp.type} just hit the market: "${newOpp.title}"`);
+  }
+
   const newAwards = ceremonyResult.newAwards;
+
   const prestigeChange = ceremonyResult.prestigeChange;
 
   if (newAwards.length > 0) {
@@ -103,6 +118,7 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
     ...state,
     week: nextWeek,
     cash: newCash,
+    opportunities: updatedOpportunities,
     studio: { ...state.studio, prestige: state.studio.prestige + prestigeChange },
     projects: updatedProjects,
     buyers: updatedBuyers,

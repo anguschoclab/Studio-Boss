@@ -3,6 +3,7 @@ import { ARCHETYPES } from '../data/archetypes';
 import { generateStudioName, generateMotto } from '../generators/names';
 import { generateFamilies, generateTalentPool } from '../generators/talent';
 import { pick, randRange } from '../utils';
+import { generateOpportunity } from '../generators/opportunities';
 
 export function initializeGame(studioName: string, archetype: ArchetypeKey): GameState {
   const arch = ARCHETYPES[archetype];
@@ -46,6 +47,7 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
     cash: arch.startingCash,
     financeHistory: [{ week: 1, cash: arch.startingCash, revenue: 0, costs: 0 }],
     families,
+    opportunities: Array.from({ length: 4 }, () => generateOpportunity(talentPool.map(t => t.id))),
     talentPool,
     contracts: [],
     awards: [],
