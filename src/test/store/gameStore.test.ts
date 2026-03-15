@@ -6,10 +6,10 @@ import { saveGame, loadGame, getSaveSlots } from "../../persistence/saveLoad";
 import { initializeGame } from "../../engine/core/gameInit";
 import * as saveLoad from "../../persistence/saveLoad";
 
-// Mock saveLoad and crypto
-mock.module("../../persistence/saveLoad", () => ({
-  saveGame: mock(),
-  loadGame: mock((slot) => {
+// Mock saveLoad
+vi.mock("../../persistence/saveLoad", () => ({
+  saveGame: vi.fn(),
+  loadGame: vi.fn((slot) => {
     if (slot === 1) return { studio: { name: "Loaded Studio" } };
     return null;
   }),
@@ -43,7 +43,7 @@ describe("gameStore", () => {
     const state = useGameStore.getState().gameState;
     expect(state).not.toBeNull();
     expect(state?.studio.name).toBe("My Studio");
-    expect(saveGameMock).toHaveBeenCalledWith(0, state);
+    expect(saveLoad.saveGame).toHaveBeenCalledWith(0, state);
   });
 
   it("advances week", () => {
@@ -58,7 +58,7 @@ describe("gameStore", () => {
     const summary = useGameStore.getState().doAdvanceWeek();
     expect(summary.fromWeek).toBe(1);
     expect(useGameStore.getState().gameState?.week).toBe(2);
-    expect(saveGameMock).toHaveBeenCalledTimes(2); // once in newGame, once in advanceWeek
+    expect(saveLoad.saveGame).toHaveBeenCalledTimes(2); // once in newGame, once in advanceWeek
   });
 
   it("throws when advancing without game state", () => {
@@ -96,7 +96,7 @@ describe("gameStore", () => {
   it("saves to slot", () => {
     useGameStore.getState().newGame("My Studio", "major");
     useGameStore.getState().saveToSlot(1);
-    expect(saveGameMock).toHaveBeenCalledWith(1, useGameStore.getState().gameState);
+    expect(saveLoad.saveGame).toHaveBeenCalledWith(1, useGameStore.getState().gameState);
   });
 
   it("loads from slot", () => {
