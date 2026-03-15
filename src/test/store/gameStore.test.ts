@@ -1,4 +1,3 @@
-import { mock } from "bun:test";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { useGameStore } from "../../store/gameStore";
 import { GameState } from "../../engine/types";
@@ -13,7 +12,7 @@ vi.mock("../../persistence/saveLoad", () => ({
     if (slot === 1) return { studio: { name: "Loaded Studio" } };
     return null;
   }),
-  getSaveSlots: mock(() => [{ exists: true }]),
+  getSaveSlots: vi.fn(() => [{ exists: true }]),
 }));
 
 Object.defineProperty(global, 'crypto', {

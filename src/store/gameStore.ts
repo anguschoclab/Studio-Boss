@@ -33,6 +33,30 @@ interface GameStore {
   pitchProject: (projectId: string, buyerId: string, contractType: ProjectContractType) => boolean;
 }
 
+
+function getFilmStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS]) {
+  return {
+    budget: tier.budget,
+    weeklyCost: tier.weeklyCost,
+    developmentWeeks: tier.developmentWeeks,
+    productionWeeks: tier.productionWeeks,
+    renewable: false,
+  };
+}
+
+function getTvStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS], tvFormatData: typeof TV_FORMATS[keyof typeof TV_FORMATS], episodes: number) {
+  const weeklyCost = tier.weeklyCost * tvFormatData.productionCostMultiplier;
+  const productionWeeks = Math.ceil(episodes * tvFormatData.productionWeeksPerEpisode);
+
+  return {
+    weeklyCost,
+    productionWeeks,
+    developmentWeeks: Math.ceil(tier.developmentWeeks * tvFormatData.developmentWeeksModifier),
+    budget: weeklyCost * productionWeeks + (tier.budget * 0.2), // Rough budget estimate
+    renewable: tvFormatData.renewable,
+  };
+}
+
 export const useGameStore = create<GameStore>((set, get) => ({
   gameState: null,
 
@@ -56,20 +80,11 @@ export const useGameStore = create<GameStore>((set, get) => ({
     if (!state) return;
     const tier = BUDGET_TIERS[params.budgetTier];
 
-    let budget = tier.budget;
-    let weeklyCost = tier.weeklyCost;
-    let developmentWeeks = tier.developmentWeeks;
-    let productionWeeks = tier.productionWeeks;
-    let renewable = false;
+    const stats = params.format === 'tv' && params.tvFormat && params.episodes
+      ? getTvStats(tier, TV_FORMATS[params.tvFormat], params.episodes)
+      : getFilmStats(tier);
 
-    if (params.format === 'tv' && params.tvFormat && params.episodes) {
-      const tvFormatData = TV_FORMATS[params.tvFormat];
-      weeklyCost = tier.weeklyCost * tvFormatData.productionCostMultiplier;
-      developmentWeeks = Math.ceil(tier.developmentWeeks * tvFormatData.developmentWeeksModifier);
-      productionWeeks = Math.ceil(params.episodes * tvFormatData.productionWeeksPerEpisode);
-      budget = weeklyCost * productionWeeks + (tier.budget * 0.2); // Rough budget estimate
-      renewable = tvFormatData.renewable;
-    }
+    const { budget, weeklyCost, developmentWeeks, productionWeeks, renewable } = stats;
 
     const project = {
       id: crypto.randomUUID(),
