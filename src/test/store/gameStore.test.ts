@@ -112,17 +112,19 @@ describe("gameStore", () => {
     expect(slots).toHaveLength(1);
   });
 
-  it("signs a contract if sufficient funds", () => {
+  const setupSignContractState = (initialCash: number) => {
     useGameStore.getState().newGame("My Studio", "major");
-
-    // Setup state for contract signing
     const state = useGameStore.getState().gameState!;
-    state.cash = 1000;
+    state.cash = initialCash;
     state.contracts = [];
     state.talentPool = [
       { id: "t1", name: "Star", type: "actor", prestige: 85, draw: 80, fee: 500, accessLevel: "outsider", temperament: "normal" }
     ];
     useGameStore.setState({ gameState: state });
+  };
+
+  it("signs a contract if sufficient funds", () => {
+    setupSignContractState(1000);
 
     useGameStore.getState().signContract("t1", "p1");
 
@@ -134,16 +136,7 @@ describe("gameStore", () => {
   });
 
   it("fails to sign contract if insufficient funds", () => {
-    useGameStore.getState().newGame("My Studio", "major");
-
-    // Setup state for contract signing
-    const state = useGameStore.getState().gameState!;
-    state.cash = 100; // Not enough for fee of 500
-    state.contracts = [];
-    state.talentPool = [
-      { id: "t1", name: "Star", type: "actor", prestige: 85, draw: 80, fee: 500, accessLevel: "outsider", temperament: "normal" }
-    ];
-    useGameStore.setState({ gameState: state });
+    setupSignContractState(100); // Not enough for fee of 500
 
     useGameStore.getState().signContract("t1", "p1");
 

@@ -39,7 +39,7 @@ const MOTTOS = [
   'Worlds without end'
 ];
 
-const MALE_FIRST_NAMES = [
+export const MALE_FIRST_NAMES = [
   'James', 'John', 'Robert', 'Michael', 'William', 'David', 'Richard', 'Joseph',
   'Thomas', 'Charles', 'Christopher', 'Daniel', 'Matthew', 'Anthony', 'Mark',
   'Donald', 'Steven', 'Paul', 'Andrew', 'Joshua', 'Kenneth', 'Kevin', 'Brian',
@@ -55,7 +55,7 @@ const MALE_FIRST_NAMES = [
   'Louis', 'Philip', 'Bobby', 'Johnny', 'Bradley'
 ];
 
-const FEMALE_FIRST_NAMES = [
+export const FEMALE_FIRST_NAMES = [
   'Mary', 'Patricia', 'Linda', 'Barbara', 'Elizabeth', 'Jennifer', 'Maria', 'Susan',
   'Margaret', 'Dorothy', 'Lisa', 'Nancy', 'Karen', 'Betty', 'Helen', 'Sandra',
   'Donna', 'Carol', 'Ruth', 'Sharon', 'Michelle', 'Laura', 'Sarah', 'Kimberly',
@@ -71,7 +71,7 @@ const FEMALE_FIRST_NAMES = [
   'Lillian', 'Emily', 'Robin'
 ];
 
-const LAST_NAMES = [
+export const LAST_NAMES = [
   'Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis',
   'Rodriguez', 'Martinez', 'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson',
   'Thomas', 'Taylor', 'Moore', 'Jackson', 'Martin', 'Lee', 'Perez', 'Thompson',

@@ -123,30 +123,35 @@ describe("awards system", () => {
       }
     };
 
-    it("should not return awards if no projects are eligible", () => {
-      const state = { ...mockState, projects: [] };
+    const expectNoAwards = (projects: typeof eligibleProject[]) => {
+      const state = { ...mockState, projects };
       const result = runAwardsCeremony(state, 62, 2024);
       expect(result.newAwards).toHaveLength(0);
       expect(result.prestigeChange).toBe(0);
+    };
+
+    it("should not return awards if no projects are eligible", () => {
+      expectNoAwards([]);
     });
 
     it("should exclude projects released more than 52 weeks ago", () => {
       const oldProject = { ...eligibleProject, releaseWeek: 5 }; // 62 - 5 = 57 weeks ago
-      const state = { ...mockState, projects: [oldProject] };
-      const result = runAwardsCeremony(state, 62, 2024);
-      expect(result.newAwards).toHaveLength(0);
+      expectNoAwards([oldProject]);
     });
+
+    const checkBestPictureAward = (project: typeof eligibleProject, expectedStatus: 'won' | 'nominated') => {
+      const state = { ...mockState, projects: [project] };
+      const result = runAwardsCeremony(state, 62, 2024);
+      const bestPictureAward = result.newAwards.find(a => a.category === "Best Picture" && a.body === "Academy Awards");
+      expect(bestPictureAward).toBeDefined();
+      expect(bestPictureAward?.status).toBe(expectedStatus);
+      expect(result.projectUpdates.some(u => u.includes(`${expectedStatus === 'won' ? 'won' : 'nominated for'} Best Picture`))).toBe(true);
+    };
 
     it("should award 'won' status for high scores (> 150)", () => {
       // Academy Awards Best Picture: academyAppeal (90) + prestigeScore (85) + narrative (80*0.5) = 90 + 85 + 40 = 215
       // 215 * (1 + 20/100) = 215 * 1.2 = 258
-      const state = { ...mockState, projects: [eligibleProject] };
-      const result = runAwardsCeremony(state, 62, 2024);
-
-      const bestPictureAward = result.newAwards.find(a => a.category === "Best Picture" && a.body === "Academy Awards");
-      expect(bestPictureAward).toBeDefined();
-      expect(bestPictureAward?.status).toBe("won");
-      expect(result.projectUpdates.some(u => u.includes("won Best Picture"))).toBe(true);
+      checkBestPictureAward(eligibleProject, 'won');
     });
 
     it("should award 'nominated' status for medium scores (> 100)", () => {
@@ -166,13 +171,7 @@ describe("awards system", () => {
       modestProject.awardsProfile.prestigeScore = 50;
       // Score: 50 + 50 + 20 = 120
 
-      const state = { ...mockState, projects: [modestProject] };
-      const result = runAwardsCeremony(state, 62, 2024);
-
-      const bestPictureAward = result.newAwards.find(a => a.category === "Best Picture" && a.body === "Academy Awards");
-      expect(bestPictureAward).toBeDefined();
-      expect(bestPictureAward?.status).toBe("nominated");
-      expect(result.projectUpdates.some(u => u.includes("nominated for Best Picture"))).toBe(true);
+      checkBestPictureAward(modestProject, 'nominated');
     });
 
     it("should correctly accumulate prestige change", () => {
