@@ -106,6 +106,7 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
     studio: { ...state.studio, prestige: state.studio.prestige + prestigeChange },
     projects: updatedProjects,
     buyers: updatedBuyers,
+    talentPool: Array.from(talentPoolMap.values()),
     rivals: updatedRivals,
     awards: [...(state.awards || []), ...newAwards],
     headlines: [...formattedBuyerHeadlines, ...newHeadlines, ...state.headlines].slice(0, 50),

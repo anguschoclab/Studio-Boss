@@ -14,6 +14,7 @@ interface CreateProjectParams {
   budgetTier: BudgetTierKey;
   targetAudience: string;
   flavor: string;
+  attachedTalentIds?: string[];
   tvFormat?: TvFormatKey;
   episodes?: number;
   releaseModel?: ReleaseModelKey;
@@ -86,10 +87,29 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
     const { budget, weeklyCost, developmentWeeks, productionWeeks, renewable } = stats;
 
+    // Calculate talent costs
+    const attachedTalentIds = params.attachedTalentIds || [];
+    const attachedTalent = attachedTalentIds
+      .map(id => state.talentPool.find(t => t.id === id))
+      .filter(t => t !== undefined);
+
+    const talentFees = attachedTalent.reduce((sum, t) => sum + (t?.fee || 0), 0);
+    const totalBudget = budget + talentFees;
+
+    const projectId = crypto.randomUUID();
+
+    const newContracts = attachedTalent.map(t => ({
+      id: `contract-${crypto.randomUUID()}`,
+      talentId: t.id,
+      projectId,
+      fee: t.fee,
+      backendPercent: t.prestige > 80 ? 10 : 0,
+    }));
+
     const project = {
-      id: crypto.randomUUID(),
+      id: projectId,
       ...params,
-      budget,
+      budget: totalBudget,
       weeklyCost,
       status: 'development' as const,
       buzz: Math.floor(randRange(30, 70)),
@@ -104,7 +124,14 @@ export const useGameStore = create<GameStore>((set, get) => ({
       renewable,
     };
 
-    set({ gameState: { ...state, projects: [...state.projects, project] } });
+    set({
+      gameState: {
+        ...state,
+        projects: [...state.projects, project],
+        contracts: [...state.contracts, ...newContracts],
+        cash: state.cash - talentFees // Deduct upfront talent fees immediately
+      }
+    });
   },
 
   renewProject: (id: string) => {

@@ -81,7 +81,7 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
       if (formatFilter === 'both' || p.format === formatFilter) {
         acc.push({
           project: p,
-          score: evaluator(p) * (1 + (p.awardsProfile?.campaignStrength || 0) / 100) // Campaign boosts score
+          score: evaluator(p) * (1 + (p.awardsProfile?.campaignStrength || 0) / 100)
         });
       }
       return acc;
