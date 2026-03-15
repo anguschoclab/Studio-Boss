@@ -1,7 +1,6 @@
 import { Opportunity, BudgetTierKey, TvFormatKey } from '../types';
 import { GENRES, TARGET_AUDIENCES } from '../data/genres';
 import { randRange, pick } from '../utils';
-import { generateHeadlineContent } from './headlines'; // Reuse some generation logic if needed, or build new one
 
 const PROJECT_ADJECTIVES = [
   'Dark', 'Neon', 'Silent', 'Golden', 'Lost', 'Forgotten', 'Broken', 'Hidden',

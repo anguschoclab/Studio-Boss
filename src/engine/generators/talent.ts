@@ -1,4 +1,4 @@
-import { TalentProfile, Family, AccessLevel } from '../types';
+import { TalentProfile, Family, AccessLevel, TalentRole, Agent, Agency } from '../types';
 import { pick, randRange } from '../utils';
 
 const FIRST_NAMES = [
@@ -24,7 +24,7 @@ const FAMOUS_LAST_NAMES = [
 
 const TEMPERAMENTS = ['Professional', 'Diva', 'Method', 'Collaborative', 'Volatile', 'Perfectionist', 'Reliable', 'Difficult'];
 
-const TALENT_TYPES: Array<'director' | 'actor' | 'writer' | 'producer'> = ['director', 'actor', 'writer', 'producer'];
+const TALENT_TYPES: Array<TalentRole> = ['director', 'actor', 'writer', 'producer', 'showrunner'];
 
 export function generateFamilies(count: number): Family[] {
   const families: Family[] = [];
@@ -54,7 +54,7 @@ export function generateFamilies(count: number): Family[] {
   return families;
 }
 
-export function generateTalentPool(size: number, families: Family[]): TalentProfile[] {
+export function generateTalentPool(size: number, families: Family[], agents: Agent[], agencies: Agency[]): TalentProfile[] {
   const pool: TalentProfile[] = [];
 
   for (let i = 0; i < size; i++) {
@@ -78,13 +78,42 @@ export function generateTalentPool(size: number, families: Family[]): TalentProf
     }
 
     const firstName = pick(FIRST_NAMES);
-    const type = pick(TALENT_TYPES);
+    const primaryRole = pick(TALENT_TYPES);
+    const roles: TalentRole[] = [primaryRole];
+
+    // Add secondary roles for multi-hyphenates (20% chance)
+    if (Math.random() < 0.2) {
+      if (primaryRole === 'actor') roles.push('producer');
+      else if (primaryRole === 'writer') roles.push(pick(['director', 'producer', 'showrunner']));
+      else if (primaryRole === 'director') roles.push('producer');
+      else if (primaryRole === 'showrunner') roles.push('writer');
+    }
+
+    // Deduplicate
+    const uniqueRoles = Array.from(new Set(roles));
 
     // Nepo babies get a slight bump in starting draw/prestige, but might have higher fee or volatility
     const nepoBump = isNepo ? 10 : 0;
     const prestige = Math.floor(randRange(10, 80)) + nepoBump;
     const draw = Math.floor(randRange(10, 80)) + nepoBump;
     const fee = Math.floor(randRange(100000, 5000000)) + (isNepo ? 500000 : 0);
+
+    // Assign Representation
+    let assignedAgentId: string | undefined = undefined;
+    let assignedAgencyId: string | undefined = undefined;
+
+    if (agents.length > 0 && Math.random() < 0.8) { // 80% have representation
+      // Powerhouses take top talent
+      const targetAgent = agents.find(a => {
+         const agency = agencies.find(ag => ag.id === a.agencyId);
+         if (agency?.tier === 'powerhouse') return prestige > 70;
+         if (agency?.tier === 'major') return prestige > 50;
+         return true; // boutique/mid-tier take anyone
+      }) || pick(agents);
+
+      assignedAgentId = targetAgent.id;
+      assignedAgencyId = targetAgent.agencyId;
+    }
 
     let temperament = pick(TEMPERAMENTS);
     if (isNepo && Math.random() < 0.3) {
@@ -94,7 +123,9 @@ export function generateTalentPool(size: number, families: Family[]): TalentProf
     pool.push({
       id: `talent-${crypto.randomUUID()}`,
       name: `${firstName} ${lastName}`,
-      type,
+      roles: uniqueRoles,
+      agencyId: assignedAgencyId,
+      agentId: assignedAgentId,
       prestige: Math.min(100, prestige),
       fee,
       draw: Math.min(100, draw),
