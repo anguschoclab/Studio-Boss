@@ -27,8 +27,16 @@ export const PipelineBoard = () => {
       </div>
 
       <div className="grid grid-cols-4 gap-4">
-        {COLUMNS.map(col => {
-          const colProjects = projects.filter(p => col.status.includes(p.status));
+        {(() => {
+          const projectsByStatus = new Map<ProjectStatus, typeof projects>();
+          for (const project of projects) {
+            const list = projectsByStatus.get(project.status) || [];
+            list.push(project);
+            projectsByStatus.set(project.status, list);
+          }
+
+          return COLUMNS.map(col => {
+            const colProjects = col.status.flatMap(status => projectsByStatus.get(status) || []);
           return (
             <div key={col.title} className="space-y-3">
               {/* Column Header */}
@@ -56,7 +64,8 @@ export const PipelineBoard = () => {
               </div>
             </div>
           );
-        })}
+        });
+        })()}
       </div>
     </div>
   );

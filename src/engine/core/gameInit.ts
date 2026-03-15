@@ -53,6 +53,11 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
     opportunities: Array.from({ length: 4 }, () => generateOpportunity(talentPool.map(t => t.id))),
     talentPool,
     contracts: [],
+    buyers: [
+      { id: 'b1', name: 'Global Network', archetype: 'network' },
+      { id: 'b2', name: 'Prestige TV', archetype: 'premium' },
+      { id: 'b3', name: 'StreamMax', archetype: 'streamer' }
+    ],
     awards: [],
   };
 }

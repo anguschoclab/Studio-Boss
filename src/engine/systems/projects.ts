@@ -1,6 +1,7 @@
 import { Project, Contract, TalentProfile } from '../types';
 import { BUDGET_TIERS } from '../data/budgetTiers';
 import { TV_FORMATS } from '../data/tvFormats';
+import { UNSCRIPTED_FORMATS } from '../data/unscriptedFormats';
 import { clamp, randRange } from '../utils';
 
 function getAttachedTalent(contracts: Contract[], talentPoolMap: Map<string, TalentProfile>): TalentProfile[] {
@@ -24,7 +25,7 @@ export function advanceProject(
   let update: string | null = null;
 
   if (p.status === 'development' && p.weeksInPhase >= p.developmentWeeks) {
-    if (p.format === 'tv') {
+    if (p.format === 'tv' || p.format === 'unscripted') {
       p.status = 'pitching';
       p.weeksInPhase = 0;
       update = `"${p.title}" is ready to be pitched to networks/streamers.`;
@@ -51,12 +52,12 @@ export function advanceProject(
 
     const baseGross = (minRev + (maxRev - minRev) * buzzFactor * prestigeFactor * randomFactor) * talentDrawFactor;
 
-    if (p.format === 'tv' && p.tvFormat) {
-      // TV Release logic
+    if ((p.format === 'tv' && p.tvFormat) || (p.format === 'unscripted' && p.unscriptedFormat)) {
+      // Episodic Release logic
       p.episodesReleased = 0;
 
-      const tvFormatData = TV_FORMATS[p.tvFormat];
-      const eps = p.episodes || tvFormatData.defaultEpisodes;
+      const formatData = p.format === 'tv' ? TV_FORMATS[p.tvFormat!] : UNSCRIPTED_FORMATS[p.unscriptedFormat!];
+      const eps = p.episodes || formatData.defaultEpisodes;
       const episodeMultiplier = Math.sqrt(eps / 10); // More episodes = more total revenue, but diminishing returns
 
       const totalTvGross = baseGross * episodeMultiplier;
@@ -84,12 +85,12 @@ export function advanceProject(
   } else if (p.status === 'released') {
     p.revenue += p.weeklyRevenue;
 
-    if (p.format === 'tv' && p.tvFormat) {
-      const tvFormatData = TV_FORMATS[p.tvFormat];
-      const eps = p.episodes || tvFormatData.defaultEpisodes;
+    if ((p.format === 'tv' && p.tvFormat) || (p.format === 'unscripted' && p.unscriptedFormat)) {
+      const formatData = p.format === 'tv' ? TV_FORMATS[p.tvFormat!] : UNSCRIPTED_FORMATS[p.unscriptedFormat!];
+      const eps = p.episodes || formatData.defaultEpisodes;
 
       if (p.releaseModel === 'binge') {
-        p.weeklyRevenue *= randRange(tvFormatData.revenueDecayBinge - 0.1, tvFormatData.revenueDecayBinge + 0.1);
+        p.weeklyRevenue *= randRange(formatData.revenueDecayBinge - 0.1, formatData.revenueDecayBinge + 0.1);
 
         if (p.weeklyRevenue < 50_000 || p.weeksInPhase > 8) {
            p.status = 'archived';
@@ -105,7 +106,7 @@ export function advanceProject(
           p.weeklyRevenue *= 2.5; // Spike for part 2
           update = `"${p.title}" Season ${p.season} Part 2 drops!`;
         } else if (p.weeksInPhase > part2DropWeek) {
-          p.weeklyRevenue *= randRange(tvFormatData.revenueDecayBinge - 0.1, tvFormatData.revenueDecayBinge + 0.1);
+          p.weeklyRevenue *= randRange(formatData.revenueDecayBinge - 0.1, formatData.revenueDecayBinge + 0.1);
         } else {
            p.weeklyRevenue *= randRange(0.6, 0.8); // decay between parts
         }
@@ -120,7 +121,7 @@ export function advanceProject(
         if (p.episodesReleased !== undefined && p.episodesReleased < eps) {
            p.episodesReleased += 1;
            // Maintain steady revenue, maybe slight decay or slight boost
-           p.weeklyRevenue *= randRange(tvFormatData.revenueDecayWeekly - 0.05, tvFormatData.revenueDecayWeekly + 0.05);
+           p.weeklyRevenue *= randRange(formatData.revenueDecayWeekly - 0.05, formatData.revenueDecayWeekly + 0.05);
 
            if (p.episodesReleased === eps) {
               update = `"${p.title}" Season ${p.season} airs its finale!`;
@@ -141,7 +142,7 @@ export function advanceProject(
       p.weeklyRevenue *= randRange(0.5, 0.7);
       if (p.weeklyRevenue < 100_000 || p.weeksInPhase > 12) {
         p.status = 'archived';
-        update = `"${p.title}" completes its run — total gross: $${(p.revenue / 1_000_000).toFixed(1)}M`;
+        update = `"${p.title}" completes its run — total gross: ${(p.revenue / 1_000_000).toFixed(1)}M`;
       }
     }
   }
@@ -155,6 +156,7 @@ export function advanceProject(
 
   return { project: p, update };
 }
+
 
 
 function updateTalentStats(project: Project, contracts: Contract[], talentPoolMap: Map<string, TalentProfile>) {

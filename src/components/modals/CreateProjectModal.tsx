@@ -1,17 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
-import { GENRES, TARGET_AUDIENCES } from '@/engine/data/genres';
+import { GENRES, TARGET_AUDIENCES, UNSCRIPTED_GENRES } from '@/engine/data/genres';
 import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
-import { TV_FORMATS } from '@/engine/data/tvFormats';
-import { BudgetTierKey, ProjectFormat, TvFormatKey, ReleaseModelKey } from '@/engine/types';
+import { generateProjectTitle } from '@/engine/generators/titles';
+import { BudgetTierKey, ProjectFormat } from '@/engine/types';
 import { formatMoney } from '@/engine/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Slider } from '@/components/ui/slider';
+import { Dices } from 'lucide-react';
 
 export const CreateProjectModal = () => {
   const { showCreateProject, closeCreateProject } = useUIStore();
@@ -25,16 +25,13 @@ export const CreateProjectModal = () => {
   const [targetAudience, setTargetAudience] = useState<string>(TARGET_AUDIENCES[0]);
   const [flavor, setFlavor] = useState('');
 
-  const [tvFormat, setTvFormat] = useState<TvFormatKey>('procedural');
-  const [episodes, setEpisodes] = useState<number>(TV_FORMATS['procedural'].defaultEpisodes);
-  const [releaseModel, setReleaseModel] = useState<ReleaseModelKey>('weekly');
-
+  // Auto-generate title when modal opens if title is empty
   useEffect(() => {
-    if (format === 'tv') {
-      const defaultEps = TV_FORMATS[tvFormat].defaultEpisodes;
-      setEpisodes(defaultEps);
+    if (showCreateProject && !title) {
+      setTitle(generateProjectTitle(genre));
     }
-  }, [tvFormat, format]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showCreateProject, genre]);
 
   const tier = BUDGET_TIERS[budgetTier];
   let calculatedWeeklyCost = tier.weeklyCost;
@@ -54,6 +51,12 @@ export const CreateProjectModal = () => {
       calculatedDevWeeks = Math.ceil(tier.developmentWeeks * tvData.developmentWeeksModifier);
       calculatedProdWeeks = Math.ceil(episodes * tvData.productionWeeksPerEpisode);
       calculatedBudget = calculatedWeeklyCost * calculatedProdWeeks + (tier.budget * 0.2);
+  } else if (format === 'unscripted') {
+      const uData = UNSCRIPTED_FORMATS[unscriptedFormat];
+      calculatedWeeklyCost = tier.weeklyCost * uData.productionCostMultiplier;
+      calculatedDevWeeks = Math.ceil(tier.developmentWeeks * uData.developmentWeeksModifier);
+      calculatedProdWeeks = Math.ceil(episodes * uData.productionWeeksPerEpisode);
+      calculatedBudget = calculatedWeeklyCost * calculatedProdWeeks + (tier.budget * 0.1);
   }
 
   const handleCreate = () => {
@@ -61,6 +64,8 @@ export const CreateProjectModal = () => {
 
     if (format === 'tv') {
         createProject({ title: title.trim(), format, genre, budgetTier, targetAudience, flavor, tvFormat, episodes, releaseModel, attachedTalentIds: selectedTalent });
+    } else if (format === 'unscripted') {
+        createProject({ title: title.trim(), format, genre, budgetTier, targetAudience, flavor, unscriptedFormat, episodes, releaseModel, attachedTalentIds: selectedTalent });
     } else {
         createProject({ title: title.trim(), format, genre, budgetTier, targetAudience, flavor, attachedTalentIds: selectedTalent });
     }
@@ -82,14 +87,19 @@ export const CreateProjectModal = () => {
         <div className="space-y-4">
           <div className="space-y-1.5">
             <Label className="text-xs uppercase tracking-wider">Title</Label>
-            <Input value={title} onChange={e => setTitle(e.target.value)} placeholder="Untitled Project" />
+            <div className="flex gap-2">
+              <Input value={title} onChange={e => setTitle(e.target.value)} placeholder="Untitled Project" className="flex-1" />
+              <Button type="button" variant="outline" size="icon" onClick={() => setTitle(generateProjectTitle(genre))} title="Generate Random Title">
+                <Dices className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
 
           {/* Format */}
           <div className="space-y-1.5">
             <Label className="text-xs uppercase tracking-wider">Format</Label>
             <div className="flex gap-2">
-              {(['film', 'tv'] as const).map(f => (
+              {(['film', 'tv', 'unscripted'] as const).map(f => (
                 <Button
                   key={f}
                   type="button"
@@ -98,15 +108,15 @@ export const CreateProjectModal = () => {
                   onClick={() => setFormat(f)}
                   className="flex-1 font-display"
                 >
-                  {f === 'film' ? 'Film' : 'TV Series'}
+                  {f === 'film' ? 'Film' : f === 'tv' ? 'TV Series' : 'Unscripted'}
                 </Button>
               ))}
             </div>
           </div>
 
-          {format === 'tv' && (
+          {(format === 'tv' || format === 'unscripted') && (
             <>
-              {/* TV Format */}
+              {format === 'tv' ? (
               <div className="space-y-1.5">
                 <Label className="text-xs uppercase tracking-wider">TV Format</Label>
                 <Select value={tvFormat} onValueChange={(v) => setTvFormat(v as TvFormatKey)}>
@@ -120,14 +130,29 @@ export const CreateProjectModal = () => {
                   </SelectContent>
                 </Select>
               </div>
+              ) : (
+              <div className="space-y-1.5">
+                <Label className="text-xs uppercase tracking-wider">Unscripted Format</Label>
+                <Select value={unscriptedFormat} onValueChange={(v) => setUnscriptedFormat(v as UnscriptedFormatKey)}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {Object.values(UNSCRIPTED_FORMATS).map(t => (
+                      <SelectItem key={t.key} value={t.key}>
+                        {t.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              )}
 
               {/* Episodes */}
               <div className="space-y-1.5">
                 <Label className="text-xs uppercase tracking-wider">Episodes: {episodes}</Label>
                 <Slider
                     value={[episodes]}
-                    min={TV_FORMATS[tvFormat].minEpisodes}
-                    max={TV_FORMATS[tvFormat].maxEpisodes}
+                    min={format === 'tv' ? TV_FORMATS[tvFormat].minEpisodes : UNSCRIPTED_FORMATS[unscriptedFormat].minEpisodes}
+                    max={format === 'tv' ? TV_FORMATS[tvFormat].maxEpisodes : UNSCRIPTED_FORMATS[unscriptedFormat].maxEpisodes}
                     step={1}
                     onValueChange={(val) => setEpisodes(val[0])}
                 />
@@ -154,7 +179,9 @@ export const CreateProjectModal = () => {
             <Select value={genre} onValueChange={setGenre}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                {GENRES.map(g => <SelectItem key={g} value={g}>{g}</SelectItem>)}
+                {format === 'unscripted'
+                  ? UNSCRIPTED_GENRES.map(g => <SelectItem key={g} value={g}>{g}</SelectItem>)
+                  : GENRES.map(g => <SelectItem key={g} value={g}>{g}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>
