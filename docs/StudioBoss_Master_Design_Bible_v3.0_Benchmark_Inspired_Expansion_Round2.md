@@ -1,6 +1,6 @@
 # Studio Boss — Master Design Bible
 
-**Version:** Master Draft 1.4 / Unified Non-Lossy v2.7  
+**Version:** Master Draft 1.4 / Unified Non-Lossy v3.0  
 **Status:** Living Design Document  
 **Project:** Studio Boss  
 **Genre:** Single-player Hollywood studio management simulation  
@@ -8944,3 +8944,2469 @@ Potential expansions later:
 
 ### 34.35 Canonical Design Rule
 **Studio Boss uses a unified NPC AI framework to power talent, agencies, studios, streamers, executives, and other industry entities. Each major entity has motivations, personality, memory, relationships, lifecycles, rivalry logic, and adaptive strategy. The result is a living single-player Hollywood ecosystem with believable behavior, emergent conflict, constant talent churn, and strong replayability.**
+
+
+## 35. Production Roles, Role Counts, Script Drafting, Talent Age Curves, and Awards-Driven Salary Escalation
+
+### 35.1 System Purpose
+This system formalizes how a project determines **which roles exist**, **how many performers and creative leads are needed**, **how those needs are inferred from script and genre**, and **how those role requirements feed directly into development, packaging, greenlight readiness, and budget forecasting**.
+
+It also expands the talent economy with:
+
+- screenplay **multi-draft development** and approval gates
+- **script doctors** and emergency rewrite specialists
+- explicit ability to hire talent as **writer** and/or **director**
+- age-driven **Sex Appeal** shifts at milestone decades
+- hidden or masked attributes for talent under age 18
+- salary sorting and quote comparison improvements
+- awards-prestige-based salary inflation for winners and nominees
+
+The design goal is to make pre-production feel like real Hollywood package building without forcing the player to manually fill dozens of meaningless slots.
+
+### 35.2 Core Principle
+A project should not ask the player to invent cast size from scratch. Instead, every project generates a **Role Map** from three sources:
+
+1. **Format and Genre Template**
+2. **Script Draft Analysis**
+3. **Ambition Layer** such as prestige, commercial scale, franchise intent, and budget band
+
+The Role Map then determines:
+
+- mandatory creative hires
+- recommended creative hires
+- minimum cast count
+- ideal cast count
+- optional flavor or prestige roles
+- salary pressure bands
+- packaging leverage points
+- greenlight confidence
+
+### 35.3 Production Role Framework
+Every project should organize roles into five broad buckets.
+
+#### 35.3.1 Core Creative Leadership
+Common slots include:
+
+- writer
+- director
+- producer
+- executive producer
+- showrunner for scripted TV
+- creator for TV when distinct from writer
+- pilot director for TV when distinct from ongoing producing director
+
+These roles influence script quality, package value, tone coherence, schedule control, and note resistance.
+
+#### 35.3.2 Principal On-Screen Cast
+These are the most market-facing performance roles.
+
+Common role classes include:
+
+- lead
+- co-lead
+- ensemble lead
+- primary antagonist
+- romantic lead / love interest
+- key supporting
+- secondary supporting
+- comic relief
+- mentor / authority figure
+- guest star
+- cameo prestige role
+- child lead / teen lead / child supporting
+
+#### 35.3.3 Voice and Performance Capture Roles
+These are especially important in animation and some VFX-heavy projects.
+
+Common classes include:
+
+- lead voice role
+- ensemble voice role
+- narrator
+- creature / specialty voice
+- celebrity stunt voice role
+- motion capture lead
+- motion capture supporting
+- singing voice when distinct from speaking voice
+
+#### 35.3.4 TV-Specific Staffing Roles
+Television should require additional role logic beyond film.
+
+Common classes include:
+
+- creator
+- lead writer / pilot writer
+- showrunner
+- co-showrunner
+- head of room
+- upper-level writer(s)
+- staff writers
+- episodic directors / block directors
+- series regular cast
+- recurring cast
+- guest cast
+
+This extends the existing TV leadership model and showrunner importance already established elsewhere in the bible. fileciteturn6file2 fileciteturn6file7
+
+#### 35.3.5 Prestige and Specialist Optional Roles
+Some projects may optionally benefit from specialist attachments.
+
+Examples include:
+
+- script doctor
+- prestige narrator
+- awards magnet supporting role
+- music-driven celebrity cameo
+- authenticity consultant
+- dialect-heavy featured player
+- stunt-heavy action specialist performer
+- voice star for animation marketing
+
+### 35.4 Role Count Generation: The Role Map
+Every script or concept should generate a **Role Map** with counts rather than fixed names.
+
+The game should present role counts using three levels:
+
+- **Minimum Required** — must be filled to move forward
+- **Recommended Package** — strongly improves greenlight confidence or performance odds
+- **Expanded / Luxury** — optional roles that raise quality, prestige, or commercial upside
+
+A Role Map should be expressed in a compact executive style such as:
+
+- 1 lead
+- 1 co-lead or romantic counterpart
+- 2 key supporting
+- 4 supporting
+- 1 antagonist
+- 1 optional narrator
+- director required
+- writer required
+- producer required
+
+The player should be free to over-package within reason, but excessive cast or creative bloat should increase budget, ego risk, and schedule complexity.
+
+### 35.5 Script Analysis Inputs That Generate Role Counts
+A screenplay or pilot should generate role counts from hidden analysis tags.
+
+Relevant tags include:
+
+- ensemble density
+- romance intensity
+- antagonist centrality
+- family spread
+- comedy banter reliance
+- action set-piece dependency
+- mythology complexity
+- youth focus
+- voiceover reliance
+- narration flag
+- celebrity cameo friendliness
+- child character count
+- location spread
+- episode-engine repeatability for TV
+
+These tags do not need literal NLP simulation. For gameplay purposes they can be produced through structured generation rules plus draft outcomes.
+
+### 35.6 Genre-Based Role Templates
+Genre should strongly influence the initial Role Map before draft-specific modifiers are applied.
+
+#### 35.6.1 Romantic Comedy
+Typical baseline:
+
+- 2 leads or 1 lead + 1 romantic lead
+- 2 to 4 key supporting friends/family/coworkers
+- 2 to 5 supporting roles
+- optional narrator in some subtypes
+- strong chemistry weighting
+
+System notes:
+
+- lead chemistry matters more than raw acting score alone
+- romantic counterpart is near-mandatory
+- sex appeal and charisma influence commercial score more than in many genres
+- awards upside is modest unless elevated prestige dramedy
+
+#### 35.6.2 Prestige Drama
+Typical baseline:
+
+- 1 lead or 2 co-leads
+- 3 to 6 key supporting roles
+- 4 to 8 supporting roles
+- optional child role, aging role, or narrator depending on story form
+- director and writer prestige heavily matter
+
+System notes:
+
+- supporting cast quality can materially affect awards trajectory
+- narrators are uncommon but powerful when the project uses literary framing
+- script quality and director cohesion matter more than raw cast count
+
+#### 35.6.3 Comedy Ensemble
+Typical baseline:
+
+- 1 lead or 2 co-leads
+- 4 to 8 ensemble supporting roles
+- 2 to 6 recurring comedic supporting slots
+- optional stunt cameo or celebrity guest
+
+System notes:
+
+- chemistry and comic timing dominate
+- cast count can rise without automatically becoming prestige inflation
+- large ensembles create more scheduling risk
+
+#### 35.6.4 Action / Thriller
+Typical baseline:
+
+- 1 lead
+- 1 antagonist
+- 1 love interest or emotional anchor optional but common
+- 2 to 4 key supporting roles
+- 4 to 8 supporting roles
+- optional narrator uncommon
+
+System notes:
+
+- star power matters strongly for lead and villain
+- secondary cast depth matters less than premium anchor roles
+- stunt-heavy productions can use fewer speaking roles but higher cost per role
+
+#### 35.6.5 Horror
+Typical baseline:
+
+- 1 lead or young ensemble
+- 1 to 3 co-leads
+- 2 to 5 supporting roles
+- optional cult character actor or horror icon cameo
+- optional narrator for anthology/gothic variants
+
+System notes:
+
+- low-budget horror can function with lean cast counts
+- a cult genre actor can replace broader package depth
+- child roles may raise both marketing novelty and ethics/PR risk
+
+#### 35.6.6 Family Adventure / Four-Quadrant Fantasy
+Typical baseline:
+
+- 1 child/teen lead or young-adult lead
+- 1 adult mentor
+- 1 antagonist
+- 2 to 4 peer supporting roles
+- 3 to 6 adult/family supporting roles
+- optional narrator common in storybook framing
+
+System notes:
+
+- voice or creature roles may matter even in live action
+- family demographic fit increases value of lovable supporting cast
+- merch and sequel value are sensitive to role archetype clarity
+
+#### 35.6.7 Animated Family Film
+Typical baseline:
+
+- 1 lead voice
+- 1 co-lead or sidekick voice
+- 1 antagonist voice
+- 3 to 7 ensemble voice roles
+- narrator optional but common
+- singing voice optional depending on musical flag
+
+System notes:
+
+- voice star casting drives marketing disproportionately
+- performers can be scheduled more flexibly than live-action leads
+- role count may be larger than a comparable live-action project without equivalent schedule pain
+- narrators, celebrity voices, and animal/creature specialty voices become meaningful package slots
+
+#### 35.6.8 Adult Animation
+Typical baseline:
+
+- 1 to 3 lead voice roles
+- 4 to 8 ensemble voices
+- recurring multi-voice comedy specialists optional
+- narrator uncommon but viable for satire/anthology
+
+System notes:
+
+- a few performers may cover multiple minor roles
+- quote demands can be high for iconic voice stars despite low physical scheduling friction
+
+#### 35.6.9 Scripted TV Procedural
+Typical baseline for a new series:
+
+- 1 lead or pair of leads
+- 3 to 6 series regular supporting roles
+- 1 showrunner mandatory
+- 1 creator/pilot writer mandatory unless acquired spec already exists
+- guest cast generated per episode later
+
+System notes:
+
+- one star is less important than dependable ensemble structure
+- recurring cast and guest engine matter for season durability
+- cast count is moderate-to-high, but not every role requires major star heat
+
+#### 35.6.10 Prestige TV Drama
+Typical baseline:
+
+- 1 to 2 leads
+- 4 to 7 key supporting roles
+- 3 to 8 recurring/seasonal roles
+- creator, showrunner, pilot writer, and pilot director strongly recommended
+
+System notes:
+
+- room quality and showrunner stamina matter heavily
+- supporting cast depth improves awards odds and late-season retention
+
+#### 35.6.11 Sitcom
+Typical baseline:
+
+- 1 lead or 2 co-leads
+- 4 to 6 core ensemble regulars
+- guest roles on top
+- showrunner mandatory
+- pilot writer mandatory
+- producing director optional but valuable for multi-cam or fast-turn formats
+
+System notes:
+
+- chemistry across the core cast is more important than one megastar
+- syndication upside scales with ensemble durability
+
+#### 35.6.12 Limited Series / Miniseries
+Typical baseline:
+
+- 1 to 2 leads
+- 3 to 6 key supporting roles
+- 2 to 5 story-critical featured roles
+- creator, showrunner, and pilot writer often overlap but not always
+
+System notes:
+
+- film stars are easier to attract due to finite commitment
+- awards appeal is very sensitive to lead/supporting role clarity
+
+### 35.7 Special Role Types
+#### 35.7.1 Romantic Lead / Love Interest
+A script may generate a distinct **romantic lead** slot when romance intensity crosses a threshold.
+
+This role should matter because:
+
+- chemistry strongly affects audience satisfaction in romance and dramedy
+- it may drive poster/trailer appeal
+- it can alter sex appeal-driven commercial lift
+- replacing this role late is especially damaging to tone
+
+#### 35.7.2 Narrator
+A narrator slot should only appear when the script has a narration tag, literary framing, mockumentary framing, anthology structure, fairy-tale framing, or prestige memoir energy.
+
+A narrator can:
+
+- improve coherence on structurally difficult scripts
+- raise prestige if voiced by a respected talent
+- raise marketability for family animation or literary adaptations
+- slightly reduce subtlety if the narrator is used as a crutch on weak drafts
+
+#### 35.7.3 Antagonist / Villain
+The system should distinguish a generic supporting role from a proper antagonist slot.
+
+A true antagonist role boosts:
+
+- package leverage in thrillers, action, fantasy, crime, and prestige dramas
+- awards potential for supporting performers
+- trailer and market identity
+
+#### 35.7.4 Child Roles and Child Stars
+If the script generates child or teen roles, those become special slots with extra considerations:
+
+- guardianship / welfare complexity
+- schedule restrictions
+- higher development volatility
+- nepo-baby and dynasty crossover potential
+- hidden personal attributes when under 18
+
+### 35.8 Role Count by Script Quality and Draft Evolution
+The number and clarity of roles should evolve as drafts evolve.
+
+A weak early draft may create:
+
+- too many thin supporting roles
+- unclear lead hierarchy
+- redundant love-interest functions
+- underwritten antagonist
+- no obvious breakout part
+
+A stronger later draft may:
+
+- merge or cut redundant roles
+- clarify lead/supporting billing
+- create a better awards-friendly supporting showcase
+- turn a weak side character into a breakout role
+- remove the need for an awkward narrator
+
+This means script development is not only about “quality up/down”; it also changes **cast architecture**.
+
+### 35.9 Multi-Draft Screenplay Development System
+The development pipeline should treat screenplay work as a staged process, not one hidden roll.
+
+Recommended stages:
+
+1. pitch / treatment
+2. outline
+3. first draft
+4. second draft
+5. polish / production draft
+6. emergency rewrites if needed
+
+Each stage should have:
+
+- time cost
+- money cost
+- quality delta risk
+- role-map update chance
+- approval gate
+
+Possible outcomes at each draft stage:
+
+- improved substantially
+- improved slightly
+- no major change
+- became messier
+- structurally worsened
+- gained a breakout role
+- lost tonal coherence
+
+This makes development a real gameplay loop rather than a binary wait state.
+
+### 35.10 Draft Approval Gates
+The player should not be forced to approve every tiny revision, but major gates should require executive approval.
+
+Recommended approvals:
+
+- approve concept to outline
+- approve first draft for packaging
+- approve revised draft for greenlight committee
+- approve production draft before go/no-go
+
+At each gate the player may:
+
+- approve and continue
+- request another pass
+- replace writer
+n- hire script doctor
+- downgrade scope
+- repurpose for TV or film
+- shelve the project
+
+### 35.11 Script Doctors
+Script doctors should exist as a distinct writer subtype. They are not just generic rewrite writers.
+
+Common script doctor archetypes:
+
+- structure fixer
+- dialogue punch-up specialist
+- comedy punch-up specialist
+- prestige dialogue polisher
+- action clarity fixer
+- adaptation cleaner
+- TV pilot rescue specialist
+- franchise continuity patcher
+
+Possible strengths:
+
+- fast turnaround
+- specific weakness repair
+- strong emergency save chance
+- improved production readiness
+
+Possible risks:
+
+- tonal mismatch
+- auteur backlash
+- over-explaining exposition
+- flattening unique voice
+- expensive last-minute fees
+
+A great script doctor can save a greenlight. A bad one can make the script feel committee-built and dead.
+
+### 35.12 Hiring Talent as Writer and/or Director
+Talent should be hireable into writer and director roles exactly as they are for acting or producing.
+
+This should support:
+
+- straightforward writer attachment
+- straightforward director attachment
+- hiring one talent into both writer and director roles
+- multi-hyphenate auteur stacking with producer or actor participation
+
+This is consistent with the existing auteur and writer-director framework already established in the current bible. fileciteturn6file7 fileciteturn6file10
+
+Benefits of stacked writer-director hiring may include:
+
+- stronger tonal cohesion
+- easier note alignment
+- marketing clarity
+- awards legitimacy on prestige plays
+
+Risks include:
+
+- higher approval demands
+- harder replacements
+- stronger disruption if that one talent bows out
+
+### 35.13 Greenlight Integration: Role Completeness Score
+The existing greenlight committee should gain a **Role Completeness Score** that sits beside package strength and schedule certainty. Existing greenlight logic already evaluates script strength, talent package strength, schedule certainty, funding strain, and package cost inflation. fileciteturn6file0
+
+Role Completeness should evaluate:
+
+- are all mandatory creative leadership slots filled
+- are all mandatory performance slots filled
+- does the genre have the right shape of cast
+- are any role archetypes badly mismatched
+- are key chemistry pairs unresolved
+- are child-role protections satisfied where relevant
+- is the draft mature enough to lock cast counts
+
+This score can produce warnings like:
+
+- **Under-Cast for Genre**
+- **No Clear Lead Identified**
+- **Romantic Arc Not Properly Packaged**
+- **Missing Showrunner**
+- **Narrator Slot Optional: do not overpay**
+- **Too Many Thin Supporting Roles**
+- **Awards-Friendly Supporting Role Available**
+
+### 35.14 Greenlight Integration: Role Forecast Panel
+Every project in development should surface a **Role Forecast Panel** before full greenlight.
+
+Recommended display:
+
+- required roles
+- recommended roles
+- optional prestige/commercial roles
+- current filled count / target count
+- cast cost estimate
+- creative leadership cost estimate
+- chemistry risk
+- replacement risk
+- whether the draft is stable enough to cast deeply
+
+### 35.15 Role Count Scaling by Budget and Ambition
+Genre creates the baseline, but budget and ambition modify it.
+
+Examples:
+
+- a low-budget horror film may compress to 1 lead, 2 co-leads, 3 supporting
+- a mid-budget romantic drama may use 2 leads, 3 key supporting, 4 supporting
+- a prestige ensemble awards film may expand to 2 leads, 5 key supporting, 8 supporting
+- a mass-market animation film may add extra voice cameos for marketing reasons
+
+This keeps role count intuitive while still allowing variety.
+
+### 35.16 TV Role Count Logic
+Television should distinguish between:
+
+- series regulars
+- recurring characters
+- guest stars
+- day players / episode utility roles
+
+A new show’s development package should only require the **core regular structure**, while recurring and guest roles are generated later at season break and episode planning.
+
+Examples:
+
+- sitcom: 4 to 6 core regulars
+- procedural: 4 to 7 core regulars plus heavy guest engine
+- prestige ensemble drama: 5 to 8 meaningful regular/recurring anchors
+- limited series: 3 to 6 major roles with tighter hierarchy
+- animation: 3 to 6 core voice anchors with flexible guest voices
+
+### 35.17 Animation and Voice Casting Rules
+Animation should use a distinct casting logic.
+
+Key rules:
+
+- voice roles do not require physical shoot availability but still require recording windows
+- a single actor may voice multiple minor roles if skill supports it
+- celebrity voice casting raises awareness more than dramatic credibility
+- veteran voice actors improve reliability and production speed
+- narrator roles are more common and more accepted in animation
+- child voice roles may be filled by adults, teens, or actual children depending tone and authenticity goals
+
+### 35.18 Chemistry Architecture
+Certain role pairings should be explicitly chemistry-sensitive.
+
+High-importance pairings include:
+
+- lead and romantic lead
+- lead and antagonist
+- buddy co-leads
+- parent and child roles
+- mentor and protege
+- core sitcom ensemble
+- detective partners / procedural duo
+
+The game should evaluate chemistry at the pairing layer, not just the full cast average.
+
+### 35.19 Sex Appeal Age Curve System
+Talent should have a **Sex Appeal** attribute that can shift at age milestones of 30, 40, 50, 60, and 70.
+
+At each milestone, the game should roll or infer one of three outcomes:
+
+- **increases**
+- **decreases**
+- **no major change**
+
+This should not be purely punitive. Different archetypes should age differently.
+
+Examples:
+
+- youthful heartthrob may dip at 30 then stabilize through reinvention
+- glamorous movie star may hold through 40 then bifurcate based on prestige and public image
+- silver-fox / grande-dame archetypes may rise at 50 or 60
+- comedy, character, prestige, and auteur identities may depend far less on sex appeal than charisma or gravitas
+
+System effects:
+
+- changes casting desirability for romance-heavy roles
+- alters marketing heat in certain genres
+- may shift a talent from lead romantic slots into authority, mentor, villain, or prestige support lanes
+- interacts with public image, reinvention, scandal, and awards narrative
+
+### 35.20 Under-18 Data Privacy and Hidden Attributes
+Talent under age 18 should have partially hidden or masked attributes.
+
+Design rules:
+
+- no explicit sex appeal display for under-18 talent
+- sensitive personal traits remain hidden or generalized
+- controversial or adult-facing marketability descriptors are suppressed
+- some instability or maturity stats may be summarized as broad labels rather than exposed numbers
+
+Visible information for under-18 talent should focus on:
+
+- performance potential
+- reliability within child-labor limits
+- family/guardian stability
+- education or welfare burden
+- charm, screen presence, voice fit, comedic fit, or dramatic fit
+
+This keeps the system safer, cleaner, and more intuitive.
+
+### 35.21 Talent List Sorting by Salary
+Talent search and roster screens should support **sorting by Salary / Quote**.
+
+Recommended salary-related sort modes:
+
+- lowest quote
+- highest quote
+- best value for quote
+- salary trend rising
+- salary trend falling
+- quote within budget band
+
+This should be available for actors, writers, directors, producers, showrunners, and voice actors.
+
+### 35.22 Awards Prestige Tiers and Salary Inflation
+Awards should not produce flat quote bumps. The increase should depend on the prestige of the award body and category. The existing awards system already establishes that SAG wins raise actor quote demands, Writers Guild wins boost writer prestige, Directors Guild wins raise director market price, and top-tier awards create broad downstream leverage. fileciteturn6file12 fileciteturn6file17
+
+Recommended award prestige tiers:
+
+#### 35.22.1 Tier S — Industry-Crowning Awards
+Examples in game terms:
+
+- Oscars
+- Emmys
+
+Effects:
+
+- large quote increase
+- major prestige lift
+- stronger approval demands
+- easier agency leverage
+- better packaging pull for future projects
+
+#### 35.22.2 Tier A — Major Global Prestige / Industry Momentum Awards
+Examples:
+
+- BAFTAs
+- Golden Globes
+- SAG
+- DGA
+- WGA
+- PGA
+
+Effects:
+
+- meaningful quote increase
+- medium-to-large prestige bump
+- improved awards credibility and package heat
+
+#### 35.22.3 Tier B — Strong Specialty / Indie / Breakout Awards
+Examples:
+
+- Independent Spirit-style wins
+- key critics and festival performance awards
+
+Effects:
+
+- small-to-medium quote increase
+- large discovery/prestige benefit for lower-tier talent
+- better access to prestige projects
+
+#### 35.22.4 Tier C — Niche, Genre, or Breakthrough Recognition
+Effects:
+
+- modest quote increase
+- stronger effect inside specialty lanes than mass-market work
+
+### 35.23 Nomination vs Win Effects
+Nominations should matter, but less than wins.
+
+Recommended structure:
+
+- nomination: modest temporary bump plus prestige heat
+- win: stronger permanent or semi-permanent quote increase
+- repeat wins: diminishing percentage bump but increasing leverage floor
+- overdue narrative win: may increase prestige more than raw quote if the talent is already expensive
+
+### 35.24 Award Effects by Talent Type
+Awards should raise salary demands differently by role class.
+
+Examples:
+
+- lead acting awards most strongly affect lead-actor quotes and billing demands
+- ensemble or supporting awards lift supporting-actor quotes and upgrade future role size expectations
+- writing awards raise first-draft, rewrite, and pilot fees
+- directing awards raise upfront director quote and approval demands
+- producing awards raise packaging leverage more than pure salary
+- TV acting awards raise **per-episode** demands more than flat season fees
+
+### 35.25 TV vs Film Compensation Rules
+The game should clearly surface the distinction between film and TV pay structure.
+
+Film:
+
+- actors usually paid upfront
+- major stars may demand backend
+- directors and writers often work on project-fee basis
+
+TV:
+
+- cast generally paid per episode
+- showrunners and some producers use per-episode producing fees plus bonuses
+- awards wins and breakout seasons can trigger step-up renegotiations on renewal
+
+This is already aligned with the broader compensation model in the bible and should now be made visible inside role screens and contract previews. fileciteturn6file6
+
+### 35.26 Replacement Pressure When Role Archetypes Matter
+When a production loses talent after greenlight, replacement logic should respect role archetype.
+
+Examples:
+
+- losing a romantic lead requires replacement with chemistry and heat, not just generic score
+- losing a narrator may be cheaper to fix than losing a co-lead
+- losing a showrunner is catastrophic on TV
+- losing a celebrity animation voice may hurt marketing more than quality
+- losing a script doctor mid-rescue may freeze draft readiness
+
+### 35.27 Suggested UI Surfaces
+Recommended interfaces:
+
+#### 35.27.1 Role Map Panel
+Shows generated role counts by class, chemistry dependencies, and optional slots.
+
+#### 35.27.2 Draft Tracker
+Shows stage, quality movement, recent rewrite notes, role-map changes, and approval status.
+
+#### 35.27.3 Salary and Quote Sorts
+Allows quick ranking by salary, value, awards heat, role fit, and availability.
+
+#### 35.27.4 Youth Talent Safe View
+A restricted, cleaner profile view for under-18 talent.
+
+#### 35.27.5 Awards Quote Impact Tooltip
+Shows why a quote rose: for example “Won Tier A supporting-acting award last season” or “Oscar nominee two years ago; prestige floor retained.”
+
+### 35.28 Example Emergent Stories
+The system should create stories like:
+
+- a weak first draft becoming greenlightable after a structure fixer creates a real antagonist role
+- an animation film overpaying for celebrity voices that raise awareness but not critic score
+- a romantic drama collapsing because the lead and romantic counterpart have no chemistry
+- a child-star breakout becoming hard to manage as adult roles begin replacing teen slots
+- a veteran actor’s sex appeal dipping at 40, then rebounding at 50 as they become a prestige romantic lead for older-skewing dramas
+- a WGA win making a previously affordable writer suddenly expensive for rewrites
+- a TV supporting actor winning a major award and demanding a huge per-episode bump for season two
+
+### 35.29 Balancing Principles
+- Role generation should feel legible, not random.
+- Draft iteration should usually help but should never be risk-free.
+- Script doctors should be powerful but expensive and imperfect.
+- Awards should raise cost through **prestige tier**, not a single universal multiplier.
+- Youth talent handling should be cleaner and more protected than adult talent handling.
+- Genre should strongly shape role counts, but the script should always be able to modify them.
+
+### 35.30 Canonical Design Rule
+Production roles in Studio Boss should follow one core truth:
+
+> **You do not greenlight a title. You greenlight a script shape, a role map, and a package that can actually be cast, financed, and made.**
+
+
+---
+
+## 36. Benchmark-Inspired Simulation Expansion (Hollywood Mogul Style Gaps Filled)
+
+This section captures feature ideas surfaced by reviewing the supplied **Hollywood Mogul 4** screenshots and translating any still-missing or under-defined ideas into the current Studio Boss simulation language.
+
+The goal is **not** to copy that game screen-for-screen. The goal is to recognize useful categories of simulation that appear in those screenshots, identify where Studio Boss can benefit from deeper treatment, and then integrate those ideas into the existing canon in a way that feels more modern, more intuitive, and more systemic.
+
+These additions especially strengthen:
+
+- project dashboard readability
+- project phase visibility
+- production incident tracking
+- release planning clarity
+- merchandising and ancillary deal play
+- final accounting transparency
+- rival studio intelligence reporting
+- library browsing and sequel spawning
+- contract rider visibility
+- location, format, and production-choice texture
+
+The guiding principle for this section is:
+
+> **The player should be able to understand what a project is, what stage it is in, what it costs, what is going wrong, what it earned, and what strategic levers still remain.**
+
+### 36.1 Project Command Center and Information Architecture
+The screenshots show a useful truth: a Hollywood studio game becomes much easier to play when each project acts like a **command center** with a stable set of tabs.
+
+Studio Boss should formalize this into a consistent project shell for both films and series.
+
+Each project should expose a persistent left-to-right or top-to-bottom tab structure:
+
+1. **Overview / Story**
+2. **Roles**
+3. **Screenplay / Series Bible**
+4. **Talent**
+5. **Production**
+6. **Production Problems**
+7. **Advertising / Campaign**
+8. **Distribution Partnerships**
+9. **Merchandising / Ancillary**
+10. **Release**
+11. **Final Accounting**
+12. **Reviews / Awards / Legacy**
+
+Some tabs should remain locked until the project reaches the relevant phase. This preserves clarity and teaches the pipeline naturally.
+
+Example:
+
+- before a screenplay exists, **Screenplay** is locked or skeletal
+- before greenlight, **Production Problems** is hidden
+- before release planning, **Distribution**, **Merchandising**, and **Release** are locked
+- after release, **Final Accounting** and **Legacy** unlock fully
+
+This creates strong phase readability without requiring the player to remember hidden states.
+
+### 36.2 Project List Status Language
+The current project list should gain explicit **phase labels** and **warning labels** that are readable at a glance.
+
+Recommended standardized statuses:
+
+- No Story
+- Story Seed
+- Outline in Progress
+- First Draft
+- Rewriting
+- Needs Writer
+- Needs Director
+- Needs Showrunner
+- Needs Greenlight
+- Packaged, Awaiting Vote
+- Greenlit
+- Production Begins Next Month
+- In Production
+- Post-Production
+- Needs Release Plan
+- Marketing Active
+- Released
+- Renewed
+- Cancelled
+- Shelved
+- Turnaround
+
+Recommended warning tags:
+
+- Role Gap
+- Talent Hold Expiring
+- Over Budget
+- Schedule Conflict
+- Production Delay Risk
+- Rewrite Requested
+- Weak Test Screening
+- Merchandising Opportunity
+- Awards Heat
+- Sequel Viable
+
+These labels should appear in the project row and in the project header.
+
+### 36.3 Cost To Date and Spend Transparency
+The screenshots reveal the value of a simple **Cost To Date** callout.
+
+Studio Boss should track and show at least four spend buckets on every project:
+
+- **Development Spend To Date**
+- **Above-the-Line Spend To Date**
+- **Below-the-Line / Production Spend To Date**
+- **Marketing Spend To Date**
+
+These should roll into:
+
+- **Total Cost To Date**
+- **Committed Future Spend**
+- **Exposure If Cancelled Today**
+
+This matters because the player often needs to decide whether to continue, delay, recast, reshoot, or kill a project. A raw budget number is not enough. The real decision is about **sunk cost versus remaining exposure**.
+
+### 36.4 Story Page Expansion
+The screenshots imply a story page that surfaces not only genre but also content shape.
+
+Studio Boss should formalize a **Story Diagnostic Panel** for both films and series.
+
+Public-facing or mostly readable story fields:
+
+- title
+- logline / storyline
+- format
+- genre + subgenre
+- tone
+- target demographic
+- world / period / era
+- primary audience quadrants
+- core hook
+- source material origin
+- franchise status
+
+Internal story-analysis attributes generated from the screenplay, outline, pilot, or season bible:
+
+- character development
+- intelligence / complexity
+- dialogue strength
+- pacing
+- plot twist density
+- subplot count
+- villain strength
+- romance intensity
+- comedy density
+- scare intensity
+- action scale
+- mythology load
+- creature / VFX dependence
+- groundedness versus stylization
+- merchandisability
+- sequel elasticity
+- awards elasticity
+
+These attributes should not all be equally precise at early stages. Early-stage projects may display fuzzy confidence bands such as:
+
+- Strong
+- Promising
+- Unclear
+- Risky
+
+This makes story development feel like discovery rather than omniscience.
+
+### 36.5 Production Design Layer and Monthly Burn Breakdown
+The screenshots show a production screen with cost per month and craft dimensions such as VFX, stunts, explosions, set design, and costume complexity.
+
+Studio Boss should deepen production planning using **Production Demand Axes**.
+
+Each project should generate or allow tuning of the following production dimensions:
+
+- stunt complexity
+- vehicle / destruction load
+- practical effects load
+- VFX load
+- creature / prosthetic load
+- wardrobe / costume complexity
+- set build complexity
+- location complexity
+- crowd complexity
+- period authenticity load
+- musical performance load
+- dance / choreography load
+- animation complexity
+- voice recording complexity
+- child labor / tutoring burden when minors are used
+
+These dimensions should drive:
+
+- monthly burn rate
+- schedule length
+- crew strain
+- vendor demand
+- overrun risk
+- insurance cost
+- awards craft upside
+- merchandising appeal in some genres
+
+The player should not need to hand-tune dozens of numbers every time. By default, the script and genre should auto-generate a recommended production profile, and the player can then choose one of three stances:
+
+- **Lean Version**
+- **Standard Version**
+- **Prestige / Spectacle Version**
+
+Advanced players can manually override individual axes.
+
+### 36.6 Shoot Format and Presentation Features
+The production screen suggests format choices such as 3-D and large format.
+
+Studio Boss should include optional **premium presentation features** that can be attached at production or release planning stages.
+
+Examples:
+
+- large format / premium large-screen capture
+- 3-D pipeline
+- premium sound mix
+- event-cinema formatted cut
+- concert-film presentation
+- animation premium conversion
+- immersive / specialty venue edition
+
+These features should affect:
+
+- cost
+- post schedule
+- release ceiling
+- premium ticket revenue mix
+- event status in trades
+- awards or technical prestige in certain categories
+
+These should never be automatic wins. Many projects are better without them.
+
+### 36.7 Shoot Location and Incentive Planning
+One screenshot shows a location block with the ability to add shoot locations.
+
+Studio Boss should formalize a **location planning system** for projects in production.
+
+Each project can have one or more shoot locations, such as:
+
+- Los Angeles
+- New York
+- Atlanta
+- Vancouver
+- London
+- Eastern Europe hub
+- Australia / New Zealand
+- virtual production stage hub
+- tax-incentive domestic region
+- prestige international location
+
+Each location should have variables like:
+
+- tax incentives
+- crew depth
+- weather reliability
+- stage availability
+- permit friction
+- travel and lodging cost
+- union burden
+- authenticity match to script setting
+- prestige value
+- disruption risk
+
+The system should present the player with readable tradeoffs:
+
+- cheaper but harder logistically
+- more authentic but weather risky
+- tax friendly but shallow crew pool
+- expensive but reliable and awards friendly
+
+Location choices should also feed later production problems.
+
+### 36.8 Vendor, Facility, and Specialist Partner Layer
+The screenshots reference animation studio and visual effects studio issues.
+
+Studio Boss should add a **specialist vendor layer** for projects that need external partners.
+
+Possible vendor types:
+
+- animation house
+- VFX vendor
+- sound post house
+- scoring studio
+- virtual production facility
+- creature effects shop
+- stunt house
+- international service producer
+- dubbing / localization vendor
+
+Vendors should have:
+
+- skill / quality
+- cost level
+- reliability
+- speed
+- backlog load
+- scandal risk
+- innovation edge
+- relationship history with your studio
+
+Vendor selection should matter for both quality and production stability.
+
+### 36.9 Production Problems Log and Incident Lifecycle
+The screenshots show a **Production Problems** page plus a modal describing a specific incident and cost increase.
+
+Studio Boss should make production incidents a first-class system instead of one-off popups.
+
+Each project in production should maintain a **Production Problems Log** with entries containing:
+
+- month and week
+- incident type
+- primary cause
+- affected talent / vendor / department
+- immediate cost increase
+- delay added
+- reputation effect
+- mitigation options chosen
+- whether the issue is resolved, recurring, or escalating
+
+Incident categories should include:
+
+- talent performance conflict
+- perfectionism causing extra takes
+- chemistry mismatch surfacing during production
+- director-star feud
+- late script rewrite spillover
+- stunt injury or safety slowdown
+- weather interruption
+- location permit issue
+- VFX vendor delay
+- animation pipeline bottleneck
+- child performer hour restrictions
+- music rights or cue replacement issue
+- crew burnout
+- union grievance
+- production design rebuild
+- continuity problem discovered late
+- test screening panic reshoots
+
+The player should be able to open each incident to see who caused it, how severe it is, and what choices are available.
+
+### 36.10 Incident Response Choices
+When a production problem occurs, the player should usually get 2 to 5 response choices, for example:
+
+- absorb the delay and protect quality
+- force a cheaper workaround
+- replace a vendor
+- authorize partial rewrite
+- bring in mediator / producer intervention
+- reduce scope elsewhere to fund the fix
+- pause production briefly
+- remove a difficult talent from key creative decisions
+- buy out a performer and recast
+- reschedule around the problem
+
+Each response should affect some combination of:
+
+- direct cost
+- time
+- morale
+- future incident risk
+- final quality
+- PR leak chance
+- relationship damage
+
+### 36.11 Problem Traits and Persistent Production Personalities
+The incident screen suggests a personality issue like **Perfectionist**.
+
+Studio Boss should turn production volatility into persistent, reusable talent traits.
+
+Examples:
+
+- Perfectionist
+- Fast and Loose
+- Script Loyal
+- Improviser
+- Demanding Star
+- Collaborative
+- Exhausting Visionary
+- Panics Under Pressure
+- Calm Fixer
+- Chaotic Genius
+- Crew Favorite
+- Set Tyrant
+- Stunt Addict
+- Brand Protector
+
+These should influence both upside and downside.
+
+A perfectionist actor or director may:
+
+- improve performance quality
+- improve awards odds
+- increase overrun risk
+- slow schedule
+- trigger conflict with efficient producers
+
+### 36.12 Studio Library Browser
+The screenshots show studio libraries for the player and rivals.
+
+Studio Boss should include a **Library Browser** that lets the player inspect completed projects by studio.
+
+Views should include:
+
+- your studio library
+- rival studio libraries
+- acquired catalog libraries
+- franchise bundles
+- genre clusters
+- awards library
+- evergreen TV library
+- merchandising-heavy library
+
+Each library item should show:
+
+- release year
+- format
+- profitability
+- awards prestige
+- audience afterlife
+- sequel / reboot viability
+- rights status
+- syndication / library revenue status
+- cultural footprint
+
+This makes the industry feel historical rather than only present-tense.
+
+### 36.13 Rival Studio Intelligence Feed
+One screenshot shows a monthly feed listing rival greenlights and key attachments.
+
+Studio Boss should add a **Monthly Industry Intelligence Feed** sourced through the trades and your internal market analysts.
+
+This feed should summarize things like:
+
+- rival studio greenlights
+- rival series orders
+- major package attachments
+- top actor or director deals
+- release date moves
+- trailer reactions
+- buyer pickups
+- cancellations and writedowns
+- merger rumors
+- talent defections
+- awards momentum swings
+
+The feed should sometimes include partial information rather than omniscient truth.
+
+Examples:
+
+- “Super Studios has greenlit an event sci-fi feature at $120M, starring two bankable leads.”
+- “Hopscotch Pictures is said to be circling a prestige limited series with a hot showrunner.”
+- “Eldritch may be overextending on three horror titles in the same quarter.”
+
+This feed should help the player read the market and feel the passage of time each month.
+
+### 36.14 Release Planning: Theater Footprint Model
+The release screenshot shows a formula-driven theater count influenced by budget, audience, stars, and advertising.
+
+Studio Boss should explicitly model **release footprint capacity** for theatrical titles.
+
+A theatrical release plan should determine:
+
+- platform release, modest wide, wide, event wide, premium saturation
+- opening theater count
+- premium screen share
+- international rollout cadence
+- expansion triggers
+- holdover expectations
+
+The initial theater footprint should be driven by factors such as:
+
+- genre and broadness of target audience
+- MPAA / age rating accessibility
+- star power
+- franchise familiarity
+- concept clarity
+- marketing spend
+- critic confidence
+- exhibitor trust in the studio
+- seasonal competition
+- awards-platform strategy
+
+The game should show a breakdown so the player understands *why* the footprint is what it is.
+
+Example display:
+
+- Base Release: 1,000 theaters
+- Four-Quadrant Appeal: +600
+- Two Major Stars: +400
+- Franchise Recognition: +500
+- Advertising Spend Tier III: +700
+- Crowded Weekend: -500
+- Final Opening Footprint: 2,700
+
+### 36.15 Distribution Partnerships and Territorial Splits
+The final accounting screenshot implies foreign partner distribution revenue and adjusted foreign rentals.
+
+Studio Boss should deepen **distribution partnership design**.
+
+For each project, the player may choose or negotiate:
+
+- self-distribution domestic only
+- domestic partner / output partner
+- foreign sales agent
+- territory-by-territory sales
+- co-financier with distribution carve-out
+- streaming-first global partner
+- television licensing path
+
+Important economic outputs should include:
+
+- domestic gross
+- exhibitor / theater share
+- domestic rentals to studio
+- foreign gross
+- foreign exhibitor share
+- foreign market fees
+- local distributor fees
+- sales agent commission
+- net foreign rentals to studio
+- minimum guarantee income where applicable
+
+This should connect cleanly to the existing rights and co-production systems.
+
+### 36.16 Final Accounting Screen
+The screenshots show a very legible post-release accounting breakdown.
+
+Studio Boss should ensure every completed project gets a **Final Accounting Screen** with standardized sections.
+
+Recommended sections:
+
+#### 36.16.1 Revenue Overview
+- worldwide gross
+- domestic gross
+- foreign gross
+- studio rentals
+- platform license revenue
+- home entertainment revenue
+- broadcast revenue
+- AVOD / FAST revenue
+- merchandising royalties
+- soundtrack / music revenue
+- games / interactive licensing revenue
+- airline / hotel / educational / specialty windows where relevant
+
+#### 36.16.2 Cost Overview
+- development cost
+- production cost
+- marketing cost
+- distribution fees
+- participation payouts
+- residual burden estimate
+- reshoot / overrun premium
+- financing cost where relevant
+
+#### 36.16.3 Net Outcome
+- project P&L
+- ROI
+- break-even threshold
+- contribution to studio cashflow
+- contribution to library value
+- sequel / renewal trigger eligibility
+
+#### 36.16.4 Legacy Outcome
+- critic score band
+- audience reception band
+- awards tally
+- franchise heat
+- catalog durability
+- talent quote changes caused by the project
+
+The point is not just realism. It is feedback clarity. The player must learn from each release.
+
+### 36.17 Reviews and Critical Reception Screen
+The screenshots include a dedicated critics and reviews area.
+
+Studio Boss should explicitly present **review clusters** rather than a single score.
+
+Possible review breakdowns:
+
+- top critics
+- trade reviews
+- general critic average
+- audience score
+- fan enthusiasm
+- social memeability
+- awards pundit heat
+
+Review text snippets should reflect what the project was trying to do.
+
+Example:
+
+- praised performances but weak ending
+- strong concept, noisy execution
+- surprise family breakout
+- prestigious but cold
+- fun crowdpleaser, no awards path
+
+This should connect to word-of-mouth, holds, streaming afterlife, and sequel logic.
+
+### 36.18 Merchandising Contracts and Threshold Gating
+A screenshot shows **manufacturer interest** and minimum production / advertising thresholds for product categories.
+
+Studio Boss should add a clearer **merchandising contract layer** before or during release planning.
+
+Possible merchandise categories:
+
+- action figures
+- fashion / apparel
+- homewares
+- school / stationery
+- publishing tie-ins
+- collectibles / statues
+- toys / games
+- mobile / video game license
+- soundtrack vinyl / music bundles
+- food and brand promotions
+- theme or experience licensing
+
+Each category should require a fit threshold, such as:
+
+- enough visual/iconic character identity
+- sufficient production spectacle
+- sufficient marketing commitment
+- family accessibility or youth appeal
+- genre suitability
+- character count / toyetic depth
+- expected audience size
+
+The game should present outcomes like:
+
+- **No Interest**
+- **Conditional Interest**
+- **Interest if Budget or Campaign Increases**
+- **Strong Interest**
+- **Competitive Bids**
+
+This gives the player reasons to invest in family, sci-fi, fantasy, action, animation, and youth-skewing titles beyond the box office alone.
+
+### 36.19 Sequel and Franchise Trigger Panel
+The screenshots show a clear **Create a Sequel** action after a film succeeds.
+
+Studio Boss should expose sequel readiness through a formal panel rather than burying it.
+
+Trigger contributors should include:
+
+- financial success
+- audience demand
+- franchise heat
+- unresolved story elasticity
+- retained rights
+- cast return likelihood
+- merchandise performance
+- awards halo in prestige follow-up cases
+- sequel options pre-negotiated in contracts
+
+Possible states:
+
+- Not Viable
+- Artistically Possible, Commercially Weak
+- Commercially Strong, Talent Fragile
+- Strong Sequel Case
+- Franchise Expansion Available
+- Spin-Off Better Than Sequel
+
+This should also apply to TV spin-offs, extra seasons, sequel films, animated specials, and prequels.
+
+### 36.20 Contract Riders and Negotiation Surface Area
+The talent negotiation screenshot reveals a few specific contractual asks that should be fully visible in Studio Boss.
+
+Add contract rider fields for:
+
+- salary
+- backend points
+- per-episode quote
+- pay-or-play
+- name above the title
+- billing position
+- sequel option ladder
+- series option ladder
+- awards-bonus clause
+- vanity shingle production fee
+- consulting producer credit
+- script approval
+- cut approval or meaningful creative consultation
+- scheduling hold term
+- exclusivity window
+
+These terms should influence both acceptance chance and downstream project constraints.
+
+#### 36.20.1 Name Above Title
+This should be mostly cosmetic on paper, but meaningful in simulation.
+
+Effects may include:
+
+- ego satisfaction for major stars
+- increased campaign prominence
+- stronger audience recognition for star-led films
+- reduced willingness of peer co-leads to accept lesser billing
+- small poster/layout marketing constraints
+
+#### 36.20.2 Sequel Option Ladder
+For sequel-capable projects, major talent should often want pre-negotiated escalation tables.
+
+Example:
+
+- film 1: $4M
+- sequel if first film passes threshold A: $6M
+- sequel if threshold B: $8M + 1 point
+- sequel if threshold C: $10M + pay-or-play
+
+This makes franchise success exciting but expensive.
+
+### 36.21 Agency Offer Presentation and Negotiation Framing
+The screenshot shows multiple agency offers for a single deal.
+
+Studio Boss should frame some negotiations as **structured offer exchanges** rather than hidden math.
+
+In visible negotiations, the player may receive:
+
+- hard ask from agent
+- compromise offer
+- prestige-friendly offer
+- cash-heavy offer
+- backend-heavy offer
+- fast-close offer
+
+This is especially useful for stars, directors, showrunners, and top writers.
+
+It makes representation feel active and readable.
+
+### 36.22 Talent Search, Sorting, and Audition Workflow Upgrades
+The screenshots show sortable talent lists with salary columns, audition indicators, and profile comparisons.
+
+Studio Boss should extend talent search with richer list controls:
+
+- sort by salary / quote
+- sort by availability date
+- sort by awards heat
+- sort by chemistry with selected lead
+- sort by role fit
+- sort by international pull
+- sort by franchise fit
+- sort by reliability
+- sort by agency
+- sort by willingness to work with attached director
+
+Talent rows should also show quick-status flags:
+
+- interested
+- not interested
+- audition required
+- offer out
+- hold in place
+- schedule conflict
+- award-season unavailable
+- family / child restrictions
+- sequel obligation elsewhere
+
+### 36.23 Monthly Studio Pulse and End-Month Ritual
+The screenshots repeatedly emphasize an **End Month** button and a monthly news cadence.
+
+Studio Boss already uses turn cadence, but this should be formalized into a stronger **monthly pulse ritual**.
+
+At the end of each month, the game should summarize:
+
+- your cash movement
+- major project status changes
+- rival studio moves
+- trade headlines
+- awards heat updates
+- box office chart
+- ratings chart
+- talent quote movers
+- incidents / crises
+- new opportunities entering market
+
+This creates a satisfying sense of rhythm and makes the game easier to read at scale.
+
+### 36.24 Project Final Breakdown as a Teachable Postmortem
+The screenshots show a final breakdown that functions almost like a postmortem.
+
+Studio Boss should embrace this as a learning tool.
+
+Every completed title should generate a **What Drove This Result?** panel showing top contributors.
+
+Examples:
+
+- strong opening due to broad release and major ad spend
+- weak legs due to poor audience word-of-mouth
+- foreign overperformance due to cast fit and action clarity
+- awards halo helped streaming afterlife
+- merchandise failed because campaign was too small
+- sequel viability improved despite only modest profit
+
+This helps the player build intuition rather than just reading numbers.
+
+### 36.25 Series-Specific Counterparts
+Any feature added from the screenshots must have a TV equivalent where sensible.
+
+Examples:
+
+- theatrical footprint becomes premiere reach / platform push / episode rollout scale
+- merchandising thresholds become character/IP thresholds for series licensing
+- final accounting becomes season accounting plus lifetime series value
+- sequel panel becomes renewal / spin-off / special / event reunion panel
+- production problems log includes writers’ room instability, showrunner burnout, cast holdouts, and episode overrun
+
+### 36.26 UX Rule: Everything Should Explain Itself
+The benchmark screenshots are useful because they make many numbers visible, but they also risk opacity.
+
+Studio Boss should modernize this by ensuring that every major value has at least one of:
+
+- breakdown tooltip
+- “why changed?” tooltip
+- comparison against baseline
+- forecast delta if changed
+- simple label explaining whether the number is good, bad, or risky
+
+The game should feel deep, never obscure.
+
+### 36.27 New Data Fields Required
+Add the following data points where not already present:
+
+#### 36.27.1 Project Dashboard Fields
+- project phase label
+- warning tags
+- total cost to date
+- committed future spend
+- cancellation exposure
+- release readiness score
+- merchandising readiness score
+- sequel readiness state
+
+#### 36.27.2 Production Planning Fields
+- monthly burn baseline
+- stunt load
+- destruction load
+- VFX load
+- costume load
+- set-build load
+- crowd load
+- location count
+- premium format flag
+- location incentive estimate
+- primary vendor links
+
+#### 36.27.3 Production Incident Fields
+- incident id
+- month/week
+- source entity
+- trait cause
+- cost delta
+- schedule delta
+- quality delta
+- resolution state
+
+#### 36.27.4 Release and Accounting Fields
+- opening footprint
+- exhibitor share estimate
+- domestic rentals
+- foreign partner fee burden
+- merchandising royalties
+- ancillary revenue by window
+- break-even estimate
+- franchise trigger score
+
+#### 36.27.5 Contract Rider Fields
+- name above title
+- billing rank
+- sequel option ladder
+- series option ladder
+- awards bonus clause
+- scheduling hold end date
+
+### 36.28 Example Emergent Stories from These Additions
+The system should now be able to produce stories like:
+
+- a studio overcommits to premium large-format spectacle, gets a bigger opening, but suffers painful VFX overruns
+- a toy company shows conditional interest in a family action film, so the player increases campaign spend to unlock a lucrative apparel and figures deal
+- a rival studio’s monthly feed reveals they are moving a big sci-fi film into your release corridor, forcing a date change
+- a prestige period drama chooses authentic European locations, wins craft awards, but takes repeated weather delays
+- a top star accepts a lower upfront fee in exchange for name-above-title billing and an aggressive sequel escalator
+- a production problem that started as harmless perfectionism becomes a recurring delay spiral and blows the budget
+- a modest film loses money theatrically but shows strong library and streaming afterlife, making it a hidden strategic success
+- a foreign distributor’s fee structure makes an apparently strong overseas gross far less valuable than the player expected
+
+### 36.29 Canonical Design Rule
+The benchmark-inspired additions should be governed by one rule:
+
+> **Every project should read like a living business case, a creative package, and a production history all at once.**
+
+
+### 36.30 Distribution Rights Sales, Pre-Sales, and Territorial Deal-Making
+A new set of screenshots highlights a more explicit **distribution-rights selling layer** than the current bible spells out.
+
+Studio Boss should add a full **Rights Sales and Distribution Partnerships Market** that lets the player retain distribution, sell rights early, or carve projects into domestic and international territory deals.
+
+This system should sit between greenlight and release, and it should remain relevant again at completion when library and secondary-window rights are resold.
+
+#### 36.30.1 Core Rights Sale Modes
+For eligible film projects, and for some premium limited series or specials, the player may choose among:
+
+- self-distribute domestically
+- license domestic distribution to another studio or distributor
+- sell all foreign rights in one package
+- sell foreign rights territory by territory
+- pre-sell selected territories before production to reduce financing risk
+- enter a negative pickup style arrangement where delivery unlocks the payment
+- retain certain rights while outsourcing only theatrical execution
+- sell later-window rights only, keeping primary release control
+
+Each option should trade off:
+
+- immediate guaranteed cash
+- retained upside
+- marketing control
+- awards campaign control
+- release timing control
+- downstream library value
+- franchise and sequel leverage
+
+#### 36.30.2 Domestic Distribution Offers
+If the player chooses to shop domestic rights, different buyers should generate offers with distinct logic.
+
+Offer variables include:
+
+- minimum guarantee
+- P&amp;A commitment
+- number of screens / footprint ambition
+- awards push commitment
+- trailer and key-art quality expectation
+- release-window promise
+- revenue split after recoupment
+- sequel or remake option language
+- whether the buyer expects final delivery changes
+
+Big majors may offer large checks but demand control.
+Boutique prestige distributors may offer smaller guarantees but stronger awards positioning.
+Streamer-first buyers may skip theatrical upside but reduce risk.
+
+#### 36.30.3 Foreign Territory Carve-Outs
+Foreign rights should be sellable one territory or regional cluster at a time.
+
+Illustrative market buckets:
+
+- UK / Ireland
+- France
+- Germany / Austria / Switzerland
+- Spain
+- Italy
+- Benelux
+- Australia / New Zealand
+- Japan
+- South Korea
+- China where politically and regulatorily viable
+- Latin America clusters
+- Southeast Asia clusters
+- Middle East / North Africa where appropriate
+
+Each territory offer should reflect:
+
+- genre exportability
+- cast recognition in that territory
+- action clarity versus dialogue dependence
+- awards appeal versus commercial appeal
+- local censorship or political risk
+- dub/sub burden
+- release corridor competition
+- whether a local partner over-indexes on horror, family, prestige, or action
+
+This should create very readable strategic choices.
+A broad action film may get strong Asian and Latin American bids.
+A dialogue-heavy prestige drama may travel better through festivals, awards, and selective European buyers.
+
+#### 36.30.4 Pre-Sales as Financing Tools
+The player should be able to use pre-sales to make borderline projects financeable.
+
+Pre-sales can:
+
+- reduce required studio cash outlay
+- lower greenlight committee fear
+- improve lender confidence
+- make prestige risk projects possible
+- unlock bigger casts by reducing financing pressure
+
+But pre-selling too much weakens later upside and can create release complications.
+
+Possible downside flags:
+
+- low retained revenue participation
+- conflicting international release dates
+- weak foreign marketing from low-quality partners
+- franchise restrictions in pre-sold territories
+- loss of sequel leverage outside retained markets
+
+#### 36.30.5 Rights Retention Strategy Layer
+The player should be able to set a **rights retention posture** per project:
+
+- Hold Everything
+- Sell to De-Risk
+- Sell Foreign Only
+- Sell Prestige Domestic, Keep Other Rights
+- Territory Optimization
+- Cashflow Emergency Sale
+
+This posture should become part of studio identity.
+A cash-starved indie player may routinely pre-sell.
+A rising prestige banner may retain more rights to build long-term library value.
+
+#### 36.30.6 Rights Sale UI Rules
+The rights screen should show:
+
+- estimated self-release value
+- current best external offers
+- expected retained upside if held
+- risk reduction if sold
+- partner quality and trustworthiness
+- territory map or territory list
+- rights already sold versus retained
+- downstream rights conflicts
+
+The player must understand not just **how much money is on the table**, but **what control and upside is being surrendered**.
+
+### 36.31 Advanced Merchandising Deal Structure and Partner Quality
+The new screenshots reveal extra detail inside merchandising that goes beyond threshold gating alone.
+
+Studio Boss should expand merchandising into a true **licensing deal system** with partner quality, royalty rate, category depth, and contract-signing choices.
+
+#### 36.31.1 Category-by-Category Merchandising Contracts
+Each merch category should be evaluated separately.
+
+Suggested categories:
+
+- action figures
+- dolls / plush
+- apparel
+- publishing tie-ins
+- soundtrack album / vinyl / playlist campaign
+- toys and board games
+- video game / mobile tie-in
+- collectibles / premium statues
+- Halloween / cosplay goods
+- school supplies
+- food promotions
+- miscellaneous novelty licensing
+
+Each category should have its own:
+
+- interest state
+- partner quality
+- royalty percentage
+- minimum guarantee when relevant
+- approval burden
+- schedule lead time
+- cancellation or underperformance risk
+
+#### 36.31.2 Manufacturer Quality
+Partner quality should matter, not just whether interest exists.
+
+Quality bands:
+
+- Low-Cost Opportunist
+- Standard Licensee
+- Reliable Mid-Tier Partner
+- Premium Brand Partner
+- Best-in-Class Global Partner
+
+Higher-quality partners may offer:
+
+- stronger sell-through
+- lower reputational damage risk
+- higher production values
+- stronger retailer placement
+- better global reach
+- better merchandising afterlife
+
+Lower-quality partners may offer:
+
+- quick cash
+- easier approvals
+- weak products that hurt brand prestige
+- supply issues
+- low long-tail revenue
+
+#### 36.31.3 Royalty Share and License Economics
+The player should negotiate or choose among royalty structures such as:
+
+- flat minimum guarantee
+- lower guarantee plus higher royalty share
+- high guarantee but poor backend
+- short-term promo license
+- premium prestige limited-run deal
+- mass-market deal with lower brand control
+
+Visible fields should include:
+
+- manufacturer percentage retained by partner
+- studio royalty percentage
+- guaranteed advance
+- expected unit volume band
+- expected total licensing value
+- approval cost / oversight burden
+
+#### 36.31.4 Soundtrack as a Separate Ancillary System
+The screenshots imply soundtrack or music-related licensing should be first-class rather than hidden in generic ancillary revenue.
+
+Studio Boss should separate **Soundtrack / Music Commercialization** from generic ancillary revenue.
+
+Possible soundtrack states:
+
+- no meaningful soundtrack opportunity
+- curated soundtrack tie-in
+- score release only
+- soundtrack breakout candidate
+- chart crossover potential
+- awards-friendly original song campaign
+
+Soundtrack outcomes can influence:
+
+- youth marketing reach
+- awards momentum
+- social-media resonance
+- later library value
+- cross-promotion deals
+
+#### 36.31.5 Merchandising Readiness from Role and Story Design
+Merchandising should draw from more than genre.
+It should also reflect whether the project actually has:
+
+- iconic silhouettes
+- strong color / costume identity
+- toyetic characters or creatures
+- a memorable villain
+- quotable lines or symbols
+- a youth-friendly entry point
+- world-building depth for collectibles
+- music or catchphrases for soundtrack and novelty products
+
+This ties merchandising back to script, role, costume, and franchise design.
+
+### 36.32 Expanded Role Specification and Performance Modality
+The new role screenshots suggest a more explicit role-spec sheet than the bible currently spells out.
+
+Studio Boss should deepen the role system so each role is not only a billing slot, but a **performance brief** that informs casting, budget, risk, and awards potential.
+
+#### 36.32.1 Role Spec Sheet Fields
+Every meaningful cast role should be able to store:
+
+- billing class
+- narrative function
+- performance type
+- performance focus
+- species or being type where relevant
+- age band
+- gender presentation if the role requires it
+- romantic or family linkage
+- stunt burden
+- intimacy burden
+- comedy burden
+- accent or language need
+- singing / dancing need
+- prosthetic / makeup load
+- motion capture requirement
+- CGI interaction intensity
+- voiceover-only flag where relevant
+
+This should still stay readable through defaults and auto-generated templates.
+
+#### 36.32.2 Performance Type
+Role performance type should drive who is considered a good fit.
+
+Suggested values:
+
+- Live Action Only
+- Live Action with Light VFX Interaction
+- Live and CGI Enhanced
+- Heavy Prosthetic Performance
+- Motion Capture Performance
+- Performance Capture Hybrid
+- Voice Performance
+- Narration Only
+- Host / Presenter
+- Archival / Documentary Recreation
+
+This helps animation, creature features, fantasy, superhero, and hybrid productions behave differently from grounded dramas.
+
+#### 36.32.3 Performance Focus
+Each role should express what kind of acting challenge is central.
+
+Possible focus tags:
+
+- Drama
+- Comedy
+- Romance
+- Action Presence
+- Horror Vulnerability
+- Villain Presence
+- Character Comedy
+- Musical Performance
+- Physicality
+- Voice Charisma
+- Ensemble Glue
+- Child Naturalism
+- Prestige Monologue Weight
+
+A role may have one primary focus and one secondary focus.
+This gives the casting agent and player a better reason why a talent fits or misses.
+
+#### 36.32.4 Character Traits and Casting Signals
+Role specs should also generate a simple readable trait bundle such as:
+
+- brave
+- funny
+- seductive
+- intelligent
+- spiritual
+- chaotic
+- ruthless
+- optimistic
+- vulnerable
+- parental
+- mysterious
+- physically intimidating
+
+These are not moral judgments. They are casting signals.
+They influence chemistry, audience fantasy, and actor fit.
+
+#### 36.32.5 Role Count Expansion from Script Drafts
+The screenshots show an explicit **additional roles** count.
+
+Studio Boss should formalize the idea that drafts can:
+
+- combine roles
+- split a composite role into multiple roles
+- add a love interest
+- add a stronger villain counterpart
+- add comic relief
+- add family members
+- increase ensemble density
+- add children or teen counterparts
+- add creatures or animated sidekicks
+- add recurring guest roles in TV
+
+This should feed directly into:
+
+- casting workload
+- above-the-line and below-the-line budget
+- chemistry complexity
+- production scheduling
+- merchandising potential
+- awards category spread
+
+#### 36.32.6 Add / Delete Role During Development
+The player should be able to intentionally add, remove, or merge meaningful roles during script development.
+
+Examples:
+
+- strengthen the antagonist
+- add a clearer romantic lead
+- make the ensemble broader for four-quadrant appeal
+- reduce role count to cut cost
+- create a narrator device
+- combine two supporting roles into one juicier prestige part
+
+This choice should improve some projects and damage others.
+A bloated role map may raise cost and scheduling friction.
+An over-trimmed role map may flatten the story.
+
+### 36.33 Talent Attachment Locks and Change Control
+One screenshot strongly implies that hiring certain talent can **lock changes** to story, roles, production assumptions, or release type.
+
+Studio Boss should add a formal **Attachment Lock System**.
+
+#### 36.33.1 What Can Be Locked
+When attaching major talent, the contract or handshake may lock:
+
+- the current story direction
+- the existing screenplay draft
+- specific roles or character definitions
+- the current production plan and scale
+- the release type
+- shooting location promises
+- a season episode count in TV
+- rating target or content tone
+- merchandising restrictions where talent is protective
+
+#### 36.33.2 Lock Strength
+Locks should come in tiers:
+
+- **Soft Preference**: changing it causes mild relationship damage
+- **Protected Understanding**: changing it requires renegotiation
+- **Contract Lock**: changing it may trigger walk-away, pay-or-play, or lawsuit risk
+
+#### 36.33.3 Who Tends to Demand Locks
+Typical lock-demanders:
+
+- prestige directors protecting script and tone
+- stars protecting role size, billing, or release posture
+- showrunners protecting episode count and room structure
+- producers protecting budget floor or release promise
+- vanity shingle talent protecting their banner identity
+
+#### 36.33.4 Player Benefit
+Locks add friction, but they also make attachments meaningful.
+
+A top actor agreeing to star in your film should not feel like a reversible icon swap.
+Once attached, that package should become more committed, more expensive to change, and more narratively alive.
+
+#### 36.33.5 Casting Agent Interaction with Locks
+When the player chooses **Open Casting Call** or **Use a Casting Agent**, the system should respect locks automatically.
+
+If the story, role, or release posture is locked, the agent should only search within those guardrails unless the player first decides to reopen negotiation.
+
+### 36.34 Open Casting Calls, Fast-Cast Modes, and Agent Automation
+The screenshots suggest a clearer flow between manual casting, open calls, and agent-assisted shortlisting.
+
+Studio Boss should turn this into a full **Casting Workflow Mode Selector**.
+
+#### 36.34.1 Casting Modes
+For any open role, the player can choose:
+
+- Manual Targeting
+- Agency Package Search
+- Open Casting Call
+- Casting Director Shortlist
+- Emergency Replacement Search
+- Child Casting Search
+- Voice Ensemble Search
+
+#### 36.34.2 Open Casting Call
+An open call should:
+
+- surface more unknowns and rising hopefuls
+- take time
+- cost modest search overhead
+- improve discovery of bargains
+- increase volatility in performance outcome
+- sometimes uncover a breakout star
+
+Open calls are especially strong for:
+
+- teen roles
+- indie supporting parts
+- comedy wildcards
+- genre discoveries
+- fresh TV ensembles
+
+#### 36.34.3 Casting Director / Casting Agent Shortlist
+A casting professional should generate a shortlist based on configurable priorities:
+
+- cheapest viable
+- best fit
+- best chemistry with attached lead
+- awards upside
+- best global marketability
+- best reliability
+- fastest availability
+- director-friendly choices
+- unexpected but inspired options
+
+#### 36.34.4 Emergency Replacement Search
+If a talent drops out close to production, the player should be able to trigger an emergency search mode that prioritizes:
+
+- immediate availability
+- script compatibility
+- minimal renegotiation damage
+- public perception control
+- preserving release date
+
+This should usually yield worse or more expensive options than normal casting.
+That is the point.
+
+### 36.35 Compatibility Forecasts and Production Friction Prediction
+A new screenshot shows a very specific **Potential Conflicts** panel comparing a director and cast members across traits like **On Budget**, **Perfectionist**, and **Script As Written**.
+
+Studio Boss should formalize this as a visible **Compatibility Forecast Screen** whenever the player is assembling a package.
+
+#### 36.35.1 Forecast Axes
+Key tension axes should include:
+
+- On Budget discipline
+- Perfectionism
+- Script-As-Written rigidity
+- Improvisation comfort
+- Stunt appetite
+- Method intensity
+- Ego sensitivity
+- Press discipline
+- Schedule discipline
+- collaboration warmth
+- tolerance for reshoots
+- comfort with VFX-heavy acting
+- comfort with child performers or animals where relevant
+
+#### 36.35.2 Forecast Outcomes
+The screen should not guarantee disaster. It should forecast tendencies such as:
+
+- low risk
+- manageable creative tension
+- likely rehearsal friction
+- likely budget overrun risk
+- likely schedule drift
+- likely morale problem
+- likely awards upside despite difficulty
+- strong chemistry / low efficiency
+- smooth execution / lower spark
+
+This helps the player decide whether a difficult but brilliant package is worth the pain.
+
+#### 36.35.3 Script-As-Written as a Distinct Axis
+The screenshots make this axis important enough that it should become a first-class simulation variable.
+
+**Script-As-Written** measures how strictly a talent wants to follow the page.
+
+High values imply:
+
+- fidelity to dialogue and blocking
+- lower improvisation tolerance
+- better protection for carefully written scripts
+- higher conflict risk with improvisers or chaotic directors
+
+Low values imply:
+
+- comfort with riffing and discovery on set
+- more adaptability during production problems
+- higher risk of tonal drift
+- possible writer frustration
+
+This should be especially meaningful in:
+
+- comedy
+- prestige drama
+- dialogue-driven TV
+- action productions with constantly revised set-pieces
+
+#### 36.35.4 On Budget as Behavior, Not Just Math
+**On Budget** should be a personal discipline trait.
+
+High On Budget talent:
+
+- prefers efficient days
+- resists vanity reshoots
+- cooperates with compromises
+- may be less adventurous
+
+Low On Budget talent:
+
+- chases perfection or spectacle
+- is more likely to demand extra takes, reshoots, or expanded scope
+- may produce stronger artistic outcomes when supported
+
+This ties personality to financial gameplay in a readable way.
+
+### 36.36 Monthly Quote Repricing, Award Winner Renegotiations, and Market Heat
+The end-month screenshots show talent quotes changing as a result of awards and performance.
+
+Studio Boss should add a more ceremonial **Monthly Market Repricing Layer**.
+
+#### 36.36.1 End-Month Quote Movers
+At month end, the game should identify notable movers:
+
+- award winners demanding more money
+- breakout stars raising quote
+- flop-tainted stars losing leverage
+- genre-specific rating movement such as comedy or action star shifts
+- directors gaining points participation leverage
+- showrunners demanding richer renewal terms
+
+These should be surfaced in a **Quote Movers** digest with clear explanation.
+
+#### 36.36.2 Awards Winner Contract Reset Events
+When a talent wins a meaningful award, the market should often react before the player does.
+
+Possible automatic effects:
+
+- minimum quote floor increases
+- backend demand increases
+- pay-or-play becomes more likely
+- name-above-title demand increases
+- sequel escalation ladder increases
+- prestige-only selectiveness increases for auteurs
+
+Award prestige tier should continue to determine magnitude, but the monthly event feed should make this visible as town gossip and agent behavior.
+
+#### 36.36.3 Representation Follow-Through
+Agencies and managers should immediately use momentum.
+
+After a win or hot streak, their behavior may shift to:
+
+- pulling clients from low-prestige offers
+- pushing overall deals
+- demanding producer credit
+- demanding first-position scheduling
+- pushing passion projects that were previously ignored
+
+### 36.37 Talent Rating Drift by Genre and Performance Outcome
+A screenshot shows role-by-role **Talent Rating Change** messages like “Comedy star rating increase” or decrease.
+
+Studio Boss should make performance outcome updates more genre-specific.
+
+#### 36.37.1 Skill Domains That Can Move
+Projects may move talent market perception in specific lanes such as:
+
+- action star power
+- comedy star power
+- drama prestige weight
+- horror credibility
+- family appeal
+- voice performance heat
+- awards prestige
+- international draw
+
+#### 36.37.2 Role-Specific Aftermath
+The same film can change different cast members in different ways.
+
+Examples:
+
+- the lead gains action rating
+- the villain gains scene-stealer prestige
+- the comic sidekick becomes more castable in family titles
+- the writer becomes hot in contained thrillers
+- the director gains credibility in VFX-heavy material
+
+This makes each project’s aftermath more nuanced than a flat fame increase.
+
+#### 36.37.3 Negative Repricing
+Ratings can also fall when:
+
+- the role miscasts the actor badly
+- a once-hot star ages out of a lane and fails to pivot
+- the project becomes a meme for the wrong reasons
+- awards hype collapses into backlash
+- a sequel exposes the talent as repetitive
+
+This keeps the town churning.
+
+### 36.38 Awards Ceremony Presentation and Broadcast Layer
+The awards screenshot suggests a more theatrical presentation layer than the bible currently spells out.
+
+Studio Boss should add a formal **Awards Ceremony Presentation System**.
+
+#### 36.38.1 Ceremony Presentation Goals
+Ceremonies should feel like:
+
+- payoff for long-term campaigning
+- a public reputational event
+- a market-moving moment
+- a memory-generating spectacle
+
+#### 36.38.2 Ceremony Flow
+A major ceremony can present:
+
+- category splash screen
+- nominee lineup with studio attribution
+- pundit expectation line
+- suspense reveal
+- winner card
+- immediate aftermath panel
+
+The key dramatic beat is the reveal moment.
+The player should feel the tension before the winner is announced.
+
+#### 36.38.3 Ceremony Outcomes Beyond Trophies
+Ceremony results should feed into:
+
+- quote spikes
+- agency demands
+- trade headlines
+- streaming and library bumps
+- sequel framing for prestige brands
+- shareholder or board confidence where relevant
+- rival jealousy and poaching attempts
+
+#### 36.38.4 Minor vs Major Ceremony Treatment
+Not every award needs a full animation or long reveal.
+
+Treatment bands:
+
+- full broadcast ceremony for major tentpole awards shows
+- fast montage for secondary ceremonies
+- digest summary for guild and critic rounds when pacing matters
+
+This keeps the system dramatic without becoming tedious.
+
+### 36.39 Audience Strategy and Advertising Focus Planner
+A screenshot shows a much more explicit audience/marketing planning screen than the current bible fully details.
+
+Studio Boss should deepen the **Audience Strategy Planner** and tie it directly into release and advertising.
+
+#### 36.39.1 Audience Definition Layer
+For every project, the player should specify or approve:
+
+- primary audience
+- secondary audience
+- age bands
+- gender skew or mixed appeal
+- family co-viewing potential
+- prestige/auteur audience appeal
+- fandom or subculture target
+- international audience priority
+
+These should be forecast suggestions, not blind guesses.
+The script, genre, talent, rating, and release posture should all contribute suggested target audiences.
+
+#### 36.39.2 Marketing Focus Modes
+The player should choose a primary and secondary messaging strategy such as:
+
+- broad four-quadrant marketing
+- sell the plot
+- sell the star
+- sell the scares
+- sell the romance
+- sell the comedy
+- sell the spectacle
+- sell the world / mythology
+- sell the awards prestige
+- sell the true-story hook
+- sell the family adventure angle
+- sell the music
+
+A mismatch between audience and message should waste money.
+A sharp match should improve campaign efficiency.
+
+#### 36.39.3 Domestic vs Foreign Campaign Split
+The advertising screen should allow a readable split between:
+
+- domestic campaign budget
+- foreign campaign budget
+- territory-specific focus where relevant
+- platform / channel mix
+
+Some projects should justify much stronger foreign spend than domestic, and vice versa.
+
+#### 36.39.4 Campaign Efficiency Feedback
+The player should be told why a campaign is effective or wasteful.
+
+Examples:
+
+- broad spend is inefficient because appeal is niche
+- awards positioning works better than action spectacle messaging
+- foreign campaign should emphasize creatures and scale rather than dialogue
+- romance marketing is underselling the star pairing
+- family marketing is blocked by harsh rating tone
+
+This turns marketing from a blunt slider into a meaningful strategy layer.
+
+### 36.40 Canonical Rule for This Expansion Round
+The second benchmark-inspired pass should follow this rule:
+
+> **The player must be able to see not only what a project is, but how the town intends to sell it, fight over it, exploit it, and suffer through making it.**
+
+These additions should remain integrated with the already established screenplay, packaging, talent, awards, trades, distribution, production-problem, merchandising, and NPC AI systems rather than operating as separate minigames.

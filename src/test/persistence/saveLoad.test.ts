@@ -19,43 +19,8 @@ const localStorageMock = (() => {
   };
 })();
 
-Object.defineProperty(globalThis, "localStorage", {
-  value: localStorageMock,
-  writable: true,
-});
-
 describe("saveLoad", () => {
-  let setItemSpy: ReturnType<typeof vi.spyOn>;
-  let getItemSpy: ReturnType<typeof vi.spyOn>;
-
-  beforeEach(() => {
-    globalThis.localStorage.clear();
-    setItemSpy = vi.spyOn(globalThis.localStorage, 'setItem');
-    getItemSpy = vi.spyOn(globalThis.localStorage, 'getItem');
-  });
-
-  afterEach(() => {
-    vi.restoreAllMocks();
-  });
-
-  const localStorageMock = (() => {
-    let store = {};
-    return {
-      getItem(key) {
-        return store[key] || null;
-      },
-      setItem(key, value) {
-        store[key] = value.toString();
-      },
-      clear() {
-        store = {};
-      },
-      removeItem(key) {
-        delete store[key];
-      }
-    };
-  })();
-  Object.defineProperty(global, 'localStorage', {
+Object.defineProperty(globalThis, "localStorage", {
     value: localStorageMock,
   });
 
@@ -110,7 +75,7 @@ describe("saveLoad", () => {
 
     saveGame(2, state);
 
-    expect(setItemSpy).toHaveBeenCalledWith("studioboss_save_2", JSON.stringify(state));
+    expect(vi.mocked(localStorage.setItem)).toHaveBeenCalledWith("studioboss_save_2", JSON.stringify(state));
 
     // Check if it saved slots correctly
     const expectedSlots = {
@@ -123,7 +88,7 @@ describe("saveLoad", () => {
         timestamp: mockNow,
       }
     };
-    expect(setItemSpy).toHaveBeenCalledWith("studioboss_slots", JSON.stringify(expectedSlots));
+    expect(vi.mocked(localStorage.setItem)).toHaveBeenCalledWith("studioboss_slots", JSON.stringify(expectedSlots));
 
     // Restore Date.now
     Date.now = originalDateNow;
@@ -145,14 +110,14 @@ describe("saveLoad", () => {
     saveGame(1, state2);
 
     // It should have called setItem for the state
-    expect(setItemSpy).toHaveBeenCalledWith("studioboss_save_1", JSON.stringify(state2));
+    expect(vi.mocked(localStorage.setItem)).toHaveBeenCalledWith("studioboss_save_1", JSON.stringify(state2));
 
     // It should have called getItem for the slots first to merge
-    expect(getItemSpy).toHaveBeenCalledWith("studioboss_slots");
+    expect(vi.mocked(localStorage.getItem)).toHaveBeenCalledWith("studioboss_slots");
 
     // We can't know the exact timestamp of state1 without more mocking,
     // but we can parse the second setItem call to check if it preserved both slots.
-    const calls = localStorageMock.setItem.mock.calls;
+    const calls = vi.mocked(localStorageMock.setItem).mock.calls;
     const slotsCall = calls.find(call => call[0] === "studioboss_slots");
     expect(slotsCall).toBeDefined();
 

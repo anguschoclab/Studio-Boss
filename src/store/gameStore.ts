@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import { GameState, WeekSummary, ProjectFormat, BudgetTierKey, ArchetypeKey, TvFormatKey, ReleaseModelKey } from '@/engine/types';
+import { GameState, WeekSummary, ProjectFormat, BudgetTierKey, ArchetypeKey, TvFormatKey, ReleaseModelKey, ProjectContractType } from '@/engine/types';
+import { negotiateContract } from '@/engine/systems/buyers';
 import { initializeGame } from '@/engine/core/gameInit';
 import { advanceWeek } from '@/engine/core/weekAdvance';
 import { BUDGET_TIERS } from '@/engine/data/budgetTiers';

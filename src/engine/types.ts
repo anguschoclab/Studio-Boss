@@ -111,6 +111,8 @@ export interface Project {
   season?: number;
   releaseModel?: ReleaseModelKey;
   episodesReleased?: number;
+  contractType?: ProjectContractType;
+  buyerId?: string;
   renewable?: boolean;
 }
 
@@ -184,6 +186,8 @@ export interface GameState {
   cash: number;
   financeHistory: FinanceRecord[];
   families: Family[];
+  agencies: Agency[];
+  agents: Agent[];
   talentPool: TalentProfile[];
   contracts: Contract[];
   awards?: Award[];
@@ -201,6 +205,29 @@ export interface SaveSlotMeta {
 
 export type AccessLevel = 'outsider' | 'soft-access' | 'legacy' | 'dynasty' | 'comeback';
 
+export type TalentRole = 'director' | 'actor' | 'writer' | 'producer' | 'showrunner';
+export type AgencyTier = 'powerhouse' | 'major' | 'mid-tier' | 'boutique' | 'specialist';
+export type AgencyCulture = 'shark' | 'family' | 'volume' | 'prestige';
+export type AgentSpecialty = 'film_packaging' | 'tv_packaging' | 'literary' | 'talent' | 'comedy' | 'unscripted';
+
+export interface Agency {
+  id: string;
+  name: string;
+  tier: AgencyTier;
+  culture: AgencyCulture;
+  prestige: number;
+  leverage: number; // 0-100
+}
+
+export interface Agent {
+  id: string;
+  agencyId: string;
+  name: string;
+  specialty: AgentSpecialty;
+  skill: number; // 0-100
+  aggression: number; // 0-100
+}
+
 export interface Family {
   id: string;
   name: string;
@@ -216,7 +243,7 @@ export interface Family {
 export interface TalentProfile {
   id: string;
   name: string;
-  type: 'director' | 'actor' | 'writer' | 'producer';
+  roles: TalentRole[]; // Changed from type
   prestige: number;
   fee: number;
   draw: number;
@@ -224,6 +251,9 @@ export interface TalentProfile {
   // Lineage properties
   familyId?: string;
   accessLevel: AccessLevel;
+  // Representation
+  agencyId?: string;
+  agentId?: string;
 }
 
 export interface Contract {

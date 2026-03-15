@@ -5,7 +5,7 @@ import { Project, Contract } from "../../../engine/types";
 const mockProjectDev: Project = {
   id: "proj-1", title: "Test Dev", budgetTier: "low", budget: 500000, genre: "Comedy",
   status: "development", developmentWeeks: 2, productionWeeks: 2, weeksInPhase: 0,
-  revenue: 0, weeklyRevenue: 0, weeklyCost: 10000, buzz: 50
+  revenue: 0, weeklyRevenue: 0, weeklyCost: 10000, buzz: 50, format: "film", targetAudience: "general", flavor: "indie", releaseWeek: 0
 };
 
 const mockProjectProd: Project = { ...mockProjectDev, id: "proj-2", status: "production", weeklyCost: 20000 };
@@ -23,7 +23,7 @@ describe("finance", () => {
   describe("calculateWeeklyRevenue", () => {
     it("sums revenue of released projects, factoring in backend percent", () => {
       const contracts: Contract[] = [
-        { id: "c1", projectId: "proj-3", talentId: "t1", status: "active", upfrontFee: 0, backendPercent: 10 }
+        { id: "c1", projectId: "proj-3", talentId: "t1", fee: 0, backendPercent: 10 }
       ];
       const revenue = calculateWeeklyRevenue([mockProjectReleased], contracts);
       expect(revenue).toBe(90000); // 100k - 10%
@@ -42,8 +42,8 @@ describe("finance", () => {
 
     it("sums backend percentages from multiple contracts on the same project", () => {
       const contracts: Contract[] = [
-        { id: "c1", projectId: "proj-3", talentId: "t1", status: "active", upfrontFee: 0, backendPercent: 10 },
-        { id: "c2", projectId: "proj-3", talentId: "t2", status: "active", upfrontFee: 0, backendPercent: 5 }
+        { id: "c1", projectId: "proj-3", talentId: "t1", fee: 0, backendPercent: 10 },
+        { id: "c2", projectId: "proj-3", talentId: "t2", fee: 0, backendPercent: 5 }
       ];
       const revenue = calculateWeeklyRevenue([mockProjectReleased], contracts);
       expect(revenue).toBe(85000); // 100k - 15%
@@ -51,7 +51,7 @@ describe("finance", () => {
 
     it("ignores contracts that belong to a different project", () => {
       const contracts: Contract[] = [
-        { id: "c1", projectId: "proj-99", talentId: "t1", status: "active", upfrontFee: 0, backendPercent: 50 }
+        { id: "c1", projectId: "proj-99", talentId: "t1", fee: 0, backendPercent: 50 }
       ];
       const revenue = calculateWeeklyRevenue([mockProjectReleased], contracts);
       expect(revenue).toBe(100000); // No reduction
@@ -60,7 +60,7 @@ describe("finance", () => {
     it("handles a released project with zero weekly revenue", () => {
       const mockProjectReleasedZero: Project = { ...mockProjectReleased, id: "proj-6", weeklyRevenue: 0 };
       const contracts: Contract[] = [
-        { id: "c1", projectId: "proj-6", talentId: "t1", status: "active", upfrontFee: 0, backendPercent: 10 }
+        { id: "c1", projectId: "proj-6", talentId: "t1", fee: 0, backendPercent: 10 }
       ];
       const revenue = calculateWeeklyRevenue([mockProjectReleasedZero], contracts);
       expect(revenue).toBe(0);
