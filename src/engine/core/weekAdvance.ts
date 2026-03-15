@@ -1,3 +1,4 @@
+import { generateOpportunity } from '../generators/opportunities';
 import { GameState, WeekSummary } from '../types';
 import { calculateWeeklyCosts, calculateWeeklyRevenue } from '../systems/finance';
 import { advanceProject } from '../systems/projects';
@@ -5,7 +6,7 @@ import { updateRival } from '../systems/rivals';
 import { updateBuyers } from '../systems/buyers';
 import { generateHeadlines } from '../generators/headlines';
 import { generateAwardsProfile, runAwardsCeremony } from '../systems/awards';
-import { pick } from '../utils';
+import { pick, groupContractsByProject } from '../utils';
 
 const EVENT_POOL = [
   'Market analysts upgrade entertainment sector outlook.',
@@ -70,9 +71,25 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
 
   // Generate headlines
   const newHeadlines = generateHeadlines(nextWeek, updatedRivals);
+  newHeadlines.push(...formattedBuyerHeadlines);
+
+  // Manage Opportunities
+  const updatedOpportunities = state.opportunities
+    .map(opp => ({ ...opp, weeksUntilExpiry: opp.weeksUntilExpiry - 1 }))
+    .filter(opp => opp.weeksUntilExpiry > 0);
 
   // Random events
   const events: string[] = [];
+  if (Math.random() < 0.15) {
+    events.push(pick(EVENT_POOL));
+  }
+
+  // Possibly spawn a new opportunity
+  if (Math.random() < 0.2) { // 20% chance per week
+    const newOpp = generateOpportunity(state.week, state.studio.prestige);
+    updatedOpportunities.push(newOpp);
+    events.push(`A new script "${newOpp.title}" just hit the market!`);
+  }
   if (Math.random() < 0.15) {
     events.push(pick(EVENT_POOL));
   }
