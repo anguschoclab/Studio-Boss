@@ -190,6 +190,7 @@ export interface GameState {
   agents: Agent[];
   talentPool: TalentProfile[];
   contracts: Contract[];
+  buyers: Buyer[];
   awards?: Award[];
 }
 

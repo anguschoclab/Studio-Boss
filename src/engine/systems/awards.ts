@@ -74,7 +74,7 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
     body: AwardBody,
     category: AwardCategory,
     evaluator: (p: Project) => number,
-    formatFilter: 'film' | 'tv' | 'both' = 'both'
+    formatFilter: 'film' | 'tv' | 'unscripted' | 'both' = 'both'
   ) => {
         // Filter and score candidates in a single pass
     const scored = eligibleProjects.reduce((acc, p) => {
@@ -142,6 +142,10 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
     evaluateAward('Primetime Emmys', 'Best Series', p =>
       (p.awardsProfile?.criticScore || 0) + (p.awardsProfile?.culturalHeat || 0) + (p.awardsProfile?.industryNarrativeScore || 0) * 0.5,
       'tv'
+    );
+    evaluateAward('Primetime Emmys', 'Best Documentary', p =>
+      (p.awardsProfile?.criticScore || 0) * 1.5 + (p.awardsProfile?.industryNarrativeScore || 0),
+      'unscripted'
     );
   }
 
