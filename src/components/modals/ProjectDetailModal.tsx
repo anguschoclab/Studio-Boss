@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { formatMoney } from '@/engine/utils';
@@ -13,10 +14,10 @@ export const ProjectDetailModal = () => {
   const gameState = useGameStore(s => s.gameState);
   const signContract = useGameStore(s => s.signContract);
   const renewProject = useGameStore(s => s.renewProject);
-  const projects = gameState?.projects || [];
-  const project = projects.find(p => p.id === selectedProjectId);
-  const talentPool = gameState?.talentPool || [];
-  const contracts = gameState?.contracts || [];
+  const projects = useMemo(() => gameState?.projects || [], [gameState?.projects]);
+  const project = useMemo(() => projects.find(p => p.id === selectedProjectId), [projects, selectedProjectId]);
+  const talentPool = useMemo(() => gameState?.talentPool || [], [gameState?.talentPool]);
+  const contracts = useMemo(() => gameState?.contracts || [], [gameState?.contracts]);
 
   if (!project) return null;
 
@@ -58,8 +59,8 @@ export const ProjectDetailModal = () => {
             {['director', 'actor', 'writer', 'producer'].map(role => {
               const roleContracts = contracts.filter(c => c.projectId === project.id);
               const roleTalentIds = roleContracts.map(c => c.talentId);
-              const attachedTalent = talentPool.filter(t => roleTalentIds.includes(t.id) && t.type === role);
-              const availableTalent = talentPool.filter(t => t.type === role && !roleTalentIds.includes(t.id));
+              const attachedTalent = talentPool.filter(t => roleTalentIds.includes(t.id) && t.roles.includes(role as import('@/engine/types').TalentRole));
+              const availableTalent = talentPool.filter(t => t.roles.includes(role as import('@/engine/types').TalentRole) && !roleTalentIds.includes(t.id));
 
               return (
                 <div key={role} className="flex items-center justify-between text-xs p-2 bg-accent/30 rounded">
