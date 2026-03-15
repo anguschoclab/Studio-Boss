@@ -8,7 +8,7 @@ export function advanceProject(
   currentWeek: number,
   studioPrestige: number,
   projectContracts: Contract[],
-  talentPool: TalentProfile[]
+  talentPoolMap: Map<string, TalentProfile>
 ): { project: Project; update: string | null } {
   if (project.status === 'archived') return { project, update: null };
 
@@ -38,7 +38,7 @@ export function advanceProject(
     const randomFactor = randRange(0.7, 1.3);
 
     // Talent impact
-    const attachedTalent = projectContracts.map(c => talentPool.find(t => t.id === c.talentId)).filter(t => t !== undefined) as TalentProfile[];
+    const attachedTalent = projectContracts.map(c => talentPoolMap.get(c.talentId)).filter(t => t !== undefined) as TalentProfile[];
     const talentDrawFactor = attachedTalent.reduce((sum, t) => sum + (t.draw / 100), 1);
 
     const baseGross = (minRev + (maxRev - minRev) * buzzFactor * prestigeFactor * randomFactor) * talentDrawFactor;
@@ -137,7 +137,7 @@ export function advanceProject(
 
   // Buzz drift during active phases
   if (p.status === 'development' || p.status === 'production') {
-    const attachedTalent = projectContracts.map(c => talentPool.find(t => t.id === c.talentId)).filter(t => t !== undefined) as TalentProfile[];
+    const attachedTalent = projectContracts.map(c => talentPoolMap.get(c.talentId)).filter(t => t !== undefined) as TalentProfile[];
     const talentBuzzBonus = attachedTalent.reduce((sum, t) => sum + (t.draw / 50), 0);
     p.buzz = clamp(p.buzz + randRange(-4, 6) + talentBuzzBonus, 0, 100);
   }
