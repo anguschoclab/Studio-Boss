@@ -35,10 +35,16 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
     contractsByProject.get(contract.projectId)!.push(contract);
   }
 
+  // Group talent by id for O(1) lookup
+  const talentPoolMap = new Map<string, typeof state.talentPool[0]>();
+  for (const talent of state.talentPool) {
+    talentPoolMap.set(talent.id, talent);
+  }
+
   // Advance projects
   const updatedProjects = state.projects.map(p => {
     const projectContracts = contractsByProject.get(p.id) || [];
-    const { project, update } = advanceProject(p, nextWeek, state.studio.prestige, projectContracts, state.talentPool);
+    const { project, update } = advanceProject(p, nextWeek, state.studio.prestige, projectContracts, talentPoolMap);
     if (update) projectUpdates.push(update);
 
     // Generate awards profile if newly released
