@@ -91,9 +91,11 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
     // Calculate talent costs
     const attachedTalentIds = params.attachedTalentIds || [];
-    const attachedTalent = attachedTalentIds
-      .map(id => state.talentPool.find(t => t.id === id))
-      .filter(t => t !== undefined);
+    const attachedTalent = attachedTalentIds.reduce((acc, id) => {
+      const t = state.talentPool.find(t => t.id === id);
+      if (t) acc.push(t);
+      return acc;
+    }, [] as typeof state.talentPool);
 
     const talentFees = attachedTalent.reduce((sum, t) => sum + (t?.fee || 0), 0);
     const totalBudget = budget + talentFees;
