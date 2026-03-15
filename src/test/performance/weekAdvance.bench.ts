@@ -49,6 +49,8 @@ function createMockState(projectCount: number, contractsPerProject: number): Gam
     talentPool: [],
     financeHistory: [],
     awards: [],
+buyers: [],
+families: [],
   };
 }
 

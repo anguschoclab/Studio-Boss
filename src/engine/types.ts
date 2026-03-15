@@ -111,6 +111,8 @@ export interface Project {
   season?: number;
   releaseModel?: ReleaseModelKey;
   episodesReleased?: number;
+  contractType?: ProjectContractType;
+  buyerId?: string;
   renewable?: boolean;
 }
 
@@ -153,6 +155,7 @@ export interface WeekSummary {
 }
 
 export interface GameState {
+  buyers: Buyer[];
   studio: Studio;
   projects: Project[];
   rivals: RivalStudio[];

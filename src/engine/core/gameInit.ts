@@ -1,4 +1,4 @@
-import { GameState, ArchetypeKey, RivalStudio, Buyer } from '../types';
+import { GameState, ArchetypeKey, RivalStudio } from '../types';
 import { ARCHETYPES } from '../data/archetypes';
 import { generateStudioName, generateMotto } from '../generators/names';
 import { generateFamilies, generateTalentPool } from '../generators/talent';
@@ -46,6 +46,7 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
     cash: arch.startingCash,
     financeHistory: [{ week: 1, cash: arch.startingCash, revenue: 0, costs: 0 }],
     families,
+    buyers: [],
     talentPool,
     contracts: [],
     awards: [],

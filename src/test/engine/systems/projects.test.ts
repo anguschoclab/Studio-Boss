@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { advanceProject } from "../../../engine/systems/projects";
-import { Project, Contract, TalentProfile } from "../../../engine/types";
+import { Project } from "../../../engine/types";
 
 const mockProject: Project = {
   id: "proj-1",
@@ -12,10 +12,14 @@ const mockProject: Project = {
   developmentWeeks: 2,
   productionWeeks: 2,
   weeksInPhase: 0,
-  revenue: 0,
-  weeklyRevenue: 0,
+  format: "film",
+  targetAudience: "General",
+  flavor: "Quirky",
+  releaseWeek: null,
   weeklyCost: 10000,
   buzz: 50,
+  revenue: 0,
+  weeklyRevenue: 0,
 };
 
 describe("advanceProject", () => {
