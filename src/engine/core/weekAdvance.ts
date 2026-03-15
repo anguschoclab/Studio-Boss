@@ -84,19 +84,12 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
     events.push(pick(EVENT_POOL));
   }
 
-    // Awards logic (Week 52)
-  let prestigeChange = 0;
-  let newAwards: Award[] = [];
-  if (nextWeek % 52 === 0) {
-    const year = Math.floor(nextWeek / 52);
-    events.push(`Year ${year} Awards Ceremony!`);
-
-    const ceremonyResult = runAwardsCeremony(state, year);
-
-    newAwards = ceremonyResult.newAwards;
-    prestigeChange = ceremonyResult.prestigeChange;
-    projectUpdates.push(...ceremonyResult.projectUpdates);
-  }
+  // Awards logic (Week 52)
+  const ceremonyResult = handleAwardsCeremony(state, nextWeek);
+  if (ceremonyResult.events) events.push(...ceremonyResult.events);
+  if (ceremonyResult.projectUpdates) projectUpdates.push(...ceremonyResult.projectUpdates);
+  const prestigeChange = ceremonyResult.prestigeChange;
+  const newAwards = ceremonyResult.newAwards;
 
   const newState: GameState = {
     ...state,
@@ -127,4 +120,24 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
   };
 
   return { newState, summary };
+}
+
+function handleAwardsCeremony(state: GameState, nextWeek: number) {
+  let prestigeChange = 0;
+  let newAwards: Award[] = [];
+  const events: string[] = [];
+  const projectUpdates: string[] = [];
+
+  if (nextWeek % 52 === 0) {
+    const year = Math.floor(nextWeek / 52);
+    events.push(`Year ${year} Awards Ceremony!`);
+
+    const ceremonyResult = runAwardsCeremony(state, year);
+
+    newAwards = ceremonyResult.newAwards;
+    prestigeChange = ceremonyResult.prestigeChange;
+    projectUpdates.push(...ceremonyResult.projectUpdates);
+  }
+
+  return { prestigeChange, newAwards, events, projectUpdates };
 }
