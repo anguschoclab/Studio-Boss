@@ -1,7 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { advanceWeek } from "@/engine/core/weekAdvance";
 import { initializeGame } from "@/engine/core/gameInit";
-import { GameState } from "@/engine/types";
 
 describe("advanceWeek", () => {
   it("advances the game by one week and generates a summary", () => {

@@ -4,6 +4,7 @@ import { useUIStore } from '@/store/uiStore';
 import { formatMoney } from '@/engine/utils';
 import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
 import { TV_FORMATS } from '@/engine/data/tvFormats';
+import { evaluateGreenlight } from '@/engine/systems/greenlight';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
@@ -14,14 +15,22 @@ export const ProjectDetailModal = () => {
   const gameState = useGameStore(s => s.gameState);
   const signContract = useGameStore(s => s.signContract);
   const renewProject = useGameStore(s => s.renewProject);
+  const greenlightProject = useGameStore(s => s.greenlightProject);
   const projects = useMemo(() => gameState?.projects || [], [gameState?.projects]);
   const project = useMemo(() => projects.find(p => p.id === selectedProjectId), [projects, selectedProjectId]);
   const talentPool = useMemo(() => gameState?.talentPool || [], [gameState?.talentPool]);
   const contracts = useMemo(() => gameState?.contracts || [], [gameState?.contracts]);
 
-  if (!project) return null;
+  const tier = project ? BUDGET_TIERS[project.budgetTier] : null;
 
-  const tier = BUDGET_TIERS[project.budgetTier];
+  const greenlightReport = useMemo(() => {
+    if (!project || project.status !== 'needs_greenlight' || !gameState) return null;
+    const projectContracts = contracts.filter(c => c.projectId === project.id);
+    const attachedTalent = projectContracts.map(c => talentPool.find(t => t.id === c.talentId)).filter(Boolean) as import('@/engine/types').TalentProfile[];
+    return evaluateGreenlight(project, gameState.cash, attachedTalent);
+  }, [project, gameState, contracts, talentPool]);
+
+  if (!project || !tier) return null;
 
   return (
     <Dialog open={!!selectedProjectId} onOpenChange={() => selectProject(null)}>
@@ -53,6 +62,50 @@ export const ProjectDetailModal = () => {
             <p className="text-sm text-muted-foreground italic">"{project.flavor}"</p>
           )}
 
+
+          {/* Greenlight Committee */}
+          {project.status === 'needs_greenlight' && greenlightReport && (
+            <div className="space-y-3 border border-warning/50 bg-warning/10 p-4 rounded-lg">
+              <div className="flex items-center justify-between border-b border-warning/20 pb-2">
+                <h4 className="font-display font-semibold text-warning-foreground">Greenlight Committee Readout</h4>
+                <Badge variant={greenlightReport.score >= 60 ? 'default' : 'destructive'}>
+                  {greenlightReport.recommendation}
+                </Badge>
+              </div>
+
+              <div className="space-y-2 text-sm">
+                {greenlightReport.positives.length > 0 && (
+                  <div>
+                    <span className="font-semibold text-success">Pros:</span>
+                    <ul className="list-disc list-inside text-muted-foreground ml-2">
+                      {greenlightReport.positives.map((p, i) => <li key={i}>{p}</li>)}
+                    </ul>
+                  </div>
+                )}
+                {greenlightReport.negatives.length > 0 && (
+                  <div>
+                    <span className="font-semibold text-destructive">Cons:</span>
+                    <ul className="list-disc list-inside text-muted-foreground ml-2">
+                      {greenlightReport.negatives.map((n, i) => <li key={i}>{n}</li>)}
+                    </ul>
+                  </div>
+                )}
+              </div>
+
+              <Button
+                className="w-full mt-2"
+                variant={greenlightReport.score >= 60 ? 'default' : 'destructive'}
+                onClick={() => {
+                  greenlightProject(project.id);
+                  selectProject(null);
+                }}
+              >
+                Approve Greenlight
+              </Button>
+            </div>
+          )}
+
+
           {/* Casting Section */}
           <div className="space-y-2 border-t border-border pt-4">
             <h4 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Cast & Crew</h4>
@@ -71,7 +124,7 @@ export const ProjectDetailModal = () => {
                         <span key={t.id} className="text-foreground font-semibold">{t.name}</span>
                       ))}
                     </div>
-                  ) : project.status === 'development' ? (
+                  ) : (project.status === 'development' || project.status === 'needs_greenlight') ? (
                     <Select onValueChange={(val) => {
                       if (val && gameState && gameState.cash >= talentPool.find(t => t.id === val)!.fee) {
                         signContract(val, project.id);

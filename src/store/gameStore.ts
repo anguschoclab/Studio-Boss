@@ -34,6 +34,7 @@ interface GameStore {
   clearGame: () => void;
   signContract: (talentId: string, projectId: string) => void;
   pitchProject: (projectId: string, buyerId: string, contractType: ProjectContractType) => boolean;
+  greenlightProject: (projectId: string) => void;
 }
 
 
@@ -209,6 +210,35 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
   clearGame: () => set({ gameState: null }),
 
+
+
+  greenlightProject: (projectId) => {
+    const state = get().gameState;
+    if (!state) return;
+
+    const projectIndex = state.projects.findIndex(p => p.id === projectId);
+    if (projectIndex === -1) return;
+
+    const project = state.projects[projectIndex];
+    if (project.status !== 'needs_greenlight') return;
+
+    const updatedProjects = [...state.projects];
+    updatedProjects[projectIndex] = {
+      ...project,
+      status: 'production',
+      weeksInPhase: 0,
+    };
+
+    const headlineText = `"${project.title}" receives full greenlight and enters production.`;
+
+    set({
+      gameState: {
+        ...state,
+        projects: updatedProjects,
+        headlines: [{ id: `gh-${crypto.randomUUID()}`, text: headlineText, week: state.week, category: 'market' as const }, ...state.headlines].slice(0, 50)
+      }
+    });
+  },
 
   pitchProject: (projectId, buyerId, contractType) => {
     const state = get().gameState;
