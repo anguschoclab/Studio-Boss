@@ -1,3 +1,4 @@
+import { mock } from "vitest";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { useGameStore } from "../../store/gameStore";
 import { GameState } from "../../engine/types";
