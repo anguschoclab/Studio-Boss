@@ -1,10 +1,12 @@
 // Domain models for Studio Boss simulation engine
 
 export type ArchetypeKey = 'major' | 'mid-tier' | 'indie';
-export type ProjectStatus = 'development' | 'production' | 'released' | 'archived';
+export type ProjectStatus = 'development' | 'pitching' | 'production' | 'released' | 'archived';
 export type ProjectFormat = 'film' | 'tv';
 export type BudgetTierKey = 'low' | 'mid' | 'high' | 'blockbuster';
 export type HeadlineCategory = 'rival' | 'market' | 'talent' | 'awards' | 'general';
+export type TvFormatKey = 'sitcom' | 'procedural' | 'prestige_drama' | 'limited_series' | 'animated_comedy' | 'animated_prestige';
+export type ReleaseModelKey = 'weekly' | 'binge' | 'split';
 
 export interface Studio {
   name: string;
@@ -128,7 +130,30 @@ export interface WeekSummary {
   events: string[];
 }
 
+
+export type OpportunityType = 'script' | 'package' | 'pitch' | 'rights';
+export type DiscoveryOrigin = 'open_spec' | 'agency_package' | 'writer_sample' | 'heat_list' | 'annual_list' | 'passion_project';
+
+export interface Opportunity {
+  id: string;
+  type: OpportunityType;
+  title: string;
+  format: ProjectFormat;
+  genre: string;
+  budgetTier: BudgetTierKey;
+  targetAudience: string;
+  flavor: string;
+  origin: DiscoveryOrigin;
+  costToAcquire: number;
+  weeksUntilExpiry: number;
+  attachedTalentIds?: string[];
+  tvFormat?: TvFormatKey;
+  episodes?: number;
+  releaseModel?: ReleaseModelKey;
+}
+
 export interface GameState {
+  opportunities: Opportunity[];
   studio: Studio;
   projects: Project[];
   rivals: RivalStudio[];
@@ -136,6 +161,13 @@ export interface GameState {
   week: number;
   cash: number;
   financeHistory: FinanceRecord[];
+  families: Family[];
+  agencies: Agency[];
+  agents: Agent[];
+  talentPool: TalentProfile[];
+  contracts: Contract[];
+  buyers: Buyer[];
+  awards?: Award[];
 }
 
 export interface SaveSlotMeta {
@@ -147,13 +179,21 @@ export interface SaveSlotMeta {
   timestamp: number;
 }
 
-// Future system stubs
-export interface TalentProfile {
+
+export type AccessLevel = 'outsider' | 'soft-access' | 'legacy' | 'dynasty' | 'comeback';
+
+export type TalentRole = 'director' | 'actor' | 'writer' | 'producer' | 'showrunner';
+export type AgencyTier = 'powerhouse' | 'major' | 'mid-tier' | 'boutique' | 'specialist';
+export type AgencyCulture = 'shark' | 'family' | 'volume' | 'prestige';
+export type AgentSpecialty = 'film_packaging' | 'tv_packaging' | 'literary' | 'talent' | 'comedy' | 'unscripted';
+
+export interface Agency {
   id: string;
   name: string;
-  type: 'director' | 'actor' | 'writer' | 'producer';
+  tier: AgencyTier;
+  culture: AgencyCulture;
   prestige: number;
-  fee: number;
+  leverage: number; // 0-100
 }
 
 
@@ -162,5 +202,6 @@ export interface Contract {
   id: string;
   talentId: string;
   projectId: string;
-  terms: Record<string, unknown>;
+  fee: number;
+  backendPercent: number;
 }

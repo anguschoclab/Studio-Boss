@@ -1,6 +1,6 @@
 # Studio Boss — Master Design Bible
 
-**Version:** Master Draft 1.1  
+**Version:** Master Draft 1.1
 **Status:** Living Design Document  
 **Project:** Studio Boss  
 **Genre:** Single-player Hollywood studio management simulation  
@@ -339,6 +339,47 @@ Each project should support a detail modal or full view containing tabs such as:
 ### 12.5 Design Intent
 The pipeline should make the player feel like an executive surveying a live slate, not a spreadsheet operator lost in menus.
 
+### 12.6 Talent Assignment UX on the Pipeline
+The pipeline should support direct talent assignment rather than forcing the player through abstract menus alone.
+
+This means project cards in **Development** can act as drop targets for talent, allowing the player to build a package by dragging talent directly onto a project.
+
+Key interaction goals:
+
+- make packaging feel tactile and immediate
+- reduce friction between scouting and attaching talent
+- let the player compare multiple possible packages quickly
+- reinforce the fantasy of assembling a movie from a live slate board
+
+### 12.7 Talent Cards
+Talent should be represented by compact, readable cards that can live in side panels, roster views, and selection drawers.
+
+Each card should surface at least:
+
+- name
+- role type
+- prestige
+- salary expectation
+- temperament
+- availability window
+- chemistry tags
+- agency affiliation
+- special traits such as awards heat, box office draw, auteur status, or controversy risk
+
+### 12.8 Pipeline Feedback for Packaging
+When talent is dropped onto a project, the project card should update immediately to show package impact.
+
+Visible feedback can include:
+
+- projected budget change
+- prestige shift
+- projected commercial appeal shift
+- chemistry warnings
+- scheduling conflicts
+- contract risk indicators
+
+The player should be able to understand within seconds whether a package makes the project stronger, riskier, more expensive, or more awards-friendly.
+
 ---
 
 ## 13. Film and Television Model
@@ -561,6 +602,93 @@ Earlier versions mention descriptor-based personalities. This should remain the 
 ### 17.5 Design Intent
 Talent should feel like people with leverage and history, not stat containers.
 
+### 17.6 The Talent Agency Layer
+A dedicated **Talent Agency** system should sit on top of the existing talent and packaging model. This is not only a database of people. It is a playable management layer where the player discovers, courts, signs, and manages high-profile creative talent with competing goals and egos.
+
+The Talent Agency layer should include:
+
+- discoverable actors, directors, writers, showrunners, and marquee producers
+- agency relationships and representation strength
+- talent availability windows and exclusivity pressure
+- package-friendly chemistry between specific collaborators
+- contract negotiations with both guaranteed cash and backend participation
+- temperament-driven instability such as diva behavior, walk-off threats, or public complaints
+
+### 17.7 Drag-and-Drop Casting and Packaging
+One of the signature UX interactions should be drag-and-drop casting.
+
+The player opens a **Talent Roster** tab from the dashboard, browses or filters available talent cards, and drags them directly onto projects sitting in the **Development** column of the Pipeline Board.
+
+This interaction should support several goals at once:
+
+- faster project packaging
+- clearer relationship between talent choice and project identity
+- more playful experimentation with different casts and creative teams
+- immediate visual feedback on prestige, cost, chemistry, and risk
+
+Dropping talent onto a project should trigger one of three states:
+
+- **Soft Attach**: the player is testing a package and seeing projected outcomes
+- **Offer Out**: the studio is actively negotiating terms
+- **Signed**: the deal is completed and the project stats are updated permanently unless the contract is broken
+
+### 17.8 Talent Card Data Model
+Each talent card should communicate executive-relevant information in a glanceable format.
+
+Recommended card properties:
+
+- **Prestige**: awards credibility, critic heat, cultural cachet
+- **Salary**: expected upfront fee or episodic/weekly cost
+- **Temperament**: reliability, ego volatility, collaboration difficulty, public meltdown risk
+- **Draw**: box office or subscriber-pull estimate
+- **Craft**: expected quality lift to script, direction, or performance
+- **Chemistry**: known positive or negative relationships with other talent
+- **Availability**: scheduling window and competing commitments
+- **Agency leverage**: how difficult the negotiation will be
+
+Card iconography should be simple and immediately readable, leaning on a small set of consistent symbols so the roster feels premium rather than cluttered.
+
+### 17.9 Contract Structure and Negotiation Depth
+Contract negotiation should move beyond a single salary number.
+
+Core contract levers should include:
+
+- upfront fee
+- backend points
+- bonuses tied to awards, box office, delivery, or renewals
+- approval rights
+- exclusivity period
+- optional sequel or crossover commitments
+- publicity obligations such as festival attendance or talk-show appearances
+
+The player should frequently choose between safer short-term spending and riskier backend-heavy deals that can preserve cash but become expensive if the project breaks out.
+
+### 17.10 Diva Events and Personality Chaos
+High-value talent should create operational drama, not just upside.
+
+A **Diva Event** framework should inject random or semi-predictable disruptions such as:
+
+- refusing rewrites
+- demanding a larger trailer vanity package equivalent in game terms
+- threatening to leave unless billing changes
+- reigniting a feud with another attached collaborator
+- refusing marketing appearances
+- clashing with a director over cut, tone, or schedule
+- generating tabloid noise that hurts morale or hype
+
+These events should not be pure punishment. In some cases, indulging a difficult star may preserve buzz, protect awards chances, or keep a valuable package alive.
+
+### 17.11 Strategic Purpose
+The Talent Agency system gives the player another authentic Hollywood tension point: talent can be your greatest accelerator and your greatest source of chaos.
+
+The intended story outcomes include:
+
+- assembling a dream package that instantly legitimizes a project
+- risking the budget on prestige talent for awards upside
+- juggling multiple giant personalities on the same production
+- preserving cash through backend-heavy deals and regretting it after a breakout
+- losing weeks of momentum because a temperamental star freezes production at the worst moment
+
 ---
 
 ## 18. Negotiation Systems
@@ -780,552 +908,185 @@ The roadmap explicitly references prestige and commercial meters. These should n
 ### 23.4 Recovery and Reappraisal
 Some projects should improve in reputation over time, allowing “cult recovery” stories or rediscovery arcs.
 
+### 23.5 Dynamic Hype Campaigns
+Buzz should not remain a mostly passive output. It should become a controllable strategic layer during production and the run-up to release.
+
+A **Dynamic Hype Campaign** system allows the player to actively shape opening demand by allocating marketing spend across channels while a project is in **Production**, **Post**, and **Pre-Release** phases.
+
+### 23.6 Marketing Spend Channels
+When the player opens a project in the **Production** column, the Project Detail Modal should expose a dedicated **Marketing Spend** section.
+
+The player can allocate budget across channels such as:
+
+- trailer placements
+- digital ads
+- viral social campaigns
+- convention appearances
+- talk-show/publicity tour bookings
+- outdoor advertising
+- prestige trade campaign spending
+- event advertising such as Super Bowl spots or major sports tie-ins
+
+Different channels should have different strengths, costs, volatility, and audience affinities.
+
+### 23.7 Hype Meter and Forecasting
+As the player adjusts spend sliders, a live **Hype Meter** should update in real time.
+
+The meter should forecast variables such as:
+
+- opening weekend potential
+- awareness level
+- audience-fit confidence
+- prestige awareness versus broad commercial awareness
+- risk of overexposure or backlash
+- likely lift in pre-sales, reviews visibility, or awards chatter
+
+This system should not promise certainty. It should present a high-confidence forecast band so the player can feel informed without seeing behind the curtain too perfectly.
+
+### 23.8 Word-of-Mouth vs Paid Awareness
+The player should be able to choose between very different campaign philosophies.
+
+Examples:
+
+- a low-cost, confidence-heavy word-of-mouth strategy for prestige releases
+- an aggressive four-quadrant spend designed to secure a huge opening weekend
+- a niche-targeted campaign tuned for specific age, gender, or regional audiences
+- an awards-first campaign that boosts prestige and long-tail legs more than day-one revenue
+
+This creates a meaningful tension between conserving capital and manufacturing event status.
+
+### 23.9 Diminishing Returns and Backlash
+Marketing spend should not scale linearly forever.
+
+The system should account for:
+
+- diminishing returns after saturation
+- poor channel-project fit
+- mismatch between hype and actual quality
+- controversy or overexposure penalties
+- competitive crowding when rivals buy the same release window attention
+
+A weak movie with massive hype may still open strong, but it should be more likely to suffer steep second-weekend collapse, hostile audience sentiment, or meme-driven backlash.
+
+### 23.10 UX Intent
+The marketing interface should feel sleek and modern rather than spreadsheet-heavy.
+
+Recommended UX traits:
+
+- intuitive sliders with instant response
+- lightweight channel descriptions on hover
+- forecast deltas displayed beside each channel
+- clear readout of remaining discretionary marketing budget
+- strong visual connection between spend decisions and the project’s commercial outlook
+
+This turns marketing from a hidden formula into a satisfying executive decision surface.
+
 ---
 
 ## 24. Festivals and Awards
 
-The game’s prestige layer is heavily tied to festivals and awards. This system should function as a full annual prestige metagame rather than a light cosmetic bonus layer. It should connect release strategy, campaign spending, critical reception, creative risk, talent leverage, studio identity, and long-tail catalog value.
+The game’s prestige layer is heavily tied to festivals and awards.
 
-### 24.1 Goals of the Awards System
-The awards system should do five jobs at once:
-
-- reward prestige-minded projects and elite craft execution
-- create meaningful strategic choices around release timing, campaign spending, platform format, and creative positioning
-- give smaller, riskier, or more artistic projects a path to success that is not purely box office driven
-- create emotional highs and lows through nominations, wins, snubs, scandals, and comeback narratives
-- feed long-term studio legacy, not just short-term prestige points
-
-Awards should never be only decorative. A nomination or win should have downstream effects on business outcomes, studio culture, future development choices, and talent relationships.
-
-### 24.2 Annual Awards Cycle
-The system should run on a recurring yearly structure with five stages.
-
-#### 24.2.1 Eligibility Stage
-Projects first need to qualify for a given award body. Qualification should be determined by project format, release method, release window, distribution scale, budget bracket, campaign support, and category fit.
-
-#### 24.2.2 Awards Profile Generation
-Every film and television project should generate a hidden awards profile based on the project’s creative and market identity. Suggested attributes include:
-
-- prestige score
-- critic score
-- guild appeal
-- audience passion
-- cultural heat
-- craft excellence
-- campaign strength
-- controversy risk
-- studio reputation bonus
-- festival momentum
-
-#### 24.2.3 Nomination Stage
-Each award body should evaluate projects according to its own preferences. Some institutions should skew toward prestige dramas and serious auteurs, while others should favor accessible star vehicles, indie credibility, audience warmth, or television craft.
-
-#### 24.2.4 Campaign Stage
-The player should be able to campaign actively. Campaign actions may include:
-
-- For Your Consideration pushes
-- guild screenings
-- Q and A events
-- critic outreach
-- red carpet appearances
-- talent press tours
-- damage control after scandals
-- strategic festival placement
-- selective category campaigning
-
-Campaigning should consume money, executive attention, PR bandwidth, and sometimes reputation. Over-campaigning should risk backlash.
-
-#### 24.2.5 Outcome and Aftermath Stage
-Nominations, wins, and losses should change the simulation. Even a high-profile snub should create consequences, such as morale shifts, ego clashes, press narratives, and market reassessments.
-
-### 24.3 Core Awards Stats
-The awards system should draw from a blend of visible and hidden values.
-
-#### 24.3.1 Visible Values
-- critic score
-- audience score
-- buzz
-- prestige
-- profit
-- controversy
-- campaign spend
-- festival performance
-
-#### 24.3.2 Hidden Values
-- academy appeal
-- guild appeal
-- foreign appeal
-- populist appeal
-- indie credibility
-- craft depth
-- social resonance
-- ensemble strength
-- campaign efficiency
-- industry narrative score
-
-The industry narrative score is especially important. Awards momentum often depends on factors such as comeback stories, overdue veterans, breakout newcomers, scandal drag, and a studio’s broader reputation in a given season.
-
-### 24.4 Festival Pipeline
-Festivals should feed awards momentum, project valuation, and studio identity.
-
-#### 24.4.1 Festivals Included
-The festival layer should include at minimum:
+### 24.1 Festivals Named in Source Materials
+The currently referenced festival set includes:
 
 - Cannes
-- Venice
-- Berlin
-- Telluride
 - TIFF
 - Sundance
 - SXSW
 - Tribeca
 
-#### 24.4.2 Festival Identities
-Each festival should tilt toward different project types.
+### 24.2 Awards Referenced in Source Materials
+The currently referenced awards set includes:
 
-- **Cannes**: auteur cinema, prestige drama, international art film, high-status premieres
-- **Venice**: serious prestige launches, awards-season starters, visually ambitious work
-- **Berlin**: international, political, art-forward, socially resonant cinema
-- **Telluride**: elite awards launch platform with heavy prestige signaling
-- **TIFF**: prestige-plus-audience crossover, major awards momentum builder
-- **Sundance**: indie discovery, documentary breakout, debut filmmaker launches
-- **SXSW**: younger-skewing buzz, genre breakouts, offbeat audience energy
-- **Tribeca**: urban prestige, indie credibility, strong launch support for smaller titles
+- Oscars
+- BAFTAs
+- Golden Globes
+- Emmys
 
-#### 24.4.3 Festival Outcomes
-Festival play should create changes to:
+### 24.3 Purpose of the System
+Festivals and awards should matter because they can:
 
-- critic score reveal or revision
-- buzz trajectory
-- awards profile bonuses
-- acquisition or distribution value
-- cast and director heat
-- press narrative
-- rival imitation or poaching pressure
+- increase prestige
+- alter valuation and release prospects
+- improve future talent negotiations
+- influence PR tone
+- shape studio identity
+- rescue or elevate projects that are not direct commercial monsters
 
-#### 24.4.4 Festival Buzz Meter
-The roadmap highlights a **Festival Buzz Meter**. That meter should represent the project’s momentum in prestige circles and should react to premiere response, critic sentiment, audience warmth, deal chatter, and scandal noise.
+### 24.4 Festival Buzz
+The roadmap highlights a **Festival Buzz Meter**, implying a focused sub-layer where projects can bomb, break out, or go viral in prestige circles.
 
-### 24.5 Award Bodies Included
-The game should support multiple overlapping award ecosystems so that more project types can find meaningful success.
+### 24.5 Red Carpet and Flavor Sequences
+Awards season and red-carpet sequences are called out as flavor-rich presentation opportunities. These should heighten emotional payoff without drowning the player in ceremony.
 
-#### 24.5.1 Major Film Awards
-- **Academy Awards / Oscars**
-- **BAFTA Film Awards**
-- **Golden Globes** (film)
-- **Independent Spirit Awards**
-- **Critics Choice Awards**
-- **Screen Actors Guild Awards**
-- **Writers Guild Awards**
-- **Directors Guild Awards**
-- **Producers Guild Awards**
-- **Annie Awards**
-- **ASC Awards**
-- **Art Directors Guild Awards**
-- **ACE Eddie Awards**
-- **VES Awards**
+### 24.6 Annual Awards Season Event
+Every **52 in-game weeks**, the simulation should pause for a major **Awards Season** event that reviews the studio year as a whole.
 
-#### 24.5.2 Major Television Awards
-- **Primetime Emmys**
-- **BAFTA Television Awards**
-- **Golden Globes** (television)
-- **Critics Choice Television Awards**
-- **Screen Actors Guild Awards**
-- **Writers Guild Awards**
-- **Directors Guild Awards**
-- **Producers Guild Awards**
-- **Peabody Awards**
-- **Television Critics Association Awards**
+This event creates a long-horizon objective beyond raw revenue and gives prestige-focused strategies a visible annual payoff.
 
-#### 24.5.3 Specialty and Flavor Awards
-These should expand the emotional and strategic texture of the system:
+Projects released during the previous award year become eligible for nomination based on factors such as:
 
-- **Gotham Awards**
-- **National Board of Review**
-- **Satellite Awards**
-- **People’s Choice Awards**
-- **Kids’ Choice Awards**
-- **MTV Movie & TV Awards**
-- **GLAAD Media Awards**
-- **NAACP Image Awards**
-- **IDA Awards** for documentary recognition
+- underlying project quality
+- prestige profile
+- critic response
+- campaign spending and visibility
+- festival performance
+- talent stature
+- genre-specific strength in applicable categories
 
-These do not all need the same depth as the Oscars or Emmys, but they help different genres, demographics, and studio identities feel recognized.
+### 24.7 Awards Categories and Nomination Logic
+The awards framework should support headline categories first, with room to expand later.
 
-### 24.6 Gameplay Award Categories
-The awards system should include the categories that make the most gameplay sense, rather than only mirroring reality in a narrow way.
+Examples include:
 
-#### 24.6.1 Universal Top-Line Categories
 - Best Picture / Best Series
 - Best Director
-- Best Original Screenplay
-- Best Adapted Screenplay
-- Best Lead Actor
-- Best Lead Actress
-- Best Supporting Actor
-- Best Supporting Actress
-- Best Ensemble
+- Best Actor / Actress / Ensemble equivalents
+- Best Screenplay
+- Best Editing / Score / Craft buckets in lighter simulation form
+- Breakthrough or festival-specific honors where appropriate
 
-#### 24.6.2 Film Craft Categories
-- Cinematography
-- Editing
-- Production Design
-- Costume Design
-- Makeup and Hairstyling
-- Visual Effects
-- Sound
-- Original Score
-- Original Song
-- Casting
-- Animated Feature
-- Documentary Feature
-- International Feature
-- Debut Feature
+Nomination chances should be driven by weighted systems rather than fixed scripts, so unexpected underdogs and sweeps remain possible.
 
-#### 24.6.3 Television Categories
-- Best Drama Series
-- Best Comedy Series
-- Best Limited Series
-- Best TV Movie
-- Lead performance categories by format
-- Supporting performance categories by format
-- Writing for Drama, Comedy, and Limited Series
-- Directing for Drama, Comedy, and Limited Series
-- Casting
-- Editing
-- Production Design
-- Sound
-- Score or Music Supervision
-- Animated Program
-- Documentary or Nonfiction Series
+### 24.8 Ceremony UX and Presentation
+Awards Season should interrupt the standard weekly flow with a cinematic full-screen modal using gold-accented presentation and suspenseful reveal pacing.
 
-#### 24.6.4 Audience and Market-Facing Meta Categories
-These can be game-specific abstraction categories used by press, fan communities, or lower-prestige shows:
+Recommended presentation beats:
 
-- Breakout Hit
-- Audience Favorite
-- Cult Sensation
-- Best Family Release
-- Best Franchise Launch
-- Most Buzzworthy Release
-- Best Debut Creator
+- category-by-category nomination reveals
+- short dramatic pauses before winners
+- clean, premium motion design that respects reduced-motion settings
+- immediate callouts when the player, rivals, or recurring collaborators win
+- summary panel at the end showing total nominations, wins, and prestige change
 
-### 24.7 Award-Specific Requirements and Preferences
-Each major body should have both a qualification gate and a taste profile.
+This should feel like an annual payoff ritual, not a spreadsheet report.
 
-#### 24.7.1 Academy Awards / Oscars
-**Best for:** prestige films, major craft showcases, serious dramas, prestige animation, and auteur work.
+### 24.9 Award Bump and Lasting Effects
+Winning or even being nominated should have meaningful long-tail effects.
 
-**Gameplay requirements:**
-- must be a film rather than a television project
-- must receive a qualifying theatrical release
-- must release within the eligible awards window
-- must carry enough visibility or campaign support to enter the race seriously
-- must match category-specific identity for categories such as Animated Feature, Documentary Feature, International Feature, Original Song, and Original Score
+Possible outcomes include:
 
-**Preference profile:**
-- critic score
-- prestige score
-- festival momentum
-- campaign spend
-- craft excellence
-- awards-friendly genre and tone
-- strong studio reputation
+- permanent studio prestige increase
+- improved future negotiations with top-tier talent
+- stronger festival access or campaign credibility
+- renewed revenue lift on nominated or winning projects
+- catalog value increase for library titles
+- morale boosts inside the studio culture layer
 
-**Gameplay effects:**
-- very large prestige gain
-- stronger talent leverage
-- improved investor and distributor confidence
-- long-tail library value increase
-- major legacy milestone tracking
+A major winner should receive an **Award Bump**, which can revive theatrical legs, premium VOD interest, streaming demand, press attention, and catalog rediscovery.
 
-#### 24.7.2 Primetime Emmys
-**Best for:** prestige television drama, comedy, limited series, and TV movies.
+### 24.10 Persistent Awards Memory
+Winning projects should retain a permanent visual mark in the pipeline and archive.
 
-**Gameplay requirements:**
-- must be an eligible television-format project
-- must air or release in the eligible TV window
-- must fit format buckets such as drama series, comedy series, limited series, or TV movie
-- acting, writing, and directing bids should depend on episode-level strength and season-wide momentum
+Recommended signals:
 
-**Preference profile:**
-- season consistency
-- critic score
-- platform strength
-- audience loyalty
-- ensemble quality
-- campaign support
+- a shiny **Award** badge on released project cards
+- expanded project detail history showing award nominations and wins
+- studio timeline entries memorializing major award nights
+- talent cards reflecting major wins in their prestige profile
 
-**Gameplay effects:**
-- improves renewal and ordering confidence
-- raises value of showrunners, TV writers, and lead casts
-- increases series library value
-- strengthens streamer or network leverage
-
-#### 24.7.3 BAFTAs
-**Best for:** prestige film and prestige television with strong craft and international resonance.
-
-**Gameplay requirements:**
-- must match film or television eligibility
-- must release within the correct timing window
-- performs best with proper awards support and strong creative identity
-
-**Preference profile:**
-- craft excellence
-- critic score
-- prestige score
-- international appeal
-- director reputation
-
-**Gameplay effects:**
-- strong international prestige bonus
-- improved overseas sales positioning
-- greater value for craft-led productions
-
-#### 24.7.4 Golden Globes
-**Best for:** star-driven prestige, accessible dramas, comedy-musicals, and glamorous, highly visible film and television projects.
-
-**Gameplay requirements:**
-- must release in-window
-- must fit correct drama, comedy, musical, or television category bucket
-- benefits from strong PR and celebrity visibility
-
-**Preference profile:**
-- star power
-- media buzz
-- critic score
-- accessibility
-- campaign charm
-- glamour factor
-
-**Gameplay effects:**
-- major PR burst
-- audience awareness boost
-- can elevate commercial projects into prestige conversation
-
-#### 24.7.5 Independent Spirit Awards
-**Best for:** indie films, lower-budget prestige projects, unconventional auteur work, and breakout debuts.
-
-**Gameplay requirements:**
-- must be a film
-- must fall under an indie budget or scale threshold in gameplay terms
-- should generally benefit from lower-budget positioning, strong critic support, and festival breakout status
-
-**Preference profile:**
-- indie credibility
-- originality
-- critic score
-- festival buzz
-- debut energy
-
-**Gameplay effects:**
-- creates a real prestige path for smaller studios
-- increases discovery value for emerging talent
-- can define the studio as an indie tastemaker
-
-#### 24.7.6 SAG Awards
-**Best for:** performance-driven projects and ensemble showcases.
-
-**Gameplay requirements:**
-- must feature standout acting metrics
-- ensemble categories require multiple strong cast performances
-- film and TV categories should be tracked separately
-
-**Preference profile:**
-- cast quality
-- ensemble chemistry
-- emotional accessibility
-- role showcase strength
-
-**Gameplay effects:**
-- raises actor quote demands
-- improves future casting leverage
-- can push momentum into Oscars and Emmys
-
-#### 24.7.7 Writers Guild Awards
-**Best for:** script- and writer-driven projects.
-
-**Gameplay requirements:**
-- requires strong writing metrics
-- should split original versus adapted for film and major format buckets for television
-
-**Preference profile:**
-- script quality
-- structure
-- dialogue
-- originality or adaptation strength
-
-**Gameplay effects:**
-- boosts writer prestige
-- raises value of writer-first projects
-- improves later top-tier awards positioning
-
-#### 24.7.8 Directors Guild Awards
-**Best for:** auteur projects and films or shows with a clear directorial signature.
-
-**Gameplay requirements:**
-- requires high directing score and project coherence
-- works especially well for prestige and visually confident projects
-
-**Preference profile:**
-- directing score
-- visual identity
-- critical acclaim
-- creative control payoff
-
-**Gameplay effects:**
-- increases director leverage in future negotiations
-- strengthens final-cut pressure from auteurs
-- raises director market price
-
-#### 24.7.9 Producers Guild Awards
-**Best for:** holistically successful projects with strong execution and awards-season professionalism.
-
-**Gameplay requirements:**
-- strong overall project package
-- disciplined campaign operation
-- broad industry respect
-
-**Preference profile:**
-- production execution
-- package quality
-- awards consistency
-- campaign professionalism
-
-**Gameplay effects:**
-- boosts studio-wide reputation
-- improves co-financing and investor confidence
-- supports Best Picture or Best Series momentum
-
-#### 24.7.10 Critics Choice Awards
-**Best for:** critic-friendly projects with enough visibility to break through.
-
-**Gameplay requirements:**
-- must release in-window on film or television side
-- best supported by strong review averages and baseline visibility
-
-**Preference profile:**
-- critic score
-- craft score
-- prestige score
-
-**Gameplay effects:**
-- early momentum support
-- improves nomination chains into larger shows
-
-#### 24.7.11 Annie Awards
-**Best for:** animated films and animated television.
-
-**Gameplay requirements:**
-- must be an animated project
-- should demonstrate strong animation craft and either family appeal or artistic distinction
-
-**Preference profile:**
-- animation quality
-- visual identity
-- family or demographic fit
-- music and voice-cast appeal
-
-**Gameplay effects:**
-- boosts animation brand value
-- supports awards runs in animation categories elsewhere
-- improves sequel and franchise confidence for animated IP
-
-#### 24.7.12 Peabody Awards
-**Best for:** culturally significant television, nonfiction, and issue-driven storytelling.
-
-**Gameplay requirements:**
-- best suited to television, documentary, or socially resonant projects
-- cultural and thematic impact should matter more than glamour
-
-**Preference profile:**
-- thematic depth
-- social resonance
-- writing quality
-- prestige seriousness
-
-**Gameplay effects:**
-- prestige gain without relying on mainstream popularity
-- strengthens the studio’s identity in serious storytelling
-
-### 24.8 Release Strategy and Eligibility Logic
-Awards should push the player to think carefully about how a project is released.
-
-The system should consider:
-
-- theatrical versus television or streaming identity
-- release quarter and late-year awards positioning
-- platform strength and campaign support
-- prestige festival premiere before general release
-- category-fit decisions for limited series versus ongoing series
-- budget bracket for indie-specific awards
-- whether the studio chooses to spend enough to be visible during awards season
-
-This should create meaningful strategic tension. A project released for pure commercial optimization may weaken its awards chances, while an awards-first release path may reduce short-term financial efficiency.
-
-### 24.9 Campaigning and Trade-Offs
-Awards campaigning should be a deliberate executive system, not an automatic bonus.
-
-The player should make choices about:
-
-- how much to spend on campaigning
-- which projects to prioritize in a crowded season
-- which categories to target aggressively
-- whether to position a title as prestige drama, crowd-pleaser, comedy, or craft play
-- whether to pull back if scandal or backlash makes a campaign risky
-
-Possible campaign outcomes include:
-
-- momentum gain
-- wasted spend
-- narrative backlash
-- category confusion
-- talent fatigue
-- improved industry goodwill
-
-### 24.10 Awards Consequences
-Awards should matter immediately, in the medium term, and over the life of the studio.
-
-#### 24.10.1 Immediate Effects
-- PR burst
-- morale increase
-- revenue or viewership bump
-- stronger sequel or spinoff confidence
-- better negotiating position on late distribution or licensing deals
-
-#### 24.10.2 Medium-Term Effects
-- talent quote inflation
-- more inbound scripts and packages
-- greater trust from agencies, investors, and co-production partners
-- stronger leverage in future financing and platform negotiations
-
-#### 24.10.3 Long-Term Effects
-- permanent studio legacy gains
-- catalog value increase
-- studio culture drift toward prestige, indie, or commercial identity
-- timeline recognition for banner titles and landmark seasons
-
-### 24.11 Snubs, Scandals, and Drama
-To preserve the emotional unpredictability of Hollywood, the awards system should also support negative and chaotic outcomes.
-
-Possible events include:
-
-- shocking snub after strong festival play
-- campaign scandal or resurfaced controversy
-- vote splitting between two titles from the same studio
-- commercial smash ignored by prestige institutions
-- over-campaigned project triggering backlash
-- actor victory inflating ego and future salary demands
-- director loss reigniting final-cut resentment on the next project
-- critics darling fading before televised awards season
-
-These outcomes should reinforce the broader design pillar that Studio Boss is a story-generating system where intersecting mechanics create memorable industry drama.
-
-### 24.12 Red Carpet and Presentation Flavor
-Awards season should be visually and tonally rewarding. Red carpet beats, acceptance speech flavor text, gossip headlines, and prestige dashboards should heighten emotion without forcing long non-interactive ceremonies.
-
-### 24.13 Summary of the Awards System
-The awards system should be understood as an annual prestige metagame in which film and television projects qualify for specific award bodies based on format, release path, scale, campaign choices, and creative profile, then compete across performance, writing, directing, craft, audience, and prestige categories. Success should reshape studio reputation, finances, talent leverage, future negotiations, and long-term legacy.
+This gives awards meaning beyond a one-night animation and turns prestige into visible studio legacy.
 
 ---
 
@@ -1754,6 +1515,7 @@ Goals:
 - actors, directors, writers, showrunners
 - agents and agencies with traits
 - casting and negotiations
+- drag-and-drop Talent Roster workflow
 - project pipeline board
 
 Outcome:
@@ -1790,6 +1552,9 @@ The player must think about rights and survival, not just project quality.
 Goals:
 
 - stronger packaging systems
+- Talent Agency layer and talent card UX
+- upfront-fee vs backend contract depth
+- diva events and package chemistry rules
 - first-look logic
 - co-production hooks
 - IP retention model
@@ -1814,7 +1579,8 @@ Goals:
 
 - festival valuation effects
 - marketplace opportunities
-- awards season flavor
+- annual Awards Season event
+- award badges and award-bump revenue logic
 - rumor mill
 - casting gossip
 - production catastrophes
@@ -1838,8 +1604,10 @@ The player must think about what form of the project is commercially and cultura
 Goals:
 
 - age, gender, and region model
-- marketing targeting systems
+- Dynamic Hype Campaign system
+- channel-based marketing targeting systems
 - Weighted Audience Index
+- Hype Meter and opening-weekend forecasts
 - audience response projections
 
 Outcome:
@@ -1995,6 +1763,7 @@ This master bible was synthesized from the following attached project documents:
 - `StudioBoss_DesignBible_v4.9.md`
 - `StudioBoss_DesignBible_v7.6.md`
 - `StudioBoss_Roadmap_v5.1.md`
+- feature additions for Talent Agency, Awards Season, and Dynamic Hype Campaigns
 
 General reconciliation rules applied:
 

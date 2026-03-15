@@ -9,7 +9,7 @@ export const WeekSummaryModal = () => {
 
   if (!weekSummary) return null;
 
-  const { fromWeek, toWeek, cashBefore, cashAfter, totalRevenue, totalCosts, projectUpdates, newHeadlines, events } = weekSummary;
+  const { toWeek, cashBefore, cashAfter, totalRevenue, totalCosts, projectUpdates, newHeadlines, events } = weekSummary;
   const netDelta = cashAfter - cashBefore;
 
   return (

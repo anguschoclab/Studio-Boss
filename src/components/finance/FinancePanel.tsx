@@ -8,7 +8,7 @@ import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'rec
 export const FinancePanel = () => {
   const gameState = useGameStore(s => s.gameState);
 
-  const projects = useMemo(() => gameState?.projects || [], [gameState?.projects]);
+  const { cash, financeHistory, projects } = gameState;
 
   const weeklyCosts = useMemo(() => calculateWeeklyCosts(projects), [projects]);
   const weeklyRevenue = useMemo(() => calculateWeeklyRevenue(projects), [projects]);
@@ -18,10 +18,6 @@ export const FinancePanel = () => {
     projects.filter(p => p.status === 'development' || p.status === 'production'),
     [projects]
   );
-
-  if (!gameState) return null;
-
-  const { cash, financeHistory } = gameState;
 
   return (
     <div className="space-y-6">

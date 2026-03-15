@@ -2,15 +2,21 @@ import { Project } from '@/engine/types';
 import { useUIStore } from '@/store/uiStore';
 import { formatMoney } from '@/engine/utils';
 import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
+import { TV_FORMATS } from '@/engine/data/tvFormats';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 
 interface ProjectCardProps {
   project: Project;
 }
 
 export const ProjectCard = ({ project }: ProjectCardProps) => {
-  const { selectProject } = useUIStore();
+  const { selectProject, openPitchProject } = useUIStore();
   const tier = BUDGET_TIERS[project.budgetTier];
+
+  const displayFormat = project.format === 'tv' && project.season
+      ? `S${project.season}`
+      : project.format.toUpperCase();
 
   const progressPct = project.status === 'development'
     ? (project.weeksInPhase / project.developmentWeeks) * 100
@@ -26,14 +32,21 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
       <div className="flex items-start justify-between gap-2">
         <h4 className="font-display font-semibold text-sm text-foreground leading-tight">{project.title}</h4>
         <Badge variant="outline" className="text-[10px] shrink-0">
-          {project.format.toUpperCase()}
+          {displayFormat}
         </Badge>
       </div>
 
-      <div className="flex items-center gap-2 text-xs text-muted-foreground">
-        <span>{project.genre}</span>
-        <span>·</span>
-        <span>{tier.label}</span>
+      <div className="flex flex-col gap-1 text-[10px] text-muted-foreground">
+        <div className="flex items-center gap-2">
+            <span>{project.genre}</span>
+            <span>·</span>
+            <span>{tier.label} Base</span>
+        </div>
+        {project.format === 'tv' && project.tvFormat && (
+            <div className="flex items-center gap-1">
+                <span>{TV_FORMATS[project.tvFormat].name} ({project.episodes} eps)</span>
+            </div>
+        )}
       </div>
 
       {/* Buzz Bar */}
@@ -70,11 +83,36 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
         </div>
       )}
 
+      {/* Pitch Button */}
+      {project.status === 'pitching' && (
+        <div className="pt-2">
+           <Button
+             variant="default"
+             size="sm"
+             className="w-full text-xs"
+             onClick={(e) => {
+               e.stopPropagation();
+               openPitchProject(project.id);
+             }}
+           >
+             Pitch to Network
+           </Button>
+        </div>
+      )}
+
       {/* Revenue for released/archived */}
       {(project.status === 'released' || project.status === 'archived') && (
-        <div className="flex justify-between text-xs">
-          <span className="text-muted-foreground">Gross</span>
-          <span className="text-success font-semibold">{formatMoney(project.revenue)}</span>
+        <div className="flex flex-col gap-1 mt-2">
+            <div className="flex justify-between text-xs">
+              <span className="text-muted-foreground">Gross</span>
+              <span className="text-success font-semibold">{formatMoney(project.revenue)}</span>
+            </div>
+            {project.format === 'tv' && project.status === 'released' && project.episodesReleased !== undefined && (
+                <div className="flex justify-between text-[10px] text-muted-foreground">
+                  <span>Released</span>
+                  <span>{project.episodesReleased} / {project.episodes}</span>
+                </div>
+            )}
         </div>
       )}
     </button>

@@ -1,21 +1,25 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { formatMoney } from '@/engine/utils';
 import { Badge } from '@/components/ui/badge';
 import { TalentProfile } from '@/engine/types';
 
 export const TalentPanel = () => {
-  const talentPool = useGameStore(s => s.gameState?.talentPool || []);
+  const state = useGameStore(s => s.gameState);
+  const talentPool = useMemo(() => state?.talentPool || [], [state?.talentPool]);
+  const agencies = useMemo(() => state?.agencies || [], [state?.agencies]);
   const [filter, setFilter] = useState<string>('all');
 
-  const filteredTalent = talentPool.filter(t => filter === 'all' || t.type === filter);
+  const filteredTalent = useMemo(() => {
+    return talentPool.filter(t => filter === 'all' || t.roles.includes(filter as import('@/engine/types').TalentRole));
+  }, [talentPool, filter]);
 
   return (
     <div className="space-y-4 h-full flex flex-col">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-display font-bold">Talent Roster</h2>
         <div className="flex gap-2">
-          {['all', 'actor', 'director', 'writer', 'producer'].map(type => (
+          {['all', 'actor', 'director', 'writer', 'producer', 'showrunner'].map(type => (
             <button
               key={type}
               onClick={() => setFilter(type)}
@@ -35,9 +39,21 @@ export const TalentPanel = () => {
         {filteredTalent.map((talent: TalentProfile) => (
           <div key={talent.id} className="p-4 rounded-lg border border-border bg-card hover:bg-accent/50 transition-colors space-y-3">
             <div className="flex items-start justify-between gap-2">
-              <h4 className="font-display font-semibold text-sm text-foreground leading-tight">{talent.name}</h4>
+              <div className="flex flex-col">
+                <h4 className="font-display font-semibold text-sm text-foreground leading-tight">{talent.name}</h4>
+                {talent.accessLevel !== 'outsider' && talent.accessLevel !== 'soft-access' && (
+                  <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">
+                    {talent.accessLevel}
+                  </span>
+                )}
+                {talent.agencyId && (
+                  <span className="text-[10px] text-muted-foreground uppercase tracking-wider">
+                    {agencies.find(a => a.id === talent.agencyId)?.name}
+                  </span>
+                )}
+              </div>
               <Badge variant="outline" className="text-[10px] shrink-0">
-                {talent.type.toUpperCase()}
+                {talent.roles.map(r => r.toUpperCase()).join(', ')}
               </Badge>
             </div>
 

@@ -1,6 +1,5 @@
 import { Link, LinkProps } from "@tanstack/react-router";
 import { forwardRef } from "react";
-import { cn } from "@/lib/utils";
 
 interface NavLinkCompatProps extends Omit<LinkProps, "className"> {
   className?: string;
@@ -9,7 +8,7 @@ interface NavLinkCompatProps extends Omit<LinkProps, "className"> {
 }
 
 const NavLink = forwardRef<HTMLAnchorElement, NavLinkCompatProps>(
-  ({ className, activeClassName, pendingClassName, to, ...props }, ref) => {
+  ({ className, activeClassName, to, ...props }, ref) => {
     return (
       <Link
         ref={ref}
