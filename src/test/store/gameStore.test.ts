@@ -151,4 +151,43 @@ describe("gameStore", () => {
     expect(newState.cash).toBe(100);
     expect(newState.contracts).toHaveLength(0);
   });
+
+  it('should acquire an opportunity and convert it to a project', () => {
+    const store = useGameStore.getState();
+    store.newGame('Test Studio', 'indie');
+
+    // Check initial state has opportunities
+    const initialState = useGameStore.getState().gameState;
+    expect(initialState.opportunities.length).toBeGreaterThan(0);
+
+    initialState.opportunities[0].id = 'unique-opp-id';
+    const opp = initialState.opportunities[0];
+    const initialOppCount = initialState.opportunities.length;
+
+    // Acquire the opportunity
+
+    useGameStore.getState().acquireOpportunity(opp.id);
+
+    const afterState = useGameStore.getState().gameState;
+
+
+    // Opportunity should be removed
+    expect(afterState.opportunities.length).toBe(initialOppCount - 1);
+
+    // A project should be created
+    expect(afterState.projects.length).toBe(1);
+    const newProject = afterState.projects[0];
+
+    // Properties should map correctly
+    expect(newProject.title).toBe(opp.title);
+    expect(newProject.format).toBe(opp.format);
+    expect(newProject.genre).toBe(opp.genre);
+    expect(newProject.budgetTier).toBe(opp.budgetTier);
+    expect(newProject.targetAudience).toBe(opp.targetAudience);
+    expect(newProject.flavor).toBe(opp.flavor);
+    expect(newProject.status).toBe('development');
+    expect(newProject.weeksInPhase).toBe(0);
+    expect(afterState.cash).toBeLessThan(initialState.cash); // Cost to acquire is subtracted
+  });
+
 });

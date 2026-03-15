@@ -144,6 +144,10 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const opp = state.opportunities.find(o => o.id === opportunityId);
     if (!opp) return;
 
+    // First remove the opportunity and subtract cash
+    const newOpportunities = state.opportunities.filter(o => o.id !== opportunityId);
+    set({ gameState: { ...state, opportunities: newOpportunities, cash: state.cash - opp.costToAcquire } });
+
     // Convert opportunity to project parameters
     const params: CreateProjectParams = {
       title: opp.title,
@@ -158,11 +162,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       releaseModel: opp.releaseModel,
     };
 
-    // Remove the opportunity from the list
-    const newOpportunities = state.opportunities.filter(o => o.id !== opportunityId);
-    set({ gameState: { ...state, opportunities: newOpportunities } });
-
-    // Re-use the createProject function
+    // Re-use the createProject function, it will get the updated state
     get().createProject(params);
   },
   renewProject: (id: string) => {
