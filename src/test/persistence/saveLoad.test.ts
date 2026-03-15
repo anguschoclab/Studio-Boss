@@ -25,8 +25,8 @@ Object.defineProperty(globalThis, "localStorage", {
 });
 
 describe("saveLoad", () => {
-  let setItemSpy: any;
-  let getItemSpy: any;
+  let setItemSpy: ReturnType<typeof vi.spyOn>;
+  let getItemSpy: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
     globalThis.localStorage.clear();
