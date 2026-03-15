@@ -37,12 +37,12 @@ describe("advanceProject", () => {
     expect(update).toBeNull();
   });
 
-  it("transitions from development to production", () => {
+  it("transitions from development to needs_greenlight", () => {
     const project = { ...mockProject, weeksInPhase: 1 };
     const { project: p, update } = advanceProject(project, 1, 10, [], new Map());
-    expect(p.status).toBe("production");
+    expect(p.status).toBe("needs_greenlight");
     expect(p.weeksInPhase).toBe(0);
-    expect(update).toContain("enters production");
+    expect(update).toContain("is ready for greenlight committee review");
   });
 
   it("transitions from production to released", () => {

@@ -30,9 +30,9 @@ export function advanceProject(
       p.weeksInPhase = 0;
       update = `"${p.title}" is ready to be pitched to networks/streamers.`;
     } else {
-      p.status = 'production';
+      p.status = 'needs_greenlight';
       p.weeksInPhase = 0;
-      update = `"${p.title}" enters production`;
+      update = `"${p.title}" is ready for greenlight committee review.`;
     }
   } else if (p.status === 'production' && p.weeksInPhase >= p.productionWeeks) {
     p.status = 'released';
