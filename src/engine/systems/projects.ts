@@ -38,7 +38,11 @@ export function advanceProject(
     const randomFactor = randRange(0.7, 1.3);
 
     // Talent impact
-    const attachedTalent = projectContracts.map(c => talentPoolMap.get(c.talentId)).filter(t => t !== undefined) as TalentProfile[];
+    const attachedTalent = projectContracts.reduce((acc, c) => {
+      const t = talentPoolMap.get(c.talentId);
+      if (t) acc.push(t);
+      return acc;
+    }, [] as TalentProfile[]);
     const talentDrawFactor = attachedTalent.reduce((sum, t) => sum + (t.draw / 100), 1);
 
     const baseGross = (minRev + (maxRev - minRev) * buzzFactor * prestigeFactor * randomFactor) * talentDrawFactor;
@@ -137,7 +141,11 @@ export function advanceProject(
 
   // Buzz drift during active phases
   if (p.status === 'development' || p.status === 'production') {
-    const attachedTalent = projectContracts.map(c => talentPoolMap.get(c.talentId)).filter(t => t !== undefined) as TalentProfile[];
+    const attachedTalent = projectContracts.reduce((acc, c) => {
+      const t = talentPoolMap.get(c.talentId);
+      if (t) acc.push(t);
+      return acc;
+    }, [] as TalentProfile[]);
     const talentBuzzBonus = attachedTalent.reduce((sum, t) => sum + (t.draw / 50), 0);
     p.buzz = clamp(p.buzz + randRange(-4, 6) + talentBuzzBonus, 0, 100);
   }
