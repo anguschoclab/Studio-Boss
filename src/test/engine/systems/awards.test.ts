@@ -221,7 +221,7 @@ describe("awards system", () => {
       };
 
       const state = { ...mockState, projects: [losingProject, winningProject] };
-      const result = runAwardsCeremony(state, 2024);
+      const result = runAwardsCeremony(state, 62, 2024);
 
       const bestPictureAwards = result.newAwards.filter(a => a.category === "Best Picture" && a.body === "Academy Awards");
       // One winner
@@ -243,7 +243,7 @@ describe("awards system", () => {
       };
 
       const state = { ...mockState, projects: [inDevProject, inProdProject] };
-      const result = runAwardsCeremony(state, 2024);
+      const result = runAwardsCeremony(state, 62, 2024);
 
       expect(result.newAwards).toHaveLength(0);
       expect(result.prestigeChange).toBe(0);
@@ -257,7 +257,7 @@ describe("awards system", () => {
       };
 
       const state = { ...mockState, projects: [archivedProject] };
-      const result = runAwardsCeremony(state, 2024);
+      const result = runAwardsCeremony(state, 62, 2024);
 
       expect(result.newAwards.length).toBeGreaterThan(0);
     });
@@ -283,7 +283,7 @@ describe("awards system", () => {
       };
 
       const state = { ...mockState, projects: [lowCampaignProject, highCampaignProject] };
-      const result = runAwardsCeremony(state, 2024);
+      const result = runAwardsCeremony(state, 62, 2024);
 
       const bestPictureAwards = result.newAwards.filter(a => a.category === "Best Picture" && a.body === "Academy Awards");
       // The high campaign project should win due to the boost
@@ -298,7 +298,7 @@ describe("awards system", () => {
       };
 
       const state = { ...mockState, projects: [noProfileProject] };
-      const result = runAwardsCeremony(state, 2024);
+      const result = runAwardsCeremony(state, 62, 2024);
 
       expect(result.newAwards).toHaveLength(0);
     });
