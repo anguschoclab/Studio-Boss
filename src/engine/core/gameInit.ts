@@ -1,4 +1,4 @@
-import { GameState, ArchetypeKey, RivalStudio, Buyer } from '../types';
+import { GameState, ArchetypeKey, RivalStudio } from '../types';
 import { ARCHETYPES } from '../data/archetypes';
 import { generateStudioName, generateMotto } from '../generators/names';
 import { generateFamilies, generateTalentPool } from '../generators/talent';

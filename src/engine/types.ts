@@ -111,6 +111,8 @@ export interface Project {
   season?: number;
   releaseModel?: ReleaseModelKey;
   episodesReleased?: number;
+  contractType?: ProjectContractType;
+  buyerId?: string;
   renewable?: boolean;
 }
 

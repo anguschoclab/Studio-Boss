@@ -19,43 +19,8 @@ const localStorageMock = (() => {
   };
 })();
 
-Object.defineProperty(globalThis, "localStorage", {
-  value: localStorageMock,
-  writable: true,
-});
-
 describe("saveLoad", () => {
-  let setItemSpy: ReturnType<typeof vi.spyOn>;
-  let getItemSpy: ReturnType<typeof vi.spyOn>;
-
-  beforeEach(() => {
-    globalThis.localStorage.clear();
-    setItemSpy = vi.spyOn(globalThis.localStorage, 'setItem');
-    getItemSpy = vi.spyOn(globalThis.localStorage, 'getItem');
-  });
-
-  afterEach(() => {
-    vi.restoreAllMocks();
-  });
-
-  const localStorageMock = (() => {
-    let store = {};
-    return {
-      getItem(key) {
-        return store[key] || null;
-      },
-      setItem(key, value) {
-        store[key] = value.toString();
-      },
-      clear() {
-        store = {};
-      },
-      removeItem(key) {
-        delete store[key];
-      }
-    };
-  })();
-  Object.defineProperty(global, 'localStorage', {
+Object.defineProperty(globalThis, "localStorage", {
     value: localStorageMock,
   });
 
@@ -152,7 +117,7 @@ describe("saveLoad", () => {
 
     // We can't know the exact timestamp of state1 without more mocking,
     // but we can parse the second setItem call to check if it preserved both slots.
-    const calls = localStorageMock.setItem.mock.calls;
+    const calls = vi.mocked(localStorageMock.setItem).mock.calls;
     const slotsCall = calls.find(call => call[0] === "studioboss_slots");
     expect(slotsCall).toBeDefined();
 
