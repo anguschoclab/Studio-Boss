@@ -1,3 +1,4 @@
+import { Contract } from './types';
 // Shared utilities for the engine layer — no React imports
 
 export function formatMoney(amount: number): string {
@@ -33,4 +34,15 @@ export function randRange(min: number, max: number): number {
 
 export function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
+}
+
+export function groupContractsByProject(contracts: Contract[]): Map<string, Contract[]> {
+  const map = new Map<string, Contract[]>();
+  for (const contract of contracts) {
+    if (!map.has(contract.projectId)) {
+      map.set(contract.projectId, []);
+    }
+    map.get(contract.projectId)!.push(contract);
+  }
+  return map;
 }

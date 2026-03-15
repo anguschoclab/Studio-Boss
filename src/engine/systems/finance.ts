@@ -1,4 +1,5 @@
 import { Project, Contract } from '../types';
+import { groupContractsByProject } from '../utils';
 
 
 export function calculateWeeklyCosts(projects: Project[]): number {
@@ -17,14 +18,7 @@ export function calculateWeeklyCosts(projects: Project[]): number {
 }
 
 export function calculateWeeklyRevenue(projects: Project[], contracts: Contract[] = []): number {
-  // Group contracts by projectId for O(1) lookup
-  const contractsByProject = new Map<string, Contract[]>();
-  for (const contract of contracts) {
-    if (!contractsByProject.has(contract.projectId)) {
-      contractsByProject.set(contract.projectId, []);
-    }
-    contractsByProject.get(contract.projectId)!.push(contract);
-  }
+  const contractsByProject = groupContractsByProject(contracts);
 
   return projects.reduce((sum, p) => {
     if (p.status === 'released') {

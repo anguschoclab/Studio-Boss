@@ -3,19 +3,24 @@ import { GameState, SaveSlotMeta } from '@/engine/types';
 const SAVE_PREFIX = 'studioboss_save_';
 const SLOTS_KEY = 'studioboss_slots';
 
+function loadSaveSlots(): Record<number, SaveSlotMeta> {
+  let slots: Record<number, SaveSlotMeta> = {};
+  try {
+    const slotsData = localStorage.getItem(SLOTS_KEY);
+    if (slotsData) {
+      slots = JSON.parse(slotsData);
+    }
+  } catch (e) {
+    console.error('Failed to load save slots metadata', e);
+  }
+  return slots;
+}
+
 export function saveGame(slot: number, state: GameState): void {
   try {
     localStorage.setItem(`${SAVE_PREFIX}${slot}`, JSON.stringify(state));
 
-    let slots: Record<number, SaveSlotMeta> = {};
-    try {
-      const slotsData = localStorage.getItem(SLOTS_KEY);
-      if (slotsData) {
-        slots = JSON.parse(slotsData);
-      }
-    } catch (e) {
-      console.error('Failed to load save slots metadata', e);
-    }
+    const slots = loadSaveSlots();
 
     slots[slot] = {
       slot,
@@ -48,15 +53,7 @@ export interface SaveSlotInfo extends SaveSlotMeta {
 }
 
 export function getSaveSlots(): SaveSlotInfo[] {
-  let slots: Record<number, SaveSlotMeta> = {};
-  try {
-    const slotsData = localStorage.getItem(SLOTS_KEY);
-    if (slotsData) {
-      slots = JSON.parse(slotsData);
-    }
-  } catch (e) {
-    console.error('Failed to get save slots', e);
-  }
+  const slots = loadSaveSlots();
 
   return [0, 1, 2].map(i => ({
     slot: i,

@@ -78,30 +78,27 @@ describe("updateRival", () => {
     expect(updated.recentActivity).not.toBe("Doing nothing");
   });
 
-  it("conditionally updates projectCount", () => {
-    vi.spyOn(Math, 'random').mockImplementation(() => 0.5);
-    let updated = updateRival(mockRival);
-    expect(updated.projectCount).toBe(5);
-
+  const mockRandomSequence = (projectUpdateRoll: number) => {
     let callCount = 0;
     vi.spyOn(Math, 'random').mockImplementation(() => {
       callCount++;
       if (callCount === 3) return 0.5; // No activity update
       if (callCount === 4) return 0.1; // Trigger project update
-      if (callCount === 5) return 0.5; // < 0.7, so increase
+      if (callCount === 5) return projectUpdateRoll;
       return 0.5;
     });
+  };
+
+  it("conditionally updates projectCount", () => {
+    vi.spyOn(Math, 'random').mockImplementation(() => 0.5);
+    let updated = updateRival(mockRival);
+    expect(updated.projectCount).toBe(5);
+
+    mockRandomSequence(0.5);
     updated = updateRival(mockRival);
     expect(updated.projectCount).toBe(6);
 
-    callCount = 0;
-    vi.spyOn(Math, 'random').mockImplementation(() => {
-      callCount++;
-      if (callCount === 3) return 0.5; // No activity update
-      if (callCount === 4) return 0.1; // Trigger project update
-      if (callCount === 5) return 0.8; // >= 0.7, so decrease
-      return 0.5;
-    });
+    mockRandomSequence(0.8);
     updated = updateRival(mockRival);
     expect(updated.projectCount).toBe(4);
   });
@@ -109,14 +106,7 @@ describe("updateRival", () => {
   it("clamps projectCount to a minimum of 1", () => {
     const fewProjects = { ...mockRival, projectCount: 1 };
 
-    let callCount = 0;
-    vi.spyOn(Math, 'random').mockImplementation(() => {
-      callCount++;
-      if (callCount === 3) return 0.5; // No activity update
-      if (callCount === 4) return 0.1; // Trigger project update
-      if (callCount === 5) return 0.8; // >= 0.7, so decrease
-      return 0.5;
-    });
+    mockRandomSequence(0.8);
 
     const updated = updateRival(fewProjects);
     expect(updated.projectCount).toBe(1);

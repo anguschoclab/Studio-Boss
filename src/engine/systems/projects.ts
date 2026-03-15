@@ -3,6 +3,14 @@ import { BUDGET_TIERS } from '../data/budgetTiers';
 import { TV_FORMATS } from '../data/tvFormats';
 import { clamp, randRange } from '../utils';
 
+function getAttachedTalent(contracts: Contract[], talentPoolMap: Map<string, TalentProfile>): TalentProfile[] {
+  return contracts.reduce((acc, c) => {
+    const t = talentPoolMap.get(c.talentId);
+    if (t) acc.push(t);
+    return acc;
+  }, [] as TalentProfile[]);
+}
+
 export function advanceProject(
   project: Project,
   currentWeek: number,
@@ -38,11 +46,7 @@ export function advanceProject(
     const randomFactor = randRange(0.7, 1.3);
 
     // Talent impact
-    const attachedTalent = projectContracts.reduce((acc, c) => {
-      const t = talentPoolMap.get(c.talentId);
-      if (t) acc.push(t);
-      return acc;
-    }, [] as TalentProfile[]);
+    const attachedTalent = getAttachedTalent(projectContracts, talentPoolMap);
     const talentDrawFactor = attachedTalent.reduce((sum, t) => sum + (t.draw / 100), 1);
 
     const baseGross = (minRev + (maxRev - minRev) * buzzFactor * prestigeFactor * randomFactor) * talentDrawFactor;
@@ -144,11 +148,7 @@ export function advanceProject(
 
   // Buzz drift during active phases
   if (p.status === 'development' || p.status === 'production') {
-    const attachedTalent = projectContracts.reduce((acc, c) => {
-      const t = talentPoolMap.get(c.talentId);
-      if (t) acc.push(t);
-      return acc;
-    }, [] as TalentProfile[]);
+    const attachedTalent = getAttachedTalent(projectContracts, talentPoolMap);
     const talentBuzzBonus = attachedTalent.reduce((sum, t) => sum + (t.draw / 50), 0);
     p.buzz = clamp(p.buzz + randRange(-4, 6) + talentBuzzBonus, 0, 100);
   }
