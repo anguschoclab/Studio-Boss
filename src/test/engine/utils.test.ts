@@ -3,28 +3,40 @@ import { formatMoney, getWeekDisplay, pick, randRange, clamp } from "../../engin
 
 describe("utils", () => {
   describe("formatMoney", () => {
-    it("formats thousands", () => {
-      expect(formatMoney(1500)).toBe("$2K");
-      expect(formatMoney(1000)).toBe("$1K");
-      expect(formatMoney(999)).toBe("$999");
-    });
-    it("formats millions", () => {
-      expect(formatMoney(1500000)).toBe("$1.5M");
-      expect(formatMoney(1000000)).toBe("$1.0M");
-    });
-    it("formats billions", () => {
-      expect(formatMoney(1500000000)).toBe("$1.5B");
-      expect(formatMoney(1000000000)).toBe("$1.0B");
-    });
-    it("formats negative numbers", () => {
-      expect(formatMoney(-1500)).toBe("-$2K");
-      expect(formatMoney(-1500000)).toBe("-$1.5M");
-      expect(formatMoney(-1500000000)).toBe("-$1.5B");
-      expect(formatMoney(-500)).toBe("-$500");
-    });
-    it("formats small numbers", () => {
-      expect(formatMoney(0)).toBe("$0");
-      expect(formatMoney(50)).toBe("$50");
+    it.each([
+      // thousands
+      [1500, "$2K"],
+      [1000, "$1K"],
+      [999, "$999"],
+
+      // millions
+      [1500000, "$1.5M"],
+      [1000000, "$1.0M"],
+
+      // billions
+      [1500000000, "$1.5B"],
+      [1000000000, "$1.0B"],
+
+      // negatives
+      [-1500, "-$2K"],
+      [-1500000, "-$1.5M"],
+      [-1500000000, "-$1.5B"],
+      [-500, "-$500"],
+
+      // small numbers
+      [0, "$0"],
+      [50, "$50"],
+
+      // new edge cases
+      [-0, "-$0"],
+      [NaN, "$NaN"],
+      [Infinity, "$InfinityB"],
+      [-Infinity, "-$InfinityB"],
+      [999.9, "$1K"],
+      [999999.9, "$1.0M"],
+      [999999999.9, "$1.0B"],
+    ])("formats %p as %p", (amount, expected) => {
+      expect(formatMoney(amount)).toBe(expected);
     });
   });
 
@@ -54,9 +66,15 @@ describe("utils", () => {
   });
 
   describe("clamp", () => {
-    it("clamps values", () => {
-      expect(clamp(5, 1, 10)).toBe(5);
+    it("returns the minimum when value is below min", () => {
       expect(clamp(0, 1, 10)).toBe(1);
+    });
+
+    it("returns the value when within range", () => {
+      expect(clamp(5, 1, 10)).toBe(5);
+    });
+
+    it("returns the maximum when value is above max", () => {
       expect(clamp(15, 1, 10)).toBe(10);
     });
   });

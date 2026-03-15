@@ -10,7 +10,7 @@ interface ProjectCardProps {
 }
 
 export const ProjectCard = ({ project }: ProjectCardProps) => {
-  const { selectProject } = useUIStore();
+  const { selectProject, openPitchProject } = useUIStore();
   const tier = BUDGET_TIERS[project.budgetTier];
 
   const displayFormat = project.format === 'tv' && project.season
@@ -79,6 +79,23 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
               style={{ width: `${Math.min(progressPct, 100)}%` }}
             />
           </div>
+        </div>
+      )}
+
+      {/* Pitch Button */}
+      {project.status === 'pitching' && (
+        <div className="pt-2">
+           <Button
+             variant="default"
+             size="sm"
+             className="w-full text-xs"
+             onClick={(e) => {
+               e.stopPropagation();
+               openPitchProject(project.id);
+             }}
+           >
+             Pitch to Network
+           </Button>
         </div>
       )}
 
