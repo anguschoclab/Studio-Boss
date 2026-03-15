@@ -84,18 +84,19 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
     events.push(pick(EVENT_POOL));
   }
 
-    // Awards logic (Week 52)
-  let prestigeChange = 0;
-  let newAwards: Award[] = [];
-  if (nextWeek % 52 === 0) {
-    const year = Math.floor(nextWeek / 52);
-    events.push(`Year ${year} Awards Ceremony!`);
+    // Run any awards ceremonies scheduled for this week
+  const year = Math.floor(nextWeek / 52) + 1; // 1-indexed year
+  const ceremonyResult = runAwardsCeremony(state, nextWeek, year);
 
-    const ceremonyResult = runAwardsCeremony(state, year);
+  const newAwards = ceremonyResult.newAwards;
+  const prestigeChange = ceremonyResult.prestigeChange;
 
-    newAwards = ceremonyResult.newAwards;
-    prestigeChange = ceremonyResult.prestigeChange;
+  if (newAwards.length > 0) {
     projectUpdates.push(...ceremonyResult.projectUpdates);
+
+    // Check which bodies fired to announce it
+    const uniqueBodies = [...new Set(newAwards.map(a => a.body))];
+    events.push(`The ${uniqueBodies.join(' and ')} took place this week!`);
   }
 
   const newState: GameState = {

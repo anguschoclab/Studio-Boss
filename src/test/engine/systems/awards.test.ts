@@ -123,15 +123,15 @@ describe("awards system", () => {
 
     it("should not return awards if no projects are eligible", () => {
       const state = { ...mockState, projects: [] };
-      const result = runAwardsCeremony(state, 2024);
+      const result = runAwardsCeremony(state, 62, 2024);
       expect(result.newAwards).toHaveLength(0);
       expect(result.prestigeChange).toBe(0);
     });
 
     it("should exclude projects released more than 52 weeks ago", () => {
-      const oldProject = { ...eligibleProject, releaseWeek: 40 }; // 100 - 40 = 60 weeks ago
+      const oldProject = { ...eligibleProject, releaseWeek: 5 }; // 62 - 5 = 57 weeks ago
       const state = { ...mockState, projects: [oldProject] };
-      const result = runAwardsCeremony(state, 2024);
+      const result = runAwardsCeremony(state, 62, 2024);
       expect(result.newAwards).toHaveLength(0);
     });
 
@@ -139,7 +139,7 @@ describe("awards system", () => {
       // Academy Awards Best Picture: academyAppeal (90) + prestigeScore (85) + narrative (80*0.5) = 90 + 85 + 40 = 215
       // 215 * (1 + 20/100) = 215 * 1.2 = 258
       const state = { ...mockState, projects: [eligibleProject] };
-      const result = runAwardsCeremony(state, 2024);
+      const result = runAwardsCeremony(state, 62, 2024);
 
       const bestPictureAward = result.newAwards.find(a => a.category === "Best Picture" && a.body === "Academy Awards");
       expect(bestPictureAward).toBeDefined();
@@ -165,7 +165,7 @@ describe("awards system", () => {
       // Score: 50 + 50 + 20 = 120
 
       const state = { ...mockState, projects: [modestProject] };
-      const result = runAwardsCeremony(state, 2024);
+      const result = runAwardsCeremony(state, 62, 2024);
 
       const bestPictureAward = result.newAwards.find(a => a.category === "Best Picture" && a.body === "Academy Awards");
       expect(bestPictureAward).toBeDefined();
@@ -175,7 +175,7 @@ describe("awards system", () => {
 
     it("should correctly accumulate prestige change", () => {
       const state = { ...mockState, projects: [eligibleProject] };
-      const result = runAwardsCeremony(state, 2024);
+      const result = runAwardsCeremony(state, 62, 2024);
 
       // It wins multiple awards in this mock setup
       // Academy Awards: Best Picture, Best Director
@@ -189,7 +189,7 @@ describe("awards system", () => {
     it("should filter awards by project format", () => {
       const tvProject = { ...eligibleProject, format: "tv" as const, id: "tv-1" };
       const state = { ...mockState, projects: [tvProject] };
-      const result = runAwardsCeremony(state, 2024);
+      const result = runAwardsCeremony(state, 37, 2024);
 
       // Should get Emmys (Best Series), but not Academy Awards (Best Picture/Director)
       expect(result.newAwards.some(a => a.body === "Primetime Emmys")).toBe(true);
