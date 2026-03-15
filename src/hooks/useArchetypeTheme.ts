@@ -1,16 +1,16 @@
 import { useEffect } from 'react';
-import { useGameStore } from '@/store/gameStore';
+import { useGameStore } from '../store/gameStore';
 
 export function useArchetypeTheme() {
   const gameState = useGameStore(s => s.gameState);
 
   useEffect(() => {
-    if (!gameState) return;
+    // Remove all existing theme classes
+    document.documentElement.classList.remove('theme-major', 'theme-mid-tier', 'theme-indie');
 
-    const archetype = gameState.studio.archetype;
-    const body = document.body;
-
-    body.classList.remove('theme-major', 'theme-mid-tier', 'theme-indie');
-    body.classList.add(`theme-${archetype}`);
-  }, [gameState]);
+    // Add the appropriate theme class
+    if (gameState?.studio?.archetype) {
+      document.documentElement.classList.add(`theme-${gameState.studio.archetype}`);
+    }
+  }, [gameState?.studio?.archetype]);
 }

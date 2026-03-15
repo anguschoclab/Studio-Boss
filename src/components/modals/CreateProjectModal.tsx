@@ -3,16 +3,15 @@ import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { GENRES, TARGET_AUDIENCES, UNSCRIPTED_GENRES } from '@/engine/data/genres';
 import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
-import { TV_FORMATS } from '@/engine/data/tvFormats';
-import { UNSCRIPTED_FORMATS } from '@/engine/data/unscriptedFormats';
-import { BudgetTierKey, ProjectFormat, TvFormatKey, UnscriptedFormatKey, ReleaseModelKey } from '@/engine/types';
+import { generateProjectTitle } from '@/engine/generators/titles';
+import { BudgetTierKey, ProjectFormat } from '@/engine/types';
 import { formatMoney } from '@/engine/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Slider } from '@/components/ui/slider';
+import { Dices } from 'lucide-react';
 
 export const CreateProjectModal = () => {
   const { showCreateProject, closeCreateProject } = useUIStore();
@@ -26,20 +25,13 @@ export const CreateProjectModal = () => {
   const [targetAudience, setTargetAudience] = useState<string>(TARGET_AUDIENCES[0]);
   const [flavor, setFlavor] = useState('');
 
-  const [tvFormat, setTvFormat] = useState<TvFormatKey>('procedural');
-  const [unscriptedFormat, setUnscriptedFormat] = useState<UnscriptedFormatKey>('competition');
-  const [episodes, setEpisodes] = useState<number>(TV_FORMATS['procedural'].defaultEpisodes);
-  const [releaseModel, setReleaseModel] = useState<ReleaseModelKey>('weekly');
-
+  // Auto-generate title when modal opens if title is empty
   useEffect(() => {
-    if (format === 'tv') {
-      const defaultEps = TV_FORMATS[tvFormat].defaultEpisodes;
-      setEpisodes(defaultEps);
-    } else if (format === 'unscripted') {
-      const defaultEps = UNSCRIPTED_FORMATS[unscriptedFormat].defaultEpisodes;
-      setEpisodes(defaultEps);
+    if (showCreateProject && !title) {
+      setTitle(generateProjectTitle(genre));
     }
-  }, [tvFormat, unscriptedFormat, format]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showCreateProject, genre]);
 
   const tier = BUDGET_TIERS[budgetTier];
   let calculatedWeeklyCost = tier.weeklyCost;
@@ -95,7 +87,12 @@ export const CreateProjectModal = () => {
         <div className="space-y-4">
           <div className="space-y-1.5">
             <Label className="text-xs uppercase tracking-wider">Title</Label>
-            <Input value={title} onChange={e => setTitle(e.target.value)} placeholder="Untitled Project" />
+            <div className="flex gap-2">
+              <Input value={title} onChange={e => setTitle(e.target.value)} placeholder="Untitled Project" className="flex-1" />
+              <Button type="button" variant="outline" size="icon" onClick={() => setTitle(generateProjectTitle(genre))} title="Generate Random Title">
+                <Dices className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
 
           {/* Format */}

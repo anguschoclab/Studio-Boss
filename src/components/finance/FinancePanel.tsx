@@ -8,22 +8,16 @@ import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'rec
 export const FinancePanel = () => {
   const gameState = useGameStore(s => s.gameState);
 
-  const projects = useMemo(() => gameState?.projects || [], [gameState?.projects]);
-  const contracts = useMemo(() => gameState?.contracts || [], [gameState?.contracts]);
+  const { cash, financeHistory, projects } = gameState;
 
   const weeklyCosts = useMemo(() => calculateWeeklyCosts(projects), [projects]);
-  const weeklyRevenue = useMemo(() => calculateWeeklyRevenue(projects, contracts), [projects, contracts]);
+  const weeklyRevenue = useMemo(() => calculateWeeklyRevenue(projects), [projects]);
   const netDelta = useMemo(() => weeklyRevenue - weeklyCosts, [weeklyRevenue, weeklyCosts]);
 
-  // Memoize active projects calculation to prevent expensive array filtering on every render
   const activeProjects = useMemo(() =>
     projects.filter(p => p.status === 'development' || p.status === 'production'),
     [projects]
   );
-
-  if (!gameState) return null;
-
-  const { cash, financeHistory } = gameState;
 
   return (
     <div className="space-y-6">

@@ -1,4 +1,6 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+const fs = require('fs');
+
+const content = `import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider, createRouter, createRoute, createRootRoute } from "@tanstack/react-router";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
@@ -64,3 +66,6 @@ const App = () => (
 );
 
 export default App;
+`;
+
+fs.writeFileSync('src/App.tsx', content);
