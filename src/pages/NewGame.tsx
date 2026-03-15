@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Dices } from 'lucide-react';
+import { generateStudioName } from '@/engine/generators/names';
 import { useGameStore } from '@/store/gameStore';
 import { ARCHETYPES, ArchetypeData } from '@/engine/data/archetypes';
 import { ArchetypeKey } from '@/engine/types';
@@ -31,13 +33,24 @@ const NewGame = () => {
         {/* Studio Name */}
         <div className="max-w-md mx-auto space-y-2">
           <label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Studio Name</label>
-          <Input
-            value={studioName}
-            onChange={e => setStudioName(e.target.value)}
-            placeholder="Enter your studio name..."
-            className="h-14 text-lg text-center font-display font-semibold bg-card border-border"
-            maxLength={30}
-          />
+          <div className="flex gap-2">
+            <Input
+              value={studioName}
+              onChange={e => setStudioName(e.target.value)}
+              placeholder="Enter your studio name..."
+              className="h-14 text-lg text-center font-display font-semibold bg-card border-border flex-1"
+              maxLength={30}
+            />
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-14 w-14 shrink-0"
+              onClick={() => setStudioName(generateStudioName([]))}
+              title="Randomize Studio Name"
+            >
+              <Dices className="h-6 w-6" />
+            </Button>
+          </div>
         </div>
 
         {/* Archetypes */}
