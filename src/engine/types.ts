@@ -154,8 +154,30 @@ export interface WeekSummary {
   events: string[];
 }
 
+
+export type OpportunityType = 'script' | 'package' | 'pitch' | 'rights';
+export type DiscoveryOrigin = 'open_spec' | 'agency_package' | 'writer_sample' | 'heat_list' | 'annual_list' | 'passion_project';
+
+export interface Opportunity {
+  id: string;
+  type: OpportunityType;
+  title: string;
+  format: ProjectFormat;
+  genre: string;
+  budgetTier: BudgetTierKey;
+  targetAudience: string;
+  flavor: string;
+  origin: DiscoveryOrigin;
+  costToAcquire: number;
+  weeksUntilExpiry: number;
+  attachedTalentIds?: string[];
+  tvFormat?: TvFormatKey;
+  episodes?: number;
+  releaseModel?: ReleaseModelKey;
+}
+
 export interface GameState {
-  buyers: Buyer[];
+  opportunities: Opportunity[];
   studio: Studio;
   projects: Project[];
   rivals: RivalStudio[];

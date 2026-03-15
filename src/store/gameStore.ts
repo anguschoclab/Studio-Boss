@@ -26,6 +26,7 @@ interface GameStore {
   newGame: (studioName: string, archetype: ArchetypeKey) => void;
   doAdvanceWeek: () => WeekSummary;
   createProject: (params: CreateProjectParams) => void;
+  acquireOpportunity: (opportunityId: string) => void;
   renewProject: (id: string) => void;
   saveToSlot: (slot: number) => void;
   loadFromSlot: (slot: number) => boolean;
@@ -135,6 +136,35 @@ export const useGameStore = create<GameStore>((set, get) => ({
     });
   },
 
+
+  acquireOpportunity: (opportunityId: string) => {
+    const state = get().gameState;
+    if (!state) return;
+
+    const opp = state.opportunities.find(o => o.id === opportunityId);
+    if (!opp) return;
+
+    // Convert opportunity to project parameters
+    const params: CreateProjectParams = {
+      title: opp.title,
+      format: opp.format,
+      genre: opp.genre,
+      budgetTier: opp.budgetTier,
+      targetAudience: opp.targetAudience,
+      flavor: opp.flavor,
+      attachedTalentIds: opp.attachedTalentIds,
+      tvFormat: opp.tvFormat,
+      episodes: opp.episodes,
+      releaseModel: opp.releaseModel,
+    };
+
+    // Remove the opportunity from the list
+    const newOpportunities = state.opportunities.filter(o => o.id !== opportunityId);
+    set({ gameState: { ...state, opportunities: newOpportunities } });
+
+    // Re-use the createProject function
+    get().createProject(params);
+  },
   renewProject: (id: string) => {
     const state = get().gameState;
     if (!state) return;
