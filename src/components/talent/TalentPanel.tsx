@@ -35,7 +35,14 @@ export const TalentPanel = () => {
         {filteredTalent.map((talent: TalentProfile) => (
           <div key={talent.id} className="p-4 rounded-lg border border-border bg-card hover:bg-accent/50 transition-colors space-y-3">
             <div className="flex items-start justify-between gap-2">
-              <h4 className="font-display font-semibold text-sm text-foreground leading-tight">{talent.name}</h4>
+              <div className="flex flex-col">
+                <h4 className="font-display font-semibold text-sm text-foreground leading-tight">{talent.name}</h4>
+                {talent.accessLevel !== 'outsider' && talent.accessLevel !== 'soft-access' && (
+                  <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">
+                    {talent.accessLevel}
+                  </span>
+                )}
+              </div>
               <Badge variant="outline" className="text-[10px] shrink-0">
                 {talent.type.toUpperCase()}
               </Badge>

@@ -25,6 +25,27 @@ Object.defineProperty(globalThis, "localStorage", {
 });
 
 describe("saveLoad", () => {
+  const localStorageMock = (() => {
+    let store = {};
+    return {
+      getItem(key) {
+        return store[key] || null;
+      },
+      setItem(key, value) {
+        store[key] = value.toString();
+      },
+      clear() {
+        store = {};
+      },
+      removeItem(key) {
+        delete store[key];
+      }
+    };
+  })();
+  Object.defineProperty(global, 'localStorage', {
+    value: localStorageMock,
+  });
+
   beforeEach(() => {
     localStorage.clear();
     vi.clearAllMocks();

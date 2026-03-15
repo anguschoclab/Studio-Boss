@@ -1,42 +1,45 @@
 const fs = require('fs');
 
-let code = fs.readFileSync('src/engine/types.ts', 'utf-8');
+let typesContent = fs.readFileSync('src/engine/types.ts', 'utf8');
 
-// 1. Update ProjectStatus
-code = code.replace(
-  "export type ProjectStatus = 'development' | 'production' | 'released' | 'archived';",
-  "export type ProjectStatus = 'development' | 'pitching' | 'production' | 'released' | 'archived';"
-);
+const familyInterface = `
+export type AccessLevel = 'outsider' | 'soft-access' | 'legacy' | 'dynasty' | 'comeback';
 
-// 2. Add ProjectContractType, MandateType, Mandate, Buyer interfaces
-const addTypes = `
-export type ProjectContractType = 'upfront' | 'deficit';
-export type MandateType = 'sci-fi' | 'comedy' | 'drama' | 'budget_freeze' | 'broad_appeal' | 'prestige';
-
-export interface Mandate {
-  type: MandateType;
-  activeUntilWeek: number;
-}
-
-export interface Buyer {
+export interface Family {
   id: string;
   name: string;
-  archetype: 'network' | 'streamer' | 'premium';
-  currentMandate?: Mandate;
+  recognition: number; // 0-100
+  prestigeLegacy: number; // 0-100
+  commercialLegacy: number; // 0-100
+  scandalLegacy: number; // 0-100
+  volatility: number; // 0-100
+  status: 'respected' | 'chaotic' | 'overexposed' | 'revived' | 'faded' | 'rising';
 }
 `;
-code = code.replace('export interface Project {', addTypes + '\\nexport interface Project {');
 
-// 3. Add contractType and buyerId to Project
-code = code.replace(
-  '  awardsProfile?: AwardsProfile;\n}',
-  '  awardsProfile?: AwardsProfile;\n  contractType?: ProjectContractType;\n  buyerId?: string;\n}'
+// Add Family interface
+typesContent = typesContent.replace('// Future system stubs', familyInterface + '\n// Future system stubs');
+
+// Add families to GameState
+typesContent = typesContent.replace(
+  'talentPool: TalentProfile[];',
+  'families: Family[];\n  talentPool: TalentProfile[];'
 );
 
-// 4. Update GameState
-code = code.replace(
-  '  financeHistory: FinanceRecord[];\n}',
-  '  financeHistory: FinanceRecord[];\n  buyers: Buyer[];\n  contracts: Contract[];\n  talentPool: TalentProfile[];\n  awards?: Award[];\n}'
-);
+// Update TalentProfile
+const newTalentProfile = `export interface TalentProfile {
+  id: string;
+  name: string;
+  type: 'director' | 'actor' | 'writer' | 'producer';
+  prestige: number;
+  fee: number;
+  draw: number;
+  temperament: string; // Used by UI
+  // Lineage properties
+  familyId?: string;
+  accessLevel: AccessLevel;
+}`;
 
-fs.writeFileSync('src/engine/types.ts', code);
+typesContent = typesContent.replace(/export interface TalentProfile \{[^}]+\}/, newTalentProfile);
+
+fs.writeFileSync('src/engine/types.ts', typesContent);
