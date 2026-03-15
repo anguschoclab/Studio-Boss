@@ -71,21 +71,6 @@ export interface Award {
   year: number;
 }
 
-
-export type ProjectContractType = 'upfront' | 'deficit';
-export type MandateType = 'sci-fi' | 'comedy' | 'drama' | 'budget_freeze' | 'broad_appeal' | 'prestige';
-
-export interface Mandate {
-  type: MandateType;
-  activeUntilWeek: number;
-}
-
-export interface Buyer {
-  id: string;
-  name: string;
-  archetype: 'network' | 'streamer' | 'premium';
-  currentMandate?: Mandate;
-}
 export interface Project {
   id: string;
   title: string;
@@ -105,15 +90,6 @@ export interface Project {
   weeklyRevenue: number;
   releaseWeek: number | null;
   awardsProfile?: AwardsProfile;
-  // TV specific fields
-  tvFormat?: TvFormatKey;
-  episodes?: number;
-  season?: number;
-  releaseModel?: ReleaseModelKey;
-  episodesReleased?: number;
-  contractType?: ProjectContractType;
-  buyerId?: string;
-  renewable?: boolean;
 }
 
 export interface RivalStudio {
@@ -220,42 +196,7 @@ export interface Agency {
   leverage: number; // 0-100
 }
 
-export interface Agent {
-  id: string;
-  agencyId: string;
-  name: string;
-  specialty: AgentSpecialty;
-  skill: number; // 0-100
-  aggression: number; // 0-100
-}
 
-export interface Family {
-  id: string;
-  name: string;
-  recognition: number; // 0-100
-  prestigeLegacy: number; // 0-100
-  commercialLegacy: number; // 0-100
-  scandalLegacy: number; // 0-100
-  volatility: number; // 0-100
-  status: 'respected' | 'chaotic' | 'overexposed' | 'revived' | 'faded' | 'rising';
-}
-
-// Future system stubs
-export interface TalentProfile {
-  id: string;
-  name: string;
-  roles: TalentRole[]; // Changed from type
-  prestige: number;
-  fee: number;
-  draw: number;
-  temperament: string; // Used by UI
-  // Lineage properties
-  familyId?: string;
-  accessLevel: AccessLevel;
-  // Representation
-  agencyId?: string;
-  agentId?: string;
-}
 
 export interface Contract {
   id: string;

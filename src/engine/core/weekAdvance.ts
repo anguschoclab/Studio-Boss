@@ -5,8 +5,7 @@ import { updateRival } from '../systems/rivals';
 import { updateBuyers } from '../systems/buyers';
 import { generateHeadlines } from '../generators/headlines';
 import { generateAwardsProfile, runAwardsCeremony } from '../systems/awards';
-import { pick, groupContractsByProject } from '../utils';
-import { generateOpportunity } from '../generators/opportunities';
+import { pick } from '../utils';
 
 const EVENT_POOL = [
   'Market analysts upgrade entertainment sector outlook.',
@@ -82,25 +81,7 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
   const year = Math.floor(nextWeek / 52) + 1; // 1-indexed year
   const ceremonyResult = runAwardsCeremony(state, nextWeek, year);
 
-
-  // Update opportunities
-  const updatedOpportunities = state.opportunities.reduce((acc, opp) => {
-    const weeksUntilExpiry = opp.weeksUntilExpiry - 1;
-    if (weeksUntilExpiry > 0) {
-      acc.push({ ...opp, weeksUntilExpiry });
-    }
-    return acc;
-  }, [] as typeof state.opportunities);
-
-  // Maybe spawn a new opportunity
-  if (Math.random() < 0.3) {
-    const newOpp = generateOpportunity(state.talentPool.map(t => t.id));
-    updatedOpportunities.push(newOpp);
-    events.push(`A new ${newOpp.genre} ${newOpp.type} just hit the market: "${newOpp.title}"`);
-  }
-
   const newAwards = ceremonyResult.newAwards;
-
   const prestigeChange = ceremonyResult.prestigeChange;
 
   if (newAwards.length > 0) {
@@ -122,7 +103,7 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
     talentPool: Array.from(talentPoolMap.values()),
     rivals: updatedRivals,
     awards: [...(state.awards || []), ...newAwards],
-    headlines: [...formattedBuyerHeadlines, ...newHeadlines, ...state.headlines].slice(0, 50),
+    headlines: [...newHeadlines, ...state.headlines].slice(0, 50),
     financeHistory: [
       ...state.financeHistory,
       { week: nextWeek, cash: newCash, revenue, costs },
