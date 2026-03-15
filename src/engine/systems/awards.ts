@@ -76,14 +76,18 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
     evaluator: (p: Project) => number,
     formatFilter: 'film' | 'tv' | 'both' = 'both'
   ) => {
-    const candidates = eligibleProjects.filter(p => formatFilter === 'both' || p.format === formatFilter);
-    if (candidates.length === 0) return;
+        // Filter and score candidates in a single pass
+    const scored = eligibleProjects.reduce((acc, p) => {
+      if (formatFilter === 'both' || p.format === formatFilter) {
+        acc.push({
+          project: p,
+          score: evaluator(p) * (1 + (p.awardsProfile?.campaignStrength || 0) / 100) // Campaign boosts score
+        });
+      }
+      return acc;
+    }, [] as { project: Project, score: number }[]).sort((a, b) => b.score - a.score);
 
-    // Score all candidates
-    const scored = candidates.map(p => ({
-      project: p,
-      score: evaluator(p) * (1 + (p.awardsProfile?.campaignStrength || 0) / 100) // Campaign boosts score
-    })).sort((a, b) => b.score - a.score);
+    if (scored.length === 0) return;
 
     // Top scorer wins, next few nominated (simplified logic)
     const winner = scored[0];

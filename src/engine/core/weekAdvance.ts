@@ -129,3 +129,23 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
 
   return { newState, summary };
 }
+
+function handleAwardsCeremony(state: GameState, nextWeek: number) {
+  let prestigeChange = 0;
+  let newAwards: Award[] = [];
+  const events: string[] = [];
+  const projectUpdates: string[] = [];
+
+  if (nextWeek % 52 === 0) {
+    const year = Math.floor(nextWeek / 52);
+    events.push(`Year ${year} Awards Ceremony!`);
+
+    const ceremonyResult = runAwardsCeremony(state, year);
+
+    newAwards = ceremonyResult.newAwards;
+    prestigeChange = ceremonyResult.prestigeChange;
+    projectUpdates.push(...ceremonyResult.projectUpdates);
+  }
+
+  return { prestigeChange, newAwards, events, projectUpdates };
+}
