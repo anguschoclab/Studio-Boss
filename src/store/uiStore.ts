@@ -6,6 +6,8 @@ interface UIStore {
   showCreateProject: boolean;
   showPitchProject: boolean;
   pitchingProjectId: string | null;
+  showCrisisModal: boolean;
+  crisisProjectId: string | null;
   showWeekSummary: boolean;
   weekSummary: WeekSummary | null;
   selectedProjectId: string | null;
@@ -14,6 +16,8 @@ interface UIStore {
   closeCreateProject: () => void;
   openPitchProject: (projectId: string) => void;
   closePitchProject: () => void;
+  openCrisisModal: (projectId: string) => void;
+  closeCrisisModal: () => void;
   showSummary: (summary: WeekSummary) => void;
   closeSummary: () => void;
   selectProject: (id: string | null) => void;
@@ -24,6 +28,8 @@ export const useUIStore = create<UIStore>((set) => ({
   showCreateProject: false,
   showPitchProject: false,
   pitchingProjectId: null,
+  showCrisisModal: false,
+  crisisProjectId: null,
   showWeekSummary: false,
   weekSummary: null,
   selectedProjectId: null,
@@ -32,6 +38,8 @@ export const useUIStore = create<UIStore>((set) => ({
   closeCreateProject: () => set({ showCreateProject: false }),
   openPitchProject: (projectId) => set({ showPitchProject: true, pitchingProjectId: projectId }),
   closePitchProject: () => set({ showPitchProject: false, pitchingProjectId: null }),
+  openCrisisModal: (projectId) => set({ showCrisisModal: true, crisisProjectId: projectId }),
+  closeCrisisModal: () => set({ showCrisisModal: false, crisisProjectId: null }),
   showSummary: (summary) => set({ showWeekSummary: true, weekSummary: summary }),
   closeSummary: () => set({ showWeekSummary: false }),
   selectProject: (id) => set({ selectedProjectId: id }),

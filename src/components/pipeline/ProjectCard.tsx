@@ -5,19 +5,21 @@ import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
 import { TV_FORMATS } from '@/engine/data/tvFormats';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { AlertTriangle } from 'lucide-react';
 
 interface ProjectCardProps {
   project: Project;
 }
 
 export const ProjectCard = ({ project }: ProjectCardProps) => {
-  const { selectProject, openPitchProject } = useUIStore();
+  const { selectProject, openPitchProject, openCrisisModal } = useUIStore();
   const tier = BUDGET_TIERS[project.budgetTier];
 
   const displayFormat = project.format === 'tv' && project.season
       ? `S${project.season}`
       : project.format.toUpperCase();
 
+  const hasUnresolvedCrisis = project.activeCrisis && !project.activeCrisis.resolved;
   const progressPct = project.status === 'development'
     ? (project.weeksInPhase / project.developmentWeeks) * 100
     : project.status === 'production'
@@ -31,9 +33,16 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
     >
       <div className="flex items-start justify-between gap-2">
         <h4 className="font-display font-semibold text-sm text-foreground leading-tight">{project.title}</h4>
-        <Badge variant="outline" className="text-[10px] shrink-0">
-          {displayFormat}
-        </Badge>
+        <div className="flex gap-2">
+          {hasUnresolvedCrisis && (
+            <Badge variant="destructive" className="text-[10px] shrink-0">
+              <AlertTriangle className="w-3 h-3 mr-1" /> Crisis
+            </Badge>
+          )}
+          <Badge variant="outline" className="text-[10px] shrink-0">
+            {displayFormat}
+          </Badge>
+        </div>
       </div>
 
       <div className="flex flex-col gap-1 text-[10px] text-muted-foreground">
@@ -69,14 +78,14 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
       {(project.status === 'development' || project.status === 'production') && (
         <div className="space-y-1">
           <div className="flex justify-between text-[10px] text-muted-foreground">
-            <span>Progress</span>
+            <span>Progress {hasUnresolvedCrisis && <span className="text-destructive font-bold">(HALTED)</span>}</span>
             <span>
               {project.weeksInPhase}/{project.status === 'development' ? project.developmentWeeks : project.productionWeeks}w
             </span>
           </div>
           <div className="h-1 bg-muted rounded-full overflow-hidden">
             <div
-              className="h-full bg-primary rounded-full transition-all duration-500"
+              className={`h-full rounded-full transition-all duration-500 ${hasUnresolvedCrisis ? 'bg-destructive' : 'bg-primary'}`}
               style={{ width: `${Math.min(progressPct, 100)}%` }}
             />
           </div>
@@ -96,6 +105,24 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
              }}
            >
              Review Greenlight
+           </Button>
+        </div>
+      )}
+
+      {/* Crisis Button */}
+      {hasUnresolvedCrisis && (
+        <div className="pt-2">
+           <Button
+             variant="destructive"
+             size="sm"
+             className="w-full text-xs font-bold"
+             onClick={(e) => {
+               e.stopPropagation();
+               openCrisisModal(project.id);
+             }}
+           >
+             <AlertTriangle className="w-4 h-4 mr-2" />
+             Resolve Crisis
            </Button>
         </div>
       )}

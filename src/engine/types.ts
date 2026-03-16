@@ -71,6 +71,21 @@ export interface Award {
   year: number;
 }
 
+
+export interface CrisisOption {
+  text: string;
+  effectDescription: string;
+  cashPenalty?: number;
+  weeksDelay?: number;
+  buzzPenalty?: number;
+}
+
+export interface ActiveCrisis {
+  description: string;
+  options: CrisisOption[];
+  resolved: boolean;
+}
+
 export interface Project {
   id: string;
   title: string;
@@ -90,6 +105,7 @@ export interface Project {
   revenue: number;
   weeklyRevenue: number;
   releaseWeek: number | null;
+  activeCrisis?: ActiveCrisis;
   awardsProfile?: AwardsProfile;
 }
 
