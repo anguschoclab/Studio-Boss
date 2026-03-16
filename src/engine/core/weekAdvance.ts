@@ -121,7 +121,14 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
   }
 
   // Generate headlines
-  const newHeadlines = [...generateHeadlines(nextWeek, updatedRivals), ...formattedBuyerHeadlines];
+  const newHeadlines = generateHeadlines(nextWeek, updatedRivals);
+  newHeadlines.push(...formattedBuyerHeadlines);
+
+
+  // Random events
+  if (Math.random() < 0.15) {
+    events.push(pick(EVENT_POOL));
+  }
 
   // Possibly spawn a new opportunity
   if (Math.random() < 0.2) { // 20% chance per week
