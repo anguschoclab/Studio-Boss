@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { GENRES, TARGET_AUDIENCES, UNSCRIPTED_GENRES } from '@/engine/data/genres';
@@ -38,9 +38,10 @@ export const CreateProjectModal = () => {
   let calculatedDevWeeks = tier.developmentWeeks;
   let calculatedProdWeeks = tier.productionWeeks;
   let calculatedBudget = tier.budget;
-  const talentPool = gameState?.talentPool || [];
+  const talentPool = useMemo(() => gameState?.talentPool || [], [gameState?.talentPool]);
+  const talentMap = useMemo(() => new Map(talentPool.map(t => [t.id, t])), [talentPool]);
   const talentFees = selectedTalent.reduce((sum, id) => {
-    const t = talentPool.find(t => t.id === id);
+    const t = talentMap.get(id);
     return sum + (t?.fee || 0);
   }, 0);
 

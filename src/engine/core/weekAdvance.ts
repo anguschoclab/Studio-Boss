@@ -1,13 +1,16 @@
-import { generateOpportunity } from '../generators/opportunities';
+import { groupContractsByProject } from "../utils";
 import { GameState, WeekSummary } from '../types';
+import { groupContractsByProject } from '../utils';
 import { calculateWeeklyCosts, calculateWeeklyRevenue } from '../systems/finance';
 import { advanceProject } from '../systems/projects';
+import { checkAndTriggerCrisis } from '../systems/crises';
 import { updateRival } from '../systems/rivals';
 import { updateBuyers } from '../systems/buyers';
 import { generateHeadlines } from '../generators/headlines';
 import { generateOpportunity } from '../generators/opportunities';
 import { generateAwardsProfile, runAwardsCeremony } from '../systems/awards';
 import { pick, groupContractsByProject } from '../utils';
+import { generateOpportunity } from '../generators/opportunities';
 
 const EVENT_POOL = [
   'Market analysts upgrade entertainment sector outlook.',
@@ -30,6 +33,7 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
   const nextWeek = state.week + 1;
 
   const contractsByProject = groupContractsByProject(state.contracts);
+  const events: string[] = [];
 
   // Group talent by id for O(1) lookup
   const talentPoolMap = new Map<string, typeof state.talentPool[0]>();
@@ -39,6 +43,12 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
 
   // Advance projects
   const updatedProjects = state.projects.map(p => {
+    // Stop progression if project is in an active unresolved crisis
+    if (p.activeCrisis && !p.activeCrisis.resolved) {
+      projectUpdates.push(`"${p.title}" production is halted until the active crisis is resolved.`);
+      return p;
+    }
+
     const projectContracts = contractsByProject.get(p.id) || [];
     const { project, update } = advanceProject(p, nextWeek, state.studio.prestige, projectContracts, talentPoolMap);
     if (update) projectUpdates.push(update);
@@ -48,8 +58,20 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
       project.awardsProfile = generateAwardsProfile(project);
     }
 
+    // Check for new crisis after advancing week if still in production
+    if (project.status === 'production' && (!project.activeCrisis || project.activeCrisis.resolved)) {
+      const newCrisis = checkAndTriggerCrisis(project);
+      if (newCrisis) {
+        project.activeCrisis = newCrisis;
+        events.push(`CRISIS: "${project.title}" - ${newCrisis.description}`);
+      }
+    }
+
     return project;
   });
+
+  // Update opportunities
+
 
   // Calculate finances
   const costs = calculateWeeklyCosts(updatedProjects);
@@ -64,7 +86,6 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
   const { updatedBuyers, newHeadlines: buyerHeadlines } = updateBuyers(state.buyers || [], nextWeek);
 
   // Merge buyer headlines into normal headlines
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const formattedBuyerHeadlines = buyerHeadlines.map(text => ({
     id: `bh-${crypto.randomUUID()}`,
     text,
@@ -74,9 +95,9 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
 
 
   // Update opportunities
-  let updatedOpportunities = state.opportunities ? [...state.opportunities] : [];
+  let updatedOpportunitiesCopy = state.opportunities ? [...state.opportunities] : [];
 
-  updatedOpportunities = updatedOpportunities
+  updatedOpportunitiesCopy = updatedOpportunitiesCopy
     .map(opp => ({
       ...opp,
       weeksUntilExpiry: opp.weeksUntilExpiry - 1,
@@ -85,7 +106,7 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
 
   // Sometimes spawn new opportunities
   if (Math.random() < 0.2) {
-    const oppNames = updatedOpportunities.map(o => o.title);
+    const oppNames = updatedOpportunitiesCopy.map(o => o.title);
     const availableTalentIds = state.talentPool
       .filter(t => !contractsByProject.has(t.id))
       .map(t => t.id);
@@ -93,7 +114,7 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
     if (availableTalentIds.length > 0) {
       const newOpp = generateOpportunity(availableTalentIds);
         if (!oppNames.includes(newOpp.title)) {
-          updatedOpportunities.push(newOpp);
+          updatedOpportunitiesCopy.push(newOpp);
           events.push(`A new script "${newOpp.title}" hit the market.`);
         }
     }
@@ -112,8 +133,21 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
   // Possibly spawn a new opportunity
   if (Math.random() < 0.2) { // 20% chance per week
     const newOpp = generateOpportunity(state.week, state.studio.prestige);
-    updatedOpportunities.push(newOpp);
+    updatedOpportunitiesCopy.push(newOpp);
     events.push(`A new script "${newOpp.title}" just hit the market!`);
+  }
+  if (Math.random() < 0.15) {
+    events.push('New opportunities have hit the market!');
+    updatedOpportunitiesCopy.push({
+      id: `opp-${crypto.randomUUID()}`,
+      type: 'script',
+      weeksUntilExpiry: 4,
+      cost: 500000,
+      details: {
+        title: 'Spec Script',
+        genre: 'Action',
+      }
+    } as typeof state.opportunities[0]);
   }
   if (Math.random() < 0.15) {
     events.push(pick(EVENT_POOL));
@@ -134,11 +168,27 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
     events.push(`The ${uniqueBodies.join(' and ')} took place this week!`);
   }
 
+
+
+  // Update opportunities
+  updatedOpportunitiesCopy = state.opportunities
+    .map(opp => ({ ...opp, weeksUntilExpiry: opp.weeksUntilExpiry - 1 }))
+    .filter(opp => opp.weeksUntilExpiry > 0);
+
+
+
+  // Random chance to spawn a new opportunity
+  if (Math.random() < 0.15 && updatedOpportunitiesCopy.length < 3) {
+    const newOpp = generateOpportunity(state.week, state.studio.prestige);
+    updatedOpportunitiesCopy.push(newOpp);
+    events.push(`A new ${newOpp.budgetTier} ${newOpp.format} package hit the market.`);
+  }
+
   const newState: GameState = {
     ...state,
     week: nextWeek,
     cash: newCash,
-    opportunities: updatedOpportunities,
+    opportunities: updatedOpportunitiesCopy,
     studio: { ...state.studio, prestige: state.studio.prestige + prestigeChange },
     projects: updatedProjects,
     buyers: updatedBuyers,

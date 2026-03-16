@@ -95,10 +95,12 @@ export function generateTalentPool(size: number, families: Family[], agents: Age
     let assignedAgentId: string | undefined = undefined;
     let assignedAgencyId: string | undefined = undefined;
 
+    const agencyMap = new Map(agencies.map(ag => [ag.id, ag]));
+
     if (agents.length > 0 && Math.random() < 0.8) { // 80% have representation
       // Powerhouses take top talent
       const targetAgent = agents.find(a => {
-         const agency = agencies.find(ag => ag.id === a.agencyId);
+         const agency = a.agencyId ? agencyMap.get(a.agencyId) : undefined;
          if (agency?.tier === 'powerhouse') return prestige > 70;
          if (agency?.tier === 'major') return prestige > 50;
          return true; // boutique/mid-tier take anyone
