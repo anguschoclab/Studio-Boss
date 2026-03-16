@@ -3,6 +3,7 @@ import { BUDGET_TIERS } from '../data/budgetTiers';
 import { TV_FORMATS } from '../data/tvFormats';
 import { UNSCRIPTED_FORMATS } from '../data/unscriptedFormats';
 import { clamp, randRange } from '../utils';
+import { updateTalentStats } from './talentStats';
 
 function getAttachedTalent(contracts: Contract[], talentPoolMap: Map<string, TalentProfile>): TalentProfile[] {
   return contracts.reduce((acc, c) => {
@@ -207,12 +208,3 @@ function updateTalentStats(project: Project, contracts: Contract[], talentPoolMa
     feeMultiplier = 0.9;
   }
 
-  for (const contract of contracts) {
-    const talent = talentPoolMap.get(contract.talentId);
-    if (talent) {
-      talent.draw = clamp(talent.draw + drawChange, 0, 100);
-      talent.prestige = clamp(talent.prestige + prestigeChange, 0, 100);
-      talent.fee = Math.max(50000, Math.floor(talent.fee * feeMultiplier));
-    }
-  }
-}

@@ -7,7 +7,9 @@ import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
 import { TV_FORMATS } from '@/engine/data/tvFormats';
 import { UNSCRIPTED_FORMATS } from '@/engine/data/unscriptedFormats';
 import { saveGame, loadGame, getSaveSlots, SaveSlotInfo } from '@/persistence/saveLoad';
+import { resolveCrisis } from '@/engine/systems/crises';
 import { randRange } from '@/engine/utils';
+import { getFilmStats, getTvStats, getUnscriptedStats } from '@/engine/systems/stats';
 
 interface CreateProjectParams {
   title: string;
@@ -37,6 +39,8 @@ interface GameStore {
   signContract: (talentId: string, projectId: string) => void;
   pitchProject: (projectId: string, buyerId: string, contractType: ProjectContractType) => boolean;
   greenlightProject: (projectId: string) => void;
+  _updateProjectToProduction: (state: GameState, projectIndex: number, project: Project, headlineText: string, extraProjectUpdates?: Partial<Project>) => void;
+  resolveProjectCrisis: (projectId: string, optionIndex: number) => void;
 }
 
 
@@ -50,31 +54,30 @@ function getFilmStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS]) {
   };
 }
 
-function getTvStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS], tvFormatData: typeof TV_FORMATS[keyof typeof TV_FORMATS], episodes: number) {
-  const weeklyCost = tier.weeklyCost * tvFormatData.productionCostMultiplier;
-  const productionWeeks = Math.ceil(episodes * tvFormatData.productionWeeksPerEpisode);
+function getEpisodicStats(
+  tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS],
+  formatData: { productionCostMultiplier: number; productionWeeksPerEpisode: number; developmentWeeksModifier: number; renewable: boolean },
+  episodes: number,
+  budgetMultiplier: number
+) {
+  const weeklyCost = tier.weeklyCost * formatData.productionCostMultiplier;
+  const productionWeeks = Math.ceil(episodes * formatData.productionWeeksPerEpisode);
 
   return {
     weeklyCost,
     productionWeeks,
-    developmentWeeks: Math.ceil(tier.developmentWeeks * tvFormatData.developmentWeeksModifier),
-    budget: weeklyCost * productionWeeks + (tier.budget * 0.2), // Rough budget estimate
-    renewable: tvFormatData.renewable,
+    developmentWeeks: Math.ceil(tier.developmentWeeks * formatData.developmentWeeksModifier),
+    budget: weeklyCost * productionWeeks + (tier.budget * budgetMultiplier),
+    renewable: formatData.renewable,
   };
 }
 
+function getTvStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS], tvFormatData: typeof TV_FORMATS[keyof typeof TV_FORMATS], episodes: number) {
+  return getEpisodicStats(tier, tvFormatData, episodes, 0.2);
+}
 
 function getUnscriptedStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS], unscriptedFormatData: typeof UNSCRIPTED_FORMATS[keyof typeof UNSCRIPTED_FORMATS], episodes: number) {
-  const weeklyCost = tier.weeklyCost * unscriptedFormatData.productionCostMultiplier;
-  const productionWeeks = Math.ceil(episodes * unscriptedFormatData.productionWeeksPerEpisode);
-
-  return {
-    weeklyCost,
-    productionWeeks,
-    developmentWeeks: Math.ceil(tier.developmentWeeks * unscriptedFormatData.developmentWeeksModifier),
-    budget: weeklyCost * productionWeeks + (tier.budget * 0.1),
-    renewable: unscriptedFormatData.renewable,
-  };
+  return getEpisodicStats(tier, unscriptedFormatData, episodes, 0.1);
 }
 
 
@@ -246,6 +249,24 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
 
 
+  _updateProjectToProduction: (state: GameState, projectIndex: number, project: Project, headlineText: string, extraProjectUpdates: Partial<Project> = {}) => {
+    const updatedProjects = [...state.projects];
+    updatedProjects[projectIndex] = {
+      ...project,
+      status: 'production',
+      weeksInPhase: 0,
+      ...extraProjectUpdates
+    };
+
+    set({
+      gameState: {
+        ...state,
+        projects: updatedProjects,
+        headlines: [{ id: `ph-${crypto.randomUUID()}`, text: headlineText, week: state.week, category: 'market' as const }, ...state.headlines].slice(0, 50)
+      }
+    });
+  },
+
   greenlightProject: (projectId) => {
     const state = get().gameState;
     if (!state) return;
@@ -256,22 +277,12 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const project = state.projects[projectIndex];
     if (project.status !== 'needs_greenlight') return;
 
-    const updatedProjects = [...state.projects];
-    updatedProjects[projectIndex] = {
-      ...project,
-      status: 'production',
-      weeksInPhase: 0,
-    };
-
-    const headlineText = `"${project.title}" receives full greenlight and enters production.`;
-
-    set({
-      gameState: {
-        ...state,
-        projects: updatedProjects,
-        headlines: [{ id: `gh-${crypto.randomUUID()}`, text: headlineText, week: state.week, category: 'market' as const }, ...state.headlines].slice(0, 50)
-      }
-    });
+    get()._updateProjectToProduction(
+      state,
+      projectIndex,
+      project,
+      `"${project.title}" receives full greenlight and enters production.`
+    );
   },
 
   pitchProject: (projectId, buyerId, contractType) => {
@@ -287,24 +298,13 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const success = negotiateContract(project, buyer, contractType);
 
     if (success) {
-      const updatedProjects = [...state.projects];
-      updatedProjects[projectIndex] = {
-        ...project,
-        status: 'production',
-        weeksInPhase: 0,
-        buyerId,
-        contractType
-      };
-
-      const headlineText = `${buyer.name} officially picks up "${project.title}" on a ${contractType} deal.`;
-
-      set({
-        gameState: {
-          ...state,
-          projects: updatedProjects,
-          headlines: [{ id: `ph-${crypto.randomUUID()}`, text: headlineText, week: state.week, category: 'market' as const }, ...state.headlines].slice(0, 50)
-        }
-      });
+      get()._updateProjectToProduction(
+        state,
+        projectIndex,
+        project,
+        `${buyer.name} officially picks up "${project.title}" on a ${contractType} deal.`,
+        { buyerId, contractType }
+      );
     }
 
     return success;
