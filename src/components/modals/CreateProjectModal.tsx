@@ -89,7 +89,7 @@ export const CreateProjectModal = () => {
             <Label className="text-xs uppercase tracking-wider">Title</Label>
             <div className="flex gap-2">
               <Input value={title} onChange={e => setTitle(e.target.value)} placeholder="Untitled Project" className="flex-1" />
-              <Button type="button" variant="outline" size="icon" onClick={() => setTitle(generateProjectTitle(genre))} title="Generate Random Title">
+              <Button type="button" variant="outline" size="icon" onClick={() => setTitle(generateProjectTitle(genre))} title="Generate Random Title" aria-label="Generate Random Title">
                 <Dices className="h-4 w-4" />
               </Button>
             </div>

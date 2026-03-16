@@ -1,3 +1,4 @@
+import { generateOpportunity } from '../generators/opportunities';
 import { GameState, WeekSummary } from '../types';
 import { calculateWeeklyCosts, calculateWeeklyRevenue } from '../systems/finance';
 import { advanceProject } from '../systems/projects';
@@ -63,6 +64,7 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
   const { updatedBuyers, newHeadlines: buyerHeadlines } = updateBuyers(state.buyers || [], nextWeek);
 
   // Merge buyer headlines into normal headlines
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const formattedBuyerHeadlines = buyerHeadlines.map(text => ({
     id: `bh-${crypto.randomUUID()}`,
     text,
@@ -99,8 +101,24 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
 
   // Generate headlines
   const newHeadlines = generateHeadlines(nextWeek, updatedRivals);
+  newHeadlines.push(...formattedBuyerHeadlines);
+
+  // Manage Opportunities
+  const updatedOpportunities = state.opportunities
+    .map(opp => ({ ...opp, weeksUntilExpiry: opp.weeksUntilExpiry - 1 }))
+    .filter(opp => opp.weeksUntilExpiry > 0);
 
   // Random events
+  if (Math.random() < 0.15) {
+    events.push(pick(EVENT_POOL));
+  }
+
+  // Possibly spawn a new opportunity
+  if (Math.random() < 0.2) { // 20% chance per week
+    const newOpp = generateOpportunity(state.week, state.studio.prestige);
+    updatedOpportunities.push(newOpp);
+    events.push(`A new script "${newOpp.title}" just hit the market!`);
+  }
   if (Math.random() < 0.15) {
     events.push(pick(EVENT_POOL));
   }
