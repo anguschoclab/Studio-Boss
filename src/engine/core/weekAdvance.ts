@@ -1,3 +1,4 @@
+import { groupContractsByProject } from "../utils";
 import { GameState, WeekSummary } from '../types';
 import { calculateWeeklyCosts, calculateWeeklyRevenue } from '../systems/finance';
 import { advanceProject } from '../systems/projects';
@@ -48,6 +49,11 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
     return project;
   });
 
+  // Update opportunities
+  const updatedOpportunities = state.opportunities
+    .map(opp => ({ ...opp, weeksUntilExpiry: opp.weeksUntilExpiry - 1 }))
+    .filter(opp => opp.weeksUntilExpiry > 0);
+
   // Calculate finances
   const costs = calculateWeeklyCosts(updatedProjects);
   const revenue = calculateWeeklyRevenue(updatedProjects, state.contracts);
@@ -69,10 +75,23 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
   }));
 
   // Generate headlines
-  const newHeadlines = generateHeadlines(nextWeek, updatedRivals);
+  const newHeadlines = [...formattedBuyerHeadlines, ...generateHeadlines(nextWeek, updatedRivals)];
 
   // Random events
   const events: string[] = [];
+  if (Math.random() < 0.15) {
+    events.push('New opportunities have hit the market!');
+    updatedOpportunities.push({
+      id: `opp-${crypto.randomUUID()}`,
+      type: 'script',
+      weeksUntilExpiry: 4,
+      cost: 500000,
+      details: {
+        title: 'Spec Script',
+        genre: 'Action',
+      }
+    } as typeof state.opportunities[0]);
+  }
   if (Math.random() < 0.15) {
     events.push(pick(EVENT_POOL));
   }
