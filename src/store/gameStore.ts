@@ -80,6 +80,40 @@ function getUnscriptedStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS]
   return getEpisodicStats(tier, unscriptedFormatData, episodes, 0.1);
 }
 
+
+function getProjectStats(params: CreateProjectParams, tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS]) {
+  if (params.format === 'tv' && params.tvFormat && params.episodes) {
+    return getTvStats(tier, TV_FORMATS[params.tvFormat], params.episodes);
+  } else if (params.format === 'unscripted' && params.unscriptedFormat && params.episodes) {
+    return getUnscriptedStats(tier, UNSCRIPTED_FORMATS[params.unscriptedFormat], params.episodes);
+  }
+  return getFilmStats(tier);
+}
+
+function prepareTalentAndContracts(
+  state: GameState,
+  attachedTalentIds: string[] | undefined,
+  projectId: string
+) {
+  const ids = attachedTalentIds || [];
+  const attachedTalent = ids.reduce((acc, id) => {
+    const t = state.talentPool.find(t => t.id === id);
+    if (t) acc.push(t);
+    return acc;
+  }, [] as typeof state.talentPool);
+
+  const talentFees = attachedTalent.reduce((sum, t) => sum + (t?.fee || 0), 0);
+
+  const newContracts = attachedTalent.map(t => ({
+    id: `contract-${crypto.randomUUID()}`,
+    talentId: t.id,
+    projectId,
+    fee: t.fee,
+    backendPercent: t.prestige > 80 ? 10 : 0,
+  }));
+
+  return { attachedTalent, talentFees, newContracts };
+}
 export const useGameStore = create<GameStore>((set, get) => ({
   gameState: null,
 
@@ -101,44 +135,15 @@ export const useGameStore = create<GameStore>((set, get) => ({
   createProject: (params) => {
     const state = get().gameState;
     if (!state) return;
+
     const tier = BUDGET_TIERS[params.budgetTier];
-
-    const stats = params.format === 'tv' && params.tvFormat && params.episodes
-      ? getTvStats(tier, TV_FORMATS[params.tvFormat], params.episodes)
-      : params.format === 'unscripted' && params.unscriptedFormat && params.episodes
-      ? getUnscriptedStats(tier, UNSCRIPTED_FORMATS[params.unscriptedFormat], params.episodes)
-      : getFilmStats(tier);
-
+    const stats = getProjectStats(params, tier);
     const { budget, weeklyCost, developmentWeeks, productionWeeks, renewable } = stats;
 
-    // Calculate talent costs
-    const attachedTalentIds = params.attachedTalentIds || [];
-    const talentMap = new Map(state.talentPool.map(t => [t.id, t]));
-    const attachedTalent = attachedTalentIds.reduce((acc, id) => {
-      const t = talentMap.get(id);
-      if (t) acc.push(t);
-      return acc;
-    }, [] as typeof state.talentPool);
-
-    const talentFees = attachedTalent.reduce((sum, t) => sum + (t?.fee || 0), 0);
-    const totalBudget = budget + talentFees;
-
     const projectId = crypto.randomUUID();
+    const { talentFees, newContracts } = prepareTalentAndContracts(state, params.attachedTalentIds, projectId);
 
-    const newContracts = attachedTalent.map(t => ({
-      id: `contract-${crypto.randomUUID()}`,
-      talentId: t.id,
-      projectId,
-      fee: t.fee,
-      backendPercent: t.prestige > 80 ? 10 : 0,
-      resolveProjectCrisis: (projectId, optionIndex) => {
-    const state = get().gameState;
-    if (!state) return;
-    const newState = resolveCrisis(state, projectId, optionIndex);
-    set({ gameState: newState });
-    saveGame(0, newState);
-  },
-}));
+    const totalBudget = budget + talentFees;
 
     const project = {
       id: projectId,

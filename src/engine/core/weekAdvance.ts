@@ -86,7 +86,7 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
   const { updatedBuyers, newHeadlines: buyerHeadlines } = updateBuyers(state.buyers || [], nextWeek);
 
   // Merge buyer headlines into normal headlines
-  const formattedBuyerHeadlines = buyerHeadlines.map(text => ({
+    const formattedBuyerHeadlines = buyerHeadlines.map(text => ({
     id: `bh-${crypto.randomUUID()}`,
     text,
     week: nextWeek,

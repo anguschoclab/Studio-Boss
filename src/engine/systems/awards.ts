@@ -45,6 +45,103 @@ export const AWARDS_CALENDAR: Record<number, AwardBody[]> = {
   37: ['Primetime Emmys']
 };
 
+interface AwardConfig {
+  body: AwardBody;
+  category: AwardCategory;
+  format: 'film' | 'tv' | 'both';
+  evaluator: (p: Project) => number;
+}
+
+const AWARD_CONFIGS: AwardConfig[] = [
+  // --- ACADEMY AWARDS (Oscars) ---
+  {
+    body: 'Academy Awards', category: 'Best Picture', format: 'film',
+    evaluator: p => (p.awardsProfile?.academyAppeal || 0) + (p.awardsProfile?.prestigeScore || 0) + (p.awardsProfile?.industryNarrativeScore || 0) * 0.5
+  },
+  {
+    body: 'Academy Awards', category: 'Best Director', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) + (p.awardsProfile?.academyAppeal || 0) * 0.8
+  },
+  {
+    body: 'Academy Awards', category: 'Best Actor', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) + (p.buzz || 0) * 0.5
+  },
+
+  // --- PRIMETIME EMMYS ---
+  {
+    body: 'Primetime Emmys', category: 'Best Series', format: 'tv',
+    evaluator: p => (p.awardsProfile?.criticScore || 0) + (p.awardsProfile?.culturalHeat || 0) + (p.awardsProfile?.industryNarrativeScore || 0) * 0.5
+  },
+
+  // --- GOLDEN GLOBES ---
+  {
+    body: 'Golden Globes', category: 'Best Picture', format: 'film',
+    evaluator: p => (p.awardsProfile?.populistAppeal || 0) + (p.awardsProfile?.culturalHeat || 0) + (p.buzz / 2)
+  },
+  {
+    body: 'Golden Globes', category: 'Best Series', format: 'tv',
+    evaluator: p => (p.awardsProfile?.populistAppeal || 0) + (p.awardsProfile?.culturalHeat || 0) + (p.buzz / 2)
+  },
+
+  // --- INDEPENDENT SPIRIT AWARDS ---
+  {
+    body: 'Independent Spirit Awards', category: 'Best Picture', format: 'film',
+    evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 2 + (p.awardsProfile?.criticScore || 0)
+  },
+
+  // --- BAFTAS ---
+  {
+    body: 'BAFTAs', category: 'Best Picture', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) + (p.awardsProfile?.prestigeScore || 0)
+  },
+  {
+    body: 'BAFTAs', category: 'Best Series', format: 'tv',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) + (p.awardsProfile?.prestigeScore || 0)
+  },
+
+  // --- SAG AWARDS ---
+  {
+    body: 'SAG Awards', category: 'Best Ensemble', format: 'both',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 0.5 + (p.awardsProfile?.industryNarrativeScore || 0) * 0.5 + (p.buzz || 0)
+  },
+
+  // --- GUILDS ---
+  {
+    body: 'Directors Guild Awards', category: 'Best Director', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) + (p.awardsProfile?.prestigeScore || 0) * 0.8
+  },
+  {
+    body: 'Producers Guild Awards', category: 'Best Picture', format: 'film',
+    evaluator: p => (p.awardsProfile?.prestigeScore || 0) * 0.8 + (p.awardsProfile?.industryNarrativeScore || 0) * 0.5
+  },
+  {
+    body: 'Writers Guild Awards', category: 'Best Screenplay', format: 'both',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.5
+  },
+
+  // --- CRITICS CHOICE ---
+  {
+    body: 'Critics Choice Awards', category: 'Best Picture', format: 'film',
+    evaluator: p => (p.awardsProfile?.criticScore || 0) * 2
+  },
+  {
+    body: 'Critics Choice Awards', category: 'Best Series', format: 'tv',
+    evaluator: p => (p.awardsProfile?.criticScore || 0) * 2
+  },
+
+  // --- ANNIE AWARDS ---
+  {
+    body: 'Annie Awards', category: 'Best Animated Feature', format: 'film',
+    evaluator: p => (p.genre === 'Animation' ? 200 : 0) + (p.awardsProfile?.craftScore || 0) + (p.awardsProfile?.audienceScore || 0)
+  },
+
+  // --- PEABODY AWARDS ---
+  {
+    body: 'Peabody Awards', category: 'Special Achievement', format: 'tv',
+    evaluator: p => (p.awardsProfile?.culturalHeat || 0) * 1.5 + (p.awardsProfile?.prestigeScore || 0)
+  }
+];
+
 export function runAwardsCeremony(state: GameState, currentWeek: number, year: number): AwardCeremonyResult {
   const newAwards: Award[] = [];
   const projectUpdates: string[] = [];
@@ -70,19 +167,14 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
   }
 
   // Helper to evaluate a specific award
-  const evaluateAward = (
-    body: AwardBody,
-    category: AwardCategory,
-    evaluator: (p: Project) => number,
-    formatFilter: 'film' | 'tv' | 'both' = 'both'
-  ) => {
-    const candidates = eligibleProjects.filter(p => formatFilter === 'both' || p.format === formatFilter);
+  const evaluateAward = (config: AwardConfig) => {
+    const candidates = eligibleProjects.filter(p => config.format === 'both' || p.format === config.format);
     if (candidates.length === 0) return;
 
     // Score all candidates
     const scored = candidates.map(p => ({
       project: p,
-      score: evaluator(p) * (1 + (p.awardsProfile?.campaignStrength || 0) / 100) // Campaign boosts score
+      score: config.evaluator(p) * (1 + (p.awardsProfile?.campaignStrength || 0) / 100) // Campaign boosts score
     })).sort((a, b) => b.score - a.score);
 
     // Top scorer wins, next few nominated (simplified logic)
@@ -93,140 +185,34 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
       newAwards.push({
         id: `award-${crypto.randomUUID()}`,
         projectId: winner.project.id,
-        name: category,
-        category: category,
-        body: body,
+        name: config.category,
+        category: config.category,
+        body: config.body,
         status: 'won',
         year
       });
       prestigeChange += 10;
-      projectUpdates.push(`🏆 "${winner.project.title}" won ${category} at the ${body}!`);
+      projectUpdates.push(`🏆 "${winner.project.title}" won ${config.category} at the ${config.body}!`);
     } else if (winner.score > 100) {
        newAwards.push({
         id: `award-${crypto.randomUUID()}`,
         projectId: winner.project.id,
-        name: category,
-        category: category,
-        body: body,
+        name: config.category,
+        category: config.category,
+        body: config.body,
         status: 'nominated',
         year
       });
       prestigeChange += 2;
-      projectUpdates.push(`⭐ "${winner.project.title}" was nominated for ${category} at the ${body}.`);
+      projectUpdates.push(`⭐ "${winner.project.title}" was nominated for ${config.category} at the ${config.body}.`);
     }
   };
 
-  // --- ACADEMY AWARDS (Oscars) ---
-  if (bodiesThisWeek.includes('Academy Awards')) {
-    evaluateAward('Academy Awards', 'Best Picture', p =>
-      (p.awardsProfile?.academyAppeal || 0) + (p.awardsProfile?.prestigeScore || 0) + (p.awardsProfile?.industryNarrativeScore || 0) * 0.5,
-      'film'
-    );
-    evaluateAward('Academy Awards', 'Best Director', p =>
-      (p.awardsProfile?.craftScore || 0) + (p.awardsProfile?.academyAppeal || 0) * 0.8,
-      'film'
-    );
-    evaluateAward('Academy Awards', 'Best Actor', p =>
-      (p.awardsProfile?.craftScore || 0) + (p.buzz || 0) * 0.5,
-      'film'
-    );
-  }
-
-
-  // --- PRIMETIME EMMYS ---
-  if (bodiesThisWeek.includes('Primetime Emmys')) {
-    evaluateAward('Primetime Emmys', 'Best Series', p =>
-      (p.awardsProfile?.criticScore || 0) + (p.awardsProfile?.culturalHeat || 0) + (p.awardsProfile?.industryNarrativeScore || 0) * 0.5,
-      'tv'
-    );
-  }
-
-  // --- GOLDEN GLOBES ---
-  if (bodiesThisWeek.includes('Golden Globes')) {
-    evaluateAward('Golden Globes', 'Best Picture', p =>
-      (p.awardsProfile?.populistAppeal || 0) + (p.awardsProfile?.culturalHeat || 0) + (p.buzz / 2),
-      'film'
-    );
-    evaluateAward('Golden Globes', 'Best Series', p =>
-      (p.awardsProfile?.populistAppeal || 0) + (p.awardsProfile?.culturalHeat || 0) + (p.buzz / 2),
-      'tv'
-    );
-  }
-
-  // --- INDEPENDENT SPIRIT AWARDS ---
-  if (bodiesThisWeek.includes('Independent Spirit Awards')) {
-    evaluateAward('Independent Spirit Awards', 'Best Picture', p =>
-      (p.awardsProfile?.indieCredibility || 0) * 2 + (p.awardsProfile?.criticScore || 0),
-      'film'
-    );
-  }
-
-  // --- BAFTAS ---
-  if (bodiesThisWeek.includes('BAFTAs')) {
-    evaluateAward('BAFTAs', 'Best Picture', p =>
-      (p.awardsProfile?.craftScore || 0) + (p.awardsProfile?.prestigeScore || 0),
-      'film'
-    );
-    evaluateAward('BAFTAs', 'Best Series', p =>
-      (p.awardsProfile?.craftScore || 0) + (p.awardsProfile?.prestigeScore || 0),
-      'tv'
-    );
-  }
-
-  // --- SAG AWARDS ---
-  if (bodiesThisWeek.includes('SAG Awards')) {
-    evaluateAward('SAG Awards', 'Best Ensemble', p =>
-      (p.awardsProfile?.craftScore || 0) * 0.5 + (p.awardsProfile?.industryNarrativeScore || 0) * 0.5 + (p.buzz || 0),
-      'both'
-    );
-  }
-
-  // --- GUILDS ---
-  if (bodiesThisWeek.includes('Directors Guild Awards')) {
-    evaluateAward('Directors Guild Awards', 'Best Director', p =>
-      (p.awardsProfile?.craftScore || 0) + (p.awardsProfile?.prestigeScore || 0) * 0.8,
-      'film'
-    );
-  }
-  if (bodiesThisWeek.includes('Producers Guild Awards')) {
-    evaluateAward('Producers Guild Awards', 'Best Picture', p =>
-      (p.awardsProfile?.prestigeScore || 0) * 0.8 + (p.awardsProfile?.industryNarrativeScore || 0) * 0.5,
-      'film'
-    );
-  }
-  if (bodiesThisWeek.includes('Writers Guild Awards')) {
-    evaluateAward('Writers Guild Awards', 'Best Screenplay', p =>
-      (p.awardsProfile?.craftScore || 0) * 1.5,
-      'both'
-    );
-  }
-
-  // --- CRITICS CHOICE ---
-  if (bodiesThisWeek.includes('Critics Choice Awards')) {
-    evaluateAward('Critics Choice Awards', 'Best Picture', p =>
-      (p.awardsProfile?.criticScore || 0) * 2,
-      'film'
-    );
-    evaluateAward('Critics Choice Awards', 'Best Series', p =>
-      (p.awardsProfile?.criticScore || 0) * 2,
-      'tv'
-    );
-  }
-
-  // --- ANNIE AWARDS ---
-  if (bodiesThisWeek.includes('Annie Awards')) {
-    evaluateAward('Annie Awards', 'Best Animated Feature', p =>
-      (p.genre === 'Animation' ? 200 : 0) + (p.awardsProfile?.craftScore || 0) + (p.awardsProfile?.audienceScore || 0),
-      'film'
-    );
-  }
-
-  // --- PEABODY AWARDS ---
-  if (bodiesThisWeek.includes('Peabody Awards')) {
-    evaluateAward('Peabody Awards', 'Special Achievement', p =>
-      (p.awardsProfile?.culturalHeat || 0) * 1.5 + (p.awardsProfile?.prestigeScore || 0),
-      'tv'
-    );
+  // Evaluate all configs for bodies present this week
+  for (const config of AWARD_CONFIGS) {
+    if (bodiesThisWeek.includes(config.body)) {
+      evaluateAward(config);
+    }
   }
 
   return { newAwards, prestigeChange, projectUpdates };
