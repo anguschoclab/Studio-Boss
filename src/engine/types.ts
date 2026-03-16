@@ -83,6 +83,7 @@ export interface Project {
   flavor: string;
   status: ProjectStatus;
   buzz: number;
+  contractType?: 'upfront' | 'deficit' | 'standard';
   weeksInPhase: number;
   developmentWeeks: number;
   productionWeeks: number;
