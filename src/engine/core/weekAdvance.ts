@@ -140,19 +140,19 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
   }
 
 
-  // Decrease opportunity expiry weeks and remove expired ones
-  const updatedOpportunities = (state.opportunities || []).reduce((acc, o) => {
-    if (o.weeksUntilExpiry > 1) {
-      acc.push({ ...o, weeksUntilExpiry: o.weeksUntilExpiry - 1 });
-    }
-    return acc;
-  }, [] as typeof state.opportunities);
 
-  // Sometimes spawn new opportunities
-  if (Math.random() < 0.2 && updatedOpportunities.length < 5) {
-    const newOpp = generateOpportunity(nextWeek);
+  // Update opportunities
+  let updatedOpportunities = state.opportunities
+    .map(opp => ({ ...opp, weeksUntilExpiry: opp.weeksUntilExpiry - 1 }))
+    .filter(opp => opp.weeksUntilExpiry > 0);
+
+
+
+  // Random chance to spawn a new opportunity
+  if (Math.random() < 0.15 && updatedOpportunities.length < 3) {
+    const newOpp = generateOpportunity(state.week, state.studio.prestige);
     updatedOpportunities.push(newOpp);
-    events.push(`A new ${newOpp.type} has hit the market!`);
+    events.push(`A new ${newOpp.budgetTier} ${newOpp.format} package hit the market.`);
   }
 
   const newState: GameState = {
