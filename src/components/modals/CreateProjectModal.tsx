@@ -39,8 +39,9 @@ export const CreateProjectModal = () => {
   let calculatedProdWeeks = tier.productionWeeks;
   let calculatedBudget = tier.budget;
   const talentPool = gameState?.talentPool || [];
+  const talentPoolMap = new Map(talentPool.map(t => [t.id, t]));
   const talentFees = selectedTalent.reduce((sum, id) => {
-    const t = talentPool.find(t => t.id === id);
+    const t = talentPoolMap.get(id);
     return sum + (t?.fee || 0);
   }, 0);
 
