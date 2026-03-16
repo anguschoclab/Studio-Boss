@@ -1,0 +1,4 @@
+playwright-report/** linguist-generated=true
+test-results/** linguist-generated=true
+bun_output.txt linguist-generated=true
+*.html linguist-detectable=false
