@@ -103,10 +103,6 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
   const newHeadlines = generateHeadlines(nextWeek, updatedRivals);
   newHeadlines.push(...formattedBuyerHeadlines);
 
-  // Manage Opportunities
-  const updatedOpportunities = state.opportunities
-    .map(opp => ({ ...opp, weeksUntilExpiry: opp.weeksUntilExpiry - 1 }))
-    .filter(opp => opp.weeksUntilExpiry > 0);
 
   // Random events
   if (Math.random() < 0.15) {
