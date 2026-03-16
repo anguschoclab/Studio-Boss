@@ -23,3 +23,8 @@ dist-ssr
 *.sln
 *.sw?
 coverage/
+
+# Playwright and generated files
+playwright-report/
+test-results/
+bun_output.txt
