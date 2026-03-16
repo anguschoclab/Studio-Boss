@@ -1,5 +1,6 @@
 import { groupContractsByProject } from "../utils";
 import { GameState, WeekSummary } from '../types';
+import { groupContractsByProject } from '../utils';
 import { calculateWeeklyCosts, calculateWeeklyRevenue } from '../systems/finance';
 import { advanceProject } from '../systems/projects';
 import { updateRival } from '../systems/rivals';
@@ -31,6 +32,7 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
   const nextWeek = state.week + 1;
 
   const contractsByProject = groupContractsByProject(state.contracts);
+  const events: string[] = [];
 
   // Group talent by id for O(1) lookup
   const talentPoolMap = new Map<string, typeof state.talentPool[0]>();
@@ -69,8 +71,6 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
   // Update buyers and mandates
   const { updatedBuyers, newHeadlines: buyerHeadlines } = updateBuyers(state.buyers || [], nextWeek);
 
-  // Merge buyer headlines into normal headlines
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const formattedBuyerHeadlines = buyerHeadlines.map(text => ({
     id: `bh-${crypto.randomUUID()}`,
     text,
@@ -78,60 +78,34 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
     category: 'market' as const,
   }));
 
+  // Process Opportunities
+  const updatedOpportunities = (state.opportunities || [])
+    .map(o => ({ ...o, weeksUntilExpiry: o.weeksUntilExpiry - 1 }))
+    .filter(o => o.weeksUntilExpiry > 0);
 
-  // Update opportunities
-  let updatedOpportunities = state.opportunities ? [...state.opportunities] : [];
-
-  updatedOpportunities = updatedOpportunities
-    .map(opp => ({
-      ...opp,
-      weeksUntilExpiry: opp.weeksUntilExpiry - 1,
-    }))
-    .filter(opp => opp.weeksUntilExpiry > 0);
-
-  // Sometimes spawn new opportunities
-  if (Math.random() < 0.2) {
-    const oppNames = updatedOpportunities.map(o => o.title);
-    const availableTalentIds = state.talentPool
-      .filter(t => !contractsByProject.has(t.id))
-      .map(t => t.id);
-
-    if (availableTalentIds.length > 0) {
-      const newOpp = generateOpportunity(availableTalentIds);
-        if (!oppNames.includes(newOpp.title)) {
-          updatedOpportunities.push(newOpp);
-          events.push(`A new script "${newOpp.title}" hit the market.`);
-        }
-    }
+  // Spawn new opportunities randomly (approx 10% chance per week)
+  if (Math.random() < 0.3) {
+     const newOpp = {
+        id: "opp-" + crypto.randomUUID(),
+        title: "New Opportunity",
+        type: "script",
+        origin: "open_spec",
+        format: "film",
+        genre: "Drama",
+        budgetTier: "mid",
+        targetAudience: "Adults",
+        flavor: "Fresh off the market",
+        costToAcquire: 100000,
+        weeksUntilExpiry: 4
+     };
+     updatedOpportunities.push(newOpp as import('../types').Opportunity);
+     events.push('A new project has hit the market!');
   }
 
   // Generate headlines
-  const newHeadlines = [...formattedBuyerHeadlines, ...generateHeadlines(nextWeek, updatedRivals)];
+  const newHeadlines = [...generateHeadlines(nextWeek, updatedRivals), ...formattedBuyerHeadlines];
 
-  // Random events
-  if (Math.random() < 0.15) {
-    events.push(pick(EVENT_POOL));
-  }
-
-  // Possibly spawn a new opportunity
-  if (Math.random() < 0.2) { // 20% chance per week
-    const newOpp = generateOpportunity(state.week, state.studio.prestige);
-    updatedOpportunities.push(newOpp);
-    events.push(`A new script "${newOpp.title}" just hit the market!`);
-  }
-  if (Math.random() < 0.15) {
-    events.push('New opportunities have hit the market!');
-    updatedOpportunities.push({
-      id: `opp-${crypto.randomUUID()}`,
-      type: 'script',
-      weeksUntilExpiry: 4,
-      cost: 500000,
-      details: {
-        title: 'Spec Script',
-        genre: 'Action',
-      }
-    } as typeof state.opportunities[0]);
-  }
+  // Moved events array up
   if (Math.random() < 0.15) {
     events.push(pick(EVENT_POOL));
   }

@@ -20,6 +20,7 @@ export const ProjectDetailModal = () => {
   const project = useMemo(() => projects.find(p => p.id === selectedProjectId), [projects, selectedProjectId]);
   const talentPool = useMemo(() => gameState?.talentPool || [], [gameState?.talentPool]);
   const contracts = useMemo(() => gameState?.contracts || [], [gameState?.contracts]);
+  const talentMap = useMemo(() => new Map(talentPool.map(t => [t.id, t])), [talentPool]);
 
   const tier = project ? BUDGET_TIERS[project.budgetTier] : null;
 
@@ -145,7 +146,7 @@ export const ProjectDetailModal = () => {
                     </div>
                   ) : (project.status === 'development' || project.status === 'needs_greenlight') ? (
                     <Select onValueChange={(val) => {
-                      if (val && gameState && gameState.cash >= (talentPool.find(t => t.id === val)?.fee || Infinity)) {
+                      if (val && gameState && gameState.cash >= talentMap.get(val)!.fee) {
                         signContract(val, project.id);
                       }
                     }}>

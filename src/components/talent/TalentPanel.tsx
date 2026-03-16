@@ -8,6 +8,7 @@ export const TalentPanel = () => {
   const state = useGameStore(s => s.gameState);
   const talentPool = useMemo(() => state?.talentPool || [], [state?.talentPool]);
   const agencies = useMemo(() => state?.agencies || [], [state?.agencies]);
+  const agencyMap = useMemo(() => new Map(agencies.map(a => [a.id, a])), [agencies]);
   const [filter, setFilter] = useState<string>('all');
 
   const filteredTalent = useMemo(() => {
@@ -48,7 +49,7 @@ export const TalentPanel = () => {
                 )}
                 {talent.agencyId && (
                   <span className="text-[10px] text-muted-foreground uppercase tracking-wider">
-                    {agencies.find(a => a.id === talent.agencyId)?.name}
+                    {agencyMap.get(talent.agencyId)?.name}
                   </span>
                 )}
               </div>
