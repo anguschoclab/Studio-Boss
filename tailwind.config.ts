@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import tailwindcssAnimate from 'tailwindcss-animate';
+
 import type { Config } from "tailwindcss";
 
 const config = {
