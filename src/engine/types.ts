@@ -91,6 +91,8 @@ export interface Project {
   weeklyRevenue: number;
   releaseWeek: number | null;
   awardsProfile?: AwardsProfile;
+  parentProjectId?: string;
+  isSpinoff?: boolean;
 }
 
 export interface RivalStudio {

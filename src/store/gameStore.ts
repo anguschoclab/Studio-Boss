@@ -9,6 +9,7 @@ import { UNSCRIPTED_FORMATS } from '@/engine/data/unscriptedFormats';
 import { saveGame, loadGame, getSaveSlots, SaveSlotInfo } from '@/persistence/saveLoad';
 import { randRange } from '@/engine/utils';
 import { getFilmStats, getTvStats, getUnscriptedStats } from '@/engine/systems/stats';
+import { exploitIP } from '@/engine/systems/franchises';
 
 interface CreateProjectParams {
   title: string;
@@ -39,6 +40,7 @@ interface GameStore {
   pitchProject: (projectId: string, buyerId: string, contractType: ProjectContractType) => boolean;
   greenlightProject: (projectId: string) => void;
   _updateProjectToProduction: (state: GameState, projectIndex: number, project: Project, headlineText: string, extraProjectUpdates?: Partial<Project>) => void;
+  developSpinoff: (sourceProjectId: string) => void;
 }
 
 
@@ -234,6 +236,23 @@ export const useGameStore = create<GameStore>((set, get) => ({
   clearGame: () => set({ gameState: null }),
 
 
+
+
+  developSpinoff: (sourceProjectId: string) => {
+    const state = get().gameState;
+    if (!state) return;
+
+    const { newState, newProject, error } = exploitIP(state, sourceProjectId);
+
+    if (error) {
+      console.error('Failed to develop spinoff:', error);
+      return;
+    }
+
+    if (newProject) {
+      set({ gameState: newState });
+    }
+  },
 
   _updateProjectToProduction: (state: GameState, projectIndex: number, project: Project, headlineText: string, extraProjectUpdates: Partial<Project> = {}) => {
     const updatedProjects = [...state.projects];

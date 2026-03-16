@@ -1,11 +1,9 @@
-import { groupContractsByProject } from "../utils";
 import { GameState, WeekSummary } from '../types';
 import { calculateWeeklyCosts, calculateWeeklyRevenue } from '../systems/finance';
 import { advanceProject } from '../systems/projects';
 import { updateRival } from '../systems/rivals';
 import { updateBuyers } from '../systems/buyers';
 import { generateHeadlines } from '../generators/headlines';
-import { generateOpportunity } from '../generators/opportunities';
 import { generateAwardsProfile, runAwardsCeremony } from '../systems/awards';
 import { pick, groupContractsByProject } from '../utils';
 import { generateOpportunity } from '../generators/opportunities';
@@ -52,11 +50,6 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
     return project;
   });
 
-  // Update opportunities
-  const updatedOpportunities = state.opportunities
-    .map(opp => ({ ...opp, weeksUntilExpiry: opp.weeksUntilExpiry - 1 }))
-    .filter(opp => opp.weeksUntilExpiry > 0);
-
   // Calculate finances
   const costs = calculateWeeklyCosts(updatedProjects);
   const revenue = calculateWeeklyRevenue(updatedProjects, state.contracts);
@@ -65,19 +58,16 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
   // Update rivals
   const updatedRivals = state.rivals.map(updateRival);
 
-
   // Update buyers and mandates
   const { updatedBuyers, newHeadlines: buyerHeadlines } = updateBuyers(state.buyers || [], nextWeek);
 
   // Merge buyer headlines into normal headlines
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const formattedBuyerHeadlines = buyerHeadlines.map(text => ({
     id: `bh-${crypto.randomUUID()}`,
     text,
     week: nextWeek,
     category: 'market' as const,
   }));
-
 
   // Update opportunities
   let updatedOpportunities = state.opportunities ? [...state.opportunities] : [];
@@ -90,7 +80,7 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
     .filter(opp => opp.weeksUntilExpiry > 0);
 
   // Sometimes spawn new opportunities
-  if (Math.random() < 0.2) {
+  if (Math.random() < 0.2 && updatedOpportunities.length < 5) {
     const oppNames = updatedOpportunities.map(o => o.title);
     const availableTalentIds = state.talentPool
       .filter(t => !contractsByProject.has(t.id))
@@ -98,10 +88,10 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
 
     if (availableTalentIds.length > 0) {
       const newOpp = generateOpportunity(availableTalentIds);
-        if (!oppNames.includes(newOpp.title)) {
-          updatedOpportunities.push(newOpp);
-          events.push(`A new script "${newOpp.title}" hit the market.`);
-        }
+      if (!oppNames.includes(newOpp.title)) {
+        updatedOpportunities.push(newOpp);
+        events.push(`A new script "${newOpp.title}" hit the market.`);
+      }
     }
   }
 
@@ -113,30 +103,7 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
     events.push(pick(EVENT_POOL));
   }
 
-  // Possibly spawn a new opportunity
-  if (Math.random() < 0.2) { // 20% chance per week
-    const newOpp = generateOpportunity(state.week, state.studio.prestige);
-    updatedOpportunities.push(newOpp);
-    events.push(`A new script "${newOpp.title}" just hit the market!`);
-  }
-  if (Math.random() < 0.15) {
-    events.push('New opportunities have hit the market!');
-    updatedOpportunities.push({
-      id: `opp-${crypto.randomUUID()}`,
-      type: 'script',
-      weeksUntilExpiry: 4,
-      cost: 500000,
-      details: {
-        title: 'Spec Script',
-        genre: 'Action',
-      }
-    } as typeof state.opportunities[0]);
-  }
-  if (Math.random() < 0.15) {
-    events.push(pick(EVENT_POOL));
-  }
-
-    // Run any awards ceremonies scheduled for this week
+  // Run any awards ceremonies scheduled for this week
   const year = Math.floor(nextWeek / 52) + 1; // 1-indexed year
   const ceremonyResult = runAwardsCeremony(state, nextWeek, year);
 
@@ -149,22 +116,6 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
     // Check which bodies fired to announce it
     const uniqueBodies = [...new Set(newAwards.map(a => a.body))];
     events.push(`The ${uniqueBodies.join(' and ')} took place this week!`);
-  }
-
-
-
-  // Update opportunities
-  let updatedOpportunities = state.opportunities
-    .map(opp => ({ ...opp, weeksUntilExpiry: opp.weeksUntilExpiry - 1 }))
-    .filter(opp => opp.weeksUntilExpiry > 0);
-
-
-
-  // Random chance to spawn a new opportunity
-  if (Math.random() < 0.15 && updatedOpportunities.length < 3) {
-    const newOpp = generateOpportunity(state.week, state.studio.prestige);
-    updatedOpportunities.push(newOpp);
-    events.push(`A new ${newOpp.budgetTier} ${newOpp.format} package hit the market.`);
   }
 
   const newState: GameState = {

@@ -225,6 +225,21 @@ export const ProjectDetailModal = () => {
             </div>
           )}
 
+          {/* Spinoff Button */}
+          {project.status === 'released' && project.revenue > project.budget * 1.5 && (
+            <div className="pt-4 border-t border-border flex justify-end">
+                <Button
+                    onClick={() => {
+                        developSpinoff(project.id);
+                        selectProject(null);
+                    }}
+                    className="font-display w-full bg-secondary text-secondary-foreground hover:bg-secondary/90"
+                >
+                    Develop Spinoff
+                </Button>
+            </div>
+          )}
+
           {/* Renew Button */}
           {project.status === 'archived' && project.format === 'tv' && project.renewable && (
             <div className="pt-4 border-t border-border flex justify-end">
