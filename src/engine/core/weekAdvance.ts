@@ -5,7 +5,8 @@ import { updateRival } from '../systems/rivals';
 import { updateBuyers } from '../systems/buyers';
 import { generateHeadlines } from '../generators/headlines';
 import { generateAwardsProfile, runAwardsCeremony } from '../systems/awards';
-import { pick } from '../utils';
+import { pick, groupContractsByProject } from '../utils';
+import { generateOpportunity } from '../generators/opportunities';
 
 const EVENT_POOL = [
   'Market analysts upgrade entertainment sector outlook.',
@@ -90,6 +91,22 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
     // Check which bodies fired to announce it
     const uniqueBodies = [...new Set(newAwards.map(a => a.body))];
     events.push(`The ${uniqueBodies.join(' and ')} took place this week!`);
+  }
+
+
+
+  // Update opportunities
+  let updatedOpportunities = state.opportunities
+    .map(opp => ({ ...opp, weeksUntilExpiry: opp.weeksUntilExpiry - 1 }))
+    .filter(opp => opp.weeksUntilExpiry > 0);
+
+
+
+  // Random chance to spawn a new opportunity
+  if (Math.random() < 0.15 && updatedOpportunities.length < 3) {
+    const newOpp = generateOpportunity(state.week, state.studio.prestige);
+    updatedOpportunities.push(newOpp);
+    events.push(`A new ${newOpp.budgetTier} ${newOpp.format} package hit the market.`);
   }
 
   const newState: GameState = {
