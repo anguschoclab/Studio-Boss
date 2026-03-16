@@ -26,7 +26,12 @@ export const ProjectDetailModal = () => {
   const greenlightReport = useMemo(() => {
     if (!project || project.status !== 'needs_greenlight' || !gameState) return null;
     const projectContracts = contracts.filter(c => c.projectId === project.id);
-    const attachedTalent = projectContracts.map(c => talentPool.find(t => t.id === c.talentId)).filter(Boolean) as import('@/engine/types').TalentProfile[];
+    const talentPoolMap = new Map(talentPool.map(t => [t.id, t]));
+    const attachedTalent = projectContracts.reduce((acc, c) => {
+      const t = talentPoolMap.get(c.talentId);
+      if (t) acc.push(t);
+      return acc;
+    }, [] as import('@/engine/types').TalentProfile[]);
     return evaluateGreenlight(project, gameState.cash, attachedTalent);
   }, [project, gameState, contracts, talentPool]);
 
@@ -140,7 +145,7 @@ export const ProjectDetailModal = () => {
                     </div>
                   ) : (project.status === 'development' || project.status === 'needs_greenlight') ? (
                     <Select onValueChange={(val) => {
-                      if (val && gameState && gameState.cash >= talentPool.find(t => t.id === val)!.fee) {
+                      if (val && gameState && gameState.cash >= (talentPool.find(t => t.id === val)?.fee || Infinity)) {
                         signContract(val, project.id);
                       }
                     }}>
