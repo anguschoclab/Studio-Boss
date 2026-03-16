@@ -1,6 +1,5 @@
-import { groupContractsByProject } from "../utils";
-import { GameState, WeekSummary } from '../types';
-import { groupContractsByProject } from '../utils';
+import { GameState, WeekSummary, Headline } from '../types';
+import { groupContractsByProject, pick } from '../utils';
 import { calculateWeeklyCosts, calculateWeeklyRevenue } from '../systems/finance';
 import { advanceProject } from '../systems/projects';
 import { checkAndTriggerCrisis } from '../systems/crises';
@@ -9,8 +8,6 @@ import { updateBuyers } from '../systems/buyers';
 import { generateHeadlines } from '../generators/headlines';
 import { generateOpportunity } from '../generators/opportunities';
 import { generateAwardsProfile, runAwardsCeremony } from '../systems/awards';
-import { pick, groupContractsByProject } from '../utils';
-import { generateOpportunity } from '../generators/opportunities';
 
 const EVENT_POOL = [
   'Market analysts upgrade entertainment sector outlook.',
@@ -27,23 +24,38 @@ const EVENT_POOL = [
   'Public family feud leaks during an awards press tour.'
 ];
 
-export function advanceWeek(state: GameState): { newState: GameState; summary: WeekSummary } {
-  const projectUpdates: string[] = [];
-  const events: string[] = [];
+export interface WeeklyChanges {
+  projectUpdates: string[];
+  events: string[];
+  newHeadlines: Headline[];
+  costs: number;
+  revenue: number;
+}
+
+const initializeWeeklyChanges = (): WeeklyChanges => ({
+  projectUpdates: [],
+  events: [],
+  newHeadlines: [],
+  costs: 0,
+  revenue: 0,
+});
+
+const processProjectPhase = (
+  state: GameState,
+  weeklyChanges: WeeklyChanges
+): { state: GameState; weeklyChanges: WeeklyChanges } => {
   const nextWeek = state.week + 1;
-
   const contractsByProject = groupContractsByProject(state.contracts);
-  const events: string[] = [];
 
-  // Group talent by id for O(1) lookup
   const talentPoolMap = new Map<string, typeof state.talentPool[0]>();
   for (const talent of state.talentPool) {
     talentPoolMap.set(talent.id, talent);
   }
 
-  // Advance projects
+  const projectUpdates: string[] = [];
+  const events: string[] = [];
+
   const updatedProjects = state.projects.map(p => {
-    // Stop progression if project is in an active unresolved crisis
     if (p.activeCrisis && !p.activeCrisis.resolved) {
       projectUpdates.push(`"${p.title}" production is halted until the active crisis is resolved.`);
       return p;
@@ -53,12 +65,10 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
     const { project, update } = advanceProject(p, nextWeek, state.studio.prestige, projectContracts, talentPoolMap);
     if (update) projectUpdates.push(update);
 
-    // Generate awards profile if newly released
     if (project.status === 'released' && p.status !== 'released' && !project.awardsProfile) {
       project.awardsProfile = generateAwardsProfile(project);
     }
 
-    // Check for new crisis after advancing week if still in production
     if (project.status === 'production' && (!project.activeCrisis || project.activeCrisis.resolved)) {
       const newCrisis = checkAndTriggerCrisis(project);
       if (newCrisis) {
@@ -70,33 +80,60 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
     return project;
   });
 
-  // Update opportunities
+  return {
+    state: { ...state, projects: updatedProjects },
+    weeklyChanges: {
+      ...weeklyChanges,
+      projectUpdates: [...weeklyChanges.projectUpdates, ...projectUpdates],
+      events: [...weeklyChanges.events, ...events],
+    },
+  };
+};
 
-
-  // Calculate finances
-  const costs = calculateWeeklyCosts(updatedProjects);
-  const revenue = calculateWeeklyRevenue(updatedProjects, state.contracts);
+const resolveFinancials = (
+  state: GameState,
+  weeklyChanges: WeeklyChanges
+): { state: GameState; weeklyChanges: WeeklyChanges } => {
+  const nextWeek = state.week + 1;
+  const costs = calculateWeeklyCosts(state.projects);
+  const revenue = calculateWeeklyRevenue(state.projects, state.contracts);
   const newCash = state.cash - costs + revenue;
 
-  // Update rivals
+  const financeHistory = [
+    ...state.financeHistory,
+    { week: nextWeek, cash: newCash, revenue, costs },
+  ].slice(-52);
+
+  return {
+    state: { ...state, cash: newCash, financeHistory },
+    weeklyChanges: {
+      ...weeklyChanges,
+      costs: weeklyChanges.costs + costs,
+      revenue: weeklyChanges.revenue + revenue,
+    },
+  };
+};
+
+const simulateWorld = (
+  state: GameState,
+  weeklyChanges: WeeklyChanges
+): { state: GameState; weeklyChanges: WeeklyChanges } => {
+  const nextWeek = state.week + 1;
+  const projectUpdates: string[] = [];
+  const events: string[] = [];
+
   const updatedRivals = state.rivals.map(updateRival);
 
-
-  // Update buyers and mandates
   const { updatedBuyers, newHeadlines: buyerHeadlines } = updateBuyers(state.buyers || [], nextWeek);
 
-  // Merge buyer headlines into normal headlines
-    const formattedBuyerHeadlines = buyerHeadlines.map(text => ({
+  const formattedBuyerHeadlines = buyerHeadlines.map(text => ({
     id: `bh-${crypto.randomUUID()}`,
     text,
     week: nextWeek,
     category: 'market' as const,
   }));
 
-
-  // Update opportunities
   let updatedOpportunitiesCopy = state.opportunities ? [...state.opportunities] : [];
-
   updatedOpportunitiesCopy = updatedOpportunitiesCopy
     .map(opp => ({
       ...opp,
@@ -104,7 +141,8 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
     }))
     .filter(opp => opp.weeksUntilExpiry > 0);
 
-  // Sometimes spawn new opportunities
+  const contractsByProject = groupContractsByProject(state.contracts);
+
   if (Math.random() < 0.2) {
     const oppNames = updatedOpportunitiesCopy.map(o => o.title);
     const availableTalentIds = state.talentPool
@@ -113,29 +151,26 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
 
     if (availableTalentIds.length > 0) {
       const newOpp = generateOpportunity(availableTalentIds);
-        if (!oppNames.includes(newOpp.title)) {
-          updatedOpportunitiesCopy.push(newOpp);
-          events.push(`A new script "${newOpp.title}" hit the market.`);
-        }
+      if (!oppNames.includes(newOpp.title)) {
+        updatedOpportunitiesCopy.push(newOpp);
+        events.push(`A new script "${newOpp.title}" hit the market.`);
+      }
     }
   }
 
-  // Generate headlines
   const newHeadlines = generateHeadlines(nextWeek, updatedRivals);
   newHeadlines.push(...formattedBuyerHeadlines);
 
-
-  // Random events
   if (Math.random() < 0.15) {
     events.push(pick(EVENT_POOL));
   }
 
-  // Possibly spawn a new opportunity
-  if (Math.random() < 0.2) { // 20% chance per week
+  if (Math.random() < 0.2) {
     const newOpp = generateOpportunity(state.week, state.studio.prestige);
     updatedOpportunitiesCopy.push(newOpp);
     events.push(`A new script "${newOpp.title}" just hit the market!`);
   }
+
   if (Math.random() < 0.15) {
     events.push('New opportunities have hit the market!');
     updatedOpportunitiesCopy.push({
@@ -149,12 +184,12 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
       }
     } as typeof state.opportunities[0]);
   }
+
   if (Math.random() < 0.15) {
     events.push(pick(EVENT_POOL));
   }
 
-    // Run any awards ceremonies scheduled for this week
-  const year = Math.floor(nextWeek / 52) + 1; // 1-indexed year
+  const year = Math.floor(nextWeek / 52) + 1;
   const ceremonyResult = runAwardsCeremony(state, nextWeek, year);
 
   const newAwards = ceremonyResult.newAwards;
@@ -162,56 +197,84 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
 
   if (newAwards.length > 0) {
     projectUpdates.push(...ceremonyResult.projectUpdates);
-
-    // Check which bodies fired to announce it
     const uniqueBodies = [...new Set(newAwards.map(a => a.body))];
     events.push(`The ${uniqueBodies.join(' and ')} took place this week!`);
   }
 
-
-
-  // Update opportunities
-  updatedOpportunitiesCopy = state.opportunities
-    .map(opp => ({ ...opp, weeksUntilExpiry: opp.weeksUntilExpiry - 1 }))
-    .filter(opp => opp.weeksUntilExpiry > 0);
-
-
-
-  // Random chance to spawn a new opportunity
   if (Math.random() < 0.15 && updatedOpportunitiesCopy.length < 3) {
     const newOpp = generateOpportunity(state.week, state.studio.prestige);
     updatedOpportunitiesCopy.push(newOpp);
     events.push(`A new ${newOpp.budgetTier} ${newOpp.format} package hit the market.`);
   }
 
+  const talentPoolMap = new Map<string, typeof state.talentPool[0]>();
+  for (const talent of state.talentPool) {
+    talentPoolMap.set(talent.id, talent);
+  }
+
   const newState: GameState = {
     ...state,
-    week: nextWeek,
-    cash: newCash,
     opportunities: updatedOpportunitiesCopy,
     studio: { ...state.studio, prestige: state.studio.prestige + prestigeChange },
-    projects: updatedProjects,
     buyers: updatedBuyers,
     talentPool: Array.from(talentPoolMap.values()),
     rivals: updatedRivals,
     awards: [...(state.awards || []), ...newAwards],
-    headlines: [...newHeadlines, ...formattedBuyerHeadlines, ...state.headlines].slice(0, 50),
-    financeHistory: [
-      ...state.financeHistory,
-      { week: nextWeek, cash: newCash, revenue, costs },
-    ].slice(-52),
+    headlines: [...newHeadlines, ...state.headlines].slice(0, 50),
   };
 
-  const summary: WeekSummary = {
-    fromWeek: state.week,
-    toWeek: nextWeek,
-    cashBefore: state.cash,
-    cashAfter: newCash,
-    totalRevenue: revenue,
-    totalCosts: costs,
-    projectUpdates,
-    newHeadlines,
-    events,
+  return {
+    state: newState,
+    weeklyChanges: {
+      ...weeklyChanges,
+      projectUpdates: [...weeklyChanges.projectUpdates, ...projectUpdates],
+      events: [...weeklyChanges.events, ...events],
+      newHeadlines: [...weeklyChanges.newHeadlines, ...newHeadlines],
+    },
   };
-  return { newState, summary };
+};
+
+const finalizeWeek = (
+  state: GameState,
+  weeklyChanges: WeeklyChanges,
+  originalState: GameState
+): { newState: GameState; summary: WeekSummary } => {
+  const nextWeek = originalState.week + 1;
+
+  const summary: WeekSummary = {
+    fromWeek: originalState.week,
+    toWeek: nextWeek,
+    cashBefore: originalState.cash,
+    cashAfter: state.cash,
+    totalRevenue: weeklyChanges.revenue,
+    totalCosts: weeklyChanges.costs,
+    projectUpdates: weeklyChanges.projectUpdates,
+    newHeadlines: weeklyChanges.newHeadlines,
+    events: weeklyChanges.events,
+  };
+
+  return { newState: { ...state, week: nextWeek }, summary };
+};
+
+export function advanceWeek(state: GameState): { newState: GameState; summary: WeekSummary } {
+  let nextState = { ...state };
+  let weeklyChanges = initializeWeeklyChanges();
+
+  // 1. Process Projects (Advancement, Quality, Completion)
+  const afterProjects = processProjectPhase(nextState, weeklyChanges);
+  nextState = afterProjects.state;
+  weeklyChanges = afterProjects.weeklyChanges;
+
+  // 2. Resolve Finances (Burn, Revenue, Cash Flow)
+  const afterFinance = resolveFinancials(nextState, weeklyChanges);
+  nextState = afterFinance.state;
+  weeklyChanges = afterFinance.weeklyChanges;
+
+  // 3. Simulate World (Rivals, Talent Stat Decay, Agency Refresh)
+  const afterWorld = simulateWorld(nextState, weeklyChanges);
+  nextState = afterWorld.state;
+  weeklyChanges = afterWorld.weeklyChanges;
+
+  // 4. Finalize
+  return finalizeWeek(nextState, weeklyChanges, state);
 }
