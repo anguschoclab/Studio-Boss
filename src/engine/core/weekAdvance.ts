@@ -1,5 +1,6 @@
 import { groupContractsByProject } from "../utils";
 import { GameState, WeekSummary } from '../types';
+import { groupContractsByProject } from '../utils';
 import { calculateWeeklyCosts, calculateWeeklyRevenue } from '../systems/finance';
 import { advanceProject } from '../systems/projects';
 import { checkAndTriggerCrisis } from '../systems/crises';
@@ -32,6 +33,7 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
   const nextWeek = state.week + 1;
 
   const contractsByProject = groupContractsByProject(state.contracts);
+  const events: string[] = [];
 
   // Group talent by id for O(1) lookup
   const talentPoolMap = new Map<string, typeof state.talentPool[0]>();
@@ -119,12 +121,7 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
   }
 
   // Generate headlines
-  const newHeadlines = [...formattedBuyerHeadlines, ...generateHeadlines(nextWeek, updatedRivals)];
-
-  // Random events
-  if (Math.random() < 0.15) {
-    events.push(pick(EVENT_POOL));
-  }
+  const newHeadlines = [...generateHeadlines(nextWeek, updatedRivals), ...formattedBuyerHeadlines];
 
   // Possibly spawn a new opportunity
   if (Math.random() < 0.2) { // 20% chance per week
