@@ -1,4 +1,5 @@
 import { GameState, WeekSummary } from '../types';
+import { groupContractsByProject } from '../utils';
 import { calculateWeeklyCosts, calculateWeeklyRevenue } from '../systems/finance';
 import { advanceProject } from '../systems/projects';
 import { updateRival } from '../systems/rivals';
@@ -27,6 +28,7 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
   const nextWeek = state.week + 1;
 
   const contractsByProject = groupContractsByProject(state.contracts);
+  const events: string[] = [];
 
   // Group talent by id for O(1) lookup
   const talentPoolMap = new Map<string, typeof state.talentPool[0]>();
@@ -60,7 +62,6 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
   // Update buyers and mandates
   const { updatedBuyers, newHeadlines: buyerHeadlines } = updateBuyers(state.buyers || [], nextWeek);
 
-  // Merge buyer headlines into normal headlines
   const formattedBuyerHeadlines = buyerHeadlines.map(text => ({
     id: `bh-${crypto.randomUUID()}`,
     text,
@@ -68,11 +69,34 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
     category: 'market' as const,
   }));
 
-  // Generate headlines
-  const newHeadlines = generateHeadlines(nextWeek, updatedRivals);
+  // Process Opportunities
+  const updatedOpportunities = (state.opportunities || [])
+    .map(o => ({ ...o, weeksUntilExpiry: o.weeksUntilExpiry - 1 }))
+    .filter(o => o.weeksUntilExpiry > 0);
 
-  // Random events
-  const events: string[] = [];
+  // Spawn new opportunities randomly (approx 10% chance per week)
+  if (Math.random() < 0.3) {
+     const newOpp = {
+        id: "opp-" + crypto.randomUUID(),
+        title: "New Opportunity",
+        type: "script",
+        origin: "open_spec",
+        format: "film",
+        genre: "Drama",
+        budgetTier: "mid",
+        targetAudience: "Adults",
+        flavor: "Fresh off the market",
+        costToAcquire: 100000,
+        weeksUntilExpiry: 4
+     };
+     updatedOpportunities.push(newOpp as import('../types').Opportunity);
+     events.push('A new project has hit the market!');
+  }
+
+  // Generate headlines
+  const newHeadlines = [...generateHeadlines(nextWeek, updatedRivals), ...formattedBuyerHeadlines];
+
+  // Moved events array up
   if (Math.random() < 0.15) {
     events.push(pick(EVENT_POOL));
   }
