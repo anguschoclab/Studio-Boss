@@ -7,6 +7,7 @@ import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
 import { TV_FORMATS } from '@/engine/data/tvFormats';
 import { UNSCRIPTED_FORMATS } from '@/engine/data/unscriptedFormats';
 import { saveGame, loadGame, getSaveSlots, SaveSlotInfo } from '@/persistence/saveLoad';
+import { resolveCrisis } from '@/engine/systems/crises';
 import { randRange } from '@/engine/utils';
 import { getFilmStats, getTvStats, getUnscriptedStats } from '@/engine/systems/stats';
 
@@ -39,6 +40,7 @@ interface GameStore {
   pitchProject: (projectId: string, buyerId: string, contractType: ProjectContractType) => boolean;
   greenlightProject: (projectId: string) => void;
   _updateProjectToProduction: (state: GameState, projectIndex: number, project: Project, headlineText: string, extraProjectUpdates?: Partial<Project>) => void;
+  resolveProjectCrisis: (projectId: string, optionIndex: number) => void;
 }
 
 
@@ -129,7 +131,14 @@ export const useGameStore = create<GameStore>((set, get) => ({
       projectId,
       fee: t.fee,
       backendPercent: t.prestige > 80 ? 10 : 0,
-    }));
+      resolveProjectCrisis: (projectId, optionIndex) => {
+    const state = get().gameState;
+    if (!state) return;
+    const newState = resolveCrisis(state, projectId, optionIndex);
+    set({ gameState: newState });
+    saveGame(0, newState);
+  },
+}));
 
     const project = {
       id: projectId,

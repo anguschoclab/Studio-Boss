@@ -12,6 +12,7 @@ import { CreateProjectModal } from '@/components/modals/CreateProjectModal';
 import { WeekSummaryModal } from '@/components/modals/WeekSummaryModal';
 import { ProjectDetailModal } from '@/components/modals/ProjectDetailModal';
 import { PitchProjectModal } from '@/components/modals/PitchProjectModal';
+import { CrisisModal } from '@/components/modals/CrisisModal';
 
 const Dashboard = () => {
   const gameState = useGameStore(s => s.gameState);
@@ -64,6 +65,7 @@ const Dashboard = () => {
       <WeekSummaryModal />
       <ProjectDetailModal />
       <PitchProjectModal />
+      <CrisisModal />
     </div>
   );
 };
