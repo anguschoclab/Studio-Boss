@@ -8,6 +8,7 @@ import { TV_FORMATS } from '@/engine/data/tvFormats';
 import { UNSCRIPTED_FORMATS } from '@/engine/data/unscriptedFormats';
 import { saveGame, loadGame, getSaveSlots, SaveSlotInfo } from '@/persistence/saveLoad';
 import { randRange } from '@/engine/utils';
+import { getFilmStats, getTvStats, getUnscriptedStats } from '@/engine/systems/stats';
 
 interface CreateProjectParams {
   title: string;
@@ -110,8 +111,9 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
     // Calculate talent costs
     const attachedTalentIds = params.attachedTalentIds || [];
+    const talentPoolMap = new Map(state.talentPool.map(t => [t.id, t]));
     const attachedTalent = attachedTalentIds.reduce((acc, id) => {
-      const t = state.talentPool.find(t => t.id === id);
+      const t = talentPoolMap.get(id);
       if (t) acc.push(t);
       return acc;
     }, [] as typeof state.talentPool);
