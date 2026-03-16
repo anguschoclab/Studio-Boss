@@ -76,8 +76,9 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
     // Calculate talent costs
     const attachedTalentIds = params.attachedTalentIds || [];
+    const talentPoolMap = new Map(state.talentPool.map(t => [t.id, t]));
     const attachedTalent = attachedTalentIds.reduce((acc, id) => {
-      const t = state.talentPool.find(t => t.id === id);
+      const t = talentPoolMap.get(id);
       if (t) acc.push(t);
       return acc;
     }, [] as typeof state.talentPool);
