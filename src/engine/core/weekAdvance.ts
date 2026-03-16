@@ -62,6 +62,7 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
   const { updatedBuyers, newHeadlines: buyerHeadlines } = updateBuyers(state.buyers || [], nextWeek);
 
   // Merge buyer headlines into normal headlines
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const formattedBuyerHeadlines = buyerHeadlines.map(text => ({
     id: `bh-${crypto.randomUUID()}`,
     text,
