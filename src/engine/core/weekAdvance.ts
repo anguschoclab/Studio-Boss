@@ -46,7 +46,7 @@ const processProjectPhase = (
 ): { state: GameState; weeklyChanges: WeeklyChanges } => {
   const nextWeek = state.week + 1;
   const contractsByProject = groupContractsByProject(state.contracts);
-
+  // Group talent by id for O(1) lookup
   const talentPoolMap = new Map<string, typeof state.talentPool[0]>();
   for (const talent of state.talentPool) {
     talentPoolMap.set(talent.id, talent);

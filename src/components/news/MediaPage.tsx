@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -54,11 +55,36 @@ const OutletWidget = ({ title, description, icon, headlines, colorClass }: Outle
 export const MediaPage = () => {
   const headlines = useGameStore((s) => s.gameState?.headlines || []);
 
-  // Filter headlines by category to simulate different trade outlets
-  const deadlineHeadlines = headlines.filter(h => h.category === 'talent' || h.category === 'rival');
-  const varietyHeadlines = headlines.filter(h => h.category === 'awards' || h.category === 'market');
-  const boxOfficeHeadlines = headlines.filter(h => h.category === 'general' || h.category === 'market');
-  const marketHeadlines = headlines.filter(h => h.category === 'market' || h.category === 'rival');
+  // Filter headlines by category to simulate different trade outlets using a single pass for performance
+  const groupedHeadlines = useMemo(() => headlines.reduce(
+    (acc, h) => {
+      const c = h.category;
+      if (c === 'talent') {
+        acc.deadline.push(h);
+        acc.insider.push(h);
+      } else if (c === 'rival') {
+        acc.deadline.push(h);
+        acc.market.push(h);
+      } else if (c === 'awards') {
+        acc.variety.push(h);
+      } else if (c === 'market') {
+        acc.variety.push(h);
+        acc.boxOffice.push(h);
+        acc.market.push(h);
+      } else if (c === 'general') {
+        acc.boxOffice.push(h);
+        acc.insider.push(h);
+      }
+      return acc;
+    },
+    {
+      deadline: [] as Headline[],
+      variety: [] as Headline[],
+      boxOffice: [] as Headline[],
+      market: [] as Headline[],
+      insider: [] as Headline[],
+    }
+  ), [headlines]);
 
   return (
     <div className="h-full flex flex-col space-y-6">
@@ -74,7 +100,7 @@ export const MediaPage = () => {
           title="The Daily Lead"
           description="Fast, deal-driven, rumor-forward casting and rival scoops."
           icon={<Activity className="w-5 h-5 text-destructive" />}
-          headlines={deadlineHeadlines}
+          headlines={groupedHeadlines.deadline}
           colorClass="text-destructive"
         />
 
@@ -82,7 +108,7 @@ export const MediaPage = () => {
           title="Showbiz Weekly"
           description="Institutional awards-literate coverage and prestige framing."
           icon={<Trophy className="w-5 h-5 text-primary" />}
-          headlines={varietyHeadlines}
+          headlines={groupedHeadlines.variety}
           colorClass="text-primary"
         />
 
@@ -90,7 +116,7 @@ export const MediaPage = () => {
           title="Box Office Bulletin"
           description="Specialized reporting for weekend box office and TV ratings."
           icon={<TrendingUp className="w-5 h-5 text-green-500" />}
-          headlines={boxOfficeHeadlines}
+          headlines={groupedHeadlines.boxOffice}
           colorClass="text-green-500"
         />
 
@@ -98,7 +124,7 @@ export const MediaPage = () => {
           title="Global Screen Report"
           description="Sales, festivals, and worldwide commercial temperature."
           icon={<MonitorPlay className="w-5 h-5 text-blue-400" />}
-          headlines={marketHeadlines}
+          headlines={groupedHeadlines.market}
           colorClass="text-blue-400"
         />
 
@@ -106,7 +132,7 @@ export const MediaPage = () => {
           title="Hollywood Insider"
           description="Talent profiles, behind-the-scenes friction, and ecosystem power lists."
           icon={<Newspaper className="w-5 h-5 text-orange-400" />}
-          headlines={headlines.filter(h => h.category === 'talent' || h.category === 'general')}
+          headlines={groupedHeadlines.insider}
           colorClass="text-orange-400"
         />
       </div>
