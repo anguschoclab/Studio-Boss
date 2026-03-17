@@ -16,6 +16,7 @@ export const ProjectDetailModal = () => {
   const signContract = useGameStore(s => s.signContract);
   const renewProject = useGameStore(s => s.renewProject);
   const greenlightProject = useGameStore(s => s.greenlightProject);
+  const exploitFranchise = useGameStore(s => s.exploitFranchise);
   const projects = useMemo(() => gameState?.projects || [], [gameState?.projects]);
   const project = useMemo(() => projects.find(p => p.id === selectedProjectId), [projects, selectedProjectId]);
   const talentPool = useMemo(() => gameState?.talentPool || [], [gameState?.talentPool]);
@@ -237,6 +238,21 @@ export const ProjectDetailModal = () => {
                     className="font-display w-full"
                 >
                     Renew for Season {(project.season || 1) + 1}
+                </Button>
+            </div>
+          )}
+
+          {/* Franchise Exploitation Button */}
+          {project.status === 'released' && project.revenue > project.budget * 1.5 && (
+            <div className="pt-4 border-t border-border flex justify-end">
+                <Button
+                    onClick={() => {
+                        exploitFranchise(project.id);
+                        selectProject(null);
+                    }}
+                    className="font-display w-full bg-secondary hover:bg-secondary/80 text-secondary-foreground"
+                >
+                    Develop Spinoff
                 </Button>
             </div>
           )}
