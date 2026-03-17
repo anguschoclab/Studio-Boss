@@ -208,3 +208,12 @@ function updateTalentStats(project: Project, contracts: Contract[], talentPoolMa
     feeMultiplier = 0.9;
   }
 
+  for (const contract of contracts) {
+    const talent = talentPoolMap.get(contract.talentId);
+    if (talent) {
+      talent.draw = clamp(talent.draw + drawChange, 0, 100);
+      talent.prestige = clamp(talent.prestige + prestigeChange, 0, 100);
+      talent.fee = clamp(talent.fee * feeMultiplier, 10000, 50000000);
+    }
+  }
+}

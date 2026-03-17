@@ -33,8 +33,6 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
   const nextWeek = state.week + 1;
 
   const contractsByProject = groupContractsByProject(state.contracts);
-  const events: string[] = [];
-
   // Group talent by id for O(1) lookup
   const talentPoolMap = new Map<string, typeof state.talentPool[0]>();
   for (const talent of state.talentPool) {
