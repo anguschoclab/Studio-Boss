@@ -79,9 +79,11 @@ ${colorConfig
   })
   .join("\n")}
 }
-`,
+`
           )
-          .join("\n"),
+          .join("\n")
+          // Replace '<' to prevent XSS breakout from <style> tags
+          .replace(/</g, "\\3C "),
       }}
     />
   );
