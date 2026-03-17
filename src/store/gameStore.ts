@@ -7,7 +7,7 @@ import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
 import { TV_FORMATS } from '@/engine/data/tvFormats';
 import { UNSCRIPTED_FORMATS } from '@/engine/data/unscriptedFormats';
 import { saveGame, loadGame, getSaveSlots, SaveSlotInfo } from '@/persistence/saveLoad';
-import { resolveCrisis } from '@/engine/systems/crises';
+
 import { randRange } from '@/engine/utils';
 import { getFilmStats, getTvStats, getUnscriptedStats } from '@/engine/systems/stats';
 

@@ -208,13 +208,12 @@ function updateTalentStats(project: Project, contracts: Contract[], talentPoolMa
     feeMultiplier = 0.9;
   }
 
-
-  for (const c of contracts) {
-    const t = talentPoolMap.get(c.talentId);
-    if (t) {
-      t.draw = clamp(t.draw + drawChange, 0, 100);
-      t.prestige = clamp(t.prestige + prestigeChange, 0, 100);
-      t.salaryExpectation *= feeMultiplier;
+  for (const contract of contracts) {
+    const talent = talentPoolMap.get(contract.talentId);
+    if (talent) {
+      talent.draw = clamp(talent.draw + drawChange, 0, 100);
+      talent.prestige = clamp(talent.prestige + prestigeChange, 0, 100);
+      talent.fee = clamp(talent.fee * feeMultiplier, 10000, 50000000);
     }
   }
 }
