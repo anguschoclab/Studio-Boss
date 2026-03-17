@@ -7,11 +7,11 @@ import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
 import { TV_FORMATS } from '@/engine/data/tvFormats';
 import { UNSCRIPTED_FORMATS } from '@/engine/data/unscriptedFormats';
 import { saveGame, loadGame, getSaveSlots, SaveSlotInfo } from '@/persistence/saveLoad';
-import { resolveCrisis } from '@/engine/systems/crises';
+// import { resolveCrisis } from '@/engine/systems/crises';
 import { randRange } from '@/engine/utils';
 import { getFilmStats, getTvStats, getUnscriptedStats } from '@/engine/systems/stats';
 
-interface CreateProjectParams {
+export interface CreateProjectParams {
   title: string;
   format: ProjectFormat;
   genre: string;
@@ -23,6 +23,9 @@ interface CreateProjectParams {
   unscriptedFormat?: UnscriptedFormatKey;
   episodes?: number;
   releaseModel?: ReleaseModelKey;
+  parentProjectId?: string;
+  isSpinoff?: boolean;
+  initialBuzzBonus?: number;
 }
 
 interface GameStore {
@@ -41,6 +44,7 @@ interface GameStore {
   greenlightProject: (projectId: string) => void;
   _updateProjectToProduction: (state: GameState, projectIndex: number, project: Project, headlineText: string, extraProjectUpdates?: Partial<Project>) => void;
   resolveProjectCrisis: (projectId: string, optionIndex: number) => void;
+  exploitFranchise: (projectId: string) => void;
 }
 
 
@@ -145,13 +149,14 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
     const totalBudget = budget + talentFees;
 
+    const initialBuzz = Math.floor(randRange(30, 70)) + (params.initialBuzzBonus || 0);
     const project = {
       id: projectId,
       ...params,
       budget: totalBudget,
       weeklyCost,
       status: 'development' as const,
-      buzz: Math.floor(randRange(30, 70)),
+      buzz: Math.min(100, initialBuzz),
       weeksInPhase: 0,
       developmentWeeks,
       productionWeeks,
@@ -308,6 +313,19 @@ export const useGameStore = create<GameStore>((set, get) => ({
     }
 
     return success;
+  },
+
+  exploitFranchise: (projectId: string) => {
+    const state = get().gameState;
+    if (!state) return;
+
+    const project = state.projects.find(p => p.id === projectId);
+    if (!project) return;
+
+    const spinoffParams = exploitIP(project);
+    if (!spinoffParams) return;
+
+    get().createProject(spinoffParams);
   },
 
   signContract: (talentId, projectId) => {

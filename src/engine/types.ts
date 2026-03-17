@@ -107,6 +107,8 @@ export interface Project {
   releaseWeek: number | null;
   activeCrisis?: ActiveCrisis;
   awardsProfile?: AwardsProfile;
+  parentProjectId?: string;
+  isSpinoff?: boolean;
 }
 
 export interface RivalStudio {
