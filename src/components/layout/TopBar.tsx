@@ -35,7 +35,7 @@ export const TopBar = () => {
     <div className="h-14 border-b border-border bg-card flex items-center px-4 gap-4 shrink-0">
       {/* Brand + Studio */}
       <div className="flex items-center gap-3 min-w-0">
-        <button onClick={handleExit} className="font-display text-sm font-bold text-primary tracking-wider hover:opacity-80 transition-opacity">
+        <button onClick={handleExit} title="Exit to Main Menu" aria-label="Exit to Main Menu" className="font-display text-sm font-bold text-primary tracking-wider hover:opacity-80 transition-opacity">
           SB
         </button>
         <div className="w-px h-6 bg-border" />
