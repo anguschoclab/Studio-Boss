@@ -134,20 +134,31 @@ const simulateWorld = (
   }));
 
   let updatedOpportunitiesCopy = state.opportunities ? [...state.opportunities] : [];
-  updatedOpportunitiesCopy = updatedOpportunitiesCopy
-    .map(opp => ({
-      ...opp,
-      weeksUntilExpiry: opp.weeksUntilExpiry - 1,
-    }))
-    .filter(opp => opp.weeksUntilExpiry > 0);
 
-  const contractsByProject = groupContractsByProject(state.contracts);
+  // ⚡ Bolt: Single pass reduce to prevent intermediate array allocation from map().filter()
+  updatedOpportunitiesCopy = updatedOpportunitiesCopy.reduce((acc, opp) => {
+    const newWeeks = opp.weeksUntilExpiry - 1;
+    if (newWeeks > 0) {
+      acc.push({
+        ...opp,
+        weeksUntilExpiry: newWeeks,
+      });
+    }
+    return acc;
+  }, [] as typeof updatedOpportunitiesCopy);
 
   if (Math.random() < 0.2) {
     const oppNames = updatedOpportunitiesCopy.map(o => o.title);
-    const availableTalentIds = state.talentPool
-      .filter(t => !contractsByProject.has(t.id))
-      .map(t => t.id);
+
+    // ⚡ Bolt: Use a Set for O(1) active talent lookup instead of Map keyed by project ID,
+    // and process in a single reduce pass to prevent intermediate array allocations.
+    const activeTalentIds = new Set(state.contracts.map(c => c.talentId));
+    const availableTalentIds = state.talentPool.reduce((acc, t) => {
+      if (!activeTalentIds.has(t.id)) {
+        acc.push(t.id);
+      }
+      return acc;
+    }, [] as string[]);
 
     if (availableTalentIds.length > 0) {
       const newOpp = generateOpportunity(availableTalentIds);
