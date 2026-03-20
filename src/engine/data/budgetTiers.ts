@@ -1,6 +1,6 @@
 import { BudgetTierKey } from '../types';
 
-export interface BudgetTierData {
+interface BudgetTierData {
   key: BudgetTierKey;
   name: string;
   label: string;
