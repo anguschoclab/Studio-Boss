@@ -27,8 +27,10 @@ export const TopBar = () => {
   };
 
   const handleExit = () => {
-    clearGame();
-    navigate({ to: '/' });
+    if (window.confirm('Are you sure you want to exit to the main menu? Unsaved progress will be lost.')) {
+      clearGame();
+      navigate({ to: '/' });
+    }
   };
 
   return (
