@@ -130,12 +130,6 @@ export interface Headline {
   category: HeadlineCategory;
 }
 
-export interface FinanceRecord {
-  week: number;
-  cash: number;
-  revenue: number;
-  costs: number;
-}
 
 export interface WeekSummary {
   fromWeek: number;
