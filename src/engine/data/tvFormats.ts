@@ -1,6 +1,6 @@
 import { TvFormatKey } from '../types';
 
-export interface TvFormatData {
+interface TvFormatData {
   key: TvFormatKey;
   name: string;
   defaultEpisodes: number;
