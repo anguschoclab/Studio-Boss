@@ -120,21 +120,31 @@ export const ProjectDetailModal = () => {
               const projectContracts = contracts.filter(c => c.projectId === project.id);
               const projectTalentIds = new Set(projectContracts.map(c => c.talentId));
 
-              return ['director', 'actor', 'writer', 'producer'].map(role => {
-                const roleEnum = role as import('@/engine/types').TalentRole;
-                const attachedTalent = [];
-                const availableTalent = [];
+              // Single pass over talentPool to group by role, replacing O(roles * talentPool) with O(talentPool)
+              const roleGroups = new Map<import('@/engine/types').TalentRole, { attached: typeof talentPool, available: typeof talentPool }>();
 
-                for (const t of talentPool) {
-                  if (t.roles.includes(roleEnum)) {
+              const rolesToTrack: import('@/engine/types').TalentRole[] = ['director', 'actor', 'writer', 'producer'];
+              for (const r of rolesToTrack) {
+                roleGroups.set(r, { attached: [], available: [] });
+              }
+
+              for (const t of talentPool) {
+                for (const r of t.roles) {
+                  const group = roleGroups.get(r);
+                  if (group) {
                     if (projectTalentIds.has(t.id)) {
-                      attachedTalent.push(t);
+                      group.attached.push(t);
                     } else {
-                      availableTalent.push(t);
+                      group.available.push(t);
                     }
                   }
                 }
+              }
 
+              return rolesToTrack.map(role => {
+                const group = roleGroups.get(role)!;
+                const attachedTalent = group.attached;
+                const availableTalent = group.available;
 
               return (
                 <div key={role} className="flex items-center justify-between text-xs p-2 bg-accent/30 rounded">
