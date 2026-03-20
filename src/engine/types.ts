@@ -8,12 +8,6 @@ export type HeadlineCategory = 'rival' | 'market' | 'talent' | 'awards' | 'gener
 export type TvFormatKey = 'sitcom' | 'procedural' | 'prestige_drama' | 'limited_series' | 'animated_comedy' | 'animated_prestige';
 export type ReleaseModelKey = 'weekly' | 'binge' | 'split';
 
-export interface Studio {
-  name: string;
-  archetype: ArchetypeKey;
-  prestige: number;
-}
-
 export interface AwardsProfile {
   criticScore: number;
   audienceScore: number;
@@ -173,7 +167,11 @@ export interface Opportunity {
 
 export interface GameState {
   opportunities: Opportunity[];
-  studio: Studio;
+  studio: {
+    name: string;
+    archetype: ArchetypeKey;
+    prestige: number;
+  };
   projects: Project[];
   rivals: RivalStudio[];
   headlines: Headline[];
