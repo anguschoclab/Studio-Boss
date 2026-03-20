@@ -59,7 +59,7 @@ export type AwardCategory =
   | 'Best Documentary'
   | 'Special Achievement';
 
-export type AwardStatus = 'won' | 'nominated';
+
 
 export interface Award {
   id: string;
@@ -67,7 +67,7 @@ export interface Award {
   name: string;      // The name of the award category (e.g., "Best Picture")
   category: string;  // Sometimes used broadly
   body: AwardBody;   // The institution
-  status: AwardStatus;
+  status: 'won' | 'nominated';
   year: number;
 }
 
