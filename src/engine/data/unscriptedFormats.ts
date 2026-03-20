@@ -1,6 +1,6 @@
 import { UnscriptedFormatKey } from '../types';
 
-export interface UnscriptedFormatData {
+interface UnscriptedFormatData {
   key: UnscriptedFormatKey;
   name: string;
   defaultEpisodes: number;
