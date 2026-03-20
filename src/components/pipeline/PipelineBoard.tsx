@@ -9,7 +9,7 @@ const COLUMNS: { status: ProjectStatus[]; title: string; color: string }[] = [
   { status: ['development', 'needs_greenlight'], title: 'Development', color: 'bg-secondary' },
   { status: ['pitching'], title: 'Pitching', color: 'bg-warning' },
   { status: ['production', 'marketing'], title: 'Production & Marketing', color: 'bg-primary' },
-  { status: ['released', 'archived'], title: 'Released', color: 'bg-success' },
+  { status: ['released', 'post_release', 'archived'], title: 'Released & Catalog', color: 'bg-success' },
 ];
 
 export const PipelineBoard = () => {

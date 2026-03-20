@@ -164,7 +164,7 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
   // Replaced multiple filter passes with a single `reduce` pass to separate film vs tv candidates O(n).
   const { eligibleFilm, eligibleTv } = state.projects.reduce(
     (acc, p) => {
-      if ((p.status === 'released' || p.status === 'archived') &&
+      if ((p.status === 'released' || p.status === 'post_release' || p.status === 'archived') &&
           p.releaseWeek !== null &&
           p.releaseWeek > currentWeek - 52 &&
           p.awardsProfile !== undefined) {
