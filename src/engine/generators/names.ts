@@ -2,44 +2,15 @@ import { pick } from '../utils';
 import { ProjectFormat } from '../types';
 
 const PREFIXES = [
-  'Apex', 'Summit', 'Horizon', 'Pinnacle', 'Sterling', 'Monarch',
-  'Titan', 'Obsidian', 'Crimson', 'Golden', 'Silver', 'Pacific',
-  'Atlantic', 'Zenith', 'Vanguard', 'Eclipse', 'Meridian', 'Solaris',
-  'Nebula', 'Infinity', 'Starlight', 'Galactic', 'Universal', 'Global',
-  'Paramount', 'Supreme', 'Grand', 'Royal', 'Imperial', 'Majestic',
-  'Crown', 'Diamond', 'Platinum', 'Neon', 'Velvet', 'Midnight',
-  'Onyx', 'Ivory', 'Crystal', 'Sapphire', 'Emerald', 'Ruby',
-  'Cobalt', 'Indigo', 'Violet', 'Scarlet', 'Amber', 'Topaz',
-  'Aether', 'Catalyst', 'Mammoth', 'A25', 'Neon', 'Bad', 'Angry', 'Iron', 'Hyper', 'Ghost', 'Rogue', 'Maverick', 'Void', 'Quantum', 'Dark', 'Luminous', 'Electric', 'Atomic', 'Prism', 'Vertex', 'Obelisk', 'Monolith', 'Paradigm', 'Synapse', 'Cerebral', 'Fractal', 'Kinetic', 'Dynamic', 'Apex', 'Alpha', 'Omega', 'Zero', 'One', 'Primary', 'Core', 'Vortex', 'Pulse', 'Signal'
+  'Apex', 'Summit', 'Horizon', 'Pinnacle', 'Sterling', 'Monarch', 'Titan', 'Obsidian', 'Crimson', 'Golden', 'Silver', 'Pacific', 'Atlantic', 'Zenith', 'Vanguard', 'Eclipse', 'Meridian', 'Solaris', 'Nebula', 'Infinity', 'Starlight', 'Galactic', 'Universal', 'Global', 'Paramount', 'Supreme', 'Grand', 'Royal', 'Imperial', 'Majestic', 'Crown', 'Diamond', 'Platinum', 'Neon', 'Velvet', 'Midnight', 'Onyx', 'Ivory', 'Crystal', 'Sapphire', 'Emerald', 'Ruby', 'Cobalt', 'Indigo', 'Violet', 'Scarlet', 'Amber', 'Topaz', 'Aether', 'Catalyst', 'Mammoth', 'A25', 'Bad', 'Angry', 'Iron', 'Hyper', 'Ghost', 'Rogue', 'Maverick', 'Void', 'Quantum', 'Dark', 'Luminous', 'Electric', 'Atomic', 'Prism', 'Vertex', 'Obelisk', 'Monolith', 'Paradigm', 'Synapse', 'Cerebral', 'Fractal', 'Kinetic', 'Dynamic', 'Alpha', 'Omega', 'Zero', 'One', 'Primary', 'Core', 'Vortex', 'Pulse', 'Signal', 'Auteur', 'Artisan', 'Boutique', 'Cinephile', 'Gritty', 'Authentic', 'Raw', 'Visceral', 'Indie', 'Micro', 'Macro', 'Omni', 'Pan', 'Poly', 'Multi', 'Epic', 'Colossal', 'Gargantuan', 'Monumental', 'Stupendous', 'Tremendous', 'Prodigious', 'Vast', 'Immense', 'Boundless', 'Infinite', 'Eternal', 'Endless', 'Limitless', 'Unbounded'
 ];
 
 const SUFFIXES = [
-  'Pictures', 'Studios', 'Entertainment', 'Films', 'Media', 'Productions',
-  'Cinema', 'Motion Pictures', 'Network', 'Broadcasting', 'Vision', 'Works',
-  'Arts', 'Interactive', 'Digital', 'Creative', 'Features', 'Releasing',
-  'Collective', 'Syndicate', 'Ventures', 'Partners', 'Holdings', 'Group', 'Enterprises', 'Corp', 'Inc', 'Labs', 'Workshop', 'Factory', 'Foundry', 'Forge', 'Vault', 'Archive', 'Cartel', 'Alliance', 'Consortium', 'Network', 'Grid', 'Matrix', 'System', 'Dynamics', 'Mechanics', 'Engine', 'Machine', 'Box', 'Room', 'House', 'Tent', 'Camp', 'Base', 'Station', 'Post', 'Hub'
+  'Pictures', 'Studios', 'Entertainment', 'Films', 'Media', 'Productions', 'Cinema', 'Motion Pictures', 'Network', 'Broadcasting', 'Vision', 'Works', 'Arts', 'Interactive', 'Digital', 'Creative', 'Features', 'Releasing', 'Collective', 'Syndicate', 'Ventures', 'Partners', 'Holdings', 'Group', 'Enterprises', 'Corp', 'Inc', 'Labs', 'Workshop', 'Factory', 'Foundry', 'Forge', 'Vault', 'Archive', 'Cartel', 'Alliance', 'Consortium', 'Grid', 'Matrix', 'System', 'Dynamics', 'Mechanics', 'Engine', 'Machine', 'Box', 'Room', 'House', 'Tent', 'Camp', 'Base', 'Station', 'Post', 'Hub'
 ];
 
 const MOTTOS = [
-  'Where stories come alive',
-  'Entertainment without limits',
-  'The future of cinema',
-  'Bold stories, bigger audiences',
-  'Defining the culture',
-  'Every frame matters',
-  'Dream factory',
-  'Stories that move the world',
-  'Inspiring the imagination',
-  'Creating the extraordinary',
-  'Beyond the screen',
-  'Magic in every moment',
-  'Your ticket to adventure',
-  'Unleashing creativity',
-  'The art of storytelling',
-  'Cinematic perfection',
-  'Bringing visions to life',
-  'Worlds without end',
-  'Monetizing your childhood', 'Content is King', 'Four quadrants, one vision', 'Synergy in motion', 'Maximizing shareholder value', 'IP above all', 'We make the memes', 'Data-driven storytelling', 'Algorithms do not lie', 'Quantity has a quality all its own', 'Rebooting the culture', 'Franchises are forever', 'Your nostalgia, our profit', 'Selling the dream', 'Pivoting to video', 'The universe is expanding', 'Building the metaverse', 'Vertical integration realized', 'From script to stream', 'Disrupting the narrative', 'Content for the modern attention span', 'Art as a service', 'Monetizing the zeitgeist', 'We own your childhood', 'A cinematic universe of our own'
+  'Where stories come alive', 'Entertainment without limits', 'The future of cinema', 'Bold stories, bigger audiences', 'Defining the culture', 'Every frame matters', 'Dream factory', 'Stories that move the world', 'Inspiring the imagination', 'Creating the extraordinary', 'Beyond the screen', 'Magic in every moment', 'Your ticket to adventure', 'Unleashing creativity', 'The art of storytelling', 'Cinematic perfection', 'Bringing visions to life', 'Worlds without end', 'Monetizing your childhood', 'Content is King', 'Four quadrants, one vision', 'Synergy in motion', 'Maximizing shareholder value', 'IP above all', 'We make the memes', 'Data-driven storytelling', 'Algorithms do not lie', 'Quantity has a quality all its own', 'Rebooting the culture', 'Franchises are forever', 'Your nostalgia, our profit', 'Selling the dream', 'Pivoting to video', 'The universe is expanding', 'Building the metaverse', 'Vertical integration realized', 'From script to stream', 'Disrupting the narrative', 'Content for the modern attention span', 'Art as a service', 'Monetizing the zeitgeist', 'We own your childhood', 'A cinematic universe of our own', 'Quantity over quality', 'Fast and cheap', 'Good enough for streaming', 'We fix it in post', 'Trust the algorithm', 'Four quadrants or bust', 'IP is king', 'Franchises forever', 'Rebooting your childhood', 'Monetizing nostalgia', 'Content is content', 'Engagement at all costs', 'Viral marketing is free', 'We only make sequels', 'Original ideas are risky', 'Focus grouped to perfection', 'Bland but profitable', 'Safely generic'
 ];
 
 export const MALE_FIRST_NAMES = [
@@ -93,52 +64,52 @@ export const LAST_NAMES = [
 // Dictionaries by Genre
 const DICTIONARIES: Record<string, { nouns: string[], adjs: string[] }> = {
   'Action': {
-    nouns: ['Vengeance', 'Protocol', 'Strike', 'Force', 'Bullet', 'Assassin', 'Mercenary', 'Mission', 'Target', 'Rogue', 'Agent', 'Sniper', 'Vendetta', 'Cartel', 'Reckoning', 'Escape', 'Heist', 'Pursuit', 'Squad', 'Fist', 'Reboot', 'Franchise', 'Multiverse', 'Cinematic Universe', 'Sequel', 'Prequel', 'Spinoff', 'Remake', 'Crossover', 'Trilogy'],
-    adjs: ['Lethal', 'Deadly', 'Blind', 'Rogue', 'Final', 'Relentless', 'Silent', 'Hostile', 'Covert', 'Extreme', 'Tactical', 'Ruthless', 'Explosive', 'Unstoppable', 'Furious', 'Savage', 'Brutal', 'Uncut', 'Quantum', 'Cyber', 'Neon', 'Hyper', 'Meta', 'Post-Apocalyptic', 'Dystopian']
+    nouns: ['Vengeance', 'Protocol', 'Strike', 'Force', 'Bullet', 'Assassin', 'Mercenary', 'Mission', 'Target', 'Rogue', 'Agent', 'Sniper', 'Vendetta', 'Cartel', 'Reckoning', 'Escape', 'Heist', 'Pursuit', 'Squad', 'Fist', 'Reboot', 'Franchise', 'Multiverse', 'Cinematic Universe', 'Sequel', 'Prequel', 'Spinoff', 'Remake', 'Crossover', 'Trilogy', 'Recon', 'Extraction', 'Payload', 'Objective', 'Bounty', 'Crossfire', 'Infiltration', 'Exfiltration', 'Takeover', 'Lockdown', 'Overdrive', 'Showdown', 'Blowback', 'Backlash', 'Flashpoint', 'Ground Zero', 'Vanguard', 'Sentinel', 'Outpost', 'Stronghold'],
+    adjs: ['Lethal', 'Deadly', 'Blind', 'Rogue', 'Final', 'Relentless', 'Silent', 'Hostile', 'Covert', 'Extreme', 'Tactical', 'Ruthless', 'Explosive', 'Unstoppable', 'Furious', 'Savage', 'Brutal', 'Uncut', 'Quantum', 'Cyber', 'Neon', 'Hyper', 'Meta', 'Post-Apocalyptic', 'Dystopian', 'Strategic', 'Clandestine', 'Stealth', 'Phantom', 'Ghost', 'Shadow', 'Maverick', 'Renegade', 'Outlaw', 'Vigilante', 'Mercenary', 'Expendable', 'Disposable', 'Collateral', 'Fatal', 'Mortal']
   },
   'Comedy': {
-    nouns: ['Weekend', 'Trip', 'Boss', 'Neighbors', 'Party', 'Wedding', 'Hangover', 'Mistake', 'Disaster', 'Fool', 'Family', 'Date', 'Road', 'Vacation', 'Mix-up', 'Camp', 'School', 'College', 'Misfits', 'Idiots', 'Content', 'Influencer', 'Streamer', 'Vlogger', 'Podcast', 'Cancel Culture', 'Algorithm', 'Meme', 'Viral', 'Trending'],
-    adjs: ['Crazy', 'Bad', 'Awkward', 'Wild', 'Stupid', 'Dumb', 'Messy', 'Clumsy', 'Hilarious', 'Unlucky', 'Fake', 'Worst', 'Accidental', 'Unexpected', 'Secret', 'Embarrassing', 'Cringe', 'Based', 'Woke', 'Toxic', 'Problematic', 'Cancelled', 'Triggered', 'Savage']
+    nouns: ['Weekend', 'Trip', 'Boss', 'Neighbors', 'Party', 'Wedding', 'Hangover', 'Mistake', 'Disaster', 'Fool', 'Family', 'Date', 'Road', 'Vacation', 'Mix-up', 'Camp', 'School', 'College', 'Misfits', 'Idiots', 'Content', 'Influencer', 'Streamer', 'Vlogger', 'Podcast', 'Cancel Culture', 'Algorithm', 'Meme', 'Viral', 'Trending', 'Grifter', 'Scam', 'Hustle', 'Flex', 'Clout', 'Drip', 'Vibe', 'Aesthetic', 'Mood', 'Energy', 'Synergy'],
+    adjs: ['Crazy', 'Bad', 'Awkward', 'Wild', 'Stupid', 'Dumb', 'Messy', 'Clumsy', 'Hilarious', 'Unlucky', 'Fake', 'Worst', 'Accidental', 'Unexpected', 'Secret', 'Embarrassing', 'Cringe', 'Based', 'Woke', 'Toxic', 'Problematic', 'Cancelled', 'Triggered', 'Savage', 'Petty', 'Salty', 'Thirsty', 'Basic', 'Extra', 'Bougie', 'Ratchet', 'Sus', 'Cap', 'No Cap', 'Bet']
   },
   'Drama': {
-    nouns: ['Tears', 'Silence', 'Promise', 'Secret', 'Shadow', 'Past', 'Letter', 'Journey', 'Heart', 'Sorrow', 'Truth', 'Lie', 'Winter', 'Summer', 'River', 'Road', 'House', 'Family', 'Son', 'Daughter', 'Wife', 'Husband', 'Memory', 'Sins', 'Trauma', 'Nepotism', 'Gaslighting', 'Narcissist', 'Sociopath', 'Empath', 'Therapy', 'Boundary', 'Trigger', 'Red Flag'],
-    adjs: ['Broken', 'Hidden', 'Fading', 'Lost', 'Quiet', 'Dark', 'Cold', 'Bitter', 'Tender', 'Forgiven', 'Forgotten', 'Silent', 'Distant', 'Empty', 'Shattered', 'Blind', 'Toxic', 'Abusive', 'Narcissistic', 'Codependent', 'Triggering', 'Validating', 'Empowering']
+    nouns: ['Tears', 'Silence', 'Promise', 'Secret', 'Shadow', 'Past', 'Letter', 'Journey', 'Heart', 'Sorrow', 'Truth', 'Lie', 'Winter', 'Summer', 'River', 'Road', 'House', 'Family', 'Son', 'Daughter', 'Wife', 'Husband', 'Memory', 'Sins', 'Trauma', 'Nepotism', 'Gaslighting', 'Narcissist', 'Sociopath', 'Empath', 'Therapy', 'Boundary', 'Trigger', 'Red Flag', 'Green Flag', 'Ick', 'Situationship', 'Attachment Style', 'Love Language', 'Toxic Trait', 'Coping Mechanism', 'Defense Mechanism', 'Projection', 'Deflection'],
+    adjs: ['Broken', 'Hidden', 'Fading', 'Lost', 'Quiet', 'Dark', 'Cold', 'Bitter', 'Tender', 'Forgiven', 'Forgotten', 'Silent', 'Distant', 'Empty', 'Shattered', 'Blind', 'Toxic', 'Abusive', 'Narcissistic', 'Codependent', 'Triggering', 'Validating', 'Empowering', 'Healing', 'Growing', 'Evolving', 'Manifesting', 'Aligning', 'Vibrating', 'Resonating', 'Connecting', 'Disconnecting', 'Dissociating', 'Spiraling', 'Crashing', 'Burning']
   },
   'Horror': {
-    nouns: ['Demon', 'Ghost', 'House', 'Woods', 'Cabin', 'Night', 'Curse', 'Entity', 'Devil', 'Spirits', 'Shadows', 'Darkness', 'Blood', 'Scream', 'Fear', 'Nightmare', 'Mirror', 'Doll', 'Asylum', 'Graveyard', 'Elevated', 'IP', 'Aesthetic', 'Vibe', 'Mood', 'Atmosphere', 'Trope', 'Cliché', 'Jump Scare', 'Gore'],
-    adjs: ['Haunted', 'Cursed', 'Possessed', 'Demonic', 'Evil', 'Creepy', 'Sinister', 'Dead', 'Undead', 'Macabre', 'Bloody', 'Terrifying', 'Wicked', 'Twisted', 'Unholy', 'Elevated', 'Atmospheric', 'Slow-Burn', 'Psychological', 'Subversive', 'Meta', 'Self-Aware']
+    nouns: ['Demon', 'Ghost', 'House', 'Woods', 'Cabin', 'Night', 'Curse', 'Entity', 'Devil', 'Spirits', 'Shadows', 'Darkness', 'Blood', 'Scream', 'Fear', 'Nightmare', 'Mirror', 'Doll', 'Asylum', 'Graveyard', 'Elevated', 'IP', 'Aesthetic', 'Vibe', 'Mood', 'Atmosphere', 'Trope', 'Cliché', 'Jump Scare', 'Gore', 'Final Girl', 'Body Horror', 'Found Footage', 'Slasher', 'Poltergeist', 'Exorcism', 'Cult', 'Sacrifice', 'Ritual'],
+    adjs: ['Haunted', 'Cursed', 'Possessed', 'Demonic', 'Evil', 'Creepy', 'Sinister', 'Dead', 'Undead', 'Macabre', 'Bloody', 'Terrifying', 'Wicked', 'Twisted', 'Unholy', 'Elevated', 'Atmospheric', 'Slow-Burn', 'Psychological', 'Subversive', 'Meta', 'Self-Aware', 'Satirical', 'Ironic', 'Campy', 'Schlocky', 'Gory', 'Gruesome', 'Disturbing', 'Unsettling', 'Spooky', 'Scary']
   },
   'Sci-Fi': {
-    nouns: ['Planet', 'Star', 'Galaxy', 'Alien', 'Space', 'Future', 'Ship', 'Void', 'Dimension', 'Colony', 'Matrix', 'Cyborg', 'Robot', 'Nexus', 'Anomaly', 'Singularity', 'Orbit', 'System', 'Engine', 'Clone', 'Metaverse', 'Web3', 'Crypto', 'NFT', 'AI', 'Blockchain', 'Virtual Reality', 'Augmented Reality', 'Simulation', 'Algorithm'],
-    adjs: ['Galactic', 'Cosmic', 'Quantum', 'Cyber', 'Neon', 'Infinite', 'Parallel', 'Unknown', 'Alien', 'Virtual', 'Solar', 'Lunar', 'Stellar', 'Digital', 'Synthetic', 'Procedural', 'Algorithmic', 'Generative', 'Virtual', 'Simulated', 'Digital', 'Crypto']
+    nouns: ['Planet', 'Star', 'Galaxy', 'Alien', 'Space', 'Future', 'Ship', 'Void', 'Dimension', 'Colony', 'Matrix', 'Cyborg', 'Robot', 'Nexus', 'Anomaly', 'Singularity', 'Orbit', 'System', 'Engine', 'Clone', 'Metaverse', 'Web3', 'Crypto', 'NFT', 'AI', 'Blockchain', 'Virtual Reality', 'Augmented Reality', 'Simulation', 'Algorithm', 'Post-Human', 'Android', 'Mutant', 'Extraterrestrial', 'UFO', 'UAP'],
+    adjs: ['Galactic', 'Cosmic', 'Quantum', 'Cyber', 'Neon', 'Infinite', 'Parallel', 'Unknown', 'Alien', 'Virtual', 'Solar', 'Lunar', 'Stellar', 'Digital', 'Synthetic', 'Procedural', 'Algorithmic', 'Generative', 'Simulated', 'Crypto', 'Retro-Futuristic', 'Post-Apocalyptic', 'Dystopian', 'Utopian', 'Interstellar', 'Multiversal', 'Transdimensional', 'Chronological']
   },
   'Thriller': {
-    nouns: ['Suspect', 'Clue', 'Murder', 'Witness', 'Motive', 'Secret', 'Deception', 'Web', 'Trap', 'Game', 'Conspiracy', 'Plot', 'Alibi', 'Lies', 'Truth', 'Stalker', 'Stranger', 'Window', 'Room', 'Identity', 'Grifter', 'Scammer', 'Catfish', 'Hacker', 'Troll', 'Bot', 'Deepfake', 'Conspiracy', 'Cover-up', 'Whistleblower'],
-    adjs: ['Fatal', 'Guilty', 'Innocent', 'Twisted', 'Deceptive', 'Hidden', 'Missing', 'Buried', 'Dark', 'Blind', 'Dangerous', 'Obsessive', 'Paranoid', 'Suspicious', 'Cold', 'Viral', 'Trending', 'Viral', 'Cancel', 'Exposed', 'Leaked', 'Hacked']
+    nouns: ['Suspect', 'Clue', 'Murder', 'Witness', 'Motive', 'Secret', 'Deception', 'Web', 'Trap', 'Game', 'Conspiracy', 'Plot', 'Alibi', 'Lies', 'Truth', 'Stalker', 'Stranger', 'Window', 'Room', 'Identity', 'Grifter', 'Scammer', 'Catfish', 'Hacker', 'Troll', 'Bot', 'Deepfake', 'Cover-up', 'Whistleblower', 'Insider', 'Informant', 'Mole', 'Double Agent', 'Sleeper Cell', 'Syndicate', 'Cartel', 'Mafia', 'Mob', 'Triad'],
+    adjs: ['Fatal', 'Guilty', 'Innocent', 'Twisted', 'Deceptive', 'Hidden', 'Missing', 'Buried', 'Dark', 'Blind', 'Dangerous', 'Obsessive', 'Paranoid', 'Suspicious', 'Cold', 'Viral', 'Trending', 'Cancel', 'Exposed', 'Leaked', 'Hacked', 'Compromised', 'Infiltrated', 'Breached', 'Decrypted', 'Encrypted', 'Classified', 'Top Secret', 'Redacted', 'Censored', 'Banned', 'Illegal', 'Illicit', 'Contraband']
   },
   'Romance': {
-    nouns: ['Love', 'Heart', 'Kiss', 'Embrace', 'Sunset', 'Rain', 'Stars', 'Letters', 'Vows', 'Desire', 'Passion', 'Romance', 'Soulmate', 'Destiny', 'Spark', 'Flame', 'Valentine', 'Rose', 'Autumn', 'Spring', 'Ghosting', 'Breadcrumbing', 'Love Bombing', 'Orbiting', 'Situationship', 'Tinder', 'Bumble', 'Hinge', 'Swiping', 'Match'],
-    adjs: ['Sweet', 'Endless', 'True', 'First', 'Last', 'Secret', 'Forbidden', 'Passionate', 'Crazy', 'Perfect', 'Beautiful', 'Tender', 'Romantic', 'Wild', 'Unexpected', 'Toxic', 'Codependent', 'Avoidant', 'Anxious', 'Secure', 'Attached', 'Detached']
+    nouns: ['Love', 'Heart', 'Kiss', 'Embrace', 'Sunset', 'Rain', 'Stars', 'Letters', 'Vows', 'Desire', 'Passion', 'Romance', 'Soulmate', 'Destiny', 'Spark', 'Flame', 'Valentine', 'Rose', 'Autumn', 'Spring', 'Ghosting', 'Breadcrumbing', 'Love Bombing', 'Orbiting', 'Situationship', 'Tinder', 'Bumble', 'Hinge', 'Swiping', 'Match', 'Super Like', 'DM', 'Slide', 'Simp', 'Cuffing Season', 'Hot Girl Summer', 'Soft Launch', 'Hard Launch', 'Red Flag', 'Green Flag'],
+    adjs: ['Sweet', 'Endless', 'True', 'First', 'Last', 'Secret', 'Forbidden', 'Passionate', 'Crazy', 'Perfect', 'Beautiful', 'Tender', 'Romantic', 'Wild', 'Unexpected', 'Toxic', 'Codependent', 'Avoidant', 'Anxious', 'Secure', 'Attached', 'Detached', 'Clingy', 'Needy', 'Distant', 'Aloof', 'Guarded', 'Vulnerable', 'Open', 'Closed', 'Available', 'Unavailable', 'Committed', 'Phobic', 'Poly']
   },
   'Animation': {
-    nouns: ['Pets', 'Toys', 'Bugs', 'Monsters', 'Magic', 'Adventure', 'Quest', 'Kingdom', 'Friends', 'Tale', 'Legend', 'Beasts', 'Dragons', 'Heroes', 'Critters', 'Machines', 'Dreams', 'Wonders', 'Island', 'Journey', 'IP', 'Merch', 'Toys', 'Theme Park', 'Ride', 'Attraction', 'Mascot', 'Brand', 'Sponsorship', 'Synergy'],
-    adjs: ['Magical', 'Incredible', 'Amazing', 'Secret', 'Lost', 'Brave', 'Little', 'Giant', 'Tiny', 'Super', 'Happy', 'Flying', 'Talking', 'Wonderful', 'Fantastic', 'Four-Quadrant', 'Family-Friendly', 'Wholesome', 'Marketable', 'Synergistic', 'Branded']
+    nouns: ['Pets', 'Toys', 'Bugs', 'Monsters', 'Magic', 'Adventure', 'Quest', 'Kingdom', 'Friends', 'Tale', 'Legend', 'Beasts', 'Dragons', 'Heroes', 'Critters', 'Machines', 'Dreams', 'Wonders', 'Island', 'Journey', 'IP', 'Merch', 'Theme Park', 'Ride', 'Attraction', 'Mascot', 'Brand', 'Sponsorship', 'Synergy', 'Crossover', 'Spinoff', 'Reboot', 'Remake', 'Sequel', 'Prequel', 'Origin Story', 'Cinematic Universe', 'Multiverse', 'Franchise'],
+    adjs: ['Magical', 'Incredible', 'Amazing', 'Secret', 'Lost', 'Brave', 'Little', 'Giant', 'Tiny', 'Super', 'Happy', 'Flying', 'Talking', 'Wonderful', 'Fantastic', 'Four-Quadrant', 'Family-Friendly', 'Wholesome', 'Marketable', 'Synergistic', 'Branded', 'Corporate', 'Sanitized', 'Safe', 'Predictable', 'Formulaic', 'Generic', 'Bland', 'Inoffensive', 'Colorful', 'Loud', 'Fast-Paced', 'Attention-Grabbing', 'Viral', 'Memeable']
   },
   'Documentary': {
-    nouns: ['Truth', 'Story', 'Life', 'World', 'Planet', 'History', 'Nature', 'Crime', 'Mystery', 'Secret', 'Rise', 'Fall', 'Behind', 'Inside', 'Mind', 'Earth', 'Ocean', 'Wild', 'People', 'Voices', 'True Crime', 'Cult', 'Scam', 'Fraud', 'Heist', 'Murder', 'Serial Killer', 'Cult Leader', 'Guru', 'Grifter'],
-    adjs: ['Untold', 'Hidden', 'Real', 'True', 'Secret', 'Dark', 'Ancient', 'Modern', 'Wild', 'Lost', 'Forgotten', 'Invisible', 'Unseen', 'Inside', 'Making', 'Shocking', 'Unbelievable', 'Twisted', 'Bizarre', 'Disturbing', 'Chilling', 'Gripping']
+    nouns: ['Truth', 'Story', 'Life', 'World', 'Planet', 'History', 'Nature', 'Crime', 'Mystery', 'Secret', 'Rise', 'Fall', 'Behind', 'Inside', 'Mind', 'Earth', 'Ocean', 'Wild', 'People', 'Voices', 'True Crime', 'Cult', 'Scam', 'Fraud', 'Heist', 'Murder', 'Serial Killer', 'Cult Leader', 'Guru', 'Grifter', 'Con Artist', 'Imposter', 'Fake', 'Phony', 'Charlatan', 'Quack', 'Snake Oil', 'Pyramid Scheme', 'Ponzi', 'MLM'],
+    adjs: ['Untold', 'Hidden', 'Real', 'True', 'Secret', 'Dark', 'Ancient', 'Modern', 'Wild', 'Lost', 'Forgotten', 'Invisible', 'Unseen', 'Inside', 'Making', 'Shocking', 'Unbelievable', 'Twisted', 'Bizarre', 'Disturbing', 'Chilling', 'Gripping', 'Compelling', 'Fascinating', 'Mind-Blowing', 'Explosive', 'Groundbreaking', 'Unprecedented', 'Never-Before-Seen', 'Exclusive', 'Behind-the-Scenes', 'All-Access', 'Unfiltered', 'Raw', 'Uncut']
   },
   'Fantasy': {
-    nouns: ['Dragon', 'Sword', 'King', 'Queen', 'Kingdom', 'Magic', 'Spell', 'Curse', 'Prophecy', 'Realm', 'Crown', 'Throne', 'Elf', 'Wizard', 'Shadow', 'Light', 'Ring', 'Stone', 'Chronicles', 'Tale', 'Lore', 'Worldbuilding', 'Canon', 'Fandom', 'Stan', 'Ship', 'Fanfic', 'Headcanon', 'Cosplay', 'Convention'],
-    adjs: ['Ancient', 'Magical', 'Cursed', 'Hidden', 'Lost', 'Dark', 'Epic', 'Mystic', 'Crystal', 'Golden', 'Silver', 'Shadow', 'Blood', 'Iron', 'Fire', 'Canon', 'Non-Canon', 'Official', 'Unofficial', 'Fan-Made', 'Community']
+    nouns: ['Dragon', 'Sword', 'King', 'Queen', 'Kingdom', 'Magic', 'Spell', 'Curse', 'Prophecy', 'Realm', 'Crown', 'Throne', 'Elf', 'Wizard', 'Shadow', 'Light', 'Ring', 'Stone', 'Chronicles', 'Tale', 'Lore', 'Worldbuilding', 'Canon', 'Fandom', 'Stan', 'Ship', 'Fanfic', 'Headcanon', 'Cosplay', 'Convention', 'Panel', 'Q&A', 'Autograph', 'Meet & Greet', 'Photo Op', 'Exclusive', 'Limited Edition', 'Collector\'s Item', 'Variant', 'Chase', 'Grail'],
+    adjs: ['Ancient', 'Magical', 'Cursed', 'Hidden', 'Lost', 'Dark', 'Epic', 'Mystic', 'Crystal', 'Golden', 'Silver', 'Shadow', 'Blood', 'Iron', 'Fire', 'Canon', 'Non-Canon', 'Official', 'Unofficial', 'Fan-Made', 'Community', 'Toxic', 'Gatekeeping', 'Elitist', 'Casual', 'Hardcore', 'Dedicated', 'Obsessive', 'Passionate', 'Devoted', 'Loyal', 'Die-Hard', 'Ride-or-Die', 'Stan', 'Main']
   },
   'Crime': {
-    nouns: ['Mob', 'Mafia', 'Gang', 'Heist', 'Bank', 'City', 'Streets', 'Detective', 'Cop', 'Robbery', 'Cartel', 'Underworld', 'Syndicate', 'Job', 'Score', 'Deal', 'Hustle', 'Cash', 'Gun', 'Law', 'Cartel', 'Syndicate', 'Crypto', 'Laundering', 'Hacking', 'Ransomware', 'Phishing', 'Scam', 'Fraud', 'Embezzlement'],
-    adjs: ['Corrupt', 'Dirty', 'Crooked', 'Bad', 'Ruthless', 'Violent', 'Bloody', 'Underground', 'Guilty', 'Cold', 'Hard', 'Blind', 'Fatal', 'Deadly', 'Broken', 'Cyber', 'Crypto', 'Digital', 'Virtual', 'Untraceable', 'Anonymous']
+    nouns: ['Mob', 'Mafia', 'Gang', 'Heist', 'Bank', 'City', 'Streets', 'Detective', 'Cop', 'Robbery', 'Cartel', 'Underworld', 'Syndicate', 'Job', 'Score', 'Deal', 'Hustle', 'Cash', 'Gun', 'Law', 'Crypto', 'Laundering', 'Hacking', 'Ransomware', 'Phishing', 'Scam', 'Fraud', 'Embezzlement', 'Extortion', 'Blackmail', 'Bribery', 'Corruption', 'Nepotism', 'Cronyism', 'Collusion', 'Racketeering', 'Tax Evasion', 'Insider Trading'],
+    adjs: ['Corrupt', 'Dirty', 'Crooked', 'Bad', 'Ruthless', 'Violent', 'Bloody', 'Underground', 'Guilty', 'Cold', 'Hard', 'Blind', 'Fatal', 'Deadly', 'Broken', 'Cyber', 'Crypto', 'Digital', 'Virtual', 'Untraceable', 'Anonymous', 'Encrypted', 'Decentralized', 'Offshore', 'Shell', 'Front', 'Bogus', 'Fake', 'Counterfeit', 'Forged', 'Stolen', 'Laundered', 'Clean', 'Legit']
   },
   'Musical': {
-    nouns: ['Song', 'Dance', 'Rhythm', 'Beat', 'Melody', 'Stage', 'Lights', 'Chorus', 'Voice', 'Music', 'Harmony', 'Band', 'Singer', 'Star', 'Dream', 'Show', 'Broadway', 'Street', 'Sound', 'Heart', 'Jukebox', 'Biopic', 'Soundtrack', 'Album', 'Single', 'Chart', 'Streaming', 'Playlist', 'Algorithm', 'Viral'],
-    adjs: ['Singing', 'Dancing', 'Loud', 'Sweet', 'Golden', 'Star', 'Neon', 'Bright', 'Magic', 'Rhythmic', 'Harmonic', 'Electric', 'Acoustic', 'Vocal', 'Grand', 'Viral', 'Trending', 'Chart-Topping', 'Platinum', 'Gold', 'Diamond']
+    nouns: ['Song', 'Dance', 'Rhythm', 'Beat', 'Melody', 'Stage', 'Lights', 'Chorus', 'Voice', 'Music', 'Harmony', 'Band', 'Singer', 'Star', 'Dream', 'Show', 'Broadway', 'Street', 'Sound', 'Heart', 'Jukebox', 'Biopic', 'Soundtrack', 'Album', 'Single', 'Chart', 'Streaming', 'Playlist', 'Algorithm', 'Viral', 'TikTok', 'Dance Challenge', 'Lip Sync', 'Cover', 'Remix', 'Mashup', 'Sample', 'Interpolation', 'Feature', 'Collab', 'Drop'],
+    adjs: ['Singing', 'Dancing', 'Loud', 'Sweet', 'Golden', 'Star', 'Neon', 'Bright', 'Magic', 'Rhythmic', 'Harmonic', 'Electric', 'Acoustic', 'Vocal', 'Grand', 'Viral', 'Trending', 'Chart-Topping', 'Platinum', 'Gold', 'Diamond', 'Multi-Platinum', 'Record-Breaking', 'Award-Winning', 'Grammy-Nominated', 'Critically-Acclaimed', 'Commercial', 'Mainstream', 'Underground', 'Indie', 'Alternative', 'Pop', 'Rock', 'Hip-Hop', 'R&B']
   }
 };
 
