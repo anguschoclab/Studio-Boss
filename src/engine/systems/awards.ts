@@ -24,7 +24,7 @@ export function generateAwardsProfile(project: Project): AwardsProfile {
   };
 }
 
-export interface AwardCeremonyResult {
+interface AwardCeremonyResult {
   newAwards: Award[];
   prestigeChange: number;
   projectUpdates: string[];

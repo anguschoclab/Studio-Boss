@@ -1,6 +1,6 @@
 import { describe, bench } from 'vitest';
 import { runAwardsCeremony } from '../../engine/systems/awards';
-import { GameState, Project, Award, AwardBody, AwardCategory, AwardCeremonyResult } from '../../engine/types';
+import { GameState, Project, Award, AwardBody, AwardCategory } from '../../engine/types';
 
 // Mock setup
 const generateProjects = (count: number): Project[] => {
@@ -158,7 +158,7 @@ const AWARD_CONFIGS: AwardConfig[] = [
 ];
 
 
-export function runAwardsCeremonyReduce(state: GameState, currentWeek: number, year: number): AwardCeremonyResult {
+export function runAwardsCeremonyReduce(state: GameState, currentWeek: number, year: number): ReturnType<typeof runAwardsCeremony> {
   const newAwards: Award[] = [];
   const projectUpdates: string[] = [];
   let prestigeChange = 0;
