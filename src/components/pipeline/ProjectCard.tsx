@@ -29,7 +29,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
   return (
     <button
       onClick={() => selectProject(project.id)}
-      className="w-full text-left p-3 rounded-lg border border-border bg-card hover:bg-accent/50 transition-colors space-y-2"
+      className="w-full text-left p-3 rounded-lg border border-border bg-card hover:bg-accent/50 transition-colors space-y-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
     >
       <div className="flex items-start justify-between gap-2">
         <h4 className="font-display font-semibold text-sm text-foreground leading-tight">{project.title}</h4>
