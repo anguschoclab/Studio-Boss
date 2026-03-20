@@ -6,9 +6,9 @@ import { Plus } from 'lucide-react';
 import { ProjectStatus } from '@/engine/types';
 
 const COLUMNS: { status: ProjectStatus[]; title: string; color: string }[] = [
-  { status: ['development'], title: 'Development', color: 'bg-secondary' },
+  { status: ['development', 'needs_greenlight'], title: 'Development', color: 'bg-secondary' },
   { status: ['pitching'], title: 'Pitching', color: 'bg-warning' },
-  { status: ['production'], title: 'Production', color: 'bg-primary' },
+  { status: ['production', 'marketing'], title: 'Production & Marketing', color: 'bg-primary' },
   { status: ['released', 'archived'], title: 'Released', color: 'bg-success' },
 ];
 
