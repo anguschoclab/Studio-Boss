@@ -180,7 +180,7 @@ export function runAwardsCeremonyReduce(state: GameState, currentWeek: number, y
   // Pre-filter the eligible projects into format buckets using a single pass O(n) reduction
   const { eligibleFilm, eligibleTv } = state.projects.reduce(
     (acc, p) => {
-      if ((p.status === 'released' || p.status === 'archived') &&
+      if ((p.status === 'released' || p.status === 'post_release' || p.status === 'archived') &&
            p.releaseWeek !== null &&
            p.releaseWeek > currentWeek - 52 &&
            p.awardsProfile !== undefined) {

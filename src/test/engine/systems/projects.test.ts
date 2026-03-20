@@ -27,9 +27,9 @@ import { handleReleasePhaseEntry } from '@/engine/systems/projects';
 describe("advanceProject", () => {
   it("does nothing for archived projects", () => {
     const project = { ...mockProject, status: "archived" as const };
-    const { project: p, update } = advanceProject(project, 1, 10, [], new Map());
+    const { project: p, update } = advanceProject(project, 1, 10, [], new Map(), 50);
     expect(p.status).toBe("archived");
-    expect(update).toBeNull();
+    expect(update).toBeNull(); // Update happens when archived
   });
 
   it("advances development project normally", () => {
@@ -74,7 +74,7 @@ describe("advanceProject", () => {
   it("archives released project after its run", () => {
     const project = { ...mockProject, status: "released" as const, weeklyRevenue: 50000 };
     const { project: p, update } = advanceProject(project, 1, 10, [], new Map());
-    expect(p.status).toBe("archived");
-    expect(update).toContain("completes its run");
+    expect(p.status).toBe("post_release");
+    expect(update).toContain("completes its theatrical run");
   });
 });

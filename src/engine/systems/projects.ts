@@ -102,7 +102,8 @@ function handleReleasedPhase(
       p.weeklyRevenue *= randRange(formatData.revenueDecayBinge - 0.1, formatData.revenueDecayBinge + 0.1);
 
       if (p.weeklyRevenue < 50_000 || p.weeksInPhase > 8) {
-        p.status = 'archived';
+        p.status = 'post_release';
+        p.weeksInPhase = 0;
         update = `"${p.title}" Season ${p.season} finishes its run.`;
         updateTalentStats(p, projectContracts, talentPoolMap);
       }
@@ -120,7 +121,8 @@ function handleReleasedPhase(
       }
 
       if (p.weeksInPhase > part2DropWeek + 6 && p.weeklyRevenue < 50_000) {
-        p.status = 'archived';
+        p.status = 'post_release';
+        p.weeksInPhase = 0;
         update = `"${p.title}" Season ${p.season} finishes its run.`;
         updateTalentStats(p, projectContracts, talentPoolMap);
       }
@@ -136,7 +138,8 @@ function handleReleasedPhase(
       } else {
         p.weeklyRevenue *= 0.6;
         if (p.weeklyRevenue < 50_000 || p.weeksInPhase > eps + 4) {
-          p.status = 'archived';
+          p.status = 'post_release';
+          p.weeksInPhase = 0;
           update = `"${p.title}" Season ${p.season} finishes its run.`;
           updateTalentStats(p, projectContracts, talentPoolMap);
         }
@@ -145,9 +148,48 @@ function handleReleasedPhase(
   } else {
     p.weeklyRevenue = simulateWeeklyBoxOffice(p, p.weeksInPhase, p.reviewScore || 50, p.weeklyRevenue, rivalStrengthAvg);
     if (p.weeklyRevenue < 100_000 || p.weeksInPhase > 12) {
-      p.status = 'archived';
-      update = `"${p.title}" completes its run — total gross: ${(p.revenue / 1_000_000).toFixed(1)}M`;
+      p.status = 'post_release';
+      p.weeksInPhase = 0;
+      update = `"${p.title}" completes its theatrical run — total gross: ${(p.revenue / 1_000_000).toFixed(1)}M`;
     }
+  }
+
+  return { update };
+}
+
+
+
+
+function handlePostReleasePhase(p: Project): { update: string | null } {
+  let update: string | null = null;
+  let weeklyAncillary = 0;
+
+  const isFamilyOrAnim = p.genre === 'Family' || p.genre === 'Animation';
+  const isPrestige = p.genre === 'Drama' || p.targetAudience === 'Prestige / Critics';
+
+  if (p.weeksInPhase === 1) {
+    if (isPrestige && (p.reviewScore || 0) > 80) {
+      weeklyAncillary = p.budget * randRange(0.5, 1.5);
+      update = `A fierce bidding war erupts for the streaming rights to "${p.title}"!`;
+    } else if (p.format === 'film') {
+      weeklyAncillary = p.revenue * randRange(0.1, 0.3);
+      update = `"${p.title}" drops on VOD and physical media.`;
+    }
+  } else {
+    if (isFamilyOrAnim) {
+      weeklyAncillary = p.revenue * 0.005;
+    } else {
+      weeklyAncillary = p.revenue * 0.001;
+    }
+    weeklyAncillary *= Math.max(0.1, 1 - (p.weeksInPhase / 52));
+  }
+
+  p.ancillaryRevenue = (p.ancillaryRevenue || 0) + weeklyAncillary;
+  p.revenue += weeklyAncillary;
+  p.weeklyRevenue = 0;
+
+  if (p.weeksInPhase >= 26) {
+    p.status = 'archived';
   }
 
   return { update };
@@ -181,6 +223,9 @@ export function advanceProject(
     update = result.update;
   } else if (p.status === 'released') {
     const result = handleReleasedPhase(p, projectContracts, talentPoolMap, rivalStrengthAvg);
+    update = result.update;
+  } else if (p.status === 'post_release') {
+    const result = handlePostReleasePhase(p);
     update = result.update;
   }
 
