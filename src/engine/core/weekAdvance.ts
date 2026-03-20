@@ -4,6 +4,7 @@ import { calculateWeeklyCosts, calculateWeeklyRevenue } from '../systems/finance
 import { advanceProject } from '../systems/projects';
 import { checkAndTriggerCrisis } from '../systems/crises';
 import { updateRival } from '../systems/rivals';
+import { calculateBoxOfficeRanks, BoxOfficeEntry } from '../systems/releaseSimulation';
 import { updateBuyers } from '../systems/buyers';
 import { generateHeadlines } from '../generators/headlines';
 import { generateOpportunity } from '../generators/opportunities';
@@ -62,7 +63,8 @@ const processProjectPhase = (
     }
 
     const projectContracts = contractsByProject.get(p.id) || [];
-    const { project, update } = advanceProject(p, nextWeek, state.studio.prestige, projectContracts, talentPoolMap);
+    const rivalAvgStrength = state.rivals.reduce((sum, r) => sum + r.strength, 0) / Math.max(1, state.rivals.length);
+    const { project, update } = advanceProject(p, nextWeek, state.studio.prestige, projectContracts, talentPoolMap, rivalAvgStrength);
     if (update) projectUpdates.push(update);
 
     if (project.status === 'released' && p.status !== 'released' && !project.awardsProfile) {
@@ -78,6 +80,16 @@ const processProjectPhase = (
     }
 
     return project;
+  });
+
+  const boxOfficeEntries: BoxOfficeEntry[] = updatedProjects
+    .filter(p => p.status === 'released')
+    .map(p => ({ projectId: p.id, studioName: state.studio.name, weeklyRevenue: p.weeklyRevenue }));
+  const ranks = calculateBoxOfficeRanks(boxOfficeEntries);
+  updatedProjects.forEach(p => {
+    if (p.status === 'released' && ranks.has(p.id)) {
+      p.boxOfficeRank = ranks.get(p.id);
+    }
   });
 
   return {

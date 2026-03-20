@@ -4,6 +4,7 @@ import { TV_FORMATS } from '../data/tvFormats';
 import { UNSCRIPTED_FORMATS } from '../data/unscriptedFormats';
 import { clamp, randRange } from '../utils';
 import { updateTalentStats } from './talentStats';
+import { generateReviewScore, simulateWeeklyBoxOffice } from './releaseSimulation';
 
 function getAttachedTalent(contracts: Contract[], talentPoolMap: Map<string, TalentProfile>): TalentProfile[] {
   return contracts.reduce((acc, c) => {
@@ -46,6 +47,9 @@ function handleProductionRelease(
   const randomFactor = randRange(0.7, 1.3);
 
   const attachedTalent = getAttachedTalent(projectContracts, talentPoolMap);
+  if (p.reviewScore === undefined) {
+    p.reviewScore = generateReviewScore(p, attachedTalent, p.activeCrisis);
+  }
   const talentDrawFactor = attachedTalent.reduce((sum, t) => sum + (t.draw / 100), 1);
 
   const baseGross = (minRev + (maxRev - minRev) * buzzFactor * prestigeFactor * randomFactor) * talentDrawFactor;
@@ -84,7 +88,8 @@ function handleProductionRelease(
 function handleReleasedPhase(
   p: Project,
   projectContracts: Contract[],
-  talentPoolMap: Map<string, TalentProfile>
+  talentPoolMap: Map<string, TalentProfile>,
+  rivalStrengthAvg: number
 ): { update: string | null } {
   p.revenue += p.weeklyRevenue;
   let update: string | null = null;
@@ -138,7 +143,7 @@ function handleReleasedPhase(
       }
     }
   } else {
-    p.weeklyRevenue *= randRange(0.5, 0.7);
+    p.weeklyRevenue = simulateWeeklyBoxOffice(p, p.weeksInPhase, p.reviewScore || 50, p.weeklyRevenue, rivalStrengthAvg);
     if (p.weeklyRevenue < 100_000 || p.weeksInPhase > 12) {
       p.status = 'archived';
       update = `"${p.title}" completes its run — total gross: ${(p.revenue / 1_000_000).toFixed(1)}M`;
@@ -153,7 +158,8 @@ export function advanceProject(
   currentWeek: number,
   studioPrestige: number,
   projectContracts: Contract[],
-  talentPoolMap: Map<string, TalentProfile>
+  talentPoolMap: Map<string, TalentProfile>,
+  rivalStrengthAvg: number = 50
 ): { project: Project; update: string | null } {
   if (project.status === 'archived') return { project, update: null };
 
@@ -167,7 +173,7 @@ export function advanceProject(
     const result = handleProductionRelease(p, currentWeek, studioPrestige, projectContracts, talentPoolMap);
     update = result.update;
   } else if (p.status === 'released') {
-    const result = handleReleasedPhase(p, projectContracts, talentPoolMap);
+    const result = handleReleasedPhase(p, projectContracts, talentPoolMap, rivalStrengthAvg);
     update = result.update;
   }
 

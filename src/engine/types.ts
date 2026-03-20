@@ -103,6 +103,8 @@ export interface Project {
   awardsProfile?: AwardsProfile;
   parentProjectId?: string;
   isSpinoff?: boolean;
+  reviewScore?: number;
+  boxOfficeRank?: number;
 }
 
 export interface RivalStudio {
