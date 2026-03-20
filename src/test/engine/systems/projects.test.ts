@@ -22,6 +22,8 @@ const mockProject: Project = {
   weeklyRevenue: 0,
 };
 
+import { handleReleasePhaseEntry } from '@/engine/systems/projects';
+
 describe("advanceProject", () => {
   it("does nothing for archived projects", () => {
     const project = { ...mockProject, status: "archived" as const };
@@ -45,13 +47,20 @@ describe("advanceProject", () => {
     expect(update).toContain("is ready for greenlight committee review");
   });
 
-  it("transitions from production to released", () => {
+  it("transitions from production to marketing", () => {
     const project = { ...mockProject, status: "production" as const, weeksInPhase: 1 };
     const { project: p, update } = advanceProject(project, 1, 10, [], new Map());
-    expect(p.status).toBe("released");
+    expect(p.status).toBe("marketing");
     expect(p.weeksInPhase).toBe(0);
-    expect(p.releaseWeek).toBe(1);
-    expect(update).toContain("releases");
+    expect(update).toContain("has wrapped production");
+  });
+
+  it("handleReleasePhaseEntry transitions to released", () => {
+    const project = { ...mockProject, status: "marketing" as const, weeksInPhase: 0 };
+    handleReleasePhaseEntry(project, 1, 10, [], new Map());
+    expect(project.status).toBe("released");
+    expect(project.releaseWeek).toBe(1);
+    expect(project.revenue).toBe(0);
   });
 
   it("accumulates revenue and decays weekly revenue for released projects", () => {

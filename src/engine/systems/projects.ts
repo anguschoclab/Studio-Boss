@@ -27,7 +27,7 @@ function handleDevelopmentPhase(p: Project): { update: string | null } {
   return { update };
 }
 
-function handleProductionRelease(
+export function handleReleasePhaseEntry(
   p: Project,
   currentWeek: number,
   studioPrestige: number,
@@ -148,6 +148,13 @@ function handleReleasedPhase(
   return { update };
 }
 
+
+function handleMarketingPhase(p: Project): { update: string | null } {
+  p.status = 'marketing';
+  p.weeksInPhase = 0;
+  return { update: `"${p.title}" has wrapped production and is ready for marketing strategy.` };
+}
+
 export function advanceProject(
   project: Project,
   currentWeek: number,
@@ -164,7 +171,7 @@ export function advanceProject(
     const result = handleDevelopmentPhase(p);
     update = result.update;
   } else if (p.status === 'production' && p.weeksInPhase >= p.productionWeeks) {
-    const result = handleProductionRelease(p, currentWeek, studioPrestige, projectContracts, talentPoolMap);
+    const result = handleMarketingPhase(p);
     update = result.update;
   } else if (p.status === 'released') {
     const result = handleReleasedPhase(p, projectContracts, talentPoolMap);

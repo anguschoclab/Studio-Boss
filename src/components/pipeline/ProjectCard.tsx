@@ -92,6 +92,24 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
         </div>
       )}
 
+
+      {/* Marketing Button */}
+      {project.status === 'marketing' && (
+        <div className="pt-2">
+           <Button
+             variant="secondary"
+             size="sm"
+             className="w-full text-xs"
+             onClick={(e) => {
+               e.stopPropagation();
+               selectProject(project.id);
+             }}
+           >
+             Plan Marketing
+           </Button>
+        </div>
+      )}
+
       {/* Pitch Button */}
       {project.status === 'needs_greenlight' && (
         <div className="pt-2">

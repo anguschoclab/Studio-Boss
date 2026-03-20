@@ -1,7 +1,7 @@
 // Domain models for Studio Boss simulation engine
 
 export type ArchetypeKey = 'major' | 'mid-tier' | 'indie';
-export type ProjectStatus = 'development' | 'pitching' | 'production' | 'released' | 'archived';
+export type ProjectStatus = 'development' | 'pitching' | 'needs_greenlight' | 'production' | 'marketing' | 'released' | 'archived';
 export type ProjectFormat = 'film' | 'tv';
 export type BudgetTierKey = 'low' | 'mid' | 'high' | 'blockbuster';
 export type HeadlineCategory = 'rival' | 'market' | 'talent' | 'awards' | 'general';
@@ -93,6 +93,9 @@ export interface Project {
   status: ProjectStatus;
   buzz: number;
   contractType?: 'upfront' | 'deficit' | 'standard';
+  marketingAngle?: string;
+  marketingDomesticSplit?: number;
+  marketingBudget?: number;
   weeksInPhase: number;
   developmentWeeks: number;
   productionWeeks: number;
