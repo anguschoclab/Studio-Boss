@@ -211,6 +211,7 @@ export interface Agency {
   culture: AgencyCulture;
   prestige: number;
   leverage: number; // 0-100
+  traits?: string[]; // new trait system
 }
 
 
@@ -221,4 +222,39 @@ export interface Contract {
   projectId: string;
   fee: number;
   backendPercent: number;
+}
+
+export interface Family {
+  id: string;
+  name: string;
+  recognition: number;
+  prestigeLegacy: number;
+  commercialLegacy: number;
+  scandalLegacy: number;
+  volatility: number;
+  status: string;
+}
+
+export interface Agent {
+  id: string;
+  agencyId: string;
+  name: string;
+  specialty: AgentSpecialty;
+  skill: number;
+  aggression: number;
+}
+
+export interface TalentProfile {
+  id: string;
+  name: string;
+  roles: TalentRole[];
+  agencyId?: string;
+  agentId?: string;
+  prestige: number;
+  fee: number;
+  draw: number;
+  temperament: string;
+  familyId?: string;
+  accessLevel: AccessLevel;
+  perks?: string[]; // new perk system
 }
