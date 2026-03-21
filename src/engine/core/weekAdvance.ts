@@ -204,7 +204,7 @@ const simulateWorld = (
   }
 
   if (Math.random() < 0.15 && updatedOpportunitiesCopy.length < 3) {
-    const newOpp = generateOpportunity(state.week, state.studio.prestige);
+    const newOpp = generateOpportunity();
     updatedOpportunitiesCopy.push(newOpp);
     events.push(`A new ${newOpp.budgetTier} ${newOpp.format} package hit the market.`);
   }

@@ -8,9 +8,9 @@ import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'rec
 export const FinancePanel = () => {
   const gameState = useGameStore(s => s.gameState);
 
-  if (!gameState) return null;
-
-  const { cash, financeHistory, projects } = gameState;
+  const cash = gameState?.cash ?? 0;
+  const financeHistory = gameState?.financeHistory ?? [];
+  const projects = gameState?.projects ?? [];
 
   const weeklyCosts = useMemo(() => calculateWeeklyCosts(projects), [projects]);
   const weeklyRevenue = useMemo(() => calculateWeeklyRevenue(projects), [projects]);

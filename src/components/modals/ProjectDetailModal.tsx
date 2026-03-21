@@ -122,8 +122,8 @@ export const ProjectDetailModal = () => {
 
               return ['director', 'actor', 'writer', 'producer'].map(role => {
                 const roleEnum = role as import('@/engine/types').TalentRole;
-                const attachedTalent = [];
-                const availableTalent = [];
+                const attachedTalent: import('@/engine/types').TalentProfile[] = [];
+                const availableTalent: import('@/engine/types').TalentProfile[] = [];
 
                 for (const t of talentPool) {
                   if (t.roles.includes(roleEnum)) {

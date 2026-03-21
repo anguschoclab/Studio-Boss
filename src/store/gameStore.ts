@@ -48,41 +48,7 @@ interface GameStore {
 }
 
 
-function getFilmStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS]) {
-  return {
-    budget: tier.budget,
-    weeklyCost: tier.weeklyCost,
-    developmentWeeks: tier.developmentWeeks,
-    productionWeeks: tier.productionWeeks,
-    renewable: false,
-  };
-}
-
-function getEpisodicStats(
-  tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS],
-  formatData: { productionCostMultiplier: number; productionWeeksPerEpisode: number; developmentWeeksModifier: number; renewable: boolean },
-  episodes: number,
-  budgetMultiplier: number
-) {
-  const weeklyCost = tier.weeklyCost * formatData.productionCostMultiplier;
-  const productionWeeks = Math.ceil(episodes * formatData.productionWeeksPerEpisode);
-
-  return {
-    weeklyCost,
-    productionWeeks,
-    developmentWeeks: Math.ceil(tier.developmentWeeks * formatData.developmentWeeksModifier),
-    budget: weeklyCost * productionWeeks + (tier.budget * budgetMultiplier),
-    renewable: formatData.renewable,
-  };
-}
-
-function getTvStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS], tvFormatData: typeof TV_FORMATS[keyof typeof TV_FORMATS], episodes: number) {
-  return getEpisodicStats(tier, tvFormatData, episodes, 0.2);
-}
-
-function getUnscriptedStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS], unscriptedFormatData: typeof UNSCRIPTED_FORMATS[keyof typeof UNSCRIPTED_FORMATS], episodes: number) {
-  return getEpisodicStats(tier, unscriptedFormatData, episodes, 0.1);
-}
+// Removed duplicate local functions - using imported versions from stats.ts
 
 
 function getProjectStats(params: CreateProjectParams, tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS]) {
