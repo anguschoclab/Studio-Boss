@@ -20,14 +20,16 @@ export const BUDGET_TIERS: Record<BudgetTierKey, BudgetTierData> = {
     weeklyCost: 500_000,
     developmentWeeks: 6,
     productionWeeks: 8,
-    revenueRange: [2_000_000, 25_000_000],
+    // Widened top-end revenue to allow for high-ROI horror/indie anomalies, simulating a 10x+ return potential.
+    revenueRange: [1_000_000, 50_000_000],
   },
   mid: {
     key: 'mid',
     name: 'Mid Budget',
     label: '$20M',
     budget: 20_000_000,
-    weeklyCost: 1_500_000,
+    // Slightly increased weekly cost to represent modern rising crew rates.
+    weeklyCost: 1_800_000,
     developmentWeeks: 8,
     productionWeeks: 12,
     revenueRange: [10_000_000, 80_000_000],
@@ -36,20 +38,26 @@ export const BUDGET_TIERS: Record<BudgetTierKey, BudgetTierData> = {
     key: 'high',
     name: 'High Budget',
     label: '$60M',
-    budget: 60_000_000,
-    weeklyCost: 3_000_000,
+    // Bumped budget to 70M to reflect inflation of mid-tier to high-tier projects.
+    budget: 70_000_000,
+    // Steep weekly cost increase to penalize prolonged productions.
+    weeklyCost: 4_500_000,
     developmentWeeks: 12,
     productionWeeks: 16,
-    revenueRange: [30_000_000, 200_000_000],
+    // Higher floor, but lower ceiling compared to risk to force careful greenlighting.
+    revenueRange: [40_000_000, 250_000_000],
   },
   blockbuster: {
     key: 'blockbuster',
     name: 'Blockbuster',
-    label: '$150M',
-    budget: 150_000_000,
-    weeklyCost: 6_000_000,
+    label: '$200M',
+    // Massive base budget increase to represent modern tentpoles ($200M+).
+    budget: 200_000_000,
+    // Punishing weekly burn rate to make delays catastrophic.
+    weeklyCost: 10_000_000,
     developmentWeeks: 16,
     productionWeeks: 24,
-    revenueRange: [80_000_000, 500_000_000],
+    // Raised ceiling slightly, but floor is still very dangerous relative to the $200M+ budget.
+    revenueRange: [100_000_000, 600_000_000],
   },
 };
