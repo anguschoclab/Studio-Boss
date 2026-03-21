@@ -54,7 +54,7 @@ describe('talent generator', () => {
             { id: 'ag-1', name: 'CAC', tier: 'powerhouse', culture: 'shark', prestige: 90, leverage: 90 }
         ];
         const agents: Agent[] = [
-            { id: 'agt-1', agencyId: 'ag-1', name: 'Ari Gold', specialty: 'talent', skill: 90, aggression: 90 }
+            { id: 'agt-1', agencyId: 'ag-1', name: 'Ari Gold', specialty: 'talent', prestige: 90, leverage: 90 }
         ];
 
         // Mock random to guarantee they get an agent
