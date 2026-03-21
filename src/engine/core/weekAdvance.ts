@@ -183,17 +183,8 @@ const simulateWorld = (
   }
 
   if (Math.random() < 0.15) {
+    updatedOpportunitiesCopy.push(generateOpportunity());
     events.push('New opportunities have hit the market!');
-    updatedOpportunitiesCopy.push({
-      id: `opp-${crypto.randomUUID()}`,
-      type: 'script',
-      weeksUntilExpiry: 4,
-      cost: 500000,
-      details: {
-        title: 'Spec Script',
-        genre: 'Action',
-      }
-    } as typeof state.opportunities[0]);
   }
 
   if (Math.random() < 0.15) {

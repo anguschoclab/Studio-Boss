@@ -109,6 +109,6 @@ export function resolveCrisis(state: GameState, projectId: string, optionIndex: 
     ...state,
     projects: newProjects,
     cash: state.cash + cashChange, // Apply cash change (penalty means negative)
-    events: [...(state.events || []), `Crisis resolved for "${project.title}": ${option.text}`]
+    headlines: [...(state.headlines || []), { id: `crisis-${crypto.randomUUID()}`, text: `Crisis resolved for "${project.title}": ${option.text}`, week: state.week, category: 'general' as const }]
   } as GameState;
 }
