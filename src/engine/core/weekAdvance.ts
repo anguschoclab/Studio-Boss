@@ -64,7 +64,7 @@ const processProjectPhase = (
 
     const projectContracts = contractsByProject.get(p.id) || [];
     const rivalAvgStrength = state.rivals.reduce((sum, r) => sum + r.strength, 0) / Math.max(1, state.rivals.length);
-    const { project, update } = advanceProject(p, nextWeek, state.studio.prestige, projectContracts, talentPoolMap, rivalAvgStrength);
+    const { project, update } = advanceProject(p, nextWeek, state.studio.prestige, projectContracts, talentPoolMap, rivalAvgStrength, state.awards);
     if (update) projectUpdates.push(update);
 
     if (project.status === 'released' && p.status !== 'released' && !project.awardsProfile) {

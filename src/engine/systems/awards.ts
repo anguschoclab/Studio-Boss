@@ -33,15 +33,16 @@ interface AwardCeremonyResult {
 // Define when ceremonies happen within a 52-week year
 export const AWARDS_CALENDAR: Record<number, AwardBody[]> = {
   2: ['Golden Globes'],
-  3: ['Critics Choice Awards'],
-  4: ['SAG Awards'],
-  5: ['Directors Guild Awards'],
-  6: ['Producers Guild Awards'],
-  7: ['Writers Guild Awards', 'BAFTAs'],
-  8: ['Annie Awards'],
-  9: ['Independent Spirit Awards'],
+  3: ['Sundance Film Festival'],
+  4: ['Critics Choice Awards'],
+  5: ['SAG Awards'],
+  6: ['Directors Guild Awards'],
+  7: ['Producers Guild Awards'],
+  8: ['Writers Guild Awards', 'BAFTAs'],
+  9: ['Annie Awards', 'Independent Spirit Awards'],
   10: ['Academy Awards'],
   20: ['Peabody Awards'],
+  21: ['Cannes Film Festival'],
   37: ['Primetime Emmys']
 };
 
@@ -64,6 +65,10 @@ const AWARD_CONFIGS: AwardConfig[] = [
   },
   {
     body: 'Academy Awards', category: 'Best Actor', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) + (p.buzz || 0) * 0.5
+  },
+  {
+    body: 'Academy Awards', category: 'Best Actress', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) + (p.buzz || 0) * 0.5
   },
 
@@ -139,6 +144,42 @@ const AWARD_CONFIGS: AwardConfig[] = [
   {
     body: 'Peabody Awards', category: 'Special Achievement', format: 'tv',
     evaluator: p => (p.awardsProfile?.culturalHeat || 0) * 1.5 + (p.awardsProfile?.prestigeScore || 0)
+  },
+
+  // --- CANNES FILM FESTIVAL ---
+  {
+    body: 'Cannes Film Festival', category: 'Palme d\'Or', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.5 + (p.awardsProfile?.prestigeScore || 0) * 1.2
+  },
+  {
+    body: 'Cannes Film Festival', category: 'Best Director', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 2 + (p.awardsProfile?.indieCredibility || 0) * 0.5
+  },
+  {
+    body: 'Cannes Film Festival', category: 'Best Actor', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.2 + (p.awardsProfile?.prestigeScore || 0) * 0.8
+  },
+  {
+    body: 'Cannes Film Festival', category: 'Best Actress', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.2 + (p.awardsProfile?.prestigeScore || 0) * 0.8
+  },
+
+  // --- SUNDANCE FILM FESTIVAL ---
+  {
+    body: 'Sundance Film Festival', category: 'Grand Jury Prize', format: 'film',
+    evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 2 + (p.awardsProfile?.criticScore || 0)
+  },
+  {
+    body: 'Sundance Film Festival', category: 'Best Director', format: 'film',
+    evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 1.5 + (p.awardsProfile?.craftScore || 0)
+  },
+  {
+    body: 'Sundance Film Festival', category: 'Best Actor', format: 'film',
+    evaluator: p => (p.awardsProfile?.indieCredibility || 0) + (p.awardsProfile?.criticScore || 0) * 0.8
+  },
+  {
+    body: 'Sundance Film Festival', category: 'Best Actress', format: 'film',
+    evaluator: p => (p.awardsProfile?.indieCredibility || 0) + (p.awardsProfile?.criticScore || 0) * 0.8
   }
 ];
 
