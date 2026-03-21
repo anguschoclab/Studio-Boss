@@ -27,12 +27,28 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
     : 100;
 
   return (
-    <button
+    <div
       onClick={() => selectProject(project.id)}
-      className="w-full text-left p-3 rounded-lg border border-border bg-card hover:bg-accent/50 transition-colors space-y-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          if ((e.target as HTMLElement).tagName !== 'BUTTON') {
+            e.preventDefault();
+            selectProject(project.id);
+          }
+        }
+      }}
+      className="w-full text-left p-3 rounded-lg border border-border bg-card hover:bg-accent/50 transition-colors space-y-2 focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 relative cursor-pointer"
     >
       <div className="flex items-start justify-between gap-2">
-        <h4 className="font-display font-semibold text-sm text-foreground leading-tight">{project.title}</h4>
+        <h4 className="font-display font-semibold text-sm text-foreground leading-tight">
+          <button
+             className="before:absolute before:inset-0 focus-visible:outline-none focus-visible:underline"
+             onClick={() => selectProject(project.id)}
+             aria-label={`View details for ${project.title}`}
+          >
+            {project.title}
+          </button>
+        </h4>
         <div className="flex gap-2">
           {hasUnresolvedCrisis && (
             <Badge variant="destructive" className="text-[10px] shrink-0">
@@ -95,7 +111,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
 
       {/* Marketing Button */}
       {project.status === 'marketing' && (
-        <div className="pt-2">
+        <div className="pt-2 relative z-10">
            <Button
              variant="secondary"
              size="sm"
@@ -112,7 +128,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
 
       {/* Pitch Button */}
       {project.status === 'needs_greenlight' && (
-        <div className="pt-2">
+        <div className="pt-2 relative z-10">
            <Button
              variant="destructive"
              size="sm"
@@ -129,7 +145,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
 
       {/* Crisis Button */}
       {hasUnresolvedCrisis && (
-        <div className="pt-2">
+        <div className="pt-2 relative z-10">
            <Button
              variant="destructive"
              size="sm"
@@ -147,7 +163,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
 
       {/* Pitch Button */}
       {project.status === 'pitching' && (
-        <div className="pt-2">
+        <div className="pt-2 relative z-10">
            <Button
              variant="default"
              size="sm"
@@ -177,6 +193,6 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
             )}
         </div>
       )}
-    </button>
+    </div>
   );
 };
