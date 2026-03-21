@@ -48,7 +48,7 @@ interface GameStore {
 }
 
 
-// Removed duplicate local functions - using imported versions from stats.ts
+import { getFilmStats, getTvStats, getUnscriptedStats } from '@/engine/systems/stats';
 
 
 function getProjectStats(params: CreateProjectParams, tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS]) {
