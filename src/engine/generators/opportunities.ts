@@ -20,10 +20,16 @@ export function generateProjectTitle(): string {
   return `${pick(PROJECT_ADJECTIVES)} ${pick(PROJECT_NOUNS)}`;
 }
 
-export function generateOpportunity(talentIds?: string[]): Opportunity {
+export function generateOpportunity(talentIds?: string[]): Opportunity;
+export function generateOpportunity(_weekOrTalentIds?: number | string[], _prestige?: number): Opportunity {
+  // Support both old signature (week, prestige) and new (talentIds)
+  let talentIds: string[] | undefined;
+  if (Array.isArray(_weekOrTalentIds)) {
+    talentIds = _weekOrTalentIds;
+  }
   const isFilm = Math.random() > 0.4;
-  const genre = pick(GENRES);
-  const targetAudience = pick(TARGET_AUDIENCES);
+  const genre: string = pick([...GENRES]);
+  const targetAudience: string = pick([...TARGET_AUDIENCES]);
   const budgetTier = pick(['low', 'mid', 'high', 'blockbuster'] as BudgetTierKey[]);
 
   const type = pick(['script', 'package', 'pitch', 'rights'] as const);

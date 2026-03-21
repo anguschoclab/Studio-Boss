@@ -4,7 +4,7 @@ import { useUIStore } from '@/store/uiStore';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ProjectContractType } from '@/engine/types';
+import type { ProjectContractType } from '@/engine/types';
 import { calculateFitScore } from '@/engine/systems/buyers';
 
 export const PitchProjectModal = () => {

@@ -85,7 +85,10 @@ describe("awards system", () => {
       contracts: [],
       awards: [],
     buyers: [],
-    families: []
+    families: [],
+    opportunities: [],
+    agencies: [],
+    agents: [],
     };
 
     const eligibleProject: Project = {

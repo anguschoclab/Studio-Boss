@@ -1,12 +1,15 @@
 // Domain models for Studio Boss simulation engine
 
 export type ArchetypeKey = 'major' | 'mid-tier' | 'indie';
-export type ProjectStatus = 'development' | 'pitching' | 'production' | 'released' | 'archived';
-export type ProjectFormat = 'film' | 'tv';
+export type ProjectStatus = 'development' | 'needs_greenlight' | 'pitching' | 'production' | 'released' | 'archived';
+export type ProjectFormat = 'film' | 'tv' | 'unscripted';
 export type BudgetTierKey = 'low' | 'mid' | 'high' | 'blockbuster';
 export type HeadlineCategory = 'rival' | 'market' | 'talent' | 'awards' | 'general';
 export type TvFormatKey = 'sitcom' | 'procedural' | 'prestige_drama' | 'limited_series' | 'animated_comedy' | 'animated_prestige';
+export type UnscriptedFormatKey = 'competition' | 'docuseries' | 'reality_ensemble' | 'game_show' | 'lifestyle';
 export type ReleaseModelKey = 'weekly' | 'binge' | 'split';
+export type ProjectContractType = 'upfront' | 'deficit' | 'standard';
+export type MandateType = 'sci-fi' | 'comedy' | 'drama' | 'budget_freeze' | 'broad_appeal' | 'prestige';
 
 export interface Studio {
   name: string;
@@ -23,7 +26,6 @@ export interface AwardsProfile {
   campaignStrength: number;
   controversyRisk: number;
   festivalBuzz: number;
-  // Hidden values
   academyAppeal: number;
   guildAppeal: number;
   populistAppeal: number;
@@ -64,13 +66,12 @@ export type AwardStatus = 'won' | 'nominated';
 export interface Award {
   id: string;
   projectId: string;
-  name: string;      // The name of the award category (e.g., "Best Picture")
-  category: string;  // Sometimes used broadly
-  body: AwardBody;   // The institution
+  name: string;
+  category: string;
+  body: AwardBody;
   status: AwardStatus;
   year: number;
 }
-
 
 export interface CrisisOption {
   text: string;
@@ -98,7 +99,7 @@ export interface Project {
   flavor: string;
   status: ProjectStatus;
   buzz: number;
-  contractType?: 'upfront' | 'deficit' | 'standard';
+  contractType?: ProjectContractType;
   weeksInPhase: number;
   developmentWeeks: number;
   productionWeeks: number;
@@ -109,6 +110,15 @@ export interface Project {
   awardsProfile?: AwardsProfile;
   parentProjectId?: string;
   isSpinoff?: boolean;
+  // TV / Unscripted fields
+  tvFormat?: TvFormatKey;
+  unscriptedFormat?: UnscriptedFormatKey;
+  episodes?: number;
+  episodesReleased?: number;
+  releaseModel?: ReleaseModelKey;
+  season?: number;
+  renewable?: boolean;
+  buyerId?: string;
 }
 
 export interface RivalStudio {
@@ -149,7 +159,6 @@ export interface WeekSummary {
   events: string[];
 }
 
-
 export type OpportunityType = 'script' | 'package' | 'pitch' | 'rights';
 export type DiscoveryOrigin = 'open_spec' | 'agency_package' | 'writer_sample' | 'heat_list' | 'annual_list' | 'passion_project';
 
@@ -167,8 +176,82 @@ export interface Opportunity {
   weeksUntilExpiry: number;
   attachedTalentIds?: string[];
   tvFormat?: TvFormatKey;
+  unscriptedFormat?: UnscriptedFormatKey;
   episodes?: number;
   releaseModel?: ReleaseModelKey;
+}
+
+// Talent & Representation
+
+export type AccessLevel = 'outsider' | 'soft-access' | 'legacy' | 'dynasty' | 'comeback';
+export type TalentRole = 'director' | 'actor' | 'writer' | 'producer' | 'showrunner';
+export type AgencyTier = 'powerhouse' | 'major' | 'mid-tier' | 'boutique' | 'specialist';
+export type AgencyCulture = 'shark' | 'family' | 'volume' | 'prestige';
+export type AgentSpecialty = 'film_packaging' | 'tv_packaging' | 'literary' | 'talent' | 'comedy' | 'unscripted';
+
+export interface Agency {
+  id: string;
+  name: string;
+  tier: AgencyTier;
+  culture: AgencyCulture;
+  prestige: number;
+  leverage: number;
+}
+
+export interface Agent {
+  id: string;
+  name: string;
+  agencyId?: string;
+  specialty: AgentSpecialty;
+  prestige: number;
+  leverage: number;
+}
+
+export interface Family {
+  id: string;
+  name: string;
+  recognition: number;
+  prestigeLegacy: number;
+  commercialLegacy: number;
+  scandalLegacy: number;
+  volatility: number;
+  status: string;
+}
+
+export interface TalentProfile {
+  id: string;
+  name: string;
+  roles: TalentRole[];
+  agencyId?: string;
+  agentId?: string;
+  prestige: number;
+  fee: number;
+  draw: number;
+  temperament: string;
+  familyId?: string;
+  accessLevel: AccessLevel;
+}
+
+export interface Contract {
+  id: string;
+  talentId: string;
+  projectId: string;
+  fee: number;
+  backendPercent: number;
+}
+
+export type BuyerArchetype = 'network' | 'premium' | 'streamer';
+
+export interface BuyerMandate {
+  type: MandateType;
+  activeUntilWeek: number;
+}
+
+export interface Buyer {
+  id: string;
+  name: string;
+  archetype: BuyerArchetype;
+  currentMandate?: BuyerMandate;
 }
 
 export interface GameState {
@@ -196,31 +279,4 @@ export interface SaveSlotMeta {
   week: number;
   cash: number;
   timestamp: number;
-}
-
-
-export type AccessLevel = 'outsider' | 'soft-access' | 'legacy' | 'dynasty' | 'comeback';
-
-export type TalentRole = 'director' | 'actor' | 'writer' | 'producer' | 'showrunner';
-export type AgencyTier = 'powerhouse' | 'major' | 'mid-tier' | 'boutique' | 'specialist';
-export type AgencyCulture = 'shark' | 'family' | 'volume' | 'prestige';
-export type AgentSpecialty = 'film_packaging' | 'tv_packaging' | 'literary' | 'talent' | 'comedy' | 'unscripted';
-
-export interface Agency {
-  id: string;
-  name: string;
-  tier: AgencyTier;
-  culture: AgencyCulture;
-  prestige: number;
-  leverage: number; // 0-100
-}
-
-
-
-export interface Contract {
-  id: string;
-  talentId: string;
-  projectId: string;
-  fee: number;
-  backendPercent: number;
 }
