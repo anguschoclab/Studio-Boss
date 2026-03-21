@@ -214,7 +214,19 @@ export interface Agency {
   leverage: number; // 0-100
 }
 
-
+export interface TalentProfile {
+  id: string;
+  name: string;
+  roles: TalentRole[];
+  prestige: number;
+  draw: number;
+  fee: number;
+  temperament: string;
+  familyId?: string;
+  agencyId?: string;
+  agentId?: string;
+  accessLevel: AccessLevel;
+}
 
 export interface Contract {
   id: string;
