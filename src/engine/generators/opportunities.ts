@@ -69,7 +69,7 @@ export function generateOpportunity(talentIds?: string[]): Opportunity {
   };
 
   if (!isFilm) {
-    opt.tvFormat = pick(['sitcom', 'procedural', 'prestige_drama', 'limited_series', 'animated_comedy'] as TvFormatKey[]);
+    opt.tvFormat = pick(['sitcom', 'procedural', 'prestige_drama', 'limited_series', 'animated_comedy', 'animated_prestige', 'daytime_soap', 'late_night_talk', 'sketch_comedy', 'sci_fi_epic', 'teen_drama', 'fantasy_epic', 'anthology_series', 'telenovela', 'historical_drama', 'medical_procedural'] as TvFormatKey[]);
     opt.episodes = opt.tvFormat === 'limited_series' ? 8 : 10;
     opt.releaseModel = 'weekly';
   }
