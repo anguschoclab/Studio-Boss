@@ -92,8 +92,8 @@ export function generateAgents(agencies: Agency[], countPerAgency: number): Agen
         agencyId: agency.id,
         name: `${firstName} ${lastName}`,
         specialty,
-        skill: Math.floor(randRange(agency.prestige - 20, agency.prestige + 20)),
-        aggression: agency.culture === 'shark' ? Math.floor(randRange(70, 100)) : Math.floor(randRange(30, 80))
+        prestige: Math.floor(randRange(agency.prestige - 20, agency.prestige + 20)),
+        leverage: agency.culture === 'shark' ? Math.floor(randRange(70, 100)) : Math.floor(randRange(30, 80))
       });
     }
   }

@@ -36,20 +36,27 @@ export function simulateWeeklyBoxOffice(
   previousWeeklyRevenue: number,
   rivalStrength: number
 ): number {
-  let dropOffMultiplier = randRange(0.4, 0.6); // Standard drop-off
+  // Increased base drop-off to simulate modern front-loaded box office trends (from 0.4-0.6 down to 0.3-0.5).
+  let dropOffMultiplier = randRange(0.3, 0.5);
 
   // Adjust drop-off based on "legs" (word-of-mouth determined by review score)
   if (reviewScore >= 85) {
-    dropOffMultiplier = randRange(0.65, 0.85); // Excellent legs
+    dropOffMultiplier = randRange(0.6, 0.8); // Excellent legs, still strong but slightly worse than before
   } else if (reviewScore >= 60) {
-    dropOffMultiplier = randRange(0.5, 0.7); // Average legs
+    dropOffMultiplier = randRange(0.4, 0.6); // Average legs
   } else if (reviewScore < 40) {
-    dropOffMultiplier = randRange(0.2, 0.4); // Terrible legs, falls off a cliff
+    // Punitive drop for terrible movies to force tighter quality control on expensive projects.
+    dropOffMultiplier = randRange(0.1, 0.25);
   }
 
-  // Heavy competition penalty: high rival strength slightly eats into revenue legs
-  const competitionPenalty = (rivalStrength / 100) * 0.1;
-  dropOffMultiplier = Math.max(0.1, dropOffMultiplier - competitionPenalty);
+  // Large budget films are more front-loaded due to massive marketing pushes week 1.
+  if (project.budget >= 100_000_000 && weekInRelease === 1) {
+     dropOffMultiplier *= 0.85; // Sharp second-weekend drop for tentpoles
+  }
+
+  // Heavy competition penalty: high rival strength eats into revenue legs
+  const competitionPenalty = (rivalStrength / 100) * 0.15; // Increased penalty from 0.1 to 0.15
+  dropOffMultiplier = Math.max(0.05, dropOffMultiplier - competitionPenalty);
 
   return Math.max(0, previousWeeklyRevenue * dropOffMultiplier);
 }

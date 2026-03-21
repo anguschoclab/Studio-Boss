@@ -50,13 +50,15 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
     cash: arch.startingCash,
     financeHistory: [{ week: 1, cash: arch.startingCash, revenue: 0, costs: 0 }],
     families,
+    agencies,
+    agents,
     opportunities: Array.from({ length: 4 }, () => generateOpportunity(talentPool.map(t => t.id))),
     talentPool,
     contracts: [],
     buyers: [
-      { id: 'b1', name: 'Global Network', archetype: 'network' },
-      { id: 'b2', name: 'Prestige TV', archetype: 'premium' },
-      { id: 'b3', name: 'StreamMax', archetype: 'streamer' }
+      { id: 'b1', name: 'Global Network', archetype: 'network' as const },
+      { id: 'b2', name: 'Prestige TV', archetype: 'premium' as const },
+      { id: 'b3', name: 'StreamMax', archetype: 'streamer' as const }
     ],
     awards: [],
   };

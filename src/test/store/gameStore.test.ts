@@ -118,7 +118,7 @@ describe("gameStore", () => {
     state.cash = initialCash;
     state.contracts = [];
     state.talentPool = [
-      { id: "t1", name: "Star", type: "actor", prestige: 85, draw: 80, fee: 500, accessLevel: "outsider", temperament: "normal" }
+      { id: "t1", name: "Star", roles: ["actor"], prestige: 85, draw: 80, fee: 500, accessLevel: "outsider", temperament: "normal" } as any
     ];
     useGameStore.setState({ gameState: state });
   };
@@ -150,7 +150,7 @@ describe("gameStore", () => {
     store.newGame('Test Studio', 'indie');
 
     // Check initial state has opportunities
-    const initialState = useGameStore.getState().gameState;
+    const initialState = useGameStore.getState().gameState!;
     expect(initialState.opportunities.length).toBeGreaterThan(0);
 
     initialState.opportunities[0].id = 'unique-opp-id';
@@ -161,7 +161,7 @@ describe("gameStore", () => {
 
     useGameStore.getState().acquireOpportunity(opp.id);
 
-    const afterState = useGameStore.getState().gameState;
+    const afterState = useGameStore.getState().gameState!;
 
 
     // Opportunity should be removed

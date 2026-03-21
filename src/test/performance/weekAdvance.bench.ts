@@ -51,6 +51,9 @@ function createMockState(projectCount: number, contractsPerProject: number): Gam
     awards: [],
 buyers: [],
 families: [],
+    opportunities: [],
+    agencies: [],
+    agents: [],
   };
 }
 

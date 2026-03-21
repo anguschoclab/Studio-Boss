@@ -3,14 +3,17 @@ import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { GENRES, TARGET_AUDIENCES, UNSCRIPTED_GENRES } from '@/engine/data/genres';
 import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
+import { TV_FORMATS } from '@/engine/data/tvFormats';
+import { UNSCRIPTED_FORMATS } from '@/engine/data/unscriptedFormats';
 import { generateProjectTitle } from '@/engine/generators/titles';
-import { BudgetTierKey, ProjectFormat } from '@/engine/types';
+import { BudgetTierKey, ProjectFormat, TvFormatKey, UnscriptedFormatKey, ReleaseModelKey } from '@/engine/types';
 import { formatMoney } from '@/engine/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Slider } from '@/components/ui/slider';
 import { Dices } from 'lucide-react';
 
 export const CreateProjectModal = () => {
@@ -24,6 +27,10 @@ export const CreateProjectModal = () => {
   const [budgetTier, setBudgetTier] = useState<BudgetTierKey>('mid');
   const [targetAudience, setTargetAudience] = useState<string>(TARGET_AUDIENCES[0]);
   const [flavor, setFlavor] = useState('');
+  const [tvFormat, setTvFormat] = useState<TvFormatKey>('prestige_drama');
+  const [unscriptedFormat, setUnscriptedFormat] = useState<UnscriptedFormatKey>('competition');
+  const [episodes, setEpisodes] = useState<number>(10);
+  const [releaseModel, setReleaseModel] = useState<ReleaseModelKey>('weekly');
 
   // Auto-generate title when modal opens if title is empty
   useEffect(() => {
@@ -44,7 +51,6 @@ export const CreateProjectModal = () => {
     const t = talentMap.get(id);
     return sum + (t?.fee || 0);
   }, 0);
-
 
   if (format === 'tv') {
       const tvData = TV_FORMATS[tvFormat];
@@ -100,7 +106,7 @@ export const CreateProjectModal = () => {
           <div className="space-y-1.5">
             <Label className="text-xs uppercase tracking-wider">Format</Label>
             <div className="flex gap-2">
-              {(['film', 'tv', 'unscripted'] as const).map(f => (
+              {(['film', 'tv', 'unscripted'] as ProjectFormat[]).map(f => (
                 <Button
                   key={f}
                   type="button"
@@ -220,7 +226,6 @@ export const CreateProjectModal = () => {
             </Select>
           </div>
 
-
           {/* Talent Selection */}
           <div className="space-y-1.5">
             <Label className="text-xs uppercase tracking-wider">Attach Talent</Label>
@@ -237,13 +242,12 @@ export const CreateProjectModal = () => {
                     }}
                   />
                   <Label htmlFor={t.id} className="text-sm cursor-pointer flex-1">
-                    {t.name} ({t.type}) - {formatMoney(t.fee)}
+                    {t.name} ({t.roles[0]}) - {formatMoney(t.fee)}
                   </Label>
                 </div>
               ))}
             </div>
           </div>
-
 
           {/* Flavor */}
           <div className="space-y-1.5">

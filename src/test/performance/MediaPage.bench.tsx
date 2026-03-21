@@ -19,12 +19,11 @@ const headlines1000 = generateHeadlines(1000);
 
 describe('MediaPage Grouping Performance', () => {
   bench('Baseline (Multiple filters)', () => {
-    const deadlineHeadlines = headlines1000.filter(h => h.category === 'talent' || h.category === 'rival');
-    const varietyHeadlines = headlines1000.filter(h => h.category === 'awards' || h.category === 'market');
-    const boxOfficeHeadlines = headlines1000.filter(h => h.category === 'general' || h.category === 'market');
-    const marketHeadlines = headlines1000.filter(h => h.category === 'market' || h.category === 'rival');
-    const insiderHeadlines = headlines1000.filter(h => h.category === 'talent' || h.category === 'general');
-    return [deadlineHeadlines, varietyHeadlines, boxOfficeHeadlines, marketHeadlines, insiderHeadlines];
+    headlines1000.filter(h => h.category === 'talent' || h.category === 'rival');
+    headlines1000.filter(h => h.category === 'awards' || h.category === 'market');
+    headlines1000.filter(h => h.category === 'general' || h.category === 'market');
+    headlines1000.filter(h => h.category === 'market' || h.category === 'rival');
+    headlines1000.filter(h => h.category === 'talent' || h.category === 'general');
   });
 
   bench('Optimized (Single pass reduce)', () => {
@@ -57,6 +56,6 @@ describe('MediaPage Grouping Performance', () => {
         insider: [] as Headline[],
       }
     );
-    return grouped;
+    void grouped;
   });
 });

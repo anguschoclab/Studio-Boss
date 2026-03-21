@@ -47,7 +47,7 @@ const processProjectPhase = (
 ): { state: GameState; weeklyChanges: WeeklyChanges } => {
   const nextWeek = state.week + 1;
   const contractsByProject = groupContractsByProject(state.contracts);
-  // Group talent by id for O(1) lookup
+
   const talentPoolMap = new Map<string, typeof state.talentPool[0]>();
   for (const talent of state.talentPool) {
     talentPoolMap.set(talent.id, talent);
@@ -64,7 +64,7 @@ const processProjectPhase = (
 
     const projectContracts = contractsByProject.get(p.id) || [];
     const rivalAvgStrength = state.rivals.reduce((sum, r) => sum + r.strength, 0) / Math.max(1, state.rivals.length);
-    const { project, update } = advanceProject(p, nextWeek, state.studio.prestige, projectContracts, talentPoolMap, rivalAvgStrength);
+    const { project, update } = advanceProject(p, nextWeek, state.studio.prestige, projectContracts, talentPoolMap, rivalAvgStrength, state.awards);
     if (update) projectUpdates.push(update);
 
     if (project.status === 'released' && p.status !== 'released' && !project.awardsProfile) {
@@ -82,9 +82,13 @@ const processProjectPhase = (
     return project;
   });
 
-  const boxOfficeEntries: BoxOfficeEntry[] = updatedProjects
-    .filter(p => p.status === 'released')
-    .map(p => ({ projectId: p.id, studioName: state.studio.name, weeklyRevenue: p.weeklyRevenue }));
+  const boxOfficeEntries = updatedProjects.reduce((acc, p) => {
+    if (p.status === 'released') {
+      acc.push({ projectId: p.id, studioName: state.studio.name, weeklyRevenue: p.weeklyRevenue });
+    }
+    return acc;
+  }, [] as BoxOfficeEntry[]);
+
   const ranks = calculateBoxOfficeRanks(boxOfficeEntries);
   updatedProjects.forEach(p => {
     if (p.status === 'released' && ranks.has(p.id)) {
@@ -160,7 +164,7 @@ const simulateWorld = (
   }, [] as typeof updatedOpportunitiesCopy);
 
   if (Math.random() < 0.2) {
-    const oppNames = updatedOpportunitiesCopy.map(o => o.title);
+    const oppNames = new Set(updatedOpportunitiesCopy.map(o => o.title));
 
     // ⚡ Bolt: Use a Set for O(1) active talent lookup instead of Map keyed by project ID,
     // and process in a single reduce pass to prevent intermediate array allocations.
@@ -174,7 +178,7 @@ const simulateWorld = (
 
     if (availableTalentIds.length > 0) {
       const newOpp = generateOpportunity(availableTalentIds);
-      if (!oppNames.includes(newOpp.title)) {
+      if (!oppNames.has(newOpp.title)) {
         updatedOpportunitiesCopy.push(newOpp);
         events.push(`A new script "${newOpp.title}" hit the market.`);
       }
@@ -189,23 +193,14 @@ const simulateWorld = (
   }
 
   if (Math.random() < 0.2) {
-    const newOpp = generateOpportunity(state.week, state.studio.prestige);
+    const newOpp = generateOpportunity();
     updatedOpportunitiesCopy.push(newOpp);
     events.push(`A new script "${newOpp.title}" just hit the market!`);
   }
 
   if (Math.random() < 0.15) {
+    updatedOpportunitiesCopy.push(generateOpportunity());
     events.push('New opportunities have hit the market!');
-    updatedOpportunitiesCopy.push({
-      id: `opp-${crypto.randomUUID()}`,
-      type: 'script',
-      weeksUntilExpiry: 4,
-      cost: 500000,
-      details: {
-        title: 'Spec Script',
-        genre: 'Action',
-      }
-    } as typeof state.opportunities[0]);
   }
 
   if (Math.random() < 0.15) {
@@ -225,7 +220,7 @@ const simulateWorld = (
   }
 
   if (Math.random() < 0.15 && updatedOpportunitiesCopy.length < 3) {
-    const newOpp = generateOpportunity(state.week, state.studio.prestige);
+    const newOpp = generateOpportunity();
     updatedOpportunitiesCopy.push(newOpp);
     events.push(`A new ${newOpp.budgetTier} ${newOpp.format} package hit the market.`);
   }

@@ -207,13 +207,10 @@ export const ProjectDetailModal = () => {
               const projectContracts = contracts.filter(c => c.projectId === project.id);
               const projectTalentIds = new Set(projectContracts.map(c => c.talentId));
 
-              // Single pass over talentPool to group by role, replacing O(roles * talentPool) with O(talentPool)
-              const roleGroups = new Map<import('@/engine/types').TalentRole, { attached: typeof talentPool, available: typeof talentPool }>();
-
-              const rolesToTrack: import('@/engine/types').TalentRole[] = ['director', 'actor', 'writer', 'producer'];
-              for (const r of rolesToTrack) {
-                roleGroups.set(r, { attached: [], available: [] });
-              }
+              return ['director', 'actor', 'writer', 'producer'].map(role => {
+                const roleEnum = role as import('@/engine/types').TalentRole;
+                const attachedTalent: import('@/engine/types').TalentProfile[] = [];
+                const availableTalent: import('@/engine/types').TalentProfile[] = [];
 
               for (const t of talentPool) {
                 for (const r of t.roles) {

@@ -1,6 +1,6 @@
 import { handleReleasePhaseEntry } from '@/engine/systems/projects';
 import { create } from 'zustand';
-import { GameState, WeekSummary, ProjectFormat, BudgetTierKey, ArchetypeKey, TvFormatKey, UnscriptedFormatKey, ReleaseModelKey, ProjectContractType } from '@/engine/types';
+import { GameState, WeekSummary, ProjectFormat, BudgetTierKey, ArchetypeKey, TvFormatKey, UnscriptedFormatKey, ReleaseModelKey, ProjectContractType, Project } from '@/engine/types';
 import { negotiateContract } from '@/engine/systems/buyers';
 import { initializeGame } from '@/engine/core/gameInit';
 import { advanceWeek } from '@/engine/core/weekAdvance';
@@ -8,9 +8,9 @@ import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
 import { TV_FORMATS } from '@/engine/data/tvFormats';
 import { UNSCRIPTED_FORMATS } from '@/engine/data/unscriptedFormats';
 import { saveGame, loadGame, getSaveSlots, SaveSlotInfo } from '@/persistence/saveLoad';
-// import { resolveCrisis } from '@/engine/systems/crises';
+import { resolveCrisis } from '@/engine/systems/crises';
+import { exploitIP } from '@/engine/systems/franchises';
 import { randRange } from '@/engine/utils';
-import { getFilmStats, getTvStats, getUnscriptedStats } from '@/engine/systems/stats';
 
 export interface CreateProjectParams {
   title: string;
@@ -50,41 +50,7 @@ interface GameStore {
 }
 
 
-function getFilmStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS]) {
-  return {
-    budget: tier.budget,
-    weeklyCost: tier.weeklyCost,
-    developmentWeeks: tier.developmentWeeks,
-    productionWeeks: tier.productionWeeks,
-    renewable: false,
-  };
-}
-
-function getEpisodicStats(
-  tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS],
-  formatData: { productionCostMultiplier: number; productionWeeksPerEpisode: number; developmentWeeksModifier: number; renewable: boolean },
-  episodes: number,
-  budgetMultiplier: number
-) {
-  const weeklyCost = tier.weeklyCost * formatData.productionCostMultiplier;
-  const productionWeeks = Math.ceil(episodes * formatData.productionWeeksPerEpisode);
-
-  return {
-    weeklyCost,
-    productionWeeks,
-    developmentWeeks: Math.ceil(tier.developmentWeeks * formatData.developmentWeeksModifier),
-    budget: weeklyCost * productionWeeks + (tier.budget * budgetMultiplier),
-    renewable: formatData.renewable,
-  };
-}
-
-function getTvStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS], tvFormatData: typeof TV_FORMATS[keyof typeof TV_FORMATS], episodes: number) {
-  return getEpisodicStats(tier, tvFormatData, episodes, 0.2);
-}
-
-function getUnscriptedStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS], unscriptedFormatData: typeof UNSCRIPTED_FORMATS[keyof typeof UNSCRIPTED_FORMATS], episodes: number) {
-  return getEpisodicStats(tier, unscriptedFormatData, episodes, 0.1);
-}
+import { getFilmStats, getTvStats, getUnscriptedStats } from '@/engine/systems/stats';
 
 
 function getProjectStats(params: CreateProjectParams, tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS]) {
@@ -102,8 +68,11 @@ function prepareTalentAndContracts(
   projectId: string
 ) {
   const ids = attachedTalentIds || [];
+
+  // O(1) lookup map for talent
+  const talentMap = new Map(state.talentPool.map(t => [t.id, t]));
   const attachedTalent = ids.reduce((acc, id) => {
-    const t = state.talentPool.find(t => t.id === id);
+    const t = talentMap.get(id);
     if (t) acc.push(t);
     return acc;
   }, [] as typeof state.talentPool);
@@ -214,26 +183,30 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const state = get().gameState;
     if (!state) return;
 
-    set({
-      gameState: {
-        ...state,
-        projects: state.projects.map((p) => {
-          if (p.id === id && (p.format === 'tv' || p.format === 'unscripted') && p.renewable && p.season !== undefined) {
-            return {
-              ...p,
-              status: 'development',
-              weeksInPhase: 0,
-              season: p.season + 1,
-              revenue: 0,
-              weeklyRevenue: 0,
-              releaseWeek: null,
-              episodesReleased: 0,
-            };
-          }
-          return p;
-        }),
-      },
-    });
+    const projectIndex = state.projects.findIndex(p => p.id === id);
+    if (projectIndex === -1) return;
+
+    const p = state.projects[projectIndex];
+    if ((p.format === 'tv' || p.format === 'unscripted') && p.renewable && p.season !== undefined) {
+      const updatedProjects = [...state.projects];
+      updatedProjects[projectIndex] = {
+        ...p,
+        status: 'development',
+        weeksInPhase: 0,
+        season: p.season + 1,
+        revenue: 0,
+        weeklyRevenue: 0,
+        releaseWeek: null,
+        episodesReleased: 0,
+      };
+
+      set({
+        gameState: {
+          ...state,
+          projects: updatedProjects,
+        },
+      });
+    }
   },
 
   saveToSlot: (slot) => {
@@ -387,7 +360,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const project = state.projects.find(p => p.id === projectId);
     if (!project) return;
 
-    const spinoffParams = exploitIP(project);
+    const spinoffParams = exploitIP(project, state);
     if (!spinoffParams) return;
 
     get().createProject(spinoffParams);
@@ -417,5 +390,12 @@ export const useGameStore = create<GameStore>((set, get) => ({
         contracts: [...state.contracts, newContract],
       },
     });
+  },
+
+  resolveProjectCrisis: (projectId, optionIndex) => {
+    const state = get().gameState;
+    if (!state) return;
+    const newState = resolveCrisis(state, projectId, optionIndex);
+    set({ gameState: newState });
   },
 }));
