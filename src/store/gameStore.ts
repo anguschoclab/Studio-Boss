@@ -102,8 +102,11 @@ function prepareTalentAndContracts(
   projectId: string
 ) {
   const ids = attachedTalentIds || [];
+
+  // O(1) lookup map for talent
+  const talentMap = new Map(state.talentPool.map(t => [t.id, t]));
   const attachedTalent = ids.reduce((acc, id) => {
-    const t = state.talentPool.find(t => t.id === id);
+    const t = talentMap.get(id);
     if (t) acc.push(t);
     return acc;
   }, [] as typeof state.talentPool);
@@ -214,26 +217,30 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const state = get().gameState;
     if (!state) return;
 
-    set({
-      gameState: {
-        ...state,
-        projects: state.projects.map((p) => {
-          if (p.id === id && (p.format === 'tv' || p.format === 'unscripted') && p.renewable && p.season !== undefined) {
-            return {
-              ...p,
-              status: 'development',
-              weeksInPhase: 0,
-              season: p.season + 1,
-              revenue: 0,
-              weeklyRevenue: 0,
-              releaseWeek: null,
-              episodesReleased: 0,
-            };
-          }
-          return p;
-        }),
-      },
-    });
+    const projectIndex = state.projects.findIndex(p => p.id === id);
+    if (projectIndex === -1) return;
+
+    const p = state.projects[projectIndex];
+    if ((p.format === 'tv' || p.format === 'unscripted') && p.renewable && p.season !== undefined) {
+      const updatedProjects = [...state.projects];
+      updatedProjects[projectIndex] = {
+        ...p,
+        status: 'development',
+        weeksInPhase: 0,
+        season: p.season + 1,
+        revenue: 0,
+        weeklyRevenue: 0,
+        releaseWeek: null,
+        episodesReleased: 0,
+      };
+
+      set({
+        gameState: {
+          ...state,
+          projects: updatedProjects,
+        },
+      });
+    }
   },
 
   saveToSlot: (slot) => {

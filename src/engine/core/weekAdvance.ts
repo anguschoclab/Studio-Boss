@@ -47,7 +47,7 @@ const processProjectPhase = (
 ): { state: GameState; weeklyChanges: WeeklyChanges } => {
   const nextWeek = state.week + 1;
   const contractsByProject = groupContractsByProject(state.contracts);
-  // Group talent by id for O(1) lookup
+
   const talentPoolMap = new Map<string, typeof state.talentPool[0]>();
   for (const talent of state.talentPool) {
     talentPoolMap.set(talent.id, talent);
@@ -82,9 +82,13 @@ const processProjectPhase = (
     return project;
   });
 
-  const boxOfficeEntries: BoxOfficeEntry[] = updatedProjects
-    .filter(p => p.status === 'released')
-    .map(p => ({ projectId: p.id, studioName: state.studio.name, weeklyRevenue: p.weeklyRevenue }));
+  const boxOfficeEntries = updatedProjects.reduce((acc, p) => {
+    if (p.status === 'released') {
+      acc.push({ projectId: p.id, studioName: state.studio.name, weeklyRevenue: p.weeklyRevenue });
+    }
+    return acc;
+  }, [] as BoxOfficeEntry[]);
+
   const ranks = calculateBoxOfficeRanks(boxOfficeEntries);
   updatedProjects.forEach(p => {
     if (p.status === 'released' && ranks.has(p.id)) {
@@ -160,7 +164,7 @@ const simulateWorld = (
   }, [] as typeof updatedOpportunitiesCopy);
 
   if (Math.random() < 0.2) {
-    const oppNames = updatedOpportunitiesCopy.map(o => o.title);
+    const oppNames = new Set(updatedOpportunitiesCopy.map(o => o.title));
 
     // ⚡ Bolt: Use a Set for O(1) active talent lookup instead of Map keyed by project ID,
     // and process in a single reduce pass to prevent intermediate array allocations.
@@ -174,7 +178,7 @@ const simulateWorld = (
 
     if (availableTalentIds.length > 0) {
       const newOpp = generateOpportunity(availableTalentIds);
-      if (!oppNames.includes(newOpp.title)) {
+      if (!oppNames.has(newOpp.title)) {
         updatedOpportunitiesCopy.push(newOpp);
         events.push(`A new script "${newOpp.title}" hit the market.`);
       }
