@@ -387,7 +387,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const project = state.projects.find(p => p.id === projectId);
     if (!project) return;
 
-    const spinoffParams = exploitIP(project);
+    const spinoffParams = exploitIP(project, state);
     if (!spinoffParams) return;
 
     get().createProject(spinoffParams);
