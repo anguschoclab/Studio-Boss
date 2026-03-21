@@ -20,6 +20,7 @@ const rootRoute = createRootRoute({
   component: () => (
     <>
       <ThemeApplier />
+      <Outlet />
       <Toaster />
       <Sonner />
     </>
