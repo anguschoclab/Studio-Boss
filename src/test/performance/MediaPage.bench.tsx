@@ -56,6 +56,6 @@ describe('MediaPage Grouping Performance', () => {
         insider: [] as Headline[],
       }
     );
-    return grouped;
+    void grouped;
   });
 });

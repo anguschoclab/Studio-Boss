@@ -161,7 +161,7 @@ describe("gameStore", () => {
 
     useGameStore.getState().acquireOpportunity(opp.id);
 
-    const afterState = useGameStore.getState().gameState;
+    const afterState = useGameStore.getState().gameState!;
 
 
     // Opportunity should be removed
