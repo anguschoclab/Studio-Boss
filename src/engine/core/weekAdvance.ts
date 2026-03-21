@@ -177,7 +177,7 @@ const simulateWorld = (
   }
 
   if (Math.random() < 0.2) {
-    const newOpp = generateOpportunity(state.week, state.studio.prestige);
+    const newOpp = generateOpportunity();
     updatedOpportunitiesCopy.push(newOpp);
     events.push(`A new script "${newOpp.title}" just hit the market!`);
   }
