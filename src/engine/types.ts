@@ -5,7 +5,8 @@ export type ProjectStatus = 'development' | 'pitching' | 'needs_greenlight' | 'p
 export type ProjectFormat = 'film' | 'tv';
 export type BudgetTierKey = 'low' | 'mid' | 'high' | 'blockbuster';
 export type HeadlineCategory = 'rival' | 'market' | 'talent' | 'awards' | 'general';
-export type TvFormatKey = 'sitcom' | 'procedural' | 'prestige_drama' | 'limited_series' | 'animated_comedy' | 'animated_prestige';
+export type TvFormatKey = 'sitcom' | 'procedural' | 'prestige_drama' | 'limited_series' | 'animated_comedy' | 'animated_prestige' | 'daytime_soap' | 'late_night_talk' | 'sketch_comedy' | 'sci_fi_epic' | 'teen_drama' | 'fantasy_epic' | 'anthology_series' | 'telenovela' | 'historical_drama' | 'medical_procedural';
+export type UnscriptedFormatKey = 'competition' | 'docuseries' | 'reality_ensemble' | 'game_show' | 'lifestyle' | 'dating_island' | 'true_crime_doc' | 'hidden_camera' | 'travel_food' | 'talent_competition' | 'home_renovation' | 'survival_challenge' | 'pawn_shop_doc' | 'celebrity_reality' | 'paranormal_investigation';
 export type ReleaseModelKey = 'weekly' | 'binge' | 'split';
 
 export interface AwardsProfile {
