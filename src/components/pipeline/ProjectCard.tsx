@@ -27,7 +27,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
     : 100;
 
   return (
-    <button
+    <div
       onClick={() => selectProject(project.id)}
       className="w-full text-left p-3.5 rounded-xl border border-border/60 bg-card/40 backdrop-blur-sm hover:shadow-lg hover:border-primary/50 hover:-translate-y-0.5 transition-all duration-300 space-y-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 group relative overflow-hidden"
     >
@@ -95,7 +95,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
 
       {/* Marketing Button */}
       {project.status === 'marketing' && (
-        <div className="pt-2">
+        <div className="pt-2 relative z-10">
            <Button
              variant="secondary"
              size="sm"
@@ -112,7 +112,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
 
       {/* Pitch Button */}
       {project.status === 'needs_greenlight' && (
-        <div className="pt-2">
+        <div className="pt-2 relative z-10">
            <Button
              variant="destructive"
              size="sm"
@@ -129,7 +129,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
 
       {/* Crisis Button */}
       {hasUnresolvedCrisis && (
-        <div className="pt-2">
+        <div className="pt-2 relative z-10">
            <Button
              variant="destructive"
              size="sm"
@@ -147,7 +147,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
 
       {/* Pitch Button */}
       {project.status === 'pitching' && (
-        <div className="pt-2">
+        <div className="pt-2 relative z-10">
            <Button
              variant="default"
              size="sm"
@@ -177,6 +177,6 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
             )}
         </div>
       )}
-    </button>
+    </div>
   );
 };

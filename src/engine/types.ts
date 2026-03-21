@@ -222,3 +222,50 @@ export interface Contract {
   fee: number;
   backendPercent: number;
 }
+
+export interface Agent {
+  id: string;
+  agencyId?: string;
+  name: string;
+  specialty: AgentSpecialty;
+  skill: number;
+  aggression: number;
+}
+
+export interface Buyer {
+  id: string;
+  name: string;
+  archetype: 'network' | 'premium' | 'streamer';
+}
+
+export interface Family {
+  id: string;
+  name: string;
+  recognition: number;
+  prestigeLegacy: number;
+  commercialLegacy: number;
+  scandalLegacy: number;
+  volatility: number;
+  status: 'respected' | 'chaotic' | 'overexposed' | 'revived' | 'faded' | 'rising';
+}
+
+export interface TalentProfile {
+  id: string;
+  name: string;
+  roles: TalentRole[];
+  prestige: number;
+  fee: number;
+  draw: number;
+  temperament: string;
+  agencyId?: string;
+  agentId?: string;
+  familyId?: string;
+  accessLevel: AccessLevel;
+}
+
+export interface FinanceRecord {
+  week: number;
+  cash: number;
+  revenue: number;
+  costs: number;
+}

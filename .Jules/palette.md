@@ -1,0 +1,3 @@
+## 2026-03-21 - Fixed Nested Buttons in ProjectCard
+**Learning:** Having interactive elements (like `<Button>`) nested inside another interactive element (like `<button>`) is invalid HTML, confuses screen readers, and is a common pitfall in card-based designs where the entire card is meant to be clickable.
+**Action:** When making a whole card clickable that contains other buttons, convert the root element to a semantically neutral element (like `<div>` or `<article>`), give it `role="button"`, `tabIndex={0}`, and handle both `onClick` and `onKeyDown` (for 'Enter' and ' ') to ensure it remains fully accessible without nesting interactive elements.
