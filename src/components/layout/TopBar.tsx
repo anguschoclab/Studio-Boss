@@ -34,14 +34,14 @@ export const TopBar = () => {
   };
 
   return (
-    <div className="h-14 border-b border-border bg-card flex items-center px-4 gap-4 shrink-0">
+    <div className="h-14 border-b border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex items-center px-4 gap-4 shrink-0 z-50 sticky top-0">
       {/* Brand + Studio */}
       <div className="flex items-center gap-3 min-w-0">
         <button onClick={handleExit} title="Exit to Main Menu" aria-label="Exit to Main Menu" className="font-display text-sm font-bold text-primary tracking-wider hover:opacity-80 transition-opacity">
           SB
         </button>
         <div className="w-px h-6 bg-border" />
-        <span className="font-display font-semibold text-foreground truncate">{studio.name}</span>
+        <span className="font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/70 truncate">{studio.name}</span>
       </div>
 
       <div className="flex-1" />
@@ -75,7 +75,7 @@ export const TopBar = () => {
         <Button variant="ghost" size="sm" onClick={handleSave} aria-label="Save Game" title="Save Game">
           <Save className="h-4 w-4" />
         </Button>
-        <Button size="sm" onClick={handleAdvanceWeek} className="font-display font-semibold gap-1.5">
+        <Button size="sm" onClick={handleAdvanceWeek} className="font-display font-semibold gap-1.5 transition-all hover:shadow-[0_0_15px_rgba(234,179,8,0.3)]">
           <FastForward className="h-3.5 w-3.5" />
           Advance Week
         </Button>

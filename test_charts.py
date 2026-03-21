@@ -1,24 +1,34 @@
-import sys
-from playwright.sync_api import sync_playwright, expect
+import asyncio
+from playwright.async_api import async_playwright
 
-def main():
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
-        context = browser.new_context(record_video_dir="verification/video", viewport={'width': 1280, 'height': 720})
-        page = context.new_page()
+async def run():
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True)
+        # Record video
+        context = await browser.new_context(record_video_dir="verification/video")
+        page = await context.new_page()
 
-        page.on("console", lambda msg: print(f"Browser Console: {msg.text}"))
-        page.on("pageerror", lambda err: print(f"Browser Page Error: {err.message}"))
+        await page.goto(f"http://localhost:8080/")
 
-        print("Navigating to app...")
-        page.goto("http://localhost:8080/")
-        page.wait_for_timeout(5000)
+        # Wait for the app to hydrate
+        await asyncio.sleep(2)
 
-        print("DOM root children:")
-        print(page.evaluate("document.getElementById('root').innerHTML"))
+        # We need to start a game to see the charts
+        try:
+            await page.get_by_role("button", name="New Game").click(timeout=5000)
+            await asyncio.sleep(0.5)
+            await page.get_by_role("textbox").fill("Testing Studio")
+            await page.get_by_text("Indie Darling").click()
+            await page.get_by_role("button", name="Launch Studio").click()
+            await asyncio.sleep(2)
+        except Exception as e:
+            print("Couldn't start game:", e)
 
-        context.close()
-        browser.close()
+        # Take a screenshot
+        await page.screenshot(path="verification/test.png", full_page=True)
+
+        await context.close()
+        await browser.close()
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(run())
