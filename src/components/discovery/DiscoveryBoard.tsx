@@ -20,8 +20,8 @@ export const DiscoveryBoard = () => {
 
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
         {opportunities.length === 0 ? (
-          <div className="col-span-3 border border-dashed border-border rounded-lg p-6 text-center">
-            <p className="text-sm text-muted-foreground">The town is quiet. No active scripts or pitches.</p>
+          <div className="col-span-2 lg:col-span-3 border-2 border-dashed border-border/50 rounded-xl p-12 text-center bg-card/20">
+            <p className="text-sm text-muted-foreground/70 font-medium">The town is quiet. No active scripts or pitches.</p>
           </div>
         ) : (
           opportunities.map(opp => (
@@ -36,13 +36,13 @@ export const DiscoveryBoard = () => {
 const OpportunityCard = ({ opportunity: opp }: { opportunity: Opportunity }) => {
   const { acquireOpportunity } = useGameStore();
   return (
-    <div className="bg-card rounded-lg border border-border p-4 shadow-sm hover:border-primary/50 transition-colors flex flex-col justify-between h-full">
+    <div className="bg-card/50 backdrop-blur-sm rounded-lg border border-border/50 p-5 shadow-sm hover:shadow-md hover:shadow-primary/5 hover:border-primary/50 transition-all duration-300 flex flex-col justify-between h-full group">
       <div className="space-y-2">
         <div className="flex justify-between items-start gap-2">
-          <h3 className="font-display font-semibold text-foreground line-clamp-1" title={opp.title}>
+          <h3 className="font-display font-semibold text-foreground line-clamp-1 group-hover:text-primary transition-colors" title={opp.title}>
             {opp.title}
           </h3>
-          <span className="shrink-0 text-[10px] font-medium tracking-wide uppercase px-1.5 py-0.5 rounded bg-muted text-muted-foreground">
+          <span className="shrink-0 text-[10px] font-medium tracking-wide uppercase px-2 py-0.5 rounded-full bg-gradient-to-br from-muted to-muted/50 border border-border/50 text-muted-foreground">
             {opp.type}
           </span>
         </div>

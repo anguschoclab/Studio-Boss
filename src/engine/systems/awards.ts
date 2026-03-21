@@ -24,7 +24,7 @@ export function generateAwardsProfile(project: Project): AwardsProfile {
   };
 }
 
-export interface AwardCeremonyResult {
+interface AwardCeremonyResult {
   newAwards: Award[];
   prestigeChange: number;
   projectUpdates: string[];
@@ -33,15 +33,16 @@ export interface AwardCeremonyResult {
 // Define when ceremonies happen within a 52-week year
 export const AWARDS_CALENDAR: Record<number, AwardBody[]> = {
   2: ['Golden Globes'],
-  3: ['Critics Choice Awards'],
-  4: ['SAG Awards'],
-  5: ['Directors Guild Awards'],
-  6: ['Producers Guild Awards'],
-  7: ['Writers Guild Awards', 'BAFTAs'],
-  8: ['Annie Awards'],
-  9: ['Independent Spirit Awards'],
+  3: ['Sundance Film Festival'],
+  4: ['Critics Choice Awards'],
+  5: ['SAG Awards'],
+  6: ['Directors Guild Awards'],
+  7: ['Producers Guild Awards'],
+  8: ['Writers Guild Awards', 'BAFTAs'],
+  9: ['Annie Awards', 'Independent Spirit Awards'],
   10: ['Academy Awards'],
   20: ['Peabody Awards'],
+  21: ['Cannes Film Festival'],
   37: ['Primetime Emmys']
 };
 
@@ -64,6 +65,10 @@ const AWARD_CONFIGS: AwardConfig[] = [
   },
   {
     body: 'Academy Awards', category: 'Best Actor', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) + (p.buzz || 0) * 0.5
+  },
+  {
+    body: 'Academy Awards', category: 'Best Actress', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) + (p.buzz || 0) * 0.5
   },
 
@@ -139,6 +144,42 @@ const AWARD_CONFIGS: AwardConfig[] = [
   {
     body: 'Peabody Awards', category: 'Special Achievement', format: 'tv',
     evaluator: p => (p.awardsProfile?.culturalHeat || 0) * 1.5 + (p.awardsProfile?.prestigeScore || 0)
+  },
+
+  // --- CANNES FILM FESTIVAL ---
+  {
+    body: 'Cannes Film Festival', category: 'Palme d\'Or', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.5 + (p.awardsProfile?.prestigeScore || 0) * 1.2
+  },
+  {
+    body: 'Cannes Film Festival', category: 'Best Director', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 2 + (p.awardsProfile?.indieCredibility || 0) * 0.5
+  },
+  {
+    body: 'Cannes Film Festival', category: 'Best Actor', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.2 + (p.awardsProfile?.prestigeScore || 0) * 0.8
+  },
+  {
+    body: 'Cannes Film Festival', category: 'Best Actress', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.2 + (p.awardsProfile?.prestigeScore || 0) * 0.8
+  },
+
+  // --- SUNDANCE FILM FESTIVAL ---
+  {
+    body: 'Sundance Film Festival', category: 'Grand Jury Prize', format: 'film',
+    evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 2 + (p.awardsProfile?.criticScore || 0)
+  },
+  {
+    body: 'Sundance Film Festival', category: 'Best Director', format: 'film',
+    evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 1.5 + (p.awardsProfile?.craftScore || 0)
+  },
+  {
+    body: 'Sundance Film Festival', category: 'Best Actor', format: 'film',
+    evaluator: p => (p.awardsProfile?.indieCredibility || 0) + (p.awardsProfile?.criticScore || 0) * 0.8
+  },
+  {
+    body: 'Sundance Film Festival', category: 'Best Actress', format: 'film',
+    evaluator: p => (p.awardsProfile?.indieCredibility || 0) + (p.awardsProfile?.criticScore || 0) * 0.8
   }
 ];
 
@@ -154,37 +195,62 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
     return { newAwards, prestigeChange, projectUpdates };
   }
 
-  // Find eligible projects (released within the last 52 weeks relative to the ceremony)
-  const eligibleProjects = state.projects.filter(
-    p => (p.status === 'released' || p.status === 'archived') &&
-         p.releaseWeek !== null &&
-         p.releaseWeek > currentWeek - 52 &&
-         p.awardsProfile !== undefined
-  );
-
-  if (eligibleProjects.length === 0) {
+  // ⚡ Bolt: Pre-filter configs so we don't process projects if no matching body exists
+  const configsThisWeek = AWARD_CONFIGS.filter(config => bodiesThisWeek.includes(config.body));
+  if (configsThisWeek.length === 0) {
     return { newAwards, prestigeChange, projectUpdates };
   }
 
-  // Helper to evaluate a specific award
-  const evaluateAward = (config: AwardConfig) => {
-    const candidates = eligibleProjects.filter(p => config.format === 'both' || p.format === config.format);
-    if (candidates.length === 0) return;
+  // ⚡ Bolt: Find eligible projects (released within the last 52 weeks relative to the ceremony)
+  // Replaced multiple filter passes with a single `reduce` pass to separate film vs tv candidates O(n).
+  const { eligibleFilm, eligibleTv } = state.projects.reduce(
+    (acc, p) => {
+      if ((p.status === 'released' || p.status === 'post_release' || p.status === 'archived') &&
+          p.releaseWeek !== null &&
+          p.releaseWeek > currentWeek - 52 &&
+          p.awardsProfile !== undefined) {
+        if (p.format === 'film') acc.eligibleFilm.push(p);
+        else if (p.format === 'tv') acc.eligibleTv.push(p);
+      }
+      return acc;
+    },
+    { eligibleFilm: [] as Project[], eligibleTv: [] as Project[] }
+  );
 
-    // Score all candidates
-    const scored = candidates.map(p => ({
-      project: p,
-      score: config.evaluator(p) * (1 + (p.awardsProfile?.campaignStrength || 0) / 100) // Campaign boosts score
-    })).sort((a, b) => b.score - a.score);
+  if (eligibleFilm.length === 0 && eligibleTv.length === 0) {
+    return { newAwards, prestigeChange, projectUpdates };
+  }
 
-    // Top scorer wins, next few nominated (simplified logic)
-    const winner = scored[0];
+  // Evaluate all configs for bodies present this week
+  for (let i = 0; i < configsThisWeek.length; i++) {
+    const config = configsThisWeek[i];
+
+    // Select candidates directly from our pre-filtered arrays to avoid .filter() overhead
+    let candidates: Project[];
+    if (config.format === 'film') candidates = eligibleFilm;
+    else if (config.format === 'tv') candidates = eligibleTv;
+    else candidates = eligibleFilm.concat(eligibleTv);
+
+    if (candidates.length === 0) continue;
+
+    let bestProject = candidates[0];
+    let bestScore = -1;
+
+    // ⚡ Bolt: Find best score using a single loop to avoid .map() object allocation and .sort() O(n log n) overhead
+    for (let j = 0; j < candidates.length; j++) {
+      const p = candidates[j];
+      const score = config.evaluator(p) * (1 + (p.awardsProfile?.campaignStrength || 0) / 100);
+      if (score > bestScore) {
+        bestScore = score;
+        bestProject = p;
+      }
+    }
 
     // Threshold to actually win (don't give out awards if the year was terrible)
-    if (winner.score > 150) {
+    if (bestScore > 150) {
       newAwards.push({
         id: `award-${crypto.randomUUID()}`,
-        projectId: winner.project.id,
+        projectId: bestProject.id,
         name: config.category,
         category: config.category,
         body: config.body,
@@ -192,11 +258,11 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
         year
       });
       prestigeChange += 10;
-      projectUpdates.push(`🏆 "${winner.project.title}" won ${config.category} at the ${config.body}!`);
-    } else if (winner.score > 100) {
+      projectUpdates.push(`🏆 "${bestProject.title}" won ${config.category} at the ${config.body}!`);
+    } else if (bestScore > 100) {
        newAwards.push({
         id: `award-${crypto.randomUUID()}`,
-        projectId: winner.project.id,
+        projectId: bestProject.id,
         name: config.category,
         category: config.category,
         body: config.body,
@@ -204,14 +270,7 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
         year
       });
       prestigeChange += 2;
-      projectUpdates.push(`⭐ "${winner.project.title}" was nominated for ${config.category} at the ${config.body}.`);
-    }
-  };
-
-  // Evaluate all configs for bodies present this week
-  for (const config of AWARD_CONFIGS) {
-    if (bodiesThisWeek.includes(config.body)) {
-      evaluateAward(config);
+      projectUpdates.push(`⭐ "${bestProject.title}" was nominated for ${config.category} at the ${config.body}.`);
     }
   }
 

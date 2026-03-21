@@ -11,12 +11,6 @@ export type ReleaseModelKey = 'weekly' | 'binge' | 'split';
 export type ProjectContractType = 'upfront' | 'deficit' | 'standard';
 export type MandateType = 'sci-fi' | 'comedy' | 'drama' | 'budget_freeze' | 'broad_appeal' | 'prestige';
 
-export interface Studio {
-  name: string;
-  archetype: ArchetypeKey;
-  prestige: number;
-}
-
 export interface AwardsProfile {
   criticScore: number;
   audienceScore: number;
@@ -61,7 +55,7 @@ export type AwardCategory =
   | 'Best Documentary'
   | 'Special Achievement';
 
-export type AwardStatus = 'won' | 'nominated';
+
 
 export interface Award {
   id: string;
@@ -105,6 +99,7 @@ export interface Project {
   productionWeeks: number;
   revenue: number;
   weeklyRevenue: number;
+  ancillaryRevenue?: number;
   releaseWeek: number | null;
   activeCrisis?: ActiveCrisis;
   awardsProfile?: AwardsProfile;
@@ -140,12 +135,6 @@ export interface Headline {
   category: HeadlineCategory;
 }
 
-export interface FinanceRecord {
-  week: number;
-  cash: number;
-  revenue: number;
-  costs: number;
-}
 
 export interface WeekSummary {
   fromWeek: number;
@@ -256,7 +245,11 @@ export interface Buyer {
 
 export interface GameState {
   opportunities: Opportunity[];
-  studio: Studio;
+  studio: {
+    name: string;
+    archetype: ArchetypeKey;
+    prestige: number;
+  };
   projects: Project[];
   rivals: RivalStudio[];
   headlines: Headline[];

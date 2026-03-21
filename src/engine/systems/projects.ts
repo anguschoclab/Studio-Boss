@@ -1,4 +1,4 @@
-import { Project, Contract, TalentProfile } from '../types';
+import { Project, Contract, TalentProfile, Award } from '../types';
 import { BUDGET_TIERS } from '../data/budgetTiers';
 import { TV_FORMATS } from '../data/tvFormats';
 import { UNSCRIPTED_FORMATS } from '../data/unscriptedFormats';
@@ -27,7 +27,7 @@ function handleDevelopmentPhase(p: Project): { update: string | null } {
   return { update };
 }
 
-function handleProductionRelease(
+export function handleReleasePhaseEntry(
   p: Project,
   currentWeek: number,
   studioPrestige: number,
@@ -46,6 +46,9 @@ function handleProductionRelease(
   const randomFactor = randRange(0.7, 1.3);
 
   const attachedTalent = getAttachedTalent(projectContracts, talentPoolMap);
+  if (p.reviewScore === undefined) {
+    p.reviewScore = generateReviewScore(p, attachedTalent, p.activeCrisis);
+  }
   const talentDrawFactor = attachedTalent.reduce((sum, t) => sum + (t.draw / 100), 1);
 
   const baseGross = (minRev + (maxRev - minRev) * buzzFactor * prestigeFactor * randomFactor) * talentDrawFactor;
@@ -84,7 +87,9 @@ function handleProductionRelease(
 function handleReleasedPhase(
   p: Project,
   projectContracts: Contract[],
-  talentPoolMap: Map<string, TalentProfile>
+  talentPoolMap: Map<string, TalentProfile>,
+  rivalStrengthAvg: number,
+  awards: Award[]
 ): { update: string | null } {
   p.revenue += p.weeklyRevenue;
   let update: string | null = null;
@@ -97,9 +102,10 @@ function handleReleasedPhase(
       p.weeklyRevenue *= randRange(formatData.revenueDecayBinge - 0.1, formatData.revenueDecayBinge + 0.1);
 
       if (p.weeklyRevenue < 50_000 || p.weeksInPhase > 8) {
-        p.status = 'archived';
+        p.status = 'post_release';
+        p.weeksInPhase = 0;
         update = `"${p.title}" Season ${p.season} finishes its run.`;
-        updateTalentStats(p, projectContracts, talentPoolMap);
+        updateTalentStats(p, projectContracts, talentPoolMap, awards);
       }
     } else if (p.releaseModel === 'split') {
       const part2DropWeek = Math.ceil(eps / 2) + 2;
@@ -115,9 +121,10 @@ function handleReleasedPhase(
       }
 
       if (p.weeksInPhase > part2DropWeek + 6 && p.weeklyRevenue < 50_000) {
-        p.status = 'archived';
+        p.status = 'post_release';
+        p.weeksInPhase = 0;
         update = `"${p.title}" Season ${p.season} finishes its run.`;
-        updateTalentStats(p, projectContracts, talentPoolMap);
+        updateTalentStats(p, projectContracts, talentPoolMap, awards);
       }
     } else {
       if (p.episodesReleased !== undefined && p.episodesReleased < eps) {
@@ -131,21 +138,68 @@ function handleReleasedPhase(
       } else {
         p.weeklyRevenue *= 0.6;
         if (p.weeklyRevenue < 50_000 || p.weeksInPhase > eps + 4) {
-          p.status = 'archived';
+          p.status = 'post_release';
+          p.weeksInPhase = 0;
           update = `"${p.title}" Season ${p.season} finishes its run.`;
-          updateTalentStats(p, projectContracts, talentPoolMap);
+          updateTalentStats(p, projectContracts, talentPoolMap, awards);
         }
       }
     }
   } else {
-    p.weeklyRevenue *= randRange(0.5, 0.7);
+    p.weeklyRevenue = simulateWeeklyBoxOffice(p, p.weeksInPhase, p.reviewScore || 50, p.weeklyRevenue, rivalStrengthAvg);
     if (p.weeklyRevenue < 100_000 || p.weeksInPhase > 12) {
-      p.status = 'archived';
-      update = `"${p.title}" completes its run — total gross: ${(p.revenue / 1_000_000).toFixed(1)}M`;
+      p.status = 'post_release';
+      p.weeksInPhase = 0;
+      update = `"${p.title}" completes its theatrical run — total gross: ${(p.revenue / 1_000_000).toFixed(1)}M`;
     }
   }
 
   return { update };
+}
+
+
+
+
+function handlePostReleasePhase(p: Project): { update: string | null } {
+  let update: string | null = null;
+  let weeklyAncillary = 0;
+
+  const isFamilyOrAnim = p.genre === 'Family' || p.genre === 'Animation';
+  const isPrestige = p.genre === 'Drama' || p.targetAudience === 'Prestige / Critics';
+
+  if (p.weeksInPhase === 1) {
+    if (isPrestige && (p.reviewScore || 0) > 80) {
+      weeklyAncillary = p.budget * randRange(0.5, 1.5);
+      update = `A fierce bidding war erupts for the streaming rights to "${p.title}"!`;
+    } else if (p.format === 'film') {
+      weeklyAncillary = p.revenue * randRange(0.1, 0.3);
+      update = `"${p.title}" drops on VOD and physical media.`;
+    }
+  } else {
+    if (isFamilyOrAnim) {
+      weeklyAncillary = p.revenue * 0.005;
+    } else {
+      weeklyAncillary = p.revenue * 0.001;
+    }
+    weeklyAncillary *= Math.max(0.1, 1 - (p.weeksInPhase / 52));
+  }
+
+  p.ancillaryRevenue = (p.ancillaryRevenue || 0) + weeklyAncillary;
+  p.revenue += weeklyAncillary;
+  p.weeklyRevenue = 0;
+
+  if (p.weeksInPhase >= 26) {
+    p.status = 'archived';
+  }
+
+  return { update };
+}
+
+
+function handleMarketingPhase(p: Project): { update: string | null } {
+  p.status = 'marketing';
+  p.weeksInPhase = 0;
+  return { update: `"${p.title}" has wrapped production and is ready for marketing strategy.` };
 }
 
 export function advanceProject(
@@ -153,7 +207,9 @@ export function advanceProject(
   currentWeek: number,
   studioPrestige: number,
   projectContracts: Contract[],
-  talentPoolMap: Map<string, TalentProfile>
+  talentPoolMap: Map<string, TalentProfile>,
+  rivalStrengthAvg: number = 50,
+  awards: Award[] = []
 ): { project: Project; update: string | null } {
   if (project.status === 'archived') return { project, update: null };
 
@@ -164,10 +220,13 @@ export function advanceProject(
     const result = handleDevelopmentPhase(p);
     update = result.update;
   } else if (p.status === 'production' && p.weeksInPhase >= p.productionWeeks) {
-    const result = handleProductionRelease(p, currentWeek, studioPrestige, projectContracts, talentPoolMap);
+    const result = handleMarketingPhase(p);
     update = result.update;
   } else if (p.status === 'released') {
-    const result = handleReleasedPhase(p, projectContracts, talentPoolMap);
+    const result = handleReleasedPhase(p, projectContracts, talentPoolMap, rivalStrengthAvg, awards);
+    update = result.update;
+  } else if (p.status === 'post_release') {
+    const result = handlePostReleasePhase(p);
     update = result.update;
   }
 
@@ -181,39 +240,3 @@ export function advanceProject(
   return { project: p, update };
 }
 
-function updateTalentStats(project: Project, contracts: Contract[], talentPoolMap: Map<string, TalentProfile>) {
-  if (contracts.length === 0) return;
-
-  const ROI = project.revenue / project.budget;
-
-  let drawChange = 0;
-  let prestigeChange = 0;
-  let feeMultiplier = 1.0;
-
-  if (ROI > 3.0) {
-    drawChange = 10;
-    prestigeChange = 5;
-    feeMultiplier = 1.5;
-  } else if (ROI > 1.5) {
-    drawChange = 5;
-    prestigeChange = 2;
-    feeMultiplier = 1.2;
-  } else if (ROI < 0.5) {
-    drawChange = -10;
-    prestigeChange = -5;
-    feeMultiplier = 0.8;
-  } else if (ROI < 1.0) {
-    drawChange = -5;
-    prestigeChange = -2;
-    feeMultiplier = 0.9;
-  }
-
-  for (const contract of contracts) {
-    const talent = talentPoolMap.get(contract.talentId);
-    if (talent) {
-      talent.draw = clamp(talent.draw + drawChange, 0, 100);
-      talent.prestige = clamp(talent.prestige + prestigeChange, 0, 100);
-      talent.fee = clamp(talent.fee * feeMultiplier, 10000, 50000000);
-    }
-  }
-}

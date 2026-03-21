@@ -2,7 +2,7 @@ import { describe, bench } from 'vitest';
 import { Project, ProjectStatus } from '../../engine/types';
 
 // Mock data setup
-const statuses: ProjectStatus[] = ['development', 'pitching', 'production', 'released', 'archived'];
+const statuses: ProjectStatus[] = ['development', 'pitching', 'production', 'released', 'post_release', 'archived'];
 
 const generateProjects = (count: number): Project[] => {
   const projects: Project[] = [];
@@ -23,7 +23,7 @@ const COLUMNS: { status: ProjectStatus[]; title: string; color: string }[] = [
   { status: ['development'], title: 'Development', color: 'bg-secondary' },
   { status: ['pitching'], title: 'Pitching', color: 'bg-warning' },
   { status: ['production'], title: 'Production', color: 'bg-primary' },
-  { status: ['released', 'archived'], title: 'Released', color: 'bg-success' },
+  { status: ['released', 'post_release', 'archived'], title: 'Released & Catalog', color: 'bg-success' },
 ];
 
 describe('PipelineBoard Grouping Performance', () => {

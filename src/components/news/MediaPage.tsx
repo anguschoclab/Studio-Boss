@@ -14,7 +14,7 @@ interface OutletWidgetProps {
 }
 
 const OutletWidget = ({ title, description, icon, headlines, colorClass }: OutletWidgetProps) => (
-  <Card className="h-full flex flex-col border-border/50 bg-card/40 backdrop-blur-sm">
+  <Card className="h-full flex flex-col border-border/40 bg-card/30 backdrop-blur-md shadow-lg transition-all duration-300 hover:shadow-xl hover:bg-card/40 hover:border-border/60">
     <CardHeader className="pb-3 border-b border-border/50">
       <div className="flex items-center gap-2">
         <div className={`p-2 rounded-md ${colorClass} bg-opacity-20 flex items-center justify-center`}>
@@ -30,7 +30,7 @@ const OutletWidget = ({ title, description, icon, headlines, colorClass }: Outle
       {headlines.length > 0 ? (
         <div className="space-y-4">
           {headlines.map((h, i) => (
-            <div key={h.id || i} className="space-y-1.5 pb-3 border-b border-border/30 last:border-0 last:pb-0">
+            <div key={h.id || i} className="space-y-2 pb-3.5 border-b border-border/30 last:border-0 last:pb-0 hover:bg-muted/10 p-2 -mx-2 rounded-lg transition-colors">
               <div className="flex justify-between items-start gap-2">
                 <span className="text-[10px] font-mono text-muted-foreground bg-muted px-1.5 py-0.5 rounded uppercase tracking-wider">
                   Wk {h.week}
@@ -39,7 +39,7 @@ const OutletWidget = ({ title, description, icon, headlines, colorClass }: Outle
                   {h.category}
                 </Badge>
               </div>
-              <p className="text-sm font-medium leading-snug">{h.text}</p>
+              <p className="text-[13px] sm:text-sm font-medium leading-relaxed">{h.text}</p>
             </div>
           ))}
         </div>
@@ -89,8 +89,8 @@ export const MediaPage = () => {
   return (
     <div className="h-full flex flex-col space-y-6">
       <div>
-        <h2 className="text-3xl font-display font-bold tracking-tight">The Trades</h2>
-        <p className="text-muted-foreground mt-1">
+        <h2 className="text-3xl font-display font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-br from-foreground to-foreground/70">The Trades</h2>
+        <p className="text-muted-foreground mt-2 text-sm max-w-2xl">
           Industry rumors, box office scoreboards, and awards buzz.
         </p>
       </div>

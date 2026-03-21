@@ -31,17 +31,17 @@ export const FinancePanel = () => {
           { label: 'Weekly Costs', value: `-${formatMoney(weeklyCosts)}`, color: 'text-destructive' },
           { label: 'Net Delta', value: `${netDelta >= 0 ? '+' : ''}${formatMoney(netDelta)}`, color: netDelta >= 0 ? 'text-success' : 'text-destructive' },
         ].map(metric => (
-          <Card key={metric.label}>
+          <Card key={metric.label} className="border-border/50 bg-card/40 backdrop-blur shadow-sm hover:shadow-md transition-shadow">
             <CardContent className="p-4">
-              <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium">{metric.label}</p>
-              <p className={`text-2xl font-display font-bold mt-1 ${metric.color}`}>{metric.value}</p>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">{metric.label}</p>
+              <p className={`text-2xl font-display font-black tracking-tight mt-1.5 ${metric.color}`}>{metric.value}</p>
             </CardContent>
           </Card>
         ))}
       </div>
 
       {/* Cash Flow Chart */}
-      <Card>
+      <Card className="border-border/50 bg-card/30 backdrop-blur-sm shadow-sm">
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-display uppercase tracking-wider text-muted-foreground">
             Cash Flow History
@@ -94,7 +94,7 @@ export const FinancePanel = () => {
 
       {/* Active Project Costs */}
       {activeProjects.length > 0 && (
-        <Card>
+        <Card className="border-border/50 bg-card/30 backdrop-blur-sm shadow-sm">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-display uppercase tracking-wider text-muted-foreground">
               Active Project Costs
@@ -103,10 +103,10 @@ export const FinancePanel = () => {
           <CardContent>
             <div className="space-y-2">
               {activeProjects.map(p => (
-                <div key={p.id} className="flex items-center justify-between py-1.5 border-b border-border last:border-0">
+                <div key={p.id} className="flex items-center justify-between py-2 border-b border-border/40 last:border-0 hover:bg-muted/20 px-2 -mx-2 rounded transition-colors">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm text-foreground">{p.title}</span>
-                    <span className="text-[10px] text-muted-foreground uppercase">{p.status}</span>
+                    <span className="text-sm font-medium text-foreground/90">{p.title}</span>
+                    <span className="text-[9px] font-bold tracking-widest text-muted-foreground uppercase bg-muted/50 px-1.5 py-0.5 rounded">{p.status}</span>
                   </div>
                   <span className="text-sm text-destructive font-medium">-{formatMoney(p.weeklyCost)}/wk</span>
                 </div>

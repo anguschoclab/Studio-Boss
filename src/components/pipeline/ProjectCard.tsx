@@ -27,12 +27,12 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
     : 100;
 
   return (
-    <button
+    <div
       onClick={() => selectProject(project.id)}
-      className="w-full text-left p-3 rounded-lg border border-border bg-card hover:bg-accent/50 transition-colors space-y-2"
+      className="w-full text-left p-3.5 rounded-xl border border-border/60 bg-card/40 backdrop-blur-sm hover:shadow-lg hover:border-primary/50 hover:-translate-y-0.5 transition-all duration-300 space-y-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 group relative overflow-hidden"
     >
       <div className="flex items-start justify-between gap-2">
-        <h4 className="font-display font-semibold text-sm text-foreground leading-tight">{project.title}</h4>
+        <h4 className="font-display font-bold text-[15px] text-foreground leading-tight group-hover:text-primary transition-colors">{project.title}</h4>
         <div className="flex gap-2">
           {hasUnresolvedCrisis && (
             <Badge variant="destructive" className="text-[10px] shrink-0">
@@ -45,7 +45,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
         </div>
       </div>
 
-      <div className="flex flex-col gap-1 text-[10px] text-muted-foreground">
+      <div className="flex flex-col gap-1 text-[11px] font-medium text-muted-foreground">
         <div className="flex items-center gap-2">
             <span>{project.genre}</span>
             <span>·</span>
@@ -67,7 +67,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
           </div>
           <div className="h-1 bg-muted rounded-full overflow-hidden">
             <div
-              className="h-full bg-secondary rounded-full transition-all duration-500"
+              className="h-full bg-gradient-to-r from-secondary/80 to-secondary rounded-full transition-all duration-500 shadow-[0_0_8px_rgba(255,161,22,0.4)]"
               style={{ width: `${project.buzz}%` }}
             />
           </div>
@@ -85,16 +85,34 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
           </div>
           <div className="h-1 bg-muted rounded-full overflow-hidden">
             <div
-              className={`h-full rounded-full transition-all duration-500 ${hasUnresolvedCrisis ? 'bg-destructive' : 'bg-primary'}`}
+              className={`h-full rounded-full transition-all duration-500 shadow-sm ${hasUnresolvedCrisis ? 'bg-gradient-to-r from-destructive/80 to-destructive shadow-[0_0_8px_rgba(239,68,68,0.5)]' : 'bg-gradient-to-r from-primary/80 to-primary shadow-[0_0_8px_rgba(234,179,8,0.4)]'}`}
               style={{ width: `${Math.min(progressPct, 100)}%` }}
             />
           </div>
         </div>
       )}
 
+
+      {/* Marketing Button */}
+      {project.status === 'marketing' && (
+        <div className="pt-2 relative z-10">
+           <Button
+             variant="secondary"
+             size="sm"
+             className="w-full text-xs"
+             onClick={(e) => {
+               e.stopPropagation();
+               selectProject(project.id);
+             }}
+           >
+             Plan Marketing
+           </Button>
+        </div>
+      )}
+
       {/* Pitch Button */}
       {project.status === 'needs_greenlight' && (
-        <div className="pt-2">
+        <div className="pt-2 relative z-10">
            <Button
              variant="destructive"
              size="sm"
@@ -111,11 +129,11 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
 
       {/* Crisis Button */}
       {hasUnresolvedCrisis && (
-        <div className="pt-2">
+        <div className="pt-2 relative z-10">
            <Button
              variant="destructive"
              size="sm"
-             className="w-full text-xs font-bold"
+             className="w-full text-xs font-bold animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.4)]"
              onClick={(e) => {
                e.stopPropagation();
                openCrisisModal(project.id);
@@ -129,7 +147,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
 
       {/* Pitch Button */}
       {project.status === 'pitching' && (
-        <div className="pt-2">
+        <div className="pt-2 relative z-10">
            <Button
              variant="default"
              size="sm"
@@ -159,6 +177,6 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
             )}
         </div>
       )}
-    </button>
+    </div>
   );
 };

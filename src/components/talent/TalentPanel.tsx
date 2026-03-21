@@ -18,16 +18,16 @@ export const TalentPanel = () => {
   return (
     <div className="space-y-4 h-full flex flex-col">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-display font-bold">Talent Roster</h2>
+        <h2 className="text-2xl font-display font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">Talent Roster</h2>
         <div className="flex gap-2">
           {['all', 'actor', 'director', 'writer', 'producer', 'showrunner'].map(type => (
             <button
               key={type}
               onClick={() => setFilter(type)}
-              className={`px-3 py-1 text-xs font-semibold rounded-full transition-colors ${
+              className={`px-3.5 py-1.5 text-xs font-bold rounded-full transition-all duration-300 ${
                 filter === type
-                  ? 'bg-primary text-primary-foreground'
-                  : 'bg-secondary/50 text-secondary-foreground hover:bg-secondary'
+                  ? 'bg-primary text-primary-foreground shadow-[0_0_10px_rgba(234,179,8,0.4)] scale-105'
+                  : 'bg-muted/50 text-muted-foreground hover:bg-secondary/80 hover:text-secondary-foreground hover:scale-105'
               }`}
             >
               {type.toUpperCase()}
@@ -38,17 +38,17 @@ export const TalentPanel = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 overflow-y-auto pb-6">
         {filteredTalent.map((talent: TalentProfile) => (
-          <div key={talent.id} className="p-4 rounded-lg border border-border bg-card hover:bg-accent/50 transition-colors space-y-3">
+          <div key={talent.id} className={`p-4 rounded-xl border ${talent.prestige >= 80 ? 'border-primary/50 shadow-[0_0_15px_rgba(234,179,8,0.15)] bg-card/60' : 'border-border/50 bg-card/40'} backdrop-blur-sm hover:shadow-md hover:border-primary/60 transition-all duration-300 space-y-3.5 group`}>
             <div className="flex items-start justify-between gap-2">
               <div className="flex flex-col">
-                <h4 className="font-display font-semibold text-sm text-foreground leading-tight">{talent.name}</h4>
+                <h4 className="font-display font-bold text-sm text-foreground leading-tight group-hover:text-primary transition-colors">{talent.name}</h4>
                 {talent.accessLevel !== 'outsider' && talent.accessLevel !== 'soft-access' && (
-                  <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">
+                  <span className="text-[9px] font-black tracking-widest text-secondary uppercase">
                     {talent.accessLevel}
                   </span>
                 )}
                 {talent.agencyId && (
-                  <span className="text-[10px] text-muted-foreground uppercase tracking-wider">
+                  <span className="text-[9px] font-bold tracking-widest text-muted-foreground uppercase bg-muted/50 px-1.5 py-0.5 rounded w-fit mt-1">
                     {agencyMap.get(talent.agencyId)?.name}
                   </span>
                 )}
@@ -58,21 +58,21 @@ export const TalentPanel = () => {
               </Badge>
             </div>
 
-            <div className="grid grid-cols-2 gap-2 text-xs">
+            <div className="grid grid-cols-2 gap-3 text-xs pt-2 border-t border-border/40">
               <div className="space-y-1">
-                <div className="text-muted-foreground">Prestige</div>
+                <div className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground">Prestige</div>
                 <div className="font-semibold text-primary">{talent.prestige}</div>
               </div>
               <div className="space-y-1">
-                <div className="text-muted-foreground">Fee</div>
+                <div className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground">Fee</div>
                 <div className="font-semibold text-success">{formatMoney(talent.fee)}</div>
               </div>
               <div className="space-y-1">
-                <div className="text-muted-foreground">Draw</div>
+                <div className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground">Draw</div>
                 <div className="font-semibold">{talent.draw}</div>
               </div>
               <div className="space-y-1">
-                <div className="text-muted-foreground">Temperament</div>
+                <div className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground">Temperament</div>
                 <div className="font-semibold">{talent.temperament}</div>
               </div>
             </div>

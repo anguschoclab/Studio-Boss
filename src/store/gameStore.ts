@@ -1,3 +1,4 @@
+import { handleReleasePhaseEntry } from '@/engine/systems/projects';
 import { create } from 'zustand';
 import { GameState, WeekSummary, ProjectFormat, BudgetTierKey, ArchetypeKey, TvFormatKey, UnscriptedFormatKey, ReleaseModelKey, ProjectContractType, Project } from '@/engine/types';
 import { negotiateContract } from '@/engine/systems/buyers';
@@ -42,6 +43,7 @@ interface GameStore {
   signContract: (talentId: string, projectId: string) => void;
   pitchProject: (projectId: string, buyerId: string, contractType: ProjectContractType) => boolean;
   greenlightProject: (projectId: string) => void;
+  launchMarketingCampaign: (projectId: string, budget: number, domesticPct: number, angle: string) => void;
   _updateProjectToProduction: (state: GameState, projectIndex: number, project: Project, headlineText: string, extraProjectUpdates?: Partial<Project>) => void;
   resolveProjectCrisis: (projectId: string, optionIndex: number) => void;
   exploitFranchise: (projectId: string) => void;
@@ -66,8 +68,11 @@ function prepareTalentAndContracts(
   projectId: string
 ) {
   const ids = attachedTalentIds || [];
+
+  // O(1) lookup map for talent
+  const talentMap = new Map(state.talentPool.map(t => [t.id, t]));
   const attachedTalent = ids.reduce((acc, id) => {
-    const t = state.talentPool.find(t => t.id === id);
+    const t = talentMap.get(id);
     if (t) acc.push(t);
     return acc;
   }, [] as typeof state.talentPool);
@@ -178,26 +183,30 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const state = get().gameState;
     if (!state) return;
 
-    set({
-      gameState: {
-        ...state,
-        projects: state.projects.map((p) => {
-          if (p.id === id && (p.format === 'tv' || p.format === 'unscripted') && p.renewable && p.season !== undefined) {
-            return {
-              ...p,
-              status: 'development',
-              weeksInPhase: 0,
-              season: p.season + 1,
-              revenue: 0,
-              weeklyRevenue: 0,
-              releaseWeek: null,
-              episodesReleased: 0,
-            };
-          }
-          return p;
-        }),
-      },
-    });
+    const projectIndex = state.projects.findIndex(p => p.id === id);
+    if (projectIndex === -1) return;
+
+    const p = state.projects[projectIndex];
+    if ((p.format === 'tv' || p.format === 'unscripted') && p.renewable && p.season !== undefined) {
+      const updatedProjects = [...state.projects];
+      updatedProjects[projectIndex] = {
+        ...p,
+        status: 'development',
+        weeksInPhase: 0,
+        season: p.season + 1,
+        revenue: 0,
+        weeklyRevenue: 0,
+        releaseWeek: null,
+        episodesReleased: 0,
+      };
+
+      set({
+        gameState: {
+          ...state,
+          projects: updatedProjects,
+        },
+      });
+    }
   },
 
   saveToSlot: (slot) => {
@@ -234,6 +243,69 @@ export const useGameStore = create<GameStore>((set, get) => ({
         ...state,
         projects: updatedProjects,
         headlines: [{ id: `ph-${crypto.randomUUID()}`, text: headlineText, week: state.week, category: 'market' as const }, ...state.headlines].slice(0, 50)
+      }
+    });
+  },
+
+
+  launchMarketingCampaign: (projectId, budget, domesticPct, angle) => {
+    const state = get().gameState;
+    if (!state) return;
+
+    if (budget > state.cash) return;
+
+    set((s) => {
+      const pIndex = s.gameState!.projects.findIndex(p => p.id === projectId);
+      if (pIndex === -1) return;
+      const p = s.gameState!.projects[pIndex];
+      if (p.status !== 'marketing') return;
+
+      s.gameState!.cash -= budget;
+      s.gameState!.financeHistory.push({
+        id: crypto.randomUUID(),
+        week: s.gameState!.week,
+        type: 'expense',
+        amount: budget,
+        category: 'marketing',
+        description: `Marketing for "${p.title}"`
+      });
+
+      p.marketingBudget = budget;
+      p.marketingDomesticSplit = domesticPct;
+      p.marketingAngle = angle;
+
+      // Marketing effectiveness
+      let buzzBonus = Math.floor(budget / 100000) * 0.1; // small bump from raw spend
+      if (budget >= p.budget * 0.5) buzzBonus += 10;
+      if (budget >= p.budget) buzzBonus += 20;
+
+      // Add synergy logic
+      const genreToAngle: Record<string, string[]> = {
+        'Action': ['spectacle', 'thrills'],
+        'Comedy': ['humor'],
+        'Drama': ['prestige', 'romance'],
+        'Horror': ['thrills', 'mystery'],
+        'Sci-Fi': ['spectacle', 'mystery'],
+        'Romance': ['romance'],
+      };
+
+      const matched = genreToAngle[p.genre]?.includes(angle) ? 15 : -10;
+      buzzBonus += matched;
+
+      p.buzz = Math.min(100, Math.max(0, p.buzz + buzzBonus));
+
+      // Use the logic from projects.ts to handle release entry
+      const contracts = s.gameState!.contracts.filter(c => c.projectId === p.id);
+      const talentMap = new Map(s.gameState!.talentPool.map(t => [t.id, t]));
+      const result = handleReleasePhaseEntry(p, s.gameState!.week, s.gameState!.studio.prestige, contracts, talentMap);
+
+      if (result.update) {
+        s.gameState!.headlines.unshift({
+          id: crypto.randomUUID(),
+          week: s.gameState!.week,
+          category: 'general',
+          text: result.update
+        });
       }
     });
   },
@@ -288,7 +360,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const project = state.projects.find(p => p.id === projectId);
     if (!project) return;
 
-    const spinoffParams = exploitIP(project);
+    const spinoffParams = exploitIP(project, state);
     if (!spinoffParams) return;
 
     get().createProject(spinoffParams);

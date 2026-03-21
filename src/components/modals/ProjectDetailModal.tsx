@@ -10,13 +10,30 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
+import { useState } from 'react';
+import { Slider } from '@/components/ui/slider';
+
+const MARKETING_ANGLES = [
+  { id: 'romance', label: 'Romance & Heart' },
+  { id: 'spectacle', label: 'Visual Spectacle' },
+  { id: 'thrills', label: 'Action & Thrills' },
+  { id: 'humor', label: 'Comedy & Fun' },
+  { id: 'prestige', label: 'Prestige & Awards' },
+  { id: 'mystery', label: 'Mystery & Intrigue' }
+];
+
 export const ProjectDetailModal = () => {
+  const [marketingBudget, setMarketingBudget] = useState(0);
+  const [domesticSplit, setDomesticSplit] = useState(50);
+  const [marketingAngle, setMarketingAngle] = useState('spectacle');
+
   const { selectedProjectId, selectProject } = useUIStore();
   const gameState = useGameStore(s => s.gameState);
   const signContract = useGameStore(s => s.signContract);
   const renewProject = useGameStore(s => s.renewProject);
   const greenlightProject = useGameStore(s => s.greenlightProject);
   const exploitFranchise = useGameStore(s => s.exploitFranchise);
+  const launchMarketingCampaign = useGameStore(s => s.launchMarketingCampaign);
   const projects = useMemo(() => gameState?.projects || [], [gameState?.projects]);
   const project = useMemo(() => projects.find(p => p.id === selectedProjectId), [projects, selectedProjectId]);
   const talentPool = useMemo(() => gameState?.talentPool || [], [gameState?.talentPool]);
@@ -113,6 +130,76 @@ export const ProjectDetailModal = () => {
           )}
 
 
+
+          {/* Marketing Configuration UI */}
+          {project.status === 'marketing' && gameState && (
+            <div className="space-y-4 border border-secondary/50 bg-secondary/10 p-4 rounded-lg">
+              <div className="flex items-center justify-between border-b border-secondary/20 pb-2">
+                <h4 className="font-display font-semibold text-secondary-foreground">Marketing Strategy</h4>
+              </div>
+
+              <div className="space-y-4 text-sm">
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="font-semibold">Marketing Budget</span>
+                    <span>{formatMoney(marketingBudget)}</span>
+                  </div>
+                  <Slider
+                    value={[marketingBudget]}
+                    min={0}
+                    max={project.budget * 2}
+                    step={100000}
+                    onValueChange={([val]) => setMarketingBudget(val)}
+                  />
+                  <p className="text-xs text-muted-foreground text-right">Max: {formatMoney(project.budget * 2)}</p>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="font-semibold">Domestic vs Foreign Split</span>
+                    <span>{domesticSplit}% Dom / {100 - domesticSplit}% Int</span>
+                  </div>
+                  <Slider
+                    value={[domesticSplit]}
+                    min={0}
+                    max={100}
+                    step={5}
+                    onValueChange={([val]) => setDomesticSplit(val)}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <span className="font-semibold">Marketing Angle</span>
+                  <Select value={marketingAngle} onValueChange={setMarketingAngle}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select angle..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {MARKETING_ANGLES.map(angle => (
+                        <SelectItem key={angle.id} value={angle.id}>{angle.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <Button
+                className="w-full mt-4"
+                variant="default"
+                disabled={marketingBudget > gameState.cash}
+                onClick={() => {
+                  launchMarketingCampaign(project.id, marketingBudget, domesticSplit, marketingAngle);
+                  selectProject(null);
+                }}
+              >
+                Launch Campaign & Release
+              </Button>
+              {marketingBudget > gameState.cash && (
+                <p className="text-xs text-destructive text-center mt-1">Insufficient funds.</p>
+              )}
+            </div>
+          )}
+
           {/* Casting Section */}
           <div className="space-y-2 border-t border-border pt-4">
             <h4 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Cast & Crew</h4>
@@ -125,16 +212,23 @@ export const ProjectDetailModal = () => {
                 const attachedTalent: import('@/engine/types').TalentProfile[] = [];
                 const availableTalent: import('@/engine/types').TalentProfile[] = [];
 
-                for (const t of talentPool) {
-                  if (t.roles.includes(roleEnum)) {
+              for (const t of talentPool) {
+                for (const r of t.roles) {
+                  const group = roleGroups.get(r);
+                  if (group) {
                     if (projectTalentIds.has(t.id)) {
-                      attachedTalent.push(t);
+                      group.attached.push(t);
                     } else {
-                      availableTalent.push(t);
+                      group.available.push(t);
                     }
                   }
                 }
+              }
 
+              return rolesToTrack.map(role => {
+                const group = roleGroups.get(role)!;
+                const attachedTalent = group.attached;
+                const availableTalent = group.available;
 
               return (
                 <div key={role} className="flex items-center justify-between text-xs p-2 bg-accent/30 rounded">
