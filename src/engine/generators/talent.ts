@@ -15,7 +15,7 @@ const FAMOUS_LAST_NAMES = [
   'Gyllenhaal', 'Arquette', 'Cusack', 'Douglas', 'Howard', 'Reiner', 'Wayans', 'Roberts', 'Eastwood', 'Smith'
 ];
 
-const TEMPERAMENTS = ['Professional', 'Diva', 'Method', 'Collaborative', 'Volatile', 'Perfectionist', 'Reliable', 'Difficult'];
+const TEMPERAMENTS = ['Professional', 'Diva', 'Method', 'Collaborative', 'Volatile', 'Perfectionist', 'Reliable', 'Difficult', 'Refuses to do press', 'Brings their own script doctor', 'Refuses to do rewrites'];
 
 const TALENT_TYPES: Array<TalentRole> = ['director', 'actor', 'writer', 'producer', 'showrunner'];
 
@@ -112,7 +112,15 @@ export function generateTalentPool(size: number, families: Family[], agents: Age
 
     let temperament = pick(TEMPERAMENTS);
     if (isNepo && Math.random() < 0.3) {
-      temperament = pick(['Diva', 'Volatile', 'Difficult']);
+      temperament = pick(['Diva', 'Volatile', 'Difficult', 'Refuses to do press', 'Brings their own script doctor']);
+    }
+
+    // Convert new temperaments into a perks/quirks system visually
+    const perks: string[] = [];
+    if (temperament === 'Refuses to do press' || temperament === 'Brings their own script doctor' || temperament === 'Refuses to do rewrites') {
+      perks.push(temperament);
+      // Keep a valid legacy temperament for the UI fallback
+      temperament = pick(['Diva', 'Volatile', 'Difficult', 'Method']);
     }
 
     pool.push({
@@ -126,7 +134,8 @@ export function generateTalentPool(size: number, families: Family[], agents: Age
       draw: Math.min(100, draw),
       temperament,
       familyId,
-      accessLevel
+      accessLevel,
+      perks
     });
   }
 

@@ -11,7 +11,11 @@ const AGENCY_NAMES = [
   'Apex Talent',
   'Nexus Representation',
   'Echo Management',
-  'Vanguard Artists'
+  'Vanguard Artists',
+  'Comedy Central',
+  'Backend Behemoths',
+  'Auteur Agency',
+  'Laugh Factory'
 ];
 
 const AGENT_FIRST_NAMES = ['Ari', 'Bryan', 'Maha', 'Jeremy', 'Richard', 'Sue', 'Ali', 'Kevin', 'Aaron', 'Emma', 'David', 'Laura'];
@@ -34,13 +38,33 @@ export function generateAgencies(count: number): Agency[] {
     else if (tier === 'boutique') culture = pick(['family', 'prestige']);
     else culture = pick(['shark', 'family', 'volume', 'prestige']);
 
+    const actualName = name || `Agency ${i}`;
+    let leverage = tier === 'powerhouse' ? Math.floor(randRange(85, 100)) : (tier === 'major' ? Math.floor(randRange(65, 85)) : Math.floor(randRange(20, 60)));
+    const traits: string[] = [];
+
+    if (actualName === 'Comedy Central' || actualName === 'Laugh Factory') {
+      traits.push('Only represents comedy writers');
+    }
+
+    if (actualName === 'Backend Behemoths') {
+      traits.push('Demands massive backend points');
+      leverage = 100; // Uncompromising leverage
+      culture = 'shark';
+    }
+
+    if (actualName === 'Auteur Agency') {
+      traits.push('Brings their own script doctor');
+      culture = 'prestige';
+    }
+
     agencies.push({
       id: `agency-${crypto.randomUUID()}`,
-      name: name || `Agency ${i}`,
+      name: actualName,
       tier,
       culture,
       prestige: tier === 'powerhouse' ? Math.floor(randRange(80, 100)) : (tier === 'major' ? Math.floor(randRange(60, 85)) : Math.floor(randRange(30, 70))),
-      leverage: tier === 'powerhouse' ? Math.floor(randRange(85, 100)) : (tier === 'major' ? Math.floor(randRange(65, 85)) : Math.floor(randRange(20, 60)))
+      leverage,
+      traits
     });
   }
 
@@ -56,7 +80,12 @@ export function generateAgents(agencies: Agency[], countPerAgency: number): Agen
     for (let i = 0; i < agentCount; i++) {
       const firstName = pick(AGENT_FIRST_NAMES);
       const lastName = pick(AGENT_LAST_NAMES);
-      const specialty: AgentSpecialty = pick(['film_packaging', 'tv_packaging', 'literary', 'talent', 'comedy', 'unscripted']);
+      let specialty: AgentSpecialty = pick(['film_packaging', 'tv_packaging', 'literary', 'talent', 'comedy', 'unscripted']);
+
+      // Override specialty based on agency traits
+      if (agency.traits?.includes('Only represents comedy writers')) {
+        specialty = 'comedy';
+      }
 
       agents.push({
         id: `agent-${crypto.randomUUID()}`,
