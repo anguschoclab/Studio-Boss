@@ -42,7 +42,7 @@ describe('agencies generator', () => {
       const agents = generateAgents(agencies, 1);
       
       for (const agent of agents) {
-        expect(agent.aggression).toBeGreaterThanOrEqual(70);
+        expect(agent.leverage).toBeGreaterThanOrEqual(70);
       }
     });
 
