@@ -150,7 +150,7 @@ describe("gameStore", () => {
     store.newGame('Test Studio', 'indie');
 
     // Check initial state has opportunities
-    const initialState = useGameStore.getState().gameState;
+    const initialState = useGameStore.getState().gameState!;
     expect(initialState.opportunities.length).toBeGreaterThan(0);
 
     initialState.opportunities[0].id = 'unique-opp-id';
