@@ -52,7 +52,7 @@ describe('agencies generator', () => {
         const agents = generateAgents(agencies, 5); // Need enough to guarantee one would be < 70 normally
 
         // At least one should be < 70, or we can just test bounds (30-79)
-        const allLessThan80 = agents.every(a => a.aggression < 80);
+        const allLessThan80 = agents.every(a => a.leverage < 80);
         expect(allLessThan80).toBe(true);
     });
   });

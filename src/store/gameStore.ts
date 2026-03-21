@@ -319,4 +319,11 @@ export const useGameStore = create<GameStore>((set, get) => ({
       },
     });
   },
+
+  resolveProjectCrisis: (projectId, optionIndex) => {
+    const state = get().gameState;
+    if (!state) return;
+    const newState = resolveCrisis(state, projectId, optionIndex);
+    set({ gameState: newState });
+  },
 }));
