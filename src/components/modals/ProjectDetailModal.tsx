@@ -207,10 +207,11 @@ export const ProjectDetailModal = () => {
               const projectContracts = contracts.filter(c => c.projectId === project.id);
               const projectTalentIds = new Set(projectContracts.map(c => c.talentId));
 
-              return ['director', 'actor', 'writer', 'producer'].map(role => {
-                const roleEnum = role as import('@/engine/types').TalentRole;
-                const attachedTalent: import('@/engine/types').TalentProfile[] = [];
-                const availableTalent: import('@/engine/types').TalentProfile[] = [];
+              const roleGroups = new Map<string, { attached: import('@/engine/types').TalentProfile[], available: import('@/engine/types').TalentProfile[] }>();
+              const rolesToTrack = ['director', 'actor', 'writer', 'producer'];
+              for (const r of rolesToTrack) {
+                roleGroups.set(r, { attached: [], available: [] });
+              }
 
               for (const t of talentPool) {
                 for (const r of t.roles) {
@@ -230,38 +231,39 @@ export const ProjectDetailModal = () => {
                 const attachedTalent = group.attached;
                 const availableTalent = group.available;
 
-              return (
-                <div key={role} className="flex items-center justify-between text-xs p-2 bg-accent/30 rounded">
-                  <span className="capitalize w-16">{role}</span>
-                  {attachedTalent.length > 0 ? (
-                    <div className="flex flex-col gap-1 w-full max-w-[200px]">
-                      {attachedTalent.map(t => (
-                        <span key={t.id} className="text-foreground font-semibold">{t.name}</span>
-                      ))}
-                    </div>
-                  ) : (project.status === 'development' || project.status === 'needs_greenlight') ? (
-                    <Select onValueChange={(val) => {
-                      if (val && gameState && gameState.cash >= talentMap.get(val)!.fee) {
-                        signContract(val, project.id);
-                      }
-                    }}>
-                      <SelectTrigger className="h-6 w-[200px] text-xs">
-                        <SelectValue placeholder="Cast Role..." />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {availableTalent.map(t => (
-                          <SelectItem key={t.id} value={t.id} disabled={gameState ? gameState.cash < t.fee : true}>
-                            {t.name} ({formatMoney(t.fee)})
-                          </SelectItem>
+                return (
+                  <div key={role} className="flex items-center justify-between text-xs p-2 bg-accent/30 rounded">
+                    <span className="capitalize w-16">{role}</span>
+                    {attachedTalent.length > 0 ? (
+                      <div className="flex flex-col gap-1 w-full max-w-[200px]">
+                        {attachedTalent.map(t => (
+                          <span key={t.id} className="text-foreground font-semibold">{t.name}</span>
                         ))}
-                      </SelectContent>
-                    </Select>
-                  ) : (
-                    <span className="text-muted-foreground w-[200px] text-right">None</span>
-                  )}
-                </div>
-              );
-            })})()}
+                      </div>
+                    ) : (project.status === 'development' || project.status === 'needs_greenlight') ? (
+                      <Select onValueChange={(val) => {
+                        if (val && gameState && gameState.cash >= talentMap.get(val)!.fee) {
+                          signContract(val, project.id);
+                        }
+                      }}>
+                        <SelectTrigger className="h-6 w-[200px] text-xs">
+                          <SelectValue placeholder="Cast Role..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {availableTalent.map(t => (
+                            <SelectItem key={t.id} value={t.id} disabled={gameState ? gameState.cash < t.fee : true}>
+                              {t.name} ({formatMoney(t.fee)})
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      <span className="text-muted-foreground w-[200px] text-right">None</span>
+                    )}
+                  </div>
+                );
+              });
+            })()}
           </div>
 
           <div className="grid grid-cols-2 gap-3">
