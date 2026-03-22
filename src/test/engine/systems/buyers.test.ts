@@ -1,5 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { updateBuyers, calculateFitScore, negotiateContract } from "../../../engine/systems/buyers";
+
+
 import { Buyer, Project, MandateType } from "../../../engine/types";
 
 const mockBuyer: Buyer = {
@@ -34,6 +36,47 @@ describe("buyers system", () => {
   });
 
   describe("updateBuyers", () => {
+    it("generates specific headlines for all mandate types", () => {
+      const testBuyer: Buyer = {
+        ...mockBuyer,
+        currentMandate: { type: "sci-fi", activeUntilWeek: 100 }
+      };
+
+      // Since pick uses Math.floor(Math.random() * arr.length), we can control the picked index
+      // The array is MANDATE_TYPES.filter(m => m !== 'sci-fi')
+      // Original: ['sci-fi', 'comedy', 'drama', 'budget_freeze', 'broad_appeal', 'prestige']
+      // Filtered: ['comedy', 'drama', 'budget_freeze', 'broad_appeal', 'prestige']
+      // Index 0: comedy (0.01)
+      // Index 1: drama (0.3)
+      // Index 3: broad_appeal (0.7)
+
+      // comedy
+      // rand for early shift: < 0.05. rand for pick: index 0 (0). rand for headline: < 0.6.
+      vi.spyOn(Math, 'random').mockReturnValueOnce(0.01).mockReturnValueOnce(0.01).mockReturnValueOnce(0.01).mockReturnValueOnce(0.01);
+      let result = updateBuyers([testBuyer], 1);
+      expect(result.newHeadlines).toContain(`${testBuyer.name} shifts focus, seeking half-hour comedies for their upcoming slate.`);
+
+      // drama
+      vi.spyOn(Math, 'random').mockReturnValueOnce(0.01).mockReturnValueOnce(0.3).mockReturnValueOnce(0.01).mockReturnValueOnce(0.01);
+      result = updateBuyers([testBuyer], 1);
+      expect(result.newHeadlines).toContain(`New mandate at ${testBuyer.name}: high-stakes drama is the priority.`);
+
+      // budget_freeze
+      vi.spyOn(Math, 'random').mockReturnValueOnce(0.01).mockReturnValueOnce(0.5).mockReturnValueOnce(0.01).mockReturnValueOnce(0.01);
+      result = updateBuyers([testBuyer], 1);
+      expect(result.newHeadlines).toContain(`Austerity hits ${testBuyer.name}! Execs are instituting a sudden budget freeze on new pitches.`);
+
+      // prestige
+      vi.spyOn(Math, 'random').mockReturnValueOnce(0.01).mockReturnValueOnce(0.9).mockReturnValueOnce(0.01).mockReturnValueOnce(0.01);
+      result = updateBuyers([testBuyer], 1);
+      expect(result.newHeadlines).toContain(`Awards chase: ${testBuyer.name} announces a massive fund specifically for prestige projects.`);
+
+      // broad_appeal
+      vi.spyOn(Math, 'random').mockReturnValueOnce(0.01).mockReturnValueOnce(0.7).mockReturnValueOnce(0.01).mockReturnValueOnce(0.01);
+      result = updateBuyers([testBuyer], 1);
+      expect(result.newHeadlines).toContain(`${testBuyer.name} pivots to four-quadrant, broad appeal projects after subscriber churn.`);
+    });
+
     it("shifts mandate if buyer has no current mandate", () => {
       vi.spyOn(Math, 'random').mockReturnValue(0.99); // ensure headline triggers based on randRange
       const { updatedBuyers } = updateBuyers([mockBuyer], 1);
@@ -82,6 +125,52 @@ describe("buyers system", () => {
   });
 
   describe("calculateFitScore", () => {
+    it("applies market saturation penalty for similar projects released within 52 weeks", () => {
+      vi.spyOn(Math, 'random').mockReturnValue(0.5); // randRange = 0
+      const activeBuyer: Buyer = { ...mockBuyer, currentMandate: null }; // No mandate, score should just be 50 - penalty
+
+      const recentSimilarProject1: Project = {
+        ...mockProject,
+        id: "recent1",
+        status: "released",
+        genre: "Sci-Fi",
+        releaseWeek: 10,
+      };
+
+      const recentSimilarProject2: Project = {
+        ...mockProject,
+        id: "recent2",
+        status: "released",
+        genre: "Sci-Fi",
+        releaseWeek: 50,
+      };
+
+      const oldSimilarProject: Project = {
+        ...mockProject,
+        id: "old1",
+        status: "released",
+        genre: "Sci-Fi",
+        releaseWeek: 5, // older than 52 weeks from 60
+      };
+
+      const currentWeek = 60;
+
+      // Test without allProjects
+      let score = calculateFitScore(mockProject, activeBuyer, currentWeek);
+      expect(score).toBe(50); // early returns base 50 if no mandate
+
+      // Test with allProjects (2 within 52 weeks, 1 outside)
+      // recent1 (week 10, current 60, diff 50 <= 52)
+      // recent2 (week 50, current 60, diff 10 <= 52)
+      // old1 (week 5, current 60, diff 55 > 52)
+      const allProjects = [recentSimilarProject1, recentSimilarProject2, oldSimilarProject];
+
+      score = calculateFitScore(mockProject, activeBuyer, currentWeek, allProjects);
+      // penalty = 2 * 5 = 10
+      // 50 - 10 = 40
+      expect(score).toBe(40);
+    });
+
     it("returns exactly 50 if buyer has no mandate (early return check)", () => {
       // Logic inside calculateFitScore early returns `score` (50) if `!buyer.currentMandate`
       const score = calculateFitScore(mockProject, mockBuyer);
