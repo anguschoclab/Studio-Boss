@@ -19,7 +19,16 @@ const GENRE_PATTERNS: Record<string, string[][]> = {
     ['NOUN', 'vs', 'NOUN'],
     ['ADJECTIVE', 'NOUN', ': Origins'],
     ['The', 'ADJECTIVE', 'Franchise'],
-    ['Return to', 'PLACE']
+    ['Return to', 'PLACE'],
+    ['Rebooting the', 'NOUN'],
+    ['NOUN', 'Without', 'NOUN'],
+    ['ADJECTIVE', 'NOUN', 'Rising'],
+    ['Fall of the', 'ADJECTIVE', 'NOUN'],
+    ['The', 'NOUN', 'Awakens'],
+    ['No Time to', 'VERB'],
+    ['Mission:', 'ADJECTIVE'],
+    ['Escape from', 'PLACE'],
+    ['The', 'NOUN', 'Reckoning']
   ],
   Comedy: [
     ['The', 'ADJECTIVE', 'NOUN'],
@@ -39,7 +48,15 @@ const GENRE_PATTERNS: Record<string, string[][]> = {
     ['ADJECTIVE', 'Content'],
     ['The', 'NOUN', 'Podcast'],
     ['Viral', 'NOUN'],
-    ['Trending in', 'PLACE']
+    ['Trending in', 'PLACE'],
+    ['The', 'ADJECTIVE', 'Apology'],
+    ['Accidentally', 'ADJECTIVE'],
+    ['The', 'NOUN', 'Who', 'VERBS'],
+    ['Algorithm', 'Fails'],
+    ['Notes App', 'Apology'],
+    ['Ratioed in', 'PLACE'],
+    ['Main Character', 'Energy'],
+    ['Chronically', 'ADJECTIVE']
   ],
   Drama: [
     ['The', 'NOUN', 'of', 'NAME'],
@@ -59,7 +76,15 @@ const GENRE_PATTERNS: Record<string, string[][]> = {
     ['The', 'ADJECTIVE', 'Sociopath'],
     ['Gaslighting', 'NAME'],
     ['Toxic', 'NOUN'],
-    ['The', 'Empath', 'and the', 'NOUN']
+    ['The', 'Empath', 'and the', 'NOUN'],
+    ['The', 'NOUN', 'We', 'VERB'],
+    ['Portrait of a', 'ADJECTIVE', 'NOUN'],
+    ['A', 'NOUN', 'in', 'PLACE'],
+    ['The', 'ADJECTIVE', 'Lie'],
+    ['Unspoken', 'NOUN'],
+    ['The', 'NOUN', 'Divide'],
+    ['Beneath the', 'NOUN'],
+    ['The', 'ADJECTIVE', 'Truth']
   ],
   Horror: [
     ['The', 'NOUN', 'in the', 'PLACE'],
@@ -79,7 +104,15 @@ const GENRE_PATTERNS: Record<string, string[][]> = {
     ['The', 'ADJECTIVE', 'Vibe'],
     ['Aesthetic of', 'PLACE'],
     ['Meta', 'NOUN'],
-    ['The', 'Subversive', 'NOUN']
+    ['The', 'Subversive', 'NOUN'],
+    ['The', 'NOUN', 'That', 'VERBS'],
+    ['Don\'t', 'VERB'],
+    ['The', 'ADJECTIVE', 'Entity'],
+    ['Algorithm of', 'Fear'],
+    ['The', 'NOUN', 'Paradox'],
+    ['Analog', 'NOUN'],
+    ['Liminal', 'PLACE'],
+    ['The', 'NOUN', 'Project']
   ],
   'Sci-Fi': [
     ['Project', 'NOUN'],
@@ -99,7 +132,15 @@ const GENRE_PATTERNS: Record<string, string[][]> = {
     ['The', 'Metaverse', 'Chronicles'],
     ['Web3', 'NOUN'],
     ['Algorithm of', 'PLACE'],
-    ['The', 'ADJECTIVE', 'Simulation']
+    ['The', 'ADJECTIVE', 'Simulation'],
+    ['The', 'NOUN', 'Paradigm'],
+    ['Echoes from', 'PLACE'],
+    ['The', 'ADJECTIVE', 'Machine'],
+    ['AI', 'NOUN'],
+    ['The', 'NOUN', 'Directive'],
+    ['Ghosts in the', 'NOUN'],
+    ['The', 'NOUN', 'Anomaly'],
+    ['Virtual', 'NOUN']
   ],
   Thriller: [
     ['The', 'ADJECTIVE', 'NOUN'],
@@ -119,7 +160,15 @@ const GENRE_PATTERNS: Record<string, string[][]> = {
     ['Exposing', 'NAME'],
     ['The', 'Deepfake', 'Conspiracy'],
     ['Viral', 'Trap'],
-    ['Cancelled in', 'PLACE']
+    ['Cancelled in', 'PLACE'],
+    ['The', 'Zero-Day', 'Protocol'],
+    ['Breach in', 'PLACE'],
+    ['The', 'ADJECTIVE', 'Drop'],
+    ['Doxxing', 'NAME'],
+    ['Psy-Op', 'Zero'],
+    ['The', 'Burner', 'Account'],
+    ['Gaslit by the', 'NOUN'],
+    ['The', 'NOUN', 'Syndicate']
   ],
   Romance: [
     ['Love in', 'PLACE'],
@@ -131,7 +180,14 @@ const GENRE_PATTERNS: Record<string, string[][]> = {
     ['Swiping Right in', 'PLACE'],
     ['The', 'Situationship'],
     ['Toxic', 'Love'],
-    ['Match with', 'NAME']
+    ['Match with', 'NAME'],
+    ['The', 'Fake Dating', 'Paradox'],
+    ['Enemies to', 'NOUN'],
+    ['The', 'Slow Burn', 'Summer'],
+    ['Hard Launch in', 'PLACE'],
+    ['The', 'Green Flag'],
+    ['Orbiting', 'NAME'],
+    ['The', 'ADJECTIVE', 'Meet-Cute']
   ],
   Animation: [
     ['The', 'ADJECTIVE', 'ANIMAL'],
@@ -143,7 +199,12 @@ const GENRE_PATTERNS: Record<string, string[][]> = {
     ['Synergistic', 'ANIMAL'],
     ['Branded', 'Tales'],
     ['Merch of the', 'NOUN'],
-    ['The Marketable', 'ANIMAL']
+    ['The Marketable', 'ANIMAL'],
+    ['The', 'Cash-Grab', 'Chronicles'],
+    ['Soulless', 'Sequel'],
+    ['The', 'ADJECTIVE', 'Plushie'],
+    ['Theme Park', 'Ride:', 'The Movie'],
+    ['Cinematic', 'ANIMAL', 'Universe']
   ],
   Documentary: [
     ['The Truth About', 'NOUN'],
@@ -155,7 +216,13 @@ const GENRE_PATTERNS: Record<string, string[][]> = {
     ['Cult of', 'NAME'],
     ['Scamming', 'NAME'],
     ['The', 'Grifter', 'Paradox'],
-    ['Inside the', 'Algorithm']
+    ['Inside the', 'Algorithm'],
+    ['The Fyre Festival of', 'NOUN'],
+    ['Exposing the', 'Crypto Crash'],
+    ['The', 'ADJECTIVE', 'Charlatan'],
+    ['Pyramid Scheme:', 'The', 'NAME', 'Story'],
+    ['The', 'Sensationalized', 'Truth'],
+    ['Behind the', 'Deepfake']
   ],
   Fantasy: [
     ['The', 'NOUN', 'of', 'PLACE'],
@@ -167,7 +234,13 @@ const GENRE_PATTERNS: Record<string, string[][]> = {
     ['The', 'Canon', 'King'],
     ['Fandom of', 'NOUN'],
     ['The Unofficial', 'Tale'],
-    ['Cosplay in', 'PLACE']
+    ['Cosplay in', 'PLACE'],
+    ['The', 'Grimdark', 'Chronicles'],
+    ['Lore of the', 'ADJECTIVE', 'Realm'],
+    ['The', 'Problematic', 'Prophecy'],
+    ['Gatekeeping the', 'NOUN'],
+    ['The', 'Mary-Sue', 'Awakens'],
+    ['Headcanon of the', 'ADJECTIVE', 'Elf']
   ],
   Crime: [
     ['The', 'PLACE', 'Murders'],
@@ -179,7 +252,12 @@ const GENRE_PATTERNS: Record<string, string[][]> = {
     ['Cyber', 'Heist'],
     ['Laundering in', 'PLACE'],
     ['The Anonymous', 'Syndicate'],
-    ['Ransomware', 'City']
+    ['Ransomware', 'City'],
+    ['The', 'Rug Pull', 'Job'],
+    ['Wire Fraud in', 'PLACE'],
+    ['The', 'White-Collar', 'Cartel'],
+    ['Ponzi Scheme', 'Zero'],
+    ['The', 'ADJECTIVE', 'Extortion']
   ],
   Musical: [
     ['Singing in the', 'PLACE'],
@@ -191,19 +269,25 @@ const GENRE_PATTERNS: Record<string, string[][]> = {
     ['Streaming', 'with', 'NAME'],
     ['Viral', 'Rhythm'],
     ['The Algorithm', 'Dance'],
-    ['Platinum', 'Dreams']
+    ['Platinum', 'Dreams'],
+    ['The', 'Industry Plant', 'Story'],
+    ['Nepo Baby', 'Sings'],
+    ['The', 'Manufactured', 'Popstar'],
+    ['Autotune', 'Dreams'],
+    ['The', 'Viral', 'TikTok Dance Challenge'],
+    ['Overproduced', 'Melodies']
   ]
 };
 
 const WORDS: Record<string, string[]> = {
-  ADJECTIVE: ['Dark', 'Silent', 'Golden', 'Broken', 'Hidden', 'Last', 'Lost', 'Secret', 'Lethal', 'Final', 'Red', 'Black', 'Wild', 'Crazy', 'Funny', 'Beautiful', 'Brave', 'Fierce', 'Uncut', 'Quantum', 'Cyber', 'Neon', 'Hyper', 'Meta', 'Toxic', 'Viral', 'Cancel', 'Elevated', 'Atmospheric', 'Subversive', 'Procedural', 'Algorithmic', 'Tactical', 'Strategic', 'Covert', 'Clandestine', 'Stealth', 'Phantom', 'Ghost', 'Shadow', 'Rogue', 'Maverick', 'Renegade', 'Outlaw', 'Vigilante', 'Mercenary', 'Expendable', 'Disposable', 'Collateral', 'Fatal', 'Mortal', 'Awkward', 'Cringe', 'Based', 'Woke', 'Problematic', 'Cancelled', 'Triggered', 'Savage', 'Petty', 'Salty', 'Thirsty', 'Basic', 'Extra', 'Bougie', 'Ratchet', 'Sus', 'Cap'],
-  NOUN: ['Shadow', 'Mirror', 'Ghost', 'Knight', 'City', 'Storm', 'Weapon', 'Target', 'Agent', 'Game', 'House', 'Night', 'Day', 'Star', 'Dream', 'Heart', 'World', 'Man', 'Woman', 'Boy', 'Girl', 'Multiverse', 'Franchise', 'Content', 'Algorithm', 'Meme', 'Podcast', 'Trauma', 'Nepotism', 'Vibe', 'Aesthetic', 'Metaverse', 'Crypto', 'Grifter', 'Situationship', 'IP', 'Recon', 'Extraction', 'Payload', 'Objective', 'Bounty', 'Crossfire', 'Infiltration', 'Exfiltration', 'Takeover', 'Lockdown', 'Overdrive', 'Showdown', 'Blowback', 'Backlash', 'Flashpoint', 'Ground Zero', 'Vanguard', 'Sentinel', 'Outpost', 'Stronghold', 'Influencer', 'Streamer', 'Vlogger', 'Viral', 'Trending', 'Cancel Culture', 'Scam', 'Hustle', 'Flex', 'Clout', 'Drip', 'Mood', 'Energy', 'Synergy'],
-  VERB: ['Die', 'Run', 'Shoot', 'Hide', 'Seek', 'Find', 'Kill', 'Save', 'Love', 'Kiss', 'Dance', 'Sing', 'Fly', 'Fall', 'Cancel', 'Reboot', 'Swipe', 'Ghost', 'Stream', 'Hack', 'Leak', 'Trend', 'Post', 'Upload', 'Download', 'Share', 'Like', 'Subscribe', 'Follow', 'Unfollow', 'Block', 'Mute', 'Report', 'Ban'],
-  VERBS: ['Waits', 'Hides', 'Kills', 'Watches', 'Screams', 'Comes', 'Walks', 'Cancels', 'Reboots', 'Swipes', 'Ghosts', 'Streams', 'Hacks', 'Leaks', 'Trends', 'Posts', 'Uploads', 'Downloads', 'Shares', 'Likes', 'Subscribes', 'Follows', 'Unfollows', 'Blocks', 'Mutes', 'Reports', 'Bans'],
-  PLACE: ['Darkness', 'City', 'Woods', 'Space', 'Future', 'Mars', 'London', 'Paris', 'New York', 'Moon', 'Sun', 'Island', 'Village', 'Metaverse', 'Simulation', 'Web3', 'Timeline', 'Algorithm', 'Feed', 'Grid', 'Matrix', 'Network', 'Cloud', 'Server', 'Database', 'Mainframe', 'Hub', 'Node', 'Nexus', 'Core', 'Vortex', 'Void', 'Abyss'],
-  NAME: ['John', 'Mary', 'Bourne', 'Bond', 'Ripley', 'Neo', 'Trinity', 'Luke', 'Leia', 'Harry', 'Hermione', 'Gatsby', 'Holmes', 'Elon', 'Zuck', 'Chad', 'Karen', 'Influencer', 'Streamer', 'Creator', 'Grifter', 'Scammer', 'Hacker', 'Troll', 'Bot', 'NPC', 'Main Character', 'Side Character', 'Villain', 'Hero', 'Anti-Hero', 'Protagonist', 'Antagonist'],
-  TIME: ['Midnight', 'Dawn', 'Dusk', 'Night', 'Tomorrow', 'Yesterday', 'Upload', 'Drop', 'Stream', 'Post'],
-  ANIMAL: ['Bear', 'Dog', 'Cat', 'Lion', 'Tiger', 'Dragon', 'Unicorn', 'Dinosaur', 'Doge', 'Ape', 'Pepe']
+  ADJECTIVE: ['Dark', 'Silent', 'Golden', 'Broken', 'Hidden', 'Last', 'Lost', 'Secret', 'Lethal', 'Final', 'Red', 'Black', 'Wild', 'Crazy', 'Funny', 'Beautiful', 'Brave', 'Fierce', 'Uncut', 'Quantum', 'Cyber', 'Neon', 'Hyper', 'Meta', 'Toxic', 'Viral', 'Cancel', 'Elevated', 'Atmospheric', 'Subversive', 'Procedural', 'Algorithmic', 'Tactical', 'Strategic', 'Covert', 'Clandestine', 'Stealth', 'Phantom', 'Ghost', 'Shadow', 'Rogue', 'Maverick', 'Renegade', 'Outlaw', 'Vigilante', 'Mercenary', 'Expendable', 'Disposable', 'Collateral', 'Fatal', 'Mortal', 'Awkward', 'Cringe', 'Based', 'Woke', 'Problematic', 'Cancelled', 'Triggered', 'Savage', 'Petty', 'Salty', 'Thirsty', 'Basic', 'Extra', 'Bougie', 'Ratchet', 'Sus', 'Cap', 'Overbudget', 'Tone-Deaf', 'Pretentious', 'Self-Indulgent', 'Liminal', 'Uncanny', 'Cash-Grab', 'Soulless', 'Manufactured'],
+  NOUN: ['Shadow', 'Mirror', 'Ghost', 'Knight', 'City', 'Storm', 'Weapon', 'Target', 'Agent', 'Game', 'House', 'Night', 'Day', 'Star', 'Dream', 'Heart', 'World', 'Man', 'Woman', 'Boy', 'Girl', 'Multiverse', 'Franchise', 'Content', 'Algorithm', 'Meme', 'Podcast', 'Trauma', 'Nepotism', 'Vibe', 'Aesthetic', 'Metaverse', 'Crypto', 'Grifter', 'Situationship', 'IP', 'Recon', 'Extraction', 'Payload', 'Objective', 'Bounty', 'Crossfire', 'Infiltration', 'Exfiltration', 'Takeover', 'Lockdown', 'Overdrive', 'Showdown', 'Blowback', 'Backlash', 'Flashpoint', 'Ground Zero', 'Vanguard', 'Sentinel', 'Outpost', 'Stronghold', 'Influencer', 'Streamer', 'Vlogger', 'Viral', 'Trending', 'Cancel Culture', 'Scam', 'Hustle', 'Flex', 'Clout', 'Drip', 'Mood', 'Energy', 'Synergy', 'Deepfake', 'Blockbuster', 'CGI', 'PR Crisis', 'Apology Video', 'Subtweet', 'Ratio', 'Oscars Bait', 'Method Acting'],
+  VERB: ['Die', 'Run', 'Shoot', 'Hide', 'Seek', 'Find', 'Kill', 'Save', 'Love', 'Kiss', 'Dance', 'Sing', 'Fly', 'Fall', 'Cancel', 'Reboot', 'Swipe', 'Ghost', 'Stream', 'Hack', 'Leak', 'Trend', 'Post', 'Upload', 'Download', 'Share', 'Like', 'Subscribe', 'Follow', 'Unfollow', 'Block', 'Mute', 'Report', 'Ban', 'Doxx', 'Gaslight', 'Girlboss', 'Gatekeep', 'Manifest', 'Vibe'],
+  VERBS: ['Waits', 'Hides', 'Kills', 'Watches', 'Screams', 'Comes', 'Walks', 'Cancels', 'Reboots', 'Swipes', 'Ghosts', 'Streams', 'Hacks', 'Leaks', 'Trends', 'Posts', 'Uploads', 'Downloads', 'Shares', 'Likes', 'Subscribes', 'Follows', 'Unfollows', 'Blocks', 'Mutes', 'Reports', 'Bans', 'Doxxes', 'Gaslights', 'Girlbosses', 'Gatekeeps', 'Manifests', 'Vibes'],
+  PLACE: ['Darkness', 'City', 'Woods', 'Space', 'Future', 'Mars', 'London', 'Paris', 'New York', 'Moon', 'Sun', 'Island', 'Village', 'Metaverse', 'Simulation', 'Web3', 'Timeline', 'Algorithm', 'Feed', 'Grid', 'Matrix', 'Network', 'Cloud', 'Server', 'Database', 'Mainframe', 'Hub', 'Node', 'Nexus', 'Core', 'Vortex', 'Void', 'Abyss', 'Backrooms', 'Discord Server', 'Subreddit', 'TikTok FYP'],
+  NAME: ['John', 'Mary', 'Bourne', 'Bond', 'Ripley', 'Neo', 'Trinity', 'Luke', 'Leia', 'Harry', 'Hermione', 'Gatsby', 'Holmes', 'Elon', 'Zuck', 'Chad', 'Karen', 'Influencer', 'Streamer', 'Creator', 'Grifter', 'Scammer', 'Hacker', 'Troll', 'Bot', 'NPC', 'Main Character', 'Side Character', 'Villain', 'Hero', 'Anti-Hero', 'Protagonist', 'Antagonist', 'Nepo Baby', 'Industry Plant', 'Auteur'],
+  TIME: ['Midnight', 'Dawn', 'Dusk', 'Night', 'Tomorrow', 'Yesterday', 'Upload', 'Drop', 'Stream', 'Post', 'The Golden Hour', 'Crunch Time'],
+  ANIMAL: ['Bear', 'Dog', 'Cat', 'Lion', 'Tiger', 'Dragon', 'Unicorn', 'Dinosaur', 'Doge', 'Ape', 'Pepe', 'Capybara', 'Trash Panda']
 };
 
 export function generateProjectTitle(genre: string): string {
