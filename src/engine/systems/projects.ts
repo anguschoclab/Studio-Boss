@@ -3,7 +3,8 @@ import { BUDGET_TIERS } from '../data/budgetTiers';
 import { TV_FORMATS } from '../data/tvFormats';
 import { UNSCRIPTED_FORMATS } from '../data/unscriptedFormats';
 import { clamp, randRange } from '../utils';
-import { updateTalentStats as updateTalentStatsFromModule } from './talentStats';
+import { updateTalentStats } from './talentStats';
+import { generateReviewScore, simulateWeeklyBoxOffice } from './stats';
 
 function getAttachedTalent(contracts: Contract[], talentPoolMap: Map<string, TalentProfile>): TalentProfile[] {
   return contracts.reduce((acc, c) => {

@@ -15,7 +15,13 @@ const AGENCY_NAMES = [
   'Comedy Central',
   'Backend Behemoths',
   'Auteur Agency',
-  'Laugh Factory'
+  'Laugh Factory',
+  'The Comedy Cartel',
+  'Cutthroat Media',
+  'Prestige Worldwide',
+  'Blockbuster Brokers',
+  'Packaging Powerhouse',
+  'Indie Darling Reps'
 ];
 
 const AGENT_FIRST_NAMES = ['Ari', 'Bryan', 'Maha', 'Jeremy', 'Richard', 'Sue', 'Ali', 'Kevin', 'Aaron', 'Emma', 'David', 'Laura'];
@@ -53,8 +59,35 @@ export function generateAgencies(count: number): Agency[] {
     }
 
     if (actualName === 'Auteur Agency') {
+      traits.push('Only represents auteur directors');
       traits.push('Brings their own script doctor');
       culture = 'prestige';
+    }
+
+    if (actualName === 'Cutthroat Media') {
+      traits.push('Poaches talent from rivals');
+      culture = 'shark';
+    }
+
+    if (actualName === 'Prestige Worldwide') {
+      traits.push('Demands massive backend points');
+      leverage = 100;
+      culture = 'shark';
+    }
+
+    if (actualName === 'Blockbuster Brokers') {
+      traits.push('Pitches packaging deals only');
+      leverage = 90;
+    }
+
+    if (actualName === 'Indie Darling Reps') {
+      traits.push('Only represents auteur directors');
+      culture = 'prestige';
+    }
+
+    if (actualName === 'Packaging Powerhouse') {
+      traits.push('Requires entire package hire');
+      leverage = 95;
     }
 
     agencies.push({
