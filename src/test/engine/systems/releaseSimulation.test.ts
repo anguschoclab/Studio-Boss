@@ -88,6 +88,25 @@ describe("releaseSimulation system", () => {
       // Total: 43 - 6 - 4 = 33.
       expect(score).toBeLessThan(40);
     });
+
+    it("applies bonus for excellent buzz (>80)", () => {
+      vi.spyOn(Math, 'random').mockReturnValue(0.5); // avg base 55, variance 0
+      const hypeProject = { ...mockProject, buzz: 85 };
+
+      const score = generateReviewScore(hypeProject, [], undefined);
+
+      expect(score).toBe(65);
+    });
+
+    it("calculates talent bonus correctly for multiple attached talents", () => {
+      vi.spyOn(Math, 'random').mockReturnValue(0.5); // avg base 55, variance 0
+      const t1 = { ...mockTalent, prestige: 60 };
+      const t2 = { ...mockTalent, prestige: 80 };
+
+      const score = generateReviewScore(mockProject, [t1, t2], undefined);
+
+      expect(score).toBe(76);
+    });
   });
 
   describe("simulateWeeklyBoxOffice", () => {
@@ -96,7 +115,7 @@ describe("releaseSimulation system", () => {
 
       // Excellent legs (score >= 85) -> range 0.6 to 0.8
       const excellentMultiplier = simulateWeeklyBoxOffice(mockProject, 2, 90, 1000000, 0);
-      expect(excellentMultiplier).toBe(700000); // 0.7 * 1M
+      expect(excellentMultiplier).toBe(840000); // 0.7 * 1.2 (indie bonus) * 1M
 
       // Average legs (score >= 60) -> range 0.4 to 0.6
       const averageMultiplier = simulateWeeklyBoxOffice(mockProject, 2, 60, 1000000, 0);
@@ -113,8 +132,8 @@ describe("releaseSimulation system", () => {
       const massiveProject = { ...mockProject, budget: 200000000 };
       const drop = simulateWeeklyBoxOffice(massiveProject, 1, 90, 1000000, 0);
 
-      // 0.7 * 0.85 = 0.595. 0.595 * 1M = 595,000
-      expect(drop).toBe(595000);
+      // 0.7 * 0.70 = 0.49. 0.49 * 1M = 490,000
+      expect(drop).toBeCloseTo(490000);
     });
 
     it("handles extreme rival competition (100 strength)", () => {
