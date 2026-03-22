@@ -56,6 +56,9 @@ const processProjectPhase = (
   const projectUpdates: string[] = [];
   const events: string[] = [];
 
+  // ⚡ Bolt: Calculate rivalAvgStrength once outside the loop instead of O(N*M) inside
+  const rivalAvgStrength = state.rivals.reduce((sum, r) => sum + r.strength, 0) / Math.max(1, state.rivals.length);
+
   const updatedProjects = state.projects.map(p => {
     if (p.activeCrisis && !p.activeCrisis.resolved) {
       projectUpdates.push(`"${p.title}" production is halted until the active crisis is resolved.`);
@@ -63,7 +66,6 @@ const processProjectPhase = (
     }
 
     const projectContracts = contractsByProject.get(p.id) || [];
-    const rivalAvgStrength = state.rivals.reduce((sum, r) => sum + r.strength, 0) / Math.max(1, state.rivals.length);
     const { project, update } = advanceProject(p, nextWeek, state.studio.prestige, projectContracts, talentPoolMap, rivalAvgStrength, state.awards);
     if (update) projectUpdates.push(update);
 
