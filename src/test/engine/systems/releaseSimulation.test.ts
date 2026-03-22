@@ -8,7 +8,7 @@ const mockProject: Project = {
   format: "film",
   genre: "Drama",
   budgetTier: "mid",
-  budget: 20000000,
+  budget: 50000000,
   weeklyCost: 100000,
   targetAudience: "General",
   flavor: "Dramatic stuff",
@@ -113,8 +113,30 @@ describe("releaseSimulation system", () => {
       const massiveProject = { ...mockProject, budget: 200000000 };
       const drop = simulateWeeklyBoxOffice(massiveProject, 1, 90, 1000000, 0);
 
+      // 0.7 * 0.70 = 0.49. 0.49 * 1M = 490,000
+      expect(drop).toBeCloseTo(490000);
+    });
+
+
+    it("applies sharp second-weekend drop for tentpoles week 1", () => {
+      vi.spyOn(Math, 'random').mockReturnValue(0.5); // Excellent legs = 0.7 drop off
+
+      const tentpoleProject = { ...mockProject, budget: 100000000 };
+      const drop = simulateWeeklyBoxOffice(tentpoleProject, 1, 90, 1000000, 0);
+
       // 0.7 * 0.85 = 0.595. 0.595 * 1M = 595,000
-      expect(drop).toBe(595000);
+      expect(drop).toBeCloseTo(595000);
+    });
+
+
+    it("applies strong word-of-mouth bonus for low budget anomalies", () => {
+      vi.spyOn(Math, 'random').mockReturnValue(0.5); // Excellent legs = 0.7 drop off
+
+      const anomalyProject = { ...mockProject, budget: 20000000 };
+      const drop = simulateWeeklyBoxOffice(anomalyProject, 2, 90, 1000000, 0);
+
+      // 0.7 * 1.2 = 0.84. 0.84 * 1M = 840,000
+      expect(drop).toBeCloseTo(840000);
     });
 
     it("handles extreme rival competition (100 strength)", () => {
