@@ -65,22 +65,36 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
     return null;
   }
 
+  // Sanitize the chart ID to prevent CSS injection.
+  // We only allow alphanumeric characters, hyphens, and underscores.
+  const safeId = id.replace(/[^a-zA-Z0-9-_]/g, "");
+
   return (
     <style
       dangerouslySetInnerHTML={{
         __html: Object.entries(THEMES)
-          .map(
-            ([theme, prefix]) => `
-${prefix} [data-chart=${id}] {
-${colorConfig
-  .map(([key, itemConfig]) => {
-    const color = itemConfig.theme?.[theme as keyof typeof itemConfig.theme] || itemConfig.color;
-    return color ? `  --color-${key}: ${color};` : null;
-  })
-  .join("\n")}
-}
-`
-          )
+          .map(([theme, prefix]) => {
+            const rules = colorConfig
+              .map(([key, itemConfig]) => {
+                const color = itemConfig.theme?.[theme as keyof typeof itemConfig.theme] || itemConfig.color;
+
+                if (!color) return null;
+
+                // Sanitize the key to prevent CSS variable injection.
+                const safeKey = key.replace(/[^a-zA-Z0-9-_]/g, "");
+
+                // Sanitize the color value to prevent CSS breakout.
+                // We permit standard CSS color characters: #, (), %, commas, and decimals.
+                // We explicitly block characters that could terminate a declaration or rule: ; { }
+                const safeColor = color.replace(/[;{}]/g, "");
+
+                return `  --color-${safeKey}: ${safeColor};`;
+              })
+              .filter(Boolean)
+              .join("\n");
+
+            return `\n${prefix} [data-chart=${safeId}] {\n${rules}\n}\n`;
+          })
           .join("\n")
           // Replace '<' to prevent XSS breakout from <style> tags
           .replace(/</g, "\\3C "),
