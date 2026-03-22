@@ -17,11 +17,29 @@ export interface GreenlightReport {
 export function evaluateGreenlight(
   project: Project,
   cash: number,
-  attachedTalent: TalentProfile[]
+  attachedTalent: TalentProfile[],
+  currentWeek: number = 0,
+  allProjects: Project[] = []
 ): GreenlightReport {
   let score = 50;
   const positives: string[] = [];
   const negatives: string[] = [];
+
+  // Market Saturation Penalty
+  // Calculate dynamic market trend by finding similar genre projects released within the last 52 weeks
+  const recentSimilarProjects = allProjects.filter(p =>
+    p.status === 'released' &&
+    p.genre === project.genre &&
+    p.releaseWeek !== null &&
+    (currentWeek - p.releaseWeek) <= 52 &&
+    p.id !== project.id // exclude self if somehow checking already released project
+  );
+
+  const saturationPenalty = recentSimilarProjects.length * 5;
+  if (saturationPenalty > 0) {
+    score -= saturationPenalty;
+    negatives.push(`Market saturation: -${saturationPenalty} points due to ${recentSimilarProjects.length} recent ${project.genre} release(s).`);
+  }
 
   // 1. Budget vs Cash
   if (cash < project.budget) {

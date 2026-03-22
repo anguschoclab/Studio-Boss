@@ -15,7 +15,7 @@ const FAMOUS_LAST_NAMES = [
   'Gyllenhaal', 'Arquette', 'Cusack', 'Douglas', 'Howard', 'Reiner', 'Wayans', 'Roberts', 'Eastwood', 'Smith'
 ];
 
-const TEMPERAMENTS = ['Professional', 'Diva', 'Method', 'Collaborative', 'Volatile', 'Perfectionist', 'Reliable', 'Difficult', 'Refuses to do press', 'Brings their own script doctor', 'Refuses to do rewrites'];
+const TEMPERAMENTS = ['Professional', 'Diva', 'Method', 'Collaborative', 'Volatile', 'Perfectionist', 'Reliable', 'Difficult', 'Refuses to do press', 'Brings their own script doctor', 'Refuses to do rewrites', 'Mandatory private jet', 'Demands final cut', 'Always late to set', 'Requires trailer bigger than co-stars', 'Refuses to work with indie studios'];
 
 const TALENT_TYPES: Array<TalentRole> = ['director', 'actor', 'writer', 'producer', 'showrunner'];
 
@@ -112,12 +112,21 @@ export function generateTalentPool(size: number, families: Family[], agents: Age
 
     let temperament = pick(TEMPERAMENTS);
     if (isNepo && Math.random() < 0.3) {
-      temperament = pick(['Diva', 'Volatile', 'Difficult', 'Refuses to do press', 'Brings their own script doctor']);
+      temperament = pick(['Diva', 'Volatile', 'Difficult', 'Refuses to do press', 'Brings their own script doctor', 'Mandatory private jet', 'Demands final cut', 'Always late to set']);
     }
 
     // Convert new temperaments into a perks/quirks system visually
     const perks: string[] = [];
-    if (temperament === 'Refuses to do press' || temperament === 'Brings their own script doctor' || temperament === 'Refuses to do rewrites') {
+    if (
+      temperament === 'Refuses to do press' ||
+      temperament === 'Brings their own script doctor' ||
+      temperament === 'Refuses to do rewrites' ||
+      temperament === 'Mandatory private jet' ||
+      temperament === 'Demands final cut' ||
+      temperament === 'Always late to set' ||
+      temperament === 'Requires trailer bigger than co-stars' ||
+      temperament === 'Refuses to work with indie studios'
+    ) {
       perks.push(temperament);
       // Keep a valid legacy temperament for the UI fallback
       temperament = pick(['Diva', 'Volatile', 'Difficult', 'Method']);
