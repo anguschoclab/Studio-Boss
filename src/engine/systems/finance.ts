@@ -9,12 +9,15 @@ export function calculateWeeklyCosts(projects: Project[]): number {
       if (p.status === 'production' && p.contractType === 'upfront') {
          costMultiplier = 0; // The network/streamer is paying for the production entirely
       } else if (p.status === 'production' && p.contractType === 'deficit') {
-         // Increased from 30% to 50% to make deficit financing a much harder upfront pill to swallow
-         costMultiplier = 0.5; // Studio pays 50% to retain backend rights
+         // Studio pays 50% to retain backend rights
+         costMultiplier = 0.5;
       }
 
       // Introduce an overhead multiplier for large projects dragging on in production
-      if (p.status === 'production' && p.budget >= 100_000_000 && p.weeksInPhase > p.productionWeeks * 0.8) {
+      if (p.status === 'production' && p.budget >= 200_000_000 && p.weeksInPhase > p.productionWeeks * 0.8) {
+         // Logistics completely break down on mega-sets; costs skyrocket late in production
+         costMultiplier *= 1.5;
+      } else if (p.status === 'production' && p.budget >= 100_000_000 && p.weeksInPhase > p.productionWeeks * 0.8) {
          // Logistics break down on huge sets; costs balloon late in production
          costMultiplier *= 1.25;
       }
@@ -44,11 +47,12 @@ export function calculateWeeklyRevenue(projects: Project[], contracts: Contract[
 
       // Backend points hit harder when revenue is massive (e.g., simulating complex gross definitions)
       let backendMultiplier = 1.0;
-      if (revenue > 20_000_000) {
-        backendMultiplier = 1.1; // Agents negotiate better escalators for massive hits
-      }
-      if (revenue > 50_000_000) {
+      if (revenue > 100_000_000) {
+        backendMultiplier = 1.5; // Mega-hits trigger astronomical backend payouts for A-listers
+      } else if (revenue > 50_000_000) {
         backendMultiplier = 1.25; // First dollar gross hits harder
+      } else if (revenue > 20_000_000) {
+        backendMultiplier = 1.1; // Agents negotiate better escalators for massive hits
       }
 
       const backendCut = revenue * ((totalBackendPercent * backendMultiplier) / 100);
