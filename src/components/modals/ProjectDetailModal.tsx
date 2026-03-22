@@ -45,14 +45,13 @@ export const ProjectDetailModal = () => {
   const greenlightReport = useMemo(() => {
     if (!project || project.status !== 'needs_greenlight' || !gameState) return null;
     const projectContracts = contracts.filter(c => c.projectId === project.id);
-    const talentPoolMap = new Map(talentPool.map(t => [t.id, t]));
     const attachedTalent = projectContracts.reduce((acc, c) => {
-      const t = talentPoolMap.get(c.talentId);
+      const t = talentMap.get(c.talentId);
       if (t) acc.push(t);
       return acc;
     }, [] as import('@/engine/types').TalentProfile[]);
     return evaluateGreenlight(project, gameState.cash, attachedTalent);
-  }, [project, gameState, contracts, talentPool]);
+  }, [project, gameState, contracts, talentMap]);
 
   if (!project || !tier) return null;
 
