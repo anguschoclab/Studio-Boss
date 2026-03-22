@@ -53,8 +53,23 @@ export function updateBuyers(buyers: Buyer[], currentWeek: number): { updatedBuy
   return { updatedBuyers, newHeadlines };
 }
 
-export function calculateFitScore(project: Project, buyer: Buyer): number {
+export function calculateFitScore(project: Project, buyer: Buyer, currentWeek: number = 0, allProjects: Project[] = []): number {
   let score = 50; // Base score
+
+  // Market Saturation Penalty
+  // Calculate dynamic market trend by finding similar genre projects released within the last 52 weeks
+  const recentSimilarProjects = allProjects.filter(p =>
+    p.status === 'released' &&
+    p.genre === project.genre &&
+    p.releaseWeek !== null &&
+    (currentWeek - p.releaseWeek) <= 52 &&
+    p.id !== project.id // exclude self
+  );
+
+  const saturationPenalty = recentSimilarProjects.length * 5;
+  if (saturationPenalty > 0) {
+    score -= saturationPenalty;
+  }
 
   if (!buyer.currentMandate) return score;
 
@@ -94,8 +109,8 @@ export function calculateFitScore(project: Project, buyer: Buyer): number {
   return Math.max(0, Math.min(100, score));
 }
 
-export function negotiateContract(project: Project, buyer: Buyer, requestedType: ProjectContractType): boolean {
-    const fitScore = calculateFitScore(project, buyer);
+export function negotiateContract(project: Project, buyer: Buyer, requestedType: ProjectContractType, currentWeek: number = 0, allProjects: Project[] = []): boolean {
+    const fitScore = calculateFitScore(project, buyer, currentWeek, allProjects);
 
     // Higher threshold for Upfront because the buyer takes all the risk
     const requiredScore = requestedType === 'upfront' ? 65 : 40;
