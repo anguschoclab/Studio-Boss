@@ -163,49 +163,76 @@ const simulateWorld = (
     return acc;
   }, [] as typeof updatedOpportunitiesCopy);
 
-  if (Math.random() < 0.2) {
-    const oppNames = new Set(updatedOpportunitiesCopy.map(o => o.title));
+  // ⚡ Bolt: Lazy load oppNames set so it doesn't map on every tick if not needed
+  let oppNames: Set<string> | null = null;
+  const getOppNames = () => {
+    if (!oppNames) {
+      oppNames = new Set(updatedOpportunitiesCopy.map(o => o.title));
+    }
+    return oppNames;
+  };
 
-    // ⚡ Bolt: Use a Set for O(1) active talent lookup instead of Map keyed by project ID,
-    // and process in a single reduce pass to prevent intermediate array allocations.
+  // Opportunity 1 (Specific to available talent)
+  // ⚡ Bolt: Keep expensive mapping inside the probability block so it doesn't run every tick
+  if (Math.random() < 0.2) {
     const activeTalentIds = new Set(state.contracts.map(c => c.talentId));
     const availableTalentIds = state.talentPool.reduce((acc, t) => {
-      if (!activeTalentIds.has(t.id)) {
-        acc.push(t.id);
-      }
+      if (!activeTalentIds.has(t.id)) acc.push(t.id);
       return acc;
     }, [] as string[]);
 
     if (availableTalentIds.length > 0) {
       const newOpp = generateOpportunity(availableTalentIds);
-      if (!oppNames.has(newOpp.title)) {
+      if (!getOppNames().has(newOpp.title)) {
         updatedOpportunitiesCopy.push(newOpp);
+        getOppNames().add(newOpp.title);
         events.push(`A new script "${newOpp.title}" hit the market.`);
       }
     }
   }
 
-  const newHeadlines = generateHeadlines(nextWeek, updatedRivals);
-  newHeadlines.push(...formattedBuyerHeadlines);
-
+  // Event 1
   if (Math.random() < 0.15) {
     events.push(pick(EVENT_POOL));
   }
 
+  // Opportunity 2 (General)
   if (Math.random() < 0.2) {
     const newOpp = generateOpportunity();
-    updatedOpportunitiesCopy.push(newOpp);
-    events.push(`A new script "${newOpp.title}" just hit the market!`);
+    if (!getOppNames().has(newOpp.title)) {
+      updatedOpportunitiesCopy.push(newOpp);
+      getOppNames().add(newOpp.title);
+      events.push(`A new script "${newOpp.title}" just hit the market!`);
+    }
   }
 
+  // Opportunity 3 (General batch)
   if (Math.random() < 0.15) {
-    updatedOpportunitiesCopy.push(generateOpportunity());
-    events.push('New opportunities have hit the market!');
+    const newOpp = generateOpportunity();
+    if (!getOppNames().has(newOpp.title)) {
+      updatedOpportunitiesCopy.push(newOpp);
+      getOppNames().add(newOpp.title);
+      events.push('New opportunities have hit the market!');
+    }
   }
 
+  // Event 2
   if (Math.random() < 0.15) {
     events.push(pick(EVENT_POOL));
   }
+
+  // Opportunity 4 (Fallback)
+  if (Math.random() < 0.15 && updatedOpportunitiesCopy.length < 3) {
+    const newOpp = generateOpportunity();
+    if (!getOppNames().has(newOpp.title)) {
+      updatedOpportunitiesCopy.push(newOpp);
+      getOppNames().add(newOpp.title);
+      events.push(`A new ${newOpp.budgetTier} ${newOpp.format} package hit the market.`);
+    }
+  }
+
+  const newHeadlines = generateHeadlines(nextWeek, updatedRivals);
+  newHeadlines.push(...formattedBuyerHeadlines);
 
   const year = Math.floor(nextWeek / 52) + 1;
   const ceremonyResult = runAwardsCeremony(state, nextWeek, year);
@@ -219,23 +246,12 @@ const simulateWorld = (
     events.push(`The ${uniqueBodies.join(' and ')} took place this week!`);
   }
 
-  if (Math.random() < 0.15 && updatedOpportunitiesCopy.length < 3) {
-    const newOpp = generateOpportunity();
-    updatedOpportunitiesCopy.push(newOpp);
-    events.push(`A new ${newOpp.budgetTier} ${newOpp.format} package hit the market.`);
-  }
-
-  const talentPoolMap = new Map<string, typeof state.talentPool[0]>();
-  for (const talent of state.talentPool) {
-    talentPoolMap.set(talent.id, talent);
-  }
-
   const newState: GameState = {
     ...state,
     opportunities: updatedOpportunitiesCopy,
     studio: { ...state.studio, prestige: state.studio.prestige + prestigeChange },
     buyers: updatedBuyers,
-    talentPool: Array.from(talentPoolMap.values()),
+    talentPool: state.talentPool, // ⚡ Bolt: No need to reconstruct talentPool if no elements mutated
     rivals: updatedRivals,
     awards: [...(state.awards || []), ...newAwards],
     headlines: [...newHeadlines, ...state.headlines].slice(0, 50),
