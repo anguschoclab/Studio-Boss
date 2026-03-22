@@ -249,26 +249,30 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
 
   launchMarketingCampaign: (projectId, budget, domesticPct, angle) => {
-    const state = get().gameState;
-    if (!state) return;
-
-    if (budget > state.cash) return;
-
     set((s) => {
-      const pIndex = s.gameState!.projects.findIndex(p => p.id === projectId);
-      if (pIndex === -1) return;
-      const p = s.gameState!.projects[pIndex];
-      if (p.status !== 'marketing') return;
+      if (!s.gameState) return s;
 
-      s.gameState!.cash -= budget;
-      s.gameState!.financeHistory.push({
+      const state = s.gameState;
+      if (budget > state.cash) return s;
+
+      const pIndex = state.projects.findIndex(p => p.id === projectId);
+      if (pIndex === -1) return s;
+
+      const originalProject = state.projects[pIndex];
+      if (originalProject.status !== 'marketing') return s;
+
+      // ⚡ Bolt: Rewrite to strictly use immutable updates instead of mutating state objects directly
+      const p = { ...originalProject };
+
+      const newCash = state.cash - budget;
+      const newFinanceHistory = [...state.financeHistory, {
         id: crypto.randomUUID(),
-        week: s.gameState!.week,
-        type: 'expense',
+        week: state.week,
+        type: 'expense' as const,
         amount: budget,
-        category: 'marketing',
+        category: 'marketing' as const,
         description: `Marketing for "${p.title}"`
-      });
+      }];
 
       p.marketingBudget = budget;
       p.marketingDomesticSplit = domesticPct;
@@ -295,18 +299,32 @@ export const useGameStore = create<GameStore>((set, get) => ({
       p.buzz = Math.min(100, Math.max(0, p.buzz + buzzBonus));
 
       // Use the logic from projects.ts to handle release entry
-      const contracts = s.gameState!.contracts.filter(c => c.projectId === p.id);
-      const talentMap = new Map(s.gameState!.talentPool.map(t => [t.id, t]));
-      const result = handleReleasePhaseEntry(p, s.gameState!.week, s.gameState!.studio.prestige, contracts, talentMap);
+      const contracts = state.contracts.filter(c => c.projectId === p.id);
+      const talentMap = new Map(state.talentPool.map(t => [t.id, t]));
+      const result = handleReleasePhaseEntry(p, state.week, state.studio.prestige, contracts, talentMap);
 
+      const newHeadlines = [...state.headlines];
       if (result.update) {
-        s.gameState!.headlines.unshift({
+        newHeadlines.unshift({
           id: crypto.randomUUID(),
-          week: s.gameState!.week,
+          week: state.week,
           category: 'general',
           text: result.update
         });
       }
+
+      const updatedProjects = [...state.projects];
+      updatedProjects[pIndex] = p;
+
+      return {
+        gameState: {
+          ...state,
+          cash: newCash,
+          financeHistory: newFinanceHistory,
+          projects: updatedProjects,
+          headlines: newHeadlines,
+        }
+      };
     });
   },
 
