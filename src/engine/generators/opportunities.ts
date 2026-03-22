@@ -6,13 +6,15 @@ import { randRange, pick } from '../utils';
 const PROJECT_ADJECTIVES = [
   'Cursed', 'Bloated', 'Pretentious', 'Gritty', 'Unnecessary', 'Rebooted', 'Overbudget', 'Derivative', 'Visionary', 'Cinematic', 'Algorithm-Driven', 'IP-Mining', 'Vain', 'Lethal', 'Synergistic',
   'Dark', 'Neon', 'Silent', 'Golden', 'Lost', 'Forgotten', 'Broken', 'Hidden',
-  'Wild', 'Cold', 'Last', 'First', 'Final', 'Secret', 'Midnight', 'Crimson'
+  'Wild', 'Cold', 'Last', 'First', 'Final', 'Secret', 'Midnight', 'Crimson',
+  'Micro-Budget', 'Banned', 'Cult', 'Divisive', 'Misunderstood', 'Post-Modern', 'Meta', 'Self-Aware', 'Interactive', 'Hyper-Violent', 'Family-Friendly', 'Subversive', 'Existential', 'Viral', 'Edgy'
 ];
 
 const PROJECT_NOUNS = [
   'Tentpole', 'Cinematic Universe', 'Vanity Project', 'Cash Grab', 'Reboot', 'Origin Story', 'Four-Quadrant Hit', 'Oscar Bait', 'Tax Write-off', 'Algorithm', 'Focus Group', 'Franchise', 'Merchandising Opportunity', 'Streaming Wars', 'Demographic',
   'Echo', 'Whisper', 'Shadow', 'Sun', 'Moon', 'Star', 'Dream', 'Nightmare',
-  'City', 'Mountain', 'River', 'Forest', 'Ocean', 'Island', 'Tower', 'Castle'
+  'City', 'Mountain', 'River', 'Forest', 'Ocean', 'Island', 'Tower', 'Castle',
+  'Content', 'IP', 'Podcast Adaptation', 'Graphic Novel', 'Limited Run', 'Spin-off', 'Prequel', 'Sequel', 'Trilogy', 'Crossover', 'Event', 'Experience', 'Platform', 'Saga', 'Chronicle'
 ];
 
 
@@ -32,7 +34,22 @@ function generateFlavor(genre: string, type: string, budgetTier: BudgetTierKey, 
     `A ${budgetTier}-budget ${genre} ${type} that was clearly written by ChatGPT.`,
     `An exhausting ${origin} that insists it's not a ${genre} film, but 'an elevated ${genre} film'.`,
     `A cynical ${genre} ${type} cashing in on a trend that died six months ago.`,
-    `A ${budgetTier}-budget ${type} that exists solely as a tax write-off for a rival studio.`
+    `A ${budgetTier}-budget ${type} that exists solely as a tax write-off for a rival studio.`,
+    `A ${budgetTier}-budget ${type} based on a viral TikTok trend that is already losing relevance.`,
+    `A shockingly expensive ${genre} ${type} that is 90% green-screen and 10% product placement.`,
+    `A highly-anticipated ${origin} that was secretly ghostwritten by an AI and it shows.`,
+    `An overhyped ${genre} ${type} that the 'fans' are already threatening to boycott.`,
+    `A tedious, slow-burn ${genre} ${origin} that requires the audience to 'do the work'.`,
+    `A ${budgetTier}-tier ${type} starring a controversial influencer attempting to crossover into acting.`,
+    `A frantic, neon-soaked ${genre} ${type} entirely funded by questionable cryptocurrency gains.`,
+    `A deeply personal ${origin} from an auteur who hasn't had a hit in three decades.`,
+    `A 'grounded and realistic' ${genre} reboot of a beloved children's cartoon.`,
+    `A multi-part ${genre} ${type} designed purely to setup a cinematic universe nobody wants.`,
+    `An incredibly dense ${origin} that the agency insists is 'the next Game of Thrones'.`,
+    `A ${budgetTier}-budget ${genre} ${type} where the lead actor is demanding final cut privilege.`,
+    `A gritty ${genre} ${type} based on a profoundly depressing true crime podcast.`,
+    `A wildly out-of-touch ${origin} written by a studio executive's tennis partner.`,
+    `A completely incomprehensible ${genre} ${type} that foreign markets will absolutely devour.`,
   ];
   return pick(cynicalFlavors);
 }
@@ -45,7 +62,7 @@ export function generateProjectTitle(): string {
 }
 
 export function generateOpportunity(talentIds?: string[]): Opportunity;
-export function generateOpportunity(_weekOrTalentIds?: number | string[], _prestige?: number): Opportunity {
+export function generateOpportunity(_weekOrTalentIds?: number | string[]): Opportunity {
   // Support both old signature (week, prestige) and new (talentIds)
   let talentIds: string[] | undefined;
   if (Array.isArray(_weekOrTalentIds)) {
