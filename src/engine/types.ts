@@ -5,8 +5,60 @@ export type ProjectStatus = 'development' | 'needs_greenlight' | 'pitching' | 'p
 export type ProjectFormat = 'film' | 'tv' | 'unscripted';
 export type BudgetTierKey = 'low' | 'mid' | 'high' | 'blockbuster';
 export type HeadlineCategory = 'rival' | 'market' | 'talent' | 'awards' | 'general';
-export type TvFormatKey = 'sitcom' | 'procedural' | 'prestige_drama' | 'limited_series' | 'animated_comedy' | 'animated_prestige';
-export type UnscriptedFormatKey = 'competition' | 'docuseries' | 'reality_ensemble' | 'game_show' | 'lifestyle';
+export type TvFormatKey =
+  | 'sitcom'
+  | 'procedural'
+  | 'prestige_drama'
+  | 'limited_series'
+  | 'animated_comedy'
+  | 'animated_prestige'
+  | 'daytime_soap'
+  | 'late_night_talk'
+  | 'sketch_comedy'
+  | 'sci_fi_epic'
+  | 'teen_drama'
+  | 'fantasy_epic'
+  | 'anthology_series'
+  | 'telenovela'
+  | 'historical_drama'
+  | 'medical_procedural'
+  | 'superhero_serial'
+  | 'espionage_thriller'
+  | 'mockumentary'
+  | 'neo_western'
+  | 'legal_drama'
+  | 'sports_drama'
+  | 'mystery_box'
+  | 'cyberpunk_dystopia'
+  | 'musical_dramedy'
+  | 'dark_academia';
+
+export type UnscriptedFormatKey =
+  | 'competition'
+  | 'docuseries'
+  | 'reality_ensemble'
+  | 'game_show'
+  | 'lifestyle'
+  | 'dating_island'
+  | 'true_crime_doc'
+  | 'hidden_camera'
+  | 'travel_food'
+  | 'talent_competition'
+  | 'home_renovation'
+  | 'survival_challenge'
+  | 'pawn_shop_doc'
+  | 'celebrity_reality'
+  | 'paranormal_investigation'
+  | 'business_pitch'
+  | 'cooking_battle'
+  | 'cult_expose_doc'
+  | 'social_experiment'
+  | 'baking_championship'
+  | 'dating_experiment'
+  | 'sports_docuseries'
+  | 'nature_doc'
+  | 'wedding_reality'
+  | 'true_con_doc';
 export type ReleaseModelKey = 'weekly' | 'binge' | 'split';
 export type ProjectContractType = 'upfront' | 'deficit' | 'standard';
 export type MandateType = 'sci-fi' | 'comedy' | 'drama' | 'budget_freeze' | 'broad_appeal' | 'prestige';
@@ -39,7 +91,13 @@ export type AwardBody =
   | 'Producers Guild Awards'
   | 'Critics Choice Awards'
   | 'Annie Awards'
-  | 'Peabody Awards';
+  | 'Peabody Awards'
+  | 'Cannes Film Festival'
+  | 'Sundance Film Festival'
+  | 'Venice Film Festival'
+  | 'Toronto International Film Festival'
+  | 'SXSW Film Festival'
+  | 'Tribeca Film Festival';
 
 export type AwardCategory =
   | 'Best Picture'
@@ -53,7 +111,12 @@ export type AwardCategory =
   | 'Best Ensemble'
   | 'Best Animated Feature'
   | 'Best Documentary'
-  | 'Special Achievement';
+  | 'Special Achievement'
+  | 'Palme d\'Or'
+  | 'Grand Jury Prize'
+  | 'Golden Lion'
+  | 'Audience Award'
+  | 'Best Narrative Feature';
 
 
 
