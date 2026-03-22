@@ -25,10 +25,10 @@ describe("finance", () => {
       expect(costs).toBe(0);
     });
 
-    it("applies costMultiplier 0.3 for deficit contract type in production", () => {
+    it('applies costMultiplier 0.5 for deficit contract type in production', () => {
       const deficitProj = { ...mockProjectProd, contractType: 'deficit' as const, weeklyCost: 10000 };
       const costs = calculateWeeklyCosts([deficitProj]);
-      expect(costs).toBe(3000); // 10000 * 0.3
+      expect(costs).toBe(5000); // 10000 * 0.5
     });
 
     it("handles negative weeklyCost safely", () => {
