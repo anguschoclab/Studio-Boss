@@ -41,8 +41,12 @@ export const AWARDS_CALENDAR: Record<number, AwardBody[]> = {
   8: ['Writers Guild Awards', 'BAFTAs'],
   9: ['Annie Awards', 'Independent Spirit Awards'],
   10: ['Academy Awards'],
+  11: ['SXSW Film Festival'],
+  15: ['Tribeca Film Festival'],
   20: ['Peabody Awards'],
   21: ['Cannes Film Festival'],
+  34: ['Venice Film Festival'],
+  36: ['Toronto International Film Festival'],
   37: ['Primetime Emmys']
 };
 
@@ -180,6 +184,46 @@ const AWARD_CONFIGS: AwardConfig[] = [
   {
     body: 'Sundance Film Festival', category: 'Best Actress', format: 'film',
     evaluator: p => (p.awardsProfile?.indieCredibility || 0) + (p.awardsProfile?.criticScore || 0) * 0.8
+  },
+
+  // --- VENICE FILM FESTIVAL ---
+  {
+    body: 'Venice Film Festival', category: 'Golden Lion', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.5 + (p.awardsProfile?.prestigeScore || 0) * 1.5
+  },
+  {
+    body: 'Venice Film Festival', category: 'Best Director', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 2 + (p.awardsProfile?.prestigeScore || 0) * 0.5
+  },
+  {
+    body: 'Venice Film Festival', category: 'Best Actor', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.2 + (p.awardsProfile?.prestigeScore || 0) * 1.0
+  },
+  {
+    body: 'Venice Film Festival', category: 'Best Actress', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.2 + (p.awardsProfile?.prestigeScore || 0) * 1.0
+  },
+
+  // --- TORONTO INTERNATIONAL FILM FESTIVAL ---
+  {
+    body: 'Toronto International Film Festival', category: 'Audience Award', format: 'film',
+    evaluator: p => (p.awardsProfile?.audienceScore || 0) * 1.5 + (p.awardsProfile?.populistAppeal || 0)
+  },
+
+  // --- SXSW FILM FESTIVAL ---
+  {
+    body: 'SXSW Film Festival', category: 'Audience Award', format: 'film',
+    evaluator: p => (p.awardsProfile?.audienceScore || 0) * 1.2 + (p.awardsProfile?.culturalHeat || 0) * 1.2
+  },
+  {
+    body: 'SXSW Film Festival', category: 'Best Director', format: 'film',
+    evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 1.2 + (p.awardsProfile?.culturalHeat || 0) * 1.0
+  },
+
+  // --- TRIBECA FILM FESTIVAL ---
+  {
+    body: 'Tribeca Film Festival', category: 'Best Narrative Feature', format: 'film',
+    evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 1.5 + (p.awardsProfile?.industryNarrativeScore || 0)
   }
 ];
 
