@@ -50,8 +50,15 @@ export function simulateWeeklyBoxOffice(
   }
 
   // Large budget films are more front-loaded due to massive marketing pushes week 1.
-  if (project.budget >= 100_000_000 && weekInRelease === 1) {
+  if (project.budget >= 200_000_000 && weekInRelease === 1) {
+     dropOffMultiplier *= 0.70; // Increased marketing decay by 15% to simulate modern extremely front-loaded box office drops for mega-blockbusters.
+  } else if (project.budget >= 100_000_000 && weekInRelease === 1) {
      dropOffMultiplier *= 0.85; // Sharp second-weekend drop for tentpoles
+  }
+
+  // Strong word-of-mouth for anomalies (horror/indie)
+  if (project.budget <= 20_000_000 && reviewScore >= 70) {
+     dropOffMultiplier = Math.min(0.95, dropOffMultiplier * 1.2);
   }
 
   // Heavy competition penalty: high rival strength eats into revenue legs

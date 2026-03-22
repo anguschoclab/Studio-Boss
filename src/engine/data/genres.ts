@@ -7,6 +7,7 @@ export const UNSCRIPTED_GENRES = [
 export const GENRES = [
   'Action', 'Comedy', 'Drama', 'Horror', 'Sci-Fi', 'Thriller',
   'Romance', 'Animation', 'Documentary', 'Fantasy', 'Crime', 'Musical',
+  'Superhero',
 ] as const;
 
 export const TARGET_AUDIENCES = [
@@ -15,7 +16,8 @@ export const TARGET_AUDIENCES = [
 ] as const;
 
 export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
-  'Action': 0.35,      // High risk for superhero/action fatigue
+  'Superhero': 0.45,   // Extreme risk, very sensitive to market saturation
+  'Action': 0.35,      // High risk for generic action fatigue
   'Sci-Fi': 0.30,      // High risk for sci-fi blockbusters
   'Fantasy': 0.25,     // Moderate risk
   'Horror': 0.15,      // Low risk, very resilient

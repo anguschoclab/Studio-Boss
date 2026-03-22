@@ -70,14 +70,16 @@ export function updateTalentStats(project: Project, contracts: Contract[], talen
           }
 
           if (award.status === 'won') {
-            if (award.body === 'Academy Awards' || award.body === 'Cannes Film Festival') {
+            if (award.body === 'Academy Awards' || award.body === 'Cannes Film Festival' || award.body === 'Venice Film Festival') {
               talentAwardsPrestigeBonus += 15 * multiplier;
               talentAwardsDrawBonus += 10 * multiplier;
-              talentAwardsFeeMultiplier += 0.5 * multiplier;
-            } else if (award.body === 'Sundance Film Festival' || award.body === 'Independent Spirit Awards') {
+              // A massive permanent ego/salary boost for top-tier specific category wins
+              talentAwardsFeeMultiplier += 1.0 * multiplier;
+            } else if (award.body === 'Sundance Film Festival' || award.body === 'Independent Spirit Awards' || award.body === 'Toronto International Film Festival' || award.body === 'SXSW Film Festival' || award.body === 'Tribeca Film Festival') {
               talentAwardsPrestigeBonus += 10 * multiplier;
               talentAwardsDrawBonus += 5 * multiplier;
-              talentAwardsFeeMultiplier += 0.2 * multiplier;
+              // A significant permanent ego/salary boost for indie/festival tier specific category wins
+              talentAwardsFeeMultiplier += 0.5 * multiplier;
             } else {
               talentAwardsPrestigeBonus += 5 * multiplier;
               talentAwardsDrawBonus += 2 * multiplier;

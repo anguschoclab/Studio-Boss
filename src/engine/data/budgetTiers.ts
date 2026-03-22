@@ -20,8 +20,8 @@ export const BUDGET_TIERS: Record<BudgetTierKey, BudgetTierData> = {
     weeklyCost: 500_000,
     developmentWeeks: 6,
     productionWeeks: 8,
-    // Widened top-end revenue to allow for high-ROI horror/indie anomalies, simulating a 10x+ return potential.
-    revenueRange: [1_000_000, 50_000_000],
+    // Widened top-end revenue even further to allow for extreme high-ROI horror/indie anomalies.
+    revenueRange: [1_000_000, 100_000_000],
   },
   mid: {
     key: 'mid',
@@ -50,14 +50,12 @@ export const BUDGET_TIERS: Record<BudgetTierKey, BudgetTierData> = {
   blockbuster: {
     key: 'blockbuster',
     name: 'Blockbuster',
-    label: '$200M',
-    // Massive base budget increase to represent modern tentpoles ($200M+).
-    budget: 200_000_000,
-    // Punishing weekly burn rate to make delays catastrophic.
-    weeklyCost: 10_000_000,
+    label: '$250M',
+    // Increased base budget to $250M and weekly cost to $15M to severely punish delays and make tentpoles genuinely risky.
+    budget: 250_000_000,
+    weeklyCost: 15_000_000,
     developmentWeeks: 16,
     productionWeeks: 24,
-    // Raised ceiling slightly, but floor is still very dangerous relative to the $200M+ budget.
-    revenueRange: [100_000_000, 600_000_000],
+    revenueRange: [100_000_000, 800_000_000],
   },
 };

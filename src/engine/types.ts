@@ -39,7 +39,13 @@ export type AwardBody =
   | 'Producers Guild Awards'
   | 'Critics Choice Awards'
   | 'Annie Awards'
-  | 'Peabody Awards';
+  | 'Peabody Awards'
+  | 'Cannes Film Festival'
+  | 'Sundance Film Festival'
+  | 'Venice Film Festival'
+  | 'Toronto International Film Festival'
+  | 'SXSW Film Festival'
+  | 'Tribeca Film Festival';
 
 export type AwardCategory =
   | 'Best Picture'
@@ -53,7 +59,12 @@ export type AwardCategory =
   | 'Best Ensemble'
   | 'Best Animated Feature'
   | 'Best Documentary'
-  | 'Special Achievement';
+  | 'Special Achievement'
+  | 'Palme d\'Or'
+  | 'Grand Jury Prize'
+  | 'Golden Lion'
+  | 'Audience Award'
+  | 'Best Narrative Feature';
 
 
 
