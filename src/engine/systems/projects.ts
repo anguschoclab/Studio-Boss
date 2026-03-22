@@ -4,7 +4,7 @@ import { TV_FORMATS } from '../data/tvFormats';
 import { UNSCRIPTED_FORMATS } from '../data/unscriptedFormats';
 import { clamp, randRange } from '../utils';
 import { updateTalentStats } from './talentStats';
-import { generateReviewScore, simulateWeeklyBoxOffice } from './stats';
+import { generateReviewScore, simulateWeeklyBoxOffice } from './releaseSimulation';
 
 function getAttachedTalent(contracts: Contract[], talentPoolMap: Map<string, TalentProfile>): TalentProfile[] {
   return contracts.reduce((acc, c) => {

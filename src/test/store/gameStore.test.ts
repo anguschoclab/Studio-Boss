@@ -118,7 +118,7 @@ describe("gameStore", () => {
     state.cash = initialCash;
     state.contracts = [];
     state.talentPool = [
-      { id: "t1", name: "Star", roles: ["actor"], prestige: 85, draw: 80, fee: 500, accessLevel: "outsider", temperament: "normal" } as any
+      { id: "t1", name: "Star", roles: ["actor"], prestige: 85, draw: 80, fee: 500, accessLevel: "outsider", temperament: "normal" } as unknown as import('../../engine/types').TalentProfile
     ];
     useGameStore.setState({ gameState: state });
   };

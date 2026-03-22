@@ -117,7 +117,7 @@ describe("advanceProject", () => {
 
   describe("TV & Unscripted Release Rules", () => {
     const mockTvProject = {
-      ...mockProject, format: "tv" as const, tvFormat: "sitcom" as any, episodes: 10, releaseModel: "weekly" as const,
+      ...mockProject, format: "tv" as const, tvFormat: "sitcom" as const, episodes: 10, releaseModel: "weekly" as const,
       status: "released" as const, weeklyRevenue: 100000, episodesReleased: 1, season: 1
     };
 
@@ -251,21 +251,21 @@ describe("advanceProject", () => {
     });
 
     it("handles binge TV entry correctly", () => {
-      const proj = { ...mockProject, status: "marketing" as const, format: 'tv' as const, tvFormat: 'sitcom' as any, episodes: 10, releaseModel: 'binge' as const };
+      const proj = { ...mockProject, status: "marketing" as const, format: 'tv' as const, tvFormat: 'sitcom' as const, episodes: 10, releaseModel: 'binge' as const };
       handleReleasePhaseEntry(proj, 1, 100, [], new Map());
       expect(proj.episodesReleased).toBe(10);
       expect(proj.weeklyRevenue).toBeGreaterThan(0);
     });
 
     it("handles split TV entry correctly", () => {
-      const proj = { ...mockProject, status: "marketing" as const, format: 'tv' as const, tvFormat: 'sitcom' as any, episodes: 10, releaseModel: 'split' as const };
+      const proj = { ...mockProject, status: "marketing" as const, format: 'tv' as const, tvFormat: 'sitcom' as const, episodes: 10, releaseModel: 'split' as const };
       handleReleasePhaseEntry(proj, 1, 100, [], new Map());
       expect(proj.episodesReleased).toBe(5);
       expect(proj.weeklyRevenue).toBeGreaterThan(0);
     });
 
     it("handles weekly TV entry correctly", () => {
-      const proj = { ...mockProject, status: "marketing" as const, format: 'tv' as const, tvFormat: 'sitcom' as any, episodes: 10, releaseModel: 'weekly' as const };
+      const proj = { ...mockProject, status: "marketing" as const, format: 'tv' as const, tvFormat: 'sitcom' as const, episodes: 10, releaseModel: 'weekly' as const };
       handleReleasePhaseEntry(proj, 1, 100, [], new Map());
       expect(proj.episodesReleased).toBe(1);
       expect(proj.weeklyRevenue).toBeGreaterThan(0);
