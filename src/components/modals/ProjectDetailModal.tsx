@@ -42,6 +42,34 @@ export const ProjectDetailModal = () => {
 
   const tier = project ? BUDGET_TIERS[project.budgetTier] : null;
 
+  const roleGroups = useMemo(() => {
+    const groups = new Map<string, { attached: import('@/engine/types').TalentProfile[], available: import('@/engine/types').TalentProfile[] }>();
+    const rolesToTrack = ['director', 'actor', 'writer', 'producer'];
+    for (const r of rolesToTrack) {
+      groups.set(r, { attached: [], available: [] });
+    }
+
+    if (!project) return groups;
+
+    const projectContracts = contracts.filter(c => c.projectId === project.id);
+    const projectTalentIds = new Set(projectContracts.map(c => c.talentId));
+
+    // ⚡ Bolt: Memoized O(N*M) talent pool scanning to prevent layout thrashing on every render
+    for (const t of talentPool) {
+      for (const r of t.roles) {
+        const group = groups.get(r);
+        if (group) {
+          if (projectTalentIds.has(t.id)) {
+            group.attached.push(t);
+          } else {
+            group.available.push(t);
+          }
+        }
+      }
+    }
+    return groups;
+  }, [project, contracts, talentPool]);
+
   const greenlightReport = useMemo(() => {
     if (!project || project.status !== 'needs_greenlight' || !gameState) return null;
     const projectContracts = contracts.filter(c => c.projectId === project.id);
@@ -203,27 +231,7 @@ export const ProjectDetailModal = () => {
           <div className="space-y-2 border-t border-border pt-4">
             <h4 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Cast & Crew</h4>
             {(() => {
-              const projectContracts = contracts.filter(c => c.projectId === project.id);
-              const projectTalentIds = new Set(projectContracts.map(c => c.talentId));
-
-              const roleGroups = new Map<string, { attached: import('@/engine/types').TalentProfile[], available: import('@/engine/types').TalentProfile[] }>();
               const rolesToTrack = ['director', 'actor', 'writer', 'producer'];
-              for (const r of rolesToTrack) {
-                roleGroups.set(r, { attached: [], available: [] });
-              }
-
-              for (const t of talentPool) {
-                for (const r of t.roles) {
-                  const group = roleGroups.get(r);
-                  if (group) {
-                    if (projectTalentIds.has(t.id)) {
-                      group.attached.push(t);
-                    } else {
-                      group.available.push(t);
-                    }
-                  }
-                }
-              }
 
               return rolesToTrack.map(role => {
                 const group = roleGroups.get(role)!;
