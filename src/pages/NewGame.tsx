@@ -32,9 +32,10 @@ const NewGame = () => {
 
         {/* Studio Name */}
         <div className="max-w-md mx-auto space-y-2">
-          <label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Studio Name</label>
+          <label htmlFor="studioName" className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Studio Name</label>
           <div className="flex gap-2">
             <Input
+              id="studioName"
               value={studioName}
               onChange={e => setStudioName(e.target.value)}
               placeholder="Enter your studio name..."
@@ -47,6 +48,7 @@ const NewGame = () => {
               className="h-14 w-14 shrink-0"
               onClick={() => setStudioName(generateStudioName([]))}
               title="Randomize Studio Name"
+              aria-label="Randomize Studio Name"
             >
               <Dices className="h-6 w-6" />
             </Button>
