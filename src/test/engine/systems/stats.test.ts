@@ -104,5 +104,21 @@ describe('stats system', () => {
       expect(stats.developmentWeeks).toBe(expectedDevelopmentWeeks);
       expect(stats.budget).toBe(expectedBudget);
     });
+
+    it('applies 1.3x scale multiplier for blockbuster tier (budget >= 100M)', () => {
+      const tier = BUDGET_TIERS.blockbuster;
+      const stats = getUnscriptedStats(tier, format, episodes);
+
+      const scaleMultiplier = 1.3;
+      const expectedWeeklyCost = tier.weeklyCost * format.productionCostMultiplier * scaleMultiplier;
+      const expectedProductionWeeks = Math.ceil(episodes * format.productionWeeksPerEpisode);
+      const expectedDevelopmentWeeks = Math.ceil(tier.developmentWeeks * format.developmentWeeksModifier);
+      const expectedBudget = expectedWeeklyCost * expectedProductionWeeks + (tier.budget * 0.15);
+
+      expect(stats.weeklyCost).toBe(expectedWeeklyCost);
+      expect(stats.productionWeeks).toBe(expectedProductionWeeks);
+      expect(stats.developmentWeeks).toBe(expectedDevelopmentWeeks);
+      expect(stats.budget).toBe(expectedBudget);
+    });
   });
 });
