@@ -28,8 +28,16 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
 
   return (
     <div
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          selectProject(project.id);
+        }
+      }}
       onClick={() => selectProject(project.id)}
-      className="w-full text-left p-4 rounded-xl border border-border/50 bg-card/60 backdrop-blur-md shadow-sm hover:shadow-xl hover:shadow-primary/5 hover:border-primary/50 hover:-translate-y-1 transition-all duration-300 space-y-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 group relative overflow-hidden"
+      className="w-full text-left p-3.5 rounded-xl border border-border/60 bg-card/40 backdrop-blur-sm hover:shadow-lg hover:border-primary/50 hover:-translate-y-0.5 transition-all duration-300 space-y-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 group relative overflow-hidden cursor-pointer"
     >
       <div className="flex items-start justify-between gap-2">
         <h4 className="font-display font-bold text-[15px] text-foreground leading-tight group-hover:text-primary transition-colors">{project.title}</h4>
