@@ -7,14 +7,16 @@ const PROJECT_ADJECTIVES = [
   'Cursed', 'Bloated', 'Pretentious', 'Gritty', 'Unnecessary', 'Rebooted', 'Overbudget', 'Derivative', 'Visionary', 'Cinematic', 'Algorithm-Driven', 'IP-Mining', 'Vain', 'Lethal', 'Synergistic',
   'Dark', 'Neon', 'Silent', 'Golden', 'Lost', 'Forgotten', 'Broken', 'Hidden',
   'Wild', 'Cold', 'Last', 'First', 'Final', 'Secret', 'Midnight', 'Crimson',
-  'Micro-Budget', 'Banned', 'Cult', 'Divisive', 'Misunderstood', 'Post-Modern', 'Meta', 'Self-Aware', 'Interactive', 'Hyper-Violent', 'Family-Friendly', 'Subversive', 'Existential', 'Viral', 'Edgy'
+  'Micro-Budget', 'Banned', 'Cult', 'Divisive', 'Misunderstood', 'Post-Modern', 'Meta', 'Self-Aware', 'Interactive', 'Hyper-Violent', 'Family-Friendly', 'Subversive', 'Existential', 'Viral', 'Edgy',
+  'Chaotic', 'Shameless', 'Tone-Deaf', 'Syndicated', 'Pandering', 'Nostalgic', 'Crowdfunded', 'Incomprehensible'
 ];
 
 const PROJECT_NOUNS = [
   'Tentpole', 'Cinematic Universe', 'Vanity Project', 'Cash Grab', 'Reboot', 'Origin Story', 'Four-Quadrant Hit', 'Oscar Bait', 'Tax Write-off', 'Algorithm', 'Focus Group', 'Franchise', 'Merchandising Opportunity', 'Streaming Wars', 'Demographic',
   'Echo', 'Whisper', 'Shadow', 'Sun', 'Moon', 'Star', 'Dream', 'Nightmare',
   'City', 'Mountain', 'River', 'Forest', 'Ocean', 'Island', 'Tower', 'Castle',
-  'Content', 'IP', 'Podcast Adaptation', 'Graphic Novel', 'Limited Run', 'Spin-off', 'Prequel', 'Sequel', 'Trilogy', 'Crossover', 'Event', 'Experience', 'Platform', 'Saga', 'Chronicle'
+  'Content', 'IP', 'Podcast Adaptation', 'Graphic Novel', 'Limited Run', 'Spin-off', 'Prequel', 'Sequel', 'Trilogy', 'Crossover', 'Event', 'Experience', 'Platform', 'Saga', 'Chronicle',
+  'Multiverse', 'Money Pit', 'Brand Synergy', 'TikTok Trend', 'Nostalgia Bait', 'Legacy Sequel', 'Toy Commercial'
 ];
 
 
@@ -50,6 +52,21 @@ function generateFlavor(genre: string, type: string, budgetTier: BudgetTierKey, 
     `A gritty ${genre} ${type} based on a profoundly depressing true crime podcast.`,
     `A wildly out-of-touch ${origin} written by a studio executive's tennis partner.`,
     `A completely incomprehensible ${genre} ${type} that foreign markets will absolutely devour.`,
+    `A legacy sequel to a ${genre} film from thirty years ago that ignores all previous continuity.`,
+    `An agonizingly slow ${type} that somehow secured funding from a disgraced tech billionaire.`,
+    `A ${budgetTier}-budget ${type} where the studio mandated a cameo from a 1990s pop star.`,
+    `A ${genre} ${type} that spends 90 minutes setting up spin-offs instead of telling a story.`,
+    `A painfully unfunny ${genre} ${type} entirely predicated on early-2000s nostalgia.`,
+    `A high-concept ${origin} that falls apart immediately if you think about the plot for five seconds.`,
+    `A ${genre} ${type} that the lead actor insists is a 'spiritual journey' despite being a cash grab.`,
+    `A desperate ${type} that shoehorns in public domain characters to avoid licensing fees.`,
+    `A ${budgetTier}-budget ${genre} ${type} heavily relying on deepfaked actors to finish scenes.`,
+    `A visually muddy ${origin} that requires audiences to read a tie-in comic to understand the ending.`,
+    `An aggressive ${genre} ${type} that replaces character development with non-stop lens flares.`,
+    `A ${budgetTier}-budget ${type} built around a single, moderately popular YouTube meme.`,
+    `A ${genre} ${type} that the studio is intentionally burying to avoid embarrassment.`,
+    `A ${budgetTier}-tier ${type} that is legally distinct enough from a popular franchise to avoid a lawsuit.`,
+    `A ${genre} ${type} that ends on a massive cliffhanger for a sequel that will never happen.`
   ];
   return pick(cynicalFlavors);
 }
