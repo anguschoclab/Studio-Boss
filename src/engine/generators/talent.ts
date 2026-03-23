@@ -15,7 +15,7 @@ const FAMOUS_LAST_NAMES = [
   'Gyllenhaal', 'Arquette', 'Cusack', 'Douglas', 'Howard', 'Reiner', 'Wayans', 'Roberts', 'Eastwood', 'Smith'
 ];
 
-const TEMPERAMENTS = ['Professional', 'Diva', 'Method', 'Collaborative', 'Volatile', 'Perfectionist', 'Reliable', 'Difficult', 'Refuses to do press', 'Brings their own script doctor', 'Refuses to do rewrites', 'Mandatory private jet', 'Demands final cut', 'Always late to set', 'Requires trailer bigger than co-stars', 'Refuses to work with indie studios'];
+const TEMPERAMENTS = ['Professional', 'Diva', 'Method', 'Collaborative', 'Volatile', 'Perfectionist', 'Reliable', 'Difficult', 'Refuses to do press', 'Brings their own script doctor', 'Refuses to do rewrites', 'Mandatory private jet', 'Demands final cut', 'Always late to set', 'Requires trailer bigger than co-stars', 'Refuses to work with indie studios', 'Demands co-star approval', 'Requires personal onset chef', 'Only shoots in Europe', 'Refuses to do sequels', 'Requires ridiculous VFX double', 'Notorious for walk-outs'];
 
 const TALENT_TYPES: Array<TalentRole> = ['director', 'actor', 'writer', 'producer', 'showrunner'];
 
@@ -125,7 +125,13 @@ export function generateTalentPool(size: number, families: Family[], agents: Age
       temperament === 'Demands final cut' ||
       temperament === 'Always late to set' ||
       temperament === 'Requires trailer bigger than co-stars' ||
-      temperament === 'Refuses to work with indie studios'
+      temperament === 'Refuses to work with indie studios' ||
+      temperament === 'Demands co-star approval' ||
+      temperament === 'Requires personal onset chef' ||
+      temperament === 'Only shoots in Europe' ||
+      temperament === 'Refuses to do sequels' ||
+      temperament === 'Requires ridiculous VFX double' ||
+      temperament === 'Notorious for walk-outs'
     ) {
       perks.push(temperament);
       // Keep a valid legacy temperament for the UI fallback
