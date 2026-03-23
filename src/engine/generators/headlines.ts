@@ -64,7 +64,24 @@ const MARKET_HEADLINES = [
   'Studios aggressively pivot to "cozy" programming following a {pct}% drop in news viewership',
   'Deepfake technology used to dub {pct}% of international releases, saving millions in localization',
   'The "Tomatoes" aggregate score proven to impact opening weekend box office by up to {pct}%',
-  'Merchandising for adult-oriented animated series outpaces kids\' shows by {pct}% this quarter'
+  'Merchandising for adult-oriented animated series outpaces kids\' shows by {pct}% this quarter',
+
+  // Scribe Additions
+  'Major theater chain threatens bankruptcy as concession prices hit all-time high',
+  'Streaming platforms introduce new "Premium Basic" tier with unskippable ads',
+  'Focus group unanimously rejects third-act twist, resulting in a rushed reshoot',
+  'Private equity firm buys beloved indie distributor, immediately lays off 80% of staff',
+  'Venture capitalists inject millions into "Generative AI Script Polishing" startup',
+  'Box office fatigue attributed to films being too long, too dark, and too self-serious',
+  'Studio writes off a completed $80M film as a tax loss to offset an algorithmic flop',
+  'A-list celebrities launch another tequila brand instead of promoting their latest film',
+  'Ticket sales drop {pct}% as audiences prefer to wait 45 days for streaming release',
+  'Critics decry the latest major release as an "empty, corporate-mandated shell"',
+  'Studios increasingly rely on established video game IP, with widely varied results',
+  'Audiences report physical exhaustion from keeping up with interconnected cinematic universes',
+  'Algorithm forces studio to reboot a franchise that ended less than five years ago',
+  'Overleveraged streaming platform quietly deletes entire original series catalog to save on server costs',
+  'Studio executives reportedly greenlit a project based entirely on a trending TikTok audio'
 ];
 
 const TALENT_HEADLINES = [
@@ -136,7 +153,22 @@ const TALENT_HEADLINES = [
   'Production on ${projectName} delayed after lead actress refuses to work with an "uncalibrated aura".',
   '${directorName} blames "woke critics" for the spectacular failure of ${projectName} at Cannes.',
   '${projectName} marketing team desperately trying to manufacture a TikTok dance trend.',
-  'Veteran script doctor brought in to "fix" ${projectName} immediately quits and checks into rehab.'
+  'Veteran script doctor brought in to "fix" ${projectName} immediately quits and checks into rehab.',
+
+  // Scribe Additions
+  '${directorName} caught using a deepfake body double for the lead actor in ${projectName} without their permission.',
+  '${projectName} is heavily criticized for containing $20M worth of indistinguishable CGI mush in the third act.',
+  'Lead actor of ${projectName} caught running a multi-level marketing scheme out of their on-set trailer.',
+  '${directorName} demands that ${projectName} be screened exclusively in 70mm IMAX or not at all.',
+  'The PR team for ${projectName} fakes a celebrity feud to drive engagement; it spectacularly backfires.',
+  'Studio forces ${directorName} to awkwardly insert a cinematic universe tease into the final shot of ${projectName}.',
+  'Test audiences visibly wince during the heavily focus-grouped emotional core of ${projectName}.',
+  'Star of ${projectName} refuses to promote the film, instead posting cryptically about "the death of cinema".',
+  '${directorName} allegedly threw a script at a studio executive after notes on ${projectName}.',
+  'Leaked emails reveal studio executives mocked ${projectName} while actively greenlighting its sequel.',
+  'Lead actor demands their character in ${projectName} never loses a fight contractually.',
+  'A poorly masked green screen in the trailer for ${projectName} becomes an internet laughing stock.',
+  '${directorName} claims the horrific working conditions on ${projectName} were necessary for the "vibe".'
 ];
 
 const RIVAL_TEMPLATES = [
@@ -197,7 +229,19 @@ const RIVAL_TEMPLATES = [
   '{rival} quietly buries their critically panned ${budget}M {genre} film on a Tuesday afternoon',
   '{rival} forces a cinematic universe crossover between a {genre} film and a fast-food mascot',
   '{rival} replaces striking writers with generative AI for their upcoming ${budget}M {genre} slate',
-  '{rival} blames the "algorithm" for their ${budget}M {genre} flop missing its target demographic entirely'
+  '{rival} blames the "algorithm" for their ${budget}M {genre} flop missing its target demographic entirely',
+
+  // Scribe Additions
+  '{rival} abruptly shelves highly anticipated ${budget}M {genre} sequel for a tax write-off',
+  '{rival} CEO mocked online after calling their new ${budget}M {genre} project "the pinnacle of human content"',
+  '{rival} announces a 10-year release schedule for a ${budget}M {genre} cinematic universe that no one wants',
+  '{rival} gets hit with class-action lawsuit over misleading trailer for their ${budget}M {genre} film',
+  '{rival} forces an unnecessary romantic subplot into their ${budget}M {genre} film to appease an algorithm',
+  '{rival} creates an entirely A.I. generated ${budget}M {genre} film; it bombs spectacularly at the box office',
+  '{rival} aggressively acquires legacy IP just to prevent competitors from making ${budget}M {genre} reboots',
+  '{rival} releases a 4-hour "Director\'s Cut" of their ${budget}M {genre} flop in a desperate cash grab',
+  '{rival} spends half the budget of their ${budget}M {genre} film on focus testing and demographic research',
+  '{rival} caught paying influencers to astroturf positive reviews for their ${budget}M {genre} disaster'
 ];
 
 function fill(template: string, vars: Record<string, string>): string {
