@@ -76,6 +76,26 @@ describe("franchise system", () => {
       expect(result).toBeNull();
     });
 
+    it("generates a deconstructive meta-sequel if franchise is heavily fatigued and fails", () => {
+      const flopProject = { ...baseProject, revenue: 100000000 };
+
+      const relatedProjects = Array(10).fill(0).map((_, i) => ({
+        ...baseProject,
+        id: `p${i+2}`,
+        parentProjectId: "p1"
+      }));
+
+      const state = { projects: [flopProject, ...relatedProjects] } as GameState;
+
+      vi.spyOn(Math, 'random').mockReturnValue(0.3); // Between 0.2 and 0.4 triggers Resurrection meta-sequel
+      const result = exploitIP(flopProject, state);
+
+      expect(result).toBeDefined();
+      expect(result?.title).toContain("Resurrection");
+      expect(result?.genre).toBe("Comedy");
+      expect(result?.flavor).toContain("self-aware, fourth-wall-breaking");
+    });
+
     it("generates crossover event if another huge hit exists in same genre", () => {
       const otherHit = {
         ...baseProject,
@@ -97,6 +117,28 @@ describe("franchise system", () => {
       const result = exploitIP(baseProject, state);
       expect(result?.title).toContain("vs Star Trek");
       expect(result?.initialBuzzBonus).toBeGreaterThan(20); // Massive hype
+    });
+
+    it("generates crossover event if another huge hit exists in a compatible crossover genre", () => {
+      const otherHit = {
+        ...baseProject,
+        id: "p99",
+        title: "Action Hero",
+        genre: "Action", // Action is compatible with Sci-Fi based on CROSSOVER_AFFINITY
+        revenue: 600000000 // > 2x budget
+      };
+
+      const state = { projects: [baseProject, otherHit] } as GameState;
+
+      let callCount = 0;
+      vi.spyOn(Math, 'random').mockImplementation(() => {
+        callCount++;
+        if (callCount === 1) return 0.9; // For crossover target detection
+        return 0.1; // For selecting crossover action
+      });
+
+      const result = exploitIP(baseProject, state);
+      expect(result?.title).toContain("vs Action Hero");
     });
 
     it("generates a direct sequel", () => {
@@ -135,6 +177,68 @@ describe("franchise system", () => {
 
       // Penalty will be massive, so bonus drops heavily
       expect(result?.initialBuzzBonus).toBe(-10); // Minimum threshold
+    });
+
+    it("applies steep fatigue curve for Superhero genre heavily saturated", () => {
+      const flopProject = { ...baseProject, revenue: 100000000, genre: "Superhero" };
+
+      // Need > 5 recent releases in the same genre
+      const recentReleases = Array(6).fill(0).map((_, i) => ({
+        ...flopProject,
+        id: `p_market_${i}`,
+        parentProjectId: undefined,
+        releaseWeek: 90
+      }));
+
+      // Need enough related projects to actually trigger the 'isFatigued' check (saturationPenalty > 35)
+      // Base fatigue for superhero is 0.45 * 1.5 (steep curve multiplier) = 0.675
+      // With 6 recent releases, penalty is roughly:
+      // (exponential * 0.675 * 10) + (6 * (0.675/2) * 5) = (exp * 6.75) + 10.125
+      // Need exp * 6.75 > 25, meaning exponential > 3.7.
+      // 3^1.2 = 3.73. Let's make 3 related projects to be safe.
+      const relatedProjects = Array(3).fill(0).map((_, i) => ({
+        ...flopProject,
+        id: `p_rel_${i}`,
+        parentProjectId: flopProject.id,
+      }));
+
+      const state = { week: 100, projects: [flopProject, ...relatedProjects, ...recentReleases] } as GameState;
+
+      vi.spyOn(Math, 'random').mockReturnValue(0.1);
+      const result = exploitIP(flopProject, state);
+
+      // Saturation penalty should be amplified due to Superhero Fatigue * 1.5 risk multiplier
+      expect(result).toBeDefined();
+      expect(result!.title).toContain("Reboot");
+      // Resulting initialBuzzBonus will be even lower due to massive penalty
+      expect(result!.initialBuzzBonus).toBeLessThan(0);
+    });
+
+    it("generates an IP Rights Retention Rush Job if legacy franchise underperforms", () => {
+      const legacyProject = {
+        ...baseProject,
+        revenue: 100000000, // < 1.5x budget (financial failure)
+        releaseWeek: 10
+      };
+
+      const relatedProject = {
+        ...legacyProject,
+        id: "p_rel_1",
+        parentProjectId: legacyProject.id,
+      };
+
+      // State is at week 200, making legacyProject > 150 weeks old (Legacy)
+      // Saturation penalty will be low as we don't have enough projects
+      const state = { week: 200, projects: [legacyProject, relatedProject] } as GameState;
+
+      vi.spyOn(Math, 'random').mockReturnValue(0.4); // < 0.5 triggers IP rush job when at risk and not fully fatigued
+      const result = exploitIP(legacyProject, state);
+
+      expect(result).toBeDefined();
+      expect(result?.title).toContain("The Untold Chapter");
+      expect(result?.budgetTier).toBe("low");
+      expect(result?.initialBuzzBonus).toBe(-5);
+      expect(result?.flavor).toContain("ensure the studio retains the");
     });
   });
 });

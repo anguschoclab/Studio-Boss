@@ -169,8 +169,8 @@ describe("talentStats system", () => {
     it("stacks multiple awards accurately", () => {
       const neutral = { ...mockProject, revenue: 10000000 };
       const awards: Award[] = [
-        { id: "a1", projectId: "p1", name: "Oscar", category: "Best Actor", body: "Academy Awards", status: "won", year: 2024 }, // +15, +10, +0.5
-        { id: "a2", projectId: "p1", name: "Spirit", category: "Best Actor", body: "Independent Spirit Awards", status: "nominated", year: 2024 } // +2, +1, +0.05
+        { id: "a1", projectId: "p1", name: "Oscar", category: "Best Actor", body: "Academy Awards", status: "won", year: 2024 }, // +15 prestige, +10 draw, +1.0 fee multiplier
+        { id: "a2", projectId: "p1", name: "Spirit", category: "Best Actor", body: "Independent Spirit Awards", status: "nominated", year: 2024 } // +2 prestige, +1 draw, +0.05 fee multiplier
       ];
 
       updateTalentStats(neutral, mockContracts, talentPoolMap, awards);

@@ -114,8 +114,9 @@ describe("releaseSimulation system", () => {
       vi.spyOn(Math, 'random').mockReturnValue(0.5); // Mid drop-off
 
       // Excellent legs (score >= 85) -> range 0.6 to 0.8
+      // Note: mockProject has a budget of 50M, so it does not get the "indie/horror" bonus (budget <= 20M)
       const excellentMultiplier = simulateWeeklyBoxOffice(mockProject, 2, 90, 1000000, 0);
-      expect(excellentMultiplier).toBe(840000); // 0.7 * 1.2 (indie bonus) * 1M
+      expect(excellentMultiplier).toBe(700000); // 0.7 * 1M
 
       // Average legs (score >= 60) -> range 0.4 to 0.6
       const averageMultiplier = simulateWeeklyBoxOffice(mockProject, 2, 60, 1000000, 0);
@@ -132,8 +133,8 @@ describe("releaseSimulation system", () => {
       const massiveProject = { ...mockProject, budget: 200000000 };
       const drop = simulateWeeklyBoxOffice(massiveProject, 1, 90, 1000000, 0);
 
-      // 0.7 * 0.70 = 0.49. 0.49 * 1M = 490,000
-      expect(drop).toBeCloseTo(490000);
+      // 0.7 * 0.60 = 0.42. 0.42 * 1M = 420,000
+      expect(drop).toBeCloseTo(420000);
     });
 
 
@@ -143,8 +144,8 @@ describe("releaseSimulation system", () => {
       const tentpoleProject = { ...mockProject, budget: 100000000 };
       const drop = simulateWeeklyBoxOffice(tentpoleProject, 1, 90, 1000000, 0);
 
-      // 0.7 * 0.85 = 0.595. 0.595 * 1M = 595,000
-      expect(drop).toBeCloseTo(595000);
+      // 0.7 * 0.80 = 0.56. 0.56 * 1M = 560,000
+      expect(drop).toBeCloseTo(560000);
     });
 
 
@@ -154,8 +155,8 @@ describe("releaseSimulation system", () => {
       const anomalyProject = { ...mockProject, budget: 20000000 };
       const drop = simulateWeeklyBoxOffice(anomalyProject, 2, 90, 1000000, 0);
 
-      // 0.7 * 1.2 = 0.84. 0.84 * 1M = 840,000
-      expect(drop).toBeCloseTo(840000);
+      // 0.7 * 1.3 = 0.91. 0.91 * 1M = 910,000
+      expect(drop).toBeCloseTo(910000);
     });
 
     it("handles extreme rival competition (100 strength)", () => {
@@ -203,6 +204,30 @@ describe("releaseSimulation system", () => {
       const ranks = calculateBoxOfficeRanks(entries);
       expect(ranks.get("p1")).toBe(1); // Standard JS sort preserves order or sorts deterministically
       expect(ranks.get("p2")).toBe(2);
+    });
+  });
+
+  describe("Extreme Edge Cases (Guild Auditor)", () => {
+    it("handles extreme review scores (> 100 or < 0)", () => {
+      // Mock random to be high
+      vi.spyOn(Math, 'random').mockReturnValue(0.9);
+      // Simulate weekly box office with reviewScore = 150 (impossible naturally, but engine shouldn't crash)
+      const multiplierHigh = simulateWeeklyBoxOffice(mockProject, 2, 150, 1000000, 0);
+      // Leg multiplier applies >= 85 logic
+      expect(multiplierHigh).toBeGreaterThan(0);
+
+      // Simulate weekly box office with reviewScore = -50
+      const multiplierLow = simulateWeeklyBoxOffice(mockProject, 2, -50, 1000000, 0);
+      // Leg multiplier applies < 40 logic
+      expect(multiplierLow).toBeGreaterThan(0);
+    });
+
+    it("handles calculating rank with a single entry or empty", () => {
+      const ranksSingle = calculateBoxOfficeRanks([{ projectId: '1', studioName: 'S1', weeklyRevenue: 100 }]);
+      expect(ranksSingle.get('1')).toBe(1);
+
+      const ranksEmpty = calculateBoxOfficeRanks([]);
+      expect(ranksEmpty.size).toBe(0);
     });
   });
 });

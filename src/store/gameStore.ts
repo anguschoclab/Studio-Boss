@@ -70,25 +70,67 @@ function prepareTalentAndContracts(
   const ids = attachedTalentIds || [];
 
   // O(1) lookup map for talent
-  const talentMap = new Map(state.talentPool.map(t => [t.id, t]));
-  const attachedTalent = ids.reduce((acc, id) => {
-    const t = talentMap.get(id);
-    if (t) acc.push(t);
-    return acc;
-  }, [] as typeof state.talentPool);
+  const talentMap = new Map();
+  for (let i = 0; i < state.talentPool.length; i++) {
+    const t = state.talentPool[i];
+    talentMap.set(t.id, t);
+  }
 
-  const talentFees = attachedTalent.reduce((sum, t) => sum + (t?.fee || 0), 0);
+  const attachedTalent: typeof state.talentPool = [];
+  let talentFees = 0;
+  const newContracts: any[] = [];
 
-  const newContracts = attachedTalent.map(t => ({
-    id: `contract-${crypto.randomUUID()}`,
-    talentId: t.id,
-    projectId,
-    fee: t.fee,
-    backendPercent: t.prestige > 80 ? 10 : 0,
-  }));
+  for (let i = 0; i < ids.length; i++) {
+    const t = talentMap.get(ids[i]);
+    if (t) {
+      attachedTalent.push(t);
+      talentFees += t.fee || 0;
+      newContracts.push({
+        id: `contract-${crypto.randomUUID()}`,
+        talentId: t.id,
+        projectId,
+        fee: t.fee,
+        backendPercent: t.prestige > 80 ? 10 : 0,
+      });
+    }
+  }
 
   return { attachedTalent, talentFees, newContracts };
 }
+
+// ⚡ Bolt: Extracted logic out of createProject into a pure function
+function buildProjectAndContracts(state: GameState, params: CreateProjectParams) {
+  const tier = BUDGET_TIERS[params.budgetTier];
+  const stats = getProjectStats(params, tier);
+  const { budget, weeklyCost, developmentWeeks, productionWeeks, renewable } = stats;
+
+  const projectId = crypto.randomUUID();
+  const { talentFees, newContracts } = prepareTalentAndContracts(state, params.attachedTalentIds, projectId);
+
+  const totalBudget = budget + talentFees;
+  const initialBuzz = Math.floor(randRange(30, 70)) + (params.initialBuzzBonus || 0);
+
+  const project: Project = {
+    id: projectId,
+    ...params,
+    budget: totalBudget,
+    weeklyCost,
+    status: 'development' as const,
+    buzz: Math.min(100, initialBuzz),
+    weeksInPhase: 0,
+    developmentWeeks,
+    productionWeeks,
+    revenue: 0,
+    weeklyRevenue: 0,
+    releaseWeek: null,
+    season: (params.format === 'tv' || params.format === 'unscripted') ? 1 : undefined,
+    episodesReleased: (params.format === 'tv' || params.format === 'unscripted') ? 0 : undefined,
+    renewable,
+  };
+
+  return { project, newContracts, talentFees };
+}
+
 export const useGameStore = create<GameStore>((set, get) => ({
   gameState: null,
 
@@ -108,105 +150,100 @@ export const useGameStore = create<GameStore>((set, get) => ({
   },
 
   createProject: (params) => {
-    const state = get().gameState;
-    if (!state) return;
+    set((s) => {
+      if (!s.gameState) return s;
 
-    const tier = BUDGET_TIERS[params.budgetTier];
-    const stats = getProjectStats(params, tier);
-    const { budget, weeklyCost, developmentWeeks, productionWeeks, renewable } = stats;
+      const { project, newContracts, talentFees } = buildProjectAndContracts(s.gameState, params);
 
-    const projectId = crypto.randomUUID();
-    const { talentFees, newContracts } = prepareTalentAndContracts(state, params.attachedTalentIds, projectId);
-
-    const totalBudget = budget + talentFees;
-
-    const initialBuzz = Math.floor(randRange(30, 70)) + (params.initialBuzzBonus || 0);
-    const project = {
-      id: projectId,
-      ...params,
-      budget: totalBudget,
-      weeklyCost,
-      status: 'development' as const,
-      buzz: Math.min(100, initialBuzz),
-      weeksInPhase: 0,
-      developmentWeeks,
-      productionWeeks,
-      revenue: 0,
-      weeklyRevenue: 0,
-      releaseWeek: null,
-      season: (params.format === 'tv' || params.format === 'unscripted') ? 1 : undefined,
-      episodesReleased: (params.format === 'tv' || params.format === 'unscripted') ? 0 : undefined,
-      renewable,
-    };
-
-    set({
-      gameState: {
-        ...state,
-        projects: [...state.projects, project],
-        contracts: [...state.contracts, ...newContracts],
-        cash: state.cash - talentFees // Deduct upfront talent fees immediately
-      }
+      return {
+        gameState: {
+          ...s.gameState,
+          projects: [...s.gameState.projects, project],
+          contracts: [...s.gameState.contracts, ...newContracts],
+          cash: s.gameState.cash - talentFees // Deduct upfront talent fees immediately
+        }
+      };
     });
   },
 
-
   acquireOpportunity: (opportunityId: string) => {
-    const state = get().gameState;
-    if (!state) return;
+    set((s) => {
+      if (!s.gameState) return s;
 
-    const opp = state.opportunities.find(o => o.id === opportunityId);
-    if (!opp) return;
+      // Use a for loop to find and filter in one pass
+      let opp: typeof s.gameState.opportunities[0] | undefined;
+      const newOpportunities: typeof s.gameState.opportunities = [];
+      for (let i = 0; i < s.gameState.opportunities.length; i++) {
+        const o = s.gameState.opportunities[i];
+        if (o.id === opportunityId) {
+          opp = o;
+        } else {
+          newOpportunities.push(o);
+        }
+      }
 
-    // First remove the opportunity and subtract cash
-    const newOpportunities = state.opportunities.filter(o => o.id !== opportunityId);
-    set({ gameState: { ...state, opportunities: newOpportunities, cash: state.cash - opp.costToAcquire } });
+      if (!opp) return s;
 
-    // Convert opportunity to project parameters
-    const params: CreateProjectParams = {
-      title: opp.title,
-      format: opp.format,
-      genre: opp.genre,
-      budgetTier: opp.budgetTier,
-      targetAudience: opp.targetAudience,
-      flavor: opp.flavor,
-      attachedTalentIds: opp.attachedTalentIds,
-      tvFormat: opp.tvFormat,
-      unscriptedFormat: opp.unscriptedFormat,
-      episodes: opp.episodes,
-      releaseModel: opp.releaseModel,
-    };
-
-    // Re-use the createProject function, it will get the updated state
-    get().createProject(params);
-  },
-  renewProject: (id: string) => {
-    const state = get().gameState;
-    if (!state) return;
-
-    const projectIndex = state.projects.findIndex(p => p.id === id);
-    if (projectIndex === -1) return;
-
-    const p = state.projects[projectIndex];
-    if ((p.format === 'tv' || p.format === 'unscripted') && p.renewable && p.season !== undefined) {
-      const updatedProjects = [...state.projects];
-      updatedProjects[projectIndex] = {
-        ...p,
-        status: 'development',
-        weeksInPhase: 0,
-        season: p.season + 1,
-        revenue: 0,
-        weeklyRevenue: 0,
-        releaseWeek: null,
-        episodesReleased: 0,
+      // Convert opportunity to project parameters
+      const params: CreateProjectParams = {
+        title: opp.title,
+        format: opp.format,
+        genre: opp.genre,
+        budgetTier: opp.budgetTier,
+        targetAudience: opp.targetAudience,
+        flavor: opp.flavor,
+        attachedTalentIds: opp.attachedTalentIds,
+        tvFormat: opp.tvFormat,
+        unscriptedFormat: opp.unscriptedFormat,
+        episodes: opp.episodes,
+        releaseModel: opp.releaseModel,
       };
 
-      set({
+      // ⚡ Bolt: Execute atomically to prevent double renders
+      const { project, newContracts, talentFees } = buildProjectAndContracts(s.gameState, params);
+
+      return {
         gameState: {
-          ...state,
-          projects: updatedProjects,
-        },
-      });
-    }
+          ...s.gameState,
+          opportunities: newOpportunities,
+          projects: [...s.gameState.projects, project],
+          contracts: [...s.gameState.contracts, ...newContracts],
+          cash: s.gameState.cash - opp.costToAcquire - talentFees
+        }
+      };
+    });
+  },
+  renewProject: (id: string) => {
+    set((s) => {
+      const state = s.gameState;
+      if (!state) return s;
+
+      const projectIndex = state.projects.findIndex(p => p.id === id);
+      if (projectIndex === -1) return s;
+
+      const p = state.projects[projectIndex];
+      if ((p.format === 'tv' || p.format === 'unscripted') && p.renewable && p.season !== undefined) {
+        const updatedProjects = [...state.projects];
+        updatedProjects[projectIndex] = {
+          ...p,
+          status: 'development',
+          weeksInPhase: 0,
+          season: p.season + 1,
+          revenue: 0,
+          weeklyRevenue: 0,
+          releaseWeek: null,
+          episodesReleased: 0,
+        };
+
+        return {
+          gameState: {
+            ...state,
+            projects: updatedProjects,
+          },
+        };
+      }
+      return s;
+    });
   },
 
   saveToSlot: (slot) => {
@@ -385,28 +422,30 @@ export const useGameStore = create<GameStore>((set, get) => ({
   },
 
   signContract: (talentId, projectId) => {
-    const state = get().gameState;
-    if (!state) return;
+    set((s) => {
+      const state = s.gameState;
+      if (!state) return s;
 
-    const talent = state.talentPool.find(t => t.id === talentId);
-    if (!talent) return;
+      const talent = state.talentPool.find(t => t.id === talentId);
+      if (!talent) return s;
 
-    if (state.cash < talent.fee) return;
+      if (state.cash < talent.fee) return s;
 
-    const newContract = {
-      id: `contract-${crypto.randomUUID()}`,
-      talentId,
-      projectId,
-      fee: talent.fee,
-      backendPercent: talent.prestige > 80 ? 10 : 0,
-    };
+      const newContract = {
+        id: `contract-${crypto.randomUUID()}`,
+        talentId,
+        projectId,
+        fee: talent.fee,
+        backendPercent: talent.prestige > 80 ? 10 : 0,
+      };
 
-    set({
-      gameState: {
-        ...state,
-        cash: state.cash - talent.fee,
-        contracts: [...state.contracts, newContract],
-      },
+      return {
+        gameState: {
+          ...state,
+          cash: state.cash - talent.fee,
+          contracts: [...state.contracts, newContract],
+        },
+      };
     });
   },
 

@@ -15,6 +15,22 @@ export const TARGET_AUDIENCES = [
   'Prestige / Critics', 'Family', 'Genre Fans',
 ] as const;
 
+export const CROSSOVER_AFFINITY: Record<string, string[]> = {
+  'Superhero': ['Action', 'Sci-Fi', 'Fantasy'],
+  'Action': ['Sci-Fi', 'Thriller', 'Crime'],
+  'Sci-Fi': ['Action', 'Horror', 'Fantasy'],
+  'Horror': ['Sci-Fi', 'Thriller', 'Comedy'],
+  'Fantasy': ['Action', 'Romance', 'Animation'],
+  'Comedy': ['Romance', 'Action', 'Animation'],
+  'Crime': ['Thriller', 'Drama', 'Action'],
+  'Thriller': ['Horror', 'Crime', 'Sci-Fi'],
+  'Romance': ['Comedy', 'Drama', 'Musical'],
+  'Animation': ['Comedy', 'Family', 'Musical', 'Fantasy'],
+  'Drama': ['Romance', 'Crime', 'Thriller'],
+  'Musical': ['Romance', 'Comedy', 'Animation'],
+  'Documentary': [] // Rarely crosses over
+};
+
 export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
   'Superhero': 0.45,   // Extreme risk, very sensitive to market saturation
   'Action': 0.35,      // High risk for generic action fatigue

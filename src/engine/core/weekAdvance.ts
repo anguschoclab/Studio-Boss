@@ -57,16 +57,28 @@ const processProjectPhase = (
   const events: string[] = [];
 
   // ⚡ Bolt: Calculate rivalAvgStrength once outside the loop instead of O(N*M) inside
-  const rivalAvgStrength = state.rivals.reduce((sum, r) => sum + r.strength, 0) / Math.max(1, state.rivals.length);
+  let rivalStrengthSum = 0;
+  for (let i = 0; i < state.rivals.length; i++) {
+    rivalStrengthSum += state.rivals[i].strength;
+  }
+  const rivalAvgStrength = rivalStrengthSum / Math.max(1, state.rivals.length);
 
-  const updatedProjects = state.projects.map(p => {
+  // ⚡ Bolt: Use a single for loop instead of map -> reduce -> forEach to prevent intermediate array allocations
+  const updatedProjects: typeof state.projects = [];
+  const boxOfficeEntries: BoxOfficeEntry[] = [];
+
+  for (let i = 0; i < state.projects.length; i++) {
+    const p = state.projects[i];
+
     if (p.activeCrisis && !p.activeCrisis.resolved) {
       projectUpdates.push(`"${p.title}" production is halted until the active crisis is resolved.`);
-      return p;
+      updatedProjects.push(p);
+      continue;
     }
 
     const projectContracts = contractsByProject.get(p.id) || [];
     const { project, update } = advanceProject(p, nextWeek, state.studio.prestige, projectContracts, talentPoolMap, rivalAvgStrength, state.awards);
+
     if (update) projectUpdates.push(update);
 
     if (project.status === 'released' && p.status !== 'released' && !project.awardsProfile) {
@@ -81,22 +93,20 @@ const processProjectPhase = (
       }
     }
 
-    return project;
-  });
+    updatedProjects.push(project);
 
-  const boxOfficeEntries = updatedProjects.reduce((acc, p) => {
-    if (p.status === 'released') {
-      acc.push({ projectId: p.id, studioName: state.studio.name, weeklyRevenue: p.weeklyRevenue });
+    if (project.status === 'released') {
+      boxOfficeEntries.push({ projectId: project.id, studioName: state.studio.name, weeklyRevenue: project.weeklyRevenue });
     }
-    return acc;
-  }, [] as BoxOfficeEntry[]);
+  }
 
   const ranks = calculateBoxOfficeRanks(boxOfficeEntries);
-  updatedProjects.forEach(p => {
+  for (let i = 0; i < updatedProjects.length; i++) {
+    const p = updatedProjects[i];
     if (p.status === 'released' && ranks.has(p.id)) {
       p.boxOfficeRank = ranks.get(p.id);
     }
-  });
+  }
 
   return {
     state: { ...state, projects: updatedProjects },
@@ -140,36 +150,47 @@ const simulateWorld = (
   const projectUpdates: string[] = [];
   const events: string[] = [];
 
-  const updatedRivals = state.rivals.map(updateRival);
+  // ⚡ Bolt: Single pass for loops instead of map to avoid allocations
+  const updatedRivals: typeof state.rivals = [];
+  for (let i = 0; i < state.rivals.length; i++) {
+    updatedRivals.push(updateRival(state.rivals[i]));
+  }
 
   const { updatedBuyers, newHeadlines: buyerHeadlines } = updateBuyers(state.buyers || [], nextWeek);
 
-  const formattedBuyerHeadlines = buyerHeadlines.map(text => ({
-    id: `bh-${crypto.randomUUID()}`,
-    text,
-    week: nextWeek,
-    category: 'market' as const,
-  }));
+  const formattedBuyerHeadlines: Headline[] = [];
+  for (let i = 0; i < buyerHeadlines.length; i++) {
+    formattedBuyerHeadlines.push({
+      id: `bh-${crypto.randomUUID()}`,
+      text: buyerHeadlines[i],
+      week: nextWeek,
+      category: 'market' as const,
+    });
+  }
 
-  let updatedOpportunitiesCopy = state.opportunities ? [...state.opportunities] : [];
+  const updatedOpportunitiesCopy: typeof state.opportunities = [];
+  const opportunities = state.opportunities || [];
 
-  // ⚡ Bolt: Single pass reduce to prevent intermediate array allocation from map().filter()
-  updatedOpportunitiesCopy = updatedOpportunitiesCopy.reduce((acc, opp) => {
+  // ⚡ Bolt: Single pass for loop instead of filter/map/reduce
+  for (let i = 0; i < opportunities.length; i++) {
+    const opp = opportunities[i];
     const newWeeks = opp.weeksUntilExpiry - 1;
     if (newWeeks > 0) {
-      acc.push({
+      updatedOpportunitiesCopy.push({
         ...opp,
         weeksUntilExpiry: newWeeks,
       });
     }
-    return acc;
-  }, [] as typeof updatedOpportunitiesCopy);
+  }
 
   // ⚡ Bolt: Lazy load oppNames set so it doesn't map on every tick if not needed
   let oppNames: Set<string> | null = null;
   const getOppNames = () => {
     if (!oppNames) {
-      oppNames = new Set(updatedOpportunitiesCopy.map(o => o.title));
+      oppNames = new Set();
+      for (let i = 0; i < updatedOpportunitiesCopy.length; i++) {
+        oppNames.add(updatedOpportunitiesCopy[i].title);
+      }
     }
     return oppNames;
   };
@@ -177,11 +198,19 @@ const simulateWorld = (
   // Opportunity 1 (Specific to available talent)
   // ⚡ Bolt: Keep expensive mapping inside the probability block so it doesn't run every tick
   if (Math.random() < 0.2) {
-    const activeTalentIds = new Set(state.contracts.map(c => c.talentId));
-    const availableTalentIds = state.talentPool.reduce((acc, t) => {
-      if (!activeTalentIds.has(t.id)) acc.push(t.id);
-      return acc;
-    }, [] as string[]);
+    // ⚡ Bolt: Avoid extra allocations with an in-place Set builder and a straight loop
+    const activeTalentIds = new Set<string>();
+    for (let i = 0; i < state.contracts.length; i++) {
+      activeTalentIds.add(state.contracts[i].talentId);
+    }
+
+    const availableTalentIds: string[] = [];
+    for (let i = 0; i < state.talentPool.length; i++) {
+      const t = state.talentPool[i];
+      if (!activeTalentIds.has(t.id)) {
+        availableTalentIds.push(t.id);
+      }
+    }
 
     if (availableTalentIds.length > 0) {
       const newOpp = generateOpportunity(availableTalentIds);
@@ -253,7 +282,6 @@ const simulateWorld = (
     opportunities: updatedOpportunitiesCopy,
     studio: { ...state.studio, prestige: state.studio.prestige + prestigeChange },
     buyers: updatedBuyers,
-    talentPool: state.talentPool, // ⚡ Bolt: No need to reconstruct talentPool if no elements mutated
     rivals: updatedRivals,
     awards: [...(state.awards || []), ...newAwards],
     headlines: [...newHeadlines, ...state.headlines].slice(0, 50),

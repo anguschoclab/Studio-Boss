@@ -28,8 +28,16 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
 
   return (
     <div
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          selectProject(project.id);
+        }
+      }}
       onClick={() => selectProject(project.id)}
-      className="w-full text-left p-3.5 rounded-xl border border-border/60 bg-card/40 backdrop-blur-sm hover:shadow-lg hover:border-primary/50 hover:-translate-y-0.5 transition-all duration-300 space-y-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 group relative overflow-hidden"
+      className="w-full text-left p-3.5 rounded-xl border border-border/60 bg-card/40 backdrop-blur-sm hover:shadow-lg hover:border-primary/50 hover:-translate-y-0.5 transition-all duration-300 space-y-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 group relative overflow-hidden cursor-pointer"
     >
       <div className="flex items-start justify-between gap-2">
         <h4 className="font-display font-bold text-[15px] text-foreground leading-tight group-hover:text-primary transition-colors">{project.title}</h4>
@@ -83,9 +91,9 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
               {project.weeksInPhase}/{project.status === 'development' ? project.developmentWeeks : project.productionWeeks}w
             </span>
           </div>
-          <div className="h-1 bg-muted rounded-full overflow-hidden">
+          <div className="h-1.5 bg-muted/50 rounded-full overflow-hidden border border-border/20 shadow-inner">
             <div
-              className={`h-full rounded-full transition-all duration-500 shadow-sm ${hasUnresolvedCrisis ? 'bg-gradient-to-r from-destructive/80 to-destructive shadow-[0_0_8px_rgba(239,68,68,0.5)]' : 'bg-gradient-to-r from-primary/80 to-primary shadow-[0_0_8px_rgba(234,179,8,0.4)]'}`}
+              className={`h-full rounded-full transition-all duration-500 shadow-sm ${hasUnresolvedCrisis ? 'bg-gradient-to-r from-destructive to-destructive/80 shadow-[0_0_12px_rgba(239,68,68,0.6)]' : 'bg-gradient-to-r from-primary to-primary/80 shadow-[0_0_10px_rgba(234,179,8,0.5)]'}`}
               style={{ width: `${Math.min(progressPct, 100)}%` }}
             />
           </div>
@@ -133,7 +141,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
            <Button
              variant="destructive"
              size="sm"
-             className="w-full text-xs font-bold animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.4)]"
+             className="w-full text-xs font-bold animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.4)] hover:scale-[1.02] transition-transform"
              onClick={(e) => {
                e.stopPropagation();
                openCrisisModal(project.id);

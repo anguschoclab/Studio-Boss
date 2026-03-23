@@ -15,11 +15,14 @@ export function calculateWeeklyCosts(projects: Project[]): number {
 
       // Introduce an overhead multiplier for large projects dragging on in production
       if (p.status === 'production' && p.budget >= 200_000_000 && p.weeksInPhase > p.productionWeeks * 0.8) {
-         // Logistics completely break down on mega-sets; costs skyrocket late in production
-         costMultiplier *= 1.5;
+         // Logistics completely break down on mega-sets; costs skyrocket late in production (increased overhead for huge risks)
+         costMultiplier *= 1.75;
       } else if (p.status === 'production' && p.budget >= 100_000_000 && p.weeksInPhase > p.productionWeeks * 0.8) {
-         // Logistics break down on huge sets; costs balloon late in production
-         costMultiplier *= 1.25;
+         // Logistics break down on huge sets; costs balloon late in production (increased overhead)
+         costMultiplier *= 1.4;
+      } else if (p.status === 'production' && p.budget >= 50_000_000 && p.weeksInPhase > p.productionWeeks * 0.8) {
+         // Mid-to-high budget projects also face significant overtime/delay penalties
+         costMultiplier *= 1.2;
       }
 
       return sum + (p.weeklyCost * costMultiplier);
@@ -48,11 +51,11 @@ export function calculateWeeklyRevenue(projects: Project[], contracts: Contract[
       // Backend points hit harder when revenue is massive (e.g., simulating complex gross definitions)
       let backendMultiplier = 1.0;
       if (revenue > 100_000_000) {
-        backendMultiplier = 1.5; // Mega-hits trigger astronomical backend payouts for A-listers
+        backendMultiplier = 1.6; // Increased mega-hit payouts to squeeze studio margins further
       } else if (revenue > 50_000_000) {
-        backendMultiplier = 1.25; // First dollar gross hits harder
+        backendMultiplier = 1.35; // Increased first dollar gross hits
       } else if (revenue > 20_000_000) {
-        backendMultiplier = 1.1; // Agents negotiate better escalators for massive hits
+        backendMultiplier = 1.15; // Agents negotiate even better escalators
       }
 
       const backendCut = revenue * ((totalBackendPercent * backendMultiplier) / 100);
