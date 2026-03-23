@@ -125,6 +125,90 @@ describe("buyers system", () => {
   });
 
   describe("calculateFitScore", () => {
+
+    it("applies extreme market saturation penalty for 5 or more recent similar projects", () => {
+      vi.spyOn(Math, 'random').mockReturnValue(0.5); // randRange = 0
+      const activeBuyer = { ...mockBuyer, currentMandate: null };
+
+      // Create 5 recent similar projects
+      const allProjects = Array.from({ length: 5 }).map((_, i) => ({
+        ...mockProject,
+        id: `recent${i}`,
+        status: "released" as const,
+        genre: "Sci-Fi",
+        releaseWeek: 50 + i,
+      }));
+
+      const currentWeek = 60;
+
+      // Base: 50
+      // 5 similar projects => saturationPenalty = (5 * 5) = 25
+      // length >= 5 => penalty += 20 (Total 45)
+      // Score = 50 - 45 = 5
+      const score = calculateFitScore(mockProject, activeBuyer, currentWeek, allProjects);
+      expect(score).toBe(5);
+    });
+
+    it("matches genres correctly for sci-fi/fantasy, comedy, and drama", () => {
+      vi.spyOn(Math, 'random').mockReturnValue(0.5); // randRange 0
+
+      const sciFiBuyer = { ...mockBuyer, currentMandate: { type: "sci-fi" as const, activeUntilWeek: 100 } };
+      const comedyBuyer = { ...mockBuyer, currentMandate: { type: "comedy" as const, activeUntilWeek: 100 } };
+      const dramaBuyer = { ...mockBuyer, currentMandate: { type: "drama" as const, activeUntilWeek: 100 } };
+
+      const fantasyProject = { ...mockProject, genre: "Fantasy", buzz: 50 }; // sci-fi matches fantasy
+      const comedyProject = { ...mockProject, genre: "Comedy", buzz: 50 };
+      const dramaProject = { ...mockProject, genre: "Drama", buzz: 50 };
+
+      // Base 50 + Match 30 + Buzz 10 + randRange 0 = 90
+      expect(calculateFitScore(fantasyProject, sciFiBuyer)).toBe(90);
+      expect(calculateFitScore(comedyProject, comedyBuyer)).toBe(90);
+      expect(calculateFitScore(dramaProject, dramaBuyer)).toBe(90);
+    });
+
+    it("boosts score for prestige mandate based on budget tiers", () => {
+      vi.spyOn(Math, 'random').mockReturnValue(0.5); // randRange 0
+      const prestigeBuyer = { ...mockBuyer, currentMandate: { type: "prestige" as const, activeUntilWeek: 100 } };
+
+      const highProject = { ...mockProject, budgetTier: "high" as const, buzz: 50 };
+      const blockbusterProject = { ...mockProject, budgetTier: "blockbuster" as const, buzz: 50 };
+      const lowProject = { ...mockProject, budgetTier: "low" as const, buzz: 50 };
+
+      // Base 50 + Match 20 + Buzz 10 = 80
+      expect(calculateFitScore(highProject, prestigeBuyer)).toBe(80);
+
+      // Base 50 + Match 10 + Buzz 10 = 70
+      expect(calculateFitScore(blockbusterProject, prestigeBuyer)).toBe(70);
+
+      // Base 50 - Match 20 + Buzz 10 = 40
+      expect(calculateFitScore(lowProject, prestigeBuyer)).toBe(40);
+    });
+
+    it("boosts score for broad_appeal mandate with family audience and mid/high budget", () => {
+      vi.spyOn(Math, 'random').mockReturnValue(0.5); // randRange 0
+      const broadBuyer = { ...mockBuyer, currentMandate: { type: "broad_appeal" as const, activeUntilWeek: 100 } };
+
+      const midFamilyProject = { ...mockProject, budgetTier: "mid" as const, targetAudience: "Family-Friendly", buzz: 50 };
+      const highAdultProject = { ...mockProject, budgetTier: "high" as const, targetAudience: "Adult", buzz: 50 };
+
+      // mid/high (+20), family (+15)
+      // Base 50 + Budget 20 + Family 15 + Buzz 10 = 95
+      expect(calculateFitScore(midFamilyProject, broadBuyer)).toBe(95);
+
+      // Base 50 + Budget 20 + Buzz 10 = 80
+      expect(calculateFitScore(highAdultProject, broadBuyer)).toBe(80);
+    });
+
+    it("penalizes low budget projects for premium archetype buyers", () => {
+      vi.spyOn(Math, 'random').mockReturnValue(0.5); // randRange 0
+      const premiumBuyer = { ...mockBuyer, archetype: "premium" as const, currentMandate: { type: "drama" as const, activeUntilWeek: 100 } };
+
+      const lowProject = { ...mockProject, budgetTier: "low" as const, genre: "Action", buzz: 50 }; // no genre match to isolate archetype penalty
+
+      // Base 50 - Premium/Low 30 + Buzz 10 = 30
+      expect(calculateFitScore(lowProject, premiumBuyer)).toBe(30);
+    });
+
     it("applies market saturation penalty for similar projects released within 52 weeks", () => {
       vi.spyOn(Math, 'random').mockReturnValue(0.5); // randRange = 0
       const activeBuyer: Buyer = { ...mockBuyer, currentMandate: null }; // No mandate, score should just be 50 - penalty
