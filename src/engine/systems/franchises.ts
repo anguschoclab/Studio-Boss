@@ -1,5 +1,5 @@
 import { Project, GameState } from '../types';
-import { FRANCHISE_FATIGUE_RISK } from '../data/genres';
+import { FRANCHISE_FATIGUE_RISK, CROSSOVER_AFFINITY } from '../data/genres';
 
 export function exploitIP(sourceProject: Project, state?: GameState) {
   if (sourceProject.status !== 'released') {
@@ -29,10 +29,13 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
         genreSaturationCount++;
       }
 
-      // Look for a crossover opportunity
+      // Look for a crossover opportunity (same genre OR compatible genre)
+      const isCompatibleCrossover = p.genre === sourceProject.genre ||
+        (CROSSOVER_AFFINITY[sourceProject.genre] && CROSSOVER_AFFINITY[sourceProject.genre].includes(p.genre));
+
       if (
         p.id !== sourceProject.id &&
-        p.genre === sourceProject.genre &&
+        isCompatibleCrossover &&
         p.status === 'released' &&
         p.revenue > p.budget * 2 &&
         Math.random() > 0.8
@@ -48,23 +51,33 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
   }
 
   // Fatigue risk calculation
-  const baseFatigueRisk = FRANCHISE_FATIGUE_RISK[sourceProject.genre] || 0.1;
+  let baseFatigueRisk = FRANCHISE_FATIGUE_RISK[sourceProject.genre] || 0.1;
+
+  // Apply "Superhero Fatigue" (or general blockbuster fatigue) logic:
+  // If the genre is heavily saturated, amplify the risk severely.
+  if ((sourceProject.genre === 'Superhero' || sourceProject.genre === 'Action' || sourceProject.genre === 'Sci-Fi') && genreSaturationCount > 5) {
+      baseFatigueRisk *= 1.5; // Steep fatigue curve
+  }
+
   const exponentialSaturation = Math.pow(relatedProjectCount, 1.2); // Exponential decay for heavily saturated franchises
   // Factor in both the direct related projects and the general market saturation for this genre
   const saturationPenalty = (exponentialSaturation * baseFatigueRisk * 10) + (genreSaturationCount * (baseFatigueRisk / 2) * 5);
 
   const isFatigued = saturationPenalty > 35; // High saturation
 
-  // Financial success check: revenue > budget * 1.5 (unless it's a desperate reboot attempt)
-  if (sourceProject.revenue <= sourceProject.budget * 1.5 && !isFatigued) {
+  // IP Rights / Retention check: If it's a legacy IP with past related projects, we might rush something purely to keep rights
+  const atRiskOfLosingRights = isLegacy && relatedProjectCount > 0 && sourceProject.revenue <= sourceProject.budget * 1.5;
+
+  // Financial success check: revenue > budget * 1.5 (unless it's a desperate reboot attempt or a rights retention rush job)
+  if (sourceProject.revenue <= sourceProject.budget * 1.5 && !isFatigued && !atRiskOfLosingRights) {
     return null;
   }
 
   const rand = Math.random();
 
-  // If the franchise is dead/fatigued and underperformed, there's a chance to reboot or format flip
+  // If the franchise is dead/fatigued and underperformed, there's a chance to reboot, format flip, or deconstruct
   if (isFatigued && sourceProject.revenue <= sourceProject.budget * 1.5) {
-    if (rand < 0.3) {
+    if (rand < 0.2) {
       return {
         title: `${sourceProject.title}: Reboot`,
         format: sourceProject.format,
@@ -76,7 +89,20 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
         isSpinoff: true,
         initialBuzzBonus: 5 - (saturationPenalty / 2), // Penalty for rebooting too soon
       };
-    } else if (rand < 0.5 && sourceProject.format === 'film') {
+    } else if (rand < 0.4) {
+      // Deconstructive Meta-Sequel
+      return {
+        title: `${sourceProject.title}: Resurrection`,
+        format: sourceProject.format,
+        genre: 'Comedy', // Often becomes a meta-comedy
+        budgetTier: 'mid',
+        targetAudience: 'Genre Fans',
+        flavor: `A self-aware, fourth-wall-breaking installment that mocks the bloated history of the ${sourceProject.title} franchise.`,
+        parentProjectId: sourceProject.id,
+        isSpinoff: true,
+        initialBuzzBonus: 10, // Meta-commentary tends to get initial positive buzz
+      };
+    } else if (rand < 0.6 && sourceProject.format === 'film') {
         // Format flip: Film to TV to save the IP
         return {
           title: `${sourceProject.title}: The Series`,
@@ -101,10 +127,25 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
   let buzzBonus = 15 - saturationPenalty;
   let newBudgetTier = sourceProject.budgetTier;
 
+  if (atRiskOfLosingRights && rand < 0.5 && !isFatigued) {
+    // IP Rights Retention Rush Job
+    return {
+      title: `${sourceProject.title}: The Untold Chapter`,
+      format: sourceProject.format,
+      genre: sourceProject.genre,
+      budgetTier: 'low',
+      targetAudience: sourceProject.targetAudience,
+      flavor: `A hastily greenlit prequel rushed into production primarily to ensure the studio retains the ${sourceProject.title} IP rights.`,
+      parentProjectId: sourceProject.id,
+      isSpinoff: true,
+      initialBuzzBonus: -5, // Audience sees through the rush job
+    };
+  }
+
   if (recentCrossoverTarget && rand < 0.2) {
     // Cinematic Universe Event
     newTitle = `${sourceProject.title} vs ${recentCrossoverTarget.title}: Dawn of Justice`;
-    flavorText = `A blockbuster Cinematic Universe event combining two powerhouse ${sourceProject.genre} franchises. Stakes have never been higher.`;
+    flavorText = `A blockbuster Cinematic Universe event combining two powerhouse franchises. Stakes have never been higher.`;
     buzzBonus += 30 - (genreSaturationCount * 2); // Crossovers generate massive hype, but suffer if the genre is saturated
     newBudgetTier = 'blockbuster'; // Crossovers are always huge events
   } else if (isLegacy && rand < 0.4) {
