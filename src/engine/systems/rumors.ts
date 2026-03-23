@@ -3,7 +3,7 @@ import { pick, randRange } from '../utils';
 
 export function advanceRumors(state: GameState): GameState {
   let currentRumors = state.rumors || [];
-  let newHeadlines = [...state.headlines];
+  const newHeadlines = [...state.headlines];
   
   // Resolve rumors that are due
   currentRumors = currentRumors.map(r => {

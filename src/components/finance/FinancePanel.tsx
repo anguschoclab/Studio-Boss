@@ -3,17 +3,18 @@ import { useGameStore } from '@/store/gameStore';
 import { formatMoney } from '@/engine/utils';
 import { calculateWeeklyCosts, calculateWeeklyRevenue, calculateStudioNetWorth, generateCashflowForecast, calculateProjectROI } from '@/engine/systems/finance';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, ComposedChart, Line } from 'recharts';
+import { Area, XAxis, YAxis, Tooltip, ResponsiveContainer, ComposedChart, Line } from 'recharts';
 import { Badge } from '@/components/ui/badge';
 
 export const FinancePanel = () => {
   const gameState = useGameStore(s => s.gameState);
 
   const cash = gameState?.cash ?? 0;
-  const financeHistory = gameState?.financeHistory ?? [];
+  const rawFinanceHistory = gameState?.financeHistory;
   const rawProjects = gameState?.projects;
 
   const projectsMemo = useMemo(() => rawProjects ?? [], [rawProjects]);
+  const financeHistory = useMemo(() => rawFinanceHistory ?? [], [rawFinanceHistory]);
 
   const weeklyCosts = useMemo(() => calculateWeeklyCosts(projectsMemo), [projectsMemo]);
   const weeklyRevenue = useMemo(() => calculateWeeklyRevenue(projectsMemo), [projectsMemo]);
@@ -28,8 +29,8 @@ export const FinancePanel = () => {
   );
   
   const releasedProjects = useMemo(() => 
-    projects.filter(p => p.status === 'released' || p.status === 'post_release' || p.status === 'archived').sort((a,b) => b.revenue - a.revenue),
-    [projects]
+    projectsMemo.filter(p => p.status === 'released' || p.status === 'post_release' || p.status === 'archived').sort((a,b) => (b.revenue || 0) - (a.revenue || 0)),
+    [projectsMemo]
   );
 
   const chartData = useMemo(() => {
