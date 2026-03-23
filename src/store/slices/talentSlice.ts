@@ -1,25 +1,27 @@
 import { StateCreator } from 'zustand';
+import { GameStore } from '../gameStore';
 import { Contract } from '@/engine/types';
+import { offerFirstLookDeal } from '@/engine/systems/deals';
 
 export interface TalentSlice {
   signContract: (talentId: string, projectId: string) => void;
   offerFirstLook: (talentId: string, duration: number, fee: number) => boolean;
 }
 
-export const createTalentSlice: StateCreator<any, [], [], TalentSlice> = (set, get) => ({
+export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (set, get) => ({
   signContract: (talentId, projectId) => {
-    set((s: any) => {
+    set((s) => {
       const state = s.gameState;
       if (!state) return s;
 
-      const talent = state.talentPool.find((t: any) => t.id === talentId);
+      const talent = state.talentPool.find(t => t.id === talentId);
       if (!talent) return s;
       
-      const pIndex = state.projects.findIndex((p: any) => p.id === projectId);
+      const pIndex = state.projects.findIndex(p => p.id === projectId);
       if (pIndex === -1) return s;
       
       let finalFee = talent.fee;
-      if (state.firstLookDeals?.some((d: any) => d.talentId === talentId)) {
+      if (state.firstLookDeals?.some(d => d.talentId === talentId)) {
          finalFee = talent.fee * 0.5;
       }
       
@@ -50,23 +52,17 @@ export const createTalentSlice: StateCreator<any, [], [], TalentSlice> = (set, g
 
   offerFirstLook: (talentId, duration, fee) => {
     let success = false;
-    set((s: any) => {
+    set((s) => {
       const state = s.gameState;
       if (!state) return s;
       
-      const talent = state.talentPool.find((t: any) => t.id === talentId);
+      const talent = state.talentPool.find(t => t.id === talentId);
       if (!talent) return s;
       
       const lockFee = (talent.fee * 2);
       if (state.cash < lockFee) return s;
       
-<<<<<<< Updated upstream
-=======
-      // Note: In slice, we might need to handle the require carefully or pass it in.
-      // For now, let's assume it's available or we can import it.
->>>>>>> Stashed changes
-      const dealsEngine = require('../../engine/systems/deals');
-      const deal = dealsEngine.offerFirstLookDeal(state, talentId, duration, true);
+      const deal = offerFirstLookDeal(state, talentId, duration, true);
       
       if (deal) {
          success = true;

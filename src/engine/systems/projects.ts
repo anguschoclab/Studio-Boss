@@ -217,6 +217,58 @@ function handleMarketingPhase(p: Project): { update: string | null } {
   return { update: `"${p.title}" has wrapped production and is ready for marketing strategy.` };
 }
 
+export function executeMarketing(
+  project: Project,
+  budget: number,
+  domesticPct: number,
+  angle: string
+): { project: Project } {
+  const p = { ...project };
+  p.marketingBudget = budget;
+  p.marketingDomesticSplit = domesticPct;
+  p.marketingAngle = angle;
+
+  // Marketing effectiveness
+  let buzzBonus = Math.floor(budget / 100000) * 0.1;
+  if (budget >= p.budget * 0.5) buzzBonus += 10;
+  if (budget >= p.budget) buzzBonus += 20;
+
+  const genreToAngle: Record<string, string[]> = {
+    'Action': ['spectacle', 'thrills'],
+    'Comedy': ['humor'],
+    'Drama': ['prestige', 'romance'],
+    'Horror': ['thrills', 'mystery'],
+    'Sci-Fi': ['spectacle', 'mystery'],
+    'Romance': ['romance'],
+  };
+
+  const matched = genreToAngle[p.genre]?.includes(angle) ? 15 : -10;
+  buzzBonus += matched;
+
+  p.buzz = Math.min(100, Math.max(0, p.buzz + buzzBonus));
+  return { project: p };
+}
+
+export function executeGreenlight(project: Project): { project: Project; update: string } {
+  const p = { ...project, status: 'production' as const, weeksInPhase: 0 };
+  return {
+    project: p,
+    update: `"${project.title}" receives full greenlight and enters production.`
+  };
+}
+
+export function executePitching(
+  project: Project,
+  buyerName: string,
+  contractType: string
+): { project: Project; update: string } {
+  const p = { ...project, status: 'production' as const, weeksInPhase: 0 };
+  return {
+    project: p,
+    update: `${buyerName} officially picks up "${project.title}" on a ${contractType} deal.`
+  };
+}
+
 export function advanceProject(
   project: Project,
   currentWeek: number,

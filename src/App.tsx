@@ -11,19 +11,15 @@ import { useArchetypeTheme } from "./hooks/useArchetypeTheme";
 
 const queryClient = new QueryClient();
 
-const ThemeApplier = () => {
-  useArchetypeTheme();
-  return null;
-};
+import { GlobalThemeProvider } from "./components/Theme/GlobalThemeProvider";
 
 const rootRoute = createRootRoute({
   component: () => (
-    <>
-      <ThemeApplier />
+    <GlobalThemeProvider>
       <Outlet />
       <Toaster />
       <Sonner />
-    </>
+    </GlobalThemeProvider>
   ),
   notFoundComponent: () => <NotFound />
 });

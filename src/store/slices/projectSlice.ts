@@ -1,8 +1,7 @@
 import { StateCreator } from 'zustand';
 import { GameStore } from '../gameStore';
-import { CreateProjectParams } from '../gameStore';
+import { CreateProjectParams, buildProjectAndContracts } from '../storeUtils';
 import { handleReleasePhaseEntry } from '@/engine/systems/projects';
-import { buildProjectAndContracts } from '../gameStore';
 import { updateCultureFromProject } from '@/engine/systems/culture';
 import { negotiateContract } from '@/engine/systems/buyers';
 import { exploitIP } from '@/engine/systems/franchises';
@@ -16,7 +15,6 @@ export interface ProjectSlice {
   renewProject: (id: string) => void;
   greenlightProject: (projectId: string) => void;
   pitchProject: (projectId: string, buyerId: string, contractType: ProjectContractType) => Promise<boolean>;
-  launchMarketingCampaign: (projectId: string, budget: number, domesticPct: number, angle: string) => Promise<void>;
   _updateProjectToProduction: (state: GameState, projectIndex: number, project: Project, headlineText: string, extraProjectUpdates?: Partial<Project>) => void;
   resolveProjectCrisis: (projectId: string, optionIndex: number) => void;
   exploitFranchise: (projectId: string) => void;
@@ -99,51 +97,6 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
     });
   },
 
-  launchMarketingCampaign: async (projectId, budget, domesticPct, angle) => {
-    const projectsEngine = await import('@/engine/systems/projects');
-    set((s) => {
-      if (!s.gameState) return s;
-
-      const state = s.gameState;
-      if (budget > state.cash) return s;
-
-      const pIndex = state.projects.findIndex(p => p.id === projectId);
-      if (pIndex === -1) return s;
-
-      const originalProject = state.projects[pIndex];
-      if (originalProject.status !== 'marketing') return s;
-
-      const newCash = state.cash - budget;
-
-      const { project: p } = projectsEngine.executeMarketing(originalProject, budget, domesticPct, angle);
-
-      const contracts = state.contracts.filter(c => c.projectId === p.id);
-      const talentMap = new Map(state.talentPool.map(t => [t.id, t]));
-      const result = handleReleasePhaseEntry(p, state.week, state.studio.prestige, contracts, talentMap);
-
-      const newHeadlines = [...state.headlines];
-      if (result.update) {
-        newHeadlines.unshift({
-          id: crypto.randomUUID(),
-          week: state.week,
-          category: 'general',
-          text: result.update
-        });
-      }
-
-      const updatedProjects = [...state.projects];
-      updatedProjects[pIndex] = p;
-
-      return {
-        gameState: {
-          ...state,
-          cash: newCash,
-          projects: updatedProjects,
-          headlines: newHeadlines,
-        }
-      };
-    });
-  },
 
   greenlightProject: async (projectId) => {
     const projectsEngine = await import('@/engine/systems/projects');
