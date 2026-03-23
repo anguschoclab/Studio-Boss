@@ -91,9 +91,9 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
               {project.weeksInPhase}/{project.status === 'development' ? project.developmentWeeks : project.productionWeeks}w
             </span>
           </div>
-          <div className="h-1 bg-muted rounded-full overflow-hidden">
+          <div className="h-1.5 bg-muted/50 rounded-full overflow-hidden border border-border/20 shadow-inner">
             <div
-              className={`h-full rounded-full transition-all duration-500 shadow-sm ${hasUnresolvedCrisis ? 'bg-gradient-to-r from-destructive/80 to-destructive shadow-[0_0_8px_rgba(239,68,68,0.5)]' : 'bg-gradient-to-r from-primary/80 to-primary shadow-[0_0_8px_rgba(234,179,8,0.4)]'}`}
+              className={`h-full rounded-full transition-all duration-500 shadow-sm ${hasUnresolvedCrisis ? 'bg-gradient-to-r from-destructive to-destructive/80 shadow-[0_0_12px_rgba(239,68,68,0.6)]' : 'bg-gradient-to-r from-primary to-primary/80 shadow-[0_0_10px_rgba(234,179,8,0.5)]'}`}
               style={{ width: `${Math.min(progressPct, 100)}%` }}
             />
           </div>
@@ -141,7 +141,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
            <Button
              variant="destructive"
              size="sm"
-             className="w-full text-xs font-bold animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.4)]"
+             className="w-full text-xs font-bold animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.4)] hover:scale-[1.02] transition-transform"
              onClick={(e) => {
                e.stopPropagation();
                openCrisisModal(project.id);

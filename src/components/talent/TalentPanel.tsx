@@ -16,7 +16,7 @@ export const TalentPanel = () => {
   }, [talentPool, filter]);
 
   return (
-    <div className="space-y-4 h-full flex flex-col">
+    <div className="space-y-4 h-full flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-display font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">Talent Roster</h2>
         <div className="flex gap-2">
@@ -38,7 +38,7 @@ export const TalentPanel = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 overflow-y-auto pb-6">
         {filteredTalent.map((talent: TalentProfile) => (
-          <div key={talent.id} className={`p-4 rounded-xl border ${talent.prestige >= 80 ? 'border-primary/50 shadow-[0_0_15px_rgba(234,179,8,0.15)] bg-card/60' : 'border-border/50 bg-card/40'} backdrop-blur-sm hover:shadow-md hover:border-primary/60 transition-all duration-300 space-y-3.5 group`}>
+          <div key={talent.id} className={`p-4 rounded-xl border ${talent.prestige >= 80 ? 'border-primary/60 shadow-[0_0_20px_rgba(234,179,8,0.2)] bg-card/80 bg-gradient-to-br from-primary/5 to-transparent' : 'border-border/50 bg-card/40'} backdrop-blur-md hover:shadow-xl hover:border-primary/50 hover:-translate-y-1 transition-all duration-300 space-y-3.5 group relative overflow-hidden`}>
             <div className="flex items-start justify-between gap-2">
               <div className="flex flex-col">
                 <h4 className="font-display font-bold text-sm text-foreground leading-tight group-hover:text-primary transition-colors">{talent.name}</h4>
