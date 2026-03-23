@@ -5,6 +5,8 @@ import { UNSCRIPTED_FORMATS } from '../data/unscriptedFormats';
 import { clamp, randRange } from '../utils';
 import { updateTalentStats } from './talentStats';
 import { generateReviewScore, simulateWeeklyBoxOffice } from './releaseSimulation';
+import { calculateRegionalPenalties } from './ratings';
+import { calculateAudienceIndex } from './demographics';
 
 function getAttachedTalent(contracts: Contract[], talentPoolMap: Map<string, TalentProfile>): TalentProfile[] {
   return contracts.reduce((acc, c) => {
@@ -52,7 +54,11 @@ export function handleReleasePhaseEntry(
   }
   const talentDrawFactor = attachedTalent.reduce((sum, t) => sum + (t.draw / 100), 1);
 
-  const baseGross = (minRev + (maxRev - minRev) * buzzFactor * prestigeFactor * randomFactor) * talentDrawFactor;
+  // Sprint H & I: Regional Censorship and Demographic Penetration
+  const regionalMultiplier = calculateRegionalPenalties(p);
+  const demographicMultiplier = p.targetDemographic ? calculateAudienceIndex(p, p.targetDemographic) : 1.0;
+
+  const baseGross = (minRev + (maxRev - minRev) * buzzFactor * prestigeFactor * randomFactor) * talentDrawFactor * regionalMultiplier * demographicMultiplier;
 
   let update: string | null;
 

@@ -15,6 +15,8 @@ import { advanceTrends, getTrendMultiplier } from '../systems/trends';
 import { resolveFestivals } from '../systems/festivals';
 import { advanceMarketEvents } from '../systems/marketEvents';
 import { advanceRumors } from '../systems/rumors';
+import { processDirectorDisputes } from '../systems/directors';
+import { generateScandals, advanceScandals } from '../systems/scandals';
 
 const EVENT_POOL = [
   'Market analysts upgrade entertainment sector outlook.',
@@ -97,6 +99,15 @@ const processProjectPhase = (
       if (newCrisis) {
         project.activeCrisis = newCrisis;
         events.push(`CRISIS: "${project.title}" - ${newCrisis.description}`);
+      }
+    }
+
+    // Sprint J: Director disputes
+    if (project.status === 'production') {
+      const dirDisputeArgs = processDirectorDisputes({ ...state, projects: [project] });
+      if (dirDisputeArgs.newCrises.length > 0 && (!project.activeCrisis || project.activeCrisis.resolved)) {
+         project.activeCrisis = dirDisputeArgs.newCrises[0].crisis;
+         projectUpdates.push(...dirDisputeArgs.updates);
       }
     }
 
@@ -298,6 +309,14 @@ const simulateWorld = (
   newState = advanceMarketEvents(newState);
   newState = advanceRumors(newState);
   newState = resolveFestivals(newState);
+  newState = advanceScandals(newState);
+  
+  // Scans talent pool and spawns new scandals
+  const scandalResult = generateScandals(newState);
+  if (scandalResult.newScandals.length > 0) {
+     newState.scandals = [...(newState.scandals || []), ...scandalResult.newScandals];
+     newHeadlines.push(...scandalResult.headlines);
+  }
 
   return {
     state: newState,

@@ -83,6 +83,27 @@ export type ReleaseModelKey = 'weekly' | 'binge' | 'split';
 export type ProjectContractType = 'upfront' | 'deficit' | 'standard';
 export type MandateType = 'sci-fi' | 'comedy' | 'drama' | 'budget_freeze' | 'broad_appeal' | 'prestige';
 
+// --- Ratings & Content (Sprint H) ---
+export type ProjectRating = 'G' | 'PG' | 'PG-13' | 'R' | 'NC-17' | 'Unrated';
+export type ContentFlag = 'violence' | 'profanity' | 'nudity' | 'gore' | 'political';
+
+// --- Demographics (Sprint I) ---
+export type DemographicGroup = 'gen-z' | 'millennial' | 'gen-x' | 'boomer';
+export type AudienceQuadrant = 'male_under_25' | 'female_under_25' | 'male_over_25' | 'female_over_25' | 'four_quadrant';
+
+// --- Directors (Sprint J) ---
+export type DirectorArchetype = 'auteur' | 'journeyman' | 'visionary' | 'commercial_hack';
+
+// --- Scandals & PR (Sprint L) ---
+export type ScandalType = 'financial' | 'personal' | 'onset_behavior' | 'legal' | 'feud';
+export interface Scandal {
+  id: string;
+  talentId: string;
+  severity: number; // 0-100
+  type: ScandalType;
+  weeksRemaining: number;
+}
+
 // --- Awards ---
 
 export interface AwardsProfile {
@@ -223,6 +244,10 @@ export interface Project {
   season?: number;
   renewable?: boolean;
   buyerId?: string;
+  // Sprint H / I additions
+  rating?: ProjectRating;
+  contentFlags?: ContentFlag[];
+  targetDemographic?: AudienceQuadrant;
 }
 
 // --- Rivals ---
@@ -353,6 +378,11 @@ export interface TalentProfile {
   familyId?: string;
   accessLevel: AccessLevel;
   perks?: string[];
+  // Sprint J / L additions
+  directorArchetype?: DirectorArchetype;
+  fandomSize?: number; // 0-100 scale representing loyal fan base
+  loyalty?: number; // 0-100 studio loyalty
+  controversyRisk?: number; // Base chance of spawning scandals
 }
 
 export interface Contract {
@@ -483,6 +513,8 @@ export interface GameState {
   activeMarketEvents?: MarketEvent[];
   festivalSubmissions?: FestivalSubmission[];
   rumors?: Rumor[];
+  // Sprint L
+  scandals?: Scandal[];
 }
 
 // --- Save/Load ---
