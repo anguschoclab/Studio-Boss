@@ -1,6 +1,17 @@
 import { Project, GameState } from '../types';
 import { FRANCHISE_FATIGUE_RISK, CROSSOVER_AFFINITY } from '../data/genres';
 
+interface StateCache {
+  week: number;
+  projectCount: number;
+  relatedCounts: Map<string, number>;
+  genreSaturationCounts: Map<string, number>;
+  crossoverTargets: Map<string, Project[]>;
+}
+
+// ⚡ Bolt: Cache index to avoid O(N) traversal on every exploitIP call for the same state tick
+const stateIndexes = new WeakMap<GameState, StateCache>();
+
 export function exploitIP(sourceProject: Project, state?: GameState) {
   if (sourceProject.status !== 'released') {
     return null;
@@ -14,38 +25,68 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
 
   if (state) {
     const rootId = sourceProject.parentProjectId || sourceProject.id;
-    for (const p of state.projects) {
-      if (p.id === rootId || p.parentProjectId === rootId) {
-        relatedProjectCount++;
+
+    let cache = stateIndexes.get(state);
+    // ⚡ Bolt: Strict cache invalidation checks using state tick identity and length
+    if (!cache || cache.week !== state.week || cache.projectCount !== state.projects.length) {
+      // Build O(1) indices for the current state exactly once
+      cache = {
+        week: state.week,
+        projectCount: state.projects.length,
+        relatedCounts: new Map<string, number>(),
+        genreSaturationCounts: new Map<string, number>(),
+        crossoverTargets: new Map<string, Project[]>(),
+      };
+
+      const saturationCutoff = state.week - 50;
+
+      for (let i = 0, len = state.projects.length; i < len; i++) {
+        const p = state.projects[i];
+
+        // Count related projects by root ID
+        const pRootId = p.parentProjectId || p.id;
+        cache.relatedCounts.set(pRootId, (cache.relatedCounts.get(pRootId) || 0) + 1);
+
+        if (p.status === 'released') {
+          // Track genre saturation
+          if (p.releaseWeek !== undefined && p.releaseWeek !== null && p.releaseWeek >= saturationCutoff) {
+            cache.genreSaturationCounts.set(p.genre, (cache.genreSaturationCounts.get(p.genre) || 0) + 1);
+          }
+
+          // Track potential crossover targets (high revenue blockbusters)
+          if (p.revenue > p.budget * 2) {
+             const targets = cache.crossoverTargets.get(p.genre) || [];
+             targets.push(p);
+             cache.crossoverTargets.set(p.genre, targets);
+          }
+        }
       }
 
-      // Calculate overall market genre saturation (recent releases)
-      if (
-        p.genre === sourceProject.genre &&
-        p.status === 'released' &&
-        p.releaseWeek &&
-        state.week - p.releaseWeek <= 50
-      ) {
-        genreSaturationCount++;
-      }
+      stateIndexes.set(state, cache);
+    }
 
-      // Look for a crossover opportunity (same genre OR compatible genre)
-      const isCompatibleCrossover = p.genre === sourceProject.genre ||
-        (CROSSOVER_AFFINITY[sourceProject.genre] && CROSSOVER_AFFINITY[sourceProject.genre].includes(p.genre));
+    relatedProjectCount = cache.relatedCounts.get(rootId) || 0;
+    genreSaturationCount = cache.genreSaturationCounts.get(sourceProject.genre) || 0;
 
-      if (
-        p.id !== sourceProject.id &&
-        isCompatibleCrossover &&
-        p.status === 'released' &&
-        p.revenue > p.budget * 2 &&
-        Math.random() > 0.8
-      ) {
-        recentCrossoverTarget = p;
+    // Look for a crossover opportunity (same genre OR compatible genre)
+    // ⚡ Bolt: Check cached targets for O(1) resolution
+    const targetAffinities = [sourceProject.genre, ...(CROSSOVER_AFFINITY[sourceProject.genre] || [])];
+    for (const genre of targetAffinities) {
+      const candidates = cache.crossoverTargets.get(genre);
+      if (candidates) {
+        // Iterate through all candidates to mimic the original array iteration probability
+        for (const candidate of candidates) {
+          if (candidate.id !== sourceProject.id && Math.random() > 0.8) {
+            recentCrossoverTarget = candidate;
+            // No early break here, as we want the *last* candidate to potentially overwrite,
+            // mirroring the probability distribution of the original O(N) traversal.
+          }
+        }
       }
     }
 
     // Check if it's a legacy IP
-    if (sourceProject.releaseWeek && state.week - sourceProject.releaseWeek > 150) {
+    if (sourceProject.releaseWeek !== undefined && sourceProject.releaseWeek !== null && state.week - sourceProject.releaseWeek > 150) {
         isLegacy = true;
     }
   }
