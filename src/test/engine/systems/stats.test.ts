@@ -17,10 +17,23 @@ describe('stats system', () => {
       expect(stats.renewable).toBe(false);
     });
 
-    it('applies 1.2x risk multiplier for blockbuster tier (budget >= 100M)', () => {
-      const tier = BUDGET_TIERS.blockbuster;
+    it('applies 1.2x risk multiplier for high tier (budget >= 100M)', () => {
+      // Mocking a high tier with 100M budget
+      const tier: typeof BUDGET_TIERS.high = { ...BUDGET_TIERS.high, budget: 100_000_000 };
       const stats = getFilmStats(tier);
       const riskMultiplier = 1.2;
+
+      expect(stats.budget).toBe(tier.budget);
+      expect(stats.weeklyCost).toBe(tier.weeklyCost * riskMultiplier);
+      expect(stats.developmentWeeks).toBe(Math.ceil(tier.developmentWeeks * riskMultiplier));
+      expect(stats.productionWeeks).toBe(Math.ceil(tier.productionWeeks * riskMultiplier));
+      expect(stats.renewable).toBe(false);
+    });
+
+    it('applies 1.4x risk multiplier for blockbuster tier (budget >= 200M)', () => {
+      const tier = BUDGET_TIERS.blockbuster;
+      const stats = getFilmStats(tier);
+      const riskMultiplier = 1.4;
 
       expect(stats.budget).toBe(tier.budget);
       expect(stats.weeklyCost).toBe(tier.weeklyCost * riskMultiplier);
@@ -135,6 +148,25 @@ describe('stats system', () => {
       expect(stats.productionWeeks).toBe(expectedProductionWeeks);
       expect(stats.developmentWeeks).toBe(expectedDevelopmentWeeks);
       expect(stats.budget).toBe(expectedBudget);
+    });
+  });
+
+  describe('Extreme Edge Cases (Guild Auditor)', () => {
+    it('handles negative budget safely', () => {
+      // Simulate data corruption or a bizarre scenario
+      const negativeTier: typeof BUDGET_TIERS.mid = { ...BUDGET_TIERS.mid, budget: -10_000_000 };
+      const stats = getFilmStats(negativeTier);
+
+      expect(stats.budget).toBe(-10_000_000);
+      expect(stats.weeklyCost).toBe(negativeTier.weeklyCost); // No risk multiplier applied
+    });
+
+    it('handles 0 budget safely', () => {
+      const zeroTier: typeof BUDGET_TIERS.low = { ...BUDGET_TIERS.low, budget: 0 };
+      const stats = getFilmStats(zeroTier);
+
+      expect(stats.budget).toBe(0);
+      expect(stats.weeklyCost).toBe(zeroTier.weeklyCost);
     });
   });
 });
