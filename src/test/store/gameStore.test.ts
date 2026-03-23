@@ -125,6 +125,13 @@ describe("gameStore", () => {
 
   it("signs a contract if sufficient funds", () => {
     setupSignContractState(1000);
+    const state = useGameStore.getState().gameState!;
+    state.projects = [{ 
+      id: "p1", title: "Test", format: "film", genre: "Action", budgetTier: "low", budget: 100_000, weeklyCost: 0,
+      targetAudience: "All", flavor: "", status: "development", weeksInPhase: 0, productionWeeks: 10, developmentWeeks: 10,
+      revenue: 0, weeklyRevenue: 0, releaseWeek: null 
+    } as any];
+    useGameStore.setState({ gameState: state });
 
     useGameStore.getState().signContract("t1", "p1");
 
@@ -132,11 +139,18 @@ describe("gameStore", () => {
     expect(newState.cash).toBe(500);
     expect(newState.contracts).toHaveLength(1);
     expect(newState.contracts[0].talentId).toBe("t1");
-    expect(newState.contracts[0].backendPercent).toBe(10);
+    expect(newState.contracts[0].backendPercent).toBe(5);
   });
 
   it("fails to sign contract if insufficient funds", () => {
     setupSignContractState(100); // Not enough for fee of 500
+    const state = useGameStore.getState().gameState!;
+    state.projects = [{ 
+      id: "p1", title: "Test", format: "film", genre: "Action", budgetTier: "low", budget: 100_000, weeklyCost: 0,
+      targetAudience: "All", flavor: "", status: "development", weeksInPhase: 0, productionWeeks: 10, developmentWeeks: 10,
+      revenue: 0, weeklyRevenue: 0, releaseWeek: null 
+    } as any];
+    useGameStore.setState({ gameState: state });
 
     useGameStore.getState().signContract("t1", "p1");
 

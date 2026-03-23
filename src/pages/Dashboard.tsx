@@ -9,6 +9,7 @@ import { TalentPanel } from '@/components/talent/TalentPanel';
 import { NewsFeed } from '@/components/news/NewsFeed';
 import { MediaPage } from '@/components/news/MediaPage';
 import { RivalsPanel } from '@/components/rivals/RivalsPanel';
+import { TrendBoard } from '@/components/trends/TrendBoard';
 import { CreateProjectModal } from '@/components/modals/CreateProjectModal';
 import { WeekSummaryModal } from '@/components/modals/WeekSummaryModal';
 import { ProjectDetailModal } from '@/components/modals/ProjectDetailModal';
@@ -56,7 +57,10 @@ const Dashboard = () => {
         <aside className="w-80 border-l border-border bg-card/30 overflow-y-auto flex flex-col">
           <div className="flex-1 overflow-y-auto">
             <NewsFeed />
-            <RivalsPanel />
+            <div className="p-4 grid gap-4">
+              <TrendBoard />
+              <RivalsPanel />
+            </div>
           </div>
         </aside>
       </div>

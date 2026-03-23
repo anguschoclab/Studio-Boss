@@ -1,10 +1,10 @@
 // Domain models for Studio Boss simulation engine
 
 export type ArchetypeKey = 'major' | 'mid-tier' | 'indie';
-export type ProjectStatus = 'development' | 'needs_greenlight' | 'pitching' | 'production' | 'released' | 'archived';
+export type ProjectStatus = 'development' | 'needs_greenlight' | 'pitching' | 'production' | 'marketing' | 'released' | 'post_release' | 'archived';
 export type ProjectFormat = 'film' | 'tv' | 'unscripted';
 export type BudgetTierKey = 'low' | 'mid' | 'high' | 'blockbuster';
-export type HeadlineCategory = 'rival' | 'market' | 'talent' | 'awards' | 'general';
+export type HeadlineCategory = 'rival' | 'market' | 'talent' | 'awards' | 'general' | 'rumor';
 export type TvFormatKey =
   | 'sitcom'
   | 'procedural'
@@ -83,6 +83,29 @@ export type ReleaseModelKey = 'weekly' | 'binge' | 'split';
 export type ProjectContractType = 'upfront' | 'deficit' | 'standard';
 export type MandateType = 'sci-fi' | 'comedy' | 'drama' | 'budget_freeze' | 'broad_appeal' | 'prestige';
 
+// --- Ratings & Content (Sprint H) ---
+export type ProjectRating = 'G' | 'PG' | 'PG-13' | 'R' | 'NC-17' | 'Unrated';
+export type ContentFlag = 'violence' | 'profanity' | 'nudity' | 'gore' | 'political';
+
+// --- Demographics (Sprint I) ---
+export type DemographicGroup = 'gen-z' | 'millennial' | 'gen-x' | 'boomer';
+export type AudienceQuadrant = 'male_under_25' | 'female_under_25' | 'male_over_25' | 'female_over_25' | 'four_quadrant';
+
+// --- Directors (Sprint J) ---
+export type DirectorArchetype = 'auteur' | 'journeyman' | 'visionary' | 'commercial_hack';
+
+// --- Scandals & PR (Sprint L) ---
+export type ScandalType = 'financial' | 'personal' | 'onset_behavior' | 'legal' | 'feud';
+export interface Scandal {
+  id: string;
+  talentId: string;
+  severity: number; // 0-100
+  type: ScandalType;
+  weeksRemaining: number;
+}
+
+// --- Awards ---
+
 export interface AwardsProfile {
   criticScore: number;
   audienceScore: number;
@@ -140,8 +163,6 @@ export type AwardCategory =
   | 'Audience Award'
   | 'Best Narrative Feature';
 
-
-
 export type AwardStatus = 'won' | 'nominated';
 
 export interface Award {
@@ -153,6 +174,8 @@ export interface Award {
   status: AwardStatus;
   year: number;
 }
+
+// --- Crisis ---
 
 export interface CrisisOption {
   text: string;
@@ -166,7 +189,18 @@ export interface ActiveCrisis {
   description: string;
   options: CrisisOption[];
   resolved: boolean;
+  severity?: 'low' | 'medium' | 'high' | 'catastrophic';
 }
+
+// --- IP Rights (Sprint E) ---
+
+export interface IPRights {
+  rightsOwner: 'studio' | 'shared' | 'external';
+  reversionWeek?: number;
+  catalogValue: number;
+}
+
+// --- Project ---
 
 export interface Project {
   id: string;
@@ -192,6 +226,15 @@ export interface Project {
   awardsProfile?: AwardsProfile;
   parentProjectId?: string;
   isSpinoff?: boolean;
+  // Release simulation fields
+  reviewScore?: number;
+  boxOfficeRank?: number;
+  // Marketing fields
+  marketingBudget?: number;
+  marketingDomesticSplit?: number;
+  marketingAngle?: string;
+  // IP Rights (Sprint E)
+  ipRights?: IPRights;
   // TV / Unscripted fields
   tvFormat?: TvFormatKey;
   unscriptedFormat?: UnscriptedFormatKey;
@@ -201,7 +244,15 @@ export interface Project {
   season?: number;
   renewable?: boolean;
   buyerId?: string;
+  // Sprint H / I additions
+  rating?: ProjectRating;
+  contentFlags?: ContentFlag[];
+  targetDemographic?: AudienceQuadrant;
 }
+
+// --- Rivals ---
+
+export type RivalStrategy = 'blockbuster_focused' | 'prestige_chaser' | 'genre_specialist' | 'acquirer' | 'poacher' | 'balanced';
 
 export interface RivalStudio {
   id: string;
@@ -213,7 +264,14 @@ export interface RivalStudio {
   prestige: number;
   recentActivity: string;
   projectCount: number;
+  // Sprint F additions
+  strategy?: RivalStrategy;
+  genreFocus?: string;
+  acquisitionTarget?: string;
+  isAcquirable?: boolean;
 }
+
+// --- Headlines & News ---
 
 export interface Headline {
   id: string;
@@ -221,7 +279,6 @@ export interface Headline {
   week: number;
   category: HeadlineCategory;
 }
-
 
 export interface WeekSummary {
   fromWeek: number;
@@ -234,6 +291,8 @@ export interface WeekSummary {
   newHeadlines: Headline[];
   events: string[];
 }
+
+// --- Discovery ---
 
 export type OpportunityType = 'script' | 'package' | 'pitch' | 'rights';
 export type DiscoveryOrigin = 'open_spec' | 'agency_package' | 'writer_sample' | 'heat_list' | 'annual_list' | 'passion_project';
@@ -257,7 +316,16 @@ export interface Opportunity {
   releaseModel?: ReleaseModelKey;
 }
 
-// Talent & Representation
+// --- Finance ---
+
+export interface FinanceRecord {
+  week: number;
+  cash: number;
+  revenue: number;
+  costs: number;
+}
+
+// --- Talent & Representation ---
 
 export type AccessLevel = 'outsider' | 'soft-access' | 'legacy' | 'dynasty' | 'comeback';
 export type TalentRole = 'director' | 'actor' | 'writer' | 'producer' | 'showrunner';
@@ -271,7 +339,8 @@ export interface Agency {
   tier: AgencyTier;
   culture: AgencyCulture;
   prestige: number;
-  leverage: number;
+  leverage: number; // 0-100
+  traits?: string[];
 }
 
 export interface Agent {
@@ -281,6 +350,8 @@ export interface Agent {
   specialty: AgentSpecialty;
   prestige: number;
   leverage: number;
+  skill?: number;
+  aggression?: number;
 }
 
 export interface Family {
@@ -306,6 +377,12 @@ export interface TalentProfile {
   temperament: string;
   familyId?: string;
   accessLevel: AccessLevel;
+  perks?: string[];
+  // Sprint J / L additions
+  directorArchetype?: DirectorArchetype;
+  fandomSize?: number; // 0-100 scale representing loyal fan base
+  loyalty?: number; // 0-100 studio loyalty
+  controversyRisk?: number; // Base chance of spawning scandals
 }
 
 export interface Contract {
@@ -314,7 +391,13 @@ export interface Contract {
   projectId: string;
   fee: number;
   backendPercent: number;
+  // Sprint E enrichments
+  creativeControl?: boolean;
+  sequelOption?: boolean;
+  backendEscalator?: number; // % bump if revenue exceeds threshold
 }
+
+// --- Buyers ---
 
 export type BuyerArchetype = 'network' | 'premium' | 'streamer';
 
@@ -330,12 +413,84 @@ export interface Buyer {
   currentMandate?: BuyerMandate;
 }
 
+// --- Genre Trends (Sprint F) ---
+
+export type TrendDirection = 'hot' | 'rising' | 'stable' | 'cooling' | 'dead';
+
+export interface GenreTrend {
+  genre: string;
+  heat: number; // 0-100
+  direction: TrendDirection;
+  weeksRemaining: number;
+}
+
+// --- Studio Culture (Sprint F) ---
+
+export interface StudioCulture {
+  prestigeVsCommercial: number; // -100 (prestige) to 100 (commercial)
+  talentFriendlyVsControlling: number; // -100 (friendly) to 100 (controlling)
+  nicheVsBroad: number; // -100 (niche) to 100 (broad)
+  filmFirstVsTvFirst: number; // -100 (film) to 100 (tv)
+}
+
+// --- First-Look Deals (Sprint E) ---
+
+export interface FirstLookDeal {
+  id: string;
+  talentId: string;
+  weeksRemaining: number;
+  exclusivity: boolean;
+}
+
+// --- Market Events (Sprint G) ---
+
+export type MarketEventType = 'streaming_boom' | 'theatrical_revival' | 'writers_strike' | 'actors_strike' | 'platform_war' | 'market_crash' | 'awards_season_frenzy';
+
+export interface MarketEvent {
+  id: string;
+  type: MarketEventType;
+  name: string;
+  description: string;
+  weeksRemaining: number;
+  revenueMultiplier: number;
+  costMultiplier: number;
+  talentAvailabilityModifier: number; // -1 to 1
+}
+
+// --- Festival Submissions (Sprint G) ---
+
+export type FestivalSubmissionStatus = 'submitted' | 'selected' | 'rejected' | 'won' | 'special_mention';
+
+export interface FestivalSubmission {
+  id: string;
+  projectId: string;
+  festivalBody: AwardBody;
+  status: FestivalSubmissionStatus;
+  buzzGain: number;
+  week: number;
+}
+
+// --- Rumors (Sprint G) ---
+
+export interface Rumor {
+  id: string;
+  text: string;
+  week: number;
+  truthful: boolean;
+  category: 'talent' | 'rival' | 'market' | 'project';
+  resolved: boolean;
+  resolutionWeek?: number;
+}
+
+// --- Game State ---
+
 export interface GameState {
   opportunities: Opportunity[];
   studio: {
     name: string;
     archetype: ArchetypeKey;
     prestige: number;
+    culture?: StudioCulture; // Sprint F
   };
   projects: Project[];
   rivals: RivalStudio[];
@@ -350,7 +505,19 @@ export interface GameState {
   contracts: Contract[];
   buyers: Buyer[];
   awards?: Award[];
+  // Sprint E
+  firstLookDeals?: FirstLookDeal[];
+  // Sprint F
+  trends?: GenreTrend[];
+  // Sprint G
+  activeMarketEvents?: MarketEvent[];
+  festivalSubmissions?: FestivalSubmission[];
+  rumors?: Rumor[];
+  // Sprint L
+  scandals?: Scandal[];
 }
+
+// --- Save/Load ---
 
 export interface SaveSlotMeta {
   slot: number;
@@ -359,67 +526,4 @@ export interface SaveSlotMeta {
   week: number;
   cash: number;
   timestamp: number;
-}
-
-
-export type AccessLevel = 'outsider' | 'soft-access' | 'legacy' | 'dynasty' | 'comeback';
-
-export type TalentRole = 'director' | 'actor' | 'writer' | 'producer' | 'showrunner';
-export type AgencyTier = 'powerhouse' | 'major' | 'mid-tier' | 'boutique' | 'specialist';
-export type AgencyCulture = 'shark' | 'family' | 'volume' | 'prestige';
-export type AgentSpecialty = 'film_packaging' | 'tv_packaging' | 'literary' | 'talent' | 'comedy' | 'unscripted';
-
-export interface Agency {
-  id: string;
-  name: string;
-  tier: AgencyTier;
-  culture: AgencyCulture;
-  prestige: number;
-  leverage: number; // 0-100
-  traits?: string[]; // new trait system
-}
-
-
-
-export interface Contract {
-  id: string;
-  talentId: string;
-  projectId: string;
-  fee: number;
-  backendPercent: number;
-}
-
-export interface Family {
-  id: string;
-  name: string;
-  recognition: number;
-  prestigeLegacy: number;
-  commercialLegacy: number;
-  scandalLegacy: number;
-  volatility: number;
-  status: string;
-}
-
-export interface Agent {
-  id: string;
-  agencyId: string;
-  name: string;
-  specialty: AgentSpecialty;
-  skill: number;
-  aggression: number;
-}
-
-export interface TalentProfile {
-  id: string;
-  name: string;
-  roles: TalentRole[];
-  agencyId?: string;
-  agentId?: string;
-  prestige: number;
-  fee: number;
-  draw: number;
-  temperament: string;
-  familyId?: string;
-  accessLevel: AccessLevel;
-  perks?: string[]; // new perk system
 }

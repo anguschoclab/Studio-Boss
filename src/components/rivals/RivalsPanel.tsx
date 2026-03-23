@@ -1,4 +1,6 @@
 import { useGameStore } from '@/store/gameStore';
+import { Button } from '@/components/ui/button';
+import { Building2 } from 'lucide-react';
 import { ARCHETYPES } from '@/engine/data/archetypes';
 
 const strengthColor = (s: number) => {
@@ -9,6 +11,7 @@ const strengthColor = (s: number) => {
 
 export const RivalsPanel = () => {
   const rivals = useGameStore(s => s.gameState?.rivals || []);
+  const acquireRival = useGameStore(s => s.acquireRival);
 
   return (
     <div className="p-4 space-y-3">
@@ -35,6 +38,17 @@ export const RivalsPanel = () => {
               </div>
               <span className="text-[10px] text-muted-foreground">{rival.projectCount} proj</span>
             </div>
+            
+            {rival.isAcquirable && (
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-full mt-2 h-7 text-xs bg-primary/10 hover:bg-primary/20 text-primary border-primary/20"
+                onClick={() => acquireRival(rival.id)}
+              >
+                <Building2 className="w-3 h-3 mr-1" /> Look into Buyout
+              </Button>
+            )}
           </div>
         ))}
       </div>

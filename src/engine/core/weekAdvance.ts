@@ -9,6 +9,14 @@ import { updateBuyers } from '../systems/buyers';
 import { generateHeadlines } from '../generators/headlines';
 import { generateOpportunity } from '../generators/opportunities';
 import { generateAwardsProfile, runAwardsCeremony } from '../systems/awards';
+import { advanceDeals } from '../systems/deals';
+import { advanceIPRights } from '../systems/ipRetention';
+import { advanceTrends, getTrendMultiplier } from '../systems/trends';
+import { resolveFestivals } from '../systems/festivals';
+import { advanceMarketEvents } from '../systems/marketEvents';
+import { advanceRumors } from '../systems/rumors';
+import { processDirectorDisputes } from '../systems/directors';
+import { generateScandals, advanceScandals } from '../systems/scandals';
 
 const EVENT_POOL = [
   'Market analysts upgrade entertainment sector outlook.',
@@ -77,7 +85,8 @@ const processProjectPhase = (
     }
 
     const projectContracts = contractsByProject.get(p.id) || [];
-    const { project, update } = advanceProject(p, nextWeek, state.studio.prestige, projectContracts, talentPoolMap, rivalAvgStrength, state.awards);
+    const trendMult = getTrendMultiplier(p.genre, state);
+    const { project, update } = advanceProject(p, nextWeek, state.studio.prestige, projectContracts, talentPoolMap, rivalAvgStrength, state.awards, trendMult);
 
     if (update) projectUpdates.push(update);
 
@@ -90,6 +99,15 @@ const processProjectPhase = (
       if (newCrisis) {
         project.activeCrisis = newCrisis;
         events.push(`CRISIS: "${project.title}" - ${newCrisis.description}`);
+      }
+    }
+
+    // Sprint J: Director disputes
+    if (project.status === 'production') {
+      const dirDisputeArgs = processDirectorDisputes({ ...state, projects: [project] });
+      if (dirDisputeArgs.newCrises.length > 0 && (!project.activeCrisis || project.activeCrisis.resolved)) {
+         project.activeCrisis = dirDisputeArgs.newCrises[0].crisis;
+         projectUpdates.push(...dirDisputeArgs.updates);
       }
     }
 
@@ -123,8 +141,8 @@ const resolveFinancials = (
   weeklyChanges: WeeklyChanges
 ): { state: GameState; weeklyChanges: WeeklyChanges } => {
   const nextWeek = state.week + 1;
-  const costs = calculateWeeklyCosts(state.projects);
-  const revenue = calculateWeeklyRevenue(state.projects, state.contracts);
+  const costs = calculateWeeklyCosts(state.projects, state.activeMarketEvents);
+  const revenue = calculateWeeklyRevenue(state.projects, state.contracts, state.activeMarketEvents);
   const newCash = state.cash - costs + revenue;
 
   const financeHistory = [
@@ -153,7 +171,7 @@ const simulateWorld = (
   // ⚡ Bolt: Single pass for loops instead of map to avoid allocations
   const updatedRivals: typeof state.rivals = [];
   for (let i = 0; i < state.rivals.length; i++) {
-    updatedRivals.push(updateRival(state.rivals[i]));
+    updatedRivals.push(updateRival(state.rivals[i], state));
   }
 
   const { updatedBuyers, newHeadlines: buyerHeadlines } = updateBuyers(state.buyers || [], nextWeek);
@@ -277,15 +295,28 @@ const simulateWorld = (
     events.push(`The ${uniqueBodies.join(' and ')} took place this week!`);
   }
 
-  const newState: GameState = {
+  let newState: GameState = {
     ...state,
     opportunities: updatedOpportunitiesCopy,
     studio: { ...state.studio, prestige: state.studio.prestige + prestigeChange },
     buyers: updatedBuyers,
     rivals: updatedRivals,
+    trends: state.trends ? advanceTrends(state.trends) : [],
     awards: [...(state.awards || []), ...newAwards],
     headlines: [...newHeadlines, ...state.headlines].slice(0, 50),
   };
+
+  newState = advanceMarketEvents(newState);
+  newState = advanceRumors(newState);
+  newState = resolveFestivals(newState);
+  newState = advanceScandals(newState);
+  
+  // Scans talent pool and spawns new scandals
+  const scandalResult = generateScandals(newState);
+  if (scandalResult.newScandals.length > 0) {
+     newState.scandals = [...(newState.scandals || []), ...scandalResult.newScandals];
+     newHeadlines.push(...scandalResult.headlines);
+  }
 
   return {
     state: newState,
@@ -338,7 +369,21 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
   const afterWorld = simulateWorld(nextState, weeklyChanges);
   nextState = afterWorld.state;
   weeklyChanges = afterWorld.weeklyChanges;
+  
+  // 4. Rights & Deals (Sprint E)
+  const { projects: updatedProjects, messages: ipMessages } = advanceIPRights(nextState.projects, nextState.week + 1);
+  nextState.projects = updatedProjects;
+  weeklyChanges.events.push(...ipMessages);
+  
+  if (nextState.firstLookDeals) {
+    const activeDeals = advanceDeals(nextState.firstLookDeals);
+    const expiredDeals = nextState.firstLookDeals.length - activeDeals.length;
+    if (expiredDeals > 0) {
+      weeklyChanges.events.push(`${expiredDeals} first-look talent deal(s) expired this week.`);
+    }
+    nextState.firstLookDeals = activeDeals;
+  }
 
-  // 4. Finalize
+  // 5. Finalize
   return finalizeWeek(nextState, weeklyChanges, state);
 }

@@ -24,6 +24,38 @@ export function generateAwardsProfile(project: Project): AwardsProfile {
   };
 }
 
+export function launchAwardsCampaign(state: GameState, projectId: string, budget: number): GameState | null {
+  const projectIndex = state.projects.findIndex(p => p.id === projectId);
+  if (projectIndex === -1 || state.cash < budget) return null;
+  const project = state.projects[projectIndex];
+  if (!project.awardsProfile) return null;
+
+  // Assuming $1M buys 5 points of campaign strength
+  const boost = (budget / 1_000_000) * 5;
+  const newStrength = Math.min(100, project.awardsProfile.campaignStrength + boost);
+
+  const newProjects = [...state.projects];
+  newProjects[projectIndex] = {
+    ...project,
+    awardsProfile: {
+      ...project.awardsProfile,
+      campaignStrength: newStrength
+    }
+  };
+
+  return {
+    ...state,
+    cash: state.cash - budget,
+    projects: newProjects,
+    headlines: [{
+      id: crypto.randomUUID(),
+      week: state.week,
+      category: 'awards' as const,
+      text: `Studio launches massive FYC campaign for "${project.title}".`
+    }, ...state.headlines].slice(0, 50)
+  };
+}
+
 interface AwardCeremonyResult {
   newAwards: Award[];
   prestigeChange: number;

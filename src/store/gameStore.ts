@@ -1,6 +1,9 @@
+import { updateCultureFromProject } from '@/engine/systems/culture';
+import { executeAcquisition } from '@/engine/systems/mergers';
 import { handleReleasePhaseEntry } from '@/engine/systems/projects';
+import { submitToFestival } from '@/engine/systems/festivals';
 import { create } from 'zustand';
-import { GameState, WeekSummary, ProjectFormat, BudgetTierKey, ArchetypeKey, TvFormatKey, UnscriptedFormatKey, ReleaseModelKey, ProjectContractType, Project } from '@/engine/types';
+import { GameState, WeekSummary, ProjectFormat, BudgetTierKey, ArchetypeKey, TvFormatKey, UnscriptedFormatKey, ReleaseModelKey, ProjectContractType, Project, Contract, AwardBody } from '@/engine/types';
 import { negotiateContract } from '@/engine/systems/buyers';
 import { initializeGame } from '@/engine/core/gameInit';
 import { advanceWeek } from '@/engine/core/weekAdvance';
@@ -8,6 +11,7 @@ import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
 import { TV_FORMATS } from '@/engine/data/tvFormats';
 import { UNSCRIPTED_FORMATS } from '@/engine/data/unscriptedFormats';
 import { saveGame, loadGame, getSaveSlots, SaveSlotInfo } from '@/persistence/saveLoad';
+import { launchAwardsCampaign } from '@/engine/systems/awards';
 import { resolveCrisis } from '@/engine/systems/crises';
 import { exploitIP } from '@/engine/systems/franchises';
 import { randRange } from '@/engine/utils';
@@ -47,6 +51,11 @@ interface GameStore {
   _updateProjectToProduction: (state: GameState, projectIndex: number, project: Project, headlineText: string, extraProjectUpdates?: Partial<Project>) => void;
   resolveProjectCrisis: (projectId: string, optionIndex: number) => void;
   exploitFranchise: (projectId: string) => void;
+  executeMarketingEvent: (eventName: 'superbowl_ad' | 'viral_campaign' | 'press_tour', cost: number, projectId: string) => void;
+  offerFirstLook: (talentId: string, duration: number, fee: number) => void;
+  acquireRival: (targetId: string) => void;
+  submitToFestival: (projectId: string, festivalBody: AwardBody) => void;
+  launchAwardsCampaign: (projectId: string, budget: number) => void;
 }
 
 
@@ -275,9 +284,15 @@ export const useGameStore = create<GameStore>((set, get) => ({
       ...extraProjectUpdates
     };
 
+    const newCulture = state.studio.culture ? updateCultureFromProject(state.studio.culture, project) : undefined;
+
     set({
       gameState: {
         ...state,
+        studio: {
+          ...state.studio,
+          culture: newCulture
+        },
         projects: updatedProjects,
         headlines: [{ id: `ph-${crypto.randomUUID()}`, text: headlineText, week: state.week, category: 'market' as const }, ...state.headlines].slice(0, 50)
       }
@@ -302,14 +317,6 @@ export const useGameStore = create<GameStore>((set, get) => ({
       const p = { ...originalProject };
 
       const newCash = state.cash - budget;
-      const newFinanceHistory = [...state.financeHistory, {
-        id: crypto.randomUUID(),
-        week: state.week,
-        type: 'expense' as const,
-        amount: budget,
-        category: 'marketing' as const,
-        description: `Marketing for "${p.title}"`
-      }];
 
       p.marketingBudget = budget;
       p.marketingDomesticSplit = domesticPct;
@@ -357,7 +364,6 @@ export const useGameStore = create<GameStore>((set, get) => ({
         gameState: {
           ...state,
           cash: newCash,
-          financeHistory: newFinanceHistory,
           projects: updatedProjects,
           headlines: newHeadlines,
         }
@@ -418,7 +424,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const spinoffParams = exploitIP(project, state);
     if (!spinoffParams) return;
 
-    get().createProject(spinoffParams);
+    get().createProject(spinoffParams as any);
   },
 
   signContract: (talentId, projectId) => {
@@ -428,25 +434,102 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
       const talent = state.talentPool.find(t => t.id === talentId);
       if (!talent) return s;
-
-      if (state.cash < talent.fee) return s;
-
-      const newContract = {
-        id: `contract-${crypto.randomUUID()}`,
-        talentId,
+      
+      const pIndex = state.projects.findIndex(p => p.id === projectId);
+      if (pIndex === -1) return s;
+      
+      const p = state.projects[pIndex];
+      // Check for first look deal synergy discount
+      let finalFee = talent.fee;
+      if (state.firstLookDeals?.some(d => d.talentId === talentId)) {
+         finalFee = talent.fee * 0.5; // Half upfront fee if already locked
+      }
+      
+      if (state.cash < finalFee) return s;
+      
+      const newCash = state.cash - finalFee;
+      
+      const contract: Contract = {
+        id: crypto.randomUUID(),
         projectId,
-        fee: talent.fee,
-        backendPercent: talent.prestige > 80 ? 10 : 0,
+        talentId,
+        fee: finalFee,
+        backendPercent: talent.accessLevel === 'dynasty' ? 10 : 5,
+        creativeControl: talent.accessLevel === 'dynasty' || talent.prestige > 85 ? true : undefined,
+        sequelOption: talent.accessLevel === 'dynasty' || talent.prestige > 75 ? true : undefined,
+        backendEscalator: talent.accessLevel === 'dynasty' ? 5 : undefined,
       };
-
+      
       return {
         gameState: {
           ...state,
-          cash: state.cash - talent.fee,
-          contracts: [...state.contracts, newContract],
-        },
+          cash: newCash,
+          contracts: [...state.contracts, contract]
+        }
       };
     });
+  },
+
+  executeMarketingEvent: (eventName, cost, projectId) => {
+    // Implementation for executeMarketingEvent would go here
+    // This is a placeholder as the instruction did not provide implementation details
+    // for this new action, only its interface definition.
+    console.log(`Executing marketing event: ${eventName} for project ${projectId} costing ${cost}`);
+  },
+
+  offerFirstLook: (talentId, duration, fee) => {
+    let success = false;
+    set((s) => {
+      const state = s.gameState;
+      if (!state) return s;
+      
+      const talent = state.talentPool.find(t => t.id === talentId);
+      if (!talent) return s;
+      
+      const lockFee = (talent.fee * 2); // Generic upfront cost to lock
+      if (state.cash < lockFee) return s;
+      
+      const dealsEngine = require('../engine/systems/deals');
+      const deal = dealsEngine.offerFirstLookDeal(state, talentId, duration, true);
+      
+      if (deal) {
+         success = true;
+         const currentDeals = state.firstLookDeals || [];
+         
+         const newHeadlines = [...state.headlines];
+         newHeadlines.unshift({
+           id: crypto.randomUUID(),
+           week: state.week,
+           category: 'talent',
+           text: `${talent.name} signs exclusive first-look pact with ${state.studio.name}.`
+         });
+         
+         return {
+           gameState: {
+             ...state,
+             cash: state.cash - lockFee,
+             headlines: newHeadlines,
+             firstLookDeals: [...currentDeals, deal]
+           }
+         };
+      } else {
+         const newHeadlines = [...state.headlines];
+         newHeadlines.unshift({
+           id: crypto.randomUUID(),
+           week: state.week,
+           category: 'general',
+           text: `${talent.name} passes on first-look deal with ${state.studio.name}.`
+         });
+         
+         return {
+           gameState: {
+             ...state,
+             headlines: newHeadlines
+           }
+         };
+      }
+    });
+    return success;
   },
 
   resolveProjectCrisis: (projectId, optionIndex) => {
@@ -455,4 +538,27 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const newState = resolveCrisis(state, projectId, optionIndex);
     set({ gameState: newState });
   },
+
+  acquireRival: (targetId) => {
+    set((s) => {
+      if (!s.gameState) return s;
+      return { gameState: executeAcquisition(s.gameState, targetId) };
+    });
+  },
+
+  submitToFestival: (projectId, festivalBody) => {
+    set((s) => {
+      if (!s.gameState) return s;
+      const newState = submitToFestival(s.gameState, projectId, festivalBody);
+      return newState ? { gameState: newState } : s;
+    });
+  },
+
+  launchAwardsCampaign: (projectId, budget) => {
+    set((s) => {
+      if (!s.gameState) return s;
+      const newState = launchAwardsCampaign(s.gameState, projectId, budget);
+      return newState ? { gameState: newState } : s;
+    });
+  }
 }));
