@@ -70,8 +70,8 @@ export function advanceTrends(trends: GenreTrend[]): GenreTrend[] {
 }
 
 export function getTrendMultiplier(genre: string, state: GameState): number {
-  if (!state.trends) return 1.0;
-  const trend = state.trends.find(t => t.genre === genre);
+  if (!state.market.trends) return 1.0;
+  const trend = state.market.trends.find(t => t.genre === genre);
   if (!trend) return 1.0;
   
   // Heat of 100 means +50% box office. Heat of 0 means -20% box office.

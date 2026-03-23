@@ -4,8 +4,10 @@ import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { Opportunity } from '@/engine/types';
 
+import { selectOpportunities } from '@/store/selectors';
+
 export const DiscoveryBoard = () => {
-  const opportunities = useGameStore(s => s.gameState?.opportunities || []);
+  const opportunities = useGameStore(s => selectOpportunities(s.gameState));
   const { openCreateProject } = useUIStore();
 
   return (

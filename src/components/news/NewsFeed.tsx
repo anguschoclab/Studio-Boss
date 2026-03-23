@@ -12,7 +12,7 @@ const categoryStyles: Record<HeadlineCategory, string> = {
 };
 
 export const NewsFeed = () => {
-  const headlines = useGameStore(s => s.gameState?.headlines || []);
+  const headlines = useGameStore(s => s.gameState?.industry.headlines || []);
 
   return (
     <div className="p-4 space-y-3 border-b border-border/50 bg-card/20 backdrop-blur-sm">

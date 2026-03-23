@@ -81,8 +81,8 @@ export function advanceRivals(
   state: GameState
 ): RivalAdvanceResult {
   const updatedRivals: RivalStudio[] = [];
-  for (let i = 0; i < state.rivals.length; i++) {
-    updatedRivals.push(updateRival(state.rivals[i], state));
+  for (let i = 0; i < state.industry.rivals.length; i++) {
+    updatedRivals.push(updateRival(state.industry.rivals[i], state));
   }
 
   return {

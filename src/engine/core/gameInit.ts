@@ -35,31 +35,41 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
   const talentPool = generateTalentPool(50, families, agents, agencies);
 
   return {
-    studio: { name: studioName, archetype, prestige: arch.startingPrestige },
-    projects: [],
-    rivals,
-    headlines: [
-      {
-        id: 'h-init',
-        text: `${studioName} launches operations — the industry takes notice.`,
-        week: 1,
-        category: 'general',
-      },
-    ],
     week: 1,
     cash: arch.startingCash,
-    financeHistory: [{ week: 1, cash: arch.startingCash, revenue: 0, costs: 0 }],
-    families,
-    agencies,
-    agents,
-    opportunities: Array.from({ length: 4 }, () => generateOpportunity(talentPool.map(t => t.id))),
-    talentPool,
-    contracts: [],
-    buyers: [
-      { id: 'b1', name: 'Global Network', archetype: 'network' as const },
-      { id: 'b2', name: 'Prestige TV', archetype: 'premium' as const },
-      { id: 'b3', name: 'StreamMax', archetype: 'streamer' as const }
-    ],
-    awards: [],
+    studio: {
+      name: studioName,
+      archetype,
+      prestige: arch.startingPrestige,
+      internal: {
+        projects: [],
+        contracts: [],
+        financeHistory: [{ week: 1, cash: arch.startingCash, revenue: 0, costs: 0 }],
+      }
+    },
+    market: {
+      opportunities: Array.from({ length: 4 }, () => generateOpportunity(talentPool.map(t => t.id))),
+      buyers: [
+        { id: 'b1', name: 'Global Network', archetype: 'network' as const },
+        { id: 'b2', name: 'Prestige TV', archetype: 'premium' as const },
+        { id: 'b3', name: 'StreamMax', archetype: 'streamer' as const }
+      ],
+    },
+    industry: {
+      rivals,
+      headlines: [
+        {
+          id: 'h-init',
+          text: `${studioName} launches operations — the industry takes notice.`,
+          week: 1,
+          category: 'general' as const,
+        },
+      ],
+      families,
+      agencies,
+      agents,
+      talentPool,
+      awards: [],
+    }
   };
 }

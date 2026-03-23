@@ -14,38 +14,47 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
       const state = s.gameState;
       if (budget > state.cash) return s;
 
-      const pIndex = state.projects.findIndex(p => p.id === projectId);
+      const pIndex = state.studio.internal.projects.findIndex(p => p.id === projectId);
       if (pIndex === -1) return s;
 
-      const originalProject = state.projects[pIndex];
+      const originalProject = state.studio.internal.projects[pIndex];
       if (originalProject.status !== 'marketing') return s;
 
       const newCash = state.cash - budget;
       const { project: p } = executeMarketing(originalProject, budget, domesticPct, angle);
 
-      const contracts = state.contracts.filter(c => c.projectId === p.id);
-      const talentMap = new Map<string, any>(state.talentPool.map(t => [t.id, t]));
+      const contracts = state.studio.internal.contracts.filter(c => c.projectId === p.id);
+      const talentMap = new Map<string, any>(state.industry.talentPool.map(t => [t.id, t]));
       const result = handleReleasePhaseEntry(p, state.week, state.studio.prestige, contracts, talentMap);
 
-      const newHeadlines = [...state.headlines];
+      const newHeadlines = [...state.industry.headlines];
       if (result.update) {
         newHeadlines.unshift({
           id: crypto.randomUUID(),
           week: state.week,
-          category: 'general',
+          category: 'general' as const,
           text: result.update
         });
       }
 
-      const updatedProjects = [...state.projects];
+      const updatedProjects = [...state.studio.internal.projects];
       updatedProjects[pIndex] = p;
 
       return {
         gameState: {
           ...state,
           cash: newCash,
-          projects: updatedProjects,
-          headlines: newHeadlines,
+          studio: {
+            ...state.studio,
+            internal: {
+              ...state.studio.internal,
+              projects: updatedProjects,
+            }
+          },
+          industry: {
+            ...state.industry,
+            headlines: newHeadlines,
+          }
         }
       };
     });

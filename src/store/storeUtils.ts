@@ -38,12 +38,13 @@ function prepareTalentAndContracts(
 ) {
     const ids = attachedTalentIds || [];
     const talentMap = new Map();
-    for (let i = 0; i < state.talentPool.length; i++) {
-        const t = state.talentPool[i];
+    const talentPool = state.industry.talentPool;
+    for (let i = 0; i < talentPool.length; i++) {
+        const t = talentPool[i];
         talentMap.set(t.id, t);
     }
 
-    const attachedTalent: typeof state.talentPool = [];
+    const attachedTalent: typeof talentPool = [];
     let talentFees = 0;
     const newContracts: any[] = [];
 

@@ -314,6 +314,7 @@ export interface Opportunity {
   unscriptedFormat?: UnscriptedFormatKey;
   episodes?: number;
   releaseModel?: ReleaseModelKey;
+  qualityBonus?: number;
 }
 
 // --- Finance ---
@@ -485,36 +486,38 @@ export interface Rumor {
 // --- Game State ---
 
 export interface GameState {
-  opportunities: Opportunity[];
+  week: number;
+  cash: number;
   studio: {
     name: string;
     archetype: ArchetypeKey;
     prestige: number;
-    culture?: StudioCulture; // Sprint F
+    culture?: StudioCulture;
+    internal: {
+      projects: Project[];
+      contracts: Contract[];
+      financeHistory: FinanceRecord[];
+      firstLookDeals?: FirstLookDeal[];
+    };
   };
-  projects: Project[];
-  rivals: RivalStudio[];
-  headlines: Headline[];
-  week: number;
-  cash: number;
-  financeHistory: FinanceRecord[];
-  families: Family[];
-  agencies: Agency[];
-  agents: Agent[];
-  talentPool: TalentProfile[];
-  contracts: Contract[];
-  buyers: Buyer[];
-  awards?: Award[];
-  // Sprint E
-  firstLookDeals?: FirstLookDeal[];
-  // Sprint F
-  trends?: GenreTrend[];
-  // Sprint G
-  activeMarketEvents?: MarketEvent[];
-  festivalSubmissions?: FestivalSubmission[];
-  rumors?: Rumor[];
-  // Sprint L
-  scandals?: Scandal[];
+  market: {
+    opportunities: Opportunity[];
+    trends?: GenreTrend[];
+    activeMarketEvents?: MarketEvent[];
+    buyers: Buyer[];
+  };
+  industry: {
+    rivals: RivalStudio[];
+    headlines: Headline[];
+    families: Family[];
+    agencies: Agency[];
+    agents: Agent[];
+    talentPool: TalentProfile[];
+    awards?: Award[];
+    festivalSubmissions?: FestivalSubmission[];
+    rumors?: Rumor[];
+    scandals?: Scandal[];
+  };
 }
 
 // --- Save/Load ---

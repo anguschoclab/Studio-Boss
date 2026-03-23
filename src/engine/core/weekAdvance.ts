@@ -54,10 +54,10 @@ const processProjectPhase = (
   weeklyChanges: WeeklyChanges
 ): { state: GameState; weeklyChanges: WeeklyChanges } => {
   const nextWeek = state.week + 1;
-  const contractsByProject = groupContractsByProject(state.contracts);
+  const contractsByProject = groupContractsByProject(state.studio.internal.contracts);
 
-  const talentPoolMap = new Map<string, typeof state.talentPool[0]>();
-  for (const talent of state.talentPool) {
+  const talentPoolMap = new Map<string, typeof state.industry.talentPool[0]>();
+  for (const talent of state.industry.talentPool) {
     talentPoolMap.set(talent.id, talent);
   }
 
@@ -66,17 +66,18 @@ const processProjectPhase = (
 
   // ⚡ Bolt: Calculate rivalAvgStrength once outside the loop instead of O(N*M) inside
   let rivalStrengthSum = 0;
-  for (let i = 0; i < state.rivals.length; i++) {
-    rivalStrengthSum += state.rivals[i].strength;
+  for (let i = 0; i < state.industry.rivals.length; i++) {
+    rivalStrengthSum += state.industry.rivals[i].strength;
   }
-  const rivalAvgStrength = rivalStrengthSum / Math.max(1, state.rivals.length);
+  const rivalAvgStrength = rivalStrengthSum / Math.max(1, state.industry.rivals.length);
 
   // ⚡ Bolt: Use a single for loop instead of map -> reduce -> forEach to prevent intermediate array allocations
-  const updatedProjects: typeof state.projects = [];
+  const updatedProjects: typeof state.studio.internal.projects = [];
   const boxOfficeEntries: BoxOfficeEntry[] = [];
+  const allTalentUpdates = new Map<string, typeof state.industry.talentPool[0]>();
 
-  for (let i = 0; i < state.projects.length; i++) {
-    const p = state.projects[i];
+  for (let i = 0; i < state.studio.internal.projects.length; i++) {
+    const p = state.studio.internal.projects[i];
 
     if (p.activeCrisis && !p.activeCrisis.resolved) {
       projectUpdates.push(`"${p.title}" production is halted until the active crisis is resolved.`);
@@ -86,10 +87,12 @@ const processProjectPhase = (
 
     const projectContracts = contractsByProject.get(p.id) || [];
     const trendMult = getTrendMultiplier(p.genre, state);
-    const { project, update } = advanceProject(p, nextWeek, state.studio.prestige, projectContracts, talentPoolMap, rivalAvgStrength, state.awards, trendMult);
+    const { project, update, talentUpdates } = advanceProject(p, nextWeek, state.studio.prestige, projectContracts, talentPoolMap, rivalAvgStrength, state.industry.awards || [], trendMult);
 
     if (update) projectUpdates.push(update);
-
+    talentUpdates.forEach(t => allTalentUpdates.set(t.id, t));
+    
+    // ... (rest of the loop)
     if (project.status === 'released' && p.status !== 'released' && !project.awardsProfile) {
       project.awardsProfile = generateAwardsProfile(project);
     }
@@ -102,9 +105,8 @@ const processProjectPhase = (
       }
     }
 
-    // Sprint J: Director disputes
     if (project.status === 'production') {
-      const dirDisputeArgs = processDirectorDisputes({ ...state, projects: [project] });
+      const dirDisputeArgs = processDirectorDisputes({ ...state, studio: { ...state.studio, internal: { ...state.studio.internal, projects: [project] } } });
       if (dirDisputeArgs.newCrises.length > 0 && (!project.activeCrisis || project.activeCrisis.resolved)) {
          project.activeCrisis = dirDisputeArgs.newCrises[0].crisis;
          projectUpdates.push(...dirDisputeArgs.updates);
@@ -126,8 +128,15 @@ const processProjectPhase = (
     }
   }
 
+  // Update talent pool with changes from projects
+  const updatedTalentPool = state.industry.talentPool.map(t => allTalentUpdates.get(t.id) || t);
+
   return {
-    state: { ...state, projects: updatedProjects },
+    state: { 
+      ...state, 
+      studio: { ...state.studio, internal: { ...state.studio.internal, projects: updatedProjects } },
+      industry: { ...state.industry, talentPool: updatedTalentPool }
+    },
     weeklyChanges: {
       ...weeklyChanges,
       projectUpdates: [...weeklyChanges.projectUpdates, ...projectUpdates],
@@ -141,17 +150,17 @@ const resolveFinancials = (
   weeklyChanges: WeeklyChanges
 ): { state: GameState; weeklyChanges: WeeklyChanges } => {
   const nextWeek = state.week + 1;
-  const costs = calculateWeeklyCosts(state.projects, state.activeMarketEvents);
-  const revenue = calculateWeeklyRevenue(state.projects, state.contracts, state.activeMarketEvents);
+  const costs = calculateWeeklyCosts(state.studio.internal.projects, state.market.activeMarketEvents || []);
+  const revenue = calculateWeeklyRevenue(state.studio.internal.projects, state.studio.internal.contracts, state.market.activeMarketEvents || []);
   const newCash = state.cash - costs + revenue;
 
   const financeHistory = [
-    ...state.financeHistory,
+    ...state.studio.internal.financeHistory,
     { week: nextWeek, cash: newCash, revenue, costs },
   ].slice(-52);
 
   return {
-    state: { ...state, cash: newCash, financeHistory },
+    state: { ...state, cash: newCash, studio: { ...state.studio, internal: { ...state.studio.internal, financeHistory } } },
     weeklyChanges: {
       ...weeklyChanges,
       costs: weeklyChanges.costs + costs,
@@ -159,6 +168,10 @@ const resolveFinancials = (
     },
   };
 };
+
+import { TalentSystem } from '../systems/TalentSystem';
+
+// ... (other imports)
 
 const simulateWorld = (
   state: GameState,
@@ -168,13 +181,14 @@ const simulateWorld = (
   const projectUpdates: string[] = [];
   const events: string[] = [];
 
-  // ⚡ Bolt: Single pass for loops instead of map to avoid allocations
-  const updatedRivals: typeof state.rivals = [];
-  for (let i = 0; i < state.rivals.length; i++) {
-    updatedRivals.push(updateRival(state.rivals[i], state));
+  // Simulate Rivals
+  const updatedRivals: typeof state.industry.rivals = [];
+  for (let i = 0; i < state.industry.rivals.length; i++) {
+    updatedRivals.push(updateRival(state.industry.rivals[i], state));
   }
 
-  const { updatedBuyers, newHeadlines: buyerHeadlines } = updateBuyers(state.buyers || [], nextWeek);
+  // Update Buyers
+  const { updatedBuyers, newHeadlines: buyerHeadlines } = updateBuyers(state.market.buyers || [], nextWeek);
 
   const formattedBuyerHeadlines: Headline[] = [];
   for (let i = 0; i < buyerHeadlines.length; i++) {
@@ -186,98 +200,16 @@ const simulateWorld = (
     });
   }
 
-  const updatedOpportunitiesCopy: typeof state.opportunities = [];
-  const opportunities = state.opportunities || [];
+  // Simulate Talent & Opportunities via TalentSystem
+  const { updatedOpportunities: updatedOpportunitiesCopy, events: talentEvents } = TalentSystem.advance(state);
+  events.push(...talentEvents);
 
-  // ⚡ Bolt: Single pass for loop instead of filter/map/reduce
-  for (let i = 0; i < opportunities.length; i++) {
-    const opp = opportunities[i];
-    const newWeeks = opp.weeksUntilExpiry - 1;
-    if (newWeeks > 0) {
-      updatedOpportunitiesCopy.push({
-        ...opp,
-        weeksUntilExpiry: newWeeks,
-      });
-    }
-  }
-
-  // ⚡ Bolt: Lazy load oppNames set so it doesn't map on every tick if not needed
-  let oppNames: Set<string> | null = null;
-  const getOppNames = () => {
-    if (!oppNames) {
-      oppNames = new Set();
-      for (let i = 0; i < updatedOpportunitiesCopy.length; i++) {
-        oppNames.add(updatedOpportunitiesCopy[i].title);
-      }
-    }
-    return oppNames;
-  };
-
-  // Opportunity 1 (Specific to available talent)
-  // ⚡ Bolt: Keep expensive mapping inside the probability block so it doesn't run every tick
+  // Random World Events
   if (Math.random() < 0.2) {
-    // ⚡ Bolt: Avoid extra allocations with an in-place Set builder and a straight loop
-    const activeTalentIds = new Set<string>();
-    for (let i = 0; i < state.contracts.length; i++) {
-      activeTalentIds.add(state.contracts[i].talentId);
-    }
-
-    const availableTalentIds: string[] = [];
-    for (let i = 0; i < state.talentPool.length; i++) {
-      const t = state.talentPool[i];
-      if (!activeTalentIds.has(t.id)) {
-        availableTalentIds.push(t.id);
-      }
-    }
-
-    if (availableTalentIds.length > 0) {
-      const newOpp = generateOpportunity(availableTalentIds);
-      if (!getOppNames().has(newOpp.title)) {
-        updatedOpportunitiesCopy.push(newOpp);
-        getOppNames().add(newOpp.title);
-        events.push(`A new script "${newOpp.title}" hit the market.`);
-      }
-    }
-  }
-
-  // Event 1
-  if (Math.random() < 0.15) {
     events.push(pick(EVENT_POOL));
   }
-
-  // Opportunity 2 (General)
   if (Math.random() < 0.2) {
-    const newOpp = generateOpportunity();
-    if (!getOppNames().has(newOpp.title)) {
-      updatedOpportunitiesCopy.push(newOpp);
-      getOppNames().add(newOpp.title);
-      events.push(`A new script "${newOpp.title}" just hit the market!`);
-    }
-  }
-
-  // Opportunity 3 (General batch)
-  if (Math.random() < 0.15) {
-    const newOpp = generateOpportunity();
-    if (!getOppNames().has(newOpp.title)) {
-      updatedOpportunitiesCopy.push(newOpp);
-      getOppNames().add(newOpp.title);
-      events.push('New opportunities have hit the market!');
-    }
-  }
-
-  // Event 2
-  if (Math.random() < 0.15) {
     events.push(pick(EVENT_POOL));
-  }
-
-  // Opportunity 4 (Fallback)
-  if (Math.random() < 0.15 && updatedOpportunitiesCopy.length < 3) {
-    const newOpp = generateOpportunity();
-    if (!getOppNames().has(newOpp.title)) {
-      updatedOpportunitiesCopy.push(newOpp);
-      getOppNames().add(newOpp.title);
-      events.push(`A new ${newOpp.budgetTier} ${newOpp.format} package hit the market.`);
-    }
   }
 
   const newHeadlines = generateHeadlines(nextWeek, updatedRivals);
@@ -301,13 +233,22 @@ const simulateWorld = (
 
   let newState: GameState = {
     ...state,
-    opportunities: updatedOpportunitiesCopy,
-    studio: { ...state.studio, prestige: state.studio.prestige + prestigeChange },
-    buyers: updatedBuyers,
-    rivals: updatedRivals,
-    trends: state.trends ? advanceTrends(state.trends) : [],
-    awards: [...(state.awards || []), ...newAwards],
-    headlines: [...newHeadlines, ...state.headlines].slice(0, 50),
+    market: {
+      ...state.market,
+      opportunities: updatedOpportunitiesCopy,
+      buyers: updatedBuyers,
+      trends: state.market.trends ? advanceTrends(state.market.trends) : [],
+    },
+    studio: {
+      ...state.studio,
+      prestige: state.studio.prestige + prestigeChange
+    },
+    industry: {
+      ...state.industry,
+      rivals: updatedRivals,
+      awards: [...(state.industry.awards || []), ...newAwards],
+      headlines: [...newHeadlines, ...state.industry.headlines].slice(0, 50),
+    }
   };
 
   newState = advanceMarketEvents(newState);
@@ -315,10 +256,9 @@ const simulateWorld = (
   newState = resolveFestivals(newState);
   newState = advanceScandals(newState);
   
-  // Scans talent pool and spawns new scandals
   const scandalResult = generateScandals(newState);
   if (scandalResult.newScandals.length > 0) {
-     newState.scandals = [...(newState.scandals || []), ...scandalResult.newScandals];
+     newState.industry.scandals = [...(newState.industry.scandals || []), ...scandalResult.newScandals];
      newHeadlines.push(...scandalResult.headlines);
   }
 
@@ -375,17 +315,17 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
   weeklyChanges = afterWorld.weeklyChanges;
   
   // 4. Rights & Deals (Sprint E)
-  const { projects: updatedProjects, messages: ipMessages } = advanceIPRights(nextState.projects, nextState.week + 1);
-  nextState.projects = updatedProjects;
+  const { projects: updatedProjects, messages: ipMessages } = advanceIPRights(nextState.studio.internal.projects, nextState.week + 1);
+  nextState.studio.internal.projects = updatedProjects;
   weeklyChanges.events.push(...ipMessages);
   
-  if (nextState.firstLookDeals) {
-    const activeDeals = advanceDeals(nextState.firstLookDeals);
-    const expiredDeals = nextState.firstLookDeals.length - activeDeals.length;
+  if (nextState.studio.internal.firstLookDeals) {
+    const activeDeals = advanceDeals(nextState.studio.internal.firstLookDeals);
+    const expiredDeals = nextState.studio.internal.firstLookDeals.length - activeDeals.length;
     if (expiredDeals > 0) {
       weeklyChanges.events.push(`${expiredDeals} first-look talent deal(s) expired this week.`);
     }
-    nextState.firstLookDeals = activeDeals;
+    nextState.studio.internal.firstLookDeals = activeDeals;
   }
 
   // 5. Finalize

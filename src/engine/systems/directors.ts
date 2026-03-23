@@ -12,9 +12,9 @@ export interface DirectorDispute {
  * Checks if the director for a given project has final cut / creative control.
  */
 export function hasCreativeControl(projectId: string, state: GameState): boolean {
-  const directorContract = state.contracts.find(c => 
+  const directorContract = state.studio.internal.contracts.find(c => 
     c.projectId === projectId && 
-    state.talentPool.find(t => t.id === c.talentId)?.roles.includes('director')
+    state.industry.talentPool.find(t => t.id === c.talentId)?.roles.includes('director')
   );
   
   if (!directorContract) return false;
@@ -28,14 +28,14 @@ export function processDirectorDisputes(state: GameState): { updates: string[], 
   const updates: string[] = [];
   const newCrises: any[] = [];
   
-  const inProduction = state.projects.filter(p => p.status === 'production');
+  const inProduction = state.studio.internal.projects.filter(p => p.status === 'production');
   
   for (const proj of inProduction) {
     // Find the director
-    const dirContract = state.contracts.find(c => c.projectId === proj.id);
+    const dirContract = state.studio.internal.contracts.find(c => c.projectId === proj.id);
     if (!dirContract) continue;
     
-    const director = state.talentPool.find(t => t.id === dirContract.talentId);
+    const director = state.industry.talentPool.find(t => t.id === dirContract.talentId);
     if (!director || !director.roles.includes('director')) continue;
     
     // Auteurs and Visionaries cause more disputes

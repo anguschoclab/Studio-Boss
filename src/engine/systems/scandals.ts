@@ -9,9 +9,9 @@ export function generateScandals(state: GameState): { newScandals: Scandal[], he
   
   // Only look at talent that is actually attached to active studio projects to keep it relevant
   const relevantTalentIds = new Set<string>();
-  state.contracts.forEach(c => relevantTalentIds.add(c.talentId));
+  state.studio.internal.contracts.forEach(c => relevantTalentIds.add(c.talentId));
   
-  const activeTalent = state.talentPool.filter(t => relevantTalentIds.has(t.id));
+  const activeTalent = state.industry.talentPool.filter(t => relevantTalentIds.has(t.id));
   
   for (const talent of activeTalent) {
     const risk = talent.controversyRisk || 5; 
@@ -31,7 +31,7 @@ export function generateScandals(state: GameState): { newScandals: Scandal[], he
        headlines.push({
           id: crypto.randomUUID(),
           week: state.week,
-          category: 'talent',
+          category: 'talent' as const,
           text: `PR NIGHTMARE: Massive ${type} scandal erupts violently around ${talent.name}!`
        });
     }
@@ -44,9 +44,9 @@ export function generateScandals(state: GameState): { newScandals: Scandal[], he
  * Processes weekly decay of scandals and applies their penalties to projects.
  */
 export function advanceScandals(state: GameState): GameState {
-  if (!state.scandals || state.scandals.length === 0) return state;
+  if (!state.industry.scandals || state.industry.scandals.length === 0) return state;
   
-  const updatedScandals = state.scandals
+  const updatedScandals = state.industry.scandals
     .map(s => ({ ...s, weeksRemaining: s.weeksRemaining - 1 }))
     .filter(s => s.weeksRemaining > 0);
     
@@ -54,26 +54,35 @@ export function advanceScandals(state: GameState): GameState {
   
   // Find projects penalized by attached talent scandals
   const penalizedProjectIds = new Set<string>();
-  state.contracts.forEach(c => {
+  state.studio.internal.contracts.forEach(c => {
     if (activeScandalTalent.has(c.talentId)) {
       penalizedProjectIds.add(c.projectId);
     }
   });
   
-  const newProjects = state.projects.map(p => {
+  const newProjects = state.studio.internal.projects.map(p => {
     if (penalizedProjectIds.has(p.id)) {
       // Tank the buzz due to the PR nightmare
       return {
         ...p,
         buzz: Math.max(0, p.buzz - 2) 
-      };
+       };
     }
     return p;
   });
   
   return {
     ...state,
-    scandals: updatedScandals,
-    projects: newProjects
+    studio: {
+      ...state.studio,
+      internal: {
+        ...state.studio.internal,
+        projects: newProjects
+      }
+    },
+    industry: {
+      ...state.industry,
+      scandals: updatedScandals
+    }
   };
 }

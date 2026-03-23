@@ -3,7 +3,7 @@ import { BUDGET_TIERS } from '../data/budgetTiers';
 import { TV_FORMATS } from '../data/tvFormats';
 import { UNSCRIPTED_FORMATS } from '../data/unscriptedFormats';
 import { clamp, randRange } from '../utils';
-import { updateTalentStats } from './talentStats';
+import { TalentSystem } from './TalentSystem';
 import { generateReviewScore, simulateWeeklyBoxOffice } from './releaseSimulation';
 import { calculateRegionalPenalties } from './ratings';
 import { calculateAudienceIndex } from './demographics';
@@ -23,7 +23,7 @@ function getAttachedTalent(contracts: Contract[], talentPoolMap: Map<string, Tal
   }, [] as TalentProfile[]);
 }
 
-function handleDevelopmentPhase(p: Project): { update: string | null } {
+function handleDevelopmentPhase(p: Project): { update: string | null; talentUpdates: TalentProfile[] } {
   let update: string | null;
   if (p.format === 'tv' || p.format === 'unscripted') {
     p.status = 'pitching';
@@ -34,7 +34,7 @@ function handleDevelopmentPhase(p: Project): { update: string | null } {
     p.weeksInPhase = 0;
     update = `"${p.title}" is ready for greenlight committee review.`;
   }
-  return { update };
+  return { update, talentUpdates: [] };
 }
 
 export function handleReleasePhaseEntry(
@@ -43,7 +43,7 @@ export function handleReleasePhaseEntry(
   studioPrestige: number,
   projectContracts: Contract[],
   talentPoolMap: Map<string, TalentProfile>
-): { update: string | null } {
+): { update: string | null; talentUpdates: TalentProfile[] } {
   p.status = 'released';
   p.weeksInPhase = 0;
   p.releaseWeek = currentWeek;
@@ -95,7 +95,7 @@ export function handleReleasePhaseEntry(
     update = `"${p.title}" releases to a ${strength} opening!`;
   }
 
-  return { update };
+  return { update, talentUpdates: [] };
 }
 
 function handleReleasedPhase(
@@ -105,9 +105,10 @@ function handleReleasedPhase(
   rivalStrengthAvg: number,
   awards: Award[],
   trendMultiplier: number = 1.0
-): { update: string | null } {
+): { update: string | null; talentUpdates: TalentProfile[] } {
   p.revenue += p.weeklyRevenue;
   let update: string | null = null;
+  let talentUpdates: TalentProfile[] = [];
 
   if ((p.format === 'tv' && p.tvFormat) || (p.format === 'unscripted' && p.unscriptedFormat)) {
     const formatData = p.format === 'tv' ? TV_FORMATS[p.tvFormat!] : UNSCRIPTED_FORMATS[p.unscriptedFormat!];
@@ -120,7 +121,7 @@ function handleReleasedPhase(
         p.status = 'post_release';
         p.weeksInPhase = 0;
         update = `"${p.title}" Season ${p.season} finishes its run.`;
-        updateTalentStats(p, projectContracts, talentPoolMap, awards);
+        talentUpdates = TalentSystem.applyProjectResults(p, projectContracts, Array.from(talentPoolMap.values()), awards);
       }
     } else if (p.releaseModel === 'split') {
       const part2DropWeek = Math.ceil(eps / 2) + 2;
@@ -139,7 +140,7 @@ function handleReleasedPhase(
         p.status = 'post_release';
         p.weeksInPhase = 0;
         update = `"${p.title}" Season ${p.season} finishes its run.`;
-        updateTalentStats(p, projectContracts, talentPoolMap, awards);
+        talentUpdates = TalentSystem.applyProjectResults(p, projectContracts, Array.from(talentPoolMap.values()), awards);
       }
     } else {
       if (p.episodesReleased !== undefined && p.episodesReleased < eps) {
@@ -156,7 +157,7 @@ function handleReleasedPhase(
           p.status = 'post_release';
           p.weeksInPhase = 0;
           update = `"${p.title}" Season ${p.season} finishes its run.`;
-          updateTalentStats(p, projectContracts, talentPoolMap, awards);
+          talentUpdates = TalentSystem.applyProjectResults(p, projectContracts, Array.from(talentPoolMap.values()), awards);
         }
       }
     }
@@ -166,16 +167,14 @@ function handleReleasedPhase(
       p.status = 'post_release';
       p.weeksInPhase = 0;
       update = `"${p.title}" completes its theatrical run — total gross: ${(p.revenue / 1_000_000).toFixed(1)}M`;
+      talentUpdates = TalentSystem.applyProjectResults(p, projectContracts, Array.from(talentPoolMap.values()), awards);
     }
   }
 
-  return { update };
+  return { update, talentUpdates };
 }
 
-
-
-
-function handlePostReleasePhase(p: Project): { update: string | null } {
+function handlePostReleasePhase(p: Project): { update: string | null; talentUpdates: TalentProfile[] } {
   let update: string | null = null;
   let weeklyAncillary = 0;
 
@@ -207,14 +206,13 @@ function handlePostReleasePhase(p: Project): { update: string | null } {
     p.status = 'archived';
   }
 
-  return { update };
+  return { update, talentUpdates: [] };
 }
 
-
-function handleMarketingPhase(p: Project): { update: string | null } {
+function handleMarketingPhase(p: Project): { update: string | null; talentUpdates: TalentProfile[] } {
   p.status = 'marketing';
   p.weeksInPhase = 0;
-  return { update: `"${p.title}" has wrapped production and is ready for marketing strategy.` };
+  return { update: `"${p.title}" has wrapped production and is ready for marketing strategy.`, talentUpdates: [] };
 }
 
 export function executeMarketing(
@@ -278,11 +276,12 @@ export function advanceProject(
   rivalStrengthAvg: number = 50,
   awards: Award[] = [],
   trendMultiplier: number = 1.0
-): { project: Project; update: string | null } {
-  if (project.status === 'archived') return { project, update: null };
+): { project: Project; update: string | null; talentUpdates: TalentProfile[] } {
+  if (project.status === 'archived') return { project, update: null, talentUpdates: [] };
 
   const p = { ...project, weeksInPhase: project.weeksInPhase + 1 };
   let update: string | null = null;
+  let talentUpdates: TalentProfile[] = [];
 
   if (p.status === 'development' && p.weeksInPhase >= p.developmentWeeks) {
     const result = handleDevelopmentPhase(p);
@@ -293,6 +292,7 @@ export function advanceProject(
   } else if (p.status === 'released') {
     const result = handleReleasedPhase(p, projectContracts, talentPoolMap, rivalStrengthAvg, awards, trendMultiplier);
     update = result.update;
+    if (result.talentUpdates) talentUpdates = result.talentUpdates;
   } else if (p.status === 'post_release') {
     const result = handlePostReleasePhase(p);
     update = result.update;
@@ -305,7 +305,7 @@ export function advanceProject(
     p.buzz = clamp(p.buzz + randRange(-4, 6) + talentBuzzBonus, 0, 100);
   }
 
-  return { project: p, update };
+  return { project: p, update, talentUpdates };
 }
 
 
@@ -313,16 +313,17 @@ export interface ProjectAdvanceResult {
   updatedProjects: Project[];
   projectUpdates: string[];
   events: string[];
+  updatedTalent: TalentProfile[];
 }
 
 export function advanceProjects(
   state: GameState,
   nextWeek: number
 ): ProjectAdvanceResult {
-  const contractsByProject = groupContractsByProject(state.contracts);
+  const contractsByProject = groupContractsByProject(state.studio.internal.contracts);
 
   const talentPoolMap = new Map<string, TalentProfile>();
-  for (const talent of state.talentPool) {
+  for (const talent of state.industry.talentPool) {
     talentPoolMap.set(talent.id, talent);
   }
 
@@ -330,16 +331,17 @@ export function advanceProjects(
   const events: string[] = [];
 
   let rivalStrengthSum = 0;
-  for (let i = 0; i < state.rivals.length; i++) {
-    rivalStrengthSum += state.rivals[i].strength;
+  for (let i = 0; i < state.industry.rivals.length; i++) {
+    rivalStrengthSum += state.industry.rivals[i].strength;
   }
-  const rivalAvgStrength = rivalStrengthSum / Math.max(1, state.rivals.length);
+  const rivalAvgStrength = rivalStrengthSum / Math.max(1, state.industry.rivals.length);
 
   const updatedProjects: Project[] = [];
   const boxOfficeEntries: BoxOfficeEntry[] = [];
+  const allTalentUpdates = new Map<string, TalentProfile>();
 
-  for (let i = 0; i < state.projects.length; i++) {
-    const p = state.projects[i];
+  for (let i = 0; i < state.studio.internal.projects.length; i++) {
+    const p = state.studio.internal.projects[i];
 
     if (p.activeCrisis && !p.activeCrisis.resolved) {
       projectUpdates.push(`"${p.title}" production is halted until the active crisis is resolved.`);
@@ -349,9 +351,10 @@ export function advanceProjects(
 
     const projectContracts = contractsByProject.get(p.id) || [];
     const trendMult = getTrendMultiplier(p.genre, state);
-    const { project, update } = advanceProject(p, nextWeek, state.studio.prestige, projectContracts, talentPoolMap, rivalAvgStrength, state.awards, trendMult);
+    const { project, update, talentUpdates } = advanceProject(p, nextWeek, state.studio.prestige, projectContracts, talentPoolMap, rivalAvgStrength, state.industry.awards || [], trendMult);
 
     if (update) projectUpdates.push(update);
+    talentUpdates.forEach(t => allTalentUpdates.set(t.id, t));
 
     if (project.status === 'released' && p.status !== 'released' && !project.awardsProfile) {
       project.awardsProfile = generateAwardsProfile(project);
@@ -367,7 +370,7 @@ export function advanceProjects(
 
     // Director disputes
     if (project.status === 'production') {
-      const dirDisputeArgs = processDirectorDisputes({ ...state, projects: [project] });
+      const dirDisputeArgs = processDirectorDisputes({ ...state, studio: { ...state.studio, internal: { ...state.studio.internal, projects: [project] } } });
       if (dirDisputeArgs.newCrises.length > 0 && (!project.activeCrisis || project.activeCrisis.resolved)) {
          project.activeCrisis = dirDisputeArgs.newCrises[0].crisis;
          projectUpdates.push(...dirDisputeArgs.updates);
@@ -389,9 +392,13 @@ export function advanceProjects(
     }
   }
 
+  // Apply talent updates back into the full pool
+  const updatedTalentPool = state.industry.talentPool.map(t => allTalentUpdates.get(t.id) || t);
+
   return {
     updatedProjects,
     projectUpdates,
     events,
+    updatedTalent: updatedTalentPool,
   };
 }

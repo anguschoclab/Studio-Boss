@@ -10,7 +10,7 @@ const strengthColor = (s: number) => {
 };
 
 export const RivalsPanel = () => {
-  const rivals = useGameStore(s => s.gameState?.rivals || []);
+  const rivals = useGameStore(s => s.gameState?.industry.rivals || []);
   const acquireRival = useGameStore(s => s.acquireRival);
 
   return (

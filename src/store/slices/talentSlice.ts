@@ -1,11 +1,13 @@
 import { StateCreator } from 'zustand';
 import { GameStore } from '../gameStore';
-import { Contract } from '@/engine/types';
+import { Contract, Project } from '@/engine/types';
 import { offerFirstLookDeal } from '@/engine/systems/deals';
+import { buildProjectAndContracts, CreateProjectParams } from '../storeUtils';
 
 export interface TalentSlice {
   signContract: (talentId: string, projectId: string) => void;
   offerFirstLook: (talentId: string, duration: number, fee: number) => boolean;
+  acquireOpportunity: (oppId: string) => void;
 }
 
 export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (set, get) => ({
@@ -14,14 +16,14 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       const state = s.gameState;
       if (!state) return s;
 
-      const talent = state.talentPool.find(t => t.id === talentId);
+      const talent = state.industry.talentPool.find(t => t.id === talentId);
       if (!talent) return s;
       
-      const pIndex = state.projects.findIndex(p => p.id === projectId);
+      const pIndex = state.studio.internal.projects.findIndex(p => p.id === projectId);
       if (pIndex === -1) return s;
       
       let finalFee = talent.fee;
-      if (state.firstLookDeals?.some(d => d.talentId === talentId)) {
+      if (state.studio.internal.firstLookDeals?.some(d => d.talentId === talentId)) {
          finalFee = talent.fee * 0.5;
       }
       
@@ -44,7 +46,13 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
         gameState: {
           ...state,
           cash: newCash,
-          contracts: [...state.contracts, contract]
+          studio: {
+            ...state.studio,
+            internal: {
+              ...state.studio.internal,
+              contracts: [...state.studio.internal.contracts, contract]
+            }
+          }
         }
       };
     });
@@ -56,7 +64,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       const state = s.gameState;
       if (!state) return s;
       
-      const talent = state.talentPool.find(t => t.id === talentId);
+      const talent = state.industry.talentPool.find(t => t.id === talentId);
       if (!talent) return s;
       
       const lockFee = (talent.fee * 2);
@@ -66,12 +74,12 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       
       if (deal) {
          success = true;
-         const currentDeals = state.firstLookDeals || [];
-         const newHeadlines = [...state.headlines];
+         const currentDeals = state.studio.internal.firstLookDeals || [];
+         const newHeadlines = [...state.industry.headlines];
          newHeadlines.unshift({
            id: crypto.randomUUID(),
            week: state.week,
-           category: 'talent',
+           category: 'talent' as const,
            text: `${talent.name} signs exclusive first-look pact with ${state.studio.name}.`
          });
          
@@ -79,27 +87,92 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
            gameState: {
              ...state,
              cash: state.cash - lockFee,
-             headlines: newHeadlines,
-             firstLookDeals: [...currentDeals, deal]
+             studio: {
+               ...state.studio,
+               internal: {
+                 ...state.studio.internal,
+                 firstLookDeals: [...currentDeals, deal]
+               }
+             },
+             industry: {
+               ...state.industry,
+               headlines: newHeadlines,
+             }
            }
          };
       } else {
-         const newHeadlines = [...state.headlines];
+         const newHeadlines = [...state.industry.headlines];
          newHeadlines.unshift({
            id: crypto.randomUUID(),
            week: state.week,
-           category: 'general',
+           category: 'general' as const,
            text: `${talent.name} passes on first-look deal with ${state.studio.name}.`
          });
          
          return {
            gameState: {
              ...state,
-             headlines: newHeadlines
+             industry: {
+               ...state.industry,
+               headlines: newHeadlines
+             }
            }
          };
       }
     });
     return success;
+  },
+
+  acquireOpportunity: (oppId) => {
+    set((s) => {
+      const state = s.gameState;
+      if (!state) return s;
+
+      const oppIndex = state.market.opportunities.findIndex(o => o.id === oppId);
+      if (oppIndex === -1) return s;
+
+      const opp = state.market.opportunities[oppIndex];
+      const cost = opp.costToAcquire || 0;
+
+      if (state.cash < cost) return s;
+
+      const params: CreateProjectParams = {
+        title: opp.title,
+        format: opp.format,
+        genre: opp.genre,
+        budgetTier: opp.budgetTier,
+        targetAudience: opp.targetAudience,
+        flavor: opp.flavor,
+        tvFormat: opp.tvFormat,
+        unscriptedFormat: opp.unscriptedFormat,
+        episodes: opp.episodes,
+        releaseModel: opp.releaseModel,
+        initialBuzzBonus: opp.qualityBonus,
+      };
+
+      const { project, newContracts, talentFees } = buildProjectAndContracts(state, params);
+
+      const updatedOpportunities = [...state.market.opportunities];
+      updatedOpportunities.splice(oppIndex, 1);
+
+      return {
+        gameState: {
+          ...state,
+          cash: state.cash - cost - talentFees,
+          studio: {
+            ...state.studio,
+            internal: {
+              ...state.studio.internal,
+              projects: [...state.studio.internal.projects, project],
+              contracts: [...state.studio.internal.contracts, ...newContracts]
+            }
+          },
+          market: {
+            ...state.market,
+            opportunities: updatedOpportunities
+          }
+        }
+      };
+    });
   },
 });

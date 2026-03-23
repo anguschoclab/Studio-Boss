@@ -11,7 +11,7 @@ export function calculateStudioNetWorth(state: GameState): number {
   let netWorth = state.cash;
   
   // Add catalog value from IP rights (Sprint E)
-  state.projects.forEach(p => {
+  state.studio.internal.projects.forEach(p => {
     if (p.ipRights && p.ipRights.catalogValue) {
       if (p.ipRights.rightsOwner === 'studio') {
         netWorth += p.ipRights.catalogValue;
@@ -36,8 +36,8 @@ export function generateCashflowForecast(state: GameState, weeksAhead: number = 
   let currentCash = state.cash;
   
   // Short-term projection based on current weekly rates with decay.
-  const currentWeeklyCosts = calculateWeeklyCosts(state.projects, state.activeMarketEvents);
-  const currentWeeklyRevenue = calculateWeeklyRevenue(state.projects, state.contracts, state.activeMarketEvents);
+  const currentWeeklyCosts = calculateWeeklyCosts(state.studio.internal.projects, state.market.activeMarketEvents || []);
+  const currentWeeklyRevenue = calculateWeeklyRevenue(state.studio.internal.projects, state.studio.internal.contracts, state.market.activeMarketEvents || []);
   
   for (let i = 1; i <= weeksAhead; i++) {
     // Assume revenue decays by roughly 15% per week in aggregate
@@ -135,12 +135,12 @@ export function advanceFinance(
   state: GameState,
   nextWeek: number
 ): FinanceAdvanceResult {
-  const costs = calculateWeeklyCosts(state.projects, state.activeMarketEvents);
-  const revenue = calculateWeeklyRevenue(state.projects, state.contracts, state.activeMarketEvents);
+  const costs = calculateWeeklyCosts(state.studio.internal.projects, state.market.activeMarketEvents || []);
+  const revenue = calculateWeeklyRevenue(state.studio.internal.projects, state.studio.internal.contracts, state.market.activeMarketEvents || []);
   const newCash = state.cash - costs + revenue;
 
   const financeHistory = [
-    ...state.financeHistory,
+    ...state.studio.internal.financeHistory,
     { week: nextWeek, cash: newCash, revenue, costs },
   ].slice(-52);
 

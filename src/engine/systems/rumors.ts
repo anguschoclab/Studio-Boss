@@ -2,8 +2,8 @@ import { GameState, Rumor } from '../types';
 import { pick, randRange } from '../utils';
 
 export function advanceRumors(state: GameState): GameState {
-  let currentRumors = state.rumors || [];
-  const newHeadlines = [...state.headlines];
+  let currentRumors = state.industry.rumors || [];
+  const newHeadlines = [...state.industry.headlines];
   
   // Resolve rumors that are due
   currentRumors = currentRumors.map(r => {
@@ -12,14 +12,14 @@ export function advanceRumors(state: GameState): GameState {
         newHeadlines.unshift({
           id: crypto.randomUUID(),
           week: state.week,
-          category: 'rumor',
+          category: 'rumor' as const,
           text: `CONFIRMED: ${r.text}`
         });
       } else {
         newHeadlines.unshift({
           id: crypto.randomUUID(),
           week: state.week,
-          category: 'rumor',
+          category: 'rumor' as const,
           text: `DEBUNKED: Previous rumors regarding ${r.text.toLowerCase()} turn out to be false.`
         });
       }
@@ -39,24 +39,24 @@ export function advanceRumors(state: GameState): GameState {
     
     let text = 'Unnamed studio in talks for a massive merger.';
     
-    if (category === 'talent' && state.talentPool.length > 0) {
-      const talent = pick(state.talentPool);
+    if (category === 'talent' && state.industry.talentPool.length > 0) {
+      const talent = pick(state.industry.talentPool);
       const rumors = [
         `${talent.name} reportedly demanding unprecedented back-end points on next project.`,
         `Sources say ${talent.name} is extremely difficult to work with on set.`,
         `${talent.name} is secretly looking to direct their next feature.`
       ];
       text = pick(rumors);
-    } else if (category === 'rival' && state.rivals.length > 0) {
-      const rival = pick(state.rivals);
+    } else if (category === 'rival' && state.industry.rivals.length > 0) {
+      const rival = pick(state.industry.rivals);
       const rumors = [
         `${rival.name} is allegedly facing severe cash flow issues.`,
         `Word around town is ${rival.name} is preparing a monumental buyout offer.`,
         `Exec shakeups expected soon at ${rival.name}.`
       ];
       text = pick(rumors);
-    } else if (category === 'project' && state.projects.length > 0) {
-      const project = pick(state.projects);
+    } else if (category === 'project' && state.studio.internal.projects.length > 0) {
+      const project = pick(state.studio.internal.projects);
       if (project.status === 'production') {
         text = `Production on "${project.title}" is rumored to be wildly over budget.`;
       } else {
@@ -79,14 +79,17 @@ export function advanceRumors(state: GameState): GameState {
     newHeadlines.unshift({
       id: crypto.randomUUID(),
       week: state.week,
-      category: 'rumor',
+      category: 'rumor' as const,
       text: `RUMOR: ${text}`
     });
   }
   
   return {
     ...state,
-    rumors: currentRumors,
-    headlines: newHeadlines.slice(0, 50)
+    industry: {
+      ...state.industry,
+      rumors: currentRumors,
+      headlines: newHeadlines.slice(0, 50)
+    }
   };
 }

@@ -22,29 +22,29 @@ export function evaluateAcquisitionTarget(target: RivalStudio, buyerCash: number
 }
 
 export function executeAcquisition(state: GameState, targetId: string): GameState {
-  const targetIndex = state.rivals.findIndex(r => r.id === targetId);
+  const targetIndex = state.industry.rivals.findIndex(r => r.id === targetId);
   if (targetIndex === -1) return state;
   
-  const target = state.rivals[targetIndex];
+  const target = state.industry.rivals[targetIndex];
   const evalResult = evaluateAcquisitionTarget(target, state.cash);
   
   if (!evalResult.viable) return state;
   
   // Execute Buyout
-  const updatedRivals = [...state.rivals];
+  const updatedRivals = [...state.industry.rivals];
   updatedRivals.splice(targetIndex, 1); // Remove from competitors list
   
   // Boost player studio prestige/strength
   const newPrestige = Math.min(100, state.studio.prestige + (target.strength * 0.2));
   
   // Gain their active projects (Simulated as random opportunities or empty shells)
-  const newOpportunities = [...(state.opportunities || [])];
+  const newOpportunities = [...(state.market.opportunities || [])];
   newOpportunities.push({
     id: crypto.randomUUID(),
     title: `Acquired ${target.name} IP Catalog`,
     format: 'film',
-    type: 'rights',
-    origin: 'agency_package',
+    type: 'rights' as const,
+    origin: 'agency_package' as const,
     budgetTier: 'mid',
     costToAcquire: 0,
     weeksUntilExpiry: 52,
@@ -60,17 +60,23 @@ export function executeAcquisition(state: GameState, targetId: string): GameStat
       ...state.studio,
       prestige: newPrestige
     },
-    rivals: updatedRivals,
-    opportunities: newOpportunities,
-    headlines: [
-      {
-        id: crypto.randomUUID(),
-        week: state.week,
-        category: 'market' as const,
-        text: `INDUSTRY SHOCKER: ${state.studio.name} acquires ${target.name} in a historic ${"$" + (evalResult.price / 1_000_000).toFixed(1)}M buyout!`
-      },
-      ...state.headlines
-    ].slice(0, 50)
+    market: {
+      ...state.market,
+      opportunities: newOpportunities
+    },
+    industry: {
+      ...state.industry,
+      rivals: updatedRivals,
+      headlines: [
+        {
+          id: crypto.randomUUID(),
+          week: state.week,
+          category: 'market' as const,
+          text: `INDUSTRY SHOCKER: ${state.studio.name} acquires ${target.name} in a historic ${"$" + (evalResult.price / 1_000_000).toFixed(1)}M buyout!`
+        },
+        ...state.industry.headlines
+      ].slice(0, 50)
+    }
   };
 }
 
@@ -78,20 +84,29 @@ export function sellLabel(state: GameState, projectsToSell: Project[], askingPri
   // Logic for the player divesting a chunk of projects/IP to a rival for cash
   // Simplified for MVP: instantly sell and remove projects
   const sellIds = new Set(projectsToSell.map(p => p.id));
-  const remainingProjects = state.projects.filter(p => !sellIds.has(p.id));
+  const remainingProjects = state.studio.internal.projects.filter(p => !sellIds.has(p.id));
   
   return {
     ...state,
     cash: state.cash + askingPrice,
-    projects: remainingProjects,
-    headlines: [
-      {
-        id: crypto.randomUUID(),
-        week: state.week,
-        category: 'market',
-        text: `${state.studio.name} divests major catalog label for ${"$" + (askingPrice / 1_000_000).toFixed(1)}M.`
-      },
-      ...state.headlines
-    ]
+    studio: {
+      ...state.studio,
+      internal: {
+        ...state.studio.internal,
+        projects: remainingProjects
+      }
+    },
+    industry: {
+      ...state.industry,
+      headlines: [
+        {
+          id: crypto.randomUUID(),
+          week: state.week,
+          category: 'market' as const,
+          text: `${state.studio.name} divests major catalog label for ${"$" + (askingPrice / 1_000_000).toFixed(1)}M.`
+        },
+        ...state.industry.headlines
+      ]
+    }
   };
 }

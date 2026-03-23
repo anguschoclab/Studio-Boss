@@ -6,7 +6,7 @@ import { Flame, TrendingUp, TrendingDown, Minus, Snowflake } from 'lucide-react'
 import { GenreTrend } from '@/engine/types';
 
 export function TrendBoard() {
-  const trends = useGameStore(state => state.gameState?.trends) || [];
+  const trends = useGameStore(state => state.gameState?.market.trends) || [];
   
   if (trends.length === 0) {
     return (

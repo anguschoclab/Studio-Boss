@@ -1,4 +1,4 @@
-import { Award, AwardBody, AwardCategory, AwardsProfile, GameState, Project } from '../types';
+import { Award, AwardBody, AwardCategory, AwardsProfile, GameState, Project, Headline } from '../types';
 
 export function generateAwardsProfile(project: Project): AwardsProfile {
   // Base values heavily randomized for now, could be tied to budget, talent, etc.
@@ -25,16 +25,16 @@ export function generateAwardsProfile(project: Project): AwardsProfile {
 }
 
 export function launchAwardsCampaign(state: GameState, projectId: string, budget: number): GameState | null {
-  const projectIndex = state.projects.findIndex(p => p.id === projectId);
+  const projectIndex = state.studio.internal.projects.findIndex(p => p.id === projectId);
   if (projectIndex === -1 || state.cash < budget) return null;
-  const project = state.projects[projectIndex];
+  const project = state.studio.internal.projects[projectIndex];
   if (!project.awardsProfile) return null;
 
   // Assuming $1M buys 5 points of campaign strength
   const boost = (budget / 1_000_000) * 5;
   const newStrength = Math.min(100, project.awardsProfile.campaignStrength + boost);
 
-  const newProjects = [...state.projects];
+  const newProjects = [...state.studio.internal.projects];
   newProjects[projectIndex] = {
     ...project,
     awardsProfile: {
@@ -43,16 +43,27 @@ export function launchAwardsCampaign(state: GameState, projectId: string, budget
     }
   };
 
+  const newHeadline: Headline = {
+    id: crypto.randomUUID(),
+    week: state.week,
+    category: 'awards' as const, 
+    text: `Studio launches massive FYC campaign for "${project.title}".`
+  };
+
   return {
     ...state,
     cash: state.cash - budget,
-    projects: newProjects,
-    headlines: [{
-      id: crypto.randomUUID(),
-      week: state.week,
-      category: 'awards' as const,
-      text: `Studio launches massive FYC campaign for "${project.title}".`
-    }, ...state.headlines].slice(0, 50)
+    studio: {
+      ...state.studio,
+      internal: {
+        ...state.studio.internal,
+        projects: newProjects
+      }
+    },
+    industry: {
+      ...state.industry,
+      headlines: [newHeadline, ...state.industry.headlines].slice(0, 50)
+    }
   };
 }
 
@@ -77,10 +88,14 @@ export const AWARDS_CALENDAR: Record<number, AwardBody[]> = {
   15: ['Tribeca Film Festival'],
   20: ['Peabody Awards'],
   21: ['Cannes Film Festival'],
-  34: ['Venice Film Festival'],
-  36: ['Toronto International Film Festival'],
-  37: ['Primetime Emmys']
+  80: ['Venice Film Festival'],
+  81: ['Toronto International Film Festival'],
+  82: ['Primetime Emmys']
 };
+// Correction to calendar logic for late year events
+AWARDS_CALENDAR[34] = ['Venice Film Festival'];
+AWARDS_CALENDAR[36] = ['Toronto International Film Festival'];
+AWARDS_CALENDAR[37] = ['Primetime Emmys'];
 
 interface AwardConfig {
   body: AwardBody;
@@ -130,7 +145,7 @@ const AWARD_CONFIGS: AwardConfig[] = [
     evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 2 + (p.awardsProfile?.criticScore || 0)
   },
 
-  // --- BAFTAS ---
+  // --- BAFTAs ---
   {
     body: 'BAFTAs', category: 'Best Picture', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) + (p.awardsProfile?.prestigeScore || 0)
@@ -296,17 +311,16 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
   }
 
   // ⚡ Bolt: O(1) early exit for zero eligible projects
-  if (state.projects.length === 0) {
+  if (state.studio.internal.projects.length === 0) {
     return { newAwards, prestigeChange, projectUpdates };
   }
 
   // ⚡ Bolt: Find eligible projects (released within the last 52 weeks relative to the ceremony)
-  // Replaced multiple filter passes and reduce with standard for loop to avoid intermediate object allocation.
   const eligibleFilm: Project[] = [];
   const eligibleTv: Project[] = [];
 
-  for (let k = 0; k < state.projects.length; k++) {
-    const p = state.projects[k];
+  for (let k = 0; k < state.studio.internal.projects.length; k++) {
+    const p = state.studio.internal.projects[k];
     if ((p.status === 'released' || p.status === 'post_release' || p.status === 'archived') &&
         p.releaseWeek !== null &&
         p.releaseWeek > currentWeek - 52 &&
@@ -335,7 +349,7 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
     let bestProject = candidates[0];
     let bestScore = -1;
 
-    // ⚡ Bolt: Find best score using a single loop to avoid .map() object allocation and .sort() O(n log n) overhead
+    // ⚡ Bolt: Find best score using a single loop
     for (let j = 0; j < candidates.length; j++) {
       const p = candidates[j];
       const score = config.evaluator(p) * (1 + (p.awardsProfile?.campaignStrength || 0) / 100);

@@ -10,8 +10,8 @@ export const FinancePanel = () => {
   const gameState = useGameStore(s => s.gameState);
 
   const cash = gameState?.cash ?? 0;
-  const rawFinanceHistory = gameState?.financeHistory;
-  const rawProjects = gameState?.projects;
+  const rawFinanceHistory = gameState?.studio.internal.financeHistory;
+  const rawProjects = gameState?.studio.internal.projects;
 
   const projectsMemo = useMemo(() => rawProjects ?? [], [rawProjects]);
   const financeHistory = useMemo(() => rawFinanceHistory ?? [], [rawFinanceHistory]);

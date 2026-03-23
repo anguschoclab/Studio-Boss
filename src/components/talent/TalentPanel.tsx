@@ -6,8 +6,8 @@ import { TalentProfile } from '@/engine/types';
 
 export const TalentPanel = () => {
   const state = useGameStore(s => s.gameState);
-  const talentPool = useMemo(() => state?.talentPool || [], [state?.talentPool]);
-  const agencies = useMemo(() => state?.agencies || [], [state?.agencies]);
+  const talentPool = useMemo(() => state?.industry.talentPool || [], [state?.industry.talentPool]);
+  const agencies = useMemo(() => state?.industry.agencies || [], [state?.industry.agencies]);
   const agencyMap = useMemo(() => new Map(agencies.map(a => [a.id, a])), [agencies]);
   const [filter, setFilter] = useState<string>('all');
 

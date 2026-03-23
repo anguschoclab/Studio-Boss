@@ -4,7 +4,7 @@ import { ProjectCard } from './ProjectCard';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { ProjectStatus } from '@/engine/types';
-import { EMPTY_PROJECTS } from '@/store/selectors';
+import { selectProjects, EMPTY_PROJECTS } from '@/store/selectors';
 
 const COLUMNS: { status: ProjectStatus[]; title: string; color: string }[] = [
   { status: ['development', 'needs_greenlight'], title: 'Development', color: 'bg-secondary' },
@@ -14,7 +14,7 @@ const COLUMNS: { status: ProjectStatus[]; title: string; color: string }[] = [
 ];
 
 export const PipelineBoard = () => {
-  const projects = useGameStore(s => s.gameState?.projects || EMPTY_PROJECTS);
+  const projects = useGameStore(s => selectProjects(s.gameState));
   const { openCreateProject } = useUIStore();
 
   return (

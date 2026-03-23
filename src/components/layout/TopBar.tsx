@@ -76,10 +76,10 @@ export const TopBar = () => {
       <div className="w-px h-6 bg-border" />
 
       {/* Global Market Events Indicator */}
-      {gameState.activeMarketEvents && gameState.activeMarketEvents.length > 0 && (
+      {gameState.market.activeMarketEvents && gameState.market.activeMarketEvents.length > 0 && (
         <div className="flex items-center gap-2 text-amber-500 font-semibold px-2">
           <AlertTriangle className="h-4 w-4 animate-pulse" />
-          <span className="text-xs">{gameState.activeMarketEvents.length} Active Event{gameState.activeMarketEvents.length > 1 ? 's' : ''}</span>
+          <span className="text-xs">{gameState.market.activeMarketEvents.length} Active Event{gameState.market.activeMarketEvents.length > 1 ? 's' : ''}</span>
         </div>
       )}
 

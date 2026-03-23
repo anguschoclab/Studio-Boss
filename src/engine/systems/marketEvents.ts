@@ -45,13 +45,13 @@ const EVENT_TEMPLATES: Omit<MarketEvent, 'id' | 'weeksRemaining'>[] = [
 ];
 
 export function getActiveMarketEvent(state: GameState): MarketEvent | undefined {
-  if (!state.activeMarketEvents || state.activeMarketEvents.length === 0) return undefined;
-  return state.activeMarketEvents[0]; // For simplicity, only 1 global event at a time
+  if (!state.market.activeMarketEvents || state.market.activeMarketEvents.length === 0) return undefined;
+  return state.market.activeMarketEvents[0]; // For simplicity, only 1 global event at a time
 }
 
 export function advanceMarketEvents(state: GameState): GameState {
-  let activeEvents = state.activeMarketEvents || [];
-  const newHeadlines = [...state.headlines];
+  let activeEvents = state.market.activeMarketEvents || [];
+  const newHeadlines = [...state.industry.headlines];
   
   // Tick active events down
   activeEvents = activeEvents.map(e => ({
@@ -67,7 +67,7 @@ export function advanceMarketEvents(state: GameState): GameState {
     newHeadlines.unshift({
       id: crypto.randomUUID(),
       week: state.week,
-      category: 'market',
+      category: 'market' as const,
       text: `Market Normalizes: The ${exp.name} has finally ended.`
     });
   }
@@ -85,14 +85,20 @@ export function advanceMarketEvents(state: GameState): GameState {
     newHeadlines.unshift({
       id: crypto.randomUUID(),
       week: state.week,
-      category: 'market',
+      category: 'market' as const,
       text: `MAJOR INDUSTRY EVENT: ${newEvent.name} - ${newEvent.description}`
     });
   }
   
   return {
     ...state,
-    activeMarketEvents: activeEvents,
-    headlines: newHeadlines.slice(0, 50)
+    market: {
+      ...state.market,
+      activeMarketEvents: activeEvents
+    },
+    industry: {
+      ...state.industry,
+      headlines: newHeadlines.slice(0, 50)
+    }
   };
 }
