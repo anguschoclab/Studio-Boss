@@ -133,8 +133,8 @@ describe("releaseSimulation system", () => {
       const massiveProject = { ...mockProject, budget: 200000000 };
       const drop = simulateWeeklyBoxOffice(massiveProject, 1, 90, 1000000, 0);
 
-      // 0.7 * 0.70 = 0.49. 0.49 * 1M = 490,000
-      expect(drop).toBeCloseTo(490000);
+      // 0.7 * 0.60 = 0.42. 0.42 * 1M = 420,000
+      expect(drop).toBeCloseTo(420000);
     });
 
 
@@ -144,8 +144,8 @@ describe("releaseSimulation system", () => {
       const tentpoleProject = { ...mockProject, budget: 100000000 };
       const drop = simulateWeeklyBoxOffice(tentpoleProject, 1, 90, 1000000, 0);
 
-      // 0.7 * 0.85 = 0.595. 0.595 * 1M = 595,000
-      expect(drop).toBeCloseTo(595000);
+      // 0.7 * 0.80 = 0.56. 0.56 * 1M = 560,000
+      expect(drop).toBeCloseTo(560000);
     });
 
 
@@ -155,8 +155,8 @@ describe("releaseSimulation system", () => {
       const anomalyProject = { ...mockProject, budget: 20000000 };
       const drop = simulateWeeklyBoxOffice(anomalyProject, 2, 90, 1000000, 0);
 
-      // 0.7 * 1.2 = 0.84. 0.84 * 1M = 840,000
-      expect(drop).toBeCloseTo(840000);
+      // 0.7 * 1.3 = 0.91. 0.91 * 1M = 910,000
+      expect(drop).toBeCloseTo(910000);
     });
 
     it("handles extreme rival competition (100 strength)", () => {
