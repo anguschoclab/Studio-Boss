@@ -31,7 +31,17 @@ export type TvFormatKey =
   | 'mystery_box'
   | 'cyberpunk_dystopia'
   | 'musical_dramedy'
-  | 'dark_academia';
+  | 'dark_academia'
+  | 'political_thriller'
+  | 'satirical_comedy'
+  | 'family_drama'
+  | 'vampire_romance'
+  | 'true_crime_dramatization'
+  | 'retro_sitcom'
+  | 'military_action'
+  | 'workplace_comedy'
+  | 'zombie_apocalypse'
+  | 'erotic_thriller';
 
 export type UnscriptedFormatKey =
   | 'competition'
@@ -58,7 +68,17 @@ export type UnscriptedFormatKey =
   | 'sports_docuseries'
   | 'nature_doc'
   | 'wedding_reality'
-  | 'true_con_doc';
+  | 'true_con_doc'
+  | 'luxury_real_estate'
+  | 'child_pageant'
+  | 'polygamy_doc'
+  | 'plastic_surgery'
+  | 'hoarder_cleanup'
+  | 'tattoo_competition'
+  | 'gold_mining'
+  | 'extreme_cheapskates'
+  | 'bounty_hunter'
+  | 'vintage_restoration';
 export type ReleaseModelKey = 'weekly' | 'binge' | 'split';
 export type ProjectContractType = 'upfront' | 'deficit' | 'standard';
 export type MandateType = 'sci-fi' | 'comedy' | 'drama' | 'budget_freeze' | 'broad_appeal' | 'prestige';
