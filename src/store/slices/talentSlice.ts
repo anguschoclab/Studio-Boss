@@ -60,6 +60,11 @@ export const createTalentSlice: StateCreator<any, [], [], TalentSlice> = (set, g
       const lockFee = (talent.fee * 2);
       if (state.cash < lockFee) return s;
       
+<<<<<<< Updated upstream
+=======
+      // Note: In slice, we might need to handle the require carefully or pass it in.
+      // For now, let's assume it's available or we can import it.
+>>>>>>> Stashed changes
       const dealsEngine = require('../../engine/systems/deals');
       const deal = dealsEngine.offerFirstLookDeal(state, talentId, duration, true);
       

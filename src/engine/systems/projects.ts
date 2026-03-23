@@ -7,6 +7,13 @@ import { updateTalentStats } from './talentStats';
 import { generateReviewScore, simulateWeeklyBoxOffice } from './releaseSimulation';
 import { calculateRegionalPenalties } from './ratings';
 import { calculateAudienceIndex } from './demographics';
+import { GameState, WeekSummary, Headline } from '../types';
+import { groupContractsByProject } from '../utils';
+import { checkAndTriggerCrisis } from './crises';
+import { calculateBoxOfficeRanks, BoxOfficeEntry } from './releaseSimulation';
+import { generateAwardsProfile } from './awards';
+import { processDirectorDisputes } from './directors';
+import { getTrendMultiplier } from './trends';
 
 function getAttachedTalent(contracts: Contract[], talentPoolMap: Map<string, TalentProfile>): TalentProfile[] {
   return contracts.reduce((acc, c) => {
@@ -249,3 +256,90 @@ export function advanceProject(
   return { project: p, update };
 }
 
+
+export interface ProjectAdvanceResult {
+  updatedProjects: Project[];
+  projectUpdates: string[];
+  events: string[];
+}
+
+export function advanceProjects(
+  state: GameState,
+  nextWeek: number
+): ProjectAdvanceResult {
+  const contractsByProject = groupContractsByProject(state.contracts);
+
+  const talentPoolMap = new Map<string, TalentProfile>();
+  for (const talent of state.talentPool) {
+    talentPoolMap.set(talent.id, talent);
+  }
+
+  const projectUpdates: string[] = [];
+  const events: string[] = [];
+
+  let rivalStrengthSum = 0;
+  for (let i = 0; i < state.rivals.length; i++) {
+    rivalStrengthSum += state.rivals[i].strength;
+  }
+  const rivalAvgStrength = rivalStrengthSum / Math.max(1, state.rivals.length);
+
+  const updatedProjects: Project[] = [];
+  const boxOfficeEntries: BoxOfficeEntry[] = [];
+
+  for (let i = 0; i < state.projects.length; i++) {
+    const p = state.projects[i];
+
+    if (p.activeCrisis && !p.activeCrisis.resolved) {
+      projectUpdates.push(`"${p.title}" production is halted until the active crisis is resolved.`);
+      updatedProjects.push(p);
+      continue;
+    }
+
+    const projectContracts = contractsByProject.get(p.id) || [];
+    const trendMult = getTrendMultiplier(p.genre, state);
+    const { project, update } = advanceProject(p, nextWeek, state.studio.prestige, projectContracts, talentPoolMap, rivalAvgStrength, state.awards, trendMult);
+
+    if (update) projectUpdates.push(update);
+
+    if (project.status === 'released' && p.status !== 'released' && !project.awardsProfile) {
+      project.awardsProfile = generateAwardsProfile(project);
+    }
+
+    if (project.status === 'production' && (!project.activeCrisis || project.activeCrisis.resolved)) {
+      const newCrisis = checkAndTriggerCrisis(project);
+      if (newCrisis) {
+        project.activeCrisis = newCrisis;
+        events.push(`CRISIS: "${project.title}" - ${newCrisis.description}`);
+      }
+    }
+
+    // Director disputes
+    if (project.status === 'production') {
+      const dirDisputeArgs = processDirectorDisputes({ ...state, projects: [project] });
+      if (dirDisputeArgs.newCrises.length > 0 && (!project.activeCrisis || project.activeCrisis.resolved)) {
+         project.activeCrisis = dirDisputeArgs.newCrises[0].crisis;
+         projectUpdates.push(...dirDisputeArgs.updates);
+      }
+    }
+
+    updatedProjects.push(project);
+
+    if (project.status === 'released') {
+      boxOfficeEntries.push({ projectId: project.id, studioName: state.studio.name, weeklyRevenue: project.weeklyRevenue });
+    }
+  }
+
+  const ranks = calculateBoxOfficeRanks(boxOfficeEntries);
+  for (let i = 0; i < updatedProjects.length; i++) {
+    const p = updatedProjects[i];
+    if (p.status === 'released' && ranks.has(p.id)) {
+      p.boxOfficeRank = ranks.get(p.id);
+    }
+  }
+
+  return {
+    updatedProjects,
+    projectUpdates,
+    events,
+  };
+}

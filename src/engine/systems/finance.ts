@@ -123,3 +123,31 @@ export function calculateWeeklyRevenue(projects: Project[], contracts: Contract[
     return sum;
   }, 0);
 }
+
+export interface FinanceAdvanceResult {
+  newCash: number;
+  costs: number;
+  revenue: number;
+  financeHistory: { week: number; cash: number; revenue: number; costs: number }[];
+}
+
+export function advanceFinance(
+  state: GameState,
+  nextWeek: number
+): FinanceAdvanceResult {
+  const costs = calculateWeeklyCosts(state.projects, state.activeMarketEvents);
+  const revenue = calculateWeeklyRevenue(state.projects, state.contracts, state.activeMarketEvents);
+  const newCash = state.cash - costs + revenue;
+
+  const financeHistory = [
+    ...state.financeHistory,
+    { week: nextWeek, cash: newCash, revenue, costs },
+  ].slice(-52);
+
+  return {
+    newCash,
+    costs,
+    revenue,
+    financeHistory,
+  };
+}

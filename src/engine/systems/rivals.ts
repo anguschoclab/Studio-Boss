@@ -72,3 +72,20 @@ export function updateRival(rival: RivalStudio, state?: GameState): RivalStudio 
   
   return r;
 }
+
+export interface RivalAdvanceResult {
+  updatedRivals: RivalStudio[];
+}
+
+export function advanceRivals(
+  state: GameState
+): RivalAdvanceResult {
+  const updatedRivals: RivalStudio[] = [];
+  for (let i = 0; i < state.rivals.length; i++) {
+    updatedRivals.push(updateRival(state.rivals[i], state));
+  }
+
+  return {
+    updatedRivals,
+  };
+}

@@ -1,4 +1,8 @@
 import { StateCreator } from 'zustand';
+<<<<<<< Updated upstream
+=======
+import { Project } from '@/engine/types';
+>>>>>>> Stashed changes
 import { handleReleasePhaseEntry } from '@/engine/systems/projects';
 
 export interface FinanceSlice {
@@ -44,7 +48,11 @@ export const createFinanceSlice: StateCreator<any, [], [], FinanceSlice> = (set,
       p.buzz = Math.min(100, Math.max(0, p.buzz + buzzBonus));
 
       const contracts = state.contracts.filter((c: any) => c.projectId === p.id);
+<<<<<<< Updated upstream
       const talentMap = new Map<string, any>(state.talentPool.map((t: any) => [t.id, t]));
+=======
+      const talentMap = new Map(state.talentPool.map((t: any) => [t.id, t]));
+>>>>>>> Stashed changes
       const result = handleReleasePhaseEntry(p, state.week, state.studio.prestige, contracts, talentMap);
 
       const newHeadlines = [...state.headlines];
