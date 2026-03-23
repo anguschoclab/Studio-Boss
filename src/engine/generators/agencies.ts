@@ -21,7 +21,12 @@ const AGENCY_NAMES = [
   'Prestige Worldwide',
   'Blockbuster Brokers',
   'Packaging Powerhouse',
-  'Indie Darling Reps'
+  'Indie Darling Reps',
+  'The Franchise Foundry',
+  'A-List Associates',
+  'Maverick Representation',
+  'Guerilla Talent',
+  'The Streaming Syndicate'
 ];
 
 const AGENT_FIRST_NAMES = ['Ari', 'Bryan', 'Maha', 'Jeremy', 'Richard', 'Sue', 'Ali', 'Kevin', 'Aaron', 'Emma', 'David', 'Laura'];
@@ -88,6 +93,31 @@ export function generateAgencies(count: number): Agency[] {
     if (actualName === 'Packaging Powerhouse') {
       traits.push('Requires entire package hire');
       leverage = 95;
+    }
+
+    if (actualName === 'The Franchise Foundry') {
+      traits.push('Demands guaranteed sequel clauses');
+      leverage = 95;
+    }
+
+    if (actualName === 'A-List Associates') {
+      traits.push('Refuses to work with indie studios');
+      culture = 'prestige';
+    }
+
+    if (actualName === 'Maverick Representation') {
+      traits.push('Notorious for walk-outs and renegotiations');
+      culture = 'shark';
+      leverage = 90;
+    }
+
+    if (actualName === 'Guerilla Talent') {
+      traits.push('Aggressive poaching tactics');
+      culture = 'shark';
+    }
+
+    if (actualName === 'The Streaming Syndicate') {
+      traits.push('Prioritizes streaming deals over theatrical');
     }
 
     agencies.push({
