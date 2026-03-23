@@ -257,6 +257,13 @@ export interface Opportunity {
   releaseModel?: ReleaseModelKey;
 }
 
+export interface FinanceRecord {
+  week: number;
+  cash: number;
+  revenue: number;
+  costs: number;
+}
+
 // Talent & Representation
 
 export type AccessLevel = 'outsider' | 'soft-access' | 'legacy' | 'dynasty' | 'comeback';
@@ -271,7 +278,8 @@ export interface Agency {
   tier: AgencyTier;
   culture: AgencyCulture;
   prestige: number;
-  leverage: number;
+  leverage: number; // 0-100
+  traits?: string[];
 }
 
 export interface Agent {
@@ -281,6 +289,8 @@ export interface Agent {
   specialty: AgentSpecialty;
   prestige: number;
   leverage: number;
+  skill?: number;
+  aggression?: number;
 }
 
 export interface Family {
@@ -306,6 +316,7 @@ export interface TalentProfile {
   temperament: string;
   familyId?: string;
   accessLevel: AccessLevel;
+  perks?: string[];
 }
 
 export interface Contract {
@@ -359,67 +370,4 @@ export interface SaveSlotMeta {
   week: number;
   cash: number;
   timestamp: number;
-}
-
-
-export type AccessLevel = 'outsider' | 'soft-access' | 'legacy' | 'dynasty' | 'comeback';
-
-export type TalentRole = 'director' | 'actor' | 'writer' | 'producer' | 'showrunner';
-export type AgencyTier = 'powerhouse' | 'major' | 'mid-tier' | 'boutique' | 'specialist';
-export type AgencyCulture = 'shark' | 'family' | 'volume' | 'prestige';
-export type AgentSpecialty = 'film_packaging' | 'tv_packaging' | 'literary' | 'talent' | 'comedy' | 'unscripted';
-
-export interface Agency {
-  id: string;
-  name: string;
-  tier: AgencyTier;
-  culture: AgencyCulture;
-  prestige: number;
-  leverage: number; // 0-100
-  traits?: string[]; // new trait system
-}
-
-
-
-export interface Contract {
-  id: string;
-  talentId: string;
-  projectId: string;
-  fee: number;
-  backendPercent: number;
-}
-
-export interface Family {
-  id: string;
-  name: string;
-  recognition: number;
-  prestigeLegacy: number;
-  commercialLegacy: number;
-  scandalLegacy: number;
-  volatility: number;
-  status: string;
-}
-
-export interface Agent {
-  id: string;
-  agencyId: string;
-  name: string;
-  specialty: AgentSpecialty;
-  skill: number;
-  aggression: number;
-}
-
-export interface TalentProfile {
-  id: string;
-  name: string;
-  roles: TalentRole[];
-  agencyId?: string;
-  agentId?: string;
-  prestige: number;
-  fee: number;
-  draw: number;
-  temperament: string;
-  familyId?: string;
-  accessLevel: AccessLevel;
-  perks?: string[]; // new perk system
 }
