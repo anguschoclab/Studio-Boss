@@ -17,7 +17,7 @@ describe('stats system', () => {
       expect(stats.renewable).toBe(false);
     });
 
-    it('applies 1.2x risk multiplier for high tier (budget >= 100M)', () => {
+    it('applies 1.25x risk multiplier for high tier (budget >= 100M)', () => {
       // Mocking a high tier with 100M budget
       const tier: typeof BUDGET_TIERS.high = { ...BUDGET_TIERS.high, budget: 100_000_000 };
       const stats = getFilmStats(tier);
@@ -30,7 +30,7 @@ describe('stats system', () => {
       expect(stats.renewable).toBe(false);
     });
 
-    it('applies 1.4x risk multiplier for blockbuster tier (budget >= 200M)', () => {
+    it('applies 1.5x risk multiplier for blockbuster tier (budget >= 200M)', () => {
       const tier = BUDGET_TIERS.blockbuster;
       const stats = getFilmStats(tier);
       const riskMultiplier = 1.5;
