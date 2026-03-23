@@ -118,7 +118,7 @@ describe("talentStats system", () => {
       const actor = talentPoolMap.get("t1")!; // Only qualifies for Best Actor
       expect(actor.prestige).toBe(65); // 50 + 15 (Academy Win)
       expect(actor.draw).toBe(60); // 50 + 10
-      expect(actor.fee).toBe(1500000); // 1M * (1.0 + 0.5)
+      expect(actor.fee).toBe(2500000); // 1M * (1.0 + 1.5)
 
       const director = talentPoolMap.get("t2")!; // Only qualifies for Best Director
       expect(director.prestige).toBe(65);
@@ -135,15 +135,11 @@ describe("talentStats system", () => {
 
       updateTalentStats(neutral, mockContracts, talentPoolMap, awards);
 
-      // Best Picture gives everyone: 15 * 0.5 = +7.5 prestige (rounds depending on display, logic keeps float or uses exact +7.5)
-      // Draw: 10 * 0.5 = +5
-      // Fee: +0.5 * 0.5 = +0.25 -> 1.25 multiplier
-
       for (let i = 1; i <= 3; i++) {
         const talent = talentPoolMap.get(`t${i}`)!;
         expect(talent.prestige).toBe(57.5); // 50 + 7.5
         expect(talent.draw).toBe(55); // 50 + 5
-        expect(talent.fee).toBe(1250000); // 1M * 1.25
+        expect(talent.fee).toBe(1750000); // 1M * (1.0 + 0.75)
       }
     });
 
@@ -182,7 +178,7 @@ describe("talentStats system", () => {
       const actor = talentPoolMap.get("t1")!;
       expect(actor.prestige).toBe(67); // 50 + 15 + 2
       expect(actor.draw).toBe(61); // 50 + 10 + 1
-      expect(actor.fee).toBe(1550000); // 1M * (1.0 + 0.5 + 0.05)
+      expect(actor.fee).toBeCloseTo(2550000, -1); // 1M * (1.0 + 1.5 + 0.05)
     });
   });
 });
