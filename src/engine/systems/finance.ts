@@ -1,8 +1,66 @@
-import { Project, Contract } from '../types';
+import { Project, Contract, GameState, MarketEvent } from '../types';
 import { groupContractsByProject } from '../utils';
 
+export function calculateProjectROI(project: Project): number {
+  const totalCost = project.budget + (project.marketingBudget || 0);
+  if (totalCost === 0) return 0;
+  return project.revenue / totalCost;
+}
 
-export function calculateWeeklyCosts(projects: Project[]): number {
+export function calculateStudioNetWorth(state: GameState): number {
+  let netWorth = state.cash;
+  
+  // Add catalog value from IP rights (Sprint E)
+  state.projects.forEach(p => {
+    if (p.ipRights && p.ipRights.catalogValue) {
+      if (p.ipRights.rightsOwner === 'studio') {
+        netWorth += p.ipRights.catalogValue;
+      } else if (p.ipRights.rightsOwner === 'shared') {
+        netWorth += p.ipRights.catalogValue * 0.5;
+      }
+    }
+  });
+  
+  return netWorth;
+}
+
+export interface CashflowForecast {
+  week: number;
+  projectedRevenue: number;
+  projectedCosts: number;
+  projectedCash: number;
+}
+
+export function generateCashflowForecast(state: GameState, weeksAhead: number = 8): CashflowForecast[] {
+  const forecast: CashflowForecast[] = [];
+  let currentCash = state.cash;
+  
+  // Short-term projection based on current weekly rates with decay.
+  const currentWeeklyCosts = calculateWeeklyCosts(state.projects, state.activeMarketEvents);
+  const currentWeeklyRevenue = calculateWeeklyRevenue(state.projects, state.contracts, state.activeMarketEvents);
+  
+  for (let i = 1; i <= weeksAhead; i++) {
+    // Assume revenue decays by roughly 15% per week in aggregate
+    const projectedRev = currentWeeklyRevenue * Math.pow(0.85, i);
+    // Costs stay flat for short-term projection
+    const projectedCost = currentWeeklyCosts;
+    currentCash += (projectedRev - projectedCost);
+    
+    forecast.push({
+      week: state.week + i,
+      projectedRevenue: projectedRev,
+      projectedCosts: projectedCost,
+      projectedCash: currentCash
+    });
+  }
+  
+  return forecast;
+}
+
+
+export function calculateWeeklyCosts(projects: Project[], activeEvents: MarketEvent[] = []): number {
+  const eventMult = activeEvents.reduce((m, e) => m * e.costMultiplier, 1.0);
+
   return projects.reduce((sum, p) => {
     if (p.status === 'development' || p.status === 'production') {
       let costMultiplier = 1;
@@ -25,13 +83,14 @@ export function calculateWeeklyCosts(projects: Project[]): number {
          costMultiplier *= 1.2;
       }
 
-      return sum + (p.weeklyCost * costMultiplier);
+      return sum + (p.weeklyCost * costMultiplier * eventMult);
     }
     return sum;
   }, 0);
 }
 
-export function calculateWeeklyRevenue(projects: Project[], contracts: Contract[] = []): number {
+export function calculateWeeklyRevenue(projects: Project[], contracts: Contract[] = [], activeEvents: MarketEvent[] = []): number {
+  const eventMult = activeEvents.reduce((m, e) => m * e.revenueMultiplier, 1.0);
   const contractsByProject = groupContractsByProject(contracts);
 
   return projects.reduce((sum, p) => {
@@ -59,7 +118,7 @@ export function calculateWeeklyRevenue(projects: Project[], contracts: Contract[
       }
 
       const backendCut = revenue * ((totalBackendPercent * backendMultiplier) / 100);
-      return sum + (revenue - backendCut);
+      return sum + ((revenue - backendCut) * eventMult);
     }
     return sum;
   }, 0);

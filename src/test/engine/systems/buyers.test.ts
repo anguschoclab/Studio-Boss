@@ -127,7 +127,7 @@ describe("buyers system", () => {
   describe("calculateFitScore", () => {
     it("applies market saturation penalty for similar projects released within 52 weeks", () => {
       vi.spyOn(Math, 'random').mockReturnValue(0.5); // randRange = 0
-      const activeBuyer: Buyer = { ...mockBuyer, currentMandate: null }; // No mandate, score should just be 50 - penalty
+      const activeBuyer: Buyer = { ...mockBuyer, currentMandate: undefined }; // No mandate, score should just be 50 - penalty
 
       const recentSimilarProject1: Project = {
         ...mockProject,

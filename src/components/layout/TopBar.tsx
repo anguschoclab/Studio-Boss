@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { formatMoney, getWeekDisplay } from '@/engine/utils';
-import { Save, FastForward } from 'lucide-react';
+import { Save, FastForward, AlertTriangle } from 'lucide-react';
 
 export const TopBar = () => {
   const navigate = useNavigate();
@@ -69,6 +69,14 @@ export const TopBar = () => {
       </div>
 
       <div className="w-px h-6 bg-border" />
+
+      {/* Global Market Events Indicator */}
+      {gameState.activeMarketEvents && gameState.activeMarketEvents.length > 0 && (
+        <div className="flex items-center gap-2 text-amber-500 font-semibold px-2">
+          <AlertTriangle className="h-4 w-4 animate-pulse" />
+          <span className="text-xs">{gameState.activeMarketEvents.length} Active Event{gameState.activeMarketEvents.length > 1 ? 's' : ''}</span>
+        </div>
+      )}
 
       {/* Actions */}
       <div className="flex items-center gap-2">

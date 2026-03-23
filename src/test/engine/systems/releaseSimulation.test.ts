@@ -124,7 +124,7 @@ describe("releaseSimulation system", () => {
 
       // Bad legs (score < 40) -> range 0.1 to 0.25
       const badMultiplier = simulateWeeklyBoxOffice(mockProject, 2, 30, 1000000, 0);
-      expect(badMultiplier).toBe(175000); // 0.175 * 1M
+      expect(badMultiplier).toBe(200000); // 0.2 * 1M
     });
 
     it("applies massive penalty for huge budget drop off week 1", () => {

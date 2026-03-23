@@ -5,6 +5,8 @@ import { formatMoney } from '@/engine/utils';
 import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
 import { TV_FORMATS } from '@/engine/data/tvFormats';
 import { evaluateGreenlight } from '@/engine/systems/greenlight';
+import { FESTIVALS } from '@/engine/systems/festivals';
+import { AwardBody } from '@/engine/types';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
@@ -34,6 +36,8 @@ export const ProjectDetailModal = () => {
   const greenlightProject = useGameStore(s => s.greenlightProject);
   const exploitFranchise = useGameStore(s => s.exploitFranchise);
   const launchMarketingCampaign = useGameStore(s => s.launchMarketingCampaign);
+  const submitToFestival = useGameStore(s => s.submitToFestival);
+  const launchAwardsCampaign = useGameStore(s => s.launchAwardsCampaign);
   const projects = useMemo(() => gameState?.projects || [], [gameState?.projects]);
   const project = useMemo(() => projects.find(p => p.id === selectedProjectId), [projects, selectedProjectId]);
   const talentPool = useMemo(() => gameState?.talentPool || [], [gameState?.talentPool]);
@@ -242,9 +246,14 @@ export const ProjectDetailModal = () => {
                   <div key={role} className="flex items-center justify-between text-xs p-2 bg-accent/30 rounded">
                     <span className="capitalize w-16">{role}</span>
                     {attachedTalent.length > 0 ? (
-                      <div className="flex flex-col gap-1 w-full max-w-[200px]">
+                      <div className="flex flex-col gap-1 w-full max-w-[200px] items-end">
                         {attachedTalent.map(t => (
-                          <span key={t.id} className="text-foreground font-semibold">{t.name}</span>
+                          <div key={t.id} className="flex items-center gap-1.5">
+                            {gameState?.firstLookDeals?.some(d => d.talentId === t.id) && (
+                              <Badge variant="outline" className="text-[8px] px-1 border-primary/40 text-primary bg-primary/10">Pact</Badge>
+                            )}
+                            <span className="text-foreground font-semibold text-right">{t.name}</span>
+                          </div>
                         ))}
                       </div>
                     ) : (project.status === 'development' || project.status === 'needs_greenlight') ? (
@@ -315,7 +324,7 @@ export const ProjectDetailModal = () => {
           )}
 
           {/* Revenue */}
-          {(project.status === 'released' || project.status === 'archived') && (
+          {(project.status === 'released' || project.status === 'archived' || project.status === 'post_release') && (
             <div className="p-3 rounded bg-accent/50">
               <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Total Gross</p>
               <p className="text-lg font-display font-bold text-success">{formatMoney(project.revenue)}</p>
@@ -329,6 +338,71 @@ export const ProjectDetailModal = () => {
               )}
             </div>
           )}
+
+          {/* Awards & Festivals */}
+          {(project.status === 'released' || project.status === 'post_release') && (
+            <div className="p-3 rounded border border-primary/20 bg-background/50 space-y-3">
+              <h4 className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold flex items-center gap-2">Awards & Festivals</h4>
+              
+              <div className="flex gap-2 items-center">
+                <Select onValueChange={(val) => {
+                  submitToFestival(project.id, val as AwardBody);
+                  selectProject(null);
+                }}>
+                  <SelectTrigger className="h-8 text-xs flex-1">
+                    <SelectValue placeholder="Submit to Festival..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {FESTIVALS.map(f => (
+                      <SelectItem key={f.body} value={f.body}>
+                        {f.name} ({formatMoney(f.cost)})
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="h-8 text-xs bg-yellow-500/10 text-yellow-600 hover:bg-yellow-500/20 hover:text-yellow-700 border-yellow-500/30"
+                  onClick={() => {
+                    launchAwardsCampaign(project.id, 500000); // Spend $500k
+                    selectProject(null);
+                  }}
+                >
+                  Boost FYC ($500k)
+                </Button>
+              </div>
+
+              {project.awardsProfile && (
+                <div className="flex items-center justify-between text-xs mt-2 p-2 bg-muted/30 rounded">
+                  <span className="text-muted-foreground">Campaign Strength</span>
+                  <span className="font-bold text-yellow-600">{project.awardsProfile.campaignStrength.toFixed(0)} / 100</span>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Rights & IP */}
+          <div className="p-3 rounded bg-accent/30 border border-primary/20">
+            <h4 className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold mb-2 flex items-center gap-2">Rights & IP</h4>
+            <div className="flex justify-between items-center text-sm">
+                <span className="text-foreground font-medium">Ownership</span>
+                <Badge variant="outline" className="capitalize">{project.ipRights?.rightsOwner || 'studio'}</Badge>
+            </div>
+            {project.ipRights?.reversionWeek && (
+              <div className="flex justify-between items-center text-sm mt-2 pt-2 border-t border-border/40">
+                  <span className="text-muted-foreground">Reversion</span>
+                  <span className={project.ipRights.reversionWeek - (gameState?.week || 0) <= 4 ? "text-destructive font-bold" : "font-mono"}>
+                    Week {project.ipRights.reversionWeek}
+                  </span>
+              </div>
+            )}
+            <div className="flex justify-between items-center text-sm mt-2 pt-2 border-t border-border/40">
+                <span className="text-muted-foreground">Catalog Value</span>
+                <span className="font-mono text-success drop-shadow-[0_0_2px_rgba(34,197,94,0.3)]">{formatMoney(project.ipRights?.catalogValue || (project.revenue > 0 ? project.revenue * 0.4 : project.budget * 0.1))}</span>
+            </div>
+          </div>
 
           {/* Renew Button */}
           {project.status === 'archived' && project.format === 'tv' && project.renewable && (

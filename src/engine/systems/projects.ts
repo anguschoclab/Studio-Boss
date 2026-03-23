@@ -90,7 +90,8 @@ function handleReleasedPhase(
   projectContracts: Contract[],
   talentPoolMap: Map<string, TalentProfile>,
   rivalStrengthAvg: number,
-  awards: Award[]
+  awards: Award[],
+  trendMultiplier: number = 1.0
 ): { update: string | null } {
   p.revenue += p.weeklyRevenue;
   let update: string | null = null;
@@ -147,7 +148,7 @@ function handleReleasedPhase(
       }
     }
   } else {
-    p.weeklyRevenue = simulateWeeklyBoxOffice(p, p.weeksInPhase, p.reviewScore || 50, p.weeklyRevenue, rivalStrengthAvg);
+    p.weeklyRevenue = simulateWeeklyBoxOffice(p, p.weeksInPhase, p.reviewScore || 50, p.weeklyRevenue, rivalStrengthAvg, trendMultiplier);
     if (p.weeklyRevenue < 100_000 || p.weeksInPhase > 12) {
       p.status = 'post_release';
       p.weeksInPhase = 0;
@@ -210,7 +211,8 @@ export function advanceProject(
   projectContracts: Contract[],
   talentPoolMap: Map<string, TalentProfile>,
   rivalStrengthAvg: number = 50,
-  awards: Award[] = []
+  awards: Award[] = [],
+  trendMultiplier: number = 1.0
 ): { project: Project; update: string | null } {
   if (project.status === 'archived') return { project, update: null };
 
@@ -224,7 +226,7 @@ export function advanceProject(
     const result = handleMarketingPhase(p);
     update = result.update;
   } else if (p.status === 'released') {
-    const result = handleReleasedPhase(p, projectContracts, talentPoolMap, rivalStrengthAvg, awards);
+    const result = handleReleasedPhase(p, projectContracts, talentPoolMap, rivalStrengthAvg, awards, trendMultiplier);
     update = result.update;
   } else if (p.status === 'post_release') {
     const result = handlePostReleasePhase(p);

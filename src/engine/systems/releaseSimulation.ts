@@ -34,26 +34,45 @@ export function simulateWeeklyBoxOffice(
   weekInRelease: number,
   reviewScore: number,
   previousWeeklyRevenue: number,
-  rivalStrength: number
+  rivalStrength: number,
+  trendMultiplier: number = 1.0
 ): number {
-  // Increased base drop-off to simulate modern front-loaded box office trends (from 0.4-0.6 down to 0.3-0.5).
-  let dropOffMultiplier = randRange(0.3, 0.5);
+  // Base drop-off range
+  let minDropOff = 0.3;
+  let maxDropOff = 0.5;
+
+  // Genre-specific legs adjustments (Sprint C feature)
+  if (project.genre === 'Horror') {
+    // Horror performs wildly differently — frontloaded, but if good, it holds phenomenally.
+    minDropOff += 0.1;
+    maxDropOff += 0.2;
+  } else if (project.genre === 'Family' || project.genre === 'Animation') {
+    // Family films have incredible legs compared to standard action blockbusters
+    minDropOff += 0.2;
+    maxDropOff += 0.3;
+  } else if (project.genre === 'Comedy') {
+    // Comedies drop off slower if word of mouth is good
+    minDropOff += 0.15;
+    maxDropOff += 0.15;
+  }
+
+  let dropOffMultiplier = randRange(minDropOff, maxDropOff);
 
   // Adjust drop-off based on "legs" (word-of-mouth determined by review score)
   if (reviewScore >= 85) {
-    dropOffMultiplier = randRange(0.6, 0.8); // Excellent legs, still strong but slightly worse than before
+    dropOffMultiplier = Math.min(0.95, dropOffMultiplier + 0.3); // Excellent legs
   } else if (reviewScore >= 60) {
-    dropOffMultiplier = randRange(0.4, 0.6); // Average legs
+    dropOffMultiplier = Math.min(0.85, dropOffMultiplier + 0.1); // Average legs
   } else if (reviewScore < 40) {
-    // Punitive drop for terrible movies to force tighter quality control on expensive projects.
-    dropOffMultiplier = randRange(0.1, 0.25);
+    // Punitive drop for terrible movies
+    dropOffMultiplier = Math.max(0.1, dropOffMultiplier - 0.2); 
   }
 
   // Large budget films are more front-loaded due to massive marketing pushes week 1.
   if (project.budget >= 200_000_000 && weekInRelease === 1) {
-     dropOffMultiplier *= 0.60; // Increased marketing decay by 15% to simulate modern extremely front-loaded box office drops for mega-blockbusters.
+     dropOffMultiplier *= 0.60;
   } else if (project.budget >= 100_000_000 && weekInRelease === 1) {
-     dropOffMultiplier *= 0.80; // Sharp second-weekend drop for tentpoles
+     dropOffMultiplier *= 0.80;
   }
 
   // Strong word-of-mouth for anomalies (horror/indie)
@@ -62,10 +81,10 @@ export function simulateWeeklyBoxOffice(
   }
 
   // Heavy competition penalty: high rival strength eats into revenue legs
-  const competitionPenalty = (rivalStrength / 100) * 0.15; // Increased penalty from 0.1 to 0.15
+  const competitionPenalty = (rivalStrength / 100) * 0.15;
   dropOffMultiplier = Math.max(0.05, dropOffMultiplier - competitionPenalty);
 
-  return Math.max(0, previousWeeklyRevenue * dropOffMultiplier);
+  return Math.max(0, previousWeeklyRevenue * dropOffMultiplier * trendMultiplier);
 }
 
 
