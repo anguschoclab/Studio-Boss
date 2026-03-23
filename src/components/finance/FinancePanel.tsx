@@ -11,18 +11,20 @@ export const FinancePanel = () => {
 
   const cash = gameState?.cash ?? 0;
   const financeHistory = gameState?.financeHistory ?? [];
-  const projects = gameState?.projects ?? [];
+  const rawProjects = gameState?.projects;
 
-  const weeklyCosts = useMemo(() => calculateWeeklyCosts(projects), [projects]);
-  const weeklyRevenue = useMemo(() => calculateWeeklyRevenue(projects, gameState?.contracts), [projects, gameState?.contracts]);
+  const projectsMemo = useMemo(() => rawProjects ?? [], [rawProjects]);
+
+  const weeklyCosts = useMemo(() => calculateWeeklyCosts(projectsMemo), [projectsMemo]);
+  const weeklyRevenue = useMemo(() => calculateWeeklyRevenue(projectsMemo), [projectsMemo]);
   const netDelta = useMemo(() => weeklyRevenue - weeklyCosts, [weeklyRevenue, weeklyCosts]);
   
   const studioNetWorth = useMemo(() => gameState ? calculateStudioNetWorth(gameState) : 0, [gameState]);
   const forecast = useMemo(() => gameState ? generateCashflowForecast(gameState, 12) : [], [gameState]);
 
   const activeProjects = useMemo(() =>
-    projects.filter(p => p.status === 'development' || p.status === 'production'),
-    [projects]
+    projectsMemo.filter(p => p.status === 'development' || p.status === 'production'),
+    [projectsMemo]
   );
   
   const releasedProjects = useMemo(() => 
