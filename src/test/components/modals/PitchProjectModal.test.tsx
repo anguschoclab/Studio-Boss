@@ -58,8 +58,14 @@ describe('PitchProjectModal', () => {
   ];
 
   const mockGameState = {
-    projects: [mockProject],
-    buyers: mockBuyers,
+    studio: {
+      internal: {
+        projects: [mockProject]
+      }
+    },
+    market: {
+      buyers: mockBuyers
+    }
   };
 
   const mockClosePitchProject = vi.fn();
@@ -150,7 +156,9 @@ describe('PitchProjectModal', () => {
     fireEvent.click(screen.getByText('Pitch Project', { selector: 'button' }));
 
     expect(mockPitchProject).toHaveBeenCalledWith('proj-1', 'buyer-1', 'upfront');
-    expect(screen.getByText('Pitch Successful! Project picked up.')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Pitch Successful! Project picked up.')).toBeInTheDocument();
+    });
 
     // Verify close is called after timeout
     await waitFor(() => {
@@ -158,8 +166,8 @@ describe('PitchProjectModal', () => {
     }, { timeout: 2000 });
   });
 
-  it('handles a failed pitch', () => {
-    mockPitchProject.mockReturnValue(false);
+  it('handles a failed pitch', async () => {
+    mockPitchProject.mockReturnValue(Promise.resolve(false));
     render(<PitchProjectModal />);
 
     // Select buyer
@@ -172,7 +180,9 @@ describe('PitchProjectModal', () => {
     fireEvent.click(screen.getByText('Pitch Project', { selector: 'button' }));
 
     expect(mockPitchProject).toHaveBeenCalledWith('proj-1', 'buyer-2', 'deficit');
-    expect(screen.getByText('Pitch Failed. They passed on the project.')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Pitch Failed. They passed on the project.')).toBeInTheDocument();
+    });
   });
 
   it('calls handleClose when dialog is closed', () => {

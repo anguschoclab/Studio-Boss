@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { evaluateFirstLookDeal, offerFirstLookDeal, FirstLookDeal } from '../../../engine/systems/deals';
-import { TalentProfile } from '../../../engine/types';
+import { evaluateFirstLookDeal, offerFirstLookDeal } from '../../../engine/systems/deals';
+import { TalentProfile, FirstLookDeal } from '../../../engine/types';
 
 describe('Deals System', () => {
   let mockTalent: TalentProfile;
@@ -14,7 +14,7 @@ describe('Deals System', () => {
       draw: 85,
       fee: 2_000_000,
       temperament: "Normal",
-      accessLevel: "insider"
+      accessLevel: "soft-access"
     };
   });
 
@@ -39,7 +39,7 @@ describe('Deals System', () => {
     // 90 prestige talent with 2 million fee evaluating a deal
     const state = {
         studio: { prestige: 90 }, // Studio prestige matches talent
-        talentPool: [mockTalent]
+        industry: { talentPool: [mockTalent] }
     } as any;
     
     // We can't guarantee random acceptance, so let's mock Math.random

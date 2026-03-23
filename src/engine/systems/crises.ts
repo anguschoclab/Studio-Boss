@@ -1002,10 +1002,10 @@ export function checkAndTriggerCrisis(project: Project): ActiveCrisis | undefine
 }
 
 export function resolveCrisis(state: GameState, projectId: string, optionIndex: number): GameState {
-  const projectIndex = state.projects.findIndex(p => p.id === projectId);
+  const projectIndex = state.studio.internal.projects.findIndex(p => p.id === projectId);
   if (projectIndex === -1) return state;
 
-  const project = state.projects[projectIndex];
+  const project = state.studio.internal.projects[projectIndex];
   if (!project.activeCrisis || project.activeCrisis.resolved) return state;
 
   const option = project.activeCrisis.options[optionIndex];
@@ -1030,13 +1030,25 @@ export function resolveCrisis(state: GameState, projectId: string, optionIndex: 
     resolved: true
   };
 
-  const newProjects = [...state.projects];
+  const newProjects = [...state.studio.internal.projects];
   newProjects[projectIndex] = updatedProject;
 
   return {
     ...state,
-    projects: newProjects,
+    studio: {
+      ...state.studio,
+      internal: {
+        ...state.studio.internal,
+        projects: newProjects
+      }
+    },
     cash: state.cash + cashChange, // Apply cash change (penalty means negative)
-    headlines: [...(state.headlines || []), { id: `crisis-${crypto.randomUUID()}`, text: `Crisis resolved for "${project.title}": ${option.text}`, week: state.week, category: 'general' as const }]
+    industry: {
+      ...state.industry,
+      headlines: [
+        ...(state.industry.headlines || []),
+        { id: `crisis-${crypto.randomUUID()}`, text: `Crisis resolved for "${project.title}": ${option.text}`, week: state.week, category: 'general' as const }
+      ]
+    }
   } as GameState;
 }

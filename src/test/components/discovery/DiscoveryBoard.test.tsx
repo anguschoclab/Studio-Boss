@@ -28,7 +28,7 @@ describe('DiscoveryBoard', () => {
   it('renders empty state when there are no opportunities', () => {
     (useGameStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector: (state: unknown) => unknown) => {
       if (typeof selector === 'function') {
-        return selector({ gameState: { opportunities: [] } });
+        return selector({ gameState: { market: { opportunities: [] } } });
       }
       return { acquireOpportunity: mockAcquireOpportunity };
     });
@@ -42,7 +42,7 @@ describe('DiscoveryBoard', () => {
   it('calls openCreateProject when Create Original button is clicked', () => {
     (useGameStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector: (state: unknown) => unknown) => {
       if (typeof selector === 'function') {
-        return selector({ gameState: { opportunities: [] } });
+        return selector({ gameState: { market: { opportunities: [] } } });
       }
       return { acquireOpportunity: mockAcquireOpportunity };
     });
@@ -61,33 +61,35 @@ describe('DiscoveryBoard', () => {
         id: '1',
         title: 'Action Movie',
         type: 'script',
-        genre: 'action',
-        format: 'feature',
+        genre: 'Action',
+        format: 'film',
         budgetTier: 'high',
         flavor: 'Explosions everywhere.',
         weeksUntilExpiry: 5,
-        targetAudience: 'broad',
-        complexity: 3,
-        qualityBonus: 0
+        targetAudience: 'Broad',
+        qualityBonus: 0,
+        origin: 'open_spec',
+        costToAcquire: 0
       },
       {
         id: '2',
         title: 'Comedy Show',
         type: 'pitch',
-        genre: 'comedy',
-        format: 'series',
+        genre: 'Comedy',
+        format: 'tv',
         budgetTier: 'low',
         flavor: 'Laugh out loud.',
         weeksUntilExpiry: 3,
-        targetAudience: 'niche',
-        complexity: 1,
-        qualityBonus: 0
+        targetAudience: 'Niche',
+        qualityBonus: 0,
+        origin: 'agency_package',
+        costToAcquire: 10000
       },
     ];
 
     (useGameStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector: (state: unknown) => unknown) => {
       if (typeof selector === 'function') {
-        return selector({ gameState: { opportunities: mockOpportunities } });
+        return selector({ gameState: { market: { opportunities: mockOpportunities } } });
       }
       return { acquireOpportunity: mockAcquireOpportunity };
     });
@@ -96,8 +98,8 @@ describe('DiscoveryBoard', () => {
 
     expect(screen.getByText('Action Movie')).toBeDefined();
     expect(screen.getByText('Comedy Show')).toBeDefined();
-    expect(screen.getByText('action • FEATURE • high budget')).toBeDefined();
-    expect(screen.getByText('comedy • SERIES • low budget')).toBeDefined();
+    expect(screen.getByText('Action • FILM • high budget')).toBeDefined();
+    expect(screen.getByText('Comedy • TV • low budget')).toBeDefined();
     expect(screen.getByText('"Explosions everywhere."')).toBeDefined();
     expect(screen.getByText('"Laugh out loud."')).toBeDefined();
     expect(screen.getByText('5 weeks left')).toBeDefined();
@@ -110,20 +112,21 @@ describe('DiscoveryBoard', () => {
         id: 'opp-123',
         title: 'Drama Film',
         type: 'script',
-        genre: 'drama',
-        format: 'feature',
-        budgetTier: 'medium',
+        genre: 'Drama',
+        format: 'film',
+        budgetTier: 'mid',
         flavor: 'Tearjerker.',
         weeksUntilExpiry: 4,
-        targetAudience: 'broad',
-        complexity: 2,
-        qualityBonus: 0
+        targetAudience: 'Broad',
+        qualityBonus: 0,
+        origin: 'open_spec',
+        costToAcquire: 0
       },
     ];
 
     (useGameStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector: (state: unknown) => unknown) => {
       if (typeof selector === 'function') {
-        return selector({ gameState: { opportunities: mockOpportunities } });
+        return selector({ gameState: { market: { opportunities: mockOpportunities } } });
       }
       return { acquireOpportunity: mockAcquireOpportunity };
     });

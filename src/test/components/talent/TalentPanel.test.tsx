@@ -11,37 +11,39 @@ describe('TalentPanel', () => {
     vi.mocked(useGameStore).mockImplementation((selector) => {
       const state = {
         gameState: {
-          talentPool: [
-            {
-              id: 't1',
-              name: 'Tom Hanks',
-              roles: ['actor'],
-              prestige: 95,
-              fee: 20000000,
-              draw: 90,
-              temperament: 80,
-              accessLevel: 'a-list',
-              agencyId: 'a1'
-            },
-            {
-              id: 't2',
-              name: 'Steven Spielberg',
-              roles: ['director', 'producer'],
-              prestige: 98,
-              fee: 30000000,
-              draw: 85,
-              temperament: 75,
-              accessLevel: 'a-list',
-              agencyId: 'a2'
-            }
-          ],
-          agencies: [
-            { id: 'a1', name: 'CAA' },
-            { id: 'a2', name: 'WME' }
-          ]
+          industry: {
+            talentPool: [
+              {
+                id: 't1',
+                name: 'Tom Hanks',
+                roles: ['actor'],
+                prestige: 95,
+                fee: 20000000,
+                draw: 90,
+                temperament: 80,
+                accessLevel: 'a-list',
+                agencyId: 'a1'
+              },
+              {
+                id: 't2',
+                name: 'Steven Spielberg',
+                roles: ['director', 'producer'],
+                prestige: 98,
+                fee: 30000000,
+                draw: 85,
+                temperament: 75,
+                accessLevel: 'a-list',
+                agencyId: 'a2'
+              }
+            ],
+            agencies: [
+              { id: 'a1', name: 'CAA' },
+              { id: 'a2', name: 'WME' }
+            ]
+          }
         }
       };
-      return selector(state);
+      return selector(state as any);
     });
   });
 

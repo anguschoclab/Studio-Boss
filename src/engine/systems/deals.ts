@@ -23,7 +23,7 @@ export function evaluateFirstLookDeal(talent: TalentProfile, state: GameState): 
 }
 
 export function offerFirstLookDeal(state: GameState, talentId: string, weeksRemaining: number, exclusivity: boolean = true): FirstLookDeal | null {
-  const talent = state.talentPool.find(t => t.id === talentId);
+  const talent = state.industry.talentPool.find(t => t.id === talentId);
   if (!talent) return null;
   
   const accepted = evaluateFirstLookDeal(talent, state);

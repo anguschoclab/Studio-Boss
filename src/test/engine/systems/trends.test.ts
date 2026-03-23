@@ -28,14 +28,14 @@ describe('Trends System', () => {
     const trends = initializeTrends();
     // Force the first genre to have a very high heat
     trends[0].heat = 100;
-    const state = { trends } as any;
+    const state = { market: { trends } } as any;
 
     const multiplier = getTrendMultiplier(trends[0].genre, state);
     expect(multiplier).toBe(1.5); // 0.8 + 0.7 = 1.5
   });
 
   it('returns a multiplier of 1.0 for a missing genre', () => {
-    const state = { trends: [] } as any;
+    const state = { market: { trends: [] } } as any;
     const multiplier = getTrendMultiplier('Unknown Genre', state);
     expect(multiplier).toBe(1.0); // Fallback to 1.0
   });

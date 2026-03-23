@@ -65,10 +65,10 @@ export function simulateMarketingCampaign(
   target: AudienceQuadrant
 ): GameState {
   
-  const pIndex = state.projects.findIndex(p => p.id === projectId);
+  const pIndex = state.studio.internal.projects.findIndex(p => p.id === projectId);
   if (pIndex === -1 || state.cash < spend) return state;
   
-  const project = state.projects[pIndex];
+  const project = state.studio.internal.projects[pIndex];
   
   // Calculate how much buzz this spend buys
   const baseBuzzGain = (spend / 100_000); // 1 buzz point per 100k
@@ -86,12 +86,18 @@ export function simulateMarketingCampaign(
     targetDemographic: target
   };
   
-  const newProjects = [...state.projects];
+  const newProjects = [...state.studio.internal.projects];
   newProjects[pIndex] = updatedProject;
   
   return {
     ...state,
     cash: state.cash - spend,
-    projects: newProjects
+    studio: {
+      ...state.studio,
+      internal: {
+        ...state.studio.internal,
+        projects: newProjects
+      }
+    }
   };
 }

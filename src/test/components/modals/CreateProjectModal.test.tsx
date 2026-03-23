@@ -1,6 +1,5 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { CreateProjectModal } from '@/components/modals/CreateProjectModal';
 import { useUIStore } from '@/store/uiStore';
@@ -47,10 +46,12 @@ describe('CreateProjectModal', () => {
   const mockCloseCreateProject = vi.fn();
   const mockCreateProject = vi.fn();
   const mockGameState = {
-    talentPool: [
-      { id: 't1', name: 'John Actor', roles: ['lead'], fee: 1000000 },
-      { id: 't2', name: 'Jane Director', roles: ['director'], fee: 2000000 },
-    ]
+    industry: {
+      talentPool: [
+        { id: 't1', name: 'John Actor', roles: ['lead'], fee: 1000000 },
+        { id: 't2', name: 'Jane Director', roles: ['director'], fee: 2000000 },
+      ]
+    }
   };
 
   beforeEach(() => {
@@ -91,24 +92,22 @@ describe('CreateProjectModal', () => {
     expect(titleInput).toBeInTheDocument();
   });
 
-  it('allows clicking Generate Random Title button', async () => {
-    const user = userEvent.setup();
+  it('allows clicking Generate Random Title button', () => {
     render(<CreateProjectModal />);
 
     // Clear the input first
     const input = screen.getByDisplayValue('Generated Test Title');
-    await user.clear(input);
+    fireEvent.change(input, { target: { value: '' } });
 
     // Find the button by title
     const generateBtn = screen.getByTitle('Generate Random Title');
-    await user.click(generateBtn);
+    fireEvent.click(generateBtn);
 
     // It should have generated the title again
     expect(screen.getByDisplayValue('Generated Test Title')).toBeInTheDocument();
   });
 
-  it('conditionally renders TV fields when TV format is selected', async () => {
-    const user = userEvent.setup();
+  it('conditionally renders TV fields when TV format is selected', () => {
     render(<CreateProjectModal />);
 
     // Should not show TV fields initially
@@ -116,7 +115,7 @@ describe('CreateProjectModal', () => {
 
     // Click TV Series
     const tvBtn = screen.getByText('TV Series');
-    await user.click(tvBtn);
+    fireEvent.click(tvBtn);
 
     // Should now show TV fields
     expect(screen.getByText('TV Format')).toBeInTheDocument();
@@ -124,43 +123,39 @@ describe('CreateProjectModal', () => {
     expect(screen.getByText('Release Model')).toBeInTheDocument();
   });
 
-  it('conditionally renders Unscripted fields when Unscripted format is selected', async () => {
-    const user = userEvent.setup();
+  it('conditionally renders Unscripted fields when Unscripted format is selected', () => {
     render(<CreateProjectModal />);
 
     expect(screen.queryByText('Unscripted Format')).not.toBeInTheDocument();
 
     // Click Unscripted
     const unscriptedBtn = screen.getByText('Unscripted');
-    await user.click(unscriptedBtn);
+    fireEvent.click(unscriptedBtn);
 
     expect(screen.getByText('Unscripted Format')).toBeInTheDocument();
     expect(screen.getByText(/Episodes:/)).toBeInTheDocument();
     expect(screen.getByText('Release Model')).toBeInTheDocument();
   });
 
-  it('disables Greenlight button if title is empty', async () => {
-    const user = userEvent.setup();
+  it('disables Greenlight button if title is empty', () => {
     render(<CreateProjectModal />);
 
     const input = screen.getByDisplayValue('Generated Test Title');
-    await user.clear(input);
+    fireEvent.change(input, { target: { value: '' } });
 
     const greenlightBtn = screen.getByText('Greenlight');
     expect(greenlightBtn).toBeDisabled();
   });
 
-  it('submits the form correctly for a film', async () => {
-    const user = userEvent.setup();
+  it('submits the form correctly for a film', () => {
     render(<CreateProjectModal />);
 
     // Type a specific title
     const input = screen.getByDisplayValue('Generated Test Title');
-    await user.clear(input);
-    await user.type(input, 'My Awesome Movie');
+    fireEvent.change(input, { target: { value: 'My Awesome Movie' } });
 
     const greenlightBtn = screen.getByText('Greenlight');
-    await user.click(greenlightBtn);
+    fireEvent.click(greenlightBtn);
 
     expect(mockCreateProject).toHaveBeenCalledWith(expect.objectContaining({
       title: 'My Awesome Movie',
@@ -169,8 +164,7 @@ describe('CreateProjectModal', () => {
     expect(mockCloseCreateProject).toHaveBeenCalled();
   });
 
-  it('allows selecting talent', async () => {
-    const user = userEvent.setup();
+  it('allows selecting talent', () => {
     render(<CreateProjectModal />);
 
     const talentCheckbox = document.getElementById('t1');
@@ -178,14 +172,14 @@ describe('CreateProjectModal', () => {
 
     // Type a title to enable submit
     const input = screen.getByDisplayValue('Generated Test Title');
-    await user.clear(input);
-    await user.type(input, 'Talent Movie');
+    fireEvent.change(input, { target: { value: 'Talent Movie' } });
 
     const greenlightBtn = screen.getByText('Greenlight');
-    await user.click(greenlightBtn);
+    fireEvent.click(greenlightBtn);
 
     expect(mockCreateProject).toHaveBeenCalledWith(expect.objectContaining({
       attachedTalentIds: ['t1'],
     }));
   });
 });
+

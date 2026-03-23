@@ -18,14 +18,14 @@ export const PitchProjectModal = () => {
 
   if (!gameState || !pitchingProjectId) return null;
 
-  const project = gameState.projects.find(p => p.id === pitchingProjectId);
+  const project = gameState.studio.internal.projects.find(p => p.id === pitchingProjectId);
   if (!project) return null;
 
-  const handlePitch = () => {
+  const handlePitch = async () => {
     setFeedback(null);
     if (!selectedBuyerId) return;
 
-    const success = pitchProject(project.id, selectedBuyerId, selectedContract);
+    const success = await pitchProject(project.id, selectedBuyerId, selectedContract);
 
     if (success) {
       setFeedback('Pitch Successful! Project picked up.');
@@ -59,7 +59,7 @@ export const PitchProjectModal = () => {
           <div className="space-y-4">
             <h4 className="font-semibold text-sm text-muted-foreground uppercase">1. Select Buyer</h4>
             <div className="space-y-2">
-              {gameState.buyers.map(buyer => {
+              {gameState.market.buyers.map(buyer => {
                 const fitScore = calculateFitScore(project, buyer);
                 return (
                   <button

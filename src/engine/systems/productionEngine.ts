@@ -16,11 +16,11 @@ export const ProductionEngine = {
     headlineText: string,
     extraProjectUpdates: Partial<Project> = {}
   ): ProductionTransitionResult {
-    const projectIndex = state.projects.findIndex(p => p.id === projectId);
+    const projectIndex = state.studio.internal.projects.findIndex(p => p.id === projectId);
     if (projectIndex === -1) return { newState: state };
 
-    const project = state.projects[projectIndex];
-    const updatedProjects = [...state.projects];
+    const project = state.studio.internal.projects[projectIndex];
+    const updatedProjects = [...state.studio.internal.projects];
     updatedProjects[projectIndex] = {
       ...project,
       status: 'production',
@@ -40,10 +40,16 @@ export const ProductionEngine = {
       ...state,
       studio: {
         ...state.studio,
-        culture: newCulture
+        culture: newCulture,
+        internal: {
+          ...state.studio.internal,
+          projects: updatedProjects
+        }
       },
-      projects: updatedProjects,
-      headlines: [headline, ...state.headlines].slice(0, 50)
+      industry: {
+        ...state.industry,
+        headlines: [headline, ...state.industry.headlines].slice(0, 50)
+      }
     };
 
     return { newState, headline };

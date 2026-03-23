@@ -50,7 +50,7 @@ describe("franchise system", () => {
         parentProjectId: "p1"
       }));
 
-      const state = { projects: [flopProject, ...relatedProjects] } as GameState;
+      const state = { studio: { internal: { projects: [flopProject, ...relatedProjects] } } } as GameState;
 
       vi.spyOn(Math, 'random').mockReturnValue(0.1); // Force reboot chance
       const result = exploitIP(flopProject, state);
@@ -69,7 +69,7 @@ describe("franchise system", () => {
         id: `p${i+2}`,
         parentProjectId: "p1"
       }));
-      const state = { projects: [flopProject, ...relatedProjects] } as GameState;
+      const state = { studio: { internal: { projects: [flopProject, ...relatedProjects] } } } as GameState;
 
       vi.spyOn(Math, 'random').mockReturnValue(0.9); // Fail reboot chance
       const result = exploitIP(flopProject, state);
@@ -85,7 +85,7 @@ describe("franchise system", () => {
         parentProjectId: "p1"
       }));
 
-      const state = { projects: [flopProject, ...relatedProjects] } as GameState;
+      const state = { studio: { internal: { projects: [flopProject, ...relatedProjects] } } } as GameState;
 
       vi.spyOn(Math, 'random').mockReturnValue(0.3); // Between 0.2 and 0.4 triggers Resurrection meta-sequel
       const result = exploitIP(flopProject, state);
@@ -104,7 +104,7 @@ describe("franchise system", () => {
         revenue: 600000000 // > 2x budget
       };
 
-      const state = { projects: [baseProject, otherHit] } as GameState;
+      const state = { studio: { internal: { projects: [baseProject, otherHit] } } } as GameState;
 
       // Need random > 0.8 for crossover target detection, then random < 0.2 for crossover selection
       let callCount = 0;
@@ -128,7 +128,7 @@ describe("franchise system", () => {
         revenue: 600000000 // > 2x budget
       };
 
-      const state = { projects: [baseProject, otherHit] } as GameState;
+      const state = { studio: { internal: { projects: [baseProject, otherHit] } } } as GameState;
 
       let callCount = 0;
       vi.spyOn(Math, 'random').mockImplementation(() => {
@@ -170,7 +170,7 @@ describe("franchise system", () => {
         id: `p${i+2}`,
         parentProjectId: "p1"
       }));
-      const state = { projects: [baseProject, ...relatedProjects] } as GameState;
+      const state = { studio: { internal: { projects: [baseProject, ...relatedProjects] } } } as GameState;
 
       vi.spyOn(Math, 'random').mockReturnValue(0.4); // trigger sequel
       const result = exploitIP(baseProject, state);
@@ -202,7 +202,7 @@ describe("franchise system", () => {
         parentProjectId: flopProject.id,
       }));
 
-      const state = { week: 100, projects: [flopProject, ...relatedProjects, ...recentReleases] } as GameState;
+      const state = { week: 100, studio: { internal: { projects: [flopProject, ...relatedProjects, ...recentReleases] } } } as GameState;
 
       vi.spyOn(Math, 'random').mockReturnValue(0.1);
       const result = exploitIP(flopProject, state);
@@ -229,7 +229,7 @@ describe("franchise system", () => {
 
       // State is at week 200, making legacyProject > 150 weeks old (Legacy)
       // Saturation penalty will be low as we don't have enough projects
-      const state = { week: 200, projects: [legacyProject, relatedProject] } as GameState;
+      const state = { week: 200, studio: { internal: { projects: [legacyProject, relatedProject] } } } as GameState;
 
       vi.spyOn(Math, 'random').mockReturnValue(0.4); // < 0.5 triggers IP rush job when at risk and not fully fatigued
       const result = exploitIP(legacyProject, state);

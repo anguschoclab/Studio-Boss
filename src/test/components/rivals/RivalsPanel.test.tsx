@@ -16,7 +16,7 @@ describe('RivalsPanel', () => {
   });
 
   it('renders correctly with an empty rivals list', () => {
-    (useGameStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector: Parameters<typeof useGameStore>[0]) => selector({ gameState: { rivals: [] } }));
+    (useGameStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector: any) => selector({ gameState: { industry: { rivals: [] } } } as any));
     render(<RivalsPanel />);
     expect(screen.getByText('Rival Studios')).toBeInTheDocument();
   });
@@ -58,7 +58,7 @@ describe('RivalsPanel', () => {
       }
     ];
 
-    (useGameStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector: Parameters<typeof useGameStore>[0]) => selector({ gameState: { rivals: mockRivals } }));
+    (useGameStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector: any) => selector({ gameState: { industry: { rivals: mockRivals } } } as any));
     render(<RivalsPanel />);
 
     // Check text elements
@@ -116,7 +116,8 @@ describe('RivalsPanel', () => {
       }
     ];
 
-    (useGameStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector: Parameters<typeof useGameStore>[0]) => selector({ gameState: { rivals: mockRivals } }));
+    (useGameStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector: any) => selector({ gameState: { industry: { rivals: mockRivals } } } as any));
+
     const { container } = render(<RivalsPanel />);
 
     const strengthBars = container.querySelectorAll('.bg-muted\\/50 .rounded-full.transition-all');

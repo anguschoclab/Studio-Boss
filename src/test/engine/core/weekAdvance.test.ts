@@ -7,9 +7,9 @@ describe("advanceWeek", () => {
     const initialState = initializeGame("Test Studio", "indie");
 
     // Set up mock data
-    initialState.contracts = [];
-    initialState.talentPool = [];
-    initialState.awards = [];
+    initialState.studio.internal.contracts = [];
+    initialState.industry.talentPool = [];
+    initialState.industry.awards = [];
 
     const { newState, summary } = advanceWeek(initialState);
 
@@ -25,7 +25,7 @@ describe("advanceWeek", () => {
     const initialState = initializeGame("Test Studio", "indie");
 
     // Add a custom opportunity that is about to expire
-    initialState.opportunities = [
+    initialState.market.opportunities = [
       {
         id: "opp-expire",
         title: "Expiring Script",
@@ -59,23 +59,23 @@ describe("advanceWeek", () => {
 
     const { newState } = advanceWeek(initialState);
 
-    expect(newState.opportunities.length).toBe(1);
-    expect(newState.opportunities[0].id).toBe("opp-stay");
-    expect(newState.opportunities[0].weeksUntilExpiry).toBe(4);
+    expect(newState.market.opportunities.length).toBe(1);
+    expect(newState.market.opportunities[0].id).toBe("opp-stay");
+    expect(newState.market.opportunities[0].weeksUntilExpiry).toBe(4);
 
     vi.restoreAllMocks();
   });
 
   it("sometimes spawns new opportunities", () => {
     const initialState = initializeGame("Test Studio", "indie");
-    initialState.opportunities = [];
+    initialState.market.opportunities = [];
 
     // Force Math.random to < 0.3 to trigger opportunity spawn
     vi.spyOn(Math, 'random').mockReturnValue(0.1);
 
     const { newState, summary } = advanceWeek(initialState);
 
-    expect(newState.opportunities.length).toBeGreaterThan(0);
+    expect(newState.market.opportunities.length).toBeGreaterThan(0);
     expect(summary.events.some(e => e.includes('hit the market'))).toBeTruthy();
 
     vi.restoreAllMocks();

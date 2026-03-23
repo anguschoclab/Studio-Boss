@@ -28,11 +28,11 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
 
     let cache = stateIndexes.get(state);
     // ⚡ Bolt: Strict cache invalidation checks using state tick identity and length
-    if (!cache || cache.week !== state.week || cache.projectCount !== state.projects.length) {
+    if (!cache || cache.week !== state.week || cache.projectCount !== state.studio.internal.projects.length) {
       // Build O(1) indices for the current state exactly once
       cache = {
         week: state.week,
-        projectCount: state.projects.length,
+        projectCount: state.studio.internal.projects.length,
         relatedCounts: new Map<string, number>(),
         genreSaturationCounts: new Map<string, number>(),
         crossoverTargets: new Map<string, Project[]>(),
@@ -40,8 +40,8 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
 
       const saturationCutoff = state.week - 50;
 
-      for (let i = 0, len = state.projects.length; i < len; i++) {
-        const p = state.projects[i];
+      for (let i = 0, len = state.studio.internal.projects.length; i < len; i++) {
+        const p = state.studio.internal.projects[i];
 
         // Count related projects by root ID
         const pRootId = p.parentProjectId || p.id;

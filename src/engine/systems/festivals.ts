@@ -14,7 +14,7 @@ export function submitToFestival(
   festivalBody: AwardBody
 ): GameState | null {
   const fest = FESTIVALS.find(f => f.body === festivalBody);
-  const project = state.projects.find(p => p.id === projectId);
+  const project = state.studio.internal.projects.find(p => p.id === projectId);
   
   if (!fest || !project || state.cash < fest.cost) return null;
   
@@ -33,26 +33,29 @@ export function submitToFestival(
   return {
     ...state,
     cash: state.cash - fest.cost,
-    festivalSubmissions: [...(state.festivalSubmissions || []), submission],
-    headlines: [
-      {
-        id: crypto.randomUUID(),
-        week: state.week,
-        category: 'awards' as const,
-        text: `"${project.title}" officially submitted for consideration at ${fest.name}.`
-      },
-      ...state.headlines
-    ].slice(0, 50)
+    industry: {
+      ...state.industry,
+      festivalSubmissions: [...(state.industry.festivalSubmissions || []), submission],
+      headlines: [
+        {
+          id: crypto.randomUUID(),
+          week: state.week,
+          category: 'awards' as const,
+          text: `"${project.title}" officially submitted for consideration at ${fest.name}.`
+        },
+        ...state.industry.headlines
+      ].slice(0, 50)
+    }
   };
 }
 
 export function resolveFestivals(state: GameState): GameState {
-  if (!state.festivalSubmissions || state.festivalSubmissions.length === 0) return state;
+  if (!state.industry.festivalSubmissions || state.industry.festivalSubmissions.length === 0) return state;
   
   const newState = { ...state };
-  let updatedSubmissions = [...state.festivalSubmissions];
-  const updatedProjects = [...state.projects];
-  const newHeadlines = [...state.headlines];
+  let updatedSubmissions = [...state.industry.festivalSubmissions];
+  const updatedProjects = [...state.studio.internal.projects];
+  const newHeadlines = [...state.industry.headlines];
   
   updatedSubmissions = updatedSubmissions.map(sub => {
     if (sub.status !== 'submitted') return sub;
@@ -99,8 +102,17 @@ export function resolveFestivals(state: GameState): GameState {
   
   return {
     ...newState,
-    festivalSubmissions: updatedSubmissions,
-    projects: updatedProjects,
-    headlines: newHeadlines.slice(0, 50)
+    studio: {
+      ...newState.studio,
+      internal: {
+        ...newState.studio.internal,
+        projects: updatedProjects
+      }
+    },
+    industry: {
+      ...newState.industry,
+      festivalSubmissions: updatedSubmissions,
+      headlines: newHeadlines.slice(0, 50)
+    }
   };
 }

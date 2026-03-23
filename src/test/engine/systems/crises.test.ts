@@ -23,21 +23,32 @@ const mockProject: Project = {
 };
 
 const mockGameState: GameState = {
-  opportunities: [],
-  studio: { name: "Test Studio", archetype: "major", prestige: 50 },
-  projects: [mockProject],
-  rivals: [],
-  headlines: [],
   week: 5,
   cash: 10000000,
-  financeHistory: [],
-  families: [],
-  agencies: [],
-  agents: [],
-  talentPool: [],
-  contracts: [],
-  buyers: [],
-};
+  studio: { 
+    name: "Test Studio", 
+    archetype: "major", 
+    prestige: 50,
+    internal: {
+      projects: [mockProject],
+      contracts: [],
+      financeHistory: [],
+    }
+  },
+  market: {
+    opportunities: [],
+    buyers: [],
+  },
+  industry: {
+    rivals: [],
+    headlines: [],
+    families: [],
+    agencies: [],
+    agents: [],
+    talentPool: [],
+    awards: [],
+  }
+} as any;
 
 describe("crises system", () => {
   beforeEach(() => {
@@ -85,7 +96,13 @@ describe("crises system", () => {
 
     const stateWithCrisis: GameState = {
       ...mockGameState,
-      projects: [{ ...mockProject, activeCrisis }]
+      studio: {
+        ...mockGameState.studio,
+        internal: {
+          ...mockGameState.studio.internal,
+          projects: [{ ...mockProject, activeCrisis }]
+        }
+      }
     };
 
     it("returns unchanged state if project not found", () => {
@@ -101,7 +118,13 @@ describe("crises system", () => {
     it("returns unchanged state if crisis is already resolved", () => {
       const resolvedState = {
         ...mockGameState,
-        projects: [{ ...mockProject, activeCrisis: { ...activeCrisis, resolved: true } }]
+        studio: {
+          ...mockGameState.studio,
+          internal: {
+            ...mockGameState.studio.internal,
+            projects: [{ ...mockProject, activeCrisis: { ...activeCrisis, resolved: true } }]
+          }
+        }
       };
       const result = resolveCrisis(resolvedState, "proj-1", 0);
       expect(result).toEqual(resolvedState);
@@ -115,24 +138,33 @@ describe("crises system", () => {
     it("applies cash penalty correctly", () => {
       const result = resolveCrisis(stateWithCrisis, "proj-1", 0);
       expect(result.cash).toBe(9000000); // 10M - 1M
-      expect(result.projects[0].activeCrisis?.resolved).toBe(true);
-      expect(result.headlines[0].text).toContain("Option A");
+      expect(result.studio.internal.projects[0].activeCrisis?.resolved).toBe(true);
+      expect(result.industry.headlines[0].text).toContain("Option A");
     });
 
     it("applies weeks delay and buzz penalty correctly, clamping buzz at 0", () => {
       const lowBuzzProject = { ...mockProject, buzz: 30, activeCrisis };
-      const lowBuzzState = { ...mockGameState, projects: [lowBuzzProject] };
+      const lowBuzzState = { 
+        ...mockGameState, 
+        studio: {
+          ...mockGameState.studio,
+          internal: {
+            ...mockGameState.studio.internal,
+            projects: [lowBuzzProject]
+          }
+        }
+      };
       const result = resolveCrisis(lowBuzzState, "proj-1", 1);
 
-      expect(result.projects[0].productionWeeks).toBe(12); // 10 + 2
-      expect(result.projects[0].buzz).toBe(0); // 30 - 50 = -20 clamped to 0
-      expect(result.projects[0].activeCrisis?.resolved).toBe(true);
+      expect(result.studio.internal.projects[0].productionWeeks).toBe(12); // 10 + 2
+      expect(result.studio.internal.projects[0].buzz).toBe(0); // 30 - 50 = -20 clamped to 0
+      expect(result.studio.internal.projects[0].activeCrisis?.resolved).toBe(true);
     });
 
     it("handles extreme negative cash penalty (edge case for data error / intentional gain)", () => {
       const result = resolveCrisis(stateWithCrisis, "proj-1", 2);
       expect(result.cash).toBe(10500000); // 10M - (-500k) = 10.5M
-      expect(result.projects[0].activeCrisis?.resolved).toBe(true);
+      expect(result.studio.internal.projects[0].activeCrisis?.resolved).toBe(true);
     });
   });
 });

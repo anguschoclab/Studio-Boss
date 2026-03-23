@@ -6,10 +6,10 @@ describe("initializeGame", () => {
     const state = initializeGame("My Studio", "major");
     expect(state.studio.name).toBe("My Studio");
     expect(state.studio.archetype).toBe("major");
-    expect(state.projects).toEqual([]);
-    expect(state.rivals).toHaveLength(4);
+    expect(state.studio.internal.projects).toEqual([]);
+    expect(state.industry.rivals).toHaveLength(4);
     expect(state.week).toBe(1);
-    expect(state.headlines).toHaveLength(1);
-    expect(state.headlines[0].text).toContain("My Studio");
+    expect(state.industry.headlines).toHaveLength(1);
+    expect(state.industry.headlines[0].text).toContain("My Studio");
   });
 });

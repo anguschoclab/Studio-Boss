@@ -1,0 +1,755 @@
+
+ RUN  v3.2.4 /Users/amauricia/Documents/GitHub/Studio-Boss
+
+ × src/test/engine/systems/festivals.test.ts > Festivals System > submits a project to a festival if cash is sufficient and status is valid 6ms
+   → Cannot read properties of undefined (reading 'projects')
+ × src/test/engine/systems/festivals.test.ts > Festivals System > declines submission if project cannot be found or cash is too low 0ms
+   → Cannot read properties of undefined (reading 'projects')
+ × src/test/engine/systems/festivals.test.ts > Festivals System > resolves festival results and correctly selects/rejects based on indie credibility and prestige 0ms
+   → Cannot read properties of undefined (reading 'festivalSubmissions')
+stderr | src/test/components/finance/FinancePanel.test.tsx > FinancePanel Component > renders gracefully with null/empty game state
+Warning: The tag <stop> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+    at stop
+    at linearGradient
+    at defs
+    at div
+    at ComposedChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:19:27)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:22:48)
+Warning: <linearGradient /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at linearGradient
+    at defs
+    at div
+    at ComposedChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:19:27)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:22:48)
+Warning: The tag <linearGradient> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+    at linearGradient
+    at defs
+    at div
+    at ComposedChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:19:27)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:22:48)
+Warning: <linearGradient /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at linearGradient
+    at defs
+    at div
+    at ComposedChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:19:27)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:22:48)
+Warning: The tag <defs> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+    at defs
+    at div
+    at ComposedChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:19:27)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:22:48)
+
+stderr | src/test/components/finance/FinancePanel.test.tsx > FinancePanel Component > renders correctly with positive cash flow and active projects
+Error: Uncaught [TypeError: Cannot read properties of undefined (reading 'internal')]
+    at reportException (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:26599:12) TypeError: Cannot read properties of undefined (reading 'internal')
+    at FinancePanel [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/components/finance/FinancePanel.tsx:13:40[90m)[39m
+    at renderWithHooks [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:15486:18[90m)[39m
+    at mountIndeterminateComponent [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:20103:13[90m)[39m
+    at beginWork [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:21626:16[90m)[39m
+    at HTMLUnknownElement.callCallback [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:4164:14[90m)[39m
+    at HTMLUnknownElement.callTheUserObjectsOperation [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/generated/EventListener.js:26:30[90m)[39m
+    at innerInvokeEventListeners [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:350:25[90m)[39m
+    at invokeEventListeners [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:286:3[90m)[39m
+    at HTMLUnknownElementImpl._dispatch [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:233:9[90m)[39m
+    at HTMLUnknownElementImpl.dispatchEvent [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:104:17[90m)[39m
+Error: Uncaught [TypeError: Cannot read properties of undefined (reading 'internal')]
+    at reportException (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:26599:12) TypeError: Cannot read properties of undefined (reading 'internal')
+    at FinancePanel [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/components/finance/FinancePanel.tsx:13:40[90m)[39m
+    at renderWithHooks [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:15486:18[90m)[39m
+    at mountIndeterminateComponent [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:20103:13[90m)[39m
+    at beginWork [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:21626:16[90m)[39m
+    at HTMLUnknownElement.callCallback [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:4164:14[90m)[39m
+    at HTMLUnknownElement.callTheUserObjectsOperation [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/generated/EventListener.js:26:30[90m)[39m
+    at innerInvokeEventListeners [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:350:25[90m)[39m
+    at invokeEventListeners [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:286:3[90m)[39m
+    at HTMLUnknownElementImpl._dispatch [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:233:9[90m)[39m
+    at HTMLUnknownElementImpl.dispatchEvent [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:104:17[90m)[39m
+The above error occurred in the <FinancePanel> component:
+
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:22:48)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+
+stderr | src/test/components/finance/FinancePanel.test.tsx > FinancePanel Component > renders correctly with negative cash flow and negative cash
+Error: Uncaught [TypeError: Cannot read properties of undefined (reading 'internal')]
+    at reportException (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:26599:12) TypeError: Cannot read properties of undefined (reading 'internal')
+    at FinancePanel [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/components/finance/FinancePanel.tsx:13:40[90m)[39m
+    at renderWithHooks [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:15486:18[90m)[39m
+    at mountIndeterminateComponent [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:20103:13[90m)[39m
+    at beginWork [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:21626:16[90m)[39m
+    at HTMLUnknownElement.callCallback [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:4164:14[90m)[39m
+    at HTMLUnknownElement.callTheUserObjectsOperation [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/generated/EventListener.js:26:30[90m)[39m
+    at innerInvokeEventListeners [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:350:25[90m)[39m
+    at invokeEventListeners [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:286:3[90m)[39m
+    at HTMLUnknownElementImpl._dispatch [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:233:9[90m)[39m
+    at HTMLUnknownElementImpl.dispatchEvent [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:104:17[90m)[39m
+Error: Uncaught [TypeError: Cannot read properties of undefined (reading 'internal')]
+    at reportException (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:26599:12) TypeError: Cannot read properties of undefined (reading 'internal')
+    at FinancePanel [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/components/finance/FinancePanel.tsx:13:40[90m)[39m
+    at renderWithHooks [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:15486:18[90m)[39m
+    at mountIndeterminateComponent [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:20103:13[90m)[39m
+    at beginWork [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:21626:16[90m)[39m
+    at HTMLUnknownElement.callCallback [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:4164:14[90m)[39m
+    at HTMLUnknownElement.callTheUserObjectsOperation [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/generated/EventListener.js:26:30[90m)[39m
+    at innerInvokeEventListeners [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:350:25[90m)[39m
+    at invokeEventListeners [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:286:3[90m)[39m
+    at HTMLUnknownElementImpl._dispatch [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:233:9[90m)[39m
+    at HTMLUnknownElementImpl.dispatchEvent [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:104:17[90m)[39m
+The above error occurred in the <FinancePanel> component:
+
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:22:48)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+
+ ✓ src/test/components/finance/FinancePanel.test.tsx > FinancePanel Component > renders gracefully with null/empty game state 63ms
+ × src/test/components/finance/FinancePanel.test.tsx > FinancePanel Component > renders correctly with positive cash flow and active projects 8ms
+   → Cannot read properties of undefined (reading 'internal')
+ × src/test/components/finance/FinancePanel.test.tsx > FinancePanel Component > renders correctly with negative cash flow and negative cash 4ms
+   → Cannot read properties of undefined (reading 'internal')
+stderr | src/test/components/discovery/DiscoveryBoard.test.tsx > DiscoveryBoard > renders empty state when there are no opportunities
+Error: Uncaught [TypeError: Cannot read properties of undefined (reading 'opportunities')]
+    at reportException (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:26599:12) TypeError: Cannot read properties of undefined (reading 'opportunities')
+    at Module.selectOpportunities [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/store/selectors.ts:32:72[90m)[39m
+    at selector [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/components/discovery/DiscoveryBoard.tsx:10:43[90m)[39m
+    at Proxy.<anonymous> [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/test/components/discovery/DiscoveryBoard.test.tsx:31:16[90m)[39m
+    at Proxy.mockCall [90m(file:///Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4m@vitest/spy[24m/dist/index.js:96:15[90m)[39m
+    at Proxy.useGameStore [90m(file:///Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mtinyspy[24m/dist/index.js:47:80[90m)[39m
+    at DiscoveryBoard [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/components/discovery/DiscoveryBoard.tsx:10:25[90m)[39m
+    at renderWithHooks [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:15486:18[90m)[39m
+    at mountIndeterminateComponent [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:20103:13[90m)[39m
+    at beginWork [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:21626:16[90m)[39m
+    at HTMLUnknownElement.callCallback [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:4164:14[90m)[39m
+Error: Uncaught [TypeError: Cannot read properties of undefined (reading 'opportunities')]
+    at reportException (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:26599:12) TypeError: Cannot read properties of undefined (reading 'opportunities')
+    at Module.selectOpportunities [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/store/selectors.ts:32:72[90m)[39m
+    at selector [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/components/discovery/DiscoveryBoard.tsx:10:43[90m)[39m
+    at Proxy.<anonymous> [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/test/components/discovery/DiscoveryBoard.test.tsx:31:16[90m)[39m
+    at Proxy.mockCall [90m(file:///Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4m@vitest/spy[24m/dist/index.js:96:15[90m)[39m
+    at Proxy.useGameStore [90m(file:///Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mtinyspy[24m/dist/index.js:47:80[90m)[39m
+    at DiscoveryBoard [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/components/discovery/DiscoveryBoard.tsx:10:25[90m)[39m
+    at renderWithHooks [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:15486:18[90m)[39m
+    at mountIndeterminateComponent [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:20103:13[90m)[39m
+    at beginWork [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:21626:16[90m)[39m
+    at HTMLUnknownElement.callCallback [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:4164:14[90m)[39m
+The above error occurred in the <DiscoveryBoard> component:
+
+    at DiscoveryBoard (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/discovery/DiscoveryBoard.tsx:14:49)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+
+stderr | src/test/components/discovery/DiscoveryBoard.test.tsx > DiscoveryBoard > calls openCreateProject when Create Original button is clicked
+Error: Uncaught [TypeError: Cannot read properties of undefined (reading 'opportunities')]
+    at reportException (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:26599:12) TypeError: Cannot read properties of undefined (reading 'opportunities')
+    at Module.selectOpportunities [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/store/selectors.ts:32:72[90m)[39m
+    at selector [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/components/discovery/DiscoveryBoard.tsx:10:43[90m)[39m
+    at Proxy.<anonymous> [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/test/components/discovery/DiscoveryBoard.test.tsx:45:16[90m)[39m
+    at Proxy.mockCall [90m(file:///Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4m@vitest/spy[24m/dist/index.js:96:15[90m)[39m
+    at Proxy.useGameStore [90m(file:///Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mtinyspy[24m/dist/index.js:47:80[90m)[39m
+    at DiscoveryBoard [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/components/discovery/DiscoveryBoard.tsx:10:25[90m)[39m
+    at renderWithHooks [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:15486:18[90m)[39m
+    at mountIndeterminateComponent [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:20103:13[90m)[39m
+    at beginWork [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:21626:16[90m)[39m
+    at HTMLUnknownElement.callCallback [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:4164:14[90m)[39m
+Error: Uncaught [TypeError: Cannot read properties of undefined (reading 'opportunities')]
+    at reportException (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:26599:12) TypeError: Cannot read properties of undefined (reading 'opportunities')
+    at Module.selectOpportunities [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/store/selectors.ts:32:72[90m)[39m
+    at selector [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/components/discovery/DiscoveryBoard.tsx:10:43[90m)[39m
+    at Proxy.<anonymous> [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/test/components/discovery/DiscoveryBoard.test.tsx:45:16[90m)[39m
+    at Proxy.mockCall [90m(file:///Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4m@vitest/spy[24m/dist/index.js:96:15[90m)[39m
+    at Proxy.useGameStore [90m(file:///Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mtinyspy[24m/dist/index.js:47:80[90m)[39m
+    at DiscoveryBoard [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/components/discovery/DiscoveryBoard.tsx:10:25[90m)[39m
+    at renderWithHooks [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:15486:18[90m)[39m
+    at mountIndeterminateComponent [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:20103:13[90m)[39m
+    at beginWork [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:21626:16[90m)[39m
+    at HTMLUnknownElement.callCallback [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:4164:14[90m)[39m
+The above error occurred in the <DiscoveryBoard> component:
+
+    at DiscoveryBoard (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/discovery/DiscoveryBoard.tsx:14:49)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+
+stderr | src/test/components/discovery/DiscoveryBoard.test.tsx > DiscoveryBoard > renders opportunity cards when there are opportunities
+Error: Uncaught [TypeError: Cannot read properties of undefined (reading 'opportunities')]
+    at reportException (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:26599:12) TypeError: Cannot read properties of undefined (reading 'opportunities')
+    at Module.selectOpportunities [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/store/selectors.ts:32:72[90m)[39m
+    at selector [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/components/discovery/DiscoveryBoard.tsx:10:43[90m)[39m
+    at Proxy.<anonymous> [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/test/components/discovery/DiscoveryBoard.test.tsx:90:16[90m)[39m
+    at Proxy.mockCall [90m(file:///Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4m@vitest/spy[24m/dist/index.js:96:15[90m)[39m
+    at Proxy.useGameStore [90m(file:///Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mtinyspy[24m/dist/index.js:47:80[90m)[39m
+    at DiscoveryBoard [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/components/discovery/DiscoveryBoard.tsx:10:25[90m)[39m
+    at renderWithHooks [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:15486:18[90m)[39m
+    at mountIndeterminateComponent [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:20103:13[90m)[39m
+    at beginWork [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:21626:16[90m)[39m
+    at HTMLUnknownElement.callCallback [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:4164:14[90m)[39m
+Error: Uncaught [TypeError: Cannot read properties of undefined (reading 'opportunities')]
+    at reportException (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:26599:12) TypeError: Cannot read properties of undefined (reading 'opportunities')
+    at Module.selectOpportunities [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/store/selectors.ts:32:72[90m)[39m
+    at selector [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/components/discovery/DiscoveryBoard.tsx:10:43[90m)[39m
+    at Proxy.<anonymous> [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/test/components/discovery/DiscoveryBoard.test.tsx:90:16[90m)[39m
+    at Proxy.mockCall [90m(file:///Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4m@vitest/spy[24m/dist/index.js:96:15[90m)[39m
+    at Proxy.useGameStore [90m(file:///Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mtinyspy[24m/dist/index.js:47:80[90m)[39m
+    at DiscoveryBoard [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/components/discovery/DiscoveryBoard.tsx:10:25[90m)[39m
+    at renderWithHooks [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:15486:18[90m)[39m
+    at mountIndeterminateComponent [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:20103:13[90m)[39m
+    at beginWork [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:21626:16[90m)[39m
+    at HTMLUnknownElement.callCallback [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:4164:14[90m)[39m
+The above error occurred in the <DiscoveryBoard> component:
+
+    at DiscoveryBoard (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/discovery/DiscoveryBoard.tsx:14:49)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+
+stderr | src/test/components/discovery/DiscoveryBoard.test.tsx > DiscoveryBoard > calls acquireOpportunity when Acquire button is clicked on a card
+Error: Uncaught [TypeError: Cannot read properties of undefined (reading 'opportunities')]
+    at reportException (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:26599:12) TypeError: Cannot read properties of undefined (reading 'opportunities')
+    at Module.selectOpportunities [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/store/selectors.ts:32:72[90m)[39m
+    at selector [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/components/discovery/DiscoveryBoard.tsx:10:43[90m)[39m
+    at Proxy.<anonymous> [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/test/components/discovery/DiscoveryBoard.test.tsx:126:16[90m)[39m
+    at Proxy.mockCall [90m(file:///Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4m@vitest/spy[24m/dist/index.js:96:15[90m)[39m
+    at Proxy.useGameStore [90m(file:///Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mtinyspy[24m/dist/index.js:47:80[90m)[39m
+    at DiscoveryBoard [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/components/discovery/DiscoveryBoard.tsx:10:25[90m)[39m
+    at renderWithHooks [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:15486:18[90m)[39m
+    at mountIndeterminateComponent [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:20103:13[90m)[39m
+    at beginWork [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:21626:16[90m)[39m
+    at HTMLUnknownElement.callCallback [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:4164:14[90m)[39m
+Error: Uncaught [TypeError: Cannot read properties of undefined (reading 'opportunities')]
+    at reportException (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:26599:12) TypeError: Cannot read properties of undefined (reading 'opportunities')
+    at Module.selectOpportunities [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/store/selectors.ts:32:72[90m)[39m
+    at selector [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/components/discovery/DiscoveryBoard.tsx:10:43[90m)[39m
+    at Proxy.<anonymous> [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/test/components/discovery/DiscoveryBoard.test.tsx:126:16[90m)[39m
+    at Proxy.mockCall [90m(file:///Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4m@vitest/spy[24m/dist/index.js:96:15[90m)[39m
+    at Proxy.useGameStore [90m(file:///Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mtinyspy[24m/dist/index.js:47:80[90m)[39m
+    at DiscoveryBoard [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/components/discovery/DiscoveryBoard.tsx:10:25[90m)[39m
+    at renderWithHooks [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:15486:18[90m)[39m
+    at mountIndeterminateComponent [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:20103:13[90m)[39m
+    at beginWork [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:21626:16[90m)[39m
+    at HTMLUnknownElement.callCallback [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:4164:14[90m)[39m
+The above error occurred in the <DiscoveryBoard> component:
+
+    at DiscoveryBoard (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/discovery/DiscoveryBoard.tsx:14:49)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+
+ × src/test/components/discovery/DiscoveryBoard.test.tsx > DiscoveryBoard > renders empty state when there are no opportunities 21ms
+   → Cannot read properties of undefined (reading 'opportunities')
+ × src/test/components/discovery/DiscoveryBoard.test.tsx > DiscoveryBoard > calls openCreateProject when Create Original button is clicked 18ms
+   → Cannot read properties of undefined (reading 'opportunities')
+ × src/test/components/discovery/DiscoveryBoard.test.tsx > DiscoveryBoard > renders opportunity cards when there are opportunities 3ms
+   → Cannot read properties of undefined (reading 'opportunities')
+ × src/test/components/discovery/DiscoveryBoard.test.tsx > DiscoveryBoard > calls acquireOpportunity when Acquire button is clicked on a card 2ms
+   → Cannot read properties of undefined (reading 'opportunities')
+ ✓ src/test/components/pipeline/ProjectCard.test.tsx > ProjectCard > renders basic project details correctly 24ms
+ ✓ src/test/components/pipeline/ProjectCard.test.tsx > ProjectCard > calls selectProject when the main card is clicked 23ms
+ ✓ src/test/components/pipeline/ProjectCard.test.tsx > ProjectCard > shows Review Greenlight button for needs_greenlight status 31ms
+ ✓ src/test/components/pipeline/ProjectCard.test.tsx > ProjectCard > shows Plan Marketing button for marketing status 21ms
+ ✓ src/test/components/modals/CrisisModal.test.tsx > CrisisModal > renders nothing if gameState is missing 8ms
+ ✓ src/test/components/modals/CrisisModal.test.tsx > CrisisModal > renders nothing if crisisProjectId is missing 1ms
+ ✓ src/test/components/modals/CrisisModal.test.tsx > CrisisModal > renders nothing if project is not found 1ms
+ ✓ src/test/components/modals/CrisisModal.test.tsx > CrisisModal > renders nothing if project has no active crisis 1ms
+ ✓ src/test/components/modals/CrisisModal.test.tsx > CrisisModal > renders nothing if crisis is already resolved 1ms
+ ✓ src/test/components/modals/CrisisModal.test.tsx > CrisisModal > renders the modal with crisis details correctly 56ms
+ ✓ src/test/components/modals/CrisisModal.test.tsx > CrisisModal > calls resolveProjectCrisis and closeCrisisModal when an option is selected 21ms
+ ✓ src/test/components/pipeline/ProjectCard.test.tsx > ProjectCard > shows Pitch to Network button for pitching status 18ms
+ ✓ src/test/components/pipeline/ProjectCard.test.tsx > ProjectCard > shows Resolve Crisis button when there is an unresolved crisis 63ms
+ ✓ src/test/components/pipeline/ProjectCard.test.tsx > ProjectCard > renders progress text for development status 2ms
+ ✓ src/test/components/pipeline/ProjectCard.test.tsx > ProjectCard > renders gross revenue for released status 1ms
+ ✓ src/test/components/pipeline/ProjectCard.test.tsx > ProjectCard > renders TV format correctly 2ms
+ ✓ src/test/components/modals/PitchProjectModal.test.tsx > PitchProjectModal > renders correctly when open 67ms
+ ✓ src/test/components/modals/PitchProjectModal.test.tsx > PitchProjectModal > does not render if gameState or pitchingProjectId is null 1ms
+ ✓ src/test/components/modals/PitchProjectModal.test.tsx > PitchProjectModal > does not render if project is not found 1ms
+ ✓ src/test/components/modals/PitchProjectModal.test.tsx > PitchProjectModal > selects a buyer when clicked 18ms
+ ✓ src/test/components/modals/CreateProjectModal.test.tsx > CreateProjectModal > does not render when showCreateProject is false 21ms
+ ✓ src/test/components/modals/PitchProjectModal.test.tsx > PitchProjectModal > selects a deal structure when clicked 20ms
+ ✓ src/test/components/modals/CreateProjectModal.test.tsx > CreateProjectModal > renders correctly when showCreateProject is true 97ms
+ ✓ src/test/components/modals/CreateProjectModal.test.tsx > CreateProjectModal > generates a title when opening with an empty title 47ms
+stderr | src/test/components/talent/TalentPanel.test.tsx > TalentPanel > renders talent roster
+Error: Uncaught [TypeError: Cannot read properties of undefined (reading 'talentPool')]
+    at reportException (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:26599:12) TypeError: Cannot read properties of undefined (reading 'talentPool')
+    at TalentPanel [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/components/talent/TalentPanel.tsx:9:78[90m)[39m
+    at renderWithHooks [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:15486:18[90m)[39m
+    at mountIndeterminateComponent [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:20103:13[90m)[39m
+    at beginWork [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:21626:16[90m)[39m
+    at HTMLUnknownElement.callCallback [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:4164:14[90m)[39m
+    at HTMLUnknownElement.callTheUserObjectsOperation [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/generated/EventListener.js:26:30[90m)[39m
+    at innerInvokeEventListeners [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:350:25[90m)[39m
+    at invokeEventListeners [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:286:3[90m)[39m
+    at HTMLUnknownElementImpl._dispatch [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:233:9[90m)[39m
+    at HTMLUnknownElementImpl.dispatchEvent [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:104:17[90m)[39m
+Error: Uncaught [TypeError: Cannot read properties of undefined (reading 'talentPool')]
+    at reportException (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:26599:12) TypeError: Cannot read properties of undefined (reading 'talentPool')
+    at TalentPanel [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/components/talent/TalentPanel.tsx:9:78[90m)[39m
+    at renderWithHooks [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:15486:18[90m)[39m
+    at mountIndeterminateComponent [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:20103:13[90m)[39m
+    at beginWork [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:21626:16[90m)[39m
+    at HTMLUnknownElement.callCallback [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:4164:14[90m)[39m
+    at HTMLUnknownElement.callTheUserObjectsOperation [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/generated/EventListener.js:26:30[90m)[39m
+    at innerInvokeEventListeners [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:350:25[90m)[39m
+    at invokeEventListeners [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:286:3[90m)[39m
+    at HTMLUnknownElementImpl._dispatch [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:233:9[90m)[39m
+    at HTMLUnknownElementImpl.dispatchEvent [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:104:17[90m)[39m
+The above error occurred in the <TalentPanel> component:
+
+    at TalentPanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/talent/TalentPanel.tsx:14:24)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+
+stderr | src/test/components/talent/TalentPanel.test.tsx > TalentPanel > filters talent by role
+Error: Uncaught [TypeError: Cannot read properties of undefined (reading 'talentPool')]
+    at reportException (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:26599:12) TypeError: Cannot read properties of undefined (reading 'talentPool')
+    at TalentPanel [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/components/talent/TalentPanel.tsx:9:78[90m)[39m
+    at renderWithHooks [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:15486:18[90m)[39m
+    at mountIndeterminateComponent [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:20103:13[90m)[39m
+    at beginWork [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:21626:16[90m)[39m
+    at HTMLUnknownElement.callCallback [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:4164:14[90m)[39m
+    at HTMLUnknownElement.callTheUserObjectsOperation [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/generated/EventListener.js:26:30[90m)[39m
+    at innerInvokeEventListeners [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:350:25[90m)[39m
+    at invokeEventListeners [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:286:3[90m)[39m
+    at HTMLUnknownElementImpl._dispatch [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:233:9[90m)[39m
+    at HTMLUnknownElementImpl.dispatchEvent [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:104:17[90m)[39m
+Error: Uncaught [TypeError: Cannot read properties of undefined (reading 'talentPool')]
+    at reportException (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:26599:12) TypeError: Cannot read properties of undefined (reading 'talentPool')
+    at TalentPanel [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/components/talent/TalentPanel.tsx:9:78[90m)[39m
+    at renderWithHooks [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:15486:18[90m)[39m
+    at mountIndeterminateComponent [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:20103:13[90m)[39m
+    at beginWork [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:21626:16[90m)[39m
+    at HTMLUnknownElement.callCallback [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:4164:14[90m)[39m
+    at HTMLUnknownElement.callTheUserObjectsOperation [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/generated/EventListener.js:26:30[90m)[39m
+    at innerInvokeEventListeners [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:350:25[90m)[39m
+    at invokeEventListeners [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:286:3[90m)[39m
+    at HTMLUnknownElementImpl._dispatch [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:233:9[90m)[39m
+    at HTMLUnknownElementImpl.dispatchEvent [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:104:17[90m)[39m
+The above error occurred in the <TalentPanel> component:
+
+    at TalentPanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/talent/TalentPanel.tsx:14:24)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+
+stderr | src/test/components/talent/TalentPanel.test.tsx > TalentPanel > shows empty state when no talent matches filter
+Error: Uncaught [TypeError: Cannot read properties of undefined (reading 'talentPool')]
+    at reportException (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:26599:12) TypeError: Cannot read properties of undefined (reading 'talentPool')
+    at TalentPanel [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/components/talent/TalentPanel.tsx:9:78[90m)[39m
+    at renderWithHooks [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:15486:18[90m)[39m
+    at mountIndeterminateComponent [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:20103:13[90m)[39m
+    at beginWork [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:21626:16[90m)[39m
+    at HTMLUnknownElement.callCallback [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:4164:14[90m)[39m
+    at HTMLUnknownElement.callTheUserObjectsOperation [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/generated/EventListener.js:26:30[90m)[39m
+    at innerInvokeEventListeners [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:350:25[90m)[39m
+    at invokeEventListeners [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:286:3[90m)[39m
+    at HTMLUnknownElementImpl._dispatch [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:233:9[90m)[39m
+    at HTMLUnknownElementImpl.dispatchEvent [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:104:17[90m)[39m
+Error: Uncaught [TypeError: Cannot read properties of undefined (reading 'talentPool')]
+    at reportException (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/react-dom/cjs/react-dom.development.js:26599:12) TypeError: Cannot read properties of undefined (reading 'talentPool')
+    at TalentPanel [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/components/talent/TalentPanel.tsx:9:78[90m)[39m
+    at renderWithHooks [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:15486:18[90m)[39m
+    at mountIndeterminateComponent [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:20103:13[90m)[39m
+    at beginWork [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:21626:16[90m)[39m
+    at HTMLUnknownElement.callCallback [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mreact-dom[24m/cjs/react-dom.development.js:4164:14[90m)[39m
+    at HTMLUnknownElement.callTheUserObjectsOperation [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/generated/EventListener.js:26:30[90m)[39m
+    at innerInvokeEventListeners [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:350:25[90m)[39m
+    at invokeEventListeners [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:286:3[90m)[39m
+    at HTMLUnknownElementImpl._dispatch [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:233:9[90m)[39m
+    at HTMLUnknownElementImpl.dispatchEvent [90m(/Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4mjsdom[24m/lib/jsdom/living/events/EventTarget-impl.js:104:17[90m)[39m
+The above error occurred in the <TalentPanel> component:
+
+    at TalentPanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/talent/TalentPanel.tsx:14:24)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+
+ × src/test/components/talent/TalentPanel.test.tsx > TalentPanel > renders talent roster 18ms
+   → Cannot read properties of undefined (reading 'talentPool')
+ × src/test/components/talent/TalentPanel.test.tsx > TalentPanel > filters talent by role 3ms
+   → Cannot read properties of undefined (reading 'talentPool')
+ × src/test/components/talent/TalentPanel.test.tsx > TalentPanel > shows empty state when no talent matches filter 3ms
+   → Cannot read properties of undefined (reading 'talentPool')
+ ✓ src/test/components/modals/CreateProjectModal.test.tsx > CreateProjectModal > allows clicking Generate Random Title button 86ms
+stderr | src/test/WeekSummaryModal.test.tsx > WeekSummaryModal > renders correctly with positive net financial data
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+stderr | src/test/WeekSummaryModal.test.tsx > WeekSummaryModal > renders correctly with negative net financial data
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ ✓ src/test/WeekSummaryModal.test.tsx > WeekSummaryModal > renders nothing when weekSummary is null 7ms
+ ✓ src/test/WeekSummaryModal.test.tsx > WeekSummaryModal > renders nothing when showWeekSummary is false (Dialog handles open state, but if weekSummary is null it returns null anyway) 1ms
+ ✓ src/test/WeekSummaryModal.test.tsx > WeekSummaryModal > renders correctly with positive net financial data 86ms
+stderr | src/test/WeekSummaryModal.test.tsx > WeekSummaryModal > renders project updates, events, and headlines if they exist
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ ✓ src/test/components/modals/CreateProjectModal.test.tsx > CreateProjectModal > conditionally renders TV fields when TV format is selected 130ms
+ ✓ src/test/components/modals/CreateProjectModal.test.tsx > CreateProjectModal > conditionally renders Unscripted fields when Unscripted format is selected 93ms
+stderr | src/test/WeekSummaryModal.test.tsx > WeekSummaryModal > calls closeSummary when the Continue button is clicked
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+stderr | src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > renders project details when a project is selected
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ ✓ src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > renders nothing when no project is selected 12ms
+ ✓ src/test/WeekSummaryModal.test.tsx > WeekSummaryModal > renders correctly with negative net financial data 15ms
+ ✓ src/test/WeekSummaryModal.test.tsx > WeekSummaryModal > renders project updates, events, and headlines if they exist 17ms
+ ✓ src/test/WeekSummaryModal.test.tsx > WeekSummaryModal > calls closeSummary when the Continue button is clicked 45ms
+stderr | src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > shows greenlight button when project needs greenlight
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+stderr | src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > shows marketing configuration and handles launch campaign
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ ✓ src/test/components/rivals/RivalsPanel.test.tsx > RivalsPanel > renders correctly with an empty rivals list 28ms
+ ✓ src/test/components/rivals/RivalsPanel.test.tsx > RivalsPanel > renders rivals correctly 29ms
+ ✓ src/test/components/rivals/RivalsPanel.test.tsx > RivalsPanel > applies correct strength styling based on strength value 4ms
+stderr | src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > shows renew button for tv project and handles renewal
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ ✓ src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > renders project details when a project is selected 124ms
+ ✓ src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > shows greenlight button when project needs greenlight 38ms
+ ✓ src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > shows marketing configuration and handles launch campaign 49ms
+ ✓ src/test/components/modals/CreateProjectModal.test.tsx > CreateProjectModal > disables Greenlight button if title is empty 46ms
+ ✓ src/test/components/modals/CreateProjectModal.test.tsx > CreateProjectModal > submits the form correctly for a film 61ms
+ ✓ src/test/components/modals/CreateProjectModal.test.tsx > CreateProjectModal > allows selecting talent 89ms
+ ✓ src/test/components/pipeline/PipelineBoard.test.tsx > PipelineBoard > renders title and New Project button 28ms
+ ✓ src/test/components/pipeline/PipelineBoard.test.tsx > PipelineBoard > calls openCreateProject when New Project button is clicked 25ms
+ ✓ src/test/components/pipeline/PipelineBoard.test.tsx > PipelineBoard > renders all pipeline columns 6ms
+ ✓ src/test/components/pipeline/PipelineBoard.test.tsx > PipelineBoard > distributes projects into correct columns 11ms
+ ✓ src/test/components/pipeline/PipelineBoard.test.tsx > PipelineBoard > shows "No projects" message for empty columns 6ms
+stderr | src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > shows develop spinoff button for high revenue projects and handles exploitation
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ ✓ src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > shows renew button for tv project and handles renewal 20ms
+ ✓ src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > shows develop spinoff button for high revenue projects and handles exploitation 55ms
+ ✓ src/test/store/gameStore.test.ts > gameStore > starts with null game state 1ms
+ ✓ src/test/store/gameStore.test.ts > gameStore > creates a new game 2ms
+ ✓ src/test/store/gameStore.test.ts > gameStore > advances week 1ms
+ ✓ src/test/store/gameStore.test.ts > gameStore > throws when advancing without game state 0ms
+ ✓ src/test/store/gameStore.test.ts > gameStore > creates a project 1ms
+ ✓ src/test/store/gameStore.test.ts > gameStore > handles creating project when no game state exists 0ms
+ ✓ src/test/store/gameStore.test.ts > gameStore > saves to slot 0ms
+ ✓ src/test/store/gameStore.test.ts > gameStore > loads from slot 0ms
+ ✓ src/test/store/gameStore.test.ts > gameStore > retrieves save slots 0ms
+ ✓ src/test/store/gameStore.test.ts > gameStore > signs a contract if sufficient funds 0ms
+ ✓ src/test/store/gameStore.test.ts > gameStore > fails to sign contract if insufficient funds 0ms
+ ✓ src/test/store/gameStore.test.ts > gameStore > should acquire an opportunity and convert it to a project 1ms
+ ✓ src/test/persistence/saveLoad.test.ts > saveLoad > returns null when loading an empty slot 1ms
+ ✓ src/test/persistence/saveLoad.test.ts > saveLoad > handles malformed save data 0ms
+ ✓ src/test/persistence/saveLoad.test.ts > saveLoad > saves and loads game state 4ms
+ ✓ src/test/persistence/saveLoad.test.ts > saveLoad > retrieves save slots info 1ms
+ ✓ src/test/persistence/saveLoad.test.ts > saveLoad > interacts with localStorage correctly when saving a game 1ms
+ ✓ src/test/persistence/saveLoad.test.ts > saveLoad > preserves existing save slots when saving to a new slot 1ms
+ ✓ src/test/chart.test.tsx > ChartStyle > should securely escape malicious XSS payloads in color config 19ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > does nothing for archived projects 1ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > advances development project normally 1ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > transitions from development to needs_greenlight 1ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > transitions from production to marketing 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > handleReleasePhaseEntry transitions to released 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > accumulates revenue and decays weekly revenue for released projects 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > archives released project after its run 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > transitions tv from development to pitching 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > transitions unscripted from development to pitching 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > drifts buzz with talent buzz bonus during dev 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > drifts buzz without talent during dev 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > TV & Unscripted Release Rules > advances episodes Released correctly 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > TV & Unscripted Release Rules > announces the finale when last episode drops 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > TV & Unscripted Release Rules > decays rapidly for weekly after finale and sets to post_release 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > TV & Unscripted Release Rules > post_release forces out after eps + 4 weeks 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > TV & Unscripted Release Rules > binge release model completes run early if below 50k 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > TV & Unscripted Release Rules > binge release model completes run after 8 weeks 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > TV & Unscripted Release Rules > split release model part 2 drops 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > TV & Unscripted Release Rules > split release decays normally before part 2 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > TV & Unscripted Release Rules > split release decays after part 2 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > TV & Unscripted Release Rules > split release finishes its run 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > Post-Release and Ancillary rules > calculates bidding war for prestige projects 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > Post-Release and Ancillary rules > calculates VOD drop for normal films 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > Post-Release and Ancillary rules > calculates higher ancillary for family and anim projects after week 1 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > Post-Release and Ancillary rules > archives project after 26 weeks of post_release 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > Handle Release Phase Entry edge cases > sets prestige multiplier correctly based on bounds 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > Handle Release Phase Entry edge cases > handles extreme negative budget or buzz values safely (clip to 0 logic check) 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > Handle Release Phase Entry edge cases > handles binge TV entry correctly 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > Handle Release Phase Entry edge cases > handles split TV entry correctly 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > Handle Release Phase Entry edge cases > handles weekly TV entry correctly 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > Extreme Edge Cases (Guild Auditor) > handles project with extremely long negative weeks in phase 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > Extreme Edge Cases (Guild Auditor) > does not crash or stall if all projects in an array are advanced correctly (pipeline simulation) 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > updateBuyers > generates specific headlines for all mandate types 2ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > updateBuyers > shifts mandate if buyer has no current mandate 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > updateBuyers > shifts mandate if current mandate is expired 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > updateBuyers > shifts mandate early due to random 5% chance 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > updateBuyers > maintains mandate if active and random chance fails 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > calculateFitScore > applies extreme market saturation penalty for 5 or more recent similar projects 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > calculateFitScore > matches genres correctly for sci-fi/fantasy, comedy, and drama 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > calculateFitScore > boosts score for prestige mandate based on budget tiers 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > calculateFitScore > boosts score for broad_appeal mandate with family audience and mid/high budget 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > calculateFitScore > penalizes low budget projects for premium archetype buyers 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > calculateFitScore > applies market saturation penalty for similar projects released within 52 weeks 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > calculateFitScore > returns exactly 50 if buyer has no mandate (early return check) 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > calculateFitScore > applies extreme buzz multipliers correctly with negative buzz 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > calculateFitScore > clamps score between 0 and 100 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > calculateFitScore > handles budget freeze mandate with extreme blockbuster budget 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > calculateFitScore > handles broad appeal mandate with niche indie project 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > calculateFitScore > applies archetype specific penalties (network vs blockbuster) 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > negotiateContract > requires a higher score (65) for upfront contracts 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > negotiateContract > requires a lower score (40) for standard/deficit contracts 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > negotiateContract > tests explicit fit score boundaries for contract acceptance 0ms
+ ✓ src/test/engine/core/weekAdvance.test.ts > advanceWeek > advances the game by one week and generates a summary 4ms
+ ✓ src/test/engine/core/weekAdvance.test.ts > advanceWeek > decreases opportunity expiry weeks and removes expired ones 1ms
+ ✓ src/test/engine/core/weekAdvance.test.ts > advanceWeek > sometimes spawns new opportunities 1ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > generateReviewScore > calculates base score clamped between 1 and 100 1ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > generateReviewScore > applies penalty for active, unresolved crises 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > generateReviewScore > ignores resolved crises 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > generateReviewScore > handles 0 prestige talent pool (edge case) 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > generateReviewScore > handles maximum prestige talent pool (edge case) 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > generateReviewScore > applies penalty for terrible buzz (<30) 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > generateReviewScore > applies bonus for excellent buzz (>80) 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > generateReviewScore > calculates talent bonus correctly for multiple attached talents 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > simulateWeeklyBoxOffice > applies standard drop off multipliers based on review score legs 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > simulateWeeklyBoxOffice > applies massive penalty for huge budget drop off week 1 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > simulateWeeklyBoxOffice > applies sharp second-weekend drop for tentpoles week 1 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > simulateWeeklyBoxOffice > applies strong word-of-mouth bonus for low budget anomalies 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > simulateWeeklyBoxOffice > handles extreme rival competition (100 strength) 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > simulateWeeklyBoxOffice > never drops below 0.05 absolute multiplier floor due to extreme competition 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > calculateBoxOfficeRanks > returns correctly sorted ranks map 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > calculateBoxOfficeRanks > handles empty array 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > calculateBoxOfficeRanks > handles identical revenues (preserves sort stability or ties appropriately) 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > calculateBoxOfficeRanks > does not mutate the original input array 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > calculateBoxOfficeRanks > handles negative and zero revenues correctly 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > calculateBoxOfficeRanks > handles fractional revenues correctly 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > Extreme Edge Cases (Guild Auditor) > handles extreme review scores (> 100 or < 0) 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > Extreme Edge Cases (Guild Auditor) > handles calculating rank with a single entry or empty 0ms
+ ✓ src/test/engine/systems/TalentSystem.test.ts > TalentSystem > applyProjectResults > returns empty array if no contracts provided 1ms
+ ✓ src/test/engine/systems/TalentSystem.test.ts > TalentSystem > applyProjectResults > applies massive hit modifiers (ROI > 4.0) 0ms
+ ✓ src/test/engine/systems/TalentSystem.test.ts > TalentSystem > applyProjectResults > applies solid success modifiers (ROI > 2.0) 0ms
+ ✓ src/test/engine/systems/TalentSystem.test.ts > TalentSystem > applyProjectResults > applies neutral/modest success modifiers (ROI > 1.0) 0ms
+ ✓ src/test/engine/systems/TalentSystem.test.ts > TalentSystem > applyProjectResults > applies bomb modifiers (ROI < 0.4) 0ms
+ ✓ src/test/engine/systems/TalentSystem.test.ts > TalentSystem > applyProjectResults > handles awards correctly for specific roles 0ms
+ ✓ src/test/engine/systems/TalentSystem.test.ts > TalentSystem > applyProjectResults > applies general award modifiers (Best Picture) to all roles with dilution 0ms
+ ✓ src/test/engine/systems/TalentSystem.test.ts > TalentSystem > applyProjectResults > clamps stats accurately 0ms
+ ✓ src/test/engine/systems/TalentSystem.test.ts > TalentSystem > advance > decrements opportunity expiry 1ms
+ ✓ src/test/engine/systems/TalentSystem.test.ts > TalentSystem > advance > removes expired opportunities 0ms
+ ✓ src/test/engine/systems/TalentSystem.test.ts > TalentSystem > advance > generates new opportunities based on random chance 1ms
+ ✓ src/test/engine/systems/franchises.test.ts > franchise system > exploitIP > returns null if source project is not released 1ms
+ ✓ src/test/engine/systems/franchises.test.ts > franchise system > exploitIP > returns null if project failed financially and is not fatigued 0ms
+ ✓ src/test/engine/systems/franchises.test.ts > franchise system > exploitIP > returns reboot option if franchise is severely fatigued and financial failure 2ms
+ ✓ src/test/engine/systems/franchises.test.ts > franchise system > exploitIP > returns null if franchise is severely fatigued, failed, but random check fails 0ms
+ ✓ src/test/engine/systems/franchises.test.ts > franchise system > exploitIP > generates a deconstructive meta-sequel if franchise is heavily fatigued and fails 1ms
+ ✓ src/test/engine/systems/franchises.test.ts > franchise system > exploitIP > generates crossover event if another huge hit exists in same genre 0ms
+ ✓ src/test/engine/systems/franchises.test.ts > franchise system > exploitIP > generates crossover event if another huge hit exists in a compatible crossover genre 0ms
+ ✓ src/test/engine/systems/franchises.test.ts > franchise system > exploitIP > generates a direct sequel 0ms
+ ✓ src/test/engine/systems/franchises.test.ts > franchise system > exploitIP > generates a prequel 0ms
+ ✓ src/test/engine/systems/franchises.test.ts > franchise system > exploitIP > generates a spinoff 0ms
+ ✓ src/test/engine/systems/franchises.test.ts > franchise system > exploitIP > clamps buzz bonus to -10 when completely saturated 0ms
+ ✓ src/test/engine/systems/franchises.test.ts > franchise system > exploitIP > applies steep fatigue curve for Superhero genre heavily saturated 0ms
+ ✓ src/test/engine/systems/franchises.test.ts > franchise system > exploitIP > generates an IP Rights Retention Rush Job if legacy franchise underperforms 0ms
+ ✓ src/test/components/modals/PitchProjectModal.test.tsx > PitchProjectModal > handles a successful pitch 1547ms
+ ✓ src/test/components/modals/PitchProjectModal.test.tsx > PitchProjectModal > handles a failed pitch 24ms
+ ✓ src/test/components/modals/PitchProjectModal.test.tsx > PitchProjectModal > calls handleClose when dialog is closed 27ms

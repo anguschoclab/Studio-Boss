@@ -46,17 +46,27 @@ describe('Festivals System', () => {
     mockState = {
       week: 1,
       cash: 1_000_000,
-      studio: { name: "Test", prestige: 50 },
-      projects: [mockProject],
-      talentPool: [],
-      contracts: [],
-      agencies: [],
-      opportunities: [],
-      activeMarketEvents: [],
-      festivalSubmissions: [],
-      rumors: [],
-      headlines: []
-    } as unknown as GameState;
+      studio: { 
+        name: "Test", 
+        prestige: 50,
+        internal: {
+          projects: [mockProject],
+          contracts: [],
+          financeHistory: [],
+        }
+      },
+      market: {
+        opportunities: [],
+        buyers: [],
+      },
+      industry: {
+        rivals: [],
+        headlines: [],
+        talentPool: [],
+        agencies: [],
+        festivalSubmissions: [],
+      }
+    } as any;
   });
 
   it('submits a project to a festival if cash is sufficient and status is valid', () => {
@@ -65,10 +75,10 @@ describe('Festivals System', () => {
     
     expect(newState).not.toBeNull();
     if (newState) {
-        expect(newState.cash).toBe(1_000_000 - festival.cost);
-        expect(newState.festivalSubmissions.length).toBe(1);
-        expect(newState.festivalSubmissions[0].projectId).toBe(mockProject.id);
-        expect(newState.festivalSubmissions[0].status).toBe('submitted');
+        expect((newState as any).cash).toBe(1_000_000 - festival.cost);
+        expect((newState as any).industry.festivalSubmissions.length).toBe(1);
+        expect((newState as any).industry.festivalSubmissions[0].projectId).toBe(mockProject.id);
+        expect((newState as any).industry.festivalSubmissions[0].status).toBe('submitted');
     }
   });
 
@@ -85,28 +95,37 @@ describe('Festivals System', () => {
     const festival = FESTIVALS.find(f => f.body === "Cannes Film Festival")!;
     
     const submission: FestivalSubmission = {
+      id: 'sub-1',
       projectId: mockProject.id,
       festivalBody: festival.body,
       status: 'submitted',
-      submissionWeek: 1
+      buzzGain: 0,
+      week: 1
     };
     
-    mockState.festivalSubmissions = [submission];
+    mockState.industry.festivalSubmissions = [submission];
 
     // First ensure it does nothing if it's the wrong week
     let resultState = resolveFestivals(mockState);
-    expect(resultState.projects[0].buzz).toBe(10); // Unchanged
+    expect((resultState as any).studio.internal.projects[0].buzz).toBe(10); // Unchanged
 
     // Now trigger it on week 21
     // Force a high random value so it gets selected
-    const correctWeekState = { ...mockState, week: 21, festivalSubmissions: [submission] } as unknown as GameState;
+    const correctWeekState = { 
+      ...mockState, 
+      week: 21, 
+      industry: { 
+        ...mockState.industry,
+        festivalSubmissions: [submission] 
+      } 
+    } as any;
     vi.spyOn(Math, 'random').mockReturnValue(0.99);
     
     resultState = resolveFestivals(correctWeekState);
-    expect(resultState.festivalSubmissions.length).toBe(1);
+    expect((resultState as any).industry.festivalSubmissions.length).toBe(1);
     
     // Cannes requires high prestige/indieCredibility. With our random mock, it should win or be selected.
-    expect(resultState.festivalSubmissions[0].status).toBe('selected');
-    expect(resultState.projects[0].buzz).toBeGreaterThan(10); // Buzz was awarded
+    expect((resultState as any).industry.festivalSubmissions[0].status).toBe('selected');
+    expect((resultState as any).studio.internal.projects[0].buzz).toBeGreaterThan(10); // Buzz was awarded
   });
 });

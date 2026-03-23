@@ -11,7 +11,7 @@ export const CrisisModal = () => {
 
   if (!gameState || !crisisProjectId) return null;
 
-  const project = gameState.projects.find(p => p.id === crisisProjectId);
+  const project = gameState.studio.internal.projects.find(p => p.id === crisisProjectId);
   if (!project || !project.activeCrisis || project.activeCrisis.resolved) {
     return null;
   }

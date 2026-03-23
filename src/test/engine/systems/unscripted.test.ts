@@ -18,7 +18,7 @@ describe('Unscripted Projects', () => {
     });
 
     const state = useGameStore.getState().gameState;
-    const project = state?.projects.find(p => p.title === 'Real World Test');
+    const project = state?.studio.internal.projects.find(p => p.title === 'Real World Test');
 
     expect(project).toBeDefined();
     expect(project?.format).toBe('unscripted');

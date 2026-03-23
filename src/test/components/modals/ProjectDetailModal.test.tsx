@@ -35,9 +35,15 @@ describe('ProjectDetailModal', () => {
     vi.mocked(useGameStore).mockImplementation((selector: any) => {
       const state = {
         gameState: {
-          projects: [],
-          talentPool: [],
-          contracts: [],
+          studio: {
+            internal: {
+              projects: [],
+              contracts: [],
+            }
+          },
+          industry: {
+            talentPool: [],
+          },
           cash: 100000000, // 100M
         },
         signContract: mockSignContract,
@@ -65,6 +71,9 @@ describe('ProjectDetailModal', () => {
     revenue: 0,
     weeklyRevenue: 0,
     format: 'film',
+    targetAudience: 'General',
+    flavor: 'Test Flavor',
+    releaseWeek: null,
     ...overrides
   });
 
@@ -84,9 +93,15 @@ describe('ProjectDetailModal', () => {
     vi.mocked(useGameStore).mockImplementation((selector: any) => {
       const state = {
         gameState: {
-          projects: [mockProject],
-          talentPool: [],
-          contracts: [],
+          studio: {
+            internal: {
+              projects: [mockProject],
+              contracts: [],
+            }
+          },
+          industry: {
+            talentPool: [],
+          },
           cash: 100000000,
         },
         signContract: mockSignContract,
@@ -111,9 +126,15 @@ describe('ProjectDetailModal', () => {
     vi.mocked(useGameStore).mockImplementation((selector: any) => {
       const state = {
         gameState: {
-          projects: [mockProject],
-          talentPool: [],
-          contracts: [],
+          studio: {
+            internal: {
+              projects: [mockProject],
+              contracts: [],
+            }
+          },
+          industry: {
+            talentPool: [],
+          },
           cash: 100000000,
         },
         greenlightProject: mockGreenlightProject,
@@ -142,9 +163,15 @@ describe('ProjectDetailModal', () => {
     vi.mocked(useGameStore).mockImplementation((selector: any) => {
       const state = {
         gameState: {
-          projects: [mockProject],
-          talentPool: [],
-          contracts: [],
+          studio: {
+            internal: {
+              projects: [mockProject],
+              contracts: [],
+            }
+          },
+          industry: {
+            talentPool: [],
+          },
           cash: 100000000,
         },
         launchMarketingCampaign: mockLaunchMarketingCampaign,
@@ -179,9 +206,15 @@ describe('ProjectDetailModal', () => {
     vi.mocked(useGameStore).mockImplementation((selector: any) => {
       const state = {
         gameState: {
-          projects: [mockProject],
-          talentPool: [],
-          contracts: [],
+          studio: {
+            internal: {
+              projects: [mockProject],
+              contracts: [],
+            }
+          },
+          industry: {
+            talentPool: [],
+          },
           cash: 100000000,
         },
         renewProject: mockRenewProject,
@@ -214,9 +247,15 @@ describe('ProjectDetailModal', () => {
     vi.mocked(useGameStore).mockImplementation((selector: any) => {
       const state = {
         gameState: {
-          projects: [mockProject],
-          talentPool: [],
-          contracts: [],
+          studio: {
+            internal: {
+              projects: [mockProject],
+              contracts: [],
+            }
+          },
+          industry: {
+            talentPool: [],
+          },
           cash: 100000000,
         },
         exploitFranchise: mockExploitFranchise,

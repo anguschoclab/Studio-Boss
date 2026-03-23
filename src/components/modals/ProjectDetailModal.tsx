@@ -38,10 +38,10 @@ export const ProjectDetailModal = () => {
   const launchMarketingCampaign = useGameStore(s => s.launchMarketingCampaign);
   const submitToFestival = useGameStore(s => s.submitToFestival);
   const launchAwardsCampaign = useGameStore(s => s.launchAwardsCampaign);
-  const projects = useMemo(() => gameState?.projects || [], [gameState?.projects]);
+  const projects = useMemo(() => gameState?.studio.internal.projects || [], [gameState?.studio.internal.projects]);
   const project = useMemo(() => projects.find(p => p.id === selectedProjectId), [projects, selectedProjectId]);
-  const talentPool = useMemo(() => gameState?.talentPool || [], [gameState?.talentPool]);
-  const contracts = useMemo(() => gameState?.contracts || [], [gameState?.contracts]);
+  const talentPool = useMemo(() => gameState?.industry.talentPool || [], [gameState?.industry.talentPool]);
+  const contracts = useMemo(() => gameState?.studio.internal.contracts || [], [gameState?.studio.internal.contracts]);
   const talentMap = useMemo(() => new Map(talentPool.map(t => [t.id, t])), [talentPool]);
 
   const tier = project ? BUDGET_TIERS[project.budgetTier] : null;
@@ -249,7 +249,7 @@ export const ProjectDetailModal = () => {
                       <div className="flex flex-col gap-1 w-full max-w-[200px] items-end">
                         {attachedTalent.map(t => (
                           <div key={t.id} className="flex items-center gap-1.5">
-                            {gameState?.firstLookDeals?.some(d => d.talentId === t.id) && (
+                            {gameState?.studio.internal.firstLookDeals?.some(d => d.talentId === t.id) && (
                               <Badge variant="outline" className="text-[8px] px-1 border-primary/40 text-primary bg-primary/10">Pact</Badge>
                             )}
                             <span className="text-foreground font-semibold text-right">{t.name}</span>

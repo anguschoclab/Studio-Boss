@@ -74,22 +74,32 @@ describe("awards system", () => {
 
   describe("runAwardsCeremony", () => {
     const mockState: GameState = {
-      studio: { name: "Test Studio", archetype: "major", prestige: 50 },
-      projects: [],
-      rivals: [],
-      headlines: [],
       week: 100,
       cash: 1000000,
-      financeHistory: [],
-      talentPool: [],
-      contracts: [],
-      awards: [],
-    buyers: [],
-    families: [],
-    opportunities: [],
-    agencies: [],
-    agents: [],
-    };
+      studio: { 
+        name: "Test Studio", 
+        archetype: "major", 
+        prestige: 50,
+        internal: {
+          projects: [],
+          contracts: [],
+          financeHistory: [],
+        }
+      },
+      market: {
+        opportunities: [],
+        buyers: [],
+      },
+      industry: {
+        rivals: [],
+        headlines: [],
+        families: [],
+        agencies: [],
+        agents: [],
+        talentPool: [],
+        awards: [],
+      }
+    } as any;
 
     const eligibleProject: Project = {
       id: "proj-1",
@@ -126,8 +136,9 @@ describe("awards system", () => {
       }
     };
 
-    const expectNoAwards = (projects: typeof eligibleProject[]) => {
-      const state = { ...mockState, projects };
+    const expectNoAwards = (projects: Project[]) => {
+      const state = { ...mockState };
+      state.studio.internal.projects = projects;
       const result = runAwardsCeremony(state, 62, 2024);
       expect(result.newAwards).toHaveLength(0);
       expect(result.prestigeChange).toBe(0);
@@ -142,8 +153,9 @@ describe("awards system", () => {
       expectNoAwards([oldProject]);
     });
 
-    const checkBestPictureAward = (project: typeof eligibleProject, expectedStatus: 'won' | 'nominated') => {
-      const state = { ...mockState, projects: [project] };
+    const checkBestPictureAward = (project: Project, expectedStatus: 'won' | 'nominated') => {
+      const state = { ...mockState };
+      state.studio.internal.projects = [project];
       const result = runAwardsCeremony(state, 62, 2024);
       const bestPictureAward = result.newAwards.find(a => a.category === "Best Picture" && a.body === "Academy Awards");
       expect(bestPictureAward).toBeDefined();
@@ -178,7 +190,8 @@ describe("awards system", () => {
     });
 
     it("should correctly accumulate prestige change", () => {
-      const state = { ...mockState, projects: [eligibleProject] };
+      const state = { ...mockState };
+      state.studio.internal.projects = [eligibleProject];
       const result = runAwardsCeremony(state, 62, 2024);
 
       // It wins multiple awards in this mock setup
@@ -192,7 +205,8 @@ describe("awards system", () => {
 
     it("should filter awards by project format", () => {
       const tvProject = { ...eligibleProject, format: "tv" as const, id: "tv-1" };
-      const state = { ...mockState, projects: [tvProject] };
+      const state = { ...mockState };
+      state.studio.internal.projects = [tvProject];
       const result = runAwardsCeremony(state, 37, 2024);
 
       // Should get Emmys (Best Series), but not Academy Awards (Best Picture/Director)
@@ -224,7 +238,8 @@ describe("awards system", () => {
         }
       };
 
-      const state = { ...mockState, projects: [losingProject, winningProject] };
+      const state = { ...mockState };
+      state.studio.internal.projects = [losingProject, winningProject];
       const result = runAwardsCeremony(state, 62, 2024);
 
       const bestPictureAwards = result.newAwards.filter(a => a.category === "Best Picture" && a.body === "Academy Awards");
@@ -246,7 +261,8 @@ describe("awards system", () => {
         status: "production" as const,
       };
 
-      const state = { ...mockState, projects: [inDevProject, inProdProject] };
+      const state = { ...mockState };
+      state.studio.internal.projects = [inDevProject, inProdProject];
       const result = runAwardsCeremony(state, 62, 2024);
 
       expect(result.newAwards).toHaveLength(0);
@@ -260,7 +276,8 @@ describe("awards system", () => {
         status: "archived" as const,
       };
 
-      const state = { ...mockState, projects: [archivedProject] };
+      const state = { ...mockState };
+      state.studio.internal.projects = [archivedProject];
       const result = runAwardsCeremony(state, 62, 2024);
 
       expect(result.newAwards.length).toBeGreaterThan(0);
@@ -286,7 +303,8 @@ describe("awards system", () => {
         }
       };
 
-      const state = { ...mockState, projects: [lowCampaignProject, highCampaignProject] };
+      const state = { ...mockState };
+      state.studio.internal.projects = [lowCampaignProject, highCampaignProject];
       const result = runAwardsCeremony(state, 62, 2024);
 
       const bestPictureAwards = result.newAwards.filter(a => a.category === "Best Picture" && a.body === "Academy Awards");
@@ -301,7 +319,8 @@ describe("awards system", () => {
         awardsProfile: undefined,
       };
 
-      const state = { ...mockState, projects: [noProfileProject] };
+      const state = { ...mockState };
+      state.studio.internal.projects = [noProfileProject];
       const result = runAwardsCeremony(state, 62, 2024);
 
       expect(result.newAwards).toHaveLength(0);

@@ -64,10 +64,14 @@ describe('FinancePanel Component', () => {
 
     const mockGameState = {
       cash: 2500000,
-      financeHistory: [
-        { id: 'h1', week: 1, type: 'income', amount: 500000, category: 'box_office', cash: 2500000 }
-      ],
-      projects: mockProjects,
+      studio: {
+        internal: {
+          projects: mockProjects,
+          financeHistory: [
+            { id: 'h1', week: 1, type: 'income', amount: 500000, category: 'box_office', cash: 2500000 }
+          ],
+        }
+      }
     };
 
     vi.mocked(useGameStore).mockImplementation((selector) => selector({ gameState: mockGameState } as any));
@@ -99,8 +103,12 @@ describe('FinancePanel Component', () => {
 
     const mockGameState = {
       cash: -500000,
-      financeHistory: [],
-      projects: mockProjects,
+      studio: {
+        internal: {
+          projects: mockProjects,
+          financeHistory: [],
+        }
+      }
     };
 
     vi.mocked(useGameStore).mockImplementation((selector) => selector({ gameState: mockGameState } as any));

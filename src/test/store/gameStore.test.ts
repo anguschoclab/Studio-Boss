@@ -49,9 +49,9 @@ describe("gameStore", () => {
     useGameStore.getState().newGame("My Studio", "major");
     // Ensure the necessary arrays are present
     const state = useGameStore.getState().gameState!;
-    state.contracts = [];
-    state.talentPool = [];
-    state.awards = [];
+    state.studio.internal.contracts = [];
+    state.industry.talentPool = [];
+    state.industry.awards = [];
     useGameStore.setState({ gameState: state });
 
     const summary = useGameStore.getState().doAdvanceWeek();
@@ -76,8 +76,8 @@ describe("gameStore", () => {
     });
 
     const state = useGameStore.getState().gameState;
-    expect(state?.projects).toHaveLength(1);
-    expect(state?.projects[0].title).toBe("Test Project");
+    expect(state?.studio.internal.projects).toHaveLength(1);
+    expect(state?.studio.internal.projects[0].title).toBe("Test Project");
   });
 
   it("handles creating project when no game state exists", () => {
@@ -116,8 +116,8 @@ describe("gameStore", () => {
     useGameStore.getState().newGame("My Studio", "major");
     const state = useGameStore.getState().gameState!;
     state.cash = initialCash;
-    state.contracts = [];
-    state.talentPool = [
+    state.studio.internal.contracts = [];
+    state.industry.talentPool = [
       { id: "t1", name: "Star", roles: ["actor"], prestige: 85, draw: 80, fee: 500, accessLevel: "outsider", temperament: "normal" } as unknown as import('../../engine/types').TalentProfile
     ];
     useGameStore.setState({ gameState: state });
@@ -126,7 +126,7 @@ describe("gameStore", () => {
   it("signs a contract if sufficient funds", () => {
     setupSignContractState(1000);
     const state = useGameStore.getState().gameState!;
-    state.projects = [{ 
+    state.studio.internal.projects = [{ 
       id: "p1", title: "Test", format: "film", genre: "Action", budgetTier: "low", budget: 100_000, weeklyCost: 0,
       targetAudience: "All", flavor: "", status: "development", weeksInPhase: 0, productionWeeks: 10, developmentWeeks: 10,
       revenue: 0, weeklyRevenue: 0, releaseWeek: null 
@@ -137,15 +137,15 @@ describe("gameStore", () => {
 
     const newState = useGameStore.getState().gameState!;
     expect(newState.cash).toBe(500);
-    expect(newState.contracts).toHaveLength(1);
-    expect(newState.contracts[0].talentId).toBe("t1");
-    expect(newState.contracts[0].backendPercent).toBe(5);
+    expect(newState.studio.internal.contracts).toHaveLength(1);
+    expect(newState.studio.internal.contracts[0].talentId).toBe("t1");
+    expect(newState.studio.internal.contracts[0].backendPercent).toBe(5);
   });
 
   it("fails to sign contract if insufficient funds", () => {
     setupSignContractState(100); // Not enough for fee of 500
     const state = useGameStore.getState().gameState!;
-    state.projects = [{ 
+    state.studio.internal.projects = [{ 
       id: "p1", title: "Test", format: "film", genre: "Action", budgetTier: "low", budget: 100_000, weeklyCost: 0,
       targetAudience: "All", flavor: "", status: "development", weeksInPhase: 0, productionWeeks: 10, developmentWeeks: 10,
       revenue: 0, weeklyRevenue: 0, releaseWeek: null 
@@ -156,7 +156,7 @@ describe("gameStore", () => {
 
     const newState = useGameStore.getState().gameState!;
     expect(newState.cash).toBe(100);
-    expect(newState.contracts).toHaveLength(0);
+    expect(newState.studio.internal.contracts).toHaveLength(0);
   });
 
   it('should acquire an opportunity and convert it to a project', () => {
@@ -165,11 +165,11 @@ describe("gameStore", () => {
 
     // Check initial state has opportunities
     const initialState = useGameStore.getState().gameState!;
-    expect(initialState.opportunities.length).toBeGreaterThan(0);
+    expect(initialState.market.opportunities.length).toBeGreaterThan(0);
 
-    initialState.opportunities[0].id = 'unique-opp-id';
-    const opp = initialState.opportunities[0];
-    const initialOppCount = initialState.opportunities.length;
+    initialState.market.opportunities[0].id = 'unique-opp-id';
+    const opp = initialState.market.opportunities[0];
+    const initialOppCount = initialState.market.opportunities.length;
 
     // Acquire the opportunity
 
@@ -179,11 +179,11 @@ describe("gameStore", () => {
 
 
     // Opportunity should be removed
-    expect(afterState.opportunities.length).toBe(initialOppCount - 1);
+    expect(afterState.market.opportunities.length).toBe(initialOppCount - 1);
 
     // A project should be created
-    expect(afterState.projects.length).toBe(1);
-    const newProject = afterState.projects[0];
+    expect(afterState.studio.internal.projects.length).toBe(1);
+    const newProject = afterState.studio.internal.projects[0];
 
     // Properties should map correctly
     expect(newProject.title).toBe(opp.title);
