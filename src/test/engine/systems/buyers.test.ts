@@ -263,5 +263,29 @@ describe("buyers system", () => {
       expect(negotiateContract(lowBuzzProject, buyer, 'standard')).toBe(true);
       expect(negotiateContract(lowBuzzProject, buyer, 'deficit')).toBe(true);
     });
+
+    it("tests explicit fit score boundaries for contract acceptance", () => {
+      vi.spyOn(Math, 'random').mockReturnValue(0.5); // randRange = 0
+      // Base score without mandates is 50, but let's give the buyer a mandate to bypass the early return
+      const buyer: Buyer = { ...mockBuyer, currentMandate: { type: "broad_appeal", activeUntilWeek: 100 } };
+
+      // 50 (base) + 20 (broad_appeal mid tier) = 70.
+
+      // Exact threshold test for standard (40). Need score to drop by 30. Buzz -150 gives factor -30.
+      const exactStandardProject = { ...mockProject, buzz: -150 };
+      expect(negotiateContract(exactStandardProject, buyer, 'standard')).toBe(true); // 40 >= 40
+
+      // Just below threshold for standard (39). Need score to drop by 31. Buzz -155 gives factor -31.
+      const belowStandardProject = { ...mockProject, buzz: -155 };
+      expect(negotiateContract(belowStandardProject, buyer, 'standard')).toBe(false); // 39 < 40
+
+      // Exact threshold test for upfront (65). Need score to drop by 5. Buzz -25 gives factor -5.
+      const exactUpfrontProject = { ...mockProject, buzz: -25 };
+      expect(negotiateContract(exactUpfrontProject, buyer, 'upfront')).toBe(true); // 65 >= 65
+
+      // Just below threshold for upfront (64). Need score to drop by 6. Buzz -30 gives factor -6.
+      const belowUpfrontProject = { ...mockProject, buzz: -30 };
+      expect(negotiateContract(belowUpfrontProject, buyer, 'upfront')).toBe(false); // 64 < 65
+    });
   });
 });
