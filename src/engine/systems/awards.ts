@@ -246,20 +246,22 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
   }
 
   // ⚡ Bolt: Find eligible projects (released within the last 52 weeks relative to the ceremony)
-  // Replaced multiple filter passes with a single `reduce` pass to separate film vs tv candidates O(n).
-  const { eligibleFilm, eligibleTv } = state.projects.reduce(
-    (acc, p) => {
-      if ((p.status === 'released' || p.status === 'post_release' || p.status === 'archived') &&
-          p.releaseWeek !== null &&
-          p.releaseWeek > currentWeek - 52 &&
-          p.awardsProfile !== undefined) {
-        if (p.format === 'film') acc.eligibleFilm.push(p);
-        else if (p.format === 'tv') acc.eligibleTv.push(p);
+  // Replaced reduce pass with a standard for loop to avoid intermediate object allocation overhead O(n).
+  const eligibleFilm: Project[] = [];
+  const eligibleTv: Project[] = [];
+  for (let i = 0; i < state.projects.length; i++) {
+    const p = state.projects[i];
+    if ((p.status === 'released' || p.status === 'post_release' || p.status === 'archived') &&
+        p.releaseWeek !== null &&
+        p.releaseWeek > currentWeek - 52 &&
+        p.awardsProfile !== undefined) {
+      if (p.format === 'film') {
+        eligibleFilm.push(p);
+      } else if (p.format === 'tv') {
+        eligibleTv.push(p);
       }
-      return acc;
-    },
-    { eligibleFilm: [] as Project[], eligibleTv: [] as Project[] }
-  );
+    }
+  }
 
   if (eligibleFilm.length === 0 && eligibleTv.length === 0) {
     return { newAwards, prestigeChange, projectUpdates };
