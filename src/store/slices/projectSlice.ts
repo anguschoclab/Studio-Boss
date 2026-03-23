@@ -1,118 +1,36 @@
 import { StateCreator } from 'zustand';
-import { GameState, Project, AwardBody, ProjectContractType } from '@/engine/types';
-import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
-import { TV_FORMATS } from '@/engine/data/tvFormats';
-import { UNSCRIPTED_FORMATS } from '@/engine/data/unscriptedFormats';
-import { getFilmStats, getTvStats, getUnscriptedStats } from '@/engine/systems/stats';
-import { randRange } from '@/engine/utils';
-import { ProductionEngine } from '@/engine/systems/productionEngine';
+import { GameStore } from '../gameStore';
+import { CreateProjectParams } from '../gameStore';
+import { handleReleasePhaseEntry } from '@/engine/systems/projects';
+import { buildProjectAndContracts } from '../gameStore';
+import { updateCultureFromProject } from '@/engine/systems/culture';
 import { negotiateContract } from '@/engine/systems/buyers';
-import { resolveCrisis } from '@/engine/systems/crises';
 import { exploitIP } from '@/engine/systems/franchises';
-
-export interface CreateProjectParams {
-  title: string;
-  format: 'film' | 'tv' | 'unscripted';
-  genre: string;
-  budgetTier: any;
-  targetAudience: string;
-  flavor: string;
-  attachedTalentIds?: string[];
-  tvFormat?: any;
-  unscriptedFormat?: any;
-  episodes?: number;
-  releaseModel?: any;
-  parentProjectId?: string;
-  isSpinoff?: boolean;
-  initialBuzzBonus?: number;
-}
+import { resolveCrisis } from '@/engine/systems/crises';
+import { submitToFestival } from '@/engine/systems/festivals';
+import { launchAwardsCampaign } from '@/engine/systems/awards';
+import { Project, GameState, AwardBody, ProjectContractType } from '@/engine/types';
 
 export interface ProjectSlice {
   createProject: (params: CreateProjectParams) => void;
-  acquireOpportunity: (opportunityId: string) => void;
   renewProject: (id: string) => void;
   greenlightProject: (projectId: string) => void;
-  pitchProject: (projectId: string, buyerId: string, contractType: ProjectContractType) => boolean;
-  exploitFranchise: (projectId: string) => void;
+  pitchProject: (projectId: string, buyerId: string, contractType: ProjectContractType) => Promise<boolean>;
+  launchMarketingCampaign: (projectId: string, budget: number, domesticPct: number, angle: string) => Promise<void>;
+  _updateProjectToProduction: (state: GameState, projectIndex: number, project: Project, headlineText: string, extraProjectUpdates?: Partial<Project>) => void;
   resolveProjectCrisis: (projectId: string, optionIndex: number) => void;
+  exploitFranchise: (projectId: string) => void;
+  submitToFestival: (projectId: string, festivalBody: AwardBody) => void;
+  launchAwardsCampaign: (projectId: string, budget: number) => void;
 }
 
-function getProjectStats(params: CreateProjectParams, tier: any) {
-  if (params.format === 'tv' && params.tvFormat && params.episodes) {
-    return getTvStats(tier, TV_FORMATS[params.tvFormat], params.episodes);
-  } else if (params.format === 'unscripted' && params.unscriptedFormat && params.episodes) {
-    return getUnscriptedStats(tier, UNSCRIPTED_FORMATS[params.unscriptedFormat], params.episodes);
-  }
-  return getFilmStats(tier);
-}
-
-function prepareTalentAndContracts(
-  state: GameState,
-  attachedTalentIds: string[] | undefined,
-  projectId: string
-) {
-  const ids = attachedTalentIds || [];
-  const talentMap = new Map(state.talentPool.map(t => [t.id, t]));
-
-  const attachedTalent: any[] = [];
-  let talentFees = 0;
-  const newContracts: any[] = [];
-
-  for (const id of ids) {
-    const t = talentMap.get(id);
-    if (t) {
-      attachedTalent.push(t);
-      talentFees += t.fee || 0;
-      newContracts.push({
-        id: `contract-${crypto.randomUUID()}`,
-        talentId: t.id,
-        projectId,
-        fee: t.fee,
-        backendPercent: t.prestige > 80 ? 10 : 0,
-      });
-    }
-  }
-
-  return { attachedTalent, talentFees, newContracts };
-}
-
-function buildProjectAndContracts(state: GameState, params: CreateProjectParams) {
-  const tier = BUDGET_TIERS[params.budgetTier];
-  const stats = getProjectStats(params, tier);
-  const { budget, weeklyCost, developmentWeeks, productionWeeks, renewable } = stats;
-
-  const projectId = crypto.randomUUID();
-  const { talentFees, newContracts } = prepareTalentAndContracts(state, params.attachedTalentIds, projectId);
-
-  const totalBudget = budget + talentFees;
-  const initialBuzz = Math.floor(randRange(30, 70)) + (params.initialBuzzBonus || 0);
-
-  const project: Project = {
-    id: projectId,
-    ...params,
-    budget: totalBudget,
-    weeklyCost,
-    status: 'development',
-    buzz: Math.min(100, initialBuzz),
-    weeksInPhase: 0,
-    developmentWeeks,
-    productionWeeks,
-    revenue: 0,
-    weeklyRevenue: 0,
-    releaseWeek: null,
-    season: (params.format === 'tv' || params.format === 'unscripted') ? 1 : undefined,
-    episodesReleased: (params.format === 'tv' || params.format === 'unscripted') ? 0 : undefined,
-    renewable,
-  } as Project;
-
-  return { project, newContracts, talentFees };
-}
-
-export const createProjectSlice: StateCreator<any, [], [], ProjectSlice> = (set, get) => ({
+export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> = (set, get) => ({
   createProject: (params) => {
-    set((s: any) => {
+    set((s) => {
       if (!s.gameState) return s;
+
       const { project, newContracts, talentFees } = buildProjectAndContracts(s.gameState, params);
+
       return {
         gameState: {
           ...s.gameState,
@@ -124,53 +42,12 @@ export const createProjectSlice: StateCreator<any, [], [], ProjectSlice> = (set,
     });
   },
 
-  acquireOpportunity: (opportunityId) => {
-    set((s: any) => {
-      if (!s.gameState) return s;
-      let opp: any;
-      const newOpportunities = s.gameState.opportunities.filter((o: any) => {
-        if (o.id === opportunityId) {
-          opp = o;
-          return false;
-        }
-        return true;
-      });
-
-      if (!opp) return s;
-
-      const params: CreateProjectParams = {
-        title: opp.title,
-        format: opp.format,
-        genre: opp.genre,
-        budgetTier: opp.budgetTier,
-        targetAudience: opp.targetAudience,
-        flavor: opp.flavor,
-        attachedTalentIds: opp.attachedTalentIds,
-        tvFormat: opp.tvFormat,
-        unscriptedFormat: opp.unscriptedFormat,
-        episodes: opp.episodes,
-        releaseModel: opp.releaseModel,
-      };
-
-      const { project, newContracts, talentFees } = buildProjectAndContracts(s.gameState, params);
-
-      return {
-        gameState: {
-          ...s.gameState,
-          opportunities: newOpportunities,
-          projects: [...s.gameState.projects, project],
-          contracts: [...s.gameState.contracts, ...newContracts],
-          cash: s.gameState.cash - opp.costToAcquire - talentFees
-        }
-      };
-    });
-  },
-
   renewProject: (id) => {
-    set((s: any) => {
+    set((s) => {
       const state = s.gameState;
       if (!state) return s;
-      const projectIndex = state.projects.findIndex((p: any) => p.id === id);
+
+      const projectIndex = state.projects.findIndex(p => p.id === id);
       if (projectIndex === -1) return s;
 
       const p = state.projects[projectIndex];
@@ -186,54 +63,148 @@ export const createProjectSlice: StateCreator<any, [], [], ProjectSlice> = (set,
           releaseWeek: null,
           episodesReleased: 0,
         };
-        return { gameState: { ...state, projects: updatedProjects } };
+
+        return {
+          gameState: {
+            ...state,
+            projects: updatedProjects,
+          },
+        };
       }
       return s;
     });
   },
 
-  greenlightProject: (projectId) => {
-    const state = get().gameState;
-    if (!state) return;
-    const project = state.projects.find((p: any) => p.id === projectId);
-    if (!project || project.status !== 'needs_greenlight') return;
+  _updateProjectToProduction: (state, projectIndex, project, headlineText, extraProjectUpdates = {}) => {
+    const updatedProjects = [...state.projects];
+    updatedProjects[projectIndex] = {
+      ...project,
+      status: 'production',
+      weeksInPhase: 0,
+      ...extraProjectUpdates
+    };
 
-    const { newState } = ProductionEngine.transitionToProduction(
-      state,
-      projectId,
-      `"${project.title}" receives full greenlight and enters production.`
-    );
-    set({ gameState: newState });
+    const newCulture = state.studio.culture ? updateCultureFromProject(state.studio.culture, project) : undefined;
+
+    set({
+      gameState: {
+        ...state,
+        studio: {
+          ...state.studio,
+          culture: newCulture
+        },
+        projects: updatedProjects,
+        headlines: [{ id: `ph-${crypto.randomUUID()}`, text: headlineText, week: state.week, category: 'market' as const }, ...state.headlines].slice(0, 50)
+      }
+    });
   },
 
-  pitchProject: (projectId, buyerId, contractType) => {
+  launchMarketingCampaign: async (projectId, budget, domesticPct, angle) => {
+    const projectsEngine = await import('@/engine/systems/projects');
+    set((s) => {
+      if (!s.gameState) return s;
+
+      const state = s.gameState;
+      if (budget > state.cash) return s;
+
+      const pIndex = state.projects.findIndex(p => p.id === projectId);
+      if (pIndex === -1) return s;
+
+      const originalProject = state.projects[pIndex];
+      if (originalProject.status !== 'marketing') return s;
+
+      const newCash = state.cash - budget;
+
+      const { project: p } = projectsEngine.executeMarketing(originalProject, budget, domesticPct, angle);
+
+      const contracts = state.contracts.filter(c => c.projectId === p.id);
+      const talentMap = new Map(state.talentPool.map(t => [t.id, t]));
+      const result = handleReleasePhaseEntry(p, state.week, state.studio.prestige, contracts, talentMap);
+
+      const newHeadlines = [...state.headlines];
+      if (result.update) {
+        newHeadlines.unshift({
+          id: crypto.randomUUID(),
+          week: state.week,
+          category: 'general',
+          text: result.update
+        });
+      }
+
+      const updatedProjects = [...state.projects];
+      updatedProjects[pIndex] = p;
+
+      return {
+        gameState: {
+          ...state,
+          cash: newCash,
+          projects: updatedProjects,
+          headlines: newHeadlines,
+        }
+      };
+    });
+  },
+
+  greenlightProject: async (projectId) => {
+    const projectsEngine = await import('@/engine/systems/projects');
+    const state = get().gameState;
+    if (!state) return;
+
+    const projectIndex = state.projects.findIndex(p => p.id === projectId);
+    if (projectIndex === -1) return;
+
+    const project = state.projects[projectIndex];
+    if (project.status !== 'needs_greenlight') return;
+
+    const { project: updatedProject, update } = projectsEngine.executeGreenlight(project);
+
+    get()._updateProjectToProduction(
+      state,
+      projectIndex,
+      updatedProject,
+      update
+    );
+  },
+
+  pitchProject: async (projectId, buyerId, contractType) => {
     const state = get().gameState;
     if (!state) return false;
 
-    const project = state.projects.find((p: any) => p.id === projectId);
-    const buyer = state.buyers.find((b: any) => b.id === buyerId);
-    if (!project || !buyer) return false;
+    const projectIndex = state.projects.findIndex(p => p.id === projectId);
+    const buyer = state.buyers.find(b => b.id === buyerId);
 
+    if (projectIndex === -1 || !buyer) return false;
+
+    const project = state.projects[projectIndex];
     const success = negotiateContract(project, buyer, contractType);
+
     if (success) {
-      const { newState } = ProductionEngine.transitionToProduction(
+      const projectsEngine = await import('@/engine/systems/projects');
+      const { project: updatedProject, update } = projectsEngine.executePitching(project, buyer.name, contractType);
+
+      get()._updateProjectToProduction(
         state,
-        projectId,
-        `${buyer.name} officially picks up "${project.title}" on a ${contractType} deal.`,
+        projectIndex,
+        updatedProject,
+        update,
         { buyerId, contractType }
       );
-      set({ gameState: newState });
     }
+
     return success;
   },
 
   exploitFranchise: (projectId) => {
     const state = get().gameState;
     if (!state) return;
-    const project = state.projects.find((p: any) => p.id === projectId);
+
+    const project = state.projects.find(p => p.id === projectId);
     if (!project) return;
+
     const spinoffParams = exploitIP(project, state);
-    if (spinoffParams) get().createProject(spinoffParams as any);
+    if (!spinoffParams) return;
+
+    get().createProject(spinoffParams as any);
   },
 
   resolveProjectCrisis: (projectId, optionIndex) => {
@@ -242,4 +213,20 @@ export const createProjectSlice: StateCreator<any, [], [], ProjectSlice> = (set,
     const newState = resolveCrisis(state, projectId, optionIndex);
     set({ gameState: newState });
   },
+
+  submitToFestival: (projectId, festivalBody) => {
+    set((s) => {
+      if (!s.gameState) return s;
+      const newState = submitToFestival(s.gameState, projectId, festivalBody);
+      return newState ? { gameState: newState } : s;
+    });
+  },
+
+  launchAwardsCampaign: (projectId, budget) => {
+    set((s) => {
+      if (!s.gameState) return s;
+      const newState = launchAwardsCampaign(s.gameState, projectId, budget);
+      return newState ? { gameState: newState } : s;
+    });
+  }
 });

@@ -51,7 +51,7 @@ export function getActiveMarketEvent(state: GameState): MarketEvent | undefined 
 
 export function advanceMarketEvents(state: GameState): GameState {
   let activeEvents = state.activeMarketEvents || [];
-  let newHeadlines = [...state.headlines];
+  const newHeadlines = [...state.headlines];
   
   // Tick active events down
   activeEvents = activeEvents.map(e => ({

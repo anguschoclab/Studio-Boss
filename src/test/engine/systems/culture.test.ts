@@ -62,7 +62,7 @@ describe('Culture System', () => {
   });
 
   it('clamps culture values between 0 and 100', () => {
-    let culture = initializeCulture('indie');
+    const culture = initializeCulture('indie');
     culture.prestigeVsCommercial = 98; // Very close to max prestige
 
     const indieDrama: Project = { ...mockProject, budgetTier: 'low', budget: 5_000_000, genre: 'Drama' };

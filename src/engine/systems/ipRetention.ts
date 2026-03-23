@@ -34,7 +34,7 @@ export function checkRightsExpiry(project: Project, currentWeek: number): string
 
 export function advanceIPRights(projects: Project[], currentWeek: number) {
    // Returns updated rights states and any lost projects
-   let messages: string[] = [];
+   const messages: string[] = [];
    
    const updatedProjects = projects.map(p => {
      if (p.ipRights && p.ipRights.reversionWeek !== undefined) {
