@@ -22,9 +22,9 @@ export const FinancePanel = () => {
   );
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-500">
-      <div className="flex items-center justify-between border-b border-border/40 pb-4">
-        <h2 className="text-3xl font-display font-black tracking-tight text-foreground/90 drop-shadow-sm">
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="flex items-center justify-between border-b border-border/40 pb-4 bg-gradient-to-r from-background to-transparent">
+        <h2 className="text-3xl font-display font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70 drop-shadow-sm">
           Financials
         </h2>
       </div>
