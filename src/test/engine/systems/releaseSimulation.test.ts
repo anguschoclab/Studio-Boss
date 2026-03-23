@@ -205,6 +205,45 @@ describe("releaseSimulation system", () => {
       expect(ranks.get("p1")).toBe(1); // Standard JS sort preserves order or sorts deterministically
       expect(ranks.get("p2")).toBe(2);
     });
+
+    it("does not mutate the original input array", () => {
+      const entries: BoxOfficeEntry[] = [
+        { projectId: "p1", studioName: "A", weeklyRevenue: 500 },
+        { projectId: "p2", studioName: "B", weeklyRevenue: 1000 },
+      ];
+      const entriesCopy = [...entries];
+
+      calculateBoxOfficeRanks(entries);
+
+      expect(entries).toEqual(entriesCopy);
+      expect(entries[0].projectId).toBe("p1"); // Should still be p1 even though it has lower revenue
+    });
+
+    it("handles negative and zero revenues correctly", () => {
+      const entries: BoxOfficeEntry[] = [
+        { projectId: "p1", studioName: "A", weeklyRevenue: -500 },
+        { projectId: "p2", studioName: "B", weeklyRevenue: 0 },
+        { projectId: "p3", studioName: "C", weeklyRevenue: 1000 },
+      ];
+
+      const ranks = calculateBoxOfficeRanks(entries);
+      expect(ranks.get("p3")).toBe(1);
+      expect(ranks.get("p2")).toBe(2);
+      expect(ranks.get("p1")).toBe(3);
+    });
+
+    it("handles fractional revenues correctly", () => {
+      const entries: BoxOfficeEntry[] = [
+        { projectId: "p1", studioName: "A", weeklyRevenue: 100.25 },
+        { projectId: "p2", studioName: "B", weeklyRevenue: 100.75 },
+        { projectId: "p3", studioName: "C", weeklyRevenue: 100.50 },
+      ];
+
+      const ranks = calculateBoxOfficeRanks(entries);
+      expect(ranks.get("p2")).toBe(1);
+      expect(ranks.get("p3")).toBe(2);
+      expect(ranks.get("p1")).toBe(3);
+    });
   });
 
   describe("Extreme Edge Cases (Guild Auditor)", () => {
