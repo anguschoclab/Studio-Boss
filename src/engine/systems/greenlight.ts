@@ -35,7 +35,14 @@ export function evaluateGreenlight(
     p.id !== project.id // exclude self if somehow checking already released project
   );
 
-  const saturationPenalty = recentSimilarProjects.length * 5;
+  let saturationPenalty = recentSimilarProjects.length * 5;
+
+  // Inject trend-modifier: heavy penalty if genre is oversaturated (e.g., >= 5 similar releases)
+  // This dynamic market trend math punishes chasing saturated markets, reducing score significantly
+  if (recentSimilarProjects.length >= 5) {
+    saturationPenalty += 20;
+  }
+
   if (saturationPenalty > 0) {
     score -= saturationPenalty;
     negatives.push(`Market saturation: -${saturationPenalty} points due to ${recentSimilarProjects.length} recent ${project.genre} release(s).`);
