@@ -95,6 +95,7 @@ export type AwardBody =
   | 'Cannes Film Festival'
   | 'Sundance Film Festival'
   | 'Venice Film Festival'
+  | 'Berlin International Film Festival'
   | 'Toronto International Film Festival'
   | 'SXSW Film Festival'
   | 'Tribeca Film Festival';
@@ -115,10 +116,13 @@ export type AwardCategory =
   | 'Palme d\'Or'
   | 'Grand Jury Prize'
   | 'Golden Lion'
+  | 'Golden Bear'
   | 'Audience Award'
   | 'Best Narrative Feature';
 
 
+
+export type AwardStatus = 'won' | 'nominated';
 
 export interface Award {
   id: string;

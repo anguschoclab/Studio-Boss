@@ -70,25 +70,41 @@ export function updateTalentStats(project: Project, contracts: Contract[], talen
           }
 
           if (award.status === 'won') {
-            if (award.body === 'Academy Awards' || award.body === 'Cannes Film Festival' || award.body === 'Venice Film Festival') {
+            if (award.body === 'Academy Awards' || award.body === 'Cannes Film Festival' || award.body === 'Venice Film Festival' || award.body === 'Berlin International Film Festival') {
               talentAwardsPrestigeBonus += 15 * multiplier;
               talentAwardsDrawBonus += 10 * multiplier;
               // A massive permanent ego/salary boost for top-tier specific category wins
-              talentAwardsFeeMultiplier += 1.0 * multiplier;
+              talentAwardsFeeMultiplier += 1.5 * multiplier;
             } else if (award.body === 'Sundance Film Festival' || award.body === 'Independent Spirit Awards' || award.body === 'Toronto International Film Festival' || award.body === 'SXSW Film Festival' || award.body === 'Tribeca Film Festival') {
               talentAwardsPrestigeBonus += 10 * multiplier;
               talentAwardsDrawBonus += 5 * multiplier;
               // A significant permanent ego/salary boost for indie/festival tier specific category wins
-              talentAwardsFeeMultiplier += 0.5 * multiplier;
+              talentAwardsFeeMultiplier += 0.75 * multiplier;
             } else {
               talentAwardsPrestigeBonus += 5 * multiplier;
               talentAwardsDrawBonus += 2 * multiplier;
-              talentAwardsFeeMultiplier += 0.1 * multiplier;
+              talentAwardsFeeMultiplier += 0.2 * multiplier;
             }
+
+            // Add a permanent ego boost via perks
+            if (!talent.perks) talent.perks = [];
+            const perkName = `Award Winner (${award.body})`;
+            if (!talent.perks.includes(perkName)) {
+               talent.perks.push(perkName);
+               talent.temperament = 'diva'; // Massive ego inflation
+            }
+
           } else if (award.status === 'nominated') {
             talentAwardsPrestigeBonus += 2 * multiplier;
             talentAwardsDrawBonus += 1 * multiplier;
             talentAwardsFeeMultiplier += 0.05 * multiplier;
+
+            // Add a permanent ego boost via perks
+            if (!talent.perks) talent.perks = [];
+            const perkName = `Award Nominee (${award.body})`;
+            if (!talent.perks.includes(perkName)) {
+               talent.perks.push(perkName);
+            }
           }
         }
       }

@@ -37,7 +37,7 @@ export const AWARDS_CALENDAR: Record<number, AwardBody[]> = {
   4: ['Critics Choice Awards'],
   5: ['SAG Awards'],
   6: ['Directors Guild Awards'],
-  7: ['Producers Guild Awards'],
+  7: ['Producers Guild Awards', 'Berlin International Film Festival'],
   8: ['Writers Guild Awards', 'BAFTAs'],
   9: ['Annie Awards', 'Independent Spirit Awards'],
   10: ['Academy Awards'],
@@ -186,6 +186,24 @@ const AWARD_CONFIGS: AwardConfig[] = [
     evaluator: p => (p.awardsProfile?.indieCredibility || 0) + (p.awardsProfile?.criticScore || 0) * 0.8
   },
 
+  // --- BERLIN INTERNATIONAL FILM FESTIVAL ---
+  {
+    body: 'Berlin International Film Festival', category: 'Golden Bear', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.5 + (p.awardsProfile?.prestigeScore || 0) * 1.2
+  },
+  {
+    body: 'Berlin International Film Festival', category: 'Best Director', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 2 + (p.awardsProfile?.prestigeScore || 0) * 0.5
+  },
+  {
+    body: 'Berlin International Film Festival', category: 'Best Actor', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.2 + (p.awardsProfile?.prestigeScore || 0) * 1.0
+  },
+  {
+    body: 'Berlin International Film Festival', category: 'Best Actress', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.2 + (p.awardsProfile?.prestigeScore || 0) * 1.0
+  },
+
   // --- VENICE FILM FESTIVAL ---
   {
     body: 'Venice Film Festival', category: 'Golden Lion', format: 'film',
@@ -245,21 +263,24 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
     return { newAwards, prestigeChange, projectUpdates };
   }
 
+  // ⚡ Bolt: O(1) early exit for zero eligible projects
+  if (state.projects.length === 0) {
+    return { newAwards, prestigeChange, projectUpdates };
+  }
+
   // ⚡ Bolt: Find eligible projects (released within the last 52 weeks relative to the ceremony)
-  // Replaced reduce pass with a standard for loop to avoid intermediate object allocation overhead O(n).
+  // Replaced multiple filter passes and reduce with standard for loop to avoid intermediate object allocation.
   const eligibleFilm: Project[] = [];
   const eligibleTv: Project[] = [];
-  for (let i = 0; i < state.projects.length; i++) {
-    const p = state.projects[i];
+
+  for (let k = 0; k < state.projects.length; k++) {
+    const p = state.projects[k];
     if ((p.status === 'released' || p.status === 'post_release' || p.status === 'archived') &&
         p.releaseWeek !== null &&
         p.releaseWeek > currentWeek - 52 &&
         p.awardsProfile !== undefined) {
-      if (p.format === 'film') {
-        eligibleFilm.push(p);
-      } else if (p.format === 'tv') {
-        eligibleTv.push(p);
-      }
+      if (p.format === 'film') eligibleFilm.push(p);
+      else if (p.format === 'tv') eligibleTv.push(p);
     }
   }
 
