@@ -52,7 +52,7 @@ interface GameStore {
   resolveProjectCrisis: (projectId: string, optionIndex: number) => void;
   exploitFranchise: (projectId: string) => void;
   executeMarketingEvent: (eventName: 'superbowl_ad' | 'viral_campaign' | 'press_tour', cost: number, projectId: string) => void;
-  offerFirstLook: (talentId: string, duration: number, fee: number) => void;
+  offerFirstLook: (talentId: string, duration: number, fee: number) => Promise<boolean> | void;
   acquireRival: (targetId: string) => void;
   submitToFestival: (projectId: string, festivalBody: AwardBody) => void;
   launchAwardsCampaign: (projectId: string, budget: number) => void;
@@ -477,8 +477,9 @@ export const useGameStore = create<GameStore>((set, get) => ({
     console.log(`Executing marketing event: ${eventName} for project ${projectId} costing ${cost}`);
   },
 
-  offerFirstLook: (talentId, duration, fee) => {
+  offerFirstLook: async (talentId, duration, _fee) => {
     let success = false;
+    const dealsEngine = await import('../engine/systems/deals');
     set((s) => {
       const state = s.gameState;
       if (!state) return s;
@@ -489,7 +490,6 @@ export const useGameStore = create<GameStore>((set, get) => ({
       const lockFee = (talent.fee * 2); // Generic upfront cost to lock
       if (state.cash < lockFee) return s;
       
-      const dealsEngine = require('../engine/systems/deals');
       const deal = dealsEngine.offerFirstLookDeal(state, talentId, duration, true);
       
       if (deal) {

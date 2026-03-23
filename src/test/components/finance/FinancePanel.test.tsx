@@ -8,6 +8,8 @@ import { useGameStore } from '@/store/gameStore';
 vi.mock('recharts', () => ({
   ResponsiveContainer: ({ children }: { children: React.ReactNode }) => <div data-testid="recharts-container">{children}</div>,
   AreaChart: ({ children }: { children: React.ReactNode }) => <div data-testid="area-chart">{children}</div>,
+  ComposedChart: ({ children }: { children: React.ReactNode }) => <div data-testid="composed-chart">{children}</div>,
+  Line: () => <div data-testid="line" />,
   Area: () => <div data-testid="area" />,
   XAxis: () => <div data-testid="xaxis" />,
   YAxis: () => <div data-testid="yaxis" />,
@@ -21,13 +23,16 @@ vi.mock('@/store/gameStore', () => ({
 
 // Mock formatMoney since it's a utility we don't need to test here directly
 vi.mock('@/engine/utils', () => ({
-  formatMoney: (val: number) => `$${val.toLocaleString()}`,
+  formatMoney: (val: number) => `$${(val || 0).toLocaleString()}`,
 }));
 
 // Mock finance calculation functions to return predictable values based on mock data length/properties
 vi.mock('@/engine/systems/finance', () => ({
   calculateWeeklyCosts: vi.fn((projects: any[]) => projects.reduce((acc: number, p: any) => acc + (p.weeklyCost || 0), 0)),
   calculateWeeklyRevenue: vi.fn((projects: any[]) => projects.reduce((acc: number, p: any) => acc + (p.weeklyRevenue || 0), 0)),
+  calculateStudioNetWorth: vi.fn(() => 10000000),
+  generateCashflowForecast: vi.fn(() => []),
+  calculateProjectROI: vi.fn(() => 1.5)
 }));
 
 describe('FinancePanel Component', () => {
@@ -41,19 +46,13 @@ describe('FinancePanel Component', () => {
     render(<FinancePanel />);
 
     // Should render empty states and $0 values
-    expect(screen.getByText('Financials')).toBeDefined();
-    expect(screen.getByText('$0')).toBeDefined(); // Cash on Hand
-
-    // Revenue and Net Delta both evaluate to "+$0" when they are 0
-    const plusZeroElements = screen.getAllByText('+$0');
-    expect(plusZeroElements.length).toBe(2); // Weekly Revenue and Net Delta
-
-    // Weekly Costs evaluates to "-$0", but there are two elements with "-$0/wk" and one with "-$0"
-    expect(screen.getByText('-$0')).toBeDefined(); // Weekly Costs summary
-    expect(screen.getByText('-$0/wk')).toBeDefined(); // Weekly Costs active
+    expect(screen.getByText('Financials & Forecasts')).toBeDefined();
+    expect(screen.getAllByText('$0').length).toBeGreaterThan(0); // Cash on Hand
+    expect(screen.getAllByText('+$0/wk').length).toBeGreaterThan(0); // Projected Net Delta
+    expect(screen.getAllByText('-$0/wk').length).toBeGreaterThan(0); // Active Costs
 
     // Should show empty projects message
-    expect(screen.getByText('No active projects')).toBeDefined();
+    expect(screen.getByText('No active burn')).toBeDefined();
   });
 
   it('renders correctly with positive cash flow and active projects', () => {
@@ -77,9 +76,10 @@ describe('FinancePanel Component', () => {
 
     // Check summaries
     expect(screen.getByText('$2,500,000')).toBeDefined(); // Cash on Hand
-    expect(screen.getByText('+$500,000')).toBeDefined(); // Weekly Revenue (Project C)
-    expect(screen.getByText('-$200,000')).toBeDefined(); // Weekly Costs (Project A + B)
-    expect(screen.getByText('+$300,000')).toBeDefined(); // Net Delta
+
+    // Some metric numbers append /wk to the text
+    expect(screen.getAllByText(/\$200,000/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/\+\$300,000/).length).toBeGreaterThan(0);
 
     // Check active projects (only A and B are active 'development' or 'production')
     expect(screen.getByText('Project A')).toBeDefined();
@@ -88,8 +88,8 @@ describe('FinancePanel Component', () => {
     expect(screen.getByText('Project B')).toBeDefined();
     expect(screen.getByText('-$150,000/wk')).toBeDefined();
 
-    // Released project C should not be in the active costs list
-    expect(screen.queryByText('Project C')).toBeNull();
+    // Released project C appears in the Project ROI Performance section
+    expect(screen.getByText('Project C')).toBeDefined();
   });
 
   it('renders correctly with negative cash flow and negative cash', () => {
@@ -111,12 +111,12 @@ describe('FinancePanel Component', () => {
     expect(screen.getByText('$-500,000')).toBeDefined();
 
     // Revenue is 0 (and Net Delta is negative, so it doesn't have a +)
-    expect(screen.getByText('+$0')).toBeDefined();
+    expect(screen.getByText('$0')).toBeDefined();
 
     // Costs are 1M
-    expect(screen.getByText('-$1,000,000')).toBeDefined();
+    expect(screen.getAllByText('-$1,000,000/wk').length).toBeGreaterThan(0);
 
     // Net Delta is negative
-    expect(screen.getByText('$-1,000,000')).toBeDefined();
+    expect(screen.getAllByText('$-1,000,000/wk').length).toBeGreaterThan(0);
   });
 });

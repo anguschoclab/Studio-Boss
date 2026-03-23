@@ -291,7 +291,11 @@ const simulateWorld = (
 
   if (newAwards.length > 0) {
     projectUpdates.push(...ceremonyResult.projectUpdates);
-    const uniqueBodies = [...new Set(newAwards.map(a => a.body))];
+    const uniqueBodiesSet = new Set<string>();
+    for (let i = 0; i < newAwards.length; i++) {
+      uniqueBodiesSet.add(newAwards[i].body);
+    }
+    const uniqueBodies = Array.from(uniqueBodiesSet);
     events.push(`The ${uniqueBodies.join(' and ')} took place this week!`);
   }
 

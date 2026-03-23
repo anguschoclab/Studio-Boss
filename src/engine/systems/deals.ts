@@ -45,11 +45,11 @@ export function advanceDeals(deals: FirstLookDeal[]): FirstLookDeal[] {
 
 export function packageProject(project: Project, talentIds: string[], agency?: Agency): { packageScore: number, synergies: string[] } {
   // Evaluates the strength of attaching a set of talent to a project
-  let score = project.buzz; // Start with project base heat
+  const score = project.buzz; // Start with project base heat
   const synergies: string[] = [];
   
-  let totalPrestige = 0;
-  let totalDraw = 0;
+  const totalPrestige = 0;
+  const totalDraw = 0;
   
   // Need the actual talent profiles, but we only have IDs here. 
   // Let's assume the caller passes the score components or we adjust the signature to take GameState.

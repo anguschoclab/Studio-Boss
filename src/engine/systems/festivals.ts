@@ -49,10 +49,10 @@ export function submitToFestival(
 export function resolveFestivals(state: GameState): GameState {
   if (!state.festivalSubmissions || state.festivalSubmissions.length === 0) return state;
   
-  let newState = { ...state };
+  const newState = { ...state };
   let updatedSubmissions = [...state.festivalSubmissions];
-  let updatedProjects = [...state.projects];
-  let newHeadlines = [...state.headlines];
+  const updatedProjects = [...state.projects];
+  const newHeadlines = [...state.headlines];
   
   updatedSubmissions = updatedSubmissions.map(sub => {
     if (sub.status !== 'submitted') return sub;

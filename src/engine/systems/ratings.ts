@@ -26,29 +26,40 @@ export function evaluateRating(flags?: ContentFlag[]): ProjectRating {
   return 'PG-13';
 }
 
+export interface EditRatingResult {
+  success: boolean;
+  data?: Project;
+  error?: string;
+}
+
 /**
  * Strips aggressive flags from a project to lower its rating, 
  * but slightly alienates prestige and angers actors/directors.
  */
-export function editForRating(project: Project, state: GameState, targetRemoval: ContentFlag): Project {
+export function editForRating(project: Project, state: GameState, targetRemoval: ContentFlag): EditRatingResult {
   if (!project.contentFlags || !project.contentFlags.includes(targetRemoval)) {
-    return project;
+    return { success: true, data: project };
   }
   
   // Actually check if the director has creative control (Sprint J integration)
   if (hasCreativeControl(project.id, state)) {
-     // For now, assume it fails if they had final cut
-     throw new Error("Director has final cut. You cannot edit for rating without breaching contract.");
+     return {
+       success: false,
+       error: "Director has final cut. You cannot edit for rating without breaching contract."
+     };
   }
   
   const newFlags = project.contentFlags.filter(f => f !== targetRemoval);
   
   return {
-    ...project,
-    contentFlags: newFlags,
-    rating: evaluateRating(newFlags),
-    buzz: Math.max(0, project.buzz - 5), // Buzz drops because fans hear the movie was censored
-    flavor: `${project.flavor} (Sanitized)`
+    success: true,
+    data: {
+      ...project,
+      contentFlags: newFlags,
+      rating: evaluateRating(newFlags),
+      buzz: Math.max(0, project.buzz - 5), // Buzz drops because fans hear the movie was censored
+      flavor: `${project.flavor} (Sanitized)`
+    }
   };
 }
 
