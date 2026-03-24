@@ -40,8 +40,8 @@ export function generateCashflowForecast(state: GameState, weeksAhead: number = 
   const currentWeeklyRevenue = calculateWeeklyRevenue(state.studio.internal.projects, state.studio.internal.contracts, state.market.activeMarketEvents || []);
   
   for (let i = 1; i <= weeksAhead; i++) {
-    // Assume revenue decays by roughly 15% per week in aggregate
-    const projectedRev = currentWeeklyRevenue * Math.pow(0.85, i);
+    // Assume revenue decays by roughly 20% per week in aggregate to reflect modern front-loaded box office drops.
+    const projectedRev = currentWeeklyRevenue * Math.pow(0.80, i);
     // Costs stay flat for short-term projection
     const projectedCost = currentWeeklyCosts;
     currentCash += (projectedRev - projectedCost);
@@ -72,9 +72,9 @@ export function calculateWeeklyCosts(projects: Project[], activeEvents: MarketEv
       }
 
       // Introduce an overhead multiplier for large projects dragging on in production
-      if (p.status === 'production' && p.budget >= 200_000_000 && p.weeksInPhase > p.productionWeeks * 0.8) {
+      if (p.status === 'production' && p.budget >= 250_000_000 && p.weeksInPhase > p.productionWeeks * 0.8) {
          // Logistics completely break down on mega-sets; costs skyrocket late in production (increased overhead for huge risks)
-         costMultiplier *= 1.75;
+         costMultiplier *= 2.0;
       } else if (p.status === 'production' && p.budget >= 100_000_000 && p.weeksInPhase > p.productionWeeks * 0.8) {
          // Logistics break down on huge sets; costs balloon late in production (increased overhead)
          costMultiplier *= 1.4;
@@ -107,12 +107,12 @@ export function calculateWeeklyRevenue(projects: Project[], contracts: Contract[
       const projectContracts = contractsByProject.get(p.id) || [];
       const totalBackendPercent = projectContracts.reduce((total, c) => total + c.backendPercent, 0);
 
-      // Backend points hit harder when revenue is massive (e.g., simulating complex gross definitions)
+      // Backend points hit harder when revenue is massive (e.g., simulating complex gross definitions to squeeze studio margins further)
       let backendMultiplier = 1.0;
       if (revenue > 100_000_000) {
-        backendMultiplier = 1.6; // Increased mega-hit payouts to squeeze studio margins further
+        backendMultiplier = 1.8; // Increased mega-hit payouts to squeeze studio margins further
       } else if (revenue > 50_000_000) {
-        backendMultiplier = 1.35; // Increased first dollar gross hits
+        backendMultiplier = 1.5; // Increased first dollar gross hits
       } else if (revenue > 20_000_000) {
         backendMultiplier = 1.15; // Agents negotiate even better escalators
       }
