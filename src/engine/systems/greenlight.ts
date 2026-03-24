@@ -43,6 +43,12 @@ export function evaluateGreenlight(
     saturationPenalty += 20;
   }
 
+  // New market saturation math: dynamic market trends
+  // Heavily penalize oversaturated tentpole genres (like Superhero) to force players to consider market conditions
+  if (recentSimilarProjects.length >= 5 && project.genre === 'Superhero') {
+    saturationPenalty *= 2; // Doubling the penalty for oversaturated Superhero genre
+  }
+
   if (saturationPenalty > 0) {
     score -= saturationPenalty;
     negatives.push(`Market saturation: -${saturationPenalty} points due to ${recentSimilarProjects.length} recent ${project.genre} release(s).`);
