@@ -15,7 +15,7 @@ const FAMOUS_LAST_NAMES = [
   'Gyllenhaal', 'Arquette', 'Cusack', 'Douglas', 'Howard', 'Reiner', 'Wayans', 'Roberts', 'Eastwood', 'Smith'
 ];
 
-const TEMPERAMENTS = ['Professional', 'Diva', 'Method', 'Collaborative', 'Volatile', 'Perfectionist', 'Reliable', 'Difficult', 'Refuses to do press', 'Brings their own script doctor', 'Refuses to do rewrites', 'Mandatory private jet', 'Demands final cut', 'Always late to set', 'Requires trailer bigger than co-stars', 'Refuses to work with indie studios', 'Demands co-star approval', 'Requires personal onset chef', 'Only shoots in Europe', 'Refuses to do sequels', 'Requires ridiculous VFX double', 'Notorious for walk-outs'];
+const TEMPERAMENTS = ['Professional', 'Diva', 'Method', 'Collaborative', 'Volatile', 'Perfectionist', 'Reliable', 'Difficult', 'Refuses to do press', 'Brings their own script doctor', 'Refuses to do rewrites', 'Mandatory private jet', 'Demands final cut', 'Always late to set', 'Requires trailer bigger than co-stars', 'Refuses to work with indie studios', 'Demands co-star approval', 'Requires personal onset chef', 'Only shoots in Europe', 'Refuses to do sequels', 'Requires ridiculous VFX double', 'Notorious for walk-outs', 'Refuses to do streaming', 'Brings their own lighting crew', 'Requires daily rewrites', 'Demands top billing', 'Only works with A-List co-stars'];
 
 const TALENT_TYPES: Array<TalentRole> = ['director', 'actor', 'writer', 'producer', 'showrunner'];
 
@@ -112,7 +112,7 @@ export function generateTalentPool(size: number, families: Family[], agents: Age
 
     let temperament = pick(TEMPERAMENTS);
     if (isNepo && Math.random() < 0.3) {
-      temperament = pick(['Diva', 'Volatile', 'Difficult', 'Refuses to do press', 'Brings their own script doctor', 'Mandatory private jet', 'Demands final cut', 'Always late to set']);
+      temperament = pick(['Diva', 'Volatile', 'Difficult', 'Refuses to do press', 'Brings their own script doctor', 'Mandatory private jet', 'Demands final cut', 'Always late to set', 'Demands top billing']);
     }
 
     // Convert new temperaments into a perks/quirks system visually
@@ -131,7 +131,12 @@ export function generateTalentPool(size: number, families: Family[], agents: Age
       temperament === 'Only shoots in Europe' ||
       temperament === 'Refuses to do sequels' ||
       temperament === 'Requires ridiculous VFX double' ||
-      temperament === 'Notorious for walk-outs'
+      temperament === 'Notorious for walk-outs' ||
+      temperament === 'Refuses to do streaming' ||
+      temperament === 'Brings their own lighting crew' ||
+      temperament === 'Requires daily rewrites' ||
+      temperament === 'Demands top billing' ||
+      temperament === 'Only works with A-List co-stars'
     ) {
       perks.push(temperament);
       // Keep a valid legacy temperament for the UI fallback
