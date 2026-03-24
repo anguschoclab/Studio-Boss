@@ -144,21 +144,39 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
         initialBuzzBonus: 10, // Meta-commentary tends to get initial positive buzz
       };
     } else if (rand < 0.6 && sourceProject.format === 'film') {
-        // Format flip: Film to TV to save the IP
-        return {
-          title: `${sourceProject.title}: The Series`,
-          format: 'tv',
-          tvFormat: 'prestige_drama',
-          episodes: 8,
-          releaseModel: 'weekly',
-          genre: sourceProject.genre,
-          budgetTier: 'high',
-          targetAudience: sourceProject.targetAudience,
-          flavor: `A high-budget TV adaptation attempting to breathe new life into the fatigued ${sourceProject.title} universe.`,
-          parentProjectId: sourceProject.id,
-          isSpinoff: true,
-          initialBuzzBonus: 10 - (saturationPenalty / 3),
-        };
+        if (rand < 0.5) {
+            // Format flip: Film to TV to save the IP
+            return {
+              title: `${sourceProject.title}: The Series`,
+              format: 'tv',
+              tvFormat: 'prestige_drama',
+              episodes: 8,
+              releaseModel: 'weekly',
+              genre: sourceProject.genre,
+              budgetTier: 'high',
+              targetAudience: sourceProject.targetAudience,
+              flavor: `A high-budget TV adaptation attempting to breathe new life into the fatigued ${sourceProject.title} universe.`,
+              parentProjectId: sourceProject.id,
+              isSpinoff: true,
+              initialBuzzBonus: 10 - (saturationPenalty / 3),
+            };
+        } else {
+            // Expanded Universe Series (Streaming)
+            return {
+              title: `${sourceProject.title}: Expanded Universe`,
+              format: 'tv',
+              tvFormat: 'prestige_drama',
+              episodes: 10,
+              releaseModel: 'binge',
+              genre: sourceProject.genre,
+              budgetTier: 'high',
+              targetAudience: sourceProject.targetAudience,
+              flavor: `A high-budget streaming spinoff attempting to salvage the lore of the fatigued ${sourceProject.title} universe.`,
+              parentProjectId: sourceProject.id,
+              isSpinoff: true,
+              initialBuzzBonus: 12 - (saturationPenalty / 3),
+            };
+        }
     }
     return null; // Otherwise, the IP is dead for now
   }
@@ -190,10 +208,24 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
     buzzBonus += 30 - (genreSaturationCount * 2); // Crossovers generate massive hype, but suffer if the genre is saturated
     newBudgetTier = 'blockbuster'; // Crossovers are always huge events
   } else if (isLegacy && rand < 0.4) {
-      // Legacy Sequel
-      newTitle = `${sourceProject.title}: Legacy`;
-      flavorText = `Decades later, the original cast returns to pass the torch to a new generation in this long-awaited continuation.`;
-      buzzBonus += 25; // Massive nostalgia bump
+      if (rand < 0.3) {
+          // Requel
+          newTitle = `${sourceProject.title}: A New Generation`;
+          flavorText = `A "requel" where the legacy cast returns to pass the torch to a new, younger set of heroes.`;
+          buzzBonus += 20;
+          newBudgetTier = 'blockbuster';
+      } else {
+          // Legacy Sequel
+          newTitle = `${sourceProject.title}: Legacy`;
+          flavorText = `Decades later, the original cast returns to pass the torch to a new generation in this long-awaited continuation.`;
+          buzzBonus += 25; // Massive nostalgia bump
+          newBudgetTier = 'blockbuster';
+      }
+  } else if (relatedProjectCount >= 3 && sourceProject.revenue > sourceProject.budget * 3 && rand < 0.45) {
+      // Part 1 of 2 Finale
+      newTitle = `${sourceProject.title}: The Final Chapter - Part 1`;
+      flavorText = `The massive, two-part conclusion to the epic ${sourceProject.title} saga begins here.`;
+      buzzBonus += 40;
       newBudgetTier = 'blockbuster';
   } else if (rand < 0.5) {
     // Direct Sequel
