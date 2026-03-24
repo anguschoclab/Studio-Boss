@@ -3,8 +3,8 @@ import { TV_FORMATS } from '@/engine/data/tvFormats';
 import { UNSCRIPTED_FORMATS } from '@/engine/data/unscriptedFormats';
 
 export function getFilmStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS]) {
-  // Severe scaling for megabudgets to increase risk of astronomical costs
-  const riskMultiplier = tier.budget >= 200_000_000 ? 1.5 : tier.budget >= 100_000_000 ? 1.25 : 1.0;
+  // Severe scaling for megabudgets to increase risk of astronomical costs (e.g., 1.75x for >=250M)
+  const riskMultiplier = tier.budget >= 250_000_000 ? 1.75 : tier.budget >= 100_000_000 ? 1.35 : 1.0;
 
   return {
     budget: tier.budget,
@@ -16,8 +16,8 @@ export function getFilmStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS
 }
 
 export function getTvStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS], tvFormatData: typeof TV_FORMATS[keyof typeof TV_FORMATS], episodes: number) {
-  // Steep scaling for mega-budget TV risks
-  const scaleMultiplier = tier.budget >= 100_000_000 ? 1.5 : tier.budget > 50_000_000 ? 1.3 : 1.0;
+  // Steep scaling for mega-budget TV risks (e.g., 1.6x for >=100M)
+  const scaleMultiplier = tier.budget >= 100_000_000 ? 1.6 : tier.budget > 50_000_000 ? 1.4 : 1.0;
   const weeklyCost = tier.weeklyCost * tvFormatData.productionCostMultiplier * scaleMultiplier;
   const productionWeeks = Math.ceil(episodes * tvFormatData.productionWeeksPerEpisode * scaleMultiplier);
 
@@ -33,8 +33,8 @@ export function getTvStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS],
 
 
 export function getUnscriptedStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS], unscriptedFormatData: typeof UNSCRIPTED_FORMATS[keyof typeof UNSCRIPTED_FORMATS], episodes: number) {
-  // Progressive scaling for massive unscripted logisitics overhead
-  const scaleMultiplier = tier.budget >= 100_000_000 ? 1.4 : tier.budget > 50_000_000 ? 1.2 : 1.0;
+  // Progressive scaling for massive unscripted logisitics overhead (e.g., 1.5x for >=100M)
+  const scaleMultiplier = tier.budget >= 100_000_000 ? 1.5 : tier.budget > 50_000_000 ? 1.3 : 1.0;
   const weeklyCost = tier.weeklyCost * unscriptedFormatData.productionCostMultiplier * scaleMultiplier;
   const productionWeeks = Math.ceil(episodes * unscriptedFormatData.productionWeeksPerEpisode);
 

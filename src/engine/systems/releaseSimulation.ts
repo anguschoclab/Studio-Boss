@@ -68,16 +68,16 @@ export function simulateWeeklyBoxOffice(
     dropOffMultiplier = Math.max(0.1, dropOffMultiplier - 0.2); 
   }
 
-  // Large budget films are more front-loaded due to massive marketing pushes week 1.
+  // Large budget films are more front-loaded due to massive marketing pushes week 1 (steeper drop-off).
   if (project.budget >= 200_000_000 && weekInRelease === 1) {
-     dropOffMultiplier *= 0.60;
+     dropOffMultiplier *= 0.50;
   } else if (project.budget >= 100_000_000 && weekInRelease === 1) {
-     dropOffMultiplier *= 0.80;
+     dropOffMultiplier *= 0.70;
   }
 
-  // Strong word-of-mouth for anomalies (horror/indie)
+  // Strong word-of-mouth for anomalies (horror/indie) yields an even bigger boost.
   if (project.budget <= 20_000_000 && reviewScore >= 70) {
-     dropOffMultiplier = Math.min(0.95, dropOffMultiplier * 1.3);
+     dropOffMultiplier = Math.min(0.98, dropOffMultiplier * 1.5);
   }
 
   // Heavy competition penalty: high rival strength eats into revenue legs
