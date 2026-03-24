@@ -37,45 +37,47 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
         }
       }}
       onClick={() => selectProject(project.id)}
-      className="w-full text-left p-3.5 rounded-xl border border-border/60 bg-card/40 backdrop-blur-sm hover:shadow-lg hover:border-primary/50 hover:-translate-y-0.5 transition-all duration-300 space-y-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 group relative overflow-hidden cursor-pointer"
+      className="w-full text-left p-4 rounded-xl border border-border/60 bg-card/60 backdrop-blur-md hover:shadow-xl hover:border-primary/50 hover:-translate-y-1 transition-all duration-300 space-y-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 group relative overflow-hidden cursor-pointer"
     >
-      <div className="flex items-start justify-between gap-2">
-        <h4 className="font-display font-bold text-[15px] text-foreground leading-tight group-hover:text-primary transition-colors">{project.title}</h4>
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+      <div className="flex items-start justify-between gap-2 relative z-10">
+        <h4 className="font-display font-bold text-[15px] text-foreground leading-tight group-hover:text-primary transition-colors drop-shadow-sm">{project.title}</h4>
         <div className="flex gap-2">
           {hasUnresolvedCrisis && (
-            <Badge variant="destructive" className="text-[10px] shrink-0">
+            <Badge variant="destructive" className="text-[10px] shrink-0 animate-pulse shadow-sm shadow-destructive/40">
               <AlertTriangle className="w-3 h-3 mr-1" /> Crisis
             </Badge>
           )}
-          <Badge variant="outline" className="text-[10px] shrink-0">
+          <Badge variant="outline" className="text-[9px] uppercase tracking-widest font-bold shrink-0 bg-background/50 backdrop-blur-sm shadow-sm">
             {displayFormat}
           </Badge>
         </div>
       </div>
 
-      <div className="flex flex-col gap-1 text-[11px] font-medium text-muted-foreground">
+      <div className="flex flex-col gap-1 text-[11px] font-medium text-muted-foreground relative z-10">
         <div className="flex items-center gap-2">
-            <span>{project.genre}</span>
-            <span>·</span>
-            <span>{tier.label} Base</span>
+            <span className="text-foreground/80">{project.genre}</span>
+            <span className="text-muted-foreground/40">·</span>
+            <span className="text-foreground/80">{tier.label} Base</span>
         </div>
         {project.format === 'tv' && project.tvFormat && (
             <div className="flex items-center gap-1">
-                <span>{TV_FORMATS[project.tvFormat].name} ({project.episodes} eps)</span>
+                <span className="text-foreground/80">{TV_FORMATS[project.tvFormat].name} ({project.episodes} eps)</span>
             </div>
         )}
       </div>
 
       {/* Buzz Bar */}
       {project.status !== 'archived' && (
-        <div className="space-y-1">
-          <div className="flex justify-between text-[10px] text-muted-foreground">
+        <div className="space-y-1 relative z-10">
+          <div className="flex justify-between text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
             <span>Buzz</span>
-            <span>{Math.round(project.buzz)}%</span>
+            <span className="text-secondary">{Math.round(project.buzz)}%</span>
           </div>
-          <div className="h-1 bg-muted rounded-full overflow-hidden">
+          <div className="h-1.5 bg-muted/50 rounded-full overflow-hidden shadow-inner">
             <div
-              className="h-full bg-gradient-to-r from-secondary/80 to-secondary rounded-full transition-all duration-500 shadow-[0_0_8px_rgba(255,161,22,0.4)]"
+              className="h-full bg-gradient-to-r from-secondary/80 to-secondary rounded-full transition-all duration-1000 ease-out shadow-[0_0_8px_rgba(255,161,22,0.4)]"
               style={{ width: `${project.buzz}%` }}
             />
           </div>
@@ -84,16 +86,16 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
 
       {/* Progress */}
       {(project.status === 'development' || project.status === 'production') && (
-        <div className="space-y-1">
-          <div className="flex justify-between text-[10px] text-muted-foreground">
-            <span>Progress {hasUnresolvedCrisis && <span className="text-destructive font-bold">(HALTED)</span>}</span>
-            <span>
+        <div className="space-y-1 relative z-10">
+          <div className="flex justify-between text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
+            <span>Progress {hasUnresolvedCrisis && <span className="text-destructive font-bold ml-1">(HALTED)</span>}</span>
+            <span className="text-foreground/80">
               {project.weeksInPhase}/{project.status === 'development' ? project.developmentWeeks : project.productionWeeks}w
             </span>
           </div>
           <div className="h-1.5 bg-muted/50 rounded-full overflow-hidden border border-border/20 shadow-inner">
             <div
-              className={`h-full rounded-full transition-all duration-500 shadow-sm ${hasUnresolvedCrisis ? 'bg-gradient-to-r from-destructive to-destructive/80 shadow-[0_0_12px_rgba(239,68,68,0.6)]' : 'bg-gradient-to-r from-primary to-primary/80 shadow-[0_0_10px_rgba(234,179,8,0.5)]'}`}
+              className={`h-full rounded-full transition-all duration-1000 ease-out shadow-sm ${hasUnresolvedCrisis ? 'bg-gradient-to-r from-destructive to-destructive/80 shadow-[0_0_12px_rgba(239,68,68,0.6)]' : 'bg-gradient-to-r from-primary to-primary/80 shadow-[0_0_10px_rgba(234,179,8,0.5)]'}`}
               style={{ width: `${Math.min(progressPct, 100)}%` }}
             />
           </div>
