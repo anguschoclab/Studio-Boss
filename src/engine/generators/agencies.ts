@@ -26,7 +26,13 @@ const AGENCY_NAMES = [
   'A-List Associates',
   'Maverick Representation',
   'Guerilla Talent',
-  'The Streaming Syndicate'
+  'The Streaming Syndicate',
+  'The Showrunner Guild',
+  'Nepo Baby Management',
+  'Digital Disruptors',
+  'Commercial Hacks Inc',
+  'Legacy Defenders',
+  'The Pitch Masters'
 ];
 
 const AGENT_FIRST_NAMES = ['Ari', 'Bryan', 'Maha', 'Jeremy', 'Richard', 'Sue', 'Ali', 'Kevin', 'Aaron', 'Emma', 'David', 'Laura'];
@@ -120,6 +126,40 @@ export function generateAgencies(count: number): Agency[] {
       traits.push('Prioritizes streaming deals over theatrical');
     }
 
+    if (actualName === 'The Showrunner Guild') {
+      traits.push('Only represents showrunners');
+      culture = 'prestige';
+    }
+
+    if (actualName === 'Nepo Baby Management') {
+      traits.push('Only represents legacy talent');
+      culture = 'family';
+    }
+
+    if (actualName === 'Digital Disruptors') {
+      traits.push('Prioritizes streaming deals over theatrical');
+      traits.push('Demands full IP ownership');
+      culture = 'volume';
+    }
+
+    if (actualName === 'Commercial Hacks Inc') {
+      traits.push('Refuses to work with indie studios');
+      traits.push('Pitches packaging deals only');
+      culture = 'volume';
+    }
+
+    if (actualName === 'Legacy Defenders') {
+      traits.push('Only represents legacy talent');
+      traits.push('Demands massive backend points');
+      leverage = 95;
+    }
+
+    if (actualName === 'The Pitch Masters') {
+      traits.push('Pitches packaging deals only');
+      traits.push('Requires entire package hire');
+      culture = 'shark';
+    }
+
     agencies.push({
       id: `agency-${crypto.randomUUID()}`,
       name: actualName,
@@ -148,6 +188,9 @@ export function generateAgents(agencies: Agency[], countPerAgency: number): Agen
       // Override specialty based on agency traits
       if (agency.traits?.includes('Only represents comedy writers')) {
         specialty = 'comedy';
+      }
+      if (agency.traits?.includes('Only represents showrunners')) {
+        specialty = 'tv_packaging';
       }
 
       agents.push({
