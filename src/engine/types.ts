@@ -141,7 +141,9 @@ export type AwardBody =
   | 'Berlin International Film Festival'
   | 'Toronto International Film Festival'
   | 'SXSW Film Festival'
-  | 'Tribeca Film Festival';
+  | 'Tribeca Film Festival'
+  | 'Telluride Film Festival'
+  | 'Slamdance Film Festival';
 
 export type AwardCategory =
   | 'Best Picture'
@@ -384,6 +386,7 @@ export interface TalentProfile {
   fandomSize?: number; // 0-100 scale representing loyal fan base
   loyalty?: number; // 0-100 studio loyalty
   controversyRisk?: number; // Base chance of spawning scandals
+  ego?: number; // 0-100 tracking their demands and attitude
 }
 
 export interface Contract {

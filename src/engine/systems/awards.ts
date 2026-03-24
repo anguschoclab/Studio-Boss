@@ -93,8 +93,9 @@ export const AWARDS_CALENDAR: Record<number, AwardBody[]> = {
   82: ['Primetime Emmys']
 };
 // Correction to calendar logic for late year events
-AWARDS_CALENDAR[34] = ['Venice Film Festival'];
-AWARDS_CALENDAR[36] = ['Toronto International Film Festival'];
+AWARDS_CALENDAR[34] = ['Venice Film Festival', 'Telluride Film Festival'];
+AWARDS_CALENDAR[35] = ['Toronto International Film Festival'];
+AWARDS_CALENDAR[36] = ['Slamdance Film Festival'];
 AWARDS_CALENDAR[37] = ['Primetime Emmys'];
 
 interface AwardConfig {
@@ -121,6 +122,14 @@ const AWARD_CONFIGS: AwardConfig[] = [
   {
     body: 'Academy Awards', category: 'Best Actress', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) + (p.buzz || 0) * 0.5
+  },
+  {
+    body: 'Academy Awards', category: 'Best Supporting Actor', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 0.8 + (p.buzz || 0) * 0.4
+  },
+  {
+    body: 'Academy Awards', category: 'Best Supporting Actress', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 0.8 + (p.buzz || 0) * 0.4
   },
 
   // --- PRIMETIME EMMYS ---
@@ -153,6 +162,14 @@ const AWARD_CONFIGS: AwardConfig[] = [
   {
     body: 'BAFTAs', category: 'Best Series', format: 'tv',
     evaluator: p => (p.awardsProfile?.craftScore || 0) + (p.awardsProfile?.prestigeScore || 0)
+  },
+  {
+    body: 'BAFTAs', category: 'Best Supporting Actor', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 0.8 + (p.awardsProfile?.prestigeScore || 0) * 0.5
+  },
+  {
+    body: 'BAFTAs', category: 'Best Supporting Actress', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 0.8 + (p.awardsProfile?.prestigeScore || 0) * 0.5
   },
 
   // --- SAG AWARDS ---
@@ -289,6 +306,26 @@ const AWARD_CONFIGS: AwardConfig[] = [
   {
     body: 'Tribeca Film Festival', category: 'Best Narrative Feature', format: 'film',
     evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 1.5 + (p.awardsProfile?.industryNarrativeScore || 0)
+  },
+
+  // --- TELLURIDE FILM FESTIVAL (Cannes Equivalent) ---
+  {
+    body: 'Telluride Film Festival', category: 'Best Picture', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.8 + (p.awardsProfile?.prestigeScore || 0) * 1.2
+  },
+  {
+    body: 'Telluride Film Festival', category: 'Best Director', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 2.0 + (p.awardsProfile?.industryNarrativeScore || 0) * 0.5
+  },
+
+  // --- SLAMDANCE FILM FESTIVAL (Sundance Equivalent) ---
+  {
+    body: 'Slamdance Film Festival', category: 'Grand Jury Prize', format: 'film',
+    evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 2.5 + (p.awardsProfile?.culturalHeat || 0) * 0.5
+  },
+  {
+    body: 'Slamdance Film Festival', category: 'Best Director', format: 'film',
+    evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 2.0 + (p.awardsProfile?.craftScore || 0) * 0.5
   }
 ];
 
