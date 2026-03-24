@@ -58,10 +58,16 @@ export function generateCashflowForecast(state: GameState, weeksAhead: number = 
 }
 
 
+// ⚡ Bolt: Replaced chained .reduce passes with single for-loops to eliminate intermediate closures in hot loops
 export function calculateWeeklyCosts(projects: Project[], activeEvents: MarketEvent[] = []): number {
-  const eventMult = activeEvents.reduce((m, e) => m * e.costMultiplier, 1.0);
+  let eventMult = 1.0;
+  for (let i = 0; i < activeEvents.length; i++) {
+    eventMult *= activeEvents[i].costMultiplier;
+  }
 
-  return projects.reduce((sum, p) => {
+  let sum = 0;
+  for (let i = 0; i < projects.length; i++) {
+    const p = projects[i];
     if (p.status === 'development' || p.status === 'production') {
       let costMultiplier = 1;
       if (p.status === 'production' && p.contractType === 'upfront') {
@@ -83,17 +89,23 @@ export function calculateWeeklyCosts(projects: Project[], activeEvents: MarketEv
          costMultiplier *= 1.2;
       }
 
-      return sum + (p.weeklyCost * costMultiplier * eventMult);
+      sum += (p.weeklyCost * costMultiplier * eventMult);
     }
-    return sum;
-  }, 0);
+  }
+  return sum;
 }
 
+// ⚡ Bolt: Replaced chained .reduce passes with single for-loops to eliminate intermediate closures in hot loops
 export function calculateWeeklyRevenue(projects: Project[], contracts: Contract[] = [], activeEvents: MarketEvent[] = []): number {
-  const eventMult = activeEvents.reduce((m, e) => m * e.revenueMultiplier, 1.0);
+  let eventMult = 1.0;
+  for (let i = 0; i < activeEvents.length; i++) {
+    eventMult *= activeEvents[i].revenueMultiplier;
+  }
   const contractsByProject = groupContractsByProject(contracts);
 
-  return projects.reduce((sum, p) => {
+  let sum = 0;
+  for (let i = 0; i < projects.length; i++) {
+    const p = projects[i];
     if (p.status === 'released') {
       let revenue = p.weeklyRevenue;
 
@@ -105,7 +117,10 @@ export function calculateWeeklyRevenue(projects: Project[], contracts: Contract[
 
       // Subtract backend participation
       const projectContracts = contractsByProject.get(p.id) || [];
-      const totalBackendPercent = projectContracts.reduce((total, c) => total + c.backendPercent, 0);
+      let totalBackendPercent = 0;
+      for (let j = 0; j < projectContracts.length; j++) {
+        totalBackendPercent += projectContracts[j].backendPercent;
+      }
 
       // Backend points hit harder when revenue is massive (e.g., simulating complex gross definitions to squeeze studio margins further)
       let backendMultiplier = 1.0;
@@ -118,10 +133,10 @@ export function calculateWeeklyRevenue(projects: Project[], contracts: Contract[
       }
 
       const backendCut = revenue * ((totalBackendPercent * backendMultiplier) / 100);
-      return sum + ((revenue - backendCut) * eventMult);
+      sum += ((revenue - backendCut) * eventMult);
     }
-    return sum;
-  }, 0);
+  }
+  return sum;
 }
 
 export interface FinanceAdvanceResult {
