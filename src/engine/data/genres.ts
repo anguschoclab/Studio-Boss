@@ -17,7 +17,7 @@ export const TARGET_AUDIENCES = [
 
 export const CROSSOVER_AFFINITY: Record<string, string[]> = {
   'Superhero': ['Action', 'Sci-Fi', 'Fantasy'],
-  'Action': ['Sci-Fi', 'Thriller', 'Crime'],
+  'Action': ['Sci-Fi', 'Thriller', 'Crime', 'Superhero'],
   'Sci-Fi': ['Action', 'Horror', 'Fantasy'],
   'Horror': ['Sci-Fi', 'Thriller', 'Comedy'],
   'Fantasy': ['Action', 'Romance', 'Animation'],
@@ -32,7 +32,7 @@ export const CROSSOVER_AFFINITY: Record<string, string[]> = {
 };
 
 export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
-  'Superhero': 0.45,   // Extreme risk, very sensitive to market saturation
+  'Superhero': 0.50,   // Extreme risk, very sensitive to market saturation
   'Action': 0.35,      // High risk for generic action fatigue
   'Sci-Fi': 0.30,      // High risk for sci-fi blockbusters
   'Fantasy': 0.25,     // Moderate risk

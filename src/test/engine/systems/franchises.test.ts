@@ -141,8 +141,54 @@ describe("franchise system", () => {
       expect(result?.title).toContain("vs Action Hero");
     });
 
+    it("generates an Expanded Universe TV spinoff if fatigued", () => {
+      const flopProject = { ...baseProject, revenue: 100000000 };
+      const relatedProjects = Array(10).fill(0).map((_, i) => ({
+        ...baseProject,
+        id: `p${i+2}`,
+        parentProjectId: "p1"
+      }));
+      const state = { studio: { internal: { projects: [flopProject, ...relatedProjects] } }, week: 200 } as GameState;
+
+      vi.spyOn(Math, 'random').mockReturnValue(0.55); // < 0.6 but >= 0.5 triggers Expanded Universe
+      const result = exploitIP(flopProject, state);
+
+      expect(result?.title).toContain("Expanded Universe");
+      expect(result?.format).toBe("tv");
+      expect(result?.releaseModel).toBe("binge");
+    });
+
+    it("generates a requel for legacy IPs", () => {
+      const legacyProject = { ...baseProject, releaseWeek: 10, revenue: 600000000 };
+      const state = { week: 200, studio: { internal: { projects: [legacyProject] } } } as GameState;
+
+      vi.spyOn(Math, 'random').mockReturnValue(0.2); // < 0.3 triggers requel inside legacy block
+      const result = exploitIP(legacyProject, state);
+
+      expect(result?.title).toContain("A New Generation");
+      expect(result?.flavor).toContain("requel");
+    });
+
+    it("generates a Part 1 finale for massive franchises", () => {
+      const massiveHit = { ...baseProject, revenue: 700000000, releaseWeek: 190 }; // revenue > 3x budget
+      const relatedProjects = Array(4).fill(0).map((_, i) => ({
+        ...massiveHit,
+        id: `p${i+2}`,
+        parentProjectId: "p1",
+        releaseWeek: 190 + i
+      }));
+      const state = { week: 200, studio: { internal: { projects: [massiveHit, ...relatedProjects] } } } as GameState;
+
+      // Not legacy (diff < 150)
+      vi.spyOn(Math, 'random').mockReturnValue(0.42); // < 0.45 triggers Part 1 Finale
+      const result = exploitIP(massiveHit, state);
+
+      expect(result?.title).toContain("The Final Chapter - Part 1");
+      expect(result?.budgetTier).toBe("blockbuster");
+    });
+
     it("generates a direct sequel", () => {
-      vi.spyOn(Math, 'random').mockReturnValue(0.4); // < 0.5 triggers sequel
+      vi.spyOn(Math, 'random').mockReturnValue(0.48); // < 0.5 but >= 0.45 triggers sequel
       const result = exploitIP(baseProject);
 
       expect(result?.title).toBe("Galaxy Wars 1"); // 0 related + 1 = 1 (or 2 depending on if it counts itself if state isn't passed)
