@@ -166,5 +166,24 @@ describe("crises system", () => {
       expect(result.cash).toBe(10500000); // 10M - (-500k) = 10.5M
       expect(result.studio.internal.projects[0].activeCrisis?.resolved).toBe(true);
     });
+
+    it("handles project with negative budget correctly", () => {
+      const negativeBudgetProject = { ...mockProject, budget: -1000000, activeCrisis };
+      const negState = {
+        ...mockGameState,
+        studio: {
+          ...mockGameState.studio,
+          internal: {
+            ...mockGameState.studio.internal,
+            projects: [negativeBudgetProject]
+          }
+        }
+      };
+
+      const result = resolveCrisis(negState, "proj-1", 0);
+      expect(result.cash).toBe(9000000); // Cash calculation ignores project budget
+      expect(result.studio.internal.projects[0].budget).toBe(-1000000); // Budget remains untouched by crisis
+      expect(result.studio.internal.projects[0].activeCrisis?.resolved).toBe(true);
+    });
   });
 });
