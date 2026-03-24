@@ -16,11 +16,12 @@ import { processDirectorDisputes } from './directors';
 import { getTrendMultiplier } from './trends';
 
 function getAttachedTalent(contracts: Contract[], talentPoolMap: Map<string, TalentProfile>): TalentProfile[] {
-  return contracts.reduce((acc, c) => {
-    const t = talentPoolMap.get(c.talentId);
+  const acc: TalentProfile[] = [];
+  for (let i = 0; i < contracts.length; i++) {
+    const t = talentPoolMap.get(contracts[i].talentId);
     if (t) acc.push(t);
-    return acc;
-  }, [] as TalentProfile[]);
+  }
+  return acc;
 }
 
 function handleDevelopmentPhase(p: Project): { update: string | null; talentUpdates: TalentProfile[] } {
@@ -59,7 +60,10 @@ export function handleReleasePhaseEntry(
   if (p.reviewScore === undefined) {
     p.reviewScore = generateReviewScore(p, attachedTalent, p.activeCrisis);
   }
-  const talentDrawFactor = attachedTalent.reduce((sum, t) => sum + (t.draw / 100), 1);
+  let talentDrawFactor = 1;
+  for (let i = 0; i < attachedTalent.length; i++) {
+    talentDrawFactor += attachedTalent[i].draw / 100;
+  }
 
   // Sprint H & I: Regional Censorship and Demographic Penetration
   const regionalMultiplier = calculateRegionalPenalties(p);
@@ -301,7 +305,10 @@ export function advanceProject(
   // Buzz drift during active phases
   if (p.status === 'development' || p.status === 'production') {
     const attachedTalent = getAttachedTalent(projectContracts, talentPoolMap);
-    const talentBuzzBonus = attachedTalent.reduce((sum, t) => sum + (t.draw / 50), 0);
+    let talentBuzzBonus = 0;
+    for (let i = 0; i < attachedTalent.length; i++) {
+      talentBuzzBonus += attachedTalent[i].draw / 50;
+    }
     p.buzz = clamp(p.buzz + randRange(-4, 6) + talentBuzzBonus, 0, 100);
   }
 

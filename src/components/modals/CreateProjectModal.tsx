@@ -18,7 +18,8 @@ import { Dices } from 'lucide-react';
 
 export const CreateProjectModal = () => {
   const { showCreateProject, closeCreateProject } = useUIStore();
-  const { createProject, gameState } = useGameStore();
+  const createProject = useGameStore(s => s.createProject);
+  const gameState = useGameStore(s => s.gameState);
   const [selectedTalent, setSelectedTalent] = useState<string[]>([]);
 
   const [title, setTitle] = useState('');

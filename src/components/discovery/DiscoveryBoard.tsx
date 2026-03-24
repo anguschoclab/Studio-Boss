@@ -36,7 +36,7 @@ export const DiscoveryBoard = () => {
 };
 
 const OpportunityCard = ({ opportunity: opp }: { opportunity: Opportunity }) => {
-  const { acquireOpportunity } = useGameStore();
+  const acquireOpportunity = useGameStore(s => s.acquireOpportunity);
   return (
     <div className="bg-card/50 backdrop-blur-sm rounded-lg border border-border/50 p-5 shadow-sm hover:shadow-md hover:shadow-primary/5 hover:border-primary/50 transition-all duration-300 flex flex-col justify-between h-full group">
       <div className="space-y-2">

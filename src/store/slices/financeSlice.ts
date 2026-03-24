@@ -23,8 +23,20 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
       const newCash = state.cash - budget;
       const { project: p } = executeMarketing(originalProject, budget, domesticPct, angle);
 
-      const contracts = state.studio.internal.contracts.filter(c => c.projectId === p.id);
-      const talentMap = new Map<string, any>(state.industry.talentPool.map(t => [t.id, t]));
+      const contracts = [];
+      for (let i = 0; i < state.studio.internal.contracts.length; i++) {
+        const c = state.studio.internal.contracts[i];
+        if (c.projectId === p.id) {
+          contracts.push(c);
+        }
+      }
+
+      const talentMap = new Map<string, any>();
+      for (let i = 0; i < state.industry.talentPool.length; i++) {
+        const t = state.industry.talentPool[i];
+        talentMap.set(t.id, t);
+      }
+
       const result = handleReleasePhaseEntry(p, state.week, state.studio.prestige, contracts, talentMap);
 
       const newHeadlines = [...state.industry.headlines];
