@@ -129,7 +129,11 @@ const processProjectPhase = (
   }
 
   // Update talent pool with changes from projects
-  const updatedTalentPool = state.industry.talentPool.map(t => allTalentUpdates.get(t.id) || t);
+  const updatedTalentPool: typeof state.industry.talentPool[0][] = new Array(state.industry.talentPool.length);
+  for (let i = 0; i < state.industry.talentPool.length; i++) {
+    const t = state.industry.talentPool[i];
+    updatedTalentPool[i] = allTalentUpdates.get(t.id) || t;
+  }
 
   return {
     state: { 
