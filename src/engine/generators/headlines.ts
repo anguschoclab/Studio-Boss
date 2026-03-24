@@ -81,7 +81,14 @@ const MARKET_HEADLINES = [
   'Audiences report physical exhaustion from keeping up with interconnected cinematic universes',
   'Algorithm forces studio to reboot a franchise that ended less than five years ago',
   'Overleveraged streaming platform quietly deletes entire original series catalog to save on server costs',
-  'Studio executives reportedly greenlit a project based entirely on a trending TikTok audio'
+  'Studio executives reportedly greenlit a project based entirely on a trending TikTok audio',
+  'Analysts confirm {pct}% of box office revenue now generated entirely by nostalgia',
+  'Studios double down on "four-quadrant" films, resulting in {pct}% more generic content',
+  'Independent theaters closing at a rate of {pct}% per year due to lack of mid-budget films',
+  'VFX artists unionize after being forced to render {pct}% more unnecessary CGI explosions',
+  'Streaming services aggressively bundle together, effectively reinventing cable television',
+  'Market research shows {pct}% of audiences cannot distinguish between rival cinematic universes',
+  'Focus groups demand {pct}% more screen time for marketable mascot characters'
 ];
 
 const TALENT_HEADLINES = [
@@ -168,7 +175,14 @@ const TALENT_HEADLINES = [
   'Leaked emails reveal studio executives mocked ${projectName} while actively greenlighting its sequel.',
   'Lead actor demands their character in ${projectName} never loses a fight contractually.',
   'A poorly masked green screen in the trailer for ${projectName} becomes an internet laughing stock.',
-  '${directorName} claims the horrific working conditions on ${projectName} were necessary for the "vibe".'
+  '${directorName} claims the horrific working conditions on ${projectName} were necessary for the "vibe".',
+  'Entire third act of ${projectName} scrapped and reshot after lead actor\'s PR scandal.',
+  '${directorName} reportedly fired from ${projectName} after refusing to include a branded energy drink in a period piece.',
+  'Fans rally to boycott ${projectName} because it didn\'t cast their preferred internet fancast.',
+  'Lead actor of ${projectName} demands equal billing with the CGI monster.',
+  'Studio uses AI to analyze ${projectName} script; it recommends adding a sassy robot sidekick.',
+  '${directorName} leaks an "early cut" of ${projectName} to force the studio\'s hand on edits.',
+  'Crew on ${projectName} complains that the "revolutionary" new lighting rig is just an overpriced ring light.'
 ];
 
 const RIVAL_TEMPLATES = [
@@ -241,7 +255,13 @@ const RIVAL_TEMPLATES = [
   '{rival} aggressively acquires legacy IP just to prevent competitors from making ${budget}M {genre} reboots',
   '{rival} releases a 4-hour "Director\'s Cut" of their ${budget}M {genre} flop in a desperate cash grab',
   '{rival} spends half the budget of their ${budget}M {genre} film on focus testing and demographic research',
-  '{rival} caught paying influencers to astroturf positive reviews for their ${budget}M {genre} disaster'
+  '{rival} caught paying influencers to astroturf positive reviews for their ${budget}M {genre} disaster',
+  '{rival} attempts to launch a ${budget}M {genre} franchise based on a line of scented candles',
+  '{rival} insists their poorly received ${budget}M {genre} film was actually "subverting expectations"',
+  '{rival} relies entirely on algorithmic generation for their upcoming ${budget}M {genre} slate',
+  '{rival} CEO steps down amidst disastrous rollout of their new ${budget}M {genre} streaming service',
+  '{rival} shamelessly copies competitor\'s successful {genre} film, adding a ${budget}M CGI budget',
+  '{rival} aggressively monetizes their back catalog, releasing "demastered" versions of classic {genre} films'
 ];
 
 function fill(template: string, vars: Record<string, string>): string {
