@@ -93,9 +93,11 @@ export const CreateProjectModal = () => {
 
         <div className="space-y-4">
           <div className="space-y-1.5">
-            <Label className="text-xs uppercase tracking-wider">Title</Label>
+            <Label htmlFor="project-title" className="text-xs uppercase tracking-wider">
+              Title <span className="text-destructive">*</span>
+            </Label>
             <div className="flex gap-2">
-              <Input value={title} onChange={e => setTitle(e.target.value)} placeholder="Untitled Project" className="flex-1" />
+              <Input id="project-title" required value={title} onChange={e => setTitle(e.target.value)} placeholder="Untitled Project" className="flex-1" />
               <Button type="button" variant="outline" size="icon" onClick={() => setTitle(generateProjectTitle(genre))} title="Generate Random Title" aria-label="Generate Random Title">
                 <Dices className="h-4 w-4" />
               </Button>
@@ -251,8 +253,8 @@ export const CreateProjectModal = () => {
 
           {/* Flavor */}
           <div className="space-y-1.5">
-            <Label className="text-xs uppercase tracking-wider">Positioning (optional)</Label>
-            <Input value={flavor} onChange={e => setFlavor(e.target.value)} placeholder="A bold reimagining of..." />
+            <Label htmlFor="project-flavor" className="text-xs uppercase tracking-wider">Positioning (optional)</Label>
+            <Input id="project-flavor" value={flavor} onChange={e => setFlavor(e.target.value)} placeholder="A bold reimagining of..." />
           </div>
         </div>
 
