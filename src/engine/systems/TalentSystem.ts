@@ -1,6 +1,7 @@
 import { GameState, TalentProfile, Project, Contract, Award, Opportunity } from '../types';
 import { generateOpportunity } from '../generators/opportunities';
 import { clamp } from '../utils';
+import { applyAwardBoostsToTalent } from './talentStats';
 
 export interface TalentAdvanceResult {
   updatedOpportunities: Opportunity[];
@@ -110,6 +111,7 @@ export class TalentSystem {
       let talentAwardsDrawBonus = 0;
       let talentAwardsPrestigeBonus = 0;
       let talentAwardsFeeMultiplier = 1.0;
+      let talentAwardsEgoBoost = 0;
 
       for (const award of projectAwards) {
         const isDirector = talent.roles.includes('director');
@@ -124,16 +126,20 @@ export class TalentSystem {
 
         if (qualifiesForBonus) {
           const multiplier = (award.category.includes('Director') || award.category.includes('Actor') || award.category.includes('Actress') || award.category.includes('Screenplay')) ? 1.0 : 0.5;
+          const isPrestige = ['Academy Awards', 'Cannes Film Festival', 'Venice Film Festival'].includes(award.body);
           
-          if (award.status === 'won') {
-            const isPrestige = ['Academy Awards', 'Cannes Film Festival', 'Venice Film Festival'].includes(award.body);
-            talentAwardsPrestigeBonus += (isPrestige ? 15 : 8) * multiplier;
-            talentAwardsDrawBonus += (isPrestige ? 10 : 5) * multiplier;
-            talentAwardsFeeMultiplier += (isPrestige ? 0.5 : 0.2) * multiplier;
-          } else {
-            talentAwardsPrestigeBonus += 2 * multiplier;
-            talentAwardsDrawBonus += 1 * multiplier;
-          }
+          const boosts = applyAwardBoostsToTalent(talent, award, multiplier, isPrestige);
+
+          talentAwardsPrestigeBonus += boosts.prestigeBoost;
+          talentAwardsDrawBonus += boosts.drawBoost;
+
+          // feeMultiplier is multiplicative
+          // (Note: previous code used additive `+=`, we can either add the net boost or change to multiplier)
+          // The old code did `talentAwardsFeeMultiplier += (isPrestige ? 0.5 : 0.2) * multiplier;`
+          // So we accumulate the boost amount above 1.0 returned by our function:
+          talentAwardsFeeMultiplier += (boosts.feeMultiplier - 1.0);
+
+          talentAwardsEgoBoost += boosts.egoBoost;
         }
       }
 
@@ -143,7 +149,8 @@ export class TalentSystem {
         ...talent,
         draw: clamp(talent.draw + drawChange + talentAwardsDrawBonus, 0, 100),
         prestige: clamp(talent.prestige + prestigeChange + talentAwardsPrestigeBonus, 0, 100),
-        fee: Math.round(clamp(talent.fee * finalFeeMultiplier, 10000, 75000000))
+        fee: Math.round(clamp(talent.fee * finalFeeMultiplier, 10000, 75000000)),
+        ego: clamp((talent.ego || 50) + talentAwardsEgoBoost, 0, 100)
       };
 
       updatedTalent.push(newTalent);
