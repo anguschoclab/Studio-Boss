@@ -9,7 +9,7 @@ const PROJECT_ADJECTIVES = [
   'Wild', 'Cold', 'Last', 'First', 'Final', 'Secret', 'Midnight', 'Crimson',
   'Micro-Budget', 'Banned', 'Cult', 'Divisive', 'Misunderstood', 'Post-Modern', 'Meta', 'Self-Aware', 'Interactive', 'Hyper-Violent', 'Family-Friendly', 'Subversive', 'Existential', 'Viral', 'Edgy',
   'Chaotic', 'Shameless', 'Tone-Deaf', 'Syndicated', 'Pandering', 'Nostalgic', 'Crowdfunded', 'Incomprehensible'
-];
+, 'Vape-Scented', 'Anti-Woke', 'Girlboss', 'Crypto-Backed', 'AI-Generated', 'Tax-Evading', 'Oscar-Thirsty', 'Cancellable', 'Tone-Deaf', 'Virtue-Signaling', 'Nostalgia-Baiting', 'IP-Laundering', 'Uninsurable', 'Direct-To-Video', 'Has-Been'];
 
 const PROJECT_NOUNS = [
   'Tentpole', 'Cinematic Universe', 'Vanity Project', 'Cash Grab', 'Reboot', 'Origin Story', 'Four-Quadrant Hit', 'Oscar Bait', 'Tax Write-off', 'Algorithm', 'Focus Group', 'Franchise', 'Merchandising Opportunity', 'Streaming Wars', 'Demographic',
@@ -17,7 +17,7 @@ const PROJECT_NOUNS = [
   'City', 'Mountain', 'River', 'Forest', 'Ocean', 'Island', 'Tower', 'Castle',
   'Content', 'IP', 'Podcast Adaptation', 'Graphic Novel', 'Limited Run', 'Spin-off', 'Prequel', 'Sequel', 'Trilogy', 'Crossover', 'Event', 'Experience', 'Platform', 'Saga', 'Chronicle',
   'Multiverse', 'Money Pit', 'Brand Synergy', 'TikTok Trend', 'Nostalgia Bait', 'Legacy Sequel', 'Toy Commercial'
-];
+, 'Tik-Tok Dance', 'Apology Video', 'Podcast Grift', 'NFT Scam', 'Subreddit Myth', 'Cancel Culture Hit-Piece', 'Nepo-Baby Vehicle', 'Wellness Retreat', 'Juice Cleanse', 'Pyramid Scheme', 'True Crime Exploitation', 'Merch Drop', 'Brand Deal', 'Focus Group Failure', 'Contractual Obligation'];
 
 
 function generateFlavor(genre: string, type: string, budgetTier: BudgetTierKey, origin: string): string {
@@ -67,6 +67,22 @@ function generateFlavor(genre: string, type: string, budgetTier: BudgetTierKey, 
     `A ${genre} ${type} that the studio is intentionally burying to avoid embarrassment.`,
     `A ${budgetTier}-tier ${type} that is legally distinct enough from a popular franchise to avoid a lawsuit.`,
     `A ${genre} ${type} that ends on a massive cliffhanger for a sequel that will never happen.`
+  ,
+    `A painfully long ${type} funded entirely by a mysterious foreign prince seeking an Oscar.`,
+    `An 'empowering' ${genre} ${origin} that accidentally reinforces every stereotype it claims to dismantle.`,
+    `A frantic, unwatchable ${type} directed entirely over Zoom because the auteur refused to leave their private island.`,
+    `A ${budgetTier}-budget ${genre} vehicle explicitly designed to relaunch a cancelled actor's career.`,
+    `A ${genre} ${type} where the lead actor demanded to rewrite the script mid-shoot using ChatGPT.`,
+    `A ${budgetTier}-tier ${genre} ${type} that feels like a two-hour commercial for a new energy drink.`,
+    `A ${origin} that the studio is releasing purely to retain the rights to the IP before they expire.`,
+    `A painfully bleak ${genre} ${type} that the marketing team is desperately trying to sell as a comedy.`,
+    `A ${budgetTier}-budget ${genre} ${type} that is 100% green screen and zero percent acting.`,
+    `A ${genre} ${origin} starring a nepotism baby who has never read a script before in their life.`,
+    `An incomprehensible ${genre} ${type} that the director claims is a 'satire of late-stage capitalism'.`,
+    `A ${budgetTier}-tier ${type} that legally cannot be released in three major international territories.`,
+    `An incredibly expensive ${genre} ${type} that ends on a baffling cliffhanger for a sequel that won't happen.`,
+    `A ${budgetTier}-budget ${type} built around a washed-up action star who refuses to run or jump.`,
+    `A ${genre} ${type} that requires audiences to have watched six different spin-off shows to understand the plot.`
   ];
   return pick(cynicalFlavors);
 }
