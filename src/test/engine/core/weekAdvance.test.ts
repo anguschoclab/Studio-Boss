@@ -80,4 +80,39 @@ describe("advanceWeek", () => {
 
     vi.restoreAllMocks();
   });
+
+  it("handles advancing a week with an entirely empty pipeline and empty world state without crashing", () => {
+    const emptyState = initializeGame("Empty Studio", "major");
+
+    // Explicitly empty arrays that might be pre-populated
+    emptyState.studio.internal.projects = [];
+    emptyState.studio.internal.contracts = [];
+    emptyState.studio.internal.firstLookDeals = [];
+    emptyState.market.opportunities = [];
+    emptyState.market.buyers = [];
+    emptyState.market.activeMarketEvents = [];
+    emptyState.industry.rivals = [];
+    emptyState.industry.headlines = [];
+    emptyState.industry.families = [];
+    emptyState.industry.agencies = [];
+    emptyState.industry.agents = [];
+    emptyState.industry.talentPool = [];
+    emptyState.industry.awards = [];
+    emptyState.industry.festivalSubmissions = [];
+    emptyState.industry.rumors = [];
+    emptyState.industry.scandals = [];
+
+    let newState;
+    let summary;
+    expect(() => {
+      const result = advanceWeek(emptyState);
+      newState = result.newState;
+      summary = result.summary;
+    }).not.toThrow();
+
+    expect(newState?.week).toBe(2);
+    expect(newState?.studio.internal.projects).toHaveLength(0);
+    expect(summary?.totalRevenue).toBe(0);
+    expect(summary?.totalCosts).toBe(0);
+  });
 });

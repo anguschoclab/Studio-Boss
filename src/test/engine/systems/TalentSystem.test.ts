@@ -137,6 +137,34 @@ describe("TalentSystem", () => {
       expect(t.prestige).toBe(100);
       expect(t.fee).toBe(75000000); // Max fee
     });
+
+    it("handles extreme ego talent (0 skill/draw, 100 prestige) accurately after a huge hit", () => {
+      const egoTalent: TalentProfile[] = [
+        { ...mockTalent1, draw: 0, prestige: 100, fee: 1000000, temperament: 'Diva' }
+      ];
+      const hugeHit = { ...mockProject, revenue: 50000000 }; // 5.0 ROI
+
+      const results = TalentSystem.applyProjectResults(hugeHit, [mockContracts[0]], egoTalent);
+      const t = results[0];
+
+      expect(t.draw).toBe(12); // 0 + 12
+      expect(t.prestige).toBe(100); // 100 + 6, clamped to 100
+      expect(t.fee).toBe(1600000); // 1M * 1.6
+    });
+
+    it("handles extreme ego talent (0 skill/draw, 100 prestige) accurately after a massive bomb", () => {
+      const egoTalent: TalentProfile[] = [
+        { ...mockTalent1, draw: 0, prestige: 100, fee: 1000000, temperament: 'Diva' }
+      ];
+      const bomb = { ...mockProject, revenue: 1000000 }; // 0.1 ROI
+
+      const results = TalentSystem.applyProjectResults(bomb, [mockContracts[0]], egoTalent);
+      const t = results[0];
+
+      expect(t.draw).toBe(0); // 0 - 12, clamped to 0
+      expect(t.prestige).toBe(94); // 100 - 6 = 94
+      expect(t.fee).toBe(750000); // 1M * 0.75
+    });
   });
 
   describe("advance", () => {

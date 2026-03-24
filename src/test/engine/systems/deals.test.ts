@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 import { describe, it, expect, beforeEach } from 'vitest';
 import { evaluateFirstLookDeal, offerFirstLookDeal } from '../../../engine/systems/deals';
 import { TalentProfile, FirstLookDeal } from '../../../engine/types';
