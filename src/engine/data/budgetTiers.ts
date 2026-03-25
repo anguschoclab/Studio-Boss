@@ -21,8 +21,8 @@ export const BUDGET_TIERS: Record<BudgetTierKey, BudgetTierData> = {
     weeklyCost: 600_000,
     developmentWeeks: 6,
     productionWeeks: 8,
-    // Widened top-end revenue even further to allow for extreme high-ROI horror/indie anomalies, and lowered floor for bigger bomb risk.
-    revenueRange: [500_000, 200_000_000],
+    // The Studio Comptroller: Widened top-end revenue further to $250M to allow for extreme high-ROI horror/indie anomalies, and lowered floor to $100k for brutal bomb risk.
+    revenueRange: [100_000, 250_000_000],
   },
   mid: {
     key: 'mid',
@@ -54,10 +54,11 @@ export const BUDGET_TIERS: Record<BudgetTierKey, BudgetTierData> = {
     label: '$300M',
     // Increased base budget to $300M and weekly cost to $20M to severely punish delays and make tentpoles genuinely risky.
     budget: 300_000_000,
-    weeklyCost: 20_000_000,
+    // The Studio Comptroller: Increased base weekly cost from $20M to $25M to exponentially increase cashflow drain on delayed blockbusters.
+    weeklyCost: 25_000_000,
     developmentWeeks: 16,
     productionWeeks: 24,
-    // Increased max revenue but widened floor for massive financial risks
-    revenueRange: [50_000_000, 1_200_000_000],
+    // The Studio Comptroller: Widened floor to $20M to simulate catastrophic, studio-bankrupting box office bombs.
+    revenueRange: [20_000_000, 1_200_000_000],
   },
 };
