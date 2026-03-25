@@ -15,7 +15,7 @@ const FAMOUS_LAST_NAMES = [
   'Gyllenhaal', 'Arquette', 'Cusack', 'Douglas', 'Howard', 'Reiner', 'Wayans', 'Roberts', 'Eastwood', 'Smith'
 ];
 
-const TEMPERAMENTS = ['Professional', 'Diva', 'Method', 'Collaborative', 'Volatile', 'Perfectionist', 'Reliable', 'Difficult', 'Refuses to do press', 'Brings their own script doctor', 'Refuses to do rewrites', 'Mandatory private jet', 'Demands final cut', 'Always late to set', 'Requires trailer bigger than co-stars', 'Refuses to work with indie studios', 'Demands co-star approval', 'Requires personal onset chef', 'Only shoots in Europe', 'Refuses to do sequels', 'Requires ridiculous VFX double', 'Notorious for walk-outs', 'Refuses to do streaming', 'Brings their own lighting crew', 'Requires daily rewrites', 'Demands top billing', 'Only works with A-List co-stars'];
+const TEMPERAMENTS = ['Professional', 'Diva', 'Method', 'Collaborative', 'Volatile', 'Perfectionist', 'Reliable', 'Difficult', 'Refuses to do press', 'Brings their own script doctor', 'Refuses to do rewrites', 'Mandatory private jet', 'Demands final cut', 'Always late to set', 'Requires trailer bigger than co-stars', 'Refuses to work with indie studios', 'Demands co-star approval', 'Requires personal onset chef', 'Only shoots in Europe', 'Refuses to do sequels', 'Requires ridiculous VFX double', 'Notorious for walk-outs', 'Refuses to do streaming', 'Brings their own lighting crew', 'Requires daily rewrites', 'Demands top billing', 'Only works with A-List co-stars', 'Requires 20-person entourage', 'Refuses to work past 4 PM', 'Demands exclusive merchandising rights', 'Refuses to promote on social media', 'Only works with their specific DP', 'Requires a personal onset gym'];
 
 const TALENT_TYPES: Array<TalentRole> = ['director', 'actor', 'writer', 'producer', 'showrunner'];
 
@@ -136,7 +136,13 @@ export function generateTalentPool(size: number, families: Family[], agents: Age
       temperament === 'Brings their own lighting crew' ||
       temperament === 'Requires daily rewrites' ||
       temperament === 'Demands top billing' ||
-      temperament === 'Only works with A-List co-stars'
+      temperament === 'Only works with A-List co-stars' ||
+      temperament === 'Requires 20-person entourage' ||
+      temperament === 'Refuses to work past 4 PM' ||
+      temperament === 'Demands exclusive merchandising rights' ||
+      temperament === 'Refuses to promote on social media' ||
+      temperament === 'Only works with their specific DP' ||
+      temperament === 'Requires a personal onset gym'
     ) {
       perks.push(temperament);
       // Keep a valid legacy temperament for the UI fallback
