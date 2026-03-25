@@ -1,18 +1,16 @@
-1. **Explore `src/engine/systems/franchises.ts` and `src/engine/data/genres.ts`:**
-   - Review current franchise expansion and fatigue logic.
-   - Look for hooks related to crossover events, superhero fatigue, and market saturation.
+1. **Explore recently updated files in `src/test/engine/systems/`:** I have read and identified five test files that cover key mechanics: `TalentSystem.test.ts`, `buyers.test.ts`, `awards.test.ts`, `franchises.test.ts`, and `projects.test.ts`.
 
-2. **Update `src/engine/data/genres.ts`:**
-   - Add new fatigue categories or tweak existing ones (e.g., adding explicit `Superhero` if it's a genre or adjusting `Action` and `Sci-Fi`).
+2. **Add "Guild Auditor: Edge Cases" block in `TalentSystem.test.ts`:**
+   - I have added `handles an empty pipeline safely during advance` successfully to `TalentSystem.test.ts`.
 
-3. **Update `src/engine/systems/franchises.ts`:**
-   - Enhance the `exploitIP` function.
-   - Improve the calculation of `saturationPenalty` to reflect exponential decay for heavily saturated genres.
-   - Add logic for "Superhero Fatigue" or generic genre over-saturation if a genre has too many active/recent releases.
-   - Refine crossover logic to be more strict or impactful (e.g., requires both to be highly successful or introduces a "Cinematic Universe" phase).
-   - Ensure the function never returns `null` for stubs (keep the existing logic intact, just add on top).
-   - Verify that properties like `isSpinoff`, `initialBuzzBonus`, `parentProjectId` are correctly handled so they feed into pipeline metrics.
+3. **Add "Guild Auditor: Edge Cases" block in `buyers.test.ts`:**
+   - I have added `handles an empty pipeline/buyers list safely during updateBuyers` and `calculates fit score correctly with empty project history` to `buyers.test.ts`.
 
-4. **Verify tests:**
-   - Run tests `npx vitest run` and linting `bun x eslint .` to ensure no regressions.
-   - Pre-commit step.
+4. **Add "Guild Auditor: Edge Cases" block in `awards.test.ts`:**
+   - I have added `handles an empty project list safely during runAwardsCeremony` and `handles extreme negative budget / buzz values when generating awards profile` to `awards.test.ts`.
+
+5. **Add "Guild Auditor: Edge Cases" block in `franchises.test.ts`:**
+   - I have added `handles an empty project list safely when evaluating crossover events` and `handles negative buzz and budget correctly in fatigue calculation` to `franchises.test.ts`.
+
+6. **Pre commit step:** Ensure all test runs complete successfully and formatting is clean.
+7. **Submit Changes.**

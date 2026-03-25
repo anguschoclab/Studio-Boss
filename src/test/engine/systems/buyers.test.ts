@@ -35,6 +35,23 @@ describe("buyers system", () => {
     vi.restoreAllMocks();
   });
 
+
+  describe("Guild Auditor: Edge Cases", () => {
+    it("handles an empty pipeline/buyers list safely during updateBuyers", () => {
+      // should return empty array and no events
+      const emptyBuyers: Buyer[] = [];
+      const { updatedBuyers, newHeadlines: events } = updateBuyers(emptyBuyers, 50);
+      expect(updatedBuyers.length).toBe(0);
+      expect(events.length).toBe(0);
+    });
+
+    it("calculates fit score correctly with empty project history", () => {
+      vi.spyOn(Math, 'random').mockReturnValue(0.5);
+      const score = calculateFitScore(mockProject, mockBuyer, 50, []);
+      expect(score).toBe(50);
+    });
+  });
+
   describe("updateBuyers", () => {
     it("generates specific headlines for all mandate types", () => {
       const testBuyer: Buyer = {
