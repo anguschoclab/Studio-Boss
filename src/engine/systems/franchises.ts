@@ -7,6 +7,7 @@ interface StateCache {
   relatedCounts: Map<string, number>;
   genreSaturationCounts: Map<string, number>;
   crossoverTargets: Map<string, Project[]>;
+  universeProjectCount: number;
 }
 
 // ⚡ Bolt: Cache index to avoid O(N) traversal on every exploitIP call for the same state tick
@@ -20,6 +21,7 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
   // Find all related projects to calculate fatigue
   let relatedProjectCount = 0;
   let genreSaturationCount = 0;
+  let universeProjectCount = 0;
   let recentCrossoverTarget: Project | null = null;
   let isLegacy = false;
 
@@ -36,12 +38,17 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
         relatedCounts: new Map<string, number>(),
         genreSaturationCounts: new Map<string, number>(),
         crossoverTargets: new Map<string, Project[]>(),
+        universeProjectCount: 0,
       };
 
       const saturationCutoff = state.week - 50;
 
       for (let i = 0, len = state.studio.internal.projects.length; i < len; i++) {
         const p = state.studio.internal.projects[i];
+
+        if (p.parentProjectId) {
+          cache.universeProjectCount++;
+        }
 
         // Count related projects by root ID
         const pRootId = p.parentProjectId || p.id;
@@ -67,6 +74,7 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
 
     relatedProjectCount = cache.relatedCounts.get(rootId) || 0;
     genreSaturationCount = cache.genreSaturationCounts.get(sourceProject.genre) || 0;
+    universeProjectCount = cache.universeProjectCount;
 
     // Look for a crossover opportunity (same genre OR compatible genre)
     // ⚡ Bolt: Check cached targets for O(1) resolution
@@ -94,6 +102,10 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
   // Fatigue risk calculation
   let baseFatigueRisk = FRANCHISE_FATIGUE_RISK[sourceProject.genre] || 0.1;
 
+  // Calculate Cinematic Universe Oversaturation Penalty
+  // High volume of spin-offs in the studio overall contributes to general audience fatigue
+  const oversaturationPenalty = (universeProjectCount / 10) * baseFatigueRisk * 5;
+
   // Apply "Superhero Fatigue" (or general blockbuster fatigue) logic:
   // If the genre is heavily saturated, amplify the risk severely.
   if ((sourceProject.genre === 'Superhero' || sourceProject.genre === 'Action' || sourceProject.genre === 'Sci-Fi') && genreSaturationCount > 5) {
@@ -101,8 +113,8 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
   }
 
   const exponentialSaturation = Math.pow(relatedProjectCount, 1.2); // Exponential decay for heavily saturated franchises
-  // Factor in both the direct related projects and the general market saturation for this genre
-  const saturationPenalty = (exponentialSaturation * baseFatigueRisk * 10) + (genreSaturationCount * (baseFatigueRisk / 2) * 5);
+  // Factor in both the direct related projects and the general market saturation for this genre, plus cinematic universe overall fatigue
+  const saturationPenalty = (exponentialSaturation * baseFatigueRisk * 10) + (genreSaturationCount * (baseFatigueRisk / 2) * 5) + oversaturationPenalty;
 
   const isFatigued = saturationPenalty > 35; // High saturation
 
@@ -201,7 +213,28 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
     };
   }
 
-  if (recentCrossoverTarget && rand < 0.2) {
+  // Desperate Nostalgia Cash-Grab for dead fatigued legacy IPs
+  if (isFatigued && isLegacy && sourceProject.revenue <= sourceProject.budget * 1.5 && rand < 0.3) {
+    return {
+      title: `${sourceProject.title}: The Return`,
+      format: sourceProject.format,
+      genre: sourceProject.genre,
+      budgetTier: 'low', // Cheap cache-grab
+      targetAudience: sourceProject.targetAudience,
+      flavor: `A cheaply produced nostalgia cash-grab trying to squeeze the last remaining drops of goodwill from the ${sourceProject.title} franchise.`,
+      parentProjectId: sourceProject.id,
+      isSpinoff: true,
+      initialBuzzBonus: -10, // General audience resents it
+    };
+  }
+
+  if (isLegacy && recentCrossoverTarget && rand < 0.15) {
+    // Multiverse Event
+    newTitle = `${sourceProject.title}: Into the Multiverse`;
+    flavorText = `A massive multiverse event uniting legacy characters from the ${sourceProject.title} universe with ${recentCrossoverTarget.title}.`;
+    buzzBonus += 40 - (genreSaturationCount * 1.5); // Insane hype, slightly offset by genre saturation
+    newBudgetTier = 'blockbuster';
+  } else if (recentCrossoverTarget && rand < 0.2) {
     // Cinematic Universe Event
     newTitle = `${sourceProject.title} vs ${recentCrossoverTarget.title}: Dawn of Justice`;
     flavorText = `A blockbuster Cinematic Universe event combining two powerhouse franchises. Stakes have never been higher.`;
@@ -237,6 +270,11 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
     // Prequel
     newTitle = `${sourceProject.title}: Origins`;
     flavorText = `A prequel revealing the hidden history of the ${sourceProject.title} universe.`;
+  } else if (sourceProject.parentProjectId) {
+    // Spinoff of a Spinoff
+    newTitle = `${sourceProject.title}: The Next Chapter`;
+    flavorText = `An unexpected spinoff of a spinoff, proving the studio will milk the ${sourceProject.title} name dry.`;
+    buzzBonus -= 5; // Extra fatigue for spinning off a spinoff
   } else {
     // Spinoff
     newTitle = `${sourceProject.title}: The Next Generation`;
