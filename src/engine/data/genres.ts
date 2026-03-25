@@ -16,23 +16,23 @@ export const TARGET_AUDIENCES = [
 ] as const;
 
 export const CROSSOVER_AFFINITY: Record<string, string[]> = {
-  'Superhero': ['Action', 'Sci-Fi', 'Fantasy'],
+  'Superhero': ['Action', 'Sci-Fi', 'Fantasy', 'Comedy'],
   'Action': ['Sci-Fi', 'Thriller', 'Crime', 'Superhero'],
-  'Sci-Fi': ['Action', 'Horror', 'Fantasy'],
+  'Sci-Fi': ['Action', 'Horror', 'Fantasy', 'Animation'],
   'Horror': ['Sci-Fi', 'Thriller', 'Comedy'],
   'Fantasy': ['Action', 'Romance', 'Animation'],
-  'Comedy': ['Romance', 'Action', 'Animation'],
+  'Comedy': ['Romance', 'Action', 'Animation', 'Superhero'],
   'Crime': ['Thriller', 'Drama', 'Action'],
   'Thriller': ['Horror', 'Crime', 'Sci-Fi'],
   'Romance': ['Comedy', 'Drama', 'Musical'],
-  'Animation': ['Comedy', 'Family', 'Musical', 'Fantasy'],
+  'Animation': ['Comedy', 'Family', 'Musical', 'Fantasy', 'Sci-Fi'],
   'Drama': ['Romance', 'Crime', 'Thriller'],
   'Musical': ['Romance', 'Comedy', 'Animation'],
   'Documentary': [] // Rarely crosses over
 };
 
 export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
-  'Superhero': 0.50,   // Extreme risk, very sensitive to market saturation
+  'Superhero': 0.60,   // Extreme risk, very sensitive to market saturation
   'Action': 0.35,      // High risk for generic action fatigue
   'Sci-Fi': 0.30,      // High risk for sci-fi blockbusters
   'Fantasy': 0.25,     // Moderate risk
