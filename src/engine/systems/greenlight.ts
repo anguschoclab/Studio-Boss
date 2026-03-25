@@ -54,6 +54,14 @@ export function evaluateGreenlight(
     negatives.push(`Market saturation: -${saturationPenalty} points due to ${recentSimilarProjects.length} recent ${project.genre} release(s).`);
   }
 
+  // Trend-modifier: Calendar Gap Bonus
+  // If no similar projects have been released in the last 52 weeks, the market is starved for this genre.
+  // We inject a positive dynamic market trend bonus here to reward players for finding gaps in the release calendar.
+  if (recentSimilarProjects.length === 0) {
+    score += 15;
+    positives.push(`Market gap: +15 points due to no recent ${project.genre} releases in the past year.`);
+  }
+
   // 1. Budget vs Cash
   if (cash < project.budget) {
     score -= 40;

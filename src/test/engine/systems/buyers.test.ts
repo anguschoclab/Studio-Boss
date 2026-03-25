@@ -160,10 +160,10 @@ describe("buyers system", () => {
       const comedyProject = { ...mockProject, genre: "Comedy", buzz: 50 };
       const dramaProject = { ...mockProject, genre: "Drama", buzz: 50 };
 
-      // Base 50 + Match 30 + Buzz 10 + randRange 0 = 90
-      expect(calculateFitScore(fantasyProject, sciFiBuyer)).toBe(90);
-      expect(calculateFitScore(comedyProject, comedyBuyer)).toBe(90);
-      expect(calculateFitScore(dramaProject, dramaBuyer)).toBe(90);
+      // Base 50 + 15 (calendar gap) + Match 30 + Buzz 10 + randRange 0 = 105 -> clamped to 100
+      expect(calculateFitScore(fantasyProject, sciFiBuyer)).toBe(100);
+      expect(calculateFitScore(comedyProject, comedyBuyer)).toBe(100);
+      expect(calculateFitScore(dramaProject, dramaBuyer)).toBe(100);
     });
 
     it("boosts score for prestige mandate based on budget tiers", () => {
@@ -174,14 +174,14 @@ describe("buyers system", () => {
       const blockbusterProject = { ...mockProject, budgetTier: "blockbuster" as const, buzz: 50 };
       const lowProject = { ...mockProject, budgetTier: "low" as const, buzz: 50 };
 
-      // Base 50 + Match 20 + Buzz 10 = 80
-      expect(calculateFitScore(highProject, prestigeBuyer)).toBe(80);
+      // Base 50 + 15 (calendar gap) + Match 20 + Buzz 10 = 95
+      expect(calculateFitScore(highProject, prestigeBuyer)).toBe(95);
 
-      // Base 50 + Match 10 + Buzz 10 = 70
-      expect(calculateFitScore(blockbusterProject, prestigeBuyer)).toBe(70);
+      // Base 50 + 15 (calendar gap) + Match 10 + Buzz 10 = 85
+      expect(calculateFitScore(blockbusterProject, prestigeBuyer)).toBe(85);
 
-      // Base 50 - Match 20 + Buzz 10 = 40
-      expect(calculateFitScore(lowProject, prestigeBuyer)).toBe(40);
+      // Base 50 + 15 (calendar gap) - Match 20 + Buzz 10 = 55
+      expect(calculateFitScore(lowProject, prestigeBuyer)).toBe(55);
     });
 
     it("boosts score for broad_appeal mandate with family audience and mid/high budget", () => {
@@ -191,12 +191,12 @@ describe("buyers system", () => {
       const midFamilyProject = { ...mockProject, budgetTier: "mid" as const, targetAudience: "Family-Friendly", buzz: 50 };
       const highAdultProject = { ...mockProject, budgetTier: "high" as const, targetAudience: "Adult", buzz: 50 };
 
-      // mid/high (+20), family (+15)
-      // Base 50 + Budget 20 + Family 15 + Buzz 10 = 95
-      expect(calculateFitScore(midFamilyProject, broadBuyer)).toBe(95);
+      // mid/high (+20), family (+15), calendar gap (+15)
+      // Base 50 + 15 + Budget 20 + Family 15 + Buzz 10 = 110 -> 100
+      expect(calculateFitScore(midFamilyProject, broadBuyer)).toBe(100);
 
-      // Base 50 + Budget 20 + Buzz 10 = 80
-      expect(calculateFitScore(highAdultProject, broadBuyer)).toBe(80);
+      // Base 50 + 15 + Budget 20 + Buzz 10 = 95
+      expect(calculateFitScore(highAdultProject, broadBuyer)).toBe(95);
     });
 
     it("penalizes low budget projects for premium archetype buyers", () => {
@@ -205,8 +205,8 @@ describe("buyers system", () => {
 
       const lowProject = { ...mockProject, budgetTier: "low" as const, genre: "Action", buzz: 50 }; // no genre match to isolate archetype penalty
 
-      // Base 50 - Premium/Low 30 + Buzz 10 = 30
-      expect(calculateFitScore(lowProject, premiumBuyer)).toBe(30);
+      // Base 50 + 15 - Premium/Low 30 + Buzz 10 = 45
+      expect(calculateFitScore(lowProject, premiumBuyer)).toBe(45);
     });
 
     it("applies market saturation penalty for similar projects released within 52 weeks", () => {
@@ -241,7 +241,7 @@ describe("buyers system", () => {
 
       // Test without allProjects
       let score = calculateFitScore(mockProject, activeBuyer, currentWeek);
-      expect(score).toBe(50); // early returns base 50 if no mandate
+      expect(score).toBe(65); // early returns base 50 + 15 calendar gap if no mandate
 
       // Test with allProjects (2 within 52 weeks, 1 outside)
       // recent1 (week 10, current 60, diff 50 <= 52)
@@ -251,14 +251,14 @@ describe("buyers system", () => {
 
       score = calculateFitScore(mockProject, activeBuyer, currentWeek, allProjects);
       // penalty = 2 * 5 = 10
-      // 50 - 10 = 40
+      // 50 - 10 = 40 (no calendar gap bonus because length > 0)
       expect(score).toBe(40);
     });
 
-    it("returns exactly 50 if buyer has no mandate (early return check)", () => {
-      // Logic inside calculateFitScore early returns `score` (50) if `!buyer.currentMandate`
+    it("returns exactly 65 if buyer has no mandate and no similar projects (early return check)", () => {
+      // Logic inside calculateFitScore early returns `score` (50 + 15 calendar gap) if `!buyer.currentMandate`
       const score = calculateFitScore(mockProject, mockBuyer);
-      expect(score).toBe(50);
+      expect(score).toBe(65);
     });
 
     it("applies extreme buzz multipliers correctly with negative buzz", () => {
@@ -268,9 +268,9 @@ describe("buyers system", () => {
       const deadBuzzProject = { ...mockProject, buzz: -100 }; // Extreme negative buzz
       const score = calculateFitScore(deadBuzzProject, activeBuyer);
 
-      // Base: 50. Match: +30. buzz = -100 -> factor = (-100/100)*20 = -20
-      // 80 - 20 = 60
-      expect(score).toBe(60);
+      // Base: 50. Calendar Gap: +15. Match: +30. buzz = -100 -> factor = (-100/100)*20 = -20
+      // 95 - 20 = 75
+      expect(score).toBe(75);
     });
 
     it("clamps score between 0 and 100", () => {
@@ -293,8 +293,8 @@ describe("buyers system", () => {
 
       const score = calculateFitScore(hugeProject, freezeBuyer);
 
-      // Base: 50. Freeze + Blockbuster: -50. Buzz: +10. Rand: 0. Total: 10
-      expect(score).toBe(10);
+      // Base: 50. Calendar Gap: +15. Freeze + Blockbuster: -50. Buzz: +10. Rand: 0. Total: 25
+      expect(score).toBe(25);
     });
 
     it("handles broad appeal mandate with niche indie project", () => {
@@ -305,8 +305,8 @@ describe("buyers system", () => {
 
       const score = calculateFitScore(lowProject, broadBuyer);
 
-      // Base: 50. No budget match. No audience match. Buzz: +10. Total: 60
-      expect(score).toBe(60);
+      // Base: 50. Calendar Gap: +15. No budget match. No audience match. Buzz: +10. Total: 75
+      expect(score).toBe(75);
     });
 
     it("applies archetype specific penalties (network vs blockbuster)", () => {
@@ -320,8 +320,8 @@ describe("buyers system", () => {
 
       const score = calculateFitScore(blockbusterProject, networkBuyer);
 
-      // Base: 50. Network+Blockbuster: -20. Buzz: +10. Total: 40
-      expect(score).toBe(40);
+      // Base: 50. Calendar Gap: +15. Network+Blockbuster: -20. Buzz: +10. Total: 55
+      expect(score).toBe(55);
     });
   });
 
@@ -329,12 +329,15 @@ describe("buyers system", () => {
     it("requires a higher score (65) for upfront contracts", () => {
       vi.spyOn(Math, 'random').mockReturnValue(0.5); // randRange = 0
       const buyer: Buyer = { ...mockBuyer, currentMandate: { type: "sci-fi", activeUntilWeek: 100 } };
-      // Score will be 50 + 30 (sci-fi) + 10 (buzz) = 90
+      // Score will be 50 + 15 (gap) + 30 (sci-fi) + 10 (buzz) = 105 -> 100
 
       expect(negotiateContract(mockProject, buyer, 'upfront')).toBe(true);
 
-      // Lower buzz to miss threshold
-      const lowBuzzProject = { ...mockProject, buzz: -100 }; // buzz -20 -> score 50 + 30 - 20 = 60
+      // Lower buzz to miss threshold. Need score < 65.
+      // 50 + 15 + 30 = 95. We need buzz penalty > 30.
+      // Buzz factor = (buzz / 100) * 20. If buzz = -160, factor is -32.
+      // 95 - 32 = 63.
+      const lowBuzzProject = { ...mockProject, buzz: -160 };
       expect(negotiateContract(lowBuzzProject, buyer, 'upfront')).toBe(false);
     });
 
@@ -342,7 +345,7 @@ describe("buyers system", () => {
       vi.spyOn(Math, 'random').mockReturnValue(0.5); // randRange = 0
       const buyer: Buyer = { ...mockBuyer, currentMandate: { type: "sci-fi", activeUntilWeek: 100 } };
 
-      const lowBuzzProject = { ...mockProject, buzz: -100 }; // score 60
+      const lowBuzzProject = { ...mockProject, buzz: -160 }; // score 63
 
       expect(negotiateContract(lowBuzzProject, buyer, 'standard')).toBe(true);
       expect(negotiateContract(lowBuzzProject, buyer, 'deficit')).toBe(true);
@@ -353,22 +356,22 @@ describe("buyers system", () => {
       // Base score without mandates is 50, but let's give the buyer a mandate to bypass the early return
       const buyer: Buyer = { ...mockBuyer, currentMandate: { type: "broad_appeal", activeUntilWeek: 100 } };
 
-      // 50 (base) + 20 (broad_appeal mid tier) = 70.
+      // 50 (base) + 15 (gap) + 20 (broad_appeal mid tier) = 85.
 
-      // Exact threshold test for standard (40). Need score to drop by 30. Buzz -150 gives factor -30.
-      const exactStandardProject = { ...mockProject, buzz: -150 };
+      // Exact threshold test for standard (40). Need score to drop by 45. Buzz -225 gives factor -45.
+      const exactStandardProject = { ...mockProject, buzz: -225 };
       expect(negotiateContract(exactStandardProject, buyer, 'standard')).toBe(true); // 40 >= 40
 
-      // Just below threshold for standard (39). Need score to drop by 31. Buzz -155 gives factor -31.
-      const belowStandardProject = { ...mockProject, buzz: -155 };
+      // Just below threshold for standard (39). Need score to drop by 46. Buzz -230 gives factor -46.
+      const belowStandardProject = { ...mockProject, buzz: -230 };
       expect(negotiateContract(belowStandardProject, buyer, 'standard')).toBe(false); // 39 < 40
 
-      // Exact threshold test for upfront (65). Need score to drop by 5. Buzz -25 gives factor -5.
-      const exactUpfrontProject = { ...mockProject, buzz: -25 };
+      // Exact threshold test for upfront (65). Need score to drop by 20. Buzz -100 gives factor -20.
+      const exactUpfrontProject = { ...mockProject, buzz: -100 };
       expect(negotiateContract(exactUpfrontProject, buyer, 'upfront')).toBe(true); // 65 >= 65
 
-      // Just below threshold for upfront (64). Need score to drop by 6. Buzz -30 gives factor -6.
-      const belowUpfrontProject = { ...mockProject, buzz: -30 };
+      // Just below threshold for upfront (64). Need score to drop by 21. Buzz -105 gives factor -21.
+      const belowUpfrontProject = { ...mockProject, buzz: -105 };
       expect(negotiateContract(belowUpfrontProject, buyer, 'upfront')).toBe(false); // 64 < 65
     });
   });

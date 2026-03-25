@@ -84,6 +84,13 @@ export function calculateFitScore(project: Project, buyer: Buyer, currentWeek: n
     score -= saturationPenalty;
   }
 
+  // Trend-modifier: Calendar Gap Bonus
+  // If there have been no similar projects released in the last 52 weeks, the market is starved for this genre.
+  // We inject a positive dynamic market trend bonus here to reward players for finding gaps in the release calendar.
+  if (recentSimilarProjects.length === 0) {
+    score += 15;
+  }
+
   if (!buyer.currentMandate) return score;
 
   const mandate = buyer.currentMandate.type;
