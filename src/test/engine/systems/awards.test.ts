@@ -3,6 +3,46 @@ import { generateAwardsProfile, runAwardsCeremony } from "../../../engine/system
 import { Project, GameState } from "../../../engine/types";
 
 describe("awards system", () => {
+
+  describe("Guild Auditor: Edge Cases", () => {
+    it("handles an empty project list safely during runAwardsCeremony", () => {
+      const state: GameState = {
+        week: 52,
+        studio: { prestige: 50, internal: { projects: [] } },
+        industry: { awards: [] }
+      } as unknown as GameState;
+      const { newAwards, projectUpdates } = runAwardsCeremony(state, 2026);
+      expect(newAwards.length).toBe(0);
+      expect(projectUpdates.length).toBe(0);
+    });
+
+    it("handles extreme negative budget / buzz values when generating awards profile", () => {
+      const negativeProject: Project = {
+          id: "proj-neg",
+          title: "Test Project",
+          format: "film",
+          genre: "Drama",
+          budgetTier: "mid",
+          budget: -10000000,
+          weeklyCost: 100000,
+          targetAudience: "Adults",
+          flavor: "Gritty drama",
+          status: "released",
+          buzz: -50,
+          weeksInPhase: 0,
+          developmentWeeks: 4,
+          productionWeeks: 4,
+          revenue: 0,
+          weeklyRevenue: 0,
+          releaseWeek: 10,
+      };
+      const profile = generateAwardsProfile(negativeProject);
+      expect(profile).toBeDefined();
+      expect(profile.prestigeScore).toBeGreaterThanOrEqual(0); // Assuming clamp
+      expect(profile.indieCredibility).toBeGreaterThanOrEqual(0);
+    });
+  });
+
   describe("generateAwardsProfile", () => {
     const mockProject: Project = {
       id: "proj-1",
@@ -99,7 +139,7 @@ describe("awards system", () => {
         talentPool: [],
         awards: [],
       }
-    } as any;
+    } as unknown as GameState;
 
     const eligibleProject: Project = {
       id: "proj-1",

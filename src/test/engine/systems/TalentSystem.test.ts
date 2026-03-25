@@ -167,6 +167,50 @@ describe("TalentSystem", () => {
     });
   });
 
+
+  describe("Guild Auditor: Edge Cases", () => {
+    it("handles extreme ego talent (0 skill/draw, 100 prestige) accurately after a huge hit within Guild Auditor Edge Cases", () => {
+      const egoTalent: TalentProfile[] = [
+        { ...mockTalent1, draw: 0, prestige: 100, fee: 1000000, temperament: 'Diva' }
+      ];
+      const hugeHit = { ...mockProject, revenue: 50000000 };
+
+      const results = TalentSystem.applyProjectResults(hugeHit, [mockContracts[0]], egoTalent);
+      const t = results[0];
+
+      expect(t.draw).toBe(12);
+      expect(t.prestige).toBe(100);
+      expect(t.fee).toBe(1600000);
+    });
+
+    it("handles an empty pipeline safely during advance", () => {
+      const emptyState: GameState = {
+        week: 1,
+        cash: 1000000,
+        studio: {
+          internal: {
+            projects: [],
+            contracts: [],
+            firstLookDeals: [],
+          }
+        },
+        market: {
+          opportunities: [],
+          buyers: [],
+        },
+        industry: {
+          rivals: [],
+          talentPool: [],
+        }
+      } as unknown as GameState;
+
+      expect(() => TalentSystem.advance(emptyState)).not.toThrow();
+
+      const result = TalentSystem.advance(emptyState);
+      expect(result.updatedOpportunities).toBeDefined();
+    });
+  });
+
   describe("advance", () => {
     const mockState: GameState = {
       week: 1,
@@ -200,7 +244,7 @@ describe("TalentSystem", () => {
         rivals: [],
         talentPool: [mockTalent1, mockTalent2],
       }
-    } as any;
+    } as unknown as GameState;
 
     it("decrements opportunity expiry", () => {
       // Mock random to prevent new opportunities
