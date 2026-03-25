@@ -183,6 +183,28 @@ const TALENT_HEADLINES = [
   'Studio uses AI to analyze ${projectName} script; it recommends adding a sassy robot sidekick.',
   '${directorName} leaks an "early cut" of ${projectName} to force the studio\'s hand on edits.',
   'Crew on ${projectName} complains that the "revolutionary" new lighting rig is just an overpriced ring light.'
+,
+  // Scribe Expanded Content
+  '${directorName} claims ${projectName} isn\'t a movie, it\'s a \'six-part feature-length experience\'.',
+  'Lead actor in ${projectName} demands CGI abs added in post-production.',
+  'Director ${directorName} reportedly communicating with cast entirely via cryptic voice notes.',
+  'A-lister drops out of ${projectName} after reading the rewrite by a focus group.',
+  'Studio executives panic as ${directorName} insists the three-hour runtime is \'non-negotiable\'.',
+  'Star of ${projectName} launches competing lifestyle brand on the same day as the premiere.',
+  'On-set \'vibe coordinator\' for ${projectName} quits, citing unmanageable egos.',
+  '${directorName} spends entirely too much of the ${projectName} budget on vintage lenses.',
+  'Lead actress in ${projectName} refuses to do press, sending her publicist in a mask instead.',
+  'Studio brings in three ghostwriters to \'punch up\' the third act of ${projectName}.',
+  '${directorName} defends the controversial ending of ${projectName} as \'challenging the viewer\'.',
+  'Star of ${projectName} caught streaming video games during the film\'s red carpet premiere.',
+  'Craft services mutiny on the set of ${projectName} over lack of artisanal matcha.',
+  '${directorName} attempts to trademark the specific shade of teal used in ${projectName}.',
+  'Leaked audio reveals ${directorName} screaming at a producer over the font size in the opening credits.',
+  'Star of ${projectName} insists on bringing their spiritual advisor to every script read.',
+  'Studio head forced to apologize after calling ${projectName} a \'glorified toy commercial\'.',
+  '${directorName} demands the removal of all dialogue from the final 20 minutes of ${projectName}.',
+  'Fans petition to recast the lead in ${projectName} with a moderately popular Twitch streamer.',
+  'The press tour for ${projectName} derails entirely after the stars admit they didn\'t understand the plot.'
 ];
 
 const RIVAL_TEMPLATES = [
@@ -262,6 +284,28 @@ const RIVAL_TEMPLATES = [
   '{rival} CEO steps down amidst disastrous rollout of their new ${budget}M {genre} streaming service',
   '{rival} shamelessly copies competitor\'s successful {genre} film, adding a ${budget}M CGI budget',
   '{rival} aggressively monetizes their back catalog, releasing "demastered" versions of classic {genre} films'
+,
+  // Scribe Expanded Content
+  '{rival} greenlights a grimdark reboot of a beloved childhood franchise, scarring millennials.',
+  '{rival} CEO defends the use of generative AI scripts for their upcoming {genre} slate.',
+  '{rival} acquires the film rights to a Wikipedia article for ${budget}M.',
+  '{rival} attempts to launch a cinematic universe based entirely on public domain mascots.',
+  '{rival} forces unnecessary sequel hooks into their acclaimed ${budget}M {genre} indie darling.',
+  '{rival} spends ${budget}M marketing a {genre} film that was quietly cancelled last month.',
+  '{rival} pivots entirely to short-form content, cutting the runtime of all {genre} films to 45 minutes.',
+  '{rival} launches a ${budget}M {genre} project starring exclusively TikTok influencers; it flops immediately.',
+  '{rival} announces a 15-year roadmap for a {genre} franchise before the first film is even cast.',
+  '{rival} desperately tries to artificially manufacture a TikTok dance trend for their ${budget}M {genre} release.',
+  '{rival} blames the poor box office of their ${budget}M {genre} tentpole on \'audience fatigue\'.',
+  '{rival} caught artificially inflating the Rotten Tomatoes score for their new {genre} blockbuster.',
+  '{rival} writes off a nearly-completed ${budget}M {genre} film, claiming it \'no longer aligns with the brand\'.',
+  '{rival} re-releases an underperforming ${budget}M {genre} film, claiming it\'s the \'true visionary cut\'.',
+  '{rival} stock plummets after their highly anticipated ${budget}M {genre} cinematic universe implodes on arrival.',
+  '{rival} buys a struggling indie distributor just to strip-mine their {genre} IP.',
+  '{rival} insists their new ${budget}M {genre} franchise is \'too smart\' for mainstream audiences.',
+  '{rival} aggressively monetizes their back catalog, releasing \'demastered\' versions of classic {genre} films.',
+  '{rival} CEO caught calling their core demographic \'walking wallets\' on a hot mic.',
+  '{rival} relies entirely on algorithmic generation for their upcoming ${budget}M {genre} slate.'
 ];
 
 function fill(template: string, vars: Record<string, string>): string {
