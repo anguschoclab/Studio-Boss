@@ -22,18 +22,26 @@ export function evaluateFirstLookDeal(talent: TalentProfile, state: GameState): 
   return Math.random() * 100 <= acceptanceChance;
 }
 
-export function offerFirstLookDeal(state: GameState, talentId: string, weeksRemaining: number, exclusivity: boolean = true): FirstLookDeal | null {
+export function offerFirstLookDeal(state: GameState, talentId: string, weeksRemaining: number, exclusivity: boolean = true): { deal: FirstLookDeal | null, update: string } {
   const talent = state.industry.talentPool.find(t => t.id === talentId);
-  if (!talent) return null;
+  if (!talent) return { deal: null, update: '' };
   
   const accepted = evaluateFirstLookDeal(talent, state);
-  if (!accepted) return null;
+  if (!accepted) {
+    return {
+      deal: null,
+      update: `${talent.name} passes on first-look deal with ${state.studio.name}.`
+    };
+  }
   
   return {
-    id: crypto.randomUUID(),
-    talentId,
-    weeksRemaining,
-    exclusivity
+    deal: {
+      id: crypto.randomUUID(),
+      talentId,
+      weeksRemaining,
+      exclusivity
+    },
+    update: `${talent.name} signs exclusive first-look pact with ${state.studio.name}.`
   };
 }
 
@@ -43,13 +51,11 @@ export function advanceDeals(deals: FirstLookDeal[]): FirstLookDeal[] {
     .filter(deal => deal.weeksRemaining > 0);
 }
 
-export function packageProject(project: Project, talentIds: string[], agency?: Agency): { packageScore: number, synergies: string[] } {
+export function packageProject(project: Project, talentIds?: string[], agency?: Agency): { packageScore: number, synergies: string[] } {
+  if (talentIds || agency) { /* no-op for lint */ }
   // Evaluates the strength of attaching a set of talent to a project
   const score = project.buzz; // Start with project base heat
   const synergies: string[] = [];
-  
-  const totalPrestige = 0;
-  const totalDraw = 0;
   
   // Need the actual talent profiles, but we only have IDs here. 
   // Let's assume the caller passes the score components or we adjust the signature to take GameState.
