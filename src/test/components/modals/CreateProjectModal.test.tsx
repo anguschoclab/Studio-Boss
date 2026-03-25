@@ -58,22 +58,22 @@ describe('CreateProjectModal', () => {
     vi.clearAllMocks();
 
     // Default mock implementation
-    (useUIStore as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
+    (useUIStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector: any) => selector ? selector({
       showCreateProject: true,
       closeCreateProject: mockCloseCreateProject,
-    });
+    }) : { showCreateProject: true, closeCreateProject: mockCloseCreateProject });
 
-    (useGameStore as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
+    (useGameStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector: any) => selector ? selector({
       createProject: mockCreateProject,
       gameState: mockGameState,
-    });
+    }) : { createProject: mockCreateProject, gameState: mockGameState });
   });
 
   it('does not render when showCreateProject is false', () => {
-    (useUIStore as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
+    (useUIStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector: any) => selector ? selector({
       showCreateProject: false,
       closeCreateProject: mockCloseCreateProject,
-    });
+    }) : { showCreateProject: false, closeCreateProject: mockCloseCreateProject });
 
     render(<CreateProjectModal />);
     expect(screen.queryByText('Greenlight New Project')).not.toBeInTheDocument();
@@ -119,7 +119,7 @@ describe('CreateProjectModal', () => {
 
     // Should now show TV fields
     expect(screen.getByText('TV Format')).toBeInTheDocument();
-    expect(screen.getByText(/Episodes:/)).toBeInTheDocument();
+    expect(screen.getByText("Episodes")).toBeInTheDocument();
     expect(screen.getByText('Release Model')).toBeInTheDocument();
   });
 
@@ -133,7 +133,7 @@ describe('CreateProjectModal', () => {
     fireEvent.click(unscriptedBtn);
 
     expect(screen.getByText('Unscripted Format')).toBeInTheDocument();
-    expect(screen.getByText(/Episodes:/)).toBeInTheDocument();
+    expect(screen.getByText("Episodes")).toBeInTheDocument();
     expect(screen.getByText('Release Model')).toBeInTheDocument();
   });
 
@@ -143,7 +143,7 @@ describe('CreateProjectModal', () => {
     const input = screen.getByDisplayValue('Generated Test Title');
     fireEvent.change(input, { target: { value: '' } });
 
-    const greenlightBtn = screen.getByText('Greenlight');
+    const greenlightBtn = screen.getByText('Greenlight Project');
     expect(greenlightBtn).toBeDisabled();
   });
 
@@ -154,7 +154,7 @@ describe('CreateProjectModal', () => {
     const input = screen.getByDisplayValue('Generated Test Title');
     fireEvent.change(input, { target: { value: 'My Awesome Movie' } });
 
-    const greenlightBtn = screen.getByText('Greenlight');
+    const greenlightBtn = screen.getByText('Greenlight Project');
     fireEvent.click(greenlightBtn);
 
     expect(mockCreateProject).toHaveBeenCalledWith(expect.objectContaining({
@@ -174,7 +174,7 @@ describe('CreateProjectModal', () => {
     const input = screen.getByDisplayValue('Generated Test Title');
     fireEvent.change(input, { target: { value: 'Talent Movie' } });
 
-    const greenlightBtn = screen.getByText('Greenlight');
+    const greenlightBtn = screen.getByText('Greenlight Project');
     fireEvent.click(greenlightBtn);
 
     expect(mockCreateProject).toHaveBeenCalledWith(expect.objectContaining({

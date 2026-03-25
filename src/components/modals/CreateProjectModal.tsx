@@ -18,7 +18,7 @@ import { Dices } from 'lucide-react';
 
 export const CreateProjectModal = () => {
   const { showCreateProject, closeCreateProject } = useUIStore();
-  const createProject = useGameStore(s => s.createProject);
+  const createProject = useGameStore(s => s.createProject) || (() => {});
   const gameState = useGameStore(s => s.gameState);
   const [selectedTalent, setSelectedTalent] = useState<string[]>([]);
 
@@ -46,7 +46,7 @@ export const CreateProjectModal = () => {
   let calculatedDevWeeks = tier.developmentWeeks;
   let calculatedProdWeeks = tier.productionWeeks;
   let calculatedBudget = tier.budget;
-  const talentPool = useMemo(() => gameState?.industry.talentPool || [], [gameState?.industry.talentPool]);
+  const talentPool = gameState?.industry?.talentPool || [];
   const talentMap = useMemo(() => new Map(talentPool.map(t => [t.id, t])), [talentPool]);
   const talentFees = selectedTalent.reduce((sum, id) => {
     const t = talentMap.get(id);
@@ -86,37 +86,38 @@ export const CreateProjectModal = () => {
 
   return (
     <Dialog open={showCreateProject} onOpenChange={closeCreateProject}>
-      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="font-display">Greenlight New Project</DialogTitle>
-          <DialogDescription>Commission a new project for your slate.</DialogDescription>
+      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto bg-card/95 backdrop-blur-xl border-border/50 shadow-2xl animate-in fade-in zoom-in-95 duration-300">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-background/50 pointer-events-none rounded-lg" />
+        <DialogHeader className="relative z-10 pb-4 border-b border-border/40">
+          <DialogTitle className="font-display font-black text-2xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">Greenlight New Project</DialogTitle>
+          <DialogDescription className="text-muted-foreground font-medium">Commission a new project for your slate.</DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4">
-          <div className="space-y-1.5">
-            <Label htmlFor="project-title" className="text-xs uppercase tracking-wider">
+        <div className="space-y-5 relative z-10 pt-2">
+          <div className="space-y-2">
+            <Label htmlFor="project-title" className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground/80">
               Title <span className="text-destructive">*</span>
             </Label>
-            <div className="flex gap-2">
-              <Input id="project-title" required value={title} onChange={e => setTitle(e.target.value)} placeholder="Untitled Project" className="flex-1" />
-              <Button type="button" variant="outline" size="icon" onClick={() => setTitle(generateProjectTitle(genre))} title="Generate Random Title" aria-label="Generate Random Title">
-                <Dices className="h-4 w-4" />
+            <div className="flex gap-2 group relative">
+              <Input id="project-title" required value={title} onChange={e => setTitle(e.target.value)} placeholder="Untitled Project" className="flex-1 font-display font-bold text-lg h-11 bg-background/50 border-border/50 focus-visible:ring-primary/50 transition-all shadow-inner" />
+              <Button type="button" variant="outline" size="icon" onClick={() => setTitle(generateProjectTitle(genre))} title="Generate Random Title" aria-label="Generate Random Title" className="h-11 w-11 shrink-0 bg-background/50 hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-all shadow-sm">
+                <Dices className="h-5 w-5" />
               </Button>
             </div>
           </div>
 
           {/* Format */}
-          <div className="space-y-1.5">
-            <Label className="text-xs uppercase tracking-wider">Format</Label>
-            <div className="flex gap-2">
+          <div className="space-y-2">
+            <Label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground/80">Format</Label>
+            <div className="flex gap-2 p-1 bg-muted/30 rounded-lg border border-border/40">
               {(['film', 'tv', 'unscripted'] as ProjectFormat[]).map(f => (
                 <Button
                   key={f}
                   type="button"
-                  variant={format === f ? 'default' : 'outline'}
+                  variant={format === f ? 'default' : 'ghost'}
                   size="sm"
                   onClick={() => setFormat(f)}
-                  className="flex-1 font-display"
+                  className={`flex-1 font-display font-bold tracking-wide transition-all ${format === f ? 'shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
                 >
                   {f === 'film' ? 'Film' : f === 'tv' ? 'TV Series' : 'Unscripted'}
                 </Button>
@@ -125,12 +126,12 @@ export const CreateProjectModal = () => {
           </div>
 
           {(format === 'tv' || format === 'unscripted') && (
-            <>
+            <div className="grid grid-cols-2 gap-4">
               {format === 'tv' ? (
-              <div className="space-y-1.5">
-                <Label className="text-xs uppercase tracking-wider">TV Format</Label>
+              <div className="space-y-2 col-span-2 sm:col-span-1">
+                <Label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground/80">TV Format</Label>
                 <Select value={tvFormat} onValueChange={(v) => setTvFormat(v as TvFormatKey)}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectTrigger className="bg-background/50 border-border/50"><SelectValue /></SelectTrigger>
                   <SelectContent>
                     {Object.values(TV_FORMATS).map(t => (
                       <SelectItem key={t.key} value={t.key}>
@@ -141,10 +142,10 @@ export const CreateProjectModal = () => {
                 </Select>
               </div>
               ) : (
-              <div className="space-y-1.5">
-                <Label className="text-xs uppercase tracking-wider">Unscripted Format</Label>
+              <div className="space-y-2 col-span-2 sm:col-span-1">
+                <Label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground/80">Unscripted Format</Label>
                 <Select value={unscriptedFormat} onValueChange={(v) => setUnscriptedFormat(v as UnscriptedFormatKey)}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectTrigger className="bg-background/50 border-border/50"><SelectValue /></SelectTrigger>
                   <SelectContent>
                     {Object.values(UNSCRIPTED_FORMATS).map(t => (
                       <SelectItem key={t.key} value={t.key}>
@@ -157,22 +158,28 @@ export const CreateProjectModal = () => {
               )}
 
               {/* Episodes */}
-              <div className="space-y-1.5">
-                <Label className="text-xs uppercase tracking-wider">Episodes: {episodes}</Label>
-                <Slider
-                    value={[episodes]}
-                    min={format === 'tv' ? TV_FORMATS[tvFormat].minEpisodes : UNSCRIPTED_FORMATS[unscriptedFormat].minEpisodes}
-                    max={format === 'tv' ? TV_FORMATS[tvFormat].maxEpisodes : UNSCRIPTED_FORMATS[unscriptedFormat].maxEpisodes}
-                    step={1}
-                    onValueChange={(val) => setEpisodes(val[0])}
-                />
+              <div className="space-y-2 col-span-2 sm:col-span-1">
+                <Label className="flex justify-between items-center text-[10px] uppercase font-bold tracking-widest text-muted-foreground/80">
+                  <span>Episodes</span>
+                  <span className="text-foreground font-mono bg-muted/50 px-1.5 py-0.5 rounded shadow-inner">{episodes}</span>
+                </Label>
+                <div className="pt-2">
+                  <Slider
+                      value={[episodes]}
+                      min={format === 'tv' ? TV_FORMATS[tvFormat].minEpisodes : UNSCRIPTED_FORMATS[unscriptedFormat].minEpisodes}
+                      max={format === 'tv' ? TV_FORMATS[tvFormat].maxEpisodes : UNSCRIPTED_FORMATS[unscriptedFormat].maxEpisodes}
+                      step={1}
+                      onValueChange={(val) => setEpisodes(val[0])}
+                      className="cursor-pointer"
+                  />
+                </div>
               </div>
 
               {/* Release Model */}
-              <div className="space-y-1.5">
-                <Label className="text-xs uppercase tracking-wider">Release Model</Label>
+              <div className="space-y-2 col-span-2">
+                <Label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground/80">Release Model</Label>
                 <Select value={releaseModel} onValueChange={(v) => setReleaseModel(v as ReleaseModelKey)}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectTrigger className="bg-background/50 border-border/50"><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="weekly">Weekly Rollout</SelectItem>
                     <SelectItem value="binge">Full Season Binge</SelectItem>
@@ -180,27 +187,40 @@ export const CreateProjectModal = () => {
                   </SelectContent>
                 </Select>
               </div>
-            </>
+            </div>
           )}
 
-          {/* Genre */}
-          <div className="space-y-1.5">
-            <Label className="text-xs uppercase tracking-wider">Genre</Label>
-            <Select value={genre} onValueChange={setGenre}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>
-                {format === 'unscripted'
-                  ? UNSCRIPTED_GENRES.map(g => <SelectItem key={g} value={g}>{g}</SelectItem>)
-                  : GENRES.map(g => <SelectItem key={g} value={g}>{g}</SelectItem>)}
-              </SelectContent>
-            </Select>
+          <div className="grid grid-cols-2 gap-4">
+            {/* Genre */}
+            <div className="space-y-2">
+              <Label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground/80">Genre</Label>
+              <Select value={genre} onValueChange={setGenre}>
+                <SelectTrigger className="bg-background/50 border-border/50"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {format === 'unscripted'
+                    ? UNSCRIPTED_GENRES.map(g => <SelectItem key={g} value={g}>{g}</SelectItem>)
+                    : GENRES.map(g => <SelectItem key={g} value={g}>{g}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Target Audience */}
+            <div className="space-y-2">
+              <Label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground/80">Target Audience</Label>
+              <Select value={targetAudience} onValueChange={setTargetAudience}>
+                <SelectTrigger className="bg-background/50 border-border/50"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {TARGET_AUDIENCES.map(a => <SelectItem key={a} value={a}>{a}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           {/* Budget Tier */}
-          <div className="space-y-1.5">
-            <Label className="text-xs uppercase tracking-wider">Budget Tier</Label>
+          <div className="space-y-2">
+            <Label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground/80">Budget Tier</Label>
             <Select value={budgetTier} onValueChange={(v) => setBudgetTier(v as BudgetTierKey)}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger className="bg-background/50 border-border/50"><SelectValue /></SelectTrigger>
               <SelectContent>
                 {Object.values(BUDGET_TIERS).map(t => (
                   <SelectItem key={t.key} value={t.key}>
@@ -209,32 +229,35 @@ export const CreateProjectModal = () => {
                 ))}
               </SelectContent>
             </Select>
-            <p className="text-[10px] text-muted-foreground bg-muted p-2 rounded">
-              Est. Weekly Cost: {formatMoney(calculatedWeeklyCost)}<br />
-              Est. Base Budget: {formatMoney(calculatedBudget)}<br />
-              Talent Fees: {formatMoney(talentFees)}<br />
-              Est. Total Budget: {formatMoney(calculatedBudget + talentFees)}<br />
-              Schedule: Dev {calculatedDevWeeks}wk / Prod {calculatedProdWeeks}wk
-            </p>
-          </div>
-
-          {/* Target Audience */}
-          <div className="space-y-1.5">
-            <Label className="text-xs uppercase tracking-wider">Target Audience</Label>
-            <Select value={targetAudience} onValueChange={setTargetAudience}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>
-                {TARGET_AUDIENCES.map(a => <SelectItem key={a} value={a}>{a}</SelectItem>)}
-              </SelectContent>
-            </Select>
+            <div className="bg-muted/30 border border-border/40 p-3 rounded-xl mt-2 grid grid-cols-2 gap-x-4 gap-y-2 shadow-inner">
+                <div className="flex flex-col">
+                  <span className="text-[9px] uppercase tracking-widest font-bold text-muted-foreground/70">Est. Base Budget</span>
+                  <span className="text-sm font-semibold text-foreground/80">{formatMoney(calculatedBudget)}</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[9px] uppercase tracking-widest font-bold text-muted-foreground/70">Est. Total Budget</span>
+                  <span className="text-sm font-bold text-foreground">{formatMoney(calculatedBudget + talentFees)}</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[9px] uppercase tracking-widest font-bold text-muted-foreground/70">Est. Weekly Cost</span>
+                  <span className="text-xs font-semibold text-destructive">{formatMoney(calculatedWeeklyCost)}/wk</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[9px] uppercase tracking-widest font-bold text-muted-foreground/70">Schedule</span>
+                  <span className="text-xs font-medium text-foreground/80">Dev {calculatedDevWeeks}w / Prod {calculatedProdWeeks}w</span>
+                </div>
+            </div>
           </div>
 
           {/* Talent Selection */}
-          <div className="space-y-1.5">
-            <Label className="text-xs uppercase tracking-wider">Attach Talent</Label>
-            <div className="max-h-40 overflow-y-auto space-y-1 border rounded p-2">
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground/80">Attach Talent</Label>
+              {talentFees > 0 && <span className="text-[10px] font-bold text-destructive">Fees: {formatMoney(talentFees)}</span>}
+            </div>
+            <div className="max-h-40 overflow-y-auto space-y-1.5 border border-border/50 bg-background/30 shadow-inner rounded-xl p-2.5 custom-scrollbar">
               {talentPool.map(t => (
-                <div key={t.id} className="flex items-center space-x-2">
+                <label key={t.id} htmlFor={t.id} className="flex items-center space-x-3 p-2 rounded-lg hover:bg-muted/50 cursor-pointer transition-colors group">
                   <input
                     type="checkbox"
                     id={t.id}
@@ -243,26 +266,31 @@ export const CreateProjectModal = () => {
                       if (e.target.checked) setSelectedTalent([...selectedTalent, t.id]);
                       else setSelectedTalent(selectedTalent.filter(id => id !== t.id));
                     }}
+                    className="rounded border-border/50 text-primary focus:ring-primary/50"
                   />
-                  <Label htmlFor={t.id} className="text-sm cursor-pointer flex-1">
-                    {t.name} ({t.roles[0]}) - {formatMoney(t.fee)}
-                  </Label>
-                </div>
+                  <div className="flex-1 flex justify-between items-center text-sm">
+                    <span className="font-semibold group-hover:text-primary transition-colors">{t.name} <span className="text-xs text-muted-foreground font-normal">({t.roles[0]})</span></span>
+                    <span className="font-mono text-xs text-foreground/70">{formatMoney(t.fee)}</span>
+                  </div>
+                </label>
               ))}
+              {talentPool.length === 0 && (
+                <div className="text-xs text-center text-muted-foreground py-4">No talent available in roster.</div>
+              )}
             </div>
           </div>
 
           {/* Flavor */}
-          <div className="space-y-1.5">
-            <Label htmlFor="project-flavor" className="text-xs uppercase tracking-wider">Positioning (optional)</Label>
-            <Input id="project-flavor" value={flavor} onChange={e => setFlavor(e.target.value)} placeholder="A bold reimagining of..." />
+          <div className="space-y-2">
+            <Label htmlFor="project-flavor" className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground/80">Positioning <span className="text-muted-foreground/50 font-normal">(optional)</span></Label>
+            <Input id="project-flavor" value={flavor} onChange={e => setFlavor(e.target.value)} placeholder="A bold reimagining of..." className="bg-background/50 border-border/50 transition-all shadow-inner focus-visible:ring-primary/50" />
           </div>
         </div>
 
-        <DialogFooter>
-          <Button variant="outline" onClick={closeCreateProject}>Cancel</Button>
-          <Button onClick={handleCreate} disabled={!title.trim()} className="font-display">
-            Greenlight
+        <DialogFooter className="relative z-10 pt-4 border-t border-border/40 mt-6 sm:justify-between">
+          <Button variant="ghost" onClick={closeCreateProject} className="font-medium hover:bg-destructive/10 hover:text-destructive transition-colors">Cancel</Button>
+          <Button onClick={handleCreate} disabled={!title.trim()} className="font-display font-bold tracking-wide shadow-sm hover:shadow-[0_0_15px_rgba(234,179,8,0.4)] transition-all">
+            Greenlight Project
           </Button>
         </DialogFooter>
       </DialogContent>
