@@ -1274,6 +1274,320 @@ const CRISIS_POOLS = [
         buzzPenalty: 45
       }
     ]
+  },
+  {
+    description: "The A-list lead actor insists that their pet iguana must be written into every scene as a crucial supporting character.",
+    options: [
+      {
+        text: "Hire writers to rewrite the script and add a tiny custom trailer for the iguana.",
+        effectDescription: "Costs $120k for the rewrites and iguana accommodations.",
+        cashPenalty: 120000
+      },
+      {
+        text: "Flatly refuse.",
+        effectDescription: "The actor sulks, tanking their performance. Lose 15 buzz.",
+        buzzPenalty: 15
+      },
+      {
+        text: "CGI the iguana out in post.",
+        effectDescription: "Costs $400k in tedious VFX and delays the edit by 1 week.",
+        cashPenalty: 400000,
+        weeksDelay: 1
+      }
+    ]
+  },
+  {
+    description: "Your 'visionary' director has mandated that everyone on set communicate solely in archaic Latin to 'maintain the atmosphere'.",
+    options: [
+      {
+        text: "Hire translators for every department head.",
+        effectDescription: "Costs $250k in rush fees.",
+        cashPenalty: 250000
+      },
+      {
+        text: "Force them to speak English.",
+        effectDescription: "The director has a breakdown, halting production for 2 weeks.",
+        weeksDelay: 2
+      },
+      {
+        text: "Let the chaos unfold.",
+        effectDescription: "No one knows what is going on. Continuity errors abound. Lose 20 buzz.",
+        buzzPenalty: 20
+      }
+    ]
+  },
+  {
+    description: "A crucial action sequence was accidentally filmed with the lens cap on, and the explosive set piece was completely destroyed.",
+    options: [
+      {
+        text: "Rebuild the set and reshoot the entire sequence.",
+        effectDescription: "Costs a brutal $1.8M and adds 3 weeks to production.",
+        cashPenalty: 1800000,
+        weeksDelay: 3
+      },
+      {
+        text: "Replace the scene with an incomprehensible CGI blur.",
+        effectDescription: "Costs $500k, but looks terrible. Lose 25 buzz.",
+        cashPenalty: 500000,
+        buzzPenalty: 25
+      },
+      {
+        text: "Write it off as an off-screen explosion.",
+        effectDescription: "Saves money, but the audience feels cheated. Lose 35 buzz.",
+        buzzPenalty: 35
+      }
+    ]
+  },
+  {
+    description: "The film's 'breakout star' just dropped a deeply embarrassing, self-produced rap album that is getting roasted globally.",
+    options: [
+      {
+        text: "Launch a PR campaign to frame it as a 'satirical performance art piece'.",
+        effectDescription: "Costs $300k to spin the narrative.",
+        cashPenalty: 300000
+      },
+      {
+        text: "Ignore it and hope the news cycle moves on.",
+        effectDescription: "It does not. The cringe factor drops your project's buzz by 25.",
+        buzzPenalty: 25
+      },
+      {
+        text: "Pay the streaming platforms to bury the album.",
+        effectDescription: "Costs $800k in backroom deals, but protects their image.",
+        cashPenalty: 800000
+      }
+    ]
+  },
+  {
+    description: "A rogue marketing agency accidentally promoted the film as a heartwarming family comedy instead of a terrifying psychological thriller.",
+    options: [
+      {
+        text: "Urgently recall and replace all marketing materials globally.",
+        effectDescription: "Costs an eye-watering $1.5M.",
+        cashPenalty: 1500000
+      },
+      {
+        text: "Recut the film to actually make it a family comedy.",
+        effectDescription: "Costs $500k in editing and ADR, but creates an incomprehensible mess. Lose 40 buzz.",
+        cashPenalty: 500000,
+        buzzPenalty: 40
+      },
+      {
+        text: "Lean into it. Let the families show up.",
+        effectDescription: "Massive traumatized walkouts generate infamy, but severe brand damage. Lose 30 buzz.",
+        buzzPenalty: 30
+      }
+    ]
+  },
+  {
+    description: "The lead actress demands that the script be restructured so her character never loses an argument, fundamentally breaking the narrative arc.",
+    options: [
+      {
+        text: "Hire expensive script doctors to make it somewhat coherent.",
+        effectDescription: "Costs $250k and delays production by 1 week.",
+        cashPenalty: 250000,
+        weeksDelay: 1
+      },
+      {
+        text: "Give in and shoot the terrible new pages.",
+        effectDescription: "The character becomes insufferable. Lose 20 buzz.",
+        buzzPenalty: 20
+      },
+      {
+        text: "Call her bluff and threaten breach of contract.",
+        effectDescription: "She complies, but her performance is completely phoned-in. Lose 15 buzz.",
+        buzzPenalty: 15
+      }
+    ]
+  },
+  {
+    description: "An eccentric billionaire investor demands a 5-minute cameo where he defeats the main villain single-handedly, or he pulls his funding.",
+    options: [
+      {
+        text: "Shoot the scene exactly as he wants it.",
+        effectDescription: "The scene is embarrassingly bad and ruins the climax. Lose 35 buzz.",
+        buzzPenalty: 35
+      },
+      {
+        text: "Shoot it, then pay a massive legal penalty to cut him in post.",
+        effectDescription: "Costs $1.2M in contractual fines.",
+        cashPenalty: 1200000
+      },
+      {
+        text: "Refuse and scramble for bridge financing.",
+        effectDescription: "Costs $500k in high-interest loans and delays production by 3 weeks.",
+        cashPenalty: 500000,
+        weeksDelay: 3
+      }
+    ]
+  },
+  {
+    description: "The crucial period-accurate costumes were 'accidentally' destroyed by a disgruntled former wardrobe assistant.",
+    options: [
+      {
+        text: "Rush order historically accurate replacements from overseas.",
+        effectDescription: "Costs $600k and delays the shoot by 2 weeks.",
+        cashPenalty: 600000,
+        weeksDelay: 2
+      },
+      {
+        text: "Raid a local theater company's generic costume rack.",
+        effectDescription: "The movie looks unbelievably cheap. Lose 25 buzz.",
+        buzzPenalty: 25
+      },
+      {
+        text: "Shoot the scenes entirely in extreme close-ups to hide the lack of costumes.",
+        effectDescription: "Saves money, but the visual style is claustrophobic and bizarre. Lose 15 buzz.",
+        buzzPenalty: 15
+      }
+    ]
+  },
+  {
+    description: "A prominent trade publication is threatening to publish an exposé on the 'toxic, chaotic' environment on your set.",
+    options: [
+      {
+        text: "Pay the publication off with 'exclusive advertising commitments'.",
+        effectDescription: "Costs $400k in forced ad buys.",
+        cashPenalty: 400000
+      },
+      {
+        text: "Launch a pre-emptive PR strike painting the set as 'passionate and intense'.",
+        effectDescription: "Costs $150k but mitigates the damage.",
+        cashPenalty: 150000
+      },
+      {
+        text: "Ignore it. Let them publish.",
+        effectDescription: "The exposé goes viral. Lose 30 buzz.",
+        buzzPenalty: 30
+      }
+    ]
+  },
+  {
+    description: "The 'method' actor playing the gritty detective refuses to shower for authenticity, and the crew is threatening to walk out due to the smell.",
+    options: [
+      {
+        text: "Hire a dedicated hazmat cleaning crew to follow them around.",
+        effectDescription: "Costs $100k in specialized sanitation.",
+        cashPenalty: 100000
+      },
+      {
+        text: "Shut down production until they bathe.",
+        effectDescription: "Delays production by 1 week.",
+        weeksDelay: 1
+      },
+      {
+        text: "Force the crew to work through it.",
+        effectDescription: "Morale completely collapses, leading to terrible work. Lose 20 buzz.",
+        buzzPenalty: 20
+      }
+    ]
+  },
+  {
+    description: "The studio mandates the sudden inclusion of a 'hilarious' CGI sidekick to appeal to international toy markets.",
+    options: [
+      {
+        text: "Hire top-tier animators to make the sidekick somewhat tolerable.",
+        effectDescription: "Costs $900k and delays post-production by 2 weeks.",
+        cashPenalty: 900000,
+        weeksDelay: 2
+      },
+      {
+        text: "Use a cheap, rushed animation studio.",
+        effectDescription: "Costs $200k, but the sidekick is nightmare fuel. Lose 35 buzz.",
+        cashPenalty: 200000,
+        buzzPenalty: 35
+      },
+      {
+        text: "Refuse the mandate.",
+        effectDescription: "The studio retaliates by pulling P&A (marketing) funds. Lose 25 buzz.",
+        buzzPenalty: 25
+      }
+    ]
+  },
+  {
+    description: "An unexpected meteor shower completely ruined a week's worth of crucial night shoots by lighting up the sky.",
+    options: [
+      {
+        text: "Wait it out and reshoot the scenes.",
+        effectDescription: "Delays production by 2 weeks.",
+        weeksDelay: 2
+      },
+      {
+        text: "Digitally remove the meteors in post.",
+        effectDescription: "Costs $300k in VFX cleanup.",
+        cashPenalty: 300000
+      },
+      {
+        text: "Claim the meteors are part of the story now.",
+        effectDescription: "The script makes no sense anymore. Lose 20 buzz.",
+        buzzPenalty: 20
+      }
+    ]
+  },
+  {
+    description: "The lead actor has secretly been wearing a high-tech earpiece to be fed their lines, and the signal just got crossed with a local sports radio station during a dramatic monologue.",
+    options: [
+      {
+        text: "Shut down the set and force them to actually learn their lines.",
+        effectDescription: "Delays production by 2 weeks.",
+        weeksDelay: 2
+      },
+      {
+        text: "Hire an elite audio team to isolate and remove the sports commentary in post.",
+        effectDescription: "Costs $400k in complex sound design.",
+        cashPenalty: 400000
+      },
+      {
+        text: "Keep the take. Claim it's a 'bold, postmodern audio choice'.",
+        effectDescription: "Critics are bewildered. Lose 25 buzz.",
+        buzzPenalty: 25
+      }
+    ]
+  },
+  {
+    description: "Your 'cutting-edge' practical effects robot went berserk and smashed through the catering tent.",
+    options: [
+      {
+        text: "Repair the robot and rebuild the tent.",
+        effectDescription: "Costs $250k and delays the shoot by 1 week.",
+        cashPenalty: 250000,
+        weeksDelay: 1
+      },
+      {
+        text: "Scrap the robot and replace it with CGI.",
+        effectDescription: "Costs $800k in VFX and loses the 'practical' marketing angle. Lose 10 buzz.",
+        cashPenalty: 800000,
+        buzzPenalty: 10
+      },
+      {
+        text: "Leak the footage to TikTok.",
+        effectDescription: "Costs nothing. Generates a weird 10 buzz boost, but delays the shoot by 1 week.",
+        weeksDelay: 1,
+        buzzPenalty: -10
+      }
+    ]
+  },
+  {
+    description: "The director vanished into the jungle to 'find the true ending' and hasn't been seen in four days.",
+    options: [
+      {
+        text: "Hire a private search and rescue team.",
+        effectDescription: "Costs $150k and delays production by 1 week.",
+        cashPenalty: 150000,
+        weeksDelay: 1
+      },
+      {
+        text: "Promote the Assistant Director to finish the film.",
+        effectDescription: "Saves money, but the movie loses its distinct voice. Lose 20 buzz.",
+        buzzPenalty: 20
+      },
+      {
+        text: "Wait for them to return.",
+        effectDescription: "They return 3 weeks later with a terrible new script. 3 week delay, lose 15 buzz.",
+        weeksDelay: 3,
+        buzzPenalty: 15
+      }
+    ]
   }
 ];
 
