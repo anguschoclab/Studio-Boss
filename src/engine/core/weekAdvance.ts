@@ -7,7 +7,6 @@ import { updateRival } from '../systems/rivals';
 import { calculateBoxOfficeRanks, BoxOfficeEntry } from '../systems/releaseSimulation';
 import { updateBuyers } from '../systems/buyers';
 import { generateHeadlines } from '../generators/headlines';
-import { generateOpportunity } from '../generators/opportunities';
 import { generateAwardsProfile, runAwardsCeremony } from '../systems/awards';
 import { advanceDeals } from '../systems/deals';
 import { advanceIPRights } from '../systems/ipRetention';
@@ -17,6 +16,7 @@ import { advanceMarketEvents } from '../systems/marketEvents';
 import { advanceRumors } from '../systems/rumors';
 import { processDirectorDisputes } from '../systems/directors';
 import { generateScandals, advanceScandals } from '../systems/scandals';
+import { TalentSystem } from '../systems/TalentSystem';
 
 const EVENT_POOL = [
   'Market analysts upgrade entertainment sector outlook.',
@@ -61,9 +61,6 @@ const processProjectPhase = (
     talentPoolMap.set(talent.id, talent);
   }
 
-  const projectUpdates: string[] = [];
-  const events: string[] = [];
-
   // ⚡ Bolt: Calculate rivalAvgStrength once outside the loop instead of O(N*M) inside
   let rivalStrengthSum = 0;
   for (let i = 0; i < state.industry.rivals.length; i++) {
@@ -76,11 +73,23 @@ const processProjectPhase = (
   const boxOfficeEntries: BoxOfficeEntry[] = [];
   const allTalentUpdates = new Map<string, typeof state.industry.talentPool[0]>();
 
+  // Mock state for director disputes to avoid massive object spreads inside the loop
+  const mockStateForDisputes = {
+    ...state,
+    studio: {
+      ...state.studio,
+      internal: {
+        ...state.studio.internal,
+        projects: [] as typeof state.studio.internal.projects,
+      }
+    }
+  };
+
   for (let i = 0; i < state.studio.internal.projects.length; i++) {
     const p = state.studio.internal.projects[i];
 
     if (p.activeCrisis && !p.activeCrisis.resolved) {
-      projectUpdates.push(`"${p.title}" production is halted until the active crisis is resolved.`);
+      weeklyChanges.projectUpdates.push(`"${p.title}" production is halted until the active crisis is resolved.`);
       updatedProjects.push(p);
       continue;
     }
@@ -89,10 +98,9 @@ const processProjectPhase = (
     const trendMult = getTrendMultiplier(p.genre, state);
     const { project, update, talentUpdates } = advanceProject(p, nextWeek, state.studio.prestige, projectContracts, talentPoolMap, rivalAvgStrength, state.industry.awards || [], trendMult);
 
-    if (update) projectUpdates.push(update);
+    if (update) weeklyChanges.projectUpdates.push(update);
     talentUpdates.forEach(t => allTalentUpdates.set(t.id, t));
     
-    // ... (rest of the loop)
     if (project.status === 'released' && p.status !== 'released' && !project.awardsProfile) {
       project.awardsProfile = generateAwardsProfile(project);
     }
@@ -101,15 +109,16 @@ const processProjectPhase = (
       const newCrisis = checkAndTriggerCrisis(project);
       if (newCrisis) {
         project.activeCrisis = newCrisis;
-        events.push(`CRISIS: "${project.title}" - ${newCrisis.description}`);
+        weeklyChanges.events.push(`CRISIS: "${project.title}" - ${newCrisis.description}`);
       }
     }
 
     if (project.status === 'production') {
-      const dirDisputeArgs = processDirectorDisputes({ ...state, studio: { ...state.studio, internal: { ...state.studio.internal, projects: [project] } } });
+      mockStateForDisputes.studio.internal.projects = [project];
+      const dirDisputeArgs = processDirectorDisputes(mockStateForDisputes);
       if (dirDisputeArgs.newCrises.length > 0 && (!project.activeCrisis || project.activeCrisis.resolved)) {
          project.activeCrisis = dirDisputeArgs.newCrises[0].crisis;
-         projectUpdates.push(...dirDisputeArgs.updates);
+         weeklyChanges.projectUpdates.push(...dirDisputeArgs.updates);
       }
     }
 
@@ -141,11 +150,7 @@ const processProjectPhase = (
       studio: { ...state.studio, internal: { ...state.studio.internal, projects: updatedProjects } },
       industry: { ...state.industry, talentPool: updatedTalentPool }
     },
-    weeklyChanges: {
-      ...weeklyChanges,
-      projectUpdates: [...weeklyChanges.projectUpdates, ...projectUpdates],
-      events: [...weeklyChanges.events, ...events],
-    },
+    weeklyChanges,
   };
 };
 
@@ -158,62 +163,57 @@ const resolveFinancials = (
   const revenue = calculateWeeklyRevenue(state.studio.internal.projects, state.studio.internal.contracts, state.market.activeMarketEvents || []);
   const newCash = state.cash - costs + revenue;
 
-  const financeHistory = [
-    ...state.studio.internal.financeHistory,
-    { week: nextWeek, cash: newCash, revenue, costs },
-  ].slice(-52);
+  // Pre-allocate or slice instead of massive spread
+  let financeHistory = state.studio.internal.financeHistory;
+  if (financeHistory.length >= 52) {
+      financeHistory = financeHistory.slice(1);
+  }
+  financeHistory = [...financeHistory, { week: nextWeek, cash: newCash, revenue, costs }];
+
+  weeklyChanges.costs += costs;
+  weeklyChanges.revenue += revenue;
 
   return {
     state: { ...state, cash: newCash, studio: { ...state.studio, internal: { ...state.studio.internal, financeHistory } } },
-    weeklyChanges: {
-      ...weeklyChanges,
-      costs: weeklyChanges.costs + costs,
-      revenue: weeklyChanges.revenue + revenue,
-    },
+    weeklyChanges,
   };
 };
-
-import { TalentSystem } from '../systems/TalentSystem';
-
-// ... (other imports)
 
 const simulateWorld = (
   state: GameState,
   weeklyChanges: WeeklyChanges
 ): { state: GameState; weeklyChanges: WeeklyChanges } => {
   const nextWeek = state.week + 1;
-  const projectUpdates: string[] = [];
-  const events: string[] = [];
 
   // Simulate Rivals
-  const updatedRivals: typeof state.industry.rivals = [];
+  const updatedRivals: typeof state.industry.rivals = new Array(state.industry.rivals.length);
   for (let i = 0; i < state.industry.rivals.length; i++) {
-    updatedRivals.push(updateRival(state.industry.rivals[i], state));
+    updatedRivals[i] = updateRival(state.industry.rivals[i], state);
   }
 
   // Update Buyers
   const { updatedBuyers, newHeadlines: buyerHeadlines } = updateBuyers(state.market.buyers || [], nextWeek);
 
-  const formattedBuyerHeadlines: Headline[] = [];
+  const formattedBuyerHeadlines: Headline[] = new Array(buyerHeadlines.length);
   for (let i = 0; i < buyerHeadlines.length; i++) {
-    formattedBuyerHeadlines.push({
+    formattedBuyerHeadlines[i] = {
       id: `bh-${crypto.randomUUID()}`,
       text: buyerHeadlines[i],
       week: nextWeek,
       category: 'market' as const,
-    });
+    };
   }
 
   // Simulate Talent & Opportunities via TalentSystem
   const { updatedOpportunities: updatedOpportunitiesCopy, events: talentEvents } = TalentSystem.advance(state);
-  events.push(...talentEvents);
+  weeklyChanges.events.push(...talentEvents);
 
   // Random World Events
   if (Math.random() < 0.2) {
-    events.push(pick(EVENT_POOL));
+    weeklyChanges.events.push(pick(EVENT_POOL));
   }
   if (Math.random() < 0.2) {
-    events.push(pick(EVENT_POOL));
+    weeklyChanges.events.push(pick(EVENT_POOL));
   }
 
   const newHeadlines = generateHeadlines(nextWeek, updatedRivals);
@@ -226,13 +226,13 @@ const simulateWorld = (
   const prestigeChange = ceremonyResult.prestigeChange;
 
   if (newAwards.length > 0) {
-    projectUpdates.push(...ceremonyResult.projectUpdates);
+    weeklyChanges.projectUpdates.push(...ceremonyResult.projectUpdates);
     const uniqueBodiesSet = new Set<string>();
     for (let i = 0; i < newAwards.length; i++) {
       uniqueBodiesSet.add(newAwards[i].body);
     }
     const uniqueBodies = Array.from(uniqueBodiesSet);
-    events.push(`The ${uniqueBodies.join(' and ')} took place this week!`);
+    weeklyChanges.events.push(`The ${uniqueBodies.join(' and ')} took place this week!`);
   }
 
   let newState: GameState = {
@@ -266,14 +266,11 @@ const simulateWorld = (
      newHeadlines.push(...scandalResult.headlines);
   }
 
+  weeklyChanges.newHeadlines.push(...newHeadlines);
+
   return {
     state: newState,
-    weeklyChanges: {
-      ...weeklyChanges,
-      projectUpdates: [...weeklyChanges.projectUpdates, ...projectUpdates],
-      events: [...weeklyChanges.events, ...events],
-      newHeadlines: [...weeklyChanges.newHeadlines, ...newHeadlines],
-    },
+    weeklyChanges,
   };
 };
 
