@@ -1,6 +1,6 @@
 import { StateCreator } from 'zustand';
 import { GameStore } from '../gameStore';
-import { Contract, Project } from '@/engine/types';
+import { Contract } from '@/engine/types';
 import { offerFirstLookDeal } from '@/engine/systems/deals';
 import { buildProjectAndContracts, CreateProjectParams } from '../storeUtils';
 
@@ -10,7 +10,7 @@ export interface TalentSlice {
   acquireOpportunity: (oppId: string) => void;
 }
 
-export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (set, get) => ({
+export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (set) => ({
   signContract: (talentId, projectId) => {
     set((s) => {
       const state = s.gameState;
@@ -58,7 +58,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
     });
   },
 
-  offerFirstLook: (talentId, duration, fee) => {
+  offerFirstLook: (talentId, duration) => {
     let success = false;
     set((s) => {
       const state = s.gameState;
@@ -70,7 +70,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       const lockFee = (talent.fee * 2);
       if (state.cash < lockFee) return s;
       
-      const deal = offerFirstLookDeal(state, talentId, duration, true);
+      const { deal, update } = offerFirstLookDeal(state, talentId, duration, true);
       
       if (deal) {
          success = true;
@@ -80,7 +80,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
            id: crypto.randomUUID(),
            week: state.week,
            category: 'talent' as const,
-           text: `${talent.name} signs exclusive first-look pact with ${state.studio.name}.`
+           text: update
          });
          
          return {
@@ -106,7 +106,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
            id: crypto.randomUUID(),
            week: state.week,
            category: 'general' as const,
-           text: `${talent.name} passes on first-look deal with ${state.studio.name}.`
+           text: update
          });
          
          return {

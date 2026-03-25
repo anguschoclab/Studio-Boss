@@ -1,7 +1,7 @@
 import { vi } from "vitest";
 import { describe, it, expect, beforeEach } from 'vitest';
 import { evaluateFirstLookDeal, offerFirstLookDeal } from '../../../engine/systems/deals';
-import { TalentProfile, FirstLookDeal } from '../../../engine/types';
+import { TalentProfile, GameState } from '../../../engine/types';
 
 describe('Deals System', () => {
   let mockTalent: TalentProfile;
@@ -20,9 +20,9 @@ describe('Deals System', () => {
   });
 
   it('evaluates whether talent will accept a first-look deal based on prestige and access levels', () => {
-    const poorState = { studio: { prestige: 20 } } as any;
-    const okState = { studio: { prestige: 90 } } as any;
-    const dynastyTalent = { ...mockTalent, accessLevel: 'dynasty' };
+    const poorState = { studio: { prestige: 20 } } as unknown as GameState;
+    const okState = { studio: { prestige: 90 } } as unknown as GameState;
+    if (mockTalent.accessLevel === 'dynasty') { /* no-op */ }
 
     vi.spyOn(Math, 'random').mockReturnValue(0.5); // mid roll = 50 
 
@@ -39,16 +39,17 @@ describe('Deals System', () => {
   it('offers a deal and returns a valid FirstLookDeal object if accepted', () => {
     // 90 prestige talent with 2 million fee evaluating a deal
     const state = {
-        studio: { prestige: 90 }, // Studio prestige matches talent
+        studio: { name: 'Test Studio', prestige: 90 }, // Studio prestige matches talent
         industry: { talentPool: [mockTalent] }
-    } as any;
+    } as unknown as GameState;
     
     // We can't guarantee random acceptance, so let's mock Math.random
     vi.spyOn(Math, 'random').mockReturnValue(0.01); // 1% random check <= 50% acceptance chance = true
     
-    const deal = offerFirstLookDeal(state, mockTalent.id, 52, true);
+    const { deal, update } = offerFirstLookDeal(state, mockTalent.id, 52, true);
     expect(deal).not.toBeNull();
     expect(deal?.talentId).toBe(mockTalent.id);
     expect(deal?.weeksRemaining).toBe(52);
+    expect(update).toContain(mockTalent.name);
   });
 });
