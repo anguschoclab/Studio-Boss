@@ -32,7 +32,11 @@ const AGENCY_NAMES = [
   'Digital Disruptors',
   'Commercial Hacks Inc',
   'Legacy Defenders',
-  'The Pitch Masters'
+  'The Pitch Masters',
+  'The Shark Tank',
+  'Vulture Capital Reps',
+  'Titan Representation',
+  'Bloodline Management'
 ];
 
 const AGENT_FIRST_NAMES = ['Ari', 'Bryan', 'Maha', 'Jeremy', 'Richard', 'Sue', 'Ali', 'Kevin', 'Aaron', 'Emma', 'David', 'Laura'];
@@ -158,6 +162,32 @@ export function generateAgencies(count: number): Agency[] {
       traits.push('Pitches packaging deals only');
       traits.push('Requires entire package hire');
       culture = 'shark';
+    }
+
+    if (actualName === 'The Shark Tank') {
+      traits.push('Takes 15% instead of 10%');
+      traits.push('Aggressive poaching tactics');
+      leverage = 98;
+      culture = 'shark';
+    }
+
+    if (actualName === 'Vulture Capital Reps') {
+      traits.push('Demands full creative control');
+      traits.push('Notorious for walk-outs and renegotiations');
+      leverage = 95;
+      culture = 'shark';
+    }
+
+    if (actualName === 'Titan Representation') {
+      traits.push('Forces useless co-stars into packages');
+      traits.push('Requires entire package hire');
+      leverage = 90;
+    }
+
+    if (actualName === 'Bloodline Management') {
+      traits.push('Only represents legacy talent');
+      traits.push('Refuses to work with indie studios');
+      culture = 'prestige';
     }
 
     agencies.push({
