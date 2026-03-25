@@ -104,9 +104,9 @@ describe("TalentSystem", () => {
       const results = TalentSystem.applyProjectResults(neutral, mockContracts, talentPool, awards);
 
       const actor = results.find(t => t.id === "t1")!;
-      expect(actor.prestige).toBe(65); // 50 + 15
-      expect(actor.draw).toBe(60); // 50 + 10
-      expect(actor.fee).toBe(1500000); // 1M * 1.5 (feeMultiplier 1.0 * awardMultiplier 1.5)
+      expect(actor.prestige).toBe(80); // 50 + (20 * 1.5) = 80
+      expect(actor.draw).toBe(65); // 50 + (10 * 1.5) = 65
+      expect(actor.fee).toBe(2500000); // 1M * (1.0 + 1.5) = 2.5M
     });
 
     it("applies general award modifiers (Best Picture) to all roles with dilution", () => {
@@ -118,9 +118,9 @@ describe("TalentSystem", () => {
       const results = TalentSystem.applyProjectResults(neutral, mockContracts, talentPool, awards);
 
       for (const t of results) {
-        expect(t.prestige).toBe(57.5); // 50 + 15 * 0.5
-        expect(t.draw).toBe(55); // 50 + 10 * 0.5
-        expect(t.fee).toBe(1250000); // 1M * (1.0 * (1.0 + 0.5 * 0.5))
+        expect(t.prestige).toBe(60); // 50 + (20 * 0.5) = 60
+        expect(t.draw).toBe(55); // 50 + (10 * 0.5) = 55
+        expect(t.fee).toBe(1500000); // 1M * (1.0 + 1.0 * 0.5) = 1.5M
       }
     });
 
