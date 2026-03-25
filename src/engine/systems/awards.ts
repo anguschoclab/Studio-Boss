@@ -231,6 +231,10 @@ const AWARD_CONFIGS: AwardConfig[] = [
     body: 'Cannes Film Festival', category: 'Best Actress', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.2 + (p.awardsProfile?.prestigeScore || 0) * 0.8
   },
+  {
+    body: 'Cannes Film Festival', category: 'Best Screenplay', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.8 + (p.awardsProfile?.indieCredibility || 0) * 0.8
+  },
 
   // --- SUNDANCE FILM FESTIVAL ---
   {
@@ -248,6 +252,10 @@ const AWARD_CONFIGS: AwardConfig[] = [
   {
     body: 'Sundance Film Festival', category: 'Best Actress', format: 'film',
     evaluator: p => (p.awardsProfile?.indieCredibility || 0) + (p.awardsProfile?.criticScore || 0) * 0.8
+  },
+  {
+    body: 'Sundance Film Festival', category: 'Best Screenplay', format: 'film',
+    evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 1.5 + (p.awardsProfile?.craftScore || 0) * 0.5
   },
 
   // --- BERLIN INTERNATIONAL FILM FESTIVAL ---
@@ -267,6 +275,10 @@ const AWARD_CONFIGS: AwardConfig[] = [
     body: 'Berlin International Film Festival', category: 'Best Actress', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.2 + (p.awardsProfile?.prestigeScore || 0) * 1.0
   },
+  {
+    body: 'Berlin International Film Festival', category: 'Best Screenplay', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.8 + (p.awardsProfile?.industryNarrativeScore || 0) * 0.8
+  },
 
   // --- VENICE FILM FESTIVAL ---
   {
@@ -284,6 +296,10 @@ const AWARD_CONFIGS: AwardConfig[] = [
   {
     body: 'Venice Film Festival', category: 'Best Actress', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.2 + (p.awardsProfile?.prestigeScore || 0) * 1.0
+  },
+  {
+    body: 'Venice Film Festival', category: 'Best Screenplay', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.8 + (p.awardsProfile?.industryNarrativeScore || 0) * 0.8
   },
 
   // --- TORONTO INTERNATIONAL FILM FESTIVAL ---
@@ -317,6 +333,14 @@ const AWARD_CONFIGS: AwardConfig[] = [
     body: 'Telluride Film Festival', category: 'Best Director', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 2.0 + (p.awardsProfile?.industryNarrativeScore || 0) * 0.5
   },
+  {
+    body: 'Telluride Film Festival', category: 'Best Actor', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.5 + (p.awardsProfile?.prestigeScore || 0) * 1.0
+  },
+  {
+    body: 'Telluride Film Festival', category: 'Best Actress', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.5 + (p.awardsProfile?.prestigeScore || 0) * 1.0
+  },
 
   // --- SLAMDANCE FILM FESTIVAL (Sundance Equivalent) ---
   {
@@ -326,6 +350,14 @@ const AWARD_CONFIGS: AwardConfig[] = [
   {
     body: 'Slamdance Film Festival', category: 'Best Director', format: 'film',
     evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 2.0 + (p.awardsProfile?.craftScore || 0) * 0.5
+  },
+  {
+    body: 'Slamdance Film Festival', category: 'Best Actor', format: 'film',
+    evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 1.5 + (p.awardsProfile?.craftScore || 0) * 0.5
+  },
+  {
+    body: 'Slamdance Film Festival', category: 'Best Actress', format: 'film',
+    evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 1.5 + (p.awardsProfile?.craftScore || 0) * 0.5
   }
 ];
 
