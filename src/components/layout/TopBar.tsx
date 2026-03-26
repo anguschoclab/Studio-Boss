@@ -39,59 +39,64 @@ export const TopBar = () => {
   };
 
   return (
-    <div className="h-14 border-b border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex items-center px-4 gap-4 shrink-0 z-50 sticky top-0">
+    <div className="h-16 border-b border-border/40 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/50 flex items-center px-6 gap-6 shrink-0 z-50 sticky top-0 shadow-sm transition-all duration-300">
       {/* Brand + Studio */}
-      <div className="flex items-center gap-3 min-w-0">
-        <button onClick={handleExit} title="Exit to Main Menu" aria-label="Exit to Main Menu" className="font-display text-sm font-bold text-primary tracking-wider hover:opacity-80 transition-opacity">
+      <div className="flex items-center gap-4 min-w-0">
+        <button onClick={handleExit} title="Exit to Main Menu" aria-label="Exit to Main Menu" className="font-display text-base font-black text-primary tracking-widest hover:text-primary/80 transition-colors drop-shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background rounded">
           SB
         </button>
-        <div className="w-px h-6 bg-border" />
-        <span className="font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/70 truncate">{studio.name}</span>
+        <div className="w-px h-8 bg-border/50 rotate-12" />
+        <span className="font-display text-lg font-black text-transparent bg-clip-text bg-gradient-to-r from-foreground to-foreground/60 truncate drop-shadow-sm tracking-tight">{studio.name}</span>
       </div>
 
       <div className="flex-1" />
 
       {/* Metrics */}
-      <div className="flex items-center gap-5 text-sm">
-        <div className="text-center">
-          <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Cash</p>
-          <p className={`font-semibold ${cash < 0 ? 'text-destructive' : 'text-primary'}`}>
+      <div className="flex items-center gap-8 text-sm bg-card/40 backdrop-blur-md border border-border/40 px-6 py-1.5 rounded-full shadow-inner">
+        <div className="flex flex-col items-center justify-center">
+          <p className="text-[9px] text-muted-foreground/80 font-black uppercase tracking-widest">Cash</p>
+          <p className={`font-mono font-bold text-[13px] drop-shadow-sm ${cash < 0 ? 'text-destructive drop-shadow-[0_0_4px_rgba(239,68,68,0.4)]' : 'text-primary drop-shadow-[0_0_4px_rgba(234,179,8,0.4)]'}`}>
             {formatMoney(cash)}
           </p>
         </div>
-        <div className="text-center">
-          <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Prestige</p>
-          <p className="font-semibold text-secondary">{studio.prestige}</p>
+        <div className="flex flex-col items-center justify-center">
+          <p className="text-[9px] text-muted-foreground/80 font-black uppercase tracking-widest">Prestige</p>
+          <p className="font-mono font-bold text-[13px] text-secondary drop-shadow-[0_0_4px_rgba(255,161,22,0.4)]">{studio.prestige}</p>
         </div>
-        <div className="text-center">
-          <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Projects</p>
-          <p className="font-semibold text-foreground">{activeProjects}</p>
+        <div className="flex flex-col items-center justify-center">
+          <p className="text-[9px] text-muted-foreground/80 font-black uppercase tracking-widest">Projects</p>
+          <p className="font-mono font-bold text-[13px] text-foreground/90">{activeProjects}</p>
         </div>
-        <div className="text-center">
-          <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Week</p>
-          <p className="font-semibold text-foreground">W{displayWeek} · {year}</p>
+        <div className="flex flex-col items-center justify-center">
+          <p className="text-[9px] text-muted-foreground/80 font-black uppercase tracking-widest">Date</p>
+          <p className="font-mono font-bold text-[13px] text-foreground/90 tracking-tight">W{displayWeek} · Y{year}</p>
         </div>
       </div>
 
-      <div className="w-px h-6 bg-border" />
+      <div className="flex-1 flex justify-end">
+        <div className="flex items-center gap-4">
+          {/* Global Market Events Indicator */}
+          {gameState.market.activeMarketEvents && gameState.market.activeMarketEvents.length > 0 && (
+            <div className="flex items-center gap-1.5 text-amber-500 font-bold bg-amber-500/10 px-3 py-1.5 rounded-full border border-amber-500/30 shadow-[0_0_10px_rgba(245,158,11,0.2)]">
+              <AlertTriangle className="h-3.5 w-3.5 animate-pulse" />
+              <span className="text-[11px] uppercase tracking-widest">{gameState.market.activeMarketEvents.length} Active Event{gameState.market.activeMarketEvents.length > 1 ? 's' : ''}</span>
+            </div>
+          )}
 
-      {/* Global Market Events Indicator */}
-      {gameState.market.activeMarketEvents && gameState.market.activeMarketEvents.length > 0 && (
-        <div className="flex items-center gap-2 text-amber-500 font-semibold px-2">
-          <AlertTriangle className="h-4 w-4 animate-pulse" />
-          <span className="text-xs">{gameState.market.activeMarketEvents.length} Active Event{gameState.market.activeMarketEvents.length > 1 ? 's' : ''}</span>
+          <div className="w-px h-8 bg-border/50 rotate-12 mx-1" />
+
+          {/* Actions */}
+          <div className="flex items-center gap-3">
+            <Button variant="outline" size="icon" onClick={handleSave} aria-label="Save Game" title="Save Game" className="h-9 w-9 rounded-full border-border/50 bg-background/50 backdrop-blur-sm hover:bg-card hover:text-primary transition-colors focus-visible:ring-offset-background">
+              <Save className="h-4 w-4" />
+            </Button>
+            <Button size="default" onClick={handleAdvanceWeek} className="h-9 px-5 font-display font-black uppercase tracking-widest text-[11px] gap-2 transition-all duration-300 hover:shadow-[0_0_20px_rgba(234,179,8,0.4)] hover:scale-105 active:scale-95 focus-visible:ring-offset-background group overflow-hidden relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
+              <FastForward className="h-3.5 w-3.5" />
+              Advance Week
+            </Button>
+          </div>
         </div>
-      )}
-
-      {/* Actions */}
-      <div className="flex items-center gap-2">
-        <Button variant="ghost" size="sm" onClick={handleSave} aria-label="Save Game" title="Save Game">
-          <Save className="h-4 w-4" />
-        </Button>
-        <Button size="sm" onClick={handleAdvanceWeek} className="font-display font-semibold gap-1.5 transition-all hover:shadow-[0_0_15px_rgba(234,179,8,0.3)]">
-          <FastForward className="h-3.5 w-3.5" />
-          Advance Week
-        </Button>
       </div>
     </div>
   );
