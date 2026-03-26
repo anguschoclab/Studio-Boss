@@ -1,4 +1,5 @@
-import { GameState, ArchetypeKey, RivalStudio } from '@/engine/types';
+import { GameState, ArchetypeKey, RivalStudio, GenreTrend } from '@/engine/types';
+import { ALL_GENRES, initializeTrends } from '../systems/trends';
 import { ARCHETYPES } from '../data/archetypes';
 import { generateStudioName, generateMotto } from '../generators/names';
 import { generateFamilies, generateTalentPool } from '../generators/talent';
@@ -33,6 +34,12 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
   const agents = generateAgents(agencies, 4);
   const families = generateFamilies(5);
   const talentPool = generateTalentPool(50, families, agents, agencies);
+  const initialTrends = initializeTrends();
+  const genrePopularity: Record<string, number> = {};
+  ALL_GENRES.forEach(g => {
+    const trend = initialTrends.find(t => t.genre === g);
+    genrePopularity[g.toLowerCase()] = trend ? trend.heat / 100 : 0.2 + Math.random() * 0.3;
+  });
 
   return {
     week: 1,
@@ -71,6 +78,16 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
       talentPool,
       awards: [],
       newsHistory: [],
-    }
+    },
+    // UI Data Vis Extensions (Epic 4)
+    culture: {
+      genrePopularity,
+    },
+    finance: {
+      bankBalance: arch.startingCash,
+      yearToDateRevenue: 0,
+      yearToDateExpenses: 0,
+    },
+    history: [],
   };
 }

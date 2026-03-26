@@ -48,3 +48,7 @@ export const selectRecentFinance = (state: GameState | null) => {
   const history = selectFinanceHistory(state);
   return history.length > 0 ? history[history.length - 1] : null;
 };
+// --- Epic 4 Selectors ---
+export const selectCulture = (state: GameState | null) => state?.culture || { genrePopularity: {} };
+export const selectFinance = (state: GameState | null) => state?.finance || { bankBalance: 0, yearToDateRevenue: 0, yearToDateExpenses: 0 };
+export const selectHistory = (state: GameState | null) => state?.history || [];

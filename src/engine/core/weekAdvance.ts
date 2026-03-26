@@ -1,4 +1,5 @@
-import { GameState, WeekSummary, Headline, NewsEvent } from '@/engine/types';
+import { GameState, WeekSummary, Headline, NewsEvent, StudioSnapshot } from '@/engine/types';
+import { ALL_GENRES } from '../systems/trends';
 import { advanceIPRights } from '../systems/ipRetention';
 import { advanceDeals } from '../systems/deals';
 import { processProduction, WeeklyChanges as ProductionWeeklyChanges } from '../systems/processors/processProduction';
@@ -49,7 +50,45 @@ const finalizeWeek = (
     }))
   };
 
-  return { newState: { ...state, week: nextWeek }, summary };
+  // Update UI Data Vis Extensions (Epic 4)
+  const nextTrends = state.market.trends || [];
+  const genrePopularity: Record<string, number> = {};
+  ALL_GENRES.forEach(g => {
+    const trend = nextTrends.find(t => t.genre === g);
+    genrePopularity[g.toLowerCase()] = trend ? trend.heat / 100 : 0.2 + Math.random() * 0.1;
+  });
+
+  const nextFinance = {
+    bankBalance: state.cash,
+    yearToDateRevenue: (state.finance?.yearToDateRevenue || 0) + weeklyChanges.revenue,
+    yearToDateExpenses: (state.finance?.yearToDateExpenses || 0) + weeklyChanges.costs,
+  };
+
+  // Create Snapshot for history
+  const activeProjectsCount = state.studio.internal.projects.filter(p => p.status !== 'released' && p.status !== 'post_release' && p.status !== 'archived').length;
+  const releasedProjectsCount = state.studio.internal.projects.filter(p => p.status === 'released' || p.status === 'post_release' || p.status === 'archived').length;
+
+  const currentSnapshot: StudioSnapshot = {
+    year: Math.floor((originalState.week - 1) / 52) + 1,
+    week: ((originalState.week - 1) % 52) + 1,
+    funds: state.cash,
+    activeProjects: activeProjectsCount,
+    completedProjects: releasedProjectsCount,
+    totalPrestige: state.studio.prestige,
+    timestamp: new Date().toISOString()
+  };
+
+  const nextHistory = [...(state.history || []), currentSnapshot].slice(-52); // Keep last year of history
+
+  const newState: GameState = {
+    ...state,
+    week: nextWeek,
+    culture: { genrePopularity },
+    finance: nextFinance,
+    history: nextHistory,
+  };
+
+  return { newState, summary };
 }
 
 /**

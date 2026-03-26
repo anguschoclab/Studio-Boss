@@ -66,6 +66,16 @@ export interface GameState {
     scandals?: Scandal[];
     newsHistory: NewsEvent[];
   };
+  // UI Data Vis Extensions (Epic 4)
+  culture: {
+    genrePopularity: Record<string, number>;
+  };
+  finance: {
+    bankBalance: number;
+    yearToDateRevenue: number;
+    yearToDateExpenses: number;
+  };
+  history: StudioSnapshot[];
 }
 
 export interface SaveSlotMeta {
