@@ -3,13 +3,16 @@ import { GameState, Scandal, ScandalType } from '../types';
 /**
  * Randomly spawns a scandal for a talent in the pool based on their controversy risk.
  */
-export function generateScandals(state: GameState): { newScandals: Scandal[], headlines: any[] } {
+export function generateScandals(state: GameState): { newScandals: Scandal[], headlines: { id: string; week: number; category: 'talent'; text: string }[] } {
   const newScandals: Scandal[] = [];
-  const headlines: any[] = [];
+  const headlines: { id: string; week: number; category: 'talent'; text: string }[] = [];
   
   // Only look at talent that is actually attached to active studio projects to keep it relevant
   const relevantTalentIds = new Set<string>();
-  state.studio.internal.contracts.forEach(c => relevantTalentIds.add(c.talentId));
+  const contracts = state.studio.internal.contracts;
+  for (let i = 0; i < contracts.length; i++) {
+    relevantTalentIds.add(contracts[i].talentId);
+  }
   
   const activeTalent = state.industry.talentPool.filter(t => relevantTalentIds.has(t.id));
   
@@ -46,30 +49,45 @@ export function generateScandals(state: GameState): { newScandals: Scandal[], he
 export function advanceScandals(state: GameState): GameState {
   if (!state.industry.scandals || state.industry.scandals.length === 0) return state;
   
-  const updatedScandals = state.industry.scandals
-    .map(s => ({ ...s, weeksRemaining: s.weeksRemaining - 1 }))
-    .filter(s => s.weeksRemaining > 0);
-    
-  const activeScandalTalent = new Set(updatedScandals.map(s => s.talentId));
+  // ⚡ Bolt: Replace map + filter with a single loop to avoid intermediate array allocations
+  const updatedScandals: Scandal[] = [];
+  const activeScandalTalent = new Set<string>();
+  const currentScandals = state.industry.scandals;
+
+  for (let i = 0; i < currentScandals.length; i++) {
+    const s = currentScandals[i];
+    if (s.weeksRemaining > 1) {
+      const updated = { ...s, weeksRemaining: s.weeksRemaining - 1 };
+      updatedScandals.push(updated);
+      activeScandalTalent.add(updated.talentId);
+    }
+  }
   
   // Find projects penalized by attached talent scandals
   const penalizedProjectIds = new Set<string>();
-  state.studio.internal.contracts.forEach(c => {
+  const contracts = state.studio.internal.contracts;
+  for (let i = 0; i < contracts.length; i++) {
+    const c = contracts[i];
     if (activeScandalTalent.has(c.talentId)) {
       penalizedProjectIds.add(c.projectId);
     }
-  });
+  }
   
-  const newProjects = state.studio.internal.projects.map(p => {
+  // ⚡ Bolt: Replace map with a loop to prevent intermediate allocations
+  const currentProjects = state.studio.internal.projects;
+  const newProjects: typeof currentProjects = new Array(currentProjects.length);
+  for (let i = 0; i < currentProjects.length; i++) {
+    const p = currentProjects[i];
     if (penalizedProjectIds.has(p.id)) {
       // Tank the buzz due to the PR nightmare
-      return {
+      newProjects[i] = {
         ...p,
         buzz: Math.max(0, p.buzz - 2) 
        };
+    } else {
+      newProjects[i] = p;
     }
-    return p;
-  });
+  }
   
   return {
     ...state,
