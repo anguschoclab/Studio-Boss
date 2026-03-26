@@ -28,9 +28,11 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
   ...createRivalSlice(set, get, ...args),
 
   newGame: (studioName, archetype) => {
-    const gameState = initializeGame(studioName, archetype);
-    saveGame(0, gameState);
-    set({ gameState });
+    set((s) => {
+      const gameState = initializeGame(studioName, archetype);
+      saveGame(0, gameState);
+      return { gameState };
+    });
   },
 
   doAdvanceWeek: () => {
@@ -40,6 +42,9 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
       if (!state.gameState) throw new Error('No game in progress');
       const result = advanceWeek(state.gameState);
       summary = result.summary;
+
+      if (state.gameState === result.newState) return state; // Prevent unnecessary re-renders
+
       saveGame(0, result.newState);
       return { gameState: result.newState };
     });
