@@ -1,1519 +1,671 @@
-
-> vite_react_shadcn_ts@0.0.0 test
-> vitest run src/test/components/modals/
-
-
- RUN  v3.2.4 /Users/amauricia/Documents/GitHub/Studio-Boss
-
- ✓ src/test/components/modals/CrisisModal.test.tsx (7 tests) 80ms
-stderr | src/test/components/modals/PitchProjectModal.test.tsx > PitchProjectModal > handles a successful pitch
-Warning: An update to PitchProjectModal inside a test was not wrapped in act(...).
-
-When testing, code that causes React state updates should be wrapped into act(...):
-
-act(() => {
-  /* fire events that update state */
-});
-/* assert on the output */
-
-This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
-    at PitchProjectModal (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/modals/PitchProjectModal.tsx:21:73)
-
-stderr | src/test/components/modals/PitchProjectModal.test.tsx > PitchProjectModal > handles a successful pitch
-Warning: An update to Presence inside a test was not wrapped in act(...).
-
-When testing, code that causes React state updates should be wrapped into act(...):
-
-act(() => {
-  /* fire events that update state */
-});
-/* assert on the output */
-
-This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:93:64
-    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/dialog.tsx:15:73
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-portal/dist/index.mjs:11:22
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at DialogPortal (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:85:11)
-    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/dialog.tsx:25:73
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at Dialog (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:25:5)
-    at PitchProjectModal (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/modals/PitchProjectModal.tsx:21:73)
-Warning: An update to Presence inside a test was not wrapped in act(...).
-
-When testing, code that causes React state updates should be wrapped into act(...):
-
-act(() => {
-  /* fire events that update state */
-});
-/* assert on the output */
-
-This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at DialogPortal (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:85:11)
-    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/dialog.tsx:25:73
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at Dialog (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:25:5)
-    at PitchProjectModal (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/modals/PitchProjectModal.tsx:21:73)
-Warning: An update to FocusScope inside a test was not wrapped in act(...).
-
-When testing, code that causes React state updates should be wrapped into act(...):
-
-act(() => {
-  /* fire events that update state */
-});
-/* assert on the output */
-
-This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-focus-scope/dist/index.mjs:15:5
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:206:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:132:58
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:123:64
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-portal/dist/index.mjs:11:22
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at DialogPortal (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:85:11)
-    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/dialog.tsx:25:73
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at Dialog (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:25:5)
-    at PitchProjectModal (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/modals/PitchProjectModal.tsx:21:73)
-Warning: An update to Presence inside a test was not wrapped in act(...).
-
-When testing, code that causes React state updates should be wrapped into act(...):
-
-act(() => {
-  /* fire events that update state */
-});
-/* assert on the output */
-
-This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:123:64
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-portal/dist/index.mjs:11:22
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at DialogPortal (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:85:11)
-    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/dialog.tsx:25:73
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at Dialog (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:25:5)
-    at PitchProjectModal (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/modals/PitchProjectModal.tsx:21:73)
-Warning: An update to Presence inside a test was not wrapped in act(...).
-
-When testing, code that causes React state updates should be wrapped into act(...):
-
-act(() => {
-  /* fire events that update state */
-});
-/* assert on the output */
-
-This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at DialogPortal (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:85:11)
-    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/dialog.tsx:25:73
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at Dialog (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:25:5)
-    at PitchProjectModal (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/modals/PitchProjectModal.tsx:21:73)
-Warning: An update to DismissableLayer inside a test was not wrapped in act(...).
-
-When testing, code that causes React state updates should be wrapped into act(...):
-
-act(() => {
-  /* fire events that update state */
-});
-/* assert on the output */
-
-This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dismissable-layer/dist/index.mjs:24:7
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-focus-scope/dist/index.mjs:15:5
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:206:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:132:58
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:123:64
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-portal/dist/index.mjs:11:22
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at DialogPortal (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:85:11)
-    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/dialog.tsx:25:73
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at Dialog (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:25:5)
-    at PitchProjectModal (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/modals/PitchProjectModal.tsx:21:73)
-Warning: An update to Presence inside a test was not wrapped in act(...).
-
-When testing, code that causes React state updates should be wrapped into act(...):
-
-act(() => {
-  /* fire events that update state */
-});
-/* assert on the output */
-
-This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:93:64
-    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/dialog.tsx:15:73
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-portal/dist/index.mjs:11:22
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at DialogPortal (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:85:11)
-    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/dialog.tsx:25:73
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at Dialog (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:25:5)
-    at PitchProjectModal (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/modals/PitchProjectModal.tsx:21:73)
-Warning: An update to Presence inside a test was not wrapped in act(...).
-
-When testing, code that causes React state updates should be wrapped into act(...):
-
-act(() => {
-  /* fire events that update state */
-});
-/* assert on the output */
-
-This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at DialogPortal (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:85:11)
-    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/dialog.tsx:25:73
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at Dialog (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:25:5)
-    at PitchProjectModal (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/modals/PitchProjectModal.tsx:21:73)
-Warning: An update to FocusScope inside a test was not wrapped in act(...).
-
-When testing, code that causes React state updates should be wrapped into act(...):
-
-act(() => {
-  /* fire events that update state */
-});
-/* assert on the output */
-
-This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-focus-scope/dist/index.mjs:15:5
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:206:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:132:58
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:123:64
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-portal/dist/index.mjs:11:22
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at DialogPortal (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:85:11)
-    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/dialog.tsx:25:73
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at Dialog (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:25:5)
-    at PitchProjectModal (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/modals/PitchProjectModal.tsx:21:73)
-Warning: An update to Presence inside a test was not wrapped in act(...).
-
-When testing, code that causes React state updates should be wrapped into act(...):
-
-act(() => {
-  /* fire events that update state */
-});
-/* assert on the output */
-
-This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:123:64
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-portal/dist/index.mjs:11:22
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at DialogPortal (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:85:11)
-    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/dialog.tsx:25:73
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at Dialog (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:25:5)
-    at PitchProjectModal (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/modals/PitchProjectModal.tsx:21:73)
-Warning: An update to Presence inside a test was not wrapped in act(...).
-
-When testing, code that causes React state updates should be wrapped into act(...):
-
-act(() => {
-  /* fire events that update state */
-});
-/* assert on the output */
-
-This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at DialogPortal (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:85:11)
-    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/dialog.tsx:25:73
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at Dialog (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:25:5)
-    at PitchProjectModal (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/modals/PitchProjectModal.tsx:21:73)
-Warning: An update to DismissableLayer inside a test was not wrapped in act(...).
-
-When testing, code that causes React state updates should be wrapped into act(...):
-
-act(() => {
-  /* fire events that update state */
-});
-/* assert on the output */
-
-This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dismissable-layer/dist/index.mjs:24:7
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-focus-scope/dist/index.mjs:15:5
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:206:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:132:58
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:123:64
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-portal/dist/index.mjs:11:22
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at DialogPortal (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:85:11)
-    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/dialog.tsx:25:73
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at Dialog (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:25:5)
-    at PitchProjectModal (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/modals/PitchProjectModal.tsx:21:73)
-
-stderr | src/test/components/modals/PitchProjectModal.test.tsx > PitchProjectModal > handles a failed pitch
-Warning: An update to PitchProjectModal inside a test was not wrapped in act(...).
-
-When testing, code that causes React state updates should be wrapped into act(...):
-
-act(() => {
-  /* fire events that update state */
-});
-/* assert on the output */
-
-This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
-    at PitchProjectModal (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/modals/PitchProjectModal.tsx:21:73)
-
-stderr | src/test/components/modals/PitchProjectModal.test.tsx > PitchProjectModal > handles a failed pitch
-Warning: An update to Presence inside a test was not wrapped in act(...).
-
-When testing, code that causes React state updates should be wrapped into act(...):
-
-act(() => {
-  /* fire events that update state */
-});
-/* assert on the output */
-
-This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:93:64
-    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/dialog.tsx:15:73
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-portal/dist/index.mjs:11:22
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at DialogPortal (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:85:11)
-    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/dialog.tsx:25:73
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at Dialog (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:25:5)
-    at PitchProjectModal (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/modals/PitchProjectModal.tsx:21:73)
-Warning: An update to Presence inside a test was not wrapped in act(...).
-
-When testing, code that causes React state updates should be wrapped into act(...):
-
-act(() => {
-  /* fire events that update state */
-});
-/* assert on the output */
-
-This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at DialogPortal (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:85:11)
-    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/dialog.tsx:25:73
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at Dialog (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:25:5)
-    at PitchProjectModal (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/modals/PitchProjectModal.tsx:21:73)
-Warning: An update to FocusScope inside a test was not wrapped in act(...).
-
-When testing, code that causes React state updates should be wrapped into act(...):
-
-act(() => {
-  /* fire events that update state */
-});
-/* assert on the output */
-
-This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-focus-scope/dist/index.mjs:15:5
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:206:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:132:58
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:123:64
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-portal/dist/index.mjs:11:22
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at DialogPortal (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:85:11)
-    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/dialog.tsx:25:73
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at Dialog (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:25:5)
-    at PitchProjectModal (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/modals/PitchProjectModal.tsx:21:73)
-Warning: An update to Presence inside a test was not wrapped in act(...).
-
-When testing, code that causes React state updates should be wrapped into act(...):
-
-act(() => {
-  /* fire events that update state */
-});
-/* assert on the output */
-
-This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:123:64
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-portal/dist/index.mjs:11:22
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at DialogPortal (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:85:11)
-    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/dialog.tsx:25:73
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at Dialog (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:25:5)
-    at PitchProjectModal (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/modals/PitchProjectModal.tsx:21:73)
-Warning: An update to Presence inside a test was not wrapped in act(...).
-
-When testing, code that causes React state updates should be wrapped into act(...):
-
-act(() => {
-  /* fire events that update state */
-});
-/* assert on the output */
-
-This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at DialogPortal (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:85:11)
-    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/dialog.tsx:25:73
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at Dialog (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:25:5)
-    at PitchProjectModal (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/modals/PitchProjectModal.tsx:21:73)
-Warning: An update to DismissableLayer inside a test was not wrapped in act(...).
-
-When testing, code that causes React state updates should be wrapped into act(...):
-
-act(() => {
-  /* fire events that update state */
-});
-/* assert on the output */
-
-This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dismissable-layer/dist/index.mjs:24:7
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-focus-scope/dist/index.mjs:15:5
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:206:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:132:58
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:123:64
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-portal/dist/index.mjs:11:22
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at DialogPortal (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:85:11)
-    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/dialog.tsx:25:73
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at Dialog (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:25:5)
-    at PitchProjectModal (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/modals/PitchProjectModal.tsx:21:73)
-Warning: An update to Presence inside a test was not wrapped in act(...).
-
-When testing, code that causes React state updates should be wrapped into act(...):
-
-act(() => {
-  /* fire events that update state */
-});
-/* assert on the output */
-
-This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:93:64
-    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/dialog.tsx:15:73
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-portal/dist/index.mjs:11:22
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at DialogPortal (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:85:11)
-    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/dialog.tsx:25:73
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at Dialog (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:25:5)
-    at PitchProjectModal (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/modals/PitchProjectModal.tsx:21:73)
-Warning: An update to Presence inside a test was not wrapped in act(...).
-
-When testing, code that causes React state updates should be wrapped into act(...):
-
-act(() => {
-  /* fire events that update state */
-});
-/* assert on the output */
-
-This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at DialogPortal (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:85:11)
-    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/dialog.tsx:25:73
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at Dialog (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:25:5)
-    at PitchProjectModal (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/modals/PitchProjectModal.tsx:21:73)
-Warning: An update to FocusScope inside a test was not wrapped in act(...).
-
-When testing, code that causes React state updates should be wrapped into act(...):
-
-act(() => {
-  /* fire events that update state */
-});
-/* assert on the output */
-
-This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-focus-scope/dist/index.mjs:15:5
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:206:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:132:58
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:123:64
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-portal/dist/index.mjs:11:22
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at DialogPortal (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:85:11)
-    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/dialog.tsx:25:73
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at Dialog (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:25:5)
-    at PitchProjectModal (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/modals/PitchProjectModal.tsx:21:73)
-Warning: An update to Presence inside a test was not wrapped in act(...).
-
-When testing, code that causes React state updates should be wrapped into act(...):
-
-act(() => {
-  /* fire events that update state */
-});
-/* assert on the output */
-
-This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:123:64
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-portal/dist/index.mjs:11:22
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at DialogPortal (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:85:11)
-    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/dialog.tsx:25:73
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at Dialog (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:25:5)
-    at PitchProjectModal (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/modals/PitchProjectModal.tsx:21:73)
-Warning: An update to Presence inside a test was not wrapped in act(...).
-
-When testing, code that causes React state updates should be wrapped into act(...):
-
-act(() => {
-  /* fire events that update state */
-});
-/* assert on the output */
-
-This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at DialogPortal (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:85:11)
-    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/dialog.tsx:25:73
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at Dialog (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:25:5)
-    at PitchProjectModal (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/modals/PitchProjectModal.tsx:21:73)
-Warning: An update to DismissableLayer inside a test was not wrapped in act(...).
-
-When testing, code that causes React state updates should be wrapped into act(...):
-
-act(() => {
-  /* fire events that update state */
-});
-/* assert on the output */
-
-This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dismissable-layer/dist/index.mjs:24:7
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-focus-scope/dist/index.mjs:15:5
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:206:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:132:58
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:123:64
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
-    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-portal/dist/index.mjs:11:22
-    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at DialogPortal (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:85:11)
-    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/dialog.tsx:25:73
-    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
-    at Dialog (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:25:5)
-    at PitchProjectModal (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/modals/PitchProjectModal.tsx:21:73)
-
- ❯ src/test/components/modals/PitchProjectModal.test.tsx (8 tests | 2 failed) 158ms
-   ✓ PitchProjectModal > renders correctly when open 67ms
-   ✓ PitchProjectModal > does not render if gameState or pitchingProjectId is null 1ms
-   ✓ PitchProjectModal > does not render if project is not found 1ms
-   ✓ PitchProjectModal > selects a buyer when clicked 15ms
-   ✓ PitchProjectModal > selects a deal structure when clicked 15ms
-   × PitchProjectModal > handles a successful pitch 25ms
-     → Unable to find an element with the text: Pitch Successful! Project picked up.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
-
-Ignored nodes: comments, script, style
-[36m<body[39m
-  [33mdata-scroll-locked[39m=[32m"1"[39m
-  [33mstyle[39m=[32m"pointer-events: none;"[39m
-[36m>[39m
-  [36m<span[39m
-    [33maria-hidden[39m=[32m"true"[39m
-    [33mdata-aria-hidden[39m=[32m"true"[39m
-    [33mdata-radix-focus-guard[39m=[32m""[39m
-    [33mstyle[39m=[32m"outline: none; opacity: 0; position: fixed; pointer-events: none;"[39m
-    [33mtabindex[39m=[32m"0"[39m
-  [36m/>[39m
-  [36m<div[39m
-    [33maria-hidden[39m=[32m"true"[39m
-    [33mdata-aria-hidden[39m=[32m"true"[39m
-  [36m/>[39m
-  [36m<div[39m
-    [33maria-hidden[39m=[32m"true"[39m
-    [33mclass[39m=[32m"fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0"[39m
-    [33mdata-aria-hidden[39m=[32m"true"[39m
-    [33mdata-state[39m=[32m"open"[39m
-    [33mstyle[39m=[32m"pointer-events: auto;"[39m
-  [36m/>[39m
-  [36m<div[39m
-    [33maria-describedby[39m=[32m"radix-:rb:"[39m
-    [33maria-labelledby[39m=[32m"radix-:ra:"[39m
-    [33mclass[39m=[32m"fixed left-[50%] top-[50%] z-50 grid w-full translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg max-w-2xl"[39m
-    [33mdata-state[39m=[32m"open"[39m
-    [33mid[39m=[32m"radix-:r9:"[39m
-    [33mrole[39m=[32m"dialog"[39m
-    [33mstyle[39m=[32m"pointer-events: auto;"[39m
-    [33mtabindex[39m=[32m"-1"[39m
-  [36m>[39m
-    [36m<div[39m
-      [33mclass[39m=[32m"flex flex-col space-y-1.5 text-center sm:text-left"[39m
-    [36m>[39m
-      [36m<h2[39m
-        [33mclass[39m=[32m"text-lg font-semibold leading-none tracking-tight"[39m
-        [33mid[39m=[32m"radix-:ra:"[39m
-      [36m>[39m
-        [0mPitch Project: [0m
-        [0mMock Project[0m
-      [36m</h2>[39m
-      [36m<p[39m
-        [33mclass[39m=[32m"text-sm text-muted-foreground"[39m
-        [33mid[39m=[32m"radix-:rb:"[39m
-      [36m>[39m
-        [0mSelect a network or streamer to pitch this series to, and propose a contract structure.[0m
-      [36m</p>[39m
-    [36m</div>[39m
-    [36m<div[39m
-      [33mclass[39m=[32m"grid grid-cols-2 gap-6 py-4"[39m
-    [36m>[39m
-      [36m<div[39m
-        [33mclass[39m=[32m"space-y-4"[39m
-      [36m>[39m
-        [36m<h4[39m
-          [33mclass[39m=[32m"font-semibold text-sm text-muted-foreground uppercase"[39m
-        [36m>[39m
-          [0m1. Select Buyer[0m
-        [36m</h4>[39m
-        [36m<div[39m
-          [33mclass[39m=[32m"space-y-2"[39m
-        [36m>[39m
-          [36m<button[39m
-            [33mclass[39m=[32m"w-full text-left p-3 rounded border transition-colors border-primary bg-primary/10"[39m
-          [36m>[39m
-            [36m<div[39m
-              [33mclass[39m=[32m"flex justify-between items-center mb-1"[39m
-            [36m>[39m
-              [36m<span[39m
-                [33mclass[39m=[32m"font-semibold text-sm"[39m
-              [36m>[39m
-                [0mMock Network[0m
-              [36m</span>[39m
-              [36m<div[39m
-                [33mclass[39m=[32m"inline-flex items-center rounded-full border px-2.5 py-0.5 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground text-[10px]"[39m
-              [36m>[39m
-                [0mnetwork[0m
-              [36m</div>[39m
-            [36m</div>[39m
-            [36m<p[39m
-              [33mclass[39m=[32m"text-xs text-muted-foreground mt-1"[39m
-            [36m>[39m
-              [0mEst. Fit: [0m
-              [0m75[0m
-              [0m/100[0m
-            [36m</p>[39m
-          [36m</button>[39m
-          [36m<button[39m
-            [33mclass[39m=[32m"w-full text-left p-3 rounded border transition-colors border-border bg-card hover:bg-accent"[39m
-          [36m>[39m
-            [36m<div[39m
-              [33mclass[39m=[32m"flex justify-between items-center mb-1"[39m
-            [36m>[39m
-              [36m<span[39m
-                [33mclass[39m=[32m"font-semibold text-sm"[39m
-              [36m>[39m
-                [0mMock Streamer[0m
-              [36m</span>[39m
-              [36m<div[39m
-                [33mclass[39m=[32m"inline-flex items-center rounded-full border px-2.5 py-0.5 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground text-[10px]"[39m
-              [36m>[39m
-                [0mstreamer[0m
-              [36m</div>[39m
-            [36m</div>[39m
-            [36m<p[39m
-              [33mclass[39m=[32m"text-xs text-muted-foreground"[39m
-            [36m>[39m
-              [0mMandate: [0m
-              [36m<span[39m
-                [33mclass[39m=[32m"text-foreground"[39m
-              [36m>[39m
-                [0mdrama[0m
-              [36m</span>[39m
-            [36m</p>[39m
-            [36m<p[39m
-              [33mclass[39m=[32m"text-xs text-muted-foreground mt-1"[39m
-            [36m>[39m
-              [0mEst. Fit: [0m
-              [0m75[0m
-              [0m/100[0m
-            [36m</p>[39m
-          [36m</button>[39m
-        [36m</div>[39m
-      [36m</div>[39m
-      [36m<div[39m
-        [33mclass[39m=[32m"space-y-4"[39m
-      [36m>[39m
-        [36m<h4[39m
-          [33mclass[39m=[32m"font-semibold text-sm text-muted-foreground uppercase"[39m
-        [36m>[39m
-          [0m2. Deal Structure[0m
-        [36m</h4>[39m
-        [36m<div[39m
-          [33mclass[39m=[32m"space-y-2"[39m
-        [36m>[39m
-          [36m<button[39m
-            [33mclass[39m=[32m"w-full text-left p-3 rounded border transition-colors border-primary bg-primary/10"[39m
-          [36m>[39m
-            [36m<span[39m
-              [33mclass[39m=[32m"font-semibold text-sm block"[39m
-            [36m>[39m
-              [0mHigh Upfront Fee[0m
-            [36m</span>[39m
-            [36m<p[39m
-              [33mclass[39m=[32m"text-xs text-muted-foreground mt-1"[39m
-            [36m>[39m
-              [0mBuyer fully funds production (0 weekly cost). Studio retains 0% backend. Harder to sell.[0m
-            [36m</p>[39m
-          [36m</button>[39m
-          [36m<button[39m
-            [33mclass[39m=[32m"w-full text-left p-3 rounded border transition-colors border-border bg-card hover:bg-accent"[39m
-          [36m>[39m
-            [36m<span[39m
-              [33mclass[39m=[32m"font-semibold text-sm block"[39m
-            [36m>[39m
-              [0mDeficit Financing[0m
-            [36m</span>[39m
-            [36m<p[39m
-              [33mclass[39m=[32m"text-xs text-muted-foreground mt-1"[39m
-            [36m>[39m
-              [0mStudio pays 30% of production costs. Studio retains 100% backend. Easier to sell.[0m
-            [36m</p>[39m
-          [36m</button>[39m
-        [36m</div>[39m
-        [36m<div[39m
-          [33mclass[39m=[32m"pt-6"[39m
-        [36m>[39m
-          [36m<button[39m
-            [33mclass[39m=[32m"inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full"[39m
-          [36m>[39m
-            [0mPitch Project[0m
-          [36m</button>[39m
-        [36m</div>[39m
-      [36m</div>[39m
-    [36m</div>[39m
-    [36m<button[39m
-      [33mclass[39m=[32m"absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity data-[state=open]:bg-accent data-[state=open]:text-muted-foreground hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none"[39m
-      [33mtype[39m=[32m"button"[39m
-    [36m>[39m
-      [36m<svg[39m
-        [33mclass[39m=[32m"lucide lucide-x h-4 w-4"[39m
-        [33mfill[39m=[32m"none"[39m
-        [33mheight[39m=[32m"24"[39m
-        [33mstroke[39m=[32m"currentColor"[39m
-        [33mstroke-linecap[39m=[32m"round"[39m
-        [33mstroke-linejoin[39m=[32m"round"[39m
-        [33mstroke-width[39m=[32m"2"[39m
-        [33mviewBox[39m=[32m"0 0 24 24"[39m
-        [33mwidth[39m=[32m"24"[39m
-        [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
-      [36m>[39m
-        [36m<path[39m
-          [33md[39m=[32m"M18 6 6 18"[39m
-        [36m/>[39m
-        [36m<path[39m
-          [33md[39m=[32m"m6 6 12 12"[39m
-        [36m/>[39m
-      [36m</svg>[39m
-      [36m<span[39m
-        [33mclass[39m=[32m"sr-only"[39m
-      [36m>[39m
-        [0mClose[0m
-      [36m</span>[39m
-    [36m</button>[39m
-  [36m</div>[39m
-  [36m<span[39m
-    [33maria-hidden[39m=[32m"true"[39m
-    [33mdata-aria-hidden[39m=[32m"true"[39m
-    [33mdata-radix-focus-guard[39m=[32m""[39m
-    [33mstyle[39m=[32m"outline: none; opacity: 0; position: fixed; pointer-events: none;"[39m
-    [33mtabindex[39m=[32m"0"[39m
-  [36m/>[39m
-[36m</body>[39m
-   × PitchProjectModal > handles a failed pitch 18ms
-     → Unable to find an element with the text: Pitch Failed. They passed on the project.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
-
-Ignored nodes: comments, script, style
-[36m<body[39m
-  [33mdata-scroll-locked[39m=[32m"1"[39m
-  [33mstyle[39m=[32m"pointer-events: none;"[39m
-[36m>[39m
-  [36m<span[39m
-    [33maria-hidden[39m=[32m"true"[39m
-    [33mdata-aria-hidden[39m=[32m"true"[39m
-    [33mdata-radix-focus-guard[39m=[32m""[39m
-    [33mstyle[39m=[32m"outline: none; opacity: 0; position: fixed; pointer-events: none;"[39m
-    [33mtabindex[39m=[32m"0"[39m
-  [36m/>[39m
-  [36m<div[39m
-    [33maria-hidden[39m=[32m"true"[39m
-    [33mdata-aria-hidden[39m=[32m"true"[39m
-  [36m/>[39m
-  [36m<div[39m
-    [33maria-hidden[39m=[32m"true"[39m
-    [33mclass[39m=[32m"fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0"[39m
-    [33mdata-aria-hidden[39m=[32m"true"[39m
-    [33mdata-state[39m=[32m"open"[39m
-    [33mstyle[39m=[32m"pointer-events: auto;"[39m
-  [36m/>[39m
-  [36m<div[39m
-    [33maria-describedby[39m=[32m"radix-:re:"[39m
-    [33maria-labelledby[39m=[32m"radix-:rd:"[39m
-    [33mclass[39m=[32m"fixed left-[50%] top-[50%] z-50 grid w-full translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg max-w-2xl"[39m
-    [33mdata-state[39m=[32m"open"[39m
-    [33mid[39m=[32m"radix-:rc:"[39m
-    [33mrole[39m=[32m"dialog"[39m
-    [33mstyle[39m=[32m"pointer-events: auto;"[39m
-    [33mtabindex[39m=[32m"-1"[39m
-  [36m>[39m
-    [36m<div[39m
-      [33mclass[39m=[32m"flex flex-col space-y-1.5 text-center sm:text-left"[39m
-    [36m>[39m
-      [36m<h2[39m
-        [33mclass[39m=[32m"text-lg font-semibold leading-none tracking-tight"[39m
-        [33mid[39m=[32m"radix-:rd:"[39m
-      [36m>[39m
-        [0mPitch Project: [0m
-        [0mMock Project[0m
-      [36m</h2>[39m
-      [36m<p[39m
-        [33mclass[39m=[32m"text-sm text-muted-foreground"[39m
-        [33mid[39m=[32m"radix-:re:"[39m
-      [36m>[39m
-        [0mSelect a network or streamer to pitch this series to, and propose a contract structure.[0m
-      [36m</p>[39m
-    [36m</div>[39m
-    [36m<div[39m
-      [33mclass[39m=[32m"grid grid-cols-2 gap-6 py-4"[39m
-    [36m>[39m
-      [36m<div[39m
-        [33mclass[39m=[32m"space-y-4"[39m
-      [36m>[39m
-        [36m<h4[39m
-          [33mclass[39m=[32m"font-semibold text-sm text-muted-foreground uppercase"[39m
-        [36m>[39m
-          [0m1. Select Buyer[0m
-        [36m</h4>[39m
-        [36m<div[39m
-          [33mclass[39m=[32m"space-y-2"[39m
-        [36m>[39m
-          [36m<button[39m
-            [33mclass[39m=[32m"w-full text-left p-3 rounded border transition-colors border-border bg-card hover:bg-accent"[39m
-          [36m>[39m
-            [36m<div[39m
-              [33mclass[39m=[32m"flex justify-between items-center mb-1"[39m
-            [36m>[39m
-              [36m<span[39m
-                [33mclass[39m=[32m"font-semibold text-sm"[39m
-              [36m>[39m
-                [0mMock Network[0m
-              [36m</span>[39m
-              [36m<div[39m
-                [33mclass[39m=[32m"inline-flex items-center rounded-full border px-2.5 py-0.5 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground text-[10px]"[39m
-              [36m>[39m
-                [0mnetwork[0m
-              [36m</div>[39m
-            [36m</div>[39m
-            [36m<p[39m
-              [33mclass[39m=[32m"text-xs text-muted-foreground mt-1"[39m
-            [36m>[39m
-              [0mEst. Fit: [0m
-              [0m75[0m
-              [0m/100[0m
-            [36m</p>[39m
-          [36m</button>[39m
-          [36m<button[39m
-            [33mclass[39m=[32m"w-full text-left p-3 rounded border transition-colors border-primary bg-primary/10"[39m
-          [36m>[39m
-            [36m<div[39m
-              [33mclass[39m=[32m"flex justify-between items-center mb-1"[39m
-            [36m>[39m
-              [36m<span[39m
-                [33mclass[39m=[32m"font-semibold text-sm"[39m
-              [36m>[39m
-                [0mMock Streamer[0m
-              [36m</span>[39m
-              [36m<div[39m
-                [33mclass[39m=[32m"inline-flex items-center rounded-full border px-2.5 py-0.5 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground text-[10px]"[39m
-              [36m>[39m
-                [0mstreamer[0m
-              [36m</div>[39m
-            [36m</div>[39m
-            [36m<p[39m
-              [33mclass[39m=[32m"text-xs text-muted-foreground"[39m
-            [36m>[39m
-              [0mMandate: [0m
-              [36m<span[39m
-                [33mclass[39m=[32m"text-foreground"[39m
-              [36m>[39m
-                [0mdrama[0m
-              [36m</span>[39m
-            [36m</p>[39m
-            [36m<p[39m
-              [33mclass[39m=[32m"text-xs text-muted-foreground mt-1"[39m
-            [36m>[39m
-              [0mEst. Fit: [0m
-              [0m75[0m
-              [0m/100[0m
-            [36m</p>[39m
-          [36m</button>[39m
-        [36m</div>[39m
-      [36m</div>[39m
-      [36m<div[39m
-        [33mclass[39m=[32m"space-y-4"[39m
-      [36m>[39m
-        [36m<h4[39m
-          [33mclass[39m=[32m"font-semibold text-sm text-muted-foreground uppercase"[39m
-        [36m>[39m
-          [0m2. Deal Structure[0m
-        [36m</h4>[39m
-        [36m<div[39m
-          [33mclass[39m=[32m"space-y-2"[39m
-        [36m>[39m
-          [36m<button[39m
-            [33mclass[39m=[32m"w-full text-left p-3 rounded border transition-colors border-border bg-card hover:bg-accent"[39m
-          [36m>[39m
-            [36m<span[39m
-              [33mclass[39m=[32m"font-semibold text-sm block"[39m
-            [36m>[39m
-              [0mHigh Upfront Fee[0m
-            [36m</span>[39m
-            [36m<p[39m
-              [33mclass[39m=[32m"text-xs text-muted-foreground mt-1"[39m
-            [36m>[39m
-              [0mBuyer fully funds production (0 weekly cost). Studio retains 0% backend. Harder to sell.[0m
-            [36m</p>[39m
-          [36m</button>[39m
-          [36m<button[39m
-            [33mclass[39m=[32m"w-full text-left p-3 rounded border transition-colors border-primary bg-primary/10"[39m
-          [36m>[39m
-            [36m<span[39m
-              [33mclass[39m=[32m"font-semibold text-sm block"[39m
-            [36m>[39m
-              [0mDeficit Financing[0m
-            [36m</span>[39m
-            [36m<p[39m
-              [33mclass[39m=[32m"text-xs text-muted-foreground mt-1"[39m
-            [36m>[39m
-              [0mStudio pays 30% of production costs. Studio retains 100% backend. Easier to sell.[0m
-            [36m</p>[39m
-          [36m</button>[39m
-        [36m</div>[39m
-        [36m<div[39m
-          [33mclass[39m=[32m"pt-6"[39m
-        [36m>[39m
-          [36m<button[39m
-            [33mclass[39m=[32m"inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full"[39m
-          [36m>[39m
-            [0mPitch Project[0m
-          [36m</button>[39m
-        [36m</div>[39m
-      [36m</div>[39m
-    [36m</div>[39m
-    [36m<button[39m
-      [33mclass[39m=[32m"absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity data-[state=open]:bg-accent data-[state=open]:text-muted-foreground hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none"[39m
-      [33mtype[39m=[32m"button"[39m
-    [36m>[39m
-      [36m<svg[39m
-        [33mclass[39m=[32m"lucide lucide-x h-4 w-4"[39m
-        [33mfill[39m=[32m"none"[39m
-        [33mheight[39m=[32m"24"[39m
-        [33mstroke[39m=[32m"currentColor"[39m
-        [33mstroke-linecap[39m=[32m"round"[39m
-        [33mstroke-linejoin[39m=[32m"round"[39m
-        [33mstroke-width[39m=[32m"2"[39m
-        [33mviewBox[39m=[32m"0 0 24 24"[39m
-        [33mwidth[39m=[32m"24"[39m
-        [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
-      [36m>[39m
-        [36m<path[39m
-          [33md[39m=[32m"M18 6 6 18"[39m
-        [36m/>[39m
-        [36m<path[39m
-          [33md[39m=[32m"m6 6 12 12"[39m
-        [36m/>[39m
-      [36m</svg>[39m
-      [36m<span[39m
-        [33mclass[39m=[32m"sr-only"[39m
-      [36m>[39m
-        [0mClose[0m
-      [36m</span>[39m
-    [36m</button>[39m
-  [36m</div>[39m
-  [36m<span[39m
-    [33maria-hidden[39m=[32m"true"[39m
-    [33mdata-aria-hidden[39m=[32m"true"[39m
-    [33mdata-radix-focus-guard[39m=[32m""[39m
-    [33mstyle[39m=[32m"outline: none; opacity: 0; position: fixed; pointer-events: none;"[39m
-    [33mtabindex[39m=[32m"0"[39m
-  [36m/>[39m
-[36m</body>[39m
-   ✓ PitchProjectModal > calls handleClose when dialog is closed 15ms
-stderr | src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > renders project details when a project is selected
-Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
-
-stderr | src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > shows greenlight button when project needs greenlight
-Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
-
-stderr | src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > shows marketing configuration and handles launch campaign
-Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
-
-stderr | src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > shows renew button for tv project and handles renewal
-Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
-
-stderr | src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > shows develop spinoff button for high revenue projects and handles exploitation
-Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
-
- ✓ src/test/components/modals/ProjectDetailModal.test.tsx (6 tests) 148ms
- ✓ src/test/components/modals/CreateProjectModal.test.tsx (9 tests) 396ms
-
-⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
-
- FAIL  src/test/components/modals/PitchProjectModal.test.tsx > PitchProjectModal > handles a successful pitch
-TestingLibraryElementError: Unable to find an element with the text: Pitch Successful! Project picked up.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
-
-Ignored nodes: comments, script, style
-[36m<body[39m
-  [33mdata-scroll-locked[39m=[32m"1"[39m
-  [33mstyle[39m=[32m"pointer-events: none;"[39m
-[36m>[39m
-  [36m<span[39m
-    [33maria-hidden[39m=[32m"true"[39m
-    [33mdata-aria-hidden[39m=[32m"true"[39m
-    [33mdata-radix-focus-guard[39m=[32m""[39m
-    [33mstyle[39m=[32m"outline: none; opacity: 0; position: fixed; pointer-events: none;"[39m
-    [33mtabindex[39m=[32m"0"[39m
-  [36m/>[39m
-  [36m<div[39m
-    [33maria-hidden[39m=[32m"true"[39m
-    [33mdata-aria-hidden[39m=[32m"true"[39m
-  [36m/>[39m
-  [36m<div[39m
-    [33maria-hidden[39m=[32m"true"[39m
-    [33mclass[39m=[32m"fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0"[39m
-    [33mdata-aria-hidden[39m=[32m"true"[39m
-    [33mdata-state[39m=[32m"open"[39m
-    [33mstyle[39m=[32m"pointer-events: auto;"[39m
-  [36m/>[39m
-  [36m<div[39m
-    [33maria-describedby[39m=[32m"radix-:rb:"[39m
-    [33maria-labelledby[39m=[32m"radix-:ra:"[39m
-    [33mclass[39m=[32m"fixed left-[50%] top-[50%] z-50 grid w-full translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg max-w-2xl"[39m
-    [33mdata-state[39m=[32m"open"[39m
-    [33mid[39m=[32m"radix-:r9:"[39m
-    [33mrole[39m=[32m"dialog"[39m
-    [33mstyle[39m=[32m"pointer-events: auto;"[39m
-    [33mtabindex[39m=[32m"-1"[39m
-  [36m>[39m
-    [36m<div[39m
-      [33mclass[39m=[32m"flex flex-col space-y-1.5 text-center sm:text-left"[39m
-    [36m>[39m
-      [36m<h2[39m
-        [33mclass[39m=[32m"text-lg font-semibold leading-none tracking-tight"[39m
-        [33mid[39m=[32m"radix-:ra:"[39m
-      [36m>[39m
-        [0mPitch Project: [0m
-        [0mMock Project[0m
-      [36m</h2>[39m
-      [36m<p[39m
-        [33mclass[39m=[32m"text-sm text-muted-foreground"[39m
-        [33mid[39m=[32m"radix-:rb:"[39m
-      [36m>[39m
-        [0mSelect a network or streamer to pitch this series to, and propose a contract structure.[0m
-      [36m</p>[39m
-    [36m</div>[39m
-    [36m<div[39m
-      [33mclass[39m=[32m"grid grid-cols-2 gap-6 py-4"[39m
-    [36m>[39m
-      [36m<div[39m
-        [33mclass[39m=[32m"space-y-4"[39m
-      [36m>[39m
-        [36m<h4[39m
-          [33mclass[39m=[32m"font-semibold text-sm text-muted-foreground uppercase"[39m
-        [36m>[39m
-          [0m1. Select Buyer[0m
-        [36m</h4>[39m
-        [36m<div[39m
-          [33mclass[39m=[32m"space-y-2"[39m
-        [36m>[39m
-          [36m<button[39m
-            [33mclass[39m=[32m"w-full text-left p-3 rounded border transition-colors border-primary bg-primary/10"[39m
-          [36m>[39m
-            [36m<div[39m
-              [33mclass[39m=[32m"flex justify-between items-center mb-1"[39m
-            [36m>[39m
-              [36m<span[39m
-                [33mclass[39m=[32m"font-semibold text-sm"[39m
-              [36m>[39m
-                [0mMock Network[0m
-              [36m</span>[39m
-              [36m<div[39m
-                [33mclass[39m=[32m"inline-flex items-center rounded-full border px-2.5 py-0.5 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground text-[10px]"[39m
-              [36m>[39m
-                [0mnetwork[0m
-              [36m</div>[39m
-            [36m</div>[39m
-            [36m<p[39m
-              [33mclass[39m=[32m"text-xs text-muted-foreground mt-1"[39m
-            [36m>[39m
-              [0mEst. Fit: [0m
-              [0m75[0m
-              [0m/100[0m
-            [36m</p>[39m
-          [36m</button>[39m
-          [36m<button[39m
-            [33mclass[39m=[32m"w-full text-left p-3 rounded border transition-colors border-border bg-card hover:bg-accent"[39m
-          [36m>[39m
-            [36m<div[39m
-              [33mclass[39m=[32m"flex justify-between items-center mb-1"[39m
-            [36m>[39m
-              [36m<span[39m
-                [33mclass[39m=[32m"font-semibold text-sm"[39m
-              [36m>[39m
-                [0mMock Streamer[0m
-              [36m</span>[39m
-              [36m<div[39m
-                [33mclass[39m=[32m"inline-flex items-center rounded-full border px-2.5 py-0.5 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground text-[10px]"[39m
-              [36m>[39m
-                [0mstreamer[0m
-              [36m</div>[39m
-            [36m</div>[39m
-            [36m<p[39m
-              [33mclass[39m=[32m"text-xs text-muted-foreground"[39m
-            [36m>[39m
-              [0mMandate: [0m
-              [36m<span[39m
-                [33mclass[39m=[32m"text-foreground"[39m
-              [36m>[39m
-                [0mdrama[0m
-              [36m</span>[39m
-            [36m</p>[39m
-            [36m<p[39m
-              [33mclass[39m=[32m"text-xs text-muted-foreground mt-1"[39m
-            [36m>[39m
-              [0mEst. Fit: [0m
-              [0m75[0m
-              [0m/100[0m
-            [36m</p>[39m
-          [36m</button>[39m
-        [36m</div>[39m
-      [36m</div>[39m
-      [36m<div[39m
-        [33mclass[39m=[32m"space-y-4"[39m
-      [36m>[39m
-        [36m<h4[39m
-          [33mclass[39m=[32m"font-semibold text-sm text-muted-foreground uppercase"[39m
-        [36m>[39m
-          [0m2. Deal Structure[0m
-        [36m</h4>[39m
-        [36m<div[39m
-          [33mclass[39m=[32m"space-y-2"[39m
-        [36m>[39m
-          [36m<button[39m
-            [33mclass[39m=[32m"w-full text-left p-3 rounded border transition-colors border-primary bg-primary/10"[39m
-          [36m>[39m
-            [36m<span[39m
-              [33mclass[39m=[32m"font-semibold text-sm block"[39m
-            [36m>[39m
-              [0mHigh Upfront Fee[0m
-            [36m</span>[39m
-            [36m<p[39m
-              [33mclass[39m=[32m"text-xs text-muted-foreground mt-1"[39m
-            [36m>[39m
-              [0mBuyer fully funds production (0 weekly cost). Studio retains 0% backend. Harder to sell.[0m
-            [36m</p>[39m
-          [36m</button>[39m
-          [36m<button[39m
-            [33mclass[39m=[32m"w-full text-left p-3 rounded border transition-colors border-border bg-card hover:bg-accent"[39m
-          [36m>[39m
-            [36m<span[39m
-              [33mclass[39m=[32m"font-semibold text-sm block"[39m
-            [36m>[39m
-              [0mDeficit Financing[0m
-            [36m</span>[39m
-            [36m<p[39m
-              [33mclass[39m=[32m"text-xs text-muted-foreground mt-1"[39m
-            [36m>[39m
-              [0mStudio pays 30% of production costs. Studio retains 100% backend. Easier to sell.[0m
-            [36m</p>[39m
-          [36m</button>[39m
-        [36m</div>[39m
-        [36m<div[39m
-          [33mclass[39m=[32m"pt-6"[39m
-        [36m>[39m
-          [36m<button[39m
-            [33mclass[39m=[32m"inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full"[39m
-          [36m>[39m
-            [0mPitch Project[0m
-          [36m</button>[39m
-        [36m</div>[39m
-      [36m</div>[39m
-    [36m</div>[39m
-    [36m<button[39m
-      [33mclass[39m=[32m"absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity data-[state=open]:bg-accent data-[state=open]:text-muted-foreground hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none"[39m
-      [33mtype[39m=[32m"button"[39m
-    [36m>[39m
-      [36m<svg[39m
-        [33mclass[39m=[32m"lucide lucide-x h-4 w-4"[39m
-        [33mfill[39m=[32m"none"[39m
-        [33mheight[39m=[32m"24"[39m
-        [33mstroke[39m=[32m"currentColor"[39m
-        [33mstroke-linecap[39m=[32m"round"[39m
-        [33mstroke-linejoin[39m=[32m"round"[39m
-        [33mstroke-width[39m=[32m"2"[39m
-        [33mviewBox[39m=[32m"0 0 24 24"[39m
-        [33mwidth[39m=[32m"24"[39m
-        [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
-      [36m>[39m
-        [36m<path[39m
-          [33md[39m=[32m"M18 6 6 18"[39m
-        [36m/>[39m
-        [36m<path[39m
-          [33md[39m=[32m"m6 6 12 12"[39m
-        [36m/>[39m
-      [36m</svg>[39m
-      [36m<span[39m
-        [33mclass[39m=[32m"sr-only"[39m
-      [36m>[39m
-        [0mClose[0m
-      [36m</span>[39m
-    [36m</button>[39m
-  [36m</div>[39m
-  [36m<span[39m
-    [33maria-hidden[39m=[32m"true"[39m
-    [33mdata-aria-hidden[39m=[32m"true"[39m
-    [33mdata-radix-focus-guard[39m=[32m""[39m
-    [33mstyle[39m=[32m"outline: none; opacity: 0; position: fixed; pointer-events: none;"[39m
-    [33mtabindex[39m=[32m"0"[39m
-  [36m/>[39m
-[36m</body>[39m
- ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
- ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
- ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
- ❯ getByText node_modules/@testing-library/dom/dist/query-helpers.js:95:19
- ❯ src/test/components/modals/PitchProjectModal.test.tsx:159:19
-    157| 
-    158|     expect(mockPitchProject).toHaveBeenCalledWith('proj-1', 'buyer-1',…
-    159|     expect(screen.getByText('Pitch Successful! Project picked up.')).t…
-       |                   ^
-    160| 
-    161|     // Verify close is called after timeout
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
-
- FAIL  src/test/components/modals/PitchProjectModal.test.tsx > PitchProjectModal > handles a failed pitch
-TestingLibraryElementError: Unable to find an element with the text: Pitch Failed. They passed on the project.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
-
-Ignored nodes: comments, script, style
-[36m<body[39m
-  [33mdata-scroll-locked[39m=[32m"1"[39m
-  [33mstyle[39m=[32m"pointer-events: none;"[39m
-[36m>[39m
-  [36m<span[39m
-    [33maria-hidden[39m=[32m"true"[39m
-    [33mdata-aria-hidden[39m=[32m"true"[39m
-    [33mdata-radix-focus-guard[39m=[32m""[39m
-    [33mstyle[39m=[32m"outline: none; opacity: 0; position: fixed; pointer-events: none;"[39m
-    [33mtabindex[39m=[32m"0"[39m
-  [36m/>[39m
-  [36m<div[39m
-    [33maria-hidden[39m=[32m"true"[39m
-    [33mdata-aria-hidden[39m=[32m"true"[39m
-  [36m/>[39m
-  [36m<div[39m
-    [33maria-hidden[39m=[32m"true"[39m
-    [33mclass[39m=[32m"fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0"[39m
-    [33mdata-aria-hidden[39m=[32m"true"[39m
-    [33mdata-state[39m=[32m"open"[39m
-    [33mstyle[39m=[32m"pointer-events: auto;"[39m
-  [36m/>[39m
-  [36m<div[39m
-    [33maria-describedby[39m=[32m"radix-:re:"[39m
-    [33maria-labelledby[39m=[32m"radix-:rd:"[39m
-    [33mclass[39m=[32m"fixed left-[50%] top-[50%] z-50 grid w-full translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg max-w-2xl"[39m
-    [33mdata-state[39m=[32m"open"[39m
-    [33mid[39m=[32m"radix-:rc:"[39m
-    [33mrole[39m=[32m"dialog"[39m
-    [33mstyle[39m=[32m"pointer-events: auto;"[39m
-    [33mtabindex[39m=[32m"-1"[39m
-  [36m>[39m
-    [36m<div[39m
-      [33mclass[39m=[32m"flex flex-col space-y-1.5 text-center sm:text-left"[39m
-    [36m>[39m
-      [36m<h2[39m
-        [33mclass[39m=[32m"text-lg font-semibold leading-none tracking-tight"[39m
-        [33mid[39m=[32m"radix-:rd:"[39m
-      [36m>[39m
-        [0mPitch Project: [0m
-        [0mMock Project[0m
-      [36m</h2>[39m
-      [36m<p[39m
-        [33mclass[39m=[32m"text-sm text-muted-foreground"[39m
-        [33mid[39m=[32m"radix-:re:"[39m
-      [36m>[39m
-        [0mSelect a network or streamer to pitch this series to, and propose a contract structure.[0m
-      [36m</p>[39m
-    [36m</div>[39m
-    [36m<div[39m
-      [33mclass[39m=[32m"grid grid-cols-2 gap-6 py-4"[39m
-    [36m>[39m
-      [36m<div[39m
-        [33mclass[39m=[32m"space-y-4"[39m
-      [36m>[39m
-        [36m<h4[39m
-          [33mclass[39m=[32m"font-semibold text-sm text-muted-foreground uppercase"[39m
-        [36m>[39m
-          [0m1. Select Buyer[0m
-        [36m</h4>[39m
-        [36m<div[39m
-          [33mclass[39m=[32m"space-y-2"[39m
-        [36m>[39m
-          [36m<button[39m
-            [33mclass[39m=[32m"w-full text-left p-3 rounded border transition-colors border-border bg-card hover:bg-accent"[39m
-          [36m>[39m
-            [36m<div[39m
-              [33mclass[39m=[32m"flex justify-between items-center mb-1"[39m
-            [36m>[39m
-              [36m<span[39m
-                [33mclass[39m=[32m"font-semibold text-sm"[39m
-              [36m>[39m
-                [0mMock Network[0m
-              [36m</span>[39m
-              [36m<div[39m
-                [33mclass[39m=[32m"inline-flex items-center rounded-full border px-2.5 py-0.5 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground text-[10px]"[39m
-              [36m>[39m
-                [0mnetwork[0m
-              [36m</div>[39m
-            [36m</div>[39m
-            [36m<p[39m
-              [33mclass[39m=[32m"text-xs text-muted-foreground mt-1"[39m
-            [36m>[39m
-              [0mEst. Fit: [0m
-              [0m75[0m
-              [0m/100[0m
-            [36m</p>[39m
-          [36m</button>[39m
-          [36m<button[39m
-            [33mclass[39m=[32m"w-full text-left p-3 rounded border transition-colors border-primary bg-primary/10"[39m
-          [36m>[39m
-            [36m<div[39m
-              [33mclass[39m=[32m"flex justify-between items-center mb-1"[39m
-            [36m>[39m
-              [36m<span[39m
-                [33mclass[39m=[32m"font-semibold text-sm"[39m
-              [36m>[39m
-                [0mMock Streamer[0m
-              [36m</span>[39m
-              [36m<div[39m
-                [33mclass[39m=[32m"inline-flex items-center rounded-full border px-2.5 py-0.5 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground text-[10px]"[39m
-              [36m>[39m
-                [0mstreamer[0m
-              [36m</div>[39m
-            [36m</div>[39m
-            [36m<p[39m
-              [33mclass[39m=[32m"text-xs text-muted-foreground"[39m
-            [36m>[39m
-              [0mMandate: [0m
-              [36m<span[39m
-                [33mclass[39m=[32m"text-foreground"[39m
-              [36m>[39m
-                [0mdrama[0m
-              [36m</span>[39m
-            [36m</p>[39m
-            [36m<p[39m
-              [33mclass[39m=[32m"text-xs text-muted-foreground mt-1"[39m
-            [36m>[39m
-              [0mEst. Fit: [0m
-              [0m75[0m
-              [0m/100[0m
-            [36m</p>[39m
-          [36m</button>[39m
-        [36m</div>[39m
-      [36m</div>[39m
-      [36m<div[39m
-        [33mclass[39m=[32m"space-y-4"[39m
-      [36m>[39m
-        [36m<h4[39m
-          [33mclass[39m=[32m"font-semibold text-sm text-muted-foreground uppercase"[39m
-        [36m>[39m
-          [0m2. Deal Structure[0m
-        [36m</h4>[39m
-        [36m<div[39m
-          [33mclass[39m=[32m"space-y-2"[39m
-        [36m>[39m
-          [36m<button[39m
-            [33mclass[39m=[32m"w-full text-left p-3 rounded border transition-colors border-border bg-card hover:bg-accent"[39m
-          [36m>[39m
-            [36m<span[39m
-              [33mclass[39m=[32m"font-semibold text-sm block"[39m
-            [36m>[39m
-              [0mHigh Upfront Fee[0m
-            [36m</span>[39m
-            [36m<p[39m
-              [33mclass[39m=[32m"text-xs text-muted-foreground mt-1"[39m
-            [36m>[39m
-              [0mBuyer fully funds production (0 weekly cost). Studio retains 0% backend. Harder to sell.[0m
-            [36m</p>[39m
-          [36m</button>[39m
-          [36m<button[39m
-            [33mclass[39m=[32m"w-full text-left p-3 rounded border transition-colors border-primary bg-primary/10"[39m
-          [36m>[39m
-            [36m<span[39m
-              [33mclass[39m=[32m"font-semibold text-sm block"[39m
-            [36m>[39m
-              [0mDeficit Financing[0m
-            [36m</span>[39m
-            [36m<p[39m
-              [33mclass[39m=[32m"text-xs text-muted-foreground mt-1"[39m
-            [36m>[39m
-              [0mStudio pays 30% of production costs. Studio retains 100% backend. Easier to sell.[0m
-            [36m</p>[39m
-          [36m</button>[39m
-        [36m</div>[39m
-        [36m<div[39m
-          [33mclass[39m=[32m"pt-6"[39m
-        [36m>[39m
-          [36m<button[39m
-            [33mclass[39m=[32m"inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full"[39m
-          [36m>[39m
-            [0mPitch Project[0m
-          [36m</button>[39m
-        [36m</div>[39m
-      [36m</div>[39m
-    [36m</div>[39m
-    [36m<button[39m
-      [33mclass[39m=[32m"absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity data-[state=open]:bg-accent data-[state=open]:text-muted-foreground hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none"[39m
-      [33mtype[39m=[32m"button"[39m
-    [36m>[39m
-      [36m<svg[39m
-        [33mclass[39m=[32m"lucide lucide-x h-4 w-4"[39m
-        [33mfill[39m=[32m"none"[39m
-        [33mheight[39m=[32m"24"[39m
-        [33mstroke[39m=[32m"currentColor"[39m
-        [33mstroke-linecap[39m=[32m"round"[39m
-        [33mstroke-linejoin[39m=[32m"round"[39m
-        [33mstroke-width[39m=[32m"2"[39m
-        [33mviewBox[39m=[32m"0 0 24 24"[39m
-        [33mwidth[39m=[32m"24"[39m
-        [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
-      [36m>[39m
-        [36m<path[39m
-          [33md[39m=[32m"M18 6 6 18"[39m
-        [36m/>[39m
-        [36m<path[39m
-          [33md[39m=[32m"m6 6 12 12"[39m
-        [36m/>[39m
-      [36m</svg>[39m
-      [36m<span[39m
-        [33mclass[39m=[32m"sr-only"[39m
-      [36m>[39m
-        [0mClose[0m
-      [36m</span>[39m
-    [36m</button>[39m
-  [36m</div>[39m
-  [36m<span[39m
-    [33maria-hidden[39m=[32m"true"[39m
-    [33mdata-aria-hidden[39m=[32m"true"[39m
-    [33mdata-radix-focus-guard[39m=[32m""[39m
-    [33mstyle[39m=[32m"outline: none; opacity: 0; position: fixed; pointer-events: none;"[39m
-    [33mtabindex[39m=[32m"0"[39m
-  [36m/>[39m
-[36m</body>[39m
- ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
- ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
- ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
- ❯ getByText node_modules/@testing-library/dom/dist/query-helpers.js:95:19
- ❯ src/test/components/modals/PitchProjectModal.test.tsx:181:19
-    179| 
-    180|     expect(mockPitchProject).toHaveBeenCalledWith('proj-1', 'buyer-2',…
-    181|     expect(screen.getByText('Pitch Failed. They passed on the project.…
-       |                   ^
-    182|   });
-    183| 
-
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
-
-
- Test Files  1 failed | 3 passed (4)
-      Tests  2 failed | 28 passed (30)
-   Start at  21:16:07
-   Duration  1.72s (transform 560ms, setup 630ms, collect 1.50s, tests 782ms, environment 1.73s, prepare 261ms)
-
+bun test v1.2.14 (6a363a38)
+
+src/test/example.test.ts:
+(pass) example > should pass [0.14ms]
+
+src/test/WeekSummaryModal.test.tsx:
+
+# Unhandled error between tests
+-------------------------------
+ 5 | import { useUIStore } from '@/store/uiStore';
+ 6 | import { formatMoney } from '@/engine/utils';
+ 7 | import { WeekSummary } from '@/engine/types';
+ 8 |
+ 9 | // Mock the store
+10 | vi.mock('@/store/uiStore', () => ({
+        ^
+TypeError: vi.mock is not a function. (In 'vi.mock("@/store/uiStore", () => ({
+  useUIStore: vi.fn()
+}))', 'vi.mock' is undefined)
+      at /app/src/test/WeekSummaryModal.test.tsx:10:4
+      at loadAndEvaluateModule (2:1)
+-------------------------------
+
+
+src/test/chart.test.tsx:
+251 |     throw error;
+252 |   }
+253 |   if (!baseElement) {
+254 |     // default to document.body instead of documentElement to avoid output of potentially-large
+255 |     // head elements (such as JSS style blocks) in debug output
+256 |     baseElement = document.body;
+                        ^
+ReferenceError: document is not defined
+      at render (/app/node_modules/@testing-library/react/dist/pure.js:256:19)
+      at <anonymous> (/app/src/test/chart.test.tsx:15:27)
+(fail) ChartStyle > should securely escape malicious XSS payloads in color config [4.56ms]
+
+src/engine/utils.test.ts:
+(pass) getWeekDisplay > should return correct display week and year for year 2026 (weeks 1-52) [0.09ms]
+(pass) getWeekDisplay > should return correct display week and year for year 2027 (weeks 53-104) [0.03ms]
+(pass) getWeekDisplay > should handle the start of year 2028 (week 105) [0.02ms]
+(pass) getWeekDisplay > should handle week 0 and negative weeks based on the current implementation [0.03ms]
+
+src/test/persistence/saveLoad.test.ts:
+(pass) saveLoad > returns null when loading an empty slot [0.10ms]
+37 |   it("returns null when loading an empty slot", () => {
+38 |     expect(loadGame(1)).toBeNull();
+39 |   });
+40 |
+41 |   it("handles malformed save data", () => {
+42 |     vi.spyOn(Storage.prototype, "getItem").mockReturnValueOnce("malformed json");
+                  ^
+ReferenceError: Storage is not defined
+      at <anonymous> (/app/src/test/persistence/saveLoad.test.ts:42:14)
+(fail) saveLoad > handles malformed save data [0.11ms]
+(pass) saveLoad > saves and loads game state [4.25ms]
+(pass) saveLoad > retrieves save slots info [1.21ms]
+73 |     const mockNow = 1234567890;
+74 |     Date.now = vi.fn(() => mockNow);
+75 |
+76 |     saveGame(2, state);
+77 |
+78 |     expect(vi.mocked(localStorage.setItem)).toHaveBeenCalledWith("studioboss_save_2", JSON.stringify(state));
+                   ^
+TypeError: vi.mocked is not a function. (In 'vi.mocked(localStorage.setItem)', 'vi.mocked' is undefined)
+      at <anonymous> (/app/src/test/persistence/saveLoad.test.ts:78:15)
+(fail) saveLoad > interacts with localStorage correctly when saving a game [1.05ms]
+108 |     Date.now = vi.fn(() => mockNow);
+109 |
+110 |     saveGame(1, state2);
+111 |
+112 |     // It should have called setItem for the state
+113 |     expect(vi.mocked(localStorage.setItem)).toHaveBeenCalledWith("studioboss_save_1", JSON.stringify(state2));
+                    ^
+TypeError: vi.mocked is not a function. (In 'vi.mocked(localStorage.setItem)', 'vi.mocked' is undefined)
+      at <anonymous> (/app/src/test/persistence/saveLoad.test.ts:113:15)
+(fail) saveLoad > preserves existing save slots when saving to a new slot [1.77ms]
+
+src/test/store/uiStore.test.ts:
+(pass) uiStore > sets active tab [0.07ms]
+(pass) uiStore > opens and closes create project modal [0.07ms]
+(pass) uiStore > selects a project [0.17ms]
+(pass) uiStore > shows and closes week summary [0.09ms]
+
+src/test/store/gameStore.test.ts:
+
+# Unhandled error between tests
+-------------------------------
+4 |
+5 |
+6 | import * as saveLoad from "../../persistence/saveLoad";
+7 |
+8 | // Mock saveLoad
+9 | vi.mock("../../persistence/saveLoad", () => ({
+       ^
+TypeError: vi.mock is not a function. (In 'vi.mock("../../persistence/saveLoad", () => ({
+  saveGame: vi.fn(),
+  loadGame: vi.fn((slot) => {
+    if (slot === 1)
+      return { studio: { name: "Loaded Studio" } };
+    return null;
+  }),
+  getSaveSlots: vi.fn(() => [{ exists: !0 }])
+}))', 'vi.mock' is undefined)
+      at /app/src/test/store/gameStore.test.ts:9:4
+      at loadAndEvaluateModule (2:1)
+-------------------------------
+
+
+src/test/engine/utils.test.ts:
+(pass) utils > formatMoney > formats 1500 as "$2K" [0.16ms]
+(pass) utils > formatMoney > formats 1000 as "$1K"
+(pass) utils > formatMoney > formats 999 as "$999"
+(pass) utils > formatMoney > formats 1500000 as "$1.5M"
+(pass) utils > formatMoney > formats 1000000 as "$1.0M"
+(pass) utils > formatMoney > formats 1500000000 as "$1.5B"
+(pass) utils > formatMoney > formats 1000000000 as "$1.0B"
+(pass) utils > formatMoney > formats -1500 as "-$2K"
+(pass) utils > formatMoney > formats -1500000 as "-$1.5M"
+(pass) utils > formatMoney > formats -1500000000 as "-$1.5B"
+(pass) utils > formatMoney > formats -500 as "-$500"
+(pass) utils > formatMoney > formats 0 as "$0"
+(pass) utils > formatMoney > formats 50 as "$50"
+(pass) utils > formatMoney > formats -0 as "-$0"
+(pass) utils > formatMoney > formats NaN as "$NaN"
+(pass) utils > formatMoney > formats Infinity as "$InfinityB"
+(pass) utils > formatMoney > formats -Infinity as "-$InfinityB"
+(pass) utils > formatMoney > formats 999.9 as "$1K"
+(pass) utils > formatMoney > formats 999999.9 as "$1.0M"
+(pass) utils > formatMoney > formats 999999999.9 as "$1.0B"
+(pass) utils > getWeekDisplay > calculates correct week and year [0.06ms]
+(pass) utils > pick > picks an element from the array [0.04ms]
+(pass) utils > randRange > returns a number within the range [0.03ms]
+(pass) utils > clamp > returns the minimum when value is below min [0.04ms]
+(pass) utils > clamp > returns the value when within range [0.01ms]
+(pass) utils > clamp > returns the maximum when value is above max [0.02ms]
+
+src/test/components/pipeline/ProjectCard.test.tsx:
+
+# Unhandled error between tests
+-------------------------------
+3 | import { ProjectCard } from '@/components/pipeline/ProjectCard';
+4 | import { useUIStore } from '@/store/uiStore';
+5 | import { Project } from '@/engine/types';
+6 |
+7 | // Mock the uiStore
+8 | vi.mock('@/store/uiStore', () => ({
+       ^
+TypeError: vi.mock is not a function. (In 'vi.mock("@/store/uiStore", () => ({
+  useUIStore: vi.fn()
+}))', 'vi.mock' is undefined)
+      at /app/src/test/components/pipeline/ProjectCard.test.tsx:8:4
+      at loadAndEvaluateModule (2:1)
+-------------------------------
+
+
+src/test/components/pipeline/PipelineBoard.test.tsx:
+
+# Unhandled error between tests
+-------------------------------
+4 | import { PipelineBoard } from '@/components/pipeline/PipelineBoard';
+5 | import { useGameStore } from '@/store/gameStore';
+6 | import { useUIStore } from '@/store/uiStore';
+7 | import { Project } from '@/engine/types';
+8 |
+9 | vi.mock('@/store/gameStore');
+       ^
+TypeError: vi.mock is not a function. (In 'vi.mock("@/store/gameStore")', 'vi.mock' is undefined)
+      at /app/src/test/components/pipeline/PipelineBoard.test.tsx:9:4
+      at loadAndEvaluateModule (2:1)
+-------------------------------
+
+
+src/test/components/modals/ProjectDetailModal.test.tsx:
+
+# Unhandled error between tests
+-------------------------------
+ 9 | class MockResizeObserver {
+10 |   observe() {}
+11 |   unobserve() {}
+12 |   disconnect() {}
+13 | }
+14 | window.ResizeObserver = MockResizeObserver;
+     ^
+ReferenceError: window is not defined
+      at /app/src/test/components/modals/ProjectDetailModal.test.tsx:14:1
+      at loadAndEvaluateModule (2:1)
+-------------------------------
+
+
+src/test/components/modals/PitchProjectModal.test.tsx:
+
+# Unhandled error between tests
+-------------------------------
+4 | import { PitchProjectModal } from '@/components/modals/PitchProjectModal';
+5 | import { useGameStore } from '@/store/gameStore';
+6 | import { useUIStore } from '@/store/uiStore';
+7 |
+8 | // Mock the stores
+9 | vi.mock('@/store/gameStore', () => ({
+       ^
+TypeError: vi.mock is not a function. (In 'vi.mock("@/store/gameStore", () => ({
+  useGameStore: vi.fn()
+}))', 'vi.mock' is undefined)
+      at /app/src/test/components/modals/PitchProjectModal.test.tsx:9:4
+      at loadAndEvaluateModule (2:1)
+-------------------------------
+
+
+src/test/components/modals/CreateProjectModal.test.tsx:
+
+# Unhandled error between tests
+-------------------------------
+4 | import { CreateProjectModal } from '@/components/modals/CreateProjectModal';
+5 | import { useUIStore } from '@/store/uiStore';
+6 | import { useGameStore } from '@/store/gameStore';
+7 |
+8 | // Mock the Zustand stores
+9 | vi.mock('@/store/uiStore', () => ({
+       ^
+TypeError: vi.mock is not a function. (In 'vi.mock("@/store/uiStore", () => ({
+  useUIStore: vi.fn()
+}))', 'vi.mock' is undefined)
+      at /app/src/test/components/modals/CreateProjectModal.test.tsx:9:4
+      at loadAndEvaluateModule (2:1)
+-------------------------------
+
+
+src/test/components/modals/CrisisModal.test.tsx:
+
+# Unhandled error between tests
+-------------------------------
+ 5 | import { useGameStore } from '@/store/gameStore';
+ 6 | import { useUIStore } from '@/store/uiStore';
+ 7 | import { Project, ProjectFormat } from '@/engine/types';
+ 8 |
+ 9 | // Mock the stores
+10 | vi.mock('@/store/gameStore', () => ({
+        ^
+TypeError: vi.mock is not a function. (In 'vi.mock("@/store/gameStore", () => ({
+  useGameStore: vi.fn()
+}))', 'vi.mock' is undefined)
+      at /app/src/test/components/modals/CrisisModal.test.tsx:10:4
+      at loadAndEvaluateModule (2:1)
+-------------------------------
+
+
+src/test/components/talent/TalentPanel.test.tsx:
+
+# Unhandled error between tests
+-------------------------------
+2 | import { render, screen, fireEvent } from '@testing-library/react';
+3 | import { describe, it, expect, vi, beforeEach } from 'vitest';
+4 | import { TalentPanel } from '@/components/talent/TalentPanel';
+5 | import { useGameStore } from '@/store/gameStore';
+6 |
+7 | vi.mock('@/store/gameStore');
+       ^
+TypeError: vi.mock is not a function. (In 'vi.mock("@/store/gameStore")', 'vi.mock' is undefined)
+      at /app/src/test/components/talent/TalentPanel.test.tsx:7:4
+      at loadAndEvaluateModule (2:1)
+-------------------------------
+
+
+src/test/components/finance/FinancePanel.test.tsx:
+
+# Unhandled error between tests
+-------------------------------
+3 | import { describe, it, expect, vi, beforeEach } from 'vitest';
+4 | import { FinancePanel } from '@/components/finance/FinancePanel';
+5 | import { useGameStore } from '@/store/gameStore';
+6 |
+7 | // Mock Recharts to avoid SVG/JSDOM issues
+8 | vi.mock('recharts', () => ({
+       ^
+TypeError: vi.mock is not a function. (In 'vi.mock("recharts", () => ({
+  ResponsiveContainer: ({ children }) => jsxDEV_7x81h0kn("div", {
+    "data-testid": "recharts-container",
+    children
+  }, void 0, !1, void 0, this),
+  AreaChart: ({ children }) => jsxDEV_7x81h0kn("div", {
+    "data-testid": "area-chart",
+    children
+  }, void 0, !1, void 0, this),
+  ComposedChart: ({ children }) => jsxDEV_7x81h0kn("div", {
+    "data-testid": "composed-chart",
+    children
+  }, void 0, !1, void 0, this),
+  Line: () => jsxDEV_7x81h0kn("div", {
+    "data-testid": "line"
+  }, void 0, !1, void 0, this),
+  Area: () => jsxDEV_7x81h0kn("div", {
+    "data-testid": "area"
+  }, void 0, !1, void 0, this),
+  XAxis: () => jsxDEV_7x81h0kn("div", {
+    "data-testid": "xaxis"
+  }, void 0, !1, void 0, this),
+  YAxis: () => jsxDEV_7x81h0kn("div", {
+    "data-testid": "yaxis"
+  }, void 0, !1, void 0, this),
+  Tooltip: () => jsxDEV_7x81h0kn("div", {
+    "data-testid": "tooltip"
+  }, void 0, !1, void 0, this)
+}))', 'vi.mock' is undefined)
+      at /app/src/test/components/finance/FinancePanel.test.tsx:8:4
+      at loadAndEvaluateModule (2:1)
+-------------------------------
+
+
+src/test/components/discovery/DiscoveryBoard.test.tsx:
+
+# Unhandled error between tests
+-------------------------------
+4 | import { DiscoveryBoard } from '../../../components/discovery/DiscoveryBoard';
+5 | import { useGameStore } from '../../../store/gameStore';
+6 | import { useUIStore } from '../../../store/uiStore';
+7 | import { Opportunity } from '../../../engine/types';
+8 |
+9 | vi.mock('../../../store/gameStore', () => ({
+       ^
+TypeError: vi.mock is not a function. (In 'vi.mock("../../../store/gameStore", () => ({
+  useGameStore: vi.fn()
+}))', 'vi.mock' is undefined)
+      at /app/src/test/components/discovery/DiscoveryBoard.test.tsx:9:4
+      at loadAndEvaluateModule (2:1)
+-------------------------------
+
+
+src/test/components/rivals/RivalsPanel.test.tsx:
+
+# Unhandled error between tests
+-------------------------------
+4 | import { RivalsPanel } from '@/components/rivals/RivalsPanel';
+5 | import { useGameStore } from '@/store/gameStore';
+6 | import { ArchetypeKey } from '@/engine/types';
+7 |
+8 | // Mock the game store
+9 | vi.mock('@/store/gameStore', () => ({
+       ^
+TypeError: vi.mock is not a function. (In 'vi.mock("@/store/gameStore", () => ({
+  useGameStore: vi.fn()
+}))', 'vi.mock' is undefined)
+      at /app/src/test/components/rivals/RivalsPanel.test.tsx:9:4
+      at loadAndEvaluateModule (2:1)
+-------------------------------
+
+
+src/test/engine/core/weekAdvance.test.ts:
+(pass) advanceWeek > advances the game by one week and generates a summary [4.36ms]
+(pass) advanceWeek > decreases opportunity expiry weeks and removes expired ones [1.07ms]
+(pass) advanceWeek > sometimes spawns new opportunities [1.75ms]
+(pass) advanceWeek > handles advancing a week with an entirely empty pipeline and empty world state without crashing [1.27ms]
+
+src/test/engine/core/gameInit.test.ts:
+(pass) initializeGame > initializes game state with correctly passed parameters [0.57ms]
+
+src/test/engine/systems/stats.test.ts:
+(pass) stats system > getFilmStats > calculates film stats correctly for mid tier (budget < 100M) [0.11ms]
+(pass) stats system > getFilmStats > applies 1.5x risk multiplier for high tier (budget >= 100M) [0.06ms]
+(pass) stats system > getFilmStats > applies 2.5x risk multiplier for blockbuster tier (budget >= 250M) [0.05ms]
+(pass) stats system > getTvStats > calculates TV stats correctly for mid tier (budget <= 50M) [0.16ms]
+(pass) stats system > getTvStats > applies 1.5x scale multiplier for high tier (budget > 50M) [0.05ms]
+(pass) stats system > getTvStats > applies 2.0x scale multiplier for blockbuster tier (budget >= 100M) [0.05ms]
+(pass) stats system > getUnscriptedStats > calculates unscripted stats correctly for mid tier (budget <= 50M) [0.09ms]
+(pass) stats system > getUnscriptedStats > applies 1.5x scale multiplier for high tier (budget > 50M) for weekly cost only [0.05ms]
+(pass) stats system > getUnscriptedStats > applies 2.0x scale multiplier for blockbuster tier (budget >= 100M) [0.04ms]
+(pass) stats system > Extreme Edge Cases (Guild Auditor) > handles negative budget safely [0.03ms]
+(pass) stats system > Extreme Edge Cases (Guild Auditor) > handles 0 budget safely [0.03ms]
+
+src/test/engine/systems/trends.test.ts:
+(pass) Trends System > initializes with a set of default genre trends [0.13ms]
+(pass) Trends System > advances trends correctly over a week [0.26ms]
+(pass) Trends System > calculates the trend multiplier for a matching genre [0.20ms]
+(pass) Trends System > returns a multiplier of 1.0 for a missing genre [0.06ms]
+(pass) Trends System > shifts directions properly based on thresholds [0.52ms]
+
+src/test/engine/systems/releaseSimulation.test.ts:
+(pass) releaseSimulation system > generateReviewScore > calculates base score clamped between 1 and 100 [0.13ms]
+(pass) releaseSimulation system > generateReviewScore > applies penalty for active, unresolved crises [0.06ms]
+(pass) releaseSimulation system > generateReviewScore > ignores resolved crises [0.04ms]
+(pass) releaseSimulation system > generateReviewScore > handles 0 prestige talent pool (edge case) [0.08ms]
+(pass) releaseSimulation system > generateReviewScore > handles maximum prestige talent pool (edge case) [0.04ms]
+(pass) releaseSimulation system > generateReviewScore > applies penalty for terrible buzz (<30) [0.03ms]
+(pass) releaseSimulation system > generateReviewScore > applies bonus for excellent buzz (>80) [0.04ms]
+(pass) releaseSimulation system > generateReviewScore > calculates talent bonus correctly for multiple attached talents [0.05ms]
+(pass) releaseSimulation system > simulateWeeklyBoxOffice > applies standard drop off multipliers based on review score legs [0.19ms]
+(pass) releaseSimulation system > simulateWeeklyBoxOffice > applies massive penalty for huge budget drop off week 1 [0.04ms]
+(pass) releaseSimulation system > simulateWeeklyBoxOffice > applies sharp second-weekend drop for tentpoles week 1 [0.03ms]
+(pass) releaseSimulation system > simulateWeeklyBoxOffice > applies strong word-of-mouth bonus for low budget anomalies [0.03ms]
+(pass) releaseSimulation system > simulateWeeklyBoxOffice > handles extreme rival competition (100 strength) [0.03ms]
+(pass) releaseSimulation system > simulateWeeklyBoxOffice > never drops below 0.05 absolute multiplier floor due to extreme competition [0.02ms]
+(pass) releaseSimulation system > calculateBoxOfficeRanks > returns correctly sorted ranks map [0.09ms]
+(pass) releaseSimulation system > calculateBoxOfficeRanks > handles empty array [0.02ms]
+(pass) releaseSimulation system > calculateBoxOfficeRanks > handles identical revenues (preserves sort stability or ties appropriately) [0.04ms]
+(pass) releaseSimulation system > calculateBoxOfficeRanks > does not mutate the original input array [0.05ms]
+(pass) releaseSimulation system > calculateBoxOfficeRanks > handles negative and zero revenues correctly [0.04ms]
+(pass) releaseSimulation system > calculateBoxOfficeRanks > handles fractional revenues correctly [0.04ms]
+(pass) releaseSimulation system > Extreme Edge Cases (Guild Auditor) > handles extreme review scores (> 100 or < 0) [0.04ms]
+(pass) releaseSimulation system > Extreme Edge Cases (Guild Auditor) > handles calculating rank with a single entry or empty [0.03ms]
+
+src/test/engine/systems/buyers.test.ts:
+(pass) buyers system > Guild Auditor: Edge Cases > handles an empty pipeline/buyers list safely during updateBuyers [0.06ms]
+46 |     });
+47 |
+48 |     it("calculates fit score correctly with empty project history", () => {
+49 |       vi.spyOn(Math, 'random').mockReturnValue(0.5);
+50 |       const score = calculateFitScore(mockProject, mockBuyer, 50, []);
+51 |       expect(score).toBe(50);
+                         ^
+error: expect(received).toBe(expected)
+
+Expected: 50
+Received: 65
+
+      at <anonymous> (/app/src/test/engine/systems/buyers.test.ts:51:21)
+(fail) buyers system > Guild Auditor: Edge Cases > calculates fit score correctly with empty project history [0.49ms]
+(pass) buyers system > updateBuyers > generates specific headlines for all mandate types [0.23ms]
+(pass) buyers system > updateBuyers > shifts mandate if buyer has no current mandate [0.06ms]
+(pass) buyers system > updateBuyers > shifts mandate if current mandate is expired [0.05ms]
+(pass) buyers system > updateBuyers > shifts mandate early due to random 5% chance [0.06ms]
+(pass) buyers system > updateBuyers > maintains mandate if active and random chance fails [0.05ms]
+(pass) buyers system > calculateFitScore > applies extreme market saturation penalty for 5 or more recent similar projects [0.16ms]
+(pass) buyers system > calculateFitScore > matches genres correctly for sci-fi/fantasy, comedy, and drama [0.13ms]
+(pass) buyers system > calculateFitScore > boosts score for prestige mandate based on budget tiers [0.12ms]
+(pass) buyers system > calculateFitScore > boosts score for broad_appeal mandate with family audience and mid/high budget [0.07ms]
+(pass) buyers system > calculateFitScore > penalizes low budget projects for premium archetype buyers [0.05ms]
+(pass) buyers system > calculateFitScore > applies market saturation penalty for similar projects released within 52 weeks [0.07ms]
+(pass) buyers system > calculateFitScore > returns exactly 65 if buyer has no mandate and no similar projects (early return check) [0.02ms]
+(pass) buyers system > calculateFitScore > applies extreme buzz multipliers correctly with negative buzz [0.05ms]
+(pass) buyers system > calculateFitScore > clamps score between 0 and 100 [0.04ms]
+(pass) buyers system > calculateFitScore > handles budget freeze mandate with extreme blockbuster budget [0.04ms]
+(pass) buyers system > calculateFitScore > handles broad appeal mandate with niche indie project [0.06ms]
+(pass) buyers system > calculateFitScore > applies archetype specific penalties (network vs blockbuster) [0.05ms]
+(pass) buyers system > negotiateContract > requires a higher score (65) for upfront contracts [0.09ms]
+(pass) buyers system > negotiateContract > requires a lower score (40) for standard/deficit contracts [0.04ms]
+(pass) buyers system > negotiateContract > tests explicit fit score boundaries for contract acceptance [0.07ms]
+
+src/test/engine/systems/projects.test.ts:
+(pass) advanceProject > TV & Unscripted Release Rules > advances episodes Released correctly [0.44ms]
+(pass) advanceProject > TV & Unscripted Release Rules > announces the finale when last episode drops [0.06ms]
+(pass) advanceProject > TV & Unscripted Release Rules > decays rapidly for weekly after finale and sets to post_release [0.54ms]
+(pass) advanceProject > TV & Unscripted Release Rules > post_release forces out after eps + 4 weeks [0.11ms]
+(pass) advanceProject > TV & Unscripted Release Rules > binge release model completes run early if below 50k [0.07ms]
+(pass) advanceProject > TV & Unscripted Release Rules > binge release model completes run after 8 weeks [0.10ms]
+(pass) advanceProject > TV & Unscripted Release Rules > split release model part 2 drops [0.11ms]
+(pass) advanceProject > TV & Unscripted Release Rules > split release decays normally before part 2 [0.05ms]
+(pass) advanceProject > TV & Unscripted Release Rules > split release decays after part 2 [0.05ms]
+(pass) advanceProject > TV & Unscripted Release Rules > split release finishes its run [0.06ms]
+(pass) advanceProject > Post-Release and Ancillary rules > calculates bidding war for prestige projects [0.15ms]
+(pass) advanceProject > Post-Release and Ancillary rules > calculates VOD drop for normal films [0.13ms]
+(pass) advanceProject > Post-Release and Ancillary rules > calculates higher ancillary for family and anim projects after week 1 [0.06ms]
+(pass) advanceProject > Post-Release and Ancillary rules > archives project after 26 weeks of post_release [0.05ms]
+(pass) advanceProject > Handle Release Phase Entry edge cases > sets prestige multiplier correctly based on bounds [0.30ms]
+(pass) advanceProject > Handle Release Phase Entry edge cases > handles extreme negative budget or buzz values safely (clip to 0 logic check) [0.05ms]
+(pass) advanceProject > Handle Release Phase Entry edge cases > handles binge TV entry correctly [0.06ms]
+(pass) advanceProject > Handle Release Phase Entry edge cases > handles split TV entry correctly [0.05ms]
+(pass) advanceProject > Handle Release Phase Entry edge cases > handles weekly TV entry correctly [0.04ms]
+(pass) advanceProject > Extreme Edge Cases (Guild Auditor) > handles project with extremely long negative weeks in phase [0.05ms]
+(pass) advanceProject > Extreme Edge Cases (Guild Auditor) > does not crash or stall if all projects in an array are advanced correctly (pipeline simulation) [0.05ms]
+(pass) advanceProject > does nothing for archived projects [0.04ms]
+(pass) advanceProject > advances development project normally [0.04ms]
+(pass) advanceProject > transitions from development to needs_greenlight [0.15ms]
+(pass) advanceProject > transitions from production to marketing [0.07ms]
+(pass) advanceProject > handleReleasePhaseEntry transitions to released [0.05ms]
+(pass) advanceProject > accumulates revenue and decays weekly revenue for released projects [0.05ms]
+(pass) advanceProject > archives released project after its run [0.06ms]
+(pass) advanceProject > transitions tv from development to pitching [0.04ms]
+(pass) advanceProject > transitions unscripted from development to pitching [0.05ms]
+(pass) advanceProject > drifts buzz with talent buzz bonus during dev [0.13ms]
+(pass) advanceProject > drifts buzz without talent during dev [0.05ms]
+
+src/test/engine/systems/TalentSystem.test.ts:
+(pass) TalentSystem > applyProjectResults > returns empty array if no contracts provided [0.04ms]
+(pass) TalentSystem > applyProjectResults > applies massive hit modifiers (ROI > 4.0) [0.16ms]
+(pass) TalentSystem > applyProjectResults > applies solid success modifiers (ROI > 2.0) [0.07ms]
+(pass) TalentSystem > applyProjectResults > applies neutral/modest success modifiers (ROI > 1.0) [0.06ms]
+(pass) TalentSystem > applyProjectResults > applies bomb modifiers (ROI < 0.4) [0.05ms]
+(pass) TalentSystem > applyProjectResults > handles awards correctly for specific roles [0.24ms]
+(pass) TalentSystem > applyProjectResults > applies general award modifiers (Best Picture) to all roles with dilution [0.17ms]
+(pass) TalentSystem > applyProjectResults > clamps stats accurately [0.10ms]
+(pass) TalentSystem > applyProjectResults > handles extreme ego talent (0 skill/draw, 100 prestige) accurately after a huge hit [0.05ms]
+(pass) TalentSystem > applyProjectResults > handles extreme ego talent (0 skill/draw, 100 prestige) accurately after a massive bomb [0.04ms]
+(pass) TalentSystem > Guild Auditor: Edge Cases > handles extreme ego talent (0 skill/draw, 100 prestige) accurately after a huge hit within Guild Auditor Edge Cases [0.04ms]
+(pass) TalentSystem > Guild Auditor: Edge Cases > handles an empty pipeline safely during advance [0.10ms]
+(pass) TalentSystem > advance > decrements opportunity expiry [0.06ms]
+(pass) TalentSystem > advance > removes expired opportunities [0.08ms]
+(pass) TalentSystem > advance > generates new opportunities based on random chance [0.14ms]
+
+src/test/engine/systems/awards.test.ts:
+(pass) awards system > Guild Auditor: Edge Cases > handles an empty project list safely during runAwardsCeremony [0.07ms]
+(pass) awards system > Guild Auditor: Edge Cases > handles extreme negative budget / buzz values when generating awards profile [0.21ms]
+(pass) awards system > generateAwardsProfile > should generate a profile with all scores between 0 and 100 [0.11ms]
+(pass) awards system > generateAwardsProfile > should have a default campaignStrength of 10 [0.02ms]
+(pass) awards system > generateAwardsProfile > should be influenced by budget for prestigeScore [0.07ms]
+(pass) awards system > generateAwardsProfile > should give higher indieCredibility potential to low budget projects [0.05ms]
+(pass) awards system > runAwardsCeremony > should not return awards if no projects are eligible [0.07ms]
+(pass) awards system > runAwardsCeremony > should exclude projects released more than 52 weeks ago [0.05ms]
+(pass) awards system > runAwardsCeremony > should award 'won' status for high scores (> 150) [0.22ms]
+(pass) awards system > runAwardsCeremony > should award 'nominated' status for medium scores (> 100) [0.06ms]
+(pass) awards system > runAwardsCeremony > should correctly accumulate prestige change [0.05ms]
+(pass) awards system > runAwardsCeremony > should filter awards by project format [0.11ms]
+(pass) awards system > runAwardsCeremony > should award the highest scoring project when multiple are eligible [0.30ms]
+(pass) awards system > runAwardsCeremony > should exclude projects that are not released or archived [0.09ms]
+(pass) awards system > runAwardsCeremony > should include projects that are archived and within the 52 week window [0.06ms]
+(pass) awards system > runAwardsCeremony > should allow a project with high campaignStrength to win against an identical project with low campaignStrength [0.10ms]
+(pass) awards system > runAwardsCeremony > should exclude projects that do not have an awardsProfile [0.04ms]
+
+src/test/engine/systems/franchises.test.ts:
+(pass) franchise system > Guild Auditor: Edge Cases > handles an empty project list safely when evaluating crossover events [0.68ms]
+(pass) franchise system > Guild Auditor: Edge Cases > handles negative buzz and budget correctly in fatigue calculation [0.11ms]
+(pass) franchise system > exploitIP > returns null if source project is not released [0.06ms]
+(pass) franchise system > exploitIP > returns null if project failed financially and is not fatigued [0.02ms]
+(pass) franchise system > exploitIP > returns reboot option if franchise is severely fatigued and financial failure [0.30ms]
+(pass) franchise system > exploitIP > returns null if franchise is severely fatigued, failed, but random check fails [0.12ms]
+(pass) franchise system > exploitIP > generates a deconstructive meta-sequel if franchise is heavily fatigued and fails [0.13ms]
+(pass) franchise system > exploitIP > generates crossover event if another huge hit exists in same genre [0.11ms]
+(pass) franchise system > exploitIP > generates crossover event if another huge hit exists in a compatible crossover genre [0.09ms]
+(pass) franchise system > exploitIP > generates an Expanded Universe TV spinoff if fatigued [0.13ms]
+(pass) franchise system > exploitIP > generates a requel for legacy IPs [0.14ms]
+(pass) franchise system > exploitIP > generates a Part 1 finale for massive franchises [0.14ms]
+(pass) franchise system > exploitIP > generates a direct sequel [0.05ms]
+(pass) franchise system > exploitIP > generates a prequel [0.03ms]
+(pass) franchise system > exploitIP > generates a spinoff [0.04ms]
+(pass) franchise system > exploitIP > clamps buzz bonus to -10 when completely saturated [0.27ms]
+(pass) franchise system > exploitIP > applies steep fatigue curve for Superhero genre heavily saturated [0.23ms]
+(pass) franchise system > exploitIP > generates an IP Rights Retention Rush Job if legacy franchise underperforms [0.18ms]
+
+src/test/engine/systems/crises.test.ts:
+(pass) crises system > checkAndTriggerCrisis > returns undefined if project is not in production [0.15ms]
+(pass) crises system > checkAndTriggerCrisis > returns undefined if random check fails (>= 0.05) [0.03ms]
+(pass) crises system > checkAndTriggerCrisis > returns an ActiveCrisis if random check passes (< 0.05) [0.07ms]
+(pass) crises system > resolveCrisis > returns unchanged state if project not found [0.26ms]
+(pass) crises system > resolveCrisis > returns unchanged state if project has no active crisis [0.04ms]
+(pass) crises system > resolveCrisis > returns unchanged state if crisis is already resolved [0.06ms]
+(pass) crises system > resolveCrisis > returns unchanged state if optionIndex is invalid [0.03ms]
+(pass) crises system > resolveCrisis > applies cash penalty correctly [0.07ms]
+(pass) crises system > resolveCrisis > applies weeks delay and buzz penalty correctly, clamping buzz at 0 [0.06ms]
+(pass) crises system > resolveCrisis > handles extreme negative cash penalty (edge case for data error / intentional gain) [0.04ms]
+(pass) crises system > resolveCrisis > handles project with negative budget correctly [0.06ms]
+
+src/test/engine/systems/greenlight.test.ts:
+(pass) evaluateGreenlight > Base Scoring Mechanics > calculates a baseline score without major modifiers [0.31ms]
+(pass) evaluateGreenlight > Base Scoring Mechanics > applies market saturation penalty for recent similar projects [0.13ms]
+(pass) evaluateGreenlight > Base Scoring Mechanics > applies heavy penalty for oversaturated genres (>= 5 similar) [0.10ms]
+108 |
+109 |       const report = evaluateGreenlight(superheroProject, 100_000_000, [mockTalent], 10, similarProjects);
+110 |       // 5 projects => penalty 25 + 20 = 45. Superhero => 45 * 2 = 90
+111 |       // Base 50 + 15 (talent) - 90 = -25 => clamped to 0
+112 |       expect(report.score).toBe(0);
+113 |       expect(report.negatives.some(n => n.includes('-90 points'))).toBe(true);
+                                                                         ^
+error: expect(received).toBe(expected)
+
+Expected: true
+Received: false
+
+      at <anonymous> (/app/src/test/engine/systems/greenlight.test.ts:113:68)
+(fail) evaluateGreenlight > Base Scoring Mechanics > doubles penalty for oversaturated Superhero genre [0.25ms]
+(pass) evaluateGreenlight > Base Scoring Mechanics > applies calendar gap bonus if no similar projects in 52 weeks [0.13ms]
+(pass) evaluateGreenlight > Base Scoring Mechanics > penalizes severe cashflow strain (cash < budget) [0.06ms]
+(pass) evaluateGreenlight > Base Scoring Mechanics > penalizes high financial exposure (cash < budget * 2) [0.05ms]
+(pass) evaluateGreenlight > Base Scoring Mechanics > rewards comfortable cash reserves (cash > budget * 5) [0.10ms]
+(pass) evaluateGreenlight > Base Scoring Mechanics > penalizes unpackaged projects (no talent) [0.05ms]
+(pass) evaluateGreenlight > Base Scoring Mechanics > rewards A-list packages (avg draw > 75) [0.05ms]
+(pass) evaluateGreenlight > Base Scoring Mechanics > rewards high prestige elements (total prestige > 150) [0.07ms]
+(pass) evaluateGreenlight > Base Scoring Mechanics > penalizes poor talent packages (avg draw <= 50) [0.06ms]
+(pass) evaluateGreenlight > Base Scoring Mechanics > rewards exceptional buzz (> 80) [0.10ms]
+(pass) evaluateGreenlight > Base Scoring Mechanics > penalizes very low buzz (< 30) [0.08ms]
+(pass) evaluateGreenlight > Recommendations Matrix and Edge Cases > returns Easy Greenlight for score >= 80 [0.03ms]
+(pass) evaluateGreenlight > Recommendations Matrix and Edge Cases > returns Viable with Conditions for 60 <= score < 80 [0.03ms]
+(pass) evaluateGreenlight > Recommendations Matrix and Edge Cases > returns Speculative Bet for 40 <= score < 60 on mid budget [0.03ms]
+(pass) evaluateGreenlight > Recommendations Matrix and Edge Cases > returns Dangerous Vanity Play for 40 <= score < 60 on blockbuster/high budget [0.04ms]
+(pass) evaluateGreenlight > Recommendations Matrix and Edge Cases > returns Do Not Greenlight Yet for score < 40 on mid budget [0.03ms]
+(pass) evaluateGreenlight > Recommendations Matrix and Edge Cases > returns Dangerous Vanity Play for score < 40 on blockbuster/high budget [0.03ms]
+(pass) evaluateGreenlight > Extreme Edge Cases (Guild Auditor) > handles negative budget securely without throwing [0.05ms]
+(pass) evaluateGreenlight > Extreme Edge Cases (Guild Auditor) > handles talent with 0 draw but 100 ego/prestige safely [0.05ms]
+(pass) evaluateGreenlight > Extreme Edge Cases (Guild Auditor) > handles an empty pipeline safely (allProjects = []) [0.03ms]
+(pass) evaluateGreenlight > Extreme Edge Cases (Guild Auditor) > bounds extreme negative scores to 0 [0.09ms]
+(pass) evaluateGreenlight > Extreme Edge Cases (Guild Auditor) > bounds extreme positive scores to 100 [0.03ms]
+
+src/test/engine/systems/culture.test.ts:
+(pass) Culture System > initializes culture based on the studio archetype [0.08ms]
+(pass) Culture System > shifts culture correctly when greenlighting a high-budget commercial film [0.12ms]
+(pass) Culture System > shifts culture correctly when greenlighting an indie prestige drama [0.04ms]
+(pass) Culture System > clamps culture values between 0 and 100 [0.04ms]
+
+src/test/engine/systems/unscripted.test.ts:
+(pass) Unscripted Projects > creates an unscripted project with correct stats [1.36ms]
+
+src/test/engine/systems/finance.test.ts:
+(pass) finance > calculateWeeklyCosts > sums costs of development and production projects only [0.05ms]
+(pass) finance > calculateWeeklyCosts > applies costMultiplier 0 for upfront contract type in production [0.08ms]
+(pass) finance > calculateWeeklyCosts > applies costMultiplier 0.5 for deficit contract type in production [0.04ms]
+(pass) finance > calculateWeeklyCosts > handles negative weeklyCost safely [0.03ms]
+(pass) finance > calculateWeeklyCosts > ignores contract types for development phase projects [0.03ms]
+(pass) finance > calculateWeeklyRevenue > sums revenue of released projects, factoring in backend percent [0.05ms]
+(pass) finance > calculateWeeklyRevenue > returns 0 if no released projects [0.02ms]
+(pass) finance > calculateWeeklyRevenue > sums revenue of multiple released projects without contracts [0.03ms]
+(pass) finance > calculateWeeklyRevenue > sums backend percentages from multiple contracts on the same project [0.04ms]
+(pass) finance > calculateWeeklyRevenue > ignores contracts that belong to a different project [0.03ms]
+(pass) finance > calculateWeeklyRevenue > handles a released project with zero weekly revenue [0.05ms]
+(pass) finance > calculateWeeklyRevenue > handles backend percentages greater than 100% [0.04ms]
+(pass) finance > calculateWeeklyRevenue > handles negative weeklyRevenue safely [0.03ms]
+(pass) finance > calculateWeeklyRevenue > returns 0 revenue for upfront contract type [0.03ms]
+(pass) finance > calculateWeeklyRevenue > calculates 100% of revenue for deficit contract type minus backend [0.04ms]
+
+src/test/engine/systems/rivals.test.ts:
+(pass) updateRival > updates strength and cash [0.06ms]
+(pass) updateRival > updates strategy based on archetype [0.04ms]
+(pass) updateRival > sets isAcquirable correctly [0.06ms]
+
+src/test/engine/systems/deals.test.ts:
+(pass) Deals System > evaluates whether talent will accept a first-look deal based on prestige and access levels [0.15ms]
+(pass) Deals System > offers a deal and returns a valid FirstLookDeal object if accepted [0.16ms]
+
+src/test/engine/systems/festivals.test.ts:
+(pass) Festivals System > submits a project to a festival if cash is sufficient and status is valid [0.20ms]
+(pass) Festivals System > declines submission if project cannot be found or cash is too low [0.04ms]
+(pass) Festivals System > resolves festival results and correctly selects/rejects based on indie credibility and prestige [0.36ms]
+
+src/test/engine/generators/names.test.ts:
+(pass) Names Generator > generateStudioName > returns a string [0.06ms]
+(pass) Names Generator > generateStudioName > avoids existing names [0.04ms]
+(pass) Names Generator > generateMotto > returns a string [0.02ms]
+(pass) Names Generator > generateActorName > returns a string with two words (first and last name) [0.11ms]
+(pass) Names Generator > generateActressName > returns a string with two words (first and last name) [0.07ms]
+(pass) Names Generator > generateProjectName > returns a string for tv projects [0.11ms]
+(pass) Names Generator > generateProjectName > returns a string for film projects [0.05ms]
+(pass) Names Generator > generateProjectName > falls back to Drama genre if an unknown genre is passed [0.03ms]
+
+src/test/engine/generators/talent.test.ts:
+(pass) talent generator > generateFamilies > generates the specified number of families [0.07ms]
+(pass) talent generator > generateFamilies > creates families with required attributes [0.04ms]
+(pass) talent generator > generateTalentPool > generates the specified number of talent profiles [0.09ms]
+(pass) talent generator > generateTalentPool > assigns multiple roles occasionally (multi-hyphenates) [0.05ms]
+(pass) talent generator > generateTalentPool > assigns nepo babies to families [0.08ms]
+(pass) talent generator > generateTalentPool > assigns talent to agents and agencies if available [0.23ms]
+
+src/test/engine/generators/agencies.test.ts:
+(pass) agencies generator > generateAgencies > generates the requested number of agencies [1.25ms]
+(pass) agencies generator > generateAgencies > makes the first two agencies powerhouses [0.08ms]
+(pass) agencies generator > generateAgencies > assigns higher prestige and leverage to powerhouse agencies [0.04ms]
+(pass) agencies generator > generateAgents > generates agents for each given agency [0.13ms]
+(pass) agencies generator > generateAgents > assigns high aggression to agents in a shark culture [0.09ms]
+(pass) agencies generator > generateAgents > assigns lower aggression to agents in non-shark cultures [0.07ms]
+
+src/test/engine/generators/opportunities.test.ts:
+(pass) Opportunity Generator > should generate a valid opportunity [0.11ms]
+(pass) Opportunity Generator > should generate attached talent if provided [0.09ms]
+(pass) Opportunity Generator > should populate TV specific fields if format is TV [0.06ms]
+(pass) Opportunity Generator > should generate titles [0.03ms]
+
+src/test/engine/generators/headlines.test.ts:
+(pass) generateHeadlines > should generate between 1 and 3 headlines [1.13ms]
+(pass) generateHeadlines > should return headlines with the correct structure [0.15ms]
+(pass) generateHeadlines > should generate rival headlines if rivals are provided [0.12ms]
+(pass) generateHeadlines > should NOT generate rival headlines if NO rivals are provided [0.48ms]
+
+18 tests failed:
+(fail) ChartStyle > should securely escape malicious XSS payloads in color config [4.56ms]
+(fail) saveLoad > handles malformed save data [0.11ms]
+(fail) saveLoad > interacts with localStorage correctly when saving a game [1.05ms]
+(fail) saveLoad > preserves existing save slots when saving to a new slot [1.77ms]
+(fail) buyers system > Guild Auditor: Edge Cases > calculates fit score correctly with empty project history [0.49ms]
+(fail) evaluateGreenlight > Base Scoring Mechanics > doubles penalty for oversaturated Superhero genre [0.25ms]
+
+ 275 pass
+ 18 fail
+ 12 errors
+ 623 expect() calls
+Ran 293 tests across 41 files. [836.00ms]
