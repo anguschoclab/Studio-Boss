@@ -44,9 +44,11 @@ export function evaluateGreenlight(
   }
 
   // New market saturation math: dynamic market trends
-  // Heavily penalize oversaturated tentpole genres (like Superhero) to force players to consider market conditions
+  // The Festival Buyer: Heavily penalize oversaturated tentpole genres (like Superhero) to force players to consider market conditions
+  // If 5 superhero movies were released last year, buyers should heavily penalize new superhero pitches in the greenlight phase.
   if (recentSimilarProjects.length >= 5 && project.genre === 'Superhero') {
     saturationPenalty *= 2; // Doubling the penalty for oversaturated Superhero genre
+    saturationPenalty += 50; // Applying a massive flat penalty for chasing an exhausted superhero market
   }
 
   if (saturationPenalty > 0) {
