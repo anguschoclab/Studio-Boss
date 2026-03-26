@@ -61,7 +61,18 @@ export type TvFormatKey =
   | 'sports_docudrama'
   | 'cyberpunk_anime'
   | 'cozy_mystery'
-  | 'satirical_news';
+  | 'satirical_news'
+  | 'prestige_limited_series'
+  | 'binge_thriller'
+  | 'adult_animation'
+  | 'franchise_spinoff'
+  | 'prestige_horror_anthology'
+  | 'international_thriller'
+  | 'gritty_reboot'
+  | 'high_concept_comedy'
+  | 'tech_dystopia'
+  | 'prestige_biopic'
+  | 'fantasy_prequel';
 
 export type UnscriptedFormatKey =
   | 'competition'
@@ -118,7 +129,18 @@ export type UnscriptedFormatKey =
   | 'paranormal_reality'
   | 'high_stakes_poker'
   | 'fashion_design_competition'
-  | 'travel_adventure_race';
+  | 'travel_adventure_race'
+  | 'trashy_dating_island'
+  | 'true_crime_docuseries'
+  | 'reality_real_estate'
+  | 'survival_betrayal'
+  | 'celebrity_escape_room'
+  | 'social_media_experiment'
+  | 'extreme_baking_wars'
+  | 'poly_dating_experiment'
+  | 'cult_survivor_doc'
+  | 'influencer_survival'
+  | 'celebrity_boxing_league';
 export type ReleaseModelKey = 'weekly' | 'binge' | 'split';
 export type ProjectContractType = 'upfront' | 'deficit' | 'standard';
 export type MandateType = 'sci-fi' | 'comedy' | 'drama' | 'budget_freeze' | 'broad_appeal' | 'prestige';
