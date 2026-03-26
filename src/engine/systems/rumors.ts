@@ -1,4 +1,4 @@
-import { GameState, Rumor } from '../types/index';
+import { GameState, Rumor } from '@/engine/types';
 import { pick, randRange } from '../utils';
 
 export function advanceRumors(state: GameState): GameState {

@@ -1,4 +1,4 @@
-import { GameState, Project, IPRights } from '../types/index';
+import { GameState, Project, IPRights } from '@/engine/types';
 
 export function calculateIPValue(project: Project): number {
   if (project.status === 'development' || project.status === 'pitching' || project.status === 'needs_greenlight') {

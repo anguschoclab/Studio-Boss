@@ -1,4 +1,4 @@
-import { GameState, Project, Headline } from '../types/index';
+import { GameState, Project, Headline } from '@/engine/types';
 import { updateCultureFromProject } from './culture';
 
 export interface ProductionTransitionResult {

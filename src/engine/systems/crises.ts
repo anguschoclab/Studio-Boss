@@ -1,4 +1,4 @@
-import { Project, ActiveCrisis, GameState } from '../types/index';
+import { Project, ActiveCrisis, GameState } from '@/engine/types';
 import { pick } from '../utils';
 
 const CRISIS_POOLS = [

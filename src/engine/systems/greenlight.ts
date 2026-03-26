@@ -1,4 +1,4 @@
-import { Project, TalentProfile } from '../types/index';
+import { Project, TalentProfile } from '@/engine/types';
 
 export type GreenlightRecommendation =
   | 'Easy Greenlight'

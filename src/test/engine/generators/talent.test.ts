@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { generateFamilies, generateTalentPool } from '@/engine/generators/talent';
-import { Agency, Agent, Family } from '@/engine/types/index';
+import { Agency, Agent, Family } from '@/engine/types';
 
 describe('talent generator', () => {
   describe('generateFamilies', () => {

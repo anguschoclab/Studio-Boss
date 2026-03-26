@@ -1,4 +1,4 @@
-import { Opportunity, BudgetTierKey, TvFormatKey } from '../types/index';
+import { Opportunity, BudgetTierKey, TvFormatKey } from '@/engine/types';
 import { GENRES, TARGET_AUDIENCES } from '../data/genres';
 import { randRange, pick } from '../utils';
  // Reuse some generation logic if needed, or build new one

@@ -1,4 +1,4 @@
-import { RivalStudio, GameState, TalentProfile } from '../types/index';
+import { RivalStudio, GameState, TalentProfile } from '@/engine/types';
 import { pick, clamp } from '../utils';
 
 const INDIE_ACTIVITIES = [

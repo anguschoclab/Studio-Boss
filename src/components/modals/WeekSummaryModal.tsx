@@ -16,12 +16,16 @@ export const WeekSummaryModal = () => {
   const netDelta = cashAfter - cashBefore;
 
   const isYearEnd = (toWeek - 1) % 52 === 0 && toWeek > 1;
+  const currentSnapshot = isYearEnd ? snapshots[snapshots.length - 1] : null;
+  const previousSnapshot = isYearEnd && snapshots.length > 1 ? snapshots[snapshots.length - 2] : null;
+
+  const displayCashAfter = isYearEnd && currentSnapshot ? currentSnapshot.funds : cashAfter;
+  const displayNetDelta = isYearEnd && currentSnapshot ? (currentSnapshot.funds - (previousSnapshot?.funds || 0)) : netDelta;
+
   let yearlyDelta = 0;
-  if (isYearEnd && snapshots.length > 0) {
-    const latest = snapshots[snapshots.length - 1];
-    const previous = snapshots.length > 1 ? snapshots[snapshots.length - 2] : null;
-    // If it's the first year, delta is from the start (we don't have a 0-snapshot yet, but we could assume 0 or just show performance)
-    yearlyDelta = previous ? latest.funds - previous.funds : latest.funds - (cashAfter - totalRevenue + totalCosts); // Approximation of start-of-game cash
+  if (isYearEnd && currentSnapshot) {
+    // If it's the first year, delta is from the start
+    yearlyDelta = previousSnapshot ? currentSnapshot.funds - previousSnapshot.funds : currentSnapshot.funds - (cashAfter - totalRevenue + totalCosts); 
   }
 
   return (
@@ -32,7 +36,7 @@ export const WeekSummaryModal = () => {
       >
         <DialogHeader>
           <DialogTitle className={`font-display text-2xl font-black tracking-tight bg-clip-text text-transparent ${isYearEnd ? 'bg-gradient-to-r from-amber-400 to-yellow-600' : 'bg-gradient-to-r from-primary to-primary/70'}`}>
-            {isYearEnd ? 'Fiscal Year Summary' : `Week ${toWeek} Report`}
+            {isYearEnd ? 'Yearly Studio Report' : `Week ${toWeek} Report`}
           </DialogTitle>
         </DialogHeader>
 
@@ -69,13 +73,13 @@ export const WeekSummaryModal = () => {
               </div>
               <div className="p-2.5 rounded-lg border border-border/40 bg-card/40 backdrop-blur-sm text-center shadow-sm">
                 <p className="text-[10px] text-muted-foreground">Net</p>
-                <p className={`text-sm font-semibold ${netDelta >= 0 ? 'text-success' : 'text-destructive'}`}>
-                  {netDelta >= 0 ? '+' : ''}{formatMoney(netDelta)}
+                <p className={`text-sm font-semibold ${displayNetDelta >= 0 ? 'text-success' : 'text-destructive'}`}>
+                  {displayNetDelta >= 0 ? '+' : ''}{formatMoney(displayNetDelta)}
                 </p>
               </div>
             </div>
             <p className="text-xs text-muted-foreground text-center">
-              Cash: {formatMoney(cashBefore)} → <span className={cashAfter < 0 ? 'text-destructive' : 'text-primary'}>{formatMoney(cashAfter)}</span>
+              Cash: {formatMoney(cashBefore)} → <span className={displayCashAfter < 0 ? 'text-destructive' : 'text-primary'}>{formatMoney(displayCashAfter)}</span>
             </p>
           </div>
 

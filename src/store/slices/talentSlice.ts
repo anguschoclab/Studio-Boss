@@ -1,6 +1,6 @@
 import { StateCreator } from 'zustand';
 import { GameStore } from '../gameStore';
-import { Contract } from '@/engine/types/index';
+import { Contract } from '@/engine/types';
 import { offerFirstLookDeal } from '@/engine/systems/deals';
 import { buildProjectAndContracts, CreateProjectParams } from '../storeUtils';
 

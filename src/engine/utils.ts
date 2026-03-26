@@ -1,4 +1,4 @@
-import { Contract } from './types/index';
+import { Contract } from '@/engine/types';
 // Shared utilities for the engine layer — no React imports
 
 export function formatMoney(amount: number): string {

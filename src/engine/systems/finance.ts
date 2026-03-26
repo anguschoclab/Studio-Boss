@@ -1,4 +1,4 @@
-import { Project, Contract, GameState, MarketEvent } from '../types/index';
+import { Project, Contract, GameState, MarketEvent } from '@/engine/types';
 import { groupContractsByProject } from '../utils';
 
 export function calculateProjectROI(project: Project): number {

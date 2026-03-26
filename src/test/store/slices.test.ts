@@ -3,17 +3,16 @@ import { useGameStore } from '../../src/store/gameStore';
 
 describe('Store Slice Isolation', () => {
   beforeEach(() => {
-    // Reset store or initialize a new game
     useGameStore.getState().newGame('Test Studio', 'major');
   });
 
   describe('Finance Slice Isolation', () => {
     it('should update funds without mutating project or talent state', () => {
-      const state = useGameStore.getState();
-      if (!state.gameState) throw new Error('Game not initialized');
+      const initialState = useGameStore.getState();
+      if (!initialState.gameState) throw new Error('Game not initialized');
       
-      const initialCash = state.gameState.cash;
-      const initialProjects = [...state.gameState.studio.internal.projects];
+      const initialProjects = [...initialState.gameState.studio.internal.projects];
+      const initialCash = initialState.gameState.cash;
       
       // Action
       useGameStore.getState().addFunds(5000);
@@ -44,7 +43,7 @@ describe('Store Slice Isolation', () => {
       
       // Verification
       expect(p1?.phase).toBe('Pre-Production');
-      expect(p2?.phase).toBe('Pre-Production'); // Ensure adjacent objects were not mutated incorrectly
+      expect(p2?.phase).toBe('Pre-Production'); // Ensure adjacent objects were not mutated
     });
   });
 });

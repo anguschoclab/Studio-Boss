@@ -1,5 +1,5 @@
 import { StateCreator } from 'zustand';
-import { NewsEvent } from '@/engine/types/index';
+import { NewsEvent } from '@/engine/types';
 import { GameStore } from '../gameStore';
 
 export interface NewsSlice {

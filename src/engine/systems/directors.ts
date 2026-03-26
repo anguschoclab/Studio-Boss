@@ -1,4 +1,4 @@
-import { GameState, Project, TalentProfile, Contract } from '../types/index';
+import { GameState, Project, TalentProfile, Contract } from '@/engine/types';
 
 export interface DirectorDispute {
   projectId: string;

@@ -8,7 +8,7 @@ import { exploitIP } from '@/engine/systems/franchises';
 import { resolveCrisis } from '@/engine/systems/crises';
 import { submitToFestival } from '@/engine/systems/festivals';
 import { launchAwardsCampaign } from '@/engine/systems/awards';
-import { Project, GameState, AwardBody, ProjectContractType } from '@/engine/types/index';
+import { Project, GameState, AwardBody, ProjectContractType } from '@/engine/types';
 
 export interface ProjectSlice {
   createProject: (params: CreateProjectParams) => void;

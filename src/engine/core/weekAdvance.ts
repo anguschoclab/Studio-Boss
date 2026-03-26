@@ -1,4 +1,4 @@
-import { GameState, WeekSummary, Headline, NewsEvent } from '../types/index';
+import { GameState, WeekSummary, Headline, NewsEvent } from '@/engine/types';
 import { advanceIPRights } from '../systems/ipRetention';
 import { advanceDeals } from '../systems/deals';
 import { processProduction, WeeklyChanges as ProductionWeeklyChanges } from '../systems/processors/processProduction';
@@ -69,11 +69,6 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
   // 3. Simulate World (Rivals, Talent, Market, Awards)
   nextState = processWorldEvents(nextState, weeklyChanges);
 
-  // 3.1 Historical Snapshot Trigger (Sprint G)
-  if (state.week === 52) {
-    useGameStore.getState().captureSnapshot();
-  }
-  
   // 4. Rights & Deals (Sprint E)
   const { projects: updatedProjects, messages: ipMessages } = advanceIPRights(nextState.studio.internal.projects, nextState.week + 1);
   nextState.studio.internal.projects = updatedProjects;

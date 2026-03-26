@@ -1,4 +1,4 @@
-import { GameState, Headline, NewsEvent, Project } from '../../types/index';
+import { GameState, Headline, NewsEvent, Project } from '@/engine/types';
 import { advanceRivals } from '../rivals';
 import { updateBuyers } from '../buyers';
 import { TalentSystem } from '../TalentSystem';

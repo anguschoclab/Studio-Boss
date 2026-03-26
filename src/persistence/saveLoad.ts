@@ -1,4 +1,4 @@
-import { GameState, SaveSlotMeta } from '@/engine/types/index';
+import { GameState, SaveSlotMeta } from '@/engine/types';
 
 const SAVE_PREFIX = 'studioboss_save_';
 const SLOTS_KEY = 'studioboss_slots';

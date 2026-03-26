@@ -1,4 +1,4 @@
-import { GameState, Scandal, ScandalType } from '../types/index';
+import { GameState, Scandal, ScandalType } from '@/engine/types';
 
 /**
  * Randomly spawns a scandal for a talent in the pool based on their controversy risk.

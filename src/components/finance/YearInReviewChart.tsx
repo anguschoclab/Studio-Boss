@@ -3,6 +3,7 @@ import { useGameStore } from '@/store/gameStore';
 import { formatMoney } from '@/engine/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from 'recharts';
+import { BarChartIcon } from 'lucide-react';
 
 export const YearInReviewChart = () => {
   const snapshots = useGameStore(s => s.snapshots);
@@ -19,14 +20,10 @@ export const YearInReviewChart = () => {
 
   if (snapshots.length === 0) {
     return (
-      <Card className="border-border/40 bg-card/60 backdrop-blur-md shadow-sm h-[300px] flex items-center justify-center">
-        <div className="text-center opacity-60">
-          <p className="text-xs font-black uppercase tracking-widest text-muted-foreground bg-muted/10 inline-block px-4 py-2 rounded-full border border-border/20 shadow-inner">
-            No yearly data recorded yet
-          </p>
-          <p className="text-[10px] text-muted-foreground mt-2 font-medium tracking-wide">Snapshots are taken at the end of every fiscal year (Week 52)</p>
-        </div>
-      </Card>
+      <div className="flex flex-col items-center justify-center h-64 border border-dashed rounded-lg opacity-50 bg-muted">
+        <BarChartIcon className="w-8 h-8 mb-2 text-muted-foreground" />
+        <p className="text-sm font-medium">Awaiting End of Year 1 Data...</p>
+      </div>
     );
   }
 

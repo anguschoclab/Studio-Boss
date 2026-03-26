@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { GameState, WeekSummary, ArchetypeKey, NewsEvent } from '@/engine/types/index';
+import { GameState, WeekSummary, ArchetypeKey, NewsEvent } from '@/engine/types';
 import { initializeGame } from '@/engine/core/gameInit';
 import { advanceWeek } from '@/engine/core/weekAdvance';
 import { saveGame, loadGame, getSaveSlots, SaveSlotInfo } from '@/persistence/saveLoad';
@@ -83,6 +83,12 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
 
     // 3. Week Summary
     ui.enqueueModal('SUMMARY', summary);
+
+    // 4. Yearly Snapshot (Sprint G)
+    if (summary && (summary.fromWeek % 52 === 0) && summary.fromWeek > 0) {
+      get().captureSnapshot();
+      // Future Hook: trigger EndOfYearAwards system here
+    }
 
     return summary;
   },

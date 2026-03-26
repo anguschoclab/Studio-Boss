@@ -1,4 +1,4 @@
-import { ContentFlag, ProjectRating, Project, GameState } from '../types/index';
+import { ContentFlag, ProjectRating, Project, GameState } from '@/engine/types';
 import { hasCreativeControl } from './directors';
 
 /**

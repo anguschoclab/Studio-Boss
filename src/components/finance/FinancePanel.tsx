@@ -6,6 +6,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Area, XAxis, YAxis, Tooltip, ResponsiveContainer, ComposedChart, Line } from 'recharts';
 import { Badge } from '@/components/ui/badge';
 import { YearInReviewChart } from './YearInReviewChart';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Button } from '@/components/ui/button';
+import { History, LayoutDashboard, ReceiptText, TrendingUp, TrendingDown, Package, Coins } from 'lucide-react';
 
 export const FinancePanel = () => {
   const gameState = useGameStore(s => s.gameState);
@@ -73,7 +77,79 @@ export const FinancePanel = () => {
         <h2 className="text-3xl font-display font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70 drop-shadow-sm">
           Financials & Forecasts
         </h2>
+        
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="outline" size="sm" className="font-display font-black uppercase tracking-widest text-[10px] gap-2 hover:bg-primary/10 hover:text-primary transition-all">
+              <ReceiptText className="w-3 h-3" />
+              View Full Ledger
+            </Button>
+          </SheetTrigger>
+          <SheetContent className="w-[400px] sm:w-[540px] border-l border-border/40 bg-background/95 backdrop-blur-xl">
+            <SheetHeader className="border-b border-border/20 pb-6">
+              <SheetTitle className="font-display text-2xl font-black uppercase tracking-tight flex items-center gap-2">
+                <Coins className="w-6 h-6 text-primary" />
+                Studio Ledger
+              </SheetTitle>
+              <SheetDescription className="text-xs font-medium tracking-wide">
+                Historical record of yearly performance and financial benchmarks.
+              </SheetDescription>
+            </SheetHeader>
+            <div className="mt-8 space-y-4 overflow-y-auto max-h-[calc(100vh-180px)] pr-2 custom-scrollbar">
+              {(useGameStore.getState().snapshots || []).slice().reverse().map((s, i) => (
+                <Card key={i} className="border-border/40 bg-card/40 backdrop-blur-md shadow-sm group hover:border-primary/30 transition-all duration-300">
+                  <CardContent className="p-5">
+                    <div className="flex justify-between items-start mb-4">
+                      <div className="space-y-1">
+                        <p className="text-[10px] text-muted-foreground uppercase font-black tracking-widest">Fiscal Year</p>
+                        <p className="text-2xl font-display font-black text-foreground">{s.year}</p>
+                      </div>
+                      <Badge variant="outline" className="text-[9px] font-black tracking-widest uppercase bg-primary/5 text-primary border-primary/20">
+                        Snapshot Taken
+                      </Badge>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="bg-background/40 p-3 rounded-lg border border-border/20">
+                        <p className="text-[9px] text-muted-foreground uppercase font-black tracking-widest mb-1 flex items-center gap-1">
+                          <TrendingUp className="w-2 h-2" /> Total Funds
+                        </p>
+                        <p className="text-sm font-bold font-mono text-success">{formatMoney(s.funds)}</p>
+                      </div>
+                      <div className="bg-background/40 p-3 rounded-lg border border-border/20">
+                        <p className="text-[9px] text-muted-foreground uppercase font-black tracking-widest mb-1 flex items-center gap-1">
+                          <Package className="w-2 h-2" /> Projects
+                        </p>
+                        <p className="text-sm font-bold font-mono">{s.completedProjects} Completed</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+              {(useGameStore.getState().snapshots || []).length === 0 && (
+                <div className="text-center py-12 opacity-50 px-8">
+                   <History className="w-12 h-12 mx-auto mb-4 text-muted-foreground/30" />
+                   <p className="text-sm font-bold uppercase tracking-widest mb-2">No Records Yet</p>
+                   <p className="text-[10px] font-medium leading-relaxed">The ledger is updated automatically at the end of every fiscal year (Week 52).</p>
+                </div>
+              )}
+            </div>
+          </SheetContent>
+        </Sheet>
       </div>
+
+      <Tabs defaultValue="current" className="space-y-6">
+        <TabsList className="bg-muted/30 backdrop-blur-md border border-border/40 p-1">
+          <TabsTrigger value="current" className="gap-2 font-display font-black uppercase tracking-widest text-[10px] data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all px-6">
+            <LayoutDashboard className="w-3 h-3" />
+            Current Operations
+          </TabsTrigger>
+          <TabsTrigger value="history" className="gap-2 font-display font-black uppercase tracking-widest text-[10px] data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all px-6">
+            <History className="w-3 h-3" />
+            Historical Trends
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="current" className="space-y-6 m-0 outline-none">
 
       {/* Summary Cards */}
       <div className="grid grid-cols-4 gap-4">
@@ -227,16 +303,12 @@ export const FinancePanel = () => {
         </CardContent>
       </Card>
 
-      {/* Historical Snapshots Section (Sprint G) */}
-      <div className="pt-4">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-border/40 to-transparent" />
-          <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 whitespace-nowrap">Historical Performance</h3>
-          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-border/40 to-transparent" />
-        </div>
-        <YearInReviewChart />
-      </div>
-      
+        </TabsContent>
+
+        <TabsContent value="history" className="m-0 outline-none">
+          <YearInReviewChart />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
