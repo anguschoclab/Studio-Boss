@@ -1,0 +1,43 @@
+import { StateCreator } from 'zustand';
+import { GameStore } from '../gameStore';
+import { StudioSnapshot } from '@/engine/types/studio.types';
+
+export interface SnapshotSlice {
+  snapshots: StudioSnapshot[];
+  captureSnapshot: () => void;
+}
+
+export const createSnapshotSlice: StateCreator<GameStore, [], [], SnapshotSlice> = (set, get) => ({
+  snapshots: [],
+
+  captureSnapshot: () => {
+    const state = get().gameState;
+    if (!state) return;
+
+    // Derived counts
+    const activeProjects = state.studio.internal.projects.filter(p => 
+      p.status === 'development' || p.status === 'production' || p.status === 'marketing'
+    ).length;
+    
+    const completedProjects = state.studio.internal.projects.filter(p => 
+      p.status === 'released' || p.status === 'post_release' || p.status === 'archived'
+    ).length;
+
+    const currentYear = Math.floor((state.week - 1) / 52) + 1;
+    const currentWeek = ((state.week - 1) % 52) + 1;
+
+    const snapshot: StudioSnapshot = {
+      year: currentYear,
+      week: currentWeek,
+      funds: state.cash,
+      activeProjects,
+      completedProjects,
+      totalPrestige: state.studio.prestige,
+      timestamp: new Date().toISOString()
+    };
+
+    set((s) => ({
+      snapshots: [...s.snapshots, snapshot]
+    }));
+  }
+});

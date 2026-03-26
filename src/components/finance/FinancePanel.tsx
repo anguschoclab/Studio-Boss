@@ -5,6 +5,7 @@ import { calculateWeeklyCosts, calculateWeeklyRevenue, calculateStudioNetWorth, 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Area, XAxis, YAxis, Tooltip, ResponsiveContainer, ComposedChart, Line } from 'recharts';
 import { Badge } from '@/components/ui/badge';
+import { YearInReviewChart } from './YearInReviewChart';
 
 export const FinancePanel = () => {
   const gameState = useGameStore(s => s.gameState);
@@ -225,6 +226,16 @@ export const FinancePanel = () => {
            </div>
         </CardContent>
       </Card>
+
+      {/* Historical Snapshots Section (Sprint G) */}
+      <div className="pt-4">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-border/40 to-transparent" />
+          <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 whitespace-nowrap">Historical Performance</h3>
+          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-border/40 to-transparent" />
+        </div>
+        <YearInReviewChart />
+      </div>
       
     </div>
   );

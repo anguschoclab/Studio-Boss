@@ -90,3 +90,13 @@ export interface Buyer {
   archetype: BuyerArchetype;
   currentMandate?: BuyerMandate;
 }
+
+export interface StudioSnapshot {
+  year: number;
+  week: number;
+  funds: number;
+  activeProjects: number;     // Count of projects not in 'Released' state
+  completedProjects: number;  // Count of projects in 'Released' state
+  totalPrestige: number;      // Derived from studio prestige/awards
+  timestamp: string;          // ISO string of when snapshot was taken
+}

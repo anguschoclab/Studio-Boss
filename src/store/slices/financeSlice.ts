@@ -5,6 +5,7 @@ import { handleReleasePhaseEntry, executeMarketing } from '@/engine/systems/proj
 export interface FinanceSlice {
   launchMarketingCampaign: (projectId: string, budget: number, domesticPct: number, angle: string) => void;
   executeMarketingEvent: (eventName: 'superbowl_ad' | 'viral_campaign' | 'press_tour', cost: number, projectId: string) => void;
+  addFunds: (amount: number) => void;
 }
 
 export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> = (set, get) => ({
@@ -74,5 +75,17 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
 
   executeMarketingEvent: (eventName, cost, projectId) => {
     console.log(`Executing marketing event: ${eventName} for project ${projectId} costing ${cost}`);
+  },
+
+  addFunds: (amount) => {
+    set((s) => {
+      if (!s.gameState) return s;
+      return {
+        gameState: {
+          ...s.gameState,
+          cash: s.gameState.cash + amount
+        }
+      };
+    });
   },
 });

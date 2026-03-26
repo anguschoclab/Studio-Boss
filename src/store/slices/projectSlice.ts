@@ -21,6 +21,8 @@ export interface ProjectSlice {
   submitToFestival: (projectId: string, festivalBody: AwardBody) => void;
   launchAwardsCampaign: (projectId: string, budget: number) => void;
   lockMarketingCampaign: (projectId: string, level: 'none' | 'basic' | 'blockbuster') => void;
+  addProject: (project: any) => void;
+  advanceProjectPhase: (projectId: string, newPhase: string) => void;
 }
 
 export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> = (set, get) => ({
@@ -236,6 +238,47 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
         gameState: {
           ...state,
           cash: state.cash - cost,
+          studio: {
+            ...state.studio,
+            internal: {
+              ...state.studio.internal,
+              projects: updatedProjects
+            }
+          }
+        }
+      };
+    });
+  },
+
+  addProject: (project) => {
+    set((s) => {
+      if (!s.gameState) return s;
+      return {
+        gameState: {
+          ...s.gameState,
+          studio: {
+            ...s.gameState.studio,
+            internal: {
+              ...s.gameState.studio.internal,
+              projects: [...s.gameState.studio.internal.projects, project]
+            }
+          }
+        }
+      };
+    });
+  },
+
+  advanceProjectPhase: (projectId, newPhase) => {
+    set((s) => {
+      if (!s.gameState) return s;
+      const state = s.gameState;
+      const updatedProjects = state.studio.internal.projects.map(p => 
+        p.id === projectId ? { ...p, phase: newPhase } : p
+      );
+      
+      return {
+        gameState: {
+          ...state,
           studio: {
             ...state.studio,
             internal: {

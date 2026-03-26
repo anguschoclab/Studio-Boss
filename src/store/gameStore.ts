@@ -10,8 +10,9 @@ import { createFinanceSlice, FinanceSlice } from './slices/financeSlice';
 import { createTalentSlice, TalentSlice } from './slices/talentSlice';
 import { createRivalSlice, RivalSlice } from './slices/rivalSlice';
 import { createNewsSlice, NewsSlice } from './slices/newsSlice';
+import { createSnapshotSlice, SnapshotSlice } from './slices/snapshotSlice';
 
-export interface GameStore extends ProjectSlice, FinanceSlice, TalentSlice, RivalSlice, NewsSlice {
+export interface GameStore extends ProjectSlice, FinanceSlice, TalentSlice, RivalSlice, NewsSlice, SnapshotSlice {
   gameState: GameState | null;
   newGame: (studioName: string, archetype: ArchetypeKey) => void;
   doAdvanceWeek: () => WeekSummary;
@@ -29,6 +30,7 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
   ...createTalentSlice(set, get, ...args),
   ...createRivalSlice(set, get, ...args),
   ...createNewsSlice(set, get, ...args),
+  ...createSnapshotSlice(set, get, ...args),
 
   newGame: (studioName, archetype) => {
     set((s) => {

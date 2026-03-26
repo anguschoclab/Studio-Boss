@@ -4,6 +4,7 @@ import { advanceDeals } from '../systems/deals';
 import { processProduction, WeeklyChanges as ProductionWeeklyChanges } from '../systems/processors/processProduction';
 import { processFinance, WeeklyChanges as FinanceWeeklyChanges } from '../systems/processors/processFinance';
 import { processWorldEvents, WeeklyChanges as WorldWeeklyChanges } from '../systems/processors/processWorldEvents';
+import { useGameStore } from '../../store/gameStore';
 
 // Consolidated WeeklyChanges interface for the orchestrator
 export interface WeeklyChanges extends ProductionWeeklyChanges, FinanceWeeklyChanges, WorldWeeklyChanges {
@@ -67,6 +68,11 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
 
   // 3. Simulate World (Rivals, Talent, Market, Awards)
   nextState = processWorldEvents(nextState, weeklyChanges);
+
+  // 3.1 Historical Snapshot Trigger (Sprint G)
+  if (state.week === 52) {
+    useGameStore.getState().captureSnapshot();
+  }
   
   // 4. Rights & Deals (Sprint E)
   const { projects: updatedProjects, messages: ipMessages } = advanceIPRights(nextState.studio.internal.projects, nextState.week + 1);
