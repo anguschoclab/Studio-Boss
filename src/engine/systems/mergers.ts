@@ -1,10 +1,6 @@
 import { GameState, RivalStudio, Project } from '../types';
 
 export function evaluateAcquisitionTarget(target: RivalStudio, buyerCash: number): { viable: boolean; price: number; reason?: string } {
-  if (!target.isAcquirable) {
-    return { viable: false, price: 0, reason: 'This studio is not currently for sale.' };
-  }
-  
   // Base valuation on their remaining cash and strength
   let basePrice = Math.max(10_000_000, (target.strength * 2_000_000) + target.cash);
   
@@ -80,33 +76,60 @@ export function executeAcquisition(state: GameState, targetId: string): GameStat
   };
 }
 
-export function sellLabel(state: GameState, projectsToSell: Project[], askingPrice: number): GameState {
-  // Logic for the player divesting a chunk of projects/IP to a rival for cash
-  // Simplified for MVP: instantly sell and remove projects
-  const sellIds = new Set(projectsToSell.map(p => p.id));
-  const remainingProjects = state.studio.internal.projects.filter(p => !sellIds.has(p.id));
-  
+export function executeSabotage(state: GameState, targetId: string): GameState {
+  const target = state.industry.rivals.find(r => r.id === targetId);
+  if (!target || state.cash < 1_000_000) return state;
+
   return {
     ...state,
-    cash: state.cash + askingPrice,
+    cash: state.cash - 1_000_000,
+    industry: {
+      ...state.industry,
+      rumors: [
+        {
+          id: crypto.randomUUID(),
+          week: state.week,
+          text: `Rumors swirl that ${target.name}'s upcoming blockbuster is facing massive reshoots.`,
+          truthful: false,
+          category: 'rival' as const,
+          resolved: false,
+        },
+        ...(state.industry.rumors || [])
+      ].slice(0, 20)
+    }
+  };
+}
+
+export function executePoach(state: GameState, targetId: string): GameState {
+  const targetIndex = state.industry.rivals.findIndex(r => r.id === targetId);
+  if (targetIndex === -1 || state.cash < 3_000_000) return state;
+
+  const updatedRivals = [...state.industry.rivals];
+  const target = updatedRivals[targetIndex];
+  
+  // Steal strength/market share
+  const stealAmount = Math.min(5, target.strength);
+  updatedRivals[targetIndex] = { ...target, strength: target.strength - stealAmount };
+
+  return {
+    ...state,
+    cash: state.cash - 3_000_000,
     studio: {
       ...state.studio,
-      internal: {
-        ...state.studio.internal,
-        projects: remainingProjects
-      }
+      prestige: Math.min(100, state.studio.prestige + stealAmount)
     },
     industry: {
       ...state.industry,
+      rivals: updatedRivals,
       headlines: [
         {
           id: crypto.randomUUID(),
           week: state.week,
-          category: 'market' as const,
-          text: `${state.studio.name} divests major catalog label for ${"$" + (askingPrice / 1_000_000).toFixed(1)}M.`
+          category: 'talent' as const,
+          text: `${state.studio.name} poaches top executive from ${target.name}!`
         },
         ...state.industry.headlines
-      ]
+      ].slice(0, 50)
     }
   };
 }

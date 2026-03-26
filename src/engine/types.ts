@@ -247,6 +247,8 @@ export interface CrisisOption {
   cashPenalty?: number;
   weeksDelay?: number;
   buzzPenalty?: number;
+  reputationPenalty?: number;
+  removeTalentId?: string;
 }
 
 export interface ActiveCrisis {
@@ -312,6 +314,7 @@ export interface Project {
   rating?: ProjectRating;
   contentFlags?: ContentFlag[];
   targetDemographic?: AudienceQuadrant;
+  isCultClassic?: boolean;
 }
 
 // --- Rivals ---
@@ -449,6 +452,7 @@ export interface TalentProfile {
   loyalty?: number; // 0-100 studio loyalty
   controversyRisk?: number; // Base chance of spawning scandals
   ego?: number; // 0-100 tracking their demands and attitude
+  hasRazzie?: boolean;
 }
 
 export interface Contract {

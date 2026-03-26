@@ -1,15 +1,32 @@
 import { create } from 'zustand';
 import { WeekSummary } from '@/engine/types';
 
+export type ModalType = 'CRISIS' | 'AWARDS' | 'SUMMARY';
+
+export interface QueuedModal {
+  id: string;
+  type: ModalType;
+  payload: any;
+}
+
 interface UIStore {
   activeTab: 'discovery' | 'pipeline' | 'finance' | 'talent' | 'media';
   showCreateProject: boolean;
   showPitchProject: boolean;
   pitchingProjectId: string | null;
+  
+  // Modal Queue System
+  modalQueue: QueuedModal[];
+  activeModal: QueuedModal | null;
+  enqueueModal: (type: ModalType, payload: any) => void;
+  resolveCurrentModal: () => void;
+
+  // Legacy (Will be refactored to use queue)
   showCrisisModal: boolean;
   crisisProjectId: string | null;
   showWeekSummary: boolean;
   weekSummary: WeekSummary | null;
+  
   selectedProjectId: string | null;
   setActiveTab: (tab: 'discovery' | 'pipeline' | 'finance' | 'talent' | 'media') => void;
   openCreateProject: () => void;
@@ -23,11 +40,42 @@ interface UIStore {
   selectProject: (id: string | null) => void;
 }
 
-export const useUIStore = create<UIStore>((set) => ({
+export const useUIStore = create<UIStore>((set, get) => ({
   activeTab: 'discovery',
   showCreateProject: false,
   showPitchProject: false,
   pitchingProjectId: null,
+  
+  modalQueue: [],
+  activeModal: null,
+
+  enqueueModal: (type, payload) => {
+    const newModal = { id: crypto.randomUUID(), type, payload };
+    set((state) => {
+      // If no modal is active, set it and return
+      if (!state.activeModal) {
+        return {
+          activeModal: newModal,
+        };
+      }
+      // Otherwise, add to queue
+      return { modalQueue: [...state.modalQueue, newModal] };
+    });
+  },
+
+  resolveCurrentModal: () => {
+    set((state) => {
+      if (state.modalQueue.length > 0) {
+        const nextModal = state.modalQueue[0];
+        return {
+          activeModal: nextModal,
+          modalQueue: state.modalQueue.slice(1),
+        };
+      }
+      return { activeModal: null };
+    });
+  },
+
   showCrisisModal: false,
   crisisProjectId: null,
   showWeekSummary: false,
@@ -44,3 +92,4 @@ export const useUIStore = create<UIStore>((set) => ({
   closeSummary: () => set({ showWeekSummary: false }),
   selectProject: (id) => set({ selectedProjectId: id }),
 }));
+

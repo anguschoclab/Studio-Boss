@@ -3,6 +3,7 @@ import { GameState, WeekSummary, ArchetypeKey } from '@/engine/types';
 import { initializeGame } from '@/engine/core/gameInit';
 import { advanceWeek } from '@/engine/core/weekAdvance';
 import { saveGame, loadGame, getSaveSlots, SaveSlotInfo } from '@/persistence/saveLoad';
+import { useUIStore } from './uiStore';
 
 import { createProjectSlice, ProjectSlice } from './slices/projectSlice';
 import { createFinanceSlice, FinanceSlice } from './slices/financeSlice';
@@ -37,11 +38,13 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
 
   doAdvanceWeek: () => {
     let summary: WeekSummary | null = null;
+    let nextState: GameState | null = null;
 
     set((state) => {
       if (!state.gameState) throw new Error('No game in progress');
       const result = advanceWeek(state.gameState);
       summary = result.summary;
+      nextState = result.newState;
 
       if (state.gameState === result.newState) return state; // Prevent unnecessary re-renders
 
@@ -49,7 +52,35 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
       return { gameState: result.newState };
     });
 
-    if (!summary) throw new Error('Failed to advance week');
+    if (!summary || !nextState) throw new Error('Failed to advance week');
+
+    // --- Modal Queue Integration ---
+    const ui = useUIStore.getState();
+
+    const finalState = nextState as GameState;
+
+    // 1. Crises/Scandals (Must be handled first)
+    // We check for new crises triggered this week
+    finalState.studio.internal.projects.forEach(p => {
+      if (p.activeCrisis && !p.activeCrisis.resolved) {
+        const isNewCrisis = summary?.events.some(e => e.includes(`CRISIS: "${p.title}"`));
+        if (isNewCrisis) {
+          ui.enqueueModal('CRISIS', { projectId: p.id, crisis: p.activeCrisis });
+        }
+      }
+    });
+
+    // 2. Awards Ceremony (Specific weeks)
+    const isAwardsWeek = finalState.week % 52 === 4 || finalState.week % 52 === 36;
+    if (isAwardsWeek) {
+      const year = Math.floor(finalState.week / 52) + 1;
+      const currentAwards = finalState.industry.awards?.filter(a => a.year === year) || [];
+      ui.enqueueModal('AWARDS', { week: finalState.week, year, awards: currentAwards });
+    }
+
+    // 3. Week Summary (Final report)
+    ui.enqueueModal('SUMMARY', summary);
+
     return summary;
   },
 

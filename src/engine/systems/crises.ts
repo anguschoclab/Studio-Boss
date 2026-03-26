@@ -1959,6 +1959,7 @@ export function resolveCrisis(state: GameState, projectId: string, optionIndex: 
 
   // Apply penalties
   const cashChange = option.cashPenalty ? -option.cashPenalty : 0;
+  const prestigePenalty = option.reputationPenalty || 0;
 
   const updatedProject = { ...project };
 
@@ -1979,13 +1980,20 @@ export function resolveCrisis(state: GameState, projectId: string, optionIndex: 
   const newProjects = [...state.studio.internal.projects];
   newProjects[projectIndex] = updatedProject;
 
+  let newContracts = state.studio.internal.contracts;
+  if (option.removeTalentId) {
+    newContracts = newContracts.filter(c => !(c.talentId === option.removeTalentId && c.projectId === projectId));
+  }
+
   return {
     ...state,
     studio: {
       ...state.studio,
+      prestige: Math.max(0, state.studio.prestige - prestigePenalty),
       internal: {
         ...state.studio.internal,
-        projects: newProjects
+        projects: newProjects,
+        contracts: newContracts,
       }
     },
     cash: state.cash + cashChange, // Apply cash change (penalty means negative)

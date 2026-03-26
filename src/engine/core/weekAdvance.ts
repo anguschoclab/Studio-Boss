@@ -230,7 +230,7 @@ const year = Math.floor(nextWeek / 52) + 1;
 
         // Apply cult classic flags
         if (razzies.cultClassicProjectIds.length > 0) {
-           for (const p of updatedProjects) {
+           for (const p of state.studio.internal.projects) {
               if (razzies.cultClassicProjectIds.includes(p.id)) {
                  p.isCultClassic = true;
               }
@@ -239,21 +239,21 @@ const year = Math.floor(nextWeek / 52) + 1;
 
         // Apply razzie winners and trigger crisis
         if (razzies.razzieWinnerTalentIds.length > 0) {
-           for (const t of updatedTalentPool) {
+           for (const t of state.industry.talentPool) {
               if (razzies.razzieWinnerTalentIds.includes(t.id)) {
                  t.hasRazzie = true;
 
                  // Ego Crisis logic for the specific talent project
-                 const relatedProject = updatedProjects.find(p => p.id === razzies.cultClassicProjectIds[0]); // fallback to worst picture
+                 const relatedProject = state.studio.internal.projects.find(p => p.id === razzies.cultClassicProjectIds[0]); // fallback to worst picture
                  if (relatedProject && !relatedProject.activeCrisis) {
                     relatedProject.activeCrisis = {
                         description: `The Razzies have destroyed ${t.name}'s ego. They are having a meltdown on set of their next project, or refusing to promote this one.`,
-                        options: [
-                           { text: "Apologize to them", buzzPenalty: 10 },
-                           { text: "Ignore it", cashPenalty: 500000 }
-                        ],
                         resolved: false,
-                        severity: 'catastrophic'
+                        severity: 'high',
+                        options: [
+                           { text: 'Apologize for being "misunderstood"', effectDescription: 'Lose 10 buzz.', buzzPenalty: 10 },
+                           { text: 'Ignore the noise', effectDescription: 'Lose $500k in PR damage.', cashPenalty: 500000 }
+                        ]
                     };
                     weeklyChanges.events.push(`CRISIS: "${relatedProject.title}" - ${relatedProject.activeCrisis.description}`);
                  }
@@ -322,7 +322,17 @@ const year = Math.floor(nextWeek / 52) + 1;
      for(let i = 0; i < scandalResult.newScandals.length; i++) combinedScandals[oldScandals.length + i] = scandalResult.newScandals[i];
      newState.industry.scandals = combinedScandals;
      newHeadlines.push(...scandalResult.headlines);
+     
+     // Apply project crises from scandals
+     for (const update of scandalResult.projectUpdates) {
+       const project = newState.studio.internal.projects.find(p => p.id === update.projectId);
+       if (project && !project.activeCrisis) {
+         project.activeCrisis = update.crisis;
+         weeklyChanges.events.push(`CRISIS: "${project.title}" - ${update.crisis.description}`);
+       }
+     }
   }
+
 
   weeklyChanges.newHeadlines.push(...newHeadlines);
 

@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { formatMoney } from '@/engine/utils';
@@ -11,9 +11,18 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-
-import { useState } from 'react';
 import { Slider } from '@/components/ui/slider';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { 
+  BarChart3, 
+  Users, 
+  Clapperboard, 
+  Trophy, 
+  TrendingUp, 
+  DollarSign, 
+  Calendar,
+  AlertCircle
+} from 'lucide-react';
 
 const MARKETING_ANGLES = [
   { id: 'romance', label: 'Romance & Heart' },
@@ -38,6 +47,7 @@ export const ProjectDetailModal = () => {
   const launchMarketingCampaign = useGameStore(s => s.launchMarketingCampaign);
   const submitToFestival = useGameStore(s => s.submitToFestival);
   const launchAwardsCampaign = useGameStore(s => s.launchAwardsCampaign);
+
   const projects = useMemo(() => gameState?.studio.internal.projects || [], [gameState?.studio.internal.projects]);
   const project = useMemo(() => projects.find(p => p.id === selectedProjectId), [projects, selectedProjectId]);
   const talentPool = useMemo(() => gameState?.industry.talentPool || [], [gameState?.industry.talentPool]);
@@ -52,13 +62,9 @@ export const ProjectDetailModal = () => {
     for (const r of rolesToTrack) {
       groups.set(r, { attached: [], available: [] });
     }
-
     if (!project) return groups;
-
     const projectContracts = contracts.filter(c => c.projectId === project.id);
     const projectTalentIds = new Set(projectContracts.map(c => c.talentId));
-
-    // ⚡ Bolt: Memoized O(N*M) talent pool scanning to prevent layout thrashing on every render
     for (const t of talentPool) {
       for (const r of t.roles) {
         const group = groups.get(r);
@@ -89,352 +95,235 @@ export const ProjectDetailModal = () => {
 
   return (
     <Dialog open={!!selectedProjectId} onOpenChange={() => selectProject(null)}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle className="font-display text-xl">
+      <DialogContent className="max-w-2xl bg-slate-950 border-slate-800 text-slate-100 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+        <DialogHeader className="border-b border-slate-800 pb-4">
+          <div className="flex items-center justify-between">
+            <DialogTitle className="font-serif text-3xl font-black tracking-tight text-white uppercase italic">
               {project.title}
+            </DialogTitle>
+            <div className="flex gap-2">
+              <Badge variant="outline" className="text-amber-500 border-amber-500/30 uppercase font-black">{project.status}</Badge>
               {project.format === 'tv' && project.season && (
-                  <span className="text-muted-foreground text-sm ml-2">Season {project.season}</span>
+                <Badge className="bg-blue-600 text-white font-black">SEASON {project.season}</Badge>
               )}
-          </DialogTitle>
+            </div>
+          </div>
         </DialogHeader>
 
-        <div className="space-y-4">
-          <div className="flex items-center gap-2 flex-wrap">
-            <Badge variant="outline">{project.format.toUpperCase()}</Badge>
-            {project.format === 'tv' && project.tvFormat && (
-                <Badge variant="secondary">{TV_FORMATS[project.tvFormat].name}</Badge>
-            )}
-            {project.format === 'tv' && project.releaseModel && (
-                <Badge variant="outline" className="capitalize">{project.releaseModel}</Badge>
-            )}
-            <Badge variant="outline">{project.genre}</Badge>
-            <Badge variant="outline">{tier.name}</Badge>
-            <Badge variant="outline" className="capitalize">{project.status}</Badge>
-          </div>
+        <Tabs defaultValue="overview" className="w-full">
+          <TabsList className="grid w-full grid-cols-4 bg-slate-900/50 p-1 border border-slate-800">
+            <TabsTrigger value="overview" className="data-[state=active]:bg-slate-800 data-[state=active]:text-white uppercase text-[10px] font-black tracking-widest"><BarChart3 className="h-3 w-3 mr-2" /> Intro</TabsTrigger>
+            <TabsTrigger value="production" className="data-[state=active]:bg-slate-800 data-[state=active]:text-white uppercase text-[10px] font-black tracking-widest"><Clapperboard className="h-3 w-3 mr-2" /> Build</TabsTrigger>
+            <TabsTrigger value="casting" className="data-[state=active]:bg-slate-800 data-[state=active]:text-white uppercase text-[10px] font-black tracking-widest"><Users className="h-3 w-3 mr-2" /> Talent</TabsTrigger>
+            <TabsTrigger value="campaigns" className="data-[state=active]:bg-slate-800 data-[state=active]:text-white uppercase text-[10px] font-black tracking-widest"><Trophy className="h-3 w-3 mr-2" /> Buzz</TabsTrigger>
+          </TabsList>
 
-          {project.flavor && (
-            <p className="text-sm text-muted-foreground italic">"{project.flavor}"</p>
-          )}
-
-
-          {/* Greenlight Committee */}
-          {project.status === 'needs_greenlight' && greenlightReport && (
-            <div className="space-y-3 border border-warning/50 bg-warning/10 p-4 rounded-lg">
-              <div className="flex items-center justify-between border-b border-warning/20 pb-2">
-                <h4 className="font-display font-semibold text-warning-foreground">Greenlight Committee Readout</h4>
-                <Badge variant={greenlightReport.score >= 60 ? 'default' : 'destructive'}>
-                  {greenlightReport.recommendation}
-                </Badge>
-              </div>
-
-              <div className="space-y-2 text-sm">
-                {greenlightReport.positives.length > 0 && (
-                  <div>
-                    <span className="font-semibold text-success">Pros:</span>
-                    <ul className="list-disc list-inside text-muted-foreground ml-2">
-                      {greenlightReport.positives.map((p, i) => <li key={i}>{p}</li>)}
-                    </ul>
+          <div className="mt-4 min-h-[400px]">
+            {/* OVERVIEW TAB */}
+            <TabsContent value="overview" className="space-y-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-slate-900/40 p-4 border border-slate-800 rounded-xl space-y-2">
+                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Metadata</span>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="secondary" className="bg-slate-800 text-slate-200">{project.format.toUpperCase()}</Badge>
+                    <Badge variant="secondary" className="bg-slate-800 text-slate-200">{project.genre}</Badge>
+                    <Badge variant="secondary" className="bg-slate-800 text-slate-200">{tier.name}</Badge>
                   </div>
-                )}
-                {greenlightReport.negatives.length > 0 && (
-                  <div>
-                    <span className="font-semibold text-destructive">Cons:</span>
-                    <ul className="list-disc list-inside text-muted-foreground ml-2">
-                      {greenlightReport.negatives.map((n, i) => <li key={i}>{n}</li>)}
-                    </ul>
-                  </div>
-                )}
-              </div>
-
-              <Button
-                className="w-full mt-2"
-                variant={greenlightReport.score >= 60 ? 'default' : 'destructive'}
-                onClick={() => {
-                  greenlightProject(project.id);
-                  selectProject(null);
-                }}
-              >
-                Approve Greenlight
-              </Button>
-            </div>
-          )}
-
-
-
-          {/* Marketing Configuration UI */}
-          {project.status === 'marketing' && gameState && (
-            <div className="space-y-4 border border-secondary/50 bg-secondary/10 p-4 rounded-lg">
-              <div className="flex items-center justify-between border-b border-secondary/20 pb-2">
-                <h4 className="font-display font-semibold text-secondary-foreground">Marketing Strategy</h4>
-              </div>
-
-              <div className="space-y-4 text-sm">
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="font-semibold">Marketing Budget</span>
-                    <span>{formatMoney(marketingBudget)}</span>
-                  </div>
-                  <Slider
-                    value={[marketingBudget]}
-                    min={0}
-                    max={project.budget * 2}
-                    step={100000}
-                    onValueChange={([val]) => setMarketingBudget(val)}
-                  />
-                  <p className="text-xs text-muted-foreground text-right">Max: {formatMoney(project.budget * 2)}</p>
+                  {project.flavor && <p className="text-sm italic text-slate-400 border-t border-slate-800/50 pt-2 mt-2">"{project.flavor}"</p>}
                 </div>
-
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="font-semibold">Domestic vs Foreign Split</span>
-                    <span>{domesticSplit}% Dom / {100 - domesticSplit}% Int</span>
+                
+                <div className="bg-slate-900/40 p-4 border border-slate-800 rounded-xl space-y-3">
+                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Financial P&L</span>
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs text-slate-400">Total Budget</span>
+                      <span className="text-sm font-bold text-white">{formatMoney(project.budget)}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs text-slate-400">Weekly Burn</span>
+                      <span className="text-sm font-bold text-red-400">-{formatMoney(project.weeklyCost)}</span>
+                    </div>
+                    {(project.status === 'released' || project.revenue > 0) && (
+                      <div className="flex justify-between items-center pt-2 border-t border-slate-800">
+                        <span className="text-xs font-black text-slate-400 uppercase">Gross Revenue</span>
+                        <span className="text-lg font-black text-green-400">{formatMoney(project.revenue)}</span>
+                      </div>
+                    )}
                   </div>
-                  <Slider
-                    value={[domesticSplit]}
-                    min={0}
-                    max={100}
-                    step={5}
-                    onValueChange={([val]) => setDomesticSplit(val)}
-                  />
                 </div>
+              </div>
 
-                <div className="space-y-2">
-                  <span className="font-semibold">Marketing Angle</span>
-                  <Select value={marketingAngle} onValueChange={setMarketingAngle}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select angle..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {MARKETING_ANGLES.map(angle => (
-                        <SelectItem key={angle.id} value={angle.id}>{angle.label}</SelectItem>
-                      ))}
+              {(project.status === 'released' || project.status === 'post_release') && (
+                <div className="bg-blue-950/20 border border-blue-500/20 p-4 rounded-xl space-y-1">
+                  <span className="text-[10px] font-black text-blue-400 uppercase tracking-widest">Release Stats</span>
+                  <div className="flex justify-between items-end">
+                    <div>
+                      <p className="text-2xl font-black text-white">{project.buzz.toFixed(0)}% <span className="text-xs font-normal text-slate-500 uppercase italic">Cultural Buzz</span></p>
+                    </div>
+                    {project.format === 'tv' && (
+                      <p className="text-sm font-bold text-slate-400">Released {project.episodesReleased}/{project.episodes} Episodes</p>
+                    )}
+                  </div>
+                </div>
+              )}
+            </TabsContent>
+
+            {/* PRODUCTION TAB */}
+            <TabsContent value="production" className="space-y-6">
+              {(project.status === 'development' || project.status === 'production') && (
+                <div className="space-y-2 bg-slate-900/40 p-4 border border-slate-800 rounded-xl">
+                  <div className="flex justify-between text-[10px] font-black uppercase tracking-widest mb-2">
+                    <span className="text-slate-500">{project.status} Progress</span>
+                    <span className="text-white">{project.weeksInPhase}/{project.status === 'development' ? project.developmentWeeks : project.productionWeeks} weeks</span>
+                  </div>
+                  <div className="h-3 bg-slate-800 rounded-full overflow-hidden shadow-inner">
+                    <div
+                      className="h-full bg-gradient-to-r from-amber-600 to-amber-400 shadow-[0_0_10px_rgba(217,119,6,0.5)] transition-all duration-1000"
+                      style={{ width: `${(project.weeksInPhase / (project.status === 'development' ? project.developmentWeeks : project.productionWeeks)) * 100}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {project.status === 'needs_greenlight' && greenlightReport && (
+                <div className="border-2 border-amber-600/50 bg-amber-950/20 p-6 rounded-xl space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-serif text-xl font-black text-amber-500 uppercase">Greenlight Committee</h4>
+                    <Badge className={greenlightReport.score >= 60 ? 'bg-green-600' : 'bg-red-600'}>{greenlightReport.recommendation}</Badge>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4 text-xs">
+                    <div className="space-y-1"><span className="text-green-400 font-bold uppercase block">Pros</span><ul className="list-disc list-inside text-slate-300">{greenlightReport.positives.map((p, i) => <li key={i}>{p}</li>)}</ul></div>
+                    <div className="space-y-1"><span className="text-red-400 font-bold uppercase block">Cons</span><ul className="list-disc list-inside text-slate-300">{greenlightReport.negatives.map((n, i) => <li key={i}>{n}</li>)}</ul></div>
+                  </div>
+                  <Button className="w-full bg-amber-600 hover:bg-amber-500 text-black font-black uppercase" onClick={() => { greenlightProject(project.id); selectProject(null); }}>Authorize Production</Button>
+                </div>
+              )}
+
+              {project.status === 'marketing' && gameState && (
+                <div className="space-y-6 border border-blue-500/20 bg-blue-950/10 p-6 rounded-xl">
+                  <h4 className="font-black text-blue-400 uppercase tracking-widest text-xs">Campaign Strategy</h4>
+                  <div className="space-y-6">
+                    <div className="space-y-3">
+                      <div className="flex justify-between text-xs font-bold uppercase"><span className="text-slate-400">Budget Deployment</span><span className="text-white">{formatMoney(marketingBudget)}</span></div>
+                      <Slider value={[marketingBudget]} min={0} max={project.budget * 2} step={100000} onValueChange={([v]) => setMarketingBudget(v)} />
+                    </div>
+                    <div className="space-y-3">
+                      <div className="flex justify-between text-xs font-bold uppercase"><span className="text-slate-400">Domestic Target</span><span>{domesticSplit}% Dom / {100 - domesticSplit}% Intl</span></div>
+                      <Slider value={[domesticSplit]} min={0} max={100} step={5} onValueChange={([v]) => setDomesticSplit(v)} />
+                    </div>
+                    <div className="space-y-2">
+                       <span className="text-xs font-bold text-slate-400 uppercase">Main Hook</span>
+                       <Select value={marketingAngle} onValueChange={setMarketingAngle}>
+                         <SelectTrigger className="bg-slate-900 border-slate-700 h-10"><SelectValue /></SelectTrigger>
+                         <SelectContent className="bg-slate-900 border-slate-700 text-slate-200">
+                           {MARKETING_ANGLES.map(a => <SelectItem key={a.id} value={a.id}>{a.label}</SelectItem>)}
+                         </SelectContent>
+                       </Select>
+                    </div>
+                  </div>
+                  <Button className="w-full bg-blue-600 hover:bg-blue-500 font-black uppercase py-6" disabled={marketingBudget > gameState.cash} onClick={() => { launchMarketingCampaign(project.id, marketingBudget, domesticSplit, marketingAngle); selectProject(null); }}>Lock Strategy & Release</Button>
+                </div>
+              )}
+            </TabsContent>
+
+            {/* CASTING TAB */}
+            <TabsContent value="casting" className="space-y-4">
+              <div className="space-y-3">
+                {['director', 'actor', 'writer', 'producer'].map(role => {
+                  const group = roleGroups.get(role)!;
+                  return (
+                    <div key={role} className="flex items-center justify-between p-4 bg-slate-900/40 border border-slate-800 rounded-xl">
+                      <div className="flex flex-col">
+                        <span className="text-[10px] font-black text-slate-500 uppercase tracking-tighter">{role}</span>
+                        {group.attached.length > 0 ? (
+                          <div className="space-y-1">
+                            {group.attached.map(t => (
+                              <div key={t.id} className="flex items-center gap-2">
+                                <span className="font-bold text-white">{t.name}</span>
+                                <Badge className="bg-amber-600/20 text-amber-500 border-amber-600/30 text-[8px] h-4">★ {t.prestige}</Badge>
+                                {t.ego && t.ego > 70 && <Badge variant="destructive" className="text-[8px] h-4">DIVA</Badge>}
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <span className="text-slate-600 italic text-sm">Vacant</span>
+                        )}
+                      </div>
+                      
+                      {(project.status === 'development' || project.status === 'needs_greenlight') && (
+                        <Select onValueChange={(val) => val && gameState && gameState.cash >= talentMap.get(val)!.fee && signContract(val, project.id)}>
+                          <SelectTrigger className="w-[180px] bg-slate-900 border-slate-700 h-8 text-xs font-bold uppercase"><SelectValue placeholder="Sign Talent..." /></SelectTrigger>
+                          <SelectContent className="bg-slate-900 border-slate-700 text-slate-200">
+                            {group.available.map(t => (
+                              <SelectItem key={t.id} value={t.id} disabled={gameState ? gameState.cash < t.fee : true}>
+                                {t.name} ({formatMoney(t.fee)})
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </TabsContent>
+
+            {/* CAMPAIGNS TAB */}
+            <TabsContent value="campaigns" className="space-y-6">
+              <div className="bg-slate-900/40 border border-slate-800 p-4 rounded-xl space-y-4">
+                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-2"><Trophy className="h-3 w-3" /> Awards & Festivals</span>
+                
+                <div className="flex gap-3">
+                  <Select onValueChange={(v) => { submitToFestival(project.id, v as AwardBody); selectProject(null); }}>
+                    <SelectTrigger className="flex-1 bg-slate-900 border-slate-700"><SelectValue placeholder="Submit to Festival..." /></SelectTrigger>
+                    <SelectContent className="bg-slate-900 border-slate-700 text-slate-200">
+                      {FESTIVALS.map(f => <SelectItem key={f.body} value={f.body}>{f.name} ({formatMoney(f.cost)})</SelectItem>)}
                     </SelectContent>
                   </Select>
+                  <Button variant="outline" className="border-amber-600/30 text-amber-500 hover:bg-amber-600/10" onClick={() => { launchAwardsCampaign(project.id, 500000); selectProject(null); }}>
+                    Boost FYC ($500k)
+                  </Button>
                 </div>
-              </div>
-
-              <Button
-                className="w-full mt-4"
-                variant="default"
-                disabled={marketingBudget > gameState.cash}
-                onClick={() => {
-                  launchMarketingCampaign(project.id, marketingBudget, domesticSplit, marketingAngle);
-                  selectProject(null);
-                }}
-              >
-                Launch Campaign & Release
-              </Button>
-              {marketingBudget > gameState.cash && (
-                <p className="text-xs text-destructive text-center mt-1">Insufficient funds.</p>
-              )}
-            </div>
-          )}
-
-          {/* Casting Section */}
-          <div className="space-y-2 border-t border-border pt-4">
-            <h4 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Cast & Crew</h4>
-            {(() => {
-              const rolesToTrack = ['director', 'actor', 'writer', 'producer'];
-
-              return rolesToTrack.map(role => {
-                const group = roleGroups.get(role)!;
-                const attachedTalent = group.attached;
-                const availableTalent = group.available;
-
-                return (
-                  <div key={role} className="flex items-center justify-between text-xs p-2 bg-accent/30 rounded">
-                    <span className="capitalize w-16">{role}</span>
-                    {attachedTalent.length > 0 ? (
-                      <div className="flex flex-col gap-1 w-full max-w-[200px] items-end">
-                        {attachedTalent.map(t => (
-                          <div key={t.id} className="flex items-center gap-1.5">
-                            {gameState?.studio.internal.firstLookDeals?.some(d => d.talentId === t.id) && (
-                              <Badge variant="outline" className="text-[8px] px-1 border-primary/40 text-primary bg-primary/10">Pact</Badge>
-                            )}
-                            <span className="text-foreground font-semibold text-right">{t.name}</span>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (project.status === 'development' || project.status === 'needs_greenlight') ? (
-                      <Select onValueChange={(val) => {
-                        if (val && gameState && gameState.cash >= talentMap.get(val)!.fee) {
-                          signContract(val, project.id);
-                        }
-                      }}>
-                        <SelectTrigger className="h-6 w-[200px] text-xs">
-                          <SelectValue placeholder="Cast Role..." />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {availableTalent.map(t => (
-                            <SelectItem key={t.id} value={t.id} disabled={gameState ? gameState.cash < t.fee : true}>
-                              {t.name} ({formatMoney(t.fee)})
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    ) : (
-                      <span className="text-muted-foreground w-[200px] text-right">None</span>
-                    )}
+                
+                {project.awardsProfile && (
+                  <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-800">
+                    <div className="space-y-1">
+                      <span className="text-[10px] font-black text-slate-500 uppercase">Academy Appeal</span>
+                      <div className="h-1 bg-slate-800 rounded-full overflow-hidden"><div className="h-full bg-amber-500" style={{ width: `${project.awardsProfile.academyAppeal}%` }} /></div>
+                    </div>
+                    <div className="space-y-1">
+                      <span className="text-[10px] font-black text-slate-500 uppercase">Campaign Strength</span>
+                      <div className="h-1 bg-slate-800 rounded-full overflow-hidden"><div className="h-full bg-white" style={{ width: `${project.awardsProfile.campaignStrength}%` }} /></div>
+                    </div>
                   </div>
-                );
-              });
-            })()}
-          </div>
+                )}
+              </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div className="p-3 rounded bg-accent/50">
-              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Budget</p>
-              <p className="text-sm font-semibold text-foreground">{formatMoney(project.budget)}</p>
-            </div>
-            <div className="p-3 rounded bg-accent/50">
-              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Weekly Cost</p>
-              <p className="text-sm font-semibold text-destructive">{formatMoney(project.weeklyCost)}/wk</p>
-            </div>
-            <div className="p-3 rounded bg-accent/50">
-              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Buzz</p>
-              <p className="text-sm font-semibold text-secondary">{Math.round(project.buzz)}%</p>
-            </div>
-            {project.format === 'tv' && (
-                <div className="p-3 rounded bg-accent/50">
-                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Episodes</p>
-                  <p className="text-sm font-semibold text-foreground">{project.episodes}</p>
+              <div className="bg-slate-900/40 border border-slate-800 p-4 rounded-xl space-y-4">
+                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-2"><DollarSign className="h-3 w-3" /> Intellectual Property</span>
+                <div className="space-y-3 text-sm">
+                  <div className="flex justify-between"><span className="text-slate-400">Rights Ownership</span><Badge variant="outline" className="capitalize border-slate-700">{project.ipRights?.rightsOwner || 'studio'}</Badge></div>
+                  <div className="flex justify-between pt-2 border-t border-slate-800/50"><span className="text-slate-400">Library Value</span><span className="font-mono text-green-400 font-bold">{formatMoney(project.ipRights?.catalogValue || project.budget * 0.1)}</span></div>
                 </div>
-            )}
+              </div>
+            </TabsContent>
           </div>
+        </Tabs>
 
-          {/* Progress */}
-          {(project.status === 'development' || project.status === 'production') && (
-            <div className="space-y-1">
-              <div className="flex justify-between text-xs text-muted-foreground">
-                <span className="capitalize">{project.status} Progress</span>
-                <span>
-                  {project.weeksInPhase}/{project.status === 'development' ? project.developmentWeeks : project.productionWeeks} weeks
-                </span>
-              </div>
-              <div className="h-2 bg-muted rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-primary rounded-full transition-all"
-                  style={{
-                    width: `${(project.weeksInPhase / (project.status === 'development' ? project.developmentWeeks : project.productionWeeks)) * 100}%`
-                  }}
-                />
-              </div>
-            </div>
-          )}
-
-          {/* Revenue */}
-          {(project.status === 'released' || project.status === 'archived' || project.status === 'post_release') && (
-            <div className="p-3 rounded bg-accent/50">
-              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Total Gross</p>
-              <p className="text-lg font-display font-bold text-success">{formatMoney(project.revenue)}</p>
-              {project.status === 'released' && (
-                <p className="text-xs text-muted-foreground mt-1">
-                    Current weekly: {formatMoney(project.weeklyRevenue)}
-                    {project.format === 'tv' && project.episodesReleased !== undefined && (
-                        <span className="ml-2">| Released: {project.episodesReleased}/{project.episodes}</span>
-                    )}
-                </p>
-              )}
-            </div>
-          )}
-
-          {/* Awards & Festivals */}
-          {(project.status === 'released' || project.status === 'post_release') && (
-            <div className="p-3 rounded border border-primary/20 bg-background/50 space-y-3">
-              <h4 className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold flex items-center gap-2">Awards & Festivals</h4>
-              
-              <div className="flex gap-2 items-center">
-                <Select onValueChange={(val) => {
-                  submitToFestival(project.id, val as AwardBody);
-                  selectProject(null);
-                }}>
-                  <SelectTrigger className="h-8 text-xs flex-1">
-                    <SelectValue placeholder="Submit to Festival..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {FESTIVALS.map(f => (
-                      <SelectItem key={f.body} value={f.body}>
-                        {f.name} ({formatMoney(f.cost)})
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="h-8 text-xs bg-yellow-500/10 text-yellow-600 hover:bg-yellow-500/20 hover:text-yellow-700 border-yellow-500/30"
-                  onClick={() => {
-                    launchAwardsCampaign(project.id, 500000); // Spend $500k
-                    selectProject(null);
-                  }}
-                >
-                  Boost FYC ($500k)
-                </Button>
-              </div>
-
-              {project.awardsProfile && (
-                <div className="flex items-center justify-between text-xs mt-2 p-2 bg-muted/30 rounded">
-                  <span className="text-muted-foreground">Campaign Strength</span>
-                  <span className="font-bold text-yellow-600">{project.awardsProfile.campaignStrength.toFixed(0)} / 100</span>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Rights & IP */}
-          <div className="p-3 rounded bg-accent/30 border border-primary/20">
-            <h4 className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold mb-2 flex items-center gap-2">Rights & IP</h4>
-            <div className="flex justify-between items-center text-sm">
-                <span className="text-foreground font-medium">Ownership</span>
-                <Badge variant="outline" className="capitalize">{project.ipRights?.rightsOwner || 'studio'}</Badge>
-            </div>
-            {project.ipRights?.reversionWeek && (
-              <div className="flex justify-between items-center text-sm mt-2 pt-2 border-t border-border/40">
-                  <span className="text-muted-foreground">Reversion</span>
-                  <span className={project.ipRights.reversionWeek - (gameState?.week || 0) <= 4 ? "text-destructive font-bold" : "font-mono"}>
-                    Week {project.ipRights.reversionWeek}
-                  </span>
-              </div>
-            )}
-            <div className="flex justify-between items-center text-sm mt-2 pt-2 border-t border-border/40">
-                <span className="text-muted-foreground">Catalog Value</span>
-                <span className="font-mono text-success drop-shadow-[0_0_2px_rgba(34,197,94,0.3)]">{formatMoney(project.ipRights?.catalogValue || (project.revenue > 0 ? project.revenue * 0.4 : project.budget * 0.1))}</span>
-            </div>
+        {/* Action Bar */}
+        {(project.status === 'archived' && project.format === 'tv' && project.renewable) && (
+          <div className="mt-6 border-t border-slate-800 pt-4">
+            <Button onClick={() => { renewProject(project.id); selectProject(null); }} className="w-full bg-blue-600 hover:bg-blue-500 font-black uppercase">Order Season {(project.season || 1) + 1}</Button>
           </div>
-
-          {/* Renew Button */}
-          {project.status === 'archived' && project.format === 'tv' && project.renewable && (
-            <div className="pt-4 border-t border-border flex justify-end">
-                <Button
-                    onClick={() => {
-                        renewProject(project.id);
-                        selectProject(null);
-                    }}
-                    className="font-display w-full"
-                >
-                    Renew for Season {(project.season || 1) + 1}
-                </Button>
-            </div>
-          )}
-
-          {/* Franchise Exploitation Button */}
-          {project.status === 'released' && project.revenue > project.budget * 1.5 && (
-            <div className="pt-4 border-t border-border flex justify-end">
-                <Button
-                    onClick={() => {
-                        exploitFranchise(project.id);
-                        selectProject(null);
-                    }}
-                    className="font-display w-full bg-secondary hover:bg-secondary/80 text-secondary-foreground"
-                >
-                    Develop Spinoff
-                </Button>
-            </div>
-          )}
-        </div>
+        )}
+        
+        {project.status === 'released' && project.revenue > project.budget * 1.5 && (
+          <div className="mt-6 border-t border-slate-800 pt-4">
+            <Button onClick={() => { exploitFranchise(project.id); selectProject(null); }} className="w-full bg-purple-600 hover:bg-purple-500 font-black uppercase">Greenlight Spinoff / Reboot</Button>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );
 };
+

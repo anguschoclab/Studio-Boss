@@ -2,23 +2,25 @@ import { GameState, Scandal, ScandalType } from '../types';
 
 /**
  * Randomly spawns a scandal for a talent in the pool based on their controversy risk.
+ * If the talent is attached to an active studio project, it triggers a Project Crisis.
  */
-export function generateScandals(state: GameState): { newScandals: Scandal[], headlines: { id: string; week: number; category: 'talent'; text: string }[] } {
+export function generateScandals(state: GameState): { 
+  newScandals: Scandal[], 
+  headlines: { id: string; week: number; category: 'talent'; text: string }[],
+  projectUpdates: { projectId: string; crisis: import('../types').ActiveCrisis }[]
+} {
   const newScandals: Scandal[] = [];
   const headlines: { id: string; week: number; category: 'talent'; text: string }[] = [];
+  const projectUpdates: { projectId: string; crisis: import('../types').ActiveCrisis }[] = [];
   
-  // Only look at talent that is actually attached to active studio projects to keep it relevant
-  const relevantTalentIds = new Set<string>();
   const contracts = state.studio.internal.contracts;
-  for (let i = 0; i < contracts.length; i++) {
-    relevantTalentIds.add(contracts[i].talentId);
+  const talentToProjectMap = new Map<string, string>();
+  for (const c of contracts) {
+    talentToProjectMap.set(c.talentId, c.projectId);
   }
   
-  const activeTalent = state.industry.talentPool.filter(t => relevantTalentIds.has(t.id));
-  
-  for (const talent of activeTalent) {
+  for (const talent of state.industry.talentPool) {
     const risk = talent.controversyRisk || 5; 
-    // risk of 5 means 0.5% chance per week
     if (Math.random() * 1000 < risk) {
        const types: ScandalType[] = ['financial', 'personal', 'onset_behavior', 'legal', 'feud'];
        const type = types[Math.floor(Math.random() * types.length)];
@@ -37,10 +39,43 @@ export function generateScandals(state: GameState): { newScandals: Scandal[], he
           category: 'talent' as const,
           text: `PR NIGHTMARE: Massive ${type} scandal erupts violently around ${talent.name}!`
        });
+
+       const projectId = talentToProjectMap.get(talent.id);
+       if (projectId) {
+         projectUpdates.push({
+           projectId,
+           crisis: {
+             description: `BREAKING NEWS: ${talent.name.toUpperCase()} has been involved in a massive ${type} scandal while working on "${state.studio.internal.projects.find(p => p.id === projectId)?.title}". The press is circling.`,
+             resolved: false,
+             severity: s.severity > 75 ? 'catastrophic' : 'high',
+             options: [
+               {
+                 text: "Fire Them",
+                 effectDescription: "Remove talent from project, +2 week delay, preserve reputation.",
+                 weeksDelay: 2,
+                 removeTalentId: talent.id,
+                 reputationPenalty: 0
+               },
+               {
+                 text: "Pay off the Press",
+                 effectDescription: `Deduct $${(s.severity * 10000).toLocaleString()} to bury the story. Keep talent.`,
+                 cashPenalty: s.severity * 10000,
+                 reputationPenalty: 2
+               },
+               {
+                 text: "Double Down",
+                 effectDescription: "Cost nothing, but lose 10% reputation and tank project buzz.",
+                 reputationPenalty: 10,
+                 buzzPenalty: 30
+               }
+             ]
+           }
+         });
+       }
     }
   }
   
-  return { newScandals, headlines };
+  return { newScandals, headlines, projectUpdates };
 }
 
 /**
