@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { GameState, WeekSummary, ArchetypeKey } from '@/engine/types';
+import { GameState, WeekSummary, ArchetypeKey, NewsEvent } from '@/engine/types';
 import { initializeGame } from '@/engine/core/gameInit';
 import { advanceWeek } from '@/engine/core/weekAdvance';
 import { saveGame, loadGame, getSaveSlots, SaveSlotInfo } from '@/persistence/saveLoad';
@@ -9,8 +9,9 @@ import { createProjectSlice, ProjectSlice } from './slices/projectSlice';
 import { createFinanceSlice, FinanceSlice } from './slices/financeSlice';
 import { createTalentSlice, TalentSlice } from './slices/talentSlice';
 import { createRivalSlice, RivalSlice } from './slices/rivalSlice';
+import { createNewsSlice, NewsSlice } from './slices/newsSlice';
 
-export interface GameStore extends ProjectSlice, FinanceSlice, TalentSlice, RivalSlice {
+export interface GameStore extends ProjectSlice, FinanceSlice, TalentSlice, RivalSlice, NewsSlice {
   gameState: GameState | null;
   newGame: (studioName: string, archetype: ArchetypeKey) => void;
   doAdvanceWeek: () => WeekSummary;
@@ -18,7 +19,6 @@ export interface GameStore extends ProjectSlice, FinanceSlice, TalentSlice, Riva
   loadFromSlot: (slot: number) => boolean;
   getSaveSlots: () => SaveSlotInfo[];
   clearGame: () => void;
-  logNewsEvent: (event: Omit<import('@/engine/types').NewsEvent, 'id' | 'week'>) => void;
 }
 
 export const useGameStore = create<GameStore>((set, get, ...args) => ({
@@ -28,6 +28,7 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
   ...createFinanceSlice(set, get, ...args),
   ...createTalentSlice(set, get, ...args),
   ...createRivalSlice(set, get, ...args),
+  ...createNewsSlice(set, get, ...args),
 
   newGame: (studioName, archetype) => {
     set((s) => {
@@ -60,8 +61,7 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
 
     const finalState = nextState as GameState;
 
-    // 1. Crises/Scandals (Must be handled first)
-    // We check for new crises triggered this week
+    // 1. Crises/Scandals
     finalState.studio.internal.projects.forEach(p => {
       if (p.activeCrisis && !p.activeCrisis.resolved) {
         const isNewCrisis = summary?.events.some(e => e.includes(`CRISIS: "${p.title}"`));
@@ -71,7 +71,7 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
       }
     });
 
-    // 2. Awards Ceremony (Specific weeks)
+    // 2. Awards Ceremony
     const isAwardsWeek = finalState.week % 52 === 4 || finalState.week % 52 === 36;
     if (isAwardsWeek) {
       const year = Math.floor(finalState.week / 52) + 1;
@@ -79,7 +79,7 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
       ui.enqueueModal('AWARDS', { week: finalState.week, year, awards: currentAwards });
     }
 
-    // 3. Week Summary (Final report)
+    // 3. Week Summary
     ui.enqueueModal('SUMMARY', summary);
 
     return summary;
@@ -94,7 +94,6 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
     const state = loadGame(slot);
     if (state) {
       set((s) => {
-        // Prevent unnecessary re-renders if state hasn't changed referentially
         if (s.gameState === state) return s;
         return { gameState: state };
       });
@@ -109,28 +108,4 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
     if (state.gameState === null) return state;
     return { gameState: null };
   }),
-
-  logNewsEvent: (event) => {
-    set((s) => {
-      if (!s.gameState) return s;
-      
-      const newEvent = {
-        ...event,
-        id: `ne-${crypto.randomUUID()}`,
-        week: s.gameState.week
-      };
-
-      const history = s.gameState.industry.newsHistory || [];
-      
-      return {
-        gameState: {
-          ...s.gameState,
-          industry: {
-            ...s.gameState.industry,
-            newsHistory: [newEvent, ...history].slice(0, 100) // Keep last 100 events
-          }
-        }
-      };
-    });
-  }
 }));
