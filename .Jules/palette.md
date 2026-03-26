@@ -1,3 +1,3 @@
-## 2024-03-24 - Interactive Component Accessibility
-**Learning:** In standard React/Tailwind setups like this one, complex components (like Project Cards) are often built as `<div>` elements with `onClick` handlers for ease of styling and layout, leading to severe keyboard accessibility gaps.
-**Action:** Always check interactive cards/containers for `role="button"`, `tabIndex={0}`, and an `onKeyDown` handler (specifically checking for 'Enter' and ' ') to ensure full keyboard navigation. When using `onKeyDown` on a `<div>`, ensure `e.preventDefault()` is called on Spacebar to prevent page scrolling.
+## 2025-03-26 - Add aria-pressed to modal selection buttons
+**Learning:** In highly custom modal interfaces like `PitchProjectModal.tsx`, toggleable selection choices (like buyers or deal structures) are often built as `<button>` elements that use CSS classes for visual state. They lack default semantic state indication for screen readers. Using `aria-pressed={condition}` is an excellent, low-risk way to expose mutually exclusive or toggleable selection states without restructuring the HTML to use `role="radio"` and `<fieldset>`/`role="radiogroup"`.
+**Action:** Next time evaluating custom selection UIs made of buttons, check for `aria-pressed` or `aria-selected` and add it based on the React state driving the visual class change.
