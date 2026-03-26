@@ -3,8 +3,8 @@ import { TV_FORMATS } from '@/engine/data/tvFormats';
 import { UNSCRIPTED_FORMATS } from '@/engine/data/unscriptedFormats';
 
 export function getFilmStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS]) {
-  // The Studio Comptroller: Increased extreme risk multiplier for $250M+ films from 1.75 to 2.0. Megabudget logistical failures should break studios, not just sting.
-  const riskMultiplier = tier.budget >= 250_000_000 ? 2.0 : tier.budget >= 100_000_000 ? 1.35 : 1.0;
+  // The Studio Comptroller: Increased extreme risk multiplier for $250M+ films (2.0 to 2.5) and $100M+ films (1.35 to 1.5). Megabudget logistical failures should break studios, not just sting.
+  const riskMultiplier = tier.budget >= 250_000_000 ? 2.5 : tier.budget >= 100_000_000 ? 1.5 : 1.0;
 
   return {
     budget: tier.budget,
@@ -16,8 +16,8 @@ export function getFilmStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS
 }
 
 export function getTvStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS], tvFormatData: typeof TV_FORMATS[keyof typeof TV_FORMATS], episodes: number) {
-  // The Studio Comptroller: Steeper scaling for mega-budget TV risks (e.g., 1.8x for >=100M, up from 1.6x) to punish excessive streamer spending sprees.
-  const scaleMultiplier = tier.budget >= 100_000_000 ? 1.8 : tier.budget > 50_000_000 ? 1.4 : 1.0;
+  // The Studio Comptroller: Steeper scaling for mega-budget TV risks (e.g., 2.0x for >=100M, up from 1.8x, and 1.5x for >50M) to punish excessive streamer spending sprees.
+  const scaleMultiplier = tier.budget >= 100_000_000 ? 2.0 : tier.budget > 50_000_000 ? 1.5 : 1.0;
   const weeklyCost = tier.weeklyCost * tvFormatData.productionCostMultiplier * scaleMultiplier;
   const productionWeeks = Math.ceil(episodes * tvFormatData.productionWeeksPerEpisode * scaleMultiplier);
 
@@ -33,8 +33,8 @@ export function getTvStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS],
 
 
 export function getUnscriptedStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS], unscriptedFormatData: typeof UNSCRIPTED_FORMATS[keyof typeof UNSCRIPTED_FORMATS], episodes: number) {
-  // The Studio Comptroller: Increased scaling for massive unscripted logistics overhead (e.g., 1.7x for >=100M, up from 1.5x) simulating complex location hazards.
-  const scaleMultiplier = tier.budget >= 100_000_000 ? 1.7 : tier.budget > 50_000_000 ? 1.3 : 1.0;
+  // The Studio Comptroller: Increased scaling for massive unscripted logistics overhead (e.g., 2.0x for >=100M, up from 1.7x, and 1.5x for >50M) simulating complex location hazards.
+  const scaleMultiplier = tier.budget >= 100_000_000 ? 2.0 : tier.budget > 50_000_000 ? 1.5 : 1.0;
   const weeklyCost = tier.weeklyCost * unscriptedFormatData.productionCostMultiplier * scaleMultiplier;
   const productionWeeks = Math.ceil(episodes * unscriptedFormatData.productionWeeksPerEpisode);
 
