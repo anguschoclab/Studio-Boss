@@ -36,7 +36,15 @@ const AGENCY_NAMES = [
   'The Shark Tank',
   'Vulture Capital Reps',
   'Titan Representation',
-  'Bloodline Management'
+  'Bloodline Management',
+  'The Method Institute',
+  'Final Cut Collective',
+  'Merch Moguls',
+  'Anti-Stream Syndicate',
+  'Backend Bandits',
+  'Comedy Dictators',
+  'The Entourage',
+  'Picky Producers'
 ];
 
 const AGENT_FIRST_NAMES = ['Ari', 'Bryan', 'Maha', 'Jeremy', 'Richard', 'Sue', 'Ali', 'Kevin', 'Aaron', 'Emma', 'David', 'Laura'];
@@ -189,6 +197,57 @@ export function generateAgencies(count: number): Agency[] {
       traits.push('Refuses to work with indie studios');
       culture = 'prestige';
     }
+    if (actualName === 'The Method Institute') {
+      traits.push('Only represents method actors');
+      traits.push('Requires personal onset chef');
+      culture = 'prestige';
+    }
+
+    if (actualName === 'Final Cut Collective') {
+      traits.push('Demands final cut');
+      traits.push('Demands massive backend points');
+      culture = 'shark';
+      leverage = 95;
+    }
+
+    if (actualName === 'Merch Moguls') {
+      traits.push('Demands exclusive merchandising rights');
+      traits.push('Requires entire package hire');
+      culture = 'volume';
+    }
+
+    if (actualName === 'Anti-Stream Syndicate') {
+      traits.push('Refuses to do streaming');
+      traits.push('Only works with A-List co-stars');
+      culture = 'prestige';
+    }
+
+    if (actualName === 'Backend Bandits') {
+      traits.push('Demands massive backend points');
+      traits.push('Takes 15% instead of 10%');
+      culture = 'shark';
+      leverage = 98;
+    }
+
+    if (actualName === 'Comedy Dictators') {
+      traits.push('Only represents comedy writers');
+      traits.push('Refuses to do rewrites');
+      culture = 'shark';
+    }
+
+    if (actualName === 'The Entourage') {
+      traits.push('Requires 20-person entourage');
+      traits.push('Requires trailer bigger than co-stars');
+      leverage = 85;
+    }
+
+    if (actualName === 'Picky Producers') {
+      traits.push('Refuses to work with first-time directors');
+      traits.push('Demands guaranteed marketing spend');
+      culture = 'prestige';
+      leverage = 90;
+    }
+
 
     agencies.push({
       id: `agency-${crypto.randomUUID()}`,
