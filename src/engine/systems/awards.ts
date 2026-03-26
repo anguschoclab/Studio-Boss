@@ -71,6 +71,7 @@ interface AwardCeremonyResult {
   newAwards: Award[];
   prestigeChange: number;
   projectUpdates: string[];
+  newsEvents: Omit<import('../types').NewsEvent, 'id' | 'week'>[];
 }
 
 // Define when ceremonies happen within a 52-week year
@@ -427,18 +428,18 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
   const bodiesThisWeek = AWARDS_CALENDAR[weekOfYear] || [];
 
   if (bodiesThisWeek.length === 0) {
-    return { newAwards, prestigeChange, projectUpdates };
+    return { newAwards, prestigeChange, projectUpdates, newsEvents: [] };
   }
 
   // ⚡ Bolt: Pre-filter configs so we don't process projects if no matching body exists
   const configsThisWeek = AWARD_CONFIGS.filter(config => bodiesThisWeek.includes(config.body));
   if (configsThisWeek.length === 0) {
-    return { newAwards, prestigeChange, projectUpdates };
+    return { newAwards, prestigeChange, projectUpdates, newsEvents: [] };
   }
 
   // ⚡ Bolt: O(1) early exit for zero eligible projects
   if (state.studio.internal.projects.length === 0) {
-    return { newAwards, prestigeChange, projectUpdates };
+    return { newAwards, prestigeChange, projectUpdates, newsEvents: [] };
   }
 
   // ⚡ Bolt: Find eligible projects (released within the last 52 weeks relative to the ceremony)
@@ -457,8 +458,10 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
   }
 
   if (eligibleFilm.length === 0 && eligibleTv.length === 0) {
-    return { newAwards, prestigeChange, projectUpdates };
+    return { newAwards, prestigeChange, projectUpdates, newsEvents: [] };
   }
+
+  const newsEvents: Omit<import('../types').NewsEvent, 'id' | 'week'>[] = [];
 
   // Evaluate all configs for bodies present this week
   for (let i = 0; i < configsThisWeek.length; i++) {
@@ -498,6 +501,12 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
       });
       prestigeChange += 10;
       projectUpdates.push(`🏆 "${bestProject.title}" won ${config.category} at the ${config.body}!`);
+      newsEvents.push({
+        type: 'AWARD',
+        headline: `${bestProject.title} Wins ${config.category}!`,
+        description: `In a stunning victory at the ${config.body}, "${bestProject.title}" took home the top prize for ${config.category}.`,
+        impact: '+10 Prestige'
+      });
     } else if (bestScore > 100) {
        newAwards.push({
         id: `award-${crypto.randomUUID()}`,
@@ -513,7 +522,7 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
     }
   }
 
-  return { newAwards, prestigeChange, projectUpdates };
+  return { newAwards, prestigeChange, projectUpdates, newsEvents };
 }
 
 
@@ -523,6 +532,7 @@ export interface RazzieResult {
   razzieWinnerTalentIds: string[];
   cultClassicProjectIds: string[];
   newHeadlines: Headline[];
+  newsEvents: Omit<import('../types').NewsEvent, 'id' | 'week'>[];
 }
 
 export function processRazzies(state: GameState, week: number): RazzieResult {
@@ -531,7 +541,8 @@ export function processRazzies(state: GameState, week: number): RazzieResult {
     studioPrestigePenalty: 0,
     razzieWinnerTalentIds: [],
     cultClassicProjectIds: [],
-    newHeadlines: []
+    newHeadlines: [],
+    newsEvents: []
   };
 
   const eligibleProjects = state.studio.internal.projects.filter(p =>
@@ -553,6 +564,12 @@ export function processRazzies(state: GameState, week: number): RazzieResult {
     week,
     category: 'razzies',
     text: `The Razzies Nominees Announced! "${worstPicture.title}" sweeps the board with a historic Worst Picture win.`
+  });
+  result.newsEvents.push({
+    type: 'AWARD', // Razzies are technically awards, albeit negative
+    headline: `Razzies: ${worstPicture.title} Named Worst Picture`,
+    description: `The Golden Raspberry Awards have spoken, and "${worstPicture.title}" is officially the worst film of the year.`,
+    impact: '-10 Prestige'
   });
   result.studioPrestigePenalty = 10;
 

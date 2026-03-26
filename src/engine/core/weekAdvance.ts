@@ -3,7 +3,7 @@ import { groupContractsByProject, pick } from '../utils';
 import { calculateWeeklyCosts, calculateWeeklyRevenue } from '../systems/finance';
 import { advanceProject } from '../systems/projects';
 import { checkAndTriggerCrisis } from '../systems/crises';
-import { updateRival } from '../systems/rivals';
+import { updateRival, advanceRivals } from '../systems/rivals';
 import { calculateBoxOfficeRanks, BoxOfficeEntry } from '../systems/releaseSimulation';
 import { updateBuyers } from '../systems/buyers';
 import { generateHeadlines } from '../generators/headlines';
@@ -39,6 +39,7 @@ export interface WeeklyChanges {
   newHeadlines: Headline[];
   costs: number;
   revenue: number;
+  newsEvents: Omit<import('../types').NewsEvent, 'id' | 'week'>[];
 }
 
 const initializeWeeklyChanges = (): WeeklyChanges => ({
@@ -47,6 +48,7 @@ const initializeWeeklyChanges = (): WeeklyChanges => ({
   newHeadlines: [],
   costs: 0,
   revenue: 0,
+  newsEvents: [],
 });
 
 const processProjectPhase = (
@@ -95,14 +97,31 @@ const processProjectPhase = (
     }
 
     const projectContracts = contractsByProject.get(p.id) || [];
-    const trendMult = getTrendMultiplier(p.genre, state);
+    const trendMult = getTrendMultiplier(p, state);
     const { project, update, talentUpdates } = advanceProject(p, nextWeek, state.studio.prestige, projectContracts, talentPoolMap, rivalAvgStrength, state.industry.awards || [], trendMult);
 
     if (update) weeklyChanges.projectUpdates.push(update);
     talentUpdates.forEach(t => allTalentUpdates.set(t.id, t));
     
-    if (project.status === 'released' && p.status !== 'released' && !project.awardsProfile) {
-      project.awardsProfile = generateAwardsProfile(project);
+    if (project.status === 'released' && p.status !== 'released') {
+      if (!project.awardsProfile) {
+        project.awardsProfile = generateAwardsProfile(project);
+      }
+      weeklyChanges.newsEvents.push({
+        type: 'RELEASE',
+        headline: `${project.title} Hits Theaters!`,
+        description: `The highly anticipated "${project.title}" has officially released. Initial buzz is ${project.buzz}.`,
+        impact: `Genre Trend Multiplier: ${trendMult.toFixed(2)}x`
+      });
+    }
+
+    if (project.status === 'marketing' && p.status === 'production') {
+      weeklyChanges.newsEvents.push({
+        type: 'STUDIO_EVENT',
+        headline: `${project.title} Wraps Production`,
+        description: `Principal photography has concluded on "${project.title}". The film now moves into post-production and marketing preparation.`,
+        impact: 'Wrap milestone reached'
+      });
     }
 
     if (project.status === 'production' && (!project.activeCrisis || project.activeCrisis.resolved)) {
@@ -183,10 +202,8 @@ const simulateWorld = (
   const nextWeek = state.week + 1;
 
   // Simulate Rivals
-  const updatedRivals: typeof state.industry.rivals = new Array(state.industry.rivals.length);
-  for (let i = 0; i < state.industry.rivals.length; i++) {
-    updatedRivals[i] = updateRival(state.industry.rivals[i], state);
-  }
+  const { updatedRivals, newsEvents: rivalNewsEvents } = advanceRivals(state);
+  weeklyChanges.newsEvents.push(...rivalNewsEvents);
 
   // Update Buyers
   const { updatedBuyers, newHeadlines: buyerHeadlines } = updateBuyers(state.market.buyers || [], nextWeek);
@@ -218,6 +235,9 @@ const simulateWorld = (
 
 const year = Math.floor(nextWeek / 52) + 1;
   const ceremonyResult = runAwardsCeremony(state, nextWeek, year);
+  if (ceremonyResult.newsEvents) {
+    weeklyChanges.newsEvents.push(...ceremonyResult.newsEvents);
+  }
 
   let prestigeChange = ceremonyResult.prestigeChange;
 
@@ -226,6 +246,9 @@ const year = Math.floor(nextWeek / 52) + 1;
      if (razzies.projectUpdates.length > 0) {
         weeklyChanges.projectUpdates.push(...razzies.projectUpdates);
         weeklyChanges.newHeadlines.push(...razzies.newHeadlines);
+        if (razzies.newsEvents) {
+          weeklyChanges.newsEvents.push(...razzies.newsEvents);
+        }
         prestigeChange -= razzies.studioPrestigePenalty; // Decrease studio prestige
 
         // Apply cult classic flags
@@ -297,6 +320,14 @@ const year = Math.floor(nextWeek / 52) + 1;
         for (let i = 0; i < newAwards.length; i++) combined[oldAwards.length + i] = newAwards[i];
         return combined;
       })(),
+      newsHistory: [
+        ...weeklyChanges.newsEvents.map(ne => ({
+          ...ne,
+          id: `ne-${crypto.randomUUID()}`,
+          week: nextWeek
+        })),
+        ...(state.industry.newsHistory || [])
+      ].slice(0, 100),
       headlines: (() => {
         const oldHeadlines = state.industry.headlines || [];
         const totalLen = Math.min(50, newHeadlines.length + oldHeadlines.length);
@@ -305,7 +336,7 @@ const year = Math.floor(nextWeek / 52) + 1;
         for (let i = 0; i < newHeadlines.length && idx < 50; i++) combined[idx++] = newHeadlines[i];
         for (let i = 0; i < oldHeadlines.length && idx < 50; i++) combined[idx++] = oldHeadlines[i];
         return combined;
-      })(),
+      })()
     }
   };
 
@@ -356,10 +387,15 @@ const finalizeWeek = (
     projectUpdates: weeklyChanges.projectUpdates,
     newHeadlines: weeklyChanges.newHeadlines,
     events: weeklyChanges.events,
+    newsEvents: weeklyChanges.newsEvents.map(ne => ({
+      ...ne,
+      id: `ne-${crypto.randomUUID()}`,
+      week: nextWeek
+    }))
   };
 
   return { newState: { ...state, week: nextWeek }, summary };
-};
+}
 
 export function advanceWeek(state: GameState): { newState: GameState; summary: WeekSummary } {
   let nextState = { ...state };

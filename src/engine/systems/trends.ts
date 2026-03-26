@@ -69,11 +69,23 @@ export function advanceTrends(trends: GenreTrend[]): GenreTrend[] {
   return updated;
 }
 
-export function getTrendMultiplier(genre: string, state: GameState): number {
+export function getTrendMultiplier(project: { genre: string; targetAudience: string }, state: GameState): number {
   if (!state.market.trends) return 1.0;
-  const trend = state.market.trends.find(t => t.genre === genre);
-  if (!trend) return 1.0;
   
-  // Heat of 100 means +50% box office. Heat of 0 means -20% box office.
-  return 0.8 + ((trend.heat / 100) * 0.7);
+  let trendModifier = 1.0;
+  
+  // Check both genre and audience for trend matches
+  for (const trend of state.market.trends) {
+    const isMatch = trend.genre === project.genre || trend.genre === project.targetAudience;
+    
+    if (isMatch) {
+      if (trend.heat >= 70) {
+        trendModifier += 0.3;
+      } else if (trend.heat <= 30) {
+        trendModifier -= 0.25;
+      }
+    }
+  }
+  
+  return trendModifier;
 }

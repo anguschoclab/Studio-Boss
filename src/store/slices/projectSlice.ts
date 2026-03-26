@@ -20,6 +20,7 @@ export interface ProjectSlice {
   exploitFranchise: (projectId: string) => void;
   submitToFestival: (projectId: string, festivalBody: AwardBody) => void;
   launchAwardsCampaign: (projectId: string, budget: number) => void;
+  lockMarketingCampaign: (projectId: string, level: 'none' | 'basic' | 'blockbuster') => void;
 }
 
 export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> = (set, get) => ({
@@ -198,6 +199,52 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
       if (!s.gameState) return s;
       const newState = launchAwardsCampaign(s.gameState, projectId, budget);
       return newState ? { gameState: newState } : s;
+    });
+  },
+
+  lockMarketingCampaign: (projectId, level) => {
+    set((s) => {
+      const state = s.gameState;
+      if (!state) return s;
+
+      const projectIndex = state.studio.internal.projects.findIndex(p => p.id === projectId);
+      if (projectIndex === -1) return s;
+
+      const project = state.studio.internal.projects[projectIndex];
+      
+      let cost = 0;
+      let buzzGain = 0;
+
+      if (level === 'basic') {
+        cost = Math.floor(project.budget * 0.10);
+        buzzGain = 15;
+      } else if (level === 'blockbuster') {
+        cost = Math.floor(project.budget * 0.50);
+        buzzGain = 40;
+      }
+
+      const updatedProjects = [...state.studio.internal.projects];
+      updatedProjects[projectIndex] = {
+        ...project,
+        marketingLevel: level,
+        marketingBudget: cost,
+        buzz: Math.min(100, project.buzz + buzzGain),
+        status: project.status === 'marketing' ? 'released' : project.status
+      };
+
+      return {
+        gameState: {
+          ...state,
+          cash: state.cash - cost,
+          studio: {
+            ...state.studio,
+            internal: {
+              ...state.studio.internal,
+              projects: updatedProjects
+            }
+          }
+        }
+      };
     });
   }
 });

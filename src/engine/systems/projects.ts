@@ -167,11 +167,23 @@ function handleReleasedPhase(
     }
   } else {
     p.weeklyRevenue = simulateWeeklyBoxOffice(p, p.weeksInPhase, p.reviewScore || 50, p.weeklyRevenue, rivalStrengthAvg, trendMultiplier);
+    
+    let trendText = "";
+    if (trendMultiplier > 1.0) {
+      const boost = Math.round((trendMultiplier - 1.0) * 100);
+      trendText = ` (+${boost}% from trends!)`;
+    } else if (trendMultiplier < 1.0) {
+      const penalty = Math.round((1.0 - trendMultiplier) * 100);
+      trendText = ` (-${penalty}% from stale content.)`;
+    }
+
     if (p.weeklyRevenue < 100_000 || p.weeksInPhase > 12) {
       p.status = 'post_release';
       p.weeksInPhase = 0;
-      update = `"${p.title}" completes its theatrical run — total gross: ${(p.revenue / 1_000_000).toFixed(1)}M`;
+      update = `"${p.title}" completes its theatrical run — total gross: ${(p.revenue / 1_000_000).toFixed(1)}M${trendText}`;
       talentUpdates = TalentSystem.applyProjectResults(p, projectContracts, Array.from(talentPoolMap.values()), awards);
+    } else {
+      update = `"${p.title}" grossed ${(p.weeklyRevenue / 1_000_000).toFixed(1)}M this week.${trendText}`;
     }
   }
 
@@ -357,7 +369,7 @@ export function advanceProjects(
     }
 
     const projectContracts = contractsByProject.get(p.id) || [];
-    const trendMult = getTrendMultiplier(p.genre, state);
+    const trendMult = getTrendMultiplier(p, state);
     const { project, update, talentUpdates } = advanceProject(p, nextWeek, state.studio.prestige, projectContracts, talentPoolMap, rivalAvgStrength, state.industry.awards || [], trendMult);
 
     if (update) projectUpdates.push(update);

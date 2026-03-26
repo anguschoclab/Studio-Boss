@@ -1,51 +1,103 @@
 import { useGameStore } from '@/store/gameStore';
-import { HeadlineCategory } from '@/engine/types';
+import { NewsEventType } from '@/engine/types';
 import { Badge } from '@/components/ui/badge';
+import { useState } from 'react';
+import { 
+  Trophy, 
+  AlertTriangle, 
+  TrendingUp, 
+  Search,
+  History,
+  Filter
+} from 'lucide-react';
 
-const categoryStyles: Record<HeadlineCategory, string> = {
-  rival: 'border-destructive/30 bg-destructive/10 text-destructive',
-  market: 'border-primary/30 bg-primary/10 text-primary',
-  talent: 'border-secondary/30 bg-secondary/10 text-secondary',
-  awards: 'border-amber-500/30 bg-amber-500/10 text-amber-500',
-  general: 'border-muted-foreground/30 bg-muted/50 text-muted-foreground',
-  rumor: 'border-purple-500/30 bg-purple-500/10 text-purple-500',
-  razzies: 'border-pink-500/30 bg-pink-500/10 text-pink-500',
+const eventTypeConfig: Record<NewsEventType, { icon: any, color: string, label: string }> = {
+  AWARD: { icon: Trophy, color: 'text-amber-500 bg-amber-500/10 border-amber-500/20', label: 'Awards' },
+  CRISIS: { icon: AlertTriangle, color: 'text-destructive bg-destructive/10 border-destructive/20', label: 'Crises' },
+  RELEASE: { icon: TrendingUp, color: 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20', label: 'Release' },
+  STUDIO_EVENT: { icon: History, color: 'text-blue-400 bg-blue-400/10 border-blue-400/20', label: 'Studio' },
+  RIVAL: { icon: History, color: 'text-red-400 bg-red-400/10 border-red-400/20', label: 'Rival' },
 };
 
 export const NewsFeed = () => {
-  const headlines = useGameStore(s => s.gameState?.industry.headlines || []);
+  const [filter, setFilter] = useState<NewsEventType | 'ALL'>('ALL');
+  const history = useGameStore(s => s.gameState?.industry.newsHistory || []);
+
+  const filteredHistory = filter === 'ALL' 
+    ? history 
+    : history.filter(h => h.type === filter);
 
   return (
-    <div className="p-5 space-y-4 border-b border-border/50 bg-gradient-to-b from-card/30 to-transparent backdrop-blur-md relative overflow-hidden">
-      <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -mr-32 -mt-32 pointer-events-none" />
-      <div className="flex items-center gap-2 pb-2 border-b border-border/30 relative z-10">
-        <div className="w-2 h-2 rounded-full bg-destructive animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]" />
-        <h3 className="font-display text-xs font-black uppercase tracking-widest text-foreground/80 drop-shadow-sm">
-          Industry Pulse
-        </h3>
+    <div className="flex flex-col h-full bg-slate-950/40 border-l border-slate-800/50 backdrop-blur-xl">
+      {/* Header & Filter */}
+      <div className="p-4 border-b border-slate-800/50 space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <History className="h-4 w-4 text-blue-400" />
+            <h3 className="font-display text-xs font-black uppercase tracking-widest text-slate-200">Industry History</h3>
+          </div>
+          <Badge variant="outline" className="text-[9px] font-black border-slate-700 bg-slate-800/50 text-slate-400">
+            {history.length} Events
+          </Badge>
+        </div>
+
+        <div className="flex gap-1.5 overflow-x-auto pb-2 custom-scrollbar no-scrollbar">
+          <button 
+            onClick={() => setFilter('ALL')}
+            className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-tighter transition-all border ${
+              filter === 'ALL' ? 'bg-white text-black border-white' : 'bg-slate-900 text-slate-400 border-slate-800'
+            }`}
+          >
+            All
+          </button>
+          {(Object.keys(eventTypeConfig) as NewsEventType[]).map(type => (
+            <button 
+              key={type}
+              onClick={() => setFilter(type)}
+              className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-tighter transition-all border flex items-center gap-1.5 whitespace-nowrap ${
+                filter === type ? 'bg-blue-600 text-white border-blue-500' : 'bg-slate-900 text-slate-400 border-slate-800'
+              }`}
+            >
+              {type}
+            </button>
+          ))}
+        </div>
       </div>
-      <div className="space-y-3 max-h-[320px] overflow-y-auto pr-2 custom-scrollbar relative z-10">
-        {headlines.slice(0, 12).map(h => (
-          <div key={h.id} className="p-3.5 rounded-xl border border-border/60 bg-card/60 backdrop-blur-md shadow-sm hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:border-primary/40 hover:-translate-y-0.5 transition-all duration-300 space-y-2.5 group relative overflow-hidden cursor-default flex flex-col justify-between">
-            <div className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-transparent via-border/50 to-transparent group-hover:via-primary/50 transition-colors duration-500" />
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
-            <p className="text-[12px] text-foreground/90 leading-relaxed font-medium group-hover:text-foreground transition-colors relative z-10 pl-2">{h.text}</p>
+      {/* Timeline List */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-6 custom-scrollbar">
+        {filteredHistory.map((item, idx) => {
+          const config = eventTypeConfig[item.type];
+          return (
+            <div key={item.id} className="relative pl-6 group">
+              {/* Vertical line connector */}
+              {idx !== filteredHistory.length - 1 && (
+                <div className="absolute left-[7px] top-4 bottom-[-24px] w-[2px] bg-slate-800 pointer-events-none group-hover:bg-slate-700 transition-colors" />
+              )}
+              
+              {/* Timeline Dot/Icon */}
+              <div className={`absolute left-0 top-1 w-4 h-4 rounded-full border bg-slate-950 z-10 flex items-center justify-center transition-all group-hover:scale-110 ${config.color}`}>
+                <config.icon className="h-2 w-2" />
+              </div>
 
-            <div className="flex items-center justify-between relative z-10 pt-2 border-t border-border/30 mt-auto pl-2">
-              <Badge variant="outline" className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 border shadow-sm ${categoryStyles[h.category]}`}>
-                {h.category}
-              </Badge>
-              <div className="flex items-center gap-1.5 opacity-80 group-hover:opacity-100 transition-opacity">
-                <span className="w-1 h-1 rounded-full bg-muted-foreground/40"></span>
-                <span className="text-[9px] font-mono font-bold text-muted-foreground uppercase tracking-widest">Wk {h.week}</span>
+              <div className="space-y-1">
+                <div className="flex items-center justify-between">
+                   <span className="text-[9px] font-mono font-black text-slate-500 uppercase">Week {item.week}</span>
+                   {item.impact && (
+                     <span className="text-[9px] font-black text-emerald-400 tracking-tighter">{item.impact}</span>
+                   )}
+                </div>
+                <h4 className="text-xs font-bold text-slate-100 group-hover:text-blue-400 transition-colors leading-tight">{item.headline}</h4>
+                <p className="text-[10px] text-slate-400 leading-relaxed font-medium line-clamp-2 group-hover:line-clamp-none transition-all duration-300">{item.description}</p>
               </div>
             </div>
-          </div>
-        ))}
-        {headlines.length === 0 && (
-          <div className="py-12 text-center opacity-70">
-            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground border border-dashed border-border/40 inline-block px-4 py-2 rounded-lg bg-muted/5">No breaking news</p>
+          );
+        })}
+
+        {filteredHistory.length === 0 && (
+          <div className="h-full flex flex-col items-center justify-center space-y-3 opacity-30 grayscale py-20">
+            <Search className="h-8 w-8 text-slate-500" />
+            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">No events found</p>
           </div>
         )}
       </div>

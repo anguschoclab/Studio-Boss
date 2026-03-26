@@ -2002,7 +2002,18 @@ export function resolveCrisis(state: GameState, projectId: string, optionIndex: 
       headlines: [
         ...(state.industry.headlines || []),
         { id: `crisis-${crypto.randomUUID()}`, text: `Crisis resolved for "${project.title}": ${option.text}`, week: state.week, category: 'general' as const }
-      ]
+      ],
+      newsHistory: [
+        {
+          id: `ne-${crypto.randomUUID()}`,
+          week: state.week,
+          type: 'CRISIS',
+          headline: `Crisis at ${project.title}`,
+          description: `The production faced a major setback: ${project.activeCrisis.description.slice(0, 100)}... Studio resolved it by: ${option.text}`,
+          impact: option.effectDescription
+        },
+        ...(state.industry.newsHistory || [])
+      ].slice(0, 100)
     }
   } as GameState;
 }

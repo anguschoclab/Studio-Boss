@@ -18,6 +18,7 @@ export interface GameStore extends ProjectSlice, FinanceSlice, TalentSlice, Riva
   loadFromSlot: (slot: number) => boolean;
   getSaveSlots: () => SaveSlotInfo[];
   clearGame: () => void;
+  logNewsEvent: (event: Omit<import('@/engine/types').NewsEvent, 'id' | 'week'>) => void;
 }
 
 export const useGameStore = create<GameStore>((set, get, ...args) => ({
@@ -108,4 +109,28 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
     if (state.gameState === null) return state;
     return { gameState: null };
   }),
+
+  logNewsEvent: (event) => {
+    set((s) => {
+      if (!s.gameState) return s;
+      
+      const newEvent = {
+        ...event,
+        id: `ne-${crypto.randomUUID()}`,
+        week: s.gameState.week
+      };
+
+      const history = s.gameState.industry.newsHistory || [];
+      
+      return {
+        gameState: {
+          ...s.gameState,
+          industry: {
+            ...s.gameState.industry,
+            newsHistory: [newEvent, ...history].slice(0, 100) // Keep last 100 events
+          }
+        }
+      };
+    });
+  }
 }));

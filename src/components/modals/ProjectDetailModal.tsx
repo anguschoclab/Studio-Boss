@@ -21,8 +21,18 @@ import {
   TrendingUp, 
   DollarSign, 
   Calendar,
-  AlertCircle
+  AlertCircle,
+  Megaphone
 } from 'lucide-react';
+import { 
+  AreaChart, 
+  Area, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  ResponsiveContainer 
+} from 'recharts';
 
 const MARKETING_ANGLES = [
   { id: 'romance', label: 'Romance & Heart' },
@@ -37,6 +47,7 @@ export const ProjectDetailModal = () => {
   const [marketingBudget, setMarketingBudget] = useState(0);
   const [domesticSplit, setDomesticSplit] = useState(50);
   const [marketingAngle, setMarketingAngle] = useState('spectacle');
+  const [selectedTier, setSelectedTier] = useState<'none' | 'basic' | 'blockbuster'>('none');
 
   const { selectedProjectId, selectProject } = useUIStore();
   const gameState = useGameStore(s => s.gameState);
@@ -44,7 +55,7 @@ export const ProjectDetailModal = () => {
   const renewProject = useGameStore(s => s.renewProject);
   const greenlightProject = useGameStore(s => s.greenlightProject);
   const exploitFranchise = useGameStore(s => s.exploitFranchise);
-  const launchMarketingCampaign = useGameStore(s => s.launchMarketingCampaign);
+  const lockMarketingCampaign = useGameStore(s => s.lockMarketingCampaign);
   const submitToFestival = useGameStore(s => s.submitToFestival);
   const launchAwardsCampaign = useGameStore(s => s.launchAwardsCampaign);
 
@@ -91,6 +102,28 @@ export const ProjectDetailModal = () => {
     return evaluateGreenlight(project, gameState.cash, attachedTalent);
   }, [project, gameState, contracts, talentMap]);
 
+  const projectionData = useMemo(() => {
+    if (!project) return [];
+    
+    let buzz = project.buzz;
+    if (selectedTier === 'basic') buzz += 15;
+    if (selectedTier === 'blockbuster') buzz += 40;
+    buzz = Math.min(100, buzz);
+
+    const baseRevenue = project.budget * (buzz / 50) * 1.5;
+    const data: { week: string, revenue: number }[] = [];
+    let currentWeekly = baseRevenue * 0.35;
+    
+    for (let i = 1; i <= 8; i++) {
+        data.push({
+            week: `Wk ${i}`,
+            revenue: Math.round(currentWeekly / 1000) * 1000
+        });
+        currentWeekly *= 0.65; // Simulated decay
+    }
+    return data;
+  }, [project, selectedTier]);
+
   if (!project || !tier) return null;
 
   return (
@@ -111,10 +144,17 @@ export const ProjectDetailModal = () => {
         </DialogHeader>
 
         <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 bg-slate-900/50 p-1 border border-slate-800">
+          <TabsList className="grid w-full grid-cols-5 bg-slate-900/50 p-1 border border-slate-800">
             <TabsTrigger value="overview" className="data-[state=active]:bg-slate-800 data-[state=active]:text-white uppercase text-[10px] font-black tracking-widest"><BarChart3 className="h-3 w-3 mr-2" /> Intro</TabsTrigger>
             <TabsTrigger value="production" className="data-[state=active]:bg-slate-800 data-[state=active]:text-white uppercase text-[10px] font-black tracking-widest"><Clapperboard className="h-3 w-3 mr-2" /> Build</TabsTrigger>
             <TabsTrigger value="casting" className="data-[state=active]:bg-slate-800 data-[state=active]:text-white uppercase text-[10px] font-black tracking-widest"><Users className="h-3 w-3 mr-2" /> Talent</TabsTrigger>
+            <TabsTrigger 
+              value="marketing" 
+              disabled={project.status === 'development' || project.status === 'production' || project.status === 'needs_greenlight' || project.status === 'pitching'}
+              className="data-[state=active]:bg-slate-800 data-[state=active]:text-white uppercase text-[10px] font-black tracking-widest"
+            >
+              <Megaphone className="h-3 w-3 mr-2" /> Sell
+            </TabsTrigger>
             <TabsTrigger value="campaigns" className="data-[state=active]:bg-slate-800 data-[state=active]:text-white uppercase text-[10px] font-black tracking-widest"><Trophy className="h-3 w-3 mr-2" /> Buzz</TabsTrigger>
           </TabsList>
 
@@ -200,30 +240,104 @@ export const ProjectDetailModal = () => {
               )}
 
               {project.status === 'marketing' && gameState && (
-                <div className="space-y-6 border border-blue-500/20 bg-blue-950/10 p-6 rounded-xl">
-                  <h4 className="font-black text-blue-400 uppercase tracking-widest text-xs">Campaign Strategy</h4>
-                  <div className="space-y-6">
-                    <div className="space-y-3">
-                      <div className="flex justify-between text-xs font-bold uppercase"><span className="text-slate-400">Budget Deployment</span><span className="text-white">{formatMoney(marketingBudget)}</span></div>
-                      <Slider value={[marketingBudget]} min={0} max={project.budget * 2} step={100000} onValueChange={([v]) => setMarketingBudget(v)} />
-                    </div>
-                    <div className="space-y-3">
-                      <div className="flex justify-between text-xs font-bold uppercase"><span className="text-slate-400">Domestic Target</span><span>{domesticSplit}% Dom / {100 - domesticSplit}% Intl</span></div>
-                      <Slider value={[domesticSplit]} min={0} max={100} step={5} onValueChange={([v]) => setDomesticSplit(v)} />
-                    </div>
-                    <div className="space-y-2">
-                       <span className="text-xs font-bold text-slate-400 uppercase">Main Hook</span>
-                       <Select value={marketingAngle} onValueChange={setMarketingAngle}>
-                         <SelectTrigger className="bg-slate-900 border-slate-700 h-10"><SelectValue /></SelectTrigger>
-                         <SelectContent className="bg-slate-900 border-slate-700 text-slate-200">
-                           {MARKETING_ANGLES.map(a => <SelectItem key={a.id} value={a.id}>{a.label}</SelectItem>)}
-                         </SelectContent>
-                       </Select>
-                    </div>
+                <div className="space-y-4">
+                  <div className="bg-blue-900/20 border border-blue-500/30 p-4 rounded-xl">
+                    <p className="text-sm text-blue-200 uppercase font-black tracking-tighter mb-2">Production Wrapped</p>
+                    <p className="text-xs text-slate-400 leading-relaxed">
+                      Your film is in the can. Now you must decide how much to risk on the global release. High spend increases opening buzz but eats deep into your margins.
+                    </p>
                   </div>
-                  <Button className="w-full bg-blue-600 hover:bg-blue-500 font-black uppercase py-6" disabled={marketingBudget > gameState.cash} onClick={() => { launchMarketingCampaign(project.id, marketingBudget, domesticSplit, marketingAngle); selectProject(null); }}>Lock Strategy & Release</Button>
+                  <Button variant="outline" className="w-full border-blue-500/30 text-blue-400" onClick={() => { /* Navigation handled by tabs */ }}>
+                    Continue to Marketing Tab →
+                  </Button>
                 </div>
               )}
+            </TabsContent>
+
+            {/* MARKETING TAB */}
+            <TabsContent value="marketing" className="space-y-6">
+               <div className="grid grid-cols-3 gap-3">
+                 {[
+                   { id: 'none', name: 'Word of Mouth', cost: 0, buzz: 0, desc: 'Hope for the best.' },
+                   { id: 'basic', name: 'Targeted Digital', cost: project.budget * 0.1, buzz: 15, desc: 'Solid social presence.' },
+                   { id: 'blockbuster', name: 'Global Blitz', cost: project.budget * 0.5, buzz: 40, desc: 'Super Bowl ads, billboards.' }
+                 ].map(tier => (
+                   <button
+                     key={tier.id}
+                     disabled={!!project.marketingLevel || (gameState && gameState.cash < tier.cost)}
+                     onClick={() => setSelectedTier(tier.id as any)}
+                     className={`p-3 rounded-xl border text-left transition-all ${
+                       project.marketingLevel === tier.id || selectedTier === tier.id 
+                         ? 'border-blue-500 bg-blue-500/20 shadow-[0_0_15px_rgba(59,130,246,0.3)]' 
+                         : 'border-slate-800 bg-slate-900/40 hover:border-slate-700'
+                     } ${!!project.marketingLevel && project.marketingLevel !== tier.id ? 'opacity-40' : ''}`}
+                   >
+                     <p className="text-[10px] font-black uppercase text-blue-400">{tier.name}</p>
+                     <p className="text-sm font-bold text-white mb-1">{formatMoney(tier.cost)}</p>
+                     <p className="text-[9px] text-slate-400 leading-tight">{tier.desc}</p>
+                     <div className="mt-2 flex items-center justify-between">
+                       <span className="text-[9px] font-black text-emerald-400">+{tier.buzz} BUZZ</span>
+                     </div>
+                   </button>
+                 ))}
+               </div>
+
+               <div className="bg-slate-900/40 border border-slate-800 rounded-xl p-4 h-[200px] relative overflow-hidden">
+                 <div className="absolute top-4 left-4 z-10">
+                   <p className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Projected Weekly Box Office</p>
+                 </div>
+                 <div className="w-full h-full pt-8">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={projectionData}>
+                        <defs>
+                          <linearGradient id="colorRev" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
+                            <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
+                        <XAxis 
+                          dataKey="week" 
+                          axisLine={false} 
+                          tickLine={false} 
+                          tick={{fontSize: 9, fill: '#64748b'}} 
+                        />
+                        <YAxis 
+                          hide 
+                        />
+                        <Tooltip 
+                          contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #1e293b', borderRadius: '8px' }}
+                          itemStyle={{ color: '#3b82f6', fontSize: '10px', fontWeight: 'bold' }}
+                          labelStyle={{ color: '#64748b', fontSize: '9px' }}
+                        />
+                        <Area 
+                          type="monotone" 
+                          dataKey="revenue" 
+                          stroke="#3b82f6" 
+                          fillOpacity={1} 
+                          fill="url(#colorRev)" 
+                          strokeWidth={2}
+                          animationDuration={1500}
+                        />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                 </div>
+               </div>
+
+               {!project.marketingLevel ? (
+                 <Button 
+                   className="w-full bg-blue-600 hover:bg-blue-500 text-white font-black uppercase py-6 shadow-lg shadow-blue-900/20"
+                   disabled={!selectedTier || (gameState && gameState.cash < (selectedTier === 'basic' ? project.budget * 0.1 : selectedTier === 'blockbuster' ? project.budget * 0.5 : 0))}
+                   onClick={() => lockMarketingCampaign(project.id, selectedTier)}
+                 >
+                   Lock Campaign & Commit Capital
+                 </Button>
+               ) : (
+                 <div className="p-4 bg-slate-900/80 border border-slate-700 rounded-xl flex items-center justify-center gap-3">
+                    <Megaphone className="h-5 w-5 text-blue-400" />
+                    <span className="text-xs font-black uppercase text-slate-300">Campaign Finalized: {project.marketingLevel} Strategy</span>
+                 </div>
+               )}
             </TabsContent>
 
             {/* CASTING TAB */}

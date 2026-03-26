@@ -56,9 +56,32 @@ export const WeekSummaryModal = () => {
               <Separator />
               <div className="space-y-2">
                 <h4 className="text-[10px] font-display uppercase tracking-widest text-secondary font-black">🎬 Project Updates</h4>
-                {projectUpdates.map((u: string, i: number) => (
-                  <p key={i} className="text-sm text-foreground">• {u}</p>
-                ))}
+                {projectUpdates.map((u: string, i: number) => {
+                  const hasPositiveTrend = u.includes('(+');
+                  const hasNegativeTrend = u.includes('(-');
+                  
+                  if (hasPositiveTrend) {
+                    const parts = u.split('(+');
+                    return (
+                      <p key={i} className="text-sm text-foreground">
+                        • {parts[0]}
+                        <span className="text-emerald-400 font-bold">(+{parts[1]}</span>
+                      </p>
+                    );
+                  }
+                  
+                  if (hasNegativeTrend) {
+                    const parts = u.split('(-');
+                    return (
+                      <p key={i} className="text-sm text-foreground">
+                        • {parts[0]}
+                        <span className="text-destructive font-bold">(-{parts[1]}</span>
+                      </p>
+                    );
+                  }
+
+                  return <p key={i} className="text-sm text-foreground">• {u}</p>;
+                })}
               </div>
             </>
           )}

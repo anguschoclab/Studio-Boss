@@ -75,17 +75,45 @@ export function updateRival(rival: RivalStudio, state?: GameState): RivalStudio 
 
 export interface RivalAdvanceResult {
   updatedRivals: RivalStudio[];
+  newsEvents: Omit<import('../types').NewsEvent, 'id' | 'week'>[];
 }
 
 export function advanceRivals(
   state: GameState
 ): RivalAdvanceResult {
   const updatedRivals: RivalStudio[] = [];
+  const newsEvents: Omit<import('../types').NewsEvent, 'id' | 'week'>[] = [];
+  
   for (let i = 0; i < state.industry.rivals.length; i++) {
-    updatedRivals.push(updateRival(state.industry.rivals[i], state));
+    const r = updateRival(state.industry.rivals[i], state);
+    updatedRivals.push(r);
+    
+    // Log major rival events
+    if (r.isAcquirable && !state.industry.rivals[i].isAcquirable) {
+      newsEvents.push({
+        type: 'RIVAL',
+        headline: `${r.name} Vulnerable to Takeover!`,
+        description: `${r.name} has hit a critical cash shortage. Strategy: ${r.recentActivity}`,
+        impact: 'Available for acquisition'
+      });
+    }
+  }
+
+  // Talent Poaching News
+  for (const rival of state.industry.rivals) {
+     const poakMsg = rivalPoachTalent(rival, state.industry.talentPool);
+     if (poakMsg) {
+       newsEvents.push({
+         type: 'RIVAL',
+         headline: `Talent Poached by ${rival.name}`,
+         description: poakMsg,
+         impact: 'Pool updated'
+       });
+     }
   }
 
   return {
     updatedRivals,
+    newsEvents
   };
 }

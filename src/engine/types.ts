@@ -239,6 +239,19 @@ export interface Award {
   year: number;
 }
 
+// --- News & Events (Sprint 2) ---
+
+export type NewsEventType = 'CRISIS' | 'AWARD' | 'RELEASE' | 'STUDIO_EVENT' | 'RIVAL';
+
+export interface NewsEvent {
+  id: string;
+  week: number;
+  type: NewsEventType;
+  headline: string;
+  description: string;
+  impact?: string;
+}
+
 // --- Crisis ---
 
 export interface CrisisOption {
@@ -297,6 +310,7 @@ export interface Project {
   boxOfficeRank?: number;
   // Marketing fields
   marketingBudget?: number;
+  marketingLevel?: 'none' | 'basic' | 'blockbuster';
   marketingDomesticSplit?: number;
   marketingAngle?: string;
   // IP Rights (Sprint E)
@@ -357,6 +371,7 @@ export interface WeekSummary {
   projectUpdates: string[];
   newHeadlines: Headline[];
   events: string[];
+  newsEvents?: NewsEvent[];
 }
 
 // --- Discovery ---
@@ -586,6 +601,7 @@ export interface GameState {
     festivalSubmissions?: FestivalSubmission[];
     rumors?: Rumor[];
     scandals?: Scandal[];
+    newsHistory: NewsEvent[];
   };
 }
 
