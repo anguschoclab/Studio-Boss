@@ -16,19 +16,19 @@ export const TARGET_AUDIENCES = [
 ] as const;
 
 export const CROSSOVER_AFFINITY: Record<string, string[]> = {
-  'Superhero': ['Action', 'Sci-Fi', 'Fantasy', 'Comedy'],
-  'Action': ['Sci-Fi', 'Thriller', 'Crime', 'Superhero'],
-  'Sci-Fi': ['Action', 'Horror', 'Fantasy', 'Animation'],
-  'Horror': ['Sci-Fi', 'Thriller', 'Comedy'],
-  'Fantasy': ['Action', 'Romance', 'Animation'],
-  'Comedy': ['Romance', 'Action', 'Animation', 'Superhero'],
-  'Crime': ['Thriller', 'Drama', 'Action'],
-  'Thriller': ['Horror', 'Crime', 'Sci-Fi'],
-  'Romance': ['Comedy', 'Drama', 'Musical'],
-  'Animation': ['Comedy', 'Family', 'Musical', 'Fantasy', 'Sci-Fi'],
-  'Drama': ['Romance', 'Crime', 'Thriller'],
-  'Musical': ['Romance', 'Comedy', 'Animation'],
-  'Documentary': [] // Rarely crosses over
+  'Superhero': ['Action', 'Sci-Fi', 'Fantasy', 'Comedy', 'Animation'],
+  'Action': ['Sci-Fi', 'Thriller', 'Crime', 'Superhero', 'Comedy'],
+  'Sci-Fi': ['Action', 'Horror', 'Fantasy', 'Animation', 'Thriller'],
+  'Horror': ['Sci-Fi', 'Thriller', 'Comedy', 'Fantasy'],
+  'Fantasy': ['Action', 'Romance', 'Animation', 'Sci-Fi'],
+  'Comedy': ['Romance', 'Action', 'Animation', 'Superhero', 'Musical'],
+  'Crime': ['Thriller', 'Drama', 'Action', 'Horror'],
+  'Thriller': ['Horror', 'Crime', 'Sci-Fi', 'Drama', 'Action'],
+  'Romance': ['Comedy', 'Drama', 'Musical', 'Fantasy'],
+  'Animation': ['Comedy', 'Family', 'Musical', 'Fantasy', 'Sci-Fi', 'Superhero'],
+  'Drama': ['Romance', 'Crime', 'Thriller', 'Documentary'],
+  'Musical': ['Romance', 'Comedy', 'Animation', 'Drama'],
+  'Documentary': ['Drama', 'Crime'] // Sometimes true crime or dramatic docs
 };
 
 export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
@@ -37,8 +37,8 @@ export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
   'Sci-Fi': 0.30,      // High risk for sci-fi blockbusters
   'Fantasy': 0.25,     // Moderate risk
   'Horror': 0.15,      // Low risk, very resilient
-  'Animation': 0.10,   // Low risk, kids watch them repeatedly
-  'Comedy': 0.20,      // Moderate risk, jokes get stale
+  'Animation': 0.15,   // Low risk, kids watch them repeatedly, but can grow stale if overused
+  'Comedy': 0.25,      // Moderate risk, jokes get stale faster in modern era
   'Drama': 0.05,       // Very low risk, rarely franchised heavily
   'Thriller': 0.15,    // Low risk
   'Romance': 0.10,     // Low risk

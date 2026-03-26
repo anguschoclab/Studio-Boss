@@ -89,7 +89,7 @@ describe("franchise system", () => {
       }));
       const state = { studio: { internal: { projects: [flopProject, ...relatedProjects] } } } as unknown as GameState;
 
-      vi.spyOn(Math, 'random').mockReturnValue(0.9); // Fail reboot chance
+      vi.spyOn(Math, 'random').mockReturnValue(0.96); // Fail all reboot/format flip chances (max is 0.95 for animated series flip)
       const result = exploitIP(flopProject, state);
       expect(result).toBeNull();
     });

@@ -110,6 +110,8 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
   // If the genre is heavily saturated, amplify the risk severely.
   if ((sourceProject.genre === 'Superhero' || sourceProject.genre === 'Action' || sourceProject.genre === 'Sci-Fi') && genreSaturationCount > 5) {
       baseFatigueRisk *= 1.5; // Steep fatigue curve
+  } else if ((sourceProject.genre === 'Horror' || sourceProject.genre === 'Comedy' || sourceProject.genre === 'Fantasy') && genreSaturationCount > 8) {
+      baseFatigueRisk *= 1.3; // Noticeable fatigue for these genres when heavily saturated
   }
 
   const exponentialSaturation = Math.pow(relatedProjectCount, 1.2); // Exponential decay for heavily saturated franchises
@@ -189,6 +191,48 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
               initialBuzzBonus: 12 - (saturationPenalty / 3),
             };
         }
+    } else if (universeProjectCount >= 10 && rand >= 0.6 && rand < 0.75) {
+      // Cinematic Universe Phase Reset
+      return {
+        title: `${sourceProject.title}: A New Era`,
+        format: sourceProject.format,
+        genre: sourceProject.genre,
+        budgetTier: 'blockbuster',
+        targetAudience: 'General Audience',
+        flavor: `A massive, universe-resetting event designed to clear out bloated continuity and start fresh for a new era of ${sourceProject.title}.`,
+        parentProjectId: sourceProject.id,
+        isSpinoff: true,
+        initialBuzzBonus: 15 - (saturationPenalty / 4), // Good buzz for a fresh start, but some fatigue remains
+      };
+    } else if (sourceProject.genre === 'Animation' && rand >= 0.75 && rand < 0.85) {
+      // Live-Action Remake
+      return {
+        title: `${sourceProject.title}: Live-Action Event`,
+        format: 'film',
+        genre: 'Fantasy',
+        budgetTier: 'blockbuster',
+        targetAudience: 'Family',
+        flavor: `A soulless but highly profitable live-action remake of the beloved animated classic ${sourceProject.title}.`,
+        parentProjectId: sourceProject.id,
+        isSpinoff: true,
+        initialBuzzBonus: 10 - (saturationPenalty / 3),
+      };
+    } else if (sourceProject.format === 'film' && rand >= 0.85 && rand < 0.95) {
+      // The Animated Series format flip
+      return {
+        title: `${sourceProject.title}: The Animated Series`,
+        format: 'tv',
+        tvFormat: 'standard_drama',
+        episodes: 13,
+        releaseModel: 'weekly',
+        genre: 'Animation',
+        budgetTier: 'mid',
+        targetAudience: 'Genre Fans',
+        flavor: `An animated continuation of the film franchise, aiming to keep the brand alive for a dedicated audience.`,
+        parentProjectId: sourceProject.id,
+        isSpinoff: true,
+        initialBuzzBonus: 5,
+      };
     }
     return null; // Otherwise, the IP is dead for now
   }
@@ -197,6 +241,24 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
   let flavorText: string;
   let buzzBonus = 15 - saturationPenalty;
   let newBudgetTier = sourceProject.budgetTier;
+
+  if (!isFatigued && rand < 0.05) {
+    // Holiday Special Gimmick
+    return {
+      title: `${sourceProject.title}: The Holiday Special`,
+      format: sourceProject.format === 'film' ? 'tv' : sourceProject.format,
+      tvFormat: sourceProject.format === 'film' ? 'limited_series' : sourceProject.tvFormat,
+      episodes: 1,
+      releaseModel: 'binge',
+      genre: 'Comedy',
+      budgetTier: 'low',
+      targetAudience: 'Family',
+      flavor: `A bizarre, non-canon holiday special featuring the cast of ${sourceProject.title} in increasingly awkward festive situations.`,
+      parentProjectId: sourceProject.id,
+      isSpinoff: true,
+      initialBuzzBonus: -5, // Often reviled by fans
+    };
+  }
 
   if (atRiskOfLosingRights && rand < 0.5 && !isFatigued) {
     // IP Rights Retention Rush Job
