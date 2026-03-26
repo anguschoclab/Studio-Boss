@@ -9,6 +9,7 @@ const categoryStyles: Record<HeadlineCategory, string> = {
   awards: 'border-amber-500/30 bg-amber-500/10 text-amber-500',
   general: 'border-muted-foreground/30 bg-muted/50 text-muted-foreground',
   rumor: 'border-purple-500/30 bg-purple-500/10 text-purple-500',
+  razzies: 'border-pink-500/30 bg-pink-500/10 text-pink-500',
 };
 
 export const NewsFeed = () => {

@@ -95,6 +95,12 @@ export function calculateWeeklyCosts(projects: Project[], activeEvents: MarketEv
 }
 
 // ⚡ Bolt: Replaced chained .reduce passes with single for-loops to eliminate intermediate closures in hot loops
+
+function applyIronicViewingMultiplier(baseRevenue: number): number {
+  // Cult classics flatten out and earn a steady ironic viewing revenue stream, preventing it from dropping off to 0
+  return Math.max(baseRevenue * 1.5, 100000); // Guarantees at least $100k weekly or 1.5x of whatever the base is
+}
+
 export function calculateWeeklyRevenue(projects: Project[], contracts: Contract[] = [], activeEvents: MarketEvent[] = []): number {
   let eventMult = 1.0;
   for (let i = 0; i < activeEvents.length; i++) {
@@ -132,7 +138,11 @@ export function calculateWeeklyRevenue(projects: Project[], contracts: Contract[
       }
 
       const backendCut = revenue * ((totalBackendPercent * backendMultiplier) / 100);
-      sum += ((revenue - backendCut) * eventMult);
+      let netRevenue = (revenue - backendCut);
+      if (p.isCultClassic) {
+         netRevenue = applyIronicViewingMultiplier(netRevenue);
+      }
+      sum += (netRevenue * eventMult);
     }
   }
   return sum;

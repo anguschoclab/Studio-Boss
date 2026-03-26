@@ -1,6 +1,13 @@
-import { Agency, Agent, AgencyTier, AgencyCulture, AgentSpecialty, AgencyArchetype } from '../types';
-import { pick, randRange } from '../utils';
+import re
 
+with open('src/engine/generators/agencies.ts', 'r') as f:
+    content = f.read()
+
+# I can see that actualName is assigned like `const actualName = name || 'Agency ${i}';` from the original code which I didn't completely overwrite!
+# The `generateAgencies` looks like it still has the original code where it picks from `AGENCY_NAMES`.
+# My earlier sed/replacement probably failed to match properly. I will rewrite `generateAgencies` entirely using string matching to be safe.
+
+new_gen = """
 const POWERHOUSE_PREFIXES = ['United Global', 'Apex', 'Titan', 'Creative Artists', 'William Morrison'];
 const BOUTIQUE_PREFIXES = ['Silver Lake', 'Artisan', 'Lighthouse', 'Indie', 'Auteur'];
 const SHARK_PREFIXES = ['Viper', 'Goldstein &', 'Predator', 'Ironclad', 'Cutthroat'];
@@ -65,41 +72,9 @@ export function generateAgencies(count: number): Agency[] {
 
   return agencies;
 }
+"""
 
+content = re.sub(r"const AGENCY_NAMES = \[[\s\S]*?export function generateAgencies\(count: number\): Agency\[\] \{[\s\S]*?  return agencies;\n\}", new_gen.strip(), content)
 
-const AGENT_FIRST_NAMES = ['Ari', 'Bryan', 'Maha', 'Jeremy', 'Richard', 'Sue', 'Ali', 'Kevin', 'Aaron', 'Emma', 'David', 'Laura'];
-const AGENT_LAST_NAMES = ['Gold', 'Lourd', 'Dakhil', 'Zimmer', 'Lovett', 'Mengers', 'Emanuel', 'Huvane', 'Sorkin', 'Stone', 'Smith', 'Jones'];
-
-export function generateAgents(agencies: Agency[], countPerAgency: number): Agent[] {
-
-  const agents: Agent[] = [];
-
-  for (const agency of agencies) {
-    const agentCount = agency.tier === 'powerhouse' ? countPerAgency * 2 : (agency.tier === 'boutique' ? Math.max(1, Math.floor(countPerAgency / 2)) : countPerAgency);
-
-    for (let i = 0; i < agentCount; i++) {
-      const firstName = pick(AGENT_FIRST_NAMES);
-      const lastName = pick(AGENT_LAST_NAMES);
-      let specialty: AgentSpecialty = pick(['film_packaging', 'tv_packaging', 'literary', 'talent', 'comedy', 'unscripted']);
-
-      // Override specialty based on agency traits
-      if (agency.traits?.includes('Only represents comedy writers')) {
-        specialty = 'comedy';
-      }
-      if (agency.traits?.includes('Only represents showrunners')) {
-        specialty = 'tv_packaging';
-      }
-
-      agents.push({
-        id: `agent-${crypto.randomUUID()}`,
-        agencyId: agency.id,
-        name: `${firstName} ${lastName}`,
-        specialty,
-        prestige: Math.floor(randRange(agency.prestige - 20, agency.prestige + 20)),
-        leverage: agency.culture === 'shark' ? Math.floor(randRange(70, 100)) : Math.floor(randRange(30, 80))
-      });
-    }
-  }
-
-  return agents;
-}
+with open('src/engine/generators/agencies.ts', 'w') as f:
+    f.write(content)

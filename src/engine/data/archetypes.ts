@@ -1,4 +1,4 @@
-import { ArchetypeKey } from '../types';
+import { ArchetypeKey, AgencyArchetype } from '../types';
 
 export interface ArchetypeData {
   key: ArchetypeKey;
@@ -34,4 +34,29 @@ export const ARCHETYPES: Record<ArchetypeKey, ArchetypeData> = {
     startingCash: 30_000_000,
     startingPrestige: 70,
   },
+};
+
+
+export interface AgencyArchetypeData {
+  key: AgencyArchetype;
+  name: string;
+  description: string;
+}
+
+export const AGENCY_ARCHETYPES: Record<AgencyArchetype, AgencyArchetypeData> = {
+  powerhouse: {
+    key: 'powerhouse',
+    name: 'Powerhouse',
+    description: 'Identity: The Powerhouse — Controls the biggest stars and demands package deals. Will flat out refuse to work with indie studios or unproven directors.'
+  },
+  boutique: {
+    key: 'boutique',
+    name: 'Boutique',
+    description: 'Identity: The Boutique — Highly specialized, prioritizing artistic integrity and auteur directors over massive paydays.'
+  },
+  shark: {
+    key: 'shark',
+    name: 'Shark',
+    description: 'Identity: The Shark — Will ruthlessly negotiate for backend points, poach talent from rivals, and protect their clients from PR crises.'
+  }
 };

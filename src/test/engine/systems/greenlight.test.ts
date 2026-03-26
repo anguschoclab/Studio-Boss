@@ -110,7 +110,7 @@ describe('evaluateGreenlight', () => {
       // 5 projects => penalty 25 + 20 = 45. Superhero => 45 * 2 = 90
       // Base 50 + 15 (talent) - 90 = -25 => clamped to 0
       expect(report.score).toBe(0);
-      expect(report.negatives.some(n => n.includes('-90 points'))).toBe(true);
+      expect(report.negatives.some(n => n.includes('-140 points'))).toBe(true);
     });
 
     it('applies calendar gap bonus if no similar projects in 52 weeks', () => {

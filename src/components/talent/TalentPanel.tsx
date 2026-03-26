@@ -2,6 +2,8 @@ import { useState, useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { formatMoney } from '@/engine/utils';
 import { Badge } from '@/components/ui/badge';
+import { HoverCard, HoverCardTrigger, HoverCardContent } from '@/components/ui/hover-card';
+import { AGENCY_ARCHETYPES } from '@/engine/data/archetypes';
 import { TalentProfile } from '@/engine/types';
 
 export const TalentPanel = () => {
@@ -42,19 +44,51 @@ export const TalentPanel = () => {
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
             <div className="flex items-start justify-between gap-2 relative z-10">
-              <div className="flex flex-col gap-1">
-                <h4 className="font-display font-bold text-[15px] text-foreground leading-tight group-hover:text-primary transition-colors drop-shadow-sm">{talent.name}</h4>
+<div className="flex flex-col gap-1">
+                <div className="flex items-center gap-2">
+                  <h4 className="font-display font-bold text-[15px] text-foreground leading-tight group-hover:text-primary transition-colors drop-shadow-sm">{talent.name}</h4>
+                  {talent.hasRazzie && (
+                    <Badge variant="destructive" className="text-[8px] px-1 py-0 h-4 bg-pink-500/20 text-pink-500 border-pink-500/30">RAZZIE WINNER</Badge>
+                  )}
+                </div>
                 <div className="flex flex-wrap gap-1.5">
                   {talent.accessLevel !== 'outsider' && talent.accessLevel !== 'soft-access' && (
                     <span className="text-[9px] font-black tracking-widest text-secondary uppercase drop-shadow-[0_0_2px_rgba(255,161,22,0.4)]">
                       {talent.accessLevel}
                     </span>
                   )}
-                  {talent.agencyId && (
-                    <span className="text-[9px] font-bold tracking-widest text-muted-foreground/80 uppercase bg-background/50 backdrop-blur-sm px-1.5 py-0.5 rounded border border-border/40 shadow-sm group-hover:border-primary/20 transition-colors">
-                      {agencyMap.get(talent.agencyId)?.name}
-                    </span>
-                  )}
+{talent.agencyId && (() => {
+                    const agency = agencyMap.get(talent.agencyId);
+                    if (!agency) return null;
+                    const archetype = agency.archetype ? AGENCY_ARCHETYPES[agency.archetype] : null;
+                    return (
+                      <HoverCard>
+                        <HoverCardTrigger asChild>
+                          <span className="text-[9px] font-bold tracking-widest text-muted-foreground/80 uppercase bg-background/50 backdrop-blur-sm px-1.5 py-0.5 rounded border border-border/40 shadow-sm group-hover:border-primary/20 transition-colors cursor-help">
+                            {agency.name}
+                          </span>
+                        </HoverCardTrigger>
+                        {archetype && (
+                          <HoverCardContent className="w-80 z-50">
+                            <div className="space-y-1">
+                              <h4 className="text-sm font-semibold">{archetype.name} Agency</h4>
+                              <p className="text-sm text-muted-foreground">
+                                {archetype.description}
+                              </p>
+                              {agency.traits && agency.traits.length > 0 && (
+                                <div className="mt-2 text-xs">
+                                  <strong>Traits:</strong>
+                                  <ul className="list-disc pl-4 mt-1">
+                                    {agency.traits.map((t, i) => <li key={i}>{t}</li>)}
+                                  </ul>
+                                </div>
+                              )}
+                            </div>
+                          </HoverCardContent>
+                        )}
+                      </HoverCard>
+                    );
+                  })()}
                 </div>
               </div>
               <Badge variant="outline" className="text-[9px] font-black tracking-widest uppercase shrink-0 bg-background/80 backdrop-blur-md border-border/50 text-foreground/80 group-hover:border-primary/30 transition-colors shadow-sm">
