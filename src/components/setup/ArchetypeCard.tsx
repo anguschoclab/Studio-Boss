@@ -19,28 +19,42 @@ export const ArchetypeCard = ({ arch, selected, onSelect }: ArchetypeCardProps) 
     <button
       key={arch.key}
       onClick={() => onSelect(arch.key)}
-      className={`relative p-6 rounded-lg border-2 text-left transition-all duration-200 ${
+      className={`relative p-6 rounded-xl border-2 text-left transition-all duration-300 group overflow-hidden ${
         selected
-          ? 'border-primary bg-primary/10 shadow-lg shadow-primary/10'
-          : 'border-border bg-card hover:border-muted-foreground/30 hover:bg-accent/50'
+          ? 'border-primary bg-primary/10 shadow-[0_0_20px_rgba(234,179,8,0.2)] scale-[1.02]'
+          : 'border-border/50 bg-card/40 backdrop-blur-md hover:border-primary/50 hover:shadow-xl hover:-translate-y-1'
       }`}
     >
-      <div className="space-y-3">
-        <div className="flex items-center gap-3">
-          <span className="text-3xl">{archetypeIcons[arch.key]}</span>
-          <div>
-            <h3 className="font-display font-bold text-lg text-foreground">{arch.name}</h3>
-            <p className="text-xs text-primary font-medium tracking-wider uppercase">{arch.tagline}</p>
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+      <div className="space-y-4 relative z-10">
+        <div className="flex items-start gap-4">
+          <div className={`p-3 rounded-xl flex items-center justify-center shrink-0 transition-colors duration-300 ${selected ? 'bg-primary/20 text-primary shadow-[0_0_10px_rgba(234,179,8,0.3)]' : 'bg-muted/50 group-hover:bg-primary/10'}`}>
+             <span className="text-3xl drop-shadow-sm">{archetypeIcons[arch.key]}</span>
+          </div>
+          <div className="flex-1 min-w-0 pt-1">
+            <h3 className="font-display font-black text-xl text-foreground tracking-tight group-hover:text-primary transition-colors drop-shadow-sm">{arch.name}</h3>
+            <p className="text-[10px] text-primary font-bold tracking-widest uppercase mt-0.5">{arch.tagline}</p>
           </div>
         </div>
-        <p className="text-sm text-muted-foreground leading-relaxed">{arch.description}</p>
-        <div className="pt-2 border-t border-border flex justify-between text-xs text-muted-foreground">
-          <span>Cash: <span className="text-primary font-semibold">{formatMoney(arch.startingCash)}</span></span>
-          <span>Prestige: <span className="text-secondary font-semibold">{arch.startingPrestige}</span></span>
+        <p className="text-[13px] text-muted-foreground leading-relaxed group-hover:text-foreground/80 transition-colors">{arch.description}</p>
+        <div className="pt-4 border-t border-border/40 flex justify-between items-center text-xs text-muted-foreground">
+          <div className="flex flex-col">
+            <span className="text-[9px] uppercase tracking-widest font-bold">Starting Cash</span>
+            <span className="text-primary font-bold text-sm drop-shadow-sm">{formatMoney(arch.startingCash)}</span>
+          </div>
+          <div className="w-px h-6 bg-border/40" />
+          <div className="flex flex-col text-right">
+             <span className="text-[9px] uppercase tracking-widest font-bold">Prestige</span>
+             <span className="text-secondary font-bold text-sm drop-shadow-sm">{arch.startingPrestige}</span>
+          </div>
         </div>
       </div>
       {selected && (
-        <div className="absolute top-3 right-3 w-3 h-3 rounded-full bg-primary" />
+        <div className="absolute top-4 right-4 flex items-center justify-center">
+            <div className="absolute w-4 h-4 rounded-full bg-primary/40 animate-ping" />
+            <div className="w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_8px_rgba(234,179,8,0.8)] relative z-10" />
+        </div>
       )}
     </button>
   );
