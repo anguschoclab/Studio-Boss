@@ -1,12 +1,11 @@
-import { GameState, Project, Headline } from '../types';
-import { updateCultureFromProject } from './culture';
+import re
 
-export interface ProductionTransitionResult {
-  newState: GameState;
-  headline?: Headline;
-}
+with open('src/engine/systems/productionEngine.ts', 'r') as f:
+    content = f.read()
 
+# I apparently didn't actually add the calculateChemistry function successfully, or it was overwritten. Let's add it.
 
+chemistry_code = """
 export function calculateChemistry(project: Project, attachedTalent: TalentProfile[]): number {
   if (attachedTalent.length === 0) return 50;
 
@@ -70,62 +69,12 @@ export function calculateChemistry(project: Project, attachedTalent: TalentProfi
 
   return Math.max(1, Math.min(100, Math.round(baseChemistry)));
 }
+"""
 
-export const ProductionEngine = {
-  /**
-   * Transitions a project to the production phase.
-   */
-  transitionToProduction(
-    state: GameState,
-    projectId: string,
-    headlineText: string,
-    extraProjectUpdates: Partial<Project> = {}
-  ): ProductionTransitionResult {
-    const projectIndex = state.studio.internal.projects.findIndex(p => p.id === projectId);
-    if (projectIndex === -1) return { newState: state };
+if 'calculateChemistry' not in content:
+    content = content.replace("export const ProductionEngine = {", chemistry_code + "\nexport const ProductionEngine = {")
+    if 'TalentProfile' not in content:
+        content = content.replace("import { GameState, Project, Headline } from '../types';", "import { GameState, Project, Headline, TalentProfile } from '../types';")
 
-    const project = state.studio.internal.projects[projectIndex];
-    const updatedProjects = [...state.studio.internal.projects];
-    updatedProjects[projectIndex] = {
-      ...project,
-      status: 'production',
-      weeksInPhase: 0,
-      ...extraProjectUpdates
-    };
-
-    const newCulture = state.studio.culture ? updateCultureFromProject(state.studio.culture, project) : undefined;
-    const headline: Headline = {
-      id: `ph-${crypto.randomUUID()}`,
-      text: headlineText,
-      week: state.week,
-      category: 'market' as const
-    };
-
-    const newState: GameState = {
-      ...state,
-      studio: {
-        ...state.studio,
-        culture: newCulture,
-        internal: {
-          ...state.studio.internal,
-          projects: updatedProjects
-        }
-      },
-      industry: {
-        ...state.industry,
-        headlines: [headline, ...state.industry.headlines].slice(0, 50)
-      }
-    };
-
-    return { newState, headline };
-  },
-
-  /**
-   * Handles weekly budget burns and production specific logic.
-   * (Currently many of these are in projects.ts, but can be moved here if they become more complex)
-   */
-  processProductionTick(project: Project): Project {
-    // Placeholder for future complex production logic (e.g. daily rushes, reshoots)
-    return project;
-  }
-};
+with open('src/engine/systems/productionEngine.ts', 'w') as f:
+    f.write(content)
