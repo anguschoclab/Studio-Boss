@@ -52,7 +52,7 @@ const initializeWeeklyChanges = (): WeeklyChanges => ({
 const processProjectPhase = (
   state: GameState,
   weeklyChanges: WeeklyChanges
-): { state: GameState; weeklyChanges: WeeklyChanges } => {
+): GameState => {
   const nextWeek = state.week + 1;
   const contractsByProject = groupContractsByProject(state.studio.internal.contracts);
 
@@ -145,19 +145,16 @@ const processProjectPhase = (
   }
 
   return {
-    state: { 
-      ...state, 
-      studio: { ...state.studio, internal: { ...state.studio.internal, projects: updatedProjects } },
-      industry: { ...state.industry, talentPool: updatedTalentPool }
-    },
-    weeklyChanges,
+    ...state,
+    studio: { ...state.studio, internal: { ...state.studio.internal, projects: updatedProjects } },
+    industry: { ...state.industry, talentPool: updatedTalentPool }
   };
 };
 
 const resolveFinancials = (
   state: GameState,
   weeklyChanges: WeeklyChanges
-): { state: GameState; weeklyChanges: WeeklyChanges } => {
+): GameState => {
   const nextWeek = state.week + 1;
   const costs = calculateWeeklyCosts(state.studio.internal.projects, state.market.activeMarketEvents || []);
   const revenue = calculateWeeklyRevenue(state.studio.internal.projects, state.studio.internal.contracts, state.market.activeMarketEvents || []);
@@ -168,21 +165,21 @@ const resolveFinancials = (
   if (financeHistory.length >= 52) {
       financeHistory = financeHistory.slice(1);
   }
-  financeHistory = [...financeHistory, { week: nextWeek, cash: newCash, revenue, costs }];
+  const newHistory = new Array(financeHistory.length + 1);
+  for(let i=0; i<financeHistory.length; i++) newHistory[i] = financeHistory[i];
+  newHistory[financeHistory.length] = { week: nextWeek, cash: newCash, revenue, costs };
+  financeHistory = newHistory;
 
   weeklyChanges.costs += costs;
   weeklyChanges.revenue += revenue;
 
-  return {
-    state: { ...state, cash: newCash, studio: { ...state.studio, internal: { ...state.studio.internal, financeHistory } } },
-    weeklyChanges,
-  };
+  return { ...state, cash: newCash, studio: { ...state.studio, internal: { ...state.studio.internal, financeHistory } } };
 };
 
 const simulateWorld = (
   state: GameState,
   weeklyChanges: WeeklyChanges
-): { state: GameState; weeklyChanges: WeeklyChanges } => {
+): GameState => {
   const nextWeek = state.week + 1;
 
   // Simulate Rivals
@@ -250,8 +247,22 @@ const simulateWorld = (
     industry: {
       ...state.industry,
       rivals: updatedRivals,
-      awards: [...(state.industry.awards || []), ...newAwards],
-      headlines: [...newHeadlines, ...state.industry.headlines].slice(0, 50),
+      awards: (() => {
+        const oldAwards = state.industry.awards || [];
+        const combined = new Array(oldAwards.length + newAwards.length);
+        for (let i = 0; i < oldAwards.length; i++) combined[i] = oldAwards[i];
+        for (let i = 0; i < newAwards.length; i++) combined[oldAwards.length + i] = newAwards[i];
+        return combined;
+      })(),
+      headlines: (() => {
+        const oldHeadlines = state.industry.headlines || [];
+        const totalLen = Math.min(50, newHeadlines.length + oldHeadlines.length);
+        const combined = new Array(totalLen);
+        let idx = 0;
+        for (let i = 0; i < newHeadlines.length && idx < 50; i++) combined[idx++] = newHeadlines[i];
+        for (let i = 0; i < oldHeadlines.length && idx < 50; i++) combined[idx++] = oldHeadlines[i];
+        return combined;
+      })(),
     }
   };
 
@@ -262,16 +273,17 @@ const simulateWorld = (
   
   const scandalResult = generateScandals(newState);
   if (scandalResult.newScandals.length > 0) {
-     newState.industry.scandals = [...(newState.industry.scandals || []), ...scandalResult.newScandals];
+     const oldScandals = newState.industry.scandals || [];
+     const combinedScandals = new Array(oldScandals.length + scandalResult.newScandals.length);
+     for(let i = 0; i < oldScandals.length; i++) combinedScandals[i] = oldScandals[i];
+     for(let i = 0; i < scandalResult.newScandals.length; i++) combinedScandals[oldScandals.length + i] = scandalResult.newScandals[i];
+     newState.industry.scandals = combinedScandals;
      newHeadlines.push(...scandalResult.headlines);
   }
 
   weeklyChanges.newHeadlines.push(...newHeadlines);
 
-  return {
-    state: newState,
-    weeklyChanges,
-  };
+  return newState;
 };
 
 const finalizeWeek = (
@@ -298,22 +310,16 @@ const finalizeWeek = (
 
 export function advanceWeek(state: GameState): { newState: GameState; summary: WeekSummary } {
   let nextState = { ...state };
-  let weeklyChanges = initializeWeeklyChanges();
+  const weeklyChanges = initializeWeeklyChanges();
 
   // 1. Process Projects (Advancement, Quality, Completion)
-  const afterProjects = processProjectPhase(nextState, weeklyChanges);
-  nextState = afterProjects.state;
-  weeklyChanges = afterProjects.weeklyChanges;
+  nextState = processProjectPhase(nextState, weeklyChanges);
 
   // 2. Resolve Finances (Burn, Revenue, Cash Flow)
-  const afterFinance = resolveFinancials(nextState, weeklyChanges);
-  nextState = afterFinance.state;
-  weeklyChanges = afterFinance.weeklyChanges;
+  nextState = resolveFinancials(nextState, weeklyChanges);
 
   // 3. Simulate World (Rivals, Talent Stat Decay, Agency Refresh)
-  const afterWorld = simulateWorld(nextState, weeklyChanges);
-  nextState = afterWorld.state;
-  weeklyChanges = afterWorld.weeklyChanges;
+  nextState = simulateWorld(nextState, weeklyChanges);
   
   // 4. Rights & Deals (Sprint E)
   const { projects: updatedProjects, messages: ipMessages } = advanceIPRights(nextState.studio.internal.projects, nextState.week + 1);
