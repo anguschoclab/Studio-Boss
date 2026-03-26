@@ -1,4 +1,4 @@
-import { ArchetypeKey, AgencyArchetype } from '../types';
+import { ArchetypeKey, AgencyArchetype } from '../types/index';
 
 export interface ArchetypeData {
   key: ArchetypeKey;

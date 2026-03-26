@@ -1,4 +1,4 @@
-import { TalentProfile, Family, AccessLevel, TalentRole, Agent, Agency } from '../types';
+import { TalentProfile, Family, AccessLevel, TalentRole, Agent, Agency } from '../types/index';
 import { pick, randRange } from '../utils';
 import { LAST_NAMES } from './names';
 

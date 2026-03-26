@@ -1,5 +1,5 @@
 import { pick } from '../utils';
-import { ProjectFormat } from '../types';
+import { ProjectFormat } from '../types/index';
 
 const PREFIXES = [
   // Classic Hollywood & Thematic

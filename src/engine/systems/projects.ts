@@ -1,4 +1,4 @@
-import { Project, Contract, TalentProfile, Award } from '../types';
+import { Project, Contract, TalentProfile, Award } from '../types/index';
 import { BUDGET_TIERS } from '../data/budgetTiers';
 import { TV_FORMATS } from '../data/tvFormats';
 import { UNSCRIPTED_FORMATS } from '../data/unscriptedFormats';
@@ -7,7 +7,7 @@ import { TalentSystem } from './TalentSystem';
 import { generateReviewScore, simulateWeeklyBoxOffice } from './releaseSimulation';
 import { calculateRegionalPenalties } from './ratings';
 import { calculateAudienceIndex } from './demographics';
-import { GameState, WeekSummary, Headline } from '../types';
+import { GameState, WeekSummary, Headline } from '../types/index';
 import { groupContractsByProject } from '../utils';
 import { checkAndTriggerCrisis } from './crises';
 import { calculateBoxOfficeRanks, BoxOfficeEntry } from './releaseSimulation';

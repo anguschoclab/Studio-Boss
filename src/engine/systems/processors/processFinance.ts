@@ -1,4 +1,4 @@
-import { GameState, FinanceRecord } from '../../types';
+import { GameState, FinanceRecord } from '../../types/index';
 import { calculateWeeklyCosts, calculateWeeklyRevenue } from '../finance';
 
 export interface WeeklyChanges {

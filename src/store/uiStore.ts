@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { WeekSummary } from '@/engine/types';
+import { WeekSummary } from '@/engine/types/index';
 
 export type ModalType = 'CRISIS' | 'AWARDS' | 'SUMMARY';
 

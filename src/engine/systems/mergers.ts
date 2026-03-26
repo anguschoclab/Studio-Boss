@@ -1,4 +1,4 @@
-import { GameState, RivalStudio, Project } from '../types';
+import { GameState, RivalStudio, Project } from '../types/index';
 
 export function evaluateAcquisitionTarget(target: RivalStudio, buyerCash: number): { viable: boolean; price: number; reason?: string } {
   // Base valuation on their remaining cash and strength

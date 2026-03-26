@@ -1,4 +1,4 @@
-import { TalentProfile, GameState, Project, FirstLookDeal, Agency } from '../types';
+import { TalentProfile, GameState, Project, FirstLookDeal, Agency } from '../types/index';
 
 export function evaluateFirstLookDeal(talent: TalentProfile, state: GameState): boolean {
   // A simple AI to determine if talent accepts a first-look deal based on studio prestige vs talent prestige

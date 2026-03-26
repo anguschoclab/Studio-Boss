@@ -1,4 +1,4 @@
-import { GameState, MarketEvent, MarketEventType } from '../types';
+import { GameState, MarketEvent, MarketEventType } from '../types/index';
 import { pick, randRange } from '../utils';
 
 const EVENT_TEMPLATES: Omit<MarketEvent, 'id' | 'weeksRemaining'>[] = [

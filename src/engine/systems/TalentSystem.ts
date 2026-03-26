@@ -1,4 +1,4 @@
-import { GameState, TalentProfile, Project, Contract, Award, Opportunity } from '../types';
+import { GameState, TalentProfile, Project, Contract, Award, Opportunity } from '../types/index';
 import { generateOpportunity } from '../generators/opportunities';
 import { clamp } from '../utils';
 import { applyAwardBoostsToTalent } from './talentStats';

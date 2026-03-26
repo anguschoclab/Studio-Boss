@@ -1,4 +1,4 @@
-import { Agency, Agent, AgencyTier, AgencyCulture, AgentSpecialty, AgencyArchetype } from '../types';
+import { Agency, Agent, AgencyTier, AgencyCulture, AgentSpecialty, AgencyArchetype } from '../types/index';
 import { pick, randRange } from '../utils';
 
 const POWERHOUSE_PREFIXES = ['United Global', 'Apex', 'Titan', 'Creative Artists', 'William Morrison'];

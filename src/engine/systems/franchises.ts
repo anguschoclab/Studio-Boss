@@ -1,4 +1,4 @@
-import { Project, GameState } from '../types';
+import { Project, GameState } from '../types/index';
 import { FRANCHISE_FATIGUE_RISK, CROSSOVER_AFFINITY } from '../data/genres';
 
 interface StateCache {

@@ -1,4 +1,4 @@
-import { BudgetTierKey } from '../types';
+import { BudgetTierKey } from '../types/index';
 
 interface BudgetTierData {
   key: BudgetTierKey;

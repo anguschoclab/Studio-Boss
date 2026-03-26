@@ -1,4 +1,4 @@
-import { GameState, Project, FestivalSubmission, AwardBody } from '../types';
+import { GameState, Project, FestivalSubmission, AwardBody } from '../types/index';
 import { randRange } from '../utils';
 
 export const FESTIVALS: { body: AwardBody, name: string, weeks: number[], cost: number, prestigeNeeded: number, buzzReward: number }[] = [

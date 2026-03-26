@@ -1,4 +1,4 @@
-import { Award, TalentProfile } from '../types';
+import { Award, TalentProfile } from '../types/index';
 
 export interface AwardBoosts {
   feeMultiplier: number;

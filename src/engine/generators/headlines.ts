@@ -1,4 +1,4 @@
-import { Headline, RivalStudio, HeadlineCategory } from '../types';
+import { Headline, RivalStudio, HeadlineCategory } from '../types/index';
 import { pick } from '../utils';
 
 const MARKET_HEADLINES = [

@@ -1,4 +1,4 @@
-import { Award, AwardBody, AwardCategory, AwardsProfile, GameState, Project, Headline } from '../types';
+import { Award, AwardBody, AwardCategory, AwardsProfile, GameState, Project, Headline } from '../types/index';
 
 export function generateAwardsProfile(project: Project): AwardsProfile {
   // Base values heavily randomized for now, could be tied to budget, talent, etc.

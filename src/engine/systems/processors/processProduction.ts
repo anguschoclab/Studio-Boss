@@ -1,4 +1,4 @@
-import { GameState, Project } from '../../types';
+import { GameState, Project } from '../../types/index';
 import { groupContractsByProject } from '../../utils';
 import { advanceProject } from '../projects';
 import { checkAndTriggerCrisis } from '../crises';

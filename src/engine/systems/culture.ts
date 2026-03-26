@@ -1,4 +1,4 @@
-import { StudioCulture, ArchetypeKey, Project } from '../types';
+import { StudioCulture, ArchetypeKey, Project } from '../types/index';
 
 export function initializeCulture(archetype: ArchetypeKey): StudioCulture {
   switch (archetype) {

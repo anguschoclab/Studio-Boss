@@ -1,4 +1,4 @@
-import { Project, AudienceQuadrant, DemographicGroup, GameState } from '../types';
+import { Project, AudienceQuadrant, DemographicGroup, GameState } from '../types/index';
 
 /**
  * Evaluates how strongly a project resonates with a specific marketing target audience.

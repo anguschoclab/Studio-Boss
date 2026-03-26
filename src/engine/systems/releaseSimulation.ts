@@ -1,4 +1,4 @@
-import { Project, TalentProfile, ActiveCrisis } from '../types';
+import { Project, TalentProfile, ActiveCrisis } from '../types/index';
 import { randRange, clamp } from '../utils';
 
 export function generateReviewScore(

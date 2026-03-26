@@ -1,4 +1,4 @@
-import { Buyer, MandateType, Project, ProjectContractType } from '../types';
+import { Buyer, MandateType, Project, ProjectContractType } from '../types/index';
 import { pick, randRange } from '../utils';
 
 const MANDATE_TYPES: MandateType[] = [

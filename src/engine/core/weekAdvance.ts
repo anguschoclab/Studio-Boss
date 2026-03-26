@@ -1,4 +1,4 @@
-import { GameState, WeekSummary, Headline, NewsEvent } from '../types';
+import { GameState, WeekSummary, Headline, NewsEvent } from '../types/index';
 import { advanceIPRights } from '../systems/ipRetention';
 import { advanceDeals } from '../systems/deals';
 import { processProduction, WeeklyChanges as ProductionWeeklyChanges } from '../systems/processors/processProduction';

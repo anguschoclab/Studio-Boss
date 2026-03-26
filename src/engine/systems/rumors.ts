@@ -1,4 +1,4 @@
-import { GameState, Rumor } from '../types';
+import { GameState, Rumor } from '../types/index';
 import { pick, randRange } from '../utils';
 
 export function advanceRumors(state: GameState): GameState {

@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { GameState, WeekSummary, ArchetypeKey, NewsEvent } from '@/engine/types';
+import { GameState, WeekSummary, ArchetypeKey, NewsEvent } from '@/engine/types/index';
 import { initializeGame } from '@/engine/core/gameInit';
 import { advanceWeek } from '@/engine/core/weekAdvance';
 import { saveGame, loadGame, getSaveSlots, SaveSlotInfo } from '@/persistence/saveLoad';

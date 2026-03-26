@@ -1,4 +1,4 @@
-import { GenreTrend, GameState } from '../types';
+import { GenreTrend, GameState } from '../types/index';
 
 export const ALL_GENRES = [
   'Action', 'Comedy', 'Drama', 'Horror', 'Sci-Fi', 'Thriller', 'Romance', 'Animation', 'Documentary', 'Fantasy'
