@@ -65,6 +65,7 @@ export const PitchProjectModal = () => {
                   <button
                     key={buyer.id}
                     onClick={() => setSelectedBuyerId(buyer.id)}
+                    aria-pressed={selectedBuyerId === buyer.id}
                     className={`w-full text-left p-3 rounded border transition-colors ${
                       selectedBuyerId === buyer.id
                         ? 'border-primary bg-primary/10'
@@ -92,6 +93,7 @@ export const PitchProjectModal = () => {
             <div className="space-y-2">
               <button
                 onClick={() => setSelectedContract('upfront')}
+                aria-pressed={selectedContract === 'upfront'}
                 className={`w-full text-left p-3 rounded border transition-colors ${
                   selectedContract === 'upfront'
                     ? 'border-primary bg-primary/10'
@@ -106,6 +108,7 @@ export const PitchProjectModal = () => {
 
               <button
                 onClick={() => setSelectedContract('deficit')}
+                aria-pressed={selectedContract === 'deficit'}
                 className={`w-full text-left p-3 rounded border transition-colors ${
                   selectedContract === 'deficit'
                     ? 'border-primary bg-primary/10'

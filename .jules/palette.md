@@ -1,0 +1,3 @@
+## 2025-03-26 - Add aria-pressed to modal selection buttons
+**Learning:** In highly custom modal interfaces like `PitchProjectModal.tsx`, toggleable selection choices (like buyers or deal structures) are often built as `<button>` elements that use CSS classes for visual state. They lack default semantic state indication for screen readers. Using `aria-pressed={condition}` is an excellent, low-risk way to expose mutually exclusive or toggleable selection states without restructuring the HTML to use `role="radio"` and `<fieldset>`/`role="radiogroup"`.
+**Action:** Next time evaluating custom selection UIs made of buttons, check for `aria-pressed` or `aria-selected` and add it based on the React state driving the visual class change.
