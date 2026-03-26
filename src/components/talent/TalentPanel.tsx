@@ -16,49 +16,53 @@ export const TalentPanel = () => {
   }, [talentPool, filter]);
 
   return (
-    <div className="space-y-4 h-full flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-display font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">Talent Roster</h2>
-        <div className="flex gap-2">
+    <div className="space-y-4 h-full flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-500 pb-12">
+      <div className="flex items-center justify-between pb-2 border-b border-border/40">
+        <h2 className="text-2xl font-display font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70 drop-shadow-sm">Talent Roster</h2>
+        <div className="flex gap-2 flex-wrap justify-end">
           {['all', 'actor', 'director', 'writer', 'producer', 'showrunner'].map(type => (
             <button
               key={type}
               onClick={() => setFilter(type)}
-              className={`px-3.5 py-1.5 text-xs font-bold rounded-full transition-all duration-300 ${
+              className={`px-3.5 py-1.5 text-[10px] uppercase tracking-wider font-black rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background ${
                 filter === type
-                  ? 'bg-primary text-primary-foreground shadow-[0_0_10px_rgba(234,179,8,0.4)] scale-105'
-                  : 'bg-muted/50 text-muted-foreground hover:bg-secondary/80 hover:text-secondary-foreground hover:scale-105'
+                  ? 'bg-primary text-primary-foreground shadow-[0_0_15px_rgba(234,179,8,0.4)] scale-105 border border-primary/50'
+                  : 'bg-muted/50 text-muted-foreground hover:bg-secondary/20 hover:text-foreground hover:-translate-y-0.5 border border-transparent hover:border-secondary/30'
               }`}
             >
-              {type.toUpperCase()}
+              {type}
             </button>
           ))}
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 overflow-y-auto pb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 overflow-y-auto pb-6 custom-scrollbar pr-2">
         {filteredTalent.map((talent: TalentProfile) => (
-          <div key={talent.id} className={`p-4 rounded-xl border ${talent.prestige >= 80 ? 'border-primary/60 shadow-[0_0_20px_rgba(234,179,8,0.2)] bg-card/80 bg-gradient-to-br from-primary/5 to-transparent' : 'border-border/50 bg-card/40'} backdrop-blur-md hover:shadow-xl hover:border-primary/50 hover:-translate-y-1 transition-all duration-300 space-y-3.5 group relative overflow-hidden`}>
-            <div className="flex items-start justify-between gap-2">
-              <div className="flex flex-col">
-                <h4 className="font-display font-bold text-sm text-foreground leading-tight group-hover:text-primary transition-colors">{talent.name}</h4>
-                {talent.accessLevel !== 'outsider' && talent.accessLevel !== 'soft-access' && (
-                  <span className="text-[9px] font-black tracking-widest text-secondary uppercase">
-                    {talent.accessLevel}
-                  </span>
-                )}
-                {talent.agencyId && (
-                  <span className="text-[9px] font-bold tracking-widest text-muted-foreground uppercase bg-muted/50 px-1.5 py-0.5 rounded w-fit mt-1">
-                    {agencyMap.get(talent.agencyId)?.name}
-                  </span>
-                )}
+          <div key={talent.id} className={`p-4 rounded-xl border ${talent.prestige >= 80 ? 'border-primary/50 shadow-[0_0_20px_rgba(234,179,8,0.15)] bg-card/80 bg-gradient-to-br from-primary/10 to-transparent' : 'border-border/60 bg-card/60 bg-gradient-to-br from-card/80 to-transparent'} backdrop-blur-md hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:border-primary/50 hover:-translate-y-1 transition-all duration-300 space-y-3.5 group relative overflow-hidden cursor-pointer`}>
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+            <div className="flex items-start justify-between gap-2 relative z-10">
+              <div className="flex flex-col gap-1">
+                <h4 className="font-display font-bold text-[15px] text-foreground leading-tight group-hover:text-primary transition-colors drop-shadow-sm">{talent.name}</h4>
+                <div className="flex flex-wrap gap-1.5">
+                  {talent.accessLevel !== 'outsider' && talent.accessLevel !== 'soft-access' && (
+                    <span className="text-[9px] font-black tracking-widest text-secondary uppercase drop-shadow-[0_0_2px_rgba(255,161,22,0.4)]">
+                      {talent.accessLevel}
+                    </span>
+                  )}
+                  {talent.agencyId && (
+                    <span className="text-[9px] font-bold tracking-widest text-muted-foreground/80 uppercase bg-background/50 backdrop-blur-sm px-1.5 py-0.5 rounded border border-border/40 shadow-sm group-hover:border-primary/20 transition-colors">
+                      {agencyMap.get(talent.agencyId)?.name}
+                    </span>
+                  )}
+                </div>
               </div>
-              <Badge variant="outline" className="text-[10px] shrink-0">
-                {talent.roles.map(r => r.toUpperCase()).join(', ')}
+              <Badge variant="outline" className="text-[9px] font-black tracking-widest uppercase shrink-0 bg-background/80 backdrop-blur-md border-border/50 text-foreground/80 group-hover:border-primary/30 transition-colors shadow-sm">
+                {talent.roles.map(r => r).join(', ')}
               </Badge>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 text-xs pt-2 border-t border-border/40">
+            <div className="grid grid-cols-2 gap-3 text-xs pt-3 border-t border-border/40 relative z-10">
               <div className="space-y-1">
                 <div className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground">Prestige</div>
                 <div className="font-semibold text-primary">{talent.prestige}</div>
