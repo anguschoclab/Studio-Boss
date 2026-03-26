@@ -8,6 +8,7 @@ const PREFIXES = [
   'Celluloid', 'Kinetoscope', 'Marquee', 'Backlot', 'Soundstage', 'Mogul', 'Box Office', 'Popcorn', 'Multiplex', 'Drive-In', 'Matinee', 'Premiere', 'Red Carpet', 'Paparazzi', 'Starlet', 'Montage', 'Jump Cut', 'Fade In', 'Lens Flare', 'Clapperboard', 'Green Screen', 'CGI', 'Showrunner', 'Method', 'Typecast', 'A-List', 'B-Movie', 'Cult Classic', 'Sleeper Hit', 'Flop', 'Bomb', 'Sequel', 'Prequel', 'Spin-off', 'Remake', 'Franchise', 'Trilogy', 'Cinematic Universe', 'Fandom', 'Four Quadrant', 'Demographic', 'IP', 'Oscar Bait', 'Festival Darling', 'Direct-to-Video', 'Streaming Wars', 'Binge', 'Content', 'Monetized', 'Synergistic', 'Vertical', 'Reshoot', 'Director\'s Cut', 'Golden Age', 'New Wave', 'Avant-Garde', 'Dogme', 'Mumblecore', 'Grindhouse', 'Midnight Movie',
   // Scribe Additions
   'Tax-Exempt', 'Algorithm-Approved', 'Deepfake', 'Focus-Tested', 'Sanitized', 'Corporate-Mandated', 'Nepo', 'Vulture', 'Hedge Fund', 'Private Equity', 'Data-Mined', 'A.I. Generated', 'Post-Credit', 'Focus-Grouped', 'Merch-Driven', 'Tax-Writeoff', 'Shell', 'Laundered', 'Overleveraged', 'Boutique', 'Uncancelled', 'Crypto-Funded', 'De-Aged', 'Shelved', 'Straight-to-Streaming', 'Zero-Day', 'Market-Tested', 'Brand-Safe', 'Four-Quadrant', 'Ghostwritten', 'Re-Edited', 'Director-Jailed', 'CGI-Heavy', 'Defamatory', 'Venture-Backed', 'Crowdfunded', 'Cash-Grab', 'Tax-Haven', 'Pivoting', 'Offshore', 'Monopolized'
+, 'Astroturfed', 'Laundered', 'Plagiarized', 'Uncredited', 'Ghost-Directed', 'Off-the-Books', 'Defunct', 'Delisted', 'Over-Hyped', 'Review-Bombed', 'B-Roll', 'Out-of-Touch', 'Subprime', 'Shadow-Banned', 'Engagement-Driven', 'Microtargeted', 'Metrics-Obsessed', 'A/B-Tested', 'Manufactured', 'Soulless', 'Demographic', 'Four-Quadrant', 'Risk-Averse', 'Focus-Grouped', 'Franchise-Ready', 'Market-Researched', 'Algorithmic', 'Sanitized', 'IP-Driven', 'Corporate-Mandated', 'Tax-Haven', 'Subsidized', 'Leveraged', 'Crowdsourced', 'Unfinished'
 ];
 
 const SUFFIXES = [
@@ -17,6 +18,7 @@ const SUFFIXES = [
   'Distribution', 'Motion Picture Company', 'International', 'Worldwide', 'Global', 'Plus', 'Max', 'Play', 'Go', 'On Demand', 'Originals', 'Releasing Company',
   // Scribe Additions
   'Acquisitions', 'Assets', 'Portfolios', 'Capital', 'Trust', 'Conglomerate', 'Monopoly', 'Subsidiary', 'Media Empire', 'Omnicorp', 'Content Farm', 'Clickfarm', 'Metrics', 'Data Systems', 'Data Analytics', 'Tax Haven', 'LLC', 'GmbH', 'Equities', 'Merchandising', 'Licensing', 'Metaverse', 'Web3', 'Blockchain', 'NFTs', 'Virtuals', 'Deepfakes', 'Algorithms'
+, 'Metrics', 'Deliverables', 'Content Solutions', 'Analytics', 'Synergies', 'Aggregators', 'Pipelines', 'Ecosystems', 'Portfolios', 'Assets', 'Data Mining', 'Tax Shelters', 'Offshores', 'Holdings', 'Monopolies', 'Cartels', 'Conglomerates', 'Subsidiaries', 'Shell Corporations', 'Trusts', 'Web3 Ventures', 'Metaverse Properties', 'Crypto Assets', 'NFT Collections', 'Algorithms', 'Deepfakes', 'Generative Media', 'Focus Groups', 'Market Research', 'Demographics'
 ];
 
 const MOTTOS = [
@@ -45,6 +47,38 @@ const MOTTOS = [
   'Where indie directors go to sell out.',
   'We turn podcasts into cinematic universes.',
   'The studio that killed the mid-budget drama.'
+,
+  'We don\'t make art, we make deliverables.',
+  'Quantity has a quality all its own.',
+  'Good enough for a second screen.',
+  'Trust the algorithm, not the auteur.',
+  'We fix it in post, always.',
+  'Focus grouped into submission.',
+  'Replacing writers with AI since last week.',
+  'We only greenlight what the data tells us to.',
+  'Artificially inflating our Rotten Tomatoes score.',
+  'Our accounting is more creative than our films.',
+  'Write it off, ship it out.',
+  'Monetizing your nostalgia, one reboot at a time.',
+  'It\'s not a movie, it\'s a four-week brand activation.',
+  'Catering to the lowest common denominator.',
+  'We buy your dreams and sell them back to you at a premium.',
+  'Because original ideas are too risky.',
+  'Lowering expectations, maximizing returns.',
+  'Our trailers are always better than the movie.',
+  'We don\'t make cinema, we make \'content\'.',
+  'Franchising your childhood memories.',
+  'A wholly-owned subsidiary of a private equity firm.',
+  'Demographics over storytelling.',
+  'We pivot to whatever the kids are doing on TikTok.',
+  'Where indie directors go to sell out.',
+  'We turn Twitter threads into cinematic universes.',
+  'The studio that killed the mid-budget drama.',
+  'We only do legacy sequels.',
+  'Putting the \'art\' in \'artificial intelligence\'.',
+  'Test audiences loved it, critics will hate it.',
+  'Where the algorithm writes the script.',
+  'Content to fold laundry to.'
 ];
 
 export const MALE_FIRST_NAMES = [
