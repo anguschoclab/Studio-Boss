@@ -1589,6 +1589,324 @@ const CRISIS_POOLS = [
       }
     ]
   }
+,
+  {
+    description: "Your 'visionary' director insists on shooting the climax on top of an active volcano, and the insurance company is threatening to pull coverage entirely.",
+    options: [
+      {
+        text: "Relocate the shoot to a soundstage and use green screen.",
+        effectDescription: "Costs $800k in VFX and the director complains to the trades. Lose 20 buzz.",
+        cashPenalty: 800000,
+        buzzPenalty: 20
+      },
+      {
+        text: "Pay an extortionate premium to a specialized insurance firm.",
+        effectDescription: "Costs $2.5M, but you get the shot.",
+        cashPenalty: 2500000
+      },
+      {
+        text: "Shoot it illegally without insurance.",
+        effectDescription: "A minor eruption causes panic. Production is halted for 4 weeks.",
+        weeksDelay: 4
+      }
+    ]
+  },
+  {
+    description: "The film's incredibly expensive bespoke sports car prop was joyridden by the lead actor's entourage and crashed into a local cafe.",
+    options: [
+      {
+        text: "Settle with the cafe owner and buy a new car.",
+        effectDescription: "Costs $1.2M and delays the shoot by 2 weeks.",
+        cashPenalty: 1200000,
+        weeksDelay: 2
+      },
+      {
+        text: "Use a cheap replica and fix it in post.",
+        effectDescription: "Costs $400k for VFX, but looks noticeably worse. Lose 15 buzz.",
+        cashPenalty: 400000,
+        buzzPenalty: 15
+      },
+      {
+        text: "Write the crash into the script.",
+        effectDescription: "Saves money, but the narrative flow is ruined. Lose 25 buzz.",
+        buzzPenalty: 25
+      }
+    ]
+  },
+  {
+    description: "A crucial supporting actor just got cast as the lead in a rival studio's massive superhero franchise and is demanding out of your contract.",
+    options: [
+      {
+        text: "Let them go and recast the role.",
+        effectDescription: "Delays production by 3 weeks and costs $500k in reshoots.",
+        weeksDelay: 3,
+        cashPenalty: 500000
+      },
+      {
+        text: "Hold them to the contract.",
+        effectDescription: "They show up and give a deliberately awful performance. Lose 30 buzz.",
+        buzzPenalty: 30
+      },
+      {
+        text: "Sue them for breach of contract.",
+        effectDescription: "Legal fees are $800k, and the negative press damages morale. Lose 10 buzz.",
+        cashPenalty: 800000,
+        buzzPenalty: 10
+      }
+    ]
+  },
+  {
+    description: "Your historical epic's 'authentic' prop weapons turned out to be live, stolen military ordnance, and the ATF is raiding the armory.",
+    options: [
+      {
+        text: "Cooperate fully and halt production.",
+        effectDescription: "Delays production by 5 weeks while the investigation clears.",
+        weeksDelay: 5
+      },
+      {
+        text: "Hire elite lawyers to fast-track the clearance.",
+        effectDescription: "Costs $1.5M in legal fees.",
+        cashPenalty: 1500000
+      },
+      {
+        text: "Switch entirely to rubber weapons.",
+        effectDescription: "The action scenes look terrible. Lose 35 buzz.",
+        buzzPenalty: 35
+      }
+    ]
+  },
+  {
+    description: "The lead actress refuses to do promotional interviews after a major magazine published an unauthorized, deeply unflattering 'tell-all' about her past.",
+    options: [
+      {
+        text: "Hire a crisis PR firm to threaten the magazine.",
+        effectDescription: "Costs $600k in legal threats, but she agrees to promote the film.",
+        cashPenalty: 600000
+      },
+      {
+        text: "Force her to do the press tour.",
+        effectDescription: "She goes rogue on live TV and insults the director. Massive 40 buzz penalty.",
+        buzzPenalty: 40
+      },
+      {
+        text: "Cancel her press tour.",
+        effectDescription: "Marketing momentum dies. Lose 25 buzz.",
+        buzzPenalty: 25
+      }
+    ]
+  },
+  {
+    description: "A flock of aggressive seagulls has taken over your outdoor set and keeps attacking the boom operators.",
+    options: [
+      {
+        text: "Hire professional falconers to clear the set.",
+        effectDescription: "Costs $150k but solves the problem.",
+        cashPenalty: 150000
+      },
+      {
+        text: "Wait for migration season to end.",
+        effectDescription: "Delays production by 2 weeks.",
+        weeksDelay: 2
+      },
+      {
+        text: "Shoot around them.",
+        effectDescription: "The audio is unusable. Costs $400k in ADR.",
+        cashPenalty: 400000
+      }
+    ]
+  },
+  {
+    description: "The studio's brand integration team locked in a deal for the main character to exclusively drink a new energy drink, but the product was just recalled for causing hallucinations.",
+    options: [
+      {
+        text: "Digitally replace every can in post-production.",
+        effectDescription: "Costs $900k and delays the edit by 2 weeks.",
+        cashPenalty: 900000,
+        weeksDelay: 2
+      },
+      {
+        text: "Break the contract and refund the integration fee.",
+        effectDescription: "Costs $1.5M in penalties.",
+        cashPenalty: 1500000
+      },
+      {
+        text: "Leave it in.",
+        effectDescription: "The film is associated with a public health crisis. Lose 50 buzz.",
+        buzzPenalty: 50
+      }
+    ]
+  },
+  {
+    description: "The 'child prodigy' director you hired has locked themselves in the editing bay and refuses to show anyone the cut, claiming it is 'too pure for human eyes'.",
+    options: [
+      {
+        text: "Have security break down the door.",
+        effectDescription: "The director destroys the hard drives. Delays post by 4 weeks to rebuild from backups.",
+        weeksDelay: 4
+      },
+      {
+        text: "Hire their favorite actor to coax them out.",
+        effectDescription: "Costs $200k in actor fees.",
+        cashPenalty: 200000
+      },
+      {
+        text: "Wait them out.",
+        effectDescription: "They emerge 3 weeks later with a brilliant but incomprehensible cut. 3 week delay, lose 15 buzz.",
+        weeksDelay: 3,
+        buzzPenalty: 15
+      }
+    ]
+  },
+  {
+    description: "The stunt coordinator was caught running an illegal underground fight club using the studio's breakaway props and stunt mats.",
+    options: [
+      {
+        text: "Fire them and hire a new team.",
+        effectDescription: "Delays production by 2 weeks and costs $300k.",
+        weeksDelay: 2,
+        cashPenalty: 300000
+      },
+      {
+        text: "Quietly pay off the local police.",
+        effectDescription: "Costs $800k in bribes.",
+        cashPenalty: 800000
+      },
+      {
+        text: "Do nothing.",
+        effectDescription: "The story breaks, and the studio looks terrible. Lose 25 buzz.",
+        buzzPenalty: 25
+      }
+    ]
+  },
+  {
+    description: "Your sci-fi film's 'revolutionary' alien language was accidentally constructed using highly offensive slurs in a dialect spoken by 40 million people.",
+    options: [
+      {
+        text: "Re-record all the alien dialogue in post.",
+        effectDescription: "Costs $1M and delays the film by 3 weeks.",
+        cashPenalty: 1000000,
+        weeksDelay: 3
+      },
+      {
+        text: "Release a public apology and try to dub over it cheaply.",
+        effectDescription: "Costs $400k, but the lips don't match. Lose 20 buzz.",
+        cashPenalty: 400000,
+        buzzPenalty: 20
+      },
+      {
+        text: "Ignore the backlash.",
+        effectDescription: "The film is banned in a massive international market. Lose 45 buzz.",
+        buzzPenalty: 45
+      }
+    ]
+  },
+  {
+    description: "The lead actor's cult-like followers have started treating the movie's script as a sacred text and are constantly breaking onto the set to steal pages.",
+    options: [
+      {
+        text: "Hire elite mercenary security to lock down the perimeter.",
+        effectDescription: "Costs $500k.",
+        cashPenalty: 500000
+      },
+      {
+        text: "Rewrite the script daily so the stolen pages are useless.",
+        effectDescription: "The narrative becomes a jumbled mess. Lose 30 buzz.",
+        buzzPenalty: 30
+      },
+      {
+        text: "Halt production until the actor calms their followers down.",
+        effectDescription: "Delays production by 2 weeks.",
+        weeksDelay: 2
+      }
+    ]
+  },
+  {
+    description: "The highly expensive, hyper-realistic animatronic shark sank to the bottom of the ocean on the first day of shooting.",
+    options: [
+      {
+        text: "Hire a salvage team to retrieve and repair it.",
+        effectDescription: "Costs $1.5M and delays the shoot by 3 weeks.",
+        cashPenalty: 1500000,
+        weeksDelay: 3
+      },
+      {
+        text: "Pivot entirely to CGI.",
+        effectDescription: "Costs $2M and loses the 'practical effects' marketing angle. Lose 10 buzz.",
+        cashPenalty: 2000000,
+        buzzPenalty: 10
+      },
+      {
+        text: "Rewrite the script so the monster is 'unseen'.",
+        effectDescription: "Saves money, but audiences feel cheated. Lose 35 buzz.",
+        buzzPenalty: 35
+      }
+    ]
+  },
+  {
+    description: "An eccentric foreign co-financier is demanding that his talentless girlfriend be given a massive musical number in the middle of your gritty war drama.",
+    options: [
+      {
+        text: "Shoot the scene exactly as demanded.",
+        effectDescription: "The tonal shift destroys the movie. Lose 40 buzz.",
+        buzzPenalty: 40
+      },
+      {
+        text: "Shoot it, but cut it in post.",
+        effectDescription: "The financier sues you. Costs $2M in legal settlements.",
+        cashPenalty: 2000000
+      },
+      {
+        text: "Refuse. They pull their funding.",
+        effectDescription: "Scrambling for gap financing costs $1M and delays the shoot by 2 weeks.",
+        cashPenalty: 1000000,
+        weeksDelay: 2
+      }
+    ]
+  },
+  {
+    description: "The makeup department accidentally used a permanent dye for the lead actor's crucial full-body tattoos.",
+    options: [
+      {
+        text: "Pay for expensive, painful laser removal daily.",
+        effectDescription: "Costs $300k and the actor's performance suffers. Lose 15 buzz.",
+        cashPenalty: 300000,
+        buzzPenalty: 15
+      },
+      {
+        text: "Digitally remove the tattoos for the non-tattooed scenes.",
+        effectDescription: "Costs $1.2M in tedious VFX work.",
+        cashPenalty: 1200000
+      },
+      {
+        text: "Halt production until the dye naturally fades.",
+        effectDescription: "Delays production by an agonizing 6 weeks.",
+        weeksDelay: 6
+      }
+    ]
+  },
+  {
+    description: "The director insisted on shooting on real 70mm film, but the lab accidentally exposed a crucial, unrepeatable stunt sequence to light.",
+    options: [
+      {
+        text: "Rebuild the set and reshoot the stunt.",
+        effectDescription: "Costs $2.5M and delays production by 3 weeks.",
+        cashPenalty: 2500000,
+        weeksDelay: 3
+      },
+      {
+        text: "Recreate the stunt entirely in CGI.",
+        effectDescription: "Costs $1M but looks noticeably fake. Lose 20 buzz.",
+        cashPenalty: 1000000,
+        buzzPenalty: 20
+      },
+      {
+        text: "Cut the sequence.",
+        effectDescription: "The climax of the film is missing. Lose 40 buzz.",
+        buzzPenalty: 40
+      }
+    ]
+  }
+
 ];
 
 export function checkAndTriggerCrisis(project: Project): ActiveCrisis | undefined {

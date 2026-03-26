@@ -10,7 +10,8 @@ const PROJECT_ADJECTIVES = [
   'Micro-Budget', 'Banned', 'Cult', 'Divisive', 'Misunderstood', 'Post-Modern', 'Meta', 'Self-Aware', 'Interactive', 'Hyper-Violent', 'Family-Friendly', 'Subversive', 'Existential', 'Viral', 'Edgy',
   'Chaotic', 'Shameless', 'Tone-Deaf', 'Syndicated', 'Pandering', 'Nostalgic', 'Crowdfunded', 'Incomprehensible'
 , 'Vape-Scented', 'Anti-Woke', 'Girlboss', 'Crypto-Backed', 'AI-Generated', 'Tax-Evading', 'Oscar-Thirsty', 'Cancellable', 'Tone-Deaf', 'Virtue-Signaling', 'Nostalgia-Baiting', 'IP-Laundering', 'Uninsurable', 'Direct-To-Video', 'Has-Been',
-  'Brand-Safe', 'Algorithmic', 'Over-Indexed', 'Under-Performing', 'Data-Mined', 'A24-Style', 'Tonal-Misfire', 'Focus-Grouped', 'Ghostwritten', 'Demographically-Targeted', 'Syndication-Bait', 'Deepfaked', 'Studio-Mandated', 'Crowd-Pleasing', 'Tax-Sheltered'];
+  'Brand-Safe', 'Algorithmic', 'Over-Indexed', 'Under-Performing', 'Data-Mined', 'A24-Style', 'Tonal-Misfire', 'Focus-Grouped', 'Ghostwritten', 'Demographically-Targeted', 'Syndication-Bait', 'Deepfaked', 'Studio-Mandated', 'Crowd-Pleasing', 'Tax-Sheltered',
+  'Tax-Sheltered', 'Algorithm-Approved', 'Nepo-Baby-Led', 'Focus-Group-Tested', 'Merch-Driven', 'TikTok-Optimized', 'VFX-Heavy', 'CGI-Bloated', 'Contractually-Obligated', 'Ghost-Directed', 'Uninsurable', 'PR-Disaster', 'Deepfake-Assisted', 'Billionaire-Funded', 'Union-Busting'];
 
 const PROJECT_NOUNS = [
   'Tentpole', 'Cinematic Universe', 'Vanity Project', 'Cash Grab', 'Reboot', 'Origin Story', 'Four-Quadrant Hit', 'Oscar Bait', 'Tax Write-off', 'Algorithm', 'Focus Group', 'Franchise', 'Merchandising Opportunity', 'Streaming Wars', 'Demographic',
@@ -19,7 +20,8 @@ const PROJECT_NOUNS = [
   'Content', 'IP', 'Podcast Adaptation', 'Graphic Novel', 'Limited Run', 'Spin-off', 'Prequel', 'Sequel', 'Trilogy', 'Crossover', 'Event', 'Experience', 'Platform', 'Saga', 'Chronicle',
   'Multiverse', 'Money Pit', 'Brand Synergy', 'TikTok Trend', 'Nostalgia Bait', 'Legacy Sequel', 'Toy Commercial'
 , 'Tik-Tok Dance', 'Apology Video', 'Podcast Grift', 'NFT Scam', 'Subreddit Myth', 'Cancel Culture Hit-Piece', 'Nepo-Baby Vehicle', 'Wellness Retreat', 'Juice Cleanse', 'Pyramid Scheme', 'True Crime Exploitation', 'Merch Drop', 'Brand Deal', 'Focus Group Failure', 'Contractual Obligation',
-  'Content Farm', 'Viewer Retention Strategy', 'Metrics Dump', 'Engagement Trap', 'Synergy Play', 'Product Placement', 'Merch Extravaganza', 'Spin-Off Generator', 'Sub-Franchise', 'Legacy IP', 'Re-Imagining', 'Cash-Cow', 'Tax-Loophole', 'Market Correction', 'Demographic Shift'];
+  'Content Farm', 'Viewer Retention Strategy', 'Metrics Dump', 'Engagement Trap', 'Synergy Play', 'Product Placement', 'Merch Extravaganza', 'Spin-Off Generator', 'Sub-Franchise', 'Legacy IP', 'Re-Imagining', 'Cash-Cow', 'Tax-Loophole', 'Market Correction', 'Demographic Shift',
+  'Apology Tour', 'Crypto-Scam', 'Podcast Adaptation', 'Product Integration', 'Toy Commercial', 'Reshoot Disaster', 'IP Laundering Scheme', 'Vanity Vehicle', 'Focus Group Casualty', 'Tax Write-Off', 'Content Pivot', 'Demographic Play', 'Merch Extravaganza', 'Synergy Mandate', 'Legacy Cash-Grab'];
 
 
 function generateFlavor(genre: string, type: string, budgetTier: BudgetTierKey, origin: string): string {
@@ -99,6 +101,22 @@ function generateFlavor(genre: string, type: string, budgetTier: BudgetTierKey, 
     `An unwatchable ${budgetTier}-tier ${type} that the studio is releasing exclusively to a failed streaming app.`,
     `A ${genre} ${type} that serves as an elaborate, feature-length apology tour for a cancelled director.`,
     `A ${genre} ${origin} where the real drama is the ongoing, highly-publicized lawsuit between the co-stars.`
+  ,
+    `A ${budgetTier}-budget ${type} that was greenlit solely because the lead actor threatened to quit the studio's main franchise.`,
+    `An incomprehensible ${genre} ${type} where the director was fired and replaced by an AI three weeks into shooting.`,
+    `A legally mandated ${origin} produced just so the studio doesn't lose the rights to the intellectual property.`,
+    `A ${budgetTier}-tier ${genre} ${type} that serves as a feature-length advertisement for an obscure cryptocurrency.`,
+    `An 'edgy' ${genre} ${type} that the test audiences absolutely despised, forcing $5M in emergency reshoots.`,
+    `A bizarre ${type} funded entirely by a mysterious oligarch who wanted to see their pet dog in a movie.`,
+    `A ${budgetTier}-budget ${genre} vehicle specifically tailored to rehabilitate the image of a recently cancelled A-lister.`,
+    `A ${genre} ${origin} that has been in development hell for so long, the original target demographic has died of old age.`,
+    `A bloated ${budgetTier}-tier ${type} that's secretly just a tax avoidance scheme disguised as a cinematic universe.`,
+    `An aggressive ${genre} ${type} built backwards from a viral TikTok dance that is already deeply embarrassing.`,
+    `A soulless ${genre} ${origin} where the real drama is the ongoing, highly-publicized lawsuit between the co-stars.`,
+    `A ${budgetTier}-budget ${type} that legally cannot be released in three major international territories due to copyright infringement.`,
+    `A deeply cynical ${genre} ${type} using deceased actors resurrected via terrifying 'uncanny valley' CGI.`,
+    `An exhausting ${type} that requires audiences to have watched six different spin-off shows to understand the opening scene.`,
+    `A ${budgetTier}-budget ${genre} ${type} entirely dictated by a deranged tech billionaire's Twitter poll.`
   ];
   return pick(cynicalFlavors);
 }
