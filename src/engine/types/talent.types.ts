@@ -12,6 +12,7 @@ export interface Scandal {
   weeksRemaining: number;
 }
 
+export type AgencyArchetype = 'powerhouse' | 'boutique' | 'shark';
 export type AccessLevel = 'outsider' | 'soft-access' | 'legacy' | 'dynasty' | 'comeback';
 export type TalentRole = 'director' | 'actor' | 'writer' | 'producer' | 'showrunner';
 export type AgencyTier = 'powerhouse' | 'major' | 'mid-tier' | 'boutique' | 'specialist';
@@ -21,6 +22,7 @@ export type AgentSpecialty = 'film_packaging' | 'tv_packaging' | 'literary' | 't
 export interface Agency {
   id: string;
   name: string;
+  archetype: AgencyArchetype;
   tier: AgencyTier;
   culture: AgencyCulture;
   prestige: number;

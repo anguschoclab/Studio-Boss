@@ -70,6 +70,7 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
       agents,
       talentPool,
       awards: [],
+      newsHistory: [],
     }
   };
 }
