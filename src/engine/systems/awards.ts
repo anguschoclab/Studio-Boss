@@ -220,6 +220,10 @@ const AWARD_CONFIGS: AwardConfig[] = [
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.5 + (p.awardsProfile?.prestigeScore || 0) * 1.2
   },
   {
+    body: 'Cannes Film Festival', category: 'Grand Jury Prize', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.2 + (p.awardsProfile?.prestigeScore || 0) * 1.0
+  },
+  {
     body: 'Cannes Film Festival', category: 'Best Director', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 2 + (p.awardsProfile?.indieCredibility || 0) * 0.5
   },
@@ -232,6 +236,14 @@ const AWARD_CONFIGS: AwardConfig[] = [
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.2 + (p.awardsProfile?.prestigeScore || 0) * 0.8
   },
   {
+    body: 'Cannes Film Festival', category: 'Best Supporting Actor', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.0 + (p.awardsProfile?.prestigeScore || 0) * 0.6
+  },
+  {
+    body: 'Cannes Film Festival', category: 'Best Supporting Actress', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.0 + (p.awardsProfile?.prestigeScore || 0) * 0.6
+  },
+  {
     body: 'Cannes Film Festival', category: 'Best Screenplay', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.8 + (p.awardsProfile?.indieCredibility || 0) * 0.8
   },
@@ -240,6 +252,10 @@ const AWARD_CONFIGS: AwardConfig[] = [
   {
     body: 'Sundance Film Festival', category: 'Grand Jury Prize', format: 'film',
     evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 2 + (p.awardsProfile?.criticScore || 0)
+  },
+  {
+    body: 'Sundance Film Festival', category: 'Audience Award', format: 'film',
+    evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 1.2 + (p.awardsProfile?.audienceScore || 0) * 1.5
   },
   {
     body: 'Sundance Film Festival', category: 'Best Director', format: 'film',
@@ -254,6 +270,14 @@ const AWARD_CONFIGS: AwardConfig[] = [
     evaluator: p => (p.awardsProfile?.indieCredibility || 0) + (p.awardsProfile?.criticScore || 0) * 0.8
   },
   {
+    body: 'Sundance Film Festival', category: 'Best Supporting Actor', format: 'film',
+    evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 0.8 + (p.awardsProfile?.criticScore || 0) * 0.5
+  },
+  {
+    body: 'Sundance Film Festival', category: 'Best Supporting Actress', format: 'film',
+    evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 0.8 + (p.awardsProfile?.criticScore || 0) * 0.5
+  },
+  {
     body: 'Sundance Film Festival', category: 'Best Screenplay', format: 'film',
     evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 1.5 + (p.awardsProfile?.craftScore || 0) * 0.5
   },
@@ -262,6 +286,10 @@ const AWARD_CONFIGS: AwardConfig[] = [
   {
     body: 'Berlin International Film Festival', category: 'Golden Bear', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.5 + (p.awardsProfile?.prestigeScore || 0) * 1.2
+  },
+  {
+    body: 'Berlin International Film Festival', category: 'Grand Jury Prize', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.2 + (p.awardsProfile?.prestigeScore || 0) * 1.0
   },
   {
     body: 'Berlin International Film Festival', category: 'Best Director', format: 'film',
@@ -276,6 +304,14 @@ const AWARD_CONFIGS: AwardConfig[] = [
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.2 + (p.awardsProfile?.prestigeScore || 0) * 1.0
   },
   {
+    body: 'Berlin International Film Festival', category: 'Best Supporting Actor', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.0 + (p.awardsProfile?.prestigeScore || 0) * 0.8
+  },
+  {
+    body: 'Berlin International Film Festival', category: 'Best Supporting Actress', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.0 + (p.awardsProfile?.prestigeScore || 0) * 0.8
+  },
+  {
     body: 'Berlin International Film Festival', category: 'Best Screenplay', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.8 + (p.awardsProfile?.industryNarrativeScore || 0) * 0.8
   },
@@ -284,6 +320,10 @@ const AWARD_CONFIGS: AwardConfig[] = [
   {
     body: 'Venice Film Festival', category: 'Golden Lion', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.5 + (p.awardsProfile?.prestigeScore || 0) * 1.5
+  },
+  {
+    body: 'Venice Film Festival', category: 'Grand Jury Prize', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.2 + (p.awardsProfile?.prestigeScore || 0) * 1.2
   },
   {
     body: 'Venice Film Festival', category: 'Best Director', format: 'film',
@@ -296,6 +336,14 @@ const AWARD_CONFIGS: AwardConfig[] = [
   {
     body: 'Venice Film Festival', category: 'Best Actress', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.2 + (p.awardsProfile?.prestigeScore || 0) * 1.0
+  },
+  {
+    body: 'Venice Film Festival', category: 'Best Supporting Actor', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.0 + (p.awardsProfile?.prestigeScore || 0) * 0.8
+  },
+  {
+    body: 'Venice Film Festival', category: 'Best Supporting Actress', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.0 + (p.awardsProfile?.prestigeScore || 0) * 0.8
   },
   {
     body: 'Venice Film Festival', category: 'Best Screenplay', format: 'film',
@@ -340,6 +388,14 @@ const AWARD_CONFIGS: AwardConfig[] = [
   {
     body: 'Telluride Film Festival', category: 'Best Actress', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.5 + (p.awardsProfile?.prestigeScore || 0) * 1.0
+  },
+  {
+    body: 'Telluride Film Festival', category: 'Best Supporting Actor', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.2 + (p.awardsProfile?.prestigeScore || 0) * 0.8
+  },
+  {
+    body: 'Telluride Film Festival', category: 'Best Supporting Actress', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.2 + (p.awardsProfile?.prestigeScore || 0) * 0.8
   },
 
   // --- SLAMDANCE FILM FESTIVAL (Sundance Equivalent) ---

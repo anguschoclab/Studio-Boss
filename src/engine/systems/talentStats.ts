@@ -32,38 +32,38 @@ export function applyAwardBoostsToTalent(
 
   if (award.status === 'won') {
     if (isPrestige || isCannesEquivalent) {
-      prestigeBoost += 20 * finalMultiplier;
-      egoBoost += 25 * finalMultiplier; // Huge ego bump for winning prestigious awards
-      drawBoost += 10 * finalMultiplier;
-      feeMultiplier += 1.0 * finalMultiplier; // 100% fee bump
+      prestigeBoost += 30 * finalMultiplier;
+      egoBoost += 40 * finalMultiplier; // Massive permanent ego bump for prestigious awards
+      drawBoost += 15 * finalMultiplier;
+      feeMultiplier += 2.0 * finalMultiplier; // 200% fee bump to make chasing trophies a massive distinct strategy
     } else if (isSundanceEquivalent) {
-      prestigeBoost += 10 * finalMultiplier;
-      egoBoost += 15 * finalMultiplier;
-      drawBoost += 20 * finalMultiplier; // Big commercial draw bump for indie hits
-      feeMultiplier += 0.8 * finalMultiplier; // 80% fee bump
+      prestigeBoost += 15 * finalMultiplier;
+      egoBoost += 25 * finalMultiplier;
+      drawBoost += 30 * finalMultiplier; // Massive commercial draw bump for indie hits
+      feeMultiplier += 1.5 * finalMultiplier; // 150% fee bump
     } else {
-      prestigeBoost += 8 * finalMultiplier;
-      egoBoost += 5 * finalMultiplier;
-      drawBoost += 5 * finalMultiplier;
-      feeMultiplier += 0.2 * finalMultiplier;
+      prestigeBoost += 10 * finalMultiplier;
+      egoBoost += 10 * finalMultiplier;
+      drawBoost += 8 * finalMultiplier;
+      feeMultiplier += 0.5 * finalMultiplier; // 50% fee bump for standard wins
     }
   } else {
     // nominated
     if (isPrestige || isCannesEquivalent) {
-      prestigeBoost += 5 * finalMultiplier;
-      egoBoost += 10 * finalMultiplier;
-      drawBoost += 3 * finalMultiplier;
-      feeMultiplier += 0.2 * finalMultiplier;
+      prestigeBoost += 10 * finalMultiplier;
+      egoBoost += 15 * finalMultiplier;
+      drawBoost += 5 * finalMultiplier;
+      feeMultiplier += 0.5 * finalMultiplier; // 50% fee bump for prestigious nominations
     } else if (isSundanceEquivalent) {
-      prestigeBoost += 3 * finalMultiplier;
-      egoBoost += 5 * finalMultiplier;
-      drawBoost += 8 * finalMultiplier;
-      feeMultiplier += 0.15 * finalMultiplier;
+      prestigeBoost += 8 * finalMultiplier;
+      egoBoost += 10 * finalMultiplier;
+      drawBoost += 12 * finalMultiplier;
+      feeMultiplier += 0.3 * finalMultiplier; // 30% fee bump for indie nominations
     } else {
-      prestigeBoost += 2 * finalMultiplier;
-      egoBoost += 2 * finalMultiplier;
-      drawBoost += 1 * finalMultiplier;
-      feeMultiplier += 0.05 * finalMultiplier;
+      prestigeBoost += 4 * finalMultiplier;
+      egoBoost += 5 * finalMultiplier;
+      drawBoost += 2 * finalMultiplier;
+      feeMultiplier += 0.1 * finalMultiplier;
     }
   }
 
