@@ -65,8 +65,17 @@ const finalizeWeek = (
   };
 
   // Create Snapshot for history
-  const activeProjectsCount = state.studio.internal.projects.filter(p => p.status !== 'released' && p.status !== 'post_release' && p.status !== 'archived').length;
-  const releasedProjectsCount = state.studio.internal.projects.filter(p => p.status === 'released' || p.status === 'post_release' || p.status === 'archived').length;
+  // ⚡ Bolt: Calculate project counts in a single O(N) pass to prevent intermediate array allocations from .filter()
+  let activeProjectsCount = 0;
+  let releasedProjectsCount = 0;
+  for (let i = 0; i < state.studio.internal.projects.length; i++) {
+    const status = state.studio.internal.projects[i].status;
+    if (status === 'released' || status === 'post_release' || status === 'archived') {
+      releasedProjectsCount++;
+    } else {
+      activeProjectsCount++;
+    }
+  }
 
   const currentSnapshot: StudioSnapshot = {
     year: Math.floor((originalState.week - 1) / 52) + 1,
