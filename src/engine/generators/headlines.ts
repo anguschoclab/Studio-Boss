@@ -469,9 +469,15 @@ export function generateHeadlines(
     return talentPool.find(t => t.id === dContract?.talentId);
   })() : null;
 
+  // Enhance context with actors and actresses
+  const highDrawTalent = talentPool.filter(t => t.draw > 70);
+  const actors = highDrawTalent.filter(t => t.roles.includes('actor'));
+
   const vars = {
     projectName: selectedProject?.title || 'upcoming blockbuster',
-    directorName: selectedDirector?.name || 'A-list director',
+    directorName: selectedDirector?.name || pick(highDrawTalent.filter(t => t.roles.includes('director')))?.name || 'A-list director',
+    actorName: pick(actors)?.name || 'Major movie star',
+    actressName: pick(actors.slice().reverse())?.name || 'Highly acclaimed actress',
     pct: String(Math.floor(5 + Math.random() * 25))
   };
 

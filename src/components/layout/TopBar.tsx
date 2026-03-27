@@ -5,6 +5,7 @@ import { formatMoney, getWeekDisplay } from '@/engine/utils';
 import { Save, FastForward, AlertTriangle, TrendingUp, Newspaper } from 'lucide-react';
 import { selectActiveProjectsCount } from '@/store/selectors';
 import { Badge } from '@/components/ui/badge';
+import { NewsTicker } from './NewsTicker';
 
 export const TopBar = () => {
   const gameState = useGameStore(s => s.gameState);
@@ -40,17 +41,11 @@ export const TopBar = () => {
         <Badge variant="outline" className="bg-primary/5 border-primary/20 text-primary font-mono px-2 py-0 text-[10px]">Q{(Math.floor((displayWeek-1)/13) + 1)}</Badge>
       </div>
 
-      {/* Global News Ticker (Placeholder for The Trades integration) */}
-      <div className="flex-1 max-w-2xl hidden lg:flex items-center gap-3 px-4 py-1.5 bg-white/5 rounded-full border border-white/5 overflow-hidden group cursor-pointer hover:bg-white/10 transition-colors"
-           onClick={() => setActiveTab('trades')}>
-        <Newspaper className="h-3.5 w-3.5 text-primary shrink-0" />
-        <div className="text-[11px] font-medium text-muted-foreground truncate italic">
-          <span className="text-primary font-bold uppercase not-italic mr-2">Breaking:</span>
-          {gameState.industry.newsHistory && gameState.industry.newsHistory.length > 0 
-            ? gameState.industry.newsHistory[0].headline 
-            : "Market volatility expected as summer blockbuster season approaches..."}
-        </div>
-      </div>
+      {/* Global News Ticker */}
+      <NewsTicker 
+        news={gameState.industry.newsHistory || []} 
+        onClick={() => setActiveTab('trades')} 
+      />
 
       {/* Primary Metrics Cluster */}
       <div className="flex items-center gap-6 ml-auto">
