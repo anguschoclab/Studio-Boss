@@ -53,10 +53,15 @@ const finalizeWeek = (
   // Update UI Data Vis Extensions (Epic 4)
   const nextTrends = state.market.trends || [];
   const genrePopularity: Record<string, number> = {};
-  ALL_GENRES.forEach(g => {
-    const trend = nextTrends.find(t => t.genre === g);
-    genrePopularity[g.toLowerCase()] = trend ? trend.heat / 100 : 0.2 + Math.random() * 0.1;
-  });
+  const trendMap = new Map<string, number>();
+  for (let i = 0; i < nextTrends.length; i++) {
+    trendMap.set(nextTrends[i].genre, nextTrends[i].heat);
+  }
+  for (let i = 0; i < ALL_GENRES.length; i++) {
+    const g = ALL_GENRES[i];
+    const heat = trendMap.get(g);
+    genrePopularity[g.toLowerCase()] = heat !== undefined ? heat / 100 : 0.2 + Math.random() * 0.1;
+  }
 
   const nextFinance = {
     bankBalance: state.cash,
@@ -65,8 +70,17 @@ const finalizeWeek = (
   };
 
   // Create Snapshot for history
-  const activeProjectsCount = state.studio.internal.projects.filter(p => p.status !== 'released' && p.status !== 'post_release' && p.status !== 'archived').length;
-  const releasedProjectsCount = state.studio.internal.projects.filter(p => p.status === 'released' || p.status === 'post_release' || p.status === 'archived').length;
+  let activeProjectsCount = 0;
+  let releasedProjectsCount = 0;
+  const projects = state.studio.internal.projects;
+  for (let i = 0; i < projects.length; i++) {
+    const s = projects[i].status;
+    if (s === 'released' || s === 'post_release' || s === 'archived') {
+      releasedProjectsCount++;
+    } else {
+      activeProjectsCount++;
+    }
+  }
 
   const currentSnapshot: StudioSnapshot = {
     year: Math.floor((originalState.week - 1) / 52) + 1,
@@ -78,7 +92,15 @@ const finalizeWeek = (
     timestamp: new Date().toISOString()
   };
 
-  const nextHistory = [...(state.history || []), currentSnapshot].slice(-52); // Keep last year of history
+  const oldHistory = state.history || [];
+  const startIdx = oldHistory.length >= 52 ? oldHistory.length - 51 : 0;
+  const newLength = Math.min(oldHistory.length + 1, 52);
+  const nextHistory = new Array(newLength);
+  let destIdx = 0;
+  for (let i = startIdx; i < oldHistory.length; i++) {
+    nextHistory[destIdx++] = oldHistory[i];
+  }
+  nextHistory[destIdx] = currentSnapshot; // Keep last year of history
 
   const newState: GameState = {
     ...state,
@@ -96,11 +118,10 @@ const finalizeWeek = (
  * This function coordinates the various sub-processes that occur every game week.
  */
 export function advanceWeek(state: GameState): { newState: GameState; summary: WeekSummary } {
-  let nextState = { ...state };
   const weeklyChanges = initializeWeeklyChanges();
 
   // 1. Process Projects (Advancement, Quality, Completion)
-  nextState = processProduction(nextState, weeklyChanges);
+  let nextState = processProduction(state, weeklyChanges);
 
   // 2. Resolve Finances (Burn, Revenue, Cash Flow)
   nextState = processFinance(nextState, weeklyChanges);

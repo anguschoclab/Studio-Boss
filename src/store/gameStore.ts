@@ -64,20 +64,35 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
     const finalState = nextState as GameState;
 
     // 1. Crises/Scandals
-    finalState.studio.internal.projects.forEach(p => {
-      if (p.activeCrisis && !p.activeCrisis.resolved) {
-        const isNewCrisis = summary?.events.some(e => e.includes(`CRISIS: "${p.title}"`));
-        if (isNewCrisis) {
-          ui.enqueueModal('CRISIS', { projectId: p.id, crisis: p.activeCrisis });
+    const crisisTitles = new Set<string>();
+    if (summary?.events) {
+      for (let i = 0; i < summary.events.length; i++) {
+        const ev = summary.events[i];
+        if (ev.startsWith('CRISIS: "')) {
+          const match = ev.match(/^CRISIS: "([^"]+)"/);
+          if (match) crisisTitles.add(match[1]);
         }
       }
-    });
+    }
+    const projects = finalState.studio.internal.projects;
+    for (let i = 0; i < projects.length; i++) {
+      const p = projects[i];
+      if (p.activeCrisis && !p.activeCrisis.resolved && crisisTitles.has(p.title)) {
+        ui.enqueueModal('CRISIS', { projectId: p.id, crisis: p.activeCrisis });
+      }
+    }
 
     // 2. Awards Ceremony
     const isAwardsWeek = finalState.week % 52 === 4 || finalState.week % 52 === 36;
     if (isAwardsWeek) {
       const year = Math.floor(finalState.week / 52) + 1;
-      const currentAwards = finalState.industry.awards?.filter(a => a.year === year) || [];
+      const allAwards = finalState.industry.awards || [];
+      const currentAwards = [];
+      for (let i = 0; i < allAwards.length; i++) {
+        if (allAwards[i].year === year) {
+          currentAwards.push(allAwards[i]);
+        }
+      }
       ui.enqueueModal('AWARDS', { week: finalState.week, year, awards: currentAwards });
     }
 
