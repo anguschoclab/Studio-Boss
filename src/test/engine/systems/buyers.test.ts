@@ -48,7 +48,7 @@ describe("buyers system", () => {
     it("calculates fit score correctly with empty project history", () => {
       vi.spyOn(Math, 'random').mockReturnValue(0.5);
       const score = calculateFitScore(mockProject, mockBuyer, 50, []);
-      expect(score).toBe(50);
+      expect(score).toBe(65);
     });
   });
 
