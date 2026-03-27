@@ -11,7 +11,7 @@ const PROJECT_ADJECTIVES = [
   'Chaotic', 'Shameless', 'Tone-Deaf', 'Syndicated', 'Pandering', 'Nostalgic', 'Crowdfunded', 'Incomprehensible'
 , 'Vape-Scented', 'Anti-Woke', 'Girlboss', 'Crypto-Backed', 'AI-Generated', 'Tax-Evading', 'Oscar-Thirsty', 'Cancellable', 'Tone-Deaf', 'Virtue-Signaling', 'Nostalgia-Baiting', 'IP-Laundering', 'Uninsurable', 'Direct-To-Video', 'Has-Been',
   'Brand-Safe', 'Algorithmic', 'Over-Indexed', 'Under-Performing', 'Data-Mined', 'A24-Style', 'Tonal-Misfire', 'Focus-Grouped', 'Ghostwritten', 'Demographically-Targeted', 'Syndication-Bait', 'Deepfaked', 'Studio-Mandated', 'Crowd-Pleasing', 'Tax-Sheltered',
-  'Tax-Sheltered', 'Algorithm-Approved', 'Nepo-Baby-Led', 'Focus-Group-Tested', 'Merch-Driven', 'TikTok-Optimized', 'VFX-Heavy', 'CGI-Bloated', 'Contractually-Obligated', 'Ghost-Directed', 'Uninsurable', 'PR-Disaster', 'Deepfake-Assisted', 'Billionaire-Funded', 'Union-Busting'];
+  'Tax-Sheltered', 'Algorithm-Approved', 'Nepo-Baby-Led', 'Focus-Group-Tested', 'Merch-Driven', 'TikTok-Optimized', 'VFX-Heavy', 'CGI-Bloated', 'Contractually-Obligated', 'Ghost-Directed', 'Uninsurable', 'PR-Disaster', 'Deepfake-Assisted', 'Billionaire-Funded', 'Union-Busting', 'Unwatchable', 'Boycotted', 'Desperate', 'Cringe-Inducing', 'Tone-Shifted', 'Recut', 'Over-Lit', 'Focus-Group-Ruined', 'Tax-Fraudulent', 'Lawsuit-Waiting', 'PR-Managed', 'Ghost-Produced', 'Audience-Alienating', 'Trend-Chasing', 'Nepotism-Fueled'];
 
 const PROJECT_NOUNS = [
   'Tentpole', 'Cinematic Universe', 'Vanity Project', 'Cash Grab', 'Reboot', 'Origin Story', 'Four-Quadrant Hit', 'Oscar Bait', 'Tax Write-off', 'Algorithm', 'Focus Group', 'Franchise', 'Merchandising Opportunity', 'Streaming Wars', 'Demographic',
@@ -21,7 +21,7 @@ const PROJECT_NOUNS = [
   'Multiverse', 'Money Pit', 'Brand Synergy', 'TikTok Trend', 'Nostalgia Bait', 'Legacy Sequel', 'Toy Commercial'
 , 'Tik-Tok Dance', 'Apology Video', 'Podcast Grift', 'NFT Scam', 'Subreddit Myth', 'Cancel Culture Hit-Piece', 'Nepo-Baby Vehicle', 'Wellness Retreat', 'Juice Cleanse', 'Pyramid Scheme', 'True Crime Exploitation', 'Merch Drop', 'Brand Deal', 'Focus Group Failure', 'Contractual Obligation',
   'Content Farm', 'Viewer Retention Strategy', 'Metrics Dump', 'Engagement Trap', 'Synergy Play', 'Product Placement', 'Merch Extravaganza', 'Spin-Off Generator', 'Sub-Franchise', 'Legacy IP', 'Re-Imagining', 'Cash-Cow', 'Tax-Loophole', 'Market Correction', 'Demographic Shift',
-  'Apology Tour', 'Crypto-Scam', 'Podcast Adaptation', 'Product Integration', 'Toy Commercial', 'Reshoot Disaster', 'IP Laundering Scheme', 'Vanity Vehicle', 'Focus Group Casualty', 'Tax Write-Off', 'Content Pivot', 'Demographic Play', 'Merch Extravaganza', 'Synergy Mandate', 'Legacy Cash-Grab'];
+  'Apology Tour', 'Crypto-Scam', 'Podcast Adaptation', 'Product Integration', 'Toy Commercial', 'Reshoot Disaster', 'IP Laundering Scheme', 'Vanity Vehicle', 'Focus Group Casualty', 'Tax Write-Off', 'Content Pivot', 'Demographic Play', 'Merch Extravaganza', 'Synergy Mandate', 'Legacy Cash-Grab', 'Apology Tour', 'Crypto Scam', 'Influencer Collab', 'Brand Integration', 'Toy Line', 'Damage Control', 'Legal Nightmare', 'Ransomware Attack', 'Viral Mistake', 'Review Bomb Target', 'Deficit Financed Disaster', 'Algorithm Glitch', 'Synergy Experiment', 'Tax Dodge', 'Focus Group Anomaly'];
 
 
 function generateFlavor(genre: string, type: string, budgetTier: BudgetTierKey, origin: string): string {
@@ -117,7 +117,24 @@ function generateFlavor(genre: string, type: string, budgetTier: BudgetTierKey, 
     `A deeply cynical ${genre} ${type} using deceased actors resurrected via terrifying 'uncanny valley' CGI.`,
     `An exhausting ${type} that requires audiences to have watched six different spin-off shows to understand the opening scene.`,
     `A ${budgetTier}-budget ${genre} ${type} entirely dictated by a deranged tech billionaire's Twitter poll.`
-  ];
+
+  ,
+    `A frankly insulting ${genre} ${type} that attempts to capitalize on a recent national tragedy.`,
+    `A frantic ${budgetTier}-tier ${type} that the lead actor signed onto purely to pay off gambling debts.`,
+    `A ${genre} ${origin} that includes a 10-minute uninterrupted commercial for a failing tech startup.`,
+    `A ${budgetTier}-budget ${genre} vehicle that was obviously written by the director's 14-year-old child.`,
+    `An inexplicably expensive ${type} entirely shot on a soundstage to accommodate the lead's house arrest.`,
+    `A grim ${genre} ${type} that the studio executives are legally barred from discussing in public.`,
+    `A ${budgetTier}-budget ${genre} ${type} that is secretly just a massive, incredibly complex money laundering scheme.`,
+    `A profoundly tone-deaf ${type} that manages to offend four distinct demographics within the first act.`,
+    `A ${genre} ${origin} starring a completely untrained influencer who stares blankly at the teleprompter in every scene.`,
+    `A heavily recut ${genre} ${type} where you can vividly feel the exact moment the studio panicked.`,
+    `A ${budgetTier}-budget ${type} that exists solely to fulfill an obscure, 20-year-old contractual obligation.`,
+    `An agonizing ${genre} ${type} where the characters constantly mention the title of the movie out loud.`,
+    `A visually incoherent ${origin} where the entire CGI budget was allegedly embezzled.`,
+    `A bizarre ${budgetTier}-tier ${genre} ${type} that heavily implies the main character is the CEO of the sponsoring brand.`,
+    `An aggressive ${type} that the marketing department is trying to rebrand as a 'tax write-off' to lower expectations.`
+];
   return pick(cynicalFlavors);
 }
 
