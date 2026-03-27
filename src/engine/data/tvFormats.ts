@@ -14,6 +14,24 @@ interface TvFormatData {
   revenueDecayWeekly: number; // Weekly revenue multiplier during run (e.g. 0.85 = slow decay)
 }
 
+export const TV_FORMAT_TAXONOMY = [
+  {
+    id: 'comedy',
+    name: 'Comedy',
+    formats: ['sitcom', 'sketch_comedy', 'animated_comedy', 'satirical_comedy']
+  },
+  {
+    id: 'drama',
+    name: 'Drama',
+    formats: ['procedural', 'prestige_drama', 'limited_series', 'teen_drama', 'historical_drama', 'medical_procedural', 'legal_drama']
+  },
+  {
+    id: 'unscripted',
+    name: 'Unscripted',
+    formats: ['late_night_talk', 'cooking_showdown', 'musical_competition', 'satirical_news']
+  }
+];
+
 export const TV_FORMATS: Record<TvFormatKey, TvFormatData> = {
   sitcom: {
     key: 'sitcom',

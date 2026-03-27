@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
-import { GENRES, TARGET_AUDIENCES, UNSCRIPTED_GENRES } from '@/engine/data/genres';
+import { GENRE_TAXONOMY, GENRES, TARGET_AUDIENCES } from '@/engine/data/genres';
 import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
 import { TV_FORMATS } from '@/engine/data/tvFormats';
 import { UNSCRIPTED_FORMATS } from '@/engine/data/unscriptedFormats';
@@ -195,11 +195,22 @@ export const CreateProjectModal = () => {
             <div className="space-y-2">
               <Label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground/80">Genre</Label>
               <Select value={genre} onValueChange={setGenre}>
-                <SelectTrigger className="bg-background/50 border-border/50"><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  {format === 'unscripted'
-                    ? UNSCRIPTED_GENRES.map(g => <SelectItem key={g} value={g}>{g}</SelectItem>)
-                    : GENRES.map(g => <SelectItem key={g} value={g}>{g}</SelectItem>)}
+                <SelectTrigger className="bg-background/50 border-border/50">
+                  <SelectValue placeholder="Select Genre" />
+                </SelectTrigger>
+                <SelectContent className="max-h-80">
+                  {GENRE_TAXONOMY.map(category => (
+                    <div key={category.id}>
+                      <div className="px-2 py-1.5 text-[10px] font-black uppercase tracking-widest text-primary/60 bg-primary/5 rounded-md my-1">
+                        {category.name}
+                      </div>
+                      {category.subGenres.map(sub => (
+                        <SelectItem key={sub.id} value={sub.name}>
+                          {sub.name}
+                        </SelectItem>
+                      ))}
+                    </div>
+                  ))}
                 </SelectContent>
               </Select>
             </div>

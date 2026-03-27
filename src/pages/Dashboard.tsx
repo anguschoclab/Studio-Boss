@@ -12,6 +12,7 @@ import { DiscoveryBoard } from '@/components/discovery/DiscoveryBoard';
 import { RivalsPanel } from '@/components/rivals/RivalsPanel';
 import { IPVault } from '@/components/ip/IPVault';
 import { DealsDesk } from '@/components/deals/DealsDesk';
+import { SBDBView } from '@/components/sbdb/SBDBView';
 import { AnimatePresence, motion } from 'framer-motion';
 
 // Modals
@@ -38,6 +39,7 @@ const Dashboard: React.FC = () => {
       case 'talent': return <TalentPanel key="talent" />;
       case 'finance': return <FinancePanel key="finance" />;
       case 'trades': return <DiscoveryBoard key="trades" />;
+      case 'sbdb': return <SBDBView key="sbdb" />;
       default: return <CommandCenter key="default" />;
     }
   };

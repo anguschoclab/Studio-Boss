@@ -49,7 +49,7 @@ export const PERK_TEMPERAMENTS = [
 ];
 
 
-const TALENT_TYPES: Array<TalentRole> = ['director', 'actor', 'writer', 'producer', 'showrunner'];
+const TALENT_TYPES: Array<TalentRole> = ['actor', 'director', 'writer', 'producer'];
 
 export function generateFamilies(count: number): Family[] {
   const families: Family[] = [];
@@ -59,7 +59,7 @@ export function generateFamilies(count: number): Family[] {
     let name = pick(FAMOUS_LAST_NAMES);
     let attempts = 0;
     while (usedNames.has(name) && attempts < 10) {
-      name = pick(LAST_NAMES); // Fallback to normal names if famous ones run out
+      name = pick(LAST_NAMES);
       attempts++;
     }
     usedNames.add(name);
@@ -142,9 +142,8 @@ export function generateTalentPool(size: number, families: Family[], agents: Age
 
     if (Math.random() < 0.2) {
       if (primaryRole === 'actor') rolesList.push('producer');
-      else if (primaryRole === 'writer') rolesList.push(pick(['director', 'producer', 'showrunner']));
+      else if (primaryRole === 'writer') rolesList.push(pick(['director', 'producer']));
       else if (primaryRole === 'director') rolesList.push('producer');
-      else if (primaryRole === 'showrunner') rolesList.push('writer');
     }
 
     const uniqueRoles = Array.from(new Set(rolesList));
@@ -179,6 +178,10 @@ export function generateTalentPool(size: number, families: Family[], agents: Age
       temperament = pick(['Diva', 'Volatile', 'Difficult', 'Method']);
     }
 
+    const age = Math.floor(randRange(18, 75));
+    const unscriptedExperience = Math.random() < 0.2 ? Math.floor(randRange(30, 90)) : 0;
+    const showrunningExperience = uniqueRoles.includes('writer') ? Math.floor(randRange(0, 100)) : 0;
+
     // Generate Filmography & Stats
     const filmographyCount = Math.floor(randRange(2, 6));
     const filmography = Array.from({ length: filmographyCount }).map(() => {
@@ -196,14 +199,28 @@ export function generateTalentPool(size: number, families: Family[], agents: Age
     }).sort((a, b) => b.year - a.year);
 
     const careerGross = filmography.reduce((sum, f) => sum + f.gross, 0);
-    const highestSalaryObj = filmography.reduce((prev, curr) => (curr.salary > prev.salary ? curr : prev), filmography[0]);
-    const highestSalary = {
-      amount: highestSalaryObj.salary,
-      project: highestSalaryObj.title,
-      type: highestSalaryObj.type
-    };
+    const movieCredits = filmography.filter(f => f.type === 'movie');
+    const tvCredits = filmography.filter(f => f.type === 'tv');
 
-    const triviaCount = Math.floor(randRange(1, 3));
+    const highestSalaryMovie = movieCredits.length > 0 
+      ? movieCredits.reduce((prev, curr) => (curr.salary > prev.salary ? curr : prev), movieCredits[0])
+      : undefined;
+
+    const highestSalaryTv = tvCredits.length > 0
+      ? tvCredits.reduce((prev, curr) => (curr.salary > prev.salary ? curr : prev), tvCredits[0])
+      : undefined;
+
+    const knownFor = filmography
+      .slice()
+      .sort((a, b) => (b.gross || b.salary) - (a.gross || a.salary))
+      .slice(0, 3)
+      .map(f => f.title);
+
+    // Star Meter Algorithm: (Prestige * 0.4) + (Draw * 0.4) + (Recent Momentum * 0.2)
+    const momentum = prestige; // Placeholder for initial pool, logic updates during week advance
+    const starMeter = Math.floor((prestige * 0.4) + (draw * 0.4) + (momentum * 0.2));
+
+    const triviaCount = Math.floor(randRange(1, 4));
     const triviaPool = [...TRIVIA_POOL];
     const trivia: string[] = [];
     for (let j = 0; j < triviaCount; j++) {
@@ -212,7 +229,7 @@ export function generateTalentPool(size: number, families: Family[], agents: Age
       triviaPool.splice(triviaPool.indexOf(t), 1);
     }
 
-    const bio = `${firstName} ${lastName} is a ${uniqueRoles.join('-')} known for their ${temperament.toLowerCase()} approach to work. ${isNepo ? 'Coming from a prominent industry family, they have had a unique vantage point on Hollywood since childhood.' : 'An outsider who worked their way up, they are seen as a rising force in the industry.'}`;
+    const bio = `${firstName} ${lastName} (${age}) is a ${uniqueRoles.join('-')} known for their ${temperament.toLowerCase()} approach. ${isNepo ? 'Coming from a prominent industry family, they have had a unique vantage point on Hollywood since childhood.' : 'An outsider who worked their way up, they are seen as a rising force in the industry.'} ${unscriptedExperience > 50 ? 'Having started in the unscripted world, they have successfully transitioned into scripted storytelling.' : ''}`;
 
     pool.push({
       id: `talent-${crypto.randomUUID()}`,
@@ -228,10 +245,16 @@ export function generateTalentPool(size: number, families: Family[], agents: Age
       familyId,
       accessLevel,
       perks,
+      age,
       bio,
       filmography,
       careerGross,
-      highestSalary,
+      knownFor,
+      starMeter,
+      showrunningExperience,
+      unscriptedExperience,
+      highestSalaryMovie: highestSalaryMovie ? { amount: highestSalaryMovie.salary, project: highestSalaryMovie.title, year: highestSalaryMovie.year } : undefined,
+      highestSalaryTv: highestSalaryTv ? { amount: highestSalaryTv.salary, project: highestSalaryTv.title, year: highestSalaryTv.year } : undefined,
       trivia
     });
   }

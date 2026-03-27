@@ -14,7 +14,8 @@ export interface Scandal {
 
 export type AgencyArchetype = 'powerhouse' | 'boutique' | 'shark';
 export type AccessLevel = 'outsider' | 'soft-access' | 'legacy' | 'dynasty' | 'comeback';
-export type TalentRole = 'director' | 'actor' | 'writer' | 'producer' | 'showrunner';
+export type ProjectRole = 'actor' | 'director' | 'writer' | 'producer' | 'showrunner';
+export type TalentRole = 'actor' | 'director' | 'writer' | 'producer';
 export type AgencyTier = 'powerhouse' | 'major' | 'mid-tier' | 'boutique' | 'specialist';
 export type AgencyCulture = 'shark' | 'family' | 'volume' | 'prestige';
 export type AgentSpecialty = 'film_packaging' | 'tv_packaging' | 'literary' | 'talent' | 'comedy' | 'unscripted';
@@ -81,14 +82,33 @@ export interface TalentProfile {
     project: string;
     type: 'movie' | 'tv';
   };
-  trivia?: string[];
-  // Sprint J / L additions
-  directorArchetype?: DirectorArchetype;
-  fandomSize?: number; // 0-100 scale representing loyal fan base
-  loyalty?: number; // 0-100 studio loyalty
-  controversyRisk?: number; // Base chance of spawning scandals
-  ego?: number; // 0-100 tracking their demands and attitude
   hasRazzie?: boolean;
+  
+  // SBDB & Career Tracking
+  age?: number;
+  knownFor?: string[]; // Top 3 Project IDs
+  starMeter?: number; // 0-100 derived metric
+  showrunningExperience?: number; // 0-100 (Writers only)
+  unscriptedExperience?: number; // 0-100 (Transition potential)
+  
+  // Advanced Relational Data
+  highestSalaryMovie?: {
+    amount: number;
+    project: string;
+    year: number;
+  };
+  highestSalaryTv?: {
+    amount: number;
+    project: string; // Per episode or total
+    year: number;
+  };
+  trivia?: string[];
+  
+  // Psychological & Fandom Stats
+  ego?: number;
+  loyalty?: number;
+  fandomSize?: number;
+  controversyRisk?: number;
 }
 
 export interface Contract {
