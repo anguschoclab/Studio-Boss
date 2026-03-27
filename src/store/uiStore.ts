@@ -28,6 +28,7 @@ interface UIStore {
   weekSummary: WeekSummary | null;
   
   selectedProjectId: string | null;
+  selectedTalentId: string | null;
   setActiveTab: (tab: 'command' | 'pipeline' | 'ip' | 'deals' | 'talent' | 'finance' | 'trades' | 'industry') => void;
   openCreateProject: () => void;
   closeCreateProject: () => void;
@@ -38,6 +39,7 @@ interface UIStore {
   showSummary: (summary: WeekSummary) => void;
   closeSummary: () => void;
   selectProject: (id: string | null) => void;
+  selectTalent: (id: string | null) => void;
 }
 
 export const useUIStore = create<UIStore>((set, get) => ({
@@ -81,6 +83,7 @@ export const useUIStore = create<UIStore>((set, get) => ({
   showWeekSummary: false,
   weekSummary: null,
   selectedProjectId: null,
+  selectedTalentId: null,
   setActiveTab: (tab) => set({ activeTab: tab }),
   openCreateProject: () => set({ showCreateProject: true }),
   closeCreateProject: () => set({ showCreateProject: false }),
@@ -91,5 +94,6 @@ export const useUIStore = create<UIStore>((set, get) => ({
   showSummary: (summary) => set({ showWeekSummary: true, weekSummary: summary }),
   closeSummary: () => set({ showWeekSummary: false }),
   selectProject: (id) => set({ selectedProjectId: id }),
+  selectTalent: (id) => set({ selectedTalentId: id }),
 }));
 

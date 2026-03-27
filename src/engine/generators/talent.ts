@@ -1,14 +1,6 @@
 import { TalentProfile, Family, AccessLevel, TalentRole, Agent, Agency } from '@/engine/types';
 import { pick, randRange } from '../utils';
-import { LAST_NAMES } from './names';
-
-const FIRST_NAMES = [
-  'Emma', 'Liam', 'Olivia', 'Noah', 'Ava', 'William', 'Sophia', 'James', 'Isabella', 'Oliver',
-  'Mia', 'Benjamin', 'Elijah', 'Lucas', 'Mason', 'Logan', 'Alexander', 'Ethan', 'Jacob', 'Michael',
-  'Daniel', 'Henry', 'Jackson', 'Sebastian', 'Aiden', 'Matthew', 'Samuel', 'David', 'Joseph', 'Carter',
-  'Owen', 'Wyatt', 'John', 'Jack', 'Luke', 'Jayden', 'Dylan', 'Grayson', 'Levi', 'Isaac',
-  'Gabriel', 'Julian', 'Mateo', 'Anthony', 'Jaxon', 'Lincoln', 'Joshua', 'Christopher', 'Andrew', 'Theodore'
-];
+import { LAST_NAMES, MALE_FIRST_NAMES, FEMALE_FIRST_NAMES } from './names';
 
 const FAMOUS_LAST_NAMES = [
   'Coppola', 'Barrymore', 'Fonda', 'Huston', 'Sheen', 'Baldwin', 'Sutherland', 'Bridges', 'Redgrave', 'Skarsgård',
@@ -87,11 +79,46 @@ export function generateFamilies(count: number): Family[] {
   return families;
 }
 
+const TRIVIA_POOL = [
+  'Once worked as a waiter before their big break.',
+  'Known for performing their own stunts in action sequences.',
+  'A classically trained Shakespearean actor.',
+  'Broke out in a low-budget indie horror film that became a cult hit.',
+  'Fluent in three languages, which helped their international career.',
+  'Notorious for never looking at their own dailies.',
+  'Almost quit acting before being cast in their most famous role.',
+  'Has a side hobby of restoring vintage motorcycles.',
+  'Is a second-generation actor, following in their parents footsteps.',
+  'Known for their extreme method acting preparations.',
+  'Refuses to use social media despite their massive following.',
+  'Originally studied to be a marine biologist.',
+  'Won a prestigious acting scholarship when they were only sixteen.',
+  'Has a collection of over 500 rare first-edition books.',
+  'Once spent three months living in a cabin to prepare for a role.',
+  'Known for their charitable work in ocean conservation.',
+  'Started their career in musical theater on Broadway.',
+  'Was discovered while working at a juice bar in West Hollywood.',
+  'Has never been seen without their signature sunglasses on set.',
+  'Once turned down a lead role in a major superhero franchise.',
+  'Is known for writing their own dialogue in several hit films.',
+  'Owns a small organic farm in upstate New York.',
+  'Practices Transcendental Meditation before every shoot.'
+];
+
+const PAST_PROJECT_TITLES = [
+  'Midnight in Berlin', 'The Silent Echo', 'Last Train to Nowhere', 'Blue Horizon', 'Neon Nights',
+  'Broken Promises', 'The Secret Vault', 'Summer of 84', 'Shadow Protocol', 'Final Vengeance',
+  'The Last Samurai', 'Empire of Dust', 'Under a Cold Moon', 'The Glass City', 'Wildfire',
+  'Into the Abyss', 'Quantum Leap', 'The Great Escape', 'Lost in Translation', 'American Dream',
+  'The Forgotten King', 'Revenge of the Sith', 'Shadows of Rome', 'Terminal Velocity', 'Deep Impact'
+];
+
 export function generateTalentPool(size: number, families: Family[], agents: Agent[], agencies: Agency[]): TalentProfile[] {
   const pool: TalentProfile[] = [];
 
   for (let i = 0; i < size; i++) {
-    const isNepo = Math.random() < 0.2 && families.length > 0; // 20% chance to be from a family
+    const isNepo = Math.random() < 0.2 && families.length > 0;
+    const gender = Math.random() < 0.5 ? 'male' : 'female';
     let familyId: string | undefined = undefined;
     let lastName: string;
     let accessLevel: AccessLevel;
@@ -100,52 +127,43 @@ export function generateTalentPool(size: number, families: Family[], agents: Age
       const family = pick(families);
       familyId = family.id;
       lastName = family.name;
-
       if (family.recognition > 80) accessLevel = 'dynasty';
       else if (family.recognition > 50) accessLevel = 'legacy';
       else if (family.status === 'faded') accessLevel = 'comeback';
       else accessLevel = 'soft-access';
     } else {
       lastName = pick(LAST_NAMES);
-      accessLevel = Math.random() < 0.1 ? 'soft-access' : 'outsider'; // Rare soft-access for non-family
+      accessLevel = Math.random() < 0.1 ? 'soft-access' : 'outsider';
     }
 
-    const firstName = pick(FIRST_NAMES);
+    const firstName = gender === 'male' ? pick(MALE_FIRST_NAMES) : pick(FEMALE_FIRST_NAMES);
     const primaryRole = pick(TALENT_TYPES);
-    const roles: TalentRole[] = [primaryRole];
+    const rolesList: TalentRole[] = [primaryRole];
 
-    // Add secondary roles for multi-hyphenates (20% chance)
     if (Math.random() < 0.2) {
-      if (primaryRole === 'actor') roles.push('producer');
-      else if (primaryRole === 'writer') roles.push(pick(['director', 'producer', 'showrunner']));
-      else if (primaryRole === 'director') roles.push('producer');
-      else if (primaryRole === 'showrunner') roles.push('writer');
+      if (primaryRole === 'actor') rolesList.push('producer');
+      else if (primaryRole === 'writer') rolesList.push(pick(['director', 'producer', 'showrunner']));
+      else if (primaryRole === 'director') rolesList.push('producer');
+      else if (primaryRole === 'showrunner') rolesList.push('writer');
     }
 
-    // Deduplicate
-    const uniqueRoles = Array.from(new Set(roles));
-
-    // Nepo babies get a slight bump in starting draw/prestige, but might have higher fee or volatility
+    const uniqueRoles = Array.from(new Set(rolesList));
     const nepoBump = isNepo ? 10 : 0;
     const prestige = Math.floor(randRange(10, 80)) + nepoBump;
     const draw = Math.floor(randRange(10, 80)) + nepoBump;
     const fee = Math.floor(randRange(100000, 5000000)) + (isNepo ? 500000 : 0);
 
-    // Assign Representation
     let assignedAgentId: string | undefined = undefined;
     let assignedAgencyId: string | undefined = undefined;
-
     const agencyMap = new Map(agencies.map(ag => [ag.id, ag]));
 
-    if (agents.length > 0 && Math.random() < 0.8) { // 80% have representation
-      // Powerhouses take top talent
+    if (agents.length > 0 && Math.random() < 0.8) {
       const targetAgent = agents.find(a => {
          const agency = a.agencyId ? agencyMap.get(a.agencyId) : undefined;
          if (agency?.tier === 'powerhouse') return prestige > 70;
          if (agency?.tier === 'major') return prestige > 50;
-         return true; // boutique/mid-tier take anyone
+         return true;
       }) || pick(agents);
-
       assignedAgentId = targetAgent.id;
       assignedAgencyId = targetAgent.agencyId;
     }
@@ -155,17 +173,51 @@ export function generateTalentPool(size: number, families: Family[], agents: Age
       temperament = pick(['Diva', 'Volatile', 'Difficult', 'Refuses to do press', 'Brings their own script doctor', 'Mandatory private jet', 'Demands final cut', 'Always late to set', 'Demands top billing', 'Refuses to do chemistry reads', 'Only communicates through manager', 'Demands constant schedule changes', 'Requires excessive vanity credits']);
     }
 
-    // Convert new temperaments into a perks/quirks system visually
     const perks: string[] = [];
     if (PERK_TEMPERAMENTS.includes(temperament)) {
       perks.push(temperament);
-      // Keep a valid legacy temperament for the UI fallback
       temperament = pick(['Diva', 'Volatile', 'Difficult', 'Method']);
     }
+
+    // Generate Filmography & Stats
+    const filmographyCount = Math.floor(randRange(2, 6));
+    const filmography = Array.from({ length: filmographyCount }).map(() => {
+      const type = Math.random() < 0.3 ? 'tv' : 'movie';
+      const gross = type === 'movie' ? randRange(10000000, 500000000) : 0;
+      const salary = randRange(50000, fee);
+      return {
+        title: pick(PAST_PROJECT_TITLES),
+        year: 2026 - Math.floor(randRange(1, 10)),
+        role: pick(uniqueRoles),
+        gross,
+        salary,
+        type: type as 'movie' | 'tv'
+      };
+    }).sort((a, b) => b.year - a.year);
+
+    const careerGross = filmography.reduce((sum, f) => sum + f.gross, 0);
+    const highestSalaryObj = filmography.reduce((prev, curr) => (curr.salary > prev.salary ? curr : prev), filmography[0]);
+    const highestSalary = {
+      amount: highestSalaryObj.salary,
+      project: highestSalaryObj.title,
+      type: highestSalaryObj.type
+    };
+
+    const triviaCount = Math.floor(randRange(1, 3));
+    const triviaPool = [...TRIVIA_POOL];
+    const trivia: string[] = [];
+    for (let j = 0; j < triviaCount; j++) {
+      const t = pick(triviaPool);
+      trivia.push(t);
+      triviaPool.splice(triviaPool.indexOf(t), 1);
+    }
+
+    const bio = `${firstName} ${lastName} is a ${uniqueRoles.join('-')} known for their ${temperament.toLowerCase()} approach to work. ${isNepo ? 'Coming from a prominent industry family, they have had a unique vantage point on Hollywood since childhood.' : 'An outsider who worked their way up, they are seen as a rising force in the industry.'}`;
 
     pool.push({
       id: `talent-${crypto.randomUUID()}`,
       name: `${firstName} ${lastName}`,
+      gender,
       roles: uniqueRoles,
       agencyId: assignedAgencyId,
       agentId: assignedAgentId,
@@ -175,7 +227,12 @@ export function generateTalentPool(size: number, families: Family[], agents: Age
       temperament,
       familyId,
       accessLevel,
-      perks
+      perks,
+      bio,
+      filmography,
+      careerGross,
+      highestSalary,
+      trivia
     });
   }
 

@@ -5,8 +5,11 @@ import { Badge } from '@/components/ui/badge';
 import { HoverCard, HoverCardTrigger, HoverCardContent } from '@/components/ui/hover-card';
 import { AGENCY_ARCHETYPES } from '@/engine/data/archetypes';
 import { TalentProfile } from '@/engine/types';
+import { useUIStore } from '@/store/uiStore';
+import { TalentDetailModal } from './TalentDetailModal';
 
 export const TalentPanel = () => {
+  const { selectTalent } = useUIStore();
   const state = useGameStore(s => s.gameState);
   const talentPool = useMemo(() => state?.industry.talentPool || [], [state?.industry.talentPool]);
   const agencies = useMemo(() => state?.industry.agencies || [], [state?.industry.agencies]);
@@ -14,7 +17,7 @@ export const TalentPanel = () => {
   const [filter, setFilter] = useState<string>('all');
 
   const filteredTalent = useMemo(() => {
-    return talentPool.filter(t => filter === 'all' || t.roles.includes(filter as import('@/engine/types').TalentRole));
+    return talentPool.filter(t => filter === 'all' || t.roles.includes(filter as any));
   }, [talentPool, filter]);
 
   return (
@@ -40,7 +43,11 @@ export const TalentPanel = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 overflow-y-auto pb-6 custom-scrollbar pr-2">
         {filteredTalent.map((talent: TalentProfile) => (
-          <div key={talent.id} className={`p-4 rounded-xl border ${talent.prestige >= 80 ? 'border-primary/50 shadow-[0_0_20px_rgba(234,179,8,0.15)] bg-card/80 bg-gradient-to-br from-primary/10 to-transparent' : 'border-border/60 bg-card/60 bg-gradient-to-br from-card/80 to-transparent'} backdrop-blur-md hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:border-primary/50 hover:-translate-y-1 transition-all duration-300 space-y-3.5 group relative overflow-hidden cursor-pointer`}>
+          <div 
+            key={talent.id} 
+            onClick={() => selectTalent(talent.id)}
+            className={`p-4 rounded-xl border ${talent.prestige >= 80 ? 'border-primary/50 shadow-[0_0_20px_rgba(234,179,8,0.15)] bg-card/80 bg-gradient-to-br from-primary/10 to-transparent' : 'border-border/60 bg-card/60 bg-gradient-to-br from-card/80 to-transparent'} backdrop-blur-md hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:border-primary/50 hover:-translate-y-1 active:scale-95 transition-all duration-300 space-y-3.5 group relative overflow-hidden cursor-pointer`}
+          >
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
             <div className="flex items-start justify-between gap-2 relative z-10">
@@ -122,6 +129,7 @@ export const TalentPanel = () => {
           </div>
         )}
       </div>
+      <TalentDetailModal />
     </div>
   );
 };

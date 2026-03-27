@@ -55,6 +55,7 @@ export interface Family {
 export interface TalentProfile {
   id: string;
   name: string;
+  gender: 'male' | 'female';
   roles: TalentRole[];
   agencyId?: string;
   agentId?: string;
@@ -65,6 +66,22 @@ export interface TalentProfile {
   familyId?: string;
   accessLevel: AccessLevel;
   perks?: string[];
+  bio?: string;
+  filmography?: {
+    title: string;
+    year: number;
+    role: string;
+    gross: number;
+    salary: number;
+    type: 'movie' | 'tv';
+  }[];
+  careerGross?: number;
+  highestSalary?: {
+    amount: number;
+    project: string;
+    type: 'movie' | 'tv';
+  };
+  trivia?: string[];
   // Sprint J / L additions
   directorArchetype?: DirectorArchetype;
   fandomSize?: number; // 0-100 scale representing loyal fan base
