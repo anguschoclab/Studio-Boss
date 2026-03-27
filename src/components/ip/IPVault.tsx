@@ -1,19 +1,18 @@
 import React from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { selectReleasedProjects, selectStudio } from '@/store/selectors';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Library, Link as LinkIcon, Star, TrendingUp, DollarSign, Award } from 'lucide-react';
+import { Library, Link as LinkIcon, Star, TrendingUp, DollarSign, Award, Archive, Zap } from 'lucide-react';
 import { formatMoney } from '@/engine/utils';
 import { Project } from '@/engine/types';
-
+import { cn } from '@/lib/utils';
 import { useShallow } from 'zustand/react/shallow';
 
 export const IPVault = () => {
   const gameState = useGameStore(s => s.gameState);
   
-  // Use useShallow to prevent re-renders when the filtered array has the same content
   const releasedProjects = useGameStore(useShallow(s => selectReleasedProjects(s.gameState)));
   const studio = useGameStore(useShallow(s => selectStudio(s.gameState)));
   
@@ -41,28 +40,41 @@ export const IPVault = () => {
   }, [releasedProjects, studio]);
 
   return (
-    <div className="h-full flex flex-col space-y-6 animate-in fade-in duration-500 overflow-hidden">
-      <div className="flex items-center justify-between">
-        <h2 className="font-display text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70 tracking-tight">IP Vault</h2>
+    <div className="h-full flex flex-col space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700 overflow-hidden">
+      {/* Vault Header */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 bg-white/5 p-5 rounded-xl border border-white/5 backdrop-blur-sm">
+        <div>
+          <div className="flex items-center gap-3 mb-1">
+            <div className="w-10 h-10 rounded-lg bg-secondary/10 border border-secondary/20 flex items-center justify-center">
+              <Archive className="h-5 w-5 text-secondary" />
+            </div>
+            <h2 className="text-2xl font-black tracking-tighter uppercase leading-none">Catalog & IP Vault</h2>
+          </div>
+          <p className="text-[11px] font-black uppercase text-muted-foreground/60 tracking-[0.2em]">Intellectual Property Protection • {releasedProjects.length} Assets</p>
+        </div>
+        
         <div className="flex gap-2">
-          <Badge variant="outline" className="bg-primary/5 border-primary/20 text-primary uppercase font-bold tracking-widest text-[10px]">
+          <Badge variant="outline" className="bg-primary/5 border-primary/20 text-primary uppercase font-black tracking-widest text-[9px] py-1">
             {releasedProjects.length} Catalog Entries
           </Badge>
-          <Badge variant="outline" className="bg-secondary/5 border-secondary/20 text-secondary uppercase font-bold tracking-widest text-[10px]">
+          <Badge variant="outline" className="bg-secondary/5 border-secondary/20 text-secondary uppercase font-black tracking-widest text-[9px] py-1">
             {franchiseEntries.length} Active Franchises
           </Badge>
         </div>
       </div>
 
       <ScrollArea className="flex-1 pr-4">
-        <div className="space-y-8 pb-8">
+        <div className="space-y-10 pb-12">
           {/* Franchises Section */}
           {franchiseEntries.length > 0 && (
             <div className="space-y-4">
-              <h3 className="text-sm font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-                <Star className="w-4 h-4 text-primary" /> Active Franchises
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="flex items-center gap-3 px-2">
+                <div className="w-1.5 h-4 rounded-full bg-primary" />
+                <h3 className="text-xs font-black uppercase tracking-widest text-foreground/80 flex items-center gap-2">
+                  Established Franchises
+                </h3>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {franchiseEntries.map(([rootId, projects]) => (
                   <FranchiseCard key={rootId} projects={projects} />
                 ))}
@@ -72,13 +84,17 @@ export const IPVault = () => {
 
           {/* Library Section */}
           <div className="space-y-4">
-            <h3 className="text-sm font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-              <Library className="w-4 h-4 text-secondary" /> Studio Library
-            </h3>
+            <div className="flex items-center gap-3 px-2">
+              <div className="w-1.5 h-4 rounded-full bg-secondary" />
+              <h3 className="text-xs font-black uppercase tracking-widest text-foreground/80 flex items-center gap-2">
+                Intellectual Property Library
+              </h3>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {independentProjects.length === 0 && franchiseEntries.length === 0 ? (
-                <div className="col-span-full border-2 border-dashed border-border/50 rounded-xl p-12 text-center bg-card/20 backdrop-blur-sm">
-                  <p className="text-muted-foreground">The vault is empty. Release your first project to start your catalog.</p>
+                <div className="col-span-full py-20 text-center glass-card border-none">
+                  <Library className="w-10 h-10 text-muted-foreground/20 mx-auto mb-4" />
+                  <p className="text-sm font-bold text-muted-foreground/40 uppercase tracking-widest">The vault is currently empty.</p>
                 </div>
               ) : (
                 independentProjects.map(p => (
@@ -91,23 +107,30 @@ export const IPVault = () => {
           {/* First Look Deals */}
           {firstLookDeals.length > 0 && (
             <div className="space-y-4">
-              <h3 className="text-sm font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-                <LinkIcon className="w-4 h-4 text-blue-400" /> First-Look Deals
-              </h3>
+               <div className="flex items-center gap-3 px-2">
+                <div className="w-1.5 h-4 rounded-full bg-blue-500" />
+                <h3 className="text-xs font-black uppercase tracking-widest text-foreground/80">
+                  Active First-Look Pipeline
+                </h3>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {firstLookDeals.map(deal => {
                    const talent = gameState?.industry.talentPool.find(t => t.id === deal.talentId);
                    return (
-                     <Card key={deal.talentId} className="bg-card/40 border-blue-500/20">
-                       <CardHeader className="p-4 pb-2">
-                         <CardTitle className="text-sm font-bold">{talent?.name || 'Unknown Talent'}</CardTitle>
-                         <CardDescription className="text-[10px] uppercase">Exclusive Multi-Year Deal</CardDescription>
-                       </CardHeader>
-                       <CardContent className="p-4 pt-0">
-                         <div className="text-[11px] text-muted-foreground">
-                           Expires in {deal.weeksRemaining} weeks
-                         </div>
-                       </CardContent>
+                     <Card key={deal.talentId} className="glass-card border-l-4 border-l-blue-500/50 border-none group hover-glow">
+                        <CardContent className="p-5">
+                          <div className="flex justify-between items-start mb-3">
+                            <div>
+                              <div className="text-sm font-black uppercase tracking-tight group-hover:text-blue-400 transition-colors">{talent?.name || 'Unknown Talent'}</div>
+                              <div className="text-[9px] font-black uppercase text-muted-foreground tracking-widest">Exclusive Creator Deal</div>
+                            </div>
+                            <LinkIcon className="h-3.5 w-3.5 text-blue-500/40" />
+                          </div>
+                          <div className="flex items-center justify-between pt-3 border-t border-white/5">
+                            <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-widest">Term Remaining</span>
+                            <span className="text-xs font-mono font-bold text-blue-400">{deal.weeksRemaining}w</span>
+                          </div>
+                        </CardContent>
                      </Card>
                    );
                 })}
@@ -125,41 +148,50 @@ const FranchiseCard = ({ projects }: { projects: Project[] }) => {
   const totalRevenue = projects.reduce((sum, p) => sum + p.revenue, 0);
   
   return (
-    <Card className="bg-card/40 border-primary/20 hover:border-primary/40 transition-colors group overflow-hidden relative">
-      <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
+    <Card className="glass-card group overflow-hidden relative border-none hover-glow">
+      {/* Decorative Branding */}
+      <div className="absolute -top-10 -right-10 w-32 h-32 bg-primary/5 rounded-full blur-3xl" />
+      <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
         <Star className="w-12 h-12 text-primary" />
       </div>
-      <CardHeader className="p-5">
-        <div className="flex justify-between items-start">
+
+      <CardContent className="p-6 space-y-5">
+        <div className="flex justify-between items-start relative z-10">
           <div>
-            <CardTitle className="font-display text-lg font-black tracking-tight">{root.title.split(':')[0]} Universe</CardTitle>
-            <CardDescription className="text-xs">{projects.length} Installments in Catalog</CardDescription>
+            <h4 className="text-xl font-black tracking-tighter uppercase group-hover:text-primary transition-colors">{root.title.split(':')[0]} IP Group</h4>
+            <div className="flex items-center gap-2 mt-1">
+              <Badge variant="outline" className="text-[9px] font-black border-primary/20 bg-primary/5 text-primary tracking-widest uppercase py-0">{root.genre}</Badge>
+              <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest">{projects.length} Total Units</span>
+            </div>
           </div>
-          <Badge className="bg-primary/20 text-primary border-primary/30 h-fit">{root.genre}</Badge>
         </div>
-      </CardHeader>
-      <CardContent className="p-5 pt-0 space-y-4">
-        <div className="flex gap-4">
-          <div className="flex-1">
-            <div className="text-[10px] uppercase font-bold text-muted-foreground mb-1">Lifetime Revenue</div>
-            <div className="text-lg font-black text-foreground">{formatMoney(totalRevenue)}</div>
+
+        <div className="grid grid-cols-2 gap-6 pt-2">
+          <div className="space-y-1">
+            <div className="text-[9px] uppercase font-black text-muted-foreground tracking-widest flex items-center gap-1.5">
+              <DollarSign className="h-2.5 w-2.5" /> Gross Yield
+            </div>
+            <div className="text-xl font-black tracking-tight text-glow text-primary">{formatMoney(totalRevenue)}</div>
           </div>
-          <div className="flex-1">
-            <div className="text-[10px] uppercase font-bold text-muted-foreground mb-1">Avg Rating</div>
-            <div className="text-lg font-black text-foreground">
+          <div className="space-y-1">
+            <div className="text-[9px] uppercase font-black text-muted-foreground tracking-widest flex items-center gap-1.5">
+              <TrendingUp className="h-2.5 w-2.5" /> Critical Index
+            </div>
+            <div className="text-xl font-black tracking-tight text-foreground/80">
               {(projects.reduce((sum, p) => sum + (p.reviewScore || 0), 0) / projects.length).toFixed(1)}/10
             </div>
           </div>
         </div>
         
-        <div className="space-y-2">
-          <div className="text-[10px] uppercase font-bold text-muted-foreground">Recent Releases</div>
+        <div className="space-y-2 pt-2 border-t border-white/5">
+          <div className="text-[9px] uppercase font-black text-muted-foreground tracking-widest">Property Components</div>
           <div className="flex flex-wrap gap-1.5">
-            {projects.slice(-3).reverse().map(p => (
-              <Badge key={p.id} variant="secondary" className="text-[9px] bg-secondary/10 hover:bg-secondary/20 truncate max-w-[150px]">
+            {projects.slice(-4).reverse().map(p => (
+              <Badge key={p.id} variant="outline" className="text-[9px] font-medium bg-white/5 border-white/5 hover:bg-white/10 transition-colors">
                 {p.title}
               </Badge>
             ))}
+            {projects.length > 4 && <Badge variant="outline" className="text-[9px] text-muted-foreground/60 border-none bg-transparent whitespace-nowrap">+ {projects.length - 4} more</Badge>}
           </div>
         </div>
       </CardContent>
@@ -169,29 +201,42 @@ const FranchiseCard = ({ projects }: { projects: Project[] }) => {
 
 const LibraryItem = ({ project }: { project: Project }) => {
   return (
-    <Card className="bg-card/40 border-border/40 hover:border-secondary/40 transition-colors h-full flex flex-col">
-      <CardHeader className="p-4 pb-2 shrink-0">
-        <div className="flex justify-between items-start gap-2">
-          <CardTitle className="text-sm font-bold line-clamp-1">{project.title}</CardTitle>
-          <Badge variant="outline" className="text-[9px] shrink-0 uppercase">{project.format}</Badge>
-        </div>
-        <CardDescription className="text-[10px] line-clamp-2 italic">"{project.flavor}"</CardDescription>
-      </CardHeader>
-      <CardContent className="p-4 pt-2 flex flex-col justify-between flex-1 space-y-3">
-        <div className="grid grid-cols-2 gap-2">
-          <div className="flex items-center gap-1.5 grayscale opacity-70">
-            <DollarSign className="w-3 h-3 text-emerald-400" />
-            <span className="text-[11px] font-bold">{formatMoney(project.revenue)}</span>
+    <Card className="glass-card border-none hover-glow group transition-all duration-300">
+      <CardContent className="p-5 flex flex-col h-full space-y-4">
+        <div className="flex justify-between items-start gap-3">
+          <div className="min-w-0">
+            <h4 className="text-sm font-black uppercase tracking-tight truncate group-hover:text-secondary transition-colors">{project.title}</h4>
+            <div className="text-[9px] font-black uppercase text-muted-foreground/60 tracking-widest mt-0.5">{project.format} Asset</div>
           </div>
-          <div className="flex items-center gap-1.5 grayscale opacity-70">
-            <Award className="w-3 h-3 text-primary" />
-            <span className="text-[11px] font-bold">{project.reviewScore || 0}/10</span>
+          <Badge variant="outline" className="text-[9px] font-black border-white/5 bg-white/5 uppercase h-5">{project.genre}</Badge>
+        </div>
+
+        <div className="flex-1 py-1">
+           <p className="text-[11px] text-muted-foreground/80 italic line-clamp-2 leading-relaxed opacity-70 group-hover:opacity-100 transition-opacity">"{project.flavor}"</p>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4 pb-3 border-b border-white/5 pt-1">
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 rounded bg-emerald-500/10 flex items-center justify-center">
+              <DollarSign className="w-3 h-3 text-emerald-500" />
+            </div>
+            <span className="text-[11px] font-black tracking-tight">{formatMoney(project.revenue)}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 rounded bg-primary/10 flex items-center justify-center">
+              <Award className="w-3 h-3 text-primary" />
+            </div>
+            <span className="text-[11px] font-black tracking-tight">{project.reviewScore || 0}/10</span>
           </div>
         </div>
-        <div className="pt-2 border-t border-border/20 flex justify-between items-center shrink-0">
-           <span className="text-[10px] text-muted-foreground font-mono">Released Wk {project.releaseWeek}</span>
+
+        <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-widest text-muted-foreground/60">
+           <span>Release Week {project.releaseWeek}</span>
            {project.isCultClassic && (
-             <Badge className="bg-pink-500/10 text-pink-500 border-pink-500/20 text-[9px] h-fit">Cult Classic</Badge>
+             <span className="flex items-center gap-1.5 text-pink-500 text-glow animate-pulse">
+               <Zap className="h-2.5 w-2.5" />
+               Cult Status
+             </span>
            )}
         </div>
       </CardContent>
