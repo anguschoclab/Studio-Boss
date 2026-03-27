@@ -1907,6 +1907,328 @@ const CRISIS_POOLS = [
     ]
   }
 
+
+, {
+    description: "The A-list lead actor has discovered a new passion for experimental crypto-art and is refusing to work until the studio buys their 'Invisible Masterpiece' NFT.",
+    options: [
+      {
+        text: "Buy the invisible NFT.",
+        effectDescription: "Costs $1.5M for literal nothingness, but they return to set.",
+        cashPenalty: 1500000
+      },
+      {
+        text: "Refuse and threaten a lawsuit.",
+        effectDescription: "The actor eventually complies but gives a lifeless performance. Lose 25 buzz.",
+        buzzPenalty: 25
+      },
+      {
+        text: "Mint the movie itself as an NFT to appease them.",
+        effectDescription: "The internet universally mocks the decision. Lose 40 buzz and delay post-production by 2 weeks.",
+        buzzPenalty: 40,
+        weeksDelay: 2
+      }
+    ]
+  },
+  {
+    description: "The 'genius' screenwriter delivered the final act, and it reveals that the entire movie was a simulation happening inside a snow globe. The crew is in revolt.",
+    options: [
+      {
+        text: "Fire the writer and hire a script doctor.",
+        effectDescription: "Costs $500k and delays the shoot by 3 weeks.",
+        cashPenalty: 500000,
+        weeksDelay: 3
+      },
+      {
+        text: "Shoot it as written. Trust the 'genius'.",
+        effectDescription: "Test audiences throw things at the screen. Massive 35 buzz penalty.",
+        buzzPenalty: 35
+      },
+      {
+        text: "Force the actors to improvise a new ending.",
+        effectDescription: "Saves money, but the ending feels deeply disjointed. Lose 20 buzz.",
+        buzzPenalty: 20
+      }
+    ]
+  },
+  {
+    description: "A prominent tech billionaire randomly tweeted that your film is 'woke garbage' because it features a female scientist, triggering a massive bot-driven review bombing campaign before release.",
+    options: [
+      {
+        text: "Ignore the billionaire and weather the storm.",
+        effectDescription: "The bot campaign succeeds in tanking the initial perception. Lose 30 buzz.",
+        buzzPenalty: 30
+      },
+      {
+        text: "Hire a massive bot-farm of your own to counter-tweet.",
+        effectDescription: "Costs $300k. The internet becomes an unusable warzone, but the buzz stabilizes.",
+        cashPenalty: 300000
+      },
+      {
+        text: "Invite the billionaire to an exclusive screening to 'change his mind'.",
+        effectDescription: "He falls asleep during the movie and tweets about it. Lose 45 buzz and $100k for the event.",
+        buzzPenalty: 45,
+        cashPenalty: 100000
+      }
+    ]
+  },
+  {
+    description: "The film's primary sponsor, a controversial cryptocurrency exchange, just collapsed spectacularly, and the CEO is a fugitive.",
+    options: [
+      {
+        text: "Urgently digitally remove all their logos from the film.",
+        effectDescription: "Costs $800k in VFX and delays the release by 2 weeks.",
+        cashPenalty: 800000,
+        weeksDelay: 2
+      },
+      {
+        text: "Leave the logos in but release a statement distancing the studio.",
+        effectDescription: "The internet mocks your 'corporate cowardice'. Lose 25 buzz.",
+        buzzPenalty: 25
+      },
+      {
+        text: "Lean into it and market the film as a 'satire of modern finance'.",
+        effectDescription: "Costs $400k in new marketing materials, but neutralizes the controversy.",
+        cashPenalty: 400000
+      }
+    ]
+  },
+  {
+    description: "The director's 'method' approach involved not telling the background extras that the explosion was real. The ensuing panic went viral.",
+    options: [
+      {
+        text: "Settle all lawsuits quietly.",
+        effectDescription: "Costs an agonizing $2.5M in settlements.",
+        cashPenalty: 2500000
+      },
+      {
+        text: "Claim it was 'performance art' and refuse to settle.",
+        effectDescription: "The studio is sued into oblivion. Lose 50 buzz and face massive legal fees later. (Instant $1M hit).",
+        cashPenalty: 1000000,
+        buzzPenalty: 50
+      },
+      {
+        text: "Fire the director as a scapegoat.",
+        effectDescription: "Costs $1M to replace them and delays production by 4 weeks.",
+        cashPenalty: 1000000,
+        weeksDelay: 4
+      }
+    ]
+  },
+  {
+    description: "Your highly-paid intimacy coordinator was revealed to be a fraud who got their certification from a weekend seminar in a strip mall.",
+    options: [
+      {
+        text: "Fire them and reshoot the intimacy scenes with a real professional.",
+        effectDescription: "Costs $400k and delays production by 2 weeks.",
+        cashPenalty: 400000,
+        weeksDelay: 2
+      },
+      {
+        text: "Keep the footage but scrub their name from the credits.",
+        effectDescription: "The actors union is furious. Lose 20 buzz and face a $150k fine.",
+        cashPenalty: 150000,
+        buzzPenalty: 20
+      },
+      {
+        text: "Ignore the controversy.",
+        effectDescription: "A major exposé is published. Lose 35 buzz.",
+        buzzPenalty: 35
+      }
+    ]
+  },
+  {
+    description: "The studio mandates the insertion of a 'post-credits scene' setting up a cinematic universe, but the scene was shot for a completely different movie three years ago.",
+    options: [
+      {
+        text: "Refuse the mandate and fight the studio.",
+        effectDescription: "The studio cuts your marketing budget in retaliation. Lose 25 buzz.",
+        buzzPenalty: 25
+      },
+      {
+        text: "Insert it and try to make it make sense with ADR.",
+        effectDescription: "Costs $100k, but audiences are utterly baffled. Lose 15 buzz.",
+        cashPenalty: 100000,
+        buzzPenalty: 15
+      },
+      {
+        text: "Hire the original actors for a quick, expensive reshoot to make it connect.",
+        effectDescription: "Costs $1.2M and delays post-production by 2 weeks.",
+        cashPenalty: 1200000,
+        weeksDelay: 2
+      }
+    ]
+  },
+  {
+    description: "A prominent TikToker with 50 million followers declares your movie 'mid' based solely on a leaked low-res screenshot of a prop.",
+    options: [
+      {
+        text: "Pay the TikToker an exorbitant fee to change their mind.",
+        effectDescription: "Costs $500k in 'influencer marketing'.",
+        cashPenalty: 500000
+      },
+      {
+        text: "Launch a retaliatory meme campaign against them.",
+        effectDescription: "Costs $200k. The internet considers it extremely cringe. Lose 30 buzz.",
+        cashPenalty: 200000,
+        buzzPenalty: 30
+      },
+      {
+        text: "Ignore it.",
+        effectDescription: "The algorithm turns against you. Lose 20 buzz.",
+        buzzPenalty: 20
+      }
+    ]
+  },
+  {
+    description: "Your prestige drama's lead actor refuses to do press because they claim the film's lighting 'doesn't align with their aura'.",
+    options: [
+      {
+        text: "Hire an 'aura specialist' to mediate.",
+        effectDescription: "Costs $150k for the consultant.",
+        cashPenalty: 150000
+      },
+      {
+        text: "Cancel their press tour.",
+        effectDescription: "The film loses crucial marketing momentum. Lose 25 buzz.",
+        buzzPenalty: 25
+      },
+      {
+        text: "Recolor the entire movie in post to match their aura.",
+        effectDescription: "Costs $800k in VFX color grading and delays the release by 3 weeks.",
+        cashPenalty: 800000,
+        weeksDelay: 3
+      }
+    ]
+  },
+  {
+    description: "The film's incredibly expensive, bespoke physical prop—a MacGuffin critical to the plot—was accidentally sold at a local garage sale by a disgruntled PA.",
+    options: [
+      {
+        text: "Track it down and buy it back from a collector at a massive markup.",
+        effectDescription: "Costs $300k.",
+        cashPenalty: 300000
+      },
+      {
+        text: "Rebuild it from scratch.",
+        effectDescription: "Costs $100k and delays the shoot by 2 weeks.",
+        cashPenalty: 100000,
+        weeksDelay: 2
+      },
+      {
+        text: "Replace it with a generic item and rewrite the script.",
+        effectDescription: "The plot hole is massive. Lose 20 buzz.",
+        buzzPenalty: 20
+      }
+    ]
+  },
+  {
+    description: "The director of your gritty urban thriller insists on shooting exclusively during 'magic hour', reducing usable filming time to 15 minutes a day.",
+    options: [
+      {
+        text: "Allow it for the sake of 'art'.",
+        effectDescription: "Delays production by an unbelievable 6 weeks.",
+        weeksDelay: 6
+      },
+      {
+        text: "Force them to shoot all day and fix it in post.",
+        effectDescription: "Costs $1.5M for extensive day-for-night/magic-hour VFX grading.",
+        cashPenalty: 1500000
+      },
+      {
+        text: "Fire the director.",
+        effectDescription: "Costs $800k to replace them and delays the shoot by 3 weeks.",
+        cashPenalty: 800000,
+        weeksDelay: 3
+      }
+    ]
+  },
+  {
+    description: "The studio's highly publicized 'carbon neutral' initiative is a sham, and an investigative journalist just found the massive hidden diesel generators powering the set.",
+    options: [
+      {
+        text: "Bribe the journalist to kill the story.",
+        effectDescription: "Costs $500k in hush money.",
+        cashPenalty: 500000
+      },
+      {
+        text: "Let the story break and issue a generic apology.",
+        effectDescription: "The eco-conscious demographic boycotts the film. Lose 35 buzz.",
+        buzzPenalty: 35
+      },
+      {
+        text: "Actually go carbon neutral immediately.",
+        effectDescription: "Costs $1.2M in rush infrastructure changes and delays the shoot by 2 weeks.",
+        cashPenalty: 1200000,
+        weeksDelay: 2
+      }
+    ]
+  },
+  {
+    description: "A prominent supporting actor was just exposed for running a bizarre, multi-level marketing scheme selling 'brain-enhancing' essential oils to their fans.",
+    options: [
+      {
+        text: "Digitally remove them and recast the role.",
+        effectDescription: "Costs $1.5M in extensive VFX and delays post-production by 4 weeks.",
+        cashPenalty: 1500000,
+        weeksDelay: 4
+      },
+      {
+        text: "Keep them in the movie, but ban them from the press tour.",
+        effectDescription: "The association still taints the film. Lose 25 buzz.",
+        buzzPenalty: 25
+      },
+      {
+        text: "Invest in the MLM and feature the oils in the movie.",
+        effectDescription: "Costs $200k. The fans realize they are being grifted. Massive 45 buzz penalty.",
+        cashPenalty: 200000,
+        buzzPenalty: 45
+      }
+    ]
+  },
+  {
+    description: "The film's highly touted 'groundbreaking' CGI monster design was leaked, and the internet unanimously agrees it looks exactly like a popular children's cartoon character.",
+    options: [
+      {
+        text: "Order an immediate, ground-up redesign.",
+        effectDescription: "Costs a staggering $2.5M and delays post-production by 5 weeks.",
+        cashPenalty: 2500000,
+        weeksDelay: 5
+      },
+      {
+        text: "Lean into it. Claim it's a deliberate homage.",
+        effectDescription: "Audiences don't buy it, and you face a potential lawsuit. Lose 30 buzz and $500k in legal fees.",
+        buzzPenalty: 30,
+        cashPenalty: 500000
+      },
+      {
+        text: "Release the movie with the terrible CGI.",
+        effectDescription: "It becomes a massive laughingstock. Lose 40 buzz.",
+        buzzPenalty: 40
+      }
+    ]
+  },
+  {
+    description: "Your 'visionary' director has demanded that the entire third act be reshot because they 'had a dream where the villain was actually a misunderstood mime'.",
+    options: [
+      {
+        text: "Approve the reshoots.",
+        effectDescription: "Costs $2M and delays the film by 4 weeks. The ending is baffling.",
+        cashPenalty: 2000000,
+        weeksDelay: 4,
+        buzzPenalty: 15
+      },
+      {
+        text: "Refuse the reshoots and lock them out of the editing bay.",
+        effectDescription: "The director throws a massive tantrum in the trades. Lose 25 buzz.",
+        buzzPenalty: 25
+      },
+      {
+        text: "Compromise by adding a mime to the background of one scene.",
+        effectDescription: "Costs $50k, but the director is pacified.",
+        cashPenalty: 50000
+      }
+    ]
+  }
 ];
 
 export function checkAndTriggerCrisis(project: Project): ActiveCrisis | undefined {

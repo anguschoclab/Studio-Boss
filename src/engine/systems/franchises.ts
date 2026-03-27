@@ -108,7 +108,9 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
 
   // Apply "Superhero Fatigue" (or general blockbuster fatigue) logic:
   // If the genre is heavily saturated, amplify the risk severely.
-  if ((sourceProject.genre === 'Superhero' || sourceProject.genre === 'Action' || sourceProject.genre === 'Sci-Fi') && genreSaturationCount > 5) {
+  if ((sourceProject.genre === 'Superhero' || sourceProject.genre === 'Action' || sourceProject.genre === 'Sci-Fi') && genreSaturationCount > 10) {
+      baseFatigueRisk *= 2.0; // Extreme fatigue curve
+  } else if ((sourceProject.genre === 'Superhero' || sourceProject.genre === 'Action' || sourceProject.genre === 'Sci-Fi') && genreSaturationCount > 5) {
       baseFatigueRisk *= 1.5; // Steep fatigue curve
   } else if ((sourceProject.genre === 'Horror' || sourceProject.genre === 'Comedy' || sourceProject.genre === 'Fantasy') && genreSaturationCount > 8) {
       baseFatigueRisk *= 1.3; // Noticeable fatigue for these genres when heavily saturated
@@ -132,7 +134,19 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
 
   // If the franchise is dead/fatigued and underperformed, there's a chance to reboot, format flip, or deconstruct
   if (isFatigued && sourceProject.revenue <= sourceProject.budget * 1.5) {
-    if (rand < 0.2) {
+    if (rand < 0.15) {
+      return {
+        title: `${sourceProject.title}: Villain Origin Story`,
+        format: 'film',
+        genre: 'Drama',
+        budgetTier: 'mid',
+        targetAudience: 'Prestige / Critics',
+        flavor: `A gritty, character-driven origin story for the franchise's iconic villain.`,
+        parentProjectId: sourceProject.id,
+        isSpinoff: true,
+        initialBuzzBonus: 10 - (saturationPenalty / 2),
+      };
+    } else if (rand < 0.3) {
       return {
         title: `${sourceProject.title}: Reboot`,
         format: sourceProject.format,
@@ -144,7 +158,7 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
         isSpinoff: true,
         initialBuzzBonus: 5 - (saturationPenalty / 2), // Penalty for rebooting too soon
       };
-    } else if (rand < 0.4) {
+    } else if (rand < 0.5) {
       // Deconstructive Meta-Sequel
       return {
         title: `${sourceProject.title}: Resurrection`,
@@ -157,8 +171,8 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
         isSpinoff: true,
         initialBuzzBonus: 10, // Meta-commentary tends to get initial positive buzz
       };
-    } else if (rand < 0.6 && sourceProject.format === 'film') {
-        if (rand < 0.5) {
+    } else if (rand < 0.7 && sourceProject.format === 'film') {
+        if (rand < 0.6) {
             // Format flip: Film to TV to save the IP
             return {
               title: `${sourceProject.title}: The Series`,
@@ -191,7 +205,7 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
               initialBuzzBonus: 12 - (saturationPenalty / 3),
             };
         }
-    } else if (universeProjectCount >= 10 && rand >= 0.6 && rand < 0.75) {
+    } else if (universeProjectCount >= 10 && rand >= 0.7 && rand < 0.8) {
       // Cinematic Universe Phase Reset
       return {
         title: `${sourceProject.title}: A New Era`,
@@ -204,7 +218,7 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
         isSpinoff: true,
         initialBuzzBonus: 15 - (saturationPenalty / 4), // Good buzz for a fresh start, but some fatigue remains
       };
-    } else if (sourceProject.genre === 'Animation' && rand >= 0.75 && rand < 0.85) {
+    } else if (sourceProject.genre === 'Animation' && rand >= 0.8 && rand < 0.9) {
       // Live-Action Remake
       return {
         title: `${sourceProject.title}: Live-Action Event`,
@@ -217,7 +231,7 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
         isSpinoff: true,
         initialBuzzBonus: 10 - (saturationPenalty / 3),
       };
-    } else if (sourceProject.format === 'film' && rand >= 0.85 && rand < 0.95) {
+    } else if (sourceProject.format === 'film' && rand >= 0.9 && rand < 0.97) {
       // The Animated Series format flip
       return {
         title: `${sourceProject.title}: The Animated Series`,
@@ -302,7 +316,13 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
     flavorText = `A blockbuster Cinematic Universe event combining two powerhouse franchises. Stakes have never been higher.`;
     buzzBonus += 30 - (genreSaturationCount * 2); // Crossovers generate massive hype, but suffer if the genre is saturated
     newBudgetTier = 'blockbuster'; // Crossovers are always huge events
-  } else if (isLegacy && rand < 0.4) {
+  } else if (universeProjectCount >= 15 && rand < 0.35) {
+      // Cinematic Universe Team-Up
+      newTitle = `${sourceProject.title}: The Assembly`;
+      flavorText = `The ultimate team-up event bringing together every corner of the massive ${sourceProject.title} universe.`;
+      buzzBonus += 50 - (genreSaturationCount * 2);
+      newBudgetTier = 'blockbuster';
+  } else if (isLegacy && rand < 0.5) {
       if (rand < 0.3) {
           // Requel
           newTitle = `${sourceProject.title}: A New Generation`;
@@ -316,19 +336,19 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
           buzzBonus += 25; // Massive nostalgia bump
           newBudgetTier = 'blockbuster';
       }
-  } else if (relatedProjectCount >= 3 && sourceProject.revenue > sourceProject.budget * 3 && rand < 0.45) {
+  } else if (relatedProjectCount >= 3 && sourceProject.revenue > sourceProject.budget * 3 && rand < 0.55) {
       // Part 1 of 2 Finale
       newTitle = `${sourceProject.title}: The Final Chapter - Part 1`;
       flavorText = `The massive, two-part conclusion to the epic ${sourceProject.title} saga begins here.`;
       buzzBonus += 40;
       newBudgetTier = 'blockbuster';
-  } else if (rand < 0.5) {
+  } else if (rand < 0.6) {
     // Direct Sequel
     const nextNumber = relatedProjectCount + 1;
     newTitle = `${sourceProject.title} ${nextNumber}`;
     flavorText = `The next highly anticipated chapter in the blockbuster ${sourceProject.title} franchise.`;
     buzzBonus += 10;
-  } else if (rand < 0.8) {
+  } else if (rand < 0.85) {
     // Prequel
     newTitle = `${sourceProject.title}: Origins`;
     flavorText = `A prequel revealing the hidden history of the ${sourceProject.title} universe.`;

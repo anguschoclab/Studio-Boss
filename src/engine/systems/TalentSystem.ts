@@ -119,10 +119,10 @@ export class TalentSystem {
         const isWriter = talent.roles.includes('writer');
 
         let qualifiesForBonus = false;
-        if (award.category.includes('Director')) qualifiesForBonus = isDirector;
-        else if (award.category.includes('Actor') || award.category.includes('Actress') || award.category.includes('Ensemble')) qualifiesForBonus = isActor;
-        else if (award.category.includes('Screenplay')) qualifiesForBonus = isWriter;
-        else qualifiesForBonus = true; // Best Picture etc.
+        if (award.category.includes('Director')) { qualifiesForBonus = isDirector; }
+        else if (award.category.includes('Actor') || award.category.includes('Actress') || award.category.includes('Ensemble')) { qualifiesForBonus = isActor; }
+        else if (award.category.includes('Screenplay')) { qualifiesForBonus = isWriter; }
+        else { qualifiesForBonus = true; } // Best Picture etc.
 
         if (qualifiesForBonus) {
           const multiplier = (award.category.includes('Director') || award.category.includes('Actor') || award.category.includes('Actress') || award.category.includes('Screenplay')) ? 1.0 : 0.5;

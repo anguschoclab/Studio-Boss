@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { useGameStore } from '../../src/store/gameStore';
+import { useGameStore } from '@/store/gameStore';
 
 describe('Store Slice Isolation', () => {
   beforeEach(() => {
@@ -27,13 +27,13 @@ describe('Store Slice Isolation', () => {
   });
 
   describe('Project Slice Isolation', () => {
-    it('should advance a specific project phase immutably', () => {
+    it('should advance a specific project status immutably', () => {
       // Add mock projects
-      useGameStore.getState().addProject({ id: 'p1', phase: 'Development', title: 'P1' });
-      useGameStore.getState().addProject({ id: 'p2', phase: 'Pre-Production', title: 'P2' });
+      useGameStore.getState().addProject({ id: 'p1', status: 'development', title: 'P1' });
+      useGameStore.getState().addProject({ id: 'p2', status: 'production', title: 'P2' });
       
       // Action
-      useGameStore.getState().advanceProjectPhase('p1', 'Pre-Production');
+      useGameStore.getState().advanceProjectPhase('p1', 'production');
       
       const newState = useGameStore.getState();
       if (!newState.gameState) throw new Error('Game missing');
@@ -42,8 +42,8 @@ describe('Store Slice Isolation', () => {
       const p2 = newState.gameState.studio.internal.projects.find(p => p.id === 'p2');
       
       // Verification
-      expect(p1?.phase).toBe('Pre-Production');
-      expect(p2?.phase).toBe('Pre-Production'); // Ensure adjacent objects were not mutated
+      expect(p1?.status).toBe('production');
+      expect(p2?.status).toBe('production'); // Ensure adjacent objects were not mutated
     });
   });
 });

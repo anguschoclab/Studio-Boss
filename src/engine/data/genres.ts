@@ -25,17 +25,17 @@ export const CROSSOVER_AFFINITY: Record<string, string[]> = {
   'Crime': ['Thriller', 'Drama', 'Action', 'Horror'],
   'Thriller': ['Horror', 'Crime', 'Sci-Fi', 'Drama', 'Action'],
   'Romance': ['Comedy', 'Drama', 'Musical', 'Fantasy'],
-  'Animation': ['Comedy', 'Family', 'Musical', 'Fantasy', 'Sci-Fi', 'Superhero'],
+  'Animation': ['Comedy', 'Family', 'Musical', 'Fantasy', 'Sci-Fi', 'Superhero', 'Action'],
   'Drama': ['Romance', 'Crime', 'Thriller', 'Documentary'],
   'Musical': ['Romance', 'Comedy', 'Animation', 'Drama'],
   'Documentary': ['Drama', 'Crime'] // Sometimes true crime or dramatic docs
 };
 
 export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
-  'Superhero': 0.60,   // Extreme risk, very sensitive to market saturation
-  'Action': 0.35,      // High risk for generic action fatigue
-  'Sci-Fi': 0.30,      // High risk for sci-fi blockbusters
-  'Fantasy': 0.25,     // Moderate risk
+  'Superhero': 0.65,   // Extreme risk, very sensitive to market saturation
+  'Action': 0.40,      // High risk for generic action fatigue
+  'Sci-Fi': 0.35,      // High risk for sci-fi blockbusters
+  'Fantasy': 0.30,     // Moderate risk
   'Horror': 0.15,      // Low risk, very resilient
   'Animation': 0.15,   // Low risk, kids watch them repeatedly, but can grow stale if overused
   'Comedy': 0.25,      // Moderate risk, jokes get stale faster in modern era
