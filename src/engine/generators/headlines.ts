@@ -1,5 +1,5 @@
-import { Headline, RivalStudio, HeadlineCategory } from '@/engine/types';
-import { pick } from '../utils';
+import { Headline, RivalStudio, HeadlineCategory, Project, Contract, TalentProfile } from '@/engine/types';
+import { pick, fillTemplate } from '../utils';
 
 const MARKET_HEADLINES = [
   'Box office up {pct}% this quarter as audiences return to theaters',
@@ -371,18 +371,45 @@ const RIVAL_TEMPLATES = [
   '{rival} spends ${budget}M marketing a highly anticipated {genre} film that was quietly cancelled last month'
 ];
 
-function fill(template: string, vars: Record<string, string>): string {
-  return template.replace(/\{([^}]+)\}/g, (match, key) => {
-    return vars[key] !== undefined ? String(vars[key]) : match;
-  });
-}
+// Removed local fill function in favor of imported fillTemplate from utils
 
 let counter = 0;
 
-export function generateHeadlines(week: number, rivals: RivalStudio[]): Headline[] {
+export function generateHeadlines(
+  week: number, 
+  rivals: RivalStudio[],
+  projects: Project[] = [],
+  contracts: Contract[] = [],
+  talentPool: TalentProfile[] = []
+): Headline[] {
   const count = 1 + Math.floor(Math.random() * 3);
   const headlines: Headline[] = [];
   const genrePool = ['sci-fi', 'drama', 'action', 'thriller', 'comedy', 'horror', 'fantasy'];
+
+  // Prepare context for talent headlines
+  const projectsWithDirectors = projects.filter(p => {
+    const projectContracts = contracts.filter(c => c.projectId === p.id);
+    return projectContracts.some(c => {
+      const talent = talentPool.find(t => t.id === c.talentId);
+      return talent?.roles.includes('director');
+    });
+  });
+
+  const selectedProject = pick(projectsWithDirectors.length > 0 ? projectsWithDirectors : projects);
+  const selectedDirector = selectedProject ? (() => {
+    const pContracts = contracts.filter(c => c.projectId === selectedProject.id);
+    const dContract = pContracts.find(c => {
+      const talent = talentPool.find(t => t.id === c.talentId);
+      return talent?.roles.includes('director');
+    });
+    return talentPool.find(t => t.id === dContract?.talentId);
+  })() : null;
+
+  const vars = {
+    projectName: selectedProject?.title || 'upcoming blockbuster',
+    directorName: selectedDirector?.name || 'A-list director',
+    pct: String(Math.floor(5 + Math.random() * 25))
+  };
 
   for (let i = 0; i < count; i++) {
     const roll = Math.random();
@@ -391,19 +418,18 @@ export function generateHeadlines(week: number, rivals: RivalStudio[]): Headline
 
     if (roll < 0.35 && rivals.length > 0) {
       const rival = pick(rivals);
-      text = fill(pick(RIVAL_TEMPLATES), {
+      text = fillTemplate(pick(RIVAL_TEMPLATES), {
+        ...vars,
         rival: rival.name,
         budget: String(Math.floor(20 + Math.random() * 180)),
         genre: pick(genrePool),
       });
       category = 'rival';
     } else if (roll < 0.7) {
-      text = fill(pick(MARKET_HEADLINES), {
-        pct: String(Math.floor(5 + Math.random() * 20)),
-      });
+      text = fillTemplate(pick(MARKET_HEADLINES), vars);
       category = 'market';
     } else {
-      text = pick(TALENT_HEADLINES);
+      text = fillTemplate(pick(TALENT_HEADLINES), vars);
       category = 'talent';
     }
 

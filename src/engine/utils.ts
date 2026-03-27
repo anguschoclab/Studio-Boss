@@ -46,3 +46,15 @@ export function groupContractsByProject(contracts: Contract[]): Map<string, Cont
   }
   return map;
 }
+
+/**
+ * Robust string template interpolation for both ${key} and {key} syntaxes.
+ * Useful for resolving headlines, scandals, and rumors from data pools.
+ */
+export function fillTemplate(template: string, vars: Record<string, string | number>): string {
+  // Regex matches ${key} (captures key in p2) or {key} (captures key in p4)
+  return template.replace(/(\$\{([^}]+)\})|(\{([^}]+)\})/g, (match, p1, p2, p3, p4) => {
+    const key = p2 || p4;
+    return vars[key] !== undefined ? String(vars[key]) : match;
+  });
+}

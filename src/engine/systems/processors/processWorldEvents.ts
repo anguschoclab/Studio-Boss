@@ -70,7 +70,13 @@ export const processWorldEvents = (
         weeklyChanges.events.push(pick(EVENT_POOL));
     }
 
-    const newHeadlines = generateHeadlines(nextWeek, updatedRivals);
+    const newHeadlines = generateHeadlines(
+        nextWeek, 
+        updatedRivals, 
+        state.studio.internal.projects, 
+        state.studio.internal.contracts, 
+        state.industry.talentPool
+    );
     newHeadlines.push(...formattedBuyerHeadlines);
 
     const year = Math.floor(nextWeek / 52) + 1;
