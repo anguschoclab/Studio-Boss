@@ -31,26 +31,27 @@ export const FinancialOverviewWidget: React.FC = () => {
   };
 
   return (
-    <Card className="col-span-1 lg:col-span-2 border-muted bg-card/50 backdrop-blur-sm shadow-sm">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+    <Card className="col-span-1 lg:col-span-2 border-border/50 bg-card/60 backdrop-blur-xl shadow-sm hover:shadow-md transition-all duration-300 relative overflow-hidden group">
+      <div className="absolute inset-0 bg-gradient-to-br from-chart-2/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+      <CardHeader className="pb-2 relative z-10">
+        <CardTitle className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest group-hover:text-foreground transition-colors duration-300">
           Studio Valuation
         </CardTitle>
-        <div className="text-3xl font-bold tracking-tight mt-1">
+        <div className="text-4xl font-black tracking-tighter mt-1 bg-clip-text text-transparent bg-gradient-to-br from-foreground to-foreground/70">
           {formatCurrency(finance.bankBalance)}
         </div>
-        <CardDescription>
+        <CardDescription className="text-[11px] font-medium tracking-wide mt-1">
           12-Week Cash Flow Trend
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <div className="h-[200px] w-full mt-2">
+      <CardContent className="relative z-10">
+        <div className="h-[220px] w-full mt-4">
           <ChartContainer config={chartConfig} className="h-full w-full">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={historyData} margin={{ top: 10, right: 0, left: 0, bottom: 0 }}>
                 <defs>
                   <linearGradient id="fillBalance" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="hsl(var(--chart-2))" stopOpacity={0.3} />
+                    <stop offset="5%" stopColor="hsl(var(--chart-2))" stopOpacity={0.4} />
                     <stop offset="95%" stopColor="hsl(var(--chart-2))" stopOpacity={0.0} />
                   </linearGradient>
                 </defs>
@@ -58,11 +59,11 @@ export const FinancialOverviewWidget: React.FC = () => {
                   dataKey="week" 
                   axisLine={false} 
                   tickLine={false} 
-                  tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }}
+                  tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10, fontWeight: 600, textAnchor: 'middle' }}
                   dy={10}
                 />
                 <YAxis hide domain={['auto', 'auto']} />
-                <ChartTooltip cursor={{ stroke: 'hsl(var(--muted))', strokeWidth: 2 }} content={<ChartTooltipContent />} />
+                <ChartTooltip cursor={{ stroke: 'hsl(var(--chart-2))', strokeWidth: 1, strokeDasharray: '4 4' }} content={<ChartTooltipContent />} />
                 <Area 
                   type="monotone" 
                   dataKey="balance" 
@@ -70,6 +71,8 @@ export const FinancialOverviewWidget: React.FC = () => {
                   strokeWidth={3}
                   fillOpacity={1} 
                   fill="url(#fillBalance)" 
+                  animationDuration={1500}
+                  animationEasing="ease-out"
                 />
               </AreaChart>
             </ResponsiveContainer>

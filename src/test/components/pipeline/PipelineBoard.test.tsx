@@ -87,7 +87,7 @@ describe('PipelineBoard', () => {
     expect(screen.getByTestId('project-card-1')).toBeInTheDocument();
 
     // 3 columns should be empty
-    const noProjectsMessages = screen.getAllByText('No projects');
+    const noProjectsMessages = screen.getAllByText('Empty');
     expect(noProjectsMessages.length).toBe(3);
   });
 });

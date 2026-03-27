@@ -28,15 +28,18 @@ export const DemographicsWidget: React.FC = () => {
   };
 
   return (
-    <Card className="col-span-1 lg:col-span-1 border-muted bg-card/50 backdrop-blur-sm">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+    <Card className="col-span-1 lg:col-span-1 border-border/50 bg-card/60 backdrop-blur-xl shadow-sm hover:shadow-md transition-all duration-300 relative overflow-hidden group">
+      <div className="absolute inset-0 bg-gradient-to-bl from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+      <CardHeader className="pb-2 relative z-10">
+        <CardTitle className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest group-hover:text-foreground transition-colors duration-300">
           Audience Trends
         </CardTitle>
-        <CardDescription>Current hottest genres</CardDescription>
+        <CardDescription className="text-xl font-black tracking-tighter mt-1 bg-clip-text text-transparent bg-gradient-to-br from-foreground to-foreground/70">
+          Hottest Genres
+        </CardDescription>
       </CardHeader>
-      <CardContent>
-        <div className="h-[200px] w-full mt-4">
+      <CardContent className="relative z-10">
+        <div className="h-[220px] w-full mt-4">
           <ChartContainer config={chartConfig} className="h-full w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData} layout="vertical" margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
@@ -46,15 +49,18 @@ export const DemographicsWidget: React.FC = () => {
                   type="category" 
                   axisLine={false} 
                   tickLine={false} 
-                  tick={{ fill: 'hsl(var(--foreground))', fontSize: 12 }}
-                  width={80}
+                  tick={{ fill: 'hsl(var(--foreground))', fontSize: 11, fontWeight: 700, opacity: 0.8 }}
+                  width={85}
+                  dx={-5}
                 />
-                <ChartTooltip cursor={{ fill: 'hsl(var(--muted))' }} content={<ChartTooltipContent />} />
+                <ChartTooltip cursor={{ fill: 'hsl(var(--muted))', opacity: 0.5 }} content={<ChartTooltipContent />} />
                 <Bar 
                   dataKey="popularity" 
                   fill="hsl(var(--primary))" 
-                  radius={[0, 4, 4, 0]} 
-                  barSize={20}
+                  radius={[0, 6, 6, 0]}
+                  barSize={24}
+                  animationDuration={1500}
+                  animationEasing="ease-out"
                 />
               </BarChart>
             </ResponsiveContainer>
