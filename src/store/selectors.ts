@@ -27,6 +27,8 @@ export const selectRivals = (state: GameState | null) => state?.industry.rivals 
 export const selectTalentPool = (state: GameState | null) => state?.industry.talentPool || EMPTY_TALENT;
 export const selectHeadlines = (state: GameState | null) => state?.industry.headlines || [];
 export const selectAwards = (state: GameState | null) => state?.industry.awards || [];
+export const selectRumors = (state: GameState | null) => state?.industry.rumors || [];
+export const selectScandals = (state: GameState | null) => state?.industry.scandals || [];
 
 // --- Market Selectors ---
 export const selectOpportunities = (state: GameState | null) => state?.market.opportunities || [];

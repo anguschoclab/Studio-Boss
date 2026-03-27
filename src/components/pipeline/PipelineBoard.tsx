@@ -2,15 +2,18 @@ import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { ProjectCard } from './ProjectCard';
 import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
+import { Plus, LayoutGrid, ListFilter, Search } from 'lucide-react';
 import { ProjectStatus } from '@/engine/types';
 import { selectProjects } from '@/store/selectors';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 
-const COLUMNS: { status: ProjectStatus[]; title: string; color: string }[] = [
-  { status: ['development', 'needs_greenlight'], title: 'Development', color: 'bg-secondary' },
-  { status: ['pitching'], title: 'Pitching', color: 'bg-warning' },
-  { status: ['production', 'marketing'], title: 'Production & Marketing', color: 'bg-primary' },
-  { status: ['released', 'post_release', 'archived'], title: 'Released & Catalog', color: 'bg-success' },
+const COLUMNS: { status: ProjectStatus[]; title: string; color: string; description: string }[] = [
+  { status: ['development', 'needs_greenlight'], title: 'Development', color: 'bg-secondary', description: 'Scripts & Concept' },
+  { status: ['pitching'], title: 'Pitching', color: 'bg-amber-500', description: 'Distribution Deals' },
+  { status: ['production', 'marketing'], title: 'Active Slate', color: 'bg-primary', description: 'Production & PR' },
+  { status: ['released', 'post_release', 'archived'], title: 'Catalog', color: 'bg-success', description: 'Release & Legacy' },
 ];
 
 export const PipelineBoard = () => {
@@ -18,16 +21,36 @@ export const PipelineBoard = () => {
   const { openCreateProject } = useUIStore();
 
   return (
-    <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="flex items-center justify-between pb-2 border-b border-border/40">
-        <h2 className="font-display text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70 tracking-tight drop-shadow-sm">Project Slate</h2>
-        <Button onClick={openCreateProject} size="sm" className="font-display gap-1.5 font-bold hover:scale-105 transition-all duration-300 active:scale-95 shadow-md hover:shadow-[0_0_20px_rgba(234,179,8,0.4)] ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
-          <Plus className="h-4 w-4" />
-          New Project
-        </Button>
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700 h-full flex flex-col">
+      {/* Executive Slate Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white/5 p-4 rounded-xl border border-white/5 backdrop-blur-sm">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
+            <LayoutGrid className="h-6 w-6 text-primary" />
+          </div>
+          <div>
+            <h2 className="text-2xl font-black tracking-tighter uppercase leading-none mb-1">Production Slate</h2>
+            <p className="text-[11px] font-black uppercase text-muted-foreground/60 tracking-[0.2em]">Operational Overview • {projects.length} Total Assets</p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <div className="relative w-48 hidden lg:block">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+            <Input className="h-9 pl-9 text-[11px] bg-white/5 border-white/10" placeholder="Filter property..." />
+          </div>
+          <Button variant="outline" size="icon" className="h-9 w-9 bg-white/5 border-white/10 text-muted-foreground hover:text-foreground">
+            <ListFilter className="h-4 w-4" />
+          </Button>
+          <Button onClick={openCreateProject} className="h-9 px-5 font-display font-black uppercase tracking-widest text-[10px] gap-2 shadow-[0_0_20px_rgba(var(--primary),0.1)] hover:shadow-[0_0_25px_rgba(var(--primary),0.3)] transition-all">
+            <Plus className="h-4 w-4" />
+            New IP Venture
+          </Button>
+        </div>
       </div>
 
-      <div className="grid grid-cols-4 gap-4">
+      {/* Production Lanes */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 flex-1 min-h-0">
         {(() => {
           const projectsByStatus = new Map<ProjectStatus, typeof projects>();
           for (const project of projects) {
@@ -38,35 +61,37 @@ export const PipelineBoard = () => {
 
           return COLUMNS.map(col => {
             const colProjects = col.status.flatMap(status => projectsByStatus.get(status) || []);
-          return (
-            <div key={col.title} className="space-y-3 bg-muted/5 p-3 rounded-xl border border-border/40 backdrop-blur-md shadow-sm hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-300 relative group/col">
-              <div className="absolute inset-0 bg-gradient-to-b from-card/40 to-transparent opacity-0 group-hover/col:opacity-100 transition-opacity duration-500 rounded-xl pointer-events-none" />
-              {/* Column Header */}
-              <div className="flex items-center gap-2 pb-2 border-b border-border/40 bg-card/60 p-2.5 rounded-t-lg backdrop-blur-md relative z-10 shadow-sm group-hover/col:border-primary/20 transition-colors">
-                <div className={`w-2 h-2 rounded-full ${col.color} shadow-[0_0_8px_${col.color}] animate-pulse`} />
-                <h3 className="font-display text-[13px] font-bold text-foreground/80 group-hover/col:text-foreground transition-colors uppercase tracking-widest drop-shadow-sm flex-1">
-                  {col.title}
-                </h3>
-                <span className="text-[11px] font-black text-foreground bg-background/80 border border-border/50 px-2.5 py-0.5 rounded-full shadow-inner ring-1 ring-inset ring-border/50">
-                  {colProjects.length}
-                </span>
-              </div>
-
-              {/* Cards */}
-              <div className="space-y-2 min-h-[200px]">
-                {colProjects.length === 0 ? (
-                  <div className="border border-dashed border-border rounded-lg p-6 text-center">
-                    <p className="text-sm text-muted-foreground">No projects</p>
+            return (
+              <div key={col.title} className="flex flex-col h-full space-y-4 group/col">
+                {/* Column Header */}
+                <div className="flex items-center justify-between px-2">
+                  <div className="flex items-center gap-3">
+                    <div className={cn("w-1.5 h-6 rounded-full", col.color)} />
+                    <div>
+                      <h3 className="text-xs font-black uppercase tracking-widest text-foreground/90">{col.title}</h3>
+                      <p className="text-[9px] font-medium text-muted-foreground uppercase tracking-widest">{col.description}</p>
+                    </div>
                   </div>
-                ) : (
-                  colProjects.map(project => (
-                    <ProjectCard key={project.id} project={project} />
-                  ))
-                )}
+                  <Badge variant="outline" className="font-mono text-[10px] bg-white/5 border-white/5 px-2">
+                    {colProjects.length}
+                  </Badge>
+                </div>
+
+                {/* Cards Container */}
+                <div className="flex-1 space-y-3 p-3 glass-card border-none overflow-y-auto custom-scrollbar min-h-[400px]">
+                  {colProjects.length === 0 ? (
+                    <div className="h-32 rounded-lg border border-dashed border-white/10 flex flex-col items-center justify-center opacity-40">
+                      <p className="text-[10px] font-black uppercase tracking-widest">No Projects</p>
+                    </div>
+                  ) : (
+                    colProjects.map(project => (
+                      <ProjectCard key={project.id} project={project} />
+                    ))
+                  )}
+                </div>
               </div>
-            </div>
-          );
-        });
+            );
+          });
         })()}
       </div>
     </div>

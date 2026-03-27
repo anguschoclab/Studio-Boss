@@ -70,7 +70,7 @@ describe("franchise system", () => {
 
       const state = { studio: { internal: { projects: [flopProject, ...relatedProjects] } } } as unknown as GameState;
 
-      vi.spyOn(Math, 'random').mockReturnValue(0.1); // Force reboot chance
+      vi.spyOn(Math, 'random').mockReturnValue(0.2); // Force reboot chance (now between 0.15 and 0.3)
       const result = exploitIP(flopProject, state);
 
       expect(result).toBeDefined();
@@ -89,7 +89,7 @@ describe("franchise system", () => {
       }));
       const state = { studio: { internal: { projects: [flopProject, ...relatedProjects] } } } as unknown as GameState;
 
-      vi.spyOn(Math, 'random').mockReturnValue(0.96); // Fail all reboot/format flip chances (max is 0.95 for animated series flip)
+      vi.spyOn(Math, 'random').mockReturnValue(0.98); // Fail all reboot/format flip chances (max is 0.97 for animated series flip)
       const result = exploitIP(flopProject, state);
       expect(result).toBeNull();
     });
@@ -105,7 +105,7 @@ describe("franchise system", () => {
 
       const state = { studio: { internal: { projects: [flopProject, ...relatedProjects] } } } as unknown as GameState;
 
-      vi.spyOn(Math, 'random').mockReturnValue(0.3); // Between 0.2 and 0.4 triggers Resurrection meta-sequel
+      vi.spyOn(Math, 'random').mockReturnValue(0.4); // Between 0.3 and 0.5 triggers Resurrection meta-sequel
       const result = exploitIP(flopProject, state);
 
       expect(result).toBeDefined();
@@ -168,7 +168,7 @@ describe("franchise system", () => {
       }));
       const state = { studio: { internal: { projects: [flopProject, ...relatedProjects] } }, week: 200 } as unknown as GameState;
 
-      vi.spyOn(Math, 'random').mockReturnValue(0.55); // < 0.6 but >= 0.5 triggers Expanded Universe
+      vi.spyOn(Math, 'random').mockReturnValue(0.65); // < 0.7 but >= 0.6 triggers Expanded Universe
       const result = exploitIP(flopProject, state);
 
       expect(result?.title).toContain("Expanded Universe");
@@ -198,7 +198,7 @@ describe("franchise system", () => {
       const state = { week: 200, studio: { internal: { projects: [massiveHit, ...relatedProjects] } } } as unknown as GameState;
 
       // Not legacy (diff < 150)
-      vi.spyOn(Math, 'random').mockReturnValue(0.42); // < 0.45 triggers Part 1 Finale
+      vi.spyOn(Math, 'random').mockReturnValue(0.52); // < 0.55 triggers Part 1 Finale
       const result = exploitIP(massiveHit, state);
 
       expect(result?.title).toContain("The Final Chapter - Part 1");
@@ -206,7 +206,7 @@ describe("franchise system", () => {
     });
 
     it("generates a direct sequel", () => {
-      vi.spyOn(Math, 'random').mockReturnValue(0.48); // < 0.5 but >= 0.45 triggers sequel
+      vi.spyOn(Math, 'random').mockReturnValue(0.58); // < 0.6 but >= 0.55 triggers sequel
       const result = exploitIP(baseProject);
 
       expect(result?.title).toBe("Galaxy Wars 1"); // 0 related + 1 = 1 (or 2 depending on if it counts itself if state isn't passed)
@@ -236,7 +236,7 @@ describe("franchise system", () => {
       }));
       const state = { studio: { internal: { projects: [baseProject, ...relatedProjects] } } } as unknown as GameState;
 
-      vi.spyOn(Math, 'random').mockReturnValue(0.4); // trigger sequel
+      vi.spyOn(Math, 'random').mockReturnValue(0.5); // trigger sequel
       const result = exploitIP(baseProject, state);
 
       // Penalty will be massive, so bonus drops heavily
@@ -268,7 +268,7 @@ describe("franchise system", () => {
 
       const state = { week: 100, studio: { internal: { projects: [flopProject, ...relatedProjects, ...recentReleases] } } } as unknown as GameState;
 
-      vi.spyOn(Math, 'random').mockReturnValue(0.1);
+      vi.spyOn(Math, 'random').mockReturnValue(0.2); // Avoid hitting Villain Origin Story (< 0.15)
       const result = exploitIP(flopProject, state);
 
       // Saturation penalty should be amplified due to Superhero Fatigue * 1.5 risk multiplier

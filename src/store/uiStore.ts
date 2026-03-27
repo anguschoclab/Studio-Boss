@@ -10,7 +10,7 @@ export interface QueuedModal {
 }
 
 interface UIStore {
-  activeTab: 'command' | 'pipeline' | 'ip' | 'deals' | 'talent' | 'finance' | 'trades';
+  activeTab: 'command' | 'pipeline' | 'ip' | 'deals' | 'talent' | 'finance' | 'trades' | 'industry';
   showCreateProject: boolean;
   showPitchProject: boolean;
   pitchingProjectId: string | null;
@@ -28,7 +28,7 @@ interface UIStore {
   weekSummary: WeekSummary | null;
   
   selectedProjectId: string | null;
-  setActiveTab: (tab: 'command' | 'pipeline' | 'ip' | 'deals' | 'talent' | 'finance' | 'trades') => void;
+  setActiveTab: (tab: 'command' | 'pipeline' | 'ip' | 'deals' | 'talent' | 'finance' | 'trades' | 'industry') => void;
   openCreateProject: () => void;
   closeCreateProject: () => void;
   openPitchProject: (projectId: string) => void;

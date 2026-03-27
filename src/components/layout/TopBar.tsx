@@ -1,25 +1,23 @@
-import { useNavigate } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { formatMoney, getWeekDisplay } from '@/engine/utils';
-import { Save, FastForward, AlertTriangle } from 'lucide-react';
+import { Save, FastForward, AlertTriangle, TrendingUp, Newspaper } from 'lucide-react';
 import { selectActiveProjectsCount } from '@/store/selectors';
+import { Badge } from '@/components/ui/badge';
 
 export const TopBar = () => {
-  const navigate = useNavigate();
   const gameState = useGameStore(s => s.gameState);
   const doAdvanceWeek = useGameStore(s => s.doAdvanceWeek);
   const saveToSlot = useGameStore(s => s.saveToSlot);
-  const clearGame = useGameStore(s => s.clearGame);
 
-  const { showSummary } = useUIStore();
+  const { showSummary, setActiveTab } = useUIStore();
 
   const activeProjects = useGameStore(s => selectActiveProjectsCount(s.gameState));
 
   if (!gameState) return null;
 
-  const { studio, cash, week } = gameState;
+  const { cash, week, studio } = gameState;
   const { displayWeek, year } = getWeekDisplay(week);
 
   const handleAdvanceWeek = () => {
@@ -31,73 +29,99 @@ export const TopBar = () => {
     saveToSlot(1);
   };
 
-  const handleExit = () => {
-    if (window.confirm('Are you sure you want to exit to the main menu? Unsaved progress will be lost.')) {
-      clearGame();
-      navigate({ to: '/' });
-    }
-  };
-
   return (
-    <div className="h-16 border-b border-border/40 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/50 flex items-center px-6 gap-6 shrink-0 z-50 sticky top-0 shadow-sm transition-all duration-300">
-      {/* Brand + Studio */}
-      <div className="flex items-center gap-4 min-w-0">
-        <button onClick={handleExit} title="Exit to Main Menu" aria-label="Exit to Main Menu" className="font-display text-base font-black text-primary tracking-widest hover:text-primary/80 transition-colors drop-shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background rounded">
-          SB
-        </button>
-        <div className="w-px h-8 bg-border/50 rotate-12" />
-        <span className="font-display text-lg font-black text-transparent bg-clip-text bg-gradient-to-r from-foreground to-foreground/60 truncate drop-shadow-sm tracking-tight">{studio.name}</span>
+    <header className="h-14 glass-header flex items-center px-6 gap-8 shrink-0 relative transition-all duration-300">
+      {/* Date & Urgency Indicator */}
+      <div className="flex items-center gap-4">
+        <div className="flex flex-col">
+          <span className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em]">Fiscal Period</span>
+          <span className="font-mono font-bold text-sm tracking-tight">Week {displayWeek} · Year {year}</span>
+        </div>
+        <Badge variant="outline" className="bg-primary/5 border-primary/20 text-primary font-mono px-2 py-0 text-[10px]">Q{(Math.floor((displayWeek-1)/13) + 1)}</Badge>
       </div>
 
-      <div className="flex-1" />
+      {/* Global News Ticker (Placeholder for The Trades integration) */}
+      <div className="flex-1 max-w-2xl hidden lg:flex items-center gap-3 px-4 py-1.5 bg-white/5 rounded-full border border-white/5 overflow-hidden group cursor-pointer hover:bg-white/10 transition-colors"
+           onClick={() => setActiveTab('trades')}>
+        <Newspaper className="h-3.5 w-3.5 text-primary shrink-0" />
+        <div className="text-[11px] font-medium text-muted-foreground truncate italic">
+          <span className="text-primary font-bold uppercase not-italic mr-2">Breaking:</span>
+          {gameState.industry.newsHistory && gameState.industry.newsHistory.length > 0 
+            ? gameState.industry.newsHistory[0].headline 
+            : "Market volatility expected as summer blockbuster season approaches..."}
+        </div>
+      </div>
 
-      {/* Metrics */}
-      <div className="flex items-center gap-8 text-sm bg-card/40 backdrop-blur-md border border-border/40 px-6 py-1.5 rounded-full shadow-inner">
-        <div className="flex flex-col items-center justify-center">
-          <p className="text-[9px] text-muted-foreground/80 font-black uppercase tracking-widest">Cash</p>
-          <p className={`font-mono font-bold text-[13px] drop-shadow-sm ${cash < 0 ? 'text-destructive drop-shadow-[0_0_4px_rgba(239,68,68,0.4)]' : 'text-primary drop-shadow-[0_0_4px_rgba(234,179,8,0.4)]'}`}>
+      {/* Primary Metrics Cluster */}
+      <div className="flex items-center gap-6 ml-auto">
+        {/* Cash Status */}
+        <div className="flex flex-col items-end">
+          <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">Liquid Capital</span>
+          <span className={`font-mono font-bold text-sm ${cash < 0 ? 'text-destructive' : 'text-primary'} text-glow`}>
             {formatMoney(cash)}
-          </p>
+          </span>
         </div>
-        <div className="flex flex-col items-center justify-center">
-          <p className="text-[9px] text-muted-foreground/80 font-black uppercase tracking-widest">Prestige</p>
-          <p className="font-mono font-bold text-[13px] text-secondary drop-shadow-[0_0_4px_rgba(255,161,22,0.4)]">{studio.prestige}</p>
-        </div>
-        <div className="flex flex-col items-center justify-center">
-          <p className="text-[9px] text-muted-foreground/80 font-black uppercase tracking-widest">Projects</p>
-          <p className="font-mono font-bold text-[13px] text-foreground/90">{activeProjects}</p>
-        </div>
-        <div className="flex flex-col items-center justify-center">
-          <p className="text-[9px] text-muted-foreground/80 font-black uppercase tracking-widest">Date</p>
-          <p className="font-mono font-bold text-[13px] text-foreground/90 tracking-tight">W{displayWeek} · Y{year}</p>
-        </div>
-      </div>
 
-      <div className="flex-1 flex justify-end">
-        <div className="flex items-center gap-4">
-          {/* Global Market Events Indicator */}
-          {gameState.market.activeMarketEvents && gameState.market.activeMarketEvents.length > 0 && (
-            <div className="flex items-center gap-1.5 text-amber-500 font-bold bg-amber-500/10 px-3 py-1.5 rounded-full border border-amber-500/30 shadow-[0_0_10px_rgba(245,158,11,0.2)]">
-              <AlertTriangle className="h-3.5 w-3.5 animate-pulse" />
-              <span className="text-[11px] uppercase tracking-widest">{gameState.market.activeMarketEvents.length} Active Event{gameState.market.activeMarketEvents.length > 1 ? 's' : ''}</span>
-            </div>
-          )}
+        <div className="w-px h-6 bg-white/10" />
 
-          <div className="w-px h-8 bg-border/50 rotate-12 mx-1" />
-
-          {/* Actions */}
-          <div className="flex items-center gap-3">
-            <Button variant="outline" size="icon" onClick={handleSave} aria-label="Save Game" title="Save Game" className="h-9 w-9 rounded-full border-border/50 bg-background/50 backdrop-blur-sm hover:bg-card hover:text-primary transition-colors focus-visible:ring-offset-background">
-              <Save className="h-4 w-4" />
-            </Button>
-            <Button size="default" onClick={handleAdvanceWeek} className="h-9 px-5 font-display font-black uppercase tracking-widest text-[11px] gap-2 transition-all duration-300 hover:shadow-[0_0_20px_rgba(234,179,8,0.4)] hover:scale-105 active:scale-95 focus-visible:ring-offset-background group overflow-hidden relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
-              <FastForward className="h-3.5 w-3.5" />
-              Advance Week
-            </Button>
+        {/* Reputation/Prestige */}
+        <div className="flex flex-col items-end group cursor-help" title="Studio Prestige Level">
+          <div className="flex items-center gap-1.5">
+            <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">Prestige</span>
+            <TrendingUp className="h-2.5 w-2.5 text-secondary" />
           </div>
+          <span className="font-mono font-bold text-sm text-secondary">
+            {studio.prestige}
+          </span>
+        </div>
+
+        <div className="w-px h-6 bg-white/10" />
+
+        {/* Project Pipeline Count */}
+        <div className="flex flex-col items-end">
+          <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">Active Slate</span>
+          <span className="font-mono font-bold text-sm text-foreground/80">
+            {activeProjects}
+          </span>
         </div>
       </div>
-    </div>
+
+      {/* Functional Actions */}
+      <div className="flex items-center gap-3 ml-4">
+        {/* Market Event Alert */}
+        {gameState.market.activeMarketEvents && gameState.market.activeMarketEvents.length > 0 && (
+          <div className="relative group">
+            <AlertTriangle className="h-4 w-4 text-amber-500 animate-pulse cursor-help" />
+            <div className="absolute top-full right-0 mt-2 p-3 bg-card border border-amber-500/20 rounded shadow-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 w-64 text-xs">
+              <p className="font-bold text-amber-500 mb-1">Active Market Events</p>
+              <ul className="list-disc list-inside text-muted-foreground">
+                {gameState.market.activeMarketEvents.map(e => (
+                  <li key={e.id}>{e.name}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
+
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          onClick={handleSave} 
+          className="h-8 w-8 rounded-full hover:bg-white/5 text-muted-foreground hover:text-primary transition-colors"
+          title="Manual Cloud Save"
+        >
+          <Save className="h-4 w-4" />
+        </Button>
+
+        <Button 
+          onClick={handleAdvanceWeek} 
+          className="h-9 px-4 font-display font-black uppercase tracking-widest text-[10px] gap-2 transition-all duration-300 shadow-[0_0_20px_rgba(var(--primary),0.1)] hover:shadow-[0_0_25px_rgba(var(--primary),0.3)] hover:scale-105 active:scale-95 group overflow-hidden relative"
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
+          <FastForward className="h-3.5 w-3.5" />
+          Advance Week
+        </Button>
+      </div>
+    </header>
   );
 };

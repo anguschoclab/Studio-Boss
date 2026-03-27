@@ -1,16 +1,41 @@
 import { Agency, Agent, AgencyTier, AgencyCulture, AgentSpecialty, AgencyArchetype } from '@/engine/types';
 import { pick, randRange } from '../utils';
 
-const POWERHOUSE_PREFIXES = ['United Global', 'Apex', 'Titan', 'Creative Artists', 'William Morrison'];
-const BOUTIQUE_PREFIXES = ['Silver Lake', 'Artisan', 'Lighthouse', 'Indie', 'Auteur'];
-const SHARK_PREFIXES = ['Viper', 'Goldstein &', 'Predator', 'Ironclad', 'Cutthroat'];
+const POWERHOUSE_PREFIXES = ['United Global', 'Apex', 'Titan', 'Creative Artists', 'William Morrison', 'Monolith', 'Apex Predators'];
+const BOUTIQUE_PREFIXES = ['Silver Lake', 'Artisan', 'Lighthouse', 'Indie', 'Auteur', 'Visionary', 'Underground'];
+const SHARK_PREFIXES = ['Viper', 'Goldstein &', 'Predator', 'Ironclad', 'Cutthroat', 'Ruthless', 'Bloodsucker'];
+
+
+const SHARK_TRAITS = [
+  'Demands massive backend points',
+  'Aggressive poaching tactics',
+  'Threatens media smear campaigns',
+  'Renegotiates mid-production',
+  'Requires excessive vanity credits'
+];
+
+const POWERHOUSE_TRAITS = [
+  'Requires entire package hire',
+  'Refuses to work with indie studios',
+  'Only represents showrunners',
+  'Demands constant schedule changes',
+  'Forces unwanted co-stars'
+];
+
+const BOUTIQUE_TRAITS = [
+  'Only represents auteur directors',
+  'Brings their own script doctor',
+  'Only represents comedy writers',
+  'Refuses to do chemistry reads',
+  'Requires final cut privileges'
+];
 
 export function generateAgencies(count: number): Agency[] {
   const agencies: Agency[] = [];
 
   for (let i = 0; i < count; i++) {
     let archetype: AgencyArchetype;
-    let actualName = '';
+    let actualName: string;
 
     if (i < 2) {
       archetype = 'powerhouse';
@@ -38,17 +63,19 @@ export function generateAgencies(count: number): Agency[] {
     else culture = pick(['family', 'prestige']);
 
     const leverage = archetype === 'powerhouse' ? Math.floor(randRange(85, 100)) : (archetype === 'shark' ? Math.floor(randRange(80, 95)) : Math.floor(randRange(20, 60)));
-    const traits: string[] = [];
+    let traitsPool: string[];
+    if (archetype === 'shark') traitsPool = [...SHARK_TRAITS];
+    else if (archetype === 'powerhouse') traitsPool = [...POWERHOUSE_TRAITS];
+    else traitsPool = [...BOUTIQUE_TRAITS];
 
-    if (archetype === 'shark') {
-      traits.push('Demands massive backend points');
-      traits.push('Aggressive poaching tactics');
-    } else if (archetype === 'powerhouse') {
-      traits.push('Requires entire package hire');
-      traits.push('Refuses to work with indie studios');
-    } else {
-      traits.push('Only represents auteur directors');
-      traits.push('Brings their own script doctor');
+    // Pick 2 random unique traits
+    const traits: string[] = [];
+    for (let j = 0; j < 2; j++) {
+      if (traitsPool.length > 0) {
+        const selected = pick(traitsPool);
+        traits.push(selected);
+        traitsPool = traitsPool.filter(t => t !== selected);
+      }
     }
 
     agencies.push({

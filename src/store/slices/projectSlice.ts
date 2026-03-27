@@ -22,7 +22,7 @@ export interface ProjectSlice {
   launchAwardsCampaign: (projectId: string, budget: number) => void;
   lockMarketingCampaign: (projectId: string, level: 'none' | 'basic' | 'blockbuster') => void;
   addProject: (project: any) => void;
-  advanceProjectPhase: (projectId: string, newPhase: string) => void;
+  advanceProjectPhase: (projectId: string, newStatus: string) => void;
 }
 
 export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> = (set, get) => ({
@@ -268,12 +268,12 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
     });
   },
 
-  advanceProjectPhase: (projectId, newPhase) => {
+  advanceProjectPhase: (projectId, newStatus) => {
     set((s) => {
       if (!s.gameState) return s;
       const state = s.gameState;
       const updatedProjects = state.studio.internal.projects.map(p => 
-        p.id === projectId ? { ...p, phase: newPhase } : p
+        p.id === projectId ? { ...p, status: newStatus as any } : p
       );
       
       return {
