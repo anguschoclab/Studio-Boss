@@ -24,7 +24,7 @@ export const processProduction = (
     const contractsByProject = groupContractsByProject(state.studio.internal.contracts);
 
     const talentPoolMap = new Map<string, typeof state.industry.talentPool[0]>();
-    for (const talent of state.industry.talentPool) {
+    for (const talent of Object.values(state.industry.talentPool)) {
         talentPoolMap.set(talent.id, talent);
     }
 

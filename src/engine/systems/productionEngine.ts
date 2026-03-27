@@ -81,7 +81,7 @@ export const ProductionEngine = {
     headlineText: string,
     extraProjectUpdates: Partial<Project> = {}
   ): ProductionTransitionResult {
-    const projectIndex = state.studio.internal.projects.findIndex(p => p.id === projectId);
+    const projectIndex = Object.values(state.studio.internal.projects).findIndex(p => p.id === projectId);
     if (projectIndex === -1) return { newState: state };
 
     const project = state.studio.internal.projects[projectIndex];

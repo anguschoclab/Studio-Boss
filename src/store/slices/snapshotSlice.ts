@@ -16,12 +16,12 @@ export const createSnapshotSlice: StateCreator<GameStore, [], [], SnapshotSlice>
 
     // Derived counts
     // Completed projects are those that have been released (including post-release and archived)
-    const completedProjects = state.studio.internal.projects.filter(p => 
+    const completedProjects = Object.values(state.studio.internal.projects).filter(p =>
       p.status === 'released' || p.status === 'post_release' || p.status === 'archived'
     ).length;
 
     // Active projects are those currently in development, production, or marketing
-    const activeProjects = state.studio.internal.projects.filter(p => 
+    const activeProjects = Object.values(state.studio.internal.projects).filter(p =>
       p.status !== 'released' && p.status !== 'post_release' && p.status !== 'archived'
     ).length;
 

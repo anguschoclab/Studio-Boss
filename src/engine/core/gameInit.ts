@@ -49,8 +49,9 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
       archetype,
       prestige: arch.startingPrestige,
       internal: {
-        projects: [],
+        projects: {},
         contracts: [],
+        transactions: {},
         financeHistory: [{ week: 1, cash: arch.startingCash, revenue: 0, costs: 0 }],
       }
     },

@@ -342,7 +342,7 @@ export function advanceProjects(
   const contractsByProject = groupContractsByProject(state.studio.internal.contracts);
 
   const talentPoolMap = new Map<string, TalentProfile>();
-  for (const talent of state.industry.talentPool) {
+  for (const talent of Object.values(state.industry.talentPool)) {
     talentPoolMap.set(talent.id, talent);
   }
 
@@ -412,7 +412,7 @@ export function advanceProjects(
   }
 
   // Apply talent updates back into the full pool
-  const updatedTalentPool = state.industry.talentPool.map(t => allTalentUpdates.get(t.id) || t);
+  const updatedTalentPool = Object.values(state.industry.talentPool).map(t => allTalentUpdates.get(t.id) || t);
 
   return {
     updatedProjects,

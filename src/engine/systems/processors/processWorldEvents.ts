@@ -98,7 +98,7 @@ export const processWorldEvents = (
             prestigeChange -= razzies.studioPrestigePenalty;
 
             if (razzies.cultClassicProjectIds.length > 0) {
-                for (const p of state.studio.internal.projects) {
+                for (const p of Object.values(state.studio.internal.projects)) {
                     if (razzies.cultClassicProjectIds.includes(p.id)) {
                         p.isCultClassic = true;
                     }
@@ -106,10 +106,10 @@ export const processWorldEvents = (
             }
 
             if (razzies.razzieWinnerTalentIds.length > 0) {
-                for (const t of state.industry.talentPool) {
+                for (const t of Object.values(state.industry.talentPool)) {
                     if (razzies.razzieWinnerTalentIds.includes(t.id)) {
                         t.hasRazzie = true;
-                        const relatedProject = state.studio.internal.projects.find(p => p.id === razzies.cultClassicProjectIds[0]);
+                        const relatedProject = Object.values(state.studio.internal.projects).find(p => p.id === razzies.cultClassicProjectIds[0]);
                         if (relatedProject && !relatedProject.activeCrisis) {
                             relatedProject.activeCrisis = {
                                 description: `The Razzies have destroyed ${t.name}'s ego. They are having a meltdown on set of their next project, or refusing to promote this one.`,

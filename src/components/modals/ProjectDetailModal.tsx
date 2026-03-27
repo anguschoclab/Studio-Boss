@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useGameStore } from '@/store/gameStore';
+import { selectProjectById, selectProjectCastAndCrew } from '@/store/selectors';
 import { useUIStore } from '@/store/uiStore';
 import { formatMoney } from '@/engine/utils';
 import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
@@ -59,8 +60,7 @@ export const ProjectDetailModal = () => {
   const submitToFestival = useGameStore(s => s.submitToFestival);
   const launchAwardsCampaign = useGameStore(s => s.launchAwardsCampaign);
 
-  const projects = useMemo(() => gameState?.studio.internal.projects || [], [gameState?.studio.internal.projects]);
-  const project = useMemo(() => projects.find(p => p.id === selectedProjectId), [projects, selectedProjectId]);
+  const project = useGameStore(state => selectProjectById(state.gameState, selectedProjectId || ''));
   const talentPool = useMemo(() => gameState?.industry.talentPool || [], [gameState?.industry.talentPool]);
   const contracts = useMemo(() => gameState?.studio.internal.contracts || [], [gameState?.studio.internal.contracts]);
   const talentMap = useMemo(() => new Map(talentPool.map(t => [t.id, t])), [talentPool]);

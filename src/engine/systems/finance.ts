@@ -11,7 +11,7 @@ export function calculateStudioNetWorth(state: GameState): number {
   let netWorth = state.cash;
   
   // Add catalog value from IP rights (Sprint E)
-  state.studio.internal.projects.forEach(p => {
+  Object.values(state.studio.internal.projects).forEach(p => {
     if (p.ipRights && p.ipRights.catalogValue) {
       if (p.ipRights.rightsOwner === 'studio') {
         netWorth += p.ipRights.catalogValue;

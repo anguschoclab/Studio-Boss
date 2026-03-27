@@ -65,7 +65,7 @@ export function simulateMarketingCampaign(
   target: AudienceQuadrant
 ): GameState {
   
-  const pIndex = state.studio.internal.projects.findIndex(p => p.id === projectId);
+  const pIndex = Object.values(state.studio.internal.projects).findIndex(p => p.id === projectId);
   if (pIndex === -1 || state.cash < spend) return state;
   
   const project = state.studio.internal.projects[pIndex];

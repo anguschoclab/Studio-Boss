@@ -3,22 +3,28 @@ import { GameStore } from '../gameStore';
 import { handleReleasePhaseEntry, executeMarketing } from '@/engine/systems/projects';
 
 export interface FinanceSlice {
+  transactions: Record<string, { id: string, projectId: string, amount: number, type: 'revenue' | 'cost', week: number }>;
+  addTransaction: (tx: Omit<{ id: string, projectId: string, amount: number, type: 'revenue' | 'cost', week: number }, 'id'>) => string;
   launchMarketingCampaign: (projectId: string, budget: number, domesticPct: number, angle: string) => void;
   executeMarketingEvent: (eventName: 'superbowl_ad' | 'viral_campaign' | 'press_tour', cost: number, projectId: string) => void;
   addFunds: (amount: number) => void;
 }
 
 export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> = (set, get) => ({
+  transactions: {},
+  addTransaction: (tx) => {
+    const id = crypto.randomUUID();
+    set((state) => ({ transactions: { ...state.transactions, [id]: { ...tx, id } } }));
+    return id;
+  },
   launchMarketingCampaign: (projectId, budget, domesticPct, angle) => {
     set((s) => {
       if (!s.gameState) return s;
       const state = s.gameState;
       if (budget > state.cash) return s;
 
-      const pIndex = state.studio.internal.projects.findIndex(p => p.id === projectId);
-      if (pIndex === -1) return s;
-
-      const originalProject = state.studio.internal.projects[pIndex];
+      const originalProject = state.studio.internal.projects[projectId];
+      if (!originalProject) return s;
       if (originalProject.status !== 'marketing') return s;
 
       const newCash = state.cash - budget;
@@ -33,9 +39,8 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
       }
 
       const talentMap = new Map<string, any>();
-      for (let i = 0; i < state.industry.talentPool.length; i++) {
-        const t = state.industry.talentPool[i];
-        talentMap.set(t.id, t);
+      for (const t of Object.values(state.industry.talentPool)) {
+        talentMap.set((t as any).id, t);
       }
 
       const result = handleReleasePhaseEntry(p, state.week, state.studio.prestige, contracts, talentMap);
@@ -50,8 +55,7 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
         });
       }
 
-      const updatedProjects = [...state.studio.internal.projects];
-      updatedProjects[pIndex] = p;
+      const updatedProjects = { ...state.studio.internal.projects, [projectId]: p };
 
       return {
         gameState: {
