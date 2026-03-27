@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { useGameStore } from '../../src/store/gameStore';
+import { useGameStore } from '@/store/gameStore';
 
 describe('Historical Snapshots System', () => {
   beforeEach(() => {

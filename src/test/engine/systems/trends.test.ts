@@ -30,13 +30,13 @@ describe('Trends System', () => {
     trends[0].heat = 100;
     const state = { market: { trends } } as any;
 
-    const multiplier = getTrendMultiplier(trends[0].genre, state);
-    expect(multiplier).toBe(1.5); // 0.8 + 0.7 = 1.5
+    const multiplier = getTrendMultiplier({ genre: trends[0].genre, targetAudience: '' }, state);
+    expect(multiplier).toBe(1.3); // 1.0 + 0.3 = 1.3
   });
 
   it('returns a multiplier of 1.0 for a missing genre', () => {
     const state = { market: { trends: [] } } as any;
-    const multiplier = getTrendMultiplier('Unknown Genre', state);
+    const multiplier = getTrendMultiplier({ genre: 'Unknown Genre', targetAudience: '' }, state);
     expect(multiplier).toBe(1.0); // Fallback to 1.0
   });
 

@@ -9,6 +9,9 @@ import { PipelineBoard } from '@/components/pipeline/PipelineBoard';
 import { TalentPanel } from '@/components/talent/TalentPanel';
 import { FinancePanel } from '@/components/finance/FinancePanel';
 import { DiscoveryBoard } from '@/components/discovery/DiscoveryBoard';
+import { RivalsPanel } from '@/components/rivals/RivalsPanel';
+import { IPVault } from '@/components/ip/IPVault';
+import { DealsDesk } from '@/components/deals/DealsDesk';
 import { Card } from '@/components/ui/card';
 import { 
   LayoutDashboard, 
@@ -17,7 +20,8 @@ import {
   Handshake, 
   Users, 
   Briefcase, 
-  Newspaper 
+  Newspaper,
+  Globe
 } from 'lucide-react';
 
 // Modals
@@ -72,6 +76,9 @@ const Dashboard: React.FC = () => {
                 <TabsTrigger value="deals" className="py-2.5 px-4 data-[state=active]:shadow-sm rounded-md flex items-center gap-2">
                   <Handshake className="h-4 w-4" /> <span className="hidden sm:inline">Deals Desk</span>
                 </TabsTrigger>
+                <TabsTrigger value="industry" className="py-2.5 px-4 data-[state=active]:shadow-sm rounded-md flex items-center gap-2">
+                  <Globe className="h-4 w-4" /> <span className="hidden sm:inline">Industry</span>
+                </TabsTrigger>
                 <TabsTrigger value="talent" className="py-2.5 px-4 data-[state=active]:shadow-sm rounded-md flex items-center gap-2">
                   <Users className="h-4 w-4" /> <span className="hidden sm:inline">Talent</span>
                 </TabsTrigger>
@@ -95,23 +102,15 @@ const Dashboard: React.FC = () => {
               </TabsContent>
 
               <TabsContent value="ip" className="m-0 h-full focus-visible:outline-none focus-visible:ring-0">
-                 <Card className="h-full border-dashed border-2 bg-muted/10 flex items-center justify-center">
-                   <div className="text-center p-12">
-                     <Library className="mx-auto h-12 w-12 text-muted-foreground opacity-50 mb-4" />
-                     <h3 className="text-lg font-medium">IP Vault (In Construction)</h3>
-                     <p className="text-sm text-muted-foreground mt-2 max-w-sm mx-auto">Manage your franchises, spinoffs, and merchandising rights here.</p>
-                   </div>
-                 </Card>
+                 <IPVault />
               </TabsContent>
 
               <TabsContent value="deals" className="m-0 h-full focus-visible:outline-none focus-visible:ring-0">
-                <Card className="h-full border-dashed border-2 bg-muted/10 flex items-center justify-center">
-                   <div className="text-center p-12">
-                     <Handshake className="mx-auto h-12 w-12 text-muted-foreground opacity-50 mb-4" />
-                     <h3 className="text-lg font-medium">Deals Desk (In Construction)</h3>
-                     <p className="text-sm text-muted-foreground mt-2 max-w-sm mx-auto">Negotiate distribution, handle bidding wars, and submit to festivals.</p>
-                   </div>
-                 </Card>
+                 <DealsDesk />
+              </TabsContent>
+
+              <TabsContent value="industry" className="m-0 h-full focus-visible:outline-none focus-visible:ring-0">
+                 <RivalsPanel />
               </TabsContent>
 
               <TabsContent value="talent" className="m-0 h-full focus-visible:outline-none focus-visible:ring-0">
