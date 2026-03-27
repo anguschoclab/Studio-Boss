@@ -89,15 +89,11 @@ export const AWARDS_CALENDAR: Record<number, AwardBody[]> = {
   15: ['Tribeca Film Festival'],
   20: ['Peabody Awards'],
   21: ['Cannes Film Festival'],
-  80: ['Venice Film Festival'],
-  81: ['Toronto International Film Festival'],
-  82: ['Primetime Emmys']
+  34: ['Venice Film Festival', 'Telluride Film Festival'],
+  35: ['Toronto International Film Festival'],
+  36: ['Slamdance Film Festival'],
+  37: ['Primetime Emmys']
 };
-// Correction to calendar logic for late year events
-AWARDS_CALENDAR[34] = ['Venice Film Festival', 'Telluride Film Festival'];
-AWARDS_CALENDAR[35] = ['Toronto International Film Festival'];
-AWARDS_CALENDAR[36] = ['Slamdance Film Festival'];
-AWARDS_CALENDAR[37] = ['Primetime Emmys'];
 AWARDS_CALENDAR[4] = ['Critics Choice Awards', 'The Razzies']; // Razzie week is usually week 4
 
 interface AwardConfig {
@@ -357,6 +353,18 @@ const AWARD_CONFIGS: AwardConfig[] = [
     body: 'Toronto International Film Festival', category: 'Audience Award', format: 'film',
     evaluator: p => (p.awardsProfile?.audienceScore || 0) * 1.5 + (p.awardsProfile?.populistAppeal || 0)
   },
+  {
+    body: 'Toronto International Film Festival', category: 'Best Director', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.5 + (p.awardsProfile?.populistAppeal || 0) * 0.5
+  },
+  {
+    body: 'Toronto International Film Festival', category: 'Best Actor', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.2 + (p.awardsProfile?.populistAppeal || 0) * 0.8
+  },
+  {
+    body: 'Toronto International Film Festival', category: 'Best Actress', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.2 + (p.awardsProfile?.populistAppeal || 0) * 0.8
+  },
 
   // --- SXSW FILM FESTIVAL ---
   {
@@ -367,11 +375,31 @@ const AWARD_CONFIGS: AwardConfig[] = [
     body: 'SXSW Film Festival', category: 'Best Director', format: 'film',
     evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 1.2 + (p.awardsProfile?.culturalHeat || 0) * 1.0
   },
+  {
+    body: 'SXSW Film Festival', category: 'Best Actor', format: 'film',
+    evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 1.2 + (p.awardsProfile?.culturalHeat || 0) * 1.0
+  },
+  {
+    body: 'SXSW Film Festival', category: 'Best Actress', format: 'film',
+    evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 1.2 + (p.awardsProfile?.culturalHeat || 0) * 1.0
+  },
 
   // --- TRIBECA FILM FESTIVAL ---
   {
     body: 'Tribeca Film Festival', category: 'Best Narrative Feature', format: 'film',
     evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 1.5 + (p.awardsProfile?.industryNarrativeScore || 0)
+  },
+  {
+    body: 'Tribeca Film Festival', category: 'Best Director', format: 'film',
+    evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 1.5 + (p.awardsProfile?.craftScore || 0) * 0.8
+  },
+  {
+    body: 'Tribeca Film Festival', category: 'Best Actor', format: 'film',
+    evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 1.2 + (p.awardsProfile?.craftScore || 0) * 0.5
+  },
+  {
+    body: 'Tribeca Film Festival', category: 'Best Actress', format: 'film',
+    evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 1.2 + (p.awardsProfile?.craftScore || 0) * 0.5
   },
 
   // --- TELLURIDE FILM FESTIVAL (Cannes Equivalent) ---
