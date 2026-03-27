@@ -110,7 +110,27 @@ const MARKET_HEADLINES = [
   'Indie distributor buys rights to a popular Reddit thread for an undisclosed seven-figure sum',
   'Streaming platform algorithm accidentally recommends highly disturbing psychological horror to kids\' profiles',
   'Studios panic as {pct}% of tracking data shows Gen Z prefers watching YouTube video essays about movies instead of movies'
-];
+,
+  'Box office numbers down {pct}% as audiences collectively decide they are tired of sequels.',
+  'Analysts predict {pct}% growth in the "nostalgia-bait" sector for Q4.',
+  'Studio stock drops {pct}% following disastrous earnings call full of buzzwords.',
+  'Streaming subscriptions decline {pct}% after platform introduces unskippable ads.',
+  'Algorithm-driven content now makes up {pct}% of all new greenlights.',
+  'Merchandise sales up {pct}% for a film that no one has actually seen.',
+  'Demographic data shows {pct}% of viewers are just scrolling on their phones while the movie plays.',
+  'Theater chains report {pct}% increase in people asking for refunds after watching CGI disasters.',
+  'Venture capitalists inject {pct}% more funding into AI-generated media start-ups.',
+  'Focus groups reject {pct}% of original ideas, preferring "things they already know".',
+  'Piracy of streaming exclusives jumps {pct}% as audiences refuse to pay for a 10th service.',
+  'International box office rescues a domestic flop, proving {pct}% of the world will watch anything with explosions.',
+  'Studios write off {pct}% of their completed films for tax purposes this fiscal year.',
+  'Engagement metrics show {pct}% of the audience skipped straight to the post-credits scene.',
+  'Ticket prices rise {pct}%, executives blame inflation despite record profits.',
+  'Market research indicates {pct}% of teens get their news exclusively from TikTok influencers.',
+  'Home video market shrinks {pct}%, physical media collectors begin hoarding DVDs like gold.',
+  'Merger talks stall after one studio demands {pct}% control of a useless legacy IP.',
+  'Wall Street panics as {pct}% of consumers realize they can just go outside instead of watching TV.',
+  'AI predictive models claim with {pct}% certainty that the next big genre is "Underwater Cyberpunk".'];
 
 const TALENT_HEADLINES = [
   'A-list director reportedly shopping a passion project around town',
@@ -247,7 +267,45 @@ const TALENT_HEADLINES = [
   'Studio head forced to apologize after calling ${projectName} a "glorified two-hour toy commercial" on a hot mic.',
   'Fans launch a GoFundMe to remake ${projectName} without the involvement of ${directorName} or the studio.',
   'The press tour for ${projectName} derails entirely after the stars admit they didn\'t understand the plot either.'
-];
+,
+  '${actorName} refuses to break character, demands to be paid entirely in crypto for ${projectName}.',
+  '${actorName} fired from ${projectName} after refusing to say the words "synergy" and "algorithm" on camera.',
+  'Child star from 90s sitcom re-emerges as a spiritual guru offering $10k retreats for ${directorName}.',
+  '${actorName} insists on doing their own stunts for ${projectName}, immediately breaks both legs on day one.',
+  'Beloved character actor cancelled after decade-old forum posts surface during the press tour for ${projectName}.',
+  'Studio mandates 6 months of PR training for entire cast of ${projectName} before press tour.',
+  '${directorName} spends entire budget of ${projectName} on a single unbroken shot of a sunset.',
+  '${actressName} "soft launches" new relationship with the studio CEO\'s son on Instagram.',
+  'Cinematographer quits after ${directorName} asks them to make ${projectName} look "more like a TikTok".',
+  'Screenwriter uses AI to finish the script for ${projectName}, gets nominated for an Oscar.',
+  'Cast of ${projectName} openly despising each other goes viral on press tour.',
+  'VFX artists unionize after being forced to work 100-hour weeks rendering a CGI mustache for ${actorName}.',
+  'Veteran actor complains about "woke" Hollywood in an interview, gets immediately cast in 3 new franchises.',
+  '${directorName} refuses to do press for ${projectName}, communicates exclusively through cryptic Instagram stories.',
+  '${actressName}\'s acting debut in ${projectName} described by critics as "a masterclass in staring blankly".',
+  'Stand-up comedian\'s dramatic turn in ${projectName} described as "deeply upsetting" by focus groups.',
+  'Influencer cast in ${projectName} asks ${directorName} what their motivation is; is ignored.',
+  '${actorName} demands a percentage of the merchandising for an indie drama about terminal illness.',
+  '${actressName} undergoes dramatic physical transformation, gains 50 lbs to play an accountant in ${projectName}.',
+  'Method actor refuses to break character, demands to be paid entirely in crypto.',
+  'A-list director locks editor out of the bay, cuts film entirely on an iPad.',
+  'Lead actor fired after refusing to say the words "synergy" and "algorithm" on camera.',
+  'Child star from 90s sitcom re-emerges as a spiritual guru offering $10k retreats.',
+  'Action star insists on doing their own stunts, immediately breaks both legs on day one.',
+  'Beloved character actor cancelled after decade-old forum posts surface.',
+  'Studio mandates 6 months of PR training for entire cast before press tour.',
+  'Auteur director spends entire budget on a single unbroken shot of a sunset.',
+  'Lead actress "soft launches" new relationship with the studio CEO\'s son on Instagram.',
+  'Cinematographer quits after director asks them to make the film look "more like a TikTok".',
+  'Screenwriter uses AI to finish the script, gets nominated for an Oscar.',
+  'Cast of new ensemble drama openly despising each other goes viral on press tour.',
+  'VFX artists unionize after being forced to work 100-hour weeks rendering a CGI mustache.',
+  'Director refuses to do press, communicates exclusively through cryptic Instagram stories.',
+  'Pop star\'s acting debut described by critics as "a masterclass in staring blankly".',
+  'Stand-up comedian\'s dramatic turn described as "deeply upsetting" by focus groups.',
+  'Influencer cast in major motion picture asks the director what their motivation is; is ignored.',
+  'Star demands a percentage of the merchandising for an indie drama about terminal illness.',
+  'Actor undergoes dramatic physical transformation, gains 50 lbs to play an accountant.'];
 
 const RIVAL_TEMPLATES = [
   '{rival} greenlights ambitious ${budget}M {genre} project',
@@ -369,7 +427,13 @@ const RIVAL_TEMPLATES = [
   '{rival} CEO vehemently defends the use of generative AI scripts for their upcoming ${budget}M {genre} slate',
   '{rival} acquires the film rights to a mildly interesting Wikipedia article for an astonishing ${budget}M',
   '{rival} spends ${budget}M marketing a highly anticipated {genre} film that was quietly cancelled last month'
-];
+,
+  '{rival} insists their widely-panned ${budget}M {genre} film is "actually a satire of the genre"',
+  '{rival} buys out an entire theater to make their ${budget}M {genre} film look like a hit opening weekend',
+  '{rival} fires director of ${budget}M {genre} tentpole three days before wrap, citing "creative differences"',
+  '{rival} launches a ${budget}M {genre} cinematic universe based on a line of discontinued toys from the 80s',
+  '{rival} tries to astroturf a viral trend for their new ${budget}M {genre} release; gets exposed by teenagers',
+  '{rival} completely re-shoots the third act of their ${budget}M {genre} film based on a single focus group comment'];
 
 // Removed local fill function in favor of imported fillTemplate from utils
 
