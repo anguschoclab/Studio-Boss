@@ -1,4 +1,5 @@
 import { useGameStore } from '@/store/gameStore';
+import { selectAllProjects } from '@/store/selectors';
 import { useUIStore } from '@/store/uiStore';
 import { ProjectCard } from './ProjectCard';
 import { Button } from '@/components/ui/button';
@@ -17,7 +18,7 @@ const COLUMNS: { status: ProjectStatus[]; title: string; color: string; descript
 ];
 
 export const PipelineBoard = () => {
-  const projects = useGameStore(s => selectProjects(s.gameState));
+  const projects = useGameStore(state => selectAllProjects(state.gameState)); // Intentionally filtering all for UI columns if that's how Pipeline works
   const { openCreateProject } = useUIStore();
 
   return (

@@ -14,7 +14,7 @@ export function submitToFestival(
   festivalBody: AwardBody
 ): GameState | null {
   const fest = FESTIVALS.find(f => f.body === festivalBody);
-  const project = state.studio.internal.projects.find(p => p.id === projectId);
+  const project = Object.values(state.studio.internal.projects).find(p => p.id === projectId);
   
   if (!fest || !project || state.cash < fest.cost) return null;
   

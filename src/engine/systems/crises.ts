@@ -2270,7 +2270,7 @@ export function checkAndTriggerCrisis(project: Project): ActiveCrisis | undefine
 }
 
 export function resolveCrisis(state: GameState, projectId: string, optionIndex: number): GameState {
-  const projectIndex = state.studio.internal.projects.findIndex(p => p.id === projectId);
+  const projectIndex = Object.values(state.studio.internal.projects).findIndex(p => p.id === projectId);
   if (projectIndex === -1) return state;
 
   const project = state.studio.internal.projects[projectIndex];

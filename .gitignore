@@ -28,3 +28,7 @@ coverage/
 playwright-report/
 test-results/
 bun_output.txt
+*.py
+*.md
+test.ts
+test_prompt.md

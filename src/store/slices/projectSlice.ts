@@ -15,13 +15,15 @@ export interface ProjectSlice {
   renewProject: (id: string) => void;
   greenlightProject: (projectId: string) => void;
   pitchProject: (projectId: string, buyerId: string, contractType: ProjectContractType) => Promise<boolean>;
-  _updateProjectToProduction: (state: GameState, projectIndex: number, project: Project, headlineText: string, extraProjectUpdates?: Partial<Project>) => void;
+  _updateProjectToProduction: (state: GameState, projectId: string, project: Project, headlineText: string, extraProjectUpdates?: Partial<Project>) => void;
   resolveProjectCrisis: (projectId: string, optionIndex: number) => void;
   exploitFranchise: (projectId: string) => void;
   submitToFestival: (projectId: string, festivalBody: AwardBody) => void;
   launchAwardsCampaign: (projectId: string, budget: number) => void;
   lockMarketingCampaign: (projectId: string, level: 'none' | 'basic' | 'blockbuster') => void;
-  addProject: (project: any) => void;
+  addProject: (project: Omit<Partial<Project>, 'id'>) => string;
+  updateProject: (id: string, updates: Partial<Project>) => void;
+  removeProject: (id: string) => void;
   advanceProjectPhase: (projectId: string, newStatus: string) => void;
 }
 
@@ -40,7 +42,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
             ...s.gameState.studio,
             internal: {
               ...s.gameState.studio.internal,
-              projects: [...s.gameState.studio.internal.projects, project],
+              projects: { ...s.gameState.studio.internal.projects, [project.id]: project },
               contracts: [...s.gameState.studio.internal.contracts, ...newContracts],
             }
           }
@@ -51,40 +53,27 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
 
   renewProject: (id) => {
     set((s) => {
-      const state = s.gameState;
-      if (!state) return s;
+      if (!s.gameState) return s;
+      const project = s.gameState.studio.internal.projects[id];
+      if (!project) return s;
 
-      const projectIndex = state.studio.internal.projects.findIndex(p => p.id === id);
-      if (projectIndex === -1) return s;
+      const newProject = { ...project, status: 'development', iterations: (project.iterations || 0) + 1 } as any;
 
-      const p = state.studio.internal.projects[projectIndex];
-      if ((p.format === 'tv' || p.format === 'unscripted') && p.renewable && p.season !== undefined) {
-        const updatedProjects = [...state.studio.internal.projects];
-        updatedProjects[projectIndex] = {
-          ...p,
-          status: 'development',
-          weeksInPhase: 0,
-          season: p.season + 1,
-          revenue: 0,
-          weeklyRevenue: 0,
-          releaseWeek: null,
-          episodesReleased: 0,
-        };
-
-        return {
-          gameState: {
-            ...state,
-            studio: {
-              ...state.studio,
-              internal: {
-                ...state.studio.internal,
-                projects: updatedProjects,
+      return {
+        gameState: {
+          ...s.gameState,
+          studio: {
+            ...s.gameState.studio,
+            internal: {
+              ...s.gameState.studio.internal,
+              projects: {
+                ...s.gameState.studio.internal.projects,
+                [id]: newProject
               }
             }
-          },
-        };
-      }
-      return s;
+          }
+        }
+      };
     });
   },
 
@@ -124,7 +113,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
     const state = get().gameState;
     if (!state) return;
 
-    const projectIndex = state.studio.internal.projects.findIndex(p => p.id === projectId);
+    const projectIndex = Object.values(state.studio.internal.projects).findIndex(p => p.id === projectId);
     if (projectIndex === -1) return;
 
     const project = state.studio.internal.projects[projectIndex];
@@ -144,7 +133,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
     const state = get().gameState;
     if (!state) return false;
 
-    const projectIndex = state.studio.internal.projects.findIndex(p => p.id === projectId);
+    const projectIndex = Object.values(state.studio.internal.projects).findIndex(p => p.id === projectId);
     const buyer = state.market.buyers.find(b => b.id === buyerId);
 
     if (projectIndex === -1 || !buyer) return false;
@@ -172,7 +161,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
     const state = get().gameState;
     if (!state) return;
 
-    const project = state.studio.internal.projects.find(p => p.id === projectId);
+    const project = Object.values(state.studio.internal.projects).find(p => p.id === projectId);
     if (!project) return;
 
     const spinoffParams = exploitIP(project, state);
@@ -209,10 +198,8 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
       const state = s.gameState;
       if (!state) return s;
 
-      const projectIndex = state.studio.internal.projects.findIndex(p => p.id === projectId);
-      if (projectIndex === -1) return s;
-
-      const project = state.studio.internal.projects[projectIndex];
+      const project = state.studio.internal.projects[projectId];
+      if (!project) return s;
       
       let cost = 0;
       let buzzGain = 0;
@@ -251,8 +238,11 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
   },
 
   addProject: (project) => {
+    let newId = '';
     set((s) => {
       if (!s.gameState) return s;
+      newId = crypto.randomUUID();
+      const newProject = { ...project, id: newId } as any;
       return {
         gameState: {
           ...s.gameState,
@@ -260,7 +250,52 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
             ...s.gameState.studio,
             internal: {
               ...s.gameState.studio.internal,
-              projects: [...s.gameState.studio.internal.projects, project]
+              projects: {
+                ...s.gameState.studio.internal.projects,
+                [newId]: newProject
+              }
+            }
+          }
+        }
+      };
+    });
+    return newId;
+  },
+
+  updateProject: (id, updates) => {
+    set((s) => {
+      if (!s.gameState || !s.gameState.studio.internal.projects[id]) return s;
+      return {
+        gameState: {
+          ...s.gameState,
+          studio: {
+            ...s.gameState.studio,
+            internal: {
+              ...s.gameState.studio.internal,
+              projects: {
+                ...s.gameState.studio.internal.projects,
+                [id]: { ...s.gameState.studio.internal.projects[id], ...updates }
+              }
+            }
+          }
+        }
+      };
+    });
+  },
+
+  removeProject: (id) => {
+    set((s) => {
+      if (!s.gameState || !s.gameState.studio.internal.projects[id]) return s;
+      const newProjects = { ...s.gameState.studio.internal.projects };
+      delete newProjects[id];
+      return {
+        gameState: {
+          ...s.gameState,
+          studio: {
+            ...s.gameState.studio,
+            internal: {
+              ...s.gameState.studio.internal,
+              projects: newProjects
             }
           }
         }
@@ -272,7 +307,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
     set((s) => {
       if (!s.gameState) return s;
       const state = s.gameState;
-      const updatedProjects = state.studio.internal.projects.map(p => 
+      const updatedProjects = Object.values(state.studio.internal.projects).map(p =>
         p.id === projectId ? { ...p, status: newStatus as any } : p
       );
       

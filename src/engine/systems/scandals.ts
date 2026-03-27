@@ -19,7 +19,7 @@ export function generateScandals(state: GameState): {
     talentToProjectMap.set(c.talentId, c.projectId);
   }
   
-  for (const talent of state.industry.talentPool) {
+  for (const talent of Object.values(state.industry.talentPool)) {
     const risk = talent.controversyRisk || 5; 
     if (Math.random() * 1000 < risk) {
        const types: ScandalType[] = ['financial', 'personal', 'onset_behavior', 'legal', 'feud'];
@@ -45,7 +45,7 @@ export function generateScandals(state: GameState): {
          projectUpdates.push({
            projectId,
            crisis: {
-             description: `BREAKING NEWS: ${talent.name.toUpperCase()} has been involved in a massive ${type} scandal while working on "${state.studio.internal.projects.find(p => p.id === projectId)?.title}". The press is circling.`,
+             description: `BREAKING NEWS: ${talent.name.toUpperCase()} has been involved in a massive ${type} scandal while working on "${Object.values(state.studio.internal.projects).find(p => p.id === projectId)?.title}". The press is circling.`,
              resolved: false,
              severity: s.severity > 75 ? 'catastrophic' : 'high',
              options: [

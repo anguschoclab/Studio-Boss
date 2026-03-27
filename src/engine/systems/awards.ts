@@ -25,7 +25,7 @@ export function generateAwardsProfile(project: Project): AwardsProfile {
 }
 
 export function launchAwardsCampaign(state: GameState, projectId: string, budget: number): GameState | null {
-  const projectIndex = state.studio.internal.projects.findIndex(p => p.id === projectId);
+  const projectIndex = Object.values(state.studio.internal.projects).findIndex(p => p.id === projectId);
   if (projectIndex === -1 || state.cash < budget) return null;
   const project = state.studio.internal.projects[projectIndex];
   if (!project.awardsProfile) return null;
@@ -573,7 +573,7 @@ export function processRazzies(state: GameState, week: number): RazzieResult {
     newsEvents: []
   };
 
-  const eligibleProjects = state.studio.internal.projects.filter(p =>
+  const eligibleProjects = Object.values(state.studio.internal.projects).filter(p =>
     p.status === 'released' &&
     p.budget >= 50_000_000 &&
     (p.reviewScore !== undefined && p.reviewScore <= 30)
@@ -615,7 +615,7 @@ export function processRazzies(state: GameState, week: number): RazzieResult {
   let highestDraw = 0;
 
   for (const c of projectContracts) {
-     const talent = state.industry.talentPool.find(t => t.id === c.talentId);
+     const talent = Object.values(state.industry.talentPool).find(t => t.id === c.talentId);
      if (talent && talent.draw > 70 && talent.draw > highestDraw) {
          worstLeadId = talent.id;
          highestDraw = talent.draw;
@@ -624,7 +624,7 @@ export function processRazzies(state: GameState, week: number): RazzieResult {
 
   if (worstLeadId) {
      result.razzieWinnerTalentIds.push(worstLeadId);
-     const talent = state.industry.talentPool.find(t => t.id === worstLeadId);
+     const talent = Object.values(state.industry.talentPool).find(t => t.id === worstLeadId);
      if (talent) {
         result.projectUpdates.push(`${talent.name} won Worst Lead for "${worstPicture.title}", absolutely devastating their ego.`);
      }

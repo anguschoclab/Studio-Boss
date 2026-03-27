@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
+import { selectAllTalent } from '@/store/selectors';
 import { TalentProfile } from '@/engine/types';
 import { useUIStore } from '@/store/uiStore';
 import { TalentProfileModal } from './TalentProfileModal';
@@ -8,7 +9,7 @@ import { TalentCard } from './TalentCard';
 export const TalentPanel = () => {
   const { selectTalent } = useUIStore();
   const state = useGameStore(s => s.gameState);
-  const talentPool = useMemo(() => state?.industry.talentPool || [], [state?.industry.talentPool]);
+  const talentPool = useGameStore(state => selectAllTalent(state.gameState));
   const [filter, setFilter] = useState<string>('all');
 
   const filteredTalent = useMemo(() => {
