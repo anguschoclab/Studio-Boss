@@ -27,20 +27,20 @@ export function applyAwardBoostsToTalent(
   const isMajorCategory = ['Best Director', 'Best Actor', 'Best Actress', 'Palme d\'Or', 'Golden Lion', 'Golden Bear', 'Grand Jury Prize'].includes(award.category);
 
   // Specific multiplicative bonus for massive individual achievements
-  const individualCategoryMultiplier = isMajorCategory ? 1.5 : 1.0;
+  const individualCategoryMultiplier = isMajorCategory ? 1.8 : 1.0;
   const finalMultiplier = multiplier * individualCategoryMultiplier;
 
   if (award.status === 'won') {
     if (isPrestige || isCannesEquivalent) {
-      prestigeBoost += 30 * finalMultiplier;
-      egoBoost += 40 * finalMultiplier; // Massive permanent ego bump for prestigious awards
+      prestigeBoost += 35 * finalMultiplier;
+      egoBoost += 45 * finalMultiplier; // Massive permanent ego bump for prestigious awards
       drawBoost += 15 * finalMultiplier;
-      feeMultiplier += 2.0 * finalMultiplier; // 200% fee bump to make chasing trophies a massive distinct strategy
+      feeMultiplier += 2.5 * finalMultiplier; // 200% fee bump to make chasing trophies a massive distinct strategy
     } else if (isSundanceEquivalent) {
       prestigeBoost += 15 * finalMultiplier;
-      egoBoost += 25 * finalMultiplier;
-      drawBoost += 30 * finalMultiplier; // Massive commercial draw bump for indie hits
-      feeMultiplier += 1.5 * finalMultiplier; // 150% fee bump
+      egoBoost += 30 * finalMultiplier;
+      drawBoost += 35 * finalMultiplier; // Massive commercial draw bump for indie hits
+      feeMultiplier += 1.8 * finalMultiplier; // 150% fee bump
     } else {
       prestigeBoost += 10 * finalMultiplier;
       egoBoost += 10 * finalMultiplier;
