@@ -67,7 +67,7 @@ describe("advanceProject", () => {
     const { project: p, update } = advanceProject(project, 1, 10, [], new Map());
     expect(p.revenue).toBe(500000);
     expect(p.weeklyRevenue).toBeLessThan(500000);
-    expect(update).toBeNull(); // Update happens when archived
+    expect(update).toContain("grossed"); // Update now happens every week
   });
 
   it("archives released project after its run", () => {
