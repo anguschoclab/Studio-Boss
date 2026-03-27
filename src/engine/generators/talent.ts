@@ -15,7 +15,47 @@ const FAMOUS_LAST_NAMES = [
   'Gyllenhaal', 'Arquette', 'Cusack', 'Douglas', 'Howard', 'Reiner', 'Wayans', 'Roberts', 'Eastwood', 'Smith'
 ];
 
-const TEMPERAMENTS = ['Professional', 'Diva', 'Method', 'Collaborative', 'Volatile', 'Perfectionist', 'Reliable', 'Difficult', 'Refuses to do press', 'Brings their own script doctor', 'Refuses to do rewrites', 'Mandatory private jet', 'Demands final cut', 'Always late to set', 'Requires trailer bigger than co-stars', 'Refuses to work with indie studios', 'Demands co-star approval', 'Requires personal onset chef', 'Only shoots in Europe', 'Refuses to do sequels', 'Requires ridiculous VFX double', 'Notorious for walk-outs', 'Refuses to do streaming', 'Brings their own lighting crew', 'Requires daily rewrites', 'Demands top billing', 'Only works with A-List co-stars', 'Requires 20-person entourage', 'Refuses to work past 4 PM', 'Demands exclusive merchandising rights', 'Refuses to promote on social media', 'Only works with their specific DP', 'Requires a personal onset gym', 'Demands guaranteed marketing spend', 'Refuses to work with first-time directors', 'Requires guaranteed sequel clauses', 'Demands creative control over casting', 'Refuses to do table reads'];
+const TEMPERAMENTS = ['Professional', 'Diva', 'Method', 'Collaborative', 'Volatile', 'Perfectionist', 'Reliable', 'Difficult', 'Refuses to do press', 'Brings their own script doctor', 'Refuses to do rewrites', 'Mandatory private jet', 'Demands final cut', 'Always late to set', 'Requires trailer bigger than co-stars', 'Refuses to work with indie studios', 'Demands co-star approval', 'Requires personal onset chef', 'Only shoots in Europe', 'Refuses to do sequels', 'Requires ridiculous VFX double', 'Notorious for walk-outs', 'Refuses to do streaming', 'Brings their own lighting crew', 'Requires daily rewrites', 'Demands top billing', 'Only works with A-List co-stars', 'Requires 20-person entourage', 'Refuses to work past 4 PM', 'Demands exclusive merchandising rights', 'Refuses to promote on social media', 'Only works with their specific DP', 'Requires a personal onset gym', 'Demands guaranteed marketing spend', 'Refuses to work with first-time directors', 'Requires guaranteed sequel clauses', 'Demands creative control over casting', 'Refuses to do table reads', 'Refuses to do chemistry reads', 'Only communicates through manager', 'Demands constant schedule changes', 'Requires excessive vanity credits', 'Threatens to walk over minor slights', 'Only works with their preferred editor'];
+
+export const PERK_TEMPERAMENTS = [
+  'Refuses to do press',
+  'Brings their own script doctor',
+  'Refuses to do rewrites',
+  'Mandatory private jet',
+  'Demands final cut',
+  'Always late to set',
+  'Requires trailer bigger than co-stars',
+  'Refuses to work with indie studios',
+  'Demands co-star approval',
+  'Requires personal onset chef',
+  'Only shoots in Europe',
+  'Refuses to do sequels',
+  'Requires ridiculous VFX double',
+  'Notorious for walk-outs',
+  'Refuses to do streaming',
+  'Brings their own lighting crew',
+  'Requires daily rewrites',
+  'Demands top billing',
+  'Only works with A-List co-stars',
+  'Requires 20-person entourage',
+  'Refuses to work past 4 PM',
+  'Demands exclusive merchandising rights',
+  'Refuses to promote on social media',
+  'Only works with their specific DP',
+  'Requires a personal onset gym',
+  'Demands guaranteed marketing spend',
+  'Refuses to work with first-time directors',
+  'Requires guaranteed sequel clauses',
+  'Demands creative control over casting',
+  'Refuses to do table reads',
+  'Refuses to do chemistry reads',
+  'Only communicates through manager',
+  'Demands constant schedule changes',
+  'Requires excessive vanity credits',
+  'Threatens to walk over minor slights',
+  'Only works with their preferred editor'
+];
+
 
 const TALENT_TYPES: Array<TalentRole> = ['director', 'actor', 'writer', 'producer', 'showrunner'];
 
@@ -112,44 +152,12 @@ export function generateTalentPool(size: number, families: Family[], agents: Age
 
     let temperament = pick(TEMPERAMENTS);
     if (isNepo && Math.random() < 0.3) {
-      temperament = pick(['Diva', 'Volatile', 'Difficult', 'Refuses to do press', 'Brings their own script doctor', 'Mandatory private jet', 'Demands final cut', 'Always late to set', 'Demands top billing']);
+      temperament = pick(['Diva', 'Volatile', 'Difficult', 'Refuses to do press', 'Brings their own script doctor', 'Mandatory private jet', 'Demands final cut', 'Always late to set', 'Demands top billing', 'Refuses to do chemistry reads', 'Only communicates through manager', 'Demands constant schedule changes', 'Requires excessive vanity credits']);
     }
 
     // Convert new temperaments into a perks/quirks system visually
     const perks: string[] = [];
-    if (
-      temperament === 'Refuses to do press' ||
-      temperament === 'Brings their own script doctor' ||
-      temperament === 'Refuses to do rewrites' ||
-      temperament === 'Mandatory private jet' ||
-      temperament === 'Demands final cut' ||
-      temperament === 'Always late to set' ||
-      temperament === 'Requires trailer bigger than co-stars' ||
-      temperament === 'Refuses to work with indie studios' ||
-      temperament === 'Demands co-star approval' ||
-      temperament === 'Requires personal onset chef' ||
-      temperament === 'Only shoots in Europe' ||
-      temperament === 'Refuses to do sequels' ||
-      temperament === 'Requires ridiculous VFX double' ||
-      temperament === 'Notorious for walk-outs' ||
-      temperament === 'Refuses to do streaming' ||
-      temperament === 'Brings their own lighting crew' ||
-      temperament === 'Requires daily rewrites' ||
-      temperament === 'Demands top billing' ||
-      temperament === 'Only works with A-List co-stars' ||
-      temperament === 'Requires 20-person entourage' ||
-      temperament === 'Refuses to work past 4 PM' ||
-      temperament === 'Demands exclusive merchandising rights' ||
-      temperament === 'Refuses to promote on social media' ||
-      temperament === 'Only works with their specific DP' ||
-      temperament === 'Requires a personal onset gym'
-      ||
-      temperament === 'Demands guaranteed marketing spend' ||
-      temperament === 'Refuses to work with first-time directors' ||
-      temperament === 'Requires guaranteed sequel clauses' ||
-      temperament === 'Demands creative control over casting' ||
-      temperament === 'Refuses to do table reads'
-    ) {
+    if (PERK_TEMPERAMENTS.includes(temperament)) {
       perks.push(temperament);
       // Keep a valid legacy temperament for the UI fallback
       temperament = pick(['Diva', 'Volatile', 'Difficult', 'Method']);
