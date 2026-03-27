@@ -266,10 +266,11 @@ export const ProjectDetailModal = () => {
                      key={tier.id}
                      disabled={!!project.marketingLevel || (gameState && gameState.cash < tier.cost)}
                      onClick={() => setSelectedTier(tier.id as any)}
-                     className={`p-3 rounded-xl border text-left transition-all ${
+                     aria-pressed={project.marketingLevel === tier.id || selectedTier === tier.id}
+                     className={`p-3 rounded-xl border text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 ${
                        project.marketingLevel === tier.id || selectedTier === tier.id 
                          ? 'border-blue-500 bg-blue-500/20 shadow-[0_0_15px_rgba(59,130,246,0.3)]' 
-                         : 'border-slate-800 bg-slate-900/40 hover:border-slate-700'
+                         : 'border-slate-800 bg-slate-900/40 hover:border-slate-700 hover:bg-slate-800/60'
                      } ${!!project.marketingLevel && project.marketingLevel !== tier.id ? 'opacity-40' : ''}`}
                    >
                      <p className="text-[10px] font-black uppercase text-blue-400">{tier.name}</p>

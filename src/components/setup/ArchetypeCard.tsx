@@ -19,7 +19,8 @@ export const ArchetypeCard = ({ arch, selected, onSelect }: ArchetypeCardProps) 
     <button
       key={arch.key}
       onClick={() => onSelect(arch.key)}
-      className={`relative p-6 rounded-xl border-2 text-left transition-all duration-300 group overflow-hidden ${
+      aria-pressed={selected}
+      className={`relative p-6 rounded-xl border-2 text-left transition-all duration-300 group overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
         selected
           ? 'border-primary bg-primary/10 shadow-[0_0_20px_rgba(234,179,8,0.2)] scale-[1.02]'
           : 'border-border/50 bg-card/40 backdrop-blur-md hover:border-primary/50 hover:shadow-xl hover:-translate-y-1'

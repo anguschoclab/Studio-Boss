@@ -1,3 +1,7 @@
 ## 2025-03-26 - Add aria-pressed to modal selection buttons
 **Learning:** In highly custom modal interfaces like `PitchProjectModal.tsx`, toggleable selection choices (like buyers or deal structures) are often built as `<button>` elements that use CSS classes for visual state. They lack default semantic state indication for screen readers. Using `aria-pressed={condition}` is an excellent, low-risk way to expose mutually exclusive or toggleable selection states without restructuring the HTML to use `role="radio"` and `<fieldset>`/`role="radiogroup"`.
 **Action:** Next time evaluating custom selection UIs made of buttons, check for `aria-pressed` or `aria-selected` and add it based on the React state driving the visual class change.
+
+## 2025-03-27 - Custom Segmented Controls Accessibility
+**Learning:** This app heavily relies on visually styled `<button>` elements to act as custom segmented controls or radio button groups across multiple components (e.g., `NewsFeed.tsx` filters, `ArchetypeCard.tsx` selections, `TalentPanel.tsx` filters, `ProjectDetailModal.tsx` marketing tiers). While these look correct visually, they often miss crucial accessibility states: `aria-pressed` for screen readers and `focus-visible` utility classes for keyboard navigation.
+**Action:** Consistently audit interactive map/filter arrays rendered as buttons in new components to ensure they include `aria-pressed={selected === current}` and proper `focus-visible` ring styling.

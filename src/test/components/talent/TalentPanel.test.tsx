@@ -62,7 +62,7 @@ describe('TalentPanel', () => {
     expect(screen.getByText('Steven Spielberg')).toBeInTheDocument();
 
     // Filter by director
-    fireEvent.click(screen.getByText('DIRECTOR'));
+    fireEvent.click(screen.getByText('director'));
 
     expect(screen.queryByText('Tom Hanks')).not.toBeInTheDocument();
     expect(screen.getByText('Steven Spielberg')).toBeInTheDocument();
@@ -71,7 +71,7 @@ describe('TalentPanel', () => {
   it('shows empty state when no talent matches filter', () => {
     render(<TalentPanel />);
 
-    fireEvent.click(screen.getByText('WRITER'));
+    fireEvent.click(screen.getByText('writer'));
 
     expect(screen.getByText('No talent found matching this filter.')).toBeInTheDocument();
   });
