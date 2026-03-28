@@ -389,7 +389,7 @@ export function advanceProjects(
 
     // Director disputes
     if (project.status === 'production') {
-      const dirDisputeArgs = processDirectorDisputes({ ...state, studio: { ...state.studio, internal: { ...state.studio.internal, projects: [project] } } });
+      const dirDisputeArgs = processDirectorDisputes(project, projectContracts, talentPoolMap);
       if (dirDisputeArgs.newCrises.length > 0 && (!project.activeCrisis || project.activeCrisis.resolved)) {
          project.activeCrisis = dirDisputeArgs.newCrises[0].crisis;
          projectUpdates.push(...dirDisputeArgs.updates);
