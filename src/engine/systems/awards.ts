@@ -365,6 +365,14 @@ const AWARD_CONFIGS: AwardConfig[] = [
     body: 'Toronto International Film Festival', category: 'Best Actress', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.2 + (p.awardsProfile?.populistAppeal || 0) * 0.8
   },
+  {
+    body: 'Toronto International Film Festival', category: 'Best Supporting Actor', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.0 + (p.awardsProfile?.populistAppeal || 0) * 0.6
+  },
+  {
+    body: 'Toronto International Film Festival', category: 'Best Supporting Actress', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.0 + (p.awardsProfile?.populistAppeal || 0) * 0.6
+  },
 
   // --- SXSW FILM FESTIVAL ---
   {
@@ -383,6 +391,14 @@ const AWARD_CONFIGS: AwardConfig[] = [
     body: 'SXSW Film Festival', category: 'Best Actress', format: 'film',
     evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 1.2 + (p.awardsProfile?.culturalHeat || 0) * 1.0
   },
+  {
+    body: 'SXSW Film Festival', category: 'Best Supporting Actor', format: 'film',
+    evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 1.0 + (p.awardsProfile?.culturalHeat || 0) * 0.8
+  },
+  {
+    body: 'SXSW Film Festival', category: 'Best Supporting Actress', format: 'film',
+    evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 1.0 + (p.awardsProfile?.culturalHeat || 0) * 0.8
+  },
 
   // --- TRIBECA FILM FESTIVAL ---
   {
@@ -400,6 +416,14 @@ const AWARD_CONFIGS: AwardConfig[] = [
   {
     body: 'Tribeca Film Festival', category: 'Best Actress', format: 'film',
     evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 1.2 + (p.awardsProfile?.craftScore || 0) * 0.5
+  },
+  {
+    body: 'Tribeca Film Festival', category: 'Best Supporting Actor', format: 'film',
+    evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 1.0 + (p.awardsProfile?.craftScore || 0) * 0.4
+  },
+  {
+    body: 'Tribeca Film Festival', category: 'Best Supporting Actress', format: 'film',
+    evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 1.0 + (p.awardsProfile?.craftScore || 0) * 0.4
   },
 
   // --- TELLURIDE FILM FESTIVAL (Cannes Equivalent) ---
@@ -444,6 +468,14 @@ const AWARD_CONFIGS: AwardConfig[] = [
   {
     body: 'Slamdance Film Festival', category: 'Best Actress', format: 'film',
     evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 1.5 + (p.awardsProfile?.craftScore || 0) * 0.5
+  },
+  {
+    body: 'Slamdance Film Festival', category: 'Best Supporting Actor', format: 'film',
+    evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 1.2 + (p.awardsProfile?.craftScore || 0) * 0.4
+  },
+  {
+    body: 'Slamdance Film Festival', category: 'Best Supporting Actress', format: 'film',
+    evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 1.2 + (p.awardsProfile?.craftScore || 0) * 0.4
   }
 ];
 
