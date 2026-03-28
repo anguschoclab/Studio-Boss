@@ -39,7 +39,7 @@ export const PipelineBoard = () => {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
             <Input className="h-9 pl-9 text-[11px] bg-white/5 border-white/10" placeholder="Filter property..." />
           </div>
-          <Button variant="outline" size="icon" className="h-9 w-9 bg-white/5 border-white/10 text-muted-foreground hover:text-foreground">
+          <Button variant="outline" size="icon" aria-label="Filter pipeline" className="h-9 w-9 bg-white/5 border-white/10 text-muted-foreground hover:text-foreground">
             <ListFilter className="h-4 w-4" />
           </Button>
           <Button onClick={openCreateProject} className="h-9 px-5 font-display font-black uppercase tracking-widest text-[10px] gap-2 shadow-[0_0_20px_rgba(var(--primary),0.1)] hover:shadow-[0_0_25px_rgba(var(--primary),0.3)] transition-all">
