@@ -1,14 +1,14 @@
 ### 📝 Daily Progress & Docs Update
 
 #### 🏗️ Codebase Status:
-* Implemented the new `marketing` project phase and `executeMarketing` logic in `src/engine/systems/projects.ts`, introducing marketing budgets, domestic splits, and angle strategies.
-* Current focus appears to be on expanding the project lifecycle to include robust marketing simulation and release mechanics before projects hit the box office.
+* Implemented the new `marketing` phase logic and `executeMarketing` function in `src/engine/systems/projects.ts` to support marketing budgets, domestic/foreign splits, and marketing angle strategies. The `advanceProject` flow was updated to pause at the `marketing` phase after production wraps.
+* Current focus appears to be on expanding the project lifecycle into deeper marketing and release planning before a project officially hits the box office, aligning with the "Audience Strategy and Advertising Focus Planner" goals.
 
 #### 📖 Design Bible Alignment:
-* ✅ **Aligned:** The marketing slider has been replaced with a deeper strategy layer, including budget-based buzz bonuses and genre-to-angle matching (e.g., matching "spectacle" with "Action"), aligning with Section 36.39.2.
-* ⚠️ **Missing/Deviations:** We built the marketing angles and mismatch penalties, but we are missing the rating/tone restrictions mentioned in Section 36.39.2 (e.g., "family marketing is blocked by harsh rating tone").
+* ✅ **Aligned:** The codebase now correctly uses angle-based marketing matched to genres (e.g. 'spectacle' mapping well to 'Action') with corresponding buzz bonuses and mismatch penalties as described in Section 36.39.2. Marketing budget tiers also dynamically affect buzz scaling.
+* ⚠️ **Missing/Deviations:** While angles are implemented, the simulation currently misses the content/rating tone restriction logic mentioned in Section 36.39.2 (e.g. "family marketing is blocked by harsh rating tone"). The `domesticPct` split is also currently recorded but not fully simulated into differential region returns.
 
 #### 📄 Proposed Documentation Updates:
-* `docs/marketing_mechanics.md`: Document the new `executeMarketing` parameters and how genre-angle buzz modifiers are calculated.
+* `docs/marketing_mechanics.md`: Document the new `executeMarketing` parameters, angle mappings, and how marketing budgets convert to pre-release project buzz.
 * **Code Paths Covered:** `src/engine/systems/projects.ts` (`executeMarketing`, `handleMarketingPhase`)
-* **Key Knowledge Gaps Addressed:** Explains how marketing budgets convert to buzz and how the `marketingAngle` impacts final project heat prior to release.
+* **Key Knowledge Gaps Addressed:** Explains the transition from production to the new marketing phase, how the `marketingAngle` impacts final project heat, and the math behind budget-driven buzz bonuses.
