@@ -306,7 +306,9 @@ const WORDS: Record<string, string[]> = {
     'Mismanaged',
     'Crowdfunded',
     'Backloaded',
-    'Gross-Point'],
+    'Gross-Point',
+    // Scribe Adjs
+    'Post-Cancellable', 'Metrics-Driven', 'Hyper-Local', 'Transmedia', 'Vertical-Slice', 'Shareholder-Approved', 'Risk-Adjusted', 'Asset-Backed', 'Over-Indexed', 'Pre-Packaged', 'Demographic-Agnostic', 'Cross-Platform', 'Syndication-Ready', 'Merchandisable', 'Franchisable', 'Algorithmic-Optimal', 'Machine-Learned'],
   NOUN: ['Shadow', 'Mirror', 'Ghost', 'Knight', 'City', 'Storm', 'Weapon', 'Target', 'Agent', 'Game', 'House', 'Night', 'Day', 'Star', 'Dream', 'Heart', 'World', 'Man', 'Woman', 'Boy', 'Girl', 'Multiverse', 'Franchise', 'Content', 'Algorithm', 'Meme', 'Podcast', 'Trauma', 'Nepotism', 'Vibe', 'Aesthetic', 'Metaverse', 'Crypto', 'Grifter', 'Situationship', 'IP', 'Recon', 'Extraction', 'Payload', 'Objective', 'Bounty', 'Crossfire', 'Infiltration', 'Exfiltration', 'Takeover', 'Lockdown', 'Overdrive', 'Showdown', 'Blowback', 'Backlash', 'Flashpoint', 'Ground Zero', 'Vanguard', 'Sentinel', 'Outpost', 'Stronghold', 'Influencer', 'Streamer', 'Vlogger', 'Viral', 'Trending', 'Cancel Culture', 'Scam', 'Hustle', 'Flex', 'Clout', 'Drip', 'Mood', 'Energy', 'Synergy', 'Deepfake', 'Blockbuster', 'CGI', 'PR Crisis', 'Apology Video', 'Subtweet', 'Ratio', 'Oscars Bait', 'Method Acting', 'Tax Write-Off', 'Hedge Fund', 'CGI Mush', 'Neomaximalism', 'Engagement Metric', 'Retention Rate', 'Shell Company', 'Tax Haven', 'LLM', 'Zero-Day', 'Psy-Op', 'Astroturf', 'Focus Group', 'NDA', 'Clickfarm', 'Content Farm', 'Brand Deal',
     // Scribe Expanded Content
     'Content', 'Franchise', 'Cinematic Universe', 'Algorithm', 'Focus Group', 'Tax Write-Off', 'Nepo Baby', 'IP', 'Reboot', 'Sequel', 'Prequel', 'Spin-Off', 'Synergy', 'Demographic', 'Engagement', 'Metrics', 'Pitch Deck', 'Boardroom', 'Shareholder', 'Vibe Shift'
@@ -331,7 +333,9 @@ const WORDS: Record<string, string[]> = {
     'NFT Drop',
     'Blockchain',
     'DAO',
-    'Metaverse Estate'],
+    'Metaverse Estate',
+    // Scribe Nouns
+    'Brand Ecosystem', 'Content Silo', 'Monetization Strategy', 'Value Extraction', 'Strategic Asset', 'Content Portfolio', 'Franchise Management', 'Demographic Target', 'Quarterly Earnings', 'Shareholder Meeting', 'Boardroom Coup', 'Hostile Takeover', 'Merger and Acquisition', 'Tax Loophole', 'NDA Violation', 'PR Spin', 'Damage Control', 'Focus Group Feedback', 'Audience Retention'],
   VERB: ['Die', 'Run', 'Shoot', 'Hide', 'Seek', 'Find', 'Kill', 'Save', 'Love', 'Kiss', 'Dance', 'Sing', 'Fly', 'Fall', 'Cancel', 'Reboot', 'Swipe', 'Ghost', 'Stream', 'Hack', 'Leak', 'Trend', 'Post', 'Upload', 'Download', 'Share', 'Like', 'Subscribe', 'Follow', 'Unfollow', 'Block', 'Mute', 'Report', 'Ban', 'Doxx', 'Gaslight', 'Girlboss', 'Gatekeep', 'Manifest', 'Vibe', 'Monetize', 'Synergize', 'Focus-Group', 'Test-Screen', 'A/B Test', 'Ratio', 'Doxx', 'Subtweet', 'Launder', 'Shelve', 'Pivot', 'Astroturf', 'Outsource',
     // Scribe Expanded Content
     'Monetize', 'Synergize', 'Reboot', 'Cancel', 'Pivot', 'Focus-Group', 'Shelve', 'Astroturf', 'Ratio', 'Doxx', 'Launder', 'Outsource', 'Stream', 'Binge', 'Optimize', 'Franchise', 'Leverage', 'Scale'
@@ -356,7 +360,9 @@ const WORDS: Record<string, string[]> = {
     'Ghosting',
     'Orbiting',
     'Breadcrumbing',
-    'Love-Bombing'],
+    'Love-Bombing',
+    // Scribe Verbs
+    'Gamify', 'Syndicate', 'Cross-Promote', 'Divest', 'Liquidate', 'Acquire', 'Merchandize', 'Astroturf', 'Greenwash', 'Pinkwash', 'Retcon', 'Gaslight', 'Girlboss', 'Gatekeep'],
   VERBS: ['Waits', 'Hides', 'Kills', 'Watches', 'Screams', 'Comes', 'Walks', 'Cancels', 'Reboots', 'Swipes', 'Ghosts', 'Streams', 'Hacks', 'Leaks', 'Trends', 'Posts', 'Uploads', 'Downloads', 'Shares', 'Likes', 'Subscribes', 'Follows', 'Unfollows', 'Blocks', 'Mutes', 'Reports', 'Bans', 'Doxxes', 'Gaslights', 'Girlbosses', 'Gatekeeps', 'Manifests', 'Vibes', 'Monetizes', 'Synergizes', 'Focus-Groups', 'Test-Screens', 'A/B Tests', 'Ratios', 'Doxxes', 'Subtweets', 'Launders', 'Shelves', 'Pivots', 'Astroturfs', 'Outsources'],
   PLACE: ['Darkness', 'City', 'Woods', 'Space', 'Future', 'Mars', 'London', 'Paris', 'New York', 'Moon', 'Sun', 'Island', 'Village', 'Metaverse', 'Simulation', 'Web3', 'Timeline', 'Algorithm', 'Feed', 'Grid', 'Matrix', 'Network', 'Cloud', 'Server', 'Database', 'Mainframe', 'Hub', 'Node', 'Nexus', 'Core', 'Vortex', 'Void', 'Abyss', 'Backrooms', 'Discord Server', 'Subreddit', 'TikTok FYP', 'Tax Haven', 'Offshore Account', 'Content Farm', 'Clickfarm', 'Boardroom', 'Focus Group Facility'],
   NAME: ['John', 'Mary', 'Bourne', 'Bond', 'Ripley', 'Neo', 'Trinity', 'Luke', 'Leia', 'Harry', 'Hermione', 'Gatsby', 'Holmes', 'Elon', 'Zuck', 'Chad', 'Karen', 'Influencer', 'Streamer', 'Creator', 'Grifter', 'Scammer', 'Hacker', 'Troll', 'Bot', 'NPC', 'Main Character', 'Side Character', 'Villain', 'Hero', 'Anti-Hero', 'Protagonist', 'Antagonist', 'Nepo Baby', 'Industry Plant', 'Auteur', 'Hedge Fund Manager', 'Venture Capitalist', 'Shareholder', 'CEO', 'Board Member', 'Algorithm'],
