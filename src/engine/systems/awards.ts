@@ -644,24 +644,25 @@ export function processRazzies(state: GameState, week: number): RazzieResult {
 
   // Find the 'Worst Lead'
   const projectContracts = state.studio.internal.contracts.filter(c => c.projectId === worstPicture.id);
+  const contractTalentIds = new Set(projectContracts.map(c => c.talentId));
 
   let worstLeadId: string | null = null;
   let highestDraw = 0;
+  let worstLeadName: string | null = null;
 
-  for (const c of projectContracts) {
-     const talent = state.industry.talentPool.find(t => t.id === c.talentId);
-     if (talent && talent.draw > 70 && talent.draw > highestDraw) {
-         worstLeadId = talent.id;
-         highestDraw = talent.draw;
-     }
+  for (const talent of state.industry.talentPool) {
+      if (contractTalentIds.has(talent.id)) {
+          if (talent.draw > 70 && talent.draw > highestDraw) {
+              worstLeadId = talent.id;
+              highestDraw = talent.draw;
+              worstLeadName = talent.name;
+          }
+      }
   }
 
-  if (worstLeadId) {
+  if (worstLeadId && worstLeadName) {
      result.razzieWinnerTalentIds.push(worstLeadId);
-     const talent = state.industry.talentPool.find(t => t.id === worstLeadId);
-     if (talent) {
-        result.projectUpdates.push(`${talent.name} won Worst Lead for "${worstPicture.title}", absolutely devastating their ego.`);
-     }
+     result.projectUpdates.push(`${worstLeadName} won Worst Lead for "${worstPicture.title}", absolutely devastating their ego.`);
   }
 
   return result;
