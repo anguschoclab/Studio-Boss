@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { checkAndTriggerCrisis, resolveCrisis } from "../../../engine/systems/crises";
 import { Project, GameState, ActiveCrisis } from "../../../engine/types";
+import * as utils from '../../../engine/utils';
 
 const mockProject: Project = {
   id: "proj-1",
@@ -62,19 +63,19 @@ describe("crises system", () => {
   describe("checkAndTriggerCrisis", () => {
     it("returns undefined if project is not in production", () => {
       const nonProdProject = { ...mockProject, status: "development" as const };
-      vi.spyOn(Math, 'random').mockReturnValue(0.01); // Force crisis if it were prod
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.01); // Force crisis if it were prod
       const result = checkAndTriggerCrisis(nonProdProject);
       expect(result).toBeUndefined();
     });
 
     it("returns undefined if random check fails (>= 0.05)", () => {
-      vi.spyOn(Math, 'random').mockReturnValue(0.06);
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.06);
       const result = checkAndTriggerCrisis(mockProject);
       expect(result).toBeUndefined();
     });
 
     it("returns an ActiveCrisis if random check passes (< 0.05)", () => {
-      vi.spyOn(Math, 'random').mockReturnValue(0.04);
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.04);
       const result = checkAndTriggerCrisis(mockProject);
       expect(result).toBeDefined();
       expect(result?.description).toBeTypeOf("string");

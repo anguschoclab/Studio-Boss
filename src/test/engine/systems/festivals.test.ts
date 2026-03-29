@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { FESTIVALS, submitToFestival, resolveFestivals } from '../../../engine/systems/festivals';
 import { Project, GameState, FestivalSubmission } from '../../../engine/types';
+import * as utils from '../../../engine/utils';
 
 describe('Festivals System', () => {
   let mockProject: Project;
@@ -119,7 +120,7 @@ describe('Festivals System', () => {
         festivalSubmissions: [submission] 
       } 
     } as any;
-    vi.spyOn(Math, 'random').mockReturnValue(0.99);
+    vi.spyOn(utils, 'secureRandom').mockReturnValue(0.99);
     
     resultState = resolveFestivals(correctWeekState);
     expect((resultState as any).industry.festivalSubmissions.length).toBe(1);

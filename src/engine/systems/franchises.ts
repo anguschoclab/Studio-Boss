@@ -1,5 +1,7 @@
 import { Project, GameState } from '@/engine/types';
 import { FRANCHISE_FATIGUE_RISK, CROSSOVER_AFFINITY } from '../data/genres';
+import { secureRandom } from '../utils';
+
 
 interface StateCache {
   week: number;
@@ -84,7 +86,7 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
       if (candidates) {
         // Iterate through all candidates to mimic the original array iteration probability
         for (const candidate of candidates) {
-          if (candidate.id !== sourceProject.id && Math.random() > 0.8) {
+          if (candidate.id !== sourceProject.id && secureRandom() > 0.8) {
             recentCrossoverTarget = candidate;
             // No early break here, as we want the *last* candidate to potentially overwrite,
             // mirroring the probability distribution of the original O(N) traversal.
@@ -104,7 +106,12 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
 
   // Calculate Cinematic Universe Oversaturation Penalty
   // High volume of spin-offs in the studio overall contributes to general audience fatigue
-  const oversaturationPenalty = (universeProjectCount / 10) * baseFatigueRisk * 5;
+  let oversaturationPenalty = (universeProjectCount / 10) * baseFatigueRisk * 5;
+
+  if (universeProjectCount > 15 && genreSaturationCount > 10) {
+      oversaturationPenalty += 10; // Cinematic Universe Collapse penalty
+      baseFatigueRisk *= 1.5;
+  }
 
   // Apply "Superhero Fatigue" (or general blockbuster fatigue) logic:
   // If the genre is heavily saturated, amplify the risk severely.
@@ -130,7 +137,7 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
     return null;
   }
 
-  const rand = Math.random();
+  const rand = secureRandom();
 
   // If the franchise is dead/fatigued and underperformed, there's a chance to reboot, format flip, or deconstruct
   if (isFatigued && sourceProject.revenue <= sourceProject.budget * 1.5) {
@@ -146,7 +153,19 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
         isSpinoff: true,
         initialBuzzBonus: 10 - (saturationPenalty / 2),
       };
-    } else if (rand < 0.3) {
+    } else if (rand < 0.2) {
+      return {
+        title: `${sourceProject.title} Returns`,
+        format: sourceProject.format,
+        genre: sourceProject.genre,
+        budgetTier: sourceProject.budgetTier,
+        targetAudience: 'General Audience',
+        flavor: `A soft reboot ignoring recent failures, hoping general audiences have a short memory.`,
+        parentProjectId: sourceProject.id,
+        isSpinoff: true,
+        initialBuzzBonus: 8 - (saturationPenalty / 2),
+      };
+    } else if (rand < 0.4) {
       return {
         title: `${sourceProject.title}: Reboot`,
         format: sourceProject.format,
@@ -158,18 +177,18 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
         isSpinoff: true,
         initialBuzzBonus: 5 - (saturationPenalty / 2), // Penalty for rebooting too soon
       };
-    } else if (rand < 0.5) {
+    } else if (rand < 0.6) {
       // Deconstructive Meta-Sequel
       return {
         title: `${sourceProject.title}: Resurrection`,
         format: sourceProject.format,
         genre: 'Comedy', // Often becomes a meta-comedy
         budgetTier: 'mid',
-        targetAudience: 'Genre Fans',
+        targetAudience: 'Adults 25-54',
         flavor: `A self-aware, fourth-wall-breaking installment that mocks the bloated history of the ${sourceProject.title} franchise.`,
         parentProjectId: sourceProject.id,
         isSpinoff: true,
-        initialBuzzBonus: 10, // Meta-commentary tends to get initial positive buzz
+        initialBuzzBonus: 12, // Meta-commentary tends to get initial positive buzz
       };
     } else if (rand < 0.7 && sourceProject.format === 'film') {
         if (rand < 0.6) {
