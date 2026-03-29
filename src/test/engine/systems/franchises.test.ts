@@ -34,7 +34,7 @@ describe("franchise system", () => {
       const state = { week: 100, studio: { internal: { projects: [] } } } as unknown as GameState;
       // exploitIP relies on checking state.studio.internal.projects for crossovers and fatigue
       // Let's ensure it doesn't crash when passing a valid base project but empty history
-      const result = exploitIP(baseProject, state);
+      exploitIP(baseProject, state);
       // It might return something or null, but the key is it shouldn't crash
       expect(true).toBe(true);
     });
