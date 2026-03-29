@@ -1,5 +1,5 @@
 import { RivalStudio, GameState, TalentProfile } from '@/engine/types';
-import { pick, clamp } from '../utils';
+import { clamp, pick, secureRandom } from '../utils';
 
 const INDIE_ACTIVITIES = [
   'Quietly developing a prestige drama slate',
@@ -25,7 +25,7 @@ const MID_ACTIVITIES = [
 
 export function rivalPoachTalent(rival: RivalStudio, talentPool: TalentProfile[]): string | null {
   if (rival.strategy === 'acquirer' || rival.cash > 100_000_000) {
-    if (Math.random() < 0.05) {
+    if (secureRandom() < 0.05) {
       // Find a highly prestigious talent
       const stars = talentPool.filter(t => t.prestige > 80);
       if (stars.length > 0) {
@@ -41,24 +41,24 @@ export function updateRival(rival: RivalStudio, state?: GameState): RivalStudio 
   const r = { ...rival };
   
   // Natural fluctuation
-  r.strength = clamp(r.strength + (Math.random() * 6 - 3), 20, 100);
+  r.strength = clamp(r.strength + (secureRandom() * 6 - 3), 20, 100);
   
   // Strategy driven behavior
   if (r.archetype === 'major') {
-    r.cash += (Math.random() * 40_000_000 - 10_000_000); // Higher variance, more revenue
-    if (Math.random() < 0.25) r.recentActivity = pick(MAJOR_ACTIVITIES);
-    r.projectCount = Math.max(2, r.projectCount + (Math.random() < 0.6 ? 1 : 0));
+    r.cash += (secureRandom() * 40_000_000 - 10_000_000); // Higher variance, more revenue
+    if (secureRandom() < 0.25) r.recentActivity = pick(MAJOR_ACTIVITIES);
+    r.projectCount = Math.max(2, r.projectCount + (secureRandom() < 0.6 ? 1 : 0));
     r.strategy = 'acquirer';
   } else if (r.archetype === 'indie') {
-    r.cash += (Math.random() * 10_000_000 - 4_000_000); // Lower variance, steady
-    if (Math.random() < 0.25) r.recentActivity = pick(INDIE_ACTIVITIES);
-    if (Math.random() < 0.1) r.projectCount = Math.max(1, r.projectCount + 1);
+    r.cash += (secureRandom() * 10_000_000 - 4_000_000); // Lower variance, steady
+    if (secureRandom() < 0.25) r.recentActivity = pick(INDIE_ACTIVITIES);
+    if (secureRandom() < 0.1) r.projectCount = Math.max(1, r.projectCount + 1);
     r.strategy = 'prestige_chaser';
   } else {
     // mid-tier
-    r.cash += (Math.random() * 20_000_000 - 5_000_000);
-    if (Math.random() < 0.25) r.recentActivity = pick(MID_ACTIVITIES);
-    if (Math.random() < 0.2) r.projectCount = Math.max(1, r.projectCount + 1);
+    r.cash += (secureRandom() * 20_000_000 - 5_000_000);
+    if (secureRandom() < 0.25) r.recentActivity = pick(MID_ACTIVITIES);
+    if (secureRandom() < 0.2) r.projectCount = Math.max(1, r.projectCount + 1);
     r.strategy = 'genre_specialist';
   }
   

@@ -1,6 +1,6 @@
 import { GameState, TalentProfile, Project, Contract, Award, Opportunity } from '@/engine/types';
 import { generateOpportunity } from '../generators/opportunities';
-import { clamp } from '../utils';
+import { clamp, secureRandom } from '../utils';
 import { applyAwardBoostsToTalent } from './talentStats';
 
 export interface TalentAdvanceResult {
@@ -46,7 +46,7 @@ export class TalentSystem {
     };
 
     // Talent-specific opportunity (using existing studio talent)
-    if (Math.random() < 0.25) {
+    if (secureRandom() < 0.25) {
       const activeTalentIds = new Set(state.studio.internal.contracts.map(c => c.talentId));
       const availableTalentIds = state.industry.talentPool
         .filter(t => !activeTalentIds.has(t.id))
@@ -59,16 +59,16 @@ export class TalentSystem {
     }
 
     // General opportunities
-    if (Math.random() < 0.2) {
+    if (secureRandom() < 0.2) {
       tryAddOpp(generateOpportunity(), `A new script is doing the rounds in town.`);
     }
 
-    if (Math.random() < 0.15) {
+    if (secureRandom() < 0.15) {
       tryAddOpp(generateOpportunity(), `New opportunities have hit the market!`);
     }
 
     // Fallback/Density control
-    if (updatedOpportunities.length < 4 && Math.random() < 0.3) {
+    if (updatedOpportunities.length < 4 && secureRandom() < 0.3) {
       tryAddOpp(generateOpportunity());
     }
 

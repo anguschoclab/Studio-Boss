@@ -1,5 +1,7 @@
 import { Project, GameState } from '@/engine/types';
 import { FRANCHISE_FATIGUE_RISK, CROSSOVER_AFFINITY } from '../data/genres';
+import { secureRandom } from '../utils';
+
 
 interface StateCache {
   week: number;
@@ -84,7 +86,7 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
       if (candidates) {
         // Iterate through all candidates to mimic the original array iteration probability
         for (const candidate of candidates) {
-          if (candidate.id !== sourceProject.id && Math.random() > 0.8) {
+          if (candidate.id !== sourceProject.id && secureRandom() > 0.8) {
             recentCrossoverTarget = candidate;
             // No early break here, as we want the *last* candidate to potentially overwrite,
             // mirroring the probability distribution of the original O(N) traversal.
@@ -130,7 +132,7 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
     return null;
   }
 
-  const rand = Math.random();
+  const rand = secureRandom();
 
   // If the franchise is dead/fatigued and underperformed, there's a chance to reboot, format flip, or deconstruct
   if (isFatigued && sourceProject.revenue <= sourceProject.budget * 1.5) {
