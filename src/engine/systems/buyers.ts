@@ -1,5 +1,5 @@
 import { Buyer, MandateType, Project, ProjectContractType } from '@/engine/types';
-import { pick, randRange } from '../utils';
+import { pick, randRange, secureRandom } from '../utils';
 
 const MANDATE_TYPES: MandateType[] = [
   'sci-fi', 'comedy', 'drama', 'budget_freeze', 'broad_appeal', 'prestige'
@@ -11,7 +11,7 @@ export function updateBuyers(buyers: Buyer[], currentWeek: number): { updatedBuy
 
   updatedBuyers.forEach((buyer, index) => {
     // If mandate expired or random 5% chance to shift early
-    if (!buyer.currentMandate || buyer.currentMandate.activeUntilWeek <= currentWeek || Math.random() < 0.05) {
+    if (!buyer.currentMandate || buyer.currentMandate.activeUntilWeek <= currentWeek || secureRandom() < 0.05) {
       const newMandateType = pick(MANDATE_TYPES.filter(m => m !== buyer.currentMandate?.type));
       const duration = Math.floor(randRange(12, 36));
 
@@ -44,7 +44,7 @@ export function updateBuyers(buyers: Buyer[], currentWeek: number): { updatedBuy
           headlineText = `Awards chase: ${buyer.name} announces a massive fund specifically for prestige projects.`;
           break;
       }
-      if (Math.random() < 0.6) { // Don't spam headlines every single shift
+      if (secureRandom() < 0.6) { // Don't spam headlines every single shift
         newHeadlines.push(headlineText);
       }
     }

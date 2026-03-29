@@ -47,6 +47,7 @@ import { advanceMarketEvents } from '../../../../engine/systems/marketEvents';
 import { advanceRumors } from '../../../../engine/systems/rumors';
 import { resolveFestivals } from '../../../../engine/systems/festivals';
 import { advanceScandals, generateScandals } from '../../../../engine/systems/scandals';
+import * as utils from '../../../../engine/utils';
 
 describe('processWorldEvents', () => {
   const getInitialState = (): GameState => ({
@@ -181,7 +182,7 @@ describe('processWorldEvents', () => {
       const changes = getInitialWeeklyChanges();
 
       // Force Math.random to always hit < 0.2
-      vi.spyOn(Math, 'random').mockReturnValue(0.1);
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.1);
 
       processWorldEvents(state, changes);
 

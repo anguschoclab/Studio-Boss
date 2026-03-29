@@ -1,5 +1,5 @@
 import { Headline, RivalStudio, HeadlineCategory, Project, Contract, TalentProfile } from '@/engine/types';
-import { pick, fillTemplate } from '../utils';
+import { fillTemplate, pick, secureRandom } from '../utils';
 
 const MARKET_HEADLINES = [
   'Box office up {pct}% this quarter as audiences return to theaters',
@@ -446,7 +446,7 @@ export function generateHeadlines(
   contracts: Contract[] = [],
   talentPool: TalentProfile[] = []
 ): Headline[] {
-  const count = 1 + Math.floor(Math.random() * 3);
+  const count = 1 + Math.floor(secureRandom() * 3);
   const headlines: Headline[] = [];
   const genrePool = ['sci-fi', 'drama', 'action', 'thriller', 'comedy', 'horror', 'fantasy'];
 
@@ -478,11 +478,11 @@ export function generateHeadlines(
     directorName: selectedDirector?.name || pick(highDrawTalent.filter(t => t.roles.includes('director')))?.name || 'A-list director',
     actorName: pick(actors)?.name || 'Major movie star',
     actressName: pick(actors.slice().reverse())?.name || 'Highly acclaimed actress',
-    pct: String(Math.floor(5 + Math.random() * 25))
+    pct: String(Math.floor(5 + secureRandom() * 25))
   };
 
   for (let i = 0; i < count; i++) {
-    const roll = Math.random();
+    const roll = secureRandom();
     let text: string;
     let category: HeadlineCategory;
 
@@ -491,7 +491,7 @@ export function generateHeadlines(
       text = fillTemplate(pick(RIVAL_TEMPLATES), {
         ...vars,
         rival: rival.name,
-        budget: String(Math.floor(20 + Math.random() * 180)),
+        budget: String(Math.floor(20 + secureRandom() * 180)),
         genre: pick(genrePool),
       });
       category = 'rival';
