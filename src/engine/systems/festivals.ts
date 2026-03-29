@@ -1,4 +1,4 @@
-import { GameState, Project, FestivalSubmission, AwardBody } from '@/engine/types';
+import { GameState, FestivalSubmission, AwardBody } from '@/engine/types';
 import { randRange } from '../utils';
 
 export const FESTIVALS: { body: AwardBody, name: string, weeks: number[], cost: number, prestigeNeeded: number, buzzReward: number }[] = [
@@ -57,6 +57,11 @@ export function resolveFestivals(state: GameState): GameState {
   const updatedProjects = [...state.studio.internal.projects];
   const newHeadlines = [...state.industry.headlines];
   
+  const projectIndices = new Map<string, number>();
+  for (let i = 0; i < updatedProjects.length; i++) {
+    projectIndices.set(updatedProjects[i].id, i);
+  }
+
   updatedSubmissions = updatedSubmissions.map(sub => {
     if (sub.status !== 'submitted') return sub;
     
@@ -65,8 +70,8 @@ export function resolveFestivals(state: GameState): GameState {
     
     // Resolve if festival is occurring this week
     if (fest.weeks.includes(state.week % 52)) {
-      const pIndex = updatedProjects.findIndex(p => p.id === sub.projectId);
-      if (pIndex === -1) return sub;
+      const pIndex = projectIndices.get(sub.projectId);
+      if (pIndex === undefined) return sub;
       const project = updatedProjects[pIndex];
       
       // Calculate acceptance chance
