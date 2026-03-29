@@ -2231,38 +2231,54 @@ const CRISIS_POOLS = [
   }
 ];
 
+type CrisisSeverity = 'low' | 'medium' | 'high' | 'catastrophic';
+
+interface PrecalculatedCrisisPool {
+  description: string;
+  options: import('../types').CrisisOption[];
+  severity: CrisisSeverity;
+}
+
+// ⚡ Bolt: Precalculate crisis severity during module initialization to avoid repeated O(n) loops over options during hot production loops
+const CACHED_CRISIS_POOLS: PrecalculatedCrisisPool[] = CRISIS_POOLS.map(template => {
+  let maxDelay = 0;
+  let maxCash = 0;
+  let maxBuzz = 0;
+
+  for (const option of template.options) {
+      const opt = option as import('../types').CrisisOption;
+      if (opt.weeksDelay && opt.weeksDelay > maxDelay) maxDelay = opt.weeksDelay;
+      if (opt.cashPenalty && opt.cashPenalty > maxCash) maxCash = opt.cashPenalty;
+      if (opt.buzzPenalty && opt.buzzPenalty > maxBuzz) maxBuzz = opt.buzzPenalty;
+  }
+
+  let severity: CrisisSeverity = 'low';
+  if (maxCash >= 2_000_000 || maxDelay >= 5 || maxBuzz >= 40) {
+      severity = 'catastrophic';
+  } else if (maxCash >= 800_000 || maxDelay >= 3 || maxBuzz >= 25) {
+      severity = 'high';
+  } else if (maxCash >= 300_000 || maxDelay >= 1 || maxBuzz >= 10) {
+      severity = 'medium';
+  }
+
+  return {
+    description: template.description,
+    options: template.options as import('../types').CrisisOption[],
+    severity
+  };
+});
+
 export function checkAndTriggerCrisis(project: Project): ActiveCrisis | undefined {
   if (project.status !== 'production') return undefined;
 
   if (Math.random() < 0.05) {
-    const crisisTemplate = pick(CRISIS_POOLS);
-
-    // Calculate severity dynamically based on worst-case penalties
-    let maxDelay = 0;
-    let maxCash = 0;
-    let maxBuzz = 0;
-
-    for (const option of crisisTemplate.options) {
-        const opt = option as import('../types').CrisisOption;
-        if (opt.weeksDelay && opt.weeksDelay > maxDelay) maxDelay = opt.weeksDelay;
-        if (opt.cashPenalty && opt.cashPenalty > maxCash) maxCash = opt.cashPenalty;
-        if (opt.buzzPenalty && opt.buzzPenalty > maxBuzz) maxBuzz = opt.buzzPenalty;
-    }
-
-    let severity: 'low' | 'medium' | 'high' | 'catastrophic' = 'low';
-    if (maxCash >= 2_000_000 || maxDelay >= 5 || maxBuzz >= 40) {
-        severity = 'catastrophic';
-    } else if (maxCash >= 800_000 || maxDelay >= 3 || maxBuzz >= 25) {
-        severity = 'high';
-    } else if (maxCash >= 300_000 || maxDelay >= 1 || maxBuzz >= 10) {
-        severity = 'medium';
-    }
+    const crisisTemplate = pick(CACHED_CRISIS_POOLS);
 
     return {
       description: crisisTemplate.description,
-      options: [...crisisTemplate.options] as import('../types').CrisisOption[], // Clone options
+      options: [...crisisTemplate.options], // Clone options
       resolved: false,
-      severity
+      severity: crisisTemplate.severity
     };
   }
 
