@@ -12,14 +12,6 @@ export function evaluateRating(flags?: ContentFlag[]): ProjectRating {
   }
   
   if (flags.includes('violence') || flags.includes('political') || flags.includes('profanity')) {
-    // If they have all 3, it's definitely R
-    if (flags.includes('violence') && flags.includes('profanity') && flags.includes('political')) {
-      return 'R';
-    }
-    // High impact flags
-    if (flags.includes('violence') || flags.includes('political')) {
-        return 'NC-17'; // Just kidding, let's make it R
-    }
     return 'R';
   }
   
