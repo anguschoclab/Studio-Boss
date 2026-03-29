@@ -62,7 +62,7 @@ describe('TalentPanel', () => {
     expect(screen.getByText('Steven Spielberg')).toBeInTheDocument();
 
     // Filter by director
-    fireEvent.click(screen.getByText((content, element) => element?.textContent?.toLowerCase() === 'director'));
+    fireEvent.click(screen.getAllByText((content, element) => element?.textContent?.toLowerCase() === 'director')[0]);
 
     expect(screen.queryByText('Tom Hanks')).not.toBeInTheDocument();
     expect(screen.getByText('Steven Spielberg')).toBeInTheDocument();

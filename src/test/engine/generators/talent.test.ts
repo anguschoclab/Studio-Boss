@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { generateFamilies, generateTalentPool } from '@/engine/generators/talent';
 import { Agency, Agent, Family } from '@/engine/types';
+import * as utils from '../../../engine/utils';
 
 describe('talent generator', () => {
   describe('generateFamilies', () => {
@@ -28,7 +29,7 @@ describe('talent generator', () => {
 
     it('assigns multiple roles occasionally (multi-hyphenates)', () => {
         // Mock random to guarantee a secondary role
-        vi.spyOn(Math, 'random').mockReturnValue(0.1);
+        vi.spyOn(utils, 'secureRandom').mockReturnValue(0.1);
         
         const pool = generateTalentPool(1, [], [], []);
         expect(pool[0].roles.length).toBeGreaterThan(0);
@@ -40,7 +41,7 @@ describe('talent generator', () => {
         const families: Family[] = [{ id: 'fam-1', name: 'Coppola', recognition: 90, prestigeLegacy: 90, commercialLegacy: 90, scandalLegacy: 10, volatility: 10, status: 'respected' }];
         
         // Mock random so they are guaranteed to be nepo
-        vi.spyOn(Math, 'random').mockReturnValue(0.1); 
+        vi.spyOn(utils, 'secureRandom').mockReturnValue(0.1);
         
         const pool = generateTalentPool(1, families, [], []);
         expect(pool[0].familyId).toBe('fam-1');
@@ -58,7 +59,7 @@ describe('talent generator', () => {
         ];
 
         // Mock random to guarantee they get an agent
-        vi.spyOn(Math, 'random').mockReturnValue(0.5); 
+        vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5);
 
         const pool = generateTalentPool(10, [], agents, agencies);
         
