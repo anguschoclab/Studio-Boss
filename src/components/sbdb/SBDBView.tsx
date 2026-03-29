@@ -98,7 +98,7 @@ export const SBDBView = () => {
             </SelectContent>
           </Select>
 
-          <Button variant="outline" size="icon" aria-label="Filter talent" title="Filter talent" className="border-white/10">
+          <Button variant="outline" size="icon" aria-label="Filter talent" className="border-white/10">
             <Filter className="w-4 h-4" />
           </Button>
         </div>
