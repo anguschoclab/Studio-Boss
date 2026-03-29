@@ -7,7 +7,7 @@ const FAMOUS_LAST_NAMES = [
   'Gyllenhaal', 'Arquette', 'Cusack', 'Douglas', 'Howard', 'Reiner', 'Wayans', 'Roberts', 'Eastwood', 'Smith'
 ];
 
-const TEMPERAMENTS = ['Professional', 'Diva', 'Method', 'Collaborative', 'Volatile', 'Perfectionist', 'Reliable', 'Difficult', 'Refuses to do press', 'Brings their own script doctor', 'Refuses to do rewrites', 'Mandatory private jet', 'Demands final cut', 'Always late to set', 'Requires trailer bigger than co-stars', 'Refuses to work with indie studios', 'Demands co-star approval', 'Requires personal onset chef', 'Only shoots in Europe', 'Refuses to do sequels', 'Requires ridiculous VFX double', 'Notorious for walk-outs', 'Refuses to do streaming', 'Brings their own lighting crew', 'Requires daily rewrites', 'Demands top billing', 'Only works with A-List co-stars', 'Requires 20-person entourage', 'Refuses to work past 4 PM', 'Demands exclusive merchandising rights', 'Refuses to promote on social media', 'Only works with their specific DP', 'Requires a personal onset gym', 'Demands guaranteed marketing spend', 'Refuses to work with first-time directors', 'Requires guaranteed sequel clauses', 'Demands creative control over casting', 'Refuses to do table reads', 'Refuses to do chemistry reads', 'Only communicates through manager', 'Demands constant schedule changes', 'Requires excessive vanity credits', 'Threatens to walk over minor slights', 'Only works with their preferred editor', 'Refuses to speak directly to the director', 'Requires an astrologer on set', 'Demands rewriting the ending', 'Brings an uncredited co-director', 'Mandatory raw vegan catering only', 'Refuses to wear synthetic fabrics', 'Only works between 10 AM and 2 PM', 'Requires their pet in every scene', 'Threatens to leak the script'];
+const TEMPERAMENTS = ['Professional', 'Diva', 'Method', 'Collaborative', 'Volatile', 'Perfectionist', 'Reliable', 'Difficult', 'Refuses to do press', 'Brings their own script doctor', 'Refuses to do rewrites', 'Mandatory private jet', 'Demands final cut', 'Always late to set', 'Requires trailer bigger than co-stars', 'Refuses to work with indie studios', 'Demands co-star approval', 'Requires personal onset chef', 'Only shoots in Europe', 'Refuses to do sequels', 'Requires ridiculous VFX double', 'Notorious for walk-outs', 'Refuses to do streaming', 'Brings their own lighting crew', 'Requires daily rewrites', 'Demands top billing', 'Only works with A-List co-stars', 'Requires 20-person entourage', 'Refuses to work past 4 PM', 'Demands exclusive merchandising rights', 'Refuses to promote on social media', 'Only works with their specific DP', 'Requires a personal onset gym', 'Demands guaranteed marketing spend', 'Refuses to work with first-time directors', 'Requires guaranteed sequel clauses', 'Demands creative control over casting', 'Refuses to do table reads', 'Refuses to do chemistry reads', 'Only communicates through manager', 'Demands constant schedule changes', 'Requires excessive vanity credits', 'Threatens to walk over minor slights', 'Only works with their preferred editor', 'Refuses all interviews', 'Demands constant script revisions', 'Requires personal onset DJ', 'Threatens to quit daily'];
 
 export const PERK_TEMPERAMENTS = [
   'Refuses to do press',
@@ -46,15 +46,10 @@ export const PERK_TEMPERAMENTS = [
   'Requires excessive vanity credits',
   'Threatens to walk over minor slights',
   'Only works with their preferred editor',
-  'Refuses to speak directly to the director',
-  'Requires an astrologer on set',
-  'Demands rewriting the ending',
-  'Brings an uncredited co-director',
-  'Mandatory raw vegan catering only',
-  'Refuses to wear synthetic fabrics',
-  'Only works between 10 AM and 2 PM',
-  'Requires their pet in every scene',
-  'Threatens to leak the script'
+  'Refuses all interviews',
+  'Demands constant script revisions',
+  'Requires personal onset DJ',
+  'Threatens to quit daily'
 ];
 
 

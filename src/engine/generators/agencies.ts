@@ -1,9 +1,9 @@
 import { Agency, Agent, AgencyTier, AgencyCulture, AgentSpecialty, AgencyArchetype } from '@/engine/types';
 import { pick, randRange } from '../utils';
 
-const POWERHOUSE_PREFIXES = ['United Global', 'Apex', 'Titan', 'Creative Artists', 'William Morrison', 'Monolith', 'Apex Predators', 'Omni', 'Gargantuan'];
-const BOUTIQUE_PREFIXES = ['Silver Lake', 'Artisan', 'Lighthouse', 'Indie', 'Auteur', 'Visionary', 'Underground'];
-const SHARK_PREFIXES = ['Viper', 'Goldstein &', 'Predator', 'Ironclad', 'Cutthroat', 'Ruthless', 'Bloodsucker', 'Venom', 'Merciless'];
+const POWERHOUSE_PREFIXES = ['United Global', 'Apex', 'Titan', 'Creative Artists', 'William Morrison', 'Monolith', 'Apex Predators', 'Colossal', 'Leviathan'];
+const BOUTIQUE_PREFIXES = ['Silver Lake', 'Artisan', 'Lighthouse', 'Indie', 'Auteur', 'Visionary', 'Underground', 'Echo Park', 'Canyon'];
+const SHARK_PREFIXES = ['Viper', 'Goldstein &', 'Predator', 'Ironclad', 'Cutthroat', 'Ruthless', 'Bloodsucker', 'Barracuda', 'Venom'];
 
 
 const SHARK_TRAITS = [
@@ -12,10 +12,9 @@ const SHARK_TRAITS = [
   'Threatens media smear campaigns',
   'Renegotiates mid-production',
   'Requires excessive vanity credits',
-  'Forces casting of nepo babies',
-  'Sabotages rival projects',
-  'Demands cross-promotional tie-ins',
-  'Requires immediate greenlight'
+  'Requires first-dollar gross',
+  'Mandates script rewrites by their writers',
+  'Demands guaranteed award campaigns'
 ];
 
 const POWERHOUSE_TRAITS = [
@@ -24,10 +23,9 @@ const POWERHOUSE_TRAITS = [
   'Only represents showrunners',
   'Demands constant schedule changes',
   'Forces unwanted co-stars',
-  'Requires overall deal commitment',
-  'Mandates specific release windows',
-  'Demands exclusive streaming rights',
-  'Requires multi-picture deals'
+  'Forces greenlight on passion projects',
+  'Requires first-dollar gross',
+  'Demands guaranteed award campaigns'
 ];
 
 const BOUTIQUE_TRAITS = [
@@ -36,10 +34,8 @@ const BOUTIQUE_TRAITS = [
   'Only represents comedy writers',
   'Refuses to do chemistry reads',
   'Requires final cut privileges',
-  'Requires analog film shoots',
-  'Only represents character actors',
-  'Demands closed-set rehearsals',
-  'Refuses test screenings'
+  'Mandates script rewrites by their writers',
+  'Forces greenlight on passion projects'
 ];
 
 export function generateAgencies(count: number): Agency[] {
