@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { GameState, WeekSummary, ArchetypeKey, NewsEvent } from '@/engine/types';
+import { GameState, WeekSummary, ArchetypeKey } from '@/engine/types';
 import { initializeGame } from '@/engine/core/gameInit';
 import { advanceWeek } from '@/engine/core/weekAdvance';
 import { saveGame, loadGame, getSaveSlots, SaveSlotInfo } from '@/persistence/saveLoad';
@@ -33,7 +33,7 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
   ...createSnapshotSlice(set, get, ...args),
 
   newGame: (studioName, archetype) => {
-    set((s) => {
+    set(() => {
       const gameState = initializeGame(studioName, archetype);
       saveGame(0, gameState);
       return { gameState };
@@ -69,16 +69,22 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
       for (let i = 0; i < summary.events.length; i++) {
         const ev = summary.events[i];
         if (ev.startsWith('CRISIS: "')) {
-          const match = ev.match(/^CRISIS: "([^"]+)"/);
-          if (match) crisisTitles.add(match[1]);
+          const firstQuote = ev.indexOf('"');
+          const secondQuote = ev.indexOf('"', firstQuote + 1);
+          if (firstQuote !== -1 && secondQuote !== -1) {
+            crisisTitles.add(ev.substring(firstQuote + 1, secondQuote));
+          }
         }
       }
     }
-    const projects = finalState.studio.internal.projects;
-    for (let i = 0; i < projects.length; i++) {
-      const p = projects[i];
-      if (p.activeCrisis && !p.activeCrisis.resolved && crisisTitles.has(p.title)) {
-        ui.enqueueModal('CRISIS', { projectId: p.id, crisis: p.activeCrisis });
+
+    if (crisisTitles.size > 0) {
+      const projects = finalState.studio.internal.projects;
+      for (let i = 0; i < projects.length; i++) {
+        const p = projects[i];
+        if (p.activeCrisis && !p.activeCrisis.resolved && crisisTitles.has(p.title)) {
+          ui.enqueueModal('CRISIS', { projectId: p.id, crisis: p.activeCrisis });
+        }
       }
     }
 

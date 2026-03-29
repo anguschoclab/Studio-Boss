@@ -1,4 +1,6 @@
 import { GenreTrend, GameState } from '@/engine/types';
+import { secureRandom } from '../utils';
+
 
 export const ALL_GENRES = [
   'Action', 'Comedy', 'Drama', 'Horror', 'Sci-Fi', 'Thriller', 'Romance', 'Animation', 'Documentary', 'Fantasy'
@@ -6,7 +8,7 @@ export const ALL_GENRES = [
 
 export function initializeTrends(): GenreTrend[] {
   // Pick 3 random genres to be the starting trends
-  const shuffled = [...ALL_GENRES].sort(() => 0.5 - Math.random());
+  const shuffled = [...ALL_GENRES].sort(() => 0.5 - secureRandom());
   return [
     {
       genre: shuffled[0],
@@ -52,16 +54,16 @@ export function advanceTrends(trends: GenreTrend[]): GenreTrend[] {
   updated = updated.filter(t => t.weeksRemaining > 0 && t.heat > 0);
   
   // Randomly spawn new trends if we are low
-  if (updated.length < 5 && Math.random() < 0.1) {
+  if (updated.length < 5 && secureRandom() < 0.1) {
     const activeGenres = new Set(updated.map(t => t.genre));
     const available = ALL_GENRES.filter(g => !activeGenres.has(g));
     if (available.length > 0) {
-      const newGenre = available[Math.floor(Math.random() * available.length)];
+      const newGenre = available[Math.floor(secureRandom() * available.length)];
       updated.push({
         genre: newGenre,
         heat: 30,
         direction: 'rising',
-        weeksRemaining: 16 + Math.floor(Math.random() * 12)
+        weeksRemaining: 16 + Math.floor(secureRandom() * 12)
       });
     }
   }

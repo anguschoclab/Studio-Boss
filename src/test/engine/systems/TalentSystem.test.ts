@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { TalentSystem } from "../../../engine/systems/TalentSystem";
 import { Project, Contract, TalentProfile, Award, GameState } from "../../../engine/types";
+import * as utils from '../../../engine/utils';
 
 const mockProject: Project = {
   id: "p1",
@@ -248,7 +249,7 @@ describe("TalentSystem", () => {
 
     it("decrements opportunity expiry", () => {
       // Mock random to prevent new opportunities
-      vi.spyOn(Math, 'random').mockReturnValue(0.9);
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.9);
       
       const result = TalentSystem.advance(mockState);
       
@@ -264,7 +265,7 @@ describe("TalentSystem", () => {
         { id: "o1", title: "Expiring", description: "", weeksUntilExpiry: 1, roles: [], budget: 1000000 }
       ];
       
-      vi.spyOn(Math, 'random').mockReturnValue(0.9);
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.9);
       
       const result = TalentSystem.advance(expiringState);
       expect(result.updatedOpportunities).toHaveLength(0);
@@ -274,7 +275,7 @@ describe("TalentSystem", () => {
 
     it("generates new opportunities based on random chance", () => {
       // Use mockReturnValueOnce to provide different values for each check
-      const randMock = vi.spyOn(Math, 'random');
+      const randMock = vi.spyOn(utils, 'secureRandom');
       // 1. Initial checks in TalentSystem.advance (0.1, 0.1, 0.1)
       // 2. Internal checks in generateOpportunity (isFilm, budgetTier, etc.)
       // It's easier to just mock generateProjectTitle or use a sequence

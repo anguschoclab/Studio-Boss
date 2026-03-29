@@ -1,8 +1,8 @@
-import { GameState, Headline, NewsEvent, Project } from '@/engine/types';
+import { GameState, Headline, NewsEvent, Project, ActiveCrisis } from '@/engine/types';
 import { advanceRivals } from '../rivals';
 import { updateBuyers } from '../buyers';
 import { TalentSystem } from '../TalentSystem';
-import { groupContractsByProject, pick } from '../../utils';
+import { groupContractsByProject, pick, secureRandom } from '../../utils';
 import { generateHeadlines } from '../../generators/headlines';
 import { runAwardsCeremony, processRazzies } from '../awards';
 import { advanceTrends } from '../trends';
@@ -63,10 +63,10 @@ export const processWorldEvents = (
     weeklyChanges.events.push(...talentEvents);
 
     // Random World Events
-    if (Math.random() < 0.2) {
+    if (secureRandom() < 0.2) {
         weeklyChanges.events.push(pick(EVENT_POOL));
     }
-    if (Math.random() < 0.2) {
+    if (secureRandom() < 0.2) {
         weeklyChanges.events.push(pick(EVENT_POOL));
     }
 
@@ -193,16 +193,48 @@ export const processWorldEvents = (
         const combinedScandals = new Array(oldScandals.length + scandalResult.newScandals.length);
         for(let i = 0; i < oldScandals.length; i++) combinedScandals[i] = oldScandals[i];
         for(let i = 0; i < scandalResult.newScandals.length; i++) combinedScandals[oldScandals.length + i] = scandalResult.newScandals[i];
-        newState.industry.scandals = combinedScandals;
+
         newHeadlines.push(...scandalResult.headlines);
         
+        // ⚡ Bolt: Optimize scandal project updates by pre-indexing updates and using O(n) mapping for immutability
+        const updatesMap = new Map<string, ActiveCrisis>();
         for (const update of scandalResult.projectUpdates) {
-            const project = newState.studio.internal.projects.find(p => p.id === update.projectId);
-            if (project && !project.activeCrisis) {
-                project.activeCrisis = update.crisis;
-                weeklyChanges.events.push(`CRISIS: "${project.title}" - ${update.crisis.description}`);
+            if (!updatesMap.has(update.projectId)) {
+                updatesMap.set(update.projectId, update.crisis);
             }
         }
+
+        const currentProjects = newState.studio.internal.projects;
+        let updatedProjects = currentProjects;
+
+        if (updatesMap.size > 0) {
+            updatedProjects = new Array(currentProjects.length);
+            for (let i = 0; i < currentProjects.length; i++) {
+                const p = currentProjects[i];
+                const crisis = updatesMap.get(p.id);
+                if (crisis && !p.activeCrisis) {
+                    weeklyChanges.events.push(`CRISIS: "${p.title}" - ${crisis.description}`);
+                    updatedProjects[i] = { ...p, activeCrisis: crisis };
+                } else {
+                    updatedProjects[i] = p;
+                }
+            }
+        }
+
+        newState = {
+            ...newState,
+            industry: {
+                ...newState.industry,
+                scandals: combinedScandals
+            },
+            studio: {
+                ...newState.studio,
+                internal: {
+                    ...newState.studio.internal,
+                    projects: updatedProjects
+                }
+            }
+        };
     }
 
     weeklyChanges.newHeadlines.push(...newHeadlines);

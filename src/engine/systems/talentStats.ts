@@ -25,9 +25,10 @@ export function applyAwardBoostsToTalent(
   const isCannesEquivalent = ['Cannes Film Festival', 'Venice Film Festival', 'Berlin International Film Festival', 'Telluride Film Festival'].includes(award.body);
   const isSundanceEquivalent = ['Sundance Film Festival', 'Toronto International Film Festival', 'SXSW Film Festival', 'Tribeca Film Festival', 'Slamdance Film Festival'].includes(award.body);
   const isMajorCategory = ['Best Director', 'Best Actor', 'Best Actress', 'Palme d\'Or', 'Golden Lion', 'Golden Bear', 'Grand Jury Prize'].includes(award.category);
+  const isSupportingCategory = ['Best Supporting Actor', 'Best Supporting Actress'].includes(award.category);
 
   // Specific multiplicative bonus for massive individual achievements
-  const individualCategoryMultiplier = isMajorCategory ? 1.8 : 1.0;
+  const individualCategoryMultiplier = isMajorCategory ? 1.8 : isSupportingCategory ? 1.4 : 1.0;
   const finalMultiplier = multiplier * individualCategoryMultiplier;
 
   if (award.status === 'won') {

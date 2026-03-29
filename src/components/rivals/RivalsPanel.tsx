@@ -50,7 +50,7 @@ export const RivalsPanel = () => {
               
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-destructive/10 hover:text-destructive">
+                  <Button variant="ghost" size="sm" aria-label="Strategic actions" className="h-8 w-8 p-0 hover:bg-destructive/10 hover:text-destructive">
                     <MoreVertical className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>

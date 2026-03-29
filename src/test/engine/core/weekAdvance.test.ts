@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { advanceWeek } from "@/engine/core/weekAdvance";
 import { initializeGame } from "@/engine/core/gameInit";
+import * as utils from '../../../engine/utils';
 
 describe("advanceWeek", () => {
   it("advances the game by one week and generates a summary", () => {
@@ -55,7 +56,7 @@ describe("advanceWeek", () => {
     ];
 
     // Force Math.random to not generate new opportunities for this test
-    vi.spyOn(Math, 'random').mockReturnValue(0.9);
+    vi.spyOn(utils, 'secureRandom').mockReturnValue(0.9);
 
     const { newState } = advanceWeek(initialState);
 
@@ -71,7 +72,7 @@ describe("advanceWeek", () => {
     initialState.market.opportunities = [];
 
     // Force Math.random to < 0.3 to trigger opportunity spawn
-    vi.spyOn(Math, 'random').mockReturnValue(0.1);
+    vi.spyOn(utils, 'secureRandom').mockReturnValue(0.1);
 
     const { newState, summary } = advanceWeek(initialState);
 

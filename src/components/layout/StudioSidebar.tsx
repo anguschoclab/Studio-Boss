@@ -145,6 +145,7 @@ export const StudioSidebar = () => {
         <Button
           variant="ghost"
           size="icon"
+          aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           onClick={() => setIsCollapsed(!isCollapsed)}
           className="w-full flex justify-center hover:bg-white/5"
         >
