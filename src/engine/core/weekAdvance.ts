@@ -6,6 +6,8 @@ import { processProduction, WeeklyChanges as ProductionWeeklyChanges } from '../
 import { processFinance, WeeklyChanges as FinanceWeeklyChanges } from '../systems/processors/processFinance';
 import { processWorldEvents, WeeklyChanges as WorldWeeklyChanges } from '../systems/processors/processWorldEvents';
 import { useGameStore } from '../../store/gameStore';
+import { secureRandom } from '../utils';
+
 
 // Consolidated WeeklyChanges interface for the orchestrator
 export interface WeeklyChanges extends ProductionWeeklyChanges, FinanceWeeklyChanges, WorldWeeklyChanges {
@@ -60,7 +62,7 @@ const finalizeWeek = (
   for (let i = 0; i < ALL_GENRES.length; i++) {
     const g = ALL_GENRES[i];
     const heat = trendMap.get(g);
-    genrePopularity[g.toLowerCase()] = heat !== undefined ? heat / 100 : 0.2 + Math.random() * 0.1;
+    genrePopularity[g.toLowerCase()] = heat !== undefined ? heat / 100 : 0.2 + secureRandom() * 0.1;
   }
 
   const nextFinance = {

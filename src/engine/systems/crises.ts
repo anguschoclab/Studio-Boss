@@ -1,5 +1,5 @@
 import { Project, ActiveCrisis, GameState } from '@/engine/types';
-import { pick } from '../utils';
+import { pick, secureRandom } from '../utils';
 
 const CRISIS_POOLS = [
   {
@@ -2548,7 +2548,7 @@ const CRISIS_POOLS = [
 export function checkAndTriggerCrisis(project: Project): ActiveCrisis | undefined {
   if (project.status !== 'production') return undefined;
 
-  if (Math.random() < 0.05) {
+  if (secureRandom() < 0.05) {
     const crisisTemplate = pick(CRISIS_POOLS);
 
     // Calculate severity dynamically based on worst-case penalties

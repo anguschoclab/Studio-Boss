@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { exploitIP } from "../../../engine/systems/franchises";
 import { Project, GameState } from "../../../engine/types";
+import * as utils from '../../../engine/utils';
 
 const baseProject: Project = {
   id: "p1",
@@ -70,7 +71,7 @@ describe("franchise system", () => {
 
       const state = { studio: { internal: { projects: [flopProject, ...relatedProjects] } } } as unknown as GameState;
 
-      vi.spyOn(Math, 'random').mockReturnValue(0.2); // Force reboot chance (now between 0.15 and 0.3)
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.2); // Force reboot chance (now between 0.15 and 0.3)
       const result = exploitIP(flopProject, state);
 
       expect(result).toBeDefined();
@@ -89,7 +90,7 @@ describe("franchise system", () => {
       }));
       const state = { studio: { internal: { projects: [flopProject, ...relatedProjects] } } } as unknown as GameState;
 
-      vi.spyOn(Math, 'random').mockReturnValue(0.98); // Fail all reboot/format flip chances (max is 0.97 for animated series flip)
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.98); // Fail all reboot/format flip chances (max is 0.97 for animated series flip)
       const result = exploitIP(flopProject, state);
       expect(result).toBeNull();
     });
@@ -105,7 +106,7 @@ describe("franchise system", () => {
 
       const state = { studio: { internal: { projects: [flopProject, ...relatedProjects] } } } as unknown as GameState;
 
-      vi.spyOn(Math, 'random').mockReturnValue(0.4); // Between 0.3 and 0.5 triggers Resurrection meta-sequel
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.4); // Between 0.3 and 0.5 triggers Resurrection meta-sequel
       const result = exploitIP(flopProject, state);
 
       expect(result).toBeDefined();
@@ -126,7 +127,7 @@ describe("franchise system", () => {
 
       // Need random > 0.8 for crossover target detection, then random < 0.2 for crossover selection
       let callCount = 0;
-      vi.spyOn(Math, 'random').mockImplementation(() => {
+      vi.spyOn(utils, 'secureRandom').mockImplementation(() => {
         callCount++;
         if (callCount === 1) return 0.9; // For crossover target detection
         return 0.1; // For selecting crossover action
@@ -149,7 +150,7 @@ describe("franchise system", () => {
       const state = { studio: { internal: { projects: [baseProject, otherHit] } } } as unknown as GameState;
 
       let callCount = 0;
-      vi.spyOn(Math, 'random').mockImplementation(() => {
+      vi.spyOn(utils, 'secureRandom').mockImplementation(() => {
         callCount++;
         if (callCount === 1) return 0.9; // For crossover target detection
         return 0.1; // For selecting crossover action
@@ -168,7 +169,7 @@ describe("franchise system", () => {
       }));
       const state = { studio: { internal: { projects: [flopProject, ...relatedProjects] } }, week: 200 } as unknown as GameState;
 
-      vi.spyOn(Math, 'random').mockReturnValue(0.65); // < 0.7 but >= 0.6 triggers Expanded Universe
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.65); // < 0.7 but >= 0.6 triggers Expanded Universe
       const result = exploitIP(flopProject, state);
 
       expect(result?.title).toContain("Expanded Universe");
@@ -180,7 +181,7 @@ describe("franchise system", () => {
       const legacyProject = { ...baseProject, releaseWeek: 10, revenue: 600000000 };
       const state = { week: 200, studio: { internal: { projects: [legacyProject] } } } as unknown as GameState;
 
-      vi.spyOn(Math, 'random').mockReturnValue(0.2); // < 0.3 triggers requel inside legacy block
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.2); // < 0.3 triggers requel inside legacy block
       const result = exploitIP(legacyProject, state);
 
       expect(result?.title).toContain("A New Generation");
@@ -198,7 +199,7 @@ describe("franchise system", () => {
       const state = { week: 200, studio: { internal: { projects: [massiveHit, ...relatedProjects] } } } as unknown as GameState;
 
       // Not legacy (diff < 150)
-      vi.spyOn(Math, 'random').mockReturnValue(0.52); // < 0.55 triggers Part 1 Finale
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.52); // < 0.55 triggers Part 1 Finale
       const result = exploitIP(massiveHit, state);
 
       expect(result?.title).toContain("The Final Chapter - Part 1");
@@ -206,7 +207,7 @@ describe("franchise system", () => {
     });
 
     it("generates a direct sequel", () => {
-      vi.spyOn(Math, 'random').mockReturnValue(0.58); // < 0.6 but >= 0.55 triggers sequel
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.58); // < 0.6 but >= 0.55 triggers sequel
       const result = exploitIP(baseProject);
 
       expect(result?.title).toBe("Galaxy Wars 1"); // 0 related + 1 = 1 (or 2 depending on if it counts itself if state isn't passed)
@@ -214,14 +215,14 @@ describe("franchise system", () => {
     });
 
     it("generates a prequel", () => {
-      vi.spyOn(Math, 'random').mockReturnValue(0.7); // < 0.8 triggers prequel
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.7); // < 0.8 triggers prequel
       const result = exploitIP(baseProject);
 
       expect(result?.title).toContain("Origins");
     });
 
     it("generates a spinoff", () => {
-      vi.spyOn(Math, 'random').mockReturnValue(0.9); // >= 0.8 triggers spinoff
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.9); // >= 0.8 triggers spinoff
       const result = exploitIP(baseProject);
 
       expect(result?.title).toContain("The Next Generation");
@@ -236,7 +237,7 @@ describe("franchise system", () => {
       }));
       const state = { studio: { internal: { projects: [baseProject, ...relatedProjects] } } } as unknown as GameState;
 
-      vi.spyOn(Math, 'random').mockReturnValue(0.5); // trigger sequel
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5); // trigger sequel
       const result = exploitIP(baseProject, state);
 
       // Penalty will be massive, so bonus drops heavily
@@ -268,7 +269,7 @@ describe("franchise system", () => {
 
       const state = { week: 100, studio: { internal: { projects: [flopProject, ...relatedProjects, ...recentReleases] } } } as unknown as GameState;
 
-      vi.spyOn(Math, 'random').mockReturnValue(0.2); // Avoid hitting Villain Origin Story (< 0.15)
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.2); // Avoid hitting Villain Origin Story (< 0.15)
       const result = exploitIP(flopProject, state);
 
       // Saturation penalty should be amplified due to Superhero Fatigue * 1.5 risk multiplier
@@ -295,7 +296,7 @@ describe("franchise system", () => {
       // Saturation penalty will be low as we don't have enough projects
       const state = { week: 200, studio: { internal: { projects: [legacyProject, relatedProject] } } } as unknown as GameState;
 
-      vi.spyOn(Math, 'random').mockReturnValue(0.4); // < 0.5 triggers IP rush job when at risk and not fully fatigued
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.4); // < 0.5 triggers IP rush job when at risk and not fully fatigued
       const result = exploitIP(legacyProject, state);
 
       expect(result).toBeDefined();

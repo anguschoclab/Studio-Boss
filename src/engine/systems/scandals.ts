@@ -1,4 +1,6 @@
 import { GameState, Scandal, ScandalType } from '@/engine/types';
+import { secureRandom } from '../utils';
+
 
 /**
  * Randomly spawns a scandal for a talent in the pool based on their controversy risk.
@@ -21,16 +23,16 @@ export function generateScandals(state: GameState): {
   
   for (const talent of state.industry.talentPool) {
     const risk = talent.controversyRisk || 5; 
-    if (Math.random() * 1000 < risk) {
+    if (secureRandom() * 1000 < risk) {
        const types: ScandalType[] = ['financial', 'personal', 'onset_behavior', 'legal', 'feud'];
-       const type = types[Math.floor(Math.random() * types.length)];
+       const type = types[Math.floor(secureRandom() * types.length)];
        
        const s: Scandal = {
          id: crypto.randomUUID(),
          talentId: talent.id,
-         severity: 20 + Math.floor(Math.random() * 80), // 20-100
+         severity: 20 + Math.floor(secureRandom() * 80), // 20-100
          type,
-         weeksRemaining: 4 + Math.floor(Math.random() * 8)
+         weeksRemaining: 4 + Math.floor(secureRandom() * 8)
        };
        newScandals.push(s);
        headlines.push({

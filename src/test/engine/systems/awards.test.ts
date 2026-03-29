@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { generateAwardsProfile, runAwardsCeremony } from "../../../engine/systems/awards";
 import { Project, GameState } from "../../../engine/types";
+import * as utils from '../../../engine/utils';
 
 describe("awards system", () => {
 
@@ -84,7 +85,7 @@ describe("awards system", () => {
 
     it("should be influenced by budget for prestigeScore", () => {
       // Mock Math.random to return 0 for deterministic results
-      vi.spyOn(Math, 'random').mockReturnValue(0);
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0);
 
       const lowBudgetProject = { ...mockProject, budget: 1000000 };
       const highBudgetProject = { ...mockProject, budget: 100000000 };
@@ -97,7 +98,7 @@ describe("awards system", () => {
 
     it("should give higher indieCredibility potential to low budget projects", () => {
       // Mock Math.random to return 0.5
-      vi.spyOn(Math, 'random').mockReturnValue(0.5);
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5);
 
       const lowBudgetProject = { ...mockProject, budgetTier: "low" as const };
       const midBudgetProject = { ...mockProject, budgetTier: "mid" as const };
