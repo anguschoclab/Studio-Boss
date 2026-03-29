@@ -1,9 +1,4 @@
-# Bolt's Journal
+## Performance Optimizations - $O(1)$ Maps
 
-## 2025-03-09 - [Reduce Object Allocation Overhead]
-**Learning:** In hot loops like `runAwardsCeremony` operating over large arrays (like `state.projects`), array reduction `[].reduce()` creating and returning intermediate objects or doing destructuring assignment has a measurable overhead.
-**Action:** Replace `reduce()` object grouping passes with simple `for` loops allocating into separate arrays directly for a ~3.2x performance gain, while keeping code readability high.
-
-## 2026-03-29 - [Precalculate Static Bounds in Hot Loops]
-**Learning:** The game's main advance loop checks conditions that run random evaluations (e.g., `checkAndTriggerCrisis`). Calculating minimum/maximum array constraints dynamically inside these checks results in needless O(N) operations.
-**Action:** Extract calculation of array extremes and constant logic into a one-time precalculation phase when the module loads, ensuring hot loops operate with O(1) property lookups.
+*   When doing lookup or filtering inside large state array loops (like evaluating `projects` in `processProduction` or `advanceProjects`), always construct an $O(1)$ lookup `Map` (e.g. `Map<string, Award[]>`) **outside** the loop beforehand rather than calling `.filter()` **inside** the loop. This changes an $O(N \times M)$ overhead into an $O(N + M)$ optimization and prevents significant FPS drops during mid-to-late game stages when industry size balloons.
+*   Ensure that the `Map` correctly resolves TypeScript typings. Using `typeof state.someArray[0]` evaluates to the object type inside the array, so if you are trying to make a Map of Arrays, make sure to either type it as `Map<string, Award[]>` directly or use `typeof state.someArray` (without the `[0]`) to grab the Array type explicitly to avoid compilation errors on `.push()`.
