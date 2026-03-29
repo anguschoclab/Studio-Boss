@@ -2,7 +2,7 @@ import { GameState, Headline, NewsEvent, Project, ActiveCrisis } from '@/engine/
 import { advanceRivals } from '../rivals';
 import { updateBuyers } from '../buyers';
 import { TalentSystem } from '../TalentSystem';
-import { groupContractsByProject, pick } from '../../utils';
+import { groupContractsByProject, pick, secureRandom } from '../../utils';
 import { generateHeadlines } from '../../generators/headlines';
 import { runAwardsCeremony, processRazzies } from '../awards';
 import { advanceTrends } from '../trends';
@@ -63,10 +63,10 @@ export const processWorldEvents = (
     weeklyChanges.events.push(...talentEvents);
 
     // Random World Events
-    if (Math.random() < 0.2) {
+    if (secureRandom() < 0.2) {
         weeklyChanges.events.push(pick(EVENT_POOL));
     }
-    if (Math.random() < 0.2) {
+    if (secureRandom() < 0.2) {
         weeklyChanges.events.push(pick(EVENT_POOL));
     }
 

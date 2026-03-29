@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { updateRival } from "../../../engine/systems/rivals";
 import { RivalStudio } from "../../../engine/types";
+import * as utils from '../../../engine/utils';
 
 const mockRival: RivalStudio = {
   id: "rival-1",
@@ -18,7 +19,7 @@ const mockRival: RivalStudio = {
 
 describe("updateRival", () => {
   beforeEach(() => {
-    vi.spyOn(Math, 'random').mockReturnValue(0.5);
+    vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5);
   });
 
   afterEach(() => {
@@ -40,7 +41,7 @@ describe("updateRival", () => {
   });
 
   it("sets isAcquirable correctly", () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0); // lowest values
+    vi.spyOn(utils, 'secureRandom').mockReturnValue(0); // lowest values
     
     // Subtract enough so that even with updateRival adding slightly to cash, it stays negative
     const brokeRival = { ...mockRival, cash: -50_000_000, strength: 30 };

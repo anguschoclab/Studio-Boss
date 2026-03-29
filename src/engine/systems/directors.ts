@@ -1,4 +1,6 @@
 import { GameState, Project, TalentProfile, Contract } from '@/engine/types';
+import { secureRandom } from '../utils';
+
 
 export interface DirectorDispute {
   projectId: string;
@@ -43,7 +45,7 @@ export function processDirectorDisputes(state: GameState): { updates: string[], 
                    director.directorArchetype === 'visionary' ? 0.04 : 
                    0.01;
                    
-    if (Math.random() < chance && !proj.activeCrisis) {
+    if (secureRandom() < chance && !proj.activeCrisis) {
        // Spawn a dispute crisis
        newCrises.push({
          projectId: proj.id,
