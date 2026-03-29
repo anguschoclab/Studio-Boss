@@ -10,7 +10,6 @@ export const EMPTY_TRENDS: GenreTrend[] = [];
 // --- Root Selectors ---
 export const selectStudio = (state: GameState | null) => state?.studio || null;
 export const selectMarket = (state: GameState | null) => state?.market || null;
-export const selectIndustry = (state: GameState | null) => state?.industry || null;
 
 // --- Studio / Internal Selectors ---
 export const selectInternal = (state: GameState | null) => state?.studio.internal || null;
