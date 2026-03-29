@@ -115,7 +115,9 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
 
   // Apply "Superhero Fatigue" (or general blockbuster fatigue) logic:
   // If the genre is heavily saturated, amplify the risk severely.
-  if ((sourceProject.genre === 'Superhero' || sourceProject.genre === 'Action' || sourceProject.genre === 'Sci-Fi') && genreSaturationCount > 10) {
+  if ((sourceProject.genre === 'Superhero' || sourceProject.genre === 'Action' || sourceProject.genre === 'Sci-Fi') && genreSaturationCount > 15) {
+      baseFatigueRisk *= 3.0; // Dead IP state due to extreme market saturation
+  } else if ((sourceProject.genre === 'Superhero' || sourceProject.genre === 'Action' || sourceProject.genre === 'Sci-Fi') && genreSaturationCount > 10) {
       baseFatigueRisk *= 2.0; // Extreme fatigue curve
   } else if ((sourceProject.genre === 'Superhero' || sourceProject.genre === 'Action' || sourceProject.genre === 'Sci-Fi') && genreSaturationCount > 5) {
       baseFatigueRisk *= 1.5; // Steep fatigue curve
@@ -128,6 +130,7 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
   const saturationPenalty = (exponentialSaturation * baseFatigueRisk * 10) + (genreSaturationCount * (baseFatigueRisk / 2) * 5) + oversaturationPenalty;
 
   const isFatigued = saturationPenalty > 35; // High saturation
+  const isDeadIP = saturationPenalty > 65; // IP is essentially unviable
 
   // IP Rights / Retention check: If it's a legacy IP with past related projects, we might rush something purely to keep rights
   const atRiskOfLosingRights = isLegacy && relatedProjectCount > 0 && sourceProject.revenue <= sourceProject.budget * 1.5;
@@ -138,6 +141,10 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
   }
 
   const rand = secureRandom();
+
+  if (isDeadIP && sourceProject.revenue <= sourceProject.budget * 1.5 && rand < 0.8) {
+     return null; // Dead IPs have an 80% chance of returning nothing if they failed
+  }
 
   // If the franchise is dead/fatigued and underperformed, there's a chance to reboot, format flip, or deconstruct
   if (isFatigued && sourceProject.revenue <= sourceProject.budget * 1.5) {
@@ -323,7 +330,28 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
     };
   }
 
-  if (isLegacy && recentCrossoverTarget && rand < 0.15) {
+  if (isDeadIP && isLegacy && sourceProject.revenue > sourceProject.budget * 2 && rand < 0.2) {
+      // Revitalized Legacy IPs
+      return {
+          title: `${sourceProject.title}: Awakening`,
+          format: sourceProject.format,
+          genre: sourceProject.genre,
+          budgetTier: 'blockbuster',
+          targetAudience: 'General Audience',
+          flavor: `A massive "soft reboot" of a dead legacy IP with extreme risk and a huge budget.`,
+          parentProjectId: sourceProject.id,
+          isSpinoff: true,
+          initialBuzzBonus: 15,
+      };
+  }
+
+  if (universeProjectCount >= 20 && recentCrossoverTarget && rand < 0.1) {
+    // Crisis Event (Endgame Level)
+    newTitle = `${sourceProject.title}: Crisis on Infinite Worlds`;
+    flavorText = `An unprecedented, universe-shattering crossover event bringing together every successful franchise IP into one monumental finale.`;
+    buzzBonus += 80 - (genreSaturationCount * 1.5); // Pinnacle hype event
+    newBudgetTier = 'blockbuster';
+  } else if (isLegacy && recentCrossoverTarget && rand < 0.15) {
     // Multiverse Event
     newTitle = `${sourceProject.title}: Into the Multiverse`;
     flavorText = `A massive multiverse event uniting legacy characters from the ${sourceProject.title} universe with ${recentCrossoverTarget.title}.`;
