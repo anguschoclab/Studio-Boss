@@ -82,7 +82,7 @@ export class TalentSystem {
     project: Project,
     contracts: Contract[],
     talentPool: TalentProfile[],
-    awards: Award[] = []
+    projectAwards: Award[] = []
   ): TalentProfile[] {
     if (contracts.length === 0) return [];
 
@@ -101,7 +101,6 @@ export class TalentSystem {
     else if (ROI < 0.4) { drawChange = -12; prestigeChange = -6; feeMultiplier = 0.75; }
     else if (ROI < 0.8) { drawChange = -6; prestigeChange = -3; feeMultiplier = 0.85; }
 
-    const projectAwards = awards.filter(a => a.projectId === project.id);
     const updatedTalent: TalentProfile[] = [];
 
     for (const contract of contracts) {
