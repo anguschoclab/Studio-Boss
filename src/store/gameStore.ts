@@ -69,8 +69,13 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
       for (let i = 0; i < summary.events.length; i++) {
         const ev = summary.events[i];
         if (ev.startsWith('CRISIS: "')) {
-          const match = ev.match(/^CRISIS: "([^"]+)"/);
-          if (match) crisisTitles.add(match[1]);
+          const firstQuote = ev.indexOf('"');
+          if (firstQuote !== -1) {
+            const secondQuote = ev.indexOf('"', firstQuote + 1);
+            if (secondQuote !== -1) {
+              crisisTitles.add(ev.substring(firstQuote + 1, secondQuote));
+            }
+          }
         }
       }
     }

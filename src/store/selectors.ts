@@ -38,12 +38,38 @@ export const selectBuyers = (state: GameState | null) => state?.market.buyers ||
 // --- Transformation Selectors ---
 export const selectActiveProjectsCount = (state: GameState | null) => {
   if (!state) return 0;
-  return selectProjects(state).filter(p => p.status === 'development' || p.status === 'production' || p.status === 'marketing').length;
+  const projects = selectProjects(state);
+  let count = 0;
+  for (let i = 0; i < projects.length; i++) {
+    const s = projects[i].status;
+    if (s === 'development' || s === 'production' || s === 'marketing') count++;
+  }
+  return count;
 };
+
+let lastProjectsRefForReleased: Project[] | null = null;
+let lastReleasedProjects: Project[] = EMPTY_PROJECTS;
 
 export const selectReleasedProjects = (state: GameState | null) => {
   if (!state) return EMPTY_PROJECTS;
-  return selectProjects(state).filter(p => p.status === 'released' || p.status === 'post_release' || p.status === 'archived');
+  const projects = selectProjects(state);
+
+  if (projects === lastProjectsRefForReleased) {
+    return lastReleasedProjects;
+  }
+
+  const released: Project[] = [];
+  for (let i = 0; i < projects.length; i++) {
+    const s = projects[i].status;
+    if (s === 'released' || s === 'post_release' || s === 'archived') {
+      released.push(projects[i]);
+    }
+  }
+
+  lastProjectsRefForReleased = projects;
+  lastReleasedProjects = released;
+
+  return released;
 };
 
 export const selectRecentFinance = (state: GameState | null) => {
