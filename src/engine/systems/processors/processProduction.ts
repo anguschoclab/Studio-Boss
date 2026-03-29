@@ -38,17 +38,6 @@ export const processProduction = (
     const boxOfficeEntries: BoxOfficeEntry[] = [];
     const allTalentUpdates = new Map<string, typeof state.industry.talentPool[0]>();
 
-    const mockStateForDisputes = {
-        ...state,
-        studio: {
-            ...state.studio,
-            internal: {
-                ...state.studio.internal,
-                projects: [] as Project[],
-            }
-        }
-    };
-
     for (let i = 0; i < state.studio.internal.projects.length; i++) {
         const p = state.studio.internal.projects[i];
 
@@ -104,8 +93,7 @@ export const processProduction = (
         }
 
         if (project.status === 'production') {
-            mockStateForDisputes.studio.internal.projects = [project];
-            const dirDisputeArgs = processDirectorDisputes(mockStateForDisputes);
+            const dirDisputeArgs = processDirectorDisputes(project, projectContracts, talentPoolMap);
             if (dirDisputeArgs.newCrises.length > 0 && (!project.activeCrisis || project.activeCrisis.resolved)) {
                 project.activeCrisis = dirDisputeArgs.newCrises[0].crisis;
                 weeklyChanges.projectUpdates.push(...dirDisputeArgs.updates);
