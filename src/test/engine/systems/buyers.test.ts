@@ -3,6 +3,7 @@ import { updateBuyers, calculateFitScore, negotiateContract } from "../../../eng
 
 
 import { Buyer, Project, MandateType } from "../../../engine/types";
+import * as utils from '../../../engine/utils';
 
 const mockBuyer: Buyer = {
   id: "b1",
@@ -46,7 +47,7 @@ describe("buyers system", () => {
     });
 
     it("calculates fit score correctly with empty project history", () => {
-      vi.spyOn(Math, 'random').mockReturnValue(0.5);
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5);
       const score = calculateFitScore(mockProject, mockBuyer, 50, []);
       expect(score).toBe(65);
     });
@@ -69,33 +70,33 @@ describe("buyers system", () => {
 
       // comedy
       // rand for early shift: < 0.05. rand for pick: index 0 (0). rand for headline: < 0.6.
-      vi.spyOn(Math, 'random').mockReturnValueOnce(0.01).mockReturnValueOnce(0.01).mockReturnValueOnce(0.01).mockReturnValueOnce(0.01);
+      vi.spyOn(utils, 'secureRandom').mockReturnValueOnce(0.01).mockReturnValueOnce(0.01).mockReturnValueOnce(0.01).mockReturnValueOnce(0.01);
       let result = updateBuyers([testBuyer], 1);
       expect(result.newHeadlines).toContain(`${testBuyer.name} shifts focus, seeking half-hour comedies for their upcoming slate.`);
 
       // drama
-      vi.spyOn(Math, 'random').mockReturnValueOnce(0.01).mockReturnValueOnce(0.3).mockReturnValueOnce(0.01).mockReturnValueOnce(0.01);
+      vi.spyOn(utils, 'secureRandom').mockReturnValueOnce(0.01).mockReturnValueOnce(0.3).mockReturnValueOnce(0.01).mockReturnValueOnce(0.01);
       result = updateBuyers([testBuyer], 1);
       expect(result.newHeadlines).toContain(`New mandate at ${testBuyer.name}: high-stakes drama is the priority.`);
 
       // budget_freeze
-      vi.spyOn(Math, 'random').mockReturnValueOnce(0.01).mockReturnValueOnce(0.5).mockReturnValueOnce(0.01).mockReturnValueOnce(0.01);
+      vi.spyOn(utils, 'secureRandom').mockReturnValueOnce(0.01).mockReturnValueOnce(0.5).mockReturnValueOnce(0.01).mockReturnValueOnce(0.01);
       result = updateBuyers([testBuyer], 1);
       expect(result.newHeadlines).toContain(`Austerity hits ${testBuyer.name}! Execs are instituting a sudden budget freeze on new pitches.`);
 
       // prestige
-      vi.spyOn(Math, 'random').mockReturnValueOnce(0.01).mockReturnValueOnce(0.9).mockReturnValueOnce(0.01).mockReturnValueOnce(0.01);
+      vi.spyOn(utils, 'secureRandom').mockReturnValueOnce(0.01).mockReturnValueOnce(0.9).mockReturnValueOnce(0.01).mockReturnValueOnce(0.01);
       result = updateBuyers([testBuyer], 1);
       expect(result.newHeadlines).toContain(`Awards chase: ${testBuyer.name} announces a massive fund specifically for prestige projects.`);
 
       // broad_appeal
-      vi.spyOn(Math, 'random').mockReturnValueOnce(0.01).mockReturnValueOnce(0.7).mockReturnValueOnce(0.01).mockReturnValueOnce(0.01);
+      vi.spyOn(utils, 'secureRandom').mockReturnValueOnce(0.01).mockReturnValueOnce(0.7).mockReturnValueOnce(0.01).mockReturnValueOnce(0.01);
       result = updateBuyers([testBuyer], 1);
       expect(result.newHeadlines).toContain(`${testBuyer.name} pivots to four-quadrant, broad appeal projects after subscriber churn.`);
     });
 
     it("shifts mandate if buyer has no current mandate", () => {
-      vi.spyOn(Math, 'random').mockReturnValue(0.99); // ensure headline triggers based on randRange
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.99); // ensure headline triggers based on randRange
       const { updatedBuyers } = updateBuyers([mockBuyer], 1);
 
       expect(updatedBuyers[0].currentMandate).toBeDefined();
@@ -120,7 +121,7 @@ describe("buyers system", () => {
         currentMandate: { type: "drama", activeUntilWeek: 100 }
       };
 
-      vi.spyOn(Math, 'random').mockReturnValue(0.04); // < 0.05 triggers early shift
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.04); // < 0.05 triggers early shift
       const { updatedBuyers } = updateBuyers([activeBuyer], 1);
 
       expect(updatedBuyers[0].currentMandate!.type).not.toBe("drama");
@@ -133,7 +134,7 @@ describe("buyers system", () => {
         currentMandate: { type: "drama", activeUntilWeek: 100 }
       };
 
-      vi.spyOn(Math, 'random').mockReturnValue(0.06); // >= 0.05
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.06); // >= 0.05
       const { updatedBuyers } = updateBuyers([activeBuyer], 1);
 
       expect(updatedBuyers[0].currentMandate!.type).toBe("drama");
@@ -144,7 +145,7 @@ describe("buyers system", () => {
   describe("calculateFitScore", () => {
 
     it("applies extreme market saturation penalty for 5 or more recent similar projects", () => {
-      vi.spyOn(Math, 'random').mockReturnValue(0.5); // randRange = 0
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5); // randRange = 0
       const activeBuyer = { ...mockBuyer, currentMandate: null };
 
       // Create 5 recent similar projects
@@ -167,7 +168,7 @@ describe("buyers system", () => {
     });
 
     it("matches genres correctly for sci-fi/fantasy, comedy, and drama", () => {
-      vi.spyOn(Math, 'random').mockReturnValue(0.5); // randRange 0
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5); // randRange 0
 
       const sciFiBuyer = { ...mockBuyer, currentMandate: { type: "sci-fi" as const, activeUntilWeek: 100 } };
       const comedyBuyer = { ...mockBuyer, currentMandate: { type: "comedy" as const, activeUntilWeek: 100 } };
@@ -184,7 +185,7 @@ describe("buyers system", () => {
     });
 
     it("boosts score for prestige mandate based on budget tiers", () => {
-      vi.spyOn(Math, 'random').mockReturnValue(0.5); // randRange 0
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5); // randRange 0
       const prestigeBuyer = { ...mockBuyer, currentMandate: { type: "prestige" as const, activeUntilWeek: 100 } };
 
       const highProject = { ...mockProject, budgetTier: "high" as const, buzz: 50 };
@@ -202,7 +203,7 @@ describe("buyers system", () => {
     });
 
     it("boosts score for broad_appeal mandate with family audience and mid/high budget", () => {
-      vi.spyOn(Math, 'random').mockReturnValue(0.5); // randRange 0
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5); // randRange 0
       const broadBuyer = { ...mockBuyer, currentMandate: { type: "broad_appeal" as const, activeUntilWeek: 100 } };
 
       const midFamilyProject = { ...mockProject, budgetTier: "mid" as const, targetAudience: "Family-Friendly", buzz: 50 };
@@ -217,7 +218,7 @@ describe("buyers system", () => {
     });
 
     it("penalizes low budget projects for premium archetype buyers", () => {
-      vi.spyOn(Math, 'random').mockReturnValue(0.5); // randRange 0
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5); // randRange 0
       const premiumBuyer = { ...mockBuyer, archetype: "premium" as const, currentMandate: { type: "drama" as const, activeUntilWeek: 100 } };
 
       const lowProject = { ...mockProject, budgetTier: "low" as const, genre: "Action", buzz: 50 }; // no genre match to isolate archetype penalty
@@ -227,7 +228,7 @@ describe("buyers system", () => {
     });
 
     it("applies market saturation penalty for similar projects released within 52 weeks", () => {
-      vi.spyOn(Math, 'random').mockReturnValue(0.5); // randRange = 0
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5); // randRange = 0
       const activeBuyer: Buyer = { ...mockBuyer, currentMandate: undefined }; // No mandate, score should just be 50 - penalty
 
       const recentSimilarProject1: Project = {
@@ -279,7 +280,7 @@ describe("buyers system", () => {
     });
 
     it("applies extreme buzz multipliers correctly with negative buzz", () => {
-      vi.spyOn(Math, 'random').mockReturnValue(0.5); // randRange = 0
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5); // randRange = 0
       const activeBuyer = { ...mockBuyer, currentMandate: { type: "sci-fi" as MandateType, activeUntilWeek: 100 } };
 
       const deadBuzzProject = { ...mockProject, buzz: -100 }; // Extreme negative buzz
@@ -291,7 +292,7 @@ describe("buyers system", () => {
     });
 
     it("clamps score between 0 and 100", () => {
-      vi.spyOn(Math, 'random').mockReturnValue(0.99); // randRange +10
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.99); // randRange +10
 
       const perfectBuyer: Buyer = { ...mockBuyer, currentMandate: { type: "sci-fi", activeUntilWeek: 100 } };
       const hypeProject = { ...mockProject, buzz: 200, genre: "Sci-Fi" }; // Extreme high buzz
@@ -303,7 +304,7 @@ describe("buyers system", () => {
     });
 
     it("handles budget freeze mandate with extreme blockbuster budget", () => {
-      vi.spyOn(Math, 'random').mockReturnValue(0.5); // randRange 0
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5); // randRange 0
 
       const freezeBuyer: Buyer = { ...mockBuyer, currentMandate: { type: "budget_freeze", activeUntilWeek: 100 } };
       const hugeProject = { ...mockProject, budgetTier: "blockbuster" as const, buzz: 50 };
@@ -315,7 +316,7 @@ describe("buyers system", () => {
     });
 
     it("handles broad appeal mandate with niche indie project", () => {
-      vi.spyOn(Math, 'random').mockReturnValue(0.5); // randRange 0
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5); // randRange 0
 
       const broadBuyer: Buyer = { ...mockBuyer, currentMandate: { type: "broad_appeal", activeUntilWeek: 100 } };
       const lowProject = { ...mockProject, budgetTier: "low" as const, targetAudience: "Niche Critics", buzz: 50 };
@@ -327,7 +328,7 @@ describe("buyers system", () => {
     });
 
     it("applies archetype specific penalties (network vs blockbuster)", () => {
-      vi.spyOn(Math, 'random').mockReturnValue(0.5);
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5);
 
       const networkBuyer: Buyer = { ...mockBuyer, archetype: "network" };
       // Assign dummy mandate to trigger mandate logic blocks even if type doesn't match
@@ -344,7 +345,7 @@ describe("buyers system", () => {
 
   describe("negotiateContract", () => {
     it("requires a higher score (65) for upfront contracts", () => {
-      vi.spyOn(Math, 'random').mockReturnValue(0.5); // randRange = 0
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5); // randRange = 0
       const buyer: Buyer = { ...mockBuyer, currentMandate: { type: "sci-fi", activeUntilWeek: 100 } };
       // Score will be 50 + 15 (gap) + 30 (sci-fi) + 10 (buzz) = 105 -> 100
 
@@ -359,7 +360,7 @@ describe("buyers system", () => {
     });
 
     it("requires a lower score (40) for standard/deficit contracts", () => {
-      vi.spyOn(Math, 'random').mockReturnValue(0.5); // randRange = 0
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5); // randRange = 0
       const buyer: Buyer = { ...mockBuyer, currentMandate: { type: "sci-fi", activeUntilWeek: 100 } };
 
       const lowBuzzProject = { ...mockProject, buzz: -160 }; // score 63
@@ -369,7 +370,7 @@ describe("buyers system", () => {
     });
 
     it("tests explicit fit score boundaries for contract acceptance", () => {
-      vi.spyOn(Math, 'random').mockReturnValue(0.5); // randRange = 0
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5); // randRange = 0
       // Base score without mandates is 50, but let's give the buyer a mandate to bypass the early return
       const buyer: Buyer = { ...mockBuyer, currentMandate: { type: "broad_appeal", activeUntilWeek: 100 } };
 

@@ -2,7 +2,7 @@ import { GameState, Headline, NewsEvent, Project } from '@/engine/types';
 import { advanceRivals } from '../rivals';
 import { updateBuyers } from '../buyers';
 import { TalentSystem } from '../TalentSystem';
-import { groupContractsByProject, pick } from '../../utils';
+import { groupContractsByProject, pick, secureRandom } from '../../utils';
 import { generateHeadlines } from '../../generators/headlines';
 import { runAwardsCeremony, processRazzies } from '../awards';
 import { advanceTrends } from '../trends';
@@ -63,10 +63,10 @@ export const processWorldEvents = (
     weeklyChanges.events.push(...talentEvents);
 
     // Random World Events
-    if (Math.random() < 0.2) {
+    if (secureRandom() < 0.2) {
         weeklyChanges.events.push(pick(EVENT_POOL));
     }
-    if (Math.random() < 0.2) {
+    if (secureRandom() < 0.2) {
         weeklyChanges.events.push(pick(EVENT_POOL));
     }
 
@@ -193,16 +193,35 @@ export const processWorldEvents = (
         const combinedScandals = new Array(oldScandals.length + scandalResult.newScandals.length);
         for(let i = 0; i < oldScandals.length; i++) combinedScandals[i] = oldScandals[i];
         for(let i = 0; i < scandalResult.newScandals.length; i++) combinedScandals[oldScandals.length + i] = scandalResult.newScandals[i];
-        newState.industry.scandals = combinedScandals;
+
+        // Enforce immutability for industry and projects
+        const currentProjects = newState.studio.internal.projects;
+        const newProjects = [...currentProjects];
+
         newHeadlines.push(...scandalResult.headlines);
         
         for (const update of scandalResult.projectUpdates) {
-            const project = newState.studio.internal.projects.find(p => p.id === update.projectId);
-            if (project && !project.activeCrisis) {
-                project.activeCrisis = update.crisis;
-                weeklyChanges.events.push(`CRISIS: "${project.title}" - ${update.crisis.description}`);
+            const projIdx = newProjects.findIndex(p => p.id === update.projectId);
+            if (projIdx !== -1 && !newProjects[projIdx].activeCrisis) {
+                newProjects[projIdx] = { ...newProjects[projIdx], activeCrisis: update.crisis };
+                weeklyChanges.events.push(`CRISIS: "${newProjects[projIdx].title}" - ${update.crisis.description}`);
             }
         }
+
+        newState = {
+            ...newState,
+            studio: {
+                ...newState.studio,
+                internal: {
+                    ...newState.studio.internal,
+                    projects: newProjects
+                }
+            },
+            industry: {
+                ...newState.industry,
+                scandals: combinedScandals
+            }
+        };
     }
 
     weeklyChanges.newHeadlines.push(...newHeadlines);
