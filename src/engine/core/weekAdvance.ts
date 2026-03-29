@@ -5,7 +5,6 @@ import { advanceDeals } from '../systems/deals';
 import { processProduction, WeeklyChanges as ProductionWeeklyChanges } from '../systems/processors/processProduction';
 import { processFinance, WeeklyChanges as FinanceWeeklyChanges } from '../systems/processors/processFinance';
 import { processWorldEvents, WeeklyChanges as WorldWeeklyChanges } from '../systems/processors/processWorldEvents';
-import { useGameStore } from '../../store/gameStore';
 
 // Consolidated WeeklyChanges interface for the orchestrator
 export interface WeeklyChanges extends ProductionWeeklyChanges, FinanceWeeklyChanges, WorldWeeklyChanges {
@@ -33,6 +32,15 @@ const finalizeWeek = (
 ): { newState: GameState; summary: WeekSummary } => {
   const nextWeek = originalState.week + 1;
 
+  const nextNewsEvents = new Array(weeklyChanges.newsEvents.length);
+  for (let i = 0; i < weeklyChanges.newsEvents.length; i++) {
+    nextNewsEvents[i] = {
+      ...weeklyChanges.newsEvents[i],
+      id: `ne-${crypto.randomUUID()}`,
+      week: nextWeek
+    };
+  }
+
   const summary: WeekSummary = {
     fromWeek: originalState.week,
     toWeek: nextWeek,
@@ -43,11 +51,7 @@ const finalizeWeek = (
     projectUpdates: weeklyChanges.projectUpdates,
     newHeadlines: weeklyChanges.newHeadlines,
     events: weeklyChanges.events,
-    newsEvents: weeklyChanges.newsEvents.map(ne => ({
-      ...ne,
-      id: `ne-${crypto.randomUUID()}`,
-      week: nextWeek
-    }))
+    newsEvents: nextNewsEvents
   };
 
   // Update UI Data Vis Extensions (Epic 4)
@@ -60,7 +64,7 @@ const finalizeWeek = (
   for (let i = 0; i < ALL_GENRES.length; i++) {
     const g = ALL_GENRES[i];
     const heat = trendMap.get(g);
-    genrePopularity[g.toLowerCase()] = heat !== undefined ? heat / 100 : 0.2 + Math.random() * 0.1;
+    genrePopularity[g.toLowerCase()] = heat !== undefined ? heat / 100 : 0.2 + secureRandom() * 0.1;
   }
 
   const nextFinance = {
@@ -131,18 +135,34 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
 
   // 4. Rights & Deals (Sprint E)
   const { projects: updatedProjects, messages: ipMessages } = advanceIPRights(nextState.studio.internal.projects, nextState.week + 1);
-  nextState.studio.internal.projects = updatedProjects;
-  weeklyChanges.events.push(...ipMessages);
+
+  const finalInternal = {
+    ...nextState.studio.internal,
+    projects: updatedProjects,
+  };
+
+  for (let i = 0; i < ipMessages.length; i++) {
+    weeklyChanges.events.push(ipMessages[i]);
+  }
   
+  let activeDeals = nextState.studio.internal.firstLookDeals;
   if (nextState.studio.internal.firstLookDeals) {
-    const activeDeals = advanceDeals(nextState.studio.internal.firstLookDeals);
+    activeDeals = advanceDeals(nextState.studio.internal.firstLookDeals);
     const expiredDeals = nextState.studio.internal.firstLookDeals.length - activeDeals.length;
     if (expiredDeals > 0) {
       weeklyChanges.events.push(`${expiredDeals} first-look talent deal(s) expired this week.`);
     }
-    nextState.studio.internal.firstLookDeals = activeDeals;
+    finalInternal.firstLookDeals = activeDeals;
   }
 
+  nextState = {
+    ...nextState,
+    studio: {
+      ...nextState.studio,
+      internal: finalInternal
+    }
+  };
+
   // 5. Finalize
-  return finalizeWeek(nextState, weeklyChanges, state);
+  return finalizeWeek(finalState, weeklyChanges, state);
 }

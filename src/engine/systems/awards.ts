@@ -1,26 +1,28 @@
 import { Award, AwardBody, AwardCategory, AwardsProfile, GameState, Project, Headline } from '@/engine/types';
+import { secureRandom } from '../utils';
+
 
 export function generateAwardsProfile(project: Project): AwardsProfile {
   // Base values heavily randomized for now, could be tied to budget, talent, etc.
-  const basePrestige = (Math.random() * 50) + (project.budget / 1000000) * 0.5;
-  const baseCritic = Math.random() * 100;
+  const basePrestige = (secureRandom() * 50) + (project.budget / 1000000) * 0.5;
+  const baseCritic = secureRandom() * 100;
 
   return {
     criticScore: Math.min(100, Math.max(0, baseCritic)),
-    audienceScore: Math.min(100, Math.max(0, Math.random() * 100)),
+    audienceScore: Math.min(100, Math.max(0, secureRandom() * 100)),
     prestigeScore: Math.min(100, Math.max(0, basePrestige)),
-    craftScore: Math.min(100, Math.max(0, Math.random() * 100)),
-    culturalHeat: Math.min(100, Math.max(0, Math.random() * 100)),
+    craftScore: Math.min(100, Math.max(0, secureRandom() * 100)),
+    culturalHeat: Math.min(100, Math.max(0, secureRandom() * 100)),
     campaignStrength: 10, // Default baseline, player can boost
-    controversyRisk: Math.min(100, Math.max(0, Math.random() * 30)),
-    festivalBuzz: Math.min(100, Math.max(0, Math.random() * 100)),
+    controversyRisk: Math.min(100, Math.max(0, secureRandom() * 30)),
+    festivalBuzz: Math.min(100, Math.max(0, secureRandom() * 100)),
 
     // Hidden values
-    academyAppeal: Math.min(100, Math.max(0, basePrestige * 0.8 + Math.random() * 40)),
-    guildAppeal: Math.min(100, Math.max(0, baseCritic * 0.7 + Math.random() * 40)),
-    populistAppeal: Math.min(100, Math.max(0, Math.random() * 100)),
-    indieCredibility: Math.min(100, Math.max(0, project.budgetTier === 'low' ? Math.random() * 80 + 20 : Math.random() * 30)),
-    industryNarrativeScore: Math.min(100, Math.max(0, Math.random() * 100))
+    academyAppeal: Math.min(100, Math.max(0, basePrestige * 0.8 + secureRandom() * 40)),
+    guildAppeal: Math.min(100, Math.max(0, baseCritic * 0.7 + secureRandom() * 40)),
+    populistAppeal: Math.min(100, Math.max(0, secureRandom() * 100)),
+    indieCredibility: Math.min(100, Math.max(0, project.budgetTier === 'low' ? secureRandom() * 80 + 20 : secureRandom() * 30)),
+    industryNarrativeScore: Math.min(100, Math.max(0, secureRandom() * 100))
   };
 }
 
@@ -365,6 +367,14 @@ const AWARD_CONFIGS: AwardConfig[] = [
     body: 'Toronto International Film Festival', category: 'Best Actress', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.2 + (p.awardsProfile?.populistAppeal || 0) * 0.8
   },
+  {
+    body: 'Toronto International Film Festival', category: 'Best Supporting Actor', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.0 + (p.awardsProfile?.populistAppeal || 0) * 0.6
+  },
+  {
+    body: 'Toronto International Film Festival', category: 'Best Supporting Actress', format: 'film',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.0 + (p.awardsProfile?.populistAppeal || 0) * 0.6
+  },
 
   // --- SXSW FILM FESTIVAL ---
   {
@@ -383,6 +393,14 @@ const AWARD_CONFIGS: AwardConfig[] = [
     body: 'SXSW Film Festival', category: 'Best Actress', format: 'film',
     evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 1.2 + (p.awardsProfile?.culturalHeat || 0) * 1.0
   },
+  {
+    body: 'SXSW Film Festival', category: 'Best Supporting Actor', format: 'film',
+    evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 1.0 + (p.awardsProfile?.culturalHeat || 0) * 0.8
+  },
+  {
+    body: 'SXSW Film Festival', category: 'Best Supporting Actress', format: 'film',
+    evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 1.0 + (p.awardsProfile?.culturalHeat || 0) * 0.8
+  },
 
   // --- TRIBECA FILM FESTIVAL ---
   {
@@ -400,6 +418,14 @@ const AWARD_CONFIGS: AwardConfig[] = [
   {
     body: 'Tribeca Film Festival', category: 'Best Actress', format: 'film',
     evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 1.2 + (p.awardsProfile?.craftScore || 0) * 0.5
+  },
+  {
+    body: 'Tribeca Film Festival', category: 'Best Supporting Actor', format: 'film',
+    evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 1.0 + (p.awardsProfile?.craftScore || 0) * 0.4
+  },
+  {
+    body: 'Tribeca Film Festival', category: 'Best Supporting Actress', format: 'film',
+    evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 1.0 + (p.awardsProfile?.craftScore || 0) * 0.4
   },
 
   // --- TELLURIDE FILM FESTIVAL (Cannes Equivalent) ---
@@ -444,6 +470,14 @@ const AWARD_CONFIGS: AwardConfig[] = [
   {
     body: 'Slamdance Film Festival', category: 'Best Actress', format: 'film',
     evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 1.5 + (p.awardsProfile?.craftScore || 0) * 0.5
+  },
+  {
+    body: 'Slamdance Film Festival', category: 'Best Supporting Actor', format: 'film',
+    evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 1.2 + (p.awardsProfile?.craftScore || 0) * 0.4
+  },
+  {
+    body: 'Slamdance Film Festival', category: 'Best Supporting Actress', format: 'film',
+    evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 1.2 + (p.awardsProfile?.craftScore || 0) * 0.4
   }
 ];
 
@@ -604,7 +638,7 @@ export function processRazzies(state: GameState, week: number): RazzieResult {
   // Determine if it becomes a Cult Classic
   // A cult classic is born if it has high absurdity/drama or a specific flavor. Let's use the genre and a random chance if it's very bad.
   const isAbsurd = worstPicture.genre === 'Drama' || (worstPicture.flavor && worstPicture.flavor.toLowerCase().match(/absurd|ridiculous|bizarre|insane/));
-  if (isAbsurd || Math.random() > 0.5) {
+  if (isAbsurd || secureRandom() > 0.5) {
      result.cultClassicProjectIds.push(worstPicture.id);
   }
 

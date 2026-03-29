@@ -1,5 +1,5 @@
 import { GameState, Rumor } from '@/engine/types';
-import { pick, randRange } from '../utils';
+import { pick, randRange, secureRandom } from '../utils';
 
 export function advanceRumors(state: GameState): GameState {
   let currentRumors = state.industry.rumors || [];
@@ -32,8 +32,8 @@ export function advanceRumors(state: GameState): GameState {
   currentRumors = currentRumors.filter(r => !(r.resolved && state.week - r.week > 4));
   
   // Generate new rumors (5% chance per week)
-  if (Math.random() < 0.05 && currentRumors.filter(r => !r.resolved).length < 3) {
-    const isTrue = Math.random() > 0.5;
+  if (secureRandom() < 0.05 && currentRumors.filter(r => !r.resolved).length < 3) {
+    const isTrue = secureRandom() > 0.5;
     const subjects = ['talent', 'rival', 'project'];
     const category = pick(subjects) as 'talent' | 'rival' | 'project';
     

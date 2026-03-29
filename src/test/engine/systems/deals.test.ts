@@ -2,6 +2,7 @@ import { vi } from "vitest";
 import { describe, it, expect, beforeEach } from 'vitest';
 import { evaluateFirstLookDeal, offerFirstLookDeal } from '../../../engine/systems/deals';
 import { TalentProfile, GameState } from '../../../engine/types';
+import * as utils from '../../../engine/utils';
 
 describe('Deals System', () => {
   let mockTalent: TalentProfile;
@@ -24,7 +25,7 @@ describe('Deals System', () => {
     const okState = { studio: { prestige: 90 } } as unknown as GameState;
     if (mockTalent.accessLevel === 'dynasty') { /* no-op */ }
 
-    vi.spyOn(Math, 'random').mockReturnValue(0.5); // mid roll = 50 
+    vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5); // mid roll = 50
 
     // 20 prestige vs 90 -> chance = 50 + (20-90) = -20 clamped to 5
     // Random 50 <= 5 is false
@@ -44,7 +45,7 @@ describe('Deals System', () => {
     } as unknown as GameState;
     
     // We can't guarantee random acceptance, so let's mock Math.random
-    vi.spyOn(Math, 'random').mockReturnValue(0.01); // 1% random check <= 50% acceptance chance = true
+    vi.spyOn(utils, 'secureRandom').mockReturnValue(0.01); // 1% random check <= 50% acceptance chance = true
     
     const { deal, update } = offerFirstLookDeal(state, mockTalent.id, 52, true);
     expect(deal).not.toBeNull();
