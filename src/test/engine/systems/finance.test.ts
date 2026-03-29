@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { calculateWeeklyCosts, calculateWeeklyRevenue } from "../../../engine/systems/finance";
-import { Project, Contract } from "../../../engine/types";
+import { calculateWeeklyCosts, calculateWeeklyRevenue, calculateProjectROI, calculateStudioNetWorth, generateCashflowForecast, advanceFinance } from "../../../engine/systems/finance";
+import { Project, Contract, GameState } from "../../../engine/types";
 
 const mockProjectDev: Project = {
   id: "proj-1", title: "Test Dev", budgetTier: "low", budget: 500000, genre: "Comedy",
@@ -126,6 +126,168 @@ describe("finance", () => {
       ];
       const revenue = calculateWeeklyRevenue([deficitProj], contracts);
       expect(revenue).toBe(80000);
+    });
+  });
+
+  describe("calculateProjectROI", () => {
+    it("returns correct ROI for a standard project", () => {
+      const proj = { ...mockProjectReleased, budget: 1000000, revenue: 2000000 };
+      expect(calculateProjectROI(proj)).toBe(2.0);
+    });
+
+    it("returns 0 if the total cost is 0", () => {
+      const proj = { ...mockProjectReleased, budget: 0, marketingBudget: 0, revenue: 1000000 };
+      expect(calculateProjectROI(proj)).toBe(0);
+    });
+
+    it("handles negative budget correctly", () => {
+      const proj = { ...mockProjectReleased, budget: -10000, revenue: 50000 };
+      expect(calculateProjectROI(proj)).toBe(-5.0);
+    });
+  });
+
+  describe("calculateStudioNetWorth", () => {
+    const mockState: GameState = {
+      week: 1,
+      cash: 500000,
+      studio: {
+        name: "Test",
+        archetype: "indie",
+        prestige: 50,
+        internal: {
+          projects: [],
+          contracts: [],
+          financeHistory: []
+        }
+      },
+      market: { opportunities: [], buyers: [] },
+      industry: { rivals: [], headlines: [], families: [], agencies: [], agents: [], talentPool: [], newsHistory: [] },
+      culture: { genrePopularity: {} },
+      finance: { bankBalance: 0, yearToDateRevenue: 0, yearToDateExpenses: 0 },
+      history: []
+    };
+
+    it("returns cash when there are no projects with catalog value", () => {
+      expect(calculateStudioNetWorth(mockState)).toBe(500000);
+    });
+
+    it("adds 100% of catalogValue if rightsOwner is 'studio'", () => {
+      const p1: Project = { ...mockProjectReleased, ipRights: { rightsOwner: 'studio', catalogValue: 200000 } };
+      const state = { ...mockState, studio: { ...mockState.studio, internal: { ...mockState.studio.internal, projects: [p1] } } };
+      expect(calculateStudioNetWorth(state)).toBe(700000);
+    });
+
+    it("adds 50% of catalogValue if rightsOwner is 'shared'", () => {
+      const p1: Project = { ...mockProjectReleased, ipRights: { rightsOwner: 'shared', catalogValue: 200000 } };
+      const state = { ...mockState, studio: { ...mockState.studio, internal: { ...mockState.studio.internal, projects: [p1] } } };
+      expect(calculateStudioNetWorth(state)).toBe(600000);
+    });
+  });
+
+  describe("generateCashflowForecast", () => {
+    const mockState: GameState = {
+      week: 1,
+      cash: 1000000,
+      studio: {
+        name: "Test",
+        archetype: "major",
+        prestige: 50,
+        internal: {
+          projects: [],
+          contracts: [],
+          financeHistory: []
+        }
+      },
+      market: { opportunities: [], buyers: [] },
+      industry: { rivals: [], headlines: [], families: [], agencies: [], agents: [], talentPool: [], newsHistory: [] },
+      culture: { genrePopularity: {} },
+      finance: { bankBalance: 0, yearToDateRevenue: 0, yearToDateExpenses: 0 },
+      history: []
+    };
+
+    it("simulates advancing weeks with an empty pipeline (no projects or revenue)", () => {
+      const forecast = generateCashflowForecast(mockState, 8);
+      expect(forecast).toHaveLength(8);
+
+      forecast.forEach((f, idx) => {
+        expect(f.week).toBe(mockState.week + idx + 1);
+        expect(f.projectedRevenue).toBe(0);
+        expect(f.projectedCosts).toBe(0);
+        expect(f.projectedCash).toBe(1000000);
+      });
+    });
+
+    it("simulates decay with existing revenue/costs", () => {
+      const state = {
+        ...mockState,
+        studio: {
+          ...mockState.studio,
+          internal: {
+            ...mockState.studio.internal,
+            projects: [mockProjectProd, mockProjectReleased]
+          }
+        }
+      };
+
+      const forecast = generateCashflowForecast(state, 1);
+
+      // Revenue is 100,000 * 0.55 = 55,000
+      expect(Math.round(forecast[0].projectedRevenue)).toBe(55000);
+      // Cost is 20,000
+      expect(forecast[0].projectedCosts).toBe(20000);
+      // Cash = 1,000,000 + 55,000 - 20,000 = 1,035,000
+      expect(Math.round(forecast[0].projectedCash)).toBe(1035000);
+    });
+  });
+
+  describe("advanceFinance", () => {
+    const mockState: GameState = {
+      week: 1,
+      cash: 1000000,
+      studio: {
+        name: "Test",
+        archetype: "major",
+        prestige: 50,
+        internal: {
+          projects: [],
+          contracts: [],
+          financeHistory: []
+        }
+      },
+      market: { opportunities: [], buyers: [] },
+      industry: { rivals: [], headlines: [], families: [], agencies: [], agents: [], talentPool: [], newsHistory: [] },
+      culture: { genrePopularity: {} },
+      finance: { bankBalance: 0, yearToDateRevenue: 0, yearToDateExpenses: 0 },
+      history: []
+    };
+
+    it("advances with empty pipeline", () => {
+      const result = advanceFinance(mockState, 2);
+      expect(result.newCash).toBe(1000000);
+      expect(result.costs).toBe(0);
+      expect(result.revenue).toBe(0);
+      expect(result.financeHistory).toHaveLength(1);
+      expect(result.financeHistory[0].week).toBe(2);
+    });
+
+    it("advances and properly calculates new cash and history", () => {
+      const state = {
+        ...mockState,
+        studio: {
+          ...mockState.studio,
+          internal: {
+            ...mockState.studio.internal,
+            projects: [mockProjectProd, mockProjectReleased]
+          }
+        }
+      };
+
+      const result = advanceFinance(state, 2);
+      expect(result.newCash).toBe(1000000 - 20000 + 100000); // 1,080,000
+      expect(result.costs).toBe(20000);
+      expect(result.revenue).toBe(100000);
+      expect(result.financeHistory).toHaveLength(1);
+      expect(result.financeHistory[0]).toStrictEqual({ week: 2, cash: 1080000, revenue: 100000, costs: 20000 });
     });
   });
 });

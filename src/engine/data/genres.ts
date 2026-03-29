@@ -87,25 +87,26 @@ export const TARGET_AUDIENCES = [
 ] as const;
 
 export const CROSSOVER_AFFINITY: Record<string, string[]> = {
-  'Superhero': ['Action', 'Sci-Fi', 'Fantasy', 'Comedy', 'Animation'],
+  'Superhero': ['Action', 'Sci-Fi', 'Fantasy', 'Comedy', 'Animation', 'Crime', 'Horror'],
   'Action': ['Sci-Fi', 'Thriller', 'Crime', 'Superhero', 'Comedy'],
   'Sci-Fi': ['Action', 'Horror', 'Fantasy', 'Animation', 'Thriller'],
-  'Horror': ['Sci-Fi', 'Thriller', 'Comedy', 'Fantasy'],
+  'Horror': ['Sci-Fi', 'Thriller', 'Comedy', 'Fantasy', 'Documentary'],
   'Fantasy': ['Action', 'Romance', 'Animation', 'Sci-Fi'],
-  'Comedy': ['Romance', 'Action', 'Animation', 'Superhero', 'Musical'],
-  'Crime': ['Thriller', 'Drama', 'Action', 'Horror'],
+  'Comedy': ['Romance', 'Action', 'Animation', 'Superhero', 'Musical', 'Horror'],
+  'Crime': ['Thriller', 'Drama', 'Action', 'Horror', 'Documentary'],
   'Thriller': ['Horror', 'Crime', 'Sci-Fi', 'Drama', 'Action'],
   'Romance': ['Comedy', 'Drama', 'Musical', 'Fantasy'],
   'Animation': ['Comedy', 'Family', 'Musical', 'Fantasy', 'Sci-Fi', 'Superhero', 'Action'],
   'Drama': ['Romance', 'Crime', 'Thriller', 'Documentary'],
   'Musical': ['Romance', 'Comedy', 'Animation', 'Drama'],
-  'Documentary': ['Drama', 'Crime']
+  'Documentary': ['Drama', 'Crime', 'Horror'],
+  'Unscripted': ['Comedy', 'Documentary', 'Drama']
 };
 
 export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
-  'Superhero': 0.65,
-  'Action': 0.40,
-  'Sci-Fi': 0.35,
+  'Superhero': 0.80,
+  'Action': 0.50,
+  'Sci-Fi': 0.45,
   'Fantasy': 0.30,
   'Horror': 0.15,
   'Animation': 0.15,
@@ -116,4 +117,5 @@ export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
   'Documentary': 0.05,
   'Crime': 0.20,
   'Musical': 0.25,
+  'Unscripted': 0.30, // Reality/Unscripted can fatigue quickly if over-saturated
 };

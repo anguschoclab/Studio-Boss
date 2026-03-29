@@ -24,12 +24,23 @@ export function getWeekDisplay(week: number): { displayWeek: number; year: numbe
   };
 }
 
+/**
+ * A cryptographically secure random number generator.
+ * Returns a float between 0 (inclusive) and 1 (exclusive).
+ */
+export function secureRandom(): number {
+  const array = new Uint32Array(1);
+  crypto.getRandomValues(array);
+  return array[0] / (0xffffffff + 1);
+}
+
 export function pick<T>(arr: T[]): T {
-  return arr[Math.floor(Math.random() * arr.length)];
+  if (arr.length === 0) return undefined as T;
+  return arr[Math.floor(secureRandom() * arr.length)];
 }
 
 export function randRange(min: number, max: number): number {
-  return min + Math.random() * (max - min);
+  return min + secureRandom() * (max - min);
 }
 
 export function clamp(value: number, min: number, max: number): number {

@@ -64,7 +64,7 @@ const finalizeWeek = (
   for (let i = 0; i < ALL_GENRES.length; i++) {
     const g = ALL_GENRES[i];
     const heat = trendMap.get(g);
-    genrePopularity[g.toLowerCase()] = heat !== undefined ? heat / 100 : 0.2 + Math.random() * 0.1;
+    genrePopularity[g.toLowerCase()] = heat !== undefined ? heat / 100 : 0.2 + secureRandom() * 0.1;
   }
 
   const nextFinance = {
@@ -145,8 +145,9 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
     weeklyChanges.events.push(ipMessages[i]);
   }
   
+  let activeDeals = nextState.studio.internal.firstLookDeals;
   if (nextState.studio.internal.firstLookDeals) {
-    const activeDeals = advanceDeals(nextState.studio.internal.firstLookDeals);
+    activeDeals = advanceDeals(nextState.studio.internal.firstLookDeals);
     const expiredDeals = nextState.studio.internal.firstLookDeals.length - activeDeals.length;
     if (expiredDeals > 0) {
       weeklyChanges.events.push(`${expiredDeals} first-look talent deal(s) expired this week.`);
@@ -163,5 +164,5 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
   };
 
   // 5. Finalize
-  return finalizeWeek(nextState, weeklyChanges, state);
+  return finalizeWeek(finalState, weeklyChanges, state);
 }
