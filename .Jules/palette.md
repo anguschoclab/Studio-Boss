@@ -1,3 +1,7 @@
 ## 2025-03-26 - Add aria-pressed to modal selection buttons
 **Learning:** In highly custom modal interfaces like `PitchProjectModal.tsx`, toggleable selection choices (like buyers or deal structures) are often built as `<button>` elements that use CSS classes for visual state. They lack default semantic state indication for screen readers. Using `aria-pressed={condition}` is an excellent, low-risk way to expose mutually exclusive or toggleable selection states without restructuring the HTML to use `role="radio"` and `<fieldset>`/`role="radiogroup"`.
 **Action:** Next time evaluating custom selection UIs made of buttons, check for `aria-pressed` or `aria-selected` and add it based on the React state driving the visual class change.
+
+## 2025-03-28 - Add aria-label to structural UI icon buttons
+**Learning:** Common navigation and structural elements in `TopBar`, `StudioSidebar`, `PipelineBoard`, and `SBDBView` frequently use icon-only Shadcn `<Button>` components (`size="icon"`) for compactness. Screen readers cannot infer the purpose of these buttons from the SVG icons alone. Consistently applying `aria-label` to these components is a vital accessibility baseline that ensures structural navigation (like opening sidebars, filtering boards, or saving state) remains usable for all players.
+**Action:** Always scan for `<Button size="icon">` usages that lack internal text. If found, inject a descriptive `aria-label` that matches the surrounding tooltip or expected action to maintain keyboard and screen reader accessibility.

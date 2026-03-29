@@ -1,5 +1,5 @@
 import { Headline, RivalStudio, HeadlineCategory, Project, Contract, TalentProfile } from '@/engine/types';
-import { pick, fillTemplate } from '../utils';
+import { fillTemplate, pick, secureRandom } from '../utils';
 
 const MARKET_HEADLINES = [
   'Box office up {pct}% this quarter as audiences return to theaters',
@@ -130,7 +130,28 @@ const MARKET_HEADLINES = [
   'Home video market shrinks {pct}%, physical media collectors begin hoarding DVDs like gold.',
   'Merger talks stall after one studio demands {pct}% control of a useless legacy IP.',
   'Wall Street panics as {pct}% of consumers realize they can just go outside instead of watching TV.',
-  'AI predictive models claim with {pct}% certainty that the next big genre is "Underwater Cyberpunk".'];
+  'AI predictive models claim with {pct}% certainty that the next big genre is "Underwater Cyberpunk".',
+  // Showbiz Scribe Market Additions
+  'Streaming platform raises subscription price by {pct}%, claims it is to "better serve the community"',
+  'Studio executives admit they haven\'t watched a movie in theaters since 2018',
+  'A.I. generated extra sues studio for unpaid digital residuals, confusing everyone',
+  'Focus group demands {pct}% less "talking" and more "things exploding" in indie drama',
+  'Major studio accidentally deletes entire finished film from their servers, writes it off as a tax loss',
+  'Audiences report being {pct}% more likely to look at their phones during heavily CGI\'d third acts',
+  'Box office analyst insists the theatrical experience is "back" for the seventh time this year',
+  'Merchandising for new superhero movie includes branded anxiety medication for millennials',
+  'Popcorn prices outpace inflation by {pct}%, theater owners blame supply chain issues',
+  'Studio launches "Phase 6" of a cinematic universe audiences abandoned in Phase 3',
+  'Algorithm accidentally greenlights a 3-hour black-and-white silent film, immediately gets fired',
+  'Writers guild protests after studios propose paying them entirely in exposure and branded NFTs',
+  'Analysts blame {pct}% drop in revenue on audiences "just not understanding the vision"',
+  'New streaming platform promises no ads, introduces them 3 months later',
+  'Studios begin focus-grouping film titles before a script is even written',
+  'Audiences overwhelmingly demand shorter movies, studios announce new 4-hour epic',
+  'Tech CEO insists VR movies are the future despite {pct}% of users experiencing severe motion sickness',
+  'Studio stock rises {pct}% after laying off entire creative department to fund executive bonuses',
+  'Independent cinema saved by unhinged viral marketing campaign orchestrated by teenagers',
+  'Major studio insists their upcoming slate is "diverse" because it features a female CGI alien'];
 
 const TALENT_HEADLINES = [
   'A-list director reportedly shopping a passion project around town',
@@ -305,7 +326,28 @@ const TALENT_HEADLINES = [
   'Stand-up comedian\'s dramatic turn described as "deeply upsetting" by focus groups.',
   'Influencer cast in major motion picture asks the director what their motivation is; is ignored.',
   'Star demands a percentage of the merchandising for an indie drama about terminal illness.',
-  'Actor undergoes dramatic physical transformation, gains 50 lbs to play an accountant.'];
+  'Actor undergoes dramatic physical transformation, gains 50 lbs to play an accountant.',
+  // Showbiz Scribe Talent Additions
+  '${directorName} insists the boom mic visible in every shot of ${projectName} is a "post-modern commentary"',
+  'Lead actor of ${projectName} demands their character be digitally inserted into real historical events',
+  'Studio forces ${directorName} to apologize for calling Marvel movies "theme park rides" during press tour',
+  '${actorName} goes method for ${projectName}, refuses to shower for three months',
+  'Crew of ${projectName} reports the "intimacy coordinator" is just an HR rep with a clipboard',
+  '${actressName} drops out of ${projectName} after realizing she plays a mother to an actor only two years younger',
+  'Publicist for ${actorName} denies rumors of an on-set feud, threatens journalists who ask about it',
+  '${directorName} spends $10M of the ${projectName} budget on acquiring the rights to a single pop song',
+  'Test audiences for ${projectName} confused why ${actorName} is attempting a British accent',
+  'Star of ${projectName} claims they were abducted by aliens to avoid doing the morning talk show circuit',
+  '${directorName} fired from ${projectName} after insisting the film needs to be shot entirely on 70mm film',
+  '${actorName} launches a line of overpriced wellness gummies on the red carpet for ${projectName}',
+  'Studio panics after test audiences for ${projectName} declare the villain "was actually completely right"',
+  '${actressName} insists on a "no eye contact" clause in her contract for ${projectName}',
+  '${directorName} demands a 10-minute standing ovation at Cannes for ${projectName}, hires extras to clap',
+  'Crew of ${projectName} forced to sign NDAs after ${actorName} throws a tantrum over craft services',
+  '${directorName} defends the 3-hour runtime of ${projectName}, claiming it "needs to breathe"',
+  '${actressName} goes viral for mispronouncing the name of her own character in ${projectName}',
+  'Studio hires a "social media whisperer" to help ${actorName} navigate the press tour for ${projectName}',
+  '${directorName} accused of using ${projectName} to launder money for an international crime syndicate'];
 
 const RIVAL_TEMPLATES = [
   '{rival} greenlights ambitious ${budget}M {genre} project',
@@ -433,7 +475,28 @@ const RIVAL_TEMPLATES = [
   '{rival} fires director of ${budget}M {genre} tentpole three days before wrap, citing "creative differences"',
   '{rival} launches a ${budget}M {genre} cinematic universe based on a line of discontinued toys from the 80s',
   '{rival} tries to astroturf a viral trend for their new ${budget}M {genre} release; gets exposed by teenagers',
-  '{rival} completely re-shoots the third act of their ${budget}M {genre} film based on a single focus group comment'];
+  '{rival} completely re-shoots the third act of their ${budget}M {genre} film based on a single focus group comment',
+  // Showbiz Scribe Rival Additions
+  '{rival} greenlights a ${budget}M {genre} film based entirely on a 15-second TikTok trend',
+  '{rival} CEO caught on hot mic calling the fans of their ${budget}M {genre} franchise "absolute suckers"',
+  '{rival} announces their new ${budget}M {genre} cinematic universe will skip theaters and go straight to ad-supported streaming',
+  '{rival} fires the director of their ${budget}M {genre} film, replacing them with a boardroom committee',
+  '{rival} attempts to launch a ${budget}M {genre} franchise, but forgets to secure the trademark',
+  '{rival} spends more on the marketing for their ${budget}M {genre} film than the actual production budget',
+  '{rival} desperately tries to convince audiences their ${budget}M {genre} reboot is "not like the other reboots"',
+  '{rival} blames the catastrophic failure of their ${budget}M {genre} film on "superhero fatigue"',
+  '{rival} caught paying for positive reviews on Letterboxd for their critically panned ${budget}M {genre} film',
+  '{rival} announces a ${budget}M {genre} sequel to a film that hasn\'t even finished shooting yet',
+  '{rival} insists the unfinished CGI in their ${budget}M {genre} trailer is just "a stylistic choice"',
+  '{rival} greenlights a ${budget}M {genre} origin story for a character nobody remembers',
+  '{rival} stock plummets after their ${budget}M {genre} tentpole grosses less than an indie horror movie',
+  '{rival} forces their actors to perform a humiliating TikTok dance to promote their ${budget}M {genre} film',
+  '{rival} accidentally leaks the entire plot of their ${budget}M {genre} film through a fast-food tie-in',
+  '{rival} CEO insists their ${budget}M {genre} flop will eventually "find its audience on streaming"',
+  '{rival} attempts to rebrand their studio as a "tech company" after a string of ${budget}M {genre} flops',
+  '{rival} announces a gritty, grounded reboot of their ${budget}M {genre} franchise that was already gritty and grounded',
+  '{rival} fires their entire PR team after a disastrous press tour for their ${budget}M {genre} film',
+  '{rival} writes off a completed ${budget}M {genre} film for tax purposes, claiming it "did not meet quality standards"'];
 
 // Removed local fill function in favor of imported fillTemplate from utils
 
@@ -446,7 +509,7 @@ export function generateHeadlines(
   contracts: Contract[] = [],
   talentPool: TalentProfile[] = []
 ): Headline[] {
-  const count = 1 + Math.floor(Math.random() * 3);
+  const count = 1 + Math.floor(secureRandom() * 3);
   const headlines: Headline[] = [];
   const genrePool = ['sci-fi', 'drama', 'action', 'thriller', 'comedy', 'horror', 'fantasy'];
 
@@ -478,11 +541,11 @@ export function generateHeadlines(
     directorName: selectedDirector?.name || pick(highDrawTalent.filter(t => t.roles.includes('director')))?.name || 'A-list director',
     actorName: pick(actors)?.name || 'Major movie star',
     actressName: pick(actors.slice().reverse())?.name || 'Highly acclaimed actress',
-    pct: String(Math.floor(5 + Math.random() * 25))
+    pct: String(Math.floor(5 + secureRandom() * 25))
   };
 
   for (let i = 0; i < count; i++) {
-    const roll = Math.random();
+    const roll = secureRandom();
     let text: string;
     let category: HeadlineCategory;
 
@@ -491,7 +554,7 @@ export function generateHeadlines(
       text = fillTemplate(pick(RIVAL_TEMPLATES), {
         ...vars,
         rival: rival.name,
-        budget: String(Math.floor(20 + Math.random() * 180)),
+        budget: String(Math.floor(20 + secureRandom() * 180)),
         genre: pick(genrePool),
       });
       category = 'rival';

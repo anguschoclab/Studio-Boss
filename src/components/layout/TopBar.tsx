@@ -101,6 +101,7 @@ export const TopBar = () => {
         <Button 
           variant="ghost" 
           size="icon" 
+          aria-label="Manual Cloud Save"
           onClick={handleSave} 
           className="h-8 w-8 rounded-full hover:bg-white/5 text-muted-foreground hover:text-primary transition-colors"
           title="Manual Cloud Save"
