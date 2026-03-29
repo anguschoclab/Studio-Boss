@@ -17,12 +17,12 @@ export const BUDGET_TIERS: Record<BudgetTierKey, BudgetTierData> = {
     name: 'Low Budget',
     label: '$5M',
     budget: 5_000_000,
-    // The Studio Comptroller: Lowered weekly cost to 400k for inflation adjustments but balanced it with brutal box office bomb potential.
-    weeklyCost: 400_000,
+    // Increased weekly cost from 500k to 600k for inflation adjustments. Increased to 750k to raise stakes.
+    weeklyCost: 750_000,
     developmentWeeks: 6,
     productionWeeks: 8,
-    // The Studio Comptroller: Widened top-end revenue further to $500M to allow for extreme high-ROI horror/indie anomalies, and lowered floor to $25k for brutal bomb risk.
-    revenueRange: [25_000, 500_000_000],
+    // The Studio Comptroller: Widened top-end revenue further to $600M to allow for extreme high-ROI horror/indie anomalies, and lowered floor to $10k for brutal bomb risk.
+    revenueRange: [10_000, 600_000_000],
   },
   mid: {
     key: 'mid',
@@ -54,11 +54,11 @@ export const BUDGET_TIERS: Record<BudgetTierKey, BudgetTierData> = {
     label: '$200M',
     // The Studio Comptroller: Adjusted blockbuster budget down to $200M to align with realistic scaling, but expanded revenue range to ensure catastrophic bomb risk and massive upside.
     budget: 200_000_000,
-    // The Studio Comptroller: Increased base weekly cost from $25M to $35M to aggressively increase cashflow drain on delayed blockbusters.
+    // The Studio Comptroller: Increased base weekly cost from $25M to $35M to exponentially increase cashflow drain on delayed blockbusters.
     weeklyCost: 35_000_000,
     developmentWeeks: 16,
     productionWeeks: 24,
-    // The Studio Comptroller: Lowered floor to $1M to simulate catastrophic, studio-bankrupting box office bombs. Increased upside to $2.0B
-    revenueRange: [1_000_000, 2_000_000_000],
+    // The Studio Comptroller: Lowered floor to $1M to simulate catastrophic, studio-bankrupting box office bombs. Increased upside to $1.5B
+    revenueRange: [1_000_000, 1_500_000_000],
   },
 };

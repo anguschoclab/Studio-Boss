@@ -17,11 +17,11 @@ describe('stats system', () => {
       expect(stats.renewable).toBe(false);
     });
 
-    it('applies 2.5x risk multiplier for high tier (budget >= 100M)', () => {
+    it('applies 2.0x risk multiplier for high tier (budget >= 100M)', () => {
       // Mocking a high tier with 100M budget
       const tier: typeof BUDGET_TIERS.high = { ...BUDGET_TIERS.high, budget: 100_000_000 };
       const stats = getFilmStats(tier);
-      const riskMultiplier = 2.5;
+      const riskMultiplier = 2.0;
 
       expect(stats.budget).toBe(tier.budget);
       expect(stats.weeklyCost).toBe(tier.weeklyCost * riskMultiplier);
@@ -55,7 +55,7 @@ describe('stats system', () => {
       const expectedWeeklyCost = tier.weeklyCost * format.productionCostMultiplier * scaleMultiplier;
       const expectedProductionWeeks = Math.ceil(episodes * format.productionWeeksPerEpisode * scaleMultiplier);
       const expectedDevelopmentWeeks = Math.ceil(tier.developmentWeeks * format.developmentWeeksModifier * scaleMultiplier);
-      const expectedBudget = expectedWeeklyCost * expectedProductionWeeks + (tier.budget * 0.3);
+      const expectedBudget = expectedWeeklyCost * expectedProductionWeeks + (tier.budget * 0.4);
 
       expect(stats.weeklyCost).toBe(expectedWeeklyCost);
       expect(stats.productionWeeks).toBe(expectedProductionWeeks);
@@ -72,7 +72,7 @@ describe('stats system', () => {
       const expectedWeeklyCost = tier.weeklyCost * format.productionCostMultiplier * scaleMultiplier;
       const expectedProductionWeeks = Math.ceil(episodes * format.productionWeeksPerEpisode * scaleMultiplier);
       const expectedDevelopmentWeeks = Math.ceil(tier.developmentWeeks * format.developmentWeeksModifier * scaleMultiplier);
-      const expectedBudget = expectedWeeklyCost * expectedProductionWeeks + (tier.budget * 0.3);
+      const expectedBudget = expectedWeeklyCost * expectedProductionWeeks + (tier.budget * 0.4);
 
       expect(stats.weeklyCost).toBe(expectedWeeklyCost);
       expect(stats.productionWeeks).toBe(expectedProductionWeeks);
@@ -88,7 +88,7 @@ describe('stats system', () => {
       const expectedWeeklyCost = tier.weeklyCost * format.productionCostMultiplier * scaleMultiplier;
       const expectedProductionWeeks = Math.ceil(episodes * format.productionWeeksPerEpisode * scaleMultiplier);
       const expectedDevelopmentWeeks = Math.ceil(tier.developmentWeeks * format.developmentWeeksModifier * scaleMultiplier);
-      const expectedBudget = expectedWeeklyCost * expectedProductionWeeks + (tier.budget * 0.3);
+      const expectedBudget = expectedWeeklyCost * expectedProductionWeeks + (tier.budget * 0.4);
 
       expect(stats.weeklyCost).toBe(expectedWeeklyCost);
       expect(stats.productionWeeks).toBe(expectedProductionWeeks);
@@ -109,7 +109,7 @@ describe('stats system', () => {
       const expectedWeeklyCost = tier.weeklyCost * format.productionCostMultiplier * scaleMultiplier;
       const expectedProductionWeeks = Math.ceil(episodes * format.productionWeeksPerEpisode);
       const expectedDevelopmentWeeks = Math.ceil(tier.developmentWeeks * format.developmentWeeksModifier);
-      const expectedBudget = expectedWeeklyCost * expectedProductionWeeks + (tier.budget * 0.15);
+      const expectedBudget = expectedWeeklyCost * expectedProductionWeeks + (tier.budget * 0.20);
 
       expect(stats.weeklyCost).toBe(expectedWeeklyCost);
       expect(stats.productionWeeks).toBe(expectedProductionWeeks);
@@ -126,7 +126,7 @@ describe('stats system', () => {
       const expectedWeeklyCost = tier.weeklyCost * format.productionCostMultiplier * scaleMultiplier;
       const expectedProductionWeeks = Math.ceil(episodes * format.productionWeeksPerEpisode);
       const expectedDevelopmentWeeks = Math.ceil(tier.developmentWeeks * format.developmentWeeksModifier);
-      const expectedBudget = expectedWeeklyCost * expectedProductionWeeks + (tier.budget * 0.15);
+      const expectedBudget = expectedWeeklyCost * expectedProductionWeeks + (tier.budget * 0.20);
 
       expect(stats.weeklyCost).toBe(expectedWeeklyCost);
       expect(stats.productionWeeks).toBe(expectedProductionWeeks);
@@ -142,7 +142,7 @@ describe('stats system', () => {
       const expectedWeeklyCost = tier.weeklyCost * format.productionCostMultiplier * scaleMultiplier;
       const expectedProductionWeeks = Math.ceil(episodes * format.productionWeeksPerEpisode);
       const expectedDevelopmentWeeks = Math.ceil(tier.developmentWeeks * format.developmentWeeksModifier);
-      const expectedBudget = expectedWeeklyCost * expectedProductionWeeks + (tier.budget * 0.15);
+      const expectedBudget = expectedWeeklyCost * expectedProductionWeeks + (tier.budget * 0.20);
 
       expect(stats.weeklyCost).toBe(expectedWeeklyCost);
       expect(stats.productionWeeks).toBe(expectedProductionWeeks);
