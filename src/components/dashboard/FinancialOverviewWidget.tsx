@@ -31,12 +31,12 @@ export const FinancialOverviewWidget: React.FC = () => {
   };
 
   return (
-    <Card className="col-span-1 lg:col-span-2 border-muted bg-card/50 backdrop-blur-sm shadow-sm">
+    <Card className="col-span-1 lg:col-span-2 border-primary/10 bg-card/40 backdrop-blur-md hover:border-primary/20 hover:shadow-lg transition-all duration-300 group">
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+        <CardTitle className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em] group-hover:text-primary transition-colors">
           Studio Valuation
         </CardTitle>
-        <div className="text-3xl font-bold tracking-tight mt-1">
+        <div className="text-4xl font-black tracking-tighter mt-1 bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent group-hover:scale-[1.02] origin-left transition-transform duration-300">
           {formatCurrency(finance.bankBalance)}
         </div>
         <CardDescription>
