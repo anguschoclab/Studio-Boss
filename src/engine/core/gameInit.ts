@@ -4,7 +4,7 @@ import { ARCHETYPES } from '../data/archetypes';
 import { generateStudioName, generateMotto } from '../generators/names';
 import { generateFamilies, generateTalentPool } from '../generators/talent';
 import { generateAgencies, generateAgents } from '../generators/agencies';
-import { pick, randRange } from '../utils';
+import { pick, randRange, secureRandom } from '../utils';
 import { generateOpportunity } from '../generators/opportunities';
 
 export function initializeGame(studioName: string, archetype: ArchetypeKey): GameState {
@@ -22,11 +22,11 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
       name,
       motto: generateMotto(),
       archetype: rArch,
-      strength: 40 + Math.floor(Math.random() * 40),
+      strength: 40 + Math.floor(secureRandom() * 40),
       cash: rArchData.startingCash * randRange(0.5, 1.2),
       prestige: rArchData.startingPrestige + Math.floor(randRange(-10, 10)),
       recentActivity: 'Setting up operations for the new season',
-      projectCount: 2 + Math.floor(Math.random() * 5),
+      projectCount: 2 + Math.floor(secureRandom() * 5),
     };
   });
 
@@ -38,7 +38,7 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
   const genrePopularity: Record<string, number> = {};
   ALL_GENRES.forEach(g => {
     const trend = initialTrends.find(t => t.genre === g);
-    genrePopularity[g.toLowerCase()] = trend ? trend.heat / 100 : 0.2 + Math.random() * 0.3;
+    genrePopularity[g.toLowerCase()] = trend ? trend.heat / 100 : 0.2 + secureRandom() * 0.3;
   });
 
   return {
