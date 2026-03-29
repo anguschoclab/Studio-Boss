@@ -21,6 +21,12 @@ export function generateScandals(state: GameState): {
     talentToProjectMap.set(c.talentId, c.projectId);
   }
   
+  // ⚡ Bolt: Replace O(N) Array.find with O(1) Map lookup
+  const projectTitleMap = new Map<string, string>();
+  for (const p of state.studio.internal.projects) {
+    projectTitleMap.set(p.id, p.title);
+  }
+
   for (const talent of state.industry.talentPool) {
     const risk = talent.controversyRisk || 5; 
     if (secureRandom() * 1000 < risk) {
@@ -44,10 +50,11 @@ export function generateScandals(state: GameState): {
 
        const projectId = talentToProjectMap.get(talent.id);
        if (projectId) {
+         const projectTitle = projectTitleMap.get(projectId) || 'Unknown Project';
          projectUpdates.push({
            projectId,
            crisis: {
-             description: `BREAKING NEWS: ${talent.name.toUpperCase()} has been involved in a massive ${type} scandal while working on "${state.studio.internal.projects.find(p => p.id === projectId)?.title}". The press is circling.`,
+             description: `BREAKING NEWS: ${talent.name.toUpperCase()} has been involved in a massive ${type} scandal while working on "${projectTitle}". The press is circling.`,
              resolved: false,
              severity: s.severity > 75 ? 'catastrophic' : 'high',
              options: [
