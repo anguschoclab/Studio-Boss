@@ -71,7 +71,7 @@ describe('TalentPanel', () => {
   it('shows empty state when no talent matches filter', () => {
     render(<TalentPanel />);
 
-    fireEvent.click(screen.getByText((content, element) => element?.textContent?.toLowerCase() === 'writer'));
+    fireEvent.click(screen.getAllByText((content, element) => element?.textContent?.toLowerCase() === 'writer')[0]);
 
     expect(screen.getByText('No talent found matching this filter.')).toBeInTheDocument();
   });
