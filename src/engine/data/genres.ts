@@ -28,7 +28,8 @@ export const GENRE_TAXONOMY: GenreCategory[] = [
       { id: 'satire', name: 'Satire' },
       { id: 'slapstick', name: 'Slapstick' },
       { id: 'dark_comedy', name: 'Dark Comedy' },
-      { id: 'sitcom', name: 'Sitcom' }
+      { id: 'sitcom', name: 'Sitcom' },
+      { id: 'ip_mashup', name: 'IP Mashup' }
     ]
   },
   {
@@ -51,7 +52,8 @@ export const GENRE_TAXONOMY: GenreCategory[] = [
       { id: 'paranormal', name: 'Paranormal' },
       { id: 'true_crime', name: 'True Crime' },
       { id: 'horror_standard', name: 'Horror' },
-      { id: 'thriller_standard', name: 'Thriller' }
+      { id: 'thriller_standard', name: 'Thriller' },
+      { id: 'elevated_horror', name: 'Elevated Horror' }
     ]
   },
   {
@@ -63,7 +65,8 @@ export const GENRE_TAXONOMY: GenreCategory[] = [
       { id: 'high_fantasy', name: 'High Fantasy' },
       { id: 'dystopian', name: 'Dystopian' },
       { id: 'scifi_standard', name: 'Sci-Fi' },
-      { id: 'fantasy_standard', name: 'Fantasy' }
+      { id: 'fantasy_standard', name: 'Fantasy' },
+      { id: 'multiverse', name: 'Multiverse' }
     ]
   },
   {
@@ -100,7 +103,10 @@ export const CROSSOVER_AFFINITY: Record<string, string[]> = {
   'Drama': ['Romance', 'Crime', 'Thriller', 'Documentary'],
   'Musical': ['Romance', 'Comedy', 'Animation', 'Drama'],
   'Documentary': ['Drama', 'Crime', 'Horror'],
-  'Unscripted': ['Comedy', 'Documentary', 'Drama']
+  'Unscripted': ['Comedy', 'Documentary', 'Drama'],
+  'Multiverse': ['Superhero', 'Sci-Fi', 'Fantasy', 'Action', 'Animation', 'IP Mashup'],
+  'Elevated Horror': ['Horror', 'Thriller', 'Drama', 'Psychological Thriller'],
+  'IP Mashup': ['Comedy', 'Action', 'Animation', 'Superhero', 'Multiverse']
 };
 
 export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
@@ -118,4 +124,7 @@ export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
   'Crime': 0.20,
   'Musical': 0.25,
   'Unscripted': 0.30, // Reality/Unscripted can fatigue quickly if over-saturated
+  'Multiverse': 0.85, // Extremely high fatigue risk if overdone
+  'Elevated Horror': 0.20,
+  'IP Mashup': 0.70, // High burnout potential
 };

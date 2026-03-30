@@ -151,7 +151,29 @@ const MARKET_HEADLINES = [
   'Tech CEO insists VR movies are the future despite {pct}% of users experiencing severe motion sickness',
   'Studio stock rises {pct}% after laying off entire creative department to fund executive bonuses',
   'Independent cinema saved by unhinged viral marketing campaign orchestrated by teenagers',
-  'Major studio insists their upcoming slate is "diverse" because it features a female CGI alien'];
+  'Major studio insists their upcoming slate is "diverse" because it features a female CGI alien',
+  // Showbiz Scribe Daily Additions
+  'Wall Street panics as major studios pivot entirely to AI-generated screenplays',
+  'Focus groups reject "originality" in latest demographic tracking report',
+  'Analysts predict streaming bubble will burst just as Q4 earnings drop',
+  'Audiences walk out of ${projectName} complaining about "unrelatable poor people"',
+  'Theater chains consider charging extra for seats with good sightlines',
+  'Indie cinema declared officially dead for the fourth time this year',
+  'Quarterly earnings report reveals studio makes more from merchandise than actual films',
+  'Box office plunges as audiences demand more legacy franchise reboots',
+  'Venture capitalists pour millions into new startup promising "algorithm-perfect pacing"',
+  'Studios quietly lobby government to classify background actors as "digital assets"',
+  'Mergers and acquisitions heat up as tech giants look to swallow remaining studios',
+  'Consumer spending on streaming overtakes basic utilities in several major cities',
+  'Market reacts poorly to studio\'s decision to release a film under 2 hours long',
+  'Shareholders demand answers after major tentpole grosses only triple its budget',
+  'Box office unexpectedly saved by ${projectName}, confusing every executive in town',
+  'Nostalgia bait proves highly lucrative yet again in Q3 financial breakdown',
+  'Analysts downgrade entertainment sector, citing "too much art, not enough content"',
+  'Studio executives insist the theatrical experience is thriving while actively closing theaters',
+  'Merchandise sales for ${projectName} surpass box office gross in opening weekend',
+  'Ticket prices surge to $30 as theaters implement "dynamic pricing" for popular showtimes'
+];
 
 const TALENT_HEADLINES = [
   'A-list director reportedly shopping a passion project around town',
@@ -347,7 +369,29 @@ const TALENT_HEADLINES = [
   '${directorName} defends the 3-hour runtime of ${projectName}, claiming it "needs to breathe"',
   '${actressName} goes viral for mispronouncing the name of her own character in ${projectName}',
   'Studio hires a "social media whisperer" to help ${actorName} navigate the press tour for ${projectName}',
-  '${directorName} accused of using ${projectName} to launder money for an international crime syndicate'];
+  '${directorName} accused of using ${projectName} to launder money for an international crime syndicate',
+  // Showbiz Scribe Daily Additions
+  'Nepo baby demands script rewrite because their character "doesn\'t have enough TikTok moments"',
+  'A-list actor refuses to leave trailer until production replaces all blue M&Ms with slightly darker blue M&Ms',
+  'Method actor takes things too far, gets arrested for actual embezzlement while preparing for ${projectName}',
+  '${directorName} reportedly fired after suggesting they shoot a scene without a green screen',
+  'Sources say ${actorName} is using a body double for emotionally demanding scenes',
+  '${actressName} drops out of ${projectName} citing "creative differences" and a massive check from a rival studio',
+  'Veteran screenwriter caught using ChatGPT to write the third act of an upcoming tentpole',
+  'Director ${directorName} locked out of editing bay as executives demand more explosions',
+  'Co-stars of ${projectName} reportedly despise each other, PR team working overtime on "friendship" narrative',
+  '${actorName} demands a producer credit despite only being on set for two days',
+  'Agent insists their client is a "four-quadrant draw" despite string of massive flops',
+  'Aging action star insists on doing their own stunts, immediately delays production by six months',
+  'Casting director under fire for requiring actors to have at least 1M Instagram followers',
+  '${actressName} launches "wellness" brand that is just expensive tap water',
+  'Director\'s "visionary" indie darling turns out to just be incredibly poorly lit',
+  'Talent agency launches aggressive campaign to convince the world ${actorName} is a sex symbol',
+  'Showrunner of ${projectName} fired after toxic workplace allegations surface on Reddit',
+  'Veteran character actor steals the show in ${projectName}, demands massive pay bump for sequel',
+  'Sources confirm ${directorName} has completely lost control of the ${projectName} set',
+  'Leading man\'s PR team scrambling after hot mic catches him admitting he hates the franchise'
+];
 
 const RIVAL_TEMPLATES = [
   '{rival} greenlights ambitious ${budget}M {genre} project',
@@ -496,7 +540,29 @@ const RIVAL_TEMPLATES = [
   '{rival} attempts to rebrand their studio as a "tech company" after a string of ${budget}M {genre} flops',
   '{rival} announces a gritty, grounded reboot of their ${budget}M {genre} franchise that was already gritty and grounded',
   '{rival} fires their entire PR team after a disastrous press tour for their ${budget}M {genre} film',
-  '{rival} writes off a completed ${budget}M {genre} film for tax purposes, claiming it "did not meet quality standards"'];
+  '{rival} writes off a completed ${budget}M {genre} film for tax purposes, claiming it "did not meet quality standards"',
+  // Showbiz Scribe Daily Additions
+  '{rival} attempts to trademark the concept of the "Hero\'s Journey" to sue competitors',
+  '{rival} releases a ${budget}M {genre} film that is entirely product placement',
+  '{rival} CEO insists that paying writers is an "outdated business model"',
+  '{rival} announces they will use deepfakes of deceased actors for their upcoming {genre} slate',
+  '{rival} shelves a critically acclaimed ${budget}M {genre} film to claim a tax write-off',
+  '{rival} accidentally emails their aggressive union-busting strategy to the entire press corps',
+  '{rival} pivots their upcoming ${budget}M {genre} film into a 12-part streaming mini-series halfway through production',
+  '{rival} fires their entire diversity and inclusion department after a ${budget}M {genre} flop',
+  '{rival} launches a ${budget}M {genre} franchise based entirely on a line of discontinued energy drinks',
+  '{rival} caught bribing critics with luxury vacations for favorable reviews of their ${budget}M {genre} disaster',
+  '{rival} attempts to astroturf a fan campaign to release the "director\'s cut" of their terrible {genre} film',
+  '{rival} CEO gets a massive $50M bonus while laying off 20% of the company\'s staff',
+  '{rival} insists that their ${budget}M {genre} film bombing is actually the audience\'s fault',
+  '{rival} desperately tries to launch a cinematic universe based on public domain literature',
+  '{rival} uses a ${budget}M {genre} film as a front for an elaborate money laundering scheme',
+  '{rival} announces a gritty reboot of a beloved childhood property, absolutely no one asked for it',
+  '{rival} replaces striking workers with unpaid interns on the set of their ${budget}M {genre} production',
+  '{rival} caught artificially inflating streaming numbers for their latest ${budget}M {genre} release',
+  '{rival} executives reportedly using astrology to make greenlight decisions on ${budget}M {genre} projects',
+  '{rival} attempts to pivot into the "wellness" space with a disastrous ${budget}M {genre} lifestyle documentary'
+];
 
 // Removed local fill function in favor of imported fillTemplate from utils
 

@@ -1,7 +1,7 @@
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { Button } from '@/components/ui/button';
-import { Plus, Search, Filter, Newspaper, Clock, TrendingUp, Sparkles, Zap } from 'lucide-react';
+import { Plus, Search, Newspaper, Clock, Sparkles } from 'lucide-react';
 import { Opportunity } from '@/engine/types';
 import { selectOpportunities } from '@/store/selectors';
 import { TrendBoard } from '@/components/trends/TrendBoard';
@@ -34,7 +34,7 @@ export const DiscoveryBoard = () => {
           <div className="flex items-center gap-3">
             <div className="relative w-48 hidden xl:block">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
-              <Input className="h-8 pl-9 text-[10px] bg-white/5 border-white/5 uppercase font-black" placeholder="Search Listings..." />
+              <Input aria-label="Search Listings" className="h-8 pl-9 text-[10px] bg-white/5 border-white/5 uppercase font-black" placeholder="Search Listings..." />
             </div>
             <Button onClick={openCreateProject} size="sm" className="h-8 px-4 text-[10px] font-black uppercase tracking-widest gap-2 bg-primary text-black hover:bg-primary/90">
               <Plus className="h-3.5 w-3.5" />

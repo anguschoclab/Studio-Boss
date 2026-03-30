@@ -97,7 +97,7 @@ describe('evaluateGreenlight', () => {
       expect(report.recommendation).toBe('Do Not Greenlight Yet');
     });
 
-    it('doubles penalty for oversaturated Superhero genre', () => {
+    it('applies explicit trend-modifier multiplier for oversaturated Superhero genre', () => {
       const superheroProject = { ...mockProject, genre: 'Superhero' };
       const similarProjects = Array.from({ length: 5 }).map((_, i) => ({
         ...superheroProject,
@@ -107,10 +107,10 @@ describe('evaluateGreenlight', () => {
       }));
 
       const report = evaluateGreenlight(superheroProject, 100_000_000, [mockTalent], 10, similarProjects);
-      // 5 projects => penalty 25 + 20 = 45. Superhero => 45 * 2 = 90
-      // Base 50 + 15 (talent) - 90 = -25 => clamped to 0
+      // 5 projects => penalty 25 + 20 = 45. Superhero => 45 * 3 = 135 + 75 = 210
+      // Base 50 + 15 (talent) - 210 < 0 => clamped to 0
       expect(report.score).toBe(0);
-      expect(report.negatives.some(n => n.includes('-140 points'))).toBe(true);
+      expect(report.negatives.some(n => n.includes('-210 points'))).toBe(true);
     });
 
     it('applies calendar gap bonus if no similar projects in 52 weeks', () => {

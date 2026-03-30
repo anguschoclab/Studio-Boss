@@ -4,6 +4,8 @@ import { pick, randRange, secureRandom } from '../utils';
  // Reuse some generation logic if needed, or build new one
 
 const PROJECT_ADJECTIVES = [
+  'De-Aged', 'Self-Funded', 'Cryptocurrency-Backed', 'Anti-Woke', 'Over-Indulgent', 'Tone-Policied', 'Has-Been-Led', 'Reboot-of-a-Reboot', 'Nepotism-Heavy', 'AI-Generated', 'Unwatchably-Dark', 'PR-Nightmare', 'CGI-Saturated', 'Legally-Ambiguous', 'Tax-Avoidant',
+
   'Cursed', 'Bloated', 'Pretentious', 'Gritty', 'Unnecessary', 'Rebooted', 'Overbudget', 'Derivative', 'Visionary', 'Cinematic', 'Algorithm-Driven', 'IP-Mining', 'Vain', 'Lethal', 'Synergistic',
   'Dark', 'Neon', 'Silent', 'Golden', 'Lost', 'Forgotten', 'Broken', 'Hidden',
   'Wild', 'Cold', 'Last', 'First', 'Final', 'Secret', 'Midnight', 'Crimson',
@@ -14,6 +16,8 @@ const PROJECT_ADJECTIVES = [
   'Tax-Sheltered', 'Algorithm-Approved', 'Nepo-Baby-Led', 'Focus-Group-Tested', 'Merch-Driven', 'TikTok-Optimized', 'VFX-Heavy', 'CGI-Bloated', 'Contractually-Obligated', 'Ghost-Directed', 'Uninsurable', 'PR-Disaster', 'Deepfake-Assisted', 'Billionaire-Funded', 'Union-Busting', 'Unwatchable', 'Boycotted', 'Desperate', 'Cringe-Inducing', 'Tone-Shifted', 'Recut', 'Over-Lit', 'Focus-Group-Ruined', 'Tax-Fraudulent', 'Lawsuit-Waiting', 'PR-Managed', 'Ghost-Produced', 'Audience-Alienating', 'Trend-Chasing', 'Nepotism-Fueled', 'Disgraced', 'Blacklisted', 'Apology-Driven', 'Litigation-Baiting', 'Hacktivist-Leaked', 'Deepfaked-Beyond-Recognition', 'Extorted', 'Cancel-Proof'];
 
 const PROJECT_NOUNS = [
+  'Tax Write-off', 'Apology Video Extended Cut', 'Podcast Spin-off', 'Focus Group Disaster', 'Legacy Sequel', 'Cinematic Universe Attempt', 'Vanity Project', 'Merchandise Commercial', 'Brand Synergy Play', 'Legal Loophole', 'NFT Cash Grab', 'Direct-to-Streaming Dump', 'TikTok Trend Movie', 'Algorithm Bait', 'Studio Mandate',
+
   'Tentpole', 'Cinematic Universe', 'Vanity Project', 'Cash Grab', 'Reboot', 'Origin Story', 'Four-Quadrant Hit', 'Oscar Bait', 'Tax Write-off', 'Algorithm', 'Focus Group', 'Franchise', 'Merchandising Opportunity', 'Streaming Wars', 'Demographic',
   'Echo', 'Whisper', 'Shadow', 'Sun', 'Moon', 'Star', 'Dream', 'Nightmare',
   'City', 'Mountain', 'River', 'Forest', 'Ocean', 'Island', 'Tower', 'Castle',
@@ -26,6 +30,17 @@ const PROJECT_NOUNS = [
 
 function generateFlavor(genre: string, type: string, budgetTier: BudgetTierKey, origin: string): string {
   const cynicalFlavors = [
+  `A frantic ${genre} ${type} cobbled together entirely from unused B-roll and AI upscaling.`,
+  `A deeply cynical ${budgetTier}-tier ${type} that feels less like a movie and more like a threat.`,
+  `A ${genre} ${origin} that the studio is only releasing to maintain the rights to a 40-year-old action figure line.`,
+  `An over-budget ${genre} ${type} starring a lead who very clearly didn't read the script.`,
+  `A visually repulsive ${genre} ${type} where you can pinpoint the exact day the VFX budget ran out.`,
+  `A 'modern update' of a classic ${genre} ${origin} that misses the point of the original so completely it's almost impressive.`,
+  `A bloated ${budgetTier}-budget ${type} that serves primarily as a two-hour commercial for an energy drink.`,
+  `An incomprehensible ${genre} ${type} that the director refuses to explain, calling it 'too elevated' for general audiences.`,
+  `A ${budgetTier}-tier ${genre} ${origin} that was clearly written around the star's refusal to do any scenes outdoors.`,
+  `A ${genre} ${type} that is 90% set-up for a cinematic universe that will literally never happen.`,
+
     `A ${budgetTier}-budget ${genre} ${type} that screams 'we made this for an algorithm'.`,
     `An overly pretentious ${genre} ${type} from an indie darling who won't stop talking about A24.`,
     `A bloated ${budgetTier}-budget ${type} that's just a thinly veiled merchandising vehicle.`,
