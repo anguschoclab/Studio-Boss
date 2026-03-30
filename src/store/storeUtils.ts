@@ -116,12 +116,15 @@ export function applyStateImpact(state: GameState, impact: import('@/engine/type
         return p;
     });
 
-    if (impact.cultClassicProjectId) {
-        const idx = newProjects.findIndex(p => p.id === impact.cultClassicProjectId);
-        if (idx !== -1) {
-            newProjects[idx] = { ...newProjects[idx], isCultClassic: true };
-            projectsChanged = true;
-        }
+    if (impact.cultClassicProjectIds && impact.cultClassicProjectIds.length > 0) {
+        const cultSet = new Set(impact.cultClassicProjectIds);
+        newProjects = newProjects.map(p => {
+            if (cultSet.has(p.id)) {
+                projectsChanged = true;
+                return { ...p, isCultClassic: true };
+            }
+            return p;
+        });
     }
   }
   
@@ -167,9 +170,28 @@ export function applyStateImpact(state: GameState, impact: import('@/engine/type
     });
   }
 
+  // 3b. Update Buyers
+  let newBuyers = [...state.market.buyers];
+  let buyersChanged = false;
+  if (impact.buyerUpdates && impact.buyerUpdates.length > 0) {
+    const bMap = new Map(impact.buyerUpdates.map(u => [u.buyerId, u.update]));
+    newBuyers = newBuyers.map(b => {
+      const up = bMap.get(b.id);
+      if (up) {
+        buyersChanged = true;
+        return { ...b, ...up };
+      }
+      return b;
+    });
+  }
+
   // 4. Update Contracts
   let newContracts = [...state.studio.internal.contracts];
-  if (impact.removeContract) {
+  if (impact.removeContracts && impact.removeContracts.length > 0) {
+    const toRemove = new Set(impact.removeContracts.map(c => `${c.talentId}-${c.projectId}`));
+    newContracts = newContracts.filter(c => !toRemove.has(`${c.talentId}-${c.projectId}`));
+  }
+  if (impact.removeContract) { // Legacy
     const { talentId, projectId } = impact.removeContract;
     newContracts = newContracts.filter(c => !(c.talentId === talentId && c.projectId === projectId));
   }
@@ -180,22 +202,63 @@ export function applyStateImpact(state: GameState, impact: import('@/engine/type
   
   // 6. Update Headlines & News History
   let newHeadlines = [...(state.industry.headlines || [])];
-  if (impact.newHeadlines) {
-    newHeadlines = [...impact.newHeadlines, ...newHeadlines].slice(0, 100);
+  if (impact.newHeadlines && impact.newHeadlines.length > 0) {
+    const hlines = impact.newHeadlines.map(h => ({
+      id: h.id || `h-${crypto.randomUUID()}`,
+      week: h.week || state.week,
+      category: h.category || 'general',
+      text: h.text || ''
+    } as import('@/engine/types').Headline));
+    newHeadlines = [...hlines, ...newHeadlines].slice(0, 100);
   }
   
   let newNewsHistory = [...(state.industry.newsHistory || [])];
-  if (impact.newsEvents) {
+  if (impact.newsEvents && impact.newsEvents.length > 0) {
     const events = impact.newsEvents.map(e => ({
       ...e,
-      id: `ne-${crypto.randomUUID()}`,
-      week: state.week
-    }));
+      id: e.id || `ne-${crypto.randomUUID()}`,
+      week: e.week || state.week,
+      type: e.type || 'STUDIO_EVENT',
+      headline: e.headline || '',
+      description: e.description || ''
+    } as import('@/engine/types').NewsEvent));
     newNewsHistory = [...events, ...newNewsHistory].slice(0, 100);
   }
 
   const newAwards = impact.newAwards ? [...(state.industry.awards || []), ...impact.newAwards] : state.industry.awards;
-  
+
+  let newScandals = [...(state.industry.scandals || [])];
+  let scandalsChanged = false;
+
+  if (impact.newScandals && impact.newScandals.length > 0) {
+      newScandals = [...newScandals, ...impact.newScandals];
+      scandalsChanged = true;
+  }
+
+  if (impact.scandalUpdates && impact.scandalUpdates.length > 0) {
+      const sMap = new Map(impact.scandalUpdates.map(u => [u.scandalId, u.update]));
+      newScandals = newScandals.map(s => {
+          const up = sMap.get(s.id);
+          if (up) {
+              scandalsChanged = true;
+              return { ...s, ...up };
+          }
+          return s;
+      });
+  }
+
+  // UI Notifications (Add to events list or handle however your system prefers. Since we don't have an explicit 'events' array in State outside of ui, we'll assume it goes to a slice. Let's make sure it's valid).
+  // The UI often pulls directly from `newsHistory` or `headlines`, but here we can add generic notifications to `newsHistory` if they are raw strings:
+  if (impact.uiNotifications && impact.uiNotifications.length > 0) {
+      const notifs = impact.uiNotifications.map(text => ({
+          id: `ne-${crypto.randomUUID()}`,
+          week: state.week,
+          type: 'STUDIO_EVENT',
+          headline: 'Notification',
+          description: text
+      } as import('@/engine/types').NewsEvent));
+      newNewsHistory = [...notifs, ...newNewsHistory].slice(0, 100);
+  }
   // Assemble final state
   return {
     ...newState,
@@ -207,6 +270,7 @@ export function applyStateImpact(state: GameState, impact: import('@/engine/type
         ...state.studio.internal,
         projects: projectsChanged ? newProjects : state.studio.internal.projects,
         contracts: newContracts,
+        financeHistory: impact.newFinanceHistory || state.studio.internal.financeHistory,
       }
     },
     industry: {
@@ -214,8 +278,18 @@ export function applyStateImpact(state: GameState, impact: import('@/engine/type
       talentPool: talentPoolChanged ? newTalentPool : state.industry.talentPool,
       rivals: rivalsChanged ? newRivals : state.industry.rivals,
       awards: newAwards,
+      scandals: scandalsChanged ? newScandals : state.industry.scandals,
       headlines: newHeadlines,
-      newsHistory: newNewsHistory
+      newsHistory: newNewsHistory,
+      rumors: impact.newRumors || state.industry.rumors,
+      festivalSubmissions: impact.newFestivalSubmissions || state.industry.festivalSubmissions
+    },
+    market: {
+      ...state.market,
+      buyers: buyersChanged ? newBuyers : state.market.buyers,
+      opportunities: impact.newOpportunities || state.market.opportunities,
+      trends: impact.newTrends || state.market.trends,
+      activeMarketEvents: impact.newMarketEvents || state.market.activeMarketEvents
     }
   };
 }

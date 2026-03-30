@@ -1,4 +1,5 @@
 import { GenreTrend, GameState } from '@/engine/types';
+import { StateImpact } from '../types/state.types';
 import { secureRandom } from '../utils';
 
 
@@ -31,7 +32,7 @@ export function initializeTrends(): GenreTrend[] {
   ];
 }
 
-export function advanceTrends(trends: GenreTrend[]): GenreTrend[] {
+export function advanceTrends(trends: GenreTrend[]): StateImpact {
   let updated = trends.map(t => {
     let newHeat = t.heat;
     if (t.direction === 'rising') newHeat = Math.min(100, newHeat + 5);
@@ -68,7 +69,9 @@ export function advanceTrends(trends: GenreTrend[]): GenreTrend[] {
     }
   }
   
-  return updated;
+  return {
+    newTrends: updated
+  };
 }
 
 export function getTrendMultiplier(project: { genre: string; targetAudience: string }, state: GameState): number {

@@ -1,4 +1,5 @@
 import { GameState, FestivalSubmission, AwardBody } from '@/engine/types';
+import { StateImpact } from '../types/state.types';
 import { randRange } from '../utils';
 
 export const FESTIVALS: { body: AwardBody, name: string, weeks: number[], cost: number, prestigeNeeded: number, buzzReward: number }[] = [
@@ -49,19 +50,18 @@ export function submitToFestival(
   };
 }
 
-export function resolveFestivals(state: GameState): GameState {
-  if (!state.industry.festivalSubmissions || state.industry.festivalSubmissions.length === 0) return state;
+export function resolveFestivals(state: GameState): StateImpact {
+  if (!state.industry.festivalSubmissions || state.industry.festivalSubmissions.length === 0) return {};
   
-  const newState = { ...state };
-  let updatedSubmissions = [...state.industry.festivalSubmissions];
-  const updatedProjects = [...state.studio.internal.projects];
-  const newHeadlines = [...state.industry.headlines];
-  
-  const projectIndices = new Map<string, number>();
-  for (let i = 0; i < updatedProjects.length; i++) {
-    projectIndices.set(updatedProjects[i].id, i);
-  }
+  const impact: StateImpact = {
+    newFestivalSubmissions: [],
+    projectUpdates: [],
+    newHeadlines: [],
+    prestigeChange: 0
+  };
 
+  let updatedSubmissions = [...state.industry.festivalSubmissions];
+  
   updatedSubmissions = updatedSubmissions.map(sub => {
     if (sub.status !== 'submitted') return sub;
     
@@ -70,9 +70,8 @@ export function resolveFestivals(state: GameState): GameState {
     
     // Resolve if festival is occurring this week
     if (fest.weeks.includes(state.week % 52)) {
-      const pIndex = projectIndices.get(sub.projectId);
-      if (pIndex === undefined) return sub;
-      const project = updatedProjects[pIndex];
+      const project = state.studio.internal.projects.find(p => p.id === sub.projectId);
+      if (!project) return sub;
       
       // Calculate acceptance chance
       const baseChance = (project.reviewScore || 50) + (state.studio.prestige * 0.5);
@@ -80,16 +79,17 @@ export function resolveFestivals(state: GameState): GameState {
       
       if (isAccepted) {
         // Boost buzz and slightly boost prestige
-        updatedProjects[pIndex] = {
-          ...project,
-          buzz: Math.min(100, project.buzz + fest.buzzReward)
-        };
-        newState.studio.prestige = Math.min(100, newState.studio.prestige + 2);
+        impact.projectUpdates!.push({
+          projectId: project.id,
+          update: {
+            buzz: Math.min(100, project.buzz + fest.buzzReward)
+          }
+        });
+
+        impact.prestigeChange! += 2;
         
-        newHeadlines.unshift({
-          id: crypto.randomUUID(),
-          week: state.week,
-          category: 'awards' as const,
+        impact.newHeadlines!.push({
+          category: 'awards',
           text: `Massive buzz out of ${fest.name} as "${project.title}" premieres to standing ovation!`
         });
         
@@ -103,21 +103,8 @@ export function resolveFestivals(state: GameState): GameState {
   });
   
   // Clean up old rejections
-  updatedSubmissions = updatedSubmissions.filter(s => s.status !== 'rejected' || state.week - s.week < 12);
+  impact.newFestivalSubmissions = updatedSubmissions.filter(s => s.status !== 'rejected' || state.week - s.week < 12);
   
-  return {
-    ...newState,
-    studio: {
-      ...newState.studio,
-      internal: {
-        ...newState.studio.internal,
-        projects: updatedProjects
-      }
-    },
-    industry: {
-      ...newState.industry,
-      festivalSubmissions: updatedSubmissions,
-      headlines: newHeadlines.slice(0, 50)
-    }
-  };
+  return impact;
 }
+

@@ -1,4 +1,5 @@
 import { GameState, MarketEvent, MarketEventType } from '@/engine/types';
+import { StateImpact } from '../types/state.types';
 import { pick, randRange, secureRandom } from '../utils';
 
 const EVENT_TEMPLATES: Omit<MarketEvent, 'id' | 'weeksRemaining'>[] = [
@@ -49,9 +50,13 @@ export function getActiveMarketEvent(state: GameState): MarketEvent | undefined 
   return state.market.activeMarketEvents[0]; // For simplicity, only 1 global event at a time
 }
 
-export function advanceMarketEvents(state: GameState): GameState {
+export function advanceMarketEvents(state: GameState): StateImpact {
+  const impact: StateImpact = {
+    newMarketEvents: [],
+    newHeadlines: []
+  };
+
   let activeEvents = state.market.activeMarketEvents || [];
-  const newHeadlines = [...state.industry.headlines];
   
   // Tick active events down
   activeEvents = activeEvents.map(e => ({
@@ -64,10 +69,8 @@ export function advanceMarketEvents(state: GameState): GameState {
   activeEvents = activeEvents.filter(e => e.weeksRemaining > 0);
   
   for (const exp of expired) {
-    newHeadlines.unshift({
-      id: crypto.randomUUID(),
-      week: state.week,
-      category: 'market' as const,
+    impact.newHeadlines!.push({
+      category: 'market',
       text: `Market Normalizes: The ${exp.name} has finally ended.`
     });
   }
@@ -82,23 +85,13 @@ export function advanceMarketEvents(state: GameState): GameState {
     };
     
     activeEvents.push(newEvent);
-    newHeadlines.unshift({
-      id: crypto.randomUUID(),
-      week: state.week,
-      category: 'market' as const,
+    impact.newHeadlines!.push({
+      category: 'market',
       text: `MAJOR INDUSTRY EVENT: ${newEvent.name} - ${newEvent.description}`
     });
   }
   
-  return {
-    ...state,
-    market: {
-      ...state.market,
-      activeMarketEvents: activeEvents
-    },
-    industry: {
-      ...state.industry,
-      headlines: newHeadlines.slice(0, 50)
-    }
-  };
+  impact.newMarketEvents = activeEvents;
+  return impact;
 }
+

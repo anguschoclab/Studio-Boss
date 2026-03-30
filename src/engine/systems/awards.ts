@@ -60,17 +60,17 @@ export function launchAwardsCampaign(state: GameState, projectId: string, budget
   const newStrength = Math.min(100, project.awardsProfile.campaignStrength + boost);
 
   return {
-    cashDelta: -budget,
+    cashChange: -budget,
     projectUpdates: [{
       projectId,
-      updates: {
+      update: {
         awardsProfile: {
           ...project.awardsProfile,
           campaignStrength: newStrength
         }
       }
     }],
-    headlines: [{
+    newHeadlines: [{
       category: 'awards',
       text: `Studio launches massive FYC campaign for "${project.title}".`
     }]
@@ -80,9 +80,9 @@ export function launchAwardsCampaign(state: GameState, projectId: string, budget
 export function runAwardsCeremony(state: GameState, currentWeek: number, year: number): StateImpact {
   const impact: StateImpact = {
     newAwards: [],
-    prestigeDelta: 0,
-    headlines: [],
-    notifications: [],
+    prestigeChange: 0,
+    newHeadlines: [],
+    uiNotifications: [],
     newsEvents: []
   };
 
@@ -144,8 +144,8 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
         status: 'won',
         year
       });
-      impact.prestigeDelta! += 10;
-      impact.notifications!.push(`🏆 "${bestProject.title}" won ${config.category} at the ${config.body}!`);
+      impact.prestigeChange! += 10;
+      impact.uiNotifications!.push(`🏆 "${bestProject.title}" won ${config.category} at the ${config.body}!`);
       impact.newsEvents!.push({
         type: 'AWARD',
         headline: `${bestProject.title} Wins ${config.category}!`,
@@ -162,8 +162,8 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
         status: 'nominated',
         year
       });
-      impact.prestigeDelta! += 2;
-      impact.notifications!.push(`⭐ "${bestProject.title}" was nominated for ${config.category} at the ${config.body}.`);
+      impact.prestigeChange! += 2;
+      impact.uiNotifications!.push(`⭐ "${bestProject.title}" was nominated for ${config.category} at the ${config.body}.`);
     }
   }
 
@@ -172,9 +172,9 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
 
 export function processRazzies(state: GameState, week: number): StateImpact {
   const impact: StateImpact = {
-    notifications: [],
-    prestigeDelta: 0,
-    headlines: [],
+    uiNotifications: [],
+    prestigeChange: 0,
+    newHeadlines: [],
     newsEvents: [],
     projectUpdates: [],
     talentUpdates: []
@@ -192,8 +192,8 @@ export function processRazzies(state: GameState, week: number): StateImpact {
     (p.reviewScore! < worst.reviewScore!) ? p : worst
   );
 
-  impact.notifications!.push(`"${worstPicture.title}" has 'won' Worst Picture at The Razzies! A catastrophic failure.`);
-  impact.headlines!.push({
+  impact.uiNotifications!.push(`"${worstPicture.title}" has 'won' Worst Picture at The Razzies! A catastrophic failure.`);
+  impact.newHeadlines!.push({
     category: 'awards', // Category should exist in HeadlineCategory
     text: `The Razzies Nominees Announced! "${worstPicture.title}" sweeps the board with a historic Worst Picture win.`
   });
@@ -203,15 +203,13 @@ export function processRazzies(state: GameState, week: number): StateImpact {
     description: `The Golden Raspberry Awards have spoken, and "${worstPicture.title}" is officially the worst film of the year.`,
     impact: '-10 Prestige'
   });
-  impact.prestigeDelta = -10;
+  impact.prestigeChange = -10;
 
   // Cult Classic logic
   const isAbsurd = worstPicture.genre === 'Drama' || (worstPicture.flavor && worstPicture.flavor.toLowerCase().match(/absurd|ridiculous|bizarre|insane/));
   if (isAbsurd || secureRandom() > 0.5) {
-     impact.projectUpdates!.push({
-       projectId: worstPicture.id,
-       updates: { isCultClassic: true }
-     });
+     impact.cultClassicProjectIds = impact.cultClassicProjectIds || [];
+     impact.cultClassicProjectIds.push(worstPicture.id);
   }
 
   // Worst Lead logic
@@ -233,16 +231,15 @@ export function processRazzies(state: GameState, week: number): StateImpact {
   }
 
   if (worstLeadId && worstLeadName) {
-     impact.talentUpdates!.push({
-       talentId: worstLeadId,
-       updates: { hasRazzie: true }
-     });
-     impact.notifications!.push(`${worstLeadName} won Worst Lead for "${worstPicture.title}", absolutely devastating their ego.`);
+     impact.razzieWinnerTalents = impact.razzieWinnerTalents || [];
+     impact.razzieWinnerTalents.push(worstLeadId);
+     
+     impact.uiNotifications!.push(`${worstLeadName} won Worst Lead for "${worstPicture.title}", absolutely devastating their ego.`);
      
      // Potential crisis for the actor
      impact.projectUpdates!.push({
        projectId: worstPicture.id,
-       updates: {
+       update: {
          activeCrisis: {
            description: `The Razzies have destroyed ${worstLeadName}'s ego. They are having a meltdown on set of their next project, or refusing to promote this one.`,
            resolved: false,

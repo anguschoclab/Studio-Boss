@@ -1,12 +1,8 @@
 import { GameState, TalentProfile, Project, Contract, Award, Opportunity } from '@/engine/types';
+import { StateImpact } from '../types/state.types';
 import { generateOpportunity } from '../generators/opportunities';
 import { clamp, secureRandom } from '../utils';
 import { applyAwardBoostsToTalent } from './talentStats';
-
-export interface TalentAdvanceResult {
-  updatedOpportunities: Opportunity[];
-  events: string[];
-}
 
 /**
  * TalentSystem encapsulates all logic related to talent lifecycle, 
@@ -16,8 +12,12 @@ export class TalentSystem {
   /**
    * Advances the talent-related aspects of the game world (weekly tick).
    */
-  static advance(state: GameState): TalentAdvanceResult {
-    const events: string[] = [];
+  static advance(state: GameState): StateImpact {
+    const impact: StateImpact = {
+      newOpportunities: [],
+      uiNotifications: []
+    };
+    
     const currentOpportunities = state.market.opportunities || [];
     const updatedOpportunities: Opportunity[] = [];
 
@@ -34,12 +34,11 @@ export class TalentSystem {
     const oppTitles = new Set(updatedOpportunities.map(o => o.title));
 
     // 2. Market Generation Logic
-    // Logic for generating new talent-driven opportunities
     const tryAddOpp = (opp: Opportunity, message?: string) => {
       if (!oppTitles.has(opp.title)) {
         updatedOpportunities.push(opp);
         oppTitles.add(opp.title);
-        if (message) events.push(message);
+        if (message) impact.uiNotifications!.push(message);
         return true;
       }
       return false;
@@ -77,8 +76,10 @@ export class TalentSystem {
       tryAddOpp(generateOpportunity());
     }
 
-    return { updatedOpportunities, events };
+    impact.newOpportunities = updatedOpportunities;
+    return impact;
   }
+
 
   /**
    * Updates talent stats based on project performance and awards.

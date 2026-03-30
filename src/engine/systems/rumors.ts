@@ -1,25 +1,26 @@
 import { GameState, Rumor } from '@/engine/types';
+import { StateImpact } from '../types/state.types';
 import { pick, randRange, secureRandom } from '../utils';
 
-export function advanceRumors(state: GameState): GameState {
+export function advanceRumors(state: GameState): StateImpact {
+  const impact: StateImpact = {
+    newRumors: [],
+    newHeadlines: []
+  };
+
   let currentRumors = state.industry.rumors || [];
-  const newHeadlines = [...state.industry.headlines];
   
   // Resolve rumors that are due
   currentRumors = currentRumors.map(r => {
     if (!r.resolved && state.week >= (r.resolutionWeek || state.week)) {
       if (r.truthful) {
-        newHeadlines.unshift({
-          id: crypto.randomUUID(),
-          week: state.week,
-          category: 'rumor' as const,
+        impact.newHeadlines!.push({
+          category: 'rumor',
           text: `CONFIRMED: ${r.text}`
         });
       } else {
-        newHeadlines.unshift({
-          id: crypto.randomUUID(),
-          week: state.week,
-          category: 'rumor' as const,
+        impact.newHeadlines!.push({
+          category: 'rumor',
           text: `DEBUNKED: Previous rumors regarding ${r.text.toLowerCase()} turn out to be false.`
         });
       }
@@ -76,20 +77,13 @@ export function advanceRumors(state: GameState): GameState {
     
     currentRumors.push(rumor);
     
-    newHeadlines.unshift({
-      id: crypto.randomUUID(),
-      week: state.week,
-      category: 'rumor' as const,
+    impact.newHeadlines!.push({
+      category: 'rumor',
       text: `RUMOR: ${text}`
     });
   }
   
-  return {
-    ...state,
-    industry: {
-      ...state.industry,
-      rumors: currentRumors,
-      headlines: newHeadlines.slice(0, 50)
-    }
-  };
+  impact.newRumors = currentRumors;
+  return impact;
 }
+

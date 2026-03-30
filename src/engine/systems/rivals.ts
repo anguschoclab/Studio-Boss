@@ -1,4 +1,5 @@
 import { RivalStudio, GameState, TalentProfile } from '@/engine/types';
+import { StateImpact } from '../types/state.types';
 import { clamp, pick, secureRandom } from '../utils';
 
 const INDIE_ACTIVITIES = [
@@ -37,63 +38,66 @@ export function rivalPoachTalent(rival: RivalStudio, talentPool: TalentProfile[]
   return null;
 }
 
-export function updateRival(rival: RivalStudio, state?: GameState): RivalStudio {
-  const r = { ...rival };
+export function updateRival(rival: RivalStudio): Partial<RivalStudio> {
+  const update: Partial<RivalStudio> = {};
   
   // Natural fluctuation
-  r.strength = clamp(r.strength + (secureRandom() * 6 - 3), 20, 100);
+  update.strength = clamp(rival.strength + (secureRandom() * 6 - 3), 20, 100);
   
   // Strategy driven behavior
-  if (r.archetype === 'major') {
-    r.cash += (secureRandom() * 40_000_000 - 10_000_000); // Higher variance, more revenue
-    if (secureRandom() < 0.25) r.recentActivity = pick(MAJOR_ACTIVITIES);
-    r.projectCount = Math.max(2, r.projectCount + (secureRandom() < 0.6 ? 1 : 0));
-    r.strategy = 'acquirer';
-  } else if (r.archetype === 'indie') {
-    r.cash += (secureRandom() * 10_000_000 - 4_000_000); // Lower variance, steady
-    if (secureRandom() < 0.25) r.recentActivity = pick(INDIE_ACTIVITIES);
-    if (secureRandom() < 0.1) r.projectCount = Math.max(1, r.projectCount + 1);
-    r.strategy = 'prestige_chaser';
+  if (rival.archetype === 'major') {
+    update.cash = rival.cash + (secureRandom() * 40_000_000 - 10_000_000); 
+    if (secureRandom() < 0.25) update.recentActivity = pick(MAJOR_ACTIVITIES);
+    update.projectCount = Math.max(2, rival.projectCount + (secureRandom() < 0.6 ? 1 : 0));
+    update.strategy = 'acquirer';
+  } else if (rival.archetype === 'indie') {
+    update.cash = rival.cash + (secureRandom() * 10_000_000 - 4_000_000);
+    if (secureRandom() < 0.25) update.recentActivity = pick(INDIE_ACTIVITIES);
+    if (secureRandom() < 0.1) update.projectCount = Math.max(1, rival.projectCount + 1);
+    update.strategy = 'prestige_chaser';
   } else {
     // mid-tier
-    r.cash += (secureRandom() * 20_000_000 - 5_000_000);
-    if (secureRandom() < 0.25) r.recentActivity = pick(MID_ACTIVITIES);
-    if (secureRandom() < 0.2) r.projectCount = Math.max(1, r.projectCount + 1);
-    r.strategy = 'genre_specialist';
+    update.cash = rival.cash + (secureRandom() * 20_000_000 - 5_000_000);
+    if (secureRandom() < 0.25) update.recentActivity = pick(MID_ACTIVITIES);
+    if (secureRandom() < 0.2) update.projectCount = Math.max(1, rival.projectCount + 1);
+    update.strategy = 'genre_specialist';
   }
   
   // Check for M&A vulnerability
-  if (r.cash < 0 && r.strength < 40) {
-    r.isAcquirable = true;
-    r.recentActivity = 'Actively seeking a buyer amid cash crunch.';
+  const finalCash = update.cash !== undefined ? update.cash : rival.cash;
+  const finalStrength = update.strength !== undefined ? update.strength : rival.strength;
+  
+  if (finalCash < 0 && finalStrength < 40) {
+    update.isAcquirable = true;
+    update.recentActivity = 'Actively seeking a buyer amid cash crunch.';
   } else {
-    r.isAcquirable = false;
+    update.isAcquirable = false;
   }
   
-  return r;
+  return update;
 }
 
-export interface RivalAdvanceResult {
-  updatedRivals: RivalStudio[];
-  newsEvents: Omit<import('../types').NewsEvent, 'id' | 'week'>[];
-}
-
-export function advanceRivals(
-  state: GameState
-): RivalAdvanceResult {
-  const updatedRivals: RivalStudio[] = [];
-  const newsEvents: Omit<import('../types').NewsEvent, 'id' | 'week'>[] = [];
+export function advanceRivals(state: GameState): StateImpact {
+  const impact: StateImpact = {
+    rivalUpdates: [],
+    newsEvents: []
+  };
   
   for (let i = 0; i < state.industry.rivals.length; i++) {
-    const r = updateRival(state.industry.rivals[i], state);
-    updatedRivals.push(r);
+    const rival = state.industry.rivals[i];
+    const update = updateRival(rival);
+    
+    impact.rivalUpdates!.push({
+      rivalId: rival.id,
+      update
+    });
     
     // Log major rival events
-    if (r.isAcquirable && !state.industry.rivals[i].isAcquirable) {
-      newsEvents.push({
+    if (update.isAcquirable && !rival.isAcquirable) {
+      impact.newsEvents!.push({
         type: 'RIVAL',
-        headline: `${r.name} Vulnerable to Takeover!`,
-        description: `${r.name} has hit a critical cash shortage. Strategy: ${r.recentActivity}`,
+        headline: `${rival.name} Vulnerable to Takeover!`,
+        description: `${rival.name} has hit a critical cash shortage. Strategy: ${update.recentActivity || rival.recentActivity}`,
         impact: 'Available for acquisition'
       });
     }
@@ -103,7 +107,7 @@ export function advanceRivals(
   for (const rival of state.industry.rivals) {
      const poakMsg = rivalPoachTalent(rival, state.industry.talentPool);
      if (poakMsg) {
-       newsEvents.push({
+       impact.newsEvents!.push({
          type: 'RIVAL',
          headline: `Talent Poached by ${rival.name}`,
          description: poakMsg,
@@ -112,8 +116,6 @@ export function advanceRivals(
      }
   }
 
-  return {
-    updatedRivals,
-    newsEvents
-  };
+  return impact;
 }
+

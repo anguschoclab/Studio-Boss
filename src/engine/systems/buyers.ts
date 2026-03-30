@@ -1,4 +1,5 @@
 import { Buyer, MandateType, Project, ProjectContractType } from '@/engine/types';
+import { StateImpact } from '../types/state.types';
 import { pick, randRange, secureRandom } from '../utils';
 
 const MANDATE_TYPES: MandateType[] = [
@@ -13,11 +14,13 @@ for (let i = 0; i < MANDATE_TYPES.length; i++) {
   AVAILABLE_MANDATES.set(type, MANDATE_TYPES.filter(m => m !== type));
 }
 
-export function updateBuyers(buyers: Buyer[], currentWeek: number): { updatedBuyers: Buyer[]; newHeadlines: string[] } {
-  const updatedBuyers = [...buyers];
-  const newHeadlines: string[] = [];
+export function updateBuyers(buyers: Buyer[], currentWeek: number): StateImpact {
+  const impact: StateImpact = {
+    buyerUpdates: [],
+    newHeadlines: []
+  };
 
-  updatedBuyers.forEach((buyer, index) => {
+  buyers.forEach((buyer) => {
     // If mandate expired or random 5% chance to shift early
     if (!buyer.currentMandate || buyer.currentMandate.activeUntilWeek <= currentWeek || secureRandom() < 0.05) {
       const currentType = buyer.currentMandate?.type || 'none';
@@ -25,13 +28,15 @@ export function updateBuyers(buyers: Buyer[], currentWeek: number): { updatedBuy
       const newMandateType = pick(availableTypes);
       const duration = Math.floor(randRange(12, 36));
 
-      updatedBuyers[index] = {
-        ...buyer,
-        currentMandate: {
-          type: newMandateType,
-          activeUntilWeek: currentWeek + duration,
+      impact.buyerUpdates!.push({
+        buyerId: buyer.id,
+        update: {
+          currentMandate: {
+            type: newMandateType,
+            activeUntilWeek: currentWeek + duration,
+          }
         }
-      };
+      });
 
       let headlineText = "";
       switch (newMandateType) {
@@ -54,14 +59,19 @@ export function updateBuyers(buyers: Buyer[], currentWeek: number): { updatedBuy
           headlineText = `Awards chase: ${buyer.name} announces a massive fund specifically for prestige projects.`;
           break;
       }
-      if (secureRandom() < 0.6) { // Don't spam headlines every single shift
-        newHeadlines.push(headlineText);
+      
+      if (headlineText && secureRandom() < 0.6) { // Don't spam headlines every single shift
+        impact.newHeadlines!.push({
+          category: 'market',
+          text: headlineText
+        });
       }
     }
   });
 
-  return { updatedBuyers, newHeadlines };
+  return impact;
 }
+
 
 export function calculateFitScore(project: Project, buyer: Buyer, currentWeek: number = 0, allProjects: Project[] = []): number {
   let score = 50; // Base score

@@ -1,6 +1,6 @@
 import { TalentProfile, Family, AccessLevel, TalentRole, Agent, Agency } from '@/engine/types';
 import { pick, randRange, secureRandom } from '../utils';
-import { LAST_NAMES, MALE_FIRST_NAMES, FEMALE_FIRST_NAMES } from './names';
+import { LAST_NAMES, MALE_FIRST_NAMES, FEMALE_FIRST_NAMES } from '../data/names.data';
 
 const FAMOUS_LAST_NAMES = [
   'Coppola', 'Barrymore', 'Fonda', 'Huston', 'Sheen', 'Baldwin', 'Sutherland', 'Bridges', 'Redgrave', 'Skarsgård',

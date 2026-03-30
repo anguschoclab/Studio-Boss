@@ -1,5 +1,5 @@
 import { Project, ActiveCrisis, GameState } from '@/engine/types';
-import { pick } from '../utils';
+import { pick, secureRandom } from '../utils';
 import { StateImpact } from '../types/state.types';
 import { CRISIS_POOLS } from '../data/crises.data';
 
@@ -17,11 +17,20 @@ export function generateCrisis(project: Project): StateImpact | null {
   return {
     projectUpdates: [{
       projectId: project.id,
-      updates: { activeCrisis: crisis }
+      update: { activeCrisis: crisis }
     }],
-    notifications: [`CRISIS: "${project.title}" - ${crisis.description}`]
+    uiNotifications: [`CRISIS: "${project.title}" - ${crisis.description}`]
   };
 }
+
+export function checkAndTriggerCrisis(project: Project): StateImpact | null {
+  // 3% base chance of a production crisis per week
+  if (secureRandom() < 0.03) {
+    return generateCrisis(project);
+  }
+  return null;
+}
+
 
 export function resolveCrisis(state: GameState, projectId: string, optionIndex: number): StateImpact {
   const project = state.studio.internal.projects.find(p => p.id === projectId);
@@ -33,11 +42,11 @@ export function resolveCrisis(state: GameState, projectId: string, optionIndex: 
   if (!option) return {};
 
   const impact: StateImpact = {
-    cashDelta: option.cashPenalty ? -option.cashPenalty : 0,
-    prestigeDelta: option.reputationPenalty ? -option.reputationPenalty : 0,
+    cashChange: option.cashPenalty ? -option.cashPenalty : 0,
+    prestigeChange: option.reputationPenalty ? -option.reputationPenalty : 0,
     projectUpdates: [],
     talentUpdates: [],
-    headlines: [],
+    newHeadlines: [],
     newsEvents: []
   };
 
@@ -58,17 +67,17 @@ export function resolveCrisis(state: GameState, projectId: string, optionIndex: 
 
   impact.projectUpdates!.push({
     projectId,
-    updates: projectUpdate
+    update: projectUpdate
   });
 
   if (option.removeTalentId) {
-    impact.contractsToRemove = [{
+    impact.removeContracts = [{
       projectId,
       talentId: option.removeTalentId
     }];
   }
 
-  impact.headlines!.push({
+  impact.newHeadlines!.push({
     category: 'general',
     text: `Crisis resolved for "${project.title}": ${option.text}`
   });

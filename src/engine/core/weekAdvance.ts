@@ -3,57 +3,33 @@ import { ALL_GENRES } from '../systems/trends';
 import { secureRandom } from '../utils';
 import { advanceIPRights } from '../systems/ipRetention';
 import { advanceDeals } from '../systems/deals';
-import { processProduction, WeeklyChanges as ProductionWeeklyChanges } from '../systems/processors/processProduction';
-import { processFinance, WeeklyChanges as FinanceWeeklyChanges } from '../systems/processors/processFinance';
-import { processWorldEvents, WeeklyChanges as WorldWeeklyChanges } from '../systems/processors/processWorldEvents';
-import { secureRandom } from '../utils';
-
-// Consolidated WeeklyChanges interface for the orchestrator
-export interface WeeklyChanges extends ProductionWeeklyChanges, FinanceWeeklyChanges, WorldWeeklyChanges {
-  projectUpdates: string[];
-  events: string[];
-  newHeadlines: Headline[];
-  costs: number;
-  revenue: number;
-  newsEvents: Omit<NewsEvent, 'id' | 'week'>[];
-}
-
-const initializeWeeklyChanges = (): WeeklyChanges => ({
-  projectUpdates: [],
-  events: [],
-  newHeadlines: [],
-  costs: 0,
-  revenue: 0,
-  newsEvents: [],
-});
+import { processProduction } from '../systems/processors/processProduction';
+import { processFinance } from '../systems/processors/processFinance';
+import { processWorldEvents } from '../systems/processors/processWorldEvents';
+import { applyStateImpact } from '@/store/storeUtils';
+import { mergeImpacts } from '../utils/impactUtils';
+import { StateImpact } from '../types/state.types';
 
 const finalizeWeek = (
   state: GameState,
-  weeklyChanges: WeeklyChanges,
+  mergedImpact: StateImpact,
   originalState: GameState
 ): { newState: GameState; summary: WeekSummary } => {
-  const nextWeek = originalState.week + 1;
-
-  const nextNewsEvents = new Array(weeklyChanges.newsEvents.length);
-  for (let i = 0; i < weeklyChanges.newsEvents.length; i++) {
-    nextNewsEvents[i] = {
-      ...weeklyChanges.newsEvents[i],
-      id: `ne-${crypto.randomUUID()}`,
-      week: nextWeek
-    };
-  }
+  const nextWeek = state.week; // Already advanced in newState? No, let's be careful.
+  // Actually, we usually advance week number at the very end. 
+  // Let's assume 'state' passed here is the result of all impacts, and we'll increment week now.
 
   const summary: WeekSummary = {
     fromWeek: originalState.week,
-    toWeek: nextWeek,
+    toWeek: originalState.week + 1,
     cashBefore: originalState.cash,
     cashAfter: state.cash,
-    totalRevenue: weeklyChanges.revenue,
-    totalCosts: weeklyChanges.costs,
-    projectUpdates: weeklyChanges.projectUpdates,
-    newHeadlines: weeklyChanges.newHeadlines,
-    events: weeklyChanges.events,
-    newsEvents: nextNewsEvents
+    totalRevenue: (mergedImpact.cashChange || 0) > 0 ? (mergedImpact.cashChange || 0) : 0, // Simplified
+    totalCosts: (mergedImpact.cashChange || 0) < 0 ? -(mergedImpact.cashChange || 0) : 0, // Simplified
+    projectUpdates: mergedImpact.uiNotifications || [], // Using notifications as the human-readable project log
+    newHeadlines: (mergedImpact.newHeadlines || []) as Headline[],
+    events: mergedImpact.uiNotifications || [],
+    newsEvents: (mergedImpact.newsEvents || []) as NewsEvent[]
   };
 
   // Update UI Data Vis Extensions (Epic 4)
@@ -71,8 +47,8 @@ const finalizeWeek = (
 
   const nextFinance = {
     bankBalance: state.cash,
-    yearToDateRevenue: (state.finance?.yearToDateRevenue || 0) + weeklyChanges.revenue,
-    yearToDateExpenses: (state.finance?.yearToDateExpenses || 0) + weeklyChanges.costs,
+    yearToDateRevenue: (state.finance?.yearToDateRevenue || 0) + (summary.totalRevenue || 0),
+    yearToDateExpenses: (state.finance?.yearToDateExpenses || 0) + (summary.totalCosts || 0),
   };
 
   // Create Snapshot for history
@@ -99,18 +75,11 @@ const finalizeWeek = (
   };
 
   const oldHistory = state.history || [];
-  const startIdx = oldHistory.length >= 52 ? oldHistory.length - 51 : 0;
-  const newLength = Math.min(oldHistory.length + 1, 52);
-  const nextHistory = new Array(newLength);
-  let destIdx = 0;
-  for (let i = startIdx; i < oldHistory.length; i++) {
-    nextHistory[destIdx++] = oldHistory[i];
-  }
-  nextHistory[destIdx] = currentSnapshot; // Keep last year of history
+  const nextHistory = [...oldHistory.slice(oldHistory.length >= 52 ? 1 : 0), currentSnapshot];
 
   const newState: GameState = {
     ...state,
-    week: nextWeek,
+    week: originalState.week + 1,
     culture: { genrePopularity },
     finance: nextFinance,
     history: nextHistory,
@@ -122,48 +91,57 @@ const finalizeWeek = (
 /**
  * The Weekly Simulation Orchestrator
  * This function coordinates the various sub-processes that occur every game week.
+ * Now implements a sequential StateImpact pipeline for determinism.
  */
 export function advanceWeek(state: GameState): { newState: GameState; summary: WeekSummary } {
-  const weeklyChanges = initializeWeeklyChanges();
+  const impacts: StateImpact[] = [];
 
-  // 1. Process Projects (Advancement, Quality, Completion)
-  let nextState = processProduction(state, weeklyChanges);
+  // 1. Process World Events (Independent, usually happens "during" the week)
+  const worldImpact = processWorldEvents(state);
+  impacts.push(worldImpact);
+  let workingState = applyStateImpact(state, worldImpact);
 
-  // 2. Resolve Finances (Burn, Revenue, Cash Flow)
-  nextState = processFinance(nextState, weeklyChanges);
+  // 2. Process Projects (Advancement, Quality, Completion)
+  const productionImpact = processProduction(workingState);
+  impacts.push(productionImpact);
+  workingState = applyStateImpact(workingState, productionImpact);
 
-  // 3. Simulate World (Rivals, Talent, Market, Awards)
-  nextState = processWorldEvents(nextState, weeklyChanges);
+  // 3. Resolve Finances (Burn, Revenue, Cash Flow)
+  const financeImpact = processFinance(workingState);
+  impacts.push(financeImpact);
+  workingState = applyStateImpact(workingState, financeImpact);
 
-  // 4. Rights & Deals (Sprint E)
-  const { projects: updatedProjects, messages: ipMessages } = advanceIPRights(nextState.studio.internal.projects, nextState.week + 1);
-
-  const finalInternal = {
-    ...nextState.studio.internal,
-    projects: updatedProjects,
+  // 4. Rights & Deals (Remaining Logic)
+  const { projects: updatedProjects, messages: ipMessages } = advanceIPRights(workingState.studio.internal.projects, workingState.week + 1);
+  const ipImpact: StateImpact = {
+      projectUpdates: updatedProjects.map(p => ({ projectId: p.id, update: p })),
+      uiNotifications: ipMessages
   };
-
-  for (let i = 0; i < ipMessages.length; i++) {
-    weeklyChanges.events.push(ipMessages[i]);
-  }
+  impacts.push(ipImpact);
+  workingState = applyStateImpact(workingState, ipImpact);
   
-  if (nextState.studio.internal.firstLookDeals) {
-    const activeDeals = advanceDeals(nextState.studio.internal.firstLookDeals);
-    const expiredDeals = nextState.studio.internal.firstLookDeals.length - activeDeals.length;
-    if (expiredDeals > 0) {
-      weeklyChanges.events.push(`${expiredDeals} first-look talent deal(s) expired this week.`);
-    }
-    finalInternal.firstLookDeals = activeDeals;
+  if (workingState.studio.internal.firstLookDeals) {
+    const activeDeals = advanceDeals(workingState.studio.internal.firstLookDeals);
+    const expiredDeals = workingState.studio.internal.firstLookDeals.length - activeDeals.length;
+    const dealImpact: StateImpact = {
+        uiNotifications: expiredDeals > 0 ? [`${expiredDeals} first-look talent deal(s) expired this week.`] : []
+    };
+    // Note: Manual assignment for deals until we have a field for it in StateImpact
+    workingState = {
+        ...workingState,
+        studio: {
+            ...workingState.studio,
+            internal: {
+                ...workingState.studio.internal,
+                firstLookDeals: activeDeals
+            }
+        }
+    };
+    impacts.push(dealImpact);
   }
-
-  nextState = {
-    ...nextState,
-    studio: {
-      ...nextState.studio,
-      internal: finalInternal
-    }
-  };
 
   // 5. Finalize
-  return finalizeWeek(nextState, weeklyChanges, state);
+  const totalImpact = mergeImpacts(...impacts);
+  return finalizeWeek(workingState, totalImpact, state);
 }
+
