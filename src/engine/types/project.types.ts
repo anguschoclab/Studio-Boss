@@ -82,7 +82,27 @@ export type TvFormatKey =
   | 'sci_fi_noir'
   | 'holiday_miniseries'
   | 'vr_immersive_show'
-  | 'sports_soap_opera';
+  | 'sports_soap_opera'
+  | 'teen_mystery'
+  | 'scifi_procedural'
+  | 'spy_comedy'
+  | 'sports_anime'
+  | 'historical_romance'
+  | 'political_satire'
+  | 'superhero_parody'
+  | 'gothic_horror'
+  | 'musical_soap'
+  | 'true_crime_spoof'
+  | 'action_comedy'
+  | 'workplace_thriller'
+  | 'teen_supernatural_comedy'
+  | 'western_procedural'
+  | 'space_western'
+  | 'k_drama_adaptation'
+  | 'live_action_anime'
+  | 'neo_noir_procedural'
+  | 'multiverse_anthology'
+  | 'standup_comedy_series';
 
 export type UnscriptedFormatKey =
   | 'competition'
@@ -160,7 +180,27 @@ export type UnscriptedFormatKey =
   | 'crypto_scam_investigation'
   | 'celebrity_house_flip'
   | 'toddler_beauty_pageant_reunion'
-  | 'doomsday_preppers_elite';
+  | 'doomsday_preppers_elite'
+  | 'extreme_cooking'
+  | 'dating_competition'
+  | 'celebrity_survival_challenge'
+  | 'poly_dating_drama'
+  | 'billionaire_lifestyle'
+  | 'startup_pitch_wars'
+  | 'prank_show_escalation'
+  | 'makeover_intervention_extreme'
+  | 'hidden_treasure_race'
+  | 'celebrity_ghost_hunting'
+  | 'true_crime_live_investigation'
+  | 'reality_courtroom'
+  | 'extreme_cheap_travel_show'
+  | 'sports_wives_drama'
+  | 'tattoo_coverup_disasters'
+  | 'influencer_boxing_league'
+  | 'virtual_reality_dating'
+  | 'extreme_job_swap'
+  | 'celebrity_farm_survival'
+  | 'niche_hobby_competition';
 
 export type ReleaseModelKey = 'weekly' | 'binge' | 'split';
 export type ProjectContractType = 'upfront' | 'deficit' | 'standard';
@@ -209,7 +249,8 @@ export type AwardBody =
   | 'SXSW Film Festival'
   | 'Tribeca Film Festival'
   | 'Telluride Film Festival'
-  | 'Slamdance Film Festival';
+  | 'Slamdance Film Festival'
+  | 'The Razzies';
 
 export type AwardCategory =
   | 'Best Picture'

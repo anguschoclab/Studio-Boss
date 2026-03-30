@@ -1,0 +1,22 @@
+export const WORLD_EVENT_POOL = [
+  'Market analysts upgrade entertainment sector outlook.',
+  'A high-profile talent dispute makes industry headlines.',
+  'Streaming platform announces major content budget increase.',
+  'International box office sets new quarterly record.',
+  'Film festival announces lineup — buzz is building.',
+  'Regulators announce new content distribution guidelines.',
+  'A viral social media trend boosts genre film interest.',
+  'Nepotism debate dominates the weekly trades.',
+  'Sibling duo announces unexpected co-production.',
+  'Famous dynasty patriarch announces retirement.',
+  'Former child star attempts a serious prestige comeback.',
+  'Public family feud leaks during an awards press tour.',
+  'Major theater chain announces return of "Unlimited Popcorn" days.',
+  'A viral video essayist accidentally saves a mid-budget drama from obscurity.',
+  'Indie distributor reports record acquisition deals at Sundance.',
+  'The "Tomatoes" score for a major blockbuster becomes a national scandal.',
+  'Nostalgia bait prove highly effective in latest demographic tracking report.',
+  'A-list director reportedly shopping a 4-hour "dream project" around town.',
+  'Crypto crash wipes out secondary financing for dozens of indie projects.',
+  'Studio lot space at a premium as production volumes surge post-strike.'
+];

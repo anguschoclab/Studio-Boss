@@ -1,9 +1,17 @@
 import { Buyer, MandateType, Project, ProjectContractType } from '@/engine/types';
-import { pick, randRange } from '../utils';
+import { pick, randRange, secureRandom } from '../utils';
 
 const MANDATE_TYPES: MandateType[] = [
   'sci-fi', 'comedy', 'drama', 'budget_freeze', 'broad_appeal', 'prestige'
 ];
+
+// Pre-compute available mandate types per mandate to avoid O(N) array allocations in the loop
+const AVAILABLE_MANDATES = new Map<string, MandateType[]>();
+AVAILABLE_MANDATES.set('none', MANDATE_TYPES);
+for (let i = 0; i < MANDATE_TYPES.length; i++) {
+  const type = MANDATE_TYPES[i];
+  AVAILABLE_MANDATES.set(type, MANDATE_TYPES.filter(m => m !== type));
+}
 
 export function updateBuyers(buyers: Buyer[], currentWeek: number): { updatedBuyers: Buyer[]; newHeadlines: string[] } {
   const updatedBuyers = [...buyers];
@@ -11,8 +19,10 @@ export function updateBuyers(buyers: Buyer[], currentWeek: number): { updatedBuy
 
   updatedBuyers.forEach((buyer, index) => {
     // If mandate expired or random 5% chance to shift early
-    if (!buyer.currentMandate || buyer.currentMandate.activeUntilWeek <= currentWeek || Math.random() < 0.05) {
-      const newMandateType = pick(MANDATE_TYPES.filter(m => m !== buyer.currentMandate?.type));
+    if (!buyer.currentMandate || buyer.currentMandate.activeUntilWeek <= currentWeek || secureRandom() < 0.05) {
+      const currentType = buyer.currentMandate?.type || 'none';
+      const availableTypes = AVAILABLE_MANDATES.get(currentType) || MANDATE_TYPES;
+      const newMandateType = pick(availableTypes);
       const duration = Math.floor(randRange(12, 36));
 
       updatedBuyers[index] = {
@@ -44,7 +54,7 @@ export function updateBuyers(buyers: Buyer[], currentWeek: number): { updatedBuy
           headlineText = `Awards chase: ${buyer.name} announces a massive fund specifically for prestige projects.`;
           break;
       }
-      if (Math.random() < 0.6) { // Don't spam headlines every single shift
+      if (secureRandom() < 0.6) { // Don't spam headlines every single shift
         newHeadlines.push(headlineText);
       }
     }
@@ -77,9 +87,9 @@ export function calculateFitScore(project: Project, buyer: Buyer, currentWeek: n
   // New market saturation math: dynamic market trends
   // The Festival Buyer: Heavily penalize oversaturated tentpole genres (like Superhero) to force players to consider market conditions
   // If 5 superhero movies were released last year, buyers should heavily penalize new superhero pitches in the greenlight phase.
-  if (recentSimilarProjects.length >= 5 && project.genre === 'Superhero') {
-    saturationPenalty *= 2; // Doubling the penalty for oversaturated Superhero genre
-    saturationPenalty += 50; // Applying a massive flat penalty for chasing an exhausted superhero market
+  if (recentSimilarProjects.length >= 5 && project.genre.toLowerCase().includes('superhero')) {
+    saturationPenalty *= 3; // Tripling the penalty for oversaturated Superhero genre
+    saturationPenalty += 75; // Applying an even more massive flat penalty for chasing an exhausted superhero market
   }
 
   if (saturationPenalty > 0) {

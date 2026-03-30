@@ -41,19 +41,34 @@ function createMockState(projectCount: number, contractsPerProject: number): Gam
   return {
     week: 1,
     cash: 1000000,
-    studio: { name: 'Test Studio', archetype: 'indie', prestige: 50 },
-    projects,
-    contracts,
-    rivals: [],
-    headlines: [],
-    talentPool: [],
-    financeHistory: [],
-    awards: [],
-buyers: [],
-families: [],
-    opportunities: [],
-    agencies: [],
-    agents: [],
+    studio: {
+        name: 'Test Studio',
+        archetype: 'indie',
+        prestige: 50,
+        internal: {
+            projects,
+            contracts,
+            financeHistory: []
+        }
+    },
+    market: {
+        opportunities: [],
+        buyers: [],
+        trends: [],
+    },
+    industry: {
+        rivals: [],
+        headlines: [],
+        families: [],
+        agencies: [],
+        agents: [],
+        talentPool: [],
+        awards: [],
+        newsHistory: []
+    },
+    culture: { genrePopularity: {} },
+    finance: { bankBalance: 0, yearToDateRevenue: 0, yearToDateExpenses: 0 },
+    history: []
   };
 }
 

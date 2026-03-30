@@ -1,4 +1,6 @@
 import { GameState, Scandal, ScandalType } from '@/engine/types';
+import { secureRandom } from '../utils';
+
 
 /**
  * Randomly spawns a scandal for a talent in the pool based on their controversy risk.
@@ -19,18 +21,24 @@ export function generateScandals(state: GameState): {
     talentToProjectMap.set(c.talentId, c.projectId);
   }
   
+  // ⚡ Bolt: Replace O(N) Array.find with O(1) Map lookup
+  const projectTitleMap = new Map<string, string>();
+  for (const p of state.studio.internal.projects) {
+    projectTitleMap.set(p.id, p.title);
+  }
+
   for (const talent of state.industry.talentPool) {
     const risk = talent.controversyRisk || 5; 
-    if (Math.random() * 1000 < risk) {
+    if (secureRandom() * 1000 < risk) {
        const types: ScandalType[] = ['financial', 'personal', 'onset_behavior', 'legal', 'feud'];
-       const type = types[Math.floor(Math.random() * types.length)];
+       const type = types[Math.floor(secureRandom() * types.length)];
        
        const s: Scandal = {
          id: crypto.randomUUID(),
          talentId: talent.id,
-         severity: 20 + Math.floor(Math.random() * 80), // 20-100
+         severity: 20 + Math.floor(secureRandom() * 80), // 20-100
          type,
-         weeksRemaining: 4 + Math.floor(Math.random() * 8)
+         weeksRemaining: 4 + Math.floor(secureRandom() * 8)
        };
        newScandals.push(s);
        headlines.push({
@@ -42,10 +50,11 @@ export function generateScandals(state: GameState): {
 
        const projectId = talentToProjectMap.get(talent.id);
        if (projectId) {
+         const projectTitle = projectTitleMap.get(projectId) || 'Unknown Project';
          projectUpdates.push({
            projectId,
            crisis: {
-             description: `BREAKING NEWS: ${talent.name.toUpperCase()} has been involved in a massive ${type} scandal while working on "${state.studio.internal.projects.find(p => p.id === projectId)?.title}". The press is circling.`,
+             description: `BREAKING NEWS: ${talent.name.toUpperCase()} has been involved in a massive ${type} scandal while working on "${projectTitle}". The press is circling.`,
              resolved: false,
              severity: s.severity > 75 ? 'catastrophic' : 'high',
              options: [

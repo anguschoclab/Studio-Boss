@@ -28,7 +28,8 @@ export const GENRE_TAXONOMY: GenreCategory[] = [
       { id: 'satire', name: 'Satire' },
       { id: 'slapstick', name: 'Slapstick' },
       { id: 'dark_comedy', name: 'Dark Comedy' },
-      { id: 'sitcom', name: 'Sitcom' }
+      { id: 'sitcom', name: 'Sitcom' },
+      { id: 'ip_mashup', name: 'IP Mashup' }
     ]
   },
   {
@@ -51,7 +52,8 @@ export const GENRE_TAXONOMY: GenreCategory[] = [
       { id: 'paranormal', name: 'Paranormal' },
       { id: 'true_crime', name: 'True Crime' },
       { id: 'horror_standard', name: 'Horror' },
-      { id: 'thriller_standard', name: 'Thriller' }
+      { id: 'thriller_standard', name: 'Thriller' },
+      { id: 'elevated_horror', name: 'Elevated Horror' }
     ]
   },
   {
@@ -63,7 +65,8 @@ export const GENRE_TAXONOMY: GenreCategory[] = [
       { id: 'high_fantasy', name: 'High Fantasy' },
       { id: 'dystopian', name: 'Dystopian' },
       { id: 'scifi_standard', name: 'Sci-Fi' },
-      { id: 'fantasy_standard', name: 'Fantasy' }
+      { id: 'fantasy_standard', name: 'Fantasy' },
+      { id: 'multiverse', name: 'Multiverse' }
     ]
   },
   {
@@ -87,25 +90,29 @@ export const TARGET_AUDIENCES = [
 ] as const;
 
 export const CROSSOVER_AFFINITY: Record<string, string[]> = {
-  'Superhero': ['Action', 'Sci-Fi', 'Fantasy', 'Comedy', 'Animation'],
+  'Superhero': ['Action', 'Sci-Fi', 'Fantasy', 'Comedy', 'Animation', 'Crime', 'Horror'],
   'Action': ['Sci-Fi', 'Thriller', 'Crime', 'Superhero', 'Comedy'],
   'Sci-Fi': ['Action', 'Horror', 'Fantasy', 'Animation', 'Thriller'],
-  'Horror': ['Sci-Fi', 'Thriller', 'Comedy', 'Fantasy'],
+  'Horror': ['Sci-Fi', 'Thriller', 'Comedy', 'Fantasy', 'Documentary'],
   'Fantasy': ['Action', 'Romance', 'Animation', 'Sci-Fi'],
-  'Comedy': ['Romance', 'Action', 'Animation', 'Superhero', 'Musical'],
-  'Crime': ['Thriller', 'Drama', 'Action', 'Horror'],
+  'Comedy': ['Romance', 'Action', 'Animation', 'Superhero', 'Musical', 'Horror'],
+  'Crime': ['Thriller', 'Drama', 'Action', 'Horror', 'Documentary'],
   'Thriller': ['Horror', 'Crime', 'Sci-Fi', 'Drama', 'Action'],
   'Romance': ['Comedy', 'Drama', 'Musical', 'Fantasy'],
   'Animation': ['Comedy', 'Family', 'Musical', 'Fantasy', 'Sci-Fi', 'Superhero', 'Action'],
   'Drama': ['Romance', 'Crime', 'Thriller', 'Documentary'],
   'Musical': ['Romance', 'Comedy', 'Animation', 'Drama'],
-  'Documentary': ['Drama', 'Crime']
+  'Documentary': ['Drama', 'Crime', 'Horror'],
+  'Unscripted': ['Comedy', 'Documentary', 'Drama'],
+  'Multiverse': ['Superhero', 'Sci-Fi', 'Fantasy', 'Action', 'Animation', 'IP Mashup'],
+  'Elevated Horror': ['Horror', 'Thriller', 'Drama', 'Psychological Thriller'],
+  'IP Mashup': ['Comedy', 'Action', 'Animation', 'Superhero', 'Multiverse']
 };
 
 export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
-  'Superhero': 0.65,
-  'Action': 0.40,
-  'Sci-Fi': 0.35,
+  'Superhero': 0.80,
+  'Action': 0.50,
+  'Sci-Fi': 0.45,
   'Fantasy': 0.30,
   'Horror': 0.15,
   'Animation': 0.15,
@@ -116,4 +123,8 @@ export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
   'Documentary': 0.05,
   'Crime': 0.20,
   'Musical': 0.25,
+  'Unscripted': 0.30, // Reality/Unscripted can fatigue quickly if over-saturated
+  'Multiverse': 0.85, // Extremely high fatigue risk if overdone
+  'Elevated Horror': 0.20,
+  'IP Mashup': 0.70, // High burnout potential
 };

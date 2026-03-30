@@ -1,14 +1,32 @@
 import { GameState, SaveSlotMeta } from '@/engine/types';
+import { z } from 'zod';
 
 const SAVE_PREFIX = 'studioboss_save_';
 const SLOTS_KEY = 'studioboss_slots';
+
+const SaveSlotMetaSchema = z.object({
+  slot: z.number(),
+  studioName: z.string(),
+  archetype: z.enum(['major', 'mid-tier', 'indie']),
+  week: z.number(),
+  cash: z.number(),
+  timestamp: z.number(),
+});
+
+const SaveSlotsSchema = z.record(z.string().or(z.number()), SaveSlotMetaSchema);
 
 function loadSaveSlots(): Record<number, SaveSlotMeta> {
   let slots: Record<number, SaveSlotMeta> = {};
   try {
     const slotsData = localStorage.getItem(SLOTS_KEY);
     if (slotsData) {
-      slots = JSON.parse(slotsData);
+      const parsed = JSON.parse(slotsData);
+      const result = SaveSlotsSchema.safeParse(parsed);
+      if (result.success) {
+        slots = result.data;
+      } else {
+        console.error('Invalid save slots metadata format:', result.error);
+      }
     }
   } catch (e) {
     console.error('Failed to load save slots metadata', e);
@@ -37,11 +55,30 @@ export function saveGame(slot: number, state: GameState): void {
   }
 }
 
+const GameStatePartialSchema = z.object({
+  week: z.number(),
+  cash: z.number(),
+  studio: z.object({
+    name: z.string(),
+    archetype: z.enum(['major', 'mid-tier', 'indie']),
+    prestige: z.number(),
+  }).passthrough(),
+}).passthrough();
+
 export function loadGame(slot: number): GameState | null {
   try {
     const data = localStorage.getItem(`${SAVE_PREFIX}${slot}`);
     if (!data) return null;
-    return JSON.parse(data) as GameState;
+
+    const parsed = JSON.parse(data);
+    const result = GameStatePartialSchema.safeParse(parsed);
+
+    if (result.success) {
+      return parsed as GameState;
+    } else {
+      console.error('Invalid game state format:', result.error);
+      return null;
+    }
   } catch (e) {
     console.error('Failed to load game state', e);
     return null;

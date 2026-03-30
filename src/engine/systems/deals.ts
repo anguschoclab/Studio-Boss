@@ -1,4 +1,6 @@
 import { TalentProfile, GameState, Project, FirstLookDeal, Agency } from '@/engine/types';
+import { secureRandom } from '../utils';
+
 
 export function evaluateFirstLookDeal(talent: TalentProfile, state: GameState): boolean {
   // A simple AI to determine if talent accepts a first-look deal based on studio prestige vs talent prestige
@@ -19,7 +21,7 @@ export function evaluateFirstLookDeal(talent: TalentProfile, state: GameState): 
   // Clamp between 5 and 95
   acceptanceChance = Math.max(5, Math.min(95, acceptanceChance));
   
-  return Math.random() * 100 <= acceptanceChance;
+  return secureRandom() * 100 <= acceptanceChance;
 }
 
 export function offerFirstLookDeal(state: GameState, talentId: string, weeksRemaining: number, exclusivity: boolean = true): { deal: FirstLookDeal | null, update: string } {
@@ -46,9 +48,15 @@ export function offerFirstLookDeal(state: GameState, talentId: string, weeksRema
 }
 
 export function advanceDeals(deals: FirstLookDeal[]): FirstLookDeal[] {
-  return deals
-    .map(deal => ({ ...deal, weeksRemaining: deal.weeksRemaining - 1 }))
-    .filter(deal => deal.weeksRemaining > 0);
+  const result: FirstLookDeal[] = [];
+  for (let i = 0; i < deals.length; i++) {
+    const deal = deals[i];
+    const newWeeks = deal.weeksRemaining - 1;
+    if (newWeeks > 0) {
+      result.push({ ...deal, weeksRemaining: newWeeks });
+    }
+  }
+  return result;
 }
 
 export function packageProject(project: Project, talentIds?: string[], agency?: Agency): { packageScore: number, synergies: string[] } {

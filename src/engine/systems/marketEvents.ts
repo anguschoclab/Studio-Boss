@@ -1,5 +1,5 @@
 import { GameState, MarketEvent, MarketEventType } from '@/engine/types';
-import { pick, randRange } from '../utils';
+import { pick, randRange, secureRandom } from '../utils';
 
 const EVENT_TEMPLATES: Omit<MarketEvent, 'id' | 'weeksRemaining'>[] = [
   {
@@ -73,7 +73,7 @@ export function advanceMarketEvents(state: GameState): GameState {
   }
   
   // Chance to spawn new event if none active
-  if (activeEvents.length === 0 && Math.random() < 0.01) {
+  if (activeEvents.length === 0 && secureRandom() < 0.01) {
     const template = pick(EVENT_TEMPLATES);
     const newEvent: MarketEvent = {
       ...template,

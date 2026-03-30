@@ -193,4 +193,139 @@ describe('processProduction', () => {
 
      expect(result.industry.talentPool[0].prestige).toBe(60);
   });
+
+
+  it('computes average rival strength correctly', () => {
+    const state = getInitialState();
+    const project = createBaseProject('p1', 'production');
+    state.studio.internal.projects = [project];
+    state.industry.rivals = [
+      { id: 'r1', name: 'Rival 1', strength: 60, marketShare: 10, cash: 1000, prestige: 50, recentReleases: [], strategies: [], activeFranchises: [] },
+      { id: 'r2', name: 'Rival 2', strength: 40, marketShare: 10, cash: 1000, prestige: 50, recentReleases: [], strategies: [], activeFranchises: [] }
+    ];
+
+    vi.mocked(getTrendMultiplier).mockReturnValue(1.0);
+    vi.mocked(advanceProject).mockReturnValue({
+      project: { ...project, status: 'production' },
+      update: '',
+      talentUpdates: []
+    });
+    vi.mocked(checkAndTriggerCrisis).mockReturnValue(null);
+    vi.mocked(processDirectorDisputes).mockReturnValue({ newCrises: [], updates: [] });
+    vi.mocked(calculateBoxOfficeRanks).mockReturnValue(new Map());
+
+    const changes = getInitialWeeklyChanges();
+    const result = processProduction(state, changes);
+
+    expect(advanceProject).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      expect.anything(),
+      expect.anything(),
+      expect.anything(),
+      50, // Expected average rival strength: (60 + 40) / 2 = 50
+      expect.anything(),
+      expect.anything()
+    );
+  });
+
+  it('triggers a new crisis from a director dispute during production', () => {
+    const state = getInitialState();
+    const project = createBaseProject('p1', 'production');
+    state.studio.internal.projects = [project];
+
+    vi.mocked(getTrendMultiplier).mockReturnValue(1.0);
+    vi.mocked(advanceProject).mockReturnValue({
+      project: { ...project, status: 'production' },
+      update: '',
+      talentUpdates: []
+    });
+    vi.mocked(checkAndTriggerCrisis).mockReturnValue(null);
+    vi.mocked(processDirectorDisputes).mockReturnValue({
+      newCrises: [{ crisis: { description: 'Director dispute!', options: [], resolved: false, severity: 'high' }, penalty: 0 }],
+      updates: ['Director is unhappy!']
+    });
+    vi.mocked(calculateBoxOfficeRanks).mockReturnValue(new Map());
+
+    const changes = getInitialWeeklyChanges();
+    const result = processProduction(state, changes);
+
+    expect(result.studio.internal.projects[0].activeCrisis).toBeDefined();
+    expect(result.studio.internal.projects[0].activeCrisis?.description).toBe('Director dispute!');
+    expect(changes.projectUpdates).toContain('Director is unhappy!');
+  });
+
+  it('triggers a new crisis when project has a resolved crisis', () => {
+    const state = getInitialState();
+    const project = createBaseProject('p1', 'production');
+    project.activeCrisis = {
+      description: 'Old crisis', options: [], resolved: true, severity: 'low'
+    };
+    state.studio.internal.projects = [project];
+
+    vi.mocked(getTrendMultiplier).mockReturnValue(1.0);
+    vi.mocked(advanceProject).mockReturnValue({
+      project: { ...project },
+      update: '',
+      talentUpdates: []
+    });
+    vi.mocked(checkAndTriggerCrisis).mockReturnValue({
+      description: 'New crisis!', options: [], resolved: false, severity: 'high'
+    });
+    vi.mocked(processDirectorDisputes).mockReturnValue({ newCrises: [], updates: [] });
+    vi.mocked(calculateBoxOfficeRanks).mockReturnValue(new Map());
+
+    const changes = getInitialWeeklyChanges();
+    const result = processProduction(state, changes);
+
+    expect(result.studio.internal.projects[0].activeCrisis).toBeDefined();
+    expect(result.studio.internal.projects[0].activeCrisis?.description).toBe('New crisis!');
+    expect(changes.events).toContain('CRISIS: "Project p1" - New crisis!');
+  });
+
+  it('does not trigger a new crisis when checkAndTriggerCrisis returns undefined', () => {
+    const state = getInitialState();
+    const project = createBaseProject('p1', 'production');
+    state.studio.internal.projects = [project];
+
+    vi.mocked(getTrendMultiplier).mockReturnValue(1.0);
+    vi.mocked(advanceProject).mockReturnValue({
+      project: { ...project },
+      update: '',
+      talentUpdates: []
+    });
+    vi.mocked(checkAndTriggerCrisis).mockReturnValue(undefined);
+    vi.mocked(processDirectorDisputes).mockReturnValue({ newCrises: [], updates: [] });
+    vi.mocked(calculateBoxOfficeRanks).mockReturnValue(new Map());
+
+    const changes = getInitialWeeklyChanges();
+    const result = processProduction(state, changes);
+
+    expect(result.studio.internal.projects[0].activeCrisis).toBeUndefined();
+    expect(changes.events.length).toBe(0);
+  });
+
+  it('processes industry awards without throwing errors', () => {
+    const state = getInitialState();
+    const project = createBaseProject('p1', 'production');
+    state.studio.internal.projects = [project];
+    state.industry.awards = [
+      { id: 'a1', projectId: 'p1', year: 2024, category: 'Best Picture', recipientName: 'p1', awardName: 'Oscar' } as any
+    ];
+
+    vi.mocked(getTrendMultiplier).mockReturnValue(1.0);
+    vi.mocked(advanceProject).mockReturnValue({
+      project: { ...project },
+      update: '',
+      talentUpdates: []
+    });
+    vi.mocked(checkAndTriggerCrisis).mockReturnValue(undefined);
+    vi.mocked(processDirectorDisputes).mockReturnValue({ newCrises: [], updates: [] });
+    vi.mocked(calculateBoxOfficeRanks).mockReturnValue(new Map());
+
+    const changes = getInitialWeeklyChanges();
+    const result = processProduction(state, changes);
+
+    expect(result.studio.internal.projects[0].id).toBe('p1');
+  });
 });

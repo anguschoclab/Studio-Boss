@@ -10,10 +10,10 @@ import { getTrendMultiplier } from '../trends';
 export interface WeeklyChanges {
     projectUpdates: string[];
     events: string[];
-    newHeadlines: any[]; // Use any for now or types/engine.types.Headline
+    newHeadlines: import("@/engine/types").Headline[];
     costs: number;
     revenue: number;
-    newsEvents: any[];
+    newsEvents: { type: string; headline: string; description: string; impact: string }[];
 }
 
 export const processProduction = (
@@ -34,20 +34,19 @@ export const processProduction = (
     }
     const rivalAvgStrength = rivalStrengthSum / Math.max(1, state.industry.rivals.length);
 
+
+    const awardsByProject = new Map<string, typeof state.industry.awards>();
+    if (state.industry.awards) {
+        for (let i = 0; i < state.industry.awards.length; i++) {
+            const a = state.industry.awards[i];
+            if (!awardsByProject.has(a.projectId)) awardsByProject.set(a.projectId, []);
+            awardsByProject.get(a.projectId)!.push(a);
+        }
+    }
+
     const updatedProjects: Project[] = [];
     const boxOfficeEntries: BoxOfficeEntry[] = [];
     const allTalentUpdates = new Map<string, typeof state.industry.talentPool[0]>();
-
-    const mockStateForDisputes = {
-        ...state,
-        studio: {
-            ...state.studio,
-            internal: {
-                ...state.studio.internal,
-                projects: [] as Project[],
-            }
-        }
-    };
 
     for (let i = 0; i < state.studio.internal.projects.length; i++) {
         const p = state.studio.internal.projects[i];
@@ -67,7 +66,7 @@ export const processProduction = (
             projectContracts, 
             talentPoolMap, 
             rivalAvgStrength, 
-            state.industry.awards || [], 
+            awardsByProject.get(p.id) || [],
             trendMult
         );
 
@@ -104,8 +103,7 @@ export const processProduction = (
         }
 
         if (project.status === 'production') {
-            mockStateForDisputes.studio.internal.projects = [project];
-            const dirDisputeArgs = processDirectorDisputes(mockStateForDisputes);
+            const dirDisputeArgs = processDirectorDisputes(project, projectContracts, talentPoolMap);
             if (dirDisputeArgs.newCrises.length > 0 && (!project.activeCrisis || project.activeCrisis.resolved)) {
                 project.activeCrisis = dirDisputeArgs.newCrises[0].crisis;
                 weeklyChanges.projectUpdates.push(...dirDisputeArgs.updates);
