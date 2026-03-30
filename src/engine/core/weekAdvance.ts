@@ -78,7 +78,7 @@ const finalizeWeek = (
   // Create Snapshot for history
   let activeProjectsCount = 0;
   let releasedProjectsCount = 0;
-  const projects = state.studio.internal.projects;
+  const projects = Object.values(state.studio.internal.projects);
   for (let i = 0; i < projects.length; i++) {
     const s = projects[i].status;
     if (s === 'released' || s === 'post_release' || s === 'archived') {
@@ -136,7 +136,7 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
   nextState = processWorldEvents(nextState, weeklyChanges);
 
   // 4. Rights & Deals (Sprint E)
-  const { projects: updatedProjects, messages: ipMessages } = advanceIPRights(nextState.studio.internal.projects, nextState.week + 1);
+  const { projects: updatedProjects, messages: ipMessages } = advanceIPRights(Object.values(nextState.studio.internal.projects), nextState.week + 1);
 
   const finalInternal = {
     ...nextState.studio.internal,

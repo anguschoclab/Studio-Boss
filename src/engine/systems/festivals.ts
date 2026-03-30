@@ -14,7 +14,7 @@ export function submitToFestival(
   festivalBody: AwardBody
 ): GameState | null {
   const fest = FESTIVALS.find(f => f.body === festivalBody);
-  const project = state.studio.internal.projects.find(p => p.id === projectId);
+  const project = state.studio.internal.projects[projectId];
   
   if (!fest || !project || state.cash < fest.cost) return null;
   
@@ -54,7 +54,7 @@ export function resolveFestivals(state: GameState): GameState {
   
   const newState = { ...state };
   let updatedSubmissions = [...state.industry.festivalSubmissions];
-  const updatedProjects = [...state.studio.internal.projects];
+  const updatedProjects = { ...state.studio.internal.projects };
   const newHeadlines = [...state.industry.headlines];
   
   const projectIndices = new Map<string, number>();
@@ -70,9 +70,10 @@ export function resolveFestivals(state: GameState): GameState {
     
     // Resolve if festival is occurring this week
     if (fest.weeks.includes(state.week % 52)) {
-      const pIndex = projectIndices.get(sub.projectId);
-      if (pIndex === undefined) return sub;
-      const project = updatedProjects[pIndex];
+
+      const project = updatedProjects[sub.projectId];
+      if (!project) return sub;
+
       
       // Calculate acceptance chance
       const baseChance = (project.reviewScore || 50) + (state.studio.prestige * 0.5);
@@ -80,7 +81,7 @@ export function resolveFestivals(state: GameState): GameState {
       
       if (isAccepted) {
         // Boost buzz and slightly boost prestige
-        updatedProjects[pIndex] = {
+        updatedProjects[sub.projectId] = {
           ...project,
           buzz: Math.min(100, project.buzz + fest.buzzReward)
         };

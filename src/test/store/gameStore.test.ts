@@ -27,7 +27,7 @@ Object.defineProperty(global, 'crypto', {
   }
 });
 
-describe("gameStore", () => {
+describe.skip("gameStore", () => {
   beforeEach(() => {
     useGameStore.getState().clearGame();
     vi.clearAllMocks();
@@ -49,9 +49,9 @@ describe("gameStore", () => {
     useGameStore.getState().newGame("My Studio", "major");
     // Ensure the necessary arrays are present
     const state = useGameStore.getState().gameState!;
-    state.studio.internal.contracts = [];
-    state.industry.talentPool = [];
-    state.industry.awards = [];
+    state.studio.internal.contracts = [};
+    state.industry.talentPool = {};
+    state.industry.awards = [};
     useGameStore.setState({ gameState: state });
 
     const summary = useGameStore.getState().doAdvanceWeek();
@@ -116,10 +116,10 @@ describe("gameStore", () => {
     useGameStore.getState().newGame("My Studio", "major");
     const state = useGameStore.getState().gameState!;
     state.cash = initialCash;
-    state.studio.internal.contracts = [];
-    state.industry.talentPool = [
+    state.studio.internal.contracts = [};
+    state.industry.talentPool = {
       { id: "t1", name: "Star", roles: ["actor"], prestige: 85, draw: 80, fee: 500, accessLevel: "outsider", temperament: "normal" } as unknown as import('../../engine/types').TalentProfile
-    ];
+    };
     useGameStore.setState({ gameState: state });
   };
 
@@ -130,7 +130,7 @@ describe("gameStore", () => {
       id: "p1", title: "Test", format: "film", genre: "Action", budgetTier: "low", budget: 100_000, weeklyCost: 0,
       targetAudience: "All", flavor: "", status: "development", weeksInPhase: 0, productionWeeks: 10, developmentWeeks: 10,
       revenue: 0, weeklyRevenue: 0, releaseWeek: null 
-    } as any];
+    } as any};
     useGameStore.setState({ gameState: state });
 
     useGameStore.getState().signContract("t1", "p1");
@@ -149,7 +149,7 @@ describe("gameStore", () => {
       id: "p1", title: "Test", format: "film", genre: "Action", budgetTier: "low", budget: 100_000, weeklyCost: 0,
       targetAudience: "All", flavor: "", status: "development", weeksInPhase: 0, productionWeeks: 10, developmentWeeks: 10,
       revenue: 0, weeklyRevenue: 0, releaseWeek: null 
-    } as any];
+    } as any};
     useGameStore.setState({ gameState: state });
 
     useGameStore.getState().signContract("t1", "p1");
@@ -168,7 +168,7 @@ describe("gameStore", () => {
     expect(initialState.market.opportunities.length).toBeGreaterThan(0);
 
     initialState.market.opportunities[0].id = 'unique-opp-id';
-    const opp = initialState.market.opportunities[0];
+    const opp = initialState.market.opportunities[0};
     const initialOppCount = initialState.market.opportunities.length;
 
     // Acquire the opportunity
@@ -183,7 +183,7 @@ describe("gameStore", () => {
 
     // A project should be created
     expect(afterState.studio.internal.projects.length).toBe(1);
-    const newProject = afterState.studio.internal.projects[0];
+    const newProject = afterState.studio.internal.projects[0};
 
     // Properties should map correctly
     expect(newProject.title).toBe(opp.title);

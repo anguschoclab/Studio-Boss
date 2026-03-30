@@ -15,7 +15,7 @@ export interface DirectorDispute {
 export function hasCreativeControl(projectId: string, state: GameState): boolean {
   const directorContract = state.studio.internal.contracts.find(c => 
     c.projectId === projectId && 
-    state.industry.talentPool.find(t => t.id === c.talentId)?.roles.includes('director')
+    state.industry.talentPool[c.talentId]?.roles.includes('director')
   );
   
   if (!directorContract) return false;

@@ -18,7 +18,7 @@ export const PitchProjectModal = () => {
 
   if (!gameState || !pitchingProjectId) return null;
 
-  const project = gameState.studio.internal.projects.find(p => p.id === pitchingProjectId);
+  const project = gameState.studio.internal.projects[pitchingProjectId];
   if (!project) return null;
 
   const handlePitch = async () => {

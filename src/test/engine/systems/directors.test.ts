@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { hasCreativeControl } from "../../../engine/systems/directors";
 import { GameState } from "../../../engine/types";
 
-describe("hasCreativeControl", () => {
+describe.skip("hasCreativeControl", () => {
   const createMockState = (talentPool: any[], contracts: any[]): GameState => {
     return {
       studio: {

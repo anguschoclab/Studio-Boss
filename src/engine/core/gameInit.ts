@@ -33,7 +33,11 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
   const agencies = generateAgencies(5);
   const agents = generateAgents(agencies, 4);
   const families = generateFamilies(5);
-  const talentPool = generateTalentPool(50, families, agents, agencies);
+  const talentPoolArray = generateTalentPool(50, families, agents, agencies);
+  const talentPool = talentPoolArray.reduce((acc, t) => {
+    acc[t.id] = t;
+    return acc;
+  }, {} as Record<string, import('@/engine/types').TalentProfile>);
   const initialTrends = initializeTrends();
   const genrePopularity: Record<string, number> = {};
   ALL_GENRES.forEach(g => {
@@ -49,13 +53,13 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
       archetype,
       prestige: arch.startingPrestige,
       internal: {
-        projects: [],
+        projects: {},
         contracts: [],
         financeHistory: [{ week: 1, cash: arch.startingCash, revenue: 0, costs: 0 }],
       }
     },
     market: {
-      opportunities: Array.from({ length: 4 }, () => generateOpportunity(talentPool.map(t => t.id))),
+      opportunities: Array.from({ length: 4 }, () => generateOpportunity(Object.keys(talentPool))),
       buyers: [
         { id: 'b1', name: 'Global Network', archetype: 'network' as const },
         { id: 'b2', name: 'Prestige TV', archetype: 'premium' as const },

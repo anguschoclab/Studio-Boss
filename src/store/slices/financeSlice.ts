@@ -3,12 +3,14 @@ import { GameStore } from '../gameStore';
 import { handleReleasePhaseEntry, executeMarketing } from '@/engine/systems/projects';
 
 export interface FinanceSlice {
+  transactions: Record<string, any>;
   launchMarketingCampaign: (projectId: string, budget: number, domesticPct: number, angle: string) => void;
   executeMarketingEvent: (eventName: 'superbowl_ad' | 'viral_campaign' | 'press_tour', cost: number, projectId: string) => void;
   addFunds: (amount: number) => void;
 }
 
 export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> = (set, get) => ({
+  transactions: {},
   launchMarketingCampaign: (projectId, budget, domesticPct, angle) => {
     set((s) => {
       if (!s.gameState) return s;
@@ -78,6 +80,15 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
   },
 
   addFunds: (amount) => {
+    set((s) => {
+      const id = crypto.randomUUID();
+      return {
+        transactions: {
+          ...s.transactions,
+          [id]: { id, amount, date: new Date().toISOString() }
+        }
+      };
+    });
     set((s) => {
       if (!s.gameState) return s;
       return {

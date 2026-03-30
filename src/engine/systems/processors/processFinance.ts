@@ -15,8 +15,8 @@ export const processFinance = (
     weeklyChanges: WeeklyChanges
 ): GameState => {
     const nextWeek = state.week + 1;
-    const costs = calculateWeeklyCosts(state.studio.internal.projects, state.market.activeMarketEvents || []);
-    const revenue = calculateWeeklyRevenue(state.studio.internal.projects, state.studio.internal.contracts, state.market.activeMarketEvents || []);
+    const costs = calculateWeeklyCosts(Object.values(state.studio.internal.projects), state.market.activeMarketEvents || []);
+    const revenue = calculateWeeklyRevenue(Object.values(state.studio.internal.projects), state.studio.internal.contracts, state.market.activeMarketEvents || []);
     const newCash = state.cash - costs + revenue;
 
     let financeHistory = state.studio.internal.financeHistory;

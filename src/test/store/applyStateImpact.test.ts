@@ -11,13 +11,13 @@ describe("applyStateImpact utility", () => {
       archetype: "major",
       prestige: 50,
       internal: {
-        projects: [{
+        projects: { "proj-1": {
           id: "proj-1",
           title: "Test Project",
           status: "development",
           buzz: 50,
           productionWeeks: 10
-        } as Project],
+        } as Project },
         contracts: [],
         financeHistory: []
       }
@@ -42,7 +42,7 @@ describe("applyStateImpact utility", () => {
       }]
     };
     const newState = applyStateImpact(mockState, impact);
-    const updatedProject = newState.studio.internal.projects.find(p => p.id === "proj-1");
+    const updatedProject = newState.studio.internal.projects["proj-1"];
     expect(updatedProject?.status).toBe("production");
     expect(updatedProject?.buzz).toBe(70);
   });

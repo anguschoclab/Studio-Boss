@@ -101,7 +101,7 @@ export function advanceRivals(
 
   // Talent Poaching News
   for (const rival of state.industry.rivals) {
-     const poakMsg = rivalPoachTalent(rival, state.industry.talentPool);
+     const poakMsg = rivalPoachTalent(rival, Object.values(state.industry.talentPool));
      if (poakMsg) {
        newsEvents.push({
          type: 'RIVAL',

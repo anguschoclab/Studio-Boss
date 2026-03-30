@@ -91,7 +91,7 @@ describe('processProduction', () => {
     const changes = getInitialWeeklyChanges();
     const result = processProduction(state, changes);
 
-    expect(result.studio.internal.projects[0].id).toBe('p1');
+    expect(Object.values(result.studio.internal.projects)[0].id).toBe('p1');
     expect(advanceProject).not.toHaveBeenCalled();
     expect(changes.projectUpdates).toContain('"Project p1" production is halted until the active crisis is resolved.');
   });
@@ -99,7 +99,7 @@ describe('processProduction', () => {
   it('advances a project correctly and triggers wrap event', () => {
     const state = getInitialState();
     const project = createBaseProject('p1', 'production');
-    state.studio.internal.projects = [project];
+    state.studio.internal.projects = { [project.id]: project };
 
     vi.mocked(getTrendMultiplier).mockReturnValue(1.0);
     vi.mocked(advanceProject).mockReturnValue({
@@ -114,7 +114,7 @@ describe('processProduction', () => {
     const changes = getInitialWeeklyChanges();
     const result = processProduction(state, changes);
 
-    expect(result.studio.internal.projects[0].status).toBe('marketing');
+    expect(Object.values(result.studio.internal.projects)[0].status).toBe('marketing');
     expect(changes.projectUpdates).toContain('Project advanced to marketing');
     expect(changes.newsEvents.some(ne => ne.type === 'STUDIO_EVENT' && ne.headline === 'Project p1 Wraps Production')).toBeTruthy();
   });
@@ -122,7 +122,7 @@ describe('processProduction', () => {
   it('triggers a release event and generates awards profile when project transitions to released', () => {
     const state = getInitialState();
     const project = createBaseProject('p1', 'marketing');
-    state.studio.internal.projects = [project];
+    state.studio.internal.projects = { [project.id]: project };
 
     vi.mocked(getTrendMultiplier).mockReturnValue(1.5);
     vi.mocked(advanceProject).mockReturnValue({
@@ -141,7 +141,7 @@ describe('processProduction', () => {
     const changes = getInitialWeeklyChanges();
     const result = processProduction(state, changes);
 
-    const releasedProject = result.studio.internal.projects[0];
+    const releasedProject = Object.values(result.studio.internal.projects)[0];
     expect(releasedProject.status).toBe('released');
     expect(releasedProject.awardsProfile).toBeDefined();
     expect(releasedProject.boxOfficeRank).toBe(1);
@@ -151,7 +151,7 @@ describe('processProduction', () => {
   it('triggers a new crisis during production', () => {
     const state = getInitialState();
     const project = createBaseProject('p1', 'production');
-    state.studio.internal.projects = [project];
+    state.studio.internal.projects = { [project.id]: project };
 
     vi.mocked(getTrendMultiplier).mockReturnValue(1.0);
     vi.mocked(advanceProject).mockReturnValue({
@@ -168,16 +168,16 @@ describe('processProduction', () => {
     const changes = getInitialWeeklyChanges();
     const result = processProduction(state, changes);
 
-    expect(result.studio.internal.projects[0].activeCrisis).toBeDefined();
+    expect(Object.values(result.studio.internal.projects)[0].activeCrisis).toBeDefined();
     expect(changes.events).toContain('CRISIS: "Project p1" - Star got a haircut!');
   });
 
   it('updates talent correctly through advanceProject return', () => {
      const state = getInitialState();
      const talent: TalentProfile = { id: 't1', name: 'Actor', roles: ['actor'], prestige: 50, fee: 1000, draw: 50, temperament: 'Normal', accessLevel: 'outsider' };
-     state.industry.talentPool = [talent];
+     state.industry.talentPool = { [talent.id]: talent };
      const project = createBaseProject('p1', 'development');
-     state.studio.internal.projects = [project];
+     state.studio.internal.projects = { [project.id]: project };
 
      const updatedTalent = { ...talent, prestige: 60 };
      vi.mocked(getTrendMultiplier).mockReturnValue(1.0);
@@ -191,14 +191,14 @@ describe('processProduction', () => {
      const changes = getInitialWeeklyChanges();
      const result = processProduction(state, changes);
 
-     expect(result.industry.talentPool[0].prestige).toBe(60);
+     expect(Object.values(result.industry.talentPool)[0].prestige).toBe(60);
   });
 
 
   it('computes average rival strength correctly', () => {
     const state = getInitialState();
     const project = createBaseProject('p1', 'production');
-    state.studio.internal.projects = [project];
+    state.studio.internal.projects = { [project.id]: project };
     state.industry.rivals = [
       { id: 'r1', name: 'Rival 1', strength: 60, marketShare: 10, cash: 1000, prestige: 50, recentReleases: [], strategies: [], activeFranchises: [] },
       { id: 'r2', name: 'Rival 2', strength: 40, marketShare: 10, cash: 1000, prestige: 50, recentReleases: [], strategies: [], activeFranchises: [] }
@@ -232,7 +232,7 @@ describe('processProduction', () => {
   it('triggers a new crisis from a director dispute during production', () => {
     const state = getInitialState();
     const project = createBaseProject('p1', 'production');
-    state.studio.internal.projects = [project];
+    state.studio.internal.projects = { [project.id]: project };
 
     vi.mocked(getTrendMultiplier).mockReturnValue(1.0);
     vi.mocked(advanceProject).mockReturnValue({
@@ -250,8 +250,8 @@ describe('processProduction', () => {
     const changes = getInitialWeeklyChanges();
     const result = processProduction(state, changes);
 
-    expect(result.studio.internal.projects[0].activeCrisis).toBeDefined();
-    expect(result.studio.internal.projects[0].activeCrisis?.description).toBe('Director dispute!');
+    expect(Object.values(result.studio.internal.projects)[0].activeCrisis).toBeDefined();
+    expect(Object.values(result.studio.internal.projects)[0].activeCrisis?.description).toBe('Director dispute!');
     expect(changes.projectUpdates).toContain('Director is unhappy!');
   });
 

@@ -23,11 +23,13 @@ export function generateCrisis(project: Project): StateImpact | null {
   };
 }
 
-export function resolveCrisis(state: GameState, projectId: string, optionIndex: number): StateImpact {
-  const project = state.studio.internal.projects.find(p => p.id === projectId);
-  if (!project || !project.activeCrisis || project.activeCrisis.resolved) {
-    return {};
-  }
+export function resolveCrisis(state: GameState, projectId: string, optionIndex: number): GameState {
+  const project = state.studio.internal.projects[projectId];
+  const projectIndex = project ? 1 : -1;
+  if (projectIndex === -1) return state;
+
+
+  if (!project.activeCrisis || project.activeCrisis.resolved) return state;
 
   const option = project.activeCrisis.options[optionIndex];
   if (!option) return {};
@@ -56,10 +58,14 @@ export function resolveCrisis(state: GameState, projectId: string, optionIndex: 
     projectUpdate.buzz = Math.max(0, project.buzz - option.buzzPenalty);
   }
 
-  impact.projectUpdates!.push({
-    projectId,
-    updates: projectUpdate
-  });
+  // Mark resolved
+  updatedProject.activeCrisis = {
+    ...project.activeCrisis,
+    resolved: true
+  };
+
+  const newProjects = { ...state.studio.internal.projects };
+  newProjects[projectId] = updatedProject;
 
   if (option.removeTalentId) {
     impact.contractsToRemove = [{

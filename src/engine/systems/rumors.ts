@@ -39,8 +39,8 @@ export function advanceRumors(state: GameState): GameState {
     
     let text = 'Unnamed studio in talks for a massive merger.';
     
-    if (category === 'talent' && state.industry.talentPool.length > 0) {
-      const talent = pick(state.industry.talentPool);
+    if (category === 'talent' && Object.keys(state.industry.talentPool).length > 0) {
+      const talent = pick(Object.values(state.industry.talentPool));
       const rumors = [
         `${talent.name} reportedly demanding unprecedented back-end points on next project.`,
         `Sources say ${talent.name} is extremely difficult to work with on set.`,
@@ -55,8 +55,8 @@ export function advanceRumors(state: GameState): GameState {
         `Exec shakeups expected soon at ${rival.name}.`
       ];
       text = pick(rumors);
-    } else if (category === 'project' && state.studio.internal.projects.length > 0) {
-      const project = pick(state.studio.internal.projects);
+    } else if (category === 'project' && Object.keys(state.studio.internal.projects).length > 0) {
+      const project = pick(Object.values(state.studio.internal.projects));
       if (project.status === 'production') {
         text = `Production on "${project.title}" is rumored to be wildly over budget.`;
       } else {
