@@ -15,6 +15,8 @@ describe("Demographics System", () => {
       const actionProject = { ...defaultProject, genre: "Action" } as Project;
       const romanceProject = { ...defaultProject, genre: "Romance" } as Project;
       const horrorProject = { ...defaultProject, genre: "Horror" } as Project;
+      const documentaryProject = { ...defaultProject, genre: "Documentary" } as Project;
+      const historicalProject = { ...defaultProject, genre: "Historical" } as Project;
 
       // male: +0.3 Action
       expect(calculateAudienceIndex(actionProject, "male_under_25")).toBeCloseTo(1.3);
@@ -22,6 +24,10 @@ describe("Demographics System", () => {
       expect(calculateAudienceIndex(romanceProject, "male_under_25")).toBeCloseTo(0.7);
       // under_25: +0.4 Horror
       expect(calculateAudienceIndex(horrorProject, "male_under_25")).toBeCloseTo(1.4);
+      // under_25: -0.4 Documentary
+      expect(calculateAudienceIndex(documentaryProject, "male_under_25")).toBeCloseTo(0.6);
+      // under_25: -0.4 Historical
+      expect(calculateAudienceIndex(historicalProject, "male_under_25")).toBeCloseTo(0.6);
     });
 
     it("evaluates female_under_25 quadrant correctly", () => {
