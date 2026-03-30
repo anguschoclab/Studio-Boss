@@ -96,7 +96,7 @@ export const FinancePanel = () => {
               </SheetDescription>
             </SheetHeader>
             <div className="mt-8 space-y-4 overflow-y-auto max-h-[calc(100vh-180px)] pr-2 custom-scrollbar">
-              {(useGameStore.getState().snapshots || []).slice().reverse().map((s, i) => (
+              {(useGameStore().snapshots || []).slice().reverse().map((s, i) => (
                 <Card key={i} className="border-border/40 bg-card/40 backdrop-blur-md shadow-sm group hover:border-primary/30 transition-all duration-300">
                   <CardContent className="p-5">
                     <div className="flex justify-between items-start mb-4">
@@ -125,7 +125,7 @@ export const FinancePanel = () => {
                   </CardContent>
                 </Card>
               ))}
-              {(useGameStore.getState().snapshots || []).length === 0 && (
+              {((useGameStore().snapshots || []).length === 0) && (
                 <div className="text-center py-12 opacity-50 px-8">
                    <History className="w-12 h-12 mx-auto mb-4 text-muted-foreground/30" />
                    <p className="text-sm font-bold uppercase tracking-widest mb-2">No Records Yet</p>

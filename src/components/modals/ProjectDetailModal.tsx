@@ -143,7 +143,11 @@ export const ProjectDetailModal = () => {
           </div>
         </DialogHeader>
 
-        <Tabs defaultValue="overview" className="w-full">
+        <Tabs defaultValue={
+          project.status === 'marketing' ? "marketing" :
+          (project.status === 'needs_greenlight' || project.status === 'development' || project.status === 'production' || project.status === 'post_production') ? "production" :
+          "overview"
+        } className="w-full">
           <TabsList className="grid w-full grid-cols-5 bg-slate-900/50 p-1 border border-slate-800">
             <TabsTrigger value="overview" className="data-[state=active]:bg-slate-800 data-[state=active]:text-white uppercase text-[10px] font-black tracking-widest"><BarChart3 className="h-3 w-3 mr-2" /> Intro</TabsTrigger>
             <TabsTrigger value="production" className="data-[state=active]:bg-slate-800 data-[state=active]:text-white uppercase text-[10px] font-black tracking-widest"><Clapperboard className="h-3 w-3 mr-2" /> Build</TabsTrigger>
@@ -328,7 +332,7 @@ export const ProjectDetailModal = () => {
                  <Button 
                    className="w-full bg-blue-600 hover:bg-blue-500 text-white font-black uppercase py-6 shadow-lg shadow-blue-900/20"
                    disabled={!selectedTier || (gameState && gameState.cash < (selectedTier === 'basic' ? project.budget * 0.1 : selectedTier === 'blockbuster' ? project.budget * 0.5 : 0))}
-                   onClick={() => lockMarketingCampaign(project.id, selectedTier)}
+                   onClick={() => { lockMarketingCampaign(project.id, selectedTier); selectProject(null); }}
                  >
                    Lock Campaign & Commit Capital
                  </Button>
