@@ -104,6 +104,14 @@ describe('Mergers and Sabotage System', () => {
       expect(result.viable).toBe(true);
       expect(result.price).toBe(12_000_000);
     });
+
+    it('calculates viable acquisition for mid-tier target without archetype multiplier', () => {
+      const midTierTarget = { ...mockTarget, archetype: 'mid-tier' as const };
+      // base price 25M. mid-tier has no multiplier -> 25M
+      const result = evaluateAcquisitionTarget(midTierTarget, 100_000_000);
+      expect(result.viable).toBe(true);
+      expect(result.price).toBe(25_000_000);
+    });
   });
 
   describe('executeAcquisition', () => {
