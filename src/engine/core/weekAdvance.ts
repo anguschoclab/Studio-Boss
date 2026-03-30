@@ -1,5 +1,6 @@
 import { GameState, WeekSummary, Headline, NewsEvent, StudioSnapshot } from '@/engine/types';
 import { ALL_GENRES } from '../systems/trends';
+import { secureRandom } from '../utils';
 import { advanceIPRights } from '../systems/ipRetention';
 import { advanceDeals } from '../systems/deals';
 import { processProduction, WeeklyChanges as ProductionWeeklyChanges } from '../systems/processors/processProduction';
@@ -146,9 +147,8 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
     weeklyChanges.events.push(ipMessages[i]);
   }
   
-  let activeDeals = nextState.studio.internal.firstLookDeals;
   if (nextState.studio.internal.firstLookDeals) {
-    activeDeals = advanceDeals(nextState.studio.internal.firstLookDeals);
+    const activeDeals = advanceDeals(nextState.studio.internal.firstLookDeals);
     const expiredDeals = nextState.studio.internal.firstLookDeals.length - activeDeals.length;
     if (expiredDeals > 0) {
       weeklyChanges.events.push(`${expiredDeals} first-look talent deal(s) expired this week.`);
