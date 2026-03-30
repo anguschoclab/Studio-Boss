@@ -25,9 +25,39 @@ export function getWeekDisplay(week: number): { displayWeek: number; year: numbe
 }
 
 /**
- * A cryptographically secure random number generator.
- * Returns a float between 0 (inclusive) and 1 (exclusive).
+ * A seedable, deterministic random number generator (Mulberry32).
  */
+let currentRandomSource = () => {
+  const array = new Uint32Array(1);
+  crypto.getRandomValues(array);
+  return array[0] / (0xffffffff + 1);
+};
+
+export function setDeterministicSeed(seed: number) {
+  let s = seed;
+  currentRandomSource = () => {
+    let t = (s += 0x6d2b79f5);
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/**
+ * The primary random function for the engine.
+ */
+export function rand(): number {
+  return currentRandomSource();
+}
+
+/**
+ * Centralized ID generation for engine entities.
+ */
+export function generateId(prefix: string = ''): string {
+  const id = crypto.randomUUID();
+  return prefix ? `${prefix}-${id}` : id;
+}
+
 export function secureRandom(): number {
   const array = new Uint32Array(1);
   crypto.getRandomValues(array);
@@ -36,11 +66,11 @@ export function secureRandom(): number {
 
 export function pick<T>(arr: T[]): T {
   if (arr.length === 0) return undefined as T;
-  return arr[Math.floor(secureRandom() * arr.length)];
+  return arr[Math.floor(rand() * arr.length)];
 }
 
 export function randRange(min: number, max: number): number {
-  return min + secureRandom() * (max - min);
+  return min + rand() * (max - min);
 }
 
 export function clamp(value: number, min: number, max: number): number {

@@ -102,33 +102,83 @@ export function applyStateImpact(state: GameState, impact: import('@/engine/type
   const newState = { ...state };
   
   // 1. Update Project List
-  const newProjects = [...state.studio.internal.projects];
+  let newProjects = [...state.studio.internal.projects];
   let projectsChanged = false;
   
-  if (impact.projectUpdates) {
-    impact.projectUpdates.forEach(({ projectId, update }) => {
-      const idx = newProjects.findIndex(p => p.id === projectId);
-      if (idx !== -1) {
-        newProjects[idx] = { ...newProjects[idx], ...update };
-        projectsChanged = true;
-      }
+  if (impact.projectUpdates && impact.projectUpdates.length > 0) {
+    const updatesMap = new Map(impact.projectUpdates.map(u => [u.projectId, u.update]));
+    newProjects = newProjects.map(p => {
+        const update = updatesMap.get(p.id);
+        if (update) {
+            projectsChanged = true;
+            return { ...p, ...update };
+        }
+        return p;
     });
+
+    if (impact.cultClassicProjectId) {
+        const idx = newProjects.findIndex(p => p.id === impact.cultClassicProjectId);
+        if (idx !== -1) {
+            newProjects[idx] = { ...newProjects[idx], isCultClassic: true };
+            projectsChanged = true;
+        }
+    }
   }
   
-  // 2. Remove Contracts
+  // 2. Update Talent Pool
+  let newTalentPool = [...state.industry.talentPool];
+  let talentPoolChanged = false;
+
+  if (impact.talentUpdates && impact.talentUpdates.length > 0) {
+    const updatesMap = new Map(impact.talentUpdates.map(u => [u.talentId, u.update]));
+    newTalentPool = newTalentPool.map(t => {
+        const update = updatesMap.get(t.id);
+        if (update) {
+            talentPoolChanged = true;
+            return { ...t, ...update };
+        }
+        return t;
+    });
+  }
+
+  if (impact.razzieWinnerTalents && impact.razzieWinnerTalents.length > 0) {
+    const razzieSet = new Set(impact.razzieWinnerTalents);
+    newTalentPool = newTalentPool.map(t => {
+        if (razzieSet.has(t.id)) {
+            talentPoolChanged = true;
+            return { ...t, hasRazzie: true };
+        }
+        return t;
+    });
+  }
+
+  // 3. Update Rivals
+  let newRivals = [...state.industry.rivals];
+  let rivalsChanged = false;
+  if (impact.rivalUpdates && impact.rivalUpdates.length > 0) {
+    const updatesMap = new Map(impact.rivalUpdates.map(u => [u.rivalId, u.update]));
+    newRivals = newRivals.map(r => {
+        const update = updatesMap.get(r.id);
+        if (update) {
+            rivalsChanged = true;
+            return { ...r, ...update };
+        }
+        return r;
+    });
+  }
+
+  // 4. Update Contracts
   let newContracts = [...state.studio.internal.contracts];
   if (impact.removeContract) {
     const { talentId, projectId } = impact.removeContract;
     newContracts = newContracts.filter(c => !(c.talentId === talentId && c.projectId === projectId));
   }
   
-  // 3. Update Cash
+  // 5. Update Cash & Prestige
   const cashChange = impact.cashChange || 0;
-  
-  // 4. Update Studio Prestige
   const prestigeChange = impact.prestigeChange || 0;
   
-  // 5. Update Headlines & News History
+  // 6. Update Headlines & News History
   let newHeadlines = [...(state.industry.headlines || [])];
   if (impact.newHeadlines) {
     newHeadlines = [...impact.newHeadlines, ...newHeadlines].slice(0, 100);
@@ -143,6 +193,8 @@ export function applyStateImpact(state: GameState, impact: import('@/engine/type
     }));
     newNewsHistory = [...events, ...newNewsHistory].slice(0, 100);
   }
+
+  const newAwards = impact.newAwards ? [...(state.industry.awards || []), ...impact.newAwards] : state.industry.awards;
   
   // Assemble final state
   return {
@@ -159,6 +211,9 @@ export function applyStateImpact(state: GameState, impact: import('@/engine/type
     },
     industry: {
       ...state.industry,
+      talentPool: talentPoolChanged ? newTalentPool : state.industry.talentPool,
+      rivals: rivalsChanged ? newRivals : state.industry.rivals,
+      awards: newAwards,
       headlines: newHeadlines,
       newsHistory: newNewsHistory
     }
