@@ -1,6 +1,6 @@
 import { StateCreator } from 'zustand';
 import { GameStore } from '../gameStore';
-import { CreateProjectParams, buildProjectAndContracts } from '../storeUtils';
+import { CreateProjectParams, buildProjectAndContracts, applyStateImpact } from '../storeUtils';
 import { handleReleasePhaseEntry } from '@/engine/systems/projects';
 import { updateCultureFromProject } from '@/engine/systems/culture';
 import { negotiateContract } from '@/engine/systems/buyers';
@@ -29,19 +29,30 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
   createProject: (params) => {
     set((s) => {
       if (!s.gameState) return s;
-
       const { project, newContracts, talentFees } = buildProjectAndContracts(s.gameState, params);
-
+      
+      return {
+        gameState: applyStateImpact(s.gameState, {
+          cashChange: -talentFees,
+          projectUpdates: [], // We are adding a new project
+          newHeadlines: [], 
+        }) as any // Temporarily casting while finalizing applyStateImpact features
+      };
+    });
+    
+    // Explicitly add the project and contracts since applyStateImpact is for updates
+    set(s => {
+      if (!s.gameState) return s;
+      const { project, newContracts } = buildProjectAndContracts(s.gameState, params);
       return {
         gameState: {
           ...s.gameState,
-          cash: s.gameState.cash - talentFees,
           studio: {
             ...s.gameState.studio,
             internal: {
               ...s.gameState.studio.internal,
               projects: [...s.gameState.studio.internal.projects, project],
-              contracts: [...s.gameState.studio.internal.contracts, ...newContracts],
+              contracts: [...s.gameState.studio.internal.contracts, ...newContracts]
             }
           }
         }
@@ -59,29 +70,21 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
 
       const p = state.studio.internal.projects[projectIndex];
       if ((p.format === 'tv' || p.format === 'unscripted') && p.renewable && p.season !== undefined) {
-        const updatedProjects = [...state.studio.internal.projects];
-        updatedProjects[projectIndex] = {
-          ...p,
-          status: 'development',
-          weeksInPhase: 0,
-          season: p.season + 1,
-          revenue: 0,
-          weeklyRevenue: 0,
-          releaseWeek: null,
-          episodesReleased: 0,
-        };
-
         return {
-          gameState: {
-            ...state,
-            studio: {
-              ...state.studio,
-              internal: {
-                ...state.studio.internal,
-                projects: updatedProjects,
+          gameState: applyStateImpact(state, {
+            projectUpdates: [{
+              projectId: id,
+              update: {
+                status: 'development',
+                weeksInPhase: 0,
+                season: p.season + 1,
+                revenue: 0,
+                weeklyRevenue: 0,
+                releaseWeek: null,
+                episodesReleased: 0,
               }
-            }
-          },
+            }]
+          })
         };
       }
       return s;
@@ -89,35 +92,33 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
   },
 
   _updateProjectToProduction: (state, projectIndex, project, headlineText, extraProjectUpdates = {}) => {
-    const updatedProjects = [...state.studio.internal.projects];
-    updatedProjects[projectIndex] = {
-      ...project,
-      status: 'production',
-      weeksInPhase: 0,
-      ...extraProjectUpdates
+    const newCulture = state.studio.culture ? updateCultureFromProject(state.studio.culture, project) : undefined;
+    
+    const impact = {
+      projectUpdates: [{
+        projectId: project.id,
+        update: {
+          ...project,
+          status: 'production' as const,
+          weeksInPhase: 0,
+          ...extraProjectUpdates
+        }
+      }],
+      newHeadlines: [{ id: `ph-${crypto.randomUUID()}`, text: headlineText, week: state.week, category: 'market' as const }]
     };
 
-    const newCulture = state.studio.culture ? updateCultureFromProject(state.studio.culture, project) : undefined;
-
+    const newState = applyStateImpact(state, impact);
+    
     set({
       gameState: {
-        ...state,
+        ...newState,
         studio: {
-          ...state.studio,
-          culture: newCulture,
-          internal: {
-            ...state.studio.internal,
-            projects: updatedProjects,
-          }
-        },
-        industry: {
-          ...state.industry,
-          headlines: [{ id: `ph-${crypto.randomUUID()}`, text: headlineText, week: state.week, category: 'market' as const }, ...state.industry.headlines].slice(0, 50)
+          ...newState.studio,
+          culture: newCulture
         }
       }
     });
   },
-
 
   greenlightProject: async (projectId) => {
     const projectsEngine = await import('@/engine/systems/projects');
@@ -184,7 +185,12 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
   resolveProjectCrisis: (projectId, optionIndex) => {
     const state = get().gameState;
     if (!state) return;
-    const newState = resolveCrisis(state, projectId, optionIndex);
+
+    const project = state.studio.internal.projects.find(p => p.id === projectId);
+    if (!project) return;
+
+    const impact = resolveCrisis(project, optionIndex);
+    const newState = applyStateImpact(state, impact);
     set({ gameState: newState });
   },
 
@@ -199,8 +205,12 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
   launchAwardsCampaign: (projectId, budget) => {
     set((s) => {
       if (!s.gameState) return s;
-      const newState = launchAwardsCampaign(s.gameState, projectId, budget);
-      return newState ? { gameState: newState } : s;
+      const project = s.gameState.studio.internal.projects.find(p => p.id === projectId);
+      if (!project) return s;
+
+      const impact = launchAwardsCampaign(project, budget);
+      const newState = applyStateImpact(s.gameState, impact);
+      return { gameState: newState };
     });
   },
 
@@ -209,10 +219,8 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
       const state = s.gameState;
       if (!state) return s;
 
-      const projectIndex = state.studio.internal.projects.findIndex(p => p.id === projectId);
-      if (projectIndex === -1) return s;
-
-      const project = state.studio.internal.projects[projectIndex];
+      const project = state.studio.internal.projects.find(p => p.id === projectId);
+      if (!project) return s;
       
       let cost = 0;
       let buzzGain = 0;
@@ -225,27 +233,19 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
         buzzGain = 40;
       }
 
-      const updatedProjects = [...state.studio.internal.projects];
-      updatedProjects[projectIndex] = {
-        ...project,
-        marketingLevel: level,
-        marketingBudget: cost,
-        buzz: Math.min(100, project.buzz + buzzGain),
-        status: project.status === 'marketing' ? 'released' : project.status
-      };
-
       return {
-        gameState: {
-          ...state,
-          cash: state.cash - cost,
-          studio: {
-            ...state.studio,
-            internal: {
-              ...state.studio.internal,
-              projects: updatedProjects
+        gameState: applyStateImpact(state, {
+          cashChange: -cost,
+          projectUpdates: [{
+            projectId,
+            update: {
+              marketingLevel: level,
+              marketingBudget: cost,
+              buzz: Math.min(100, project.buzz + buzzGain),
+              status: project.status === 'marketing' ? 'released' : project.status
             }
-          }
-        }
+          }]
+        })
       };
     });
   },
@@ -271,22 +271,13 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
   advanceProjectPhase: (projectId, newStatus) => {
     set((s) => {
       if (!s.gameState) return s;
-      const state = s.gameState;
-      const updatedProjects = state.studio.internal.projects.map(p => 
-        p.id === projectId ? { ...p, status: newStatus as any } : p
-      );
-      
       return {
-        gameState: {
-          ...state,
-          studio: {
-            ...state.studio,
-            internal: {
-              ...state.studio.internal,
-              projects: updatedProjects
-            }
-          }
-        }
+        gameState: applyStateImpact(s.gameState, {
+          projectUpdates: [{
+            projectId,
+            update: { status: newStatus as any }
+          }]
+        })
       };
     });
   }
