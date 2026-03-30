@@ -249,7 +249,8 @@ export type AwardBody =
   | 'SXSW Film Festival'
   | 'Tribeca Film Festival'
   | 'Telluride Film Festival'
-  | 'Slamdance Film Festival';
+  | 'Slamdance Film Festival'
+  | 'The Razzies';
 
 export type AwardCategory =
   | 'Best Picture'

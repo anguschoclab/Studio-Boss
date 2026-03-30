@@ -5,6 +5,14 @@ const MANDATE_TYPES: MandateType[] = [
   'sci-fi', 'comedy', 'drama', 'budget_freeze', 'broad_appeal', 'prestige'
 ];
 
+// Pre-compute available mandate types per mandate to avoid O(N) array allocations in the loop
+const AVAILABLE_MANDATES = new Map<string, MandateType[]>();
+AVAILABLE_MANDATES.set('none', MANDATE_TYPES);
+for (let i = 0; i < MANDATE_TYPES.length; i++) {
+  const type = MANDATE_TYPES[i];
+  AVAILABLE_MANDATES.set(type, MANDATE_TYPES.filter(m => m !== type));
+}
+
 export function updateBuyers(buyers: Buyer[], currentWeek: number): { updatedBuyers: Buyer[]; newHeadlines: string[] } {
   const updatedBuyers = [...buyers];
   const newHeadlines: string[] = [];
@@ -12,7 +20,9 @@ export function updateBuyers(buyers: Buyer[], currentWeek: number): { updatedBuy
   updatedBuyers.forEach((buyer, index) => {
     // If mandate expired or random 5% chance to shift early
     if (!buyer.currentMandate || buyer.currentMandate.activeUntilWeek <= currentWeek || secureRandom() < 0.05) {
-      const newMandateType = pick(MANDATE_TYPES.filter(m => m !== buyer.currentMandate?.type));
+      const currentType = buyer.currentMandate?.type || 'none';
+      const availableTypes = AVAILABLE_MANDATES.get(currentType) || MANDATE_TYPES;
+      const newMandateType = pick(availableTypes);
       const duration = Math.floor(randRange(12, 36));
 
       updatedBuyers[index] = {
