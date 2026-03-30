@@ -97,3 +97,70 @@ export function buildProjectAndContracts(state: GameState, params: CreateProject
 
     return { project, newContracts, talentFees };
 }
+
+export function applyStateImpact(state: GameState, impact: import('@/engine/types').StateImpact): GameState {
+  const newState = { ...state };
+  
+  // 1. Update Project List
+  const newProjects = [...state.studio.internal.projects];
+  let projectsChanged = false;
+  
+  if (impact.projectUpdates) {
+    impact.projectUpdates.forEach(({ projectId, update }) => {
+      const idx = newProjects.findIndex(p => p.id === projectId);
+      if (idx !== -1) {
+        newProjects[idx] = { ...newProjects[idx], ...update };
+        projectsChanged = true;
+      }
+    });
+  }
+  
+  // 2. Remove Contracts
+  let newContracts = [...state.studio.internal.contracts];
+  if (impact.removeContract) {
+    const { talentId, projectId } = impact.removeContract;
+    newContracts = newContracts.filter(c => !(c.talentId === talentId && c.projectId === projectId));
+  }
+  
+  // 3. Update Cash
+  const cashChange = impact.cashChange || 0;
+  
+  // 4. Update Studio Prestige
+  const prestigeChange = impact.prestigeChange || 0;
+  
+  // 5. Update Headlines & News History
+  let newHeadlines = [...(state.industry.headlines || [])];
+  if (impact.newHeadlines) {
+    newHeadlines = [...impact.newHeadlines, ...newHeadlines].slice(0, 100);
+  }
+  
+  let newNewsHistory = [...(state.industry.newsHistory || [])];
+  if (impact.newsEvents) {
+    const events = impact.newsEvents.map(e => ({
+      ...e,
+      id: `ne-${crypto.randomUUID()}`,
+      week: state.week
+    }));
+    newNewsHistory = [...events, ...newNewsHistory].slice(0, 100);
+  }
+  
+  // Assemble final state
+  return {
+    ...newState,
+    cash: state.cash + cashChange,
+    studio: {
+      ...state.studio,
+      prestige: Math.max(0, state.studio.prestige + prestigeChange),
+      internal: {
+        ...state.studio.internal,
+        projects: projectsChanged ? newProjects : state.studio.internal.projects,
+        contracts: newContracts,
+      }
+    },
+    industry: {
+      ...state.industry,
+      headlines: newHeadlines,
+      newsHistory: newNewsHistory
+    }
+  };
+}

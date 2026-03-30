@@ -97,7 +97,12 @@ export type TvFormatKey =
   | 'workplace_thriller'
   | 'teen_supernatural_comedy'
   | 'western_procedural'
-  | 'space_western';
+  | 'space_western'
+  | 'k_drama_adaptation'
+  | 'live_action_anime'
+  | 'neo_noir_procedural'
+  | 'multiverse_anthology'
+  | 'standup_comedy_series';
 
 export type UnscriptedFormatKey =
   | 'competition'
@@ -190,7 +195,12 @@ export type UnscriptedFormatKey =
   | 'reality_courtroom'
   | 'extreme_cheap_travel_show'
   | 'sports_wives_drama'
-  | 'tattoo_coverup_disasters';
+  | 'tattoo_coverup_disasters'
+  | 'influencer_boxing_league'
+  | 'virtual_reality_dating'
+  | 'extreme_job_swap'
+  | 'celebrity_farm_survival'
+  | 'niche_hobby_competition';
 
 export type ReleaseModelKey = 'weekly' | 'binge' | 'split';
 export type ProjectContractType = 'upfront' | 'deficit' | 'standard';

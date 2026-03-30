@@ -65,31 +65,57 @@ export const ProjectDetailModal = () => {
   const contracts = useMemo(() => gameState?.studio.internal.contracts || [], [gameState?.studio.internal.contracts]);
   const talentMap = useMemo(() => new Map(talentPool.map(t => [t.id, t])), [talentPool]);
 
+  const talentByRole = useMemo(() => {
+    const map = new Map<string, import('@/engine/types').TalentProfile[]>();
+    const rolesToTrack = ['director', 'actor', 'writer', 'producer'];
+    for (const r of rolesToTrack) {
+      map.set(r, []);
+    }
+    for (const t of talentPool) {
+      for (const r of t.roles) {
+        const arr = map.get(r);
+        if (arr) {
+          arr.push(t);
+        }
+      }
+    }
+    return map;
+  }, [talentPool]);
+
   const tier = project ? BUDGET_TIERS[project.budgetTier] : null;
 
   const roleGroups = useMemo(() => {
     const groups = new Map<string, { attached: import('@/engine/types').TalentProfile[], available: import('@/engine/types').TalentProfile[] }>();
     const rolesToTrack = ['director', 'actor', 'writer', 'producer'];
-    for (const r of rolesToTrack) {
-      groups.set(r, { attached: [], available: [] });
+
+    if (!project) {
+      for (const r of rolesToTrack) {
+        groups.set(r, { attached: [], available: [] });
+      }
+      return groups;
     }
-    if (!project) return groups;
+
     const projectContracts = contracts.filter(c => c.projectId === project.id);
     const projectTalentIds = new Set(projectContracts.map(c => c.talentId));
-    for (const t of talentPool) {
-      for (const r of t.roles) {
-        const group = groups.get(r);
-        if (group) {
-          if (projectTalentIds.has(t.id)) {
-            group.attached.push(t);
-          } else {
-            group.available.push(t);
-          }
+
+    for (const r of rolesToTrack) {
+      const allInRole = talentByRole.get(r) || [];
+      const attached: import('@/engine/types').TalentProfile[] = [];
+      const available: import('@/engine/types').TalentProfile[] = [];
+
+      for (let i = 0; i < allInRole.length; i++) {
+        const t = allInRole[i];
+        if (projectTalentIds.has(t.id)) {
+          attached.push(t);
+        } else {
+          available.push(t);
         }
       }
+
+      groups.set(r, { attached, available });
     }
     return groups;
-  }, [project, contracts, talentPool]);
+  }, [project, contracts, talentByRole]);
 
   const greenlightReport = useMemo(() => {
     if (!project || project.status !== 'needs_greenlight' || !gameState) return null;

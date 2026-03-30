@@ -47,10 +47,15 @@ export class TalentSystem {
 
     // Talent-specific opportunity (using existing studio talent)
     if (secureRandom() < 0.25) {
-      const activeTalentIds = new Set(state.studio.internal.contracts.map(c => c.talentId));
-      const availableTalentIds = state.industry.talentPool
-        .filter(t => !activeTalentIds.has(t.id))
-        .map(t => t.id);
+      const activeTalentIds = new Set<string>();
+      for (let i = 0; i < state.studio.internal.contracts.length; i++) {
+        activeTalentIds.add(state.studio.internal.contracts[i].talentId);
+      }
+      const availableTalentIds: string[] = [];
+      for (let i = 0; i < state.industry.talentPool.length; i++) {
+        const id = state.industry.talentPool[i].id;
+        if (!activeTalentIds.has(id)) availableTalentIds.push(id);
+      }
 
       if (availableTalentIds.length > 0) {
         const newOpp = generateOpportunity(availableTalentIds);
@@ -82,7 +87,7 @@ export class TalentSystem {
     project: Project,
     contracts: Contract[],
     talentPool: TalentProfile[],
-    awards: Award[] = []
+    projectAwards: Award[] = []
   ): TalentProfile[] {
     if (contracts.length === 0) return [];
 
@@ -101,7 +106,6 @@ export class TalentSystem {
     else if (ROI < 0.4) { drawChange = -12; prestigeChange = -6; feeMultiplier = 0.75; }
     else if (ROI < 0.8) { drawChange = -6; prestigeChange = -3; feeMultiplier = 0.85; }
 
-    const projectAwards = awards.filter(a => a.projectId === project.id);
     const updatedTalent: TalentProfile[] = [];
 
     for (const contract of contracts) {
@@ -118,7 +122,7 @@ export class TalentSystem {
         const isActor = talent.roles.includes('actor');
         const isWriter = talent.roles.includes('writer');
 
-        let qualifiesForBonus = false;
+        let qualifiesForBonus;
         if (award.category.includes('Director')) { qualifiesForBonus = isDirector; }
         else if (award.category.includes('Actor') || award.category.includes('Actress') || award.category.includes('Ensemble')) { qualifiesForBonus = isActor; }
         else if (award.category.includes('Screenplay')) { qualifiesForBonus = isWriter; }

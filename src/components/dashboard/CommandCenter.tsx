@@ -52,7 +52,7 @@ export const CommandCenter: React.FC = () => {
           { label: 'Industry Rivals', value: rivalCount, sub: 'Active competitors', icon: Building2, color: 'text-destructive' },
           { label: 'Prestige XP', value: studio.prestige, sub: 'Reputation level', icon: TrendingUp, color: 'text-success' },
         ].map((kpi, i) => (
-          <Card key={i} className="glass-card hover-glow group overflow-hidden relative border-none">
+          <Card key={i} className="glass-card hover-glow group overflow-hidden relative border-none hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
             {/* Visual Flare */}
             <div className={cn("absolute -top-4 -right-4 w-16 h-16 opacity-10 blur-2xl rounded-full", kpi.color.replace('text', 'bg'))} />
             
@@ -93,7 +93,7 @@ export const CommandCenter: React.FC = () => {
             {newsHistory && newsHistory.length > 0 ? (
               newsHistory.slice(0, 4).map((news, i) => (
                 <div key={news.id} className={cn(
-                  "flex items-center gap-4 p-3 rounded-lg border border-white/5 bg-white/5 hover:bg-white/10 transition-colors group cursor-default",
+                  "flex items-center gap-4 p-3 rounded-lg border border-white/5 bg-card/40 backdrop-blur-md hover:bg-white/10 hover:-translate-y-0.5 hover:shadow-md transition-all duration-300 group cursor-default",
                   i === 0 && "border-primary/20 bg-primary/5"
                 )}>
                   <div className="w-10 h-10 rounded bg-card flex items-center justify-center font-mono text-[10px] text-muted-foreground group-hover:text-primary transition-colors">

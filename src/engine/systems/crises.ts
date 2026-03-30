@@ -2867,40 +2867,380 @@ const CRISIS_POOLS = [
       }
     ]
   }
+,
+  {
+    "description": "Your lead method actor has fully immersed themselves in their character as an 18th-century cobbler and is refusing to wear modern shoes, perform lines correctly, or acknowledge anyone by their real names.",
+    "options": [
+      {
+        "text": "Hire an 'acting coach' who is actually a therapist to gently guide them out.",
+        "effectDescription": "Costs $150k but saves face and keeps production on track.",
+        "cashPenalty": 150000
+      },
+      {
+        "text": "Let them do it. It's 'art.'",
+        "effectDescription": "The crew is miserable, delaying production by 3 weeks.",
+        "weeksDelay": 3
+      },
+      {
+        "text": "Threaten a breach of contract lawsuit unless they break character.",
+        "effectDescription": "They break character, but immediately trash the studio to the press. Lose 30 buzz and 5 reputation.",
+        "buzzPenalty": 30,
+        "reputationPenalty": 5
+      }
+    ]
+  },
+  {
+    "description": "The primary VFX studio hired for the film has suddenly declared bankruptcy, leaving 80% of your CGI shots unfinished and held hostage by their creditors.",
+    "options": [
+      {
+        "text": "Pay off their most urgent creditors to get the servers unlocked.",
+        "effectDescription": "Costs a staggering $2.5M, but you get the files immediately.",
+        "cashPenalty": 2500000
+      },
+      {
+        "text": "Pivot to practical effects and miniatures for the remaining shots.",
+        "effectDescription": "Costs $800k and delays the release by 4 weeks while sets are built.",
+        "cashPenalty": 800000,
+        "weeksDelay": 4
+      },
+      {
+        "text": "Release it as is, claiming it's an 'avant-garde deconstruction of modern cinema'.",
+        "effectDescription": "Audiences despise it. Lose 45 buzz and 10 reputation.",
+        "buzzPenalty": 45,
+        "reputationPenalty": 10
+      }
+    ]
+  },
+  {
+    "description": "Extremely problematic tweets from your director dating back to 2011 have suddenly resurfaced and are trending globally on social media.",
+    "options": [
+      {
+        "text": "Launch a massive PR campaign and 'Apology Tour'.",
+        "effectDescription": "Costs $500k in crisis management fees, but saves the director's job.",
+        "cashPenalty": 500000
+      },
+      {
+        "text": "Fire the director and bring in a reliable studio hack to finish.",
+        "effectDescription": "Costs $300k and adds 3 weeks of reshoots.",
+        "cashPenalty": 300000,
+        "weeksDelay": 3
+      },
+      {
+        "text": "Do absolutely nothing and hope it blows over.",
+        "effectDescription": "The internet goes nuclear. The studio's reputation suffers heavily. Lose 35 buzz and 15 reputation.",
+        "buzzPenalty": 35,
+        "reputationPenalty": 15
+      }
+    ]
+  },
+  {
+    "description": "Your A-list lead actor has been arrested in a foreign country for attempting to smuggle an endangered iguana through customs.",
+    "options": [
+      {
+        "text": "Bribe local officials through a shell company to get them released.",
+        "effectDescription": "Costs $1M and is highly illegal, but production resumes.",
+        "cashPenalty": 1000000
+      },
+      {
+        "text": "Rewrite the script to explain their sudden disappearance.",
+        "effectDescription": "The rewrite is terrible and delays the film by 2 weeks. Lose 15 buzz.",
+        "weeksDelay": 2,
+        "buzzPenalty": 15
+      },
+      {
+        "text": "Wait for the legal process to play out.",
+        "effectDescription": "Production is halted for 5 weeks while they post bail.",
+        "weeksDelay": 5
+      }
+    ]
+  },
+  {
+    "description": "An anonymous hacker group is threatening to leak the unfinished, un-color-graded film unless a $2M ransom is paid in cryptocurrency.",
+    "options": [
+      {
+        "text": "Pay the ransom quietly.",
+        "effectDescription": "Costs $2M in untraceable funds.",
+        "cashPenalty": 2000000
+      },
+      {
+        "text": "Call their bluff and refuse to pay.",
+        "effectDescription": "The movie leaks. Everyone sees the green screens. Lose 40 buzz.",
+        "buzzPenalty": 40
+      },
+      {
+        "text": "Leak it yourself first as a 'teaser' to establish dominance.",
+        "effectDescription": "Costs $100k in PR spin. Confuses the public but lessens the blow. Lose 20 buzz.",
+        "cashPenalty": 100000,
+        "buzzPenalty": 20
+      }
+    ]
+  },
+  {
+    "description": "Your two co-stars have developed a deep, burning hatred for each other and absolutely refuse to film any scenes together.",
+    "options": [
+      {
+        "text": "Shoot their scenes separately and stitch them together in post.",
+        "effectDescription": "Costs $600k in extra VFX work and scheduling delays.",
+        "cashPenalty": 600000
+      },
+      {
+        "text": "Hire a mediator to force them into a truce.",
+        "effectDescription": "Costs $150k but delays production by 1 week while they talk it out.",
+        "cashPenalty": 150000,
+        "weeksDelay": 1
+      },
+      {
+        "text": "Fire the supporting star and recast immediately.",
+        "effectDescription": "Costs $400k and delays production by 3 weeks.",
+        "cashPenalty": 400000,
+        "weeksDelay": 3
+      }
+    ]
+  },
+  {
+    "description": "The crew has walked off the set, claiming the historic location is severely haunted after three lighting rigs collapsed under mysterious circumstances.",
+    "options": [
+      {
+        "text": "Hire an exorcist and a psychic to cleanse the set.",
+        "effectDescription": "Costs $50k. The crew comes back, but you lose 5 reputation for looking ridiculous.",
+        "cashPenalty": 50000,
+        "reputationPenalty": 5
+      },
+      {
+        "text": "Abandon the location and rebuild the set on a soundstage.",
+        "effectDescription": "Costs $1.2M and delays production by 4 weeks.",
+        "cashPenalty": 1200000,
+        "weeksDelay": 4
+      },
+      {
+        "text": "Force them to work under threat of firing.",
+        "effectDescription": "The crew returns resentfully. The film suffers. Lose 25 buzz.",
+        "buzzPenalty": 25
+      }
+    ]
+  },
+  {
+    "description": "A major corporate sponsor realized their product is being used by the villain and is demanding extensive reshoots to make their soda look 'heroic'.",
+    "options": [
+      {
+        "text": "Comply and write a scene where the hero drinks the soda.",
+        "effectDescription": "Costs $300k and delays the film by 1 week. The scene is cringe-inducing. Lose 15 buzz.",
+        "cashPenalty": 300000,
+        "weeksDelay": 1,
+        "buzzPenalty": 15
+      },
+      {
+        "text": "Digitally replace the soda in every frame.",
+        "effectDescription": "Costs $800k in last-minute VFX work.",
+        "cashPenalty": 800000
+      },
+      {
+        "text": "Tell the sponsor to kick rocks and breach the contract.",
+        "effectDescription": "You lose the sponsorship money and face a lawsuit. Lose $1.5M.",
+        "cashPenalty": 1500000
+      }
+    ]
+  },
+  {
+    "description": "During a massive crowd scene, a legitimate brawl breaks out among the extras, leading to several injuries and a police shutdown.",
+    "options": [
+      {
+        "text": "Settle all medical bills and quietly pay off the injured extras.",
+        "effectDescription": "Costs $400k to avoid lawsuits.",
+        "cashPenalty": 400000
+      },
+      {
+        "text": "Use the footage of the real brawl in the movie.",
+        "effectDescription": "Saves money, but the unions are furious. Lose 10 reputation.",
+        "reputationPenalty": 10
+      },
+      {
+        "text": "Shut down production until a safety review is completed.",
+        "effectDescription": "Delays the film by 3 weeks.",
+        "weeksDelay": 3
+      }
+    ]
+  },
+  {
+    "description": "A critical prop—an authentic 17th-century guitar on loan from a museum—was accidentally smashed to splinters by the lead actor in a fit of rage.",
+    "options": [
+      {
+        "text": "Pay the museum its full insured value.",
+        "effectDescription": "Costs $1.2M out of pocket.",
+        "cashPenalty": 1200000
+      },
+      {
+        "text": "Cover it up and return a convincing replica.",
+        "effectDescription": "Costs $100k, but if caught, it'll be a disaster. The anxiety costs you 10 buzz.",
+        "cashPenalty": 100000,
+        "buzzPenalty": 10
+      },
+      {
+        "text": "Publicly blame the prop department and fire them.",
+        "effectDescription": "Saves the studio's face, but destroys crew morale. Delays production by 2 weeks and costs 5 reputation.",
+        "weeksDelay": 2,
+        "reputationPenalty": 5
+      }
+    ]
+  },
+  {
+    "description": "A rogue drone operator captured the entire climactic ending of the film and uploaded it to a popular subreddit, ruining the twist for millions.",
+    "options": [
+      {
+        "text": "Hire private investigators to find the leaker and sue them into oblivion.",
+        "effectDescription": "Costs $300k in legal fees, but sends a message.",
+        "cashPenalty": 300000
+      },
+      {
+        "text": "Shoot an entirely new, decoy ending to confuse the internet.",
+        "effectDescription": "Costs $1.5M and delays release by 3 weeks.",
+        "cashPenalty": 1500000,
+        "weeksDelay": 3
+      },
+      {
+        "text": "Claim the leak was intentional 'viral marketing'.",
+        "effectDescription": "No one believes you. The film's hype deflates. Lose 35 buzz.",
+        "buzzPenalty": 35
+      }
+    ]
+  },
+  {
+    "description": "The cultural consultant you hired just published a scathing 5,000-word exposé in a major magazine calling the film 'profoundly tone-deaf and insulting.'",
+    "options": [
+      {
+        "text": "Publicly apologize and commit to extensive reshoots.",
+        "effectDescription": "Costs $2M and adds 4 weeks to the schedule.",
+        "cashPenalty": 2000000,
+        "weeksDelay": 4
+      },
+      {
+        "text": "Hire a rival PR firm to discredit the consultant.",
+        "effectDescription": "Costs $500k. It's ugly, but it saves the film's buzz at the cost of 10 reputation.",
+        "cashPenalty": 500000,
+        "reputationPenalty": 10
+      },
+      {
+        "text": "Ignore the article entirely.",
+        "effectDescription": "The backlash is fierce. Lose 45 buzz.",
+        "buzzPenalty": 45
+      }
+    ]
+  },
+  {
+    "description": "The local mayor has revoked your filming permits after the director went on a profanity-laced tirade about the town's catering options.",
+    "options": [
+      {
+        "text": "Make a massive 'donation' to the mayor's re-election campaign.",
+        "effectDescription": "Costs $750k to get the permits back instantly.",
+        "cashPenalty": 750000
+      },
+      {
+        "text": "Force the director to grovel publicly and apologize.",
+        "effectDescription": "The director's ego takes a hit, but it costs nothing. Lose 15 buzz.",
+        "buzzPenalty": 15
+      },
+      {
+        "text": "Move the entire production to a neighboring state.",
+        "effectDescription": "Costs $1.5M and delays filming by 3 weeks.",
+        "cashPenalty": 1500000,
+        "weeksDelay": 3
+      }
+    ]
+  },
+  {
+    "description": "Your lead talent has joined a 'wellness cult' in the desert and refuses to read any script pages that contain negative energy.",
+    "options": [
+      {
+        "text": "Hire the cult leader as a 'spiritual producer' to placate them.",
+        "effectDescription": "Costs $400k in a fake salary, but the actor returns to work.",
+        "cashPenalty": 400000
+      },
+      {
+        "text": "Have the writers hastily rewrite the entire film to be 'positive'.",
+        "effectDescription": "Costs $200k and ruins the gritty tone. Lose 25 buzz.",
+        "cashPenalty": 200000,
+        "buzzPenalty": 25
+      },
+      {
+        "text": "Send a private security team to 'extract' them from the compound.",
+        "effectDescription": "Costs $500k and delays production by 2 weeks while things cool down.",
+        "cashPenalty": 500000,
+        "weeksDelay": 2
+      }
+    ]
+  },
+  {
+    "description": "The studio executives have suddenly decided the film needs a talking CGI animal sidekick to boost merchandise sales, and they want it added retroactively to every scene.",
+    "options": [
+      {
+        "text": "Comply and ruin the film's artistic integrity.",
+        "effectDescription": "Costs $3M in VFX and delays the film by 5 weeks.",
+        "cashPenalty": 3000000,
+        "weeksDelay": 5
+      },
+      {
+        "text": "Threaten to take your name off the project and leak the memo.",
+        "effectDescription": "The executives back down, but your relationship is damaged. Lose 15 reputation.",
+        "reputationPenalty": 15
+      },
+      {
+        "text": "Add the CGI animal, but make it deeply unsettling on purpose.",
+        "effectDescription": "Costs $500k. The internet turns it into a meme, but it alienates general audiences. Lose 20 buzz.",
+        "cashPenalty": 500000,
+        "buzzPenalty": 20
+      }
+    ]
+  }
 ];
+
+type CrisisSeverity = 'low' | 'medium' | 'high' | 'catastrophic';
+
+interface PrecalculatedCrisisPool {
+  description: string;
+  options: import('../types').CrisisOption[];
+  severity: CrisisSeverity;
+}
+
+// ⚡ Bolt: Precalculate crisis severity during module initialization to avoid repeated O(n) loops over options during hot production loops
+const CACHED_CRISIS_POOLS: PrecalculatedCrisisPool[] = CRISIS_POOLS.map(template => {
+  let maxDelay = 0;
+  let maxCash = 0;
+  let maxBuzz = 0;
+
+  for (const option of template.options) {
+      const opt = option as import('../types').CrisisOption;
+      if (opt.weeksDelay && opt.weeksDelay > maxDelay) maxDelay = opt.weeksDelay;
+      if (opt.cashPenalty && opt.cashPenalty > maxCash) maxCash = opt.cashPenalty;
+      if (opt.buzzPenalty && opt.buzzPenalty > maxBuzz) maxBuzz = opt.buzzPenalty;
+  }
+
+  let severity: CrisisSeverity = 'low';
+  if (maxCash >= 2_000_000 || maxDelay >= 5 || maxBuzz >= 40) {
+      severity = 'catastrophic';
+  } else if (maxCash >= 800_000 || maxDelay >= 3 || maxBuzz >= 25) {
+      severity = 'high';
+  } else if (maxCash >= 300_000 || maxDelay >= 1 || maxBuzz >= 10) {
+      severity = 'medium';
+  }
+
+  return {
+    description: template.description,
+    options: template.options as import('../types').CrisisOption[],
+    severity
+  };
+});
 
 export function checkAndTriggerCrisis(project: Project): ActiveCrisis | undefined {
   if (project.status !== 'production') return undefined;
 
   if (secureRandom() < 0.05) {
-    const crisisTemplate = pick(CRISIS_POOLS);
-
-    // Calculate severity dynamically based on worst-case penalties
-    let maxDelay = 0;
-    let maxCash = 0;
-    let maxBuzz = 0;
-
-    for (const option of crisisTemplate.options) {
-        const opt = option as import('../types').CrisisOption;
-        if (opt.weeksDelay && opt.weeksDelay > maxDelay) maxDelay = opt.weeksDelay;
-        if (opt.cashPenalty && opt.cashPenalty > maxCash) maxCash = opt.cashPenalty;
-        if (opt.buzzPenalty && opt.buzzPenalty > maxBuzz) maxBuzz = opt.buzzPenalty;
-    }
-
-    let severity: 'low' | 'medium' | 'high' | 'catastrophic' = 'low';
-    if (maxCash >= 2_000_000 || maxDelay >= 5 || maxBuzz >= 40) {
-        severity = 'catastrophic';
-    } else if (maxCash >= 800_000 || maxDelay >= 3 || maxBuzz >= 25) {
-        severity = 'high';
-    } else if (maxCash >= 300_000 || maxDelay >= 1 || maxBuzz >= 10) {
-        severity = 'medium';
-    }
+    const crisisTemplate = pick(CACHED_CRISIS_POOLS);
 
     return {
       description: crisisTemplate.description,
-      options: [...crisisTemplate.options] as import('../types').CrisisOption[], // Clone options
+      options: [...crisisTemplate.options], // Clone options
       resolved: false,
-      severity
+      severity: crisisTemplate.severity
     };
   }
 

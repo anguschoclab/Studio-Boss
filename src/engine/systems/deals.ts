@@ -48,9 +48,15 @@ export function offerFirstLookDeal(state: GameState, talentId: string, weeksRema
 }
 
 export function advanceDeals(deals: FirstLookDeal[]): FirstLookDeal[] {
-  return deals
-    .map(deal => ({ ...deal, weeksRemaining: deal.weeksRemaining - 1 }))
-    .filter(deal => deal.weeksRemaining > 0);
+  const result: FirstLookDeal[] = [];
+  for (let i = 0; i < deals.length; i++) {
+    const deal = deals[i];
+    const newWeeks = deal.weeksRemaining - 1;
+    if (newWeeks > 0) {
+      result.push({ ...deal, weeksRemaining: newWeeks });
+    }
+  }
+  return result;
 }
 
 export function packageProject(project: Project, talentIds?: string[], agency?: Agency): { packageScore: number, synergies: string[] } {

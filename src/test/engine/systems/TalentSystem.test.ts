@@ -107,7 +107,7 @@ describe("TalentSystem", () => {
       const actor = results.find(t => t.id === "t1")!;
       expect(actor.prestige).toBe(100);
       expect(actor.draw).toBe(77);
-      expect(actor.fee).toBe(5500000);
+      expect(actor.fee).toBe(8200000);
     });
 
     it("applies general award modifiers (Best Picture) to all roles with dilution", () => {
@@ -121,7 +121,7 @@ describe("TalentSystem", () => {
       for (const t of results) {
         expect(t.prestige).toBe(67.5);
         expect(t.draw).toBe(57.5);
-        expect(t.fee).toBe(2250000);
+        expect(t.fee).toBe(3000000);
       }
     });
 

@@ -10,10 +10,10 @@ import { getTrendMultiplier } from '../trends';
 export interface WeeklyChanges {
     projectUpdates: string[];
     events: string[];
-    newHeadlines: any[]; // Use any for now or types/engine.types.Headline
+    newHeadlines: import("@/engine/types").Headline[];
     costs: number;
     revenue: number;
-    newsEvents: any[];
+    newsEvents: { type: string; headline: string; description: string; impact: string }[];
 }
 
 export const processProduction = (
@@ -33,6 +33,16 @@ export const processProduction = (
         rivalStrengthSum += state.industry.rivals[i].strength;
     }
     const rivalAvgStrength = rivalStrengthSum / Math.max(1, state.industry.rivals.length);
+
+
+    const awardsByProject = new Map<string, typeof state.industry.awards>();
+    if (state.industry.awards) {
+        for (let i = 0; i < state.industry.awards.length; i++) {
+            const a = state.industry.awards[i];
+            if (!awardsByProject.has(a.projectId)) awardsByProject.set(a.projectId, []);
+            awardsByProject.get(a.projectId)!.push(a);
+        }
+    }
 
     const updatedProjects: Project[] = [];
     const boxOfficeEntries: BoxOfficeEntry[] = [];
@@ -56,7 +66,7 @@ export const processProduction = (
             projectContracts, 
             talentPoolMap, 
             rivalAvgStrength, 
-            state.industry.awards || [], 
+            awardsByProject.get(p.id) || [],
             trendMult
         );
 

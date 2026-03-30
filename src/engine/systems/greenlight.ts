@@ -27,39 +27,46 @@ export function evaluateGreenlight(
 
   // Market Saturation Penalty
   // Calculate dynamic market trend by finding similar genre projects released within the last 52 weeks
-  const recentSimilarProjects = allProjects.filter(p =>
-    p.status === 'released' &&
-    p.genre === project.genre &&
-    p.releaseWeek !== null &&
-    (currentWeek - p.releaseWeek) <= 52 &&
-    p.id !== project.id // exclude self if somehow checking already released project
-  );
+  // ⚡ Bolt: Replaced O(N) .filter() array allocation with a direct for-loop count to eliminate garbage collection pressure
+  let recentSimilarProjectsCount = 0;
+  for (let i = 0; i < allProjects.length; i++) {
+    const p = allProjects[i];
+    if (
+      p.status === 'released' &&
+      p.genre === project.genre &&
+      p.releaseWeek !== null &&
+      (currentWeek - p.releaseWeek) <= 52 &&
+      p.id !== project.id
+    ) {
+      recentSimilarProjectsCount++;
+    }
+  }
 
-  let saturationPenalty = recentSimilarProjects.length * 5;
+  let saturationPenalty = recentSimilarProjectsCount * 5;
 
   // Inject trend-modifier: heavy penalty if genre is oversaturated (e.g., >= 5 similar releases)
   // This dynamic market trend math punishes chasing saturated markets, reducing score significantly
-  if (recentSimilarProjects.length >= 5) {
+  if (recentSimilarProjectsCount >= 5) {
     saturationPenalty += 20;
   }
 
   // New market saturation math: dynamic market trends
   // The Festival Buyer: Heavily penalize oversaturated tentpole genres (like Superhero) to force players to consider market conditions
   // If 5 superhero movies were released last year, buyers should heavily penalize new superhero pitches in the greenlight phase.
-  if (recentSimilarProjects.length >= 5 && project.genre === 'Superhero') {
-    saturationPenalty *= 2; // Doubling the penalty for oversaturated Superhero genre
-    saturationPenalty += 50; // Applying a massive flat penalty for chasing an exhausted superhero market
+  if (recentSimilarProjects.length >= 5 && project.genre.toLowerCase().includes('superhero')) {
+    saturationPenalty *= 3; // Tripling the penalty for oversaturated Superhero genre
+    saturationPenalty += 75; // Applying an even more massive flat penalty for chasing an exhausted superhero market
   }
 
   if (saturationPenalty > 0) {
     score -= saturationPenalty;
-    negatives.push(`Market saturation: -${saturationPenalty} points due to ${recentSimilarProjects.length} recent ${project.genre} release(s).`);
+    negatives.push(`Market saturation: -${saturationPenalty} points due to ${recentSimilarProjectsCount} recent ${project.genre} release(s).`);
   }
 
   // Trend-modifier: Calendar Gap Bonus
   // If no similar projects have been released in the last 52 weeks, the market is starved for this genre.
   // We inject a positive dynamic market trend bonus here to reward players for finding gaps in the release calendar.
-  if (recentSimilarProjects.length === 0) {
+  if (recentSimilarProjectsCount === 0) {
     score += 15;
     positives.push(`Market gap: +15 points due to no recent ${project.genre} releases in the past year.`);
   }
@@ -81,7 +88,14 @@ export function evaluateGreenlight(
     score -= 20;
     negatives.push('Unpackaged: No key talent attached.');
   } else {
-    const totalDraw = attachedTalent.reduce((sum, t) => sum + t.draw, 0);
+    // ⚡ Bolt: Replaced multiple O(N) .reduce() iterations over attachedTalent with a single for-loop
+    let totalDraw = 0;
+    let totalPrestige = 0;
+    for (let i = 0; i < attachedTalent.length; i++) {
+      totalDraw += attachedTalent[i].draw;
+      totalPrestige += attachedTalent[i].prestige;
+    }
+
     const avgDraw = totalDraw / attachedTalent.length;
 
     if (avgDraw > 75) {
@@ -95,7 +109,6 @@ export function evaluateGreenlight(
       negatives.push('Attached talent lacks strong box office/ratings draw.');
     }
 
-    const totalPrestige = attachedTalent.reduce((sum, t) => sum + t.prestige, 0);
     if (totalPrestige > 150) {
       score += 10;
       positives.push('Strong prestige elements for awards narrative.');
