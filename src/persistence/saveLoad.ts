@@ -37,11 +37,35 @@ export function saveGame(slot: number, state: GameState): void {
   }
 }
 
+
+function isValidGameState(data: unknown): data is GameState {
+  if (!data || typeof data !== 'object') return false;
+  const d = data as Record<string, unknown>;
+  if (typeof d.week !== 'number') return false;
+  if (typeof d.cash !== 'number') return false;
+  if (!d.studio || typeof d.studio !== 'object') return false;
+  if (typeof (d.studio as Record<string, unknown>).name !== 'string') return false;
+  if (typeof (d.studio as Record<string, unknown>).archetype !== 'string') return false;
+  if (typeof (d.studio as Record<string, unknown>).prestige !== 'number') return false;
+  if (!(d.studio as Record<string, unknown>).internal || typeof (d.studio as Record<string, unknown>).internal !== 'object') return false;
+  if (!Array.isArray(((d.studio as Record<string, unknown>).internal as Record<string, unknown>).projects)) return false;
+  if (!d.market || typeof d.market !== 'object') return false;
+  if (!d.industry || typeof d.industry !== 'object') return false;
+  if (!d.history || !Array.isArray(d.history)) return false;
+
+  return true;
+}
+
 export function loadGame(slot: number): GameState | null {
   try {
     const data = localStorage.getItem(`${SAVE_PREFIX}${slot}`);
     if (!data) return null;
-    return JSON.parse(data) as GameState;
+    const parsed = JSON.parse(data);
+    if (!isValidGameState(parsed)) {
+      console.error('Invalid save data format');
+      return null;
+    }
+    return parsed as GameState;
   } catch (e) {
     console.error('Failed to load game state', e);
     return null;

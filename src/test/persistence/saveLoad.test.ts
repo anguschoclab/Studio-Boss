@@ -43,6 +43,16 @@ Object.defineProperty(globalThis, "localStorage", {
     expect(loadGame(1)).toBeNull();
   });
 
+
+  it("returns null for invalid payload structures", () => {
+    vi.spyOn(Storage.prototype, "getItem").mockReturnValueOnce(JSON.stringify({
+      week: 1,
+      // missing cash
+      studio: { name: "Hacked" }
+    }));
+    expect(loadGame(1)).toBeNull();
+  });
+
   it("saves and loads game state", () => {
     const state: GameState = initializeGame("Save Studio", "major");
     saveGame(0, state);

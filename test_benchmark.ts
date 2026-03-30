@@ -28,7 +28,7 @@ for (let i = 0; i < 1000; i++) {
   contracts.push({ id: `c_${i}`, projectId: `p_${Math.floor(i / 5)}`, talentId: `t_${Math.floor(Math.random() * 5000)}` });
 }
 
-let project = { id: 'p_0' };
+const project = { id: 'p_0' };
 
 function original() {
   const groups = new Map<string, { attached: TalentProfile[], available: TalentProfile[] }>();
