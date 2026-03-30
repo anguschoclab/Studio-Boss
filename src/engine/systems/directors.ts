@@ -1,7 +1,6 @@
 import { GameState, Project, TalentProfile, Contract, Crisis } from '@/engine/types';
 import { secureRandom } from '../utils';
 
-
 export interface DirectorDispute {
   projectId: string;
   directorId: string;
