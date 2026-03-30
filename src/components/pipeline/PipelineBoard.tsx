@@ -54,9 +54,12 @@ export const PipelineBoard = () => {
         {(() => {
           const projectsByStatus = new Map<ProjectStatus, typeof projects>();
           for (const project of projects) {
-            const list = projectsByStatus.get(project.status) || [];
-            list.push(project);
-            projectsByStatus.set(project.status, list);
+            const list = projectsByStatus.get(project.status);
+            if (list) {
+              list.push(project);
+            } else {
+              projectsByStatus.set(project.status, [project]);
+            }
           }
 
           return COLUMNS.map(col => {
