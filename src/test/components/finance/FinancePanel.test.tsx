@@ -41,7 +41,10 @@ describe('FinancePanel Component', () => {
   });
 
   it('renders gracefully with null/empty game state', () => {
-    vi.mocked(useGameStore).mockImplementation((selector) => selector({ gameState: null } as any));
+    vi.mocked(useGameStore).mockImplementation((selector: any) => {
+      if (!selector) return { snapshots: [] };
+      return selector({ gameState: null, snapshots: [] } as any)
+    });
 
     render(<FinancePanel />);
 
@@ -74,7 +77,10 @@ describe('FinancePanel Component', () => {
       }
     };
 
-    vi.mocked(useGameStore).mockImplementation((selector) => selector({ gameState: mockGameState } as any));
+    vi.mocked(useGameStore).mockImplementation((selector: any) => {
+      if (!selector) return { snapshots: [] };
+      return selector({ gameState: mockGameState, snapshots: [] } as any)
+    });
 
     render(<FinancePanel />);
 
@@ -111,7 +117,10 @@ describe('FinancePanel Component', () => {
       }
     };
 
-    vi.mocked(useGameStore).mockImplementation((selector) => selector({ gameState: mockGameState } as any));
+    vi.mocked(useGameStore).mockImplementation((selector: any) => {
+      if (!selector) return { snapshots: [] };
+      return selector({ gameState: mockGameState, snapshots: [] } as any)
+    });
 
     render(<FinancePanel />);
 

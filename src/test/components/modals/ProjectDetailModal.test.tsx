@@ -138,13 +138,14 @@ describe('ProjectDetailModal', () => {
           cash: 100000000,
         },
         greenlightProject: mockGreenlightProject,
+        getGreenlightReport: vi.fn().mockReturnValue({ score: 80, positives: [], negatives: [] })
       };
       return selector(state);
     });
 
     render(<ProjectDetailModal />);
 
-    const approveBtn = screen.getByText('Approve Greenlight');
+    const approveBtn = screen.getByText('Authorize Production');
     expect(approveBtn).toBeInTheDocument();
 
     fireEvent.click(approveBtn);
@@ -160,6 +161,8 @@ describe('ProjectDetailModal', () => {
       selectProject: mockSelectProject,
     } as unknown as ReturnType<typeof useUIStore>);
 
+    const mockLockMarketingCampaign = vi.fn();
+
     vi.mocked(useGameStore).mockImplementation((selector: any) => {
       const state = {
         gameState: {
@@ -174,19 +177,19 @@ describe('ProjectDetailModal', () => {
           },
           cash: 100000000,
         },
-        launchMarketingCampaign: mockLaunchMarketingCampaign,
+        lockMarketingCampaign: mockLockMarketingCampaign,
       };
       return selector(state);
     });
 
     render(<ProjectDetailModal />);
 
-    const launchBtn = screen.getByText('Launch Campaign & Release');
+    const launchBtn = screen.getByText('Lock Campaign & Commit Capital');
     expect(launchBtn).toBeInTheDocument();
 
     fireEvent.click(launchBtn);
-    // Default marketing Budget is 0, domestic split is 50, angle is 'spectacle'
-    expect(mockLaunchMarketingCampaign).toHaveBeenCalledWith('P1', 0, 50, 'spectacle');
+    // Selected tier defaults to 'none', so it will pass 'none' as argument
+    expect(mockLockMarketingCampaign).toHaveBeenCalledWith('P1', 'none');
     expect(mockSelectProject).toHaveBeenCalledWith(null);
   });
 
@@ -224,7 +227,7 @@ describe('ProjectDetailModal', () => {
 
     render(<ProjectDetailModal />);
 
-    const renewBtn = screen.getByText('Renew for Season 2');
+    const renewBtn = screen.getByText('Order Season 2');
     expect(renewBtn).toBeInTheDocument();
 
     fireEvent.click(renewBtn);
@@ -265,7 +268,7 @@ describe('ProjectDetailModal', () => {
 
     render(<ProjectDetailModal />);
 
-    const spinoffBtn = screen.getByText('Develop Spinoff');
+    const spinoffBtn = screen.getByText('Greenlight Spinoff / Reboot');
     expect(spinoffBtn).toBeInTheDocument();
 
     fireEvent.click(spinoffBtn);
