@@ -2,6 +2,22 @@ import { Award, AwardBody, AwardCategory, AwardsProfile, GameState, Project, Hea
 import { secureRandom } from '../utils';
 
 
+export function isCannesEquivalentFestival(body: AwardBody | string): boolean {
+  return ['Cannes Film Festival', 'Venice Film Festival', 'Berlin International Film Festival', 'Telluride Film Festival'].includes(body);
+}
+
+export function isSundanceEquivalentFestival(body: AwardBody | string): boolean {
+  return ['Sundance Film Festival', 'Toronto International Film Festival', 'SXSW Film Festival', 'Tribeca Film Festival', 'Slamdance Film Festival'].includes(body);
+}
+
+export function isMajorCategoryNomination(category: AwardCategory | string): boolean {
+  return ['Best Director', 'Best Actor', 'Best Actress', 'Palme d\'Or', 'Golden Lion', 'Golden Bear', 'Grand Jury Prize'].includes(category);
+}
+
+export function isSupportingCategoryNomination(category: AwardCategory | string): boolean {
+  return ['Best Supporting Actor', 'Best Supporting Actress'].includes(category);
+}
+
 export function generateAwardsProfile(project: Project): AwardsProfile {
   // Base values heavily randomized for now, could be tied to budget, talent, etc.
   const basePrestige = (secureRandom() * 50) + (project.budget / 1000000) * 0.5;
@@ -543,7 +559,7 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
     // ⚡ Bolt: Find best score using a single loop
     for (let j = 0; j < candidates.length; j++) {
       const p = candidates[j];
-      const score = config.evaluator(p) * (1 + (p.awardsProfile?.campaignStrength || 0) / 100);
+      const score = config.evaluator(p) * (1 + (p.awardsProfile?.campaignStrength || 0) / 25);
       if (score > bestScore) {
         bestScore = score;
         bestProject = p;
