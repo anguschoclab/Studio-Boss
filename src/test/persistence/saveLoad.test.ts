@@ -130,4 +130,20 @@ Object.defineProperty(globalThis, "localStorage", {
 
     Date.now = originalDateNow;
   });
+
+  it("handles malformed save slots metadata", () => {
+    vi.spyOn(localStorageMock, "getItem").mockImplementation((key) => {
+      if (key === "studioboss_slots") return "malformed json";
+      return null;
+    });
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    const slots = getSaveSlots();
+
+    expect(consoleSpy).toHaveBeenCalledWith("Failed to load save slots metadata", expect.any(Error));
+    expect(slots).toHaveLength(3);
+    expect(slots.every((s) => !s.exists)).toBe(true);
+
+    consoleSpy.mockRestore();
+  });
 });
