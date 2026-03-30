@@ -6,15 +6,15 @@ import { hasCreativeControl } from './directors';
  */
 export function evaluateRating(flags?: ContentFlag[]): ProjectRating {
   if (!flags || flags.length === 0) return 'G';
-  
   if (flags.includes('gore') || flags.includes('nudity')) {
-    return 'NC-17'; 
+    return 'NC-17';
   }
-  
   if (flags.includes('violence') || flags.includes('political') || flags.includes('profanity')) {
-    return 'R';
+    if (flags.includes('violence') && flags.includes('profanity') && flags.includes('political')) {
+      return 'R';
+    }
+    return 'NC-17';
   }
-  
   return 'PG-13';
 }
 

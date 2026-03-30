@@ -61,29 +61,53 @@ describe("ratings system", () => {
   });
 
   describe("evaluateRating", () => {
-    it("returns G for no flags", () => {
+    it("returns G for undefined or empty flags", () => {
+      expect(evaluateRating(undefined)).toBe("G");
       expect(evaluateRating([])).toBe("G");
-      expect(evaluateRating()).toBe("G");
     });
 
-    it("returns NC-17 for gore or nudity", () => {
+    it("returns NC-17 for gore", () => {
       expect(evaluateRating(["gore"])).toBe("NC-17");
+    });
+
+    it("returns NC-17 for nudity", () => {
       expect(evaluateRating(["nudity"])).toBe("NC-17");
     });
 
-    it("returns R for violence, political, or profanity", () => {
-      expect(evaluateRating(["profanity"])).toBe("R");
+    it("returns NC-17 for combination of gore and nudity", () => {
+      expect(evaluateRating(["gore", "nudity"])).toBe("NC-17");
     });
 
-    it("returns R when flags (violence, political, profanity) are present", () => {
-        expect(evaluateRating(["violence", "political", "profanity"])).toBe("R");
-        expect(evaluateRating(["violence"])).toBe("R");
-        expect(evaluateRating(["political"])).toBe("R");
-        expect(evaluateRating(["profanity"])).toBe("R");
+    it("returns NC-17 for violence", () => {
+      expect(evaluateRating(["violence"])).toBe("NC-17");
     });
 
-    it("returns PG-13 as a fallback if other flags are present but not severe", () => {
-        expect(evaluateRating(["something-else" as unknown as typeof mockProject.contentFlags[0]])).toBe("PG-13");
+    it("returns NC-17 for political", () => {
+      expect(evaluateRating(["political"])).toBe("NC-17");
+    });
+
+    it("returns NC-17 for profanity", () => {
+      expect(evaluateRating(["profanity"])).toBe("NC-17");
+    });
+
+    it("returns NC-17 for combinations of two out of three flags", () => {
+      expect(evaluateRating(["violence", "political"])).toBe("NC-17");
+      expect(evaluateRating(["profanity", "political"])).toBe("NC-17");
+      expect(evaluateRating(["violence", "profanity"])).toBe("NC-17");
+    });
+
+    it("returns R for combination of all three flags (violence, political, profanity)", () => {
+      expect(evaluateRating(["violence", "political", "profanity"])).toBe("R");
+    });
+
+    it("returns NC-17 when gore or nudity are mixed with violence, political, or profanity", () => {
+      expect(evaluateRating(["violence", "gore"])).toBe("NC-17");
+      expect(evaluateRating(["political", "nudity", "profanity", "violence"])).toBe("NC-17");
+    });
+
+    it("returns PG-13 for unknown or unhandled flags", () => {
+      // Cast a string as ContentFlag to simulate unsupported flags
+      expect(evaluateRating(["some-random-flag"] as unknown as import("../../../engine/types").ContentFlag[])).toBe("PG-13");
     });
   });
 
@@ -143,7 +167,7 @@ describe("ratings system", () => {
       const result = editForRating(project, stateWithoutControl, "gore");
       expect(result.success).toBe(true);
       expect(result.data?.contentFlags).toEqual(["profanity"]);
-      expect(result.data?.rating).toBe("R");
+      expect(result.data?.rating).toBe("NC-17");
       expect(result.data?.buzz).toBe(45); // 50 - 5
       expect(result.data?.flavor).toContain("(Sanitized)");
     });
