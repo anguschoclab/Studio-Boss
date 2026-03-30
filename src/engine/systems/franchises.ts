@@ -115,8 +115,10 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
 
   // Apply "Superhero Fatigue" (or general blockbuster fatigue) logic:
   // If the genre is heavily saturated, amplify the risk severely.
-  if ((sourceProject.genre === 'Superhero' || sourceProject.genre === 'Action' || sourceProject.genre === 'Sci-Fi') && genreSaturationCount > 15) {
-      baseFatigueRisk *= 3.0; // Dead IP state due to extreme market saturation
+  if ((sourceProject.genre === 'Superhero' || sourceProject.genre === 'Action' || sourceProject.genre === 'Sci-Fi') && genreSaturationCount > 20) {
+      baseFatigueRisk *= 4.0; // Dead IP state due to extreme market saturation
+  } else if ((sourceProject.genre === 'Superhero' || sourceProject.genre === 'Action' || sourceProject.genre === 'Sci-Fi') && genreSaturationCount > 15) {
+      baseFatigueRisk *= 3.0;
   } else if ((sourceProject.genre === 'Superhero' || sourceProject.genre === 'Action' || sourceProject.genre === 'Sci-Fi') && genreSaturationCount > 10) {
       baseFatigueRisk *= 2.0; // Extreme fatigue curve
   } else if ((sourceProject.genre === 'Superhero' || sourceProject.genre === 'Action' || sourceProject.genre === 'Sci-Fi') && genreSaturationCount > 5) {
@@ -148,7 +150,58 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
 
   // If the franchise is dead/fatigued and underperformed, there's a chance to reboot, format flip, or deconstruct
   if (isFatigued && sourceProject.revenue <= sourceProject.budget * 1.5) {
-    if (rand < 0.15) {
+    if (rand < 0.05) {
+      return {
+        title: `${sourceProject.title}: The True Story`,
+        format: 'tv',
+        tvFormat: 'docuseries',
+        episodes: 4,
+        releaseModel: 'binge',
+        genre: 'Unscripted',
+        budgetTier: 'low',
+        targetAudience: 'Prestige / Critics',
+        flavor: `An unscripted docuseries retrospective detailing the troubled production and ultimate downfall of the ${sourceProject.title} franchise.`,
+        parentProjectId: sourceProject.id,
+        isSpinoff: true,
+        initialBuzzBonus: 10,
+      };
+    } else if (rand < 0.1) {
+      return {
+        title: `${sourceProject.title}: A New Perspective`,
+        format: sourceProject.format,
+        genre: sourceProject.genre,
+        budgetTier: 'mid',
+        targetAudience: 'Young Adults',
+        flavor: `A demographic shift spin-off targeting a totally new audience to try and save the ${sourceProject.title} IP.`,
+        parentProjectId: sourceProject.id,
+        isSpinoff: true,
+        initialBuzzBonus: 5 - (saturationPenalty / 3),
+      };
+    } else if (rand < 0.15) {
+      return {
+        title: `${sourceProject.title}: An Elseworlds Tale`,
+        format: 'film',
+        genre: 'Drama',
+        budgetTier: 'mid',
+        targetAudience: 'Prestige / Critics',
+        flavor: `A standalone prestige "Elseworlds" project that loosely uses the ${sourceProject.title} IP for an Oscar bait drama.`,
+        parentProjectId: sourceProject.id,
+        isSpinoff: true,
+        initialBuzzBonus: 15,
+      };
+    } else if (rand < 0.2) {
+      return {
+        title: `${sourceProject.title}: IP Retention`,
+        format: 'film',
+        genre: sourceProject.genre,
+        budgetTier: 'low',
+        targetAudience: sourceProject.targetAudience,
+        flavor: `A cynical, zero-budget IP retention flop designed purely to keep the rights to ${sourceProject.title} before they expire.`,
+        parentProjectId: sourceProject.id,
+        isSpinoff: true,
+        initialBuzzBonus: -20,
+      };
+    } else if (rand < 0.3) {
       return {
         title: `${sourceProject.title}: Villain Origin Story`,
         format: 'film',
@@ -160,7 +213,6 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
         isSpinoff: true,
         initialBuzzBonus: 10 - (saturationPenalty / 2),
       };
-    } else if (rand < 0.2) {
       return {
         title: `${sourceProject.title} Returns`,
         format: sourceProject.format,
@@ -172,7 +224,7 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
         isSpinoff: true,
         initialBuzzBonus: 8 - (saturationPenalty / 2),
       };
-    } else if (rand < 0.4) {
+    } else if (rand < 0.5) {
       return {
         title: `${sourceProject.title}: Reboot`,
         format: sourceProject.format,
@@ -345,7 +397,13 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
       };
   }
 
-  if (universeProjectCount >= 20 && recentCrossoverTarget && rand < 0.1) {
+  if (universeProjectCount >= 25 && recentCrossoverTarget && rand < 0.05) {
+    // Ultimate IP Mashup
+    newTitle = `${sourceProject.title} x ${recentCrossoverTarget.title}: The Ultimate Mashup`;
+    flavorText = `A shameless IP mashup crossover event trying to capture the attention of literally everyone.`;
+    buzzBonus += 100 - (genreSaturationCount * 1.5);
+    newBudgetTier = 'blockbuster';
+  } else if (universeProjectCount >= 20 && recentCrossoverTarget && rand < 0.1) {
     // Crisis Event (Endgame Level)
     newTitle = `${sourceProject.title}: Crisis on Infinite Worlds`;
     flavorText = `An unprecedented, universe-shattering crossover event bringing together every successful franchise IP into one monumental finale.`;

@@ -1,5 +1,5 @@
 import { Agency, Agent, AgencyTier, AgencyCulture, AgentSpecialty, AgencyArchetype } from '@/engine/types';
-import { pick, randRange } from '../utils';
+import { pick, randRange, secureRandom } from '../utils';
 
 const POWERHOUSE_PREFIXES = ['United Global', 'Apex', 'Titan', 'Creative Artists', 'William Morrison', 'Monolith', 'Apex Predators', 'Colossal', 'Leviathan'];
 const BOUTIQUE_PREFIXES = ['Silver Lake', 'Artisan', 'Lighthouse', 'Indie', 'Auteur', 'Visionary', 'Underground', 'Echo Park', 'Canyon'];
@@ -14,7 +14,10 @@ const SHARK_TRAITS = [
   'Requires excessive vanity credits',
   'Requires first-dollar gross',
   'Mandates script rewrites by their writers',
-  'Demands guaranteed award campaigns'
+  'Demands guaranteed award campaigns',
+  'Demands 20% backend',
+  'Forces multi-picture deal',
+  'Threatens to pull all clients'
 ];
 
 const POWERHOUSE_TRAITS = [
@@ -25,7 +28,10 @@ const POWERHOUSE_TRAITS = [
   'Forces unwanted co-stars',
   'Forces greenlight on passion projects',
   'Requires first-dollar gross',
-  'Demands guaranteed award campaigns'
+  'Demands guaranteed award campaigns',
+  'Demands cross-promotional tie-ins',
+  'Forces top billing for all clients',
+  'Mandates release windows'
 ];
 
 const BOUTIQUE_TRAITS = [
@@ -35,7 +41,34 @@ const BOUTIQUE_TRAITS = [
   'Refuses to do chemistry reads',
   'Requires final cut privileges',
   'Mandates script rewrites by their writers',
-  'Forces greenlight on passion projects'
+  'Forces greenlight on passion projects',
+  'Requires an analog film shoot',
+  'Mandates a 3-month rehearsal period',
+  'Demands closed-set rehearsals'
+];
+
+const COMEDY_SPECIALIST_TRAITS = [
+  'Only represents comedy writers',
+  'Requires their own stand-up openers',
+  'Demands massive backend points for streaming',
+  'Mandates high script punch-up fees',
+  'Refuses to work on drama projects'
+];
+
+const LIT_AGENCY_TRAITS = [
+  'Demands aggressive credit arbitration',
+  'Requires complete creative control over scripts',
+  'Forces package deals with unproven directors',
+  'Demands first-look deals for all adaptations',
+  'Mandates script rewrites by their writers'
+];
+
+const MEGA_CORP_TRAITS = [
+  'Mandates absurd crossover cameos',
+  'Forces cross-promotional brand integrations',
+  'Requires entire package hire',
+  'Demands guaranteed award campaigns',
+  'Mandates release windows'
 ];
 
 export function generateAgencies(count: number): Agency[] {
@@ -45,35 +78,53 @@ export function generateAgencies(count: number): Agency[] {
     let archetype: AgencyArchetype;
     let actualName: string;
 
+    const r = secureRandom();
+
     if (i < 2) {
       archetype = 'powerhouse';
       actualName = pick(POWERHOUSE_PREFIXES) + pick([' Partners', ' Representation', ' Agency', ' Group', ' Collective']);
     } else if (i % 3 === 0) {
       archetype = 'shark';
       actualName = pick(SHARK_PREFIXES) + pick([' Management', ' Media', ' Brokers', ' Associates']);
+    } else if (r < 0.2) {
+      archetype = 'comedy_specialist';
+      actualName = pick(['Giggles', 'Laugh Track', 'Standup', 'Joke', 'Punchline']) + pick([' Reps', ' Management', ' Artists']);
+    } else if (r < 0.4) {
+      archetype = 'lit_agency';
+      actualName = pick(['Pages', 'Story', 'Narrative', 'Ink', 'Typewriter']) + pick([' Guild', ' Agency', ' Associates']);
+    } else if (r < 0.6) {
+      archetype = 'mega_corp';
+      actualName = pick(['Omni', 'Global', 'Universal', 'Infinite', 'Massive']) + pick([' Media', ' Corp', ' Representation']);
     } else {
       archetype = 'boutique';
       actualName = pick(BOUTIQUE_PREFIXES) + pick([' Reps', ' Artists', ' Guild', ' Defenders']);
     }
 
     let tier: AgencyTier;
-    if (archetype === 'powerhouse') {
+    if (archetype === 'powerhouse' || archetype === 'mega_corp') {
         tier = 'powerhouse';
     } else if (archetype === 'shark') {
         tier = 'major';
+    } else if (archetype === 'comedy_specialist' || archetype === 'lit_agency') {
+        tier = 'specialist';
     } else {
         tier = pick(['mid-tier', 'boutique', 'specialist']);
     }
 
     let culture: AgencyCulture;
-    if (archetype === 'powerhouse') culture = pick(['shark', 'volume']);
+    if (archetype === 'powerhouse' || archetype === 'mega_corp') culture = pick(['shark', 'volume']);
     else if (archetype === 'shark') culture = 'shark';
+    else if (archetype === 'lit_agency') culture = 'prestige';
+    else if (archetype === 'comedy_specialist') culture = 'family';
     else culture = pick(['family', 'prestige']);
 
-    const leverage = archetype === 'powerhouse' ? Math.floor(randRange(85, 100)) : (archetype === 'shark' ? Math.floor(randRange(80, 95)) : Math.floor(randRange(20, 60)));
+    const leverage = (archetype === 'powerhouse' || archetype === 'mega_corp') ? Math.floor(randRange(85, 100)) : (archetype === 'shark' ? Math.floor(randRange(80, 95)) : Math.floor(randRange(20, 60)));
     let traitsPool: string[];
     if (archetype === 'shark') traitsPool = [...SHARK_TRAITS];
     else if (archetype === 'powerhouse') traitsPool = [...POWERHOUSE_TRAITS];
+    else if (archetype === 'comedy_specialist') traitsPool = [...COMEDY_SPECIALIST_TRAITS];
+    else if (archetype === 'lit_agency') traitsPool = [...LIT_AGENCY_TRAITS];
+    else if (archetype === 'mega_corp') traitsPool = [...MEGA_CORP_TRAITS];
     else traitsPool = [...BOUTIQUE_TRAITS];
 
     // Pick 2 random unique traits

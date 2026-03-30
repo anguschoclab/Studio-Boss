@@ -17,7 +17,34 @@ const PREFIXES = [
   'Rebooted',
   'Marketable',
   // Showbiz Scribe Additions Round 3
-  'Post-Cancellable', 'Metrics-Driven', 'Hyper-Local', 'Transmedia', 'Vertical-Slice', 'Quarterly-Earnings', 'Shareholder-Approved', 'Risk-Adjusted', 'Asset-Backed', 'Over-Indexed', 'Pre-Packaged', 'Demographic-Agnostic', 'Cross-Platform', 'Syndication-Ready', 'Merchandisable', 'Franchisable', 'Algorithmic-Optimal', 'Machine-Learned', 'Data-Scraped', 'A.I. Generated', 'Subprime', 'Un-Unionized'];
+  'Post-Cancellable', 'Metrics-Driven', 'Hyper-Local', 'Transmedia', 'Vertical-Slice', 'Quarterly-Earnings', 'Shareholder-Approved', 'Risk-Adjusted', 'Asset-Backed', 'Over-Indexed', 'Pre-Packaged', 'Demographic-Agnostic', 'Cross-Platform', 'Syndication-Ready', 'Merchandisable', 'Franchisable', 'Algorithmic-Optimal', 'Machine-Learned', 'Data-Scraped', 'A.I. Generated', 'Subprime', 'Un-Unionized',
+    // Showbiz Scribe Daily Additions
+    'Tax-Shelter',
+    'Algorithm-Driven',
+    'Shareholder-Approved',
+    'Prestige-Bait',
+    'IP-Farm',
+    'Metrics-Obsessed',
+    'Demographic-Targeted',
+    'Focus-Group-Tested',
+    'Corporate-Synergy',
+    'Subprime',
+    'Venture-Capital',
+    'Offshore-Account',
+    'Data-Mined',
+    'A/B-Tested',
+    'Post-Cancellable',
+    'Brand-Safe',
+    'Risk-Adjusted',
+    'Asset-Backed',
+    'Over-Leveraged',
+    'Nepotism-Fueled',
+    'Ghost-Directed',
+    'Generative-AI',
+    'Derivative',
+    'Plagiarized',
+    'Market-Corrected'
+  ];
 
 const SUFFIXES = [
   // Thematic
@@ -32,7 +59,34 @@ const SUFFIXES = [
   'Data Mine',
   'Rights Management',
   // Showbiz Scribe Additions Round 3
-  'Capital Partners', 'IP Holdings', 'Asset Management', 'Content Silos', 'Delivery Systems', 'Monetization Group', 'Value Extraction', 'Brand Ecosystems', 'Digital Real Estate', 'Media Consolidation', 'Strategic Assets', 'Content Portfolios', 'Franchise Management', 'Global Reach', 'Demographic Targets'];
+  'Capital Partners', 'IP Holdings', 'Asset Management', 'Content Silos', 'Delivery Systems', 'Monetization Group', 'Value Extraction', 'Brand Ecosystems', 'Digital Real Estate', 'Media Consolidation', 'Strategic Assets', 'Content Portfolios', 'Franchise Management', 'Global Reach', 'Demographic Targets',
+    // Showbiz Scribe Daily Additions
+    'Monopolies',
+    'Tax Havens',
+    'Content Farms',
+    'Shell Corporations',
+    'Synergies',
+    'Deliverables',
+    'Holding Companies',
+    'Analytics',
+    'Focus Groups',
+    'Market Research',
+    'IP Vaults',
+    'Franchise Portfolios',
+    'Merchandising Wings',
+    'Rights Management',
+    'Engagement Hubs',
+    'Hedge Funds',
+    'Trusts',
+    'Data Centers',
+    'Creative Silos',
+    'Content Pipelines',
+    'Conglomerates',
+    'Subsidiaries',
+    'Web3 Ventures',
+    'Metaverse Properties',
+    'Deepfakes'
+  ];
 
 const MOTTOS = [
   'Where stories come alive', 'Entertainment without limits', 'The future of cinema', 'Bold stories, bigger audiences', 'Defining the culture', 'Every frame matters', 'Dream factory', 'Stories that move the world', 'Inspiring the imagination', 'Creating the extraordinary', 'Beyond the screen', 'Magic in every moment', 'Your ticket to adventure', 'Unleashing creativity', 'The art of storytelling', 'Cinematic perfection', 'Bringing visions to life', 'Worlds without end', 'Monetizing your childhood', 'Content is King', 'Four quadrants, one vision', 'Synergy in motion', 'Maximizing shareholder value', 'IP above all', 'We make the memes', 'Data-driven storytelling', 'Algorithms do not lie', 'Quantity has a quality all its own', 'Rebooting the culture', 'Franchises are forever', 'Your nostalgia, our profit', 'Selling the dream', 'Pivoting to video', 'The universe is expanding', 'Building the metaverse', 'Vertical integration realized', 'From script to stream', 'Disrupting the narrative', 'Content for the modern attention span', 'Art as a service', 'Monetizing the zeitgeist', 'We own your childhood', 'A cinematic universe of our own', 'Quantity over quality', 'Fast and cheap', 'Good enough for streaming', 'We fix it in post', 'Trust the algorithm', 'Four quadrants or bust', 'IP is king', 'Franchises forever', 'Rebooting your childhood', 'Monetizing nostalgia', 'Content is content', 'Engagement at all costs', 'Viral marketing is free', 'We only make sequels', 'Original ideas are risky', 'Focus grouped to perfection', 'Bland but profitable', 'Safely generic', 'Write it off for taxes', 'Don\'t read the reviews', 'Our trailers are better than the movie', 'Cancel culture is our best marketing', 'Replacing actors with AI since 2024', 'Please subscribe to our streaming tier', 'We own the rights to your dreams', 'Greenlighting based on TikTok trends', 'If it bleeds, we stream it', 'Milking the IP dry', 'Another reboot no one asked for', 'Lowering the bar daily',
@@ -113,7 +167,34 @@ const MOTTOS = [
   'Monetizing nostalgia one reboot at a time.',
   'You will subscribe, eventually.',
   // Showbiz Scribe Additions Round 3
-  'Because art is whatever the spreadsheet says it is.', 'We make movies so you can look at your phone.', 'Your attention is our quarterly bonus.', 'Minimizing risk, maximizing mediocrity.', 'We greenlight what you already know.', 'Recycling your childhood for our shareholders.', 'If it makes money, it\'s cinema.', 'We don\'t make films, we make four-quadrant content events.', 'Tax evasion disguised as entertainment.', 'Algorithmic perfection, artistic bankruptcy.', 'Our focus groups are never wrong.', 'Selling you the same story, repackaged.', 'Art is just a vehicle for merchandising.', 'Because original ideas don\'t test well.', 'We fixed the script in the marketing department.', 'We don\'t care if it\'s good, as long as it trends.', 'Where creativity goes to get focus-grouped.', 'Your nostalgia is our greatest asset.'];
+  'Because art is whatever the spreadsheet says it is.', 'We make movies so you can look at your phone.', 'Your attention is our quarterly bonus.', 'Minimizing risk, maximizing mediocrity.', 'We greenlight what you already know.', 'Recycling your childhood for our shareholders.', 'If it makes money, it\'s cinema.', 'We don\'t make films, we make four-quadrant content events.', 'Tax evasion disguised as entertainment.', 'Algorithmic perfection, artistic bankruptcy.', 'Our focus groups are never wrong.', 'Selling you the same story, repackaged.', 'Art is just a vehicle for merchandising.', 'Because original ideas don\'t test well.', 'We fixed the script in the marketing department.', 'We don\'t care if it\'s good, as long as it trends.', 'Where creativity goes to get focus-grouped.', 'Your nostalgia is our greatest asset.',
+    // Showbiz Scribe Daily Additions
+    'Art is just a byproduct of commerce.',
+    'We own your childhood memories.',
+    'Replacing creativity with algorithms since 2024.',
+    'Focus grouped to perfection.',
+    'Don\'t read the reviews, look at the engagement metrics.',
+    'Where art meets quarterly earnings.',
+    'We make the memes, you do the marketing.',
+    'Quantity has a quality all its own.',
+    'Your subscription is non-refundable.',
+    'If it bleeds, it streams.',
+    'We pivot to whatever is trending.',
+    'Catering exclusively to the lowest common denominator.',
+    'We fix it in post.',
+    'A tax write-off in the making.',
+    'Please don\'t unionize.',
+    'We bought the rights, you buy the ticket.',
+    'Content you can scroll past.',
+    'Our trailers are better than our movies.',
+    'A subsidiary of a subsidiary.',
+    'Monetizing your nostalgia.',
+    'Because original ideas are too expensive.',
+    'Demographically optimized for maximum retention.',
+    'We don\'t make movies, we make content.',
+    'Sacrificing art for shareholder value.',
+    'We own the rights to your dreams.'
+  ];
 
 export const MALE_FIRST_NAMES = [
   'James', 'John', 'Robert', 'Michael', 'William', 'David', 'Richard', 'Joseph',

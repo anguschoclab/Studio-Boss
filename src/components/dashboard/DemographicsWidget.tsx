@@ -28,9 +28,9 @@ export const DemographicsWidget: React.FC = () => {
   };
 
   return (
-    <Card className="col-span-1 lg:col-span-1 border-muted bg-card/50 backdrop-blur-sm">
+    <Card className="col-span-1 lg:col-span-1 border-primary/10 bg-card/40 backdrop-blur-md hover:border-primary/20 hover:shadow-lg transition-all duration-300 group">
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+        <CardTitle className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em] group-hover:text-primary transition-colors">
           Audience Trends
         </CardTitle>
         <CardDescription>Current hottest genres</CardDescription>
