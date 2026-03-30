@@ -102,18 +102,16 @@ export function applyStateImpact(state: GameState, impact: import('@/engine/type
   const newState = { ...state };
   
   // 1. Update Project List
-  let newProjects = [...state.studio.internal.projects];
+  const newProjects = { ...state.studio.internal.projects };
   let projectsChanged = false;
   
-  if (impact.projectUpdates && impact.projectUpdates.length > 0) {
-    const updatesMap = new Map(impact.projectUpdates.map(u => [u.projectId, u.update]));
-    newProjects = newProjects.map(p => {
-        const update = updatesMap.get(p.id);
-        if (update) {
-            projectsChanged = true;
-            return { ...p, ...update };
-        }
-        return p;
+  if (impact.projectUpdates) {
+    impact.projectUpdates.forEach(({ projectId, update }) => {
+      const project = newProjects[projectId];
+      if (project) {
+        newProjects[projectId] = { ...project, ...update };
+        projectsChanged = true;
+      }
     });
 
     if (impact.cultClassicProjectIds && impact.cultClassicProjectIds.length > 0) {

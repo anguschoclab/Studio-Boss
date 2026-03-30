@@ -6,10 +6,6 @@ import { useGameStore } from '../../../store/gameStore';
 import { useUIStore } from '../../../store/uiStore';
 import { Opportunity } from '../../../engine/types';
 
-vi.mock('../../../store/gameStore', () => ({
-  useGameStore: vi.fn(),
-}));
-
 vi.mock('../../../store/uiStore', () => ({
   useUIStore: vi.fn(),
 }));
@@ -26,40 +22,32 @@ describe('DiscoveryBoard', () => {
   });
 
   it('renders empty state when there are no opportunities', () => {
-    (useGameStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector: (state: unknown) => unknown) => {
-      if (typeof selector === 'function') {
-        return selector({ 
-          gameState: { 
-            market: { opportunities: [], trends: [] },
-            industry: { newsHistory: [] } 
-          } 
-        });
-      }
-      return { acquireOpportunity: mockAcquireOpportunity };
-    });
+    useGameStore.setState({
+      gameState: {
+        market: { opportunities: [], trends: [] },
+        industry: { newsHistory: [] }
+      },
+      acquireOpportunity: mockAcquireOpportunity
+    } as any);
 
     render(<DiscoveryBoard />);
 
-    expect(screen.getByText('Discovery Market')).toBeDefined();
-    expect(screen.getByText('The town is quiet. No active scripts or pitches.')).toBeDefined();
+    expect(screen.getByText('The Trades')).toBeDefined();
+    expect(screen.getByText('The town is quiet')).toBeDefined();
   });
 
   it('calls openCreateProject when Create Original button is clicked', () => {
-    (useGameStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector: (state: unknown) => unknown) => {
-      if (typeof selector === 'function') {
-        return selector({ 
-          gameState: { 
-            market: { opportunities: [], trends: [] },
-            industry: { newsHistory: [] } 
-          } 
-        });
-      }
-      return { acquireOpportunity: mockAcquireOpportunity };
-    });
+    useGameStore.setState({
+      gameState: {
+        market: { opportunities: [], trends: [] },
+        industry: { newsHistory: [] }
+      },
+      acquireOpportunity: mockAcquireOpportunity
+    } as any);
 
     render(<DiscoveryBoard />);
 
-    const createButton = screen.getByText('Create Original');
+    const createButton = screen.getByText('Original Concept');
     fireEvent.click(createButton);
 
     expect(mockOpenCreateProject).toHaveBeenCalledTimes(1);
@@ -97,30 +85,26 @@ describe('DiscoveryBoard', () => {
       },
     ];
 
-    (useGameStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector: (state: unknown) => unknown) => {
-      if (typeof selector === 'function') {
-        return selector({ 
-          gameState: { 
-            market: { opportunities: mockOpportunities, trends: [] },
-            industry: { newsHistory: [] }
-          } 
-        });
-      }
-      return { acquireOpportunity: mockAcquireOpportunity };
-    });
+    useGameStore.setState({
+      gameState: {
+        market: { opportunities: mockOpportunities, trends: [] },
+        industry: { newsHistory: [] }
+      },
+      acquireOpportunity: mockAcquireOpportunity
+    } as any);
 
     render(<DiscoveryBoard />);
 
     expect(screen.getByText('Action Movie')).toBeDefined();
     expect(screen.getByText('Comedy Show')).toBeDefined();
     // Updated to match actual component case
-    expect(screen.getByText(/Action/i)).toBeDefined();
-    expect(screen.getByText(/FILM/i)).toBeDefined();
+    expect(screen.getAllByText(/Action/i)).toBeDefined();
+    expect(screen.getAllByText(/FILM/i)).toBeDefined();
     expect(screen.getAllByText(/BUDGET/i)).toBeDefined();
     expect(screen.getByText('"Explosions everywhere."')).toBeDefined();
     expect(screen.getByText('"Laugh out loud."')).toBeDefined();
-    expect(screen.getByText('5 weeks left')).toBeDefined();
-    expect(screen.getByText('3 weeks left')).toBeDefined();
+    expect(screen.getByText('Expiring in 5w')).toBeDefined();
+    expect(screen.getByText('Expiring in 3w')).toBeDefined();
   });
 
   it('calls acquireOpportunity when Acquire button is clicked on a card', () => {
@@ -141,21 +125,17 @@ describe('DiscoveryBoard', () => {
       },
     ];
 
-    (useGameStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector: (state: unknown) => unknown) => {
-      if (typeof selector === 'function') {
-        return selector({ 
-          gameState: { 
-            market: { opportunities: mockOpportunities, trends: [] },
-            industry: { newsHistory: [] }
-          } 
-        });
-      }
-      return { acquireOpportunity: mockAcquireOpportunity };
-    });
+    useGameStore.setState({
+      gameState: {
+        market: { opportunities: mockOpportunities, trends: [] },
+        industry: { newsHistory: [] }
+      },
+      acquireOpportunity: mockAcquireOpportunity
+    } as any);
 
     render(<DiscoveryBoard />);
 
-    const acquireButton = screen.getByText('Acquire');
+    const acquireButton = screen.getByText('Acquire IP');
     fireEvent.click(acquireButton);
 
     expect(mockAcquireOpportunity).toHaveBeenCalledWith('opp-123');

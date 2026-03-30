@@ -11,7 +11,7 @@ describe('Store Slice Isolation', () => {
       const initialState = useGameStore.getState();
       if (!initialState.gameState) throw new Error('Game not initialized');
       
-      const initialProjects = [...initialState.gameState.studio.internal.projects];
+      const initialProjects = { ...initialState.gameState.studio.internal.projects };
       const initialCash = initialState.gameState.cash;
       
       // Action
@@ -27,6 +27,13 @@ describe('Store Slice Isolation', () => {
   });
 
   describe('Project Slice Isolation', () => {
+    it('should manage UUIDs internally and access by O(1) dictionary key', () => {
+      const state = useGameStore.getState();
+      state.addProject({ id: 'p_O1', title: 'O1 Project', status: 'development' });
+      const newState = useGameStore.getState();
+      expect(newState.gameState?.studio.internal.projects['p_O1']).toBeDefined();
+      expect(Object.keys(newState.gameState?.studio.internal.projects || {}).includes('p_O1')).toBe(true);
+    });
     it('should advance a specific project status immutably', () => {
       // Add mock projects
       useGameStore.getState().addProject({ id: 'p1', status: 'development', title: 'P1' });
@@ -38,8 +45,8 @@ describe('Store Slice Isolation', () => {
       const newState = useGameStore.getState();
       if (!newState.gameState) throw new Error('Game missing');
       
-      const p1 = newState.gameState.studio.internal.projects.find(p => p.id === 'p1');
-      const p2 = newState.gameState.studio.internal.projects.find(p => p.id === 'p2');
+      const p1 = newState.gameState.studio.internal.projects['p1'];
+      const p2 = newState.gameState.studio.internal.projects['p2'];
       
       // Verification
       expect(p1?.status).toBe('production');

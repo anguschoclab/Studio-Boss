@@ -1,5 +1,5 @@
 import { Project, ActiveCrisis, GameState } from '@/engine/types';
-import { pick, secureRandom } from '../utils';
+import { pick } from '../utils';
 import { StateImpact } from '../types/state.types';
 import { CRISIS_POOLS } from '../data/crises.data';
 
@@ -17,36 +17,29 @@ export function generateCrisis(project: Project): StateImpact | null {
   return {
     projectUpdates: [{
       projectId: project.id,
-      update: { activeCrisis: crisis }
+      updates: { activeCrisis: crisis }
     }],
-    uiNotifications: [`CRISIS: "${project.title}" - ${crisis.description}`]
+    notifications: [`CRISIS: "${project.title}" - ${crisis.description}`]
   };
 }
 
-export function checkAndTriggerCrisis(project: Project): StateImpact | null {
-  // 3% base chance of a production crisis per week
-  if (secureRandom() < 0.03) {
-    return generateCrisis(project);
-  }
-  return null;
-}
+export function resolveCrisis(state: GameState, projectId: string, optionIndex: number): GameState {
+  const project = state.studio.internal.projects[projectId];
+  const projectIndex = project ? 1 : -1;
+  if (projectIndex === -1) return state;
 
 
-export function resolveCrisis(state: GameState, projectId: string, optionIndex: number): StateImpact {
-  const project = state.studio.internal.projects.find(p => p.id === projectId);
-  if (!project || !project.activeCrisis || project.activeCrisis.resolved) {
-    return {};
-  }
+  if (!project.activeCrisis || project.activeCrisis.resolved) return state;
 
   const option = project.activeCrisis.options[optionIndex];
   if (!option) return {};
 
   const impact: StateImpact = {
-    cashChange: option.cashPenalty ? -option.cashPenalty : 0,
-    prestigeChange: option.reputationPenalty ? -option.reputationPenalty : 0,
+    cashDelta: option.cashPenalty ? -option.cashPenalty : 0,
+    prestigeDelta: option.reputationPenalty ? -option.reputationPenalty : 0,
     projectUpdates: [],
     talentUpdates: [],
-    newHeadlines: [],
+    headlines: [],
     newsEvents: []
   };
 
@@ -65,19 +58,23 @@ export function resolveCrisis(state: GameState, projectId: string, optionIndex: 
     projectUpdate.buzz = Math.max(0, project.buzz - option.buzzPenalty);
   }
 
-  impact.projectUpdates!.push({
-    projectId,
-    update: projectUpdate
-  });
+  // Mark resolved
+  updatedProject.activeCrisis = {
+    ...project.activeCrisis,
+    resolved: true
+  };
+
+  const newProjects = { ...state.studio.internal.projects };
+  newProjects[projectId] = updatedProject;
 
   if (option.removeTalentId) {
-    impact.removeContracts = [{
+    impact.contractsToRemove = [{
       projectId,
       talentId: option.removeTalentId
     }];
   }
 
-  impact.newHeadlines!.push({
+  impact.headlines!.push({
     category: 'general',
     text: `Crisis resolved for "${project.title}": ${option.text}`
   });

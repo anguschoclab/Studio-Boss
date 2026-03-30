@@ -41,7 +41,7 @@ export interface GameState {
     prestige: number;
     culture?: StudioCulture;
     internal: {
-      projects: Project[];
+      projects: Record<string, Project>;
       contracts: Contract[];
       financeHistory: FinanceRecord[];
       firstLookDeals?: FirstLookDeal[];
@@ -59,7 +59,7 @@ export interface GameState {
     families: Family[];
     agencies: Agency[];
     agents: Agent[];
-    talentPool: TalentProfile[];
+    talentPool: Record<string, TalentProfile>;
     awards?: Award[];
     festivalSubmissions?: FestivalSubmission[];
     rumors?: Rumor[];

@@ -19,11 +19,12 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       const state = s.gameState;
       if (!state) return s;
 
-      const talent = state.industry.talentPool.find(t => t.id === talentId);
+      const talent = state.industry.talentPool[talentId];
       if (!talent) return s;
       
-      const pIndex = state.studio.internal.projects.findIndex(p => p.id === projectId);
-      if (pIndex === -1) return s;
+      const p = state.studio.internal.projects[projectId];
+      const pIndex = p ? 1 : -1;
+      if (!p) return s;
       
       let finalFee = talent.fee;
       if (state.studio.internal.firstLookDeals?.some(d => d.talentId === talentId)) {
@@ -67,7 +68,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       const state = s.gameState;
       if (!state) return s;
       
-      const talent = state.industry.talentPool.find(t => t.id === talentId);
+      const talent = state.industry.talentPool[talentId];
       if (!talent) return s;
       
       const lockFee = (talent.fee * 2);
@@ -166,7 +167,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
             ...state.studio,
             internal: {
               ...state.studio.internal,
-              projects: [...state.studio.internal.projects, project],
+              projects: { ...state.studio.internal.projects, [project.id]: project },
               contracts: [...state.studio.internal.contracts, ...newContracts]
             }
           },
@@ -182,14 +183,14 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
   getTalentFilmography: (talentId) => {
     const s = get();
     if (!s.gameState) return [];
-    const talent = s.gameState.industry.talentPool.find(t => t.id === talentId);
+    const talent = s.gameState.industry.talentPool[talentId];
     return talent?.filmography || [];
   },
 
   getTalentCareerStats: (talentId) => {
     const s = get();
     if (!s.gameState) return null;
-    const talent = s.gameState.industry.talentPool.find(t => t.id === talentId);
+    const talent = s.gameState.industry.talentPool[talentId];
     if (!talent) return null;
     
     return {
@@ -203,7 +204,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
   calculateStarMeter: (talentId) => {
     const s = get();
     if (!s.gameState) return 50;
-    const talent = s.gameState.industry.talentPool.find(t => t.id === talentId);
+    const talent = s.gameState.industry.talentPool[talentId];
     if (!talent) return 50;
 
     const filmography = talent.filmography || [];

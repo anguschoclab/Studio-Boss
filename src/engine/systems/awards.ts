@@ -48,16 +48,32 @@ export function generateAwardsProfile(project: Project): AwardsProfile {
   };
 }
 
-/**
- * Returns a StateImpact instead of direct state mutation.
- */
-export function launchAwardsCampaign(state: GameState, projectId: string, budget: number): StateImpact | null {
-  const project = state.studio.internal.projects.find(p => p.id === projectId);
-  if (!project || state.cash < budget || !project.awardsProfile) return null;
+export function launchAwardsCampaign(state: GameState, projectId: string, budget: number): GameState | null {
+  const project = state.studio.internal.projects[projectId];
+
+  if (projectIndex === -1 || state.cash < budget) return null;
+
+  if (!project.awardsProfile) return null;
 
   // Assuming $1M buys 5 points of campaign strength
   const boost = (budget / 1_000_000) * 5;
   const newStrength = Math.min(100, project.awardsProfile.campaignStrength + boost);
+
+  const newProjects = { ...state.studio.internal.projects };
+  newProjects[projectId] = {
+    ...project,
+    awardsProfile: {
+      ...project.awardsProfile,
+      campaignStrength: newStrength
+    }
+  };
+
+  const newHeadline: Headline = {
+    id: crypto.randomUUID(),
+    week: state.week,
+    category: 'awards' as const, 
+    text: `Studio launches massive FYC campaign for "${project.title}".`
+  };
 
   return {
     cashChange: -budget,
@@ -94,7 +110,25 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
   const configsThisWeek = AWARD_CONFIGS.filter(config => bodiesThisWeek.includes(config.body));
   if (configsThisWeek.length === 0) return impact;
 
-  if (state.studio.internal.projects.length === 0) return impact;
+  // ⚡ Bolt: O(1) early exit for zero eligible projects
+  if (Object.keys(state.studio.internal.projects).length === 0) {
+    return { newAwards, prestigeChange, projectUpdates, newsEvents: [] };
+  }
+
+  // ⚡ Bolt: Find eligible projects (released within the last 52 weeks relative to the ceremony)
+  const eligibleFilm: Project[] = [];
+  const eligibleTv: Project[] = [];
+
+  for (const p of Object.values(state.studio.internal.projects)) {
+
+    if ((p.status === 'released' || p.status === 'post_release' || p.status === 'archived') &&
+        p.releaseWeek !== null &&
+        p.releaseWeek > currentWeek - 52 &&
+        p.awardsProfile !== undefined) {
+      if (p.format === 'film') eligibleFilm.push(p);
+      else if (p.format === 'tv') eligibleTv.push(p);
+    }
+  }
 
   // Find eligible projects (released within the last 52 weeks relative to the ceremony)
   const eligibleFilm = state.studio.internal.projects.filter(p => 
@@ -180,7 +214,7 @@ export function processRazzies(state: GameState, week: number): StateImpact {
     talentUpdates: []
   };
 
-  const eligibleProjects = state.studio.internal.projects.filter(p =>
+  const eligibleProjects = Object.values(state.studio.internal.projects).filter(p =>
     p.status === 'released' &&
     p.budget >= 50_000_000 &&
     (p.reviewScore !== undefined && p.reviewScore <= 30)
@@ -220,7 +254,7 @@ export function processRazzies(state: GameState, week: number): StateImpact {
   let highestDraw = 0;
   let worstLeadName: string | null = null;
 
-  for (const talent of state.industry.talentPool) {
+  for (const talent of Object.values(state.industry.talentPool)) {
       if (contractTalentIds.has(talent.id)) {
           if (talent.draw > 70 && talent.draw > highestDraw) {
               worstLeadId = talent.id;

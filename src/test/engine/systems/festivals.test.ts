@@ -108,7 +108,7 @@ describe('Festivals System', () => {
 
     // First ensure it does nothing if it's the wrong week
     let resultState = resolveFestivals(mockState);
-    expect((resultState as any).studio.internal.projects[0].buzz).toBe(10); // Unchanged
+    expect((Object.values((resultState as any).studio.internal.projects)[0] as any).buzz).toBe(10); // Unchanged
 
     // Now trigger it on week 21
     // Force a high random value so it gets selected
@@ -127,6 +127,6 @@ describe('Festivals System', () => {
     
     // Cannes requires high prestige/indieCredibility. With our random mock, it should win or be selected.
     expect((resultState as any).industry.festivalSubmissions[0].status).toBe('selected');
-    expect((resultState as any).studio.internal.projects[0].buzz).toBeGreaterThan(10); // Buzz was awarded
+    expect((Object.values((resultState as any).studio.internal.projects)[0] as any).buzz).toBeGreaterThan(10); // Buzz was awarded
   });
 });

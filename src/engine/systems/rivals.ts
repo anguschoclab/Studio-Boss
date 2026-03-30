@@ -105,7 +105,7 @@ export function advanceRivals(state: GameState): StateImpact {
 
   // Talent Poaching News
   for (const rival of state.industry.rivals) {
-     const poakMsg = rivalPoachTalent(rival, state.industry.talentPool);
+     const poakMsg = rivalPoachTalent(rival, Object.values(state.industry.talentPool));
      if (poakMsg) {
        impact.newsEvents!.push({
          type: 'RIVAL',
