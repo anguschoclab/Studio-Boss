@@ -65,7 +65,7 @@ describe('ProjectCard', () => {
     const project = { ...baseProject, status: 'needs_greenlight' as const };
     render(<ProjectCard project={project} />);
 
-    const button = screen.getAllByRole('button', { name: /Executive Review/i })[1];
+    const button = screen.getByRole('button', { name: /Executive Review/i });
     expect(button).toBeInTheDocument();
 
     fireEvent.click(button);
@@ -76,7 +76,7 @@ describe('ProjectCard', () => {
     const project = { ...baseProject, status: 'pitching' as const };
     render(<ProjectCard project={project} />);
 
-    const button = screen.getAllByRole('button', { name: /Pitch Pipeline/i })[1];
+    const button = screen.getByRole('button', { name: /Pitch Pipeline/i });
     expect(button).toBeInTheDocument();
 
     fireEvent.click(button);
@@ -97,7 +97,7 @@ describe('ProjectCard', () => {
     };
     render(<ProjectCard project={project} />);
 
-    const button = screen.getAllByRole('button', { name: /Neutralize Crisis/i })[1];
+    const button = screen.getByRole('button', { name: /Neutralize Crisis/i });
     expect(button).toBeInTheDocument();
 
     fireEvent.click(button);
