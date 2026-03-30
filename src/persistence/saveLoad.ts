@@ -1,14 +1,32 @@
 import { GameState, SaveSlotMeta } from '@/engine/types';
+import { z } from 'zod';
 
 const SAVE_PREFIX = 'studioboss_save_';
 const SLOTS_KEY = 'studioboss_slots';
+
+const SaveSlotMetaSchema = z.object({
+  slot: z.number(),
+  studioName: z.string(),
+  archetype: z.enum(['major', 'mid-tier', 'indie']),
+  week: z.number(),
+  cash: z.number(),
+  timestamp: z.number(),
+});
+
+const SaveSlotsSchema = z.record(z.string().or(z.number()), SaveSlotMetaSchema);
 
 function loadSaveSlots(): Record<number, SaveSlotMeta> {
   let slots: Record<number, SaveSlotMeta> = {};
   try {
     const slotsData = localStorage.getItem(SLOTS_KEY);
     if (slotsData) {
-      slots = JSON.parse(slotsData);
+      const parsed = JSON.parse(slotsData);
+      const result = SaveSlotsSchema.safeParse(parsed);
+      if (result.success) {
+        slots = result.data;
+      } else {
+        console.error('Invalid save slots metadata format:', result.error);
+      }
     }
   } catch (e) {
     console.error('Failed to load save slots metadata', e);
@@ -37,35 +55,30 @@ export function saveGame(slot: number, state: GameState): void {
   }
 }
 
-
-function isValidGameState(data: unknown): data is GameState {
-  if (!data || typeof data !== 'object') return false;
-  const d = data as Record<string, unknown>;
-  if (typeof d.week !== 'number') return false;
-  if (typeof d.cash !== 'number') return false;
-  if (!d.studio || typeof d.studio !== 'object') return false;
-  if (typeof (d.studio as Record<string, unknown>).name !== 'string') return false;
-  if (typeof (d.studio as Record<string, unknown>).archetype !== 'string') return false;
-  if (typeof (d.studio as Record<string, unknown>).prestige !== 'number') return false;
-  if (!(d.studio as Record<string, unknown>).internal || typeof (d.studio as Record<string, unknown>).internal !== 'object') return false;
-  if (!Array.isArray(((d.studio as Record<string, unknown>).internal as Record<string, unknown>).projects)) return false;
-  if (!d.market || typeof d.market !== 'object') return false;
-  if (!d.industry || typeof d.industry !== 'object') return false;
-  if (!d.history || !Array.isArray(d.history)) return false;
-
-  return true;
-}
+const GameStatePartialSchema = z.object({
+  week: z.number(),
+  cash: z.number(),
+  studio: z.object({
+    name: z.string(),
+    archetype: z.enum(['major', 'mid-tier', 'indie']),
+    prestige: z.number(),
+  }).passthrough(),
+}).passthrough();
 
 export function loadGame(slot: number): GameState | null {
   try {
     const data = localStorage.getItem(`${SAVE_PREFIX}${slot}`);
     if (!data) return null;
+
     const parsed = JSON.parse(data);
-    if (!isValidGameState(parsed)) {
-      console.error('Invalid save data format');
+    const result = GameStatePartialSchema.safeParse(parsed);
+
+    if (result.success) {
+      return parsed as GameState;
+    } else {
+      console.error('Invalid game state format:', result.error);
       return null;
     }
-    return parsed as GameState;
   } catch (e) {
     console.error('Failed to load game state', e);
     return null;
