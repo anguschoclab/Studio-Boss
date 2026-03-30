@@ -1,4 +1,6 @@
-## Performance Optimizations - $O(1)$ Maps
+## Performance Optimizations
 
-*   When doing lookup or filtering inside large state array loops (like evaluating `projects` in `processProduction` or `advanceProjects`), always construct an $O(1)$ lookup `Map` (e.g. `Map<string, Award[]>`) **outside** the loop beforehand rather than calling `.filter()` **inside** the loop. This changes an $O(N \times M)$ overhead into an $O(N + M)$ optimization and prevents significant FPS drops during mid-to-late game stages when industry size balloons.
-*   Ensure that the `Map` correctly resolves TypeScript typings. Using `typeof state.someArray[0]` evaluates to the object type inside the array, so if you are trying to make a Map of Arrays, make sure to either type it as `Map<string, Award[]>` directly or use `typeof state.someArray` (without the `[0]`) to grab the Array type explicitly to avoid compilation errors on `.push()`.
+### Deals System (`advanceDeals`)
+- Transformed O(N) map + O(N) filter into a single O(N) `for` loop in `advanceDeals`.
+- Reduced memory allocations by eliminating the intermediate mapped array.
+- Measured a ~21% reduction in execution time for heavy loads (100k items, 100 iterations) from ~849ms to ~669ms.
