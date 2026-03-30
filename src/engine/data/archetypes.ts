@@ -58,5 +58,20 @@ export const AGENCY_ARCHETYPES: Record<AgencyArchetype, AgencyArchetypeData> = {
     key: 'shark',
     name: 'Shark',
     description: 'Identity: The Shark — The quintessential cutthroat Ten-Percenter. They will mercilessly demand massive backend points, aggressively poach talent from rivals, force the casting of nepo babies, sabotage rival projects, and casually threaten media smear campaigns to get their way.'
+  },
+  comedy_specialist: {
+    key: 'comedy_specialist',
+    name: 'Comedy Specialist',
+    description: 'Identity: The Comedy Specialist — A relentless agency exclusively representing comedy talent. They mandate high script punch-up fees, require their own stand-up openers, and fiercely negotiate for massive backend points in streaming deals.'
+  },
+  lit_agency: {
+    key: 'lit_agency',
+    name: 'Literary Agency',
+    description: 'Identity: The Literary Agency — Represents the most coveted writers in town. They force package deals with unproven directors they want to break, demand aggressive credit arbitration, and require complete creative control over scripts.'
+  },
+  mega_corp: {
+    key: 'mega_corp',
+    name: 'Mega-Corp',
+    description: 'Identity: The Mega-Corp — A sprawling conglomerate agency. They mandate absurd crossover cameos, force cross-promotional brand integrations into your films, and leverage media empires to guarantee award campaigns.'
   }
 };
