@@ -1,4 +1,4 @@
-import { GameState, Project, IPRights } from '@/engine/types';
+import { Project } from '@/engine/types';
 
 export function calculateIPValue(project: Project): number {
   if (project.status === 'development' || project.status === 'pitching' || project.status === 'needs_greenlight') {
@@ -69,13 +69,17 @@ export function advanceIPRights(projects: Project[], currentWeek: number) {
 }
 
 export function catalogValue(projects: Project[]): number {
-  return projects.reduce((total, p) => {
-    if (p.ipRights && p.ipRights.rightsOwner === 'studio') {
-      return total + (p.ipRights.catalogValue || calculateIPValue(p));
+  // ⚡ Bolt: Replaced O(N) .reduce() with a direct for-loop to eliminate intermediate closure allocation overhead
+  let total = 0;
+  for (let i = 0; i < projects.length; i++) {
+    const p = projects[i];
+    if (p.ipRights) {
+      if (p.ipRights.rightsOwner === 'studio') {
+        total += (p.ipRights.catalogValue || calculateIPValue(p));
+      } else if (p.ipRights.rightsOwner === 'shared') {
+        total += ((p.ipRights.catalogValue || calculateIPValue(p)) * 0.5);
+      }
     }
-    if (p.ipRights && p.ipRights.rightsOwner === 'shared') {
-      return total + ((p.ipRights.catalogValue || calculateIPValue(p)) * 0.5);
-    }
-    return total;
-  }, 0);
+  }
+  return total;
 }
