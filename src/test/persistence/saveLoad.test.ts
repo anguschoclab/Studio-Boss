@@ -130,4 +130,21 @@ Object.defineProperty(globalThis, "localStorage", {
 
     Date.now = originalDateNow;
   });
+  it("handles storage errors gracefully without crashing", () => {
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    vi.spyOn(localStorage, "setItem").mockImplementationOnce(() => {
+      throw new Error("QuotaExceededError");
+    });
+
+    const state = initializeGame("Error Studio", "major");
+
+    // This should not throw an exception
+    expect(() => saveGame(0, state)).not.toThrow();
+
+    // It should have logged the error
+    expect(consoleSpy).toHaveBeenCalledWith("Failed to save game state", expect.any(Error));
+
+    consoleSpy.mockRestore();
+    vi.restoreAllMocks();
+  });
 });
