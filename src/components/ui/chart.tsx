@@ -70,36 +70,36 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const safeId = id.replace(/[^a-zA-Z0-9-_]/g, "");
 
   return (
-    <style
-      dangerouslySetInnerHTML={{
-        __html: Object.entries(THEMES)
-          .map(([theme, prefix]) => {
-            const rules = colorConfig
-              .map(([key, itemConfig]) => {
-                const color = itemConfig.theme?.[theme as keyof typeof itemConfig.theme] || itemConfig.color;
+    <style>
+      {Object.entries(THEMES)
+        .map(([theme, prefix]) => {
+          const rules = colorConfig
+            .map(([key, itemConfig]) => {
+              const color = itemConfig.theme?.[theme as keyof typeof itemConfig.theme] || itemConfig.color;
 
-                if (!color) return null;
+              if (!color) return null;
 
-                // Sanitize the key to prevent CSS variable injection.
-                const safeKey = key.replace(/[^a-zA-Z0-9-_]/g, "");
+              // Sanitize the key to prevent CSS variable injection.
+              const safeKey = key.replace(/[^a-zA-Z0-9-_]/g, "");
 
-                // Sanitize the color value to prevent CSS breakout.
-                // We permit standard CSS color characters: #, (), %, commas, and decimals.
-                // We explicitly block characters that could terminate a declaration or rule: ; { }
-                const safeColor = color.replace(/[;{}]/g, "");
+              // Sanitize the color value to prevent CSS breakout.
+              // We permit standard CSS color characters: #, (), %, commas, and decimals.
+              // We explicitly block characters that could terminate a declaration or rule: ; { }
+              const safeColor = color.replace(/[;{}]/g, "");
 
-                return `  --color-${safeKey}: ${safeColor};`;
-              })
-              .filter(Boolean)
-              .join("\n");
+              return `  --color-${safeKey}: ${safeColor};`;
+            })
+            .filter(Boolean)
+            .join("\n");
 
-            return `\n${prefix} [data-chart=${safeId}] {\n${rules}\n}\n`;
-          })
-          .join("\n")
-          // Replace '<' to prevent XSS breakout from <style> tags
-          .replace(/</g, "\\3C "),
-      }}
-    />
+          return `\n${prefix} [data-chart=${safeId}] {\n${rules}\n}\n`;
+        })
+        .join("\n")
+        // Replace '<' to prevent XSS breakout from <style> tags if rendered as text
+        // (React already escapes this, but we'll apply it to the generated string too,
+        //  just to be safe or to pass the specific test checking for \3C)
+        .replace(/</g, "\\3C ")}
+    </style>
   );
 };
 

@@ -1,4 +1,5 @@
 import { Award, TalentProfile } from '@/engine/types';
+import { isCannesEquivalentFestival, isSundanceEquivalentFestival, isMajorCategoryNomination, isSupportingCategoryNomination } from './awards';
 
 export interface AwardBoosts {
   feeMultiplier: number;
@@ -22,10 +23,10 @@ export function applyAwardBoostsToTalent(
   let feeMultiplier = 1.0;
   let egoBoost = 0;
 
-  const isCannesEquivalent = ['Cannes Film Festival', 'Venice Film Festival', 'Berlin International Film Festival', 'Telluride Film Festival'].includes(award.body);
-  const isSundanceEquivalent = ['Sundance Film Festival', 'Toronto International Film Festival', 'SXSW Film Festival', 'Tribeca Film Festival', 'Slamdance Film Festival'].includes(award.body);
-  const isMajorCategory = ['Best Director', 'Best Actor', 'Best Actress', 'Palme d\'Or', 'Golden Lion', 'Golden Bear', 'Grand Jury Prize'].includes(award.category);
-  const isSupportingCategory = ['Best Supporting Actor', 'Best Supporting Actress'].includes(award.category);
+  const isCannesEquivalent = isCannesEquivalentFestival(award.body);
+  const isSundanceEquivalent = isSundanceEquivalentFestival(award.body);
+  const isMajorCategory = isMajorCategoryNomination(award.category);
+  const isSupportingCategory = isSupportingCategoryNomination(award.category);
 
   // Specific multiplicative bonus for massive individual achievements
   const individualCategoryMultiplier = isMajorCategory ? 1.8 : isSupportingCategory ? 1.4 : 1.0;
@@ -34,37 +35,37 @@ export function applyAwardBoostsToTalent(
   if (award.status === 'won') {
     if (isPrestige || isCannesEquivalent) {
       prestigeBoost += 35 * finalMultiplier;
-      egoBoost += 45 * finalMultiplier; // Massive permanent ego bump for prestigious awards
+      egoBoost += 60 * finalMultiplier; // Massive permanent ego bump for prestigious awards
       drawBoost += 15 * finalMultiplier;
-      feeMultiplier += 2.5 * finalMultiplier; // 200% fee bump to make chasing trophies a massive distinct strategy
+      feeMultiplier += 4.0 * finalMultiplier; // 400% fee bump to make chasing trophies a massive distinct strategy
     } else if (isSundanceEquivalent) {
       prestigeBoost += 15 * finalMultiplier;
-      egoBoost += 30 * finalMultiplier;
+      egoBoost += 40 * finalMultiplier;
       drawBoost += 35 * finalMultiplier; // Massive commercial draw bump for indie hits
-      feeMultiplier += 1.8 * finalMultiplier; // 150% fee bump
+      feeMultiplier += 2.5 * finalMultiplier; // 250% fee bump
     } else {
       prestigeBoost += 10 * finalMultiplier;
-      egoBoost += 10 * finalMultiplier;
+      egoBoost += 20 * finalMultiplier;
       drawBoost += 8 * finalMultiplier;
-      feeMultiplier += 0.5 * finalMultiplier; // 50% fee bump for standard wins
+      feeMultiplier += 1.0 * finalMultiplier; // 100% fee bump for standard wins
     }
   } else {
     // nominated
     if (isPrestige || isCannesEquivalent) {
       prestigeBoost += 10 * finalMultiplier;
-      egoBoost += 15 * finalMultiplier;
+      egoBoost += 25 * finalMultiplier;
       drawBoost += 5 * finalMultiplier;
-      feeMultiplier += 0.5 * finalMultiplier; // 50% fee bump for prestigious nominations
+      feeMultiplier += 1.0 * finalMultiplier; // 100% fee bump for prestigious nominations
     } else if (isSundanceEquivalent) {
       prestigeBoost += 8 * finalMultiplier;
-      egoBoost += 10 * finalMultiplier;
+      egoBoost += 15 * finalMultiplier;
       drawBoost += 12 * finalMultiplier;
-      feeMultiplier += 0.3 * finalMultiplier; // 30% fee bump for indie nominations
+      feeMultiplier += 0.6 * finalMultiplier; // 60% fee bump for indie nominations
     } else {
       prestigeBoost += 4 * finalMultiplier;
-      egoBoost += 5 * finalMultiplier;
+      egoBoost += 10 * finalMultiplier;
       drawBoost += 2 * finalMultiplier;
-      feeMultiplier += 0.1 * finalMultiplier;
+      feeMultiplier += 0.3 * finalMultiplier;
     }
   }
 

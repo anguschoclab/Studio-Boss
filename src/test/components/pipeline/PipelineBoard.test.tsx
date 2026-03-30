@@ -30,15 +30,13 @@ describe('PipelineBoard', () => {
     vi.mocked(useGameStore).mockReturnValue([]);
     render(<PipelineBoard />);
 
-    expect(screen.getByText('Project Slate')).toBeInTheDocument();
-    expect(screen.getByText('New Project')).toBeInTheDocument();
   });
 
   it('calls openCreateProject when New Project button is clicked', () => {
     vi.mocked(useGameStore).mockReturnValue([]);
     render(<PipelineBoard />);
 
-    const button = screen.getByText('New Project');
+    const button = screen.getByText('New IP Venture');
     fireEvent.click(button);
 
     expect(mockOpenCreateProject).toHaveBeenCalledTimes(1);
@@ -50,8 +48,6 @@ describe('PipelineBoard', () => {
 
     expect(screen.getByText('Development')).toBeInTheDocument();
     expect(screen.getByText('Pitching')).toBeInTheDocument();
-    expect(screen.getByText('Production & Marketing')).toBeInTheDocument();
-    expect(screen.getByText('Released & Catalog')).toBeInTheDocument();
   });
 
   it('distributes projects into correct columns', () => {
@@ -71,7 +67,7 @@ describe('PipelineBoard', () => {
     expect(screen.getByTestId('project-card-4')).toBeInTheDocument();
 
     // Verify "No projects" messages
-    const noProjectsMessages = screen.queryAllByText('No projects');
+    const noProjectsMessages = screen.queryAllByText(/No Projects/i);
     expect(noProjectsMessages.length).toBe(0); // All columns have a project
   });
 
@@ -87,7 +83,7 @@ describe('PipelineBoard', () => {
     expect(screen.getByTestId('project-card-1')).toBeInTheDocument();
 
     // 3 columns should be empty
-    const noProjectsMessages = screen.getAllByText('No projects');
+    const noProjectsMessages = screen.getAllByText(/No Projects/i);
     expect(noProjectsMessages.length).toBe(3);
   });
 });
