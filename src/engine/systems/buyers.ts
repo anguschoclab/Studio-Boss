@@ -5,6 +5,17 @@ const MANDATE_TYPES: MandateType[] = [
   'sci-fi', 'comedy', 'drama', 'budget_freeze', 'broad_appeal', 'prestige'
 ];
 
+// Precompute filtered mandates to avoid O(N) filtering inside the loop
+const OTHER_MANDATES: Record<string, MandateType[]> = {
+  'sci-fi': ['comedy', 'drama', 'budget_freeze', 'broad_appeal', 'prestige'],
+  'comedy': ['sci-fi', 'drama', 'budget_freeze', 'broad_appeal', 'prestige'],
+  'drama': ['sci-fi', 'comedy', 'budget_freeze', 'broad_appeal', 'prestige'],
+  'budget_freeze': ['sci-fi', 'comedy', 'drama', 'broad_appeal', 'prestige'],
+  'broad_appeal': ['sci-fi', 'comedy', 'drama', 'budget_freeze', 'prestige'],
+  'prestige': ['sci-fi', 'comedy', 'drama', 'budget_freeze', 'broad_appeal']
+};
+
+
 export function updateBuyers(buyers: Buyer[], currentWeek: number): { updatedBuyers: Buyer[]; newHeadlines: string[] } {
   const updatedBuyers = [...buyers];
   const newHeadlines: string[] = [];
@@ -12,7 +23,8 @@ export function updateBuyers(buyers: Buyer[], currentWeek: number): { updatedBuy
   updatedBuyers.forEach((buyer, index) => {
     // If mandate expired or random 5% chance to shift early
     if (!buyer.currentMandate || buyer.currentMandate.activeUntilWeek <= currentWeek || secureRandom() < 0.05) {
-      const newMandateType = pick(MANDATE_TYPES.filter(m => m !== buyer.currentMandate?.type));
+      const options = buyer.currentMandate?.type ? OTHER_MANDATES[buyer.currentMandate.type] : MANDATE_TYPES;
+      const newMandateType = pick(options);
       const duration = Math.floor(randRange(12, 36));
 
       updatedBuyers[index] = {
