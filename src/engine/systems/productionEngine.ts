@@ -81,12 +81,13 @@ export const ProductionEngine = {
     headlineText: string,
     extraProjectUpdates: Partial<Project> = {}
   ): ProductionTransitionResult {
-    const projectIndex = state.studio.internal.projects.findIndex(p => p.id === projectId);
-    if (projectIndex === -1) return { newState: state };
+    const project = state.studio.internal.projects[projectId];
+    if (!project) return { newState: state };
 
-    const project = state.studio.internal.projects[projectIndex];
-    const updatedProjects = [...state.studio.internal.projects];
-    updatedProjects[projectIndex] = {
+
+
+    const updatedProjects = { ...state.studio.internal.projects };
+    updatedProjects[projectId] = {
       ...project,
       status: 'production',
       weeksInPhase: 0,

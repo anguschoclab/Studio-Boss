@@ -12,7 +12,7 @@ export const CrisisModal = () => {
   if (!gameState || !activeModal || activeModal.type !== 'CRISIS') return null;
 
   const { projectId, crisis } = activeModal.payload;
-  const project = gameState.studio.internal.projects.find(p => p.id === projectId);
+  const project = gameState.studio.internal.projects[projectId];
   
   if (!project) {
     resolveCurrentModal();

@@ -43,17 +43,18 @@ export function generateAwardsProfile(project: Project): AwardsProfile {
 }
 
 export function launchAwardsCampaign(state: GameState, projectId: string, budget: number): GameState | null {
-  const projectIndex = state.studio.internal.projects.findIndex(p => p.id === projectId);
+  const project = state.studio.internal.projects[projectId];
+
   if (projectIndex === -1 || state.cash < budget) return null;
-  const project = state.studio.internal.projects[projectIndex];
+
   if (!project.awardsProfile) return null;
 
   // Assuming $1M buys 5 points of campaign strength
   const boost = (budget / 1_000_000) * 5;
   const newStrength = Math.min(100, project.awardsProfile.campaignStrength + boost);
 
-  const newProjects = [...state.studio.internal.projects];
-  newProjects[projectIndex] = {
+  const newProjects = { ...state.studio.internal.projects };
+  newProjects[projectId] = {
     ...project,
     awardsProfile: {
       ...project.awardsProfile,
@@ -516,7 +517,7 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
   }
 
   // ⚡ Bolt: O(1) early exit for zero eligible projects
-  if (state.studio.internal.projects.length === 0) {
+  if (Object.keys(state.studio.internal.projects).length === 0) {
     return { newAwards, prestigeChange, projectUpdates, newsEvents: [] };
   }
 
@@ -524,8 +525,8 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
   const eligibleFilm: Project[] = [];
   const eligibleTv: Project[] = [];
 
-  for (let k = 0; k < state.studio.internal.projects.length; k++) {
-    const p = state.studio.internal.projects[k];
+  for (const p of Object.values(state.studio.internal.projects)) {
+
     if ((p.status === 'released' || p.status === 'post_release' || p.status === 'archived') &&
         p.releaseWeek !== null &&
         p.releaseWeek > currentWeek - 52 &&
@@ -623,7 +624,7 @@ export function processRazzies(state: GameState, week: number): RazzieResult {
     newsEvents: []
   };
 
-  const eligibleProjects = state.studio.internal.projects.filter(p =>
+  const eligibleProjects = Object.values(state.studio.internal.projects).filter(p =>
     p.status === 'released' &&
     p.budget >= 50_000_000 &&
     (p.reviewScore !== undefined && p.reviewScore <= 30)
@@ -666,7 +667,7 @@ export function processRazzies(state: GameState, week: number): RazzieResult {
   let highestDraw = 0;
   let worstLeadName: string | null = null;
 
-  for (const talent of state.industry.talentPool) {
+  for (const talent of Object.values(state.industry.talentPool)) {
       if (contractTalentIds.has(talent.id)) {
           if (talent.draw > 70 && talent.draw > highestDraw) {
               worstLeadId = talent.id;

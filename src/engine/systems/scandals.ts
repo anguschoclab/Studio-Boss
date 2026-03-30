@@ -23,11 +23,11 @@ export function generateScandals(state: GameState): {
   
   // ⚡ Bolt: Replace O(N) Array.find with O(1) Map lookup
   const projectTitleMap = new Map<string, string>();
-  for (const p of state.studio.internal.projects) {
+  for (const p of Object.values(state.studio.internal.projects)) {
     projectTitleMap.set(p.id, p.title);
   }
 
-  for (const talent of state.industry.talentPool) {
+  for (const talent of Object.values(state.industry.talentPool)) {
     const risk = talent.controversyRisk || 5; 
     if (secureRandom() * 1000 < risk) {
        const types: ScandalType[] = ['financial', 'personal', 'onset_behavior', 'legal', 'feud'];
@@ -118,7 +118,7 @@ export function advanceScandals(state: GameState): GameState {
   }
   
   // ⚡ Bolt: Replace map with a loop to prevent intermediate allocations
-  const currentProjects = state.studio.internal.projects;
+  const currentProjects = Object.values(state.studio.internal.projects);
   const newProjects: typeof currentProjects = new Array(currentProjects.length);
   for (let i = 0; i < currentProjects.length; i++) {
     const p = currentProjects[i];

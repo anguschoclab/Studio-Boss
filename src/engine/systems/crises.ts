@@ -3248,10 +3248,11 @@ export function checkAndTriggerCrisis(project: Project): ActiveCrisis | undefine
 }
 
 export function resolveCrisis(state: GameState, projectId: string, optionIndex: number): GameState {
-  const projectIndex = state.studio.internal.projects.findIndex(p => p.id === projectId);
+  const project = state.studio.internal.projects[projectId];
+  const projectIndex = project ? 1 : -1;
   if (projectIndex === -1) return state;
 
-  const project = state.studio.internal.projects[projectIndex];
+
   if (!project.activeCrisis || project.activeCrisis.resolved) return state;
 
   const option = project.activeCrisis.options[optionIndex];
@@ -3277,8 +3278,8 @@ export function resolveCrisis(state: GameState, projectId: string, optionIndex: 
     resolved: true
   };
 
-  const newProjects = [...state.studio.internal.projects];
-  newProjects[projectIndex] = updatedProject;
+  const newProjects = { ...state.studio.internal.projects };
+  newProjects[projectId] = updatedProject;
 
   let newContracts = state.studio.internal.contracts;
   if (option.removeTalentId) {

@@ -13,7 +13,7 @@ export const selectMarket = (state: GameState | null) => state?.market || null;
 
 // --- Studio / Internal Selectors ---
 export const selectInternal = (state: GameState | null) => state?.studio.internal || null;
-export const selectProjects = (state: GameState | null) => state?.studio.internal.projects || EMPTY_PROJECTS;
+export const selectProjects = (state: GameState | null) => Object.values(state?.studio.internal.projects || {});
 export const selectContracts = (state: GameState | null) => state?.studio.internal.contracts || EMPTY_CONTRACTS;
 export const selectFinanceHistory = (state: GameState | null) => state?.studio.internal.financeHistory || [];
 export const selectTotalCash = (state: GameState | null) => state?.cash || 0;
@@ -23,7 +23,7 @@ export const selectStudioPrestige = (state: GameState | null) => state?.studio.p
 
 // --- Industry Selectors ---
 export const selectRivals = (state: GameState | null) => state?.industry.rivals || EMPTY_RIVALS;
-export const selectTalentPool = (state: GameState | null) => state?.industry.talentPool || EMPTY_TALENT;
+export const selectTalentPool = (state: GameState | null) => Object.values(state?.industry.talentPool || {});
 export const selectHeadlines = (state: GameState | null) => state?.industry.headlines || [];
 export const selectAwards = (state: GameState | null) => state?.industry.awards || [];
 export const selectRumors = (state: GameState | null) => state?.industry.rumors || [];
@@ -35,6 +35,7 @@ export const selectTrends = (state: GameState | null) => state?.market.trends ||
 export const selectBuyers = (state: GameState | null) => state?.market.buyers || EMPTY_BUYERS;
 
 // --- Transformation Selectors ---
+export const selectProjectById = (state: GameState | null, id: string) => state?.studio.internal.projects?.[id] || null;
 export const selectActiveProjectsCount = (state: GameState | null) => {
   if (!state) return 0;
   const projects = selectProjects(state);
@@ -46,14 +47,15 @@ export const selectActiveProjectsCount = (state: GameState | null) => {
   return count;
 };
 
-let lastProjectsRefForReleased: Project[] | null = null;
+let lastProjectsRefForReleased: Record<string, Project> | null = null;
 let lastReleasedProjects: Project[] = EMPTY_PROJECTS;
 
 export const selectReleasedProjects = (state: GameState | null) => {
   if (!state) return EMPTY_PROJECTS;
   const projects = selectProjects(state);
 
-  if (projects === lastProjectsRefForReleased) {
+  const rawProjects = state.studio.internal.projects;
+  if (rawProjects === lastProjectsRefForReleased) {
     return lastReleasedProjects;
   }
 
@@ -65,7 +67,7 @@ export const selectReleasedProjects = (state: GameState | null) => {
     }
   }
 
-  lastProjectsRefForReleased = projects;
+  lastProjectsRefForReleased = rawProjects;
   lastReleasedProjects = released;
 
   return released;

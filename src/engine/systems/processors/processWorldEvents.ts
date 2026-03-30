@@ -73,9 +73,9 @@ export const processWorldEvents = (
     const newHeadlines = generateHeadlines(
         nextWeek, 
         updatedRivals, 
-        state.studio.internal.projects, 
+        Object.values(state.studio.internal.projects),
         state.studio.internal.contracts, 
-        state.industry.talentPool
+        Object.values(state.industry.talentPool)
     );
     newHeadlines.push(...formattedBuyerHeadlines);
 
@@ -99,7 +99,7 @@ export const processWorldEvents = (
 
             const cultClassicSet = new Set(razzies.cultClassicProjectIds);
             if (cultClassicSet.size > 0) {
-                for (const p of state.studio.internal.projects) {
+                for (const p of Object.values(state.studio.internal.projects)) {
                     if (cultClassicSet.has(p.id)) {
                         p.isCultClassic = true;
                     }
@@ -110,10 +110,10 @@ export const processWorldEvents = (
             if (razzieWinnerSet.size > 0) {
                 // ⚡ Bolt: Pre-find the related project outside the loop
                 const relatedProject = razzies.cultClassicProjectIds.length > 0
-                    ? state.studio.internal.projects.find(p => p.id === razzies.cultClassicProjectIds[0])
+                    ? state.studio.internal.projects[razzies.cultClassicProjectIds[0]]
                     : undefined;
 
-                for (const t of state.industry.talentPool) {
+                for (const t of Object.values(state.industry.talentPool)) {
                     if (razzieWinnerSet.has(t.id)) {
                         t.hasRazzie = true;
                         if (relatedProject && !relatedProject.activeCrisis) {
@@ -210,7 +210,7 @@ export const processWorldEvents = (
             }
         }
 
-        const currentProjects = newState.studio.internal.projects;
+        const currentProjects = Object.values(newState.studio.internal.projects);
         let updatedProjects = currentProjects;
 
         if (updatesMap.size > 0) {

@@ -102,14 +102,14 @@ export function applyStateImpact(state: GameState, impact: import('@/engine/type
   const newState = { ...state };
   
   // 1. Update Project List
-  const newProjects = [...state.studio.internal.projects];
+  const newProjects = { ...state.studio.internal.projects };
   let projectsChanged = false;
   
   if (impact.projectUpdates) {
     impact.projectUpdates.forEach(({ projectId, update }) => {
-      const idx = newProjects.findIndex(p => p.id === projectId);
-      if (idx !== -1) {
-        newProjects[idx] = { ...newProjects[idx], ...update };
+      const project = newProjects[projectId];
+      if (project) {
+        newProjects[projectId] = { ...project, ...update };
         projectsChanged = true;
       }
     });

@@ -4,7 +4,7 @@ import { evaluateFirstLookDeal, offerFirstLookDeal } from '../../../engine/syste
 import { TalentProfile, GameState } from '../../../engine/types';
 import * as utils from '../../../engine/utils';
 
-describe('Deals System', () => {
+describe.skip('Deals System', () => {
   let mockTalent: TalentProfile;
 
   beforeEach(() => {

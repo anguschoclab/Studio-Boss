@@ -8,7 +8,7 @@ import { TalentCard } from './TalentCard';
 export const TalentPanel = () => {
   const { selectTalent } = useUIStore();
   const state = useGameStore(s => s.gameState);
-  const talentPool = useMemo(() => state?.industry.talentPool || [], [state?.industry.talentPool]);
+  const talentPool = useMemo(() => Object.values(state?.industry.talentPool || {}), [state?.industry.talentPool]);
   const [filter, setFilter] = useState<string>('all');
 
   const filteredTalent = useMemo(() => {

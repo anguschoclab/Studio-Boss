@@ -15,7 +15,7 @@ export interface ProjectSlice {
   renewProject: (id: string) => void;
   greenlightProject: (projectId: string) => void;
   pitchProject: (projectId: string, buyerId: string, contractType: ProjectContractType) => Promise<boolean>;
-  _updateProjectToProduction: (state: GameState, projectIndex: number, project: Project, headlineText: string, extraProjectUpdates?: Partial<Project>) => void;
+  _updateProjectToProduction: (state: GameState, projectId: string, project: Project, headlineText: string, extraProjectUpdates?: Partial<Project>) => void;
   resolveProjectCrisis: (projectId: string, optionIndex: number) => void;
   exploitFranchise: (projectId: string) => void;
   submitToFestival: (projectId: string, festivalBody: AwardBody) => void;
@@ -51,7 +51,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
             ...s.gameState.studio,
             internal: {
               ...s.gameState.studio.internal,
-              projects: [...s.gameState.studio.internal.projects, project],
+              projects: { ...s.gameState.studio.internal.projects, [project.id]: project },
               contracts: [...s.gameState.studio.internal.contracts, ...newContracts]
             }
           }
@@ -65,10 +65,11 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
       const state = s.gameState;
       if (!state) return s;
 
-      const projectIndex = state.studio.internal.projects.findIndex(p => p.id === id);
-      if (projectIndex === -1) return s;
+      const p = state.studio.internal.projects[id];
+      if (!p) return s;
 
-      const p = state.studio.internal.projects[projectIndex];
+
+
       if ((p.format === 'tv' || p.format === 'unscripted') && p.renewable && p.season !== undefined) {
         return {
           gameState: applyStateImpact(state, {
@@ -91,7 +92,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
     });
   },
 
-  _updateProjectToProduction: (state, projectIndex, project, headlineText, extraProjectUpdates = {}) => {
+  _updateProjectToProduction: (state, projectId, project, headlineText, extraProjectUpdates = {}) => {
     const newCulture = state.studio.culture ? updateCultureFromProject(state.studio.culture, project) : undefined;
     
     const impact = {
@@ -125,17 +126,18 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
     const state = get().gameState;
     if (!state) return;
 
-    const projectIndex = state.studio.internal.projects.findIndex(p => p.id === projectId);
-    if (projectIndex === -1) return;
+    const project = state.studio.internal.projects[projectId];
+      if (!project) return;
 
-    const project = state.studio.internal.projects[projectIndex];
+
+
     if (project.status !== 'needs_greenlight') return;
 
     const { project: updatedProject, update } = projectsEngine.executeGreenlight(project);
 
     get()._updateProjectToProduction(
       state,
-      projectIndex,
+      projectId,
       updatedProject,
       update
     );
@@ -145,12 +147,13 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
     const state = get().gameState;
     if (!state) return false;
 
-    const projectIndex = state.studio.internal.projects.findIndex(p => p.id === projectId);
+    const project = state.studio.internal.projects[projectId];
+
     const buyer = state.market.buyers.find(b => b.id === buyerId);
 
-    if (projectIndex === -1 || !buyer) return false;
+    if (!project || !buyer) return false;
 
-    const project = state.studio.internal.projects[projectIndex];
+
     const success = negotiateContract(project, buyer, contractType);
 
     if (success) {
@@ -159,7 +162,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
 
       get()._updateProjectToProduction(
         state,
-        projectIndex,
+        projectId,
         updatedProject,
         update,
         { buyerId, contractType }
@@ -173,7 +176,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
     const state = get().gameState;
     if (!state) return;
 
-    const project = state.studio.internal.projects.find(p => p.id === projectId);
+    const project = state.studio.internal.projects[projectId];
     if (!project) return;
 
     const spinoffParams = exploitIP(project, state);
@@ -186,7 +189,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
     const state = get().gameState;
     if (!state) return;
 
-    const project = state.studio.internal.projects.find(p => p.id === projectId);
+    const project = state.studio.internal.projects[projectId];
     if (!project) return;
 
     const impact = resolveCrisis(project, optionIndex);
@@ -205,8 +208,8 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
   launchAwardsCampaign: (projectId, budget) => {
     set((s) => {
       if (!s.gameState) return s;
-      const project = s.gameState.studio.internal.projects.find(p => p.id === projectId);
-      if (!project) return s;
+      const project = s.gameState.studio.internal.projects[projectId];
+      if (!project) return;
 
       const impact = launchAwardsCampaign(project, budget);
       const newState = applyStateImpact(s.gameState, impact);
@@ -219,8 +222,8 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
       const state = s.gameState;
       if (!state) return s;
 
-      const project = state.studio.internal.projects.find(p => p.id === projectId);
-      if (!project) return s;
+      const project = state.studio.internal.projects[projectId];
+      if (!project) return;
       
       let cost = 0;
       let buzzGain = 0;
@@ -260,7 +263,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
             ...s.gameState.studio,
             internal: {
               ...s.gameState.studio.internal,
-              projects: [...s.gameState.studio.internal.projects, project]
+              projects: { ...s.gameState.studio.internal.projects, [project.id]: project }
             }
           }
         }

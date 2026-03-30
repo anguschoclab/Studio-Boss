@@ -24,7 +24,7 @@ export const processProduction = (
     const contractsByProject = groupContractsByProject(state.studio.internal.contracts);
 
     const talentPoolMap = new Map<string, typeof state.industry.talentPool[0]>();
-    for (const talent of state.industry.talentPool) {
+    for (const talent of Object.values(state.industry.talentPool)) {
         talentPoolMap.set(talent.id, talent);
     }
 
@@ -48,8 +48,8 @@ export const processProduction = (
     const boxOfficeEntries: BoxOfficeEntry[] = [];
     const allTalentUpdates = new Map<string, typeof state.industry.talentPool[0]>();
 
-    for (let i = 0; i < state.studio.internal.projects.length; i++) {
-        const p = state.studio.internal.projects[i];
+    for (const p of Object.values(state.studio.internal.projects)) {
+
 
         if (p.activeCrisis && !p.activeCrisis.resolved) {
             weeklyChanges.projectUpdates.push(`"${p.title}" production is halted until the active crisis is resolved.`);
@@ -125,10 +125,10 @@ export const processProduction = (
         }
     }
 
-    const updatedTalentPool = new Array(state.industry.talentPool.length);
-    for (let i = 0; i < state.industry.talentPool.length; i++) {
-        const t = state.industry.talentPool[i];
-        updatedTalentPool[i] = allTalentUpdates.get(t.id) || t;
+    const updatedTalentPool: Record<string, typeof state.industry.talentPool[0]> = {};
+    for (const t of Object.values(state.industry.talentPool)) {
+
+        updatedTalentPool[t.id] = allTalentUpdates.get(t.id) || t;
     }
 
     return {

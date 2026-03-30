@@ -115,7 +115,7 @@ export const IPVault = () => {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {firstLookDeals.map(deal => {
-                   const talent = gameState?.industry.talentPool.find(t => t.id === deal.talentId);
+                   const talent = gameState?.industry.talentPool[deal.talentId];
                    return (
                      <Card key={deal.talentId} className="glass-card border-l-4 border-l-blue-500/50 border-none group hover-glow">
                         <CardContent className="p-5">

@@ -11,7 +11,7 @@ export function calculateStudioNetWorth(state: GameState): number {
   let netWorth = state.cash;
   
   // Add catalog value from IP rights (Sprint E)
-  state.studio.internal.projects.forEach(p => {
+  Object.values(state.studio.internal.projects).forEach(p => {
     if (p.ipRights && p.ipRights.catalogValue) {
       if (p.ipRights.rightsOwner === 'studio') {
         netWorth += p.ipRights.catalogValue;
@@ -36,8 +36,8 @@ export function generateCashflowForecast(state: GameState, weeksAhead: number = 
   let currentCash = state.cash;
   
   // Short-term projection based on current weekly rates with decay.
-  const currentWeeklyCosts = calculateWeeklyCosts(state.studio.internal.projects, state.market.activeMarketEvents || []);
-  const currentWeeklyRevenue = calculateWeeklyRevenue(state.studio.internal.projects, state.studio.internal.contracts, state.market.activeMarketEvents || []);
+  const currentWeeklyCosts = calculateWeeklyCosts(Object.values(state.studio.internal.projects), state.market.activeMarketEvents || []);
+  const currentWeeklyRevenue = calculateWeeklyRevenue(Object.values(state.studio.internal.projects), state.studio.internal.contracts, state.market.activeMarketEvents || []);
   
   for (let i = 1; i <= weeksAhead; i++) {
     // The Studio Comptroller: Increased aggregate revenue decay to 65% (Math.pow(0.35, i)) to simulate even steeper highly front-loaded modern box office drops.
@@ -163,8 +163,8 @@ export function advanceFinance(
   state: GameState,
   nextWeek: number
 ): FinanceAdvanceResult {
-  const costs = calculateWeeklyCosts(state.studio.internal.projects, state.market.activeMarketEvents || []);
-  const revenue = calculateWeeklyRevenue(state.studio.internal.projects, state.studio.internal.contracts, state.market.activeMarketEvents || []);
+  const costs = calculateWeeklyCosts(Object.values(state.studio.internal.projects), state.market.activeMarketEvents || []);
+  const revenue = calculateWeeklyRevenue(Object.values(state.studio.internal.projects), state.studio.internal.contracts, state.market.activeMarketEvents || []);
   const newCash = state.cash - costs + revenue;
 
   const financeHistory = [
