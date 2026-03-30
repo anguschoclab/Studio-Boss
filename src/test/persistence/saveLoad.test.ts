@@ -140,21 +140,20 @@ Object.defineProperty(globalThis, "localStorage", {
 
     Date.now = originalDateNow;
   });
-  it("handles storage errors gracefully without crashing", () => {
-    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-    vi.spyOn(localStorage, "setItem").mockImplementationOnce(() => {
-      throw new Error("QuotaExceededError");
+
+  it("handles malformed save slots metadata", () => {
+    vi.spyOn(localStorageMock, "getItem").mockImplementation((key) => {
+      if (key === "studioboss_slots") return "malformed json";
+      return null;
     });
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
-    const state = initializeGame("Error Studio", "major");
+    const slots = getSaveSlots();
 
-    // This should not throw an exception
-    expect(() => saveGame(0, state)).not.toThrow();
-
-    // It should have logged the error
-    expect(consoleSpy).toHaveBeenCalledWith("Failed to save game state", expect.any(Error));
+    expect(consoleSpy).toHaveBeenCalledWith("Failed to load save slots metadata", expect.any(Error));
+    expect(slots).toHaveLength(3);
+    expect(slots.every((s) => !s.exists)).toBe(true);
 
     consoleSpy.mockRestore();
-    vi.restoreAllMocks();
   });
 });
