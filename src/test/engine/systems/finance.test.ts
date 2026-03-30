@@ -231,12 +231,12 @@ describe("finance", () => {
 
       const forecast = generateCashflowForecast(state, 1);
 
-      // Revenue is 100,000 * 0.55 = 55,000
-      expect(Math.round(forecast[0].projectedRevenue)).toBe(55000);
+      // Revenue is 100,000 * 0.35 = 35,000
+      expect(Math.round(forecast[0].projectedRevenue)).toBe(35000);
       // Cost is 20,000
       expect(forecast[0].projectedCosts).toBe(20000);
-      // Cash = 1,000,000 + 55,000 - 20,000 = 1,035,000
-      expect(Math.round(forecast[0].projectedCash)).toBe(1035000);
+      // Cash = 1,000,000 + 35,000 - 20,000 = 1,015,000
+      expect(Math.round(forecast[0].projectedCash)).toBe(1015000);
     });
   });
 
