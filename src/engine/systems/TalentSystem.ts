@@ -47,10 +47,15 @@ export class TalentSystem {
 
     // Talent-specific opportunity (using existing studio talent)
     if (secureRandom() < 0.25) {
-      const activeTalentIds = new Set(state.studio.internal.contracts.map(c => c.talentId));
-      const availableTalentIds = state.industry.talentPool
-        .filter(t => !activeTalentIds.has(t.id))
-        .map(t => t.id);
+      const activeTalentIds = new Set<string>();
+      for (let i = 0; i < state.studio.internal.contracts.length; i++) {
+        activeTalentIds.add(state.studio.internal.contracts[i].talentId);
+      }
+      const availableTalentIds: string[] = [];
+      for (let i = 0; i < state.industry.talentPool.length; i++) {
+        const id = state.industry.talentPool[i].id;
+        if (!activeTalentIds.has(id)) availableTalentIds.push(id);
+      }
 
       if (availableTalentIds.length > 0) {
         const newOpp = generateOpportunity(availableTalentIds);
@@ -118,7 +123,7 @@ export class TalentSystem {
         const isActor = talent.roles.includes('actor');
         const isWriter = talent.roles.includes('writer');
 
-        let qualifiesForBonus = false;
+        let qualifiesForBonus;
         if (award.category.includes('Director')) { qualifiesForBonus = isDirector; }
         else if (award.category.includes('Actor') || award.category.includes('Actress') || award.category.includes('Ensemble')) { qualifiesForBonus = isActor; }
         else if (award.category.includes('Screenplay')) { qualifiesForBonus = isWriter; }
