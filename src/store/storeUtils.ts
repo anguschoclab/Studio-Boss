@@ -99,10 +99,10 @@ export function buildProjectAndContracts(state: GameState, params: CreateProject
 }
 
 export function applyStateImpact(state: GameState, impact: import('@/engine/types').StateImpact): GameState {
-  let newState = { ...state };
+  const newState = { ...state };
   
   // 1. Update Project List
-  let newProjects = [...state.studio.internal.projects];
+  const newProjects = [...state.studio.internal.projects];
   let projectsChanged = false;
   
   if (impact.projectUpdates) {

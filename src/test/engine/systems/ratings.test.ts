@@ -1,12 +1,6 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { evaluateRating, calculateRegionalPenalties, editForRating } from "../../../engine/systems/ratings";
 import { Project, GameState } from "../../../engine/types";
-import { hasCreativeControl } from "../../../engine/systems/directors";
-
-// Mock hasCreativeControl
-vi.mock("../../../engine/systems/directors", () => ({
-  hasCreativeControl: vi.fn(),
-}));
 
 const mockProject: Project = {
   id: "proj-1",
@@ -61,9 +55,6 @@ describe("ratings system", () => {
     });
 
     it("clamps the minimum multiplier to 0.1", () => {
-        // Even if we had more penalties, it should clamp to 0.1
-        // Current logic max penalty is 0.3 + 0.15 = 0.45, so 0.55.
-        // We'll trust the Math.max(0.1, multiplier) for now.
         const project = { ...mockProject, contentFlags: ["political" as const, "gore" as const, "nudity" as const] };
         expect(calculateRegionalPenalties(project)).toBeCloseTo(0.55);
     });
@@ -121,9 +112,39 @@ describe("ratings system", () => {
   });
 
   describe("editForRating", () => {
-    const mockState = {} as GameState;
+    const createMockState = (creativeControl: boolean) => ({
+      studio: {
+        internal: {
+          contracts: [
+            {
+              id: "contract-1",
+              talentId: "talent-1",
+              projectId: "proj-1",
+              fee: 1000000,
+              backendPercent: 0,
+              creativeControl: creativeControl
+            }
+          ]
+        }
+      },
+      industry: {
+        talentPool: [
+          {
+            id: "talent-1",
+            name: "Test Director",
+            roles: ["director"],
+            level: "A",
+            traits: [],
+            fee: 1000000,
+            backendPercent: 0,
+            directorArchetype: "journeyman"
+          }
+        ]
+      }
+    } as unknown as GameState);
 
     it("returns success if flag not present", () => {
+      const mockState = {} as GameState;
       const project = { ...mockProject, contentFlags: ["political" as const] };
       const result = editForRating(project, mockState, "gore");
       expect(result.success).toBe(true);
@@ -132,18 +153,18 @@ describe("ratings system", () => {
 
     it("fails if director has creative control", () => {
       const project = { ...mockProject, contentFlags: ["gore" as const] };
-      vi.mocked(hasCreativeControl).mockReturnValue(true);
+      const stateWithControl = createMockState(true);
 
-      const result = editForRating(project, mockState, "gore");
+      const result = editForRating(project, stateWithControl, "gore");
       expect(result.success).toBe(false);
       expect(result.error).toContain("Director has final cut");
     });
 
     it("succeeds and updates project if director does NOT have creative control", () => {
       const project = { ...mockProject, contentFlags: ["gore" as const, "profanity" as const], rating: "NC-17" as const };
-      vi.mocked(hasCreativeControl).mockReturnValue(false);
+      const stateWithoutControl = createMockState(false);
 
-      const result = editForRating(project, mockState, "gore");
+      const result = editForRating(project, stateWithoutControl, "gore");
       expect(result.success).toBe(true);
       expect(result.data?.contentFlags).toEqual(["profanity"]);
       expect(result.data?.rating).toBe("NC-17");
