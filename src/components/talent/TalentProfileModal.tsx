@@ -52,7 +52,7 @@ export const TalentModal = () => {
       { name: 'Prestige', value: talent.prestige, color: '#fbbf24' },
       { name: 'Draw', value: talent.draw, color: '#3b82f6' },
       { name: 'Star Meter', value: talent.starMeter || 50, color: '#8b5cf6' },
-      { name: 'Ego', value: talent.ego || 50, color: '#ef4444' }
+      { name: 'Ego', value: talent.psychology?.ego || 50, color: '#ef4444' }
     ];
   }, [talent]);
 

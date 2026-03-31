@@ -215,6 +215,7 @@ export function generateOpportunity(_weekOrTalentIds?: number | string[]): Oppor
   const type = pick(['script', 'package', 'pitch', 'rights'] as const);
   const origin = pick(['open_spec', 'agency_package', 'writer_sample', 'heat_list', 'passion_project'] as const);
 
+  const weeksUntilExpiry = Math.floor(randRange(4, 12));
   const opt: Opportunity = {
     id: `opp-${crypto.randomUUID()}`,
     type,
@@ -226,8 +227,10 @@ export function generateOpportunity(_weekOrTalentIds?: number | string[]): Oppor
     flavor: generateFlavor(genre, type, budgetTier, origin),
     origin,
     costToAcquire: Math.floor(randRange(10, 500)) * 1000,
-    weeksUntilExpiry: Math.floor(randRange(4, 12)),
+    weeksUntilExpiry,
     attachedTalentIds: talentIds && talentIds.length > 0 && secureRandom() > 0.5 ? [pick(talentIds)] : undefined,
+    bids: {},
+    expirationWeek: weeksUntilExpiry,
   };
 
   if (!isFilm) {

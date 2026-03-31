@@ -64,7 +64,7 @@ export const PipelineBoard = () => {
           }
 
           return COLUMNS.map(col => {
-            const colProjects = col.state.flatMap(status => projectsByStatus.get(status) || []);
+            const colProjects = col.status.flatMap(status => projectsByStatus.get(status) || []);
             return (
               <div key={col.title} className="flex flex-col h-full space-y-4 group/col">
                 {/* Column Header */}

@@ -23,7 +23,7 @@ export function generateTalent(params: { role: TalentRole; tier: string; localCo
     name,
     role: params.role,
     roles: [params.role],
-    tier: params.tier,
+    tier: params.tier as import('../../types/talent.types').TalentTier,
     demographics,
     psychology,
     prestige: Math.min(100, prestige),

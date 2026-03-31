@@ -172,7 +172,7 @@ export function processRazzies(state: GameState, week: number): StateImpact {
   };
 
   const eligibleProjects = Object.values(state.studio.internal.projects).filter(p =>
-    p.status === 'released' &&
+    p.state === 'released' &&
     p.budget >= 50_000_000 &&
     (p.reviewScore !== undefined && p.reviewScore <= 30)
   );

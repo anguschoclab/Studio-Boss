@@ -1,4 +1,5 @@
-import { Headline, RivalStudio, HeadlineCategory, Project, Contract, TalentProfile } from '@/engine/types';
+import { Headline, RivalStudio, HeadlineCategory, Project, Contract, Talent } from '@/engine/types';
+type TalentProfile = Talent;
 import { fillTemplate, pick, secureRandom } from '../utils';
 import { MARKET_HEADLINES, TALENT_HEADLINES, RIVAL_TEMPLATES } from '../data/headlines.data';
 

@@ -65,7 +65,8 @@ export type ImpactType =
   | 'SYSTEM_TICK';
 
 export interface StateImpact {
-  type: ImpactType;
-  payload: any;
+  type?: ImpactType;
+  payload?: any;
+  [key: string]: any;
 }
 

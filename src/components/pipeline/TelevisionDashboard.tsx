@@ -108,7 +108,7 @@ const TVShowCard = ({ show }: { show: Project }) => {
               <div className="text-[9px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-1.5">
                 <Zap className="h-2.5 w-2.5" /> Quality
               </div>
-              <div className="text-sm font-black tracking-tight">{Math.round(show.reviewScore)}</div>
+              <div className="text-sm font-black tracking-tight">{Math.round(show.reviewScore ?? 0)}</div>
            </div>
         </div>
 

@@ -99,7 +99,7 @@ export const TalentCard: React.FC<TalentCardProps> = ({ talent, className, showS
         </div>
         <div className="space-y-0.5">
           <div className="text-[9px] uppercase font-bold tracking-wider text-muted-foreground">Status</div>
-          <div className="font-semibold truncate text-foreground/90 capitalize">{talent.temperament}</div>
+          <div className="font-semibold truncate text-foreground/90 capitalize">{talent.psychology?.mood > 70 ? 'Confident' : talent.psychology?.mood > 40 ? 'Steady' : 'Volatile'}</div>
         </div>
       </div>
     </div>
