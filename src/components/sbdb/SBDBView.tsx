@@ -64,6 +64,7 @@ export const SBDBView = () => {
         <div className="relative w-full md:w-96">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input 
+            aria-label="Search SBDB"
             placeholder="Search SBDB..." 
             className="pl-10 bg-white/5 border-white/10"
             value={search}
