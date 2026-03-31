@@ -15,9 +15,9 @@ const TitleScreen = () => {
 
   useEffect(() => {
     const fetchSlots = async () => {
-      const result = await getSaveSlots();
-      setSlots(result);
-      setHasSaves(result.some(s => s.exists));
+    const result = await getSaveSlots();
+    setSlots(result);
+    setHasSaves(result.some((s: any) => s.exists));
     };
     fetchSlots();
   }, [getSaveSlots]);
