@@ -1,4 +1,4 @@
-import { TalentProfile, Family, AccessLevel, TalentRole, Agent, Agency } from '@/engine/types';
+import { TalentProfile, Family, AccessLevel, TalentRole, Agent, Agency, MotivationProfile, TalentMotivation } from '@/engine/types';
 import { pick, randRange, secureRandom } from '../utils';
 import { LAST_NAMES, MALE_FIRST_NAMES, FEMALE_FIRST_NAMES } from '../data/names.data';
 
@@ -230,15 +230,31 @@ export function generateTalentPool(size: number, families: Family[], agents: Age
     const starMeter = Math.floor((prestige * 0.4) + (draw * 0.4) + (momentum * 0.2));
 
     const triviaCount = Math.floor(randRange(1, 4));
-    const triviaPool = [...TRIVIA_POOL];
+    const triviaPoolList = [...TRIVIA_POOL];
     const trivia: string[] = [];
     for (let j = 0; j < triviaCount; j++) {
-      const t = pick(triviaPool);
+      const t = pick(triviaPoolList);
       trivia.push(t);
-      triviaPool.splice(triviaPool.indexOf(t), 1);
+      triviaPoolList.splice(triviaPoolList.indexOf(t), 1);
     }
 
-    const bio = `${firstName} ${lastName} (${age}) is a ${uniqueRoles.join('-')} known for their ${temperament.toLowerCase()} approach. ${isNepo ? 'Coming from a prominent industry family, they have had a unique vantage point on Hollywood since childhood.' : 'An outsider who worked their way up, they are seen as a rising force in the industry.'} ${unscriptedExperience > 50 ? 'Having started in the unscripted world, they have successfully transitioned into scripted storytelling.' : ''}`;
+    const bio = `${firstName} ${lastName} (${age}) is a ${rolesList.join('-')} known for their ${temperament.toLowerCase()} approach. ${isNepo ? 'Coming from a prominent industry family, they have had a unique vantage point on Hollywood since childhood.' : 'An outsider who worked their way up, they are seen as a rising force in the industry.'} ${unscriptedExperience > 50 ? 'Having started in the unscripted world, they have successfully transitioned into scripted storytelling.' : ''}`;
+
+    // AI Motivations Generation
+    const motivationProfile: MotivationProfile = {
+      financial: Math.floor(randRange(20, 80)),
+      prestige: Math.floor(randRange(20, 80)),
+      legacy: Math.floor(randRange(10, 70)),
+      aggression: Math.floor(randRange(10, 60))
+    };
+
+    // Refine profile based on role/access
+    if (primaryRole === 'actor') motivationProfile.financial += 10;
+    if (primaryRole === 'director') motivationProfile.prestige += 15;
+    if (accessLevel === 'dynasty') motivationProfile.legacy += 20;
+
+    const motivations: TalentMotivation[] = ['FAME_SEEKER', 'PRESTIGE_HUNTER', 'MONEY_GRABBER', 'REHAB_ARC', 'CREATIVE_FREEDOM', 'NONE'];
+    const currentMotivation = pick(motivations);
 
     pool.push({
       id: `talent-${crypto.randomUUID()}`,
@@ -264,7 +280,11 @@ export function generateTalentPool(size: number, families: Family[], agents: Age
       unscriptedExperience,
       highestSalaryMovie: highestSalaryMovie ? { amount: highestSalaryMovie.salary, project: highestSalaryMovie.title, year: highestSalaryMovie.year } : undefined,
       highestSalaryTv: highestSalaryTv ? { amount: highestSalaryTv.salary, project: highestSalaryTv.title, year: highestSalaryTv.year } : undefined,
-      trivia
+      trivia,
+      // AI Motivations
+      motivationProfile,
+      currentMotivation,
+      motivationImpulse: 'NONE'
     });
   }
 

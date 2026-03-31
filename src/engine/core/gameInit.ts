@@ -17,6 +17,16 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
     existingNames.push(name);
     const rArch = pick(rivalArchetypes);
     const rArchData = ARCHETYPES[rArch];
+
+    const motivationProfile = {
+       financial: rArch === 'major' ? 80 : (rArch === 'mid-tier' ? 60 : 40),
+       prestige: rArch === 'indie' ? 90 : (rArch === 'mid-tier' ? 60 : 40),
+       legacy: rArch === 'major' ? 70 : 30,
+       aggression: 40 + Math.floor(secureRandom() * 40)
+    };
+
+    const motivations: import('@/engine/types').StudioMotivation[] = ['CASH_CRUNCH', 'AWARD_CHASE', 'FRANCHISE_BUILDING', 'MARKET_DISRUPTION', 'STABILITY'];
+
     return {
       id: `rival-${i}`,
       name,
@@ -27,6 +37,10 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
       prestige: rArchData.startingPrestige + Math.floor(randRange(-10, 10)),
       recentActivity: 'Setting up operations for the new season',
       projectCount: 2 + Math.floor(secureRandom() * 5),
+      motivationProfile,
+      currentMotivation: pick(motivations),
+      projects: {},
+      contracts: []
     };
   });
 

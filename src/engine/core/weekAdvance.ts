@@ -4,6 +4,7 @@ import { secureRandom } from '../utils';
 import { advanceIPRights } from '../systems/ipRetention';
 import { advanceDeals } from '../systems/deals';
 import { processProduction } from '../systems/processors/processProduction';
+import { processRivalProduction } from '../systems/processors/processRivalProduction';
 import { processFinance } from '../systems/processors/processFinance';
 import { processWorldEvents } from '../systems/processors/processWorldEvents';
 import { applyStateImpact } from '../../store/storeUtils';
@@ -87,6 +88,10 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
   const productionImpact = processProduction(currentState);
   currentState = applyStateImpact(currentState, productionImpact);
 
+  // 1b. Process Rival Production (Advancement for competitors)
+  const rivalProdImpact = processRivalProduction(currentState);
+  currentState = applyStateImpact(currentState, rivalProdImpact);
+
   // 2. Resolve Studio Finances (Burn, Revenue, Cash Flow)
   const financeImpact = processFinance(currentState);
   currentState = applyStateImpact(currentState, financeImpact);
@@ -103,7 +108,7 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
   currentState = applyStateImpact(currentState, dealsImpact);
 
   // 5. Build Cumulative Summary
-  const allImpacts = mergeImpacts(productionImpact, financeImpact, worldImpact, ipImpact, dealsImpact);
+  const allImpacts = mergeImpacts(productionImpact, rivalProdImpact, financeImpact, worldImpact, ipImpact, dealsImpact);
   
   const totalRevenue = financeImpact.cashChange && financeImpact.cashChange > 0 ? financeImpact.cashChange : 0;
   const totalCosts = financeImpact.cashChange && financeImpact.cashChange < 0 ? -financeImpact.cashChange : 0;

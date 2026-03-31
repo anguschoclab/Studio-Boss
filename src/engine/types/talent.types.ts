@@ -1,5 +1,16 @@
 // Types related to Talent, Agencies, and Scandals
 
+export interface MotivationProfile {
+  financial: number; // 0-100, prioritizing profit/cash
+  prestige: number;  // 0-100, prioritizing awards/critics
+  legacy: number;    // 0-100, prioritizing long-term IP/history (talent only: artistry)
+  aggression: number; // 0-100, likelihood of hostile moves
+}
+
+export type TalentMotivation = 'FAME_SEEKER' | 'PRESTIGE_HUNTER' | 'MONEY_GRABBER' | 'REHAB_ARC' | 'CREATIVE_FREEDOM' | 'NONE';
+export type AgencyMotivation = 'THE_PACKAGER' | 'THE_CLIMBER' | 'THE_PROTECTOR' | 'THE_SHARK' | 'VOLUME_RETAIL';
+export type RivalStrategy = 'blockbuster_focused' | 'prestige_chaser' | 'genre_specialist' | 'acquirer' | 'poacher' | 'balanced';
+
 export type DirectorArchetype = 'auteur' | 'journeyman' | 'visionary' | 'commercial_hack';
 
 export type ScandalType = 'financial' | 'personal' | 'onset_behavior' | 'legal' | 'feud';
@@ -29,6 +40,8 @@ export interface Agency {
   prestige: number;
   leverage: number; // 0-100
   traits?: string[];
+  motivationProfile?: MotivationProfile;
+  currentMotivation?: AgencyMotivation;
 }
 
 export interface Agent {
@@ -40,6 +53,7 @@ export interface Agent {
   leverage: number;
   skill?: number;
   aggression?: number;
+  motivationProfile?: MotivationProfile;
 }
 
 export interface Family {
@@ -51,6 +65,7 @@ export interface Family {
   scandalLegacy: number;
   volatility: number;
   status: string;
+  motivationProfile?: MotivationProfile;
 }
 
 export interface TalentProfile {
@@ -109,6 +124,11 @@ export interface TalentProfile {
   loyalty?: number;
   fandomSize?: number;
   controversyRisk?: number;
+
+  // AI Motivations
+  motivationProfile?: MotivationProfile;
+  currentMotivation?: TalentMotivation;
+  motivationImpulse?: 'CASH_OUT' | 'AWARDS_RUN' | 'REHAB' | 'VANITY' | 'NONE';
 }
 
 export interface Contract {

@@ -1,4 +1,4 @@
-import { Agency, Agent, AgencyTier, AgencyCulture, AgentSpecialty, AgencyArchetype } from '@/engine/types';
+import { Agency, Agent, AgencyTier, AgencyCulture, AgentSpecialty, AgencyArchetype, AgencyMotivation, MotivationProfile } from '@/engine/types';
 import { pick, randRange, secureRandom } from '../utils';
 
 const POWERHOUSE_PREFIXES = ['United Global', 'Apex', 'Titan', 'Creative Artists', 'William Morrison', 'Monolith', 'Apex Predators', 'Colossal', 'Leviathan'];
@@ -137,6 +137,22 @@ export function generateAgencies(count: number): Agency[] {
       }
     }
 
+    const motivationProfile: MotivationProfile = {
+      financial: archetype === 'shark' ? 90 : (archetype === 'powerhouse' ? 70 : 50),
+      prestige: archetype === 'lit_agency' ? 80 : 40,
+      legacy: archetype === 'powerhouse' ? 70 : 30,
+      aggression: archetype === 'shark' ? 95 : (archetype === 'mega_corp' ? 80 : 40)
+    };
+
+    const motivationMap: Record<string, AgencyMotivation> = {
+       'powerhouse': 'THE_CLIMBER',
+       'boutique': 'THE_PROTECTOR',
+       'shark': 'THE_SHARK',
+       'comedy_specialist': 'VOLUME_RETAIL',
+       'lit_agency': 'THE_PROTECTOR',
+       'mega_corp': 'THE_PACKAGER'
+    };
+
     agencies.push({
       id: `agency-${crypto.randomUUID()}`,
       name: actualName,
@@ -145,7 +161,9 @@ export function generateAgencies(count: number): Agency[] {
       culture,
       prestige: tier === 'powerhouse' ? Math.floor(randRange(80, 100)) : (tier === 'major' ? Math.floor(randRange(60, 85)) : Math.floor(randRange(30, 70))),
       leverage,
-      traits
+      traits,
+      motivationProfile,
+      currentMotivation: motivationMap[archetype] || 'VOLUME_RETAIL'
     });
   }
 
@@ -182,7 +200,8 @@ export function generateAgents(agencies: Agency[], countPerAgency: number): Agen
         name: `${firstName} ${lastName}`,
         specialty,
         prestige: Math.floor(randRange(agency.prestige - 20, agency.prestige + 20)),
-        leverage: agency.culture === 'shark' ? Math.floor(randRange(70, 100)) : Math.floor(randRange(30, 80))
+        leverage: agency.culture === 'shark' ? Math.floor(randRange(70, 100)) : Math.floor(randRange(30, 80)),
+        motivationProfile: agency.motivationProfile ? { ...agency.motivationProfile, aggression: agency.motivationProfile.aggression + randRange(-10, 10) } : undefined
       });
     }
   }
