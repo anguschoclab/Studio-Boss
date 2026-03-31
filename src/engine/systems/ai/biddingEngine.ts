@@ -1,54 +1,61 @@
-import { Opportunity, RivalStudio } from '../../types';
-import { clamp, randRange } from '../../utils';
+import { GameState, RivalStudio, Opportunity, StateImpact } from '@/engine/types';
+import { secureRandom, pick, randRange } from '../../utils';
 
-export function calculateAIBid(
-  studio: RivalStudio,
-  opportunity: Opportunity,
-  leadingBid: number
-): number {
-  let desireMultiplier = 1.0;
+/**
+ * AI Decision Multipliers (Target C2).
+ * Archetypes now have clear, deterministic bidding biases.
+ */
+const ArchetypeMultipliers: Record<string, (genre: string) => number> = {
+  PRESTIGE_INDIE: (genre) => (genre === 'Drama' || genre === 'Horror' ? 1.3 : 0.8),
+  FRANCHISE_FACTORY: (genre) => (genre === 'Sci-Fi' || genre === 'Action' ? 1.5 : 0.7),
+  CAPITALIST_PIONEER: (genre) => 1.1, // High bids across the board but calculated
+  BALANCED: (genre) => 1.0,
+};
 
-  // 1. Archetype Match (+25% weight for projects matching the studio's focus)
-  const isMajorForBlockbuster = studio.archetype === 'major' && opportunity.budgetTier === 'blockbuster';
-  const isIndieForDrama = studio.archetype === 'indie' && (opportunity.genre === 'Drama' || opportunity.genre === 'Horror');
-  
-  if (isMajorForBlockbuster || isIndieForDrama) {
-    desireMultiplier += 0.25;
-  }
+/**
+ * AI Auction Tick (Target C2).
+ * Pure function that generates bidding impacts for all active opportunities.
+ */
+export function tickAuctions(state: GameState): StateImpact[] {
+  const impacts: StateImpact[] = [];
+  const opportunities = state.market.opportunities.filter(o => o.expirationWeek >= state.week);
 
-  // 2. Multi-Round Counter-Offer Weight (+10% over the current leading bid)
-  const baseBid = leadingBid > 0 ? leadingBid * 1.1 : opportunity.costToAcquire * randRange(0.9, 1.3);
-  
-  // 3. Quality Premium (+15% bid for projects with quality > 80)
-  if (opportunity.qualityBonus && opportunity.qualityBonus > 80) {
-    desireMultiplier += 0.15;
-  }
+  opportunities.forEach(opportunity => {
+    state.industry.rivals.forEach(rival => {
+      // Logic for should rebid
+      const currentHighest = Object.values(opportunity.bids).reduce((max, b) => Math.max(max, b), 0);
+      const myBid = opportunity.bids[rival.id] || 0;
 
-  const finalBid = baseBid * desireMultiplier;
+      if (myBid < currentHighest && rival.cash > currentHighest * 1.5) {
+        const multiplier = ArchetypeMultipliers[rival.archetype]?.(opportunity.genre) || 1.0;
+        const newBid = Math.floor(currentHighest * randRange(1.05, 1.15) * multiplier);
 
-  // 4. Budget Safeguard (AI will NOT re-bid if the total bid exceeds 40% of its current cash)
-  const budgetCap = studio.cash * 0.4;
-  
-  return Math.floor(Math.min(finalBid, budgetCap));
-}
+        if (newBid < rival.cash * 0.4) {
+          impacts.push({
+            type: 'PROJECT_UPDATED', // Bids are temporarily stored on opportunity
+            payload: {
+              opportunityId: opportunity.id,
+              rivalId: rival.id,
+              bid: newBid
+            }
+          });
 
-export function shouldStudioRebid(
-  studio: RivalStudio,
-  opportunity: Opportunity,
-  currentHighestBid: number
-): boolean {
-  // If the highest bid is already from this studio, don't rebid
-  const myBid = opportunity.bids[studio.id] || 0;
-  if (myBid >= currentHighestBid) return false;
+          if (secureRandom() < 0.1) {
+            impacts.push({
+              type: 'NEWS_ADDED',
+              payload: {
+                headline: {
+                  week: state.week,
+                  category: 'market',
+                  text: `BIDDING WAR: ${rival.name} raises the stakes for ${opportunity.title}.`
+                }
+              }
+            });
+          }
+        }
+      }
+    });
+  });
 
-  // AI calculates if it has the desire and budget to stay in the war
-  const bidCap = studio.cash * 0.4;
-  if (currentHighestBid > bidCap) return false;
-
-  // Bidding Strategy: Sharks rebid quickly, Mid-tier is cautious
-  let aggression = 0.5;
-  if (studio.strategy === 'acquirer') aggression = 0.8;
-  if (studio.archetype === 'major') aggression = 0.7;
-
-  return Math.random() < aggression;
+  return impacts;
 }

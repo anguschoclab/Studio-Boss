@@ -17,7 +17,7 @@ export interface SynergyGains {
  */
 export function calculateSynergyGains(
   franchise: Franchise,
-  projectType: 'FILM' | 'TELEVISION',
+  projectType: 'FILM' | 'SERIES',
   relatedVaultAssets: IPAsset[] // All IPAssets belonging to this franchise
 ): SynergyGains {
   const gains: SynergyGains = { 
@@ -30,7 +30,7 @@ export function calculateSynergyGains(
   // Releasing a theatrical film provides a massive viewership spike to related TV catalog and active series.
   const hasActiveTheatricalRun = franchise.activeProjectIds.some(id => id.includes('film')); // Simplified check for demonstration
   
-  if (projectType === 'TELEVISION') {
+  if (projectType === 'SERIES') {
     if (hasActiveTheatricalRun) {
       gains.ratingBonus += 15; // +15 rating points for related TV shows airing alongside a movie
       gains.revenueMultiplier += 0.25; // +25% revenue multiplier for TV merch/syndication

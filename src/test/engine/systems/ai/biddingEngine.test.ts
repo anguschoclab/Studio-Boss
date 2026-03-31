@@ -1,68 +1,67 @@
-import { calculateAIBid, shouldStudioRebid } from '@/engine/systems/ai/biddingEngine';
-import { Opportunity, RivalStudio } from '@/engine/types';
+import { describe, it, expect } from 'vitest';
+import { GameState, RivalStudio, Opportunity } from '@/engine/types';
+import { tickAuctions } from '@/engine/systems/ai/biddingEngine';
 
-describe('calculateAIBid', () => {
-  it('returns a high bid if the studio has high cash and the opportunity fits their archetype', () => {
-    const studio = { 
-        id: 'rival-1', 
-        cash: 50000000, 
-        archetype: 'major',
-        strength: 80 
-    } as RivalStudio;
+describe('AI Bidding Engine (Target C2 Refactor)', () => {
+  const mockRival: RivalStudio = {
+    id: 'rival-1',
+    name: 'Major Studio',
+    cash: 50000000,
+    archetype: 'FRANCHISE_FACTORY',
+    strength: 80,
+    projects: {},
+    motivationProfile: { financial: 50, prestige: 50, legacy: 50, aggression: 50 },
+    currentMotivation: 'STABILITY'
+  } as any;
+
+  const mockOpportunity: Opportunity = {
+    id: 'script-1',
+    title: 'Action Epic',
+    genre: 'Action',
+    budgetTier: 'blockbuster',
+    costToAcquire: 1000000,
+    expirationWeek: 10,
+    bids: { 'player-1': 1100000 }
+  } as any;
+
+  const mockState = {
+    week: 1,
+    industry: {
+      rivals: [mockRival]
+    },
+    market: {
+      opportunities: [mockOpportunity]
+    }
+  } as unknown as GameState;
+
+  it('generates a PROJECT_UPDATED impact representing a counter-bid', () => {
+    const impacts = tickAuctions(mockState);
+    const bidImpact = impacts.find(i => i.type === 'PROJECT_UPDATED');
     
-    const opportunity = { 
-        id: 'script-1', 
-        genre: 'Action', 
-        budgetTier: 'blockbuster',
-        costToAcquire: 1000000,
-        qualityBonus: 85
-    } as any; // Using any for simplified test data
-    
-    const bid = calculateAIBid(studio, opportunity, 0); // No leading bid
-    expect(bid).toBeGreaterThan(1200000); // 1.2M+ due to archetype match and quality
+    expect(bidImpact).toBeDefined();
+    expect(bidImpact?.payload.bid).toBeGreaterThan(1100000);
+    expect(bidImpact?.payload.rivalId).toBe('rival-1');
   });
 
-  it('respects budget safeguards (e.g., bid capped at 40% of cash)', () => {
-    const studio = { 
-        id: 'rival-small', 
-        cash: 1000000, 
-        archetype: 'indie' 
-    } as RivalStudio;
-    
-    const opportunity = { 
-        id: 'script-high-cost', 
-        costToAcquire: 500000,
-        qualityBonus: 90
+  it('does not bid if the rival is already the highest bidder', () => {
+    const winningState = {
+      ...mockState,
+      market: {
+        ...mockState.market,
+        opportunities: [{ ...mockOpportunity, bids: { 'rival-1': 2000000 } }]
+      }
     } as any;
-
-    const bid = calculateAIBid(studio, opportunity, 0);
-    expect(bid).toBeLessThanOrEqual(400000); // 40% of 1M
+    
+    const impacts = tickAuctions(winningState);
+    expect(impacts.length).toBe(0);
   });
-});
 
-describe('shouldStudioRebid', () => {
-    it('returns true if studio is outbid but still has desire and budget', () => {
-        const studio = { id: 'rival-1', cash: 10000000, archetype: 'major' } as RivalStudio;
-        const opportunity = { 
-            id: 'script-1', 
-            genre: 'Action', 
-            budgetTier: 'blockbuster',
-            costToAcquire: 1000000,
-            bids: { 'player-1': 1500000 } 
-        } as any;
-
-        const result = shouldStudioRebid(studio, opportunity, 1500000);
-        expect(result).toBe(true);
-    });
-
-    it('returns false if current bid exceeds 40% of studio cash', () => {
-        const studio = { id: 'rival-1', cash: 2000000, archetype: 'major' } as RivalStudio;
-        const opportunity = { 
-            id: 'script-1', 
-            bids: { 'player-1': 900000 } 
-        } as any;
-
-        const result = shouldStudioRebid(studio, opportunity, 900000);
-        expect(result).toBe(false); // 900k is 45% of 2M
-    });
+  it('respects budget limits and aggression profiles', () => {
+    const poorRival = { ...mockRival, cash: 1000000 };
+    const state = { ...mockState, industry: { rivals: [poorRival] } } as any;
+    
+    const impacts = tickAuctions(state);
+    // Should not bid because 1.1M is > 40% of 1M cash
+    expect(impacts.length).toBe(0);
+  });
 });

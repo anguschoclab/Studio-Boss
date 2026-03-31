@@ -47,65 +47,19 @@ export interface IPState {
   franchises: Record<string, Franchise>; // Centralized Meta-Hub
 }
 
+export type ImpactType = 
+  | 'FUNDS_CHANGED' 
+  | 'PROJECT_UPDATED' 
+  | 'PROJECT_REMOVED' 
+  | 'NEWS_ADDED' 
+  | 'TALENT_UPDATED' 
+  | 'PRESTIGE_CHANGED'
+  | 'BUYER_UPDATED'
+  | 'RIVAL_UPDATED'
+  | 'OPPORTUNITY_UPDATED';
+
 export interface StateImpact {
-  cashChange?: number;
-  prestigeChange?: number;
-  projectUpdates?: Array<{
-    projectId: string;
-    update: Partial<Project>;
-  }>;
-  rivalProjectUpdates?: Array<{
-    rivalId: string;
-    projectId: string;
-    update: Partial<Project>;
-  }>;
-  assetUpdates?: Array<{
-    assetId: string;
-    update: Partial<IPAsset>;
-  }>;
-  newVaultAssets?: IPAsset[];
-  talentUpdates?: Array<{
-    talentId: string;
-    update: any; // Partial<TalentProfile>
-  }>;
-  rivalUpdates?: Array<{
-    rivalId: string;
-    update: any; // Partial<RivalStudio>
-  }>;
-  buyerUpdates?: Array<{
-    buyerId: string;
-    update: Partial<Buyer>;
-  }>;
-  removeContracts?: Array<{
-    talentId: string;
-    projectId: string;
-  }>;
-  removeContract?: { // Keep this for backward compat temporarily
-    talentId: string;
-    projectId: string;
-  };
-  newHeadlines?: Array<Partial<Headline>>;
-  newsEvents?: Array<Partial<NewsEvent>>;
-  newAwards?: any[];
-  newScandals?: Scandal[];
-  scandalUpdates?: Array<{
-    scandalId: string;
-    update: Partial<Scandal>;
-  }>;
-  newOpportunities?: Opportunity[];
-  newTrends?: GenreTrend[];
-  newMarketEvents?: MarketEvent[];
-  newRumors?: Rumor[];
-  newFestivalSubmissions?: FestivalSubmission[];
-  newFinanceHistory?: FinanceRecord[];
-  cultClassicProjectIds?: string[];
-  razzieWinnerTalents?: string[];
-  removeScandalIds?: string[];
-  opportunityUpdates?: Array<{
-    opportunityId: string;
-    update: Partial<Opportunity>;
-  }>;
-  removeOpportunityIds?: string[];
-  uiNotifications?: string[]; // Generic log for the UI 'events' list
+  type: ImpactType;
+  payload: any;
 }
 

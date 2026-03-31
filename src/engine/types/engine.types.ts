@@ -26,7 +26,11 @@ export interface CrisisOption {
 export interface ActiveCrisis {
   crisisId: string;
   triggeredWeek: number;
-  haltedProduction: boolean; 
+  haltedProduction: boolean;
+  description: string;
+  options: CrisisOption[];
+  resolved: boolean;
+  severity: 'low' | 'medium' | 'high';
 }
 
 export interface Headline {

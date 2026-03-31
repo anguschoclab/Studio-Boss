@@ -19,7 +19,7 @@ describe('Synergy Evaluator', () => {
   };
 
   it('applies Halo Effect to television projects when a related film is active', () => {
-    const gains = calculateSynergyGains(mockFranchise, 'TELEVISION', []);
+    const gains = calculateSynergyGains(mockFranchise, 'SERIES', []);
     expect(gains.ratingBonus).toBe(15);
     expect(gains.revenueMultiplier).toBe(1.25);
   });
@@ -42,7 +42,7 @@ describe('Synergy Evaluator', () => {
       { id: 'ip-film1', syndicationStatus: 'NONE' } as IPAsset,
       { id: 'ip-tv1', syndicationStatus: 'SYNDICATED' } as IPAsset
     ];
-    const gains = calculateSynergyGains(mockFranchise, 'TELEVISION', assets);
+    const gains = calculateSynergyGains(mockFranchise, 'SERIES', assets);
     expect(gains.revenueMultiplier).toBe(1.25 + 0.15); // Halo + Multi-format
   });
 });

@@ -103,12 +103,32 @@ export interface BuyerMandate {
   activeUntilWeek: number;
 }
 
-export interface Buyer {
+export interface BuyerBase {
   id: string;
   name: string;
   archetype: BuyerArchetype;
   currentMandate?: BuyerMandate;
 }
+
+export interface NetworkPlatform extends BuyerBase {
+  archetype: 'network';
+  reach: number; // 0-100: Influences initial rating
+}
+
+export interface PremiumPlatform extends BuyerBase {
+  archetype: 'premium';
+  prestigeBonus: number; // 0-50: Influences review scores
+}
+
+export interface StreamerPlatform extends BuyerBase {
+  archetype: 'streamer';
+  subscribers: number;
+  churnRate: number; // 0.01 to 0.10
+  contentLibraryQuality: number; // 0-100: Influences growth
+  marketingSpend: number; // Weekly burn
+}
+
+export type Buyer = NetworkPlatform | PremiumPlatform | StreamerPlatform;
 
 export interface StudioSnapshot {
   year: number;

@@ -3,15 +3,16 @@ import { useGameStore } from '@/store/gameStore';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Tv, Activity, Users, Star, TrendingUp, AlertCircle, PlayCircle, Zap } from 'lucide-react';
+import { Tv, Activity, Star, AlertCircle, PlayCircle, Zap } from 'lucide-react';
 import { Project } from '@/engine/types';
 import { useShallow } from 'zustand/react/shallow';
+import { cn } from '@/lib/utils';
 
 export const TelevisionDashboard = () => {
-  const activeProjects = useGameStore(useShallow(s => s.gameState.projects.active));
+  const activeProjects = useGameStore(useShallow(s => s.gameState?.projects.active || []));
   
   const tvShows = React.useMemo(() => 
-    activeProjects.filter(p => p.type === 'TELEVISION' && p.tvDetails),
+    activeProjects.filter(p => p.type === 'SERIES'),
   [activeProjects]);
 
   if (tvShows.length === 0) {
@@ -26,7 +27,6 @@ export const TelevisionDashboard = () => {
 
   return (
     <div className="h-full flex flex-col space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700 overflow-hidden">
-      {/* Dashboard Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 bg-white/5 p-5 rounded-xl border border-white/5 backdrop-blur-sm">
         <div>
           <div className="flex items-center gap-3 mb-1">
@@ -51,10 +51,10 @@ export const TelevisionDashboard = () => {
 };
 
 const TVShowCard = ({ show }: { show: Project }) => {
-  const details = show.tvDetails!;
-  const format = show.tvFormat || show.unscriptedFormat || 'Series';
+  if (show.type !== 'SERIES') return null;
+  const details = show.tvDetails;
   
-  const statusColors = {
+  const statusColors: Record<string, string> = {
     'ON_AIR': 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20',
     'ON_BUBBLE': 'bg-amber-500/10 text-amber-500 border-amber-500/20',
     'RENEWED': 'bg-primary/10 text-primary border-primary/20',
@@ -68,23 +68,22 @@ const TVShowCard = ({ show }: { show: Project }) => {
   return (
     <Card className="glass-card border-none hover-glow overflow-hidden relative group transition-all duration-500">
       <CardContent className="p-0">
-        {/* Header Section */}
         <div className="p-6 pb-2">
           <div className="flex justify-between items-start gap-4">
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <Badge className={cn("text-[9px] font-black uppercase tracking-widest", statusColors[details.status])}>
+                <Badge className={cn("text-[9px] font-black uppercase tracking-widest", statusColors[details.status] || '')}>
                   {details.status.replace('_', ' ')}
                 </Badge>
-                {details.averageRating > 80 && (
-                  <Badge variant="outline" className="text-[9px] font-black border-primary/40 text-primary uppercase bg-primary/5">CRITICAL DARLING</Badge>
+                {details.averageRating > 8 && (
+                   <Badge variant="outline" className="text-[9px] font-black border-primary/40 text-primary uppercase bg-primary/5">CRITICAL DARLING</Badge>
                 )}
               </div>
               <h3 className="text-xl font-black tracking-tighter uppercase group-hover:text-primary transition-colors">{show.title}</h3>
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">{format} • Season {details.currentSeason}</p>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">S{details.currentSeason} • {show.format.toUpperCase()}</p>
             </div>
             <div className="text-right">
-              <div className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-1 leading-none">Weekly Rating</div>
+              <div className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-1 leading-none">Rating</div>
               <div className="text-3xl font-black tracking-tighter text-glow text-primary">
                 {details.averageRating.toFixed(1)}
               </div>
@@ -92,7 +91,6 @@ const TVShowCard = ({ show }: { show: Project }) => {
           </div>
         </div>
 
-        {/* Stats Grid */}
         <div className="px-6 py-4 grid grid-cols-3 gap-4 border-y border-white/5 bg-white/2">
            <div className="space-y-1">
               <div className="text-[9px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-1.5">
@@ -104,17 +102,16 @@ const TVShowCard = ({ show }: { show: Project }) => {
               <div className="text-[9px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-1.5">
                 <Star className="h-2.5 w-2.5" /> Buzz
               </div>
-              <div className="text-sm font-black tracking-tight">{show.buzz.toFixed(0)}</div>
+              <div className="text-sm font-black tracking-tight">{Math.round(show.buzz)}</div>
            </div>
            <div className="space-y-1">
               <div className="text-[9px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-1.5">
-                <Zap className="h-2.5 w-2.5" /> Stability
+                <Zap className="h-2.5 w-2.5" /> Quality
               </div>
-              <div className="text-sm font-black tracking-tight">{show.tvFormat === 'sitcom' ? 'Low' : 'High'}</div>
+              <div className="text-sm font-black tracking-tight">{Math.round(show.reviewScore)}</div>
            </div>
         </div>
 
-        {/* Progress Bar */}
         <div className="h-1.5 w-full bg-white/5 relative">
           <div 
             className="absolute top-0 left-0 h-full bg-primary transition-all duration-1000"
@@ -122,22 +119,17 @@ const TVShowCard = ({ show }: { show: Project }) => {
           />
         </div>
 
-        {/* Bottom Metadata */}
         <div className="p-4 px-6 flex justify-between items-center text-[9px] font-black uppercase text-muted-foreground/60 tracking-[0.15em]">
            <span className="flex items-center gap-1.5">
              <AlertCircle className="h-2.5 w-2.5" /> 
-             {details.status === 'ON_AIR' ? 'Currently Airing' : 'Awaiting Renewal'}
+             {details.status === 'ON_AIR' ? 'Currently Airing' : 'Awaiting Review'}
            </span>
            <span className="flex items-center gap-1.5">
              <PlayCircle className="h-2.5 w-2.5" />
-             Premiere Week {show.releaseWeek || 'TBA'}
+             Cycle Week {show.productionWeeks}
            </span>
         </div>
       </CardContent>
     </Card>
   );
 };
-
-function cn(...classes: any[]) {
-  return classes.filter(Boolean).join(' ');
-}

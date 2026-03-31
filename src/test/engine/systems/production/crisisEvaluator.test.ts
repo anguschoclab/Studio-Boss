@@ -1,28 +1,45 @@
 import { describe, it, expect } from 'vitest';
-import { evaluateProjectCrises } from '@/engine/systems/production/crisisEvaluator';
-import { Project } from '@/engine/types';
+import { GameState, StateImpact, Project } from '@/engine/types';
+import { resolveCrisisWithHandlers } from '@/engine/systems/production/crisisEvaluator';
 
-describe('evaluateProjectCrises', () => {
-  it('does nothing if a crisis is already active', () => {
-    const project = { id: '1', state: 'production', activeCrisis: { crisisId: 'onset_altercation', triggeredWeek: 5, haltedProduction: true } } as Project;
-    const result = evaluateProjectCrises(project, 10);
-    expect(result.activeCrisis?.crisisId).toBe('onset_altercation');
-    expect(result.activeCrisis?.triggeredWeek).toBe(5);
-  });
+describe('Crisis Evaluator (Target A3)', () => {
+  const mockState = {
+    week: 1,
+    studio: {
+      internal: {
+        projects: {
+          'p1': {
+            id: 'p1',
+            title: 'Star Wars Clone',
+            state: 'production',
+            productionWeeks: 20,
+            buzz: 50,
+            activeCrisis: {
+              description: 'Actor walkout',
+              options: [
+                {
+                  text: 'Bribe them',
+                  cashPenalty: 100000,
+                  weeksDelay: 2,
+                  buzzPenalty: -10
+                }
+              ],
+              resolved: false
+            }
+          } as unknown as Project
+        }
+      }
+    }
+  } as unknown as GameState;
 
-  it('triggers a crisis if RNG hits the threshold', () => {
-    const project = { id: '1', state: 'production', activeCrisis: null } as Project;
-    // Mock RNG to 0.99 (above 0.95 threshold)
-    const result = evaluateProjectCrises(project, 10, 0.99); 
-    expect(result.activeCrisis).not.toBeNull();
-    expect(result.activeCrisis?.crisisId).toBe('onset_altercation');
-    expect(result.activeCrisis?.haltedProduction).toBe(true);
-  });
-
-  it('does not trigger a crisis if RNG is below the threshold', () => {
-    const project = { id: '1', state: 'production', activeCrisis: null } as Project;
-    // Mock RNG to 0.50 (below 0.95 threshold)
-    const result = evaluateProjectCrises(project, 10, 0.50); 
-    expect(result.activeCrisis).toBeNull();
+  it('should resolve a crisis using handlers and return StateImpact objects', () => {
+    const impacts = resolveCrisisWithHandlers(mockState, 'p1', 0);
+    
+    const fundsImpact = impacts.find(i => i.type === 'FUNDS_CHANGED');
+    const projectImpact = impacts.find(i => i.type === 'PROJECT_UPDATED');
+    
+    expect(fundsImpact?.payload.amount).toBe(-100000);
+    expect(projectImpact?.payload.update.productionWeeks).toBe(22);
+    expect(projectImpact?.payload.update.activeCrisis.resolved).toBe(true);
   });
 });

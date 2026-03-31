@@ -15,14 +15,14 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
   const { selectProject, openPitchProject, openCrisisModal } = useUIStore();
   const tier = BUDGET_TIERS[project.budgetTier];
 
-  const displayFormat = project.format === 'tv' && project.season
-      ? `S${project.season}`
+  const displayFormat = project.type === 'SERIES'
+      ? `S${(project as any).tvDetails?.currentSeason || 1}`
       : project.format.toUpperCase();
 
   const hasUnresolvedCrisis = project.activeCrisis && !project.activeCrisis.resolved;
-  const progressPct = project.status === 'development'
+  const progressPct = project.state === 'development'
     ? (project.weeksInPhase / project.developmentWeeks) * 100
-    : project.status === 'production'
+    : project.state === 'production'
     ? (project.weeksInPhase / project.productionWeeks) * 100
     : 100;
 
@@ -64,7 +64,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
       {/* Metrics: Buzz & Progress */}
       <div className="space-y-3 relative z-10">
         {/* Buzz Indicator */}
-        {project.status !== 'archived' && (
+        {project.state !== 'archived' && (
           <div className="space-y-1">
             <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground/60 group-hover:text-muted-foreground/80 transition-colors">
               <span className="flex items-center gap-1"><TrendingUp className="h-2.5 w-2.5 group-hover:text-secondary transition-colors" /> Market Buzz</span>
@@ -82,11 +82,11 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
         )}
 
         {/* Phase Progress */}
-        {(project.status === 'development' || project.status === 'production') && (
+        {(project.state === 'development' || project.state === 'production') && (
           <div className="space-y-1">
             <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground/60 group-hover:text-muted-foreground/80 transition-colors">
-              <span className="flex items-center gap-1"><Activity className={cn("h-2.5 w-2.5 transition-colors", hasUnresolvedCrisis ? "group-hover:text-destructive" : "group-hover:text-primary")} /> {project.status.replace('_', ' ')}</span>
-              <span className="font-mono">{project.weeksInPhase}/{project.status === 'development' ? project.developmentWeeks : project.productionWeeks}w</span>
+              <span className="flex items-center gap-1"><Activity className={cn("h-2.5 w-2.5 transition-colors", hasUnresolvedCrisis ? "group-hover:text-destructive" : "group-hover:text-primary")} /> {project.state.replace('_', ' ')}</span>
+              <span className="font-mono">{project.weeksInPhase}/{project.state === 'development' ? project.developmentWeeks : project.productionWeeks}w</span>
             </div>
             <div className="h-1 bg-black/40 rounded-full overflow-hidden border border-white/5">
               <div
@@ -103,7 +103,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
         )}
 
         {/* Financial Highlights */}
-        {(project.status === 'released' || project.status === 'archived') && (
+        {(project.state === 'released' || project.state === 'archived') && (
           <div className="flex items-center justify-between p-2.5 bg-black/30 rounded-lg border border-white/5 group-hover:border-white/10 transition-colors">
             <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/80 flex items-center gap-1.5">
               <DollarSign className="h-3 w-3 text-success/70" /> Lifetime
@@ -130,7 +130,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
           </Button>
         )}
 
-        {project.status === 'needs_greenlight' && (
+        {project.state === 'needs_greenlight' && (
           <Button
             variant="default"
             size="sm"
@@ -145,7 +145,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
           </Button>
         )}
 
-        {project.status === 'pitching' && (
+        {project.state === 'pitching' && (
           <Button
             size="sm"
             className="w-full h-8 text-[9px] font-black uppercase tracking-widest bg-gradient-to-r from-secondary to-secondary/90 text-white hover:from-secondary/90 hover:to-secondary/80 shadow-[0_0_15px_rgba(var(--secondary),0.3)] hover:shadow-[0_0_20px_rgba(var(--secondary),0.5)] transition-all border border-secondary/50"

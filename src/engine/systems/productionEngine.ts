@@ -1,132 +1,53 @@
-import { GameState, Project, Headline } from '@/engine/types';
-import { updateCultureFromProject } from './culture';
+import { GameState, Project, StateImpact } from '@/engine/types';
 
-export interface ProductionTransitionResult {
-  newState: GameState;
-  headline?: Headline;
-}
-
-
-export function calculateChemistry(project: Project, attachedTalent: TalentProfile[]): number {
-  if (attachedTalent.length === 0) return 50;
-
-  let baseChemistry = 50;
-
-  // Unscripted Ensemble
-  if (project.format === 'unscripted' && project.template?.castingRequirements?.some(req => req.roleType === 'ENSEMBLE')) {
-    let conflictScore = 0;
-    let totalDrama = 0;
-    const traits = new Set<string>();
-
-    for (const t of attachedTalent) {
-      if (t.perks) {
-        for (const perk of t.perks) {
-          traits.add(perk);
-        }
-      }
-      totalDrama += (t.ego || 0);
-    }
-
-    if (traits.has('Diva') && (traits.has('Hot-Headed') || traits.has('Abrasive') || traits.has('Difficult'))) {
-      conflictScore += 30;
-    }
-    if (traits.has('Volatile')) conflictScore += 10;
-
-    const avgDrama = attachedTalent.length > 0 ? totalDrama / attachedTalent.length : 0;
-    baseChemistry += conflictScore + (avgDrama * 0.4);
-
-  } else if (project.format === 'unscripted' && project.template?.castingRequirements?.some(req => req.roleType === 'HOST')) {
-    const host = attachedTalent.find(t => t.roles.includes('showrunner') || t.roles.includes('director'));
-    let charismaBonus = 0;
-    if (host) {
-      charismaBonus = host.draw * 0.5;
-    }
-
-    const uniqueTraits = new Set<string>();
-    for (const t of attachedTalent) {
-       if (t.perks) t.perks.forEach(p => uniqueTraits.add(p));
-    }
-    const varietyBonus = Math.min(30, uniqueTraits.size * 5);
-
-    baseChemistry += charismaBonus + varietyBonus;
-
-  } else {
-    let synergyScore = 0;
-    let totalActing = 0;
-
-    for (const t of attachedTalent) {
-       totalActing += t.skill || t.draw;
-       if (t.perks) {
-         if (t.perks.includes('Collaborative')) synergyScore += 10;
-         if (t.perks.includes('Reliable')) synergyScore += 5;
-         if (t.perks.includes('Diva') || t.perks.includes('Difficult')) synergyScore -= 15;
-         if (t.perks.includes('Volatile')) synergyScore -= 10;
-       }
-    }
-
-    const avgActing = attachedTalent.length > 0 ? totalActing / attachedTalent.length : 0;
-    baseChemistry += synergyScore + (avgActing * 0.4);
+/**
+ * Pure function to advance a single project's weekly production logic.
+ * Handlers are kept under 50 lines per mandate.
+ */
+function tickProject(project: Project): StateImpact[] {
+  if (project.state === 'archived' || project.state === 'released' || project.state === 'post_release') {
+    return [];
   }
 
-  return Math.max(1, Math.min(100, Math.round(baseChemistry)));
+  const impacts: StateImpact[] = [];
+  const nextWeeksInPhase = (project.weeksInPhase || 0) + 1;
+
+  // 1. Progress Increment
+  impacts.push({
+    type: 'PROJECT_UPDATED',
+    payload: {
+      projectId: project.id,
+      update: {
+        weeksInPhase: nextWeeksInPhase,
+        // Simple linear progress for now, will be refined in Phase B
+        progress: Math.min(100, (nextWeeksInPhase / (project.productionWeeks || 20)) * 100)
+      }
+    }
+  });
+
+  return impacts;
 }
 
-export const ProductionEngine = {
-  /**
-   * Transitions a project to the production phase.
-   */
-  transitionToProduction(
-    state: GameState,
-    projectId: string,
-    headlineText: string,
-    extraProjectUpdates: Partial<Project> = {}
-  ): ProductionTransitionResult {
-    const project = state.studio.internal.projects[projectId];
-    if (!project) return { newState: state };
+/**
+ * Unified Production Engine (Target A2).
+ * Iterates over all projects (Player & Rivals) with identical math.
+ */
+export function tickProduction(state: GameState): StateImpact[] {
+  const allImpacts: StateImpact[] = [];
 
-
-
-    const updatedProjects = { ...state.studio.internal.projects };
-    updatedProjects[projectId] = {
-      ...project,
-      status: 'production',
-      weeksInPhase: 0,
-      ...extraProjectUpdates
-    };
-
-    const newCulture = state.studio.culture ? updateCultureFromProject(state.studio.culture, project) : undefined;
-    const headline: Headline = {
-      id: `ph-${crypto.randomUUID()}`,
-      text: headlineText,
-      week: state.week,
-      category: 'market' as const
-    };
-
-    const newState: GameState = {
-      ...state,
-      studio: {
-        ...state.studio,
-        culture: newCulture,
-        internal: {
-          ...state.studio.internal,
-          projects: updatedProjects
-        }
-      },
-      industry: {
-        ...state.industry,
-        headlines: [headline, ...state.industry.headlines].slice(0, 50)
-      }
-    };
-
-    return { newState, headline };
-  },
-
-  /**
-   * Handles weekly budget burns and production specific logic.
-   * (Currently many of these are in projects.ts, but can be moved here if they become more complex)
-   */
-  processProductionTick(project: Project): Project {
-    // Placeholder for future complex production logic (e.g. daily rushes, reshoots)
-    return project;
+  // 1. Player Projects
+  const playerProjects = Object.values(state.studio.internal.projects);
+  for (const project of playerProjects) {
+    allImpacts.push(...tickProject(project));
   }
-};
+
+  // 2. Rival Projects
+  for (const rival of state.industry.rivals) {
+    const rivalProjects = Object.values(rival.projects || {});
+    for (const project of rivalProjects) {
+      allImpacts.push(...tickProject(project));
+    }
+  }
+
+  return allImpacts;
+}

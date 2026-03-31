@@ -1,126 +1,56 @@
-import { GameState, WeekSummary, Headline, NewsEvent, StudioSnapshot } from '@/engine/types';
-import { ALL_GENRES } from '../systems/trends';
-import { secureRandom } from '../utils';
-import { processProduction } from '../systems/processors/processProduction';
-import { processTelevision } from '../systems/processors/processTelevision';
-import { processIPVault } from '../systems/processors/processIPVault';
-import { processRivalProduction } from '../systems/processors/processRivalProduction';
-import { processFinance } from '../systems/processors/processFinance';
-import { processWorldEvents } from '../systems/processors/processWorldEvents';
-import { advanceDeals } from '../systems/deals';
-import { applyStateImpact } from '../../store/storeUtils';
-import { mergeImpacts } from '../utils/impactUtils';
+import { GameState, WeekSummary, StateImpact } from '@/engine/types';
+import { tickProduction } from '../systems/productionEngine';
+import { tickPlatforms } from '../systems/television/platformEngine';
+import { tickAIMinds } from '../systems/ai/motivationEngine';
+import { tickAgencies } from '../systems/ai/AgentBrain';
+import { tickAuctions } from '../systems/ai/biddingEngine';
+import { tickWorldEvents } from '../systems/ai/WorldSimulator';
+import { tickTelevision } from '../systems/television/televisionTick';
+import { tickFinance } from '../systems/finance/financeTick';
+import { applyImpacts } from './impactReducer';
 
 /**
- * Creates a snapshot of the current studio state for historical tracking.
- */
-function createSnapshot(state: GameState, originalWeek: number): StudioSnapshot {
-  let activeProjectsCount = 0;
-  let releasedProjectsCount = 0;
-  const projects = Object.values(state.studio.internal.projects);
-  
-  for (const p of projects) {
-    if (p.state === 'released' || p.state === 'post_release' || p.state === 'archived') {
-      releasedProjectsCount++;
-    } else {
-      activeProjectsCount++;
-    }
-  }
-
-  return {
-    year: Math.floor((originalWeek - 1) / 52) + 1,
-    week: ((originalWeek - 1) % 52) + 1,
-    funds: state.finance.cash,
-    activeProjects: activeProjectsCount,
-    completedProjects: releasedProjectsCount,
-    totalPrestige: state.studio.prestige,
-    timestamp: new Date().toISOString()
-  };
-}
-
-/**
- * Updates the culture and history slices of the state.
- */
-function finalizeStateMetadata(state: GameState, originalState: GameState): GameState {
-  const nextWeek = originalState.week + 1;
-
-  // 1. Update Culture (Genre Popularity)
-  const nextTrends = state.market.trends || [];
-  const genrePopularity: Record<string, number> = {};
-  const trendMap = new Map<string, number>();
-  for (const t of nextTrends) trendMap.set(t.genre, t.heat);
-  
-  for (const g of ALL_GENRES) {
-    const heat = trendMap.get(g);
-    genrePopularity[g.toLowerCase()] = heat !== undefined ? heat / 100 : 0.2 + secureRandom() * 0.1;
-  }
-
-  // 2. Update History
-  const currentSnapshot = createSnapshot(state, originalState.week);
-  const oldHistory = state.history || [];
-  const nextHistory = [...oldHistory.slice(-51), currentSnapshot];
-
-  return {
-    ...state,
-    week: nextWeek,
-    culture: { genrePopularity },
-    history: nextHistory,
-  };
-}
-
-/**
- * The Weekly Simulation Orchestrator.
- * Coordinates all simulation systems in a deterministic, sequential pipeline.
+ * Weekly Simulation Orchestrator (Phase A-C).
+ * Coordinates all simulation systems in a pure, functional pipeline.
  */
 export function advanceWeek(state: GameState): { newState: GameState; summary: WeekSummary } {
-  const originalState = state;
-  let currentState = state;
+  // 1. Collect all impacts from decoupled systems (Strategy: Collect -> Merge -> Apply)
+  const impacts: StateImpact[] = [
+    ...tickProduction(state),
+    ...tickPlatforms(state),
+    ...tickAIMinds(state),
+    ...tickAgencies(state),
+    ...tickAuctions(state),
+    ...tickWorldEvents(state),
+    ...tickTelevision(state),
+    ...tickFinance(state),
+  ];
 
-  // 1. Process Studio Production (Advancement, Quality, Completion)
-  // TRANSFORMER: Directly returns new GameState
-  currentState = processProduction(currentState);
-  currentState = processTelevision(currentState);
+  // 2. Reduce impacts into the next state
+  const nextState = applyImpacts(state, impacts);
 
-  // 2. Process Rival Production (Advancement for competitors)
-  const rivalProdImpact = processRivalProduction(currentState);
-  currentState = applyStateImpact(currentState, rivalProdImpact);
-
-  // 3. Resolve Studio Finances & IP Vault (Passive revenue collection happens in processIPVault)
-  // TRANSFORMER: Directly returns new GameState
-  currentState = processIPVault(currentState); // IP Revenue added to cash
-  currentState = processFinance(currentState); // Standard burn/box office
-  
-  // Extract report from ledger for summary
-  const lastReport = currentState.finance.ledger[currentState.finance.ledger.length - 1];
-  const totalRevenue = lastReport?.revenue.boxOffice + lastReport?.revenue.distribution + lastReport?.revenue.other || 0;
-  const totalCosts = lastReport?.expenses.production + lastReport?.expenses.marketing + lastReport?.expenses.overhead || 0;
-
-  // 4. Simulate World (Rivals, Talent, Market, Awards, Scandals)
-  const worldImpact = processWorldEvents(currentState);
-  currentState = applyStateImpact(currentState, worldImpact);
-
-  // 5. IP Rights & Deals
-  const dealsImpact = advanceDeals(currentState.studio.internal.firstLookDeals || []);
-  currentState = applyStateImpact(currentState, dealsImpact);
-
-  // 6. Build Cumulative Summary
-  const allImpacts = mergeImpacts(rivalProdImpact, worldImpact, dealsImpact);
-  
-  const summary: WeekSummary = {
-    fromWeek: originalState.week,
-    toWeek: originalState.week + 1,
-    cashBefore: originalState.finance.cash,
-    cashAfter: currentState.finance.cash,
-    totalRevenue,
-    totalCosts,
-    projectUpdates: allImpacts.uiNotifications || [],
-    newHeadlines: (allImpacts.newHeadlines as Headline[]) || [],
-    events: allImpacts.uiNotifications || [], 
-    newsEvents: (allImpacts.newsEvents as NewsEvent[]) || []
+  // 3. Increment Week & Metadata
+  const finalizedState: GameState = {
+    ...nextState,
+    week: (state.week || 0) + 1,
   };
 
-  // 7. Finalize State (Metadata, History)
-  const finalState = finalizeStateMetadata(currentState, originalState);
+  return { newState: finalizedState, summary: buildSummary(state, finalizedState, impacts) };
+}
 
-  return { newState: finalState, summary };
+/**
+ * Builds the news and financial summary for the executive review.
+ */
+function buildSummary(before: GameState, after: GameState, impacts: StateImpact[]): WeekSummary {
+  return {
+    fromWeek: before.week,
+    toWeek: after.week,
+    cashBefore: before.finance.cash,
+    cashAfter: after.finance.cash,
+    totalRevenue: 0, 
+    totalCosts: 0,
+    projectUpdates: impacts.filter(i => i.type === 'PROJECT_UPDATED').map(i => i.payload.projectId),
+    newHeadlines: impacts.filter(i => i.type === 'NEWS_ADDED').map(i => i.payload.headline),
+    events: [],
+  };
 }
