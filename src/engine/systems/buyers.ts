@@ -97,9 +97,25 @@ export function calculateFitScore(project: Project, buyer: Buyer, currentWeek: n
   // New market saturation math: dynamic market trends
   // The Festival Buyer: Heavily penalize oversaturated tentpole genres (like Superhero) to force players to consider market conditions
   // If 5 superhero movies were released last year, buyers should heavily penalize new superhero pitches in the greenlight phase.
+  if (recentSimilarProjects.length >= 5 && project.genre.toLowerCase().includes('superhero')) {
+    saturationPenalty *= 3; // Tripling the penalty for oversaturated Superhero genre
+    saturationPenalty += 75; // Applying an even more massive flat penalty for chasing an exhausted superhero market
+  }
+
+  // New market saturation math: dynamic market trends
+  // The Festival Buyer: Heavily penalize oversaturated tentpole genres (like Superhero) to force players to consider market conditions
+  // If 5 superhero movies were released last year, buyers should heavily penalize new superhero pitches in the greenlight phase.
   if (recentSimilarProjects.length >= 5 && project.genre && project.genre.toLowerCase().includes('superhero')) {
     saturationPenalty *= 3; // Tripling the penalty for oversaturated Superhero genre
     saturationPenalty += 75; // Applying an even more massive flat penalty for chasing an exhausted superhero market
+  }
+
+  // Trend-modifier: Calendar Gap Bonus
+  // If there have been no similar projects released in the last 52 weeks, the market is starved for this genre.
+  // We inject a positive dynamic market trend bonus here to reward players for finding gaps in the release calendar.
+  if (recentSimilarProjects.length === 0) {
+    score += 15;
+
   }
 
   if (saturationPenalty > 0) {
