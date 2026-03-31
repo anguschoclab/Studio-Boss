@@ -14,8 +14,8 @@ import { History, LayoutDashboard, ReceiptText, TrendingUp, TrendingDown, Packag
 export const FinancePanel = () => {
   const gameState = useGameStore(s => s.gameState);
 
-  const cash = gameState?.cash ?? 0;
-  const rawFinanceHistory = gameState?.studio.internal.financeHistory;
+  const cash = gameState?.finance?.cash ?? 0;
+  const rawFinanceHistory = gameState?.finance?.ledger;
   const rawProjects = Object.values(gameState?.studio.internal.projects || {});
 
   const projectsMemo = useMemo(() => rawProjects ?? [], [rawProjects]);
