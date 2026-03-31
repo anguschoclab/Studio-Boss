@@ -1,4 +1,5 @@
 import { Project } from '@/engine/types';
+import { StateImpact } from '../types/state.types';
 
 export function calculateIPValue(project: Project): number {
   if (project.status === 'development' || project.status === 'pitching' || project.status === 'needs_greenlight') {
@@ -32,44 +33,46 @@ export function checkRightsExpiry(project: Project, currentWeek: number): string
   return null;
 }
 
-export function advanceIPRights(projects: Project[], currentWeek: number) {
-   // Returns updated rights states and any lost projects
-   const messages: string[] = [];
+export function advanceIPRights(projects: Project[], currentWeek: number): StateImpact {
+   const impact: StateImpact = {
+       projectUpdates: [],
+       uiNotifications: []
+   };
    
-   const updatedProjects = projects.map(p => {
+   for (const p of projects) {
      if (p.ipRights && p.ipRights.reversionWeek !== undefined) {
         if (currentWeek >= p.ipRights.reversionWeek) {
-          // Rights lost
-          messages.push(`You lost the exclusive IP rights to ${p.title}.`);
-          return {
-             ...p,
-             ipRights: {
-                ...p.ipRights,
-                rightsOwner: 'external' as const
-             }
-          };
+          impact.uiNotifications!.push(`You lost the exclusive IP rights to ${p.title}.`);
+          impact.projectUpdates!.push({
+            projectId: p.id,
+            update: {
+                ipRights: {
+                    ...p.ipRights,
+                    rightsOwner: 'external' as const
+                }
+            }
+          });
+          continue;
         }
      }
      
-     // Update catalog value dynamically
      if (p.ipRights && p.ipRights.rightsOwner === 'studio') {
-        return {
-           ...p,
-           ipRights: {
-              ...p.ipRights,
-              catalogValue: calculateIPValue(p)
-           }
-        };
+        impact.projectUpdates!.push({
+            projectId: p.id,
+            update: {
+                ipRights: {
+                    ...p.ipRights,
+                    catalogValue: calculateIPValue(p)
+                }
+            }
+        });
      }
-     
-     return p;
-   });
+   }
    
-   return { projects: updatedProjects, messages };
+   return impact;
 }
 
 export function catalogValue(projects: Project[]): number {
-  // ⚡ Bolt: Replaced O(N) .reduce() with a direct for-loop to eliminate intermediate closure allocation overhead
   let total = 0;
   for (let i = 0; i < projects.length; i++) {
     const p = projects[i];

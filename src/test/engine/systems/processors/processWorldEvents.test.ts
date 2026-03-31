@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { processWorldEvents } from '../../../../engine/systems/processors/processWorldEvents';
-import { GameState, RivalStudio } from '../../../../engine/types';
+import { GameState, RivalStudio, MarketplaceTrend } from '../../../../engine/types';
+import { StateImpact } from '../../../../engine/types/state.types';
 
 vi.mock('../../../../engine/systems/rivals', () => ({
   advanceRivals: vi.fn()
@@ -49,7 +50,7 @@ import { resolveFestivals } from '../../../../engine/systems/festivals';
 import { advanceScandals, generateScandals } from '../../../../engine/systems/scandals';
 import * as utils from '../../../../engine/utils';
 
-describe.skip('processWorldEvents', () => {
+describe('processWorldEvents', () => {
   const getInitialState = (): GameState => ({
     week: 1,
     cash: 1000000,
@@ -58,14 +59,15 @@ describe.skip('processWorldEvents', () => {
       archetype: 'major',
       prestige: 50,
       internal: {
-        projects: [],
+        projects: {},
         contracts: [],
         financeHistory: []
       }
     },
     market: {
       opportunities: [],
-      buyers: []
+      buyers: [],
+      trends: []
     },
     industry: {
       rivals: [],
@@ -73,139 +75,128 @@ describe.skip('processWorldEvents', () => {
       families: [],
       agencies: [],
       agents: [],
-      talentPool: [],
-      newsHistory: []
+      talentPool: {},
+      newsHistory: [],
+      scandals: []
     },
     culture: { genrePopularity: {} },
     finance: { bankBalance: 1000000, yearToDateRevenue: 0, yearToDateExpenses: 0 },
     history: []
   });
 
-  const getInitialWeeklyChanges = () => ({
-    projectUpdates: [],
-    events: [],
-    newHeadlines: [],
-    costs: 0,
-    revenue: 0,
-    newsEvents: []
-  });
-
   beforeEach(() => {
     vi.clearAllMocks();
 
-    // Setup default mocks
-    vi.mocked(advanceRivals).mockReturnValue({ updatedRivals: [], newsEvents: [] });
-    vi.mocked(updateBuyers).mockReturnValue({ updatedBuyers: [], newHeadlines: [] });
-    vi.mocked(TalentSystem.advance).mockReturnValue({ updatedOpportunities: [], events: [] });
+    // Setup default mocks returning StateImpact
+    vi.mocked(advanceRivals).mockReturnValue({ rivalUpdates: [], newsEvents: [] });
+    vi.mocked(updateBuyers).mockReturnValue({ buyerUpdates: [], newHeadlines: [] });
+    vi.mocked(TalentSystem.advance).mockReturnValue({ newOpportunities: [], uiNotifications: [] });
     vi.mocked(generateHeadlines).mockReturnValue([]);
     vi.mocked(runAwardsCeremony).mockReturnValue({ projectUpdates: [], newsEvents: [], newAwards: [], prestigeChange: 0 });
-    vi.mocked(advanceTrends).mockReturnValue([]);
-    vi.mocked(advanceMarketEvents).mockImplementation((s) => s);
-    vi.mocked(advanceRumors).mockImplementation((s) => s);
-    vi.mocked(resolveFestivals).mockImplementation((s) => s);
-    vi.mocked(advanceScandals).mockImplementation((s) => s);
-    vi.mocked(generateScandals).mockReturnValue({ newScandals: [], projectUpdates: [], headlines: [] });
+    vi.mocked(processRazzies).mockReturnValue({});
+    vi.mocked(advanceTrends).mockReturnValue({ newTrends: [] });
+    vi.mocked(advanceMarketEvents).mockReturnValue({ newMarketEvents: [] });
+    vi.mocked(advanceRumors).mockReturnValue({ newRumors: [] });
+    vi.mocked(resolveFestivals).mockReturnValue({ projectUpdates: [] });
+    vi.mocked(advanceScandals).mockReturnValue({ scandalUpdates: [] });
+    vi.mocked(generateScandals).mockReturnValue({ newScandals: [], projectUpdates: [], newHeadlines: [] });
   });
 
-  it('orchestrates subsystem advancements and collects updates correctly', () => {
+  it('orchestrates subsystem advancements and aggregates impacts correctly', () => {
     const state = getInitialState();
-    const changes = getInitialWeeklyChanges();
 
     vi.mocked(advanceRivals).mockReturnValue({
-      updatedRivals: [{ id: 'r1', name: 'Rival' } as RivalStudio],
+      rivalUpdates: [{ rivalId: 'r1', update: { strength: 60 } }],
       newsEvents: [{ type: 'RIVAL', headline: 'Rival Action', description: 'Desc' }]
     });
     vi.mocked(updateBuyers).mockReturnValue({
-      updatedBuyers: [{ id: 'b1', name: 'Buyer', archetype: 'network' }],
-      newHeadlines: ['Buyer changed mandate']
+      buyerUpdates: [{ buyerId: 'b1', update: { currentMandate: { type: 'sci-fi', activeUntilWeek: 10 } } }],
+      newHeadlines: [{ category: 'market', text: 'Buyer changed mandate', week: 2 }]
     });
     vi.mocked(generateHeadlines).mockReturnValue([{ id: 'h1', text: 'Gen headline', week: 2, category: 'general' }]);
 
-    const result = processWorldEvents(state, changes);
+    const impact = processWorldEvents(state);
 
-    expect(result.industry.rivals).toHaveLength(1);
-    expect(result.market.buyers).toHaveLength(1);
-    expect(changes.newsEvents.some(ne => ne.headline === 'Rival Action')).toBeTruthy();
-    expect(changes.newHeadlines.some(h => h.text === 'Buyer changed mandate')).toBeTruthy();
-    expect(result.industry.headlines.some(h => h.text === 'Gen headline')).toBeTruthy();
+    expect(impact.rivalUpdates).toHaveLength(1);
+    expect(impact.buyerUpdates).toHaveLength(1);
+    expect(impact.newsEvents?.some(ne => ne.headline === 'Rival Action')).toBeTruthy();
+    expect(impact.newHeadlines?.some(h => h.text === 'Buyer changed mandate')).toBeTruthy();
+    expect(impact.newHeadlines?.some(h => h.text === 'Gen headline')).toBeTruthy();
   });
 
-  it('runs awards ceremony and correctly accumulates new awards and prestige', () => {
+  it('collects awards ceremony and prestige results', () => {
     const state = getInitialState();
-    const changes = getInitialWeeklyChanges();
 
     vi.mocked(runAwardsCeremony).mockReturnValue({
-      projectUpdates: ['Won Best Picture!'],
+      projectUpdates: [{ projectId: 'p1', update: { buzz: 100 } }],
       newsEvents: [{ type: 'AWARD', headline: 'Big Win!', description: 'Awesome.' }],
       newAwards: [{ id: 'a1', projectId: 'p1', name: 'Best Picture', category: 'Best Picture', body: 'Academy Awards', status: 'won', year: 2025 }],
       prestigeChange: 15
     });
 
-    const result = processWorldEvents(state, changes);
+    const impact = processWorldEvents(state);
 
-    expect(result.studio.prestige).toBe(65);
-    expect(result.industry.awards).toHaveLength(1);
-    expect(changes.projectUpdates).toContain('Won Best Picture!');
-    expect(changes.events.some(e => e.includes('Academy Awards'))).toBeTruthy();
-    expect(changes.newsEvents.some(ne => ne.type === 'AWARD')).toBeTruthy();
+    expect(impact.prestigeChange).toBe(15);
+    expect(impact.newAwards).toHaveLength(1);
+    expect(impact.projectUpdates).toContainEqual(expect.objectContaining({ projectId: 'p1' }));
+    expect(impact.newsEvents?.some(ne => ne.type === 'AWARD')).toBeTruthy();
   });
 
-  it('triggers Razzie logic accurately on week 4', () => {
+  it('triggers Razzie logic on week 4', () => {
     const state = getInitialState();
     state.week = 3; // nextWeek will be 4
-    state.studio.internal.projects = [{ id: 'p1', title: 'Terrible Film', format: 'film', genre: 'Action', budgetTier: 'low', budget: 100, weeklyCost: 10, targetAudience: 'Everyone', flavor: '', status: 'released', buzz: 0, weeksInPhase: 0, developmentWeeks: 0, productionWeeks: 0, revenue: 0, weeklyRevenue: 0, releaseWeek: null }];
-    state.industry.talentPool = { "t1": { id: "t1", name: 'Bad Actor', roles: ['actor'], prestige: 10, fee: 100, draw: 10, temperament: 'Normal', accessLevel: "outsider" } };
-
-    const changes = getInitialWeeklyChanges();
 
     vi.mocked(processRazzies).mockReturnValue({
-      projectUpdates: ['A terrible film won.'],
-      newHeadlines: [{ id: 'h1', text: 'Razzie!', week: 4, category: 'awards' }],
-      newsEvents: [],
-      studioPrestigePenalty: 10,
+      projectUpdates: [{ projectId: 'p1', update: { activeCrisis: { description: 'Razzie Crisis', resolved: false, severity: 'high', options: [] } } }],
+      newHeadlines: [{ category: 'awards', text: 'Razzie!', week: 4 }],
+      prestigeChange: -10,
       cultClassicProjectIds: ['p1'],
-      razzieWinnerTalentIds: ['t1']
+      razzieWinnerTalents: ['t1']
     });
 
-    const result = processWorldEvents(state, changes);
+    const impact = processWorldEvents(state);
 
-    expect(result.studio.prestige).toBe(40); // 50 - 10
-    expect(Object.values(result.studio.internal.projects)[0].isCultClassic).toBe(true);
-    expect(Object.values(result.industry.talentPool)[0].hasRazzie).toBe(true);
-    // Project P1 gets a crisis because they won a razzie
-    expect(Object.values(result.studio.internal.projects)[0].activeCrisis).toBeDefined();
-    expect(changes.events.some(e => e.includes('CRISIS: "Terrible Film" - The Razzies have destroyed Bad Actor\'s ego'))).toBeTruthy();
+    expect(impact.prestigeChange).toBe(-10);
+    expect(impact.cultClassicProjectIds).toContain('p1');
+    expect(impact.razzieWinnerTalents).toContain('t1');
+    expect(impact.projectUpdates).toContainEqual(expect.objectContaining({ 
+        projectId: 'p1',
+        update: expect.objectContaining({ 
+            activeCrisis: expect.objectContaining({ description: 'Razzie Crisis' }) 
+        })
+    }));
   });
 
-  it('handles random world events generation appropriately', () => {
+  it('handles random world events generation', () => {
       const state = getInitialState();
-      const changes = getInitialWeeklyChanges();
 
-      // Force Math.random to always hit < 0.2
+      // Force Math.random to always hit < 0.2 twice
       vi.spyOn(utils, 'secureRandom').mockReturnValue(0.1);
 
-      processWorldEvents(state, changes);
+      const impact = processWorldEvents(state);
 
-      expect(changes.events.length).toBeGreaterThanOrEqual(2); // Two potential random events
+      expect(impact.uiNotifications?.length).toBeGreaterThanOrEqual(2);
       vi.restoreAllMocks();
   });
 
-  it('generates and attaches scandals properly', () => {
+  it('aggregates new scandals and their resulting crises', () => {
      const state = getInitialState();
-     const changes = getInitialWeeklyChanges();
-
-     state.studio.internal.projects = [{ id: 'p1', title: 'Scandal Film', format: 'film', genre: 'Action', budgetTier: 'low', budget: 100, weeklyCost: 10, targetAudience: 'Everyone', flavor: '', status: 'production', buzz: 0, weeksInPhase: 0, developmentWeeks: 0, productionWeeks: 0, revenue: 0, weeklyRevenue: 0, releaseWeek: null }];
 
      vi.mocked(generateScandals).mockReturnValue({
          newScandals: [{ id: 's1', talentId: 't1', severity: 50, type: 'personal', weeksRemaining: 4 }],
-         projectUpdates: [{ projectId: 'p1', crisis: { description: 'A bad scandal.', options: [], resolved: false, severity: 'medium' } }],
-         headlines: [{ id: 'h1', text: 'SCANDAL!', week: 2, category: 'talent' }]
+         projectUpdates: [{ projectId: 'p1', update: { activeCrisis: { description: 'A bad scandal.', options: [], resolved: false, severity: 'medium' } } }],
+         newHeadlines: [{ text: 'SCANDAL!', week: 2, category: 'talent' }]
      });
 
-     const result = processWorldEvents(state, changes);
+     const impact = processWorldEvents(state);
 
-     expect(result.industry.scandals).toHaveLength(1);
-     expect(Object.values(result.studio.internal.projects)[0].activeCrisis?.description).toBe('A bad scandal.');
-     expect(changes.newHeadlines.some(h => h.text === 'SCANDAL!')).toBeTruthy();
+     expect(impact.newScandals).toHaveLength(1);
+     expect(impact.projectUpdates).toContainEqual(expect.objectContaining({ 
+         projectId: 'p1',
+         update: expect.objectContaining({ 
+             activeCrisis: expect.objectContaining({ description: 'A bad scandal.' }) 
+         })
+     }));
+     expect(impact.newHeadlines?.some(h => h.text === 'SCANDAL!')).toBeTruthy();
   });
 });

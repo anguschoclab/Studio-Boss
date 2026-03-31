@@ -3,167 +3,126 @@ import { ALL_GENRES } from '../systems/trends';
 import { secureRandom } from '../utils';
 import { advanceIPRights } from '../systems/ipRetention';
 import { advanceDeals } from '../systems/deals';
-import { processProduction, WeeklyChanges as ProductionWeeklyChanges } from '../systems/processors/processProduction';
-import { processFinance, WeeklyChanges as FinanceWeeklyChanges } from '../systems/processors/processFinance';
-import { processWorldEvents, WeeklyChanges as WorldWeeklyChanges } from '../systems/processors/processWorldEvents';
-import { secureRandom } from '../utils';
+import { processProduction } from '../systems/processors/processProduction';
+import { processFinance } from '../systems/processors/processFinance';
+import { processWorldEvents } from '../systems/processors/processWorldEvents';
+import { applyStateImpact } from '../../store/storeUtils';
+import { mergeImpacts } from '../utils/impactUtils';
 
-// Consolidated WeeklyChanges interface for the orchestrator
-export interface WeeklyChanges extends ProductionWeeklyChanges, FinanceWeeklyChanges, WorldWeeklyChanges {
-  projectUpdates: string[];
-  events: string[];
-  newHeadlines: Headline[];
-  costs: number;
-  revenue: number;
-  newsEvents: Omit<NewsEvent, 'id' | 'week'>[];
-}
-
-const initializeWeeklyChanges = (): WeeklyChanges => ({
-  projectUpdates: [],
-  events: [],
-  newHeadlines: [],
-  costs: 0,
-  revenue: 0,
-  newsEvents: [],
-});
-
-const finalizeWeek = (
-  state: GameState,
-  weeklyChanges: WeeklyChanges,
-  originalState: GameState
-): { newState: GameState; summary: WeekSummary } => {
-  const nextWeek = originalState.week + 1;
-
-  const nextNewsEvents = new Array(weeklyChanges.newsEvents.length);
-  for (let i = 0; i < weeklyChanges.newsEvents.length; i++) {
-    nextNewsEvents[i] = {
-      ...weeklyChanges.newsEvents[i],
-      id: `ne-${crypto.randomUUID()}`,
-      week: nextWeek
-    };
-  }
-
-  const summary: WeekSummary = {
-    fromWeek: originalState.week,
-    toWeek: nextWeek,
-    cashBefore: originalState.cash,
-    cashAfter: state.cash,
-    totalRevenue: weeklyChanges.revenue,
-    totalCosts: weeklyChanges.costs,
-    projectUpdates: weeklyChanges.projectUpdates,
-    newHeadlines: weeklyChanges.newHeadlines,
-    events: weeklyChanges.events,
-    newsEvents: nextNewsEvents
-  };
-
-  // Update UI Data Vis Extensions (Epic 4)
-  const nextTrends = state.market.trends || [];
-  const genrePopularity: Record<string, number> = {};
-  const trendMap = new Map<string, number>();
-  for (let i = 0; i < nextTrends.length; i++) {
-    trendMap.set(nextTrends[i].genre, nextTrends[i].heat);
-  }
-  for (let i = 0; i < ALL_GENRES.length; i++) {
-    const g = ALL_GENRES[i];
-    const heat = trendMap.get(g);
-    genrePopularity[g.toLowerCase()] = heat !== undefined ? heat / 100 : 0.2 + secureRandom() * 0.1;
-  }
-
-  const nextFinance = {
-    bankBalance: state.cash,
-    yearToDateRevenue: (state.finance?.yearToDateRevenue || 0) + weeklyChanges.revenue,
-    yearToDateExpenses: (state.finance?.yearToDateExpenses || 0) + weeklyChanges.costs,
-  };
-
-  // Create Snapshot for history
+/**
+ * Creates a snapshot of the current studio state for historical tracking.
+ */
+function createSnapshot(state: GameState, originalWeek: number): StudioSnapshot {
   let activeProjectsCount = 0;
   let releasedProjectsCount = 0;
   const projects = Object.values(state.studio.internal.projects);
-  for (let i = 0; i < projects.length; i++) {
-    const s = projects[i].status;
-    if (s === 'released' || s === 'post_release' || s === 'archived') {
+  
+  for (const p of projects) {
+    if (p.status === 'released' || p.status === 'post_release' || p.status === 'archived') {
       releasedProjectsCount++;
     } else {
       activeProjectsCount++;
     }
   }
 
-  const currentSnapshot: StudioSnapshot = {
-    year: Math.floor((originalState.week - 1) / 52) + 1,
-    week: ((originalState.week - 1) % 52) + 1,
+  return {
+    year: Math.floor((originalWeek - 1) / 52) + 1,
+    week: ((originalWeek - 1) % 52) + 1,
     funds: state.cash,
     activeProjects: activeProjectsCount,
     completedProjects: releasedProjectsCount,
     totalPrestige: state.studio.prestige,
     timestamp: new Date().toISOString()
   };
+}
 
-  const oldHistory = state.history || [];
-  const startIdx = oldHistory.length >= 52 ? oldHistory.length - 51 : 0;
-  const newLength = Math.min(oldHistory.length + 1, 52);
-  const nextHistory = new Array(newLength);
-  let destIdx = 0;
-  for (let i = startIdx; i < oldHistory.length; i++) {
-    nextHistory[destIdx++] = oldHistory[i];
+/**
+ * Updates the culture and finance slices of the state based on simulation results.
+ */
+function finalizeStateMetadata(state: GameState, originalState: GameState, totalRevenue: number, totalCosts: number): GameState {
+  const nextWeek = originalState.week + 1;
+
+  // 1. Update Culture (Genre Popularity)
+  const nextTrends = state.market.trends || [];
+  const genrePopularity: Record<string, number> = {};
+  const trendMap = new Map<string, number>();
+  for (const t of nextTrends) trendMap.set(t.genre, t.heat);
+  
+  for (const g of ALL_GENRES) {
+    const heat = trendMap.get(g);
+    genrePopularity[g.toLowerCase()] = heat !== undefined ? heat / 100 : 0.2 + secureRandom() * 0.1;
   }
-  nextHistory[destIdx] = currentSnapshot; // Keep last year of history
 
-  const newState: GameState = {
+  // 2. Update Finance Summary
+  const nextFinance = {
+    bankBalance: state.cash,
+    yearToDateRevenue: (state.finance?.yearToDateRevenue || 0) + totalRevenue,
+    yearToDateExpenses: (state.finance?.yearToDateExpenses || 0) + totalCosts,
+  };
+
+  // 3. Update History
+  const currentSnapshot = createSnapshot(state, originalState.week);
+  const oldHistory = state.history || [];
+  const nextHistory = [...oldHistory.slice(-51), currentSnapshot];
+
+  return {
     ...state,
     week: nextWeek,
     culture: { genrePopularity },
     finance: nextFinance,
     history: nextHistory,
   };
-
-  return { newState, summary };
 }
 
 /**
- * The Weekly Simulation Orchestrator
- * This function coordinates the various sub-processes that occur every game week.
+ * The Weekly Simulation Orchestrator.
+ * Coordinates all simulation systems in a deterministic, sequential pipeline.
  */
 export function advanceWeek(state: GameState): { newState: GameState; summary: WeekSummary } {
-  const weeklyChanges = initializeWeeklyChanges();
+  const originalState = state;
+  let currentState = state;
+  let cumulativeImpact = {};
 
-  // 1. Process Projects (Advancement, Quality, Completion)
-  let nextState = processProduction(state, weeklyChanges);
+  // 1. Process Studio Production (Advancement, Quality, Completion)
+  const productionImpact = processProduction(currentState);
+  currentState = applyStateImpact(currentState, productionImpact);
 
-  // 2. Resolve Finances (Burn, Revenue, Cash Flow)
-  nextState = processFinance(nextState, weeklyChanges);
+  // 2. Resolve Studio Finances (Burn, Revenue, Cash Flow)
+  const financeImpact = processFinance(currentState);
+  currentState = applyStateImpact(currentState, financeImpact);
 
-  // 3. Simulate World (Rivals, Talent, Market, Awards)
-  nextState = processWorldEvents(nextState, weeklyChanges);
+  // 3. Simulate World (Rivals, Talent, Market, Awards, Scandals)
+  const worldImpact = processWorldEvents(currentState);
+  currentState = applyStateImpact(currentState, worldImpact);
 
-  // 4. Rights & Deals (Sprint E)
-  const { projects: updatedProjects, messages: ipMessages } = advanceIPRights(Object.values(nextState.studio.internal.projects), nextState.week + 1);
-
-  const finalInternal = {
-    ...nextState.studio.internal,
-    projects: updatedProjects,
-  };
-
-  for (let i = 0; i < ipMessages.length; i++) {
-    weeklyChanges.events.push(ipMessages[i]);
-  }
+  // 4. IP Rights & Deals
+  const ipImpact = advanceIPRights(Object.values(currentState.studio.internal.projects), currentState.week);
+  currentState = applyStateImpact(currentState, ipImpact);
   
-  if (nextState.studio.internal.firstLookDeals) {
-    const activeDeals = advanceDeals(nextState.studio.internal.firstLookDeals);
-    const expiredDeals = nextState.studio.internal.firstLookDeals.length - activeDeals.length;
-    if (expiredDeals > 0) {
-      weeklyChanges.events.push(`${expiredDeals} first-look talent deal(s) expired this week.`);
-    }
-    finalInternal.firstLookDeals = activeDeals;
-  }
+  const dealsImpact = advanceDeals(currentState.studio.internal.firstLookDeals || []);
+  currentState = applyStateImpact(currentState, dealsImpact);
 
-  nextState = {
-    ...nextState,
-    studio: {
-      ...nextState.studio,
-      internal: finalInternal
-    }
+  // 5. Build Cumulative Summary
+  const allImpacts = mergeImpacts(productionImpact, financeImpact, worldImpact, ipImpact, dealsImpact);
+  
+  const totalRevenue = financeImpact.cashChange && financeImpact.cashChange > 0 ? financeImpact.cashChange : 0;
+  const totalCosts = financeImpact.cashChange && financeImpact.cashChange < 0 ? -financeImpact.cashChange : 0;
+
+  const summary: WeekSummary = {
+    fromWeek: originalState.week,
+    toWeek: originalState.week + 1,
+    cashBefore: originalState.cash,
+    cashAfter: currentState.cash,
+    totalRevenue: totalRevenue,
+    totalCosts: totalCosts,
+    projectUpdates: allImpacts.uiNotifications || [],
+    newHeadlines: (allImpacts.newHeadlines as Headline[]) || [],
+    events: allImpacts.uiNotifications || [], // Overlapping for now, unified in later sprints
+    newsEvents: (allImpacts.newsEvents as NewsEvent[]) || []
   };
 
-  // 5. Finalize
-  return finalizeWeek(nextState, weeklyChanges, state);
+  // 6. Finalize State (Metadata, History, Finance slices)
+  const finalState = finalizeStateMetadata(currentState, originalState, totalRevenue, totalCosts);
+
+  return { newState: finalState, summary };
 }

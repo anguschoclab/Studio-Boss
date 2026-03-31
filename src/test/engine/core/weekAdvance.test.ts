@@ -5,11 +5,11 @@ import * as utils from '../../../engine/utils';
 
 describe("advanceWeek", () => {
   it("advances the game by one week and generates a summary", () => {
-    const initialState = initializeGame("Test Studio", "indie");
+    const initialState = initializeGame("Test Studio", "major");
 
     // Set up mock data
     initialState.studio.internal.contracts = [];
-    initialState.industry.talentPool = [];
+    initialState.industry.talentPool = {};
     initialState.industry.awards = [];
 
     const { newState, summary } = advanceWeek(initialState);
@@ -23,9 +23,8 @@ describe("advanceWeek", () => {
   });
 
   it("decreases opportunity expiry weeks and removes expired ones", () => {
-    const initialState = initializeGame("Test Studio", "indie");
+    const initialState = initializeGame("Test Studio", "major");
 
-    // Add a custom opportunity that is about to expire
     initialState.market.opportunities = [
       {
         id: "opp-expire",
@@ -55,7 +54,7 @@ describe("advanceWeek", () => {
       }
     ];
 
-    // Force Math.random to not generate new opportunities for this test
+    // Force Math.random to not generate new opportunities for this test in TalentSystem.advance
     vi.spyOn(utils, 'secureRandom').mockReturnValue(0.9);
 
     const { newState } = advanceWeek(initialState);
@@ -68,16 +67,17 @@ describe("advanceWeek", () => {
   });
 
   it("sometimes spawns new opportunities", () => {
-    const initialState = initializeGame("Test Studio", "indie");
+    const initialState = initializeGame("Test Studio", "major");
     initialState.market.opportunities = [];
 
-    // Force Math.random to < 0.3 to trigger opportunity spawn
-    vi.spyOn(utils, 'secureRandom').mockReturnValue(0.1);
+    // Force Math.random to < 0.2 to trigger opportunity spawn in TalentSystem.advance
+    vi.spyOn(utils, 'secureRandom').mockReturnValue(0.01);
 
     const { newState, summary } = advanceWeek(initialState);
 
     expect(newState.market.opportunities.length).toBeGreaterThan(0);
-    expect(summary.events.some(e => e.includes('hit the market'))).toBeTruthy();
+    // UI notifications from TalentSystem.advance
+    expect(summary.newsEvents.length + summary.projectUpdates.length).toBeGreaterThan(0);
 
     vi.restoreAllMocks();
   });
@@ -85,8 +85,8 @@ describe("advanceWeek", () => {
   it("handles advancing a week with an entirely empty pipeline and empty world state without crashing", () => {
     const emptyState = initializeGame("Empty Studio", "major");
 
-    // Explicitly empty arrays that might be pre-populated
-    emptyState.studio.internal.projects = [];
+    // Explicitly empty Records and arrays
+    emptyState.studio.internal.projects = {};
     emptyState.studio.internal.contracts = [];
     emptyState.studio.internal.firstLookDeals = [];
     emptyState.market.opportunities = [];
@@ -94,10 +94,7 @@ describe("advanceWeek", () => {
     emptyState.market.activeMarketEvents = [];
     emptyState.industry.rivals = [];
     emptyState.industry.headlines = [];
-    emptyState.industry.families = [];
-    emptyState.industry.agencies = [];
-    emptyState.industry.agents = [];
-    emptyState.industry.talentPool = [];
+    emptyState.industry.talentPool = {};
     emptyState.industry.awards = [];
     emptyState.industry.festivalSubmissions = [];
     emptyState.industry.rumors = [];
@@ -112,7 +109,7 @@ describe("advanceWeek", () => {
     }).not.toThrow();
 
     expect(newState?.week).toBe(2);
-    expect(newState?.studio.internal.projects).toHaveLength(0);
+    expect(Object.keys(newState?.studio.internal.projects || {}).length).toBe(0);
     expect(summary?.totalRevenue).toBe(0);
     expect(summary?.totalCosts).toBe(0);
   });

@@ -1,4 +1,4 @@
-import { GameState, Project, ProjectFormat, BudgetTierKey, TvFormatKey, UnscriptedFormatKey, ReleaseModelKey } from '@/engine/types';
+import { GameState, Project, TalentProfile, ProjectFormat, BudgetTierKey, TvFormatKey, UnscriptedFormatKey, ReleaseModelKey } from '@/engine/types';
 import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
 import { TV_FORMATS } from '@/engine/data/tvFormats';
 import { UNSCRIPTED_FORMATS } from '@/engine/data/unscriptedFormats';
@@ -39,17 +39,12 @@ function prepareTalentAndContracts(
     const ids = attachedTalentIds || [];
     const talentMap = new Map();
     const talentPool = state.industry.talentPool;
-    for (let i = 0; i < talentPool.length; i++) {
-        const t = talentPool[i];
-        talentMap.set(t.id, t);
-    }
-
-    const attachedTalent: typeof talentPool = [];
+    const attachedTalent: TalentProfile[] = [];
     let talentFees = 0;
     const newContracts: any[] = [];
 
     for (let i = 0; i < ids.length; i++) {
-        const t = talentMap.get(ids[i]);
+        const t = talentPool[ids[i]];
         if (t) {
             attachedTalent.push(t);
             talentFees += t.fee || 0;
@@ -115,41 +110,37 @@ export function applyStateImpact(state: GameState, impact: import('@/engine/type
     });
 
     if (impact.cultClassicProjectIds && impact.cultClassicProjectIds.length > 0) {
-        const cultSet = new Set(impact.cultClassicProjectIds);
-        newProjects = newProjects.map(p => {
-            if (cultSet.has(p.id)) {
+        impact.cultClassicProjectIds.forEach(projectId => {
+            const project = newProjects[projectId];
+            if (project) {
+                newProjects[projectId] = { ...project, isCultClassic: true };
                 projectsChanged = true;
-                return { ...p, isCultClassic: true };
             }
-            return p;
         });
     }
   }
   
   // 2. Update Talent Pool
-  let newTalentPool = [...state.industry.talentPool];
+  const newTalentPool = { ...state.industry.talentPool };
   let talentPoolChanged = false;
 
   if (impact.talentUpdates && impact.talentUpdates.length > 0) {
-    const updatesMap = new Map(impact.talentUpdates.map(u => [u.talentId, u.update]));
-    newTalentPool = newTalentPool.map(t => {
-        const update = updatesMap.get(t.id);
-        if (update) {
-            talentPoolChanged = true;
-            return { ...t, ...update };
-        }
-        return t;
+    impact.talentUpdates.forEach(({ talentId, update }) => {
+      const talent = newTalentPool[talentId];
+      if (talent) {
+        newTalentPool[talentId] = { ...talent, ...update };
+        talentPoolChanged = true;
+      }
     });
   }
 
   if (impact.razzieWinnerTalents && impact.razzieWinnerTalents.length > 0) {
-    const razzieSet = new Set(impact.razzieWinnerTalents);
-    newTalentPool = newTalentPool.map(t => {
-        if (razzieSet.has(t.id)) {
-            talentPoolChanged = true;
-            return { ...t, hasRazzie: true };
-        }
-        return t;
+    impact.razzieWinnerTalents.forEach(talentId => {
+      const talent = newTalentPool[talentId];
+      if (talent) {
+        newTalentPool[talentId] = { ...talent, hasRazzie: true };
+        talentPoolChanged = true;
+      }
     });
   }
 

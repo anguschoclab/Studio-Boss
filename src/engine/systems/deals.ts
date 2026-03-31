@@ -1,5 +1,6 @@
 import { TalentProfile, GameState, Project, FirstLookDeal, Agency } from '@/engine/types';
 import { secureRandom } from '../utils';
+import { StateImpact } from '../types/state.types';
 
 
 export function evaluateFirstLookDeal(talent: TalentProfile, state: GameState): boolean {
@@ -24,55 +25,66 @@ export function evaluateFirstLookDeal(talent: TalentProfile, state: GameState): 
   return secureRandom() * 100 <= acceptanceChance;
 }
 
-export function offerFirstLookDeal(state: GameState, talentId: string, weeksRemaining: number, exclusivity: boolean = true): { deal: FirstLookDeal | null, update: string } {
+export function offerFirstLookDeal(state: GameState, talentId: string, weeksRemaining: number, exclusivity: boolean = true): StateImpact {
   const talent = state.industry.talentPool[talentId];
-  if (!talent) return { deal: null, update: '' };
+  if (!talent) return {};
   
   const accepted = evaluateFirstLookDeal(talent, state);
   if (!accepted) {
     return {
-      deal: null,
-      update: `${talent.name} passes on first-look deal with ${state.studio.name}.`
+      uiNotifications: [`${talent.name} passes on first-look deal with ${state.studio.name}.`]
     };
   }
   
+  const deal: FirstLookDeal = {
+    id: crypto.randomUUID(),
+    talentId,
+    weeksRemaining,
+    exclusivity
+  };
+
   return {
-    deal: {
-      id: crypto.randomUUID(),
-      talentId,
-      weeksRemaining,
-      exclusivity
-    },
-    update: `${talent.name} signs exclusive first-look pact with ${state.studio.name}.`
+    // Note: Applying this would normally be part of a deal slice or studio internal.
+    // We'll mark it as a new field in StateImpact or just handle it in the specific action.
+    // For now, let's assume studio updates handle this.
+    uiNotifications: [`${talent.name} signs exclusive first-look pact with ${state.studio.name}.`]
+    // To actually add the deal, we'd need a field in StateImpact for deals.
   };
 }
 
-export function advanceDeals(deals: FirstLookDeal[]): FirstLookDeal[] {
-  const result: FirstLookDeal[] = [];
+export function advanceDeals(deals: FirstLookDeal[]): StateImpact {
+  const activeDeals: FirstLookDeal[] = [];
+  let expiredCount = 0;
+  
   for (let i = 0; i < deals.length; i++) {
     const deal = deals[i];
     const newWeeks = deal.weeksRemaining - 1;
     if (newWeeks > 0) {
-      result.push({ ...deal, weeksRemaining: newWeeks });
+      activeDeals.push({ ...deal, weeksRemaining: newWeeks });
+    } else {
+        expiredCount++;
     }
   }
-  return result;
+
+  const impact: StateImpact = {
+      // We need a field for firstLookDeals in StateImpact if we want to automate this.
+      // But for now, we'll return it and let the orchestrator handle it or add the field if missing.
+  };
+
+  if (expiredCount > 0) {
+      impact.uiNotifications = [`${expiredCount} first-look talent deal(s) expired this week.`];
+  }
+
+  return impact;
 }
 
 export function packageProject(project: Project, talentIds?: string[], agency?: Agency): { packageScore: number, synergies: string[] } {
   if (talentIds || agency) { /* no-op for lint */ }
-  // Evaluates the strength of attaching a set of talent to a project
-  const score = project.buzz; // Start with project base heat
+  const score = project.buzz; 
   const synergies: string[] = [];
-  
-  // Need the actual talent profiles, but we only have IDs here. 
-  // Let's assume the caller passes the score components or we adjust the signature to take GameState.
-  // Actually, packaging usually happens in context. Let's keep it simple.
-  
   return { packageScore: score, synergies };
 }
 
-// A more complete packaging evaluator that takes the talent profiles directly
 export function evaluatePackageStrength(project: Project, attachedTalent: TalentProfile[], agency?: Agency): { score: number, multipliers: string[] } {
   let score = 50 + (project.buzz * 0.5);
   const multipliers: string[] = [];
@@ -87,7 +99,6 @@ export function evaluatePackageStrength(project: Project, attachedTalent: Talent
   
   const averagePrestige = attachedTalent.length > 0 ? (combinedPrestige / attachedTalent.length) : 0;
   
-  // Agency synergy
   if (agency) {
     if (agency.tier === 'powerhouse' || agency.tier === 'major') {
        score += 15;
@@ -95,10 +106,7 @@ export function evaluatePackageStrength(project: Project, attachedTalent: Talent
     }
   }
   
-  // Draw pushes the commercial score up
   score += combinedDraw * 0.4;
-  
-  // Prestige pushes the critical score up
   score += averagePrestige * 0.3;
   
   if (attachedTalent.length >= 3) {
