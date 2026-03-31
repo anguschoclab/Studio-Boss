@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, test } from 'vitest';
 import { calculateWeeklyRevenue } from '../../../engine/systems/finance';
 import { Project } from '../../../engine/types';
 

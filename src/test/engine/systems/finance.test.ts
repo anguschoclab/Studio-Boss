@@ -91,6 +91,68 @@ describe("finance system utilities", () => {
       const state = { ...mockState, studio: { ...mockState.studio, internal: { ...mockState.studio.internal, projects: { 'p1': p1 } } } };
       expect(calculateStudioNetWorth(state)).toBe(700000);
     });
+
+    it("adds 50% of catalogValue if rightsOwner is 'shared'", () => {
+      const p1: Project = { ...mockProjectReleased, ipRights: { rightsOwner: 'shared', catalogValue: 200000 } };
+      const state = { ...mockState, studio: { ...mockState.studio, internal: { ...mockState.studio.internal, projects: [p1] } } };
+      expect(calculateStudioNetWorth(state)).toBe(600000);
+    });
+  });
+
+  describe("generateCashflowForecast", () => {
+    const mockState: GameState = {
+      week: 1,
+      cash: 1000000,
+      studio: {
+        name: "Test",
+        archetype: "major",
+        prestige: 50,
+        internal: {
+          projects: [],
+          contracts: [],
+          financeHistory: []
+        }
+      },
+      market: { opportunities: [], buyers: [] },
+      industry: { rivals: [], headlines: [], families: [], agencies: [], agents: [], talentPool: [], newsHistory: [] },
+      culture: { genrePopularity: {} },
+      finance: { bankBalance: 0, yearToDateRevenue: 0, yearToDateExpenses: 0 },
+      history: []
+    };
+
+    it("simulates advancing weeks with an empty pipeline (no projects or revenue)", () => {
+      const forecast = generateCashflowForecast(mockState, 8);
+      expect(forecast).toHaveLength(8);
+
+      forecast.forEach((f, idx) => {
+        expect(f.week).toBe(mockState.week + idx + 1);
+        expect(f.projectedRevenue).toBe(0);
+        expect(f.projectedCosts).toBe(0);
+        expect(f.projectedCash).toBe(1000000);
+      });
+    });
+
+    it("simulates decay with existing revenue/costs", () => {
+      const state = {
+        ...mockState,
+        studio: {
+          ...mockState.studio,
+          internal: {
+            ...mockState.studio.internal,
+            projects: [mockProjectProd, mockProjectReleased]
+          }
+        }
+      };
+
+      const forecast = generateCashflowForecast(state, 1);
+
+      // Revenue is 100,000 * 0.25 = 25,000
+      expect(Math.round(forecast[0].projectedRevenue)).toBe(25000);
+      // Cost is 20,000
+      expect(forecast[0].projectedCosts).toBe(20000);
+      // Cash = 1,000,000 + 25,000 - 20,000 = 1,005,000
+      expect(Math.round(forecast[0].projectedCash)).toBe(1005000);
+    });
   });
 
   describe("advanceFinance", () => {

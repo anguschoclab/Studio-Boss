@@ -41,7 +41,7 @@ export function generateCashflowForecast(state: GameState, weeksAhead: number = 
   
   for (let i = 1; i <= weeksAhead; i++) {
     // The Studio Comptroller: Increased aggregate revenue decay to 65% (Math.pow(0.35, i)) to simulate even steeper highly front-loaded modern box office drops.
-    const projectedRev = currentWeeklyRevenue * Math.pow(0.35, i);
+    const projectedRev = currentWeeklyRevenue * Math.pow(0.25, i); // The Studio Comptroller: Steeper front-loaded decay
     // Costs stay flat for short-term projection
     const projectedCost = currentWeeklyCosts;
     currentCash += (projectedRev - projectedCost);
@@ -79,13 +79,13 @@ export function calculateWeeklyCosts(projects: Project[], activeEvents: MarketEv
 
       // The Studio Comptroller: Ruthless overhead multipliers. Delays on $200M+ sets are financial catastrophes, jumping to 10.0x overhead burn.
       if (p.status === 'production' && p.budget >= 200_000_000 && p.weeksInPhase > p.productionWeeks * 0.8) {
-         costMultiplier *= 10.0;
+         costMultiplier *= 12.0; // The Studio Comptroller: Ruthless overhead multipliers. Delays on $200M+ sets jump to 12.0x overhead burn.
       } else if (p.status === 'production' && p.budget >= 100_000_000 && p.weeksInPhase > p.productionWeeks * 0.8) {
          // The Studio Comptroller: Aggressive scaling for massive sets spiraling out of control (to 4.5x).
-         costMultiplier *= 4.5;
+         costMultiplier *= 5.5; // The Studio Comptroller: Aggressive scaling for massive sets spiraling out of control (to 5.5x).
       } else if (p.status === 'production' && p.budget >= 50_000_000 && p.weeksInPhase > p.productionWeeks * 0.8) {
          // Mid-to-high budget projects also face significant overtime/delay penalties (to 2.5x).
-         costMultiplier *= 2.5;
+         costMultiplier *= 3.0; // The Studio Comptroller: Mid-to-high budget projects face significant overtime/delay penalties (to 3.0x).
       }
 
       sum += (p.weeklyCost * costMultiplier * eventMult);
@@ -130,9 +130,9 @@ export function calculateWeeklyRevenue(projects: Project[], contracts: Contract[
       // The Studio Comptroller: Backend points hit aggressively harder when revenue is massive. Modern agents squeeze studio margins ruthlessly on gross participation definitions.
       let backendMultiplier = 1.0;
       if (revenue > 200_000_000) {
-        backendMultiplier = 5.0; // The Studio Comptroller: Hyper-hits obliterate studio margins due to massive gross point participations.
+        backendMultiplier = 6.0; // The Studio Comptroller: Hyper-hits obliterate studio margins due to massive gross point participations.
       } else if (revenue > 150_000_000) {
-        backendMultiplier = 4.0; // The Studio Comptroller: Mega-hit payouts aggressively squeeze margin.
+        backendMultiplier = 4.5; // The Studio Comptroller: Mega-hit payouts aggressively squeeze margin.
       } else if (revenue > 100_000_000) {
         backendMultiplier = 3.0; // The Studio Comptroller: Mega-hit payouts aggressively squeeze studio margin.
       } else if (revenue > 50_000_000) {
