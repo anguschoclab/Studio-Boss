@@ -1,16 +1,26 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useGameStore } from '@/store/gameStore';
 import { formatMoney, getWeekDisplay } from '@/engine/utils';
+import { SaveSlotInfo } from '@/persistence/saveLoad';
 
 const TitleScreen = () => {
   const navigate = useNavigate();
   const { loadFromSlot, getSaveSlots } = useGameStore();
   const [showLoad, setShowLoad] = useState(false);
-  const slots = getSaveSlots();
-  const hasSaves = slots.some(s => s.exists);
+  const [slots, setSlots] = useState<SaveSlotInfo[]>([]);
+  const [hasSaves, setHasSaves] = useState(false);
+
+  useEffect(() => {
+    const fetchSlots = async () => {
+      const result = await getSaveSlots();
+      setSlots(result);
+      setHasSaves(result.some(s => s.exists));
+    };
+    fetchSlots();
+  }, [getSaveSlots]);
 
   const handleLoad = (slot: number) => {
     if (loadFromSlot(slot)) {
@@ -20,7 +30,6 @@ const TitleScreen = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-background relative overflow-hidden">
-      {/* Ambient gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-to-t from-primary/3 via-transparent to-transparent pointer-events-none" />
 
@@ -59,7 +68,6 @@ const TitleScreen = () => {
         </p>
       </div>
 
-      {/* Load Dialog */}
       <Dialog open={showLoad} onOpenChange={setShowLoad}>
         <DialogContent>
           <DialogHeader>
