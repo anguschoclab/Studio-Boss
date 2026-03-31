@@ -22,7 +22,9 @@ import {
   DollarSign, 
   Calendar,
   AlertCircle,
-  Megaphone
+  Megaphone,
+  Package,
+  ShieldAlert
 } from 'lucide-react';
 import { 
   AreaChart, 
