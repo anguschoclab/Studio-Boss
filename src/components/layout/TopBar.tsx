@@ -14,11 +14,12 @@ export const TopBar = () => {
 
   const { showSummary, setActiveTab } = useUIStore();
 
-  const activeProjects = useGameStore(s => selectActiveProjectsCount(s.gameState));
+  const activeProjectsList = useGameStore(s => selectActiveProjects(s.gameState));
 
   if (!gameState) return null;
 
-  const { cash, week, studio } = gameState;
+  const cash = gameState.finance.cash;
+  const { week, studio } = gameState;
   const { displayWeek, year } = getWeekDisplay(week);
 
   const handleAdvanceWeek = () => {
