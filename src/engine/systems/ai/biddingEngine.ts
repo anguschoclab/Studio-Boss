@@ -1,5 +1,5 @@
 import { GameState, RivalStudio, Opportunity, StateImpact } from '@/engine/types';
-import { secureRandom, pick, randRange } from '../../utils';
+import { RandomGenerator } from '../../utils/rng';
 
 /**
  * AI Decision Multipliers (Target C2).
@@ -16,23 +16,24 @@ const ArchetypeMultipliers: Record<string, (genre: string) => number> = {
  * AI Auction Tick (Target C2).
  * Pure function that generates bidding impacts for all active opportunities.
  */
-export function tickAuctions(state: GameState): StateImpact[] {
+export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const opportunities = state.market.opportunities.filter(o => o.expirationWeek >= state.week);
+  const currWeek = state.week;
+  const opportunities = state.market.opportunities.filter(o => (o.expirationWeek || 0) >= currWeek);
 
   opportunities.forEach(opportunity => {
     state.industry.rivals.forEach(rival => {
       // Logic for should rebid
-      const currentHighest = Object.values(opportunity.bids).reduce((max, b) => Math.max(max, b), 0);
-      const myBid = opportunity.bids[rival.id] || 0;
+      const currentHighest = Object.values(opportunity.bids || {}).reduce((max: number, b: any) => Math.max(max, Number(b)), 0);
+      const myBid = (opportunity.bids as any)[rival.id] || 0;
 
       if (myBid < currentHighest && rival.cash > currentHighest * 1.5) {
         const multiplier = ArchetypeMultipliers[rival.archetype]?.(opportunity.genre) || 1.0;
-        const newBid = Math.floor(currentHighest * randRange(1.05, 1.15) * multiplier);
+        const newBid = Math.floor(currentHighest * rng.range(1.05, 1.15) * multiplier);
 
         if (newBid < rival.cash * 0.4) {
           impacts.push({
-            type: 'PROJECT_UPDATED', // Bids are temporarily stored on opportunity
+            type: 'OPPORTUNITY_UPDATED',
             payload: {
               opportunityId: opportunity.id,
               rivalId: rival.id,
@@ -40,15 +41,12 @@ export function tickAuctions(state: GameState): StateImpact[] {
             }
           });
 
-          if (secureRandom() < 0.1) {
+          if (rng.next() < 0.1) {
             impacts.push({
               type: 'NEWS_ADDED',
               payload: {
-                headline: {
-                  week: state.week,
-                  category: 'market',
-                  text: `BIDDING WAR: ${rival.name} raises the stakes for ${opportunity.title}.`
-                }
+                headline: `BIDDING WAR: ${rival.name} raises the stakes for ${opportunity.title}.`,
+                description: `${rival.name} has submitted a significantly higher bid for the rights to "${opportunity.title}", signaling intense industry interest.`,
               }
             });
           }

@@ -1,6 +1,7 @@
 import { GameState, StateImpact, SeriesProject } from '@/engine/types';
 import { calculateWeeklyRating } from './ratingsEvaluator';
 import { evaluateRenewal } from './renewalEngine';
+import { RandomGenerator } from '../../utils/rng';
 
 export type TVStatus = 'IN_DEVELOPMENT' | 'ON_AIR' | 'ON_BUBBLE' | 'RENEWED' | 'CANCELLED' | 'SYNDICATED';
 
@@ -9,7 +10,7 @@ export type TVStatus = 'IN_DEVELOPMENT' | 'ON_AIR' | 'ON_BUBBLE' | 'RENEWED' | '
  * Processes airing loops and renewal logic for episodic content.
  * Returns discrete StateImpacts instead of modifying state directly.
  */
-export function tickTelevision(state: GameState): StateImpact[] {
+export function tickTelevision(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
   const series = state.projects.active.filter(p => p.type === 'SERIES' && p.tvDetails) as SeriesProject[];
 
@@ -17,8 +18,8 @@ export function tickTelevision(state: GameState): StateImpact[] {
     // Only process shows actively airing
     if (project.tvDetails.status !== 'ON_AIR') return;
 
-    // 1. Ratings Logic
-    const newRating = calculateWeeklyRating(project, project.buzz);
+    // 1. Ratings Logic (with stochastic variance)
+    const newRating = calculateWeeklyRating(project, project.buzz || 0, rng);
     const aired = (project.tvDetails.episodesAired || 0) + 1;
     const totalRatingSum = (project.tvDetails.averageRating * (project.tvDetails.episodesAired || 0)) + newRating;
     const nextAverageRating = Math.round((totalRatingSum / aired) * 10) / 10;
@@ -49,7 +50,7 @@ export function tickTelevision(state: GameState): StateImpact[] {
     if (nextStatus === 'CANCELLED') {
       impacts.push({
         type: 'PROJECT_REMOVED',
-        payload: { projectId: project.id, reason: 'CANCELLED' }
+        payload: { projectId: project.id }
       });
     }
   });

@@ -14,11 +14,11 @@ import { createSnapshotSlice, SnapshotSlice } from './slices/snapshotSlice';
 
 export interface GameStore extends ProjectSlice, FinanceSlice, TalentSlice, RivalSlice, NewsSlice, SnapshotSlice {
   gameState: GameState | null;
-  newGame: (studioName: string, archetype: ArchetypeKey) => void;
+  newGame: (studioName: string, archetype: ArchetypeKey) => Promise<void>;
   doAdvanceWeek: () => WeekSummary;
-  saveToSlot: (slot: number) => void;
-  loadFromSlot: (slot: number) => boolean;
-  getSaveSlots: () => SaveSlotInfo[];
+  saveToSlot: (slot: number) => Promise<void>;
+  loadFromSlot: (slot: number) => Promise<boolean>;
+  getSaveSlots: () => Promise<SaveSlotInfo[]>;
   clearGame: () => void;
 }
 
@@ -32,9 +32,9 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
   ...createNewsSlice(set, get, ...args),
   ...createSnapshotSlice(set, get, ...args),
 
-  newGame: (studioName, archetype) => {
+  newGame: async (studioName, archetype) => {
     const gameState = initializeGame(studioName, archetype);
-    saveGame(0, gameState);
+    await saveGame(0, gameState);
     set({ 
       gameState,
       finance: gameState.finance,
@@ -54,7 +54,9 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
 
       if (state.gameState === result.newState) return state; 
 
+      // Trigger background save without blocking UI (Fire and forget)
       saveGame(0, result.newState);
+      
       return { 
         gameState: result.newState,
         finance: result.newState.finance,
@@ -120,13 +122,13 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
     return summary;
   },
 
-  saveToSlot: (slot) => {
+  saveToSlot: async (slot) => {
     const state = get().gameState;
-    if (state) saveGame(slot, state);
+    if (state) await saveGame(slot, state);
   },
 
-  loadFromSlot: (slot) => {
-    const state = loadGame(slot);
+  loadFromSlot: async (slot) => {
+    const state = await loadGame(slot);
     if (state) {
       set({ 
         gameState: state,
@@ -138,7 +140,7 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
     return false;
   },
 
-  getSaveSlots: () => getSaveSlots(),
+  getSaveSlots: async () => await getSaveSlots(),
 
   clearGame: () => set((state) => {
     if (state.gameState === null) return state;

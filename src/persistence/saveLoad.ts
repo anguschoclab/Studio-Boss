@@ -1,88 +1,33 @@
 import { GameState, SaveSlotMeta } from '@/engine/types';
-import { z } from 'zod';
+import { persistenceService } from './PersistenceService';
 
-const SAVE_PREFIX = 'studioboss_save_';
-const SLOTS_KEY = 'studioboss_slots';
+/**
+ * High-level orchestration for Game State Persistence.
+ * This bridges the UI/Store to the background Save Worker.
+ */
 
-const SaveSlotMetaSchema = z.object({
-  slot: z.number(),
-  studioName: z.string(),
-  archetype: z.enum(['major', 'mid-tier', 'indie']),
-  week: z.number(),
-  cash: z.number(),
-  timestamp: z.number(),
-});
-
-const SaveSlotsSchema = z.record(z.string().or(z.number()), SaveSlotMetaSchema);
-
-function loadSaveSlots(): Record<number, SaveSlotMeta> {
-  let slots: Record<number, SaveSlotMeta> = {};
+export async function saveGame(slot: number, state: GameState): Promise<void> {
   try {
-    const slotsData = localStorage.getItem(SLOTS_KEY);
-    if (slotsData) {
-      const parsed = JSON.parse(slotsData);
-      const result = SaveSlotsSchema.safeParse(parsed);
-      if (result.success) {
-        slots = result.data;
-      } else {
-        console.error('Invalid save slots metadata format:', result.error);
-      }
-    }
+    // 1. Offload to background worker (OPFS)
+    await persistenceService.save(slot, state);
+
+    // 2. We skip synchronous metadata cache for now, or we could store it in OPFS too.
+    console.log(`[SaveLoad] State saved to slot ${slot} via OPFS.`);
   } catch (e) {
-    console.error('Failed to load save slots metadata', e);
-  }
-  return slots;
-}
-
-export function saveGame(slot: number, state: GameState): void {
-  try {
-    localStorage.setItem(`${SAVE_PREFIX}${slot}`, JSON.stringify(state));
-
-    const slots = loadSaveSlots();
-
-    slots[slot] = {
-      slot,
-      studioName: state.studio.name,
-      archetype: state.studio.archetype,
-      week: state.week,
-      cash: state.finance.cash,
-      timestamp: Date.now(),
-    };
-
-    localStorage.setItem(SLOTS_KEY, JSON.stringify(slots));
-  } catch (e) {
-    console.error('Failed to save game state', e);
+    console.error('[SaveLoad] Failed to save game state', e);
   }
 }
 
-const GameStatePartialSchema = z.object({
-  week: z.number(),
-  finance: z.object({
-    cash: z.number(),
-  }).passthrough(),
-  studio: z.object({
-    name: z.string(),
-    archetype: z.enum(['major', 'mid-tier', 'indie']),
-    prestige: z.number(),
-  }).passthrough(),
-}).passthrough();
-
-export function loadGame(slot: number): GameState | null {
+export async function loadGame(slot: number): Promise<GameState | null> {
   try {
-    const data = localStorage.getItem(`${SAVE_PREFIX}${slot}`);
-    if (!data) return null;
+    // 1. Fetch from background worker (OPFS)
+    const state = await persistenceService.load(slot);
+    if (!state) return null;
 
-    const parsed = JSON.parse(data);
-    const result = GameStatePartialSchema.safeParse(parsed);
-
-    if (result.success) {
-      return parsed as GameState;
-    } else {
-      console.error('Invalid game state format:', result.error);
-      return null;
-    }
+    console.log(`[SaveLoad] State loaded from slot ${slot} via OPFS.`);
+    return state as GameState;
   } catch (e) {
-    console.error('Failed to load game state', e);
+    console.error('[SaveLoad] Failed to load game state', e);
     return null;
   }
 }
@@ -91,16 +36,38 @@ export interface SaveSlotInfo extends SaveSlotMeta {
   exists: boolean;
 }
 
-export function getSaveSlots(): SaveSlotInfo[] {
-  const slots = loadSaveSlots();
+/**
+ * Returns a preview of all available save slots.
+ */
+export async function getSaveSlots(): Promise<SaveSlotInfo[]> {
+  const slots: SaveSlotInfo[] = [];
 
-  return [0, 1, 2].map(i => ({
-    slot: i,
-    exists: !!slots[i],
-    studioName: slots[i]?.studioName || '',
-    archetype: slots[i]?.archetype || 'indie',
-    week: slots[i]?.week || 0,
-    cash: slots[i]?.cash || 0,
-    timestamp: slots[i]?.timestamp || 0,
-  }));
+  for (let i = 0; i < 3; i++) {
+    const exists = await persistenceService.exists(i);
+    if (exists) {
+      // For metadata (title, week, etc.), we would ideally store a small JSON file
+      // alongside the main state. For now, we'll return placeholders or basic info.
+      slots.push({
+        slot: i,
+        exists: true,
+        studioName: 'Active Game',
+        archetype: 'major',
+        week: 1,
+        cash: 0,
+        timestamp: Date.now(),
+      });
+    } else {
+      slots.push({
+        slot: i,
+        exists: false,
+        studioName: '',
+        archetype: 'indie',
+        week: 0,
+        cash: 0,
+        timestamp: 0,
+      });
+    }
+  }
+
+  return slots;
 }

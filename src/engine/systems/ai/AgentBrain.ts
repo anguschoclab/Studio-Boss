@@ -1,5 +1,5 @@
 import { Agency, Agent, Talent, GameState, StateImpact } from '@/engine/types';
-import { pick, secureRandom } from '../../utils';
+import { RandomGenerator } from '../../utils/rng';
 
 /**
  * Pure function to evaluate if an agency offers a "Package Deal".
@@ -7,15 +7,16 @@ import { pick, secureRandom } from '../../utils';
 export function evaluatePackageOffer(
   agency: Agency, 
   leadTalent: Talent, 
-  talentPool: Talent[]
+  talentPool: Talent[],
+  rng: RandomGenerator
 ): { requiredTalentId?: string; packageDiscount?: number; reason: string } {
   const motivation = agency.currentMotivation || 'VOLUME_RETAIL';
   
-  if (motivation === 'THE_PACKAGER' || secureRandom() < 0.15) {
+  if (motivation === 'THE_PACKAGER' || rng.next() < 0.15) {
     const otherClients = talentPool.filter(t => t.agencyId === agency.id && t.id !== leadTalent.id);
     
     if (otherClients.length > 0) {
-      const bundled = pick(otherClients);
+      const bundled = rng.pick(otherClients);
       return {
         requiredTalentId: bundled.id,
         packageDiscount: 0.1,
@@ -31,23 +32,21 @@ export function evaluatePackageOffer(
  * Agency Weekly Tick (Target C2).
  * Generates rumors and poach attempts as discrete state impacts.
  */
-export function tickAgencies(state: GameState): StateImpact[] {
+export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
 
   state.industry.agencies.forEach(agency => {
     // Aggressive agencies (Sharks) leak rumors
     if (agency.culture === 'shark' || agency.currentMotivation === 'THE_SHARK') {
-      if (secureRandom() < 0.1) {
-        const rival = pick(state.industry.rivals);
+      if (rng.next() < 0.1) {
+        const brands = state.industry.rivals;
+        const rival = rng.pick(brands);
         if (rival) {
           impacts.push({
             type: 'NEWS_ADDED',
             payload: {
-              headline: {
-                week: state.week,
-                category: 'rival',
-                text: `${agency.name} is looking to poach top talent from ${rival.name}.`
-              }
+              headline: `${agency.name} is looking to poach top talent from ${rival.name}.`,
+              description: `Industry whispers suggest ${agency.name} is making aggressive overtures to talent currently under contract at ${rival.name}.`,
             }
           });
         }

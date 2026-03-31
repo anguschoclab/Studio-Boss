@@ -1,83 +1,119 @@
-import { GameState, Project, Contract, RivalStudio, TalentProfile, Buyer, GenreTrend } from '../engine/types';
+import { createSelector } from 'reselect';
+import { GameState, Project, Contract, RivalStudio, Talent, Buyer, GenreTrend } from '../engine/types';
 
-export const EMPTY_PROJECTS: Project[] = [];
-export const EMPTY_CONTRACTS: Contract[] = [];
-export const EMPTY_RIVALS: RivalStudio[] = [];
-export const EMPTY_TALENT: TalentProfile[] = [];
-export const EMPTY_BUYERS: Buyer[] = [];
-export const EMPTY_TRENDS: GenreTrend[] = [];
+/**
+ * Standard Root Selectors
+ */
+export const selectGameState = (state: GameState | null) => state;
 
-// --- Root Selectors ---
-export const selectStudio = (state: GameState | null) => state?.studio || null;
-export const selectMarket = (state: GameState | null) => state?.market || null;
+export const selectStudio = createSelector(
+  [selectGameState],
+  (state) => state?.studio || null
+);
 
-// --- Studio / Internal Selectors ---
-export const selectInternal = (state: GameState | null) => state?.studio.internal || null;
-export const selectProjects = (state: GameState | null) => Object.values(state?.studio.internal.projects || {});
-export const selectContracts = (state: GameState | null) => state?.studio.internal.contracts || EMPTY_CONTRACTS;
-export const selectFinanceHistory = (state: GameState | null) => state?.studio.internal.financeHistory || [];
-export const selectTotalCash = (state: GameState | null) => state?.cash || 0;
-export const selectStudioName = (state: GameState | null) => state?.studio.name || 'Unknown Studio';
-export const selectStudioArchetype = (state: GameState | null) => state?.studio.archetype || 'major';
-export const selectStudioPrestige = (state: GameState | null) => state?.studio.prestige || 0;
+export const selectInternal = createSelector(
+  [selectStudio],
+  (studio) => studio?.internal || null
+);
 
-// --- Industry Selectors ---
-export const selectRivals = (state: GameState | null) => state?.industry.rivals || EMPTY_RIVALS;
-export const selectTalentPool = (state: GameState | null) => Object.values(state?.industry.talentPool || {});
-export const selectHeadlines = (state: GameState | null) => state?.industry.headlines || [];
-export const selectAwards = (state: GameState | null) => state?.industry.awards || [];
-export const selectRumors = (state: GameState | null) => state?.industry.rumors || [];
-export const selectScandals = (state: GameState | null) => state?.industry.scandals || [];
+export const selectProjectsRaw = createSelector(
+  [selectInternal],
+  (internal) => internal?.projects || {}
+);
 
-// --- Market Selectors ---
-export const selectOpportunities = (state: GameState | null) => state?.market.opportunities || [];
-export const selectTrends = (state: GameState | null) => state?.market.trends || EMPTY_TRENDS;
-export const selectBuyers = (state: GameState | null) => state?.market.buyers || EMPTY_BUYERS;
+export const selectProjects = createSelector(
+  [selectProjectsRaw],
+  (projects) => Object.values(projects)
+);
 
-// --- Transformation Selectors ---
-export const selectProjectById = (state: GameState | null, id: string) => state?.studio.internal.projects?.[id] || null;
-export const selectActiveProjectsCount = (state: GameState | null) => {
-  if (!state) return 0;
-  const projects = selectProjects(state);
-  let count = 0;
-  for (let i = 0; i < projects.length; i++) {
-    const s = projects[i].status;
-    if (s === 'development' || s === 'production' || s === 'marketing') count++;
+export const selectFinance = createSelector(
+  [selectGameState],
+  (state) => state?.finance || { cash: 0, ledger: [] }
+);
+
+export const selectCash = createSelector(
+  [selectFinance],
+  (finance) => finance.cash || 0
+);
+
+/**
+ * Industry Selectors
+ */
+export const selectIndustry = createSelector(
+  [selectGameState],
+  (state) => state?.industry || null
+);
+
+export const selectRivals = createSelector(
+  [selectIndustry],
+  (industry) => industry?.rivals || []
+);
+
+export const selectTalentPool = createSelector(
+  [selectIndustry],
+  (industry) => industry?.talentPool || {}
+);
+
+/**
+ * Business Logic Selectors (Selector Hardening)
+ */
+
+export const selectActiveProjects = createSelector(
+  [selectProjects],
+  (projects) => projects.filter(p => 
+    p.state !== 'released' && 
+    p.state !== 'archived' && 
+    p.state !== 'post_release'
+  )
+);
+
+export const selectReleasedProjects = createSelector(
+  [selectProjects],
+  (projects) => projects.filter(p => 
+    p.state === 'released' || 
+    p.state === 'post_release' || 
+    p.state === 'archived'
+  )
+);
+
+export const selectIsBankrupt = createSelector(
+  [selectCash, selectActiveProjects],
+  (cash, activeProjects) => {
+    // Basic check: Cash < $0 and no potential revenue soon
+    return cash < 0 && activeProjects.length === 0;
   }
-  return count;
-};
+);
 
-let lastProjectsRefForReleased: Record<string, Project> | null = null;
-let lastReleasedProjects: Project[] = EMPTY_PROJECTS;
-
-export const selectReleasedProjects = (state: GameState | null) => {
-  if (!state) return EMPTY_PROJECTS;
-  const projects = selectProjects(state);
-
-  const rawProjects = state.studio.internal.projects;
-  if (rawProjects === lastProjectsRefForReleased) {
-    return lastReleasedProjects;
+export const selectStudioSuccess = createSelector(
+  [selectReleasedProjects],
+  (released) => {
+    const totalRevenue = released.reduce((sum, p) => sum + (p.revenue || 0), 0);
+    const avgScore = released.length > 0 
+      ? released.reduce((sum, p) => sum + (p.reviewScore || 0), 0) / released.length 
+      : 0;
+    
+    return {
+      totalRevenue,
+      avgScore,
+      count: released.length
+    };
   }
+);
 
-  const released: Project[] = [];
-  for (let i = 0; i < projects.length; i++) {
-    const s = projects[i].status;
-    if (s === 'released' || s === 'post_release' || s === 'archived') {
-      released.push(projects[i]);
-    }
-  }
+export const selectMarketTrends = createSelector(
+  [selectGameState],
+  (state) => state?.market.trends || []
+);
 
-  lastProjectsRefForReleased = rawProjects;
-  lastReleasedProjects = released;
+/**
+ * UI / Event Selectors
+ */
+export const selectEventHistory = createSelector(
+  [selectGameState],
+  (state) => state?.eventHistory || []
+);
 
-  return released;
-};
-
-export const selectRecentFinance = (state: GameState | null) => {
-  const history = selectFinanceHistory(state);
-  return history.length > 0 ? history[history.length - 1] : null;
-};
-// --- Epic 4 Selectors ---
-export const selectCulture = (state: GameState | null) => state?.culture || { genrePopularity: {} };
-export const selectFinance = (state: GameState | null) => state?.finance || { bankBalance: 0, yearToDateRevenue: 0, yearToDateExpenses: 0 };
-export const selectHistory = (state: GameState | null) => state?.history || [];
+export const selectRecentEvents = createSelector(
+  [selectEventHistory],
+  (history) => history.slice(-10).reverse()
+);

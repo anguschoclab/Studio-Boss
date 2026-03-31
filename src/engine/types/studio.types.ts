@@ -3,6 +3,16 @@
 import { Project, Opportunity, GenreTrend, FestivalSubmission, Award, MandateType } from './project.types';
 import { Contract, FirstLookDeal, Family, Agency, Agent, Talent, Scandal, MotivationProfile, RivalStrategy } from './talent.types';
 import { FinanceRecord, NewsEvent, Headline, Rumor, MarketEvent } from './engine.types';
+import { WeeklyFinancialReport, FinanceState, NewsState, IPState } from './state.types';
+
+export interface GameEvent {
+  id: string;
+  week: number;
+  type: 'PROJECT_FINISHED' | 'STUDIO_MERGED' | 'AWARD_WON' | 'BANKRUPTCY_WARNING' | 'MARKET_CRASH' | 'TALENT_SCANDAL' | 'GENERAL';
+  title: string;
+  description: string;
+  data?: any;
+}
 
 export type ArchetypeKey = 'major' | 'mid-tier' | 'indie';
 
@@ -38,10 +48,10 @@ export interface StudioCulture {
   filmFirstVsTvFirst: number; // -100 (film) to 100 (tv)
 }
 
-import { WeeklyFinancialReport, FinanceState, NewsState, IPState } from './state.types';
-
 export interface GameState {
   week: number;
+  gameSeed: number;
+  tickCount: number;
   projects: {
     active: Project[];
   };
@@ -85,6 +95,7 @@ export interface GameState {
     genrePopularity: Record<string, number>;
   };
   history: StudioSnapshot[];
+  eventHistory: GameEvent[];
 }
 
 export interface SaveSlotMeta {
