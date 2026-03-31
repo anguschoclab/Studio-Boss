@@ -115,13 +115,13 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
 
   // Apply "Superhero Fatigue" (or general blockbuster fatigue) logic:
   // If the genre is heavily saturated, amplify the risk severely.
-  if ((sourceProject.genre === 'Superhero' || sourceProject.genre === 'Action' || sourceProject.genre === 'Sci-Fi') && genreSaturationCount > 20) {
+  if ((sourceProject.genre === 'Superhero' || sourceProject.genre === 'Action' || sourceProject.genre === 'Sci-Fi' || sourceProject.genre === 'Video Game Adaptation') && genreSaturationCount > 20) {
       baseFatigueRisk *= 4.0; // Dead IP state due to extreme market saturation
-  } else if ((sourceProject.genre === 'Superhero' || sourceProject.genre === 'Action' || sourceProject.genre === 'Sci-Fi') && genreSaturationCount > 15) {
+  } else if ((sourceProject.genre === 'Superhero' || sourceProject.genre === 'Action' || sourceProject.genre === 'Sci-Fi' || sourceProject.genre === 'Video Game Adaptation') && genreSaturationCount > 15) {
       baseFatigueRisk *= 3.0;
-  } else if ((sourceProject.genre === 'Superhero' || sourceProject.genre === 'Action' || sourceProject.genre === 'Sci-Fi') && genreSaturationCount > 10) {
+  } else if ((sourceProject.genre === 'Superhero' || sourceProject.genre === 'Action' || sourceProject.genre === 'Sci-Fi' || sourceProject.genre === 'Video Game Adaptation') && genreSaturationCount > 10) {
       baseFatigueRisk *= 2.0; // Extreme fatigue curve
-  } else if ((sourceProject.genre === 'Superhero' || sourceProject.genre === 'Action' || sourceProject.genre === 'Sci-Fi') && genreSaturationCount > 5) {
+  } else if ((sourceProject.genre === 'Superhero' || sourceProject.genre === 'Action' || sourceProject.genre === 'Sci-Fi' || sourceProject.genre === 'Video Game Adaptation') && genreSaturationCount > 5) {
       baseFatigueRisk *= 1.5; // Steep fatigue curve
   } else if ((sourceProject.genre === 'Horror' || sourceProject.genre === 'Comedy' || sourceProject.genre === 'Fantasy') && genreSaturationCount > 8) {
       baseFatigueRisk *= 1.3; // Noticeable fatigue for these genres when heavily saturated
@@ -201,7 +201,7 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
         isSpinoff: true,
         initialBuzzBonus: -20,
       };
-    } else if (rand < 0.3) {
+    } else if (rand < 0.25) {
       return {
         title: `${sourceProject.title}: Villain Origin Story`,
         format: 'film',
@@ -213,6 +213,7 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
         isSpinoff: true,
         initialBuzzBonus: 10 - (saturationPenalty / 2),
       };
+    } else if (rand < 0.3) {
       return {
         title: `${sourceProject.title} Returns`,
         format: sourceProject.format,
@@ -223,6 +224,21 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
         parentProjectId: sourceProject.id,
         isSpinoff: true,
         initialBuzzBonus: 8 - (saturationPenalty / 2),
+      };
+    } else if (rand < 0.35) {
+      return {
+        title: `${sourceProject.title}: Interactive Special`,
+        format: 'tv',
+        tvFormat: 'limited_series',
+        episodes: 1,
+        releaseModel: 'binge',
+        genre: sourceProject.genre,
+        budgetTier: 'mid',
+        targetAudience: sourceProject.targetAudience,
+        flavor: `A desperate gimmick interactive special attempting to pull audiences back with a 'choose your own adventure' format.`,
+        parentProjectId: sourceProject.id,
+        isSpinoff: true,
+        initialBuzzBonus: -5,
       };
     } else if (rand < 0.5) {
       return {
@@ -457,6 +473,24 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
     // Prequel
     newTitle = `${sourceProject.title}: Origins`;
     flavorText = `A prequel revealing the hidden history of the ${sourceProject.title} universe.`;
+  } else if (rand < 0.90 && sourceProject.format === 'film' && sourceProject.genre !== 'Animation') {
+    // The Anime Series format flip for active franchises
+    newTitle = `${sourceProject.title}: The Anime Series`;
+    flavorText = `A highly stylized anime spin-off meant to expand the global reach of the ${sourceProject.title} universe.`;
+    return {
+      title: newTitle,
+      format: 'tv',
+      tvFormat: 'standard_drama',
+      episodes: 10,
+      releaseModel: 'binge',
+      genre: 'Animation',
+      budgetTier: 'mid',
+      targetAudience: 'Genre Fans',
+      flavor: flavorText,
+      parentProjectId: sourceProject.id,
+      isSpinoff: true,
+      initialBuzzBonus: buzzBonus + 5,
+    };
   } else if (sourceProject.parentProjectId) {
     // Spinoff of a Spinoff
     newTitle = `${sourceProject.title}: The Next Chapter`;
