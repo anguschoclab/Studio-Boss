@@ -1276,5 +1276,321 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
         buzzPenalty: 20
       }
     ]
+  },
+  {
+    description: "The film's lead has decided they are a sovereign citizen and refuses to pay taxes or recognize the authority of the director, driving a golf cart through a live shot.",
+    options: [
+      {
+        text: "Hire a constitutional lawyer to explain maritime law to them.",
+        effectDescription: "Costs $150k in legal fees, but they agree to work. Lose 10 buzz.",
+        cashPenalty: 150000,
+        buzzPenalty: 10
+      },
+      {
+        text: "Let them do what they want as long as they say their lines.",
+        effectDescription: "Production descends into anarchy. Delays by 3 weeks.",
+        weeksDelay: 3
+      },
+      {
+        text: "Call the police and have them arrested.",
+        effectDescription: "Costs $2M to recast and reshoot. Major PR disaster. Lose 20 reputation.",
+        cashPenalty: 2000000,
+        reputationPenalty: 20
+      }
+    ]
+  },
+  {
+    description: "A famous 'cancel culture' podcaster has targeted your movie because the villain drinks almond milk, which they claim is a dog whistle.",
+    options: [
+      {
+        text: "Ignore it and let the internet fight it out.",
+        effectDescription: "It trends for 48 hours. Lose 25 buzz.",
+        buzzPenalty: 25
+      },
+      {
+        text: "Change the almond milk to oat milk in post.",
+        effectDescription: "Costs $300k in VFX. Now the oat milk people are angry.",
+        cashPenalty: 300000
+      },
+      {
+        text: "Release a 10-page academic essay defending the almond milk.",
+        effectDescription: "Everyone makes fun of you. Lose 15 reputation.",
+        reputationPenalty: 15
+      }
+    ]
+  },
+  {
+    description: "The 'intimacy coordinator' hired for the rom-com is actually the lead actor's ex-spouse, and they are using the job to enact petty revenge.",
+    options: [
+      {
+        text: "Fire the coordinator and pay their exorbitant severance.",
+        effectDescription: "Costs $500k. Production resumes smoothly.",
+        cashPenalty: 500000
+      },
+      {
+        text: "Force them to work it out like adults.",
+        effectDescription: "The tension is unbearable. Delays production by 2 weeks.",
+        weeksDelay: 2
+      },
+      {
+        text: "Film the arguments and turn the movie into a documentary.",
+        effectDescription: "The rom-com is dead. The documentary wins a minor festival. Lose 40 buzz.",
+        buzzPenalty: 40
+      }
+    ]
+  },
+  {
+    description: "A method actor playing a hacker has actually hacked the studio's payroll system and redistributed the executives' bonuses to the PAs.",
+    options: [
+      {
+        text: "Quietly reverse the hack and pay the executives.",
+        effectDescription: "Costs $1M. The actor is smug.",
+        cashPenalty: 1000000
+      },
+      {
+        text: "Fire the actor for cybercrime.",
+        effectDescription: "Costs $1.5M to recast and delays by 4 weeks.",
+        cashPenalty: 1500000,
+        weeksDelay: 4
+      },
+      {
+        text: "Let the PAs keep the money. It's great PR.",
+        effectDescription: "The executives despise you. Lose 25 reputation, but the crew loves you.",
+        reputationPenalty: 25
+      }
+    ]
+  },
+  {
+    description: "The studio's AI script-punch-up tool hallucinated a terrifying, 15-minute monologue about the end of the universe, and the director secretly filmed it.",
+    options: [
+      {
+        text: "Cut the monologue entirely.",
+        effectDescription: "The director threatens to quit. Delays by 1 week.",
+        weeksDelay: 1
+      },
+      {
+        text: "Leave it in. It's 'visionary'.",
+        effectDescription: "Test audiences are traumatized. Lose 35 buzz.",
+        buzzPenalty: 35
+      },
+      {
+        text: "Pay a human writer to make it make sense.",
+        effectDescription: "Costs $200k in rewrites.",
+        cashPenalty: 200000
+      }
+    ]
+  },
+  {
+    description: "Your sci-fi epic's lead actor refuses to come out of their trailer until the studio acknowledges that the earth is flat.",
+    options: [
+      {
+        text: "Issue a vague statement 'respecting all cosmological beliefs'.",
+        effectDescription: "Costs 15 reputation for looking incredibly stupid.",
+        reputationPenalty: 15
+      },
+      {
+        text: "Wait them out.",
+        effectDescription: "Delays production by 3 weeks.",
+        weeksDelay: 3
+      },
+      {
+        text: "Fire them for breach of contract.",
+        effectDescription: "Costs $3M to recast and reshoot. Delays by 5 weeks.",
+        cashPenalty: 3000000,
+        weeksDelay: 5
+      }
+    ]
+  },
+  {
+    description: "The movie's tie-in fast food toy has a massive design flaw: it looks exactly like an adult novelty item.",
+    options: [
+      {
+        text: "Recall the toys immediately.",
+        effectDescription: "Costs $2M in penalties to the fast food chain.",
+        cashPenalty: 2000000
+      },
+      {
+        text: "Lean into it. Market the film to a different demographic.",
+        effectDescription: "You lose the family audience entirely. Lose 50 buzz.",
+        buzzPenalty: 50
+      },
+      {
+        text: "Blame the manufacturer and sue.",
+        effectDescription: "Costs $500k in legal fees. The PR is a nightmare. Lose 20 reputation.",
+        cashPenalty: 500000,
+        reputationPenalty: 20
+      }
+    ]
+  },
+  {
+    description: "During a location shoot in a small town, the crew accidentally drank the local mayor's prize-winning artisanal kombucha stash.",
+    options: [
+      {
+        text: "Pay off the mayor with a massive 'location fee'.",
+        effectDescription: "Costs $250k.",
+        cashPenalty: 250000
+      },
+      {
+        text: "Refuse to pay. Move the shoot.",
+        effectDescription: "Delays production by 2 weeks and costs $100k to relocate.",
+        cashPenalty: 100000,
+        weeksDelay: 2
+      },
+      {
+        text: "Give the mayor a speaking role in the film.",
+        effectDescription: "Their acting is atrocious. Lose 10 buzz.",
+        buzzPenalty: 10
+      }
+    ]
+  },
+  {
+    description: "The lead actress insists on bringing her 'emotional support python' on set, which has now escaped into the lighting grids.",
+    options: [
+      {
+        text: "Hire a professional snake wrangler.",
+        effectDescription: "Costs $50k. Production resumes in a day.",
+        cashPenalty: 50000
+      },
+      {
+        text: "Evacuate the set until it comes down.",
+        effectDescription: "Delays production by 2 weeks.",
+        weeksDelay: 2
+      },
+      {
+        text: "Ignore it. Hope it doesn't fall on anyone.",
+        effectDescription: "It falls on a grip. Massive lawsuit. Costs $1M and 15 reputation.",
+        cashPenalty: 1000000,
+        reputationPenalty: 15
+      }
+    ]
+  },
+  {
+    description: "A TikTok influencer snuck onto the set, filmed the movie's biggest twist, and is threatening to post it unless you give them a cameo.",
+    options: [
+      {
+        text: "Give them the cameo.",
+        effectDescription: "Costs $0, but the cast is furious. Lose 10 reputation.",
+        reputationPenalty: 10
+      },
+      {
+        text: "Call their bluff.",
+        effectDescription: "They post it. The twist is ruined. Lose 40 buzz.",
+        buzzPenalty: 40
+      },
+      {
+        text: "Hire a private investigator to steal their phone.",
+        effectDescription: "Costs $200k. Highly illegal, but effective. Lose 5 reputation.",
+        cashPenalty: 200000,
+        reputationPenalty: 5
+      }
+    ]
+  },
+  {
+    description: "The director spent $4M of the budget building a historically accurate 18th-century warship, only to realize the script is set in a landlocked desert.",
+    options: [
+      {
+        text: "Rewrite the script to include a magical flying ship.",
+        effectDescription: "Costs $1M in rewrites and VFX. Audiences are baffled. Lose 30 buzz.",
+        cashPenalty: 1000000,
+        buzzPenalty: 30
+      },
+      {
+        text: "Abandon the ship and eat the cost.",
+        effectDescription: "You are out $4M. The studio executives are furious.",
+        cashPenalty: 4000000
+      },
+      {
+        text: "Transport the ship to the ocean.",
+        effectDescription: "Costs $2.5M in logistics and delays by 4 weeks.",
+        cashPenalty: 2500000,
+        weeksDelay: 4
+      }
+    ]
+  },
+  {
+    description: "The 'child prodigy' actor you hired has hit a massive growth spurt mid-shoot and is now taller than the adult male lead.",
+    options: [
+      {
+        text: "Use forced perspective and trenches to make them look small.",
+        effectDescription: "Costs $500k in set modifications and delays by 2 weeks.",
+        cashPenalty: 500000,
+        weeksDelay: 2
+      },
+      {
+        text: "Digitally shrink them in post.",
+        effectDescription: "Costs $1.5M in uncanny-valley VFX.",
+        cashPenalty: 1500000
+      },
+      {
+        text: "Recast and reshoot.",
+        effectDescription: "Costs $3M and delays by 5 weeks.",
+        cashPenalty: 3000000,
+        weeksDelay: 5
+      }
+    ]
+  },
+  {
+    description: "Your prestige historical drama has a scene where the protagonist uses a smartphone. Nobody noticed until the trailer dropped.",
+    options: [
+      {
+        text: "CGI it into a pocket watch.",
+        effectDescription: "Costs $800k in rush VFX.",
+        cashPenalty: 800000
+      },
+      {
+        text: "Claim it's a 'stylistic anachronism'.",
+        effectDescription: "The internet roasts you relentlessly. Lose 35 buzz.",
+        buzzPenalty: 35
+      },
+      {
+        text: "Reshoot the scene and pull the trailer.",
+        effectDescription: "Costs $1M and delays marketing. Lose 15 buzz.",
+        cashPenalty: 1000000,
+        buzzPenalty: 15
+      }
+    ]
+  },
+  {
+    description: "The catering company served undercooked chicken, and 80% of the crew is now bedridden with severe food poisoning.",
+    options: [
+      {
+        text: "Shut down production until they recover.",
+        effectDescription: "Delays the film by 2 weeks.",
+        weeksDelay: 2
+      },
+      {
+        text: "Hire an entirely new non-union emergency crew.",
+        effectDescription: "Costs $1M. The unions strike. Lose 30 reputation.",
+        cashPenalty: 1000000,
+        reputationPenalty: 30
+      },
+      {
+        text: "Force the healthy 20% to do everyone's jobs.",
+        effectDescription: "The footage is completely unusable. Lose 45 buzz.",
+        buzzPenalty: 45
+      }
+    ]
+  },
+  {
+    description: "An eccentric billionaire bought the rights to the IP you're adapting and is demanding you insert their NFT collection into the background of every scene.",
+    options: [
+      {
+        text: "Comply to secure the rights.",
+        effectDescription: "The film looks like a crypto scam. Lose 50 buzz and 20 reputation.",
+        buzzPenalty: 50,
+        reputationPenalty: 20
+      },
+      {
+        text: "Fight them in court.",
+        effectDescription: "Costs $2M in legal fees and delays by 6 weeks.",
+        cashPenalty: 2000000,
+        weeksDelay: 6
+      },
+      {
+        text: "Pay them a massive 'consulting fee' to back off.",
+        effectDescription: "Costs $3M, but the film's integrity is saved.",
+        cashPenalty: 3000000
+      }
+    ]
   }
 ];
