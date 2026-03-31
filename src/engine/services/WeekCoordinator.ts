@@ -14,6 +14,7 @@ import { tickFinance } from '../systems/finance/financeTick';
 import { advanceTrends } from '../systems/trends';
 import { advanceMarketEvents } from '../systems/marketEvents';
 import { generateScandals, advanceScandals } from '../systems/scandals';
+import { advanceBuyers } from '../systems/buyerMergers';
 
 /**
  * Studio Boss - Simulation Tick Context
