@@ -1,7 +1,7 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { HoverCard, HoverCardTrigger, HoverCardContent } from '@/components/ui/hover-card';
-import { Star, TrendingUp, TrendingDown, Users } from 'lucide-react';
+import { Star, TrendingUp, TrendingDown, Package } from 'lucide-react';
 import { Talent } from '@/engine/types';
 import { formatMoney } from '@/engine/utils';
 import { AGENCY_ARCHETYPES } from '@/engine/data/archetypes';
@@ -19,6 +19,10 @@ export const TalentCard: React.FC<TalentCardProps> = ({ talent, className, showS
   const agencyMap = new Map(gameState?.industry.agencies.map(a => [a.id, a]) || []);
   const agency = talent.agencyId ? agencyMap.get(talent.agencyId) : null;
   const archetype = agency?.archetype ? AGENCY_ARCHETYPES[agency.archetype] : null;
+
+  const isPackager = agency?.currentMotivation === 'THE_PACKAGER' ||
+    (archetype?.description?.toLowerCase() || '').includes('package') ||
+    (archetype?.description?.toLowerCase() || '').includes('packaging');
 
   const starMeterTrend = (talent.starMeter || 50) > 75 ? 'up' : (talent.starMeter || 50) < 30 ? 'down' : 'stable';
 
@@ -54,6 +58,7 @@ export const TalentCard: React.FC<TalentCardProps> = ({ talent, className, showS
                 <HoverCardTrigger asChild>
                   <span className="text-[9px] font-bold tracking-widest text-muted-foreground/80 lowercase bg-background/50 backdrop-blur-sm px-1.5 py-0.5 rounded border border-border/40 shadow-sm group-hover:border-primary/20 transition-colors cursor-help">
                     {agency.name}
+                    {isPackager && <Package className="w-2.5 h-2.5 ml-1 inline-block text-amber-500" />}
                   </span>
                 </HoverCardTrigger>
                 {archetype && (
@@ -61,6 +66,12 @@ export const TalentCard: React.FC<TalentCardProps> = ({ talent, className, showS
                     <div className="space-y-1">
                       <h4 className="text-sm font-semibold">{archetype.name} Agency</h4>
                       <p className="text-sm text-muted-foreground">{archetype.description}</p>
+                      {isPackager && (
+                        <div className="mt-2 flex items-center gap-1.5 text-xs font-medium text-amber-500 bg-amber-500/10 p-1.5 rounded border border-amber-500/20">
+                          <Package className="w-3.5 h-3.5" />
+                          <span>Known for aggressive packaging demands</span>
+                        </div>
+                      )}
                     </div>
                   </HoverCardContent>
                 )}
