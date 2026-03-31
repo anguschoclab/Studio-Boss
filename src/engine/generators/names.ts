@@ -28,12 +28,10 @@ export function generateMotto(): string {
   return pick(MOTTOS);
 }
 
-export function generateActorName(): string {
+export function generateDemographicName(gender: 'MALE' | 'FEMALE' | 'NON_BINARY', country: string, ethnicity: string): string {
+  // Simple mapping for now, can be expanded with geo-specific datasets
+  if (gender === 'FEMALE') return `${pick(FEMALE_FIRST_NAMES)} ${pick(LAST_NAMES)}`;
   return `${pick(MALE_FIRST_NAMES)} ${pick(LAST_NAMES)}`;
-}
-
-export function generateActressName(): string {
-  return `${pick(FEMALE_FIRST_NAMES)} ${pick(LAST_NAMES)}`;
 }
 
 export function generateProjectName(format: ProjectFormat, genre: string): string {

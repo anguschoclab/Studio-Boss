@@ -1,141 +1,63 @@
-import { GameState, Project } from '@/engine/types';
-import { groupContractsByProject } from '../../utils';
-import { advanceProject } from '../projects';
-import { checkAndTriggerCrisis } from '../crises';
+import { GameState, Project, StateImpact } from '@/engine/types';
+import { evaluateProjectCrises } from '../production/crisisEvaluator';
+import { advanceProjectProgress } from '../production/progressCalculator';
 import { generateAwardsProfile } from '../awards';
-import { calculateBoxOfficeRanks, BoxOfficeEntry } from '../releaseSimulation';
-import { processDirectorDisputes } from '../directors';
-import { getTrendMultiplier } from '../trends';
-import { StateImpact } from '../../types/state.types';
 
 /**
- * processProduction simulates the weekly advancement of all studio projects.
- * Returns a StateImpact to be applied by the unified simulation pipeline.
+ * processProduction orchestrates the weekly advancement of all studio projects.
+ * Now modularized for Phase 2 focus on Progress and Crises.
  */
-export const processProduction = (
-    state: GameState
-): StateImpact => {
-    const impact: StateImpact = {
-        projectUpdates: [],
-        talentUpdates: [],
-        newsEvents: [],
-        uiNotifications: []
-    };
+export const processProduction = (state: GameState): StateImpact => {
+  const impact: StateImpact = {
+    projectUpdates: [],
+    newsEvents: [],
+    uiNotifications: []
+  };
 
-    const nextWeek = state.week + 1;
-    const contractsByProject = groupContractsByProject(state.studio.internal.contracts);
+  const currentWeek = state.week;
 
-    // O(1) lookup map for talent
-    const talentPool = state.industry.talentPool;
+  Object.values(state.studio.internal.projects).forEach((project: Project) => {
+    if (project.status === 'production') {
+      const oldCost = project.accumulatedCost;
+      
+      // 1. Evaluate Crises
+      let updatedProject = evaluateProjectCrises(project, currentWeek);
+      
+      // 2. Advance Progress
+      updatedProject = advanceProjectProgress(updatedProject);
 
-    let rivalStrengthSum = 0;
-    const rivals = state.industry.rivals || [];
-    for (let i = 0; i < rivals.length; i++) {
-        rivalStrengthSum += rivals[i].strength;
-    }
-    const rivalAvgStrength = rivalStrengthSum / Math.max(1, rivals.length);
+      // 3. Update weekly cost for finance system to pick up
+      updatedProject.weeklyCost = updatedProject.accumulatedCost - oldCost;
 
-    const awardsByProject = new Map<string, any[]>();
-    const awards = state.industry.awards || [];
-    for (let i = 0; i < awards.length; i++) {
-        const a = awards[i];
-        if (!awardsByProject.has(a.projectId)) awardsByProject.set(a.projectId, []);
-        awardsByProject.get(a.projectId)!.push(a);
-    }
-
-    const boxOfficeEntries: BoxOfficeEntry[] = [];
-
-    // O(N) iteration over projects Record
-    Object.values(state.studio.internal.projects).forEach(p => {
-        if (p.activeCrisis && !p.activeCrisis.resolved) {
-            impact.uiNotifications!.push(`"${p.title}" production is halted until the active crisis is resolved.`);
-            return;
-        }
-
-        const projectContracts = contractsByProject.get(p.id) || [];
-        const trendMult = getTrendMultiplier(p, state);
+      // 4. Handle Phase Transitions
+      if (updatedProject.progress >= 100) {
+        updatedProject.status = 'marketing';
+        updatedProject.weeksInPhase = 0;
         
-        // advanceProject returns a new copy and the update log
-        const { project: updatedProj, update: logMessage, talentUpdates } = advanceProject(
-            p, 
-            nextWeek, 
-            state.studio.prestige, 
-            projectContracts, 
-            new Map(Object.entries(talentPool)), // Note: current advanceProject expects a Map
-            rivalAvgStrength, 
-            awardsByProject.get(p.id) || [],
-            trendMult
-        );
-
-        if (logMessage) impact.uiNotifications!.push(logMessage);
-        
-        // Accumulate talent updates
-        talentUpdates?.forEach(t => {
-            impact.talentUpdates!.push({ talentId: t.id, update: t });
+        impact.newsEvents!.push({
+          type: 'STUDIO_EVENT',
+          headline: `${updatedProject.title} Wraps Production`,
+          description: `Principal photography has concluded on "${updatedProject.title}". The film now moves into post-production and marketing preparation.`,
         });
+      }
 
-        // Track released project for box office ranks
-        if (updatedProj.status === 'released') {
-            boxOfficeEntries.push({ 
-                projectId: updatedProj.id, 
-                studioName: state.studio.name, 
-                weeklyRevenue: updatedProj.weeklyRevenue 
-            });
-        }
+      impact.projectUpdates!.push({
+        projectId: updatedProject.id,
+        update: updatedProject
+      });
 
-        // Project lifecycle events
-        if (updatedProj.status === 'released' && p.status !== 'released') {
-            if (!updatedProj.awardsProfile) {
-                updatedProj.awardsProfile = generateAwardsProfile(updatedProj);
-            }
-            impact.newsEvents!.push({
-                type: 'RELEASE',
-                headline: `${updatedProj.title} Hits Theaters!`,
-                description: `The highly anticipated "${updatedProj.title}" has officially released. Initial buzz is ${updatedProj.buzz}.`,
-            });
-        }
+      // UI Notifications for Crises
+      if (updatedProject.activeCrisis && !project.activeCrisis) {
+        impact.uiNotifications!.push(`CRISIS: "${updatedProject.title}" has been hit by a production crisis!`);
+      }
+    } else if (project.status === 'released' && !project.awardsProfile) {
+        // Migration/Cleanup: Ensure awards profile exists
+        impact.projectUpdates!.push({
+            projectId: project.id,
+            update: { awardsProfile: generateAwardsProfile(project) }
+        });
+    }
+  });
 
-        if (updatedProj.status === 'marketing' && p.status === 'production') {
-            impact.newsEvents!.push({
-                type: 'STUDIO_EVENT',
-                headline: `${updatedProj.title} Wraps Production`,
-                description: `Principal photography has concluded on "${updatedProj.title}". The film now moves into post-production and marketing preparation.`,
-            });
-        }
-
-        // Crisis generation
-        if (updatedProj.status === 'production' && (!updatedProj.activeCrisis || updatedProj.activeCrisis.resolved)) {
-            const crisisImpact = checkAndTriggerCrisis(updatedProj);
-            if (crisisImpact) {
-                if (crisisImpact.projectUpdates) impact.projectUpdates!.push(...crisisImpact.projectUpdates);
-                if (crisisImpact.uiNotifications) impact.uiNotifications!.push(...crisisImpact.uiNotifications);
-                
-                // Update local copy for subsequent checks
-                const crisisUpdate = crisisImpact.projectUpdates?.[0]?.update;
-                if (crisisUpdate) Object.assign(updatedProj, crisisUpdate);
-            }
-        }
-
-        // Director disputes
-        if (updatedProj.status === 'production') {
-            const dirDisputeArgs = processDirectorDisputes(updatedProj, projectContracts, new Map(Object.entries(talentPool)));
-            if (dirDisputeArgs.newCrises.length > 0 && (!updatedProj.activeCrisis || updatedProj.activeCrisis.resolved)) {
-                updatedProj.activeCrisis = dirDisputeArgs.newCrises[0].crisis;
-                impact.uiNotifications!.push(...dirDisputeArgs.updates);
-            }
-        }
-
-        impact.projectUpdates!.push({ projectId: updatedProj.id, update: updatedProj });
-    });
-
-    // Apply Box Office Ranks
-    const ranks = calculateBoxOfficeRanks(boxOfficeEntries);
-    impact.projectUpdates!.forEach(up => {
-        const rank = ranks.get(up.projectId);
-        if (rank !== undefined) {
-            up.update.boxOfficeRank = rank;
-        }
-    });
-
-    return impact;
+  return impact;
 };

@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { AlertTriangle, UserX, DollarSign, Zap } from 'lucide-react';
+import { getCrisisData } from '@/engine/utils/impactUtils';
 
 export const CrisisModal = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();
@@ -11,10 +12,18 @@ export const CrisisModal = () => {
 
   if (!gameState || !activeModal || activeModal.type !== 'CRISIS') return null;
 
-  const { projectId, crisis } = activeModal.payload;
+  const { projectId } = activeModal.payload;
   const project = gameState.studio.internal.projects[projectId];
   
-  if (!project) {
+  if (!project || !project.activeCrisis) {
+    resolveCurrentModal();
+    return null;
+  }
+
+  const crisisDef = getCrisisData(project.activeCrisis.crisisId);
+  
+  if (!crisisDef) {
+    console.error(`Crisis template not found for ID: ${project.activeCrisis.crisisId}`);
     resolveCurrentModal();
     return null;
   }
@@ -32,7 +41,7 @@ export const CrisisModal = () => {
 
   const getOptionVariant = (text: string) => {
     if (text.toLowerCase().includes('fire')) return 'destructive';
-    if (text.toLowerCase().includes('pay')) return 'default'; // Yellow/Gold via CSS
+    if (text.toLowerCase().includes('pay')) return 'default';
     return 'secondary';
   };
 
@@ -40,7 +49,6 @@ export const CrisisModal = () => {
     <Dialog 
       open={true} 
       onOpenChange={(open) => {
-        // Prevent closing by clicking outside or pressing Escape
         if (!open) return;
       }}
     >
@@ -49,7 +57,6 @@ export const CrisisModal = () => {
         onPointerDownOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
       >
-        {/* Pulsing Red Backdrop (simulated via absolute div inside content or global CSS if possible, but here we use a glow) */}
         <div className="absolute inset-0 bg-red-950/20 animate-pulse pointer-events-none rounded-lg" />
         
         <DialogHeader className="relative z-10">
@@ -59,15 +66,15 @@ export const CrisisModal = () => {
             </div>
           </div>
           <DialogTitle className="text-2xl font-black text-center uppercase tracking-tighter text-red-500">
-            Breaking News: Scandal!
+            Phase 2: Production Crisis
           </DialogTitle>
           <DialogDescription className="text-slate-200 pt-4 text-base font-bold text-center leading-tight">
-            {crisis.description}
+            {crisisDef.description}
           </DialogDescription>
         </DialogHeader>
 
         <div className="flex flex-col gap-4 py-6 relative z-10">
-          {crisis.options.map((option: any, idx: number) => (
+          {crisisDef.options.map((option: any, idx: number) => (
             <div key={idx} className="group relative">
               <Button
                 variant={getOptionVariant(option.text) as any}
@@ -87,10 +94,9 @@ export const CrisisModal = () => {
         </div>
         
         <div className="text-[10px] text-center text-slate-500 uppercase tracking-widest font-black animate-pulse relative z-10">
-          Immediate Action Required
+          Production Status: {project.activeCrisis.haltedProduction ? 'HALTED' : 'SLUGGISH'}
         </div>
       </DialogContent>
     </Dialog>
   );
 };
-

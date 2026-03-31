@@ -68,21 +68,39 @@ export interface Family {
   motivationProfile?: MotivationProfile;
 }
 
-export interface TalentProfile {
+export interface TalentDemographics {
+  age: number;
+  gender: 'MALE' | 'FEMALE' | 'NON_BINARY';
+  ethnicity: string;
+  country: string;
+}
+
+export interface TalentPsychology {
+  ego: number;         // 1-100
+  mood: number;        // 1-100
+  scandalRisk: number; // 1-100
+  synergyAffinities: string[]; // Talent IDs
+  synergyConflicts: string[];  // Talent IDs
+}
+
+export interface Talent {
   id: string;
   name: string;
-  gender: 'male' | 'female';
-  roles: TalentRole[];
+  role: string; // Primary role
+  roles: TalentRole[]; // All roles
+  tier: string;
   agencyId?: string;
   agentId?: string;
   prestige: number;
   fee: number;
   draw: number;
-  temperament: string;
   familyId?: string;
   accessLevel: AccessLevel;
   perks?: string[];
   bio?: string;
+  demographics: TalentDemographics;
+  psychology: TalentPsychology;
+  
   filmography?: {
     title: string;
     year: number;
@@ -100,7 +118,6 @@ export interface TalentProfile {
   hasRazzie?: boolean;
   
   // SBDB & Career Tracking
-  age?: number;
   knownFor?: string[]; // Top 3 Project IDs
   starMeter?: number; // 0-100 derived metric
   showrunningExperience?: number; // 0-100 (Writers only)
@@ -119,12 +136,6 @@ export interface TalentProfile {
   };
   trivia?: string[];
   
-  // Psychological & Fandom Stats
-  ego?: number;
-  loyalty?: number;
-  fandomSize?: number;
-  controversyRisk?: number;
-
   // AI Motivations
   motivationProfile?: MotivationProfile;
   currentMotivation?: TalentMotivation;

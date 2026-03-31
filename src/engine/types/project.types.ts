@@ -330,7 +330,10 @@ export interface Project {
   weeklyRevenue: number;
   ancillaryRevenue?: number;
   releaseWeek: number | null;
-  activeCrisis?: ActiveCrisis;
+  activeCrisis: ActiveCrisis | null;
+  momentum: number; // 1-100: Influences budget burn and final quality
+  progress: number; // 0-100
+  accumulatedCost: number;
   awardsProfile?: AwardsProfile;
   parentProjectId?: string;
   isSpinoff?: boolean;

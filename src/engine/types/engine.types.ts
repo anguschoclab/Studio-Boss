@@ -24,10 +24,9 @@ export interface CrisisOption {
 }
 
 export interface ActiveCrisis {
-  description: string;
-  options: CrisisOption[];
-  resolved: boolean;
-  severity?: 'low' | 'medium' | 'high' | 'catastrophic';
+  crisisId: string;
+  triggeredWeek: number;
+  haltedProduction: boolean; 
 }
 
 export interface Headline {
