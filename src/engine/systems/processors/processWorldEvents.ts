@@ -12,6 +12,7 @@ import { resolveFestivals } from '../festivals';
 import { advanceScandals, generateScandals } from '../scandals';
 import { StateImpact } from '../../types/state.types';
 import { mergeImpacts } from '../../utils/impactUtils';
+import { IndustryBrain } from '../ai/IndustryBrain';
 
 const EVENT_POOL = [
     'Market analysts upgrade entertainment sector outlook.',
@@ -90,7 +91,10 @@ export const processWorldEvents = (
         text: h.text
     }));
 
-    // 8. Merge all impacts into a single result
+    // 9. AI Driven Industry Decisions (New System)
+    const industryImpact = IndustryBrain.processIndustryWeekly(state);
+
+    // 10. Merge all impacts into a single result
     return mergeImpacts(
         rivalImpact,
         buyerImpact,
@@ -103,6 +107,7 @@ export const processWorldEvents = (
         festivalImpact,
         ceremonyImpact,
         razzieImpact,
-        globalImpact
+        globalImpact,
+        industryImpact
     );
 };

@@ -26,8 +26,6 @@ export function evaluateGreenlight(
   const negatives: string[] = [];
 
   // Market Saturation Penalty
-  // Calculate dynamic market trend by finding similar genre projects released within the last 52 weeks
-  // ⚡ Bolt: Replaced O(N) .filter() array allocation with a direct for-loop count to eliminate garbage collection pressure
   let recentSimilarProjectsCount = 0;
   for (let i = 0; i < allProjects.length; i++) {
     const p = allProjects[i];
@@ -44,18 +42,14 @@ export function evaluateGreenlight(
 
   let saturationPenalty = recentSimilarProjectsCount * 5;
 
-  // Inject trend-modifier: heavy penalty if genre is oversaturated (e.g., >= 5 similar releases)
-  // This dynamic market trend math punishes chasing saturated markets, reducing score significantly
   if (recentSimilarProjectsCount >= 5) {
     saturationPenalty += 20;
   }
 
-  // New market saturation math: dynamic market trends
-  // The Festival Buyer: Heavily penalize oversaturated tentpole genres (like Superhero) to force players to consider market conditions
-  // If 5 superhero movies were released last year, buyers should heavily penalize new superhero pitches in the greenlight phase.
-  if (recentSimilarProjects && recentSimilarProjects.length >= 5 && project.genre.toLowerCase().includes('superhero')) {
-    saturationPenalty *= 3; // Tripling the penalty for oversaturated Superhero genre
-    saturationPenalty += 75; // Applying an even more massive flat penalty for chasing an exhausted superhero market
+  // The Festival Buyer: Heavily penalize oversaturated tentpole genres (like Superhero)
+  if (recentSimilarProjectsCount >= 5 && project.genre.toLowerCase().includes('superhero')) {
+    saturationPenalty *= 3;
+    saturationPenalty += 75;
   }
 
   if (saturationPenalty > 0) {
@@ -64,8 +58,6 @@ export function evaluateGreenlight(
   }
 
   // Trend-modifier: Calendar Gap Bonus
-  // If no similar projects have been released in the last 52 weeks, the market is starved for this genre.
-  // We inject a positive dynamic market trend bonus here to reward players for finding gaps in the release calendar.
   if (recentSimilarProjectsCount === 0) {
     score += 15;
     positives.push(`Market gap: +15 points due to no recent ${project.genre} releases in the past year.`);
@@ -88,7 +80,6 @@ export function evaluateGreenlight(
     score -= 20;
     negatives.push('Unpackaged: No key talent attached.');
   } else {
-    // ⚡ Bolt: Replaced multiple O(N) .reduce() iterations over attachedTalent with a single for-loop
     let totalDraw = 0;
     let totalPrestige = 0;
     for (let i = 0; i < attachedTalent.length; i++) {

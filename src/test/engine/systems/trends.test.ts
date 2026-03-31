@@ -14,11 +14,11 @@ describe('Trends System', () => {
 
   it('advances trends correctly over a week', () => {
     const initialTrends = initializeTrends();
-    const updatedTrends = advanceTrends(initialTrends);
+    const { newTrends } = advanceTrends(initialTrends);
     
-    expect(updatedTrends.length).toBeGreaterThanOrEqual(initialTrends.length - 1); // might drop if dead
+    expect(newTrends!.length).toBeGreaterThanOrEqual(initialTrends.length - 1); // might drop if dead
     // Values should fluctuate but remain clamped
-    updatedTrends.forEach(trend => {
+    newTrends!.forEach(trend => {
       expect(trend.heat).toBeGreaterThanOrEqual(0);
       expect(trend.heat).toBeLessThanOrEqual(100);
     });
@@ -45,7 +45,8 @@ describe('Trends System', () => {
     // and returns valid state strings.
     let trends = initializeTrends();
     for (let i = 0; i < 50; i++) {
-        trends = advanceTrends(trends);
+        const impact = advanceTrends(trends);
+        trends = impact.newTrends!;
     }
     
     trends.forEach(trend => {

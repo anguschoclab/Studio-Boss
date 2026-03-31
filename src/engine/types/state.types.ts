@@ -7,6 +7,11 @@ export interface StateImpact {
     projectId: string;
     update: Partial<Project>;
   }>;
+  rivalProjectUpdates?: Array<{
+    rivalId: string;
+    projectId: string;
+    update: Partial<Project>;
+  }>;
   talentUpdates?: Array<{
     talentId: string;
     update: any; // Partial<TalentProfile>
@@ -43,6 +48,7 @@ export interface StateImpact {
   newFinanceHistory?: FinanceRecord[];
   cultClassicProjectIds?: string[];
   razzieWinnerTalents?: string[];
+  removeScandalIds?: string[];
   uiNotifications?: string[]; // Generic log for the UI 'events' list
 }
 

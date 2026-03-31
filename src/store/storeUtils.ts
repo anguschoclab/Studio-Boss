@@ -144,7 +144,7 @@ export function applyStateImpact(state: GameState, impact: import('@/engine/type
     });
   }
 
-  // 3. Update Rivals
+  // 3. Update Rivals & Rival Projects
   let newRivals = [...state.industry.rivals];
   let rivalsChanged = false;
   if (impact.rivalUpdates && impact.rivalUpdates.length > 0) {
@@ -156,6 +156,26 @@ export function applyStateImpact(state: GameState, impact: import('@/engine/type
             return { ...r, ...update };
         }
         return r;
+    });
+  }
+
+  if (impact.rivalProjectUpdates && impact.rivalProjectUpdates.length > 0) {
+    rivalsChanged = true;
+    impact.rivalProjectUpdates.forEach(({ rivalId, projectId, update }) => {
+       const rivalIndex = newRivals.findIndex(r => r.id === rivalId);
+       if (rivalIndex !== -1) {
+          const rival = newRivals[rivalIndex];
+          const project = rival.projects[projectId];
+          if (project) {
+             newRivals[rivalIndex] = {
+                ...rival,
+                projects: {
+                   ...rival.projects,
+                   [projectId]: { ...project, ...update }
+                }
+             };
+          }
+       }
     });
   }
 
@@ -234,6 +254,11 @@ export function applyStateImpact(state: GameState, impact: import('@/engine/type
           }
           return s;
       });
+  }
+  if (impact.removeScandalIds && impact.removeScandalIds.length > 0) {
+      const toRemove = new Set(impact.removeScandalIds);
+      newScandals = newScandals.filter(s => !toRemove.has(s.id));
+      scandalsChanged = true;
   }
 
   // UI Notifications (Add to events list or handle however your system prefers. Since we don't have an explicit 'events' array in State outside of ui, we'll assume it goes to a slice. Let's make sure it's valid).

@@ -1,12 +1,12 @@
 // Types related to Studios, Rivals, and Game State
 
 import { Project, Opportunity, GenreTrend, FestivalSubmission, Award, MandateType } from './project.types';
-import { Contract, FirstLookDeal, Family, Agency, Agent, TalentProfile, Scandal } from './talent.types';
+import { Contract, FirstLookDeal, Family, Agency, Agent, TalentProfile, Scandal, MotivationProfile, RivalStrategy } from './talent.types';
 import { FinanceRecord, NewsEvent, Headline, Rumor, MarketEvent } from './engine.types';
 
 export type ArchetypeKey = 'major' | 'mid-tier' | 'indie';
 
-export type RivalStrategy = 'blockbuster_focused' | 'prestige_chaser' | 'genre_specialist' | 'acquirer' | 'poacher' | 'balanced';
+export type StudioMotivation = 'CASH_CRUNCH' | 'AWARD_CHASE' | 'FRANCHISE_BUILDING' | 'MARKET_DISRUPTION' | 'STABILITY';
 
 export interface RivalStudio {
   id: string;
@@ -18,6 +18,12 @@ export interface RivalStudio {
   prestige: number;
   recentActivity: string;
   projectCount: number;
+  // AI Motivations
+  motivationProfile: MotivationProfile;
+  currentMotivation: StudioMotivation;
+  // Dynamic State
+  projects: Record<string, Project>;
+  contracts: Contract[];
   // Sprint F additions
   strategy?: RivalStrategy;
   genreFocus?: string;

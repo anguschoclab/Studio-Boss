@@ -8,17 +8,17 @@ describe('Finance: Cult Classic Revenue', () => {
     budget: 1000000, weeklyCost: 10000, targetAudience: 'General Audience', flavor: 'A nice drama',
     status: 'released', buzz: 50, weeksInPhase: 0, developmentWeeks: 4, productionWeeks: 4,
     revenue: 0, weeklyRevenue: 50000, releaseWeek: null
-  };
+  } as Project;
 
-  test('Cult Classic projects generate long-tail revenue minimums', () => {
+  it('Cult Classic projects generate long-tail revenue minimums', () => {
     // Normal project
     const normalProject = { ...baseProject, weeklyRevenue: 50000 };
-    const revNormal = calculateWeeklyRevenue([normalProject], []);
+    const revNormal = calculateWeeklyRevenue([normalProject], [], []);
     expect(revNormal).toBe(50000);
 
     // Cult classic project overrides low base with ironic viewing multiplier
     const cultProject = { ...baseProject, isCultClassic: true, weeklyRevenue: 50000 };
-    const revCult = calculateWeeklyRevenue([cultProject], []);
+    const revCult = calculateWeeklyRevenue([cultProject], [], []);
 
     // applyIronicViewingMultiplier gives Math.max(50000 * 1.5, 100000)
     expect(revCult).toBe(100000); // Because 50000 * 1.5 = 75000, so it hits the 100000 minimum floor

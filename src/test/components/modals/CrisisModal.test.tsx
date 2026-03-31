@@ -56,7 +56,7 @@ describe('CrisisModal', () => {
   const mockGameState = {
     studio: {
       internal: {
-        projects: [mockProject]
+        projects: { [mockProject.id]: mockProject }
       }
     }
   } as any;
@@ -119,7 +119,7 @@ describe('CrisisModal', () => {
         gameState: { 
           studio: {
             internal: {
-              projects: [projectWithoutCrisis]
+              projects: { [projectWithoutCrisis.id]: projectWithoutCrisis }
             }
           }
         },

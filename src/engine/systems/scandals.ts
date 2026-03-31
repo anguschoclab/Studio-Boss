@@ -88,11 +88,12 @@ export function generateScandals(state: GameState): StateImpact {
  * Processes weekly decay of scandals and applies their penalties to projects.
  */
 export function advanceScandals(state: GameState): StateImpact {
-  if (!state.industry.scandals || state.industry.scandals.length === 0) return {};
+  if (!state.industry?.scandals || state.industry.scandals.length === 0) return { scandalUpdates: [], projectUpdates: [], removeScandalIds: [] };
   
   const impact: StateImpact = {
     scandalUpdates: [],
-    projectUpdates: []
+    projectUpdates: [],
+    removeScandalIds: []
   };
 
   const activeScandalTalent = new Set<string>();
@@ -107,13 +108,7 @@ export function advanceScandals(state: GameState): StateImpact {
       });
       activeScandalTalent.add(s.talentId);
     } else {
-        // Scandal expired - we'll handle removal in applyStateImpact or just let it decay
-        // For now, simpler to just not update it, and let applyStateImpact handle the array filter if we wanted.
-        // Actually, let's just update it to 0 weeks.
-        impact.scandalUpdates!.push({
-            scandalId: s.id,
-            update: { weeksRemaining: 0 }
-        });
+        impact.removeScandalIds!.push(s.id);
     }
   }
   

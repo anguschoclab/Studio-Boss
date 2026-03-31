@@ -78,28 +78,31 @@ export function calculateFitScore(project: Project, buyer: Buyer, currentWeek: n
 
   // Market Saturation Penalty
   // Calculate dynamic market trend by finding similar genre projects released within the last 52 weeks
-  const recentSimilarProjects = allProjects.filter(p =>
-    p.status === 'released' &&
-    p.genre === project.genre &&
-    p.releaseWeek !== null &&
-    (currentWeek - p.releaseWeek) <= 52 &&
-    p.id !== project.id // exclude self
-  );
+  // ⚡ Bolt: Replaced O(N) .filter() array allocation with a direct for-loop count to eliminate garbage collection pressure
+  let recentSimilarProjectsCount = 0;
+  for (let i = 0; i < allProjects.length; i++) {
+    const p = allProjects[i];
+    if (
+      p.status === 'released' &&
+      p.genre === project.genre &&
+      p.releaseWeek !== null &&
+      (currentWeek - p.releaseWeek) <= 52 &&
+      p.id !== project.id
+    ) {
+      recentSimilarProjectsCount++;
+    }
+  }
 
-  let saturationPenalty = recentSimilarProjects.length * 5;
+  let saturationPenalty = recentSimilarProjectsCount * 5;
 
-  // Inject trend-modifier: heavy penalty if genre is oversaturated (e.g., >= 5 similar releases)
-  // This dynamic market trend math punishes chasing saturated markets, reducing score significantly
-  if (recentSimilarProjects.length >= 5) {
+  if (recentSimilarProjectsCount >= 5) {
     saturationPenalty += 20;
   }
 
-  // New market saturation math: dynamic market trends
-  // The Festival Buyer: Heavily penalize oversaturated tentpole genres (like Superhero) to force players to consider market conditions
-  // If 5 superhero movies were released last year, buyers should heavily penalize new superhero pitches in the greenlight phase.
-  if (recentSimilarProjects.length >= 5 && project.genre.toLowerCase().includes('superhero')) {
-    saturationPenalty *= 3; // Tripling the penalty for oversaturated Superhero genre
-    saturationPenalty += 75; // Applying an even more massive flat penalty for chasing an exhausted superhero market
+  // The Festival Buyer: Heavily penalize oversaturated tentpole genres (like Superhero)
+  if (recentSimilarProjectsCount >= 5 && project.genre.toLowerCase().includes('superhero')) {
+    saturationPenalty *= 3;
+    saturationPenalty += 75;
   }
 
   if (saturationPenalty > 0) {
@@ -107,43 +110,42 @@ export function calculateFitScore(project: Project, buyer: Buyer, currentWeek: n
   }
 
   // Trend-modifier: Calendar Gap Bonus
-  // If there have been no similar projects released in the last 52 weeks, the market is starved for this genre.
-  // We inject a positive dynamic market trend bonus here to reward players for finding gaps in the release calendar.
-  if (recentSimilarProjects.length === 0) {
+  if (recentSimilarProjectsCount === 0) {
     score += 15;
   }
 
-  if (!buyer.currentMandate) return score;
+  // Mandate matching (Skip if no mandate)
+  if (buyer.currentMandate) {
+    const mandate = buyer.currentMandate.type;
 
-  const mandate = buyer.currentMandate.type;
+    // Genre matching
+    const lowerGenre = project.genre.toLowerCase();
+    if (mandate === 'sci-fi' && (lowerGenre.includes('sci-fi') || lowerGenre.includes('fantasy'))) score += 30;
+    if (mandate === 'comedy' && lowerGenre.includes('comedy')) score += 30;
+    if (mandate === 'drama' && lowerGenre.includes('drama')) score += 30;
 
-  // Genre matching
-  const lowerGenre = project.genre.toLowerCase();
-  if (mandate === 'sci-fi' && (lowerGenre.includes('sci-fi') || lowerGenre.includes('fantasy'))) score += 30;
-  if (mandate === 'comedy' && lowerGenre.includes('comedy')) score += 30;
-  if (mandate === 'drama' && lowerGenre.includes('drama')) score += 30;
+    // Prestige matching
+    if (mandate === 'prestige' && project.budgetTier === 'high') score += 20;
+    if (mandate === 'prestige' && project.budgetTier === 'blockbuster') score += 10;
+    if (mandate === 'prestige' && project.budgetTier === 'low') score -= 20;
 
-  // Prestige matching
-  if (mandate === 'prestige' && project.budgetTier === 'high') score += 20;
-  if (mandate === 'prestige' && project.budgetTier === 'blockbuster') score += 10;
-  if (mandate === 'prestige' && project.budgetTier === 'low') score -= 20;
+    // Broad appeal
+    if (mandate === 'broad_appeal' && (project.budgetTier === 'mid' || project.budgetTier === 'high')) score += 20;
+    if (mandate === 'broad_appeal' && project.targetAudience.toLowerCase().includes('family')) score += 15;
 
-  // Broad appeal
-  if (mandate === 'broad_appeal' && (project.budgetTier === 'mid' || project.budgetTier === 'high')) score += 20;
-  if (mandate === 'broad_appeal' && project.targetAudience.toLowerCase().includes('family')) score += 15;
-
-  // Budget Freeze
-  if (mandate === 'budget_freeze') {
-    if (project.budgetTier === 'blockbuster') score -= 50;
-    if (project.budgetTier === 'high') score -= 30;
-    if (project.budgetTier === 'low') score += 20; // They prefer cheap during a freeze
+    // Budget Freeze
+    if (mandate === 'budget_freeze') {
+      if (project.budgetTier === 'blockbuster') score -= 50;
+      if (project.budgetTier === 'high') score -= 30;
+      if (project.budgetTier === 'low') score += 20;
+    }
   }
 
   // Archetype specific preferences
   if (buyer.archetype === 'network' && project.budgetTier === 'blockbuster') score -= 20;
   if (buyer.archetype === 'premium' && project.budgetTier === 'low') score -= 30;
 
-  // Add some randomness and scale by project buzz
+  // Global modifiers: Buzz and Randomness
   const buzzFactor = (project.buzz / 100) * 20; // Buzz gives up to +20
   score += buzzFactor;
   score += randRange(-10, 10);

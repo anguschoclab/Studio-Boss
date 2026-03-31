@@ -138,6 +138,11 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
         headline: `${bestProject.title} Wins ${config.category}!`,
         description: `In a stunning victory at the ${config.body}, "${bestProject.title}" took home the top prize for ${config.category}.`,
       });
+      impact.newHeadlines!.push({
+        week: currentWeek,
+        category: 'awards',
+        text: `BREAKING: "${bestProject.title}" wins ${config.category} at the ${config.body}!`
+      });
     } else if (bestScore > 100) {
       impact.newAwards!.push({
         id: `award-${crypto.randomUUID()}`,
