@@ -358,9 +358,19 @@ export interface IPRights {
   catalogValue: number;
 }
 
+export interface TVSeasonDetails {
+  currentSeason: number;
+  episodesOrdered: number;
+  episodesCompleted: number;
+  episodesAired: number;
+  averageRating: number; // 1-100 scale
+  status: 'IN_DEVELOPMENT' | 'ON_AIR' | 'ON_BUBBLE' | 'RENEWED' | 'CANCELLED' | 'SYNDICATED';
+}
+
 export interface Project {
   id: string;
   title: string;
+  type: 'FILM' | 'TELEVISION'; // Discriminator
   format: ProjectFormat;
   genre: string;
   budgetTier: BudgetTierKey;
@@ -385,6 +395,7 @@ export interface Project {
   awardsProfile?: AwardsProfile;
   parentProjectId?: string;
   isSpinoff?: boolean;
+  franchiseId?: string;
   // Release simulation fields
   reviewScore?: number;
   boxOfficeRank?: number;
@@ -398,11 +409,8 @@ export interface Project {
   // TV / Unscripted fields
   tvFormat?: TvFormatKey;
   unscriptedFormat?: UnscriptedFormatKey;
-  episodes?: number;
-  episodesReleased?: number;
+  tvDetails?: TVSeasonDetails;
   releaseModel?: ReleaseModelKey;
-  season?: number;
-  renewable?: boolean;
   buyerId?: string;
   // Sprint H / I additions
   rating?: ProjectRating;
@@ -413,8 +421,8 @@ export interface Project {
   boxOffice?: BoxOfficeResult;
 }
 
-export interface OpportunityType = 'script' | 'package' | 'pitch' | 'rights';
-export interface DiscoveryOrigin = 'open_spec' | 'agency_package' | 'writer_sample' | 'heat_list' | 'annual_list' | 'passion_project';
+export type OpportunityType = 'script' | 'package' | 'pitch' | 'rights';
+export type DiscoveryOrigin = 'open_spec' | 'agency_package' | 'writer_sample' | 'heat_list' | 'annual_list' | 'passion_project';
 
 export interface Opportunity {
   id: string;

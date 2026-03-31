@@ -43,7 +43,9 @@ export function handleReleasePhaseEntry(
   currentWeek: number,
   studioPrestige: number,
   projectContracts: Contract[],
-  talentPoolMap: Map<string, Talent>
+  talentPoolMap: Map<string, Talent>,
+  franchiseSynergy: number = 1.0,
+  franchiseFatigue: number = 0
 ): { update: string | null; talentUpdates: Talent[] } {
   p.state = 'released';
   p.weeksInPhase = 0;
@@ -61,15 +63,15 @@ export function handleReleasePhaseEntry(
   let update: string | null = null;
 
   if (p.format === 'film') {
-    const result = calculateOpeningWeekend(p, attachedTalent, studioPrestige);
+    const result = calculateOpeningWeekend(p, attachedTalent, studioPrestige, franchiseSynergy, franchiseFatigue);
     // Replace p with the updated project from result
     Object.assign(p, result.project);
     update = result.feedback;
   } else {
-    // TV/Unscripted logic (simplified for now to keep focus on Film Distribution Phase 3)
-    p.weeklyRevenue = (p.budget * 0.1) * (p.buzz / 50); 
+    // TV/Unscripted logic (simplified for now)
+    p.weeklyRevenue = (p.budget * 0.1) * (p.buzz / 50) * franchiseSynergy * (1 - franchiseFatigue); 
     p.revenue = p.weeklyRevenue;
-    update = `"${p.title}" Season ${p.season || 1} premieres!`;
+    update = `"${p.title}" Season ${p.tvDetails?.currentSeason || 1} premieres!`;
   }
 
   return { update, talentUpdates: [] };
@@ -81,7 +83,8 @@ function handleReleasedPhase(
   talentPoolMap: Map<string, Talent>,
   rivalStrengthAvg: number,
   projectAwards: Award[],
-  trendMultiplier: number = 1.0
+  trendMultiplier: number = 1.0,
+  franchiseSynergy: number = 1.0
 ): { update: string | null; talentUpdates: Talent[] } {
   p.revenue += p.weeklyRevenue;
   let update: string | null = null;
@@ -89,57 +92,59 @@ function handleReleasedPhase(
 
   if ((p.format === 'tv' && p.tvFormat) || (p.format === 'unscripted' && p.unscriptedFormat)) {
     const formatData = p.format === 'tv' ? TV_FORMATS[p.tvFormat!] : UNSCRIPTED_FORMATS[p.unscriptedFormat!];
-    const eps = p.episodes || formatData.defaultEpisodes;
+    const eps = p.tvDetails?.episodesOrdered || formatData.defaultEpisodes;
+    const currentSeason = p.tvDetails?.currentSeason || 1;
 
     if (p.releaseModel === 'binge') {
-      p.weeklyRevenue *= randRange(formatData.revenueDecayBinge - 0.1, formatData.revenueDecayBinge + 0.1);
+      p.weeklyRevenue *= randRange(formatData.revenueDecayBinge - 0.1, formatData.revenueDecayBinge + 0.1) * franchiseSynergy;
 
       if (p.weeklyRevenue < 50_000 || p.weeksInPhase > 8) {
         p.state = 'post_release';
         p.weeksInPhase = 0;
-        update = `"${p.title}" Season ${p.season} finishes its run.`;
+        update = `"${p.title}" Season ${currentSeason} finishes its run.`;
         talentUpdates = TalentSystem.applyProjectResults(p, projectContracts, Array.from(talentPoolMap.values()), projectAwards);
       }
     } else if (p.releaseModel === 'split') {
       const part2DropWeek = Math.ceil(eps / 2) + 2;
 
       if (p.weeksInPhase === part2DropWeek) {
-        p.episodesReleased = eps;
-        p.weeklyRevenue *= 2.5;
-        update = `"${p.title}" Season ${p.season} Part 2 drops!`;
+        if (p.tvDetails) p.tvDetails.episodesAired = eps;
+        p.weeklyRevenue *= 2.5 * franchiseSynergy;
+        update = `"${p.title}" Season ${currentSeason} Part 2 drops!`;
       } else if (p.weeksInPhase > part2DropWeek) {
-        p.weeklyRevenue *= randRange(formatData.revenueDecayBinge - 0.1, formatData.revenueDecayBinge + 0.1);
+        p.weeklyRevenue *= randRange(formatData.revenueDecayBinge - 0.1, formatData.revenueDecayBinge + 0.1) * franchiseSynergy;
       } else {
-        p.weeklyRevenue *= randRange(0.6, 0.8);
+        p.weeklyRevenue *= randRange(0.6, 0.8) * franchiseSynergy;
       }
 
       if (p.weeksInPhase > part2DropWeek + 6 && p.weeklyRevenue < 50_000) {
         p.state = 'post_release';
         p.weeksInPhase = 0;
-        update = `"${p.title}" Season ${p.season} finishes its run.`;
+        update = `"${p.title}" Season ${currentSeason} finishes its run.`;
         talentUpdates = TalentSystem.applyProjectResults(p, projectContracts, Array.from(talentPoolMap.values()), projectAwards);
       }
     } else {
-      if (p.episodesReleased !== undefined && p.episodesReleased < eps) {
-        p.episodesReleased += 1;
-        p.weeklyRevenue *= randRange(formatData.revenueDecayWeekly - 0.05, formatData.revenueDecayWeekly + 0.05);
+      const episodesReleased = p.tvDetails?.episodesAired || 0;
+      if (p.tvDetails && episodesReleased < eps) {
+        p.tvDetails.episodesAired += 1;
+        p.weeklyRevenue *= randRange(formatData.revenueDecayWeekly - 0.05, formatData.revenueDecayWeekly + 0.05) * franchiseSynergy;
 
-        if (p.episodesReleased === eps) {
-          update = `"${p.title}" Season ${p.season} airs its finale!`;
-          p.weeklyRevenue *= 1.3;
+        if (p.tvDetails.episodesAired === eps) {
+          update = `"${p.title}" Season ${currentSeason} airs its finale!`;
+          p.weeklyRevenue *= 1.3 * franchiseSynergy;
         }
       } else {
-        p.weeklyRevenue *= 0.6;
+        p.weeklyRevenue *= 0.6 * franchiseSynergy;
         if (p.weeklyRevenue < 50_000 || p.weeksInPhase > eps + 4) {
           p.state = 'post_release';
           p.weeksInPhase = 0;
-          update = `"${p.title}" Season ${p.season} finishes its run.`;
+          update = `"${p.title}" Season ${currentSeason} finishes its run.`;
           talentUpdates = TalentSystem.applyProjectResults(p, projectContracts, Array.from(talentPoolMap.values()), projectAwards);
         }
       }
     }
   } else {
-    p.weeklyRevenue = simulateWeeklyBoxOffice(p, p.weeksInPhase, p.reviewScore || 50, p.weeklyRevenue, rivalStrengthAvg, trendMultiplier);
+    p.weeklyRevenue = simulateWeeklyBoxOffice(p, p.weeksInPhase, p.reviewScore || 50, p.weeklyRevenue, rivalStrengthAvg, trendMultiplier, franchiseSynergy);
     
     let trendText = "";
     if (trendMultiplier > 1.0) {
@@ -246,7 +251,9 @@ export function advanceProject(
   talentPoolMap: Map<string, Talent>,
   rivalStrengthAvg: number = 50,
   projectAwards: Award[] = [],
-  trendMultiplier: number = 1.0
+  trendMultiplier: number = 1.0,
+  franchiseSynergy: number = 1.0,
+  franchiseFatigue: number = 0
 ): { project: Project; update: string | null; talentUpdates: Talent[] } {
   if (project.state === 'archived') return { project, update: null, talentUpdates: [] };
 
@@ -270,7 +277,7 @@ export function advanceProject(
     const result = handleMarketingPhase(p);
     update = result.update;
   } else if (p.state === 'released') {
-    const result = handleReleasedPhase(p, projectContracts, talentPoolMap, rivalStrengthAvg, projectAwards, trendMultiplier);
+    const result = handleReleasedPhase(p, projectContracts, talentPoolMap, rivalStrengthAvg, projectAwards, trendMultiplier, franchiseSynergy);
     update = result.update;
     if (result.talentUpdates) talentUpdates = result.talentUpdates;
   } else if (p.state === 'post_release') {

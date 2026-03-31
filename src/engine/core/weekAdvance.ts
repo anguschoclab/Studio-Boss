@@ -1,12 +1,13 @@
 import { GameState, WeekSummary, Headline, NewsEvent, StudioSnapshot } from '@/engine/types';
 import { ALL_GENRES } from '../systems/trends';
 import { secureRandom } from '../utils';
-import { advanceIPRights } from '../systems/ipRetention';
-import { advanceDeals } from '../systems/deals';
 import { processProduction } from '../systems/processors/processProduction';
+import { processTelevision } from '../systems/processors/processTelevision';
+import { processIPVault } from '../systems/processors/processIPVault';
 import { processRivalProduction } from '../systems/processors/processRivalProduction';
 import { processFinance } from '../systems/processors/processFinance';
 import { processWorldEvents } from '../systems/processors/processWorldEvents';
+import { advanceDeals } from '../systems/deals';
 import { applyStateImpact } from '../../store/storeUtils';
 import { mergeImpacts } from '../utils/impactUtils';
 
@@ -78,14 +79,16 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
   // 1. Process Studio Production (Advancement, Quality, Completion)
   // TRANSFORMER: Directly returns new GameState
   currentState = processProduction(currentState);
+  currentState = processTelevision(currentState);
 
   // 2. Process Rival Production (Advancement for competitors)
   const rivalProdImpact = processRivalProduction(currentState);
   currentState = applyStateImpact(currentState, rivalProdImpact);
 
-  // 3. Resolve Studio Finances (Burn, Revenue, Cash Flow)
+  // 3. Resolve Studio Finances & IP Vault (Passive revenue collection happens in processIPVault)
   // TRANSFORMER: Directly returns new GameState
-  currentState = processFinance(currentState);
+  currentState = processIPVault(currentState); // IP Revenue added to cash
+  currentState = processFinance(currentState); // Standard burn/box office
   
   // Extract report from ledger for summary
   const lastReport = currentState.finance.ledger[currentState.finance.ledger.length - 1];
@@ -97,14 +100,11 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
   currentState = applyStateImpact(currentState, worldImpact);
 
   // 5. IP Rights & Deals
-  const ipImpact = advanceIPRights(Object.values(currentState.studio.internal.projects), currentState.week);
-  currentState = applyStateImpact(currentState, ipImpact);
-  
   const dealsImpact = advanceDeals(currentState.studio.internal.firstLookDeals || []);
   currentState = applyStateImpact(currentState, dealsImpact);
 
   // 6. Build Cumulative Summary
-  const allImpacts = mergeImpacts(rivalProdImpact, worldImpact, ipImpact, dealsImpact);
+  const allImpacts = mergeImpacts(rivalProdImpact, worldImpact, dealsImpact);
   
   const summary: WeekSummary = {
     fromWeek: originalState.week,

@@ -38,7 +38,7 @@ export interface StudioCulture {
   filmFirstVsTvFirst: number; // -100 (film) to 100 (tv)
 }
 
-import { WeeklyFinancialReport, FinanceState, NewsState } from './state.types';
+import { WeeklyFinancialReport, FinanceState, NewsState, IPState } from './state.types';
 
 export interface GameState {
   week: number;
@@ -50,6 +50,7 @@ export interface GameState {
   };
   finance: FinanceState;
   news: NewsState;
+  ip: IPState;
   studio: {
     name: string;
     archetype: ArchetypeKey;

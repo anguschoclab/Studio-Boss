@@ -4,11 +4,12 @@ import { CreateProjectParams, buildProjectAndContracts, applyStateImpact } from 
 import * as projectsEngine from '@/engine/systems/projects';
 import { updateCultureFromProject } from '@/engine/systems/culture';
 import { negotiateContract } from '@/engine/systems/buyers';
-import { exploitIP } from '@/engine/systems/franchises';
+import { generateSpinoffProposal } from '@/engine/systems/ip/spinoffFactory';
+import { calculateFranchiseFatigue } from '@/engine/systems/ip/fatigueEngine';
 import { resolveCrisis } from '@/engine/systems/crises';
-import { submitToFestival } from '@/engine/systems/festivals';
-import { launchAwardsCampaign } from '@/engine/systems/awards';
-import { Project, GameState, AwardBody, ProjectContractType, MarketingCampaign } from '@/engine/types';
+import * as festivalsEngine from '@/engine/systems/festivals';
+import * as awardsEngine from '@/engine/systems/awards';
+import { Project, GameState, AwardBody, ProjectContractType, MarketingCampaign, TvFormatKey, UnscriptedFormatKey } from '@/engine/types';
 
 export interface ProjectSlice {
   createProject: (params: CreateProjectParams) => void;
@@ -67,7 +68,9 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
       const p = state.studio.internal.projects[id];
       if (!p) return s;
 
-      if ((p.format === 'tv' || p.format === 'unscripted') && p.renewable && p.season !== undefined) {
+      const tv = p.tvDetails;
+      if ((p.format === 'tv' || p.format === 'unscripted') && tv && tv.status === 'RENEWED') {
+        const nextSeason = (tv.currentSeason || 1) + 1;
         return {
           gameState: applyStateImpact(state, {
             projectUpdates: [{
@@ -82,8 +85,12 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
                 weeksInPhase: 0,
                 developmentWeeks: 0,
                 productionWeeks: 0,
-                season: p.season + 1,
-                episodesReleased: 0,
+                tvDetails: {
+                  ...tv,
+                  currentSeason: nextSeason,
+                  episodesAired: 0,
+                  status: 'IN_DEVELOPMENT'
+                }
               }
             }]
           }) as any
@@ -174,10 +181,35 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
     const project = state.studio.internal.projects[projectId];
     if (!project) return;
 
-    const spinoffParams = exploitIP(project, state);
-    if (!spinoffParams) return;
+    // 1. Determine Franchise Context
+    let status: 'HEALTHY' | 'FATIGUED' | 'LEGACY' = 'HEALTHY';
+    let relatedCount = 0;
 
-    get().createProject(spinoffParams as any);
+    if (project.franchiseId && state.ip.franchises[project.franchiseId]) {
+      const franchise = state.ip.franchises[project.franchiseId];
+      relatedCount = franchise.assetIds.length;
+      
+      const genreSaturation = state.projects.active.filter(p => p.genre === project.genre).length;
+      const isSpectacle = ['SCI-FI', 'SUPERHERO', 'ACTION', 'FANTASY'].includes(project.genre.toUpperCase());
+      const fatigue = calculateFranchiseFatigue(franchise, genreSaturation, isSpectacle ? 'spectacle' : 'comfort_food');
+      
+      if (fatigue > 0.4) status = 'FATIGUED';
+      
+      // Legacy Check: 10+ year gap triggers Nostalgia Spike (LEGACY status)
+      const lastRelease = Math.max(...franchise.lastReleaseWeeks, 0);
+      if (state.game.currentWeek - lastRelease > 520) status = 'LEGACY';
+    }
+
+    // 2. Generate Proposal
+    const spinoffParams = generateSpinoffProposal(project, status, relatedCount);
+    
+    // Ensure the new project inherits the franchiseId
+    const finalParams = {
+      ...spinoffParams,
+      franchiseId: project.franchiseId
+    };
+
+    get().createProject(finalParams as any);
   },
 
   resolveProjectCrisis: (projectId, optionIndex) => {
@@ -195,7 +227,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
   submitToFestival: (projectId, festivalBody) => {
     set((s) => {
       if (!s.gameState) return s;
-      const impact = submitToFestival(s.gameState, projectId, festivalBody);
+      const impact = festivalsEngine.submitToFestival(s.gameState, projectId, festivalBody);
       if (!impact) return s;
       const newState = applyStateImpact(s.gameState, impact);
       return { gameState: newState as any };
@@ -205,7 +237,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
   launchAwardsCampaign: (projectId, budget) => {
     set((s) => {
       if (!s.gameState) return s;
-      const impact = launchAwardsCampaign(s.gameState, projectId, budget);
+      const impact = awardsEngine.launchAwardsCampaign(s.gameState, projectId, budget);
       if (!impact) return s;
       const newState = applyStateImpact(s.gameState, impact);
       return { gameState: newState as any };

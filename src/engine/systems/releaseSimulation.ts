@@ -39,7 +39,9 @@ export function calculateReviewScore(
 export function calculateOpeningWeekend(
   project: Project,
   attachedTalent: Talent[],
-  studioPrestige: number
+  studioPrestige: number,
+  franchiseSynergy: number = 1.0, // New: Halo Effect (1.0 - 2.5)
+  franchiseFatigue: number = 0 // New: Audience Saturation (0 - 1.0)
 ): { project: Project; feedback: string } {
   // If no campaign, it's a "silent release" - very poor performance
   const campaign = project.marketingCampaign || {
@@ -58,7 +60,8 @@ export function calculateOpeningWeekend(
   const basePotential = (project.budget * 0.4) * buzzFactor * prestigeFactor * (1 + (talentDraw / 100));
   const randomFactor = randRange(0.85, 1.15);
   
-  let effectiveGross = basePotential * randomFactor;
+  let effectiveGross = basePotential * randomFactor * franchiseSynergy; // Apply Halo Effect
+  effectiveGross *= (1 - franchiseFatigue); // Apply Fatigue Penalty
 
   // 2. Apply Marketing Efficiency
   const { multiplier, feedbackText } = evaluateMarketingEfficiency(project, campaign);
@@ -75,9 +78,12 @@ export function calculateOpeningWeekend(
     revenue: (territoryResult.openingWeekendDomestic + territoryResult.openingWeekendForeign)
   };
 
+  const fatigueFeedback = franchiseFatigue > 0.3 ? " Brand fatigue is chilling the audience." : "";
+  const synergyFeedback = franchiseSynergy > 1.2 ? " Shared universe hype is driving massive interest!" : "";
+
   return { 
     project: updatedProject, 
-    feedback: feedbackText + " " + (territoryResult.multiplier > 1.2 ? "Strong international breakout!" : "")
+    feedback: feedbackText + synergyFeedback + fatigueFeedback + " " + (territoryResult.multiplier > 1.2 ? "Strong international breakout!" : "")
   };
 }
 
@@ -87,7 +93,8 @@ export function simulateWeeklyBoxOffice(
   reviewScore: number,
   previousWeeklyRevenue: number,
   rivalStrength: number,
-  trendMultiplier: number = 1.0
+  trendMultiplier: number = 1.0,
+  franchiseSynergy: number = 1.0 // New: Ongoing Halo Effect
 ): number {
   if (weekInRelease === 0) return previousWeeklyRevenue;
 
@@ -107,7 +114,7 @@ export function simulateWeeklyBoxOffice(
   const competitionLoss = (rivalStrength / 100) * 0.1;
   const finalMultiplier = clamp(decayFactor - competitionLoss, 0.1, 0.95);
 
-  return Math.floor(previousWeeklyRevenue * finalMultiplier * trendMultiplier);
+  return Math.floor(previousWeeklyRevenue * finalMultiplier * trendMultiplier * franchiseSynergy);
 }
 
 export interface BoxOfficeEntry {

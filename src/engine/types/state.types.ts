@@ -1,4 +1,4 @@
-import { NewsEvent, Headline, Project, Scandal, Opportunity, GenreTrend, MarketEvent, Rumor, Buyer, FestivalSubmission, FinanceRecord } from './index';
+import { NewsEvent, Headline, Project, Scandal, Opportunity, GenreTrend, MarketEvent, Rumor, Buyer, FestivalSubmission, FinanceRecord, Franchise } from './index';
 
 export interface WeeklyFinancialReport {
   week: number;
@@ -27,6 +27,26 @@ export interface NewsState {
   headlines: Headline[];
 }
 
+export interface IPAsset {
+  id: string;
+  originalProjectId: string;
+  title: string;
+  franchiseId?: string; // New field for Shared Universe grouping
+  baseValue: number; // Based on box office / ratings success
+  decayRate: number; // Drops every week
+  merchandisingMultiplier: number; 
+  syndicationStatus: 'NONE' | 'SYNDICATED';
+  syndicationTier: 'NONE' | 'BRONZE' | 'SILVER' | 'GOLD';
+  totalEpisodes: number;
+  rightsExpirationWeek: number; 
+  rightsOwner: 'STUDIO' | 'MARKET' | 'RIVAL';
+}
+
+export interface IPState {
+  vault: IPAsset[];
+  franchises: Record<string, Franchise>; // Centralized Meta-Hub
+}
+
 export interface StateImpact {
   cashChange?: number;
   prestigeChange?: number;
@@ -39,6 +59,11 @@ export interface StateImpact {
     projectId: string;
     update: Partial<Project>;
   }>;
+  assetUpdates?: Array<{
+    assetId: string;
+    update: Partial<IPAsset>;
+  }>;
+  newVaultAssets?: IPAsset[];
   talentUpdates?: Array<{
     talentId: string;
     update: any; // Partial<TalentProfile>

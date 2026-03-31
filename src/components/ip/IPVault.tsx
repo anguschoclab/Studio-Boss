@@ -1,43 +1,33 @@
 import React from 'react';
 import { useGameStore } from '@/store/gameStore';
-import { selectReleasedProjects, selectStudio } from '@/store/selectors';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Library, Link as LinkIcon, Star, TrendingUp, DollarSign, Award, Archive, Zap } from 'lucide-react';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Library, Star, TrendingUp, DollarSign, Award, Archive, Zap, History, Globe, Lock } from 'lucide-react';
 import { formatMoney } from '@/engine/utils';
-import { Project } from '@/engine/types';
-import { cn } from '@/lib/utils';
+import { IPAsset } from '@/engine/types';
 import { useShallow } from 'zustand/react/shallow';
+import { FranchiseHub } from './FranchiseHub';
+
+import { SYNDICATION_TIERS } from '@/engine/data/syndicationConfig';
 
 export const IPVault = () => {
-  const gameState = useGameStore(s => s.gameState);
+  const ipState = useGameStore(useShallow(s => s.gameState?.ip)) || { vault: [], franchises: {} };
+  const franchises = Object.values(ipState.franchises);
   
-  const releasedProjects = useGameStore(useShallow(s => selectReleasedProjects(s.gameState)));
-  const studio = useGameStore(useShallow(s => selectStudio(s.gameState)));
-  
-  const { franchiseEntries, independentProjects, firstLookDeals } = React.useMemo(() => {
-    const franchisesMap = new Map<string, Project[]>();
-    const independent: Project[] = [];
+  const { ownedIP, syndicatedIP, marketIP } = React.useMemo(() => {
+    const vault = ipState.vault || [];
+    const owned = vault.filter(a => a.rightsOwner === 'STUDIO');
+    const syndicated = vault.filter(a => a.syndicationStatus === 'SYNDICATED' && a.rightsOwner === 'STUDIO');
+    const market = vault.filter(a => a.rightsOwner === 'MARKET');
     
-    releasedProjects.forEach(p => {
-      const rootId = p.parentProjectId || p.id;
-      const isPartOfFranchise = p.isSpinoff || releasedProjects.some(other => other.parentProjectId === p.id);
-      
-      if (isPartOfFranchise) {
-        const existing = franchisesMap.get(rootId) || [];
-        franchisesMap.set(rootId, [...existing, p]);
-      } else {
-        independent.push(p);
-      }
-    });
-
     return {
-      franchiseEntries: Array.from(franchisesMap.entries()),
-      independentProjects: independent,
-      firstLookDeals: studio?.internal.firstLookDeals || []
+      ownedIP: owned,
+      syndicatedIP: syndicated,
+      marketIP: market
     };
-  }, [releasedProjects, studio]);
+  }, [ipState]);
 
   return (
     <div className="h-full flex flex-col space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700 overflow-hidden">
@@ -48,198 +38,180 @@ export const IPVault = () => {
             <div className="w-10 h-10 rounded-lg bg-secondary/10 border border-secondary/20 flex items-center justify-center">
               <Archive className="h-5 w-5 text-secondary" />
             </div>
-            <h2 className="text-2xl font-black tracking-tighter uppercase leading-none">Catalog & IP Vault</h2>
+            <h2 className="text-2xl font-black tracking-tighter uppercase leading-none">Property Vault & Catalog</h2>
           </div>
-          <p className="text-[11px] font-black uppercase text-muted-foreground/60 tracking-[0.2em]">Intellectual Property Protection • {releasedProjects.length} Assets</p>
+          <p className="text-[11px] font-black uppercase text-muted-foreground/60 tracking-[0.2em]">Intellectual Property Protection • {ipState.vault.length} Total Assets</p>
         </div>
         
         <div className="flex gap-2">
           <Badge variant="outline" className="bg-primary/5 border-primary/20 text-primary uppercase font-black tracking-widest text-[9px] py-1">
-            {releasedProjects.length} Catalog Entries
+            {franchises.length} Shared Universes
           </Badge>
           <Badge variant="outline" className="bg-secondary/5 border-secondary/20 text-secondary uppercase font-black tracking-widest text-[9px] py-1">
-            {franchiseEntries.length} Active Franchises
+            {ownedIP.length} Owned Titles
           </Badge>
         </div>
       </div>
 
-      <ScrollArea className="flex-1 pr-4">
-        <div className="space-y-10 pb-12">
-          {/* Franchises Section */}
-          {franchiseEntries.length > 0 && (
-            <div className="space-y-4">
-              <div className="flex items-center gap-3 px-2">
-                <div className="w-1.5 h-4 rounded-full bg-primary" />
-                <h3 className="text-xs font-black uppercase tracking-widest text-foreground/80 flex items-center gap-2">
-                  Established Franchises
-                </h3>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {franchiseEntries.map(([rootId, projects]) => (
-                  <FranchiseCard key={rootId} projects={projects} />
-                ))}
-              </div>
-            </div>
-          )}
+      <Tabs defaultValue="franchises" className="flex-1 flex flex-col min-h-0">
+        <TabsList className="bg-white/5 border border-white/10 p-1 self-start mb-6">
+          <TabsTrigger value="franchises" className="text-[10px] uppercase font-black tracking-widest px-6 h-8 data-[state=active]:bg-primary/20 data-[state=active]:text-primary">
+            Franchise Hub ({franchises.length})
+          </TabsTrigger>
+          <TabsTrigger value="owned" className="text-[10px] uppercase font-black tracking-widest px-6 h-8 data-[state=active]:bg-white/10 data-[state=active]:text-white">
+            Owned Inventory ({ownedIP.length})
+          </TabsTrigger>
+          <TabsTrigger value="market" className="text-[10px] uppercase font-black tracking-widest px-6 h-8 data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-500">
+            Market Rights ({marketIP.length})
+          </TabsTrigger>
+          <TabsTrigger value="syndicated" className="text-[10px] uppercase font-black tracking-widest px-6 h-8 data-[state=active]:bg-purple-500/20 data-[state=active]:text-purple-500">
+            Syndication ({syndicatedIP.length})
+          </TabsTrigger>
+        </TabsList>
 
-          {/* Library Section */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-3 px-2">
-              <div className="w-1.5 h-4 rounded-full bg-secondary" />
-              <h3 className="text-xs font-black uppercase tracking-widest text-foreground/80 flex items-center gap-2">
-                Intellectual Property Library
-              </h3>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {independentProjects.length === 0 && franchiseEntries.length === 0 ? (
-                <div className="col-span-full py-20 text-center glass-card border-none">
-                  <Library className="w-10 h-10 text-muted-foreground/20 mx-auto mb-4" />
-                  <p className="text-sm font-bold text-muted-foreground/40 uppercase tracking-widest">The vault is currently empty.</p>
-                </div>
+        <ScrollArea className="flex-1 pr-4">
+          <TabsContent value="franchises" className="mt-0">
+             <FranchiseHub />
+          </TabsContent>
+
+          <TabsContent value="owned" className="mt-0 space-y-10 pb-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {ownedIP.length === 0 ? (
+                <EmptyVault message="The vault is currently empty. Assets enter here after their release windows close." />
               ) : (
-                independentProjects.map(p => (
-                   <LibraryItem key={p.id} project={p} />
-                ))
+                ownedIP.map(asset => <IPAssetCard key={asset.id} asset={asset} />)
               )}
             </div>
-          </div>
+          </TabsContent>
 
-          {/* First Look Deals */}
-          {firstLookDeals.length > 0 && (
-            <div className="space-y-4">
-               <div className="flex items-center gap-3 px-2">
-                <div className="w-1.5 h-4 rounded-full bg-blue-500" />
-                <h3 className="text-xs font-black uppercase tracking-widest text-foreground/80">
-                  Active First-Look Pipeline
-                </h3>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {firstLookDeals.map(deal => {
-                   const talent = gameState?.industry.talentPool[deal.talentId];
-                   return (
-                     <Card key={deal.talentId} className="glass-card border-l-4 border-l-blue-500/50 border-none group hover-glow">
-                        <CardContent className="p-5">
-                          <div className="flex justify-between items-start mb-3">
-                            <div>
-                              <div className="text-sm font-black uppercase tracking-tight group-hover:text-blue-400 transition-colors">{talent?.name || 'Unknown Talent'}</div>
-                              <div className="text-[9px] font-black uppercase text-muted-foreground tracking-widest">Exclusive Creator Deal</div>
-                            </div>
-                            <LinkIcon className="h-3.5 w-3.5 text-blue-500/40" />
-                          </div>
-                          <div className="flex items-center justify-between pt-3 border-t border-white/5">
-                            <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-widest">Term Remaining</span>
-                            <span className="text-xs font-mono font-bold text-blue-400">{deal.weeksRemaining}w</span>
-                          </div>
-                        </CardContent>
-                     </Card>
-                   );
-                })}
-              </div>
+          <TabsContent value="market" className="mt-0">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {marketIP.length === 0 ? (
+                 <EmptyVault message="No external IP rights are currently available for acquisition." />
+              ) : (
+                marketIP.map(asset => <IPAssetCard key={asset.id} asset={asset} isMarket />)
+              )}
             </div>
-          )}
-        </div>
-      </ScrollArea>
+          </TabsContent>
+
+          <TabsContent value="syndicated" className="mt-0">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {syndicatedIP.length === 0 ? (
+                <EmptyVault message="No titles have reached the historical syndication milestones." />
+              ) : (
+                syndicatedIP.map(asset => <IPAssetCard key={asset.id} asset={asset} />)
+              )}
+            </div>
+          </TabsContent>
+        </ScrollArea>
+      </Tabs>
     </div>
   );
 };
 
-const FranchiseCard = ({ projects }: { projects: Project[] }) => {
-  const root = projects.find(p => !p.parentProjectId) || projects[0];
-  const totalRevenue = projects.reduce((sum, p) => sum + p.revenue, 0);
+const IPAssetCard = ({ asset, isMarket = false }: { asset: IPAsset, isMarket?: boolean }) => {
+  const relevancePercent = asset.decayRate * 100;
+  const tier = SYNDICATION_TIERS[asset.syndicationTier || 'NONE'];
   
   return (
-    <Card className="glass-card group overflow-hidden relative border-none hover-glow">
-      {/* Decorative Branding */}
-      <div className="absolute -top-10 -right-10 w-32 h-32 bg-primary/5 rounded-full blur-3xl" />
-      <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-        <Star className="w-12 h-12 text-primary" />
-      </div>
-
-      <CardContent className="p-6 space-y-5">
-        <div className="flex justify-between items-start relative z-10">
-          <div>
-            <h4 className="text-xl font-black tracking-tighter uppercase group-hover:text-primary transition-colors">{root.title.split(':')[0]} IP Group</h4>
-            <div className="flex items-center gap-2 mt-1">
-              <Badge variant="outline" className="text-[9px] font-black border-primary/20 bg-primary/5 text-primary tracking-widest uppercase py-0">{root.genre}</Badge>
-              <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest">{projects.length} Total Units</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-6 pt-2">
-          <div className="space-y-1">
-            <div className="text-[9px] uppercase font-black text-muted-foreground tracking-widest flex items-center gap-1.5">
-              <DollarSign className="h-2.5 w-2.5" /> Gross Yield
-            </div>
-            <div className="text-xl font-black tracking-tight text-glow text-primary">{formatMoney(totalRevenue)}</div>
-          </div>
-          <div className="space-y-1">
-            <div className="text-[9px] uppercase font-black text-muted-foreground tracking-widest flex items-center gap-1.5">
-              <TrendingUp className="h-2.5 w-2.5" /> Critical Index
-            </div>
-            <div className="text-xl font-black tracking-tight text-foreground/80">
-              {(projects.reduce((sum, p) => sum + (p.reviewScore || 0), 0) / projects.length).toFixed(1)}/10
-            </div>
-          </div>
-        </div>
-        
-        <div className="space-y-2 pt-2 border-t border-white/5">
-          <div className="text-[9px] uppercase font-black text-muted-foreground tracking-widest">Property Components</div>
-          <div className="flex flex-wrap gap-1.5">
-            {projects.slice(-4).reverse().map(p => (
-              <Badge key={p.id} variant="outline" className="text-[9px] font-medium bg-white/5 border-white/5 hover:bg-white/10 transition-colors">
-                {p.title}
-              </Badge>
-            ))}
-            {projects.length > 4 && <Badge variant="outline" className="text-[9px] text-muted-foreground/60 border-none bg-transparent whitespace-nowrap">+ {projects.length - 4} more</Badge>}
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
-};
-
-const LibraryItem = ({ project }: { project: Project }) => {
-  return (
-    <Card className="glass-card border-none hover-glow group transition-all duration-300">
-      <CardContent className="p-5 flex flex-col h-full space-y-4">
-        <div className="flex justify-between items-start gap-3">
+    <Card className="glass-card border-none hover-glow group transition-all duration-300 relative overflow-hidden">
+      {/* Decorative background element */}
+      <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
+      
+      <CardContent className="p-6 flex flex-col h-full space-y-5 relative z-10">
+        <div className="flex justify-between items-start gap-4">
           <div className="min-w-0">
-            <h4 className="text-sm font-black uppercase tracking-tight truncate group-hover:text-secondary transition-colors">{project.title}</h4>
-            <div className="text-[9px] font-black uppercase text-muted-foreground/60 tracking-widest mt-0.5">{project.format} Asset</div>
+             <div className="flex items-center gap-2 mb-1">
+               {asset.syndicationTier !== 'NONE' && (
+                 <Badge 
+                   style={{ backgroundColor: `${tier.color}20`, color: tier.color, borderColor: `${tier.color}30` }}
+                   className="text-[8px] font-black uppercase tracking-widest px-1.5 h-4 border"
+                 >
+                    {tier.label}
+                 </Badge>
+               )}
+               {isMarket && (
+                 <Badge className="bg-amber-500/20 text-amber-400 border-amber-500/30 text-[8px] font-black uppercase tracking-widest px-1.5 h-4">
+                    Open Rights
+                 </Badge>
+               )}
+               {asset.syndicationTier === 'NONE' && asset.totalEpisodes > 40 && (
+                 <Badge variant="outline" className="border-pink-500/30 text-pink-400 text-[8px] font-black uppercase tracking-widest px-1.5 h-4">
+                    Reboot Potential
+                 </Badge>
+               )}
+             </div>
+             <h4 className="text-lg font-black uppercase tracking-tighter truncate group-hover:text-primary transition-colors">{asset.title}</h4>
+             <div className="text-[9px] font-black uppercase text-muted-foreground/60 tracking-widest flex items-center gap-1.5 mt-0.5">
+               <History className="h-2.5 w-2.5" /> {asset.totalEpisodes || 0} Episodes • Est. Catalog
+             </div>
           </div>
-          <Badge variant="outline" className="text-[9px] font-black border-white/5 bg-white/5 uppercase h-5">{project.genre}</Badge>
+          <div className="w-10 h-10 rounded bg-white/5 border border-white/10 flex items-center justify-center">
+            {isMarket ? <Globe className="h-5 w-5 text-amber-500/40" /> : <Lock className="h-5 w-5 text-primary/40" />}
+          </div>
         </div>
 
-        <div className="flex-1 py-1">
-           <p className="text-[11px] text-muted-foreground/80 italic line-clamp-2 leading-relaxed opacity-70 group-hover:opacity-100 transition-opacity">"{project.flavor}"</p>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4 pb-3 border-b border-white/5 pt-1">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded bg-emerald-500/10 flex items-center justify-center">
-              <DollarSign className="w-3 h-3 text-emerald-500" />
-            </div>
-            <span className="text-[11px] font-black tracking-tight">{formatMoney(project.revenue)}</span>
+        {/* Decay/Relevance Indicator */}
+        <div className="space-y-1.5">
+          <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-widest text-muted-foreground/80">
+            <span>Cultural Relevance</span>
+            <span className={relevancePercent < 20 ? 'text-red-500' : 'text-primary'}>{relevancePercent.toFixed(0)}%</span>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded bg-primary/10 flex items-center justify-center">
-              <Award className="w-3 h-3 text-primary" />
-            </div>
-            <span className="text-[11px] font-black tracking-tight">{project.reviewScore || 0}/10</span>
+          <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
+            <div 
+              className={cn(
+                "h-full transition-all duration-1000 rounded-full",
+                relevancePercent < 20 ? 'bg-red-500' : (asset.syndicationTier !== 'NONE' ? 'bg-purple-500' : 'bg-primary')
+              )} 
+              style={{ width: `${relevancePercent}%` }}
+            />
           </div>
         </div>
 
-        <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-widest text-muted-foreground/60">
-           <span>Release Week {project.releaseWeek}</span>
-           {project.isCultClassic && (
-             <span className="flex items-center gap-1.5 text-pink-500 text-glow animate-pulse">
-               <Zap className="h-2.5 w-2.5" />
-               Cult Status
-             </span>
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-2 gap-4 pt-2">
+           <div className="space-y-1">
+             <div className="text-[9px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-1.5">
+               <DollarSign className="h-2.5 w-2.5 text-emerald-500" /> Weekly Revenue
+             </div>
+             <div className="text-sm font-black tracking-tight text-emerald-400">
+               {formatMoney(Math.floor((asset.baseValue * asset.merchandisingMultiplier) * asset.decayRate))}
+             </div>
+           </div>
+           <div className="space-y-1">
+             <div className="text-[9px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-1.5">
+               <TrendingUp className="h-2.5 w-2.5 text-secondary" /> Equity Value
+             </div>
+             <div className="text-sm font-black tracking-tight">
+               {formatMoney(asset.baseValue)}
+             </div>
+           </div>
+        </div>
+
+        {/* Interaction Footer */}
+        <div className="pt-4 mt-auto border-t border-white/5 flex justify-between items-center">
+           <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40 leading-none">
+             Rights expire week {asset.rightsExpirationWeek}
+           </div>
+           {isMarket && (
+             <button className="text-[9px] font-black bg-amber-500/10 hover:bg-amber-500 text-amber-500 hover:text-black border border-amber-500/20 px-3 py-1.5 rounded transition-all uppercase tracking-widest">
+               Acquire & Reboot
+             </button>
            )}
         </div>
       </CardContent>
     </Card>
   );
 };
+
+const EmptyVault = ({ message }: { message: string }) => (
+  <div className="col-span-full py-32 text-center glass-card border-none">
+    <Library className="w-12 h-12 text-muted-foreground/10 mx-auto mb-4" />
+    <p className="text-sm font-bold text-muted-foreground/30 uppercase tracking-widest max-w-[280px] mx-auto leading-relaxed">{message}</p>
+  </div>
+);
+
+function cn(...classes: any[]) {
+  return classes.filter(Boolean).join(' ');
+}

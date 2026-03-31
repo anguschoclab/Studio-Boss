@@ -77,6 +77,9 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
         },
       ],
     },
+    ip: {
+      vault: []
+    },
     studio: {
       name: studioName,
       archetype,
