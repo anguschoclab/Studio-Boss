@@ -17,9 +17,9 @@ export function submitToFestival(
   const fest = FESTIVALS.find(f => f.body === festivalBody);
   const project = state.studio.internal.projects[projectId];
   
-  if (!fest || !project || state.cash < fest.cost) return null;
+  if (!fest || !project || state.finance.cash < fest.cost) return null;
   
-  if (project.status === 'development' || project.status === 'pitching') return null;
+  if (project.state === 'development' || project.state === 'pitching') return null;
   
   const submission: FestivalSubmission = {
     id: crypto.randomUUID(),

@@ -40,7 +40,7 @@ export function processDirectorDisputes(
   const updates: string[] = [];
   const newCrises: { projectId: string; crisis: Crisis }[] = [];
 
-  if (project.status !== 'production') return { updates, newCrises };
+  if (project.state !== 'production') return { updates, newCrises };
 
   // Find the director using pre-filtered contracts for this specific project (O(1) instead of O(N) scan)
   const dirContract = projectContracts.find(c => c.projectId === project.id);

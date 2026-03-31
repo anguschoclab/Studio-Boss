@@ -2,7 +2,7 @@ import { Project } from '@/engine/types';
 import { StateImpact } from '../types/state.types';
 
 export function calculateIPValue(project: Project): number {
-  if (project.status === 'development' || project.status === 'pitching' || project.status === 'needs_greenlight') {
+  if (project.state === 'development' || project.state === 'pitching' || project.state === 'needs_greenlight') {
     return project.budget * 0.1; // Base speculative value
   }
   

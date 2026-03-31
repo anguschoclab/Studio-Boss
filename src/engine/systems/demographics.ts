@@ -92,7 +92,7 @@ export function simulateMarketingCampaign(
   
   return {
     ...state,
-    cash: state.cash - spend,
+    finance: { ...state.finance, cash: state.finance.cash - spend },
     studio: {
       ...state.studio,
       internal: {

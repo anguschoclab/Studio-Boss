@@ -25,7 +25,7 @@ export function calculateInitialIPValue(project: Project): IPAsset {
   }
 
   // Syndication Tiering: Delegate to the logic engine
-  const episodes = project.tvDetails?.episodesAired || 0;
+  const episodes = (project as any).tvDetails?.episodesAired || 0;
   const syndicationTier = determineSyndicationTier(episodes, project.genre);
   const syndicationStatus = (syndicationTier !== 'NONE') ? 'SYNDICATED' : 'NONE';
 

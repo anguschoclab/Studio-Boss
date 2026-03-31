@@ -62,6 +62,8 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
 
   return {
     week: 1,
+    gameSeed: Math.floor(secureRandom() * 1_000_000),
+    tickCount: 0,
     game: { currentWeek: 1 },
     projects: { active: [] },
     finance: {
@@ -104,10 +106,10 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
       awards: [],
       newsHistory: [],
     },
-    // UI Data Vis Extensions (Epic 4)
     culture: {
       genrePopularity,
     },
     history: [],
+    eventHistory: [],
   };
 }

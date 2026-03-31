@@ -8,6 +8,9 @@ export function generateCrisis(project: Project): StateImpact | null {
   if (!template) return null;
 
   const crisis: ActiveCrisis = {
+    crisisId: `crisis-${crypto.randomUUID()}`,
+    triggeredWeek: 0,
+    haltedProduction: false,
     description: template.description,
     options: template.options,
     resolved: false,
