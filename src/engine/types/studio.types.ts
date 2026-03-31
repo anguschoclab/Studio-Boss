@@ -38,9 +38,12 @@ export interface StudioCulture {
   filmFirstVsTvFirst: number; // -100 (film) to 100 (tv)
 }
 
+import { WeeklyFinancialReport, FinanceState, NewsState } from './state.types';
+
 export interface GameState {
   week: number;
-  cash: number;
+  finance: FinanceState;
+  news: NewsState;
   studio: {
     name: string;
     archetype: ArchetypeKey;
@@ -49,7 +52,6 @@ export interface GameState {
     internal: {
       projects: Record<string, Project>;
       contracts: Contract[];
-      financeHistory: FinanceRecord[];
       firstLookDeals?: FirstLookDeal[];
     };
   };
@@ -61,7 +63,6 @@ export interface GameState {
   };
   industry: {
     rivals: RivalStudio[];
-    headlines: Headline[];
     families: Family[];
     agencies: Agency[];
     agents: Agent[];
@@ -75,11 +76,6 @@ export interface GameState {
   // UI Data Vis Extensions (Epic 4)
   culture: {
     genrePopularity: Record<string, number>;
-  };
-  finance: {
-    bankBalance: number;
-    yearToDateRevenue: number;
-    yearToDateExpenses: number;
   };
   history: StudioSnapshot[];
 }

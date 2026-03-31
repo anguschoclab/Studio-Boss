@@ -1,4 +1,4 @@
-import { Project, Contract, GameState, MarketEvent } from '@/engine/types';
+import { Project, Contract, GameState, MarketEvent, WeeklyFinancialReport } from '@/engine/types';
 import { groupContractsByProject } from '../utils';
 
 export function calculateProjectROI(project: Project): number {
@@ -8,7 +8,7 @@ export function calculateProjectROI(project: Project): number {
 }
 
 export function calculateStudioNetWorth(state: GameState): number {
-  let netWorth = state.cash;
+  let netWorth = state.finance.cash;
   
   // Add catalog value from IP rights (Sprint E)
   Object.values(state.studio.internal.projects).forEach(p => {
@@ -24,68 +24,27 @@ export function calculateStudioNetWorth(state: GameState): number {
   return netWorth;
 }
 
-export interface CashflowForecast {
-  week: number;
-  projectedRevenue: number;
-  projectedCosts: number;
-  projectedCash: number;
-}
+// --- Modular Cost Calculations ---
 
-export function generateCashflowForecast(state: GameState, weeksAhead: number = 8): CashflowForecast[] {
-  const forecast: CashflowForecast[] = [];
-  let currentCash = state.cash;
-  
-  // Short-term projection based on current weekly rates with decay.
-  const currentWeeklyCosts = calculateWeeklyCosts(Object.values(state.studio.internal.projects), state.market.activeMarketEvents || []);
-  const currentWeeklyRevenue = calculateWeeklyRevenue(Object.values(state.studio.internal.projects), state.studio.internal.contracts, state.market.activeMarketEvents || []);
-  
-  for (let i = 1; i <= weeksAhead; i++) {
-    // The Studio Comptroller: Increased aggregate revenue decay to 65% (Math.pow(0.35, i)) to simulate even steeper highly front-loaded modern box office drops.
-    const projectedRev = currentWeeklyRevenue * Math.pow(0.25, i); // The Studio Comptroller: Steeper front-loaded decay
-    // Costs stay flat for short-term projection
-    const projectedCost = currentWeeklyCosts;
-    currentCash += (projectedRev - projectedCost);
-    
-    forecast.push({
-      week: state.week + i,
-      projectedRevenue: projectedRev,
-      projectedCosts: projectedCost,
-      projectedCash: currentCash
-    });
-  }
-  
-  return forecast;
-}
-
-
-// ⚡ Bolt: Replaced chained .reduce passes with single for-loops to eliminate intermediate closures in hot loops
-export function calculateWeeklyCosts(projects: Project[], activeEvents: MarketEvent[] = []): number {
-  let eventMult = 1.0;
-  for (let i = 0; i < activeEvents.length; i++) {
-    eventMult *= activeEvents[i].costMultiplier;
-  }
-
+export function calculateProductionBurn(projects: Project[], eventMult: number = 1.0): number {
   let sum = 0;
   for (let i = 0; i < projects.length; i++) {
     const p = projects[i];
-    if (p.status === 'development' || p.status === 'production') {
+    if (p.status === 'production') {
       let costMultiplier = 1;
-      if (p.status === 'production' && p.contractType === 'upfront') {
-         costMultiplier = 0; // The network/streamer is paying for the production entirely
-      } else if (p.status === 'production' && p.contractType === 'deficit') {
-         // Studio pays 50% to retain backend rights
+      if (p.contractType === 'upfront') {
+         costMultiplier = 0; 
+      } else if (p.contractType === 'deficit') {
          costMultiplier = 0.5;
       }
 
-      // The Studio Comptroller: Ruthless overhead multipliers. Delays on $200M+ sets are financial catastrophes, jumping to 10.0x overhead burn.
-      if (p.status === 'production' && p.budget >= 200_000_000 && p.weeksInPhase > p.productionWeeks * 0.8) {
-         costMultiplier *= 12.0; // The Studio Comptroller: Ruthless overhead multipliers. Delays on $200M+ sets jump to 12.0x overhead burn.
-      } else if (p.status === 'production' && p.budget >= 100_000_000 && p.weeksInPhase > p.productionWeeks * 0.8) {
-         // The Studio Comptroller: Aggressive scaling for massive sets spiraling out of control (to 4.5x).
-         costMultiplier *= 5.5; // The Studio Comptroller: Aggressive scaling for massive sets spiraling out of control (to 5.5x).
-      } else if (p.status === 'production' && p.budget >= 50_000_000 && p.weeksInPhase > p.productionWeeks * 0.8) {
-         // Mid-to-high budget projects also face significant overtime/delay penalties (to 2.5x).
-         costMultiplier *= 3.0; // The Studio Comptroller: Mid-to-high budget projects face significant overtime/delay penalties (to 3.0x).
+      // The Studio Comptroller: Ruthless overhead multipliers for delayed massive sets.
+      if (p.budget >= 200_000_000 && p.weeksInPhase > p.productionWeeks * 0.8) {
+         costMultiplier *= 12.0; 
+      } else if (p.budget >= 100_000_000 && p.weeksInPhase > p.productionWeeks * 0.8) {
+         costMultiplier *= 5.5; 
+      } else if (p.budget >= 50_000_000 && p.weeksInPhase > p.productionWeeks * 0.8) {
+         costMultiplier *= 3.0; 
       }
 
       sum += (p.weeklyCost * costMultiplier * eventMult);
@@ -94,30 +53,39 @@ export function calculateWeeklyCosts(projects: Project[], activeEvents: MarketEv
   return sum;
 }
 
-// ⚡ Bolt: Replaced chained .reduce passes with single for-loops to eliminate intermediate closures in hot loops
-
-function applyIronicViewingMultiplier(baseRevenue: number): number {
-  // Cult classics flatten out and earn a steady ironic viewing revenue stream, preventing it from dropping off to 0
-  return Math.max(baseRevenue * 1.5, 100000); // Guarantees at least $100k weekly or 1.5x of whatever the base is
+export function calculateMarketingExpenses(projects: Project[], eventMult: number = 1.0): number {
+    let sum = 0;
+    for (let i = 0; i < projects.length; i++) {
+      const p = projects[i];
+      if (p.status === 'marketing') {
+        sum += (p.weeklyCost * eventMult);
+      }
+    }
+    return sum;
 }
 
-export function calculateWeeklyRevenue(projects: Project[], contracts: Contract[] = [], activeEvents: MarketEvent[] = []): number {
-  let eventMult = 1.0;
-  for (let i = 0; i < activeEvents.length; i++) {
-    eventMult *= activeEvents[i].revenueMultiplier;
-  }
-  const contractsByProject = groupContractsByProject(contracts);
+export function calculateOverhead(state: GameState): number {
+  // Base studio overhead
+  return 500000; 
+}
 
+// --- Modular Revenue Calculations ---
+
+function applyIronicViewingMultiplier(baseRevenue: number): number {
+  return Math.max(baseRevenue * 1.5, 100000); 
+}
+
+export function calculateBoxOfficeRevenue(projects: Project[], contracts: Contract[] = [], eventMult: number = 1.0): number {
+  const contractsByProject = groupContractsByProject(contracts);
   let sum = 0;
+  
   for (let i = 0; i < projects.length; i++) {
     const p = projects[i];
-    if (p.status === 'released') {
+    if (p.status === 'released' && p.format === 'film') {
       let revenue = p.weeklyRevenue;
 
       if (p.contractType === 'upfront') {
-          revenue = 0; // Studio traded all backend revenue for an upfront production fee
-      } else if (p.contractType === 'deficit') {
-          // Keep 100% of the calculated revenue for the syndication run
+          revenue = 0;
       }
 
       // Subtract backend participation
@@ -127,22 +95,17 @@ export function calculateWeeklyRevenue(projects: Project[], contracts: Contract[
         totalBackendPercent += projectContracts[j].backendPercent;
       }
 
-      // The Studio Comptroller: Backend points hit aggressively harder when revenue is massive. Modern agents squeeze studio margins ruthlessly on gross participation definitions.
+      // The Studio Comptroller: Backend points hit aggressively harder when revenue is massive.
       let backendMultiplier = 1.0;
-      if (revenue > 200_000_000) {
-        backendMultiplier = 6.0; // The Studio Comptroller: Hyper-hits obliterate studio margins due to massive gross point participations.
-      } else if (revenue > 150_000_000) {
-        backendMultiplier = 4.5; // The Studio Comptroller: Mega-hit payouts aggressively squeeze margin.
-      } else if (revenue > 100_000_000) {
-        backendMultiplier = 3.0; // The Studio Comptroller: Mega-hit payouts aggressively squeeze studio margin.
-      } else if (revenue > 50_000_000) {
-        backendMultiplier = 2.2; // The Studio Comptroller: Increased backend slice for strong hits.
-      } else if (revenue > 20_000_000) {
-        backendMultiplier = 1.5; // Good performers trigger escalating payout tiers.
-      }
+      if (revenue > 200_000_000) backendMultiplier = 6.0;
+      else if (revenue > 150_000_000) backendMultiplier = 4.5;
+      else if (revenue > 100_000_000) backendMultiplier = 3.0;
+      else if (revenue > 50_000_000) backendMultiplier = 2.2;
+      else if (revenue > 20_000_000) backendMultiplier = 1.5;
 
       const backendCut = revenue * ((totalBackendPercent * backendMultiplier) / 100);
       let netRevenue = (revenue - backendCut);
+      
       if (p.isCultClassic) {
          netRevenue = applyIronicViewingMultiplier(netRevenue);
       }
@@ -152,30 +115,64 @@ export function calculateWeeklyRevenue(projects: Project[], contracts: Contract[
   return sum;
 }
 
-export interface FinanceAdvanceResult {
-  newCash: number;
-  costs: number;
-  revenue: number;
-  financeHistory: { week: number; cash: number; revenue: number; costs: number }[];
+export function calculateDistributionRevenue(projects: Project[], eventMult: number = 1.0): number {
+    let sum = 0;
+    for (let i = 0; i < projects.length; i++) {
+      const p = projects[i];
+      // TV/Unscripted/Catalog revenue
+      if (p.status === 'released' && p.format !== 'film') {
+        sum += (p.weeklyRevenue * eventMult);
+      }
+    }
+    return sum;
 }
 
-export function advanceFinance(
-  state: GameState,
-  nextWeek: number
-): FinanceAdvanceResult {
-  const costs = calculateWeeklyCosts(Object.values(state.studio.internal.projects), state.market.activeMarketEvents || []);
-  const revenue = calculateWeeklyRevenue(Object.values(state.studio.internal.projects), state.studio.internal.contracts, state.market.activeMarketEvents || []);
-  const newCash = state.cash - costs + revenue;
+// --- Weekly Report Generation ---
 
-  const financeHistory = [
-    ...state.studio.internal.financeHistory,
-    { week: nextWeek, cash: newCash, revenue, costs },
-  ].slice(-52);
+export function generateWeeklyFinancialReport(state: GameState): WeeklyFinancialReport {
+  const projects = Object.values(state.studio.internal.projects);
+  const contracts = state.studio.internal.contracts;
+  const activeEvents = state.market.activeMarketEvents || [];
+
+  let costMult = 1.0;
+  let revMult = 1.0;
+  for (const e of activeEvents) {
+    costMult *= e.costMultiplier;
+    revMult *= e.revenueMultiplier;
+  }
+
+  const production = calculateProductionBurn(projects, costMult);
+  const marketing = calculateMarketingExpenses(projects, costMult);
+  const overhead = calculateOverhead(state);
+
+  const boxOffice = calculateBoxOfficeRevenue(projects, contracts, revMult);
+  const distribution = calculateDistributionRevenue(projects, revMult);
+  const other = 0; // Future: licensing, merchandising, etc.
+
+  const totalRevenue = boxOffice + distribution + other;
+  const totalExpenses = production + marketing + overhead;
+  const netProfit = totalRevenue - totalExpenses;
 
   return {
-    newCash,
-    costs,
-    revenue,
-    financeHistory,
+    week: state.week,
+    year: Math.floor((state.week - 1) / 52) + 1,
+    startingCash: state.finance.cash,
+    revenue: { boxOffice, distribution, other },
+    expenses: { production, marketing, overhead },
+    endingCash: state.finance.cash + netProfit,
+    netProfit,
   };
+}
+
+// Legacy wrappers to prevent breaking existing code during transition
+export function calculateWeeklyCosts(projects: Project[], activeEvents: MarketEvent[] = []): number {
+  let costMult = 1.0;
+  for (const e of activeEvents) costMult *= e.costMultiplier;
+  return calculateProductionBurn(projects, costMult) + 500000; // Static overhead for now
+}
+
+export function calculateWeeklyRevenue(projects: Project[], contracts: Contract[] = [], activeEvents: MarketEvent[] = []): number {
+  let revMult = 1.0;
+  for (const e of activeEvents) revMult *= e.revenueMultiplier;
+  return calculateBoxOfficeRevenue(projects, contracts, revMult) + calculateDistributionRevenue(projects, revMult);
 }

@@ -2,115 +2,127 @@ import { useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { formatMoney } from '@/engine/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from 'recharts';
-import { BarChartIcon } from 'lucide-react';
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, ReferenceLine } from 'recharts';
+import { BarChartIcon, TrendingUp, TrendingDown } from 'lucide-react';
 
 export const YearInReviewChart = () => {
-  const snapshots = useGameStore(s => s.snapshots);
+  const ledger = useGameStore(s => s.finance.ledger);
 
   const chartData = useMemo(() => {
-    return snapshots.map(s => ({
-      name: `Year ${s.year}`,
-      funds: s.funds,
-      completed: s.completedProjects,
-      active: s.activeProjects,
-      prestige: s.totalPrestige
+    return ledger.slice(-52).map(entry => ({
+      name: `W${entry.week}`,
+      cash: entry.endingCash,
+      profit: entry.netProfit,
+      revenue: entry.revenue.boxOffice + entry.revenue.distribution + entry.revenue.other,
+      expenses: entry.expenses.production + entry.expenses.marketing + entry.expenses.overhead
     }));
-  }, [snapshots]);
+  }, [ledger]);
 
-  if (snapshots.length === 0) {
+  if (ledger.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-64 border border-dashed rounded-lg opacity-50 bg-muted">
-        <BarChartIcon className="w-8 h-8 mb-2 text-muted-foreground" />
-        <p className="text-sm font-medium">Awaiting End of Year 1 Data...</p>
+      <div className="flex flex-col items-center justify-center h-[350px] border border-dashed rounded-xl opacity-50 bg-muted/20 backdrop-blur-sm">
+        <div className="bg-primary/10 p-4 rounded-full mb-4 animate-pulse">
+           <BarChartIcon className="w-8 h-8 text-primary/60" />
+        </div>
+        <p className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Initializing Financial Ledger...</p>
+        <p className="text-[10px] text-muted-foreground/60 mt-1 uppercase">Simulate one week to generate data</p>
       </div>
     );
   }
 
+  const lastEntry = ledger[ledger.length - 1];
+  const isProfitable = lastEntry.netProfit >= 0;
+
   return (
-    <Card className="border-border/40 bg-card/60 bg-gradient-to-br from-card/80 to-transparent backdrop-blur-md shadow-sm hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-300">
-      <CardHeader className="pb-4 border-b border-border/30 bg-background/40 backdrop-blur-sm">
-        <CardTitle className="text-xs font-display font-black uppercase tracking-widest text-foreground/80 drop-shadow-sm flex justify-between items-center">
-          <span>Historical Studio Performance</span>
-          <span className="text-primary font-mono text-[10px] tracking-normal uppercase bg-primary/10 px-2 py-0.5 rounded border border-primary/20">{snapshots.length} Year{snapshots.length > 1 ? 's' : ''} Record</span>
-        </CardTitle>
+    <Card className="border-border/40 bg-card/40 backdrop-blur-xl shadow-2xl relative overflow-hidden group">
+      {/* Decorative Gradient Overlay */}
+      <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -mr-32 -mt-32 transition-colors duration-500 group-hover:bg-primary/10" />
+      
+      <CardHeader className="pb-2 flex flex-row items-center justify-between space-y-0">
+        <div>
+          <CardTitle className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-1">
+            Studio Financial Performance
+          </CardTitle>
+          <div className="flex items-baseline gap-2">
+            <span className="text-2xl font-black tracking-tight font-display italic">
+              {formatMoney(lastEntry.endingCash)}
+            </span>
+            <div className={`flex items-center gap-0.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full ${isProfitable ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'}`}>
+              {isProfitable ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
+              {formatMoney(Math.abs(lastEntry.netProfit))}
+            </div>
+          </div>
+        </div>
+        <div className="text-right">
+          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Week {lastEntry.week}</p>
+          <p className="text-[10px] font-mono font-bold text-primary italic">ROLLING 52-WEEK VIEW</p>
+        </div>
       </CardHeader>
-      <CardContent className="pt-6 h-[350px]">
+
+      <CardContent className="h-[300px] pt-4">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={chartData} margin={{ top: 10, right: 30, left: 20, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+          <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+            <defs>
+              <linearGradient id="colorCash" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
+                <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
+              </linearGradient>
+              <linearGradient id="colorProfit" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor={isProfitable ? "#10b981" : "#f43f5e"} stopOpacity={0.2}/>
+                <stop offset="95%" stopColor={isProfitable ? "#10b981" : "#f43f5e"} stopOpacity={0}/>
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.03)" />
             <XAxis 
               dataKey="name" 
-              stroke="hsl(215, 20%, 35%)" 
-              fontSize={11} 
+              hide={chartData.length > 20}
+              stroke="rgba(255,255,255,0.2)" 
+              fontSize={10} 
               tickLine={false} 
-              axisLine={false} 
-              fontFamily="inherit"
-              fontWeight="bold"
+              axisLine={false}
+              tick={{ fill: 'rgba(255,255,255,0.4)', fontWeight: 700 }}
             />
             <YAxis 
-              yAxisId="left"
-              stroke="hsl(215, 20%, 35%)" 
-              fontSize={11} 
-              tickFormatter={v => formatMoney(v)} 
+              stroke="rgba(255,255,255,0.2)" 
+              fontSize={10} 
+              tickFormatter={v => `$${(v / 1e6).toFixed(0)}M`}
               tickLine={false} 
-              axisLine={false} 
-              fontFamily="inherit"
-            />
-            <YAxis 
-              yAxisId="right"
-              orientation="right"
-              stroke="hsl(215, 20%, 35%)" 
-              fontSize={11} 
-              tickLine={false} 
-              axisLine={false} 
-              fontFamily="inherit"
+              axisLine={false}
+              tick={{ fill: 'rgba(255,255,255,0.4)', fontWeight: 700 }}
             />
             <Tooltip
               contentStyle={{ 
-                background: 'rgba(15, 23, 42, 0.9)', 
-                border: '1px solid rgba(51, 65, 85, 0.6)', 
-                borderRadius: '12px', 
-                fontSize: '12px', 
-                backdropFilter: 'blur(16px)', 
-                boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
-                fontFamily: 'inherit',
-                color: '#fff'
+                background: 'rgba(2, 6, 23, 0.95)', 
+                border: '1px solid rgba(255,255,255,0.1)', 
+                borderRadius: '12px',
+                backdropFilter: 'blur(10px)',
+                boxShadow: '0 20px 40px -10px rgba(0,0,0,0.5)',
+                padding: '12px'
               }}
-              itemStyle={{ fontWeight: 700 }}
-              labelStyle={{ fontWeight: 900, marginBottom: '8px', color: '#fbbf24', textTransform: 'uppercase', letterSpacing: '0.05em' }}
-              formatter={(value: number, name: string) => {
-                if (name === 'funds') return [formatMoney(value), 'Studio Funds'];
-                if (name === 'completed') return [value, 'Projects Released'];
-                return [value, name.charAt(0).toUpperCase() + name.slice(1)];
-              }}
+              labelStyle={{ color: 'rgba(255,255,255,0.5)', fontWeight: 900, fontSize: '10px', textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '0.1em' }}
+              itemStyle={{ fontSize: '12px', fontWeight: 700, padding: '2px 0' }}
+              formatter={(value: any) => [formatMoney(value as number), '']}
             />
-            <Legend 
-              verticalAlign="top" 
-              height={36} 
-              iconType="circle" 
-              formatter={(value) => <span className="text-[10px] font-black uppercase tracking-widest text-foreground/70">{value === 'funds' ? 'Financial Growth' : value === 'completed' ? 'Output' : value}</span>}
-            />
-            <Line 
-              yAxisId="left"
+            <ReferenceLine y={0} stroke="rgba(255,255,255,0.1)" strokeWidth={2} />
+            <Area 
               type="monotone" 
-              dataKey="funds" 
-              stroke="hsl(48, 96%, 53%)" 
-              strokeWidth={4} 
-              dot={{ r: 6, fill: 'hsl(48, 96%, 53%)', strokeWidth: 2, stroke: '#fff' }} 
-              activeDot={{ r: 8, strokeWidth: 0 }}
-              style={{ filter: 'drop-shadow(0 0 8px rgba(234,179,8,0.5))' }}
+              dataKey="cash" 
+              stroke="hsl(var(--primary))" 
+              strokeWidth={3}
+              fillOpacity={1} 
+              fill="url(#colorCash)" 
+              animationDuration={1500}
             />
-            <Line 
-              yAxisId="right"
+            <Area 
               type="monotone" 
-              dataKey="completed" 
-              stroke="hsl(142, 71%, 45%)" 
-              strokeWidth={3} 
-              dot={{ r: 4, fill: 'hsl(142, 71%, 45%)' }}
-              style={{ filter: 'drop-shadow(0 0 6px rgba(34,197,94,0.4))' }}
+              dataKey="profit" 
+              stroke={isProfitable ? "#10b981" : "#f43f5e"} 
+              strokeWidth={2}
+              fillOpacity={1} 
+              fill="url(#colorProfit)" 
+              animationDuration={2000}
             />
-          </LineChart>
+          </AreaChart>
         </ResponsiveContainer>
       </CardContent>
     </Card>

@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { GameState, WeekSummary, ArchetypeKey } from '@/engine/types';
+import { GameState, WeekSummary, ArchetypeKey, FinanceState, NewsState } from '@/engine/types';
 import { initializeGame } from '@/engine/core/gameInit';
 import { advanceWeek } from '@/engine/core/weekAdvance';
 import { saveGame, loadGame, getSaveSlots, SaveSlotInfo } from '@/persistence/saveLoad';
@@ -33,10 +33,12 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
   ...createSnapshotSlice(set, get, ...args),
 
   newGame: (studioName, archetype) => {
-    set(() => {
-      const gameState = initializeGame(studioName, archetype);
-      saveGame(0, gameState);
-      return { gameState };
+    const gameState = initializeGame(studioName, archetype);
+    saveGame(0, gameState);
+    set({ 
+      gameState,
+      finance: gameState.finance,
+      news: gameState.news
     });
   },
 
@@ -50,17 +52,20 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
       summary = result.summary;
       nextState = result.newState;
 
-      if (state.gameState === result.newState) return state; // Prevent unnecessary re-renders
+      if (state.gameState === result.newState) return state; 
 
       saveGame(0, result.newState);
-      return { gameState: result.newState };
+      return { 
+        gameState: result.newState,
+        finance: result.newState.finance,
+        news: result.newState.news
+      };
     });
 
     if (!summary || !nextState) throw new Error('Failed to advance week');
 
     // --- Modal Queue Integration ---
     const ui = useUIStore.getState();
-
     const finalState = nextState as GameState;
 
     // 1. Crises/Scandals
@@ -110,7 +115,6 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
     // 4. Yearly Snapshot (Sprint G)
     if (summary && ((summary as any).fromWeek % 52 === 0) && (summary as any).fromWeek > 0) {
       get().captureSnapshot();
-      // Future Hook: trigger EndOfYearAwards system here
     }
 
     return summary;
@@ -124,9 +128,10 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
   loadFromSlot: (slot) => {
     const state = loadGame(slot);
     if (state) {
-      set((s) => {
-        if (s.gameState === state) return s;
-        return { gameState: state };
+      set({ 
+        gameState: state,
+        finance: state.finance,
+        news: state.news
       });
       return true;
     }
@@ -137,6 +142,10 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
 
   clearGame: () => set((state) => {
     if (state.gameState === null) return state;
-    return { gameState: null };
+    return { 
+        gameState: null,
+        finance: { cash: 0, ledger: [] } as any,
+        news: { headlines: [] } as any
+    };
   }),
 }));

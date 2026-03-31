@@ -61,7 +61,20 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
 
   return {
     week: 1,
-    cash: arch.startingCash,
+    finance: {
+      cash: arch.startingCash,
+      ledger: [],
+    },
+    news: {
+      headlines: [
+        {
+          id: 'h-init',
+          text: `${studioName} launches operations — the industry takes notice.`,
+          week: 1,
+          category: 'general' as const,
+        },
+      ],
+    },
     studio: {
       name: studioName,
       archetype,
@@ -69,7 +82,6 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
       internal: {
         projects: {},
         contracts: [],
-        financeHistory: [{ week: 1, cash: arch.startingCash, revenue: 0, costs: 0 }],
       }
     },
     market: {
@@ -82,14 +94,6 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
     },
     industry: {
       rivals,
-      headlines: [
-        {
-          id: 'h-init',
-          text: `${studioName} launches operations — the industry takes notice.`,
-          week: 1,
-          category: 'general' as const,
-        },
-      ],
       families,
       agencies,
       agents,
@@ -100,11 +104,6 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
     // UI Data Vis Extensions (Epic 4)
     culture: {
       genrePopularity,
-    },
-    finance: {
-      bankBalance: arch.startingCash,
-      yearToDateRevenue: 0,
-      yearToDateExpenses: 0,
     },
     history: [],
   };

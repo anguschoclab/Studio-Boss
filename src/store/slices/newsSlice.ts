@@ -1,12 +1,18 @@
 import { StateCreator } from 'zustand';
-import { NewsEvent } from '@/engine/types';
+import { NewsEvent, Headline, NewsState } from '@/engine/types';
 import { GameStore } from '../gameStore';
 
 export interface NewsSlice {
+  news: NewsState;
   logNewsEvent: (event: Omit<NewsEvent, 'id' | 'week'>) => void;
+  addHeadline: (headline: Partial<Headline>) => void;
 }
 
 export const createNewsSlice: StateCreator<GameStore, [], [], NewsSlice> = (set, get) => ({
+  news: {
+    headlines: [],
+  },
+
   logNewsEvent: (event) => {
     set((s) => {
       if (!s.gameState) return s;
@@ -14,8 +20,11 @@ export const createNewsSlice: StateCreator<GameStore, [], [], NewsSlice> = (set,
       const newEvent = {
         ...event,
         id: `ne-${crypto.randomUUID()}`,
-        week: s.gameState.week
-      };
+        week: s.gameState.week,
+        type: event.type || 'STUDIO_EVENT',
+        headline: event.headline || '',
+        description: event.description || ''
+      } as NewsEvent;
 
       const history = s.gameState.industry.newsHistory || [];
       
@@ -24,7 +33,36 @@ export const createNewsSlice: StateCreator<GameStore, [], [], NewsSlice> = (set,
           ...s.gameState,
           industry: {
             ...s.gameState.industry,
-            newsHistory: [newEvent, ...history].slice(0, 100) // Keep last 100 events
+            newsHistory: [newEvent, ...history].slice(0, 100)
+          }
+        }
+      };
+    });
+  },
+
+  addHeadline: (h) => {
+    set((s) => {
+      if (!s.gameState) return s;
+
+      const newHeadline: Headline = {
+        id: h.id || crypto.randomUUID(),
+        week: h.week || s.gameState.week,
+        category: h.category || 'general',
+        text: h.text || '',
+      };
+
+      const headlines = [newHeadline, ...s.news.headlines].slice(0, 50);
+
+      return {
+        news: {
+          ...s.news,
+          headlines,
+        },
+        gameState: {
+          ...s.gameState,
+          news: {
+            ...s.gameState.news,
+            headlines,
           }
         }
       };

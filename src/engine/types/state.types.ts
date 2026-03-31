@@ -1,5 +1,32 @@
 import { NewsEvent, Headline, Project, Scandal, Opportunity, GenreTrend, MarketEvent, Rumor, Buyer, FestivalSubmission, FinanceRecord } from './index';
 
+export interface WeeklyFinancialReport {
+  week: number;
+  year: number;
+  startingCash: number;
+  revenue: {
+    boxOffice: number;
+    distribution: number;
+    other: number;
+  };
+  expenses: {
+    production: number;
+    marketing: number;
+    overhead: number;
+  };
+  endingCash: number;
+  netProfit: number;
+}
+
+export interface FinanceState {
+  cash: number;
+  ledger: WeeklyFinancialReport[];
+}
+
+export interface NewsState {
+  headlines: Headline[];
+}
+
 export interface StateImpact {
   cashChange?: number;
   prestigeChange?: number;

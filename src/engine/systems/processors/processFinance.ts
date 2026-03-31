@@ -1,26 +1,16 @@
-import { GameState, FinanceRecord } from '@/engine/types';
-import { StateImpact } from '../../types/state.types';
-import { calculateWeeklyCosts, calculateWeeklyRevenue } from '../finance';
+import { GameState } from '@/engine/types';
+import { generateWeeklyFinancialReport } from '../finance';
 
-export const processFinance = (
-    state: GameState
-): StateImpact => {
-    const nextWeek = state.week + 1;
-    const costs = calculateWeeklyCosts(Object.values(state.studio.internal.projects), state.market.activeMarketEvents || []);
-    const revenue = calculateWeeklyRevenue(Object.values(state.studio.internal.projects), state.studio.internal.contracts, state.market.activeMarketEvents || []);
-    const newCash = state.cash - costs + revenue;
-
-    let financeHistory = state.studio.internal.financeHistory || [];
-    if (financeHistory.length >= 52) {
-        financeHistory = financeHistory.slice(1);
-    }
-    const newHistory: FinanceRecord[] = new Array(financeHistory.length + 1);
-    for (let i = 0; i < financeHistory.length; i++) newHistory[i] = financeHistory[i];
-    newHistory[financeHistory.length] = { week: nextWeek, cash: newCash, revenue, costs };
+export function processFinance(state: GameState): GameState {
+    const report = generateWeeklyFinancialReport(state);
 
     return {
-        cashChange: revenue - costs,
-        newFinanceHistory: newHistory
+        ...state,
+        finance: {
+            ...state.finance,
+            cash: report.endingCash,
+            ledger: [...state.finance.ledger, report].slice(-100), // Keep last 100 weeks
+        }
     };
-};
+}
 

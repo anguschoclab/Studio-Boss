@@ -210,7 +210,7 @@ export function applyStateImpact(state: GameState, impact: import('@/engine/type
   const prestigeChange = impact.prestigeChange || 0;
   
   // 6. Update Headlines & News History
-  let newHeadlines = [...(state.industry.headlines || [])];
+  let newHeadlines = [...(state.news.headlines || [])];
   if (impact.newHeadlines && impact.newHeadlines.length > 0) {
     const hlines = impact.newHeadlines.map(h => ({
       id: h.id || `h-${crypto.randomUUID()}`,
@@ -276,7 +276,15 @@ export function applyStateImpact(state: GameState, impact: import('@/engine/type
   // Assemble final state
   return {
     ...newState,
-    cash: state.cash + cashChange,
+    finance: {
+      ...state.finance,
+      cash: state.finance.cash + cashChange,
+      ledger: (impact.newFinanceHistory as any) || state.finance.ledger,
+    },
+    news: {
+      ...state.news,
+      headlines: newHeadlines,
+    },
     studio: {
       ...state.studio,
       prestige: Math.max(0, state.studio.prestige + prestigeChange),
@@ -284,7 +292,6 @@ export function applyStateImpact(state: GameState, impact: import('@/engine/type
         ...state.studio.internal,
         projects: projectsChanged ? newProjects : state.studio.internal.projects,
         contracts: newContracts,
-        financeHistory: impact.newFinanceHistory || state.studio.internal.financeHistory,
       }
     },
     industry: {
@@ -293,7 +300,6 @@ export function applyStateImpact(state: GameState, impact: import('@/engine/type
       rivals: rivalsChanged ? newRivals : state.industry.rivals,
       awards: newAwards,
       scandals: scandalsChanged ? newScandals : state.industry.scandals,
-      headlines: newHeadlines,
       newsHistory: newNewsHistory,
       rumors: impact.newRumors || state.industry.rumors,
       festivalSubmissions: impact.newFestivalSubmissions || state.industry.festivalSubmissions

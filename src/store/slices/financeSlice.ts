@@ -1,50 +1,78 @@
 import { StateCreator } from 'zustand';
 import { GameStore } from '../gameStore';
 import { handleReleasePhaseEntry, executeMarketing } from '@/engine/systems/projects';
+import { WeeklyFinancialReport, FinanceState, Contract, Project } from '@/engine/types';
 
 export interface FinanceSlice {
-  transactions: Record<string, any>;
+  finance: FinanceState;
+  addLedgerEntry: (report: WeeklyFinancialReport) => void;
   launchMarketingCampaign: (projectId: string, budget: number, domesticPct: number, angle: string) => void;
   executeMarketingEvent: (eventName: 'superbowl_ad' | 'viral_campaign' | 'press_tour', cost: number, projectId: string) => void;
   addFunds: (amount: number) => void;
 }
 
 export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> = (set, get) => ({
-  transactions: {},
+  finance: {
+    cash: 500000000,
+    ledger: [],
+  },
+
+  addLedgerEntry: (report: WeeklyFinancialReport) =>
+    set((state) => {
+      if (!state.gameState) return state;
+      return {
+        finance: {
+          ...state.finance,
+          cash: report.endingCash,
+          ledger: [...state.finance.ledger, report].slice(-100),
+        },
+        gameState: {
+          ...state.gameState,
+          finance: {
+            ...state.gameState.finance,
+            cash: report.endingCash,
+            ledger: [...state.gameState.finance.ledger, report].slice(-100),
+          },
+        },
+      };
+    }),
+
   launchMarketingCampaign: (projectId, budget, domesticPct, angle) => {
     set((s) => {
       if (!s.gameState) return s;
       const state = s.gameState;
-      if (budget > state.cash) return s;
+      if (budget > state.finance.cash) return s;
 
-      const pIndex = state.studio.internal.projects.findIndex(p => p.id === projectId);
+      const pIndex = Object.values(state.studio.internal.projects).findIndex(p => p.id === projectId);
       if (pIndex === -1) return s;
 
-      const originalProject = state.studio.internal.projects[pIndex];
+      // Extract original project
+      const originalProject = Object.values(state.studio.internal.projects)[pIndex];
       if (originalProject.status !== 'marketing') return s;
 
-      const newCash = state.cash - budget;
+      const newCash = state.finance.cash - budget;
       const { project: p } = executeMarketing(originalProject, budget, domesticPct, angle);
 
-      const contracts = [];
-      for (let i = 0; i < state.studio.internal.contracts.length; i++) {
-        const c = state.studio.internal.contracts[i];
+      const contracts: Contract[] = [];
+      const allContracts = state.studio.internal.contracts;
+      for (let i = 0; i < allContracts.length; i++) {
+        const c = allContracts[i];
         if (c.projectId === p.id) {
           contracts.push(c);
         }
       }
 
+      const talentPool = state.industry.talentPool;
       const talentMap = new Map<string, any>();
-      for (let i = 0; i < state.industry.talentPool.length; i++) {
-        const t = state.industry.talentPool[i];
-        talentMap.set(t.id, t);
-      }
+      Object.keys(talentPool).forEach(id => {
+        talentMap.set(id, talentPool[id]);
+      });
 
       const result = handleReleasePhaseEntry(p, state.week, state.studio.prestige, contracts, talentMap);
 
-      const newHeadlines = [...state.industry.headlines];
+      const headlines = [...state.news.headlines];
       if (result.update) {
-        newHeadlines.unshift({
+        headlines.unshift({
           id: crypto.randomUUID(),
           week: state.week,
           category: 'general' as const,
@@ -52,13 +80,19 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
         });
       }
 
-      const updatedProjects = [...state.studio.internal.projects];
-      updatedProjects[pIndex] = p;
+      const updatedProjects = { ...state.studio.internal.projects, [p.id]: p };
 
       return {
+        finance: {
+            ...s.finance,
+            cash: newCash
+        },
         gameState: {
           ...state,
-          cash: newCash,
+          finance: {
+            ...state.finance,
+            cash: newCash,
+          },
           studio: {
             ...state.studio,
             internal: {
@@ -66,9 +100,9 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
               projects: updatedProjects,
             }
           },
-          industry: {
-            ...state.industry,
-            headlines: newHeadlines,
+          news: {
+            ...state.news,
+            headlines,
           }
         }
       };
@@ -81,20 +115,19 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
 
   addFunds: (amount) => {
     set((s) => {
-      const id = crypto.randomUUID();
-      return {
-        transactions: {
-          ...s.transactions,
-          [id]: { id, amount, date: new Date().toISOString() }
-        }
-      };
-    });
-    set((s) => {
       if (!s.gameState) return s;
+      const newCash = s.finance.cash + amount;
       return {
+        finance: {
+          ...s.finance,
+          cash: newCash
+        },
         gameState: {
           ...s.gameState,
-          cash: s.gameState.cash + amount
+          finance: {
+            ...s.gameState.finance,
+            cash: newCash
+          }
         }
       };
     });
