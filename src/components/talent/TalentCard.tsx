@@ -7,6 +7,8 @@ import { formatMoney } from '@/engine/utils';
 import { AGENCY_ARCHETYPES } from '@/engine/data/archetypes';
 import { cn } from '@/lib/utils';
 import { useGameStore } from '@/store/gameStore';
+import { TalentAvatar } from './TalentAvatar';
+import { getTalentVisualAge, getCountryFlag } from '@/engine/generators/avatarGenerator';
 
 interface TalentCardProps {
   talent: Talent;
@@ -16,6 +18,7 @@ interface TalentCardProps {
 
 export const TalentCard: React.FC<TalentCardProps> = ({ talent, className, showStarMeter }) => {
   const gameState = useGameStore(s => s.gameState);
+  const currentWeek = gameState?.week ?? 1;
   const agencyMap = new Map(gameState?.industry.agencies.map(a => [a.id, a]) || []);
   const agency = talent.agencyId ? agencyMap.get(talent.agencyId) : null;
   const archetype = agency?.archetype ? AGENCY_ARCHETYPES[agency.archetype] : null;
@@ -26,9 +29,13 @@ export const TalentCard: React.FC<TalentCardProps> = ({ talent, className, showS
 
   const starMeterTrend = (talent.starMeter || 50) > 75 ? 'up' : (talent.starMeter || 50) < 30 ? 'down' : 'stable';
 
+  const visualAge = getTalentVisualAge(talent, currentWeek);
+  const countryFlag = getCountryFlag(talent.demographics.country);
+  const genderSymbol = talent.demographics.gender === 'MALE' ? '♂' : talent.demographics.gender === 'FEMALE' ? '♀' : '⚧';
+
   return (
     <div className={cn(
-      "p-4 rounded-xl border backdrop-blur-md transition-all duration-300 space-y-3.5 group relative overflow-hidden",
+      "p-4 rounded-xl border backdrop-blur-md transition-all duration-300 space-y-3 group relative overflow-hidden",
       talent.prestige >= 80 
         ? 'border-primary/50 shadow-[0_0_20px_rgba(234,179,8,0.15)] bg-card/80 bg-gradient-to-br from-primary/10 to-transparent' 
         : 'border-border/60 bg-card/60 bg-gradient-to-br from-card/80 to-transparent',
@@ -37,23 +44,54 @@ export const TalentCard: React.FC<TalentCardProps> = ({ talent, className, showS
     )}>
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
-      <div className="flex items-start justify-between gap-2 relative z-10">
-        <div className="flex flex-col gap-1">
-          <div className="flex items-center gap-2">
-            <h4 className="font-display font-bold text-[15px] text-foreground leading-tight group-hover:text-primary transition-colors drop-shadow-sm">{talent.name}</h4>
-            {talent.hasRazzie && (
-              <Badge variant="destructive" className="text-[8px] px-1 py-0 h-4 bg-pink-500/20 text-pink-500 border-pink-500/30">RAZZIE</Badge>
-            )}
+      {/* Header: Avatar + Name + Badges */}
+      <div className="flex items-start gap-3 relative z-10">
+        <TalentAvatar talent={talent} size="sm" className="mt-0.5 group-hover:border-primary/30 transition-colors" />
+        
+        <div className="flex-1 min-w-0">
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex flex-col gap-1 min-w-0">
+              <div className="flex items-center gap-1.5">
+                <h4 className="font-display font-bold text-[14px] text-foreground leading-tight group-hover:text-primary transition-colors drop-shadow-sm truncate">{talent.name}</h4>
+                {talent.hasRazzie && (
+                  <Badge variant="destructive" className="text-[8px] px-1 py-0 h-4 bg-pink-500/20 text-pink-500 border-pink-500/30 shrink-0">RAZZIE</Badge>
+                )}
+              </div>
+              
+              {/* Demographic Info Row */}
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <span className="text-[9px] font-bold text-muted-foreground/70 bg-white/5 px-1.5 py-0.5 rounded border border-white/5">
+                  {visualAge}y {genderSymbol}
+                </span>
+                <span className="text-[9px] font-bold text-muted-foreground/70 bg-white/5 px-1.5 py-0.5 rounded border border-white/5">
+                  {countryFlag} {talent.demographics.country}
+                </span>
+                {talent.accessLevel !== 'outsider' && talent.accessLevel !== 'soft-access' && (
+                  <span className="text-[8px] font-black tracking-widest text-secondary uppercase drop-shadow-[0_0_2px_rgba(255,161,22,0.4)]">
+                    {talent.accessLevel}
+                  </span>
+                )}
+              </div>
+            </div>
+            
+            <div className="flex flex-col items-end gap-1 shrink-0">
+              <Badge variant="outline" className="text-[9px] font-black tracking-widest uppercase bg-background/80 backdrop-blur-md border-border/50 text-foreground/80 group-hover:border-primary/30 transition-colors shadow-sm">
+                {talent.roles[0]}
+              </Badge>
+              {showStarMeter && (
+                <div className="flex items-center gap-1 bg-black/40 px-1.5 py-0.5 rounded border border-white/5">
+                  <Star className="w-2.5 h-2.5 text-primary fill-primary" />
+                  <span className="text-[10px] font-bold text-primary">{talent.starMeter || 50}</span>
+                  {starMeterTrend === 'up' && <TrendingUp className="w-2.5 h-2.5 text-success" />}
+                  {starMeterTrend === 'down' && <TrendingDown className="w-2.5 h-2.5 text-destructive" />}
+                </div>
+              )}
+            </div>
           </div>
           
-          <div className="flex flex-wrap gap-1.5">
-            {talent.accessLevel !== 'outsider' && talent.accessLevel !== 'soft-access' && (
-              <span className="text-[9px] font-black tracking-widest text-secondary uppercase drop-shadow-[0_0_2px_rgba(255,161,22,0.4)]">
-                {talent.accessLevel}
-              </span>
-            )}
-            
-            {agency && (
+          {/* Agency Badge */}
+          {agency && (
+            <div className="mt-1.5">
               <HoverCard>
                 <HoverCardTrigger asChild>
                   <span className="text-[9px] font-bold tracking-widest text-muted-foreground/80 lowercase bg-background/50 backdrop-blur-sm px-1.5 py-0.5 rounded border border-border/40 shadow-sm group-hover:border-primary/20 transition-colors cursor-help">
@@ -76,26 +114,13 @@ export const TalentCard: React.FC<TalentCardProps> = ({ talent, className, showS
                   </HoverCardContent>
                 )}
               </HoverCard>
-            )}
-          </div>
-        </div>
-        
-        <div className="flex flex-col items-end gap-1 shrink-0">
-          <Badge variant="outline" className="text-[9px] font-black tracking-widest uppercase bg-background/80 backdrop-blur-md border-border/50 text-foreground/80 group-hover:border-primary/30 transition-colors shadow-sm">
-            {talent.roles[0]}
-          </Badge>
-          {showStarMeter && (
-            <div className="flex items-center gap-1 bg-black/40 px-1.5 py-0.5 rounded border border-white/5">
-              <Star className="w-2.5 h-2.5 text-primary fill-primary" />
-              <span className="text-[10px] font-bold text-primary">{talent.starMeter || 50}</span>
-              {starMeterTrend === 'up' && <TrendingUp className="w-2.5 h-2.5 text-success" />}
-              {starMeterTrend === 'down' && <TrendingDown className="w-2.5 h-2.5 text-destructive" />}
             </div>
           )}
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 text-xs pt-3 border-t border-border/40 relative z-10">
+      {/* Stats Grid */}
+      <div className="grid grid-cols-4 gap-2 text-xs pt-2.5 border-t border-border/40 relative z-10">
         <div className="space-y-0.5">
           <div className="text-[9px] uppercase font-bold tracking-wider text-muted-foreground">Prestige</div>
           <div className="font-semibold text-primary">{talent.prestige}</div>

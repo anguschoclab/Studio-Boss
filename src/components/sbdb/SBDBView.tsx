@@ -52,7 +52,7 @@ export const SBDBView = () => {
       <div className="flex flex-col space-y-1">
         <div className="flex items-center gap-2">
           <Users className="w-5 h-5 text-primary" />
-          <h1 className="text-2xl font-black tracking-tighter uppercase italic">SBDB Directory</h1>
+          <h1 className="text-2xl font-black tracking-tighter uppercase italic">SBDB</h1>
         </div>
         <p className="text-muted-foreground text-sm font-medium">
           The definitive industry database of talent, producers, and unscripted stars.

@@ -30,7 +30,7 @@ const NAV_ITEMS = [
   { id: 'talent', label: 'Talent Roster', icon: Users },
   { id: 'finance', label: 'Finance & P&L', icon: Briefcase },
   { id: 'trades', label: 'The Trades', icon: Newspaper },
-  { id: 'sbdb', label: 'SBDB Directory', icon: Users },
+  { id: 'sbdb', label: 'SBDB', icon: Users },
 ] as const;
 
 export const StudioSidebar = () => {

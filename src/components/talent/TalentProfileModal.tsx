@@ -18,7 +18,10 @@ import {
   Star,
   Award,
   Zap,
-  Info
+  Info,
+  MapPin,
+  Calendar,
+  Users
 } from 'lucide-react';
 import { 
   BarChart, 
@@ -30,10 +33,13 @@ import {
   ResponsiveContainer,
   Cell
 } from 'recharts';
+import { TalentAvatar } from './TalentAvatar';
+import { getTalentVisualAge, getCountryFlag } from '@/engine/generators/avatarGenerator';
 
 export const TalentModal = () => {
   const { selectedTalentId, selectTalent } = useUIStore();
   const gameState = useGameStore(s => s.gameState);
+  const currentWeek = gameState?.week ?? 1;
   
   const talentPool = useMemo(() => Object.values(gameState?.industry.talentPool || {}), [gameState?.industry.talentPool]);
   const talent = useMemo(() => talentPool.find(t => t.id === selectedTalentId), [talentPool, selectedTalentId]);
@@ -45,6 +51,12 @@ export const TalentModal = () => {
   
   const families = useMemo(() => gameState?.industry.families || [], [gameState?.industry.families]);
   const family = useMemo(() => families.find(f => f.id === talent?.familyId), [families, talent]);
+
+  // Find family members for nepo-baby display
+  const familyMembers = useMemo(() => {
+    if (!talent?.familyId) return [];
+    return talentPool.filter(t => t.familyId === talent.familyId && t.id !== talent.id);
+  }, [talentPool, talent]);
 
   const statData = useMemo(() => {
     if (!talent) return [];
@@ -58,23 +70,32 @@ export const TalentModal = () => {
 
   if (!talent) return null;
 
+  const visualAge = getTalentVisualAge(talent, currentWeek);
+  const countryFlag = getCountryFlag(talent.demographics.country);
+  const genderLabel = talent.demographics.gender === 'MALE' ? 'Male' : talent.demographics.gender === 'FEMALE' ? 'Female' : 'Non-Binary';
+
   return (
     <Dialog open={!!selectedTalentId} onOpenChange={() => selectTalent(null)}>
       <DialogContent className="max-w-4xl bg-slate-950 border-slate-800 text-slate-100 shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col h-[90vh] p-0 rounded-3xl">
         {/* Cinematic Header Section */}
-        <div className="relative h-64 bg-slate-900 shrink-0 overflow-hidden">
+        <div className="relative h-72 bg-slate-900 shrink-0 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-transparent to-rose-500/10" />
           <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')] opacity-30" />
           
           <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-slate-950 to-transparent" />
           
           <div className="absolute bottom-6 left-10 flex items-end gap-8 z-10 w-full pr-20">
-            <div className="w-40 h-40 rounded-3xl bg-slate-800 border-4 border-slate-950 shadow-2xl overflow-hidden flex items-center justify-center group relative">
-              <User className="w-20 h-20 text-slate-600 group-hover:scale-110 transition-transform duration-500" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end justify-center pb-3">
-                 <Badge className="text-[10px] bg-primary text-black font-black uppercase tracking-widest px-3 py-1 shadow-[0_4px_10px_rgba(var(--primary),0.4)]">
-                    {talent.roles[0]}
-                 </Badge>
+            {/* Avatar replaces the old placeholder icon */}
+            <div className="relative group">
+              <TalentAvatar 
+                talent={talent} 
+                size="xl" 
+                className="border-slate-950 shadow-2xl group-hover:border-primary/30 transition-all duration-500"
+              />
+              <div className="absolute -bottom-1 left-1/2 -translate-x-1/2">
+                <Badge className="text-[10px] bg-primary text-black font-black uppercase tracking-widest px-3 py-1 shadow-[0_4px_10px_rgba(var(--primary),0.4)]">
+                  {talent.roles[0]}
+                </Badge>
               </div>
             </div>
             
@@ -88,6 +109,24 @@ export const TalentModal = () => {
                   <span className="text-xl font-black text-primary italic leading-none">{talent.starMeter || 50}</span>
                   <span className="text-[10px] uppercase font-black text-slate-500 tracking-widest ml-1">Star Meter</span>
                 </div>
+              </div>
+              
+              {/* Demographics Row */}
+              <div className="flex gap-2 flex-wrap mb-2">
+                <Badge variant="outline" className="text-[10px] border-white/10 bg-white/5 text-slate-300 font-bold uppercase tracking-widest px-2.5 py-1 gap-1.5">
+                  <Calendar className="w-3 h-3 opacity-60" />
+                  {visualAge} years old
+                </Badge>
+                <Badge variant="outline" className="text-[10px] border-white/10 bg-white/5 text-slate-300 font-bold uppercase tracking-widest px-2.5 py-1">
+                  {genderLabel}
+                </Badge>
+                <Badge variant="outline" className="text-[10px] border-white/10 bg-white/5 text-slate-300 font-bold uppercase tracking-widest px-2.5 py-1">
+                  {talent.demographics.ethnicity}
+                </Badge>
+                <Badge variant="outline" className="text-[10px] border-white/10 bg-white/5 text-slate-300 font-bold uppercase tracking-widest px-2.5 py-1 gap-1">
+                  <MapPin className="w-3 h-3 opacity-60" />
+                  {countryFlag} {talent.demographics.country}
+                </Badge>
               </div>
               
               <div className="flex gap-3">
@@ -208,7 +247,32 @@ export const TalentModal = () => {
                             <p className="text-sm font-black text-amber-200">{family.recognition}</p>
                          </div>
                       </div>
-                      <p className="text-[10px] text-amber-200/40 leading-relaxed font-bold uppercase tracking-tight">
+
+                      {/* Family Members with Avatars */}
+                      {familyMembers.length > 0 && (
+                        <div className="mt-4 pt-3 border-t border-amber-500/10">
+                          <p className="text-[9px] font-black text-amber-500/60 uppercase tracking-widest mb-3 flex items-center gap-1.5">
+                            <Users className="w-3 h-3" /> Family Members
+                          </p>
+                          <div className="flex flex-wrap gap-2">
+                            {familyMembers.slice(0, 4).map(member => (
+                              <div 
+                                key={member.id} 
+                                className="flex items-center gap-2 bg-amber-950/30 px-2 py-1.5 rounded-xl border border-amber-500/10 hover:border-amber-500/30 transition-colors cursor-pointer"
+                                onClick={() => selectTalent(member.id)}
+                              >
+                                <TalentAvatar talent={member} size="xs" className="border-amber-500/20" />
+                                <div>
+                                  <p className="text-[10px] font-bold text-amber-200 leading-tight">{member.name}</p>
+                                  <p className="text-[8px] font-bold text-amber-500/50 uppercase">{member.roles[0]}</p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      <p className="text-[10px] text-amber-200/40 leading-relaxed font-bold uppercase tracking-tight mt-3">
                         A recognized lineage in the Hollywood hierarchy. Transitioning from {family.status} status.
                       </p>
                     </div>

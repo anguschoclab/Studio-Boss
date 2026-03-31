@@ -11,6 +11,7 @@ describe('TalentPanel', () => {
     vi.mocked(useGameStore).mockImplementation((selector) => {
       const state = {
         gameState: {
+          week: 1,
           industry: {
             talentPool: {
               't1': {
@@ -22,7 +23,9 @@ describe('TalentPanel', () => {
                 draw: 90,
                 temperament: 'normal',
                 accessLevel: 'a-list',
-                agencyId: 'a1'
+                agencyId: 'a1',
+                demographics: { age: 66, gender: 'MALE', ethnicity: 'Caucasian', country: 'USA' },
+                psychology: { ego: 30, mood: 80, scandalRisk: 10, synergyAffinities: [], synergyConflicts: [] }
               },
               't2': {
                 id: 't2',
@@ -33,7 +36,9 @@ describe('TalentPanel', () => {
                 draw: 85,
                 temperament: 'normal',
                 accessLevel: 'a-list',
-                agencyId: 'a2'
+                agencyId: 'a2',
+                demographics: { age: 76, gender: 'MALE', ethnicity: 'Caucasian', country: 'USA' },
+                psychology: { ego: 40, mood: 75, scandalRisk: 5, synergyAffinities: [], synergyConflicts: [] }
               }
             },
             agencies: [
