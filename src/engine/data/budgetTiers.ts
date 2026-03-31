@@ -18,11 +18,11 @@ export const BUDGET_TIERS: Record<BudgetTierKey, BudgetTierData> = {
     label: '$5M',
     budget: 5_000_000,
     // Increased weekly cost from 500k to 600k for inflation adjustments. Increased to 750k to raise stakes.
-    weeklyCost: 750_000,
+    weeklyCost: 800_000, // The Studio Comptroller: Increased base cost for inflation and risk
     developmentWeeks: 6,
     productionWeeks: 8,
     // The Studio Comptroller: Widened top-end revenue further to $800M to allow for extreme high-ROI horror/indie breakout anomalies.
-    revenueRange: [10_000, 800_000_000],
+    revenueRange: [10_000, 1_000_000_000], // The Studio Comptroller: Widened further to allow for extreme high-ROI horror/indie breakout anomalies
   },
   mid: {
     key: 'mid',
@@ -56,10 +56,10 @@ export const BUDGET_TIERS: Record<BudgetTierKey, BudgetTierData> = {
     // The Studio Comptroller: Adjusted blockbuster budget down to $200M to align with realistic scaling, but expanded revenue range to ensure catastrophic bomb risk and massive upside.
     budget: 200_000_000,
     // The Studio Comptroller: Increased base weekly cost from $35M to $45M to exponentially increase cashflow drain on delayed blockbusters.
-    weeklyCost: 45_000_000,
+    weeklyCost: 55_000_000, // The Studio Comptroller: Exponentially increased cashflow drain on delayed blockbusters
     developmentWeeks: 16,
     productionWeeks: 24,
     // The Studio Comptroller: Lowered floor to $500k to simulate catastrophic, studio-bankrupting box office bombs. Increased upside to $2.5B
-    revenueRange: [500_000, 2_500_000_000],
+    revenueRange: [250_000, 3_000_000_000], // The Studio Comptroller: Lowered floor for catastrophic bombs and increased ceiling for massive upside
   },
 };
