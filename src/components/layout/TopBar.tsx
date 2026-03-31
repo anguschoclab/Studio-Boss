@@ -74,7 +74,7 @@ export const TopBar = () => {
         <div className="flex flex-col items-end">
           <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">Active Slate</span>
           <span className="font-mono font-bold text-sm text-foreground/80">
-            {activeProjects}
+            {activeProjectsList.length}
           </span>
         </div>
       </div>
