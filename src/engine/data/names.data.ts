@@ -138,3 +138,35 @@ export const CONNECTORS = [
 export const LOCATIONS = [
   'New York', 'Los Angeles', 'London', 'Paris', 'Tokyo', 'Vegas', 'Miami', 'Chicago', 'Texas', 'Hollywood', 'Space', 'Mars', 'Earth', 'Hell', 'Heaven', 'Island', 'Mountain', 'River', 'City', 'Town'
 ];
+
+// Buyer / Streaming Platform name generation data
+export const NETWORK_PREFIXES = [
+  'American', 'National', 'Pacific', 'Continental', 'Atlantic', 'Federal', 'Imperial', 'United', 'Global', 'Liberty',
+  'Paramount', 'Columbia', 'Republic', 'Dominion', 'Heritage', 'Sovereign', 'Pinnacle', 'Meridian', 'Western', 'Eastern'
+];
+
+export const NETWORK_SUFFIXES = [
+  'Broadcasting', 'Television', 'Network', 'Broadcasting System', 'Media Network', 'Television Group',
+  'Broadcasting Company', 'Channel', 'Broadcasting Network', 'TV'
+];
+
+export const PREMIUM_PREFIXES = [
+  'Prestige', 'Criterion', 'Auteur', 'Curated', 'Elevated', 'Luminary', 'Vanguard', 'Artisan', 'Cinema',
+  'Sterling', 'Onyx', 'Velvet', 'Ivory', 'Obsidian', 'Sapphire', 'Aureate', 'Gilded', 'Refined', 'Noble', 'Paramount'
+];
+
+export const PREMIUM_SUFFIXES = [
+  'Select', 'Premiere', 'Cinema', 'Films', 'Originals', 'Pictures', 'Features',
+  'Prestige', 'Collection', 'Masterclass'
+];
+
+export const STREAMER_PREFIXES = [
+  'Stream', 'Binge', 'Pixel', 'Cloud', 'Flux', 'Hype', 'Zap', 'Bolt', 'Dash', 'Nova',
+  'Vibe', 'Pulse', 'Wave', 'Neon', 'Echo', 'Loop', 'Prism', 'Orbit', 'Surge', 'Blitz',
+  'Algo', 'Data', 'Viral', 'Metric', 'Feed', 'Scroll', 'Click', 'Buffer', 'Render', 'Core'
+];
+
+export const STREAMER_SUFFIXES = [
+  'Max', 'Plus', 'Go', 'Now', 'Play', 'Hub', 'Zone', 'Stream', 'View', 'Watch',
+  'On Demand', 'Originals', 'TV', 'Video', 'Digital', 'Unlimited', 'Prime', 'Select', 'Live', 'X'
+];
