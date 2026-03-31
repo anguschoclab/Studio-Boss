@@ -14,6 +14,7 @@ import { tickFinance } from '../systems/finance/financeTick';
 import { advanceTrends } from '../systems/trends';
 import { advanceMarketEvents } from '../systems/marketEvents';
 import { generateScandals, advanceScandals } from '../systems/scandals';
+import { advanceBuyers } from '../systems/buyerMergers';
 
 /**
  * Studio Boss - Simulation Tick Context
@@ -75,6 +76,7 @@ export class WeekCoordinator {
     context.impacts.push(...tickWorldEvents(state, context.rng));
     context.impacts.push(...advanceTrends(state.market.trends || []));
     context.impacts.push(...advanceMarketEvents(state));
+    context.impacts.push(advanceBuyers(state));
   }
 
   private static runProductionFilter(state: GameState, context: TickContext) {

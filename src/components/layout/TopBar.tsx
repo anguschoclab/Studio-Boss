@@ -3,7 +3,7 @@ import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { formatMoney, getWeekDisplay } from '@/engine/utils';
 import { Save, FastForward, AlertTriangle, TrendingUp, Newspaper } from 'lucide-react';
-import { selectActiveProjectsCount } from '@/store/selectors';
+import { selectActiveProjects } from '@/store/selectors';
 import { Badge } from '@/components/ui/badge';
 import { NewsTicker } from './NewsTicker';
 
@@ -14,11 +14,12 @@ export const TopBar = () => {
 
   const { showSummary, setActiveTab } = useUIStore();
 
-  const activeProjects = useGameStore(s => selectActiveProjectsCount(s.gameState));
+  const activeProjectsList = useGameStore(s => selectActiveProjects(s.gameState));
 
   if (!gameState) return null;
 
-  const { cash, week, studio } = gameState;
+  const cash = gameState.finance.cash;
+  const { week, studio } = gameState;
   const { displayWeek, year } = getWeekDisplay(week);
 
   const handleAdvanceWeek = () => {
@@ -42,10 +43,7 @@ export const TopBar = () => {
       </div>
 
       {/* Global News Ticker */}
-      <NewsTicker 
-        news={gameState.industry.newsHistory || []} 
-        onClick={() => setActiveTab('trades')} 
-      />
+      <NewsTicker />
 
       {/* Primary Metrics Cluster */}
       <div className="flex items-center gap-6 ml-auto">
@@ -76,7 +74,7 @@ export const TopBar = () => {
         <div className="flex flex-col items-end">
           <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">Active Slate</span>
           <span className="font-mono font-bold text-sm text-foreground/80">
-            {activeProjects}
+            {activeProjectsList.length}
           </span>
         </div>
       </div>

@@ -176,3 +176,19 @@ export function calculateWeeklyRevenue(projects: Project[], contracts: Contract[
   for (const e of activeEvents) revMult *= e.revenueMultiplier;
   return calculateBoxOfficeRevenue(projects, contracts, revMult) + calculateDistributionRevenue(projects, revMult);
 }
+
+export function generateCashflowForecast(state: GameState, weeks: number = 12): { week: number; projected: number }[] {
+  const projects = Object.values(state.studio.internal.projects);
+  const contracts = state.studio.internal.contracts;
+  const weeklyCosts = calculateWeeklyCosts(projects);
+  const weeklyRevenue = calculateWeeklyRevenue(projects, contracts);
+  const netPerWeek = weeklyRevenue - weeklyCosts;
+  
+  const forecast: { week: number; projected: number }[] = [];
+  let runningCash = state.finance.cash;
+  for (let i = 1; i <= weeks; i++) {
+    runningCash += netPerWeek;
+    forecast.push({ week: state.week + i, projected: runningCash });
+  }
+  return forecast;
+}
