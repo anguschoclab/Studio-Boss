@@ -2,7 +2,6 @@ import { Project } from '@/engine/types';
 import { useUIStore } from '@/store/uiStore';
 import { formatMoney } from '@/engine/utils';
 import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
-import { TV_FORMATS } from '@/engine/data/tvFormats';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { AlertTriangle, TrendingUp, DollarSign, Activity, Zap } from 'lucide-react';
@@ -32,6 +31,13 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
       role="button"
       tabIndex={0}
       onClick={() => selectProject(project.id)}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          selectProject(project.id);
+        }
+      }}
+      aria-label={`View details for ${project.title}`}
       className="w-full text-left p-4 rounded-xl border border-white/5 bg-gradient-to-br from-white/[0.05] to-transparent backdrop-blur-md hover:bg-white/[0.08] hover:border-primary/30 transition-all duration-500 space-y-4 group relative overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl hover:-translate-y-1"
     >
       {/* Visual Accent */}
