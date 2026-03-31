@@ -75,7 +75,7 @@ describe("crises system", () => {
     });
 
     it("returns an ActiveCrisis if random check passes (< 0.05)", () => {
-      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.04);
+      vi.spyOn(Math, 'random').mockReturnValue(0.04);
       const result = checkAndTriggerCrisis(mockProject);
       expect(result).toBeDefined();
       expect(result?.description).toBeTypeOf("string");

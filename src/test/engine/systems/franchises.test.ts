@@ -60,54 +60,95 @@ describe("franchise system", () => {
     });
 
     it("returns reboot option if franchise is severely fatigued and financial failure", () => {
-      const flopProject = { ...baseProject, revenue: 100000000 };
+      const flopProject = { ...baseProject, revenue: 70000000, genre: "Horror" as const };
 
-      // Create 10 related projects to force massive fatigue
-      const relatedProjects = Array(10).fill(0).map((_, i) => ({
+      const relatedProjectsFatigued = Array(12).fill(0).map((_, i) => ({
         ...baseProject,
         id: `p${i+2}`,
-        parentProjectId: "p1"
+        parentProjectId: "p1",
+        genre: "Horror" as const,
+        releaseWeek: 90,
+        status: "released" as const
+      }));
+      const marketProjects = Array(15).fill(0).map((_, i) => ({
+        ...baseProject,
+        id: `m${i+2}`,
+        parentProjectId: undefined,
+        genre: "Horror" as const,
+        releaseWeek: 90,
+        status: "released" as const,
+        revenue: 0 // Do not trigger crossover target loop
       }));
 
-      const state = { studio: { internal: { projects: [flopProject, ...relatedProjects] } } } as unknown as GameState;
+      const stateFatigued = { week: 100, studio: { internal: { projects: [flopProject, ...relatedProjectsFatigued, ...marketProjects] } } } as unknown as GameState;
 
-      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.2); // Force reboot chance (now between 0.15 and 0.3)
-      const result = exploitIP(flopProject, state);
+      vi.spyOn(crypto, 'getRandomValues').mockImplementation((arr: any) => {
+        arr[0] = Math.floor(0.25 * (0xffffffff + 1));
+        return arr;
+      });
+
+      const result = exploitIP(flopProject, stateFatigued);
 
       expect(result).toBeDefined();
       expect(result?.title).toContain("Reboot");
-      // Saturation penalty = 11 * 0.1 (Sci-Fi default assuming no specific mapping) * 10 = 11
-      // Initial Buzz = 5 - (11/2) = -0.5 (Expect to be negative for early reboot)
       expect(result?.initialBuzzBonus).toBeLessThan(5);
     });
 
     it("returns null if franchise is severely fatigued, failed, but random check fails", () => {
-      const flopProject = { ...baseProject, revenue: 100000000 };
-      const relatedProjects = Array(10).fill(0).map((_, i) => ({
+      const flopProject = { ...baseProject, revenue: 70000000, genre: "Horror" as const };
+      const relatedProjectsFatigued = Array(12).fill(0).map((_, i) => ({
         ...baseProject,
         id: `p${i+2}`,
-        parentProjectId: "p1"
+        parentProjectId: "p1",
+        genre: "Horror" as const,
+        releaseWeek: 90,
+        status: "released" as const
       }));
-      const state = { studio: { internal: { projects: [flopProject, ...relatedProjects] } } } as unknown as GameState;
+      const marketProjects = Array(15).fill(0).map((_, i) => ({
+        ...baseProject,
+        id: `m${i+2}`,
+        parentProjectId: undefined,
+        genre: "Horror" as const,
+        releaseWeek: 90,
+        status: "released" as const,
+        revenue: 0
+      }));
 
-      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.98); // Fail all reboot/format flip chances (max is 0.97 for animated series flip)
-      const result = exploitIP(flopProject, state);
+      const stateFatigued = { week: 100, studio: { internal: { projects: [flopProject, ...relatedProjectsFatigued, ...marketProjects] } } } as unknown as GameState;
+
+      vi.spyOn(crypto, 'getRandomValues').mockImplementation((arr: any) => { arr[0] = Math.floor(0.98 * (0xffffffff + 1)); return arr; });
+      const result = exploitIP(flopProject, stateFatigued);
       expect(result).toBeNull();
     });
 
     it("generates a deconstructive meta-sequel if franchise is heavily fatigued and fails", () => {
-      const flopProject = { ...baseProject, revenue: 100000000 };
+      const flopProject = { ...baseProject, revenue: 70000000, genre: "Horror" as const };
 
-      const relatedProjects = Array(10).fill(0).map((_, i) => ({
+      const relatedProjectsFatigued = Array(12).fill(0).map((_, i) => ({
         ...baseProject,
         id: `p${i+2}`,
-        parentProjectId: "p1"
+        parentProjectId: "p1",
+        genre: "Horror" as const,
+        releaseWeek: 90,
+        status: "released" as const
+      }));
+      const marketProjects = Array(15).fill(0).map((_, i) => ({
+        ...baseProject,
+        id: `m${i+2}`,
+        parentProjectId: undefined,
+        genre: "Horror" as const,
+        releaseWeek: 90,
+        status: "released" as const,
+        revenue: 0
       }));
 
-      const state = { studio: { internal: { projects: [flopProject, ...relatedProjects] } } } as unknown as GameState;
+      const stateFatigued = { week: 100, studio: { internal: { projects: [flopProject, ...relatedProjectsFatigued, ...marketProjects] } } } as unknown as GameState;
 
-      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.4); // Between 0.3 and 0.5 triggers Resurrection meta-sequel
-      const result = exploitIP(flopProject, state);
+      vi.spyOn(crypto, 'getRandomValues').mockImplementation((arr: any) => {
+        arr[0] = Math.floor(0.45 * (0xffffffff + 1));
+        return arr;
+      });
+      const result = exploitIP(flopProject, stateFatigued);
 
       expect(result).toBeDefined();
       expect(result?.title).toContain("Resurrection");
@@ -123,14 +164,15 @@ describe("franchise system", () => {
         revenue: 600000000 // > 2x budget
       };
 
-      const state = { studio: { internal: { projects: [baseProject, otherHit] } } } as unknown as GameState;
+      const state = { week: 100, studio: { internal: { projects: [baseProject, otherHit] } } } as unknown as GameState;
 
       // Need random > 0.8 for crossover target detection, then random < 0.2 for crossover selection
       let callCount = 0;
-      vi.spyOn(utils, 'secureRandom').mockImplementation(() => {
+      vi.spyOn(crypto, 'getRandomValues').mockImplementation((arr: any) => {
         callCount++;
-        if (callCount === 1) return 0.9; // For crossover target detection
-        return 0.1; // For selecting crossover action
+        if (callCount === 1) { arr[0] = Math.floor(0.9 * (0xffffffff + 1)); }
+        else { arr[0] = Math.floor(0.1 * (0xffffffff + 1)); }
+        return arr;
       });
 
       const result = exploitIP(baseProject, state);
@@ -147,13 +189,14 @@ describe("franchise system", () => {
         revenue: 600000000 // > 2x budget
       };
 
-      const state = { studio: { internal: { projects: [baseProject, otherHit] } } } as unknown as GameState;
+      const state = { week: 100, studio: { internal: { projects: [baseProject, otherHit] } } } as unknown as GameState;
 
       let callCount = 0;
-      vi.spyOn(utils, 'secureRandom').mockImplementation(() => {
+      vi.spyOn(crypto, 'getRandomValues').mockImplementation((arr: any) => {
         callCount++;
-        if (callCount === 1) return 0.9; // For crossover target detection
-        return 0.1; // For selecting crossover action
+        if (callCount === 1) { arr[0] = Math.floor(0.9 * (0xffffffff + 1)); }
+        else { arr[0] = Math.floor(0.1 * (0xffffffff + 1)); }
+        return arr;
       });
 
       const result = exploitIP(baseProject, state);
@@ -161,17 +204,35 @@ describe("franchise system", () => {
     });
 
     it("generates an Expanded Universe TV spinoff if fatigued", () => {
-      const flopProject = { ...baseProject, revenue: 100000000 };
-      const relatedProjects = Array(10).fill(0).map((_, i) => ({
+      const flopProject = { ...baseProject, revenue: 70000000, genre: "Horror" as const };
+      const relatedProjectsFatigued = Array(12).fill(0).map((_, i) => ({
         ...baseProject,
         id: `p${i+2}`,
-        parentProjectId: "p1"
+        parentProjectId: "p1",
+        genre: "Horror" as const,
+        releaseWeek: 90,
+        status: "released" as const
       }));
-      const state = { studio: { internal: { projects: [flopProject, ...relatedProjects] } }, week: 200 } as unknown as GameState;
+      const marketProjects = Array(15).fill(0).map((_, i) => ({
+        ...baseProject,
+        id: `m${i+2}`,
+        parentProjectId: undefined,
+        genre: "Horror" as const,
+        releaseWeek: 90,
+        status: "released" as const,
+        revenue: 0
+      }));
 
-      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.65); // < 0.7 but >= 0.6 triggers Expanded Universe
-      const result = exploitIP(flopProject, state);
+      const stateFatigued = { week: 100, studio: { internal: { projects: [flopProject, ...relatedProjectsFatigued, ...marketProjects] } } } as unknown as GameState;
 
+      vi.spyOn(crypto, 'getRandomValues').mockImplementation((arr: any) => {
+        arr[0] = Math.floor(0.65 * (0xffffffff + 1));
+        return arr;
+      });
+
+      const result = exploitIP(flopProject, stateFatigued);
+
+      expect(result).toBeDefined();
       expect(result?.title).toContain("Expanded Universe");
       expect(result?.format).toBe("tv");
       expect(result?.releaseModel).toBe("binge");
@@ -181,7 +242,10 @@ describe("franchise system", () => {
       const legacyProject = { ...baseProject, releaseWeek: 10, revenue: 600000000 };
       const state = { week: 200, studio: { internal: { projects: [legacyProject] } } } as unknown as GameState;
 
-      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.2); // < 0.3 triggers requel inside legacy block
+      vi.spyOn(crypto, 'getRandomValues').mockImplementation((arr: any) => {
+        arr[0] = Math.floor(0.2 * (0xffffffff + 1));
+        return arr;
+      });
       const result = exploitIP(legacyProject, state);
 
       expect(result?.title).toContain("A New Generation");
@@ -270,7 +334,7 @@ describe("franchise system", () => {
         ...baseProject,
         id: "p99",
         title: "Action Hero",
-        genre: "Action", // Compatible genre
+        genre: "Action" as const, // Compatible genre
         revenue: 600000000 // > 2x budget
       };
 
@@ -280,13 +344,14 @@ describe("franchise system", () => {
         parentProjectId: "p1"
       }));
 
-      const state = { studio: { internal: { projects: [baseProject, otherHit, ...manyProjects] } } } as unknown as GameState;
+      const state = { week: 100, studio: { internal: { projects: [baseProject, otherHit, ...manyProjects] } } } as unknown as GameState;
 
       let callCount = 0;
-      vi.spyOn(Math, 'random').mockImplementation(() => {
+      vi.spyOn(crypto, 'getRandomValues').mockImplementation((arr: any) => {
         callCount++;
-        if (callCount === 1) return 0.9; // For crossover target detection
-        return 0.05; // For selecting crossover action (< 0.1 triggers Crisis)
+        if (callCount === 1) { arr[0] = Math.floor(0.9 * (0xffffffff + 1)); }
+        else { arr[0] = Math.floor(0.05 * (0xffffffff + 1)); }
+        return arr;
       });
 
       const result = exploitIP(baseProject, state);
@@ -299,19 +364,17 @@ describe("franchise system", () => {
         ...baseProject,
         revenue: 600000000, // Very successful
         releaseWeek: 10,
-        genre: "Superhero" // Superhero base fatigue = 0.65, easier to hit Dead IP > 65
+        genre: "Horror" as const
       };
 
-      // Superhero (>15 in market means base * 3 = 1.95)
-      // sat = exp * 1.95 * 10 + market * 0.975 * 5 + oversat
-      // Let's just put 20 market and 10 related.
       const recentReleases = Array(20).fill(0).map((_, i) => ({
         ...legacyProject,
         id: `p_market_${i}`,
         parentProjectId: undefined,
-        releaseWeek: 90
+        releaseWeek: 190,
+        revenue: 0 // Do not trigger crossover loops
       }));
-      const relatedProjects = Array(10).fill(0).map((_, i) => ({
+      const relatedProjects = Array(35).fill(0).map((_, i) => ({
         ...legacyProject,
         id: `p_rel_${i}`,
         parentProjectId: legacyProject.id,
@@ -319,12 +382,12 @@ describe("franchise system", () => {
 
       const state = { week: 200, studio: { internal: { projects: [legacyProject, ...recentReleases, ...relatedProjects] } } } as unknown as GameState;
 
-      // To bypass Multiverse / Crossover logic earlier in the file, we can return a crossover target mock of 0.9 (no target)
       let callCount = 0;
-      vi.spyOn(Math, 'random').mockImplementation(() => {
+      vi.spyOn(crypto, 'getRandomValues').mockImplementation((arr: any) => {
         callCount++;
-        if (callCount === 1) return 0.9; // Target selection (no target found because random > 0.8 to select but no hit candidates)
-        return 0.18; // rand < 0.2 to hit Revitalized Legacy
+        if (callCount === 1) { arr[0] = Math.floor(0.9 * (0xffffffff + 1)); } // Avoid crossover logic
+        else { arr[0] = Math.floor(0.18 * (0xffffffff + 1)); } // rand < 0.2 to hit Revitalized Legacy
+        return arr;
       });
 
       const result = exploitIP(legacyProject, state);

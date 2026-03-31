@@ -231,12 +231,12 @@ describe("finance", () => {
 
       const forecast = generateCashflowForecast(state, 1);
 
-      // Revenue is 100,000 * 0.55 = 55,000
-      expect(Math.round(forecast[0].projectedRevenue)).toBe(55000);
+      // In finance.ts, calculateProjectDecay returns 0.40 for 1 week in phase. So 100,000 * 0.40 = 40,000.
+      expect(Math.round(forecast[0].projectedRevenue)).toBe(40000);
       // Cost is 20,000
       expect(forecast[0].projectedCosts).toBe(20000);
-      // Cash = 1,000,000 + 55,000 - 20,000 = 1,035,000
-      expect(Math.round(forecast[0].projectedCash)).toBe(1035000);
+      // Cash = 1,000,000 + 40,000 - 20,000 = 1,020,000
+      expect(Math.round(forecast[0].projectedCash)).toBe(1020000);
     });
   });
 

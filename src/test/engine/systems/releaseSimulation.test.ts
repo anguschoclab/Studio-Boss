@@ -3,6 +3,12 @@ import { generateReviewScore, simulateWeeklyBoxOffice, calculateBoxOfficeRanks, 
 import { Project, TalentProfile, ActiveCrisis } from "../../../engine/types";
 import * as utils from '../../../engine/utils';
 
+// We must mock getRandomValues directly, because the system under test calls secureRandom,
+// which is defined as `export function secureRandom() { ... crypto.getRandomValues(...) ... }`
+// Since secureRandom is internal to the module or imported as a named export, vitest sometimes fails
+// to spy on the internal call if it's imported directly in the same module bundle, or we can just mock
+// the underlying crypto mechanism to be universally safe.
+
 const mockProject: Project = {
   id: "proj-1",
   title: "Simulated Project",
@@ -34,7 +40,7 @@ describe("releaseSimulation system", () => {
 
   describe("generateReviewScore", () => {
     it("calculates base score clamped between 1 and 100", () => {
-      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5); // avg base 55
+      vi.spyOn(crypto, 'getRandomValues').mockImplementation((arr: any) => { arr[0] = Math.floor(0.5 * (0xffffffff + 1)); return arr; });
       const score = generateReviewScore(mockProject, [], undefined);
       // Base: 40 + (30 * 0.5) = 55. Talent: 0. Buzz bonus: 0. Variance: 0 (-5 to 5 * 0.5 = 0).
       expect(score).toBeGreaterThanOrEqual(40);
@@ -42,7 +48,7 @@ describe("releaseSimulation system", () => {
     });
 
     it("applies penalty for active, unresolved crises", () => {
-      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5);
+      vi.spyOn(crypto, 'getRandomValues').mockImplementation((arr: any) => { arr[0] = Math.floor(0.5 * (0xffffffff + 1)); return arr; });
       const crisis: ActiveCrisis = { description: "Bad", options: [], resolved: false };
       const baseScore = generateReviewScore(mockProject, [], undefined);
       const penaltyScore = generateReviewScore(mockProject, [], crisis);
@@ -51,7 +57,7 @@ describe("releaseSimulation system", () => {
     });
 
     it("ignores resolved crises", () => {
-      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5);
+      vi.spyOn(crypto, 'getRandomValues').mockImplementation((arr: any) => { arr[0] = Math.floor(0.5 * (0xffffffff + 1)); return arr; });
       const crisis: ActiveCrisis = { description: "Bad", options: [], resolved: true };
       const baseScore = generateReviewScore(mockProject, [], undefined);
       const resolvedScore = generateReviewScore(mockProject, [], crisis);
@@ -60,7 +66,7 @@ describe("releaseSimulation system", () => {
     });
 
     it("handles 0 prestige talent pool (edge case)", () => {
-      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5);
+      vi.spyOn(crypto, 'getRandomValues').mockImplementation((arr: any) => { arr[0] = Math.floor(0.5 * (0xffffffff + 1)); return arr; });
       const zeroPrestige: TalentProfile = { ...mockTalent, prestige: 0 };
       const score = generateReviewScore(mockProject, [zeroPrestige], undefined);
       // Talent bonus = 0 / 1 * 0.3 = 0.
@@ -68,7 +74,7 @@ describe("releaseSimulation system", () => {
     });
 
     it("handles maximum prestige talent pool (edge case)", () => {
-      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.99); // Max base (70), Max variance (+5)
+      vi.spyOn(crypto, 'getRandomValues').mockImplementation((arr: any) => { arr[0] = Math.floor(0.99 * (0xffffffff + 1)); return arr; });
       const maxPrestige: TalentProfile = { ...mockTalent, prestige: 100 };
       const hypeProject = { ...mockProject, buzz: 100 }; // >80 gets bonus
 
@@ -80,7 +86,7 @@ describe("releaseSimulation system", () => {
     });
 
     it("applies penalty for terrible buzz (<30)", () => {
-      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.1); // Min base (43), Min variance (-4)
+      vi.spyOn(crypto, 'getRandomValues').mockImplementation((arr: any) => { arr[0] = Math.floor(0.1 * (0xffffffff + 1)); return arr; });
       const deadProject = { ...mockProject, buzz: 0 };
 
       const score = generateReviewScore(deadProject, [], undefined);
@@ -91,7 +97,7 @@ describe("releaseSimulation system", () => {
     });
 
     it("applies bonus for excellent buzz (>80)", () => {
-      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5); // avg base 55, variance 0
+      vi.spyOn(crypto, 'getRandomValues').mockImplementation((arr: any) => { arr[0] = Math.floor(0.5 * (0xffffffff + 1)); return arr; });
       const hypeProject = { ...mockProject, buzz: 85 };
 
       const score = generateReviewScore(hypeProject, [], undefined);
@@ -100,7 +106,7 @@ describe("releaseSimulation system", () => {
     });
 
     it("calculates talent bonus correctly for multiple attached talents", () => {
-      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5); // avg base 55, variance 0
+      vi.spyOn(crypto, 'getRandomValues').mockImplementation((arr: any) => { arr[0] = Math.floor(0.5 * (0xffffffff + 1)); return arr; });
       const t1 = { ...mockTalent, prestige: 60 };
       const t2 = { ...mockTalent, prestige: 80 };
 
@@ -112,7 +118,7 @@ describe("releaseSimulation system", () => {
 
   describe("simulateWeeklyBoxOffice", () => {
     it("applies standard drop off multipliers based on review score legs", () => {
-      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5); // Mid drop-off
+      vi.spyOn(crypto, 'getRandomValues').mockImplementation((arr: any) => { arr[0] = Math.floor(0.5 * (0xffffffff + 1)); return arr; });
 
       // Excellent legs (score >= 85) -> range 0.6 to 0.8
       // Note: mockProject has a budget of 50M, so it does not get the "indie/horror" bonus (budget <= 20M)
@@ -129,7 +135,7 @@ describe("releaseSimulation system", () => {
     });
 
     it("applies massive penalty for huge budget drop off week 1", () => {
-      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5); // Excellent legs = 0.7 drop off
+      vi.spyOn(crypto, 'getRandomValues').mockImplementation((arr: any) => { arr[0] = Math.floor(0.5 * (0xffffffff + 1)); return arr; });
 
       const massiveProject = { ...mockProject, budget: 200000000 };
       const drop = simulateWeeklyBoxOffice(massiveProject, 1, 90, 1000000, 0);
@@ -140,7 +146,7 @@ describe("releaseSimulation system", () => {
 
 
     it("applies sharp second-weekend drop for tentpoles week 1", () => {
-      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5); // Excellent legs = 0.7 drop off
+      vi.spyOn(crypto, 'getRandomValues').mockImplementation((arr: any) => { arr[0] = Math.floor(0.5 * (0xffffffff + 1)); return arr; });
 
       const tentpoleProject = { ...mockProject, budget: 100000000 };
       const drop = simulateWeeklyBoxOffice(tentpoleProject, 1, 90, 1000000, 0);
@@ -151,7 +157,7 @@ describe("releaseSimulation system", () => {
 
 
     it("applies strong word-of-mouth bonus for low budget anomalies", () => {
-      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5); // Excellent legs = 0.7 drop off
+      vi.spyOn(crypto, 'getRandomValues').mockImplementation((arr: any) => { arr[0] = Math.floor(0.5 * (0xffffffff + 1)); return arr; });
 
       const anomalyProject = { ...mockProject, budget: 20000000 };
       const drop = simulateWeeklyBoxOffice(anomalyProject, 2, 90, 1000000, 0);
@@ -161,7 +167,7 @@ describe("releaseSimulation system", () => {
     });
 
     it("handles extreme rival competition (100 strength)", () => {
-      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5); // average legs = 0.5
+      vi.spyOn(crypto, 'getRandomValues').mockImplementation((arr: any) => { arr[0] = Math.floor(0.5 * (0xffffffff + 1)); return arr; });
 
       // Penalty: (100/100) * 0.15 = 0.15. Multiplier = 0.5 - 0.15 = 0.35.
       const drop = simulateWeeklyBoxOffice(mockProject, 2, 60, 1000000, 100);
@@ -169,7 +175,7 @@ describe("releaseSimulation system", () => {
     });
 
     it("never drops below 0.05 absolute multiplier floor due to extreme competition", () => {
-      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.1); // Bad legs = ~0.115 drop off
+      vi.spyOn(crypto, 'getRandomValues').mockImplementation((arr: any) => { arr[0] = Math.floor(0.1 * (0xffffffff + 1)); return arr; });
 
       // Penalty: (100/100) * 0.15 = 0.15. Multiplier = 0.115 - 0.15 = -0.035 -> Clamped 0.05.
       const drop = simulateWeeklyBoxOffice(mockProject, 2, 30, 1000000, 100);
@@ -250,7 +256,7 @@ describe("releaseSimulation system", () => {
   describe("Extreme Edge Cases (Guild Auditor)", () => {
     it("handles extreme review scores (> 100 or < 0)", () => {
       // Mock random to be high
-      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.9);
+      vi.spyOn(crypto, 'getRandomValues').mockImplementation((arr: any) => { arr[0] = Math.floor(0.9 * (0xffffffff + 1)); return arr; });
       // Simulate weekly box office with reviewScore = 150 (impossible naturally, but engine shouldn't crash)
       const multiplierHigh = simulateWeeklyBoxOffice(mockProject, 2, 150, 1000000, 0);
       // Leg multiplier applies >= 85 logic
