@@ -3,7 +3,7 @@ import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { formatMoney, getWeekDisplay } from '@/engine/utils';
 import { Save, FastForward, AlertTriangle, TrendingUp, Newspaper } from 'lucide-react';
-import { selectActiveProjectsCount } from '@/store/selectors';
+import { selectActiveProjects } from '@/store/selectors';
 import { Badge } from '@/components/ui/badge';
 import { NewsTicker } from './NewsTicker';
 
