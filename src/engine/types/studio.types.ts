@@ -119,6 +119,13 @@ export interface BuyerBase {
   name: string;
   archetype: BuyerArchetype;
   currentMandate?: BuyerMandate;
+  // M&A fields
+  cash?: number;
+  strength?: number;
+  isAcquirable?: boolean;
+  acquiredBy?: string; // id of buyer that acquired this one
+  ownedPlatforms?: string[]; // ids of platforms this buyer has acquired
+  parentCompany?: string; // name of parent company after merger
 }
 
 export interface NetworkPlatform extends BuyerBase {
