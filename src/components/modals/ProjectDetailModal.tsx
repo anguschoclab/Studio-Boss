@@ -50,6 +50,7 @@ export const ProjectDetailModal = () => {
   const [domesticSplit, setDomesticSplit] = useState(50);
   const [marketingAngle, setMarketingAngle] = useState('spectacle');
   const [selectedTier, setSelectedTier] = useState<'none' | 'basic' | 'blockbuster'>('none');
+  const [packageDeal, setPackageDeal] = useState<{ leadTalentId: string; bundledTalentId: string; bundledTalentName: string; discount: number; reason: string } | null>(null);
 
   const { selectedProjectId, selectProject } = useUIStore();
   const gameState = useGameStore(s => s.gameState);
