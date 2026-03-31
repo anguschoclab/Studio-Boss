@@ -76,6 +76,7 @@ export class WeekCoordinator {
     context.impacts.push(...tickWorldEvents(state, context.rng));
     context.impacts.push(...advanceTrends(state.market.trends || []));
     context.impacts.push(...advanceMarketEvents(state));
+    context.impacts.push(advanceBuyers(state));
   }
 
   private static runProductionFilter(state: GameState, context: TickContext) {
