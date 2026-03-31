@@ -102,7 +102,17 @@ export type TvFormatKey =
   | 'live_action_anime'
   | 'neo_noir_procedural'
   | 'multiverse_anthology'
-  | 'standup_comedy_series';
+  | 'standup_comedy_series'
+  | 'cyberpunk_satire'
+  | 'steampunk_fantasy'
+  | 'post_apocalyptic_soap'
+  | 'supernatural_procedural'
+  | 'historical_heist'
+  | 'mecha_anime'
+  | 'vampire_sitcom'
+  | 'retro_sci_fi'
+  | 'fantasy_workplace_comedy'
+  | 'time_travel_romance';
 
 export type UnscriptedFormatKey =
   | 'competition'
@@ -200,7 +210,17 @@ export type UnscriptedFormatKey =
   | 'virtual_reality_dating'
   | 'extreme_job_swap'
   | 'celebrity_farm_survival'
-  | 'niche_hobby_competition';
+  | 'niche_hobby_competition'
+  | 'paranormal_renovation'
+  | 'extreme_pet_makeover'
+  | 'rich_kids_survival'
+  | 'crypto_millionaire_matchmaker'
+  | 'ai_dating_experiment'
+  | 'zombie_survival_reality'
+  | 'toddler_chef_competition'
+  | 'underground_fight_club_doc'
+  | 'space_tourism_reality'
+  | 'extreme_couponing_wars';
 
 export type ReleaseModelKey = 'weekly' | 'binge' | 'split';
 export type ProjectContractType = 'upfront' | 'deficit' | 'standard';
