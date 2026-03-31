@@ -1,11 +1,11 @@
-import { describe, it, expect } from 'vitest';
-import { advanceProjectProgress } from '../../../../engine/systems/production/progressCalculator';
-import { Project } from '../../../../engine/types';
+import { advanceProjectProgress } from '@/engine/systems/production/progressCalculator';
+import { Project } from '@/engine/types';
 
 describe('advanceProjectProgress', () => {
   it('halts progress and burns budget if a crisis is active and halting', () => {
     const project = { 
         id: '1', 
+        state: 'production',
         progress: 20, 
         budget: 1000000, 
         accumulatedCost: 200000,
@@ -21,6 +21,7 @@ describe('advanceProjectProgress', () => {
   it('advances progress normally when no crisis is active', () => {
     const project = { 
         id: '1', 
+        state: 'production',
         progress: 20, 
         budget: 1000000, 
         accumulatedCost: 200000,

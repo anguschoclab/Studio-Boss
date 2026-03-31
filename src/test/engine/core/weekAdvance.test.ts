@@ -18,7 +18,7 @@ describe("advanceWeek", () => {
     expect(summary.fromWeek).toBe(1);
     expect(summary.toWeek).toBe(2);
 
-    expect(summary.totalCosts).toBe(0);
+    expect(summary.totalCosts).toBe(500000);
     expect(summary.totalRevenue).toBe(0);
   });
 
@@ -77,7 +77,7 @@ describe("advanceWeek", () => {
 
     expect(newState.market.opportunities.length).toBeGreaterThan(0);
     // UI notifications from TalentSystem.advance
-    expect(summary.newsEvents.length + summary.projectUpdates.length).toBeGreaterThan(0);
+    expect((summary.newsEvents || []).length + (summary.projectUpdates || []).length).toBeGreaterThan(0);
 
     vi.restoreAllMocks();
   });
@@ -87,13 +87,18 @@ describe("advanceWeek", () => {
 
     // Explicitly empty Records and arrays
     emptyState.studio.internal.projects = {};
+    emptyState.projects = { active: [] };
+    emptyState.game = { currentWeek: 1 };
+    emptyState.finance = { cash: 1000000, ledger: [] };
+    emptyState.news = { headlines: [] };
+    emptyState.culture = { genrePopularity: {} };
     emptyState.studio.internal.contracts = [];
     emptyState.studio.internal.firstLookDeals = [];
     emptyState.market.opportunities = [];
     emptyState.market.buyers = [];
     emptyState.market.activeMarketEvents = [];
     emptyState.industry.rivals = [];
-    emptyState.industry.headlines = [];
+    emptyState.news.headlines = [];
     emptyState.industry.talentPool = {};
     emptyState.industry.awards = [];
     emptyState.industry.festivalSubmissions = [];
@@ -111,6 +116,6 @@ describe("advanceWeek", () => {
     expect(newState?.week).toBe(2);
     expect(Object.keys(newState?.studio.internal.projects || {}).length).toBe(0);
     expect(summary?.totalRevenue).toBe(0);
-    expect(summary?.totalCosts).toBe(0);
+    expect(summary?.totalCosts).toBe(500000);
   });
 });

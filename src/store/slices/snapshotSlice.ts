@@ -15,14 +15,15 @@ export const createSnapshotSlice: StateCreator<GameStore, [], [], SnapshotSlice>
     if (!state) return;
 
     // Derived counts
+    const projectsArray = Object.values(state.studio.internal.projects);
     // Completed projects are those that have been released (including post-release and archived)
-    const completedProjects = state.studio.internal.projects.filter(p => 
-      p.status === 'released' || p.status === 'post_release' || p.status === 'archived'
+    const completedProjects = projectsArray.filter(p => 
+      p.state === 'released' || p.state === 'post_release' || p.state === 'archived'
     ).length;
 
     // Active projects are those currently in development, production, or marketing
-    const activeProjects = state.studio.internal.projects.filter(p => 
-      p.status !== 'released' && p.status !== 'post_release' && p.status !== 'archived'
+    const activeProjects = projectsArray.filter(p => 
+      p.state !== 'released' && p.state !== 'post_release' && p.state !== 'archived'
     ).length;
 
     const currentYear = Math.floor((state.week - 1) / 52) + 1;
@@ -31,7 +32,7 @@ export const createSnapshotSlice: StateCreator<GameStore, [], [], SnapshotSlice>
     const snapshot: StudioSnapshot = {
       year: currentYear,
       week: currentWeek,
-      funds: state.cash,
+      funds: state.finance.cash,
       activeProjects,
       completedProjects,
       totalPrestige: state.studio.prestige,

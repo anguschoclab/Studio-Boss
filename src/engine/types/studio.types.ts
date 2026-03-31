@@ -1,7 +1,7 @@
 // Types related to Studios, Rivals, and Game State
 
 import { Project, Opportunity, GenreTrend, FestivalSubmission, Award, MandateType } from './project.types';
-import { Contract, FirstLookDeal, Family, Agency, Agent, TalentProfile, Scandal, MotivationProfile, RivalStrategy } from './talent.types';
+import { Contract, FirstLookDeal, Family, Agency, Agent, Talent, Scandal, MotivationProfile, RivalStrategy } from './talent.types';
 import { FinanceRecord, NewsEvent, Headline, Rumor, MarketEvent } from './engine.types';
 
 export type ArchetypeKey = 'major' | 'mid-tier' | 'indie';
@@ -42,6 +42,12 @@ import { WeeklyFinancialReport, FinanceState, NewsState } from './state.types';
 
 export interface GameState {
   week: number;
+  projects: {
+    active: Project[];
+  };
+  game: {
+    currentWeek: number;
+  };
   finance: FinanceState;
   news: NewsState;
   studio: {
@@ -66,7 +72,7 @@ export interface GameState {
     families: Family[];
     agencies: Agency[];
     agents: Agent[];
-    talentPool: Record<string, TalentProfile>;
+    talentPool: Record<string, Talent>;
     awards?: Award[];
     festivalSubmissions?: FestivalSubmission[];
     rumors?: Rumor[];

@@ -47,7 +47,7 @@ Object.defineProperty(globalThis, "localStorage", {
   it("returns null for invalid payload structures", () => {
     vi.spyOn(Storage.prototype, "getItem").mockReturnValueOnce(JSON.stringify({
       week: 1,
-      // missing cash
+      // missing finance.cash
       studio: { name: "Hacked" }
     }));
     expect(loadGame(1)).toBeNull();
@@ -94,7 +94,7 @@ Object.defineProperty(globalThis, "localStorage", {
         studioName: state.studio.name,
         archetype: state.studio.archetype,
         week: state.week,
-        cash: state.cash,
+        cash: state.finance.cash,
         timestamp: mockNow,
       }
     };

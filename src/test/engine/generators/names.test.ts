@@ -2,8 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   generateStudioName,
   generateMotto,
-  generateActorName,
-  generateActressName,
+  generateDemographicName,
   generateProjectName
 } from '../../../engine/generators/names';
 
@@ -30,17 +29,21 @@ describe('Names Generator', () => {
     });
   });
 
-  describe('generateActorName', () => {
-    it('returns a string with two words (first and last name)', () => {
-      const name = generateActorName();
+  describe('generateDemographicName', () => {
+    it('returns a string with two words for MALE', () => {
+      const name = generateDemographicName('MALE', 'USA', 'White');
       expect(typeof name).toBe('string');
       expect(name.split(' ').length).toBeGreaterThanOrEqual(2);
     });
-  });
 
-  describe('generateActressName', () => {
-    it('returns a string with two words (first and last name)', () => {
-      const name = generateActressName();
+    it('returns a string with two words for FEMALE', () => {
+      const name = generateDemographicName('FEMALE', 'USA', 'White');
+      expect(typeof name).toBe('string');
+      expect(name.split(' ').length).toBeGreaterThanOrEqual(2);
+    });
+    
+    it('returns a string for NON_BINARY', () => {
+      const name = generateDemographicName('NON_BINARY', 'USA', 'White');
       expect(typeof name).toBe('string');
       expect(name.split(' ').length).toBeGreaterThanOrEqual(2);
     });

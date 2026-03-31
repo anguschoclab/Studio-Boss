@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import * as utils from "../../../engine/utils";
 import { exploitIP } from "../../../engine/systems/franchises";
 import { Project, GameState } from "../../../engine/types";
-import * as utils from '../../../engine/utils';
 
 const baseProject: Project = {
   id: "p1",
@@ -13,7 +13,7 @@ const baseProject: Project = {
   weeklyCost: 1000000,
   targetAudience: "General",
   flavor: "Space epic",
-  status: "released",
+  state: "released",
   buzz: 100,
   weeksInPhase: 5,
   developmentWeeks: 20,
@@ -45,7 +45,7 @@ describe("franchise system", () => {
 
   describe("exploitIP", () => {
     it("returns null if source project is not released", () => {
-      const devProject = { ...baseProject, status: "development" as const };
+      const devProject = { ...baseProject, state: "development" as const };
       const result = exploitIP(devProject);
       expect(result).toBeNull();
     });
@@ -238,7 +238,7 @@ describe("franchise system", () => {
         ...Object.fromEntries(recentReleases.map(p => [p.id, p]))
       } } } } as unknown as GameState;
 
-      vi.spyOn(Math, 'random').mockReturnValue(0.5); 
+      vi.spyOn(utils, "secureRandom").mockReturnValue(0.5); 
       const result = exploitIP(flopProject, state);
 
       expect(result).toBeNull();

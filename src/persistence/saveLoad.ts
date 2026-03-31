@@ -45,7 +45,7 @@ export function saveGame(slot: number, state: GameState): void {
       studioName: state.studio.name,
       archetype: state.studio.archetype,
       week: state.week,
-      cash: state.cash,
+      cash: state.finance.cash,
       timestamp: Date.now(),
     };
 
@@ -57,7 +57,9 @@ export function saveGame(slot: number, state: GameState): void {
 
 const GameStatePartialSchema = z.object({
   week: z.number(),
-  cash: z.number(),
+  finance: z.object({
+    cash: z.number(),
+  }).passthrough(),
   studio: z.object({
     name: z.string(),
     archetype: z.enum(['major', 'mid-tier', 'indie']),

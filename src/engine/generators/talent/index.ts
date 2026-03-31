@@ -1,4 +1,4 @@
-import { Talent, TalentRole } from '../../types/talent.types';
+import { Talent, TalentRole, Family, Agency, Agent } from '../../types/talent.types';
 import { generateDemographics } from './demographicsGenerator';
 import { generatePsychology } from './psychologyGenerator';
 import { generateDemographicName } from '../names';
@@ -43,7 +43,26 @@ export function generateTalent(params: { role: TalentRole; tier: string; localCo
   };
 }
 
-export function generateTalentPool(count: number, localCountry?: string): Talent[] {
+export function generateFamilies(count: number): Family[] {
+  return Array.from({ length: count }).map((_, i) => ({
+    id: `family-${i}`,
+    name: `Family ${i}`, // Improved naming in future turns
+    recognition: Math.floor(Math.random() * 100),
+    prestigeLegacy: Math.floor(Math.random() * 100),
+    commercialLegacy: Math.floor(Math.random() * 100),
+    scandalLegacy: Math.floor(Math.random() * 100),
+    volatility: Math.floor(Math.random() * 100),
+    status: 'active'
+  }));
+}
+
+export function generateTalentPool(
+  count: number, 
+  families: Family[] = [], 
+  agents: Agent[] = [], 
+  agencies: Agency[] = [], 
+  localCountry?: string
+): Talent[] {
     const roles: TalentRole[] = ['actor', 'director', 'writer', 'producer'];
     const tiers = ['S-List', 'A-List', 'B-List', 'C-List', 'D-List'];
     

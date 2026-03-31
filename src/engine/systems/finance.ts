@@ -30,7 +30,7 @@ export function calculateProductionBurn(projects: Project[], eventMult: number =
   let sum = 0;
   for (let i = 0; i < projects.length; i++) {
     const p = projects[i];
-    if (p.status === 'production') {
+    if (p.state === 'production') {
       let costMultiplier = 1;
       if (p.contractType === 'upfront') {
          costMultiplier = 0; 
@@ -57,7 +57,7 @@ export function calculateMarketingExpenses(projects: Project[], eventMult: numbe
     let sum = 0;
     for (let i = 0; i < projects.length; i++) {
       const p = projects[i];
-      if (p.status === 'marketing') {
+      if (p.state === 'marketing') {
         sum += (p.weeklyCost * eventMult);
       }
     }
@@ -81,7 +81,7 @@ export function calculateBoxOfficeRevenue(projects: Project[], contracts: Contra
   
   for (let i = 0; i < projects.length; i++) {
     const p = projects[i];
-    if (p.status === 'released' && p.format === 'film') {
+    if (p.state === 'released' && p.format === 'film') {
       let revenue = p.weeklyRevenue;
 
       if (p.contractType === 'upfront') {
@@ -120,7 +120,7 @@ export function calculateDistributionRevenue(projects: Project[], eventMult: num
     for (let i = 0; i < projects.length; i++) {
       const p = projects[i];
       // TV/Unscripted/Catalog revenue
-      if (p.status === 'released' && p.format !== 'film') {
+      if (p.state === 'released' && p.format !== 'film') {
         sum += (p.weeklyRevenue * eventMult);
       }
     }

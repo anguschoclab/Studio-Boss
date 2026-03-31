@@ -16,7 +16,7 @@ interface StateCache {
 const stateIndexes = new WeakMap<GameState, StateCache>();
 
 export function exploitIP(sourceProject: Project, state?: GameState) {
-  if (sourceProject.status !== 'released') {
+  if (sourceProject.state !== 'released') {
     return null;
   }
 
@@ -56,7 +56,7 @@ export function exploitIP(sourceProject: Project, state?: GameState) {
         const pRootId = p.parentProjectId || p.id;
         cache.relatedCounts.set(pRootId, (cache.relatedCounts.get(pRootId) || 0) + 1);
 
-        if (p.status === 'released') {
+        if (p.state === 'released') {
           // Track genre saturation
           if (p.releaseWeek !== undefined && p.releaseWeek !== null && p.releaseWeek >= saturationCutoff) {
             cache.genreSaturationCounts.set(p.genre, (cache.genreSaturationCounts.get(p.genre) || 0) + 1);

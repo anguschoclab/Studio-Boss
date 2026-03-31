@@ -15,6 +15,10 @@ vi.mock('@/store/uiStore', () => ({
   useUIStore: vi.fn(),
 }));
 
+vi.mock('@/engine/utils/impactUtils', () => ({
+  getCrisisData: vi.fn(),
+}));
+
 // Mock Lucide icons properly
 vi.mock('lucide-react', async (importOriginal) => {
   const actual = await importOriginal<typeof import('lucide-react')>();
@@ -41,6 +45,7 @@ describe('CrisisModal', () => {
     flavor: 'explosive',
     status: 'production',
     activeCrisis: {
+      crisisId: 'test-crisis',
       description: 'The set is on fire.',
       options: [
         { text: 'Put it out', effectDescription: 'Costs $1M' },
@@ -61,13 +66,23 @@ describe('CrisisModal', () => {
     }
   } as any;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.clearAllMocks();
 
     // Default mock implementations
     (useUIStore as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
       activeModal: { type: 'CRISIS', payload: { projectId: 'proj-123', crisis: mockProject.activeCrisis } },
       resolveCurrentModal: mockCloseCrisisModal,
+    });
+
+    const impactUtils = await import('@/engine/utils/impactUtils');
+    (impactUtils.getCrisisData as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
+      id: 'test-crisis',
+      description: 'The set is on fire.',
+      options: [
+        { text: 'Put it out', effectDescription: 'Costs $1M' },
+        { text: 'Let it burn', effectDescription: 'Delays 2 weeks' },
+      ],
     });
 
     (useGameStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector: any) => {
@@ -138,7 +153,7 @@ describe('CrisisModal', () => {
   it('renders the modal with crisis details correctly', () => {
     render(<CrisisModal />);
 
-    expect(screen.getByText(/Breaking News: Scandal!/i)).toBeInTheDocument();
+    expect(screen.getByText(/Phase 2: Production Crisis/i)).toBeInTheDocument();
     expect(screen.getByText('The set is on fire.')).toBeInTheDocument();
     expect(screen.getByText('Put it out')).toBeInTheDocument();
     expect(screen.getByText('Costs $1M')).toBeInTheDocument();

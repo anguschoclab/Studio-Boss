@@ -15,7 +15,7 @@ describe("applyStateImpact utility", () => {
           "proj-1": {
             id: "proj-1",
             title: "Test Project",
-            status: "development",
+            state: "development",
             buzz: 50,
             weeksInPhase: 0,
             developmentWeeks: 10,
@@ -55,9 +55,11 @@ describe("applyStateImpact utility", () => {
         genrePopularity: {}
     },
     finance: {
-        bankBalance: 1000000,
-        yearToDateRevenue: 0,
-        yearToDateExpenses: 0
+        cash: 1000000,
+        ledger: []
+    },
+    news: {
+        headlines: []
     },
     history: []
   } as unknown as GameState);
@@ -65,19 +67,19 @@ describe("applyStateImpact utility", () => {
   it("should update cash correctly", () => {
     const impact = { cashChange: -500000 };
     const newState = applyStateImpact(getInitialMockState(), impact);
-    expect(newState.cash).toBe(500000);
+    expect(newState.finance.cash).toBe(500000);
   });
 
   it("should update project fields correctly", () => {
     const impact = {
       projectUpdates: [{
         projectId: "proj-1",
-        update: { status: "production" as const, buzz: 70 }
+        update: { state: "production" as const, buzz: 70 }
       }]
     };
     const newState = applyStateImpact(getInitialMockState(), impact);
     const updatedProject = newState.studio.internal.projects["proj-1"];
-    expect(updatedProject?.status).toBe("production");
+    expect(updatedProject?.state).toBe("production");
     expect(updatedProject?.buzz).toBe(70);
   });
 
@@ -93,7 +95,7 @@ describe("applyStateImpact utility", () => {
       newsEvents: [{ type: "AWARD" as const, headline: "Award Won!", description: "Win", impact: "+10 Prestige" }]
     };
     const newState = applyStateImpact(getInitialMockState(), impact);
-    expect(newState.industry.headlines).toHaveLength(1);
+    expect(newState.news.headlines).toHaveLength(1);
     expect(newState.industry.newsHistory).toHaveLength(1);
     expect(newState.industry.newsHistory[0].headline).toBe("Award Won!");
   });

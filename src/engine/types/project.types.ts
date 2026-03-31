@@ -320,7 +320,7 @@ export interface Project {
   weeklyCost: number;
   targetAudience: string;
   flavor: string;
-  status: ProjectStatus;
+  state: ProjectStatus;
   buzz: number;
   contractType?: ProjectContractType;
   weeksInPhase: number;

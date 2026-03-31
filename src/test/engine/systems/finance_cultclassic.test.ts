@@ -6,7 +6,7 @@ describe('Finance: Cult Classic Revenue', () => {
   const baseProject: Project = {
     id: 'p1', title: 'Flop', format: 'film', genre: 'Drama', budgetTier: 'low',
     budget: 1000000, weeklyCost: 10000, targetAudience: 'General Audience', flavor: 'A nice drama',
-    status: 'released', buzz: 50, weeksInPhase: 0, developmentWeeks: 4, productionWeeks: 4,
+    state: 'released', buzz: 50, weeksInPhase: 0, developmentWeeks: 4, productionWeeks: 4,
     revenue: 0, weeklyRevenue: 50000, releaseWeek: null
   } as Project;
 

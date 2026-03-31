@@ -51,7 +51,7 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
   const talentPool = talentPoolArray.reduce((acc, t) => {
     acc[t.id] = t;
     return acc;
-  }, {} as Record<string, import('@/engine/types').TalentProfile>);
+  }, {} as Record<string, import('@/engine/types').Talent>);
   const initialTrends = initializeTrends();
   const genrePopularity: Record<string, number> = {};
   ALL_GENRES.forEach(g => {
@@ -61,6 +61,8 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
 
   return {
     week: 1,
+    game: { currentWeek: 1 },
+    projects: { active: [] },
     finance: {
       cash: arch.startingCash,
       ledger: [],

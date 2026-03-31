@@ -1,13 +1,18 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { useGameStore } from "../../store/gameStore";
 import * as saveLoad from "../../persistence/saveLoad";
-import { TalentProfile, Project } from "../../engine/types";
+import { Talent, Project } from "../../engine/types";
 
 // Mock saveLoad
 vi.mock("../../persistence/saveLoad", () => ({
   saveGame: vi.fn(),
   loadGame: vi.fn((slot) => {
-    if (slot === 1) return { studio: { name: "Loaded Studio", internal: { projects: {}, contracts: [] } }, industry: { talentPool: {} } };
+    if (slot === 1) return { week: 1, 
+      game: { currentWeek: 1 },
+      finance: { cash: 0, ledger: [] },
+      news: { headlines: [] },
+      projects: { active: [] },
+      studio: { name: "Loaded Studio", internal: { projects: {}, contracts: [] } }, industry: { talentPool: {} } };
     return null;
   }),
   getSaveSlots: vi.fn(() => [{ exists: true }]),
@@ -70,7 +75,7 @@ describe("gameStore", () => {
   it("signs a contract if sufficient funds", () => {
     useGameStore.getState().newGame("My Studio", "major");
     const state = useGameStore.getState().gameState!;
-    state.cash = 1000000;
+    state.finance.cash = 1000000;
     state.industry.talentPool = {
       "t1": { 
           id: "t1", name: "Star", roles: ["actor"], prestige: 85, draw: 80, fee: 100000, accessLevel: "outsider", temperament: "normal",
@@ -80,7 +85,7 @@ describe("gameStore", () => {
     state.studio.internal.projects = {
       "p1": { 
         id: "p1", title: "Test", format: "film", genre: "Action", budgetTier: "low", budget: 500000, weeklyCost: 10000,
-        targetAudience: "General", flavor: "", status: "development", weeksInPhase: 0, productionWeeks: 10, developmentWeeks: 10,
+        targetAudience: "General", flavor: "", state: "development", weeksInPhase: 0, productionWeeks: 10, developmentWeeks: 10,
         revenue: 0, weeklyRevenue: 0, releaseWeek: null 
       } as any
     };
@@ -89,7 +94,7 @@ describe("gameStore", () => {
     useGameStore.getState().signContract("t1", "p1");
 
     const newState = useGameStore.getState().gameState!;
-    expect(newState.cash).toBe(900000); // 1M - 100k fee
+    expect(newState.finance.cash).toBe(900000); // 1M - 100k fee
     expect(newState.studio.internal.contracts).toHaveLength(1);
     expect(newState.studio.internal.contracts[0].talentId).toBe("t1");
   });

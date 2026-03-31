@@ -29,6 +29,6 @@ describe('Historical Snapshots System', () => {
      expect(snapshots.length).toBe(1);
      expect(snapshots[0].year).toBe(2);
      expect(snapshots[0].week).toBe(1);
-     expect(snapshots[0].funds).toBe(useGameStore.getState().gameState?.cash || 0);
+     expect(snapshots[0].funds).toBe(useGameStore.getState().gameState?.finance.cash || 0);
   });
 });

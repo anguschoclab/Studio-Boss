@@ -13,7 +13,7 @@ const mockProject: Project = {
   weeklyCost: 1000000,
   targetAudience: "General",
   flavor: "Epic space journey",
-  status: "pitching",
+  state: "pitching",
   buzz: 50,
   weeksInPhase: 0,
   developmentWeeks: 10,

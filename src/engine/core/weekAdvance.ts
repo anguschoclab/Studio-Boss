@@ -19,7 +19,7 @@ function createSnapshot(state: GameState, originalWeek: number): StudioSnapshot 
   const projects = Object.values(state.studio.internal.projects);
   
   for (const p of projects) {
-    if (p.status === 'released' || p.status === 'post_release' || p.status === 'archived') {
+    if (p.state === 'released' || p.state === 'post_release' || p.state === 'archived') {
       releasedProjectsCount++;
     } else {
       activeProjectsCount++;
@@ -76,8 +76,8 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
   let currentState = state;
 
   // 1. Process Studio Production (Advancement, Quality, Completion)
-  const productionImpact = processProduction(currentState);
-  currentState = applyStateImpact(currentState, productionImpact);
+  // TRANSFORMER: Directly returns new GameState
+  currentState = processProduction(currentState);
 
   // 2. Process Rival Production (Advancement for competitors)
   const rivalProdImpact = processRivalProduction(currentState);
@@ -104,7 +104,7 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
   currentState = applyStateImpact(currentState, dealsImpact);
 
   // 6. Build Cumulative Summary
-  const allImpacts = mergeImpacts(productionImpact, rivalProdImpact, worldImpact, ipImpact, dealsImpact);
+  const allImpacts = mergeImpacts(rivalProdImpact, worldImpact, ipImpact, dealsImpact);
   
   const summary: WeekSummary = {
     fromWeek: originalState.week,

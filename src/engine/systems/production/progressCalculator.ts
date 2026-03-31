@@ -7,23 +7,29 @@ import { Project } from '../../types';
 export function advanceProjectProgress(project: Project): Project {
   // Use momentum to modify base progress/burn
   const momentumFactor = 0.5 + (project.momentum / 200); // 0.55 to 1.0 multiplier
+  
+  const p = { ...project };
 
-  if (project.activeCrisis?.haltedProduction) {
-    // Burn budget (5% penalty), no progress
-    return {
-      ...project,
-      accumulatedCost: project.accumulatedCost + (project.budget * 0.05)
-    };
+  if (p.state !== 'production') return p;
+
+  // Halt logic: Still burns budget (overheads/delay costs) but no progress
+  if (p.activeCrisis?.haltedProduction) {
+    p.momentum = Math.max(0, p.momentum - 5);
+    const costStep = (project.budget * 0.05) / momentumFactor; 
+    p.accumulatedCost += costStep;
+    return p;
   }
 
-  // Advance normally (approx 10% progress per week)
-  // Modified by momentum
-  const progressStep = 10 * momentumFactor;
-  const costStep = (project.budget * 0.10) / momentumFactor; // High momentum makes cost more efficient
+  // Progress logic
+  const baseProgress = 10; // 10% per week base
+  const actualProgress = baseProgress * momentumFactor;
+  p.progress = Math.min(100, p.progress + actualProgress);
 
-  return {
-    ...project,
-    progress: Math.min(100, project.progress + progressStep),
-    accumulatedCost: project.accumulatedCost + costStep
-  };
+  // Budget burn logic (Accelerated by low momentum)
+  const costStep = (project.budget * 0.10) / momentumFactor; 
+  p.accumulatedCost += costStep;
+  
+  p.weeksInPhase += 1;
+
+  return p;
 }
