@@ -30,6 +30,7 @@ export function generateTalent(params: { role: TalentRole; tier: string; localCo
     fee,
     draw: Math.min(100, draw),
     accessLevel: isNepo ? 'legacy' : 'outsider',
+    momentum: 50,
     starMeter: Math.floor((prestige * 0.4) + (draw * 0.4) + (prestige * 0.2)),
     bio: `${name} is a ${params.tier} ${params.role}.`,
     motivationProfile: {
