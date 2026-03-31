@@ -12,21 +12,32 @@ function tickProject(project: Project, rng: RandomGenerator): StateImpact[] {
 
   const impacts: StateImpact[] = [];
   const nextWeeksInPhase = (project.weeksInPhase || 0) + 1;
+  const targetWeeks = project.productionWeeks || 20;
+  
+  // 1. Progress Increment (with small stochastic variance)
+  const baseProgress = (1 / targetWeeks) * 100;
+  const variance = rng.range(0.8, 1.2);
+  const actualProgressIncrement = baseProgress * variance;
+  const newProgress = Math.min(100, (project.progress || 0) + actualProgressIncrement);
 
-  // 1. Progress Increment
+  // 2. Stochastic Quality Check
+  // Each week has a chance to slightly shift the reviewScore based on progress milestones
+  let qualityShift = 0;
+  if (rng.next() < 0.2) {
+    qualityShift = rng.range(-2, 3); // Slightly biased towards improvement
+  }
+
   impacts.push({
     type: 'PROJECT_UPDATED',
     payload: {
       projectId: project.id,
       update: {
         weeksInPhase: nextWeeksInPhase,
-        // Simple linear progress for now, will be refined in Phase B
-        progress: Math.min(100, (nextWeeksInPhase / (project.productionWeeks || 20)) * 100)
+        progress: newProgress,
+        reviewScore: Math.min(100, Math.max(0, (project.reviewScore || 50) + qualityShift))
       }
     }
   });
-
-  // Future: Stochastic quality checks using rng.next()
 
   return impacts;
 }

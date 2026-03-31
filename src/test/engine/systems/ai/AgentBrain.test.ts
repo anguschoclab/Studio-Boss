@@ -1,8 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { GameState, Agency, Agent, Talent } from '@/engine/types';
+import { GameState, Agency } from '@/engine/types';
 import { tickAgencies } from '@/engine/systems/ai/AgentBrain';
+import { RandomGenerator } from '@/engine/utils/rng';
 
 describe('Agent Brain (Target C2)', () => {
+  const rng = new RandomGenerator(888);
   const mockAgency: Agency = {
     id: 'a1',
     name: 'CAA Clone',
@@ -23,9 +25,8 @@ describe('Agent Brain (Target C2)', () => {
   } as unknown as GameState;
 
   it('should generate rumors for SHARK agencies', () => {
-    const impacts = tickAgencies(mockState);
-    const rumors = impacts.filter(i => i.type === 'NEWS_ADDED');
-    // Since it's probabilistic, we can't always guarantee, but we check return type
+    // Probabilistic, but we pass RNG now
+    const impacts = tickAgencies(mockState, rng);
     expect(Array.isArray(impacts)).toBe(true);
   });
 });

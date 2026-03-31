@@ -1,11 +1,11 @@
 import { vi } from "vitest";
 import { describe, it, expect, beforeEach } from 'vitest';
 import { evaluateFirstLookDeal, offerFirstLookDeal, advanceDeals } from '../../../engine/systems/deals';
-import { TalentProfile, GameState, FirstLookDeal } from '../../../engine/types';
+import { Talent, GameState, FirstLookDeal } from '../../../engine/types';
 import * as utils from '../../../engine/utils';
 
 describe('Deals System', () => {
-  let mockTalent: TalentProfile;
+  let mockTalent: Talent;
 
   beforeEach(() => {
     mockTalent = {
@@ -15,15 +15,8 @@ describe('Deals System', () => {
       prestige: 90,
       draw: 85,
       fee: 2_000_000,
-      temperament: "Normal",
+      personality: "Normal",
       accessLevel: "soft-access",
-      age: 40,
-      gender: "male",
-      ethnicity: "white",
-      nationality: "USA",
-      traits: [],
-      stats: { acting: 90, directing: 85, writing: 0, production: 0 },
-      workHistory: []
     } as any;
   });
 
@@ -44,7 +37,7 @@ describe('Deals System', () => {
     expect(highOffer).toBe(true);
   });
 
-  it('offers a deal and returns StateImpact if accepted', () => {
+  it('offers a deal and returns NEWS_ADDED impact if accepted', () => {
     const state = {
         studio: { name: 'Test Studio', prestige: 90 },
         industry: { talentPool: { [mockTalent.id]: mockTalent } }
@@ -52,13 +45,13 @@ describe('Deals System', () => {
     
     vi.spyOn(utils, 'secureRandom').mockReturnValue(0.01); // Trigger success
     
-    const impact = offerFirstLookDeal(state, mockTalent.id, 52, true);
-    expect(impact.uiNotifications).toBeDefined();
-    expect(impact.uiNotifications![0]).toContain(mockTalent.name);
-    expect(impact.uiNotifications![0]).toContain("signs");
+    const impacts = offerFirstLookDeal(state, mockTalent.id, 52, true);
+    const news = impacts.find(i => i.type === 'NEWS_ADDED');
+    expect(news).toBeDefined();
+    expect(news?.payload.headline).toContain("signs");
   });
 
-  it('returns expiry notification in StateImpact during advanceDeals', () => {
+  it('returns expiry notification in NEWS_ADDED impact during advanceDeals', () => {
     const deal: FirstLookDeal = {
       id: 'd1',
       talentId: 't1',
@@ -66,8 +59,9 @@ describe('Deals System', () => {
       exclusivity: true
     };
     
-    const impact = advanceDeals([deal]);
-    expect(impact.uiNotifications).toHaveLength(1);
-    expect(impact.uiNotifications![0]).toContain("expired");
+    const impacts = advanceDeals([deal]);
+    const news = impacts.find(i => i.type === 'NEWS_ADDED');
+    expect(news).toBeDefined();
+    expect(news?.payload.description).toContain("expired");
   });
 });

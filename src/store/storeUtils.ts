@@ -1,28 +1,10 @@
-import { GameState, Project, Talent, ProjectFormat, BudgetTierKey, TvFormatKey, UnscriptedFormatKey, ReleaseModelKey } from '@/engine/types';
+import { GameState, Project, Talent, ProjectFormat, BudgetTierKey, TvFormatKey, UnscriptedFormatKey, ReleaseModelKey, StateImpact } from '@/engine/types';
 import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
 import { TV_FORMATS } from '@/engine/data/tvFormats';
 import { UNSCRIPTED_FORMATS } from '@/engine/data/unscriptedFormats';
 import { getFilmStats, getTvStats, getUnscriptedStats } from '@/engine/systems/stats';
 import { randRange } from '@/engine/utils';
-
-function updateOpportunities(current: import('@/engine/types').Opportunity[], impact: any): import('@/engine/types').Opportunity[] {
-  let next = [...current];
-  if (impact.opportunityUpdates && impact.opportunityUpdates.length > 0) {
-    const uMap = new Map(impact.opportunityUpdates.map((u: any) => [u.opportunityId, u.update]));
-    next = next.map(o => {
-      const up = uMap.get(o.id);
-      return up ? { ...o, ...up } : o;
-    });
-  }
-  if (impact.removeOpportunityIds && impact.removeOpportunityIds.length > 0) {
-    const toRemove = new Set(impact.removeOpportunityIds);
-    next = next.filter(o => !toRemove.has(o.id));
-  }
-  if (impact.newOpportunities) {
-    next = [...next, ...impact.newOpportunities];
-  }
-  return next;
-}
+import { applyImpacts } from '@/engine/core/impactReducer';
 
 export interface CreateProjectParams {
     title: string;
@@ -39,6 +21,7 @@ export interface CreateProjectParams {
     parentProjectId?: string;
     isSpinoff?: boolean;
     initialBuzzBonus?: number;
+    franchiseId?: string;
 }
 
 function getProjectStats(params: CreateProjectParams, tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS]) {
@@ -56,7 +39,6 @@ function prepareTalentAndContracts(
     projectId: string
 ) {
     const ids = attachedTalentIds || [];
-    const talentMap = new Map();
     const talentPool = state.industry.talentPool;
     const attachedTalent: Talent[] = [];
     let talentFees = 0;
@@ -97,7 +79,6 @@ export function buildProjectAndContracts(state: GameState, params: CreateProject
         budget: totalBudget,
         weeklyCost,
         state: 'development' as const,
-        episodesReleased: (params.format === 'tv' || params.format === 'unscripted') ? 0 : undefined,
         renewable,
         activeCrisis: null,
         momentum: 50,
@@ -110,227 +91,26 @@ export function buildProjectAndContracts(state: GameState, params: CreateProject
         weeksInPhase: 0,
         developmentWeeks,
         productionWeeks,
-    };
+        ...( (params.format === 'tv' || params.format === 'unscripted') ? {
+            tvDetails: {
+                currentSeason: 1,
+                episodesOrdered: params.episodes || 0,
+                episodesCompleted: 0,
+                episodesAired: 0,
+                averageRating: 0,
+                status: 'IN_DEVELOPMENT'
+            }
+        } : {} )
+    } as Project;
 
     return { project, newContracts, talentFees };
 }
 
-export function applyStateImpact(state: GameState, impact: import('@/engine/types').StateImpact): GameState {
-  const newState = { ...state };
-  
-  // 1. Update Project List
-  const newProjects = { ...state.studio.internal.projects };
-  let projectsChanged = false;
-  
-  if (impact.projectUpdates) {
-    impact.projectUpdates.forEach(({ projectId, update }) => {
-      const project = newProjects[projectId];
-      if (project) {
-        newProjects[projectId] = { ...project, ...update };
-        projectsChanged = true;
-      }
-    });
-
-    if (impact.cultClassicProjectIds && impact.cultClassicProjectIds.length > 0) {
-        impact.cultClassicProjectIds.forEach(projectId => {
-            const project = newProjects[projectId];
-            if (project) {
-                newProjects[projectId] = { ...project, isCultClassic: true };
-                projectsChanged = true;
-            }
-        });
-    }
-  }
-  
-  // 2. Update Talent Pool
-  const newTalentPool = { ...state.industry.talentPool };
-  let talentPoolChanged = false;
-
-  if (impact.talentUpdates && impact.talentUpdates.length > 0) {
-    impact.talentUpdates.forEach(({ talentId, update }) => {
-      const talent = newTalentPool[talentId];
-      if (talent) {
-        newTalentPool[talentId] = { ...talent, ...update };
-        talentPoolChanged = true;
-      }
-    });
-  }
-
-  if (impact.razzieWinnerTalents && impact.razzieWinnerTalents.length > 0) {
-    impact.razzieWinnerTalents.forEach(talentId => {
-      const talent = newTalentPool[talentId];
-      if (talent) {
-        newTalentPool[talentId] = { ...talent, hasRazzie: true };
-        talentPoolChanged = true;
-      }
-    });
-  }
-
-  // 3. Update Rivals & Rival Projects
-  let newRivals = [...state.industry.rivals];
-  let rivalsChanged = false;
-  if (impact.rivalUpdates && impact.rivalUpdates.length > 0) {
-    const updatesMap = new Map(impact.rivalUpdates.map(u => [u.rivalId, u.update]));
-    newRivals = newRivals.map(r => {
-        const update = updatesMap.get(r.id);
-        if (update) {
-            rivalsChanged = true;
-            return { ...r, ...update };
-        }
-        return r;
-    });
-  }
-
-  if (impact.rivalProjectUpdates && impact.rivalProjectUpdates.length > 0) {
-    rivalsChanged = true;
-    impact.rivalProjectUpdates.forEach(({ rivalId, projectId, update }) => {
-       const rivalIndex = newRivals.findIndex(r => r.id === rivalId);
-       if (rivalIndex !== -1) {
-          const rival = newRivals[rivalIndex];
-          const project = rival.projects[projectId];
-          if (project) {
-             newRivals[rivalIndex] = {
-                ...rival,
-                projects: {
-                   ...rival.projects,
-                   [projectId]: { ...project, ...update }
-                }
-             };
-          }
-       }
-    });
-  }
-
-  // 3b. Update Buyers
-  let newBuyers = [...state.market.buyers];
-  let buyersChanged = false;
-  if (impact.buyerUpdates && impact.buyerUpdates.length > 0) {
-    const bMap = new Map(impact.buyerUpdates.map(u => [u.buyerId, u.update]));
-    newBuyers = newBuyers.map(b => {
-      const up = bMap.get(b.id);
-      if (up) {
-        buyersChanged = true;
-        return { ...b, ...up };
-      }
-      return b;
-    });
-  }
-
-  // 4. Update Contracts
-  let newContracts = [...state.studio.internal.contracts];
-  if (impact.removeContracts && impact.removeContracts.length > 0) {
-    const toRemove = new Set(impact.removeContracts.map(c => `${c.talentId}-${c.projectId}`));
-    newContracts = newContracts.filter(c => !toRemove.has(`${c.talentId}-${c.projectId}`));
-  }
-  if (impact.removeContract) { // Legacy
-    const { talentId, projectId } = impact.removeContract;
-    newContracts = newContracts.filter(c => !(c.talentId === talentId && c.projectId === projectId));
-  }
-  
-  // 5. Update Cash & Prestige
-  const cashChange = impact.cashChange || 0;
-  const prestigeChange = impact.prestigeChange || 0;
-  
-  // 6. Update Headlines & News History
-  let newHeadlines = [...(state.news.headlines || [])];
-  if (impact.newHeadlines && impact.newHeadlines.length > 0) {
-    const hlines = impact.newHeadlines.map(h => ({
-      id: h.id || `h-${crypto.randomUUID()}`,
-      week: h.week || state.week,
-      category: h.category || 'general',
-      text: h.text || ''
-    } as import('@/engine/types').Headline));
-    newHeadlines = [...hlines, ...newHeadlines].slice(0, 100);
-  }
-  
-  let newNewsHistory = [...(state.industry.newsHistory || [])];
-  if (impact.newsEvents && impact.newsEvents.length > 0) {
-    const events = impact.newsEvents.map(e => ({
-      ...e,
-      id: e.id || `ne-${crypto.randomUUID()}`,
-      week: e.week || state.week,
-      type: e.type || 'STUDIO_EVENT',
-      headline: e.headline || '',
-      description: e.description || ''
-    } as import('@/engine/types').NewsEvent));
-    newNewsHistory = [...events, ...newNewsHistory].slice(0, 100);
-  }
-
-  const newAwards = impact.newAwards ? [...(state.industry.awards || []), ...impact.newAwards] : state.industry.awards;
-
-  let newScandals = [...(state.industry.scandals || [])];
-  let scandalsChanged = false;
-
-  if (impact.newScandals && impact.newScandals.length > 0) {
-      newScandals = [...newScandals, ...impact.newScandals];
-      scandalsChanged = true;
-  }
-
-  if (impact.scandalUpdates && impact.scandalUpdates.length > 0) {
-      const sMap = new Map(impact.scandalUpdates.map(u => [u.scandalId, u.update]));
-      newScandals = newScandals.map(s => {
-          const up = sMap.get(s.id);
-          if (up) {
-              scandalsChanged = true;
-              return { ...s, ...up };
-          }
-          return s;
-      });
-  }
-  if (impact.removeScandalIds && impact.removeScandalIds.length > 0) {
-      const toRemove = new Set(impact.removeScandalIds);
-      newScandals = newScandals.filter(s => !toRemove.has(s.id));
-      scandalsChanged = true;
-  }
-
-  // UI Notifications (Add to events list or handle however your system prefers. Since we don't have an explicit 'events' array in State outside of ui, we'll assume it goes to a slice. Let's make sure it's valid).
-  // The UI often pulls directly from `newsHistory` or `headlines`, but here we can add generic notifications to `newsHistory` if they are raw strings:
-  if (impact.uiNotifications && impact.uiNotifications.length > 0) {
-      const notifs = impact.uiNotifications.map(text => ({
-          id: `ne-${crypto.randomUUID()}`,
-          week: state.week,
-          type: 'STUDIO_EVENT',
-          headline: 'Notification',
-          description: text
-      } as import('@/engine/types').NewsEvent));
-      newNewsHistory = [...notifs, ...newNewsHistory].slice(0, 100);
-  }
-  // Assemble final state
-  return {
-    ...newState,
-    finance: {
-      ...state.finance,
-      cash: state.finance.cash + cashChange,
-      ledger: (impact.newFinanceHistory as any) || state.finance.ledger,
-    },
-    news: {
-      ...state.news,
-      headlines: newHeadlines,
-    },
-    studio: {
-      ...state.studio,
-      prestige: Math.max(0, state.studio.prestige + prestigeChange),
-      internal: {
-        ...state.studio.internal,
-        projects: projectsChanged ? newProjects : state.studio.internal.projects,
-        contracts: newContracts,
-      }
-    },
-    industry: {
-      ...state.industry,
-      talentPool: talentPoolChanged ? newTalentPool : state.industry.talentPool,
-      rivals: rivalsChanged ? newRivals : state.industry.rivals,
-      awards: newAwards,
-      scandals: scandalsChanged ? newScandals : state.industry.scandals,
-      newsHistory: newNewsHistory,
-      rumors: impact.newRumors || state.industry.rumors,
-      festivalSubmissions: impact.newFestivalSubmissions || state.industry.festivalSubmissions
-    },
-    market: {
-      ...state.market,
-      buyers: buyersChanged ? newBuyers : state.market.buyers,
-      activeMarketEvents: impact.newMarketEvents || state.market.activeMarketEvents,
-      opportunities: updateOpportunities(state.market.opportunities, impact)
-    }
-  };
+/**
+ * Bridge to the engine's impact reducer.
+ * Supports passing multiple impacts for convenience in the store.
+ */
+export function applyStateImpact(state: GameState, impacts: StateImpact | StateImpact[]): GameState {
+  const impactsArray = Array.isArray(impacts) ? impacts : [impacts];
+  return applyImpacts(state, impactsArray);
 }

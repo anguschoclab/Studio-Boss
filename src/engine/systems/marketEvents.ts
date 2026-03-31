@@ -50,12 +50,8 @@ export function getActiveMarketEvent(state: GameState): MarketEvent | undefined 
   return state.market.activeMarketEvents[0]; // For simplicity, only 1 global event at a time
 }
 
-export function advanceMarketEvents(state: GameState): StateImpact {
-  const impact: StateImpact = {
-    newMarketEvents: [],
-    newHeadlines: []
-  };
-
+export function advanceMarketEvents(state: GameState): StateImpact[] {
+  const impacts: StateImpact[] = [];
   let activeEvents = state.market.activeMarketEvents || [];
   
   // Tick active events down
@@ -69,14 +65,17 @@ export function advanceMarketEvents(state: GameState): StateImpact {
   activeEvents = activeEvents.filter(e => e.weeksRemaining > 0);
   
   for (const exp of expired) {
-    impact.newHeadlines!.push({
-      category: 'market',
-      text: `Market Normalizes: The ${exp.name} has finally ended.`
+    impacts.push({
+      type: 'NEWS_ADDED',
+      payload: {
+        headline: 'Market Normalizes',
+        description: `The ${exp.name} has finally ended.`,
+      }
     });
   }
   
   // Chance to spawn new event if none active
-  if (activeEvents.length === 0 && secureRandom() < 0.01) {
+  if (activeEvents.length === 0 && secureRandom() < 0.02) {
     const template = pick(EVENT_TEMPLATES);
     const newEvent: MarketEvent = {
       ...template,
@@ -85,13 +84,20 @@ export function advanceMarketEvents(state: GameState): StateImpact {
     };
     
     activeEvents.push(newEvent);
-    impact.newHeadlines!.push({
-      category: 'market',
-      text: `MAJOR INDUSTRY EVENT: ${newEvent.name} - ${newEvent.description}`
+    impacts.push({
+      type: 'NEWS_ADDED',
+      payload: {
+        headline: `MAJOR INDUSTRY EVENT: ${newEvent.name}`,
+        description: newEvent.description,
+      }
     });
   }
   
-  impact.newMarketEvents = activeEvents;
-  return impact;
+  impacts.push({
+    type: 'MARKET_EVENT_UPDATED',
+    payload: { events: activeEvents }
+  });
+
+  return impacts;
 }
 

@@ -14,6 +14,15 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
         }
       };
 
+    case 'FUNDS_DEDUCTED':
+      return {
+        ...state,
+        finance: {
+          ...state.finance,
+          cash: state.finance.cash - impact.payload.amount
+        }
+      };
+
     case 'PROJECT_UPDATED': {
       const { projectId, update } = impact.payload;
       const projects = { ...state.studio.internal.projects };
@@ -87,6 +96,100 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
         }
       };
     }
+
+    case 'BUYER_UPDATED': {
+      const { buyerId, update } = impact.payload;
+      const buyers = state.market.buyers.map(b => 
+        b.id === buyerId ? { ...b, ...update } : b
+      );
+      return {
+        ...state,
+        market: {
+          ...state.market,
+          buyers
+        }
+      };
+    }
+
+    case 'RIVAL_UPDATED': {
+      const { rivalId, update } = impact.payload;
+      const rivals = state.industry.rivals.map(r => 
+        r.id === rivalId ? { ...r, ...update } : r
+      );
+      return {
+        ...state,
+        industry: {
+          ...state.industry,
+          rivals
+        }
+      };
+    }
+
+    case 'OPPORTUNITY_UPDATED': {
+      const { opportunityId, rivalId, bid } = impact.payload;
+      const opportunities = state.market.opportunities.map(o => {
+        if (o.id === opportunityId) {
+          return {
+            ...o,
+            bids: {
+              ...(o.bids || {}),
+              [rivalId]: bid
+            }
+          };
+        }
+        return o;
+      });
+      return {
+        ...state,
+        market: {
+          ...state.market,
+          opportunities
+        }
+      };
+    }
+
+    case 'TRENDS_UPDATED':
+      return {
+        ...state,
+        market: {
+          ...state.market,
+          trends: impact.payload.trends
+        }
+      };
+
+    case 'SCANDAL_ADDED':
+      return {
+        ...state,
+        industry: {
+          ...state.industry,
+          scandals: [...(state.industry.scandals || []), impact.payload.scandal]
+        }
+      };
+
+    case 'SCANDAL_REMOVED':
+      return {
+        ...state,
+        industry: {
+          ...state.industry,
+          scandals: (state.industry.scandals || []).filter(s => s.id !== impact.payload.scandalId)
+        }
+      };
+
+    case 'MARKET_EVENT_UPDATED':
+      return {
+        ...state,
+        market: {
+          ...state.market,
+          activeMarketEvents: impact.payload.events
+        }
+      };
+
+    case 'SYSTEM_TICK':
+      return {
+        ...state,
+        week: impact.payload.week ?? state.week,
+        tickCount: impact.payload.tickCount ?? state.tickCount
+      };
 
     default:
       return state;

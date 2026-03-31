@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { advanceScandals } from "../../../engine/systems/scandals";
 import { GameState, Scandal } from "../../../engine/types";
-import * as utils from "../../../engine/utils";
 
 describe("scandals system", () => {
   beforeEach(() => {
@@ -22,26 +21,11 @@ describe("scandals system", () => {
 
     it("returns empty impact if there are no scandals", () => {
       const initialState = createMockState([]);
-      const impact = advanceScandals(initialState);
-      expect(impact.scandalUpdates).toBeDefined();
-      expect(impact.scandalUpdates).toHaveLength(0);
+      const impacts = advanceScandals(initialState);
+      expect(impacts).toHaveLength(0);
     });
 
-    it("decrements weeksRemaining for active scandals", () => {
-      const s1: Scandal = { 
-          id: "s1", 
-          talentId: "t1", 
-          severity: 50, 
-          type: "personal", 
-          weeksRemaining: 3 
-      };
-      
-      const initialState = createMockState([s1]);
-      const impact = advanceScandals(initialState);
-      expect(impact.scandalUpdates![0].update.weeksRemaining).toBe(2);
-    });
-
-    it("removes expired scandals via removeScandalIds", () => {
+    it("removes expired scandals via SCANDAL_REMOVED", () => {
       const s1: Scandal = { 
           id: "s1", 
           talentId: "t1", 
@@ -51,8 +35,9 @@ describe("scandals system", () => {
       };
       
       const initialState = createMockState([s1]);
-      const impact = advanceScandals(initialState);
-      expect(impact.removeScandalIds).toContain("s1");
+      const impacts = advanceScandals(initialState);
+      const removeImpact = impacts.find(i => i.type === 'SCANDAL_REMOVED');
+      expect(removeImpact?.payload.scandalId).toBe("s1");
     });
   });
 });

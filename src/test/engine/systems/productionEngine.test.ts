@@ -1,11 +1,14 @@
 import { describe, it, expect } from 'vitest';
-import { GameState, StateImpact } from '@/engine/types';
+import { GameState } from '@/engine/types';
 import { tickProduction } from '@/engine/systems/productionEngine';
+import { RandomGenerator } from '@/engine/utils/rng';
 
 describe('Production Engine (Target A2) - Symmetry', () => {
+  const rng = new RandomGenerator(555);
   const mockState = {
     week: 1,
     studio: {
+      name: 'Player Studio',
       internal: {
         projects: {
           'player-p1': { 
@@ -13,7 +16,8 @@ describe('Production Engine (Target A2) - Symmetry', () => {
             type: 'FILM', 
             state: 'production', 
             weeksInPhase: 5, 
-            productionWeeks: 20 
+            productionWeeks: 20,
+            progress: 25
           }
         },
         contracts: []
@@ -30,7 +34,8 @@ describe('Production Engine (Target A2) - Symmetry', () => {
               type: 'FILM', 
               state: 'production', 
               weeksInPhase: 5, 
-              productionWeeks: 20 
+              productionWeeks: 20,
+              progress: 25
             }
           }
         }
@@ -39,8 +44,8 @@ describe('Production Engine (Target A2) - Symmetry', () => {
     }
   } as unknown as GameState;
 
-  it('should return identical PROJECT_UPDATED impacts for Player and Rival with identical stats', () => {
-    const impacts = tickProduction(mockState);
+  it('should return PROJECT_UPDATED impacts for Player and Rival', () => {
+    const impacts = tickProduction(mockState, rng);
     
     const playerImpact = impacts.find(i => i.payload.projectId === 'player-p1');
     const rivalImpact = impacts.find(i => i.payload.projectId === 'rival-p1');
@@ -48,7 +53,7 @@ describe('Production Engine (Target A2) - Symmetry', () => {
     expect(playerImpact).toBeDefined();
     expect(rivalImpact).toBeDefined();
     
-    // Assert symmetry in weeksInPhase increment
+    // Assert weeksInPhase increment
     expect(playerImpact?.payload.update.weeksInPhase).toBe(6);
     expect(rivalImpact?.payload.update.weeksInPhase).toBe(6);
   });

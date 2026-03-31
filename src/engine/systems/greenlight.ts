@@ -1,4 +1,4 @@
-import { Project, TalentProfile } from '@/engine/types';
+import { Project, Talent } from '@/engine/types';
 
 export type GreenlightRecommendation =
   | 'Easy Greenlight'
@@ -17,7 +17,7 @@ export interface GreenlightReport {
 export function evaluateGreenlight(
   project: Project,
   cash: number,
-  attachedTalent: TalentProfile[],
+  attachedTalent: Talent[],
   currentWeek: number = 0,
   allProjects: Project[] = []
 ): GreenlightReport {
@@ -27,10 +27,9 @@ export function evaluateGreenlight(
 
   // Market Saturation Penalty
   let recentSimilarProjectsCount = 0;
-  for (let i = 0; i < allProjects.length; i++) {
-    const p = allProjects[i];
+  for (const p of allProjects) {
     if (
-      p.status === 'released' &&
+      p.state === 'released' &&
       p.genre === project.genre &&
       p.releaseWeek !== null &&
       (currentWeek - p.releaseWeek) <= 52 &&
@@ -44,37 +43,19 @@ export function evaluateGreenlight(
 
   if (recentSimilarProjectsCount >= 5) {
     saturationPenalty += 20;
-  }
 
-  // The Festival Buyer: Heavily penalize oversaturated tentpole genres (like Superhero)
-  if (recentSimilarProjectsCount >= 5 && project.genre.toLowerCase().includes('superhero')) {
-    saturationPenalty *= 3;
-    saturationPenalty += 75;
-  }
-
-  // New market saturation math: dynamic market trends
-  // The Festival Buyer: Heavily penalize oversaturated tentpole genres (like Superhero) to force players to consider market conditions
-  // If 5 superhero movies were released last year, buyers should heavily penalize new superhero pitches in the greenlight phase.
-  if (recentSimilarProjectsCount >= 5 && project.genre && project.genre.toLowerCase().includes('superhero')) {
-    saturationPenalty *= 3; // Tripling the penalty for oversaturated Superhero genre
-    saturationPenalty += 75; // Applying an even more massive flat penalty for chasing an exhausted superhero market
-  }
-
-  // Trend-modifier: Calendar Gap Bonus
-  // If there have been no similar projects released in the last 52 weeks, the market is starved for this genre.
-  // We inject a positive dynamic market trend bonus here to reward players for finding gaps in the release calendar.
-  if (recentSimilarProjectsCount === 0) {
-    score += 15;
-    positives.push(`Market gap: +15 points due to no recent ${project.genre} releases in the past year.`);
+    // Heavily penalize oversaturated tentpole genres (like Superhero)
+    if (project.genre?.toLowerCase().includes('superhero')) {
+      saturationPenalty = (saturationPenalty * 3) + 75;
+    }
   }
 
   if (saturationPenalty > 0) {
     score -= saturationPenalty;
     negatives.push(`Market saturation: -${saturationPenalty} points due to ${recentSimilarProjectsCount} recent ${project.genre} release(s).`);
-  }
-
-  // Trend-modifier: Calendar Gap Bonus
-  if (recentSimilarProjectsCount === 0) {
+  } else if (recentSimilarProjectsCount === 0) {
+    // Trend-modifier: Calendar Gap Bonus
+    // If there have been no similar projects released in the last 52 weeks, the market is starved for this genre.
     score += 15;
     positives.push(`Market gap: +15 points due to no recent ${project.genre} releases in the past year.`);
   }
@@ -98,9 +79,9 @@ export function evaluateGreenlight(
   } else {
     let totalDraw = 0;
     let totalPrestige = 0;
-    for (let i = 0; i < attachedTalent.length; i++) {
-      totalDraw += attachedTalent[i].draw;
-      totalPrestige += attachedTalent[i].prestige;
+    for (const t of attachedTalent) {
+      totalDraw += t.draw;
+      totalPrestige += t.prestige;
     }
 
     const avgDraw = totalDraw / attachedTalent.length;

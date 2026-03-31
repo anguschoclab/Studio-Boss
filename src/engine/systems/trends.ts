@@ -32,8 +32,8 @@ export function initializeTrends(): GenreTrend[] {
   ];
 }
 
-export function advanceTrends(trends: GenreTrend[]): StateImpact {
-  let updated = trends.map(t => {
+export function advanceTrends(trends: GenreTrend[]): StateImpact[] {
+  let updated = (trends || []).map(t => {
     let newHeat = t.heat;
     if (t.direction === 'rising') newHeat = Math.min(100, newHeat + 5);
     if (t.direction === 'cooling') newHeat = Math.max(0, newHeat - 5);
@@ -47,7 +47,7 @@ export function advanceTrends(trends: GenreTrend[]): StateImpact {
       ...t,
       heat: newHeat,
       direction: newDirection,
-      weeksRemaining: t.weeksRemaining - 1
+      weeksRemaining: (t.weeksRemaining || 0) - 1
     };
   });
   
@@ -69,9 +69,12 @@ export function advanceTrends(trends: GenreTrend[]): StateImpact {
     }
   }
   
-  return {
-    newTrends: updated
-  };
+  return [
+    {
+      type: 'TRENDS_UPDATED',
+      payload: { trends: updated }
+    }
+  ];
 }
 
 export function getTrendMultiplier(project: { genre: string; targetAudience: string }, state: GameState): number {

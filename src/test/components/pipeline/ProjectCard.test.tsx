@@ -16,6 +16,7 @@ const mockOpenCrisisModal = vi.fn();
 const baseProject: Project = {
   id: 'test-project-1',
   title: 'Test Movie',
+  type: 'FILM',
   format: 'film',
   genre: 'Action',
   budgetTier: 'mid',
@@ -23,7 +24,7 @@ const baseProject: Project = {
   weeklyCost: 2000000,
   targetAudience: 'General',
   flavor: 'Explosions',
-  status: 'development',
+  state: 'development',
   buzz: 50,
   weeksInPhase: 4,
   developmentWeeks: 8,
@@ -31,7 +32,11 @@ const baseProject: Project = {
   revenue: 0,
   weeklyRevenue: 0,
   releaseWeek: null,
-};
+  activeCrisis: null,
+  momentum: 50,
+  progress: 50,
+  accumulatedCost: 10000000,
+} as Project;
 
 describe('ProjectCard', () => {
   beforeEach(() => {
@@ -48,7 +53,7 @@ describe('ProjectCard', () => {
 
     expect(screen.getByText('Test Movie')).toBeInTheDocument();
     expect(screen.getByText('Action')).toBeInTheDocument();
-    expect(screen.getByText('$30M')).toBeInTheDocument(); // Mid budget tier label
+    expect(screen.getByText('$30M')).toBeInTheDocument(); // Label for 'mid' tier
     expect(screen.getByText('FILM')).toBeInTheDocument();
   });
 
@@ -61,8 +66,8 @@ describe('ProjectCard', () => {
     expect(mockSelectProject).toHaveBeenCalledWith('test-project-1');
   });
 
-  it('shows Executive Review button for needs_greenlight status', () => {
-    const project = { ...baseProject, status: 'needs_greenlight' as const };
+  it('shows Executive Review button for needs_greenlight state', () => {
+     const project = { ...baseProject, state: 'needs_greenlight' as const };
     render(<ProjectCard project={project} />);
 
     const button = screen.getByRole('button', { name: /Executive Review/i });
@@ -72,8 +77,8 @@ describe('ProjectCard', () => {
     expect(mockSelectProject).toHaveBeenCalledWith('test-project-1');
   });
 
-  it('shows Pitch Pipeline button for pitching status', () => {
-    const project = { ...baseProject, status: 'pitching' as const };
+  it('shows Pitch Pipeline button for pitching state', () => {
+    const project = { ...baseProject, state: 'pitching' as const };
     render(<ProjectCard project={project} />);
 
     const button = screen.getByRole('button', { name: /Pitch Pipeline/i });
@@ -94,7 +99,7 @@ describe('ProjectCard', () => {
         resolved: false,
         weekTriggered: 1,
       },
-    };
+    } as any;
     render(<ProjectCard project={project} />);
 
     const button = screen.getByRole('button', { name: /Neutralize Crisis/i });
@@ -104,15 +109,15 @@ describe('ProjectCard', () => {
     expect(mockOpenCrisisModal).toHaveBeenCalledWith('test-project-1');
   });
 
-  it('renders progress text for development status', () => {
+  it('renders progress text for development state', () => {
     render(<ProjectCard project={baseProject} />);
     const devElements = screen.getAllByText((content, element) => element?.textContent?.includes('development') ?? false);
     expect(devElements.length).toBeGreaterThan(0);
     expect(screen.getByText('4/8w')).toBeInTheDocument();
   });
 
-  it('renders gross revenue for released status', () => {
-    const project = { ...baseProject, status: 'released' as const, revenue: 150000000 };
+  it('renders gross revenue for released state', () => {
+    const project = { ...baseProject, state: 'released' as const, revenue: 150000000 };
     render(<ProjectCard project={project} />);
 
     const lifetimeElements = screen.getAllByText((content, element) => element?.textContent?.includes('Lifetime') ?? false);
@@ -123,11 +128,18 @@ describe('ProjectCard', () => {
   it('renders TV format correctly', () => {
     const tvProject = {
       ...baseProject,
+      type: 'SERIES' as const,
       format: 'tv' as const,
-      season: 2,
+      tvDetails: {
+        currentSeason: 2,
+        episodesOrdered: 10,
+        episodesCompleted: 0,
+        episodesAired: 0,
+        averageRating: 0,
+        status: 'IN_DEVELOPMENT'
+      },
       tvFormat: 'sitcom' as const,
-      episodes: 12,
-    };
+    } as any;
     render(<ProjectCard project={tvProject} />);
 
     expect(screen.getByText('S2')).toBeInTheDocument();

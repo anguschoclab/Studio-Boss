@@ -9,7 +9,7 @@ import { calculateFranchiseFatigue } from '@/engine/systems/ip/fatigueEngine';
 import { resolveCrisis } from '@/engine/systems/crises';
 import * as festivalsEngine from '@/engine/systems/festivals';
 import * as awardsEngine from '@/engine/systems/awards';
-import { Project, GameState, AwardBody, ProjectContractType, MarketingCampaign, TvFormatKey, UnscriptedFormatKey } from '@/engine/types';
+import { Project, GameState, AwardBody, ProjectContractType, MarketingCampaign, TvFormatKey, UnscriptedFormatKey, StateImpact, SeriesProject } from '@/engine/types';
 
 export interface ProjectSlice {
   createProject: (params: CreateProjectParams) => void;
@@ -35,8 +35,8 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
       
       return {
         gameState: applyStateImpact(s.gameState, {
-          cashChange: -talentFees,
-          projectUpdates: [], 
+          type: 'FUNDS_DEDUCTED',
+          payload: { amount: talentFees }
         }) as any 
       };
     });
@@ -68,33 +68,36 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
       const p = state.studio.internal.projects[id];
       if (!p) return s;
 
-      const tv = p.tvDetails;
-      if ((p.format === 'tv' || p.format === 'unscripted') && tv && tv.status === 'RENEWED') {
-        const nextSeason = (tv.currentSeason || 1) + 1;
-        return {
-          gameState: applyStateImpact(state, {
-            projectUpdates: [{
-              projectId: id,
-              update: {
-                state: 'development',
-                accumulatedCost: 0,
-                releaseWeek: null,
-                buzz: 0,
-                revenue: 0,
-                weeklyRevenue: 0,
-                weeksInPhase: 0,
-                developmentWeeks: 0,
-                productionWeeks: 0,
-                tvDetails: {
-                  ...tv,
-                  currentSeason: nextSeason,
-                  episodesAired: 0,
-                  status: 'IN_DEVELOPMENT'
+      if (p.type === 'SERIES') {
+        const tv = (p as SeriesProject).tvDetails;
+        if (tv && tv.status === 'RENEWED') {
+          const nextSeason = (tv.currentSeason || 1) + 1;
+          return {
+            gameState: applyStateImpact(state, [{
+              type: 'PROJECT_UPDATED',
+              payload: {
+                projectId: id,
+                update: {
+                  state: 'development',
+                  accumulatedCost: 0,
+                  releaseWeek: null,
+                  buzz: 0,
+                  revenue: 0,
+                  weeklyRevenue: 0,
+                  weeksInPhase: 0,
+                  developmentWeeks: 0,
+                  productionWeeks: 0,
+                  tvDetails: {
+                    ...tv,
+                    currentSeason: nextSeason,
+                    episodesAired: 0,
+                    status: 'IN_DEVELOPMENT'
+                  }
                 }
               }
-            }]
-          }) as any
-        };
+            }]) as any
+          };
+        }
       }
       return s;
     });
@@ -103,20 +106,29 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
   _updateProjectToProduction: (state, projectId, project, headlineText, extraProjectUpdates = {}) => {
     const newCulture = state.studio.culture ? updateCultureFromProject(state.studio.culture, project) : undefined;
     
-    const impact = {
-      projectUpdates: [{
-        projectId: project.id,
-        update: {
-          ...project,
-          state: 'production' as const,
-          weeksInPhase: 0,
-          ...extraProjectUpdates
+    const impacts: StateImpact[] = [
+      {
+        type: 'PROJECT_UPDATED',
+        payload: {
+          projectId: project.id,
+          update: {
+            ...project,
+            state: 'production' as const,
+            weeksInPhase: 0,
+            ...extraProjectUpdates
+          }
         }
-      }],
-      newHeadlines: [{ id: `ph-${crypto.randomUUID()}`, text: headlineText, week: state.week, category: 'market' as const }]
-    };
+      },
+      {
+        type: 'NEWS_ADDED',
+        payload: {
+          headline: headlineText,
+          description: `Strategic shift: ${project.title} enters production.`
+        }
+      }
+    ];
 
-    const newState = applyStateImpact(state, impact);
+    const newState = applyStateImpact(state, impacts);
     
     set({
       gameState: {
@@ -189,7 +201,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
       const franchise = state.ip.franchises[project.franchiseId];
       relatedCount = franchise.assetIds.length;
       
-      const genreSaturation = state.projects.active.filter(p => p.genre === project.genre).length;
+      const genreSaturation = Object.values(state.studio.internal.projects).filter(p => p.genre === project.genre).length;
       const isSpectacle = ['SCI-FI', 'SUPERHERO', 'ACTION', 'FANTASY'].includes(project.genre.toUpperCase());
       const fatigue = calculateFranchiseFatigue(franchise, genreSaturation, isSpectacle ? 'spectacle' : 'comfort_food');
       
@@ -197,7 +209,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
       
       // Legacy Check: 10+ year gap triggers Nostalgia Spike (LEGACY status)
       const lastRelease = Math.max(...franchise.lastReleaseWeeks, 0);
-      if (state.game.currentWeek - lastRelease > 520) status = 'LEGACY';
+      if (state.week - lastRelease > 520) status = 'LEGACY';
     }
 
     // 2. Generate Proposal
@@ -271,19 +283,25 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
       };
 
       return {
-        gameState: applyStateImpact(state, {
-          cashChange: -cost,
-          projectUpdates: [{
-            projectId,
-            update: {
-              marketingLevel: level,
-              marketingBudget: cost,
-              marketingCampaign: campaign,
-              buzz: Math.min(100, project.buzz + buzzGain),
-              state: project.state === 'marketing' ? 'released' : project.state
+        gameState: applyStateImpact(state, [
+          {
+            type: 'FUNDS_DEDUCTED',
+            payload: { amount: cost }
+          },
+          {
+            type: 'PROJECT_UPDATED',
+            payload: {
+              projectId,
+              update: {
+                marketingLevel: level,
+                marketingBudget: cost,
+                marketingCampaign: campaign,
+                buzz: Math.min(100, project.buzz + buzzGain),
+                state: project.state === 'marketing' ? 'released' : project.state
+              }
             }
-          }]
-        }) as any
+          }
+        ]) as any
       };
     });
   },
@@ -311,24 +329,26 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
       if (!s.gameState) return s;
       return {
         gameState: applyStateImpact(s.gameState, {
-          projectUpdates: [{
+          type: 'PROJECT_UPDATED',
+          payload: {
             projectId,
             update: { state: newState as any }
-          }]
+          }
         }) as any
       };
     });
   },
-  
+
   updateProject: (projectId, update) => {
     set((s) => {
       if (!s.gameState) return s;
       return {
         gameState: applyStateImpact(s.gameState, {
-          projectUpdates: [{
+          type: 'PROJECT_UPDATED',
+          payload: {
             projectId,
             update
-          }]
+          }
         }) as any
       };
     });

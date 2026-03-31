@@ -1,8 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { SeriesProject, StateImpact } from '@/engine/types';
+import { SeriesProject } from '@/engine/types';
 import { calculateWeeklyRating } from '@/engine/systems/television/ratingsEvaluator';
+import { RandomGenerator } from '@/engine/utils/rng';
 
 describe('Ratings Evaluator (Target B2)', () => {
+  const rng = new RandomGenerator(12345);
   const mockSeries: SeriesProject = {
     id: 'tv1',
     title: 'The Bear',
@@ -20,15 +22,15 @@ describe('Ratings Evaluator (Target B2)', () => {
   } as unknown as SeriesProject;
 
   it('should calculate viewership based on buzz and quality', () => {
-    const rating = calculateWeeklyRating(mockSeries, 80);
+    const rating = calculateWeeklyRating(mockSeries, 80, rng);
     expect(rating).toBeGreaterThan(0);
     expect(rating).toBeLessThanOrEqual(100);
   });
 
   it('should apply higher decay if the review score is low', () => {
     const badSeries = { ...mockSeries, reviewScore: 20 };
-    const rating1 = calculateWeeklyRating(mockSeries, 80);
-    const rating2 = calculateWeeklyRating(badSeries, 80);
+    const rating1 = calculateWeeklyRating(mockSeries, 80, rng);
+    const rating2 = calculateWeeklyRating(badSeries, 80, rng);
     // Note: Simple test, logic might vary
     expect(rating2).toBeLessThan(rating1);
   });

@@ -100,9 +100,19 @@ export const selectStudioSuccess = createSelector(
   }
 );
 
-export const selectMarketTrends = createSelector(
+export const selectMarket = createSelector(
   [selectGameState],
-  (state) => state?.market.trends || []
+  (state) => state?.market || { buyers: [], opportunities: [], trends: [], activeMarketEvents: [] }
+);
+
+export const selectBuyers = createSelector(
+  [selectMarket],
+  (market) => market.buyers || []
+);
+
+export const selectMarketTrends = createSelector(
+  [selectMarket],
+  (market) => market.trends || []
 );
 
 /**

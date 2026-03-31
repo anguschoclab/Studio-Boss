@@ -43,18 +43,16 @@ export async function getSaveSlots(): Promise<SaveSlotInfo[]> {
   const slots: SaveSlotInfo[] = [];
 
   for (let i = 0; i < 3; i++) {
-    const exists = await persistenceService.exists(i);
-    if (exists) {
-      // For metadata (title, week, etc.), we would ideally store a small JSON file
-      // alongside the main state. For now, we'll return placeholders or basic info.
+    const state = await loadGame(i);
+    if (state) {
       slots.push({
         slot: i,
         exists: true,
-        studioName: 'Active Game',
-        archetype: 'major',
-        week: 1,
-        cash: 0,
-        timestamp: Date.now(),
+        studioName: state.studio.name || 'Active Game',
+        archetype: state.studio.archetype || 'major',
+        week: state.week || 1,
+        cash: state.finance.cash || 0,
+        timestamp: Date.now(), // ideally state.saveTimestamp
       });
     } else {
       slots.push({

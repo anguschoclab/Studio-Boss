@@ -11,6 +11,9 @@ import { tickAuctions } from '../systems/ai/biddingEngine';
 import { tickWorldEvents } from '../systems/ai/WorldSimulator';
 import { tickTelevision } from '../systems/television/televisionTick';
 import { tickFinance } from '../systems/finance/financeTick';
+import { advanceTrends } from '../systems/trends';
+import { advanceMarketEvents } from '../systems/marketEvents';
+import { generateScandals, advanceScandals } from '../systems/scandals';
 
 /**
  * Studio Boss - Simulation Tick Context
@@ -48,6 +51,7 @@ export class WeekCoordinator {
     this.runMarketFilter(state, context);
     this.runProductionFilter(state, context);
     this.runAIFilter(state, context);
+    this.runScandalFilter(state, context);
     this.runFinanceFilter(state, context);
 
     // 3. Consolidation Phase (The Merge)
@@ -69,6 +73,8 @@ export class WeekCoordinator {
   private static runMarketFilter(state: GameState, context: TickContext) {
     context.impacts.push(...tickPlatforms(state, context.rng));
     context.impacts.push(...tickWorldEvents(state, context.rng));
+    context.impacts.push(...advanceTrends(state.market.trends || []));
+    context.impacts.push(...advanceMarketEvents(state));
   }
 
   private static runProductionFilter(state: GameState, context: TickContext) {
@@ -80,6 +86,11 @@ export class WeekCoordinator {
     context.impacts.push(...tickAIMinds(state, context.rng));
     context.impacts.push(...tickAgencies(state, context.rng));
     context.impacts.push(...tickAuctions(state, context.rng));
+  }
+
+  private static runScandalFilter(state: GameState, context: TickContext) {
+    context.impacts.push(...generateScandals(state));
+    context.impacts.push(...advanceScandals(state));
   }
 
   private static runFinanceFilter(state: GameState, context: TickContext) {

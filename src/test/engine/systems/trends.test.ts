@@ -14,11 +14,13 @@ describe('Trends System', () => {
 
   it('advances trends correctly over a week', () => {
     const initialTrends = initializeTrends();
-    const { newTrends } = advanceTrends(initialTrends);
+    const impacts = advanceTrends(initialTrends);
+    const trendImpact = impacts.find(i => i.type === 'TRENDS_UPDATED');
+    const newTrends = trendImpact?.payload.trends;
     
-    expect(newTrends!.length).toBeGreaterThanOrEqual(initialTrends.length - 1); // might drop if dead
+    expect(newTrends?.length).toBeGreaterThanOrEqual(initialTrends.length - 1); // might drop if dead
     // Values should fluctuate but remain clamped
-    newTrends!.forEach(trend => {
+    newTrends?.forEach((trend: any) => {
       expect(trend.heat).toBeGreaterThanOrEqual(0);
       expect(trend.heat).toBeLessThanOrEqual(100);
     });
@@ -41,12 +43,11 @@ describe('Trends System', () => {
   });
 
   it('shifts directions properly based on thresholds', () => {
-    // Hard to test random tightly, but we can verify it doesn't crash 
-    // and returns valid state strings.
     let trends = initializeTrends();
     for (let i = 0; i < 50; i++) {
-        const impact = advanceTrends(trends);
-        trends = impact.newTrends!;
+        const impacts = advanceTrends(trends);
+        const trendImpact = impacts.find(i => i.type === 'TRENDS_UPDATED');
+        trends = trendImpact?.payload.trends || [];
     }
     
     trends.forEach(trend => {

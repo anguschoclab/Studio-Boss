@@ -49,6 +49,7 @@ export interface IPState {
 
 export type ImpactType = 
   | 'FUNDS_CHANGED' 
+  | 'FUNDS_DEDUCTED'
   | 'PROJECT_UPDATED' 
   | 'PROJECT_REMOVED' 
   | 'NEWS_ADDED' 
@@ -56,7 +57,12 @@ export type ImpactType =
   | 'PRESTIGE_CHANGED'
   | 'BUYER_UPDATED'
   | 'RIVAL_UPDATED'
-  | 'OPPORTUNITY_UPDATED';
+  | 'OPPORTUNITY_UPDATED'
+  | 'TRENDS_UPDATED'
+  | 'SCANDAL_ADDED'
+  | 'SCANDAL_REMOVED'
+  | 'MARKET_EVENT_UPDATED'
+  | 'SYSTEM_TICK';
 
 export interface StateImpact {
   type: ImpactType;

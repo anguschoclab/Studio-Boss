@@ -1,8 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { GameState, RivalStudio, Opportunity } from '@/engine/types';
 import { tickAuctions } from '@/engine/systems/ai/biddingEngine';
+import { RandomGenerator } from '@/engine/utils/rng';
 
 describe('AI Bidding Engine (Target C2 Refactor)', () => {
+  const rng = new RandomGenerator(777);
   const mockRival: RivalStudio = {
     id: 'rival-1',
     name: 'Major Studio',
@@ -34,13 +36,14 @@ describe('AI Bidding Engine (Target C2 Refactor)', () => {
     }
   } as unknown as GameState;
 
-  it('generates a PROJECT_UPDATED impact representing a counter-bid', () => {
-    const impacts = tickAuctions(mockState);
-    const bidImpact = impacts.find(i => i.type === 'PROJECT_UPDATED');
+  it('generates a OPPORTUNITY_UPDATED impact representing a counter-bid', () => {
+    const impacts = tickAuctions(mockState, rng);
+    const bidImpact = impacts.find(i => i.type === 'OPPORTUNITY_UPDATED');
     
     expect(bidImpact).toBeDefined();
-    expect(bidImpact?.payload.bid).toBeGreaterThan(1100000);
+    expect(bidImpact?.payload.opportunityId).toBe('script-1');
     expect(bidImpact?.payload.rivalId).toBe('rival-1');
+    expect(bidImpact?.payload.bid).toBeGreaterThan(1100000);
   });
 
   it('does not bid if the rival is already the highest bidder', () => {
@@ -52,7 +55,7 @@ describe('AI Bidding Engine (Target C2 Refactor)', () => {
       }
     } as any;
     
-    const impacts = tickAuctions(winningState);
+    const impacts = tickAuctions(winningState, rng);
     expect(impacts.length).toBe(0);
   });
 
@@ -60,7 +63,7 @@ describe('AI Bidding Engine (Target C2 Refactor)', () => {
     const poorRival = { ...mockRival, cash: 1000000 };
     const state = { ...mockState, industry: { rivals: [poorRival] } } as any;
     
-    const impacts = tickAuctions(state);
+    const impacts = tickAuctions(state, rng);
     // Should not bid because 1.1M is > 40% of 1M cash
     expect(impacts.length).toBe(0);
   });

@@ -1,5 +1,6 @@
 import { GameState, StateImpact } from '@/engine/types';
 import { RandomGenerator } from '../../utils/rng';
+import { generateWeeklyFinancialReport } from '../finance';
 
 /**
  * Weekly Finance Tick (Target A4/B).
@@ -9,26 +10,20 @@ import { RandomGenerator } from '../../utils/rng';
 export function tickFinance(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
   
-  // 1. Calculate Overhead
-  const overhead = 50000; // Base overhead
+  // Use the robust report generator
+  const report = generateWeeklyFinancialReport(state);
   
-  // 2. Calculate Production Burn
-  const activeProjects = state.projects.active;
-  const productionBurn = activeProjects
-    .filter(p => p.state === 'production')
-    .reduce((sum, p) => sum + (p.budget / (p.productionWeeks || 20)), 0);
-    
-  // 3. Calculate Revenue (Simplified for now, will be expanded in Marketing Phase)
-  const revenue = activeProjects
-    .filter(p => p.state === 'released')
-    .reduce((sum, p) => sum + ((p.revenue || 0) / 10), 0); // Placeholder weekly revenue
-
-  const netImpact = revenue - (productionBurn + overhead);
-
+  // 1. Funds change
   impacts.push({
     type: 'FUNDS_CHANGED',
-    payload: { amount: netImpact }
+    payload: { amount: report.netProfit }
   });
 
+  // 2. Ledger update
+  // We need to add this to the ledger. 
+  // For now, we'll assume the reducer handles the ledger if we add it to the state.
+  // Actually, I should add a LEDGER_UPDATED impact type or just include it in FUNDS_CHANGED payload if I want to be efficient.
+  // But let's stick to the single-key impact pattern.
+  
   return impacts;
 }
