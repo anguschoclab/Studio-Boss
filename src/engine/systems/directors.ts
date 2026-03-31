@@ -61,6 +61,9 @@ export function processDirectorDisputes(
      newCrises.push({
        projectId: project.id,
        crisis: {
+         crisisId: `crisis-${crypto.randomUUID()}`,
+         triggeredWeek: 0,
+         haltedProduction: false,
          description: `Director ${director.name} is demanding an immediate $5M budget increase to shoot a highly ambitious sequence, threatening to walk off set!`,
          resolved: false,
          severity: 'high',

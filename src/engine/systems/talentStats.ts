@@ -1,4 +1,5 @@
-import { Award, TalentProfile } from '@/engine/types';
+import { Award, Talent } from '@/engine/types';
+type TalentProfile = Talent;
 import { isCannesEquivalentFestival, isSundanceEquivalentFestival, isMajorCategoryNomination, isSupportingCategoryNomination } from './awards';
 
 export interface AwardBoosts {
