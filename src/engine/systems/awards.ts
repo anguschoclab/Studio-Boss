@@ -91,7 +91,7 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
   const eligibleTv: Project[] = [];
 
   for (const p of Object.values(state.studio.internal.projects)) {
-    if ((p.status === 'released' || p.status === 'post_release' || p.status === 'archived') &&
+    if ((p.state === 'released' || p.state === 'post_release' || p.state === 'archived') &&
         p.releaseWeek !== null &&
         p.releaseWeek > currentWeek - 52 &&
         p.awardsProfile !== undefined) {
