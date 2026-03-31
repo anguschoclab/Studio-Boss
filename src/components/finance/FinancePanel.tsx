@@ -240,7 +240,7 @@ export const FinancePanel = () => {
                       <span className="text-sm text-destructive font-bold drop-shadow-[0_0_2px_rgba(239,68,68,0.2)] font-mono">-{formatMoney(p.weeklyCost)}/wk</span>
                     </div>
                     <div className="flex items-center gap-2 relative z-10">
-                       <span className="text-[9px] font-bold tracking-widest text-muted-foreground uppercase bg-background/50 backdrop-blur-sm border border-border/40 px-2 py-0.5 rounded-full shadow-sm">{p.status}</span>
+                       <span className="text-[9px] font-bold tracking-widest text-muted-foreground uppercase bg-background/50 backdrop-blur-sm border border-border/40 px-2 py-0.5 rounded-full shadow-sm">{p.state}</span>
                     </div>
                   </div>
                 )) : (
