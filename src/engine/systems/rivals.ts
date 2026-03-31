@@ -1,4 +1,5 @@
-import { RivalStudio, GameState, TalentProfile } from '@/engine/types';
+import { RivalStudio, GameState, Talent } from '@/engine/types';
+type TalentProfile = Talent;
 import { StateImpact } from '../types/state.types';
 import { clamp, pick, secureRandom } from '../utils';
 

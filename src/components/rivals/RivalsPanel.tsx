@@ -21,7 +21,7 @@ const strengthColor = (s: number) => {
 export const RivalsPanel = () => {
   const gameState = useGameStore(s => s.gameState);
   const rivals = gameState?.industry.rivals || [];
-  const playerCash = gameState?.cash || 0;
+  const playerCash = gameState?.finance?.cash || 0;
   
   const { corporateSabotage, poachExec, attemptTakeover } = useGameStore();
 

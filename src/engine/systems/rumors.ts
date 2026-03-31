@@ -58,7 +58,7 @@ export function advanceRumors(state: GameState): StateImpact {
       text = pick(rumors);
     } else if (category === 'project' && Object.keys(state.studio.internal.projects).length > 0) {
       const project = pick(Object.values(state.studio.internal.projects));
-      if (project.status === 'production') {
+      if (project.state === 'production') {
         text = `Production on "${project.title}" is rumored to be wildly over budget.`;
       } else {
         text = `Early test screenings for "${project.title}" are supposedly disastrous.`;

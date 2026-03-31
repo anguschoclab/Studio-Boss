@@ -1,4 +1,6 @@
-import { GameState, Project, TalentProfile, Contract, Crisis } from '@/engine/types';
+import { GameState, Project, Talent, Contract, ActiveCrisis } from '@/engine/types';
+type TalentProfile = Talent;
+type Crisis = ActiveCrisis;
 import { secureRandom } from '../utils';
 
 export interface DirectorDispute {
@@ -38,7 +40,7 @@ export function processDirectorDisputes(
   const updates: string[] = [];
   const newCrises: { projectId: string; crisis: Crisis }[] = [];
 
-  if (project.status !== 'production') return { updates, newCrises };
+  if (project.state !== 'production') return { updates, newCrises };
 
   // Find the director using pre-filtered contracts for this specific project (O(1) instead of O(N) scan)
   const dirContract = projectContracts.find(c => c.projectId === project.id);
@@ -49,8 +51,9 @@ export function processDirectorDisputes(
   if (!director || !director.roles.includes('director')) return { updates, newCrises };
   
   // Auteurs and Visionaries cause more disputes
-  const chance = director.directorArchetype === 'auteur' ? 0.05 :
-                 director.directorArchetype === 'visionary' ? 0.04 :
+  const archetype = (director as any).directorArchetype;
+  const chance = archetype === 'auteur' ? 0.05 :
+                 archetype === 'visionary' ? 0.04 :
                  0.01;
 
   if (secureRandom() < chance && !project.activeCrisis) {
@@ -58,6 +61,9 @@ export function processDirectorDisputes(
      newCrises.push({
        projectId: project.id,
        crisis: {
+         crisisId: `crisis-${crypto.randomUUID()}`,
+         triggeredWeek: 0,
+         haltedProduction: false,
          description: `Director ${director.name} is demanding an immediate $5M budget increase to shoot a highly ambitious sequence, threatening to walk off set!`,
          resolved: false,
          severity: 'high',

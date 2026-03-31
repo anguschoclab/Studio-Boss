@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { formatMoney } from '@/engine/utils';
@@ -22,7 +22,9 @@ import {
   DollarSign, 
   Calendar,
   AlertCircle,
-  Megaphone
+  Megaphone,
+  Package,
+  ShieldAlert
 } from 'lucide-react';
 import { 
   AreaChart, 
@@ -48,6 +50,7 @@ export const ProjectDetailModal = () => {
   const [domesticSplit, setDomesticSplit] = useState(50);
   const [marketingAngle, setMarketingAngle] = useState('spectacle');
   const [selectedTier, setSelectedTier] = useState<'none' | 'basic' | 'blockbuster'>('none');
+  const [packageDeal, setPackageDeal] = useState<{ leadTalentId: string; bundledTalentId: string; bundledTalentName: string; discount: number; reason: string } | null>(null);
 
   const { selectedProjectId, selectProject } = useUIStore();
   const gameState = useGameStore(s => s.gameState);
@@ -162,8 +165,8 @@ export const ProjectDetailModal = () => {
             </DialogTitle>
             <div className="flex gap-2">
               <Badge variant="outline" className="text-amber-500 border-amber-500/30 uppercase font-black">{project.state}</Badge>
-              {project.format === 'tv' && project.season && (
-                <Badge className="bg-blue-600 text-white font-black">SEASON {project.season}</Badge>
+              {project.type === 'SERIES' && (project as any).tvDetails && (
+                <Badge className="bg-blue-600 text-white font-black">SEASON {(project as any).tvDetails.currentSeason}</Badge>
               )}
             </div>
           </div>
@@ -171,7 +174,7 @@ export const ProjectDetailModal = () => {
 
         <Tabs defaultValue={
           project.state === 'marketing' ? "marketing" :
-          (project.state === 'needs_greenlight' || project.state === 'development' || project.state === 'production' || project.state === 'post_production') ? "production" :
+          (project.state === 'needs_greenlight' || project.state === 'development' || project.state === 'production') ? "production" :
           "overview"
         } className="w-full">
           <TabsList className="grid w-full grid-cols-5 bg-slate-900/50 p-1 border border-slate-800">
@@ -230,8 +233,8 @@ export const ProjectDetailModal = () => {
                     <div>
                       <p className="text-2xl font-black text-white">{project.buzz.toFixed(0)}% <span className="text-xs font-normal text-slate-500 uppercase italic">Cultural Buzz</span></p>
                     </div>
-                    {project.format === 'tv' && (
-                      <p className="text-sm font-bold text-slate-400">Released {project.episodesReleased}/{project.episodes} Episodes</p>
+                    {project.type === 'SERIES' && (
+                      <p className="text-sm font-bold text-slate-400">Released {(project as any).tvDetails?.episodesAired || 0}/{(project as any).tvDetails?.episodesOrdered || 0} Episodes</p>
                     )}
                   </div>
                 </div>
@@ -294,7 +297,7 @@ export const ProjectDetailModal = () => {
                  ].map(tier => (
                    <button
                      key={tier.id}
-                     disabled={!!project.marketingLevel || (gameState && gameState.finance.cash < tier.cost)}
+                     disabled={!!project.marketingLevel || (gameState ? gameState.finance.cash < tier.cost : false)}
                      onClick={() => setSelectedTier(tier.id as any)}
                      className={`p-3 rounded-xl border text-left transition-all ${
                        project.marketingLevel === tier.id || selectedTier === tier.id 
@@ -357,7 +360,7 @@ export const ProjectDetailModal = () => {
                {!project.marketingLevel ? (
                  <Button 
                    className="w-full bg-blue-600 hover:bg-blue-500 text-white font-black uppercase py-6 shadow-lg shadow-blue-900/20"
-                   disabled={!selectedTier || (gameState && gameState.finance.cash < (selectedTier === 'basic' ? project.budget * 0.1 : selectedTier === 'blockbuster' ? project.budget * 0.5 : 0))}
+                   disabled={!selectedTier || (gameState ? gameState.finance.cash < (selectedTier === 'basic' ? project.budget * 0.1 : selectedTier === 'blockbuster' ? project.budget * 0.5 : 0) : false)}
                    onClick={() => { lockMarketingCampaign(project.id, selectedTier); selectProject(null); }}
                  >
                    Lock Campaign & Commit Capital
@@ -385,7 +388,7 @@ export const ProjectDetailModal = () => {
                               <div key={t.id} className="flex items-center gap-2">
                                 <span className="font-bold text-white">{t.name}</span>
                                 <Badge className="bg-amber-600/20 text-amber-500 border-amber-600/30 text-[8px] h-4">★ {t.prestige}</Badge>
-                                {t.ego && t.ego > 70 && <Badge variant="destructive" className="text-[8px] h-4">DIVA</Badge>}
+                                {t.psychology?.ego && t.psychology.ego > 70 && <Badge variant="destructive" className="text-[8px] h-4">DIVA</Badge>}
                               </div>
                             ))}
                           </div>
@@ -455,9 +458,9 @@ export const ProjectDetailModal = () => {
         </Tabs>
 
         {/* Action Bar */}
-        {(project.state === 'archived' && project.format === 'tv' && project.renewable) && (
+        {(project.state === 'archived' && project.type === 'SERIES') && (
           <div className="mt-6 border-t border-slate-800 pt-4">
-            <Button onClick={() => { renewProject(project.id); selectProject(null); }} className="w-full bg-blue-600 hover:bg-blue-500 font-black uppercase">Order Season {(project.season || 1) + 1}</Button>
+            <Button onClick={() => { renewProject(project.id); selectProject(null); }} className="w-full bg-blue-600 hover:bg-blue-500 font-black uppercase">Order Season {((project as any).tvDetails?.currentSeason || 1) + 1}</Button>
           </div>
         )}
         

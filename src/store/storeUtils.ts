@@ -73,13 +73,13 @@ export function buildProjectAndContracts(state: GameState, params: CreateProject
     const totalBudget = budget + talentFees;
     const initialBuzz = Math.floor(randRange(30, 70)) + (params.initialBuzzBonus || 0);
 
-    const project: Project = {
+    const projectBase = {
         id: projectId,
         ...params,
+        type: (params.format === 'film' ? 'FILM' : 'SERIES') as any,
         budget: totalBudget,
         weeklyCost,
         state: 'development' as const,
-        renewable,
         activeCrisis: null,
         momentum: 50,
         progress: 0,
@@ -91,17 +91,19 @@ export function buildProjectAndContracts(state: GameState, params: CreateProject
         weeksInPhase: 0,
         developmentWeeks,
         productionWeeks,
-        ...( (params.format === 'tv' || params.format === 'unscripted') ? {
-            tvDetails: {
-                currentSeason: 1,
-                episodesOrdered: params.episodes || 0,
-                episodesCompleted: 0,
-                episodesAired: 0,
-                averageRating: 0,
-                status: 'IN_DEVELOPMENT'
-            }
-        } : {} )
-    } as Project;
+    };
+
+    const project: any = (params.format === 'tv' || params.format === 'unscripted') ? {
+        ...projectBase,
+        tvDetails: {
+            currentSeason: 1,
+            episodesOrdered: params.episodes || 0,
+            episodesCompleted: 0,
+            episodesAired: 0,
+            averageRating: 0,
+            status: 'IN_DEVELOPMENT'
+        }
+    } : projectBase;
 
     return { project, newContracts, talentFees };
 }

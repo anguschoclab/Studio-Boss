@@ -48,10 +48,14 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
 
       // Extract original project
       const originalProject = Object.values(state.studio.internal.projects)[pIndex];
-      if (originalProject.status !== 'marketing') return s;
+      if (originalProject.state !== 'marketing') return s;
 
       const newCash = state.finance.cash - budget;
-      const { project: p } = executeMarketing(originalProject, budget, domesticPct, angle);
+      const { project: p } = executeMarketing(originalProject, {
+        domesticBudget: budget * (domesticPct / 100),
+        foreignBudget: budget * (1 - domesticPct / 100),
+        primaryAngle: angle as any,
+      });
 
       const contracts: Contract[] = [];
       const allContracts = state.studio.internal.contracts;

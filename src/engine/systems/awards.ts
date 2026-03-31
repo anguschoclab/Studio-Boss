@@ -47,7 +47,7 @@ export function generateAwardsProfile(project: Project): AwardsProfile {
 
 export function launchAwardsCampaign(state: GameState, projectId: string, budget: number): StateImpact | null {
   const project = state.studio.internal.projects[projectId];
-  if (!project || state.cash < budget || !project.awardsProfile) return null;
+  if (!project || state.finance.cash < budget || !project.awardsProfile) return null;
 
   const boost = (budget / 1_000_000) * 5;
   const newStrength = Math.min(100, project.awardsProfile.campaignStrength + boost);
@@ -91,7 +91,7 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
   const eligibleTv: Project[] = [];
 
   for (const p of Object.values(state.studio.internal.projects)) {
-    if ((p.status === 'released' || p.status === 'post_release' || p.status === 'archived') &&
+    if ((p.state === 'released' || p.state === 'post_release' || p.state === 'archived') &&
         p.releaseWeek !== null &&
         p.releaseWeek > currentWeek - 52 &&
         p.awardsProfile !== undefined) {
@@ -172,7 +172,7 @@ export function processRazzies(state: GameState, week: number): StateImpact {
   };
 
   const eligibleProjects = Object.values(state.studio.internal.projects).filter(p =>
-    p.status === 'released' &&
+    p.state === 'released' &&
     p.budget >= 50_000_000 &&
     (p.reviewScore !== undefined && p.reviewScore <= 30)
   );
