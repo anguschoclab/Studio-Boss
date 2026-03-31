@@ -29,12 +29,12 @@ export const FinancePanel = () => {
   const forecast = useMemo(() => gameState ? generateCashflowForecast(gameState, 12) : [], [gameState]);
 
   const activeProjects = useMemo(() =>
-    projectsMemo.filter(p => p.status === 'development' || p.status === 'production'),
+    projectsMemo.filter(p => p.state === 'development' || p.state === 'production'),
     [projectsMemo]
   );
   
   const releasedProjects = useMemo(() => 
-    projectsMemo.filter(p => p.status === 'released' || p.status === 'post_release' || p.status === 'archived').sort((a,b) => (b.revenue || 0) - (a.revenue || 0)),
+    projectsMemo.filter(p => p.state === 'released' || p.state === 'post_release' || p.state === 'archived').sort((a,b) => (b.revenue || 0) - (a.revenue || 0)),
     [projectsMemo]
   );
 
