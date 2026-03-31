@@ -20,7 +20,13 @@ const TitleScreen = () => {
     setHasSaves(result.some((s: any) => s.exists));
     };
     fetchSlots();
-  }, [getSaveSlots]);
+
+    // Handle Auto-Start redirect
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('autoStart') === 'true') {
+      window.location.href = '/dashboard?autoStart=true';
+    }
+  }, [getSaveSlots, navigate]);
 
   const handleLoad = async (slot: number) => {
     const success = await loadFromSlot(slot);

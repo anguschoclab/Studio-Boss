@@ -26,11 +26,19 @@ import { AwardsCeremonyModal } from '@/components/modals/AwardsCeremonyModal';
 const Dashboard: React.FC = () => {
   const gameState = useGameStore(s => s.gameState);
   const { activeTab } = useUIStore();
+  const devAutoInit = useGameStore(s => s.devAutoInit);
   const searchParams = new URLSearchParams(window.location.search);
   const isAutoStarting = searchParams.get('autoStart') === 'true';
 
+  React.useEffect(() => {
+    if (!gameState && isAutoStarting) {
+      console.log('[Dashboard] Auto-starting game...');
+      devAutoInit();
+    }
+  }, [gameState, isAutoStarting, devAutoInit]);
+
   if (!gameState && !isAutoStarting) return <Navigate to="/" replace />;
-  if (!gameState) return <div className="flex items-center justify-center h-screen font-display">Initializing Studio...</div>;
+  if (!gameState) return <div className="flex items-center justify-center h-screen font-sans">Initializing Studio...</div>;
 
   const renderContent = () => {
     switch (activeTab) {

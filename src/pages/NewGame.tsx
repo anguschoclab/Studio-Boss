@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -14,6 +14,13 @@ const NewGame = () => {
   const { newGame } = useGameStore();
   const [studioName, setStudioName] = useState('');
   const [selectedArchetype, setSelectedArchetype] = useState<ArchetypeKey | null>(null);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('autoStart') === 'true') {
+      navigate({ to: '/dashboard', search: (prev: any) => ({ ...prev, autoStart: 'true' }), replace: true });
+    }
+  }, [navigate]);
 
   const handleLaunch = () => {
     if (!studioName.trim() || !selectedArchetype) return;
