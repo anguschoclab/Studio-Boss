@@ -455,9 +455,9 @@ export const ProjectDetailModal = () => {
         </Tabs>
 
         {/* Action Bar */}
-        {(project.state === 'archived' && project.format === 'tv' && project.renewable) && (
+        {(project.state === 'archived' && project.type === 'SERIES') && (
           <div className="mt-6 border-t border-slate-800 pt-4">
-            <Button onClick={() => { renewProject(project.id); selectProject(null); }} className="w-full bg-blue-600 hover:bg-blue-500 font-black uppercase">Order Season {(project.season || 1) + 1}</Button>
+            <Button onClick={() => { renewProject(project.id); selectProject(null); }} className="w-full bg-blue-600 hover:bg-blue-500 font-black uppercase">Order Season {((project as any).tvDetails?.currentSeason || 1) + 1}</Button>
           </div>
         )}
         
