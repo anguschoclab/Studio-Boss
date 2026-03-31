@@ -65,9 +65,11 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
 
     // 1. Crises/Scandals
     const crisisTitles = new Set<string>();
-    if (summary?.events) {
-      for (let i = 0; i < summary.events.length; i++) {
-        const ev = summary.events[i];
+    const summaryCast = summary as WeekSummary;
+    if (summaryCast?.events) {
+      const events = summaryCast.events as string[];
+      for (let i = 0; i < events.length; i++) {
+        const ev = events[i];
         if (ev.startsWith('CRISIS: "')) {
           const firstQuote = ev.indexOf('"');
           const secondQuote = ev.indexOf('"', firstQuote + 1);
@@ -79,7 +81,7 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
     }
 
     if (crisisTitles.size > 0) {
-      const projects = finalState.studio.internal.projects;
+      const projects = Object.values(finalState.studio.internal.projects);
       for (let i = 0; i < projects.length; i++) {
         const p = projects[i];
         if (p.activeCrisis && !p.activeCrisis.resolved && crisisTitles.has(p.title)) {
@@ -93,7 +95,7 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
     if (isAwardsWeek) {
       const year = Math.floor(finalState.week / 52) + 1;
       const allAwards = finalState.industry.awards || [];
-      const currentAwards = [];
+      const currentAwards = [] as any[];
       for (let i = 0; i < allAwards.length; i++) {
         if (allAwards[i].year === year) {
           currentAwards.push(allAwards[i]);
@@ -106,7 +108,7 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
     ui.enqueueModal('SUMMARY', summary);
 
     // 4. Yearly Snapshot (Sprint G)
-    if (summary && (summary.fromWeek % 52 === 0) && summary.fromWeek > 0) {
+    if (summary && ((summary as any).fromWeek % 52 === 0) && (summary as any).fromWeek > 0) {
       get().captureSnapshot();
       // Future Hook: trigger EndOfYearAwards system here
     }

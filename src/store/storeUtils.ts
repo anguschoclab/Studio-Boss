@@ -235,6 +235,11 @@ export function applyStateImpact(state: GameState, impact: import('@/engine/type
           return s;
       });
   }
+  if (impact.removeScandalIds && impact.removeScandalIds.length > 0) {
+      const toRemove = new Set(impact.removeScandalIds);
+      newScandals = newScandals.filter(s => !toRemove.has(s.id));
+      scandalsChanged = true;
+  }
 
   // UI Notifications (Add to events list or handle however your system prefers. Since we don't have an explicit 'events' array in State outside of ui, we'll assume it goes to a slice. Let's make sure it's valid).
   // The UI often pulls directly from `newsHistory` or `headlines`, but here we can add generic notifications to `newsHistory` if they are raw strings:

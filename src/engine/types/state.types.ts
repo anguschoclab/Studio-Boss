@@ -43,6 +43,7 @@ export interface StateImpact {
   newFinanceHistory?: FinanceRecord[];
   cultClassicProjectIds?: string[];
   razzieWinnerTalents?: string[];
+  removeScandalIds?: string[];
   uiNotifications?: string[]; // Generic log for the UI 'events' list
 }
 

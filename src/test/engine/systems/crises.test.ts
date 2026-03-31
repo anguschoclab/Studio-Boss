@@ -1,8 +1,9 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { resolveCrisis, checkAndTriggerCrisis } from "../../../engine/systems/crises";
-import { Project } from "../../../engine/types";
+import { Project, GameState } from "../../../engine/types";
+import * as utils from "../../../engine/utils";
 
-describe.skip("crises system", () => {
+describe("crises system", () => {
   const mockProject: Project = {
     id: "proj-1",
     title: "Test Blockbuster",
@@ -44,38 +45,46 @@ describe.skip("crises system", () => {
       resolved: false,
       severity: "medium"
     }
-  };
+  } as Project;
 
-  describe.skip("checkAndTriggerCrisis", () => {
-    it("should return undefined if project is not in production", () => {
-      const devProject = { ...mockProject, status: "development" as const };
-      const crisis = checkAndTriggerCrisis(devProject);
-      expect(crisis).toBeUndefined();
+  const mockGameState: GameState = {
+      studio: {
+          internal: {
+              projects: { [mockProject.id]: mockProject }
+          }
+      }
+  } as any;
+
+  describe("checkAndTriggerCrisis", () => {
+    it("should return null if project is not in production", () => {
+      const devProject = { ...mockProject, status: "marketing" as const };
+      const impact = checkAndTriggerCrisis(devProject);
+      expect(impact).toBeNull();
     });
 
-    it("should have a 5% chance to trigger a crisis in production", () => {
-      vi.spyOn(Math, 'random').mockReturnValue(0.04);
-      const crisis = checkAndTriggerCrisis(mockProject);
-      expect(crisis).toBeDefined();
-      expect(crisis?.resolved).toBe(false);
+    it("should trigger a crisis in production with secureRandom probability", () => {
+      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.01);
+      const impact = checkAndTriggerCrisis(mockProject);
+      expect(impact!.projectUpdates).toHaveLength(1);
+      expect(impact!.projectUpdates![0].update.activeCrisis?.resolved).toBe(false);
       vi.restoreAllMocks();
     });
   });
 
-  describe.skip("resolveCrisis", () => {
+  describe("resolveCrisis", () => {
     it("should return correct impact for cash penalty option", () => {
-      const impact = resolveCrisis(mockProject, 0);
+      const impact = resolveCrisis(mockGameState, mockProject.id, 0);
       expect(impact.cashChange).toBe(-1000000);
       expect(impact.projectUpdates![0].update.activeCrisis?.resolved).toBe(true);
     });
 
     it("should return correct impact for delay option", () => {
-      const impact = resolveCrisis(mockProject, 1);
+      const impact = resolveCrisis(mockGameState, mockProject.id, 1);
       expect(impact.projectUpdates![0].update.productionWeeks).toBe(mockProject.productionWeeks + 2);
     });
 
     it("should return correct impact for buzz/prestige penalty option", () => {
-      const impact = resolveCrisis(mockProject, 2);
+      const impact = resolveCrisis(mockGameState, mockProject.id, 2);
       expect(impact.projectUpdates![0].update.buzz).toBe(mockProject.buzz - 20);
       expect(impact.prestigeChange).toBe(-5);
     });
@@ -85,7 +94,11 @@ describe.skip("crises system", () => {
         ...mockProject,
         activeCrisis: { ...mockProject.activeCrisis!, resolved: true }
       };
-      const impact = resolveCrisis(resolvedProject, 0);
+      const stateWithResolved = {
+          ...mockGameState,
+          studio: { internal: { projects: { [resolvedProject.id]: resolvedProject } } }
+      } as any;
+      const impact = resolveCrisis(stateWithResolved, resolvedProject.id, 0);
       expect(impact).toEqual({});
     });
   });

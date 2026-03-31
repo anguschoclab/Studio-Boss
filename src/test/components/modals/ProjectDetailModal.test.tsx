@@ -37,12 +37,12 @@ describe('ProjectDetailModal', () => {
         gameState: {
           studio: {
             internal: {
-              projects: [],
+              projects: {},
               contracts: [],
             }
           },
           industry: {
-            talentPool: [],
+            talentPool: {},
           },
           cash: 100000000, // 100M
         },
@@ -95,12 +95,12 @@ describe('ProjectDetailModal', () => {
         gameState: {
           studio: {
             internal: {
-              projects: [mockProject],
+              projects: { [mockProject.id]: mockProject },
               contracts: [],
             }
           },
           industry: {
-            talentPool: [],
+            talentPool: {},
           },
           cash: 100000000,
         },
@@ -128,12 +128,12 @@ describe('ProjectDetailModal', () => {
         gameState: {
           studio: {
             internal: {
-              projects: [mockProject],
+              projects: { [mockProject.id]: mockProject },
               contracts: [],
             }
           },
           industry: {
-            talentPool: [],
+            talentPool: {},
           },
           cash: 100000000,
         },
@@ -168,12 +168,12 @@ describe('ProjectDetailModal', () => {
         gameState: {
           studio: {
             internal: {
-              projects: [mockProject],
+              projects: { [mockProject.id]: mockProject },
               contracts: [],
             }
           },
           industry: {
-            talentPool: [],
+            talentPool: {},
           },
           cash: 100000000,
         },
@@ -211,12 +211,12 @@ describe('ProjectDetailModal', () => {
         gameState: {
           studio: {
             internal: {
-              projects: [mockProject],
+              projects: { [mockProject.id]: mockProject },
               contracts: [],
             }
           },
           industry: {
-            talentPool: [],
+            talentPool: {},
           },
           cash: 100000000,
         },
@@ -252,12 +252,12 @@ describe('ProjectDetailModal', () => {
         gameState: {
           studio: {
             internal: {
-              projects: [mockProject],
+              projects: { [mockProject.id]: mockProject },
               contracts: [],
             }
           },
           industry: {
-            talentPool: [],
+            talentPool: {},
           },
           cash: 100000000,
         },
