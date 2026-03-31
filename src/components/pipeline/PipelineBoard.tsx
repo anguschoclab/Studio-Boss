@@ -55,16 +55,16 @@ export const PipelineBoard = () => {
         {(() => {
           const projectsByStatus = new Map<ProjectStatus, typeof projects>();
           for (const project of projects) {
-            const list = projectsByStatus.get(project.status);
+            const list = projectsByStatus.get(project.state);
             if (list) {
               list.push(project);
             } else {
-              projectsByStatus.set(project.status, [project]);
+              projectsByStatus.set(project.state, [project]);
             }
           }
 
           return COLUMNS.map(col => {
-            const colProjects = col.status.flatMap(status => projectsByStatus.get(status) || []);
+            const colProjects = col.state.flatMap(status => projectsByStatus.get(status) || []);
             return (
               <div key={col.title} className="flex flex-col h-full space-y-4 group/col">
                 {/* Column Header */}

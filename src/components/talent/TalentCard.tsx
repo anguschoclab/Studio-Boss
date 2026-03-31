@@ -2,14 +2,14 @@ import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { HoverCard, HoverCardTrigger, HoverCardContent } from '@/components/ui/hover-card';
 import { Star, TrendingUp, TrendingDown, Users } from 'lucide-react';
-import { TalentProfile } from '@/engine/types';
+import { Talent } from '@/engine/types';
 import { formatMoney } from '@/engine/utils';
 import { AGENCY_ARCHETYPES } from '@/engine/data/archetypes';
 import { cn } from '@/lib/utils';
 import { useGameStore } from '@/store/gameStore';
 
 interface TalentCardProps {
-  talent: TalentProfile;
+  talent: Talent;
   className?: string;
   showStarMeter?: boolean;
 }

@@ -1,8 +1,8 @@
 import { useState, useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
-import { TalentProfile } from '@/engine/types';
+import { Talent } from '@/engine/types';
 import { useUIStore } from '@/store/uiStore';
-import { TalentProfileModal } from './TalentProfileModal';
+import { TalentModal } from './TalentModal';
 import { TalentCard } from './TalentCard';
 
 export const TalentPanel = () => {
@@ -37,7 +37,7 @@ export const TalentPanel = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 overflow-y-auto pb-6 custom-scrollbar pr-2">
-        {filteredTalent.map((talent: TalentProfile) => (
+        {filteredTalent.map((talent: Talent) => (
           <div 
             key={talent.id} 
             onClick={() => selectTalent(talent.id)}
@@ -52,7 +52,7 @@ export const TalentPanel = () => {
           </div>
         )}
       </div>
-      <TalentProfileModal />
+      <TalentModal />
     </div>
   );
 };

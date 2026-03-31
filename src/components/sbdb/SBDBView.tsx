@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Search, Filter, Star, TrendingUp, Users, DollarSign } from 'lucide-react';
-import { TalentProfile, TalentRole } from '@/engine/types';
+import { Talent, TalentRole } from '@/engine/types';
 import { TalentCard } from '../talent/TalentCard';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
