@@ -43,9 +43,9 @@ export const FinancePanel = () => {
     const history = financeHistory.slice(-24).map(h => ({
       ...h,
       isForecast: false,
-      histCash: h.cash,
-      histRevenue: h.revenue,
-      histCosts: h.costs
+      histCash: h.endingCash,
+      histRevenue: h.revenue.boxOffice + h.revenue.distribution + h.revenue.other,
+      histCosts: h.expenses.production + h.expenses.marketing + h.expenses.overhead
     }));
     
     const projected = forecast.map(f => ({
