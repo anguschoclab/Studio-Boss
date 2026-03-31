@@ -17,7 +17,7 @@ export function isSundanceEquivalentFestival(body: AwardBody | string): boolean 
 }
 
 export function isMajorCategoryNomination(category: AwardCategory | string): boolean {
-  return ['Best Director', 'Best Actor', 'Best Actress', 'Palme d\'Or', 'Golden Lion', 'Golden Bear', 'Grand Jury Prize', 'Best Screenplay'].includes(category);
+  return ['Best Director', 'Best Actor', 'Best Actress', 'Palme d\'Or', 'Golden Lion', 'Golden Bear', 'Grand Jury Prize', 'Best Screenplay', 'Best Picture', 'Best Series', 'Best Animated Feature', 'Audience Award', 'Special Achievement', 'Best Narrative Feature', 'Best Ensemble'].includes(category);
 }
 
 export function isSupportingCategoryNomination(category: AwardCategory | string): boolean {
