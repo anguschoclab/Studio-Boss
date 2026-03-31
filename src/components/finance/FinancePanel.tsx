@@ -51,9 +51,9 @@ export const FinancePanel = () => {
     const projected = forecast.map(f => ({
       week: f.week,
       isForecast: true,
-      projCash: f.projectedCash,
-      projRevenue: f.projectedRevenue,
-      projCosts: f.projectedCosts
+      projCash: f.projected,
+      projRevenue: 0,
+      projCosts: 0
     }));
     
     // Stitch the last history point to forecast so the line connects
