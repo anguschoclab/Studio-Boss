@@ -92,11 +92,7 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
     },
     market: {
       opportunities: Array.from({ length: 4 }, () => generateOpportunity(Object.keys(talentPool))),
-      buyers: [
-        { id: 'b1', name: 'Global Network', archetype: 'network' as const },
-        { id: 'b2', name: 'Prestige TV', archetype: 'premium' as const },
-        { id: 'b3', name: 'StreamMax', archetype: 'streamer' as const }
-      ],
+      buyers: generateBuyers(),
     },
     industry: {
       rivals,
