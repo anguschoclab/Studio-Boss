@@ -105,6 +105,11 @@ export const selectMarket = createSelector(
   (state) => state?.market || { buyers: [], opportunities: [], trends: [], activeMarketEvents: [] }
 );
 
+export const selectOpportunities = createSelector(
+  [selectMarket],
+  (market) => market.opportunities || []
+);
+
 export const selectBuyers = createSelector(
   [selectMarket],
   (market) => market.buyers || []
