@@ -230,8 +230,8 @@ export const ProjectDetailModal = () => {
                     <div>
                       <p className="text-2xl font-black text-white">{project.buzz.toFixed(0)}% <span className="text-xs font-normal text-slate-500 uppercase italic">Cultural Buzz</span></p>
                     </div>
-                    {project.format === 'tv' && (
-                      <p className="text-sm font-bold text-slate-400">Released {project.episodesReleased}/{project.episodes} Episodes</p>
+                    {project.type === 'SERIES' && (
+                      <p className="text-sm font-bold text-slate-400">Released {(project as any).tvDetails?.episodesAired || 0}/{(project as any).tvDetails?.episodesOrdered || 0} Episodes</p>
                     )}
                   </div>
                 </div>
