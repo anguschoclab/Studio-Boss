@@ -100,6 +100,7 @@ describe("advanceProject", () => {
   });
 
   describe("Handle Release Phase Entry", () => {
+    it("transitions marketing project to released", () => {
       const proj = { ...mockProject, state: "marketing" as const };
       const { project: updatedProj, update } = handleReleasePhaseEntry(proj, 1, 50, [], new Map());
       expect(updatedProj.state).toBe("released");
