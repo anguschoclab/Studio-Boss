@@ -171,7 +171,7 @@ export const ProjectDetailModal = () => {
 
         <Tabs defaultValue={
           project.state === 'marketing' ? "marketing" :
-          (project.state === 'needs_greenlight' || project.state === 'development' || project.state === 'production' || project.state === 'post_production') ? "production" :
+          (project.state === 'needs_greenlight' || project.state === 'development' || project.state === 'production') ? "production" :
           "overview"
         } className="w-full">
           <TabsList className="grid w-full grid-cols-5 bg-slate-900/50 p-1 border border-slate-800">
