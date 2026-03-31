@@ -51,8 +51,9 @@ export function processDirectorDisputes(
   if (!director || !director.roles.includes('director')) return { updates, newCrises };
   
   // Auteurs and Visionaries cause more disputes
-  const chance = director.directorArchetype === 'auteur' ? 0.05 :
-                 director.directorArchetype === 'visionary' ? 0.04 :
+  const archetype = (director as any).directorArchetype;
+  const chance = archetype === 'auteur' ? 0.05 :
+                 archetype === 'visionary' ? 0.04 :
                  0.01;
 
   if (secureRandom() < chance && !project.activeCrisis) {
