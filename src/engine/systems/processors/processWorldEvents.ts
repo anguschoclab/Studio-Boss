@@ -88,7 +88,7 @@ export const processWorldEvents = (
     let prestigeChange = ceremonyResult.prestigeChange;
 
     if (nextWeek % 52 === 4) {
-        const razzies = processRazzies(state, nextWeek);
+        const razzies = processRazzies(state);
         if (razzies.projectUpdates.length > 0) {
             weeklyChanges.projectUpdates.push(...razzies.projectUpdates);
             weeklyChanges.newHeadlines.push(...razzies.newHeadlines);

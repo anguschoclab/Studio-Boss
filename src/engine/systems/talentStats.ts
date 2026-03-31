@@ -35,14 +35,14 @@ export function applyAwardBoostsToTalent(
   if (award.status === 'won') {
     if (isPrestige || isCannesEquivalent) {
       prestigeBoost += 35 * finalMultiplier;
-      egoBoost += 60 * finalMultiplier; // Massive permanent ego bump for prestigious awards
+      egoBoost += 90 * finalMultiplier; // Massive permanent ego bump for prestigious awards
       drawBoost += 15 * finalMultiplier;
-      feeMultiplier += 4.0 * finalMultiplier; // 400% fee bump to make chasing trophies a massive distinct strategy
+      feeMultiplier += 6.0 * finalMultiplier; // 600% fee bump to make chasing trophies a massive distinct strategy
     } else if (isSundanceEquivalent) {
       prestigeBoost += 15 * finalMultiplier;
-      egoBoost += 40 * finalMultiplier;
+      egoBoost += 60 * finalMultiplier;
       drawBoost += 35 * finalMultiplier; // Massive commercial draw bump for indie hits
-      feeMultiplier += 2.5 * finalMultiplier; // 250% fee bump
+      feeMultiplier += 4.0 * finalMultiplier; // 400% fee bump
     } else {
       prestigeBoost += 10 * finalMultiplier;
       egoBoost += 20 * finalMultiplier;
@@ -53,14 +53,14 @@ export function applyAwardBoostsToTalent(
     // nominated
     if (isPrestige || isCannesEquivalent) {
       prestigeBoost += 10 * finalMultiplier;
-      egoBoost += 25 * finalMultiplier;
+      egoBoost += 40 * finalMultiplier;
       drawBoost += 5 * finalMultiplier;
-      feeMultiplier += 1.0 * finalMultiplier; // 100% fee bump for prestigious nominations
+      feeMultiplier += 2.0 * finalMultiplier; // 200% fee bump for prestigious nominations
     } else if (isSundanceEquivalent) {
       prestigeBoost += 8 * finalMultiplier;
-      egoBoost += 15 * finalMultiplier;
+      egoBoost += 25 * finalMultiplier;
       drawBoost += 12 * finalMultiplier;
-      feeMultiplier += 0.6 * finalMultiplier; // 60% fee bump for indie nominations
+      feeMultiplier += 1.5 * finalMultiplier; // 150% fee bump for indie nominations
     } else {
       prestigeBoost += 4 * finalMultiplier;
       egoBoost += 10 * finalMultiplier;

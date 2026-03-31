@@ -1,15 +1,31 @@
-/** @vitest-environment node */
+/** @vitest-environment jsdom */
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { generateAwardsProfile, runAwardsCeremony } from "../../../engine/systems/awards";
 import { Project, GameState } from "../../../engine/types";
 import * as utils from '../../../engine/utils';
 
+const createMockState = (projects) => {
+  const arr = Array.isArray(projects) ? projects : Object.values(projects || {});
+  return {
+    studio: {
+      internal: {
+        projects: arr.reduce((acc, p) => ({ ...acc, [p.id]: p }), {})
+      }
+    }
+  } as GameState;
+};
+
+const runAwardsCeremonyMocked = (projects, week, year) => {
+  const state = createMockState(projects);
+  return runAwardsCeremony(state, week, year);
+};
+
 describe("awards system", () => {
 
   describe("Guild Auditor: Edge Cases", () => {
     it("handles an empty project list safely during runAwardsCeremony", () => {
-      const impact = runAwardsCeremony([], 52, 2026);
-      expect(impact).toEqual({});
+      const impact = runAwardsCeremonyMocked([], 52, 2026);
+      expect(impact).toEqual({ newAwards: [], prestigeChange: 0, newHeadlines: [], uiNotifications: [], newsEvents: [] });
     });
 
     it("handles extreme negative budget / buzz values when generating awards profile", () => {
@@ -77,14 +93,14 @@ describe("awards system", () => {
 
     it("should award 'won' status for high scores (> 150)", () => {
       // Week 10 is Academy Awards
-      const impact = runAwardsCeremony([eligibleProject], 10, 2024);
+      const impact = runAwardsCeremonyMocked([eligibleProject], 10, 2024);
       expect(impact.prestigeChange).toBeGreaterThanOrEqual(10);
-      expect(impact.newHeadlines?.some(h => h.text.includes('won'))).toBe(true);
+      expect(impact.newsEvents?.some(h => h.headline.includes('Wins'))).toBe(true);
     });
 
     it("should correctly accumulate prestige change", () => {
       // Week 10 is Academy Awards
-      const impact = runAwardsCeremony([eligibleProject], 10, 2024);
+      const impact = runAwardsCeremonyMocked([eligibleProject], 10, 2024);
       // It wins multiple awards (Best Picture, Best Director)
       expect(impact.prestigeChange).toBeGreaterThanOrEqual(20);
     });
@@ -92,10 +108,10 @@ describe("awards system", () => {
     it("should filter awards by project format", () => {
       const tvProject: Project = { ...eligibleProject, format: "tv", id: "tv-1" };
       // Week 37 is Emmys
-      const impact = runAwardsCeremony([tvProject], 37, 2024);
+      const impact = runAwardsCeremonyMocked([tvProject], 37, 2024);
 
       expect(impact.newsEvents?.some(e => e.headline.includes('Wins'))).toBe(true);
-      expect(impact.newHeadlines?.some(h => h.text.includes('🏆'))).toBe(true);
+      expect(impact.uiNotifications?.some(h => h.includes('🏆'))).toBe(true);
     });
   });
 });

@@ -30,9 +30,9 @@ describe('applyAwardBoostsToTalent', () => {
       const boosts = applyAwardBoostsToTalent(baseTalent, award, 1.0, true);
 
       expect(boosts.prestigeBoost).toBeCloseTo(63);
-      expect(boosts.egoBoost).toBeCloseTo(108);
+      expect(boosts.egoBoost).toBeCloseTo(162);
       expect(boosts.drawBoost).toBeCloseTo(27);
-      expect(boosts.feeMultiplier).toBeCloseTo(8.2);
+      expect(boosts.feeMultiplier).toBeCloseTo(11.8);
     });
 
     it('calculates boosts for a Cannes equivalent supporting win', () => {
@@ -40,19 +40,19 @@ describe('applyAwardBoostsToTalent', () => {
       const boosts = applyAwardBoostsToTalent(baseTalent, award, 1.0, false);
 
       expect(boosts.prestigeBoost).toBeCloseTo(49);
-      expect(boosts.egoBoost).toBeCloseTo(84);
+      expect(boosts.egoBoost).toBeCloseTo(126);
       expect(boosts.drawBoost).toBeCloseTo(21);
-      expect(boosts.feeMultiplier).toBeCloseTo(6.6);
+      expect(boosts.feeMultiplier).toBeCloseTo(9.4);
     });
 
     it('calculates boosts for a Sundance equivalent standard category win', () => {
       const award: Award = { ...baseAward, category: 'Best Screenplay', body: 'Sundance Film Festival', status: 'won' };
       const boosts = applyAwardBoostsToTalent(baseTalent, award, 1.0, false);
 
-      expect(boosts.prestigeBoost).toBeCloseTo(15);
-      expect(boosts.egoBoost).toBeCloseTo(40);
-      expect(boosts.drawBoost).toBeCloseTo(35);
-      expect(boosts.feeMultiplier).toBeCloseTo(3.5);
+      expect(boosts.prestigeBoost).toBeCloseTo(27);
+      expect(boosts.egoBoost).toBeCloseTo(108);
+      expect(boosts.drawBoost).toBeCloseTo(63);
+      expect(boosts.feeMultiplier).toBeCloseTo(8.2);
     });
 
     it('calculates boosts for a standard non-prestige win', () => {
@@ -72,9 +72,9 @@ describe('applyAwardBoostsToTalent', () => {
       const boosts = applyAwardBoostsToTalent(baseTalent, award, 1.0, true);
 
       expect(boosts.prestigeBoost).toBeCloseTo(18);
-      expect(boosts.egoBoost).toBeCloseTo(45);
+      expect(boosts.egoBoost).toBeCloseTo(72);
       expect(boosts.drawBoost).toBeCloseTo(9);
-      expect(boosts.feeMultiplier).toBeCloseTo(2.8);
+      expect(boosts.feeMultiplier).toBeCloseTo(4.6);
     });
 
     it('calculates boosts for a Sundance equivalent supporting nomination', () => {
@@ -82,9 +82,9 @@ describe('applyAwardBoostsToTalent', () => {
       const boosts = applyAwardBoostsToTalent(baseTalent, award, 1.0, false);
 
       expect(boosts.prestigeBoost).toBeCloseTo(11.2);
-      expect(boosts.egoBoost).toBeCloseTo(21);
+      expect(boosts.egoBoost).toBeCloseTo(35);
       expect(boosts.drawBoost).toBeCloseTo(16.8);
-      expect(boosts.feeMultiplier).toBeCloseTo(1.84);
+      expect(boosts.feeMultiplier).toBeCloseTo(3.1);
     });
 
     it('calculates boosts for a standard nomination', () => {
@@ -104,9 +104,9 @@ describe('applyAwardBoostsToTalent', () => {
       const boosts = applyAwardBoostsToTalent(baseTalent, award, 0.5, true);
 
       expect(boosts.prestigeBoost).toBeCloseTo(31.5);
-      expect(boosts.egoBoost).toBeCloseTo(54);
+      expect(boosts.egoBoost).toBeCloseTo(81);
       expect(boosts.drawBoost).toBeCloseTo(13.5);
-      expect(boosts.feeMultiplier).toBeCloseTo(4.6);
+      expect(boosts.feeMultiplier).toBeCloseTo(6.4);
     });
   });
 });

@@ -20,7 +20,7 @@ describe('Razzies Award System', () => {
       industry: { talentPool: [] }
     } as unknown as GameState;
 
-    const result = processRazzies(state, 4);
+    const result = processRazzies(state);
 
     // Only the bigFlop is eligible. And Worst Picture should be 'Title big'
     expect(result.projectUpdates[0]).toContain('Title big');
@@ -33,7 +33,7 @@ describe('Razzies Award System', () => {
       industry: { talentPool: [] }
     } as unknown as GameState;
 
-    const result = processRazzies(state, 4);
+    const result = processRazzies(state);
 
     expect(result.studioPrestigePenalty).toBe(10);
     expect(result.cultClassicProjectIds.includes('absurd')).toBe(true);

@@ -17,7 +17,7 @@ export function isSundanceEquivalentFestival(body: AwardBody | string): boolean 
 }
 
 export function isMajorCategoryNomination(category: AwardCategory | string): boolean {
-  return ['Best Director', 'Best Actor', 'Best Actress', 'Palme d\'Or', 'Golden Lion', 'Golden Bear', 'Grand Jury Prize'].includes(category);
+  return ['Best Director', 'Best Actor', 'Best Actress', 'Palme d\'Or', 'Golden Lion', 'Golden Bear', 'Grand Jury Prize', 'Best Screenplay'].includes(category);
 }
 
 export function isSupportingCategoryNomination(category: AwardCategory | string): boolean {
@@ -68,6 +68,7 @@ export function launchAwardsCampaign(state: GameState, projectId: string, budget
     }
   };
 
+
   const newHeadline: Headline = {
     id: crypto.randomUUID(),
     week: state.week,
@@ -86,10 +87,7 @@ export function launchAwardsCampaign(state: GameState, projectId: string, budget
         }
       }
     }],
-    newHeadlines: [{
-      category: 'awards',
-      text: `Studio launches massive FYC campaign for "${project.title}".`
-    }]
+    newHeadlines: [newHeadline]
   };
 }
 
@@ -112,7 +110,7 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
 
   // ⚡ Bolt: O(1) early exit for zero eligible projects
   if (Object.keys(state.studio.internal.projects).length === 0) {
-    return { newAwards, prestigeChange, projectUpdates, newsEvents: [] };
+    return impact;
   }
 
   // ⚡ Bolt: Find eligible projects (released within the last 52 weeks relative to the ceremony)
@@ -130,22 +128,6 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
     }
   }
 
-  // Find eligible projects (released within the last 52 weeks relative to the ceremony)
-  const eligibleFilm = state.studio.internal.projects.filter(p => 
-    (p.status === 'released' || p.status === 'post_release' || p.status === 'archived') &&
-    p.releaseWeek !== null &&
-    p.releaseWeek > currentWeek - 52 &&
-    p.awardsProfile !== undefined &&
-    p.format === 'film'
-  );
-
-  const eligibleTv = state.studio.internal.projects.filter(p => 
-    (p.status === 'released' || p.status === 'post_release' || p.status === 'archived') &&
-    p.releaseWeek !== null &&
-    p.releaseWeek > currentWeek - 52 &&
-    p.awardsProfile !== undefined &&
-    p.format === 'tv'
-  );
 
   if (eligibleFilm.length === 0 && eligibleTv.length === 0) return impact;
 
@@ -177,7 +159,7 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
         body: config.body,
         status: 'won',
         year
-      });
+      } as Award);
       impact.prestigeChange! += 10;
       impact.uiNotifications!.push(`🏆 "${bestProject.title}" won ${config.category} at the ${config.body}!`);
       impact.newsEvents!.push({
@@ -195,7 +177,7 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
         body: config.body,
         status: 'nominated',
         year
-      });
+      } as Award);
       impact.prestigeChange! += 2;
       impact.uiNotifications!.push(`⭐ "${bestProject.title}" was nominated for ${config.category} at the ${config.body}.`);
     }
@@ -204,7 +186,7 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
   return impact;
 }
 
-export function processRazzies(state: GameState, week: number): StateImpact {
+export function processRazzies(state: GameState): StateImpact {
   const impact: StateImpact = {
     uiNotifications: [],
     prestigeChange: 0,
