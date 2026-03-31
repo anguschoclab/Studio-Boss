@@ -80,8 +80,8 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
 
     if (crisisTitles.size > 0) {
       const projects = finalState.studio.internal.projects;
-      for (let i = 0; i < projects.length; i++) {
-        const p = projects[i];
+      for (const key in projects) {
+        const p = projects[key];
         if (p.activeCrisis && !p.activeCrisis.resolved && crisisTitles.has(p.title)) {
           ui.enqueueModal('CRISIS', { projectId: p.id, crisis: p.activeCrisis });
         }

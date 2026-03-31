@@ -15,9 +15,10 @@ import { mergeImpacts } from '../utils/impactUtils';
 function createSnapshot(state: GameState, originalWeek: number): StudioSnapshot {
   let activeProjectsCount = 0;
   let releasedProjectsCount = 0;
-  const projects = Object.values(state.studio.internal.projects);
+  const projects = state.studio.internal.projects;
   
-  for (const p of projects) {
+  for (const key in projects) {
+    const p = projects[key];
     if (p.status === 'released' || p.status === 'post_release' || p.status === 'archived') {
       releasedProjectsCount++;
     } else {
@@ -45,11 +46,16 @@ function finalizeStateMetadata(state: GameState, originalState: GameState, total
   // 1. Update Culture (Genre Popularity)
   const nextTrends = state.market.trends || [];
   const genrePopularity: Record<string, number> = {};
-  const trendMap = new Map<string, number>();
-  for (const t of nextTrends) trendMap.set(t.genre, t.heat);
   
-  for (const g of ALL_GENRES) {
-    const heat = trendMap.get(g);
+  for (let i = 0; i < ALL_GENRES.length; i++) {
+    const g = ALL_GENRES[i];
+    let heat: number | undefined;
+    for (let j = 0; j < nextTrends.length; j++) {
+      if (nextTrends[j].genre === g) {
+        heat = nextTrends[j].heat;
+        break;
+      }
+    }
     genrePopularity[g.toLowerCase()] = heat !== undefined ? heat / 100 : 0.2 + secureRandom() * 0.1;
   }
 
@@ -81,7 +87,6 @@ function finalizeStateMetadata(state: GameState, originalState: GameState, total
 export function advanceWeek(state: GameState): { newState: GameState; summary: WeekSummary } {
   const originalState = state;
   let currentState = state;
-  let cumulativeImpact = {};
 
   // 1. Process Studio Production (Advancement, Quality, Completion)
   const productionImpact = processProduction(currentState);
@@ -96,7 +101,12 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
   currentState = applyStateImpact(currentState, worldImpact);
 
   // 4. IP Rights & Deals
-  const ipImpact = advanceIPRights(Object.values(currentState.studio.internal.projects), currentState.week);
+  const currentProjects = currentState.studio.internal.projects;
+  const projectsArr = [];
+  for (const key in currentProjects) {
+    projectsArr.push(currentProjects[key]);
+  }
+  const ipImpact = advanceIPRights(projectsArr, currentState.week);
   currentState = applyStateImpact(currentState, ipImpact);
   
   const dealsImpact = advanceDeals(currentState.studio.internal.firstLookDeals || []);
