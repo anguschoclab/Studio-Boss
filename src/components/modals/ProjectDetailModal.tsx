@@ -162,8 +162,8 @@ export const ProjectDetailModal = () => {
             </DialogTitle>
             <div className="flex gap-2">
               <Badge variant="outline" className="text-amber-500 border-amber-500/30 uppercase font-black">{project.state}</Badge>
-              {project.format === 'tv' && project.season && (
-                <Badge className="bg-blue-600 text-white font-black">SEASON {project.season}</Badge>
+              {project.type === 'SERIES' && (project as any).tvDetails && (
+                <Badge className="bg-blue-600 text-white font-black">SEASON {(project as any).tvDetails.currentSeason}</Badge>
               )}
             </div>
           </div>
