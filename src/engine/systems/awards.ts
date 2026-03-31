@@ -47,7 +47,7 @@ export function generateAwardsProfile(project: Project): AwardsProfile {
 
 export function launchAwardsCampaign(state: GameState, projectId: string, budget: number): StateImpact | null {
   const project = state.studio.internal.projects[projectId];
-  if (!project || state.cash < budget || !project.awardsProfile) return null;
+  if (!project || state.finance.cash < budget || !project.awardsProfile) return null;
 
   const boost = (budget / 1_000_000) * 5;
   const newStrength = Math.min(100, project.awardsProfile.campaignStrength + boost);
