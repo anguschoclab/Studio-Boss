@@ -1,4 +1,4 @@
-import { GameState, Project } from '@/engine/types';
+import { GameState } from '@/engine/types';
 import { groupContractsByProject } from '../../utils';
 import { advanceProject } from '../projects';
 import { checkAndTriggerCrisis } from '../crises';
@@ -35,7 +35,7 @@ export const processProduction = (
     }
     const rivalAvgStrength = rivalStrengthSum / Math.max(1, rivals.length);
 
-    const awardsByProject = new Map<string, any[]>();
+    const awardsByProject = new Map<string, unknown[]>();
     const awards = state.industry.awards || [];
     for (let i = 0; i < awards.length; i++) {
         const a = awards[i];
@@ -45,11 +45,16 @@ export const processProduction = (
 
     const boxOfficeEntries: BoxOfficeEntry[] = [];
 
+    // Create map once outside the loop instead of inside per project to avoid repeated Map allocations
+    const talentMap = new Map(Object.entries(talentPool));
+    const projects = state.studio.internal.projects;
+
     // O(N) iteration over projects Record
-    Object.values(state.studio.internal.projects).forEach(p => {
+    for (const key in projects) {
+        const p = projects[key];
         if (p.activeCrisis && !p.activeCrisis.resolved) {
             impact.uiNotifications!.push(`"${p.title}" production is halted until the active crisis is resolved.`);
-            return;
+            continue;
         }
 
         const projectContracts = contractsByProject.get(p.id) || [];
@@ -61,7 +66,7 @@ export const processProduction = (
             nextWeek, 
             state.studio.prestige, 
             projectContracts, 
-            new Map(Object.entries(talentPool)), // Note: current advanceProject expects a Map
+            talentMap,
             rivalAvgStrength, 
             awardsByProject.get(p.id) || [],
             trendMult
@@ -118,7 +123,7 @@ export const processProduction = (
 
         // Director disputes
         if (updatedProj.status === 'production') {
-            const dirDisputeArgs = processDirectorDisputes(updatedProj, projectContracts, new Map(Object.entries(talentPool)));
+            const dirDisputeArgs = processDirectorDisputes(updatedProj, projectContracts, talentMap);
             if (dirDisputeArgs.newCrises.length > 0 && (!updatedProj.activeCrisis || updatedProj.activeCrisis.resolved)) {
                 updatedProj.activeCrisis = dirDisputeArgs.newCrises[0].crisis;
                 impact.uiNotifications!.push(...dirDisputeArgs.updates);
@@ -126,7 +131,7 @@ export const processProduction = (
         }
 
         impact.projectUpdates!.push({ projectId: updatedProj.id, update: updatedProj });
-    });
+    }
 
     // Apply Box Office Ranks
     const ranks = calculateBoxOfficeRanks(boxOfficeEntries);

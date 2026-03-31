@@ -6,8 +6,14 @@ export const processFinance = (
     state: GameState
 ): StateImpact => {
     const nextWeek = state.week + 1;
-    const costs = calculateWeeklyCosts(Object.values(state.studio.internal.projects), state.market.activeMarketEvents || []);
-    const revenue = calculateWeeklyRevenue(Object.values(state.studio.internal.projects), state.studio.internal.contracts, state.market.activeMarketEvents || []);
+    const projectsObj = state.studio.internal.projects;
+    const projectsArray = [];
+    for (const key in projectsObj) {
+        projectsArray.push(projectsObj[key]);
+    }
+
+    const costs = calculateWeeklyCosts(projectsArray, state.market.activeMarketEvents || []);
+    const revenue = calculateWeeklyRevenue(projectsArray, state.studio.internal.contracts, state.market.activeMarketEvents || []);
     const newCash = state.cash - costs + revenue;
 
     let financeHistory = state.studio.internal.financeHistory || [];
