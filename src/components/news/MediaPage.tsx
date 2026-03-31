@@ -53,7 +53,7 @@ const OutletWidget = ({ title, description, icon, headlines, colorClass }: Outle
 );
 
 export const MediaPage = () => {
-  const headlines = useGameStore((s) => s.gameState?.industry.headlines || []);
+  const headlines = useGameStore((s) => s.gameState?.industry.newsHistory || []);
 
   // Filter headlines by category to simulate different trade outlets using a single pass for performance
   const groupedHeadlines = useMemo(() => headlines.reduce(
