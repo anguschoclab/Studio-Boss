@@ -294,7 +294,7 @@ export const ProjectDetailModal = () => {
                  ].map(tier => (
                    <button
                      key={tier.id}
-                     disabled={!!project.marketingLevel || (gameState && gameState.finance.cash < tier.cost)}
+                     disabled={!!project.marketingLevel || (gameState ? gameState.finance.cash < tier.cost : false)}
                      onClick={() => setSelectedTier(tier.id as any)}
                      className={`p-3 rounded-xl border text-left transition-all ${
                        project.marketingLevel === tier.id || selectedTier === tier.id 
