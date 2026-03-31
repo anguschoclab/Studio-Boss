@@ -22,8 +22,9 @@ const TitleScreen = () => {
     fetchSlots();
   }, [getSaveSlots]);
 
-  const handleLoad = (slot: number) => {
-    if (loadFromSlot(slot)) {
+  const handleLoad = async (slot: number) => {
+    const success = await loadFromSlot(slot);
+    if (success) {
       navigate({ to: '/dashboard' });
     }
   };
