@@ -70,21 +70,29 @@ describe("buyers system", () => {
 
       // comedy
       // rand for early shift: < 0.05. rand for pick: index 0 (0). rand for headline: < 0.6.
-      vi.spyOn(utils, 'secureRandom').mockReturnValueOnce(0.01).mockReturnValueOnce(0.01).mockReturnValueOnce(0.01).mockReturnValueOnce(0.01);
+      vi.spyOn(utils, 'secureRandom').mockReturnValueOnce(0.01).mockReturnValueOnce(0.01).mockReturnValueOnce(0.01); vi.spyOn(utils, 'pick').mockReturnValueOnce('comedy' as any);
       let result = updateBuyers([testBuyer], 1);
-      expect(result.newHeadlines.length).toBeGreaterThan(0);
+      expect(result.newHeadlines).toContain(`${testBuyer.name} shifts focus, seeking half-hour comedies for their upcoming slate.`);
 
       // drama
-      vi.spyOn(utils, 'secureRandom').mockReturnValueOnce(0.01).mockReturnValueOnce(0.3).mockReturnValueOnce(0.01).mockReturnValueOnce(0.01);
+      vi.spyOn(utils, 'secureRandom').mockReturnValueOnce(0.01).mockReturnValueOnce(0.01).mockReturnValueOnce(0.01); vi.spyOn(utils, 'pick').mockReturnValueOnce('drama' as any);
       result = updateBuyers([testBuyer], 1);
-      expect(result.newHeadlines.length).toBeGreaterThan(0);
+      expect(result.newHeadlines).toContain(`New mandate at ${testBuyer.name}: high-stakes drama is the priority.`);
 
       // budget_freeze
-      vi.spyOn(utils, 'secureRandom').mockReturnValueOnce(0.01).mockReturnValueOnce(0.5).mockReturnValueOnce(0.01).mockReturnValueOnce(0.01);
+      vi.spyOn(utils, 'secureRandom').mockReturnValueOnce(0.01).mockReturnValueOnce(0.01).mockReturnValueOnce(0.01); vi.spyOn(utils, 'pick').mockReturnValueOnce('budget_freeze' as any);
       result = updateBuyers([testBuyer], 1);
-      expect(result.newHeadlines.length).toBeGreaterThan(0);
+      expect(result.newHeadlines).toContain(`Austerity hits ${testBuyer.name}! Execs are instituting a sudden budget freeze on new pitches.`);
 
+      // prestige
+      vi.spyOn(utils, 'secureRandom').mockReturnValueOnce(0.01).mockReturnValueOnce(0.01).mockReturnValueOnce(0.01); vi.spyOn(utils, 'pick').mockReturnValueOnce('prestige' as any);
+      result = updateBuyers([testBuyer], 1);
+      expect(result.newHeadlines).toContain(`Awards chase: ${testBuyer.name} announces a massive fund specifically for prestige projects.`);
 
+      // broad_appeal
+      vi.spyOn(utils, 'secureRandom').mockReturnValueOnce(0.01).mockReturnValueOnce(0.01).mockReturnValueOnce(0.01); vi.spyOn(utils, 'pick').mockReturnValueOnce('broad_appeal' as any);
+      result = updateBuyers([testBuyer], 1);
+      expect(result.newHeadlines).toContain(`${testBuyer.name} pivots to four-quadrant, broad appeal projects after subscriber churn.`);
     });
 
     it("shifts mandate if buyer has no current mandate", () => {
