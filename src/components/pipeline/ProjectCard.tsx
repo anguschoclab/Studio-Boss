@@ -38,6 +38,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
         }
       }}
       aria-label={`View details for ${project.title}`}
+      data-testid={`project-card-${project.id}`}
       className="w-full text-left p-4 rounded-xl border border-white/5 bg-gradient-to-br from-white/[0.05] to-transparent backdrop-blur-md hover:bg-white/[0.08] hover:border-primary/30 transition-all duration-500 space-y-4 group relative overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl hover:-translate-y-1"
     >
       {/* Visual Accent */}

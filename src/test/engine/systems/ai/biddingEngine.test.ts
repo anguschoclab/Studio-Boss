@@ -1,39 +1,75 @@
 import { describe, it, expect } from 'vitest';
-import { GameState, RivalStudio, Opportunity } from '@/engine/types';
+import { GameState, RivalStudio, Opportunity, Talent } from '@/engine/types';
 import { tickAuctions } from '@/engine/systems/ai/biddingEngine';
 import { RandomGenerator } from '@/engine/utils/rng';
 
 describe('AI Bidding Engine (Target C2 Refactor)', () => {
   const rng = new RandomGenerator(777);
+  
   const mockRival: RivalStudio = {
     id: 'rival-1',
     name: 'Major Studio',
-    cash: 50000000,
-    archetype: 'FRANCHISE_FACTORY',
+    motto: 'Standard.',
+    archetype: 'major',
     strength: 80,
+    cash: 50_000_000,
+    prestige: 50,
+    recentActivity: 'Testing',
+    projectCount: 5,
+    strategy: 'acquirer',
     projects: {},
+    contracts: [],
     motivationProfile: { financial: 50, prestige: 50, legacy: 50, aggression: 50 },
     currentMotivation: 'STABILITY'
-  } as any;
+  } as RivalStudio;
 
   const mockOpportunity: Opportunity = {
     id: 'script-1',
     title: 'Action Epic',
+    type: 'script',
+    format: 'film',
     genre: 'Action',
     budgetTier: 'blockbuster',
-    costToAcquire: 1000000,
+    targetAudience: 'General',
+    flavor: 'Cool',
+    origin: 'open_spec',
+    costToAcquire: 1_000_000,
+    weeksUntilExpiry: 10,
     expirationWeek: 10,
-    bids: { 'player-1': 1100000 }
-  } as any;
+    bids: { 'player-1': 1_100_000 }
+  } as Opportunity;
 
   const mockState = {
     week: 1,
-    industry: {
-      rivals: [mockRival]
+    gameSeed: 1,
+    tickCount: 0,
+    projects: { active: [] },
+    game: { currentWeek: 1 },
+    finance: { cash: 1_000_000, ledger: [] },
+    news: { headlines: [] },
+    ip: { vault: [], franchises: {} },
+    studio: {
+      name: 'Player Studio',
+      archetype: 'major',
+      prestige: 50,
+      internal: { projects: {}, contracts: [] }
     },
-    market: {
-      opportunities: [mockOpportunity]
-    }
+    market: { 
+      opportunities: [mockOpportunity],
+      buyers: []
+    },
+    industry: {
+      rivals: [mockRival],
+      families: [],
+      agencies: [],
+      agents: [],
+      talentPool: {} as Record<string, Talent>,
+      newsHistory: [],
+      rumors: []
+    },
+    culture: { genrePopularity: {} },
+    history: [],
+    eventHistory: []
   } as unknown as GameState;
 
   it('generates a OPPORTUNITY_UPDATED impact representing a counter-bid', () => {
@@ -43,28 +79,32 @@ describe('AI Bidding Engine (Target C2 Refactor)', () => {
     expect(bidImpact).toBeDefined();
     expect(bidImpact?.payload.opportunityId).toBe('script-1');
     expect(bidImpact?.payload.rivalId).toBe('rival-1');
-    expect(bidImpact?.payload.bid).toBeGreaterThan(1100000);
+    expect(bidImpact?.payload.bid).toBeGreaterThan(1_100_000);
   });
 
   it('does not bid if the rival is already the highest bidder', () => {
+    const winningOpportunity = { ...mockOpportunity, bids: { 'rival-1': 2_000_000 } };
     const winningState = {
       ...mockState,
       market: {
         ...mockState.market,
-        opportunities: [{ ...mockOpportunity, bids: { 'rival-1': 2000000 } }]
+        opportunities: [winningOpportunity]
       }
-    } as any;
+    } as unknown as GameState;
     
     const impacts = tickAuctions(winningState, rng);
     expect(impacts.length).toBe(0);
   });
 
   it('respects budget limits and aggression profiles', () => {
-    const poorRival = { ...mockRival, cash: 1000000 };
-    const state = { ...mockState, industry: { rivals: [poorRival] } } as any;
+    const poorRival = { ...mockRival, cash: 1_000_000 };
+    const poorState = { 
+        ...mockState, 
+        industry: { ...mockState.industry, rivals: [poorRival] } 
+    } as unknown as GameState;
     
-    const impacts = tickAuctions(state, rng);
-    // Should not bid because 1.1M is > 40% of 1M cash
+    const impacts = tickAuctions(poorState, rng);
+    // Should not bid because currentHighest (1.1M) * 1.5 is already more than available cash
     expect(impacts.length).toBe(0);
   });
 });

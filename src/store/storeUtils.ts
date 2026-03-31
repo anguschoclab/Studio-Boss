@@ -80,6 +80,7 @@ export function buildProjectAndContracts(state: GameState, params: CreateProject
         budget: totalBudget,
         weeklyCost,
         state: 'development' as const,
+        renewable,
         activeCrisis: null,
         momentum: 50,
         progress: 0,

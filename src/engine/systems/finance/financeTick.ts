@@ -20,10 +20,10 @@ export function tickFinance(state: GameState, rng: RandomGenerator): StateImpact
   });
 
   // 2. Ledger update
-  // We need to add this to the ledger. 
-  // For now, we'll assume the reducer handles the ledger if we add it to the state.
-  // Actually, I should add a LEDGER_UPDATED impact type or just include it in FUNDS_CHANGED payload if I want to be efficient.
-  // But let's stick to the single-key impact pattern.
+  impacts.push({
+    type: 'LEDGER_UPDATED',
+    payload: { report }
+  });
   
   return impacts;
 }

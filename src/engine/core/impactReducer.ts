@@ -14,6 +14,15 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
         }
       };
 
+    case 'LEDGER_UPDATED':
+      return {
+        ...state,
+        finance: {
+          ...state.finance,
+          ledger: [impact.payload.report, ...state.finance.ledger].slice(0, 52)
+        }
+      };
+
     case 'FUNDS_DEDUCTED':
       return {
         ...state,

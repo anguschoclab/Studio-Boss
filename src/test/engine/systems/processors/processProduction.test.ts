@@ -1,70 +1,75 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { processProduction } from '@/engine/systems/processors/processProduction';
-import { GameState, Project } from '@/engine/types';
+import { describe, it, expect } from 'vitest';
+import { tickProduction } from '../../../../engine/systems/productionEngine';
+import { GameState, Project, Talent } from '../../../../engine/types';
+import { RandomGenerator } from '../../../../engine/utils/rng';
 
-vi.mock('@/engine/systems/production/crisisEvaluator', () => ({
-  evaluateProjectCrises: vi.fn()
-}));
-vi.mock('@/engine/systems/production/progressCalculator', () => ({
-  advanceProjectProgress: vi.fn()
-}));
-
-import { evaluateProjectCrises } from '@/engine/systems/production/crisisEvaluator';
-import { advanceProjectProgress } from '@/engine/systems/production/progressCalculator';
-
-describe('processProduction', () => {
+describe('tickProduction', () => {
+  const rng = new RandomGenerator(456);
+  
   const getInitialState = (): GameState => ({
     week: 1,
-    game: { currentWeek: 1 },
+    gameSeed: 1,
+    tickCount: 0,
     projects: { active: [] },
-    finance: {} as any,
-    news: {} as any,
-    studio: {} as any,
-    market: {} as any,
-    industry: {} as any,
+    game: { currentWeek: 1 },
+    finance: { cash: 1000000, ledger: [] },
+    news: { headlines: [] },
+    ip: { vault: [], franchises: {} },
+    studio: {
+      name: 'Test Studio',
+      archetype: 'major',
+      prestige: 50,
+      internal: {
+        projects: {}, 
+        contracts: [],
+      }
+    },
+    market: { opportunities: [], buyers: [], activeMarketEvents: [] },
+    industry: {
+      rivals: [],
+      families: [],
+      agencies: [],
+      agents: [],
+      talentPool: {} as Record<string, Talent>,
+      newsHistory: [],
+      rumors: []
+    },
     culture: { genrePopularity: {} },
-    history: []
-  });
+    history: [],
+    eventHistory: []
+    } as unknown as GameState);
 
   const createBaseProject = (id: string, state: Project['state']): Project => ({
-    id, title: `Project ${id}`, format: 'film', genre: 'Action', budgetTier: 'mid',
-    budget: 50000000, weeklyCost: 1000000, targetAudience: 'General Audience', flavor: 'Boom',
+    id, title: `Project ${id}`, type: 'FILM', format: 'film', genre: 'Action', budgetTier: 'mid',
+    budget: 50_000_000, weeklyCost: 1_000_000, targetAudience: 'General', flavor: 'Boom',
     state, buzz: 50, weeksInPhase: 0, developmentWeeks: 4, productionWeeks: 4,
     revenue: 0, weeklyRevenue: 0, releaseWeek: null,
-    activeCrisis: null, momentum: 50, progress: 0, accumulatedCost: 0
-  });
+    activeCrisis: null, momentum: 50, progress: 0, accumulatedCost: 0,
+    contentFlags: []
+  } as Project);
 
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
-  it('ignores projects not in production state', () => {
+  it('ignores projects not in production/development state in the core tick (if logic specifies)', () => {
     const state = getInitialState();
-    const devProject = createBaseProject('p1', 'development');
-    state.projects.active = [devProject];
+    const releasedProject = createBaseProject('p1', 'released');
+    state.studio.internal.projects['p1'] = releasedProject;
 
-    const newState = processProduction(state);
+    const impacts = tickProduction(state, rng);
     
-    expect(evaluateProjectCrises).not.toHaveBeenCalled();
-    expect(advanceProjectProgress).not.toHaveBeenCalled();
-    expect(newState.projects.active[0]).toBe(devProject);
+    // tickProject has a guard: if (project.state === 'released') return [];
+    expect(impacts).toHaveLength(0);
   });
 
-  it('delegates to crisisEvaluator and progressCalculator for production projects', () => {
+  it('generates PROJECT_UPDATED impact for production projects', () => {
     const state = getInitialState();
     const prodProject = createBaseProject('p1', 'production');
-    state.projects.active = [prodProject];
+    state.studio.internal.projects['p1'] = prodProject;
 
-    const nextProject1 = { ...prodProject, id: 'p1_after_crisis' };
-    const nextProject2 = { ...nextProject1, id: 'p1_after_progress' };
-
-    vi.mocked(evaluateProjectCrises).mockReturnValue(nextProject1 as Project);
-    vi.mocked(advanceProjectProgress).mockReturnValue(nextProject2 as Project);
-
-    const newState = processProduction(state);
+    const impacts = tickProduction(state, rng);
     
-    expect(evaluateProjectCrises).toHaveBeenCalledWith(prodProject, 1);
-    expect(advanceProjectProgress).toHaveBeenCalledWith(nextProject1);
-    expect(newState.projects.active[0]).toBe(nextProject2);
+    expect(impacts).toHaveLength(1);
+    expect(impacts[0].type).toBe('PROJECT_UPDATED');
+    expect(impacts[0].payload.projectId).toBe('p1');
+    expect(impacts[0].payload.update.weeksInPhase).toBe(1);
+    expect(impacts[0].payload.update.progress).toBeGreaterThan(0);
   });
 });

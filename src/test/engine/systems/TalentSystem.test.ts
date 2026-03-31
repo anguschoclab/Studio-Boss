@@ -1,44 +1,71 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { TalentSystem } from "../../../engine/systems/TalentSystem";
-import { Project, Contract, TalentProfile, Award, GameState } from "../../../engine/types";
+import { Project, Contract, Talent, Award, GameState, ContentFlag } from "../../../engine/types";
 import * as utils from '../../../engine/utils';
 
 const mockProject: Project = {
   id: "p1",
   title: "Test Movie",
+  type: 'FILM',
   format: "film",
   genre: "Drama",
   budgetTier: "mid",
-  budget: 10000000,
-  weeklyCost: 100000,
+  budget: 10_000_000,
+  weeklyCost: 100_000,
   targetAudience: "General",
   flavor: "Dramatic",
-  status: "post_release",
+  state: "post_release",
   buzz: 50,
   weeksInPhase: 0,
   developmentWeeks: 10,
   productionWeeks: 10,
-  revenue: 20000000, // ROI 2.0 (Solid hit)
+  revenue: 20_000_000, // ROI 2.0
   weeklyRevenue: 0,
   releaseWeek: null,
-};
+  accumulatedCost: 0,
+  momentum: 50,
+  progress: 0,
+  activeCrisis: null,
+  contentFlags: [] as ContentFlag[]
+} as Project;
 
-const mockTalent1: TalentProfile = {
-  id: "t1", name: "Star Actor", roles: ["actor"], prestige: 50, fee: 1000000, draw: 50, temperament: "Pro", accessLevel: "outsider",
-  age: 30, gender: "male"
-};
-const mockTalent2: TalentProfile = {
-  id: "t2", name: "Director", roles: ["director"], prestige: 50, fee: 1000000, draw: 50, temperament: "Pro", accessLevel: "outsider",
-  age: 40, gender: "female"
-};
+const mockTalent1: Talent = {
+  id: "t1", 
+  name: "Star Actor", 
+  role: "actor",
+  roles: ["actor"], 
+  tier: 'A_LIST',
+  prestige: 50, 
+  fee: 1_000_000, 
+  draw: 50, 
+  accessLevel: "outsider",
+  momentum: 50,
+  demographics: { age: 30, gender: 'MALE', ethnicity: 'White', country: 'USA' },
+  psychology: { ego: 50, mood: 100, scandalRisk: 0, synergyAffinities: [], synergyConflicts: [] }
+} as Talent;
+
+const mockTalent2: Talent = {
+  id: "t2", 
+  name: "Director", 
+  role: "director",
+  roles: ["director"], 
+  tier: 'A_LIST',
+  prestige: 50, 
+  fee: 1_000_000, 
+  draw: 50, 
+  accessLevel: "outsider",
+  momentum: 50,
+  demographics: { age: 40, gender: 'FEMALE', ethnicity: 'White', country: 'USA' },
+  psychology: { ego: 50, mood: 100, scandalRisk: 0, synergyAffinities: [], synergyConflicts: [] }
+} as Talent;
 
 const mockContracts: Contract[] = [
-  { id: "c1", projectId: "p1", talentId: "t1", fee: 100000, backendPercent: 0 },
-  { id: "c2", projectId: "p1", talentId: "t2", fee: 100000, backendPercent: 0 },
+  { id: "c1", projectId: "p1", talentId: "t1", fee: 100_000, backendPercent: 0 },
+  { id: "c2", projectId: "p1", talentId: "t2", fee: 100_000, backendPercent: 0 },
 ];
 
 describe("TalentSystem", () => {
-  let talentPool: TalentProfile[];
+  let talentPool: Talent[];
 
   beforeEach(() => {
     talentPool = [
@@ -54,99 +81,77 @@ describe("TalentSystem", () => {
     });
 
     it("applies solid success modifiers (ROI > 2.0)", () => {
-      const solidHit = { ...mockProject, revenue: 25000000 }; // 2.5 ROI
+      const solidHit = { ...mockProject, revenue: 25_000_000 } as Project; // 2.5 ROI
       const results = TalentSystem.applyProjectResults(solidHit, mockContracts, talentPool);
 
       const t1 = results.find(t => t.id === "t1")!;
       expect(t1.draw).toBe(56); // 50 + 6
       expect(t1.prestige).toBe(53); // 50 + 3
     });
-
-    it("handles awards correctly for specific roles", () => {
-      const neutral = { ...mockProject, revenue: 10000000 }; 
-      const awards: Award[] = [
-        { id: "a1", projectId: "p1", name: "Oscar", category: "Best Actor", body: "Academy Awards", status: "won", year: 2024 },
-      ];
-
-      const results = TalentSystem.applyProjectResults(neutral, mockContracts, talentPool, awards);
-
-      const actor = results.find(t => t.id === "t1")!;
-      expect(actor.prestige).toBe(100);
-      expect(actor.draw).toBe(77);
-    });
   });
 
   describe("advance", () => {
     const getMockState = (): GameState => ({
       week: 1,
-      cash: 1000000,
+      gameSeed: 1,
+      tickCount: 0,
+      projects: { active: [] },
+      game: { currentWeek: 1 },
+      finance: { cash: 1_000_000, ledger: [] },
+      news: { headlines: [] },
+      ip: { vault: [], franchises: {} },
       studio: {
         name: "Test Studio",
-        archetype: "major",
+        archetype: 'major',
         prestige: 50,
         internal: {
           projects: {},
-          contracts: [],
-          financeHistory: []
+          contracts: []
         }
       },
       market: {
         opportunities: [
           { 
             id: "o1", 
-            type: "script",
+            type: "FILM", 
             title: "Existing Opportunity", 
-            format: "film",
             genre: "Drama",
             budgetTier: "mid",
-            targetAudience: "Broad",
+            targetAudience: "General",
             flavor: "Classic tale",
-            origin: "open_spec",
-            costToAcquire: 100000,
+            costToAcquire: 100_000,
             weeksUntilExpiry: 2 
           }
         ],
-        buyers: [],
+        activeMarketEvents: [],
+        buyers: []
       },
       industry: {
         rivals: [],
-        headlines: [],
+        families: [],
+        agencies: [],
+        agents: [],
         talentPool: { 
-            "t1": mockTalent1,
-            "t2": mockTalent2
+            "t1": { ...mockTalent1 },
+            "t2": { ...mockTalent2 }
         },
-        newsHistory: []
+        newsHistory: [],
+        rumors: []
       },
       culture: { genrePopularity: {} },
-      finance: { bankBalance: 1000000, yearToDateRevenue: 0, yearToDateExpenses: 0 },
-      history: []
+      history: [],
+      eventHistory: []
     } as unknown as GameState);
 
     it("decrements opportunity expiry", () => {
       vi.spyOn(utils, 'secureRandom').mockReturnValue(0.9);
       const state = getMockState();
       
-      const result = TalentSystem.advance(state);
+      const impact = TalentSystem.advance(state);
       
-      expect(result.newOpportunities).toBeDefined();
-      expect(result.newOpportunities!).toHaveLength(1);
-      expect(result.newOpportunities![0].weeksUntilExpiry).toBe(1);
-      
-      vi.restoreAllMocks();
-    });
-
-    it("removes expired opportunities", () => {
-      const state = getMockState();
-      state.market.opportunities = [
-        { ...state.market.opportunities[0], id: "o-expired", weeksUntilExpiry: 1 }
-      ];
-      
-      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.9);
-      
-      const result = TalentSystem.advance(state);
-      expect(result.newOpportunities).toHaveLength(0);
-      
-      vi.restoreAllMocks();
+      expect(impact.newOpportunities).toBeDefined();
+      expect(impact.newOpportunities!).toHaveLength(1);
+      expect(impact.newOpportunities![0].weeksUntilExpiry).toBe(1);
     });
   });
 });

@@ -1,21 +1,24 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { updateRival, advanceRivals } from "../../../engine/systems/rivals";
-import { RivalStudio, GameState } from "../../../engine/types";
+import { RivalStudio, GameState, Talent } from "../../../engine/types";
 import * as utils from '../../../engine/utils';
 
 const mockRival: RivalStudio = {
   id: "rival-1",
   name: "Test Studio",
+  motto: "The standard.",
   archetype: "major",
   strength: 50,
   cash: 100_000_000,
   prestige: 50,
   recentActivity: "Doing nothing",
   projectCount: 5,
-  strategies: ['acquirer'],
-  isAcquirable: false,
-  activeFranchises: []
-};
+  strategy: 'acquirer',
+  projects: {},
+  contracts: [],
+  motivationProfile: { financial: 50, prestige: 50, legacy: 50, aggression: 50 },
+  currentMotivation: 'STABILITY'
+} as RivalStudio;
 
 describe("rivals system", () => {
   beforeEach(() => {
@@ -44,10 +47,11 @@ describe("rivals system", () => {
 
   describe("advanceRivals", () => {
     it("returns StateImpact with rivalUpdates for all rivals in state", () => {
-      const state: GameState = {
+      const state = {
         industry: {
           rivals: [mockRival],
-          talentPool: {} // Record
+          talentPool: {} as Record<string, Talent>,
+          newsHistory: []
         }
       } as unknown as GameState;
 
@@ -60,11 +64,12 @@ describe("rivals system", () => {
 
     it("triggers news events for newly acquirable rivals", () => {
       vi.spyOn(utils, 'secureRandom').mockReturnValue(0);
-      const brokeRival = { ...mockRival, cash: -50_000_000, strength: 30 };
-      const state: GameState = {
+      const brokeRival = { ...mockRival, cash: -50_000_000, strength: 30, isAcquirable: false };
+      const state = {
         industry: {
           rivals: [brokeRival],
-          talentPool: {}
+          talentPool: {},
+          newsHistory: []
         }
       } as unknown as GameState;
 

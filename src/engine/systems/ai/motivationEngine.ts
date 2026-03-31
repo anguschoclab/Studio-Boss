@@ -21,10 +21,19 @@ export function calculateRivalMotivation(rival: RivalStudio, state: GameState, r
   let bestScore = -1;
   let bestMotivation: StudioMotivation = 'STABILITY';
 
+  const profileMap: Record<StudioMotivation, keyof import('@/engine/types').MotivationProfile> = {
+    CASH_CRUNCH: 'financial',
+    AWARD_CHASE: 'prestige',
+    FRANCHISE_BUILDING: 'legacy',
+    MARKET_DISRUPTION: 'aggression',
+    STABILITY: 'financial'
+  };
+
   Object.entries(MotivationScores).forEach(([motivation, scorer]) => {
     // Add profile bias
     const baseScore = scorer(rival, state);
-    const bias = (rival.motivationProfile as any)[motivation.toLowerCase()] || 0;
+    const profileKey = profileMap[motivation as StudioMotivation];
+    const bias = (rival.motivationProfile as any)[profileKey] || 0;
     
     // Add small stochastic variance for strategy shifts
     const variance = rng.range(-5, 5);

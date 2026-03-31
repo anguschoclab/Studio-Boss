@@ -5,11 +5,10 @@ import { RandomGenerator } from '../../utils/rng';
  * AI Decision Multipliers (Target C2).
  * Archetypes now have clear, deterministic bidding biases.
  */
-const ArchetypeMultipliers: Record<string, (genre: string) => number> = {
-  PRESTIGE_INDIE: (genre) => (genre === 'Drama' || genre === 'Horror' ? 1.3 : 0.8),
-  FRANCHISE_FACTORY: (genre) => (genre === 'Sci-Fi' || genre === 'Action' ? 1.5 : 0.7),
-  CAPITALIST_PIONEER: (genre) => 1.1, // High bids across the board but calculated
-  BALANCED: (genre) => 1.0,
+const ArchetypeMultipliers: Record<import('@/engine/types').ArchetypeKey, (genre: string) => number> = {
+  'indie': (genre) => (genre === 'Drama' || genre === 'Horror' ? 1.3 : 0.8),
+  'major': (genre) => (genre === 'Sci-Fi' || genre === 'Action' ? 1.5 : 0.7),
+  'mid-tier': (genre) => 1.1, 
 };
 
 /**

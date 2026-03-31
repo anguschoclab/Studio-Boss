@@ -62,6 +62,7 @@ export type ImpactType =
   | 'SCANDAL_ADDED'
   | 'SCANDAL_REMOVED'
   | 'MARKET_EVENT_UPDATED'
+  | 'LEDGER_UPDATED'
   | 'SYSTEM_TICK';
 
 export interface StateImpact {

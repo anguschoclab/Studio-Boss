@@ -14,6 +14,7 @@ import { calculateBoxOfficeRanks, BoxOfficeEntry } from './releaseSimulation';
 import { generateAwardsProfile } from './awards';
 import { processDirectorDisputes } from './directors';
 import { getTrendMultiplier } from './trends';
+import { RandomGenerator } from '../utils/rng';
 
 function getAttachedTalent(contracts: Contract[], talentPoolMap: Map<string, Talent>): Talent[] {
   const acc: Talent[] = [];
@@ -253,7 +254,8 @@ export function advanceProject(
   projectAwards: Award[] = [],
   trendMultiplier: number = 1.0,
   franchiseSynergy: number = 1.0,
-  franchiseFatigue: number = 0
+  franchiseFatigue: number = 0,
+  rng?: RandomGenerator
 ): { project: Project; update: string | null; talentUpdates: Talent[] } {
   if (project.state === 'archived') return { project, update: null, talentUpdates: [] };
 
@@ -292,7 +294,8 @@ export function advanceProject(
     for (let i = 0; i < attachedTalent.length; i++) {
       talentBuzzBonus += attachedTalent[i].draw / 50;
     }
-    p.buzz = clamp(p.buzz + randRange(-4, 6) + talentBuzzBonus, 0, 100);
+    const roll = rng ? rng.rangeInt(-4, 6) : randRange(-4, 6);
+    p.buzz = clamp(p.buzz + roll + talentBuzzBonus, 0, 100);
   }
 
   return { project: p, update, talentUpdates };
