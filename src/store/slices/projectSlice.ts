@@ -231,7 +231,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
     const project = state.studio.internal.projects[projectId];
     if (!project) return;
 
-    const impact = resolveCrisis(project, optionIndex);
+    const impact = resolveCrisis(state, project.id, optionIndex);
     const newState = applyStateImpact(state, impact);
     set({ gameState: newState as any });
   },
