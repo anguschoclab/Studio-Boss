@@ -14,8 +14,8 @@ import { History, LayoutDashboard, ReceiptText, TrendingUp, TrendingDown, Packag
 export const FinancePanel = () => {
   const gameState = useGameStore(s => s.gameState);
 
-  const cash = gameState?.cash ?? 0;
-  const rawFinanceHistory = gameState?.studio.internal.financeHistory;
+  const cash = gameState?.finance?.cash ?? 0;
+  const rawFinanceHistory = gameState?.finance?.ledger;
   const rawProjects = Object.values(gameState?.studio.internal.projects || {});
 
   const projectsMemo = useMemo(() => rawProjects ?? [], [rawProjects]);
@@ -29,12 +29,12 @@ export const FinancePanel = () => {
   const forecast = useMemo(() => gameState ? generateCashflowForecast(gameState, 12) : [], [gameState]);
 
   const activeProjects = useMemo(() =>
-    projectsMemo.filter(p => p.status === 'development' || p.status === 'production'),
+    projectsMemo.filter(p => p.state === 'development' || p.state === 'production'),
     [projectsMemo]
   );
   
   const releasedProjects = useMemo(() => 
-    projectsMemo.filter(p => p.status === 'released' || p.status === 'post_release' || p.status === 'archived').sort((a,b) => (b.revenue || 0) - (a.revenue || 0)),
+    projectsMemo.filter(p => p.state === 'released' || p.state === 'post_release' || p.state === 'archived').sort((a,b) => (b.revenue || 0) - (a.revenue || 0)),
     [projectsMemo]
   );
 
@@ -43,17 +43,17 @@ export const FinancePanel = () => {
     const history = financeHistory.slice(-24).map(h => ({
       ...h,
       isForecast: false,
-      histCash: h.cash,
-      histRevenue: h.revenue,
-      histCosts: h.costs
+      histCash: h.endingCash,
+      histRevenue: h.revenue.boxOffice + h.revenue.distribution + h.revenue.other,
+      histCosts: h.expenses.production + h.expenses.marketing + h.expenses.overhead
     }));
     
     const projected = forecast.map(f => ({
       week: f.week,
       isForecast: true,
-      projCash: f.projectedCash,
-      projRevenue: f.projectedRevenue,
-      projCosts: f.projectedCosts
+      projCash: f.projected,
+      projRevenue: 0,
+      projCosts: 0
     }));
     
     // Stitch the last history point to forecast so the line connects
@@ -157,7 +157,7 @@ export const FinancePanel = () => {
           { label: 'Available Cash', value: formatMoney(cash), color: cash < 0 ? 'text-destructive drop-shadow-[0_0_8px_rgba(239,68,68,0.4)]' : 'text-primary drop-shadow-[0_0_8px_rgba(234,179,8,0.4)]', bg: 'from-card/80 to-card/40' },
           { label: 'Total Net Worth', value: formatMoney(studioNetWorth), color: 'text-foreground', bg: 'from-card/80 to-card/40' },
           { label: 'Projected Net Delta', value: `${netDelta >= 0 ? '+' : ''}${formatMoney(netDelta)}/wk`, color: netDelta >= 0 ? 'text-success drop-shadow-[0_0_8px_rgba(34,197,94,0.4)]' : 'text-destructive drop-shadow-[0_0_8px_rgba(239,68,68,0.4)]', bg: netDelta >= 0 ? 'from-success/5 to-transparent' : 'from-destructive/5 to-transparent' },
-          { label: '12-Wk Forecast Cash', value: formatMoney(forecast.length > 0 ? forecast[forecast.length - 1].projectedCash : 0), color: 'text-purple-400 drop-shadow-[0_0_8px_rgba(192,132,252,0.4)]', bg: 'from-purple-500/5 to-transparent' },
+          { label: '12-Wk Forecast Cash', value: formatMoney(forecast.length > 0 ? forecast[forecast.length - 1].projected : 0), color: 'text-purple-400 drop-shadow-[0_0_8px_rgba(192,132,252,0.4)]', bg: 'from-purple-500/5 to-transparent' },
         ].map((metric, i) => (
           <Card key={metric.label} className={`border-border/50 bg-card/60 bg-gradient-to-br ${metric.bg} backdrop-blur-md shadow-sm hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:-translate-y-1 hover:border-primary/30 transition-all duration-300 relative overflow-hidden group cursor-default`} style={{ animationDelay: `${i * 100}ms` }}>
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
@@ -240,7 +240,7 @@ export const FinancePanel = () => {
                       <span className="text-sm text-destructive font-bold drop-shadow-[0_0_2px_rgba(239,68,68,0.2)] font-mono">-{formatMoney(p.weeklyCost)}/wk</span>
                     </div>
                     <div className="flex items-center gap-2 relative z-10">
-                       <span className="text-[9px] font-bold tracking-widest text-muted-foreground uppercase bg-background/50 backdrop-blur-sm border border-border/40 px-2 py-0.5 rounded-full shadow-sm">{p.status}</span>
+                       <span className="text-[9px] font-bold tracking-widest text-muted-foreground uppercase bg-background/50 backdrop-blur-sm border border-border/40 px-2 py-0.5 rounded-full shadow-sm">{p.state}</span>
                     </div>
                   </div>
                 )) : (

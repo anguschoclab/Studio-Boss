@@ -66,7 +66,7 @@ export const ProjectDetailModal = () => {
   const talentMap = useMemo(() => new Map(talentPool.map(t => [t.id, t])), [talentPool]);
 
   const talentByRole = useMemo(() => {
-    const map = new Map<string, import('@/engine/types').TalentProfile[]>();
+    const map = new Map<string, import('@/engine/types').Talent[]>();
     const rolesToTrack = ['director', 'actor', 'writer', 'producer'];
     for (const r of rolesToTrack) {
       map.set(r, []);
@@ -85,7 +85,7 @@ export const ProjectDetailModal = () => {
   const tier = project ? BUDGET_TIERS[project.budgetTier] : null;
 
   const roleGroups = useMemo(() => {
-    const groups = new Map<string, { attached: import('@/engine/types').TalentProfile[], available: import('@/engine/types').TalentProfile[] }>();
+    const groups = new Map<string, { attached: import('@/engine/types').Talent[], available: import('@/engine/types').Talent[] }>();
     const rolesToTrack = ['director', 'actor', 'writer', 'producer'];
 
     if (!project) {
@@ -100,8 +100,8 @@ export const ProjectDetailModal = () => {
 
     for (const r of rolesToTrack) {
       const allInRole = talentByRole.get(r) || [];
-      const attached: import('@/engine/types').TalentProfile[] = [];
-      const available: import('@/engine/types').TalentProfile[] = [];
+      const attached: import('@/engine/types').Talent[] = [];
+      const available: import('@/engine/types').Talent[] = [];
 
       for (let i = 0; i < allInRole.length; i++) {
         const t = allInRole[i];
@@ -118,14 +118,14 @@ export const ProjectDetailModal = () => {
   }, [project, contracts, talentByRole]);
 
   const greenlightReport = useMemo(() => {
-    if (!project || project.status !== 'needs_greenlight' || !gameState) return null;
+    if (!project || project.state !== 'needs_greenlight' || !gameState) return null;
     const projectContracts = contracts.filter(c => c.projectId === project.id);
     const attachedTalent = projectContracts.reduce((acc, c) => {
       const t = talentMap.get(c.talentId);
       if (t) acc.push(t);
       return acc;
-    }, [] as import('@/engine/types').TalentProfile[]);
-    return evaluateGreenlight(project, gameState.cash, attachedTalent);
+    }, [] as import('@/engine/types').Talent[]);
+    return evaluateGreenlight(project, gameState.finance.cash, attachedTalent);
   }, [project, gameState, contracts, talentMap]);
 
   const projectionData = useMemo(() => {
@@ -161,7 +161,7 @@ export const ProjectDetailModal = () => {
               {project.title}
             </DialogTitle>
             <div className="flex gap-2">
-              <Badge variant="outline" className="text-amber-500 border-amber-500/30 uppercase font-black">{project.status}</Badge>
+              <Badge variant="outline" className="text-amber-500 border-amber-500/30 uppercase font-black">{project.state}</Badge>
               {project.format === 'tv' && project.season && (
                 <Badge className="bg-blue-600 text-white font-black">SEASON {project.season}</Badge>
               )}
@@ -170,8 +170,8 @@ export const ProjectDetailModal = () => {
         </DialogHeader>
 
         <Tabs defaultValue={
-          project.status === 'marketing' ? "marketing" :
-          (project.status === 'needs_greenlight' || project.status === 'development' || project.status === 'production' || project.status === 'post_production') ? "production" :
+          project.state === 'marketing' ? "marketing" :
+          (project.state === 'needs_greenlight' || project.state === 'development' || project.state === 'production' || project.state === 'post_production') ? "production" :
           "overview"
         } className="w-full">
           <TabsList className="grid w-full grid-cols-5 bg-slate-900/50 p-1 border border-slate-800">
@@ -180,7 +180,7 @@ export const ProjectDetailModal = () => {
             <TabsTrigger value="casting" className="data-[state=active]:bg-slate-800 data-[state=active]:text-white uppercase text-[10px] font-black tracking-widest"><Users className="h-3 w-3 mr-2" /> Talent</TabsTrigger>
             <TabsTrigger 
               value="marketing" 
-              disabled={project.status === 'development' || project.status === 'production' || project.status === 'needs_greenlight' || project.status === 'pitching'}
+              disabled={project.state === 'development' || project.state === 'production' || project.state === 'needs_greenlight' || project.state === 'pitching'}
               className="data-[state=active]:bg-slate-800 data-[state=active]:text-white uppercase text-[10px] font-black tracking-widest"
             >
               <Megaphone className="h-3 w-3 mr-2" /> Sell
@@ -213,7 +213,7 @@ export const ProjectDetailModal = () => {
                       <span className="text-xs text-slate-400">Weekly Burn</span>
                       <span className="text-sm font-bold text-red-400">-{formatMoney(project.weeklyCost)}</span>
                     </div>
-                    {(project.status === 'released' || project.revenue > 0) && (
+                    {(project.state === 'released' || project.revenue > 0) && (
                       <div className="flex justify-between items-center pt-2 border-t border-slate-800">
                         <span className="text-xs font-black text-slate-400 uppercase">Gross Revenue</span>
                         <span className="text-lg font-black text-green-400">{formatMoney(project.revenue)}</span>
@@ -223,7 +223,7 @@ export const ProjectDetailModal = () => {
                 </div>
               </div>
 
-              {(project.status === 'released' || project.status === 'post_release') && (
+              {(project.state === 'released' || project.state === 'post_release') && (
                 <div className="bg-blue-950/20 border border-blue-500/20 p-4 rounded-xl space-y-1">
                   <span className="text-[10px] font-black text-blue-400 uppercase tracking-widest">Release Stats</span>
                   <div className="flex justify-between items-end">
@@ -240,22 +240,22 @@ export const ProjectDetailModal = () => {
 
             {/* PRODUCTION TAB */}
             <TabsContent value="production" className="space-y-6">
-              {(project.status === 'development' || project.status === 'production') && (
+              {(project.state === 'development' || project.state === 'production') && (
                 <div className="space-y-2 bg-slate-900/40 p-4 border border-slate-800 rounded-xl">
                   <div className="flex justify-between text-[10px] font-black uppercase tracking-widest mb-2">
-                    <span className="text-slate-500">{project.status} Progress</span>
-                    <span className="text-white">{project.weeksInPhase}/{project.status === 'development' ? project.developmentWeeks : project.productionWeeks} weeks</span>
+                    <span className="text-slate-500">{project.state} Progress</span>
+                    <span className="text-white">{project.weeksInPhase}/{project.state === 'development' ? project.developmentWeeks : project.productionWeeks} weeks</span>
                   </div>
                   <div className="h-3 bg-slate-800 rounded-full overflow-hidden shadow-inner">
                     <div
                       className="h-full bg-gradient-to-r from-amber-600 to-amber-400 shadow-[0_0_10px_rgba(217,119,6,0.5)] transition-all duration-1000"
-                      style={{ width: `${(project.weeksInPhase / (project.status === 'development' ? project.developmentWeeks : project.productionWeeks)) * 100}%` }}
+                      style={{ width: `${(project.weeksInPhase / (project.state === 'development' ? project.developmentWeeks : project.productionWeeks)) * 100}%` }}
                     />
                   </div>
                 </div>
               )}
 
-              {project.status === 'needs_greenlight' && greenlightReport && (
+              {project.state === 'needs_greenlight' && greenlightReport && (
                 <div className="border-2 border-amber-600/50 bg-amber-950/20 p-6 rounded-xl space-y-4">
                   <div className="flex items-center justify-between">
                     <h4 className="font-serif text-xl font-black text-amber-500 uppercase">Greenlight Committee</h4>
@@ -269,7 +269,7 @@ export const ProjectDetailModal = () => {
                 </div>
               )}
 
-              {project.status === 'marketing' && gameState && (
+              {project.state === 'marketing' && gameState && (
                 <div className="space-y-4">
                   <div className="bg-blue-900/20 border border-blue-500/30 p-4 rounded-xl">
                     <p className="text-sm text-blue-200 uppercase font-black tracking-tighter mb-2">Production Wrapped</p>
@@ -294,7 +294,7 @@ export const ProjectDetailModal = () => {
                  ].map(tier => (
                    <button
                      key={tier.id}
-                     disabled={!!project.marketingLevel || (gameState && gameState.cash < tier.cost)}
+                     disabled={!!project.marketingLevel || (gameState && gameState.finance.cash < tier.cost)}
                      onClick={() => setSelectedTier(tier.id as any)}
                      className={`p-3 rounded-xl border text-left transition-all ${
                        project.marketingLevel === tier.id || selectedTier === tier.id 
@@ -357,7 +357,7 @@ export const ProjectDetailModal = () => {
                {!project.marketingLevel ? (
                  <Button 
                    className="w-full bg-blue-600 hover:bg-blue-500 text-white font-black uppercase py-6 shadow-lg shadow-blue-900/20"
-                   disabled={!selectedTier || (gameState && gameState.cash < (selectedTier === 'basic' ? project.budget * 0.1 : selectedTier === 'blockbuster' ? project.budget * 0.5 : 0))}
+                   disabled={!selectedTier || (gameState && gameState.finance.cash < (selectedTier === 'basic' ? project.budget * 0.1 : selectedTier === 'blockbuster' ? project.budget * 0.5 : 0))}
                    onClick={() => { lockMarketingCampaign(project.id, selectedTier); selectProject(null); }}
                  >
                    Lock Campaign & Commit Capital
@@ -394,12 +394,12 @@ export const ProjectDetailModal = () => {
                         )}
                       </div>
                       
-                      {(project.status === 'development' || project.status === 'needs_greenlight') && (
-                        <Select onValueChange={(val) => val && gameState && gameState.cash >= talentMap.get(val)!.fee && signContract(val, project.id)}>
+                      {(project.state === 'development' || project.state === 'needs_greenlight') && (
+                        <Select onValueChange={(val) => val && gameState && gameState.finance.cash >= talentMap.get(val)!.fee && signContract(val, project.id)}>
                           <SelectTrigger className="w-[180px] bg-slate-900 border-slate-700 h-8 text-xs font-bold uppercase"><SelectValue placeholder="Sign Talent..." /></SelectTrigger>
                           <SelectContent className="bg-slate-900 border-slate-700 text-slate-200">
                             {group.available.map(t => (
-                              <SelectItem key={t.id} value={t.id} disabled={gameState ? gameState.cash < t.fee : true}>
+                              <SelectItem key={t.id} value={t.id} disabled={gameState ? gameState.finance.cash < t.fee : true}>
                                 {t.name} ({formatMoney(t.fee)})
                               </SelectItem>
                             ))}
@@ -455,13 +455,13 @@ export const ProjectDetailModal = () => {
         </Tabs>
 
         {/* Action Bar */}
-        {(project.status === 'archived' && project.format === 'tv' && project.renewable) && (
+        {(project.state === 'archived' && project.format === 'tv' && project.renewable) && (
           <div className="mt-6 border-t border-slate-800 pt-4">
             <Button onClick={() => { renewProject(project.id); selectProject(null); }} className="w-full bg-blue-600 hover:bg-blue-500 font-black uppercase">Order Season {(project.season || 1) + 1}</Button>
           </div>
         )}
         
-        {project.status === 'released' && project.revenue > project.budget * 1.5 && (
+        {project.state === 'released' && project.revenue > project.budget * 1.5 && (
           <div className="mt-6 border-t border-slate-800 pt-4">
             <Button onClick={() => { exploitFranchise(project.id); selectProject(null); }} className="w-full bg-purple-600 hover:bg-purple-500 font-black uppercase">Greenlight Spinoff / Reboot</Button>
           </div>

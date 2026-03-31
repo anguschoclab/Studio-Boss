@@ -31,7 +31,7 @@ import {
   Cell
 } from 'recharts';
 
-export const TalentProfileModal = () => {
+export const TalentModal = () => {
   const { selectedTalentId, selectTalent } = useUIStore();
   const gameState = useGameStore(s => s.gameState);
   

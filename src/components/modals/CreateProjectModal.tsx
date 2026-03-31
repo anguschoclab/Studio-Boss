@@ -46,7 +46,8 @@ export const CreateProjectModal = () => {
   let calculatedDevWeeks = tier.developmentWeeks;
   let calculatedProdWeeks = tier.productionWeeks;
   let calculatedBudget = tier.budget;
-  const talentPool = gameState?.industry?.talentPool || [];
+  const talentPoolRecord = gameState?.industry?.talentPool || {};
+  const talentPool = useMemo(() => Object.values(talentPoolRecord), [talentPoolRecord]);
   const talentMap = useMemo(() => new Map(talentPool.map(t => [t.id, t])), [talentPool]);
   const talentFees = selectedTalent.reduce((sum, id) => {
     const t = talentMap.get(id);
