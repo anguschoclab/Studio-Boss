@@ -12,11 +12,11 @@ export const CommandCenter: React.FC = () => {
   if (!gameState) return null;
 
   const { studio, industry } = gameState;
-  const { projects } = studio.internal;
+  const projects = Object.values(studio.internal.projects);
   const { talentPool, rivals, newsHistory } = industry;
 
-  const activeProjectsCount = projects.filter(p => p.status !== 'released' && p.status !== 'post_release' && p.status !== 'archived').length;
-  const talentCount = talentPool.length;
+  const activeProjectsCount = projects.filter(p => p.state !== 'released' && p.state !== 'post_release' && p.state !== 'archived').length;
+  const talentCount = Object.keys(talentPool).length;
   const rivalCount = rivals.length;
 
   return (
@@ -53,9 +53,7 @@ export const CommandCenter: React.FC = () => {
           { label: 'Prestige XP', value: studio.prestige, sub: 'Reputation level', icon: TrendingUp, color: 'text-success' },
         ].map((kpi, i) => (
           <Card key={i} className="glass-card hover-glow group overflow-hidden relative border-none hover:-translate-y-1 transition-transform duration-300 bg-gradient-to-br from-white/5 to-transparent">
-            {/* Visual Flare */}
             <div className={cn("absolute -top-4 -right-4 w-16 h-16 opacity-10 blur-2xl rounded-full transition-opacity duration-300 group-hover:opacity-30", kpi.color.replace('text', 'bg'))} />
-            
             <CardContent className="p-5 relative z-10">
               <div className="flex items-center justify-between mb-3">
                 <span className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/80 group-hover:text-foreground transition-colors">{kpi.label}</span>

@@ -14,7 +14,7 @@ export const DealsDesk = () => {
   const gameState = useGameStore(s => s.gameState);
   const buyers = useGameStore(s => selectBuyers(s.gameState));
   const projects = useGameStore(s => selectProjects(s.gameState));
-  const pitchingProjects = projects.filter(p => p.status === 'pitching' || p.status === 'development');
+  const pitchingProjects = projects.filter(p => p.state === 'pitching' || p.state === 'development');
 
   return (
     <div className="h-full flex flex-col space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700 overflow-hidden">
