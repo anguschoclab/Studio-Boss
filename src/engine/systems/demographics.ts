@@ -67,7 +67,7 @@ export function simulateMarketingCampaign(
   
   const project = state.studio.internal.projects[projectId];
 
-  if (pIndex === -1 || state.cash < spend) return state;
+  if (!project || state.finance.cash < spend) return state;
   
 
   
