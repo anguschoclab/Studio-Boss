@@ -23,7 +23,7 @@ export interface Scandal {
   weeksRemaining: number;
 }
 
-export type AgencyArchetype = 'powerhouse' | 'boutique' | 'shark' | 'comedy_specialist' | 'lit_agency' | 'mega_corp';
+export type AgencyArchetype = 'powerhouse' | 'boutique' | 'shark' | 'comedy_specialist' | 'lit_agency' | 'mega_corp' | 'streaming_titan' | 'indie_darling';
 export type AccessLevel = 'outsider' | 'soft-access' | 'legacy' | 'dynasty' | 'comeback';
 export type ProjectRole = 'actor' | 'director' | 'writer' | 'producer' | 'showrunner';
 export type TalentRole = 'actor' | 'director' | 'writer' | 'producer';

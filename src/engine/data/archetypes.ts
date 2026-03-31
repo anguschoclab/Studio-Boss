@@ -47,7 +47,7 @@ export const AGENCY_ARCHETYPES: Record<AgencyArchetype, AgencyArchetypeData> = {
   powerhouse: {
     key: 'powerhouse',
     name: 'Powerhouse',
-    description: 'Identity: The Powerhouse — Controls the biggest stars and demands complete package deals. They represent elite showrunners and will ruthlessly force unwanted co-stars onto your projects, mandate specific release windows, require overall deal commitments, or outright refuse to work with indie studios.'
+    description: 'Identity: The Powerhouse — Controls the biggest stars and demands complete package deals. They represent elite showrunners and will ruthlessly force unwanted co-stars onto your projects, mandate guaranteed trilogies, dictate release windows, demand overall deal commitments, or outright refuse to work with indie studios.'
   },
   boutique: {
     key: 'boutique',
@@ -57,12 +57,12 @@ export const AGENCY_ARCHETYPES: Record<AgencyArchetype, AgencyArchetypeData> = {
   shark: {
     key: 'shark',
     name: 'Shark',
-    description: 'Identity: The Shark — The quintessential cutthroat Ten-Percenter. They will mercilessly demand massive backend points, aggressively poach talent from rivals, force the casting of nepo babies, sabotage rival projects, and casually threaten media smear campaigns to get their way.'
+    description: 'Identity: The Shark — The quintessential cutthroat Ten-Percenter. They will mercilessly demand massive backend points, aggressively poach talent from rivals, force the casting of nepo babies, sabotage rival projects, casually threaten media smear campaigns to get their way, and demand exclusive personal security details.'
   },
   comedy_specialist: {
     key: 'comedy_specialist',
     name: 'Comedy Specialist',
-    description: 'Identity: The Comedy Specialist — A relentless agency exclusively representing comedy talent. They mandate high script punch-up fees, require their own stand-up openers, and fiercely negotiate for massive backend points in streaming deals.'
+    description: 'Identity: The Comedy Specialist — A relentless agency exclusively representing comedy talent. They mandate high script punch-up fees, require their own stand-up openers, fiercely negotiate for massive backend points in streaming deals, and routinely refuse dramatic cross-over projects.'
   },
   lit_agency: {
     key: 'lit_agency',
@@ -73,5 +73,16 @@ export const AGENCY_ARCHETYPES: Record<AgencyArchetype, AgencyArchetypeData> = {
     key: 'mega_corp',
     name: 'Mega-Corp',
     description: 'Identity: The Mega-Corp — A sprawling conglomerate agency. They mandate absurd crossover cameos, force cross-promotional brand integrations into your films, and leverage media empires to guarantee award campaigns.'
+  }
+,
+  streaming_titan: {
+    key: 'streaming_titan',
+    name: 'Streaming Titan',
+    description: 'Identity: The Streaming Titan — Specialized in packaging talent directly to major streaming platforms. They aggressively demand immediate upfront payments and massive backend points tied to algorithmic viewership metrics, and consistently require their clients to skip traditional theatrical windows.'
+  },
+  indie_darling: {
+    key: 'indie_darling',
+    name: 'Indie Darling',
+    description: 'Identity: The Indie Darling — Highly influential among festival circuits and independent financiers. They refuse to let their clients participate in commercial franchises and constantly mandate analog shoots, auteur directors, and extended rehearsal schedules.'
   }
 };
