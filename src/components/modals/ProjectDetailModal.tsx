@@ -385,7 +385,7 @@ export const ProjectDetailModal = () => {
                               <div key={t.id} className="flex items-center gap-2">
                                 <span className="font-bold text-white">{t.name}</span>
                                 <Badge className="bg-amber-600/20 text-amber-500 border-amber-600/30 text-[8px] h-4">★ {t.prestige}</Badge>
-                                {t.ego && t.ego > 70 && <Badge variant="destructive" className="text-[8px] h-4">DIVA</Badge>}
+                                {t.psychology?.ego && t.psychology.ego > 70 && <Badge variant="destructive" className="text-[8px] h-4">DIVA</Badge>}
                               </div>
                             ))}
                           </div>
