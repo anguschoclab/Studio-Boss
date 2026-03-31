@@ -12,10 +12,12 @@ import { useArchetypeTheme } from "./hooks/useArchetypeTheme";
 const queryClient = new QueryClient();
 
 import { GlobalThemeProvider } from "./components/Theme/GlobalThemeProvider";
+import { AutoInitializer } from "./components/debug/AutoInitializer";
 
 const rootRoute = createRootRoute({
   component: () => (
     <GlobalThemeProvider>
+      <AutoInitializer />
       <Outlet />
       <Toaster />
       <Sonner />

@@ -1,671 +1,1730 @@
-bun test v1.2.14 (6a363a38)
-
-src/test/example.test.ts:
-(pass) example > should pass [0.14ms]
-
-src/test/WeekSummaryModal.test.tsx:
-
-# Unhandled error between tests
--------------------------------
- 5 | import { useUIStore } from '@/store/uiStore';
- 6 | import { formatMoney } from '@/engine/utils';
- 7 | import { WeekSummary } from '@/engine/types';
- 8 |
- 9 | // Mock the store
-10 | vi.mock('@/store/uiStore', () => ({
-        ^
-TypeError: vi.mock is not a function. (In 'vi.mock("@/store/uiStore", () => ({
-  useUIStore: vi.fn()
-}))', 'vi.mock' is undefined)
-      at /app/src/test/WeekSummaryModal.test.tsx:10:4
-      at loadAndEvaluateModule (2:1)
--------------------------------
-
-
-src/test/chart.test.tsx:
-251 |     throw error;
-252 |   }
-253 |   if (!baseElement) {
-254 |     // default to document.body instead of documentElement to avoid output of potentially-large
-255 |     // head elements (such as JSS style blocks) in debug output
-256 |     baseElement = document.body;
-                        ^
-ReferenceError: document is not defined
-      at render (/app/node_modules/@testing-library/react/dist/pure.js:256:19)
-      at <anonymous> (/app/src/test/chart.test.tsx:15:27)
-(fail) ChartStyle > should securely escape malicious XSS payloads in color config [4.56ms]
-
-src/engine/utils.test.ts:
-(pass) getWeekDisplay > should return correct display week and year for year 2026 (weeks 1-52) [0.09ms]
-(pass) getWeekDisplay > should return correct display week and year for year 2027 (weeks 53-104) [0.03ms]
-(pass) getWeekDisplay > should handle the start of year 2028 (week 105) [0.02ms]
-(pass) getWeekDisplay > should handle week 0 and negative weeks based on the current implementation [0.03ms]
-
-src/test/persistence/saveLoad.test.ts:
-(pass) saveLoad > returns null when loading an empty slot [0.10ms]
-37 |   it("returns null when loading an empty slot", () => {
-38 |     expect(loadGame(1)).toBeNull();
-39 |   });
-40 |
-41 |   it("handles malformed save data", () => {
-42 |     vi.spyOn(Storage.prototype, "getItem").mockReturnValueOnce("malformed json");
-                  ^
-ReferenceError: Storage is not defined
-      at <anonymous> (/app/src/test/persistence/saveLoad.test.ts:42:14)
-(fail) saveLoad > handles malformed save data [0.11ms]
-(pass) saveLoad > saves and loads game state [4.25ms]
-(pass) saveLoad > retrieves save slots info [1.21ms]
-73 |     const mockNow = 1234567890;
-74 |     Date.now = vi.fn(() => mockNow);
-75 |
-76 |     saveGame(2, state);
-77 |
-78 |     expect(vi.mocked(localStorage.setItem)).toHaveBeenCalledWith("studioboss_save_2", JSON.stringify(state));
-                   ^
-TypeError: vi.mocked is not a function. (In 'vi.mocked(localStorage.setItem)', 'vi.mocked' is undefined)
-      at <anonymous> (/app/src/test/persistence/saveLoad.test.ts:78:15)
-(fail) saveLoad > interacts with localStorage correctly when saving a game [1.05ms]
-108 |     Date.now = vi.fn(() => mockNow);
-109 |
-110 |     saveGame(1, state2);
-111 |
-112 |     // It should have called setItem for the state
-113 |     expect(vi.mocked(localStorage.setItem)).toHaveBeenCalledWith("studioboss_save_1", JSON.stringify(state2));
-                    ^
-TypeError: vi.mocked is not a function. (In 'vi.mocked(localStorage.setItem)', 'vi.mocked' is undefined)
-      at <anonymous> (/app/src/test/persistence/saveLoad.test.ts:113:15)
-(fail) saveLoad > preserves existing save slots when saving to a new slot [1.77ms]
-
-src/test/store/uiStore.test.ts:
-(pass) uiStore > sets active tab [0.07ms]
-(pass) uiStore > opens and closes create project modal [0.07ms]
-(pass) uiStore > selects a project [0.17ms]
-(pass) uiStore > shows and closes week summary [0.09ms]
-
-src/test/store/gameStore.test.ts:
-
-# Unhandled error between tests
--------------------------------
-4 |
-5 |
-6 | import * as saveLoad from "../../persistence/saveLoad";
-7 |
-8 | // Mock saveLoad
-9 | vi.mock("../../persistence/saveLoad", () => ({
-       ^
-TypeError: vi.mock is not a function. (In 'vi.mock("../../persistence/saveLoad", () => ({
-  saveGame: vi.fn(),
-  loadGame: vi.fn((slot) => {
-    if (slot === 1)
-      return { studio: { name: "Loaded Studio" } };
-    return null;
-  }),
-  getSaveSlots: vi.fn(() => [{ exists: !0 }])
-}))', 'vi.mock' is undefined)
-      at /app/src/test/store/gameStore.test.ts:9:4
-      at loadAndEvaluateModule (2:1)
--------------------------------
-
-
-src/test/engine/utils.test.ts:
-(pass) utils > formatMoney > formats 1500 as "$2K" [0.16ms]
-(pass) utils > formatMoney > formats 1000 as "$1K"
-(pass) utils > formatMoney > formats 999 as "$999"
-(pass) utils > formatMoney > formats 1500000 as "$1.5M"
-(pass) utils > formatMoney > formats 1000000 as "$1.0M"
-(pass) utils > formatMoney > formats 1500000000 as "$1.5B"
-(pass) utils > formatMoney > formats 1000000000 as "$1.0B"
-(pass) utils > formatMoney > formats -1500 as "-$2K"
-(pass) utils > formatMoney > formats -1500000 as "-$1.5M"
-(pass) utils > formatMoney > formats -1500000000 as "-$1.5B"
-(pass) utils > formatMoney > formats -500 as "-$500"
-(pass) utils > formatMoney > formats 0 as "$0"
-(pass) utils > formatMoney > formats 50 as "$50"
-(pass) utils > formatMoney > formats -0 as "-$0"
-(pass) utils > formatMoney > formats NaN as "$NaN"
-(pass) utils > formatMoney > formats Infinity as "$InfinityB"
-(pass) utils > formatMoney > formats -Infinity as "-$InfinityB"
-(pass) utils > formatMoney > formats 999.9 as "$1K"
-(pass) utils > formatMoney > formats 999999.9 as "$1.0M"
-(pass) utils > formatMoney > formats 999999999.9 as "$1.0B"
-(pass) utils > getWeekDisplay > calculates correct week and year [0.06ms]
-(pass) utils > pick > picks an element from the array [0.04ms]
-(pass) utils > randRange > returns a number within the range [0.03ms]
-(pass) utils > clamp > returns the minimum when value is below min [0.04ms]
-(pass) utils > clamp > returns the value when within range [0.01ms]
-(pass) utils > clamp > returns the maximum when value is above max [0.02ms]
-
-src/test/components/pipeline/ProjectCard.test.tsx:
-
-# Unhandled error between tests
--------------------------------
-3 | import { ProjectCard } from '@/components/pipeline/ProjectCard';
-4 | import { useUIStore } from '@/store/uiStore';
-5 | import { Project } from '@/engine/types';
-6 |
-7 | // Mock the uiStore
-8 | vi.mock('@/store/uiStore', () => ({
-       ^
-TypeError: vi.mock is not a function. (In 'vi.mock("@/store/uiStore", () => ({
-  useUIStore: vi.fn()
-}))', 'vi.mock' is undefined)
-      at /app/src/test/components/pipeline/ProjectCard.test.tsx:8:4
-      at loadAndEvaluateModule (2:1)
--------------------------------
-
-
-src/test/components/pipeline/PipelineBoard.test.tsx:
-
-# Unhandled error between tests
--------------------------------
-4 | import { PipelineBoard } from '@/components/pipeline/PipelineBoard';
-5 | import { useGameStore } from '@/store/gameStore';
-6 | import { useUIStore } from '@/store/uiStore';
-7 | import { Project } from '@/engine/types';
-8 |
-9 | vi.mock('@/store/gameStore');
-       ^
-TypeError: vi.mock is not a function. (In 'vi.mock("@/store/gameStore")', 'vi.mock' is undefined)
-      at /app/src/test/components/pipeline/PipelineBoard.test.tsx:9:4
-      at loadAndEvaluateModule (2:1)
--------------------------------
-
-
-src/test/components/modals/ProjectDetailModal.test.tsx:
-
-# Unhandled error between tests
--------------------------------
- 9 | class MockResizeObserver {
-10 |   observe() {}
-11 |   unobserve() {}
-12 |   disconnect() {}
-13 | }
-14 | window.ResizeObserver = MockResizeObserver;
-     ^
-ReferenceError: window is not defined
-      at /app/src/test/components/modals/ProjectDetailModal.test.tsx:14:1
-      at loadAndEvaluateModule (2:1)
--------------------------------
-
-
-src/test/components/modals/PitchProjectModal.test.tsx:
-
-# Unhandled error between tests
--------------------------------
-4 | import { PitchProjectModal } from '@/components/modals/PitchProjectModal';
-5 | import { useGameStore } from '@/store/gameStore';
-6 | import { useUIStore } from '@/store/uiStore';
-7 |
-8 | // Mock the stores
-9 | vi.mock('@/store/gameStore', () => ({
-       ^
-TypeError: vi.mock is not a function. (In 'vi.mock("@/store/gameStore", () => ({
-  useGameStore: vi.fn()
-}))', 'vi.mock' is undefined)
-      at /app/src/test/components/modals/PitchProjectModal.test.tsx:9:4
-      at loadAndEvaluateModule (2:1)
--------------------------------
-
-
-src/test/components/modals/CreateProjectModal.test.tsx:
-
-# Unhandled error between tests
--------------------------------
-4 | import { CreateProjectModal } from '@/components/modals/CreateProjectModal';
-5 | import { useUIStore } from '@/store/uiStore';
-6 | import { useGameStore } from '@/store/gameStore';
-7 |
-8 | // Mock the Zustand stores
-9 | vi.mock('@/store/uiStore', () => ({
-       ^
-TypeError: vi.mock is not a function. (In 'vi.mock("@/store/uiStore", () => ({
-  useUIStore: vi.fn()
-}))', 'vi.mock' is undefined)
-      at /app/src/test/components/modals/CreateProjectModal.test.tsx:9:4
-      at loadAndEvaluateModule (2:1)
--------------------------------
-
-
-src/test/components/modals/CrisisModal.test.tsx:
-
-# Unhandled error between tests
--------------------------------
- 5 | import { useGameStore } from '@/store/gameStore';
- 6 | import { useUIStore } from '@/store/uiStore';
- 7 | import { Project, ProjectFormat } from '@/engine/types';
- 8 |
- 9 | // Mock the stores
-10 | vi.mock('@/store/gameStore', () => ({
-        ^
-TypeError: vi.mock is not a function. (In 'vi.mock("@/store/gameStore", () => ({
-  useGameStore: vi.fn()
-}))', 'vi.mock' is undefined)
-      at /app/src/test/components/modals/CrisisModal.test.tsx:10:4
-      at loadAndEvaluateModule (2:1)
--------------------------------
-
-
-src/test/components/talent/TalentPanel.test.tsx:
-
-# Unhandled error between tests
--------------------------------
-2 | import { render, screen, fireEvent } from '@testing-library/react';
-3 | import { describe, it, expect, vi, beforeEach } from 'vitest';
-4 | import { TalentPanel } from '@/components/talent/TalentPanel';
-5 | import { useGameStore } from '@/store/gameStore';
-6 |
-7 | vi.mock('@/store/gameStore');
-       ^
-TypeError: vi.mock is not a function. (In 'vi.mock("@/store/gameStore")', 'vi.mock' is undefined)
-      at /app/src/test/components/talent/TalentPanel.test.tsx:7:4
-      at loadAndEvaluateModule (2:1)
--------------------------------
-
-
-src/test/components/finance/FinancePanel.test.tsx:
-
-# Unhandled error between tests
--------------------------------
-3 | import { describe, it, expect, vi, beforeEach } from 'vitest';
-4 | import { FinancePanel } from '@/components/finance/FinancePanel';
-5 | import { useGameStore } from '@/store/gameStore';
-6 |
-7 | // Mock Recharts to avoid SVG/JSDOM issues
-8 | vi.mock('recharts', () => ({
-       ^
-TypeError: vi.mock is not a function. (In 'vi.mock("recharts", () => ({
-  ResponsiveContainer: ({ children }) => jsxDEV_7x81h0kn("div", {
-    "data-testid": "recharts-container",
-    children
-  }, void 0, !1, void 0, this),
-  AreaChart: ({ children }) => jsxDEV_7x81h0kn("div", {
-    "data-testid": "area-chart",
-    children
-  }, void 0, !1, void 0, this),
-  ComposedChart: ({ children }) => jsxDEV_7x81h0kn("div", {
-    "data-testid": "composed-chart",
-    children
-  }, void 0, !1, void 0, this),
-  Line: () => jsxDEV_7x81h0kn("div", {
-    "data-testid": "line"
-  }, void 0, !1, void 0, this),
-  Area: () => jsxDEV_7x81h0kn("div", {
-    "data-testid": "area"
-  }, void 0, !1, void 0, this),
-  XAxis: () => jsxDEV_7x81h0kn("div", {
-    "data-testid": "xaxis"
-  }, void 0, !1, void 0, this),
-  YAxis: () => jsxDEV_7x81h0kn("div", {
-    "data-testid": "yaxis"
-  }, void 0, !1, void 0, this),
-  Tooltip: () => jsxDEV_7x81h0kn("div", {
-    "data-testid": "tooltip"
-  }, void 0, !1, void 0, this)
-}))', 'vi.mock' is undefined)
-      at /app/src/test/components/finance/FinancePanel.test.tsx:8:4
-      at loadAndEvaluateModule (2:1)
--------------------------------
-
-
-src/test/components/discovery/DiscoveryBoard.test.tsx:
-
-# Unhandled error between tests
--------------------------------
-4 | import { DiscoveryBoard } from '../../../components/discovery/DiscoveryBoard';
-5 | import { useGameStore } from '../../../store/gameStore';
-6 | import { useUIStore } from '../../../store/uiStore';
-7 | import { Opportunity } from '../../../engine/types';
-8 |
-9 | vi.mock('../../../store/gameStore', () => ({
-       ^
-TypeError: vi.mock is not a function. (In 'vi.mock("../../../store/gameStore", () => ({
-  useGameStore: vi.fn()
-}))', 'vi.mock' is undefined)
-      at /app/src/test/components/discovery/DiscoveryBoard.test.tsx:9:4
-      at loadAndEvaluateModule (2:1)
--------------------------------
-
-
-src/test/components/rivals/RivalsPanel.test.tsx:
-
-# Unhandled error between tests
--------------------------------
-4 | import { RivalsPanel } from '@/components/rivals/RivalsPanel';
-5 | import { useGameStore } from '@/store/gameStore';
-6 | import { ArchetypeKey } from '@/engine/types';
-7 |
-8 | // Mock the game store
-9 | vi.mock('@/store/gameStore', () => ({
-       ^
-TypeError: vi.mock is not a function. (In 'vi.mock("@/store/gameStore", () => ({
-  useGameStore: vi.fn()
-}))', 'vi.mock' is undefined)
-      at /app/src/test/components/rivals/RivalsPanel.test.tsx:9:4
-      at loadAndEvaluateModule (2:1)
--------------------------------
-
-
-src/test/engine/core/weekAdvance.test.ts:
-(pass) advanceWeek > advances the game by one week and generates a summary [4.36ms]
-(pass) advanceWeek > decreases opportunity expiry weeks and removes expired ones [1.07ms]
-(pass) advanceWeek > sometimes spawns new opportunities [1.75ms]
-(pass) advanceWeek > handles advancing a week with an entirely empty pipeline and empty world state without crashing [1.27ms]
-
-src/test/engine/core/gameInit.test.ts:
-(pass) initializeGame > initializes game state with correctly passed parameters [0.57ms]
-
-src/test/engine/systems/stats.test.ts:
-(pass) stats system > getFilmStats > calculates film stats correctly for mid tier (budget < 100M) [0.11ms]
-(pass) stats system > getFilmStats > applies 1.5x risk multiplier for high tier (budget >= 100M) [0.06ms]
-(pass) stats system > getFilmStats > applies 2.5x risk multiplier for blockbuster tier (budget >= 250M) [0.05ms]
-(pass) stats system > getTvStats > calculates TV stats correctly for mid tier (budget <= 50M) [0.16ms]
-(pass) stats system > getTvStats > applies 1.5x scale multiplier for high tier (budget > 50M) [0.05ms]
-(pass) stats system > getTvStats > applies 2.0x scale multiplier for blockbuster tier (budget >= 100M) [0.05ms]
-(pass) stats system > getUnscriptedStats > calculates unscripted stats correctly for mid tier (budget <= 50M) [0.09ms]
-(pass) stats system > getUnscriptedStats > applies 1.5x scale multiplier for high tier (budget > 50M) for weekly cost only [0.05ms]
-(pass) stats system > getUnscriptedStats > applies 2.0x scale multiplier for blockbuster tier (budget >= 100M) [0.04ms]
-(pass) stats system > Extreme Edge Cases (Guild Auditor) > handles negative budget safely [0.03ms]
-(pass) stats system > Extreme Edge Cases (Guild Auditor) > handles 0 budget safely [0.03ms]
-
-src/test/engine/systems/trends.test.ts:
-(pass) Trends System > initializes with a set of default genre trends [0.13ms]
-(pass) Trends System > advances trends correctly over a week [0.26ms]
-(pass) Trends System > calculates the trend multiplier for a matching genre [0.20ms]
-(pass) Trends System > returns a multiplier of 1.0 for a missing genre [0.06ms]
-(pass) Trends System > shifts directions properly based on thresholds [0.52ms]
-
-src/test/engine/systems/releaseSimulation.test.ts:
-(pass) releaseSimulation system > generateReviewScore > calculates base score clamped between 1 and 100 [0.13ms]
-(pass) releaseSimulation system > generateReviewScore > applies penalty for active, unresolved crises [0.06ms]
-(pass) releaseSimulation system > generateReviewScore > ignores resolved crises [0.04ms]
-(pass) releaseSimulation system > generateReviewScore > handles 0 prestige talent pool (edge case) [0.08ms]
-(pass) releaseSimulation system > generateReviewScore > handles maximum prestige talent pool (edge case) [0.04ms]
-(pass) releaseSimulation system > generateReviewScore > applies penalty for terrible buzz (<30) [0.03ms]
-(pass) releaseSimulation system > generateReviewScore > applies bonus for excellent buzz (>80) [0.04ms]
-(pass) releaseSimulation system > generateReviewScore > calculates talent bonus correctly for multiple attached talents [0.05ms]
-(pass) releaseSimulation system > simulateWeeklyBoxOffice > applies standard drop off multipliers based on review score legs [0.19ms]
-(pass) releaseSimulation system > simulateWeeklyBoxOffice > applies massive penalty for huge budget drop off week 1 [0.04ms]
-(pass) releaseSimulation system > simulateWeeklyBoxOffice > applies sharp second-weekend drop for tentpoles week 1 [0.03ms]
-(pass) releaseSimulation system > simulateWeeklyBoxOffice > applies strong word-of-mouth bonus for low budget anomalies [0.03ms]
-(pass) releaseSimulation system > simulateWeeklyBoxOffice > handles extreme rival competition (100 strength) [0.03ms]
-(pass) releaseSimulation system > simulateWeeklyBoxOffice > never drops below 0.05 absolute multiplier floor due to extreme competition [0.02ms]
-(pass) releaseSimulation system > calculateBoxOfficeRanks > returns correctly sorted ranks map [0.09ms]
-(pass) releaseSimulation system > calculateBoxOfficeRanks > handles empty array [0.02ms]
-(pass) releaseSimulation system > calculateBoxOfficeRanks > handles identical revenues (preserves sort stability or ties appropriately) [0.04ms]
-(pass) releaseSimulation system > calculateBoxOfficeRanks > does not mutate the original input array [0.05ms]
-(pass) releaseSimulation system > calculateBoxOfficeRanks > handles negative and zero revenues correctly [0.04ms]
-(pass) releaseSimulation system > calculateBoxOfficeRanks > handles fractional revenues correctly [0.04ms]
-(pass) releaseSimulation system > Extreme Edge Cases (Guild Auditor) > handles extreme review scores (> 100 or < 0) [0.04ms]
-(pass) releaseSimulation system > Extreme Edge Cases (Guild Auditor) > handles calculating rank with a single entry or empty [0.03ms]
-
-src/test/engine/systems/buyers.test.ts:
-(pass) buyers system > Guild Auditor: Edge Cases > handles an empty pipeline/buyers list safely during updateBuyers [0.06ms]
-46 |     });
-47 |
-48 |     it("calculates fit score correctly with empty project history", () => {
-49 |       vi.spyOn(Math, 'random').mockReturnValue(0.5);
-50 |       const score = calculateFitScore(mockProject, mockBuyer, 50, []);
-51 |       expect(score).toBe(50);
-                         ^
-error: expect(received).toBe(expected)
-
-Expected: 50
-Received: 65
-
-      at <anonymous> (/app/src/test/engine/systems/buyers.test.ts:51:21)
-(fail) buyers system > Guild Auditor: Edge Cases > calculates fit score correctly with empty project history [0.49ms]
-(pass) buyers system > updateBuyers > generates specific headlines for all mandate types [0.23ms]
-(pass) buyers system > updateBuyers > shifts mandate if buyer has no current mandate [0.06ms]
-(pass) buyers system > updateBuyers > shifts mandate if current mandate is expired [0.05ms]
-(pass) buyers system > updateBuyers > shifts mandate early due to random 5% chance [0.06ms]
-(pass) buyers system > updateBuyers > maintains mandate if active and random chance fails [0.05ms]
-(pass) buyers system > calculateFitScore > applies extreme market saturation penalty for 5 or more recent similar projects [0.16ms]
-(pass) buyers system > calculateFitScore > matches genres correctly for sci-fi/fantasy, comedy, and drama [0.13ms]
-(pass) buyers system > calculateFitScore > boosts score for prestige mandate based on budget tiers [0.12ms]
-(pass) buyers system > calculateFitScore > boosts score for broad_appeal mandate with family audience and mid/high budget [0.07ms]
-(pass) buyers system > calculateFitScore > penalizes low budget projects for premium archetype buyers [0.05ms]
-(pass) buyers system > calculateFitScore > applies market saturation penalty for similar projects released within 52 weeks [0.07ms]
-(pass) buyers system > calculateFitScore > returns exactly 65 if buyer has no mandate and no similar projects (early return check) [0.02ms]
-(pass) buyers system > calculateFitScore > applies extreme buzz multipliers correctly with negative buzz [0.05ms]
-(pass) buyers system > calculateFitScore > clamps score between 0 and 100 [0.04ms]
-(pass) buyers system > calculateFitScore > handles budget freeze mandate with extreme blockbuster budget [0.04ms]
-(pass) buyers system > calculateFitScore > handles broad appeal mandate with niche indie project [0.06ms]
-(pass) buyers system > calculateFitScore > applies archetype specific penalties (network vs blockbuster) [0.05ms]
-(pass) buyers system > negotiateContract > requires a higher score (65) for upfront contracts [0.09ms]
-(pass) buyers system > negotiateContract > requires a lower score (40) for standard/deficit contracts [0.04ms]
-(pass) buyers system > negotiateContract > tests explicit fit score boundaries for contract acceptance [0.07ms]
-
-src/test/engine/systems/projects.test.ts:
-(pass) advanceProject > TV & Unscripted Release Rules > advances episodes Released correctly [0.44ms]
-(pass) advanceProject > TV & Unscripted Release Rules > announces the finale when last episode drops [0.06ms]
-(pass) advanceProject > TV & Unscripted Release Rules > decays rapidly for weekly after finale and sets to post_release [0.54ms]
-(pass) advanceProject > TV & Unscripted Release Rules > post_release forces out after eps + 4 weeks [0.11ms]
-(pass) advanceProject > TV & Unscripted Release Rules > binge release model completes run early if below 50k [0.07ms]
-(pass) advanceProject > TV & Unscripted Release Rules > binge release model completes run after 8 weeks [0.10ms]
-(pass) advanceProject > TV & Unscripted Release Rules > split release model part 2 drops [0.11ms]
-(pass) advanceProject > TV & Unscripted Release Rules > split release decays normally before part 2 [0.05ms]
-(pass) advanceProject > TV & Unscripted Release Rules > split release decays after part 2 [0.05ms]
-(pass) advanceProject > TV & Unscripted Release Rules > split release finishes its run [0.06ms]
-(pass) advanceProject > Post-Release and Ancillary rules > calculates bidding war for prestige projects [0.15ms]
-(pass) advanceProject > Post-Release and Ancillary rules > calculates VOD drop for normal films [0.13ms]
-(pass) advanceProject > Post-Release and Ancillary rules > calculates higher ancillary for family and anim projects after week 1 [0.06ms]
-(pass) advanceProject > Post-Release and Ancillary rules > archives project after 26 weeks of post_release [0.05ms]
-(pass) advanceProject > Handle Release Phase Entry edge cases > sets prestige multiplier correctly based on bounds [0.30ms]
-(pass) advanceProject > Handle Release Phase Entry edge cases > handles extreme negative budget or buzz values safely (clip to 0 logic check) [0.05ms]
-(pass) advanceProject > Handle Release Phase Entry edge cases > handles binge TV entry correctly [0.06ms]
-(pass) advanceProject > Handle Release Phase Entry edge cases > handles split TV entry correctly [0.05ms]
-(pass) advanceProject > Handle Release Phase Entry edge cases > handles weekly TV entry correctly [0.04ms]
-(pass) advanceProject > Extreme Edge Cases (Guild Auditor) > handles project with extremely long negative weeks in phase [0.05ms]
-(pass) advanceProject > Extreme Edge Cases (Guild Auditor) > does not crash or stall if all projects in an array are advanced correctly (pipeline simulation) [0.05ms]
-(pass) advanceProject > does nothing for archived projects [0.04ms]
-(pass) advanceProject > advances development project normally [0.04ms]
-(pass) advanceProject > transitions from development to needs_greenlight [0.15ms]
-(pass) advanceProject > transitions from production to marketing [0.07ms]
-(pass) advanceProject > handleReleasePhaseEntry transitions to released [0.05ms]
-(pass) advanceProject > accumulates revenue and decays weekly revenue for released projects [0.05ms]
-(pass) advanceProject > archives released project after its run [0.06ms]
-(pass) advanceProject > transitions tv from development to pitching [0.04ms]
-(pass) advanceProject > transitions unscripted from development to pitching [0.05ms]
-(pass) advanceProject > drifts buzz with talent buzz bonus during dev [0.13ms]
-(pass) advanceProject > drifts buzz without talent during dev [0.05ms]
-
-src/test/engine/systems/TalentSystem.test.ts:
-(pass) TalentSystem > applyProjectResults > returns empty array if no contracts provided [0.04ms]
-(pass) TalentSystem > applyProjectResults > applies massive hit modifiers (ROI > 4.0) [0.16ms]
-(pass) TalentSystem > applyProjectResults > applies solid success modifiers (ROI > 2.0) [0.07ms]
-(pass) TalentSystem > applyProjectResults > applies neutral/modest success modifiers (ROI > 1.0) [0.06ms]
-(pass) TalentSystem > applyProjectResults > applies bomb modifiers (ROI < 0.4) [0.05ms]
-(pass) TalentSystem > applyProjectResults > handles awards correctly for specific roles [0.24ms]
-(pass) TalentSystem > applyProjectResults > applies general award modifiers (Best Picture) to all roles with dilution [0.17ms]
-(pass) TalentSystem > applyProjectResults > clamps stats accurately [0.10ms]
-(pass) TalentSystem > applyProjectResults > handles extreme ego talent (0 skill/draw, 100 prestige) accurately after a huge hit [0.05ms]
-(pass) TalentSystem > applyProjectResults > handles extreme ego talent (0 skill/draw, 100 prestige) accurately after a massive bomb [0.04ms]
-(pass) TalentSystem > Guild Auditor: Edge Cases > handles extreme ego talent (0 skill/draw, 100 prestige) accurately after a huge hit within Guild Auditor Edge Cases [0.04ms]
-(pass) TalentSystem > Guild Auditor: Edge Cases > handles an empty pipeline safely during advance [0.10ms]
-(pass) TalentSystem > advance > decrements opportunity expiry [0.06ms]
-(pass) TalentSystem > advance > removes expired opportunities [0.08ms]
-(pass) TalentSystem > advance > generates new opportunities based on random chance [0.14ms]
-
-src/test/engine/systems/awards.test.ts:
-(pass) awards system > Guild Auditor: Edge Cases > handles an empty project list safely during runAwardsCeremony [0.07ms]
-(pass) awards system > Guild Auditor: Edge Cases > handles extreme negative budget / buzz values when generating awards profile [0.21ms]
-(pass) awards system > generateAwardsProfile > should generate a profile with all scores between 0 and 100 [0.11ms]
-(pass) awards system > generateAwardsProfile > should have a default campaignStrength of 10 [0.02ms]
-(pass) awards system > generateAwardsProfile > should be influenced by budget for prestigeScore [0.07ms]
-(pass) awards system > generateAwardsProfile > should give higher indieCredibility potential to low budget projects [0.05ms]
-(pass) awards system > runAwardsCeremony > should not return awards if no projects are eligible [0.07ms]
-(pass) awards system > runAwardsCeremony > should exclude projects released more than 52 weeks ago [0.05ms]
-(pass) awards system > runAwardsCeremony > should award 'won' status for high scores (> 150) [0.22ms]
-(pass) awards system > runAwardsCeremony > should award 'nominated' status for medium scores (> 100) [0.06ms]
-(pass) awards system > runAwardsCeremony > should correctly accumulate prestige change [0.05ms]
-(pass) awards system > runAwardsCeremony > should filter awards by project format [0.11ms]
-(pass) awards system > runAwardsCeremony > should award the highest scoring project when multiple are eligible [0.30ms]
-(pass) awards system > runAwardsCeremony > should exclude projects that are not released or archived [0.09ms]
-(pass) awards system > runAwardsCeremony > should include projects that are archived and within the 52 week window [0.06ms]
-(pass) awards system > runAwardsCeremony > should allow a project with high campaignStrength to win against an identical project with low campaignStrength [0.10ms]
-(pass) awards system > runAwardsCeremony > should exclude projects that do not have an awardsProfile [0.04ms]
-
-src/test/engine/systems/franchises.test.ts:
-(pass) franchise system > Guild Auditor: Edge Cases > handles an empty project list safely when evaluating crossover events [0.68ms]
-(pass) franchise system > Guild Auditor: Edge Cases > handles negative buzz and budget correctly in fatigue calculation [0.11ms]
-(pass) franchise system > exploitIP > returns null if source project is not released [0.06ms]
-(pass) franchise system > exploitIP > returns null if project failed financially and is not fatigued [0.02ms]
-(pass) franchise system > exploitIP > returns reboot option if franchise is severely fatigued and financial failure [0.30ms]
-(pass) franchise system > exploitIP > returns null if franchise is severely fatigued, failed, but random check fails [0.12ms]
-(pass) franchise system > exploitIP > generates a deconstructive meta-sequel if franchise is heavily fatigued and fails [0.13ms]
-(pass) franchise system > exploitIP > generates crossover event if another huge hit exists in same genre [0.11ms]
-(pass) franchise system > exploitIP > generates crossover event if another huge hit exists in a compatible crossover genre [0.09ms]
-(pass) franchise system > exploitIP > generates an Expanded Universe TV spinoff if fatigued [0.13ms]
-(pass) franchise system > exploitIP > generates a requel for legacy IPs [0.14ms]
-(pass) franchise system > exploitIP > generates a Part 1 finale for massive franchises [0.14ms]
-(pass) franchise system > exploitIP > generates a direct sequel [0.05ms]
-(pass) franchise system > exploitIP > generates a prequel [0.03ms]
-(pass) franchise system > exploitIP > generates a spinoff [0.04ms]
-(pass) franchise system > exploitIP > clamps buzz bonus to -10 when completely saturated [0.27ms]
-(pass) franchise system > exploitIP > applies steep fatigue curve for Superhero genre heavily saturated [0.23ms]
-(pass) franchise system > exploitIP > generates an IP Rights Retention Rush Job if legacy franchise underperforms [0.18ms]
-
-src/test/engine/systems/crises.test.ts:
-(pass) crises system > checkAndTriggerCrisis > returns undefined if project is not in production [0.15ms]
-(pass) crises system > checkAndTriggerCrisis > returns undefined if random check fails (>= 0.05) [0.03ms]
-(pass) crises system > checkAndTriggerCrisis > returns an ActiveCrisis if random check passes (< 0.05) [0.07ms]
-(pass) crises system > resolveCrisis > returns unchanged state if project not found [0.26ms]
-(pass) crises system > resolveCrisis > returns unchanged state if project has no active crisis [0.04ms]
-(pass) crises system > resolveCrisis > returns unchanged state if crisis is already resolved [0.06ms]
-(pass) crises system > resolveCrisis > returns unchanged state if optionIndex is invalid [0.03ms]
-(pass) crises system > resolveCrisis > applies cash penalty correctly [0.07ms]
-(pass) crises system > resolveCrisis > applies weeks delay and buzz penalty correctly, clamping buzz at 0 [0.06ms]
-(pass) crises system > resolveCrisis > handles extreme negative cash penalty (edge case for data error / intentional gain) [0.04ms]
-(pass) crises system > resolveCrisis > handles project with negative budget correctly [0.06ms]
-
-src/test/engine/systems/greenlight.test.ts:
-(pass) evaluateGreenlight > Base Scoring Mechanics > calculates a baseline score without major modifiers [0.31ms]
-(pass) evaluateGreenlight > Base Scoring Mechanics > applies market saturation penalty for recent similar projects [0.13ms]
-(pass) evaluateGreenlight > Base Scoring Mechanics > applies heavy penalty for oversaturated genres (>= 5 similar) [0.10ms]
-108 |
-109 |       const report = evaluateGreenlight(superheroProject, 100_000_000, [mockTalent], 10, similarProjects);
-110 |       // 5 projects => penalty 25 + 20 = 45. Superhero => 45 * 2 = 90
-111 |       // Base 50 + 15 (talent) - 90 = -25 => clamped to 0
-112 |       expect(report.score).toBe(0);
-113 |       expect(report.negatives.some(n => n.includes('-90 points'))).toBe(true);
-                                                                         ^
-error: expect(received).toBe(expected)
-
-Expected: true
-Received: false
-
-      at <anonymous> (/app/src/test/engine/systems/greenlight.test.ts:113:68)
-(fail) evaluateGreenlight > Base Scoring Mechanics > doubles penalty for oversaturated Superhero genre [0.25ms]
-(pass) evaluateGreenlight > Base Scoring Mechanics > applies calendar gap bonus if no similar projects in 52 weeks [0.13ms]
-(pass) evaluateGreenlight > Base Scoring Mechanics > penalizes severe cashflow strain (cash < budget) [0.06ms]
-(pass) evaluateGreenlight > Base Scoring Mechanics > penalizes high financial exposure (cash < budget * 2) [0.05ms]
-(pass) evaluateGreenlight > Base Scoring Mechanics > rewards comfortable cash reserves (cash > budget * 5) [0.10ms]
-(pass) evaluateGreenlight > Base Scoring Mechanics > penalizes unpackaged projects (no talent) [0.05ms]
-(pass) evaluateGreenlight > Base Scoring Mechanics > rewards A-list packages (avg draw > 75) [0.05ms]
-(pass) evaluateGreenlight > Base Scoring Mechanics > rewards high prestige elements (total prestige > 150) [0.07ms]
-(pass) evaluateGreenlight > Base Scoring Mechanics > penalizes poor talent packages (avg draw <= 50) [0.06ms]
-(pass) evaluateGreenlight > Base Scoring Mechanics > rewards exceptional buzz (> 80) [0.10ms]
-(pass) evaluateGreenlight > Base Scoring Mechanics > penalizes very low buzz (< 30) [0.08ms]
-(pass) evaluateGreenlight > Recommendations Matrix and Edge Cases > returns Easy Greenlight for score >= 80 [0.03ms]
-(pass) evaluateGreenlight > Recommendations Matrix and Edge Cases > returns Viable with Conditions for 60 <= score < 80 [0.03ms]
-(pass) evaluateGreenlight > Recommendations Matrix and Edge Cases > returns Speculative Bet for 40 <= score < 60 on mid budget [0.03ms]
-(pass) evaluateGreenlight > Recommendations Matrix and Edge Cases > returns Dangerous Vanity Play for 40 <= score < 60 on blockbuster/high budget [0.04ms]
-(pass) evaluateGreenlight > Recommendations Matrix and Edge Cases > returns Do Not Greenlight Yet for score < 40 on mid budget [0.03ms]
-(pass) evaluateGreenlight > Recommendations Matrix and Edge Cases > returns Dangerous Vanity Play for score < 40 on blockbuster/high budget [0.03ms]
-(pass) evaluateGreenlight > Extreme Edge Cases (Guild Auditor) > handles negative budget securely without throwing [0.05ms]
-(pass) evaluateGreenlight > Extreme Edge Cases (Guild Auditor) > handles talent with 0 draw but 100 ego/prestige safely [0.05ms]
-(pass) evaluateGreenlight > Extreme Edge Cases (Guild Auditor) > handles an empty pipeline safely (allProjects = []) [0.03ms]
-(pass) evaluateGreenlight > Extreme Edge Cases (Guild Auditor) > bounds extreme negative scores to 0 [0.09ms]
-(pass) evaluateGreenlight > Extreme Edge Cases (Guild Auditor) > bounds extreme positive scores to 100 [0.03ms]
-
-src/test/engine/systems/culture.test.ts:
-(pass) Culture System > initializes culture based on the studio archetype [0.08ms]
-(pass) Culture System > shifts culture correctly when greenlighting a high-budget commercial film [0.12ms]
-(pass) Culture System > shifts culture correctly when greenlighting an indie prestige drama [0.04ms]
-(pass) Culture System > clamps culture values between 0 and 100 [0.04ms]
-
-src/test/engine/systems/unscripted.test.ts:
-(pass) Unscripted Projects > creates an unscripted project with correct stats [1.36ms]
-
-src/test/engine/systems/finance.test.ts:
-(pass) finance > calculateWeeklyCosts > sums costs of development and production projects only [0.05ms]
-(pass) finance > calculateWeeklyCosts > applies costMultiplier 0 for upfront contract type in production [0.08ms]
-(pass) finance > calculateWeeklyCosts > applies costMultiplier 0.5 for deficit contract type in production [0.04ms]
-(pass) finance > calculateWeeklyCosts > handles negative weeklyCost safely [0.03ms]
-(pass) finance > calculateWeeklyCosts > ignores contract types for development phase projects [0.03ms]
-(pass) finance > calculateWeeklyRevenue > sums revenue of released projects, factoring in backend percent [0.05ms]
-(pass) finance > calculateWeeklyRevenue > returns 0 if no released projects [0.02ms]
-(pass) finance > calculateWeeklyRevenue > sums revenue of multiple released projects without contracts [0.03ms]
-(pass) finance > calculateWeeklyRevenue > sums backend percentages from multiple contracts on the same project [0.04ms]
-(pass) finance > calculateWeeklyRevenue > ignores contracts that belong to a different project [0.03ms]
-(pass) finance > calculateWeeklyRevenue > handles a released project with zero weekly revenue [0.05ms]
-(pass) finance > calculateWeeklyRevenue > handles backend percentages greater than 100% [0.04ms]
-(pass) finance > calculateWeeklyRevenue > handles negative weeklyRevenue safely [0.03ms]
-(pass) finance > calculateWeeklyRevenue > returns 0 revenue for upfront contract type [0.03ms]
-(pass) finance > calculateWeeklyRevenue > calculates 100% of revenue for deficit contract type minus backend [0.04ms]
-
-src/test/engine/systems/rivals.test.ts:
-(pass) updateRival > updates strength and cash [0.06ms]
-(pass) updateRival > updates strategy based on archetype [0.04ms]
-(pass) updateRival > sets isAcquirable correctly [0.06ms]
-
-src/test/engine/systems/deals.test.ts:
-(pass) Deals System > evaluates whether talent will accept a first-look deal based on prestige and access levels [0.15ms]
-(pass) Deals System > offers a deal and returns a valid FirstLookDeal object if accepted [0.16ms]
-
-src/test/engine/systems/festivals.test.ts:
-(pass) Festivals System > submits a project to a festival if cash is sufficient and status is valid [0.20ms]
-(pass) Festivals System > declines submission if project cannot be found or cash is too low [0.04ms]
-(pass) Festivals System > resolves festival results and correctly selects/rejects based on indie credibility and prestige [0.36ms]
-
-src/test/engine/generators/names.test.ts:
-(pass) Names Generator > generateStudioName > returns a string [0.06ms]
-(pass) Names Generator > generateStudioName > avoids existing names [0.04ms]
-(pass) Names Generator > generateMotto > returns a string [0.02ms]
-(pass) Names Generator > generateActorName > returns a string with two words (first and last name) [0.11ms]
-(pass) Names Generator > generateActressName > returns a string with two words (first and last name) [0.07ms]
-(pass) Names Generator > generateProjectName > returns a string for tv projects [0.11ms]
-(pass) Names Generator > generateProjectName > returns a string for film projects [0.05ms]
-(pass) Names Generator > generateProjectName > falls back to Drama genre if an unknown genre is passed [0.03ms]
-
-src/test/engine/generators/talent.test.ts:
-(pass) talent generator > generateFamilies > generates the specified number of families [0.07ms]
-(pass) talent generator > generateFamilies > creates families with required attributes [0.04ms]
-(pass) talent generator > generateTalentPool > generates the specified number of talent profiles [0.09ms]
-(pass) talent generator > generateTalentPool > assigns multiple roles occasionally (multi-hyphenates) [0.05ms]
-(pass) talent generator > generateTalentPool > assigns nepo babies to families [0.08ms]
-(pass) talent generator > generateTalentPool > assigns talent to agents and agencies if available [0.23ms]
-
-src/test/engine/generators/agencies.test.ts:
-(pass) agencies generator > generateAgencies > generates the requested number of agencies [1.25ms]
-(pass) agencies generator > generateAgencies > makes the first two agencies powerhouses [0.08ms]
-(pass) agencies generator > generateAgencies > assigns higher prestige and leverage to powerhouse agencies [0.04ms]
-(pass) agencies generator > generateAgents > generates agents for each given agency [0.13ms]
-(pass) agencies generator > generateAgents > assigns high aggression to agents in a shark culture [0.09ms]
-(pass) agencies generator > generateAgents > assigns lower aggression to agents in non-shark cultures [0.07ms]
-
-src/test/engine/generators/opportunities.test.ts:
-(pass) Opportunity Generator > should generate a valid opportunity [0.11ms]
-(pass) Opportunity Generator > should generate attached talent if provided [0.09ms]
-(pass) Opportunity Generator > should populate TV specific fields if format is TV [0.06ms]
-(pass) Opportunity Generator > should generate titles [0.03ms]
-
-src/test/engine/generators/headlines.test.ts:
-(pass) generateHeadlines > should generate between 1 and 3 headlines [1.13ms]
-(pass) generateHeadlines > should return headlines with the correct structure [0.15ms]
-(pass) generateHeadlines > should generate rival headlines if rivals are provided [0.12ms]
-(pass) generateHeadlines > should NOT generate rival headlines if NO rivals are provided [0.48ms]
-
-18 tests failed:
-(fail) ChartStyle > should securely escape malicious XSS payloads in color config [4.56ms]
-(fail) saveLoad > handles malformed save data [0.11ms]
-(fail) saveLoad > interacts with localStorage correctly when saving a game [1.05ms]
-(fail) saveLoad > preserves existing save slots when saving to a new slot [1.77ms]
-(fail) buyers system > Guild Auditor: Edge Cases > calculates fit score correctly with empty project history [0.49ms]
-(fail) evaluateGreenlight > Base Scoring Mechanics > doubles penalty for oversaturated Superhero genre [0.25ms]
-
- 275 pass
- 18 fail
- 12 errors
- 623 expect() calls
-Ran 293 tests across 41 files. [836.00ms]
+
+ RUN  v3.2.4 /Users/amauricia/Documents/GitHub/Studio-Boss
+
+ × src/test/store/applyStateImpact.test.ts > applyStateImpact utility > should update cash correctly 12ms
+   → expected 1000000 to be 500000 // Object.is equality
+ × src/test/store/applyStateImpact.test.ts > applyStateImpact utility > should update project fields correctly 2ms
+   → expected 'development' to be 'production' // Object.is equality
+ × src/test/store/applyStateImpact.test.ts > applyStateImpact utility > should update prestige correctly 0ms
+   → expected 50 to be 60 // Object.is equality
+ × src/test/store/applyStateImpact.test.ts > applyStateImpact utility > should add headlines and news events 8ms
+   → expected [] to have a length of 1 but got +0
+stdout | src/test/persistence/saveLoad.test.ts > saveLoad > saves and loads game state
+[SaveLoad] State saved to slot 0 via OPFS.
+
+stdout | src/test/persistence/saveLoad.test.ts > saveLoad > interacts with localStorage correctly when saving a game
+[SaveLoad] State saved to slot 2 via OPFS.
+
+stdout | src/test/persistence/saveLoad.test.ts > saveLoad > preserves existing save slots when saving to a new slot
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 1 via OPFS.
+
+ × src/test/persistence/saveLoad.test.ts > saveLoad > returns null when loading an empty slot 11ms
+   → expected Promise{…} to be null
+ × src/test/persistence/saveLoad.test.ts > saveLoad > handles malformed save data 2ms
+   → expected Promise{…} to be null
+ × src/test/persistence/saveLoad.test.ts > saveLoad > returns null for invalid payload structures 1ms
+   → expected Promise{…} to be null
+ × src/test/persistence/saveLoad.test.ts > saveLoad > saves and loads game state 8ms
+   → Cannot read properties of undefined (reading 'name')
+ × src/test/persistence/saveLoad.test.ts > saveLoad > retrieves save slots info 6ms
+   → expected Promise{…} to have property 'length'
+ × src/test/persistence/saveLoad.test.ts > saveLoad > interacts with localStorage correctly when saving a game 7ms
+   → expected "spy" to be called with arguments: [ 'studioboss_save_2', …(1) ][90m
+
+Number of calls: [1m0[22m
+[39m
+ × src/test/persistence/saveLoad.test.ts > saveLoad > preserves existing save slots when saving to a new slot 25ms
+   → expected "spy" to be called with arguments: [ 'studioboss_save_1', …(1) ][90m
+
+Number of calls: [1m0[22m
+[39m
+ × src/test/persistence/saveLoad.test.ts > saveLoad > handles malformed save slots metadata 1ms
+   → expected "error" to be called with arguments: [ …(2) ][90m
+
+Number of calls: [1m0[22m
+[39m
+ ✓ src/test/components/modals/PitchProjectModal.test.tsx > PitchProjectModal > renders correctly when open 104ms
+ ✓ src/test/components/modals/PitchProjectModal.test.tsx > PitchProjectModal > does not render if gameState or pitchingProjectId is null 7ms
+ ✓ src/test/components/modals/PitchProjectModal.test.tsx > PitchProjectModal > does not render if project is not found 4ms
+ ✓ src/test/components/modals/PitchProjectModal.test.tsx > PitchProjectModal > selects a buyer when clicked 34ms
+ ✓ src/test/components/modals/PitchProjectModal.test.tsx > PitchProjectModal > selects a deal structure when clicked 41ms
+ ✓ src/test/components/modals/CreateProjectModal.test.tsx > CreateProjectModal > does not render when showCreateProject is false 63ms
+ ✓ src/test/store/gameStore.test.ts > gameStore > starts with null game state 2ms
+ × src/test/store/gameStore.test.ts > gameStore > creates a new game 25ms
+   → expected null not to be null
+ × src/test/store/gameStore.test.ts > gameStore > advances week 3ms
+   → Cannot read properties of null (reading 'studio')
+ × src/test/store/gameStore.test.ts > gameStore > creates a project 8ms
+   → expected [] to have a length of 1 but got +0
+ × src/test/store/gameStore.test.ts > gameStore > loads from slot 2ms
+   → expected Promise{…} to be true // Object.is equality
+ × src/test/store/gameStore.test.ts > gameStore > signs a contract if sufficient funds 4ms
+   → Cannot read properties of null (reading 'finance')
+stderr | src/test/components/finance/FinancePanel.test.tsx > FinancePanel Component > renders gracefully with null/empty game state
+Warning: [object Object]: `ref` is not a prop. Trying to access it will result in `undefined` being returned. If you need to access the same value within the child component, you should pass it as a different prop. (https://reactjs.org/link/special-props)
+    at PopChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:43:21)
+    at PresenceChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PresenceChild.mjs:9:26)
+    at AnimatePresence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/index.mjs:44:28)
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:32:76
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:147:13
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:70:71
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:24:7
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:32:48)
+Warning: The tag <stop> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+    at stop
+    at linearGradient
+    at defs
+    at div
+    at ComposedChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:19:27)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at div
+    at MotionDOMComponent (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/motion/index.mjs:45:16)
+    at PopChildMeasure (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:13:1)
+    at PopChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:43:21)
+    at PresenceChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PresenceChild.mjs:9:26)
+    at AnimatePresence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/index.mjs:44:28)
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:32:76
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:147:13
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:70:71
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:24:7
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:32:48)
+Warning: <linearGradient /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at linearGradient
+    at defs
+    at div
+    at ComposedChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:19:27)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at div
+    at MotionDOMComponent (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/motion/index.mjs:45:16)
+    at PopChildMeasure (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:13:1)
+    at PopChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:43:21)
+    at PresenceChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PresenceChild.mjs:9:26)
+    at AnimatePresence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/index.mjs:44:28)
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:32:76
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:147:13
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:70:71
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:24:7
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:32:48)
+Warning: The tag <linearGradient> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+    at linearGradient
+    at defs
+    at div
+    at ComposedChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:19:27)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at div
+    at MotionDOMComponent (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/motion/index.mjs:45:16)
+    at PopChildMeasure (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:13:1)
+    at PopChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:43:21)
+    at PresenceChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PresenceChild.mjs:9:26)
+    at AnimatePresence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/index.mjs:44:28)
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:32:76
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:147:13
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:70:71
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:24:7
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:32:48)
+Warning: <linearGradient /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at linearGradient
+    at defs
+    at div
+    at ComposedChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:19:27)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at div
+    at MotionDOMComponent (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/motion/index.mjs:45:16)
+    at PopChildMeasure (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:13:1)
+    at PopChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:43:21)
+    at PresenceChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PresenceChild.mjs:9:26)
+    at AnimatePresence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/index.mjs:44:28)
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:32:76
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:147:13
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:70:71
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:24:7
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:32:48)
+Warning: The tag <defs> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+    at defs
+    at div
+    at ComposedChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:19:27)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at div
+    at MotionDOMComponent (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/motion/index.mjs:45:16)
+    at PopChildMeasure (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:13:1)
+    at PopChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:43:21)
+    at PresenceChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PresenceChild.mjs:9:26)
+    at AnimatePresence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/index.mjs:44:28)
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:32:76
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:147:13
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:70:71
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:24:7
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:32:48)
+
+ ✓ src/test/components/modals/CreateProjectModal.test.tsx > CreateProjectModal > renders correctly when showCreateProject is true 380ms
+stderr | src/test/components/finance/FinancePanel.test.tsx > FinancePanel Component > renders correctly with positive cash flow and active projects
+Warning: <linearGradient /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at linearGradient
+    at defs
+    at div
+    at ComposedChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:19:27)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at div
+    at MotionDOMComponent (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/motion/index.mjs:45:16)
+    at PopChildMeasure (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:13:1)
+    at PopChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:43:21)
+    at PresenceChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PresenceChild.mjs:9:26)
+    at AnimatePresence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/index.mjs:44:28)
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:32:76
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:147:13
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:70:71
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:24:7
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:32:48)
+Warning: <linearGradient /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at linearGradient
+    at defs
+    at div
+    at ComposedChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:19:27)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at div
+    at MotionDOMComponent (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/motion/index.mjs:45:16)
+    at PopChildMeasure (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:13:1)
+    at PopChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:43:21)
+    at PresenceChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PresenceChild.mjs:9:26)
+    at AnimatePresence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/index.mjs:44:28)
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:32:76
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:147:13
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:70:71
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:24:7
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:32:48)
+
+stderr | src/test/components/finance/FinancePanel.test.tsx > FinancePanel Component > renders correctly with negative cash flow and negative cash
+Warning: <linearGradient /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at linearGradient
+    at defs
+    at div
+    at ComposedChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:19:27)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at div
+    at MotionDOMComponent (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/motion/index.mjs:45:16)
+    at PopChildMeasure (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:13:1)
+    at PopChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:43:21)
+    at PresenceChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PresenceChild.mjs:9:26)
+    at AnimatePresence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/index.mjs:44:28)
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:32:76
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:147:13
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:70:71
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:24:7
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:32:48)
+Warning: <linearGradient /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at linearGradient
+    at defs
+    at div
+    at ComposedChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:19:27)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at div
+    at MotionDOMComponent (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/motion/index.mjs:45:16)
+    at PopChildMeasure (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:13:1)
+    at PopChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:43:21)
+    at PresenceChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PresenceChild.mjs:9:26)
+    at AnimatePresence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/index.mjs:44:28)
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:32:76
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:147:13
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:70:71
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:24:7
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:32:48)
+
+ ✓ src/test/components/finance/FinancePanel.test.tsx > FinancePanel Component > renders gracefully with null/empty game state 264ms
+ ✓ src/test/components/finance/FinancePanel.test.tsx > FinancePanel Component > renders correctly with positive cash flow and active projects 49ms
+ ✓ src/test/components/finance/FinancePanel.test.tsx > FinancePanel Component > renders correctly with negative cash flow and negative cash 27ms
+ ✓ src/test/components/deals/DealsDesk.test.tsx > DealsDesk > renders main header and empty states 71ms
+ ✓ src/test/components/modals/CreateProjectModal.test.tsx > CreateProjectModal > generates a title when opening with an empty title 110ms
+ ✓ src/test/components/deals/DealsDesk.test.tsx > DealsDesk > renders buyers with mandates 29ms
+ ✓ src/test/components/deals/DealsDesk.test.tsx > DealsDesk > renders active pitching slate projects 23ms
+ × src/test/components/deals/DealsDesk.test.tsx > DealsDesk > displays fit scores when projects and buyers are present 30ms
+   → Unable to find an element with the text: 85%. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"h-full flex flex-col space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700 overflow-hidden"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"flex flex-col md:flex-row md:items-end justify-between gap-4 bg-white/5 p-5 rounded-xl border border-white/5 backdrop-blur-sm"[39m
+      [36m>[39m
+        [36m<div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center gap-3 mb-1"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-10 h-10 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33mclass[39m=[32m"lucide lucide-briefcase h-5 w-5 text-blue-400"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mheight[39m=[32m"24"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+                [33mwidth[39m=[32m"24"[39m
+                [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"[39m
+                [36m/>[39m
+                [36m<rect[39m
+                  [33mheight[39m=[32m"14"[39m
+                  [33mrx[39m=[32m"2"[39m
+                  [33mwidth[39m=[32m"20"[39m
+                  [33mx[39m=[32m"2"[39m
+                  [33my[39m=[32m"6"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</div>[39m
+            [36m<h2[39m
+              [33mclass[39m=[32m"text-2xl font-black tracking-tighter uppercase leading-none"[39m
+            [36m>[39m
+              [0mDeals Desk & Distribution[0m
+            [36m</h2>[39m
+          [36m</div>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"text-[11px] font-black uppercase text-muted-foreground/60 tracking-[0.2em]"[39m
+          [36m>[39m
+            [0mMandate Tracking • Global Territory Management[0m
+          [36m</p>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex gap-2"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"inline-flex items-center rounded-full border px-2.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 bg-blue-500/5 border-blue-500/20 text-blue-400 uppercase font-black tracking-widest text-[9px] py-1"[39m
+          [36m>[39m
+            [0m1[0m
+            [0m Network Partners[0m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"flex-1 flex flex-col lg:flex-row gap-6 overflow-hidden"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex-1 flex flex-col space-y-4 overflow-hidden"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center gap-3 px-2"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-1.5 h-4 rounded-full bg-blue-500"[39m
+            [36m/>[39m
+            [36m<h3[39m
+              [33mclass[39m=[32m"text-xs font-black uppercase tracking-widest text-foreground/80 flex items-center gap-2"[39m
+            [36m>[39m
+              [0mDistribution Acquisitions[0m
+            [36m</h3>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"relative overflow-hidden flex-1 pr-4"[39m
+            [33mdir[39m=[32m"ltr"[39m
+            [33mstyle[39m=[32m"position: relative; --radix-scroll-area-corner-width: 0px; --radix-scroll-area-corner-height: 0px;"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"h-full w-full rounded-[inherit]"[39m
+              [33mdata-radix-scroll-area-viewport[39m=[32m""[39m
+              [33mstyle[39m=[32m"overflow-x: hidden; overflow-y: scroll;"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mstyle[39m=[32m"min-width: 100%; display: table;"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"grid grid-cols-1 md:grid-cols-2 gap-4 pb-8"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"rounded-lg border bg-card text-card-foreground shadow-sm glass-card border-none hover-glow group transition-all duration-300"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"p-5 space-y-5 relative z-10"[39m
+                    [36m>[39m
+                      [36m<div[39m
+                        [33mclass[39m=[32m"flex justify-between items-start"[39m
+                      [36m>[39m
+                        [36m<div>[39m
+                          [36m<h4[39m
+                            [33mclass[39m=[32m"font-display text-base font-black tracking-tighter uppercase group-hover:text-blue-400 transition-colors leading-tight"[39m
+                          [36m>[39m
+                            [0mBuyer 1[0m
+                          [36m</h4>[39m
+                          [36m<div[39m
+                            [33mclass[39m=[32m"flex items-center gap-2 mt-1"[39m
+                          [36m>[39m
+                            [36m<div[39m
+                              [33mclass[39m=[32m"inline-flex items-center rounded-full border px-2.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground text-[9px] font-black border-white/10 bg-white/5 uppercase py-0 tracking-widest"[39m
+                            [36m>[39m
+                              [0mstreamer[0m
+                            [36m</div>[39m
+                          [36m</div>[39m
+                        [36m</div>[39m
+                        [36m<div[39m
+                          [33mclass[39m=[32m"px-2 py-1 rounded-md border text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground bg-white/5 border-white/10"[39m
+                        [36m>[39m
+                          [0mOpen Slate[0m
+                        [36m</div>[39m
+                      [36m</div>[39m
+                      [36m<div[39m
+                        [33mclass[39m=[32m"p-3 bg-black/20 rounded border border-white/5"[39m
+                      [36m>[39m
+                        [36m<p[39m
+                          [33mclass[39m=[32m"text-[10px] text-muted-foreground leading-relaxed italic opacity-80 group-hover:opacity-100 transition-opacity"[39m
+                        [36m>[39m
+                          [0mAcquisition desk is currently seeking new high-potential property slates.[0m
+                        [36m</p>[39m
+                      [36m</div>[39m
+                      [36m<div[39m
+                        [33mclass[39m=[32m"space-y-3"[39m
+                      [36m>[39m
+                        [36m<div[39m
+                          [33mclass[39m=[32m"text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 flex items-center justify-between"[39m
+                        [36m>[39m
+                          [36m<span[39m
+                            [33mclass[39m=[32m"flex items-center gap-1.5"[39m
+                          [36m>[39m
+                            [36m<svg[39m
+                              [33mclass[39m=[32m"lucide lucide-target h-2.5 w-2.5"[39m
+                              [33mfill[39m=[32m"none"[39m
+                              [33mheight[39m=[32m"24"[39m
+                              [33mstroke[39m=[32m"currentColor"[39m
+                              [33mstroke-linecap[39m=[32m"round"[39m
+                              [33mstroke-linejoin[39m=[32m"round"[39m
+                              [33mstroke-width[39m=[32m"2"[39m
+                              [33mviewBox[39m=[32m"0 0 24 24"[39m
+                              [33mwidth[39m=[32m"24"[39m
+                              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                            [36m>[39m
+                              [36m<circle[39m
+                                [33mcx[39m=[32m"12"[39m
+                                [33mcy[39m=[32m"12"[39m
+                                [33mr[39m=[32m"10"[39m
+                              [36m/>[39m
+                              [36m<circle[39m
+                                [33mcx[39m=[32m"12"[39m
+                                [33mcy[39m=[32m"12"[39m
+                                [33mr[39m=[32m"6"[39m
+                              [36m/>[39m
+                              [36m<circle[39m
+                                [33mcx[39m=[32m"12"[39m
+                                [33mcy[39m=[32m"12"[39m
+                                [33mr[39m=[32m"2"[39m
+                              [36m/>[39m
+                            [36m</svg>[39m
+                            [0m Acquisition Fit Analysis[0m
+                          [36m</span>[39m
+                        [36m</div>[39m
+                        [36m<div[39m
+                          [33mclass[39m=[32m"space-y-3"[39m
+                        [36m>[39m
+                          [36m<div[39m
+                            [33mclass[39m=[32m"space-y-1.5"[39m
+                          [36m>[39m
+                            [36m<div[39m
+                              [33mclass[39m=[32m"flex justify-between text-[10px] font-black uppercase tracking-tight"[39m
+                            [36m>[39m
+                              [36m<span[39m
+                                [33mclass[39m=[32m"truncate max-w-[150px] text-foreground/80 opacity-60 group-hover:opacity-100 transition-opacity"[39m
+                              [36m>[39m
+                                [0mFit Project[0m
+                              [36m</span>[39m
+                              [36m<span[39m
+                                [33mclass[39m=[32m"font-mono text-destructive"[39m
+                              [36m>[39m
+                                [0m30[0m
+                                [0m%[0m
+                              [36m</span>[39m
+                            [36m</div>[39m
+                            [36m<div[39m
+                              [33mclass[39m=[32m"h-1 bg-white/5 rounded-full overflow-hidden"[39m
+                            [36m>[39m
+                              [36m<div[39m
+                                [33mclass[39m=[32m"h-full rounded-full transition-all duration-1000 bg-destructive shadow-[0_0_8px_rgba(239,68,68,0.4)]"[39m
+                                [33mstyle[39m=[32m"width: 30%;"[39m
+                              [36m/>[39m
+                            [36m</div>[39m
+                          [36m</div>[39m
+                        [36m</div>[39m
+                      [36m</div>[39m
+                      [36m<div[39m
+                        [33mclass[39m=[32m"pt-2"[39m
+                      [36m>[39m
+                        [36m<button[39m
+                          [33mclass[39m=[32m"inline-flex items-center justify-center gap-2 whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border bg-background rounded-md px-3 w-full text-[9px] font-black uppercase tracking-[0.2em] h-9 border-white/10 hover:bg-blue-500 hover:text-white hover:border-blue-400 transition-all group/btn shadow-xl"[39m
+                        [36m>[39m
+                          [0mNegotiate Terms[0m
+                        [36m</button>[39m
+                      [36m</div>[39m
+                    [36m</div>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"w-full lg:w-80 flex flex-col space-y-4 shrink-0 overflow-hidden"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center gap-3 px-2"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-1.5 h-4 rounded-full bg-primary"[39m
+            [36m/>[39m
+            [36m<h3[39m
+              [33mclass[39m=[32m"text-xs font-black uppercase tracking-widest text-foreground/80 flex items-center gap-2"[39m
+            [36m>[39m
+              [0mActive Slate Briefing[0m
+            [36m</h3>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex-1 glass-card border-none overflow-hidden flex flex-col p-4"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"relative overflow-hidden flex-1"[39m
+              [33mdir[39m=[32m"ltr"[39m
+              [33mstyle[39m=[32m"position: relative; --radix-scroll-area-corner-width: 0px; --radix-scroll-area-corner-height: 0px;"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"h-full w-full rounded-[inherit]"[39m
+                [33mdata-radix-scroll-area-viewport[39m=[32m""[39m
+                [33mstyle[39m=[32m"overflow-x: hidden; overflow-y: scroll;"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mstyle[39m=[32m"min-width: 100%; display: table;"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"space-y-3"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"p-4 rounded-lg bg-white/5 border border-white/5 hover:border-primary/40 transition-all group cursor-pointer"[39m
+                    [36m>[39m
+                      [36m<div[39m
+                        [33mclass[39m=[32m"text-[11px] font-black uppercase tracking-tight group-hover:text-primary transition-colors truncate"[39m
+                      [36m>[39m
+                        [0mFit Project[0m
+                      [36m</div>[39m
+                      [36m<div[39m
+                        [33mclass[39m=[32m"flex justify-between items-center mt-2"[39m
+                      [36m>[39m
+                        [36m<span[39m
+                          [33mclass[39m=[32m"text-[9px] uppercase text-muted-foreground/60 font-black tracking-widest"[39m
+                        [36m>[39m
+                          [0mAction[0m
+                        [36m</span>[39m
+                        [36m<div[39m
+                          [33mclass[39m=[32m"inline-flex items-center rounded-full border py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 hover:bg-primary/80 text-[9px] px-1.5 h-4 bg-primary/10 text-primary border-primary/20 font-black uppercase"[39m
+                        [36m>[39m
+                          [0mhigh[0m
+                        [36m</div>[39m
+                      [36m</div>[39m
+                    [36m</div>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ✓ src/test/components/modals/CreateProjectModal.test.tsx > CreateProjectModal > allows clicking Generate Random Title button 185ms
+stderr | src/test/WeekSummaryModal.test.tsx > WeekSummaryModal > renders correctly with positive net financial data
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ ✓ src/test/WeekSummaryModal.test.tsx > WeekSummaryModal > renders nothing when weekSummary is null 12ms
+ ✓ src/test/WeekSummaryModal.test.tsx > WeekSummaryModal > renders nothing when showWeekSummary is false (Dialog handles open state, but if weekSummary is null it returns null anyway) 1ms
+stderr | src/test/WeekSummaryModal.test.tsx > WeekSummaryModal > renders correctly with negative net financial data
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+stderr | src/test/WeekSummaryModal.test.tsx > WeekSummaryModal > renders project updates, events, and headlines if they exist
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ ✓ src/test/WeekSummaryModal.test.tsx > WeekSummaryModal > renders correctly with positive net financial data 189ms
+ ✓ src/test/WeekSummaryModal.test.tsx > WeekSummaryModal > renders correctly with negative net financial data 70ms
+stderr | src/test/WeekSummaryModal.test.tsx > WeekSummaryModal > calls closeSummary when the Continue button is clicked
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ ✓ src/test/WeekSummaryModal.test.tsx > WeekSummaryModal > renders project updates, events, and headlines if they exist 79ms
+ ✓ src/test/WeekSummaryModal.test.tsx > WeekSummaryModal > calls closeSummary when the Continue button is clicked 103ms
+ ✓ src/test/components/modals/CrisisModal.test.tsx > CrisisModal > renders nothing if gameState is missing 15ms
+ ✓ src/test/components/modals/CrisisModal.test.tsx > CrisisModal > renders nothing if crisisProjectId is missing 1ms
+ ✓ src/test/components/modals/CrisisModal.test.tsx > CrisisModal > renders nothing if project is not found 2ms
+ ✓ src/test/components/modals/CrisisModal.test.tsx > CrisisModal > renders nothing if project has no active crisis 1ms
+ ✓ src/test/components/modals/CrisisModal.test.tsx > CrisisModal > renders the modal with crisis details correctly 232ms
+ ✓ src/test/components/modals/CrisisModal.test.tsx > CrisisModal > calls resolveProjectCrisis and closeCrisisModal when an option is selected 61ms
+ ✓ src/test/components/modals/CreateProjectModal.test.tsx > CreateProjectModal > conditionally renders TV fields when TV format is selected 313ms
+ ✓ src/test/components/pipeline/ProjectCard.test.tsx > ProjectCard > renders basic project details correctly 126ms
+ ✓ src/test/components/pipeline/ProjectCard.test.tsx > ProjectCard > calls selectProject when the main card is clicked 89ms
+ ✓ src/test/components/modals/CreateProjectModal.test.tsx > CreateProjectModal > conditionally renders Unscripted fields when Unscripted format is selected 455ms
+stderr | src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > renders project details when a project is selected
+Warning: [object Object]: `ref` is not a prop. Trying to access it will result in `undefined` being returned. If you need to access the same value within the child component, you should pass it as a different prop. (https://reactjs.org/link/special-props)
+    at PopChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:43:21)
+    at PresenceChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PresenceChild.mjs:9:26)
+    at AnimatePresence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/index.mjs:44:28)
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:32:76
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:147:13
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:70:71
+    at div
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:24:7
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dismissable-layer/dist/index.mjs:24:7
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-focus-scope/dist/index.mjs:15:5
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:206:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:132:58
+    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:123:64
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-portal/dist/index.mjs:11:22
+    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at DialogPortal (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:85:11)
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/dialog.tsx:25:73
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at Dialog (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:25:5)
+    at ProjectDetailModal (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/modals/ProjectDetailModal.tsx:58:73)
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ ✓ src/test/components/pipeline/ProjectCard.test.tsx > ProjectCard > shows Executive Review button for needs_greenlight state 38ms
+ ✓ src/test/components/pipeline/ProjectCard.test.tsx > ProjectCard > shows Pitch Pipeline button for pitching state 6ms
+ ✓ src/test/components/pipeline/ProjectCard.test.tsx > ProjectCard > shows Neutralize Crisis button when there is an unresolved crisis 68ms
+ ✓ src/test/components/pipeline/ProjectCard.test.tsx > ProjectCard > renders progress text for development state 6ms
+ ✓ src/test/components/pipeline/ProjectCard.test.tsx > ProjectCard > renders gross revenue for released state 5ms
+ ✓ src/test/components/pipeline/ProjectCard.test.tsx > ProjectCard > renders TV format correctly 2ms
+ ✓ src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > renders nothing when no project is selected 42ms
+stderr | src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > shows greenlight button when project needs greenlight
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ ✓ src/test/components/modals/PitchProjectModal.test.tsx > PitchProjectModal > handles a successful pitch 1551ms
+ ✓ src/test/components/modals/PitchProjectModal.test.tsx > PitchProjectModal > handles a failed pitch 60ms
+ ✓ src/test/components/modals/PitchProjectModal.test.tsx > PitchProjectModal > calls handleClose when dialog is closed 44ms
+stderr | src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > shows marketing configuration and handles lock campaign
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+
+ ✓ src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > renders project details when a project is selected 336ms
+ ✓ src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > shows greenlight button when project needs greenlight 61ms
+ ✓ src/test/components/modals/CreateProjectModal.test.tsx > CreateProjectModal > disables Greenlight button if title is empty 118ms
+stderr | src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > shows renew button for tv project and handles renewal
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ ✓ src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > shows marketing configuration and handles lock campaign 142ms
+ ✓ src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > shows renew button for tv project and handles renewal 67ms
+ ✓ src/test/components/modals/CreateProjectModal.test.tsx > CreateProjectModal > submits the form correctly for a film 270ms
+ ✓ src/test/components/modals/CreateProjectModal.test.tsx > CreateProjectModal > allows selecting talent 183ms
+ ✓ src/test/components/pipeline/PipelineBoard.test.tsx > PipelineBoard > renders title and New Project button 127ms
+ ✓ src/test/components/pipeline/PipelineBoard.test.tsx > PipelineBoard > calls openCreateProject when New Project button is clicked 261ms
+ ✓ src/test/components/pipeline/PipelineBoard.test.tsx > PipelineBoard > renders all pipeline columns 13ms
+ ✓ src/test/components/pipeline/PipelineBoard.test.tsx > PipelineBoard > distributes projects into correct columns 7ms
+ ✓ src/test/components/pipeline/PipelineBoard.test.tsx > PipelineBoard > shows "No projects" message for empty columns 14ms
+ ✓ src/test/components/discovery/DiscoveryBoard.test.tsx > DiscoveryBoard > renders empty state when there are no opportunities 93ms
+ ✓ src/test/components/discovery/DiscoveryBoard.test.tsx > DiscoveryBoard > calls openCreateProject when Create Original button is clicked 41ms
+ ✓ src/test/components/discovery/DiscoveryBoard.test.tsx > DiscoveryBoard > renders opportunity cards when there are opportunities 44ms
+ ✓ src/test/components/discovery/DiscoveryBoard.test.tsx > DiscoveryBoard > calls acquireOpportunity when Acquire button is clicked on a card 26ms
+stdout | src/test/engine/snapshots.test.ts > Historical Snapshots System > should capture a complete snapshot exactly on week 52
+[SaveLoad] State saved to slot 0 via OPFS.
+
+ ✓ src/test/engine/systems/talentStats.test.ts > applyAwardBoostsToTalent > Wins > calculates boosts for a prestigious major win (e.g. Academy Award Best Actor) 1ms
+ ✓ src/test/engine/systems/talentStats.test.ts > applyAwardBoostsToTalent > Wins > calculates boosts for a Cannes equivalent supporting win 0ms
+ ✓ src/test/engine/systems/talentStats.test.ts > applyAwardBoostsToTalent > Wins > calculates boosts for a Sundance equivalent standard category win 0ms
+ ✓ src/test/engine/systems/talentStats.test.ts > applyAwardBoostsToTalent > Wins > calculates boosts for a standard non-prestige win 0ms
+ ✓ src/test/engine/systems/talentStats.test.ts > applyAwardBoostsToTalent > Nominations > calculates boosts for a prestigious major nomination 0ms
+ ✓ src/test/engine/systems/talentStats.test.ts > applyAwardBoostsToTalent > Nominations > calculates boosts for a Sundance equivalent supporting nomination 0ms
+ ✓ src/test/engine/systems/talentStats.test.ts > applyAwardBoostsToTalent > Nominations > calculates boosts for a standard nomination 0ms
+ ✓ src/test/engine/systems/talentStats.test.ts > applyAwardBoostsToTalent > Multiplier parameter > applies the external multiplier parameter correctly 0ms
+stdout | src/test/engine/snapshots.test.ts > Historical Snapshots System > should capture a complete snapshot exactly on week 52
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+[SaveLoad] State saved to slot 0 via OPFS.
+
+ ✓ src/test/engine/snapshots.test.ts > Historical Snapshots System > should capture a complete snapshot exactly on week 52 95ms
+ ✓ src/test/components/layout/NewsTicker.test.tsx > NewsTicker > returns default fallback state if there are no headlines 55ms
+ ✓ src/test/components/layout/NewsTicker.test.tsx > NewsTicker > displays active news items from the store (doubled for marquee) 13ms
+ ✓ src/test/components/rivals/RivalsPanel.test.tsx > RivalsPanel > renders correctly with an empty rivals list 30ms
+ ✓ src/test/components/rivals/RivalsPanel.test.tsx > RivalsPanel > renders rivals correctly 157ms
+ ✓ src/test/components/rivals/RivalsPanel.test.tsx > RivalsPanel > applies correct strength styling based on strength value 22ms
+stderr | src/test/components/finance/YearInReviewChart.test.tsx > YearInReviewChart > renders chart data when ledger has entries
+The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+
+ ✓ src/test/components/finance/YearInReviewChart.test.tsx > YearInReviewChart > renders initializing state message when ledger is empty 102ms
+ ✓ src/test/components/finance/YearInReviewChart.test.tsx > YearInReviewChart > renders chart data when ledger has entries 65ms
+ ✓ src/test/components/talent/TalentPanel.test.tsx > TalentPanel > renders talent roster 86ms
+ ✓ src/test/components/talent/TalentPanel.test.tsx > TalentPanel > filters talent by role 47ms
+ ✓ src/test/components/talent/TalentPanel.test.tsx > TalentPanel > shows empty state when no talent matches filter 7ms
+ ✓ src/test/engine/generators/talent/psychologyGenerator.test.ts > generatePsychology > generates psychological profiles where A-listers have higher base ego 1ms
+ ✓ src/test/engine/generators/talent/psychologyGenerator.test.ts > generatePsychology > generates attributes within 1-100 range 9ms
+ ✓ src/test/engine/generators/talent/psychologyGenerator.test.ts > generatePsychology > initializes synergy lists as empty arrays 0ms
+stdout | src/test/vitest_temp.test.tsx > ChartStyle Log > logs the innerHTML
+XSS innerHTML output:
+
+ [data-chart=test-chart] {
+  --color-malicious: red \3C /style>\3C script>alert("xss")\3C /script>\3C style>;
+}
+
+
+.dark [data-chart=test-chart] {
+  --color-malicious: red \3C /style>\3C script>alert("xss")\3C /script>\3C style>;
+}
+
+
+ ✓ src/test/vitest_temp.test.tsx > ChartStyle Log > logs the innerHTML 33ms
+ ✓ src/test/engine/systems/mergers.test.ts > Mergers and Sabotage System > evaluateAcquisitionTarget > calculates viable acquisition for indie target 1ms
+ ✓ src/test/engine/systems/mergers.test.ts > Mergers and Sabotage System > evaluateAcquisitionTarget > calculates viable acquisition for major target 0ms
+ ✓ src/test/engine/systems/mergers.test.ts > Mergers and Sabotage System > evaluateAcquisitionTarget > returns not viable if buyer cash is insufficient 0ms
+ ✓ src/test/engine/systems/mergers.test.ts > Mergers and Sabotage System > executeAcquisition > returns unmodified state if target ID is invalid 0ms
+ ✓ src/test/engine/systems/mergers.test.ts > Mergers and Sabotage System > executeAcquisition > successfully executes acquisition and updates game state 1ms
+ ✓ src/test/engine/systems/mergers.test.ts > Mergers and Sabotage System > executeSabotage > successfully executes sabotage and generates a rumor 0ms
+ ✓ src/test/engine/systems/mergers.test.ts > Mergers and Sabotage System > executePoach > successfully executes poach, stealing strength and boosting prestige 0ms
+ ✓ src/test/engine/systems/ratings.test.ts > ratings system > calculateRegionalPenalties > returns 1.0 for project with no content flags 1ms
+ ✓ src/test/engine/systems/ratings.test.ts > ratings system > calculateRegionalPenalties > returns 0.7 for project with political flag 0ms
+ ✓ src/test/engine/systems/ratings.test.ts > ratings system > calculateRegionalPenalties > returns 0.85 for project with gore flag 0ms
+ ✓ src/test/engine/systems/ratings.test.ts > ratings system > calculateRegionalPenalties > returns 0.55 for project with both political and gore flags 1ms
+ ✓ src/test/engine/systems/ratings.test.ts > ratings system > evaluateRating > returns G for undefined or empty flags 0ms
+ ✓ src/test/engine/systems/ratings.test.ts > ratings system > evaluateRating > returns NC-17 for gore 0ms
+ ✓ src/test/engine/systems/ratings.test.ts > ratings system > evaluateRating > returns R for combo of three 0ms
+ ✓ src/test/engine/systems/ratings.test.ts > ratings system > editForRating > returns success if flag not present 0ms
+ ✓ src/test/engine/systems/ratings.test.ts > ratings system > editForRating > succeeds and updates project if no creative control 2ms
+ ✓ src/test/engine/systems/greenlight.test.ts > evaluateGreenlight > Base Scoring Mechanics > calculates a baseline score without major modifiers 1ms
+ ✓ src/test/engine/systems/greenlight.test.ts > evaluateGreenlight > Base Scoring Mechanics > applies market saturation penalty for recent similar projects 1ms
+ ✓ src/test/engine/systems/greenlight.test.ts > evaluateGreenlight > Base Scoring Mechanics > applies heavy penalty for oversaturated genres (>= 5 similar) 0ms
+ ✓ src/test/engine/systems/greenlight.test.ts > evaluateGreenlight > Base Scoring Mechanics > penalizes severe cashflow strain (cash < budget) 0ms
+ ✓ src/test/engine/systems/greenlight.test.ts > evaluateGreenlight > Base Scoring Mechanics > rewards comfortable cash reserves (cash > budget * 5) 0ms
+ ✓ src/test/engine/systems/greenlight.test.ts > evaluateGreenlight > Base Scoring Mechanics > penalizes unpackaged projects (no talent) 0ms
+ ✓ src/test/engine/systems/greenlight.test.ts > evaluateGreenlight > Base Scoring Mechanics > rewards A-list packages (avg draw > 75) 0ms
+ ✓ src/test/engine/systems/greenlight.test.ts > evaluateGreenlight > Recommendations Matrix > returns Easy Greenlight for score >= 80 0ms
+ ✓ src/test/engine/systems/greenlight.test.ts > evaluateGreenlight > Recommendations Matrix > returns Viable with Conditions for 60 <= score < 80 0ms
+ ✓ src/test/engine/systems/awards_razzies.test.ts > Razzies Award System > Razzies are only awarded to projects with Budget >= 50M and Score <= 30 1ms
+ ✓ src/test/engine/systems/awards_razzies.test.ts > Razzies Award System > Razzie win triggers Studio Prestige penalty and marks cult classic if absurd 1ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p 1500 $2K 1ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p 1000 $1K 0ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p 999 undefined 0ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p 1500000 $1.5M 0ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p 1000000 $1.0M 0ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p 1500000000 $1.5B 0ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p 1000000000 $1.0B 0ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p -1500 -$2K 0ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p -1500000 -$1.5M 0ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p -1500000000 -$1.5B 0ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p -500 -undefined 0ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p 0 +0 0ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p 50 undefined 0ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p 0 --0 0ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p NaN $NaN 0ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p Infinity $InfinityB 0ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p -Infinity -$InfinityB 0ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p 999.9 $1K 0ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p 999999.9 $1.0M 0ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p 999999999.9 $1.0B 0ms
+ ✓ src/test/engine/utils.test.ts > utils > getWeekDisplay > calculates correct week and year 0ms
+ ✓ src/test/engine/utils.test.ts > utils > pick > picks an element from the array 1ms
+ ✓ src/test/engine/utils.test.ts > utils > randRange > returns a number within the range 0ms
+ ✓ src/test/engine/utils.test.ts > utils > clamp > returns the minimum when value is below min 0ms
+ ✓ src/test/engine/utils.test.ts > utils > clamp > returns the value when within range 0ms
+ ✓ src/test/engine/utils.test.ts > utils > clamp > returns the maximum when value is above max 0ms
+stdout | src/test/store/slices.test.ts > Store Slice Isolation > Finance Slice Isolation > should update funds without mutating project or talent state
+[SaveLoad] State saved to slot 0 via OPFS.
+
+stdout | src/test/store/slices.test.ts > Store Slice Isolation > Project Slice Isolation > should manage UUIDs internally and access by O(1) dictionary key
+[SaveLoad] State saved to slot 0 via OPFS.
+
+stdout | src/test/store/slices.test.ts > Store Slice Isolation > Project Slice Isolation > should advance a specific project status immutably
+[SaveLoad] State saved to slot 0 via OPFS.
+
+ ✓ src/test/store/slices.test.ts > Store Slice Isolation > Finance Slice Isolation > should update funds without mutating project or talent state 14ms
+ ✓ src/test/store/slices.test.ts > Store Slice Isolation > Project Slice Isolation > should manage UUIDs internally and access by O(1) dictionary key 4ms
+ ✓ src/test/store/slices.test.ts > Store Slice Isolation > Project Slice Isolation > should advance a specific project status immutably 11ms
+stdout | src/test/engine/systems/unscripted.test.ts > Unscripted Projects > creates an unscripted project with correct stats
+[SaveLoad] State saved to slot 0 via OPFS.
+
+ ✓ src/test/engine/systems/unscripted.test.ts > Unscripted Projects > creates an unscripted project with correct stats 13ms
+ ✓ src/test/engine/systems/spinoffFactory.test.ts > Spinoff Factory > generates a sequel for a healthy franchise 1ms
+ ✓ src/test/engine/systems/spinoffFactory.test.ts > Spinoff Factory > generates a docuseries for a fatigued franchise 0ms
+ ✓ src/test/engine/systems/spinoffFactory.test.ts > Spinoff Factory > generates a Legacy sequel for a long-dormant franchise 0ms
+ ✓ src/test/engine/systems/rumors.test.ts > advanceRumors > handles missing rumors array gracefully 2ms
+ ✓ src/test/engine/systems/rumors.test.ts > advanceRumors > resolves truthful rumors and generates CONFIRMED headlines 5ms
+ ✓ src/test/engine/systems/rumors.test.ts > advanceRumors > resolves false rumors and generates DEBUNKED headlines 0ms
+ ✓ src/test/engine/systems/rumors.test.ts > advanceRumors > generates new rumors when random conditions are met 2ms
+ ✓ src/test/engine/systems/ai/biddingEngine.test.ts > AI Bidding Engine (Target C2 Refactor) > generates a OPPORTUNITY_UPDATED impact representing a counter-bid 1ms
+ ✓ src/test/engine/systems/ai/biddingEngine.test.ts > AI Bidding Engine (Target C2 Refactor) > does not bid if the rival is already the highest bidder 0ms
+ ✓ src/test/engine/systems/ai/biddingEngine.test.ts > AI Bidding Engine (Target C2 Refactor) > respects budget limits and aggression profiles 0ms
+ ✓ src/test/engine/systems/rivals.test.ts > rivals system > updateRival > returns partial updates for strength and cash 2ms
+ ✓ src/test/engine/systems/rivals.test.ts > rivals system > updateRival > sets isAcquirable correctly on cash crunch 1ms
+ ✓ src/test/engine/systems/rivals.test.ts > rivals system > advanceRivals > returns StateImpact with rivalUpdates for all rivals in state 22ms
+ ✓ src/test/engine/systems/rivals.test.ts > rivals system > advanceRivals > triggers news events for newly acquirable rivals 4ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > does nothing for archived projects 5ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > advances development project normally 2ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > transitions from development to needs_greenlight 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > transitions from production to marketing 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > accumulates revenue and decays weekly revenue for released projects 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > returns StateImpact for funds change 3ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > transitions tv from development to pitching 1ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > drifts buzz with talent buzz bonus during dev 1ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > Handle Release Phase Entry > transitions marketing project to released 1ms
+ ✓ src/test/engine/generators/opportunities.test.ts > Opportunity Generator > should generate a valid opportunity 2ms
+ ✓ src/test/engine/generators/opportunities.test.ts > Opportunity Generator > should generate attached talent if provided 0ms
+ ✓ src/test/engine/generators/opportunities.test.ts > Opportunity Generator > should populate TV specific fields if format is TV 1ms
+ ✓ src/test/engine/generators/opportunities.test.ts > Opportunity Generator > should generate titles 1ms
+ ✓ src/test/engine/generators/headlines.test.ts > generateHeadlines > should generate between 1 and 3 headlines 2ms
+ ✓ src/test/engine/generators/headlines.test.ts > generateHeadlines > should return headlines with the correct structure 1ms
+ ✓ src/test/engine/generators/headlines.test.ts > generateHeadlines > should generate rival headlines if rivals are provided 0ms
+ ✓ src/test/engine/generators/headlines.test.ts > generateHeadlines > should NOT generate rival headlines if NO rivals are provided 1ms
+ ✓ src/test/engine/generators/headlines.test.ts > generateHeadlines > should interpolate talent headlines with project and director names 0ms
+ ✓ src/test/engine/systems/crises.test.ts > crises system > checkAndTriggerCrisis > should return null if project is not in production 4ms
+ ✓ src/test/engine/systems/crises.test.ts > crises system > checkAndTriggerCrisis > should trigger a crisis in production with secureRandom probability 1ms
+ ✓ src/test/engine/systems/crises.test.ts > crises system > resolveCrisis > should return correct impact for cash penalty option 0ms
+ ✓ src/test/engine/systems/crises.test.ts > crises system > resolveCrisis > should return correct impact for delay option 0ms
+ ✓ src/test/engine/systems/crises.test.ts > crises system > resolveCrisis > should return correct impact for buzz/prestige penalty option 0ms
+ ✓ src/test/engine/systems/crises.test.ts > crises system > resolveCrisis > should return empty impact if crisis already resolved 0ms
+ ✓ src/test/engine/systems/trends.test.ts > Trends System > initializes with a set of default genre trends 1ms
+ ✓ src/test/engine/systems/trends.test.ts > Trends System > advances trends correctly over a week 1ms
+ ✓ src/test/engine/systems/trends.test.ts > Trends System > calculates the trend multiplier for a matching genre 0ms
+ ✓ src/test/engine/systems/trends.test.ts > Trends System > returns a multiplier of 1.0 for a missing genre 0ms
+ ✓ src/test/engine/systems/trends.test.ts > Trends System > shifts directions properly based on thresholds 3ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > calculateReviewScore > calculates base score clamped between 1 and 100 3ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > calculateReviewScore > applies penalty for active, unresolved crises 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > calculateReviewScore > ignores absent crises 1ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > calculateOpeningWeekend > returns updated project and feedback 1ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > simulateWeeklyBoxOffice > applies decay based on review score legs 2ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > calculateBoxOfficeRanks > returns correctly sorted ranks map 1ms
+ ✓ src/test/engine/systems/festivals.test.ts > Festivals System > submits a project to a festival if cash is sufficient 3ms
+ ✓ src/test/engine/systems/festivals.test.ts > Festivals System > declines submission if cash is too low 0ms
+ ✓ src/test/engine/systems/festivals.test.ts > Festivals System > resolves festival results and awards rewards 0ms
+ ✓ src/test/engine/types/project.types.test.ts > Unified Project Schema (Target A1) > should allow casting a BaseProject to a FilmProject via discriminator 3ms
+ ✓ src/test/engine/types/project.types.test.ts > Unified Project Schema (Target A1) > should allow casting a BaseProject to a SeriesProject via discriminator 1ms
+ ✓ src/test/engine/systems/synergyEvaluator.test.ts > Synergy Evaluator > applies Halo Effect to television projects when a related film is active 1ms
+ ✓ src/test/engine/systems/synergyEvaluator.test.ts > Synergy Evaluator > applies Built-in Audience bonus to films if the vault has syndicated TV assets 0ms
+ ✓ src/test/engine/systems/synergyEvaluator.test.ts > Synergy Evaluator > applies Multi-Format Prestige bonus if the brand spans Film and TV 0ms
+ ✓ src/test/store/financeSlice.test.ts > financeSlice > should initialize with an empty ledger 3ms
+ ✓ src/test/store/financeSlice.test.ts > financeSlice > should append a WeeklyFinancialReport to the ledger via addLedgerEntry 1ms
+ ✓ src/test/engine/generators/talent.test.ts > talent generator > generateFamilies > generates the specified number of families 6ms
+ ✓ src/test/engine/generators/talent.test.ts > talent generator > generateFamilies > creates families with required attributes 0ms
+ ✓ src/test/engine/generators/talent.test.ts > talent generator > generateTalentPool > generates the specified number of talent profiles 1ms
+ ✓ src/test/engine/generators/talent.test.ts > talent generator > generateTalentPool > assigns demographics and psychology to the profile 0ms
+ ✓ src/test/engine/systems/directors.test.ts > hasCreativeControl > should return false if there is no contract for the given project 1ms
+ ✓ src/test/engine/systems/directors.test.ts > hasCreativeControl > should return false if the contract exists but the talent is not a director 1ms
+ ✓ src/test/engine/systems/directors.test.ts > hasCreativeControl > should return true if the contract exists, talent is a director, and creativeControl is true 0ms
+ ✓ src/test/engine/systems/scandals.test.ts > scandals system > advanceScandals > returns empty impact if there are no scandals 2ms
+ ✓ src/test/engine/systems/scandals.test.ts > scandals system > advanceScandals > removes expired scandals via SCANDAL_REMOVED 0ms
+ ✓ src/test/engine/generators/names.test.ts > Names Generator > generateStudioName > returns a string 2ms
+ ✓ src/test/engine/generators/names.test.ts > Names Generator > generateStudioName > avoids existing names 0ms
+ ✓ src/test/engine/generators/names.test.ts > Names Generator > generateMotto > returns a string 0ms
+ ✓ src/test/engine/generators/names.test.ts > Names Generator > generateDemographicName > returns a string with two words for MALE 0ms
+ ✓ src/test/engine/generators/names.test.ts > Names Generator > generateDemographicName > returns a string with two words for FEMALE 0ms
+ ✓ src/test/engine/generators/names.test.ts > Names Generator > generateDemographicName > returns a string for NON_BINARY 0ms
+ ✓ src/test/engine/generators/names.test.ts > Names Generator > generateProjectName > returns a string for tv projects 0ms
+ ✓ src/test/engine/generators/names.test.ts > Names Generator > generateProjectName > returns a string for film projects 0ms
+ ✓ src/test/engine/generators/names.test.ts > Names Generator > generateProjectName > falls back to Drama genre if an unknown genre is passed 0ms
+ ✓ src/test/engine/systems/stats.test.ts > stats system > getFilmStats > calculates film stats correctly for mid tier (budget < 100M) 2ms
+ ✓ src/test/engine/systems/stats.test.ts > stats system > getFilmStats > applies 3.0x risk multiplier for high tier (budget >= 100M) 6ms
+ ✓ src/test/engine/systems/stats.test.ts > stats system > getFilmStats > applies 6.0x risk multiplier for blockbuster tier (budget >= 200M) 1ms
+ ✓ src/test/engine/systems/stats.test.ts > stats system > getTvStats > calculates TV stats correctly for mid tier (budget <= 50M) 0ms
+ ✓ src/test/engine/systems/stats.test.ts > stats system > getTvStats > applies 2.0x scale multiplier for high tier (budget > 50M) 0ms
+ ✓ src/test/engine/systems/stats.test.ts > stats system > getTvStats > applies 4.0x scale multiplier for blockbuster tier (budget >= 150M) 0ms
+ ✓ src/test/engine/systems/stats.test.ts > stats system > getUnscriptedStats > calculates unscripted stats correctly for mid tier (budget <= 50M) 0ms
+ ✓ src/test/engine/systems/stats.test.ts > stats system > getUnscriptedStats > applies 2.0x scale multiplier for high tier (budget > 50M) for weekly cost only 0ms
+ ✓ src/test/engine/systems/stats.test.ts > stats system > getUnscriptedStats > applies 3.5x scale multiplier for blockbuster tier (budget >= 100M) 0ms
+ ✓ src/test/engine/systems/stats.test.ts > stats system > Extreme Edge Cases (Guild Auditor) > handles negative budget safely 0ms
+ ✓ src/test/engine/systems/stats.test.ts > stats system > Extreme Edge Cases (Guild Auditor) > handles 0 budget safely 0ms
+ ✓ src/test/engine/systems/awards.test.ts > awards system > generateAwardsProfile > handles extreme negative values 4ms
+ ✓ src/test/engine/systems/awards.test.ts > awards system > runAwardsCeremony > awards 'won' status for high scores at Academy Awards (Week 10) 1ms
+ ✓ src/test/engine/systems/awards.test.ts > awards system > runAwardsCeremony > accumulates prestige change 0ms
+ ✓ src/test/engine/systems/awards.test.ts > awards system > processRazzies > triggers Razzie penalty for high-budget, low-score films 0ms
+ ✓ src/test/engine/systems/television/platformEngine.test.ts > Platform Engine (Target B1) > should calculate subscriber growth and churn correctly 3ms
+ ✓ src/test/engine/core/weekAdvance.test.ts > Week Advance Pipeline (Target A4) > should process the week and return a summarized result 3ms
+ ✓ src/test/engine/systems/production/crisisEvaluator.test.ts > Crisis Evaluator (Target A3) > should resolve a crisis using handlers and return StateImpact objects 1ms
+ ✓ src/test/engine/systems/TalentSystem.test.ts > TalentSystem > applyProjectResults > returns empty array if no contracts provided 1ms
+ ✓ src/test/engine/systems/TalentSystem.test.ts > TalentSystem > applyProjectResults > applies solid success modifiers (ROI > 2.0) 0ms
+ ✓ src/test/engine/systems/TalentSystem.test.ts > TalentSystem > advance > decrements opportunity expiry 2ms
+ ✓ src/test/engine/systems/processors/processWorldEvents.test.ts > tickWorldEvents > generates MARKET SATURATION news when a project is released 1ms
+ ✓ src/test/engine/systems/processors/processWorldEvents.test.ts > tickWorldEvents > generates STAR RISING news for talents with high momentum 0ms
+ ✓ src/test/engine/systems/marketing/efficiencyEvaluator.test.ts > evaluateMarketingEfficiency > penalizes mismatching angles (e.g. Spectacle for an Indie Drama) 3ms
+ ✓ src/test/engine/systems/marketing/efficiencyEvaluator.test.ts > evaluateMarketingEfficiency > boosts matching angles (e.g. Family Adventure for Animation) 0ms
+ ✓ src/test/engine/systems/marketing/efficiencyEvaluator.test.ts > evaluateMarketingEfficiency > applies decay if marketing phase lasts too long (e.g., 6 weeks) 0ms
+ ✓ src/test/engine/generators/talent/demographicsGenerator.test.ts > generateDemographics > generates local demographics favoring the provided localCountry 1ms
+ ✓ src/test/engine/generators/talent/demographicsGenerator.test.ts > generateDemographics > generates global demographics for A-listers ignoring localCountry 0ms
+ ✓ src/test/engine/generators/talent/demographicsGenerator.test.ts > generateDemographics > provides a sensible ethnicity based on country 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > calculateFitScore > calculates base fit score correctly 3ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > calculateFitScore > adds bonus for mandate match 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > negotiateContract > accepts a high fit score 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > negotiateContract > requires a higher score (65) for upfront contracts 0ms
+ ✓ src/test/engine/systems/finance.test.ts > Finance System > calculateProjectROI > returns correct ROI for a standard project 1ms
+ ✓ src/test/engine/systems/finance.test.ts > Finance System > calculateStudioNetWorth > returns cash when there are no projects with catalog value 0ms
+ ✓ src/test/engine/systems/finance.test.ts > Finance System > calculateStudioNetWorth > adds 100% of catalogValue if rightsOwner is 'studio' 0ms
+ ✓ src/test/engine/systems/finance.test.ts > Finance System > generateWeeklyFinancialReport > properly calculates burns, overhead, and box office 0ms
+ ✓ src/test/engine/systems/finance.test.ts > Finance System > tickFinance > returns StateImpact for funds change 0ms
+ ✓ src/test/engine/systems/processors/processProduction.test.ts > tickProduction > ignores projects not in production/development state in the core tick (if logic specifies) 2ms
+ ✓ src/test/engine/systems/processors/processProduction.test.ts > tickProduction > generates PROJECT_UPDATED impact for production projects 1ms
+ ✓ src/test/engine/systems/deals.test.ts > Deals System > evaluates whether talent will accept a first-look deal based on prestige 1ms
+ ✓ src/test/engine/systems/deals.test.ts > Deals System > offers a deal and returns NEWS_ADDED impact if accepted 1ms
+ ✓ src/test/engine/systems/deals.test.ts > Deals System > returns expiry notification in NEWS_ADDED impact during advanceDeals 0ms
+ ✓ src/test/engine/systems/marketEvents.test.ts > Market Events System > advanceMarketEvents > should tick active events down 2ms
+ ✓ src/test/engine/systems/marketEvents.test.ts > Market Events System > advanceMarketEvents > should expire events when weeksRemaining reaches 0 1ms
+ ✓ src/test/engine/systems/marketEvents.test.ts > Market Events System > getActiveMarketEvent > should return the first event when there are active events 0ms
+ ✓ src/test/engine/systems/processors/processFinance.test.ts > tickFinance > should generate financial impacts (FUNDS_CHANGED and LEDGER_UPDATED) 1ms
+ ✓ src/test/engine/types/impactUtils.test.ts > Impact Reducer (Target A1) > should accurately process FUNDS_CHANGED impact 5ms
+ ✓ src/test/engine/types/impactUtils.test.ts > Impact Reducer (Target A1) > should accurately process PROJECT_UPDATED impact 0ms
+ ✓ src/test/engine/types/impactUtils.test.ts > Impact Reducer (Target A1) > should accurately process NEWS_ADDED impact 0ms
+ ✓ src/test/engine/systems/television/ratingsEvaluator.test.ts > Ratings Evaluator (Target B2) > should calculate viewership based on buzz and quality (0-10 scale) 1ms
+ ✓ src/test/engine/systems/television/ratingsEvaluator.test.ts > Ratings Evaluator (Target B2) > should apply higher decay if the review score is low 0ms
+ ✓ src/test/engine/systems/television/renewalEngine.test.ts > Renewal Engine (Target B2) > should cancel a show if its average rating is below the threshold 2ms
+ ✓ src/test/engine/systems/television/renewalEngine.test.ts > Renewal Engine (Target B2) > should renew a show if its average rating is above the threshold 0ms
+ ✓ src/test/engine/systems/television/renewalEngine.test.ts > Renewal Engine (Target B2) > should keep a show ON_AIR if season is not finished 0ms
+ ✓ src/test/engine/systems/demographics.test.ts > Demographics System > calculateAudienceIndex > evaluates male_under_25 quadrant correctly 1ms
+ ✓ src/test/engine/systems/demographics.test.ts > Demographics System > calculateAudienceIndex > evaluates four_quadrant correctly with budget 0ms
+ ✓ src/test/engine/systems/demographics.test.ts > Demographics System > calculateAudienceIndex > applies rating penalties correctly 0ms
+ ✓ src/test/engine/systems/demographics.test.ts > Demographics System > simulateMarketingCampaign > returns unmodified state if project is not found 7ms
+ ✓ src/test/engine/systems/demographics.test.ts > Demographics System > simulateMarketingCampaign > returns unmodified state if studio cash is insufficient 0ms
+ ✓ src/test/engine/systems/demographics.test.ts > Demographics System > simulateMarketingCampaign > deducts cash and increases project buzz 6ms
+ ✓ src/test/store/uiStore.test.ts > uiStore > sets active tab 1ms
+ ✓ src/test/store/uiStore.test.ts > uiStore > opens and closes create project modal 0ms
+ ✓ src/test/store/uiStore.test.ts > uiStore > selects a project 0ms
+ ✓ src/test/store/uiStore.test.ts > uiStore > shows and closes week summary 0ms
+ ✓ src/test/engine/systems/marketing/territoryDistributor.test.ts > calculateTerritorySplit > skews heavily foreign if foreign marketing budget vastly outpaces domestic 1ms
+ ✓ src/test/engine/systems/marketing/territoryDistributor.test.ts > calculateTerritorySplit > skews domestic for Comedy genre even with balanced marketing 0ms
+ ✓ src/test/engine/systems/fatigueEngine.test.ts > Fatigue Engine > calculates low fatigue for a healthy single-project franchise 1ms
+ ✓ src/test/engine/systems/fatigueEngine.test.ts > Fatigue Engine > applies exponential dilution for multiple active projects 0ms
+ ✓ src/test/engine/systems/fatigueEngine.test.ts > Fatigue Engine > triggers Nostalgia Spike for 10+ year gaps 0ms
+ ✓ src/test/engine/systems/fatigueEngine.test.ts > Fatigue Engine > identifies The Dead Zone for 5 year gaps 0ms
+ ✓ src/test/engine/systems/production/progressCalculator.test.ts > advanceProjectProgress > halts progress and burns budget if a crisis is active and halting 1ms
+ ✓ src/test/engine/systems/production/progressCalculator.test.ts > advanceProjectProgress > advances progress normally when no crisis is active 0ms
+ ✓ src/test/engine/systems/culture.test.ts > Culture System > initializes culture based on the studio archetype 2ms
+ ✓ src/test/engine/systems/culture.test.ts > Culture System > shifts culture correctly when greenlighting a high-budget commercial film 1ms
+ ✓ src/test/engine/systems/culture.test.ts > Culture System > shifts culture correctly when greenlighting an indie prestige drama 3ms
+ ✓ src/test/engine/systems/culture.test.ts > Culture System > clamps culture values between 0 and 100 1ms
+ ✓ src/test/engine/systems/ipRetention.test.ts > calculateIPValue > returns 10% of budget for early stages 2ms
+ ✓ src/test/engine/systems/ipRetention.test.ts > calculateIPValue > returns 40% of revenue for released/other stages 0ms
+ ✓ src/test/engine/systems/ipRetention.test.ts > calculateIPValue > applies a 1.5x multiplier for high prestige score (> 80) 0ms
+ ✓ src/test/example.test.ts > example > should pass 1ms
+ ✓ src/test/engine/systems/finance_cultclassic.test.ts > Finance: Cult Classic Revenue > Cult Classic projects generate long-tail revenue minimums 1ms
+ ✓ src/test/engine/systems/productionEngine.test.ts > Production Engine (Target A2) - Symmetry > should return PROJECT_UPDATED impacts for Player and Rival 2ms
+ ✓ src/test/engine/systems/ai/AgentBrain.test.ts > Agent Brain (Target C2) > should generate rumors for SHARK agencies 2ms
+ ✓ src/test/engine/systems/ai/motivationEngine.test.ts > AI Motivation Engine (Target C1) > should switch to CASH_CRUNCH if cash is extremely low 1ms
+ ✓ src/test/engine/systems/ai/motivationEngine.test.ts > AI Motivation Engine (Target C1) > should switch to AWARD_CHASE if prestige is high but cash is fine 0ms
+ ↓ src/test/engine/core/gameInit.test.ts > initializeGame > initializes game state with correctly passed parameters
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/test/engine/generators/agencies.test.ts [ src/test/engine/generators/agencies.test.ts ]
+Error: Failed to resolve import "bun:test" from "src/test/engine/generators/agencies.test.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/generators/agencies.test.ts:1:37
+  1  |  import { describe, expect, it } from 'bun:test';
+     |                                        ^
+  2  |  import { generateAgencies } from '../../../engine/generators/agencies';
+  3  |  import { AGENCY_ARCHETYPES } from '../../../engine/data/archetypes';
+ ❯ TransformPluginContext._formatError node_modules/vite/dist/node/chunks/dep-C6uTJdX2.js:49258:41
+ ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/dep-C6uTJdX2.js:49253:16
+ ❯ normalizeUrl node_modules/vite/dist/node/chunks/dep-C6uTJdX2.js:64291:23
+ ❯ node_modules/vite/dist/node/chunks/dep-C6uTJdX2.js:64423:39
+ ❯ TransformPluginContext.transform node_modules/vite/dist/node/chunks/dep-C6uTJdX2.js:64350:7
+ ❯ PluginContainer.transform node_modules/vite/dist/node/chunks/dep-C6uTJdX2.js:49099:18
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/dep-C6uTJdX2.js:51977:27
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/19]⎯
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 18 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/test/persistence/saveLoad.test.ts > saveLoad > returns null when loading an empty slot
+AssertionError: expected Promise{…} to be null
+
+[32m- Expected:[39m 
+null
+
+[31m+ Received:[39m 
+Promise {}
+
+ ❯ src/test/persistence/saveLoad.test.ts:38:25
+     36| 
+     37|   it("returns null when loading an empty slot", () => {
+     38|     expect(loadGame(1)).toBeNull();
+       |                         ^
+     39|   });
+     40| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/19]⎯
+
+ FAIL  src/test/persistence/saveLoad.test.ts > saveLoad > handles malformed save data
+AssertionError: expected Promise{…} to be null
+
+[32m- Expected:[39m 
+null
+
+[31m+ Received:[39m 
+Promise {}
+
+ ❯ src/test/persistence/saveLoad.test.ts:43:25
+     41|   it("handles malformed save data", () => {
+     42|     vi.spyOn(Storage.prototype, "getItem").mockReturnValueOnce("malfor…
+     43|     expect(loadGame(1)).toBeNull();
+       |                         ^
+     44|   });
+     45| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/19]⎯
+
+ FAIL  src/test/persistence/saveLoad.test.ts > saveLoad > returns null for invalid payload structures
+AssertionError: expected Promise{…} to be null
+
+[32m- Expected:[39m 
+null
+
+[31m+ Received:[39m 
+Promise {}
+
+ ❯ src/test/persistence/saveLoad.test.ts:53:25
+     51|       studio: { name: "Hacked" }
+     52|     }));
+     53|     expect(loadGame(1)).toBeNull();
+       |                         ^
+     54|   });
+     55| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/19]⎯
+
+ FAIL  src/test/persistence/saveLoad.test.ts > saveLoad > saves and loads game state
+TypeError: Cannot read properties of undefined (reading 'name')
+ ❯ src/test/persistence/saveLoad.test.ts:62:20
+     60|     const loaded = loadGame(0);
+     61|     expect(loaded).not.toBeNull();
+     62|     expect(loaded?.studio.name).toBe("Save Studio");
+       |                    ^
+     63|   });
+     64| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/19]⎯
+
+ FAIL  src/test/persistence/saveLoad.test.ts > saveLoad > retrieves save slots info
+AssertionError: expected Promise{…} to have property 'length'
+ ❯ src/test/persistence/saveLoad.test.ts:67:25
+     65|   it("retrieves save slots info", () => {
+     66|     const slotsBefore = getSaveSlots();
+     67|     expect(slotsBefore).toHaveLength(3);
+       |                         ^
+     68|     expect(slotsBefore.every((s) => !s.exists)).toBe(true);
+     69| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/19]⎯
+
+ FAIL  src/test/persistence/saveLoad.test.ts > saveLoad > interacts with localStorage correctly when saving a game
+AssertionError: expected "spy" to be called with arguments: [ 'studioboss_save_2', …(1) ][90m
+
+Number of calls: [1m0[22m
+[39m
+ ❯ src/test/persistence/saveLoad.test.ts:88:45
+     86|     saveGame(2, state);
+     87| 
+     88|     expect(vi.mocked(localStorage.setItem)).toHaveBeenCalledWith("stud…
+       |                                             ^
+     89| 
+     90|     // Check if it saved slots correctly
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/19]⎯
+
+ FAIL  src/test/persistence/saveLoad.test.ts > saveLoad > preserves existing save slots when saving to a new slot
+AssertionError: expected "spy" to be called with arguments: [ 'studioboss_save_1', …(1) ][90m
+
+Number of calls: [1m0[22m
+[39m
+ ❯ src/test/persistence/saveLoad.test.ts:123:45
+    121| 
+    122|     // It should have called setItem for the state
+    123|     expect(vi.mocked(localStorage.setItem)).toHaveBeenCalledWith("stud…
+       |                                             ^
+    124| 
+    125|     // It should have called getItem for the slots first to merge
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/19]⎯
+
+ FAIL  src/test/persistence/saveLoad.test.ts > saveLoad > handles malformed save slots metadata
+AssertionError: expected "error" to be called with arguments: [ …(2) ][90m
+
+Number of calls: [1m0[22m
+[39m
+ ❯ src/test/persistence/saveLoad.test.ts:153:24
+    151|     const slots = getSaveSlots();
+    152| 
+    153|     expect(consoleSpy).toHaveBeenCalledWith("Failed to load save slots…
+       |                        ^
+    154|     expect(slots).toHaveLength(3);
+    155|     expect(slots.every((s) => !s.exists)).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/19]⎯
+
+ FAIL  src/test/store/applyStateImpact.test.ts > applyStateImpact utility > should update cash correctly
+AssertionError: expected 1000000 to be 500000 // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 500000[39m
+[31m+ 1000000[39m
+
+ ❯ src/test/store/applyStateImpact.test.ts:70:35
+     68|     const impact = { cashChange: -500000 };
+     69|     const newState = applyStateImpact(getInitialMockState(), impact);
+     70|     expect(newState.finance.cash).toBe(500000);
+       |                                   ^
+     71|   });
+     72| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/19]⎯
+
+ FAIL  src/test/store/applyStateImpact.test.ts > applyStateImpact utility > should update project fields correctly
+AssertionError: expected 'development' to be 'production' // Object.is equality
+
+Expected: [32m"production"[39m
+Received: [31m"development"[39m
+
+ ❯ src/test/store/applyStateImpact.test.ts:82:35
+     80|     const newState = applyStateImpact(getInitialMockState(), impact);
+     81|     const updatedProject = newState.studio.internal.projects["proj-1"];
+     82|     expect(updatedProject?.state).toBe("production");
+       |                                   ^
+     83|     expect(updatedProject?.buzz).toBe(70);
+     84|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/19]⎯
+
+ FAIL  src/test/store/applyStateImpact.test.ts > applyStateImpact utility > should update prestige correctly
+AssertionError: expected 50 to be 60 // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 60[39m
+[31m+ 50[39m
+
+ ❯ src/test/store/applyStateImpact.test.ts:89:38
+     87|     const impact = { prestigeChange: 10 };
+     88|     const newState = applyStateImpact(getInitialMockState(), impact);
+     89|     expect(newState.studio.prestige).toBe(60);
+       |                                      ^
+     90|   });
+     91| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/19]⎯
+
+ FAIL  src/test/store/applyStateImpact.test.ts > applyStateImpact utility > should add headlines and news events
+AssertionError: expected [] to have a length of 1 but got +0
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 1[39m
+[31m+ 0[39m
+
+ ❯ src/test/store/applyStateImpact.test.ts:98:37
+     96|     };
+     97|     const newState = applyStateImpact(getInitialMockState(), impact);
+     98|     expect(newState.news.headlines).toHaveLength(1);
+       |                                     ^
+     99|     expect(newState.industry.newsHistory).toHaveLength(1);
+    100|     expect(newState.industry.newsHistory[0].headline).toBe("Award Won!…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/19]⎯
+
+ FAIL  src/test/store/gameStore.test.ts > gameStore > creates a new game
+AssertionError: expected null not to be null
+ ❯ src/test/store/gameStore.test.ts:34:23
+     32|     useGameStore.getState().newGame("My Studio", "major");
+     33|     const state = useGameStore.getState().gameState;
+     34|     expect(state).not.toBeNull();
+       |                       ^
+     35|     expect(state?.studio.name).toBe("My Studio");
+     36|     expect(saveLoad.saveGame).toHaveBeenCalledWith(0, state);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/19]⎯
+
+ FAIL  src/test/store/gameStore.test.ts > gameStore > advances week
+TypeError: Cannot read properties of null (reading 'studio')
+ ❯ src/test/store/gameStore.test.ts:43:11
+     41|     const state = useGameStore.getState().gameState!;
+     42|     // Ensure the necessary structures are present
+     43|     state.studio.internal.contracts = [];
+       |           ^
+     44|     state.industry.talentPool = {};
+     45|     useGameStore.setState({ gameState: state });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/19]⎯
+
+ FAIL  src/test/store/gameStore.test.ts > gameStore > creates a project
+AssertionError: expected [] to have a length of 1 but got +0
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 1[39m
+[31m+ 0[39m
+
+ ❯ src/test/store/gameStore.test.ts:65:22
+     63|     const state = useGameStore.getState().gameState;
+     64|     const projects = Object.values(state?.studio.internal.projects || …
+     65|     expect(projects).toHaveLength(1);
+       |                      ^
+     66|     expect(projects[0].title).toBe("Test Project");
+     67|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/19]⎯
+
+ FAIL  src/test/store/gameStore.test.ts > gameStore > loads from slot
+AssertionError: expected Promise{…} to be true // Object.is equality
+
+[32m- Expected:[39m 
+true
+
+[31m+ Received:[39m 
+Promise {}
+
+ ❯ src/test/store/gameStore.test.ts:71:20
+     69|   it("loads from slot", () => {
+     70|     const loaded = useGameStore.getState().loadFromSlot(1);
+     71|     expect(loaded).toBe(true);
+       |                    ^
+     72|     expect(useGameStore.getState().gameState?.studio.name).toBe("Loade…
+     73|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/19]⎯
+
+ FAIL  src/test/store/gameStore.test.ts > gameStore > signs a contract if sufficient funds
+TypeError: Cannot read properties of null (reading 'finance')
+ ❯ src/test/store/gameStore.test.ts:78:11
+     76|     useGameStore.getState().newGame("My Studio", "major");
+     77|     const state = useGameStore.getState().gameState!;
+     78|     state.finance.cash = 1000000;
+       |           ^
+     79|     state.industry.talentPool = {
+     80|       "t1": { 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/19]⎯
+
+ FAIL  src/test/components/deals/DealsDesk.test.tsx > DealsDesk > displays fit scores when projects and buyers are present
+TestingLibraryElementError: Unable to find an element with the text: 85%. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"h-full flex flex-col space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700 overflow-hidden"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"flex flex-col md:flex-row md:items-end justify-between gap-4 bg-white/5 p-5 rounded-xl border border-white/5 backdrop-blur-sm"[39m
+      [36m>[39m
+        [36m<div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center gap-3 mb-1"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-10 h-10 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33mclass[39m=[32m"lucide lucide-briefcase h-5 w-5 text-blue-400"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mheight[39m=[32m"24"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+                [33mwidth[39m=[32m"24"[39m
+                [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"[39m
+                [36m/>[39m
+                [36m<rect[39m
+                  [33mheight[39m=[32m"14"[39m
+                  [33mrx[39m=[32m"2"[39m
+                  [33mwidth[39m=[32m"20"[39m
+                  [33mx[39m=[32m"2"[39m
+                  [33my[39m=[32m"6"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</div>[39m
+            [36m<h2[39m
+              [33mclass[39m=[32m"text-2xl font-black tracking-tighter uppercase leading-none"[39m
+            [36m>[39m
+              [0mDeals Desk & Distribution[0m
+            [36m</h2>[39m
+          [36m</div>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"text-[11px] font-black uppercase text-muted-foreground/60 tracking-[0.2em]"[39m
+          [36m>[39m
+            [0mMandate Tracking • Global Territory Management[0m
+          [36m</p>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex gap-2"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"inline-flex items-center rounded-full border px-2.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 bg-blue-500/5 border-blue-500/20 text-blue-400 uppercase font-black tracking-widest text-[9px] py-1"[39m
+          [36m>[39m
+            [0m1[0m
+            [0m Network Partners[0m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"flex-1 flex flex-col lg:flex-row gap-6 overflow-hidden"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex-1 flex flex-col space-y-4 overflow-hidden"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center gap-3 px-2"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-1.5 h-4 rounded-full bg-blue-500"[39m
+            [36m/>[39m
+            [36m<h3[39m
+              [33mclass[39m=[32m"text-xs font-black uppercase tracking-widest text-foreground/80 flex items-center gap-2"[39m
+            [36m>[39m
+              [0mDistribution Acquisitions[0m
+            [36m</h3>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"relative overflow-hidden flex-1 pr-4"[39m
+            [33mdir[39m=[32m"ltr"[39m
+            [33mstyle[39m=[32m"position: relative; --radix-scroll-area-corner-width: 0px; --radix-scroll-area-corner-height: 0px;"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"h-full w-full rounded-[inherit]"[39m
+              [33mdata-radix-scroll-area-viewport[39m=[32m""[39m
+              [33mstyle[39m=[32m"overflow-x: hidden; overflow-y: scroll;"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mstyle[39m=[32m"min-width: 100%; display: table;"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"grid grid-cols-1 md:grid-cols-2 gap-4 pb-8"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"rounded-lg border bg-card text-card-foreground shadow-sm glass-card border-none hover-glow group transition-all duration-300"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"p-5 space-y-5 relative z-10"[39m
+                    [36m>[39m
+                      [36m<div[39m
+                        [33mclass[39m=[32m"flex justify-between items-start"[39m
+                      [36m>[39m
+                        [36m<div>[39m
+                          [36m<h4[39m
+                            [33mclass[39m=[32m"font-display text-base font-black tracking-tighter uppercase group-hover:text-blue-400 transition-colors leading-tight"[39m
+                          [36m>[39m
+                            [0mBuyer 1[0m
+                          [36m</h4>[39m
+                          [36m<div[39m
+                            [33mclass[39m=[32m"flex items-center gap-2 mt-1"[39m
+                          [36m>[39m
+                            [36m<div[39m
+                              [33mclass[39m=[32m"inline-flex items-center rounded-full border px-2.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground text-[9px] font-black border-white/10 bg-white/5 uppercase py-0 tracking-widest"[39m
+                            [36m>[39m
+                              [0mstreamer[0m
+                            [36m</div>[39m
+                          [36m</div>[39m
+                        [36m</div>[39m
+                        [36m<div[39m
+                          [33mclass[39m=[32m"px-2 py-1 rounded-md border text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground bg-white/5 border-white/10"[39m
+                        [36m>[39m
+                          [0mOpen Slate[0m
+                        [36m</div>[39m
+                      [36m</div>[39m
+                      [36m<div[39m
+                        [33mclass[39m=[32m"p-3 bg-black/20 rounded border border-white/5"[39m
+                      [36m>[39m
+                        [36m<p[39m
+                          [33mclass[39m=[32m"text-[10px] text-muted-foreground leading-relaxed italic opacity-80 group-hover:opacity-100 transition-opacity"[39m
+                        [36m>[39m
+                          [0mAcquisition desk is currently seeking new high-potential property slates.[0m
+                        [36m</p>[39m
+                      [36m</div>[39m
+                      [36m<div[39m
+                        [33mclass[39m=[32m"space-y-3"[39m
+                      [36m>[39m
+                        [36m<div[39m
+                          [33mclass[39m=[32m"text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 flex items-center justify-between"[39m
+                        [36m>[39m
+                          [36m<span[39m
+                            [33mclass[39m=[32m"flex items-center gap-1.5"[39m
+                          [36m>[39m
+                            [36m<svg[39m
+                              [33mclass[39m=[32m"lucide lucide-target h-2.5 w-2.5"[39m
+                              [33mfill[39m=[32m"none"[39m
+                              [33mheight[39m=[32m"24"[39m
+                              [33mstroke[39m=[32m"currentColor"[39m
+                              [33mstroke-linecap[39m=[32m"round"[39m
+                              [33mstroke-linejoin[39m=[32m"round"[39m
+                              [33mstroke-width[39m=[32m"2"[39m
+                              [33mviewBox[39m=[32m"0 0 24 24"[39m
+                              [33mwidth[39m=[32m"24"[39m
+                              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                            [36m>[39m
+                              [36m<circle[39m
+                                [33mcx[39m=[32m"12"[39m
+                                [33mcy[39m=[32m"12"[39m
+                                [33mr[39m=[32m"10"[39m
+                              [36m/>[39m
+                              [36m<circle[39m
+                                [33mcx[39m=[32m"12"[39m
+                                [33mcy[39m=[32m"12"[39m
+                                [33mr[39m=[32m"6"[39m
+                              [36m/>[39m
+                              [36m<circle[39m
+                                [33mcx[39m=[32m"12"[39m
+                                [33mcy[39m=[32m"12"[39m
+                                [33mr[39m=[32m"2"[39m
+                              [36m/>[39m
+                            [36m</svg>[39m
+                            [0m Acquisition Fit Analysis[0m
+                          [36m</span>[39m
+                        [36m</div>[39m
+                        [36m<div[39m
+                          [33mclass[39m=[32m"space-y-3"[39m
+                        [36m>[39m
+                          [36m<div[39m
+                            [33mclass[39m=[32m"space-y-1.5"[39m
+                          [36m>[39m
+                            [36m<div[39m
+                              [33mclass[39m=[32m"flex justify-between text-[10px] font-black uppercase tracking-tight"[39m
+                            [36m>[39m
+                              [36m<span[39m
+                                [33mclass[39m=[32m"truncate max-w-[150px] text-foreground/80 opacity-60 group-hover:opacity-100 transition-opacity"[39m
+                              [36m>[39m
+                                [0mFit Project[0m
+                              [36m</span>[39m
+                              [36m<span[39m
+                                [33mclass[39m=[32m"font-mono text-destructive"[39m
+                              [36m>[39m
+                                [0m30[0m
+                                [0m%[0m
+                              [36m</span>[39m
+                            [36m</div>[39m
+                            [36m<div[39m
+                              [33mclass[39m=[32m"h-1 bg-white/5 rounded-full overflow-hidden"[39m
+                            [36m>[39m
+                              [36m<div[39m
+                                [33mclass[39m=[32m"h-full rounded-full transition-all duration-1000 bg-destructive shadow-[0_0_8px_rgba(239,68,68,0.4)]"[39m
+                                [33mstyle[39m=[32m"width: 30%;"[39m
+                              [36m/>[39m
+                            [36m</div>[39m
+                          [36m</div>[39m
+                        [36m</div>[39m
+                      [36m</div>[39m
+                      [36m<div[39m
+                        [33mclass[39m=[32m"pt-2"[39m
+                      [36m>[39m
+                        [36m<button[39m
+                          [33mclass[39m=[32m"inline-flex items-center justify-center gap-2 whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border bg-background rounded-md px-3 w-full text-[9px] font-black uppercase tracking-[0.2em] h-9 border-white/10 hover:bg-blue-500 hover:text-white hover:border-blue-400 transition-all group/btn shadow-xl"[39m
+                        [36m>[39m
+                          [0mNegotiate Terms[0m
+                        [36m</button>[39m
+                      [36m</div>[39m
+                    [36m</div>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"w-full lg:w-80 flex flex-col space-y-4 shrink-0 overflow-hidden"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-center gap-3 px-2"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"w-1.5 h-4 rounded-full bg-primary"[39m
+            [36m/>[39m
+            [36m<h3[39m
+              [33mclass[39m=[32m"text-xs font-black uppercase tracking-widest text-foreground/80 flex items-center gap-2"[39m
+            [36m>[39m
+              [0mActive Slate Briefing[0m
+            [36m</h3>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex-1 glass-card border-none overflow-hidden flex flex-col p-4"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"relative overflow-hidden flex-1"[39m
+              [33mdir[39m=[32m"ltr"[39m
+              [33mstyle[39m=[32m"position: relative; --radix-scroll-area-corner-width: 0px; --radix-scroll-area-corner-height: 0px;"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"h-full w-full rounded-[inherit]"[39m
+                [33mdata-radix-scroll-area-viewport[39m=[32m""[39m
+                [33mstyle[39m=[32m"overflow-x: hidden; overflow-y: scroll;"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mstyle[39m=[32m"min-width: 100%; display: table;"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"space-y-3"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"p-4 rounded-lg bg-white/5 border border-white/5 hover:border-primary/40 transition-all group cursor-pointer"[39m
+                    [36m>[39m
+                      [36m<div[39m
+                        [33mclass[39m=[32m"text-[11px] font-black uppercase tracking-tight group-hover:text-primary transition-colors truncate"[39m
+                      [36m>[39m
+                        [0mFit Project[0m
+                      [36m</div>[39m
+                      [36m<div[39m
+                        [33mclass[39m=[32m"flex justify-between items-center mt-2"[39m
+                      [36m>[39m
+                        [36m<span[39m
+                          [33mclass[39m=[32m"text-[9px] uppercase text-muted-foreground/60 font-black tracking-widest"[39m
+                        [36m>[39m
+                          [0mAction[0m
+                        [36m</span>[39m
+                        [36m<div[39m
+                          [33mclass[39m=[32m"inline-flex items-center rounded-full border py-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 hover:bg-primary/80 text-[9px] px-1.5 h-4 bg-primary/10 text-primary border-primary/20 font-black uppercase"[39m
+                        [36m>[39m
+                          [0mhigh[0m
+                        [36m</div>[39m
+                      [36m</div>[39m
+                    [36m</div>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ getByText node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/test/components/deals/DealsDesk.test.tsx:129:19
+    127|     expect(screen.getByText('Acquisition Fit Analysis')).toBeInTheDocu…
+    128|     expect(screen.getAllByText('Fit Project').length).toBeGreaterThan(…
+    129|     expect(screen.getByText('85%')).toBeInTheDocument();
+       |                   ^
+    130|   });
+    131| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/19]⎯
+
+
+ Test Files  5 failed | 72 passed | 1 skipped (78)
+      Tests  18 failed | 301 passed | 1 skipped (320)
+   Start at  13:40:40
+   Duration  13.27s (transform 3.05s, setup 8.23s, collect 18.28s, tests 8.08s, environment 51.52s, prepare 8.17s)
+

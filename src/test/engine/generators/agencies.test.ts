@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'bun:test';
+import { describe, expect, it } from 'vitest';
 import { generateAgencies } from '../../../engine/generators/agencies';
 import { AGENCY_ARCHETYPES } from '../../../engine/data/archetypes';
 

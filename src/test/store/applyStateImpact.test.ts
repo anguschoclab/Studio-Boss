@@ -1,11 +1,10 @@
 import { describe, it, expect } from "vitest";
 import { applyStateImpact } from "../../store/storeUtils";
-import { GameState, Project } from "../../engine/types";
+import { GameState, Project, StateImpact } from "../../engine/types";
 
 describe("applyStateImpact utility", () => {
   const getInitialMockState = (): GameState => ({
     week: 1,
-    cash: 1000000,
     studio: {
       name: "Test Studio",
       archetype: "major",
@@ -33,26 +32,16 @@ describe("applyStateImpact utility", () => {
           } as Project 
         },
         contracts: [],
-        financeHistory: []
       }
     },
     industry: {
       rivals: [],
-      headlines: [],
       newsHistory: [],
       talentPool: {},
-      scandals: [],
-      marketEvents: [],
-      rumors: [],
-      festivalSubmissions: [],
-      genres: []
     },
     market: {
         opportunities: [],
         buyers: []
-    },
-    culture: {
-        genrePopularity: {}
     },
     finance: {
         cash: 1000000,
@@ -60,22 +49,22 @@ describe("applyStateImpact utility", () => {
     },
     news: {
         headlines: []
-    },
-    history: []
+    }
   } as unknown as GameState);
 
   it("should update cash correctly", () => {
-    const impact = { cashChange: -500000 };
+    const impact: StateImpact = { type: 'FUNDS_CHANGED', payload: { amount: -500000 } };
     const newState = applyStateImpact(getInitialMockState(), impact);
     expect(newState.finance.cash).toBe(500000);
   });
 
   it("should update project fields correctly", () => {
-    const impact = {
-      projectUpdates: [{
+    const impact: StateImpact = {
+      type: 'PROJECT_UPDATED',
+      payload: {
         projectId: "proj-1",
-        update: { state: "production" as const, buzz: 70 }
-      }]
+        update: { state: "production", buzz: 70 }
+      }
     };
     const newState = applyStateImpact(getInitialMockState(), impact);
     const updatedProject = newState.studio.internal.projects["proj-1"];
@@ -84,18 +73,17 @@ describe("applyStateImpact utility", () => {
   });
 
   it("should update prestige correctly", () => {
-    const impact = { prestigeChange: 10 };
+    const impact: StateImpact = { type: 'PRESTIGE_CHANGED', payload: { amount: 10 } };
     const newState = applyStateImpact(getInitialMockState(), impact);
     expect(newState.studio.prestige).toBe(60);
   });
 
-  it("should add headlines and news events", () => {
-    const impact = {
-      newHeadlines: [{ id: "h1", text: "News!", week: 1, category: "market" as const }],
-      newsEvents: [{ type: "AWARD" as const, headline: "Award Won!", description: "Win", impact: "+10 Prestige" }]
+  it("should add news events", () => {
+    const impact: StateImpact = {
+      type: 'NEWS_ADDED',
+      payload: { headline: "Award Won!", description: "Win" }
     };
     const newState = applyStateImpact(getInitialMockState(), impact);
-    expect(newState.news.headlines).toHaveLength(1);
     expect(newState.industry.newsHistory).toHaveLength(1);
     expect(newState.industry.newsHistory[0].headline).toBe("Award Won!");
   });

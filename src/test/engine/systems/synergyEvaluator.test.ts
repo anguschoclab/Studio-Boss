@@ -7,7 +7,7 @@ describe('Synergy Evaluator', () => {
     id: 'f1', 
     name: 'Galaxy Wars', 
     description: 'Universe',
-    activeProjectIds: ['film1'], // Represents an active theatrical run
+    activeProjectIds: ['film1'], // Hits hasActiveTheatricalRun
     assetIds: [], 
     fatigueLevel: 0, 
     audienceLoyalty: 50, 
@@ -18,6 +18,20 @@ describe('Synergy Evaluator', () => {
     creationWeek: 0 
   };
 
+  const createMockAsset = (id: string, syndicationStatus: 'NONE' | 'SYNDICATED', syndicationTier: 'NONE' | 'BRONZE' | 'SILVER' | 'GOLD' = 'NONE'): IPAsset => ({
+    id,
+    originalProjectId: 'p1',
+    title: 'Asset',
+    baseValue: 1000000,
+    decayRate: 0.01,
+    merchandisingMultiplier: 1.0,
+    syndicationStatus,
+    syndicationTier,
+    totalEpisodes: 10,
+    rightsExpirationWeek: 100,
+    rightsOwner: 'STUDIO'
+  });
+
   it('applies Halo Effect to television projects when a related film is active', () => {
     const gains = calculateSynergyGains(mockFranchise, 'SERIES', []);
     expect(gains.ratingBonus).toBe(15);
@@ -26,12 +40,7 @@ describe('Synergy Evaluator', () => {
 
   it('applies Built-in Audience bonus to films if the vault has syndicated TV assets', () => {
     const relatedAssets = [
-      { 
-        id: 'ip-tv1', 
-        syndicationStatus: 'SYNDICATED', 
-        syndicationTier: 'GOLD',
-        title: 'Galaxy Wars: The Series'
-      } as IPAsset
+      createMockAsset('ip-tv1', 'SYNDICATED', 'GOLD')
     ];
     const gains = calculateSynergyGains(mockFranchise, 'FILM', relatedAssets);
     expect(gains.buzzBonus).toBe(30); // Gold tier bonus
@@ -39,10 +48,11 @@ describe('Synergy Evaluator', () => {
 
   it('applies Multi-Format Prestige bonus if the brand spans Film and TV', () => {
     const assets = [
-      { id: 'ip-film1', syndicationStatus: 'NONE' } as IPAsset,
-      { id: 'ip-tv1', syndicationStatus: 'SYNDICATED' } as IPAsset
+      createMockAsset('ip-film1', 'NONE'),
+      createMockAsset('ip-tv1', 'SYNDICATED')
     ];
     const gains = calculateSynergyGains(mockFranchise, 'SERIES', assets);
-    expect(gains.revenueMultiplier).toBe(1.25 + 0.15); // Halo + Multi-format
+    // 1.0 (base) + 0.25 (Halo) + 0.15 (Multi-format) = 1.4
+    expect(gains.revenueMultiplier).toBeCloseTo(1.4);
   });
 });

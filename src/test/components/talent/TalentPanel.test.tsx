@@ -12,30 +12,30 @@ describe('TalentPanel', () => {
       const state = {
         gameState: {
           industry: {
-            talentPool: [
-              {
+            talentPool: {
+              't1': {
                 id: 't1',
                 name: 'Tom Hanks',
                 roles: ['actor'],
                 prestige: 95,
                 fee: 20000000,
                 draw: 90,
-                temperament: 80,
+                temperament: 'normal',
                 accessLevel: 'a-list',
                 agencyId: 'a1'
               },
-              {
+              't2': {
                 id: 't2',
                 name: 'Steven Spielberg',
                 roles: ['director', 'producer'],
                 prestige: 98,
                 fee: 30000000,
                 draw: 85,
-                temperament: 75,
+                temperament: 'normal',
                 accessLevel: 'a-list',
                 agencyId: 'a2'
               }
-            ],
+            },
             agencies: [
               { id: 'a1', name: 'CAA' },
               { id: 'a2', name: 'WME' }

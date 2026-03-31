@@ -4,7 +4,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { DealsDesk } from '@/components/deals/DealsDesk';
 import { useGameStore } from '@/store/gameStore';
 import { calculateFitScore } from '@/engine/systems/buyers';
-import { GameState } from '@/engine/types';
+import { GameState, Project, Buyer } from '@/engine/types';
 
 vi.mock('@/store/gameStore');
 vi.mock('@/engine/systems/buyers', () => ({
@@ -16,16 +16,24 @@ describe('DealsDesk', () => {
     vi.clearAllMocks();
   });
 
+  const generateMockProject = (id: string, state: string, genre: string, tier: string) => ({
+      id, title: `${id} Project`, state, genre, budgetTier: tier, budget: 1000000
+  } as Project);
+
+  const generateMockBuyer = (id: string, name: string, archetype: string, mandate?: any) => ({
+      id, name, archetype, currentMandate: mandate
+  } as Buyer);
+
   it('renders main header and empty states', () => {
     vi.mocked(useGameStore).mockImplementation((selector) => {
       const state = {
         gameState: {
           week: 1,
-          studio: { internal: { projects: [] } },
+          studio: { internal: { projects: {}, contracts: [] } },
           market: { buyers: [] }
         }
       };
-      return selector(state as unknown as GameState);
+      return selector(state as any);
     });
 
     render(<DealsDesk />);
@@ -39,16 +47,16 @@ describe('DealsDesk', () => {
       const state = {
         gameState: {
           week: 1,
-          studio: { internal: { projects: [] } },
+          studio: { internal: { projects: {}, contracts: [] } },
           market: {
             buyers: [
-              { id: 'b1', name: 'Netflix', archetype: 'streamer', currentMandate: { type: 'prestige', activeUntilWeek: 10 } },
-              { id: 'b2', name: 'HBO', archetype: 'premium' }
+              generateMockBuyer('b1', 'Netflix', 'streamer', { type: 'prestige', activeUntilWeek: 10 }),
+              generateMockBuyer('b2', 'HBO', 'premium')
             ]
           }
         }
       };
-      return selector(state as unknown as GameState);
+      return selector(state as any);
     });
 
     render(<DealsDesk />);
@@ -68,17 +76,18 @@ describe('DealsDesk', () => {
           week: 1,
           studio: {
             internal: {
-              projects: [
-                { id: 'p1', title: 'Pitch Project', status: 'pitching', genre: 'Action', budgetTier: 'high' },
-                { id: 'p2', title: 'Dev Project', status: 'development', genre: 'Drama', budgetTier: 'low' },
-                { id: 'p3', title: 'Prod Project', status: 'production', genre: 'Comedy', budgetTier: 'mid' }
-              ]
+              projects: {
+                'p1': generateMockProject('Pitch', 'pitching', 'Action', 'high'),
+                'p2': generateMockProject('Dev', 'development', 'Drama', 'low'),
+                'p3': generateMockProject('Prod', 'production', 'Comedy', 'mid')
+              },
+              contracts: []
             }
           },
           market: { buyers: [] }
         }
       };
-      return selector(state as unknown as GameState);
+      return selector(state as any);
     });
 
     render(<DealsDesk />);
@@ -98,19 +107,20 @@ describe('DealsDesk', () => {
           week: 1,
           studio: {
             internal: {
-              projects: [
-                { id: 'p1', title: 'Fit Project', status: 'pitching', genre: 'Action', budgetTier: 'high' }
-              ]
+              projects: {
+                'p1': { id: 'p1', title: 'Fit Project', state: 'pitching', genre: 'Action', budgetTier: 'high', budget: 1000000 } as Project
+              },
+              contracts: []
             }
           },
           market: {
             buyers: [
-              { id: 'b1', name: 'Buyer 1', archetype: 'streamer' }
+              generateMockBuyer('b1', 'Buyer 1', 'streamer')
             ]
           }
         }
       };
-      return selector(state as unknown as GameState);
+      return selector(state as any);
     });
 
     render(<DealsDesk />);

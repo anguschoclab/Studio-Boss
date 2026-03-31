@@ -62,6 +62,18 @@ const TitleScreen = () => {
               Load Game
             </Button>
           )}
+          <Button
+            onClick={() => {
+              const { devAutoInit } = useGameStore.getState();
+              devAutoInit();
+              navigate({ to: '/dashboard' });
+            }}
+            variant="ghost"
+            size="sm"
+            className="w-full h-10 font-display text-muted-foreground hover:text-primary transition-colors opacity-50 hover:opacity-100"
+          >
+            Quick Start (Dev)
+          </Button>
         </div>
 
         <p className="text-muted-foreground/50 text-xs tracking-widest uppercase">

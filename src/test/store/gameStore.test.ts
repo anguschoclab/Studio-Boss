@@ -1,21 +1,23 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { useGameStore } from "../../store/gameStore";
 import * as saveLoad from "../../persistence/saveLoad";
-import { Talent, Project } from "../../engine/types";
+import { Talent, Project, GameState } from "../../engine/types";
 
 // Mock saveLoad
 vi.mock("../../persistence/saveLoad", () => ({
   saveGame: vi.fn(),
-  loadGame: vi.fn((slot) => {
-    if (slot === 1) return { week: 1, 
-      game: { currentWeek: 1 },
-      finance: { cash: 0, ledger: [] },
+  loadGame: vi.fn(async (slot) => {
+    if (slot === 1) return { 
+      week: 1, 
+      finance: { cash: 1000000, ledger: [] },
       news: { headlines: [] },
-      projects: { active: [] },
-      studio: { name: "Loaded Studio", internal: { projects: {}, contracts: [] } }, industry: { talentPool: {} } };
+      studio: { name: "Loaded Studio", archetype: 'major', prestige: 50, internal: { projects: {}, contracts: [] } }, 
+      industry: { talentPool: {}, rivals: [], newsHistory: [] },
+      market: { buyers: [], opportunities: [] }
+    } as unknown as GameState;
     return null;
   }),
-  getSaveSlots: vi.fn(() => [{ exists: true }]),
+  getSaveSlots: vi.fn(async () => [{ id: 1, name: 'Slot 1', date: '2026-03-31', week: 1, studio: 'Studio' }]),
 }));
 
 describe("gameStore", () => {
@@ -28,16 +30,16 @@ describe("gameStore", () => {
     expect(useGameStore.getState().gameState).toBeNull();
   });
 
-  it("creates a new game", () => {
-    useGameStore.getState().newGame("My Studio", "major");
+  it("creates a new game", async () => {
+    await useGameStore.getState().newGame("My Studio", "major");
     const state = useGameStore.getState().gameState;
     expect(state).not.toBeNull();
     expect(state?.studio.name).toBe("My Studio");
     expect(saveLoad.saveGame).toHaveBeenCalledWith(0, state);
   });
 
-  it("advances week", () => {
-    useGameStore.getState().newGame("My Studio", "major");
+  it("advances week", async () => {
+    await useGameStore.getState().newGame("My Studio", "major");
     const state = useGameStore.getState().gameState!;
     // Ensure the necessary structures are present
     state.studio.internal.contracts = [];
@@ -49,8 +51,8 @@ describe("gameStore", () => {
     expect(useGameStore.getState().gameState?.week).toBe(2);
   });
 
-  it("creates a project", () => {
-    useGameStore.getState().newGame("My Studio", "major");
+  it("creates a project", async () => {
+    await useGameStore.getState().newGame("My Studio", "major");
     useGameStore.getState().createProject({
       title: "Test Project",
       format: "film",
@@ -66,26 +68,26 @@ describe("gameStore", () => {
     expect(projects[0].title).toBe("Test Project");
   });
 
-  it("loads from slot", () => {
-    const loaded = useGameStore.getState().loadFromSlot(1);
+  it("loads from slot", async () => {
+    const loaded = await useGameStore.getState().loadFromSlot(1);
     expect(loaded).toBe(true);
     expect(useGameStore.getState().gameState?.studio.name).toBe("Loaded Studio");
   });
 
-  it("signs a contract if sufficient funds", () => {
-    useGameStore.getState().newGame("My Studio", "major");
+  it("signs a contract if sufficient funds", async () => {
+    await useGameStore.getState().newGame("My Studio", "major");
     const state = useGameStore.getState().gameState!;
     state.finance.cash = 1000000;
     state.industry.talentPool = {
       "t1": { 
-          id: "t1", name: "Star", roles: ["actor"], prestige: 85, draw: 80, fee: 100000, accessLevel: "outsider", temperament: "normal",
-          age: 30, gender: "male", ethnicity: "white", nationality: "USA", traits: [], stats: { acting: 80, directing: 0 }, workHistory: []
+          id: "t1", name: "Star", roles: ["actor"], prestige: 85, draw: 80, fee: 100000, 
+          agencyId: 'a1'
       } as any
     };
     state.studio.internal.projects = {
       "p1": { 
         id: "p1", title: "Test", format: "film", genre: "Action", budgetTier: "low", budget: 500000, weeklyCost: 10000,
-        targetAudience: "General", flavor: "", state: "development", weeksInPhase: 0, productionWeeks: 10, developmentWeeks: 10,
+        state: "development", weeksInPhase: 0, productionWeeks: 10, developmentWeeks: 10,
         revenue: 0, weeklyRevenue: 0, releaseWeek: null 
       } as any
     };

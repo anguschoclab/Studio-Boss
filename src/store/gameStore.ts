@@ -20,6 +20,7 @@ export interface GameStore extends ProjectSlice, FinanceSlice, TalentSlice, Riva
   loadFromSlot: (slot: number) => Promise<boolean>;
   getSaveSlots: () => Promise<SaveSlotInfo[]>;
   clearGame: () => void;
+  devAutoInit: (archetype?: ArchetypeKey) => void;
 }
 
 export const useGameStore = create<GameStore>((set, get, ...args) => ({
@@ -150,4 +151,13 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
         news: { headlines: [] } as any
     };
   }),
+
+  devAutoInit: (archetype = 'major') => {
+    const gameState = initializeGame('Alpha Studios', archetype);
+    set({ 
+      gameState,
+      finance: gameState.finance,
+      news: gameState.news
+    });
+  },
 }));

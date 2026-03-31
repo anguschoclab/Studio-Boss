@@ -6,38 +6,40 @@ import { RandomGenerator } from '../../../../engine/utils/rng';
 describe('Platform Engine (Target B1)', () => {
   const rng = new RandomGenerator(42);
   
-  const getInitialState = (buyers: StreamerPlatform[]): GameState => ({
-    week: 1,
-    gameSeed: 1,
-    tickCount: 0,
-    projects: { active: [] },
-    game: { currentWeek: 1 },
-    finance: { cash: 1000000, ledger: [] },
-    news: { headlines: [] },
-    ip: { vault: [], franchises: {} },
-    studio: {
-      name: 'Test Studio',
-      archetype: 'major',
-      prestige: 50,
-      internal: {
-        projects: {}, 
-        contracts: [],
-      }
-    },
-    market: { opportunities: [], buyers, activeMarketEvents: [] },
-    industry: {
-      rivals: [],
-      families: [],
-      agencies: [],
-      agents: [],
-      talentPool: {} as Record<string, Talent>,
-      newsHistory: [],
-      rumors: []
-    },
-    culture: { genrePopularity: {} },
-    history: [],
-    eventHistory: []
-  } as unknown as GameState;
+  const getInitialState = (buyers: StreamerPlatform[]): GameState => {
+    return {
+      week: 1,
+      gameSeed: 1,
+      tickCount: 0,
+      projects: { active: [] },
+      game: { currentWeek: 1 },
+      finance: { cash: 1000000, ledger: [] },
+      news: { headlines: [] },
+      ip: { vault: [], franchises: {} },
+      studio: {
+        name: 'Test Studio',
+        archetype: 'major',
+        prestige: 50,
+        internal: {
+          projects: {}, 
+          contracts: [],
+        }
+      },
+      market: { opportunities: [], buyers, activeMarketEvents: [] },
+      industry: {
+        rivals: [],
+        families: [],
+        agencies: [],
+        agents: [],
+        talentPool: {} as Record<string, Talent>,
+        newsHistory: [],
+        rumors: []
+      },
+      culture: { genrePopularity: {} },
+      history: [],
+      eventHistory: []
+    } as unknown as GameState;
+  };
 
   it('should calculate subscriber growth and churn correctly', () => {
     const streamer: StreamerPlatform = {
@@ -52,8 +54,9 @@ describe('Platform Engine (Target B1)', () => {
       isMajor: true,
       currentMandate: { type: 'prestige', activeUntilWeek: 10 },
       isGlobal: true,
-      territories: ['USA', 'UK']
-    } as StreamerPlatform;
+      territories: ['USA', 'UK'],
+      ratingHistory: []
+    } as any;
 
     const state = getInitialState([streamer]);
     const impacts = tickPlatforms(state, rng);

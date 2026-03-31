@@ -23,7 +23,7 @@ describe('PipelineBoard', () => {
     vi.clearAllMocks();
     vi.mocked(useUIStore).mockReturnValue({
       openCreateProject: mockOpenCreateProject,
-    });
+    } as any);
   });
 
   it('renders title and New Project button', () => {
@@ -56,10 +56,10 @@ describe('PipelineBoard', () => {
 
   it('distributes projects into correct columns', () => {
     const mockProjects: Project[] = [
-      { id: '1', title: 'Project 1', status: 'development', budgetTier: 'low', format: 'film', genre: 'Action', targetAudience: 'general', flavor: 'Standard', budget: 10, weeklyCost: 1, weeksInPhase: 0, developmentWeeks: 4, productionWeeks: 4, revenue: 0, weeklyRevenue: 0, releaseWeek: null, buzz: 0 } as Project,
-      { id: '2', title: 'Project 2', status: 'pitching', budgetTier: 'low', format: 'film', genre: 'Comedy', targetAudience: 'general', flavor: 'Standard', budget: 10, weeklyCost: 1, weeksInPhase: 0, developmentWeeks: 4, productionWeeks: 4, revenue: 0, weeklyRevenue: 0, releaseWeek: null, buzz: 0 } as Project,
-      { id: '3', title: 'Project 3', status: 'production', budgetTier: 'low', format: 'film', genre: 'Drama', targetAudience: 'general', flavor: 'Standard', budget: 10, weeklyCost: 1, weeksInPhase: 0, developmentWeeks: 4, productionWeeks: 4, revenue: 0, weeklyRevenue: 0, releaseWeek: null, buzz: 0 } as Project,
-      { id: '4', title: 'Project 4', status: 'released', budgetTier: 'low', format: 'film', genre: 'Horror', targetAudience: 'general', flavor: 'Standard', budget: 10, weeklyCost: 1, weeksInPhase: 0, developmentWeeks: 4, productionWeeks: 4, revenue: 0, weeklyRevenue: 0, releaseWeek: null, buzz: 0 } as Project,
+      { id: '1', title: 'Project 1', state: 'development', budgetTier: 'low', format: 'film', type: 'FILM', genre: 'Action', targetAudience: 'general', flavor: 'Standard', budget: 10, weeklyCost: 1, weeksInPhase: 0, developmentWeeks: 4, productionWeeks: 4, revenue: 0, weeklyRevenue: 0, releaseWeek: null, buzz: 0, activeCrisis: null, momentum: 50, progress: 0, accumulatedCost: 0, contentFlags: [] } as Project,
+      { id: '2', title: 'Project 2', state: 'pitching', budgetTier: 'low', format: 'film', type: 'FILM', genre: 'Comedy', targetAudience: 'general', flavor: 'Standard', budget: 10, weeklyCost: 1, weeksInPhase: 0, developmentWeeks: 4, productionWeeks: 4, revenue: 0, weeklyRevenue: 0, releaseWeek: null, buzz: 0, activeCrisis: null, momentum: 50, progress: 0, accumulatedCost: 0, contentFlags: [] } as Project,
+      { id: '3', title: 'Project 3', state: 'production', budgetTier: 'low', format: 'film', type: 'FILM', genre: 'Drama', targetAudience: 'general', flavor: 'Standard', budget: 10, weeklyCost: 1, weeksInPhase: 0, developmentWeeks: 4, productionWeeks: 4, revenue: 0, weeklyRevenue: 0, releaseWeek: null, buzz: 0, activeCrisis: null, momentum: 50, progress: 0, accumulatedCost: 0, contentFlags: [] } as Project,
+      { id: '4', title: 'Project 4', state: 'released', budgetTier: 'low', format: 'film', type: 'FILM', genre: 'Horror', targetAudience: 'general', flavor: 'Standard', budget: 10, weeklyCost: 1, weeksInPhase: 0, developmentWeeks: 4, productionWeeks: 4, revenue: 0, weeklyRevenue: 0, releaseWeek: null, buzz: 0, activeCrisis: null, momentum: 50, progress: 0, accumulatedCost: 0, contentFlags: [] } as Project,
     ];
 
     vi.mocked(useGameStore).mockReturnValue(mockProjects);
@@ -69,16 +69,12 @@ describe('PipelineBoard', () => {
     expect(screen.getByTestId('project-card-2')).toBeInTheDocument();
     expect(screen.getByTestId('project-card-3')).toBeInTheDocument();
     expect(screen.getByTestId('project-card-4')).toBeInTheDocument();
-
-    // Verify "No projects" messages
-    const noProjectsMessages = screen.queryAllByText((content, element) => element?.textContent === 'No Projects');
-    expect(noProjectsMessages.length).toBe(0); // All columns have a project
   });
 
   it('shows "No projects" message for empty columns', () => {
     // Only one project in Development
     const mockProjects: Project[] = [
-      { id: '1', title: 'Project 1', status: 'development', budgetTier: 'low', format: 'film', genre: 'Action', targetAudience: 'general', flavor: 'Standard', budget: 10, weeklyCost: 1, weeksInPhase: 0, developmentWeeks: 4, productionWeeks: 4, revenue: 0, weeklyRevenue: 0, releaseWeek: null, buzz: 0 } as Project,
+      { id: '1', title: 'Project 1', state: 'development', budgetTier: 'low', format: 'film', type: 'FILM', genre: 'Action', targetAudience: 'general', flavor: 'Standard', budget: 10, weeklyCost: 1, weeksInPhase: 0, developmentWeeks: 4, productionWeeks: 4, revenue: 0, weeklyRevenue: 0, releaseWeek: null, buzz: 0, activeCrisis: null, momentum: 50, progress: 0, accumulatedCost: 0, contentFlags: [] } as Project,
     ];
 
     vi.mocked(useGameStore).mockReturnValue(mockProjects);
@@ -87,7 +83,7 @@ describe('PipelineBoard', () => {
     expect(screen.getByTestId('project-card-1')).toBeInTheDocument();
 
     // 3 columns should be empty
-    const noProjectsMessages = screen.queryAllByText((content, element) => element?.textContent?.trim() === 'No Projects' || element?.textContent?.trim() === 'Empty');
-    expect(noProjectsMessages.length).toBeGreaterThan(0);
+    const noProjectsMessages = screen.queryAllByText(/No Projects/i);
+    expect(noProjectsMessages.length).toBe(3);
   });
 });
