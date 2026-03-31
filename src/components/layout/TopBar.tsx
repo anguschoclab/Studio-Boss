@@ -43,10 +43,7 @@ export const TopBar = () => {
       </div>
 
       {/* Global News Ticker */}
-      <NewsTicker 
-        news={gameState.industry.newsHistory || []} 
-        onClick={() => setActiveTab('trades')} 
-      />
+      <NewsTicker />
 
       {/* Primary Metrics Cluster */}
       <div className="flex items-center gap-6 ml-auto">
