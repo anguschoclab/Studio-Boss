@@ -1,9 +1,28 @@
-import { GameState, Project, TalentProfile, ProjectFormat, BudgetTierKey, TvFormatKey, UnscriptedFormatKey, ReleaseModelKey } from '@/engine/types';
+import { GameState, Project, Talent, ProjectFormat, BudgetTierKey, TvFormatKey, UnscriptedFormatKey, ReleaseModelKey } from '@/engine/types';
 import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
 import { TV_FORMATS } from '@/engine/data/tvFormats';
 import { UNSCRIPTED_FORMATS } from '@/engine/data/unscriptedFormats';
 import { getFilmStats, getTvStats, getUnscriptedStats } from '@/engine/systems/stats';
 import { randRange } from '@/engine/utils';
+
+function updateOpportunities(current: import('@/engine/types').Opportunity[], impact: any): import('@/engine/types').Opportunity[] {
+  let next = [...current];
+  if (impact.opportunityUpdates && impact.opportunityUpdates.length > 0) {
+    const uMap = new Map(impact.opportunityUpdates.map((u: any) => [u.opportunityId, u.update]));
+    next = next.map(o => {
+      const up = uMap.get(o.id);
+      return up ? { ...o, ...up } : o;
+    });
+  }
+  if (impact.removeOpportunityIds && impact.removeOpportunityIds.length > 0) {
+    const toRemove = new Set(impact.removeOpportunityIds);
+    next = next.filter(o => !toRemove.has(o.id));
+  }
+  if (impact.newOpportunities) {
+    next = [...next, ...impact.newOpportunities];
+  }
+  return next;
+}
 
 export interface CreateProjectParams {
     title: string;
@@ -39,7 +58,7 @@ function prepareTalentAndContracts(
     const ids = attachedTalentIds || [];
     const talentMap = new Map();
     const talentPool = state.industry.talentPool;
-    const attachedTalent: TalentProfile[] = [];
+    const attachedTalent: Talent[] = [];
     let talentFees = 0;
     const newContracts: any[] = [];
 
@@ -77,17 +96,20 @@ export function buildProjectAndContracts(state: GameState, params: CreateProject
         ...params,
         budget: totalBudget,
         weeklyCost,
-        status: 'development' as const,
+        state: 'development' as const,
+        episodesReleased: (params.format === 'tv' || params.format === 'unscripted') ? 0 : undefined,
+        renewable,
+        activeCrisis: null,
+        momentum: 50,
+        progress: 0,
+        accumulatedCost: 0,
+        releaseWeek: null,
         buzz: Math.min(100, initialBuzz),
+        revenue: 0,
+        weeklyRevenue: 0,
         weeksInPhase: 0,
         developmentWeeks,
         productionWeeks,
-        revenue: 0,
-        weeklyRevenue: 0,
-        releaseWeek: null,
-        season: (params.format === 'tv' || params.format === 'unscripted') ? 1 : undefined,
-        episodesReleased: (params.format === 'tv' || params.format === 'unscripted') ? 0 : undefined,
-        renewable,
     };
 
     return { project, newContracts, talentFees };
@@ -307,9 +329,8 @@ export function applyStateImpact(state: GameState, impact: import('@/engine/type
     market: {
       ...state.market,
       buyers: buyersChanged ? newBuyers : state.market.buyers,
-      opportunities: impact.newOpportunities || state.market.opportunities,
-      trends: impact.newTrends || state.market.trends,
-      activeMarketEvents: impact.newMarketEvents || state.market.activeMarketEvents
+      activeMarketEvents: impact.newMarketEvents || state.market.activeMarketEvents,
+      opportunities: updateOpportunities(state.market.opportunities, impact)
     }
   };
 }

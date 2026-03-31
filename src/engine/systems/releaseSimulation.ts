@@ -1,32 +1,84 @@
-import { Project, TalentProfile, ActiveCrisis } from '@/engine/types';
+import { Project, Talent, ActiveCrisis, BoxOfficeResult, MarketingCampaign } from '@/engine/types';
 import { randRange, clamp } from '../utils';
+import { evaluateMarketingEfficiency } from './marketing/efficiencyEvaluator';
+import { calculateTerritorySplit } from './marketing/territoryDistributor';
 
-export function generateReviewScore(
+/**
+ * Phase 3 & 4 Orchestrator for Release Simulation.
+ * Handles Reviews, Opening Weekends, and Territory Distribution.
+ */
+
+export function calculateReviewScore(
   project: Project,
-  attachedTalent: TalentProfile[],
-  crises: ActiveCrisis | undefined
+  attachedTalent: Talent[],
+  crises: ActiveCrisis | null | undefined
 ): number {
   let baseScore = randRange(40, 70);
 
-  // Bonus from attached talent prestige
-  const talentBonus = attachedTalent.reduce((sum, t) => sum + t.prestige, 0) / Math.max(1, attachedTalent.length) * 0.3;
-  baseScore += talentBonus;
+  // 1. Talent Prestige Bonus
+  if (attachedTalent.length > 0) {
+    const talentBonus = attachedTalent.reduce((sum, t) => sum + t.prestige, 0) / attachedTalent.length * 0.3;
+    baseScore += talentBonus;
+  }
 
-  // Penalty from production crises
-  if (crises && !crises.resolved) {
+  // 2. Production Crises Penalty
+  if (crises) {
     baseScore -= randRange(10, 25);
   }
 
-  // Bonus for high buzz
+  // 3. Buzz Alignment (Expectation vs Reality)
   if (project.buzz > 80) {
-    baseScore += randRange(5, 15);
+    baseScore += randRange(5, 12);
   } else if (project.buzz < 30) {
-    baseScore -= randRange(5, 15);
+    baseScore -= randRange(5, 12);
   }
 
-  // Slight random variance for the final score
-  const finalScore = clamp(Math.round(baseScore + randRange(-5, 5)), 1, 100);
-  return finalScore;
+  return clamp(Math.round(baseScore + randRange(-5, 5)), 1, 100);
+}
+
+export function calculateOpeningWeekend(
+  project: Project,
+  attachedTalent: Talent[],
+  studioPrestige: number
+): { project: Project; feedback: string } {
+  // If no campaign, it's a "silent release" - very poor performance
+  const campaign = project.marketingCampaign || {
+    primaryAngle: 'GRASSROOTS',
+    domesticBudget: 0,
+    foreignBudget: 0,
+    weeksInMarketing: 0
+  } as MarketingCampaign;
+
+  // 1. Calculate Base Potential (based on Buzz and Talent Draw)
+  const talentDraw = attachedTalent.reduce((sum, t) => sum + t.draw, 0) / (attachedTalent.length || 1);
+  const buzzFactor = project.buzz / 50;
+  const prestigeFactor = 0.8 + (studioPrestige / 200);
+  
+  // Base potential: roughly 5x budget for a perfect storm, 0.5x for a dud
+  const basePotential = (project.budget * 0.4) * buzzFactor * prestigeFactor * (1 + (talentDraw / 100));
+  const randomFactor = randRange(0.85, 1.15);
+  
+  let effectiveGross = basePotential * randomFactor;
+
+  // 2. Apply Marketing Efficiency
+  const { multiplier, feedbackText } = evaluateMarketingEfficiency(project, campaign);
+  effectiveGross *= multiplier;
+
+  // 3. Distribute Territories
+  const territoryResult = calculateTerritorySplit(effectiveGross, campaign, project.genre);
+
+  // 4. Update Project State
+  const updatedProject = {
+    ...project,
+    boxOffice: territoryResult,
+    weeklyRevenue: (territoryResult.openingWeekendDomestic + territoryResult.openingWeekendForeign),
+    revenue: (territoryResult.openingWeekendDomestic + territoryResult.openingWeekendForeign)
+  };
+
+  return { 
+    project: updatedProject, 
+    feedback: feedbackText + " " + (territoryResult.multiplier > 1.2 ? "Strong international breakout!" : "")
+  };
 }
 
 export function simulateWeeklyBoxOffice(
@@ -37,56 +89,26 @@ export function simulateWeeklyBoxOffice(
   rivalStrength: number,
   trendMultiplier: number = 1.0
 ): number {
-  // Base drop-off range
-  let minDropOff = 0.3;
-  let maxDropOff = 0.5;
+  if (weekInRelease === 0) return previousWeeklyRevenue;
 
-  // Genre-specific legs adjustments (Sprint C feature)
-  if (project.genre === 'Horror') {
-    // Horror performs wildly differently — frontloaded, but if good, it holds phenomenally.
-    minDropOff += 0.1;
-    maxDropOff += 0.2;
-  } else if (project.genre === 'Family' || project.genre === 'Animation') {
-    // Family films have incredible legs compared to standard action blockbusters
-    minDropOff += 0.2;
-    maxDropOff += 0.3;
-  } else if (project.genre === 'Comedy') {
-    // Comedies drop off slower if word of mouth is good
-    minDropOff += 0.15;
-    maxDropOff += 0.15;
-  }
+  // 1. Base Decay based on Word of Mouth (Review Score)
+  let decayFactor = 0.6; // 40% drop
+  
+  if (reviewScore > 80) decayFactor = 0.8; // Leggy
+  else if (reviewScore > 60) decayFactor = 0.7;
+  else if (reviewScore < 40) decayFactor = 0.4; // Front-loaded disaster
 
-  let dropOffMultiplier = randRange(minDropOff, maxDropOff);
+  // 2. Genre Specifics
+  const g = project.genre.toUpperCase();
+  if (g === 'HORROR') decayFactor -= 0.15; // Horror drops fast
+  if (g === 'FAMILY' || g === 'ANIMATION') decayFactor += 0.1; // Families have legs
 
-  // Adjust drop-off based on "legs" (word-of-mouth determined by review score)
-  if (reviewScore >= 85) {
-    dropOffMultiplier = Math.min(0.95, dropOffMultiplier + 0.3); // Excellent legs
-  } else if (reviewScore >= 60) {
-    dropOffMultiplier = Math.min(0.85, dropOffMultiplier + 0.1); // Average legs
-  } else if (reviewScore < 40) {
-    // Punitive drop for terrible movies
-    dropOffMultiplier = Math.max(0.1, dropOffMultiplier - 0.2); 
-  }
+  // 3. Competition Penalty
+  const competitionLoss = (rivalStrength / 100) * 0.1;
+  const finalMultiplier = clamp(decayFactor - competitionLoss, 0.1, 0.95);
 
-  // Large budget films are more front-loaded due to massive marketing pushes week 1 (steeper drop-off).
-  if (project.budget >= 200_000_000 && weekInRelease === 1) {
-     dropOffMultiplier *= 0.50;
-  } else if (project.budget >= 100_000_000 && weekInRelease === 1) {
-     dropOffMultiplier *= 0.70;
-  }
-
-  // Strong word-of-mouth for anomalies (horror/indie) yields an even bigger boost.
-  if (project.budget <= 20_000_000 && reviewScore >= 70) {
-     dropOffMultiplier = Math.min(0.98, dropOffMultiplier * 1.5);
-  }
-
-  // Heavy competition penalty: high rival strength eats into revenue legs
-  const competitionPenalty = (rivalStrength / 100) * 0.15;
-  dropOffMultiplier = Math.max(0.05, dropOffMultiplier - competitionPenalty);
-
-  return Math.max(0, previousWeeklyRevenue * dropOffMultiplier * trendMultiplier);
+  return Math.floor(previousWeeklyRevenue * finalMultiplier * trendMultiplier);
 }
-
 
 export interface BoxOfficeEntry {
   projectId: string;

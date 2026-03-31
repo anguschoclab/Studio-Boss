@@ -76,6 +76,11 @@ export interface StateImpact {
   cultClassicProjectIds?: string[];
   razzieWinnerTalents?: string[];
   removeScandalIds?: string[];
+  opportunityUpdates?: Array<{
+    opportunityId: string;
+    update: Partial<Opportunity>;
+  }>;
+  removeOpportunityIds?: string[];
   uiNotifications?: string[]; // Generic log for the UI 'events' list
 }
 

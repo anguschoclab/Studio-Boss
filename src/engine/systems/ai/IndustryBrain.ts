@@ -1,6 +1,8 @@
-import { GameState, RivalStudio, Agent, Family, Agency } from '@/engine/types';
+import { GameState, RivalStudio, Agent, Family, Agency, Opportunity } from '@/engine/types';
 import { StateImpact } from '../../types/state.types';
 import { AgentBrain } from './AgentBrain';
+import { calculateAIBid, shouldStudioRebid } from './biddingEngine';
+import { WorldSimulator } from './WorldSimulator';
 import { pick, secureRandom } from '../../utils';
 
 export class IndustryBrain {
@@ -25,9 +27,17 @@ export class IndustryBrain {
     const rivalImpact = this.processRivalDecisions(state);
     finalImpact = this.mergeImpacts(finalImpact, rivalImpact);
 
-    // 3. Process Family Dynasties (Legacy influence)
+    // 3. Process Auctions (AI Studios bidding on scripts)
+    const auctionImpact = this.processAuctions(state);
+    finalImpact = this.mergeImpacts(finalImpact, auctionImpact);
+
+    // 4. Process Family Dynasties (Legacy influence)
     const familyImpact = this.processFamilyLegacy(state);
     finalImpact = this.mergeImpacts(finalImpact, familyImpact);
+
+    // 5. Process World Events (Living World - Prestige, Star Meter, etc.)
+    const worldImpact = WorldSimulator.processWorldState(state);
+    finalImpact = this.mergeImpacts(finalImpact, worldImpact);
 
     return finalImpact;
   }
@@ -67,6 +77,52 @@ export class IndustryBrain {
     return impact;
   }
 
+  private static processAuctions(state: GameState): StateImpact {
+    const impact: StateImpact = {
+      opportunityUpdates: [],
+      newHeadlines: []
+    };
+
+    const opportunities = state.market.opportunities;
+    if (!opportunities || opportunities.length === 0) return impact;
+
+    for (const opportunity of opportunities) {
+       // Only process bidding if it hasn't expired yet
+       if (opportunity.expirationWeek < state.week) continue;
+
+       const currentHighestBid = Object.values(opportunity.bids || {}).reduce((max, b) => Math.max(max, b), 0);
+       
+       for (const rival of state.industry.rivals) {
+          if (shouldStudioRebid(rival, opportunity, currentHighestBid)) {
+             const newBid = calculateAIBid(rival, opportunity, currentHighestBid);
+             
+             if (newBid > currentHighestBid) {
+                impact.opportunityUpdates!.push({
+                  opportunityId: opportunity.id,
+                  update: {
+                    bids: {
+                      ...opportunity.bids,
+                      [rival.id]: newBid
+                    }
+                  }
+                });
+
+                // Periodic news about bidding wars
+                if (secureRandom() < 0.15) {
+                   impact.newHeadlines!.push({
+                      week: state.week,
+                      category: 'market' as const,
+                      text: `BIDDING WAR: ${rival.name} just raised the stakes for the spec script "${opportunity.title}".`
+                   });
+                }
+             }
+          }
+       }
+    }
+
+    return impact;
+  }
+
   private static processFamilyLegacy(state: GameState): StateImpact {
     const impact: StateImpact = { newHeadlines: [] };
 
@@ -91,6 +147,7 @@ export class IndustryBrain {
       newRumors: [...(base.newRumors || []), ...(next.newRumors || [])],
       rivalUpdates: [...(base.rivalUpdates || []), ...(next.rivalUpdates || [])],
       talentUpdates: [...(base.talentUpdates || []), ...(next.talentUpdates || [])],
+      opportunityUpdates: [...(base.opportunityUpdates || []), ...(next.opportunityUpdates || [])],
       newAwards: [...(base.newAwards || []), ...(next.newAwards || [])],
       uiNotifications: [...(base.uiNotifications || []), ...(next.uiNotifications || [])],
     };

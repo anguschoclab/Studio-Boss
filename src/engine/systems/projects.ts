@@ -1,10 +1,10 @@
-import { Project, Contract, TalentProfile, Award } from '@/engine/types';
+import { Project, Contract, Talent, Award, MarketingCampaign } from '@/engine/types';
 import { BUDGET_TIERS } from '../data/budgetTiers';
 import { TV_FORMATS } from '../data/tvFormats';
 import { UNSCRIPTED_FORMATS } from '../data/unscriptedFormats';
 import { clamp, randRange } from '../utils';
 import { TalentSystem } from './TalentSystem';
-import { generateReviewScore, simulateWeeklyBoxOffice } from './releaseSimulation';
+import { calculateReviewScore, calculateOpeningWeekend, simulateWeeklyBoxOffice } from './releaseSimulation';
 import { calculateRegionalPenalties } from './ratings';
 import { calculateAudienceIndex } from './demographics';
 import { GameState, WeekSummary, Headline } from '@/engine/types';
@@ -15,8 +15,8 @@ import { generateAwardsProfile } from './awards';
 import { processDirectorDisputes } from './directors';
 import { getTrendMultiplier } from './trends';
 
-function getAttachedTalent(contracts: Contract[], talentPoolMap: Map<string, TalentProfile>): TalentProfile[] {
-  const acc: TalentProfile[] = [];
+function getAttachedTalent(contracts: Contract[], talentPoolMap: Map<string, Talent>): Talent[] {
+  const acc: Talent[] = [];
   for (let i = 0; i < contracts.length; i++) {
     const t = talentPoolMap.get(contracts[i].talentId);
     if (t) acc.push(t);
@@ -24,14 +24,14 @@ function getAttachedTalent(contracts: Contract[], talentPoolMap: Map<string, Tal
   return acc;
 }
 
-function handleDevelopmentPhase(p: Project): { update: string | null; talentUpdates: TalentProfile[] } {
+function handleDevelopmentPhase(p: Project): { update: string | null; talentUpdates: Talent[] } {
   let update: string | null;
   if (p.format === 'tv' || p.format === 'unscripted') {
-    p.status = 'pitching';
+    p.state = 'pitching';
     p.weeksInPhase = 0;
     update = `"${p.title}" is ready to be pitched to networks/streamers.`;
   } else {
-    p.status = 'needs_greenlight';
+    p.state = 'needs_greenlight';
     p.weeksInPhase = 0;
     update = `"${p.title}" is ready for greenlight committee review.`;
   }
@@ -43,60 +43,33 @@ export function handleReleasePhaseEntry(
   currentWeek: number,
   studioPrestige: number,
   projectContracts: Contract[],
-  talentPoolMap: Map<string, TalentProfile>
-): { update: string | null; talentUpdates: TalentProfile[] } {
-  p.status = 'released';
+  talentPoolMap: Map<string, Talent>
+): { update: string | null; talentUpdates: Talent[] } {
+  p.state = 'released';
   p.weeksInPhase = 0;
   p.releaseWeek = currentWeek;
   p.revenue = 0;
 
-  const tier = BUDGET_TIERS[p.budgetTier];
-  const [minRev, maxRev] = tier.revenueRange;
-  const buzzFactor = p.buzz / 100;
-  const prestigeFactor = 0.5 + studioPrestige / 200;
-  const randomFactor = randRange(0.7, 1.3);
-
   const attachedTalent = getAttachedTalent(projectContracts, talentPoolMap);
+  
+  // 1. Generate Review Score
   if (p.reviewScore === undefined) {
-    p.reviewScore = generateReviewScore(p, attachedTalent, p.activeCrisis);
-  }
-  let talentDrawFactor = 1;
-  for (let i = 0; i < attachedTalent.length; i++) {
-    talentDrawFactor += attachedTalent[i].draw / 100;
+    p.reviewScore = calculateReviewScore(p, attachedTalent, p.activeCrisis);
   }
 
-  // Sprint H & I: Regional Censorship and Demographic Penetration
-  const regionalMultiplier = calculateRegionalPenalties(p);
-  const demographicMultiplier = p.targetDemographic ? calculateAudienceIndex(p, p.targetDemographic) : 1.0;
+  // 2. Simulate Opening (Film vs TV)
+  let update: string | null = null;
 
-  const baseGross = (minRev + (maxRev - minRev) * buzzFactor * prestigeFactor * randomFactor) * talentDrawFactor * regionalMultiplier * demographicMultiplier;
-
-  let update: string | null;
-
-  if ((p.format === 'tv' && p.tvFormat) || (p.format === 'unscripted' && p.unscriptedFormat)) {
-    p.episodesReleased = 0;
-    const formatData = p.format === 'tv' ? TV_FORMATS[p.tvFormat!] : UNSCRIPTED_FORMATS[p.unscriptedFormat!];
-    const eps = p.episodes || formatData.defaultEpisodes;
-    const episodeMultiplier = Math.sqrt(eps / 10);
-    const totalTvGross = baseGross * episodeMultiplier;
-
-    if (p.releaseModel === 'binge') {
-      p.weeklyRevenue = totalTvGross * 0.6;
-      p.episodesReleased = eps;
-      update = `"${p.title}" Season ${p.season} drops! Huge binge viewership.`;
-    } else if (p.releaseModel === 'split') {
-      p.weeklyRevenue = totalTvGross * 0.35;
-      p.episodesReleased = Math.ceil(eps / 2);
-      update = `"${p.title}" Season ${p.season} Part 1 premieres!`;
-    } else {
-      p.weeklyRevenue = (totalTvGross * 0.15);
-      p.episodesReleased = 1;
-      update = `"${p.title}" Season ${p.season} premieres its first episode!`;
-    }
+  if (p.format === 'film') {
+    const result = calculateOpeningWeekend(p, attachedTalent, studioPrestige);
+    // Replace p with the updated project from result
+    Object.assign(p, result.project);
+    update = result.feedback;
   } else {
-    p.weeklyRevenue = baseGross * 0.35;
-    const strength = p.weeklyRevenue > baseGross * 0.25 ? 'strong' : 'modest';
-    update = `"${p.title}" releases to a ${strength} opening!`;
+    // TV/Unscripted logic (simplified for now to keep focus on Film Distribution Phase 3)
+    p.weeklyRevenue = (p.budget * 0.1) * (p.buzz / 50); 
+    p.revenue = p.weeklyRevenue;
+    update = `"${p.title}" Season ${p.season || 1} premieres!`;
   }
 
   return { update, talentUpdates: [] };
@@ -105,14 +78,14 @@ export function handleReleasePhaseEntry(
 function handleReleasedPhase(
   p: Project,
   projectContracts: Contract[],
-  talentPoolMap: Map<string, TalentProfile>,
+  talentPoolMap: Map<string, Talent>,
   rivalStrengthAvg: number,
   projectAwards: Award[],
   trendMultiplier: number = 1.0
-): { update: string | null; talentUpdates: TalentProfile[] } {
+): { update: string | null; talentUpdates: Talent[] } {
   p.revenue += p.weeklyRevenue;
   let update: string | null = null;
-  let talentUpdates: TalentProfile[] = [];
+  let talentUpdates: Talent[] = [];
 
   if ((p.format === 'tv' && p.tvFormat) || (p.format === 'unscripted' && p.unscriptedFormat)) {
     const formatData = p.format === 'tv' ? TV_FORMATS[p.tvFormat!] : UNSCRIPTED_FORMATS[p.unscriptedFormat!];
@@ -122,7 +95,7 @@ function handleReleasedPhase(
       p.weeklyRevenue *= randRange(formatData.revenueDecayBinge - 0.1, formatData.revenueDecayBinge + 0.1);
 
       if (p.weeklyRevenue < 50_000 || p.weeksInPhase > 8) {
-        p.status = 'post_release';
+        p.state = 'post_release';
         p.weeksInPhase = 0;
         update = `"${p.title}" Season ${p.season} finishes its run.`;
         talentUpdates = TalentSystem.applyProjectResults(p, projectContracts, Array.from(talentPoolMap.values()), projectAwards);
@@ -141,7 +114,7 @@ function handleReleasedPhase(
       }
 
       if (p.weeksInPhase > part2DropWeek + 6 && p.weeklyRevenue < 50_000) {
-        p.status = 'post_release';
+        p.state = 'post_release';
         p.weeksInPhase = 0;
         update = `"${p.title}" Season ${p.season} finishes its run.`;
         talentUpdates = TalentSystem.applyProjectResults(p, projectContracts, Array.from(talentPoolMap.values()), projectAwards);
@@ -158,7 +131,7 @@ function handleReleasedPhase(
       } else {
         p.weeklyRevenue *= 0.6;
         if (p.weeklyRevenue < 50_000 || p.weeksInPhase > eps + 4) {
-          p.status = 'post_release';
+          p.state = 'post_release';
           p.weeksInPhase = 0;
           update = `"${p.title}" Season ${p.season} finishes its run.`;
           talentUpdates = TalentSystem.applyProjectResults(p, projectContracts, Array.from(talentPoolMap.values()), projectAwards);
@@ -178,7 +151,7 @@ function handleReleasedPhase(
     }
 
     if (p.weeklyRevenue < 100_000 || p.weeksInPhase > 12) {
-      p.status = 'post_release';
+      p.state = 'post_release';
       p.weeksInPhase = 0;
       update = `"${p.title}" completes its theatrical run — total gross: ${(p.revenue / 1_000_000).toFixed(1)}M${trendText}`;
       talentUpdates = TalentSystem.applyProjectResults(p, projectContracts, Array.from(talentPoolMap.values()), projectAwards);
@@ -190,7 +163,7 @@ function handleReleasedPhase(
   return { update, talentUpdates };
 }
 
-function handlePostReleasePhase(p: Project): { update: string | null; talentUpdates: TalentProfile[] } {
+function handlePostReleasePhase(p: Project): { update: string | null; talentUpdates: Talent[] } {
   let update: string | null = null;
   let weeklyAncillary = 0;
 
@@ -219,52 +192,34 @@ function handlePostReleasePhase(p: Project): { update: string | null; talentUpda
   p.weeklyRevenue = 0;
 
   if (p.weeksInPhase >= 26) {
-    p.status = 'archived';
+    p.state = 'archived';
   }
 
   return { update, talentUpdates: [] };
 }
 
-function handleMarketingPhase(p: Project): { update: string | null; talentUpdates: TalentProfile[] } {
-  p.status = 'marketing';
+function handleMarketingPhase(p: Project): { update: string | null; talentUpdates: Talent[] } {
+  p.state = 'marketing';
   p.weeksInPhase = 0;
   return { update: `"${p.title}" has wrapped production and is ready for marketing strategy.`, talentUpdates: [] };
 }
 
 export function executeMarketing(
   project: Project,
-  budget: number,
-  domesticPct: number,
-  angle: string
+  campaign: MarketingCampaign
 ): { project: Project } {
-  const p = { ...project };
-  p.marketingBudget = budget;
-  p.marketingDomesticSplit = domesticPct;
-  p.marketingAngle = angle;
-
-  // Marketing effectiveness
-  let buzzBonus = Math.floor(budget / 100000) * 0.1;
-  if (budget >= p.budget * 0.5) buzzBonus += 10;
-  if (budget >= p.budget) buzzBonus += 20;
-
-  const genreToAngle: Record<string, string[]> = {
-    'Action': ['spectacle', 'thrills'],
-    'Comedy': ['humor'],
-    'Drama': ['prestige', 'romance'],
-    'Horror': ['thrills', 'mystery'],
-    'Sci-Fi': ['spectacle', 'mystery'],
-    'Romance': ['romance'],
+  const p = { 
+    ...project, 
+    marketingCampaign: {
+      ...campaign,
+      weeksInMarketing: 1 // Starts at week 1
+    } 
   };
-
-  const matched = genreToAngle[p.genre]?.includes(angle) ? 15 : -10;
-  buzzBonus += matched;
-
-  p.buzz = Math.min(100, Math.max(0, p.buzz + buzzBonus));
   return { project: p };
 }
 
 export function executeGreenlight(project: Project): { project: Project; update: string } {
-  const p = { ...project, status: 'production' as const, weeksInPhase: 0 };
+  const p = { ...project, state: 'production' as const, weeksInPhase: 0 };
   return {
     project: p,
     update: `"${project.title}" receives full greenlight and enters production.`
@@ -276,7 +231,7 @@ export function executePitching(
   buyerName: string,
   contractType: string
 ): { project: Project; update: string } {
-  const p = { ...project, status: 'production' as const, weeksInPhase: 0 };
+  const p = { ...project, state: 'production' as const, weeksInPhase: 0 };
   return {
     project: p,
     update: `${buyerName} officially picks up "${project.title}" on a ${contractType} deal.`
@@ -288,34 +243,43 @@ export function advanceProject(
   currentWeek: number,
   studioPrestige: number,
   projectContracts: Contract[],
-  talentPoolMap: Map<string, TalentProfile>,
+  talentPoolMap: Map<string, Talent>,
   rivalStrengthAvg: number = 50,
   projectAwards: Award[] = [],
   trendMultiplier: number = 1.0
-): { project: Project; update: string | null; talentUpdates: TalentProfile[] } {
-  if (project.status === 'archived') return { project, update: null, talentUpdates: [] };
+): { project: Project; update: string | null; talentUpdates: Talent[] } {
+  if (project.state === 'archived') return { project, update: null, talentUpdates: [] };
 
   const p = { ...project, weeksInPhase: project.weeksInPhase + 1 };
-  let update: string | null = null;
-  let talentUpdates: TalentProfile[] = [];
 
-  if (p.status === 'development' && p.weeksInPhase >= p.developmentWeeks) {
+  // Update marketing weeks if in marketing phase
+  if (p.state === 'marketing' && p.marketingCampaign) {
+    p.marketingCampaign = {
+      ...p.marketingCampaign,
+      weeksInMarketing: (p.marketingCampaign.weeksInMarketing || 0) + 1
+    };
+  }
+
+  let update: string | null = null;
+  let talentUpdates: Talent[] = [];
+
+  if (p.state === 'development' && p.weeksInPhase >= p.developmentWeeks) {
     const result = handleDevelopmentPhase(p);
     update = result.update;
-  } else if (p.status === 'production' && p.weeksInPhase >= p.productionWeeks) {
+  } else if (p.state === 'production' && p.weeksInPhase >= p.productionWeeks) {
     const result = handleMarketingPhase(p);
     update = result.update;
-  } else if (p.status === 'released') {
+  } else if (p.state === 'released') {
     const result = handleReleasedPhase(p, projectContracts, talentPoolMap, rivalStrengthAvg, projectAwards, trendMultiplier);
     update = result.update;
     if (result.talentUpdates) talentUpdates = result.talentUpdates;
-  } else if (p.status === 'post_release') {
+  } else if (p.state === 'post_release') {
     const result = handlePostReleasePhase(p);
     update = result.update;
   }
 
   // Buzz drift during active phases
-  if (p.status === 'development' || p.status === 'production') {
+  if (p.state === 'development' || p.state === 'production') {
     const attachedTalent = getAttachedTalent(projectContracts, talentPoolMap);
     let talentBuzzBonus = 0;
     for (let i = 0; i < attachedTalent.length; i++) {
@@ -326,5 +290,3 @@ export function advanceProject(
 
   return { project: p, update, talentUpdates };
 }
-
-

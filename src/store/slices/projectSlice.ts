@@ -1,14 +1,14 @@
 import { StateCreator } from 'zustand';
 import { GameStore } from '../gameStore';
 import { CreateProjectParams, buildProjectAndContracts, applyStateImpact } from '../storeUtils';
-import { handleReleasePhaseEntry } from '@/engine/systems/projects';
+import * as projectsEngine from '@/engine/systems/projects';
 import { updateCultureFromProject } from '@/engine/systems/culture';
 import { negotiateContract } from '@/engine/systems/buyers';
 import { exploitIP } from '@/engine/systems/franchises';
 import { resolveCrisis } from '@/engine/systems/crises';
 import { submitToFestival } from '@/engine/systems/festivals';
 import { launchAwardsCampaign } from '@/engine/systems/awards';
-import { Project, GameState, AwardBody, ProjectContractType } from '@/engine/types';
+import { Project, GameState, AwardBody, ProjectContractType, MarketingCampaign } from '@/engine/types';
 
 export interface ProjectSlice {
   createProject: (params: CreateProjectParams) => void;
@@ -22,25 +22,24 @@ export interface ProjectSlice {
   launchAwardsCampaign: (projectId: string, budget: number) => void;
   lockMarketingCampaign: (projectId: string, level: 'none' | 'basic' | 'blockbuster') => void;
   addProject: (project: any) => void;
-  advanceProjectPhase: (projectId: string, newStatus: string) => void;
+  advanceProjectPhase: (projectId: string, newState: string) => void;
+  updateProject: (projectId: string, update: Partial<Project>) => void;
 }
 
 export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> = (set, get) => ({
   createProject: (params) => {
     set((s) => {
       if (!s.gameState) return s;
-      const { project, newContracts, talentFees } = buildProjectAndContracts(s.gameState, params);
+      const { talentFees } = buildProjectAndContracts(s.gameState, params);
       
       return {
         gameState: applyStateImpact(s.gameState, {
           cashChange: -talentFees,
-          projectUpdates: [], // We are adding a new project
-          newHeadlines: [], 
-        }) as any // Temporarily casting while finalizing applyStateImpact features
+          projectUpdates: [], 
+        }) as any 
       };
     });
     
-    // Explicitly add the project and contracts since applyStateImpact is for updates
     set(s => {
       if (!s.gameState) return s;
       const { project, newContracts } = buildProjectAndContracts(s.gameState, params);
@@ -68,24 +67,26 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
       const p = state.studio.internal.projects[id];
       if (!p) return s;
 
-
-
       if ((p.format === 'tv' || p.format === 'unscripted') && p.renewable && p.season !== undefined) {
         return {
           gameState: applyStateImpact(state, {
             projectUpdates: [{
               projectId: id,
               update: {
-                status: 'development',
-                weeksInPhase: 0,
-                season: p.season + 1,
+                state: 'development',
+                accumulatedCost: 0,
+                releaseWeek: null,
+                buzz: 0,
                 revenue: 0,
                 weeklyRevenue: 0,
-                releaseWeek: null,
+                weeksInPhase: 0,
+                developmentWeeks: 0,
+                productionWeeks: 0,
+                season: p.season + 1,
                 episodesReleased: 0,
               }
             }]
-          })
+          }) as any
         };
       }
       return s;
@@ -100,7 +101,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
         projectId: project.id,
         update: {
           ...project,
-          status: 'production' as const,
+          state: 'production' as const,
           weeksInPhase: 0,
           ...extraProjectUpdates
         }
@@ -117,21 +118,18 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
           ...newState.studio,
           culture: newCulture
         }
-      }
+      } as any
     });
   },
 
   greenlightProject: async (projectId) => {
-    const projectsEngine = await import('@/engine/systems/projects');
     const state = get().gameState;
     if (!state) return;
 
     const project = state.studio.internal.projects[projectId];
-      if (!project) return;
+    if (!project) return;
 
-
-
-    if (project.status !== 'needs_greenlight') return;
+    if (project.state !== 'needs_greenlight') return;
 
     const { project: updatedProject, update } = projectsEngine.executeGreenlight(project);
 
@@ -148,16 +146,13 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
     if (!state) return false;
 
     const project = state.studio.internal.projects[projectId];
-
     const buyer = state.market.buyers.find(b => b.id === buyerId);
 
     if (!project || !buyer) return false;
 
-
     const success = negotiateContract(project, buyer, contractType);
 
     if (success) {
-      const projectsEngine = await import('@/engine/systems/projects');
       const { project: updatedProject, update } = projectsEngine.executePitching(project, buyer.name, contractType);
 
       get()._updateProjectToProduction(
@@ -194,26 +189,26 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
 
     const impact = resolveCrisis(project, optionIndex);
     const newState = applyStateImpact(state, impact);
-    set({ gameState: newState });
+    set({ gameState: newState as any });
   },
 
   submitToFestival: (projectId, festivalBody) => {
     set((s) => {
       if (!s.gameState) return s;
-      const newState = submitToFestival(s.gameState, projectId, festivalBody);
-      return newState ? { gameState: newState } : s;
+      const impact = submitToFestival(s.gameState, projectId, festivalBody);
+      if (!impact) return s;
+      const newState = applyStateImpact(s.gameState, impact);
+      return { gameState: newState as any };
     });
   },
 
   launchAwardsCampaign: (projectId, budget) => {
     set((s) => {
       if (!s.gameState) return s;
-      const project = s.gameState.studio.internal.projects[projectId];
-      if (!project) return;
-
-      const impact = launchAwardsCampaign(project, budget);
+      const impact = launchAwardsCampaign(s.gameState, projectId, budget);
+      if (!impact) return s;
       const newState = applyStateImpact(s.gameState, impact);
-      return { gameState: newState };
+      return { gameState: newState as any };
     });
   },
 
@@ -223,7 +218,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
       if (!state) return s;
 
       const project = state.studio.internal.projects[projectId];
-      if (!project) return;
+      if (!project) return s;
       
       let cost = 0;
       let buzzGain = 0;
@@ -236,6 +231,13 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
         buzzGain = 40;
       }
 
+      const campaign: MarketingCampaign = {
+        primaryAngle: 'SELL_THE_STORY',
+        domesticBudget: cost * 0.6,
+        foreignBudget: cost * 0.4,
+        weeksInMarketing: 1
+      };
+
       return {
         gameState: applyStateImpact(state, {
           cashChange: -cost,
@@ -244,11 +246,12 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
             update: {
               marketingLevel: level,
               marketingBudget: cost,
+              marketingCampaign: campaign,
               buzz: Math.min(100, project.buzz + buzzGain),
-              status: project.status === 'marketing' ? 'released' : project.status
+              state: project.state === 'marketing' ? 'released' : project.state
             }
           }]
-        })
+        }) as any
       };
     });
   },
@@ -271,16 +274,30 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
     });
   },
 
-  advanceProjectPhase: (projectId, newStatus) => {
+  advanceProjectPhase: (projectId, newState) => {
     set((s) => {
       if (!s.gameState) return s;
       return {
         gameState: applyStateImpact(s.gameState, {
           projectUpdates: [{
             projectId,
-            update: { status: newStatus as any }
+            update: { state: newState as any }
           }]
-        })
+        }) as any
+      };
+    });
+  },
+  
+  updateProject: (projectId, update) => {
+    set((s) => {
+      if (!s.gameState) return s;
+      return {
+        gameState: applyStateImpact(s.gameState, {
+          projectUpdates: [{
+            projectId,
+            update
+          }]
+        }) as any
       };
     });
   }

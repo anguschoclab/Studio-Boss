@@ -1,6 +1,33 @@
 // Types related to Projects, Formats, and Markets
 import { ActiveCrisis } from './engine.types';
 
+export type MarketingAngle = 
+  | 'SELL_THE_SPECTACLE' 
+  | 'SELL_THE_STORY' 
+  | 'SELL_THE_STARS' 
+  | 'FAMILY_ADVENTURE' 
+  | 'AWARDS_PUSH'
+  | 'GRASSROOTS'
+  | 'GLOBAL_BLITZ'
+  | 'CONTROVERSY';
+
+export interface MarketingCampaign {
+  domesticBudget: number;
+  foreignBudget: number;
+  primaryAngle: MarketingAngle;
+  efficiencyMultiplier?: number; // Calculated at release (e.g., 0.5 = bomb, 1.5 = viral hit)
+  weeksInMarketing?: number; // For decay calculation
+  feedbackText?: string; 
+}
+
+export interface BoxOfficeResult {
+  openingWeekendDomestic: number;
+  openingWeekendForeign: number;
+  totalDomestic: number;
+  totalForeign: number;
+  multiplier: number;
+}
+
 export type ProjectStatus = 'development' | 'needs_greenlight' | 'pitching' | 'production' | 'marketing' | 'released' | 'post_release' | 'archived';
 export type ProjectFormat = 'film' | 'tv' | 'unscripted';
 export type BudgetTierKey = 'low' | 'mid' | 'high' | 'blockbuster';
@@ -127,6 +154,27 @@ export type UnscriptedFormatKey =
   | 'talent_competition'
   | 'home_renovation'
   | 'survival_challenge'
+  | 'pawn_shop_doc'
+  | 'celebrity_reality'
+  | 'paranormal_investigation'
+  | 'business_pitch'
+  | 'cooking_battle'
+  | 'cult_expose_doc'
+  | 'social_experiment'
+  | 'baking_championship'
+  | 'dating_experiment'
+  | 'sports_docuseries'
+  | 'nature_doc'
+  | 'wedding_reality'
+  | 'true_con_doc'
+  | 'luxury_real_estate'
+  | 'child_pageant'
+  | 'polygamy_doc'
+  | 'plastic_surgery'
+  | 'hoarder_cleanup'
+  | 'tattoo_competition'
+  | 'gold_mining'
+  | 'extreme_cheapskates'
   | 'pawn_shop_doc'
   | 'celebrity_reality'
   | 'paranormal_investigation'
@@ -361,10 +409,12 @@ export interface Project {
   contentFlags?: ContentFlag[];
   targetDemographic?: AudienceQuadrant;
   isCultClassic?: boolean;
+  marketingCampaign?: MarketingCampaign;
+  boxOffice?: BoxOfficeResult;
 }
 
-export type OpportunityType = 'script' | 'package' | 'pitch' | 'rights';
-export type DiscoveryOrigin = 'open_spec' | 'agency_package' | 'writer_sample' | 'heat_list' | 'annual_list' | 'passion_project';
+export interface OpportunityType = 'script' | 'package' | 'pitch' | 'rights';
+export interface DiscoveryOrigin = 'open_spec' | 'agency_package' | 'writer_sample' | 'heat_list' | 'annual_list' | 'passion_project';
 
 export interface Opportunity {
   id: string;
@@ -384,6 +434,8 @@ export interface Opportunity {
   episodes?: number;
   releaseModel?: ReleaseModelKey;
   qualityBonus?: number;
+  bids: Record<string, number>; // StudioId -> Bid Amount in Dollars
+  expirationWeek: number; // When the auction resolves
 }
 
 export type TrendDirection = 'hot' | 'rising' | 'stable' | 'cooling' | 'dead';

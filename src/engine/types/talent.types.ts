@@ -12,6 +12,7 @@ export type AgencyMotivation = 'THE_PACKAGER' | 'THE_CLIMBER' | 'THE_PROTECTOR' 
 export type RivalStrategy = 'blockbuster_focused' | 'prestige_chaser' | 'genre_specialist' | 'acquirer' | 'poacher' | 'balanced';
 
 export type DirectorArchetype = 'auteur' | 'journeyman' | 'visionary' | 'commercial_hack';
+export type TalentTier = 'A_LIST' | 'B_LIST' | 'C_LIST' | 'RISING_STAR' | 'NEWCOMER';
 
 export type ScandalType = 'financial' | 'personal' | 'onset_behavior' | 'legal' | 'feud';
 
@@ -88,7 +89,7 @@ export interface Talent {
   name: string;
   role: string; // Primary role
   roles: TalentRole[]; // All roles
-  tier: string;
+  tier: TalentTier;
   agencyId?: string;
   agentId?: string;
   prestige: number;
@@ -96,6 +97,7 @@ export interface Talent {
   draw: number;
   familyId?: string;
   accessLevel: AccessLevel;
+  momentum: number; // 0-100
   perks?: string[];
   bio?: string;
   demographics: TalentDemographics;
