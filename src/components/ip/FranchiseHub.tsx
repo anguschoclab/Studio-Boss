@@ -3,6 +3,7 @@ import { useGameStore } from '@/store/gameStore';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { Button } from '@/components/ui/button';
 import { Network, Zap, AlertTriangle, TrendingUp, Layers, Film, Tv, Play } from 'lucide-react';
 import { formatMoney } from '@/engine/utils';
 import { Franchise, IPAsset } from '@/engine/types';
@@ -143,12 +144,12 @@ const FranchiseCard = ({ franchise, assets }: { franchise: Franchise, assets: IP
 
         {/* Footer Actions */}
         <div className="px-6 py-4 bg-white/5 flex gap-3">
-           <button className="flex-1 text-[10px] font-black bg-primary/20 hover:bg-primary text-primary hover:text-black border border-primary/20 p-2 rounded transition-all uppercase tracking-widest flex items-center justify-center gap-2 group">
+           <Button className="flex-1 text-[10px] font-black bg-primary/20 hover:bg-primary text-primary hover:text-primary-foreground border border-primary/20 h-9 rounded transition-all uppercase tracking-widest flex items-center justify-center gap-2 group shadow-[0_0_15px_hsl(var(--primary)/10%)] hover:shadow-[0_0_20px_hsl(var(--primary)/30%)] hover:-translate-y-0.5">
              <Play className="h-3 w-3 fill-current" /> Exploit IP
-           </button>
-           <button className="flex-1 text-[10px] font-black bg-white/5 hover:bg-white/20 text-white border border-white/10 p-2 rounded transition-all uppercase tracking-widest">
+           </Button>
+           <Button variant="outline" className="flex-1 text-[10px] font-black bg-white/5 hover:bg-white/10 text-white border border-white/10 h-9 rounded transition-all uppercase tracking-widest hover:-translate-y-0.5">
              Deep Analytics
-           </button>
+           </Button>
         </div>
       </CardContent>
     </Card>

@@ -1,11 +1,13 @@
 import React from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Library, Star, TrendingUp, DollarSign, Award, Archive, Zap, History, Globe, Lock } from 'lucide-react';
 import { formatMoney } from '@/engine/utils';
+import { cn } from '@/lib/utils';
 import { IPAsset } from '@/engine/types';
 import { useShallow } from 'zustand/react/shallow';
 import { FranchiseHub } from './FranchiseHub';
@@ -195,9 +197,9 @@ const IPAssetCard = ({ asset, isMarket = false }: { asset: IPAsset, isMarket?: b
              Rights expire week {asset.rightsExpirationWeek}
            </div>
            {isMarket && (
-             <button className="text-[9px] font-black bg-amber-500/10 hover:bg-amber-500 text-amber-500 hover:text-black border border-amber-500/20 px-3 py-1.5 rounded transition-all uppercase tracking-widest">
+             <Button className="text-[9px] font-black bg-amber-500/10 hover:bg-amber-500 text-amber-500 hover:text-amber-950 border border-amber-500/20 h-7 rounded transition-all uppercase tracking-widest shadow-[0_0_10px_rgba(245,158,11,0.1)] hover:shadow-[0_0_15px_rgba(245,158,11,0.3)] hover:-translate-y-0.5">
                Acquire & Reboot
-             </button>
+             </Button>
            )}
         </div>
       </CardContent>
@@ -212,6 +214,3 @@ const EmptyVault = ({ message }: { message: string }) => (
   </div>
 );
 
-function cn(...classes: any[]) {
-  return classes.filter(Boolean).join(' ');
-}
