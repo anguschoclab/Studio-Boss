@@ -4,6 +4,7 @@ import { pick, randRange, secureRandom } from '../utils';
  // Reuse some generation logic if needed, or build new one
 
 const PROJECT_ADJECTIVES = [
+  'Extortionate', 'PR-Cursed', 'Algorithmically-Mandated', 'Sovereign-Citizen-Funded', 'Cryptocurrency-Evading', 'TikTok-Ruined', 'VFX-Destitute', 'Focus-Group-Mutilated',
   'De-Aged', 'Self-Funded', 'Cryptocurrency-Backed', 'Anti-Woke', 'Over-Indulgent', 'Tone-Policied', 'Has-Been-Led', 'Reboot-of-a-Reboot', 'Nepotism-Heavy', 'AI-Generated', 'Unwatchably-Dark', 'PR-Nightmare', 'CGI-Saturated', 'Legally-Ambiguous', 'Tax-Avoidant',
 
   'Cursed', 'Bloated', 'Pretentious', 'Gritty', 'Unnecessary', 'Rebooted', 'Overbudget', 'Derivative', 'Visionary', 'Cinematic', 'Algorithm-Driven', 'IP-Mining', 'Vain', 'Lethal', 'Synergistic',
@@ -16,6 +17,7 @@ const PROJECT_ADJECTIVES = [
   'Tax-Sheltered', 'Algorithm-Approved', 'Nepo-Baby-Led', 'Focus-Group-Tested', 'Merch-Driven', 'TikTok-Optimized', 'VFX-Heavy', 'CGI-Bloated', 'Contractually-Obligated', 'Ghost-Directed', 'Uninsurable', 'PR-Disaster', 'Deepfake-Assisted', 'Billionaire-Funded', 'Union-Busting', 'Unwatchable', 'Boycotted', 'Desperate', 'Cringe-Inducing', 'Tone-Shifted', 'Recut', 'Over-Lit', 'Focus-Group-Ruined', 'Tax-Fraudulent', 'Lawsuit-Waiting', 'PR-Managed', 'Ghost-Produced', 'Audience-Alienating', 'Trend-Chasing', 'Nepotism-Fueled', 'Disgraced', 'Blacklisted', 'Apology-Driven', 'Litigation-Baiting', 'Hacktivist-Leaked', 'Deepfaked-Beyond-Recognition', 'Extorted', 'Cancel-Proof', 'VFX-Rushed', 'Cult-Adjacent', 'Apology-Format', 'Micro-Targeted', 'Gaslight-Heavy', 'Defamatory', 'Legally-Bound', 'Nepo-Baby-Directed', 'Sovereign-Citizen-Funded', 'Vape-Clouded'];
 
 const PROJECT_NOUNS = [
+  'Nepotism Vehicle', 'Tax-Evasion Scheme', 'Defamation Settlement', 'Crypto-Scam Spinoff', 'Audience Test Disaster',
   'Tax Write-off', 'Apology Video Extended Cut', 'Podcast Spin-off', 'Focus Group Disaster', 'Legacy Sequel', 'Cinematic Universe Attempt', 'Vanity Project', 'Merchandise Commercial', 'Brand Synergy Play', 'Legal Loophole', 'NFT Cash Grab', 'Direct-to-Streaming Dump', 'TikTok Trend Movie', 'Algorithm Bait', 'Studio Mandate',
 
   'Tentpole', 'Cinematic Universe', 'Vanity Project', 'Cash Grab', 'Reboot', 'Origin Story', 'Four-Quadrant Hit', 'Oscar Bait', 'Tax Write-off', 'Algorithm', 'Focus Group', 'Franchise', 'Merchandising Opportunity', 'Streaming Wars', 'Demographic',
@@ -29,6 +31,12 @@ const PROJECT_NOUNS = [
 
 function generateFlavor(genre: string, type: string, budgetTier: BudgetTierKey, origin: string): string {
   const cynicalFlavors = [
+  `A ${budgetTier}-tier ${type} that the lead actor agreed to solely to pay off their devastating crypto losses.`,
+  `A ${genre} ${origin} that is technically just a front for an elaborate international money-laundering operation.`,
+  `An aggressively ${genre} ${type} mandated by a tech CEO who thinks they are a visionary storyteller.`,
+  `A frantic ${type} where every single line of dialogue was rewritten by a sentient marketing algorithm to maximize 'engagement'.`,
+  `A ${budgetTier}-budget ${genre} ${origin} that the studio is releasing only because it's cheaper than burying it in a landfill.`,
+
   `A frantic ${genre} ${type} cobbled together entirely from unused B-roll and AI upscaling.`,
   `A deeply cynical ${budgetTier}-tier ${type} that feels less like a movie and more like a threat.`,
   `A ${genre} ${origin} that the studio is only releasing to maintain the rights to a 40-year-old action figure line.`,
