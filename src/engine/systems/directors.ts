@@ -1,4 +1,6 @@
-import { GameState, Project, TalentProfile, Contract, Crisis } from '@/engine/types';
+import { GameState, Project, Talent, Contract, ActiveCrisis } from '@/engine/types';
+type TalentProfile = Talent;
+type Crisis = ActiveCrisis;
 import { secureRandom } from '../utils';
 
 export interface DirectorDispute {
