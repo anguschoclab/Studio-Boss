@@ -357,7 +357,7 @@ export const ProjectDetailModal = () => {
                {!project.marketingLevel ? (
                  <Button 
                    className="w-full bg-blue-600 hover:bg-blue-500 text-white font-black uppercase py-6 shadow-lg shadow-blue-900/20"
-                   disabled={!selectedTier || (gameState && gameState.finance.cash < (selectedTier === 'basic' ? project.budget * 0.1 : selectedTier === 'blockbuster' ? project.budget * 0.5 : 0))}
+                   disabled={!selectedTier || (gameState ? gameState.finance.cash < (selectedTier === 'basic' ? project.budget * 0.1 : selectedTier === 'blockbuster' ? project.budget * 0.5 : 0) : false)}
                    onClick={() => { lockMarketingCampaign(project.id, selectedTier); selectProject(null); }}
                  >
                    Lock Campaign & Commit Capital
