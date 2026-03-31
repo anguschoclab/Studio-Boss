@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { Talent } from '@/engine/types';
 import { useUIStore } from '@/store/uiStore';
-import { TalentProfileModal as TalentModal } from './TalentProfileModal';
+import { TalentModal } from './TalentProfileModal';
 import { TalentCard } from './TalentCard';
 
 export const TalentPanel = () => {
