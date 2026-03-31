@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { formatMoney } from '@/engine/utils';
