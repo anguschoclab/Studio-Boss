@@ -4,7 +4,6 @@ export type Ethnicity = 'Caucasian' | 'Black' | 'Hispanic' | 'Asian' | 'South As
 
 interface CountryProfile {
   ethnicities: { type: Ethnicity; weight: number }[];
-  skinTones: { type: string; weight: number }[]; // Future use for more granularity
 }
 
 const COUNTRY_PROFILES: Record<string, CountryProfile> = {
@@ -15,8 +14,7 @@ const COUNTRY_PROFILES: Record<string, CountryProfile> = {
       { type: 'Hispanic', weight: 18 },
       { type: 'Asian', weight: 6 },
       { type: 'Mixed', weight: 3 }
-    ],
-    skinTones: []
+    ]
   },
   'UK': {
     ethnicities: [
@@ -25,40 +23,35 @@ const COUNTRY_PROFILES: Record<string, CountryProfile> = {
       { type: 'Black', weight: 4 },
       { type: 'Mixed', weight: 3 },
       { type: 'Asian', weight: 1 }
-    ],
-    skinTones: []
+    ]
   },
   'Japan': {
-    ethnicities: [{ type: 'Asian', weight: 98 }, { type: 'Mixed', weight: 2 }],
-    skinTones: []
+    ethnicities: [{ type: 'Asian', weight: 98 }, { type: 'Mixed', weight: 2 }]
   },
   'South Korea': {
-    ethnicities: [{ type: 'Asian', weight: 99 }, { type: 'Mixed', weight: 1 }],
-    skinTones: []
+    ethnicities: [{ type: 'Asian', weight: 99 }, { type: 'Mixed', weight: 1 }]
   },
   'India': {
-    ethnicities: [{ type: 'South Asian', weight: 98 }, { type: 'Mixed', weight: 2 }],
-    skinTones: []
+    ethnicities: [{ type: 'South Asian', weight: 98 }, { type: 'Mixed', weight: 2 }]
   },
   'Mexico': {
-    ethnicities: [{ type: 'Hispanic', weight: 90 }, { type: 'Caucasian', weight: 10 }],
-    skinTones: []
+    ethnicities: [{ type: 'Hispanic', weight: 90 }, { type: 'Caucasian', weight: 10 }]
   },
   'France': {
     ethnicities: [
       { type: 'Caucasian', weight: 85 },
       { type: 'Black', weight: 10 },
       { type: 'Middle Eastern', weight: 5 }
-    ],
-    skinTones: []
+    ]
   },
   'Default': {
-    ethnicities: [{ type: 'Mixed', weight: 100 }],
-    skinTones: []
+    ethnicities: [{ type: 'Mixed', weight: 100 }]
   }
 };
 
-function pick<T>(arr: T[]): T {
+const GENDERS = ['MALE', 'FEMALE', 'NON_BINARY'] as const;
+
+function pick<T>(arr: readonly T[] | T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
@@ -84,8 +77,9 @@ export function generateDemographics(isGlobalStar: boolean = false, country?: st
   }
 
   return {
-    gender: GENDERS[Math.floor(Math.random() * GENDERS.length)],
-    ethnicity: getSensibleEthnicity(country),
-    country
+    age: Math.floor(randRange(18, isGlobalStar ? 65 : 45)),
+    gender: pick(GENDERS),
+    country: finalCountry,
+    ethnicity
   };
 }
