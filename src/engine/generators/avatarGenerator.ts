@@ -432,11 +432,11 @@ export function generateAvatarSVG(talent: Talent, currentWeek: number = 1): stri
   
   // SVG canvas: 200x200 viewBox
   const cx = 100; // Center x
-  const cy = 108; // Center y (slightly below midpoint for head room)
+  const cy = 100; // Center y — centered for better framing
   
-  // Face dimensions
-  const faceW = 58 + f.faceWidth * 24;   // 58-82
-  const faceH = 68 + f.faceHeight * 22;  // 68-90
+  // Face dimensions — LARGER to avoid pinhead look
+  const faceW = 68 + f.faceWidth * 20;   // 68-88 (was 58-82)
+  const faceH = 78 + f.faceHeight * 18;  // 78-96 (was 68-90)
   const jawW = faceW * (0.7 + f.jawWidth * 0.25);
   const chinY = cy + faceH * 0.48;
   const chinPoint = f.chinPointiness * 8;
@@ -459,19 +459,20 @@ export function generateAvatarSVG(talent: Talent, currentWeek: number = 1): stri
   svg += `</defs>`;
   
   // ── Background circle ──
-  svg += `<circle cx="100" cy="100" r="98" fill="${darkenColor(f.skin.shadow, 0.6)}" opacity="0.3"/>`;
+  svg += `<circle cx="100" cy="100" r="98" fill="${darkenColor(f.skin.shadow, 0.5)}" opacity="0.4"/>`;
   
-  // ── Neck ──
-  const neckW = 22 + f.faceWidth * 8;
-  const neckTop = chinY - 8;
-  svg += `<rect x="${cx - neckW/2}" y="${neckTop}" width="${neckW}" height="40" rx="8" fill="${f.skin.shadow}"/>`;
-  
-  // ── Ears ──
-  const earY = cy - 4;
-  const earH = 16 + f.faceHeight * 6;
-  svg += `<ellipse cx="${cx - faceW/2 + 2}" cy="${earY}" rx="6" ry="${earH/2}" fill="${f.skin.base}" stroke="${f.skin.shadow}" stroke-width="0.8"/>`;
-  svg += `<ellipse cx="${cx + faceW/2 - 2}" cy="${earY}" rx="6" ry="${earH/2}" fill="${f.skin.base}" stroke="${f.skin.shadow}" stroke-width="0.8"/>`;
-  
+  // ── Neck — wider & shorter to avoid stick-figure look ──
+  const neckW = 28 + f.faceWidth * 10;
+  const neckTop = chinY - 10;
+  svg += `<rect x="${cx - neckW/2}" y="${neckTop}" width="${neckW}" height="50" rx="10" fill="${f.skin.shadow}"/>`;
+  // Shoulders hint
+  svg += `<ellipse cx="${cx}" cy="${neckTop + 44}" rx="${faceW * 0.9}" ry="18" fill="${darkenColor(f.skin.shadow, 0.25)}"/>`;
+  // ── Ears — proportionally sized ──
+  const earY = cy - 2;
+  const earH = 18 + f.faceHeight * 7;
+  svg += `<ellipse cx="${cx - faceW/2 + 3}" cy="${earY}" rx="7" ry="${earH/2}" fill="${f.skin.base}" stroke="${f.skin.shadow}" stroke-width="0.8"/>`;
+  svg += `<ellipse cx="${cx + faceW/2 - 3}" cy="${earY}" rx="7" ry="${earH/2}" fill="${f.skin.base}" stroke="${f.skin.shadow}" stroke-width="0.8"/>`;
+
   // ── Face shape ──
   // Using an ellipse as the base with path modifications for jaw
   svg += `<ellipse cx="${cx}" cy="${cy}" rx="${faceW/2}" ry="${faceH/2}" fill="url(#${uid}-skin)" stroke="${f.skin.shadow}" stroke-width="0.5"/>`;
