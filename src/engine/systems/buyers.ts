@@ -93,14 +93,16 @@ export function calculateFitScore(project: Project, buyer: Buyer, currentWeek: n
     }
   }
 
+  // The Festival Buyer: Base penalty is 5 points per recent similar project.
   let saturationPenalty = recentSimilarProjectsCount * 5;
 
+  // If there are 5 or more, add a flat 20 point penalty.
   if (recentSimilarProjectsCount >= 5) {
     saturationPenalty += 20;
   }
 
-  // The Festival Buyer: Heavily penalize oversaturated tentpole genres (like Superhero)
-  if (recentSimilarProjectsCount >= 5 && project.genre.toLowerCase().includes('superhero')) {
+  // Heavily penalize oversaturated tentpole genres (like Superhero) by multiplying the penalty by 3 and adding 75.
+  if (recentSimilarProjectsCount >= 5 && project.genre && project.genre.toLowerCase().includes('superhero')) {
     saturationPenalty *= 3;
     saturationPenalty += 75;
   }
