@@ -13,6 +13,7 @@ import { RivalsPanel } from '@/components/rivals/RivalsPanel';
 import { IPVault } from '@/components/ip/IPVault';
 import { DealsDesk } from '@/components/deals/DealsDesk';
 import { SBDBView } from '@/components/sbdb/SBDBView';
+import { StreamingPanel } from '@/components/streaming/StreamingPanel';
 import { AnimatePresence, motion } from 'framer-motion';
 
 // Modals
@@ -51,6 +52,7 @@ const Dashboard: React.FC = () => {
       case 'finance': return <FinancePanel key="finance" />;
       case 'trades': return <DiscoveryBoard key="trades" />;
       case 'sbdb': return <SBDBView key="sbdb" />;
+      case 'streaming': return <StreamingPanel key="streaming" />;
       default: return <CommandCenter key="default" />;
     }
   };
