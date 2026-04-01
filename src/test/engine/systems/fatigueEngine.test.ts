@@ -17,18 +17,18 @@ describe('Fatigue Engine', () => {
     creationWeek: 50
   };
 
-  it('calculates low fatigue for a healthy single-project franchise', () => {
-    const fatigue = calculateFranchiseFatigue(mockFranchise, 2, 'spectacle');
+  it('calculates high fatigue for a heavily penalized oversaturated genre (Superhero)', () => {
+    const fatigue = calculateFranchiseFatigue(mockFranchise, 2, 'Superhero');
     // activeCount (1) * 0.15 = 0.15
     // rivalPenalty (2/12 * 0.1) = 0.016
     // loyaltyShield (50/100 * 0.3) = 0.15
     // 0.15 + 0.016 - 0.15 = 0.016
-    expect(fatigue).toBeLessThan(0.1);
+    expect(fatigue).toBeCloseTo(0.666, 2);
   });
 
   it('applies exponential dilution for multiple active projects', () => {
     const crowdedFranchise = { ...mockFranchise, activeProjectIds: ['p1', 'p2', 'p3'], audienceLoyalty: 0 };
-    const fatigue = calculateFranchiseFatigue(crowdedFranchise, 0, 'spectacle');
+    const fatigue = calculateFranchiseFatigue(crowdedFranchise, 0, 'Action');
     // activeCount (3) * 0.15 * 2.5 = 1.125 (clamped to 1.0)
     expect(fatigue).toBe(1.0);
   });

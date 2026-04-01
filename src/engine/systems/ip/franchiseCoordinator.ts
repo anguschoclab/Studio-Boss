@@ -1,5 +1,6 @@
 import { GameState, Project, Franchise, IPAsset } from '../../types';
 import { generateId, clamp } from '../../utils';
+import { CROSSOVER_AFFINITY } from '../../data/genres';
 
 /**
  * Franchise Coordinator.
@@ -12,16 +13,44 @@ import { generateId, clamp } from '../../utils';
  */
 export function calculateFranchiseEquity(
   franchise: Franchise,
-  assets: IPAsset[]
+  assets: IPAsset[],
+  sourceProjects?: Record<string, Project> // Pass projects to resolve genres
 ): number {
   const baseEquity = assets.reduce((sum, a) => sum + (a.baseValue * a.decayRate), 0);
   
   // 1. Shared Universe Premium
-  // Releasing multiple entries creates a compounding brand effect.
-  const crossoverBonus = assets.length >= 3 ? 1.20 : 1.05; // 20% premium for 3+ assets
+  let crossoverBonus = assets.length >= 3 ? 1.20 : 1.05;
+
+  // 1b. Genre Crossover Events Hook
+  if (sourceProjects && assets.length > 1) {
+    const uniqueGenres = new Set<string>();
+    assets.forEach(a => {
+      const p = sourceProjects[a.originalProjectId];
+      if (p && p.genre) {
+        // Normalize to Title Case to match CROSSOVER_AFFINITY keys (e.g. 'Action', 'Sci-Fi')
+        const normalizedGenre = Object.keys(CROSSOVER_AFFINITY).find(
+          k => k.toLowerCase() === p.genre!.toLowerCase()
+        ) || p.genre;
+        uniqueGenres.add(normalizedGenre);
+      }
+    });
+
+    const genres = Array.from(uniqueGenres);
+    let synergyHits = 0;
+    for (let i = 0; i < genres.length; i++) {
+      for (let j = i + 1; j < genres.length; j++) {
+        const g1 = genres[i];
+        const g2 = genres[j];
+        if (CROSSOVER_AFFINITY[g1]?.includes(g2) || CROSSOVER_AFFINITY[g2]?.includes(g1)) {
+          synergyHits++;
+        }
+      }
+    }
+    // Boost bonus significantly if diverse compatible genres cross over
+    crossoverBonus += Math.min(0.5, synergyHits * 0.15);
+  }
   
   // 2. Format Diversity Multiplier
-  // High synergy (Film + TV presence) boosts total value.
   const multiplier = franchise.synergyMultiplier;
   
   return Math.floor(baseEquity * crossoverBonus * multiplier);
@@ -66,13 +95,23 @@ export function updateFranchiseHub(state: GameState, project: Project): GameStat
     
     // Avoid duplicate links
     if (!hub.assetIds.includes(newAssetId)) {
+      const nextAssetIds = [...hub.assetIds, newAssetId];
+      const relevantAssets = state.ip.vault.filter(a => nextAssetIds.includes(a.id));
+
       updatedFranchises[franchiseId] = {
         ...hub,
-        assetIds: [...hub.assetIds, newAssetId],
+        assetIds: nextAssetIds,
         lastReleaseWeeks: [...hub.lastReleaseWeeks, project.releaseWeek || state.week],
         // Update synergy based on format diversity
         synergyMultiplier: clamp(hub.synergyMultiplier + 0.1, 1.0, 2.5) 
       };
+
+      // Recalculate Enterprise Value
+      updatedFranchises[franchiseId].totalEquity = calculateFranchiseEquity(
+        updatedFranchises[franchiseId],
+        relevantAssets,
+        state.studio.internal.projects
+      );
     }
   }
 
