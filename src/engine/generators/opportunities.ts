@@ -230,6 +230,7 @@ export function generateOpportunity(_weekOrTalentIds?: number | string[]): Oppor
     weeksUntilExpiry,
     attachedTalentIds: talentIds && talentIds.length > 0 && secureRandom() > 0.5 ? [pick(talentIds)] : undefined,
     bids: {},
+    bidHistory: [],
     expirationWeek: weeksUntilExpiry,
   };
 

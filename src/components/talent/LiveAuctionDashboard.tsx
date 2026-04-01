@@ -53,7 +53,7 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ oppo
   };
 
   const isLeading = opportunity.highestBidderId === 'PLAYER';
-  const history = [...opportunity.bidHistory].reverse().slice(0, 5);
+  const history = [...(opportunity.bidHistory || [])].reverse().slice(0, 5);
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/90 backdrop-blur-md p-6 animate-in fade-in duration-300">
