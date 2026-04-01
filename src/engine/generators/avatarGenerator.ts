@@ -467,12 +467,12 @@ export function generateAvatarSVG(talent: Talent, currentWeek: number = 1): stri
   svg += `<rect x="${cx - neckW/2}" y="${neckTop}" width="${neckW}" height="50" rx="10" fill="${f.skin.shadow}"/>`;
   // Shoulders hint
   svg += `<ellipse cx="${cx}" cy="${neckTop + 44}" rx="${faceW * 0.9}" ry="18" fill="${darkenColor(f.skin.shadow, 0.25)}"/>`;
-  // ── Ears ──
-  const earY = cy - 4;
-  const earH = 16 + f.faceHeight * 6;
-  svg += `<ellipse cx="${cx - faceW/2 + 2}" cy="${earY}" rx="6" ry="${earH/2}" fill="${f.skin.base}" stroke="${f.skin.shadow}" stroke-width="0.8"/>`;
-  svg += `<ellipse cx="${cx + faceW/2 - 2}" cy="${earY}" rx="6" ry="${earH/2}" fill="${f.skin.base}" stroke="${f.skin.shadow}" stroke-width="0.8"/>`;
-  
+  // ── Ears — proportionally sized ──
+  const earY = cy - 2;
+  const earH = 18 + f.faceHeight * 7;
+  svg += `<ellipse cx="${cx - faceW/2 + 3}" cy="${earY}" rx="7" ry="${earH/2}" fill="${f.skin.base}" stroke="${f.skin.shadow}" stroke-width="0.8"/>`;
+  svg += `<ellipse cx="${cx + faceW/2 - 3}" cy="${earY}" rx="7" ry="${earH/2}" fill="${f.skin.base}" stroke="${f.skin.shadow}" stroke-width="0.8"/>`;
+
   // ── Face shape ──
   // Using an ellipse as the base with path modifications for jaw
   svg += `<ellipse cx="${cx}" cy="${cy}" rx="${faceW/2}" ry="${faceH/2}" fill="url(#${uid}-skin)" stroke="${f.skin.shadow}" stroke-width="0.5"/>`;
