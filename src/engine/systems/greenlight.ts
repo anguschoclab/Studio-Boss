@@ -39,13 +39,15 @@ export function evaluateGreenlight(
     }
   }
 
+  // The Festival Buyer: Base penalty is 5 points per recent similar project.
   let saturationPenalty = recentSimilarProjectsCount * 5;
 
+  // If there are 5 or more, add a flat 20 point penalty.
   if (recentSimilarProjectsCount >= 5) {
     saturationPenalty += 20;
 
-    // Heavily penalize oversaturated tentpole genres (like Superhero)
-    if (project.genre?.toLowerCase().includes('superhero')) {
+    // Heavily penalize oversaturated tentpole genres (like Superhero) by multiplying the penalty by 3 and adding 75.
+    if (project.genre && project.genre.toLowerCase().includes('superhero')) {
       saturationPenalty = (saturationPenalty * 3) + 75;
     }
   }
