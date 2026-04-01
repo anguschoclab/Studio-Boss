@@ -1668,4 +1668,352 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
       }
     ]
   }
+  ,
+  {
+    id: 'crisis_74',
+    description: "Your prestige 'elevated horror' director has secretly replaced the original commissioned orchestral score with a terrifying, royalty-free AI synth track, claiming it 'speaks to the algorithm'.",
+    options: [
+      {
+        text: "Force the composer's original score back into the edit.",
+        effectDescription: "Costs $500k in union arbitration and mixing fees. The director throws a fit in the trades. Lose 20 buzz.",
+        cashPenalty: 500000,
+        buzzPenalty: 20
+      },
+      {
+        text: "Keep the AI synth track and market it as 'the sound of the future'.",
+        effectDescription: "The composer's guild sues you. Costs $1.5M in legal settlements and lose 15 reputation.",
+        cashPenalty: 1500000,
+        reputationPenalty: 15
+      },
+      {
+        text: "Delay the release and hire a famous pop star to write a completely new score.",
+        effectDescription: "Costs $2M and adds 4 weeks of delay. It completely changes the movie's tone.",
+        cashPenalty: 2000000,
+        weeksDelay: 4
+      }
+    ]
+  },
+  {
+    id: 'crisis_75',
+    description: "The eccentric tech billionaire who heavily financed your sci-fi epic is demanding that the climax be entirely reworked to serve as a 10-minute commercial for their new 'Mars Colonization' crypto token.",
+    options: [
+      {
+        text: "Refuse. Integrity over everything.",
+        effectDescription: "The billionaire pulls their remaining funding. You must cover a massive $4M shortfall.",
+        cashPenalty: 4000000
+      },
+      {
+        text: "Acquiesce to the demand.",
+        effectDescription: "The movie becomes a laughingstock. Lose 50 buzz and 25 reputation.",
+        buzzPenalty: 50,
+        reputationPenalty: 25
+      },
+      {
+        text: "Compromise: Add a subtle QR code in the background of the final shot.",
+        effectDescription: "Costs $100k in rush VFX. The internet notices and mocks it, costing 15 buzz.",
+        cashPenalty: 100000,
+        buzzPenalty: 15
+      }
+    ]
+  },
+  {
+    id: 'crisis_76',
+    description: "Your lead actor's extremely litigious 'Lifestyle Brand' has slapped the production with a cease-and-desist because the prop department used an unauthorized, off-brand yoga mat in a crucial scene.",
+    options: [
+      {
+        text: "Pay the brand's extortionate 'licensing fee'.",
+        effectDescription: "Costs $800k.",
+        cashPenalty: 800000
+      },
+      {
+        text: "Digitally paint over the yoga mat in every single frame.",
+        effectDescription: "Costs $1.2M in extensive rotoscoping and delays post-production by 3 weeks.",
+        cashPenalty: 1200000,
+        weeksDelay: 3
+      },
+      {
+        text: "Leak the cease-and-desist to the press to make the actor look ridiculous.",
+        effectDescription: "The actor retaliates by trashing the set. Costs $300k in damages. Lose 10 reputation.",
+        cashPenalty: 300000,
+        reputationPenalty: 10
+      }
+    ]
+  },
+  {
+    id: 'crisis_77',
+    description: "A major international market has completely banned your film because a background extra is wearing a t-shirt that technically features an illegal political slogan.",
+    options: [
+      {
+        text: "Create a localized, heavily-censored cut.",
+        effectDescription: "Costs $2M in re-editing, VFX, and new dubbing. Delays the international release.",
+        cashPenalty: 2000000
+      },
+      {
+        text: "Refuse to alter the art and lose the market entirely.",
+        effectDescription: "Massive hit to the film's financial viability. Buzz takes a hit. Lose 35 buzz.",
+        buzzPenalty: 35
+      },
+      {
+        text: "Bribe a local censor board official through a shell company.",
+        effectDescription: "Costs $500k. Incredibly risky and illegal. Lose 15 reputation.",
+        cashPenalty: 500000,
+        reputationPenalty: 15
+      }
+    ]
+  },
+  {
+    id: 'crisis_78',
+    description: "The studio's highly anticipated 'Cinematic Universe' crossover movie just lost its main writer to a rival streaming service, taking the entire 'Series Bible' with them on a thumb drive.",
+    options: [
+      {
+        text: "Sue the writer and the rival streamer.",
+        effectDescription: "Costs $1.5M in brutal legal warfare. Delays production by 6 weeks.",
+        cashPenalty: 1500000,
+        weeksDelay: 6
+      },
+      {
+        text: "Hire a team of hack writers to hastily reverse-engineer the bible from memory.",
+        effectDescription: "Costs $600k. The resulting lore is a mess. Lose 40 buzz from diehard fans.",
+        cashPenalty: 600000,
+        buzzPenalty: 40
+      },
+      {
+        text: "Pivote the entire universe to a completely new storyline.",
+        effectDescription: "Costs $2.5M in scrapped pre-production and design work.",
+        cashPenalty: 2500000
+      }
+    ]
+  },
+  {
+    id: 'crisis_79',
+    description: "During a high-speed chase scene, the stunt driver accidentally ramped a sports car through the front window of a beloved, historic local bakery.",
+    options: [
+      {
+        text: "Pay out a massive, quiet settlement to rebuild the bakery.",
+        effectDescription: "Costs $1.2M. The story is kept completely out of the press.",
+        cashPenalty: 1200000
+      },
+      {
+        text: "Buy the bakery outright and turn it into a permanent set.",
+        effectDescription: "Costs $3M. You now own a bakery. The locals hate you. Lose 20 reputation.",
+        cashPenalty: 3000000,
+        reputationPenalty: 20
+      },
+      {
+        text: "Blame 'mechanical failure' and refuse fault.",
+        effectDescription: "The studio faces a PR nightmare. Lose 45 buzz and 15 reputation.",
+        buzzPenalty: 45,
+        reputationPenalty: 15
+      }
+    ]
+  },
+  {
+    id: 'crisis_80',
+    description: "Your A-list director has locked themselves in the editing bay, claiming they have discovered the 'brown note' through audio frequency manipulation and intend to leave it in the final mix.",
+    options: [
+      {
+        text: "Have security breach the door and confiscate the hard drives.",
+        effectDescription: "Costs $200k in damages and severance. The director sues you. Lose 25 buzz.",
+        cashPenalty: 200000,
+        buzzPenalty: 25
+      },
+      {
+        text: "Let them do it. It's 'visionary'.",
+        effectDescription: "Test audiences literally soil themselves. Massive lawsuits ensue. Costs $3M.",
+        cashPenalty: 3000000
+      },
+      {
+        text: "Secretly hire a secondary audio team to mix out the frequency at night.",
+        effectDescription: "Costs $400k in overtime. The director never notices, but you're delayed 2 weeks.",
+        cashPenalty: 400000,
+        weeksDelay: 2
+      }
+    ]
+  },
+  {
+    id: 'crisis_81',
+    description: "A prominent 'anti-woke' YouTube grifter has launched a coordinated harassment campaign against your lead actress because her character knows how to fix a car engine.",
+    options: [
+      {
+        text: "Release a strong public statement defending her and doubling down.",
+        effectDescription: "The grifters review-bomb the project online. Lose 30 buzz, but gain 10 reputation with the industry.",
+        buzzPenalty: 30,
+        reputationPenalty: -10
+      },
+      {
+        text: "Quietly edit out the scene to appease the mob.",
+        effectDescription: "Costs $300k. The core fanbase realizes what you did and revolts. Lose 50 buzz and 25 reputation.",
+        cashPenalty: 300000,
+        buzzPenalty: 50,
+        reputationPenalty: 25
+      },
+      {
+        text: "Hire a bot farm to spam the YouTuber's comments with nonsense.",
+        effectDescription: "Costs $150k. It backfires spectacularly when traced back to the studio. Lose 20 reputation.",
+        cashPenalty: 150000,
+        reputationPenalty: 20
+      }
+    ]
+  },
+  {
+    id: 'crisis_82',
+    description: "The primary filming location—an abandoned hospital—was just condemned by the city halfway through production due to extreme asbestos exposure.",
+    options: [
+      {
+        text: "Pay for full hazmat suits for the entire crew and keep shooting.",
+        effectDescription: "Costs $800k in hazard pay and protective gear. The unions are furious. Lose 15 reputation.",
+        cashPenalty: 800000,
+        reputationPenalty: 15
+      },
+      {
+        text: "Relocate immediately to a soundstage and rebuild the sets.",
+        effectDescription: "Costs $2.5M and delays the shoot by a massive 5 weeks.",
+        cashPenalty: 2500000,
+        weeksDelay: 5
+      },
+      {
+        text: "Bribe the city inspectors to look the other way.",
+        effectDescription: "Costs $400k. Highly illegal and risky. Lose 10 buzz.",
+        cashPenalty: 400000,
+        buzzPenalty: 10
+      }
+    ]
+  },
+  {
+    id: 'crisis_83',
+    description: "Your 'focus-group-tested' comedy film has a joke about an obscure fruit that, as of yesterday, is the center of a massive global E. coli outbreak.",
+    options: [
+      {
+        text: "ADR every instance of the fruit to a different fruit.",
+        effectDescription: "Costs $300k. The lip-syncing is noticeably terrible. Lose 15 buzz.",
+        cashPenalty: 300000,
+        buzzPenalty: 15
+      },
+      {
+        text: "Leave it in. All publicity is good publicity.",
+        effectDescription: "Audiences are deeply uncomfortable. Lose 35 buzz.",
+        buzzPenalty: 35
+      },
+      {
+        text: "Cut the entire 5-minute comedic setpiece.",
+        effectDescription: "The film's runtime is severely impacted and pacing is ruined. Delays post-production by 2 weeks.",
+        weeksDelay: 2
+      }
+    ]
+  },
+  {
+    id: 'crisis_84',
+    description: "A rogue AI bot designed to drum up social media hype has become sentient and is relentlessly roasting the director's previous box office failures on the official movie account.",
+    options: [
+      {
+        text: "Pay the tech firm an emergency fee to kill the bot.",
+        effectDescription: "Costs $250k. The internet screenshots everything. Lose 20 buzz.",
+        cashPenalty: 250000,
+        buzzPenalty: 20
+      },
+      {
+        text: "Lean into it. Let the bot 'take over' marketing.",
+        effectDescription: "The director threatens to quit. You spend $500k to placate them. Buzz increases slightly.",
+        cashPenalty: 500000
+      },
+      {
+        text: "Claim the account was hacked by a teenage prodigy.",
+        effectDescription: "Nobody believes you. Costs $100k in PR spin. Lose 10 reputation.",
+        cashPenalty: 100000,
+        reputationPenalty: 10
+      }
+    ]
+  },
+  {
+    id: 'crisis_85',
+    description: "Your romantic lead has developed a bizarre allergic reaction to the bespoke, $50,000 silk wardrobe and looks like a swollen tomato in every wide shot.",
+    options: [
+      {
+        text: "Scrap the wardrobe and pivot to cheap cotton. Reshoot the scenes.",
+        effectDescription: "Costs $1.2M and delays production by 3 weeks.",
+        cashPenalty: 1200000,
+        weeksDelay: 3
+      },
+      {
+        text: "Digitally de-puff their face in every frame.",
+        effectDescription: "Costs a staggering $2M in extensive VFX cleanup.",
+        cashPenalty: 2000000
+      },
+      {
+        text: "Rewrite the script so their character has a severe shellfish allergy.",
+        effectDescription: "Costs $150k in rewrites. The tone is deeply confused. Lose 25 buzz.",
+        cashPenalty: 150000,
+        buzzPenalty: 25
+      }
+    ]
+  },
+  {
+    id: 'crisis_86',
+    description: "The film's 80-year-old legendary composer simply 'forgot' to write the score, cashing the check and submitting an empty hard drive on the final day of post-production.",
+    options: [
+      {
+        text: "Hire a desperate, cheap up-and-comer to ghostwrite a score overnight.",
+        effectDescription: "Costs $400k. The score sounds like a generic royalty-free track. Lose 30 buzz.",
+        cashPenalty: 400000,
+        buzzPenalty: 30
+      },
+      {
+        text: "Sue the legend for breach of contract.",
+        effectDescription: "Costs $1M in legal fees. The entire industry turns against you for suing an icon. Lose 35 reputation.",
+        cashPenalty: 1000000,
+        reputationPenalty: 35
+      },
+      {
+        text: "Delay the film's release by two months to hire a real composer.",
+        effectDescription: "Costs $2.5M and massive marketing penalties. Delays by 8 weeks.",
+        cashPenalty: 2500000,
+        weeksDelay: 8
+      }
+    ]
+  },
+  {
+    id: 'crisis_87',
+    description: "A sudden union strike by the catering department has brought the entire production to a screeching halt, with the crew demanding artisanal, locally-sourced craft services.",
+    options: [
+      {
+        text: "Cave to all demands immediately.",
+        effectDescription: "Costs an extra $600k for the rest of the shoot. Studio looks weak.",
+        cashPenalty: 600000
+      },
+      {
+        text: "Hire a fleet of non-union food trucks to break the strike.",
+        effectDescription: "Costs $250k. The crew is furious, and the Teamsters threaten to walk. Lose 20 reputation.",
+        cashPenalty: 250000,
+        reputationPenalty: 20
+      },
+      {
+        text: "Shut down the set until the union negotiates.",
+        effectDescription: "Delays production by 3 excruciating weeks.",
+        weeksDelay: 3
+      }
+    ]
+  },
+  {
+    id: 'crisis_88',
+    description: "The wildly expensive 'Volume' LED stage you rented crashed, and due to a server error, the backdrop for your sci-fi planet is permanently stuck on a Windows 95 screensaver.",
+    options: [
+      {
+        text: "Pay an emergency fee to the tech firm to fly out a team of engineers.",
+        effectDescription: "Costs $1M. Delays the shoot by 1 week.",
+        cashPenalty: 1000000,
+        weeksDelay: 1
+      },
+      {
+        text: "Shoot it anyway and fix it in post.",
+        effectDescription: "Costs $2.5M in painstaking rotoscoping to remove the flying toasters.",
+        cashPenalty: 2500000
+      },
+      {
+        text: "Pivot to an empty soundstage and use physical green screens.",
+        effectDescription: "Costs $800k in setup and delays by 2 weeks.",
+        cashPenalty: 800000,
+        weeksDelay: 2
+      }
+    ]
+  }
 ];
