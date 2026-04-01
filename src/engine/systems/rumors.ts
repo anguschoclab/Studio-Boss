@@ -3,23 +3,23 @@ import { StateImpact } from '../types/state.types';
 import { pick, randRange, secureRandom } from '../utils';
 
 export function advanceRumors(state: GameState): StateImpact {
-  const impact: StateImpact = {
-    newRumors: [],
-    newHeadlines: []
-  };
-
+  const newHeadlines: import('../types/engine.types').Headline[] = [];
   let currentRumors = state.industry.rumors || [];
   
   // Resolve rumors that are due
   currentRumors = currentRumors.map(r => {
     if (!r.resolved && state.week >= (r.resolutionWeek || state.week)) {
       if (r.truthful) {
-        impact.newHeadlines!.push({
+        newHeadlines.push({
+          id: `confirm-${r.id}-${state.week}`,
+          week: state.week,
           category: 'rumor',
           text: `CONFIRMED: ${r.text}`
         });
       } else {
-        impact.newHeadlines!.push({
+        newHeadlines.push({
+          id: `debunk-${r.id}-${state.week}`,
+          week: state.week,
           category: 'rumor',
           text: `DEBUNKED: Previous rumors regarding ${r.text.toLowerCase()} turn out to be false.`
         });
@@ -77,13 +77,17 @@ export function advanceRumors(state: GameState): StateImpact {
     
     currentRumors.push(rumor);
     
-    impact.newHeadlines!.push({
+    newHeadlines.push({
+      id: `rumor-headline-${rumor.id}`,
+      week: state.week,
       category: 'rumor',
       text: `RUMOR: ${text}`
     });
   }
   
-  impact.newRumors = currentRumors;
-  return impact;
+  return {
+    newRumors: currentRumors,
+    newHeadlines
+  };
 }
 

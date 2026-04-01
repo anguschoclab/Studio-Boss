@@ -133,26 +133,38 @@ export class WeekCoordinator {
 
   private static buildSummary(before: GameState, after: GameState, context: TickContext): WeekSummary {
     const newsImpacts = context.impacts.filter(i => i.type === 'NEWS_ADDED');
+    const ledgerImpact = context.impacts.find(i => i.type === 'LEDGER_UPDATED');
     
+    let totalRevenue = 0;
+    let totalCosts = 0;
+
+    if (ledgerImpact && ledgerImpact.type === 'LEDGER_UPDATED') {
+       const report = ledgerImpact.payload.report;
+       totalRevenue = report.revenue.boxOffice + report.revenue.distribution + report.revenue.other;
+       totalCosts = report.expenses.production + report.expenses.marketing + report.expenses.overhead;
+    }
+
+    const projectUpdates = context.impacts
+      .filter(i => i.type === 'PROJECT_UPDATED' && i.payload)
+      .map(i => (i.payload as import('../types/state.types').ProjectUpdate).projectId);
+
     return {
       fromWeek: before.week,
       toWeek: after.week,
       cashBefore: before.finance.cash,
       cashAfter: after.finance.cash,
-      totalRevenue: 0,
-      totalCosts: 0,
-      projectUpdates: context.impacts
-        .filter(i => i.type === 'PROJECT_UPDATED' && i.payload)
-        .map(i => (i.payload as Record<string, string>).projectId),
+      totalRevenue,
+      totalCosts,
+      projectUpdates: Array.from(new Set(projectUpdates)),
       newHeadlines: newsImpacts.map(i => {
-        const payload = i.payload as Record<string, string>;
+        if (i.type !== 'NEWS_ADDED') return { id: '', text: '', week: 0, category: 'general' };
         return {
           id: context.rng.uuid('news'),
-          text: payload?.headline || 'Unknown Event',
+          text: i.payload.headline || 'Unknown Event',
           week: context.week,
-          category: 'general'
+          category: 'general' as import('../types/engine.types').HeadlineCategory
         };
-      }),
+      }).filter(h => h.id !== ''),
       events: context.events.map(e => e.title),
     };
   }

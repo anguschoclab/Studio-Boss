@@ -4,11 +4,9 @@ import { GameState, StateImpact, NewsEvent } from '@/engine/types';
  * Pure function to apply a single StateImpact to the GameState.
  */
 function applySingleImpact(state: GameState, impact: StateImpact): GameState {
-  const payload = impact.payload || {};
-
   switch (impact.type) {
     case 'FUNDS_CHANGED': {
-      const { amount } = payload as { amount: number };
+      const { amount } = impact.payload;
       return {
         ...state,
         finance: {
@@ -19,7 +17,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     }
 
     case 'LEDGER_UPDATED': {
-      const { report } = payload as { report: any };
+      const { report } = impact.payload;
       return {
         ...state,
         finance: {
@@ -30,7 +28,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     }
 
     case 'FINANCE_SNAPSHOT_ADDED': {
-      const { snapshot } = payload as { snapshot: any };
+      const { snapshot } = impact.payload;
       return {
         ...state,
         finance: {
@@ -41,7 +39,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     }
 
     case 'SYNC_M_A_FUNDS': {
-      const { amount } = payload as { amount: number };
+      const { amount } = impact.payload;
       return {
         ...state,
         finance: {
@@ -52,7 +50,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     }
 
     case 'FUNDS_DEDUCTED': {
-      const { amount } = payload as { amount: number };
+      const { amount } = impact.payload;
       return {
         ...state,
         finance: {
@@ -63,10 +61,10 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     }
 
     case 'PROJECT_UPDATED': {
-      const { projectId, update } = payload as { projectId: string; update: any };
+      const { projectId, update } = impact.payload;
       const projects = { ...state.studio.internal.projects };
       if (projects[projectId]) {
-        projects[projectId] = { ...projects[projectId], ...update };
+        projects[projectId] = { ...projects[projectId], ...update } as import('@/engine/types').Project;
       }
       return {
         ...state,
@@ -81,7 +79,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     }
 
     case 'NEWS_ADDED': {
-      const { headline, description } = payload as { headline: string; description: string };
+      const { headline, description } = impact.payload;
       const newsEvent: NewsEvent = {
         id: `ne-${crypto.randomUUID()}`,
         week: state.week,
@@ -99,7 +97,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     }
 
     case 'PROJECT_REMOVED': {
-      const { projectId } = payload as { projectId: string };
+      const { projectId } = impact.payload;
       const projects = { ...state.studio.internal.projects };
       delete projects[projectId];
       return {
@@ -115,7 +113,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     }
 
     case 'PRESTIGE_CHANGED': {
-      const { amount } = payload as { amount: number };
+      const { amount } = impact.payload;
       return {
         ...state,
         studio: {
@@ -126,10 +124,10 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     }
 
     case 'TALENT_UPDATED': {
-      const { talentId, update } = payload as { talentId: string; update: any };
+      const { talentId, update } = impact.payload;
       const talentPool = { ...state.industry.talentPool };
       if (talentPool[talentId]) {
-        talentPool[talentId] = { ...talentPool[talentId], ...update };
+        talentPool[talentId] = { ...talentPool[talentId], ...update } as import('@/engine/types').Talent;
       }
       return {
         ...state,
@@ -141,9 +139,9 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     }
 
     case 'BUYER_UPDATED': {
-      const { buyerId, update } = payload as { buyerId: string; update: any };
+      const { buyerId, update } = impact.payload;
       const buyers = state.market.buyers.map(b => 
-        b.id === buyerId ? { ...b, ...update } : b
+        b.id === buyerId ? { ...b, ...update } as any : b
       );
       return {
         ...state,
@@ -155,9 +153,9 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     }
 
     case 'RIVAL_UPDATED': {
-      const { rivalId, update } = payload as { rivalId: string; update: any };
+      const { rivalId, update } = impact.payload;
       const rivals = state.industry.rivals.map(r => 
-        r.id === rivalId ? { ...r, ...update } : r
+        r.id === rivalId ? { ...r, ...update } as any : r
       );
       return {
         ...state,
@@ -169,7 +167,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     }
 
     case 'OPPORTUNITY_UPDATED': {
-      const { opportunityId, rivalId, bid } = payload as { opportunityId: string; rivalId: string; bid: any };
+      const { opportunityId, rivalId, bid } = impact.payload;
       const opportunities = state.market.opportunities.map(o => {
         if (o.id === opportunityId) {
           return {
@@ -192,7 +190,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     }
 
     case 'TRENDS_UPDATED': {
-      const { trends } = payload as { trends: any };
+      const { trends } = impact.payload;
       return {
         ...state,
         market: {
@@ -203,7 +201,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     }
 
     case 'SCANDAL_ADDED': {
-      const { scandal } = payload as { scandal: any };
+      const { scandal } = impact.payload;
       return {
         ...state,
         industry: {
@@ -214,7 +212,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     }
 
     case 'SCANDAL_REMOVED': {
-      const { scandalId } = payload as { scandalId: string };
+      const { scandalId } = impact.payload;
       return {
         ...state,
         industry: {
@@ -225,7 +223,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     }
 
     case 'MARKET_EVENT_UPDATED': {
-      const { events, marketState } = payload as { events: any[]; marketState: any };
+      const { events, marketState } = impact.payload;
       return {
         ...state,
         market: {
@@ -239,8 +237,13 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
       };
     }
 
+    case 'FINANCE_TRANSACTION': {
+      const { amount } = impact.payload;
+      return applySingleImpact(state, { type: 'FUNDS_CHANGED', payload: { amount } });
+    }
+
     case 'SYSTEM_TICK': {
-      const { week, tickCount } = payload as { week?: number; tickCount?: number };
+      const { week, tickCount } = impact.payload;
       return {
         ...state,
         week: week ?? state.week,
@@ -248,8 +251,67 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
       };
     }
 
-    default:
-      return state;
+    default: {
+      // Handle the "base" case for merged impacts (Recursive application)
+      let newState = state;
+      if (impact.cashChange !== undefined) {
+          newState = applySingleImpact(newState, { type: 'FUNDS_CHANGED', payload: { amount: impact.cashChange } });
+      }
+      if (impact.prestigeChange !== undefined) {
+          newState = applySingleImpact(newState, { type: 'PRESTIGE_CHANGED', payload: { amount: impact.prestigeChange } });
+      }
+      if (impact.projectUpdates) {
+          impact.projectUpdates.forEach(u => {
+              newState = applySingleImpact(newState, { type: 'PROJECT_UPDATED', payload: u });
+          });
+      }
+      if (impact.rivalUpdates) {
+          impact.rivalUpdates.forEach(u => {
+              newState = applySingleImpact(newState, { type: 'RIVAL_UPDATED', payload: u });
+          });
+      }
+      if (impact.newHeadlines) {
+          impact.newHeadlines.forEach(h => {
+              newState = applySingleImpact(newState, { type: 'NEWS_ADDED', payload: { headline: h.text, description: '' } });
+          });
+      }
+      if (impact.newsEvents) {
+          impact.newsEvents.forEach(e => {
+              newState = applySingleImpact(newState, { type: 'NEWS_ADDED', payload: { headline: e.headline, description: e.description } });
+          });
+      }
+      if (impact.newAwards) {
+          impact.newAwards.forEach(award => {
+              const projects = { ...newState.studio.internal.projects };
+              if (projects[award.projectId]) {
+                  projects[award.projectId] = { 
+                      ...projects[award.projectId], 
+                      awards: [...(projects[award.projectId].awards || []), award] 
+                  } as any;
+              }
+              newState = { ...newState, studio: { ...newState.studio, internal: { ...newState.studio.internal, projects } } };
+          });
+      }
+      if (impact.cultClassicProjectIds) {
+          impact.cultClassicProjectIds.forEach(id => {
+              const projects = { ...newState.studio.internal.projects };
+              if (projects[id]) {
+                  projects[id] = { ...projects[id], isCultClassic: true } as any;
+              }
+              newState = { ...newState, studio: { ...newState.studio, internal: { ...newState.studio.internal, projects } } };
+          });
+      }
+      if (impact.razzieWinnerTalents) {
+          impact.razzieWinnerTalents.forEach(id => {
+              const talentPool = { ...newState.industry.talentPool };
+              if (talentPool[id]) {
+                  talentPool[id] = { ...talentPool[id], razzieWinner: true } as any;
+              }
+              newState = { ...newState, industry: { ...newState.industry, talentPool } };
+          });
+      }
+      return newState;
+    }
   }
 }
 

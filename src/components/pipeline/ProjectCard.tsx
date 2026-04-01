@@ -1,13 +1,13 @@
 import { Project } from '@/engine/types';
 import { useUIStore } from '@/store/uiStore';
-import { formatMoney } from '@/engine/utils';
 import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
-import { AlertTriangle, TrendingUp, DollarSign, Activity, Zap } from 'lucide-react';
+import { AlertTriangle, TrendingUp, Activity, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { DistributionBadge } from '../shared/DistributionBadge';
+import { RecoupmentStatus } from '../shared/RecoupmentStatus';
 
 interface ProjectCardProps {
   project: Project;
@@ -111,16 +111,9 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
             </TooltipWrapper>
           )}
 
-          {/* Financial Highlights */}
+          {/* Financial Highlights & Recoupment */}
           {(project.state === 'released' || project.state === 'archived') && (
-            <TooltipWrapper tooltip="Total accumulated revenue across all syndication windows." side="top">
-              <div className="flex items-center justify-between p-2.5 bg-black/30 rounded-lg border border-white/5 group-hover:border-white/10 transition-colors">
-                <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/80 flex items-center gap-1.5">
-                  <DollarSign className="h-3 w-3 text-success/70" /> Lifetime
-                </span>
-                <span className="text-xs font-mono font-black text-success drop-shadow-[0_0_8px_rgba(var(--success),0.5)]">{formatMoney(project.revenue)}</span>
-              </div>
-            </TooltipWrapper>
+            <RecoupmentStatus project={project} className="p-2.5 bg-black/30 rounded-xl border border-white/5" />
           )}
         </div>
 

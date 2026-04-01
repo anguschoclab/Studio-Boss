@@ -26,8 +26,11 @@ const mockProject: Project = {
   momentum: 50,
   progress: 0,
   accumulatedCost: 0,
-  activeCrisis: null
-} as Project;
+  activeCrisis: null,
+  scriptHeat: 50,
+  activeRoles: [],
+  scriptEvents: []
+} as import('../../../engine/types').Project;
 
 describe("advanceProject", () => {
   it("does nothing for archived projects", () => {

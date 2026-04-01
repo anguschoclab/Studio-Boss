@@ -36,8 +36,8 @@ describe('generateHeadlines', () => {
   it('should generate rival headlines if rivals are provided', () => {
     const week = 10;
     const rivals: RivalStudio[] = [
-      { id: '1', name: 'Rival A', cash: 1000, projectCount: 0, motto: '', archetype: 'major', strength: 50, prestige: 50, recentActivity: '', motivationProfile: { financial: 80, prestige: 40, legacy: 70, aggression: 50 }, currentMotivation: 'CASH_CRUNCH' as any, projects: {}, contracts: [] },
-      { id: '2', name: 'Rival B', cash: 2000, projectCount: 0, motto: '', archetype: 'major', strength: 50, prestige: 50, recentActivity: '', motivationProfile: { financial: 80, prestige: 40, legacy: 70, aggression: 50 }, currentMotivation: 'CASH_CRUNCH' as any, projects: {}, contracts: [] }
+      { id: 'rival-1', name: 'Global Pictures', cash: 100000000, projectCount: 5, motto: 'Bigger is Better', archetype: 'major', strength: 80, prestige: 80, recentActivity: 'Signing stars', motivationProfile: { financial: 0.8, prestige: 0.8, legacy: 0.5, aggression: 0.5 }, currentMotivation: 'prestige' as any, projects: {}, contracts: [], foundedWeek: 1 },
+    { id: 'rival-2', name: 'Indie Art', cash: 1000000, projectCount: 2, motto: 'Art First', archetype: 'major', strength: 20, prestige: 60, recentActivity: 'Festivals', motivationProfile: { financial: 0.2, prestige: 0.9, legacy: 0.8, aggression: 0.3 }, currentMotivation: 'legacy' as any, projects: {}, contracts: [], foundedWeek: 1 }
     ];
 
     // Run multiple times to ensure we hit the 35% chance for a rival headline
@@ -74,11 +74,14 @@ describe('generateHeadlines', () => {
       status: 'production' as any, 
       budget: 1000000, 
       buzz: 50, 
-      quality: 50, 
-      releaseWeek: 0, 
-      revenue: 0, 
-      costToDate: 0 
-    }];
+      progress: 0,
+      accumulatedCost: 0,
+      activeCrisis: null,
+      type: 'FILM',
+      scriptHeat: 50,
+      activeRoles: [],
+      scriptEvents: []
+    } as import('../../../engine/types').Project];
     const talent = [{ 
       id: 't1', 
       name: 'James Cameron', 

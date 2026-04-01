@@ -14,7 +14,13 @@ interface TvFormatData {
   revenueDecayWeekly: number; // Weekly revenue multiplier during run (e.g. 0.85 = slow decay)
 }
 
-export const TV_FORMAT_TAXONOMY = [
+export interface TvFormatTaxonomyItem {
+  id: string;
+  name: string;
+  formats: TvFormatKey[];
+}
+
+export const TV_FORMAT_TAXONOMY: TvFormatTaxonomyItem[] = [
   {
     id: 'comedy',
     name: 'Comedy',
@@ -1430,20 +1436,6 @@ export const TV_FORMATS: Record<TvFormatKey, TvFormatData> = {
     revenueDecayBinge: 0.55,
     revenueDecayWeekly: 0.86,
   },
-
-  prestige_limited_series: {
-    key: 'prestige_limited_series',
-    name: 'Prestige Limited Series',
-    defaultEpisodes: 8,
-    minEpisodes: 4,
-    maxEpisodes: 10,
-    productionCostMultiplier: 2.5,
-    developmentWeeksModifier: 1.5,
-    productionWeeksPerEpisode: 1.2,
-    renewable: false,
-    revenueDecayBinge: 0.8,
-    revenueDecayWeekly: 0.95,
-  },
   trashy_dating_island: {
     key: 'trashy_dating_island',
     name: 'Trashy Dating Island',
@@ -1482,19 +1474,6 @@ export const TV_FORMATS: Record<TvFormatKey, TvFormatData> = {
     renewable: true,
     revenueDecayBinge: 0.6,
     revenueDecayWeekly: 0.92,
-  },
-  cyberpunk_dystopia: {
-    key: 'cyberpunk_dystopia',
-    name: 'Cyberpunk Dystopia',
-    defaultEpisodes: 10,
-    minEpisodes: 8,
-    maxEpisodes: 16,
-    productionCostMultiplier: 2.8,
-    developmentWeeksModifier: 1.4,
-    productionWeeksPerEpisode: 1.3,
-    renewable: true,
-    revenueDecayBinge: 0.65,
-    revenueDecayWeekly: 0.91,
   },
   high_fantasy_epic: {
     key: 'high_fantasy_epic',

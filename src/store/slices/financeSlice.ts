@@ -1,7 +1,9 @@
 import { StateCreator } from 'zustand';
 import { GameStore } from '../gameStore';
 import { handleReleasePhaseEntry, executeMarketing } from '@/engine/systems/projects';
-import { WeeklyFinancialReport, FinanceState, Contract, Project } from '@/engine/types';
+import { WeeklyFinancialReport, FinanceState, Contract, Project, Buyer, RivalStudio } from '@/engine/types';
+import { FinancialSnapshot, MarketState } from '@/engine/types/state.types';
+import { InterestRateSimulator } from '@/engine/systems/market/InterestRateSimulator';
 
 export interface FinanceSlice {
   finance: FinanceState;
@@ -13,66 +15,48 @@ export interface FinanceSlice {
 
 export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> = (set, get) => ({
   finance: {
-    cash: 500000000,
+    cash: 0,
     ledger: [],
     weeklyHistory: [],
+    marketState: InterestRateSimulator.initialize(),
   },
 
   addLedgerEntry: (report: WeeklyFinancialReport) =>
     set((state) => {
       if (!state.gameState) return state;
+      const snapshot: FinancialSnapshot = {
+        week: report.week,
+        revenue: {
+          theatrical: report.revenue.boxOffice,
+          streaming: report.revenue.distribution,
+          merch: report.revenue.other,
+          passive: 0,
+        },
+        expenses: {
+          production: report.expenses.production,
+          burn: report.expenses.overhead,
+          marketing: report.expenses.marketing,
+          royalties: 0,
+          interest: 0,
+        },
+        net: report.netProfit,
+        cash: report.endingCash
+      };
+
       return {
         finance: {
           ...state.finance,
           cash: report.endingCash,
-          ledger: [...state.finance.ledger, report].slice(-100),
-          weeklyHistory: [
-            ...state.finance.weeklyHistory,
-            {
-              week: report.week,
-              revenue: {
-                theatrical: report.revenue.boxOffice,
-                streaming: report.revenue.distribution,
-                merch: report.revenue.other,
-                other: 0
-              },
-              expenses: {
-                production: report.expenses.production,
-                burn: report.expenses.overhead,
-                marketing: report.expenses.marketing,
-                interest: 0
-              },
-              net: report.netProfit,
-              cash: report.endingCash
-            }
-          ].slice(-52), // Keep 1 year of history
+          ledger: [report, ...state.finance.ledger].slice(0, 100),
+          weeklyHistory: [snapshot, ...state.finance.weeklyHistory].slice(0, 52),
         },
         gameState: {
           ...state.gameState,
           finance: {
             ...state.gameState.finance,
             cash: report.endingCash,
-            ledger: [...state.gameState.finance.ledger, report].slice(-100),
-            weeklyHistory: [
-              ...state.gameState.finance.weeklyHistory,
-              {
-                week: report.week,
-                revenue: {
-                  theatrical: report.revenue.boxOffice,
-                  streaming: report.revenue.distribution,
-                  merch: report.revenue.other,
-                  other: 0
-                },
-                expenses: {
-                  production: report.expenses.production,
-                  burn: report.expenses.overhead,
-                  marketing: report.expenses.marketing,
-                  interest: 0
-                },
-                net: report.netProfit,
-                cash: report.endingCash
-              }
-            ].slice(-52),
+            ledger: [report, ...state.gameState.finance.ledger].slice(0, 100),
+            weeklyHistory: [snapshot, ...state.gameState.finance.weeklyHistory].slice(0, 52),
           },
         },
       };

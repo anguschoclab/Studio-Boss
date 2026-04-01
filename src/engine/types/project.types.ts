@@ -318,6 +318,9 @@ export interface AwardsProfile {
   criticScore: number;
   audienceScore: number;
   prestigeScore: number;
+  awards?: Award[];
+  isCultClassic?: boolean;
+  isBoxOfficeSuccess?: boolean;
   craftScore: number;
   culturalHeat: number;
   campaignStrength: number;
@@ -416,6 +419,7 @@ export interface ProjectBase {
   flavor: string;
   state: ProjectStatus;
   buzz: number;
+  awards?: Award[];
   contractType?: ProjectContractType;
   weeksInPhase: number;
   developmentWeeks: number;
@@ -431,6 +435,8 @@ export interface ProjectBase {
   awardsProfile?: AwardsProfile;
   parentProjectId?: string;
   isSpinoff?: boolean;
+  isGlobalIcon?: boolean;
+  razzieWinner?: boolean;
   franchiseId?: string;
   // Release simulation fields
   reviewScore?: number;
@@ -442,11 +448,7 @@ export interface ProjectBase {
   marketingAngle?: string;
   // IP Rights
   ipRights?: IPRights;
-  // Script Evolution
-  scriptHeat: number; // 0-100: Influences evolution events
-  activeRoles: CharacterArchetype[];
-  scriptEvents: ScriptEvent[];
-  // Sprint H / I additions
+  // Common Sprint H / I additions
   rating?: ProjectRating;
   contentFlags?: ContentFlag[];
   targetDemographic?: AudienceQuadrant;
@@ -458,20 +460,28 @@ export interface ProjectBase {
   buyerId?: string;
 }
 
-export interface FilmProject extends ProjectBase {
+export interface ScriptedProject extends ProjectBase {
+  scriptHeat: number; // 0-100: Influences evolution events
+  activeRoles: CharacterArchetype[];
+  scriptEvents: ScriptEvent[];
+}
+
+export interface UnscriptedProject extends ProjectBase {
+  unscriptedFormat: UnscriptedFormatKey;
+}
+
+export interface FilmProject extends ScriptedProject {
   type: 'FILM';
 }
 
-export interface SeriesProject extends ProjectBase {
+export interface SeriesProject extends ScriptedProject {
   type: 'SERIES';
   tvFormat?: TvFormatKey;
-  unscriptedFormat?: UnscriptedFormatKey;
   tvDetails: TVSeasonDetails;
   releaseModel?: ReleaseModelKey;
-  buyerId?: string;
 }
 
-export type Project = FilmProject | SeriesProject;
+export type Project = FilmProject | SeriesProject | (UnscriptedProject & { type: 'SERIES' });
 
 export type OpportunityType = 'script' | 'package' | 'pitch' | 'rights';
 export type DiscoveryOrigin = 'open_spec' | 'agency_package' | 'writer_sample' | 'heat_list' | 'annual_list' | 'passion_project';

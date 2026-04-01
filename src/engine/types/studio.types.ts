@@ -1,9 +1,9 @@
 // Types related to Studios, Rivals, and Game State
 
-import { Project, Opportunity, GenreTrend, FestivalSubmission, Award, MandateType } from './project.types';
+import { Project, Opportunity, GenreTrend, FestivalSubmission, Award } from './project.types';
 import { Contract, FirstLookDeal, Family, Agency, Agent, Talent, Scandal, MotivationProfile, RivalStrategy } from './talent.types';
-import { FinanceRecord, NewsEvent, Headline, Rumor, MarketEvent } from './engine.types';
-import { WeeklyFinancialReport, FinanceState, NewsState, IPState } from './state.types';
+import { NewsEvent, Rumor, MarketEvent } from './engine.types';
+import { FinanceState, NewsState, IPState } from './state.types';
 
 export interface GameEvent {
   id: string;
@@ -11,7 +11,7 @@ export interface GameEvent {
   type: 'PROJECT_FINISHED' | 'STUDIO_MERGED' | 'AWARD_WON' | 'BANKRUPTCY_WARNING' | 'MARKET_CRASH' | 'TALENT_SCANDAL' | 'GENERAL';
   title: string;
   description: string;
-  data?: any;
+  data?: unknown;
 }
 
 export type ArchetypeKey = 'major' | 'mid-tier' | 'indie';
@@ -56,9 +56,6 @@ export interface GameState {
   week: number;
   gameSeed: number;
   tickCount: number;
-  projects: {
-    active: Project[];
-  };
   game: {
     currentWeek: number;
   };

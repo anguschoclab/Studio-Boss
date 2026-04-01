@@ -14,10 +14,7 @@ export class TalentSystem {
    * Advances the talent-related aspects of the game world (weekly tick).
    */
   static advance(state: GameState): StateImpact {
-    const impact: StateImpact = {
-      newOpportunities: [],
-      uiNotifications: []
-    };
+    const uiNotifications: string[] = [];
     
     const currentOpportunities = state.market.opportunities || [];
     const updatedOpportunities: Opportunity[] = [];
@@ -39,7 +36,7 @@ export class TalentSystem {
       if (!oppTitles.has(opp.title)) {
         updatedOpportunities.push(opp);
         oppTitles.add(opp.title);
-        if (message) impact.uiNotifications!.push(message);
+        if (message) uiNotifications.push(message);
         return true;
       }
       return false;
@@ -77,8 +74,10 @@ export class TalentSystem {
       tryAddOpp(generateOpportunity());
     }
 
-    impact.newOpportunities = updatedOpportunities;
-    return impact;
+    return {
+      newOpportunities: updatedOpportunities,
+      uiNotifications
+    };
   }
 
 

@@ -1,20 +1,21 @@
-import { useMemo } from 'react';
-import { useGameStore } from '@/store/gameStore';
-import { formatMoney } from '@/engine/utils';
 import { calculateWeeklyCosts, calculateWeeklyRevenue, calculateStudioNetWorth, generateCashflowForecast, calculateProjectROI } from '@/engine/systems/finance';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Area, XAxis, YAxis, Tooltip, ResponsiveContainer, ComposedChart, Line } from 'recharts';
 import { Badge } from '@/components/ui/badge';
-import { YearInReviewChart } from './YearInReviewChart';
+import { YearInReviewChart } from '@/components/finance/YearInReviewChart';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { History, LayoutDashboard, ReceiptText, TrendingUp, Package, Coins } from 'lucide-react';
 import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
-import { RevenueStreamChart } from './RevenueStreamChart';
-import { ProfitWaterfallChart } from './ProfitWaterfallChart';
-import { CashEfficiencyGauge } from './CashEfficiencyGauge';
-import { DistributionBadge } from '../shared/DistributionBadge';
+import { RevenueStreamChart } from '@/components/finance/RevenueStreamChart';
+import { ProfitWaterfallChart } from '@/components/finance/ProfitWaterfallChart';
+import { CashEfficiencyGauge } from '@/components/finance/CashEfficiencyGauge';
+import { DistributionBadge } from '@/components/shared/DistributionBadge';
+import { MarketRatesWidget } from '@/components/finance/MarketRatesWidget';
+import { useMemo } from 'react';
+import { useGameStore } from '@/store/gameStore';
+import { formatMoney } from '@/engine/utils';
 
 export const FinancePanel = () => {
   const gameState = useGameStore(s => s.gameState);
@@ -51,8 +52,8 @@ export const FinancePanel = () => {
       week: h.week,
       isForecast: false,
       histCash: h.cash,
-      histRevenue: h.revenue.theatrical + h.revenue.streaming + h.revenue.merch + h.revenue.other,
-      histCosts: h.expenses.production + h.expenses.marketing + h.expenses.burn + h.expenses.interest,
+      histRevenue: h.revenue.theatrical + h.revenue.streaming + h.revenue.merch + h.revenue.passive,
+      histCosts: h.expenses.production + h.expenses.marketing + h.expenses.burn + h.expenses.interest + h.expenses.royalties,
       ...h.revenue,
       ...h.expenses
     }));
@@ -187,6 +188,10 @@ export const FinancePanel = () => {
       <div className="grid grid-cols-3 gap-6 h-[400px]">
         {/* Cash Flow Chart */}
         <div className="col-span-2 flex flex-col h-full">
+          <div className="mb-6">
+            <MarketRatesWidget />
+          </div>
+          
           <Card className="border-border/40 bg-card/60 bg-gradient-to-br from-card/80 to-transparent backdrop-blur-md shadow-sm hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-300 flex-1 flex flex-col">
             <CardHeader className="pb-4 border-b border-border/30 bg-background/40 backdrop-blur-sm shrink-0 flex flex-row items-center justify-between">
               <CardTitle className="text-xs font-display font-black uppercase tracking-widest text-foreground/80 drop-shadow-sm">

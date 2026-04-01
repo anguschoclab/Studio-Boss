@@ -1,6 +1,6 @@
-import { RivalStudio, GameState, Talent } from '@/engine/types';
+import { RivalStudio, GameState, Talent, NewsEvent } from '@/engine/types';
 type TalentProfile = Talent;
-import { StateImpact } from '../types/state.types';
+import { StateImpact, RivalUpdate } from '../types/state.types';
 import { clamp, pick, secureRandom } from '../utils';
 
 const INDIE_ACTIVITIES = [
@@ -79,23 +79,23 @@ export function updateRival(rival: RivalStudio): Partial<RivalStudio> {
 }
 
 export function advanceRivals(state: GameState): StateImpact {
-  const impact: StateImpact = {
-    rivalUpdates: [],
-    newsEvents: []
-  };
+  const rivalUpdates: RivalUpdate[] = [];
+  const newsEvents: NewsEvent[] = [];
   
   for (let i = 0; i < state.industry.rivals.length; i++) {
     const rival = state.industry.rivals[i];
     const update = updateRival(rival);
     
-    impact.rivalUpdates!.push({
+    rivalUpdates.push({
       rivalId: rival.id,
       update
     });
     
     // Log major rival events
     if (update.isAcquirable && !rival.isAcquirable) {
-      impact.newsEvents!.push({
+      newsEvents.push({
+        id: `rival-vulnerable-${rival.id}-${state.week}`,
+        week: state.week,
         type: 'RIVAL',
         headline: `${rival.name} Vulnerable to Takeover!`,
         description: `${rival.name} has hit a critical cash shortage. Strategy: ${update.recentActivity || rival.recentActivity}`,
@@ -108,7 +108,9 @@ export function advanceRivals(state: GameState): StateImpact {
   for (const rival of state.industry.rivals) {
      const poakMsg = rivalPoachTalent(rival, Object.values(state.industry.talentPool));
      if (poakMsg) {
-       impact.newsEvents!.push({
+       newsEvents.push({
+         id: `rival-poach-${rival.id}-${state.week}`,
+         week: state.week,
          type: 'RIVAL',
          headline: `Talent Poached by ${rival.name}`,
          description: poakMsg,
@@ -117,6 +119,8 @@ export function advanceRivals(state: GameState): StateImpact {
      }
   }
 
-  return impact;
+  return {
+    rivalUpdates,
+    newsEvents
+  };
 }
-

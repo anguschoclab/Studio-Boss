@@ -8,15 +8,16 @@ import { tickFinance } from "../../../engine/systems/finance/financeTick";
 import { Project, GameState } from "../../../engine/types";
 import { RandomGenerator } from "../../../engine/utils/rng";
 
-const mockProjectDev: Project = {
+const mockProjectDev: import('../../../engine/types').Project = {
   id: "proj-1", title: "Test Dev", budgetTier: "low", budget: 500000, genre: "Comedy",
   state: "development", developmentWeeks: 2, productionWeeks: 2, weeksInPhase: 0,
   revenue: 0, weeklyRevenue: 0, weeklyCost: 10000, buzz: 50, format: "film", targetAudience: "general", flavor: "indie", releaseWeek: 0,
-  momentum: 50, progress: 0, accumulatedCost: 0, activeCrisis: null
-} as Project;
+  momentum: 50, progress: 0, accumulatedCost: 0, activeCrisis: null,
+  type: 'FILM', scriptHeat: 50, activeRoles: [], scriptEvents: []
+} as import('../../../engine/types').FilmProject;
 
-const mockProjectProd: Project = { ...mockProjectDev, id: "proj-2", state: "production", weeklyCost: 20000 } as Project;
-const mockProjectReleased: Project = { ...mockProjectDev, id: "proj-3", state: "released", weeklyCost: 0, weeklyRevenue: 100000 } as Project;
+const mockProjectProd: import('../../../engine/types').Project = { ...mockProjectDev, id: "proj-2", state: "production", weeklyCost: 20000 } as any;
+const mockProjectReleased: import('../../../engine/types').Project = { ...mockProjectDev, id: "proj-3", state: "released", weeklyCost: 0, weeklyRevenue: 100000 } as any;
 
 describe("Finance System", () => {
   describe("calculateProjectROI", () => {
@@ -92,7 +93,7 @@ describe("Finance System", () => {
           }
         } as any;
 
-        const report = generateWeeklyFinancialReport(stateWithDist);
+        const { report } = generateWeeklyFinancialReport(stateWithDist);
         // ExpenseProcessor.calculateStudioBurn(1, 2 active) = 500k + 250k + (2 * 50k) = 850k
         expect(report.expenses.overhead).toBe(850000);
         expect(report.expenses.production).toBe(20000); // Only mockProjectProd is in production
