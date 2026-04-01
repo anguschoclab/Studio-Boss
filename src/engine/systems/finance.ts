@@ -38,13 +38,13 @@ export function calculateProductionBurn(projects: Project[], eventMult: number =
          costMultiplier = 0.5;
       }
 
-      // The Studio Comptroller: Ruthless overhead multipliers for delayed massive sets.
+      // The Studio Comptroller: Increased overhead penalties for delayed large productions to enforce stricter cashflow limits on massive budgets.
       if (p.budget >= 200_000_000 && p.weeksInPhase > p.productionWeeks * 0.8) {
-         costMultiplier *= 12.0; 
+         costMultiplier *= 15.0;
       } else if (p.budget >= 100_000_000 && p.weeksInPhase > p.productionWeeks * 0.8) {
-         costMultiplier *= 5.5; 
+         costMultiplier *= 7.0;
       } else if (p.budget >= 50_000_000 && p.weeksInPhase > p.productionWeeks * 0.8) {
-         costMultiplier *= 3.0; 
+         costMultiplier *= 4.0;
       }
 
       sum += (p.weeklyCost * costMultiplier * eventMult);
@@ -95,11 +95,11 @@ export function calculateBoxOfficeRevenue(projects: Project[], contracts: Contra
         totalBackendPercent += projectContracts[j].backendPercent;
       }
 
-      // The Studio Comptroller: Backend points hit aggressively harder when revenue is massive.
+      // The Studio Comptroller: Backend points hit even harder at extremely high revenue tiers to reflect aggressively scaling profit-sharing contracts.
       let backendMultiplier = 1.0;
-      if (revenue > 200_000_000) backendMultiplier = 6.0;
-      else if (revenue > 150_000_000) backendMultiplier = 4.5;
-      else if (revenue > 100_000_000) backendMultiplier = 3.0;
+      if (revenue > 200_000_000) backendMultiplier = 7.5;
+      else if (revenue > 150_000_000) backendMultiplier = 5.0;
+      else if (revenue > 100_000_000) backendMultiplier = 3.5;
       else if (revenue > 50_000_000) backendMultiplier = 2.2;
       else if (revenue > 20_000_000) backendMultiplier = 1.5;
 
