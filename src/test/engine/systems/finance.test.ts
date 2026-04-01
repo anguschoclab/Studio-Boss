@@ -73,13 +73,31 @@ describe("Finance System", () => {
     } as unknown as GameState;
 
     it("properly calculates burns, overhead, and box office", () => {
-        const report = generateWeeklyFinancialReport(mockState);
-        // Overhead is hardcoded to 500,000 right now.
-        // Prod costs are 20,000 normally.
-        expect(report.expenses.overhead).toBe(500000);
-        expect(report.expenses.production).toBe(20000); 
-        expect(report.revenue.boxOffice).toBe(100000);
-        expect(report.netProfit).toBe(100000 - 520000);
+        const releasedWithDist = { 
+          ...mockProjectReleased, 
+          distributionStatus: 'theatrical' as const,
+          weeklyRevenue: 100000 
+        };
+        const stateWithDist = {
+          ...mockState,
+          studio: {
+            ...mockState.studio,
+            internal: {
+              ...mockState.studio.internal,
+              projects: {
+                ...mockState.studio.internal.projects,
+                'rel': releasedWithDist
+              }
+            }
+          }
+        } as any;
+
+        const report = generateWeeklyFinancialReport(stateWithDist);
+        // ExpenseProcessor.calculateStudioBurn(1, 2 active) = 500k + 250k + (2 * 50k) = 850k
+        expect(report.expenses.overhead).toBe(850000);
+        expect(report.expenses.production).toBe(20000); // Only mockProjectProd is in production
+        expect(report.revenue.boxOffice).toBe(50000);
+        expect(report.netProfit).toBe(50000 - 870000);
         expect(report.startingCash).toBe(1000000);
     });
   });
@@ -106,10 +124,32 @@ describe("Finance System", () => {
   
       it("returns StateImpact for funds change", () => {
          const rng = new RandomGenerator(12345);
-         const impacts = tickFinance(mockState, rng);
+         const releasedWithDist = { 
+           ...mockProjectReleased, 
+           distributionStatus: 'theatrical' as const,
+           weeklyRevenue: 200000 
+         };
+         const stateWithDist = {
+           ...mockState,
+           studio: {
+             ...mockState.studio,
+             internal: {
+               ...mockState.studio.internal,
+               projects: {
+                 'prod': mockProjectProd,
+                 'rel': releasedWithDist
+               }
+             }
+           }
+         } as any;
+
+         const impacts = tickFinance(stateWithDist, rng);
          const impact = impacts.find(i => i.type === 'FUNDS_CHANGED');
-         // Net profit = 100k - (20k + 500k) = -420k
-         expect(impact?.payload.amount).toBe(-420000);
+         
+         // Revenue: 200k * 0.5 (decay) = 100k
+         // Expenses: 20k (prod) + [500k + 250k + (1 * 50k)] (overhead) = 820k
+         // Net: 100k - 820k = -720k
+         expect(impact?.payload.amount).toBe(-720000);
       });
   });
 });

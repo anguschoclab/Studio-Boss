@@ -87,6 +87,9 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
       churnRate: 0.05,
       contentLibraryQuality: 60,
       marketingSpend: 2_000_000,
+      marketShare: archetype === 'major' ? 0.35 : 0.15,
+      reach: archetype === 'major' ? 95 : 70,
+      subscriberHistory: [],
     };
     initialBuyers.push(playerStreamer);
     playerOwnedPlatforms.push(playerStreamer.id);
@@ -107,6 +110,9 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
         churnRate: 0.05,
         contentLibraryQuality: 50,
         marketingSpend: 1_500_000,
+        marketShare: rival.archetype === 'major' ? 0.30 : 0.12,
+        reach: rival.archetype === 'major' ? 90 : 65,
+        subscriberHistory: [],
       };
       initialBuyers.push(rivalStreamer);
       rival.ownedPlatforms = [rivalStreamer.id];
@@ -122,6 +128,7 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
     finance: {
       cash: arch.startingCash,
       ledger: [],
+      weeklyHistory: [],
     },
     news: {
       headlines: [

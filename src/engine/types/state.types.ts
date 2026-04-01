@@ -18,9 +18,28 @@ export interface WeeklyFinancialReport {
   netProfit: number;
 }
 
+export interface FinancialSnapshot {
+  week: number;
+  revenue: {
+    theatrical: number;
+    streaming: number;
+    merch: number;
+    other: number;
+  };
+  expenses: {
+    production: number;
+    burn: number;
+    marketing: number;
+    interest: number;
+  };
+  net: number;
+  cash: number;
+}
+
 export interface FinanceState {
   cash: number;
   ledger: WeeklyFinancialReport[];
+  weeklyHistory: FinancialSnapshot[];
 }
 
 export interface NewsState {

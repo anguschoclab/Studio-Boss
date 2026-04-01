@@ -15,6 +15,7 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
   finance: {
     cash: 500000000,
     ledger: [],
+    weeklyHistory: [],
   },
 
   addLedgerEntry: (report: WeeklyFinancialReport) =>
@@ -25,6 +26,26 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
           ...state.finance,
           cash: report.endingCash,
           ledger: [...state.finance.ledger, report].slice(-100),
+          weeklyHistory: [
+            ...state.finance.weeklyHistory,
+            {
+              week: report.week,
+              revenue: {
+                theatrical: report.revenue.boxOffice,
+                streaming: report.revenue.distribution,
+                merch: report.revenue.other,
+                other: 0
+              },
+              expenses: {
+                production: report.expenses.production,
+                burn: report.expenses.overhead,
+                marketing: report.expenses.marketing,
+                interest: 0
+              },
+              net: report.netProfit,
+              cash: report.endingCash
+            }
+          ].slice(-52), // Keep 1 year of history
         },
         gameState: {
           ...state.gameState,
@@ -32,6 +53,26 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
             ...state.gameState.finance,
             cash: report.endingCash,
             ledger: [...state.gameState.finance.ledger, report].slice(-100),
+            weeklyHistory: [
+              ...state.gameState.finance.weeklyHistory,
+              {
+                week: report.week,
+                revenue: {
+                  theatrical: report.revenue.boxOffice,
+                  streaming: report.revenue.distribution,
+                  merch: report.revenue.other,
+                  other: 0
+                },
+                expenses: {
+                  production: report.expenses.production,
+                  burn: report.expenses.overhead,
+                  marketing: report.expenses.marketing,
+                  interest: 0
+                },
+                net: report.netProfit,
+                cash: report.endingCash
+              }
+            ].slice(-52),
           },
         },
       };

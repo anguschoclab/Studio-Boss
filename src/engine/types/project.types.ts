@@ -453,6 +453,9 @@ export interface ProjectBase {
   isCultClassic?: boolean;
   marketingCampaign?: MarketingCampaign;
   boxOffice?: BoxOfficeResult;
+  isAcquired?: boolean;
+  distributionStatus?: 'theatrical' | 'streaming' | 'syndicated';
+  buyerId?: string;
 }
 
 export interface FilmProject extends ProjectBase {

@@ -134,6 +134,8 @@ export interface BuyerBase {
   acquiredBy?: string; // id of buyer that acquired this one
   ownedPlatforms?: string[]; // ids of platforms this buyer has acquired
   parentCompany?: string; // name of parent company after merger
+  marketShare: number; // 0-1.0
+  reach: number; // 0-100
   maHistory?: { week: number; event: string; value?: number }[];
 }
 

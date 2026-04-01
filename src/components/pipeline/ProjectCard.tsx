@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
 import { AlertTriangle, TrendingUp, DollarSign, Activity, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { DistributionBadge } from '../shared/DistributionBadge';
 
 interface ProjectCardProps {
   project: Project;
@@ -62,6 +63,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
           <Badge variant="outline" className="text-[9px] uppercase tracking-[0.2em] font-black h-5 bg-black/40 border-white/10 text-muted-foreground group-hover:border-white/20 group-hover:text-foreground/80 transition-colors shadow-sm">
             {displayFormat}
           </Badge>
+          <DistributionBadge status={project.distributionStatus} className="h-5" />
         </div>
 
         {/* Metrics: Buzz & Progress */}

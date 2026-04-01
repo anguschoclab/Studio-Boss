@@ -1,5 +1,6 @@
-import { Project, Contract, GameState, MarketEvent, WeeklyFinancialReport } from '@/engine/types';
-import { groupContractsByProject } from '../utils';
+import { Project, GameState, WeeklyFinancialReport, MarketEvent, Contract, Buyer } from '@/engine/types';
+import { RevenueProcessor } from './finance/RevenueProcessor';
+import { ExpenseProcessor } from './finance/ExpenseProcessor';
 
 export function calculateProjectROI(project: Project): number {
   const totalCost = project.budget + (project.marketingBudget || 0);
@@ -10,7 +11,6 @@ export function calculateProjectROI(project: Project): number {
 export function calculateStudioNetWorth(state: GameState): number {
   let netWorth = state.finance.cash;
   
-  // Add catalog value from IP rights (Sprint E)
   Object.values(state.studio.internal.projects).forEach(p => {
     if (p.ipRights && p.ipRights.catalogValue) {
       if (p.ipRights.rightsOwner === 'studio') {
@@ -24,114 +24,12 @@ export function calculateStudioNetWorth(state: GameState): number {
   return netWorth;
 }
 
-// --- Modular Cost Calculations ---
-
-export function calculateProductionBurn(projects: Project[], eventMult: number = 1.0): number {
-  let sum = 0;
-  for (let i = 0; i < projects.length; i++) {
-    const p = projects[i];
-    if (p.state === 'production') {
-      let costMultiplier = 1;
-      if (p.contractType === 'upfront') {
-         costMultiplier = 0; 
-      } else if (p.contractType === 'deficit') {
-         costMultiplier = 0.5;
-      }
-
-      // The Studio Comptroller: Increased overhead penalties for delayed large productions to enforce stricter cashflow limits on massive budgets.
-      if (p.budget >= 200_000_000 && p.weeksInPhase > p.productionWeeks * 0.8) {
-         costMultiplier *= 15.0;
-      } else if (p.budget >= 100_000_000 && p.weeksInPhase > p.productionWeeks * 0.8) {
-         costMultiplier *= 7.0;
-      } else if (p.budget >= 50_000_000 && p.weeksInPhase > p.productionWeeks * 0.8) {
-         costMultiplier *= 4.0;
-      }
-
-      sum += (p.weeklyCost * costMultiplier * eventMult);
-    }
-  }
-  return sum;
-}
-
-export function calculateMarketingExpenses(projects: Project[], eventMult: number = 1.0): number {
-    let sum = 0;
-    for (let i = 0; i < projects.length; i++) {
-      const p = projects[i];
-      if (p.state === 'marketing') {
-        sum += (p.weeklyCost * eventMult);
-      }
-    }
-    return sum;
-}
-
-export function calculateOverhead(state: GameState): number {
-  // Base studio overhead
-  return 500000; 
-}
-
-// --- Modular Revenue Calculations ---
-
-function applyIronicViewingMultiplier(baseRevenue: number): number {
-  return Math.max(baseRevenue * 1.5, 100000); 
-}
-
-export function calculateBoxOfficeRevenue(projects: Project[], contracts: Contract[] = [], eventMult: number = 1.0): number {
-  const contractsByProject = groupContractsByProject(contracts);
-  let sum = 0;
-  
-  for (let i = 0; i < projects.length; i++) {
-    const p = projects[i];
-    if (p.state === 'released' && p.format === 'film') {
-      let revenue = p.weeklyRevenue;
-
-      if (p.contractType === 'upfront') {
-          revenue = 0;
-      }
-
-      // Subtract backend participation
-      const projectContracts = contractsByProject.get(p.id) || [];
-      let totalBackendPercent = 0;
-      for (let j = 0; j < projectContracts.length; j++) {
-        totalBackendPercent += projectContracts[j].backendPercent;
-      }
-
-      // The Studio Comptroller: Backend points hit even harder at extremely high revenue tiers to reflect aggressively scaling profit-sharing contracts.
-      let backendMultiplier = 1.0;
-      if (revenue > 200_000_000) backendMultiplier = 7.5;
-      else if (revenue > 150_000_000) backendMultiplier = 5.0;
-      else if (revenue > 100_000_000) backendMultiplier = 3.5;
-      else if (revenue > 50_000_000) backendMultiplier = 2.2;
-      else if (revenue > 20_000_000) backendMultiplier = 1.5;
-
-      const backendCut = revenue * ((totalBackendPercent * backendMultiplier) / 100);
-      let netRevenue = (revenue - backendCut);
-      
-      if (p.isCultClassic) {
-         netRevenue = applyIronicViewingMultiplier(netRevenue);
-      }
-      sum += (netRevenue * eventMult);
-    }
-  }
-  return sum;
-}
-
-export function calculateDistributionRevenue(projects: Project[], eventMult: number = 1.0): number {
-    let sum = 0;
-    for (let i = 0; i < projects.length; i++) {
-      const p = projects[i];
-      // TV/Unscripted/Catalog revenue
-      if (p.state === 'released' && p.format !== 'film') {
-        sum += (p.weeklyRevenue * eventMult);
-      }
-    }
-    return sum;
-}
-
-// --- Weekly Report Generation ---
-
+/**
+ * NEW: Integrated Economic Tick using modular processors
+ */
 export function generateWeeklyFinancialReport(state: GameState): WeeklyFinancialReport {
   const projects = Object.values(state.studio.internal.projects);
-  const contracts = state.studio.internal.contracts;
+  const buyers = state.market.buyers;
   const activeEvents = state.market.activeMarketEvents || [];
 
   let costMult = 1.0;
@@ -141,15 +39,35 @@ export function generateWeeklyFinancialReport(state: GameState): WeeklyFinancial
     revMult *= e.revenueMultiplier;
   }
 
-  const production = calculateProductionBurn(projects, costMult);
-  const marketing = calculateMarketingExpenses(projects, costMult);
-  const overhead = calculateOverhead(state);
+  // 1. Calculate Expenses using Processor
+  const production = ExpenseProcessor.calculateProductionBurn(projects) * costMult;
+  const marketing = ExpenseProcessor.calculateMarketingBurn(projects) * costMult;
+  const overhead = ExpenseProcessor.calculateStudioBurn(1, projects.filter(p => p.state !== 'released').length) * costMult;
 
-  const boxOffice = calculateBoxOfficeRevenue(projects, contracts, revMult);
-  const distribution = calculateDistributionRevenue(projects, revMult);
-  const other = 0; // Future: licensing, merchandising, etc.
+  // 2. Calculate Revenues using Processor
+  let boxOffice = 0;
+  let distribution = 0;
+  let merch = 0;
 
-  const totalRevenue = boxOffice + distribution + other;
+  projects.forEach(p => {
+    if (p.state === 'released') {
+      if (p.distributionStatus === 'theatrical') {
+        const weeklyRev = p.weeklyRevenue || 0;
+        boxOffice += RevenueProcessor.calculateTheatricalDecay(weeklyRev, 0.5) * revMult;
+      } else if (p.distributionStatus === 'streaming') {
+        const platform = buyers.find(b => b.id === p.buyerId);
+        if (platform) {
+          distribution += RevenueProcessor.calculateStreamingRevenue(p, platform) * revMult;
+        }
+      }
+      
+      // Every released project has a chance for merch
+      const franchise = p.franchiseId ? state.ip.franchises[p.franchiseId] : null;
+      merch += RevenueProcessor.calculateMerchRevenue(p.buzz, franchise?.relevanceScore || 0) * revMult;
+    }
+  });
+
+  const totalRevenue = boxOffice + distribution + merch;
   const totalExpenses = production + marketing + overhead;
   const netProfit = totalRevenue - totalExpenses;
 
@@ -157,31 +75,45 @@ export function generateWeeklyFinancialReport(state: GameState): WeeklyFinancial
     week: state.week,
     year: Math.floor((state.week - 1) / 52) + 1,
     startingCash: state.finance.cash,
-    revenue: { boxOffice, distribution, other },
+    revenue: { boxOffice, distribution, other: merch },
     expenses: { production, marketing, overhead },
     endingCash: state.finance.cash + netProfit,
     netProfit,
   };
 }
 
-// Legacy wrappers to prevent breaking existing code during transition
-export function calculateWeeklyCosts(projects: Project[], activeEvents: MarketEvent[] = []): number {
-  let costMult = 1.0;
-  for (const e of activeEvents) costMult *= e.costMultiplier;
-  return calculateProductionBurn(projects, costMult) + 500000; // Static overhead for now
+// Legacy wrappers updated to use new processors
+export function calculateWeeklyCosts(projects: Project[]): number {
+  const production = ExpenseProcessor.calculateProductionBurn(projects);
+  const marketing = ExpenseProcessor.calculateMarketingBurn(projects);
+  const overhead = ExpenseProcessor.calculateStudioBurn(1, projects.filter(p => p.state !== 'released').length);
+  return production + marketing + overhead;
 }
 
-export function calculateWeeklyRevenue(projects: Project[], contracts: Contract[] = [], activeEvents: MarketEvent[] = []): number {
-  let revMult = 1.0;
-  for (const e of activeEvents) revMult *= e.revenueMultiplier;
-  return calculateBoxOfficeRevenue(projects, contracts, revMult) + calculateDistributionRevenue(projects, revMult);
+export function calculateWeeklyRevenue(projects: Project[], buyers: Buyer[] = []): number {
+  let boxOffice = 0;
+  let distribution = 0;
+
+  projects.forEach(p => {
+    if (p.state === 'released') {
+      if (p.distributionStatus === 'theatrical') {
+        boxOffice += RevenueProcessor.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.5);
+      } else if (p.distributionStatus === 'streaming') {
+        const platform = buyers.find(b => b.id === p.buyerId);
+        if (platform) {
+          distribution += RevenueProcessor.calculateStreamingRevenue(p, platform);
+        }
+      }
+    }
+  });
+
+  return boxOffice + distribution;
 }
 
 export function generateCashflowForecast(state: GameState, weeks: number = 12): { week: number; projected: number }[] {
   const projects = Object.values(state.studio.internal.projects);
-  const contracts = state.studio.internal.contracts;
   const weeklyCosts = calculateWeeklyCosts(projects);
-  const weeklyRevenue = calculateWeeklyRevenue(projects, contracts);
+  const weeklyRevenue = calculateWeeklyRevenue(projects, state.market.buyers);
   const netPerWeek = weeklyRevenue - weeklyCosts;
   
   const forecast: { week: number; projected: number }[] = [];

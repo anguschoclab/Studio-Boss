@@ -175,13 +175,29 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
     if (success) {
       const { project: updatedProject, update } = projectsEngine.executePitching(project, buyer.name, contractType);
 
+      // Distribution Effects
+      const distributionStatus = buyer.archetype === 'streamer' ? 'streaming' : 'theatrical';
+      let upfrontPayment = 0;
+      if (contractType === 'upfront') {
+        upfrontPayment = Math.floor(project.budget * 1.1); // 10% profit margin for upfront
+      }
+
       get()._updateProjectToProduction(
         state,
         projectId,
         updatedProject,
         update,
-        { buyerId, contractType }
+        { 
+          buyerId, 
+          contractType, 
+          distributionStatus,
+          revenue: project.revenue + upfrontPayment
+        }
       );
+
+      if (upfrontPayment > 0) {
+        get().addFunds(upfrontPayment);
+      }
     }
 
     return success;

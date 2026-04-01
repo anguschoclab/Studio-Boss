@@ -20,30 +20,35 @@ export function executeAcquisition(state: GameState, targetId: string): GameStat
 
   const updatedRivals = [...state.industry.rivals];
   updatedRivals.splice(targetIndex, 1);
-  const newPrestige = Math.min(100, state.studio.prestige + (target.strength * 0.2));
-
-  const newOpportunities: Opportunity[] = [...(state.market.opportunities || [])];
-  newOpportunities.push({
-    id: crypto.randomUUID(),
-    title: `Acquired ${target.name} IP Catalog`,
-    format: 'film',
-    type: 'rights' as const,
-    origin: 'agency_package' as const,
-    budgetTier: 'mid',
-    costToAcquire: 0,
-    weeksUntilExpiry: 52,
-    flavor: `A diverse library of IP acquired from ${target.name}.`,
-    targetAudience: 'broad',
-    genre: target.genreFocus || 'Drama',
-    bids: {},
-    expirationWeek: state.week + 52,
+  
+  // Consolidation Logic: Deep-merge library and talent rosters
+  const playerProjects = { ...state.studio.internal.projects };
+  const targetProjects = target.projects || {};
+  Object.keys(targetProjects).forEach(id => {
+    // Avoid overwriting if ID exists (though it shouldn't)
+    if (!playerProjects[id]) {
+      playerProjects[id] = { ...targetProjects[id], isAcquired: true };
+    }
   });
+
+  const playerContracts = [...state.studio.internal.contracts];
+  const targetContracts = target.contracts || [];
+  playerContracts.push(...targetContracts);
+
+  const newPrestige = Math.min(100, state.studio.prestige + (target.strength * 0.2));
 
   return {
     ...state,
     finance: { ...state.finance, cash: state.finance.cash - evalResult.price },
-    studio: { ...state.studio, prestige: newPrestige },
-    market: { ...state.market, opportunities: newOpportunities },
+    studio: { 
+      ...state.studio, 
+      prestige: newPrestige,
+      internal: {
+        ...state.studio.internal,
+        projects: playerProjects,
+        contracts: playerContracts,
+      }
+    },
     industry: {
       ...state.industry,
       rivals: updatedRivals,
@@ -52,8 +57,8 @@ export function executeAcquisition(state: GameState, targetId: string): GameStat
           id: crypto.randomUUID(),
           week: state.week,
           type: 'STUDIO_EVENT' as const,
-          headline: `INDUSTRY SHOCKER: ${state.studio.name} acquires ${target.name} in a historic ${"$" + (evalResult.price / 1_000_000).toFixed(1)}M buyout!`,
-          description: `${state.studio.name} has completed a landmark acquisition of ${target.name}.`,
+          headline: `CONSOLIDATED: ${state.studio.name} absorbs ${target.name}!`,
+          description: `The acquisition is finalized. ${Object.keys(targetProjects).length} projects and ${targetContracts.length} talent contracts have been integrated into ${state.studio.name}.`,
         },
         ...state.industry.newsHistory,
       ].slice(0, 50),

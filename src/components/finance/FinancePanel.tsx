@@ -11,12 +11,16 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import { Button } from '@/components/ui/button';
 import { History, LayoutDashboard, ReceiptText, TrendingUp, Package, Coins } from 'lucide-react';
 import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
+import { RevenueStreamChart } from './RevenueStreamChart';
+import { ProfitWaterfallChart } from './ProfitWaterfallChart';
+import { CashEfficiencyGauge } from './CashEfficiencyGauge';
+import { DistributionBadge } from '../shared/DistributionBadge';
 
 export const FinancePanel = () => {
   const gameState = useGameStore(s => s.gameState);
 
   const cash = gameState?.finance?.cash ?? 0;
-  const rawFinanceHistory = gameState?.finance?.ledger;
+  const rawFinanceHistory = gameState?.finance?.weeklyHistory; // Use new structured history
   const rawProjects = Object.values(gameState?.studio.internal.projects || {});
 
   const projectsMemo = useMemo(() => rawProjects ?? [], [rawProjects]);
@@ -40,13 +44,17 @@ export const FinancePanel = () => {
   );
 
   const chartData = useMemo(() => {
-    // Combine history and forecast
-    const history = financeHistory.slice(-24).map(h => ({
-      ...h,
+    if (!financeHistory || financeHistory.length === 0) return [];
+    
+    // Convert snapshots to chart format
+    const history = financeHistory.map(h => ({
+      week: h.week,
       isForecast: false,
-      histCash: h.endingCash,
-      histRevenue: h.revenue.boxOffice + h.revenue.distribution + h.revenue.other,
-      histCosts: h.expenses.production + h.expenses.marketing + h.expenses.overhead
+      histCash: h.cash,
+      histRevenue: h.revenue.theatrical + h.revenue.streaming + h.revenue.merch + h.revenue.other,
+      histCosts: h.expenses.production + h.expenses.marketing + h.expenses.burn + h.expenses.interest,
+      ...h.revenue,
+      ...h.expenses
     }));
     
     const projected = forecast.map(f => ({
@@ -57,16 +65,15 @@ export const FinancePanel = () => {
       projCosts: 0
     }));
     
-    // Stitch the last history point to forecast so the line connects
     if (history.length > 0 && projected.length > 0) {
       const last = history[history.length - 1];
       projected.unshift({
-        week: last.week,
-        isForecast: true,
+        ...last,
         projCash: last.histCash,
         projRevenue: last.histRevenue,
-        projCosts: last.histCosts
-      });
+        projCosts: last.histCosts,
+        isForecast: true,
+      } as any);
     }
 
     return [...history, ...projected];
@@ -262,6 +269,36 @@ export const FinancePanel = () => {
         </div>
       </div>
       
+      {/* Deep Economic Analytics */}
+      <div className="grid grid-cols-3 gap-6 h-[250px]">
+        <Card className="col-span-1 border-border/40 bg-card/40 backdrop-blur-md shadow-sm">
+          <CardHeader className="pb-2 border-b border-border/20">
+             <CardTitle className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Revenue Mix (Last 12w)</CardTitle>
+          </CardHeader>
+          <CardContent className="h-[180px] pt-4">
+             <RevenueStreamChart data={gameState?.finance?.weeklyHistory || []} />
+          </CardContent>
+        </Card>
+
+        <Card className="col-span-1 border-border/40 bg-card/40 backdrop-blur-md shadow-sm">
+          <CardHeader className="pb-2 border-b border-border/20">
+             <CardTitle className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Weekly P&L Breakdown</CardTitle>
+          </CardHeader>
+          <CardContent className="h-[180px] pt-4">
+             <ProfitWaterfallChart snapshot={gameState?.finance?.weeklyHistory?.slice(-1)[0]} />
+          </CardContent>
+        </Card>
+
+        <Card className="col-span-1 border-border/40 bg-card/40 backdrop-blur-md shadow-sm">
+          <CardHeader className="pb-2 border-b border-border/20">
+             <CardTitle className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Studio Efficiency</CardTitle>
+          </CardHeader>
+          <CardContent className="h-[180px] pt-4 flex items-center justify-center">
+             <CashEfficiencyGauge score={gameState?.studio?.prestige || 75} />
+          </CardContent>
+        </Card>
+      </div>
+
       {/* Project ROI Analytics */}
       <Card className="border-border/40 bg-card/60 backdrop-blur-md shadow-sm">
         <CardHeader className="pb-4 border-b border-border/30 bg-background/40">
@@ -278,11 +315,14 @@ export const FinancePanel = () => {
                return (
                  <div key={p.id} className="p-5 flex flex-col gap-3 hover:bg-muted/10 transition-colors group relative overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-                    <div className="flex items-start justify-between relative z-10">
-                       <h4 className="font-bold text-[15px] tracking-tight group-hover:text-primary transition-colors">{p.title}</h4>
-                       <Badge variant="outline" className={`text-[9px] uppercase font-black tracking-widest shadow-sm bg-background/50 backdrop-blur-sm ${isProfitable ? 'text-success border-success/30 shadow-[0_0_8px_rgba(34,197,94,0.2)]' : 'text-destructive border-destructive/30 shadow-[0_0_8px_rgba(239,68,68,0.2)]'}`}>
-                         {isProfitable ? 'Profit' : 'Loss'}
-                       </Badge>
+                     <div className="flex items-start justify-between relative z-10 gap-2">
+                       <h4 className="font-bold text-[15px] tracking-tight group-hover:text-primary transition-colors truncate">{p.title}</h4>
+                       <div className="flex flex-col items-end gap-1 shrink-0">
+                         <Badge variant="outline" className={`text-[9px] uppercase font-black tracking-widest shadow-sm bg-background/50 backdrop-blur-sm ${isProfitable ? 'text-success border-success/30 shadow-[0_0_8px_rgba(34,197,94,0.2)]' : 'text-destructive border-destructive/30 shadow-[0_0_8px_rgba(239,68,68,0.2)]'}`}>
+                           {isProfitable ? 'Profit' : 'Loss'}
+                         </Badge>
+                         <DistributionBadge status={p.distributionStatus} className="scale-75 origin-right" />
+                       </div>
                     </div>
                     <div className="space-y-1.5 relative z-10">
                       <TooltipWrapper tooltip="Total project earnings from box office receipts, distribution deals, and licensing." side="bottom">

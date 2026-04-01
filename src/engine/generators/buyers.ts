@@ -35,6 +35,7 @@ export function generateBuyers(config?: { networks?: number; premium?: number; s
       archetype: 'network',
       foundedWeek: 1,
       reach: Math.floor(randRange(40, 95)),
+      marketShare: randRange(0.1, 0.2),
     };
     buyers.push(buyer);
   }
@@ -49,6 +50,8 @@ export function generateBuyers(config?: { networks?: number; premium?: number; s
       archetype: 'premium',
       foundedWeek: 1,
       prestigeBonus: Math.floor(randRange(10, 45)),
+      marketShare: randRange(0.05, 0.1),
+      reach: Math.floor(randRange(30, 60)),
     };
     buyers.push(buyer);
   }
@@ -66,6 +69,9 @@ export function generateBuyers(config?: { networks?: number; premium?: number; s
       churnRate: parseFloat((secureRandom() * 0.09 + 0.01).toFixed(3)),
       contentLibraryQuality: Math.floor(randRange(30, 90)),
       marketingSpend: Math.floor(randRange(500_000, 5_000_000)),
+      marketShare: randRange(0.2, 0.4),
+      reach: Math.floor(randRange(70, 95)),
+      subscriberHistory: [],
     };
     buyers.push(buyer);
   }
