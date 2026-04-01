@@ -1,6 +1,7 @@
+import React from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { Button } from '@/components/ui/button';
-import { Building2, MoreVertical, Zap, UserPlus, ShieldAlert, DollarSign } from 'lucide-react';
+import { Building2, MoreVertical, Zap, UserPlus, ShieldAlert } from 'lucide-react';
 import { ARCHETYPES } from '@/engine/data/archetypes';
 import {
   DropdownMenu,
@@ -13,7 +14,6 @@ import {
 import { formatMoney } from '@/engine/utils';
 import { MADashboard } from '../industry/MADashboard';
 import { cn } from '@/lib/utils';
-import React from 'react';
 
 const strengthColor = (s: number) => {
   if (s >= 70) return 'bg-gradient-to-r from-primary to-primary/80 shadow-[0_0_8px_rgba(234,179,8,0.5)]';
@@ -30,7 +30,7 @@ export const RivalsPanel = () => {
   const { corporateSabotage, poachExec, attemptTakeover } = useGameStore();
 
   return (
-    <div className="h-full flex flex-col overflow-hidden">
+    <div className="h-full flex flex-col overflow-hidden p-4">
       {/* Sub-Tabs */}
       <div className="flex gap-1 p-1 bg-slate-900/50 rounded-lg self-start mb-6 border border-slate-800">
         <Button 
