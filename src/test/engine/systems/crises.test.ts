@@ -4,7 +4,7 @@ import { Project, GameState } from "../../../engine/types";
 import * as utils from "../../../engine/utils";
 
 describe("crises system", () => {
-  const mockProject: Project = {
+  const mockProject = {
     id: "proj-1",
     title: "Test Blockbuster",
     format: "film",
@@ -14,7 +14,7 @@ describe("crises system", () => {
     weeklyCost: 1000000,
     targetAudience: "Teens",
     flavor: "Massive action",
-    status: "production",
+    state: "production",
     buzz: 50,
     weeksInPhase: 5,
     developmentWeeks: 10,
@@ -45,7 +45,7 @@ describe("crises system", () => {
       resolved: false,
       severity: "medium"
     }
-  } as Project;
+  } as unknown as Project;
 
   const mockGameState: GameState = {
       studio: {
