@@ -1,26 +1,89 @@
 import { TalentDemographics } from '../../types/talent.types';
 
-const GENDERS = ['MALE', 'FEMALE', 'NON_BINARY'] as const;
-const COUNTRIES = ['USA', 'UK', 'Canada', 'Australia', 'Japan', 'Mexico', 'South Korea', 'France', 'India'];
-const ETHNICITIES = ['Caucasian', 'Black', 'Hispanic', 'Asian', 'South Asian', 'Middle Eastern', 'Mixed'];
+export type Ethnicity = 'Caucasian' | 'Black' | 'Hispanic' | 'Asian' | 'South Asian' | 'Middle Eastern' | 'Mixed';
 
-function getSensibleEthnicity(country: string): string {
-  if (country === 'Japan' || country === 'South Korea') return 'Asian';
-  if (country === 'India') return 'South Asian';
-  if (country === 'Mexico') return 'Hispanic';
-  return ETHNICITIES[Math.floor(Math.random() * ETHNICITIES.length)];
+interface CountryProfile {
+  ethnicities: { type: Ethnicity; weight: number }[];
+  skinTones: { type: string; weight: number }[]; // Future use for more granularity
 }
 
-export function generateDemographics(isGlobalSuperstar: boolean, localCountry?: string): TalentDemographics {
-  let country = COUNTRIES[Math.floor(Math.random() * COUNTRIES.length)];
+const COUNTRY_PROFILES: Record<string, CountryProfile> = {
+  'USA': {
+    ethnicities: [
+      { type: 'Caucasian', weight: 60 },
+      { type: 'Black', weight: 13 },
+      { type: 'Hispanic', weight: 18 },
+      { type: 'Asian', weight: 6 },
+      { type: 'Mixed', weight: 3 }
+    ],
+    skinTones: []
+  },
+  'UK': {
+    ethnicities: [
+      { type: 'Caucasian', weight: 85 },
+      { type: 'South Asian', weight: 7 },
+      { type: 'Black', weight: 4 },
+      { type: 'Mixed', weight: 3 },
+      { type: 'Asian', weight: 1 }
+    ],
+    skinTones: []
+  },
+  'Japan': {
+    ethnicities: [{ type: 'Asian', weight: 98 }, { type: 'Mixed', weight: 2 }],
+    skinTones: []
+  },
+  'South Korea': {
+    ethnicities: [{ type: 'Asian', weight: 99 }, { type: 'Mixed', weight: 1 }],
+    skinTones: []
+  },
+  'India': {
+    ethnicities: [{ type: 'South Asian', weight: 98 }, { type: 'Mixed', weight: 2 }],
+    skinTones: []
+  },
+  'Mexico': {
+    ethnicities: [{ type: 'Hispanic', weight: 90 }, { type: 'Caucasian', weight: 10 }],
+    skinTones: []
+  },
+  'France': {
+    ethnicities: [
+      { type: 'Caucasian', weight: 85 },
+      { type: 'Black', weight: 10 },
+      { type: 'Middle Eastern', weight: 5 }
+    ],
+    skinTones: []
+  },
+  'Default': {
+    ethnicities: [{ type: 'Mixed', weight: 100 }],
+    skinTones: []
+  }
+};
+
+function pick<T>(arr: T[]): T {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function randRange(min: number, max: number): number {
+  return Math.random() * (max - min) + min;
+}
+
+export function generateDemographics(isGlobalStar: boolean = false, country?: string): TalentDemographics {
+  const finalCountry = country || pick(['USA', 'UK', 'Canada', 'Australia', 'Japan', 'Mexico', 'South Korea', 'France', 'India']);
+  const profile = COUNTRY_PROFILES[finalCountry] || COUNTRY_PROFILES['Default'];
   
-  // Non-superstars favor the local country (80% chance)
-  if (!isGlobalSuperstar && localCountry && Math.random() < 0.8) {
-    country = localCountry;
+  // Weighted ethnicity pick
+  const roll = Math.random() * 100;
+  let cumulative = 0;
+  let ethnicity: Ethnicity = 'Mixed';
+  
+  for (const entry of profile.ethnicities) {
+    cumulative += entry.weight;
+    if (roll <= cumulative) {
+      ethnicity = entry.type;
+      break;
+    }
   }
 
   return {
-    age: 18 + Math.floor(Math.random() * 62),
     gender: GENDERS[Math.floor(Math.random() * GENDERS.length)],
     ethnicity: getSensibleEthnicity(country),
     country
