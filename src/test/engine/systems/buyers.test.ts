@@ -28,6 +28,10 @@ const mockBuyer: Buyer = {
   name: "Test Streamer",
   archetype: "streamer",
   currentMandate: undefined,
+  subscribers: 50000000,
+  churnRate: 0.05,
+  contentLibraryQuality: 60,
+  marketingSpend: 1000000,
 };
 
 describe("buyers system", () => {
