@@ -50,10 +50,13 @@ export const TalentAvatar: React.FC<TalentAvatarProps> = React.memo(({
   return (
     <div
       className={cn(
-        "rounded-full overflow-hidden shrink-0 bg-slate-900/60",
+        "rounded-full overflow-hidden shrink-0",
+        "bg-gradient-to-br from-slate-800/80 to-slate-950/90",
+        "backdrop-blur-sm",
         BORDER_SIZE_MAP[size],
-        "border-white/10",
-        "shadow-lg",
+        "border-white/20",
+        "shadow-[0_8px_16px_-6px_rgba(0,0,0,0.5)]",
+        "relative group transition-transform duration-500 hover:scale-105",
         className
       )}
       style={{ width: pixelSize, height: pixelSize }}

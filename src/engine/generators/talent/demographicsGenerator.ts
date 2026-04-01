@@ -59,8 +59,15 @@ function randRange(min: number, max: number): number {
   return Math.random() * (max - min) + min;
 }
 
-export function generateDemographics(isGlobalStar: boolean = false, country?: string): TalentDemographics {
-  const finalCountry = country || pick(['USA', 'UK', 'Canada', 'Australia', 'Japan', 'Mexico', 'South Korea', 'France', 'India']);
+export function generateDemographics(isGlobalStar: boolean = false, localCountry?: string): TalentDemographics {
+  const COUNTRIES = ['USA', 'UK', 'Canada', 'Australia', 'Japan', 'Mexico', 'South Korea', 'France', 'India'];
+  let finalCountry = pick(COUNTRIES);
+  
+  // Bias for local country if not a global star
+  if (!isGlobalStar && localCountry && Math.random() < 0.8) {
+    finalCountry = localCountry;
+  }
+
   const profile = COUNTRY_PROFILES[finalCountry] || COUNTRY_PROFILES['Default'];
   
   // Weighted ethnicity pick
