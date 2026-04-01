@@ -504,7 +504,7 @@ export interface Opportunity {
   episodes?: number;
   releaseModel?: ReleaseModelKey;
   qualityBonus?: number;
-  bids: Record<string, number>; // StudioId -> Bid Amount in Dollars
+  bids: Record<string, { amount: number; terms: string }>; // StudioId -> Bid Data
   highestBidderId?: string | 'PLAYER';
   bidHistory: { rivalId: string | 'PLAYER'; amount: number; week: number }[];
   expirationWeek: number; // When the auction resolves

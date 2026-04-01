@@ -26,7 +26,10 @@ describe("calculateIPValue", () => {
     momentum: 50,
     progress: 0,
     accumulatedCost: 0,
-    contentFlags: []
+    contentFlags: [],
+    scriptHeat: 50,
+    activeRoles: [],
+    scriptEvents: []
   } as Project;
 
   it("returns 10% of budget for early stages", () => {

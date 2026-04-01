@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { GameState, Agency, Talent, RivalStudio } from '@/engine/types';
+import { GameState, Agency, Talent, RivalStudio, NewsImpact } from '@/engine/types';
 import { tickAgencies } from '@/engine/systems/ai/AgentBrain';
 import { RandomGenerator } from '@/engine/utils/rng';
 
@@ -26,6 +26,7 @@ describe('Agent Brain (Target C2)', () => {
     strength: 50,
     cash: 100_000_000,
     prestige: 50,
+    foundedWeek: 0,
     recentActivity: 'Testing',
     projectCount: 5,
     strategy: 'acquirer',
@@ -39,7 +40,6 @@ describe('Agent Brain (Target C2)', () => {
     week: 1,
     gameSeed: 1,
     tickCount: 0,
-    projects: { active: [] },
     game: { currentWeek: 1 },
     finance: { cash: 1_000_000, ledger: [] },
     news: { headlines: [] },
@@ -73,8 +73,9 @@ describe('Agent Brain (Target C2)', () => {
     // With seed 888 and shark culture, should eventually trigger a rumor
     // if rng.next() < 0.1. Let's just check that it returns the right type.
     if (impacts.length > 0) {
-      expect(impacts[0].type).toBe('NEWS_ADDED');
-      expect(impacts[0].payload.headline).toContain('poach top talent');
+      const impact = impacts[0] as NewsImpact;
+      expect(impact.type).toBe('NEWS_ADDED');
+      expect(impact.payload.headline).toContain('poach top talent');
     }
   });
 });

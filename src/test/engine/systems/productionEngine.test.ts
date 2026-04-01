@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { GameState } from '@/engine/types';
+import { GameState, ProjectUpdateImpact } from '@/engine/types';
 import { tickProduction } from '@/engine/systems/productionEngine';
 import { RandomGenerator } from '@/engine/utils/rng';
 
@@ -17,7 +17,10 @@ describe('Production Engine (Target A2) - Symmetry', () => {
             state: 'production', 
             weeksInPhase: 5, 
             productionWeeks: 20,
-            progress: 25
+            progress: 25,
+            scriptHeat: 50,
+            activeRoles: [],
+            scriptEvents: []
           }
         },
         contracts: []
@@ -35,7 +38,10 @@ describe('Production Engine (Target A2) - Symmetry', () => {
               state: 'production', 
               weeksInPhase: 5, 
               productionWeeks: 20,
-              progress: 25
+              progress: 25,
+              scriptHeat: 50,
+              activeRoles: [],
+              scriptEvents: []
             }
           }
         }
@@ -47,8 +53,8 @@ describe('Production Engine (Target A2) - Symmetry', () => {
   it('should return PROJECT_UPDATED impacts for Player and Rival', () => {
     const impacts = tickProduction(mockState, rng);
     
-    const playerImpact = impacts.find(i => i.payload.projectId === 'player-p1');
-    const rivalImpact = impacts.find(i => i.payload.projectId === 'rival-p1');
+    const playerImpact = impacts.find(i => (i as ProjectUpdateImpact).payload.projectId === 'player-p1') as ProjectUpdateImpact | undefined;
+    const rivalImpact = impacts.find(i => (i as ProjectUpdateImpact).payload.projectId === 'rival-p1') as ProjectUpdateImpact | undefined;
     
     expect(playerImpact).toBeDefined();
     expect(rivalImpact).toBeDefined();

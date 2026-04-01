@@ -15,7 +15,8 @@ import { LiveAuctionDashboard } from '@/components/talent/LiveAuctionDashboard';
 import { OpportunityCard } from './OpportunityCard';
 
 export const DiscoveryBoard = () => {
-  const opportunities = useGameStore(s => selectOpportunities(s.gameState));
+  const gameState = useGameStore(s => s.gameState);
+  const opportunities = selectOpportunities(gameState);
   const { openCreateProject } = useUIStore();
   const [selectedAuctionOpp, setSelectedAuctionOpp] = useState<Opportunity | null>(null);
 

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { GameState, RivalStudio, Opportunity, Talent } from '@/engine/types';
+import { GameState, RivalStudio, Opportunity, Talent, OpportunityUpdateImpact } from '@/engine/types';
 import { tickAuctions } from '@/engine/systems/ai/biddingEngine';
 import { RandomGenerator } from '@/engine/utils/rng';
 
@@ -14,6 +14,7 @@ describe('AI Bidding Engine (Target C2 Refactor)', () => {
     strength: 80,
     cash: 50_000_000,
     prestige: 50,
+    foundedWeek: 0,
     recentActivity: 'Testing',
     projectCount: 5,
     strategy: 'acquirer',
@@ -21,7 +22,7 @@ describe('AI Bidding Engine (Target C2 Refactor)', () => {
     contracts: [],
     motivationProfile: { financial: 50, prestige: 50, legacy: 50, aggression: 50 },
     currentMotivation: 'STABILITY'
-  } as RivalStudio;
+  };
 
   const mockOpportunity: Opportunity = {
     id: 'script-1',
@@ -36,7 +37,8 @@ describe('AI Bidding Engine (Target C2 Refactor)', () => {
     costToAcquire: 1_000_000,
     weeksUntilExpiry: 10,
     expirationWeek: 10,
-    bids: { 'player-1': 1_100_000 }
+    bids: { 'player-1': { amount: 1_100_000, terms: 'standard' } },
+    bidHistory: []
   } as Opportunity;
 
   const mockState = {
@@ -73,17 +75,17 @@ describe('AI Bidding Engine (Target C2 Refactor)', () => {
   } as unknown as GameState;
 
   it('generates a OPPORTUNITY_UPDATED impact representing a counter-bid', () => {
-    const impacts = tickAuctions(mockState, rng);
-    const bidImpact = impacts.find(i => i.type === 'OPPORTUNITY_UPDATED');
+    const impacts = tickAuctions(mockState as any, rng);
+    const bidImpact = impacts.find(i => i.type === 'OPPORTUNITY_UPDATED') as OpportunityUpdateImpact | undefined;
     
     expect(bidImpact).toBeDefined();
     expect(bidImpact?.payload.opportunityId).toBe('script-1');
     expect(bidImpact?.payload.rivalId).toBe('rival-1');
-    expect(bidImpact?.payload.bid).toBeGreaterThan(1_100_000);
+    expect(bidImpact?.payload.bid.amount).toBeGreaterThan(1_100_000);
   });
 
   it('does not bid if the rival is already the highest bidder', () => {
-    const winningOpportunity = { ...mockOpportunity, bids: { 'rival-1': 2_000_000 } };
+    const winningOpportunity = { ...mockOpportunity, bids: { 'rival-1': { amount: 2_000_000, terms: 'standard' } } };
     const winningState = {
       ...mockState,
       market: {

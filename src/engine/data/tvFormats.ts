@@ -1527,17 +1527,4 @@ export const TV_FORMATS: Record<TvFormatKey, TvFormatData> = {
     revenueDecayBinge: 0.3,
     revenueDecayWeekly: 0.75,
   },
-  historical_romance: {
-    key: 'historical_romance',
-    name: 'Historical Romance',
-    defaultEpisodes: 8,
-    minEpisodes: 6,
-    maxEpisodes: 12,
-    productionCostMultiplier: 1.8,
-    developmentWeeksModifier: 1.2,
-    productionWeeksPerEpisode: 1.1,
-    renewable: true,
-    revenueDecayBinge: 0.6,
-    revenueDecayWeekly: 0.9,
-  },
 };

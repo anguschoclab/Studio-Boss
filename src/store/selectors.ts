@@ -1,36 +1,36 @@
 import { createSelector } from 'reselect';
-import { GameState, Project, Contract, RivalStudio, Talent, Buyer, GenreTrend, NewsEvent } from '../engine/types';
+import { GameState, Project, RivalStudio, Talent, GameEvent } from '../engine/types';
 
 const EMPTY_PROJECTS = {};
 const EMPTY_FINANCE = { cash: 0, ledger: [] };
 const EMPTY_MARKET = { buyers: [], opportunities: [], trends: [], activeMarketEvents: [] };
 const EMPTY_TALENT_POOL = {};
 const EMPTY_RIVALS: RivalStudio[] = [];
-const EMPTY_EVENT_HISTORY: NewsEvent[] = [];
+const EMPTY_EVENT_HISTORY: GameEvent[] = [];
 
 /**
  * Standard Root Selectors
  */
-export const selectGameState = (state: GameState | null) => state;
+export const selectGameState = (state: GameState | null): GameState | null => state;
 
 export const selectStudio = createSelector(
   [selectGameState],
-  (state) => state?.studio || null
+  (state): GameState['studio'] | null => state?.studio || null
 );
 
 export const selectInternal = createSelector(
   [selectStudio],
-  (studio) => studio?.internal || null
+  (studio): GameState['studio']['internal'] | null => studio?.internal || null
 );
 
 export const selectProjectsRaw = createSelector(
   [selectInternal],
-  (internal) => internal?.projects || EMPTY_PROJECTS
+  (internal): Record<string, Project> => internal?.projects || EMPTY_PROJECTS
 );
 
 export const selectProjects = createSelector(
   [selectProjectsRaw],
-  (projects) => Object.values(projects)
+  (projects): Project[] => Object.values(projects)
 );
 
 export const selectFinance = createSelector(
@@ -40,7 +40,7 @@ export const selectFinance = createSelector(
 
 export const selectCash = createSelector(
   [selectFinance],
-  (finance) => finance.cash || 0
+  (finance): number => finance.cash || 0
 );
 
 /**
@@ -48,17 +48,17 @@ export const selectCash = createSelector(
  */
 export const selectIndustry = createSelector(
   [selectGameState],
-  (state) => state?.industry || null
+  (state): GameState['industry'] | null => state?.industry || null
 );
 
 export const selectRivals = createSelector(
   [selectIndustry],
-  (industry) => industry?.rivals || EMPTY_RIVALS
+  (industry): RivalStudio[] => industry?.rivals || EMPTY_RIVALS
 );
 
 export const selectTalentPool = createSelector(
   [selectIndustry],
-  (industry) => industry?.talentPool || EMPTY_TALENT_POOL
+  (industry): Record<string, Talent> => industry?.talentPool || EMPTY_TALENT_POOL
 );
 
 /**
@@ -132,10 +132,10 @@ export const selectMarketTrends = createSelector(
  */
 export const selectEventHistory = createSelector(
   [selectGameState],
-  (state) => state?.eventHistory || EMPTY_EVENT_HISTORY
+  (state): GameEvent[] => state?.eventHistory || EMPTY_EVENT_HISTORY
 );
 
 export const selectRecentEvents = createSelector(
   [selectEventHistory],
-  (history) => history.slice(-10).reverse()
+  (history): GameEvent[] => history.slice(-10).reverse()
 );

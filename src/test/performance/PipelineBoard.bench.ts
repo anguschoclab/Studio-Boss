@@ -28,20 +28,19 @@ const COLUMNS: { status: ProjectStatus[]; title: string; color: string }[] = [
 describe('PipelineBoard Grouping Performance', () => {
   bench('Baseline (O(C * P))', () => {
     COLUMNS.map(col => {
-      const colProjects = projects10000.filter(p => col.status.includes((p as any).state));
+      const colProjects = projects10000.filter(p => col.status.includes(p.state));
       return colProjects;
     });
   });
 
   bench('Optimized (reduce)', () => {
     const grouped = projects10000.reduce((acc, project) => {
-      const s = (project as any).state;
+      const s = project.state;
       if (!acc[s]) acc[s] = [];
       acc[s].push(project);
       return acc;
-    }, {} as Record<ProjectStatus, Project[]>);
-
-    COLUMNS.map(col => {
+    }, {} as Partial<Record<ProjectStatus, Project[]>>) as Record<ProjectStatus, Project[]>;
+   COLUMNS.map(col => {
       return col.status.flatMap(status => grouped[status] || []);
     });
   });

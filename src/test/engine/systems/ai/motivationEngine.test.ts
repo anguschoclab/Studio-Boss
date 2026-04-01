@@ -14,6 +14,7 @@ describe('AI Motivation Engine (Target C1)', () => {
     strength: 50,
     cash: 100_000, // Very low cash
     prestige: 80,
+    foundedWeek: 0,
     motivationProfile: {
       financial: 50,
       prestige: 50,
@@ -32,7 +33,6 @@ describe('AI Motivation Engine (Target C1)', () => {
     week: 1,
     gameSeed: 1,
     tickCount: 0,
-    projects: { active: [] },
     game: { currentWeek: 1 },
     finance: { cash: 1_000_000, ledger: [] },
     news: { headlines: [] },
@@ -64,8 +64,8 @@ describe('AI Motivation Engine (Target C1)', () => {
   });
 
   it('should switch to AWARD_CHASE if prestige is high but cash is fine', () => {
-    const richRival = { ...mockRival, cash: 50_000_000, prestige: 90 };
-    const nextMotivation = calculateRivalMotivation(richRival as RivalStudio, mockState, rng);
+    const richRival: RivalStudio = { ...mockRival, cash: 50_000_000, prestige: 90 };
+    const nextMotivation = calculateRivalMotivation(richRival, mockState, rng);
     expect(nextMotivation).toBe('AWARD_CHASE');
   });
 });

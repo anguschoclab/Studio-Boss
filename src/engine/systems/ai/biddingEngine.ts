@@ -22,10 +22,10 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
 
   opportunities.forEach(opportunity => {
     // Current highest bid tracking
-    const currentHighest = Object.values(opportunity.bids || {}).reduce((max: number, b: number) => Math.max(max, b), 0);
+    const currentHighest = Object.values(opportunity.bids || {}).reduce((max: number, b) => Math.max(max, b.amount), 0);
     
     state.industry.rivals.forEach(rival => {
-      const myBid = opportunity.bids[rival.id] || 0;
+      const myBid = opportunity.bids[rival.id]?.amount || 0;
 
       // Logic for should rebid: Outbid if highest is better AND rival has cash
       // If the player is the highest bidder, AI is more aggressive
@@ -43,8 +43,7 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
             payload: {
               opportunityId: opportunity.id,
               rivalId: rival.id,
-              bid: newBid,
-              week: currWeek
+              bid: { amount: newBid, terms: 'aggressive' }
             }
           });
 
@@ -91,8 +90,7 @@ export function calculateLiveCounterBid(
         payload: {
           opportunityId: opportunity.id,
           rivalId: rival.id,
-          bid: counterAmount,
-          week
+          bid: { amount: counterAmount, terms: 'aggressive' }
         }
       };
     }
@@ -106,6 +104,6 @@ export function calculateLiveCounterBid(
  * Suggests a bid 10% higher than current max, rounded.
  */
 export function getLiveCounterBid(opportunity: Opportunity, increment: number = 0.1): number {
-  const currentMax = Math.max(...Object.values(opportunity.bids || {}), opportunity.costToAcquire);
+  const currentMax = Math.max(...Object.values(opportunity.bids || {}).map(b => b.amount), opportunity.costToAcquire);
   return Math.round(currentMax * (1 + increment) / 1000) * 1000;
 }

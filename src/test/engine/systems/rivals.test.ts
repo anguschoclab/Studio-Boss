@@ -11,6 +11,7 @@ const mockRival: RivalStudio = {
   strength: 50,
   cash: 100_000_000,
   prestige: 50,
+  foundedWeek: 0,
   recentActivity: "Doing nothing",
   projectCount: 5,
   strategy: 'acquirer',
@@ -18,7 +19,7 @@ const mockRival: RivalStudio = {
   contracts: [],
   motivationProfile: { financial: 50, prestige: 50, legacy: 50, aggression: 50 },
   currentMotivation: 'STABILITY'
-} as RivalStudio;
+};
 
 describe("rivals system", () => {
   beforeEach(() => {

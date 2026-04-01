@@ -31,6 +31,9 @@ describe('Ratings Evaluator (Target B2)', () => {
     accumulatedCost: 10_000_000,
     contentFlags: [],
     reviewScore: 90,
+    scriptHeat: 50,
+    scriptEvents: [],
+    activeRoles: [],
     tvDetails: {
       currentSeason: 1,
       episodesOrdered: 8,
@@ -39,7 +42,7 @@ describe('Ratings Evaluator (Target B2)', () => {
       averageRating: 0,
       status: 'ON_AIR'
     }
-  } as SeriesProject;
+  };
 
   it('should calculate viewership based on buzz and quality (0-10 scale)', () => {
     const rating = calculateWeeklyRating(mockSeries, 80, rng);

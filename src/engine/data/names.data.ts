@@ -1,4 +1,4 @@
-export const PREFIXES = [
+export const PREFIXES: string[] = [
   'Universal', 'Paramount', 'Silver', 'Golden', 'Grand', 'Royal', 'Majestic', 'A25', 'Auteur', 'Artisan', 'Boutique', 'Cinephile', 'Gritty', 'Authentic', 'Raw', 'Visceral', 'Indie', 'Micro', 'Prestige', 'Trophy', 'Icon', 'Aura', 'Elevated', 'Derivative', 'Algorithm', 'Nostalgia', 'Tentpole', 'Reboot', 'Cinematic', 'Blockbuster', 'Streaming', 'Viral', 'Meme', 'Synergy', 'Corporate', 'Focus Group',
   'Celluloid', 'Kinetoscope', 'Marquee', 'Backlot', 'Soundstage', 'Mogul', 'Box Office', 'Popcorn', 'Multiplex', 'Drive-In', 'Matinee', 'Premiere', 'Red Carpet', 'Paparazzi', 'Starlet', 'Montage', 'Jump Cut', 'Fade In', 'Lens Flare', 'Clapperboard', 'Green Screen', 'CGI', 'Showrunner', 'Method', 'Typecast', 'A-List', 'B-Movie', 'Cult Classic', 'Sleeper Hit', 'Flop', 'Bomb', 'Sequel', 'Prequel', 'Spin-off', 'Remake', 'Franchise', 'Trilogy', 'Cinematic Universe', 'Fandom', 'Four Quadrant', 'Demographic', 'IP', 'Oscar Bait', 'Festival Darling', 'Direct-to-Video', 'Streaming Wars', 'Binge', 'Content', 'Monetized', 'Synergistic', 'Vertical', 'Reshoot', 'Director\'s Cut', 'Golden Age', 'New Wave', 'Avant-Garde', 'Dogme', 'Mumblecore', 'Grindhouse', 'Midnight Movie',
   'Tax-Exempt', 'Algorithm-Approved', 'Deepfake', 'Focus-Tested', 'Sanitized', 'Corporate-Mandated', 'Nepo', 'Vulture', 'Hedge Fund', 'Private Equity', 'Data-Mined', 'A.I. Generated', 'Post-Credit', 'Focus-Grouped', 'Merch-Driven', 'Tax-Writeoff', 'Shell', 'Laundered', 'Overleveraged', 'Boutique', 'Uncancelled', 'Crypto-Funded', 'De-Aged', 'Shelved', 'Straight-to-Streaming', 'Zero-Day', 'Market-Tested', 'Brand-Safe', 'Four-Quadrant', 'Ghostwritten', 'Re-Edited', 'Director-Jailed', 'CGI-Heavy', 'Defamatory', 'Venture-Backed', 'Crowdfunded', 'Cash-Grab', 'Tax-Haven', 'Pivoting', 'Offshore', 'Monopolized',
@@ -50,7 +50,7 @@ export const PREFIXES = [
   'Monopolized'
 ];
 
-export const SUFFIXES = [
+export const SUFFIXES: string[] = [
   'Pictures', 'Studios', 'Entertainment', 'Films', 'Media', 'Productions', 'Cinema', 'Motion Pictures', 'Network', 'Broadcasting', 'Vision', 'Works', 'Arts', 'Interactive', 'Digital', 'Creative', 'Features', 'Releasing', 'Collective', 'Syndicate', 'Ventures', 'Partners', 'Holdings', 'Group', 'Enterprises', 'Corp', 'Inc', 'Labs', 'Workshop', 'Factory', 'Foundry', 'Forge', 'Vault', 'Archive', 'Content', 'IP', 'Universe', 'Franchise', 'Algorithm', 'Brand', 'Properties', 'Synergy Group',
   'Distribution', 'Motion Picture Company', 'International', 'Worldwide', 'Global', 'Plus', 'Max', 'Play', 'Go', 'On Demand', 'Originals', 'Releasing Company',
   'Acquisitions', 'Assets', 'Portfolios', 'Capital', 'Trust', 'Conglomerate', 'Monopoly', 'Subsidiary', 'Media Empire', 'Omnicorp', 'Content Farm', 'Clickfarm', 'Metrics', 'Data Systems', 'Data Analytics', 'Tax Haven', 'LLC', 'GmbH', 'Equities', 'Merchandising', 'Licensing', 'Metaverse', 'Web3', 'Blockchain', 'NFTs', 'Virtuals', 'Deepfakes', 'Algorithms',
@@ -90,7 +90,7 @@ export const SUFFIXES = [
   'Deepfake'
 ];
 
-export const MOTTOS = [
+export const MOTTOS: string[] = [
   'Where stories come alive', 'Entertainment without limits', 'The future of cinema', 'Bold stories, bigger audiences', 'Defining the culture', 'Every frame matters', 'Dream factory', 'Stories that move the world', 'Inspiring the imagination', 'Creating the extraordinary', 'Beyond the screen', 'Magic in every moment', 'Your ticket to adventure', 'Unleashing creativity', 'The art of storytelling', 'Cinematic perfection', 'Bringing visions to life', 'Worlds without end', 'Monetizing your childhood', 'Content is King', 'Four quadrants, one vision', 'Synergy in motion', 'Maximizing shareholder value', 'IP above all', 'We make the memes', 'Data-driven storytelling', 'Algorithms do not lie', 'Quantity has a quality all its own', 'Rebooting the culture', 'Franchises are forever', 'Your nostalgia, our profit', 'Selling the dream', 'Pivoting to video', 'The universe is expanding', 'Building the metaverse', 'Vertical integration realized', 'From script to stream', 'Disrupting the narrative', 'Content for the modern attention span', 'Art as a service', 'Monetizing the zeitgeist', 'We own your childhood', 'A cinematic universe of our own', 'Quantity over quality', 'Fast and cheap', 'Good enough for streaming', 'We fix it in post', 'Trust the algorithm', 'Four quadrants or bust', 'IP is king', 'Franchises forever', 'Rebooting your childhood', 'Monetizing nostalgia', 'Content is content', 'Engagement at all costs', 'Viral marketing is free', 'We only make sequels', 'Original ideas are risky', 'Focus grouped to perfection', 'Bland but profitable', 'Safely generic', 'Write it off for taxes', 'Don\'t read the reviews', 'Our trailers are better than the movie', 'Cancel culture is our best marketing', 'Replacing actors with AI since 2024', 'Please subscribe to our streaming tier', 'We own the rights to your dreams', 'Greenlighting based on TikTok trends', 'If it bleeds, we stream it', 'Milking the IP dry', 'Another reboot no one asked for', 'Lowering the bar daily',
   'We\'ll fix it in the edit.', 'Generated by our proprietary LLM.', 'More content than you could ever watch.', 'Tax evasion is an art form.', 'Art is just a byproduct of commerce.', 'A subsidiary of a hedge fund.', 'We buy your dreams and sell them back to you.', 'Quantity over quality, always.', 'The algorithm loved it.', 'We focus grouped the soul out of it.', 'Please don\'t unionize.', 'Replacing our writers with interns.', 'Merchandising rights reserved.', 'We only greenlight existing IP.', 'A tax write-off in the making.', 'Content to fold laundry to.', 'We paid for the bots to make it trend.', 'Cancel us, we need the PR.', 'Our CEO makes 400x your salary.', 'Content is a commodity.', 'We own the rights to your nostalgia.', 'Optimized for second screens.', 'Don\'t read the contract.', 'Artificially inflating box office since 1999.', 'No original ideas allowed.', 'Catering exclusively to demographics.', 'Written by an intern, directed by an algorithm.', 'Pre-approved by the board of directors.', 'We don\'t make movies, we make content.', 'Because you\'ll watch anything on a plane.', 'Synergy isn\'t just a buzzword, it\'s our religion.', 'We pivot to whatever is trending.', 'Lowering expectations daily.', 'Your subscription is non-refundable.', 'We have the rights, you have the money.', 'Failing upwards.', 'Monetizing your childhood trauma.',
   'Where the algorithm writes the script.', 'Test audiences loved it, critics will hate it.', 'We fix the plot in the trailer.', 'Four quadrants, zero risks.', 'Franchising your childhood memories since 1998.', 'A wholly-owned subsidiary of a tech conglomerate.', 'We make content, not cinema.', 'Cinematic universes built on shifting sand.', 'Because focus groups said so.', 'Recycling IP for a modern audience.', 'Greenlit by a spreadsheet.', 'We bought the rights to your tweet.', 'More lens flares, less character development.', 'Catering to the lowest common denominator.', 'It\'s not a movie, it\'s a four-week brand activation.', 'We only do legacy sequels.', 'Putting the \'art\' in \'artificial intelligence\'.', 'Where indie directors go to sell out.', 'We turn podcasts into cinematic universes.', 'The studio that killed the mid-budget drama.',
@@ -132,7 +132,7 @@ export const MOTTOS = [
   'Monetizing your childhood trauma.'
 ];
 
-export const MALE_FIRST_NAMES = [
+export const MALE_FIRST_NAMES: string[] = [
   'James', 'John', 'Robert', 'Michael', 'William', 'David', 'Richard', 'Joseph',
   'Thomas', 'Charles', 'Christopher', 'Daniel', 'Matthew', 'Anthony', 'Mark',
   'Donald', 'Steven', 'Paul', 'Andrew', 'Joshua', 'Kenneth', 'Kevin', 'Brian',
@@ -148,7 +148,7 @@ export const MALE_FIRST_NAMES = [
   'Louis', 'Philip', 'Bobby', 'Johnny', 'Bradley'
 ];
 
-export const FEMALE_FIRST_NAMES = [
+export const FEMALE_FIRST_NAMES: string[] = [
   'Mary', 'Patricia', 'Linda', 'Barbara', 'Elizabeth', 'Jennifer', 'Maria', 'Susan',
   'Margaret', 'Dorothy', 'Lisa', 'Nancy', 'Karen', 'Betty', 'Helen', 'Sandra',
   'Donna', 'Carol', 'Ruth', 'Sharon', 'Michelle', 'Laura', 'Sarah', 'Kimberly',
@@ -164,7 +164,7 @@ export const FEMALE_FIRST_NAMES = [
   'Lillian', 'Emily', 'Robin'
 ];
 
-export const LAST_NAMES = [
+export const LAST_NAMES: string[] = [
   'Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis',
   'Rodriguez', 'Martinez', 'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson',
   'Thomas', 'Taylor', 'Moore', 'Jackson', 'Martin', 'Lee', 'Perez', 'Thompson',
@@ -231,15 +231,15 @@ export const DICTIONARIES: Record<string, { nouns: string[], adjs: string[] }> =
   }
 };
 
-export const PREFIX_PATTERNS = [
+export const PREFIX_PATTERNS: string[] = [
   'The', 'A', 'Return of the', 'Rise of the', 'Fall of the', 'Revenge of the', 'Curse of the', 'Secret of the', 'Legend of the', 'Tale of the'
 ];
 
-export const CONNECTORS = [
+export const CONNECTORS: string[] = [
   'and the', 'in the', 'of the', 'from the', 'without', 'vs', 'meets'
 ];
 
-export const LOCATIONS = [
+export const LOCATIONS: string[] = [
   'New York', 'Los Angeles', 'London', 'Paris', 'Tokyo', 'Vegas', 'Miami', 'Chicago', 'Texas', 'Hollywood', 'Space', 'Mars', 'Earth', 'Hell', 'Heaven', 'Island', 'Mountain', 'River', 'City', 'Town'
 ];
 

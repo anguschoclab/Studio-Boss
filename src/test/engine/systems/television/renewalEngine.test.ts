@@ -28,6 +28,9 @@ describe('Renewal Engine (Target B2)', () => {
     accumulatedCost: 10_000_000,
     contentFlags: [],
     reviewScore: 90,
+    scriptHeat: 50,
+    scriptEvents: [],
+    activeRoles: [],
     tvDetails: {
       episodesAired: 10,
       episodesOrdered: 10,

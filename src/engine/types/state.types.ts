@@ -106,8 +106,7 @@ export interface BuyerUpdate { buyerId: string; update: Partial<import('./studio
 export interface ScandalUpdate { scandalId: string; update: Partial<import('./talent.types').Scandal> }
 
 export interface BaseImpact {
-  type?: ImpactType;
-  payload?: any;
+  payload?: unknown;
   cashChange?: number;
   prestigeChange?: number;
   projectUpdates?: ProjectUpdate[];
@@ -130,24 +129,53 @@ export interface BaseImpact {
   newFestivalSubmissions?: import('./project.types').FestivalSubmission[];
 }
 
+export interface FundsImpact extends BaseImpact { type: 'FUNDS_CHANGED'; payload: { amount: number } }
+export interface FundsDeductedImpact extends BaseImpact { type: 'FUNDS_DEDUCTED'; payload: { amount: number } }
+export interface ProjectUpdateImpact extends BaseImpact { type: 'PROJECT_UPDATED'; payload: ProjectUpdate }
+export type ProjectRemovedImpact = BaseImpact & { type: 'PROJECT_REMOVED'; payload: { projectId: string } };
+export type NewsImpact = BaseImpact & { type: 'NEWS_ADDED'; payload: { headline: string; description: string; category?: import('./engine.types').HeadlineCategory } };
+export type TalentUpdateImpact = BaseImpact & { type: 'TALENT_UPDATED'; payload: TalentUpdate };
+export interface PrestigeChangedImpact extends BaseImpact { type: 'PRESTIGE_CHANGED'; payload: { amount: number } }
+export interface BuyerUpdateImpact extends BaseImpact { type: 'BUYER_UPDATED'; payload: BuyerUpdate }
+export interface RivalUpdateImpact extends BaseImpact { type: 'RIVAL_UPDATED'; payload: RivalUpdate }
+export interface OpportunityUpdateImpact extends BaseImpact { type: 'OPPORTUNITY_UPDATED'; payload: { opportunityId: string; rivalId: string; bid: { amount: number; terms: string } } }
+export interface TrendsUpdateImpact extends BaseImpact { type: 'TRENDS_UPDATED'; payload: { trends: import('./project.types').GenreTrend[] } }
+export interface ScandalAddedImpact extends BaseImpact { type: 'SCANDAL_ADDED'; payload: { scandal: import('./talent.types').Scandal } }
+export interface ScandalRemovedImpact extends BaseImpact { type: 'SCANDAL_REMOVED'; payload: { scandalId: string } }
+export interface MarketEventUpdateImpact extends BaseImpact { type: 'MARKET_EVENT_UPDATED'; payload: { events?: import('./engine.types').MarketEvent[]; marketState?: MarketState } }
+export interface LedgerImpact extends BaseImpact { type: 'LEDGER_UPDATED'; payload: { report: WeeklyFinancialReport } }
+export interface FinanceTransactionImpact extends BaseImpact { type: 'FINANCE_TRANSACTION'; payload: { amount: number; description: string } }
+export interface FinanceSnapshotImpact extends BaseImpact { type: 'FINANCE_SNAPSHOT_ADDED'; payload: { snapshot: FinancialSnapshot } }
+export interface SyncMAFundsImpact extends BaseImpact { type: 'SYNC_M_A_FUNDS'; payload: { amount: number } }
+export interface SystemTickImpact extends BaseImpact { type: 'SYSTEM_TICK'; payload: { week?: number; tickCount?: number } }
+export interface IndustryUpdateImpact extends BaseImpact { 
+  type: 'INDUSTRY_UPDATE'; 
+  payload: { 
+    update: Record<string, unknown>;
+    rival?: RivalUpdate;
+    mergedRivalId?: string;
+  } 
+}
+
 export type StateImpact = 
-  | (BaseImpact & { type: 'FUNDS_CHANGED'; payload: { amount: number } })
-  | (BaseImpact & { type: 'FUNDS_DEDUCTED'; payload: { amount: number } })
-  | (BaseImpact & { type: 'PROJECT_UPDATED'; payload: ProjectUpdate })
-  | (BaseImpact & { type: 'PROJECT_REMOVED'; payload: { projectId: string } })
-  | (BaseImpact & { type: 'NEWS_ADDED'; payload: { headline: string; description: string } })
-  | (BaseImpact & { type: 'TALENT_UPDATED'; payload: TalentUpdate })
-  | (BaseImpact & { type: 'PRESTIGE_CHANGED'; payload: { amount: number } })
-  | (BaseImpact & { type: 'BUYER_UPDATED'; payload: BuyerUpdate })
-  | (BaseImpact & { type: 'RIVAL_UPDATED'; payload: RivalUpdate })
-  | (BaseImpact & { type: 'OPPORTUNITY_UPDATED'; payload: { opportunityId: string; rivalId: string; bid: any } })
-  | (BaseImpact & { type: 'TRENDS_UPDATED'; payload: { trends: import('./project.types').GenreTrend[] } })
-  | (BaseImpact & { type: 'SCANDAL_ADDED'; payload: { scandal: import('./talent.types').Scandal } })
-  | (BaseImpact & { type: 'SCANDAL_REMOVED'; payload: { scandalId: string } })
-  | (BaseImpact & { type: 'MARKET_EVENT_UPDATED'; payload: { events?: import('./engine.types').MarketEvent[]; marketState?: MarketState } })
-  | (BaseImpact & { type: 'LEDGER_UPDATED'; payload: { report: WeeklyFinancialReport } })
-  | (BaseImpact & { type: 'FINANCE_TRANSACTION'; payload: { amount: number; description: string } })
-  | (BaseImpact & { type: 'FINANCE_SNAPSHOT_ADDED'; payload: { snapshot: FinancialSnapshot } })
-  | (BaseImpact & { type: 'SYNC_M_A_FUNDS'; payload: { amount: number } })
-  | (BaseImpact & { type: 'SYSTEM_TICK'; payload: { week?: number; tickCount?: number } })
-  | BaseImpact; // Support for "merged" impacts with no type
+  | FundsImpact
+  | FundsDeductedImpact
+  | ProjectUpdateImpact
+  | ProjectRemovedImpact
+  | NewsImpact
+  | TalentUpdateImpact
+  | PrestigeChangedImpact
+  | BuyerUpdateImpact
+  | RivalUpdateImpact
+  | OpportunityUpdateImpact
+  | TrendsUpdateImpact
+  | ScandalAddedImpact
+  | ScandalRemovedImpact
+  | MarketEventUpdateImpact
+  | LedgerImpact
+  | FinanceTransactionImpact
+  | FinanceSnapshotImpact
+  | SyncMAFundsImpact
+  | SystemTickImpact
+  | IndustryUpdateImpact
+  | (BaseImpact & { type?: undefined }); // The "Bag" impact

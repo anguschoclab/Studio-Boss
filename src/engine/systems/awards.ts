@@ -1,4 +1,4 @@
-import { Award, AwardBody, AwardCategory, AwardsProfile, GameState, Project, Headline, NewsEvent } from '@/engine/types';
+import { AwardBody, AwardCategory, AwardsProfile, GameState, Project } from '@/engine/types';
 import { secureRandom } from '../utils';
 import { StateImpact } from '../types/state.types';
 import { 
@@ -17,11 +17,11 @@ export function isSundanceEquivalentFestival(body: AwardBody | string): boolean 
 }
 
 export function isMajorCategoryNomination(category: AwardCategory | string): boolean {
-  return ['Best Director', 'Best Actor', 'Best Actress', 'Palme d\'Or', 'Golden Lion', 'Golden Bear', 'Grand Jury Prize'].includes(category as any);
+  return (['Best Director', 'Best Actor', 'Best Actress', 'Palme d\'Or', 'Golden Lion', 'Golden Bear', 'Grand Jury Prize'] as string[]).includes(category as string);
 }
 
 export function isSupportingCategoryNomination(category: AwardCategory | string): boolean {
-  return ['Best Supporting Actor', 'Best Supporting Actress'].includes(category as any);
+  return (['Best Supporting Actor', 'Best Supporting Actress'] as string[]).includes(category as string);
 }
 
 export function generateAwardsProfile(project: Project): AwardsProfile {
@@ -64,6 +64,7 @@ export function launchAwardsCampaign(state: GameState, projectId: string, budget
       }
     }],
     newHeadlines: [{
+      id: `hl-${crypto.randomUUID()}`,
       week: state.week,
       category: 'awards',
       text: `Studio launches massive FYC campaign for "${project.title}".`
@@ -122,8 +123,8 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
       }
     }
 
-    if (bestScore > 150) {
-      impact.newAwards!.push({
+    if (bestScore > 150 && impact.newAwards) {
+      impact.newAwards.push({
         id: `award-${crypto.randomUUID()}`,
         projectId: bestProject.id,
         name: config.category,
@@ -141,21 +142,30 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
       } else if (isMajorCategoryNomination(config.category)) {
         prestigeWon = 15;
       }
-      impact.prestigeChange! += prestigeWon;
+      impact.prestigeChange = (impact.prestigeChange || 0) + prestigeWon;
 
-      impact.uiNotifications!.push(`🏆 "${bestProject.title}" won ${config.category} at the ${config.body}!`);
-      impact.newsEvents!.push({
-        type: 'AWARD',
-        headline: `${bestProject.title} Wins ${config.category}!`,
-        description: `In a stunning victory at the ${config.body}, "${bestProject.title}" took home the top prize for ${config.category}.`,
-      });
-      impact.newHeadlines!.push({
-        week: currentWeek,
-        category: 'awards',
-        text: `BREAKING: "${bestProject.title}" wins ${config.category} at the ${config.body}!`
-      });
-    } else if (bestScore > 100) {
-      impact.newAwards!.push({
+      if (impact.uiNotifications) {
+        impact.uiNotifications.push(`🏆 "${bestProject.title}" won ${config.category} at the ${config.body}!`);
+      }
+      if (impact.newsEvents) {
+        impact.newsEvents.push({
+          id: `news-${crypto.randomUUID()}`,
+          week: currentWeek,
+          type: 'AWARD',
+          headline: `${bestProject.title} Wins ${config.category}!`,
+          description: `In a stunning victory at the ${config.body}, "${bestProject.title}" took home the top prize for ${config.category}.`,
+        });
+      }
+      if (impact.newHeadlines) {
+        impact.newHeadlines.push({
+          id: `hl-${crypto.randomUUID()}`,
+          week: currentWeek,
+          category: 'awards',
+          text: `BREAKING: "${bestProject.title}" wins ${config.category} at the ${config.body}!`
+        });
+      }
+    } else if (bestScore > 100 && impact.newAwards) {
+      impact.newAwards.push({
         id: `award-${crypto.randomUUID()}`,
         projectId: bestProject.id,
         name: config.category,
@@ -173,9 +183,11 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
       } else if (isMajorCategoryNomination(config.category)) {
         prestigeNom = 3;
       }
-      impact.prestigeChange! += prestigeNom;
+      impact.prestigeChange = (impact.prestigeChange || 0) + prestigeNom;
 
-      impact.uiNotifications!.push(`⭐ "${bestProject.title}" was nominated for ${config.category} at the ${config.body}.`);
+      if (impact.uiNotifications) {
+        impact.uiNotifications.push(`⭐ "${bestProject.title}" was nominated for ${config.category} at the ${config.body}.`);
+      }
     }
   }
 
@@ -202,21 +214,32 @@ export function processRazzies(state: GameState, week: number): StateImpact {
 
   if (eligibleProjects.length === 0) return impact;
 
-  const worstPicture = eligibleProjects.reduce((worst, p) =>
-    (p.reviewScore! < worst.reviewScore!) ? p : worst
-  );
+  const worstPicture = eligibleProjects.reduce((worst, p) => {
+    const pScore = p.reviewScore ?? 100;
+    const worstScore = worst.reviewScore ?? 100;
+    return (pScore < worstScore) ? p : worst;
+  });
 
-  impact.uiNotifications!.push(`"${worstPicture.title}" has 'won' Worst Picture at The Razzies! A catastrophic failure.`);
-  impact.newHeadlines!.push({
-    week,
-    category: 'awards',
-    text: `The Razzies Nominees Announced! "${worstPicture.title}" sweeps the board with a historic Worst Picture win.`
-  });
-  impact.newsEvents!.push({
-    type: 'AWARD',
-    headline: `Razzies: ${worstPicture.title} Named Worst Picture`,
-    description: `The Golden Raspberry Awards have spoken, and "${worstPicture.title}" is officially the worst film of the year.`,
-  });
+  if (impact.uiNotifications) {
+      impact.uiNotifications.push(`"${worstPicture.title}" has 'won' Worst Picture at The Razzies! A catastrophic failure.`);
+  }
+  if (impact.newHeadlines) {
+    impact.newHeadlines.push({
+      id: `hl-${crypto.randomUUID()}`,
+      week,
+      category: 'awards',
+      text: `The Razzies Nominees Announced! "${worstPicture.title}" sweeps the board with a historic Worst Picture win.`
+    });
+  }
+  if (impact.newsEvents) {
+    impact.newsEvents.push({
+      id: `news-${crypto.randomUUID()}`,
+      week,
+      type: 'AWARD',
+      headline: `Razzies: ${worstPicture.title} Named Worst Picture`,
+      description: `The Golden Raspberry Awards have spoken, and "${worstPicture.title}" is officially the worst film of the year.`,
+    });
+  }
   impact.prestigeChange = -10;
 
   const isAbsurd = worstPicture.genre === 'Drama' || (worstPicture.flavor && worstPicture.flavor.toLowerCase().match(/absurd|ridiculous|bizarre|insane/));
@@ -244,22 +267,29 @@ export function processRazzies(state: GameState, week: number): StateImpact {
 
   if (worstLeadId && worstLeadName) {
      impact.razzieWinnerTalents = [worstLeadId];
-     impact.uiNotifications!.push(`${worstLeadName} won Worst Lead for "${worstPicture.title}", absolutely devastating their ego.`);
+     if (impact.uiNotifications) {
+        impact.uiNotifications.push(`${worstLeadName} won Worst Lead for "${worstPicture.title}", absolutely devastating their ego.`);
+     }
      
-     impact.projectUpdates!.push({
-       projectId: worstPicture.id,
-       update: {
-         activeCrisis: {
-           description: `The Razzies have destroyed ${worstLeadName}'s ego. They are having a meltdown on set of their next project, or refusing to promote this one.`,
-           resolved: false,
-           severity: 'high',
-           options: [
-             { text: 'Apologize for being "misunderstood"', effectDescription: 'Lose 10 buzz.', buzzPenalty: 10 },
-             { text: 'Ignore the noise', effectDescription: 'Lose $500k in PR damage.', cashPenalty: 500000 }
-           ]
-         }
-       }
-     });
+     if (impact.projectUpdates) {
+        impact.projectUpdates.push({
+          projectId: worstPicture.id,
+          update: {
+            activeCrisis: {
+              crisisId: `crisis-${crypto.randomUUID()}`,
+              triggeredWeek: week,
+              haltedProduction: false,
+              description: `The Razzies have destroyed ${worstLeadName}'s ego. They are having a meltdown on set of their next project, or refusing to promote this one.`,
+              resolved: false,
+              severity: 'high',
+              options: [
+                { text: 'Apologize for being "misunderstood"', effectDescription: 'Lose 10 buzz.', buzzPenalty: 10 },
+                { text: 'Ignore the noise', effectDescription: 'Lose $500k in PR damage.', cashPenalty: 500000 }
+              ]
+            }
+          }
+        });
+     }
   }
 
   return impact;

@@ -12,8 +12,8 @@ import { cn } from '@/lib/utils';
 
 export const DealsDesk = () => {
   const gameState = useGameStore(s => s.gameState);
-  const buyers = useGameStore(s => selectBuyers(s.gameState));
-  const projects = useGameStore(s => selectProjects(s.gameState));
+  const buyers = selectBuyers(gameState);
+  const projects = selectProjects(gameState);
   const pitchingProjects = projects.filter(p => p.state === 'pitching' || p.state === 'development');
 
   return (

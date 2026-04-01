@@ -16,18 +16,21 @@ describe('Razzies Award System', () => {
     flavor, 
     state: 'released', 
     buzz: 50, 
-    weeksInPhase: 0,
+    weeksInPhase: 1,
     developmentWeeks: 1, 
     productionWeeks: 1, 
     revenue: 10, 
     weeklyRevenue: 10, 
-    releaseWeek: null,
+    releaseWeek: 1,
     reviewScore: score,
     activeCrisis: null,
     momentum: 50,
     progress: 100,
     accumulatedCost: budget,
-    contentFlags: []
+    contentFlags: [],
+    scriptHeat: 50,
+    activeRoles: [],
+    scriptEvents: []
   } as Project);
 
   it('Razzies are only awarded to projects with Budget >= 50M and Score <= 30', () => {

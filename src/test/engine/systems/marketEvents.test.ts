@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { advanceMarketEvents, getActiveMarketEvent } from '../../../engine/systems/marketEvents';
-import { GameState, MarketEvent, Talent } from '../../../engine/types';
+import { GameState, MarketEvent, Talent, StateImpact, MarketEventUpdateImpact } from '../../../engine/types';
 import * as utils from '../../../engine/utils';
 
 describe('Market Events System', () => {
@@ -64,11 +64,11 @@ describe('Market Events System', () => {
       mockGameState.market.activeMarketEvents = [activeEvent];
 
       const impacts = advanceMarketEvents(mockGameState);
-      const marketImpact = impacts.find(i => i.type === 'MARKET_EVENT_UPDATED');
+      const marketImpact = impacts.find(i => i.type === 'MARKET_EVENT_UPDATED') as MarketEventUpdateImpact | undefined;
 
       expect(marketImpact).toBeDefined();
-      expect(marketImpact?.payload.events.length).toBe(1);
-      expect(marketImpact?.payload.events[0].weeksRemaining).toBe(4);
+      expect(marketImpact?.payload.events?.length).toBe(1);
+      expect(marketImpact?.payload.events?.[0].weeksRemaining).toBe(4);
     });
 
     it('should expire events when weeksRemaining reaches 0', () => {
@@ -87,9 +87,9 @@ describe('Market Events System', () => {
       vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5); // No new event spawn
 
       const impacts = advanceMarketEvents(mockGameState);
-      const marketImpact = impacts.find(i => i.type === 'MARKET_EVENT_UPDATED');
+      const marketImpact = impacts.find(i => i.type === 'MARKET_EVENT_UPDATED') as MarketEventUpdateImpact | undefined;
       
-      expect(marketImpact?.payload.events.length).toBe(0);
+      expect(marketImpact?.payload.events?.length).toBe(0);
     });
   });
 

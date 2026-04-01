@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { tickProduction } from '../../../../engine/systems/productionEngine';
-import { GameState, Project, Talent } from '../../../../engine/types';
+import { GameState, Project, Talent, ProjectUpdateImpact } from '../../../../engine/types';
 import { RandomGenerator } from '../../../../engine/utils/rng';
 
 describe('tickProduction', () => {
@@ -10,7 +10,6 @@ describe('tickProduction', () => {
     week: 1,
     gameSeed: 1,
     tickCount: 0,
-    projects: { active: [] },
     game: { currentWeek: 1 },
     finance: { cash: 1000000, ledger: [] },
     news: { headlines: [] },
@@ -45,7 +44,7 @@ describe('tickProduction', () => {
     state, buzz: 50, weeksInPhase: 0, developmentWeeks: 4, productionWeeks: 4,
     revenue: 0, weeklyRevenue: 0, releaseWeek: null,
     activeCrisis: null, momentum: 50, progress: 0, accumulatedCost: 0,
-    contentFlags: []
+    contentFlags: [], scriptHeat: 50, activeRoles: [], scriptEvents: []
   } as Project);
 
   it('ignores projects not in production/development state in the core tick (if logic specifies)', () => {
@@ -67,9 +66,10 @@ describe('tickProduction', () => {
     const impacts = tickProduction(state, rng);
     
     expect(impacts).toHaveLength(1);
-    expect(impacts[0].type).toBe('PROJECT_UPDATED');
-    expect(impacts[0].payload.projectId).toBe('p1');
-    expect(impacts[0].payload.update.weeksInPhase).toBe(1);
-    expect(impacts[0].payload.update.progress).toBeGreaterThan(0);
+    const impact = impacts[0] as ProjectUpdateImpact;
+    expect(impact.type).toBe('PROJECT_UPDATED');
+    expect(impact.payload.projectId).toBe('p1');
+    expect(impact.payload.update.weeksInPhase).toBe(1);
+    expect(impact.payload.update.progress).toBeGreaterThan(0);
   });
 });

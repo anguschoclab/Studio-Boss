@@ -26,7 +26,10 @@ describe('evaluateMarketingEfficiency', () => {
       momentum: 50,
       progress: 100,
       accumulatedCost: budget,
-      contentFlags: []
+      contentFlags: [],
+      scriptHeat: 50,
+      activeRoles: [],
+      scriptEvents: []
   } as Project);
 
   it('penalizes mismatching angles (e.g. Spectacle for an Indie Drama)', () => {
@@ -34,7 +37,7 @@ describe('evaluateMarketingEfficiency', () => {
     const campaign: MarketingCampaign = { 
       domesticBudget: 10_000_000, 
       foreignBudget: 0, 
-      primaryAngle: 'SELL_THE_SPECTACLE' as any
+      primaryAngle: 'SELL_THE_SPECTACLE'
     };
     
     const result = evaluateMarketingEfficiency(project, campaign);
@@ -47,7 +50,7 @@ describe('evaluateMarketingEfficiency', () => {
     const campaign: MarketingCampaign = { 
       domesticBudget: 20_000_000, 
       foreignBudget: 20_000_000, 
-      primaryAngle: 'FAMILY_ADVENTURE' as any
+      primaryAngle: 'FAMILY_ADVENTURE'
     };
     
     const result = evaluateMarketingEfficiency(project, campaign);
@@ -60,7 +63,7 @@ describe('evaluateMarketingEfficiency', () => {
     const campaign: MarketingCampaign = { 
         domesticBudget: 50_000_000, 
         foreignBudget: 50_000_000, 
-        primaryAngle: 'SELL_THE_SPECTACLE' as any,
+        primaryAngle: 'SELL_THE_SPECTACLE',
         weeksInMarketing: 6 
     };
 

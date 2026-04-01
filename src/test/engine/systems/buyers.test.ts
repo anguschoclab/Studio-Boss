@@ -1,11 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { calculateFitScore, negotiateContract } from "../../../engine/systems/buyers";
-import { Project, Buyer } from "../../../engine/types";
+import { Project, Buyer, StreamerPlatform } from "../../../engine/types";
 import * as utils from "../../../engine/utils";
 
 const mockProject: Project = {
   id: "p1",
   title: "Sci-Fi Epic",
+  type: "FILM",
   format: "film",
   genre: "Sci-Fi",
   budgetTier: "blockbuster",
@@ -21,9 +22,17 @@ const mockProject: Project = {
   revenue: 0,
   weeklyRevenue: 0,
   releaseWeek: null,
+  activeCrisis: null,
+  momentum: 50,
+  progress: 0,
+  accumulatedCost: 0,
+  contentFlags: [],
+  scriptHeat: 50,
+  activeRoles: [],
+  scriptEvents: []
 } as Project;
 
-const mockBuyer: Buyer = {
+const mockBuyer: StreamerPlatform = {
   id: "b1",
   name: "Test Streamer",
   archetype: "streamer",
@@ -32,6 +41,10 @@ const mockBuyer: Buyer = {
   churnRate: 0.05,
   contentLibraryQuality: 60,
   marketingSpend: 1000000,
+  foundedWeek: 0,
+  marketShare: 0.1,
+  reach: 80,
+  subscriberHistory: []
 };
 
 describe("buyers system", () => {

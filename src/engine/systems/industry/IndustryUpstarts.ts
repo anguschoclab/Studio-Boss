@@ -48,13 +48,17 @@ export function tickIndustryUpstarts(state: GameState): StateImpact[] {
 
     impacts.push({
       type: 'INDUSTRY_UPDATE',
-      payload: { rival: newStudio }
+      payload: { 
+        update: {},
+        rival: { rivalId: newStudio.id, update: newStudio }
+      }
     });
 
     impacts.push({
       type: 'NEWS_ADDED',
       payload: {
         headline: `NEW PLAYER: ${name} launches as artisanal studio`,
+        description: `With a focus on quality over volume, ${name} has officially entered the market as a boutique ${archetype} studio.`,
         category: 'general'
       }
     });
@@ -74,7 +78,10 @@ export function tickIndustryUpstarts(state: GameState): StateImpact[] {
         subscribers: 2_000_000,
         churnRate: 0.08,
         contentLibraryQuality: 30,
-        marketingSpend: 1_000_000
+        marketingSpend: 1_000_000,
+        subscriberHistory: [{ week: state.week, count: 2_000_000 }],
+        marketShare: 0.02,
+        reach: 40
      };
 
      impacts.push({
@@ -89,6 +96,7 @@ export function tickIndustryUpstarts(state: GameState): StateImpact[] {
         type: 'NEWS_ADDED',
         payload: {
            headline: `DISRUPTOR: ${name} enters the streaming wars`,
+           description: `A new streaming platform, ${name}, has launched today with an aggressive subscriber acquisition strategy.`,
            category: 'market'
         }
      });

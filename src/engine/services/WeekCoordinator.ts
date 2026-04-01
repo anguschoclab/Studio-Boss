@@ -139,14 +139,15 @@ export class WeekCoordinator {
     let totalCosts = 0;
 
     if (ledgerImpact && ledgerImpact.type === 'LEDGER_UPDATED') {
-       const report = ledgerImpact.payload.report;
+       const payload = ledgerImpact.payload as import('../types/state.types').LedgerImpact['payload'];
+       const report = payload.report;
        totalRevenue = report.revenue.boxOffice + report.revenue.distribution + report.revenue.other;
        totalCosts = report.expenses.production + report.expenses.marketing + report.expenses.overhead;
     }
 
     const projectUpdates = context.impacts
-      .filter(i => i.type === 'PROJECT_UPDATED' && i.payload)
-      .map(i => (i.payload as import('../types/state.types').ProjectUpdate).projectId);
+      .filter((i): i is import('../types/state.types').ProjectUpdateImpact => i.type === 'PROJECT_UPDATED')
+      .map(i => i.payload.projectId);
 
     return {
       fromWeek: before.week,
@@ -157,14 +158,15 @@ export class WeekCoordinator {
       totalCosts,
       projectUpdates: Array.from(new Set(projectUpdates)),
       newHeadlines: newsImpacts.map(i => {
-        if (i.type !== 'NEWS_ADDED') return { id: '', text: '', week: 0, category: 'general' };
+        if (i.type !== 'NEWS_ADDED') return null;
+        const payload = i.payload as import('../types/state.types').NewsImpact['payload'];
         return {
           id: context.rng.uuid('news'),
-          text: i.payload.headline || 'Unknown Event',
+          text: payload.headline || 'Unknown Event',
           week: context.week,
           category: 'general' as import('../types/engine.types').HeadlineCategory
         };
-      }).filter(h => h.id !== ''),
+      }).filter((h): h is import('../types/engine.types').Headline => h !== null),
       events: context.events.map(e => e.title),
     };
   }

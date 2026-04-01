@@ -1,4 +1,4 @@
-import { GameState, StateImpact, NewsEvent } from '@/engine/types';
+import { GameState, StateImpact, NewsEvent, Project, RivalStudio, Talent, Buyer } from '@/engine/types';
 
 /**
  * Pure function to apply a single StateImpact to the GameState.
@@ -63,8 +63,9 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     case 'PROJECT_UPDATED': {
       const { projectId, update } = impact.payload;
       const projects = { ...state.studio.internal.projects };
-      if (projects[projectId]) {
-        projects[projectId] = { ...projects[projectId], ...update } as import('@/engine/types').Project;
+      const project = projects[projectId];
+      if (project) {
+        projects[projectId] = { ...project, ...update } as Project;
       }
       return {
         ...state,
@@ -126,8 +127,9 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     case 'TALENT_UPDATED': {
       const { talentId, update } = impact.payload;
       const talentPool = { ...state.industry.talentPool };
-      if (talentPool[talentId]) {
-        talentPool[talentId] = { ...talentPool[talentId], ...update } as import('@/engine/types').Talent;
+      const talent = talentPool[talentId];
+      if (talent) {
+        talentPool[talentId] = { ...talent, ...update } as Talent;
       }
       return {
         ...state,
@@ -141,7 +143,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     case 'BUYER_UPDATED': {
       const { buyerId, update } = impact.payload;
       const buyers = state.market.buyers.map(b => 
-        b.id === buyerId ? { ...b, ...update } as any : b
+        b.id === buyerId ? { ...b, ...update } as Buyer : b
       );
       return {
         ...state,
@@ -155,7 +157,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     case 'RIVAL_UPDATED': {
       const { rivalId, update } = impact.payload;
       const rivals = state.industry.rivals.map(r => 
-        r.id === rivalId ? { ...r, ...update } as any : r
+        r.id === rivalId ? { ...r, ...update } as RivalStudio : r
       );
       return {
         ...state,
@@ -283,11 +285,12 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
       if (impact.newAwards) {
           impact.newAwards.forEach(award => {
               const projects = { ...newState.studio.internal.projects };
-              if (projects[award.projectId]) {
+              const project = projects[award.projectId];
+              if (project) {
                   projects[award.projectId] = { 
-                      ...projects[award.projectId], 
-                      awards: [...(projects[award.projectId].awards || []), award] 
-                  } as any;
+                      ...project, 
+                      awards: [...(project.awards || []), award] 
+                  } as Project;
               }
               newState = { ...newState, studio: { ...newState.studio, internal: { ...newState.studio.internal, projects } } };
           });
@@ -295,8 +298,9 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
       if (impact.cultClassicProjectIds) {
           impact.cultClassicProjectIds.forEach(id => {
               const projects = { ...newState.studio.internal.projects };
-              if (projects[id]) {
-                  projects[id] = { ...projects[id], isCultClassic: true } as any;
+              const project = projects[id];
+              if (project) {
+                  projects[id] = { ...project, isCultClassic: true } as Project;
               }
               newState = { ...newState, studio: { ...newState.studio, internal: { ...newState.studio.internal, projects } } };
           });
@@ -304,8 +308,9 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
       if (impact.razzieWinnerTalents) {
           impact.razzieWinnerTalents.forEach(id => {
               const talentPool = { ...newState.industry.talentPool };
-              if (talentPool[id]) {
-                  talentPool[id] = { ...talentPool[id], razzieWinner: true } as any;
+              const talent = talentPool[id];
+              if (talent) {
+                  talentPool[id] = { ...talent, razzieWinner: true } as Talent;
               }
               newState = { ...newState, industry: { ...newState.industry, talentPool } };
           });

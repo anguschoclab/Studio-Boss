@@ -26,6 +26,7 @@ export interface RivalStudio {
   strength: number;
   cash: number;
   prestige: number;
+  foundedWeek: number;
   recentActivity: string;
   projectCount: number;
   // AI Motivations
@@ -36,7 +37,6 @@ export interface RivalStudio {
   contracts: Contract[];
   // Consolidation & Vertical Integration
   ownedPlatforms?: string[]; // IDs of platforms this studio owns
-  foundedWeek: number;
   parentBrand?: string;
   marketShare?: number; // 0-100: Calculated based on revenue and prestige
   strategy?: RivalStrategy;
