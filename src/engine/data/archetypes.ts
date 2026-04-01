@@ -85,4 +85,15 @@ export const AGENCY_ARCHETYPES: Record<AgencyArchetype, AgencyArchetypeData> = {
     name: 'Indie Darling',
     description: 'Identity: The Indie Darling — Highly influential among festival circuits and independent financiers. They refuse to let their clients participate in commercial franchises and constantly mandate analog shoots, auteur directors, and extended rehearsal schedules.'
   }
+,
+  nepotism_mill: {
+    key: 'nepotism_mill',
+    name: 'Nepotism Mill',
+    description: 'Identity: The Nepotism Mill — Specialized in placing entirely unqualified offspring of Hollywood royalty into leading roles. They demand massive ego-stroking, completely unearned top billing, and aggressively suppress any reviews that point out their clients\' lack of talent.'
+  },
+  international_broker: {
+    key: 'international_broker',
+    name: 'International Broker',
+    description: 'Identity: The International Broker — Bridges global markets. They fiercely negotiate for absurd cross-cultural pandering scenes, demand separate international press tours, and mandate that foreign box office grosses trigger massive backend escalators.'
+  }
 };
