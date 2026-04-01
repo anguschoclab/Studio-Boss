@@ -432,11 +432,11 @@ export function generateAvatarSVG(talent: Talent, currentWeek: number = 1): stri
   
   // SVG canvas: 200x200 viewBox
   const cx = 100; // Center x
-  const cy = 108; // Center y (slightly below midpoint for head room)
+  const cy = 100; // Center y — centered for better framing
   
-  // Face dimensions
-  const faceW = 58 + f.faceWidth * 24;   // 58-82
-  const faceH = 68 + f.faceHeight * 22;  // 68-90
+  // Face dimensions — LARGER to avoid pinhead look
+  const faceW = 68 + f.faceWidth * 20;   // 68-88 (was 58-82)
+  const faceH = 78 + f.faceHeight * 18;  // 78-96 (was 68-90)
   const jawW = faceW * (0.7 + f.jawWidth * 0.25);
   const chinY = cy + faceH * 0.48;
   const chinPoint = f.chinPointiness * 8;
