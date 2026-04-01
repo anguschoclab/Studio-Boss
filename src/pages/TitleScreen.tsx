@@ -24,7 +24,7 @@ const TitleScreen = () => {
     // Handle Auto-Start redirect
     const params = new URLSearchParams(window.location.search);
     if (params.get('autoStart') === 'true') {
-      window.location.href = '/dashboard?autoStart=true';
+      navigate({ to: '/dashboard' });
     }
   }, [getSaveSlots, navigate]);
 
