@@ -6,6 +6,8 @@ const BOUTIQUE_PREFIXES = ['Silver Lake', 'Artisan', 'Lighthouse', 'Indie', 'Aut
 const SHARK_PREFIXES = ['Viper', 'Goldstein &', 'Predator', 'Ironclad', 'Cutthroat', 'Ruthless', 'Bloodsucker', 'Barracuda', 'Venom'];
 const STREAMING_TITAN_PREFIXES = ['Algorithm', 'Streamline', 'Cloud', 'Data-Driven', 'Binge'];
 const INDIE_DARLING_PREFIXES = ['Festival', 'Arthouse', 'Cinema', 'Auteur', 'Celluloid'];
+const NEPO_MILL_PREFIXES = ['Dynasty', 'Legacy', 'Bloodline', 'Heirloom', 'Sion'];
+const INT_BROKER_PREFIXES = ['Global', 'Transcontinental', 'Overseas', 'Worldwide', 'Meridian'];
 
 
 
@@ -86,6 +88,23 @@ const STREAMING_TITAN_TRAITS = [
   'Demands back-end points tied to 28-day viewership'
 ];
 
+const NEPOTISM_MILL_TRAITS = [
+  'Demands massive ego-stroking',
+  'Requires completely unearned top billing',
+  'Aggressively suppresses negative reviews',
+  'Demands massive backend points despite zero experience',
+  'Forces family members into supporting roles',
+  'Refuses to audition or do chemistry reads'
+];
+
+const INTERNATIONAL_BROKER_TRAITS = [
+  'Mandates absurd cross-cultural pandering scenes',
+  'Demands separate international press tours',
+  'Requires massive backend escalators for foreign gross',
+  'Forces shooting in specific tax-haven countries',
+  'Demands international distribution rights carve-outs'
+];
+
 const INDIE_DARLING_TRAITS = [
   'Refuses commercial franchise projects',
   'Requires analog film shoot',
@@ -122,9 +141,15 @@ export function generateAgencies(count: number): Agency[] {
     } else if (r < 0.75) {
       archetype = 'streaming_titan';
       actualName = pick(STREAMING_TITAN_PREFIXES) + pick([' Representation', ' Management', ' Artists']);
-    } else if (r < 0.9) {
+    } else if (r < 0.8) {
       archetype = 'indie_darling';
       actualName = pick(INDIE_DARLING_PREFIXES) + pick([' Guild', ' Collective', ' Artists']);
+    } else if (r < 0.9) {
+      archetype = 'nepotism_mill';
+      actualName = pick(NEPO_MILL_PREFIXES) + pick([' Representation', ' Management', ' Dynasty']);
+    } else if (r < 0.95) {
+      archetype = 'international_broker';
+      actualName = pick(INT_BROKER_PREFIXES) + pick([' Media', ' Exchange', ' Associates']);
     } else {
       archetype = 'boutique';
       actualName = pick(BOUTIQUE_PREFIXES) + pick([' Reps', ' Artists', ' Guild', ' Defenders']);
@@ -138,7 +163,7 @@ export function generateAgencies(count: number): Agency[] {
     } else if (archetype === 'comedy_specialist' || archetype === 'lit_agency' || archetype === 'indie_darling') {
         tier = 'specialist';
     } else {
-        tier = pick(['mid-tier', 'boutique', 'specialist']);
+        tier = (archetype === 'international_broker') ? 'major' : pick(['mid-tier', 'boutique', 'specialist']);
     }
 
     let culture: AgencyCulture;
@@ -146,6 +171,7 @@ export function generateAgencies(count: number): Agency[] {
     else if (archetype === 'shark') culture = 'shark';
     else if (archetype === 'lit_agency' || archetype === 'indie_darling') culture = 'prestige';
     else if (archetype === 'comedy_specialist') culture = 'family';
+    else if (archetype === 'nepotism_mill') culture = 'family';
     else culture = pick(['family', 'prestige']);
 
     const leverage = (archetype === 'powerhouse' || archetype === 'mega_corp' || archetype === 'streaming_titan') ? Math.floor(randRange(85, 100)) : (archetype === 'shark' ? Math.floor(randRange(80, 95)) : Math.floor(randRange(20, 60)));
@@ -157,6 +183,8 @@ export function generateAgencies(count: number): Agency[] {
     else if (archetype === 'mega_corp') traitsPool = [...MEGA_CORP_TRAITS];
     else if (archetype === 'streaming_titan') traitsPool = [...STREAMING_TITAN_TRAITS];
     else if (archetype === 'indie_darling') traitsPool = [...INDIE_DARLING_TRAITS];
+    else if (archetype === 'nepotism_mill') traitsPool = [...NEPOTISM_MILL_TRAITS];
+    else if (archetype === 'international_broker') traitsPool = [...INTERNATIONAL_BROKER_TRAITS];
     else traitsPool = [...BOUTIQUE_TRAITS];
 
     // Pick 2 random unique traits
@@ -182,7 +210,9 @@ export function generateAgencies(count: number): Agency[] {
        'shark': 'THE_SHARK',
        'comedy_specialist': 'VOLUME_RETAIL',
        'lit_agency': 'THE_PROTECTOR',
-       'mega_corp': 'THE_PACKAGER'
+       'mega_corp': 'THE_PACKAGER',
+       'nepotism_mill': 'THE_PROTECTOR',
+       'international_broker': 'THE_CLIMBER'
     };
 
     agencies.push({
