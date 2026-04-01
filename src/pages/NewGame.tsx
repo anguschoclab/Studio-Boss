@@ -18,7 +18,7 @@ const NewGame = () => {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get('autoStart') === 'true') {
-      navigate({ to: '/dashboard', search: (prev: any) => ({ ...prev, autoStart: 'true' }), replace: true });
+      navigate({ to: '/dashboard' });
     }
   }, [navigate]);
 

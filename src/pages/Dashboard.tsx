@@ -37,7 +37,7 @@ const Dashboard: React.FC = () => {
     }
   }, [gameState, isAutoStarting, devAutoInit]);
 
-  if (!gameState && !isAutoStarting) return <Navigate to="/" replace />;
+  if (!gameState && !isAutoStarting) return <Navigate to="/" />;
   if (!gameState) return <div className="flex items-center justify-center h-screen font-sans">Initializing Studio...</div>;
 
   const renderContent = () => {

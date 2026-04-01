@@ -28,43 +28,18 @@ const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
   component: TitleScreen,
-  validateSearch: (search: Record<string, unknown>) => ({
-    autoStart: search.autoStart === 'true' || search.autoStart === true,
-  }),
-  beforeLoad: ({ search }) => {
-    if (search.autoStart) {
-      throw redirect({
-        to: '/dashboard',
-        search: { autoStart: true },
-      });
-    }
-  },
 });
 
 const newGameRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/new-game',
   component: NewGame,
-  validateSearch: (search: Record<string, unknown>) => ({
-    autoStart: search.autoStart === 'true' || search.autoStart === true,
-  }),
-  beforeLoad: ({ search }) => {
-    if (search.autoStart) {
-      throw redirect({
-        to: '/dashboard',
-        search: { autoStart: true },
-      });
-    }
-  },
 });
 
 const dashboardRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/dashboard',
   component: Dashboard,
-  validateSearch: (search: Record<string, unknown>) => ({
-    autoStart: search.autoStart === 'true' || search.autoStart === true,
-  }),
 });
 
 const routeTree = rootRoute.addChildren([indexRoute, newGameRoute, dashboardRoute]);
