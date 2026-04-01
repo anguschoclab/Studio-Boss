@@ -141,7 +141,7 @@ describe("TalentSystem", () => {
       culture: { genrePopularity: {} },
       history: [],
       eventHistory: []
-    } as unknown as GameState);
+    } as Partial<GameState> as GameState);
 
     it("decrements opportunity expiry", () => {
       vi.spyOn(utils, 'secureRandom').mockReturnValue(0.9);
@@ -152,6 +152,66 @@ describe("TalentSystem", () => {
       expect(impact.newOpportunities).toBeDefined();
       expect(impact.newOpportunities!).toHaveLength(1);
       expect(impact.newOpportunities![0].weeksUntilExpiry).toBe(1);
+    });
+  });
+
+
+  describe("applyProjectResults - Extreme Edge Cases (Guild Auditor)", () => {
+    it("handles extreme negative ROI gracefully", () => {
+      const flop = { ...mockProject, budget: 100_000_000, revenue: 1_000 } as Project;
+      const results = TalentSystem.applyProjectResults(flop, mockContracts, talentPool);
+
+      const t1 = results.find(t => t.id === "t1")!;
+      expect(t1.draw).toBeLessThan(50);
+      expect(t1.prestige).toBeLessThan(50);
+      expect(t1.fee).toBeLessThan(1_000_000);
+    });
+
+    it("handles zero budget and zero revenue safely", () => {
+      const weirdProject = { ...mockProject, budget: 0, revenue: 0, marketingBudget: 0 } as Project;
+      const results = TalentSystem.applyProjectResults(weirdProject, mockContracts, talentPool);
+
+      const t1 = results.find(t => t.id === "t1")!;
+      expect(t1.draw).toBeLessThan(50); // 0 ROI results in a drop
+      expect(t1.prestige).toBeLessThan(50);
+    });
+
+    it("clamps stats safely for a talent with 0 skill and 100 ego", () => {
+      const toxicTalent = { ...mockTalent1, id: "t_toxic", prestige: 0, draw: 0, fee: 10_000, psychology: { ego: 100, mood: 100, scandalRisk: 0, synergyAffinities: [], synergyConflicts: [] } };
+      const localPool = [toxicTalent];
+      const localContracts = [{ id: "c_toxic", projectId: "p1", talentId: "t_toxic", fee: 10_000, backendPercent: 0 }] as Contract[];
+
+      const hitProject = { ...mockProject, budget: 1_000_000, revenue: 100_000_000 } as Project;
+      const results = TalentSystem.applyProjectResults(hitProject, localContracts, localPool);
+
+      const res = results[0];
+      expect(res.prestige).toBeGreaterThan(0);
+      expect(res.draw).toBeGreaterThan(0);
+      expect(res.ego).toBe(100); // Clamped to 100
+      expect(res.fee).toBeGreaterThan(10_000);
+    });
+  });
+
+  describe("advance - Extreme Edge Cases (Guild Auditor)", () => {
+    it("handles an empty pipeline and talent pool safely", () => {
+      const emptyState = {
+        week: 1,
+        studio: {
+          internal: {
+            projects: {},
+            contracts: []
+          }
+        },
+        market: {
+          opportunities: []
+        },
+        industry: {
+          talentPool: {}
+        }
+      } as Partial<GameState> as GameState;
+
+      const impact = TalentSystem.advance(emptyState);
+      expect(impact.newOpportunities).toBeDefined();
     });
   });
 });

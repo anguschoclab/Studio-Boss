@@ -8,20 +8,46 @@ import { tickFinance } from "../../../engine/systems/finance/financeTick";
 import { Project, GameState } from "../../../engine/types";
 import { RandomGenerator } from "../../../engine/utils/rng";
 
+
+function createMockState(overrides: Partial<GameState> = {}): GameState {
+  return {
+    week: 1,
+    gameSeed: 1,
+    tickCount: 0,
+    projects: { active: [] },
+    game: { currentWeek: 1 },
+    finance: { cash: 0, ledger: [] },
+    news: { headlines: [] },
+    ip: { vault: [], franchises: {} },
+    studio: {
+      name: "Test",
+      archetype: "major",
+      prestige: 50,
+      internal: { projects: {}, contracts: [] }
+    },
+    market: { opportunities: [], buyers: [], activeMarketEvents: [] },
+    industry: { rivals: [], families: [], agencies: [], agents: [], talentPool: {}, newsHistory: [], rumors: [], scandals: [] },
+    culture: { genrePopularity: {} },
+    history: [],
+    eventHistory: [],
+    ...overrides
+  };
+}
+
 const mockProjectDev: Project = {
   id: "proj-1", title: "Test Dev", budgetTier: "low", budget: 500000, genre: "Comedy",
   state: "development", developmentWeeks: 2, productionWeeks: 2, weeksInPhase: 0,
   revenue: 0, weeklyRevenue: 0, weeklyCost: 10000, buzz: 50, format: "film", targetAudience: "general", flavor: "indie", releaseWeek: 0,
   momentum: 50, progress: 0, accumulatedCost: 0, activeCrisis: null
-} as Project;
+} as Partial<Project> as Project;
 
-const mockProjectProd: Project = { ...mockProjectDev, id: "proj-2", state: "production", weeklyCost: 20000 } as Project;
-const mockProjectReleased: Project = { ...mockProjectDev, id: "proj-3", state: "released", weeklyCost: 0, weeklyRevenue: 100000 } as Project;
+const mockProjectProd: Project = { ...mockProjectDev, id: "proj-2", state: "production", weeklyCost: 20000 } as Partial<Project> as Project;
+const mockProjectReleased: Project = { ...mockProjectDev, id: "proj-3", state: "released", weeklyCost: 0, weeklyRevenue: 100000 } as Partial<Project> as Project;
 
 describe("Finance System", () => {
   describe("calculateProjectROI", () => {
     it("returns correct ROI for a standard project", () => {
-      const proj = { ...mockProjectReleased, budget: 1000000, revenue: 2000000 } as any;
+      const proj = { ...mockProjectReleased, budget: 1000000, revenue: 2000000 } as Partial<Project> as Project;
       expect(calculateProjectROI(proj)).toBe(2.0);
     });
   });
@@ -38,15 +64,15 @@ describe("Finance System", () => {
       },
       market: { opportunities: [], buyers: [] },
       industry: { rivals: [], headlines: [], talentPool: {} }
-    } as unknown as GameState;
+    } as Partial<GameState> as GameState;
 
     it("returns cash when there are no projects with catalog value", () => {
       expect(calculateStudioNetWorth(mockState)).toBe(500000);
     });
 
     it("adds 100% of catalogValue if rightsOwner is 'studio'", () => {
-       const p1: Project = { ...mockProjectReleased, ipRights: { rightsOwner: 'studio', catalogValue: 200000 } } as any;
-       const state = { ...mockState, studio: { ...mockState.studio, internal: { ...mockState.studio.internal, projects: { 'p1': p1 } } } } as any;
+       const p1: Project = { ...mockProjectReleased, ipRights: { rightsOwner: 'studio', catalogValue: 200000 } } as Partial<Project> as Project;
+       const state = { ...mockState, studio: { ...mockState.studio, internal: { ...mockState.studio.internal, projects: { 'p1': p1 } } } } as unknown as Partial<GameState> as GameState;
        expect(calculateStudioNetWorth(state)).toBe(700000);
     });
   });
@@ -70,7 +96,7 @@ describe("Finance System", () => {
       },
       market: { opportunities: [], buyers: [], activeMarketEvents: [] },
       industry: { rivals: [], headlines: [], talentPool: {}, newsHistory: [] },
-    } as unknown as GameState;
+    } as Partial<GameState> as GameState;
 
     it("properly calculates burns, overhead, and box office", () => {
         const report = generateWeeklyFinancialReport(mockState);
@@ -102,7 +128,7 @@ describe("Finance System", () => {
         },
         market: { opportunities: [], buyers: [], activeMarketEvents: [] },
         industry: { rivals: [], headlines: [], talentPool: {} }
-      } as unknown as GameState;
+      } as Partial<GameState> as GameState;
   
       it("returns StateImpact for funds change", () => {
          const rng = new RandomGenerator('test');
@@ -111,5 +137,64 @@ describe("Finance System", () => {
          // Net profit = 100k - (20k + 500k) = -420k
          expect(impact?.payload.amount).toBe(-420000);
       });
+  });
+
+
+  describe("Extreme Edge Cases (Guild Auditor)", () => {
+    describe("calculateProjectROI", () => {
+      it("handles massive negative budget safely without crashing", () => {
+        const weirdProj = { ...mockProjectReleased, budget: -50_000_000, revenue: 10_000_000 } as Partial<Project> as Project;
+        const roi = calculateProjectROI(weirdProj);
+        // It should either return a negative ROI or a calculable number depending on the formula,
+        // as long as it handles the math operation.
+        expect(roi).toBeDefined();
+        expect(typeof roi).toBe('number');
+      });
+
+      it("returns 0 ROI if totalCost is 0", () => {
+        const freeProj = { ...mockProjectReleased, budget: 0, marketingBudget: 0, revenue: 10_000_000 } as Partial<Project> as Project;
+        expect(calculateProjectROI(freeProj)).toBe(0);
+      });
+    });
+
+    describe("calculateStudioNetWorth", () => {
+      it("handles massive negative cash balance gracefully", () => {
+        const brokeState = {
+          week: 1,
+          finance: { cash: -100_000_000, ledger: [] },
+          studio: {
+            internal: { projects: {} }
+          }
+        } as Partial<GameState> as GameState;
+
+        expect(calculateStudioNetWorth(brokeState)).toBe(-100_000_000);
+      });
+    });
+
+    describe("generateWeeklyFinancialReport", () => {
+      it("returns base overhead with an empty pipeline", () => {
+        const emptyState = {
+          week: 1,
+          finance: { cash: 1_000_000, ledger: [] },
+          studio: {
+            internal: {
+              projects: {},
+              contracts: []
+            }
+          },
+          market: { opportunities: [], buyers: [], activeMarketEvents: [] },
+          industry: { rivals: [], headlines: [], talentPool: {}, newsHistory: [] },
+        } as Partial<GameState> as GameState;
+
+        const report = generateWeeklyFinancialReport(emptyState);
+
+        expect(report.expenses.overhead).toBe(500000);
+        expect(report.expenses.production).toBe(0);
+        expect(report.expenses.marketing).toBe(0);
+        expect(report.revenue.boxOffice).toBe(0);
+        expect(report.revenue.distribution).toBe(0);
+        expect(report.netProfit).toBe(-500000);
+      });
+    });
   });
 });
