@@ -2,9 +2,10 @@ import { Button } from '@/components/ui/button';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { formatMoney, getWeekDisplay } from '@/engine/utils';
-import { Save, FastForward, AlertTriangle, TrendingUp, Newspaper } from 'lucide-react';
+import { Save, FastForward, AlertTriangle, TrendingUp } from 'lucide-react';
 import { selectActiveProjects } from '@/store/selectors';
 import { Badge } from '@/components/ui/badge';
+import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
 import { NewsTicker } from './NewsTicker';
 
 export const TopBar = () => {
@@ -12,7 +13,7 @@ export const TopBar = () => {
   const doAdvanceWeek = useGameStore(s => s.doAdvanceWeek);
   const saveToSlot = useGameStore(s => s.saveToSlot);
 
-  const { showSummary, setActiveTab } = useUIStore();
+  const { showSummary } = useUIStore();
 
   const activeProjectsList = useGameStore(s => selectActiveProjects(s.gameState));
 
@@ -34,13 +35,15 @@ export const TopBar = () => {
   return (
     <header className="h-14 glass-header flex items-center px-6 gap-8 shrink-0 relative transition-all duration-300">
       {/* Date & Urgency Indicator */}
-      <div className="flex items-center gap-4">
-        <div className="flex flex-col">
-          <span className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em]">Fiscal Period</span>
-          <span className="font-mono font-bold text-sm tracking-tight">Week {displayWeek} · Year {year}</span>
+      <TooltipWrapper tooltip={`Current Year: ${year}, Week: ${displayWeek}. Business quarters cycle every 13 weeks.`} side="bottom">
+        <div className="flex items-center gap-4 cursor-default">
+          <div className="flex flex-col">
+            <span className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em]">Fiscal Period</span>
+            <span className="font-mono font-bold text-sm tracking-tight">Week {displayWeek} · Year {year}</span>
+          </div>
+          <Badge variant="outline" className="bg-primary/5 border-primary/20 text-primary font-mono px-2 py-0 text-[10px]">Q{(Math.floor((displayWeek-1)/13) + 1)}</Badge>
         </div>
-        <Badge variant="outline" className="bg-primary/5 border-primary/20 text-primary font-mono px-2 py-0 text-[10px]">Q{(Math.floor((displayWeek-1)/13) + 1)}</Badge>
-      </div>
+      </TooltipWrapper>
 
       {/* Global News Ticker */}
       <NewsTicker />
@@ -48,35 +51,41 @@ export const TopBar = () => {
       {/* Primary Metrics Cluster */}
       <div className="flex items-center gap-6 ml-auto">
         {/* Cash Status */}
-        <div className="flex flex-col items-end">
-          <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">Liquid Capital</span>
-          <span className={`font-mono font-bold text-sm ${cash < 0 ? 'text-destructive' : 'text-primary'} text-glow`}>
-            {formatMoney(cash)}
-          </span>
-        </div>
+        <TooltipWrapper tooltip="Total liquid capital available for acquisitions and project funding." side="bottom">
+          <div className="flex flex-col items-end cursor-default">
+            <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">Liquid Capital</span>
+            <span className={`font-mono font-bold text-sm ${cash < 0 ? 'text-destructive' : 'text-primary'} text-glow`}>
+              {formatMoney(cash)}
+            </span>
+          </div>
+        </TooltipWrapper>
 
         <div className="w-px h-6 bg-white/10" />
 
         {/* Reputation/Prestige */}
-        <div className="flex flex-col items-end group cursor-help" title="Studio Prestige Level">
-          <div className="flex items-center gap-1.5">
-            <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">Prestige</span>
-            <TrendingUp className="h-2.5 w-2.5 text-secondary" />
+        <TooltipWrapper tooltip="Studio reputation level. High prestige unlocks elite talent and better distribution terms." side="bottom">
+          <div className="flex flex-col items-end group cursor-default">
+            <div className="flex items-center gap-1.5">
+              <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">Prestige</span>
+              <TrendingUp className="h-2.5 w-2.5 text-secondary" />
+            </div>
+            <span className="font-mono font-bold text-sm text-secondary">
+              {studio.prestige}
+            </span>
           </div>
-          <span className="font-mono font-bold text-sm text-secondary">
-            {studio.prestige}
-          </span>
-        </div>
+        </TooltipWrapper>
 
         <div className="w-px h-6 bg-white/10" />
 
         {/* Project Pipeline Count */}
-        <div className="flex flex-col items-end">
-          <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">Active Slate</span>
-          <span className="font-mono font-bold text-sm text-foreground/80">
-            {activeProjectsList.length}
-          </span>
-        </div>
+        <TooltipWrapper tooltip="Total number of properties currently in active development or production phases." side="bottom">
+          <div className="flex flex-col items-end cursor-default">
+            <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">Active Slate</span>
+            <span className="font-mono font-bold text-sm text-foreground/80">
+              {activeProjectsList.length}
+            </span>
+          </div>
+        </TooltipWrapper>
       </div>
 
       {/* Functional Actions */}
@@ -100,15 +109,16 @@ export const TopBar = () => {
           variant="ghost" 
           size="icon" 
           aria-label="Manual Cloud Save"
+          tooltip="Sync studio progress to cloud storage"
           onClick={handleSave} 
           className="h-8 w-8 rounded-full hover:bg-white/5 text-muted-foreground hover:text-primary transition-colors"
-          title="Manual Cloud Save"
         >
           <Save className="h-4 w-4" />
         </Button>
 
         <Button 
           onClick={handleAdvanceWeek} 
+          tooltip="Advance to next fiscal week and process all studio operations"
           className="h-9 px-4 font-display font-black uppercase tracking-widest text-[10px] gap-2 transition-all duration-300 shadow-[0_0_20px_rgba(var(--primary),0.1)] hover:shadow-[0_0_25px_rgba(var(--primary),0.3)] hover:scale-105 active:scale-95 group overflow-hidden relative"
         >
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
