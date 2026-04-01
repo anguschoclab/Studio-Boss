@@ -29,10 +29,10 @@ describe('applyAwardBoostsToTalent', () => {
       const award: Award = { ...baseAward, category: 'Best Actor', body: 'Academy Awards', status: 'won' };
       const boosts = applyAwardBoostsToTalent(baseTalent, award, 1.0, true);
 
-      expect(boosts.prestigeBoost).toBeCloseTo(63);
-      expect(boosts.egoBoost).toBeCloseTo(108);
-      expect(boosts.drawBoost).toBeCloseTo(27);
-      expect(boosts.feeMultiplier).toBeCloseTo(8.2);
+      expect(boosts.prestigeBoost).toBeCloseTo(81);
+      expect(boosts.egoBoost).toBeCloseTo(135);
+      expect(boosts.drawBoost).toBeCloseTo(36);
+      expect(boosts.feeMultiplier).toBeCloseTo(10.0);
     });
 
     it('calculates boosts for a Cannes equivalent supporting win', () => {
@@ -103,10 +103,10 @@ describe('applyAwardBoostsToTalent', () => {
       const award: Award = { ...baseAward, category: 'Best Director', body: 'Academy Awards', status: 'won' };
       const boosts = applyAwardBoostsToTalent(baseTalent, award, 0.5, true);
 
-      expect(boosts.prestigeBoost).toBeCloseTo(31.5);
-      expect(boosts.egoBoost).toBeCloseTo(54);
-      expect(boosts.drawBoost).toBeCloseTo(13.5);
-      expect(boosts.feeMultiplier).toBeCloseTo(4.6);
+      expect(boosts.prestigeBoost).toBeCloseTo(40.5);
+      expect(boosts.egoBoost).toBeCloseTo(67.5);
+      expect(boosts.drawBoost).toBeCloseTo(18);
+      expect(boosts.feeMultiplier).toBeCloseTo(5.5);
     });
   });
 });

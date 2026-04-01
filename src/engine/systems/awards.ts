@@ -90,7 +90,8 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
   const eligibleFilm: Project[] = [];
   const eligibleTv: Project[] = [];
 
-  for (const p of Object.values(state.studio.internal.projects)) {
+  for (const projectId in state.studio.internal.projects) {
+    const p = state.studio.internal.projects[projectId];
     if ((p.state === 'released' || p.state === 'post_release' || p.state === 'archived') &&
         p.releaseWeek !== null &&
         p.releaseWeek > currentWeek - 52 &&
@@ -131,7 +132,17 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
         status: 'won',
         year
       });
-      impact.prestigeChange! += 10;
+
+      let prestigeWon = 10;
+      if (isCannesEquivalentFestival(config.body) && isMajorCategoryNomination(config.category)) {
+        prestigeWon = 25;
+      } else if (isSundanceEquivalentFestival(config.body)) {
+        prestigeWon = 15;
+      } else if (isMajorCategoryNomination(config.category)) {
+        prestigeWon = 15;
+      }
+      impact.prestigeChange! += prestigeWon;
+
       impact.uiNotifications!.push(`🏆 "${bestProject.title}" won ${config.category} at the ${config.body}!`);
       impact.newsEvents!.push({
         type: 'AWARD',
@@ -153,7 +164,17 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
         status: 'nominated',
         year
       });
-      impact.prestigeChange! += 2;
+
+      let prestigeNom = 2;
+      if (isCannesEquivalentFestival(config.body) && isMajorCategoryNomination(config.category)) {
+        prestigeNom = 5;
+      } else if (isSundanceEquivalentFestival(config.body)) {
+        prestigeNom = 3;
+      } else if (isMajorCategoryNomination(config.category)) {
+        prestigeNom = 3;
+      }
+      impact.prestigeChange! += prestigeNom;
+
       impact.uiNotifications!.push(`⭐ "${bestProject.title}" was nominated for ${config.category} at the ${config.body}.`);
     }
   }
@@ -171,11 +192,13 @@ export function processRazzies(state: GameState, week: number): StateImpact {
     talentUpdates: []
   };
 
-  const eligibleProjects = Object.values(state.studio.internal.projects).filter(p =>
-    p.state === 'released' &&
-    p.budget >= 50_000_000 &&
-    (p.reviewScore !== undefined && p.reviewScore <= 30)
-  );
+  const eligibleProjects: Project[] = [];
+  for (const projectId in state.studio.internal.projects) {
+    const p = state.studio.internal.projects[projectId];
+    if (p.state === 'released' && p.budget >= 50_000_000 && (p.reviewScore !== undefined && p.reviewScore <= 30)) {
+      eligibleProjects.push(p);
+    }
+  }
 
   if (eligibleProjects.length === 0) return impact;
 
@@ -208,7 +231,8 @@ export function processRazzies(state: GameState, week: number): StateImpact {
   let highestDraw = 0;
   let worstLeadName: string | null = null;
 
-  for (const talent of Object.values(state.industry.talentPool)) {
+  for (const talentId in state.industry.talentPool) {
+      const talent = state.industry.talentPool[talentId];
       if (contractTalentIds.has(talent.id)) {
           if (talent.draw > 70 && talent.draw > highestDraw) {
               worstLeadId = talent.id;
