@@ -459,13 +459,14 @@ export function generateAvatarSVG(talent: Talent, currentWeek: number = 1): stri
   svg += `</defs>`;
   
   // ── Background circle ──
-  svg += `<circle cx="100" cy="100" r="98" fill="${darkenColor(f.skin.shadow, 0.6)}" opacity="0.3"/>`;
+  svg += `<circle cx="100" cy="100" r="98" fill="${darkenColor(f.skin.shadow, 0.5)}" opacity="0.4"/>`;
   
-  // ── Neck ──
-  const neckW = 22 + f.faceWidth * 8;
-  const neckTop = chinY - 8;
-  svg += `<rect x="${cx - neckW/2}" y="${neckTop}" width="${neckW}" height="40" rx="8" fill="${f.skin.shadow}"/>`;
-  
+  // ── Neck — wider & shorter to avoid stick-figure look ──
+  const neckW = 28 + f.faceWidth * 10;
+  const neckTop = chinY - 10;
+  svg += `<rect x="${cx - neckW/2}" y="${neckTop}" width="${neckW}" height="50" rx="10" fill="${f.skin.shadow}"/>`;
+  // Shoulders hint
+  svg += `<ellipse cx="${cx}" cy="${neckTop + 44}" rx="${faceW * 0.9}" ry="18" fill="${darkenColor(f.skin.shadow, 0.25)}"/>`;
   // ── Ears ──
   const earY = cy - 4;
   const earH = 16 + f.faceHeight * 6;

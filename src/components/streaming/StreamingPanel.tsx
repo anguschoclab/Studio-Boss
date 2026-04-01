@@ -67,7 +67,7 @@ const DealModal: React.FC<{
   const eligibleProjects = useMemo(() => {
     if (!gameState) return [];
     return Object.values(gameState.studio.internal.projects).filter(
-      (p: Project) => p.state === 'development' || p.state === 'pre-production' || p.state === 'production'
+      (p: Project) => p.state === 'development' || p.state === 'production' || p.state === 'needs_greenlight'
     );
   }, [gameState]);
 
