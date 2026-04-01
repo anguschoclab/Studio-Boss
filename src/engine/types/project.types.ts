@@ -161,7 +161,15 @@ export type TvFormatKey =
   | 'vampire_sitcom'
   | 'retro_sci_fi'
   | 'fantasy_workplace_comedy'
-  | 'time_travel_romance';
+  | 'time_travel_romance'
+  | 'trashy_dating_island'
+  | 'true_crime_docuseries'
+  | 'superhero_origin'
+  | 'high_fantasy_epic'
+  | 'teen_mystery_box'
+  | 'workplace_mockumentary'
+  | 'satirical_news_show'
+  | 'historical_romance';
 
 export type UnscriptedFormatKey =
   | 'competition'
@@ -290,7 +298,11 @@ export type UnscriptedFormatKey =
   | 'toddler_chef_competition'
   | 'underground_fight_club_doc'
   | 'space_tourism_reality'
-  | 'extreme_couponing_wars';
+  | 'extreme_couponing_wars'
+  | 'extreme_makeover_cult'
+  | 'crypto_scam_expose'
+  | 'child_star_documentary'
+  | 'billionaire_yacht_crew';
 
 export type ReleaseModelKey = 'weekly' | 'binge' | 'split';
 export type ProjectContractType = 'upfront' | 'deficit' | 'standard';
