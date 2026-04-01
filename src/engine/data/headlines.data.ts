@@ -169,7 +169,20 @@ export const MARKET_HEADLINES = [
   'Analysts downgrade entertainment sector, citing "too much art, not enough content"',
   'Studio executives insist the theatrical experience is thriving while actively closing theaters',
   'Merchandise sales for {projectName} surpass box office gross in opening weekend',
-  'Ticket prices surge to $30 as theaters implement "dynamic pricing" for popular showtimes'
+  'Ticket prices surge to $30 as theaters implement "dynamic pricing" for popular showtimes',
+  'Audiences walk out of {projectName} complaining about "unrelatable poor people"',
+  'Theater chains consider charging extra for seats with good sightlines',
+  'Indie cinema declared officially dead for the fourth time this year',
+  'Quarterly earnings report reveals studio makes more from merchandise than actual films',
+  'Box office plunges as audiences demand more legacy franchise reboots',
+  'Venture capitalists pour millions into new startup promising "algorithm-perfect pacing"',
+  'Studios quietly lobby government to classify background actors as "digital assets"',
+  'Mergers and acquisitions heat up as tech giants look to swallow remaining studios',
+  'Consumer spending on streaming overtakes basic utilities in several major cities',
+  'Market reacts poorly to studio\'s decision to release a film under 2 hours long',
+  'Shareholders demand answers after major tentpole grosses only triple its budget',
+  'Box office unexpectedly saved by {projectName}, confusing every executive in town',
+  'Nostalgia bait proves highly lucrative yet again in Q3 financial breakdown'
 ];
 
 export const TALENT_HEADLINES = [
@@ -346,7 +359,22 @@ export const TALENT_HEADLINES = [
   '{directorName} defends the 3-hour runtime of {projectName}, claiming it "needs to breathe"',
   '{actressName} goes viral for mispronouncing the name of her own character in {projectName}',
   'Studio hires a "social media whisperer" to help {actorName} navigate the press tour for {projectName}',
-  '{directorName} accused of using {projectName} to launder money for an international crime syndicate'
+  '{directorName} accused of using {projectName} to launder money for an international crime syndicate',
+  '{directorName} insists the boom mic visible in every shot of {projectName} is a "post-modern commentary"',
+  'Lead actor of {projectName} demands their character be digitally inserted into real historical events',
+  'Studio forces {directorName} to apologize for calling Marvel movies "theme park rides" during press tour',
+  '{actorName} goes method for {projectName}, refuses to shower for three months',
+  'Crew of {projectName} reports the "intimacy coordinator" is just an HR rep with a clipboard',
+  '{actressName} drops out of {projectName} after realizing she plays a mother to an actor only two years younger',
+  'Publicist for {actorName} denies rumors of an on-set feud, threatens journalists who ask about it',
+  '{directorName} spends $10M of the {projectName} budget on acquiring the rights to a single pop song',
+  'Test audiences for {projectName} confused why {actorName} is attempting a British accent',
+  'Star of {projectName} claims they were abducted by aliens to avoid doing the morning talk show circuit',
+  '{directorName} fired from {projectName} after insisting the film needs to be shot entirely on 70mm film',
+  '{actorName} launches a line of overpriced wellness gummies on the red carpet for {projectName}',
+  'Studio panics after test audiences for {projectName} declare the villain "was actually completely right"',
+  '{actressName} insists on a "no eye contact" clause in her contract for {projectName}',
+  '{directorName} demands a 10-minute standing ovation at Cannes for {projectName}, hires extras to clap'
 ];
 
 export const RIVAL_TEMPLATES = [
@@ -496,5 +524,20 @@ export const RIVAL_TEMPLATES = [
   '{rival} attempts to rebrand their studio as a "tech company" after a string of ${budget}M {genre} flops',
   '{rival} announces a gritty, grounded reboot of their ${budget}M {genre} franchise that was already gritty and grounded',
   '{rival} fires their entire PR team after a disastrous press tour for their ${budget}M {genre} film',
-  '{rival} writes off a completed ${budget}M {genre} film for tax purposes, claiming it "did not meet quality standards"'
+  '{rival} writes off a completed ${budget}M {genre} film for tax purposes, claiming it "did not meet quality standards"',
+  '{rival} greenlights a ${budget}M {genre} film based entirely on a 15-second TikTok trend',
+  '{rival} CEO caught on hot mic calling the fans of their ${budget}M {genre} franchise "absolute suckers"',
+  '{rival} announces their new ${budget}M {genre} cinematic universe will skip theaters and go straight to ad-supported streaming',
+  '{rival} fires the director of their ${budget}M {genre} film, replacing them with a boardroom committee',
+  '{rival} attempts to launch a ${budget}M {genre} franchise, but forgets to secure the trademark',
+  '{rival} spends more on the marketing for their ${budget}M {genre} film than the actual production budget',
+  '{rival} desperately tries to convince audiences their ${budget}M {genre} reboot is "not like the other reboots"',
+  '{rival} blames the catastrophic failure of their ${budget}M {genre} film on "superhero fatigue"',
+  '{rival} caught paying for positive reviews on Letterboxd for their critically panned ${budget}M {genre} film',
+  '{rival} announces a ${budget}M {genre} sequel to a film that hasn\'t even finished shooting yet',
+  '{rival} insists the unfinished CGI in their ${budget}M {genre} trailer is just "a stylistic choice"',
+  '{rival} greenlights a ${budget}M {genre} origin story for a character nobody remembers',
+  '{rival} stock plummets after their ${budget}M {genre} tentpole grosses less than an indie horror movie',
+  '{rival} forces their actors to perform a humiliating TikTok dance to promote their ${budget}M {genre} film',
+  '{rival} accidentally leaks the entire plot of their ${budget}M {genre} film through a fast-food tie-in'
 ];
