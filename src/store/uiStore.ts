@@ -9,8 +9,10 @@ export interface QueuedModal {
   payload: any;
 }
 
+export type TabId = 'command' | 'pipeline' | 'ip' | 'deals' | 'talent' | 'finance' | 'trades' | 'industry' | 'sbdb' | 'streaming';
+
 interface UIStore {
-  activeTab: 'command' | 'pipeline' | 'ip' | 'deals' | 'talent' | 'finance' | 'trades' | 'industry' | 'sbdb' | 'streaming';
+  activeTab: TabId;
   showCreateProject: boolean;
   showPitchProject: boolean;
   pitchingProjectId: string | null;
@@ -42,7 +44,7 @@ interface UIStore {
   selectTalent: (id: string | null) => void;
 }
 
-export const useUIStore = create<UIStore>((set, get) => ({
+export const useUIStore = create<UIStore>((set) => ({
   activeTab: 'command',
   showCreateProject: false,
   showPitchProject: false,

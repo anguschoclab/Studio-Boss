@@ -1,5 +1,5 @@
 import React from 'react';
-import { useUIStore } from '@/store/uiStore';
+import { useUIStore, TabId } from '@/store/uiStore';
 import { useGameStore } from '@/store/gameStore';
 import { 
   LayoutDashboard, 
@@ -22,7 +22,14 @@ import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useNavigate } from '@tanstack/react-router';
 
-const NAV_ITEMS = [
+interface NavItem {
+  id: TabId;
+  label: string;
+  icon: React.ElementType;
+  tooltip: string;
+}
+
+const NAV_ITEMS: NavItem[] = [
   { id: 'command', label: 'Command Center', icon: LayoutDashboard, tooltip: 'Global studio overview, active alerts, and top-line metrics' },
   { id: 'pipeline', label: 'Production Pipeline', icon: Film, tooltip: 'Manage active projects from development through principal photography' },
   { id: 'ip', label: 'IP Vault', icon: Library, tooltip: 'Catalog of owned intellectual property, franchises, and library rights' },
@@ -33,7 +40,7 @@ const NAV_ITEMS = [
   { id: 'trades', label: 'The Trades', icon: Newspaper, tooltip: 'Scout new IP opportunities and monitor industry headlines' },
   { id: 'sbdb', label: 'SBDB', icon: Users, tooltip: 'Comprehensive historical database of all industry talent and credits' },
   { id: 'streaming', label: 'Streaming & Distribution', icon: Tv, tooltip: 'Manage platform content licenses and home video syndication' },
-] as const;
+];
 
 export const StudioSidebar = () => {
   const { activeTab, setActiveTab } = useUIStore();
@@ -89,7 +96,7 @@ export const StudioSidebar = () => {
                 <Button
                   variant="ghost"
                   size={isCollapsed ? "icon" : "default"}
-                  onClick={() => setActiveTab(item.id as any)}
+                  onClick={() => setActiveTab(item.id)}
                   className={cn(
                     "w-full justify-start gap-3 transition-all duration-200 relative group",
                     isCollapsed ? "justify-center h-12" : "h-11 px-4",

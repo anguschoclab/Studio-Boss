@@ -1,22 +1,13 @@
 import React, { useMemo, useState } from 'react';
 import { useGameStore } from '@/store/gameStore';
-import { Buyer, StreamerPlatform, Project } from '@/engine/types';
-import { formatMoney } from '@/engine/utils';
+import { Buyer, StreamerPlatform } from '@/engine/types';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { 
-  Tv, 
-  Users, 
-  AlertTriangle, 
-  Building2, 
   ArrowRightLeft,
-  Crown,
-  Wifi,
-  Radio,
   FileSearch,
   Globe,
-  TrendingUp,
   History,
   Activity
 } from 'lucide-react';
@@ -24,7 +15,7 @@ import { cn } from '@/lib/utils';
 import { PlatformCard } from './components/PlatformCard';
 import { DealModal } from './components/DealModal';
 import { MAHistoryFeed } from './components/MAHistoryFeed';
-import { SubscriberTrendChart } from './components/SubscriberTrendChart';
+import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
 
 function formatSubscribers(n: number): string {
   if (n >= 1_000_000_000) return `${(n / 1_000_000_000).toFixed(1)}B`;
@@ -75,17 +66,21 @@ export const StreamingPanel: React.FC = () => {
          </div>
 
          <div className="flex gap-4 relative z-10 shrink-0">
-            <div className="text-right">
-                <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-1">Weekly Growth</div>
-                <div className={cn("text-xl font-black tabular-nums leading-none", stats.totalWeeklyGrowth >= 0 ? "text-emerald-400" : "text-rose-400")}>
-                    {stats.totalWeeklyGrowth >= 0 ? '+' : ''}{formatSubscribers(stats.totalWeeklyGrowth)}
-                </div>
-            </div>
+            <TooltipWrapper tooltip="Net change in total platform subscribers across all monitored digital networks over the last 7 days." side="top">
+              <div className="text-right cursor-help">
+                  <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-1">Weekly Growth</div>
+                  <div className={cn("text-xl font-black tabular-nums leading-none", stats.totalWeeklyGrowth >= 0 ? "text-emerald-400" : "text-rose-400")}>
+                      {stats.totalWeeklyGrowth >= 0 ? '+' : ''}{formatSubscribers(stats.totalWeeklyGrowth)}
+                  </div>
+              </div>
+            </TooltipWrapper>
             <div className="w-[1px] h-10 bg-white/10" />
-            <div className="text-right">
-                <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-1">Active Conglomerates</div>
-                <div className="text-xl font-black text-foreground leading-none">{stats.activeCount} <span className="text-[10px] text-muted-foreground/40 italic">Global</span></div>
-            </div>
+            <TooltipWrapper tooltip="Number of independent media entities currently operating digital distribution platforms." side="top">
+              <div className="text-right cursor-help">
+                  <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-1">Active Conglomerates</div>
+                  <div className="text-xl font-black text-foreground leading-none">{stats.activeCount} <span className="text-[10px] text-muted-foreground/40 italic">Global</span></div>
+              </div>
+            </TooltipWrapper>
          </div>
       </div>
 
@@ -119,16 +114,19 @@ export const StreamingPanel: React.FC = () => {
            {/* Detailed M&A History Feed */}
            <div className="glass-panel rounded-2xl border border-white/5 flex flex-col h-full min-h-[400px] overflow-hidden group/intel">
               <div className="p-5 border-b border-white/5 bg-white/2 flex items-center justify-between">
-                 <div>
-                    <h3 className="text-xs font-black uppercase tracking-widest text-foreground leading-none mb-1 flex items-center gap-2">
-                      <History className="w-4 h-4 text-primary" /> Industry Intelligence
-                    </h3>
-                    <p className="text-[9px] font-bold text-muted-foreground uppercase opacity-60">Consolidation History</p>
-                 </div>
+                 <TooltipWrapper tooltip="Chronological audit of platform acquisitions, mergers, and market consolidation events." side="left">
+                   <div className="cursor-help">
+                      <h3 className="text-xs font-black uppercase tracking-widest text-foreground leading-none mb-1 flex items-center gap-2">
+                        <History className="w-4 h-4 text-primary" /> Industry Intelligence
+                      </h3>
+                      <p className="text-[9px] font-bold text-muted-foreground uppercase opacity-60">Consolidation History</p>
+                   </div>
+                 </TooltipWrapper>
                  {selectedBuyerForHistory && (
                    <Button 
                     variant="ghost" 
                     size="sm" 
+                    tooltip="Reset intelligence feed to show global industry history"
                     onClick={() => setSelectedBuyerForHistory(null)}
                     className="h-6 text-[8px] font-black uppercase hover:bg-white/5 px-2"
                    >
@@ -166,6 +164,7 @@ export const StreamingPanel: React.FC = () => {
                                   <Button 
                                     variant="ghost" 
                                     size="sm" 
+                                    tooltip={`Analyze ${p.name} acquisition details`}
                                     onClick={() => setSelectedBuyerForHistory(p)}
                                     className="h-8 w-8 p-0 opacity-0 group-hover/plat:opacity-100 transition-opacity"
                                   >

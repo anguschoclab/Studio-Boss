@@ -1,22 +1,23 @@
 import React, { useMemo, useState } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { Buyer, Project, ProjectContractType } from '@/engine/types';
-import { formatMoney } from '@/engine/utils';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { 
   Handshake, 
   Film, 
   CheckCircle2, 
-  XCircle, 
-  AlertCircle,
-  TrendingUp,
-  Target,
-  FileText
+  XCircle
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { calculateFitScore } from '@/engine/systems/buyers';
+import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
+
+const DEAL_TYPE_TOOLTIPS = {
+  standard: "Balanced revenue share and license fee. The industry standard baseline.",
+  deficit: "Higher back-end revenue share in exchange for a lower upfront license fee. High risk, high reward.",
+  upfront: "Higher upfront payment to cover production costs at the expense of back-end participation."
+};
 
 interface DealModalProps {
   buyer: Buyer;
@@ -84,8 +85,8 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
 
           {dealResult ? (
             <div className={cn(
-              "p-6 rounded-2xl border animate-in zoom-in-95 duration-300",
-              dealResult.success ? "bg-emerald-500/10 border-emerald-500/20" : "bg-rose-500/10 border-rose-500/20"
+               "p-6 rounded-2xl border animate-in zoom-in-95 duration-300",
+               dealResult.success ? "bg-emerald-500/10 border-emerald-500/20" : "bg-rose-500/10 border-rose-500/20"
             )}>
               <div className="flex items-start gap-4">
                 {dealResult.success ? (
@@ -132,7 +133,9 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
                 <div className="space-y-4">
                    <div className="glass-panel p-5 rounded-2xl border border-white/5 bg-black/20 space-y-4">
                       <div className="flex items-center justify-between">
-                         <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Strategic Fit</span>
+                         <TooltipWrapper tooltip="Algorithmic alignment score between your project's genre/talent and the platform's current executive mandate." side="top">
+                           <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground cursor-help">Strategic Fit</span>
+                         </TooltipWrapper>
                          <span className={cn("text-lg font-black italic", fitScore >= 70 ? 'text-emerald-400' : fitScore >= 50 ? 'text-primary' : 'text-rose-400')}>
                            {Math.round(fitScore)}%
                          </span>
@@ -154,16 +157,17 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
                       <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Deal Structure</span>
                       <div className="flex gap-2">
                         {(['standard', 'deficit', 'upfront'] as ProjectContractType[]).map(t => (
-                          <button
-                            key={t}
-                            onClick={() => setContractType(t)}
-                            className={cn(
-                              "flex-1 h-9 rounded-lg border text-[9px] font-black uppercase tracking-widest transition-all",
-                              contractType === t ? "bg-primary text-black border-primary shadow-lg" : "bg-white/5 border-white/5 text-muted-foreground hover:bg-white/10"
-                            )}
-                          >
-                            {t}
-                          </button>
+                          <TooltipWrapper key={t} tooltip={DEAL_TYPE_TOOLTIPS[t]} side="bottom">
+                            <button
+                              onClick={() => setContractType(t)}
+                              className={cn(
+                                "flex-1 h-9 rounded-lg border text-[9px] font-black uppercase tracking-widest transition-all",
+                                contractType === t ? "bg-primary text-black border-primary shadow-lg" : "bg-white/5 border-white/5 text-muted-foreground hover:bg-white/10"
+                              )}
+                            >
+                              {t}
+                            </button>
+                          </TooltipWrapper>
                         ))}
                       </div>
                    </div>
@@ -175,6 +179,7 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
                  <Button 
                    onClick={handlePitch}
                    disabled={!selectedProject || isPitching}
+                   tooltip="Officially present the content package to the executive board for greenlight review"
                    className="flex-1 h-12 bg-primary text-black hover:bg-primary/90 font-black text-xs uppercase tracking-[0.2em] shadow-xl shadow-primary/10 relative overflow-hidden"
                  >
                    {isPitching ? <div className="flex items-center gap-2"><div className="w-3 h-3 border-2 border-black/30 border-t-black rounded-full animate-spin" /> Reviewing Package...</div> : 'Send Official Pitch'}

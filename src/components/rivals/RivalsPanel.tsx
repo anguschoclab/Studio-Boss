@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { formatMoney } from '@/engine/utils';
 import { MADashboard } from '../industry/MADashboard';
+import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
 import { cn } from '@/lib/utils';
 
 const strengthColor = (s: number) => {
@@ -36,6 +37,7 @@ export const RivalsPanel = () => {
         <Button 
           variant="ghost" 
           size="sm"
+          tooltip="Analyze competitor power levels, archetypes, and recent strategic movements"
           onClick={() => setActiveSubTab('intel')}
           className={cn(
             "text-[10px] uppercase tracking-widest font-black px-4 h-8 transition-all",
@@ -47,6 +49,7 @@ export const RivalsPanel = () => {
         <Button 
           variant="ghost" 
           size="sm"
+          tooltip="Global industry trends, market share distribution, and M&A opportunities"
           onClick={() => setActiveSubTab('market')}
           className={cn(
             "text-[10px] uppercase tracking-widest font-black px-4 h-8 transition-all",
@@ -74,16 +77,24 @@ export const RivalsPanel = () => {
                   <div className="absolute inset-0 bg-gradient-to-br from-destructive/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
                   
                   <div className="flex items-center justify-between relative z-10">
-                    <div className="flex flex-col">
-                      <h4 className="font-display text-[15px] font-black text-foreground group-hover:text-destructive transition-colors tracking-tight drop-shadow-sm">{rival.name}</h4>
-                      <span className="text-[9px] font-black tracking-widest text-muted-foreground/90 uppercase">
-                        {ARCHETYPES[rival.archetype]?.name}
-                      </span>
-                    </div>
+                    <TooltipWrapper tooltip={`Studio Archetype: ${ARCHETYPES[rival.archetype]?.name}. This studio priority and decision making is driven by this profile.`} side="top">
+                      <div className="flex flex-col cursor-help">
+                        <h4 className="font-display text-[15px] font-black text-foreground group-hover:text-destructive transition-colors tracking-tight drop-shadow-sm">{rival.name}</h4>
+                        <span className="text-[9px] font-black tracking-widest text-muted-foreground/90 uppercase">
+                          {ARCHETYPES[rival.archetype]?.name}
+                        </span>
+                      </div>
+                    </TooltipWrapper>
                     
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="sm" aria-label="Strategic actions" className="h-8 w-8 p-0 hover:bg-destructive/10 hover:text-destructive">
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          tooltip="Execute covert operations to destabilize or acquire this competitor"
+                          aria-label="Strategic actions" 
+                          className="h-8 w-8 p-0 hover:bg-destructive/10 hover:text-destructive"
+                        >
                           <MoreVertical className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
@@ -134,10 +145,12 @@ export const RivalsPanel = () => {
                   <p className="text-[12px] font-medium text-muted-foreground/90 leading-relaxed border-l-2 border-border/50 group-hover:border-destructive/50 pl-2.5 relative z-10 transition-colors">{rival.recentActivity}</p>
                   
                   <div className="space-y-1.5 relative z-10">
-                    <div className="flex justify-between items-center text-[10px] uppercase font-bold tracking-widest text-muted-foreground">
-                      <span>Power Level</span>
-                      <span className="font-mono text-foreground/80">{rival.strength}%</span>
-                    </div>
+                    <TooltipWrapper tooltip="Combined metric of studio cash, IP catalog value, and industry prestige." side="top">
+                      <div className="flex justify-between items-center text-[10px] uppercase font-bold tracking-widest text-muted-foreground cursor-help">
+                        <span>Power Level</span>
+                        <span className="font-mono text-foreground/80">{rival.strength}%</span>
+                      </div>
+                    </TooltipWrapper>
                     <div className="h-1.5 bg-muted/50 rounded-full overflow-hidden shadow-inner ring-1 ring-inset ring-border/50">
                       <div
                         className={`h-full rounded-full transition-all duration-1000 ease-out ${strengthColor(rival.strength)} shadow-sm group-hover:shadow-[0_0_10px_rgba(239,68,68,0.4)]`}
@@ -145,8 +158,14 @@ export const RivalsPanel = () => {
                       />
                     </div>
                     <div className="flex justify-between items-center text-[9px] text-muted-foreground/60 pt-1 font-bold italic tracking-tight">
-                        <span>{rival.projectCount} active projects</span>
-                        {rival.cash > 0 && <span>Valuation: {formatMoney(rival.cash * 2)}</span>}
+                        <TooltipWrapper tooltip="Number of properties this studio currently has in production." side="bottom">
+                          <span className="cursor-help">{rival.projectCount} active projects</span>
+                        </TooltipWrapper>
+                        {rival.cash > 0 && (
+                          <TooltipWrapper tooltip="Projected studio valuation based on current cash reserves and IP assets." side="bottom">
+                            <span className="cursor-help text-right">Valuation: {formatMoney(rival.cash * 2)}</span>
+                          </TooltipWrapper>
+                        )}
                     </div>
                   </div>
                 </div>

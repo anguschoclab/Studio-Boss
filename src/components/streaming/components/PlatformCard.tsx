@@ -1,6 +1,5 @@
 import React from 'react';
-import { Buyer, StreamerPlatform, NetworkPlatform, PremiumPlatform } from '@/engine/types';
-import { formatMoney } from '@/engine/utils';
+import { Buyer, StreamerPlatform, NetworkPlatform } from '@/engine/types';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { 
@@ -9,7 +8,6 @@ import {
   Crown, 
   Users, 
   AlertTriangle, 
-  Building2, 
   Handshake, 
   TrendingUp, 
   TrendingDown,
@@ -18,11 +16,12 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SubscriberTrendChart } from './SubscriberTrendChart';
+import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
 
 const ARCHETYPE_CONFIG = {
-  streamer: { icon: Wifi, label: 'Streamer', color: 'text-violet-400', bg: 'bg-violet-500/10', border: 'border-violet-500/20' },
-  network: { icon: Radio, label: 'Network', color: 'text-blue-400', bg: 'bg-blue-500/10', border: 'border-blue-500/20' },
-  premium: { icon: Crown, label: 'Premium', color: 'text-amber-400', bg: 'bg-amber-500/10', border: 'border-amber-500/20' },
+  streamer: { icon: Wifi, label: 'Streamer', color: 'text-violet-400', bg: 'bg-violet-500/10', border: 'border-violet-500/20', tooltip: 'Global digital distribution platform focusing on subscriber growth and library depth.' },
+  network: { icon: Radio, label: 'Network', color: 'text-blue-400', bg: 'bg-blue-500/10', border: 'border-blue-500/20', tooltip: 'Traditional broadcast or cable network focusing on domestic reach and advertising.' },
+  premium: { icon: Crown, label: 'Premium', color: 'text-amber-400', bg: 'bg-amber-500/10', border: 'border-amber-500/20', tooltip: 'High-end subscription service focusing on prestige content and exclusive talent deals.' },
 } as const;
 
 function formatSubscribers(n: number): string {
@@ -44,9 +43,7 @@ export const PlatformCard: React.FC<PlatformCardProps> = ({ buyer, allBuyers, on
   const Icon = config.icon;
   const isAcquired = !!buyer.acquiredBy;
   const acquirer = isAcquired ? allBuyers.find(b => b.id === buyer.acquiredBy) : null;
-  const ownedPlatforms = (buyer.ownedPlatforms || []).map(id => allBuyers.find(b => b.id === id)).filter(Boolean);
   const strength = buyer.strength ?? 60;
-  const cash = buyer.cash ?? 50_000_000;
 
   // Trend Calculation
   const isStreamer = buyer.archetype === 'streamer';
@@ -74,9 +71,11 @@ export const PlatformCard: React.FC<PlatformCardProps> = ({ buyer, allBuyers, on
       {/* Header */}
       <div className="flex items-start justify-between gap-3 relative z-10">
         <div className="flex items-center gap-3">
-          <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center border shadow-inner", config.bg, config.border)}>
-            <Icon className={cn("w-5 h-5", config.color)} />
-          </div>
+          <TooltipWrapper tooltip={config.tooltip} side="top">
+            <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center border shadow-inner cursor-help", config.bg, config.border)}>
+              <Icon className={cn("w-5 h-5", config.color)} />
+            </div>
+          </TooltipWrapper>
           <div>
             <h3 
               className="font-display font-black text-[15px] tracking-tight text-foreground leading-tight group-hover:text-primary transition-colors cursor-pointer"
@@ -98,30 +97,34 @@ export const PlatformCard: React.FC<PlatformCardProps> = ({ buyer, allBuyers, on
         </div>
 
         {buyer.currentMandate && (
-          <div className="flex flex-col items-end">
-            <span className="text-[7px] font-black text-muted-foreground/40 uppercase tracking-[0.2em] mb-1">Active Mandate</span>
-            <Badge variant="secondary" className="text-[9px] font-bold uppercase tracking-widest bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2">
-              {buyer.currentMandate.type.replace('_', ' ')}
-            </Badge>
-          </div>
+          <TooltipWrapper tooltip="The primary strategic goal for this platform. Alignment increases the probability of deal acceptance and higher valuations." side="left">
+            <div className="flex flex-col items-end cursor-help">
+              <span className="text-[7px] font-black text-muted-foreground/40 uppercase tracking-[0.2em] mb-1">Active Mandate</span>
+              <Badge variant="secondary" className="text-[9px] font-bold uppercase tracking-widest bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2">
+                {buyer.currentMandate.type.replace('_', ' ')}
+              </Badge>
+            </div>
+          </TooltipWrapper>
         )}
       </div>
 
       {/* Chart Section (Streamer Only) */}
       {isStreamer && (
-        <div className="h-20 w-full relative z-10 my-1 overflow-hidden rounded-lg bg-black/20 border border-white/5 p-1 group/chart">
-           <SubscriberTrendChart platform={streamer} />
-           <div className="absolute top-1 right-2 flex items-center gap-1 text-[8px] font-black uppercase tracking-widest">
-              {isTrendingUp ? (
-                <TrendingUp className="w-2.5 h-2.5 text-emerald-400" />
-              ) : (
-                <TrendingDown className="w-2.5 h-2.5 text-rose-400" />
-              )}
-              <span className={isTrendingUp ? 'text-emerald-400' : 'text-rose-400'}>
-                {Math.abs(trend) > 0 ? formatSubscribers(Math.abs(trend)) : 'Steady'}
-              </span>
-           </div>
-        </div>
+        <TooltipWrapper tooltip="Subscriber trajectory over the last 12 weeks. Trends influence platform valuation and buying power." side="top">
+          <div className="h-20 w-full relative z-10 my-1 overflow-hidden rounded-lg bg-black/20 border border-white/5 p-1 group/chart cursor-help">
+             <SubscriberTrendChart platform={streamer} />
+             <div className="absolute top-1 right-2 flex items-center gap-1 text-[8px] font-black uppercase tracking-widest">
+                {isTrendingUp ? (
+                  <TrendingUp className="w-2.5 h-2.5 text-emerald-400" />
+                ) : (
+                  <TrendingDown className="w-2.5 h-2.5 text-rose-400" />
+                )}
+                <span className={isTrendingUp ? 'text-emerald-400' : 'text-rose-400'}>
+                  {Math.abs(trend) > 0 ? formatSubscribers(Math.abs(trend)) : 'Steady'}
+                </span>
+             </div>
+          </div>
+        </TooltipWrapper>
       )}
 
       {/* Stats Grid */}
@@ -130,30 +133,36 @@ export const PlatformCard: React.FC<PlatformCardProps> = ({ buyer, allBuyers, on
         buyer.archetype === 'streamer' ? 'grid-cols-2' : 'grid-cols-2'
       )}>
         {buyer.archetype === 'streamer' && (
-          <div className="space-y-1">
-            <div className="text-[9px] uppercase font-black tracking-widest text-muted-foreground/40 leading-none">Global Subs</div>
-            <div className="font-black text-foreground flex items-center gap-1.5 text-sm">
-              <Users className="w-3.5 h-3.5 text-violet-400" />
-              {formatSubscribers((buyer as StreamerPlatform).subscribers)}
+          <TooltipWrapper tooltip="Total number of paying users on this digital network." side="bottom">
+            <div className="space-y-1 cursor-help">
+              <div className="text-[9px] uppercase font-black tracking-widest text-muted-foreground/40 leading-none">Global Subs</div>
+              <div className="font-black text-foreground flex items-center gap-1.5 text-sm">
+                <Users className="w-3.5 h-3.5 text-violet-400" />
+                {formatSubscribers((buyer as StreamerPlatform).subscribers)}
+              </div>
             </div>
-          </div>
+          </TooltipWrapper>
         )}
         {buyer.archetype === 'network' && (
-          <div className="space-y-1">
-            <div className="text-[9px] uppercase font-black tracking-widest text-muted-foreground/40 leading-none">Domestic Reach</div>
-            <div className="font-black text-foreground text-sm flex items-center gap-1.5">
-              <Radio className="w-3.5 h-3.5 text-blue-400" />
-              {(buyer as NetworkPlatform).reach}/100
+          <TooltipWrapper tooltip="Estimated percentage of households reached by this broadcast network." side="bottom">
+            <div className="space-y-1 cursor-help">
+              <div className="text-[9px] uppercase font-black tracking-widest text-muted-foreground/40 leading-none">Domestic Reach</div>
+              <div className="font-black text-foreground text-sm flex items-center gap-1.5">
+                <Radio className="w-3.5 h-3.5 text-blue-400" />
+                {(buyer as NetworkPlatform).reach}/100
+              </div>
+            </div>
+          </TooltipWrapper>
+        )}
+        <TooltipWrapper tooltip="Market capitalization and competitive influence index. Higher strength equals better deal terms." side="bottom">
+          <div className="space-y-1 cursor-help">
+            <div className="text-[9px] uppercase font-black tracking-widest text-muted-foreground/40 leading-none">Market Strength</div>
+            <div className={cn("font-black text-sm flex items-center gap-1.5", strength > 70 ? 'text-emerald-400' : strength > 40 ? 'text-foreground' : 'text-rose-400')}>
+              <TrendingUp className="w-3.5 h-3.5" />
+              {strength.toFixed(0)}
             </div>
           </div>
-        )}
-        <div className="space-y-1">
-          <div className="text-[9px] uppercase font-black tracking-widest text-muted-foreground/40 leading-none">Market Strength</div>
-          <div className={cn("font-black text-sm flex items-center gap-1.5", strength > 70 ? 'text-emerald-400' : strength > 40 ? 'text-foreground' : 'text-rose-400')}>
-            <TrendingUp className="w-3.5 h-3.5" />
-            {strength.toFixed(0)}
-          </div>
-        </div>
+        </TooltipWrapper>
       </div>
 
       {/* Actions */}
@@ -162,6 +171,7 @@ export const PlatformCard: React.FC<PlatformCardProps> = ({ buyer, allBuyers, on
            <Button
               variant="outline"
               size="sm"
+              tooltip={`Initiate license negotiations with ${buyer.name}`}
               className="flex-1 h-8 text-[9px] uppercase font-black tracking-[0.2em] bg-white/5 border-white/5 hover:bg-primary hover:text-black hover:border-primary transition-all group scale-100 active:scale-95"
               onClick={() => onDeal(buyer)}
             >
@@ -177,9 +187,9 @@ export const PlatformCard: React.FC<PlatformCardProps> = ({ buyer, allBuyers, on
         <Button
           variant="outline"
           size="sm"
+          tooltip={`View ${buyer.name} industry intelligence and M&A history`}
           className="w-8 h-8 p-0 bg-white/5 border-white/5 hover:border-primary/40 hover:text-primary transition-all"
           onClick={() => onViewHistory(buyer)}
-          title="Industry Intelligence"
         >
           <Star className="w-3.5 h-3.5" />
         </Button>
@@ -187,10 +197,12 @@ export const PlatformCard: React.FC<PlatformCardProps> = ({ buyer, allBuyers, on
 
       {/* Vulnerability Alert */}
       {buyer.isAcquirable && !isAcquired && (
-        <div className="absolute top-2 right-2 flex items-center gap-1.5 bg-rose-500/10 border border-rose-500/20 px-2 py-0.5 rounded-full animate-pulse">
-           <AlertTriangle className="w-2.5 h-2.5 text-rose-500" />
-           <span className="text-[8px] font-black text-rose-500 uppercase tracking-widest">M&A Target</span>
-        </div>
+        <TooltipWrapper tooltip="This platform is currently vulnerable to a corporate takeover." side="top">
+          <div className="absolute top-2 right-2 flex items-center gap-1.5 bg-rose-500/10 border border-rose-500/20 px-2 py-0.5 rounded-full animate-pulse cursor-help">
+             <AlertTriangle className="w-2.5 h-2.5 text-rose-500" />
+             <span className="text-[8px] font-black text-rose-500 uppercase tracking-widest">M&A Target</span>
+          </div>
+        </TooltipWrapper>
       )}
     </div>
   );

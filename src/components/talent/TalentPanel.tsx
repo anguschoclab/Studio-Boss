@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
-import { Talent } from '@/engine/types';
+import { Talent, TalentRole } from '@/engine/types';
 import { TalentModal } from './TalentProfileModal';
 import { TalentCard } from './TalentCard';
 import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
@@ -8,10 +8,10 @@ import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
 export const TalentPanel = () => {
   const state = useGameStore(s => s.gameState);
   const talentPool = useMemo(() => Object.values(state?.industry.talentPool || {}), [state?.industry.talentPool]);
-  const [filter, setFilter] = useState<string>('all');
+  const [filter, setFilter] = useState<TalentRole | 'all'>('all');
 
   const filteredTalent = useMemo(() => {
-    return talentPool.filter(t => filter === 'all' || t.roles.includes(filter as any));
+    return talentPool.filter(t => filter === 'all' || t.roles.includes(filter as TalentRole));
   }, [talentPool, filter]);
 
   return (
@@ -19,7 +19,7 @@ export const TalentPanel = () => {
       <div className="flex items-center justify-between pb-2 border-b border-border/40">
         <h2 className="text-2xl font-display font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70 drop-shadow-sm">Talent Roster</h2>
         <div className="flex gap-2 flex-wrap justify-end">
-          {['all', 'actor', 'director', 'writer', 'producer'].map(type => (
+          {(['all', 'actor', 'director', 'writer', 'producer'] as (TalentRole | 'all')[]).map(type => (
             <TooltipWrapper key={type} tooltip={`Filter by ${type === 'all' ? 'all professional roles' : `the ${type} category`}`} side="bottom">
               <button
                 onClick={() => setFilter(type)}

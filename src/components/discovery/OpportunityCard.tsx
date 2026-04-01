@@ -39,8 +39,12 @@ export const OpportunityCard = ({ opportunity: opp, onEnterAuction }: Opportunit
           </div>
 
           <div className="flex items-center gap-3">
-            <Badge variant="outline" className="text-[9px] font-black border-white/10 text-muted-foreground uppercase h-5 tracking-widest">{opp.format}</Badge>
-            <Badge variant="outline" className="text-[9px] font-black border-primary/20 bg-primary/5 text-primary uppercase h-5 tracking-widest">{opp.budgetTier} BUDGET</Badge>
+            <TooltipWrapper tooltip="Property format determines distribution strategy and platform suitability." side="top">
+              <Badge variant="outline" className="text-[9px] font-black border-white/10 text-muted-foreground uppercase h-5 tracking-widest cursor-help">{opp.format}</Badge>
+            </TooltipWrapper>
+            <TooltipWrapper tooltip="Estimated production cost category. Higher tiers require more capital but have higher revenue ceilings." side="top">
+              <Badge variant="outline" className="text-[9px] font-black border-primary/20 bg-primary/5 text-primary uppercase h-5 tracking-widest cursor-help">{opp.budgetTier} BUDGET</Badge>
+            </TooltipWrapper>
           </div>
 
           <div className="p-4 rounded-xl bg-black/40 italic text-xs text-muted-foreground/80 leading-relaxed border-l-2 border-primary/20 group-hover:border-amber-500/40 transition-all shadow-inner">
@@ -49,14 +53,14 @@ export const OpportunityCard = ({ opportunity: opp, onEnterAuction }: Opportunit
           
           <div className="grid grid-cols-2 gap-4 pt-2">
               <TooltipWrapper tooltip="The current highest bid in the marketplace for these rights." side="top">
-                <div className="space-y-1">
+                <div className="space-y-1 cursor-help">
                     <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">Market Bid</span>
                     <div className="text-base font-black text-foreground tabular-nums">{formatMoney(maxBid)}</div>
                 </div>
               </TooltipWrapper>
               
               <TooltipWrapper tooltip="The entity currently holding the winning bid position." side="top">
-                <div className="space-y-1 text-right">
+                <div className="space-y-1 text-right cursor-help">
                     <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">Leader</span>
                     <div className={cn("text-[10px] font-black uppercase tracking-widest", highestBid === 'YOU' ? 'text-emerald-400' : 'text-rose-400')}>
                        {highestBid}
@@ -67,8 +71,8 @@ export const OpportunityCard = ({ opportunity: opp, onEnterAuction }: Opportunit
         </div>
 
         <div className="mt-6 pt-5 border-t border-white/5 flex justify-between items-center relative z-10">
-          <TooltipWrapper tooltip="Time remaining before the auction concludes and rights are awarded." side="top">
-            <div className="flex flex-col">
+          <TooltipWrapper tooltip="Time remaining before the auction concludes and rights are awarded. Bids placed in the final hour may extend the clock." side="top">
+            <div className="flex flex-col cursor-help">
               <div className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2 mb-1">
                 <Clock className={cn("h-3 w-3", opp.weeksUntilExpiry <= 1 ? "text-rose-500 animate-pulse" : "text-amber-500/40")} />
                 Closing Soon

@@ -9,7 +9,7 @@ import { calculateFranchiseFatigue } from '@/engine/systems/ip/fatigueEngine';
 import { resolveCrisis } from '@/engine/systems/crises';
 import * as festivalsEngine from '@/engine/systems/festivals';
 import * as awardsEngine from '@/engine/systems/awards';
-import { Project, GameState, AwardBody, ProjectContractType, MarketingCampaign, TvFormatKey, UnscriptedFormatKey, StateImpact, SeriesProject } from '@/engine/types';
+import { Project, GameState, AwardBody, ProjectContractType, MarketingCampaign, StateImpact, SeriesProject } from '@/engine/types';
 
 export interface ProjectSlice {
   createProject: (params: CreateProjectParams) => void;
@@ -19,6 +19,7 @@ export interface ProjectSlice {
   _updateProjectToProduction: (state: GameState, projectId: string, project: Project, headlineText: string, extraProjectUpdates?: Partial<Project>) => void;
   resolveProjectCrisis: (projectId: string, optionIndex: number) => void;
   exploitFranchise: (projectId: string) => void;
+  acquireAndRebootIP: (ipAssetId: string) => void;
   submitToFestival: (projectId: string, festivalBody: AwardBody) => void;
   launchAwardsCampaign: (projectId: string, budget: number) => void;
   lockMarketingCampaign: (projectId: string, level: 'none' | 'basic' | 'blockbuster') => void;
@@ -222,6 +223,73 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
     };
 
     get().createProject(finalParams as any);
+  },
+
+  acquireAndRebootIP: (ipAssetId) => {
+    set((s) => {
+      const state = s.gameState;
+      if (!state) return s;
+
+      const asset = state.ip.vault.find(a => a.id === ipAssetId);
+      if (!asset || asset.rightsOwner !== 'MARKET') return s;
+
+      if (state.finance.cash < asset.baseValue) {
+        // Could trigger an alert here, but for now just return
+        return s;
+      }
+
+      // 1. Prepare reboot parameters
+      const rebootParams: CreateProjectParams = {
+        title: `${asset.title}`,
+        format: 'film', // Defaulting to film for reboots
+        genre: 'DRAMA', // Default or inherited
+        budgetTier: asset.baseValue > 100000000 ? 'blockbuster' : 'high',
+        targetAudience: 'GENERAL',
+        flavor: 'reboot',
+        franchiseId: asset.franchiseId,
+        initialBuzzBonus: Math.floor(asset.decayRate * 50) + 20
+      };
+
+      // 2. Build the project
+      const { project, newContracts } = buildProjectAndContracts(state, rebootParams);
+
+      // 3. Execute Impacts
+      const impacts: StateImpact[] = [
+        {
+          type: 'FUNDS_DEDUCTED',
+          payload: { amount: asset.baseValue }
+        },
+        {
+          type: 'INDUSTRY_UPDATE',
+          payload: {
+            vault: state.ip.vault.map(a => a.id === ipAssetId ? { ...a, rightsOwner: 'STUDIO' as const } : a)
+          }
+        },
+        {
+          type: 'NEWS_ADDED',
+          payload: {
+            headline: `STUDIO ACQUIRES "${asset.title}" RIGHTS`,
+            description: `Major industry shift as rights for the classic property return to production slate.`
+          }
+        }
+      ];
+
+      const intermediateState = applyStateImpact(state, impacts);
+
+      return {
+        gameState: {
+          ...intermediateState,
+          studio: {
+            ...intermediateState.studio,
+            internal: {
+              ...intermediateState.studio.internal,
+              projects: { ...intermediateState.studio.internal.projects, [project.id]: project },
+              contracts: [...intermediateState.studio.internal.contracts, ...newContracts]
+            }
+          }
+        } as any
+      };
+    });
   },
 
   resolveProjectCrisis: (projectId, optionIndex) => {

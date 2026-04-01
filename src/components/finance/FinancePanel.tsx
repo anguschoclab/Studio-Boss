@@ -9,7 +9,8 @@ import { YearInReviewChart } from './YearInReviewChart';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { History, LayoutDashboard, ReceiptText, TrendingUp, TrendingDown, Package, Coins } from 'lucide-react';
+import { History, LayoutDashboard, ReceiptText, TrendingUp, Package, Coins } from 'lucide-react';
+import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
 
 export const FinancePanel = () => {
   const gameState = useGameStore(s => s.gameState);
@@ -80,7 +81,12 @@ export const FinancePanel = () => {
         
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="outline" size="sm" className="font-display font-black uppercase tracking-widest text-[10px] gap-2 hover:bg-primary/10 hover:text-primary transition-all">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              tooltip="Access comprehensive historical financial records and audit logs"
+              className="font-display font-black uppercase tracking-widest text-[10px] gap-2 hover:bg-primary/10 hover:text-primary transition-all"
+            >
               <ReceiptText className="w-3 h-3" />
               View Full Ledger
             </Button>
@@ -154,18 +160,20 @@ export const FinancePanel = () => {
       {/* Summary Cards */}
       <div className="grid grid-cols-4 gap-4">
         {[
-          { label: 'Available Cash', value: formatMoney(cash), color: cash < 0 ? 'text-destructive drop-shadow-[0_0_8px_rgba(239,68,68,0.4)]' : 'text-primary drop-shadow-[0_0_8px_rgba(234,179,8,0.4)]', bg: 'from-card/80 to-card/40' },
-          { label: 'Total Net Worth', value: formatMoney(studioNetWorth), color: 'text-foreground', bg: 'from-card/80 to-card/40' },
-          { label: 'Projected Net Delta', value: `${netDelta >= 0 ? '+' : ''}${formatMoney(netDelta)}/wk`, color: netDelta >= 0 ? 'text-success drop-shadow-[0_0_8px_rgba(34,197,94,0.4)]' : 'text-destructive drop-shadow-[0_0_8px_rgba(239,68,68,0.4)]', bg: netDelta >= 0 ? 'from-success/5 to-transparent' : 'from-destructive/5 to-transparent' },
-          { label: '12-Wk Forecast Cash', value: formatMoney(forecast.length > 0 ? forecast[forecast.length - 1].projected : 0), color: 'text-purple-400 drop-shadow-[0_0_8px_rgba(192,132,252,0.4)]', bg: 'from-purple-500/5 to-transparent' },
+          { label: 'Available Cash', value: formatMoney(cash), color: cash < 0 ? 'text-destructive drop-shadow-[0_0_8px_rgba(239,68,68,0.4)]' : 'text-primary drop-shadow-[0_0_8px_rgba(234,179,8,0.4)]', bg: 'from-card/80 to-card/40', tooltip: 'Total liquid capital available for studio operations and project funding.' },
+          { label: 'Total Net Worth', value: formatMoney(studioNetWorth), color: 'text-foreground', bg: 'from-card/80 to-card/40', tooltip: 'Estimated total value of all studio assets, including cash, IP, and talent contracts.' },
+          { label: 'Projected Net Delta', value: `${netDelta >= 0 ? '+' : ''}${formatMoney(netDelta)}/wk`, color: netDelta >= 0 ? 'text-success drop-shadow-[0_0_8px_rgba(34,197,94,0.4)]' : 'text-destructive drop-shadow-[0_0_8px_rgba(239,68,68,0.4)]', bg: netDelta >= 0 ? 'from-success/5 to-transparent' : 'from-destructive/5 to-transparent', tooltip: 'Estimated weekly profit or loss based on current revenue streams and production burn.' },
+          { label: '12-Wk Forecast Cash', value: formatMoney(forecast.length > 0 ? forecast[forecast.length - 1].projected : 0), color: 'text-purple-400 drop-shadow-[0_0_8px_rgba(192,132,252,0.4)]', bg: 'from-purple-500/5 to-transparent', tooltip: 'Projected cash position in 12 weeks based on current trajectory and known milestones.' },
         ].map((metric, i) => (
-          <Card key={metric.label} className={`border-border/50 bg-card/60 bg-gradient-to-br ${metric.bg} backdrop-blur-md shadow-sm hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:-translate-y-1 hover:border-primary/30 transition-all duration-300 relative overflow-hidden group cursor-default`} style={{ animationDelay: `${i * 100}ms` }}>
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
-            <CardContent className="p-5 relative z-10">
-              <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-black drop-shadow-sm group-hover:text-foreground/80 transition-colors">{metric.label}</p>
-              <p className={`text-2xl font-display font-black tracking-tighter mt-2 ${metric.color} transition-colors duration-300`}>{metric.value}</p>
-            </CardContent>
-          </Card>
+          <TooltipWrapper key={metric.label} tooltip={metric.tooltip} side="top">
+            <Card className={`border-border/50 bg-card/60 bg-gradient-to-br ${metric.bg} backdrop-blur-md shadow-sm hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:-translate-y-1 hover:border-primary/30 transition-all duration-300 relative overflow-hidden group cursor-help`} style={{ animationDelay: `${i * 100}ms` }}>
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
+              <CardContent className="p-5 relative z-10">
+                <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-black drop-shadow-sm group-hover:text-foreground/80 transition-colors">{metric.label}</p>
+                <p className={`text-2xl font-display font-black tracking-tighter mt-2 ${metric.color} transition-colors duration-300`}>{metric.value}</p>
+              </CardContent>
+            </Card>
+          </TooltipWrapper>
         ))}
       </div>
 
@@ -277,20 +285,26 @@ export const FinancePanel = () => {
                        </Badge>
                     </div>
                     <div className="space-y-1.5 relative z-10">
-                      <div className="flex justify-between text-[11px] font-medium">
-                         <span className="text-muted-foreground uppercase tracking-wider text-[9px] font-bold">Rev</span>
-                         <span className="font-mono text-success drop-shadow-[0_0_2px_rgba(34,197,94,0.3)]">{formatMoney(p.revenue)}</span>
-                      </div>
-                      <div className="flex justify-between text-[11px] font-medium">
-                         <span className="text-muted-foreground uppercase tracking-wider text-[9px] font-bold">Cost</span>
-                         <span className="font-mono text-destructive drop-shadow-[0_0_2px_rgba(239,68,68,0.3)]">{formatMoney(p.budget + (p.marketingBudget||0))}</span>
-                      </div>
-                      <div className="mt-3 pt-3 border-t border-border/30 flex justify-between items-center group-hover:border-primary/20 transition-colors">
-                         <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">ROI</span>
-                         <span className={`text-xl font-display font-black drop-shadow-sm ${isProfitable ? 'text-success' : 'text-destructive'}`}>
-                           {roi.toFixed(2)}x
-                         </span>
-                      </div>
+                      <TooltipWrapper tooltip="Total project earnings from box office receipts, distribution deals, and licensing." side="bottom">
+                        <div className="flex justify-between text-[11px] font-medium cursor-help">
+                           <span className="text-muted-foreground uppercase tracking-wider text-[9px] font-bold">Rev</span>
+                           <span className="font-mono text-success drop-shadow-[0_0_2px_rgba(34,197,94,0.3)]">{formatMoney(p.revenue)}</span>
+                        </div>
+                      </TooltipWrapper>
+                      <TooltipWrapper tooltip="Total project expenditure including production budget, marketing spend, and talent fees." side="bottom">
+                        <div className="flex justify-between text-[11px] font-medium cursor-help">
+                           <span className="text-muted-foreground uppercase tracking-wider text-[9px] font-bold">Cost</span>
+                           <span className="font-mono text-destructive drop-shadow-[0_0_2px_rgba(239,68,68,0.3)]">{formatMoney(p.budget + (p.marketingBudget||0))}</span>
+                        </div>
+                      </TooltipWrapper>
+                      <TooltipWrapper tooltip="Return on Investment ratio. Values above 1.0x signify capital growth." side="top">
+                        <div className="mt-3 pt-3 border-t border-border/30 flex justify-between items-center group-hover:border-primary/20 transition-colors cursor-help">
+                           <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">ROI</span>
+                           <span className={`text-xl font-display font-black drop-shadow-sm ${isProfitable ? 'text-success' : 'text-destructive'}`}>
+                             {roi.toFixed(2)}x
+                           </span>
+                        </div>
+                      </TooltipWrapper>
                     </div>
                  </div>
                )
