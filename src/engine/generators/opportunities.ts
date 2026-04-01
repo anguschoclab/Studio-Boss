@@ -4,7 +4,7 @@ import { pick, randRange, secureRandom } from '../utils';
  // Reuse some generation logic if needed, or build new one
 
 const PROJECT_ADJECTIVES = [
-  'Extortionate', 'PR-Cursed', 'Algorithmically-Mandated', 'Sovereign-Citizen-Funded', 'Cryptocurrency-Evading', 'TikTok-Ruined', 'VFX-Destitute', 'Focus-Group-Mutilated',
+  'PR-Cursed', 'Algorithmically-Mandated', 'Sovereign-Citizen-Funded', 'Cryptocurrency-Evading', 'TikTok-Ruined', 'VFX-Destitute', 'Extortionate', 'Focus-Group-Mutilated',
   'De-Aged', 'Self-Funded', 'Cryptocurrency-Backed', 'Anti-Woke', 'Over-Indulgent', 'Tone-Policied', 'Has-Been-Led', 'Reboot-of-a-Reboot', 'Nepotism-Heavy', 'AI-Generated', 'Unwatchably-Dark', 'PR-Nightmare', 'CGI-Saturated', 'Legally-Ambiguous', 'Tax-Avoidant',
 
   'Cursed', 'Bloated', 'Pretentious', 'Gritty', 'Unnecessary', 'Rebooted', 'Overbudget', 'Derivative', 'Visionary', 'Cinematic', 'Algorithm-Driven', 'IP-Mining', 'Vain', 'Lethal', 'Synergistic',
