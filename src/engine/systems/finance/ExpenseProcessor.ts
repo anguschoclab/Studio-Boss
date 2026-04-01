@@ -6,15 +6,39 @@ import { Project } from '../../types';
 export class ExpenseProcessor {
   /**
    * Calculates studio burn based on studio level and the number of active projects.
+   * Non-linear scaling for late-game challenge.
    */
   static calculateStudioBurn(level: number, activeProjectsCount: number): number {
     const baseRent = 500000; // $500k base weekly overhead
-    const levelMultiplier = 250000; // $250k increase per level
-    const projectPenalty = 50000; // $50k penalty per active project
     
-    // Formula: BaseRent + (Level * Multiplier) + (ActiveProjects * Penalty)
-    const burn = baseRent + (level * levelMultiplier) + (activeProjectsCount * projectPenalty);
+    // Non-linear scaling: Base * (1.25 ^ (Level-1))
+    const levelScale = Math.pow(1.25, Math.max(0, level - 1));
+    const projectPenalty = 75000; // $75k penalty per active project
+    
+    const burn = (baseRent * levelScale) + (activeProjectsCount * projectPenalty);
     return Math.round(burn);
+  }
+
+  /**
+   * Calculates weekly interest penalty for negative cash balances.
+   */
+  static calculateDebtInterest(cash: number, debtRate: number): number {
+    if (cash >= 0) return 0;
+    
+    // Weekly interest = (Balance * AnnualRate) / 52
+    const weeklyRate = debtRate / 52;
+    return Math.abs(Math.round(cash * weeklyRate));
+  }
+
+  /**
+   * Calculates weekly interest yield for positive cash balances.
+   */
+  static calculateSavingsYield(cash: number, savingsYield: number): number {
+    if (cash <= 0) return 0;
+    
+    // Weekly yield = (Balance * AnnualRate) / 52
+    const weeklyRate = savingsYield / 52;
+    return Math.round(cash * weeklyRate);
   }
 
   /**

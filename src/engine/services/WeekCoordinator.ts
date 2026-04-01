@@ -21,6 +21,7 @@ import { advanceBuyers } from '../systems/buyerMergers';
 import { tickVerticalIntegration } from '../systems/industry/VerticalIntegrationProcessor';
 import { tickIndustryUpstarts } from '../systems/industry/IndustryUpstarts';
 import { tickConsolidation } from '../systems/industry/ConsolidationEngine';
+import { InterestRateSimulator } from '../systems/market/InterestRateSimulator';
 
 /**
  * Studio Boss - Simulation Tick Context
@@ -79,6 +80,7 @@ export class WeekCoordinator {
 
   private static runMarketFilter(state: GameState, context: TickContext) {
     context.impacts.push(...tickPlatforms(state, context.rng));
+    context.impacts.push(InterestRateSimulator.advance(state));
     context.impacts.push(...tickWorldEvents(state, context.rng));
     context.impacts.push(...advanceTrends(state.market.trends || []));
     context.impacts.push(...advanceMarketEvents(state));
@@ -139,13 +141,18 @@ export class WeekCoordinator {
       cashAfter: after.finance.cash,
       totalRevenue: 0,
       totalCosts: 0,
-      projectUpdates: context.impacts.filter(i => i.type === 'PROJECT_UPDATED').map(i => i.payload.projectId),
-      newHeadlines: newsImpacts.map(i => ({
-        id: context.rng.uuid('news'),
-        text: i.payload.headline,
-        week: context.week,
-        category: 'general'
-      })),
+      projectUpdates: context.impacts
+        .filter(i => i.type === 'PROJECT_UPDATED' && i.payload)
+        .map(i => (i.payload as Record<string, string>).projectId),
+      newHeadlines: newsImpacts.map(i => {
+        const payload = i.payload as Record<string, string>;
+        return {
+          id: context.rng.uuid('news'),
+          text: payload?.headline || 'Unknown Event',
+          week: context.week,
+          category: 'general'
+        };
+      }),
       events: context.events.map(e => e.title),
     };
   }

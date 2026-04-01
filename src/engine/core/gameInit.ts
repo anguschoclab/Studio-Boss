@@ -1,12 +1,13 @@
-import { GameState, ArchetypeKey, RivalStudio, GenreTrend } from '@/engine/types';
+import { ArchetypeKey, RivalStudio, GameState } from '../types/studio.types';
+import { MarketState } from '../types/state.types';
 import { ALL_GENRES, initializeTrends } from '../systems/trends';
 import { ARCHETYPES } from '../data/archetypes';
 import { BrandSystem } from '../generators/BrandSystem';
-import { generateStudioName, generateMotto } from '../generators/names';
+import { generateMotto } from '../generators/names';
 import { generateFamilies, generateTalentPool } from '../generators/talent';
 import { generateBuyers } from '../generators/buyers';
 import { generateAgencies, generateAgents } from '../generators/agencies';
-import { pick, randRange, secureRandom } from '../utils';
+import { pick, secureRandom, randRange } from '../utils';
 import { generateOpportunity } from '../generators/opportunities';
 
 export function initializeGame(studioName: string, archetype: ArchetypeKey): GameState {
@@ -73,7 +74,7 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
   
   // Vertical Integration: Assign starting platforms to Majors/Mid-tiers
   // Finding player's starting streamer if applicable
-  let playerOwnedPlatforms: string[] = [];
+  const playerOwnedPlatforms: string[] = [];
   if (archetype !== 'indie') {
     const playerBrand = { core: studioName.split(' ')[0], isConglomerate: true };
     const playerStreamer: import('@/engine/types').StreamerPlatform = {
@@ -129,6 +130,13 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
       cash: arch.startingCash,
       ledger: [],
       weeklyHistory: [],
+      marketState: {
+        baseRate: 0.045,
+        savingsYield: 0.025,
+        debtRate: 0.095,
+        loanRate: 0.07,
+        rateHistory: [{ week: 1, rate: 0.045 }]
+      } as MarketState
     },
     news: {
       headlines: [

@@ -1,6 +1,8 @@
-import { Project, GameState, WeeklyFinancialReport, MarketEvent, Contract, Buyer } from '@/engine/types';
+import { Project, GameState, WeeklyFinancialReport, Contract } from '@/engine/types';
+import { StateImpact, FinancialSnapshot } from '../types/state.types';
 import { RevenueProcessor } from './finance/RevenueProcessor';
 import { ExpenseProcessor } from './finance/ExpenseProcessor';
+import { InterestRateSimulator } from './market/InterestRateSimulator';
 
 export function calculateProjectROI(project: Project): number {
   const totalCost = project.budget + (project.marketingBudget || 0);
@@ -11,75 +13,138 @@ export function calculateProjectROI(project: Project): number {
 export function calculateStudioNetWorth(state: GameState): number {
   let netWorth = state.finance.cash;
   
+  // 1. IP Catalog Value
+  state.ip.vault.forEach(asset => {
+    netWorth += asset.baseValue * asset.decayRate;
+  });
+
+  // 2. Active Projects Inventory (Work in Progress value)
+  // We value "Inventory" as 50% of the budget already spent
   Object.values(state.studio.internal.projects).forEach(p => {
-    if (p.ipRights && p.ipRights.catalogValue) {
-      if (p.ipRights.rightsOwner === 'studio') {
-        netWorth += p.ipRights.catalogValue;
-      } else if (p.ipRights.rightsOwner === 'shared') {
-        netWorth += p.ipRights.catalogValue * 0.5;
-      }
+    if (p.state !== 'released' && p.state !== 'archived') {
+      netWorth += p.budget * 0.5;
     }
   });
   
-  return netWorth;
+  return Math.floor(netWorth);
 }
 
 /**
  * NEW: Integrated Economic Tick using modular processors
+ * Consolidates all silos (IP Dividends, Royalties, Market Rates, M&A Costs)
  */
-export function generateWeeklyFinancialReport(state: GameState): WeeklyFinancialReport {
+export function generateWeeklyFinancialReport(
+  state: GameState, 
+  pendingImpacts: StateImpact[] = []
+): { report: WeeklyFinancialReport; snapshot: FinancialSnapshot } {
   const projects = Object.values(state.studio.internal.projects);
-  const buyers = state.market.buyers;
-  const activeEvents = state.market.activeMarketEvents || [];
+  const studioLevel = (state.studio as any).level || 1;
+  const market = state.finance.marketState || InterestRateSimulator.initialize();
 
-  let costMult = 1.0;
-  let revMult = 1.0;
-  for (const e of activeEvents) {
-    costMult *= e.costMultiplier;
-    revMult *= e.revenueMultiplier;
-  }
-
-  // 1. Calculate Expenses using Processor
-  const production = ExpenseProcessor.calculateProductionBurn(projects) * costMult;
-  const marketing = ExpenseProcessor.calculateMarketingBurn(projects) * costMult;
-  const overhead = ExpenseProcessor.calculateStudioBurn(1, projects.filter(p => p.state !== 'released').length) * costMult;
-
-  // 2. Calculate Revenues using Processor
+  // 1. Calculate Passive Income from Vault
+  const passive = RevenueProcessor.calculateVaultDividends(state.ip.vault);
+  
+  // 2. Calculate Active Revenue & Royalties
   let boxOffice = 0;
   let distribution = 0;
   let merch = 0;
+  let totalRoyalties = 0;
 
   projects.forEach(p => {
     if (p.state === 'released') {
+      let weeklyGross = 0;
+      
+      // Theatrical vs Streaming
       if (p.distributionStatus === 'theatrical') {
-        const weeklyRev = p.weeklyRevenue || 0;
-        boxOffice += RevenueProcessor.calculateTheatricalDecay(weeklyRev, 0.5) * revMult;
+        weeklyGross = RevenueProcessor.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.5);
+        boxOffice += weeklyGross;
       } else if (p.distributionStatus === 'streaming') {
-        const platform = buyers.find(b => b.id === p.buyerId);
+        const platform = state.market.buyers.find(b => b.id === p.buyerId);
         if (platform) {
-          distribution += RevenueProcessor.calculateStreamingRevenue(p, platform) * revMult;
+          weeklyGross = RevenueProcessor.calculateStreamingRevenue(p, platform);
+          distribution += weeklyGross;
         }
       }
       
-      // Every released project has a chance for merch
+      // Base Merch
       const franchise = p.franchiseId ? state.ip.franchises[p.franchiseId] : null;
-      merch += RevenueProcessor.calculateMerchRevenue(p.buzz, franchise?.relevanceScore || 0) * revMult;
+      const weeklyMerch = RevenueProcessor.calculateMerchRevenue(p.buzz, franchise?.relevanceScore || 0);
+      merch += weeklyMerch;
+
+      // Deduct Talent Royalties (Net Points Logic)
+      totalRoyalties += RevenueProcessor.calculateNetPointsRoyalty(p, weeklyGross + weeklyMerch, state.studio.internal.contracts);
     }
   });
 
-  const totalRevenue = boxOffice + distribution + merch;
-  const totalExpenses = production + marketing + overhead;
+  // 3. Calculate Operational Expenses
+  const production = ExpenseProcessor.calculateProductionBurn(projects);
+  const marketing = ExpenseProcessor.calculateMarketingBurn(projects);
+  const overhead = ExpenseProcessor.calculateStudioBurn(studioLevel, projects.filter(p => p.state !== 'released').length);
+
+  // 4. Calculate Interest (Debt or Savings)
+  const isDebt = state.finance.cash < 0;
+  const interest = isDebt 
+    ? ExpenseProcessor.calculateDebtInterest(state.finance.cash, market.debtRate)
+    : -ExpenseProcessor.calculateSavingsYield(state.finance.cash, market.savingsYield); // Negative expense = income
+
+  // 5. Consolidated One-off Impacts (Awards, Festivals, Acquisitions)
+  let otherRevenue = 0;
+  let otherExpenses = 0;
+
+  pendingImpacts.forEach(impact => {
+    if (impact.type === 'FINANCE_TRANSACTION' && impact.payload) {
+      const amount = (impact.payload as any).amount || 0;
+      if (amount > 0) otherRevenue += amount;
+      else otherExpenses += Math.abs(amount);
+    } else if (impact.cashChange) {
+      const change = impact.cashChange as number;
+      if (change > 0) otherRevenue += change;
+      else otherExpenses += Math.abs(change);
+    }
+  });
+
+  const totalRevenue = boxOffice + distribution + merch + passive + otherRevenue;
+  const totalExpenses = production + marketing + overhead + totalRoyalties + (interest > 0 ? interest : 0) + otherExpenses;
   const netProfit = totalRevenue - totalExpenses;
 
-  return {
+  const report: WeeklyFinancialReport = {
     week: state.week,
     year: Math.floor((state.week - 1) / 52) + 1,
     startingCash: state.finance.cash,
-    revenue: { boxOffice, distribution, other: merch },
-    expenses: { production, marketing, overhead },
+    revenue: { 
+      boxOffice, 
+      distribution, 
+      other: merch + passive + otherRevenue 
+    },
+    expenses: { 
+      production, 
+      marketing, 
+      overhead: overhead + (interest > 0 ? interest : 0) + otherExpenses + totalRoyalties
+    },
     endingCash: state.finance.cash + netProfit,
     netProfit,
   };
+
+  const snapshot: FinancialSnapshot = {
+    week: state.week,
+    revenue: {
+      theatrical: boxOffice,
+      streaming: distribution,
+      merch: merch,
+      passive: passive + otherRevenue
+    },
+    expenses: {
+      production,
+      burn: overhead,
+      marketing,
+      royalties: totalRoyalties,
+      interest: interest
+    },
+    net: netProfit,
+    cash: state.finance.cash + netProfit
+  };
+
+  return { report, snapshot };
 }
 
 // Legacy wrappers updated to use new processors

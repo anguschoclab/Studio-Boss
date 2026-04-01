@@ -1,4 +1,5 @@
-import { NewsEvent, Headline, Project, Scandal, Opportunity, GenreTrend, MarketEvent, Rumor, Buyer, FestivalSubmission, FinanceRecord, Franchise } from './index';
+import { Headline } from './engine.types';
+import { Franchise } from './franchise.types';
 
 export interface WeeklyFinancialReport {
   week: number;
@@ -24,22 +25,32 @@ export interface FinancialSnapshot {
     theatrical: number;
     streaming: number;
     merch: number;
-    other: number;
+    passive: number; // From archived IP
   };
   expenses: {
     production: number;
-    burn: number;
+    burn: number; // Studio Overhead
     marketing: number;
-    interest: number;
+    royalties: number; // Talent point payouts
+    interest: number; // Debt or Savings
   };
   net: number;
   cash: number;
+}
+
+export interface MarketState {
+  baseRate: number; // e.g. 0.04 for 4%
+  savingsYield: number;
+  debtRate: number;
+  loanRate: number;
+  rateHistory: { week: number; rate: number }[];
 }
 
 export interface FinanceState {
   cash: number;
   ledger: WeeklyFinancialReport[];
   weeklyHistory: FinancialSnapshot[];
+  marketState: MarketState;
 }
 
 export interface NewsState {
@@ -83,12 +94,14 @@ export type ImpactType =
   | 'MARKET_EVENT_UPDATED'
   | 'LEDGER_UPDATED'
   | 'FINANCE_TRANSACTION'
+  | 'FINANCE_SNAPSHOT_ADDED'
+  | 'SYNC_M_A_FUNDS'
   | 'INDUSTRY_UPDATE'
   | 'SYSTEM_TICK';
 
 export interface StateImpact {
   type?: ImpactType;
-  payload?: any;
-  [key: string]: any;
+  payload?: Record<string, unknown>;
+  [key: string]: unknown;
 }
 

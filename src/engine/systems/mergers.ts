@@ -39,7 +39,10 @@ export function executeAcquisition(state: GameState, targetId: string): GameStat
 
   return {
     ...state,
-    finance: { ...state.finance, cash: state.finance.cash - evalResult.price },
+    finance: { 
+      ...state.finance, 
+      cash: state.finance.cash - evalResult.price + (target.cash || 0) 
+    },
     studio: { 
       ...state.studio, 
       prestige: newPrestige,
