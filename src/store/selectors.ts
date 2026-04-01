@@ -1,5 +1,12 @@
 import { createSelector } from 'reselect';
-import { GameState, Project, Contract, RivalStudio, Talent, Buyer, GenreTrend } from '../engine/types';
+import { GameState, Project, Contract, RivalStudio, Talent, Buyer, GenreTrend, NewsEvent } from '../engine/types';
+
+const EMPTY_PROJECTS = {};
+const EMPTY_FINANCE = { cash: 0, ledger: [] };
+const EMPTY_MARKET = { buyers: [], opportunities: [], trends: [], activeMarketEvents: [] };
+const EMPTY_TALENT_POOL = {};
+const EMPTY_RIVALS: RivalStudio[] = [];
+const EMPTY_EVENT_HISTORY: NewsEvent[] = [];
 
 /**
  * Standard Root Selectors
@@ -18,7 +25,7 @@ export const selectInternal = createSelector(
 
 export const selectProjectsRaw = createSelector(
   [selectInternal],
-  (internal) => internal?.projects || {}
+  (internal) => internal?.projects || EMPTY_PROJECTS
 );
 
 export const selectProjects = createSelector(
@@ -28,7 +35,7 @@ export const selectProjects = createSelector(
 
 export const selectFinance = createSelector(
   [selectGameState],
-  (state) => state?.finance || { cash: 0, ledger: [] }
+  (state) => state?.finance || EMPTY_FINANCE
 );
 
 export const selectCash = createSelector(
@@ -46,12 +53,12 @@ export const selectIndustry = createSelector(
 
 export const selectRivals = createSelector(
   [selectIndustry],
-  (industry) => industry?.rivals || []
+  (industry) => industry?.rivals || EMPTY_RIVALS
 );
 
 export const selectTalentPool = createSelector(
   [selectIndustry],
-  (industry) => industry?.talentPool || {}
+  (industry) => industry?.talentPool || EMPTY_TALENT_POOL
 );
 
 /**
@@ -102,7 +109,7 @@ export const selectStudioSuccess = createSelector(
 
 export const selectMarket = createSelector(
   [selectGameState],
-  (state) => state?.market || { buyers: [], opportunities: [], trends: [], activeMarketEvents: [] }
+  (state) => state?.market || EMPTY_MARKET
 );
 
 export const selectOpportunities = createSelector(
@@ -125,7 +132,7 @@ export const selectMarketTrends = createSelector(
  */
 export const selectEventHistory = createSelector(
   [selectGameState],
-  (state) => state?.eventHistory || []
+  (state) => state?.eventHistory || EMPTY_EVENT_HISTORY
 );
 
 export const selectRecentEvents = createSelector(

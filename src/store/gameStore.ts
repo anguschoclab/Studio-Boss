@@ -5,6 +5,9 @@ import { advanceWeek } from '@/engine/core/weekAdvance';
 import { saveGame, loadGame, getSaveSlots, SaveSlotInfo } from '@/persistence/saveLoad';
 import { useUIStore } from './uiStore';
 
+const EMPTY_FINANCE = { cash: 0, ledger: [] };
+const EMPTY_NEWS = { headlines: [] };
+
 import { createProjectSlice, ProjectSlice } from './slices/projectSlice';
 import { createFinanceSlice, FinanceSlice } from './slices/financeSlice';
 import { createTalentSlice, TalentSlice } from './slices/talentSlice';
@@ -89,9 +92,9 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
     }
 
     if (crisisTitles.size > 0) {
-      const projects = Object.values(finalState.studio.internal.projects);
-      for (let i = 0; i < projects.length; i++) {
-        const p = projects[i];
+      const projects = finalState.studio.internal.projects;
+      for (const key in projects) {
+        const p = projects[key];
         if (p.activeCrisis && !p.activeCrisis.resolved && crisisTitles.has(p.title)) {
           ui.enqueueModal('CRISIS', { projectId: p.id, crisis: p.activeCrisis });
         }
@@ -147,8 +150,8 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
     if (state.gameState === null) return state;
     return { 
         gameState: null,
-        finance: { cash: 0, ledger: [] } as any,
-        news: { headlines: [] } as any
+        finance: EMPTY_FINANCE as unknown as any,
+        news: EMPTY_NEWS as unknown as any
     };
   }),
 
