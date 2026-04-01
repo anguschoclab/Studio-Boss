@@ -57,7 +57,7 @@ describe("crises system", () => {
 
   describe("checkAndTriggerCrisis", () => {
     it("should return null if project is not in production", () => {
-      const devProject = { ...mockProject, status: "marketing" as const };
+      const devProject = { ...mockProject, state: "marketing" as const } as unknown as Project;
       const impact = checkAndTriggerCrisis(devProject);
       expect(impact).toBeNull();
     });

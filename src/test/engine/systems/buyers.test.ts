@@ -68,7 +68,7 @@ describe("buyers system", () => {
 
     it("requires a higher score (65) for upfront contracts", () => {
       vi.spyOn(utils, 'randRange').mockReturnValue(0);
-      const buyer = { ...mockBuyer, archetype: 'network' as const };
+      const buyer = { ...mockBuyer, archetype: 'network' as const, reach: 75 } as Buyer;
       // Score: Base 50 + Gap 15 + Buzz 10 - Network Blockbuster Penalty 20 = 55
       expect(negotiateContract(mockProject, buyer, 'upfront')).toBe(false);
     });

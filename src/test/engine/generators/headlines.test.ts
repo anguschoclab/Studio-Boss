@@ -36,8 +36,8 @@ describe('generateHeadlines', () => {
   it('should generate rival headlines if rivals are provided', () => {
     const week = 10;
     const rivals: RivalStudio[] = [
-      { id: '1', name: 'Rival A', cash: 1000, projectCount: 0, motto: '', archetype: 'major', strength: 50, prestige: 50, recentActivity: '' },
-      { id: '2', name: 'Rival B', cash: 2000, projectCount: 0, motto: '', archetype: 'major', strength: 50, prestige: 50, recentActivity: '' }
+      { id: '1', name: 'Rival A', cash: 1000, projectCount: 0, motto: '', archetype: 'major', strength: 50, prestige: 50, recentActivity: '', motivationProfile: { financial: 80, prestige: 40, legacy: 70, aggression: 50 }, currentMotivation: 'CASH_CRUNCH' as any, projects: {}, contracts: [] },
+      { id: '2', name: 'Rival B', cash: 2000, projectCount: 0, motto: '', archetype: 'major', strength: 50, prestige: 50, recentActivity: '', motivationProfile: { financial: 80, prestige: 40, legacy: 70, aggression: 50 }, currentMotivation: 'CASH_CRUNCH' as any, projects: {}, contracts: [] }
     ];
 
     // Run multiple times to ensure we hit the 35% chance for a rival headline

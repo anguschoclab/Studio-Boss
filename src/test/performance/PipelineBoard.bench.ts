@@ -10,9 +10,8 @@ const generateProjects = (count: number): Project[] => {
     projects.push({
       id: `proj-${i}`,
       title: `Project ${i}`,
-      status: statuses[i % statuses.length],
-      // Add other required fields with dummy data if necessary for type checking
-    } as Project);
+      state: statuses[i % statuses.length],
+    } as unknown as Project);
   }
   return projects;
 };
@@ -29,15 +28,16 @@ const COLUMNS: { status: ProjectStatus[]; title: string; color: string }[] = [
 describe('PipelineBoard Grouping Performance', () => {
   bench('Baseline (O(C * P))', () => {
     COLUMNS.map(col => {
-      const colProjects = projects10000.filter(p => col.status.includes(p.status));
+      const colProjects = projects10000.filter(p => col.status.includes((p as any).state));
       return colProjects;
     });
   });
 
   bench('Optimized (reduce)', () => {
     const grouped = projects10000.reduce((acc, project) => {
-      if (!acc[project.status]) acc[project.status] = [];
-      acc[project.status].push(project);
+      const s = (project as any).state;
+      if (!acc[s]) acc[s] = [];
+      acc[s].push(project);
       return acc;
     }, {} as Record<ProjectStatus, Project[]>);
 

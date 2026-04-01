@@ -101,7 +101,7 @@ describe("Finance System", () => {
           }
         },
         market: { opportunities: [], buyers: [], activeMarketEvents: [] },
-        industry: { rivals: [], headlines: [], talentPool: {} }
+        industry: { rivals: [], newsHistory: [], talentPool: {} }
       } as unknown as GameState;
   
       it("returns StateImpact for funds change", () => {

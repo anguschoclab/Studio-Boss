@@ -3,7 +3,7 @@ import { applyAwardBoostsToTalent } from '../../../engine/systems/talentStats';
 import { Talent, Award } from '../../../engine/types';
 
 describe('applyAwardBoostsToTalent', () => {
-  const baseTalent: TalentProfile = {
+  const baseTalent = {
     id: 't1',
     name: 'Test Actor',
     roles: ['actor'],

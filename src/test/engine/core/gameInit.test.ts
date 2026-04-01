@@ -9,7 +9,8 @@ describe.skip("initializeGame", () => {
     expect(state.studio.internal.projects).toEqual([]);
     expect(state.industry.rivals).toHaveLength(4);
     expect(state.week).toBe(1);
-    expect(state.industry.headlines).toHaveLength(1);
-    expect(state.industry.headlines[0].text).toContain("My Studio");
+    expect(state.industry.newsHistory).toHaveLength(0);
+    expect(state.news.headlines).toHaveLength(1);
+    expect(state.news.headlines[0].text).toContain("My Studio");
   });
 });
