@@ -67,7 +67,9 @@ describe('DiscoveryBoard', () => {
         targetAudience: 'Broad',
         qualityBonus: 0,
         origin: 'open_spec',
-        costToAcquire: 0
+        costToAcquire: 0,
+        bids: {},
+        expirationWeek: 10,
       },
       {
         id: '2',
@@ -81,7 +83,9 @@ describe('DiscoveryBoard', () => {
         targetAudience: 'Niche',
         qualityBonus: 0,
         origin: 'agency_package',
-        costToAcquire: 10000
+        costToAcquire: 10000,
+        bids: {},
+        expirationWeek: 8,
       },
     ];
 
@@ -121,7 +125,9 @@ describe('DiscoveryBoard', () => {
         targetAudience: 'Broad',
         qualityBonus: 0,
         origin: 'open_spec',
-        costToAcquire: 0
+        costToAcquire: 0,
+        bids: {},
+        expirationWeek: 9,
       },
     ];
 

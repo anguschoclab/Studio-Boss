@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { applyAwardBoostsToTalent } from '../../../engine/systems/talentStats';
-import { TalentProfile, Award } from '../../../engine/types';
+import { Talent, Award } from '../../../engine/types';
 
 describe('applyAwardBoostsToTalent', () => {
-  const baseTalent: TalentProfile = {
+  const baseTalent = {
     id: 't1',
     name: 'Test Actor',
     roles: ['actor'],
@@ -12,7 +12,7 @@ describe('applyAwardBoostsToTalent', () => {
     draw: 50,
     temperament: 'Pro',
     accessLevel: 'insider'
-  };
+  } as any;
 
   const baseAward: Award = {
     id: 'a1',

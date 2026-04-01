@@ -2,15 +2,15 @@ import { advanceWeek } from '../../engine/core/weekAdvance';
 import { GameState, Project, Contract } from '../../engine/types';
 
 function createMockState(projectCount: number, contractsPerProject: number): GameState {
-  const projects: Project[] = [];
+  const projects: Record<string, Project> = {};
   const contracts: Contract[] = [];
 
   for (let i = 0; i < projectCount; i++) {
     const projectId = `p${i}`;
-    projects.push({
+    projects[projectId] = {
       id: projectId,
       title: `Project ${i}`,
-      status: 'production',
+      state: 'production',
       weeklyCost: 100,
       budget: 1000,
       weeksInPhase: 0,
@@ -25,7 +25,7 @@ function createMockState(projectCount: number, contractsPerProject: number): Gam
       budgetTier: 'mid',
       targetAudience: 'General',
       flavor: '',
-    });
+    } as unknown as Project;
 
     for (let j = 0; j < contractsPerProject; j++) {
       contracts.push({
@@ -34,13 +34,12 @@ function createMockState(projectCount: number, contractsPerProject: number): Gam
         talentId: `t${j}`,
         fee: 100,
         backendPercent: 1,
-      });
+      } as Contract);
     }
   }
 
   return {
     week: 1,
-    cash: 1000000,
     studio: {
         name: 'Test Studio',
         archetype: 'indie',
@@ -48,28 +47,25 @@ function createMockState(projectCount: number, contractsPerProject: number): Gam
         internal: {
             projects,
             contracts,
-            financeHistory: []
         }
     },
     market: {
         opportunities: [],
         buyers: [],
-        trends: [],
     },
     industry: {
         rivals: [],
-        headlines: [],
+        newsHistory: [],
         families: [],
         agencies: [],
         agents: [],
-        talentPool: [],
+        talentPool: {},
         awards: [],
-        newsHistory: []
     },
     culture: { genrePopularity: {} },
-    finance: { bankBalance: 0, yearToDateRevenue: 0, yearToDateExpenses: 0 },
+    finance: { cash: 1000000, ledger: [] },
     history: []
-  };
+  } as unknown as GameState;
 }
 
 const PROJECT_COUNT = 100;

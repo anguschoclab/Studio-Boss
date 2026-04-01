@@ -28,6 +28,10 @@ const mockBuyer: Buyer = {
   name: "Test Streamer",
   archetype: "streamer",
   currentMandate: undefined,
+  subscribers: 50000000,
+  churnRate: 0.05,
+  contentLibraryQuality: 60,
+  marketingSpend: 1000000,
 };
 
 describe("buyers system", () => {
@@ -64,7 +68,7 @@ describe("buyers system", () => {
 
     it("requires a higher score (65) for upfront contracts", () => {
       vi.spyOn(utils, 'randRange').mockReturnValue(0);
-      const buyer = { ...mockBuyer, archetype: 'network' as const };
+      const buyer = { ...mockBuyer, archetype: 'network' as const, reach: 75 } as Buyer;
       // Score: Base 50 + Gap 15 + Buzz 10 - Network Blockbuster Penalty 20 = 55
       expect(negotiateContract(mockProject, buyer, 'upfront')).toBe(false);
     });

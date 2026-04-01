@@ -28,15 +28,17 @@ global.ResizeObserver = class ResizeObserver {
 
 // Also mock PointerEvent as some Radix components use it
 if (typeof window !== 'undefined') {
-  window.PointerEvent = class PointerEvent extends Event {
+  (window as any).PointerEvent = class PointerEvent extends Event {
     button: number;
     ctrlKey: boolean;
-    constructor(type: string, props: PointerEventInit = {}) {
+    pointerType: string;
+    constructor(type: string, props: any = {}) {
       super(type, props);
       this.button = props.button ?? 0;
       this.ctrlKey = props.ctrlKey ?? false;
+      this.pointerType = props.pointerType ?? 'mouse';
     }
-  } as unknown as typeof Event;
+  };
   window.HTMLElement.prototype.scrollIntoView = vi.fn();
   window.HTMLElement.prototype.hasPointerCapture = vi.fn();
   window.HTMLElement.prototype.releasePointerCapture = vi.fn();
