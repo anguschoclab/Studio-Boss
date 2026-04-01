@@ -149,7 +149,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       
       // Auction requirement: Only acquire if player is highest bidder and auction expired
       // OR if it's a non-auction acquisition (costToAcquire > 0)
-      const currentHighest = Object.values(opp.bids || {}).reduce((max: number, b: number) => Math.max(max, b), 0);
+      const currentHighest = Object.values(opp.bids || {}).reduce((max: number, b) => Math.max(max, (b as any).amount || 0), 0);
       const isWinner = opp.highestBidderId === 'PLAYER';
       const isExpired = state.week >= opp.expirationWeek;
 
@@ -175,11 +175,13 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
 
       const { project, newContracts, talentFees } = buildProjectAndContracts(state, params);
 
-      // Initialize new project roles & script state
-      project.scriptHeat = 50;
-      project.activeRoles = ['protagonist', 'antagonist', 'mentor', 'love_interest'].slice(0, project.budgetTier === 'blockbuster' ? 4 : 3);
-      project.scriptEvents = [];
-
+      // Initialize new project roles & script state if scripted
+      if (params.format !== 'unscripted') {
+        const scripted = project as any; // Temporary cast to handle the fact that we know it's scripted
+        scripted.scriptHeat = 50;
+        scripted.activeRoles = ['protagonist', 'antagonist', 'mentor', 'love_interest'].slice(0, project.budgetTier === 'blockbuster' ? 4 : 3);
+        scripted.scriptEvents = [];
+      }
       const updatedOpportunities = [...state.market.opportunities];
       updatedOpportunities.splice(oppIndex, 1);
 
@@ -216,7 +218,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       if (state.finance.cash < amount) return s;
 
       // Update player bid
-      const updatedBids = { ...opp.bids, PLAYER: amount };
+      const updatedBids = { ...opp.bids, PLAYER: { amount, terms: 'standard' } };
       const bidHistory = [...(opp.bidHistory || []), { rivalId: 'PLAYER', amount, week: state.week }];
       
       let nextState = {
@@ -238,7 +240,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
         const counterImpact = calculateLiveCounterBid(opp, amount, rival, rng, state.week);
         
         if (counterImpact) {
-          nextState = applyStateImpact(nextState, [counterImpact]) as any;
+          nextState = applyStateImpact(nextState, [counterImpact]);
         }
       }
 

@@ -70,6 +70,7 @@ describe('DiscoveryBoard', () => {
         costToAcquire: 0,
         bids: {},
         expirationWeek: 10,
+        bidHistory: []
       },
       {
         id: '2',
@@ -86,6 +87,7 @@ describe('DiscoveryBoard', () => {
         costToAcquire: 10000,
         bids: {},
         expirationWeek: 8,
+        bidHistory: []
       },
     ];
 
@@ -128,6 +130,7 @@ describe('DiscoveryBoard', () => {
         costToAcquire: 0,
         bids: {},
         expirationWeek: 9,
+        bidHistory: []
       },
     ];
 

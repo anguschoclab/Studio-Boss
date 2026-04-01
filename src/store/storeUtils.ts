@@ -1,4 +1,4 @@
-import { GameState, Project, Talent, ProjectFormat, BudgetTierKey, TvFormatKey, UnscriptedFormatKey, ReleaseModelKey, StateImpact } from '@/engine/types';
+import { GameState, Project, Talent, ProjectFormat, BudgetTierKey, TvFormatKey, UnscriptedFormatKey, ReleaseModelKey, StateImpact, Contract } from '@/engine/types';
 import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
 import { TV_FORMATS } from '@/engine/data/tvFormats';
 import { UNSCRIPTED_FORMATS } from '@/engine/data/unscriptedFormats';
@@ -42,7 +42,7 @@ function prepareTalentAndContracts(
     const talentPool = state.industry.talentPool;
     const attachedTalent: Talent[] = [];
     let talentFees = 0;
-    const newContracts: any[] = [];
+    const newContracts: Contract[] = [];
 
     for (let i = 0; i < ids.length; i++) {
         const t = talentPool[ids[i]];
@@ -62,7 +62,7 @@ function prepareTalentAndContracts(
     return { attachedTalent, talentFees, newContracts };
 }
 
-export function buildProjectAndContracts(state: GameState, params: CreateProjectParams) {
+export function buildProjectAndContracts(state: GameState, params: CreateProjectParams): { project: Project; newContracts: Contract[]; talentFees: number } {
     const tier = BUDGET_TIERS[params.budgetTier];
     const stats = getProjectStats(params, tier);
     const { budget, weeklyCost, developmentWeeks, productionWeeks, renewable } = stats;
@@ -75,8 +75,11 @@ export function buildProjectAndContracts(state: GameState, params: CreateProject
 
     const projectBase = {
         id: projectId,
-        ...params,
-        type: (params.format === 'film' ? 'FILM' : 'SERIES') as any,
+        title: params.title,
+        genre: params.genre,
+        budgetTier: params.budgetTier,
+        targetAudience: params.targetAudience,
+        flavor: params.flavor,
         budget: totalBudget,
         weeklyCost,
         state: 'development' as const,
@@ -92,10 +95,52 @@ export function buildProjectAndContracts(state: GameState, params: CreateProject
         weeksInPhase: 0,
         developmentWeeks,
         productionWeeks,
+        contentFlags: [],
+        franchiseId: params.franchiseId,
+        parentProjectId: params.parentProjectId,
+        isSpinoff: params.isSpinoff
     };
 
-    const project: any = (params.format === 'tv' || params.format === 'unscripted') ? {
+    if (params.format === 'film') {
+        const project: Project = {
+            ...projectBase,
+            type: 'FILM',
+            format: 'film',
+            scriptHeat: 50,
+            activeRoles: [],
+            scriptEvents: []
+        };
+        return { project, newContracts, talentFees };
+    }
+
+    if (params.format === 'tv') {
+        const project: Project = {
+            ...projectBase,
+            type: 'SERIES',
+            format: 'tv',
+            scriptHeat: 50,
+            activeRoles: [],
+            scriptEvents: [],
+            tvFormat: params.tvFormat,
+            tvDetails: {
+                currentSeason: 1,
+                episodesOrdered: params.episodes || 0,
+                episodesCompleted: 0,
+                episodesAired: 0,
+                averageRating: 0,
+                status: 'IN_DEVELOPMENT'
+            },
+            releaseModel: params.releaseModel
+        };
+        return { project, newContracts, talentFees };
+    }
+
+    // Unscripted
+    const project: Project = {
         ...projectBase,
+        type: 'SERIES',
+        format: 'unscripted',
+        unscriptedFormat: params.unscriptedFormat || 'competition',
         tvDetails: {
             currentSeason: 1,
             episodesOrdered: params.episodes || 0,
@@ -104,8 +149,7 @@ export function buildProjectAndContracts(state: GameState, params: CreateProject
             averageRating: 0,
             status: 'IN_DEVELOPMENT'
         }
-    } : projectBase;
-
+    };
     return { project, newContracts, talentFees };
 }
 
