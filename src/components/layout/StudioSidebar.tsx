@@ -31,6 +31,7 @@ const NAV_ITEMS = [
   { id: 'finance', label: 'Finance & P&L', icon: Briefcase },
   { id: 'trades', label: 'The Trades', icon: Newspaper },
   { id: 'sbdb', label: 'SBDB', icon: Users },
+  { id: 'streaming', label: 'Streaming & Distribution', icon: Tv },
 ] as const;
 
 export const StudioSidebar = () => {
