@@ -105,7 +105,7 @@ describe("Finance System", () => {
       } as unknown as GameState;
   
       it("returns StateImpact for funds change", () => {
-         const rng = new RandomGenerator('test');
+         const rng = new RandomGenerator(12345);
          const impacts = tickFinance(mockState, rng);
          const impact = impacts.find(i => i.type === 'FUNDS_CHANGED');
          // Net profit = 100k - (20k + 500k) = -420k

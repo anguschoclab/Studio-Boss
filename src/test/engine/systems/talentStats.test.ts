@@ -12,7 +12,7 @@ describe('applyAwardBoostsToTalent', () => {
     draw: 50,
     temperament: 'Pro',
     accessLevel: 'insider'
-  };
+  } as any;
 
   const baseAward: Award = {
     id: 'a1',
