@@ -13,11 +13,11 @@ interface TalentAvatarProps {
 }
 
 const SIZE_MAP = {
-  xs: 28,
-  sm: 36,
-  md: 48,
-  lg: 72,
-  xl: 140,
+  xs: 32,
+  sm: 44,
+  md: 56,
+  lg: 80,
+  xl: 148,
 } as const;
 
 const BORDER_SIZE_MAP = {
