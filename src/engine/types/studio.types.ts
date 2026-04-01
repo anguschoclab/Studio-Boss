@@ -134,6 +134,7 @@ export interface BuyerBase {
   acquiredBy?: string; // id of buyer that acquired this one
   ownedPlatforms?: string[]; // ids of platforms this buyer has acquired
   parentCompany?: string; // name of parent company after merger
+  maHistory?: { week: number; event: string; value?: number }[];
 }
 
 export interface NetworkPlatform extends BuyerBase {
@@ -152,6 +153,7 @@ export interface StreamerPlatform extends BuyerBase {
   churnRate: number; // 0.01 to 0.10
   contentLibraryQuality: number; // 0-100: Influences growth
   marketingSpend: number; // Weekly burn
+  subscriberHistory: { week: number; count: number }[];
 }
 
 export type Buyer = NetworkPlatform | PremiumPlatform | StreamerPlatform;

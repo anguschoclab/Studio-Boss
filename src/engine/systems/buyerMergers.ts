@@ -29,8 +29,8 @@ const STREAMER_DECLINE_EVENTS = [
 ];
 
 /**
- * Simulate weekly buyer/platform dynamics — subscriber fluctuations, 
- * financial health, and M&A activity.
+ * Simulate weekly buyer/platform dynamics — financial health and M&A activity.
+ * Subscriber fluctuations are handled by platformEngine.ts.
  */
 export function advanceBuyers(state: GameState): StateImpact {
   const impact: StateImpact = {
@@ -38,49 +38,41 @@ export function advanceBuyers(state: GameState): StateImpact {
     newHeadlines: [],
   };
 
+  const currWeek = state.week;
   const buyers = state.market.buyers;
   const activeBuyers = buyers.filter(b => !b.acquiredBy);
 
-  // Update each active buyer
+  // Update each active buyer's financial health
   for (const buyer of activeBuyers) {
     const update: Partial<Buyer> = {};
-
-    // Financial simulation
     const currentCash = buyer.cash ?? 50_000_000;
     const currentStrength = buyer.strength ?? 60;
 
     if (buyer.archetype === 'streamer') {
       const streamer = buyer as StreamerPlatform;
-      // Subscriber fluctuation
-      const growth = secureRandom() < 0.6 ? 1 : -1;
-      const delta = Math.floor(streamer.subscribers * streamer.churnRate * growth);
-      const newSubs = Math.max(1_000_000, streamer.subscribers + delta);
-      
-      // Revenue correlates with subscribers
-      const revenue = newSubs * 0.8; // ~$0.80/sub/week simplified
-      const costs = streamer.marketingSpend + (streamer.contentLibraryQuality * 50_000);
+      // Financials based on existing subscribers (updated in platformEngine)
+      const revenue = streamer.subscribers * 0.8; 
+      const costs = (streamer.marketingSpend || 0) + (streamer.contentLibraryQuality * 50_000);
       const newCash = currentCash + revenue - costs;
 
-      (update as Partial<StreamerPlatform>).subscribers = newSubs;
       update.cash = newCash;
-      update.strength = Math.max(10, Math.min(100, currentStrength + (growth * randRange(0, 3))));
+      // Strength drifts based on financial performance
+      const performance = (revenue - costs) / 1_000_000;
+      update.strength = Math.max(10, Math.min(100, currentStrength + performance));
 
-      // Occasional headlines
-      if (secureRandom() < 0.03) {
-        const templates = growth > 0 ? STREAMER_GROWTH_EVENTS : STREAMER_DECLINE_EVENTS;
+      if (secureRandom() < 0.02) {
         impact.newHeadlines!.push({
           category: 'market',
-          text: pick(templates)(buyer.name),
+          text: pick(performance > 0 ? STREAMER_GROWTH_EVENTS : STREAMER_DECLINE_EVENTS)(buyer.name),
         });
       }
     } else {
-      // Network / Premium — simpler cash simulation
       const cashDelta = randRange(-2_000_000, 5_000_000);
       update.cash = currentCash + cashDelta;
       update.strength = Math.max(10, Math.min(100, currentStrength + randRange(-2, 2)));
     }
 
-    // Check vulnerability
+    // Vulnerability Check
     const finalCash = update.cash ?? currentCash;
     const finalStrength = update.strength ?? currentStrength;
 
@@ -99,22 +91,29 @@ export function advanceBuyers(state: GameState): StateImpact {
     impact.buyerUpdates!.push({ buyerId: buyer.id, update });
   }
 
-  // M&A: Strong buyers may acquire vulnerable ones
-  if (secureRandom() < 0.08) { // ~8% chance per week
+  // M&A Execution
+  if (secureRandom() < 0.08) { 
     const vulnerable = activeBuyers.filter(b => b.isAcquirable);
-    const strong = activeBuyers.filter(b => !b.isAcquirable && (b.strength ?? 60) > 60);
+    const strong = activeBuyers.filter(b => !b.isAcquirable && (b.strength ?? 60) > 70);
 
     if (vulnerable.length > 0 && strong.length > 0) {
       const acquirer = pick(strong);
       const target = pick(vulnerable);
 
       if (acquirer.id !== target.id) {
-        // Execute merger
+        const maHistory = [...(target.maHistory || [])];
+        maHistory.push({
+          week: currWeek,
+          event: `Acquired by ${acquirer.name}`,
+          value: target.cash // Using cash as proxy for valuation
+        });
+
         impact.buyerUpdates!.push({
           buyerId: target.id,
           update: {
             acquiredBy: acquirer.id,
             parentCompany: acquirer.name,
+            maHistory
           }
         });
 
@@ -122,7 +121,7 @@ export function advanceBuyers(state: GameState): StateImpact {
           buyerId: acquirer.id,
           update: {
             ownedPlatforms: [...(acquirer.ownedPlatforms || []), target.id],
-            strength: Math.min(100, (acquirer.strength ?? 60) + 10),
+            strength: Math.min(100, (acquirer.strength ?? 60) + 12),
           }
         });
 

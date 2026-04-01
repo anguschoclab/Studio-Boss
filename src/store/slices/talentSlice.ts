@@ -1,12 +1,15 @@
 import { StateCreator } from 'zustand';
 import { GameStore } from '../gameStore';
-import { Contract } from '@/engine/types';
-import { buildProjectAndContracts, CreateProjectParams } from '../storeUtils';
+import { Contract, Opportunity, StateImpact } from '@/engine/types';
+import { buildProjectAndContracts, CreateProjectParams, applyStateImpact } from '../storeUtils';
+import { calculateLiveCounterBid } from '@/engine/systems/ai/biddingEngine';
+import { RandomGenerator } from '@/engine/utils/rng';
 
 export interface TalentSlice {
   signContract: (talentId: string, projectId: string) => void;
   offerFirstLook: (talentId: string, duration: number, fee: number) => boolean;
   acquireOpportunity: (oppId: string) => void;
+  placeBid: (oppId: string, amount: number) => void;
   getTalentFilmography: (talentId: string) => any[];
   getTalentCareerStats: (talentId: string) => any;
   calculateStarMeter: (talentId: string) => number;
@@ -143,9 +146,18 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       if (oppIndex === -1) return s;
 
       const opp = state.market.opportunities[oppIndex];
-      const cost = opp.costToAcquire || 0;
+      
+      // Auction requirement: Only acquire if player is highest bidder and auction expired
+      // OR if it's a non-auction acquisition (costToAcquire > 0)
+      const currentHighest = Object.values(opp.bids || {}).reduce((max: number, b: number) => Math.max(max, b), 0);
+      const isWinner = opp.highestBidderId === 'PLAYER';
+      const isExpired = state.week >= opp.expirationWeek;
 
-      if (state.finance.cash < cost) return s;
+      if (opp.costToAcquire === 0 && (!isWinner || !isExpired)) return s;
+
+      const cost = opp.costToAcquire > 0 ? opp.costToAcquire : currentHighest;
+
+      if (state.finance.cash < (cost + 100000)) return s; // Buffer for fees
 
       const params: CreateProjectParams = {
         title: opp.title,
@@ -162,6 +174,11 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       };
 
       const { project, newContracts, talentFees } = buildProjectAndContracts(state, params);
+
+      // Initialize new project roles & script state
+      project.scriptHeat = 50;
+      project.activeRoles = ['protagonist', 'antagonist', 'mentor', 'love_interest'].slice(0, project.budgetTier === 'blockbuster' ? 4 : 3);
+      project.scriptEvents = [];
 
       const updatedOpportunities = [...state.market.opportunities];
       updatedOpportunities.splice(oppIndex, 1);
@@ -184,6 +201,48 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
           }
         }
       };
+    });
+  },
+
+  placeBid: (oppId, amount) => {
+    set((s) => {
+      const state = s.gameState;
+      if (!state) return s;
+
+      const oppIndex = state.market.opportunities.findIndex(o => o.id === oppId);
+      if (oppIndex === -1) return s;
+
+      const opp = state.market.opportunities[oppIndex];
+      if (state.finance.cash < amount) return s;
+
+      // Update player bid
+      const updatedBids = { ...opp.bids, PLAYER: amount };
+      const bidHistory = [...(opp.bidHistory || []), { rivalId: 'PLAYER', amount, week: state.week }];
+      
+      let nextState = {
+        ...state,
+        market: {
+          ...state.market,
+          opportunities: state.market.opportunities.map(o => 
+            o.id === oppId ? { ...o, bids: updatedBids, highestBidderId: 'PLAYER', bidHistory } : o
+          )
+        }
+      };
+
+      // Live Counter Bid Logic
+      const rng = new RandomGenerator(state.gameSeed + state.week + amount);
+      const aggressiveRivals = state.industry.rivals.filter(r => r.cash > amount * 1.5 && r.prestige > 40);
+      
+      if (aggressiveRivals.length > 0) {
+        const rival = aggressiveRivals[Math.floor(rng.next() * aggressiveRivals.length)];
+        const counterImpact = calculateLiveCounterBid(opp, amount, rival, rng, state.week);
+        
+        if (counterImpact) {
+          nextState = applyStateImpact(nextState, [counterImpact]) as any;
+        }
+      }
+
+      return { gameState: nextState };
     });
   },
 

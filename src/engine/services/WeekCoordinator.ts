@@ -4,6 +4,7 @@ import { applyImpacts } from '../core/impactReducer';
 
 // System Imports
 import { tickProduction } from '../systems/productionEngine';
+import { tickScriptDevelopment } from '../systems/production/ScriptDraftingSystem';
 import { tickPlatforms } from '../systems/television/platformEngine';
 import { tickAIMinds } from '../systems/ai/motivationEngine';
 import { tickAgencies } from '../systems/ai/AgentBrain';
@@ -90,7 +91,26 @@ export class WeekCoordinator {
   }
 
   private static runProductionFilter(state: GameState, context: TickContext) {
+    // 1. Core Production Tick
     context.impacts.push(...tickProduction(state, context.rng));
+    
+    // 2. Script Evolution Tick (Only for Studio Projects in Development)
+    Object.values(state.studio.internal.projects).forEach(project => {
+      if (project.state === 'development') {
+        const result = tickScriptDevelopment(project, context.rng);
+        if (result.project !== project) {
+          context.impacts.push({
+            type: 'PROJECT_UPDATED',
+            payload: {
+              projectId: project.id,
+              update: result.project
+            }
+          });
+          if (result.impact) context.impacts.push(result.impact);
+        }
+      }
+    });
+
     context.impacts.push(...tickTelevision(state, context.rng));
   }
 

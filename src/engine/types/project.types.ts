@@ -1,6 +1,28 @@
 // Types related to Projects, Formats, and Markets
 import { ActiveCrisis } from './engine.types';
 
+export type CharacterArchetype = 
+  | 'protagonist'
+  | 'antagonist'
+  | 'mentor'
+  | 'love_interest'
+  | 'comic_relief'
+  | 'anti_hero'
+  | 'sidekick'
+  | 'femme_fatale'
+  | 'loose_cannon'
+  | 'everyman'
+  | 'chosen_one'
+  | 'wise_fool';
+
+export interface ScriptEvent {
+  week: number;
+  type: 'ROLE_MERGE' | 'ROLE_SPLIT' | 'ARCHETYPE_CHANGE' | 'PLOT_TWIST_ADDED' | 'DIALOGUE_POLISH';
+  description: string;
+  qualityImpact: number;
+  heatGain: number;
+}
+
 export type MarketingAngle = 
   | 'SELL_THE_SPECTACLE' 
   | 'SELL_THE_STORY' 
@@ -408,6 +430,10 @@ export interface ProjectBase {
   marketingAngle?: string;
   // IP Rights
   ipRights?: IPRights;
+  // Script Evolution
+  scriptHeat: number; // 0-100: Influences evolution events
+  activeRoles: CharacterArchetype[];
+  scriptEvents: ScriptEvent[];
   // Sprint H / I additions
   rating?: ProjectRating;
   contentFlags?: ContentFlag[];
@@ -454,6 +480,8 @@ export interface Opportunity {
   releaseModel?: ReleaseModelKey;
   qualityBonus?: number;
   bids: Record<string, number>; // StudioId -> Bid Amount in Dollars
+  highestBidderId?: string | 'PLAYER';
+  bidHistory: { rivalId: string | 'PLAYER'; amount: number; week: number }[];
   expirationWeek: number; // When the auction resolves
 }
 
