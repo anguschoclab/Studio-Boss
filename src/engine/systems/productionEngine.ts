@@ -50,15 +50,18 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
   const allImpacts: StateImpact[] = [];
 
   // 1. Player Projects
-  const playerProjects = Object.values(state.studio.internal.projects);
-  for (const project of playerProjects) {
+  // ⚡ Bolt: Iterate over project records using for...in to avoid O(N) array allocation per tick
+  for (const key in state.studio.internal.projects) {
+    const project = state.studio.internal.projects[key];
     allImpacts.push(...tickProject(project, rng));
   }
 
   // 2. Rival Projects
   for (const rival of state.industry.rivals) {
-    const rivalProjects = Object.values(rival.projects || {});
-    for (const project of rivalProjects) {
+    if (!rival.projects) continue;
+    // ⚡ Bolt: Iterate over project records using for...in to avoid O(N) array allocation per tick
+    for (const key in rival.projects) {
+      const project = rival.projects[key];
       allImpacts.push(...tickProject(project, rng));
     }
   }
