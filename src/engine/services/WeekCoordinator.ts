@@ -13,8 +13,13 @@ import { tickTelevision } from '../systems/television/televisionTick';
 import { tickFinance } from '../systems/finance/financeTick';
 import { advanceTrends } from '../systems/trends';
 import { advanceMarketEvents } from '../systems/marketEvents';
-import { generateScandals, advanceScandals } from '../systems/scandals';
+import { advanceScandals, generateScandals } from '../systems/scandals';
 import { advanceBuyers } from '../systems/buyerMergers';
+
+// New Industry Systems
+import { tickVerticalIntegration } from '../systems/industry/VerticalIntegrationProcessor';
+import { tickIndustryUpstarts } from '../systems/industry/IndustryUpstarts';
+import { tickConsolidation } from '../systems/industry/ConsolidationEngine';
 
 /**
  * Studio Boss - Simulation Tick Context
@@ -77,6 +82,11 @@ export class WeekCoordinator {
     context.impacts.push(...advanceTrends(state.market.trends || []));
     context.impacts.push(...advanceMarketEvents(state));
     context.impacts.push(advanceBuyers(state));
+    
+    // New Industry Filters
+    context.impacts.push(...tickVerticalIntegration(state, context.rng));
+    context.impacts.push(...tickIndustryUpstarts(state));
+    context.impacts.push(...tickConsolidation(state));
   }
 
   private static runProductionFilter(state: GameState, context: TickContext) {

@@ -1,4 +1,5 @@
 import { pick } from '../utils';
+import { BrandSystem } from './BrandSystem';
 import { ProjectFormat } from '@/engine/types';
 import { 
   PREFIXES, 
@@ -15,13 +16,8 @@ import {
 
 export function generateStudioName(existing: string[]): string {
   const existingSet = new Set(existing);
-  let name: string;
-  let attempts = 0;
-  do {
-    name = `${pick(PREFIXES)} ${pick(SUFFIXES)}`;
-    attempts++;
-  } while (existingSet.has(name) && attempts < 50);
-  return name;
+  const identity = BrandSystem.generateIdentity(existingSet);
+  return BrandSystem.getStudioName(identity);
 }
 
 export function generateMotto(): string {

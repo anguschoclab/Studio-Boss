@@ -34,7 +34,11 @@ export interface RivalStudio {
   // Dynamic State
   projects: Record<string, Project>;
   contracts: Contract[];
-  // Sprint F additions
+  // Consolidation & Vertical Integration
+  ownedPlatforms?: string[]; // IDs of platforms this studio owns
+  foundedWeek: number;
+  parentBrand?: string;
+  marketShare?: number; // 0-100: Calculated based on revenue and prestige
   strategy?: RivalStrategy;
   genreFocus?: string;
   acquisitionTarget?: string;
@@ -71,6 +75,7 @@ export interface GameState {
       contracts: Contract[];
       firstLookDeals?: FirstLookDeal[];
     };
+    ownedPlatforms?: string[];
   };
   market: {
     opportunities: Opportunity[];
@@ -119,7 +124,10 @@ export interface BuyerBase {
   name: string;
   archetype: BuyerArchetype;
   currentMandate?: BuyerMandate;
-  // M&A fields
+  foundedWeek: number;
+  parentBrand?: string;
+  // M&A and Vertical Integration
+  ownerId?: string; // ID of the studio that owns this platform
   cash?: number;
   strength?: number;
   isAcquirable?: boolean;

@@ -140,6 +140,11 @@ export const LOCATIONS = [
 ];
 
 // Buyer / Streaming Platform name generation data
+export const CONGLOMERATE_PREFIXES = [
+  'Apex', 'Zenith', 'Titan', 'Global', 'Starlight', 'Hyperion', 'Nexus', 'Omni', 'Vanguard', 'Elysium',
+  'Horizon', 'Summit', 'Pinnacle', 'Meridian', 'Vector', 'Quantum', 'Aura', 'Legacy', 'Infinity', 'Atlas'
+];
+
 export const NETWORK_PREFIXES = [
   'American', 'National', 'Pacific', 'Continental', 'Atlantic', 'Federal', 'Imperial', 'United', 'Global', 'Liberty',
   'Paramount', 'Columbia', 'Republic', 'Dominion', 'Heritage', 'Sovereign', 'Pinnacle', 'Meridian', 'Western', 'Eastern'

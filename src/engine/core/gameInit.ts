@@ -1,6 +1,7 @@
 import { GameState, ArchetypeKey, RivalStudio, GenreTrend } from '@/engine/types';
 import { ALL_GENRES, initializeTrends } from '../systems/trends';
 import { ARCHETYPES } from '../data/archetypes';
+import { BrandSystem } from '../generators/BrandSystem';
 import { generateStudioName, generateMotto } from '../generators/names';
 import { generateFamilies, generateTalentPool } from '../generators/talent';
 import { generateBuyers } from '../generators/buyers';
@@ -11,11 +12,15 @@ import { generateOpportunity } from '../generators/opportunities';
 export function initializeGame(studioName: string, archetype: ArchetypeKey): GameState {
   const arch = ARCHETYPES[archetype];
   const rivalArchetypes: ArchetypeKey[] = ['major', 'mid-tier', 'indie'];
-  const existingNames = [studioName];
+  const usedNames = new Set<string>([studioName]);
 
-  const rivals: RivalStudio[] = Array.from({ length: 4 }, (_, i) => {
-    const name = generateStudioName(existingNames);
-    existingNames.push(name);
+  // Generate 10 Rivals
+  const rivals: RivalStudio[] = Array.from({ length: 10 }, (_, i) => {
+    const ident = BrandSystem.generateIdentity(usedNames);
+    const name = BrandSystem.getStudioName(ident);
+    usedNames.add(name);
+    usedNames.add(ident.core);
+    
     const rArch = pick(rivalArchetypes);
     const rArchData = ARCHETYPES[rArch];
 
@@ -29,10 +34,12 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
     const motivations: import('@/engine/types').StudioMotivation[] = ['CASH_CRUNCH', 'AWARD_CHASE', 'FRANCHISE_BUILDING', 'MARKET_DISRUPTION', 'STABILITY'];
 
     return {
-      id: `rival-${i}`,
+      id: `rival-${i}-${Date.now()}`,
       name,
       motto: generateMotto(),
       archetype: rArch,
+      foundedWeek: 1,
+      parentBrand: ident.core,
       strength: 40 + Math.floor(secureRandom() * 40),
       cash: rArchData.startingCash * randRange(0.5, 1.2),
       prestige: rArchData.startingPrestige + Math.floor(randRange(-10, 10)),
@@ -41,7 +48,8 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
       motivationProfile,
       currentMotivation: pick(motivations),
       projects: {},
-      contracts: []
+      contracts: [],
+      ownedPlatforms: []
     };
   });
 
@@ -58,6 +66,51 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
   ALL_GENRES.forEach(g => {
     const trend = initialTrends.find(t => t.genre === g);
     genrePopularity[g.toLowerCase()] = trend ? trend.heat / 100 : 0.2 + secureRandom() * 0.3;
+  });
+
+  // Generate initial buyers
+  const initialBuyers = generateBuyers({ networks: 4, premium: 4, streamers: 5 });
+  
+  // Vertical Integration: Assign starting platforms to Majors/Mid-tiers
+  // Finding player's starting streamer if applicable
+  let playerOwnedPlatforms: string[] = [];
+  if (archetype !== 'indie') {
+    const playerBrand = { core: studioName.split(' ')[0], isConglomerate: true };
+    const playerStreamer: import('@/engine/types').StreamerPlatform = {
+      id: `player-streamer-${Date.now()}`,
+      name: BrandSystem.getStreamingName(playerBrand),
+      archetype: 'streamer',
+      foundedWeek: 1,
+      parentBrand: playerBrand.core,
+      ownerId: 'player',
+      subscribers: archetype === 'major' ? 25_000_000 : 10_000_000,
+      churnRate: 0.05,
+      contentLibraryQuality: 60,
+      marketingSpend: 2_000_000,
+    };
+    initialBuyers.push(playerStreamer);
+    playerOwnedPlatforms.push(playerStreamer.id);
+  }
+
+  // Assign streamers to Rivals
+  rivals.forEach(rival => {
+    if (rival.archetype !== 'indie' && secureRandom() < 0.7) {
+      const rivalBrand = { core: rival.parentBrand!, isConglomerate: true };
+      const rivalStreamer: import('@/engine/types').StreamerPlatform = {
+        id: `rival-streamer-${rival.id}`,
+        name: BrandSystem.getStreamingName(rivalBrand),
+        archetype: 'streamer',
+        foundedWeek: 1,
+        parentBrand: rivalBrand.core,
+        ownerId: rival.id,
+        subscribers: rival.archetype === 'major' ? 20_000_000 : 8_000_000,
+        churnRate: 0.05,
+        contentLibraryQuality: 50,
+        marketingSpend: 1_500_000,
+      };
+      initialBuyers.push(rivalStreamer);
+      rival.ownedPlatforms = [rivalStreamer.id];
+    }
   });
 
   return {
@@ -91,11 +144,12 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
       internal: {
         projects: {},
         contracts: [],
-      }
+      },
+      ownedPlatforms: playerOwnedPlatforms
     },
     market: {
       opportunities: Array.from({ length: 4 }, () => generateOpportunity(Object.keys(talentPool))),
-      buyers: generateBuyers(),
+      buyers: initialBuyers,
     },
     industry: {
       rivals,
