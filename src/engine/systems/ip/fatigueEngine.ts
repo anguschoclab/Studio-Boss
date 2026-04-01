@@ -1,5 +1,6 @@
 import { Franchise } from '../../types';
 import { clamp } from '../../utils';
+import { FRANCHISE_FATIGUE_RISK } from '../../data/genres';
 
 /**
  * Fatigue Logic Engine.
@@ -17,14 +18,18 @@ import { clamp } from '../../utils';
 export function calculateFranchiseFatigue(
   franchise: Franchise, 
   genreSaturation: number, // Market-wide saturation for the genre (count of active rival projects)
-  genreType: 'spectacle' | 'comfort_food' = 'spectacle'
+  genre: string = 'Action'
 ): number {
   const activeCount = franchise.activeProjectIds.length;
   
+  // Normalize genre string to match FRANCHISE_FATIGUE_RISK keys (e.g. "Action", "Sci-Fi", "Superhero")
+  // Handle ALL CAPS or all lowercase variations
+  const normalizedGenre = Object.keys(FRANCHISE_FATIGUE_RISK).find(
+    k => k.toLowerCase() === genre.toLowerCase()
+  ) || genre;
+
   // 1. Base Fatigue Rate (Genre-specific)
-  // 'Spectacle' (Superhero, Sci-Fi) builds fatigue at 0.15 per project.
-  // 'Comfort Food' (Procedural, Sitcom) builds at 0.05 per project.
-  const baseRate = (genreType === 'spectacle') ? 0.15 : 0.05;
+  const baseRate = FRANCHISE_FATIGUE_RISK[normalizedGenre] !== undefined ? FRANCHISE_FATIGUE_RISK[normalizedGenre] : 0.15;
   let currentFatigue = activeCount * baseRate;
 
   // 2. Exponential Dilution (Spin-off of a spin-off)
@@ -35,9 +40,9 @@ export function calculateFranchiseFatigue(
   }
 
   // 3. Rival Saturation (The 'Poison the Well' effect)
-  // If rivals flood the market with the same genre (e.g., Every studio has a superhero film), 
-  // it adds a "Genre Fatigue" floor that impacts your brand too.
-  const rivalPenalty = (genreSaturation / 12) * 0.1; // 10% penalty floor for every 12 active rival projects in genre
+  // If genre is severely oversaturated, penalty multiplier increases heavily.
+  const oversaturationMultiplier = genreSaturation > 10 ? 1.5 : 1.0;
+  const rivalPenalty = (genreSaturation / 12) * 0.1 * oversaturationMultiplier;
   
   // 4. Audience Loyalty (Protective Shield)
   // High loyalty acts as a buffer against fatigue.

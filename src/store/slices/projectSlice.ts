@@ -202,8 +202,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
       relatedCount = franchise.assetIds.length;
       
       const genreSaturation = Object.values(state.studio.internal.projects).filter(p => p.genre === project.genre).length;
-      const isSpectacle = ['SCI-FI', 'SUPERHERO', 'ACTION', 'FANTASY'].includes(project.genre.toUpperCase());
-      const fatigue = calculateFranchiseFatigue(franchise, genreSaturation, isSpectacle ? 'spectacle' : 'comfort_food');
+      const fatigue = calculateFranchiseFatigue(franchise, genreSaturation, project.genre);
       
       if (fatigue > 0.4) status = 'FATIGUED';
       
