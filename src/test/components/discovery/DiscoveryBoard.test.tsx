@@ -67,7 +67,9 @@ describe('DiscoveryBoard', () => {
         targetAudience: 'Broad',
         qualityBonus: 0,
         origin: 'open_spec',
-        costToAcquire: 0
+        costToAcquire: 0,
+        bids: {},
+        expirationWeek: 10,
       },
       {
         id: '2',
