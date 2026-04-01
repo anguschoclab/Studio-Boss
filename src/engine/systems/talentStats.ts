@@ -35,15 +35,29 @@ export function applyAwardBoostsToTalent(
 
   if (award.status === 'won') {
     if (isPrestige || isCannesEquivalent) {
-      prestigeBoost += 35 * finalMultiplier;
-      egoBoost += 60 * finalMultiplier; // Massive permanent ego bump for prestigious awards
-      drawBoost += 15 * finalMultiplier;
-      feeMultiplier += 4.0 * finalMultiplier; // 400% fee bump to make chasing trophies a massive distinct strategy
+      if (isMajorCategory) {
+        prestigeBoost += 45 * finalMultiplier;
+        egoBoost += 75 * finalMultiplier; // Extreme permanent ego bump for major prestigious awards
+        drawBoost += 20 * finalMultiplier;
+        feeMultiplier += 5.0 * finalMultiplier; // 500% fee bump for Best Director/Actor at Cannes
+      } else {
+        prestigeBoost += 35 * finalMultiplier;
+        egoBoost += 60 * finalMultiplier; // Massive permanent ego bump for prestigious awards
+        drawBoost += 15 * finalMultiplier;
+        feeMultiplier += 4.0 * finalMultiplier; // 400% fee bump
+      }
     } else if (isSundanceEquivalent) {
-      prestigeBoost += 15 * finalMultiplier;
-      egoBoost += 40 * finalMultiplier;
-      drawBoost += 35 * finalMultiplier; // Massive commercial draw bump for indie hits
-      feeMultiplier += 2.5 * finalMultiplier; // 250% fee bump
+      if (isMajorCategory) {
+        prestigeBoost += 20 * finalMultiplier;
+        egoBoost += 50 * finalMultiplier;
+        drawBoost += 40 * finalMultiplier;
+        feeMultiplier += 3.0 * finalMultiplier;
+      } else {
+        prestigeBoost += 15 * finalMultiplier;
+        egoBoost += 40 * finalMultiplier;
+        drawBoost += 35 * finalMultiplier; // Massive commercial draw bump for indie hits
+        feeMultiplier += 2.5 * finalMultiplier; // 250% fee bump
+      }
     } else {
       prestigeBoost += 10 * finalMultiplier;
       egoBoost += 20 * finalMultiplier;
