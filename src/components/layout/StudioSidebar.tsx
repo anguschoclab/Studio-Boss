@@ -10,6 +10,7 @@ import {
   Users, 
   Briefcase, 
   Newspaper,
+  Tv,
   ChevronLeft,
   ChevronRight,
   LogOut,

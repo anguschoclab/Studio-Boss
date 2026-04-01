@@ -52,6 +52,7 @@ const Dashboard: React.FC = () => {
       case 'finance': return <FinancePanel key="finance" />;
       case 'trades': return <DiscoveryBoard key="trades" />;
       case 'sbdb': return <SBDBView key="sbdb" />;
+      case 'streaming': return <StreamingPanel key="streaming" />;
       default: return <CommandCenter key="default" />;
     }
   };
