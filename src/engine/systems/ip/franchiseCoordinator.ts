@@ -48,6 +48,11 @@ export function calculateFranchiseEquity(
     }
     // Boost bonus significantly if diverse compatible genres cross over
     crossoverBonus += Math.min(0.5, synergyHits * 0.15);
+
+    // Avengers-style crossover event check
+    if (assets.length >= 3 && genres.some(g => g === 'Multiverse' || g === 'IP Mashup')) {
+      crossoverBonus += 0.3;
+    }
   }
   
   // 2. Format Diversity Multiplier

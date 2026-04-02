@@ -43,6 +43,21 @@ export const SPINOFF_TEMPLATES: Record<'FATIGUED' | 'HEALTHY' | 'LEGACY', Spinof
       budgetTier: 'mid',
       buzzBonus: -5,
       flavorTemplate: "A desperate gimmick interactive special attempting to pull audiences back with a 'choose your own adventure' format."
+    },
+    {
+      titleSuffix: 'The Musical',
+      format: 'film',
+      genre: 'Musical',
+      budgetTier: 'mid',
+      buzzBonus: 5,
+      flavorTemplate: 'A polarizing musical adaptation attempting to breathe new life into {title}.'
+    },
+    {
+      titleSuffix: 'Deconstructed',
+      format: 'film',
+      budgetTier: 'high',
+      buzzBonus: -10,
+      flavorTemplate: 'A meta-narrative sequel that actively mocks the {title} fanbase.'
     }
   ],
   HEALTHY: [
@@ -63,6 +78,21 @@ export const SPINOFF_TEMPLATES: Record<'FATIGUED' | 'HEALTHY' | 'LEGACY', Spinof
       budgetTier: 'mid',
       buzzBonus: 5,
       flavorTemplate: 'A highly stylized anime spin-off meant to expand the global reach of the {title} universe.'
+    },
+    {
+      titleSuffix: 'Into the Multiverse',
+      format: 'film',
+      genre: 'Multiverse',
+      budgetTier: 'blockbuster',
+      buzzBonus: 20,
+      flavorTemplate: 'A massive crossover event pulling alternate reality versions of characters from the {title} universe.'
+    },
+    {
+      titleSuffix: 'The Spin-Off',
+      format: 'film',
+      budgetTier: 'high',
+      buzzBonus: 10,
+      flavorTemplate: 'A side-story focusing on a fan-favorite secondary character from {title}.'
     }
   ],
   LEGACY: [
@@ -77,6 +107,22 @@ export const SPINOFF_TEMPLATES: Record<'FATIGUED' | 'HEALTHY' | 'LEGACY', Spinof
       budgetTier: 'high',
       buzzBonus: 15,
       flavorTemplate: 'A massive "soft reboot" of a dead legacy IP with extreme risk and a huge budget.'
+    },
+    {
+      titleSuffix: 'Reborn',
+      format: 'film',
+      budgetTier: 'blockbuster',
+      buzzBonus: 30,
+      flavorTemplate: 'A gritty, grounded re-imagining of {title} for modern audiences.'
+    },
+    {
+      titleSuffix: 'Reunion',
+      format: 'unscripted',
+      unscriptedFormat: 'talk_show',
+      genre: 'Unscripted',
+      budgetTier: 'low',
+      buzzBonus: 20,
+      flavorTemplate: 'The original cast of {title} reunites to discuss the franchise\'s cultural impact.'
     }
   ]
 };
@@ -95,6 +141,20 @@ export function generateSpinoffProposal(
   // Standard Sequel Check: If healthy and not reached many entries
   if (status === 'HEALTHY' && secureRandom() > 0.5) {
      const sequelNum = relatedCount + 2;
+
+     if (sequelNum >= 3) {
+       return {
+         title: `${sourceProject.title} ${sequelNum}: Part 1`,
+         format: sourceProject.format,
+         genre: sourceProject.genre,
+         budgetTier: 'blockbuster', // Finale bloat
+         buzz: 20,
+         flavor: `The epic first half of the massive conclusion to the ${sourceProject.title} saga.`,
+         parentProjectId: sourceProject.id,
+         isSpinoff: true
+       };
+     }
+
      return {
        title: `${sourceProject.title} ${sequelNum}`,
        format: sourceProject.format,
