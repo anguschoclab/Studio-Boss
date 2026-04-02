@@ -125,7 +125,6 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
     gameSeed: Math.floor(secureRandom() * 1_000_000),
     tickCount: 0,
     game: { currentWeek: 1 },
-    projects: { active: [] },
     finance: {
       cash: arch.startingCash,
       ledger: [],

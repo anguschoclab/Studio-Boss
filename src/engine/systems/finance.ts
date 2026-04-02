@@ -1,4 +1,4 @@
-import { Project, GameState, WeeklyFinancialReport, Contract } from '@/engine/types';
+import { Project, GameState, WeeklyFinancialReport, Contract, Buyer } from '@/engine/types';
 import { StateImpact, FinancialSnapshot } from '../types/state.types';
 import { RevenueProcessor } from './finance/RevenueProcessor';
 import { ExpenseProcessor } from './finance/ExpenseProcessor';

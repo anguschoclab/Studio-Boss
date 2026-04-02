@@ -28,11 +28,11 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ oppo
   const rivals = gameState?.industry.rivals || [];
   
   const currentHighest = useMemo(() => {
-    return Object.values(opp.bids || {}).reduce((max: number, b: number) => Math.max(max, b), 0);
+    return Object.values(opp.bids || {}).reduce((max, b) => Math.max(max, b.amount), 0);
   }, [opp.bids]);
 
   const isPlayerWinning = opp.highestBidderId === 'PLAYER';
-  const playerBid = opp.bids['PLAYER'] || 0;
+  const playerBid = opp.bids['PLAYER']?.amount || 0;
   const highestBidder = isPlayerWinning ? { name: 'YOU' } : rivals.find(r => r.id === opp.highestBidderId);
 
   const [bidAmount, setBidAmount] = useState(currentHighest + 1_000_000);

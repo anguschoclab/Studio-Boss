@@ -62,6 +62,8 @@ export function updateBuyers(buyers: Buyer[], currentWeek: number): StateImpact 
       
       if (headlineText && secureRandom() < 0.6) { // Don't spam headlines every single shift
         impact.newHeadlines!.push({
+          id: `headline-${crypto.randomUUID()}`,
+          week: currentWeek,
           category: 'market',
           text: headlineText
         });

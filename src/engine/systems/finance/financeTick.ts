@@ -1,5 +1,4 @@
-import { Project, GameState, WeeklyFinancialReport, Contract, Buyer, StateImpact, ImpactType } from '@/engine/types';
-import { FinancialSnapshot } from '../../types/state.types';
+import { GameState, StateImpact } from '@/engine/types';
 import { RandomGenerator } from '../../utils/rng';
 import { generateWeeklyFinancialReport } from '../finance';
 
@@ -28,8 +27,8 @@ export function tickFinance(state: GameState, rng: RandomGenerator, pendingImpac
 
   // 3. History Snapshot update
   impacts.push({
-    type: 'FINANCE_SNAPSHOT_ADDED' as ImpactType, // Cast to known type if possible, or extend ImpactType
-    payload: { snapshot: (snapshot as unknown as Record<string, unknown>) }
+    type: 'FINANCE_SNAPSHOT_ADDED',
+    payload: { snapshot }
   });
   
   return impacts;

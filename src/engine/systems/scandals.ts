@@ -53,9 +53,12 @@ export function generateScandals(state: GameState): StateImpact[] {
              projectId,
              update: {
                activeCrisis: {
+                  crisisId: `scandal-crisis-${crypto.randomUUID()}`,
+                  triggeredWeek: state.week,
+                  haltedProduction: false,
                  description: `BREAKING NEWS: ${talent.name.toUpperCase()} has been involved in a massive ${type} scandal while working on "${project.title}". The press is circling.`,
                  resolved: false,
-                 severity: s.severity > 75 ? 'catastrophic' : 'high',
+                  severity: s.severity > 75 ? 'high' : 'medium',
                  options: [
                    {
                      text: "Fire Them",

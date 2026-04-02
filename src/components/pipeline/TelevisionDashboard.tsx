@@ -4,15 +4,15 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tv, Activity, Star, AlertCircle, PlayCircle, Zap } from 'lucide-react';
-import { Project } from '@/engine/types';
+import { Project, SeriesProject } from '@/engine/types';
 import { useShallow } from 'zustand/react/shallow';
 import { cn } from '@/lib/utils';
 
 export const TelevisionDashboard = () => {
-  const activeProjects = useGameStore(useShallow(s => s.gameState?.projects.active || []));
+  const activeProjects = useGameStore(useShallow(s => Object.values(s.gameState?.studio.internal.projects || {})));
   
   const tvShows = React.useMemo(() => 
-    activeProjects.filter(p => p.type === 'SERIES'),
+    activeProjects.filter((p: Project) => p.type === 'SERIES' && 'tvDetails' in p),
   [activeProjects]);
 
   if (tvShows.length === 0) {
@@ -41,7 +41,7 @@ export const TelevisionDashboard = () => {
 
       <ScrollArea className="flex-1 pr-4">
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 pb-10">
-          {tvShows.map(show => (
+          {tvShows.map((show: Project) => (
             <TVShowCard key={show.id} show={show} />
           ))}
         </div>
@@ -51,8 +51,8 @@ export const TelevisionDashboard = () => {
 };
 
 const TVShowCard = ({ show }: { show: Project }) => {
-  if (show.type !== 'SERIES') return null;
-  const details = show.tvDetails;
+  if (show.type !== 'SERIES' || !('tvDetails' in show)) return null;
+  const details = (show as SeriesProject).tvDetails;
   
   const statusColors: Record<string, string> = {
     'ON_AIR': 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20',

@@ -33,7 +33,7 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ oppo
   const [isAnimating, setIsAnimating] = useState(false);
   
   const currentMaxBid = useMemo(() => {
-    return Math.max(...Object.values(opportunity.bids || {}), opportunity.costToAcquire);
+    return Math.max(...Object.values(opportunity.bids || {}).map(bid => bid.amount), opportunity.costToAcquire);
   }, [opportunity.bids, opportunity.costToAcquire]);
 
   const recommendedBid = useMemo(() => {
