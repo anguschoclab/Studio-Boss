@@ -133,7 +133,9 @@ export class WeekCoordinator {
     context.impacts.push(...tickProduction(state, context.rng));
     
     // 2. Script Evolution Tick
-    Object.values(state.studio.internal.projects).forEach(project => {
+    // ⚡ Bolt: Iterate over Record using for...in to prevent O(n) array allocation overhead during ticks
+    for (const projectId in state.studio.internal.projects) {
+      const project = state.studio.internal.projects[projectId];
       if (project.state === 'development') {
         const result = tickScriptDevelopment(project, context.rng);
         if (result.project !== project) {
@@ -147,7 +149,7 @@ export class WeekCoordinator {
           if (result.impact) context.impacts.push(result.impact);
         }
       }
-    });
+    }
 
     // 3. Crisis Filter (New Integration)
     this.runCrisisFilter(state, context);
@@ -158,24 +160,27 @@ export class WeekCoordinator {
   }
 
   private static runCrisisFilter(state: GameState, context: TickContext) {
+    // ⚡ Bolt: Use for...in for Record iteration and hoist activeStages array to prevent reallocation
+    const activeStages = ['prep', 'production', 'post_production', 'marketing'];
+
     // Roll for crises for studio projects in active production stages
-    Object.values(state.studio.internal.projects).forEach(project => {
-      const activeStages = ['prep', 'production', 'post_production', 'marketing'];
+    for (const projectId in state.studio.internal.projects) {
+      const project = state.studio.internal.projects[projectId];
       if (!project.activeCrisis && activeStages.includes(project.state)) {
         const impact = checkAndTriggerCrisis(project, context.rng);
         if (impact) context.impacts.push(impact);
       }
-    });
+    }
 
     // Roll for rival projects
     state.industry.rivals.forEach(rival => {
-      Object.values(rival.projects || {}).forEach(project => {
-        const activeStages = ['prep', 'production', 'post_production', 'marketing'];
+      for (const projectId in rival.projects || {}) {
+        const project = rival.projects[projectId];
         if (!project.activeCrisis && activeStages.includes(project.state)) {
            const impact = checkAndTriggerCrisis(project, context.rng);
            if (impact) context.impacts.push(impact);
         }
-      });
+      }
     });
   }
 
