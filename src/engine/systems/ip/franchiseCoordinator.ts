@@ -1,6 +1,9 @@
 import { GameState, Project, Franchise, IPAsset } from '../../types';
-import { generateId, clamp } from '../../utils';
+import { clamp } from '../../utils';
 import { CROSSOVER_AFFINITY } from '../../data/genres';
+import { RandomGenerator } from '../../utils/rng';
+import { evaluateVaultSynergy } from './synergyEvaluator';
+import { applyIPDecay } from './ipValuation';
 
 /**
  * Franchise Coordinator.
@@ -65,7 +68,7 @@ export function calculateFranchiseEquity(
  * Evaluates a finished project and updates or creates its Franchise Hub.
  * This is the entry point for turning successful originals into persistent franchises.
  */
-export function updateFranchiseHub(state: GameState, project: Project): GameState {
+export function updateFranchiseHub(state: GameState, project: Project, rng: RandomGenerator): GameState {
   let franchiseId = project.franchiseId;
   const updatedFranchises = { ...state.ip.franchises };
 
@@ -75,7 +78,7 @@ export function updateFranchiseHub(state: GameState, project: Project): GameStat
   const isPrestigeHit = (project.awardsProfile?.prestigeScore || 0) > 85;
 
   if (!franchiseId && (isBreakout || isPrestigeHit)) {
-    franchiseId = generateId('hub');
+    franchiseId = rng.uuid('hub');
     const newFranchise: Franchise = {
       id: franchiseId,
       name: project.title,
@@ -148,7 +151,7 @@ export function updateFranchiseHub(state: GameState, project: Project): GameStat
  * Stage 2.3 Pipeline Hook.
  * Identifies projects released in the current simulation week and triggers franchise evolution.
  */
-export function calculateFranchiseEvolutionImpacts(state: GameState): import('../../types/state.types').StateImpact[] {
+export function calculateFranchiseEvolutionImpacts(state: GameState, rng: RandomGenerator): import('../../types/state.types').StateImpact[] {
   const impacts: import('../../types/state.types').StateImpact[] = [];
   const projects = Object.values(state.studio.internal.projects);
   
@@ -161,7 +164,7 @@ export function calculateFranchiseEvolutionImpacts(state: GameState): import('..
 
       // 1. Breakout Hub Creation
       if (!franchiseId && (isBreakout || isPrestigeHit)) {
-        franchiseId = generateId('hub');
+        franchiseId = rng.uuid('hub');
         const newFranchise: Franchise = {
           id: franchiseId,
           name: project.title,
@@ -224,6 +227,29 @@ export function calculateFranchiseEvolutionImpacts(state: GameState): import('..
         }
       }
     }
+  });
+
+  return impacts;
+}
+
+/**
+ * Phase 7: Weekly IP Vault Tick.
+ * Orchestrates synergy evaluation and cultural decay for the entire studio vault.
+ */
+export function tickIPVault(state: GameState): import('../../types/state.types').StateImpact[] {
+  const impacts: import('../../types/state.types').StateImpact[] = [];
+  const activeProjects = Object.values(state.studio.internal.projects);
+
+  // 1. Evaluate Synergy (Reboots/Spinoffs in production) 
+  // 2. Apply Decay (Synergy-shielded & Tiered)
+  const updatedVault = evaluateVaultSynergy(activeProjects, state.ip.vault).map(asset => applyIPDecay(asset));
+
+  // 3. Generate individual update impacts
+  updatedVault.forEach(asset => {
+    impacts.push({
+      type: 'VAULT_ASSET_UPDATED',
+      payload: { assetId: asset.id, update: asset }
+    });
   });
 
   return impacts;

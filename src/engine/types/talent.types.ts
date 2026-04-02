@@ -40,6 +40,8 @@ export interface Agency {
   culture: AgencyCulture;
   prestige: number;
   leverage: number; // 0-100
+  marketSensitivity: number; // 0-1.0 (How much market cycles affect their demands)
+  globalReach: number; // 0-100 (Influences foreign box office & distribution)
   traits?: string[];
   motivationProfile?: MotivationProfile;
   currentMotivation?: AgencyMotivation;
@@ -52,6 +54,7 @@ export interface Agent {
   specialty: AgentSpecialty;
   prestige: number;
   leverage: number;
+  negotiationTactic: 'SHARK' | 'DIPLOMAT' | 'VOLUME' | 'PRESTIGE';
   skill?: number;
   aggression?: number;
   motivationProfile?: MotivationProfile;

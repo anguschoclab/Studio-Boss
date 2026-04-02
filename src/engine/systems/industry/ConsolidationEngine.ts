@@ -1,21 +1,21 @@
-import { GameState, RivalStudio, StateImpact, Buyer, StreamerPlatform } from '@/engine/types';
+import { GameState, StateImpact, StreamerPlatform } from '@/engine/types';
 import { RegulatorSystem } from './RegulatorSystem';
-import { pick, secureRandom, randRange } from '../../utils';
+import { RandomGenerator } from '../../utils/rng';
 
 /**
  * Studio Boss - Consolidation Engine
  * Automates the mergers and acquisitions process for Rival Studios and Platforms.
  */
-export function tickConsolidation(state: GameState): StateImpact[] {
+export function tickConsolidation(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
   const rivals = state.industry.rivals;
   const buyers = state.market.buyers;
 
   // Potential Acquirers: Majors with surplus cash
   const majors = rivals.filter(r => r.archetype === 'major' && r.cash > 250_000_000);
-  if (majors.length === 0 || secureRandom() < 0.92) return []; // Only check 8% of the time
+  if (majors.length === 0 || rng.next() < 0.92) return []; // Only check 8% of the time
 
-  const acquirer = pick(majors);
+  const acquirer = rng.pick(majors);
 
   // Target: struggling Indie or Mid-tier studio
   const targets = rivals.filter(r => 
@@ -29,14 +29,14 @@ export function tickConsolidation(state: GameState): StateImpact[] {
   ) as StreamerPlatform[];
 
   // Choose acquisition type
-  const roll = secureRandom();
+  const roll = rng.next();
   if (roll < 0.5 && targets.length > 0) {
     // Studio Acquisition
-    const target = pick(targets);
+    const target = rng.pick(targets);
     const cost = target.cash + (target.strength * 2_000_000);
     
     // Check Regulators
-    const reg = RegulatorSystem.isBlocked(state, acquirer.id, target.id);
+    const reg = RegulatorSystem.isBlocked(state, acquirer.id, target.id, rng);
     if (reg.blocked) {
       impacts.push({
         type: 'NEWS_ADDED',
@@ -69,13 +69,13 @@ export function tickConsolidation(state: GameState): StateImpact[] {
     });
   } else if (platforms.length > 0) {
     // Platform Acquisition (Vertical Integration)
-    const platform = pick(platforms);
+    const platform = rng.pick(platforms);
     const cost = (platform.subscribers * 5) + (platform.contentLibraryQuality * 1_000_000);
 
     if (acquirer.cash < cost) return impacts;
 
     // Check Regulators
-    const reg = RegulatorSystem.isBlocked(state, acquirer.id, platform.id);
+    const reg = RegulatorSystem.isBlocked(state, acquirer.id, platform.id, rng);
     if (reg.blocked) {
       impacts.push({
         type: 'NEWS_ADDED',
@@ -120,3 +120,4 @@ export function tickConsolidation(state: GameState): StateImpact[] {
 
   return impacts;
 }
+

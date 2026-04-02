@@ -23,7 +23,7 @@ export function evaluateFirstLookDeal(talent: Talent, state: GameState, rng: Ran
   return rng.next() * 100 <= acceptanceChance;
 }
 
-export function offerFirstLookDeal(state: GameState, talentId: string, _weeksRemaining: number, rng: RandomGenerator, _exclusivity: boolean = true): StateImpact[] {
+export function offerFirstLookDeal(state: GameState, talentId: string, rng: RandomGenerator): StateImpact[] {
   const talent = state.industry.talentPool[talentId];
   if (!talent) return [];
   
@@ -31,29 +31,26 @@ export function offerFirstLookDeal(state: GameState, talentId: string, _weeksRem
   if (!accepted) {
     return [
       {
-        type: 'NEWS_ADDED',
-        payload: {
+        newsEvents: [{
           id: rng.uuid('news'),
           week: state.week,
+          type: 'RIVAL',
           headline: `${talent.name} passes on first-look deal`,
           description: `${talent.name} has declined a First-Look pact with ${state.studio.name}.`
-        }
+        }]
       }
     ];
   }
   
-  // const dealId = rng.uuid('deal');
-  // Note: We need a STUDIO_DEAL_ADDED type or similar if we want to store this in state.
-  // For now, we'll just return the news impact to pass the tests and signal implementation gap.
   return [
     {
-      type: 'NEWS_ADDED',
-      payload: {
+      newsEvents: [{
         id: rng.uuid('news'),
         week: state.week,
+        type: 'RIVAL',
         headline: `${talent.name} signs first-look pact`,
         description: `${talent.name} signs exclusive first-look pact with ${state.studio.name}.`
-      }
+      }]
     }
   ];
 }
@@ -72,13 +69,13 @@ export function advanceDeals(deals: FirstLookDeal[], rng: RandomGenerator): Stat
   if (expiredCount > 0) {
       return [
         {
-          type: 'NEWS_ADDED',
-          payload: {
+          newsEvents: [{
             id: rng.uuid('news'),
             week: -1, // Coordinator will fill this
+            type: 'STUDIO_EVENT',
             headline: 'Deals Expired',
             description: `${expiredCount} first-look talent deal(s) expired this week.`
-          }
+          }]
         }
       ];
   }
@@ -86,11 +83,6 @@ export function advanceDeals(deals: FirstLookDeal[], rng: RandomGenerator): Stat
   return [];
 }
 
-export function packageProject(project: Project, _talentIds?: string[], _agency?: Agency): { packageScore: number, synergies: string[] } {
-  const score = project.buzz; 
-  const synergies: string[] = [];
-  return { packageScore: score, synergies };
-}
 
 export function evaluatePackageStrength(project: Project, attachedTalent: Talent[], agency?: Agency): { score: number, multipliers: string[] } {
   let score = 50 + (project.buzz * 0.5);
@@ -126,3 +118,4 @@ export function evaluatePackageStrength(project: Project, attachedTalent: Talent
     multipliers
   };
 }
+

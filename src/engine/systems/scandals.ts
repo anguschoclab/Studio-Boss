@@ -7,7 +7,14 @@ import { RandomGenerator } from '../utils/rng';
  * If the talent is attached to an active studio project, it triggers a Project Crisis.
  */
 export function generateScandals(state: GameState, rng: RandomGenerator): StateImpact[] {
-  const impacts: StateImpact[] = [];
+  const impactsToReturn: StateImpact[] = [];
+  const impact: StateImpact = {
+    newScandals: [],
+    newHeadlines: [],
+    newsEvents: [],
+    projectUpdates: [],
+    uiNotifications: []
+  };
   
   const contracts = state.studio.internal.contracts || [];
   const talentToProjectMap = new Map<string, string>();
@@ -17,7 +24,6 @@ export function generateScandals(state: GameState, rng: RandomGenerator): StateI
   
   const studioProjects = state.studio.internal.projects || {};
 
-  // ⚡ Bolt: Iterate over talentPool using for...in to avoid O(N) array allocation per tick
   const talentPool = state.industry.talentPool || {};
   for (const talentId in talentPool) {
     const talent = talentPool[talentId];
@@ -34,19 +40,14 @@ export function generateScandals(state: GameState, rng: RandomGenerator): StateI
          weeksRemaining: 4 + Math.floor(rng.next() * 8)
        };
 
-       impacts.push({
-         type: 'SCANDAL_ADDED',
-         payload: { scandal: s }
-       });
+       impact.newScandals!.push(s);
 
-       impacts.push({
-          type: 'NEWS_ADDED',
-          payload: {
-            id: rng.uuid('news'),
-            week: state.week,
-            headline: 'PR NIGHTMARE',
-            description: `A massive ${type} scandal erupts violently around ${talent.name}!`,
-          }
+       impact.newsEvents!.push({
+         id: rng.uuid('news'),
+         week: state.week,
+         type: 'CRISIS',
+         headline: 'PR NIGHTMARE',
+         description: `A massive ${type} scandal erupts violently around ${talent.name}!`,
        });
 
        const projectId = talentToProjectMap.get(talent.id);
@@ -83,21 +84,20 @@ export function generateScandals(state: GameState, rng: RandomGenerator): StateI
             ]
          };
 
-         impacts.push({
-           type: 'PROJECT_UPDATED',
-           payload: {
-             projectId,
-             update: {
-                activeCrisis: crisisPayload
-             }
-           }
+         impact.projectUpdates!.push({
+            projectId,
+            update: {
+               activeCrisis: crisisPayload
+            }
          });
 
-         impacts.push({
+         impact.uiNotifications!.push(`A crisis has hit "${project.title}"!`);
+
+         impactsToReturn.push({
            type: 'MODAL_TRIGGERED',
            payload: {
              modalType: 'CRISIS',
-             priority: 100, // High priority
+             priority: 100,
              payload: {
                projectId,
                crisis: crisisPayload
@@ -108,8 +108,11 @@ export function generateScandals(state: GameState, rng: RandomGenerator): StateI
     }
   }
   
-  return impacts;
+  impactsToReturn.push(impact);
+  return impactsToReturn;
 }
+
+
 
 /**
  * Processes weekly decay of scandals and applies their penalties to projects.

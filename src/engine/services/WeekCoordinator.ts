@@ -1,6 +1,7 @@
 import { GameState, StateImpact, WeekSummary, GameEvent } from '../types';
 import { RandomGenerator } from '../utils/rng';
 import { applyImpacts } from '../core/impactReducer';
+import { clamp } from '../utils';
 
 // System Imports
 import { tickProduction } from '../systems/productionEngine';
@@ -23,7 +24,7 @@ import { tickVerticalIntegration } from '../systems/industry/VerticalIntegration
 import { tickIndustryUpstarts } from '../systems/industry/IndustryUpstarts';
 import { tickConsolidation } from '../systems/industry/ConsolidationEngine';
 import { InterestRateSimulator } from '../systems/market/InterestRateSimulator';
-import { calculateFranchiseEvolutionImpacts } from '../systems/ip/franchiseCoordinator';
+import { calculateFranchiseEvolutionImpacts, tickIPVault } from '../systems/ip/franchiseCoordinator';
 
 // Integrated Hardening Systems
 import { runAwardsCeremony, processRazzies } from '../systems/awards';
@@ -77,11 +78,21 @@ export class WeekCoordinator {
     // 3. Consolidation Phase (The Merge)
     const nextState = applyImpacts(state, context.impacts);
 
+    const updatedMarketState = {
+      ...nextState.finance.marketState,
+      sentiment: clamp((nextState.finance.marketState?.sentiment || 50) + (context.rng.next() - 0.5) * 5, -100, 100),
+      cycle: (nextState.finance.marketState?.baseRate || 0) > 0.08 ? 'RECESSION' : (nextState.finance.marketState?.baseRate || 0) > 0.06 ? 'BEAR' : 'STABLE'
+    };
+
     const finalizedState: GameState = {
       ...nextState,
       week: context.week,
       tickCount: context.tickCount,
-      eventHistory: [...(state.eventHistory || []), ...context.events].slice(-500)
+      eventHistory: [...(state.eventHistory || []), ...context.events].slice(-52),
+      finance: {
+        ...nextState.finance,
+        marketState: updatedMarketState as import('../types/state.types').MarketState
+      }
     };
 
     const summary = this.buildSummary(state, finalizedState, context);
@@ -105,16 +116,16 @@ export class WeekCoordinator {
 
   private static runMarketFilter(state: GameState, context: TickContext) {
     context.impacts.push(...tickPlatforms(state, context.rng));
-    context.impacts.push(InterestRateSimulator.advance(state));
+    context.impacts.push(InterestRateSimulator.advance(state, context.rng));
     context.impacts.push(...tickWorldEvents(state, context.rng));
-    context.impacts.push(...advanceTrends(state.market.trends || []));
+    context.impacts.push(...advanceTrends(state.market.trends || [], context.rng));
     context.impacts.push(...advanceMarketEvents(state, context.rng));
     context.impacts.push(advanceBuyers(state, context.rng));
     
     // New Industry Filters
     context.impacts.push(...tickVerticalIntegration(state, context.rng));
     context.impacts.push(...tickIndustryUpstarts(state, context.rng));
-    context.impacts.push(...tickConsolidation(state));
+    context.impacts.push(...tickConsolidation(state, context.rng));
   }
 
   private static runProductionFilter(state: GameState, context: TickContext) {
@@ -142,7 +153,8 @@ export class WeekCoordinator {
     this.runCrisisFilter(state, context);
 
     context.impacts.push(...tickTelevision(state, context.rng));
-    context.impacts.push(...calculateFranchiseEvolutionImpacts(state));
+    context.impacts.push(...calculateFranchiseEvolutionImpacts(state, context.rng));
+    context.impacts.push(...tickIPVault(state));
   }
 
   private static runCrisisFilter(state: GameState, context: TickContext) {
@@ -214,7 +226,7 @@ export class WeekCoordinator {
 
   private static runMediaFilter(state: GameState, context: TickContext) {
     context.impacts.push(advanceRumors(state, context.rng));
-    context.impacts.push(...advanceDeals(state.studio.internal.deals || [], context.rng));
+    context.impacts.push(...advanceDeals(state.studio.internal.firstLookDeals || [], context.rng));
   }
 
   private static runScandalFilter(state: GameState, context: TickContext) {
@@ -227,7 +239,40 @@ export class WeekCoordinator {
   }
 
   private static buildSummary(before: GameState, after: GameState, context: TickContext): WeekSummary {
-    const newsImpacts = context.impacts.filter(i => i.type === 'NEWS_ADDED');
+    const allHeadlines: import('../types/engine.types').Headline[] = [];
+    const newsEvents: import('../types/engine.types').NewsEvent[] = [];
+    
+    context.impacts.forEach(impact => {
+      // 1. Action-style NEWS_ADDED
+      if (impact.type === 'NEWS_ADDED') {
+        const payload = impact.payload as import('../types/state.types').NewsImpact['payload'];
+        allHeadlines.push({
+          id: context.rng.uuid('news'),
+          text: payload.headline || 'Breaking News',
+          week: context.week,
+          category: payload.category || 'general'
+        });
+      }
+      
+      // 2. Bag-style arrays
+      if (impact.newHeadlines) {
+        allHeadlines.push(...impact.newHeadlines);
+      }
+      if (impact.newsEvents) {
+        newsEvents.push(...impact.newsEvents);
+      }
+    });
+
+    newsEvents.forEach(e => {
+       allHeadlines.push({
+         id: e.id,
+         text: `${e.headline}: ${e.description}`,
+         week: e.week || context.week,
+         category: (e.type?.toLowerCase() === 'crisis' ? 'talent' : 'general') as import('../types/engine.types').HeadlineCategory
+       });
+    });
+
+
     const ledgerImpact = context.impacts.find(i => i.type === 'LEDGER_UPDATED');
     
     let totalRevenue = 0;
@@ -244,6 +289,12 @@ export class WeekCoordinator {
       .filter((i): i is import('../types/state.types').ProjectUpdateImpact => i.type === 'PROJECT_UPDATED')
       .map(i => i.payload.projectId);
 
+    context.impacts.forEach(i => {
+      if (i.projectUpdates) {
+        i.projectUpdates.forEach(pu => projectUpdates.push(pu.projectId));
+      }
+    });
+
     return {
       fromWeek: before.week,
       toWeek: after.week,
@@ -252,16 +303,7 @@ export class WeekCoordinator {
       totalRevenue,
       totalCosts,
       projectUpdates: Array.from(new Set(projectUpdates)),
-      newHeadlines: newsImpacts.map(i => {
-        if (i.type !== 'NEWS_ADDED') return null;
-        const payload = i.payload as import('../types/state.types').NewsImpact['payload'];
-        return {
-          id: context.rng.uuid('news'),
-          text: payload.headline || 'Unknown Event',
-          week: context.week,
-          category: 'general' as import('../types/engine.types').HeadlineCategory
-        };
-      }).filter((h): h is import('../types/engine.types').Headline => h !== null),
+      newHeadlines: allHeadlines,
       events: context.events.map(e => e.title),
     };
   }

@@ -1,7 +1,8 @@
 import { MarketState, StateImpact } from '../../types/state.types';
 import { Headline } from '../../types/engine.types';
 import { GameState } from '../../types/studio.types';
-import { clamp, secureRandom } from '../../utils';
+import { clamp } from '../../utils';
+import { RandomGenerator } from '../../utils/rng';
 
 /**
  * Global Market Simulation: Interest Rate Simulator.
@@ -22,19 +23,21 @@ export class InterestRateSimulator {
       savingsYield: baseRate - 0.02, // 2.5%
       debtRate: baseRate + 0.05,     // 9.5%
       loanRate: baseRate + 0.025,    // 7.0%
-      rateHistory: [{ week: 1, rate: baseRate }]
+      rateHistory: [{ week: 1, rate: baseRate }],
+      sentiment: 50,
+      cycle: 'STABLE'
     };
   }
 
   /**
    * Weekly Tick: Fluctuates the base rate and derives other rates.
    */
-  static advance(state: GameState): StateImpact {
+  static advance(state: GameState, rng: RandomGenerator): StateImpact {
     const market = state.finance.marketState || this.initialize();
     const currentRate = market.baseRate;
     
     // Random Walk
-    const delta = (secureRandom() - 0.5) * this.VOLATILITY;
+    const delta = (rng.next() - 0.5) * this.VOLATILITY;
     const newRate = clamp(currentRate + delta, this.BASE_RATE_MIN, this.BASE_RATE_MAX);
     
     const updatedMarket: MarketState = {
@@ -60,7 +63,7 @@ export class InterestRateSimulator {
        // But for now, let's just trigger a notification if we hit historical highs/lows
     }
 
-    if (secureRandom() < 0.05) { // 5% chance of a "Market Analysis" headline
+    if (rng.next() < 0.05) { // 5% chance of a "Market Analysis" headline
       const trend = newRate > currentRate ? 'rising' : 'falling';
       impact.newHeadlines = [{
         id: crypto.randomUUID(),
@@ -71,5 +74,14 @@ export class InterestRateSimulator {
     }
 
     return impact;
+  }
+
+  /**
+   * Helper: Returns week and year for display.
+   */
+  static getWeekDisplay(week: number): { week: number; year: number } {
+    const year = Math.floor((week - 1) / 52) + 1;
+    const weekInYear = ((week - 1) % 52) + 1;
+    return { week: weekInYear, year };
   }
 }

@@ -1,7 +1,6 @@
 import { RivalStudio, GameState, Talent, NewsEvent } from '@/engine/types';
-type TalentProfile = Talent;
 import { StateImpact, RivalUpdate } from '../types/state.types';
-import { clamp, pick, secureRandom } from '../utils';
+import { RandomGenerator } from '../utils/rng';
 
 const INDIE_ACTIVITIES = [
   'Quietly developing a prestige drama slate',
@@ -25,13 +24,13 @@ const MID_ACTIVITIES = [
   'Betting heavily on a buzzy spec script'
 ];
 
-export function rivalPoachTalent(rival: RivalStudio, talentPool: TalentProfile[]): string | null {
+export function rivalPoachTalent(rng: RandomGenerator, rival: RivalStudio, talentPool: Talent[]): string | null {
   if (rival.strategy === 'acquirer' || rival.cash > 100_000_000) {
-    if (secureRandom() < 0.05) {
+    if (rng.next() < 0.05) {
       // Find a highly prestigious talent
       const stars = talentPool.filter(t => t.prestige > 80);
       if (stars.length > 0) {
-        const star = pick(stars);
+        const star = rng.pick(stars);
         return `${rival.name} just poached ${star.name} with a massive overall deal!`;
       }
     }
@@ -39,28 +38,28 @@ export function rivalPoachTalent(rival: RivalStudio, talentPool: TalentProfile[]
   return null;
 }
 
-export function updateRival(rival: RivalStudio): Partial<RivalStudio> {
+export function updateRival(rng: RandomGenerator, rival: RivalStudio): Partial<RivalStudio> {
   const update: Partial<RivalStudio> = {};
   
   // Natural fluctuation
-  update.strength = clamp(rival.strength + (secureRandom() * 6 - 3), 20, 100);
+  update.strength = Math.max(20, Math.min(100, rival.strength + (rng.next() * 6 - 3)));
   
   // Strategy driven behavior
   if (rival.archetype === 'major') {
-    update.cash = rival.cash + (secureRandom() * 40_000_000 - 10_000_000); 
-    if (secureRandom() < 0.25) update.recentActivity = pick(MAJOR_ACTIVITIES);
-    update.projectCount = Math.max(2, rival.projectCount + (secureRandom() < 0.6 ? 1 : 0));
+    update.cash = rival.cash + (rng.next() * 40_000_000 - 10_000_000); 
+    if (rng.next() < 0.25) update.recentActivity = rng.pick(MAJOR_ACTIVITIES);
+    update.projectCount = Math.max(2, rival.projectCount + (rng.next() < 0.6 ? 1 : 0));
     update.strategy = 'acquirer';
   } else if (rival.archetype === 'indie') {
-    update.cash = rival.cash + (secureRandom() * 10_000_000 - 4_000_000);
-    if (secureRandom() < 0.25) update.recentActivity = pick(INDIE_ACTIVITIES);
-    if (secureRandom() < 0.1) update.projectCount = Math.max(1, rival.projectCount + 1);
+    update.cash = rival.cash + (rng.next() * 10_000_000 - 4_000_000);
+    if (rng.next() < 0.25) update.recentActivity = rng.pick(INDIE_ACTIVITIES);
+    if (rng.next() < 0.1) update.projectCount = Math.max(1, rival.projectCount + 1);
     update.strategy = 'prestige_chaser';
   } else {
     // mid-tier
-    update.cash = rival.cash + (secureRandom() * 20_000_000 - 5_000_000);
-    if (secureRandom() < 0.25) update.recentActivity = pick(MID_ACTIVITIES);
-    if (secureRandom() < 0.2) update.projectCount = Math.max(1, rival.projectCount + 1);
+    update.cash = rival.cash + (rng.next() * 20_000_000 - 5_000_000);
+    if (rng.next() < 0.25) update.recentActivity = rng.pick(MID_ACTIVITIES);
+    if (rng.next() < 0.2) update.projectCount = Math.max(1, rival.projectCount + 1);
     update.strategy = 'genre_specialist';
   }
   
@@ -78,13 +77,13 @@ export function updateRival(rival: RivalStudio): Partial<RivalStudio> {
   return update;
 }
 
-export function advanceRivals(state: GameState): StateImpact {
+export function advanceRivals(rng: RandomGenerator, state: GameState): StateImpact {
   const rivalUpdates: RivalUpdate[] = [];
   const newsEvents: NewsEvent[] = [];
   
   for (let i = 0; i < state.industry.rivals.length; i++) {
     const rival = state.industry.rivals[i];
-    const update = updateRival(rival);
+    const update = updateRival(rng, rival);
     
     rivalUpdates.push({
       rivalId: rival.id,
@@ -94,7 +93,7 @@ export function advanceRivals(state: GameState): StateImpact {
     // Log major rival events
     if (update.isAcquirable && !rival.isAcquirable) {
       newsEvents.push({
-        id: `rival-vulnerable-${rival.id}-${state.week}`,
+        id: rng.uuid('news'),
         week: state.week,
         type: 'RIVAL',
         headline: `${rival.name} Vulnerable to Takeover!`,
@@ -106,10 +105,10 @@ export function advanceRivals(state: GameState): StateImpact {
 
   // Talent Poaching News
   for (const rival of state.industry.rivals) {
-     const poakMsg = rivalPoachTalent(rival, Object.values(state.industry.talentPool));
+     const poakMsg = rivalPoachTalent(rng, rival, Object.values(state.industry.talentPool));
      if (poakMsg) {
        newsEvents.push({
-         id: `rival-poach-${rival.id}-${state.week}`,
+         id: rng.uuid('news'),
          week: state.week,
          type: 'RIVAL',
          headline: `Talent Poached by ${rival.name}`,
@@ -124,3 +123,4 @@ export function advanceRivals(state: GameState): StateImpact {
     newsEvents
   };
 }
+

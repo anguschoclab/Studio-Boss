@@ -458,6 +458,7 @@ export interface ProjectBase {
   isGlobalIcon?: boolean;
   razzieWinner?: boolean;
   franchiseId?: string;
+  originalProjectId?: string; // Links to the vault asset it's rebooting/spinning off
   // Release simulation fields
   reviewScore?: number;
   boxOfficeRank?: number;

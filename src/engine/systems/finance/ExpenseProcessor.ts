@@ -20,21 +20,32 @@ export class ExpenseProcessor {
   }
 
   /**
-   * Calculates the 'Credit Spread' (risk premium) based on studio prestige.
+   * Calculates the 'Credit Spread' (risk premium) based on studio prestige and award history.
    * Prestige 100 = 0% spread (Prime). Prestige 0 = 10% spread (Subprime).
+   * Phase 7 Addition: Awards like Oscars or Razzies provide tangible interest floor shifts.
    */
-  static calculateCreditSpread(prestige: number): number {
-    return (100 - Math.min(100, Math.max(0, prestige))) / 1000; // 0 to 0.10
+  static calculateCreditSpread(prestige: number, awards: import('../../types').Award[] = []): number {
+    let spread = (100 - Math.min(100, Math.max(0, prestige))) / 1000; // 0 to 0.10
+
+    // Oscar Discount: -0.01 (1%) per Best Picture win
+    const oscarWins = awards.filter(a => a.body === 'Academy Awards' && a.category === 'Best Picture' && a.status === 'won').length;
+    spread -= Math.min(0.03, oscarWins * 0.01);
+
+    // Razzie Penalty: +0.005 (0.5%) per win
+    const razzieWins = awards.filter(a => a.body === 'The Razzies' && a.status === 'won').length;
+    spread += (razzieWins * 0.005);
+
+    return Math.max(0, spread);
   }
 
   /**
    * Calculates weekly interest penalty for negative cash balances.
    * Includes a risk premium based on the studio's reputation.
    */
-  static calculateDebtInterest(cash: number, debtRate: number, prestige: number = 70): number {
+  static calculateDebtInterest(cash: number, debtRate: number, prestige: number = 70, awards: import('../../types').Award[] = []): number {
     if (cash >= 0) return 0;
     
-    const riskPremium = this.calculateCreditSpread(prestige);
+    const riskPremium = this.calculateCreditSpread(prestige, awards);
     const effectiveAnnualRate = debtRate + riskPremium;
     
     // Weekly interest = (Balance * EffectiveRate) / 52
@@ -106,7 +117,7 @@ export class ExpenseProcessor {
 
     const isDebt = state.finance.cash < 0;
     const interest = isDebt 
-      ? this.calculateDebtInterest(state.finance.cash, market.debtRate, state.studio.prestige)
+      ? this.calculateDebtInterest(state.finance.cash, market.debtRate, state.studio.prestige, state.industry.awards || [])
       : -this.calculateSavingsYield(state.finance.cash, market.savingsYield);
 
     return { production, marketing, overhead, interest };

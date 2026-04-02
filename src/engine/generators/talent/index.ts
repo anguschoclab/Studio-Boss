@@ -1,4 +1,4 @@
-import { Talent, TalentRole, Family, Agency, Agent } from '../../types/talent.types';
+import { Talent, TalentRole, Family } from '../../types/talent.types';
 import { generateDemographics } from './demographicsGenerator';
 import { generatePsychology } from './psychologyGenerator';
 import { generateDemographicName } from '../names';
@@ -109,9 +109,6 @@ export function generateFamilies(rng: RandomGenerator, count: number): Family[] 
 export function generateTalentPool(
   rng: RandomGenerator,
   count: number, 
-  families: Family[] = [], 
-  agents: Agent[] = [], 
-  agencies: Agency[] = [], 
   localCountry?: string
 ): Talent[] {
     const roles: TalentRole[] = ['actor', 'director', 'writer', 'producer'];

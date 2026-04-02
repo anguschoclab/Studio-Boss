@@ -273,6 +273,8 @@ export function generateAgencies(rng: RandomGenerator, count: number): Agency[] 
       culture,
       prestige: tier === 'powerhouse' ? Math.floor(rng.range(80, 100)) : (tier === 'major' ? Math.floor(rng.range(60, 85)) : Math.floor(rng.range(30, 70))),
       leverage,
+      marketSensitivity: archetype === 'boutique' ? 0.3 : (archetype === 'shark' ? 0.8 : 0.5),
+      globalReach: archetype === 'international_broker' ? 90 : (tier === 'powerhouse' ? 80 : 40),
       traits,
       motivationProfile,
       currentMotivation: motivationMap[archetype] || 'VOLUME_RETAIL'
@@ -314,6 +316,7 @@ export function generateAgents(rng: RandomGenerator, agencies: Agency[], countPe
         specialty,
         prestige: Math.floor(rng.range(agency.prestige - 20, agency.prestige + 20)),
         leverage: agency.culture === 'shark' ? Math.floor(rng.range(70, 100)) : Math.floor(rng.range(30, 80)),
+        negotiationTactic: agency.culture === 'shark' ? 'SHARK' : (agency.culture === 'prestige' ? 'PRESTIGE' : 'VOLUME'),
         motivationProfile: agency.motivationProfile ? { 
           ...agency.motivationProfile, 
           aggression: agency.motivationProfile.aggression + rng.range(-10, 10) 
@@ -324,4 +327,3 @@ export function generateAgents(rng: RandomGenerator, agencies: Agency[], countPe
 
   return agents;
 }
-
