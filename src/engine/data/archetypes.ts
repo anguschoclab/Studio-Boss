@@ -95,5 +95,20 @@ export const AGENCY_ARCHETYPES: Record<AgencyArchetype, AgencyArchetypeData> = {
     key: 'international_broker',
     name: 'International Broker',
     description: 'Identity: The International Broker — Bridges global markets. They fiercely negotiate for absurd cross-cultural pandering scenes, demand separate international press tours, and mandate that foreign box office grosses trigger massive backend escalators.'
+  },
+  legacy_defenders: {
+    key: 'legacy_defenders',
+    name: 'Legacy Defenders',
+    description: 'Identity: The Legacy Defenders — Represents aging icons clinging to relevance. They demand outdated legacy salaries, enforce ridiculous onset perks like their own private chefs, and outright refuse projects that don\'t offer guaranteed theatrical releases and massive first-dollar gross.'
+  },
+  genre_kings: {
+    key: 'genre_kings',
+    name: 'Genre Kings',
+    description: 'Identity: The Genre Kings — Unapologetic masters of horror, sci-fi, and action. They mandate high script punch-up fees for their own writers, demand significant backend escalators for international gross, and strictly prohibit their talent from doing prestigious dramatic roles.'
+  },
+  influencer_syndicate: {
+    key: 'influencer_syndicate',
+    name: 'Influencer Syndicate',
+    description: 'Identity: The Influencer Syndicate — Represents the TikTok and YouTube elite. They aggressively demand immediate upfront payments, mandate daily social media integration into scripts, and force the casting of fellow influencers with zero acting ability into supporting roles.'
   }
 };
