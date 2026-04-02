@@ -21,10 +21,16 @@ function tickProject(project: Project, rng: RandomGenerator): StateImpact[] {
   const newProgress = Math.min(100, (project.progress || 0) + actualProgressIncrement);
 
   // 2. Stochastic Quality Check
-  // Each week has a chance to slightly shift the reviewScore based on progress milestones
   let qualityShift = 0;
   if (rng.next() < 0.2) {
-    qualityShift = rng.range(-2, 3); // Slightly biased towards improvement
+    qualityShift = rng.range(-2, 3);
+  }
+
+  // 3. Stage 2.1: Marketing & Buzz Tick
+  let buzzGain = 0;
+  if (project.state === 'marketing' && project.marketingBudget) {
+    // Every $1M in budget generates ~1 point of buzz per week
+    buzzGain = (project.marketingBudget / 1_000_000) * rng.range(0.5, 1.5);
   }
 
   impacts.push({
@@ -34,7 +40,8 @@ function tickProject(project: Project, rng: RandomGenerator): StateImpact[] {
       update: {
         weeksInPhase: nextWeeksInPhase,
         progress: newProgress,
-        reviewScore: Math.min(100, Math.max(0, (project.reviewScore || 50) + qualityShift))
+        reviewScore: Math.min(100, Math.max(0, (project.reviewScore || 50) + qualityShift)),
+        buzz: Math.min(100, (project.buzz || 0) + buzzGain)
       }
     }
   });
