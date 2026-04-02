@@ -2,10 +2,11 @@ import { Project, Contract, Talent, Award, MarketingCampaign, SeriesProject, Uns
 import { randRange } from '../utils';
 import { TalentSystem } from './TalentSystem';
 import { calculateReviewScore, calculateOpeningWeekend, simulateWeeklyBoxOffice } from './releaseSimulation';
-import { RandomGenerator } from '../utils/rng';
 import { isFilmProject, isSeriesProject, isUnscriptedProject } from '../utils/projectUtils';
 import { TV_FORMATS } from '../data/tvFormats';
 import { UNSCRIPTED_FORMATS } from '../data/unscriptedFormats';
+import { TalentMoraleSystem } from './talent/TalentMoraleSystem';
+import { RandomGenerator } from '../utils/rng';
 
 function getAttachedTalent(contracts: Contract[], talentPoolMap: Map<string, Talent>): Talent[] {
   const acc: Talent[] = [];
@@ -48,7 +49,9 @@ export function handleReleasePhaseEntry(
   
   // 1. Generate Review Score
   if (p.reviewScore === undefined) {
-    p.reviewScore = calculateReviewScore(p, attachedTalent, p.activeCrisis);
+    const rawScore = calculateReviewScore(p, attachedTalent, p.activeCrisis);
+    const moraleMult = TalentMoraleSystem.getQualityMultiplier(attachedTalent);
+    p.reviewScore = Math.round(rawScore * moraleMult);
   }
 
   // 2. Simulate Opening (Film vs TV)
@@ -77,7 +80,7 @@ export function handleReleasePhaseEntry(
     };
   }
 
-  // Fallback for types not yet fully handled - using cast to avoid 'never' error
+  // Fallback for types not yet fully handled
   return { update: `"${(p as any).title}" has been released.`, talentUpdates: [] };
 }
 
@@ -181,7 +184,8 @@ function handleReleasedPhase(
   rivalStrengthAvg: number,
   projectAwards: Award[],
   trendMultiplier: number = 1.0,
-  franchiseSynergy: number = 1.0
+  franchiseSynergy: number = 1.0,
+  franchiseFatigue: number = 0
 ): { update: string | null; talentUpdates: Talent[] } {
   if (isSeriesProject(p)) {
     return handleReleasedSeries(p, projectContracts, talentPoolMap, projectAwards, franchiseSynergy);
@@ -189,7 +193,7 @@ function handleReleasedPhase(
     return handleReleasedUnscripted(p, projectContracts, talentPoolMap, projectAwards, franchiseSynergy);
   } else if (isFilmProject(p)) {
     p.revenue += p.weeklyRevenue;
-    p.weeklyRevenue = simulateWeeklyBoxOffice(p, p.weeksInPhase, p.reviewScore || 50, p.weeklyRevenue, rivalStrengthAvg, trendMultiplier, franchiseSynergy);
+    p.weeklyRevenue = simulateWeeklyBoxOffice(p, p.weeksInPhase, p.reviewScore || 50, p.weeklyRevenue, rivalStrengthAvg, trendMultiplier, franchiseSynergy, franchiseFatigue);
     
     let trendText = "";
     if (trendMultiplier > 1.0) {
@@ -329,7 +333,7 @@ export function advanceProject(
     const result = handleMarketingPhase(p);
     update = result.update;
   } else if (p.state === 'released') {
-    const result = handleReleasedPhase(p, projectContracts, talentPoolMap, rivalStrengthAvg, projectAwards, trendMultiplier, franchiseSynergy);
+    const result = handleReleasedPhase(p, projectContracts, talentPoolMap, rivalStrengthAvg, projectAwards, trendMultiplier, franchiseSynergy, franchiseFatigue);
     update = result.update;
     if (result.talentUpdates) talentUpdates = result.talentUpdates;
   } else if (p.state === 'post_release') {

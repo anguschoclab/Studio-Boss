@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { FESTIVALS, submitToFestival, resolveFestivals } from '../../../engine/systems/festivals';
 import { Project, GameState, FestivalSubmission, ContentFlag } from '../../../engine/types';
+import { RandomGenerator } from '../../../engine/utils/rng';
 import * as utils from '../../../engine/utils';
 
 const mockProject: Project = {
@@ -86,8 +87,9 @@ describe('Festivals System', () => {
   });
 
   it('submits a project to a festival if cash is sufficient', () => {
+    const rng = new RandomGenerator(1);
     const festival = FESTIVALS[0]; // Sundance
-    const impact = submitToFestival(mockState, mockProject.id, festival.body);
+    const impact = submitToFestival(mockState, mockProject.id, festival.body, rng);
     
     expect(impact).not.toBeNull();
     expect(impact!.cashChange).toBe(-festival.cost);
@@ -97,9 +99,10 @@ describe('Festivals System', () => {
   });
 
   it('declines submission if cash is too low', () => {
+    const rng = new RandomGenerator(1);
     const festival = FESTIVALS[0]; 
     mockState.finance.cash = 0;
-    const impact = submitToFestival(mockState, mockProject.id, festival.body);
+    const impact = submitToFestival(mockState, mockProject.id, festival.body, rng);
     
     expect(impact).toBeNull();
   });
@@ -118,10 +121,11 @@ describe('Festivals System', () => {
     mockState.industry.festivalSubmissions = [submission];
     mockState.week = 3; // Sundance week
 
-    // Force acceptance
-    vi.spyOn(utils, 'randRange').mockReturnValue(0);
+    // Force high acceptance chance with high review score in mockProject (100)
+    // and fixed seed 1 for predictable RNG.
+    const rng = new RandomGenerator(1); 
     
-    const impact = resolveFestivals(mockState);
+    const impact = resolveFestivals(mockState, rng);
     
     expect(impact.newFestivalSubmissions?.some(s => s.status === 'selected')).toBe(true);
     expect(impact.prestigeChange).toBeGreaterThan(0);

@@ -16,6 +16,7 @@ import { advanceTrends } from '../systems/trends';
 import { advanceMarketEvents } from '../systems/marketEvents';
 import { advanceScandals, generateScandals } from '../systems/scandals';
 import { advanceBuyers } from '../systems/buyerMergers';
+import { checkAndTriggerCrisis } from '../systems/crises';
 
 // New Industry Systems
 import { tickVerticalIntegration } from '../systems/industry/VerticalIntegrationProcessor';
@@ -23,6 +24,13 @@ import { tickIndustryUpstarts } from '../systems/industry/IndustryUpstarts';
 import { tickConsolidation } from '../systems/industry/ConsolidationEngine';
 import { InterestRateSimulator } from '../systems/market/InterestRateSimulator';
 import { calculateFranchiseEvolutionImpacts } from '../systems/ip/franchiseCoordinator';
+
+// Integrated Hardening Systems
+import { runAwardsCeremony, processRazzies } from '../systems/awards';
+import { TalentSystem } from '../systems/TalentSystem';
+import { resolveFestivals } from '../systems/festivals';
+import { advanceRumors } from '../systems/rumors';
+import { advanceDeals } from '../systems/deals';
 
 /**
  * Studio Boss - Simulation Tick Context
@@ -45,7 +53,7 @@ export class WeekCoordinator {
   /**
    * Main entry point for the weekly simulation tick.
    */
-  static execute(state: GameState): { newState: GameState; summary: WeekSummary } {
+  static execute(state: GameState): { newState: GameState; summary: WeekSummary; impacts: StateImpact[] } {
     // 1. Preparation Phase (The Valve)
     const context: TickContext = {
       week: state.week + 1,
@@ -60,6 +68,9 @@ export class WeekCoordinator {
     this.runMarketFilter(state, context);
     this.runProductionFilter(state, context);
     this.runAIFilter(state, context);
+    this.runIndustryFilter(state, context);
+    this.runTalentFilter(state, context);
+    this.runMediaFilter(state, context);
     this.runScandalFilter(state, context);
     this.runFinanceFilter(state, context);
 
@@ -75,6 +86,7 @@ export class WeekCoordinator {
 
     const summary = this.buildSummary(state, finalizedState, context);
 
+    // Ensure SUMMARY is last in priority (Priority 0)
     context.impacts.push({
       type: 'MODAL_TRIGGERED',
       payload: {
@@ -86,7 +98,8 @@ export class WeekCoordinator {
 
     return {
       newState: finalizedState,
-      summary
+      summary,
+      impacts: context.impacts
     };
   }
 
@@ -95,12 +108,12 @@ export class WeekCoordinator {
     context.impacts.push(InterestRateSimulator.advance(state));
     context.impacts.push(...tickWorldEvents(state, context.rng));
     context.impacts.push(...advanceTrends(state.market.trends || []));
-    context.impacts.push(...advanceMarketEvents(state));
-    context.impacts.push(advanceBuyers(state));
+    context.impacts.push(...advanceMarketEvents(state, context.rng));
+    context.impacts.push(advanceBuyers(state, context.rng));
     
     // New Industry Filters
     context.impacts.push(...tickVerticalIntegration(state, context.rng));
-    context.impacts.push(...tickIndustryUpstarts(state));
+    context.impacts.push(...tickIndustryUpstarts(state, context.rng));
     context.impacts.push(...tickConsolidation(state));
   }
 
@@ -108,7 +121,7 @@ export class WeekCoordinator {
     // 1. Core Production Tick
     context.impacts.push(...tickProduction(state, context.rng));
     
-    // 2. Script Evolution Tick (Only for Studio Projects in Development)
+    // 2. Script Evolution Tick
     Object.values(state.studio.internal.projects).forEach(project => {
       if (project.state === 'development') {
         const result = tickScriptDevelopment(project, context.rng);
@@ -125,8 +138,33 @@ export class WeekCoordinator {
       }
     });
 
+    // 3. Crisis Filter (New Integration)
+    this.runCrisisFilter(state, context);
+
     context.impacts.push(...tickTelevision(state, context.rng));
     context.impacts.push(...calculateFranchiseEvolutionImpacts(state));
+  }
+
+  private static runCrisisFilter(state: GameState, context: TickContext) {
+    // Roll for crises for studio projects in active production stages
+    Object.values(state.studio.internal.projects).forEach(project => {
+      const activeStages = ['prep', 'production', 'post_production', 'marketing'];
+      if (!project.activeCrisis && activeStages.includes(project.state)) {
+        const impact = checkAndTriggerCrisis(project, context.rng);
+        if (impact) context.impacts.push(impact);
+      }
+    });
+
+    // Roll for rival projects
+    state.industry.rivals.forEach(rival => {
+      Object.values(rival.projects || {}).forEach(project => {
+        const activeStages = ['prep', 'production', 'post_production', 'marketing'];
+        if (!project.activeCrisis && activeStages.includes(project.state)) {
+           const impact = checkAndTriggerCrisis(project, context.rng);
+           if (impact) context.impacts.push(impact);
+        }
+      });
+    });
   }
 
   private static runAIFilter(state: GameState, context: TickContext) {
@@ -135,8 +173,52 @@ export class WeekCoordinator {
     context.impacts.push(...tickAuctions(state, context.rng));
   }
 
+  private static runIndustryFilter(state: GameState, context: TickContext) {
+    const { year } = InterestRateSimulator.getWeekDisplay(context.week);
+    
+    // 1. Awards Ceremony
+    const awardsImpact = runAwardsCeremony(state, context.week, year, context.rng);
+    context.impacts.push(awardsImpact);
+    
+    // Trigger Awards Modal ONLY if there are new awards or nominations
+    if (awardsImpact.newAwards && awardsImpact.newAwards.length > 0) {
+      context.impacts.push({
+        type: 'MODAL_TRIGGERED',
+        payload: {
+          modalType: 'AWARDS',
+          priority: 50, // Higher priority than summary
+          payload: { 
+            week: context.week,
+            year,
+            awards: awardsImpact.newAwards,
+            body: awardsImpact.newAwards[0]?.body || 'Annual Industry Awards'
+          }
+        }
+      });
+    }
+    
+    // 2. Razzies (Week 4)
+    const weekDisplay = context.week % 52 === 0 ? 52 : context.week % 52;
+    if (weekDisplay === 4) {
+      const razzieImpact = processRazzies(state, context.week, context.rng);
+      context.impacts.push(razzieImpact);
+    }
+
+    // 3. Film Festivals
+    context.impacts.push(resolveFestivals(state, context.rng));
+  }
+
+  private static runTalentFilter(state: GameState, context: TickContext) {
+    context.impacts.push(TalentSystem.advance(state, context.rng));
+  }
+
+  private static runMediaFilter(state: GameState, context: TickContext) {
+    context.impacts.push(advanceRumors(state, context.rng));
+    context.impacts.push(...advanceDeals(state.studio.internal.deals || [], context.rng));
+  }
+
   private static runScandalFilter(state: GameState, context: TickContext) {
-    context.impacts.push(...generateScandals(state));
+    context.impacts.push(...generateScandals(state, context.rng));
     context.impacts.push(...advanceScandals(state));
   }
 

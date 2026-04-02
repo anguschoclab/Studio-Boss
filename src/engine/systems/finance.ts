@@ -122,11 +122,13 @@ export function generateWeeklyFinancialReport(
   return { report, snapshot };
 }
 
-// Legacy wrappers updated to use new processors
-export function calculateWeeklyCosts(projects: Project[]): number {
+// Update updated legacy wrapper
+export function calculateWeeklyCosts(state: GameState): number {
+  const projects = Object.values(state.studio.internal.projects);
+  const studioLevel = state.studio.archetype === 'major' ? 3 : (state.studio.archetype === 'mid-tier' ? 2 : 1);
   const production = ExpenseProcessor.calculateProductionBurn(projects);
   const marketing = ExpenseProcessor.calculateMarketingBurn(projects);
-  const overhead = ExpenseProcessor.calculateStudioBurn(1, projects.filter(p => p.state !== 'released').length);
+  const overhead = ExpenseProcessor.calculateStudioBurn(studioLevel, projects.filter(p => p.state !== 'released').length);
   return production + marketing + overhead;
 }
 

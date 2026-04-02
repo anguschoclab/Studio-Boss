@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { generateAwardsProfile, runAwardsCeremony, processRazzies } from "../../../engine/systems/awards";
 import { Project, GameState, Talent, ContentFlag } from "../../../engine/types";
+import { RandomGenerator } from "../../../engine/utils/rng";
 
 describe("awards system", () => {
 
@@ -79,8 +80,9 @@ describe("awards system", () => {
 
   describe("generateAwardsProfile", () => {
     it("handles extreme negative values", () => {
+      const rng = new RandomGenerator(1);
       const negativeProject = { ...eligibleProject, budget: -10_000_000, buzz: -50 } as Project;
-      const profile = generateAwardsProfile(negativeProject);
+      const profile = generateAwardsProfile(negativeProject, rng);
       expect(profile).toBeDefined();
       expect(profile.prestigeScore).toBeGreaterThanOrEqual(0);
     });
@@ -88,11 +90,12 @@ describe("awards system", () => {
 
   describe("runAwardsCeremony", () => {
     it("awards 'won' status for high scores at Academy Awards (Week 10)", () => {
+      const rng = new RandomGenerator(1);
       const state = getInitialState();
       state.studio.internal.projects = { [eligibleProject.id]: eligibleProject };
       state.week = 10;
 
-      const impact = runAwardsCeremony(state, 10, 2024);
+      const impact = runAwardsCeremony(state, 10, 2024, rng);
       
       expect(impact.newHeadlines![0].text).toContain("Academy Awards");
       expect(impact.newAwards?.some(a => a.status === 'won')).toBe(true);
@@ -100,17 +103,19 @@ describe("awards system", () => {
     });
 
     it("accumulates prestige change", () => {
+      const rng = new RandomGenerator(1);
       const state = getInitialState();
       state.studio.internal.projects = { [eligibleProject.id]: eligibleProject };
       state.week = 10;
 
-      const impact = runAwardsCeremony(state, 10, 2024);
+      const impact = runAwardsCeremony(state, 10, 2024, rng);
       expect(impact.prestigeChange).toBeGreaterThanOrEqual(10);
     });
   });
 
   describe("processRazzies", () => {
       it("triggers Razzie penalty for high-budget, low-score films", () => {
+          const rng = new RandomGenerator(1);
           const badFilm = {
               ...eligibleProject,
               id: "bad-1",
@@ -125,7 +130,7 @@ describe("awards system", () => {
           state.studio.internal.projects = { [badFilm.id]: badFilm };
           state.week = 4;
 
-          const impact = processRazzies(state, 4);
+          const impact = processRazzies(state, 4, rng);
 
           expect(impact.prestigeChange).toBe(-10);
           expect(impact.uiNotifications?.some(n => n.includes('Worst Picture'))).toBe(true);

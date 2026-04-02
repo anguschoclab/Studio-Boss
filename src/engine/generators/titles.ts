@@ -1,4 +1,5 @@
 import { pick } from '../utils';
+import { RandomGenerator } from '../utils/rng';
 
 const GENRE_PATTERNS: Record<string, string[][]> = {
   Action: [
@@ -298,13 +299,15 @@ const WORDS: Record<string, string[]> = {
   ANIMAL: ['Bear', 'Dog', 'Cat', 'Lion', 'Tiger', 'Dragon', 'Unicorn', 'Dinosaur', 'Doge', 'Ape', 'Pepe', 'Capybara', 'Trash Panda', 'Vulture', 'Cash Cow', 'Dead Cat', 'Black Swan']
 };
 
-export function generateProjectTitle(genre: string): string {
-  const patterns = GENRE_PATTERNS[genre] || GENRE_PATTERNS['Drama'];
-  const pattern = pick(patterns);
+import { RandomGenerator } from '../utils/rng';
 
-  return pattern.map(part => {
+export function generateProjectTitle(genre: string, rng: RandomGenerator): string {
+  const patterns = GENRE_PATTERNS[genre] || GENRE_PATTERNS['Drama'];
+  const pattern = rng.pick(patterns);
+
+  return pattern.map((part: string) => {
     if (WORDS[part]) {
-      return pick(WORDS[part]);
+      return rng.pick(WORDS[part]);
     }
     return part;
   }).join(' ');

@@ -1,4 +1,4 @@
-import { Project, Talent, ActiveCrisis, BoxOfficeResult, MarketingCampaign } from '@/engine/types';
+import { Project, Talent, ActiveCrisis, MarketingCampaign } from '@/engine/types';
 import { randRange, clamp } from '../utils';
 import { evaluateMarketingEfficiency } from './marketing/efficiencyEvaluator';
 import { calculateTerritorySplit } from './marketing/territoryDistributor';
@@ -94,7 +94,8 @@ export function simulateWeeklyBoxOffice(
   previousWeeklyRevenue: number,
   rivalStrength: number,
   trendMultiplier: number = 1.0,
-  franchiseSynergy: number = 1.0 // New: Ongoing Halo Effect
+  franchiseSynergy: number = 1.0, // New: Ongoing Halo Effect
+  franchiseFatigue: number = 0 // New: Audience Saturation
 ): number {
   if (weekInRelease === 0) return previousWeeklyRevenue;
 
@@ -114,7 +115,7 @@ export function simulateWeeklyBoxOffice(
   const competitionLoss = (rivalStrength / 100) * 0.1;
   const finalMultiplier = clamp(decayFactor - competitionLoss, 0.1, 0.95);
 
-  return Math.floor(previousWeeklyRevenue * finalMultiplier * trendMultiplier * franchiseSynergy);
+  return Math.floor(previousWeeklyRevenue * finalMultiplier * trendMultiplier * franchiseSynergy * (1 - (franchiseFatigue * 0.5))); // Fatigue hurts legs too, but at 50% strength vs opening
 }
 
 export interface BoxOfficeEntry {

@@ -1,12 +1,11 @@
 import { Opportunity, BudgetTierKey, TvFormatKey } from '@/engine/types';
 import { GENRES, TARGET_AUDIENCES } from '../data/genres';
 import { pick, randRange, secureRandom } from '../utils';
- // Reuse some generation logic if needed, or build new one
+import { RandomGenerator } from '../utils/rng';
 
 const PROJECT_ADJECTIVES = [
   'PR-Cursed', 'Algorithmically-Mandated', 'Sovereign-Citizen-Funded', 'Cryptocurrency-Evading', 'TikTok-Ruined', 'VFX-Destitute', 'Extortionate', 'Focus-Group-Mutilated',
   'De-Aged', 'Self-Funded', 'Cryptocurrency-Backed', 'Anti-Woke', 'Over-Indulgent', 'Tone-Policied', 'Has-Been-Led', 'Reboot-of-a-Reboot', 'Nepotism-Heavy', 'AI-Generated', 'Unwatchably-Dark', 'PR-Nightmare', 'CGI-Saturated', 'Legally-Ambiguous', 'Tax-Avoidant',
-
   'Cursed', 'Bloated', 'Pretentious', 'Gritty', 'Unnecessary', 'Rebooted', 'Overbudget', 'Derivative', 'Visionary', 'Cinematic', 'Algorithm-Driven', 'IP-Mining', 'Vain', 'Lethal', 'Synergistic',
   'Dark', 'Neon', 'Silent', 'Golden', 'Lost', 'Forgotten', 'Broken', 'Hidden',
   'Wild', 'Cold', 'Last', 'First', 'Final', 'Secret', 'Midnight', 'Crimson',
@@ -19,7 +18,6 @@ const PROJECT_ADJECTIVES = [
 const PROJECT_NOUNS = [
   'Nepotism Vehicle', 'Tax-Evasion Scheme', 'Defamation Settlement', 'Crypto-Scam Spinoff', 'Audience Test Disaster',
   'Tax Write-off', 'Apology Video Extended Cut', 'Podcast Spin-off', 'Focus Group Disaster', 'Legacy Sequel', 'Cinematic Universe Attempt', 'Vanity Project', 'Merchandise Commercial', 'Brand Synergy Play', 'Legal Loophole', 'NFT Cash Grab', 'Direct-to-Streaming Dump', 'TikTok Trend Movie', 'Algorithm Bait', 'Studio Mandate',
-
   'Tentpole', 'Cinematic Universe', 'Vanity Project', 'Cash Grab', 'Reboot', 'Origin Story', 'Four-Quadrant Hit', 'Oscar Bait', 'Tax Write-off', 'Algorithm', 'Focus Group', 'Franchise', 'Merchandising Opportunity', 'Streaming Wars', 'Demographic',
   'Echo', 'Whisper', 'Shadow', 'Sun', 'Moon', 'Star', 'Dream', 'Nightmare',
   'City', 'Mountain', 'River', 'Forest', 'Ocean', 'Island', 'Tower', 'Castle',
@@ -29,14 +27,13 @@ const PROJECT_NOUNS = [
   'Content Farm', 'Viewer Retention Strategy', 'Metrics Dump', 'Engagement Trap', 'Synergy Play', 'Product Placement', 'Merch Extravaganza', 'Spin-Off Generator', 'Sub-Franchise', 'Legacy IP', 'Re-Imagining', 'Cash-Cow', 'Tax-Loophole', 'Market Correction', 'Demographic Shift',
   'Apology Tour', 'Crypto-Scam', 'Podcast Adaptation', 'Product Integration', 'Toy Commercial', 'Reshoot Disaster', 'IP Laundering Scheme', 'Vanity Vehicle', 'Focus Group Casualty', 'Tax Write-Off', 'Content Pivot', 'Demographic Play', 'Merch Extravaganza', 'Synergy Mandate', 'Legacy Cash-Grab', 'Apology Tour', 'Crypto Scam', 'Influencer Collab', 'Brand Integration', 'Toy Line', 'Damage Control', 'Legal Nightmare', 'Ransomware Attack', 'Viral Mistake', 'Review Bomb Target', 'Deficit Financed Disaster', 'Algorithm Glitch', 'Synergy Experiment', 'Tax Dodge', 'Focus Group Anomaly', 'Defamation Lawsuit', 'Extortion Scheme', 'PR Disaster', 'Damage Control Tour', 'Reddit Thread', 'Leak', 'Bailout', 'Bankruptcy Filing', 'Streaming-Service Tax Dodge', 'Hush-Money Payout', 'Damage-Control Press Tour', 'Crypto Collapse Story', 'CGI Monster Flop', 'Subreddit Conspiracy', 'Review-Bomb Casualty', 'Focus Group Hallucination', 'Algorithm-Generated Mess', 'Merch Dump'];
 
-function generateFlavor(genre: string, type: string, budgetTier: BudgetTierKey, origin: string): string {
+function generateFlavor(genre: string, type: string, budgetTier: BudgetTierKey, origin: string, rng?: RandomGenerator): string {
   const cynicalFlavors = [
   `A ${budgetTier}-tier ${type} that the lead actor agreed to solely to pay off their devastating crypto losses.`,
   `A ${genre} ${origin} that is technically just a front for an elaborate international money-laundering operation.`,
   `An aggressively ${genre} ${type} mandated by a tech CEO who thinks they are a visionary storyteller.`,
   `A frantic ${type} where every single line of dialogue was rewritten by a sentient marketing algorithm to maximize 'engagement'.`,
   `A ${budgetTier}-budget ${genre} ${origin} that the studio is releasing only because it's cheaper than burying it in a landfill.`,
-
   `A frantic ${genre} ${type} cobbled together entirely from unused B-roll and AI upscaling.`,
   `A deeply cynical ${budgetTier}-tier ${type} that feels less like a movie and more like a threat.`,
   `A ${genre} ${origin} that the studio is only releasing to maintain the rights to a 40-year-old action figure line.`,
@@ -47,7 +44,6 @@ function generateFlavor(genre: string, type: string, budgetTier: BudgetTierKey, 
   `An incomprehensible ${genre} ${type} that the director refuses to explain, calling it 'too elevated' for general audiences.`,
   `A ${budgetTier}-tier ${genre} ${origin} that was clearly written around the star's refusal to do any scenes outdoors.`,
   `A ${genre} ${type} that is 90% set-up for a cinematic universe that will literally never happen.`,
-
     `A ${budgetTier}-budget ${genre} ${type} that screams 'we made this for an algorithm'.`,
     `An overly pretentious ${genre} ${type} from an indie darling who won't stop talking about A24.`,
     `A bloated ${budgetTier}-budget ${type} that's just a thinly veiled merchandising vehicle.`,
@@ -180,70 +176,63 @@ function generateFlavor(genre: string, type: string, budgetTier: BudgetTierKey, 
   `A ${genre} ${type} that the test audiences actively tried to destroy the screen during.`,
   `A ${budgetTier}-budget ${origin} that is secretly just an hour-long commercial for a controversial energy drink.`,
   `A deeply cynical ${genre} ${type} designed to appeal exclusively to a demographic that doesn't actually exist.`
-
-  ,
-  `A ${budgetTier}-budget ${type} that serves as a thinly veiled apology for the director's recent public meltdown.`,
-  `An overstuffed ${genre} ${origin} that's legally required to feature the producer's untalented nephew in every scene.`,
-  `A ${genre} ${type} that was entirely written by a sentient marketing algorithm, and it feels like it.`,
-  `A desperate ${genre} ${type} fast-tracked to distract from the studio's looming SEC investigation.`,
-  `A ${budgetTier}-tier ${origin} that the lead actor refuses to promote unless the studio funds their Mars colony.`,
-  `An exhausting ${type} shot entirely in 'The Volume' because the star is afraid of actual sunlight.`,
-  `A visually unappealing ${genre} ${type} where the CGI budget was spent entirely on de-aging the 70-year-old lead.`,
-  `A ${budgetTier}-budget ${genre} ${type} that attempts to capitalize on a viral meme from five years ago.`,
-  `A ${genre} ${origin} that is currently the subject of a massive defamation lawsuit by a rival studio.`,
-  `A frankly insulting ${type} that tries to launch a 'Cinematic Universe' out of a public domain board game.`,
-  `An incredibly dense ${genre} ${origin} that requires an active subscription to a failing streaming service to understand.`,
-  `A ${budgetTier}-tier ${type} cobbled together from the unused B-roll of three different, cancelled ${genre} movies.`,
-  `A ${genre} ${type} that the test audiences actively tried to destroy the screen during.`,
-  `A ${budgetTier}-budget ${origin} that is secretly just an hour-long commercial for a controversial energy drink.`,
-  `A deeply cynical ${genre} ${type} designed to appeal exclusively to a demographic that doesn't actually exist.`
 ];
+  
+  if (rng) {
+    return rng.pick(cynicalFlavors);
+  }
   return pick(cynicalFlavors);
 }
 
-export function generateProjectTitle(): string {
-  if (secureRandom() > 0.5) {
-    return `The ${pick(PROJECT_ADJECTIVES)} ${pick(PROJECT_NOUNS)}`;
+export function generateProjectTitle(rng?: RandomGenerator): string {
+  const roll = rng ? rng.next() : secureRandom();
+  const adj = rng ? rng.pick(PROJECT_ADJECTIVES) : pick(PROJECT_ADJECTIVES);
+  const noun = rng ? rng.pick(PROJECT_NOUNS) : pick(PROJECT_NOUNS);
+  
+  if (roll > 0.5) {
+    return `The ${adj} ${noun}`;
   }
-  return `${pick(PROJECT_ADJECTIVES)} ${pick(PROJECT_NOUNS)}`;
+  return `${adj} ${noun}`;
 }
 
-export function generateOpportunity(talentIds?: string[]): Opportunity;
-export function generateOpportunity(_weekOrTalentIds?: number | string[]): Opportunity {
-  // Support both old signature (week, prestige) and new (talentIds)
+export function generateOpportunity(talentIds?: string[], rng?: RandomGenerator): Opportunity;
+export function generateOpportunity(_weekOrTalentIds?: number | string[], _rng?: RandomGenerator): Opportunity {
   let talentIds: string[] | undefined;
+  let rng = _rng;
+  
   if (Array.isArray(_weekOrTalentIds)) {
     talentIds = _weekOrTalentIds;
   }
-  const isFilm = secureRandom() > 0.4;
-  const genre: string = pick([...GENRES]);
-  const targetAudience: string = pick([...TARGET_AUDIENCES]);
-  const budgetTier = pick(['low', 'mid', 'high', 'blockbuster'] as BudgetTierKey[]);
 
-  const type = pick(['script', 'package', 'pitch', 'rights'] as const);
-  const origin = pick(['open_spec', 'agency_package', 'writer_sample', 'heat_list', 'passion_project'] as const);
+  const isFilm = (rng ? rng.next() : secureRandom()) > 0.4;
+  const genre: string = rng ? rng.pick([...GENRES]) : pick([...GENRES]);
+  const targetAudience: string = rng ? rng.pick([...TARGET_AUDIENCES]) : pick([...TARGET_AUDIENCES]);
+  const budgetTier = (rng ? rng.pick(['low', 'mid', 'high', 'blockbuster'] as BudgetTierKey[]) : pick(['low', 'mid', 'high', 'blockbuster'] as BudgetTierKey[]));
 
-  const weeksUntilExpiry = Math.floor(randRange(4, 12));
+  const type = (rng ? rng.pick(['script', 'package', 'pitch', 'rights'] as const) : pick(['script', 'package', 'pitch', 'rights'] as const));
+  const origin = (rng ? rng.pick(['open_spec', 'agency_package', 'writer_sample', 'heat_list', 'passion_project'] as const) : pick(['open_spec', 'agency_package', 'writer_sample', 'heat_list', 'passion_project'] as const));
+
+  const weeksUntilExpiry = Math.floor(rng ? rng.range(4, 12) : randRange(4, 12));
   const opt: Opportunity = {
-    id: `opp-${crypto.randomUUID()}`,
+    id: rng ? rng.uuid('opp') : `opp-${crypto.randomUUID()}`,
     type,
-    title: generateProjectTitle(),
+    title: generateProjectTitle(rng),
     format: isFilm ? 'film' : 'tv',
     genre,
     budgetTier,
     targetAudience,
-    flavor: generateFlavor(genre, type, budgetTier, origin),
+    flavor: generateFlavor(genre, type, budgetTier, origin, rng),
     origin,
-    costToAcquire: Math.floor(randRange(10, 500)) * 1000,
+    costToAcquire: Math.floor(rng ? rng.range(10, 500) : randRange(10, 500)) * 1000,
     weeksUntilExpiry,
-    attachedTalentIds: talentIds && talentIds.length > 0 && secureRandom() > 0.5 ? [pick(talentIds)] : undefined,
+    attachedTalentIds: talentIds && talentIds.length > 0 && (rng ? rng.next() : secureRandom()) > 0.5 ? [rng ? rng.pick(talentIds) : pick(talentIds)] : undefined,
     bids: {},
     bidHistory: [],
     expirationWeek: weeksUntilExpiry,
   };
 
   if (!isFilm) {
-    opt.tvFormat = pick(['sitcom', 'procedural', 'prestige_drama', 'limited_series', 'animated_comedy', 'animated_prestige', 'daytime_soap', 'late_night_talk', 'sketch_comedy', 'sci_fi_epic', 'teen_drama', 'fantasy_epic', 'anthology_series', 'telenovela', 'historical_drama', 'medical_procedural'] as TvFormatKey[]);
+    opt.tvFormat = (rng ? rng.pick(['sitcom', 'procedural', 'prestige_drama', 'limited_series', 'animated_comedy', 'animated_prestige', 'daytime_soap', 'late_night_talk', 'sketch_comedy', 'sci_fi_epic', 'teen_drama', 'fantasy_epic', 'anthology_series', 'telenovela', 'historical_drama', 'medical_procedural'] as TvFormatKey[]) : pick(['sitcom', 'procedural', 'prestige_drama', 'limited_series', 'animated_comedy', 'animated_prestige', 'daytime_soap', 'late_night_talk', 'sketch_comedy', 'sci_fi_epic', 'teen_drama', 'fantasy_epic', 'anthology_series', 'telenovela', 'historical_drama', 'medical_procedural'] as TvFormatKey[]));
     opt.episodes = opt.tvFormat === 'limited_series' ? 8 : 10;
     opt.releaseModel = 'weekly';
   }

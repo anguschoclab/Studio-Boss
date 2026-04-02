@@ -1,12 +1,9 @@
 import { create } from 'zustand';
-import { GameState, WeekSummary, ArchetypeKey, FinanceState, NewsState } from '@/engine/types';
+import { GameState, WeekSummary, ArchetypeKey } from '@/engine/types';
 import { initializeGame } from '@/engine/core/gameInit';
 import { advanceWeek } from '@/engine/core/weekAdvance';
 import { saveGame, loadGame, getSaveSlots, SaveSlotInfo } from '@/persistence/saveLoad';
 import { useUIStore } from './uiStore';
-
-const EMPTY_FINANCE = { cash: 0, ledger: [] };
-const EMPTY_NEWS = { headlines: [] };
 
 import { createProjectSlice, ProjectSlice } from './slices/projectSlice';
 import { createFinanceSlice, FinanceSlice } from './slices/financeSlice';
@@ -47,42 +44,43 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
   },
 
   doAdvanceWeek: () => {
-    let summary: WeekSummary | null = null;
-    let nextState: GameState | null = null;
+    const state = get().gameState;
+    if (!state) throw new Error('No game in progress');
 
-    set((state) => {
-      if (!state.gameState) throw new Error('No game in progress');
-      const result = advanceWeek(state.gameState);
-      summary = result.summary;
-      nextState = result.newState;
+    const { newState: nextState, summary, impacts } = advanceWeek(state);
+    const finalState = nextState as GameState;
 
-      if (state.gameState === result.newState) return state; 
-
-      // Trigger background save without blocking UI (Fire and forget)
-      saveGame(0, result.newState);
-      
-      return { 
-        gameState: result.newState,
-        finance: result.newState.finance,
-        news: result.newState.news
-      };
+    // Trigger background save without blocking UI (Fire and forget)
+    saveGame(0, finalState);
+    
+    set({ 
+      gameState: finalState,
+      finance: finalState.finance,
+      news: finalState.news
     });
-
-    if (!summary || !nextState) throw new Error('Failed to advance week');
 
     // --- Modal Queue Integration ---
     const ui = useUIStore.getState();
-    const resultImpacts = finalState.finance.ledger.length > 0 ? [] : []; // We need a way to get the impacts from advanceWeek
 
-    // Actually, doAdvanceWeek gets the full state. 
-    // We should probably have advanceWeek return the impacts too, OR 
-    // just rely on the fact that WeekCoordinator already pushed them.
-    // 
-    // Wait, advanceWeek calls WeekCoordinator.execute.
-    // Let's check advanceWeek's return signature.
+    // Process simulation impacts for UI triggers (Modals, etc.)
+    if (impacts && impacts.length > 0) {
+      // Sort by priority (descending)
+      const sortedImpacts = [...impacts].sort((a, b) => {
+        if (a.type === 'MODAL_TRIGGERED' && b.type === 'MODAL_TRIGGERED') {
+          return (b.payload.priority || 0) - (a.payload.priority || 0);
+        }
+        return 0;
+      });
+
+      for (const impact of sortedImpacts) {
+        if (impact.type === 'MODAL_TRIGGERED') {
+          ui.enqueueModal(impact.payload.modalType, impact.payload.payload as Record<string, unknown>);
+        }
+      }
+    }
 
     // 4. Yearly Snapshot (Sprint G)
-    if (summary && ((summary as any).fromWeek % 52 === 0) && (summary as any).fromWeek > 0) {
+    if (summary && summary.fromWeek % 52 === 0 && summary.fromWeek > 0) {
       get().captureSnapshot();
     }
 
@@ -113,9 +111,9 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
     if (state.gameState === null) return state;
     return { 
         gameState: null,
-        finance: EMPTY_FINANCE as unknown as any,
-        news: EMPTY_NEWS as unknown as any
-    };
+        finance: { cash: 0, ledger: [] } as any,
+        news: { headlines: [] } as any
+    } as any;
   }),
 
   devAutoInit: (archetype = 'major') => {

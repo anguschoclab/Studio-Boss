@@ -1,4 +1,4 @@
-import { GameState, WeekSummary } from '@/engine/types';
+import { GameState, WeekSummary, StateImpact } from '@/engine/types';
 import { WeekCoordinator } from '../services/WeekCoordinator';
 
 /**
@@ -7,6 +7,6 @@ import { WeekCoordinator } from '../services/WeekCoordinator';
  * Use this as the main-thread entry point for the "Weekly Tick".
  */
 // Audit: O(1) pass-through. Engine allocations deferred to WeekCoordinator.
-export function advanceWeek(state: GameState): { newState: GameState; summary: WeekSummary } {
+export function advanceWeek(state: GameState): { newState: GameState; summary: WeekSummary; impacts: StateImpact[] } {
   return WeekCoordinator.execute(state);
 }

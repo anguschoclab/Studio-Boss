@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { TalentSystem } from "../../../engine/systems/TalentSystem";
 import { Project, Contract, Talent, Award, GameState, ContentFlag } from "../../../engine/types";
+import { RandomGenerator } from "../../../engine/utils/rng";
 import * as utils from '../../../engine/utils';
 
 const mockProject: Project = {
@@ -144,10 +145,10 @@ describe("TalentSystem", () => {
     } as unknown as GameState);
 
     it("decrements opportunity expiry", () => {
-      vi.spyOn(utils, 'secureRandom').mockReturnValue(0.9);
+      const rng = new RandomGenerator(12345);
       const state = getMockState();
       
-      const impact = TalentSystem.advance(state);
+      const impact = TalentSystem.advance(state, rng);
       
       expect(impact.newOpportunities).toBeDefined();
       expect(impact.newOpportunities!).toHaveLength(1);

@@ -1,5 +1,5 @@
 import { GameState, FestivalSubmission, AwardBody, Project } from '@/engine/types';
-import { randRange } from '../utils';
+import { RandomGenerator } from '../utils/rng';
 import { StateImpact } from '../types/state.types';
 
 export const FESTIVALS: { body: AwardBody, name: string, weeks: number[], cost: number, prestigeNeeded: number, buzzReward: number }[] = [
@@ -12,7 +12,8 @@ export const FESTIVALS: { body: AwardBody, name: string, weeks: number[], cost: 
 export function submitToFestival(
   state: GameState,
   projectId: string,
-  festivalBody: AwardBody
+  festivalBody: AwardBody,
+  rng: RandomGenerator
 ): StateImpact | null {
   const fest = FESTIVALS.find(f => f.body === festivalBody);
   const project = state.studio.internal.projects[projectId];
@@ -22,7 +23,7 @@ export function submitToFestival(
   if (project.state === 'development' || project.state === 'pitching') return null;
   
   const submission: FestivalSubmission = {
-    id: crypto.randomUUID(),
+    id: rng.uuid('fest-sub'),
     projectId,
     festivalBody,
     status: 'submitted',
@@ -35,7 +36,7 @@ export function submitToFestival(
     newFestivalSubmissions: [...(state.industry.festivalSubmissions || []), submission],
     newHeadlines: [
       {
-        id: `headline-${crypto.randomUUID()}`,
+        id: rng.uuid('hl'),
         week: state.week,
         category: 'awards' as const,
         text: `"${project.title}" officially submitted for consideration at ${fest.name}.`
@@ -44,7 +45,7 @@ export function submitToFestival(
   };
 }
 
-export function resolveFestivals(state: GameState): StateImpact {
+export function resolveFestivals(state: GameState, rng: RandomGenerator): StateImpact {
   if (!state.industry.festivalSubmissions || state.industry.festivalSubmissions.length === 0) return {};
   
   const impact: StateImpact = {
@@ -68,7 +69,8 @@ export function resolveFestivals(state: GameState): StateImpact {
         continue;
     }
     
-    if (fest.weeks.includes(state.week % 52)) {
+    const weekOfCycle = state.week % 52 === 0 ? 52 : state.week % 52;
+    if (fest.weeks.includes(weekOfCycle)) {
       const project = state.studio.internal.projects[sub.projectId];
       if (!project) {
           updatedSubmissions.push(sub);
@@ -76,7 +78,7 @@ export function resolveFestivals(state: GameState): StateImpact {
       }
       
       const baseChance = (project.reviewScore || 50) + (state.studio.prestige * 0.5);
-      const isAccepted = baseChance > fest.prestigeNeeded + randRange(-20, 20);
+      const isAccepted = baseChance > fest.prestigeNeeded + rng.range(-20, 20);
       
       if (isAccepted) {
         impact.projectUpdates!.push({
@@ -86,7 +88,7 @@ export function resolveFestivals(state: GameState): StateImpact {
         impact.prestigeChange! += 2;
         
         impact.newHeadlines!.push({
-          id: `headline-${crypto.randomUUID()}`,
+          id: rng.uuid('hl'),
           week: state.week,
           category: 'awards' as const,
           text: `Massive buzz out of ${fest.name} as "${project.title}" premieres to standing ovation!`

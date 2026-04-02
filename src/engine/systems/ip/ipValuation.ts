@@ -1,5 +1,5 @@
-import { Project, IPAsset } from '../../types';
-import { randRange, clamp } from '../../utils';
+import { Project, IPAsset, SeriesProject } from '../../types';
+import { clamp } from '../../utils';
 import { determineSyndicationTier, getSyndicationImpact } from './syndicationEngine';
 
 /**
@@ -7,7 +7,12 @@ import { determineSyndicationTier, getSyndicationImpact } from './syndicationEng
  * A project's success (revenue/awards) is converted into a persistent IPAsset.
  */
 export function calculateInitialIPValue(project: Project): IPAsset {
-  // Base value: roughly 20% of total revenue as catalog potential
+  // 1. Determine Tier based on Industrial Performance
+  let tier: IPAsset['tier'] = 'ORIGINAL';
+  if (project.revenue > 500000000) tier = 'BLOCKBUSTER';
+  if (project.isCultClassic) tier = 'CULT_CLASSIC';
+  
+  // 2. Base value: roughly 20% of total revenue as catalog potential
   let baseValue = project.revenue * 0.2;
   
   // Prestige/Awards bonus: 50% spike
@@ -15,35 +20,30 @@ export function calculateInitialIPValue(project: Project): IPAsset {
     baseValue *= 1.5;
   }
 
-  // Genre Multiplier: Franchise friendly genres get higher multipliers
+  // Genre Multipliers: Franchise friendly genres get higher multipliers
   let merchandisingMultiplier = 1.0;
   const genre = project.genre.toUpperCase();
-  if (genre === 'SCI-FI' || genre === 'ANIMATION' || genre === 'SUPERHERO') {
-    merchandisingMultiplier = 2.5;
-  } else if (genre === 'HORROR' || genre === 'FANTASY') {
-    merchandisingMultiplier = 1.8;
-  }
+  if (['SCI-FI', 'ANIMATION', 'SUPERHERO'].includes(genre)) merchandisingMultiplier = 2.5;
+  else if (['HORROR', 'FANTASY'].includes(genre)) merchandisingMultiplier = 1.8;
 
-  // Syndication Tiering: Delegate to the logic engine
-  const episodes = (project as any).tvDetails?.episodesAired || 0;
+  // Syndication Tiering
+  const episodes = (project as SeriesProject).tvDetails?.episodesAired || 0;
   const syndicationTier = determineSyndicationTier(episodes, project.genre);
-  const syndicationStatus = (syndicationTier !== 'NONE') ? 'SYNDICATED' : 'NONE';
-
-  // Rights Expiry: 10 years (520 weeks) by default
-  const rightsExpirationWeek = (project.releaseWeek || 0) + 520;
 
   return {
     id: `ip-${project.id}`,
     originalProjectId: project.id,
     franchiseId: project.franchiseId, 
     title: project.title,
+    tier,
+    quality: project.reviewScore || 50,
     baseValue: Math.floor(baseValue),
-    decayRate: 1.0, // Cultural peak at launch
+    decayRate: 1.0, 
     merchandisingMultiplier,
-    syndicationStatus,
+    syndicationStatus: (syndicationTier !== 'NONE') ? 'SYNDICATED' : 'NONE',
     syndicationTier,
     totalEpisodes: episodes,
-    rightsExpirationWeek,
+    rightsExpirationWeek: (project.releaseWeek || 0) + 520,
     rightsOwner: 'STUDIO'
   };
 }
@@ -53,11 +53,22 @@ export function calculateInitialIPValue(project: Project): IPAsset {
  * This decreases total merchant revenue.
  */
 export function applyIPDecay(asset: IPAsset): IPAsset {
-  const baseDecay = 0.01; // 1% weekly drop by default
-  const impact = getSyndicationImpact(asset.syndicationTier);
+  // 1. Synergy Check (Reboot/Spinoff active)
+  if (asset.isSynergyActive) {
+    // Synergy freezes decay and adds a small "Anniversary/Hype" recovery
+    return {
+      ...asset,
+      decayRate: clamp(asset.decayRate + 0.002, 0.05, 1.0)
+    };
+  }
 
-  // Syndication halts or slows decay: 
-  // Gold (1.0) = 0% decay, Silver (0.9) = 0.1% decay, Bronze (0.5) = 0.5% decay
+  // 2. Tiered Decay Logic
+  let baseDecay = 0.01; // 1% default
+  if (asset.tier === 'BLOCKBUSTER') baseDecay = 0.005; // Slower decay
+  if (asset.tier === 'LEGACY') baseDecay = 0.002; // Very slow
+  if (asset.tier === 'CULT_CLASSIC') baseDecay = 0.008; // Slightly better than original
+
+  const impact = getSyndicationImpact(asset.syndicationTier);
   const effectiveDecay = baseDecay * (1 - impact.decayShield);
 
   return {

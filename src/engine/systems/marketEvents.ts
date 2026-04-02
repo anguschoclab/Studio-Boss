@@ -1,6 +1,6 @@
-import { GameState, MarketEvent, MarketEventType } from '@/engine/types';
+import { GameState, MarketEvent } from '@/engine/types';
 import { StateImpact } from '../types/state.types';
-import { pick, randRange, secureRandom } from '../utils';
+import { RandomGenerator } from '../utils/rng';
 
 const EVENT_TEMPLATES: Omit<MarketEvent, 'id' | 'weeksRemaining'>[] = [
   {
@@ -55,7 +55,7 @@ export function getActiveMarketEvent(state: GameState): MarketEvent | undefined 
   return state.market.activeMarketEvents[0]; // For simplicity, only 1 global event at a time
 }
 
-export function advanceMarketEvents(state: GameState): StateImpact[] {
+export function advanceMarketEvents(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
   let activeEvents = state.market.activeMarketEvents || [];
   
@@ -73,6 +73,8 @@ export function advanceMarketEvents(state: GameState): StateImpact[] {
     impacts.push({
       type: 'NEWS_ADDED',
       payload: {
+        id: rng.uuid('news'),
+        week: state.week,
         headline: 'Market Normalizes',
         description: `The ${exp.name} has finally ended.`,
       }
@@ -80,18 +82,20 @@ export function advanceMarketEvents(state: GameState): StateImpact[] {
   }
   
   // Chance to spawn new event if none active
-  if (activeEvents.length === 0 && secureRandom() < 0.02) {
-    const template = pick(EVENT_TEMPLATES);
+  if (activeEvents.length === 0 && rng.next() < 0.02) {
+    const template = rng.pick(EVENT_TEMPLATES);
     const newEvent: MarketEvent = {
       ...template,
-      id: crypto.randomUUID(),
-      weeksRemaining: randRange(12, 52)
+      id: rng.uuid('market-event'),
+      weeksRemaining: Math.floor(rng.range(12, 52))
     };
     
     activeEvents.push(newEvent);
     impacts.push({
       type: 'NEWS_ADDED',
       payload: {
+        id: rng.uuid('news'),
+        week: state.week,
         headline: `MAJOR INDUSTRY EVENT: ${newEvent.name}`,
         description: newEvent.description,
       }
@@ -105,4 +109,3 @@ export function advanceMarketEvents(state: GameState): StateImpact[] {
 
   return impacts;
 }
-

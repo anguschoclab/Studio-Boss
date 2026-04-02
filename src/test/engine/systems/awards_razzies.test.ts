@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { processRazzies } from '../../../engine/systems/awards';
 import { GameState, Project, Talent } from '../../../engine/types';
+import { RandomGenerator } from '../../../engine/utils/rng';
 
 describe('Razzies Award System', () => {
   const createProject = (id: string, budget: number, score: number, flavor: string, genre: string): Project => ({
@@ -55,7 +56,8 @@ describe('Razzies Award System', () => {
       }
     } as unknown as GameState;
 
-    const result = processRazzies(state, 4);
+    const rng = new RandomGenerator(1);
+    const result = processRazzies(state, 4, rng);
 
     // Only the bigFlop is eligible. Worst Picture should trigger a headline mentioning it.
     expect(result.newHeadlines![0].text).toContain('Title big');
@@ -77,7 +79,8 @@ describe('Razzies Award System', () => {
       }
     } as unknown as GameState;
 
-    const result = processRazzies(state, 4);
+    const rng = new RandomGenerator(1);
+    const result = processRazzies(state, 4, rng);
 
     expect(result.prestigeChange).toBe(-10);
     expect(result.cultClassicProjectIds).toContain('absurd');

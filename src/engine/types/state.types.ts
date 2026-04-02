@@ -62,19 +62,24 @@ export interface NewsState {
   headlines: Headline[];
 }
 
+export type IPAssetTier = 'ORIGINAL' | 'BLOCKBUSTER' | 'CULT_CLASSIC' | 'LEGACY';
+
 export interface IPAsset {
   id: string;
   originalProjectId: string;
   title: string;
   franchiseId?: string; // New field for Shared Universe grouping
+  tier: IPAssetTier;
+  quality: number; // Inherited from project.reviewScore
   baseValue: number; // Based on box office / ratings success
-  decayRate: number; // Drops every week
+  decayRate: number; // 0.0 to 1.0 (Cultural relevance)
   merchandisingMultiplier: number; 
   syndicationStatus: 'NONE' | 'SYNDICATED';
   syndicationTier: 'NONE' | 'BRONZE' | 'SILVER' | 'GOLD';
   totalEpisodes: number;
   rightsExpirationWeek: number; 
   rightsOwner: 'STUDIO' | 'MARKET' | 'RIVAL';
+  isSynergyActive?: boolean; // True if a reboot/spinoff is active
 }
 
 export interface IPState {

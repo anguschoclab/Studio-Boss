@@ -1,9 +1,8 @@
 import { pick } from '../utils';
 import { BrandSystem } from './BrandSystem';
 import { ProjectFormat } from '@/engine/types';
+import { RandomGenerator } from '../utils/rng';
 import { 
-  PREFIXES, 
-  SUFFIXES, 
   MOTTOS, 
   MALE_FIRST_NAMES, 
   FEMALE_FIRST_NAMES, 
@@ -14,14 +13,14 @@ import {
   LOCATIONS
 } from '../data/names.data';
 
-export function generateStudioName(existing: string[]): string {
+export function generateStudioName(existing: string[], rng?: RandomGenerator): string {
   const existingSet = new Set(existing);
-  const identity = BrandSystem.generateIdentity(existingSet);
-  return BrandSystem.getStudioName(identity);
+  const identity = BrandSystem.generateIdentity(existingSet, rng);
+  return BrandSystem.getStudioName(identity, rng);
 }
 
-export function generateMotto(): string {
-  return pick(MOTTOS);
+export function generateMotto(rng?: RandomGenerator): string {
+  return rng ? rng.pick(MOTTOS) : pick(MOTTOS);
 }
 
 const REGIONAL_NAMES: Record<string, { firstM: string[], firstF: string[], last: string[] }> = {
@@ -52,44 +51,44 @@ const REGIONAL_NAMES: Record<string, { firstM: string[], firstF: string[], last:
   }
 };
 
-export function generateDemographicName(gender: 'MALE' | 'FEMALE' | 'NON_BINARY', country: string, ethnicity: string): string {
+export function generateDemographicName(gender: 'MALE' | 'FEMALE' | 'NON_BINARY', country: string, _ethnicity: string, rng?: RandomGenerator): string {
   const region = REGIONAL_NAMES[country];
   
   if (region) {
-    const first = gender === 'FEMALE' ? pick(region.firstF) : pick(region.firstM);
-    return `${first} ${pick(region.last)}`;
+    const first = gender === 'FEMALE' ? (rng ? rng.pick(region.firstF) : pick(region.firstF)) : (rng ? rng.pick(region.firstM) : pick(region.firstM));
+    return `${first} ${rng ? rng.pick(region.last) : pick(region.last)}`;
   }
 
   // Fallback to western/US names
-  const first = gender === 'FEMALE' ? pick(FEMALE_FIRST_NAMES) : pick(MALE_FIRST_NAMES);
-  return `${first} ${pick(LAST_NAMES)}`;
+  const first = gender === 'FEMALE' ? (rng ? rng.pick(FEMALE_FIRST_NAMES) : pick(FEMALE_FIRST_NAMES)) : (rng ? rng.pick(MALE_FIRST_NAMES) : pick(MALE_FIRST_NAMES));
+  return `${first} ${rng ? rng.pick(LAST_NAMES) : pick(LAST_NAMES)}`;
 }
 
-export function generateProjectName(format: ProjectFormat, genre: string): string {
+export function generateProjectName(format: ProjectFormat, genre: string, rng?: RandomGenerator): string {
   const dict = DICTIONARIES[genre] || DICTIONARIES['Drama']; // Fallback to Drama
 
   if (format === 'tv') {
     const tvPatterns = [
-      () => `${pick(dict.adjs)} ${pick(dict.nouns)}s`,
-      () => `The ${pick(dict.nouns)}`,
-      () => `${pick(dict.nouns)} ${pick(LOCATIONS)}`,
-      () => `${pick(dict.nouns)} and ${pick(dict.nouns)}`,
-      () => `${pick(LOCATIONS)} ${pick(dict.nouns)}s`,
-      () => `Project: ${pick(dict.nouns)}`,
-      () => `${pick(dict.adjs)}`,
+      () => `${rng ? rng.pick(dict.adjs) : pick(dict.adjs)} ${rng ? rng.pick(dict.nouns) : pick(dict.nouns)}s`,
+      () => `The ${rng ? rng.pick(dict.nouns) : pick(dict.nouns)}`,
+      () => `${rng ? rng.pick(dict.nouns) : pick(dict.nouns)} ${rng ? rng.pick(LOCATIONS) : pick(LOCATIONS)}`,
+      () => `${rng ? rng.pick(dict.nouns) : pick(dict.nouns)} and ${rng ? rng.pick(dict.nouns) : pick(dict.nouns)}`,
+      () => `${rng ? rng.pick(LOCATIONS) : pick(LOCATIONS)} ${rng ? rng.pick(dict.nouns) : pick(dict.nouns)}s`,
+      () => `Project: ${rng ? rng.pick(dict.nouns) : pick(dict.nouns)}`,
+      () => `${rng ? rng.pick(dict.adjs) : pick(dict.adjs)}`,
     ];
-    return pick(tvPatterns)();
+    return rng ? rng.pick(tvPatterns)() : pick(tvPatterns)();
   } else {
     // Film
     const filmPatterns = [
-      () => `The ${pick(dict.adjs)} ${pick(dict.nouns)}`,
-      () => `${pick(PREFIX_PATTERNS)} ${pick(dict.nouns)}`,
-      () => `${pick(dict.nouns)} of ${pick(LOCATIONS)}`,
-      () => `${pick(dict.adjs)} ${pick(dict.nouns)}`,
-      () => `${pick(dict.nouns)} ${pick(CONNECTORS)} ${pick(dict.nouns)}`,
-      () => `${pick(dict.nouns)}`,
-      () => `The ${pick(dict.nouns)} ${pick(dict.nouns)}`,
+      () => `The ${rng ? rng.pick(dict.adjs) : pick(dict.adjs)} ${rng ? rng.pick(dict.nouns) : pick(dict.nouns)}`,
+      () => `${rng ? rng.pick(PREFIX_PATTERNS) : pick(PREFIX_PATTERNS)} ${rng ? rng.pick(dict.nouns) : pick(dict.nouns)}`,
+      () => `${rng ? rng.pick(dict.nouns) : pick(dict.nouns)} of ${rng ? rng.pick(LOCATIONS) : pick(LOCATIONS)}`,
+      () => `${rng ? rng.pick(dict.adjs) : pick(dict.adjs)} ${rng ? rng.pick(dict.nouns) : pick(dict.nouns)}`,
+      () => `${rng ? rng.pick(dict.nouns) : pick(dict.nouns)} ${rng ? rng.pick(CONNECTORS) : pick(CONNECTORS)} ${rng ? rng.pick(dict.nouns) : pick(dict.nouns)}`,
+      () => `${rng ? rng.pick(dict.nouns) : pick(dict.nouns)}`,
+      () => `The ${rng ? rng.pick(dict.nouns) : pick(dict.nouns)} ${rng ? rng.pick(dict.nouns) : pick(dict.nouns)}`,
     ];
-    return pick(filmPatterns)();
+    return rng ? rng.pick(filmPatterns)() : pick(filmPatterns)();
   }
 }

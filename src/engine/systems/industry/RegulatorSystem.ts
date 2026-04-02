@@ -1,4 +1,5 @@
-import { GameState, RivalStudio, Buyer } from '@/engine/types';
+import { GameState } from '@/engine/types';
+import { RandomGenerator } from '../../utils/rng';
 
 /**
  * Studio Boss - Regulator System (Anti-Trust)
@@ -34,7 +35,7 @@ export class RegulatorSystem {
    * Evaluates if a merger between an acquirer and a target should be blocked.
    * Returns true if the merger is BLOCKED.
    */
-  static isBlocked(state: GameState, acquirerId: string | 'player', targetId: string): { blocked: boolean; sharePreview: number; reason?: string } {
+  static isBlocked(state: GameState, acquirerId: string | 'player', targetId: string, rng: RandomGenerator): { blocked: boolean; sharePreview: number; reason?: string } {
     const currentShare = this.getMarketShare(state, acquirerId);
     const targetShare = this.getMarketShare(state, targetId);
     const combinedShare = currentShare + targetShare;
@@ -47,7 +48,7 @@ export class RegulatorSystem {
       blockChance = 0.4 + (combinedShare - 25) * 0.05; // Sliding scale
     }
 
-    if (Math.random() < blockChance) {
+    if (rng.next() < blockChance) {
       return { 
         blocked: true, 
         sharePreview: combinedShare, 
