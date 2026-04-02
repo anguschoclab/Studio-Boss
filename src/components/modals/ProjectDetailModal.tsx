@@ -484,7 +484,7 @@ export const ProjectDetailModal = () => {
                        { id: 'basic', name: 'Targeted Digital', cost: project.budget * 0.1, buzz: 15, desc: 'Coordinated social campaign.' },
                        { id: 'blockbuster', name: 'Global Blitz', cost: project.budget * 0.5, buzz: 40, desc: 'Omnichannel market saturation.' }
                      ].map(tier => (
-                       <button
+                       <button aria-pressed={project.marketingLevel === tier.id || selectedTier === tier.id}
                          key={tier.id}
                          disabled={!!project.marketingLevel || (gameState ? gameState.finance.cash < tier.cost : false)}
                          onClick={() => setSelectedTier(tier.id as any)}
