@@ -224,6 +224,39 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
       };
     }
 
+    case 'FRANCHISE_UPDATED': {
+      const { franchiseId, update } = impact.payload;
+      const franchises = { ...state.ip.franchises };
+      const franchise = franchises[franchiseId];
+      if (franchise) {
+        franchises[franchiseId] = { ...franchise, ...update };
+      } else {
+        // Initial creation
+        franchises[franchiseId] = update as import('../types/franchise.types').Franchise;
+      }
+      return {
+        ...state,
+        ip: {
+          ...state.ip,
+          franchises
+        }
+      };
+    }
+
+    case 'VAULT_ASSET_UPDATED': {
+      const { assetId, update } = impact.payload;
+      const vault = state.ip.vault.map(asset => 
+        asset.id === assetId ? { ...asset, ...update } : asset
+      );
+      return {
+        ...state,
+        ip: {
+          ...state.ip,
+          vault
+        }
+      };
+    }
+
     case 'MARKET_EVENT_UPDATED': {
       const { events, marketState } = impact.payload;
       return {

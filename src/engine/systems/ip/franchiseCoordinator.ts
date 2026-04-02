@@ -143,3 +143,88 @@ export function updateFranchiseHub(state: GameState, project: Project): GameStat
     }
   };
 }
+
+/**
+ * Stage 2.3 Pipeline Hook.
+ * Identifies projects released in the current simulation week and triggers franchise evolution.
+ */
+export function calculateFranchiseEvolutionImpacts(state: GameState): import('../../types/state.types').StateImpact[] {
+  const impacts: import('../../types/state.types').StateImpact[] = [];
+  const projects = Object.values(state.studio.internal.projects);
+  
+  projects.forEach(project => {
+    // Only process for the week the project is released
+    if (project.state === 'released' && project.releaseWeek === state.week) {
+      let franchiseId = project.franchiseId;
+      const isBreakout = project.revenue > (project.budget * 2.5);
+      const isPrestigeHit = (project.awardsProfile?.prestigeScore || 0) > 85;
+
+      // 1. Breakout Hub Creation
+      if (!franchiseId && (isBreakout || isPrestigeHit)) {
+        franchiseId = generateId('hub');
+        const newFranchise: Franchise = {
+          id: franchiseId,
+          name: project.title,
+          description: `The ${project.title} Universe`,
+          relevanceScore: 100,
+          fatigueLevel: 0,
+          audienceLoyalty: 50,
+          totalEquity: Math.floor(project.revenue * 0.2),
+          synergyMultiplier: 1.0,
+          assetIds: [`ip-${project.id}`],
+          activeProjectIds: [],
+          lastReleaseWeeks: [state.week],
+          creationWeek: state.week
+        };
+        
+        impacts.push({
+          type: 'FRANCHISE_UPDATED',
+          payload: { franchiseId, update: newFranchise }
+        });
+
+        // Link the project back to the hub
+        impacts.push({
+          type: 'PROJECT_UPDATED',
+          payload: { projectId: project.id, update: { franchiseId } }
+        });
+
+        // Link the existing IP asset in the vault to the hub
+        impacts.push({
+          type: 'VAULT_ASSET_UPDATED',
+          payload: { assetId: `ip-${project.id}`, update: { franchiseId } }
+        });
+      }
+      
+      // 2. Mainstream Hub Maintenance
+      else if (franchiseId && state.ip.franchises[franchiseId]) {
+        const hub = state.ip.franchises[franchiseId];
+        const newAssetId = `ip-${project.id}`;
+        
+        if (!hub.assetIds.includes(newAssetId)) {
+          const nextAssetIds = [...hub.assetIds, newAssetId];
+          const nextReleaseWeeks = [...hub.lastReleaseWeeks, state.week];
+          
+          impacts.push({
+            type: 'FRANCHISE_UPDATED',
+            payload: {
+              franchiseId,
+              update: {
+                assetIds: nextAssetIds,
+                lastReleaseWeeks: nextReleaseWeeks,
+                synergyMultiplier: clamp(hub.synergyMultiplier + 0.1, 1.0, 2.5)
+              }
+            }
+          });
+
+          // Link the newly created and archived IP asset to the existing hub
+          impacts.push({
+            type: 'VAULT_ASSET_UPDATED',
+            payload: { assetId: newAssetId, update: { franchiseId } }
+          });
+        }
+      }
+    }
+  });
+
+  return impacts;
+}

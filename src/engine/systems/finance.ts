@@ -39,6 +39,9 @@ export function generateWeeklyFinancialReport(
 ): { report: WeeklyFinancialReport; snapshot: FinancialSnapshot } {
   const projects = Object.values(state.studio.internal.projects);
   const market = state.finance.marketState || InterestRateSimulator.initialize();
+  
+  // Derive Studio Level from Archetype for overhead scaling
+  const studioLevel = state.studio.archetype === 'major' ? 3 : (state.studio.archetype === 'mid-tier' ? 2 : 1);
 
   // 1. Calculate Passive Income from Vault
   const passive = RevenueProcessor.calculateVaultDividends(state.ip.vault);
@@ -46,32 +49,6 @@ export function generateWeeklyFinancialReport(
   // 2. Calculate Active Revenue & Royalties (Consolidated)
   const { boxOffice, distribution, merch, totalRoyalties, projectRecoupment } = 
     RevenueProcessor.calculateActiveRevenue(projects, state);
-
-  projects.forEach(p => {
-    if (p.state === 'released') {
-      let weeklyGross = 0;
-      
-      // Theatrical vs Streaming
-      if (p.distributionStatus === 'theatrical') {
-        weeklyGross = RevenueProcessor.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.45); // The Studio Comptroller: Reduced theatrical studio share (decay rate) from 50% to 45% to simulate modern front-loaded box office drops.
-        boxOffice += weeklyGross;
-      } else if (p.distributionStatus === 'streaming') {
-        const platform = state.market.buyers.find(b => b.id === p.buyerId);
-        if (platform) {
-          weeklyGross = RevenueProcessor.calculateStreamingRevenue(p, platform);
-          distribution += weeklyGross;
-        }
-      }
-      
-      // Base Merch
-      const franchise = p.franchiseId ? state.ip.franchises[p.franchiseId] : null;
-      const weeklyMerch = RevenueProcessor.calculateMerchRevenue(p.buzz, franchise?.relevanceScore || 0);
-      merch += weeklyMerch;
-
-      // Deduct Talent Royalties (Net Points Logic)
-      totalRoyalties += RevenueProcessor.calculateNetPointsRoyalty(p, weeklyGross + weeklyMerch, state.studio.internal.contracts);
-    }
-  });
 
   // 3. Calculate Operational Expenses
   const production = ExpenseProcessor.calculateProductionBurn(projects);

@@ -59,34 +59,73 @@ export function generateScandals(state: GameState): StateImpact[] {
                   crisisId: `scandal-crisis-${crypto.randomUUID()}`,
                   triggeredWeek: state.week,
                   haltedProduction: false,
-                 description: `BREAKING NEWS: ${talent.name.toUpperCase()} has been involved in a massive ${type} scandal while working on "${project.title}". The press is circling.`,
-                 resolved: false,
+                  description: `BREAKING NEWS: ${talent.name.toUpperCase()} has been involved in a massive ${type} scandal while working on "${project.title}". The press is circling.`,
+                  resolved: false,
                   severity: s.severity > 75 ? 'high' : 'medium',
-                 options: [
-                   {
-                     text: "Fire Them",
-                     effectDescription: "Remove talent from project, +2 week delay, preserve reputation.",
-                     weeksDelay: 2,
-                     removeTalentId: talent.id,
-                   },
-                   {
-                     text: "Pay off the Press",
-                     effectDescription: `Deduct $${(s.severity * 10000).toLocaleString()} to bury the story. Keep talent.`,
-                     cashPenalty: s.severity * 10000,
-                     reputationPenalty: 2
-                   },
-                   {
-                     text: "Double Down",
-                     effectDescription: "Cost nothing, but lose 10% reputation and tank project buzz.",
-                     reputationPenalty: 10,
-                     buzzPenalty: 30
-                   }
-                 ]
-               }
-             }
-           }
-         });
-       }
+                  options: [
+                    {
+                      text: "Fire Them",
+                      effectDescription: "Remove talent from project, +2 week delay, preserve reputation.",
+                      weeksDelay: 2,
+                      removeTalentId: talent.id,
+                    },
+                    {
+                      text: "Pay off the Press",
+                      effectDescription: `Deduct $${(s.severity * 10000).toLocaleString()} to bury the story. Keep talent.`,
+                      cashPenalty: s.severity * 10000,
+                      reputationPenalty: 2
+                    },
+                    {
+                      text: "Double Down",
+                      effectDescription: "Cost nothing, but lose 10% reputation and tank project buzz.",
+                      reputationPenalty: 10,
+                      buzzPenalty: 30
+                    }
+                  ]
+                }
+              }
+            }
+          });
+
+          impacts.push({
+            type: 'MODAL_TRIGGERED',
+            payload: {
+              modalType: 'CRISIS',
+              priority: 1,
+              payload: {
+                projectId,
+                crisis: {
+                   crisisId: `scandal-crisis-modal-${crypto.randomUUID()}`,
+                   triggeredWeek: state.week,
+                   haltedProduction: false,
+                   description: `BREAKING NEWS: ${talent.name.toUpperCase()} has been involved in a massive ${type} scandal while working on "${project.title}". The press is circling.`,
+                   resolved: false,
+                   severity: s.severity > 75 ? 'high' : 'medium',
+                   options: [
+                    {
+                      text: "Fire Them",
+                      effectDescription: "Remove talent from project, +2 week delay, preserve reputation.",
+                      weeksDelay: 2,
+                      removeTalentId: talent.id,
+                    },
+                    {
+                      text: "Pay off the Press",
+                      effectDescription: `Deduct $${(s.severity * 10000).toLocaleString()} to bury the story. Keep talent.`,
+                      cashPenalty: s.severity * 10000,
+                      reputationPenalty: 2
+                    },
+                    {
+                      text: "Double Down",
+                      effectDescription: "Cost nothing, but lose 10% reputation and tank project buzz.",
+                      reputationPenalty: 10,
+                      buzzPenalty: 30
+                    }
+                  ]
+                }
+              }
+            }
+          });
+        }
     }
   }
   

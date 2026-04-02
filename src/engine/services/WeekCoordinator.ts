@@ -22,6 +22,7 @@ import { tickVerticalIntegration } from '../systems/industry/VerticalIntegration
 import { tickIndustryUpstarts } from '../systems/industry/IndustryUpstarts';
 import { tickConsolidation } from '../systems/industry/ConsolidationEngine';
 import { InterestRateSimulator } from '../systems/market/InterestRateSimulator';
+import { calculateFranchiseEvolutionImpacts } from '../systems/ip/franchiseCoordinator';
 
 /**
  * Studio Boss - Simulation Tick Context
@@ -72,9 +73,20 @@ export class WeekCoordinator {
       eventHistory: [...(state.eventHistory || []), ...context.events].slice(-500)
     };
 
+    const summary = this.buildSummary(state, finalizedState, context);
+
+    context.impacts.push({
+      type: 'MODAL_TRIGGERED',
+      payload: {
+        modalType: 'SUMMARY',
+        priority: 0,
+        payload: summary as unknown as Record<string, unknown>
+      }
+    });
+
     return {
       newState: finalizedState,
-      summary: this.buildSummary(state, finalizedState, context)
+      summary
     };
   }
 
@@ -114,6 +126,7 @@ export class WeekCoordinator {
     });
 
     context.impacts.push(...tickTelevision(state, context.rng));
+    context.impacts.push(...calculateFranchiseEvolutionImpacts(state));
   }
 
   private static runAIFilter(state: GameState, context: TickContext) {

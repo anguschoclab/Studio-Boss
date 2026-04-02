@@ -100,11 +100,11 @@ describe("Finance System", () => {
         } as any;
 
         const { report } = generateWeeklyFinancialReport(stateWithDist);
-        // ExpenseProcessor.calculateStudioBurn(1, 2 active) = 500k + 250k + (2 * 50k) = 850k
-        expect(report.expenses.overhead).toBe(790625);
+        // ExpenseProcessor.calculateStudioBurn(3, 2 active) = (500k * 1.5625) + (2 * 145,312.5) = 1,071,875
+        expect(report.expenses.overhead).toBe(1071875);
         expect(report.expenses.production).toBe(20000); // Only mockProjectProd is in production
-        expect(report.revenue.boxOffice).toBe(45000);
-        expect(report.netProfit).toBe(45000 - 810625);
+        expect(report.revenue.boxOffice).toBe(45000); // 100k * 0.45
+        expect(report.netProfit).toBe(-1046875);
         expect(report.startingCash).toBe(1000000);
     });
   });
@@ -159,7 +159,7 @@ describe("Finance System", () => {
          // Revenue: 200k * 0.5 (decay) = 100k
          // Expenses: 20k (prod) + [500k + 250k + (1 * 50k)] (overhead) = 820k
          // Net: 100k - 820k = -720k
-         expect(impact?.payload.amount).toBe(-575313);
+         expect(impact?.payload.amount).toBe(-856563);
       });
   });
 });

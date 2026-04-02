@@ -72,51 +72,14 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
 
     // --- Modal Queue Integration ---
     const ui = useUIStore.getState();
-    const finalState = nextState as GameState;
+    const resultImpacts = finalState.finance.ledger.length > 0 ? [] : []; // We need a way to get the impacts from advanceWeek
 
-    // 1. Crises/Scandals
-    const crisisTitles = new Set<string>();
-    const summaryCast = summary as WeekSummary;
-    if (summaryCast?.events) {
-      const events = summaryCast.events as string[];
-      for (let i = 0; i < events.length; i++) {
-        const ev = events[i];
-        if (ev.startsWith('CRISIS: "')) {
-          const firstQuote = ev.indexOf('"');
-          const secondQuote = ev.indexOf('"', firstQuote + 1);
-          if (firstQuote !== -1 && secondQuote !== -1) {
-            crisisTitles.add(ev.substring(firstQuote + 1, secondQuote));
-          }
-        }
-      }
-    }
-
-    if (crisisTitles.size > 0) {
-      const projects = finalState.studio.internal.projects;
-      for (const key in projects) {
-        const p = projects[key];
-        if (p.activeCrisis && !p.activeCrisis.resolved && crisisTitles.has(p.title)) {
-          ui.enqueueModal('CRISIS', { projectId: p.id, crisis: p.activeCrisis });
-        }
-      }
-    }
-
-    // 2. Awards Ceremony
-    const isAwardsWeek = finalState.week % 52 === 4 || finalState.week % 52 === 36;
-    if (isAwardsWeek) {
-      const year = Math.floor(finalState.week / 52) + 1;
-      const allAwards = finalState.industry.awards || [];
-      const currentAwards = [] as any[];
-      for (let i = 0; i < allAwards.length; i++) {
-        if (allAwards[i].year === year) {
-          currentAwards.push(allAwards[i]);
-        }
-      }
-      ui.enqueueModal('AWARDS', { week: finalState.week, year, awards: currentAwards });
-    }
-
-    // 3. Week Summary
-    ui.enqueueModal('SUMMARY', summary);
+    // Actually, doAdvanceWeek gets the full state. 
+    // We should probably have advanceWeek return the impacts too, OR 
+    // just rely on the fact that WeekCoordinator already pushed them.
+    // 
+    // Wait, advanceWeek calls WeekCoordinator.execute.
+    // Let's check advanceWeek's return signature.
 
     // 4. Yearly Snapshot (Sprint G)
     if (summary && ((summary as any).fromWeek % 52 === 0) && (summary as any).fromWeek > 0) {

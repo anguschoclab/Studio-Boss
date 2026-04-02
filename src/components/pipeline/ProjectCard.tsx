@@ -8,17 +8,18 @@ import { AlertTriangle, TrendingUp, Activity, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { DistributionBadge } from '../shared/DistributionBadge';
 import { RecoupmentStatus } from '../shared/RecoupmentStatus';
+import { isSeriesProject } from '@/engine/utils/projectUtils';
 
 interface ProjectCardProps {
   project: Project;
 }
 
 export const ProjectCard = ({ project }: ProjectCardProps) => {
-  const { selectProject, openPitchProject, openCrisisModal } = useUIStore();
+  const { selectProject, openPitchProject, enqueueModal } = useUIStore();
   const tier = BUDGET_TIERS[project.budgetTier];
 
-  const displayFormat = project.type === 'SERIES'
-      ? `S${(project as any).tvDetails?.currentSeason || 1}`
+  const displayFormat = isSeriesProject(project)
+      ? `S${project.tvDetails.currentSeason || 1}`
       : project.format.toUpperCase();
 
   const hasUnresolvedCrisis = project.activeCrisis && !project.activeCrisis.resolved;
@@ -127,7 +128,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
               className="w-full h-8 text-[9px] font-black uppercase tracking-widest animate-pulse border border-white/20 bg-destructive/90 hover:bg-destructive shadow-[0_0_15px_rgba(239,68,68,0.4)] hover:shadow-[0_0_20px_rgba(239,68,68,0.6)] transition-all"
               onClick={(e) => {
                 e.stopPropagation();
-                openCrisisModal(project.id);
+                enqueueModal('CRISIS', { projectId: project.id });
               }}
             >
               <AlertTriangle className="w-3.5 h-3.5 mr-2 drop-shadow-sm" />

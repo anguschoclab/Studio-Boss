@@ -102,7 +102,9 @@ export type ImpactType =
   | 'FINANCE_TRANSACTION'
   | 'FINANCE_SNAPSHOT_ADDED'
   | 'SYNC_M_A_FUNDS'
+  | 'VAULT_ASSET_UPDATED'
   | 'INDUSTRY_UPDATE'
+  | 'MODAL_TRIGGERED'
   | 'SYSTEM_TICK';
 
 export interface ProjectUpdate { projectId: string; update: Partial<import('./project.types').Project> }
@@ -111,6 +113,7 @@ export interface RivalUpdate { rivalId: string; update: Partial<import('./studio
 export interface BuyerUpdate { buyerId: string; update: Partial<import('./studio.types').Buyer> }
 export interface ScandalUpdate { scandalId: string; update: Partial<import('./talent.types').Scandal> }
 export interface FranchiseUpdate { franchiseId: string; update: Partial<import('./franchise.types').Franchise> }
+export interface VaultAssetUpdate { assetId: string; update: Partial<IPAsset> }
 
 export interface BaseImpact {
   payload?: unknown;
@@ -151,6 +154,7 @@ export interface ScandalAddedImpact extends BaseImpact { type: 'SCANDAL_ADDED'; 
 export interface ScandalRemovedImpact extends BaseImpact { type: 'SCANDAL_REMOVED'; payload: { scandalId: string } }
 export interface MarketEventUpdateImpact extends BaseImpact { type: 'MARKET_EVENT_UPDATED'; payload: { events?: import('./engine.types').MarketEvent[]; marketState?: MarketState } }
 export interface FranchiseUpdateImpact extends BaseImpact { type: 'FRANCHISE_UPDATED'; payload: FranchiseUpdate }
+export interface VaultAssetUpdateImpact extends BaseImpact { type: 'VAULT_ASSET_UPDATED'; payload: VaultAssetUpdate }
 export interface LedgerImpact extends BaseImpact { type: 'LEDGER_UPDATED'; payload: { report: WeeklyFinancialReport } }
 export interface FinanceTransactionImpact extends BaseImpact { type: 'FINANCE_TRANSACTION'; payload: { amount: number; description: string } }
 export interface FinanceSnapshotImpact extends BaseImpact { type: 'FINANCE_SNAPSHOT_ADDED'; payload: { snapshot: FinancialSnapshot } }
@@ -162,6 +166,15 @@ export interface IndustryUpdateImpact extends BaseImpact {
     update: Record<string, unknown>;
     rival?: RivalUpdate;
     mergedRivalId?: string;
+  } 
+}
+
+export interface ModalTriggeredImpact extends BaseImpact { 
+  type: 'MODAL_TRIGGERED'; 
+  payload: { 
+    modalType: import('./engine.types').ModalType; 
+    payload: unknown;
+    priority?: number; 
   } 
 }
 
@@ -179,6 +192,8 @@ export type StateImpact =
   | TrendsUpdateImpact
   | ScandalAddedImpact
   | ScandalRemovedImpact
+  | FranchiseUpdateImpact
+  | VaultAssetUpdateImpact
   | MarketEventUpdateImpact
   | LedgerImpact
   | FinanceTransactionImpact
@@ -186,4 +201,5 @@ export type StateImpact =
   | SyncMAFundsImpact
   | SystemTickImpact
   | IndustryUpdateImpact
+  | ModalTriggeredImpact
   | (BaseImpact & { type?: undefined }); // The "Bag" impact

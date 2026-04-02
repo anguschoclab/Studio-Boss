@@ -37,7 +37,7 @@ export class RevenueProcessor {
         let weeklyGross = 0;
         
         if (p.distributionStatus === 'theatrical') {
-          weeklyGross = this.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.5) * talentMultiplier;
+          weeklyGross = this.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.45) * talentMultiplier;
           boxOffice += weeklyGross;
         } else if (p.distributionStatus === 'streaming') {
           const platform = state.market.buyers.find(b => b.id === p.buyerId);
