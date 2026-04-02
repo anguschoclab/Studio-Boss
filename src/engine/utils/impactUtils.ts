@@ -1,3 +1,4 @@
+import { BudgetTierKey } from '../types/project.types';
 import { StateImpact } from '../types/state.types';
 import { CRISIS_POOLS, CrisisTemplate } from '../data/crises.data';
 
@@ -47,4 +48,12 @@ export function mergeImpacts(...impacts: (StateImpact | undefined)[]): StateImpa
     }
 
     return result;
+}
+
+export function isBudgetTier(value: any): value is BudgetTierKey {
+    return ["low", "mid", "high", "blockbuster"].includes(value);
+}
+
+export function applyModification(impactPayload: any, modificationAmount: number): any {
+    return { ...impactPayload, value: (impactPayload.value || 0) + modificationAmount };
 }

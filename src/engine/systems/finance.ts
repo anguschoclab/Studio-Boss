@@ -192,3 +192,21 @@ export function generateCashflowForecast(state: GameState, weeks: number = 12): 
   }
   return forecast;
 }
+
+export interface Deduction { amount: number; reason: string; }
+export interface TaxBracket { rate: number; description: string; }
+export interface Transaction { type: 'revenue' | 'expense'; amount: number; }
+
+export function calculateGrossQuarterlyRevenue(transactions: Transaction[]): number {
+  return transactions.reduce((sum, t) => t.type === 'revenue' ? sum + t.amount : sum, 0);
+}
+
+export function getTaxBracket(revenue: number): TaxBracket {
+  if (revenue > 100000000) return { rate: 0.25, description: 'High' };
+  return { rate: 0.15, description: 'Standard' };
+}
+
+export function applyDeductions(revenue: number, deductions: Deduction[]): number {
+  const total = deductions.reduce((sum, d) => sum + d.amount, 0);
+  return Math.max(0, revenue - total);
+}

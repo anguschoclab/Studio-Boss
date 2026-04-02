@@ -369,6 +369,12 @@ export interface TVSeasonDetails {
 
 export type ProjectType = 'FILM' | 'SERIES';
 
+
+export interface ProductionState {
+  productionValue: number;
+  currentShootDay: number;
+}
+
 export interface ProjectBase {
   id: string;
   title: string;
@@ -394,6 +400,7 @@ export interface ProjectBase {
   momentum: number; // 1-100: Influences budget burn and final quality
   progress: number; // 0-100
   accumulatedCost: number;
+  productionState?: ProductionState;
   awardsProfile?: AwardsProfile;
   parentProjectId?: string;
   isSpinoff?: boolean;

@@ -1,3 +1,4 @@
+import { isBudgetTier } from '@/engine/utils/impactUtils';
 import { GameState, Project, Talent, ProjectFormat, BudgetTierKey, TvFormatKey, UnscriptedFormatKey, ReleaseModelKey, StateImpact } from '@/engine/types';
 import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
 import { TV_FORMATS } from '@/engine/data/tvFormats';
@@ -63,6 +64,7 @@ function prepareTalentAndContracts(
 }
 
 export function buildProjectAndContracts(state: GameState, params: CreateProjectParams) {
+    if (!isBudgetTier(params.budgetTier)) throw new Error(`Invalid budget tier provided: ${params.budgetTier}`);
     const tier = BUDGET_TIERS[params.budgetTier];
     const stats = getProjectStats(params, tier);
     const { budget, weeklyCost, developmentWeeks, productionWeeks, renewable } = stats;

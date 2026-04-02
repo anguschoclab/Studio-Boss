@@ -1,3 +1,4 @@
+import { calculateGrossQuarterlyRevenue, getTaxBracket, applyDeductions, Transaction, Deduction } from '@/engine/systems/finance';
 import { StateCreator } from 'zustand';
 import { GameStore } from '../gameStore';
 import { handleReleasePhaseEntry, executeMarketing } from '@/engine/systems/projects';
@@ -9,6 +10,7 @@ export interface FinanceSlice {
   launchMarketingCampaign: (projectId: string, budget: number, domesticPct: number, angle: string) => void;
   executeMarketingEvent: (eventName: 'superbowl_ad' | 'viral_campaign' | 'press_tour', cost: number, projectId: string) => void;
   addFunds: (amount: number) => void;
+  calculateQuarterlyTaxes: (transactions: Transaction[], deductions: Deduction[]) => void;
 }
 
 export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> = (set, get) => ({
@@ -117,6 +119,16 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
     console.log(`Executing marketing event: ${eventName} for project ${projectId} costing ${cost}`);
   },
 
+  calculateQuarterlyTaxes: (transactions, deductions) => {
+    set((s) => {
+      if (!s.gameState) return s;
+      const gross = calculateGrossQuarterlyRevenue(transactions);
+      const taxable = applyDeductions(gross, deductions);
+      const bracket = getTaxBracket(taxable);
+      const taxAmount = taxable * bracket.rate;
+      return { finance: { ...s.finance, cash: s.finance.cash - taxAmount } };
+    });
+  },
   addFunds: (amount) => {
     set((s) => {
       if (!s.gameState) return s;

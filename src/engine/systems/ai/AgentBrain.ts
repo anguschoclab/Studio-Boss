@@ -56,3 +56,30 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
 
   return impacts;
 }
+
+export interface ContractOffer {
+  fee: number;
+  backendPercent: number;
+}
+
+export function decideContractAcceptance(
+  talent: Talent,
+  offer: ContractOffer
+): { accepted: boolean; counterOffer?: ContractOffer; reason: string } {
+  if (offer.fee >= talent.fee) {
+    return { accepted: true, reason: 'Fee meets expectation' };
+  }
+  return { accepted: false, counterOffer: { fee: talent.fee, backendPercent: offer.backendPercent }, reason: 'Fee too low' };
+}
+
+export function processContractNegotiation(
+  talent: Talent,
+  offer: ContractOffer
+): StateImpact[] {
+  const result = decideContractAcceptance(talent, offer);
+  if (result.accepted) {
+    // Return side effect as pure state impact instead of mutating state
+    return [{ type: 'TALENT_UPDATED', payload: { talentId: talent.id, update: { assignedStudio: 'player' } } }];
+  }
+  return [];
+}
