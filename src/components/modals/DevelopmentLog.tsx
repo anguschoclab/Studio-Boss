@@ -1,5 +1,5 @@
 import React from 'react';
-import { Project, ScriptEvent } from '@/engine/types';
+import { Project, ScriptEvent, ScriptedProject } from '@/engine/types';
 import { 
   FileEdit, 
   Split, 
@@ -25,8 +25,9 @@ const EVENT_CONFIG = {
 } as const;
 
 export const DevelopmentLog: React.FC<DevelopmentLogProps> = ({ project }) => {
-  const events = project.scriptEvents || [];
-  const heat = project.scriptHeat || 50;
+  const scriptedProject = (project.format === 'unscripted' ? null : project) as ScriptedProject | null;
+  const events: ScriptEvent[] = scriptedProject?.scriptEvents || [];
+  const heat = scriptedProject?.scriptHeat || 50;
 
   return (
     <div className="flex flex-col h-full space-y-4">
@@ -64,7 +65,7 @@ export const DevelopmentLog: React.FC<DevelopmentLogProps> = ({ project }) => {
             <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">Character Matrix</span>
          </div>
          <div className="flex flex-wrap gap-2">
-            {(project.activeRoles || []).map(role => (
+            {(scriptedProject?.activeRoles || []).map((role: string) => (
                <div key={role} className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/5 text-[10px] font-black uppercase tracking-widest text-foreground/80 flex items-center gap-2 group hover:border-primary/40 transition-all">
                   <Search className="w-3.5 h-3.5 text-muted-foreground/40 group-hover:text-primary transition-colors" />
                   {role.replace('_', ' ')}
@@ -86,7 +87,7 @@ export const DevelopmentLog: React.FC<DevelopmentLogProps> = ({ project }) => {
            </div>
          ) : (
            <div className="space-y-4">
-             {events.map((event, idx) => {
+              {events.map((event: ScriptEvent, idx: number) => {
                const config = EVENT_CONFIG[event.type as keyof typeof EVENT_CONFIG] || EVENT_CONFIG.DIALOGUE_POLISH;
                const EventIcon = config.icon;
                return (

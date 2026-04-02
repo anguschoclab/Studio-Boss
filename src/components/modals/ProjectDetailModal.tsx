@@ -6,7 +6,7 @@ import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
 import { TV_FORMATS } from '@/engine/data/tvFormats';
 import { evaluateGreenlight } from '@/engine/systems/greenlight';
 import { FESTIVALS } from '@/engine/systems/festivals';
-import { AwardBody, Project, Talent } from '@/engine/types';
+import { AwardBody, Project, Talent, ScriptedProject, SeriesProject } from '@/engine/types';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
@@ -91,10 +91,16 @@ export const ProjectDetailModal = () => {
   }, [talentPool]);
 
   const tier = project ? BUDGET_TIERS[project.budgetTier] : null;
+  const scriptedProject = useMemo(() => (
+    project && project.format !== 'unscripted' ? project as ScriptedProject : null
+  ), [project]);
+  const seriesProject = useMemo(() => (
+    project && project.type === 'SERIES' && 'tvDetails' in project ? project as SeriesProject : null
+  ), [project]);
 
   const roleGroups = useMemo(() => {
     const groups = new Map<string, { attached: Talent[], available: Talent[] }>();
-    const rolesToTrack = project?.activeRoles || ['director', 'writer', 'producer', 'protagonist'];
+    const rolesToTrack = scriptedProject?.activeRoles || ['director', 'writer', 'producer', 'protagonist'];
 
     if (!project) {
       for (const r of rolesToTrack) {
@@ -124,7 +130,7 @@ export const ProjectDetailModal = () => {
       groups.set(r, { attached, available });
     }
     return groups;
-  }, [project, contracts, talentByRole]);
+  }, [project, scriptedProject, contracts, talentByRole]);
 
   const greenlightReport = useMemo(() => {
     if (!project || project.state !== 'needs_greenlight' || !gameState) return null;
@@ -185,8 +191,8 @@ export const ProjectDetailModal = () => {
                   <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">Capital At Risk</span>
                   <div className="text-xl font-black text-foreground leading-none">{formatMoney(project.budget)}</div>
                </div>
-               {project.type === 'SERIES' && (project as any).tvDetails && (
-                 <Badge className="bg-blue-600/20 text-blue-400 border border-blue-600/30 font-black h-10 px-4">S{(project as any).tvDetails.currentSeason}</Badge>
+                {seriesProject?.tvDetails && (
+                  <Badge className="bg-blue-600/20 text-blue-400 border border-blue-600/30 font-black h-10 px-4">S{seriesProject.tvDetails.currentSeason}</Badge>
                )}
             </div>
           </div>
@@ -233,10 +239,10 @@ export const ProjectDetailModal = () => {
                       <div className="space-y-4">
                         <div className="flex items-center justify-between">
                            <span className="text-xs font-bold text-slate-400">Town Heat</span>
-                           <span className="text-sm font-black text-primary">{project.scriptHeat || 50}%</span>
+                            <span className="text-sm font-black text-primary">{scriptedProject?.scriptHeat || 50}%</span>
                         </div>
                         <div className="h-1.5 rounded-full bg-slate-800 overflow-hidden">
-                           <div className="h-full bg-primary" style={{ width: `${project.scriptHeat || 50}%` }} />
+                           <div className="h-full bg-primary" style={{ width: `${scriptedProject?.scriptHeat || 50}%` }} />
                         </div>
                         {project.flavor && (
                           <div className="relative p-4 rounded-xl bg-black/40 border-l-4 border-primary/40 italic text-sm text-slate-300">

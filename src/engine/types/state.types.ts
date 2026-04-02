@@ -107,7 +107,7 @@ export type ImpactType =
 export interface ProjectUpdate { projectId: string; update: Partial<import('./project.types').Project> }
 export interface TalentUpdate { talentId: string; update: Partial<import('./talent.types').Talent> }
 export interface RivalUpdate { rivalId: string; update: Partial<import('./studio.types').RivalStudio> }
-export interface BuyerUpdate { buyerId: string; update: Partial<import('./studio.types').BuyerBase> }
+export interface BuyerUpdate { buyerId: string; update: Partial<import('./studio.types').Buyer> }
 export interface ScandalUpdate { scandalId: string; update: Partial<import('./talent.types').Scandal> }
 
 export interface BaseImpact {

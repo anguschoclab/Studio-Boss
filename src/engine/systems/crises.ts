@@ -73,18 +73,19 @@ export function resolveCrisis(state: GameState, projectId: string, optionIndex: 
   });
 
   if (option.removeTalentId) {
-    impact.removeContracts!.push({
-      projectId,
-      talentId: option.removeTalentId
-    });
+    impact.removeContracts!.push(`${projectId}:${option.removeTalentId}`);
   }
 
   impact.newHeadlines!.push({
+    id: `headline-${crypto.randomUUID()}`,
+    week: state.week,
     category: 'general',
     text: `Crisis resolved for "${project.title}": ${option.text}`
   });
 
   impact.newsEvents!.push({
+    id: `news-${crypto.randomUUID()}`,
+    week: state.week,
     type: 'CRISIS',
     headline: `Crisis at ${project.title}`,
     description: `The production faced a major setback: ${project.activeCrisis.description.slice(0, 100)}... Studio resolved it by: ${option.text}`,

@@ -1,5 +1,5 @@
-import { Project, GameState, WeeklyFinancialReport, Buyer, StateImpact } from '@/engine/types';
-import { FinancialSnapshot } from '../types/state.types';
+import { Project, GameState, WeeklyFinancialReport, Contract, Buyer } from '@/engine/types';
+import { StateImpact, FinancialSnapshot } from '../types/state.types';
 import { RevenueProcessor } from './finance/RevenueProcessor';
 import { ExpenseProcessor } from './finance/ExpenseProcessor';
 import { InterestRateSimulator } from './market/InterestRateSimulator';
@@ -110,6 +110,34 @@ export function generateWeeklyFinancialReport(
   };
 
   return { report, snapshot };
+}
+
+// Legacy wrappers updated to use new processors
+export function calculateWeeklyCosts(projects: Project[]): number {
+  const production = ExpenseProcessor.calculateProductionBurn(projects);
+  const marketing = ExpenseProcessor.calculateMarketingBurn(projects);
+  const overhead = ExpenseProcessor.calculateStudioBurn(1, projects.filter(p => p.state !== 'released').length);
+  return production + marketing + overhead;
+}
+
+export function calculateWeeklyRevenue(projects: Project[], buyers: Buyer[] = [], _legacyContext?: unknown): number {
+  let boxOffice = 0;
+  let distribution = 0;
+
+  projects.forEach(p => {
+    if (p.state === 'released') {
+      if (p.distributionStatus === 'theatrical') {
+        boxOffice += RevenueProcessor.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.5);
+      } else if (p.distributionStatus === 'streaming') {
+        const platform = buyers.find(b => b.id === p.buyerId);
+        if (platform) {
+          distribution += RevenueProcessor.calculateStreamingRevenue(p, platform);
+        }
+      }
+    }
+  });
+
+  return boxOffice + distribution;
 }
 
 export function generateCashflowForecast(state: GameState, weeks: number = 12): { week: number; projected: number }[] {
