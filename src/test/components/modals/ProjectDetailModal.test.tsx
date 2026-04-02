@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ProjectDetailModal } from '@/components/modals/ProjectDetailModal';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { Project } from '@/engine/types';
@@ -84,7 +85,7 @@ describe('ProjectDetailModal', () => {
   } as Project);
 
   it('renders nothing when no project is selected', () => {
-    render(<ProjectDetailModal />);
+    render(<TooltipProvider><ProjectDetailModal /></TooltipProvider>);
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
@@ -115,7 +116,7 @@ describe('ProjectDetailModal', () => {
       return selector(state);
     });
 
-    render(<ProjectDetailModal />);
+    render(<TooltipProvider><ProjectDetailModal /></TooltipProvider>);
 
     expect(screen.getByRole('dialog')).toBeInTheDocument();
     expect(screen.getByText(mockProject.title)).toBeInTheDocument();
@@ -148,7 +149,7 @@ describe('ProjectDetailModal', () => {
       return selector(state);
     });
 
-    render(<ProjectDetailModal />);
+    render(<TooltipProvider><ProjectDetailModal /></TooltipProvider>);
 
     const approveBtn = screen.getByText('Authorize Production');
     expect(approveBtn).toBeInTheDocument();
@@ -185,7 +186,7 @@ describe('ProjectDetailModal', () => {
       return selector(state);
     });
 
-    render(<ProjectDetailModal />);
+    render(<TooltipProvider><ProjectDetailModal /></TooltipProvider>);
 
     const lockBtn = screen.getByText('Lock Campaign & Commit Capital');
     expect(lockBtn).toBeInTheDocument();
@@ -234,7 +235,7 @@ describe('ProjectDetailModal', () => {
       return selector(state);
     });
 
-    render(<ProjectDetailModal />);
+    render(<TooltipProvider><ProjectDetailModal /></TooltipProvider>);
 
     const renewBtn = screen.getByText('Order Season 2');
     expect(renewBtn).toBeInTheDocument();

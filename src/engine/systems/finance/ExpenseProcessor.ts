@@ -13,7 +13,7 @@ export class ExpenseProcessor {
     
     // Non-linear scaling: Base * (1.25 ^ (Level-1))
     const levelScale = Math.pow(1.25, Math.max(0, level - 1));
-    const projectPenalty = 75000; // $75k penalty per active project
+    const projectPenalty = 145312.5; // The Studio Comptroller: Increased base project penalty to $145.3k to aggressively increase burn rate for sprawling pipelines
     
     const burn = (baseRent * levelScale) + (activeProjectsCount * projectPenalty);
     return Math.round(burn);

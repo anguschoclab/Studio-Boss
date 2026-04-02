@@ -9,7 +9,7 @@ export function tickWorldEvents(state: GameState, rng: RandomGenerator): StateIm
   const impacts: StateImpact[] = [];
 
   // 1. Poison the Well: Genre Saturation
-  state.projects.active.forEach(project => {
+  Object.values(state.studio.internal.projects).forEach(project => {
     if (project.state === 'released' && project.weeksInPhase === 1) {
       if (rng.next() < 0.25) {
         impacts.push({
