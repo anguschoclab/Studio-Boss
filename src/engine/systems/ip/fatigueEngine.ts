@@ -39,6 +39,17 @@ export function calculateFranchiseFatigue(
     currentFatigue *= 2.5; 
   }
 
+  // Content Mine Penalty
+  // If a franchise has 3 or more active entries, audience considers it 'Homework'.
+  if (activeCount >= 3) {
+    currentFatigue *= 3.0;
+  }
+
+  // Superhero & Multiverse specific exponential burnout
+  if (activeCount >= 3 && (normalizedGenre === 'Superhero' || normalizedGenre === 'Multiverse')) {
+    currentFatigue *= 1.5;
+  }
+
   // 3. Rival Saturation (The 'Poison the Well' effect)
   // If genre is severely oversaturated, penalty multiplier increases heavily.
   const oversaturationMultiplier = genreSaturation > 10 ? 1.5 : 1.0;
@@ -76,9 +87,18 @@ export function calculateReleaseGapImpact(
     };
   }
 
+  // Brand Reboot (Fresh Start)
+  if (yearsSince >= 7 && yearsSince < 10) {
+    return {
+      buzzBonus: 20,
+      label: 'Brand Reboot (Fresh Start)',
+      fatigueReset: true
+    };
+  }
+
   // 2. The Dead Zone (4-7 years / 208-364 weeks)
   // Real-life: Alice Through the Looking Glass, The LEGO Movie 2.
-  if (yearsSince >= 4 && yearsSince <= 7) {
+  if (yearsSince >= 4 && yearsSince < 7) {
     return { 
       buzzBonus: -15, 
       label: 'The Dead Zone (Apathy)',
@@ -86,5 +106,14 @@ export function calculateReleaseGapImpact(
     };
   }
   
+  // Anticipated Sequel
+  if (yearsSince >= 1 && yearsSince <= 3) {
+    return {
+      buzzBonus: 10,
+      label: 'Anticipated Sequel',
+      fatigueReset: false
+    };
+  }
+
   return { buzzBonus: 0, label: '', fatigueReset: false };
 }

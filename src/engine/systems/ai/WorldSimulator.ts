@@ -7,6 +7,7 @@ import { RandomGenerator } from '../../utils/rng';
  */
 export function tickWorldEvents(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
+  const projects = Object.values(state.studio.internal.projects);
 
   // 1. Poison the Well: Genre Saturation
   Object.values(state.studio.internal.projects).forEach(project => {

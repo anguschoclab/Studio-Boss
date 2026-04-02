@@ -21,7 +21,7 @@ export const TalentPanel = () => {
         <div className="flex gap-2 flex-wrap justify-end">
           {(['all', 'actor', 'director', 'writer', 'producer'] as (TalentRole | 'all')[]).map(type => (
             <TooltipWrapper key={type} tooltip={`Filter by ${type === 'all' ? 'all professional roles' : `the ${type} category`}`} side="bottom">
-              <button
+              <button aria-pressed={filter === type}
                 onClick={() => setFilter(type)}
                 className={`px-3.5 py-1.5 text-[10px] uppercase tracking-wider font-black rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background ${
                   filter === type

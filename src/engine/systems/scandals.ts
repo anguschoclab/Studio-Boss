@@ -17,7 +17,10 @@ export function generateScandals(state: GameState): StateImpact[] {
   
   const studioProjects = state.studio.internal.projects || {};
 
-  for (const talent of Object.values(state.industry.talentPool || {})) {
+  // ⚡ Bolt: Iterate over talentPool using for...in to avoid O(N) array allocation per tick
+  const talentPool = state.industry.talentPool || {};
+  for (const talentId in talentPool) {
+    const talent = talentPool[talentId];
     const risk = talent.psychology?.scandalRisk || 5; 
     if (secureRandom() * 1000 < risk) {
        const types: ScandalType[] = ['financial', 'personal', 'onset_behavior', 'legal', 'feud'];
@@ -53,9 +56,12 @@ export function generateScandals(state: GameState): StateImpact[] {
              projectId,
              update: {
                activeCrisis: {
+                  crisisId: `scandal-crisis-${crypto.randomUUID()}`,
+                  triggeredWeek: state.week,
+                  haltedProduction: false,
                  description: `BREAKING NEWS: ${talent.name.toUpperCase()} has been involved in a massive ${type} scandal while working on "${project.title}". The press is circling.`,
                  resolved: false,
-                 severity: s.severity > 75 ? 'catastrophic' : 'high',
+                  severity: s.severity > 75 ? 'high' : 'medium',
                  options: [
                    {
                      text: "Fire Them",

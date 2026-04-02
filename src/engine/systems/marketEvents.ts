@@ -9,7 +9,8 @@ const EVENT_TEMPLATES: Omit<MarketEvent, 'id' | 'weeksRemaining'>[] = [
     description: 'A global lock-down or tech shift leads to massive streaming growth.',
     revenueMultiplier: 1.5,
     costMultiplier: 1.2,
-    talentAvailabilityModifier: -0.1
+    talentAvailabilityModifier: -0.1,
+    economicShock: { sentimentShift: 20, baseRateShift: -0.01 } // Lower rates for growth
   },
   {
     type: 'theatrical_revival',
@@ -17,7 +18,8 @@ const EVENT_TEMPLATES: Omit<MarketEvent, 'id' | 'weeksRemaining'>[] = [
     description: 'Audiences are flocking back to cinemas globally.',
     revenueMultiplier: 1.4,
     costMultiplier: 1.0,
-    talentAvailabilityModifier: 0.1
+    talentAvailabilityModifier: 0.1,
+    economicShock: { sentimentShift: 10, baseRateShift: 0 }
   },
   {
     type: 'writers_strike',
@@ -25,7 +27,8 @@ const EVENT_TEMPLATES: Omit<MarketEvent, 'id' | 'weeksRemaining'>[] = [
     description: 'Writers are striking for better streaming residuals.',
     revenueMultiplier: 1.0,
     costMultiplier: 1.5,
-    talentAvailabilityModifier: -0.8
+    talentAvailabilityModifier: -0.8,
+    economicShock: { sentimentShift: -15, baseRateShift: 0.005 } // Slight rate hike from inflation
   },
   {
     type: 'actors_strike',
@@ -33,7 +36,8 @@ const EVENT_TEMPLATES: Omit<MarketEvent, 'id' | 'weeksRemaining'>[] = [
     description: 'Actors hit the picket lines over AI replacement fears.',
     revenueMultiplier: 0.8,
     costMultiplier: 1.5,
-    talentAvailabilityModifier: -0.9
+    talentAvailabilityModifier: -0.9,
+    economicShock: { sentimentShift: -20, baseRateShift: 0.005 }
   },
   {
     type: 'market_crash',
@@ -41,7 +45,8 @@ const EVENT_TEMPLATES: Omit<MarketEvent, 'id' | 'weeksRemaining'>[] = [
     description: 'An economic downturn dries up credit and suppresses entertainment spending.',
     revenueMultiplier: 0.7,
     costMultiplier: 0.9,
-    talentAvailabilityModifier: 0.3
+    talentAvailabilityModifier: 0.3,
+    economicShock: { sentimentShift: -50, baseRateShift: 0.04 } // Massive rate hike to combat inflation
   }
 ];
 

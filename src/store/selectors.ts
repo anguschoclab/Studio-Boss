@@ -2,7 +2,12 @@ import { createSelector } from 'reselect';
 import { GameState, Project, RivalStudio, Talent, GameEvent } from '../engine/types';
 
 const EMPTY_PROJECTS = {};
-const EMPTY_FINANCE = { cash: 0, ledger: [] };
+const EMPTY_FINANCE = { 
+  cash: 0, 
+  ledger: [], 
+  weeklyHistory: [], 
+  marketState: null 
+};
 const EMPTY_MARKET = { buyers: [], opportunities: [], trends: [], activeMarketEvents: [] };
 const EMPTY_TALENT_POOL = {};
 const EMPTY_RIVALS: RivalStudio[] = [];
@@ -126,6 +131,46 @@ export const selectMarketTrends = createSelector(
   [selectMarket],
   (market) => market.trends || []
 );
+
+/**
+ * Market & Economy Selectors
+ */
+export const selectMarketState = createSelector(
+  [selectFinance],
+  (finance) => finance.marketState || null
+);
+
+export const selectMarketMetrics = createSelector(
+  [selectMarketState],
+  (market) => {
+    if (!market) return { cycle: 'STABLE', sentiment: 0, debtRate: 0.08, savingsRate: 0.02 };
+    return {
+      cycle: market.cycle,
+      sentiment: market.sentiment,
+      debtRate: market.debtRate,
+      savingsRate: market.savingsYield
+    };
+  }
+);
+
+/**
+ * Project Recoupment Selectors
+ */
+export const selectLatestSnapshot = createSelector(
+  [selectFinance],
+  (finance) => finance.weeklyHistory[finance.weeklyHistory.length - 1] || null
+);
+
+export const selectRecoupmentMap = createSelector(
+  [selectLatestSnapshot],
+  (snapshot) => snapshot?.projectRecoupment || {}
+);
+
+export const selectProjectRecoupment = (projectId: string) => 
+  createSelector(
+    [selectRecoupmentMap],
+    (map) => map[projectId] || 0
+  );
 
 /**
  * UI / Event Selectors

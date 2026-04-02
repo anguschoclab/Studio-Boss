@@ -47,7 +47,17 @@ export const PREFIXES: string[] = [
   'Cash-Grab',
   'Tax-Haven',
   'Pivoting',
-  'Monopolized'
+  'Monopolized',
+  'Data-Scraped',
+  'A.I. Generated',
+  'Subprime',
+  'Un-Unionized',
+  'Tax-Shelter',
+  'Algorithm-Driven',
+  'Shareholder-Approved',
+  'Prestige-Bait',
+  'IP-Farm',
+  'Metrics-Obsessed'
 ];
 
 export const SUFFIXES: string[] = [
@@ -87,7 +97,17 @@ export const SUFFIXES: string[] = [
   'Web3 Venture',
   'Metaverse Property',
   'NFT Collection',
-  'Deepfake'
+  'Deepfake',
+  'Tax Shelters',
+  'Offshores',
+  'Holdings',
+  'Monopolies',
+  'Cartels',
+  'Conglomerates',
+  'Subsidiaries',
+  'Shell Corporations',
+  'Trusts',
+  'Web3 Ventures'
 ];
 
 export const MOTTOS: string[] = [
@@ -129,7 +149,17 @@ export const MOTTOS: string[] = [
   'Your subscription is non-refundable.',
   'We have the rights, you have the money.',
   'Failing upwards.',
-  'Monetizing your childhood trauma.'
+  'Monetizing your childhood trauma.',
+  'Art through analytics.',
+  'Maximizing shareholder value since Q3.',
+  'Democratizing the algorithm.',
+  'Synergizing paradigms for a new era.',
+  'Where IP meets ROI.',
+  'Focus-grouped for your pleasure.',
+  'We know what you want before you do.',
+  'Leveraging assets, expanding universes.',
+  'Because art is just a tax write-off.',
+  'If it worked once, we will do it again.'
 ];
 
 export const MALE_FIRST_NAMES: string[] = [

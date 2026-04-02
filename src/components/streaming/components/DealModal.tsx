@@ -113,7 +113,7 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
                    </h4>
                    <div className="space-y-2 max-h-[240px] overflow-y-auto pr-1">
                       {eligibleProjects.map(p => (
-                        <button
+                        <button aria-pressed={selectedProject === p.id}
                           key={p.id}
                           onClick={() => setSelectedProject(p.id)}
                           className={cn(
@@ -158,7 +158,7 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
                       <div className="flex gap-2">
                         {(['standard', 'deficit', 'upfront'] as ProjectContractType[]).map(t => (
                           <TooltipWrapper key={t} tooltip={DEAL_TYPE_TOOLTIPS[t]} side="bottom">
-                            <button
+                            <button aria-pressed={contractType === t}
                               onClick={() => setContractType(t)}
                               className={cn(
                                 "flex-1 h-9 rounded-lg border text-[9px] font-black uppercase tracking-widest transition-all",

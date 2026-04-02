@@ -1,4 +1,4 @@
-import { Project, Contract, Talent, Award, MarketingCampaign } from '@/engine/types';
+import { Project, Contract, Talent, Award, MarketingCampaign, SeriesProject, UnscriptedProject } from '@/engine/types';
 import { BUDGET_TIERS } from '../data/budgetTiers';
 import { TV_FORMATS } from '../data/tvFormats';
 import { UNSCRIPTED_FORMATS } from '../data/unscriptedFormats';
@@ -91,8 +91,10 @@ function handleReleasedPhase(
   let update: string | null = null;
   let talentUpdates: Talent[] = [];
 
-  if ((p.format === 'tv' && ((p as any).tvFormat)) || (p.format === 'unscripted' && ((p as any).unscriptedFormat))) {
-    const formatData = p.format === 'tv' ? TV_FORMATS[((p as any).tvFormat)!] : UNSCRIPTED_FORMATS[((p as any).unscriptedFormat)!];
+  if (p.format === 'tv' || p.format === 'unscripted') {
+    const formatData = p.format === 'tv'
+      ? TV_FORMATS[(p as SeriesProject).tvFormat as keyof typeof TV_FORMATS]
+      : UNSCRIPTED_FORMATS[(p as UnscriptedProject & { type: 'SERIES' }).unscriptedFormat as keyof typeof UNSCRIPTED_FORMATS];
     const eps = ((p as any).tvDetails)?.episodesOrdered || formatData.defaultEpisodes;
     const currentSeason = ((p as any).tvDetails)?.currentSeason || 1;
 

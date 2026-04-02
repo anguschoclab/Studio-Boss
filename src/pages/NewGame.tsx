@@ -22,9 +22,9 @@ const NewGame = () => {
     }
   }, [navigate]);
 
-  const handleLaunch = () => {
+  const handleLaunch = async () => {
     if (!studioName.trim() || !selectedArchetype) return;
-    newGame(studioName.trim(), selectedArchetype);
+    await newGame(studioName.trim(), selectedArchetype);
     navigate({ to: '/dashboard' });
   };
 

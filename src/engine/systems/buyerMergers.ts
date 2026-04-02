@@ -62,6 +62,8 @@ export function advanceBuyers(state: GameState): StateImpact {
 
       if (secureRandom() < 0.02) {
         impact.newHeadlines!.push({
+          id: `headline-${crypto.randomUUID()}`,
+          week: currWeek,
           category: 'market',
           text: pick(performance > 0 ? STREAMER_GROWTH_EVENTS : STREAMER_DECLINE_EVENTS)(buyer.name),
         });
@@ -80,6 +82,8 @@ export function advanceBuyers(state: GameState): StateImpact {
       if (!buyer.isAcquirable) {
         update.isAcquirable = true;
         impact.newHeadlines!.push({
+          id: `headline-${crypto.randomUUID()}`,
+          week: currWeek,
           category: 'market',
           text: pick(VULNERABILITY_HEADLINES)(buyer.name),
         });
@@ -126,6 +130,8 @@ export function advanceBuyers(state: GameState): StateImpact {
         });
 
         impact.newHeadlines!.push({
+          id: `headline-${crypto.randomUUID()}`,
+          week: currWeek,
           category: 'market',
           text: pick(MERGER_HEADLINES)(acquirer.name, target.name),
         });

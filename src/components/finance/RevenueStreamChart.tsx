@@ -13,7 +13,7 @@ export const RevenueStreamChart: React.FC<RevenueStreamChartProps> = ({ data }) 
     theatrical: h.revenue.theatrical,
     streaming: h.revenue.streaming,
     merch: h.revenue.merch,
-    other: h.revenue.other,
+    passive: h.revenue.passive,
   }));
 
   return (
@@ -45,7 +45,7 @@ export const RevenueStreamChart: React.FC<RevenueStreamChartProps> = ({ data }) 
           <Area type="monotone" dataKey="theatrical" stackId="1" stroke="#f59e0b" fillOpacity={1} fill="url(#colorTheo)" />
           <Area type="monotone" dataKey="streaming" stackId="1" stroke="#6366f1" fillOpacity={1} fill="url(#colorStream)" />
           <Area type="monotone" dataKey="merch" stackId="1" stroke="#10b981" fillOpacity={1} fill="url(#colorMerch)" />
-          <Area type="monotone" dataKey="other" stackId="1" stroke="#94a3b8" fillOpacity={1} fill="#94a3b8" />
+          <Area type="monotone" dataKey="passive" stackId="1" stroke="#94a3b8" fillOpacity={1} fill="#94a3b8" />
         </AreaChart>
       </ResponsiveContainer>
     </div>

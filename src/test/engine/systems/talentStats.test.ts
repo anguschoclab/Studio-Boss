@@ -29,40 +29,40 @@ describe('applyAwardBoostsToTalent', () => {
       const award: Award = { ...baseAward, category: 'Best Actor', body: 'Academy Awards', status: 'won' };
       const boosts = applyAwardBoostsToTalent(baseTalent, award, 1.0, true);
 
-      expect(boosts.prestigeBoost).toBeCloseTo(81);
-      expect(boosts.egoBoost).toBeCloseTo(135);
-      expect(boosts.drawBoost).toBeCloseTo(36);
-      expect(boosts.feeMultiplier).toBeCloseTo(10.0);
+      expect(boosts.prestigeBoost).toBeCloseTo(108);
+      expect(boosts.egoBoost).toBeCloseTo(180);
+      expect(boosts.drawBoost).toBeCloseTo(54);
+      expect(boosts.feeMultiplier).toBeCloseTo(15.4);
     });
 
     it('calculates boosts for a Cannes equivalent supporting win', () => {
       const award: Award = { ...baseAward, category: 'Best Supporting Actor', body: 'Cannes Film Festival', status: 'won' };
       const boosts = applyAwardBoostsToTalent(baseTalent, award, 1.0, false);
 
-      expect(boosts.prestigeBoost).toBeCloseTo(49);
-      expect(boosts.egoBoost).toBeCloseTo(84);
-      expect(boosts.drawBoost).toBeCloseTo(21);
-      expect(boosts.feeMultiplier).toBeCloseTo(6.6);
+      expect(boosts.prestigeBoost).toBeCloseTo(63);
+      expect(boosts.egoBoost).toBeCloseTo(112);
+      expect(boosts.drawBoost).toBeCloseTo(28);
+      expect(boosts.feeMultiplier).toBeCloseTo(9.4);
     });
 
     it('calculates boosts for a Sundance equivalent standard category win', () => {
       const award: Award = { ...baseAward, category: 'Best Screenplay', body: 'Sundance Film Festival', status: 'won' };
       const boosts = applyAwardBoostsToTalent(baseTalent, award, 1.0, false);
 
-      expect(boosts.prestigeBoost).toBeCloseTo(15);
-      expect(boosts.egoBoost).toBeCloseTo(40);
-      expect(boosts.drawBoost).toBeCloseTo(35);
-      expect(boosts.feeMultiplier).toBeCloseTo(3.5);
+      expect(boosts.prestigeBoost).toBeCloseTo(20);
+      expect(boosts.egoBoost).toBeCloseTo(50);
+      expect(boosts.drawBoost).toBeCloseTo(45);
+      expect(boosts.feeMultiplier).toBeCloseTo(4.5);
     });
 
     it('calculates boosts for a standard non-prestige win', () => {
       const award: Award = { ...baseAward, category: 'Best Original Song', body: 'Golden Globes', status: 'won' };
       const boosts = applyAwardBoostsToTalent(baseTalent, award, 1.0, false);
 
-      expect(boosts.prestigeBoost).toBeCloseTo(10);
-      expect(boosts.egoBoost).toBeCloseTo(20);
-      expect(boosts.drawBoost).toBeCloseTo(8);
-      expect(boosts.feeMultiplier).toBeCloseTo(2.0);
+      expect(boosts.prestigeBoost).toBeCloseTo(15);
+      expect(boosts.egoBoost).toBeCloseTo(30);
+      expect(boosts.drawBoost).toBeCloseTo(12);
+      expect(boosts.feeMultiplier).toBeCloseTo(3.0);
     });
   });
 
@@ -103,10 +103,10 @@ describe('applyAwardBoostsToTalent', () => {
       const award: Award = { ...baseAward, category: 'Best Director', body: 'Academy Awards', status: 'won' };
       const boosts = applyAwardBoostsToTalent(baseTalent, award, 0.5, true);
 
-      expect(boosts.prestigeBoost).toBeCloseTo(40.5);
-      expect(boosts.egoBoost).toBeCloseTo(67.5);
-      expect(boosts.drawBoost).toBeCloseTo(18);
-      expect(boosts.feeMultiplier).toBeCloseTo(5.5);
+      expect(boosts.prestigeBoost).toBeCloseTo(54);
+      expect(boosts.egoBoost).toBeCloseTo(90);
+      expect(boosts.drawBoost).toBeCloseTo(27);
+      expect(boosts.feeMultiplier).toBeCloseTo(8.2);
     });
   });
 });

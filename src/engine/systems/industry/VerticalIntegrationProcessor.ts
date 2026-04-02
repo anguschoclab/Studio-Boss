@@ -27,7 +27,6 @@ export function tickVerticalIntegration(state: GameState, rng: RandomGenerator):
         type: 'FINANCE_TRANSACTION',
         payload: {
           amount: netProfit,
-          category: 'other',
           description: `Platform P&L: ${platform.name}`,
         }
       });
@@ -53,6 +52,7 @@ export function tickVerticalIntegration(state: GameState, rng: RandomGenerator):
           headline: netProfit > 0 
             ? `${platform.name} reports record weekly profits` 
             : `${platform.ownerId === 'player' ? state.studio.name : platform.name} shares tumble on streaming losses`,
+          description: `Weekly platform earnings signal a major shift in distribution economics for ${platform.name}.`,
           category: 'market',
         }
       });

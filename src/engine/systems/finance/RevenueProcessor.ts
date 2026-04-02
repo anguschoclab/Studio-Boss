@@ -7,19 +7,64 @@ import { calculateWeeklyIPRevenue } from '../ip/merchandisingEngine';
  */
 export class RevenueProcessor {
   /**
+   * Calculates total active revenue and recoupment for all studio projects.
+   */
+  static calculateActiveRevenue(
+    projects: Project[],
+    state: import('../../types').GameState
+  ): {
+    boxOffice: number;
+    distribution: number;
+    merch: number;
+    totalRoyalties: number;
+    projectRecoupment: Record<string, number>;
+  } {
+    let boxOffice = 0;
+    let distribution = 0;
+    let merch = 0;
+    let totalRoyalties = 0;
+    const projectRecoupment: Record<string, number> = {};
+
+    projects.forEach(p => {
+      const totalCost = p.budget + (p.marketingBudget || 0);
+      if (totalCost > 0) {
+        projectRecoupment[p.id] = Math.min(100, Math.floor((p.revenue / totalCost) * 100));
+      }
+
+      if (p.state === 'released') {
+        let weeklyGross = 0;
+        
+        if (p.distributionStatus === 'theatrical') {
+          weeklyGross = this.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.5);
+          boxOffice += weeklyGross;
+        } else if (p.distributionStatus === 'streaming') {
+          const platform = state.market.buyers.find(b => b.id === p.buyerId);
+          if (platform) {
+            weeklyGross = this.calculateStreamingRevenue(p, platform);
+            distribution += weeklyGross;
+          }
+        }
+        
+        const franchise = p.franchiseId ? state.ip.franchises[p.franchiseId] : null;
+        const weeklyMerch = this.calculateMerchRevenue(p.buzz, franchise?.relevanceScore || 0);
+        merch += weeklyMerch;
+
+        totalRoyalties += this.calculateNetPointsRoyalty(p, weeklyGross + weeklyMerch, state.studio.internal.contracts);
+      }
+    });
+
+    return { boxOffice, distribution, merch, totalRoyalties, projectRecoupment };
+  }
+
+  /**
    * Calculates weekly streaming revenue for a project on a specific platform.
-   * Expected: Weekly Licensing Fee = $20,000 (at 100 quality, 10% market share).
    */
   static calculateStreamingRevenue(project: Project, platform: Buyer): number {
     const quality = project.reviewScore || 50;
     const marketShare = platform.marketShare || 0.10;
-    
-    // Base fee is $2,000 per 1% market share at 100 quality
     const baseFeePerUnit = 2000; 
     const shareUnits = marketShare * 100;
-    
-    const revenue = baseFeePerUnit * shareUnits * (quality / 100);
-    return Math.round(revenue);
+    return Math.round(baseFeePerUnit * shareUnits * (quality / 100));
   }
 
   /**
@@ -38,14 +83,10 @@ export class RevenueProcessor {
    */
   static calculateMerchRevenue(hype: number, franchiseRelevance: number): number {
     if (hype < 70) return 0;
-    
-    // Revenue scales with hype and franchise relevance
     const base = 5000;
-    const hypeFactor = (hype - 70) / 30; // 0 to 1
-    const relevanceFactor = franchiseRelevance / 100; // 0 to 1
-    
-    const revenue = base + (base * 5 * hypeFactor * relevanceFactor);
-    return Math.round(revenue);
+    const hypeFactor = (hype - 70) / 30;
+    const relevanceFactor = franchiseRelevance / 100;
+    return Math.round(base + (base * 5 * hypeFactor * relevanceFactor));
   }
 
   /**
@@ -57,28 +98,20 @@ export class RevenueProcessor {
 
   /**
    * Calculates talent royalties (Net Points) for a project.
-   * Royalties ONLY trigger after the project has recouped (Total Revenue >= Total Cost).
    */
   static calculateNetPointsRoyalty(project: Project, weeklyRevenue: number, contracts: Contract[]): number {
     const totalCost = project.budget + (project.marketingBudget || 0);
     const totalRevenue = project.revenue || 0;
 
-    // Recoupment check
-    if (totalRevenue < totalCost) {
-      return 0; // Negative cost has not been recovered yet
-    }
+    if (totalRevenue < totalCost) return 0;
 
-    // Payout logic: Gross points based on the current week's revenue
     let totalRoyalty = 0;
     contracts.forEach(contract => {
       if (contract.projectId === project.id && contract.backendPercent > 0) {
         let percent = contract.backendPercent / 100;
-
-        // Backend escalator: +5% if Revenue > 2x Cost
         if (contract.backendEscalator && totalRevenue > totalCost * 2) {
           percent += 0.05;
         }
-
         totalRoyalty += weeklyRevenue * percent;
       }
     });
