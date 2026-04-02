@@ -10,6 +10,7 @@ describe('financeSlice', () => {
         finance: {
           cash: 100000000,
           ledger: [],
+          weeklyHistory: []
         }
       } as any
     });

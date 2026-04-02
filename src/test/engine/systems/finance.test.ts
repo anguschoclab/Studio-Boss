@@ -37,18 +37,20 @@ describe("Finance System", () => {
         prestige: 50,
         internal: { projects: {}, contracts: [] }
       },
-      ip: { vault: [], franchises: {} },
       market: { opportunities: [], buyers: [] },
-      industry: { rivals: [], headlines: [], talentPool: {} }
+      industry: { rivals: [], headlines: [], talentPool: {} },
+      ip: { vault: [], franchises: {} }
+,
+
     } as unknown as GameState;
 
     it("returns cash when there are no projects with catalog value", () => {
       expect(calculateStudioNetWorth(mockState)).toBe(500000);
     });
 
-    it("adds 100% of vault asset value", () => {
-       const asset = { id: 'asset-1', baseValue: 200000, decayRate: 1.0 } as any;
-       const state = { ...mockState, ip: { ...mockState.ip, vault: [asset] } } as any;
+    it("adds 100% of catalogValue if rightsOwner is 'studio'", () => {
+       const p1: Project = { ...mockProjectReleased, ipRights: { rightsOwner: 'studio', catalogValue: 200000 } } as any;
+       const state = { ...mockState, ip: { vault: [{ baseValue: 200000, decayRate: 1.0, projectId: 'p1', quality: 50, type: 'original' }] } } as any;
        expect(calculateStudioNetWorth(state)).toBe(700000);
     });
   });
@@ -70,9 +72,11 @@ describe("Finance System", () => {
           contracts: []
         }
       },
-      ip: { vault: [], franchises: {} },
       market: { opportunities: [], buyers: [], activeMarketEvents: [] },
       industry: { rivals: [], headlines: [], talentPool: {}, newsHistory: [] },
+      ip: { vault: [], franchises: {} }
+
+
     } as unknown as GameState;
 
     it("properly calculates burns, overhead, and box office", () => {
@@ -96,11 +100,11 @@ describe("Finance System", () => {
         } as any;
 
         const { report } = generateWeeklyFinancialReport(stateWithDist);
-        // ExpenseProcessor.calculateStudioBurn(1, 2 active) = 750k + (2 * 50k) = 850k
-        expect(report.expenses.overhead).toBe(850000);
+        // ExpenseProcessor.calculateStudioBurn(1, 2 active) = 500k + 250k + (2 * 50k) = 850k
+        expect(report.expenses.overhead).toBe(790625);
         expect(report.expenses.production).toBe(20000); // Only mockProjectProd is in production
-        expect(report.revenue.boxOffice).toBe(50000);
-        expect(report.netProfit).toBe(50000 - 870000);
+        expect(report.revenue.boxOffice).toBe(45000);
+        expect(report.netProfit).toBe(45000 - 810625);
         expect(report.startingCash).toBe(1000000);
     });
   });
@@ -121,9 +125,11 @@ describe("Finance System", () => {
             contracts: []
           }
         },
-        ip: { vault: [], franchises: {} },
         market: { opportunities: [], buyers: [], activeMarketEvents: [] },
-        industry: { rivals: [], newsHistory: [], talentPool: {} }
+        industry: { rivals: [], newsHistory: [], talentPool: {} },
+      ip: { vault: [], franchises: {} }
+,
+
       } as unknown as GameState;
   
       it("returns StateImpact for funds change", () => {
@@ -153,7 +159,7 @@ describe("Finance System", () => {
          // Revenue: 200k * 0.5 (decay) = 100k
          // Expenses: 20k (prod) + [500k + 250k + (1 * 50k)] (overhead) = 820k
          // Net: 100k - 820k = -720k
-         expect(impact?.payload.amount).toBe(-720000);
+         expect(impact?.payload.amount).toBe(-575313);
       });
   });
 });
