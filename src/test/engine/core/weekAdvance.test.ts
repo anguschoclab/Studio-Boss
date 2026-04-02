@@ -9,7 +9,7 @@ describe('Week Advance Pipeline (Target A4)', () => {
     tickCount: 0,
     projects: { active: [] },
     game: { currentWeek: 1 },
-    finance: { cash: 1_000_000, ledger: [] },
+    finance: { cash: 1_000_000, ledger: [], weeklyHistory: [] },
     news: { headlines: [] },
     ip: { vault: [], franchises: {} },
     studio: {

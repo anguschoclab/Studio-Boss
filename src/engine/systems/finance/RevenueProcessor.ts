@@ -70,8 +70,12 @@ export class RevenueProcessor {
   /**
    * Calculates box office decay for a project in a given week.
    */
-  static calculateTheatricalDecay(currentRevenue: number, decayRate: number): number {
-    return Math.round(currentRevenue * decayRate);
+  static calculateTheatricalDecay(currentRevenue: number, decayRate: number, isCultClassic: boolean = false): number {
+    let revenue = Math.round(currentRevenue * decayRate);
+    if (isCultClassic) {
+      revenue = Math.max(revenue * 1.5, 100000);
+    }
+    return revenue;
   }
 
   /**
