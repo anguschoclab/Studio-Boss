@@ -1,4 +1,3 @@
-import { pick } from '../utils';
 import { RandomGenerator } from '../utils/rng';
 
 const GENRE_PATTERNS: Record<string, string[][]> = {
@@ -298,8 +297,6 @@ const WORDS: Record<string, string[]> = {
   TIME: ['Midnight', 'Dawn', 'Dusk', 'Night', 'Tomorrow', 'Yesterday', 'Upload', 'Drop', 'Stream', 'Post', 'The Golden Hour', 'Crunch Time', 'Q1', 'Q2', 'Q3', 'Q4', 'Fiscal Year', 'Earnings Call', 'Tax Season', 'Zero-Day'],
   ANIMAL: ['Bear', 'Dog', 'Cat', 'Lion', 'Tiger', 'Dragon', 'Unicorn', 'Dinosaur', 'Doge', 'Ape', 'Pepe', 'Capybara', 'Trash Panda', 'Vulture', 'Cash Cow', 'Dead Cat', 'Black Swan']
 };
-
-import { RandomGenerator } from '../utils/rng';
 
 export function generateProjectTitle(genre: string, rng: RandomGenerator): string {
   const patterns = GENRE_PATTERNS[genre] || GENRE_PATTERNS['Drama'];
