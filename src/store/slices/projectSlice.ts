@@ -275,12 +275,6 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
           payload: { amount: asset.baseValue }
         },
         {
-          type: 'INDUSTRY_UPDATE',
-          payload: {
-            vault: state.ip.vault.map(a => a.id === ipAssetId ? { ...a, rightsOwner: 'STUDIO' as const } : a)
-          }
-        },
-        {
           type: 'NEWS_ADDED',
           payload: {
             headline: `STUDIO ACQUIRES "${asset.title}" RIGHTS`,
@@ -294,6 +288,10 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
       return {
         gameState: {
           ...intermediateState,
+          ip: {
+            ...intermediateState.ip,
+            vault: state.ip.vault.map(a => a.id === ipAssetId ? { ...a, rightsOwner: 'STUDIO' as const } : a)
+          },
           studio: {
             ...intermediateState.studio,
             internal: {

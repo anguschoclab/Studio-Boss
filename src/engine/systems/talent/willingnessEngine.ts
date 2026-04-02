@@ -54,10 +54,11 @@ export function calculateWillingness(
   }
 
   // 4. Script Heat
-  if (project.scriptHeat > 80) {
+  const scriptHeat = 'scriptHeat' in project ? project.scriptHeat : 50;
+  if (scriptHeat > 80) {
     score += 15;
     reasons.push(`The script is considered a "Must-Read" in town.`);
-  } else if (project.scriptHeat < 30) {
+  } else if (scriptHeat < 30) {
     score -= 10;
     reasons.push(`Word of mouth on the current draft is lukewarm.`);
   }

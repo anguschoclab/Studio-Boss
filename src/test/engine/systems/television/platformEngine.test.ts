@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { GameState, StreamerPlatform, Talent } from '../../../../engine/types';
+import { GameState, StreamerPlatform, Talent, BuyerUpdateImpact } from '../../../../engine/types';
 import { tickPlatforms } from '../../../../engine/systems/television/platformEngine';
 import { RandomGenerator } from '../../../../engine/utils/rng';
 
@@ -11,9 +11,8 @@ describe('Platform Engine (Target B1)', () => {
       week: 1,
       gameSeed: 1,
       tickCount: 0,
-      projects: { active: [] },
       game: { currentWeek: 1 },
-      finance: { cash: 1000000, ledger: [] },
+      finance: { cash: 1000000, ledger: [], weeklyHistory: [], marketState: { baseRate: 0.04, savingsYield: 0.02, debtRate: 0.08, loanRate: 0.06, rateHistory: [] } },
       news: { headlines: [] },
       ip: { vault: [], franchises: {} },
       studio: {
@@ -61,11 +60,11 @@ describe('Platform Engine (Target B1)', () => {
     const state = getInitialState([streamer]);
     const impacts = tickPlatforms(state, rng);
     
-    const buyerImpact = impacts.find(i => i.payload.buyerId === 's1');
+    const buyerImpact = impacts.find((i): i is BuyerUpdateImpact => i.type === 'BUYER_UPDATED' && i.payload.buyerId === 's1');
     expect(buyerImpact).toBeDefined();
     expect(buyerImpact?.type).toBe('BUYER_UPDATED');
     
-    const nextSubs = buyerImpact?.payload.update.subscribers;
+    const nextSubs = (buyerImpact?.payload.update as Partial<StreamerPlatform> | undefined)?.subscribers;
     expect(nextSubs).toBeDefined();
     expect(nextSubs).not.toBe(10_000_000); 
   });

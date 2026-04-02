@@ -35,6 +35,7 @@ export function submitToFestival(
     newFestivalSubmissions: [...(state.industry.festivalSubmissions || []), submission],
     newHeadlines: [
       {
+        id: `headline-${crypto.randomUUID()}`,
         week: state.week,
         category: 'awards' as const,
         text: `"${project.title}" officially submitted for consideration at ${fest.name}.`
@@ -85,6 +86,7 @@ export function resolveFestivals(state: GameState): StateImpact {
         impact.prestigeChange! += 2;
         
         impact.newHeadlines!.push({
+          id: `headline-${crypto.randomUUID()}`,
           week: state.week,
           category: 'awards' as const,
           text: `Massive buzz out of ${fest.name} as "${project.title}" premieres to standing ovation!`

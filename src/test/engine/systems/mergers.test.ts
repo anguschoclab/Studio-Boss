@@ -24,6 +24,7 @@ describe('Mergers and Sabotage System', () => {
       cash: 5_000_000,
       prestige: 20,
       recentActivity: 'Testing',
+      foundedWeek: 1,
       projectCount: 2,
       strategy: 'genre_specialist',
       genreFocus: 'Horror',

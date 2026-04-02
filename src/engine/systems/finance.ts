@@ -1,4 +1,4 @@
-import { Project, GameState, WeeklyFinancialReport, Contract } from '@/engine/types';
+import { Project, GameState, WeeklyFinancialReport, Contract, Buyer } from '@/engine/types';
 import { StateImpact, FinancialSnapshot } from '../types/state.types';
 import { RevenueProcessor } from './finance/RevenueProcessor';
 import { ExpenseProcessor } from './finance/ExpenseProcessor';
@@ -155,7 +155,7 @@ export function calculateWeeklyCosts(projects: Project[]): number {
   return production + marketing + overhead;
 }
 
-export function calculateWeeklyRevenue(projects: Project[], buyers: Buyer[] = []): number {
+export function calculateWeeklyRevenue(projects: Project[], buyers: Buyer[] = [], _legacyContext?: unknown): number {
   let boxOffice = 0;
   let distribution = 0;
 

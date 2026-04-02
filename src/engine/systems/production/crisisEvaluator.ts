@@ -1,4 +1,4 @@
-import { GameState, Project, StateImpact } from '@/engine/types';
+import { GameState, Project, StateImpact, ProjectUpdateImpact } from '@/engine/types';
 
 /**
  * Strategy Pattern for Crisis Resolution (Target A3).
@@ -46,13 +46,18 @@ export function resolveCrisisWithHandlers(state: GameState, projectId: string, o
   const rawImpacts = Object.values(CrisisHandlers).flatMap(handler => handler(project, option));
   
   // Merge all PROJECT_UPDATED impacts for this specific project into one
-  const mergedUpdate = rawImpacts
-    .filter(i => i.type === 'PROJECT_UPDATED' && i.payload.projectId === projectId)
-    .reduce((acc, i) => ({ ...acc, ...i.payload.update }), { 
-       activeCrisis: { ...project.activeCrisis, resolved: true } 
-    });
+  const projectImpacts = rawImpacts.filter(
+    (i): i is ProjectUpdateImpact => i.type === 'PROJECT_UPDATED' && i.payload.projectId === projectId
+  );
 
-  const otherImpacts = rawImpacts.filter(i => i.type !== 'PROJECT_UPDATED' || i.payload.projectId !== projectId);
+  const mergedUpdate = projectImpacts.reduce<Partial<Project>>(
+    (acc, i) => ({ ...acc, ...i.payload.update }),
+    { activeCrisis: { ...project.activeCrisis, resolved: true } }
+  );
+
+  const otherImpacts = rawImpacts.filter(
+    i => !(i.type === 'PROJECT_UPDATED' && (i as ProjectUpdateImpact).payload.projectId === projectId)
+  );
 
   return [
     ...otherImpacts,
