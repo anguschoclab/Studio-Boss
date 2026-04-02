@@ -43,6 +43,21 @@ export function executeAcquisition(state: GameState, targetId: string): GameStat
       ...state.finance, 
       cash: state.finance.cash - evalResult.price + (target.cash || 0) 
     },
+    market: {
+      ...state.market,
+      opportunities: [
+        {
+          id: crypto.randomUUID(),
+          type: 'IP_ACQUISITION',
+          title: `Acquired ${target.name} IP Catalog`,
+          description: `The back catalog of ${target.name} is ready to be monetized.`,
+          costToAcquire: 0,
+          weeksUntilExpiry: 52,
+          requirements: {}
+        },
+        ...(state.market.opportunities || []),
+      ],
+    },
     studio: { 
       ...state.studio, 
       prestige: newPrestige,

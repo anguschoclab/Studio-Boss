@@ -88,6 +88,44 @@ describe("TalentSystem", () => {
       expect(t1.draw).toBe(56); // 50 + 6
       expect(t1.prestige).toBe(53); // 50 + 3
     });
+
+    it("handles extreme edge case: talent with 0 skill (draw/prestige) but 100 ego safely", () => {
+      // Create a terrible talent (nepotism hire)
+      const zeroSkillTalent: Talent = {
+        ...mockTalent1,
+        id: "t_nepo",
+        name: "Nepo Baby",
+        draw: 0,
+        prestige: 0,
+        fee: 5_000_000,
+        psychology: { ego: 100, mood: 50, scandalRisk: 90, synergyAffinities: [], synergyConflicts: [] }
+      };
+
+      // Put them in a catastrophic flop
+      const flopContracts: Contract[] = [
+        { id: "c_flop", projectId: "p1", talentId: "t_nepo", fee: 5_000_000, backendPercent: 0 }
+      ];
+
+      const megaFlopProject: Project = {
+        ...mockProject,
+        budget: 100_000_000,
+        revenue: 1_000_000 // 0.01 ROI
+      } as Project;
+
+      const results = TalentSystem.applyProjectResults(megaFlopProject, flopContracts, [zeroSkillTalent]);
+
+      const nepo = results.find(t => t.id === "t_nepo")!;
+
+      // Values should clamp at 0 and not go negative
+      expect(nepo.draw).toBe(0);
+      expect(nepo.prestige).toBe(0);
+
+      // Fee should drop by 25% (0.75 multiplier)
+      expect(nepo.fee).toBe(3_750_000);
+
+      // Ego remains unshaken at 100 (clamp maximum)
+      expect(nepo.ego).toBe(100);
+    });
   });
 
   describe("advance", () => {

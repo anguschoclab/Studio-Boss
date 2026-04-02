@@ -108,7 +108,7 @@ describe('Mergers and Sabotage System', () => {
     it('successfully executes acquisition and updates game state', () => {
       const newState = executeAcquisition(mockState, mockTarget.id);
 
-      expect(newState.finance.cash).toBe(100_000_000 - 30_000_000);
+      expect(newState.finance.cash).toBe(100_000_000 - 30_000_000 + 5_000_000);
       expect(newState.industry.rivals).toHaveLength(0);
       expect(newState.studio.prestige).toBe(52);
       expect(newState.market.opportunities).toHaveLength(1);
@@ -118,7 +118,7 @@ describe('Mergers and Sabotage System', () => {
 
       expect(newState.industry.newsHistory).toHaveLength(1);
       const news = newState.industry.newsHistory[0];
-      expect(news.headline).toContain('acquires Test Indie Studio');
+      expect(news.headline).toContain('absorbs Test Indie Studio');
     });
   });
 

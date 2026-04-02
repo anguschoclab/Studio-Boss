@@ -63,4 +63,32 @@ describe('Production Engine (Target A2) - Symmetry', () => {
     expect(playerImpact?.payload.update.weeksInPhase).toBe(6);
     expect(rivalImpact?.payload.update.weeksInPhase).toBe(6);
   });
+
+  it('handles edge case: advancing weeks with completely empty pipelines safely', () => {
+    // Empty player and rival pipelines
+    const emptyState = {
+      ...mockState,
+      studio: {
+        ...mockState.studio,
+        internal: {
+          ...mockState.studio.internal,
+          projects: {} // empty player pipeline
+        }
+      },
+      industry: {
+        ...mockState.industry,
+        rivals: [
+          {
+            ...mockState.industry.rivals[0],
+            projects: {} // empty rival pipeline
+          }
+        ]
+      }
+    } as unknown as GameState;
+
+    const impacts = tickProduction(emptyState, rng);
+
+    // Should iterate cleanly without crashing and return no impacts
+    expect(impacts).toHaveLength(0);
+  });
 });

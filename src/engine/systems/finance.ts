@@ -14,7 +14,7 @@ export function calculateStudioNetWorth(state: GameState): number {
   let netWorth = state.finance.cash;
   
   // 1. IP Catalog Value
-  state.ip.vault.forEach(asset => {
+  (state.ip?.vault || []).forEach(asset => {
     netWorth += asset.baseValue * asset.decayRate;
   });
 
@@ -42,7 +42,7 @@ export function generateWeeklyFinancialReport(
   const market = state.finance.marketState || InterestRateSimulator.initialize();
 
   // 1. Calculate Passive Income from Vault
-  const passive = RevenueProcessor.calculateVaultDividends(state.ip.vault);
+  const passive = RevenueProcessor.calculateVaultDividends(state.ip?.vault || []);
   
   // 2. Calculate Active Revenue & Royalties
   let boxOffice = 0;
@@ -162,7 +162,11 @@ export function calculateWeeklyRevenue(projects: Project[], buyers: Buyer[] = []
   projects.forEach(p => {
     if (p.state === 'released') {
       if (p.distributionStatus === 'theatrical') {
-        boxOffice += RevenueProcessor.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.5);
+        let decayGross = RevenueProcessor.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.5);
+        if (p.isCultClassic) {
+          decayGross = Math.max(decayGross * 1.5, 100000);
+        }
+        boxOffice += decayGross;
       } else if (p.distributionStatus === 'streaming') {
         const platform = buyers.find(b => b.id === p.buyerId);
         if (platform) {
