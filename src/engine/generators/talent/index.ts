@@ -21,7 +21,22 @@ const TALENT_QUIRKS = [
   'Requires all dialogue to be whispered',
   'Insists on writing their own stunts',
   'Refuses to work past 4 PM',
-  'Demands exclusive gym trailer'
+  'Demands exclusive gym trailer',
+  'Requires mandatory daily rewrites',
+  'Refuses to work with first-time directors',
+  'Forces entire cast to do method acting',
+  'Only communicates through their assistant',
+  'Demands a guaranteed percentage of merchandising',
+  'Refuses to look co-stars in the eye',
+  'Requires a dedicated onset therapist',
+  'Demands their own dedicated lighting director',
+  'Will only eat blue M&Ms',
+  'Mandates a full orchestra on set',
+  'Refuses to memorize lines, uses an earpiece',
+  'Requires a personal psychic reading before every take',
+  'Demands a completely closed set with no eye contact',
+  'Refuses to shoot in locations under 70 degrees',
+  'Requires all their wardrobe to be designer originals'
 ];
 
 export function generateTalent(params: { role: TalentRole; tier: string; localCountry?: string }): Talent {

@@ -10,8 +10,8 @@ describe('Agency Generation', () => {
     expect(agencies[0].archetype).toBe('powerhouse');
     expect(agencies[1].archetype).toBe('powerhouse');
 
-    // The third (i=2, 2%3 !== 0) should be boutique
-    expect(['comedy_specialist', 'mega_corp', 'boutique', 'indie_darling', 'streaming_titan', 'lit_agency']).toContain(agencies[2].archetype);
+    // The third (i=2, 2%3 !== 0) should be one of the remaining specialists/boutiques
+    expect(['comedy_specialist', 'mega_corp', 'boutique', 'indie_darling', 'international_broker', 'nepotism_mill', 'lit_agency', 'streaming_titan', 'legacy_defenders', 'genre_kings', 'influencer_syndicate']).toContain(agencies[2].archetype);
 
     // The fourth (i=3, 3%3 === 0) should be shark
     expect(agencies[3].archetype).toBe('shark');
