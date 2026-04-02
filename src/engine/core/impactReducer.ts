@@ -33,7 +33,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
         ...state,
         finance: {
           ...state.finance,
-          weeklyHistory: [snapshot, ...state.finance.weeklyHistory].slice(0, 52)
+          weeklyHistory: [snapshot, ...(state.finance.weeklyHistory || [])].slice(0, 52)
         }
       };
     }

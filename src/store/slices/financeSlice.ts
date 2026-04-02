@@ -47,16 +47,16 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
         finance: {
           ...state.finance,
           cash: report.endingCash,
-          ledger: [report, ...state.finance.ledger].slice(0, 100),
-          weeklyHistory: [snapshot, ...state.finance.weeklyHistory].slice(0, 52),
+          ledger: [report, ...(state.finance.ledger || [])].slice(0, 100),
+          weeklyHistory: [snapshot, ...(state.finance.weeklyHistory || [])].slice(0, 52),
         },
         gameState: {
           ...state.gameState,
           finance: {
             ...state.gameState.finance,
             cash: report.endingCash,
-            ledger: [report, ...state.gameState.finance.ledger].slice(0, 100),
-            weeklyHistory: [snapshot, ...state.gameState.finance.weeklyHistory].slice(0, 52),
+            ledger: [report, ...(state.gameState.finance.ledger || [])].slice(0, 100),
+            weeklyHistory: [snapshot, ...(state.gameState.finance.weeklyHistory || [])].slice(0, 52),
           },
         },
       };
@@ -68,12 +68,8 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
       const state = s.gameState;
       if (budget > state.finance.cash) return s;
 
-      const pIndex = Object.values(state.studio.internal.projects).findIndex(p => p.id === projectId);
-      if (pIndex === -1) return s;
-
-      // Extract original project
-      const originalProject = Object.values(state.studio.internal.projects)[pIndex];
-      if (originalProject.state !== 'marketing') return s;
+      const originalProject = state.studio.internal.projects[projectId];
+      if (!originalProject || originalProject.state !== 'marketing') return s;
 
       const newCash = state.finance.cash - budget;
       const { project: p } = executeMarketing(originalProject, {

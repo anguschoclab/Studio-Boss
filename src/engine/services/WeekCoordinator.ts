@@ -97,7 +97,9 @@ export class WeekCoordinator {
     context.impacts.push(...tickProduction(state, context.rng));
     
     // 2. Script Evolution Tick (Only for Studio Projects in Development)
-    Object.values(state.studio.internal.projects).forEach(project => {
+    const projects = state.studio.internal.projects;
+    for (const projectId in projects) {
+      const project = projects[projectId];
       if (project.state === 'development') {
         const result = tickScriptDevelopment(project, context.rng);
         if (result.project !== project) {
@@ -111,7 +113,7 @@ export class WeekCoordinator {
           if (result.impact) context.impacts.push(result.impact);
         }
       }
-    });
+    }
 
     context.impacts.push(...tickTelevision(state, context.rng));
   }

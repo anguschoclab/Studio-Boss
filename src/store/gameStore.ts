@@ -50,22 +50,21 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
     let summary: WeekSummary | null = null;
     let nextState: GameState | null = null;
 
-    set((state) => {
-      if (!state.gameState) throw new Error('No game in progress');
-      const result = advanceWeek(state.gameState);
-      summary = result.summary;
-      nextState = result.newState;
+    const state = get();
+    if (!state.gameState) throw new Error('No game in progress');
+    const result = advanceWeek(state.gameState);
+    summary = result.summary;
+    nextState = result.newState;
 
-      if (state.gameState === result.newState) return state; 
+    if (state.gameState === result.newState) return summary;
 
-      // Trigger background save without blocking UI (Fire and forget)
-      saveGame(0, result.newState);
-      
-      return { 
-        gameState: result.newState,
-        finance: result.newState.finance,
-        news: result.newState.news
-      };
+    // Trigger background save without blocking UI (Fire and forget)
+    saveGame(0, result.newState);
+
+    set({
+      gameState: result.newState,
+      finance: result.newState.finance,
+      news: result.newState.news
     });
 
     if (!summary || !nextState) throw new Error('Failed to advance week');
@@ -146,14 +145,15 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
 
   getSaveSlots: async () => await getSaveSlots(),
 
-  clearGame: () => set((state) => {
-    if (state.gameState === null) return state;
-    return { 
+  clearGame: () => {
+    const state = get();
+    if (state.gameState === null) return;
+    set({
         gameState: null,
         finance: EMPTY_FINANCE as unknown as any,
         news: EMPTY_NEWS as unknown as any
-    };
-  }),
+    });
+  },
 
   devAutoInit: (archetype = 'major') => {
     const gameState = initializeGame('Alpha Studios', archetype);

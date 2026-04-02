@@ -14,17 +14,23 @@ export function calculateStudioNetWorth(state: GameState): number {
   let netWorth = state.finance.cash;
   
   // 1. IP Catalog Value
-  state.ip.vault.forEach(asset => {
-    netWorth += asset.baseValue * asset.decayRate;
-  });
+  if (state.ip && state.ip.vault) {
+    state.ip.vault.forEach(asset => {
+      netWorth += asset.baseValue * asset.decayRate;
+    });
+  }
 
   // 2. Active Projects Inventory (Work in Progress value)
   // We value "Inventory" as 50% of the budget already spent
-  Object.values(state.studio.internal.projects).forEach(p => {
-    if (p.state !== 'released' && p.state !== 'archived') {
-      netWorth += p.budget * 0.5;
+  if (state.studio && state.studio.internal && state.studio.internal.projects) {
+    const projects = state.studio.internal.projects;
+    for (const key in projects) {
+      const p = projects[key];
+      if (p.state !== 'released' && p.state !== 'archived') {
+        netWorth += p.budget * 0.5;
+      }
     }
-  });
+  }
   
   return Math.floor(netWorth);
 }
@@ -37,12 +43,12 @@ export function generateWeeklyFinancialReport(
   state: GameState, 
   pendingImpacts: StateImpact[] = []
 ): { report: WeeklyFinancialReport; snapshot: FinancialSnapshot } {
-  const projects = Object.values(state.studio.internal.projects);
-  const studioLevel = (state.studio as any).level || 1;
-  const market = state.finance.marketState || InterestRateSimulator.initialize();
+  const projects = state.studio?.internal?.projects ? Object.values(state.studio.internal.projects) : [];
+  const studioLevel = (state.studio as any)?.level || 1;
+  const market = state.finance?.marketState || InterestRateSimulator.initialize();
 
   // 1. Calculate Passive Income from Vault
-  const passive = RevenueProcessor.calculateVaultDividends(state.ip.vault);
+  const passive = state.ip?.vault ? RevenueProcessor.calculateVaultDividends(state.ip.vault) : 0;
   
   // 2. Calculate Active Revenue & Royalties
   let boxOffice = 0;
