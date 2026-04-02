@@ -37,6 +37,7 @@ describe("Finance System", () => {
         prestige: 50,
         internal: { projects: {}, contracts: [] }
       },
+      ip: { vault: [], franchises: {} },
       market: { opportunities: [], buyers: [] },
       industry: { rivals: [], headlines: [], talentPool: {} }
     } as unknown as GameState;
@@ -45,9 +46,9 @@ describe("Finance System", () => {
       expect(calculateStudioNetWorth(mockState)).toBe(500000);
     });
 
-    it("adds 100% of catalogValue if rightsOwner is 'studio'", () => {
-       const p1: Project = { ...mockProjectReleased, ipRights: { rightsOwner: 'studio', catalogValue: 200000 } } as any;
-       const state = { ...mockState, studio: { ...mockState.studio, internal: { ...mockState.studio.internal, projects: { 'p1': p1 } } } } as any;
+    it("adds 100% of vault asset value", () => {
+       const asset = { id: 'asset-1', baseValue: 200000, decayRate: 1.0 } as any;
+       const state = { ...mockState, ip: { ...mockState.ip, vault: [asset] } } as any;
        expect(calculateStudioNetWorth(state)).toBe(700000);
     });
   });
@@ -69,6 +70,7 @@ describe("Finance System", () => {
           contracts: []
         }
       },
+      ip: { vault: [], franchises: {} },
       market: { opportunities: [], buyers: [], activeMarketEvents: [] },
       industry: { rivals: [], headlines: [], talentPool: {}, newsHistory: [] },
     } as unknown as GameState;
@@ -94,7 +96,7 @@ describe("Finance System", () => {
         } as any;
 
         const { report } = generateWeeklyFinancialReport(stateWithDist);
-        // ExpenseProcessor.calculateStudioBurn(1, 2 active) = 500k + 250k + (2 * 50k) = 850k
+        // ExpenseProcessor.calculateStudioBurn(1, 2 active) = 750k + (2 * 50k) = 850k
         expect(report.expenses.overhead).toBe(850000);
         expect(report.expenses.production).toBe(20000); // Only mockProjectProd is in production
         expect(report.revenue.boxOffice).toBe(50000);
@@ -119,6 +121,7 @@ describe("Finance System", () => {
             contracts: []
           }
         },
+        ip: { vault: [], franchises: {} },
         market: { opportunities: [], buyers: [], activeMarketEvents: [] },
         industry: { rivals: [], newsHistory: [], talentPool: {} }
       } as unknown as GameState;

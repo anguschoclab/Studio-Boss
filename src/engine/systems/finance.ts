@@ -1,4 +1,4 @@
-import { Project, GameState, WeeklyFinancialReport, Contract, Buyer } from '@/engine/types';
+import { Project, GameState, WeeklyFinancialReport, Buyer } from '@/engine/types';
 import { StateImpact, FinancialSnapshot } from '../types/state.types';
 import { RevenueProcessor } from './finance/RevenueProcessor';
 import { ExpenseProcessor } from './finance/ExpenseProcessor';
@@ -120,7 +120,7 @@ export function calculateWeeklyCosts(projects: Project[]): number {
   return production + marketing + overhead;
 }
 
-export function calculateWeeklyRevenue(projects: Project[], buyers: Buyer[] = [], _legacyContext?: unknown): number {
+export function calculateWeeklyRevenue(projects: Project[], buyers: Buyer[] = []): number {
   let boxOffice = 0;
   let distribution = 0;
 
@@ -141,11 +141,9 @@ export function calculateWeeklyRevenue(projects: Project[], buyers: Buyer[] = []
 }
 
 export function generateCashflowForecast(state: GameState, weeks: number = 12): { week: number; projected: number }[] {
-  const projects = Object.values(state.studio.internal.projects);
-  const market = state.finance.marketState || InterestRateSimulator.initialize();
-
   // Forecast using the robust generators
-  const { netProfit } = generateWeeklyFinancialReport(state);
+  const { report } = generateWeeklyFinancialReport(state);
+  const netProfit = report.netProfit;
   
   const forecast: { week: number; projected: number }[] = [];
   let runningCash = state.finance.cash;
