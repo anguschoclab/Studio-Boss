@@ -36,7 +36,10 @@ export interface FinancialSnapshot {
   };
   net: number;
   cash: number;
+  projectRecoupment?: Record<string, number>; // ProjectId -> % Recouped
 }
+
+export type MarketCycle = 'BOOM' | 'STABLE' | 'BEAR' | 'RECESSION' | 'RECOVERY';
 
 export interface MarketState {
   baseRate: number; // e.g. 0.04 for 4%
@@ -44,6 +47,8 @@ export interface MarketState {
   debtRate: number;
   loanRate: number;
   rateHistory: { week: number; rate: number }[];
+  sentiment: number; // -100 to 100
+  cycle: MarketCycle;
 }
 
 export interface FinanceState {
