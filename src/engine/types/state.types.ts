@@ -94,6 +94,7 @@ export type ImpactType =
   | 'RIVAL_UPDATED'
   | 'OPPORTUNITY_UPDATED'
   | 'TRENDS_UPDATED'
+  | 'FRANCHISE_UPDATED'
   | 'SCANDAL_ADDED'
   | 'SCANDAL_REMOVED'
   | 'MARKET_EVENT_UPDATED'
@@ -109,6 +110,7 @@ export interface TalentUpdate { talentId: string; update: Partial<import('./tale
 export interface RivalUpdate { rivalId: string; update: Partial<import('./studio.types').RivalStudio> }
 export interface BuyerUpdate { buyerId: string; update: Partial<import('./studio.types').Buyer> }
 export interface ScandalUpdate { scandalId: string; update: Partial<import('./talent.types').Scandal> }
+export interface FranchiseUpdate { franchiseId: string; update: Partial<import('./franchise.types').Franchise> }
 
 export interface BaseImpact {
   payload?: unknown;
