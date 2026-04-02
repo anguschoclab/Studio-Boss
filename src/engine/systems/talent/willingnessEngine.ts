@@ -54,7 +54,7 @@ export function calculateWillingness(
   }
 
   // 4. Script Heat
-  const scriptHeat = project.format === 'unscripted' ? 50 : project.scriptHeat;
+  const scriptHeat = 'scriptHeat' in project ? project.scriptHeat : 50;
   if (scriptHeat > 80) {
     score += 15;
     reasons.push(`The script is considered a "Must-Read" in town.`);

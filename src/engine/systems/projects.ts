@@ -91,8 +91,10 @@ function handleReleasedPhase(
   let update: string | null = null;
   let talentUpdates: Talent[] = [];
 
-  if ((p.format === 'tv' && ((p as any).tvFormat)) || (p.format === 'unscripted' && ((p as any).unscriptedFormat))) {
-    const formatData = p.format === 'tv' ? TV_FORMATS[((p as any).tvFormat)!] : UNSCRIPTED_FORMATS[((p as any).unscriptedFormat)!];
+  if ((p.format === 'tv' && 'tvFormat' in p && p.tvFormat) || (p.format === 'unscripted' && 'unscriptedFormat' in p && p.unscriptedFormat)) {
+    const formatData = p.format === 'tv'
+      ? TV_FORMATS[p.tvFormat]
+      : UNSCRIPTED_FORMATS[p.unscriptedFormat];
     const eps = ((p as any).tvDetails)?.episodesOrdered || formatData.defaultEpisodes;
     const currentSeason = ((p as any).tvDetails)?.currentSeason || 1;
 

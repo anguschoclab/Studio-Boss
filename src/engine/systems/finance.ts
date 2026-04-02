@@ -155,7 +155,7 @@ export function calculateWeeklyCosts(projects: Project[]): number {
   return production + marketing + overhead;
 }
 
-export function calculateWeeklyRevenue(projects: Project[], buyers: Buyer[] = []): number {
+export function calculateWeeklyRevenue(projects: Project[], buyers: Buyer[] = [], _legacyContext?: unknown): number {
   let boxOffice = 0;
   let distribution = 0;
 

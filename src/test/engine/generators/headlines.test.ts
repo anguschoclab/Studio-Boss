@@ -70,10 +70,22 @@ describe('generateHeadlines', () => {
     const projects = [{ 
       id: 'p1', 
       title: 'Test Movie', 
+      format: 'film',
       genre: 'action' as any, 
-      status: 'production' as any, 
+      budgetTier: 'mid',
       budget: 1000000, 
+      weeklyCost: 10000,
+      targetAudience: 'General Audience',
+      flavor: 'Test package',
+      state: 'production' as const,
+      weeksInPhase: 0,
+      developmentWeeks: 4,
+      productionWeeks: 8,
+      revenue: 0,
+      weeklyRevenue: 0,
+      releaseWeek: null,
       buzz: 50, 
+      momentum: 50,
       progress: 0,
       accumulatedCost: 0,
       activeCrisis: null,
@@ -81,7 +93,7 @@ describe('generateHeadlines', () => {
       scriptHeat: 50,
       activeRoles: [],
       scriptEvents: []
-    } as import('../../../engine/types').Project];
+    } as unknown as import('../../../engine/types').Project];
     const talent = [{ 
       id: 't1', 
       name: 'James Cameron', 

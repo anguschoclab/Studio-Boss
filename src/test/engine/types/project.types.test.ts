@@ -70,7 +70,7 @@ describe('Unified Project Schema (Target A1)', () => {
     } as Project;
 
     expect(project.type).toBe('SERIES');
-    if (project.type === 'SERIES') {
+    if (project.type === 'SERIES' && project.format === 'tv') {
       const series: SeriesProject = project;
       expect(series.tvDetails).toBeDefined();
       expect(series.tvDetails?.status).toBe('ON_AIR');

@@ -39,7 +39,8 @@ describe('Crisis Evaluator (Target A3)', () => {
     const projectImpact = impacts.find(i => i.type === 'PROJECT_UPDATED');
     
     expect(fundsImpact?.payload.amount).toBe(-100000);
-    expect(projectImpact?.payload.update.productionWeeks).toBe(22);
-    expect(projectImpact?.payload.update.activeCrisis.resolved).toBe(true);
+    const updatedProject = projectImpact as StateImpact & { payload: { update: { productionWeeks: number; activeCrisis: { resolved: boolean } } } };
+    expect(updatedProject.payload.update.productionWeeks).toBe(22);
+    expect(updatedProject.payload.update.activeCrisis.resolved).toBe(true);
   });
 });
