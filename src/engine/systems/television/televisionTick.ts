@@ -12,7 +12,7 @@ export type TVStatus = 'IN_DEVELOPMENT' | 'ON_AIR' | 'ON_BUBBLE' | 'RENEWED' | '
  */
 export function tickTelevision(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const series = state.projects.active.filter(p => p.type === 'SERIES' && p.tvDetails) as SeriesProject[];
+  const series = Object.values(state.studio.internal.projects).filter(p => p.type === 'SERIES' && (p as any).tvDetails) as SeriesProject[];
 
   series.forEach(project => {
     // Only process shows actively airing
