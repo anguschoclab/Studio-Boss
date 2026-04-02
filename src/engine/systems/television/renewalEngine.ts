@@ -14,13 +14,28 @@ export function evaluateRenewal(
     return 'ON_AIR';
   }
 
+  // Tweaked streaming renewal thresholds: platforms now cancel expensive shows faster
+  // if their metrics drop or if they run for many seasons. Season inflation reflects
+  // escalating cast and production costs over time.
+  const currentSeason = project.tvDetails?.currentSeason || 1;
+  let dynamicThreshold = threshold + ((currentSeason - 1) * 0.2);
+
+  // Shield consistently high-quality shows, punish poorly reviewed ones
+  if (project.reviewScore) {
+    if (project.reviewScore >= 70) {
+      dynamicThreshold -= 0.5;
+    } else if (project.reviewScore < 50) {
+      dynamicThreshold += 0.5;
+    }
+  }
+
   // Renewal decision logic
-  if (averageRating >= threshold) {
+  if (averageRating >= dynamicThreshold) {
     return 'RENEWED';
   }
 
   // Potential "Bubble" show logic
-  if (averageRating >= threshold - 0.5) {
+  if (averageRating >= dynamicThreshold - 0.5) {
     return 'ON_BUBBLE';
   }
 

@@ -15,7 +15,16 @@ function calculateSubChange(platform: StreamerPlatform, rng: RandomGenerator): n
   // Add 1% stochastic variance
   const variance = 1 + (rng.next() - 0.5) * 0.01;
   const growth = (baseGrowthRate * qualityFactor + marketingFactor * 0.01) * platform.subscribers * variance;
-  const churn = platform.subscribers * platform.churnRate;
+  // Tweaked streaming renewal thresholds: platforms now experience dynamic churn
+  // based on the cutthroat "streaming wars" environment. Poor library quality
+  // hemorrhages subscribers, while high-tier content retains them.
+  let dynamicChurnRate = platform.churnRate;
+  if (platform.contentLibraryQuality < 65) {
+    dynamicChurnRate *= 1.30; // 30% penalty
+  } else if (platform.contentLibraryQuality > 85) {
+    dynamicChurnRate *= 0.80; // 20% bonus retention
+  }
+  const churn = platform.subscribers * dynamicChurnRate;
   
   return Math.floor(growth - churn);
 }

@@ -11,7 +11,17 @@ export function calculateWeeklyRating(project: SeriesProject, currentBuzz: numbe
   
   // Decay logic: Each episode naturally loses some audience unless it's a "Water Cooler" hit.
   const aired = project.tvDetails?.episodesAired || 1;
-  const decayValue = aired > 1 ? Math.pow(0.95, aired - 1) : 1;
+  // Viewership retention in the cutthroat streaming wars environment:
+  // Reward consistent season-over-season quality with sticky retention (0.98),
+  // while harshly penalizing low-quality shows with fast abandonment (0.90).
+  let decayFactor = 0.95;
+  const reviewScore = project.reviewScore || 50;
+  if ((project.tvDetails?.currentSeason || 1) > 1 && reviewScore >= 75) {
+    decayFactor = 0.98;
+  } else if (reviewScore < 55) {
+    decayFactor = 0.90;
+  }
+  const decayValue = aired > 1 ? Math.pow(decayFactor, aired - 1) : 1;
   
   // Water Cooler Effect: High buzz can counteract decay
   const waterCoolerBonus = currentBuzz > 85 ? 1.2 : 1.0;
