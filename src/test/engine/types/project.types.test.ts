@@ -56,6 +56,9 @@ describe('Unified Project Schema (Target A1)', () => {
       weeklyRevenue: 0,
       releaseWeek: null,
       activeCrisis: null,
+      scriptHeat: 50,
+      activeRoles: [],
+      scriptEvents: [],
       momentum: 50,
       progress: 0,
       accumulatedCost: 0,
@@ -70,7 +73,7 @@ describe('Unified Project Schema (Target A1)', () => {
     } as Project;
 
     expect(project.type).toBe('SERIES');
-    if (project.type === 'SERIES' && project.format === 'tv') {
+    if (project.type === 'SERIES' && project.format === 'tv' && 'tvDetails' in project && 'scriptHeat' in project) {
       const series: SeriesProject = project;
       expect(series.tvDetails).toBeDefined();
       expect(series.tvDetails?.status).toBe('ON_AIR');

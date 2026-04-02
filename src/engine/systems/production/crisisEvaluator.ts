@@ -50,13 +50,13 @@ export function resolveCrisisWithHandlers(state: GameState, projectId: string, o
     (i): i is ProjectUpdateImpact => i.type === 'PROJECT_UPDATED' && i.payload.projectId === projectId
   );
 
-  const mergedUpdate = projectImpacts
-    .reduce((acc, i) => ({ ...acc, ...i.payload.update }), { 
-       activeCrisis: { ...project.activeCrisis, resolved: true } 
-    });
+  const mergedUpdate = projectImpacts.reduce<Partial<Project>>(
+    (acc, i) => ({ ...acc, ...i.payload.update }),
+    { activeCrisis: { ...project.activeCrisis, resolved: true } }
+  );
 
   const otherImpacts = rawImpacts.filter(
-    i => i.type !== 'PROJECT_UPDATED' || (i as ProjectUpdateImpact).payload.projectId !== projectId
+    i => !(i.type === 'PROJECT_UPDATED' && (i as ProjectUpdateImpact).payload.projectId === projectId)
   );
 
   return [

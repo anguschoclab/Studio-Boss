@@ -64,7 +64,7 @@ describe('Platform Engine (Target B1)', () => {
     expect(buyerImpact).toBeDefined();
     expect(buyerImpact?.type).toBe('BUYER_UPDATED');
     
-    const nextSubs = buyerImpact?.payload.update.subscribers;
+    const nextSubs = (buyerImpact?.payload.update as Partial<StreamerPlatform> | undefined)?.subscribers;
     expect(nextSubs).toBeDefined();
     expect(nextSubs).not.toBe(10_000_000); 
   });
