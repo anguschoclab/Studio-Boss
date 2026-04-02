@@ -32,7 +32,7 @@ const mockTalent: Talent = {
   draw: 60,
   personality: 'Pro',
   accessLevel: 'outsider',
-} as any;
+} as unknown as import('../../engine/types').Project;
 
 const mockTalentAlist: Talent = {
   id: 't2',
@@ -43,7 +43,7 @@ const mockTalentAlist: Talent = {
   draw: 90,
   personality: 'Pro',
   accessLevel: 'outsider',
-} as any;
+} as unknown as import('../../engine/types').Project;
 
 const mockTalentEgo: Talent = {
   id: 't3',
@@ -54,7 +54,7 @@ const mockTalentEgo: Talent = {
   draw: 0,
   personality: 'Diva',
   accessLevel: 'outsider',
-} as any;
+} as unknown as import('../../engine/types').Project;
 
 describe('evaluateGreenlight', () => {
   describe('Base Scoring Mechanics', () => {

@@ -31,7 +31,7 @@ describe('WeekSummaryModal', () => {
 
   it('renders nothing when showWeekSummary is false (Dialog handles open state, but if weekSummary is null it returns null anyway)', () => {
     mockUseUIStore.mockReturnValue({
-      activeModal: { type: 'OTHER' } as any,
+      activeModal: { type: 'OTHER' } as unknown as import('@/store/uiStore').UIStoreState['activeModal'],
       resolveCurrentModal: mockCloseSummary,
     } as unknown as ReturnType<typeof useUIStore>);
 

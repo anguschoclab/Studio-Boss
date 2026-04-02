@@ -33,7 +33,7 @@ describe('DealsDesk', () => {
           market: { buyers: [] }
         }
       };
-      return selector(state as any);
+      return selector(state as unknown as GameState);
     });
 
     render(<DealsDesk />);
@@ -56,7 +56,7 @@ describe('DealsDesk', () => {
           }
         }
       };
-      return selector(state as any);
+      return selector(state as unknown as GameState);
     });
 
     render(<DealsDesk />);
@@ -87,7 +87,7 @@ describe('DealsDesk', () => {
           market: { buyers: [] }
         }
       };
-      return selector(state as any);
+      return selector(state as unknown as GameState);
     });
 
     render(<DealsDesk />);
@@ -120,7 +120,7 @@ describe('DealsDesk', () => {
           }
         }
       };
-      return selector(state as any);
+      return selector(state as unknown as GameState);
     });
 
     render(<DealsDesk />);

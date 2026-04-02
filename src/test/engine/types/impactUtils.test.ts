@@ -14,7 +14,7 @@ describe('Impact Reducer (Target A1)', () => {
       prestige: 50,
       internal: {
         projects: {
-          'p1': { id: 'p1', title: 'Movie A', type: 'FILM', buzz: 50 } as any
+          'p1': { id: 'p1', title: 'Movie A', type: 'FILM', buzz: 50 } as unknown as import('../../engine/types').Project
         },
         contracts: []
       }

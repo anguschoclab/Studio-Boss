@@ -81,7 +81,7 @@ describe("advanceProject", () => {
   });
 
   it("transitions tv from development to pitching", () => {
-    const project = { ...mockProject, weeksInPhase: 1, format: 'tv' as const, type: 'SERIES' as const } as any;
+    const project = { ...mockProject, weeksInPhase: 1, format: 'tv' as const, type: 'SERIES' as const } as unknown as import('../../engine/types').Project;
     const { project: p, update } = advanceProject(project, 1, 50, [], new Map());
     expect(p.state).toBe("pitching");
     expect(p.weeksInPhase).toBe(0);
@@ -92,7 +92,7 @@ describe("advanceProject", () => {
     const project = { ...mockProject, buzz: 50 };
     const mockTalent: Talent = {
       id: "t1", name: "Star", roles: ["actor"], prestige: 100, fee: 1000000, draw: 100, personality: "Pro", accessLevel: "legacy",
-    } as any;
+    } as unknown as import('../../engine/types').Project;
     const pool = new Map([["t1", mockTalent]]);
     const contracts: Contract[] = [{ id: "c1", projectId: "proj-1", talentId: "t1", fee: 100000, backendPercent: 0 }];
     

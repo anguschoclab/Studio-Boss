@@ -75,7 +75,7 @@ describe('AI Bidding Engine (Target C2 Refactor)', () => {
   } as unknown as GameState;
 
   it('generates a OPPORTUNITY_UPDATED impact representing a counter-bid', () => {
-    const impacts = tickAuctions(mockState as any, rng);
+    const impacts = tickAuctions(mockState as unknown as import('../../../engine/types').GameState, rng);
     const bidImpact = impacts.find(i => i.type === 'OPPORTUNITY_UPDATED') as OpportunityUpdateImpact | undefined;
     
     expect(bidImpact).toBeDefined();

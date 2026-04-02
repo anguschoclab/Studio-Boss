@@ -28,7 +28,7 @@ global.ResizeObserver = class ResizeObserver {
 
 // Also mock PointerEvent as some Radix components use it
 if (typeof window !== 'undefined') {
-  (window as any).PointerEvent = class PointerEvent extends Event {
+  (window as Window & typeof globalThis & { PointerEvent: any }).PointerEvent = class PointerEvent extends Event {
     button: number;
     ctrlKey: boolean;
     pointerType: string;

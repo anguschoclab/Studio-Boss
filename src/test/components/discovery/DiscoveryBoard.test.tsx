@@ -28,7 +28,7 @@ describe('DiscoveryBoard', () => {
         industry: { newsHistory: [] }
       },
       acquireOpportunity: mockAcquireOpportunity
-    } as any);
+    } as unknown as ReturnType<typeof import('@/store/uiStore').useUIStore>);
 
     render(<DiscoveryBoard />);
 
@@ -43,7 +43,7 @@ describe('DiscoveryBoard', () => {
         industry: { newsHistory: [] }
       },
       acquireOpportunity: mockAcquireOpportunity
-    } as any);
+    } as unknown as ReturnType<typeof import('@/store/uiStore').useUIStore>);
 
     render(<DiscoveryBoard />);
 
@@ -97,7 +97,7 @@ describe('DiscoveryBoard', () => {
         industry: { newsHistory: [] }
       },
       acquireOpportunity: mockAcquireOpportunity
-    } as any);
+    } as unknown as ReturnType<typeof import('@/store/uiStore').useUIStore>);
 
     render(<DiscoveryBoard />);
 
@@ -140,7 +140,7 @@ describe('DiscoveryBoard', () => {
         industry: { newsHistory: [] }
       },
       acquireOpportunity: mockAcquireOpportunity
-    } as any);
+    } as unknown as ReturnType<typeof import('@/store/uiStore').useUIStore>);
 
     render(<DiscoveryBoard />);
 

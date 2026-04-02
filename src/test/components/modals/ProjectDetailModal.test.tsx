@@ -31,7 +31,7 @@ describe('ProjectDetailModal', () => {
     vi.mocked(useUIStore).mockReturnValue({
       selectedProjectId: null,
       selectProject: mockSelectProject,
-    } as any);
+    } as unknown as import('@/store/gameStore').GameState);
 
     vi.mocked(useGameStore).mockImplementation((selector: any) => {
       const state = {
@@ -95,7 +95,7 @@ describe('ProjectDetailModal', () => {
     vi.mocked(useUIStore).mockReturnValue({
       selectedProjectId: 'P1',
       selectProject: mockSelectProject,
-    } as any);
+    } as unknown as import('@/store/gameStore').GameState);
 
     vi.mocked(useGameStore).mockImplementation((selector: any) => {
       const state = {
@@ -128,7 +128,7 @@ describe('ProjectDetailModal', () => {
     vi.mocked(useUIStore).mockReturnValue({
       selectedProjectId: 'P1',
       selectProject: mockSelectProject,
-    } as any);
+    } as unknown as import('@/store/gameStore').GameState);
 
     vi.mocked(useGameStore).mockImplementation((selector: any) => {
       const state = {
@@ -165,7 +165,7 @@ describe('ProjectDetailModal', () => {
     vi.mocked(useUIStore).mockReturnValue({
       selectedProjectId: 'P1',
       selectProject: mockSelectProject,
-    } as any);
+    } as unknown as import('@/store/gameStore').GameState);
 
     vi.mocked(useGameStore).mockImplementation((selector: any) => {
       const state = {
@@ -214,7 +214,7 @@ describe('ProjectDetailModal', () => {
     vi.mocked(useUIStore).mockReturnValue({
       selectedProjectId: 'P1',
       selectProject: mockSelectProject,
-    } as any);
+    } as unknown as import('@/store/gameStore').GameState);
 
     vi.mocked(useGameStore).mockImplementation((selector: any) => {
       const state = {

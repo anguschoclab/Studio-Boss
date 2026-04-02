@@ -11,7 +11,7 @@ describe('advanceProjectProgress', () => {
         accumulatedCost: 200000,
         activeCrisis: { crisisId: 'halt', haltedProduction: true },
         momentum: 50
-    } as any as Project;
+    } as unknown as Project;
 
     const result = advanceProjectProgress(project);
     expect(result.progress).toBe(20); // No progress
@@ -27,7 +27,7 @@ describe('advanceProjectProgress', () => {
         accumulatedCost: 200000,
         activeCrisis: null,
         momentum: 50
-    } as any as Project;
+    } as unknown as Project;
 
     const result = advanceProjectProgress(project);
     expect(result.progress).toBeGreaterThan(20); // Progress advanced

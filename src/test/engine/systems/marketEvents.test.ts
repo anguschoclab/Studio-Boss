@@ -95,7 +95,7 @@ describe('Market Events System', () => {
 
   describe('getActiveMarketEvent', () => {
     it('should return the first event when there are active events', () => {
-      const activeEvent: MarketEvent = { id: 'event-4' } as any;
+      const activeEvent: MarketEvent = { id: 'event-4' } as unknown as import('../../engine/types').MarketEvent;
       mockGameState.market.activeMarketEvents = [activeEvent];
       const result = getActiveMarketEvent(mockGameState);
       expect(result?.id).toBe(activeEvent.id);

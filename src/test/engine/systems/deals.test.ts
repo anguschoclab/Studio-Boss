@@ -17,7 +17,7 @@ describe('Deals System', () => {
       fee: 2_000_000,
       personality: "Normal",
       accessLevel: "soft-access",
-    } as any;
+    } as unknown as import('../../engine/types').Deal;
   });
 
   it('evaluates whether talent will accept a first-look deal based on prestige', () => {

@@ -12,7 +12,7 @@ describe('RivalsPanel', () => {
       gameState: {
         industry: { rivals: [] }
       }
-    } as any);
+    } as unknown as import('@/store/gameStore').GameState);
   });
 
   it('renders correctly with an empty rivals list', () => {
@@ -61,7 +61,7 @@ describe('RivalsPanel', () => {
       gameState: {
         industry: { rivals: mockRivals }
       }
-    } as any);
+    } as unknown as import('@/store/gameStore').GameState);
     render(<RivalsPanel />);
 
     // Check text elements
@@ -120,7 +120,7 @@ describe('RivalsPanel', () => {
       gameState: {
         industry: { rivals: mockRivals }
       }
-    } as any);
+    } as unknown as import('@/store/gameStore').GameState);
 
     const { container } = render(<RivalsPanel />);
 

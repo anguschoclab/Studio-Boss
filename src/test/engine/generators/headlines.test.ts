@@ -36,8 +36,8 @@ describe('generateHeadlines', () => {
   it('should generate rival headlines if rivals are provided', () => {
     const week = 10;
     const rivals: RivalStudio[] = [
-      { id: 'rival-1', name: 'Global Pictures', cash: 100000000, projectCount: 5, motto: 'Bigger is Better', archetype: 'major', strength: 80, prestige: 80, recentActivity: 'Signing stars', motivationProfile: { financial: 0.8, prestige: 0.8, legacy: 0.5, aggression: 0.5 }, currentMotivation: 'prestige' as any, projects: {}, contracts: [], foundedWeek: 1 },
-    { id: 'rival-2', name: 'Indie Art', cash: 1000000, projectCount: 2, motto: 'Art First', archetype: 'major', strength: 20, prestige: 60, recentActivity: 'Festivals', motivationProfile: { financial: 0.2, prestige: 0.9, legacy: 0.8, aggression: 0.3 }, currentMotivation: 'legacy' as any, projects: {}, contracts: [], foundedWeek: 1 }
+      { id: 'rival-1', name: 'Global Pictures', cash: 100000000, projectCount: 5, motto: 'Bigger is Better', archetype: 'major', strength: 80, prestige: 80, recentActivity: 'Signing stars', motivationProfile: { financial: 0.8, prestige: 0.8, legacy: 0.5, aggression: 0.5 }, currentMotivation: 'prestige' as import('../../../engine/types').AI_MOTIVATION, projects: {}, contracts: [], foundedWeek: 1 },
+    { id: 'rival-2', name: 'Indie Art', cash: 1000000, projectCount: 2, motto: 'Art First', archetype: 'major', strength: 20, prestige: 60, recentActivity: 'Festivals', motivationProfile: { financial: 0.2, prestige: 0.9, legacy: 0.8, aggression: 0.3 }, currentMotivation: 'legacy' as import('../../../engine/types').AI_MOTIVATION, projects: {}, contracts: [], foundedWeek: 1 }
     ];
 
     // Run multiple times to ensure we hit the 35% chance for a rival headline
@@ -71,7 +71,7 @@ describe('generateHeadlines', () => {
       id: 'p1', 
       title: 'Test Movie', 
       format: 'film',
-      genre: 'action' as any, 
+      genre: 'action',
       budgetTier: 'mid',
       budget: 1000000, 
       weeklyCost: 10000,
@@ -108,7 +108,7 @@ describe('generateHeadlines', () => {
       id: 'c1', 
       projectId: 'p1', 
       talentId: 't1', 
-      role: 'director' as any, 
+      role: 'director' as import('../../../engine/types').TalentRole,
       salary: 100000, 
       length: 1, 
       weekStarted: 1 
@@ -116,7 +116,7 @@ describe('generateHeadlines', () => {
 
     let foundInterpolatedHeadline = false;
     for (let i = 0; i < 50; i++) {
-      const headlines = generateHeadlines(1, rivals, projects as any, contracts as any, talent as any);
+      const headlines = generateHeadlines(1, rivals, projects as unknown as Record<string, import('../../../engine/types').Project>, contracts as unknown as import('../../../engine/types').Contract[], talent as unknown as Record<string, import('../../../engine/types').Talent>);
       const talentHeadline = headlines.find(h => h.category === 'talent');
       if (talentHeadline) {
         if (talentHeadline.text.includes('Test Movie') || talentHeadline.text.includes('James Cameron')) {

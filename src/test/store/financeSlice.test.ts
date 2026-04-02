@@ -12,7 +12,7 @@ describe('financeSlice', () => {
           ledger: [],
           weeklyHistory: []
         }
-      } as any
+      } as unknown as import('../../engine/types').GameState
     });
   });
 
@@ -33,7 +33,7 @@ describe('financeSlice', () => {
     };
 
     // Assuming we add an action to the store
-    (useGameStore.getState() as any).addLedgerEntry(mockReport);
+    (useGameStore.getState() as unknown as { addLedgerEntry: Function }).addLedgerEntry(mockReport);
 
     const state = useGameStore.getState().gameState;
     expect(state?.finance.ledger).toHaveLength(1);

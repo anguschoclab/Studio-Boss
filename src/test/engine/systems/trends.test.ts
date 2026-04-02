@@ -30,14 +30,14 @@ describe('Trends System', () => {
     const trends = initializeTrends();
     // Force the first genre to have a very high heat
     trends[0].heat = 100;
-    const state = { market: { trends } } as any;
+    const state = { market: { trends } } as unknown as import('../../engine/types').GameState;
 
     const multiplier = getTrendMultiplier({ genre: trends[0].genre, targetAudience: 'Any' }, state);
     expect(multiplier).toBe(1.3); // 1.0 + 0.3 = 1.3
   });
 
   it('returns a multiplier of 1.0 for a missing genre', () => {
-    const state = { market: { trends: [] } } as any;
+    const state = { market: { trends: [] } } as unknown as import('../../engine/types').GameState;
     const multiplier = getTrendMultiplier({ genre: 'Unknown Genre', targetAudience: 'Any' }, state);
     expect(multiplier).toBe(1.0); // Fallback to 1.0
   });

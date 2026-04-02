@@ -56,7 +56,7 @@ describe('CrisisModal', () => {
     metrics: { buzz: 0, quality: 0, momentum: 0 },
     stats: { weeksInProduction: 0 },
     history: [],
-  } as any;
+  } as unknown as import('@/engine/types').Project;
 
   const mockGameState = {
     studio: {
@@ -64,7 +64,7 @@ describe('CrisisModal', () => {
         projects: { [mockProject.id]: mockProject }
       }
     }
-  } as any;
+  } as unknown as import('@/engine/types').Project;
 
   beforeEach(async () => {
     vi.clearAllMocks();
@@ -139,7 +139,7 @@ describe('CrisisModal', () => {
           }
         },
         resolveProjectCrisis: mockResolveProjectCrisis,
-      } as any;
+  } as unknown as import('@/engine/types').Project;
       return selector ? selector(state) : state;
     });
 

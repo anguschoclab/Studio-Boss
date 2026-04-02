@@ -12,7 +12,7 @@ describe('applyAwardBoostsToTalent', () => {
     draw: 50,
     temperament: 'Pro',
     accessLevel: 'insider'
-  } as any;
+  } as unknown as import('../../engine/types').Talent;
 
   const baseAward: Award = {
     id: 'a1',

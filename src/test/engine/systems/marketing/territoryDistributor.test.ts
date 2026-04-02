@@ -7,7 +7,7 @@ describe('calculateTerritorySplit', () => {
     const campaign: MarketingCampaign = { 
         domesticBudget: 1_000_000, 
         foreignBudget: 20_000_000, 
-        primaryAngle: 'SELL_THE_SPECTACLE' as any,
+        primaryAngle: 'SELL_THE_SPECTACLE' as import('../../../engine/types').MarketingAngle,
         weeksInMarketing: 1
     };
     const baseGross = 100_000_000;
@@ -25,7 +25,7 @@ describe('calculateTerritorySplit', () => {
     const campaign: MarketingCampaign = { 
         domesticBudget: 10_000_000, 
         foreignBudget: 10_000_000, 
-        primaryAngle: 'SELL_THE_STORY' as any,
+        primaryAngle: 'SELL_THE_STORY' as import('../../../engine/types').MarketingAngle,
         weeksInMarketing: 1
     };
     const baseGross = 50_000_000;

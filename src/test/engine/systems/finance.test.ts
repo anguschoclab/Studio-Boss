@@ -16,13 +16,13 @@ const mockProjectDev: import('../../../engine/types').Project = {
   type: 'FILM', scriptHeat: 50, activeRoles: [], scriptEvents: []
 } as import('../../../engine/types').FilmProject;
 
-const mockProjectProd: import('../../../engine/types').Project = { ...mockProjectDev, id: "proj-2", state: "production", weeklyCost: 20000 } as any;
-const mockProjectReleased: import('../../../engine/types').Project = { ...mockProjectDev, id: "proj-3", state: "released", weeklyCost: 0, weeklyRevenue: 100000 } as any;
+const mockProjectProd: import('../../../engine/types').Project = { ...mockProjectDev, id: "proj-2", state: "production", weeklyCost: 20000 } as unknown as import('../../../engine/types').Project;
+const mockProjectReleased: import('../../../engine/types').Project = { ...mockProjectDev, id: "proj-3", state: "released", weeklyCost: 0, weeklyRevenue: 100000 } as unknown as import('../../../engine/types').Project;
 
 describe("Finance System", () => {
   describe("calculateProjectROI", () => {
     it("returns correct ROI for a standard project", () => {
-      const proj = { ...mockProjectReleased, budget: 1000000, revenue: 2000000 } as any;
+      const proj = { ...mockProjectReleased, budget: 1000000, revenue: 2000000 } as unknown as import('../../../engine/types').Project;
       expect(calculateProjectROI(proj)).toBe(2.0);
     });
   });
@@ -49,8 +49,8 @@ describe("Finance System", () => {
     });
 
     it("adds 100% of catalogValue if rightsOwner is 'studio'", () => {
-       const p1: Project = { ...mockProjectReleased, ipRights: { rightsOwner: 'studio', catalogValue: 200000 } } as any;
-       const state = { ...mockState, ip: { vault: [{ baseValue: 200000, decayRate: 1.0, projectId: 'p1', quality: 50, type: 'original' }] } } as any;
+       const p1: Project = { ...mockProjectReleased, ipRights: { rightsOwner: 'studio', catalogValue: 200000 } } as unknown as import('../../../engine/types').Project;
+       const state = { ...mockState, ip: { vault: [{ baseValue: 200000, decayRate: 1.0, projectId: 'p1', quality: 50, type: 'original' }] } } as unknown as import('../../../engine/types').Project;
        expect(calculateStudioNetWorth(state)).toBe(700000);
     });
   });
@@ -97,7 +97,7 @@ describe("Finance System", () => {
               }
             }
           }
-        } as any;
+        } as unknown as import('../../../engine/types').Project;
 
         const { report } = generateWeeklyFinancialReport(stateWithDist);
         // ExpenseProcessor.calculateStudioBurn(3, 2 active) = (500k * 1.5625) + (2 * 145,312.5) = 1,071,875
@@ -151,7 +151,7 @@ describe("Finance System", () => {
                }
              }
            }
-         } as any;
+         } as unknown as import('../../../engine/types').Project;
 
          const impacts = tickFinance(stateWithDist, rng);
          const impact = impacts.find(i => i.type === 'FUNDS_CHANGED');

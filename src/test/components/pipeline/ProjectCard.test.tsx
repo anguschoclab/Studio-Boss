@@ -99,7 +99,7 @@ describe('ProjectCard', () => {
         resolved: false,
         weekTriggered: 1,
       },
-    } as any;
+    } as unknown as import('@/engine/types').Project;
     render(<ProjectCard project={project} />);
 
     const button = screen.getByRole('button', { name: /Neutralize Crisis/i });
@@ -139,7 +139,7 @@ describe('ProjectCard', () => {
         status: 'IN_DEVELOPMENT'
       },
       tvFormat: 'sitcom' as const,
-    } as any;
+    } as unknown as import('@/engine/types').Project;
     render(<ProjectCard project={tvProject} />);
 
     expect(screen.getByText('S2')).toBeInTheDocument();
