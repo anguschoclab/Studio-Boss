@@ -7,3 +7,7 @@
 ## 2026-03-31 - Iterate over State Records using for...in loops
 **Learning:** Using Object.values() on high-frequency State Records (like projects) causes O(N) array allocation per tick, leading to garbage collection spikes.
 **Action:** Replace Object.values() with for...in loops when iterating over high-frequency State Records in the engine to avoid O(N) array allocation overhead.
+
+## 2024-04-02 - Avoid Object.values in Engine Loops
+**Learning:** Using Object.values() on large state dictionaries like talentPool inside high-frequency engine loops causes unnecessary O(N) array allocation and garbage collection pressure every tick.
+**Action:** Iterate over dictionary records using for...in to avoid array allocation overhead.
