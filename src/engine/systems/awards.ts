@@ -137,10 +137,16 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
       let prestigeWon = 10;
       if (isCannesEquivalentFestival(config.body) && isMajorCategoryNomination(config.category)) {
         prestigeWon = 25;
+      } else if (isSundanceEquivalentFestival(config.body) && isMajorCategoryNomination(config.category)) {
+        prestigeWon = 20;
+      } else if (isCannesEquivalentFestival(config.body) && isSupportingCategoryNomination(config.category)) {
+        prestigeWon = 18;
       } else if (isSundanceEquivalentFestival(config.body)) {
         prestigeWon = 15;
       } else if (isMajorCategoryNomination(config.category)) {
         prestigeWon = 15;
+      } else if (isSupportingCategoryNomination(config.category)) {
+        prestigeWon = 12;
       }
       impact.prestigeChange = (impact.prestigeChange || 0) + prestigeWon;
 
@@ -178,10 +184,16 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
       let prestigeNom = 2;
       if (isCannesEquivalentFestival(config.body) && isMajorCategoryNomination(config.category)) {
         prestigeNom = 5;
+      } else if (isSundanceEquivalentFestival(config.body) && isMajorCategoryNomination(config.category)) {
+        prestigeNom = 4;
+      } else if (isCannesEquivalentFestival(config.body) && isSupportingCategoryNomination(config.category)) {
+        prestigeNom = 4;
       } else if (isSundanceEquivalentFestival(config.body)) {
         prestigeNom = 3;
       } else if (isMajorCategoryNomination(config.category)) {
         prestigeNom = 3;
+      } else if (isSupportingCategoryNomination(config.category)) {
+        prestigeNom = 2.5;
       }
       impact.prestigeChange = (impact.prestigeChange || 0) + prestigeNom;
 
@@ -214,11 +226,15 @@ export function processRazzies(state: GameState, week: number): StateImpact {
 
   if (eligibleProjects.length === 0) return impact;
 
-  const worstPicture = eligibleProjects.reduce((worst, p) => {
+  let worstPicture = eligibleProjects[0];
+  for (let i = 1; i < eligibleProjects.length; i++) {
+    const p = eligibleProjects[i];
     const pScore = p.reviewScore ?? 100;
-    const worstScore = worst.reviewScore ?? 100;
-    return (pScore < worstScore) ? p : worst;
-  });
+    const worstScore = worstPicture.reviewScore ?? 100;
+    if (pScore < worstScore) {
+      worstPicture = p;
+    }
+  }
 
   if (impact.uiNotifications) {
       impact.uiNotifications.push(`"${worstPicture.title}" has 'won' Worst Picture at The Razzies! A catastrophic failure.`);

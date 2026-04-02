@@ -20,13 +20,25 @@ export class ExpenseProcessor {
   }
 
   /**
-   * Calculates weekly interest penalty for negative cash balances.
+   * Calculates the 'Credit Spread' (risk premium) based on studio prestige.
+   * Prestige 100 = 0% spread (Prime). Prestige 0 = 10% spread (Subprime).
    */
-  static calculateDebtInterest(cash: number, debtRate: number): number {
+  static calculateCreditSpread(prestige: number): number {
+    return (100 - Math.min(100, Math.max(0, prestige))) / 1000; // 0 to 0.10
+  }
+
+  /**
+   * Calculates weekly interest penalty for negative cash balances.
+   * Includes a risk premium based on the studio's reputation.
+   */
+  static calculateDebtInterest(cash: number, debtRate: number, prestige: number = 70): number {
     if (cash >= 0) return 0;
     
-    // Weekly interest = (Balance * AnnualRate) / 52
-    const weeklyRate = debtRate / 52;
+    const riskPremium = this.calculateCreditSpread(prestige);
+    const effectiveAnnualRate = debtRate + riskPremium;
+    
+    // Weekly interest = (Balance * EffectiveRate) / 52
+    const weeklyRate = effectiveAnnualRate / 52;
     return Math.abs(Math.round(cash * weeklyRate));
   }
 
@@ -72,5 +84,31 @@ export class ExpenseProcessor {
     });
 
     return Math.round(totalBurn);
+  }
+
+  /**
+   * Calculates total consolidated expenses for the studio.
+   */
+  static calculateConsolidatedExpenses(
+    projects: Project[],
+    state: import('../../types').GameState,
+    market: import('../../types/state.types').MarketState
+  ): {
+    production: number;
+    marketing: number;
+    overhead: number;
+    interest: number;
+  } {
+    const studioLevel = 1;
+    const production = this.calculateProductionBurn(projects);
+    const marketing = this.calculateMarketingBurn(projects);
+    const overhead = this.calculateStudioBurn(studioLevel, projects.filter(p => p.state !== 'released').length);
+
+    const isDebt = state.finance.cash < 0;
+    const interest = isDebt 
+      ? this.calculateDebtInterest(state.finance.cash, market.debtRate, state.studio.prestige)
+      : -this.calculateSavingsYield(state.finance.cash, market.savingsYield);
+
+    return { production, marketing, overhead, interest };
   }
 }
