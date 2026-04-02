@@ -32,15 +32,17 @@ export class RevenueProcessor {
       }
 
       if (p.state === 'released') {
+        // 2.2: Talent Draw & Prestige Multiplier
+        const talentMultiplier = this.calculateTalentRevenueMultiplier(p, state);
         let weeklyGross = 0;
         
         if (p.distributionStatus === 'theatrical') {
-          weeklyGross = this.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.5);
+          weeklyGross = this.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.5) * talentMultiplier;
           boxOffice += weeklyGross;
         } else if (p.distributionStatus === 'streaming') {
           const platform = state.market.buyers.find(b => b.id === p.buyerId);
           if (platform) {
-            weeklyGross = this.calculateStreamingRevenue(p, platform);
+            weeklyGross = this.calculateStreamingRevenue(p, platform) * talentMultiplier;
             distribution += weeklyGross;
           }
         }
@@ -54,6 +56,30 @@ export class RevenueProcessor {
     });
 
     return { boxOffice, distribution, merch, totalRoyalties, projectRecoupment };
+  }
+
+  /**
+   * Stage 2.2: Calculates a revenue multiplier based on the collective 'Draw' and 'Prestige' 
+   * of attached talent. High-value stars act as a force multiplier for box office.
+   */
+  static calculateTalentRevenueMultiplier(project: Project, state: import('../../types').GameState): number {
+    const contracts = state.studio.internal.contracts.filter(c => c.projectId === project.id);
+    if (contracts.length === 0) return 1.0;
+
+    let totalBonus = 0;
+    contracts.forEach(contract => {
+      const talent = state.industry.talentPool[contract.talentId];
+      if (talent) {
+        // Draw contribution: 100 draw = +0.25 bonus
+        const drawBonus = (talent.draw - 50) * 0.005;
+        // Prestige contribution: 100 prestige = +0.10 bonus
+        const prestigeBonus = (talent.prestige - 50) * 0.002;
+        totalBonus += (drawBonus + prestigeBonus);
+      }
+    });
+
+    // Clamp multiplier between 0.5x and 2.5x
+    return Math.min(2.5, Math.max(0.5, 1.0 + totalBonus));
   }
 
   /**
