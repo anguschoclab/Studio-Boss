@@ -37,9 +37,9 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
       const isCashCrunch = rival.currentMotivation === 'CASH_CRUNCH';
       const motivationAggression = (rival.motivationProfile?.aggression || 50) / 100;
 
-      const overpayThreshold = isFranchiseBuilder ? 1.1 : (isCashCrunch ? 1.5 : 1.3 - (motivationAggression * 0.1));
+      const liquidityBuffer = isFranchiseBuilder ? 1.1 : (isCashCrunch ? 1.5 : 1.3 - (motivationAggression * 0.1));
 
-      if (myBid < currentHighest && rival.cash > currentHighest * overpayThreshold) {
+      if (myBid < currentHighest && rival.cash > currentHighest * liquidityBuffer) {
         const multiplier = (ArchetypeMultipliers[rival.archetype]?.(opportunity.genre) || 1.0) * aggressionFactor * (isFranchiseBuilder ? 1.2 : 1.0);
         const newBid = Math.floor(currentHighest * (1 + (rng.range(1.05, 1.2) - 1) * multiplier));
 
