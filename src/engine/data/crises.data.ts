@@ -2151,4 +2151,31 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
       { text: "Leak dirt on the hackers to distract the public.", effectDescription: "A massive gamble. It works temporarily, but costs $2M in shady private investigator fees.", cashPenalty: 2000000 }
     ]
   }
+
+  ,
+  // Added 'Director Cancelled' crisis event with a -30 prestige hit but a +10 awareness boost for the current project.
+  {
+    id: 'director_cancelled',
+    description: "Your director has been 'cancelled' over resurfaced controversial statements. The internet is demanding their removal.",
+    options: [
+      {
+        text: "Fire them immediately",
+        effectDescription: "Costs $1M to sever their contract. Delays the film by 3 weeks.",
+        cashPenalty: 1000000,
+        weeksDelay: 3
+      },
+      {
+        text: "Double down and defend them",
+        effectDescription: "Costs 30 prestige hit but a +10 awareness boost for the current project.",
+        reputationPenalty: 30,
+        buzzPenalty: -10
+      },
+      {
+        text: "Issue a groveling apology",
+        effectDescription: "Costs $200k in PR and takes a 10 prestige hit.",
+        cashPenalty: 200000,
+        reputationPenalty: 10
+      }
+    ]
+  }
 ];

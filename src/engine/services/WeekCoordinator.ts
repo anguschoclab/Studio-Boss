@@ -147,7 +147,7 @@ export class WeekCoordinator {
     for (const key in state.studio.internal.projects) {
       const project = state.studio.internal.projects[key];
       if (!project.activeCrisis && activeStages.includes(project.state)) {
-        const impact = checkAndTriggerCrisis(project, context.rng);
+        const impact = checkAndTriggerCrisis(project, state, context.rng);
         if (impact) context.impacts.push(impact);
       }
     }

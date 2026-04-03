@@ -25,11 +25,15 @@ export function generateScandals(state: GameState, rng: RandomGenerator): StateI
   
   const studioProjects = state.studio.internal.projects || {};
 
+  const numContracts = contracts.length;
+  const studioProjectsCount = Object.keys(studioProjects).length;
+  const sizeModifier = 1.0 + (numContracts * 0.05) + (studioProjectsCount * 0.1);
+
   const talentPool = state.industry.talentPool || {};
   for (const talentId in talentPool) {
     const talent = talentPool[talentId];
     const risk = talent.psychology?.scandalRisk || 5; 
-    if (rng.next() * 1000 < risk) {
+    if (rng.next() * 1000 < (risk * sizeModifier)) {
        const types: ScandalType[] = ['financial', 'personal', 'onset_behavior', 'legal', 'feud'];
        const type = pick(types, rng);
        
