@@ -10,8 +10,13 @@ export interface TalentSlice {
   offerFirstLook: (talentId: string, duration: number, fee: number) => boolean;
   acquireOpportunity: (oppId: string) => void;
   placeBid: (oppId: string, amount: number) => void;
-  getTalentFilmography: (talentId: string) => any[];
-  getTalentCareerStats: (talentId: string) => any;
+  getTalentFilmography: (talentId: string) => import('@/engine/types/talent.types').Talent['filmography'];
+  getTalentCareerStats: (talentId: string) => { 
+    careerGross: number; 
+    highestSalaryMovie?: import('@/engine/types/talent.types').Talent['highestSalaryMovie']; 
+    highestSalaryTv?: import('@/engine/types/talent.types').Talent['highestSalaryTv']; 
+    starMeter: number; 
+  } | null;
   calculateStarMeter: (talentId: string) => number;
 }
 
@@ -36,8 +41,10 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       
       const newCash = state.finance.cash - finalFee;
       
+      const rng = new RandomGenerator(state.gameSeed + state.week + 11);
+      
       const contract: Contract = {
-        id: crypto.randomUUID(),
+        id: rng.uuid('contract'),
         projectId,
         talentId,
         fee: finalFee,
@@ -75,13 +82,13 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       const lockFee = (talent.fee * 2);
       if (state.finance.cash < lockFee) return s;
       
-      // Simplified: just create the deal directly
-      const accepted = Math.random() > 0.3; // 70% acceptance
+      const rng = new RandomGenerator(state.gameSeed + state.week + 22);
+      const accepted = rng.next() > 0.3; // 70% acceptance
       
       if (accepted) {
          success = true;
          const deal = {
-           id: crypto.randomUUID(),
+           id: rng.uuid('fld'),
            talentId,
            weeksRemaining: duration,
            exclusivity: true,
@@ -89,7 +96,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
          const currentDeals = state.studio.internal.firstLookDeals || [];
          const newNewsHistory = [...state.industry.newsHistory];
          newNewsHistory.unshift({
-           id: crypto.randomUUID(),
+           id: rng.uuid('news-fld'),
            week: state.week,
            type: 'STUDIO_EVENT' as const,
            headline: `${talent.name} signs first-look pact with ${state.studio.name}.`,
@@ -116,7 +123,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       } else {
          const newNewsHistory = [...state.industry.newsHistory];
          newNewsHistory.unshift({
-           id: crypto.randomUUID(),
+           id: rng.uuid('news-fld-reject'),
            week: state.week,
            type: 'STUDIO_EVENT' as const,
            headline: `${talent.name} passes on first-look deal with ${state.studio.name}.`,
@@ -149,7 +156,8 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       
       // Auction requirement: Only acquire if player is highest bidder and auction expired
       // OR if it's a non-auction acquisition (costToAcquire > 0)
-      const currentHighest = Object.values(opp.bids || {}).reduce((max: number, b) => Math.max(max, (b as any).amount || 0), 0);
+      const rng = new RandomGenerator(state.gameSeed + state.week + 33);
+      const currentHighest = Object.values(opp.bids || {}).reduce((max: number, b) => Math.max(max, b.amount || 0), 0);
       const isWinner = opp.highestBidderId === 'PLAYER';
       const isExpired = state.week >= opp.expirationWeek;
 
@@ -173,14 +181,24 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
         initialBuzzBonus: opp.qualityBonus,
       };
 
-      const { project, newContracts, talentFees } = buildProjectAndContracts(state, params);
+      const { project, newContracts, talentFees } = buildProjectAndContracts(state, params, rng);
 
       // Initialize new project roles & script state if scripted
       if (params.format !== 'unscripted') {
-        const scripted = project as any; // Temporary cast to handle the fact that we know it's scripted
-        scripted.scriptHeat = 50;
-        scripted.activeRoles = ['protagonist', 'antagonist', 'mentor', 'love_interest'].slice(0, project.budgetTier === 'blockbuster' ? 4 : 3);
-        scripted.scriptEvents = [];
+        const roles: import('@/engine/types').CharacterArchetype[] = ['protagonist', 'antagonist', 'mentor', 'love_interest'];
+        const activeRoles: import('@/engine/types').CharacterArchetype[] = roles.slice(0, project.budgetTier === 'blockbuster' ? 4 : 3);
+        
+        if (project.type === 'FILM') {
+           const film = project as import('@/engine/types').FilmProject;
+           film.scriptHeat = 50;
+           film.activeRoles = activeRoles;
+           film.scriptEvents = [];
+        } else if (project.type === 'SERIES') {
+           const series = project as import('@/engine/types').SeriesProject;
+           series.scriptHeat = 50;
+           series.activeRoles = activeRoles;
+           series.scriptEvents = [];
+        }
       }
       const updatedOpportunities = [...state.market.opportunities];
       updatedOpportunities.splice(oppIndex, 1);
@@ -250,9 +268,9 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
 
   getTalentFilmography: (talentId) => {
     const s = get();
-    if (!s.gameState) return [];
+    if (!s.gameState) return [] as import('@/engine/types/talent.types').Talent['filmography'];
     const talent = s.gameState.industry.talentPool[talentId];
-    return talent?.filmography || [];
+    return (talent?.filmography || []) as import('@/engine/types/talent.types').Talent['filmography'];
   },
 
   getTalentCareerStats: (talentId) => {

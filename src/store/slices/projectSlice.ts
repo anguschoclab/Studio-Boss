@@ -24,7 +24,7 @@ export interface ProjectSlice {
   submitToFestival: (projectId: string, festivalBody: AwardBody) => void;
   launchAwardsCampaign: (projectId: string, budget: number) => void;
   lockMarketingCampaign: (projectId: string, level: 'none' | 'basic' | 'blockbuster') => void;
-  addProject: (project: any) => void;
+  addProject: (project: Project) => void;
   advanceProjectPhase: (projectId: string, newState: string) => void;
   updateProject: (projectId: string, update: Partial<Project>) => void;
 }
@@ -40,7 +40,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
         gameState: applyStateImpact(s.gameState, {
           type: 'FUNDS_DEDUCTED',
           payload: { amount: talentFees }
-        }) as any 
+        })
       };
     });
     
@@ -99,7 +99,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
                   }
                 }
               }
-            }]) as any
+            }])
           };
         }
       }
@@ -143,7 +143,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
           ...newState.studio,
           culture: newCulture
         }
-      } as any
+      }
     });
   },
 
@@ -233,14 +233,15 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
       if (state.week - lastRelease > 520) status = 'LEGACY';
     }
 
-    const spinoffParams = generateSpinoffProposal(project, status, relatedCount);
+    const rng = new RandomGenerator(state.gameSeed + state.week + 44);
+    const spinoffParams = generateSpinoffProposal(rng, project, status, relatedCount);
     
     const finalParams = {
       ...spinoffParams,
       franchiseId: project.franchiseId
-    };
+    } as import('../storeUtils').CreateProjectParams;
 
-    get().createProject(finalParams as any);
+    get().createProject(finalParams);
   },
 
   acquireAndRebootIP: (ipAssetId) => {
@@ -301,7 +302,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
               contracts: [...intermediateState.studio.internal.contracts, ...newContracts]
             }
           }
-        } as any
+        }
       };
     });
   },
@@ -316,7 +317,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
     const rng = new RandomGenerator(state.gameSeed + state.week + 88); 
     const impact = resolveCrisis(state, project.id, optionIndex, rng);
     const newState = applyStateImpact(state, impact);
-    set({ gameState: newState as any });
+    set({ gameState: newState });
   },
 
   submitToFestival: (projectId, festivalBody) => {
@@ -326,7 +327,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
       const impact = festivalsEngine.submitToFestival(s.gameState, projectId, festivalBody, rng);
       if (!impact) return s;
       const newState = applyStateImpact(s.gameState, impact);
-      return { gameState: newState as any };
+      return { gameState: newState };
     });
   },
 
@@ -337,7 +338,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
       const impact = awardsEngine.launchAwardsCampaign(s.gameState, projectId, budget, rng);
       if (!impact) return s;
       const newState = applyStateImpact(s.gameState, impact);
-      return { gameState: newState as any };
+      return { gameState: newState };
     });
   },
 
@@ -386,7 +387,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
               }
             }
           }
-        ]) as any
+        ])
       };
     });
   },
@@ -417,9 +418,9 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
           type: 'PROJECT_UPDATED',
           payload: {
             projectId,
-            update: { state: newState as any }
+            update: { state: newState as import('@/engine/types').Project['state'] }
           }
-        }) as any
+        })
       };
     });
   },
@@ -434,8 +435,9 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
             projectId,
             update
           }
-        }) as any
+        })
       };
     });
   }
 });
+
