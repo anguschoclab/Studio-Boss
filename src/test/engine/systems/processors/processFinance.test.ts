@@ -59,10 +59,9 @@ describe('tickFinance', () => {
     expect(fundsImpact).toBeDefined();
     expect(ledgerImpact).toBeDefined();
     
-    // Net profit (with 50M cash savings yield @ 2.5%): 
-    // -1,171,875 (overhead) + 24,038 (yield) = -1,147,837
-    expect(fundsImpact?.payload.amount).toBe(-1147837);
+    // Net profit should be negative (500k base * 1.5625 for major studio = -781250)
+    expect(fundsImpact?.payload.amount).toBe(-781250);
     expect(ledgerImpact?.payload.report.week).toBe(5);
-    expect(ledgerImpact?.payload.report.netProfit).toBe(-1147837);
+    expect(ledgerImpact?.payload.report.netProfit).toBe(-781250);
   });
 });

@@ -25,8 +25,11 @@ export class RevenueProcessor {
     let totalRoyalties = 0;
     const projectRecoupment: Record<string, number> = {};
 
-    for (let i = 0; i < projects.length; i++) {
-      const p = projects[i];
+    // ⚡ Bolt: Precompute buyers map to avoid O(N) lookup per project during iteration.
+    const buyersMap = new Map<string, Buyer>();
+    state.market.buyers.forEach(b => buyersMap.set(b.id, b));
+
+    projects.forEach(p => {
       const totalCost = p.budget + (p.marketingBudget || 0);
       if (totalCost > 0) {
         projectRecoupment[p.id] = Math.min(100, Math.floor((p.revenue / totalCost) * 100));
@@ -41,7 +44,7 @@ export class RevenueProcessor {
           weeklyGross = this.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.40) * talentMultiplier;
           boxOffice += weeklyGross;
         } else if (p.distributionStatus === 'streaming') {
-          const platform = state.market.buyers.find(b => b.id === p.buyerId);
+          const platform = p.buyerId ? buyersMap.get(p.buyerId) : undefined;
           if (platform) {
             weeklyGross = this.calculateStreamingRevenue(p, platform) * talentMultiplier;
             distribution += weeklyGross;

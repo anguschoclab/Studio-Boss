@@ -160,13 +160,16 @@ export function calculateWeeklyRevenue(state: GameState): number {
   let boxOffice = 0;
   let distribution = 0;
 
-  for (let i = 0; i < projects.length; i++) {
-    const p = projects[i];
+  // ⚡ Bolt: Precompute buyers map to avoid O(N) lookup per project during iteration.
+  const buyersMap = new Map<string, Buyer>();
+  buyers.forEach(b => buyersMap.set(b.id, b));
+
+  projects.forEach(p => {
     if (p.state === 'released') {
       if (p.distributionStatus === 'theatrical') {
         boxOffice += RevenueProcessor.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.40, p.isCultClassic); // The Studio Comptroller: Reduced theatrical studio share (decay rate) from 45% to 40% to simulate modern front-loaded box office drops.
       } else if (p.distributionStatus === 'streaming') {
-        const platform = buyers.find(b => b.id === p.buyerId);
+        const platform = p.buyerId ? buyersMap.get(p.buyerId) : undefined;
         if (platform) {
           distribution += RevenueProcessor.calculateStreamingRevenue(p, platform);
         }

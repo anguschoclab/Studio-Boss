@@ -1,5 +1,7 @@
 import { useGameStore } from '@/store/gameStore';
+import { useShallow } from 'zustand/react/shallow';
 import { useUIStore } from '@/store/uiStore';
+import { useMemo } from 'react';
 import { ProjectCard } from './ProjectCard';
 import { Button } from '@/components/ui/button';
 import { Plus, LayoutGrid, ListFilter, Search } from 'lucide-react';
@@ -17,8 +19,22 @@ const COLUMNS: { status: ProjectStatus[]; title: string; color: string; descript
 ];
 
 export const PipelineBoard = () => {
-  const projects = useGameStore(s => selectProjects(s.gameState));
+  const projects = useGameStore(useShallow(s => selectProjects(s.gameState)));
   const { openCreateProject } = useUIStore();
+
+  // Memoize project distribution to avoid recalculating on every re-render
+  const projectsByStatus = useMemo(() => {
+    const map = new Map<ProjectStatus, typeof projects>();
+    for (const project of projects) {
+      const list = map.get(project.state);
+      if (list) {
+        list.push(project);
+      } else {
+        map.set(project.state, [project]);
+      }
+    }
+    return map;
+  }, [projects]);
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700 h-full flex flex-col">
@@ -52,21 +68,10 @@ export const PipelineBoard = () => {
 
       {/* Production Lanes */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 flex-1 min-h-0">
-        {(() => {
-          const projectsByStatus = new Map<ProjectStatus, typeof projects>();
-          for (const project of projects) {
-            const list = projectsByStatus.get(project.state);
-            if (list) {
-              list.push(project);
-            } else {
-              projectsByStatus.set(project.state, [project]);
-            }
-          }
-
-          return COLUMNS.map(col => {
-            const colProjects = col.status.flatMap(status => projectsByStatus.get(status) || []);
-            return (
-              <div key={col.title} className="flex flex-col h-full space-y-4 group/col">
+        {COLUMNS.map(col => {
+          const colProjects = col.status.flatMap(status => projectsByStatus.get(status) || []);
+          return (
+            <div key={col.title} className="flex flex-col h-full space-y-4 group/col">
                 {/* Column Header */}
                 <div className="flex items-center justify-between px-3 py-2 rounded-lg bg-white/[0.02] border border-white/5 group-hover/col:bg-white/[0.04] transition-colors relative overflow-hidden">
                   <div className={cn("absolute inset-y-0 left-0 w-1 opacity-50", col.color)} />
@@ -92,15 +97,14 @@ export const PipelineBoard = () => {
                       <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground group-hover:text-foreground/70 transition-colors">No Projects</p>
                     </div>
                   ) : (
-                    colProjects.map(project => (
-                      <ProjectCard key={project.id} project={project} />
-                    ))
-                  )}
-                </div>
+                  colProjects.map(project => (
+                    <ProjectCard key={project.id} project={project} />
+                  ))
+                )}
               </div>
-            );
-          });
-        })()}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
