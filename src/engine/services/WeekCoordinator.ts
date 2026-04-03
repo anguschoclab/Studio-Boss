@@ -259,7 +259,7 @@ export class WeekCoordinator {
 
       // Track project updates directly
       if (impact.type === 'PROJECT_UPDATED') {
-        projectUpdates.push((impact.payload as any).projectId);
+        projectUpdates.push((impact as import('../types/state.types').ProjectUpdateImpact).payload.projectId);
       }
       if (impact.projectUpdates) {
         for (let j = 0; j < impact.projectUpdates.length; j++) {
