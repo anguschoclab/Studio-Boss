@@ -37,7 +37,7 @@ export class RevenueProcessor {
         let weeklyGross = 0;
         
         if (p.distributionStatus === 'theatrical') {
-          weeklyGross = this.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.45) * talentMultiplier;
+          weeklyGross = this.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.40) * talentMultiplier;
           boxOffice += weeklyGross;
         } else if (p.distributionStatus === 'streaming') {
           const platform = state.market.buyers.find(b => b.id === p.buyerId);
@@ -99,7 +99,7 @@ export class RevenueProcessor {
   static calculateTheatricalDecay(currentRevenue: number, decayRate: number, isCultClassic: boolean = false): number {
     let revenue = Math.round(currentRevenue * decayRate);
     if (isCultClassic) {
-      revenue = Math.max(revenue * 1.5, 100000);
+      revenue = Math.max(revenue * 1.8, 150000); // The Studio Comptroller: Buffed cult classics to create dramatic financial anomalies.
     }
     return revenue;
   }
