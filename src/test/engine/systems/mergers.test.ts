@@ -5,7 +5,7 @@ import {
   executeSabotage,
   executePoach
 } from '../../../engine/systems/mergers';
-import { GameState, RivalStudio, Talent } from '../../../engine/types';
+import { GameState, RivalStudio, Talent, Project } from '../../../engine/types';
 import { RandomGenerator } from '../../../engine/utils/rng';
 
 describe('Mergers and Sabotage System', () => {
@@ -103,12 +103,32 @@ describe('Mergers and Sabotage System', () => {
       expect(impact).toBeNull();
     });
 
-    it('successfully executes acquisition impact', () => {
+    it('successfully executes acquisition impact with project and IP transfer', () => {
+      // Add a project to the target
+      mockTarget.projects = {
+        'p-1': { id: 'p-1', title: 'Rival Hit', state: 'production', budget: 50_000_000 } as Project
+      };
+      
+      // Add a rival IP to the state
+      mockState.ip.vault = [
+        { id: 'ip-1', title: 'Rival IP', rightsOwner: 'RIVAL', originalProjectId: 'p-1', baseValue: 10_000_000, decayRate: 1 } as any
+      ];
+
       const impact = executeAcquisition(mockState, mockTarget.id, rng);
 
       // Price 30m, but we get target's 5m cash. Net -25m
       expect(impact!.cashChange).toBe(-25000000);
-      expect(impact!.prestigeChange).toBeGreaterThan(0);
+      
+      // Verify Project Transfer
+      expect(impact!.newProjects).toHaveLength(1);
+      expect(impact!.newProjects![0].id).toBe('p-1');
+      expect(impact!.newProjects![0].state).toBe('turnaround'); // Stuck in turnaround
+      expect(impact!.newProjects![0].isAcquired).toBe(true);
+
+      // Verify IP Transfer
+      expect(impact!.newIPAssets).toHaveLength(1);
+      expect(impact!.newIPAssets![0].id).toBe('ip-1');
+      expect(impact!.newIPAssets![0].rightsOwner).toBe('STUDIO');
 
       expect(impact!.newHeadlines).toHaveLength(1);
       const headline = impact!.newHeadlines![0];
