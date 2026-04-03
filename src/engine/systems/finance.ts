@@ -20,11 +20,13 @@ export function calculateStudioNetWorth(state: GameState): number {
 
   // 2. Active Projects Inventory (Work in Progress value)
   // We value "Inventory" as 40% of the budget already spent to reflect harsher sunk cost realities
-  Object.values(state.studio.internal.projects).forEach(p => {
+  // ⚡ Bolt: Use for...in to avoid O(N) Object.values array allocation
+  for (const key in state.studio.internal.projects) {
+    const p = state.studio.internal.projects[key];
     if (p.state !== 'released' && p.state !== 'archived') {
       netWorth += p.budget * 0.4; // The Studio Comptroller: Reduced WIP valuation from 50% to 40%
     }
-  });
+  }
   
   return Math.floor(netWorth);
 }

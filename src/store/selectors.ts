@@ -99,10 +99,13 @@ export const selectIsBankrupt = createSelector(
 export const selectStudioSuccess = createSelector(
   [selectReleasedProjects],
   (released) => {
-    const totalRevenue = released.reduce((sum, p) => sum + (p.revenue || 0), 0);
-    const avgScore = released.length > 0 
-      ? released.reduce((sum, p) => sum + (p.reviewScore || 0), 0) / released.length 
-      : 0;
+    let totalRevenue = 0;
+    let totalScore = 0;
+    for (let i = 0; i < released.length; i++) {
+      totalRevenue += (released[i].revenue || 0);
+      totalScore += (released[i].reviewScore || 0);
+    }
+    const avgScore = released.length > 0 ? totalScore / released.length : 0;
     
     return {
       totalRevenue,
