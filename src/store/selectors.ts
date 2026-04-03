@@ -35,7 +35,11 @@ export const selectProjectsRaw = createSelector(
 
 export const selectProjects = createSelector(
   [selectProjectsRaw],
-  (projects): Project[] => Object.values(projects)
+  (projects): Project[] => {
+    const arr: Project[] = [];
+    for (const key in projects) arr.push(projects[key]);
+    return arr;
+  }
 );
 
 export const selectFinance = createSelector(
@@ -71,21 +75,31 @@ export const selectTalentPool = createSelector(
  */
 
 export const selectActiveProjects = createSelector(
-  [selectProjects],
-  (projects) => projects.filter(p => 
-    p.state !== 'released' && 
-    p.state !== 'archived' && 
-    p.state !== 'post_release'
-  )
+  [selectProjectsRaw],
+  (projects) => {
+    const arr: Project[] = [];
+    for (const key in projects) {
+      const p = projects[key];
+      if (p.state !== 'released' && p.state !== 'archived' && p.state !== 'post_release') {
+        arr.push(p);
+      }
+    }
+    return arr;
+  }
 );
 
 export const selectReleasedProjects = createSelector(
-  [selectProjects],
-  (projects) => projects.filter(p => 
-    p.state === 'released' || 
-    p.state === 'post_release' || 
-    p.state === 'archived'
-  )
+  [selectProjectsRaw],
+  (projects) => {
+    const arr: Project[] = [];
+    for (const key in projects) {
+      const p = projects[key];
+      if (p.state === 'released' || p.state === 'post_release' || p.state === 'archived') {
+        arr.push(p);
+      }
+    }
+    return arr;
+  }
 );
 
 export const selectIsBankrupt = createSelector(
@@ -99,10 +113,15 @@ export const selectIsBankrupt = createSelector(
 export const selectStudioSuccess = createSelector(
   [selectReleasedProjects],
   (released) => {
-    const totalRevenue = released.reduce((sum, p) => sum + (p.revenue || 0), 0);
-    const avgScore = released.length > 0 
-      ? released.reduce((sum, p) => sum + (p.reviewScore || 0), 0) / released.length 
-      : 0;
+    let totalRevenue = 0;
+    let totalScore = 0;
+
+    for (let i = 0; i < released.length; i++) {
+      totalRevenue += released[i].revenue || 0;
+      totalScore += released[i].reviewScore || 0;
+    }
+
+    const avgScore = released.length > 0 ? totalScore / released.length : 0;
     
     return {
       totalRevenue,
