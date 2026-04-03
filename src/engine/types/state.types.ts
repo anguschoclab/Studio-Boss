@@ -36,7 +36,10 @@ export interface FinancialSnapshot {
   };
   net: number;
   cash: number;
+  projectRecoupment?: Record<string, number>; // ProjectId -> % Recouped
 }
+
+export type MarketCycle = 'BOOM' | 'STABLE' | 'BEAR' | 'RECESSION' | 'RECOVERY';
 
 export interface MarketState {
   baseRate: number; // e.g. 0.04 for 4%
@@ -44,6 +47,8 @@ export interface MarketState {
   debtRate: number;
   loanRate: number;
   rateHistory: { week: number; rate: number }[];
+  sentiment: number; // -100 to 100
+  cycle: MarketCycle;
 }
 
 export interface FinanceState {
@@ -57,19 +62,24 @@ export interface NewsState {
   headlines: Headline[];
 }
 
+export type IPAssetTier = 'ORIGINAL' | 'BLOCKBUSTER' | 'CULT_CLASSIC' | 'LEGACY';
+
 export interface IPAsset {
   id: string;
   originalProjectId: string;
   title: string;
   franchiseId?: string; // New field for Shared Universe grouping
+  tier: IPAssetTier;
+  quality: number; // Inherited from project.reviewScore
   baseValue: number; // Based on box office / ratings success
-  decayRate: number; // Drops every week
+  decayRate: number; // 0.0 to 1.0 (Cultural relevance)
   merchandisingMultiplier: number; 
   syndicationStatus: 'NONE' | 'SYNDICATED';
   syndicationTier: 'NONE' | 'BRONZE' | 'SILVER' | 'GOLD';
   totalEpisodes: number;
   rightsExpirationWeek: number; 
   rightsOwner: 'STUDIO' | 'MARKET' | 'RIVAL';
+  isSynergyActive?: boolean; // True if a reboot/spinoff is active
 }
 
 export interface IPState {
@@ -89,6 +99,7 @@ export type ImpactType =
   | 'RIVAL_UPDATED'
   | 'OPPORTUNITY_UPDATED'
   | 'TRENDS_UPDATED'
+  | 'FRANCHISE_UPDATED'
   | 'SCANDAL_ADDED'
   | 'SCANDAL_REMOVED'
   | 'MARKET_EVENT_UPDATED'
@@ -96,7 +107,9 @@ export type ImpactType =
   | 'FINANCE_TRANSACTION'
   | 'FINANCE_SNAPSHOT_ADDED'
   | 'SYNC_M_A_FUNDS'
+  | 'VAULT_ASSET_UPDATED'
   | 'INDUSTRY_UPDATE'
+  | 'MODAL_TRIGGERED'
   | 'SYSTEM_TICK';
 
 export interface ProjectUpdate { projectId: string; update: Partial<import('./project.types').Project> }
@@ -104,6 +117,8 @@ export interface TalentUpdate { talentId: string; update: Partial<import('./tale
 export interface RivalUpdate { rivalId: string; update: Partial<import('./studio.types').RivalStudio> }
 export interface BuyerUpdate { buyerId: string; update: Partial<import('./studio.types').Buyer> }
 export interface ScandalUpdate { scandalId: string; update: Partial<import('./talent.types').Scandal> }
+export interface FranchiseUpdate { franchiseId: string; update: Partial<import('./franchise.types').Franchise> }
+export interface VaultAssetUpdate { assetId: string; update: Partial<IPAsset> }
 
 export interface BaseImpact {
   payload?: unknown;
@@ -133,7 +148,15 @@ export interface FundsImpact extends BaseImpact { type: 'FUNDS_CHANGED'; payload
 export interface FundsDeductedImpact extends BaseImpact { type: 'FUNDS_DEDUCTED'; payload: { amount: number } }
 export interface ProjectUpdateImpact extends BaseImpact { type: 'PROJECT_UPDATED'; payload: ProjectUpdate }
 export type ProjectRemovedImpact = BaseImpact & { type: 'PROJECT_REMOVED'; payload: { projectId: string } };
-export type NewsImpact = BaseImpact & { type: 'NEWS_ADDED'; payload: { headline: string; description: string; category?: import('./engine.types').HeadlineCategory } };
+export type NewsImpact = BaseImpact & { 
+  type: 'NEWS_ADDED'; 
+  payload: { 
+    id: string;
+    headline: string; 
+    description: string; 
+    category?: import('./engine.types').HeadlineCategory 
+  } 
+};
 export type TalentUpdateImpact = BaseImpact & { type: 'TALENT_UPDATED'; payload: TalentUpdate };
 export interface PrestigeChangedImpact extends BaseImpact { type: 'PRESTIGE_CHANGED'; payload: { amount: number } }
 export interface BuyerUpdateImpact extends BaseImpact { type: 'BUYER_UPDATED'; payload: BuyerUpdate }
@@ -143,6 +166,8 @@ export interface TrendsUpdateImpact extends BaseImpact { type: 'TRENDS_UPDATED';
 export interface ScandalAddedImpact extends BaseImpact { type: 'SCANDAL_ADDED'; payload: { scandal: import('./talent.types').Scandal } }
 export interface ScandalRemovedImpact extends BaseImpact { type: 'SCANDAL_REMOVED'; payload: { scandalId: string } }
 export interface MarketEventUpdateImpact extends BaseImpact { type: 'MARKET_EVENT_UPDATED'; payload: { events?: import('./engine.types').MarketEvent[]; marketState?: MarketState } }
+export interface FranchiseUpdateImpact extends BaseImpact { type: 'FRANCHISE_UPDATED'; payload: FranchiseUpdate }
+export interface VaultAssetUpdateImpact extends BaseImpact { type: 'VAULT_ASSET_UPDATED'; payload: VaultAssetUpdate }
 export interface LedgerImpact extends BaseImpact { type: 'LEDGER_UPDATED'; payload: { report: WeeklyFinancialReport } }
 export interface FinanceTransactionImpact extends BaseImpact { type: 'FINANCE_TRANSACTION'; payload: { amount: number; description: string } }
 export interface FinanceSnapshotImpact extends BaseImpact { type: 'FINANCE_SNAPSHOT_ADDED'; payload: { snapshot: FinancialSnapshot } }
@@ -154,6 +179,15 @@ export interface IndustryUpdateImpact extends BaseImpact {
     update: Record<string, unknown>;
     rival?: RivalUpdate;
     mergedRivalId?: string;
+  } 
+}
+
+export interface ModalTriggeredImpact extends BaseImpact { 
+  type: 'MODAL_TRIGGERED'; 
+  payload: { 
+    modalType: import('./engine.types').ModalType; 
+    payload: unknown;
+    priority?: number; 
   } 
 }
 
@@ -171,6 +205,8 @@ export type StateImpact =
   | TrendsUpdateImpact
   | ScandalAddedImpact
   | ScandalRemovedImpact
+  | FranchiseUpdateImpact
+  | VaultAssetUpdateImpact
   | MarketEventUpdateImpact
   | LedgerImpact
   | FinanceTransactionImpact
@@ -178,4 +214,5 @@ export type StateImpact =
   | SyncMAFundsImpact
   | SystemTickImpact
   | IndustryUpdateImpact
+  | ModalTriggeredImpact
   | (BaseImpact & { type?: undefined }); // The "Bag" impact

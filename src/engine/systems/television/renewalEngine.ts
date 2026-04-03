@@ -14,13 +14,24 @@ export function evaluateRenewal(
     return 'ON_AIR';
   }
 
+  // 📺 The Syndication Baron: Tweaked streaming renewal thresholds: platforms now cancel expensive shows faster, but reward consistent multi-season hits.
+  let dynamicThreshold = threshold;
+  if (project.budgetTier === 'blockbuster') {
+    dynamicThreshold += 1.5;
+  } else if (project.budgetTier === 'high') {
+    dynamicThreshold += 0.8;
+  }
+  if (project.tvDetails && project.tvDetails.currentSeason > 2) {
+    dynamicThreshold -= 0.5;
+  }
+
   // Renewal decision logic
-  if (averageRating >= threshold) {
+  if (averageRating >= dynamicThreshold) {
     return 'RENEWED';
   }
 
   // Potential "Bubble" show logic
-  if (averageRating >= threshold - 0.5) {
+  if (averageRating >= dynamicThreshold - 0.5) {
     return 'ON_BUBBLE';
   }
 

@@ -38,7 +38,10 @@ describe("Finance System", () => {
         internal: { projects: {}, contracts: [] }
       },
       market: { opportunities: [], buyers: [] },
-      industry: { rivals: [], headlines: [], talentPool: {} }
+      industry: { rivals: [], headlines: [], talentPool: {} },
+      ip: { vault: [], franchises: {} }
+,
+
     } as unknown as GameState;
 
     it("returns cash when there are no projects with catalog value", () => {
@@ -47,7 +50,7 @@ describe("Finance System", () => {
 
     it("adds 100% of catalogValue if rightsOwner is 'studio'", () => {
        const p1: Project = { ...mockProjectReleased, ipRights: { rightsOwner: 'studio', catalogValue: 200000 } } as any;
-       const state = { ...mockState, studio: { ...mockState.studio, internal: { ...mockState.studio.internal, projects: { 'p1': p1 } } } } as any;
+       const state = { ...mockState, ip: { vault: [{ baseValue: 200000, decayRate: 1.0, projectId: 'p1', quality: 50, type: 'original' }] } } as any;
        expect(calculateStudioNetWorth(state)).toBe(700000);
     });
   });
@@ -71,6 +74,9 @@ describe("Finance System", () => {
       },
       market: { opportunities: [], buyers: [], activeMarketEvents: [] },
       industry: { rivals: [], headlines: [], talentPool: {}, newsHistory: [] },
+      ip: { vault: [], franchises: {} }
+
+
     } as unknown as GameState;
 
     it("properly calculates burns, overhead, and box office", () => {
@@ -94,11 +100,14 @@ describe("Finance System", () => {
         } as any;
 
         const { report } = generateWeeklyFinancialReport(stateWithDist);
-        // ExpenseProcessor.calculateStudioBurn(1, 2 active) = 500k + 250k + (2 * 50k) = 850k
-        expect(report.expenses.overhead).toBe(850000);
+        // ExpenseProcessor.calculateStudioBurn(Level 3, 2 active [unreleased])
+        // levelScale = 1.25^2 = 1.5625
+        // overhead = (750k * 1.5625) + (2 * 200k) = 1,171,875 + 400,000 = 1,571,875
+        expect(report.expenses.overhead).toBe(1571875);
         expect(report.expenses.production).toBe(20000); // Only mockProjectProd is in production
-        expect(report.revenue.boxOffice).toBe(50000);
-        expect(report.netProfit).toBe(50000 - 870000);
+        expect(report.revenue.boxOffice).toBe(40000); // 100k * 0.40
+        // Net: 40k - 1,571,875 (overhead) - 20k (prod) + 481 (savings yield) = -1,551,394
+        expect(report.netProfit).toBe(-1551394);
         expect(report.startingCash).toBe(1000000);
     });
   });
@@ -106,7 +115,21 @@ describe("Finance System", () => {
   describe("tickFinance", () => {
       const mockState: GameState = {
         week: 1,
-        finance: { cash: 1000000, ledger: [] },
+        gameSeed: 1,
+        tickCount: 0,
+        finance: { 
+          cash: 1000000, 
+          ledger: [],
+          marketState: {
+            baseRate: 0.05,
+            savingsYield: 0.02,
+            debtRate: 0.1,
+            loanRate: 0.08,
+            rateHistory: [],
+            sentiment: 50,
+            cycle: 'STABLE'
+          }
+        },
         studio: {
           name: "Test",
           archetype: "major",
@@ -119,8 +142,10 @@ describe("Finance System", () => {
             contracts: []
           }
         },
-        market: { opportunities: [], buyers: [], activeMarketEvents: [] },
-        industry: { rivals: [], newsHistory: [], talentPool: {} }
+        market: { opportunities: [], buyers: [], trends: [] },
+        industry: { rivals: [], newsHistory: [], talentPool: {}, awards: [] },
+        ip: { vault: [], franchises: {} },
+        culture: { genrePopularity: {} }
       } as unknown as GameState;
   
       it("returns StateImpact for funds change", () => {
@@ -147,10 +172,13 @@ describe("Finance System", () => {
          const impacts = tickFinance(stateWithDist, rng);
          const impact = impacts.find(i => i.type === 'FUNDS_CHANGED');
          
-         // Revenue: 200k * 0.5 (decay) = 100k
-         // Expenses: 20k (prod) + [500k + 250k + (1 * 50k)] (overhead) = 820k
-         // Net: 100k - 820k = -720k
-         expect(impact?.payload.amount).toBe(-720000);
+         // Revenue: 200k * 0.40 = 80k
+         // Overhead: Level 3, 1 active unreleased = (750k * 1.5625) + (1 * 200k) = 1,171,875 + 200,000 = 1,371,875
+         // Production: 20k
+         // Savings Yield: 1M * (0.02 / 52) = ~385
+         // Total Expenses: 1,391,875 - 385 = 1,391,490
+         // Net: 80k - 1,391,490 = -1,311,490
+         expect(impact?.payload.amount).toBe(-1311490);
       });
   });
 });

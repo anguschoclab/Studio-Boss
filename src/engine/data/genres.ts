@@ -91,28 +91,28 @@ export const TARGET_AUDIENCES = [
 ] as const;
 
 export const CROSSOVER_AFFINITY: Record<string, string[]> = {
-  'Superhero': ['Action', 'Sci-Fi', 'Fantasy', 'Comedy', 'Animation', 'Crime', 'Horror'],
-  'Action': ['Sci-Fi', 'Thriller', 'Crime', 'Superhero', 'Comedy'],
-  'Sci-Fi': ['Action', 'Horror', 'Fantasy', 'Animation', 'Thriller', 'Video Game Adaptation'],
-  'Horror': ['Sci-Fi', 'Thriller', 'Comedy', 'Fantasy', 'Documentary'],
-  'Fantasy': ['Action', 'Romance', 'Animation', 'Sci-Fi'],
-  'Comedy': ['Romance', 'Action', 'Animation', 'Superhero', 'Musical', 'Horror'],
+  'Superhero': ['Action', 'Sci-Fi', 'Fantasy', 'Comedy', 'Animation', 'Crime', 'Horror', 'Multiverse', 'IP Mashup'],
+  'Action': ['Sci-Fi', 'Thriller', 'Crime', 'Superhero', 'Comedy', 'Video Game Adaptation'],
+  'Sci-Fi': ['Action', 'Horror', 'Fantasy', 'Animation', 'Thriller', 'Video Game Adaptation', 'Multiverse'],
+  'Horror': ['Sci-Fi', 'Thriller', 'Comedy', 'Fantasy', 'Documentary', 'Elevated Horror'],
+  'Fantasy': ['Action', 'Romance', 'Animation', 'Sci-Fi', 'Multiverse'],
+  'Comedy': ['Romance', 'Action', 'Animation', 'Superhero', 'Musical', 'Horror', 'IP Mashup'],
   'Crime': ['Thriller', 'Drama', 'Action', 'Horror', 'Documentary'],
-  'Thriller': ['Horror', 'Crime', 'Sci-Fi', 'Drama', 'Action'],
+  'Thriller': ['Horror', 'Crime', 'Sci-Fi', 'Drama', 'Action', 'Elevated Horror'],
   'Romance': ['Comedy', 'Drama', 'Musical', 'Fantasy'],
-  'Animation': ['Comedy', 'Family', 'Musical', 'Fantasy', 'Sci-Fi', 'Superhero', 'Action'],
+  'Animation': ['Comedy', 'Family', 'Musical', 'Fantasy', 'Sci-Fi', 'Superhero', 'Action', 'Video Game Adaptation', 'IP Mashup'],
   'Drama': ['Romance', 'Crime', 'Thriller', 'Documentary'],
   'Musical': ['Romance', 'Comedy', 'Animation', 'Drama'],
   'Documentary': ['Drama', 'Crime', 'Horror'],
   'Unscripted': ['Comedy', 'Documentary', 'Drama'],
   'Multiverse': ['Superhero', 'Sci-Fi', 'Fantasy', 'Action', 'Animation', 'IP Mashup'],
   'Elevated Horror': ['Horror', 'Thriller', 'Drama', 'Psychological Thriller'],
-  'IP Mashup': ['Comedy', 'Action', 'Animation', 'Superhero', 'Multiverse'],
-  'Video Game Adaptation': ['Action', 'Sci-Fi', 'Fantasy', 'Animation']
+  'IP Mashup': ['Comedy', 'Action', 'Animation', 'Superhero', 'Multiverse', 'Sci-Fi', 'Video Game Adaptation'],
+  'Video Game Adaptation': ['Action', 'Sci-Fi', 'Fantasy', 'Animation', 'Horror', 'IP Mashup']
 };
 
 export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
-  'Superhero': 0.80,
+  'Superhero': 0.85,
   'Action': 0.50,
   'Sci-Fi': 0.45,
   'Fantasy': 0.30,
@@ -125,9 +125,11 @@ export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
   'Documentary': 0.05,
   'Crime': 0.20,
   'Musical': 0.25,
-  'Unscripted': 0.30, // Reality/Unscripted can fatigue quickly if over-saturated
-  'Multiverse': 0.85, // Extremely high fatigue risk if overdone
+  'Unscripted': 0.40, // Reality/Unscripted can fatigue quickly if over-saturated
+  'Multiverse': 0.90, // Extremely high fatigue risk if overdone
   'Elevated Horror': 0.20,
-  'IP Mashup': 0.70, // High burnout potential
+  'IP Mashup': 0.75, // High burnout potential
   'Video Game Adaptation': 0.60,
+  'Space Opera': 0.65,
+  'Cyberpunk': 0.55,
 };

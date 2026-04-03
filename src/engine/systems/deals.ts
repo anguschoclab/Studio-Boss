@@ -1,7 +1,7 @@
 import { Talent, GameState, Project, FirstLookDeal, Agency, StateImpact } from '@/engine/types';
-import { secureRandom } from '../utils';
+import { RandomGenerator } from '../utils/rng';
 
-export function evaluateFirstLookDeal(talent: Talent, state: GameState): boolean {
+export function evaluateFirstLookDeal(talent: Talent, state: GameState, rng: RandomGenerator): boolean {
   // A simple AI to determine if talent accepts a first-look deal based on studio prestige vs talent prestige
   const studioPrestige = state.studio.prestige;
   const talentPrestige = talent.prestige;
@@ -20,41 +20,42 @@ export function evaluateFirstLookDeal(talent: Talent, state: GameState): boolean
   // Clamp between 5 and 95
   acceptanceChance = Math.max(5, Math.min(95, acceptanceChance));
   
-  return secureRandom() * 100 <= acceptanceChance;
+  return rng.next() * 100 <= acceptanceChance;
 }
 
-export function offerFirstLookDeal(state: GameState, talentId: string, weeksRemaining: number, exclusivity: boolean = true): StateImpact[] {
+export function offerFirstLookDeal(state: GameState, talentId: string, rng: RandomGenerator): StateImpact[] {
   const talent = state.industry.talentPool[talentId];
   if (!talent) return [];
   
-  const accepted = evaluateFirstLookDeal(talent, state);
+  const accepted = evaluateFirstLookDeal(talent, state, rng);
   if (!accepted) {
     return [
       {
-        type: 'NEWS_ADDED',
-        payload: {
+        newsEvents: [{
+          id: rng.uuid('news'),
+          week: state.week,
+          type: 'RIVAL',
           headline: `${talent.name} passes on first-look deal`,
           description: `${talent.name} has declined a First-Look pact with ${state.studio.name}.`
-        }
+        }]
       }
     ];
   }
   
-  const dealId = crypto.randomUUID();
-  // Note: We need a STUDIO_DEAL_ADDED type or similar if we want to store this in state.
-  // For now, we'll just return the news impact to pass the tests and signal implementation gap.
   return [
     {
-      type: 'NEWS_ADDED',
-      payload: {
+      newsEvents: [{
+        id: rng.uuid('news'),
+        week: state.week,
+        type: 'RIVAL',
         headline: `${talent.name} signs first-look pact`,
         description: `${talent.name} signs exclusive first-look pact with ${state.studio.name}.`
-      }
+      }]
     }
   ];
 }
 
-export function advanceDeals(deals: FirstLookDeal[]): StateImpact[] {
+export function advanceDeals(deals: FirstLookDeal[], rng: RandomGenerator): StateImpact[] {
   let expiredCount = 0;
   
   for (let i = 0; i < deals.length; i++) {
@@ -68,11 +69,13 @@ export function advanceDeals(deals: FirstLookDeal[]): StateImpact[] {
   if (expiredCount > 0) {
       return [
         {
-          type: 'NEWS_ADDED',
-          payload: {
+          newsEvents: [{
+            id: rng.uuid('news'),
+            week: -1, // Coordinator will fill this
+            type: 'STUDIO_EVENT',
             headline: 'Deals Expired',
             description: `${expiredCount} first-look talent deal(s) expired this week.`
-          }
+          }]
         }
       ];
   }
@@ -80,12 +83,6 @@ export function advanceDeals(deals: FirstLookDeal[]): StateImpact[] {
   return [];
 }
 
-export function packageProject(project: Project, talentIds?: string[], agency?: Agency): { packageScore: number, synergies: string[] } {
-  if (talentIds || agency) { /* no-op for lint */ }
-  const score = project.buzz; 
-  const synergies: string[] = [];
-  return { packageScore: score, synergies };
-}
 
 export function evaluatePackageStrength(project: Project, attachedTalent: Talent[], agency?: Agency): { score: number, multipliers: string[] } {
   let score = 50 + (project.buzz * 0.5);
@@ -121,3 +118,4 @@ export function evaluatePackageStrength(project: Project, attachedTalent: Talent
     multipliers
   };
 }
+

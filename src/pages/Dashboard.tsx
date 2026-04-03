@@ -16,13 +16,11 @@ import { SBDBView } from '@/components/sbdb/SBDBView';
 import { StreamingPanel } from '@/components/streaming/StreamingPanel';
 import { AnimatePresence, motion } from 'framer-motion';
 
-// Modals
+// Modals & Overlays
+import { ModalManager } from '@/components/modals/ModalManager';
 import { CreateProjectModal } from '@/components/modals/CreateProjectModal';
-import { WeekSummaryModal } from '@/components/modals/WeekSummaryModal';
 import { ProjectDetailModal } from '@/components/modals/ProjectDetailModal';
 import { PitchProjectModal } from '@/components/modals/PitchProjectModal';
-import { CrisisModal } from '@/components/modals/CrisisModal';
-import { AwardsCeremonyModal } from '@/components/modals/AwardsCeremonyModal';
 
 const Dashboard: React.FC = () => {
   const gameState = useGameStore(s => s.gameState);
@@ -90,13 +88,11 @@ const Dashboard: React.FC = () => {
         </main>
       </div>
       
-      {/* Modals */}
+      {/* Modals & Overlays */}
+      <ModalManager />
       <CreateProjectModal />
-      <WeekSummaryModal />
       <ProjectDetailModal />
       <PitchProjectModal />
-      <CrisisModal />
-      <AwardsCeremonyModal />
     </div>
   );
 };

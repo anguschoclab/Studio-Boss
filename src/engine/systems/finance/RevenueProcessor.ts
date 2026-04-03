@@ -7,26 +7,111 @@ import { calculateWeeklyIPRevenue } from '../ip/merchandisingEngine';
  */
 export class RevenueProcessor {
   /**
+   * Calculates total active revenue and recoupment for all studio projects.
+   */
+  static calculateActiveRevenue(
+    projects: Project[],
+    state: import('../../types').GameState
+  ): {
+    boxOffice: number;
+    distribution: number;
+    merch: number;
+    totalRoyalties: number;
+    projectRecoupment: Record<string, number>;
+  } {
+    let boxOffice = 0;
+    let distribution = 0;
+    let merch = 0;
+    let totalRoyalties = 0;
+    const projectRecoupment: Record<string, number> = {};
+
+    // ⚡ Bolt: Precompute buyers map to avoid O(N) lookup per project during iteration.
+    const buyersMap = new Map<string, Buyer>();
+    state.market.buyers.forEach(b => buyersMap.set(b.id, b));
+
+    projects.forEach(p => {
+      const totalCost = p.budget + (p.marketingBudget || 0);
+      if (totalCost > 0) {
+        projectRecoupment[p.id] = Math.min(100, Math.floor((p.revenue / totalCost) * 100));
+      }
+
+      if (p.state === 'released') {
+        // 2.2: Talent Draw & Prestige Multiplier
+        const talentMultiplier = this.calculateTalentRevenueMultiplier(p, state);
+        let weeklyGross = 0;
+        
+        if (p.distributionStatus === 'theatrical') {
+          weeklyGross = this.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.40) * talentMultiplier;
+          boxOffice += weeklyGross;
+        } else if (p.distributionStatus === 'streaming') {
+          const platform = p.buyerId ? buyersMap.get(p.buyerId) : undefined;
+          if (platform) {
+            weeklyGross = this.calculateStreamingRevenue(p, platform) * talentMultiplier;
+            distribution += weeklyGross;
+          }
+        }
+        
+        const franchise = p.franchiseId ? state.ip.franchises[p.franchiseId] : null;
+        const weeklyMerch = this.calculateMerchRevenue(p.buzz, franchise?.relevanceScore || 0);
+        merch += weeklyMerch;
+
+        totalRoyalties += this.calculateNetPointsRoyalty(p, weeklyGross + weeklyMerch, state.studio.internal.contracts);
+      }
+    }
+
+    return { boxOffice, distribution, merch, totalRoyalties, projectRecoupment };
+  }
+
+  /**
+   * Stage 2.2: Calculates a revenue multiplier based on the collective 'Draw' and 'Prestige' 
+   * of attached talent. High-value stars act as a force multiplier for box office.
+   */
+  static calculateTalentRevenueMultiplier(project: Project, state: import('../../types').GameState): number {
+    const contracts = state.studio.internal.contracts;
+    let totalBonus = 0;
+    let hasContract = false;
+
+    for (let i = 0; i < contracts.length; i++) {
+      const contract = contracts[i];
+      if (contract.projectId === project.id) {
+        hasContract = true;
+        const talent = state.industry.talentPool[contract.talentId];
+        if (talent) {
+          // Draw contribution: 100 draw = +0.25 bonus
+          const drawBonus = (talent.draw - 50) * 0.005;
+          // Prestige contribution: 100 prestige = +0.10 bonus
+          const prestigeBonus = (talent.prestige - 50) * 0.002;
+          totalBonus += (drawBonus + prestigeBonus);
+        }
+      }
+    }
+
+    if (!hasContract) return 1.0;
+
+    // Clamp multiplier between 0.5x and 2.5x
+    return Math.min(2.5, Math.max(0.5, 1.0 + totalBonus));
+  }
+
+  /**
    * Calculates weekly streaming revenue for a project on a specific platform.
-   * Expected: Weekly Licensing Fee = $20,000 (at 100 quality, 10% market share).
    */
   static calculateStreamingRevenue(project: Project, platform: Buyer): number {
     const quality = project.reviewScore || 50;
     const marketShare = platform.marketShare || 0.10;
-    
-    // Base fee is $2,000 per 1% market share at 100 quality
     const baseFeePerUnit = 2000; 
     const shareUnits = marketShare * 100;
-    
-    const revenue = baseFeePerUnit * shareUnits * (quality / 100);
-    return Math.round(revenue);
+    return Math.round(baseFeePerUnit * shareUnits * (quality / 100));
   }
 
   /**
    * Calculates box office decay for a project in a given week.
    */
-  static calculateTheatricalDecay(currentRevenue: number, decayRate: number): number {
-    return Math.round(currentRevenue * decayRate);
+  static calculateTheatricalDecay(currentRevenue: number, decayRate: number, isCultClassic: boolean = false): number {
+    let revenue = Math.round(currentRevenue * decayRate);
+    if (isCultClassic) {
+      revenue = Math.max(revenue * 1.8, 150000); // The Studio Comptroller: Buffed cult classics to create dramatic financial anomalies.
+    }
+    return revenue;
   }
 
   /**
@@ -34,50 +119,44 @@ export class RevenueProcessor {
    */
   static calculateMerchRevenue(hype: number, franchiseRelevance: number): number {
     if (hype < 70) return 0;
-    
-    // Revenue scales with hype and franchise relevance
     const base = 5000;
-    const hypeFactor = (hype - 70) / 30; // 0 to 1
-    const relevanceFactor = franchiseRelevance / 100; // 0 to 1
-    
-    const revenue = base + (base * 5 * hypeFactor * relevanceFactor);
-    return Math.round(revenue);
+    const hypeFactor = (hype - 70) / 30;
+    const relevanceFactor = franchiseRelevance / 100;
+    return Math.round(base + (base * 5 * hypeFactor * relevanceFactor));
   }
 
   /**
    * Calculates passive revenue generated by the archived IP vault.
    */
   static calculateVaultDividends(vault: IPAsset[]): number {
-    return vault.reduce((total, asset) => total + calculateWeeklyIPRevenue(asset), 0);
+    if (vault.length === 0) return 0;
+    let total = 0;
+    for (let i = 0; i < vault.length; i++) {
+      total += calculateWeeklyIPRevenue(vault[i]);
+    }
+    return total;
   }
 
   /**
    * Calculates talent royalties (Net Points) for a project.
-   * Royalties ONLY trigger after the project has recouped (Total Revenue >= Total Cost).
    */
   static calculateNetPointsRoyalty(project: Project, weeklyRevenue: number, contracts: Contract[]): number {
     const totalCost = project.budget + (project.marketingBudget || 0);
     const totalRevenue = project.revenue || 0;
 
-    // Recoupment check
-    if (totalRevenue < totalCost) {
-      return 0; // Negative cost has not been recovered yet
-    }
+    if (totalRevenue < totalCost) return 0;
 
-    // Payout logic: Gross points based on the current week's revenue
     let totalRoyalty = 0;
-    contracts.forEach(contract => {
+    for (let i = 0; i < contracts.length; i++) {
+      const contract = contracts[i];
       if (contract.projectId === project.id && contract.backendPercent > 0) {
         let percent = contract.backendPercent / 100;
-
-        // Backend escalator: +5% if Revenue > 2x Cost
         if (contract.backendEscalator && totalRevenue > totalCost * 2) {
           percent += 0.05;
         }
-
         totalRoyalty += weeklyRevenue * percent;
       }
-    });
+    }
 
     return Math.round(totalRoyalty);
   }

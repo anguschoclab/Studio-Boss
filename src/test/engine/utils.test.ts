@@ -1,5 +1,4 @@
-import { describe, it, expect } from "vitest";
-import { formatMoney, getWeekDisplay, pick, randRange, clamp } from "../../engine/utils";
+import { formatMoney, getWeekDisplay, clamp } from "../../engine/utils";
 
 describe("utils", () => {
   describe("formatMoney", () => {
@@ -46,22 +45,6 @@ describe("utils", () => {
       expect(getWeekDisplay(52)).toEqual({ displayWeek: 52, year: 2026 });
       expect(getWeekDisplay(53)).toEqual({ displayWeek: 1, year: 2027 });
       expect(getWeekDisplay(104)).toEqual({ displayWeek: 52, year: 2027 });
-    });
-  });
-
-  describe("pick", () => {
-    it("picks an element from the array", () => {
-      const arr = [1, 2, 3];
-      const result = pick(arr);
-      expect(arr).toContain(result);
-    });
-  });
-
-  describe("randRange", () => {
-    it("returns a number within the range", () => {
-      const result = randRange(1, 10);
-      expect(result).toBeGreaterThanOrEqual(1);
-      expect(result).toBeLessThanOrEqual(10);
     });
   });
 

@@ -169,7 +169,17 @@ export type TvFormatKey =
   | 'teen_mystery_box'
   | 'workplace_mockumentary'
   | 'satirical_news_show'
-  | 'historical_romance';
+    | 'historical_romance'
+  | 'medical_soap'
+  | 'alien_invasion_thriller'
+  | 'political_family_drama'
+  | 'historical_comedy'
+  | 'superhero_parody_sitcom'
+  | 'prestige_espionage_miniseries'
+  | 'lawyer_comedy'
+  | 'gothic_romance'
+  | 'tech_startup_thriller'
+  | 'suburban_mystery';
 
 export type UnscriptedFormatKey =
   | 'competition'
@@ -302,7 +312,17 @@ export type UnscriptedFormatKey =
   | 'extreme_makeover_cult'
   | 'crypto_scam_expose'
   | 'child_star_documentary'
-  | 'billionaire_yacht_crew';
+    | 'billionaire_yacht_crew'
+  | 'historical_reenactment_doc'
+  | 'celebrity_cooking_disasters'
+  | 'high_school_sports_doc'
+  | 'extreme_body_mods'
+  | 'polygraph_interrogation'
+  | 'rich_pets_of_instagram'
+  | 'survival_island_celebrity'
+  | 'art_forgery_expose'
+  | 'underground_racing_doc'
+  | 'extreme_decluttering';
 
 export type ReleaseModelKey = 'weekly' | 'binge' | 'split';
 export type ProjectContractType = 'upfront' | 'deficit' | 'standard';
@@ -438,6 +458,7 @@ export interface ProjectBase {
   isGlobalIcon?: boolean;
   razzieWinner?: boolean;
   franchiseId?: string;
+  originalProjectId?: string; // Links to the vault asset it's rebooting/spinning off
   // Release simulation fields
   reviewScore?: number;
   boxOfficeRank?: number;

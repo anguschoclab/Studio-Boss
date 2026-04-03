@@ -58,13 +58,26 @@ describe('AI Motivation Engine (Target C1)', () => {
     eventHistory: []
   } as unknown as GameState;
 
-  it('should switch to CASH_CRUNCH if cash is extremely low', () => {
+  it("should switch to CASH_CRUNCH if cash is extremely low", () => {
     const nextMotivation = calculateRivalMotivation(mockRival, mockState, rng);
     expect(nextMotivation).toBe('CASH_CRUNCH');
   });
 
-  it('should switch to AWARD_CHASE if prestige is high but cash is fine', () => {
-    const richRival: RivalStudio = { ...mockRival, cash: 50_000_000, prestige: 90 };
+  it("should switch to AWARD_CHASE if prestige is high, cash is fine, and enough projects exist", () => {
+    // We need to avoid FRANCHISE_BUILDING (95 base if projects < 2).
+    // So we add 3 projects to the richRival.
+    const richRival: RivalStudio = { 
+      ...mockRival, 
+      cash: 50_000_000, 
+      prestige: 90,
+      projects: { 'p1': {} as any, 'p2': {} as any, 'p3': {} as any }
+    };
+    
+    // AWARD_CHASE base = 80 (since prestige > 70). Profile bias = 50. Total 130 + var.
+    // FRANCHISE_BUILDING base = 90 (since projects > 3). Profile bias = 50. Wait, length is 3, not > 3.
+    // If length is 3, base is 30. Total 80 + var.
+    // STABILITY base = 50. Profile bias = 50. Total 100 + var.
+    // AWARD_CHASE wins.
     const nextMotivation = calculateRivalMotivation(richRival, mockState, rng);
     expect(nextMotivation).toBe('AWARD_CHASE');
   });

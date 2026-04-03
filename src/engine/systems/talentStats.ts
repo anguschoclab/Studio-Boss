@@ -31,38 +31,39 @@ export function applyAwardBoostsToTalent(
 
   // Specific multiplicative bonus for massive individual achievements
   const individualCategoryMultiplier = isMajorCategory ? 1.8 : isSupportingCategory ? 1.4 : 1.0;
+  // The Prestige Chaser: We need to significantly scale up these boosts for elite individual achievements to reflect the true value of an FYC campaign.
   const finalMultiplier = multiplier * individualCategoryMultiplier;
 
   if (award.status === 'won') {
     if (isPrestige || isCannesEquivalent) {
       if (isMajorCategory) {
-        prestigeBoost += 45 * finalMultiplier;
-        egoBoost += 75 * finalMultiplier; // Extreme permanent ego bump for major prestigious awards
-        drawBoost += 20 * finalMultiplier;
-        feeMultiplier += 5.0 * finalMultiplier; // 500% fee bump for Best Director/Actor at Cannes
+        prestigeBoost += 60 * finalMultiplier;
+        egoBoost += 100 * finalMultiplier; // Extreme permanent ego bump for major prestigious awards
+        drawBoost += 30 * finalMultiplier;
+        feeMultiplier += 8.0 * finalMultiplier; // 800% fee bump for Best Director/Actor at Cannes
       } else {
-        prestigeBoost += 35 * finalMultiplier;
-        egoBoost += 60 * finalMultiplier; // Massive permanent ego bump for prestigious awards
-        drawBoost += 15 * finalMultiplier;
-        feeMultiplier += 4.0 * finalMultiplier; // 400% fee bump
+        prestigeBoost += 45 * finalMultiplier;
+        egoBoost += 80 * finalMultiplier; // Massive permanent ego bump for prestigious awards
+        drawBoost += 20 * finalMultiplier;
+        feeMultiplier += 6.0 * finalMultiplier; // 600% fee bump
       }
     } else if (isSundanceEquivalent) {
       if (isMajorCategory) {
+        prestigeBoost += 30 * finalMultiplier;
+        egoBoost += 70 * finalMultiplier;
+        drawBoost += 50 * finalMultiplier;
+        feeMultiplier += 5.0 * finalMultiplier; // 500% fee bump for Sundance breakouts
+      } else {
         prestigeBoost += 20 * finalMultiplier;
         egoBoost += 50 * finalMultiplier;
-        drawBoost += 40 * finalMultiplier;
-        feeMultiplier += 3.0 * finalMultiplier;
-      } else {
-        prestigeBoost += 15 * finalMultiplier;
-        egoBoost += 40 * finalMultiplier;
-        drawBoost += 35 * finalMultiplier; // Massive commercial draw bump for indie hits
-        feeMultiplier += 2.5 * finalMultiplier; // 250% fee bump
+        drawBoost += 45 * finalMultiplier; // Massive commercial draw bump for indie hits
+        feeMultiplier += 3.5 * finalMultiplier; // 350% fee bump
       }
     } else {
-      prestigeBoost += 10 * finalMultiplier;
-      egoBoost += 20 * finalMultiplier;
-      drawBoost += 8 * finalMultiplier;
-      feeMultiplier += 1.0 * finalMultiplier; // 100% fee bump for standard wins
+      prestigeBoost += 15 * finalMultiplier;
+      egoBoost += 30 * finalMultiplier;
+      drawBoost += 12 * finalMultiplier;
+      feeMultiplier += 2.0 * finalMultiplier; // 200% fee bump for standard wins
     }
   } else {
     // nominated

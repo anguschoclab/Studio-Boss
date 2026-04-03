@@ -1,12 +1,9 @@
 import { create } from 'zustand';
-import { GameState, WeekSummary, ArchetypeKey, FinanceState, NewsState } from '@/engine/types';
+import { GameState, WeekSummary, ArchetypeKey } from '@/engine/types';
 import { initializeGame } from '@/engine/core/gameInit';
 import { advanceWeek } from '@/engine/core/weekAdvance';
 import { saveGame, loadGame, getSaveSlots, SaveSlotInfo } from '@/persistence/saveLoad';
 import { useUIStore } from './uiStore';
-
-const EMPTY_FINANCE = { cash: 0, ledger: [] };
-const EMPTY_NEWS = { headlines: [] };
 
 import { createProjectSlice, ProjectSlice } from './slices/projectSlice';
 import { createFinanceSlice, FinanceSlice } from './slices/financeSlice';
@@ -26,6 +23,9 @@ export interface GameStore extends ProjectSlice, FinanceSlice, TalentSlice, Riva
   devAutoInit: (archetype?: ArchetypeKey) => void;
 }
 
+const INITIAL_FINANCE = { cash: 0, ledger: [] };
+const INITIAL_NEWS = { headlines: [] };
+
 export const useGameStore = create<GameStore>((set, get, ...args) => ({
   gameState: null,
 
@@ -37,7 +37,8 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
   ...createSnapshotSlice(set, get, ...args),
 
   newGame: async (studioName, archetype) => {
-    const gameState = initializeGame(studioName, archetype);
+    const seed = Math.floor(Math.random() * 1_000_000);
+    const gameState = initializeGame(studioName, archetype, seed);
     await saveGame(0, gameState);
     set({ 
       gameState,
@@ -47,79 +48,44 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
   },
 
   doAdvanceWeek: () => {
-    let summary: WeekSummary | null = null;
-    let nextState: GameState | null = null;
+    const state = get().gameState;
+    if (!state) throw new Error('No game in progress');
 
-    set((state) => {
-      if (!state.gameState) throw new Error('No game in progress');
-      const result = advanceWeek(state.gameState);
-      summary = result.summary;
-      nextState = result.newState;
+    const { newState: nextState, summary, impacts } = advanceWeek(state);
+    const finalState = nextState as GameState;
 
-      if (state.gameState === result.newState) return state; 
-
-      // Trigger background save without blocking UI (Fire and forget)
-      saveGame(0, result.newState);
-      
-      return { 
-        gameState: result.newState,
-        finance: result.newState.finance,
-        news: result.newState.news
-      };
+    // Trigger background save without blocking UI (Fire and forget)
+    saveGame(0, finalState);
+    
+    set({ 
+      gameState: finalState,
+      finance: finalState.finance,
+      news: finalState.news
     });
-
-    if (!summary || !nextState) throw new Error('Failed to advance week');
 
     // --- Modal Queue Integration ---
     const ui = useUIStore.getState();
-    const finalState = nextState as GameState;
 
-    // 1. Crises/Scandals
-    const crisisTitles = new Set<string>();
-    const summaryCast = summary as WeekSummary;
-    if (summaryCast?.events) {
-      const events = summaryCast.events as string[];
-      for (let i = 0; i < events.length; i++) {
-        const ev = events[i];
-        if (ev.startsWith('CRISIS: "')) {
-          const firstQuote = ev.indexOf('"');
-          const secondQuote = ev.indexOf('"', firstQuote + 1);
-          if (firstQuote !== -1 && secondQuote !== -1) {
-            crisisTitles.add(ev.substring(firstQuote + 1, secondQuote));
-          }
+    // Process simulation impacts for UI triggers (Modals, etc.)
+    if (impacts && impacts.length > 0) {
+      // Collect modal impacts for prioritized queueing
+      const modalImpacts: (import('@/engine/types').StateImpact & { type: 'MODAL_TRIGGERED', payload: any })[] = [];
+      for (let i = 0; i < impacts.length; i++) {
+        if (impacts[i].type === 'MODAL_TRIGGERED') {
+          modalImpacts.push(impacts[i] as any);
+        }
+      }
+
+      if (modalImpacts.length > 0) {
+        modalImpacts.sort((a, b) => (b.payload.priority || 0) - (a.payload.priority || 0));
+        for (let i = 0; i < modalImpacts.length; i++) {
+          ui.enqueueModal(modalImpacts[i].payload.modalType, modalImpacts[i].payload.payload as Record<string, unknown>);
         }
       }
     }
-
-    if (crisisTitles.size > 0) {
-      const projects = finalState.studio.internal.projects;
-      for (const key in projects) {
-        const p = projects[key];
-        if (p.activeCrisis && !p.activeCrisis.resolved && crisisTitles.has(p.title)) {
-          ui.enqueueModal('CRISIS', { projectId: p.id, crisis: p.activeCrisis });
-        }
-      }
-    }
-
-    // 2. Awards Ceremony
-    const isAwardsWeek = finalState.week % 52 === 4 || finalState.week % 52 === 36;
-    if (isAwardsWeek) {
-      const year = Math.floor(finalState.week / 52) + 1;
-      const allAwards = finalState.industry.awards || [];
-      const currentAwards = [] as any[];
-      for (let i = 0; i < allAwards.length; i++) {
-        if (allAwards[i].year === year) {
-          currentAwards.push(allAwards[i]);
-        }
-      }
-      ui.enqueueModal('AWARDS', { week: finalState.week, year, awards: currentAwards });
-    }
-
-    // 3. Week Summary
-    ui.enqueueModal('SUMMARY', summary);
 
     // 4. Yearly Snapshot (Sprint G)
-    if (summary && ((summary as any).fromWeek % 52 === 0) && (summary as any).fromWeek > 0) {
+    if (summary && summary.fromWeek % 52 === 0 && summary.fromWeek > 0) {
       get().captureSnapshot();
     }
 
@@ -150,13 +116,14 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
     if (state.gameState === null) return state;
     return { 
         gameState: null,
-        finance: EMPTY_FINANCE as unknown as any,
-        news: EMPTY_NEWS as unknown as any
-    };
+        finance: INITIAL_FINANCE as any,
+        news: INITIAL_NEWS as any
+    } as any;
   }),
 
   devAutoInit: (archetype = 'major') => {
-    const gameState = initializeGame('Alpha Studios', archetype);
+    const seed = 42; // Constant seed for predictable dev testing
+    const gameState = initializeGame('Alpha Studios', archetype, seed);
     set({ 
       gameState,
       finance: gameState.finance,

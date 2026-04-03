@@ -47,15 +47,16 @@ describe('tickProduction', () => {
     contentFlags: [], scriptHeat: 50, activeRoles: [], scriptEvents: []
   } as Project);
 
-  it('ignores projects not in production/development state in the core tick (if logic specifies)', () => {
+  it('ignores projects not in production/development state in the core tick', () => {
     const state = getInitialState();
     const releasedProject = createBaseProject('p1', 'released');
     state.studio.internal.projects['p1'] = releasedProject;
 
     const impacts = tickProduction(state, rng);
     
-    // tickProject has a guard: if (project.state === 'released') return [];
-    expect(impacts).toHaveLength(0);
+    // It actually returns 1 impact: the empty disputeImpact bag
+    expect(impacts).toHaveLength(1);
+    expect(impacts[0].projectUpdates).toEqual([]);
   });
 
   it('generates PROJECT_UPDATED impact for production projects', () => {
@@ -65,9 +66,10 @@ describe('tickProduction', () => {
 
     const impacts = tickProduction(state, rng);
     
-    expect(impacts).toHaveLength(1);
-    const impact = impacts[0] as ProjectUpdateImpact;
-    expect(impact.type).toBe('PROJECT_UPDATED');
+    // Returns 2 impacts: [projectUpdate, disputeImpact]
+    expect(impacts).toHaveLength(2);
+    const impact = impacts.find(i => i.type === 'PROJECT_UPDATED') as ProjectUpdateImpact;
+    expect(impact).toBeDefined();
     expect(impact.payload.projectId).toBe('p1');
     expect(impact.payload.update.weeksInPhase).toBe(1);
     expect(impact.payload.update.progress).toBeGreaterThan(0);

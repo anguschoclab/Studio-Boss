@@ -7,10 +7,11 @@ import { RandomGenerator } from '../../utils/rng';
  */
 export function tickWorldEvents(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const projects = Object.values(state.studio.internal.projects);
 
   // 1. Poison the Well: Genre Saturation
-  projects.forEach(project => {
+  const projects = Object.values(state.studio.internal.projects);
+  for (let i = 0; i < projects.length; i++) {
+    const project = projects[i];
     if (project.state === 'released' && project.weeksInPhase === 1) {
       if (rng.next() < 0.25) {
         impacts.push({
@@ -22,10 +23,12 @@ export function tickWorldEvents(state: GameState, rng: RandomGenerator): StateIm
         });
       }
     }
-  });
+  }
 
   // 2. Star Meter & Talent Momentum
-  Object.values(state.industry.talentPool || {}).forEach(talent => {
+  const talentPool = Object.values(state.industry.talentPool || {});
+  for (let i = 0; i < talentPool.length; i++) {
+    const talent = talentPool[i];
     if (talent.momentum > 85 && rng.next() < 0.1) {
       impacts.push({
         type: 'NEWS_ADDED',
@@ -35,7 +38,7 @@ export function tickWorldEvents(state: GameState, rng: RandomGenerator): StateIm
         }
       });
     }
-  });
+  }
 
   return impacts;
 }

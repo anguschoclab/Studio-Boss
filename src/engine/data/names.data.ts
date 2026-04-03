@@ -47,11 +47,22 @@ export const PREFIXES: string[] = [
   'Cash-Grab',
   'Tax-Haven',
   'Pivoting',
-  'Monopolized'
+  'Monopolized',
+  'Data-Scraped',
+  'A.I. Generated',
+  'Subprime',
+  'Un-Unionized',
+  'Tax-Shelter',
+  'Algorithm-Driven',
+  'Shareholder-Approved',
+  'Prestige-Bait',
+  'IP-Farm',
+  'Metrics-Obsessed'
 ];
 
 export const SUFFIXES: string[] = [
   'Pictures', 'Studios', 'Entertainment', 'Films', 'Media', 'Productions', 'Cinema', 'Motion Pictures', 'Network', 'Broadcasting', 'Vision', 'Works', 'Arts', 'Interactive', 'Digital', 'Creative', 'Features', 'Releasing', 'Collective', 'Syndicate', 'Ventures', 'Partners', 'Holdings', 'Group', 'Enterprises', 'Corp', 'Inc', 'Labs', 'Workshop', 'Factory', 'Foundry', 'Forge', 'Vault', 'Archive', 'Content', 'IP', 'Universe', 'Franchise', 'Algorithm', 'Brand', 'Properties', 'Synergy Group',
+  'Tax Shelters', 'Equity Partners', 'Dividend Streams', 'Shell Corps', 'Licensing Boards',
   'Distribution', 'Motion Picture Company', 'International', 'Worldwide', 'Global', 'Plus', 'Max', 'Play', 'Go', 'On Demand', 'Originals', 'Releasing Company',
   'Acquisitions', 'Assets', 'Portfolios', 'Capital', 'Trust', 'Conglomerate', 'Monopoly', 'Subsidiary', 'Media Empire', 'Omnicorp', 'Content Farm', 'Clickfarm', 'Metrics', 'Data Systems', 'Data Analytics', 'Tax Haven', 'LLC', 'GmbH', 'Equities', 'Merchandising', 'Licensing', 'Metaverse', 'Web3', 'Blockchain', 'NFTs', 'Virtuals', 'Deepfakes', 'Algorithms',
   'Metrics', 'Deliverables', 'Content Solutions', 'Analytics', 'Synergies', 'Aggregators', 'Pipelines', 'Ecosystems', 'Portfolios', 'Assets', 'Data Mining', 'Tax Shelters', 'Offshores', 'Holdings', 'Monopolies', 'Cartels', 'Conglomerates', 'Subsidiaries', 'Shell Corporations', 'Trusts', 'Web3 Ventures', 'Metaverse Properties', 'Crypto Assets', 'NFT Collections', 'Algorithms', 'Deepfakes', 'Generative Media', 'Focus Groups', 'Market Research', 'Demographics',
@@ -87,7 +98,17 @@ export const SUFFIXES: string[] = [
   'Web3 Venture',
   'Metaverse Property',
   'NFT Collection',
-  'Deepfake'
+  'Deepfake',
+  'Tax Shelters',
+  'Offshores',
+  'Holdings',
+  'Monopolies',
+  'Cartels',
+  'Conglomerates',
+  'Subsidiaries',
+  'Shell Corporations',
+  'Trusts',
+  'Web3 Ventures'
 ];
 
 export const MOTTOS: string[] = [
@@ -129,7 +150,17 @@ export const MOTTOS: string[] = [
   'Your subscription is non-refundable.',
   'We have the rights, you have the money.',
   'Failing upwards.',
-  'Monetizing your childhood trauma.'
+  'Monetizing your childhood trauma.',
+  'Art through analytics.',
+  'Maximizing shareholder value since Q3.',
+  'Democratizing the algorithm.',
+  'Synergizing paradigms for a new era.',
+  'Where IP meets ROI.',
+  'Focus-grouped for your pleasure.',
+  'We know what you want before you do.',
+  'Leveraging assets, expanding universes.',
+  'Because art is just a tax write-off.',
+  'If it worked once, we will do it again.'
 ];
 
 export const MALE_FIRST_NAMES: string[] = [
@@ -232,26 +263,31 @@ export const DICTIONARIES: Record<string, { nouns: string[], adjs: string[] }> =
 };
 
 export const PREFIX_PATTERNS: string[] = [
-  'The', 'A', 'Return of the', 'Rise of the', 'Fall of the', 'Revenge of the', 'Curse of the', 'Secret of the', 'Legend of the', 'Tale of the'
+  'The', 'A', 'Return of the', 'Rise of the', 'Fall of the', 'Revenge of the', 'Curse of the', 'Secret of the', 'Legend of the', 'Tale of the',
+  'The Deconstruction of the', 'The IPification of the', 'The Monetization of the', 'The Sanitized', 'The Test-Screened'
 ];
 
 export const CONNECTORS: string[] = [
-  'and the', 'in the', 'of the', 'from the', 'without', 'vs', 'meets'
+  'and the', 'in the', 'of the', 'from the', 'without', 'vs', 'meets',
+  'leveraged against', 'synergizing', 'outperforming', 'subtweeting', 'shadowbanning'
 ];
 
 export const LOCATIONS: string[] = [
-  'New York', 'Los Angeles', 'London', 'Paris', 'Tokyo', 'Vegas', 'Miami', 'Chicago', 'Texas', 'Hollywood', 'Space', 'Mars', 'Earth', 'Hell', 'Heaven', 'Island', 'Mountain', 'River', 'City', 'Town'
+  'New York', 'Los Angeles', 'London', 'Paris', 'Tokyo', 'Vegas', 'Miami', 'Chicago', 'Texas', 'Hollywood', 'Space', 'Mars', 'Earth', 'Hell', 'Heaven', 'Island', 'Mountain', 'River', 'City', 'Town',
+  'The Spreadsheet', 'The Focus Group', 'The Greenroom', 'The Content Mine', 'A Crypto Exchange'
 ];
 
 // Buyer / Streaming Platform name generation data
 export const CONGLOMERATE_PREFIXES = [
   'Apex', 'Zenith', 'Titan', 'Global', 'Starlight', 'Hyperion', 'Nexus', 'Omni', 'Vanguard', 'Elysium',
-  'Horizon', 'Summit', 'Pinnacle', 'Meridian', 'Vector', 'Quantum', 'Aura', 'Legacy', 'Infinity', 'Atlas'
+  'Horizon', 'Summit', 'Pinnacle', 'Meridian', 'Vector', 'Quantum', 'Aura', 'Legacy', 'Infinity', 'Atlas',
+  'Megacorp', 'Synergex', 'Monolith', 'Consolidated', 'Omnicorp'
 ];
 
 export const NETWORK_PREFIXES = [
   'American', 'National', 'Pacific', 'Continental', 'Atlantic', 'Federal', 'Imperial', 'United', 'Global', 'Liberty',
-  'Paramount', 'Columbia', 'Republic', 'Dominion', 'Heritage', 'Sovereign', 'Pinnacle', 'Meridian', 'Western', 'Eastern'
+  'Paramount', 'Columbia', 'Republic', 'Dominion', 'Heritage', 'Sovereign', 'Pinnacle', 'Meridian', 'Western', 'Eastern',
+  'Patriot', 'Transcontinental', 'Universal', 'Broadcast', 'Standard'
 ];
 
 export const NETWORK_SUFFIXES = [
@@ -261,7 +297,8 @@ export const NETWORK_SUFFIXES = [
 
 export const PREMIUM_PREFIXES = [
   'Prestige', 'Criterion', 'Auteur', 'Curated', 'Elevated', 'Luminary', 'Vanguard', 'Artisan', 'Cinema',
-  'Sterling', 'Onyx', 'Velvet', 'Ivory', 'Obsidian', 'Sapphire', 'Aureate', 'Gilded', 'Refined', 'Noble', 'Paramount'
+  'Sterling', 'Onyx', 'Velvet', 'Ivory', 'Obsidian', 'Sapphire', 'Aureate', 'Gilded', 'Refined', 'Noble', 'Paramount',
+  'Bespoke', 'Cinephile', 'Cinematheque', 'Exquisite', 'Aesthete'
 ];
 
 export const PREMIUM_SUFFIXES = [
@@ -272,7 +309,8 @@ export const PREMIUM_SUFFIXES = [
 export const STREAMER_PREFIXES = [
   'Stream', 'Binge', 'Pixel', 'Cloud', 'Flux', 'Hype', 'Zap', 'Bolt', 'Dash', 'Nova',
   'Vibe', 'Pulse', 'Wave', 'Neon', 'Echo', 'Loop', 'Prism', 'Orbit', 'Surge', 'Blitz',
-  'Algo', 'Data', 'Viral', 'Metric', 'Feed', 'Scroll', 'Click', 'Buffer', 'Render', 'Core'
+  'Algo', 'Data', 'Viral', 'Metric', 'Feed', 'Scroll', 'Click', 'Buffer', 'Render', 'Core',
+  'Snackable', 'Scroll', 'Dopamine', 'Algorithm', 'Infinite'
 ];
 
 export const STREAMER_SUFFIXES = [

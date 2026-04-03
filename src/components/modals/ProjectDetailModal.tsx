@@ -67,10 +67,10 @@ export const ProjectDetailModal = () => {
   const submitToFestival = useGameStore(s => s.submitToFestival);
   const launchAwardsCampaign = useGameStore(s => s.launchAwardsCampaign);
 
-  const projects = useMemo(() => Object.values(gameState?.studio.internal.projects || {}), [gameState?.studio.internal.projects]);
+  const projects = useMemo(() => Object.values(gameState?.studio?.internal?.projects || {}), [gameState?.studio?.internal?.projects]);
   const project = useMemo(() => projects.find(p => p.id === selectedProjectId), [projects, selectedProjectId]);
-  const talentPool = useMemo(() => Object.values(gameState?.industry.talentPool || {}), [gameState?.industry.talentPool]);
-  const contracts = useMemo(() => gameState?.studio.internal.contracts || [], [gameState?.studio.internal.contracts]);
+  const talentPool = useMemo(() => Object.values(gameState?.industry?.talentPool || {}), [gameState?.industry?.talentPool]);
+  const contracts = useMemo(() => gameState?.studio?.internal?.contracts || [], [gameState?.studio?.internal?.contracts]);
   const talentMap = useMemo(() => new Map(talentPool.map(t => [t.id, t])), [talentPool]);
 
   const talentByRole = useMemo(() => {
@@ -484,7 +484,7 @@ export const ProjectDetailModal = () => {
                        { id: 'basic', name: 'Targeted Digital', cost: project.budget * 0.1, buzz: 15, desc: 'Coordinated social campaign.' },
                        { id: 'blockbuster', name: 'Global Blitz', cost: project.budget * 0.5, buzz: 40, desc: 'Omnichannel market saturation.' }
                      ].map(tier => (
-                       <button
+                       <button aria-pressed={project.marketingLevel === tier.id || selectedTier === tier.id}
                          key={tier.id}
                          disabled={!!project.marketingLevel || (gameState ? gameState.finance.cash < tier.cost : false)}
                          onClick={() => setSelectedTier(tier.id as any)}

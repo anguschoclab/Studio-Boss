@@ -2,7 +2,8 @@ import { GameState, Talent, Project, Contract, Award, Opportunity } from '@/engi
 type TalentProfile = Talent;
 import { StateImpact } from '../types/state.types';
 import { generateOpportunity } from '../generators/opportunities';
-import { clamp, secureRandom } from '../utils';
+import { clamp } from '../utils';
+import { RandomGenerator } from '../utils/rng';
 import { applyAwardBoostsToTalent } from './talentStats';
 
 /**
@@ -13,7 +14,7 @@ export class TalentSystem {
   /**
    * Advances the talent-related aspects of the game world (weekly tick).
    */
-  static advance(state: GameState): StateImpact {
+  static advance(state: GameState, rng: RandomGenerator): StateImpact {
     const uiNotifications: string[] = [];
     
     const currentOpportunities = state.market.opportunities || [];
@@ -43,35 +44,34 @@ export class TalentSystem {
     };
 
     // Talent-specific opportunity (using existing studio talent)
-    if (secureRandom() < 0.25) {
+    if (rng.next() < 0.25) {
       const activeTalentIds = new Set<string>();
       for (let i = 0; i < state.studio.internal.contracts.length; i++) {
         activeTalentIds.add(state.studio.internal.contracts[i].talentId);
       }
       const availableTalentIds: string[] = [];
-      for (const talent of Object.values(state.industry.talentPool)) {
-        const id = talent.id;
+      for (const id in state.industry.talentPool) {
         if (!activeTalentIds.has(id)) availableTalentIds.push(id);
       }
 
       if (availableTalentIds.length > 0) {
-        const newOpp = generateOpportunity(availableTalentIds);
+        const newOpp = generateOpportunity(rng, availableTalentIds);
         tryAddOpp(newOpp, `A new package "${newOpp.title}" hit the market.`);
       }
     }
 
     // General opportunities
-    if (secureRandom() < 0.2) {
-      tryAddOpp(generateOpportunity(), `A new script is doing the rounds in town.`);
+    if (rng.next() < 0.2) {
+      tryAddOpp(generateOpportunity(rng), `A new script is doing the rounds in town.`);
     }
 
-    if (secureRandom() < 0.15) {
-      tryAddOpp(generateOpportunity(), `New opportunities have hit the market!`);
+    if (rng.next() < 0.15) {
+      tryAddOpp(generateOpportunity(rng), `New opportunities have hit the market!`);
     }
 
     // Fallback/Density control
-    if (updatedOpportunities.length < 4 && secureRandom() < 0.3) {
-      tryAddOpp(generateOpportunity());
+    if (updatedOpportunities.length < 4 && rng.next() < 0.3) {
+      tryAddOpp(generateOpportunity(rng));
     }
 
     return {
@@ -139,11 +139,7 @@ export class TalentSystem {
           talentAwardsDrawBonus += boosts.drawBoost;
 
           // feeMultiplier is multiplicative
-          // (Note: previous code used additive `+=`, we can either add the net boost or change to multiplier)
-          // The old code did `talentAwardsFeeMultiplier += (isPrestige ? 0.5 : 0.2) * multiplier;`
-          // So we accumulate the boost amount above 1.0 returned by our function:
           talentAwardsFeeMultiplier += (boosts.feeMultiplier - 1.0);
-
           talentAwardsEgoBoost += boosts.egoBoost;
         }
       }

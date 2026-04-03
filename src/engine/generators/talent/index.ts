@@ -1,9 +1,8 @@
-import { Talent, TalentRole, Family, Agency, Agent } from '../../types/talent.types';
+import { Talent, TalentRole, Family } from '../../types/talent.types';
 import { generateDemographics } from './demographicsGenerator';
 import { generatePsychology } from './psychologyGenerator';
 import { generateDemographicName } from '../names';
-import { randRange, secureRandom, pick } from '../../utils';
-
+import { RandomGenerator } from '../../utils/rng';
 
 const TALENT_QUIRKS = [
   'Refuses to do press',
@@ -21,32 +20,44 @@ const TALENT_QUIRKS = [
   'Requires all dialogue to be whispered',
   'Insists on writing their own stunts',
   'Refuses to work past 4 PM',
-  'Demands exclusive gym trailer'
+  'Demands exclusive gym trailer',
+  'Requires mandatory daily rewrites',
+  'Refuses to work with first-time directors',
+  'Forces entire cast to do method acting',
+  'Only communicates through their assistant',
+  'Demands a guaranteed percentage of merchandising',
+  'Refuses to look co-stars in the eye',
+  'Requires a dedicated onset therapist',
+  'Demands their own dedicated lighting director',
+  'Will only eat blue M&Ms',
+  'Mandates a full orchestra on set',
+  'Refuses to memorize lines, uses an earpiece',
+  'Requires a personal psychic reading before every take',
+  'Demands a completely closed set with no eye contact',
+  'Refuses to shoot in locations under 70 degrees',
+  'Requires all their wardrobe to be designer originals'
 ];
 
-export function generateTalent(params: { role: TalentRole; tier: string; localCountry?: string }): Talent {
-
+export function generateTalent(rng: RandomGenerator, params: { role: TalentRole; tier: string; localCountry?: string }): Talent {
   const isGlobalSuperstar = params.tier === 'A-List' || params.tier === 'S-List';
   
-  const demographics = generateDemographics(isGlobalSuperstar, params.localCountry);
-  const psychology = generatePsychology(params.tier);
-  const name = generateDemographicName(demographics.gender, demographics.country, demographics.ethnicity);
+  const demographics = generateDemographics(rng, isGlobalSuperstar, params.localCountry);
+  const psychology = generatePsychology(rng, params.tier);
+  const name = generateDemographicName(demographics.gender, demographics.country, demographics.ethnicity, rng);
 
-  // Stats Logic (reusing bits from old generator)
-  const isNepo = secureRandom() < 0.1; // Reduced for default pool
+  const isNepo = rng.next() < 0.1;
   const nepoBump = isNepo ? 15 : 0;
-  const prestige = Math.floor(randRange(10, 80)) + nepoBump;
-  const draw = Math.floor(randRange(10, 80)) + nepoBump;
-  const fee = Math.floor(randRange(100000, 5000000)) + (isNepo ? 1000000 : 0);
-
+  const prestige = rng.rangeInt(10, 80) + nepoBump;
+  const draw = rng.rangeInt(10, 80) + nepoBump;
+  const fee = rng.rangeInt(100000, 5000000) + (isNepo ? 1000000 : 0);
 
   // Generate random perks
-  const perksCount = Math.floor(Math.random() * 3);
+  const perksCount = rng.rangeInt(0, 2);
   const perksPool = [...TALENT_QUIRKS];
   const perks: string[] = [];
   for (let i = 0; i < perksCount; i++) {
     if (perksPool.length > 0) {
-      const selected = pick(perksPool);
+      const selected = rng.pick(perksPool);
       perks.push(selected);
       const index = perksPool.indexOf(selected);
       if (index > -1) {
@@ -56,8 +67,7 @@ export function generateTalent(params: { role: TalentRole; tier: string; localCo
   }
 
   return {
-
-    id: `talent-${crypto.randomUUID()}`,
+    id: rng.uuid('talent'),
     name,
     role: params.role,
     roles: [params.role],
@@ -67,56 +77,52 @@ export function generateTalent(params: { role: TalentRole; tier: string; localCo
     prestige: Math.min(100, prestige),
     fee,
     draw: Math.min(100, draw),
-
     accessLevel: isNepo ? 'legacy' : 'outsider',
     momentum: 50,
     perks,
-
     starMeter: Math.floor((prestige * 0.4) + (draw * 0.4) + (prestige * 0.2)),
     bio: `${name} is a ${params.tier} ${params.role}.`,
     motivationProfile: {
-        financial: Math.floor(randRange(20, 80)),
-        prestige: Math.floor(randRange(20, 80)),
-        legacy: Math.floor(randRange(10, 70)),
-        aggression: Math.floor(randRange(10, 60))
+        financial: rng.rangeInt(20, 80),
+        prestige: rng.rangeInt(20, 80),
+        legacy: rng.rangeInt(10, 70),
+        aggression: rng.rangeInt(10, 60)
     },
     currentMotivation: 'NONE',
     motivationImpulse: 'NONE'
   };
 }
 
-export function generateFamilies(count: number): Family[] {
+export function generateFamilies(rng: RandomGenerator, count: number): Family[] {
   return Array.from({ length: count }).map((_, i) => ({
-    id: `family-${i}`,
-    name: `Family ${i}`, // Improved naming in future turns
-    recognition: Math.floor(Math.random() * 100),
-    prestigeLegacy: Math.floor(Math.random() * 100),
-    commercialLegacy: Math.floor(Math.random() * 100),
-    scandalLegacy: Math.floor(Math.random() * 100),
-    volatility: Math.floor(Math.random() * 100),
+    id: rng.uuid('family'),
+    name: `Family ${i}`,
+    recognition: rng.rangeInt(0, 100),
+    prestigeLegacy: rng.rangeInt(0, 100),
+    commercialLegacy: rng.rangeInt(0, 100),
+    scandalLegacy: rng.rangeInt(0, 100),
+    volatility: rng.rangeInt(0, 100),
     status: 'active'
   }));
 }
 
 export function generateTalentPool(
+  rng: RandomGenerator,
   count: number, 
-  families: Family[] = [], 
-  agents: Agent[] = [], 
-  agencies: Agency[] = [], 
   localCountry?: string
 ): Talent[] {
     const roles: TalentRole[] = ['actor', 'director', 'writer', 'producer'];
-    const tiers = ['S-List', 'A-List', 'B-List', 'C-List', 'D-List'];
     
     return Array.from({ length: count }).map(() => {
-        const role = pick(roles);
-        const tierRoll = Math.random();
+        const role = rng.pick(roles);
+        const tierRoll = rng.next();
         let tier = 'C-List';
         if (tierRoll > 0.98) tier = 'S-List';
         else if (tierRoll > 0.90) tier = 'A-List';
         else if (tierRoll > 0.70) tier = 'B-List';
         else if (tierRoll < 0.20) tier = 'D-List';
 
-        return generateTalent({ role, tier, localCountry });
+        return generateTalent(rng, { role, tier, localCountry });
     });
 }
+

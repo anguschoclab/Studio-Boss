@@ -24,7 +24,7 @@ export interface Scandal {
   weeksRemaining: number;
 }
 
-export type AgencyArchetype = 'powerhouse' | 'boutique' | 'shark' | 'comedy_specialist' | 'lit_agency' | 'mega_corp' | 'streaming_titan' | 'indie_darling' | 'nepotism_mill' | 'international_broker';
+export type AgencyArchetype = 'powerhouse' | 'boutique' | 'shark' | 'comedy_specialist' | 'lit_agency' | 'mega_corp' | 'streaming_titan' | 'indie_darling' | 'nepotism_mill' | 'international_broker' | 'legacy_defenders' | 'genre_kings' | 'influencer_syndicate';
 export type AccessLevel = 'outsider' | 'soft-access' | 'legacy' | 'dynasty' | 'comeback';
 export type ProjectRole = 'actor' | 'director' | 'writer' | 'producer' | 'showrunner';
 export type TalentRole = 'actor' | 'director' | 'writer' | 'producer';
@@ -40,6 +40,8 @@ export interface Agency {
   culture: AgencyCulture;
   prestige: number;
   leverage: number; // 0-100
+  marketSensitivity: number; // 0-1.0 (How much market cycles affect their demands)
+  globalReach: number; // 0-100 (Influences foreign box office & distribution)
   traits?: string[];
   motivationProfile?: MotivationProfile;
   currentMotivation?: AgencyMotivation;
@@ -52,6 +54,7 @@ export interface Agent {
   specialty: AgentSpecialty;
   prestige: number;
   leverage: number;
+  negotiationTactic: 'SHARK' | 'DIPLOMAT' | 'VOLUME' | 'PRESTIGE';
   skill?: number;
   aggression?: number;
   motivationProfile?: MotivationProfile;

@@ -3,7 +3,7 @@ import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
 import { TV_FORMATS } from '@/engine/data/tvFormats';
 import { UNSCRIPTED_FORMATS } from '@/engine/data/unscriptedFormats';
 import { getFilmStats, getTvStats, getUnscriptedStats } from '@/engine/systems/stats';
-import { randRange } from '@/engine/utils';
+import { RandomGenerator } from '@/engine/utils/rng';
 import { applyImpacts } from '@/engine/core/impactReducer';
 
 export interface CreateProjectParams {
@@ -36,7 +36,8 @@ function getProjectStats(params: CreateProjectParams, tier: typeof BUDGET_TIERS[
 function prepareTalentAndContracts(
     state: GameState,
     attachedTalentIds: string[] | undefined,
-    projectId: string
+    projectId: string,
+    rng: RandomGenerator
 ) {
     const ids = attachedTalentIds || [];
     const talentPool = state.industry.talentPool;
@@ -50,7 +51,7 @@ function prepareTalentAndContracts(
             attachedTalent.push(t);
             talentFees += t.fee || 0;
             newContracts.push({
-                id: `contract-${crypto.randomUUID()}`,
+                id: rng.uuid('contract'),
                 talentId: t.id,
                 projectId,
                 fee: t.fee,
@@ -62,16 +63,16 @@ function prepareTalentAndContracts(
     return { attachedTalent, talentFees, newContracts };
 }
 
-export function buildProjectAndContracts(state: GameState, params: CreateProjectParams): { project: Project; newContracts: Contract[]; talentFees: number } {
+export function buildProjectAndContracts(state: GameState, params: CreateProjectParams, rng: RandomGenerator): { project: Project; newContracts: Contract[]; talentFees: number } {
     const tier = BUDGET_TIERS[params.budgetTier];
     const stats = getProjectStats(params, tier);
     const { budget, weeklyCost, developmentWeeks, productionWeeks, renewable } = stats;
 
-    const projectId = crypto.randomUUID();
-    const { talentFees, newContracts } = prepareTalentAndContracts(state, params.attachedTalentIds, projectId);
+    const projectId = rng.uuid('project');
+    const { talentFees, newContracts } = prepareTalentAndContracts(state, params.attachedTalentIds, projectId, rng);
 
     const totalBudget = budget + talentFees;
-    const initialBuzz = Math.floor(randRange(30, 70)) + (params.initialBuzzBonus || 0);
+    const initialBuzz = Math.floor(rng.range(30, 70)) + (params.initialBuzzBonus || 0);
 
     const projectBase = {
         id: projectId,

@@ -1,13 +1,20 @@
-import { GameState, Scandal, ScandalType, Project } from '@/engine/types';
-import { secureRandom } from '../utils';
+import { GameState, Scandal, ScandalType } from '@/engine/types';
 import { StateImpact } from '../types/state.types';
+import { RandomGenerator } from '../utils/rng';
 
 /**
  * Randomly spawns a scandal for a talent in the pool based on their controversy risk.
  * If the talent is attached to an active studio project, it triggers a Project Crisis.
  */
-export function generateScandals(state: GameState): StateImpact[] {
-  const impacts: StateImpact[] = [];
+export function generateScandals(state: GameState, rng: RandomGenerator): StateImpact[] {
+  const impactsToReturn: StateImpact[] = [];
+  const impact: StateImpact = {
+    newScandals: [],
+    newHeadlines: [],
+    newsEvents: [],
+    projectUpdates: [],
+    uiNotifications: []
+  };
   
   const contracts = state.studio.internal.contracts || [];
   const talentToProjectMap = new Map<string, string>();
@@ -17,69 +24,93 @@ export function generateScandals(state: GameState): StateImpact[] {
   
   const studioProjects = state.studio.internal.projects || {};
 
-  for (const talent of Object.values(state.industry.talentPool || {})) {
-    const risk = talent.psychology?.scandalRisk || 5; 
-    if (secureRandom() * 1000 < risk) {
+  const talentPool = state.industry.talentPool || {};
+  for (const talentId in talentPool) {
+    const talent = talentPool[talentId];
+    let risk = talent.psychology?.scandalRisk || 5;
+
+    // Scale risk with studio prestige (higher prestige/larger studio = more scrutiny)
+    const studioPrestige = state.studio.prestige || 0;
+    let riskMultiplier = 1;
+    if (studioPrestige > 800) riskMultiplier = 2.5;
+    else if (studioPrestige > 500) riskMultiplier = 1.8;
+    else if (studioPrestige > 200) riskMultiplier = 1.3;
+
+    risk = risk * riskMultiplier;
+
+    if (rng.next() * 1000 < risk) {
        const types: ScandalType[] = ['financial', 'personal', 'onset_behavior', 'legal', 'feud'];
-       const type = types[Math.floor(secureRandom() * types.length)];
+       const type = rng.pick(types);
        
        const s: Scandal = {
-         id: crypto.randomUUID(),
+         id: rng.uuid('scandal'),
          talentId: talent.id,
-         severity: 20 + Math.floor(secureRandom() * 80), // 20-100
+         severity: 20 + Math.floor(rng.next() * 80), // 20-100
          type,
-         weeksRemaining: 4 + Math.floor(secureRandom() * 8)
+         weeksRemaining: 4 + Math.floor(rng.next() * 8)
        };
 
-       impacts.push({
-         type: 'SCANDAL_ADDED',
-         payload: { scandal: s }
-       });
+       impact.newScandals!.push(s);
 
-       impacts.push({
-          type: 'NEWS_ADDED',
-          payload: {
-            headline: 'PR NIGHTMARE',
-            description: `A massive ${type} scandal erupts violently around ${talent.name}!`,
-          }
+       impact.newsEvents!.push({
+         id: rng.uuid('news'),
+         week: state.week,
+         type: 'CRISIS',
+         headline: 'PR NIGHTMARE',
+         description: `A massive ${type} scandal erupts violently around ${talent.name}!`,
        });
 
        const projectId = talentToProjectMap.get(talent.id);
        if (projectId && studioProjects[projectId]) {
          const project = studioProjects[projectId];
-         impacts.push({
-           type: 'PROJECT_UPDATED',
+         const crisisId = rng.uuid('scandal-crisis');
+         
+         const crisisPayload = {
+            crisisId,
+            triggeredWeek: state.week,
+            haltedProduction: false,
+            description: `BREAKING NEWS: ${talent.name.toUpperCase()} has been involved in a massive ${type} scandal while working on "${project.title}". The press is circling.`,
+            resolved: false,
+            severity: s.severity > 75 ? 'high' as const : 'medium' as const,
+            options: [
+              {
+                text: "Fire Them",
+                effectDescription: "Remove talent from project, +2 week delay, preserve reputation.",
+                weeksDelay: 2,
+                removeTalentId: talent.id,
+              },
+              {
+                text: "Pay off the Press",
+                effectDescription: `Deduct $${(s.severity * 10000).toLocaleString()} to bury the story. Keep talent.`,
+                cashPenalty: s.severity * 10000,
+                reputationPenalty: 2
+              },
+              {
+                text: "Double Down",
+                effectDescription: "Cost nothing, but lose 10% reputation and tank project buzz.",
+                reputationPenalty: 10,
+                buzzPenalty: 30
+              }
+            ]
+         };
+
+         impact.projectUpdates!.push({
+            projectId,
+            update: {
+               activeCrisis: crisisPayload
+            }
+         });
+
+         impact.uiNotifications!.push(`A crisis has hit "${project.title}"!`);
+
+         impactsToReturn.push({
+           type: 'MODAL_TRIGGERED',
            payload: {
-             projectId,
-             update: {
-               activeCrisis: {
-                  crisisId: `scandal-crisis-${crypto.randomUUID()}`,
-                  triggeredWeek: state.week,
-                  haltedProduction: false,
-                 description: `BREAKING NEWS: ${talent.name.toUpperCase()} has been involved in a massive ${type} scandal while working on "${project.title}". The press is circling.`,
-                 resolved: false,
-                  severity: s.severity > 75 ? 'high' : 'medium',
-                 options: [
-                   {
-                     text: "Fire Them",
-                     effectDescription: "Remove talent from project, +2 week delay, preserve reputation.",
-                     weeksDelay: 2,
-                     removeTalentId: talent.id,
-                   },
-                   {
-                     text: "Pay off the Press",
-                     effectDescription: `Deduct $${(s.severity * 10000).toLocaleString()} to bury the story. Keep talent.`,
-                     cashPenalty: s.severity * 10000,
-                     reputationPenalty: 2
-                   },
-                   {
-                     text: "Double Down",
-                     effectDescription: "Cost nothing, but lose 10% reputation and tank project buzz.",
-                     reputationPenalty: 10,
-                     buzzPenalty: 30
-                   }
-                 ]
-               }
+             modalType: 'CRISIS',
+             priority: 100,
+             payload: {
+               projectId,
+               crisis: crisisPayload
              }
            }
          });
@@ -87,8 +118,11 @@ export function generateScandals(state: GameState): StateImpact[] {
     }
   }
   
-  return impacts;
+  impactsToReturn.push(impact);
+  return impactsToReturn;
 }
+
+
 
 /**
  * Processes weekly decay of scandals and applies their penalties to projects.
@@ -100,8 +134,6 @@ export function advanceScandals(state: GameState): StateImpact[] {
 
   for (const s of currentScandals) {
     if (s.weeksRemaining > 1) {
-      // In a real state-impact system, we'd have a SCANDAL_UPDATED
-      // or just replace the list. For now, let's just update the list.
       activeScandalTalent.add(s.talentId);
     } else {
       impacts.push({
@@ -111,22 +143,6 @@ export function advanceScandals(state: GameState): StateImpact[] {
     }
   }
   
-  // Update weeks remaining for all scandals (shortcut for now since we don't have SCANDAL_UPDATED)
-  const updatedScandals = currentScandals
-    .filter(s => s.weeksRemaining > 1)
-    .map(s => ({ ...s, weeksRemaining: s.weeksRemaining - 1 }));
-
-  // This is a bit of a hack since we don't have a bulk update, 
-  // but we can use SYSTEM_TICK or a new impact if needed.
-  // Actually, let's just make it simple: replace the whole list if it changed.
-  if (updatedScandals.length !== currentScandals.length) {
-    // Handled by SCANDAL_REMOVED above individualy. 
-    // But we still need to tick down the ones that stay.
-  }
-  
-  // Let's add SCANDAL_UPDATED to the types or just use a bulk impact.
-  // For now, I'll just use PROJECT_UPDATED for the penalties.
-
   const contracts = state.studio.internal.contracts || [];
   const penalizedProjectIds = new Set<string>();
   for (const c of contracts) {

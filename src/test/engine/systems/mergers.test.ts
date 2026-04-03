@@ -1,20 +1,19 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import {
   evaluateAcquisitionTarget,
   executeAcquisition,
   executeSabotage,
   executePoach
 } from '../../../engine/systems/mergers';
-import { GameState, RivalStudio, Talent, Project } from '../../../engine/types';
+import { GameState, RivalStudio, Talent } from '../../../engine/types';
+import { RandomGenerator } from '../../../engine/utils/rng';
 
 describe('Mergers and Sabotage System', () => {
   let mockState: GameState;
   let mockTarget: RivalStudio;
+  const rng = new RandomGenerator(333);
 
   beforeEach(() => {
-    // Mock crypto.randomUUID for deterministic testing
-    vi.spyOn(crypto, 'randomUUID').mockReturnValue('test-uuid-1234' as `${string}-${string}-${string}-${string}-${string}`);
-
     mockTarget = {
       id: 'rival-1',
       name: 'Test Indie Studio',
@@ -75,14 +74,11 @@ describe('Mergers and Sabotage System', () => {
     } as unknown as GameState;
   });
 
-  afterEach(() => {
-    vi.restoreAllMocks();
-  });
-
   describe('evaluateAcquisitionTarget', () => {
     it('calculates viable acquisition for indie target', () => {
       const result = evaluateAcquisitionTarget(mockTarget, 100_000_000);
       expect(result.viable).toBe(true);
+      // Indie price = basePrice * 1.2. basePrice = (10*2m) + 5m = 25m. 25m * 1.2 = 30m.
       expect(result.price).toBe(30_000_000);
     });
 
@@ -90,6 +86,7 @@ describe('Mergers and Sabotage System', () => {
       const majorTarget = { ...mockTarget, archetype: 'major' as const };
       const result = evaluateAcquisitionTarget(majorTarget, 100_000_000);
       expect(result.viable).toBe(true);
+      // Major price = basePrice * 2.0. basePrice = 25m. 25m * 2 = 50m.
       expect(result.price).toBe(50_000_000);
     });
 
@@ -101,43 +98,38 @@ describe('Mergers and Sabotage System', () => {
   });
 
   describe('executeAcquisition', () => {
-    it('returns unmodified state if target ID is invalid', () => {
-      const newState = executeAcquisition(mockState, 'invalid-id');
-      expect(newState).toBe(mockState);
+    it('returns null if target ID is invalid', () => {
+      const impact = executeAcquisition(mockState, 'invalid-id', rng);
+      expect(impact).toBeNull();
     });
 
-    it('successfully executes acquisition and updates game state', () => {
-      const newState = executeAcquisition(mockState, mockTarget.id);
+    it('successfully executes acquisition impact', () => {
+      const impact = executeAcquisition(mockState, mockTarget.id, rng);
 
-      expect(newState.finance.cash).toBe(100_000_000 - 30_000_000);
-      expect(newState.industry.rivals).toHaveLength(0);
-      expect(newState.studio.prestige).toBe(52);
-      expect(newState.market.opportunities).toHaveLength(1);
-      
-      const opportunity = newState.market.opportunities[0];
-      expect(opportunity.title).toBe('Acquired Test Indie Studio IP Catalog');
+      // Price 30m, but we get target's 5m cash. Net -25m
+      expect(impact!.cashChange).toBe(-25000000);
+      expect(impact!.prestigeChange).toBeGreaterThan(0);
 
-      expect(newState.industry.newsHistory).toHaveLength(1);
-      const news = newState.industry.newsHistory[0];
-      expect(news.headline).toContain('acquires Test Indie Studio');
+      expect(impact!.newHeadlines).toHaveLength(1);
+      const headline = impact!.newHeadlines![0];
+      expect(headline.text).toContain('absorbs Test Indie Studio');
     });
   });
 
   describe('executeSabotage', () => {
-    it('successfully executes sabotage and generates a rumor', () => {
-      const newState = executeSabotage(mockState, mockTarget.id);
-      expect(newState.finance.cash).toBe(99_000_000);
-      expect(newState.industry.rumors).toHaveLength(1);
+    it('successfully executes sabotage impact and generates a rumor', () => {
+      const impact = executeSabotage(mockState, mockTarget.id, rng);
+      expect(impact!.cashChange).toBe(-1_000_000);
+      expect(impact!.newRumors).toHaveLength(1);
     });
   });
 
   describe('executePoach', () => {
-    it('successfully executes poach, stealing strength and boosting prestige', () => {
-      const newState = executePoach(mockState, mockTarget.id);
-      expect(newState.finance.cash).toBe(97_000_000);
-      expect(newState.industry.rivals[0].strength).toBe(5);
-      expect(newState.studio.prestige).toBe(55);
-      expect(newState.industry.newsHistory).toHaveLength(1);
+    it('successfully executes poach impact, stealing strength', () => {
+      const impact = executePoach(mockState, mockTarget.id, rng);
+      expect(impact!.cashChange).toBe(-3_000_000);
+      expect(impact!.prestigeChange).toBe(5);
+      expect(impact!.rivalUpdates![0].update.strength).toBe(5); // 10 - 5
     });
   });
 });

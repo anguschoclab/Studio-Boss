@@ -2,8 +2,8 @@ import { Button } from '@/components/ui/button';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { formatMoney, getWeekDisplay } from '@/engine/utils';
-import { Save, FastForward, AlertTriangle, TrendingUp } from 'lucide-react';
-import { selectActiveProjects } from '@/store/selectors';
+import { Save, FastForward, AlertTriangle, TrendingUp, Globe } from 'lucide-react';
+import { selectActiveProjects, selectMarketMetrics } from '@/store/selectors';
 import { Badge } from '@/components/ui/badge';
 import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
 import { NewsTicker } from './NewsTicker';
@@ -16,6 +16,7 @@ export const TopBar = () => {
   const { showSummary } = useUIStore();
 
   const activeProjectsList = useGameStore(s => selectActiveProjects(s.gameState));
+  const { cycle, debtRate } = useGameStore(s => selectMarketMetrics(s.gameState));
 
   if (!gameState) return null;
 
@@ -50,6 +51,21 @@ export const TopBar = () => {
 
       {/* Primary Metrics Cluster */}
       <div className="flex items-center gap-6 ml-auto">
+        {/* Global Economy */}
+        <TooltipWrapper tooltip={`Global Market State: ${cycle}. Your adjusted borrowing cost is ${(debtRate * 100).toFixed(1)}% APR.`} side="bottom">
+          <div className="flex flex-col items-end cursor-default group">
+            <div className="flex items-center gap-1.5">
+              <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">Market: {cycle}</span>
+              <Globe className="h-2.5 w-2.5 text-blue-400 group-hover:animate-spin-slow" />
+            </div>
+            <span className="font-mono font-bold text-sm text-blue-300">
+              {(debtRate * 100).toFixed(1)}% <span className="text-[10px] font-normal text-muted-foreground">APR</span>
+            </span>
+          </div>
+        </TooltipWrapper>
+
+        <div className="w-px h-6 bg-white/10" />
+
         {/* Cash Status */}
         <TooltipWrapper tooltip="Total liquid capital available for acquisitions and project funding." side="bottom">
           <div className="flex flex-col items-end cursor-default">

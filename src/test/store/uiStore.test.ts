@@ -5,11 +5,14 @@ describe("uiStore", () => {
   beforeEach(() => {
     // Reset store before each test
     useUIStore.setState({
-      activeTab: "pipeline",
+      activeTab: "command",
       showCreateProject: false,
-      showWeekSummary: false,
-      weekSummary: null,
+      showPitchProject: false,
+      pitchingProjectId: null,
+      modalQueue: [],
+      activeModal: null,
       selectedProjectId: null,
+      selectedTalentId: null,
     });
   });
 
@@ -34,13 +37,27 @@ describe("uiStore", () => {
     expect(useUIStore.getState().selectedProjectId).toBeNull();
   });
 
-  it("shows and closes week summary", () => {
-    const summary = { fromWeek: 1, toWeek: 2 } as unknown as import('../../engine/types').WeekSummary;
-    useUIStore.getState().showSummary(summary);
-    expect(useUIStore.getState().showWeekSummary).toBe(true);
-    expect(useUIStore.getState().weekSummary).toBe(summary);
+  it("manages the modal queue correctly", () => {
+    const payload = { test: 123 };
+    
+    // First modal becomes active immediately
+    useUIStore.getState().enqueueModal('SUMMARY', payload);
+    expect(useUIStore.getState().activeModal?.type).toBe('SUMMARY');
+    expect(useUIStore.getState().activeModal?.payload).toEqual(payload);
+    expect(useUIStore.getState().modalQueue.length).toBe(0);
 
-    useUIStore.getState().closeSummary();
-    expect(useUIStore.getState().showWeekSummary).toBe(false);
+    // Second modal goes to queue
+    useUIStore.getState().enqueueModal('CRISIS', { id: 'c1' });
+    expect(useUIStore.getState().modalQueue.length).toBe(1);
+    expect(useUIStore.getState().modalQueue[0].type).toBe('CRISIS');
+
+    // Resolving first pops second
+    useUIStore.getState().resolveCurrentModal();
+    expect(useUIStore.getState().activeModal?.type).toBe('CRISIS');
+    expect(useUIStore.getState().modalQueue.length).toBe(0);
+
+    // Resolving last clears active
+    useUIStore.getState().resolveCurrentModal();
+    expect(useUIStore.getState().activeModal).toBeNull();
   });
 });

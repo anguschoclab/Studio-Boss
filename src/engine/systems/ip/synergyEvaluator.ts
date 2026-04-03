@@ -68,3 +68,20 @@ export function calculateSynergyGains(
 
   return gains;
 }
+
+/**
+ * Phase 7: Vault Synergy Detection.
+ * Scans active projects to identify which vault assets are currently being 'Rebooted' or 'Expanded'.
+ * This sets the 'isSynergyActive' flag on IPAssets, which freezes their cultural decay.
+ */
+export function evaluateVaultSynergy(
+  activeProjects: import('../../types').Project[],
+  vault: IPAsset[]
+): IPAsset[] {
+  const activeOriginalProjectIds = new Set(activeProjects.map(p => p.originalProjectId).filter(Boolean));
+  
+  return vault.map(asset => ({
+    ...asset,
+    isSynergyActive: activeOriginalProjectIds.has(asset.originalProjectId)
+  }));
+}

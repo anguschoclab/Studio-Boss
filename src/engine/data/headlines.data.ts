@@ -1,4 +1,9 @@
 export const MARKET_HEADLINES = [
+  'Audiences reject {pct}% of new releases, demanding more familiar IP',
+  'Wall Street praises {pct}% increase in predictable blockbusters',
+  'Studios panic as {pct}% of test audiences fall asleep during exposition',
+  'Focus groups demand {pct}% more explosions in prestige dramas',
+  'Algorithm successfully predicts {pct}% of box office flops',
   'Box office up {pct}% this quarter as audiences return to theaters',
   'Streaming wars intensify as subscriber growth plateaus industry-wide',
   'Horror genre sees unprecedented demand from international markets',
@@ -182,10 +187,25 @@ export const MARKET_HEADLINES = [
   'Market reacts poorly to studio\'s decision to release a film under 2 hours long',
   'Shareholders demand answers after major tentpole grosses only triple its budget',
   'Box office unexpectedly saved by {projectName}, confusing every executive in town',
-  'Nostalgia bait proves highly lucrative yet again in Q3 financial breakdown'
+  'Nostalgia bait proves highly lucrative yet again in Q3 financial breakdown',
+  'Box office numbers down {pct}% as audiences collectively decide they are tired of sequels.',
+  'Analysts predict {pct}% growth in the "nostalgia-bait" sector for Q4.',
+  'Studio stock drops {pct}% following disastrous earnings call full of buzzwords.',
+  'Streaming subscriptions decline {pct}% after platform introduces unskippable ads.',
+  'Algorithm-driven content now makes up {pct}% of all new greenlights.',
+  'Merchandise sales up {pct}% for a film that no one has actually seen.',
+  'Demographic data shows {pct}% of viewers are just scrolling on their phones while the movie plays.',
+  'Theater chains report {pct}% increase in people asking for refunds after watching CGI disasters.',
+  'Venture capitalists inject {pct}% more funding into AI-generated media start-ups.',
+  'Focus groups reject {pct}% of original ideas, preferring "things they already know".'
 ];
 
 export const TALENT_HEADLINES = [
+  '{directorName} storms off set of {projectName} after focus group demands {pct}% more CGI',
+  '{actorName} apologizes for problematic tweet, {projectName} box office tracking down {pct}%',
+  '{actressName} demands {pct}% of merchandise revenue, holding {projectName} production hostage',
+  '{directorName} insists 4-hour runtime for {projectName} is necessary for "artistic integrity"',
+  '{actorName} caught using AI to write apologies for on-set outbursts during {projectName}',
   'A-list director reportedly shopping a passion project around town',
   'Rising star signs multi-picture deal, sending ripples through the industry',
   'Veteran screenwriter comes out of retirement for "one last script"',
@@ -374,10 +394,25 @@ export const TALENT_HEADLINES = [
   '{actorName} launches a line of overpriced wellness gummies on the red carpet for {projectName}',
   'Studio panics after test audiences for {projectName} declare the villain "was actually completely right"',
   '{actressName} insists on a "no eye contact" clause in her contract for {projectName}',
-  '{directorName} demands a 10-minute standing ovation at Cannes for {projectName}, hires extras to clap'
+  '{directorName} demands a 10-minute standing ovation at Cannes for {projectName}, hires extras to clap',
+  '{directorName} claims {projectName} isn\'t a movie, it\'s a \'six-part feature-length experience\'.',
+  'Lead actor in {projectName} demands CGI abs added in post-production.',
+  'Director {directorName} reportedly communicating with cast entirely via cryptic voice notes.',
+  'A-lister drops out of {projectName} after reading the rewrite by a focus group.',
+  'Studio executives panic as {directorName} insists the three-hour runtime is \'non-negotiable\'.',
+  'Star of {projectName} launches competing lifestyle brand on the same day as the premiere.',
+  'On-set \'vibe coordinator\' for {projectName} quits, citing unmanageable egos.',
+  '{directorName} spends entirely too much of the {projectName} budget on vintage lenses.',
+  'Lead actress in {projectName} refuses to do press, sending her publicist in a mask instead.',
+  'Studio brings in three ghostwriters to \'punch up\' the third act of {projectName}.'
 ];
 
 export const RIVAL_TEMPLATES = [
+  '{rival} writes off ${budget}M {genre} film for tax purposes before release',
+  '{rival} insists {genre} flop was just an experiment in audience patience',
+  '{rival} accidentally greenlights AI-generated script for ${budget}M',
+  '{rival} desperate to launch cinematic universe, announces 12 spin-offs to their ${budget}M flop',
+  '{rival} sues test audience for leaking plot of their ${budget}M {genre} disaster',
   '{rival} greenlights ambitious ${budget}M {genre} project',
   '{rival} announces surprise release date shift for upcoming tentpole',
   '{rival} poaches key executive from competitor in aggressive move',
@@ -539,5 +574,15 @@ export const RIVAL_TEMPLATES = [
   '{rival} greenlights a ${budget}M {genre} origin story for a character nobody remembers',
   '{rival} stock plummets after their ${budget}M {genre} tentpole grosses less than an indie horror movie',
   '{rival} forces their actors to perform a humiliating TikTok dance to promote their ${budget}M {genre} film',
-  '{rival} accidentally leaks the entire plot of their ${budget}M {genre} film through a fast-food tie-in'
+  '{rival} accidentally leaks the entire plot of their ${budget}M {genre} film through a fast-food tie-in',
+  '{rival} greenlights a grimdark reboot of a beloved childhood franchise, scarring millennials.',
+  '{rival} CEO defends the use of generative AI scripts for their upcoming {genre} slate.',
+  '{rival} acquires the film rights to a Wikipedia article for ${budget}M.',
+  '{rival} attempts to launch a cinematic universe based entirely on public domain mascots.',
+  '{rival} forces unnecessary sequel hooks into their acclaimed ${budget}M {genre} indie darling.',
+  '{rival} spends ${budget}M marketing a {genre} film that was quietly cancelled last month.',
+  '{rival} pivots entirely to short-form content, cutting the runtime of all {genre} films to 45 minutes.',
+  '{rival} launches a ${budget}M {genre} project starring exclusively TikTok influencers; it flops immediately.',
+  '{rival} announces a 15-year roadmap for a {genre} franchise before the first film is even cast.',
+  '{rival} desperately tries to artificially manufacture a TikTok dance trend for their ${budget}M {genre} release.'
 ];

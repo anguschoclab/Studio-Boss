@@ -1,6 +1,8 @@
 import { Buyer, StreamerPlatform, GameState } from '@/engine/types';
 import { StateImpact } from '../types/state.types';
-import { pick, secureRandom, randRange } from '../utils';
+import { RandomGenerator } from '../utils/rng';
+import { updateBuyers } from './buyers';
+import { mergeImpacts } from '../utils/impactUtils';
 
 const MERGER_HEADLINES = [
   (a: string, b: string) => `BREAKING: ${a} acquires ${b} in landmark media deal!`,
@@ -32,7 +34,7 @@ const STREAMER_DECLINE_EVENTS = [
  * Simulate weekly buyer/platform dynamics — financial health and M&A activity.
  * Subscriber fluctuations are handled by platformEngine.ts.
  */
-export function advanceBuyers(state: GameState): StateImpact {
+export function advanceBuyers(state: GameState, rng: RandomGenerator): StateImpact {
   const impact: StateImpact = {
     buyerUpdates: [],
     newHeadlines: [],
@@ -48,6 +50,8 @@ export function advanceBuyers(state: GameState): StateImpact {
     const currentCash = buyer.cash ?? 50_000_000;
     const currentStrength = buyer.strength ?? 60;
 
+    let performance = 0;
+
     if (buyer.archetype === 'streamer') {
       const streamer = buyer as StreamerPlatform;
       // Financials based on existing subscribers (updated in platformEngine)
@@ -57,21 +61,21 @@ export function advanceBuyers(state: GameState): StateImpact {
 
       update.cash = newCash;
       // Strength drifts based on financial performance
-      const performance = (revenue - costs) / 1_000_000;
+      performance = (revenue - costs) / 1_000_000;
       update.strength = Math.max(10, Math.min(100, currentStrength + performance));
 
-      if (secureRandom() < 0.02) {
+      if (rng.next() < 0.02) {
         impact.newHeadlines!.push({
-          id: `headline-${crypto.randomUUID()}`,
+          id: rng.uuid('hl'),
           week: currWeek,
           category: 'market',
-          text: pick(performance > 0 ? STREAMER_GROWTH_EVENTS : STREAMER_DECLINE_EVENTS)(buyer.name),
+          text: rng.pick(performance > 0 ? STREAMER_GROWTH_EVENTS : STREAMER_DECLINE_EVENTS)(buyer.name),
         });
       }
     } else {
-      const cashDelta = randRange(-2_000_000, 5_000_000);
+      const cashDelta = Math.floor(rng.range(-2_000_000, 5_000_000));
       update.cash = currentCash + cashDelta;
-      update.strength = Math.max(10, Math.min(100, currentStrength + randRange(-2, 2)));
+      update.strength = Math.max(10, Math.min(100, currentStrength + Math.floor(rng.range(-2, 2))));
     }
 
     // Vulnerability Check
@@ -82,10 +86,10 @@ export function advanceBuyers(state: GameState): StateImpact {
       if (!buyer.isAcquirable) {
         update.isAcquirable = true;
         impact.newHeadlines!.push({
-          id: `headline-${crypto.randomUUID()}`,
+          id: rng.uuid('hl'),
           week: currWeek,
           category: 'market',
-          text: pick(VULNERABILITY_HEADLINES)(buyer.name),
+          text: rng.pick(VULNERABILITY_HEADLINES)(buyer.name),
         });
       }
     } else {
@@ -96,13 +100,13 @@ export function advanceBuyers(state: GameState): StateImpact {
   }
 
   // M&A Execution
-  if (secureRandom() < 0.08) { 
+  if (rng.next() < 0.08) { 
     const vulnerable = activeBuyers.filter(b => b.isAcquirable);
     const strong = activeBuyers.filter(b => !b.isAcquirable && (b.strength ?? 60) > 70);
 
     if (vulnerable.length > 0 && strong.length > 0) {
-      const acquirer = pick(strong);
-      const target = pick(vulnerable);
+      const acquirer = rng.pick(strong);
+      const target = rng.pick(vulnerable);
 
       if (acquirer.id !== target.id) {
         const maHistory = [...(target.maHistory || [])];
@@ -130,14 +134,16 @@ export function advanceBuyers(state: GameState): StateImpact {
         });
 
         impact.newHeadlines!.push({
-          id: `headline-${crypto.randomUUID()}`,
+          id: rng.uuid('hl'),
           week: currWeek,
           category: 'market',
-          text: pick(MERGER_HEADLINES)(acquirer.name, target.name),
+          text: rng.pick(MERGER_HEADLINES)(acquirer.name, target.name),
         });
       }
     }
   }
 
-  return impact;
+  const mandateImpact = updateBuyers(activeBuyers, currWeek, rng);
+  
+  return mergeImpacts(impact, mandateImpact);
 }

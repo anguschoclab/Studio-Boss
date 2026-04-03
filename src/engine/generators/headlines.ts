@@ -1,18 +1,17 @@
 import { Headline, RivalStudio, HeadlineCategory, Project, Contract, Talent } from '@/engine/types';
-type TalentProfile = Talent;
-import { fillTemplate, pick, secureRandom } from '../utils';
+import { fillTemplate } from '../utils';
+import { RandomGenerator } from '../utils/rng';
 import { MARKET_HEADLINES, TALENT_HEADLINES, RIVAL_TEMPLATES } from '../data/headlines.data';
 
-let counter = 0;
-
 export function generateHeadlines(
+  rng: RandomGenerator,
   week: number, 
   rivals: RivalStudio[],
   projects: Project[] = [],
   contracts: Contract[] = [],
-  talentPool: TalentProfile[] = []
+  talentPool: Talent[] = []
 ): Headline[] {
-  const count = 1 + Math.floor(secureRandom() * 3);
+  const count = rng.rangeInt(1, 3);
   const headlines: Headline[] = [];
   const genrePool = ['sci-fi', 'drama', 'action', 'thriller', 'comedy', 'horror', 'fantasy'];
 
@@ -25,7 +24,7 @@ export function generateHeadlines(
     });
   });
 
-  const selectedProject = pick(projectsWithDirectors.length > 0 ? projectsWithDirectors : projects);
+  const selectedProject = rng.pick(projectsWithDirectors.length > 0 ? projectsWithDirectors : (projects.length > 0 ? projects : []));
   const selectedDirector = selectedProject ? (() => {
     const pContracts = contracts.filter(c => c.projectId === selectedProject.id);
     const dContract = pContracts.find(c => {
@@ -41,36 +40,37 @@ export function generateHeadlines(
 
   const vars = {
     projectName: selectedProject?.title || 'upcoming blockbuster',
-    directorName: selectedDirector?.name || pick(highDrawTalent.filter(t => t.roles.includes('director')))?.name || 'A-list director',
-    actorName: pick(actors)?.name || 'Major movie star',
-    actressName: pick(actors.slice().reverse())?.name || 'Highly acclaimed actress',
-    pct: String(Math.floor(5 + secureRandom() * 25))
+    directorName: selectedDirector?.name || rng.pick(highDrawTalent.filter(t => t.roles.includes('director')))?.name || 'A-list director',
+    actorName: rng.pick(actors)?.name || 'Major movie star',
+    actressName: rng.pick(actors.slice().reverse())?.name || 'Highly acclaimed actress',
+    pct: String(rng.rangeInt(5, 30))
   };
 
   for (let i = 0; i < count; i++) {
-    const roll = secureRandom();
+    const roll = rng.next();
     let text: string;
     let category: HeadlineCategory;
 
     if (roll < 0.35 && rivals.length > 0) {
-      const rival = pick(rivals);
-      text = fillTemplate(pick(RIVAL_TEMPLATES), {
+      const rival = rng.pick(rivals);
+      text = fillTemplate(rng.pick(RIVAL_TEMPLATES), {
         ...vars,
         rival: rival.name,
-        budget: String(Math.floor(20 + secureRandom() * 180)),
-        genre: pick(genrePool),
+        budget: String(rng.rangeInt(20, 200)),
+        genre: rng.pick(genrePool),
       });
       category = 'rival';
     } else if (roll < 0.7) {
-      text = fillTemplate(pick(MARKET_HEADLINES), vars);
+      text = fillTemplate(rng.pick(MARKET_HEADLINES), vars);
       category = 'market';
     } else {
-      text = fillTemplate(pick(TALENT_HEADLINES), vars);
+      text = fillTemplate(rng.pick(TALENT_HEADLINES), vars);
       category = 'talent';
     }
 
-    headlines.push({ id: `h-${++counter}-${week}`, text, week, category });
+    headlines.push({ id: rng.uuid('h'), text, week, category });
   }
 
   return headlines;
 }
+
