@@ -20,8 +20,8 @@ export function evaluatePackageOffer(
       const bundled = (rng && rng.pick ? rng.pick.bind(rng) : pick)(otherClients);
       return {
         requiredTalentId: bundled.id,
-        packageDiscount: 0.1,
-        reason: `Agency policy: To secure ${leadTalent.name}, we require ${bundled.name}.`
+        packageDiscount: discount,
+        reason: isAuteur ? `Creative Mandate: ${leadTalent.name} insists on working with ${bundled.name} for this project.` : `Agency policy: To secure ${leadTalent.name}, we require ${bundled.name}.`
       };
     }
   }

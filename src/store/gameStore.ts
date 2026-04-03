@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { GameState, WeekSummary, ArchetypeKey } from '@/engine/types';
 import { initializeGame } from '@/engine/core/gameInit';
 import { advanceWeek } from '@/engine/core/weekAdvance';
+import { RandomGenerator } from '@/engine/utils/rng';
 import { saveGame, loadGame, getSaveSlots, SaveSlotInfo } from '@/persistence/saveLoad';
 import { useUIStore } from './uiStore';
 
@@ -23,6 +24,9 @@ export interface GameStore extends ProjectSlice, FinanceSlice, TalentSlice, Riva
   devAutoInit: (archetype?: ArchetypeKey) => void;
 }
 
+const INITIAL_FINANCE = { cash: 0, ledger: [] };
+const INITIAL_NEWS = { headlines: [] };
+
 export const useGameStore = create<GameStore>((set, get, ...args) => ({
   gameState: null,
 
@@ -34,7 +38,8 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
   ...createSnapshotSlice(set, get, ...args),
 
   newGame: async (studioName, archetype) => {
-    const gameState = initializeGame(studioName, archetype);
+    const seed = Math.floor(Math.random() * 1_000_000);
+    const gameState = initializeGame(studioName, archetype, seed);
     await saveGame(0, gameState);
     set({ 
       gameState,
@@ -47,7 +52,10 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
     const state = get().gameState;
     if (!state) throw new Error('No game in progress');
 
-    const { newState: nextState, summary, impacts } = advanceWeek(state);
+    // Instantiate deterministic RNG for this week's simulation tick
+    const rng = new RandomGenerator((state.gameSeed || 12345) + (state.tickCount || 0));
+
+    const { newState: nextState, summary, impacts } = advanceWeek(state, rng);
     const finalState = nextState as GameState;
 
     // Trigger background save without blocking UI (Fire and forget)
@@ -64,17 +72,18 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
 
     // Process simulation impacts for UI triggers (Modals, etc.)
     if (impacts && impacts.length > 0) {
-      // Sort by priority (descending)
-      const sortedImpacts = [...impacts].sort((a, b) => {
-        if (a.type === 'MODAL_TRIGGERED' && b.type === 'MODAL_TRIGGERED') {
-          return (b.payload.priority || 0) - (a.payload.priority || 0);
+      // Collect modal impacts for prioritized queueing
+      const modalImpacts: (import('@/engine/types').StateImpact & { type: 'MODAL_TRIGGERED', payload: any })[] = [];
+      for (let i = 0; i < impacts.length; i++) {
+        if (impacts[i].type === 'MODAL_TRIGGERED') {
+          modalImpacts.push(impacts[i] as any);
         }
-        return 0;
-      });
+      }
 
-      for (const impact of sortedImpacts) {
-        if (impact.type === 'MODAL_TRIGGERED') {
-          ui.enqueueModal(impact.payload.modalType, impact.payload.payload as Record<string, unknown>);
+      if (modalImpacts.length > 0) {
+        modalImpacts.sort((a, b) => (b.payload.priority || 0) - (a.payload.priority || 0));
+        for (let i = 0; i < modalImpacts.length; i++) {
+          ui.enqueueModal(modalImpacts[i].payload.modalType, modalImpacts[i].payload.payload as Record<string, unknown>);
         }
       }
     }
@@ -111,13 +120,14 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
     if (state.gameState === null) return state;
     return { 
         gameState: null,
-        finance: { cash: 0, ledger: [] } as any,
-        news: { headlines: [] } as any
+        finance: INITIAL_FINANCE as any,
+        news: INITIAL_NEWS as any
     } as any;
   }),
 
   devAutoInit: (archetype = 'major') => {
-    const gameState = initializeGame('Alpha Studios', archetype);
+    const seed = 42; // Constant seed for predictable dev testing
+    const gameState = initializeGame('Alpha Studios', archetype, seed);
     set({ 
       gameState,
       finance: gameState.finance,

@@ -14,6 +14,7 @@ export interface WeeklyFinancialReport {
     production: number;
     marketing: number;
     overhead: number;
+    pacts: number;
   };
   endingCash: number;
   netProfit: number;
@@ -25,29 +26,30 @@ export interface FinancialSnapshot {
     theatrical: number;
     streaming: number;
     merch: number;
-    passive: number; // From archived IP
+    passive: number; 
   };
   expenses: {
     production: number;
-    burn: number; // Studio Overhead
+    burn: number; 
     marketing: number;
-    royalties: number; // Talent point payouts
-    interest: number; // Debt or Savings
+    pacts: number; 
+    royalties: number; 
+    interest: number; 
   };
   net: number;
   cash: number;
-  projectRecoupment?: Record<string, number>; // ProjectId -> % Recouped
+  projectRecoupment?: Record<string, number>;
 }
 
 export type MarketCycle = 'BOOM' | 'STABLE' | 'BEAR' | 'RECESSION' | 'RECOVERY';
 
 export interface MarketState {
-  baseRate: number; // e.g. 0.04 for 4%
+  baseRate: number; 
   savingsYield: number;
   debtRate: number;
   loanRate: number;
   rateHistory: { week: number; rate: number }[];
-  sentiment: number; // -100 to 100
+  sentiment: number; 
   cycle: MarketCycle;
 }
 
@@ -68,23 +70,23 @@ export interface IPAsset {
   id: string;
   originalProjectId: string;
   title: string;
-  franchiseId?: string; // New field for Shared Universe grouping
+  franchiseId?: string; 
   tier: IPAssetTier;
-  quality: number; // Inherited from project.reviewScore
-  baseValue: number; // Based on box office / ratings success
-  decayRate: number; // 0.0 to 1.0 (Cultural relevance)
+  quality: number; 
+  baseValue: number; 
+  decayRate: number; 
   merchandisingMultiplier: number; 
   syndicationStatus: 'NONE' | 'SYNDICATED';
   syndicationTier: 'NONE' | 'BRONZE' | 'SILVER' | 'GOLD';
   totalEpisodes: number;
   rightsExpirationWeek: number; 
   rightsOwner: 'STUDIO' | 'MARKET' | 'RIVAL';
-  isSynergyActive?: boolean; // True if a reboot/spinoff is active
+  isSynergyActive?: boolean; 
 }
 
 export interface IPState {
   vault: IPAsset[];
-  franchises: Record<string, Franchise>; // Centralized Meta-Hub
+  franchises: Record<string, Franchise>;
 }
 
 export type ImpactType = 
@@ -144,67 +146,4 @@ export interface BaseImpact {
   newFestivalSubmissions?: import('./project.types').FestivalSubmission[];
 }
 
-export interface FundsImpact extends BaseImpact { type: 'FUNDS_CHANGED'; payload: { amount: number } }
-export interface FundsDeductedImpact extends BaseImpact { type: 'FUNDS_DEDUCTED'; payload: { amount: number } }
-export interface ProjectUpdateImpact extends BaseImpact { type: 'PROJECT_UPDATED'; payload: ProjectUpdate }
-export type ProjectRemovedImpact = BaseImpact & { type: 'PROJECT_REMOVED'; payload: { projectId: string } };
-export type NewsImpact = BaseImpact & { type: 'NEWS_ADDED'; payload: { headline: string; description: string; category?: import('./engine.types').HeadlineCategory } };
-export type TalentUpdateImpact = BaseImpact & { type: 'TALENT_UPDATED'; payload: TalentUpdate };
-export interface PrestigeChangedImpact extends BaseImpact { type: 'PRESTIGE_CHANGED'; payload: { amount: number } }
-export interface BuyerUpdateImpact extends BaseImpact { type: 'BUYER_UPDATED'; payload: BuyerUpdate }
-export interface RivalUpdateImpact extends BaseImpact { type: 'RIVAL_UPDATED'; payload: RivalUpdate }
-export interface OpportunityUpdateImpact extends BaseImpact { type: 'OPPORTUNITY_UPDATED'; payload: { opportunityId: string; rivalId: string; bid: { amount: number; terms: string } } }
-export interface TrendsUpdateImpact extends BaseImpact { type: 'TRENDS_UPDATED'; payload: { trends: import('./project.types').GenreTrend[] } }
-export interface ScandalAddedImpact extends BaseImpact { type: 'SCANDAL_ADDED'; payload: { scandal: import('./talent.types').Scandal } }
-export interface ScandalRemovedImpact extends BaseImpact { type: 'SCANDAL_REMOVED'; payload: { scandalId: string } }
-export interface MarketEventUpdateImpact extends BaseImpact { type: 'MARKET_EVENT_UPDATED'; payload: { events?: import('./engine.types').MarketEvent[]; marketState?: MarketState } }
-export interface FranchiseUpdateImpact extends BaseImpact { type: 'FRANCHISE_UPDATED'; payload: FranchiseUpdate }
-export interface VaultAssetUpdateImpact extends BaseImpact { type: 'VAULT_ASSET_UPDATED'; payload: VaultAssetUpdate }
-export interface LedgerImpact extends BaseImpact { type: 'LEDGER_UPDATED'; payload: { report: WeeklyFinancialReport } }
-export interface FinanceTransactionImpact extends BaseImpact { type: 'FINANCE_TRANSACTION'; payload: { amount: number; description: string } }
-export interface FinanceSnapshotImpact extends BaseImpact { type: 'FINANCE_SNAPSHOT_ADDED'; payload: { snapshot: FinancialSnapshot } }
-export interface SyncMAFundsImpact extends BaseImpact { type: 'SYNC_M_A_FUNDS'; payload: { amount: number } }
-export interface SystemTickImpact extends BaseImpact { type: 'SYSTEM_TICK'; payload: { week?: number; tickCount?: number } }
-export interface IndustryUpdateImpact extends BaseImpact { 
-  type: 'INDUSTRY_UPDATE'; 
-  payload: { 
-    update: Record<string, unknown>;
-    rival?: RivalUpdate;
-    mergedRivalId?: string;
-  } 
-}
-
-export interface ModalTriggeredImpact extends BaseImpact { 
-  type: 'MODAL_TRIGGERED'; 
-  payload: { 
-    modalType: import('./engine.types').ModalType; 
-    payload: unknown;
-    priority?: number; 
-  } 
-}
-
-export type StateImpact = 
-  | FundsImpact
-  | FundsDeductedImpact
-  | ProjectUpdateImpact
-  | ProjectRemovedImpact
-  | NewsImpact
-  | TalentUpdateImpact
-  | PrestigeChangedImpact
-  | BuyerUpdateImpact
-  | RivalUpdateImpact
-  | OpportunityUpdateImpact
-  | TrendsUpdateImpact
-  | ScandalAddedImpact
-  | ScandalRemovedImpact
-  | FranchiseUpdateImpact
-  | VaultAssetUpdateImpact
-  | MarketEventUpdateImpact
-  | LedgerImpact
-  | FinanceTransactionImpact
-  | FinanceSnapshotImpact
-  | SyncMAFundsImpact
-  | SystemTickImpact
-  | IndustryUpdateImpact
-  | ModalTriggeredImpact
-  | (BaseImpact & { type?: undefined }); // The "Bag" impact
+export type StateImpact = BaseImpact & { type?: ImpactType ; payload?: any };

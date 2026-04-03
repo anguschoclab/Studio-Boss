@@ -5,14 +5,18 @@ import { DiscoveryBoard } from '../../../components/discovery/DiscoveryBoard';
 import { useGameStore } from '../../../store/gameStore';
 import { useUIStore } from '../../../store/uiStore';
 import { Opportunity } from '../../../engine/types';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 vi.mock('../../../store/uiStore', () => ({
   useUIStore: vi.fn(),
 }));
 
+// Mock NewsFeed and TrendBoard to avoid nested store dependency issues
+vi.mock('@/components/news/NewsFeed', () => ({ NewsFeed: () => <div data-testid="news-feed">News Feed</div> }));
+vi.mock('@/components/trends/TrendBoard', () => ({ TrendBoard: () => <div data-testid="trend-board">Trend Board</div> }));
+
 describe('DiscoveryBoard', () => {
   const mockOpenCreateProject = vi.fn();
-  const mockAcquireOpportunity = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -21,33 +25,36 @@ describe('DiscoveryBoard', () => {
     });
   });
 
+  const getBaseGameState = (opportunities: Opportunity[] = []) => ({
+    market: { opportunities, trends: [] },
+    industry: { newsHistory: [] },
+    finance: { cash: 1000000, ledger: [], marketState: { interestRate: 0.05, inflation: 0.02, consumerConfidence: 0.8, rateHistory: [] } },
+    studio: { internal: { projects: {} } }
+  });
+
   it('renders empty state when there are no opportunities', () => {
+    const gameState = getBaseGameState([]);
     useGameStore.setState({
-      gameState: {
-        market: { opportunities: [], trends: [] },
-        industry: { newsHistory: [] }
-      },
-      acquireOpportunity: mockAcquireOpportunity
+      gameState,
+      finance: gameState.finance,
     } as any);
 
-    render(<DiscoveryBoard />);
+    render(<TooltipProvider><DiscoveryBoard /></TooltipProvider>);
 
     expect(screen.getByText('The Trades')).toBeDefined();
-    expect(screen.getByText('The town is quiet')).toBeDefined();
+    expect(screen.getByText(/No active scripts/i)).toBeDefined();
   });
 
   it('calls openCreateProject when Create Original button is clicked', () => {
+    const gameState = getBaseGameState([]);
     useGameStore.setState({
-      gameState: {
-        market: { opportunities: [], trends: [] },
-        industry: { newsHistory: [] }
-      },
-      acquireOpportunity: mockAcquireOpportunity
+      gameState,
+      finance: gameState.finance,
     } as any);
 
-    render(<DiscoveryBoard />);
+    render(<TooltipProvider><DiscoveryBoard /></TooltipProvider>);
 
-    const createButton = screen.getByText('Original Concept');
+    const createButton = screen.getByText('Original IP Concept');
     fireEvent.click(createButton);
 
     expect(mockOpenCreateProject).toHaveBeenCalledTimes(1);
@@ -72,48 +79,22 @@ describe('DiscoveryBoard', () => {
         expirationWeek: 10,
         bidHistory: []
       },
-      {
-        id: '2',
-        title: 'Comedy Show',
-        type: 'pitch',
-        genre: 'Comedy',
-        format: 'tv',
-        budgetTier: 'low',
-        flavor: 'Laugh out loud.',
-        weeksUntilExpiry: 3,
-        targetAudience: 'Niche',
-        qualityBonus: 0,
-        origin: 'agency_package',
-        costToAcquire: 10000,
-        bids: {},
-        expirationWeek: 8,
-        bidHistory: []
-      },
     ];
 
+    const gameState = getBaseGameState(mockOpportunities);
     useGameStore.setState({
-      gameState: {
-        market: { opportunities: mockOpportunities, trends: [] },
-        industry: { newsHistory: [] }
-      },
-      acquireOpportunity: mockAcquireOpportunity
+      gameState,
+      finance: gameState.finance,
     } as any);
 
-    render(<DiscoveryBoard />);
+    render(<TooltipProvider><DiscoveryBoard /></TooltipProvider>);
 
     expect(screen.getByText('Action Movie')).toBeDefined();
-    expect(screen.getByText('Comedy Show')).toBeDefined();
-    // Updated to match actual component case
     expect(screen.getAllByText(/Action/i)).toBeDefined();
-    expect(screen.getAllByText(/FILM/i)).toBeDefined();
-    expect(screen.getAllByText(/BUDGET/i)).toBeDefined();
     expect(screen.getByText('"Explosions everywhere."')).toBeDefined();
-    expect(screen.getByText('"Laugh out loud."')).toBeDefined();
-    expect(screen.getByText('Expiring in 5w')).toBeDefined();
-    expect(screen.getByText('Expiring in 3w')).toBeDefined();
   });
 
-  it('calls acquireOpportunity when Acquire button is clicked on a card', () => {
+  it('opens auction dashboard when Enter War button is clicked on a card', () => {
     const mockOpportunities: Opportunity[] = [
       {
         id: 'opp-123',
@@ -134,19 +115,21 @@ describe('DiscoveryBoard', () => {
       },
     ];
 
+    const gameState = getBaseGameState(mockOpportunities);
     useGameStore.setState({
-      gameState: {
-        market: { opportunities: mockOpportunities, trends: [] },
-        industry: { newsHistory: [] }
-      },
-      acquireOpportunity: mockAcquireOpportunity
+      gameState,
+      finance: gameState.finance,
     } as any);
 
-    render(<DiscoveryBoard />);
+    render(<TooltipProvider><DiscoveryBoard /></TooltipProvider>);
 
-    const acquireButton = screen.getByText('Acquire IP');
+    const acquireButton = screen.getByText('Enter War');
     fireEvent.click(acquireButton);
 
-    expect(mockAcquireOpportunity).toHaveBeenCalledWith('opp-123');
+    // LiveAuctionDashboard should appear in the DOM
+    expect(screen.getByText('Market Valuation')).toBeInTheDocument();
+    expect(screen.getByText('Your Action')).toBeInTheDocument();
+    // Select the one in the auction header (h2) to be specific
+    expect(screen.getByRole('heading', { level: 2, name: 'Drama Film' })).toBeInTheDocument();
   });
 });

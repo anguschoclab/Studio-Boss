@@ -1,7 +1,7 @@
 // Types related to Studios, Rivals, and Game State
 
 import { Project, Opportunity, GenreTrend, FestivalSubmission, Award } from './project.types';
-import { Contract, FirstLookDeal, Family, Agency, Agent, Talent, Scandal, MotivationProfile, RivalStrategy } from './talent.types';
+import { Contract, TalentPact, Family, Agency, Agent, Talent, Scandal, MotivationProfile, RivalStrategy } from './talent.types';
 import { NewsEvent, Rumor, MarketEvent } from './engine.types';
 import { FinanceState, NewsState, IPState } from './state.types';
 
@@ -70,7 +70,7 @@ export interface GameState {
     internal: {
       projects: Record<string, Project>;
       contracts: Contract[];
-      firstLookDeals?: FirstLookDeal[];
+      firstLookDeals?: TalentPact[];
     };
     ownedPlatforms?: string[];
   };
@@ -146,6 +146,13 @@ export interface PremiumPlatform extends BuyerBase {
   prestigeBonus: number; // 0-50: Influences review scores
 }
 
+export interface StreamingLicense {
+  projectId: string;
+  expiryWeek: number;
+  isAnchor: boolean; // If true, losing this causes mass churn
+  originalOwnerId: string;
+}
+
 export interface StreamerPlatform extends BuyerBase {
   archetype: 'streamer';
   subscribers: number;
@@ -153,6 +160,7 @@ export interface StreamerPlatform extends BuyerBase {
   contentLibraryQuality: number; // 0-100: Influences growth
   marketingSpend: number; // Weekly burn
   subscriberHistory: { week: number; count: number }[];
+  activeLicenses: StreamingLicense[];
 }
 
 export type Buyer = NetworkPlatform | PremiumPlatform | StreamerPlatform;

@@ -44,3 +44,163 @@ describe('Crisis Evaluator (Target A3)', () => {
     expect(updatedProject.payload.update.activeCrisis.resolved).toBe(true);
   });
 });
+
+describe('Crisis Evaluator - Edge Cases', () => {
+  it('should safely return empty array if no activeCrisis exists', () => {
+     const state = {
+       week: 1,
+       studio: {
+         internal: {
+           projects: {
+             'p1': {
+               id: 'p1',
+               title: 'test',
+               type: 'FILM',
+               format: 'film',
+               genre: 'drama',
+               budgetTier: 'low',
+               budget: 1000000,
+               weeklyCost: 100000,
+               targetAudience: 'General',
+               flavor: 'test',
+               state: 'production',
+               buzz: 50,
+               weeksInPhase: 0,
+               developmentWeeks: 10,
+               productionWeeks: 10,
+               revenue: 0,
+               weeklyRevenue: 0,
+               releaseWeek: null,
+               accumulatedCost: 0,
+               momentum: 50,
+               progress: 0,
+               activeCrisis: null,
+               contentFlags: []
+             } as Project
+           }
+         }
+       }
+     } as unknown as GameState;
+     const impacts = resolveCrisisWithHandlers(state, 'p1', 0);
+     expect(impacts).toHaveLength(0);
+  });
+
+  it('should safely return empty array if activeCrisis is already resolved', () => {
+     const state = {
+       week: 1,
+       studio: {
+         internal: {
+           projects: {
+             'p1': {
+               id: 'p1',
+               title: 'test',
+               type: 'FILM',
+               format: 'film',
+               genre: 'drama',
+               budgetTier: 'low',
+               budget: 1000000,
+               weeklyCost: 100000,
+               targetAudience: 'General',
+               flavor: 'test',
+               state: 'production',
+               buzz: 50,
+               weeksInPhase: 0,
+               developmentWeeks: 10,
+               productionWeeks: 10,
+               revenue: 0,
+               weeklyRevenue: 0,
+               releaseWeek: null,
+               accumulatedCost: 0,
+               momentum: 50,
+               progress: 0,
+               contentFlags: [],
+               activeCrisis: { resolved: true, crisisId: '1', title: 'test', description: 'test', type: 'DELAY', resolvedWeek: 1, options: [] }
+             } as Project
+           }
+         }
+       }
+     } as unknown as GameState;
+     const impacts = resolveCrisisWithHandlers(state, 'p1', 0);
+     expect(impacts).toHaveLength(0);
+  });
+
+  it('should safely return empty array if optionIndex is out of bounds', () => {
+     const state = {
+       week: 1,
+       studio: {
+         internal: {
+           projects: {
+             'p1': {
+               id: 'p1',
+               title: 'test',
+               type: 'FILM',
+               format: 'film',
+               genre: 'drama',
+               budgetTier: 'low',
+               budget: 1000000,
+               weeklyCost: 100000,
+               targetAudience: 'General',
+               flavor: 'test',
+               state: 'production',
+               buzz: 50,
+               weeksInPhase: 0,
+               developmentWeeks: 10,
+               productionWeeks: 10,
+               revenue: 0,
+               weeklyRevenue: 0,
+               releaseWeek: null,
+               accumulatedCost: 0,
+               momentum: 50,
+               progress: 0,
+               contentFlags: [],
+               activeCrisis: { resolved: false, crisisId: '1', title: 'test', description: 'test', type: 'DELAY', resolvedWeek: 1, options: [] }
+             } as Project
+           }
+         }
+       }
+     } as unknown as GameState;
+     const impacts = resolveCrisisWithHandlers(state, 'p1', 0);
+     expect(impacts).toHaveLength(0);
+  });
+
+  it('should safely process an option with no impacts/penalties', () => {
+     const state = {
+       week: 1,
+       studio: {
+         internal: {
+           projects: {
+             'p1': {
+               id: 'p1',
+               title: 'test',
+               type: 'FILM',
+               format: 'film',
+               genre: 'drama',
+               budgetTier: 'low',
+               budget: 1000000,
+               weeklyCost: 100000,
+               targetAudience: 'General',
+               flavor: 'test',
+               state: 'production',
+               buzz: 50,
+               weeksInPhase: 0,
+               developmentWeeks: 10,
+               productionWeeks: 10,
+               revenue: 0,
+               weeklyRevenue: 0,
+               releaseWeek: null,
+               accumulatedCost: 0,
+               momentum: 50,
+               progress: 0,
+               contentFlags: [],
+               activeCrisis: { resolved: false, crisisId: '1', title: 'test', description: 'test', type: 'DELAY', resolvedWeek: 1, options: [{ text: 'Do nothing' }] }
+             } as Project
+           }
+         }
+       }
+     } as unknown as GameState;
+     const impacts = resolveCrisisWithHandlers(state, 'p1', 0);
+     // Should still emit NEWS_ADDED and PROJECT_UPDATED (resolved: true)
+     expect(impacts.some(i => i.type === 'NEWS_ADDED')).toBe(true);
+     expect(impacts.some(i => i.type === 'PROJECT_UPDATED')).toBe(true);
+  });
+});

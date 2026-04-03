@@ -9,6 +9,7 @@ import { calculateFranchiseFatigue } from '@/engine/systems/ip/fatigueEngine';
 import { resolveCrisis } from '@/engine/systems/crises';
 import * as festivalsEngine from '@/engine/systems/festivals';
 import * as awardsEngine from '@/engine/systems/awards';
+import { RandomGenerator } from '@/engine/utils/rng';
 import { Project, GameState, AwardBody, ProjectContractType, MarketingCampaign, StateImpact, SeriesProject } from '@/engine/types';
 
 export interface ProjectSlice {
@@ -23,7 +24,7 @@ export interface ProjectSlice {
   submitToFestival: (projectId: string, festivalBody: AwardBody) => void;
   launchAwardsCampaign: (projectId: string, budget: number) => void;
   lockMarketingCampaign: (projectId: string, level: 'none' | 'basic' | 'blockbuster') => void;
-  addProject: (project: any) => void;
+  addProject: (project: Project) => void;
   advanceProjectPhase: (projectId: string, newState: string) => void;
   updateProject: (projectId: string, update: Partial<Project>) => void;
 }
@@ -32,19 +33,21 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
   createProject: (params) => {
     set((s) => {
       if (!s.gameState) return s;
-      const { talentFees } = buildProjectAndContracts(s.gameState, params);
+      const rng = new RandomGenerator(s.gameState.gameSeed + s.gameState.week + s.gameState.tickCount);
+      const { talentFees } = buildProjectAndContracts(s.gameState, params, rng);
       
       return {
         gameState: applyStateImpact(s.gameState, {
           type: 'FUNDS_DEDUCTED',
           payload: { amount: talentFees }
-        }) as any 
+        })
       };
     });
     
     set(s => {
       if (!s.gameState) return s;
-      const { project, newContracts } = buildProjectAndContracts(s.gameState, params);
+      const rng = new RandomGenerator(s.gameState.gameSeed + s.gameState.week + s.gameState.tickCount);
+      const { project, newContracts } = buildProjectAndContracts(s.gameState, params, rng);
       return {
         gameState: {
           ...s.gameState,
@@ -96,7 +99,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
                   }
                 }
               }
-            }]) as any
+            }])
           };
         }
       }
@@ -106,6 +109,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
 
   _updateProjectToProduction: (state, projectId, project, headlineText, extraProjectUpdates = {}) => {
     const newCulture = state.studio.culture ? updateCultureFromProject(state.studio.culture, project) : undefined;
+    const rng = new RandomGenerator(state.gameSeed + state.week + 17);
     
     const impacts: StateImpact[] = [
       {
@@ -123,6 +127,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
       {
         type: 'NEWS_ADDED',
         payload: {
+          id: rng.uuid('news-prod'),
           headline: headlineText,
           description: `Strategic shift: ${project.title} enters production.`
         }
@@ -138,7 +143,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
           ...newState.studio,
           culture: newCulture
         }
-      } as any
+      }
     });
   },
 
@@ -170,7 +175,9 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
 
     if (!project || !buyer) return false;
 
-    const success = negotiateContract(project, buyer, contractType);
+    const rng = new RandomGenerator(state.gameSeed + state.week + state.tickCount);
+    const allProjects = Object.values(state.studio.internal.projects);
+    const success = negotiateContract(project, buyer, contractType, state.week, allProjects, rng);
 
     if (success) {
       const { project: updatedProject, update } = projectsEngine.executePitching(project, buyer.name, contractType);
@@ -210,7 +217,6 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
     const project = state.studio.internal.projects[projectId];
     if (!project) return;
 
-    // 1. Determine Franchise Context
     let status: 'HEALTHY' | 'FATIGUED' | 'LEGACY' = 'HEALTHY';
     let relatedCount = 0;
 
@@ -223,21 +229,19 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
       
       if (fatigue > 0.4) status = 'FATIGUED';
       
-      // Legacy Check: 10+ year gap triggers Nostalgia Spike (LEGACY status)
       const lastRelease = Math.max(...franchise.lastReleaseWeeks, 0);
       if (state.week - lastRelease > 520) status = 'LEGACY';
     }
 
-    // 2. Generate Proposal
-    const spinoffParams = generateSpinoffProposal(project, status, relatedCount);
+    const rng = new RandomGenerator(state.gameSeed + state.week + 44);
+    const spinoffParams = generateSpinoffProposal(rng, project, status, relatedCount);
     
-    // Ensure the new project inherits the franchiseId
     const finalParams = {
       ...spinoffParams,
       franchiseId: project.franchiseId
-    };
+    } as import('../storeUtils').CreateProjectParams;
 
-    get().createProject(finalParams as any);
+    get().createProject(finalParams);
   },
 
   acquireAndRebootIP: (ipAssetId) => {
@@ -249,15 +253,13 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
       if (!asset || asset.rightsOwner !== 'MARKET') return s;
 
       if (state.finance.cash < asset.baseValue) {
-        // Could trigger an alert here, but for now just return
         return s;
       }
 
-      // 1. Prepare reboot parameters
       const rebootParams: CreateProjectParams = {
         title: `${asset.title}`,
-        format: 'film', // Defaulting to film for reboots
-        genre: 'DRAMA', // Default or inherited
+        format: 'film',
+        genre: 'DRAMA',
         budgetTier: asset.baseValue > 100000000 ? 'blockbuster' : 'high',
         targetAudience: 'GENERAL',
         flavor: 'reboot',
@@ -265,10 +267,9 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
         initialBuzzBonus: Math.floor(asset.decayRate * 50) + 20
       };
 
-      // 2. Build the project
-      const { project, newContracts } = buildProjectAndContracts(state, rebootParams);
+      const rng = new RandomGenerator(state.gameSeed + (state.week * 100));
+      const { project, newContracts } = buildProjectAndContracts(state, rebootParams, rng);
 
-      // 3. Execute Impacts
       const impacts: StateImpact[] = [
         {
           type: 'FUNDS_DEDUCTED',
@@ -277,6 +278,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
         {
           type: 'NEWS_ADDED',
           payload: {
+            id: rng.uuid('ip-acq'),
             headline: `STUDIO ACQUIRES "${asset.title}" RIGHTS`,
             description: `Major industry shift as rights for the classic property return to production slate.`
           }
@@ -300,7 +302,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
               contracts: [...intermediateState.studio.internal.contracts, ...newContracts]
             }
           }
-        } as any
+        }
       };
     });
   },
@@ -312,28 +314,31 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
     const project = state.studio.internal.projects[projectId];
     if (!project) return;
 
-    const impact = resolveCrisis(state, project.id, optionIndex);
+    const rng = new RandomGenerator(state.gameSeed + state.week + 88); 
+    const impact = resolveCrisis(state, project.id, optionIndex, rng);
     const newState = applyStateImpact(state, impact);
-    set({ gameState: newState as any });
+    set({ gameState: newState });
   },
 
   submitToFestival: (projectId, festivalBody) => {
     set((s) => {
       if (!s.gameState) return s;
-      const impact = festivalsEngine.submitToFestival(s.gameState, projectId, festivalBody);
+      const rng = new RandomGenerator(s.gameState.gameSeed + s.gameState.week + 99);
+      const impact = festivalsEngine.submitToFestival(s.gameState, projectId, festivalBody, rng);
       if (!impact) return s;
       const newState = applyStateImpact(s.gameState, impact);
-      return { gameState: newState as any };
+      return { gameState: newState };
     });
   },
 
   launchAwardsCampaign: (projectId, budget) => {
     set((s) => {
       if (!s.gameState) return s;
-      const impact = awardsEngine.launchAwardsCampaign(s.gameState, projectId, budget);
+      const rng = new RandomGenerator(s.gameState.gameSeed + s.gameState.week + 111);
+      const impact = awardsEngine.launchAwardsCampaign(s.gameState, projectId, budget, rng);
       if (!impact) return s;
       const newState = applyStateImpact(s.gameState, impact);
-      return { gameState: newState as any };
+      return { gameState: newState };
     });
   },
 
@@ -382,7 +387,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
               }
             }
           }
-        ]) as any
+        ])
       };
     });
   },
@@ -413,9 +418,9 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
           type: 'PROJECT_UPDATED',
           payload: {
             projectId,
-            update: { state: newState as any }
+            update: { state: newState as import('@/engine/types').Project['state'] }
           }
-        }) as any
+        })
       };
     });
   },
@@ -430,8 +435,9 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
             projectId,
             update
           }
-        }) as any
+        })
       };
     });
   }
 });
+

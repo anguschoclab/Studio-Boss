@@ -1,4 +1,4 @@
-import { Talent, GameState, Project, FirstLookDeal, Agency, StateImpact } from '@/engine/types';
+import { Talent, GameState, Project, TalentPact, Agency, StateImpact } from '@/engine/types';
 import { RandomGenerator } from '../utils/rng';
 
 export function evaluateFirstLookDeal(talent: Talent, state: GameState, rng: RandomGenerator): boolean {
@@ -55,7 +55,7 @@ export function offerFirstLookDeal(state: GameState, talentId: string, rng: Rand
   ];
 }
 
-export function advanceDeals(deals: FirstLookDeal[], rng: RandomGenerator): StateImpact[] {
+export function advanceDeals(deals: TalentPact[], rng: RandomGenerator): StateImpact[] {
   let expiredCount = 0;
   
   for (let i = 0; i < deals.length; i++) {

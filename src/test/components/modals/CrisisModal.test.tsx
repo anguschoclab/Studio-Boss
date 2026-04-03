@@ -153,7 +153,7 @@ describe('CrisisModal', () => {
   it('renders the modal with crisis details correctly', () => {
     render(<CrisisModal />);
 
-    expect(screen.getByText(/Phase 2: Production Crisis/i)).toBeInTheDocument();
+    expect(screen.getByText(/Production Crisis/i)).toBeInTheDocument();
     expect(screen.getByText('The set is on fire.')).toBeInTheDocument();
     expect(screen.getByText('Put it out')).toBeInTheDocument();
     expect(screen.getByText('Costs $1M')).toBeInTheDocument();

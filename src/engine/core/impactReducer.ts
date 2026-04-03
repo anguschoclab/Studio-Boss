@@ -80,9 +80,9 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     }
 
     case 'NEWS_ADDED': {
-      const { headline, description } = impact.payload;
+      const { id, headline, description } = impact.payload;
       const newsEvent: NewsEvent = {
-        id: `ne-${crypto.randomUUID()}`,
+        id: id,
         week: state.week,
         type: 'STUDIO_EVENT',
         headline: headline,
@@ -204,8 +204,39 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
 
     case 'SCANDAL_ADDED': {
       const { scandal } = impact.payload;
+      let newPrestige = state.studio.prestige;
+
+      // Calculate a prestige hit based on the severity
+      const prestigeHit = Math.floor(scandal.severity / 10);
+      newPrestige = Math.max(0, newPrestige - prestigeHit);
+
+      // Check if there's an attached project to boost buzz for specific genres/formats
+      const projects = { ...state.studio.internal.projects };
+      const contracts = state.studio.internal.contracts || [];
+      const projectIds = contracts.filter(c => c.talentId === scandal.talentId).map(c => c.projectId);
+
+      for (const pid of projectIds) {
+          const project = projects[pid];
+          if (project) {
+              const format = project.format;
+              const genre = project.genre ? project.genre.toLowerCase() : '';
+              if (format === 'unscripted' || genre.includes('horror')) {
+                  // Trashy reality TV or horror gets a temporary buzz boost from scandals
+                  projects[pid] = { ...project, buzz: Math.min(100, (project.buzz || 0) + Math.floor(scandal.severity / 5)) } as Project;
+              }
+          }
+      }
+
       return {
         ...state,
+        studio: {
+          ...state.studio,
+          prestige: newPrestige,
+          internal: {
+              ...state.studio.internal,
+              projects
+          }
+        },
         industry: {
           ...state.industry,
           scandals: [...(state.industry.scandals || []), scandal]
@@ -307,12 +338,18 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
       }
       if (impact.newHeadlines) {
           impact.newHeadlines.forEach(h => {
-              newState = applySingleImpact(newState, { type: 'NEWS_ADDED', payload: { headline: h.text, description: '' } });
+              newState = applySingleImpact(newState, { 
+                type: 'NEWS_ADDED', 
+                payload: { id: h.id, headline: h.text, description: '', category: h.category } 
+              });
           });
       }
       if (impact.newsEvents) {
           impact.newsEvents.forEach(e => {
-              newState = applySingleImpact(newState, { type: 'NEWS_ADDED', payload: { headline: e.headline, description: e.description } });
+              newState = applySingleImpact(newState, { 
+                type: 'NEWS_ADDED', 
+                payload: { id: e.id, headline: e.headline, description: e.description } 
+              });
           });
       }
       if (impact.newAwards) {

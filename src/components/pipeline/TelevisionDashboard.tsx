@@ -9,7 +9,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { cn } from '@/lib/utils';
 
 export const TelevisionDashboard = () => {
-  const activeProjects = useGameStore(useShallow(s => Object.values(s.gameState?.studio.internal.projects || {})));
+  const activeProjects = useGameStore(useShallow(s => Object.values(s.gameState?.studio?.internal?.projects || {})));
   
   const tvShows = React.useMemo(() => 
     activeProjects.filter((p: Project) => p.type === 'SERIES' && 'tvDetails' in p),

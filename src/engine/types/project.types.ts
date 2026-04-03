@@ -50,7 +50,7 @@ export interface BoxOfficeResult {
   multiplier: number;
 }
 
-export type ProjectStatus = 'development' | 'needs_greenlight' | 'pitching' | 'production' | 'marketing' | 'released' | 'post_release' | 'archived';
+export type ProjectStatus = 'development' | 'needs_greenlight' | 'pitching' | 'production' | 'marketing' | 'released' | 'post_release' | 'archived' | 'turnaround';
 export type ProjectFormat = 'film' | 'tv' | 'unscripted';
 export type BudgetTierKey = 'low' | 'mid' | 'high' | 'blockbuster';
 
@@ -479,6 +479,10 @@ export interface ProjectBase {
   isAcquired?: boolean;
   distributionStatus?: 'theatrical' | 'streaming' | 'syndicated';
   buyerId?: string;
+  // Phase 2: Dynamic Scheduling & Pipeline Management
+  isRecasting?: boolean;
+  turnaroundStartWeek?: number;
+  estimatedWindow?: { startWeek: number; endWeek: number };
 }
 
 export interface ScriptedProject extends ProjectBase {

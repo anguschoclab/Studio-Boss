@@ -7,10 +7,11 @@ import { generateMotto } from '../generators/names';
 import { generateFamilies, generateTalentPool } from '../generators/talent';
 import { generateBuyers } from '../generators/buyers';
 import { generateAgencies, generateAgents } from '../generators/agencies';
-import { pick, secureRandom, randRange } from '../utils';
+import { RandomGenerator } from '../utils/rng';
 import { generateOpportunity } from '../generators/opportunities';
 
-export function initializeGame(studioName: string, archetype: ArchetypeKey): GameState {
+export function initializeGame(studioName: string, archetype: ArchetypeKey, seed: number): GameState {
+  const rng = new RandomGenerator(seed);
   const arch = ARCHETYPES[archetype];
   const rivalArchetypes: ArchetypeKey[] = ['major', 'mid-tier', 'indie'];
   const usedNames = new Set<string>([studioName]);
@@ -22,32 +23,32 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
     usedNames.add(name);
     usedNames.add(ident.core);
     
-    const rArch = pick(rivalArchetypes);
+    const rArch = rng.pick(rivalArchetypes);
     const rArchData = ARCHETYPES[rArch];
 
     const motivationProfile = {
        financial: rArch === 'major' ? 80 : (rArch === 'mid-tier' ? 60 : 40),
        prestige: rArch === 'indie' ? 90 : (rArch === 'mid-tier' ? 60 : 40),
        legacy: rArch === 'major' ? 70 : 30,
-       aggression: 40 + Math.floor(secureRandom() * 40)
+       aggression: rng.rangeInt(40, 80)
     };
 
     const motivations: import('@/engine/types').StudioMotivation[] = ['CASH_CRUNCH', 'AWARD_CHASE', 'FRANCHISE_BUILDING', 'MARKET_DISRUPTION', 'STABILITY'];
 
     return {
-      id: `rival-${i}-${Date.now()}`,
+      id: rng.uuid('rival'),
       name,
-      motto: generateMotto(),
+      motto: generateMotto(rng),
       archetype: rArch,
       foundedWeek: 1,
       parentBrand: ident.core,
-      strength: 40 + Math.floor(secureRandom() * 40),
-      cash: rArchData.startingCash * randRange(0.5, 1.2),
-      prestige: rArchData.startingPrestige + Math.floor(randRange(-10, 10)),
+      strength: rng.rangeInt(40, 80),
+      cash: rArchData.startingCash * rng.range(0.5, 1.2),
+      prestige: rArchData.startingPrestige + rng.rangeInt(-10, 10),
       recentActivity: 'Setting up operations for the new season',
-      projectCount: 2 + Math.floor(secureRandom() * 5),
+      projectCount: rng.rangeInt(2, 7),
       motivationProfile,
-      currentMotivation: pick(motivations),
+      currentMotivation: rng.pick(motivations),
       projects: {},
       contracts: [],
       ownedPlatforms: []
@@ -62,24 +63,23 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
     acc[t.id] = t;
     return acc;
   }, {} as Record<string, import('@/engine/types').Talent>);
-  const initialTrends = initializeTrends();
+  const initialTrends = initializeTrends(rng);
   const genrePopularity: Record<string, number> = {};
   ALL_GENRES.forEach(g => {
     const trend = initialTrends.find(t => t.genre === g);
-    genrePopularity[g.toLowerCase()] = trend ? trend.heat / 100 : 0.2 + secureRandom() * 0.3;
+    genrePopularity[g.toLowerCase()] = trend ? trend.heat / 100 : rng.range(0.2, 0.5);
   });
 
   // Generate initial buyers
-  const initialBuyers = generateBuyers({ networks: 4, premium: 4, streamers: 5 });
+  const initialBuyers = generateBuyers(rng, { networks: 4, premium: 4, streamers: 5 });
   
   // Vertical Integration: Assign starting platforms to Majors/Mid-tiers
-  // Finding player's starting streamer if applicable
   const playerOwnedPlatforms: string[] = [];
   if (archetype !== 'indie') {
     const playerBrand = { core: studioName.split(' ')[0], isConglomerate: true };
     const playerStreamer: import('@/engine/types').StreamerPlatform = {
-      id: `player-streamer-${Date.now()}`,
-      name: BrandSystem.getStreamingName(playerBrand),
+      id: rng.uuid('player-streamer'),
+      name: BrandSystem.getStreamingName(playerBrand, rng),
       archetype: 'streamer',
       foundedWeek: 1,
       parentBrand: playerBrand.core,
@@ -98,11 +98,11 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
 
   // Assign streamers to Rivals
   rivals.forEach(rival => {
-    if (rival.archetype !== 'indie' && secureRandom() < 0.7) {
+    if (rival.archetype !== 'indie' && rng.next() < 0.7) {
       const rivalBrand = { core: rival.parentBrand!, isConglomerate: true };
       const rivalStreamer: import('@/engine/types').StreamerPlatform = {
-        id: `rival-streamer-${rival.id}`,
-        name: BrandSystem.getStreamingName(rivalBrand),
+        id: rng.uuid('rival-streamer'),
+        name: BrandSystem.getStreamingName(rivalBrand, rng),
         archetype: 'streamer',
         foundedWeek: 1,
         parentBrand: rivalBrand.core,
@@ -122,7 +122,7 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
 
   return {
     week: 1,
-    gameSeed: Math.floor(secureRandom() * 1_000_000),
+    gameSeed: seed,
     tickCount: 0,
     game: { currentWeek: 1 },
     finance: {
@@ -134,13 +134,15 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
         savingsYield: 0.025,
         debtRate: 0.095,
         loanRate: 0.07,
-        rateHistory: [{ week: 1, rate: 0.045 }]
+        rateHistory: [{ week: 1, rate: 0.045 }],
+        sentiment: 50,
+        cycle: 'STABLE'
       } as MarketState
     },
     news: {
       headlines: [
         {
-          id: 'h-init',
+          id: rng.uuid('h-init'),
           text: `${studioName} launches operations — the industry takes notice.`,
           week: 1,
           category: 'general' as const,
@@ -162,7 +164,7 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey): Gam
       ownedPlatforms: playerOwnedPlatforms
     },
     market: {
-      opportunities: Array.from({ length: 4 }, () => generateOpportunity(Object.keys(talentPool))),
+      opportunities: Array.from({ length: 4 }, () => generateOpportunity(rng, Object.keys(talentPool))),
       buyers: initialBuyers,
     },
     industry: {

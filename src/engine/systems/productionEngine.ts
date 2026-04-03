@@ -1,6 +1,9 @@
-import { GameState, Project, StateImpact, Contract, Talent } from '@/engine/types';
+import { GameState, Project, StateImpact, Contract, Talent, TalentPact, TalentRole } from '@/engine/types';
 import { RandomGenerator } from '../utils/rng';
 import { TalentMoraleSystem } from './talent/TalentMoraleSystem';
+import { processDirectorDisputes } from './directors';
+import { getProjectEstimatedWindow, isSeriesProject } from '../utils/projectUtils';
+import { SchedulingEngine } from './schedulingEngine';
 
 function getAttachedTalent(contracts: Contract[], talentPool: Record<string, Talent>): Talent[] {
   const acc: Talent[] = [];
@@ -13,21 +16,60 @@ function getAttachedTalent(contracts: Contract[], talentPool: Record<string, Tal
 
 /**
  * Pure function to advance a single project's weekly production logic.
- * Handlers are kept under 50 lines per mandate.
  */
-function tickProject(project: Project, rng: RandomGenerator): StateImpact[] {
+function tickProject(
+  project: Project, 
+  projectContracts: Contract[],
+  talentPool: Record<string, Talent>,
+  rng: RandomGenerator
+): StateImpact[] {
   if (project.state === 'archived' || project.state === 'released' || project.state === 'post_release') {
     return [];
   }
 
   const impacts: StateImpact[] = [];
+  
+  // Handle Turnaround logic
+  if (project.state === 'turnaround') {
+    const nextTurnaround = (project.turnaroundStartWeek || 0) + 1;
+    impacts.push({
+      type: 'PROJECT_UPDATED',
+      payload: {
+        projectId: project.id,
+        update: { turnaroundStartWeek: nextTurnaround }
+      }
+    });
+
+    // Option: If project stays in turnaround too long, it might get cancelled?
+    // Not implemented yet, just tracking the time.
+    return impacts;
+  }
+
   const nextWeeksInPhase = (project.weeksInPhase || 0) + 1;
   const targetWeeks = project.productionWeeks || 20;
   
-  // 1. Progress Increment (with small stochastic variance & Morale Drag)
+  // Production efficiency influenced by talent fatigue and morale
+  const attachedTalent = getAttachedTalent(projectContracts, talentPool);
+  const moraleMult = TalentMoraleSystem.getProductionSpeedMultiplier(attachedTalent);
+  
+  // Fatigue logic: increase fatigue for all attached talent
+  attachedTalent.forEach(t => {
+    const newFatigue = SchedulingEngine.updateTalentFatigue(t, true);
+    if (newFatigue !== t.fatigue) {
+      impacts.push({
+        type: 'TALENT_UPDATED',
+        payload: {
+          talentId: t.id,
+          update: { fatigue: newFatigue }
+        }
+      });
+    }
+  });
+
+  // 1. Progress Increment
   const baseProgress = (1 / targetWeeks) * 100;
   const variance = rng.range(0.8, 1.2);
-  const actualProgressIncrement = baseProgress * variance; 
+  const actualProgressIncrement = baseProgress * variance * moraleMult; 
   const newProgress = Math.min(100, (project.progress || 0) + actualProgressIncrement);
 
   // 2. Stochastic Quality Check
@@ -36,10 +78,9 @@ function tickProject(project: Project, rng: RandomGenerator): StateImpact[] {
     qualityShift = rng.range(-2, 3);
   }
 
-  // 3. Stage 2.1: Marketing & Buzz Tick
+  // 3. Marketing & Buzz Tick
   let buzzGain = 0;
   if (project.state === 'marketing' && project.marketingBudget) {
-    // Every $1M in budget generates ~1 point of buzz per week
     buzzGain = (project.marketingBudget / 1_000_000) * rng.range(0.5, 1.5);
   }
 
@@ -60,39 +101,51 @@ function tickProject(project: Project, rng: RandomGenerator): StateImpact[] {
 }
 
 /**
- * Unified Production Engine (Target A2).
- * Iterates over all projects (Player & Rivals) with identical math.
+ * Unified Production Engine.
  */
 export function tickProduction(state: GameState, rng: RandomGenerator): StateImpact[] {
   const allImpacts: StateImpact[] = [];
+  const contractMap = new Map<string, Contract[]>();
+  
+  for (const contract of state.studio.internal.contracts) {
+    const list = contractMap.get(contract.projectId) || [];
+    list.push(contract);
+    contractMap.set(contract.projectId, list);
+  }
 
   // 1. Player Projects
   for (const key in state.studio.internal.projects) {
     const project = state.studio.internal.projects[key];
-    const projectContracts = state.studio.internal.contracts.filter(c => c.projectId === project.id);
-    const attachedTalent = getAttachedTalent(projectContracts, state.industry.talentPool);
-    const moraleMult = TalentMoraleSystem.getProductionSpeedMultiplier(attachedTalent);
+    const projectContracts = contractMap.get(project.id) || [];
     
-    const projectImpacts = tickProject(project, rng);
-    // Apply morale multiplier to the progress increment in the impact
-    projectImpacts.forEach(impact => {
-       if (impact.type === 'PROJECT_UPDATED' && impact.payload.update.progress !== undefined) {
-         const oldProgress = project.progress || 0;
-         const increment = impact.payload.update.progress - oldProgress;
-         impact.payload.update.progress = oldProgress + (increment * moraleMult);
-       }
-    });
+    allImpacts.push(...tickProject(project, projectContracts, state.industry.talentPool, rng));
 
-    allImpacts.push(...projectImpacts);
+    const disputeImpact = processDirectorDisputes(project, projectContracts, new Map(Object.entries(state.industry.talentPool)), rng);
+    if (disputeImpact) allImpacts.push(disputeImpact);
   }
+
+  // Handle Resting Talent Fatigue (Those not assigned to any active production)
+  const activeTalentIds = new Set(state.studio.internal.contracts.map(c => c.talentId));
+  Object.values(state.industry.talentPool).forEach(talent => {
+    if (!activeTalentIds.has(talent.id)) {
+      const newFatigue = SchedulingEngine.updateTalentFatigue(talent, false);
+      if (newFatigue !== talent.fatigue) {
+        allImpacts.push({
+          type: 'TALENT_UPDATED',
+          payload: { talentId: talent.id, update: { fatigue: newFatigue } }
+        });
+      }
+    }
+  });
 
   // 2. Rival Projects
   for (const rival of state.industry.rivals) {
     if (!rival.projects) continue;
-    // ⚡ Bolt: Iterate over project records using for...in to avoid O(N) array allocation per tick
     for (const key in rival.projects) {
       const project = rival.projects[key];
-      allImpacts.push(...tickProject(project, rng));
+      // Note: Rivals might need their own contract mapping if we track them deeply.
+      // For now, simple tick.
+      allImpacts.push(...tickProject(project, [], state.industry.talentPool, rng));
     }
   }
 

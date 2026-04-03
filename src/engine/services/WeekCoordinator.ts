@@ -31,11 +31,10 @@ import { runAwardsCeremony, processRazzies } from '../systems/awards';
 import { TalentSystem } from '../systems/TalentSystem';
 import { resolveFestivals } from '../systems/festivals';
 import { advanceRumors } from '../systems/rumors';
-import { advanceDeals } from '../systems/deals';
+import { SchedulingEngine } from '../systems/schedulingEngine';
 
 /**
  * Studio Boss - Simulation Tick Context
- * Travels through the pipeline to ensure 100% determinism.
  */
 export interface TickContext {
   week: number;
@@ -48,24 +47,19 @@ export interface TickContext {
 
 /**
  * The "Pipe and Filter" Orchestrator.
- * Deconstructs the monolithic simulation into discrete, testable stages.
  */
 export class WeekCoordinator {
-  /**
-   * Main entry point for the weekly simulation tick.
-   */
-  static execute(state: GameState): { newState: GameState; summary: WeekSummary; impacts: StateImpact[] } {
-    // 1. Preparation Phase (The Valve)
+  static execute(state: GameState, rng: RandomGenerator): { newState: GameState; summary: WeekSummary; impacts: StateImpact[] } {
     const context: TickContext = {
       week: state.week + 1,
       tickCount: (state.tickCount || 0) + 1,
-      rng: new RandomGenerator((state.gameSeed || 12345) + (state.tickCount || 0)),
-      timestamp: Date.now(),
+      rng,
+      timestamp: (state.tickCount || 0) * 1000,
       impacts: [],
       events: []
     };
 
-    // 2. The Filter Pipeline
+    // 1. Run Filters
     this.runMarketFilter(state, context);
     this.runProductionFilter(state, context);
     this.runAIFilter(state, context);
@@ -75,7 +69,7 @@ export class WeekCoordinator {
     this.runScandalFilter(state, context);
     this.runFinanceFilter(state, context);
 
-    // 3. Consolidation Phase (The Merge)
+    // 2. Consolidation & State Application
     const nextState = applyImpacts(state, context.impacts);
 
     const updatedMarketState = {
@@ -97,7 +91,6 @@ export class WeekCoordinator {
 
     const summary = this.buildSummary(state, finalizedState, context);
 
-    // Ensure SUMMARY is last in priority (Priority 0)
     context.impacts.push({
       type: 'MODAL_TRIGGERED',
       payload: {
@@ -121,62 +114,41 @@ export class WeekCoordinator {
     context.impacts.push(...advanceTrends(state.market.trends || [], context.rng));
     context.impacts.push(...advanceMarketEvents(state, context.rng));
     context.impacts.push(advanceBuyers(state, context.rng));
-    
-    // New Industry Filters
     context.impacts.push(...tickVerticalIntegration(state, context.rng));
     context.impacts.push(...tickIndustryUpstarts(state, context.rng));
     context.impacts.push(...tickConsolidation(state, context.rng));
   }
 
   private static runProductionFilter(state: GameState, context: TickContext) {
-    // 1. Core Production Tick
     context.impacts.push(...tickProduction(state, context.rng));
-    
-    // 2. Script Evolution Tick
-    Object.values(state.studio.internal.projects).forEach(project => {
+    for (const key in state.studio.internal.projects) {
+      const project = state.studio.internal.projects[key];
       if (project.state === 'development') {
         const result = tickScriptDevelopment(project, context.rng);
         if (result.project !== project) {
           context.impacts.push({
             type: 'PROJECT_UPDATED',
-            payload: {
-              projectId: project.id,
-              update: result.project
-            }
+            payload: { projectId: project.id, update: result.project }
           });
           if (result.impact) context.impacts.push(result.impact);
         }
       }
-    });
-
-    // 3. Crisis Filter (New Integration)
+    }
     this.runCrisisFilter(state, context);
-
     context.impacts.push(...tickTelevision(state, context.rng));
     context.impacts.push(...calculateFranchiseEvolutionImpacts(state, context.rng));
     context.impacts.push(...tickIPVault(state));
   }
 
   private static runCrisisFilter(state: GameState, context: TickContext) {
-    // Roll for crises for studio projects in active production stages
-    Object.values(state.studio.internal.projects).forEach(project => {
-      const activeStages = ['prep', 'production', 'post_production', 'marketing'];
+    const activeStages = ['prep', 'production', 'post_production', 'marketing'];
+    for (const key in state.studio.internal.projects) {
+      const project = state.studio.internal.projects[key];
       if (!project.activeCrisis && activeStages.includes(project.state)) {
         const impact = checkAndTriggerCrisis(project, context.rng);
         if (impact) context.impacts.push(impact);
       }
-    });
-
-    // Roll for rival projects
-    state.industry.rivals.forEach(rival => {
-      Object.values(rival.projects || {}).forEach(project => {
-        const activeStages = ['prep', 'production', 'post_production', 'marketing'];
-        if (!project.activeCrisis && activeStages.includes(project.state)) {
-           const impact = checkAndTriggerCrisis(project, context.rng);
-           if (impact) context.impacts.push(impact);
-        }
-      });
-    });
+    }
   }
 
   private static runAIFilter(state: GameState, context: TickContext) {
@@ -187,18 +159,15 @@ export class WeekCoordinator {
 
   private static runIndustryFilter(state: GameState, context: TickContext) {
     const { year } = InterestRateSimulator.getWeekDisplay(context.week);
-    
-    // 1. Awards Ceremony
     const awardsImpact = runAwardsCeremony(state, context.week, year, context.rng);
     context.impacts.push(awardsImpact);
     
-    // Trigger Awards Modal ONLY if there are new awards or nominations
     if (awardsImpact.newAwards && awardsImpact.newAwards.length > 0) {
       context.impacts.push({
         type: 'MODAL_TRIGGERED',
         payload: {
           modalType: 'AWARDS',
-          priority: 50, // Higher priority than summary
+          priority: 50,
           payload: { 
             week: context.week,
             year,
@@ -209,14 +178,12 @@ export class WeekCoordinator {
       });
     }
     
-    // 2. Razzies (Week 4)
     const weekDisplay = context.week % 52 === 0 ? 52 : context.week % 52;
     if (weekDisplay === 4) {
       const razzieImpact = processRazzies(state, context.week, context.rng);
       context.impacts.push(razzieImpact);
     }
 
-    // 3. Film Festivals
     context.impacts.push(resolveFestivals(state, context.rng));
   }
 
@@ -226,7 +193,15 @@ export class WeekCoordinator {
 
   private static runMediaFilter(state: GameState, context: TickContext) {
     context.impacts.push(advanceRumors(state, context.rng));
-    context.impacts.push(...advanceDeals(state.studio.internal.firstLookDeals || [], context.rng));
+    
+    // Process First-Look Deal decay
+    const updatedPacts = SchedulingEngine.processPacts(state.studio.internal.firstLookDeals || []);
+    if (JSON.stringify(updatedPacts) !== JSON.stringify(state.studio.internal.firstLookDeals)) {
+       context.impacts.push({
+         type: 'INDUSTRY_UPDATE',
+         payload: { update: { 'studio.internal.firstLookDeals': updatedPacts } }
+       });
+    }
   }
 
   private static runScandalFilter(state: GameState, context: TickContext) {
@@ -242,8 +217,24 @@ export class WeekCoordinator {
     const allHeadlines: import('../types/engine.types').Headline[] = [];
     const newsEvents: import('../types/engine.types').NewsEvent[] = [];
     
-    context.impacts.forEach(impact => {
-      // 1. Action-style NEWS_ADDED
+    let ledgerImpact: StateImpact | undefined;
+    const projectUpdates: string[] = [];
+
+    for (let i = 0; i < context.impacts.length; i++) {
+      const impact = context.impacts[i];
+
+      if (impact.type === 'LEDGER_UPDATED') ledgerImpact = impact;
+      
+      if (impact.type === 'PROJECT_UPDATED') {
+        const payload = impact.payload as import('../types/state.types').ProjectUpdate;
+        projectUpdates.push(payload.projectId);
+      }
+      if (impact.projectUpdates) {
+        for (let j = 0; j < impact.projectUpdates.length; j++) {
+          projectUpdates.push(impact.projectUpdates[j].projectId);
+        }
+      }
+
       if (impact.type === 'NEWS_ADDED') {
         const payload = impact.payload as import('../types/state.types').NewsImpact['payload'];
         allHeadlines.push({
@@ -254,46 +245,28 @@ export class WeekCoordinator {
         });
       }
       
-      // 2. Bag-style arrays
-      if (impact.newHeadlines) {
-        allHeadlines.push(...impact.newHeadlines);
-      }
-      if (impact.newsEvents) {
-        newsEvents.push(...impact.newsEvents);
-      }
-    });
+      if (impact.newHeadlines) allHeadlines.push(...impact.newHeadlines);
+      if (impact.newsEvents) newsEvents.push(...impact.newsEvents);
+    }
 
-    newsEvents.forEach(e => {
+    for (let i = 0; i < newsEvents.length; i++) {
+       const e = newsEvents[i];
        allHeadlines.push({
          id: e.id,
          text: `${e.headline}: ${e.description}`,
          week: e.week || context.week,
          category: (e.type?.toLowerCase() === 'crisis' ? 'talent' : 'general') as import('../types/engine.types').HeadlineCategory
        });
-    });
+    }
 
-
-    const ledgerImpact = context.impacts.find(i => i.type === 'LEDGER_UPDATED');
-    
     let totalRevenue = 0;
     let totalCosts = 0;
 
     if (ledgerImpact && ledgerImpact.type === 'LEDGER_UPDATED') {
-       const payload = ledgerImpact.payload as import('../types/state.types').LedgerImpact['payload'];
-       const report = payload.report;
+       const report = (ledgerImpact.payload as any).report;
        totalRevenue = report.revenue.boxOffice + report.revenue.distribution + report.revenue.other;
-       totalCosts = report.expenses.production + report.expenses.marketing + report.expenses.overhead;
+       totalCosts = report.expenses.production + report.expenses.marketing + report.expenses.overhead + report.expenses.pacts;
     }
-
-    const projectUpdates = context.impacts
-      .filter((i): i is import('../types/state.types').ProjectUpdateImpact => i.type === 'PROJECT_UPDATED')
-      .map(i => i.payload.projectId);
-
-    context.impacts.forEach(i => {
-      if (i.projectUpdates) {
-        i.projectUpdates.forEach(pu => projectUpdates.push(pu.projectId));
-      }
-    });
 
     return {
       fromWeek: before.week,

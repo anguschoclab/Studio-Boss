@@ -1,10 +1,10 @@
 import { GameState, Talent, Project, Contract, Award, Opportunity } from '@/engine/types';
-type TalentProfile = Talent;
-import { StateImpact } from '../types/state.types';
+import { StateImpact, TalentUpdate } from '../types/state.types';
 import { generateOpportunity } from '../generators/opportunities';
 import { clamp } from '../utils';
 import { RandomGenerator } from '../utils/rng';
 import { applyAwardBoostsToTalent } from './talentStats';
+import { SchedulingEngine } from './schedulingEngine';
 
 /**
  * TalentSystem encapsulates all logic related to talent lifecycle, 
@@ -16,11 +16,33 @@ export class TalentSystem {
    */
   static advance(state: GameState, rng: RandomGenerator): StateImpact {
     const uiNotifications: string[] = [];
+    const talentUpdates: TalentUpdate[] = [];
     
+    // 1. Fatigue & Commitment Decay (Deterministic via SchedulingEngine)
+    for (const id in state.industry.talentPool) {
+      const talent = state.industry.talentPool[id];
+      
+      // Recovery phase (default)
+      const updatedTalent = SchedulingEngine.updateTalentFatigue(talent, false);
+      
+      // Cleanup expired commitments
+      const nextCommitments = (updatedTalent.commitments || []).filter(c => c.endWeek >= state.week);
+      
+      if (updatedTalent.fatigue !== talent.fatigue || nextCommitments.length !== (talent.commitments || []).length) {
+        talentUpdates.push({
+          talentId: id,
+          update: {
+            fatigue: updatedTalent.fatigue,
+            commitments: nextCommitments
+          }
+        });
+      }
+    }
+
     const currentOpportunities = state.market.opportunities || [];
     const updatedOpportunities: Opportunity[] = [];
 
-    // 1. Opportunity Lifecycle (Expiry)
+    // 2. Opportunity Lifecycle (Expiry)
     for (const opp of currentOpportunities) {
       if (opp.weeksUntilExpiry > 1) {
         updatedOpportunities.push({
@@ -32,7 +54,7 @@ export class TalentSystem {
 
     const oppTitles = new Set(updatedOpportunities.map(o => o.title));
 
-    // 2. Market Generation Logic
+    // 3. Market Generation Logic
     const tryAddOpp = (opp: Opportunity, message?: string) => {
       if (!oppTitles.has(opp.title)) {
         updatedOpportunities.push(opp);
@@ -46,17 +68,16 @@ export class TalentSystem {
     // Talent-specific opportunity (using existing studio talent)
     if ((rng && rng.next ? rng.next() : Math.random()) < 0.25) {
       const activeTalentIds = new Set<string>();
-      for (let i = 0; i < state.studio.internal.contracts.length; i++) {
+      for (let i = 0; i < (state.studio.internal.contracts || []).length; i++) {
         activeTalentIds.add(state.studio.internal.contracts[i].talentId);
       }
       const availableTalentIds: string[] = [];
-      for (const talent of Object.values(state.industry.talentPool)) {
-        const id = talent.id;
+      for (const id in state.industry.talentPool) {
         if (!activeTalentIds.has(id)) availableTalentIds.push(id);
       }
 
       if (availableTalentIds.length > 0) {
-        const newOpp = generateOpportunity(availableTalentIds, rng);
+        const newOpp = generateOpportunity(rng, availableTalentIds);
         tryAddOpp(newOpp, `A new package "${newOpp.title}" hit the market.`);
       }
     }
@@ -76,7 +97,9 @@ export class TalentSystem {
     }
 
     return {
+      type: 'SYSTEM_TICK',
       newOpportunities: updatedOpportunities,
+      talentUpdates,
       uiNotifications
     };
   }
@@ -88,9 +111,9 @@ export class TalentSystem {
   static applyProjectResults(
     project: Project,
     contracts: Contract[],
-    talentPool: TalentProfile[],
+    talentPool: Talent[],
     projectAwards: Award[] = []
-  ): TalentProfile[] {
+  ): Talent[] {
     if (contracts.length === 0) return [];
 
     const talentPoolMap = new Map(talentPool.map(t => [t.id, t]));
@@ -108,7 +131,7 @@ export class TalentSystem {
     else if (ROI < 0.4) { drawChange = -12; prestigeChange = -6; feeMultiplier = 0.75; }
     else if (ROI < 0.8) { drawChange = -6; prestigeChange = -3; feeMultiplier = 0.85; }
 
-    const updatedTalent: TalentProfile[] = [];
+    const updatedTalent: Talent[] = [];
 
     for (const contract of contracts) {
       const talent = talentPoolMap.get(contract.talentId);

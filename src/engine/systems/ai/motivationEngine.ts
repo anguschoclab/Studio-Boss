@@ -6,9 +6,10 @@ import { RandomGenerator } from '../../utils/rng';
  * Each function returns a weight (0-100) based on the current context.
  */
 const MotivationScores: Record<StudioMotivation, (rival: RivalStudio, state: GameState) => number> = {
+  // 🎭 Method Actor Tuning: Adjusted motivation scores to create more emergent and realistic studio behavior.
   CASH_CRUNCH: (rival) => (rival.cash < 500000 ? 100 : 0),
-  AWARD_CHASE: (rival) => (rival.prestige > 70 ? 80 : 20),
-  FRANCHISE_BUILDING: (rival) => (Object.keys(rival.projects).length > 3 ? 90 : 30),
+  AWARD_CHASE: (rival) => (rival.prestige < 50 && rival.cash > 2000000 ? 90 : (rival.prestige > 70 ? 80 : 20)),
+  FRANCHISE_BUILDING: (rival) => (rival.cash > 3000000 && Object.keys(rival.projects).length < 2 ? 95 : (Object.keys(rival.projects).length > 3 ? 90 : 30)),
   MARKET_DISRUPTION: (rival) => (rival.motivationProfile.aggression > 70 ? 70 : 10),
   STABILITY: (rival) => (rival.cash > 2000000 ? 50 : 0),
 };

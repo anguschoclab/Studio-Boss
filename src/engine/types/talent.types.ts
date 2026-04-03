@@ -32,6 +32,25 @@ export type AgencyTier = 'powerhouse' | 'major' | 'mid-tier' | 'boutique' | 'spe
 export type AgencyCulture = 'shark' | 'family' | 'volume' | 'prestige';
 export type AgentSpecialty = 'film_packaging' | 'tv_packaging' | 'literary' | 'talent' | 'comedy' | 'unscripted';
 
+export interface TalentCommitment {
+  projectId: string;
+  projectTitle: string;
+  startWeek: number;
+  endWeek: number;
+  role: TalentRole;
+}
+
+export interface TalentPact {
+  id: string;
+  talentId: string;
+  studioId: string;
+  type: 'first_look' | 'vanity_shingle';
+  weeksRemaining: number;
+  expiryWeek: number;
+  weeklyOverheadCost: number;
+  exclusivity: boolean;
+}
+
 export interface Agency {
   id: string;
   name: string;
@@ -145,6 +164,11 @@ export interface Talent {
   motivationProfile?: MotivationProfile;
   currentMotivation?: TalentMotivation;
   motivationImpulse?: 'CASH_OUT' | 'AWARDS_RUN' | 'REHAB' | 'VANITY' | 'NONE';
+
+  // Phase 2 Expansion: Commitments & Fatigue
+  commitments: TalentCommitment[];
+  fatigue: number; // 0-100: Influences performance and conflict chance
+  preferredGenres: string[];
 }
 
 export interface Contract {
@@ -157,11 +181,6 @@ export interface Contract {
   creativeControl?: boolean;
   sequelOption?: boolean;
   backendEscalator?: number; // % bump if revenue exceeds threshold
-}
-
-export interface FirstLookDeal {
-  id: string;
-  talentId: string;
-  weeksRemaining: number;
-  exclusivity: boolean;
+  // Phase 2: Dynamic Scheduling
+  role: TalentRole;
 }

@@ -1,5 +1,5 @@
 import { Project, TvFormatKey, BudgetTierKey, UnscriptedFormatKey } from '../../types';
-import { secureRandom } from '../../utils';
+import { RandomGenerator } from '../../utils/rng';
 
 /**
  * Spinoff Factory.
@@ -128,18 +128,19 @@ export const SPINOFF_TEMPLATES: Record<'FATIGUED' | 'HEALTHY' | 'LEGACY', Spinof
 };
 
 /**
- * Generates a new project proposal based on an existing IP asset.
+ * Generates a new project proposal based on an existing IP asset (Hardened).
  */
 export function generateSpinoffProposal(
+  rng: RandomGenerator,
   sourceProject: Project, 
   status: 'FATIGUED' | 'HEALTHY' | 'LEGACY',
   relatedCount: number = 0
 ): Partial<Project> {
   const pool = SPINOFF_TEMPLATES[status];
-  const template = pool[Math.floor(secureRandom() * pool.length)];
+  const template = rng.pick(pool);
   
   // Standard Sequel Check: If healthy and not reached many entries
-  if (status === 'HEALTHY' && secureRandom() > 0.5) {
+  if (status === 'HEALTHY' && rng.next() > 0.5) {
      const sequelNum = relatedCount + 2;
 
      if (sequelNum >= 3) {
