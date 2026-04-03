@@ -2,9 +2,9 @@
 
 export type ModalType = 'CRISIS' | 'AWARDS' | 'SUMMARY';
 
-export type HeadlineCategory = 'rival' | 'market' | 'talent' | 'awards' | 'general' | 'rumor';
+export type HeadlineCategory = 'rival' | 'market' | 'talent' | 'awards' | 'general' | 'rumor' | 'box_office' | 'streaming' | 'scandal' | 'dispute';
 
-export type NewsEventType = 'CRISIS' | 'AWARD' | 'RELEASE' | 'STUDIO_EVENT' | 'RIVAL';
+export type NewsEventType = 'CRISIS' | 'AWARD' | 'RELEASE' | 'STUDIO_EVENT' | 'RIVAL' | 'MILESTONE' | 'SCANDAL' | 'LEGAL';
 
 export type PublicationType = 'Variety' | 'Deadline' | 'TMZ' | 'The Hollywood Reporter' | 'Financial Journal' | 'IndieWire';
 

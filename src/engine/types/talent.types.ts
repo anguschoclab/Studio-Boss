@@ -122,6 +122,12 @@ export interface Talent {
   familyId?: string;
   accessLevel: AccessLevel;
   momentum: number; // 0-100
+  skills: {
+    acting: number;
+    directing: number;
+    writing: number;
+    stardom: number;
+  };
   perks?: string[];
   bio?: string;
   demographics: TalentDemographics;

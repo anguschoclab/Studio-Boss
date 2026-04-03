@@ -9,12 +9,21 @@ import { Handshake, Tv, Globe, Zap, BarChart3, Info, Target, Briefcase } from 'l
 import { Buyer, Project, MandateType } from '@/engine/types';
 import { calculateFitScore } from '@/engine/systems/buyers';
 import { cn } from '@/lib/utils';
+import { useUIStore } from '@/store/uiStore';
+import { RandomGenerator } from '@/engine/utils/rng';
 
 export const DealsDesk = () => {
+  const { openPitchProject } = useUIStore();
+  const [selectedProjectId, setSelectedProjectId] = React.useState<string | null>(null);
   const gameState = useGameStore(s => s.gameState);
   const buyers = selectBuyers(gameState);
   const projects = selectProjects(gameState);
   const pitchingProjects = projects.filter(p => p.state === 'pitching' || p.state === 'development');
+
+  const handleNegotiate = (buyerId: string) => {
+    if (!selectedProjectId) return;
+    openPitchProject(selectedProjectId);
+  };
 
   return (
     <div className="h-full flex flex-col space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700 overflow-hidden">
@@ -54,7 +63,15 @@ export const DealsDesk = () => {
           <ScrollArea className="flex-1 pr-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-8">
               {buyers.map(buyer => (
-                <BuyerCard key={buyer.id} buyer={buyer} projects={pitchingProjects} week={gameState?.week || 0} allProjects={projects} />
+                <BuyerCard 
+                  key={buyer.id} 
+                  buyer={buyer} 
+                  projects={pitchingProjects} 
+                  week={gameState?.week || 0} 
+                  allProjects={projects} 
+                  onNegotiate={() => handleNegotiate(buyer.id)}
+                  canNegotiate={!!selectedProjectId}
+                />
               ))}
             </div>
           </ScrollArea>
@@ -81,8 +98,21 @@ export const DealsDesk = () => {
                   </div>
                 ) : (
                   pitchingProjects.map(p => (
-                    <div key={p.id} className="p-4 rounded-lg bg-white/5 border border-white/5 hover:border-primary/40 transition-all group cursor-pointer" role="button" tabIndex={0} onClick={() => {}} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); } }}>
-                      <div className="text-[11px] font-black uppercase tracking-tight group-hover:text-primary transition-colors truncate">{p.title}</div>
+                    <div 
+                      key={p.id} 
+                      className={cn(
+                        "p-4 rounded-lg bg-white/5 border border-white/5 hover:border-primary/40 transition-all group cursor-pointer",
+                        selectedProjectId === p.id && "border-primary bg-primary/5 shadow-[0_0_15px_rgba(var(--primary),0.1)]"
+                      )}
+                      role="button" 
+                      tabIndex={0} 
+                      onClick={() => setSelectedProjectId(p.id)} 
+                      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedProjectId(p.id); } }}
+                    >
+                      <div className={cn(
+                        "text-[11px] font-black uppercase tracking-tight transition-colors truncate",
+                        selectedProjectId === p.id ? "text-primary" : "group-hover:text-primary"
+                      )}>{p.title}</div>
                       <div className="flex justify-between items-center mt-2">
                         <span className="text-[9px] uppercase text-muted-foreground/60 font-black tracking-widest">{p.genre}</span>
                         <Badge className="text-[9px] px-1.5 h-4 bg-primary/10 text-primary border-primary/20 font-black uppercase">{p.budgetTier}</Badge>
@@ -111,7 +141,21 @@ const getMandateStyle = (type?: MandateType) => {
   }
 };
 
-const BuyerCard = ({ buyer, projects, week, allProjects }: { buyer: Buyer, projects: Project[], week: number, allProjects: Project[] }) => {
+const BuyerCard = ({ 
+  buyer, 
+  projects, 
+  week, 
+  allProjects,
+  onNegotiate,
+  canNegotiate
+}: { 
+  buyer: Buyer, 
+  projects: Project[], 
+  week: number, 
+  allProjects: Project[],
+  onNegotiate: () => void,
+  canNegotiate: boolean
+}) => {
   return (
     <Card className="glass-card border border-white/5 hover:border-white/10 hover-glow group transition-all duration-500 hover:-translate-y-1 hover:shadow-xl bg-gradient-to-br from-white/[0.03] to-transparent overflow-hidden">
       <CardContent className="p-5 space-y-5 relative z-10">
@@ -148,7 +192,8 @@ const BuyerCard = ({ buyer, projects, week, allProjects }: { buyer: Buyer, proje
             </div>
             <div className="space-y-3">
               {projects.slice(0, 2).map(p => {
-                const fit = calculateFitScore(p, buyer, week, allProjects);
+                const rng = new RandomGenerator(p.id.length + week);
+                const fit = calculateFitScore(p, buyer, week, allProjects, rng);
                 return (
                   <div key={p.id} className="space-y-1.5">
                     <div className="flex justify-between text-[10px] font-black uppercase tracking-tight">
@@ -175,8 +220,17 @@ const BuyerCard = ({ buyer, projects, week, allProjects }: { buyer: Buyer, proje
         )}
         
         <div className="pt-2">
-           <Button variant="outline" size="sm" className="w-full text-[9px] font-black uppercase tracking-[0.2em] h-9 border-white/10 hover:bg-blue-500 hover:text-white hover:border-blue-400 transition-all group/btn shadow-xl">
-             Negotiate Terms
+           <Button 
+             variant="outline" 
+             size="sm" 
+             onClick={onNegotiate}
+             disabled={!canNegotiate}
+             className={cn(
+               "w-full text-[9px] font-black uppercase tracking-[0.2em] h-9 border-white/10 transition-all group/btn shadow-xl",
+               canNegotiate ? "hover:bg-blue-500 hover:text-white hover:border-blue-400" : "opacity-50 grayscale pointer-events-none"
+             )}
+           >
+             {canNegotiate ? 'Negotiate Terms' : 'Select Project to Pitch'}
            </Button>
         </div>
       </CardContent>

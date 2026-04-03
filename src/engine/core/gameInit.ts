@@ -60,8 +60,8 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
   const agents = generateAgents(rng, agencies, 4);
   const families = generateFamilies(rng, 5);
   
-  // SEED: 1,000+ Talents for a robust living world
-  const talentPoolArray = generateTalentPool(rng, 1000);
+  // SEED: 2,500+ Talents for a robust living world
+  const talentPoolArray = generateTalentPool(rng, 2500);
   const talentPool = talentPoolArray.reduce((acc, t) => {
     acc[t.id] = t;
     return acc;

@@ -256,6 +256,13 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
       };
     }
 
+    case 'SYSTEM_TICK': {
+      // Integration of new projects and IP assets usually happens here if triggered by a system tick
+      // but for manual actions like acquisition, we handle it in the default or RIVAL_UPDATED.
+      // However, BaseImpact has them as top-level fields, so we should handle them in the main reducer loop.
+      return state;
+    }
+
     case 'FRANCHISE_UPDATED': {
       const { franchiseId, update } = impact.payload;
       const franchises = { ...state.ip.franchises };
@@ -385,6 +392,18 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
               }
               newState = { ...newState, industry: { ...newState.industry, talentPool } };
           });
+      }
+      if (impact.newProjects) {
+          const projects = { ...newState.studio.internal.projects };
+          impact.newProjects.forEach(p => {
+              projects[p.id] = p;
+          });
+          newState = { ...newState, studio: { ...newState.studio, internal: { ...newState.studio.internal, projects } } };
+      }
+      if (impact.newIPAssets) {
+          const newAssetIds = new Set(impact.newIPAssets.map(a => a.id));
+          const vault = [...newState.ip.vault.filter(a => !newAssetIds.has(a.id)), ...impact.newIPAssets];
+          newState = { ...newState, ip: { ...newState.ip, vault } };
       }
       return newState;
     }

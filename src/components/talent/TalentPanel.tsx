@@ -4,35 +4,80 @@ import { Talent, TalentRole } from '@/engine/types';
 import { TalentModal } from './TalentProfileModal';
 import { TalentCard } from './TalentCard';
 import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Search, Filter } from 'lucide-react';
 
 export const TalentPanel = () => {
   const state = useGameStore(s => s.gameState);
   const talentPool = useMemo(() => Object.values(state?.industry.talentPool || {}), [state?.industry.talentPool]);
-  const [filter, setFilter] = useState<TalentRole | 'all'>('all');
+  const [roleFilter, setRoleFilter] = useState<TalentRole | 'all'>('all');
+  const [tierFilter, setTierFilter] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const filteredTalent = useMemo(() => {
-    return talentPool.filter(t => filter === 'all' || t.roles.includes(filter as TalentRole));
-  }, [talentPool, filter]);
+    return talentPool.filter(t => {
+      const matchesSearch = t.name.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesRole = roleFilter === 'all' || t.roles.includes(roleFilter as TalentRole);
+      
+      let matchesTier = true;
+      if (tierFilter !== 'all') {
+        const prestige = t.prestige;
+        if (tierFilter === 'a-list') matchesTier = prestige >= 80;
+        else if (tierFilter === 'b-list') matchesTier = prestige >= 60 && prestige < 80;
+        else if (tierFilter === 'rising') matchesTier = prestige >= 40 && prestige < 60;
+        else if (tierFilter === 'undiscovered') matchesTier = prestige < 40;
+      }
+      
+      return matchesSearch && matchesRole && matchesTier;
+    }).sort((a, b) => (b.starMeter || 0) - (a.starMeter || 0));
+  }, [talentPool, searchQuery, roleFilter, tierFilter]);
 
   return (
     <div className="space-y-4 h-full flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-500 pb-12">
-      <div className="flex items-center justify-between pb-2 border-b border-border/40">
+      <div className="flex flex-col md:flex-row md:items-center justify-between pb-4 border-b border-border/40 gap-4">
         <h2 className="text-2xl font-display font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70 drop-shadow-sm">Talent Roster</h2>
-        <div className="flex gap-2 flex-wrap justify-end">
-          {(['all', 'actor', 'director', 'writer', 'producer'] as (TalentRole | 'all')[]).map(type => (
-            <TooltipWrapper key={type} tooltip={`Filter by ${type === 'all' ? 'all professional roles' : `the ${type} category`}`} side="bottom">
-              <button aria-pressed={filter === type}
-                onClick={() => setFilter(type)}
-                className={`px-3.5 py-1.5 text-[10px] uppercase tracking-wider font-black rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background ${
-                  filter === type
-                    ? 'bg-primary text-primary-foreground shadow-[0_0_15px_rgba(234,179,8,0.4)] scale-105 border border-primary/50'
-                    : 'bg-muted/50 text-muted-foreground hover:bg-secondary/20 hover:text-foreground hover:-translate-y-0.5 border border-transparent hover:border-secondary/30'
-                }`}
-              >
-                {type}
-              </button>
-            </TooltipWrapper>
-          ))}
+        
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="relative w-64">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
+            <Input 
+              placeholder="Search talent..." 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-9 h-9 text-xs bg-muted/20 border-border/40 focus:ring-primary/20"
+            />
+          </div>
+
+          <Select value={tierFilter} onValueChange={setTierFilter}>
+            <SelectTrigger className="w-40 h-9 text-[10px] font-black uppercase tracking-widest bg-muted/20 border-border/40">
+              <SelectValue placeholder="All Tiers" />
+            </SelectTrigger>
+            <SelectContent className="bg-slate-950 border-slate-800">
+              <SelectItem value="all">All Tiers</SelectItem>
+              <SelectItem value="a-list">A-List (80+)</SelectItem>
+              <SelectItem value="b-list">B-List (60-79)</SelectItem>
+              <SelectItem value="rising">Rising Star (40-59)</SelectItem>
+              <SelectItem value="undiscovered">Undiscovered (&lt;40)</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <div className="flex gap-1.5 h-9 items-center px-2 bg-muted/10 rounded-lg border border-border/20">
+            {(['all', 'actor', 'director', 'writer', 'producer'] as (TalentRole | 'all')[]).map(type => (
+              <TooltipWrapper key={type} tooltip={`Filter by ${type}`} side="bottom">
+                <button 
+                  onClick={() => setRoleFilter(type)}
+                  className={`px-3 py-1 text-[9px] uppercase tracking-wider font-black rounded-md transition-all ${
+                    roleFilter === type
+                      ? 'bg-primary text-primary-foreground'
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  {type}
+                </button>
+              </TooltipWrapper>
+            ))}
+          </div>
         </div>
       </div>
 

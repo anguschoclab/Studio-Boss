@@ -48,6 +48,7 @@ export function generateTalent(rng: RandomGenerator, params: { role: TalentRole;
     tier: params.tier,
     demographics,
     psychology,
+    accessLevel: isGlobalSuperstar ? 'legacy' : 'outsider' as any,
     skills: {
       acting: params.role === 'actor' ? rng.rangeInt(40, 95) : rng.rangeInt(10, 40),
       directing: params.role === 'director' ? rng.rangeInt(40, 95) : rng.rangeInt(10, 40),
@@ -96,15 +97,20 @@ export function generateTalentPool(
     const tiers: TalentTier[] = ['S_LIST', 'A_LIST', 'B_LIST', 'C_LIST', 'RISING_STAR', 'NEWCOMER'];
     
     return Array.from({ length: count }).map(() => {
-        const role = rng.pick(roles);
+        const roleRoll = rng.next();
+        let role: TalentRole = 'actor';
+        if (roleRoll > 0.50 && roleRoll <= 0.70) role = 'director';
+        else if (roleRoll > 0.70 && roleRoll <= 0.90) role = 'writer';
+        else if (roleRoll > 0.90) role = 'producer';
+
         const tierRoll = rng.next();
         let tier: TalentTier = 'C_LIST';
         
-        if (tierRoll > 0.98) tier = 'S_LIST';
-        else if (tierRoll > 0.90) tier = 'A_LIST';
-        else if (tierRoll > 0.70) tier = 'B_LIST';
-        else if (tierRoll < 0.20) tier = 'NEWCOMER';
-        else if (tierRoll < 0.40) tier = 'RISING_STAR';
+        if (tierRoll > 0.985) tier = 'S_LIST';
+        else if (tierRoll > 0.92) tier = 'A_LIST';
+        else if (tierRoll > 0.75) tier = 'B_LIST';
+        else if (tierRoll < 0.15) tier = 'NEWCOMER';
+        else if (tierRoll < 0.35) tier = 'RISING_STAR';
 
         return generateTalent(rng, { role, tier, localCountry });
     });

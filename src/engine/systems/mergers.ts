@@ -19,16 +19,34 @@ export function executeAcquisition(state: GameState, targetId: string, rng: Rand
   const evalResult = evaluateAcquisitionTarget(target, state.finance.cash);
   if (!evalResult.viable) return null;
 
+  // Transfer projects
   const targetProjects = target.projects || {};
-  const projectUpdates: { projectId: string; update: Partial<Project> }[] = [];
+  const newProjects: Project[] = [];
   Object.keys(targetProjects).forEach(id => {
-      projectUpdates.push({ projectId: id, update: { ...targetProjects[id], isAcquired: true } });
+      const p = targetProjects[id];
+      // Active projects get stuck in turnaround
+      const newState = (p.state === 'production' || p.state === 'marketing') ? 'turnaround' : p.state;
+      newProjects.push({ 
+        ...p, 
+        state: newState as any,
+        isAcquired: true 
+      });
   });
+
+  // Transfer IP assets
+  const newIPAssets = (state.ip.vault || []).filter(a => 
+    a.rightsOwner === 'RIVAL' && 
+    (a.originalProjectId in targetProjects || a.title.includes(target.name)) 
+  ).map(asset => ({
+    ...asset,
+    rightsOwner: 'STUDIO' as const
+  }));
 
   return {
     cashChange: -evalResult.price + (target.cash || 0),
     prestigeChange: Math.min(100, state.studio.prestige + (target.strength * 0.2)) - state.studio.prestige,
-    projectUpdates,
+    newProjects,
+    newIPAssets,
     newHeadlines: [
       {
         id: rng.uuid('hl'),
@@ -43,12 +61,9 @@ export function executeAcquisition(state: GameState, targetId: string, rng: Rand
         week: state.week,
         type: 'STUDIO_EVENT' as const,
         headline: `M&A Finalized`,
-        description: `The acquisition of ${target.name} is complete. ${projectUpdates.length} projects have been integrated.`,
+        description: `The acquisition of ${target.name} is complete. ${newProjects.length} projects and ${newIPAssets.length} IP assets have been integrated.`,
       }
-    ],
-    // The reducer will need to handle RIVAL_REMOVAL specifically if added to StateImpact, 
-    // or we can handle it via a special field. 
-    // For now, we'll assume the caller (Store) removes the rival from the list.
+    ]
   };
 }
 

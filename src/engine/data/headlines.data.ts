@@ -586,3 +586,40 @@ export const RIVAL_TEMPLATES = [
   '{rival} announces a 15-year roadmap for a {genre} franchise before the first film is even cast.',
   '{rival} desperately tries to artificially manufacture a TikTok dance trend for their ${budget}M {genre} release.'
 ];
+
+export const BOX_OFFICE_MILESTONES = [
+  '{projectName} crushes expectations, crossing ${amount}M domestic',
+  'Global phenomenon: {projectName} hits ${amount}M worldwide',
+  '{projectName} becomes the highest-grossing {genre} film of all time',
+  'Record-breaking opening: {projectName} pulls in ${amount}M in three days',
+  'Holiday box office win: {projectName} dominates with ${amount}M weekend',
+  '{projectName} crosses the elusive $1B mark, analysts stunned',
+  'Second-weekend hold: {projectName} stays #1 with minimal drop',
+  'International breakout: {projectName} triples its budget via overseas gross',
+];
+
+export const STREAMING_RECORDS = [
+  '{projectName} sets new viewership record on {platform}, totaling {amount}M hours viewed',
+  'Viral sensation: {projectName} trends #1 globally for three consecutive weeks',
+  '{platform} reports {amount}% subscriber growth attributed entirely to {projectName}',
+  'Binge-watch phenomenon: {projectName} becomes the most-watched {genre} series of the year',
+  '{projectName} breaks the internet: {platform} servers struggle under premiere load',
+  'Critical & Commercial hit: {projectName} becomes {platform}\'s most decorated original series',
+];
+
+export const SCANDAL_TEMPLATES = [
+  'TMZ Reports: {actorName} seen in heated altercation at Sunset Blvd lounge',
+  'Variety Exclusive: {directorName} accused of creating "toxic atmosphere" on set of {projectName}',
+  'Leaked audio reveals {actorName} trashing the script of their own upcoming blockbuster',
+  'Industry Scandal: Major talent agency dropped {actorName} after midnight PR disaster',
+  'Legal Battle: {actressName} sues studio over "dishonest" backend accounting',
+  'Social Media Storm: {actorName} under fire for controversial comments on industry strike',
+];
+
+export const DISPUTE_TEMPLATES = [
+  'Contract Standoff: {actorName} refuses to film {projectName} sequel without 50% raise',
+  'Production Halted: {directorName} and Studio Head locked in creative dispute over {projectName} finale',
+  'Legal Filing: {rival} sues {actorName} for breach of exclusivity contract',
+  'Agent War: Top agencies battle over representation rights for {projectName} breakout star',
+  'Budget Dispute: {directorName} demands additional ${amount}M for reshoots, studio denies request',
+];

@@ -152,6 +152,8 @@ export interface BaseImpact {
   cultClassicProjectIds?: string[];
   razzieWinnerTalents?: string[];
   newFestivalSubmissions?: import('./project.types').FestivalSubmission[];
+  newProjects?: import('./project.types').Project[];
+  newIPAssets?: IPAsset[];
 }
 
 export type StateImpact = BaseImpact & { type?: ImpactType ; payload?: any };
