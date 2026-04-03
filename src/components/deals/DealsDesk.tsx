@@ -73,7 +73,7 @@ export const DealsDesk = () => {
                   </div>
                 ) : (
                   pitchingProjects.map(p => (
-                    <div key={p.id} className="p-4 rounded-lg bg-white/5 border border-white/5 hover:border-primary/40 transition-all group cursor-pointer">
+                    <div key={p.id} className="p-4 rounded-lg bg-white/5 border border-white/5 hover:border-primary/40 transition-all group cursor-pointer" role="button" tabIndex={0} onClick={() => {}} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); } }}>
                       <div className="text-[11px] font-black uppercase tracking-tight group-hover:text-primary transition-colors truncate">{p.title}</div>
                       <div className="flex justify-between items-center mt-2">
                         <span className="text-[9px] uppercase text-muted-foreground/60 font-black tracking-widest">{p.genre}</span>

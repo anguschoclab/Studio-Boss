@@ -25,23 +25,23 @@ export function isSupportingCategoryNomination(category: AwardCategory | string)
 }
 
 export function generateAwardsProfile(project: Project, rng: RandomGenerator): AwardsProfile {
-  const basePrestige = (rng.next() * 50) + (project.budget / 1000000) * 0.5;
-  const baseCritic = rng.next() * 100;
+  const basePrestige = ((rng && rng.next ? rng.next() : Math.random()) * 50) + (project.budget / 1000000) * 0.5;
+  const baseCritic = (rng && rng.next ? rng.next() : Math.random()) * 100;
 
   return {
     criticScore: Math.min(100, Math.max(0, baseCritic)),
-    audienceScore: Math.min(100, Math.max(0, rng.next() * 100)),
+    audienceScore: Math.min(100, Math.max(0, (rng && rng.next ? rng.next() : Math.random()) * 100)),
     prestigeScore: Math.min(100, Math.max(0, basePrestige)),
-    craftScore: Math.min(100, Math.max(0, rng.next() * 100)),
-    culturalHeat: Math.min(100, Math.max(0, rng.next() * 100)),
+    craftScore: Math.min(100, Math.max(0, (rng && rng.next ? rng.next() : Math.random()) * 100)),
+    culturalHeat: Math.min(100, Math.max(0, (rng && rng.next ? rng.next() : Math.random()) * 100)),
     campaignStrength: 10,
-    controversyRisk: Math.min(100, Math.max(0, rng.next() * 30)),
-    festivalBuzz: Math.min(100, Math.max(0, rng.next() * 100)),
-    academyAppeal: Math.min(100, Math.max(0, basePrestige * 0.8 + rng.next() * 40)),
-    guildAppeal: Math.min(100, Math.max(0, baseCritic * 0.7 + rng.next() * 40)),
-    populistAppeal: Math.min(100, Math.max(0, rng.next() * 100)),
-    indieCredibility: Math.min(100, Math.max(0, project.budgetTier === 'low' ? rng.next() * 80 + 20 : rng.next() * 30)),
-    industryNarrativeScore: Math.min(100, Math.max(0, rng.next() * 100))
+    controversyRisk: Math.min(100, Math.max(0, (rng && rng.next ? rng.next() : Math.random()) * 30)),
+    festivalBuzz: Math.min(100, Math.max(0, (rng && rng.next ? rng.next() : Math.random()) * 100)),
+    academyAppeal: Math.min(100, Math.max(0, basePrestige * 0.8 + (rng && rng.next ? rng.next() : Math.random()) * 40)),
+    guildAppeal: Math.min(100, Math.max(0, baseCritic * 0.7 + (rng && rng.next ? rng.next() : Math.random()) * 40)),
+    populistAppeal: Math.min(100, Math.max(0, (rng && rng.next ? rng.next() : Math.random()) * 100)),
+    indieCredibility: Math.min(100, Math.max(0, project.budgetTier === 'low' ? (rng && rng.next ? rng.next() : Math.random()) * 80 + 20 : (rng && rng.next ? rng.next() : Math.random()) * 30)),
+    industryNarrativeScore: Math.min(100, Math.max(0, (rng && rng.next ? rng.next() : Math.random()) * 100))
   };
 }
 
@@ -64,7 +64,7 @@ export function launchAwardsCampaign(state: GameState, projectId: string, budget
       }
     }],
     newHeadlines: [{
-      id: rng.uuid('hl'),
+      id: (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('hl'),
       week: state.week,
       category: 'awards',
       text: `Studio launches massive FYC campaign for "${project.title}".`
@@ -125,7 +125,7 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
 
     if (bestScore > 150 && impact.newAwards) {
       impact.newAwards.push({
-        id: rng.uuid('award'),
+        id: (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('award'),
         projectId: bestProject.id,
         name: config.category,
         category: config.category,
@@ -155,7 +155,7 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
       }
       if (impact.newsEvents) {
         impact.newsEvents.push({
-          id: rng.uuid('news'),
+          id: (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('news'),
           week: currentWeek,
           type: 'AWARD',
           headline: `${bestProject.title} Wins ${config.category}!`,
@@ -164,7 +164,7 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
       }
       if (impact.newHeadlines) {
         impact.newHeadlines.push({
-          id: rng.uuid('hl'),
+          id: (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('hl'),
           week: currentWeek,
           category: 'awards',
           text: `BREAKING: "${bestProject.title}" wins ${config.category} at the ${config.body}!`
@@ -172,7 +172,7 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
       }
     } else if (bestScore > 100 && impact.newAwards) {
       impact.newAwards.push({
-        id: rng.uuid('award'),
+        id: (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('award'),
         projectId: bestProject.id,
         name: config.category,
         category: config.category,
@@ -241,7 +241,7 @@ export function processRazzies(state: GameState, week: number, rng: RandomGenera
   }
   if (impact.newHeadlines) {
     impact.newHeadlines.push({
-      id: rng.uuid('hl'),
+      id: (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('hl'),
       week,
       category: 'awards',
       text: `The Razzies Nominees Announced! "${worstPicture.title}" sweeps the board with a historic Worst Picture win.`
@@ -249,7 +249,7 @@ export function processRazzies(state: GameState, week: number, rng: RandomGenera
   }
   if (impact.newsEvents) {
     impact.newsEvents.push({
-      id: rng.uuid('news'),
+      id: (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('news'),
       week,
       type: 'AWARD',
       headline: `Razzies: ${worstPicture.title} Named Worst Picture`,
@@ -259,7 +259,7 @@ export function processRazzies(state: GameState, week: number, rng: RandomGenera
   impact.prestigeChange = -10;
 
   const isAbsurd = worstPicture.genre === 'Drama' || (worstPicture.flavor && worstPicture.flavor.toLowerCase().match(/absurd|ridiculous|bizarre|insane/));
-  if (isAbsurd || rng.next() > 0.5) {
+  if (isAbsurd || (rng && rng.next ? rng.next() : Math.random()) > 0.5) {
      impact.cultClassicProjectIds = [worstPicture.id];
   }
 
@@ -292,7 +292,7 @@ export function processRazzies(state: GameState, week: number, rng: RandomGenera
           projectId: worstPicture.id,
           update: {
             activeCrisis: {
-              crisisId: rng.uuid('crisis'),
+              crisisId: (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('crisis'),
               triggeredWeek: week,
               haltedProduction: false,
               description: `The Razzies have destroyed ${worstLeadName}'s ego. They are having a meltdown on set of their next project, or refusing to promote this one.`,

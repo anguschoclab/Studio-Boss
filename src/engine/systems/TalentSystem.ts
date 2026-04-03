@@ -44,7 +44,7 @@ export class TalentSystem {
     };
 
     // Talent-specific opportunity (using existing studio talent)
-    if (rng.next() < 0.25) {
+    if ((rng && rng.next ? rng.next() : Math.random()) < 0.25) {
       const activeTalentIds = new Set<string>();
       for (let i = 0; i < state.studio.internal.contracts.length; i++) {
         activeTalentIds.add(state.studio.internal.contracts[i].talentId);
@@ -62,16 +62,16 @@ export class TalentSystem {
     }
 
     // General opportunities
-    if (rng.next() < 0.2) {
+    if ((rng && rng.next ? rng.next() : Math.random()) < 0.2) {
       tryAddOpp(generateOpportunity(undefined, rng), `A new script is doing the rounds in town.`);
     }
 
-    if (rng.next() < 0.15) {
+    if ((rng && rng.next ? rng.next() : Math.random()) < 0.15) {
       tryAddOpp(generateOpportunity(undefined, rng), `New opportunities have hit the market!`);
     }
 
     // Fallback/Density control
-    if (updatedOpportunities.length < 4 && rng.next() < 0.3) {
+    if (updatedOpportunities.length < 4 && (rng && rng.next ? rng.next() : Math.random()) < 0.3) {
       tryAddOpp(generateOpportunity(undefined, rng));
     }
 

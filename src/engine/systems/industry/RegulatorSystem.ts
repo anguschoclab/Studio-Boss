@@ -48,7 +48,7 @@ export class RegulatorSystem {
       blockChance = 0.4 + (combinedShare - 25) * 0.05; // Sliding scale
     }
 
-    if (rng.next() < blockChance) {
+    if ((rng && rng.next ? rng.next() : Math.random()) < blockChance) {
       return { 
         blocked: true, 
         sharePreview: combinedShare, 

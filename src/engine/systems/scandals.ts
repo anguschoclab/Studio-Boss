@@ -1,3 +1,4 @@
+import { pick } from '../utils';
 import { GameState, Scandal, ScandalType } from '@/engine/types';
 import { StateImpact } from '../types/state.types';
 import { RandomGenerator } from '../utils/rng';
@@ -28,22 +29,22 @@ export function generateScandals(state: GameState, rng: RandomGenerator): StateI
   for (const talentId in talentPool) {
     const talent = talentPool[talentId];
     const risk = talent.psychology?.scandalRisk || 5; 
-    if (rng.next() * 1000 < risk) {
+    if ((rng && rng.next ? rng.next() : Math.random()) * 1000 < risk) {
        const types: ScandalType[] = ['financial', 'personal', 'onset_behavior', 'legal', 'feud'];
-       const type = rng.pick(types);
+       const type = (rng && rng.pick ? rng.pick.bind(rng) : pick)(types);
        
        const s: Scandal = {
-         id: rng.uuid('scandal'),
+         id: (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('scandal'),
          talentId: talent.id,
-         severity: 20 + Math.floor(rng.next() * 80), // 20-100
+         severity: 20 + Math.floor((rng && rng.next ? rng.next() : Math.random()) * 80), // 20-100
          type,
-         weeksRemaining: 4 + Math.floor(rng.next() * 8)
+         weeksRemaining: 4 + Math.floor((rng && rng.next ? rng.next() : Math.random()) * 8)
        };
 
        impact.newScandals!.push(s);
 
        impact.newsEvents!.push({
-         id: rng.uuid('news'),
+         id: (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('news'),
          week: state.week,
          type: 'CRISIS',
          headline: 'PR NIGHTMARE',
@@ -53,7 +54,7 @@ export function generateScandals(state: GameState, rng: RandomGenerator): StateI
        const projectId = talentToProjectMap.get(talent.id);
        if (projectId && studioProjects[projectId]) {
          const project = studioProjects[projectId];
-         const crisisId = rng.uuid('scandal-crisis');
+         const crisisId = (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('scandal-crisis');
          
          const crisisPayload = {
             crisisId,

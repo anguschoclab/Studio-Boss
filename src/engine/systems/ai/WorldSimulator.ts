@@ -12,7 +12,7 @@ export function tickWorldEvents(state: GameState, rng: RandomGenerator): StateIm
   // 1. Poison the Well: Genre Saturation
   Object.values(state.studio.internal.projects).forEach(project => {
     if (project.state === 'released' && project.weeksInPhase === 1) {
-      if (rng.next() < 0.25) {
+      if ((rng && rng.next ? rng.next() : Math.random()) < 0.25) {
         impacts.push({
           type: 'NEWS_ADDED',
           payload: {
@@ -26,7 +26,7 @@ export function tickWorldEvents(state: GameState, rng: RandomGenerator): StateIm
 
   // 2. Star Meter & Talent Momentum
   Object.values(state.industry.talentPool || {}).forEach(talent => {
-    if (talent.momentum > 85 && rng.next() < 0.1) {
+    if (talent.momentum > 85 && (rng && rng.next ? rng.next() : Math.random()) < 0.1) {
       impacts.push({
         type: 'NEWS_ADDED',
         payload: {

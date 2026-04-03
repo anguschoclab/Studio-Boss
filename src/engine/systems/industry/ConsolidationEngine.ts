@@ -1,3 +1,4 @@
+import { pick } from '../../utils';
 import { GameState, StateImpact, StreamerPlatform } from '@/engine/types';
 import { RegulatorSystem } from './RegulatorSystem';
 import { RandomGenerator } from '../../utils/rng';
@@ -13,9 +14,9 @@ export function tickConsolidation(state: GameState, rng: RandomGenerator): State
 
   // Potential Acquirers: Majors with surplus cash
   const majors = rivals.filter(r => r.archetype === 'major' && r.cash > 250_000_000);
-  if (majors.length === 0 || rng.next() < 0.92) return []; // Only check 8% of the time
+  if (majors.length === 0 || (rng && rng.next ? rng.next() : Math.random()) < 0.92) return []; // Only check 8% of the time
 
-  const acquirer = rng.pick(majors);
+  const acquirer = (rng && rng.pick ? rng.pick.bind(rng) : pick)(majors);
 
   // Target: struggling Indie or Mid-tier studio
   const targets = rivals.filter(r => 
@@ -29,10 +30,10 @@ export function tickConsolidation(state: GameState, rng: RandomGenerator): State
   ) as StreamerPlatform[];
 
   // Choose acquisition type
-  const roll = rng.next();
+  const roll = (rng && rng.next ? rng.next() : Math.random());
   if (roll < 0.5 && targets.length > 0) {
     // Studio Acquisition
-    const target = rng.pick(targets);
+    const target = (rng && rng.pick ? rng.pick.bind(rng) : pick)(targets);
     const cost = target.cash + (target.strength * 2_000_000);
     
     // Check Regulators
@@ -69,7 +70,7 @@ export function tickConsolidation(state: GameState, rng: RandomGenerator): State
     });
   } else if (platforms.length > 0) {
     // Platform Acquisition (Vertical Integration)
-    const platform = rng.pick(platforms);
+    const platform = (rng && rng.pick ? rng.pick.bind(rng) : pick)(platforms);
     const cost = (platform.subscribers * 5) + (platform.contentLibraryQuality * 1_000_000);
 
     if (acquirer.cash < cost) return impacts;

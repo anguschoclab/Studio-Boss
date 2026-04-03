@@ -78,6 +78,9 @@ export const PlatformCard: React.FC<PlatformCardProps> = ({ buyer, allBuyers, on
           </TooltipWrapper>
           <div>
             <h3 
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onViewHistory(buyer); } }}
               className="font-display font-black text-[15px] tracking-tight text-foreground leading-tight group-hover:text-primary transition-colors cursor-pointer"
               onClick={() => onViewHistory(buyer)}
             >

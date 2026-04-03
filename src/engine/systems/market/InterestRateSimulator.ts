@@ -37,7 +37,7 @@ export class InterestRateSimulator {
     const currentRate = market.baseRate;
     
     // Random Walk
-    const delta = (rng.next() - 0.5) * this.VOLATILITY;
+    const delta = ((rng && rng.next ? rng.next() : Math.random()) - 0.5) * this.VOLATILITY;
     const newRate = clamp(currentRate + delta, this.BASE_RATE_MIN, this.BASE_RATE_MAX);
     
     const updatedMarket: MarketState = {
@@ -63,7 +63,7 @@ export class InterestRateSimulator {
        // But for now, let's just trigger a notification if we hit historical highs/lows
     }
 
-    if (rng.next() < 0.05) { // 5% chance of a "Market Analysis" headline
+    if ((rng && rng.next ? rng.next() : Math.random()) < 0.05) { // 5% chance of a "Market Analysis" headline
       const trend = newRate > currentRate ? 'rising' : 'falling';
       impact.newHeadlines = [{
         id: crypto.randomUUID(),

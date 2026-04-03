@@ -258,7 +258,7 @@ export const TalentModal = () => {
                             {familyMembers.slice(0, 4).map(member => (
                               <div 
                                 key={member.id} 
-                                className="flex items-center gap-2 bg-amber-950/30 px-2 py-1.5 rounded-xl border border-amber-500/10 hover:border-amber-500/30 transition-colors cursor-pointer"
+                                role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectTalent(member.id); } }} className="flex items-center gap-2 bg-amber-950/30 px-2 py-1.5 rounded-xl border border-amber-500/10 hover:border-amber-500/30 transition-colors cursor-pointer text-left"
                                 onClick={() => selectTalent(member.id)}
                               >
                                 <TalentAvatar talent={member} size="xs" className="border-amber-500/20" />
