@@ -57,7 +57,7 @@ export class RevenueProcessor {
 
         totalRoyalties += this.calculateNetPointsRoyalty(p, weeklyGross + weeklyMerch, state.studio.internal.contracts);
       }
-    }
+    });
 
     return { boxOffice, distribution, merch, totalRoyalties, projectRecoupment };
   }

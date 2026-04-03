@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { GameState, WeekSummary, ArchetypeKey } from '@/engine/types';
 import { initializeGame } from '@/engine/core/gameInit';
 import { advanceWeek } from '@/engine/core/weekAdvance';
+import { RandomGenerator } from '@/engine/utils/rng';
 import { saveGame, loadGame, getSaveSlots, SaveSlotInfo } from '@/persistence/saveLoad';
 import { useUIStore } from './uiStore';
 
@@ -51,7 +52,10 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
     const state = get().gameState;
     if (!state) throw new Error('No game in progress');
 
-    const { newState: nextState, summary, impacts } = advanceWeek(state);
+    // Instantiate deterministic RNG for this week's simulation tick
+    const rng = new RandomGenerator((state.gameSeed || 12345) + (state.tickCount || 0));
+
+    const { newState: nextState, summary, impacts } = advanceWeek(state, rng);
     const finalState = nextState as GameState;
 
     // Trigger background save without blocking UI (Fire and forget)

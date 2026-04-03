@@ -175,7 +175,7 @@ export function calculateWeeklyRevenue(state: GameState): number {
         }
       }
     }
-  }
+  });
 
   return boxOffice + distribution;
 }
