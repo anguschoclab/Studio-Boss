@@ -218,7 +218,12 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
       const franchise = state.ip.franchises[project.franchiseId];
       relatedCount = franchise.assetIds.length;
       
-      const genreSaturation = Object.values(state.studio.internal.projects).filter(p => p.genre === project.genre).length;
+      let genreSaturation = 0;
+      for (const key in state.studio.internal.projects) {
+        if (state.studio.internal.projects[key].genre === project.genre) {
+          genreSaturation++;
+        }
+      }
       const fatigue = calculateFranchiseFatigue(franchise, genreSaturation, project.genre);
       
       if (fatigue > 0.4) status = 'FATIGUED';

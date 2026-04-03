@@ -20,11 +20,12 @@ export function calculateStudioNetWorth(state: GameState): number {
 
   // 2. Active Projects Inventory (Work in Progress value)
   // We value "Inventory" as 40% of the budget already spent to reflect harsher sunk cost realities
-  Object.values(state.studio.internal.projects).forEach(p => {
+  for (const key in state.studio.internal.projects) {
+    const p = state.studio.internal.projects[key];
     if (p.state !== 'released' && p.state !== 'archived') {
       netWorth += p.budget * 0.4; // The Studio Comptroller: Reduced WIP valuation from 50% to 40%
     }
-  });
+  }
   
   return Math.floor(netWorth);
 }
@@ -37,7 +38,10 @@ export function generateWeeklyFinancialReport(
   state: GameState, 
   pendingImpacts: StateImpact[] = []
 ): { report: WeeklyFinancialReport; snapshot: FinancialSnapshot } {
-  const projects = Object.values(state.studio.internal.projects);
+  const projects: Project[] = [];
+  for (const key in state.studio.internal.projects) {
+    projects.push(state.studio.internal.projects[key]);
+  }
   const market = state.finance.marketState || InterestRateSimulator.initialize();
   
   // Derive Studio Level from Archetype for overhead scaling
@@ -124,7 +128,10 @@ export function generateWeeklyFinancialReport(
 
 // Update updated legacy wrapper
 export function calculateWeeklyCosts(state: GameState): number {
-  const projects = Object.values(state.studio.internal.projects);
+  const projects: Project[] = [];
+  for (const key in state.studio.internal.projects) {
+    projects.push(state.studio.internal.projects[key]);
+  }
   const studioLevel = state.studio.archetype === 'major' ? 3 : (state.studio.archetype === 'mid-tier' ? 2 : 1);
   const production = ExpenseProcessor.calculateProductionBurn(projects);
   const marketing = ExpenseProcessor.calculateMarketingBurn(projects);
