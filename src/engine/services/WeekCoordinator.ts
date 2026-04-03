@@ -133,7 +133,7 @@ export class WeekCoordinator {
     context.impacts.push(...tickProduction(state, context.rng));
     
     // 2. Script Evolution Tick
-    // ⚡ Bolt: Use for...in instead of Object.values().forEach
+    // ⚡ Bolt: Iterate over project records using for...in to avoid O(N) array allocation per tick
     for (const key in state.studio.internal.projects) {
       const project = state.studio.internal.projects[key];
       if (project.state === 'development') {
@@ -161,7 +161,7 @@ export class WeekCoordinator {
 
   private static runCrisisFilter(state: GameState, context: TickContext) {
     // Roll for crises for studio projects in active production stages
-    // ⚡ Bolt: Use for...in instead of Object.values().forEach
+    // ⚡ Bolt: Iterate over project records using for...in to avoid O(N) array allocation per tick
     for (const key in state.studio.internal.projects) {
       const project = state.studio.internal.projects[key];
       const activeStages = ['prep', 'production', 'post_production', 'marketing'];
@@ -173,9 +173,10 @@ export class WeekCoordinator {
 
     // Roll for rival projects
     state.industry.rivals.forEach(rival => {
-      if (!rival.projects) return;
-      for (const key in rival.projects) {
-        const project = rival.projects[key];
+      // ⚡ Bolt: Iterate over project records using for...in to avoid O(N) array allocation per tick
+      const projects = rival.projects || {};
+      for (const key in projects) {
+        const project = projects[key];
         const activeStages = ['prep', 'production', 'post_production', 'marketing'];
         if (!project.activeCrisis && activeStages.includes(project.state)) {
            const impact = checkAndTriggerCrisis(project, context.rng);
