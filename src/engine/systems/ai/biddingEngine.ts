@@ -41,7 +41,7 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
 
       if (myBid < currentHighest && rival.cash > currentHighest * overpayThreshold) {
         const multiplier = (ArchetypeMultipliers[rival.archetype]?.(opportunity.genre) || 1.0) * aggressionFactor * (isFranchiseBuilder ? 1.2 : 1.0);
-        const newBid = Math.floor(currentHighest * rng.range(1.05, 1.2) * multiplier);
+        const newBid = Math.floor(currentHighest * (1 + (rng.range(1.05, 1.2) - 1) * multiplier));
 
         // Cap bid at 35% of total rival cash for "Strategic" behavior
         const maxBidCap = isFranchiseBuilder ? 0.5 : (isCashCrunch ? 0.2 : 0.35 + (motivationAggression * 0.05));
