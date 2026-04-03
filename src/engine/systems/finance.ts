@@ -22,7 +22,7 @@ export function calculateStudioNetWorth(state: GameState): number {
   // We value "Inventory" as 40% of the budget already spent to reflect harsher sunk cost realities
   Object.values(state.studio.internal.projects).forEach(p => {
     if (p.state !== 'released' && p.state !== 'archived') {
-      netWorth += p.budget * 0.4; // The Studio Comptroller: Reduced WIP valuation from 50% to 40%
+      netWorth += p.budget * 0.3; // The Studio Comptroller: Reduced WIP valuation from 40% to 30%
     }
   });
   
@@ -139,7 +139,7 @@ export function calculateWeeklyRevenue(projects: Project[], buyers: Buyer[] = []
   projects.forEach(p => {
     if (p.state === 'released') {
       if (p.distributionStatus === 'theatrical') {
-        boxOffice += RevenueProcessor.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.45, p.isCultClassic); // The Studio Comptroller: Reduced theatrical studio share (decay rate) from 50% to 45% to simulate modern front-loaded box office drops.
+        boxOffice += RevenueProcessor.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.40, p.isCultClassic); // The Studio Comptroller: Reduced theatrical studio share (decay rate) from 45% to 40% to simulate modern front-loaded box office drops.
       } else if (p.distributionStatus === 'streaming') {
         const platform = buyers.find(b => b.id === p.buyerId);
         if (platform) {
