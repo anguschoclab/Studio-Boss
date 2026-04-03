@@ -24,17 +24,62 @@ export const TV_FORMAT_TAXONOMY: TvFormatTaxonomyItem[] = [
   {
     id: 'comedy',
     name: 'Comedy',
-    formats: ['sitcom', 'sketch_comedy', 'animated_comedy', 'satirical_comedy', 'workplace_mockumentary', 'satirical_news_show']
+    formats: ['sitcom', 'sketch_comedy', 'animated_comedy', 'satirical_comedy', 'workplace_comedy', 'mockumentary', 'workplace_mockumentary', 'retro_sitcom', 'spy_comedy', 'high_concept_comedy', 'docu_comedy', 'sports_comedy', 'vampire_sitcom', 'fantasy_workplace_comedy', 'satirical_news_show']
   },
   {
     id: 'drama',
     name: 'Drama',
-    formats: ['procedural', 'prestige_drama', 'limited_series', 'teen_drama', 'historical_drama', 'medical_procedural', 'legal_drama', 'prestige_limited_series', 'superhero_origin', 'cyberpunk_dystopia', 'high_fantasy_epic', 'teen_mystery_box', 'historical_romance']
+    formats: ['procedural', 'prestige_drama', 'limited_series', 'prestige_limited_series', 'teen_drama', 'historical_drama', 'medical_procedural', 'legal_drama', 'family_drama', 'neo_western', 'daytime_soap', 'telenovela', 'musical_dramedy', 'dark_academia', 'music_industry_drama', 'prestige_biopic', 'historical_romance', 'teen_mystery_box']
   },
   {
-    id: 'unscripted',
-    name: 'Unscripted',
-    formats: ['late_night_talk', 'cooking_showdown', 'musical_competition', 'satirical_news', 'trashy_dating_island', 'true_crime_docuseries']
+    id: 'thriller_crime',
+    name: 'Thriller & Crime',
+    formats: ['espionage_thriller', 'mystery_box', 'political_thriller', 'binge_thriller', 'international_thriller', 'heist_thriller', 'dark_comedy_thriller', 'workplace_thriller', 'neo_noir_procedural', 'true_crime_dramatization', 'true_crime_miniseries', 'erotic_thriller']
+  },
+  {
+    id: 'scifi_fantasy',
+    name: 'Sci-Fi & Fantasy',
+    formats: ['sci_fi_epic', 'fantasy_epic', 'cyberpunk_dystopia', 'space_opera', 'high_fantasy_epic', 'tech_dystopia', 'sci_fi_noir', 'scifi_procedural', 'retro_sci_fi', 'cyberpunk_anime', 'cyberpunk_satire', 'steampunk_fantasy', 'space_western', 'sci_fi_anthology', 'fantasy_prequel', 'multiverse_anthology', 'time_travel_romance', 'mecha_anime']
+  },
+  {
+    id: 'horror_supernatural',
+    name: 'Horror & Supernatural',
+    formats: ['vampire_romance', 'zombie_apocalypse', 'gothic_horror', 'paranormal_romance', 'supernatural_teen_drama', 'supernatural_procedural', 'prestige_horror_anthology', 'post_apocalyptic_survival']
+  },
+  {
+    id: 'action_military',
+    name: 'Action & Military',
+    formats: ['superhero_serial', 'superhero_origin', 'superhero_teamup', 'superhero_parody', 'military_action', 'action_comedy', 'western_procedural']
+  },
+  {
+    id: 'animation',
+    name: 'Animation',
+    formats: ['animated_comedy', 'animated_prestige', 'adult_animation', 'cyberpunk_anime', 'sports_anime', 'live_action_anime']
+  },
+  {
+    id: 'anthology_limited',
+    name: 'Anthology & Limited',
+    formats: ['anthology_series', 'limited_series', 'prestige_limited_series', 'sci_fi_anthology', 'prestige_horror_anthology', 'holiday_miniseries', 'true_crime_miniseries', 'micro_series']
+  },
+  {
+    id: 'variety_talk',
+    name: 'Variety & Talk',
+    formats: ['late_night_talk', 'sketch_comedy', 'sketch_show_revival', 'satirical_news', 'satirical_news_show', 'standup_comedy_series', 'musical_competition', 'cooking_showdown', 'interactive_special', 'live_event_series']
+  },
+  {
+    id: 'sports',
+    name: 'Sports',
+    formats: ['sports_drama', 'sports_comedy', 'sports_docudrama', 'sports_anime', 'sports_soap_opera']
+  },
+  {
+    id: 'historical',
+    name: 'Historical & Period',
+    formats: ['historical_drama', 'historical_fiction_epic', 'historical_romance', 'historical_heist', 'docudrama']
+  },
+  {
+    id: 'trending_niche',
+    name: 'Trending & Niche',
+    formats: ['k_drama_adaptation', 'foreign_language_hit', 'nostalgia_reunion', 'gritty_reboot', 'franchise_spinoff', 'vr_immersive_show', 'musical_soap', 'post_apocalyptic_soap', 'true_crime_spoof']
   }
 ];
 
