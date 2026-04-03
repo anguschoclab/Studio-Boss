@@ -133,7 +133,6 @@ export class WeekCoordinator {
     context.impacts.push(...tickProduction(state, context.rng));
     
     // 2. Script Evolution Tick
-    // ⚡ Bolt: Iterate over project records using for...in to avoid O(N) array allocation per tick
     for (const key in state.studio.internal.projects) {
       const project = state.studio.internal.projects[key];
       if (project.state === 'development') {
@@ -161,7 +160,6 @@ export class WeekCoordinator {
 
   private static runCrisisFilter(state: GameState, context: TickContext) {
     // Roll for crises for studio projects in active production stages
-    // ⚡ Bolt: Iterate over project records using for...in to avoid O(N) array allocation per tick
     for (const key in state.studio.internal.projects) {
       const project = state.studio.internal.projects[key];
       const activeStages = ['prep', 'production', 'post_production', 'marketing'];
@@ -172,18 +170,17 @@ export class WeekCoordinator {
     }
 
     // Roll for rival projects
-    state.industry.rivals.forEach(rival => {
-      // ⚡ Bolt: Iterate over project records using for...in to avoid O(N) array allocation per tick
-      const projects = rival.projects || {};
-      for (const key in projects) {
-        const project = projects[key];
+    for (let i = 0; i < state.industry.rivals.length; i++) {
+      const rival = state.industry.rivals[i];
+      for (const key in rival.projects || {}) {
+        const project = rival.projects[key];
         const activeStages = ['prep', 'production', 'post_production', 'marketing'];
         if (!project.activeCrisis && activeStages.includes(project.state)) {
            const impact = checkAndTriggerCrisis(project, context.rng);
            if (impact) context.impacts.push(impact);
         }
       }
-    });
+    }
   }
 
   private static runAIFilter(state: GameState, context: TickContext) {
@@ -249,7 +246,27 @@ export class WeekCoordinator {
     const allHeadlines: import('../types/engine.types').Headline[] = [];
     const newsEvents: import('../types/engine.types').NewsEvent[] = [];
     
-    context.impacts.forEach(impact => {
+    let ledgerImpact: StateImpact | undefined;
+    const projectUpdates: string[] = [];
+
+    for (let i = 0; i < context.impacts.length; i++) {
+      const impact = context.impacts[i];
+
+      // Track ledger update
+      if (impact.type === 'LEDGER_UPDATED') {
+        ledgerImpact = impact;
+      }
+
+      // Track project updates directly
+      if (impact.type === 'PROJECT_UPDATED') {
+        projectUpdates.push((impact as import('../types/state.types').ProjectUpdateImpact).payload.projectId);
+      }
+      if (impact.projectUpdates) {
+        for (let j = 0; j < impact.projectUpdates.length; j++) {
+          projectUpdates.push(impact.projectUpdates[j].projectId);
+        }
+      }
+
       // 1. Action-style NEWS_ADDED
       if (impact.type === 'NEWS_ADDED') {
         const payload = impact.payload as import('../types/state.types').NewsImpact['payload'];
@@ -268,20 +285,18 @@ export class WeekCoordinator {
       if (impact.newsEvents) {
         newsEvents.push(...impact.newsEvents);
       }
-    });
+    }
 
-    newsEvents.forEach(e => {
+    for (let i = 0; i < newsEvents.length; i++) {
+       const e = newsEvents[i];
        allHeadlines.push({
          id: e.id,
          text: `${e.headline}: ${e.description}`,
          week: e.week || context.week,
          category: (e.type?.toLowerCase() === 'crisis' ? 'talent' : 'general') as import('../types/engine.types').HeadlineCategory
        });
-    });
+    }
 
-
-    const ledgerImpact = context.impacts.find(i => i.type === 'LEDGER_UPDATED');
-    
     let totalRevenue = 0;
     let totalCosts = 0;
 
@@ -292,15 +307,10 @@ export class WeekCoordinator {
        totalCosts = report.expenses.production + report.expenses.marketing + report.expenses.overhead;
     }
 
-    const projectUpdates = context.impacts
-      .filter((i): i is import('../types/state.types').ProjectUpdateImpact => i.type === 'PROJECT_UPDATED')
-      .map(i => i.payload.projectId);
-
-    context.impacts.forEach(i => {
-      if (i.projectUpdates) {
-        i.projectUpdates.forEach(pu => projectUpdates.push(pu.projectId));
-      }
-    });
+    const eventTitles: string[] = [];
+    for (let i = 0; i < context.events.length; i++) {
+       eventTitles.push(context.events[i].title);
+    }
 
     return {
       fromWeek: before.week,
@@ -311,7 +321,7 @@ export class WeekCoordinator {
       totalCosts,
       projectUpdates: Array.from(new Set(projectUpdates)),
       newHeadlines: allHeadlines,
-      events: context.events.map(e => e.title),
+      events: eventTitles,
     };
   }
 }

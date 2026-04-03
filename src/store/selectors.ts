@@ -1,23 +1,20 @@
 import { createSelector } from 'reselect';
-import { GameState, Project, RivalStudio, Talent, GameEvent, Opportunity, Buyer, GenreTrend } from '../engine/types';
-import { WeeklyFinancialReport, FinancialSnapshot, MarketState, MarketEvent } from '../engine/types/state.types';
+import { GameState, Project, RivalStudio, Talent, GameEvent } from '../engine/types';
+import { FinanceState, MarketState } from '../engine/types/state.types';
 
 const EMPTY_PROJECTS: Record<string, Project> = {};
-const EMPTY_FINANCE: {
-  cash: number;
-  ledger: WeeklyFinancialReport[];
-  weeklyHistory: FinancialSnapshot[];
-  marketState: MarketState | null;
-} = {
+const EMPTY_FINANCE: FinanceState = {
   cash: 0, 
   ledger: [], 
   weeklyHistory: [], 
-  marketState: null 
+  marketState: { cycle: 'STABLE', sentiment: 0, baseRate: 0.05, consumerConfidence: 50, debtRate: 0.08, savingsYield: 0.02 } as import('../engine/types/state.types').MarketState
 };
-const EMPTY_MARKET: { buyers: Buyer[]; opportunities: Opportunity[]; trends: GenreTrend[]; activeMarketEvents: MarketEvent[] } = { buyers: [], opportunities: [], trends: [], activeMarketEvents: [] };
+const EMPTY_MARKET: GameState['market'] = { buyers: [], opportunities: [], trends: [], activeMarketEvents: [] };
 const EMPTY_TALENT_POOL: Record<string, Talent> = {};
 const EMPTY_RIVALS: RivalStudio[] = [];
 const EMPTY_EVENT_HISTORY: GameEvent[] = [];
+
+const DEFAULT_MARKET_METRICS = { cycle: 'STABLE', sentiment: 0, debtRate: 0.08, savingsRate: 0.02 };
 
 /**
  * Standard Root Selectors
@@ -121,12 +118,10 @@ export const selectStudioSuccess = createSelector(
   (released) => {
     let totalRevenue = 0;
     let totalScore = 0;
-
     for (let i = 0; i < released.length; i++) {
       totalRevenue += released[i].revenue || 0;
       totalScore += released[i].reviewScore || 0;
     }
-
     const avgScore = released.length > 0 ? totalScore / released.length : 0;
     
     return {
@@ -168,7 +163,7 @@ export const selectMarketState = createSelector(
 export const selectMarketMetrics = createSelector(
   [selectMarketState],
   (market) => {
-    if (!market) return { cycle: 'STABLE', sentiment: 0, debtRate: 0.08, savingsRate: 0.02 };
+    if (!market) return DEFAULT_MARKET_METRICS;
     return {
       cycle: market.cycle,
       sentiment: market.sentiment,
