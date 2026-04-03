@@ -1,4 +1,5 @@
 import { Contract } from '@/engine/types';
+import { RandomGenerator } from './utils/rng';
 // Shared utilities for the engine layer — no React imports
 
 export function formatMoney(amount: number): string {
@@ -45,28 +46,18 @@ export function groupContractsByProject(contracts: Contract[]): Map<string, Cont
  * Useful for resolving headlines, scandals, and rumors from data pools.
  */
 export function fillTemplate(template: string, vars: Record<string, string | number>): string {
-  // Regex matches ${key} (captures key in p2) or {key} (captures key in p4)
   return template.replace(/(\$\{([^}]+)\})|(\{([^}]+)\})/g, (match, p1, p2, p3, p4) => {
     const key = p2 || p4;
     return vars[key] !== undefined ? String(vars[key]) : match;
   });
 }
 
-export function pick<T>(arr: T[]): T {
+export function pick<T>(arr: T[], rng?: RandomGenerator): T {
+  if (rng) return rng.pick(arr);
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-export function randRange(min: number, max: number): number {
+export function randRange(min: number, max: number, rng?: RandomGenerator): number {
+  if (rng) return rng.rangeInt(min, max);
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-
-export function secureRandom(): number {
-  return Math.random();
-}
-
-export const rngAdapter = {
-  next: () => secureRandom(),
-  pick: (arr: any[]) => pick(arr),
-  rangeInt: (min: number, max: number) => randRange(min, max),
-  uuid: (prefix: string) => `${prefix}-${secureRandom()}`
-};

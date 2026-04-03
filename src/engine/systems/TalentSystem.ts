@@ -23,16 +23,16 @@ export class TalentSystem {
       const talent = state.industry.talentPool[id];
       
       // Recovery phase (default)
-      const updatedTalent = SchedulingEngine.updateTalentFatigue(talent, false);
+      const nextFatigue = SchedulingEngine.updateTalentFatigue(talent, false);
       
       // Cleanup expired commitments
-      const nextCommitments = (updatedTalent.commitments || []).filter(c => c.endWeek >= state.week);
+      const nextCommitments = (talent.commitments || []).filter((c: any) => c.endWeek >= state.week);
       
-      if (updatedTalent.fatigue !== talent.fatigue || nextCommitments.length !== (talent.commitments || []).length) {
+      if (nextFatigue !== (talent.fatigue || 0) || nextCommitments.length !== (talent.commitments || []).length) {
         talentUpdates.push({
           talentId: id,
           update: {
-            fatigue: updatedTalent.fatigue,
+            fatigue: nextFatigue,
             commitments: nextCommitments
           }
         });
@@ -65,35 +65,34 @@ export class TalentSystem {
       return false;
     };
 
-    // Talent-specific opportunity (using existing studio talent)
-    if ((rng && rng.next ? rng.next() : Math.random()) < 0.25) {
-      const activeTalentIds = new Set<string>();
-      for (let i = 0; i < (state.studio.internal.contracts || []).length; i++) {
+    // Prepare available talent pool for opportunity generation
+    const activeTalentIds = new Set<string>();
+    for (let i = 0; i < (state.studio.internal.contracts || []).length; i++) {
         activeTalentIds.add(state.studio.internal.contracts[i].talentId);
-      }
-      const availableTalentIds: string[] = [];
-      for (const id in state.industry.talentPool) {
+    }
+    const availableTalentIds: string[] = [];
+    for (const id in state.industry.talentPool) {
         if (!activeTalentIds.has(id)) availableTalentIds.push(id);
-      }
+    }
 
-      if (availableTalentIds.length > 0) {
+    // Talent-specific opportunity (using existing studio talent)
+    if (rng.next() < 0.25 && availableTalentIds.length > 0) {
         const newOpp = generateOpportunity(rng, availableTalentIds);
         tryAddOpp(newOpp, `A new package "${newOpp.title}" hit the market.`);
-      }
     }
 
     // General opportunities
-    if ((rng && rng.next ? rng.next() : Math.random()) < 0.2) {
-      tryAddOpp(generateOpportunity(undefined, rng), `A new script is doing the rounds in town.`);
+    if (rng.next() < 0.2) {
+      tryAddOpp(generateOpportunity(rng, availableTalentIds), `A new script is doing the rounds in town.`);
     }
 
-    if ((rng && rng.next ? rng.next() : Math.random()) < 0.15) {
-      tryAddOpp(generateOpportunity(undefined, rng), `New opportunities have hit the market!`);
+    if (rng.next() < 0.15) {
+      tryAddOpp(generateOpportunity(rng, availableTalentIds), `New opportunities have hit the market!`);
     }
 
     // Fallback/Density control
-    if (updatedOpportunities.length < 4 && (rng && rng.next ? rng.next() : Math.random()) < 0.3) {
-      tryAddOpp(generateOpportunity(undefined, rng));
+    if (updatedOpportunities.length < 4 && rng.next() < 0.3) {
+      tryAddOpp(generateOpportunity(rng, availableTalentIds));
     }
 
     return {
