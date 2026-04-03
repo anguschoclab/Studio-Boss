@@ -14,13 +14,13 @@ export function calculateStudioNetWorth(state: GameState): number {
   let netWorth = state.finance.cash;
   
   // 1. IP Catalog Value
-  state.ip.vault.forEach(asset => {
+  for (let i = 0; i < state.ip.vault.length; i++) {
+    const asset = state.ip.vault[i];
     netWorth += asset.baseValue * asset.decayRate;
-  });
+  }
 
   // 2. Active Projects Inventory (Work in Progress value)
   // We value "Inventory" as 40% of the budget already spent to reflect harsher sunk cost realities
-  // ⚡ Bolt: Use for...in to avoid O(N) Object.values array allocation
   for (const key in state.studio.internal.projects) {
     const p = state.studio.internal.projects[key];
     if (p.state !== 'released' && p.state !== 'archived') {
@@ -39,7 +39,16 @@ export function generateWeeklyFinancialReport(
   state: GameState, 
   pendingImpacts: StateImpact[] = []
 ): { report: WeeklyFinancialReport; snapshot: FinancialSnapshot } {
-  const projects = Object.values(state.studio.internal.projects);
+  const projects: Project[] = [];
+  let unreleasedCount = 0;
+  for (const key in state.studio.internal.projects) {
+    const p = state.studio.internal.projects[key];
+    projects.push(p);
+    if (p.state !== 'released') {
+      unreleasedCount++;
+    }
+  }
+
   const market = state.finance.marketState || InterestRateSimulator.initialize();
   
   // Derive Studio Level from Archetype for overhead scaling
@@ -55,7 +64,7 @@ export function generateWeeklyFinancialReport(
   // 3. Calculate Operational Expenses
   const production = ExpenseProcessor.calculateProductionBurn(projects);
   const marketing = ExpenseProcessor.calculateMarketingBurn(projects);
-  const overhead = ExpenseProcessor.calculateStudioBurn(studioLevel, projects.filter(p => p.state !== 'released').length);
+  const overhead = ExpenseProcessor.calculateStudioBurn(studioLevel, unreleasedCount);
 
   // 4. Calculate Interest (Debt or Savings)
   const isDebt = state.finance.cash < 0;
@@ -67,7 +76,8 @@ export function generateWeeklyFinancialReport(
   let otherRevenue = 0;
   let otherExpenses = 0;
 
-  pendingImpacts.forEach(impact => {
+  for (let i = 0; i < pendingImpacts.length; i++) {
+    const impact = pendingImpacts[i];
     if (impact.type === 'FINANCE_TRANSACTION' && impact.payload) {
       const amount = (impact.payload as { amount: number }).amount || 0;
       if (amount > 0) otherRevenue += amount;
@@ -77,7 +87,7 @@ export function generateWeeklyFinancialReport(
       if (change > 0) otherRevenue += change;
       else otherExpenses += Math.abs(change);
     }
-  });
+  }
 
   const totalRevenue = boxOffice + distribution + merch + passive + otherRevenue;
   const totalExpenses = production + marketing + overhead + totalRoyalties + (interest > 0 ? interest : 0) + otherExpenses;
@@ -126,11 +136,20 @@ export function generateWeeklyFinancialReport(
 
 // Update updated legacy wrapper
 export function calculateWeeklyCosts(state: GameState): number {
-  const projects = Object.values(state.studio.internal.projects);
+  const projects: Project[] = [];
+  let unreleasedCount = 0;
+  for (const key in state.studio.internal.projects) {
+    const p = state.studio.internal.projects[key];
+    projects.push(p);
+    if (p.state !== 'released') {
+      unreleasedCount++;
+    }
+  }
+
   const studioLevel = state.studio.archetype === 'major' ? 3 : (state.studio.archetype === 'mid-tier' ? 2 : 1);
   const production = ExpenseProcessor.calculateProductionBurn(projects);
   const marketing = ExpenseProcessor.calculateMarketingBurn(projects);
-  const overhead = ExpenseProcessor.calculateStudioBurn(studioLevel, projects.filter(p => p.state !== 'released').length);
+  const overhead = ExpenseProcessor.calculateStudioBurn(studioLevel, unreleasedCount);
   return production + marketing + overhead;
 }
 
@@ -138,7 +157,8 @@ export function calculateWeeklyRevenue(projects: Project[], buyers: Buyer[] = []
   let boxOffice = 0;
   let distribution = 0;
 
-  projects.forEach(p => {
+  for (let i = 0; i < projects.length; i++) {
+    const p = projects[i];
     if (p.state === 'released') {
       if (p.distributionStatus === 'theatrical') {
         boxOffice += RevenueProcessor.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.40, p.isCultClassic); // The Studio Comptroller: Reduced theatrical studio share (decay rate) from 45% to 40% to simulate modern front-loaded box office drops.
@@ -149,7 +169,7 @@ export function calculateWeeklyRevenue(projects: Project[], buyers: Buyer[] = []
         }
       }
     }
-  });
+  }
 
   return boxOffice + distribution;
 }
