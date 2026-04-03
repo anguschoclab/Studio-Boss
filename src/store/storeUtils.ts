@@ -56,6 +56,7 @@ function prepareTalentAndContracts(
                 projectId,
                 fee: t.fee,
                 backendPercent: t.prestige > 80 ? 10 : 0,
+                role: t.type // Default to their base type
             });
         }
     }
@@ -99,7 +100,10 @@ export function buildProjectAndContracts(state: GameState, params: CreateProject
         contentFlags: [],
         franchiseId: params.franchiseId,
         parentProjectId: params.parentProjectId,
-        isSpinoff: params.isSpinoff
+        isSpinoff: params.isSpinoff,
+        isRecasting: false,
+        turnaroundStartWeek: undefined,
+        estimatedWindow: { startWeek: state.week + 1, endWeek: state.week + 1 + developmentWeeks + productionWeeks }
     };
 
     if (params.format === 'film') {

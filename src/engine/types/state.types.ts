@@ -14,6 +14,7 @@ export interface WeeklyFinancialReport {
     production: number;
     marketing: number;
     overhead: number;
+    pacts: number;
   };
   endingCash: number;
   netProfit: number;
@@ -31,6 +32,7 @@ export interface FinancialSnapshot {
     production: number;
     burn: number; // Studio Overhead
     marketing: number;
+    pacts: number; // First-look deal overhead
     royalties: number; // Talent point payouts
     interest: number; // Debt or Savings
   };

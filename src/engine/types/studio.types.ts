@@ -70,7 +70,7 @@ export interface GameState {
     internal: {
       projects: Record<string, Project>;
       contracts: Contract[];
-      firstLookDeals?: FirstLookDeal[];
+      firstLookDeals?: TalentPact[];
     };
     ownedPlatforms?: string[];
   };
