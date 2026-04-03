@@ -1,11 +1,13 @@
 import { Project } from '@/engine/types';
 import { useUIStore } from '@/store/uiStore';
+import { useGameStore } from '@/store/gameStore';
 import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
-import { AlertTriangle, TrendingUp, Activity, Zap } from 'lucide-react';
+import { AlertTriangle, TrendingUp, Activity, Zap, DollarSign } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { formatMoney } from '@/engine/utils';
 import { DistributionBadge } from '../shared/DistributionBadge';
 import { RecoupmentStatus } from '../shared/RecoupmentStatus';
 
