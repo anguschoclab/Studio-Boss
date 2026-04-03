@@ -53,15 +53,24 @@ export function calculateFranchiseEquity(
     crossoverBonus += Math.min(0.5, synergyHits * 0.15);
 
     // Avengers-style crossover event check
+    // 🌌 The Universe Builder: Massive event films generate unprecedented synergy.
     if (assets.length >= 3 && genres.some(g => g === 'Multiverse' || g === 'IP Mashup')) {
-      crossoverBonus += 0.3;
+      crossoverBonus += 0.45;
+    }
+
+    // 🌌 The Universe Builder: Added a 15% synergy bonus when combining two Level 3+ franchises in a crossover event.
+    if (assets.length >= 5) {
+      crossoverBonus += 0.15;
     }
   }
   
   // 2. Format Diversity Multiplier
   const multiplier = franchise.synergyMultiplier;
   
-  return Math.floor(baseEquity * crossoverBonus * multiplier);
+  // 🌌 The Universe Builder: A mega-franchise with 10+ assets holds a cultural premium.
+  const megaFranchisePremium = assets.length >= 10 ? 1.25 : 1.0;
+
+  return Math.floor(baseEquity * crossoverBonus * multiplier * megaFranchisePremium);
 }
 
 /**
@@ -85,7 +94,7 @@ export function updateFranchiseHub(state: GameState, project: Project, rng: Rand
       description: `The ${project.title} Universe`,
       relevanceScore: 100,
       fatigueLevel: 0,
-      audienceLoyalty: 50,
+      audienceLoyalty: isBreakout ? 65 : 50, // 🌌 The Universe Builder: Breakout hits secure higher initial loyalty.
       totalEquity: Math.floor(project.revenue * 0.2),
       synergyMultiplier: 1.0,
       assetIds: [`ip-${project.id}`],
@@ -111,7 +120,7 @@ export function updateFranchiseHub(state: GameState, project: Project, rng: Rand
         assetIds: nextAssetIds,
         lastReleaseWeeks: [...hub.lastReleaseWeeks, project.releaseWeek || state.week],
         // Update synergy based on format diversity
-        synergyMultiplier: clamp(hub.synergyMultiplier + 0.1, 1.0, 2.5) 
+        synergyMultiplier: clamp(hub.synergyMultiplier + 0.15, 1.0, 3.0) // 🌌 The Universe Builder: Synergy cap raised for mega-franchises.
       };
 
       // Recalculate Enterprise Value
@@ -171,7 +180,7 @@ export function calculateFranchiseEvolutionImpacts(state: GameState, rng: Random
           description: `The ${project.title} Universe`,
           relevanceScore: 100,
           fatigueLevel: 0,
-          audienceLoyalty: 50,
+          audienceLoyalty: isBreakout ? 65 : 50, // 🌌 The Universe Builder: Breakout hits secure higher initial loyalty.
           totalEquity: Math.floor(project.revenue * 0.2),
           synergyMultiplier: 1.0,
           assetIds: [`ip-${project.id}`],
@@ -214,7 +223,7 @@ export function calculateFranchiseEvolutionImpacts(state: GameState, rng: Random
               update: {
                 assetIds: nextAssetIds,
                 lastReleaseWeeks: nextReleaseWeeks,
-                synergyMultiplier: clamp(hub.synergyMultiplier + 0.1, 1.0, 2.5)
+                synergyMultiplier: clamp(hub.synergyMultiplier + 0.15, 1.0, 3.0) // 🌌 The Universe Builder: Synergy cap raised for mega-franchises.
               }
             }
           });
