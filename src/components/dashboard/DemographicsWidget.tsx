@@ -33,7 +33,7 @@ export const DemographicsWidget: React.FC = () => {
       <CardHeader className="pb-4 border-b border-white/10 relative z-10 bg-white/5">
         <CardTitle className="text-xs font-black text-muted-foreground/80 uppercase tracking-[0.2em] flex items-center justify-between">
           <span className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-primary shadow-[0_0_10px_rgba(var(--primary),0.8)] animate-pulse" />
+            <div className="w-2 h-2 rounded-full bg-primary shadow-[0_0_10px_hsl(var(--primary) / 0.8)] animate-pulse" />
             <span className="group-hover:text-foreground/90 transition-colors tracking-widest drop-shadow-sm">Audience Trends</span>
           </span>
           <span className="text-[9px] px-2.5 py-1 rounded-full bg-white/10 font-mono tracking-widest border border-white/5 shadow-inner">DATA</span>
