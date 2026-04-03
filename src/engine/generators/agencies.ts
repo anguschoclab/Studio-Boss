@@ -147,47 +147,47 @@ export function generateAgencies(rng: RandomGenerator, count: number): Agency[] 
     let archetype: AgencyArchetype;
     let actualName: string;
 
-    const r = (rng.next ? (rng && rng.next ? rng.next() : Math.random()) : Math.random());
+    const r = rng.next();
 
     if (i < 2) {
       archetype = 'powerhouse';
-      actualName = (rng && rng.pick ? rng.pick.bind(rng) : pick)(POWERHOUSE_PREFIXES) + (rng && rng.pick ? rng.pick.bind(rng) : pick)([' Partners', ' Representation', ' Agency', ' Group', ' Collective']);
+      actualName = pick(POWERHOUSE_PREFIXES, rng) + pick([' Partners', ' Representation', ' Agency', ' Group', ' Collective'], rng);
     } else if (i % 3 === 0) {
       archetype = 'shark';
-      actualName = (rng && rng.pick ? rng.pick.bind(rng) : pick)(SHARK_PREFIXES) + (rng && rng.pick ? rng.pick.bind(rng) : pick)([' Management', ' Media', ' Brokers', ' Associates']);
+      actualName = pick(SHARK_PREFIXES, rng) + pick([' Management', ' Media', ' Brokers', ' Associates'], rng);
     } else if (r < 0.15) {
       archetype = 'comedy_specialist';
-      actualName = (rng && rng.pick ? rng.pick.bind(rng) : pick)(['Giggles', 'Laugh Track', 'Standup', 'Joke', 'Punchline']) + (rng && rng.pick ? rng.pick.bind(rng) : pick)([' Reps', ' Management', ' Artists']);
+      actualName = pick(['Giggles', 'Laugh Track', 'Standup', 'Joke', 'Punchline'], rng) + pick([' Reps', ' Management', ' Artists'], rng);
     } else if (r < 0.3) {
       archetype = 'lit_agency';
-      actualName = (rng && rng.pick ? rng.pick.bind(rng) : pick)(['Pages', 'Story', 'Narrative', 'Ink', 'Typewriter']) + (rng && rng.pick ? rng.pick.bind(rng) : pick)([' Guild', ' Agency', ' Associates']);
+      actualName = pick(['Pages', 'Story', 'Narrative', 'Ink', 'Typewriter'], rng) + pick([' Guild', ' Agency', ' Associates'], rng);
     } else if (r < 0.45) {
       archetype = 'mega_corp';
-      actualName = (rng && rng.pick ? rng.pick.bind(rng) : pick)(['Omni', 'Global', 'Universal', 'Infinite', 'Massive']) + (rng && rng.pick ? rng.pick.bind(rng) : pick)([' Media', ' Corp', ' Representation']);
+      actualName = pick(['Omni', 'Global', 'Universal', 'Infinite', 'Massive'], rng) + pick([' Media', ' Corp', ' Representation'], rng);
     } else if (r < 0.55) {
       archetype = 'streaming_titan';
-      actualName = (rng && rng.pick ? rng.pick.bind(rng) : pick)(STREAMING_TITAN_PREFIXES) + (rng && rng.pick ? rng.pick.bind(rng) : pick)([' Representation', ' Management', ' Artists']);
+      actualName = pick(STREAMING_TITAN_PREFIXES, rng) + pick([' Representation', ' Management', ' Artists'], rng);
     } else if (r < 0.65) {
       archetype = 'indie_darling';
-      actualName = (rng && rng.pick ? rng.pick.bind(rng) : pick)(INDIE_DARLING_PREFIXES) + (rng && rng.pick ? rng.pick.bind(rng) : pick)([' Guild', ' Collective', ' Artists']);
+      actualName = pick(INDIE_DARLING_PREFIXES, rng) + pick([' Guild', ' Collective', ' Artists'], rng);
     } else if (r < 0.70) {
       archetype = 'nepotism_mill';
-      actualName = (rng && rng.pick ? rng.pick.bind(rng) : pick)(NEPO_MILL_PREFIXES) + (rng && rng.pick ? rng.pick.bind(rng) : pick)([' Representation', ' Management', ' Dynasty']);
+      actualName = pick(NEPO_MILL_PREFIXES, rng) + pick([' Representation', ' Management', ' Dynasty'], rng);
     } else if (r < 0.75) {
       archetype = 'international_broker';
-      actualName = (rng && rng.pick ? rng.pick.bind(rng) : pick)(INT_BROKER_PREFIXES) + (rng && rng.pick ? rng.pick.bind(rng) : pick)([' Media', ' Exchange', ' Associates']);
+      actualName = pick(INT_BROKER_PREFIXES, rng) + pick([' Media', ' Exchange', ' Associates'], rng);
     } else if (r < 0.80) {
       archetype = 'legacy_defenders';
-      actualName = (rng && rng.pick ? rng.pick.bind(rng) : pick)(LEGACY_PREFIXES) + (rng && rng.pick ? rng.pick.bind(rng) : pick)([' Representation', ' Icons', ' Legacy']);
+      actualName = pick(LEGACY_PREFIXES, rng) + pick([' Representation', ' Icons', ' Legacy'], rng);
     } else if (r < 0.85) {
       archetype = 'genre_kings';
-      actualName = (rng && rng.pick ? rng.pick.bind(rng) : pick)(GENRE_PREFIXES) + (rng && rng.pick ? rng.pick.bind(rng) : pick)([' Guild', ' Management', ' Associates']);
+      actualName = pick(GENRE_PREFIXES, rng) + pick([' Guild', ' Management', ' Associates'], rng);
     } else if (r < 0.90) {
       archetype = 'influencer_syndicate';
-      actualName = (rng && rng.pick ? rng.pick.bind(rng) : pick)(INFLUENCER_PREFIXES) + (rng && rng.pick ? rng.pick.bind(rng) : pick)([' Media', ' Sync', ' Creators']);
+      actualName = pick(INFLUENCER_PREFIXES, rng) + pick([' Media', ' Sync', ' Creators'], rng);
     } else {
       archetype = 'boutique';
-      actualName = (rng && rng.pick ? rng.pick.bind(rng) : pick)(BOUTIQUE_PREFIXES) + (rng && rng.pick ? rng.pick.bind(rng) : pick)([' Reps', ' Artists', ' Guild', ' Defenders']);
+      actualName = pick(BOUTIQUE_PREFIXES, rng) + pick([' Reps', ' Artists', ' Guild', ' Defenders'], rng);
     }
 
     let tier: AgencyTier;
@@ -199,13 +199,13 @@ export function generateAgencies(rng: RandomGenerator, count: number): Agency[] 
         tier = 'specialist';
     } else {
         const potentialTiers = ['mid-tier', 'boutique', 'specialist'] as AgencyTier[];
-        tier = (archetype === 'international_broker' || archetype === 'legacy_defenders') ? 'major' : (rng && rng.pick ? rng.pick.bind(rng) : pick)(potentialTiers);
+        tier = (archetype === 'international_broker' || archetype === 'legacy_defenders') ? 'major' : pick(potentialTiers, rng);
     }
 
     let culture: AgencyCulture;
     if (archetype === 'powerhouse' || archetype === 'mega_corp' || archetype === 'streaming_titan') {
       const potentialCultures = ['shark', 'volume'] as AgencyCulture[];
-      culture = (rng && rng.pick ? rng.pick.bind(rng) : pick)(potentialCultures);
+      culture = pick(potentialCultures, rng);
     }
     else if (archetype === 'shark') culture = 'shark';
     else if (archetype === 'lit_agency' || archetype === 'indie_darling') culture = 'prestige';
@@ -213,12 +213,12 @@ export function generateAgencies(rng: RandomGenerator, count: number): Agency[] 
     else if (archetype === 'influencer_syndicate' || archetype === 'genre_kings') culture = 'volume';
     else {
       const potentialCultures = ['family', 'prestige'] as AgencyCulture[];
-      culture = (rng && rng.pick ? rng.pick.bind(rng) : pick)(potentialCultures);
+      culture = pick(potentialCultures, rng);
     }
 
     const leverage = (archetype === 'powerhouse' || archetype === 'mega_corp' || archetype === 'streaming_titan') 
-      ? Math.floor(((rng && rng.range) ? rng.range.bind(rng) : (min, max) => Math.floor(Math.random() * (max - min + 1)) + min)(85, 100))
-      : (archetype === 'shark' ? Math.floor(((rng && rng.range) ? rng.range.bind(rng) : (min, max) => Math.floor(Math.random() * (max - min + 1)) + min)(80, 95)) : Math.floor(((rng && rng.range) ? rng.range.bind(rng) : (min, max) => Math.floor(Math.random() * (max - min + 1)) + min)(20, 60)));
+      ? Math.floor(rng.range(85, 100))
+      : (archetype === 'shark' ? Math.floor(rng.range(80, 95)) : Math.floor(rng.range(20, 60)));
 
     let traitsPool: string[];
     if (archetype === 'shark') traitsPool = [...SHARK_TRAITS];
@@ -239,7 +239,7 @@ export function generateAgencies(rng: RandomGenerator, count: number): Agency[] 
     const traits: string[] = [];
     for (let j = 0; j < 2; j++) {
       if (traitsPool.length > 0) {
-        const selected = (rng && rng.pick ? rng.pick.bind(rng) : pick)(traitsPool);
+        const selected = pick(traitsPool, rng);
         traits.push(selected);
         traitsPool = traitsPool.filter(t => t !== selected);
       }
@@ -267,12 +267,12 @@ export function generateAgencies(rng: RandomGenerator, count: number): Agency[] 
     };
 
     agencies.push({
-      id: (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('agency'),
+      id: rng.uuid('agency'),
       name: actualName,
       archetype,
       tier,
       culture,
-      prestige: tier === 'powerhouse' ? Math.floor(((rng && rng.range) ? rng.range.bind(rng) : (min, max) => Math.floor(Math.random() * (max - min + 1)) + min)(80, 100)) : (tier === 'major' ? Math.floor(((rng && rng.range) ? rng.range.bind(rng) : (min, max) => Math.floor(Math.random() * (max - min + 1)) + min)(60, 85)) : Math.floor(((rng && rng.range) ? rng.range.bind(rng) : (min, max) => Math.floor(Math.random() * (max - min + 1)) + min)(30, 70))),
+      prestige: tier === 'powerhouse' ? Math.floor(rng.range(80, 100)) : (tier === 'major' ? Math.floor(rng.range(60, 85)) : Math.floor(rng.range(30, 70))),
       leverage,
       marketSensitivity: archetype === 'boutique' ? 0.3 : (archetype === 'shark' ? 0.8 : 0.5),
       globalReach: archetype === 'international_broker' ? 90 : (tier === 'powerhouse' ? 80 : 40),
@@ -297,10 +297,10 @@ export function generateAgents(rng: RandomGenerator, agencies: Agency[], countPe
     const agentCount = agency.tier === 'powerhouse' ? countPerAgency * 2 : (agency.tier === 'boutique' ? Math.max(1, Math.floor(countPerAgency / 2)) : countPerAgency);
 
     for (let i = 0; i < agentCount; i++) {
-      const firstName = (rng && rng.pick ? rng.pick.bind(rng) : pick)(AGENT_FIRST_NAMES);
-      const lastName = (rng && rng.pick ? rng.pick.bind(rng) : pick)(AGENT_LAST_NAMES);
+      const firstName = pick(AGENT_FIRST_NAMES, rng);
+      const lastName = pick(AGENT_LAST_NAMES, rng);
       const potentialSpecialties = ['film_packaging', 'tv_packaging', 'literary', 'talent', 'comedy', 'unscripted'] as AgentSpecialty[];
-      let specialty: AgentSpecialty = (rng && rng.pick ? rng.pick.bind(rng) : pick)(potentialSpecialties);
+      let specialty: AgentSpecialty = pick(potentialSpecialties, rng);
 
       // Override specialty based on agency traits
       if (agency.traits?.includes('Only represents comedy writers')) {
@@ -311,16 +311,16 @@ export function generateAgents(rng: RandomGenerator, agencies: Agency[], countPe
       }
 
       agents.push({
-        id: (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('agent'),
+        id: rng.uuid('agent'),
         agencyId: agency.id,
         name: `${firstName} ${lastName}`,
         specialty,
-        prestige: Math.floor(((rng && rng.range) ? rng.range.bind(rng) : (min, max) => Math.floor(Math.random() * (max - min + 1)) + min)(agency.prestige - 20, agency.prestige + 20)),
-        leverage: agency.culture === 'shark' ? Math.floor(((rng && rng.range) ? rng.range.bind(rng) : (min, max) => Math.floor(Math.random() * (max - min + 1)) + min)(70, 100)) : Math.floor(((rng && rng.range) ? rng.range.bind(rng) : (min, max) => Math.floor(Math.random() * (max - min + 1)) + min)(30, 80)),
+        prestige: Math.floor(rng.range(agency.prestige - 20, agency.prestige + 20)),
+        leverage: agency.culture === 'shark' ? Math.floor(rng.range(70, 100)) : Math.floor(rng.range(30, 80)),
         negotiationTactic: agency.culture === 'shark' ? 'SHARK' : (agency.culture === 'prestige' ? 'PRESTIGE' : 'VOLUME'),
         motivationProfile: agency.motivationProfile ? { 
           ...agency.motivationProfile, 
-          aggression: agency.motivationProfile.aggression + ((rng && rng.range) ? rng.range.bind(rng) : (min, max) => Math.floor(Math.random() * (max - min + 1)) + min)(-10, 10)
+          aggression: agency.motivationProfile.aggression + rng.range(-10, 10)
         } : undefined
       });
     }

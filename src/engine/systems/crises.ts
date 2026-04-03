@@ -9,11 +9,11 @@ import { RandomGenerator } from '../utils/rng';
  * Returns a StateImpact that adds a crisis to a project.
  */
 export function generateCrisis(project: Project, rng: RandomGenerator): StateImpact | null {
-  const template = (rng && rng.pick ? rng.pick.bind(rng) : pick)(CRISIS_POOLS);
+  const template = pick(CRISIS_POOLS, rng);
   if (!template) return null;
 
   const crisis: ActiveCrisis = {
-    crisisId: (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('crisis'),
+    crisisId: rng.uuid('crisis'),
     triggeredWeek: 0, // Will be set by the coordinator or reducer
     haltedProduction: false,
     description: template.description,
@@ -37,7 +37,7 @@ export function generateCrisis(project: Project, rng: RandomGenerator): StateImp
  */
 export function checkAndTriggerCrisis(project: Project, rng: RandomGenerator): StateImpact | null {
   // 3% base chance of a production crisis per week
-  if ((rng && rng.next ? rng.next() : Math.random()) < 0.03) {
+  if (rng.next() < 0.03) {
     return generateCrisis(project, rng);
   }
   return null;
@@ -90,14 +90,14 @@ export function resolveCrisis(state: GameState, projectId: string, optionIndex: 
   }
 
   impact.newHeadlines!.push({
-    id: (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('hl'),
+    id: rng.uuid('hl'),
     week: state.week,
     category: 'general',
     text: `Crisis resolved for "${project.title}": ${option.text}`
   });
 
   impact.newsEvents!.push({
-    id: (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('news'),
+    id: rng.uuid('news'),
     week: state.week,
     type: 'CRISIS',
     headline: `Crisis at ${project.title}`,

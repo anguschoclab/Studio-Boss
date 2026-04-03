@@ -13,7 +13,7 @@ function calculateSubChange(platform: StreamerPlatform, rng: RandomGenerator): n
   const marketingFactor = (platform.marketingSpend || 0) / 500000; // Normalized to 500k
   
   // Add 1% stochastic variance
-  const variance = 1 + ((rng && rng.next ? rng.next() : Math.random()) - 0.5) * 0.01;
+  const variance = 1 + (rng.next() - 0.5) * 0.01;
   const growth = (baseGrowthRate * qualityFactor + marketingFactor * 0.01) * platform.subscribers * variance;
 
   // 📺 The Syndication Baron: Streaming wars subscriber churn penalty for flatlining growth.

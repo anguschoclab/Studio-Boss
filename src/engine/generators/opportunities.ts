@@ -178,13 +178,13 @@ function generateFlavor(rng: RandomGenerator, genre: string, type: string, budge
   `A deeply cynical ${genre} ${type} designed to appeal exclusively to a demographic that doesn't actually exist.`
 ];
   
-  return (rng && rng.pick ? rng.pick.bind(rng) : pick)(cynicalFlavors);
+  return pick(cynicalFlavors, rng);
 }
 
 export function generateProjectTitle(rng: RandomGenerator): string {
-  const roll = (rng.next ? (rng && rng.next ? rng.next() : Math.random()) : Math.random());
-  const adj = (rng && rng.pick ? rng.pick.bind(rng) : pick)(PROJECT_ADJECTIVES);
-  const noun = (rng && rng.pick ? rng.pick.bind(rng) : pick)(PROJECT_NOUNS);
+  const roll = rng.next();
+  const adj = pick(PROJECT_ADJECTIVES, rng);
+  const noun = pick(PROJECT_NOUNS, rng);
   
   if (roll > 0.5) {
     return `The ${adj} ${noun}`;
@@ -193,17 +193,17 @@ export function generateProjectTitle(rng: RandomGenerator): string {
 }
 
 export function generateOpportunity(rng: RandomGenerator, talentIds?: string[]): Opportunity {
-  const isFilm = (rng.next ? (rng && rng.next ? rng.next() : Math.random()) : Math.random()) > 0.4;
-  const genre: string = (rng && rng.pick ? rng.pick.bind(rng) : pick)([...GENRES]);
-  const targetAudience: string = (rng && rng.pick ? rng.pick.bind(rng) : pick)([...TARGET_AUDIENCES]);
-  const budgetTier = (rng && rng.pick ? rng.pick.bind(rng) : pick)(['low', 'mid', 'high', 'blockbuster'] as BudgetTierKey[]);
+  const isFilm = rng.next() > 0.4;
+  const genre: string = pick([...GENRES], rng);
+  const targetAudience: string = pick([...TARGET_AUDIENCES], rng);
+  const budgetTier = pick(['low', 'mid', 'high', 'blockbuster'] as BudgetTierKey[], rng);
 
-  const type = (rng && rng.pick ? rng.pick.bind(rng) : pick)(['script', 'package', 'pitch', 'rights'] as const);
-  const origin = (rng && rng.pick ? rng.pick.bind(rng) : pick)(['open_spec', 'agency_package', 'writer_sample', 'heat_list', 'passion_project'] as const);
+  const type = pick(['script', 'package', 'pitch', 'rights'] as const, rng);
+  const origin = pick(['open_spec', 'agency_package', 'writer_sample', 'heat_list', 'passion_project'] as const, rng);
 
-  const weeksUntilExpiry = ((rng && rng.rangeInt) ? rng.rangeInt.bind(rng) : (min, max) => Math.floor(Math.random() * (max - min + 1)) + min)(4, 12);
+  const weeksUntilExpiry = rng.rangeInt(4, 12);
   const opt: Opportunity = {
-    id: (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('opp'),
+    id: rng.uuid('opp'),
     type,
     title: generateProjectTitle(rng),
     format: isFilm ? 'film' : 'tv',
@@ -212,16 +212,16 @@ export function generateOpportunity(rng: RandomGenerator, talentIds?: string[]):
     targetAudience,
     flavor: generateFlavor(rng, genre, type, budgetTier, origin),
     origin,
-    costToAcquire: ((rng && rng.rangeInt) ? rng.rangeInt.bind(rng) : (min, max) => Math.floor(Math.random() * (max - min + 1)) + min)(10, 500) * 1000,
+    costToAcquire: rng.rangeInt(10, 500) * 1000,
     weeksUntilExpiry,
-    attachedTalentIds: talentIds && talentIds.length > 0 && (rng.next ? (rng && rng.next ? rng.next() : Math.random()) : Math.random()) > 0.5 ? [(rng && rng.pick ? rng.pick.bind(rng) : pick)(talentIds)] : undefined,
+    attachedTalentIds: talentIds && talentIds.length > 0 && rng.next() > 0.5 ? [pick(talentIds, rng)] : undefined,
     bids: {},
     bidHistory: [],
     expirationWeek: weeksUntilExpiry,
   };
 
   if (!isFilm) {
-    opt.tvFormat = (rng && rng.pick ? rng.pick.bind(rng) : pick)(['sitcom', 'procedural', 'prestige_drama', 'limited_series', 'animated_comedy', 'animated_prestige', 'daytime_soap', 'late_night_talk', 'sketch_comedy', 'sci_fi_epic', 'teen_drama', 'fantasy_epic', 'anthology_series', 'telenovela', 'historical_drama', 'medical_procedural'] as TvFormatKey[]);
+    opt.tvFormat = pick(['sitcom', 'procedural', 'prestige_drama', 'limited_series', 'animated_comedy', 'animated_prestige', 'daytime_soap', 'late_night_talk', 'sketch_comedy', 'sci_fi_epic', 'teen_drama', 'fantasy_epic', 'anthology_series', 'telenovela', 'historical_drama', 'medical_procedural'] as TvFormatKey[], rng);
     opt.episodes = opt.tvFormat === 'limited_series' ? 8 : 10;
     opt.releaseModel = 'weekly';
   }

@@ -65,12 +65,12 @@ export function advanceBuyers(state: GameState, rng: RandomGenerator): StateImpa
       performance = (revenue - costs) / 1_000_000;
       update.strength = Math.max(10, Math.min(100, currentStrength + performance));
 
-      if ((rng && rng.next ? rng.next() : Math.random()) < 0.02) {
+      if (rng.next() < 0.02) {
         impact.newHeadlines!.push({
-          id: (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('hl'),
+          id: rng.uuid('hl'),
           week: currWeek,
           category: 'market',
-          text: (rng && rng.pick ? rng.pick.bind(rng) : pick)(performance > 0 ? STREAMER_GROWTH_EVENTS : STREAMER_DECLINE_EVENTS)(buyer.name),
+          text: pick(performance > 0 ? STREAMER_GROWTH_EVENTS : STREAMER_DECLINE_EVENTS, rng)(buyer.name),
         });
       }
     } else {
@@ -87,10 +87,10 @@ export function advanceBuyers(state: GameState, rng: RandomGenerator): StateImpa
       if (!buyer.isAcquirable) {
         update.isAcquirable = true;
         impact.newHeadlines!.push({
-          id: (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('hl'),
+          id: rng.uuid('hl'),
           week: currWeek,
           category: 'market',
-          text: (rng && rng.pick ? rng.pick.bind(rng) : pick)(VULNERABILITY_HEADLINES)(buyer.name),
+          text: pick(VULNERABILITY_HEADLINES, rng)(buyer.name),
         });
       }
     } else {
@@ -101,13 +101,13 @@ export function advanceBuyers(state: GameState, rng: RandomGenerator): StateImpa
   }
 
   // M&A Execution
-  if ((rng && rng.next ? rng.next() : Math.random()) < 0.08) {
+  if (rng.next() < 0.08) {
     const vulnerable = activeBuyers.filter(b => b.isAcquirable);
     const strong = activeBuyers.filter(b => !b.isAcquirable && (b.strength ?? 60) > 70);
 
     if (vulnerable.length > 0 && strong.length > 0) {
-      const acquirer = (rng && rng.pick ? rng.pick.bind(rng) : pick)(strong);
-      const target = (rng && rng.pick ? rng.pick.bind(rng) : pick)(vulnerable);
+      const acquirer = pick(strong, rng);
+      const target = pick(vulnerable, rng);
 
       if (acquirer.id !== target.id) {
         const maHistory = [...(target.maHistory || [])];
@@ -135,10 +135,10 @@ export function advanceBuyers(state: GameState, rng: RandomGenerator): StateImpa
         });
 
         impact.newHeadlines!.push({
-          id: (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('hl'),
+          id: rng.uuid('hl'),
           week: currWeek,
           category: 'market',
-          text: (rng && rng.pick ? rng.pick.bind(rng) : pick)(MERGER_HEADLINES)(acquirer.name, target.name),
+          text: pick(MERGER_HEADLINES, rng)(acquirer.name, target.name),
         });
       }
     }

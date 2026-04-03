@@ -20,7 +20,7 @@ export function calculateWeeklyRating(project: SeriesProject, currentBuzz: numbe
   const waterCoolerBonus = currentBuzz > 85 ? 1.2 : 1.0;
   
   // Deterministic variance: +/- 5%
-  const variance = 0.95 + ((rng && rng.next ? rng.next() : Math.random()) * 0.1);
+  const variance = 0.95 + (rng.next() * 0.1);
   
   const finalRating = baseRating * qualityMultiplier * decayValue * waterCoolerBonus * variance;
   

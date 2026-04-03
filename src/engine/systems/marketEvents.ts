@@ -74,7 +74,7 @@ export function advanceMarketEvents(state: GameState, rng: RandomGenerator): Sta
     impacts.push({
       type: 'NEWS_ADDED',
       payload: {
-        id: (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('news'),
+        id: rng.uuid('news'),
         week: state.week,
         headline: 'Market Normalizes',
         description: `The ${exp.name} has finally ended.`,
@@ -83,11 +83,11 @@ export function advanceMarketEvents(state: GameState, rng: RandomGenerator): Sta
   }
   
   // Chance to spawn new event if none active
-  if (activeEvents.length === 0 && (rng && rng.next ? rng.next() : Math.random()) < 0.02) {
-    const template = (rng && rng.pick ? rng.pick.bind(rng) : pick)(EVENT_TEMPLATES);
+  if (activeEvents.length === 0 && rng.next() < 0.02) {
+    const template = pick(EVENT_TEMPLATES, rng);
     const newEvent: MarketEvent = {
       ...template,
-      id: (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('market-event'),
+      id: rng.uuid('market-event'),
       weeksRemaining: Math.floor(rng.range(12, 52))
     };
     
@@ -95,7 +95,7 @@ export function advanceMarketEvents(state: GameState, rng: RandomGenerator): Sta
     impacts.push({
       type: 'NEWS_ADDED',
       payload: {
-        id: (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('news'),
+        id: rng.uuid('news'),
         week: state.week,
         headline: `MAJOR INDUSTRY EVENT: ${newEvent.name}`,
         description: newEvent.description,

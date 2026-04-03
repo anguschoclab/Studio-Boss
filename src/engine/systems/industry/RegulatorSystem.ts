@@ -4,7 +4,7 @@ import { RandomGenerator } from '../../utils/rng';
 /**
  * IndustryRegulator - Anti-Trust & Economic Replenishment
  */
-export class IndustryRegulator {
+export class RegulatorSystem {
   static tick(state: GameState, rng: RandomGenerator): StateImpact[] {
     const impacts: StateImpact[] = [];
     
@@ -16,7 +16,7 @@ export class IndustryRegulator {
     ];
 
     const totalIndustryCash = studios.reduce((sum, s) => sum + s.cash, 0);
-    const threshold = 0.45; // 45% of total industry cash
+    const threshold = 0.40; // 🌌 PHASE 2: Anti-Trust cap moved to 40% per TDD.
 
     studios.forEach(s => {
       if (s.cash > totalIndustryCash * threshold && s.type === 'major') {
@@ -36,6 +36,7 @@ export class IndustryRegulator {
           impacts.push({
             type: 'NEWS_ADDED',
             payload: {
+              id: rng.uuid('news'),
               headline: `SEC Fines ${s.name} for Monopolistic Cash Reserves`,
               category: 'market',
               publication: 'Financial Journal'
@@ -56,13 +57,37 @@ export class IndustryRegulator {
       }
     });
 
-    // 2. Talent Market Replenishment
-    // Ensure the talent pool doesn't stagnate by injecting new talent.
-    if (Object.keys(state.industry.talentPool).length < 200 || rng.next() < 0.1) {
-        // This is handled by TalentSystem or gameInit in larger sweeps, 
-        // but can trigger micro-injections here if needed.
+    return impacts;
+  }
+
+  /**
+   * 🌌 PHASE 2: Consolidation Check.
+   * prevents M&A that would result in >40% market share or cash dominance.
+   */
+  static isBlocked(
+    state: GameState, 
+    acquirerId: string, 
+    targetId: string, 
+    rng: RandomGenerator
+  ): { blocked: boolean; reason?: string } {
+    const acquirer = acquirerId === 'player' ? state.studio : state.industry.rivals.find(r => r.id === acquirerId);
+    const target = state.industry.rivals.find(r => r.id === targetId) || state.market.buyers.find(b => b.id === targetId);
+    
+    if (!acquirer || !target) return { blocked: false };
+
+    // 1. Absolute Dominance Check
+    const totalCash = (state.finance.cash) + state.industry.rivals.reduce((sum, r) => sum + r.cash, 0);
+    const acquirerCash = acquirerId === 'player' ? state.finance.cash : (acquirer as import('@/engine/types').RivalStudio).cash;
+    
+    if (acquirerCash > totalCash * 0.45) {
+      return { blocked: true, reason: 'Market Dominance Threshold' };
     }
 
-    return impacts;
+    // 2. Regulatory Random Audit (5% chance of block for major mergers)
+    if (rng.next() < 0.05) {
+      return { blocked: true, reason: 'Anti-Trust Investigation' };
+    }
+
+    return { blocked: false };
   }
 }

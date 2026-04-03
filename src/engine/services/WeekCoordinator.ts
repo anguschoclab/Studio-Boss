@@ -1,7 +1,7 @@
 import { GameState, StateImpact, WeekSummary, GameEvent } from '../types';
 import { RandomGenerator } from '../utils/rng';
 import { applyImpacts } from '../core/impactReducer';
-import { IndustryRegulator } from '../systems/industry/RegulatorSystem';
+import { RegulatorSystem } from '../systems/industry/RegulatorSystem';
 import { clamp } from '../utils';
 
 // System Imports
@@ -187,7 +187,7 @@ export class WeekCoordinator {
     }
 
     context.impacts.push(resolveFestivals(state, context.rng));
-    context.impacts.push(...IndustryRegulator.tick(state, context.rng));
+    context.impacts.push(...RegulatorSystem.tick(state, context.rng));
   }
 
   private static runTalentFilter(state: GameState, context: TickContext) {

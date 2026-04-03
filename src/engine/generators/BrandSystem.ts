@@ -20,13 +20,13 @@ export class BrandSystem {
    * Generates a new brand identity.
    * 50% chance of being a Conglomerate.
    */
-  static generateIdentity(existing: Set<string>, rng: any): BrandIdentity {
+  static generateIdentity(existing: Set<string>, rng: RandomGenerator): BrandIdentity {
     let core: string;
-    const isConglomerate = (rng.next ? (rng && rng.next ? rng.next() : Math.random()) : Math.random()) > 0.5;
+    const isConglomerate = rng.next() > 0.5;
     let attempts = 0;
 
     do {
-      core = isConglomerate ? (rng && (rng && rng.pick ? rng.pick.bind(rng) : pick) ? (rng && rng.pick ? rng.pick.bind(rng) : pick).bind(rng) : pick)(CONGLOMERATE_PREFIXES) : (rng && (rng && rng.pick ? rng.pick.bind(rng) : pick) ? (rng && rng.pick ? rng.pick.bind(rng) : pick).bind(rng) : pick)(PREFIXES);
+      core = isConglomerate ? pick(CONGLOMERATE_PREFIXES, rng) : pick(PREFIXES, rng);
       attempts++;
     } while (existing.has(core) && attempts < 50);
 
@@ -38,7 +38,7 @@ export class BrandSystem {
    */
   static getStudioName(identity: BrandIdentity, rng: RandomGenerator): string {
     const suffixes = ['Pictures', 'Studios', 'Entertainment', 'Films', 'Media', 'Productions'];
-    const suffix = (rng && (rng && rng.pick ? rng.pick.bind(rng) : pick) ? (rng && rng.pick ? rng.pick.bind(rng) : pick).bind(rng) : pick)(suffixes);
+    const suffix = pick(suffixes, rng);
     return `${identity.core} ${suffix}`;
   }
 
@@ -48,11 +48,11 @@ export class BrandSystem {
   static getStreamingName(identity: BrandIdentity, rng: RandomGenerator): string {
     if (identity.isConglomerate) {
       const suffixes = ['+', 'Plus', 'Max', 'Go', 'Play', 'Hub'];
-      const suffix = (rng && (rng && rng.pick ? rng.pick.bind(rng) : pick) ? (rng && rng.pick ? rng.pick.bind(rng) : pick).bind(rng) : pick)(suffixes);
+      const suffix = pick(suffixes, rng);
       return `${identity.core}${suffix}`;
     } else {
       const suffixes = ['Cinema', 'Select', 'Direct', 'Watch', 'Premier', 'On Demand'];
-      const suffix = (rng && (rng && rng.pick ? rng.pick.bind(rng) : pick) ? (rng && rng.pick ? rng.pick.bind(rng) : pick).bind(rng) : pick)(suffixes);
+      const suffix = pick(suffixes, rng);
       return `${identity.core} ${suffix}`;
     }
   }
@@ -61,7 +61,7 @@ export class BrandSystem {
    * Generates a network name based on a brand identity.
    */
   static getNetworkName(identity: BrandIdentity, rng: RandomGenerator): string {
-    const suffix = (rng && (rng && rng.pick ? rng.pick.bind(rng) : pick) ? (rng && rng.pick ? rng.pick.bind(rng) : pick).bind(rng) : pick)(NETWORK_SUFFIXES);
+    const suffix = pick([...NETWORK_SUFFIXES], rng);
     return `${identity.core} ${suffix}`;
   }
 

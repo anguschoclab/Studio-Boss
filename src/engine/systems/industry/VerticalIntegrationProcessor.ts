@@ -45,7 +45,7 @@ export function tickVerticalIntegration(state: GameState, rng: RandomGenerator):
     }
 
     // Add news if profit/loss is massive
-    if (Math.abs(netProfit) > 5_000_000 && (rng && rng.next ? rng.next() : Math.random()) < 0.1) {
+    if (Math.abs(netProfit) > 5_000_000 && rng.next() < 0.1) {
       impacts.push({
         type: 'NEWS_ADDED',
         payload: {

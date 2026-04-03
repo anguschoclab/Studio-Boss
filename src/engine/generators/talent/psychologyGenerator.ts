@@ -6,9 +6,9 @@ export function generatePsychology(rng: RandomGenerator, tier: string): TalentPs
   const egoBase = isGlobalSuperstar ? 50 : 10;
   
   return {
-    ego: Math.min(100, egoBase + ((rng && rng.rangeInt) ? rng.rangeInt.bind(rng) : (min, max) => Math.floor(Math.random() * (max - min + 1)) + min)(0, 50)),
-    mood: ((rng && rng.rangeInt) ? rng.rangeInt.bind(rng) : (min, max) => Math.floor(Math.random() * (max - min + 1)) + min)(50, 100),
-    scandalRisk: ((rng && rng.rangeInt) ? rng.rangeInt.bind(rng) : (min, max) => Math.floor(Math.random() * (max - min + 1)) + min)(0, 100),
+    ego: Math.min(100, egoBase + rng.rangeInt(0, 50)),
+    mood: rng.rangeInt(50, 100),
+    scandalRisk: rng.rangeInt(0, 100),
     synergyAffinities: [],
     synergyConflicts: [],
   };

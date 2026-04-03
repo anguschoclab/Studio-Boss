@@ -27,11 +27,11 @@ const MID_ACTIVITIES = [
 
 export function rivalPoachTalent(rng: RandomGenerator, rival: RivalStudio, talentPool: Talent[]): string | null {
   if (rival.strategy === 'acquirer' || rival.cash > 100_000_000) {
-    if ((rng && rng.next ? rng.next() : Math.random()) < 0.05) {
+    if (rng.next() < 0.05) {
       // Find a highly prestigious talent
       const stars = talentPool.filter(t => t.prestige > 80);
       if (stars.length > 0) {
-        const star = (rng && rng.pick ? rng.pick.bind(rng) : pick)(stars);
+        const star = pick(stars, rng);
         return `${rival.name} just poached ${star.name} with a massive overall deal!`;
       }
     }
@@ -43,24 +43,24 @@ export function updateRival(rng: RandomGenerator, rival: RivalStudio): Partial<R
   const update: Partial<RivalStudio> = {};
   
   // Natural fluctuation
-  update.strength = Math.max(20, Math.min(100, rival.strength + ((rng && rng.next ? rng.next() : Math.random()) * 6 - 3)));
+  update.strength = Math.max(20, Math.min(100, rival.strength + (rng.next() * 6 - 3)));
   
   // Strategy driven behavior
   if (rival.archetype === 'major') {
-    update.cash = rival.cash + ((rng && rng.next ? rng.next() : Math.random()) * 40_000_000 - 10_000_000);
-    if ((rng && rng.next ? rng.next() : Math.random()) < 0.25) update.recentActivity = (rng && rng.pick ? rng.pick.bind(rng) : pick)(MAJOR_ACTIVITIES);
-    update.projectCount = Math.max(2, rival.projectCount + ((rng && rng.next ? rng.next() : Math.random()) < 0.6 ? 1 : 0));
+    update.cash = rival.cash + (rng.next() * 40_000_000 - 10_000_000);
+    if (rng.next() < 0.25) update.recentActivity = pick(MAJOR_ACTIVITIES, rng);
+    update.projectCount = Math.max(2, rival.projectCount + (rng.next() < 0.6 ? 1 : 0));
     update.strategy = 'acquirer';
   } else if (rival.archetype === 'indie') {
-    update.cash = rival.cash + ((rng && rng.next ? rng.next() : Math.random()) * 10_000_000 - 4_000_000);
-    if ((rng && rng.next ? rng.next() : Math.random()) < 0.25) update.recentActivity = (rng && rng.pick ? rng.pick.bind(rng) : pick)(INDIE_ACTIVITIES);
-    if ((rng && rng.next ? rng.next() : Math.random()) < 0.1) update.projectCount = Math.max(1, rival.projectCount + 1);
+    update.cash = rival.cash + (rng.next() * 10_000_000 - 4_000_000);
+    if (rng.next() < 0.25) update.recentActivity = pick(INDIE_ACTIVITIES, rng);
+    if (rng.next() < 0.1) update.projectCount = Math.max(1, rival.projectCount + 1);
     update.strategy = 'prestige_chaser';
   } else {
     // mid-tier
-    update.cash = rival.cash + ((rng && rng.next ? rng.next() : Math.random()) * 20_000_000 - 5_000_000);
-    if ((rng && rng.next ? rng.next() : Math.random()) < 0.25) update.recentActivity = (rng && rng.pick ? rng.pick.bind(rng) : pick)(MID_ACTIVITIES);
-    if ((rng && rng.next ? rng.next() : Math.random()) < 0.2) update.projectCount = Math.max(1, rival.projectCount + 1);
+    update.cash = rival.cash + (rng.next() * 20_000_000 - 5_000_000);
+    if (rng.next() < 0.25) update.recentActivity = pick(MID_ACTIVITIES, rng);
+    if (rng.next() < 0.2) update.projectCount = Math.max(1, rival.projectCount + 1);
     update.strategy = 'genre_specialist';
   }
   
@@ -94,7 +94,7 @@ export function advanceRivals(rng: RandomGenerator, state: GameState): StateImpa
     // Log major rival events
     if (update.isAcquirable && !rival.isAcquirable) {
       newsEvents.push({
-        id: (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('news'),
+        id: rng.uuid('news'),
         week: state.week,
         type: 'RIVAL',
         headline: `${rival.name} Vulnerable to Takeover!`,
@@ -114,7 +114,7 @@ export function advanceRivals(rng: RandomGenerator, state: GameState): StateImpa
      const poakMsg = rivalPoachTalent(rng, rival, talentPoolArr);
      if (poakMsg) {
        newsEvents.push({
-         id: (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('news'),
+         id: rng.uuid('news'),
          week: state.week,
          type: 'RIVAL',
          headline: `Talent Poached by ${rival.name}`,

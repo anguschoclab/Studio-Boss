@@ -23,7 +23,7 @@ export function submitToFestival(
   if (project.state === 'development' || project.state === 'pitching') return null;
   
   const submission: FestivalSubmission = {
-    id: (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('fest-sub'),
+    id: rng.uuid('fest-sub'),
     projectId,
     festivalBody,
     status: 'submitted',
@@ -36,7 +36,7 @@ export function submitToFestival(
     newFestivalSubmissions: [...(state.industry.festivalSubmissions || []), submission],
     newHeadlines: [
       {
-        id: (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('hl'),
+        id: rng.uuid('hl'),
         week: state.week,
         category: 'awards' as const,
         text: `"${project.title}" officially submitted for consideration at ${fest.name}.`
@@ -88,7 +88,7 @@ export function resolveFestivals(state: GameState, rng: RandomGenerator): StateI
         impact.prestigeChange! += 2;
         
         impact.newHeadlines!.push({
-          id: (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('hl'),
+          id: rng.uuid('hl'),
           week: state.week,
           category: 'awards' as const,
           text: `Massive buzz out of ${fest.name} as "${project.title}" premieres to standing ovation!`

@@ -18,7 +18,7 @@ export function tickScriptDevelopment(
   if (!('scriptHeat' in project)) return { project };
 
   const p = { ...project } as import('@/engine/types').ScriptedProject;
-  const roll = (rng && rng.next ? rng.next() : Math.random());
+  const roll = rng.next();
   
   // 1. Script Heat Drift
   const heatDrift = rng.rangeInt(-3, 5); // Slight upward bias
@@ -26,7 +26,7 @@ export function tickScriptDevelopment(
 
   // 2. Evolution Events (Low Probability)
   if (roll < 0.15) {
-    const evolutionRoll = (rng && rng.next ? rng.next() : Math.random());
+    const evolutionRoll = rng.next();
 
     // ROLE MERGE (Low Heat or Budget Constraint)
     if (evolutionRoll < 0.4 && p.activeRoles.length > 3) {
@@ -50,7 +50,7 @@ export function tickScriptDevelopment(
     // ROLE SPLIT (High Heat)
     else if (evolutionRoll > 0.8 && p.activeRoles.length < 6) {
       if (p.scriptHeat > 70) {
-        const archetype: CharacterArchetype = (rng && rng.pick ? rng.pick.bind(rng) : pick)(['sidekick', 'love_interest', 'loose_cannon', 'femme_fatale']);
+        const archetype: CharacterArchetype = pick(['sidekick', 'love_interest', 'loose_cannon', 'femme_fatale'], rng);
         p.activeRoles.push(archetype);
 
         const event: import('@/engine/types').ScriptEvent = {
