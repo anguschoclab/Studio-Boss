@@ -1,9 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { generateOpportunity, generateProjectTitle } from '@/engine/generators/opportunities';
+import { RandomGenerator } from '@/engine/utils/rng';
 
 describe('Opportunity Generator', () => {
+  const rng = new RandomGenerator(12345);
+
   it('should generate a valid opportunity', () => {
-    const opp = generateOpportunity();
+    const opp = generateOpportunity(rng);
 
     expect(opp).toBeDefined();
     expect(opp.id).toContain('opp-');
@@ -18,8 +21,8 @@ describe('Opportunity Generator', () => {
   it('should generate attached talent if provided', () => {
     // Generate many to ensure randomness catches one with talent
     let foundTalent = false;
-    for (let i = 0; i < 20; i++) {
-      const opp = generateOpportunity(['t-1', 't-2']);
+    for (let i = 0; i < 50; i++) {
+      const opp = generateOpportunity(rng, ['t-1', 't-2']);
       if (opp.attachedTalentIds && opp.attachedTalentIds.length > 0) {
         foundTalent = true;
         expect(['t-1', 't-2']).toContain(opp.attachedTalentIds[0]);
@@ -32,8 +35,8 @@ describe('Opportunity Generator', () => {
   it('should populate TV specific fields if format is TV', () => {
     // Generate until we get a TV project
     let tvOpp;
-    for (let i = 0; i < 20; i++) {
-      const opp = generateOpportunity();
+    for (let i = 0; i < 50; i++) {
+      const opp = generateOpportunity(rng);
       if (opp.format === 'tv') {
         tvOpp = opp;
         break;
@@ -47,7 +50,7 @@ describe('Opportunity Generator', () => {
   });
 
   it('should generate titles', () => {
-    const title = generateProjectTitle();
+    const title = generateProjectTitle(rng);
     expect(title).toBeTypeOf('string');
     expect(title.length).toBeGreaterThan(0);
   });

@@ -1,12 +1,19 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { generateHeadlines } from '../../../engine/generators/headlines';
+import { RandomGenerator } from '../../../engine/utils/rng';
 import { RivalStudio } from '../../../engine/types';
 
 describe('generateHeadlines', () => {
+  let rng: RandomGenerator;
+
+  beforeEach(() => {
+    rng = new RandomGenerator(12345); // Fixed seed for determinism
+  });
+
   it('should generate between 1 and 3 headlines', () => {
     const week = 1;
     const rivals: RivalStudio[] = [];
-    const headlines = generateHeadlines(week, rivals, [], [], []);
+    const headlines = generateHeadlines(rng, week, rivals, [], [], []);
 
     expect(headlines.length).toBeGreaterThanOrEqual(1);
     expect(headlines.length).toBeLessThanOrEqual(3);
@@ -15,7 +22,7 @@ describe('generateHeadlines', () => {
   it('should return headlines with the correct structure', () => {
     const week = 5;
     const rivals: RivalStudio[] = [];
-    const headlines = generateHeadlines(week, rivals, [], [], []);
+    const headlines = generateHeadlines(rng, week, rivals, [], [], []);
 
     headlines.forEach(headline => {
       expect(headline).toHaveProperty('id');
@@ -37,13 +44,13 @@ describe('generateHeadlines', () => {
     const week = 10;
     const rivals: RivalStudio[] = [
       { id: 'rival-1', name: 'Global Pictures', cash: 100000000, projectCount: 5, motto: 'Bigger is Better', archetype: 'major', strength: 80, prestige: 80, recentActivity: 'Signing stars', motivationProfile: { financial: 0.8, prestige: 0.8, legacy: 0.5, aggression: 0.5 }, currentMotivation: 'prestige' as any, projects: {}, contracts: [], foundedWeek: 1 },
-    { id: 'rival-2', name: 'Indie Art', cash: 1000000, projectCount: 2, motto: 'Art First', archetype: 'major', strength: 20, prestige: 60, recentActivity: 'Festivals', motivationProfile: { financial: 0.2, prestige: 0.9, legacy: 0.8, aggression: 0.3 }, currentMotivation: 'legacy' as any, projects: {}, contracts: [], foundedWeek: 1 }
+      { id: 'rival-2', name: 'Indie Art', cash: 1000000, projectCount: 2, motto: 'Art First', archetype: 'major', strength: 20, prestige: 60, recentActivity: 'Festivals', motivationProfile: { financial: 0.2, prestige: 0.9, legacy: 0.8, aggression: 0.3 }, currentMotivation: 'legacy' as any, projects: {}, contracts: [], foundedWeek: 1 }
     ];
 
     // Run multiple times to ensure we hit the 35% chance for a rival headline
     let foundRivalHeadline = false;
     for (let i = 0; i < 20; i++) {
-      const headlines = generateHeadlines(week, rivals, [], [], []);
+      const headlines = generateHeadlines(rng, week, rivals, [], [], []);
       if (headlines.some(h => h.category === 'rival')) {
         foundRivalHeadline = true;
         break;
@@ -59,7 +66,7 @@ describe('generateHeadlines', () => {
 
     // Run multiple times to ensure we don't accidentally generate a rival headline
     for (let i = 0; i < 20; i++) {
-      const headlines = generateHeadlines(week, rivals, [], [], []);
+      const headlines = generateHeadlines(rng, week, rivals, [], [], []);
       const hasRivalHeadline = headlines.some(h => h.category === 'rival');
       expect(hasRivalHeadline).toBe(false);
     }
@@ -102,8 +109,11 @@ describe('generateHeadlines', () => {
       salary: 100000, 
       buzz: 100, 
       marketability: 100, 
-      skill: 100 
-    }];
+      skill: 100,
+      draw: 100,
+      fee: 100000,
+      energy: 100,
+    } as any];
     const contracts = [{ 
       id: 'c1', 
       projectId: 'p1', 
@@ -116,7 +126,7 @@ describe('generateHeadlines', () => {
 
     let foundInterpolatedHeadline = false;
     for (let i = 0; i < 50; i++) {
-      const headlines = generateHeadlines(1, rivals, projects as any, contracts as any, talent as any);
+      const headlines = generateHeadlines(rng, 1, rivals, projects as any, contracts as any, talent as any);
       const talentHeadline = headlines.find(h => h.category === 'talent');
       if (talentHeadline) {
         if (talentHeadline.text.includes('Test Movie') || talentHeadline.text.includes('James Cameron')) {

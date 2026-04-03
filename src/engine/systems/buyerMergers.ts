@@ -1,6 +1,8 @@
 import { Buyer, StreamerPlatform, GameState } from '@/engine/types';
 import { StateImpact } from '../types/state.types';
 import { RandomGenerator } from '../utils/rng';
+import { updateBuyers } from './buyers';
+import { mergeImpacts } from '../utils/impactUtils';
 
 const MERGER_HEADLINES = [
   (a: string, b: string) => `BREAKING: ${a} acquires ${b} in landmark media deal!`,
@@ -141,5 +143,7 @@ export function advanceBuyers(state: GameState, rng: RandomGenerator): StateImpa
     }
   }
 
-  return impact;
+  const mandateImpact = updateBuyers(activeBuyers, currWeek, rng);
+  
+  return mergeImpacts(impact, mandateImpact);
 }

@@ -43,7 +43,7 @@ export function generateTalent(rng: RandomGenerator, params: { role: TalentRole;
   
   const demographics = generateDemographics(rng, isGlobalSuperstar, params.localCountry);
   const psychology = generatePsychology(rng, params.tier);
-  const name = generateDemographicName(demographics.gender, demographics.country, demographics.ethnicity);
+  const name = generateDemographicName(demographics.gender, demographics.country, demographics.ethnicity, rng);
 
   const isNepo = rng.next() < 0.1;
   const nepoBump = isNepo ? 15 : 0;

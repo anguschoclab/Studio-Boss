@@ -89,7 +89,7 @@ export function generateWeeklyFinancialReport(
     }
   }
 
-  const totalRevenue = boxOffice + distribution + merch + passive + otherRevenue;
+  const totalRevenue = boxOffice + distribution + merch + passive + otherRevenue + (interest < 0 ? Math.abs(interest) : 0);
   const totalExpenses = production + marketing + overhead + totalRoyalties + (interest > 0 ? interest : 0) + otherExpenses;
   const netProfit = totalRevenue - totalExpenses;
 
@@ -153,7 +153,10 @@ export function calculateWeeklyCosts(state: GameState): number {
   return production + marketing + overhead;
 }
 
-export function calculateWeeklyRevenue(projects: Project[], buyers: Buyer[] = []): number {
+export function calculateWeeklyRevenue(state: GameState): number {
+  const projects = Object.values(state.studio?.internal?.projects || {});
+  const buyers = state.market?.buyers || [];
+
   let boxOffice = 0;
   let distribution = 0;
 

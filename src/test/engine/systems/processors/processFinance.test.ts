@@ -59,9 +59,10 @@ describe('tickFinance', () => {
     expect(fundsImpact).toBeDefined();
     expect(ledgerImpact).toBeDefined();
     
-    // Net profit should be negative (1.171875M overhead)
-    expect(fundsImpact?.payload.amount).toBe(-1171875);
+    // Net profit (with 50M cash savings yield @ 2.5%): 
+    // -1,171,875 (overhead) + 24,038 (yield) = -1,147,837
+    expect(fundsImpact?.payload.amount).toBe(-1147837);
     expect(ledgerImpact?.payload.report.week).toBe(5);
-    expect(ledgerImpact?.payload.report.netProfit).toBe(-1171875);
+    expect(ledgerImpact?.payload.report.netProfit).toBe(-1147837);
   });
 });

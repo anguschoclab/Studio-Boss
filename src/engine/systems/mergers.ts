@@ -1,4 +1,5 @@
-import { GameState, RivalStudio, Project, Opportunity } from '@/engine/types';
+import { GameState, RivalStudio, Project, Talent, StateImpact } from '@/engine/types';
+import { RandomGenerator } from '../utils/rng';
 
 export function evaluateAcquisitionTarget(target: RivalStudio, buyerCash: number): { viable: boolean; price: number; reason?: string } {
   let basePrice = Math.max(10_000_000, (target.strength * 2_000_000) + target.cash);
@@ -11,114 +12,88 @@ export function evaluateAcquisitionTarget(target: RivalStudio, buyerCash: number
   return { viable: true, price: finalPrice };
 }
 
-export function executeAcquisition(state: GameState, targetId: string): GameState {
+export function executeAcquisition(state: GameState, targetId: string, rng: RandomGenerator): StateImpact | null {
   const targetIndex = state.industry.rivals.findIndex(r => r.id === targetId);
-  if (targetIndex === -1) return state;
+  if (targetIndex === -1) return null;
   const target = state.industry.rivals[targetIndex];
   const evalResult = evaluateAcquisitionTarget(target, state.finance.cash);
-  if (!evalResult.viable) return state;
+  if (!evalResult.viable) return null;
 
-  const updatedRivals = [...state.industry.rivals];
-  updatedRivals.splice(targetIndex, 1);
-  
-  // Consolidation Logic: Deep-merge library and talent rosters
-  const playerProjects = { ...state.studio.internal.projects };
   const targetProjects = target.projects || {};
+  const projectUpdates: { projectId: string; update: Partial<Project> }[] = [];
   Object.keys(targetProjects).forEach(id => {
-    // Avoid overwriting if ID exists (though it shouldn't)
-    if (!playerProjects[id]) {
-      playerProjects[id] = { ...targetProjects[id], isAcquired: true };
-    }
+      projectUpdates.push({ projectId: id, update: { ...targetProjects[id], isAcquired: true } });
   });
 
-  const playerContracts = [...state.studio.internal.contracts];
-  const targetContracts = target.contracts || [];
-  playerContracts.push(...targetContracts);
-
-  const newPrestige = Math.min(100, state.studio.prestige + (target.strength * 0.2));
-
   return {
-    ...state,
-    finance: { 
-      ...state.finance, 
-      cash: state.finance.cash - evalResult.price + (target.cash || 0) 
-    },
-    studio: { 
-      ...state.studio, 
-      prestige: newPrestige,
-      internal: {
-        ...state.studio.internal,
-        projects: playerProjects,
-        contracts: playerContracts,
+    cashChange: -evalResult.price + (target.cash || 0),
+    prestigeChange: Math.min(100, state.studio.prestige + (target.strength * 0.2)) - state.studio.prestige,
+    projectUpdates,
+    newHeadlines: [
+      {
+        id: rng.uuid('hl'),
+        week: state.week,
+        category: 'market' as const,
+        text: `CONSOLIDATED: ${state.studio.name} absorbs ${target.name}!`
       }
-    },
-    industry: {
-      ...state.industry,
-      rivals: updatedRivals,
-      newsHistory: [
-        {
-          id: crypto.randomUUID(),
-          week: state.week,
-          type: 'STUDIO_EVENT' as const,
-          headline: `CONSOLIDATED: ${state.studio.name} absorbs ${target.name}!`,
-          description: `The acquisition is finalized. ${Object.keys(targetProjects).length} projects and ${targetContracts.length} talent contracts have been integrated into ${state.studio.name}.`,
-        },
-        ...state.industry.newsHistory,
-      ].slice(0, 50),
-    },
+    ],
+    newsEvents: [
+      {
+        id: rng.uuid('news'),
+        week: state.week,
+        type: 'STUDIO_EVENT' as const,
+        headline: `M&A Finalized`,
+        description: `The acquisition of ${target.name} is complete. ${projectUpdates.length} projects have been integrated.`,
+      }
+    ],
+    // The reducer will need to handle RIVAL_REMOVAL specifically if added to StateImpact, 
+    // or we can handle it via a special field. 
+    // For now, we'll assume the caller (Store) removes the rival from the list.
   };
 }
 
-export function executeSabotage(state: GameState, targetId: string): GameState {
+export function executeSabotage(state: GameState, targetId: string, rng: RandomGenerator): StateImpact | null {
   const target = state.industry.rivals.find(r => r.id === targetId);
-  if (!target || state.finance.cash < 1_000_000) return state;
+  if (!target || state.finance.cash < 1_000_000) return null;
 
   return {
-    ...state,
-    finance: { ...state.finance, cash: state.finance.cash - 1_000_000 },
-    industry: {
-      ...state.industry,
-      rumors: [
-        {
-          id: crypto.randomUUID(),
-          week: state.week,
-          text: `Rumors swirl that ${target.name}'s upcoming blockbuster is facing massive reshoots.`,
-          truthful: false,
-          category: 'rival' as const,
-          resolved: false,
-        },
-        ...(state.industry.rumors || []),
-      ].slice(0, 20),
-    },
+    cashChange: -1_000_000,
+    newRumors: [
+      {
+        id: rng.uuid('rumor'),
+        week: state.week,
+        text: `Rumors swirl that ${target.name}'s upcoming blockbuster is facing massive reshoots.`,
+        truthful: false,
+        category: 'rival' as const,
+        resolved: false,
+        resolutionWeek: state.week + 4
+      }
+    ]
   };
 }
 
-export function executePoach(state: GameState, targetId: string): GameState {
-  const targetIndex = state.industry.rivals.findIndex(r => r.id === targetId);
-  if (targetIndex === -1 || state.finance.cash < 3_000_000) return state;
+export function executePoach(state: GameState, targetId: string, rng: RandomGenerator): StateImpact | null {
+  const target = state.industry.rivals.find(r => r.id === targetId);
+  if (!target || state.finance.cash < 3_000_000) return null;
 
-  const updatedRivals = [...state.industry.rivals];
-  const target = updatedRivals[targetIndex];
   const stealAmount = Math.min(5, target.strength);
-  updatedRivals[targetIndex] = { ...target, strength: target.strength - stealAmount };
 
   return {
-    ...state,
-    finance: { ...state.finance, cash: state.finance.cash - 3_000_000 },
-    studio: { ...state.studio, prestige: Math.min(100, state.studio.prestige + stealAmount) },
-    industry: {
-      ...state.industry,
-      rivals: updatedRivals,
-      newsHistory: [
-        {
-          id: crypto.randomUUID(),
-          week: state.week,
-          type: 'STUDIO_EVENT' as const,
-          headline: `${state.studio.name} poaches top executive from ${target.name}!`,
-          description: `A major talent move shakes the industry.`,
-        },
-        ...state.industry.newsHistory,
-      ].slice(0, 50),
-    },
+    cashChange: -3_000_000,
+    prestigeChange: stealAmount,
+    rivalUpdates: [
+      {
+        rivalId: target.id,
+        update: { strength: target.strength - stealAmount }
+      }
+    ],
+    newHeadlines: [
+      {
+        id: rng.uuid('hl'),
+        week: state.week,
+        category: 'talent' as const,
+        text: `${state.studio.name} poaches top executive from ${target.name}!`
+      }
+    ]
   };
 }

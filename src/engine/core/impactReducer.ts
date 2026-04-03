@@ -80,9 +80,9 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     }
 
     case 'NEWS_ADDED': {
-      const { headline, description } = impact.payload;
+      const { id, headline, description } = impact.payload;
       const newsEvent: NewsEvent = {
-        id: `ne-${crypto.randomUUID()}`,
+        id: id,
         week: state.week,
         type: 'STUDIO_EVENT',
         headline: headline,
@@ -338,12 +338,18 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
       }
       if (impact.newHeadlines) {
           impact.newHeadlines.forEach(h => {
-              newState = applySingleImpact(newState, { type: 'NEWS_ADDED', payload: { headline: h.text, description: '' } });
+              newState = applySingleImpact(newState, { 
+                type: 'NEWS_ADDED', 
+                payload: { id: h.id, headline: h.text, description: '', category: h.category } 
+              });
           });
       }
       if (impact.newsEvents) {
           impact.newsEvents.forEach(e => {
-              newState = applySingleImpact(newState, { type: 'NEWS_ADDED', payload: { headline: e.headline, description: e.description } });
+              newState = applySingleImpact(newState, { 
+                type: 'NEWS_ADDED', 
+                payload: { id: e.id, headline: e.headline, description: e.description } 
+              });
           });
       }
       if (impact.newAwards) {

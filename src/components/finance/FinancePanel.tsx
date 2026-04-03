@@ -22,13 +22,13 @@ export const FinancePanel = () => {
 
   const cash = gameState?.finance?.cash ?? 0;
   const rawFinanceHistory = gameState?.finance?.weeklyHistory; // Use new structured history
-  const rawProjects = Object.values(gameState?.studio.internal.projects || {});
+  const rawProjects = Object.values(gameState?.studio?.internal?.projects || {});
 
   const projectsMemo = useMemo(() => rawProjects ?? [], [rawProjects]);
   const financeHistory = useMemo(() => rawFinanceHistory ?? [], [rawFinanceHistory]);
 
-  const weeklyCosts = useMemo(() => calculateWeeklyCosts(projectsMemo), [projectsMemo]);
-  const weeklyRevenue = useMemo(() => calculateWeeklyRevenue(projectsMemo), [projectsMemo]);
+  const weeklyCosts = useMemo(() => gameState ? calculateWeeklyCosts(gameState) : 0, [gameState]);
+  const weeklyRevenue = useMemo(() => gameState ? calculateWeeklyRevenue(gameState) : 0, [gameState]);
   const netDelta = useMemo(() => weeklyRevenue - weeklyCosts, [weeklyRevenue, weeklyCosts]);
   
   const studioNetWorth = useMemo(() => gameState ? calculateStudioNetWorth(gameState) : 0, [gameState]);

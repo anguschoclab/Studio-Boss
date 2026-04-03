@@ -6,6 +6,12 @@ import { useUIStore } from '@/store/uiStore';
 import { Trophy, Star, Sparkles, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+interface AwardsPayload {
+  awards: import('@/engine/types').Award[];
+  body?: string;
+  year?: number;
+}
+
 export const AwardsCeremonyModal = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();
   const gameState = useGameStore(s => s.gameState);
@@ -15,7 +21,8 @@ export const AwardsCeremonyModal = () => {
 
   if (!gameState || !activeModal || activeModal.type !== 'AWARDS') return null;
 
-  const { awards = [], body = 'Annual Industry Awards', year = 2026 } = activeModal.payload || {};
+  const payload = activeModal.payload as unknown as AwardsPayload;
+  const { awards = [], body = 'Annual Industry Awards', year = 2026 } = payload || {};
   
   // Safety guard for empty awards
   if (awards.length === 0) {
@@ -43,7 +50,7 @@ export const AwardsCeremonyModal = () => {
   };
 
   const getProjectTitle = (id: string) => {
-    return gameState.studio.internal.projects[id]?.title || "Unknown Project";
+    return gameState?.studio?.internal?.projects[id]?.title || "Unknown Project";
   };
 
   return (

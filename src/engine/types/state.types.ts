@@ -148,7 +148,15 @@ export interface FundsImpact extends BaseImpact { type: 'FUNDS_CHANGED'; payload
 export interface FundsDeductedImpact extends BaseImpact { type: 'FUNDS_DEDUCTED'; payload: { amount: number } }
 export interface ProjectUpdateImpact extends BaseImpact { type: 'PROJECT_UPDATED'; payload: ProjectUpdate }
 export type ProjectRemovedImpact = BaseImpact & { type: 'PROJECT_REMOVED'; payload: { projectId: string } };
-export type NewsImpact = BaseImpact & { type: 'NEWS_ADDED'; payload: { headline: string; description: string; category?: import('./engine.types').HeadlineCategory } };
+export type NewsImpact = BaseImpact & { 
+  type: 'NEWS_ADDED'; 
+  payload: { 
+    id: string;
+    headline: string; 
+    description: string; 
+    category?: import('./engine.types').HeadlineCategory 
+  } 
+};
 export type TalentUpdateImpact = BaseImpact & { type: 'TALENT_UPDATED'; payload: TalentUpdate };
 export interface PrestigeChangedImpact extends BaseImpact { type: 'PRESTIGE_CHANGED'; payload: { amount: number } }
 export interface BuyerUpdateImpact extends BaseImpact { type: 'BUYER_UPDATED'; payload: BuyerUpdate }

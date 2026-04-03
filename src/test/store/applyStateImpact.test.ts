@@ -81,10 +81,11 @@ describe("applyStateImpact utility", () => {
   it("should add news events", () => {
     const impact: StateImpact = {
       type: 'NEWS_ADDED',
-      payload: { headline: "Award Won!", description: "Win" }
+      payload: { id: "news-1", headline: "Award Won!", description: "Win" }
     };
     const newState = applyStateImpact(getInitialMockState(), impact);
     expect(newState.industry.newsHistory).toHaveLength(1);
     expect(newState.industry.newsHistory[0].headline).toBe("Award Won!");
+    expect(newState.industry.newsHistory[0].id).toBe("news-1");
   });
 });

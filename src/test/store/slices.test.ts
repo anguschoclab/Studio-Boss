@@ -2,8 +2,8 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { useGameStore } from '@/store/gameStore';
 
 describe('Store Slice Isolation', () => {
-  beforeEach(() => {
-    useGameStore.getState().newGame('Test Studio', 'major');
+  beforeEach(async () => {
+    await useGameStore.getState().newGame('Test Studio', 'major');
   });
 
   describe('Finance Slice Isolation', () => {

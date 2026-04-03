@@ -54,13 +54,13 @@ export class WeekCoordinator {
   /**
    * Main entry point for the weekly simulation tick.
    */
-  static execute(state: GameState): { newState: GameState; summary: WeekSummary; impacts: StateImpact[] } {
+  static execute(state: GameState, rng?: RandomGenerator): { newState: GameState; summary: WeekSummary; impacts: StateImpact[] } {
     // 1. Preparation Phase (The Valve)
     const context: TickContext = {
       week: state.week + 1,
       tickCount: (state.tickCount || 0) + 1,
-      rng: new RandomGenerator((state.gameSeed || 12345) + (state.tickCount || 0)),
-      timestamp: Date.now(),
+      rng: rng || new RandomGenerator((state.gameSeed || 12345) + (state.tickCount || 0)),
+      timestamp: (state.tickCount || 0) * 1000, // Deterministic timestamp delta
       impacts: [],
       events: []
     };

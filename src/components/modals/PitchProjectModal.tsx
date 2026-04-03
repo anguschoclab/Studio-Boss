@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import type { ProjectContractType } from '@/engine/types';
 import { calculateFitScore } from '@/engine/systems/buyers';
+import { RandomGenerator } from '@/engine/utils/rng';
 
 export const PitchProjectModal = () => {
   const { showPitchProject, closePitchProject, pitchingProjectId } = useUIStore();
@@ -18,7 +19,7 @@ export const PitchProjectModal = () => {
 
   if (!gameState || !pitchingProjectId) return null;
 
-  const project = gameState.studio.internal.projects[pitchingProjectId];
+  const project = gameState?.studio?.internal?.projects[pitchingProjectId];
   if (!project) return null;
 
   const handlePitch = async () => {
@@ -60,7 +61,8 @@ export const PitchProjectModal = () => {
             <h4 className="font-semibold text-sm text-muted-foreground uppercase">1. Select Buyer</h4>
             <div className="space-y-2">
               {gameState.market.buyers.map(buyer => {
-                const fitScore = calculateFitScore(project, buyer);
+                const rng = new RandomGenerator(gameState.gameSeed + gameState.week);
+                const fitScore = calculateFitScore(project, buyer, gameState.week, Object.values(gameState?.studio?.internal?.projects || {}), rng);
                 return (
                   <button
                     key={buyer.id}

@@ -37,7 +37,8 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
   ...createSnapshotSlice(set, get, ...args),
 
   newGame: async (studioName, archetype) => {
-    const gameState = initializeGame(studioName, archetype);
+    const seed = Math.floor(Math.random() * 1_000_000);
+    const gameState = initializeGame(studioName, archetype, seed);
     await saveGame(0, gameState);
     set({ 
       gameState,
@@ -121,7 +122,8 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
   }),
 
   devAutoInit: (archetype = 'major') => {
-    const gameState = initializeGame('Alpha Studios', archetype);
+    const seed = 42; // Constant seed for predictable dev testing
+    const gameState = initializeGame('Alpha Studios', archetype, seed);
     set({ 
       gameState,
       finance: gameState.finance,
