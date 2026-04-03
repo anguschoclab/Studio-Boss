@@ -50,8 +50,7 @@ export class TalentSystem {
         activeTalentIds.add(state.studio.internal.contracts[i].talentId);
       }
       const availableTalentIds: string[] = [];
-      for (const talent of Object.values(state.industry.talentPool)) {
-        const id = talent.id;
+      for (const id in state.industry.talentPool) {
         if (!activeTalentIds.has(id)) availableTalentIds.push(id);
       }
 
