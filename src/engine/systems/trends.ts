@@ -11,7 +11,7 @@ export function initializeTrends(rng: RandomGenerator): GenreTrend[] {
   const shuffled = [...ALL_GENRES];
   // Fisher-Yates shuffle with rng
   for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(rng.next() * (i + 1));
+    const j = rng.rangeInt(0, i);
     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
   
@@ -69,7 +69,7 @@ export function advanceTrends(trends: GenreTrend[], rng: RandomGenerator): State
         genre: newGenre,
         heat: 30,
         direction: 'rising',
-        weeksRemaining: 16 + Math.floor(rng.next() * 12)
+        weeksRemaining: rng.rangeInt(16, 28)
       });
     }
   }

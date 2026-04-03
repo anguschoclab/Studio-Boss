@@ -1,11 +1,11 @@
-import { vi } from "vitest";
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { evaluateFirstLookDeal, offerFirstLookDeal, advanceDeals } from '../../../engine/systems/deals';
 import { Talent, GameState, FirstLookDeal } from '../../../engine/types';
-import * as utils from '../../../engine/utils';
+import { RandomGenerator } from '../../../engine/utils/rng';
 
 describe('Deals System', () => {
   let mockTalent: Talent;
+  const rng = new RandomGenerator(888);
 
   beforeEach(() => {
     mockTalent = {
@@ -24,34 +24,37 @@ describe('Deals System', () => {
     const poorState = { studio: { prestige: 20 } } as unknown as GameState;
     const okState = { studio: { prestige: 90 } } as unknown as GameState;
 
-    vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5); // mid roll = 50
+    const luckyRng = new RandomGenerator(123);
+    vi.spyOn(luckyRng, 'next').mockReturnValue(0.5); // mid roll = 50
 
     // 20 prestige vs 90 -> chance = 50 + (20-90) = -20. Clamped to 5.
     // Random 50 <= 5 is false
-    const lowOffer = evaluateFirstLookDeal(mockTalent, poorState);
+    const lowOffer = evaluateFirstLookDeal(mockTalent, poorState, luckyRng);
     expect(lowOffer).toBe(false);
 
     // 90 vs 90 -> chance = 50 (base) + 20 (soft-access bonus) = 70. 
     // Random 50 <= 70 is true
-    const highOffer = evaluateFirstLookDeal(mockTalent, okState);
+    const highOffer = evaluateFirstLookDeal(mockTalent, okState, luckyRng);
     expect(highOffer).toBe(true);
   });
 
-  it('offers a deal and returns NEWS_ADDED impact if accepted', () => {
+  it('offers a deal and returns newsEvents impact if accepted', () => {
     const state = {
+        week: 10,
         studio: { name: 'Test Studio', prestige: 90 },
         industry: { talentPool: { [mockTalent.id]: mockTalent } }
     } as unknown as GameState;
     
-    vi.spyOn(utils, 'secureRandom').mockReturnValue(0.01); // Trigger success
+    const luckyRng = new RandomGenerator(456);
+    vi.spyOn(luckyRng, 'next').mockReturnValue(0.01); // Trigger success
     
-    const impacts = offerFirstLookDeal(state, mockTalent.id, 52, true);
-    const news = impacts.find(i => i.type === 'NEWS_ADDED');
-    expect(news).toBeDefined();
-    expect(news?.payload.headline).toContain("signs");
+    const impacts = offerFirstLookDeal(state, mockTalent.id, luckyRng);
+    const newsImpact = impacts.find(i => i.newsEvents && i.newsEvents.length > 0);
+    expect(newsImpact).toBeDefined();
+    expect(newsImpact?.newsEvents![0].headline).toContain("signs");
   });
 
-  it('returns expiry notification in NEWS_ADDED impact during advanceDeals', () => {
+  it('returns expiry notification in newsEvents impact during advanceDeals', () => {
     const deal: FirstLookDeal = {
       id: 'd1',
       talentId: 't1',
@@ -59,9 +62,9 @@ describe('Deals System', () => {
       exclusivity: true
     };
     
-    const impacts = advanceDeals([deal]);
-    const news = impacts.find(i => i.type === 'NEWS_ADDED');
-    expect(news).toBeDefined();
-    expect(news?.payload.description).toContain("expired");
+    const impacts = advanceDeals([deal], rng);
+    const newsImpact = impacts.find(i => i.newsEvents && i.newsEvents.length > 0);
+    expect(newsImpact).toBeDefined();
+    expect(newsImpact?.newsEvents![0].description).toContain("expired");
   });
 });

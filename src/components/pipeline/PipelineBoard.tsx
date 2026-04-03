@@ -42,8 +42,8 @@ export const PipelineBoard = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gradient-to-r from-white/5 to-transparent p-5 rounded-xl border border-white/5 backdrop-blur-md relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-[80px] pointer-events-none" />
         <div className="flex items-center gap-4 relative z-10">
-          <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/20 flex items-center justify-center shadow-[0_0_15px_rgba(var(--primary),0.2)]">
-            <LayoutGrid className="h-6 w-6 text-primary drop-shadow-[0_0_5px_rgba(var(--primary),0.5)]" />
+          <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/20 flex items-center justify-center shadow-[0_0_15px_hsl(var(--primary) / 0.2)]">
+            <LayoutGrid className="h-6 w-6 text-primary drop-shadow-[0_0_5px_hsl(var(--primary) / 0.5)]" />
           </div>
           <div>
             <h2 className="text-2xl font-black tracking-tighter uppercase leading-none mb-1 bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent drop-shadow-sm">Production Slate</h2>
@@ -59,7 +59,7 @@ export const PipelineBoard = () => {
           <Button variant="outline" size="icon" className="h-9 w-9 bg-black/40 border-white/10 text-muted-foreground hover:text-foreground hover:border-white/20 transition-all">
             <ListFilter className="h-4 w-4" />
           </Button>
-          <Button onClick={openCreateProject} className="h-9 px-5 font-display font-black uppercase tracking-widest text-[10px] gap-2 bg-gradient-to-br from-primary to-primary/80 text-black hover:from-primary/90 hover:to-primary/70 shadow-[0_0_20px_rgba(var(--primary),0.2)] hover:shadow-[0_0_30px_rgba(var(--primary),0.4)] transition-all hover:-translate-y-0.5 border border-primary/50">
+          <Button onClick={openCreateProject} className="h-9 px-5 font-display font-black uppercase tracking-widest text-[10px] gap-2 bg-gradient-to-br from-primary to-primary/80 text-black hover:from-primary/90 hover:to-primary/70 shadow-[0_0_20px_hsl(var(--primary) / 0.2)] hover:shadow-[0_0_30px_hsl(var(--primary) / 0.4)] transition-all hover:-translate-y-0.5 border border-primary/50">
             <Plus className="h-4 w-4" />
             New IP Venture
           </Button>

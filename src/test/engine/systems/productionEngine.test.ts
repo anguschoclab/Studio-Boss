@@ -53,8 +53,8 @@ describe('Production Engine (Target A2) - Symmetry', () => {
   it('should return PROJECT_UPDATED impacts for Player and Rival', () => {
     const impacts = tickProduction(mockState, rng);
     
-    const playerImpact = impacts.find(i => (i as ProjectUpdateImpact).payload.projectId === 'player-p1') as ProjectUpdateImpact | undefined;
-    const rivalImpact = impacts.find(i => (i as ProjectUpdateImpact).payload.projectId === 'rival-p1') as ProjectUpdateImpact | undefined;
+    const playerImpact = impacts.find(i => i.type === 'PROJECT_UPDATED' && i.payload.projectId === 'player-p1') as ProjectUpdateImpact | undefined;
+    const rivalImpact = impacts.find(i => i.type === 'PROJECT_UPDATED' && i.payload.projectId === 'rival-p1') as ProjectUpdateImpact | undefined;
     
     expect(playerImpact).toBeDefined();
     expect(rivalImpact).toBeDefined();

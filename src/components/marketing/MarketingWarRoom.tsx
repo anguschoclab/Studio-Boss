@@ -29,7 +29,7 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
   const studioCash = gameState?.finance.cash || 0;
 
   const project = useMemo(() => 
-    Object.values(gameState?.studio.internal.projects || {}).find(p => p.id === projectId),
+    Object.values(gameState?.studio?.internal?.projects || {}).find(p => p.id === projectId),
     [gameState, projectId]
   );
 

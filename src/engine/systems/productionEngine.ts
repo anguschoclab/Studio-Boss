@@ -1,6 +1,8 @@
 import { GameState, Project, StateImpact, Contract, Talent } from '@/engine/types';
 import { RandomGenerator } from '../utils/rng';
 import { TalentMoraleSystem } from './talent/TalentMoraleSystem';
+import { processDirectorDisputes } from './directors';
+import { mergeImpacts } from '../utils/impactUtils';
 
 function getAttachedTalent(contracts: Contract[], talentPool: Record<string, Talent>): Talent[] {
   const acc: Talent[] = [];
@@ -91,7 +93,9 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
        }
     });
 
-    allImpacts.push(...projectImpacts);
+    const disputeImpact = processDirectorDisputes(project, projectContracts, new Map(Object.entries(state.industry.talentPool)), rng);
+    
+    allImpacts.push(...projectImpacts, disputeImpact);
   }
 
   // 2. Rival Projects

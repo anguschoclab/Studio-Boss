@@ -66,7 +66,7 @@ export class InterestRateSimulator {
     if (rng.next() < 0.05) { // 5% chance of a "Market Analysis" headline
       const trend = newRate > currentRate ? 'rising' : 'falling';
       impact.newHeadlines = [{
-        id: crypto.randomUUID(),
+        id: rng.uuid('hl'),
         week: state.week,
         category: 'market',
         text: `Market Brief: Interest rates are ${trend} as the global economy shifts.`

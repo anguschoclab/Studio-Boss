@@ -37,7 +37,8 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
   ...createSnapshotSlice(set, get, ...args),
 
   newGame: async (studioName, archetype) => {
-    const gameState = initializeGame(studioName, archetype);
+    const seed = Math.floor(Math.random() * 1_000_000);
+    const gameState = initializeGame(studioName, archetype, seed);
     await saveGame(0, gameState);
     set({ 
       gameState,
@@ -67,15 +68,19 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
 
     // Process simulation impacts for UI triggers (Modals, etc.)
     if (impacts && impacts.length > 0) {
-      // Filter modal triggers first, then sort
-      const modalImpacts = impacts.filter(i => i.type === 'MODAL_TRIGGERED');
+      // Collect modal impacts for prioritized queueing
+      const modalImpacts: (import('@/engine/types').StateImpact & { type: 'MODAL_TRIGGERED', payload: any })[] = [];
+      for (let i = 0; i < impacts.length; i++) {
+        if (impacts[i].type === 'MODAL_TRIGGERED') {
+          modalImpacts.push(impacts[i] as any);
+        }
+      }
 
-      const sortedImpacts = modalImpacts.sort((a, b) => {
-        return ((b.payload as any).priority || 0) - ((a.payload as any).priority || 0);
-      });
-
-      for (const impact of sortedImpacts) {
-        ui.enqueueModal((impact.payload as any).modalType, (impact.payload as any).payload as Record<string, unknown>);
+      if (modalImpacts.length > 0) {
+        modalImpacts.sort((a, b) => (b.payload.priority || 0) - (a.payload.priority || 0));
+        for (let i = 0; i < modalImpacts.length; i++) {
+          ui.enqueueModal(modalImpacts[i].payload.modalType, modalImpacts[i].payload.payload as Record<string, unknown>);
+        }
       }
     }
 
@@ -117,7 +122,8 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
   }),
 
   devAutoInit: (archetype = 'major') => {
-    const gameState = initializeGame('Alpha Studios', archetype);
+    const seed = 42; // Constant seed for predictable dev testing
+    const gameState = initializeGame('Alpha Studios', archetype, seed);
     set({ 
       gameState,
       finance: gameState.finance,

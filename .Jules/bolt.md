@@ -11,3 +11,7 @@
 ## 2024-04-02 - Avoid Object.values in Engine Loops
 **Learning:** Using Object.values() on large state dictionaries like talentPool inside high-frequency engine loops causes unnecessary O(N) array allocation and garbage collection pressure every tick.
 **Action:** Iterate over dictionary records using for...in to avoid array allocation overhead.
+
+## 2025-04-02 - O(n) Array Allocations in High-Frequency Loops
+**Learning:** In high-frequency engine loops (like weekly simulation ticks), iterating over `Record<string, Project>` using `Object.values()` creates a new array allocation every iteration, leading to massive garbage collection spikes.
+**Action:** Always iterate over `Record` dictionaries using `for...in` instead of `Object.values()` or hoist `Object.values()` outside the loop when iterating is necessary.

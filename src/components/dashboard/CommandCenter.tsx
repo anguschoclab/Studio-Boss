@@ -12,7 +12,7 @@ export const CommandCenter: React.FC = () => {
   if (!gameState) return null;
 
   const { studio, industry } = gameState;
-  const projects = Object.values(studio.internal.projects);
+  const projects = Object.values(studio?.internal?.projects || {});
   const { talentPool, rivals, newsHistory } = industry;
 
   const activeProjectsCount = projects.filter(p => p.state !== 'released' && p.state !== 'post_release' && p.state !== 'archived').length;
@@ -28,12 +28,12 @@ export const CommandCenter: React.FC = () => {
             <h1 className="text-4xl font-extrabold tracking-tight uppercase bg-gradient-to-br from-white via-foreground/90 to-foreground/40 bg-clip-text text-transparent drop-shadow-md">
               {studio.name}
             </h1>
-            <Badge className="bg-primary/10 text-primary border border-primary/20 uppercase tracking-[0.2em] text-[10px] py-0.5 px-3 rounded-full shadow-[0_0_15px_rgba(var(--primary),0.15)] transition-all duration-500 hover:bg-primary/20 hover:shadow-[0_0_20px_rgba(var(--primary),0.3)]">
+            <Badge className="bg-primary/10 text-primary border border-primary/20 uppercase tracking-[0.2em] text-[10px] py-0.5 px-3 rounded-full shadow-[0_0_15px_hsl(var(--primary) / 0.15)] transition-all duration-500 hover:bg-primary/20 hover:shadow-[0_0_20px_hsl(var(--primary) / 0.3)]">
               {studio.archetype.replace('-', ' ')}
             </Badge>
           </div>
           <p className="text-muted-foreground/80 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest drop-shadow-sm">
-            <Star className="h-3 w-3 text-secondary animate-pulse drop-shadow-[0_0_5px_rgba(var(--secondary),0.6)]" />
+            <Star className="h-3 w-3 text-secondary animate-pulse drop-shadow-[0_0_5px_hsl(var(--secondary) / 0.6)]" />
             Executive HQ & Operational Overview
           </p>
         </div>
@@ -42,7 +42,7 @@ export const CommandCenter: React.FC = () => {
           <div className="px-5 py-2.5 bg-card/40 backdrop-blur-md rounded-xl border border-white/10 shadow-lg flex flex-col items-end transition-all hover:border-white/20 hover:bg-card/60">
             <span className="text-[9px] uppercase font-black text-muted-foreground/70 tracking-[0.2em] leading-none mb-1">Market Position</span>
             <span className="text-sm font-extrabold flex items-center gap-1.5 bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
-              <Zap className="h-3.5 w-3.5 text-primary drop-shadow-[0_0_5px_rgba(var(--primary),0.8)]" />
+              <Zap className="h-3.5 w-3.5 text-primary drop-shadow-[0_0_5px_hsl(var(--primary) / 0.8)]" />
               Tier 2 Studio
             </span>
           </div>
@@ -89,10 +89,10 @@ export const CommandCenter: React.FC = () => {
         <CardContent className="p-0 relative z-10">
           <div className="flex items-center justify-between p-6 border-b border-white/10 bg-white/5">
             <h3 className="text-sm font-extrabold tracking-[0.1em] uppercase flex items-center gap-2 text-foreground/90 drop-shadow-md">
-              <Zap className="h-4 w-4 text-primary animate-pulse drop-shadow-[0_0_8px_rgba(var(--primary),0.6)]" />
+              <Zap className="h-4 w-4 text-primary animate-pulse drop-shadow-[0_0_8px_hsl(var(--primary) / 0.6)]" />
               Recent Intelligence
             </h3>
-            <span className="text-[9px] font-black uppercase text-primary tracking-[0.2em] bg-primary/10 border border-primary/20 px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-[0_0_10px_rgba(var(--primary),0.1)]">
+            <span className="text-[9px] font-black uppercase text-primary tracking-[0.2em] bg-primary/10 border border-primary/20 px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-[0_0_10px_hsl(var(--primary) / 0.1)]">
               <div className="w-1.5 h-1.5 rounded-full bg-primary animate-ping" />
               Live Feed
             </span>
@@ -106,7 +106,7 @@ export const CommandCenter: React.FC = () => {
                   i === 0 && "bg-white/5 border-l-primary/50"
                 )}>
                   {i === 0 && <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent pointer-events-none" />}
-                  <div className="w-12 h-12 rounded-xl bg-black/40 border border-white/10 shadow-inner flex items-center justify-center font-mono text-[11px] font-extrabold text-muted-foreground group-hover:text-primary group-hover:border-primary/30 group-hover:shadow-[0_0_15px_rgba(var(--primary),0.15)] transition-all duration-300 relative z-10">
+                  <div className="w-12 h-12 rounded-xl bg-black/40 border border-white/10 shadow-inner flex items-center justify-center font-mono text-[11px] font-extrabold text-muted-foreground group-hover:text-primary group-hover:border-primary/30 group-hover:shadow-[0_0_15px_hsl(var(--primary) / 0.15)] transition-all duration-300 relative z-10">
                     W{news.week}
                   </div>
                   <div className="flex-1 min-w-0 relative z-10">

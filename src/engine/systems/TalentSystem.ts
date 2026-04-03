@@ -50,29 +50,28 @@ export class TalentSystem {
         activeTalentIds.add(state.studio.internal.contracts[i].talentId);
       }
       const availableTalentIds: string[] = [];
-      for (const talent of Object.values(state.industry.talentPool)) {
-        const id = talent.id;
+      for (const id in state.industry.talentPool) {
         if (!activeTalentIds.has(id)) availableTalentIds.push(id);
       }
 
       if (availableTalentIds.length > 0) {
-        const newOpp = generateOpportunity(availableTalentIds, rng);
+        const newOpp = generateOpportunity(rng, availableTalentIds);
         tryAddOpp(newOpp, `A new package "${newOpp.title}" hit the market.`);
       }
     }
 
     // General opportunities
     if (rng.next() < 0.2) {
-      tryAddOpp(generateOpportunity(undefined, rng), `A new script is doing the rounds in town.`);
+      tryAddOpp(generateOpportunity(rng), `A new script is doing the rounds in town.`);
     }
 
     if (rng.next() < 0.15) {
-      tryAddOpp(generateOpportunity(undefined, rng), `New opportunities have hit the market!`);
+      tryAddOpp(generateOpportunity(rng), `New opportunities have hit the market!`);
     }
 
     // Fallback/Density control
     if (updatedOpportunities.length < 4 && rng.next() < 0.3) {
-      tryAddOpp(generateOpportunity(undefined, rng));
+      tryAddOpp(generateOpportunity(rng));
     }
 
     return {

@@ -4,6 +4,8 @@ const GENRE_PATTERNS: Record<string, string[][]> = {
   Action: [
     ['The', 'ADJECTIVE', 'NOUN'],
     ['The', 'ADJECTIVE', 'NOUN', 'Protocol'],
+    ['The', 'ADJECTIVE', 'Cinematic Universe'],
+    ['Operation', 'ADJECTIVE', 'Write-Off'],
     ['Project', 'NOUN', 'Zero'],
     ['NOUN', 'Down'],
     ['VERB', 'or', 'VERB'],
@@ -33,6 +35,8 @@ const GENRE_PATTERNS: Record<string, string[][]> = {
   Comedy: [
     ['The', 'ADJECTIVE', 'NOUN'],
     ['Cancel', 'NAME'],
+    ['The', 'Pre-Packaged', 'NOUN'],
+    ['Focus Group', 'NAME'],
     ['The', 'ADJECTIVE', 'Influencer'],
     ['Trending in', 'PLACE'],
     ['The', 'Meme', 'Team'],
@@ -61,6 +65,8 @@ const GENRE_PATTERNS: Record<string, string[][]> = {
   Drama: [
     ['The', 'NOUN', 'of', 'NAME'],
     ['The', 'ADJECTIVE', 'Focus Group'],
+    ['The', 'Award-Baited', 'NOUN'],
+    ['Portrait of a', 'Monetized', 'NAME'],
     ['PR Spin', 'and', 'Damage Control'],
     ['The', 'Shareholder', 'Paradox'],
     ['Tax Write-Off', 'in', 'PLACE'],
@@ -97,6 +103,8 @@ const GENRE_PATTERNS: Record<string, string[][]> = {
   Horror: [
     ['The', 'NOUN', 'in the', 'PLACE'],
     ['Elevated', 'NOUN'],
+    ['The', 'Focus-Tested', 'Entity'],
+    ['A', 'Four-Quadrant', 'Nightmare'],
     ['The', 'ADJECTIVE', 'Vibe'],
     ['Aesthetic of', 'PLACE'],
     ['Meta', 'NOUN'],
@@ -120,6 +128,8 @@ const GENRE_PATTERNS: Record<string, string[][]> = {
   'Sci-Fi': [
     ['Project', 'NOUN'],
     ['The', 'ADJECTIVE', 'Algorithm'],
+    ['The', 'NFT', 'Protocol'],
+    ['A', 'Generative', 'PLACE'],
     ['Generative', 'NOUN'],
     ['Beyond the', 'Data Mine'],
     ['The', 'Web3', 'Incident'],
@@ -284,16 +294,22 @@ const GENRE_PATTERNS: Record<string, string[][]> = {
 
 const WORDS: Record<string, string[]> = {
   ADJECTIVE: ['Dark', 'Silent', 'Golden', 'Broken', 'Hidden', 'Last', 'Lost', 'Secret', 'Lethal', 'Final', 'Red', 'Black', 'Wild', 'Crazy', 'Funny', 'Beautiful', 'Brave', 'Fierce', 'Uncut', 'Quantum', 'Cyber', 'Neon', 'Hyper', 'Meta', 'Toxic', 'Viral', 'Cancel', 'Elevated', 'Atmospheric', 'Subversive', 'Procedural', 'Algorithmic', 'Tactical', 'Strategic', 'Covert', 'Clandestine', 'Stealth', 'Phantom', 'Ghost', 'Shadow', 'Rogue', 'Maverick', 'Renegade', 'Outlaw', 'Vigilante', 'Mercenary', 'Expendable', 'Disposable', 'Collateral', 'Fatal', 'Mortal', 'Awkward', 'Cringe', 'Based', 'Woke', 'Problematic', 'Cancelled', 'Triggered', 'Savage', 'Petty', 'Salty', 'Thirsty', 'Basic', 'Extra', 'Bougie', 'Ratchet', 'Sus', 'Cap', 'Overbudget', 'Tone-Deaf', 'Pretentious', 'Self-Indulgent', 'Liminal', 'Uncanny', 'Cash-Grab', 'Soulless', 'Manufactured', 'Algorithm-Approved', 'Tax-Exempt', 'Rebooted', 'Focus-Grouped', 'Monetized', 'Demonetized', 'Post-Credit', 'Data-Driven', 'Derivative', 'Gritty', 'Four-Quadrant', 'Ghostwritten', 'Out-of-Touch', 'Venture-Backed', 'Uncancelled', 'Defamatory', 'AI-Generated', 'Generative', 'Tax-Haven', 'Pivoting',
-    'Post-Cancellable', 'Metrics-Driven', 'Hyper-Local', 'Transmedia', 'Vertical-Slice', 'Shareholder-Approved', 'Risk-Adjusted', 'Asset-Backed', 'Over-Indexed', 'Pre-Packaged', 'Demographic-Agnostic', 'Cross-Platform', 'Syndication-Ready', 'Merchandisable', 'Franchisable', 'Algorithmic-Optimal', 'Machine-Learned', 'Focus-Tested', 'Sanitized', 'Corporate-Mandated', 'Data-Mined', 'Merch-Driven', 'Tax-Writeoff', 'Laundered', 'Market-Tested', 'Brand-Safe', 'CGI-Heavy'
+    'Post-Cancellable', 'Metrics-Driven', 'Hyper-Local', 'Transmedia', 'Vertical-Slice', 'Shareholder-Approved', 'Risk-Adjusted', 'Asset-Backed', 'Over-Indexed', 'Pre-Packaged', 'Demographic-Agnostic', 'Cross-Platform', 'Syndication-Ready', 'Merchandisable', 'Franchisable', 'Algorithmic-Optimal', 'Machine-Learned', 'Focus-Tested', 'Sanitized', 'Corporate-Mandated', 'Data-Mined', 'Merch-Driven', 'Tax-Writeoff', 'Laundered', 'Market-Tested', 'Brand-Safe', 'CGI-Heavy',
+    'Bingeable', 'Non-Union', 'Subsidized', 'Franchise-Ready', 'Syndicated'
   ],
   NOUN: ['Shadow', 'Mirror', 'Ghost', 'Knight', 'City', 'Storm', 'Weapon', 'Target', 'Agent', 'Game', 'House', 'Night', 'Day', 'Star', 'Dream', 'Heart', 'World', 'Man', 'Woman', 'Boy', 'Girl', 'Multiverse', 'Franchise', 'Content', 'Algorithm', 'Meme', 'Podcast', 'Trauma', 'Nepotism', 'Vibe', 'Aesthetic', 'Metaverse', 'Crypto', 'Grifter', 'Situationship', 'IP', 'Recon', 'Extraction', 'Payload', 'Objective', 'Bounty', 'Crossfire', 'Infiltration', 'Exfiltration', 'Takeover', 'Lockdown', 'Overdrive', 'Showdown', 'Blowback', 'Backlash', 'Flashpoint', 'Ground Zero', 'Vanguard', 'Sentinel', 'Outpost', 'Stronghold', 'Influencer', 'Streamer', 'Vlogger', 'Viral', 'Trending', 'Cancel Culture', 'Scam', 'Hustle', 'Flex', 'Clout', 'Drip', 'Mood', 'Energy', 'Synergy', 'Deepfake', 'Blockbuster', 'CGI', 'PR Crisis', 'Apology Video', 'Subtweet', 'Ratio', 'Oscars Bait', 'Method Acting', 'Tax Write-Off', 'Hedge Fund', 'CGI Mush', 'Neomaximalism', 'Engagement Metric', 'Retention Rate', 'Shell Company', 'Tax Haven', 'LLM', 'Zero-Day', 'Psy-Op', 'Astroturf', 'Focus Group', 'NDA', 'Clickfarm', 'Content Farm', 'Brand Deal',
-    'Brand Ecosystem', 'Content Silo', 'Monetization Strategy', 'Value Extraction', 'Strategic Asset', 'Content Portfolio', 'Franchise Management', 'Demographic Target', 'Quarterly Earnings', 'Shareholder Meeting', 'Boardroom Coup', 'Hostile Takeover', 'Merger and Acquisition', 'Tax Loophole', 'NDA Violation', 'PR Spin', 'Damage Control', 'Focus Group Feedback', 'Audience Retention', 'CGI Void', 'Post-Credit Scene', 'Cinematic Universe', 'Merchandising Rights', 'Test Audience', 'Algorithm Spike', 'A.I. Artifact', 'Studio Mandate', 'Box Office Flop', 'Tax Shelter'
+    'Brand Ecosystem', 'Content Silo', 'Monetization Strategy', 'Value Extraction', 'Strategic Asset', 'Content Portfolio', 'Franchise Management', 'Demographic Target', 'Quarterly Earnings', 'Shareholder Meeting', 'Boardroom Coup', 'Hostile Takeover', 'Merger and Acquisition', 'Tax Loophole', 'NDA Violation', 'PR Spin', 'Damage Control', 'Focus Group Feedback', 'Audience Retention', 'CGI Void', 'Post-Credit Scene', 'Cinematic Universe', 'Merchandising Rights', 'Test Audience', 'Algorithm Spike', 'A.I. Artifact', 'Studio Mandate', 'Box Office Flop', 'Tax Shelter',
+    'Focus-Group Participant', 'Brand Identity', 'Product Placement', 'Merger', 'Acquisition'
   ],
   VERB: ['Die', 'Run', 'Shoot', 'Hide', 'Seek', 'Find', 'Kill', 'Save', 'Love', 'Kiss', 'Dance', 'Sing', 'Fly', 'Fall', 'Cancel', 'Reboot', 'Swipe', 'Ghost', 'Stream', 'Hack', 'Leak', 'Trend', 'Post', 'Upload', 'Download', 'Share', 'Like', 'Subscribe', 'Follow', 'Unfollow', 'Block', 'Mute', 'Report', 'Ban', 'Doxx', 'Gaslight', 'Girlboss', 'Gatekeep', 'Manifest', 'Vibe', 'Monetize', 'Synergize', 'Focus-Group', 'Test-Screen', 'A/B Test', 'Ratio', 'Doxx', 'Subtweet', 'Launder', 'Shelve', 'Pivot', 'Astroturf', 'Outsource',
-    'Gamify', 'Syndicate', 'Cross-Promote', 'Divest', 'Liquidate', 'Acquire', 'Merchandize', 'Astroturf', 'Greenwash', 'Pinkwash', 'Retcon', 'Gaslight', 'Girlboss', 'Gatekeep'],
-  VERBS: ['Waits', 'Hides', 'Kills', 'Watches', 'Screams', 'Comes', 'Walks', 'Cancels', 'Reboots', 'Swipes', 'Ghosts', 'Streams', 'Hacks', 'Leaks', 'Trends', 'Posts', 'Uploads', 'Downloads', 'Shares', 'Likes', 'Subscribes', 'Follows', 'Unfollows', 'Blocks', 'Mutes', 'Reports', 'Bans', 'Doxxes', 'Gaslights', 'Girlbosses', 'Gatekeeps', 'Manifests', 'Vibes', 'Monetizes', 'Synergizes', 'Focus-Groups', 'Test-Screens', 'A/B Tests', 'Ratios', 'Doxxes', 'Subtweets', 'Launders', 'Shelves', 'Pivots', 'Astroturfs', 'Outsources'],
-  PLACE: ['Darkness', 'City', 'Woods', 'Space', 'Future', 'Mars', 'London', 'Paris', 'New York', 'Moon', 'Sun', 'Island', 'Village', 'Metaverse', 'Simulation', 'Web3', 'Timeline', 'Algorithm', 'Feed', 'Grid', 'Matrix', 'Network', 'Cloud', 'Server', 'Database', 'Mainframe', 'Hub', 'Node', 'Nexus', 'Core', 'Vortex', 'Void', 'Abyss', 'Backrooms', 'Discord Server', 'Subreddit', 'TikTok FYP', 'Tax Haven', 'Offshore Account', 'Content Farm', 'Clickfarm', 'Boardroom', 'Focus Group Facility'],
-  NAME: ['John', 'Mary', 'Bourne', 'Bond', 'Ripley', 'Neo', 'Trinity', 'Luke', 'Leia', 'Harry', 'Hermione', 'Gatsby', 'Holmes', 'Elon', 'Zuck', 'Chad', 'Karen', 'Influencer', 'Streamer', 'Creator', 'Grifter', 'Scammer', 'Hacker', 'Troll', 'Bot', 'NPC', 'Main Character', 'Side Character', 'Villain', 'Hero', 'Anti-Hero', 'Protagonist', 'Antagonist', 'Nepo Baby', 'Industry Plant', 'Auteur', 'Hedge Fund Manager', 'Venture Capitalist', 'Shareholder', 'CEO', 'Board Member', 'Algorithm'],
+    'Gamify', 'Syndicate', 'Cross-Promote', 'Divest', 'Liquidate', 'Acquire', 'Merchandize', 'Astroturf', 'Greenwash', 'Pinkwash', 'Retcon', 'Gaslight', 'Girlboss', 'Gatekeep',
+    'Consolidate', 'Restructure', 'Depreciate', 'Overextend', 'Underperform'],
+  VERBS: ['Waits', 'Hides', 'Kills', 'Watches', 'Screams', 'Comes', 'Walks', 'Cancels', 'Reboots', 'Swipes', 'Ghosts', 'Streams', 'Hacks', 'Leaks', 'Trends', 'Posts', 'Uploads', 'Downloads', 'Shares', 'Likes', 'Subscribes', 'Follows', 'Unfollows', 'Blocks', 'Mutes', 'Reports', 'Bans', 'Doxxes', 'Gaslights', 'Girlbosses', 'Gatekeeps', 'Manifests', 'Vibes', 'Monetizes', 'Synergizes', 'Focus-Groups', 'Test-Screens', 'A/B Tests', 'Ratios', 'Doxxes', 'Subtweets', 'Launders', 'Shelves', 'Pivots', 'Astroturfs', 'Outsources',
+    'Consolidates', 'Restructures', 'Depreciates', 'Overextends', 'Underperforms'],
+  PLACE: ['Darkness', 'City', 'Woods', 'Space', 'Future', 'Mars', 'London', 'Paris', 'New York', 'Moon', 'Sun', 'Island', 'Village', 'Metaverse', 'Simulation', 'Web3', 'Timeline', 'Algorithm', 'Feed', 'Grid', 'Matrix', 'Network', 'Cloud', 'Server', 'Database', 'Mainframe', 'Hub', 'Node', 'Nexus', 'Core', 'Vortex', 'Void', 'Abyss', 'Backrooms', 'Discord Server', 'Subreddit', 'TikTok FYP', 'Tax Haven', 'Offshore Account', 'Content Farm', 'Clickfarm', 'Boardroom', 'Focus Group Facility',
+    'The Write-Off Bin', 'The Streaming Vault', 'The Data Center', 'The LLC'],
+  NAME: ['John', 'Mary', 'Bourne', 'Bond', 'Ripley', 'Neo', 'Trinity', 'Luke', 'Leia', 'Harry', 'Hermione', 'Gatsby', 'Holmes', 'Elon', 'Zuck', 'Chad', 'Karen', 'Influencer', 'Streamer', 'Creator', 'Grifter', 'Scammer', 'Hacker', 'Troll', 'Bot', 'NPC', 'Main Character', 'Side Character', 'Villain', 'Hero', 'Anti-Hero', 'Protagonist', 'Antagonist', 'Nepo Baby', 'Industry Plant', 'Auteur', 'Hedge Fund Manager', 'Venture Capitalist', 'Shareholder', 'CEO', 'Board Member', 'Algorithm',
+    'The VP of Content', 'The IP Lawyer', 'The Brand Manager', 'The Private Equity Firm'],
   TIME: ['Midnight', 'Dawn', 'Dusk', 'Night', 'Tomorrow', 'Yesterday', 'Upload', 'Drop', 'Stream', 'Post', 'The Golden Hour', 'Crunch Time', 'Q1', 'Q2', 'Q3', 'Q4', 'Fiscal Year', 'Earnings Call', 'Tax Season', 'Zero-Day'],
   ANIMAL: ['Bear', 'Dog', 'Cat', 'Lion', 'Tiger', 'Dragon', 'Unicorn', 'Dinosaur', 'Doge', 'Ape', 'Pepe', 'Capybara', 'Trash Panda', 'Vulture', 'Cash Cow', 'Dead Cat', 'Black Swan']
 };

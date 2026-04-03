@@ -100,11 +100,14 @@ describe("Finance System", () => {
         } as any;
 
         const { report } = generateWeeklyFinancialReport(stateWithDist);
-        // ExpenseProcessor.calculateStudioBurn(3, 2 active) = (500k * 1.5625) + (2 * 145,312.5) = 1,071,875
-        expect(report.expenses.overhead).toBe(1071875);
+        // ExpenseProcessor.calculateStudioBurn(Level 3, 2 active [unreleased])
+        // levelScale = 1.25^2 = 1.5625
+        // overhead = (750k * 1.5625) + (2 * 200k) = 1,171,875 + 400,000 = 1,571,875
+        expect(report.expenses.overhead).toBe(1571875);
         expect(report.expenses.production).toBe(20000); // Only mockProjectProd is in production
-        expect(report.revenue.boxOffice).toBe(45000); // 100k * 0.45
-        expect(report.netProfit).toBe(-1046875);
+        expect(report.revenue.boxOffice).toBe(40000); // 100k * 0.40
+        // Net: 40k - 1,571,875 (overhead) - 20k (prod) + 481 (savings yield) = -1,551,394
+        expect(report.netProfit).toBe(-1551394);
         expect(report.startingCash).toBe(1000000);
     });
   });
@@ -112,7 +115,21 @@ describe("Finance System", () => {
   describe("tickFinance", () => {
       const mockState: GameState = {
         week: 1,
-        finance: { cash: 1000000, ledger: [] },
+        gameSeed: 1,
+        tickCount: 0,
+        finance: { 
+          cash: 1000000, 
+          ledger: [],
+          marketState: {
+            baseRate: 0.05,
+            savingsYield: 0.02,
+            debtRate: 0.1,
+            loanRate: 0.08,
+            rateHistory: [],
+            sentiment: 50,
+            cycle: 'STABLE'
+          }
+        },
         studio: {
           name: "Test",
           archetype: "major",
@@ -125,11 +142,10 @@ describe("Finance System", () => {
             contracts: []
           }
         },
-        market: { opportunities: [], buyers: [], activeMarketEvents: [] },
-        industry: { rivals: [], newsHistory: [], talentPool: {} },
-      ip: { vault: [], franchises: {} }
-,
-
+        market: { opportunities: [], buyers: [], trends: [] },
+        industry: { rivals: [], newsHistory: [], talentPool: {}, awards: [] },
+        ip: { vault: [], franchises: {} },
+        culture: { genrePopularity: {} }
       } as unknown as GameState;
   
       it("returns StateImpact for funds change", () => {
@@ -156,10 +172,13 @@ describe("Finance System", () => {
          const impacts = tickFinance(stateWithDist, rng);
          const impact = impacts.find(i => i.type === 'FUNDS_CHANGED');
          
-         // Revenue: 200k * 0.5 (decay) = 100k
-         // Expenses: 20k (prod) + [500k + 250k + (1 * 50k)] (overhead) = 820k
-         // Net: 100k - 820k = -720k
-         expect(impact?.payload.amount).toBe(-856563);
+         // Revenue: 200k * 0.40 = 80k
+         // Overhead: Level 3, 1 active unreleased = (750k * 1.5625) + (1 * 200k) = 1,171,875 + 200,000 = 1,371,875
+         // Production: 20k
+         // Savings Yield: 1M * (0.02 / 52) = ~385
+         // Total Expenses: 1,391,875 - 385 = 1,391,490
+         // Net: 80k - 1,391,490 = -1,311,490
+         expect(impact?.payload.amount).toBe(-1311490);
       });
   });
 });

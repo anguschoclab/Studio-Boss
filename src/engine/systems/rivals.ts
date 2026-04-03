@@ -104,8 +104,13 @@ export function advanceRivals(rng: RandomGenerator, state: GameState): StateImpa
   }
 
   // Talent Poaching News
+  const talentPoolArr = [];
+  for (const id in state.industry.talentPool) {
+    talentPoolArr.push(state.industry.talentPool[id]);
+  }
+
   for (const rival of state.industry.rivals) {
-     const poakMsg = rivalPoachTalent(rng, rival, Object.values(state.industry.talentPool));
+     const poakMsg = rivalPoachTalent(rng, rival, talentPoolArr);
      if (poakMsg) {
        newsEvents.push({
          id: rng.uuid('news'),
