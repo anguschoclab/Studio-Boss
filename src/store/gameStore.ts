@@ -67,18 +67,15 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
 
     // Process simulation impacts for UI triggers (Modals, etc.)
     if (impacts && impacts.length > 0) {
-      // Sort by priority (descending)
-      const sortedImpacts = [...impacts].sort((a, b) => {
-        if (a.type === 'MODAL_TRIGGERED' && b.type === 'MODAL_TRIGGERED') {
-          return (b.payload.priority || 0) - (a.payload.priority || 0);
-        }
-        return 0;
+      // Filter modal triggers first, then sort
+      const modalImpacts = impacts.filter(i => i.type === 'MODAL_TRIGGERED');
+
+      const sortedImpacts = modalImpacts.sort((a, b) => {
+        return ((b.payload as any).priority || 0) - ((a.payload as any).priority || 0);
       });
 
       for (const impact of sortedImpacts) {
-        if (impact.type === 'MODAL_TRIGGERED') {
-          ui.enqueueModal(impact.payload.modalType, impact.payload.payload as Record<string, unknown>);
-        }
+        ui.enqueueModal((impact.payload as any).modalType, (impact.payload as any).payload as Record<string, unknown>);
       }
     }
 

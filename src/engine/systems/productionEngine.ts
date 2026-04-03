@@ -66,10 +66,18 @@ function tickProject(project: Project, rng: RandomGenerator): StateImpact[] {
 export function tickProduction(state: GameState, rng: RandomGenerator): StateImpact[] {
   const allImpacts: StateImpact[] = [];
 
+  // ⚡ Bolt: Pre-calculate contract map to avoid O(N) array allocation per project tick
+  const contractMap = new Map<string, import('@/engine/types').Contract[]>();
+  for (const contract of state.studio.internal.contracts) {
+    const list = contractMap.get(contract.projectId) || [];
+    list.push(contract);
+    contractMap.set(contract.projectId, list);
+  }
+
   // 1. Player Projects
   for (const key in state.studio.internal.projects) {
     const project = state.studio.internal.projects[key];
-    const projectContracts = state.studio.internal.contracts.filter(c => c.projectId === project.id);
+    const projectContracts = contractMap.get(project.id) || [];
     const attachedTalent = getAttachedTalent(projectContracts, state.industry.talentPool);
     const moraleMult = TalentMoraleSystem.getProductionSpeedMultiplier(attachedTalent);
     

@@ -14,13 +14,13 @@ describe('Finance: Cult Classic Revenue', () => {
     // Normal project
     const normalProject = { ...baseProject, weeklyRevenue: 50000 };
     const revNormal = calculateWeeklyRevenue([{...normalProject, distributionStatus: 'theatrical'}], [], []);
-    expect(revNormal).toBe(22500);
+    expect(revNormal).toBe(20000); // 50000 * 0.40
 
     // Cult classic project overrides low base with ironic viewing multiplier
     const cultProject = { ...baseProject, isCultClassic: true, weeklyRevenue: 50000 };
     const revCult = calculateWeeklyRevenue([{...cultProject, distributionStatus: 'theatrical'}], [], []);
 
-    // applyIronicViewingMultiplier gives Math.max(50000 * 1.5, 100000)
-    expect(revCult).toBe(100000); // Because 50000 * 1.5 = 75000, so it hits the 100000 minimum floor
+    // applyIronicViewingMultiplier gives Math.max(20000 * 1.8, 150000)
+    expect(revCult).toBe(150000); // Because 20000 * 1.8 = 36000, so it hits the 150000 minimum floor
   });
 });

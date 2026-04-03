@@ -38,7 +38,11 @@ export const selectProjectsRaw = createSelector(
 
 export const selectProjects = createSelector(
   [selectProjectsRaw],
-  (projects): Project[] => Object.values(projects)
+  (projects): Project[] => {
+    const arr: Project[] = [];
+    for (const key in projects) arr.push(projects[key]);
+    return arr;
+  }
 );
 
 export const selectFinance = createSelector(
@@ -74,21 +78,31 @@ export const selectTalentPool = createSelector(
  */
 
 export const selectActiveProjects = createSelector(
-  [selectProjects],
-  (projects) => projects.filter(p => 
-    p.state !== 'released' && 
-    p.state !== 'archived' && 
-    p.state !== 'post_release'
-  )
+  [selectProjectsRaw],
+  (projects) => {
+    const arr: Project[] = [];
+    for (const key in projects) {
+      const p = projects[key];
+      if (p.state !== 'released' && p.state !== 'archived' && p.state !== 'post_release') {
+        arr.push(p);
+      }
+    }
+    return arr;
+  }
 );
 
 export const selectReleasedProjects = createSelector(
-  [selectProjects],
-  (projects) => projects.filter(p => 
-    p.state === 'released' || 
-    p.state === 'post_release' || 
-    p.state === 'archived'
-  )
+  [selectProjectsRaw],
+  (projects) => {
+    const arr: Project[] = [];
+    for (const key in projects) {
+      const p = projects[key];
+      if (p.state === 'released' || p.state === 'post_release' || p.state === 'archived') {
+        arr.push(p);
+      }
+    }
+    return arr;
+  }
 );
 
 export const selectIsBankrupt = createSelector(
