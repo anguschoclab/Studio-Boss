@@ -1,11 +1,13 @@
 import { Project } from '@/engine/types';
 import { useUIStore } from '@/store/uiStore';
+import { useGameStore } from '@/store/gameStore';
 import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
-import { AlertTriangle, TrendingUp, Activity, Zap } from 'lucide-react';
+import { AlertTriangle, TrendingUp, Activity, Zap, DollarSign } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { formatMoney } from '@/engine/utils';
 import { DistributionBadge } from '../shared/DistributionBadge';
 import { RecoupmentStatus } from '../shared/RecoupmentStatus';
 
@@ -15,7 +17,20 @@ interface ProjectCardProps {
 
 export const ProjectCard = ({ project }: ProjectCardProps) => {
   const { selectProject, openPitchProject, openCrisisModal } = useUIStore();
+  const gameState = useGameStore(s => s.gameState);
   const tier = BUDGET_TIERS[project.budgetTier];
+  
+  // Find buyer name for distribution badge
+  const buyer = project.buyerId && gameState
+    ? gameState.market.buyers.find(b => b.id === project.buyerId)
+    : null;
+  
+  // Estimate weekly streaming revenue (passive revenue from deal)
+  const weeklyRevenueForecast = project.distributionStatus === 'streaming' && project.buyerId
+    ? Math.floor(project.budget * 0.02) // ~2% of budget per week from streaming deal
+    : project.distributionStatus === 'theatrical'
+    ? Math.floor(project.budget * 0.03)
+    : 0;
 
   const displayFormat = project.type === 'SERIES'
       ? `S${(project as any).tvDetails?.currentSeason || 1}`
@@ -63,7 +78,6 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
           <Badge variant="outline" className="text-[9px] uppercase tracking-[0.2em] font-black h-5 bg-black/40 border-white/10 text-muted-foreground group-hover:border-white/20 group-hover:text-foreground/80 transition-colors shadow-sm">
             {displayFormat}
           </Badge>
-          <DistributionBadge status={project.distributionStatus} className="h-5" />
         </div>
 
         {/* Metrics: Buzz & Progress */}
@@ -109,6 +123,26 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
                 </div>
               </div>
             </TooltipWrapper>
+          )}
+
+          {/* Distribution Deal Info */}
+          {project.distributionStatus && buyer && (
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-1.5">
+                  <DistributionBadge status={project.distributionStatus} className="h-5" />
+                  <span className="text-[9px] font-bold text-muted-foreground/60 truncate max-w-[100px]">{buyer.name}</span>
+                </div>
+                {weeklyRevenueForecast > 0 && (
+                  <TooltipWrapper tooltip={`Projected weekly revenue from ${buyer.name} distribution deal`} side="top">
+                    <div className="flex items-center gap-1 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20 cursor-help">
+                      <DollarSign className="w-2.5 h-2.5 text-emerald-400" />
+                      <span className="text-[9px] font-black text-emerald-400">{formatMoney(weeklyRevenueForecast)}/wk</span>
+                    </div>
+                  </TooltipWrapper>
+                )}
+              </div>
+            </div>
           )}
 
           {/* Financial Highlights & Recoupment */}

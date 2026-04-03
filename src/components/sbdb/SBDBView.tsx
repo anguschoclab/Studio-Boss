@@ -53,7 +53,7 @@ export const SBDBView = () => {
           <h1 className="text-2xl font-black tracking-tighter uppercase italic">SBDB</h1>
         </div>
         <p className="text-muted-foreground text-sm font-medium">
-          The definitive industry database of talent, producers, and unscripted stars.
+          The definitive industry database of talent, producers, and stars.
         </p>
       </div>
 
