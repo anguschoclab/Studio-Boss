@@ -1,10 +1,11 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { GENRE_TAXONOMY, GENRES, TARGET_AUDIENCES } from '@/engine/data/genres';
 import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
-import { TV_FORMATS } from '@/engine/data/tvFormats';
+import { TV_FORMATS, TV_FORMAT_TAXONOMY } from '@/engine/data/tvFormats';
 import { UNSCRIPTED_FORMATS } from '@/engine/data/unscriptedFormats';
+import { UNSCRIPTED_FORMAT_TAXONOMY } from '@/engine/data/unscriptedTaxonomy';
 import { generateProjectTitle } from '@/engine/generators/titles';
 import { BudgetTierKey, ProjectFormat, TvFormatKey, UnscriptedFormatKey, ReleaseModelKey } from '@/engine/types';
 import { formatMoney } from '@/engine/utils';
@@ -14,13 +15,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
-import { Dices } from 'lucide-react';
+import { Dices, Info } from 'lucide-react';
 
 export const CreateProjectModal = () => {
   const { showCreateProject, closeCreateProject } = useUIStore();
   const createProject = useGameStore(s => s.createProject) || (() => {});
-  const gameState = useGameStore(s => s.gameState);
-  const [selectedTalent, setSelectedTalent] = useState<string[]>([]);
 
   const [title, setTitle] = useState('');
   const [format, setFormat] = useState<ProjectFormat>('film');
@@ -33,7 +32,6 @@ export const CreateProjectModal = () => {
   const [episodes, setEpisodes] = useState<number>(10);
   const [releaseModel, setReleaseModel] = useState<ReleaseModelKey>('weekly');
 
-  // Auto-generate title when modal opens if title is empty
   useEffect(() => {
     if (showCreateProject && !title) {
       setTitle(generateProjectTitle(genre));
@@ -46,13 +44,6 @@ export const CreateProjectModal = () => {
   let calculatedDevWeeks = tier.developmentWeeks;
   let calculatedProdWeeks = tier.productionWeeks;
   let calculatedBudget = tier.budget;
-  const talentPoolRecord = gameState?.industry?.talentPool || {};
-  const talentPool = useMemo(() => Object.values(talentPoolRecord), [talentPoolRecord]);
-  const talentMap = useMemo(() => new Map(talentPool.map(t => [t.id, t])), [talentPool]);
-  const talentFees = selectedTalent.reduce((sum, id) => {
-    const t = talentMap.get(id);
-    return sum + (t?.fee || 0);
-  }, 0);
 
   if (format === 'tv') {
       const tvData = TV_FORMATS[tvFormat];
@@ -72,17 +63,16 @@ export const CreateProjectModal = () => {
     if (!title.trim()) return;
 
     if (format === 'tv') {
-        createProject({ title: title.trim(), format, genre, budgetTier, targetAudience, flavor, tvFormat, episodes, releaseModel, attachedTalentIds: selectedTalent });
+        createProject({ title: title.trim(), format, genre, budgetTier, targetAudience, flavor, tvFormat, episodes, releaseModel, attachedTalentIds: [] });
     } else if (format === 'unscripted') {
-        createProject({ title: title.trim(), format, genre, budgetTier, targetAudience, flavor, unscriptedFormat, episodes, releaseModel, attachedTalentIds: selectedTalent });
+        createProject({ title: title.trim(), format, genre, budgetTier, targetAudience, flavor, unscriptedFormat, episodes, releaseModel, attachedTalentIds: [] });
     } else {
-        createProject({ title: title.trim(), format, genre, budgetTier, targetAudience, flavor, attachedTalentIds: selectedTalent });
+        createProject({ title: title.trim(), format, genre, budgetTier, targetAudience, flavor, attachedTalentIds: [] });
     }
 
     closeCreateProject();
     setTitle('');
     setFlavor('');
-    setSelectedTalent([]);
   };
 
   return (
@@ -91,7 +81,7 @@ export const CreateProjectModal = () => {
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-background/50 pointer-events-none rounded-lg" />
         <DialogHeader className="relative z-10 pb-4 border-b border-border/40">
           <DialogTitle className="font-display font-black text-2xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">Greenlight New Project</DialogTitle>
-          <DialogDescription className="text-muted-foreground font-medium">Commission a new project for your slate.</DialogDescription>
+          <DialogDescription className="text-muted-foreground font-medium">Commission a new project. Talent will be attached after greenlight.</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-5 relative z-10 pt-2">
@@ -133,11 +123,20 @@ export const CreateProjectModal = () => {
                 <Label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground/80">TV Format</Label>
                 <Select value={tvFormat} onValueChange={(v) => setTvFormat(v as TvFormatKey)}>
                   <SelectTrigger className="bg-background/50 border-border/50"><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    {Object.values(TV_FORMATS).map(t => (
-                      <SelectItem key={t.key} value={t.key}>
-                        {t.name}
-                      </SelectItem>
+                  <SelectContent className="max-h-80">
+                    {TV_FORMAT_TAXONOMY.map(category => (
+                      <div key={category.id}>
+                        <div className="px-2 py-1.5 text-[10px] font-black uppercase tracking-widest text-primary/60 bg-primary/5 rounded-md my-1">
+                          {category.name}
+                        </div>
+                        {category.formats
+                          .filter(fk => TV_FORMATS[fk])
+                          .map(fk => (
+                            <SelectItem key={fk} value={fk}>
+                              {TV_FORMATS[fk].name}
+                            </SelectItem>
+                          ))}
+                      </div>
                     ))}
                   </SelectContent>
                 </Select>
@@ -147,11 +146,20 @@ export const CreateProjectModal = () => {
                 <Label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground/80">Unscripted Format</Label>
                 <Select value={unscriptedFormat} onValueChange={(v) => setUnscriptedFormat(v as UnscriptedFormatKey)}>
                   <SelectTrigger className="bg-background/50 border-border/50"><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    {Object.values(UNSCRIPTED_FORMATS).map(t => (
-                      <SelectItem key={t.key} value={t.key}>
-                        {t.name}
-                      </SelectItem>
+                  <SelectContent className="max-h-80">
+                    {UNSCRIPTED_FORMAT_TAXONOMY.map(category => (
+                      <div key={category.id}>
+                        <div className="px-2 py-1.5 text-[10px] font-black uppercase tracking-widest text-primary/60 bg-primary/5 rounded-md my-1">
+                          {category.name}
+                        </div>
+                        {category.formats
+                          .filter(fk => UNSCRIPTED_FORMATS[fk])
+                          .map(fk => (
+                            <SelectItem key={fk} value={fk}>
+                              {UNSCRIPTED_FORMATS[fk].name}
+                            </SelectItem>
+                          ))}
+                      </div>
                     ))}
                   </SelectContent>
                 </Select>
@@ -248,7 +256,7 @@ export const CreateProjectModal = () => {
                 </div>
                 <div className="flex flex-col">
                   <span className="text-[9px] uppercase tracking-widest font-bold text-muted-foreground/70">Est. Total Budget</span>
-                  <span className="text-sm font-bold text-foreground">{formatMoney(calculatedBudget + talentFees)}</span>
+                  <span className="text-sm font-bold text-foreground">{formatMoney(calculatedBudget)}</span>
                 </div>
                 <div className="flex flex-col">
                   <span className="text-[9px] uppercase tracking-widest font-bold text-muted-foreground/70">Est. Weekly Cost</span>
@@ -261,35 +269,12 @@ export const CreateProjectModal = () => {
             </div>
           </div>
 
-          {/* Talent Selection */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <Label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground/80">Attach Talent</Label>
-              {talentFees > 0 && <span className="text-[10px] font-bold text-destructive">Fees: {formatMoney(talentFees)}</span>}
-            </div>
-            <div className="max-h-40 overflow-y-auto space-y-1.5 border border-border/50 bg-background/30 shadow-inner rounded-xl p-2.5 custom-scrollbar">
-              {talentPool.map(t => (
-                <label key={t.id} htmlFor={t.id} className="flex items-center space-x-3 p-2 rounded-lg hover:bg-muted/50 cursor-pointer transition-colors group">
-                  <input
-                    type="checkbox"
-                    id={t.id}
-                    checked={selectedTalent.includes(t.id)}
-                    onChange={(e) => {
-                      if (e.target.checked) setSelectedTalent([...selectedTalent, t.id]);
-                      else setSelectedTalent(selectedTalent.filter(id => id !== t.id));
-                    }}
-                    className="rounded border-border/50 text-primary focus:ring-primary/50"
-                  />
-                  <div className="flex-1 flex justify-between items-center text-sm">
-                    <span className="font-semibold group-hover:text-primary transition-colors">{t.name} <span className="text-xs text-muted-foreground font-normal">({t.roles[0]})</span></span>
-                    <span className="font-mono text-xs text-foreground/70">{formatMoney(t.fee)}</span>
-                  </div>
-                </label>
-              ))}
-              {talentPool.length === 0 && (
-                <div className="text-xs text-center text-muted-foreground py-4">No talent available in roster.</div>
-              )}
-            </div>
+          {/* Talent Info Notice */}
+          <div className="flex items-start gap-2 p-3 rounded-xl bg-primary/5 border border-primary/20">
+            <Info className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+            <p className="text-[10px] text-muted-foreground leading-relaxed">
+              <span className="font-bold text-foreground">Talent attachment happens after greenlight.</span> First attach producers/writers during development, then cast acting talent and directors for production — just like real Hollywood.
+            </p>
           </div>
 
           {/* Flavor */}
