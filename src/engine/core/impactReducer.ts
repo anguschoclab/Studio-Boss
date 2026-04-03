@@ -222,7 +222,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
               const genre = project.genre ? project.genre.toLowerCase() : '';
               if (format === 'unscripted' || genre.includes('horror')) {
                   // Trashy reality TV or horror gets a temporary buzz boost from scandals
-                  projects[pid] = { ...project, buzz: Math.min(100, (project.buzz || 0) + Math.floor(scandal.severity / 5)) } as import('@/engine/types').Project;
+                  projects[pid] = { ...project, buzz: Math.min(100, (project.buzz || 0) + Math.floor(scandal.severity / 5)) } as Project;
               }
           }
       }
