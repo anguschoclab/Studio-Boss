@@ -341,7 +341,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
           impact.newHeadlines.forEach(h => {
               newState = applySingleImpact(newState, { 
                 type: 'NEWS_ADDED', 
-                payload: { id: h.id, headline: h.text, description: '', category: h.category } 
+                payload: { id: h.id, headline: h.text, description: '', category: h.category, publication: h.publication } 
               });
           });
       }
@@ -349,7 +349,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
           impact.newsEvents.forEach(e => {
               newState = applySingleImpact(newState, { 
                 type: 'NEWS_ADDED', 
-                payload: { id: e.id, headline: e.headline, description: e.description } 
+                payload: { id: e.id, headline: e.headline, description: e.description, publication: e.publication } 
               });
           });
       }

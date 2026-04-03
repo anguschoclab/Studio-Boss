@@ -32,7 +32,6 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
       const isPlayerLeading = opportunity.highestBidderId === 'PLAYER';
       const aggressionFactor = isPlayerLeading ? 1.2 : 1.0;
 
-      // 🎭 Method Actor Tuning: Adjusted bidding logic to be more dynamic based on AI motivation.
       const isFranchiseBuilder = rival.currentMotivation === 'FRANCHISE_BUILDING';
       const isCashCrunch = rival.currentMotivation === 'CASH_CRUNCH';
       const motivationAggression = (rival.motivationProfile?.aggression || 50) / 100;
@@ -56,7 +55,7 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
           });
 
           // Industry News for significant bidding wars
-          if (newBid > 10_000_000 && (rng && rng.next ? rng.next() : Math.random()) < 0.2) {
+          if (newBid > 10_000_000 && rng.next() < 0.2) {
             impacts.push({
               type: 'NEWS_ADDED',
               payload: {
@@ -75,59 +74,45 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
 
 /**
  * AI Talent Competition.
- * AI Studios with >$100M cash scan talent pool every 12 weeks to assign pacts.
- * Top 10% talent (prestige > 85) triggers a "Bidding War" news event.
+ * AI Studios with >$100M cash scan talent pool every 4 weeks to assign pacts.
  */
 export function tickTalentCompetition(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
   
-  // Only run talent competition once every 4 weeks to avoid saturation
   if (state.week % 4 !== 0) return [];
 
   const eligibleRivals = state.industry.rivals.filter(r => r.cash > 100_000_000);
   if (eligibleRivals.length === 0) return [];
 
-  // Find highly desirable talent (top 10% prestige) who are not currently signed to a first-look deal
-  const signedTalentIds = new Set<string>();
-  state.industry.rivals.forEach(r => {
-    // Note: In this version, we assume rival.contracts or similar might hold pacts if they were added.
-    // For now we check the player's deals and any future rival deals.
-  });
-
-  const availableTalent = Object.values(state.industry.talentPool).filter(t => t.prestige > 85);
+  const availableTalent = Object.values(state.industry.talentPool).filter(t => t.prestige > 85 && !t.contractId);
   
   if (availableTalent.length === 0) return [];
 
   eligibleRivals.forEach(rival => {
-    if (rng.next() < 0.1) { // 10% chance per eligible rival per 4 weeks
+    if (rng.next() < 0.1) {
       const target = rng.pick(availableTalent);
       const lockFee = target.fee * (1.5 + rng.next());
       
       if (rival.cash > lockFee * 2) {
-         // Create a pact for the rival
          const pact: TalentPact = {
            id: rng.uuid('pact'),
            talentId: target.id,
            studioId: rival.id,
            type: 'first_look',
-           weeksRemaining: 52,
-           expiryWeek: state.week + 52,
-           weeklyOverheadCost: Math.floor(lockFee * 0.05),
-           exclusivity: true
+           startDate: state.week,
+           endDate: state.week + 52,
+           weeklyOverhead: Math.floor(lockFee * 0.05),
+           exclusivity: true,
+           status: 'active'
          };
 
          impacts.push({
            type: 'INDUSTRY_UPDATE',
            payload: {
-             update: {
-               // We need a way to store rival pacts. 
-               // For now, let's assume they are handled by IndustryUpdate or specific rival fields.
-             },
              rival: {
                rivalId: rival.id,
                update: {
                  cash: rival.cash - lockFee
-                 // In a real implementation, we'd add 'pacts' to RivalStudio
                }
              }
            }
@@ -150,7 +135,6 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
 
 /**
  * Live Reaction Bidding.
- * Used for "1-Click" outbidding where AI might respond immediately.
  */
 export function calculateLiveCounterBid(
   opportunity: Opportunity,
@@ -159,13 +143,12 @@ export function calculateLiveCounterBid(
   rng: RandomGenerator,
   week: number
 ): StateImpact | null {
-  // Only high-prestige or cash-rich rivals counter immediately to avoid spam
   if (rival.cash < playerBid * 2 || rival.prestige < 60) return null;
 
   const multiplier = ArchetypeMultipliers[rival.archetype]?.(opportunity.genre) || 1.1;
-  const reactionThreshold = 0.3; // 30% chance for immediate response
+  const reactionThreshold = 0.3;
   
-  if ((rng && rng.next ? rng.next() : Math.random()) < reactionThreshold) {
+  if (rng.next() < reactionThreshold) {
     const counterAmount = Math.floor(playerBid * rng.range(1.05, 1.15) * multiplier);
     if (counterAmount < rival.cash * 0.4) {
       return {
@@ -184,7 +167,6 @@ export function calculateLiveCounterBid(
 
 /**
  * Player UI Helper.
- * Suggests a bid 10% higher than current max, rounded.
  */
 export function getLiveCounterBid(opportunity: Opportunity, increment: number = 0.1): number {
   const currentMax = Math.max(...Object.values(opportunity.bids || {}).map(b => b.amount), opportunity.costToAcquire);

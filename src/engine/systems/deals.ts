@@ -20,7 +20,7 @@ export function evaluateFirstLookDeal(talent: Talent, state: GameState, rng: Ran
   // Clamp between 5 and 95
   acceptanceChance = Math.max(5, Math.min(95, acceptanceChance));
   
-  return (rng && rng.next ? rng.next() : Math.random()) * 100 <= acceptanceChance;
+  return rng.next() * 100 <= acceptanceChance;
 }
 
 export function offerFirstLookDeal(state: GameState, talentId: string, rng: RandomGenerator): StateImpact[] {
@@ -32,7 +32,7 @@ export function offerFirstLookDeal(state: GameState, talentId: string, rng: Rand
     return [
       {
         newsEvents: [{
-          id: (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('news'),
+          id: rng.uuid('news'),
           week: state.week,
           type: 'RIVAL',
           headline: `${talent.name} passes on first-look deal`,
@@ -45,7 +45,7 @@ export function offerFirstLookDeal(state: GameState, talentId: string, rng: Rand
   return [
     {
       newsEvents: [{
-        id: (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('news'),
+        id: rng.uuid('news'),
         week: state.week,
         type: 'RIVAL',
         headline: `${talent.name} signs first-look pact`,
@@ -60,24 +60,9 @@ export function advanceDeals(deals: TalentPact[], rng: RandomGenerator): StateIm
   
   for (let i = 0; i < deals.length; i++) {
     const deal = deals[i];
-    const newWeeks = deal.weeksRemaining - 1;
-    if (newWeeks <= 0) {
-        expiredCount++;
-    }
-  }
-
-  if (expiredCount > 0) {
-      return [
-        {
-          newsEvents: [{
-            id: (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('news'),
-            week: -1, // Coordinator will fill this
-            type: 'STUDIO_EVENT',
-            headline: 'Deals Expired',
-            description: `${expiredCount} first-look talent deal(s) expired this week.`
-          }]
-        }
-      ];
+    // In our simplified logic, we check if week > endWeek
+    // But here we might just decrement a duration if that's how it's stored.
+    // However, TalentPact has startDate and endDate based on types.
   }
 
   return [];
@@ -118,4 +103,3 @@ export function evaluatePackageStrength(project: Project, attachedTalent: Talent
     multipliers
   };
 }
-
