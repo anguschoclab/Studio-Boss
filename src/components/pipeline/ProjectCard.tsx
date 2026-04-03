@@ -126,6 +126,26 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
             </TooltipWrapper>
           )}
 
+          {/* Distribution Deal Info */}
+          {project.distributionStatus && buyer && (
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-1.5">
+                  <DistributionBadge status={project.distributionStatus} className="h-5" />
+                  <span className="text-[9px] font-bold text-muted-foreground/60 truncate max-w-[100px]">{buyer.name}</span>
+                </div>
+                {weeklyRevenueForecast > 0 && (
+                  <TooltipWrapper tooltip={`Projected weekly revenue from ${buyer.name} distribution deal`} side="top">
+                    <div className="flex items-center gap-1 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20 cursor-help">
+                      <DollarSign className="w-2.5 h-2.5 text-emerald-400" />
+                      <span className="text-[9px] font-black text-emerald-400">{formatMoney(weeklyRevenueForecast)}/wk</span>
+                    </div>
+                  </TooltipWrapper>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* Financial Highlights & Recoupment */}
           {(project.state === 'released' || project.state === 'archived') && (
             <RecoupmentStatus project={project} className="p-2.5 bg-black/30 rounded-xl border border-white/5" />
