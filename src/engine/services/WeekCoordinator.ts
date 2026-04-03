@@ -1,187 +1,283 @@
-import { GameState, Talent, Project, Contract, Award, Opportunity } from '@/engine/types';
-import { StateImpact, TalentUpdate } from '../types/state.types';
-import { generateOpportunity } from '../generators/opportunities';
-import { clamp } from '../utils';
+import { GameState, StateImpact, WeekSummary, GameEvent } from '../types';
 import { RandomGenerator } from '../utils/rng';
-import { applyAwardBoostsToTalent } from './talentStats';
-import { SchedulingEngine } from './schedulingEngine';
+import { applyImpacts } from '../core/impactReducer';
+import { clamp } from '../utils';
+
+// System Imports
+import { tickProduction } from '../systems/productionEngine';
+import { tickScriptDevelopment } from '../systems/production/ScriptDraftingSystem';
+import { tickPlatforms } from '../systems/television/platformEngine';
+import { tickAIMinds } from '../systems/ai/motivationEngine';
+import { tickAgencies } from '../systems/ai/AgentBrain';
+import { tickAuctions } from '../systems/ai/biddingEngine';
+import { tickWorldEvents } from '../systems/ai/WorldSimulator';
+import { tickTelevision } from '../systems/television/televisionTick';
+import { tickFinance } from '../systems/finance/financeTick';
+import { advanceTrends } from '../systems/trends';
+import { advanceMarketEvents } from '../systems/marketEvents';
+import { advanceScandals, generateScandals } from '../systems/scandals';
+import { advanceBuyers } from '../systems/buyerMergers';
+import { checkAndTriggerCrisis } from '../systems/crises';
+
+// New Industry Systems
+import { tickVerticalIntegration } from '../systems/industry/VerticalIntegrationProcessor';
+import { tickIndustryUpstarts } from '../systems/industry/IndustryUpstarts';
+import { tickConsolidation } from '../systems/industry/ConsolidationEngine';
+import { InterestRateSimulator } from '../systems/market/InterestRateSimulator';
+import { calculateFranchiseEvolutionImpacts, tickIPVault } from '../systems/ip/franchiseCoordinator';
+
+// Integrated Hardening Systems
+import { runAwardsCeremony, processRazzies } from '../systems/awards';
+import { TalentSystem } from '../systems/TalentSystem';
+import { resolveFestivals } from '../systems/festivals';
+import { advanceRumors } from '../systems/rumors';
+import { SchedulingEngine } from '../systems/schedulingEngine';
 
 /**
- * TalentSystem encapsulates all logic related to talent lifecycle, 
- * stat progression, and market opportunity generation.
+ * Studio Boss - Simulation Tick Context
  */
-export class TalentSystem {
-  /**
-   * Advances the talent-related aspects of the game world (weekly tick).
-   */
-  static advance(state: GameState, rng: RandomGenerator): StateImpact {
-    const uiNotifications: string[] = [];
-    const talentUpdates: TalentUpdate[] = [];
-    
-    // 1. Fatigue & Commitment Decay (Deterministic via SchedulingEngine)
-    // We update fatigue for all talent. Talent active in production will have their fatigue
-    // further adjusted by the productionEngine.
-    for (const id in state.industry.talentPool) {
-      const talent = state.industry.talentPool[id];
-      
-      // Recovery phase (default)
-      const updatedTalent = SchedulingEngine.updateTalentFatigue(talent, false);
-      
-      // Cleanup expired commitments
-      const nextCommitments = (updatedTalent.commitments || []).filter(c => c.endWeek >= state.week);
-      
-      if (updatedTalent.fatigue !== talent.fatigue || nextCommitments.length !== (talent.commitments || []).length) {
-        talentUpdates.push({
-          talentId: id,
-          update: {
-            fatigue: updatedTalent.fatigue,
-            commitments: nextCommitments
-          }
-        });
-      }
-    }
+export interface TickContext {
+  week: number;
+  tickCount: number;
+  rng: RandomGenerator;
+  timestamp: number;
+  impacts: StateImpact[];
+  events: GameEvent[];
+}
 
-    const currentOpportunities = state.market.opportunities || [];
-    const updatedOpportunities: Opportunity[] = [];
-
-    // 2. Opportunity Lifecycle (Expiry)
-    for (const opp of currentOpportunities) {
-      if (opp.weeksUntilExpiry > 1) {
-        updatedOpportunities.push({
-          ...opp,
-          weeksUntilExpiry: opp.weeksUntilExpiry - 1,
-        });
-      }
-    }
-
-    const oppTitles = new Set(updatedOpportunities.map(o => o.title));
-
-    // 3. Market Generation Logic
-    const tryAddOpp = (opp: Opportunity, message?: string) => {
-      if (!oppTitles.has(opp.title)) {
-        updatedOpportunities.push(opp);
-        oppTitles.add(opp.title);
-        if (message) uiNotifications.push(message);
-        return true;
-      }
-      return false;
+/**
+ * The "Pipe and Filter" Orchestrator.
+ */
+export class WeekCoordinator {
+  static execute(state: GameState, rng: RandomGenerator): { newState: GameState; summary: WeekSummary; impacts: StateImpact[] } {
+    const context: TickContext = {
+      week: state.week + 1,
+      tickCount: (state.tickCount || 0) + 1,
+      rng,
+      timestamp: (state.tickCount || 0) * 1000,
+      impacts: [],
+      events: []
     };
 
-    // Talent-specific opportunity
-    if (rng.next() < 0.25) {
-      const activeTalentIds = new Set<string>();
-      for (let i = 0; i < state.studio.internal.contracts.length; i++) {
-        activeTalentIds.add(state.studio.internal.contracts[i].talentId);
+    // 1. Run Filters
+    this.runMarketFilter(state, context);
+    this.runProductionFilter(state, context);
+    this.runAIFilter(state, context);
+    this.runIndustryFilter(state, context);
+    this.runTalentFilter(state, context);
+    this.runMediaFilter(state, context);
+    this.runScandalFilter(state, context);
+    this.runFinanceFilter(state, context);
+
+    // 2. Consolidation & State Application
+    const nextState = applyImpacts(state, context.impacts);
+
+    const updatedMarketState = {
+      ...nextState.finance.marketState,
+      sentiment: clamp((nextState.finance.marketState?.sentiment || 50) + (context.rng.next() - 0.5) * 5, -100, 100),
+      cycle: (nextState.finance.marketState?.baseRate || 0) > 0.08 ? 'RECESSION' : (nextState.finance.marketState?.baseRate || 0) > 0.06 ? 'BEAR' : 'STABLE'
+    };
+
+    const finalizedState: GameState = {
+      ...nextState,
+      week: context.week,
+      tickCount: context.tickCount,
+      eventHistory: [...(state.eventHistory || []), ...context.events].slice(-52),
+      finance: {
+        ...nextState.finance,
+        marketState: updatedMarketState as import('../types/state.types').MarketState
       }
-      const availableTalentIds: string[] = [];
-      for (const id in state.industry.talentPool) {
-        if (!activeTalentIds.has(id)) availableTalentIds.push(id);
+    };
+
+    const summary = this.buildSummary(state, finalizedState, context);
+
+    context.impacts.push({
+      type: 'MODAL_TRIGGERED',
+      payload: {
+        modalType: 'SUMMARY',
+        priority: 0,
+        payload: summary as unknown as Record<string, unknown>
       }
-
-      if (availableTalentIds.length > 0) {
-        const newOpp = generateOpportunity(rng, availableTalentIds);
-        tryAddOpp(newOpp, `A new package "${newOpp.title}" hit the market.`);
-      }
-    }
-
-    // General opportunities
-    if (rng.next() < 0.2) {
-      tryAddOpp(generateOpportunity(rng), `A new script is doing the rounds in town.`);
-    }
-
-    if (rng.next() < 0.15) {
-      tryAddOpp(generateOpportunity(rng), `New opportunities have hit the market!`);
-    }
-
-    // Fallback/Density control
-    if (updatedOpportunities.length < 4 && rng.next() < 0.3) {
-      tryAddOpp(generateOpportunity(rng));
-    }
+    });
 
     return {
-      newOpportunities: updatedOpportunities,
-      talentUpdates,
-      uiNotifications
+      newState: finalizedState,
+      summary,
+      impacts: context.impacts
     };
   }
 
+  private static runMarketFilter(state: GameState, context: TickContext) {
+    context.impacts.push(...tickPlatforms(state, context.rng));
+    context.impacts.push(InterestRateSimulator.advance(state, context.rng));
+    context.impacts.push(...tickWorldEvents(state, context.rng));
+    context.impacts.push(...advanceTrends(state.market.trends || [], context.rng));
+    context.impacts.push(...advanceMarketEvents(state, context.rng));
+    context.impacts.push(advanceBuyers(state, context.rng));
+    context.impacts.push(...tickVerticalIntegration(state, context.rng));
+    context.impacts.push(...tickIndustryUpstarts(state, context.rng));
+    context.impacts.push(...tickConsolidation(state, context.rng));
+  }
 
-  /**
-   * Updates talent stats based on project performance and awards.
-   */
-  static applyProjectResults(
-    project: Project,
-    contracts: Contract[],
-    talentPool: Talent[],
-    projectAwards: Award[] = []
-  ): Talent[] {
-    if (contracts.length === 0) return [];
+  private static runProductionFilter(state: GameState, context: TickContext) {
+    context.impacts.push(...tickProduction(state, context.rng));
+    for (const key in state.studio.internal.projects) {
+      const project = state.studio.internal.projects[key];
+      if (project.state === 'development') {
+        const result = tickScriptDevelopment(project, context.rng);
+        if (result.project !== project) {
+          context.impacts.push({
+            type: 'PROJECT_UPDATED',
+            payload: { projectId: project.id, update: result.project }
+          });
+          if (result.impact) context.impacts.push(result.impact);
+        }
+      }
+    }
+    this.runCrisisFilter(state, context);
+    context.impacts.push(...tickTelevision(state, context.rng));
+    context.impacts.push(...calculateFranchiseEvolutionImpacts(state, context.rng));
+    context.impacts.push(...tickIPVault(state));
+  }
 
-    const talentPoolMap = new Map(talentPool.map(t => [t.id, t]));
-    const totalCost = project.budget + (project.marketingBudget || 0);
-    const ROI = totalCost > 0 ? project.revenue / totalCost : 0;
+  private static runCrisisFilter(state: GameState, context: TickContext) {
+    const activeStages = ['prep', 'production', 'post_production', 'marketing'];
+    for (const key in state.studio.internal.projects) {
+      const project = state.studio.internal.projects[key];
+      if (!project.activeCrisis && activeStages.includes(project.state)) {
+        const impact = checkAndTriggerCrisis(project, context.rng);
+        if (impact) context.impacts.push(impact);
+      }
+    }
+  }
 
-    // Define success/failure bounds
-    let drawChange = 0;
-    let prestigeChange = 0;
-    let feeMultiplier = 1.0;
+  private static runAIFilter(state: GameState, context: TickContext) {
+    context.impacts.push(...tickAIMinds(state, context.rng));
+    context.impacts.push(...tickAgencies(state, context.rng));
+    context.impacts.push(...tickAuctions(state, context.rng));
+  }
 
-    if (ROI > 4.0) { drawChange = 12; prestigeChange = 6; feeMultiplier = 1.6; }
-    else if (ROI > 2.0) { drawChange = 6; prestigeChange = 3; feeMultiplier = 1.3; }
-    else if (ROI > 1.0) { drawChange = 2; prestigeChange = 1; feeMultiplier = 1.1; }
-    else if (ROI < 0.4) { drawChange = -12; prestigeChange = -6; feeMultiplier = 0.75; }
-    else if (ROI < 0.8) { drawChange = -6; prestigeChange = -3; feeMultiplier = 0.85; }
+  private static runIndustryFilter(state: GameState, context: TickContext) {
+    const { year } = InterestRateSimulator.getWeekDisplay(context.week);
+    const awardsImpact = runAwardsCeremony(state, context.week, year, context.rng);
+    context.impacts.push(awardsImpact);
+    
+    if (awardsImpact.newAwards && awardsImpact.newAwards.length > 0) {
+      context.impacts.push({
+        type: 'MODAL_TRIGGERED',
+        payload: {
+          modalType: 'AWARDS',
+          priority: 50,
+          payload: { 
+            week: context.week,
+            year,
+            awards: awardsImpact.newAwards,
+            body: awardsImpact.newAwards[0]?.body || 'Annual Industry Awards'
+          }
+        }
+      });
+    }
+    
+    const weekDisplay = context.week % 52 === 0 ? 52 : context.week % 52;
+    if (weekDisplay === 4) {
+      const razzieImpact = processRazzies(state, context.week, context.rng);
+      context.impacts.push(razzieImpact);
+    }
 
-    const updatedTalent: Talent[] = [];
+    context.impacts.push(resolveFestivals(state, context.rng));
+  }
 
-    for (const contract of contracts) {
-      const talent = talentPoolMap.get(contract.talentId);
-      if (!talent) continue;
+  private static runTalentFilter(state: GameState, context: TickContext) {
+    context.impacts.push(TalentSystem.advance(state, context.rng));
+  }
 
-      let talentAwardsDrawBonus = 0;
-      let talentAwardsPrestigeBonus = 0;
-      let talentAwardsFeeMultiplier = 1.0;
-      let talentAwardsEgoBoost = 0;
+  private static runMediaFilter(state: GameState, context: TickContext) {
+    context.impacts.push(advanceRumors(state, context.rng));
+    
+    // Process First-Look Deal decay
+    const updatedPacts = SchedulingEngine.processPacts(state.studio.internal.firstLookDeals || []);
+    if (JSON.stringify(updatedPacts) !== JSON.stringify(state.studio.internal.firstLookDeals)) {
+       context.impacts.push({
+         type: 'INDUSTRY_UPDATE',
+         payload: { update: { 'studio.internal.firstLookDeals': updatedPacts } }
+       });
+    }
+  }
 
-      for (const award of projectAwards) {
-        const isDirector = talent.roles.includes('director');
-        const isActor = talent.roles.includes('actor');
-        const isWriter = talent.roles.includes('writer');
+  private static runScandalFilter(state: GameState, context: TickContext) {
+    context.impacts.push(...generateScandals(state, context.rng));
+    context.impacts.push(...advanceScandals(state));
+  }
 
-        let qualifiesForBonus;
-        if (award.category.includes('Director')) { qualifiesForBonus = isDirector; }
-        else if (award.category.includes('Actor') || award.category.includes('Actress') || award.category.includes('Ensemble')) { qualifiesForBonus = isActor; }
-        else if (award.category.includes('Screenplay')) { qualifiesForBonus = isWriter; }
-        else { qualifiesForBonus = true; } // Best Picture etc.
+  private static runFinanceFilter(state: GameState, context: TickContext) {
+    context.impacts.push(...tickFinance(state, context.rng));
+  }
 
-        if (qualifiesForBonus) {
-          const multiplier = (award.category.includes('Director') || award.category.includes('Actor') || award.category.includes('Actress') || award.category.includes('Screenplay')) ? 1.0 : 0.5;
-          const isPrestige = ['Academy Awards', 'Cannes Film Festival', 'Venice Film Festival'].includes(award.body);
-          
-          const boosts = applyAwardBoostsToTalent(talent, award, multiplier, isPrestige);
+  private static buildSummary(before: GameState, after: GameState, context: TickContext): WeekSummary {
+    const allHeadlines: import('../types/engine.types').Headline[] = [];
+    const newsEvents: import('../types/engine.types').NewsEvent[] = [];
+    
+    let ledgerImpact: StateImpact | undefined;
+    const projectUpdates: string[] = [];
 
-          talentAwardsPrestigeBonus += boosts.prestigeBoost;
-          talentAwardsDrawBonus += boosts.drawBoost;
+    for (let i = 0; i < context.impacts.length; i++) {
+      const impact = context.impacts[i];
 
-          // feeMultiplier is multiplicative
-          talentAwardsFeeMultiplier += (boosts.feeMultiplier - 1.0);
-          talentAwardsEgoBoost += boosts.egoBoost;
+      if (impact.type === 'LEDGER_UPDATED') ledgerImpact = impact;
+      
+      if (impact.type === 'PROJECT_UPDATED') {
+        const payload = impact.payload as import('../types/state.types').ProjectUpdate;
+        projectUpdates.push(payload.projectId);
+      }
+      if (impact.projectUpdates) {
+        for (let j = 0; j < impact.projectUpdates.length; j++) {
+          projectUpdates.push(impact.projectUpdates[j].projectId);
         }
       }
 
-      const finalFeeMultiplier = feeMultiplier * talentAwardsFeeMultiplier;
+      if (impact.type === 'NEWS_ADDED') {
+        const payload = impact.payload as import('../types/state.types').NewsImpact['payload'];
+        allHeadlines.push({
+          id: context.rng.uuid('news'),
+          text: payload.headline || 'Breaking News',
+          week: context.week,
+          category: payload.category || 'general'
+        });
+      }
       
-      const newTalent = {
-        ...talent,
-        draw: clamp(talent.draw + drawChange + talentAwardsDrawBonus, 0, 100),
-        prestige: clamp(talent.prestige + prestigeChange + talentAwardsPrestigeBonus, 0, 100),
-        fee: Math.round(clamp(talent.fee * finalFeeMultiplier, 10000, 75000000)),
-        ego: clamp((talent.psychology?.ego || 50) + talentAwardsEgoBoost, 0, 100)
-      };
-
-      updatedTalent.push(newTalent);
+      if (impact.newHeadlines) allHeadlines.push(...impact.newHeadlines);
+      if (impact.newsEvents) newsEvents.push(...impact.newsEvents);
     }
 
-    return updatedTalent;
+    for (let i = 0; i < newsEvents.length; i++) {
+       const e = newsEvents[i];
+       allHeadlines.push({
+         id: e.id,
+         text: `${e.headline}: ${e.description}`,
+         week: e.week || context.week,
+         category: (e.type?.toLowerCase() === 'crisis' ? 'talent' : 'general') as import('../types/engine.types').HeadlineCategory
+       });
+    }
+
+    let totalRevenue = 0;
+    let totalCosts = 0;
+
+    if (ledgerImpact && ledgerImpact.type === 'LEDGER_UPDATED') {
+       const report = (ledgerImpact.payload as any).report;
+       totalRevenue = report.revenue.boxOffice + report.revenue.distribution + report.revenue.other;
+       totalCosts = report.expenses.production + report.expenses.marketing + report.expenses.overhead + report.expenses.pacts;
+    }
+
+    return {
+      fromWeek: before.week,
+      toWeek: after.week,
+      cashBefore: before.finance.cash,
+      cashAfter: after.finance.cash,
+      totalRevenue,
+      totalCosts,
+      projectUpdates: Array.from(new Set(projectUpdates)),
+      newHeadlines: allHeadlines,
+      events: context.events.map(e => e.title),
+    };
   }
 }

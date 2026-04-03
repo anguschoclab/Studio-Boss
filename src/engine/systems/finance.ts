@@ -1,5 +1,5 @@
 import { Project, GameState, WeeklyFinancialReport, Buyer } from '@/engine/types';
-import { StateImpact, FinancialSnapshot, TalentPact } from '../types/state.types';
+import { StateImpact, FinancialSnapshot } from '../types/state.types';
 import { RevenueProcessor } from './finance/RevenueProcessor';
 import { ExpenseProcessor } from './finance/ExpenseProcessor';
 import { InterestRateSimulator } from './market/InterestRateSimulator';

@@ -94,7 +94,7 @@ export class ExpenseProcessor {
     interest: number;
     pacts: number;
   } {
-    const studioLevel = state.studio.stats?.level || 1;
+    const studioLevel = state.studio.archetype === 'major' ? 3 : (state.studio.archetype === 'mid-tier' ? 2 : 1);
     const production = this.calculateProductionBurn(projects);
     const marketing = this.calculateMarketingBurn(projects);
     const overhead = this.calculateStudioBurn(studioLevel, projects.filter(p => p.state !== 'released' && p.state !== 'archived').length);
