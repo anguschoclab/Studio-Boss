@@ -8,6 +8,6 @@ import { RandomGenerator } from '../utils/rng';
  * Use this as the main-thread entry point for the "Weekly Tick".
  */
 // Audit: O(1) pass-through. Engine allocations deferred to WeekCoordinator.
-export function advanceWeek(state: GameState, rng?: RandomGenerator): { newState: GameState; summary: WeekSummary; impacts: StateImpact[] } {
+export function advanceWeek(state: GameState, rng: RandomGenerator): { newState: GameState; summary: WeekSummary; impacts: StateImpact[] } {
   return WeekCoordinator.execute(state, rng);
 }

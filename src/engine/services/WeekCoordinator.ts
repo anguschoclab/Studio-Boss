@@ -54,12 +54,12 @@ export class WeekCoordinator {
   /**
    * Main entry point for the weekly simulation tick.
    */
-  static execute(state: GameState, rng?: RandomGenerator): { newState: GameState; summary: WeekSummary; impacts: StateImpact[] } {
+  static execute(state: GameState, rng: RandomGenerator): { newState: GameState; summary: WeekSummary; impacts: StateImpact[] } {
     // 1. Preparation Phase (The Valve)
     const context: TickContext = {
       week: state.week + 1,
       tickCount: (state.tickCount || 0) + 1,
-      rng: rng || new RandomGenerator((state.gameSeed || 12345) + (state.tickCount || 0)),
+      rng,
       timestamp: (state.tickCount || 0) * 1000, // Deterministic timestamp delta
       impacts: [],
       events: []
@@ -165,7 +165,6 @@ export class WeekCoordinator {
     // Roll for crises for studio projects in active production stages
     for (const key in state.studio.internal.projects) {
       const project = state.studio.internal.projects[key];
-      const activeStages = ['prep', 'production', 'post_production', 'marketing'];
       if (!project.activeCrisis && activeStages.includes(project.state)) {
         const impact = checkAndTriggerCrisis(project, context.rng);
         if (impact) context.impacts.push(impact);
@@ -177,7 +176,6 @@ export class WeekCoordinator {
       const projects = rival.projects || {};
       for (const key in projects) {
         const project = projects[key];
-        const activeStages = ['prep', 'production', 'post_production', 'marketing'];
         if (!project.activeCrisis && activeStages.includes(project.state)) {
            const impact = checkAndTriggerCrisis(project, context.rng);
            if (impact) context.impacts.push(impact);

@@ -10,7 +10,7 @@ import { generateAgencies, generateAgents } from '../generators/agencies';
 import { RandomGenerator } from '../utils/rng';
 import { generateOpportunity } from '../generators/opportunities';
 
-export function initializeGame(studioName: string, archetype: ArchetypeKey, seed: number = Math.floor(Math.random() * 1_000_000)): GameState {
+export function initializeGame(studioName: string, archetype: ArchetypeKey, seed: number): GameState {
   const rng = new RandomGenerator(seed);
   const arch = ARCHETYPES[archetype];
   const rivalArchetypes: ArchetypeKey[] = ['major', 'mid-tier', 'indie'];
