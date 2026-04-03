@@ -12,6 +12,6 @@
 **Learning:** Using Object.values() on large state dictionaries like talentPool inside high-frequency engine loops causes unnecessary O(N) array allocation and garbage collection pressure every tick.
 **Action:** Iterate over dictionary records using for...in to avoid array allocation overhead.
 
-## 2025-01-20 - Optimize Studio Core Loop
-**Learning:** Replacing O(N) array filtering with O(1) Map lookups and `for...in` iteration prevents GC spikes during weekly simulation ticks.
-**Action:** Refactored `productionEngine.ts`, `finance.ts`, and `selectors.ts` to pre-calculate lookup maps, eliminate inline allocations, and replace `reduce` with `for` loops.
+## 2025-04-02 - O(n) Array Allocations in High-Frequency Loops
+**Learning:** In high-frequency engine loops (like weekly simulation ticks), iterating over `Record<string, Project>` using `Object.values()` creates a new array allocation every iteration, leading to massive garbage collection spikes.
+**Action:** Always iterate over `Record` dictionaries using `for...in` instead of `Object.values()` or hoist `Object.values()` outside the loop when iterating is necessary.
