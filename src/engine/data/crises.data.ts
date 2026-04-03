@@ -2123,5 +2123,32 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
       { text: "Deny the request and use a budget, low-poly CGI beast.", effectDescription: "The beast becomes a viral meme for looking like a PS2 character. Lose 40 buzz.", buzzPenalty: 40 },
       { text: "Cut the beast entirely and rewrite the scene to feature a real dog.", effectDescription: "Costs $250k for animal trainers and a reshoot day. Delays production by 1 week.", cashPenalty: 250000, weeksDelay: 1 }
     ]
+  },
+  {
+    id: 'vfx_strike',
+    description: "The primary VFX studio working on your project has gone on strike citing inhumane 100-hour work weeks and 'abusive render farm practices'.",
+    options: [
+      { text: "Cave to their demands and double their pay.", effectDescription: "Costs $3M in emergency contract renegotiations but keeps production moving.", cashPenalty: 3000000 },
+      { text: "Hire a non-union overseas farm.", effectDescription: "Saves money but the VFX looks uncanny and the union blacklists you. Lose 30 reputation and 15 buzz.", reputationPenalty: 30, buzzPenalty: 15 },
+      { text: "Force the director to use practical effects instead.", effectDescription: "Delays the project by 4 weeks and costs $1.5M in practical rig construction.", cashPenalty: 1500000, weeksDelay: 4 }
+    ]
+  },
+  {
+    id: 'director_meltdown',
+    description: "Your auteur director has barricaded themselves in the editing bay, declaring the final cut 'spiritually bankrupt' and threatening to burn the hard drives.",
+    options: [
+      { text: "Call security and physically remove them.", effectDescription: "A massive PR disaster. You save the footage but lose 40 reputation. Costs $500k to settle the lawsuit.", reputationPenalty: 40, cashPenalty: 500000 },
+      { text: "Give them final cut and complete creative control.", effectDescription: "The film is incomprehensible. Lose 50 buzz, but they eventually finish it.", buzzPenalty: 50 },
+      { text: "Hire their therapist as a 'Co-Producer' to talk them down.", effectDescription: "Costs $1M in therapy fees and delays the film by 2 weeks.", cashPenalty: 1000000, weeksDelay: 2 }
+    ]
+  },
+  {
+    id: 'leaked_emails',
+    description: "A hack has leaked thousands of internal studio emails, including a thread where your executives called the film's lead actor 'a talentless vacuum'.",
+    options: [
+      { text: "Deny the authenticity of the emails and blame North Korea.", effectDescription: "The internet doesn't buy it. Lose 35 reputation and 20 buzz.", reputationPenalty: 35, buzzPenalty: 20 },
+      { text: "Issue a groveling, highly publicized apology tour.", effectDescription: "Costs $1.5M in PR spin. You lose 15 reputation.", cashPenalty: 1500000, reputationPenalty: 15 },
+      { text: "Leak dirt on the hackers to distract the public.", effectDescription: "A massive gamble. It works temporarily, but costs $2M in shady private investigator fees.", cashPenalty: 2000000 }
+    ]
   }
 ];

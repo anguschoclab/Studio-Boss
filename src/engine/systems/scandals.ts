@@ -27,7 +27,17 @@ export function generateScandals(state: GameState, rng: RandomGenerator): StateI
   const talentPool = state.industry.talentPool || {};
   for (const talentId in talentPool) {
     const talent = talentPool[talentId];
-    const risk = talent.psychology?.scandalRisk || 5; 
+    let risk = talent.psychology?.scandalRisk || 5;
+
+    // Scale risk with studio prestige (higher prestige/larger studio = more scrutiny)
+    const studioPrestige = state.studio.prestige || 0;
+    let riskMultiplier = 1;
+    if (studioPrestige > 800) riskMultiplier = 2.5;
+    else if (studioPrestige > 500) riskMultiplier = 1.8;
+    else if (studioPrestige > 200) riskMultiplier = 1.3;
+
+    risk = risk * riskMultiplier;
+
     if (rng.next() * 1000 < risk) {
        const types: ScandalType[] = ['financial', 'personal', 'onset_behavior', 'legal', 'feud'];
        const type = rng.pick(types);
