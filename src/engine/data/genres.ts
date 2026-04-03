@@ -107,8 +107,8 @@ export const CROSSOVER_AFFINITY: Record<string, string[]> = {
   'Unscripted': ['Comedy', 'Documentary', 'Drama'],
   'Multiverse': ['Superhero', 'Sci-Fi', 'Fantasy', 'Action', 'Animation', 'IP Mashup'],
   'Elevated Horror': ['Horror', 'Thriller', 'Drama', 'Psychological Thriller'],
-  'IP Mashup': ['Comedy', 'Action', 'Animation', 'Superhero', 'Multiverse'],
-  'Video Game Adaptation': ['Action', 'Sci-Fi', 'Fantasy', 'Animation']
+  'IP Mashup': ['Comedy', 'Action', 'Animation', 'Superhero', 'Multiverse', 'Sci-Fi', 'Video Game Adaptation'],
+  'Video Game Adaptation': ['Action', 'Sci-Fi', 'Fantasy', 'Animation', 'Horror', 'IP Mashup']
 };
 
 export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
@@ -130,4 +130,6 @@ export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
   'Elevated Horror': 0.20,
   'IP Mashup': 0.75, // High burnout potential
   'Video Game Adaptation': 0.60,
+  'Space Opera': 0.65,
+  'Cyberpunk': 0.55,
 };
