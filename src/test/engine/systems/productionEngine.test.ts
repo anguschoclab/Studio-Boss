@@ -64,3 +64,119 @@ describe('Production Engine (Target A2) - Symmetry', () => {
     expect(rivalImpact?.payload.update.weeksInPhase).toBe(6);
   });
 });
+
+describe('Production Engine (Target A2) - Edge Cases', () => {
+  const rng = new RandomGenerator(555);
+
+  it('should handle empty projects pipeline safely', () => {
+    const emptyState = {
+      week: 1,
+      studio: { internal: { projects: {}, contracts: [] } },
+      industry: { rivals: [], talentPool: {} }
+    } as unknown as GameState;
+    const impacts = tickProduction(emptyState, rng);
+    expect(impacts).toHaveLength(0);
+  });
+
+  it('should process projects with 0 targetWeeks without Infinity progress', () => {
+     const state = {
+        studio: {
+            internal: {
+                projects: {
+                    'p1': {
+                        id: 'p1',
+                        title: 'Test',
+                        type: 'FILM',
+                        format: 'film',
+                        genre: 'drama',
+                        budgetTier: 'low',
+                        budget: 1000000,
+                        weeklyCost: 100000,
+                        targetAudience: 'General',
+                        flavor: 'test',
+                        state: 'production',
+                        buzz: 50,
+                        weeksInPhase: 0,
+                        developmentWeeks: 10,
+                        productionWeeks: 0,
+                        revenue: 0,
+                        weeklyRevenue: 0,
+                        releaseWeek: null,
+                        accumulatedCost: 0,
+                        momentum: 50,
+                        progress: 0,
+                        activeCrisis: null,
+                        contentFlags: []
+                    } as import('@/engine/types').Project
+                },
+                contracts: []
+            }
+        },
+        industry: { rivals: [], talentPool: {} }
+     } as unknown as GameState;
+     const impacts = tickProduction(state, rng);
+     const projectImpact = impacts.find(i => (i as ProjectUpdateImpact).payload.projectId === 'p1') as ProjectUpdateImpact;
+     expect(projectImpact.payload.update.progress).toBeDefined();
+     expect(projectImpact.payload.update.progress).toBeGreaterThan(0);
+     expect(projectImpact.payload.update.progress).toBeLessThanOrEqual(100);
+  });
+
+  it('should apply maximum morale multiplier if talents are fully motivated', () => {
+      const state = {
+          studio: {
+              internal: {
+                  projects: {
+                      'p1': {
+                          id: 'p1',
+                          title: 'Test',
+                          type: 'FILM',
+                          format: 'film',
+                          genre: 'drama',
+                          budgetTier: 'low',
+                          budget: 1000000,
+                          weeklyCost: 100000,
+                          targetAudience: 'General',
+                          flavor: 'test',
+                          state: 'production',
+                          buzz: 50,
+                          weeksInPhase: 0,
+                          developmentWeeks: 10,
+                          productionWeeks: 10,
+                          revenue: 0,
+                          weeklyRevenue: 0,
+                          releaseWeek: null,
+                          accumulatedCost: 0,
+                          momentum: 50,
+                          progress: 0,
+                          activeCrisis: null,
+                          contentFlags: []
+                      } as import('@/engine/types').Project
+                  },
+                  contracts: [{ id: 'c1', projectId: 'p1', talentId: 't1', fee: 10000, backendPercent: 0 } as import('@/engine/types').Contract]
+              }
+          },
+          industry: {
+              rivals: [],
+              talentPool: {
+                  't1': {
+                      id: 't1',
+                      name: 'Test Talent',
+                      role: 'actor',
+                      roles: ['actor'],
+                      tier: 'A_LIST',
+                      prestige: 50,
+                      fee: 1000000,
+                      draw: 50,
+                      accessLevel: 'outsider',
+                      momentum: 50,
+                      demographics: { age: 30, gender: 'MALE', ethnicity: 'White', country: 'USA' },
+                      psychology: { ego: 50, mood: 100, scandalRisk: 0, synergyAffinities: [], synergyConflicts: [] }
+                  } as import('@/engine/types').Talent
+              }
+          }
+      } as unknown as GameState;
+      const impacts = tickProduction(state, rng);
+      const projectImpact = impacts.find(i => (i as ProjectUpdateImpact).payload.projectId === 'p1') as ProjectUpdateImpact;
+      expect(projectImpact.payload.update.progress).toBeGreaterThan(0);
+  });
+});

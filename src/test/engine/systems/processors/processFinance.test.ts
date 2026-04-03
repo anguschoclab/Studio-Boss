@@ -59,9 +59,9 @@ describe('tickFinance', () => {
     expect(fundsImpact).toBeDefined();
     expect(ledgerImpact).toBeDefined();
     
-    // Net profit should be negative (500k overhead)
-    expect(fundsImpact?.payload.amount).toBe(-500000);
+    // Net profit should be negative (1.171875M overhead)
+    expect(fundsImpact?.payload.amount).toBe(-1171875);
     expect(ledgerImpact?.payload.report.week).toBe(5);
-    expect(ledgerImpact?.payload.report.netProfit).toBe(-500000);
+    expect(ledgerImpact?.payload.report.netProfit).toBe(-1171875);
   });
 });

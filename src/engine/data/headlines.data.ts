@@ -1,4 +1,9 @@
 export const MARKET_HEADLINES = [
+  'Audiences reject {pct}% of new releases, demanding more familiar IP',
+  'Wall Street praises {pct}% increase in predictable blockbusters',
+  'Studios panic as {pct}% of test audiences fall asleep during exposition',
+  'Focus groups demand {pct}% more explosions in prestige dramas',
+  'Algorithm successfully predicts {pct}% of box office flops',
   'Box office up {pct}% this quarter as audiences return to theaters',
   'Streaming wars intensify as subscriber growth plateaus industry-wide',
   'Horror genre sees unprecedented demand from international markets',
@@ -196,6 +201,11 @@ export const MARKET_HEADLINES = [
 ];
 
 export const TALENT_HEADLINES = [
+  '{directorName} storms off set of {projectName} after focus group demands {pct}% more CGI',
+  '{actorName} apologizes for problematic tweet, {projectName} box office tracking down {pct}%',
+  '{actressName} demands {pct}% of merchandise revenue, holding {projectName} production hostage',
+  '{directorName} insists 4-hour runtime for {projectName} is necessary for "artistic integrity"',
+  '{actorName} caught using AI to write apologies for on-set outbursts during {projectName}',
   'A-list director reportedly shopping a passion project around town',
   'Rising star signs multi-picture deal, sending ripples through the industry',
   'Veteran screenwriter comes out of retirement for "one last script"',
@@ -398,6 +408,11 @@ export const TALENT_HEADLINES = [
 ];
 
 export const RIVAL_TEMPLATES = [
+  '{rival} writes off ${budget}M {genre} film for tax purposes before release',
+  '{rival} insists {genre} flop was just an experiment in audience patience',
+  '{rival} accidentally greenlights AI-generated script for ${budget}M',
+  '{rival} desperate to launch cinematic universe, announces 12 spin-offs to their ${budget}M flop',
+  '{rival} sues test audience for leaking plot of their ${budget}M {genre} disaster',
   '{rival} greenlights ambitious ${budget}M {genre} project',
   '{rival} announces surprise release date shift for upcoming tentpole',
   '{rival} poaches key executive from competitor in aggressive move',

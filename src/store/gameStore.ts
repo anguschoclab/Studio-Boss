@@ -23,6 +23,9 @@ export interface GameStore extends ProjectSlice, FinanceSlice, TalentSlice, Riva
   devAutoInit: (archetype?: ArchetypeKey) => void;
 }
 
+const INITIAL_FINANCE = { cash: 0, ledger: [] };
+const INITIAL_NEWS = { headlines: [] };
+
 export const useGameStore = create<GameStore>((set, get, ...args) => ({
   gameState: null,
 
@@ -112,8 +115,8 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
     if (state.gameState === null) return state;
     return { 
         gameState: null,
-        finance: { cash: 0, ledger: [] } as any,
-        news: { headlines: [] } as any
+        finance: INITIAL_FINANCE as any,
+        news: INITIAL_NEWS as any
     } as any;
   }),
 
