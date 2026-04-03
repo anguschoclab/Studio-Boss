@@ -12,15 +12,20 @@ export function evaluatePackageOffer(
 ): { requiredTalentId?: string; packageDiscount?: number; reason: string } {
   const motivation = agency.currentMotivation || 'VOLUME_RETAIL';
   
-  if (motivation === 'THE_PACKAGER' || rng.next() < 0.15) {
+  // 🎭 Method Actor Tuning: 'THE_PACKAGER' agencies now aggressively bundle based on talent motivation.
+  const isAuteur = leadTalent.currentMotivation === 'PRESTIGE_HUNTER' || leadTalent.role === 'director';
+  const packageProbability = motivation === 'THE_PACKAGER' ? 1.0 : (isAuteur ? 0.3 : 0.15);
+  const discount = isAuteur ? 0.15 : 0.1;
+
+  if (rng.next() < packageProbability) {
     const otherClients = talentPool.filter(t => t.agencyId === agency.id && t.id !== leadTalent.id);
     
     if (otherClients.length > 0) {
       const bundled = rng.pick(otherClients);
       return {
         requiredTalentId: bundled.id,
-        packageDiscount: 0.1,
-        reason: `Agency policy: To secure ${leadTalent.name}, we require ${bundled.name}.`
+        packageDiscount: discount,
+        reason: isAuteur ? `Creative Mandate: ${leadTalent.name} insists on working with ${bundled.name} for this project.` : `Agency policy: To secure ${leadTalent.name}, we require ${bundled.name}.`
       };
     }
   }
