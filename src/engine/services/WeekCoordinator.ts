@@ -139,6 +139,7 @@ export class WeekCoordinator {
     context.impacts.push(...tickTelevision(state, context.rng));
     context.impacts.push(...calculateFranchiseEvolutionImpacts(state, context.rng));
     context.impacts.push(...tickIPVault(state));
+    context.impacts.push(...SchedulingEngine.tick(state, context.rng));
   }
 
   private static runCrisisFilter(state: GameState, context: TickContext) {

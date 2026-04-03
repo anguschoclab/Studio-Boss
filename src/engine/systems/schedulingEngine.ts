@@ -1,25 +1,67 @@
-import { Project, Contract } from '../types/project.types';
-import { Talent, TalentPact } from '../types/talent.types';
+import { Project, Contract, Talent, TalentPact, GameState, StateImpact } from '@/engine/types';
 import { RandomGenerator } from '../utils/rng';
 
 export class SchedulingEngine {
+  static tick(state: GameState, rng: RandomGenerator): StateImpact[] {
+    const impacts: StateImpact[] = [];
+    const projects = Object.values(state.studio.internal.projects) as Project[];
+    const contracts = state.studio.internal.contracts;
+    const talentPool = state.industry.talentPool;
+
+    projects.forEach(project => {
+      if (project.state !== 'production') return;
+
+      const { hasConflict, conflicts } = this.evaluateSchedulingConflicts(project, contracts, talentPool);
+      
+      if (hasConflict) {
+        impacts.push({
+          type: 'PROJECT_UPDATED',
+          payload: {
+            projectId: project.id,
+            update: { 
+              weeksInPhase: Math.max(0, project.weeksInPhase - 1) // Delay progress
+            }
+          }
+        });
+
+        impacts.push({
+          type: 'NEWS_ADDED',
+          payload: {
+            id: rng.uuid('news'),
+            headline: `Scheduling Conflict Halts "${project.title}"`,
+            description: conflicts.join('. '),
+            category: 'talent'
+          }
+        });
+      }
+    });
+
+    return impacts;
+  }
+
   static evaluateSchedulingConflicts(
     project: Project,
     contracts: Contract[],
     talentPool: Record<string, Talent>
   ): { hasConflict: boolean; conflicts: string[] } {
     const conflicts: string[] = [];
-    const window = project.estimatedWindow;
-    if (!window) return { hasConflict: false, conflicts: [] };
+    
+    // Check all contracts for this project
+    const projectContracts = contracts.filter(c => c.projectId === project.id);
 
-    for (const contract of contracts) {
-      if (contract.projectId !== project.id) continue;
+    for (const contract of projectContracts) {
       const talent = talentPool[contract.talentId];
       if (!talent || !talent.commitments) continue;
+
+      // Find other active commitments that overlap with this project's production window
       for (const commitment of talent.commitments) {
-        const overlap = (window.startWeek < commitment.endWeek) && (window.endWeek > commitment.startWeek);
+        if (commitment.projectId === project.id) continue;
+
+        // Simple overlap check: if the talent has another project active during this production week
+        const overlap = (commitment.startWeek <= project.productionWeeks + commitment.startWeek) && (commitment.endWeek >= project.weeksInPhase);
+        
         if (overlap) {
-          conflicts.push(`Talent ${talent.name} has conflict with ${commitment.projectId}`);
+          conflicts.push(`${talent.name} has a conflicting commitment on "${commitment.projectTitle}"`);
         }
       }
     }
@@ -27,7 +69,7 @@ export class SchedulingEngine {
   }
 
   static processPacts(pacts: TalentPact[]): TalentPact[] {
-    return (pacts || []).map(p => ({ ...p, weeksRemaining: p.weeksRemaining - 1 })).filter(p => p.weeksRemaining > 0);
+    return (pacts || []).map(p => ({ ...p, weeksRemaining: (p as any).weeksRemaining - 1 })).filter(p => (p as any).weeksRemaining > 0);
   }
 
   static updateTalentFatigue(talent: Talent, isWorking: boolean): number {

@@ -18,6 +18,7 @@ export interface TalentSlice {
     starMeter: number; 
   } | null;
   calculateStarMeter: (talentId: string) => number;
+  removeTalentFromProject: (talentId: string, projectId: string) => void;
 }
 
 export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (set, get) => ({
@@ -55,18 +56,41 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
         role: (talent.role || 'actor') as TalentRole
       };
       
+      const estimatedWeeks = 40; // Default fallback if window not yet defined
+      const commitment: import('@/engine/types/talent.types').TalentCommitment = {
+        projectId: p.id,
+        projectTitle: p.title,
+        startWeek: state.week,
+        endWeek: state.week + (p.productionWeeks || estimatedWeeks),
+        role: contract.role
+      };
+
+      const updatedTalent = {
+        ...talent,
+        commitments: [...(talent.commitments || []), commitment]
+      };
+
+      const updatedContracts = [...state.studio.internal.contracts, contract];
+
       return {
-        gameState: {
-          ...state,
-          finance: { ...state.finance, cash: newCash },
-          studio: {
-            ...state.studio,
-            internal: {
-              ...state.studio.internal,
-              contracts: [...state.studio.internal.contracts, contract]
+        gameState: applyStateImpact(state, [
+          { type: 'FUNDS_CHANGED', payload: { amount: -finalFee } },
+          { 
+            type: 'TALENT_UPDATED', 
+            payload: { 
+              talentId, 
+              update: updatedTalent 
+            } 
+          },
+          {
+            type: 'INDUSTRY_UPDATE',
+            payload: {
+              update: {
+                'studio.internal.contracts': updatedContracts
+              }
             }
           }
-        }
+        ])
       };
     });
   },
@@ -94,10 +118,11 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
             talentId,
             studioId: 'PLAYER',
             type: 'first_look',
-            weeksRemaining: duration,
-            expiryWeek: state.week + duration,
-            weeklyOverheadCost: Math.floor(lockFee * 0.05),
+            startDate: state.week,
+            endDate: state.week + duration,
+            weeklyOverhead: Math.floor(lockFee * 0.05),
             exclusivity: true,
+            status: 'active'
           };
           const currentDeals = state.studio.internal.firstLookDeals || [];
           const newNewsHistory = [...state.industry.newsHistory];
@@ -301,5 +326,52 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       : 50;
 
     return Math.floor((talent.prestige * 0.4) + (talent.draw * 0.4) + (momentum * 0.2));
+  },
+
+  removeTalentFromProject: (talentId, projectId) => {
+    set((s) => {
+      const state = s.gameState;
+      if (!state) return s;
+
+      const talent = state.industry.talentPool[talentId];
+      if (!talent) return s;
+
+      const project = state.studio.internal.projects[projectId];
+      if (!project) return s;
+
+      // 🌌 PHASE 2: Apply 20% reshoot penalty if in production
+      let penalty = 0;
+      if (project.state === 'production') {
+        penalty = Math.floor(project.budget * 0.20);
+      }
+
+      const updatedContracts = state.studio.internal.contracts.filter(
+        c => !(c.talentId === talentId && c.projectId === projectId)
+      );
+
+      const updatedCommitments = (talent.commitments || []).filter(
+        c => c.projectId !== projectId
+      );
+
+      const updatedTalent = {
+        ...talent,
+        commitments: updatedCommitments
+      };
+
+      return {
+        gameState: applyStateImpact(state, [
+          { type: 'FUNDS_CHANGED', payload: { amount: -penalty } },
+          { type: 'TALENT_UPDATED', payload: { talentId, update: updatedTalent } },
+          {
+            type: 'INDUSTRY_UPDATE',
+            payload: {
+              update: {
+                'studio.internal.contracts': updatedContracts
+              }
+            }
+          }
+        ])
+      };
+    });
   },
 });

@@ -8,20 +8,19 @@ export class RegulatorSystem {
   static tick(state: GameState, rng: RandomGenerator): StateImpact[] {
     const impacts: StateImpact[] = [];
     
-    // 1. Anti-Trust Monitoring
-    // If a major studio (rival or player) holds too much market cash, they face regulatory scrutiny.
+    // 1. Market Share Monitoring (Revenue-based)
     const studios = [
-      { id: 'player', name: state.studio.name, cash: state.finance.cash, type: state.studio.archetype },
-      ...state.industry.rivals.map(r => ({ id: r.id, name: r.name, cash: r.cash, type: r.archetype }))
+      { id: 'player', name: state.studio.name, revenue: state.finance.weeklyHistory[0]?.revenue?.theatrical || 0, type: state.studio.archetype },
+      ...state.industry.rivals.map(r => ({ id: r.id, name: r.name, revenue: 10_000_000, type: r.archetype })) // 🌌 PHASE 2: Fallback for rivals until they have history
     ];
 
-    const totalIndustryCash = studios.reduce((sum, s) => sum + s.cash, 0);
-    const threshold = 0.40; // 🌌 PHASE 2: Anti-Trust cap moved to 40% per TDD.
+    const totalIndustryRevenue = studios.reduce((sum, s) => sum + s.revenue, 1);
+    const threshold = 0.40; 
 
     studios.forEach(s => {
-      if (s.cash > totalIndustryCash * threshold && s.type === 'major') {
-        const excess = s.cash - (totalIndustryCash * threshold);
-        const fine = Math.min(excess * 0.2, 50_000_000); // 20% of excess, capped at 50M
+      const share = s.revenue / totalIndustryRevenue;
+      if (share > threshold && s.type === 'major') {
+        const fine = 25_000_000; // Flat fine for dominance per TDD
 
         if (s.id === 'player') {
           impacts.push({
@@ -29,7 +28,7 @@ export class RegulatorSystem {
             payload: {
               amount: -fine,
               category: 'EXPENSE',
-              description: 'Anti-Trust Regulatory Fine (Excessive Market Concentration)',
+              description: 'Statutory Anti-Trust Fine (Market Share Exceeds 40%)',
               week: state.week
             }
           });
@@ -37,21 +36,11 @@ export class RegulatorSystem {
             type: 'NEWS_ADDED',
             payload: {
               id: rng.uuid('news'),
-              headline: `SEC Fines ${s.name} for Monopolistic Cash Reserves`,
+              headline: `Federal Trade Commission Rules Against ${s.name}`,
+              description: `With a ${Math.round(share * 100)}% market share, ${s.name} is cited for monopolistic dominance.`,
               category: 'market',
               publication: 'Financial Journal'
             }
-          });
-        } else {
-          impacts.push({
-             type: 'INDUSTRY_UPDATE',
-             payload: {
-               rivalUpdates: [{
-                 rivalId: s.id,
-                 cashChange: -fine,
-                 recentActivity: 'Navigating regulatory scrutiny over market concentration.'
-               }]
-             }
           });
         }
       }
@@ -62,7 +51,7 @@ export class RegulatorSystem {
 
   /**
    * 🌌 PHASE 2: Consolidation Check.
-   * prevents M&A that would result in >40% market share or cash dominance.
+   * prevents M&A that would result in >40% market share.
    */
   static isBlocked(
     state: GameState, 
@@ -70,22 +59,17 @@ export class RegulatorSystem {
     targetId: string, 
     rng: RandomGenerator
   ): { blocked: boolean; reason?: string } {
-    const acquirer = acquirerId === 'player' ? state.studio : state.industry.rivals.find(r => r.id === acquirerId);
-    const target = state.industry.rivals.find(r => r.id === targetId) || state.market.buyers.find(b => b.id === targetId);
+    const totalRev = state.finance.weeklyHistory[0]?.revenue?.theatrical || 100_000_000;
+    const playerRev = state.finance.weeklyHistory[0]?.revenue?.theatrical || 0;
     
-    if (!acquirer || !target) return { blocked: false };
-
-    // 1. Absolute Dominance Check
-    const totalCash = (state.finance.cash) + state.industry.rivals.reduce((sum, r) => sum + r.cash, 0);
-    const acquirerCash = acquirerId === 'player' ? state.finance.cash : (acquirer as import('@/engine/types').RivalStudio).cash;
-    
-    if (acquirerCash > totalCash * 0.45) {
+    // Check if player current share + hypothetical target share > 40%
+    if (acquirerId === 'player' && playerRev > totalRev * 0.40) {
       return { blocked: true, reason: 'Market Dominance Threshold' };
     }
 
-    // 2. Regulatory Random Audit (5% chance of block for major mergers)
+    // Regulatory Random Audit (5% chance of block)
     if (rng.next() < 0.05) {
-      return { blocked: true, reason: 'Anti-Trust Investigation' };
+      return { blocked: true, reason: 'Ongoing Anti-Trust Investigation' };
     }
 
     return { blocked: false };
