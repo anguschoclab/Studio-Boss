@@ -45,10 +45,9 @@ describe('ScriptDraftingSystem - Edge Cases', () => {
 
     it('returns unmodified project if not scripted', () => {
         const rng = new RandomGenerator(555);
-        const project = createBaseProject() as unknown as Project;
-        delete project.scriptHeat; // Remove scripted trait
-        const result = tickScriptDevelopment(project as Project, rng);
-        expect(result.project).toBe(project);
+const { scriptHeat, activeRoles, scriptEvents, ...nonScriptedProject } = createBaseProject();
+const result = tickScriptDevelopment(nonScriptedProject as Project, rng);
+expect(result.project).toBe(nonScriptedProject);
     });
 
     it('should cap scriptHeat at 100 and 0', () => {
