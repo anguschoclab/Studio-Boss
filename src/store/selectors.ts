@@ -7,7 +7,7 @@ const EMPTY_FINANCE: FinanceState = {
   cash: 0, 
   ledger: [], 
   weeklyHistory: [], 
-  marketState: { cycle: 'STABLE', sentiment: 50, baseRate: 0.05, consumerConfidence: 50, debtRate: 0.08, savingsYield: 0.02 } as import('../engine/types/state.types').MarketState
+  marketState: { cycle: 'STABLE', sentiment: 0, baseRate: 0.05, consumerConfidence: 50, debtRate: 0.08, savingsYield: 0.02 } as import('../engine/types/state.types').MarketState
 };
 const EMPTY_MARKET: GameState['market'] = { buyers: [], opportunities: [], trends: [], activeMarketEvents: [] };
 const EMPTY_TALENT_POOL: Record<string, Talent> = {};
