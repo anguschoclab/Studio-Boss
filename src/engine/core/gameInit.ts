@@ -17,9 +17,9 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
   const usedNames = new Set<string>([studioName]);
 
   // Generate 10 Rivals
-  const rivals: RivalStudio[] = Array.from({ length: 10 }, () => {
-    const ident = BrandSystem.generateIdentity(usedNames, rng);
-    const name = BrandSystem.getStudioName(ident, rng);
+  const rivals: RivalStudio[] = Array.from({ length: 10 }, (_, i) => {
+    const ident = BrandSystem.generateIdentity(usedNames, { next: secureRandom, pick: pick } as any);
+    const name = BrandSystem.getStudioName(ident);
     usedNames.add(name);
     usedNames.add(ident.core);
     
@@ -55,10 +55,10 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
     };
   });
 
-  const agencies = generateAgencies(rng, 5);
-  const agents = generateAgents(rng, agencies, 4);
-  const families = generateFamilies(rng, 5);
-  const talentPoolArray = generateTalentPool(rng, 50);
+  const agencies = generateAgencies({ next: secureRandom, pick: pick } as any, 5);
+  const agents = generateAgents({ next: secureRandom, pick: pick, rangeInt: randRange } as any, agencies, 4);
+  const families = generateFamilies(5);
+  const talentPoolArray = generateTalentPool(50, families, agents, agencies);
   const talentPool = talentPoolArray.reduce((acc, t) => {
     acc[t.id] = t;
     return acc;

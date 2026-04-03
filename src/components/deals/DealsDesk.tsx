@@ -81,12 +81,11 @@ export const DealsDesk = () => {
                   </div>
                 ) : (
                   pitchingProjects.map(p => (
-                    <div key={p.id} className="p-4 rounded-xl bg-white/[0.03] border border-white/10 hover:border-primary/40 hover:bg-white/[0.06] hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300 group cursor-pointer relative overflow-hidden">
-                      <div className="absolute top-0 left-0 w-1 h-full bg-primary/20 group-hover:bg-primary transition-colors duration-300" />
-                      <div className="text-[11px] font-black uppercase tracking-tight text-foreground/90 group-hover:text-primary transition-colors truncate drop-shadow-sm">{p.title}</div>
-                      <div className="flex justify-between items-center mt-2.5">
-                        <span className="text-[9px] uppercase text-muted-foreground/60 font-bold tracking-widest group-hover:text-muted-foreground/80 transition-colors">{p.genre}</span>
-                        <Badge className="text-[9px] px-1.5 py-0 h-4 bg-primary/10 text-primary border-primary/20 font-black uppercase shadow-inner">{p.budgetTier}</Badge>
+                    <div key={p.id} className="p-4 rounded-lg bg-white/5 border border-white/5 hover:border-primary/40 transition-all group cursor-pointer" role="button" tabIndex={0} onClick={() => {}} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); } }}>
+                      <div className="text-[11px] font-black uppercase tracking-tight group-hover:text-primary transition-colors truncate">{p.title}</div>
+                      <div className="flex justify-between items-center mt-2">
+                        <span className="text-[9px] uppercase text-muted-foreground/60 font-black tracking-widest">{p.genre}</span>
+                        <Badge className="text-[9px] px-1.5 h-4 bg-primary/10 text-primary border-primary/20 font-black uppercase">{p.budgetTier}</Badge>
                       </div>
                     </div>
                   ))

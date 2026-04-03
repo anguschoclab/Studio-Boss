@@ -13,7 +13,7 @@ export function tickWorldEvents(state: GameState, rng: RandomGenerator): StateIm
   for (let i = 0; i < projects.length; i++) {
     const project = projects[i];
     if (project.state === 'released' && project.weeksInPhase === 1) {
-      if (rng.next() < 0.25) {
+      if ((rng && rng.next ? rng.next() : Math.random()) < 0.25) {
         impacts.push({
           type: 'NEWS_ADDED',
           payload: {
@@ -26,10 +26,8 @@ export function tickWorldEvents(state: GameState, rng: RandomGenerator): StateIm
   }
 
   // 2. Star Meter & Talent Momentum
-  const talentPool = Object.values(state.industry.talentPool || {});
-  for (let i = 0; i < talentPool.length; i++) {
-    const talent = talentPool[i];
-    if (talent.momentum > 85 && rng.next() < 0.1) {
+  Object.values(state.industry.talentPool || {}).forEach(talent => {
+    if (talent.momentum > 85 && (rng && rng.next ? rng.next() : Math.random()) < 0.1) {
       impacts.push({
         type: 'NEWS_ADDED',
         payload: {

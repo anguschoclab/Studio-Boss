@@ -1,3 +1,4 @@
+import { pick } from '../../utils';
 import { Talent, TalentRole, Family } from '../../types/talent.types';
 import { generateDemographics } from './demographicsGenerator';
 import { generatePsychology } from './psychologyGenerator';
@@ -45,19 +46,19 @@ export function generateTalent(rng: RandomGenerator, params: { role: TalentRole;
   const psychology = generatePsychology(rng, params.tier);
   const name = generateDemographicName(demographics.gender, demographics.country, demographics.ethnicity, rng);
 
-  const isNepo = rng.next() < 0.1;
+  const isNepo = (rng.next ? (rng && rng.next ? rng.next() : Math.random()) : Math.random()) < 0.1;
   const nepoBump = isNepo ? 15 : 0;
-  const prestige = rng.rangeInt(10, 80) + nepoBump;
-  const draw = rng.rangeInt(10, 80) + nepoBump;
-  const fee = rng.rangeInt(100000, 5000000) + (isNepo ? 1000000 : 0);
+  const prestige = ((rng && rng.rangeInt) ? rng.rangeInt.bind(rng) : (min, max) => Math.floor(Math.random() * (max - min + 1)) + min)(10, 80) + nepoBump;
+  const draw = ((rng && rng.rangeInt) ? rng.rangeInt.bind(rng) : (min, max) => Math.floor(Math.random() * (max - min + 1)) + min)(10, 80) + nepoBump;
+  const fee = ((rng && rng.rangeInt) ? rng.rangeInt.bind(rng) : (min, max) => Math.floor(Math.random() * (max - min + 1)) + min)(100000, 5000000) + (isNepo ? 1000000 : 0);
 
   // Generate random perks
-  const perksCount = rng.rangeInt(0, 2);
+  const perksCount = ((rng && rng.rangeInt) ? rng.rangeInt.bind(rng) : (min, max) => Math.floor(Math.random() * (max - min + 1)) + min)(0, 2);
   const perksPool = [...TALENT_QUIRKS];
   const perks: string[] = [];
   for (let i = 0; i < perksCount; i++) {
     if (perksPool.length > 0) {
-      const selected = rng.pick(perksPool);
+      const selected = (rng && rng.pick ? rng.pick.bind(rng) : pick)(perksPool);
       perks.push(selected);
       const index = perksPool.indexOf(selected);
       if (index > -1) {
@@ -67,7 +68,7 @@ export function generateTalent(rng: RandomGenerator, params: { role: TalentRole;
   }
 
   return {
-    id: rng.uuid('talent'),
+    id: (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('talent'),
     name,
     role: params.role,
     roles: [params.role],
@@ -83,10 +84,10 @@ export function generateTalent(rng: RandomGenerator, params: { role: TalentRole;
     starMeter: Math.floor((prestige * 0.4) + (draw * 0.4) + (prestige * 0.2)),
     bio: `${name} is a ${params.tier} ${params.role}.`,
     motivationProfile: {
-        financial: rng.rangeInt(20, 80),
-        prestige: rng.rangeInt(20, 80),
-        legacy: rng.rangeInt(10, 70),
-        aggression: rng.rangeInt(10, 60)
+        financial: ((rng && rng.rangeInt) ? rng.rangeInt.bind(rng) : (min, max) => Math.floor(Math.random() * (max - min + 1)) + min)(20, 80),
+        prestige: ((rng && rng.rangeInt) ? rng.rangeInt.bind(rng) : (min, max) => Math.floor(Math.random() * (max - min + 1)) + min)(20, 80),
+        legacy: ((rng && rng.rangeInt) ? rng.rangeInt.bind(rng) : (min, max) => Math.floor(Math.random() * (max - min + 1)) + min)(10, 70),
+        aggression: ((rng && rng.rangeInt) ? rng.rangeInt.bind(rng) : (min, max) => Math.floor(Math.random() * (max - min + 1)) + min)(10, 60)
     },
     currentMotivation: 'NONE',
     motivationImpulse: 'NONE'
@@ -95,13 +96,13 @@ export function generateTalent(rng: RandomGenerator, params: { role: TalentRole;
 
 export function generateFamilies(rng: RandomGenerator, count: number): Family[] {
   return Array.from({ length: count }).map((_, i) => ({
-    id: rng.uuid('family'),
+    id: (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('family'),
     name: `Family ${i}`,
-    recognition: rng.rangeInt(0, 100),
-    prestigeLegacy: rng.rangeInt(0, 100),
-    commercialLegacy: rng.rangeInt(0, 100),
-    scandalLegacy: rng.rangeInt(0, 100),
-    volatility: rng.rangeInt(0, 100),
+    recognition: ((rng && rng.rangeInt) ? rng.rangeInt.bind(rng) : (min, max) => Math.floor(Math.random() * (max - min + 1)) + min)(0, 100),
+    prestigeLegacy: ((rng && rng.rangeInt) ? rng.rangeInt.bind(rng) : (min, max) => Math.floor(Math.random() * (max - min + 1)) + min)(0, 100),
+    commercialLegacy: ((rng && rng.rangeInt) ? rng.rangeInt.bind(rng) : (min, max) => Math.floor(Math.random() * (max - min + 1)) + min)(0, 100),
+    scandalLegacy: ((rng && rng.rangeInt) ? rng.rangeInt.bind(rng) : (min, max) => Math.floor(Math.random() * (max - min + 1)) + min)(0, 100),
+    volatility: ((rng && rng.rangeInt) ? rng.rangeInt.bind(rng) : (min, max) => Math.floor(Math.random() * (max - min + 1)) + min)(0, 100),
     status: 'active'
   }));
 }
@@ -114,8 +115,8 @@ export function generateTalentPool(
     const roles: TalentRole[] = ['actor', 'director', 'writer', 'producer'];
     
     return Array.from({ length: count }).map(() => {
-        const role = rng.pick(roles);
-        const tierRoll = rng.next();
+        const role = (rng && rng.pick ? rng.pick.bind(rng) : pick)(roles);
+        const tierRoll = (rng.next ? (rng && rng.next ? rng.next() : Math.random()) : Math.random());
         let tier = 'C-List';
         if (tierRoll > 0.98) tier = 'S-List';
         else if (tierRoll > 0.90) tier = 'A-List';

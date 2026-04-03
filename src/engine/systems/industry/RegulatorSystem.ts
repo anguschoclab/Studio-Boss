@@ -249,23 +249,12 @@ export class WeekCoordinator {
       if (impact.newsEvents) newsEvents.push(...impact.newsEvents);
     }
 
-    for (let i = 0; i < newsEvents.length; i++) {
-       const e = newsEvents[i];
-       allHeadlines.push({
-         id: e.id,
-         text: `${e.headline}: ${e.description}`,
-         week: e.week || context.week,
-         category: (e.type?.toLowerCase() === 'crisis' ? 'talent' : 'general') as import('../types/engine.types').HeadlineCategory
-       });
-    }
-
-    let totalRevenue = 0;
-    let totalCosts = 0;
-
-    if (ledgerImpact && ledgerImpact.type === 'LEDGER_UPDATED') {
-       const report = (ledgerImpact.payload as any).report;
-       totalRevenue = report.revenue.boxOffice + report.revenue.distribution + report.revenue.other;
-       totalCosts = report.expenses.production + report.expenses.marketing + report.expenses.overhead + (report.expenses as any).pacts;
+    if ((rng && rng.next ? rng.next() : Math.random()) < blockChance) {
+      return { 
+        blocked: true, 
+        sharePreview: combinedShare, 
+        reason: combinedShare > 35 ? 'Severe Concentration of Media Power' : 'Competition Concerns' 
+      };
     }
 
     return {
