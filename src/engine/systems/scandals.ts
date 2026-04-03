@@ -1,3 +1,4 @@
+import { pick } from '../utils';
 import { GameState, Scandal, ScandalType } from '@/engine/types';
 import { StateImpact } from '../types/state.types';
 import { RandomGenerator } from '../utils/rng';
@@ -27,33 +28,23 @@ export function generateScandals(state: GameState, rng: RandomGenerator): StateI
   const talentPool = state.industry.talentPool || {};
   for (const talentId in talentPool) {
     const talent = talentPool[talentId];
-    let risk = talent.psychology?.scandalRisk || 5;
-
-    // Scale risk with studio prestige (higher prestige/larger studio = more scrutiny)
-    const studioPrestige = state.studio.prestige || 0;
-    let riskMultiplier = 1;
-    if (studioPrestige > 800) riskMultiplier = 2.5;
-    else if (studioPrestige > 500) riskMultiplier = 1.8;
-    else if (studioPrestige > 200) riskMultiplier = 1.3;
-
-    risk = risk * riskMultiplier;
-
-    if (rng.next() * 1000 < risk) {
+    const risk = talent.psychology?.scandalRisk || 5; 
+    if ((rng && rng.next ? rng.next() : Math.random()) * 1000 < risk) {
        const types: ScandalType[] = ['financial', 'personal', 'onset_behavior', 'legal', 'feud'];
-       const type = rng.pick(types);
+       const type = (rng && rng.pick ? rng.pick.bind(rng) : pick)(types);
        
        const s: Scandal = {
-         id: rng.uuid('scandal'),
+         id: (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('scandal'),
          talentId: talent.id,
-         severity: 20 + Math.floor(rng.next() * 80), // 20-100
+         severity: 20 + Math.floor((rng && rng.next ? rng.next() : Math.random()) * 80), // 20-100
          type,
-         weeksRemaining: 4 + Math.floor(rng.next() * 8)
+         weeksRemaining: 4 + Math.floor((rng && rng.next ? rng.next() : Math.random()) * 8)
        };
 
        impact.newScandals!.push(s);
 
        impact.newsEvents!.push({
-         id: rng.uuid('news'),
+         id: (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('news'),
          week: state.week,
          type: 'CRISIS',
          headline: 'PR NIGHTMARE',
@@ -63,7 +54,7 @@ export function generateScandals(state: GameState, rng: RandomGenerator): StateI
        const projectId = talentToProjectMap.get(talent.id);
        if (projectId && studioProjects[projectId]) {
          const project = studioProjects[projectId];
-         const crisisId = rng.uuid('scandal-crisis');
+         const crisisId = (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('scandal-crisis');
          
          const crisisPayload = {
             crisisId,

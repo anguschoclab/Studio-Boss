@@ -1,3 +1,4 @@
+import { pick } from '../utils';
 import { GenreTrend, GameState } from '@/engine/types';
 import { StateImpact } from '../types/state.types';
 import { RandomGenerator } from '../utils/rng';
@@ -11,7 +12,7 @@ export function initializeTrends(rng: RandomGenerator): GenreTrend[] {
   const shuffled = [...ALL_GENRES];
   // Fisher-Yates shuffle with rng
   for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = rng.rangeInt(0, i);
+    const j = Math.floor((rng && rng.next ? rng.next() : Math.random()) * (i + 1));
     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
   
@@ -60,16 +61,16 @@ export function advanceTrends(trends: GenreTrend[], rng: RandomGenerator): State
   updated = updated.filter(t => t.weeksRemaining > 0 && t.heat > 0);
   
   // Randomly spawn new trends if we are low
-  if (updated.length < 5 && rng.next() < 0.1) {
+  if (updated.length < 5 && (rng && rng.next ? rng.next() : Math.random()) < 0.1) {
     const activeGenres = new Set(updated.map(t => t.genre));
     const available = ALL_GENRES.filter(g => !activeGenres.has(g));
     if (available.length > 0) {
-      const newGenre = rng.pick(available);
+      const newGenre = (rng && rng.pick ? rng.pick.bind(rng) : pick)(available);
       updated.push({
         genre: newGenre,
         heat: 30,
         direction: 'rising',
-        weeksRemaining: rng.rangeInt(16, 28)
+        weeksRemaining: 16 + Math.floor((rng && rng.next ? rng.next() : Math.random()) * 12)
       });
     }
   }

@@ -51,3 +51,22 @@ export function fillTemplate(template: string, vars: Record<string, string | num
     return vars[key] !== undefined ? String(vars[key]) : match;
   });
 }
+
+export function pick<T>(arr: T[]): T {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+export function randRange(min: number, max: number): number {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+export function secureRandom(): number {
+  return Math.random();
+}
+
+export const rngAdapter = {
+  next: () => secureRandom(),
+  pick: (arr: any[]) => pick(arr),
+  rangeInt: (min: number, max: number) => randRange(min, max),
+  uuid: (prefix: string) => `${prefix}-${secureRandom()}`
+};

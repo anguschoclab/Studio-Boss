@@ -74,7 +74,7 @@ function tickProject(
 
   // 2. Stochastic Quality Check
   let qualityShift = 0;
-  if (rng.next() < 0.2) {
+  if ((rng && rng.next ? rng.next() : Math.random()) < 0.2) {
     qualityShift = rng.range(-2, 3);
   }
 

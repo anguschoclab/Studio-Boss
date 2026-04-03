@@ -21,20 +21,20 @@ export function tickIndustryUpstarts(state: GameState, rng: RandomGenerator): St
   const MIN_STREAMERS = 10;
 
   // Spawn Studio Upstart
-  if (currentRivals < MIN_RIVALS && rng.next() < 0.1) {
+  if (currentRivals < MIN_RIVALS && (rng && rng.next ? rng.next() : Math.random()) < 0.1) {
     const ident = BrandSystem.generateIdentity(usedNames, rng);
     const name = BrandSystem.getStudioName(ident, rng);
     const archetype = 'indie'; // Upstarts usually start small
     const archData = ARCHETYPES[archetype];
 
     const newStudio: RivalStudio = {
-      id: rng.uuid('upstart-studio'),
+      id: (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('upstart-studio'),
       name,
       motto: generateMotto(rng),
       archetype: archetype as any,
       foundedWeek: state.week,
       parentBrand: ident.core,
-      strength: 30 + Math.floor(rng.next() * 20),
+      strength: 30 + Math.floor((rng && rng.next ? rng.next() : Math.random()) * 20),
       cash: archData.startingCash * 0.8,
       prestige: 50 + Math.floor(rng.range(0, 20)),
       recentActivity: 'A new boutique studio enters the fray with big ambitions.',
@@ -57,7 +57,7 @@ export function tickIndustryUpstarts(state: GameState, rng: RandomGenerator): St
     impacts.push({
       type: 'NEWS_ADDED',
       payload: {
-        id: rng.uuid('news'),
+        id: (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('news'),
         week: state.week,
         headline: `NEW PLAYER: ${name} launches as artisanal studio`,
         description: `With a focus on quality over volume, ${name} has officially entered the market as a boutique ${archetype} studio.`,
@@ -67,12 +67,12 @@ export function tickIndustryUpstarts(state: GameState, rng: RandomGenerator): St
   }
 
   // Spawn Streamer Upstart
-  if (currentStreamers < MIN_STREAMERS && rng.next() < 0.1) {
+  if (currentStreamers < MIN_STREAMERS && (rng && rng.next ? rng.next() : Math.random()) < 0.1) {
      const ident = BrandSystem.generateIdentity(usedNames, rng);
      const name = BrandSystem.getStreamingName(ident, rng);
      
      const newStreamer: StreamerPlatform = {
-        id: rng.uuid('upstart-streamer'),
+        id: (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('upstart-streamer'),
         name,
         archetype: 'streamer',
         foundedWeek: state.week,
@@ -97,7 +97,7 @@ export function tickIndustryUpstarts(state: GameState, rng: RandomGenerator): St
      impacts.push({
         type: 'NEWS_ADDED',
         payload: {
-           id: rng.uuid('news'),
+           id: (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('news'),
            week: state.week,
            headline: `DISRUPTOR: ${name} enters the streaming wars`,
            description: `A new streaming platform, ${name}, has launched today with an aggressive subscriber acquisition strategy.`,

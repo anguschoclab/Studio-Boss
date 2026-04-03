@@ -17,9 +17,9 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
   const usedNames = new Set<string>([studioName]);
 
   // Generate 10 Rivals
-  const rivals: RivalStudio[] = Array.from({ length: 10 }, () => {
-    const ident = BrandSystem.generateIdentity(usedNames, rng);
-    const name = BrandSystem.getStudioName(ident, rng);
+  const rivals: RivalStudio[] = Array.from({ length: 10 }, (_, i) => {
+    const ident = BrandSystem.generateIdentity(usedNames, { next: secureRandom, pick: pick } as any);
+    const name = BrandSystem.getStudioName(ident);
     usedNames.add(name);
     usedNames.add(ident.core);
     
@@ -55,43 +55,14 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
     };
   });
 
-  const agencies = generateAgencies(rng, 5);
-  const agents = generateAgents(rng, agencies, 4);
-  const families = generateFamilies(rng, 5);
-  
-  // SEED: 500 Talents for a robust living world
-  const talentPoolArray = generateTalentPool(rng, 500);
+  const agencies = generateAgencies({ next: secureRandom, pick: pick } as any, 5);
+  const agents = generateAgents({ next: secureRandom, pick: pick, rangeInt: randRange } as any, agencies, 4);
+  const families = generateFamilies(5);
+  const talentPoolArray = generateTalentPool(50, families, agents, agencies);
   const talentPool = talentPoolArray.reduce((acc, t) => {
     acc[t.id] = t;
     return acc;
   }, {} as Record<string, import('@/engine/types').Talent>);
-
-  // Initialize some initial pacts for rivals to make the world feel alive
-  rivals.forEach(rival => {
-    const pactCount = rival.archetype === 'major' ? 3 : (rival.archetype === 'mid-tier' ? 1 : 0);
-    for (let i = 0; i < pactCount; i++) {
-        const topTalent = talentPoolArray
-            .filter(t => t.tier === 'S_LIST' || t.tier === 'A_LIST')
-            .find(t => !t.contractId); 
-
-        if (topTalent) {
-            const pact: import('@/engine/types').TalentPact = {
-                id: rng.uuid('pact'),
-                talentId: topTalent.id,
-                studioId: rival.id,
-                type: 'first_look',
-                exclusivity: true,
-                weeklyOverhead: topTalent.fee * 0.05,
-                startDate: 1,
-                endDate: 52,
-                status: 'active'
-            };
-            rival.contracts.push(pact as any); 
-            topTalent.contractId = pact.id;
-        }
-    }
-  });
-
   const initialTrends = initializeTrends(rng);
   const genrePopularity: Record<string, number> = {};
   ALL_GENRES.forEach(g => {
@@ -120,7 +91,6 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
       marketShare: archetype === 'major' ? 0.35 : 0.15,
       reach: archetype === 'major' ? 95 : 70,
       subscriberHistory: [],
-      activeLicenses: [],
     };
     initialBuyers.push(playerStreamer);
     playerOwnedPlatforms.push(playerStreamer.id);
@@ -144,7 +114,6 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
         marketShare: rival.archetype === 'major' ? 0.30 : 0.12,
         reach: rival.archetype === 'major' ? 90 : 65,
         subscriberHistory: [],
-        activeLicenses: [],
       };
       initialBuyers.push(rivalStreamer);
       rival.ownedPlatforms = [rivalStreamer.id];

@@ -65,8 +65,8 @@ export class TalentSystem {
       return false;
     };
 
-    // Talent-specific opportunity
-    if (rng.next() < 0.25) {
+    // Talent-specific opportunity (using existing studio talent)
+    if ((rng && rng.next ? rng.next() : Math.random()) < 0.25) {
       const activeTalentIds = new Set<string>();
       for (let i = 0; i < (state.studio.internal.contracts || []).length; i++) {
         activeTalentIds.add(state.studio.internal.contracts[i].talentId);
@@ -83,17 +83,17 @@ export class TalentSystem {
     }
 
     // General opportunities
-    if (rng.next() < 0.2) {
-      tryAddOpp(generateOpportunity(rng), `A new script is doing the rounds in town.`);
+    if ((rng && rng.next ? rng.next() : Math.random()) < 0.2) {
+      tryAddOpp(generateOpportunity(undefined, rng), `A new script is doing the rounds in town.`);
     }
 
-    if (rng.next() < 0.15) {
-      tryAddOpp(generateOpportunity(rng), `New opportunities have hit the market!`);
+    if ((rng && rng.next ? rng.next() : Math.random()) < 0.15) {
+      tryAddOpp(generateOpportunity(undefined, rng), `New opportunities have hit the market!`);
     }
 
     // Fallback/Density control
-    if (updatedOpportunities.length < 4 && rng.next() < 0.3) {
-      tryAddOpp(generateOpportunity(rng));
+    if (updatedOpportunities.length < 4 && (rng && rng.next ? rng.next() : Math.random()) < 0.3) {
+      tryAddOpp(generateOpportunity(undefined, rng));
     }
 
     return {

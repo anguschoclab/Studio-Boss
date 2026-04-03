@@ -56,7 +56,7 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
           });
 
           // Industry News for significant bidding wars
-          if (newBid > 10_000_000 && rng.next() < 0.2) {
+          if (newBid > 10_000_000 && (rng && rng.next ? rng.next() : Math.random()) < 0.2) {
             impacts.push({
               type: 'NEWS_ADDED',
               payload: {
@@ -165,7 +165,7 @@ export function calculateLiveCounterBid(
   const multiplier = ArchetypeMultipliers[rival.archetype]?.(opportunity.genre) || 1.1;
   const reactionThreshold = 0.3; // 30% chance for immediate response
   
-  if (rng.next() < reactionThreshold) {
+  if ((rng && rng.next ? rng.next() : Math.random()) < reactionThreshold) {
     const counterAmount = Math.floor(playerBid * rng.range(1.05, 1.15) * multiplier);
     if (counterAmount < rival.cash * 0.4) {
       return {

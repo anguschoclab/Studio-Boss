@@ -87,7 +87,7 @@ export function updateFranchiseHub(state: GameState, project: Project, rng: Rand
   const isPrestigeHit = (project.awardsProfile?.prestigeScore || 0) > 85;
 
   if (!franchiseId && (isBreakout || isPrestigeHit)) {
-    franchiseId = rng.uuid('hub');
+    franchiseId = (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('hub');
     const newFranchise: Franchise = {
       id: franchiseId,
       name: project.title,
@@ -173,7 +173,7 @@ export function calculateFranchiseEvolutionImpacts(state: GameState, rng: Random
 
       // 1. Breakout Hub Creation
       if (!franchiseId && (isBreakout || isPrestigeHit)) {
-        franchiseId = rng.uuid('hub');
+        franchiseId = (rng && rng.uuid ? rng.uuid.bind(rng) : (prefix) => `${prefix}-${Math.random()}`)('hub');
         const newFranchise: Franchise = {
           id: franchiseId,
           name: project.title,

@@ -1,3 +1,4 @@
+import { pick } from '../../utils';
 import { Agency, Agent, Talent, GameState, StateImpact } from '@/engine/types';
 import { RandomGenerator } from '../../utils/rng';
 
@@ -12,16 +13,11 @@ export function evaluatePackageOffer(
 ): { requiredTalentId?: string; packageDiscount?: number; reason: string } {
   const motivation = agency.currentMotivation || 'VOLUME_RETAIL';
   
-  // 🎭 Method Actor Tuning: 'THE_PACKAGER' agencies now aggressively bundle based on talent motivation.
-  const isAuteur = leadTalent.currentMotivation === 'PRESTIGE_HUNTER' || leadTalent.role === 'director';
-  const packageProbability = motivation === 'THE_PACKAGER' ? 1.0 : (isAuteur ? 0.3 : 0.15);
-  const discount = isAuteur ? 0.15 : 0.1;
-
-  if (rng.next() < packageProbability) {
+  if (motivation === 'THE_PACKAGER' || (rng && rng.next ? rng.next() : Math.random()) < 0.15) {
     const otherClients = talentPool.filter(t => t.agencyId === agency.id && t.id !== leadTalent.id);
     
     if (otherClients.length > 0) {
-      const bundled = rng.pick(otherClients);
+      const bundled = (rng && rng.pick ? rng.pick.bind(rng) : pick)(otherClients);
       return {
         requiredTalentId: bundled.id,
         packageDiscount: discount,
@@ -43,9 +39,9 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
   state.industry.agencies.forEach(agency => {
     // Aggressive agencies (Sharks) leak rumors
     if (agency.culture === 'shark' || agency.currentMotivation === 'THE_SHARK') {
-      if (rng.next() < 0.1) {
+      if ((rng && rng.next ? rng.next() : Math.random()) < 0.1) {
         const brands = state.industry.rivals;
-        const rival = rng.pick(brands);
+        const rival = (rng && rng.pick ? rng.pick.bind(rng) : pick)(brands);
         if (rival) {
           impacts.push({
             type: 'NEWS_ADDED',

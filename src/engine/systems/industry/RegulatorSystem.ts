@@ -1,55 +1,272 @@
-import { GameState, StateImpact } from '../../types';
-import { RandomGenerator } from '../../utils/rng';
+import { GameState, StateImpact, WeekSummary, GameEvent } from '../types';
+import { RandomGenerator } from '../utils/rng';
+import { applyImpacts } from '../core/impactReducer';
+import { clamp } from '../utils';
+
+// System Imports
+import { tickProduction } from '../systems/productionEngine';
+import { tickScriptDevelopment } from '../systems/production/ScriptDraftingSystem';
+import { tickPlatforms } from '../systems/television/platformEngine';
+import { tickAIMinds } from '../systems/ai/motivationEngine';
+import { tickAgencies } from '../systems/ai/AgentBrain';
+import { tickAuctions } from '../systems/ai/biddingEngine';
+import { tickWorldEvents } from '../systems/ai/WorldSimulator';
+import { tickTelevision } from '../systems/television/televisionTick';
+import { tickFinance } from '../systems/finance/financeTick';
+import { advanceTrends } from '../systems/trends';
+import { advanceMarketEvents } from '../systems/marketEvents';
+import { advanceScandals, generateScandals } from '../systems/scandals';
+import { advanceBuyers } from '../systems/buyerMergers';
+import { checkAndTriggerCrisis } from '../systems/crises';
+
+// New Industry Systems
+import { tickVerticalIntegration } from '../systems/industry/VerticalIntegrationProcessor';
+import { tickIndustryUpstarts } from '../systems/industry/IndustryUpstarts';
+import { tickConsolidation } from '../systems/industry/ConsolidationEngine';
+import { InterestRateSimulator } from '../systems/market/InterestRateSimulator';
+import { calculateFranchiseEvolutionImpacts, tickIPVault } from '../systems/ip/franchiseCoordinator';
+
+// Integrated Hardening Systems
+import { runAwardsCeremony, processRazzies } from '../systems/awards';
+import { TalentSystem } from '../systems/TalentSystem';
+import { resolveFestivals } from '../systems/festivals';
+import { advanceRumors } from '../systems/rumors';
+import { advanceDeals } from '../systems/deals';
+import { SchedulingEngine } from '../systems/schedulingEngine';
 
 /**
- * Industry Regulator System
- * Handles Anti-Trust, Market Replenishment, and Macro-Economic Stability.
+ * Studio Boss - Simulation Tick Context
  */
-export class IndustryRegulator {
-  static tick(state: GameState, rng: RandomGenerator): StateImpact[] {
-    const impacts: StateImpact[] = [];
+export interface TickContext {
+  week: number;
+  tickCount: number;
+  rng: RandomGenerator;
+  timestamp: number;
+  impacts: StateImpact[];
+  events: GameEvent[];
+}
 
-    // 1. Anti-Trust Monitoring
-    const majors = state.industry.rivals.filter(r => r.archetype === 'major');
-    const totalMarketCash = state.industry.rivals.reduce((sum, r) => sum + r.cash, 0);
+/**
+ * The "Pipe and Filter" Orchestrator.
+ */
+export class WeekCoordinator {
+  static execute(state: GameState, rng: RandomGenerator): { newState: GameState; summary: WeekSummary; impacts: StateImpact[] } {
+    const context: TickContext = {
+      week: state.week + 1,
+      tickCount: (state.tickCount || 0) + 1,
+      rng,
+      timestamp: (state.tickCount || 0) * 1000,
+      impacts: [],
+      events: []
+    };
 
-    majors.forEach(major => {
-        // If a major owns more than 40% of industry liquid cash, trigger anti-trust fine
-        if (major.cash > totalMarketCash * 0.4) {
-            impacts.push({
-                type: 'LEDGER_UPDATED',
-                payload: {
-                    amount: -(major.cash * 0.05),
-                    category: 'legal',
-                    description: `Anti-Trust Fine: ${major.name}'s market dominance has triggered regulatory penalties.`,
-                    rivalId: major.id
-                }
-            });
+    // 1. Run Filters
+    this.runMarketFilter(state, context);
+    this.runProductionFilter(state, context);
+    this.runAIFilter(state, context);
+    this.runIndustryFilter(state, context);
+    this.runTalentFilter(state, context);
+    this.runMediaFilter(state, context);
+    this.runScandalFilter(state, context);
+    this.runFinanceFilter(state, context);
 
-            impacts.push({
-                type: 'NEWS_ADDED',
-                payload: {
-                    id: rng.uuid('news'),
-                    headline: 'ANTITRUST PROBE',
-                    description: `Federal regulators have opened an investigation into ${major.name} for anticompetitive behavior.`,
-                    publication: 'Financial Journal',
-                    category: 'market'
-                }
-            });
-        }
+    // 2. Consolidation & State Application
+    const nextState = applyImpacts(state, context.impacts);
+
+    const updatedMarketState = {
+      ...nextState.finance.marketState,
+      sentiment: clamp((nextState.finance.marketState?.sentiment || 50) + (context.rng.next() - 0.5) * 5, -100, 100),
+      cycle: (nextState.finance.marketState?.baseRate || 0) > 0.08 ? 'RECESSION' : (nextState.finance.marketState?.baseRate || 0) > 0.06 ? 'BEAR' : 'STABLE'
+    };
+
+    const finalizedState: GameState = {
+      ...nextState,
+      week: context.week,
+      tickCount: context.tickCount,
+      eventHistory: [...(state.eventHistory || []), ...context.events].slice(-52),
+      finance: {
+        ...nextState.finance,
+        marketState: updatedMarketState as import('../types/state.types').MarketState
+      }
+    };
+
+    const summary = this.buildSummary(state, finalizedState, context);
+
+    context.impacts.push({
+      type: 'MODAL_TRIGGERED',
+      payload: {
+        modalType: 'SUMMARY',
+        priority: 0,
+        payload: summary as unknown as Record<string, unknown>
+      }
     });
 
-    // 2. Market Replenishment (Upstart entry)
-    if (state.industry.rivals.length < 15 && rng.next() < 0.05) {
-        // Potential for a new indie/mid-tier to enter
-        impacts.push({
-            type: 'INDUSTRY_UPDATE',
-            payload: {
-                // Logic for adding a new rival would go here or be triggered as an event
-            }
-        });
+    return {
+      newState: finalizedState,
+      summary,
+      impacts: context.impacts
+    };
+  }
+
+  private static runMarketFilter(state: GameState, context: TickContext) {
+    context.impacts.push(...tickPlatforms(state, context.rng));
+    context.impacts.push(InterestRateSimulator.advance(state, context.rng));
+    context.impacts.push(...tickWorldEvents(state, context.rng));
+    context.impacts.push(...advanceTrends(state.market.trends || [], context.rng));
+    context.impacts.push(...advanceMarketEvents(state, context.rng));
+    context.impacts.push(advanceBuyers(state, context.rng));
+    context.impacts.push(...tickVerticalIntegration(state, context.rng));
+    context.impacts.push(...tickIndustryUpstarts(state, context.rng));
+    context.impacts.push(...tickConsolidation(state, context.rng));
+  }
+
+  private static runProductionFilter(state: GameState, context: TickContext) {
+    context.impacts.push(...tickProduction(state, context.rng));
+    for (const key in state.studio.internal.projects) {
+      const project = state.studio.internal.projects[key];
+      if (project.state === 'development') {
+        const result = tickScriptDevelopment(project, context.rng);
+        if (result.project !== project) {
+          context.impacts.push({
+            type: 'PROJECT_UPDATED',
+            payload: { projectId: project.id, update: result.project }
+          });
+          if (result.impact) context.impacts.push(result.impact);
+        }
+      }
+    }
+    this.runCrisisFilter(state, context);
+    context.impacts.push(...tickTelevision(state, context.rng));
+    context.impacts.push(...calculateFranchiseEvolutionImpacts(state, context.rng));
+    context.impacts.push(...tickIPVault(state));
+  }
+
+  private static runCrisisFilter(state: GameState, context: TickContext) {
+    const activeStages = ['prep', 'production', 'post_production', 'marketing'];
+    for (const key in state.studio.internal.projects) {
+      const project = state.studio.internal.projects[key];
+      if (!project.activeCrisis && activeStages.includes(project.state)) {
+        const impact = checkAndTriggerCrisis(project, context.rng);
+        if (impact) context.impacts.push(impact);
+      }
+    }
+  }
+
+  private static runAIFilter(state: GameState, context: TickContext) {
+    context.impacts.push(...tickAIMinds(state, context.rng));
+    context.impacts.push(...tickAgencies(state, context.rng));
+    context.impacts.push(...tickAuctions(state, context.rng));
+  }
+
+  private static runIndustryFilter(state: GameState, context: TickContext) {
+    const { year } = InterestRateSimulator.getWeekDisplay(context.week);
+    const awardsImpact = runAwardsCeremony(state, context.week, year, context.rng);
+    context.impacts.push(awardsImpact);
+    
+    if (awardsImpact.newAwards && awardsImpact.newAwards.length > 0) {
+      context.impacts.push({
+        type: 'MODAL_TRIGGERED',
+        payload: {
+          modalType: 'AWARDS',
+          priority: 50,
+          payload: { 
+            week: context.week,
+            year,
+            awards: awardsImpact.newAwards,
+            body: awardsImpact.newAwards[0]?.body || 'Annual Industry Awards'
+          }
+        }
+      });
+    }
+    
+    const weekDisplay = context.week % 52 === 0 ? 52 : context.week % 52;
+    if (weekDisplay === 4) {
+      const razzieImpact = processRazzies(state, context.week, context.rng);
+      context.impacts.push(razzieImpact);
     }
 
-    return impacts;
+    context.impacts.push(resolveFestivals(state, context.rng));
+  }
+
+  private static runTalentFilter(state: GameState, context: TickContext) {
+    context.impacts.push(TalentSystem.advance(state, context.rng));
+  }
+
+  private static runMediaFilter(state: GameState, context: TickContext) {
+    context.impacts.push(advanceRumors(state, context.rng));
+    
+    // Process First-Look Deal decay
+    const updatedPacts = SchedulingEngine.processPacts(state.studio.internal.firstLookDeals || []);
+    if (JSON.stringify(updatedPacts) !== JSON.stringify(state.studio.internal.firstLookDeals)) {
+       context.impacts.push({
+         type: 'INDUSTRY_UPDATE',
+         payload: { update: { 'studio.internal.firstLookDeals': updatedPacts } }
+       });
+    }
+  }
+
+  private static runScandalFilter(state: GameState, context: TickContext) {
+    context.impacts.push(...generateScandals(state, context.rng));
+    context.impacts.push(...advanceScandals(state));
+  }
+
+  private static runFinanceFilter(state: GameState, context: TickContext) {
+    context.impacts.push(...tickFinance(state, context.rng));
+  }
+
+  private static buildSummary(before: GameState, after: GameState, context: TickContext): WeekSummary {
+    const allHeadlines: import('../types/engine.types').Headline[] = [];
+    const newsEvents: import('../types/engine.types').NewsEvent[] = [];
+    
+    let ledgerImpact: StateImpact | undefined;
+    const projectUpdates: string[] = [];
+
+    for (let i = 0; i < context.impacts.length; i++) {
+      const impact = context.impacts[i];
+
+      if (impact.type === 'LEDGER_UPDATED') ledgerImpact = impact;
+      
+      if (impact.type === 'PROJECT_UPDATED') {
+        projectUpdates.push((impact as import('../types/state.types').ProjectUpdateImpact).payload.projectId);
+      }
+      if (impact.projectUpdates) {
+        for (let j = 0; j < impact.projectUpdates.length; j++) {
+          projectUpdates.push(impact.projectUpdates[j].projectId);
+        }
+      }
+
+      if (impact.type === 'NEWS_ADDED') {
+        const payload = impact.payload as import('../types/state.types').NewsImpact['payload'];
+        allHeadlines.push({
+          id: context.rng.uuid('news'),
+          text: payload.headline || 'Breaking News',
+          week: context.week,
+          category: payload.category || 'general'
+        });
+      }
+      
+      if (impact.newHeadlines) allHeadlines.push(...impact.newHeadlines);
+      if (impact.newsEvents) newsEvents.push(...impact.newsEvents);
+    }
+
+    if ((rng && rng.next ? rng.next() : Math.random()) < blockChance) {
+      return { 
+        blocked: true, 
+        sharePreview: combinedShare, 
+        reason: combinedShare > 35 ? 'Severe Concentration of Media Power' : 'Competition Concerns' 
+      };
+    }
+
+    return {
+      fromWeek: before.week,
+      toWeek: after.week,
+      cashBefore: before.finance.cash,
+      cashAfter: after.finance.cash,
+      totalRevenue,
+      totalCosts,
+      projectUpdates: Array.from(new Set(projectUpdates)),
+      newHeadlines: allHeadlines,
+      events: context.events.map(e => e.title),
+    };
   }
 }
