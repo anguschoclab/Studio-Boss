@@ -1,15 +1,21 @@
 import { createSelector } from 'reselect';
-import { GameState, Project, RivalStudio, Talent, GameEvent } from '../engine/types';
+import { GameState, Project, RivalStudio, Talent, GameEvent, Opportunity, Buyer, GenreTrend } from '../engine/types';
+import { WeeklyFinancialReport, FinancialSnapshot, MarketState, MarketEvent } from '../engine/types/state.types';
 
-const EMPTY_PROJECTS = {};
-const EMPTY_FINANCE = { 
+const EMPTY_PROJECTS: Record<string, Project> = {};
+const EMPTY_FINANCE: {
+  cash: number;
+  ledger: WeeklyFinancialReport[];
+  weeklyHistory: FinancialSnapshot[];
+  marketState: MarketState | null;
+} = {
   cash: 0, 
   ledger: [], 
   weeklyHistory: [], 
   marketState: null 
 };
-const EMPTY_MARKET = { buyers: [], opportunities: [], trends: [], activeMarketEvents: [] };
-const EMPTY_TALENT_POOL = {};
+const EMPTY_MARKET: { buyers: Buyer[]; opportunities: Opportunity[]; trends: GenreTrend[]; activeMarketEvents: MarketEvent[] } = { buyers: [], opportunities: [], trends: [], activeMarketEvents: [] };
+const EMPTY_TALENT_POOL: Record<string, Talent> = {};
 const EMPTY_RIVALS: RivalStudio[] = [];
 const EMPTY_EVENT_HISTORY: GameEvent[] = [];
 
