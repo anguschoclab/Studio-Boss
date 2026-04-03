@@ -9,6 +9,7 @@ import { generateBuyers } from '../generators/buyers';
 import { generateAgencies, generateAgents } from '../generators/agencies';
 import { RandomGenerator } from '../utils/rng';
 import { generateOpportunity } from '../generators/opportunities';
+import { Talent, TalentPact, StreamerPlatform, Buyer, StudioMotivation, Contract } from '@/engine/types';
 
 export function initializeGame(studioName: string, archetype: ArchetypeKey, seed: number): GameState {
   const rng = new RandomGenerator(seed);
@@ -33,7 +34,7 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
        aggression: rng.rangeInt(40, 80)
     };
 
-    const motivations: import('@/engine/types').StudioMotivation[] = ['CASH_CRUNCH', 'AWARD_CHASE', 'FRANCHISE_BUILDING', 'MARKET_DISRUPTION', 'STABILITY'];
+    const motivations: StudioMotivation[] = ['CASH_CRUNCH', 'AWARD_CHASE', 'FRANCHISE_BUILDING', 'MARKET_DISRUPTION', 'STABILITY'];
 
     return {
       id: rng.uuid('rival'),
@@ -59,12 +60,12 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
   const agents = generateAgents(rng, agencies, 4);
   const families = generateFamilies(rng, 5);
   
-  // SEED: 500 Talents for a robust living world
-  const talentPoolArray = generateTalentPool(rng, 500);
+  // SEED: 1,000+ Talents for a robust living world
+  const talentPoolArray = generateTalentPool(rng, 1000);
   const talentPool = talentPoolArray.reduce((acc, t) => {
     acc[t.id] = t;
     return acc;
-  }, {} as Record<string, import('@/engine/types').Talent>);
+  }, {} as Record<string, Talent>);
 
   // Initialize some initial pacts for rivals to make the world feel alive
   rivals.forEach(rival => {
@@ -75,7 +76,7 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
             .find(t => !t.contractId); 
 
         if (topTalent) {
-            const pact: import('@/engine/types').TalentPact = {
+            const pact: TalentPact = {
                 id: rng.uuid('pact'),
                 talentId: topTalent.id,
                 studioId: rival.id,
@@ -86,7 +87,7 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
                 endDate: 52,
                 status: 'active'
             };
-            rival.contracts.push(pact as any); 
+            rival.contracts.push(pact as unknown as Contract); 
             topTalent.contractId = pact.id;
         }
     }
@@ -106,7 +107,7 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
   const playerOwnedPlatforms: string[] = [];
   if (archetype !== 'indie') {
     const playerBrand = { core: studioName.split(' ')[0], isConglomerate: true };
-    const playerStreamer: import('@/engine/types').StreamerPlatform = {
+    const playerStreamer: StreamerPlatform = {
       id: rng.uuid('player-streamer'),
       name: BrandSystem.getStreamingName(playerBrand, rng),
       archetype: 'streamer',
@@ -130,7 +131,7 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
   rivals.forEach(rival => {
     if (rival.archetype !== 'indie' && rng.next() < 0.7) {
       const rivalBrand = { core: rival.parentBrand!, isConglomerate: true };
-      const rivalStreamer: import('@/engine/types').StreamerPlatform = {
+      const rivalStreamer: StreamerPlatform = {
         id: rng.uuid('rival-streamer'),
         name: BrandSystem.getStreamingName(rivalBrand, rng),
         archetype: 'streamer',

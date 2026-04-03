@@ -142,6 +142,7 @@ export interface Talent {
     type: 'movie' | 'tv';
   };
   hasRazzie?: boolean;
+  razzieWinner?: boolean; // 🌌 PHASE 2: Added for high-fidelity career tracking.
   
   // SBDB & Career Tracking
   knownFor?: string[]; // Top 3 Project IDs

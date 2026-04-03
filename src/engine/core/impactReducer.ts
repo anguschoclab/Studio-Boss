@@ -1,4 +1,4 @@
-import { GameState, StateImpact, NewsEvent, Project, RivalStudio, Talent, Buyer } from '@/engine/types';
+import { GameState, StateImpact, NewsEvent, Project, RivalStudio, Talent, Buyer, Franchise } from '@/engine/types';
 
 /**
  * Pure function to apply a single StateImpact to the GameState.
@@ -65,7 +65,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
       const projects = { ...state.studio.internal.projects };
       const project = projects[projectId];
       if (project) {
-        projects[projectId] = { ...project, ...update } as Project;
+        projects[projectId] = { ...project, ...update };
       }
       return {
         ...state,
@@ -130,7 +130,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
       const talentPool = { ...state.industry.talentPool };
       const talent = talentPool[talentId];
       if (talent) {
-        talentPool[talentId] = { ...talent, ...update } as Talent;
+        talentPool[talentId] = { ...talent, ...update };
       }
       return {
         ...state,
@@ -223,7 +223,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
               const genre = project.genre ? project.genre.toLowerCase() : '';
               if (format === 'unscripted' || genre.includes('horror')) {
                   // Trashy reality TV or horror gets a temporary buzz boost from scandals
-                  projects[pid] = { ...project, buzz: Math.min(100, (project.buzz || 0) + Math.floor(scandal.severity / 5)) } as Project;
+                  projects[pid] = { ...project, buzz: Math.min(100, (project.buzz || 0) + Math.floor(scandal.severity / 5)) };
               }
           }
       }
@@ -264,7 +264,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
         franchises[franchiseId] = { ...franchise, ...update };
       } else {
         // Initial creation
-        franchises[franchiseId] = update as import('../types/franchise.types').Franchise;
+        franchises[franchiseId] = update as Franchise;
       }
       return {
         ...state,
@@ -361,7 +361,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
                   projects[award.projectId] = { 
                       ...project, 
                       awards: [...(project.awards || []), award] 
-                  } as Project;
+                  };
               }
               newState = { ...newState, studio: { ...newState.studio, internal: { ...newState.studio.internal, projects } } };
           });
@@ -371,7 +371,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
               const projects = { ...newState.studio.internal.projects };
               const project = projects[id];
               if (project) {
-                  projects[id] = { ...project, isCultClassic: true } as Project;
+                  projects[id] = { ...project, isCultClassic: true };
               }
               newState = { ...newState, studio: { ...newState.studio, internal: { ...newState.studio.internal, projects } } };
           });
@@ -381,7 +381,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
               const talentPool = { ...newState.industry.talentPool };
               const talent = talentPool[id];
               if (talent) {
-                  talentPool[id] = { ...talent, razzieWinner: true } as Talent;
+                  talentPool[id] = { ...talent, razzieWinner: true };
               }
               newState = { ...newState, industry: { ...newState.industry, talentPool } };
           });
