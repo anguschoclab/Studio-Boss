@@ -9,11 +9,11 @@ export class ExpenseProcessor {
    * Non-linear scaling for late-game challenge.
    */
   static calculateStudioBurn(level: number, activeProjectsCount: number): number {
-    const baseRent = 500000; // $500k base weekly overhead
+    const baseRent = 750000; // $750k base weekly overhead (The Studio Comptroller: Increased base rent to force faster scale or fail)
     
     // Non-linear scaling: Base * (1.25 ^ (Level-1))
     const levelScale = Math.pow(1.25, Math.max(0, level - 1));
-    const projectPenalty = 145312.5; // The Studio Comptroller: Increased base project penalty to $145.3k to aggressively increase burn rate for sprawling pipelines
+    const projectPenalty = 200000; // The Studio Comptroller: Increased base project penalty to $200k to aggressively increase burn rate for sprawling pipelines
     
     const burn = (baseRent * levelScale) + (activeProjectsCount * projectPenalty);
     return Math.round(burn);
@@ -74,7 +74,7 @@ export class ExpenseProcessor {
       if (p.state === 'marketing' && p.marketingBudget) {
         // Marketing budget is usually spent over 4-8 weeks
         // Weekly burn is a fraction of the total budget
-        const weeklyMarketingBurn = p.marketingBudget / 6; 
+        const weeklyMarketingBurn = p.marketingBudget / 4; // The Studio Comptroller: Accelerated marketing burn to rapidly deplete cash reserves.
         totalBurn += weeklyMarketingBurn;
       }
     });
