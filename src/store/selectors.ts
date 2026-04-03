@@ -1,15 +1,21 @@
 import { createSelector } from 'reselect';
-import { GameState, Project, RivalStudio, Talent, GameEvent } from '../engine/types';
+import { GameState, Project, RivalStudio, Talent, GameEvent, Opportunity, Buyer, GenreTrend } from '../engine/types';
+import { WeeklyFinancialReport, FinancialSnapshot, MarketState, MarketEvent } from '../engine/types/state.types';
 
-const EMPTY_PROJECTS = {};
-const EMPTY_FINANCE = { 
+const EMPTY_PROJECTS: Record<string, Project> = {};
+const EMPTY_FINANCE: {
+  cash: number;
+  ledger: WeeklyFinancialReport[];
+  weeklyHistory: FinancialSnapshot[];
+  marketState: MarketState | null;
+} = {
   cash: 0, 
   ledger: [], 
   weeklyHistory: [], 
   marketState: null 
 };
-const EMPTY_MARKET = { buyers: [], opportunities: [], trends: [], activeMarketEvents: [] };
-const EMPTY_TALENT_POOL = {};
+const EMPTY_MARKET: { buyers: Buyer[]; opportunities: Opportunity[]; trends: GenreTrend[]; activeMarketEvents: MarketEvent[] } = { buyers: [], opportunities: [], trends: [], activeMarketEvents: [] };
+const EMPTY_TALENT_POOL: Record<string, Talent> = {};
 const EMPTY_RIVALS: RivalStudio[] = [];
 const EMPTY_EVENT_HISTORY: GameEvent[] = [];
 
@@ -99,10 +105,16 @@ export const selectIsBankrupt = createSelector(
 export const selectStudioSuccess = createSelector(
   [selectReleasedProjects],
   (released) => {
-    const totalRevenue = released.reduce((sum, p) => sum + (p.revenue || 0), 0);
-    const avgScore = released.length > 0 
-      ? released.reduce((sum, p) => sum + (p.reviewScore || 0), 0) / released.length 
-      : 0;
+    let totalRevenue = 0;
+    let totalScore = 0;
+
+    for (let i = 0; i < released.length; i++) {
+      const p = released[i];
+      totalRevenue += (p.revenue || 0);
+      totalScore += (p.reviewScore || 0);
+    }
+
+    const avgScore = released.length > 0 ? totalScore / released.length : 0;
     
     return {
       totalRevenue,
