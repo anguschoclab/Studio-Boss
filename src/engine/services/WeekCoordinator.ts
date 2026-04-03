@@ -174,8 +174,9 @@ export class WeekCoordinator {
     // Roll for rival projects
     state.industry.rivals.forEach(rival => {
       // ⚡ Bolt: Iterate over project records using for...in to avoid O(N) array allocation per tick
-      for (const key in rival.projects || {}) {
-        const project = (rival.projects || {})[key];
+      const projects = rival.projects || {};
+      for (const key in projects) {
+        const project = projects[key];
         const activeStages = ['prep', 'production', 'post_production', 'marketing'];
         if (!project.activeCrisis && activeStages.includes(project.state)) {
            const impact = checkAndTriggerCrisis(project, context.rng);
