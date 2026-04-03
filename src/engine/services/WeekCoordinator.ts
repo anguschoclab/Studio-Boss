@@ -1,6 +1,7 @@
 import { GameState, StateImpact, WeekSummary, GameEvent } from '../types';
 import { RandomGenerator } from '../utils/rng';
 import { applyImpacts } from '../core/impactReducer';
+import { IndustryRegulator } from '../systems/industry/RegulatorSystem';
 import { clamp } from '../utils';
 
 // System Imports
@@ -9,7 +10,7 @@ import { tickScriptDevelopment } from '../systems/production/ScriptDraftingSyste
 import { tickPlatforms } from '../systems/television/platformEngine';
 import { tickAIMinds } from '../systems/ai/motivationEngine';
 import { tickAgencies } from '../systems/ai/AgentBrain';
-import { tickAuctions } from '../systems/ai/biddingEngine';
+import { tickAuctions, tickTalentCompetition } from '../systems/ai/biddingEngine';
 import { tickWorldEvents } from '../systems/ai/WorldSimulator';
 import { tickTelevision } from '../systems/television/televisionTick';
 import { tickFinance } from '../systems/finance/financeTick';
@@ -155,6 +156,7 @@ export class WeekCoordinator {
     context.impacts.push(...tickAIMinds(state, context.rng));
     context.impacts.push(...tickAgencies(state, context.rng));
     context.impacts.push(...tickAuctions(state, context.rng));
+    context.impacts.push(...tickTalentCompetition(state, context.rng));
   }
 
   private static runIndustryFilter(state: GameState, context: TickContext) {
@@ -185,6 +187,7 @@ export class WeekCoordinator {
     }
 
     context.impacts.push(resolveFestivals(state, context.rng));
+    context.impacts.push(...IndustryRegulator.tick(state, context.rng));
   }
 
   private static runTalentFilter(state: GameState, context: TickContext) {
@@ -236,12 +239,13 @@ export class WeekCoordinator {
       }
 
       if (impact.type === 'NEWS_ADDED') {
-        const payload = impact.payload as import('../types/state.types').NewsImpact['payload'];
+        const payload = impact.payload as import('../types/state.types').NewsImpact;
         allHeadlines.push({
           id: context.rng.uuid('news'),
           text: payload.headline || 'Breaking News',
           week: context.week,
-          category: payload.category || 'general'
+          category: payload.category || 'general',
+          publication: payload.publication || 'Variety'
         });
       }
       

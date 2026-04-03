@@ -80,13 +80,14 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     }
 
     case 'NEWS_ADDED': {
-      const { id, headline, description } = impact.payload;
+      const { id, headline, description, publication } = impact.payload;
       const newsEvent: NewsEvent = {
         id: id,
         week: state.week,
         type: 'STUDIO_EVENT',
         headline: headline,
         description: description,
+        publication: publication
       };
       return {
         ...state,

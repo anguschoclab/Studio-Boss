@@ -104,10 +104,37 @@ export const TalentModal = () => {
                 <h2 className="text-5xl font-black tracking-tighter text-white uppercase italic drop-shadow-2xl">
                   {talent.name}
                 </h2>
-                <div className="flex items-center gap-2 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 shadow-xl">
-                  <Star className="w-4 h-4 text-primary fill-primary" />
-                  <span className="text-xl font-black text-primary italic leading-none">{talent.starMeter || 50}</span>
-                  <span className="text-[10px] uppercase font-black text-slate-500 tracking-widest ml-1">Star Meter</span>
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center gap-2 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 shadow-xl">
+                    <Star className="w-4 h-4 text-primary fill-primary" />
+                    <span className="text-xl font-black text-primary italic leading-none">{talent.starMeter || 50}</span>
+                    <span className="text-[10px] uppercase font-black text-slate-500 tracking-widest ml-1">Star Meter</span>
+                  </div>
+                  {talent.contractId && (
+                    <div className="flex items-center gap-1.5 bg-rose-500/10 border border-rose-500/20 px-3 py-1 rounded-full">
+                      <Briefcase className="w-3 h-3 text-rose-400" />
+                      <span className="text-[8px] font-black text-rose-400 uppercase tracking-widest">Exclusive Pact</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+              
+              {/* Condition Row */}
+              <div className="flex gap-2 mb-4">
+                <div className="flex flex-col gap-1 grow">
+                  <div className="flex justify-between items-center text-[8px] font-black text-slate-500 uppercase tracking-widest px-1">
+                    <span>Performance Fatigue</span>
+                    <span className={talent.fatigue > 70 ? 'text-rose-400' : 'text-slate-400'}>{talent.fatigue}%</span>
+                  </div>
+                  <div className="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden border border-white/5">
+                    <div 
+                      className={`h-full transition-all duration-1000 ${
+                        talent.fatigue > 70 ? 'bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.5)]' : 
+                        talent.fatigue > 40 ? 'bg-amber-500' : 'bg-emerald-500'
+                      }`}
+                      style={{ width: `${talent.fatigue}%` }}
+                    />
+                  </div>
                 </div>
               </div>
               
@@ -208,6 +235,13 @@ export const TalentModal = () => {
                             <Badge variant="secondary" className="text-[9px] h-5 bg-slate-800 text-slate-400 uppercase font-black">{agency.culture}</Badge>
                           </div>
                         </div>
+                        {talent.contractId && (
+                           <div className="p-4 rounded-2xl bg-rose-500/5 border border-rose-500/10">
+                              <p className="text-[10px] font-bold text-rose-500/60 uppercase tracking-widest mb-1">Exclusive Pact</p>
+                              <p className="text-xs font-black text-rose-400 uppercase italic">Active Industry Tie-up</p>
+                              <p className="text-[9px] text-rose-400/60 font-bold mt-1 uppercase">Limited availability for outside projects</p>
+                           </div>
+                        )}
                         {agent && (
                           <div className="pl-2">
                             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-0.5">Primary Agent</p>

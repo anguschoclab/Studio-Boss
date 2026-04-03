@@ -114,6 +114,14 @@ export type ImpactType =
   | 'MODAL_TRIGGERED'
   | 'SYSTEM_TICK';
 
+export interface NewsImpact {
+  id: string;
+  headline: string;
+  description: string;
+  category?: import('./engine.types').HeadlineCategory;
+  publication?: import('./engine.types').PublicationType;
+}
+
 export interface ProjectUpdate { projectId: string; update: Partial<import('./project.types').Project> }
 export interface TalentUpdate { talentId: string; update: Partial<import('./talent.types').Talent> }
 export interface RivalUpdate { rivalId: string; update: Partial<import('./studio.types').RivalStudio> }

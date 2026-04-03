@@ -39,7 +39,7 @@ const TALENT_QUIRKS = [
 ];
 
 export function generateTalent(rng: RandomGenerator, params: { role: TalentRole; tier: string; localCountry?: string }): Talent {
-  const isGlobalSuperstar = params.tier === 'A-List' || params.tier === 'S-List';
+  const isGlobalSuperstar = params.tier === 'A_LIST' || params.tier === 'S_LIST';
   
   const demographics = generateDemographics(rng, isGlobalSuperstar, params.localCountry);
   const psychology = generatePsychology(rng, params.tier);
@@ -66,6 +66,8 @@ export function generateTalent(rng: RandomGenerator, params: { role: TalentRole;
     }
   }
 
+  const GENRES = ['Action', 'Comedy', 'Drama', 'Horror', 'Sci-Fi', 'Thriller', 'Romance', 'Musical', 'Documentary', 'Western'];
+
   return {
     id: rng.uuid('talent'),
     name,
@@ -89,7 +91,10 @@ export function generateTalent(rng: RandomGenerator, params: { role: TalentRole;
         aggression: rng.rangeInt(10, 60)
     },
     currentMotivation: 'NONE',
-    motivationImpulse: 'NONE'
+    motivationImpulse: 'NONE',
+    commitments: [],
+    fatigue: 0,
+    preferredGenres: Array.from({ length: rng.rangeInt(1, 3) }, () => rng.pick(GENRES))
   };
 }
 
@@ -116,11 +121,11 @@ export function generateTalentPool(
     return Array.from({ length: count }).map(() => {
         const role = rng.pick(roles);
         const tierRoll = rng.next();
-        let tier = 'C-List';
-        if (tierRoll > 0.98) tier = 'S-List';
-        else if (tierRoll > 0.90) tier = 'A-List';
-        else if (tierRoll > 0.70) tier = 'B-List';
-        else if (tierRoll < 0.20) tier = 'D-List';
+        let tier = 'C_LIST';
+        if (tierRoll > 0.98) tier = 'S_LIST';
+        else if (tierRoll > 0.90) tier = 'A_LIST';
+        else if (tierRoll > 0.70) tier = 'B_LIST';
+        else if (tierRoll < 0.20) tier = 'NEWCOMER';
 
         return generateTalent(rng, { role, tier, localCountry });
     });

@@ -1,7 +1,9 @@
-import { Headline, RivalStudio, HeadlineCategory, Project, Contract, Talent } from '@/engine/types';
+import { Headline, RivalStudio, HeadlineCategory, Project, Contract, Talent, PublicationType } from '@/engine/types';
 import { fillTemplate } from '../utils';
 import { RandomGenerator } from '../utils/rng';
 import { MARKET_HEADLINES, TALENT_HEADLINES, RIVAL_TEMPLATES } from '../data/headlines.data';
+
+const PUBLICATIONS: PublicationType[] = ['Variety', 'Deadline', 'TMZ', 'The Hollywood Reporter', 'Financial Journal', 'IndieWire'];
 
 export function generateHeadlines(
   rng: RandomGenerator,
@@ -68,7 +70,13 @@ export function generateHeadlines(
       category = 'talent';
     }
 
-    headlines.push({ id: rng.uuid('h'), text, week, category });
+    headlines.push({ 
+      id: rng.uuid('h'), 
+      text, 
+      week, 
+      category, 
+      publication: rng.pick(PUBLICATIONS) 
+    });
   }
 
   return headlines;

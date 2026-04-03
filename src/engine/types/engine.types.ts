@@ -6,6 +6,8 @@ export type HeadlineCategory = 'rival' | 'market' | 'talent' | 'awards' | 'gener
 
 export type NewsEventType = 'CRISIS' | 'AWARD' | 'RELEASE' | 'STUDIO_EVENT' | 'RIVAL';
 
+export type PublicationType = 'Variety' | 'Deadline' | 'TMZ' | 'The Hollywood Reporter' | 'Financial Journal' | 'IndieWire';
+
 export interface NewsEvent {
   id: string;
   week: number;
@@ -13,6 +15,7 @@ export interface NewsEvent {
   headline: string;
   description: string;
   impact?: string;
+  publication?: PublicationType;
 }
 
 export interface CrisisOption {
@@ -40,6 +43,7 @@ export interface Headline {
   text: string;
   week: number;
   category: HeadlineCategory;
+  publication?: PublicationType;
 }
 
 export interface WeekSummary {

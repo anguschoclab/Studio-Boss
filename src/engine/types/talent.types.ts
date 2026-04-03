@@ -12,7 +12,7 @@ export type AgencyMotivation = 'THE_PACKAGER' | 'THE_CLIMBER' | 'THE_PROTECTOR' 
 export type RivalStrategy = 'blockbuster_focused' | 'prestige_chaser' | 'genre_specialist' | 'acquirer' | 'poacher' | 'balanced';
 
 export type DirectorArchetype = 'auteur' | 'journeyman' | 'visionary' | 'commercial_hack';
-export type TalentTier = 'A_LIST' | 'B_LIST' | 'C_LIST' | 'RISING_STAR' | 'NEWCOMER';
+export type TalentTier = 'S_LIST' | 'A_LIST' | 'B_LIST' | 'C_LIST' | 'RISING_STAR' | 'NEWCOMER';
 
 export type ScandalType = 'financial' | 'personal' | 'onset_behavior' | 'legal' | 'feud';
 
@@ -45,10 +45,11 @@ export interface TalentPact {
   talentId: string;
   studioId: string;
   type: 'first_look' | 'vanity_shingle';
-  weeksRemaining: number;
-  expiryWeek: number;
-  weeklyOverheadCost: number;
+  startDate: number;
+  endDate: number;
+  weeklyOverhead: number;
   exclusivity: boolean;
+  status: 'active' | 'expired' | 'terminated';
 }
 
 export interface Agency {
@@ -112,6 +113,7 @@ export interface Talent {
   role: string; // Primary role
   roles: TalentRole[]; // All roles
   tier: TalentTier;
+  contractId?: string; // ID of active TalentPact
   agencyId?: string;
   agentId?: string;
   prestige: number;

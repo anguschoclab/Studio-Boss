@@ -81,11 +81,18 @@ export const NewsFeed = () => {
               </div>
 
               <div className="space-y-1">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between mb-1">
                    <span className="text-[9px] font-mono font-black text-slate-500 uppercase">Week {item.week}</span>
-                   {item.impact && (
-                     <span className="text-[9px] font-black text-emerald-400 tracking-tighter">{item.impact}</span>
-                   )}
+                   <div className="flex gap-2 items-center">
+                    {item.publication && (
+                      <span className="text-[7px] font-black text-blue-400/60 uppercase tracking-widest border border-blue-400/20 px-1.5 py-0.5 rounded italic">
+                        {item.publication}
+                      </span>
+                    )}
+                    {item.impact && (
+                      <span className="text-[9px] font-black text-emerald-400 tracking-tighter">{item.impact}</span>
+                    )}
+                   </div>
                 </div>
                 <h4 className="text-xs font-bold text-slate-100 group-hover:text-blue-400 transition-colors leading-tight">{item.headline}</h4>
                 <p className="text-[10px] text-slate-400 leading-relaxed font-medium line-clamp-2 group-hover:line-clamp-none transition-all duration-300">{item.description}</p>

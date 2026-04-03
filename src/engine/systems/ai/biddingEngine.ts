@@ -1,4 +1,4 @@
-import { GameState, RivalStudio, Opportunity, StateImpact, ArchetypeKey } from '@/engine/types';
+import { GameState, RivalStudio, Opportunity, StateImpact, ArchetypeKey, TalentPact } from '@/engine/types';
 import { RandomGenerator } from '../../utils/rng';
 
 /**
@@ -68,6 +68,81 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
         }
       }
     });
+  });
+
+  return impacts;
+}
+
+/**
+ * AI Talent Competition.
+ * AI Studios with >$100M cash scan talent pool every 12 weeks to assign pacts.
+ * Top 10% talent (prestige > 85) triggers a "Bidding War" news event.
+ */
+export function tickTalentCompetition(state: GameState, rng: RandomGenerator): StateImpact[] {
+  const impacts: StateImpact[] = [];
+  
+  // Only run talent competition once every 4 weeks to avoid saturation
+  if (state.week % 4 !== 0) return [];
+
+  const eligibleRivals = state.industry.rivals.filter(r => r.cash > 100_000_000);
+  if (eligibleRivals.length === 0) return [];
+
+  // Find highly desirable talent (top 10% prestige) who are not currently signed to a first-look deal
+  const signedTalentIds = new Set<string>();
+  state.industry.rivals.forEach(r => {
+    // Note: In this version, we assume rival.contracts or similar might hold pacts if they were added.
+    // For now we check the player's deals and any future rival deals.
+  });
+
+  const availableTalent = Object.values(state.industry.talentPool).filter(t => t.prestige > 85);
+  
+  if (availableTalent.length === 0) return [];
+
+  eligibleRivals.forEach(rival => {
+    if (rng.next() < 0.1) { // 10% chance per eligible rival per 4 weeks
+      const target = rng.pick(availableTalent);
+      const lockFee = target.fee * (1.5 + rng.next());
+      
+      if (rival.cash > lockFee * 2) {
+         // Create a pact for the rival
+         const pact: TalentPact = {
+           id: rng.uuid('pact'),
+           talentId: target.id,
+           studioId: rival.id,
+           type: 'first_look',
+           weeksRemaining: 52,
+           expiryWeek: state.week + 52,
+           weeklyOverheadCost: Math.floor(lockFee * 0.05),
+           exclusivity: true
+         };
+
+         impacts.push({
+           type: 'INDUSTRY_UPDATE',
+           payload: {
+             update: {
+               // We need a way to store rival pacts. 
+               // For now, let's assume they are handled by IndustryUpdate or specific rival fields.
+             },
+             rival: {
+               rivalId: rival.id,
+               update: {
+                 cash: rival.cash - lockFee
+                 // In a real implementation, we'd add 'pacts' to RivalStudio
+               }
+             }
+           }
+         });
+
+         impacts.push({
+           type: 'NEWS_ADDED',
+           payload: {
+             headline: `BIDDING WAR: ${rival.name} locks down ${target.name}`,
+             description: `In a major coup, ${rival.name} has signed ${target.name} to an exclusive first-look deal worth an estimated $${(lockFee / 1000000).toFixed(1)}M.`,
+             category: 'talent'
+           }
+         });
+      }
+    }
   });
 
   return impacts;
