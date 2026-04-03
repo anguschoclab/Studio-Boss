@@ -17,7 +17,20 @@ interface ProjectCardProps {
 
 export const ProjectCard = ({ project }: ProjectCardProps) => {
   const { selectProject, openPitchProject, openCrisisModal } = useUIStore();
+  const gameState = useGameStore(s => s.gameState);
   const tier = BUDGET_TIERS[project.budgetTier];
+  
+  // Find buyer name for distribution badge
+  const buyer = project.buyerId && gameState
+    ? gameState.market.buyers.find(b => b.id === project.buyerId)
+    : null;
+  
+  // Estimate weekly streaming revenue (passive revenue from deal)
+  const weeklyRevenueForecast = project.distributionStatus === 'streaming' && project.buyerId
+    ? Math.floor(project.budget * 0.02) // ~2% of budget per week from streaming deal
+    : project.distributionStatus === 'theatrical'
+    ? Math.floor(project.budget * 0.03)
+    : 0;
 
   const displayFormat = project.type === 'SERIES'
       ? `S${(project as any).tvDetails?.currentSeason || 1}`
