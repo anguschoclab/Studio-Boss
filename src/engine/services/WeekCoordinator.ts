@@ -133,9 +133,8 @@ export class WeekCoordinator {
     context.impacts.push(...tickProduction(state, context.rng));
     
     // 2. Script Evolution Tick
-    // ⚡ Bolt: Iterate over Record using for...in to prevent O(n) array allocation overhead during ticks
-    for (const projectId in state.studio.internal.projects) {
-      const project = state.studio.internal.projects[projectId];
+    for (const key in state.studio.internal.projects) {
+      const project = state.studio.internal.projects[key];
       if (project.state === 'development') {
         const result = tickScriptDevelopment(project, context.rng);
         if (result.project !== project) {
@@ -164,8 +163,9 @@ export class WeekCoordinator {
     const activeStages = ['prep', 'production', 'post_production', 'marketing'];
 
     // Roll for crises for studio projects in active production stages
-    for (const projectId in state.studio.internal.projects) {
-      const project = state.studio.internal.projects[projectId];
+    for (const key in state.studio.internal.projects) {
+      const project = state.studio.internal.projects[key];
+      const activeStages = ['prep', 'production', 'post_production', 'marketing'];
       if (!project.activeCrisis && activeStages.includes(project.state)) {
         const impact = checkAndTriggerCrisis(project, context.rng);
         if (impact) context.impacts.push(impact);
@@ -174,8 +174,10 @@ export class WeekCoordinator {
 
     // Roll for rival projects
     state.industry.rivals.forEach(rival => {
-      for (const projectId in rival.projects || {}) {
-        const project = rival.projects[projectId];
+      const projects = rival.projects || {};
+      for (const key in projects) {
+        const project = projects[key];
+        const activeStages = ['prep', 'production', 'post_production', 'marketing'];
         if (!project.activeCrisis && activeStages.includes(project.state)) {
            const impact = checkAndTriggerCrisis(project, context.rng);
            if (impact) context.impacts.push(impact);
