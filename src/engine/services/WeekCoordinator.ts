@@ -147,6 +147,17 @@ export class WeekCoordinator {
     context.impacts.push(...SchedulingEngine.tick(state, context.rng));
   }
 
+  private static runCrisisFilter(state: GameState, context: TickContext) {
+    const activeStages = ['prep', 'production', 'post_production', 'marketing'];
+    for (const key in state.studio.internal.projects) {
+      const project = state.studio.internal.projects[key];
+      if (!project.activeCrisis && activeStages.includes(project.state)) {
+        const impact = checkAndTriggerCrisis(project, state, context.rng);
+        if (impact) context.impacts.push(impact);
+      }
+    }
+  }
+
   private static runAIFilter(state: GameState, context: TickContext) {
     context.impacts.push(...tickAIMinds(state, context.rng));
     context.impacts.push(...tickAgencies(state, context.rng));
