@@ -14,6 +14,7 @@ import { IPVault } from '@/components/ip/IPVault';
 import { DealsDesk } from '@/components/deals/DealsDesk';
 import { SBDBView } from '@/components/sbdb/SBDBView';
 import { StreamingPanel } from '@/components/streaming/StreamingPanel';
+import { NielsenDashboard } from '@/components/television/NielsenDashboard';
 import { AnimatePresence, motion } from 'framer-motion';
 
 // Modals
