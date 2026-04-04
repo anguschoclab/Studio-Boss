@@ -59,9 +59,11 @@ describe('tickFinance', () => {
     expect(fundsImpact).toBeDefined();
     expect(ledgerImpact).toBeDefined();
     
-    // Net profit should be negative (500k base * 1.5625 for major studio = -781250)
-    expect(fundsImpact?.payload.amount).toBe(-781250);
+    // Net profit should be negative (850k base * 1.5625 for major studio = -1328125, plus interest yield)
+    // 50_000_000 * (0.025 / 52) = 24038 (Interest yield)
+    // -1328125 + 24038 = -1304087
+    expect(fundsImpact?.payload.amount).toBe(-1304087);
     expect(ledgerImpact?.payload.report.week).toBe(5);
-    expect(ledgerImpact?.payload.report.netProfit).toBe(-781250);
+    expect(ledgerImpact?.payload.report.netProfit).toBe(-1304087);
   });
 });

@@ -9,7 +9,7 @@ describe('stats system', () => {
     it('calculates film stats correctly for mid tier (budget < 50M)', () => {
       const tier = BUDGET_TIERS.mid; // budget is 30M
       const stats = getFilmStats(tier);
-      const riskMultiplier = 1.5; // budget < 50M
+      const riskMultiplier = 1.8; // budget < 50M
 
       expect(stats.budget).toBe(tier.budget);
       expect(stats.weeklyCost).toBe(tier.weeklyCost * riskMultiplier);
@@ -18,19 +18,19 @@ describe('stats system', () => {
       expect(stats.renewable).toBe(false);
     });
 
-    it('applies 3.0x risk multiplier for mid-high tier (budget >= 50M)', () => {
+    it('applies 3.5x risk multiplier for mid-high tier (budget >= 50M)', () => {
         const tier: typeof BUDGET_TIERS.high = { ...BUDGET_TIERS.high, budget: 50_000_000 };
         const stats = getFilmStats(tier);
-        const riskMultiplier = 3.0;
+        const riskMultiplier = 3.5;
   
         expect(stats.budget).toBe(tier.budget);
         expect(stats.weeklyCost).toBe(tier.weeklyCost * riskMultiplier);
     });
 
-    it('applies 6.0x risk multiplier for high tier (budget >= 100M)', () => {
+    it('applies 7.5x risk multiplier for high tier (budget >= 100M)', () => {
       const tier: typeof BUDGET_TIERS.high = { ...BUDGET_TIERS.high, budget: 100_000_000 };
       const stats = getFilmStats(tier);
-      const riskMultiplier = 6.0;
+      const riskMultiplier = 7.5;
 
       expect(stats.budget).toBe(tier.budget);
       expect(stats.weeklyCost).toBe(tier.weeklyCost * riskMultiplier);
@@ -39,10 +39,10 @@ describe('stats system', () => {
       expect(stats.renewable).toBe(false);
     });
 
-    it('applies 12.0x risk multiplier for blockbuster tier (budget >= 200M)', () => {
+    it('applies 15.0x risk multiplier for blockbuster tier (budget >= 200M)', () => {
       const tier = BUDGET_TIERS.blockbuster;
       const stats = getFilmStats(tier);
-      const riskMultiplier = 12.0;
+      const riskMultiplier = 15.0;
 
       expect(stats.budget).toBe(tier.budget);
       expect(stats.weeklyCost).toBe(tier.weeklyCost * riskMultiplier);
@@ -60,11 +60,11 @@ describe('stats system', () => {
       const tier = BUDGET_TIERS.mid; // budget is 30M
       const stats = getTvStats(tier, format, episodes);
 
-      const scaleMultiplier = 1.5; // budget <= 50M
+      const scaleMultiplier = 1.8; // budget <= 50M
       const expectedWeeklyCost = tier.weeklyCost * format.productionCostMultiplier * scaleMultiplier;
       const expectedProductionWeeks = Math.ceil(episodes * format.productionWeeksPerEpisode * scaleMultiplier);
       const expectedDevelopmentWeeks = Math.ceil(tier.developmentWeeks * format.developmentWeeksModifier * scaleMultiplier);
-      const expectedBudget = expectedWeeklyCost * expectedProductionWeeks + (tier.budget * 0.4);
+      const expectedBudget = expectedWeeklyCost * expectedProductionWeeks + (tier.budget * 0.5);
 
       expect(stats.weeklyCost).toBe(expectedWeeklyCost);
       expect(stats.productionWeeks).toBe(expectedProductionWeeks);
@@ -73,23 +73,23 @@ describe('stats system', () => {
       expect(stats.renewable).toBe(format.renewable);
     });
 
-    it('applies 4.0x scale multiplier for mid-high tier (budget > 50M)', () => {
+    it('applies 4.5x scale multiplier for mid-high tier (budget > 50M)', () => {
         const tier: typeof BUDGET_TIERS.high = { ...BUDGET_TIERS.high, budget: 60_000_000 };
         const stats = getTvStats(tier, format, episodes);
   
-        const scaleMultiplier = 4.0;
+        const scaleMultiplier = 4.5;
         expect(stats.weeklyCost).toBe(tier.weeklyCost * format.productionCostMultiplier * scaleMultiplier);
     });
 
-    it('applies 5.0x scale multiplier for high tier (budget >= 100M)', () => {
+    it('applies 6.0x scale multiplier for high tier (budget >= 100M)', () => {
       const tier: typeof BUDGET_TIERS.high = { ...BUDGET_TIERS.high, budget: 100_000_000 };
       const stats = getTvStats(tier, format, episodes);
 
-      const scaleMultiplier = 5.0;
+      const scaleMultiplier = 6.0;
       const expectedWeeklyCost = tier.weeklyCost * format.productionCostMultiplier * scaleMultiplier;
       const expectedProductionWeeks = Math.ceil(episodes * format.productionWeeksPerEpisode * scaleMultiplier);
       const expectedDevelopmentWeeks = Math.ceil(tier.developmentWeeks * format.developmentWeeksModifier * scaleMultiplier);
-      const expectedBudget = expectedWeeklyCost * expectedProductionWeeks + (tier.budget * 0.4);
+      const expectedBudget = expectedWeeklyCost * expectedProductionWeeks + (tier.budget * 0.5);
 
       expect(stats.weeklyCost).toBe(expectedWeeklyCost);
       expect(stats.productionWeeks).toBe(expectedProductionWeeks);
@@ -97,15 +97,15 @@ describe('stats system', () => {
       expect(stats.budget).toBe(expectedBudget);
     });
 
-    it('applies 8.0x scale multiplier for blockbuster tier (budget >= 150M)', () => {
+    it('applies 10.0x scale multiplier for blockbuster tier (budget >= 150M)', () => {
       const tier = BUDGET_TIERS.blockbuster;
       const stats = getTvStats(tier, format, episodes);
 
-      const scaleMultiplier = 8.0;
+      const scaleMultiplier = 10.0;
       const expectedWeeklyCost = tier.weeklyCost * format.productionCostMultiplier * scaleMultiplier;
       const expectedProductionWeeks = Math.ceil(episodes * format.productionWeeksPerEpisode * scaleMultiplier);
       const expectedDevelopmentWeeks = Math.ceil(tier.developmentWeeks * format.developmentWeeksModifier * scaleMultiplier);
-      const expectedBudget = expectedWeeklyCost * expectedProductionWeeks + (tier.budget * 0.4);
+      const expectedBudget = expectedWeeklyCost * expectedProductionWeeks + (tier.budget * 0.5);
 
       expect(stats.weeklyCost).toBe(expectedWeeklyCost);
       expect(stats.productionWeeks).toBe(expectedProductionWeeks);
@@ -122,11 +122,11 @@ describe('stats system', () => {
       const tier = BUDGET_TIERS.mid; // 30M
       const stats = getUnscriptedStats(tier, format, episodes);
 
-      const scaleMultiplier = 1.5; // budget <= 50M
+      const scaleMultiplier = 2.0; // budget <= 50M
       const expectedWeeklyCost = tier.weeklyCost * format.productionCostMultiplier * scaleMultiplier;
       const expectedProductionWeeks = Math.ceil(episodes * format.productionWeeksPerEpisode);
       const expectedDevelopmentWeeks = Math.ceil(tier.developmentWeeks * format.developmentWeeksModifier);
-      const expectedBudget = expectedWeeklyCost * expectedProductionWeeks + (tier.budget * 0.20);
+      const expectedBudget = expectedWeeklyCost * expectedProductionWeeks + (tier.budget * 0.25);
 
       expect(stats.weeklyCost).toBe(expectedWeeklyCost);
       expect(stats.productionWeeks).toBe(expectedProductionWeeks);
@@ -135,23 +135,23 @@ describe('stats system', () => {
       expect(stats.renewable).toBe(format.renewable);
     });
 
-    it('applies 4.0x scale multiplier for mid-high tier (budget > 50M)', () => {
+    it('applies 5.0x scale multiplier for mid-high tier (budget > 50M)', () => {
         const tier: typeof BUDGET_TIERS.high = { ...BUDGET_TIERS.high, budget: 60_000_000 };
         const stats = getUnscriptedStats(tier, format, episodes);
   
-        const scaleMultiplier = 4.0;
+        const scaleMultiplier = 5.0;
         expect(stats.weeklyCost).toBe(tier.weeklyCost * format.productionCostMultiplier * scaleMultiplier);
     });
 
-    it('applies 6.0x scale multiplier for high tier (budget >= 100M)', () => {
+    it('applies 7.5x scale multiplier for high tier (budget >= 100M)', () => {
       const tier: typeof BUDGET_TIERS.high = { ...BUDGET_TIERS.high, budget: 100_000_000 };
       const stats = getUnscriptedStats(tier, format, episodes);
 
-      const scaleMultiplier = 6.0;
+      const scaleMultiplier = 7.5;
       const expectedWeeklyCost = tier.weeklyCost * format.productionCostMultiplier * scaleMultiplier;
       const expectedProductionWeeks = Math.ceil(episodes * format.productionWeeksPerEpisode);
       const expectedDevelopmentWeeks = Math.ceil(tier.developmentWeeks * format.developmentWeeksModifier);
-      const expectedBudget = expectedWeeklyCost * expectedProductionWeeks + (tier.budget * 0.20);
+      const expectedBudget = expectedWeeklyCost * expectedProductionWeeks + (tier.budget * 0.25);
 
       expect(stats.weeklyCost).toBe(expectedWeeklyCost);
       expect(stats.productionWeeks).toBe(expectedProductionWeeks);
@@ -164,7 +164,7 @@ describe('stats system', () => {
     it('handles negative budget safely by using base multiplier', () => {
       const negativeTier = { ...BUDGET_TIERS.mid, budget: -10_000_000 };
       const stats = getFilmStats(negativeTier as any);
-      const riskMultiplier = 1.5;
+      const riskMultiplier = 1.8;
 
       expect(stats.budget).toBe(-10_000_000);
       expect(stats.weeklyCost).toBe(negativeTier.weeklyCost * riskMultiplier);
@@ -173,7 +173,7 @@ describe('stats system', () => {
     it('handles 0 budget safely', () => {
       const zeroTier = { ...BUDGET_TIERS.low, budget: 0 };
       const stats = getFilmStats(zeroTier as any);
-      const riskMultiplier = 1.5;
+      const riskMultiplier = 1.8;
 
       expect(stats.budget).toBe(0);
       expect(stats.weeklyCost).toBe(zeroTier.weeklyCost * riskMultiplier);
