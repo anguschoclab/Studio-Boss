@@ -167,9 +167,12 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
 
     case 'BUYER_UPDATED': {
       const { buyerId, update } = impact.payload;
-      const buyers = state.market.buyers.map(b => 
-        b.id === buyerId ? { ...b, ...update } as Buyer : b
-      );
+      // ⚡ Bolt: Consolidated mapping array allocation to O(n) for loop
+      const buyers: Buyer[] = [];
+      for (let i = 0; i < state.market.buyers.length; i++) {
+        const b = state.market.buyers[i];
+        buyers.push(b.id === buyerId ? { ...b, ...update } as Buyer : b);
+      }
       return {
         ...state,
         market: {
@@ -181,9 +184,12 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
 
     case 'RIVAL_UPDATED': {
       const { rivalId, update } = impact.payload;
-      const rivals = state.industry.rivals.map(r => 
-        r.id === rivalId ? { ...r, ...update } as RivalStudio : r
-      );
+      // ⚡ Bolt: Consolidated mapping array allocation to O(n) for loop
+      const rivals: RivalStudio[] = [];
+      for (let i = 0; i < state.industry.rivals.length; i++) {
+        const r = state.industry.rivals[i];
+        rivals.push(r.id === rivalId ? { ...r, ...update } as RivalStudio : r);
+      }
       return {
         ...state,
         industry: {
@@ -195,18 +201,22 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
 
     case 'OPPORTUNITY_UPDATED': {
       const { opportunityId, rivalId, bid } = impact.payload;
-      const opportunities = state.market.opportunities.map(o => {
+      // ⚡ Bolt: Consolidated mapping array allocation to O(n) for loop
+      const opportunities: import('../types').ProjectOpportunity[] = [];
+      for (let i = 0; i < state.market.opportunities.length; i++) {
+        const o = state.market.opportunities[i];
         if (o.id === opportunityId) {
-          return {
+          opportunities.push({
             ...o,
             bids: {
               ...(o.bids || {}),
               [rivalId]: bid
             }
-          };
+          });
+        } else {
+          opportunities.push(o);
         }
-        return o;
-      });
+      }
       return {
         ...state,
         market: {
@@ -238,7 +248,14 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
       // Check if there's an attached project to boost buzz for specific genres/formats
       const projects = { ...state.studio.internal.projects };
       const contracts = state.studio.internal.contracts || [];
-      const projectIds = contracts.filter(c => c.talentId === scandal.talentId).map(c => c.projectId);
+
+      // ⚡ Bolt: Consolidated mapping array allocation to O(n) for loop
+      const projectIds: string[] = [];
+      for (let i = 0; i < contracts.length; i++) {
+        if (contracts[i].talentId === scandal.talentId) {
+          projectIds.push(contracts[i].projectId);
+        }
+      }
 
       for (const pid of projectIds) {
           const project = projects[pid];
@@ -271,11 +288,19 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
 
     case 'SCANDAL_REMOVED': {
       const { scandalId } = impact.payload;
+      // ⚡ Bolt: Consolidated mapping array allocation to O(n) for loop
+      const scandals: import('../types').Scandal[] = [];
+      const existingScandals = state.industry.scandals || [];
+      for (let i = 0; i < existingScandals.length; i++) {
+        if (existingScandals[i].id !== scandalId) {
+          scandals.push(existingScandals[i]);
+        }
+      }
       return {
         ...state,
         industry: {
           ...state.industry,
-          scandals: (state.industry.scandals || []).filter(s => s.id !== scandalId)
+          scandals
         }
       };
     }
@@ -308,9 +333,12 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
 
     case 'VAULT_ASSET_UPDATED': {
       const { assetId, update } = impact.payload;
-      const vault = state.ip.vault.map(asset => 
-        asset.id === assetId ? { ...asset, ...update } : asset
-      );
+      // ⚡ Bolt: Consolidated mapping array allocation to O(n) for loop
+      const vault: import('../types').IPAsset[] = [];
+      for (let i = 0; i < state.ip.vault.length; i++) {
+        const asset = state.ip.vault[i];
+        vault.push(asset.id === assetId ? { ...asset, ...update } : asset);
+      }
       return {
         ...state,
         ip: {
@@ -371,33 +399,36 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
           newState = applySingleImpact(newState, { type: 'PRESTIGE_CHANGED', payload: { amount: impact.prestigeChange } });
       }
       if (impact.projectUpdates) {
-          impact.projectUpdates.forEach(u => {
-              newState = applySingleImpact(newState, { type: 'PROJECT_UPDATED', payload: u });
-          });
+          for (let i = 0; i < impact.projectUpdates.length; i++) {
+              newState = applySingleImpact(newState, { type: 'PROJECT_UPDATED', payload: impact.projectUpdates[i] });
+          }
       }
       if (impact.rivalUpdates) {
-          impact.rivalUpdates.forEach(u => {
-              newState = applySingleImpact(newState, { type: 'RIVAL_UPDATED', payload: u });
-          });
+          for (let i = 0; i < impact.rivalUpdates.length; i++) {
+              newState = applySingleImpact(newState, { type: 'RIVAL_UPDATED', payload: impact.rivalUpdates[i] });
+          }
       }
       if (impact.newHeadlines) {
-          impact.newHeadlines.forEach(h => {
+          for (let i = 0; i < impact.newHeadlines.length; i++) {
+              const h = impact.newHeadlines[i];
               newState = applySingleImpact(newState, { 
                 type: 'NEWS_ADDED', 
                 payload: { id: h.id, headline: h.text, description: '', category: h.category, publication: h.publication } 
               });
-          });
+          }
       }
       if (impact.newsEvents) {
-          impact.newsEvents.forEach(e => {
+          for (let i = 0; i < impact.newsEvents.length; i++) {
+              const e = impact.newsEvents[i];
               newState = applySingleImpact(newState, { 
                 type: 'NEWS_ADDED', 
                 payload: { id: e.id, headline: e.headline, description: e.description, publication: e.publication } 
               });
-          });
+          }
       }
       if (impact.newAwards) {
-          impact.newAwards.forEach(award => {
+          for (let i = 0; i < impact.newAwards.length; i++) {
+              const award = impact.newAwards[i];
               const projects = { ...newState.studio.internal.projects };
               const project = projects[award.projectId];
               if (project) {
@@ -407,63 +438,52 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
                   };
               }
               newState = { ...newState, studio: { ...newState.studio, internal: { ...newState.studio.internal, projects } } };
-          });
+          }
       }
       if (impact.cultClassicProjectIds) {
-          impact.cultClassicProjectIds.forEach(id => {
+          for (let i = 0; i < impact.cultClassicProjectIds.length; i++) {
+              const id = impact.cultClassicProjectIds[i];
               const projects = { ...newState.studio.internal.projects };
               const project = projects[id];
               if (project) {
                   projects[id] = { ...project, isCultClassic: true };
               }
               newState = { ...newState, studio: { ...newState.studio, internal: { ...newState.studio.internal, projects } } };
-          });
+          }
       }
       if (impact.razzieWinnerTalents) {
-          impact.razzieWinnerTalents.forEach(id => {
+          for (let i = 0; i < impact.razzieWinnerTalents.length; i++) {
+              const id = impact.razzieWinnerTalents[i];
               const talentPool = { ...newState.industry.talentPool };
               const talent = talentPool[id];
               if (talent) {
                   talentPool[id] = { ...talent, razzieWinner: true };
               }
               newState = { ...newState, industry: { ...newState.industry, talentPool } };
-          });
+          }
       }
       if (impact.newProjects) {
-        newState = {
-          ...newState,
-          studio: {
-            ...newState.studio,
-            internal: {
-              ...newState.studio.internal,
-              projects: { ...newState.studio.internal.projects, ...Object.fromEntries(impact.newProjects.map(p => [p.id, p])) }
-            }
+          const projects = { ...newState.studio.internal.projects };
+          for (let i = 0; i < impact.newProjects.length; i++) {
+              const p = impact.newProjects[i];
+              projects[p.id] = p;
           }
-        };
-      }
-      if (impact.newContracts) {
-        newState = {
-          ...newState,
-          studio: {
-            ...newState.studio,
-            internal: {
-              ...newState.studio.internal,
-              contracts: [...newState.studio.internal.contracts, ...impact.newContracts]
-            }
-          }
-        };
-      }
-      if (impact.type === 'INDUSTRY_UPDATE') {
-        const payload = impact.payload as any;
-        Object.entries(payload).forEach(([path, value]) => {
-          if (path === 'market.opportunities') {
-            newState = { ...newState, market: { ...newState.market, opportunities: value as any } };
-          }
-        });
+          newState = { ...newState, studio: { ...newState.studio, internal: { ...newState.studio.internal, projects } } };
       }
       if (impact.newIPAssets) {
-          const newAssetIds = new Set(impact.newIPAssets.map(a => a.id));
-          const vault = [...newState.ip.vault.filter(a => !newAssetIds.has(a.id)), ...impact.newIPAssets];
+          const newAssetIds = new Set<string>();
+          for (let i = 0; i < impact.newIPAssets.length; i++) {
+              newAssetIds.add(impact.newIPAssets[i].id);
+          }
+          const vault: import('../types').IPAsset[] = [];
+          for (let i = 0; i < newState.ip.vault.length; i++) {
+              if (!newAssetIds.has(newState.ip.vault[i].id)) {
+                  vault.push(newState.ip.vault[i]);
+              }
+          }
+          for (let i = 0; i < impact.newIPAssets.length; i++) {
+              vault.push(impact.newIPAssets[i]);
+          }
           newState = { ...newState, ip: { ...newState.ip, vault } };
       }
       return newState;
@@ -475,5 +495,9 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
  * Pure reducer that processes an array of impacts without mutating original state.
  */
 export function applyImpacts(state: GameState, impacts: StateImpact[]): GameState {
-  return impacts.reduce((currentState, impact) => applySingleImpact(currentState, impact), state);
+  let currentState = state;
+  for (let i = 0; i < impacts.length; i++) {
+      currentState = applySingleImpact(currentState, impacts[i]);
+  }
+  return currentState;
 }
