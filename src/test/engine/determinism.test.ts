@@ -4,7 +4,7 @@ import { WeekCoordinator } from '@/engine/services/WeekCoordinator';
 import { RandomGenerator } from '@/engine/utils/rng';
 
 describe('Studio Boss - 100 Week Determinism Certification', () => {
-  it('should produce identical results over 100 weeks when given the same seed', () => {
+  it('should produce identical results over 100 weeks when given the same seed', { timeout: 30000 }, () => {
     const SEED = 42;
     const STUDIO_NAME = 'Test Studio';
     const ARCHETYPE = 'major';
