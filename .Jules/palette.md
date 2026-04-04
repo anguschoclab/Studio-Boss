@@ -1,3 +1,8 @@
-## 2026-04-03 - Adding aria-pressed to toggleable UI cards and buttons
-**Learning:** In Studio Boss, many interactive selection components (like filter pills in NewsFeed or Archetype selection cards) use visual styling changes (like borders and background colors driven by Tailwind classes) to indicate selection state, but lack semantic HTML attributes for screen readers to identify this state.
-**Action:** Always verify if a custom interactive element that toggles state includes `aria-pressed={condition}`. This provides crucial context to accessibility tools without requiring structural HTML changes, ensuring "micro-UX" wins are easily maintainable.
+## 2024-04-02 - Icon Button Accessibility
+**Learning:** Icon-only buttons used for dismiss/close actions (like the one in `LiveAuctionDashboard.tsx`) often lack descriptive labels, making them invisible or confusing to screen readers.
+**Action:** Always verify that buttons containing only an SVG/Icon have an `aria-label` attribute describing their function.
+
+## 2024-05-24
+
+**Learning:** Using `font-display` combined with `font-black` on major headings and key KPI value displays significantly improves the "SaaS-meets-Hollywood" premium aesthetic without harming readability. Also, creating deeper, more pronounced drop shadows (`shadow-[0_20px_40px_rgba(0,0,0,0.4)]`) on card hover states increases the tactile, elevated feel of the dashboard.
+**Action:** Applied these exact Tailwind class upgrades to the `CommandCenter.tsx` executive header and KPI cards.
