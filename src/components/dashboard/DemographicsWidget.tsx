@@ -4,11 +4,12 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Cell } from 'recharts';
 import { useGameStore } from '@/store/gameStore';
 
+import { useShallow } from 'zustand/react/shallow';
+
 export const DemographicsWidget: React.FC = () => {
-  const gameState = useGameStore((state) => state.gameState);
-  if (!gameState) return null;
-  
-  const { culture } = gameState;
+  // ⚡ Bolt: Destructured with useShallow to prevent unnecessary re-renders on minor state ticks
+  const culture = useGameStore(useShallow((state) => state.gameState?.culture));
+  if (!culture) return null;
 
   // Transform engine culture data into chart data
   const chartData = Object.entries(culture.genrePopularity)

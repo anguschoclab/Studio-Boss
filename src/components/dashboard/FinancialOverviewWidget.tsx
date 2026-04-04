@@ -5,11 +5,13 @@ import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 import { useGameStore } from '@/store/gameStore';
 import { formatCurrency } from '@/lib/utils';
 
+import { useShallow } from 'zustand/react/shallow';
+
 export const FinancialOverviewWidget: React.FC = () => {
-  const gameState = useGameStore((state) => state.gameState);
-  if (!gameState) return null;
-  
-  const { finance, history } = gameState;
+  // ⚡ Bolt: Destructured with useShallow to prevent unnecessary re-renders on minor state ticks
+  const finance = useGameStore(useShallow((state) => state.gameState?.finance));
+  const history = useGameStore(useShallow((state) => state.gameState?.history));
+  if (!finance || !history) return null;
 
   // Build history data from snapshots. If we don't have enough history, pad it.
   const historyData = history.slice(-12).map((snap) => ({
