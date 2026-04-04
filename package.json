@@ -1,8 +1,10 @@
 {
-  "name": "vite_react_shadcn_ts",
+  "name": "studio-boss",
+  "productName": "Studio Boss",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
+  "main": "electron/main.cjs",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -11,7 +13,33 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "simulate": "bun src/engine/simulation/run.ts"
+    "simulate": "bun src/engine/simulation/run.ts",
+    "electron:dev": "vite build && electron .",
+    "electron:build": "vite build && electron-builder --mac",
+    "electron:build:dir": "vite build && electron-builder --mac --dir"
+  },
+  "build": {
+    "appId": "com.studioboss.app",
+    "productName": "Studio Boss",
+    "copyright": "Copyright © 2025 Studio Boss",
+    "mac": {
+      "category": "public.app-category.games",
+      "target": [
+        { "target": "dir", "arch": ["arm64"] }
+      ],
+      "icon": "public/pwa-512x512.png",
+      "darkModeSupport": true,
+      "identity": null
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*"
+    ],
+    "directories": {
+      "buildResources": "public",
+      "output": "release"
+    },
+    "asar": true
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.11",
@@ -78,6 +106,8 @@
     "@vitejs/plugin-react-swc": "^3.11.0",
     "@vitest/coverage-v8": "3.2.4",
     "autoprefixer": "^10.4.21",
+    "electron": "^41.1.1",
+    "electron-builder": "^26.8.1",
     "eslint": "^10.0.3",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
