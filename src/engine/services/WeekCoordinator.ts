@@ -19,6 +19,7 @@ import { advanceMarketEvents } from '../systems/marketEvents';
 import { advanceScandals, generateScandals } from '../systems/scandals';
 import { advanceBuyers } from '../systems/buyerMergers';
 import { checkAndTriggerCrisis } from '../systems/crises';
+import { advanceDeals } from '../systems/deals';
 
 // New Industry Systems
 import { tickVerticalIntegration } from '../systems/industry/VerticalIntegrationProcessor';
@@ -205,6 +206,12 @@ export class WeekCoordinator {
          type: 'INDUSTRY_UPDATE',
          payload: { update: { 'studio.internal.firstLookDeals': updatedPacts } }
        });
+    }
+
+    // Process deal expiration news via advanceDeals
+    if (state.studio.internal.firstLookDeals && state.studio.internal.firstLookDeals.length > 0) {
+       const dealImpacts = advanceDeals(state.studio.internal.firstLookDeals, state.week, context.rng);
+       dealImpacts.forEach(i => context.impacts.push(i));
     }
   }
 

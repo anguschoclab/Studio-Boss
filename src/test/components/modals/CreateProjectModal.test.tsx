@@ -166,11 +166,8 @@ describe('CreateProjectModal', () => {
     expect(mockCloseCreateProject).toHaveBeenCalled();
   });
 
-  it('allows selecting talent', () => {
+  it('submits project without talent attachments (deferred to packaging phase)', () => {
     render(<CreateProjectModal />);
-
-    const talentCheckbox = document.getElementById('t1');
-    if (talentCheckbox) fireEvent.click(talentCheckbox);
 
     // Type a title to enable submit
     const input = screen.getByDisplayValue('Generated Test Title');
@@ -180,7 +177,7 @@ describe('CreateProjectModal', () => {
     fireEvent.click(greenlightBtn);
 
     expect(mockCreateProject).toHaveBeenCalledWith(expect.objectContaining({
-      attachedTalentIds: ['t1'],
+      attachedTalentIds: [],
     }));
   });
 });

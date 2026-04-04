@@ -32,8 +32,8 @@ export const FinancePanel = () => {
   // but we extract it here to pass to memoized functions without triggering re-renders on the whole object
   const fullGameState = useGameStore(s => s.gameState);
 
-  const weeklyCosts = useMemo(() => gameState ? calculateWeeklyCosts(gameState) : 0, [gameState]);
-  const weeklyRevenue = useMemo(() => gameState ? calculateWeeklyRevenue(gameState) : 0, [gameState]);
+  const weeklyCosts = useMemo(() => fullGameState ? calculateWeeklyCosts(fullGameState) : 0, [fullGameState]);
+  const weeklyRevenue = useMemo(() => fullGameState ? calculateWeeklyRevenue(fullGameState) : 0, [fullGameState]);
   const netDelta = useMemo(() => weeklyRevenue - weeklyCosts, [weeklyRevenue, weeklyCosts]);
   
   const studioNetWorth = useMemo(() => fullGameState ? calculateStudioNetWorth(fullGameState) : 0, [fullGameState]);

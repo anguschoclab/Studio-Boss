@@ -55,17 +55,25 @@ export function offerFirstLookDeal(state: GameState, talentId: string, rng: Rand
   ];
 }
 
-export function advanceDeals(deals: TalentPact[], rng: RandomGenerator): StateImpact[] {
-  let expiredCount = 0;
+export function advanceDeals(deals: TalentPact[], currentWeek: number, rng: RandomGenerator): StateImpact[] {
+  const impacts: StateImpact[] = [];
   
   for (let i = 0; i < deals.length; i++) {
     const deal = deals[i];
-    // In our simplified logic, we check if week > endWeek
-    // But here we might just decrement a duration if that's how it's stored.
-    // However, TalentPact has startDate and endDate based on types.
+    if (deal.endDate <= currentWeek && deal.status === 'active') {
+      impacts.push({
+        newsEvents: [{
+          id: rng.uuid('news-expired'),
+          week: currentWeek,
+          type: 'STUDIO_EVENT',
+          headline: `Deal Expired`,
+          description: `First-look deal has expired.`
+        }]
+      });
+    }
   }
 
-  return [];
+  return impacts;
 }
 
 

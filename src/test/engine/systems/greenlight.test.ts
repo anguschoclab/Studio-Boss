@@ -97,6 +97,22 @@ describe('evaluateGreenlight', () => {
       expect(report.recommendation).toBe('Do Not Greenlight Yet');
     });
 
+    it('doubles penalty for oversaturated Superhero genre', () => {
+      const heroProject = { ...mockProject, genre: 'Superhero Action' };
+      const similarProjects = Array.from({ length: 5 }).map((_, i) => ({
+        ...heroProject,
+        id: `p${i+2}`,
+        state: 'released' as const,
+        releaseWeek: 5,
+      }));
+      const report = evaluateGreenlight(heroProject, 100_000_000, [mockTalent], 10, similarProjects as Project[]);
+
+      // penalty: (25 + 20) * 3 + 75 = 210
+      // Base 50 + 15 - 210 < 0 => 0
+      expect(report.score).toBe(0);
+      expect(report.negatives.some(n => n.includes('-210 points'))).toBe(true);
+    });
+
     it('penalizes severe cashflow strain (cash < budget)', () => {
       const report = evaluateGreenlight(mockProject, 10_000_000, [mockTalent], 10, []);
       // Base 50 + 15 (gap) + 15 (talent) - 40 (cash) = 40

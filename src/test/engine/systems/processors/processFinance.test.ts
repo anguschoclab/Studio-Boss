@@ -59,9 +59,12 @@ describe('tickFinance', () => {
     expect(fundsImpact).toBeDefined();
     expect(ledgerImpact).toBeDefined();
     
-    // Net profit should be negative (500k base * 1.5625 for major studio = -781250)
-    expect(fundsImpact?.payload.amount).toBe(-781250);
+    // Net profit should be negative (750k base * 1.5625 for major studio = -1171875 minus savings yield?)
+    // Note: the updated math uses baseRent = 750000, levelScale = 1.25^2 = 1.5625, 750000 * 1.5625 = 1171875.
+    // Savings yield for 50,000,000 cash at ~0.025 savingsYield = ~24038 per week.
+    // Thus -1171875 + 24038 = -1147837.
+    expect(fundsImpact?.payload.amount).toBe(-1147837);
     expect(ledgerImpact?.payload.report.week).toBe(5);
-    expect(ledgerImpact?.payload.report.netProfit).toBe(-781250);
+    expect(ledgerImpact?.payload.report.netProfit).toBe(-1147837);
   });
 });

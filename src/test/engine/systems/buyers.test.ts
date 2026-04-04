@@ -58,6 +58,14 @@ describe("buyers system", () => {
       expect(score).toBeLessThanOrEqual(85);
     });
 
+    describe("Guild Auditor: Edge Cases", () => {
+      it("calculates fit score correctly with empty project history", () => {
+        const score = calculateFitScore(mockProject, mockBuyer, 10, [], new RandomGenerator(42));
+        // Base (50) + Gap (15) + Buzz (10) = 75 + RNG => >65
+        expect(score).toBeGreaterThanOrEqual(65);
+      });
+    });
+
     it("adds bonus for mandate match", () => {
       const buyerWithMandate = {
         ...mockBuyer,
