@@ -1,0 +1,2732 @@
+[
+  {
+    "week": 1,
+    "playerCash": 500000000,
+    "rivalAvgCash": 242360244.50359398,
+    "totalSystemCash": 2923602445.0359397,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2500,
+    "avgTalentPrestige": 46.0064,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 0,
+    "bankruptcyCount": 0,
+    "marketShare": 17.102188460984596,
+    "industryLeader": "Synergex Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 2,
+    "playerCash": 504424520,
+    "rivalAvgCash": 242952744.50359398,
+    "totalSystemCash": 2933951965.0359397,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2499,
+    "avgTalentPrestige": 46.01080432172869,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 1,
+    "bankruptcyCount": 0,
+    "marketShare": 17.192664570219744,
+    "industryLeader": "Synergex Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 3,
+    "playerCash": 508885902.79999995,
+    "rivalAvgCash": 243532558.64359397,
+    "totalSystemCash": 2944211489.23594,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2499,
+    "avgTalentPrestige": 46.01080432172869,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 1,
+    "bankruptcyCount": 0,
+    "marketShare": 17.284284931992513,
+    "industryLeader": "Synergex Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 4,
+    "playerCash": 513384932,
+    "rivalAvgCash": 244099719.08359402,
+    "totalSystemCash": 2954382122.8359404,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2499,
+    "avgTalentPrestige": 46.01080432172869,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 1,
+    "bankruptcyCount": 0,
+    "marketShare": 17.3770660210737,
+    "industryLeader": "Synergex Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 5,
+    "playerCash": 517904312.4,
+    "rivalAvgCash": 244654373.063594,
+    "totalSystemCash": 2964448043.03594,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2499,
+    "avgTalentPrestige": 46.01080432172869,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 1,
+    "bankruptcyCount": 0,
+    "marketShare": 17.47051406809632,
+    "industryLeader": "Synergex Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 6,
+    "playerCash": 522441728.4,
+    "rivalAvgCash": 245136866.583594,
+    "totalSystemCash": 2973810394.23594,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2499,
+    "avgTalentPrestige": 46.01080432172869,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 1,
+    "bankruptcyCount": 0,
+    "marketShare": 17.56809140934591,
+    "industryLeader": "Synergex Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 7,
+    "playerCash": 526599548.79999995,
+    "rivalAvgCash": 245537855.243594,
+    "totalSystemCash": 2981978101.23594,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2499,
+    "avgTalentPrestige": 46.01080432172869,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 1,
+    "bankruptcyCount": 0,
+    "marketShare": 17.659403621433047,
+    "industryLeader": "Synergex Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 8,
+    "playerCash": 530402293.1999999,
+    "rivalAvgCash": 245937092.34359398,
+    "totalSystemCash": 2989773216.6359396,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2499,
+    "avgTalentPrestige": 46.01080432172869,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 1,
+    "bankruptcyCount": 0,
+    "marketShare": 17.74055270308438,
+    "industryLeader": "Synergex Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 9,
+    "playerCash": 533862283.1999999,
+    "rivalAvgCash": 246076243.503594,
+    "totalSystemCash": 2994624718.23594,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2499,
+    "avgTalentPrestige": 46.01080432172869,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 1,
+    "bankruptcyCount": 0,
+    "marketShare": 17.827351786319493,
+    "industryLeader": "Synergex Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 10,
+    "playerCash": 536986535.9999999,
+    "rivalAvgCash": 246122496.183594,
+    "totalSystemCash": 2998211497.83594,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2498,
+    "avgTalentPrestige": 46.01240992794235,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 2,
+    "bankruptcyCount": 0,
+    "marketShare": 17.910228694259494,
+    "industryLeader": "Synergex Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 11,
+    "playerCash": 539781397.1999999,
+    "rivalAvgCash": 246386593.96359402,
+    "totalSystemCash": 3003647336.83594,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2498,
+    "avgTalentPrestige": 46.01240992794235,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 2,
+    "bankruptcyCount": 0,
+    "marketShare": 17.970864641140224,
+    "industryLeader": "Synergex Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 12,
+    "playerCash": 542267855.9999999,
+    "rivalAvgCash": 246603044.583594,
+    "totalSystemCash": 3008298301.83594,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2498,
+    "avgTalentPrestige": 46.01240992794235,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 2,
+    "bankruptcyCount": 0,
+    "marketShare": 18.02573420558255,
+    "industryLeader": "Synergex Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 13,
+    "playerCash": 544457510.4,
+    "rivalAvgCash": 246613830.84359398,
+    "totalSystemCash": 3010595818.83594,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2498,
+    "avgTalentPrestige": 46.01240992794235,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 2,
+    "bankruptcyCount": 0,
+    "marketShare": 18.084709577870765,
+    "industryLeader": "Synergex Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 14,
+    "playerCash": 546366990.8000001,
+    "rivalAvgCash": 246081000.14359397,
+    "totalSystemCash": 3007176992.23594,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2498,
+    "avgTalentPrestige": 46.01240992794235,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 2,
+    "bankruptcyCount": 0,
+    "marketShare": 18.168767325988263,
+    "industryLeader": "Synergex Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 15,
+    "playerCash": 548009894.4,
+    "rivalAvgCash": 246168527.42359394,
+    "totalSystemCash": 3009695168.6359396,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2498,
+    "avgTalentPrestige": 46.01240992794235,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 2,
+    "bankruptcyCount": 0,
+    "marketShare": 18.2081527760956,
+    "industryLeader": "Synergex Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 16,
+    "playerCash": 549374861.9999999,
+    "rivalAvgCash": 246113698.66359395,
+    "totalSystemCash": 3010511848.6359396,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2497,
+    "avgTalentPrestige": 46.008810572687224,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 3,
+    "bankruptcyCount": 0,
+    "marketShare": 18.248553389647718,
+    "industryLeader": "Synergex Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 17,
+    "playerCash": 550469451.5999998,
+    "rivalAvgCash": 246125694.78359398,
+    "totalSystemCash": 3011726399.43594,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2497,
+    "avgTalentPrestige": 46.008810572687224,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 3,
+    "bankruptcyCount": 0,
+    "marketShare": 18.277538481021917,
+    "industryLeader": "Synergex Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 18,
+    "playerCash": 551306217.1999997,
+    "rivalAvgCash": 259352790.34702307,
+    "totalSystemCash": 2885481330.3232074,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2496,
+    "avgTalentPrestige": 46.01722756410256,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 4,
+    "bankruptcyCount": 0,
+    "marketShare": 19.106213282559935,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 19,
+    "playerCash": 551904461.5999998,
+    "rivalAvgCash": 258955113.01368973,
+    "totalSystemCash": 2882500478.7232075,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2495,
+    "avgTalentPrestige": 46.00440881763527,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 5,
+    "bankruptcyCount": 0,
+    "marketShare": 19.146725756814575,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 20,
+    "playerCash": 552267530.3999997,
+    "rivalAvgCash": 258851047.52480084,
+    "totalSystemCash": 2881926958.123207,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2495,
+    "avgTalentPrestige": 46.00440881763527,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 5,
+    "bankruptcyCount": 0,
+    "marketShare": 19.16313419544998,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 21,
+    "playerCash": 552393143.1999997,
+    "rivalAvgCash": 258582825.2803564,
+    "totalSystemCash": 2879638570.7232075,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2494,
+    "avgTalentPrestige": 46.01523656776263,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 6,
+    "bankruptcyCount": 0,
+    "marketShare": 19.182724832764993,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 22,
+    "playerCash": 552308397.5999998,
+    "rivalAvgCash": 258420369.7025786,
+    "totalSystemCash": 2878091724.9232073,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2494,
+    "avgTalentPrestige": 46.01523656776263,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 6,
+    "bankruptcyCount": 0,
+    "marketShare": 19.190090184312535,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 23,
+    "playerCash": 552017844.3999997,
+    "rivalAvgCash": 249188730.81368977,
+    "totalSystemCash": 2794716421.7232075,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2492,
+    "avgTalentPrestige": 46.00120385232745,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 8,
+    "bankruptcyCount": 0,
+    "marketShare": 19.752195253485805,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 24,
+    "playerCash": 551528567.1999997,
+    "rivalAvgCash": 248599498.2692453,
+    "totalSystemCash": 2788924051.6232076,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2492,
+    "avgTalentPrestige": 46.00120385232745,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 8,
+    "bankruptcyCount": 0,
+    "marketShare": 19.77567538560254,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 25,
+    "playerCash": 550834978.3999997,
+    "rivalAvgCash": 248182401.32480085,
+    "totalSystemCash": 2784476590.3232074,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2492,
+    "avgTalentPrestige": 46.00120385232745,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 8,
+    "bankruptcyCount": 0,
+    "marketShare": 19.78235264445379,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 26,
+    "playerCash": 549950877.1999997,
+    "rivalAvgCash": 247706123.38035646,
+    "totalSystemCash": 2779305987.623208,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2490,
+    "avgTalentPrestige": 45.98634538152611,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 10,
+    "bankruptcyCount": 0,
+    "marketShare": 19.78734546138634,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 27,
+    "playerCash": 548885227.9999996,
+    "rivalAvgCash": 247157516.1692453,
+    "totalSystemCash": 2773302873.523207,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2490,
+    "avgTalentPrestige": 45.98634538152611,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 10,
+    "bankruptcyCount": 0,
+    "marketShare": 19.791752038344633,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 28,
+    "playerCash": 547661465.1999997,
+    "rivalAvgCash": 246645005.4692453,
+    "totalSystemCash": 2767466514.4232078,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2490,
+    "avgTalentPrestige": 45.98634538152611,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 10,
+    "bankruptcyCount": 0,
+    "marketShare": 19.789271608012307,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 29,
+    "playerCash": 546284079.5999998,
+    "rivalAvgCash": 246138357.72480085,
+    "totalSystemCash": 2761529299.1232076,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2490,
+    "avgTalentPrestige": 45.98634538152611,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 10,
+    "bankruptcyCount": 0,
+    "marketShare": 19.781940382578824,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 30,
+    "playerCash": 544755397.1999997,
+    "rivalAvgCash": 245605905.6692453,
+    "totalSystemCash": 2755208548.2232075,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2490,
+    "avgTalentPrestige": 45.98634538152611,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 10,
+    "bankruptcyCount": 0,
+    "marketShare": 19.771838961203294,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 31,
+    "playerCash": 543083009.9999996,
+    "rivalAvgCash": 245049080.79146752,
+    "totalSystemCash": 2748524737.123207,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2490,
+    "avgTalentPrestige": 45.98634538152611,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 10,
+    "bankruptcyCount": 0,
+    "marketShare": 19.75907302797017,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 32,
+    "playerCash": 541269435.9999996,
+    "rivalAvgCash": 244491448.20257866,
+    "totalSystemCash": 2741692469.8232074,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2490,
+    "avgTalentPrestige": 45.98634538152611,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 10,
+    "bankruptcyCount": 0,
+    "marketShare": 19.74216444614236,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 33,
+    "playerCash": 539301165.9999996,
+    "rivalAvgCash": 243976484.2803564,
+    "totalSystemCash": 2735089524.523207,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2489,
+    "avgTalentPrestige": 45.98392928887103,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 11,
+    "bankruptcyCount": 0,
+    "marketShare": 19.717861560455248,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 34,
+    "playerCash": 537190847.1999997,
+    "rivalAvgCash": 243354561.42480087,
+    "totalSystemCash": 2727381900.0232077,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2489,
+    "avgTalentPrestige": 45.98392928887103,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 11,
+    "bankruptcyCount": 0,
+    "marketShare": 19.696209291241125,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 35,
+    "playerCash": 534960268.39999974,
+    "rivalAvgCash": 242746096.83591196,
+    "totalSystemCash": 2719675139.9232073,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2489,
+    "avgTalentPrestige": 45.98392928887103,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 11,
+    "bankruptcyCount": 0,
+    "marketShare": 19.67000619107416,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 36,
+    "playerCash": 532602420.7999997,
+    "rivalAvgCash": 241882056.33591196,
+    "totalSystemCash": 2709540927.8232074,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2489,
+    "avgTalentPrestige": 45.98392928887103,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 11,
+    "bankruptcyCount": 0,
+    "marketShare": 19.65655566708425,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 37,
+    "playerCash": 530136693.1999997,
+    "rivalAvgCash": 235951361.52480084,
+    "totalSystemCash": 2653698946.9232073,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2488,
+    "avgTalentPrestige": 45.98432475884244,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 12,
+    "bankruptcyCount": 0,
+    "marketShare": 19.977273375891375,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 38,
+    "playerCash": 527543607.1999997,
+    "rivalAvgCash": 235302848.24702305,
+    "totalSystemCash": 2645269241.4232073,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2487,
+    "avgTalentPrestige": 45.991958182549254,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 13,
+    "bankruptcyCount": 0,
+    "marketShare": 19.942907849946145,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 39,
+    "playerCash": 524827101.59999967,
+    "rivalAvgCash": 234594635.52480084,
+    "totalSystemCash": 2636178821.323207,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2486,
+    "avgTalentPrestige": 45.99637972646822,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 14,
+    "bankruptcyCount": 0,
+    "marketShare": 19.908630528203975,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 40,
+    "playerCash": 521987228.7999997,
+    "rivalAvgCash": 233871938.91368976,
+    "totalSystemCash": 2626834679.0232077,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2486,
+    "avgTalentPrestige": 45.99637972646822,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 14,
+    "bankruptcyCount": 0,
+    "marketShare": 19.87133918127278,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 41,
+    "playerCash": 519049069.99999976,
+    "rivalAvgCash": 233195083.96924528,
+    "totalSystemCash": 2617804825.7232075,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2486,
+    "avgTalentPrestige": 45.99637972646822,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 14,
+    "bankruptcyCount": 0,
+    "marketShare": 19.827645854255184,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 42,
+    "playerCash": 516005431.5999998,
+    "rivalAvgCash": 232445762.0692453,
+    "totalSystemCash": 2608017290.2232075,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2486,
+    "avgTalentPrestige": 45.99637972646822,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 14,
+    "bankruptcyCount": 0,
+    "marketShare": 19.785353169795794,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 43,
+    "playerCash": 512850093.5999998,
+    "rivalAvgCash": 231548845.16924533,
+    "totalSystemCash": 2596789700.1232076,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2486,
+    "avgTalentPrestige": 45.99637972646822,
+    "activeProjects": 0,
+    "completedProjects": 1,
+    "retiredCount": 14,
+    "bankruptcyCount": 0,
+    "marketShare": 19.749388777060656,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 44,
+    "playerCash": 509595414.39999974,
+    "rivalAvgCash": 230884153.11368978,
+    "totalSystemCash": 2587552792.4232078,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2486,
+    "avgTalentPrestige": 45.99637972646822,
+    "activeProjects": 0,
+    "completedProjects": 1,
+    "retiredCount": 14,
+    "bankruptcyCount": 0,
+    "marketShare": 19.694106952800393,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 45,
+    "playerCash": 506238098.39999974,
+    "rivalAvgCash": 222022117.19146752,
+    "totalSystemCash": 2504437153.1232076,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2486,
+    "avgTalentPrestige": 45.99637972646822,
+    "activeProjects": 0,
+    "completedProjects": 1,
+    "retiredCount": 14,
+    "bankruptcyCount": 0,
+    "marketShare": 20.213647516316612,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 46,
+    "playerCash": 502792008.7999997,
+    "rivalAvgCash": 221031825.12480083,
+    "totalSystemCash": 2492078434.9232073,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2485,
+    "avgTalentPrestige": 46.007243460764585,
+    "activeProjects": 0,
+    "completedProjects": 1,
+    "retiredCount": 15,
+    "bankruptcyCount": 0,
+    "marketShare": 20.175609312854277,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 47,
+    "playerCash": 499255787.99999976,
+    "rivalAvgCash": 211219924.24702308,
+    "totalSystemCash": 2400235106.2232075,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2484,
+    "avgTalentPrestige": 46.006441223832525,
+    "activeProjects": 0,
+    "completedProjects": 1,
+    "retiredCount": 16,
+    "bankruptcyCount": 0,
+    "marketShare": 20.800286884628708,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 48,
+    "playerCash": 495631027.1999998,
+    "rivalAvgCash": 210499893.52480087,
+    "totalSystemCash": 2390130068.9232073,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2484,
+    "avgTalentPrestige": 46.006441223832525,
+    "activeProjects": 0,
+    "completedProjects": 1,
+    "retiredCount": 16,
+    "bankruptcyCount": 0,
+    "marketShare": 20.736571354181144,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 49,
+    "playerCash": 491941331.1999998,
+    "rivalAvgCash": 209677752.7803564,
+    "totalSystemCash": 2379041106.2232075,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2484,
+    "avgTalentPrestige": 46.006441223832525,
+    "activeProjects": 0,
+    "completedProjects": 1,
+    "retiredCount": 16,
+    "bankruptcyCount": 0,
+    "marketShare": 20.67813498107101,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 50,
+    "playerCash": 488181344.39999986,
+    "rivalAvgCash": 208934852.90257862,
+    "totalSystemCash": 2368595020.5232077,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2484,
+    "avgTalentPrestige": 46.006441223832525,
+    "activeProjects": 0,
+    "completedProjects": 1,
+    "retiredCount": 16,
+    "bankruptcyCount": 0,
+    "marketShare": 20.610587296268303,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 51,
+    "playerCash": 484352711.5999999,
+    "rivalAvgCash": 207938308.40257868,
+    "totalSystemCash": 2355797487.223208,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2484,
+    "avgTalentPrestige": 46.006441223832525,
+    "activeProjects": 0,
+    "completedProjects": 1,
+    "retiredCount": 16,
+    "bankruptcyCount": 0,
+    "marketShare": 20.560031761087803,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 52,
+    "playerCash": 480465394.79999995,
+    "rivalAvgCash": 206719353.25813422,
+    "totalSystemCash": 2340939574.123208,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2483,
+    "avgTalentPrestige": 45.995167136528394,
+    "activeProjects": 0,
+    "completedProjects": 1,
+    "retiredCount": 17,
+    "bankruptcyCount": 0,
+    "marketShare": 20.52446804313421,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 53,
+    "playerCash": 476502939.1999999,
+    "rivalAvgCash": 205866634.33591193,
+    "totalSystemCash": 2329302648.2232075,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2483,
+    "avgTalentPrestige": 45.995167136528394,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 17,
+    "bankruptcyCount": 0,
+    "marketShare": 20.456892519461842,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 54,
+    "playerCash": 472482320.79999995,
+    "rivalAvgCash": 205007256.43591198,
+    "totalSystemCash": 2317547628.7232075,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2483,
+    "avgTalentPrestige": 45.995167136528394,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 17,
+    "bankruptcyCount": 0,
+    "marketShare": 20.387167665689002,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 55,
+    "playerCash": 468391360.4,
+    "rivalAvgCash": 204124696.40257862,
+    "totalSystemCash": 2305513628.0232077,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2483,
+    "avgTalentPrestige": 45.995167136528394,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 17,
+    "bankruptcyCount": 0,
+    "marketShare": 20.31613930652008,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 56,
+    "playerCash": 464227693.6,
+    "rivalAvgCash": 203253046.90257862,
+    "totalSystemCash": 2293505115.7232075,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2483,
+    "avgTalentPrestige": 45.995167136528394,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 17,
+    "bankruptcyCount": 0,
+    "marketShare": 20.2409704873763,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 57,
+    "playerCash": 459992577.6,
+    "rivalAvgCash": 202326309.0470231,
+    "totalSystemCash": 2280929359.0232077,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2483,
+    "avgTalentPrestige": 45.995167136528394,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 17,
+    "bankruptcyCount": 0,
+    "marketShare": 20.166892752741308,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 58,
+    "playerCash": 455701496.4,
+    "rivalAvgCash": 201322612.21368974,
+    "totalSystemCash": 2267605006.323208,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2483,
+    "avgTalentPrestige": 45.995167136528394,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 17,
+    "bankruptcyCount": 0,
+    "marketShare": 20.096158507732966,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 59,
+    "playerCash": 451344662.4,
+    "rivalAvgCash": 200397539.69146752,
+    "totalSystemCash": 2254922519.6232076,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2483,
+    "avgTalentPrestige": 45.995167136528394,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 17,
+    "bankruptcyCount": 0,
+    "marketShare": 20.015972099804948,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 60,
+    "playerCash": 446928258.4,
+    "rivalAvgCash": 199551331.9914675,
+    "totalSystemCash": 2242890246.3232074,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2481,
+    "avgTalentPrestige": 45.97944377267231,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 19,
+    "bankruptcyCount": 0,
+    "marketShare": 19.926443531182766,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 61,
+    "playerCash": 442463773.6,
+    "rivalAvgCash": 198654218.44702306,
+    "totalSystemCash": 2230351739.6232076,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2481,
+    "avgTalentPrestige": 45.97944377267231,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 19,
+    "bankruptcyCount": 0,
+    "marketShare": 19.8382957153991,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 62,
+    "playerCash": 437958456.4,
+    "rivalAvgCash": 197646450.61368978,
+    "totalSystemCash": 2216776511.9232078,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2480,
+    "avgTalentPrestige": 45.97258064516129,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 20,
+    "bankruptcyCount": 0,
+    "marketShare": 19.756545328064693,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 63,
+    "playerCash": 433409082.4,
+    "rivalAvgCash": 196838737.1581342,
+    "totalSystemCash": 2204957716.823208,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2480,
+    "avgTalentPrestige": 45.97258064516129,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 20,
+    "bankruptcyCount": 0,
+    "marketShare": 19.65611762498711,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 64,
+    "playerCash": 428824654.79999995,
+    "rivalAvgCash": 195929336.61368978,
+    "totalSystemCash": 2192188684.323208,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2480,
+    "avgTalentPrestige": 45.97258064516129,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 20,
+    "bankruptcyCount": 0,
+    "marketShare": 19.56148473288879,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 65,
+    "playerCash": 424191866.79999995,
+    "rivalAvgCash": 195016257.0470231,
+    "totalSystemCash": 2179338180.2232075,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2479,
+    "avgTalentPrestige": 45.98588140379185,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 21,
+    "bankruptcyCount": 0,
+    "marketShare": 19.464251608557344,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 66,
+    "playerCash": 419517618.4,
+    "rivalAvgCash": 193900433.2581342,
+    "totalSystemCash": 2164621517.7232075,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2478,
+    "avgTalentPrestige": 45.97578692493947,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 22,
+    "bankruptcyCount": 0,
+    "marketShare": 19.380645298271684,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 67,
+    "playerCash": 414803036,
+    "rivalAvgCash": 192773075.72480085,
+    "totalSystemCash": 2149760717.5232077,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2478,
+    "avgTalentPrestige": 45.97578692493947,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 22,
+    "bankruptcyCount": 0,
+    "marketShare": 19.295311920942755,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 68,
+    "playerCash": 410044762.4,
+    "rivalAvgCash": 191608941.64702308,
+    "totalSystemCash": 2134525237.223208,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2478,
+    "avgTalentPrestige": 45.97578692493947,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 22,
+    "bankruptcyCount": 0,
+    "marketShare": 19.210115450938634,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 69,
+    "playerCash": 405256724.79999995,
+    "rivalAvgCash": 190793752.23591197,
+    "totalSystemCash": 2122400494.9232078,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2478,
+    "avgTalentPrestige": 45.97578692493947,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 22,
+    "bankruptcyCount": 0,
+    "marketShare": 19.09426264125814,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 70,
+    "playerCash": 400436901.1999999,
+    "rivalAvgCash": 189864962.95813426,
+    "totalSystemCash": 2109221567.8232083,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2478,
+    "avgTalentPrestige": 45.97578692493947,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 22,
+    "bankruptcyCount": 0,
+    "marketShare": 18.985056255292566,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 71,
+    "playerCash": 395573625.1999999,
+    "rivalAvgCash": 188933496.32480085,
+    "totalSystemCash": 2095975092.1232076,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2478,
+    "avgTalentPrestige": 45.97578692493947,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 22,
+    "bankruptcyCount": 0,
+    "marketShare": 18.87301173981446,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 72,
+    "playerCash": 390666513.1999999,
+    "rivalAvgCash": 188135603.78035644,
+    "totalSystemCash": 2083886947.223208,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2475,
+    "avgTalentPrestige": 45.98909090909091,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 25,
+    "bankruptcyCount": 0,
+    "marketShare": 18.74701090289785,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 73,
+    "playerCash": 385714345.1999999,
+    "rivalAvgCash": 187199201.99146757,
+    "totalSystemCash": 2070507163.123208,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2474,
+    "avgTalentPrestige": 45.99110751818917,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 26,
+    "bankruptcyCount": 0,
+    "marketShare": 18.62897902841245,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 74,
+    "playerCash": 380730762.79999995,
+    "rivalAvgCash": 186473648.69146758,
+    "totalSystemCash": 2058993601.0232081,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2473,
+    "avgTalentPrestige": 45.994338859684596,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 27,
+    "bankruptcyCount": 0,
+    "marketShare": 18.491109569781926,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 75,
+    "playerCash": 375725850.79999995,
+    "rivalAvgCash": 185715757.14702308,
+    "totalSystemCash": 2047167665.1232078,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2473,
+    "avgTalentPrestige": 45.994338859684596,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 27,
+    "bankruptcyCount": 0,
+    "marketShare": 18.35344789784901,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 76,
+    "playerCash": 370690119.1999999,
+    "rivalAvgCash": 184772855.95813417,
+    "totalSystemCash": 2033645822.8232074,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2473,
+    "avgTalentPrestige": 45.994338859684596,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 27,
+    "bankruptcyCount": 0,
+    "marketShare": 18.227860281265183,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 77,
+    "playerCash": 365629527.1999999,
+    "rivalAvgCash": 183828007.32480088,
+    "totalSystemCash": 2020081593.123208,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2473,
+    "avgTalentPrestige": 45.994338859684596,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 27,
+    "bankruptcyCount": 0,
+    "marketShare": 18.099740547346276,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 78,
+    "playerCash": 360535458.4,
+    "rivalAvgCash": 182881311.38035643,
+    "totalSystemCash": 2006467260.8232079,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2472,
+    "avgTalentPrestige": 46.00809061488673,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 28,
+    "bankruptcyCount": 0,
+    "marketShare": 17.968668885834724,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 79,
+    "playerCash": 355403786,
+    "rivalAvgCash": 181845279.39146754,
+    "totalSystemCash": 1992011300.523208,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2471,
+    "avgTalentPrestige": 46.00809388911372,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 29,
+    "bankruptcyCount": 0,
+    "marketShare": 17.841454308349157,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 80,
+    "playerCash": 350235252.4,
+    "rivalAvgCash": 180813173.64702308,
+    "totalSystemCash": 1977553815.223208,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2471,
+    "avgTalentPrestige": 46.00809388911372,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 29,
+    "bankruptcyCount": 0,
+    "marketShare": 17.7105295291531,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 81,
+    "playerCash": 345030926.4,
+    "rivalAvgCash": 200039379.0188071,
+    "totalSystemCash": 1945345958.550457,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2471,
+    "avgTalentPrestige": 46.00809388911372,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 29,
+    "bankruptcyCount": 0,
+    "marketShare": 17.736224494335918,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 82,
+    "playerCash": 339811171.1999999,
+    "rivalAvgCash": 199232888.18130708,
+    "totalSystemCash": 1933674276.6504564,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2471,
+    "avgTalentPrestige": 46.00809388911372,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 29,
+    "bankruptcyCount": 0,
+    "marketShare": 17.57334083114694,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 83,
+    "playerCash": 334573317.5999999,
+    "rivalAvgCash": 198460582.71880707,
+    "totalSystemCash": 1922257979.3504565,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2471,
+    "avgTalentPrestige": 46.00809388911372,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 29,
+    "bankruptcyCount": 0,
+    "marketShare": 17.405224542912517,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 84,
+    "playerCash": 329310960.39999986,
+    "rivalAvgCash": 197400890.881307,
+    "totalSystemCash": 1908518087.450456,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2471,
+    "avgTalentPrestige": 46.00809388911372,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 29,
+    "bankruptcyCount": 0,
+    "marketShare": 17.254799027863477,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 85,
+    "playerCash": 324030865.5999999,
+    "rivalAvgCash": 196363556.91880706,
+    "totalSystemCash": 1894939320.9504564,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2471,
+    "avgTalentPrestige": 46.00809388911372,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 29,
+    "bankruptcyCount": 0,
+    "marketShare": 17.099801667394487,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 86,
+    "playerCash": 318724649.9999999,
+    "rivalAvgCash": 195454005.35630703,
+    "totalSystemCash": 1882356692.8504562,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2470,
+    "avgTalentPrestige": 46.00931174089069,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 30,
+    "bankruptcyCount": 0,
+    "marketShare": 16.93221328404844,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 87,
+    "playerCash": 313387675.5999999,
+    "rivalAvgCash": 194394301.54380706,
+    "totalSystemCash": 1868542087.9504564,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2469,
+    "avgTalentPrestige": 46.001620089104904,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 31,
+    "bankruptcyCount": 0,
+    "marketShare": 16.77177504434726,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 88,
+    "playerCash": 308035642.79999995,
+    "rivalAvgCash": 193594061.30630708,
+    "totalSystemCash": 1856788133.2504566,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2469,
+    "avgTalentPrestige": 46.001620089104904,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 31,
+    "bankruptcyCount": 0,
+    "marketShare": 16.58970333145973,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 89,
+    "playerCash": 302659571.1999999,
+    "rivalAvgCash": 192890797.443807,
+    "totalSystemCash": 1845785950.7504559,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2469,
+    "avgTalentPrestige": 46.001620089104904,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 31,
+    "bankruptcyCount": 0,
+    "marketShare": 16.39732771164204,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 90,
+    "playerCash": 297254996.79999995,
+    "rivalAvgCash": 191977027.55630705,
+    "totalSystemCash": 1833071217.2504563,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2469,
+    "avgTalentPrestige": 46.001620089104904,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 31,
+    "bankruptcyCount": 0,
+    "marketShare": 16.216227389455835,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 91,
+    "playerCash": 291823065.1999999,
+    "rivalAvgCash": 191062333.66880706,
+    "totalSystemCash": 1820321734.5504565,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2469,
+    "avgTalentPrestige": 46.001620089104904,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 31,
+    "bankruptcyCount": 0,
+    "marketShare": 16.031400365170505,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 92,
+    "playerCash": 286367688.4,
+    "rivalAvgCash": 189988048.38130707,
+    "totalSystemCash": 1806272075.4504566,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2467,
+    "avgTalentPrestige": 46.02877989460884,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 33,
+    "bankruptcyCount": 0,
+    "marketShare": 15.854072722050153,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 93,
+    "playerCash": 280896285.1999999,
+    "rivalAvgCash": 189071647.21880707,
+    "totalSystemCash": 1793469462.9504566,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2467,
+    "avgTalentPrestige": 46.02877989460884,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 33,
+    "bankruptcyCount": 0,
+    "marketShare": 15.66217273294937,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 94,
+    "playerCash": 275408704.79999995,
+    "rivalAvgCash": 188283276.63130707,
+    "totalSystemCash": 1781674917.8504565,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2467,
+    "avgTalentPrestige": 46.02877989460884,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 33,
+    "bankruptcyCount": 0,
+    "marketShare": 15.457853845317263,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 95,
+    "playerCash": 269907146.4,
+    "rivalAvgCash": 187365332.41880703,
+    "totalSystemCash": 1768829805.7504563,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2466,
+    "avgTalentPrestige": 46.01622060016221,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 34,
+    "bankruptcyCount": 0,
+    "marketShare": 15.259079506831764,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 96,
+    "playerCash": 264385967.59999996,
+    "rivalAvgCash": 186337617.08130705,
+    "totalSystemCash": 1755086904.2504563,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2466,
+    "avgTalentPrestige": 46.01622060016221,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 34,
+    "bankruptcyCount": 0,
+    "marketShare": 15.063981558959389,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 97,
+    "playerCash": 258841909.59999996,
+    "rivalAvgCash": 185534180.74380705,
+    "totalSystemCash": 1743115355.5504563,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2465,
+    "avgTalentPrestige": 46.017849898580124,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 35,
+    "bankruptcyCount": 0,
+    "marketShare": 14.849384969032103,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 98,
+    "playerCash": 253286869.99999994,
+    "rivalAvgCash": 184421823.20630705,
+    "totalSystemCash": 1728661455.6504564,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2465,
+    "avgTalentPrestige": 46.017849898580124,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 35,
+    "bankruptcyCount": 0,
+    "marketShare": 14.652196309004516,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 99,
+    "playerCash": 247715785.19999993,
+    "rivalAvgCash": 183457323.96880704,
+    "totalSystemCash": 1715374376.9504561,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2464,
+    "avgTalentPrestige": 46.01095779220779,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 36,
+    "bankruptcyCount": 0,
+    "marketShare": 14.440916719321761,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 100,
+    "playerCash": 242126617.5999999,
+    "rivalAvgCash": 182536161.90630704,
+    "totalSystemCash": 1702415912.8504562,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2464,
+    "avgTalentPrestige": 46.01095779220779,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 36,
+    "bankruptcyCount": 0,
+    "marketShare": 14.222530215580099,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 101,
+    "playerCash": 236524108.39999992,
+    "rivalAvgCash": 181614451.04380706,
+    "totalSystemCash": 1689439716.7504563,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2464,
+    "avgTalentPrestige": 46.01095779220779,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 36,
+    "bankruptcyCount": 0,
+    "marketShare": 14.00015082248338,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 102,
+    "playerCash": 230910316.39999992,
+    "rivalAvgCash": 180394693.43130705,
+    "totalSystemCash": 1674067863.8504562,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2464,
+    "avgTalentPrestige": 46.01095779220779,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 36,
+    "bankruptcyCount": 0,
+    "marketShare": 13.7933665286957,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 103,
+    "playerCash": 225283133.5999999,
+    "rivalAvgCash": 179420908.09380707,
+    "totalSystemCash": 1660650398.3504565,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2464,
+    "avgTalentPrestige": 46.01095779220779,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 36,
+    "bankruptcyCount": 0,
+    "marketShare": 13.565957881549078,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 104,
+    "playerCash": 219639780.7999999,
+    "rivalAvgCash": 178305170.88130704,
+    "totalSystemCash": 1646081147.8504562,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2462,
+    "avgTalentPrestige": 43.97238017871649,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 38,
+    "bankruptcyCount": 0,
+    "marketShare": 13.343192775569884,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 43,
+    "totalBailoutCash": 0
+  },
+  {
+    "week": 105,
+    "playerCash": 213985949.99999988,
+    "rivalAvgCash": 177381526.34380704,
+    "totalSystemCash": 1633038160.7504563,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2461,
+    "avgTalentPrestige": 43.96058512799675,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 39,
+    "bankruptcyCount": 0,
+    "marketShare": 13.103548658144245,
+    "industryLeader": "Ghost-Directed Productions",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 43,
+    "totalBailoutCash": 0
+  }
+]

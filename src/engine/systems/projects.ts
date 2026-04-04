@@ -328,10 +328,10 @@ export function advanceProject(
   let update: string | null = null;
   let talentUpdates: Talent[] = [];
 
-  if (p.state === 'development' && p.weeksInPhase >= p.developmentWeeks) {
+  if (p.state === 'development' && p.weeksInPhase >= (p.developmentWeeks || 4)) {
     const result = handleDevelopmentPhase(p);
     update = result.update;
-  } else if (p.state === 'production' && p.weeksInPhase >= p.productionWeeks) {
+  } else if (p.state === 'production' && p.weeksInPhase >= (p.productionWeeks || 20)) {
     const result = handleMarketingPhase(p);
     update = result.update;
   } else if (p.state === 'released') {

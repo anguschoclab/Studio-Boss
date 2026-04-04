@@ -73,6 +73,17 @@ export function calculateWillingness(
     reasons.push(`${talent.name}'s team is wary of the studio's current market standing.`);
   }
 
+  // 5b. Studio Infamy (Razzies & Bombs)
+  const studioProjects = Object.values(gameState.studio.internal.projects);
+  const recentRazzie = studioProjects.some(p => 
+    p.awards?.some(a => a.body === 'The Razzies' && a.status === 'won')
+  );
+  
+  if (recentRazzie && talent.prestige > 70) {
+    score -= 20;
+    reasons.push(`${talent.name} is hesitant to work with a studio that recently took home a Razzie.`);
+  }
+
   // 6. Directorial Influence (Check if a director is already attached)
   // ⚡ Bolt: Consolidated O(N) array .some() and .find() into a single O(N) array .find() scan
   const directorContract = gameState.studio.internal.contracts.find(

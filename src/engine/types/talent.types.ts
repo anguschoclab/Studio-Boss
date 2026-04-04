@@ -178,6 +178,7 @@ export interface Talent {
   commitments: TalentCommitment[];
   fatigue: number; // 0-100: Influences performance and conflict chance
   preferredGenres: string[];
+  lastReleaseWeek?: number; // Last week a release happened (for prestige decay)
 }
 
 export interface Contract {

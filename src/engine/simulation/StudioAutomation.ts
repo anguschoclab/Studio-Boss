@@ -109,6 +109,7 @@ export class StudioAutomation {
         impacts.push(this.createUpdateImpact(studioId, p.id, { 
           state: 'production', 
           weeksInPhase: 0,
+          productionWeeks: rng.rangeInt(8, 20),
           buyerId: buyer.id,
           distributionStatus: buyer.archetype === 'streamer' ? 'streaming' : 'theatrical'
         }, state));
@@ -117,7 +118,11 @@ export class StudioAutomation {
 
     // 2. Resolve Greenlight (Immediate)
     if (p.state === 'needs_greenlight') {
-      impacts.push(this.createUpdateImpact(studioId, p.id, { state: 'production', weeksInPhase: 0 }, state));
+      impacts.push(this.createUpdateImpact(studioId, p.id, { 
+          state: 'production', 
+          weeksInPhase: 0, 
+          productionWeeks: rng.rangeInt(12, 26) 
+      }, state));
     }
 
     // 3. Resolve Marketing -> Release (Random marketing level)

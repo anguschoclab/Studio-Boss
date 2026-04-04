@@ -34,27 +34,52 @@ export const AWARD_CONFIGS: AwardConfig[] = [
   // --- ACADEMY AWARDS (Oscars) ---
   {
     body: 'Academy Awards', category: 'Best Picture', format: 'film',
-    evaluator: p => (p.awardsProfile?.academyAppeal || 0) + (p.awardsProfile?.prestigeScore || 0) + (p.awardsProfile?.industryNarrativeScore || 0) * 0.5
+    evaluator: p => {
+      let base = (p.awardsProfile?.academyAppeal || 0) + (p.awardsProfile?.prestigeScore || 0) + (p.awardsProfile?.industryNarrativeScore || 0) * 0.5;
+      // Award Season Momentum: +15% if won Golden Globe Best Picture
+      const hasGlobe = p.awards?.some(a => a.body === 'Golden Globes' && a.category === 'Best Picture' && a.status === 'won');
+      return hasGlobe ? base * 1.15 : base;
+    }
   },
   {
     body: 'Academy Awards', category: 'Best Director', format: 'film',
-    evaluator: p => (p.awardsProfile?.craftScore || 0) + (p.awardsProfile?.academyAppeal || 0) * 0.8
+    evaluator: p => {
+      let base = (p.awardsProfile?.craftScore || 0) + (p.awardsProfile?.academyAppeal || 0) * 0.8;
+      const hasGlobe = p.awards?.some(a => a.body === 'Golden Globes' && a.status === 'won'); // Any Globe win helps Director momentum
+      return hasGlobe ? base * 1.10 : base;
+    }
   },
   {
     body: 'Academy Awards', category: 'Best Actor', format: 'film',
-    evaluator: p => (p.awardsProfile?.craftScore || 0) + (p.buzz || 0) * 0.5
+    evaluator: p => {
+      let base = (p.awardsProfile?.craftScore || 0) + (p.buzz || 0) * 0.5;
+      const hasGlobe = p.awards?.some(a => a.body === 'Golden Globes' && a.category.includes('Actor') && a.status === 'won');
+      return hasGlobe ? base * 1.15 : base;
+    }
   },
   {
     body: 'Academy Awards', category: 'Best Actress', format: 'film',
-    evaluator: p => (p.awardsProfile?.craftScore || 0) + (p.buzz || 0) * 0.5
+    evaluator: p => {
+      let base = (p.awardsProfile?.craftScore || 0) + (p.buzz || 0) * 0.5;
+      const hasGlobe = p.awards?.some(a => a.body === 'Golden Globes' && a.category.includes('Actress') && a.status === 'won');
+      return hasGlobe ? base * 1.15 : base;
+    }
   },
   {
     body: 'Academy Awards', category: 'Best Supporting Actor', format: 'film',
-    evaluator: p => (p.awardsProfile?.craftScore || 0) * 0.8 + (p.buzz || 0) * 0.4
+    evaluator: p => {
+      let base = (p.awardsProfile?.craftScore || 0) * 0.8 + (p.buzz || 0) * 0.4;
+      const hasGlobe = p.awards?.some(a => a.body === 'Golden Globes' && a.category.includes('Actor') && a.status === 'won');
+      return hasGlobe ? base * 1.15 : base;
+    }
   },
   {
     body: 'Academy Awards', category: 'Best Supporting Actress', format: 'film',
-    evaluator: p => (p.awardsProfile?.craftScore || 0) * 0.8 + (p.buzz || 0) * 0.4
+    evaluator: p => {
+      let base = (p.awardsProfile?.craftScore || 0) * 0.8 + (p.buzz || 0) * 0.4;
+      const hasGlobe = p.awards?.some(a => a.body === 'Golden Globes' && a.category.includes('Actress') && a.status === 'won');
+      return hasGlobe ? base * 1.15 : base;
+    }
   },
 
   // --- PRIMETIME EMMYS ---

@@ -15,13 +15,23 @@ export class TalentLifecycleSystem {
     const retiredIds: string[] = [];
 
     talentPool.forEach(talent => {
-      // 1. Annual Aging
+      // 1. Annual Aging & Prestige Decay
       if (isYearEnd) {
+        // Prestige Decay: -2 per year if no projects released in the last 52 weeks
+        const weeksSinceLastRelease = state.week - (talent.lastReleaseWeek || 0);
+        let decay = 0;
+        if (weeksSinceLastRelease > 52) {
+          decay = talent.tier === 'S_LIST' ? -4 : -2;
+        }
+
         impacts.push({
           type: 'TALENT_UPDATED',
           payload: {
             talentId: talent.id,
-            update: { demographics: { ...talent.demographics, age: (talent.demographics.age || 40) + 1 } }
+            update: { 
+              demographics: { ...talent.demographics, age: (talent.demographics.age || 40) + 1 },
+              prestige: Math.max(0, (talent.prestige || 50) + decay)
+            }
           }
         });
       }
@@ -33,7 +43,11 @@ export class TalentLifecycleSystem {
       if (age > 75) retirementChance = 0.5; 
       else if (age > 65) retirementChance = 0.05; 
       else if (age > 55) retirementChance = 0.01; 
-      else if (talent.momentum < 10 && talent.prestige < 20) retirementChance = 0.005; 
+      
+      // Momentum Traps: Burnout and Blacklisting for failing talent
+      if (talent.momentum < 20 && talent.prestige < 30) {
+        retirementChance += 0.02; // Significant increase for the "Momentum Trap"
+      }
       
       if (rng.next() < 0.0001) retirementChance = 1.0; 
 
@@ -72,6 +86,14 @@ export class TalentLifecycleSystem {
         newTalents
       } as any);
     }
+
+    // Pass metadata to industry tick for metrics
+    impacts.push({
+      type: 'SYSTEM_TICK',
+      payload: { 
+        retiredCount: retiredIds.length 
+      }
+    } as any);
 
     return impacts;
   }
