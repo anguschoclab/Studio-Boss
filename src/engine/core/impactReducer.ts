@@ -220,6 +220,45 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
       };
     }
 
+    case 'INDUSTRY_UPDATE': {
+      if (!impact.payload || !impact.payload.update || typeof impact.payload.update !== 'object' || Array.isArray(impact.payload.update)) return state;
+      const { update } = impact.payload;
+
+      const newState = { ...state };
+      for (const [path, value] of Object.entries(update)) {
+        const parts = path.split('.');
+        let current: any = newState;
+        let validPath = true;
+
+        for (let i = 0; i < parts.length - 1; i++) {
+          const part = parts[i];
+          if (part === '__proto__' || part === 'constructor' || part === 'prototype') {
+            validPath = false;
+            break;
+          }
+
+          if (current[part] === undefined || current[part] === null) {
+             current[part] = {};
+          }
+
+          if (Array.isArray(current[part])) {
+            current[part] = [...current[part]];
+          } else if (typeof current[part] === 'object') {
+            current[part] = { ...current[part] };
+          }
+          current = current[part];
+        }
+
+        if (validPath) {
+          const lastPart = parts[parts.length - 1];
+          if (lastPart !== '__proto__' && lastPart !== 'constructor' && lastPart !== 'prototype') {
+            current[lastPart] = value;
+          }
+        }
+      }
+      return newState;
+    }
+
     case 'TRENDS_UPDATED': {
       const { trends } = impact.payload;
       return {

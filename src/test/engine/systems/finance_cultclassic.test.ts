@@ -13,12 +13,20 @@ describe('Finance: Cult Classic Revenue', () => {
   it('Cult Classic projects generate long-tail revenue minimums', () => {
     // Normal project
     const normalProject = { ...baseProject, weeklyRevenue: 50000 };
-    const revNormal = calculateWeeklyRevenue({ studio: { internal: { projects: { p1: { ...normalProject, distributionStatus: 'theatrical' } } } } } as any);
+    const mockStateNormal = {
+      studio: { internal: { projects: { p1: { ...normalProject, distributionStatus: 'theatrical' } } } },
+      market: { buyers: [] }
+    } as any;
+    const revNormal = calculateWeeklyRevenue(mockStateNormal);
     expect(revNormal).toBe(20000); // 50000 * 0.40
 
     // Cult classic project overrides low base with ironic viewing multiplier
     const cultProject = { ...baseProject, isCultClassic: true, weeklyRevenue: 50000 };
-    const revCult = calculateWeeklyRevenue({ studio: { internal: { projects: { p1: { ...cultProject, distributionStatus: 'theatrical' } } } } } as any);
+    const mockStateCult = {
+      studio: { internal: { projects: { p1: { ...cultProject, distributionStatus: 'theatrical' } } } },
+      market: { buyers: [] }
+    } as any;
+    const revCult = calculateWeeklyRevenue(mockStateCult);
 
     // applyIronicViewingMultiplier gives Math.max(17500 * 1.8, 200000)
     expect(revCult).toBe(200000); // Because 17500 * 1.8 = 31500, so it hits the 200000 minimum floor

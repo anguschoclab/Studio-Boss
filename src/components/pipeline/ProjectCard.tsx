@@ -18,7 +18,7 @@ interface ProjectCardProps {
 }
 
 export const ProjectCard = ({ project }: ProjectCardProps) => {
-  const { selectProject, openPitchProject, enqueueModal } = useUIStore();
+  const { selectProject, openPitchProject, openCrisisModal, enqueueModal } = useUIStore();
   const gameState = useGameStore(s => s.gameState);
   const tier = BUDGET_TIERS[project.budgetTier];
   

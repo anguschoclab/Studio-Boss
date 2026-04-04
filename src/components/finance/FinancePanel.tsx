@@ -32,7 +32,6 @@ export const FinancePanel = () => {
   // but we extract it here to pass to memoized functions without triggering re-renders on the whole object
   const fullGameState = useGameStore(s => s.gameState);
 
-  // ⚡ Bolt: Corrected dependency references to prevent infinite renders or stale calculations
   const weeklyCosts = useMemo(() => fullGameState ? calculateWeeklyCosts(fullGameState) : 0, [fullGameState]);
   const weeklyRevenue = useMemo(() => fullGameState ? calculateWeeklyRevenue(fullGameState) : 0, [fullGameState]);
   const netDelta = useMemo(() => weeklyRevenue - weeklyCosts, [weeklyRevenue, weeklyCosts]);

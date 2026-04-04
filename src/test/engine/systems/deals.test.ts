@@ -55,19 +55,19 @@ describe('Deals System', () => {
   });
 
   it('returns expiry notification in newsEvents impact during advanceDeals', () => {
-    const deal: TalentPact = {
+    const deal = {
       id: 'd1',
       talentId: 't1',
       studioId: 's1',
       type: 'first_look',
       startDate: 1,
       endDate: 10,
-      weeklyOverhead: 10000,
+      weeklyOverhead: 1000,
       exclusivity: true,
       status: 'active'
-    };
+    } as any;
     
-    const impacts = advanceDeals([deal], 11, rng);
+    const impacts = advanceDeals([deal], 10, rng);
     const newsImpact = impacts.find(i => i.newsEvents && i.newsEvents.length > 0);
     expect(newsImpact).toBeDefined();
     expect(newsImpact?.newsEvents![0].description).toContain("expired");

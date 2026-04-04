@@ -55,19 +55,19 @@ export function offerFirstLookDeal(state: GameState, talentId: string, rng: Rand
   ];
 }
 
-export function advanceDeals(deals: TalentPact[], stateWeek: number, rng: RandomGenerator): StateImpact[] {
+export function advanceDeals(deals: TalentPact[], currentWeek: number, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
   
   for (let i = 0; i < deals.length; i++) {
     const deal = deals[i];
-    if (deal.status === 'active' && stateWeek > deal.endDate) {
+    if (deal.endDate === currentWeek && deal.status === 'active') {
       impacts.push({
         newsEvents: [{
-          id: rng.uuid('news'),
-          week: stateWeek,
-          type: 'GENERAL',
-          headline: `First-Look Pact Expired`,
-          description: `A first-look pact has expired.`
+          id: rng.uuid('news-expired'),
+          week: currentWeek,
+          type: 'STUDIO_EVENT',
+          headline: `Deal Expired`,
+          description: `First-look deal has expired.`
         }]
       });
     }
