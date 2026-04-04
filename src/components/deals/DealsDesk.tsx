@@ -5,8 +5,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
-import { Handshake, Tv, Globe, Zap, BarChart3, Info, Target, Briefcase } from 'lucide-react';
-import { Buyer, Project, MandateType } from '@/engine/types';
+import { Handshake, Tv, Globe, Zap, BarChart3, Info, Target, Briefcase, FileSignature } from 'lucide-react';
+import { Buyer, Project, MandateType, TalentPact } from '@/engine/types';
 import { calculateFitScore } from '@/engine/systems/buyers';
 import { cn } from '@/lib/utils';
 import { useUIStore } from '@/store/uiStore';
@@ -19,6 +19,8 @@ export const DealsDesk = () => {
   const buyers = selectBuyers(gameState);
   const projects = selectProjects(gameState);
   const pitchingProjects = projects.filter(p => p.state === 'pitching' || p.state === 'development');
+  const activeDeals: TalentPact[] = gameState?.deals?.activeDeals ?? [];
+  const talentPool = gameState?.industry?.talentPool ?? {};
 
   const handleNegotiate = (buyerId: string) => {
     if (!selectedProjectId) return;
@@ -50,6 +52,37 @@ export const DealsDesk = () => {
           </div>
         </div>
       </div>
+
+      {/* Talent Pacts Section */}
+      {activeDeals.length > 0 && (
+        <div className="flex flex-col space-y-3">
+          <div className="flex items-center gap-3 px-2">
+            <div className="w-1.5 h-4 rounded-full bg-amber-500" />
+            <h3 className="text-xs font-black uppercase tracking-widest text-foreground/80">
+              Active Talent Pacts <span className="text-muted-foreground">({activeDeals.length})</span>
+            </h3>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {activeDeals.map(deal => {
+              const talent = talentPool[deal.talentId];
+              const pactLabel = deal.type === 'overall_deal' ? 'Overall Deal' : deal.type === 'vanity_shingle' ? 'Vanity Shingle' : 'First Look';
+              const pactColor = deal.type === 'overall_deal' ? 'text-amber-400 border-amber-500/30 bg-amber-500/10' : deal.type === 'vanity_shingle' ? 'text-purple-400 border-purple-500/30 bg-purple-500/10' : 'text-blue-400 border-blue-500/30 bg-blue-500/10';
+              return (
+                <div key={deal.id} className="p-3 rounded-lg border border-white/5 bg-white/[0.02] flex items-start justify-between gap-3 hover:border-white/10 transition-colors">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <FileSignature className="h-4 w-4 text-muted-foreground shrink-0" />
+                    <div className="min-w-0">
+                      <p className="text-[11px] font-black uppercase tracking-tight truncate">{talent?.name ?? deal.talentId}</p>
+                      <p className="text-[9px] text-muted-foreground/60 uppercase tracking-widest">${deal.weeklyOverhead.toLocaleString()}/wk overhead</p>
+                    </div>
+                  </div>
+                  <Badge variant="outline" className={cn('text-[9px] font-black uppercase tracking-wider shrink-0', pactColor)}>{pactLabel}</Badge>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       <div className="flex-1 flex flex-col lg:flex-row gap-6 overflow-hidden">
         {/* Buyers List */}
