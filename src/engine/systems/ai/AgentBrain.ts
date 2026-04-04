@@ -13,18 +13,21 @@ export function evaluatePackageOffer(
 ): { requiredTalentId?: string; packageDiscount?: number; reason: string } {
   const motivation = agency.currentMotivation || 'VOLUME_RETAIL';
   
-  if (motivation === 'THE_PACKAGER' || rng.next() < 0.15) {
+  // 🎭 Method Actor Tuning: Auteurs heavily mandate their own creative teams, effectively overriding agency norms.
+  const isAuteur = leadTalent.prestige > 85;
+  const packageProbability = motivation === 'THE_PACKAGER' ? 0.40 : (isAuteur ? 0.35 : 0.15);
+
+  if (rng.next() < packageProbability) {
     const otherClients = talentPool.filter(t => t.agencyId === agency.id && t.id !== leadTalent.id);
     
     if (otherClients.length > 0) {
       const bundled = pick(otherClients, rng);
-      const isAuteur = leadTalent.prestige > 85;
       const discount = motivation === 'THE_PACKAGER' ? 0.20 : 0.10;
 
       return {
         requiredTalentId: bundled.id,
         packageDiscount: discount,
-        reason: isAuteur ? `Creative Mandate: ${leadTalent.name} insists on working with ${bundled.name} for this project.` : `Agency policy: To secure ${leadTalent.name}, we require ${bundled.name}.`
+        reason: isAuteur ? `Creative Mandate: ${leadTalent.name} refuses to sign unless their frequent collaborator ${bundled.name} is attached.` : `Agency policy: To secure ${leadTalent.name}, we require you to also hire ${bundled.name}.`
       };
     }
   }
