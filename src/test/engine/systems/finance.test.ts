@@ -186,3 +186,47 @@ describe("Finance System", () => {
       });
   });
 });
+
+describe('Finance Edge Cases', () => {
+  it('handles project with a negative budget safely', () => {
+    const project = {
+      id: 'p1',
+      title: 'Flop',
+      format: 'film',
+      genre: 'Drama',
+      budgetTier: 'low',
+      budget: -500000, // Negative budget
+      weeklyCost: 10000,
+      targetAudience: 'General Audience',
+      flavor: 'A nice drama',
+      state: 'production',
+      buzz: 50,
+      weeksInPhase: 0,
+      developmentWeeks: 4,
+      productionWeeks: 4,
+      revenue: 0,
+      weeklyRevenue: 0,
+      releaseWeek: null,
+      accumulatedCost: 0,
+      momentum: 50,
+      progress: 0,
+      activeCrisis: null,
+      contentFlags: [],
+      scriptHeat: 50,
+      activeRoles: [],
+      scriptEvents: []
+    } as any;
+
+    const state = {
+        week: 1,
+        studio: { internal: { projects: { 'p1': project }, contracts: [], firstLookDeals: [] }, archetype: 'indie', prestige: 50 },
+        finance: { cash: 1000000 },
+        ip: { vault: [], franchises: {} },
+        market: { buyers: [] },
+        industry: { talentPool: {} }
+    } as any;
+
+    const { report } = generateWeeklyFinancialReport(state);
+    expect(report.expenses.production).toBe(10000); // weeklyCost is 10k, even though budget is negative
+  });
+});

@@ -36,7 +36,7 @@ describe('generateHeadlines', () => {
       expect(headline.week).toBe(week);
 
       expect(headline).toHaveProperty('category');
-      expect(['rival', 'market', 'talent']).toContain(headline.category);
+      expect(['rival', 'market', 'talent', 'box_office', 'streaming', 'scandal', 'dispute']).toContain(headline.category);
     });
   });
 

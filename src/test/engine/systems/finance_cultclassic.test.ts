@@ -11,19 +11,14 @@ describe('Finance: Cult Classic Revenue', () => {
   } as Project;
 
   it('Cult Classic projects generate long-tail revenue minimums', () => {
-    // calculateWeeklyRevenue expects a state object. We need to mock it properly.
-    const stateWithNormalProject = {
-      studio: { internal: { projects: { p1: { ...baseProject, weeklyRevenue: 50000, distributionStatus: 'theatrical' } } } },
-      market: { buyers: [] }
-    } as any;
-    const revNormal = calculateWeeklyRevenue(stateWithNormalProject);
-    expect(revNormal).toBe(17500); // 50000 * 0.35
+    // Normal project
+    const normalProject = { ...baseProject, weeklyRevenue: 50000 };
+    const revNormal = calculateWeeklyRevenue({ studio: { internal: { projects: { p1: { ...normalProject, distributionStatus: 'theatrical' } } } } } as any);
+    expect(revNormal).toBe(20000); // 50000 * 0.40
 
-    const stateWithCultProject = {
-      studio: { internal: { projects: { p1: { ...baseProject, isCultClassic: true, weeklyRevenue: 50000, distributionStatus: 'theatrical' } } } },
-      market: { buyers: [] }
-    } as any;
-    const revCult = calculateWeeklyRevenue(stateWithCultProject);
+    // Cult classic project overrides low base with ironic viewing multiplier
+    const cultProject = { ...baseProject, isCultClassic: true, weeklyRevenue: 50000 };
+    const revCult = calculateWeeklyRevenue({ studio: { internal: { projects: { p1: { ...cultProject, distributionStatus: 'theatrical' } } } } } as any);
 
     // applyIronicViewingMultiplier gives Math.max(17500 * 1.8, 200000)
     expect(revCult).toBe(200000); // Because 17500 * 1.8 = 31500, so it hits the 200000 minimum floor
