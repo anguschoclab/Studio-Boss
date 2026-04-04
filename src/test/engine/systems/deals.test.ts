@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { evaluateFirstLookDeal, offerFirstLookDeal, advanceDeals } from '../../../engine/systems/deals';
-import { Talent, GameState, FirstLookDeal } from '../../../engine/types';
+import { evaluateFirstLookDeal, offerFirstLookDeal, advanceDeals, evaluatePackageStrength } from '../../../engine/systems/deals';
+import { Talent, GameState, TalentPact, Agency } from '../../../engine/types';
 import { RandomGenerator } from '../../../engine/utils/rng';
 
 describe('Deals System', () => {
@@ -55,14 +55,19 @@ describe('Deals System', () => {
   });
 
   it('returns expiry notification in newsEvents impact during advanceDeals', () => {
-    const deal: FirstLookDeal = {
+    const deal: TalentPact = {
       id: 'd1',
       talentId: 't1',
-      weeksRemaining: 1,
-      exclusivity: true
+      studioId: 's1',
+      type: 'first_look',
+      startDate: 1,
+      endDate: 10,
+      weeklyOverhead: 10000,
+      exclusivity: true,
+      status: 'active'
     };
     
-    const impacts = advanceDeals([deal], rng);
+    const impacts = advanceDeals([deal], 11, rng);
     const newsImpact = impacts.find(i => i.newsEvents && i.newsEvents.length > 0);
     expect(newsImpact).toBeDefined();
     expect(newsImpact?.newsEvents![0].description).toContain("expired");
