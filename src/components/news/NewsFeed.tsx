@@ -45,9 +45,8 @@ export const NewsFeed = () => {
         <div className="flex flex-wrap gap-2 pb-2">
           <button 
             onClick={() => setFilter('ALL')}
-            aria-label="Filter all events"
             aria-pressed={filter === 'ALL'}
-            className={`p-3 m-2 rounded-lg text-[10px] font-black uppercase tracking-tighter transition-all border ${
+            className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-tighter transition-all border ${
               filter === 'ALL' ? 'bg-white text-black border-white' : 'bg-slate-900 text-slate-400 border-slate-800'
             }`}
           >
@@ -57,9 +56,8 @@ export const NewsFeed = () => {
             <button 
               key={type}
               onClick={() => setFilter(type)}
-              aria-label={`Filter ${eventTypeConfig[type].label.toLowerCase()} events`}
               aria-pressed={filter === type}
-              className={`p-3 m-2 rounded-lg text-[10px] font-black uppercase tracking-tighter transition-all border flex items-center gap-1.5 whitespace-nowrap ${
+              className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-tighter transition-all border flex items-center gap-1.5 whitespace-nowrap ${
                 filter === type ? 'bg-blue-600 text-white border-blue-500' : 'bg-slate-900 text-slate-400 border-slate-800'
               }`}
             >
