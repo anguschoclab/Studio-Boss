@@ -32,3 +32,17 @@ bun_output.txt
 # Electron build output
 release/
 out/
+
+# Generated simulation reports
+sim-reports/
+
+# Test output artifacts
+vitest_output.txt
+bun_output.txt
+
+# Verification artifacts
+verification/
+
+# Stale lock files (project uses bun)
+package-lock.json
+pnpm-lock.yaml
