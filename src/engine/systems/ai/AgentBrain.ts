@@ -1,6 +1,8 @@
 import { pick } from '../../utils';
-import { Agency, Agent, Talent, GameState, StateImpact } from '@/engine/types';
+import { Agency, Agent, Talent, GameState, StateImpact, Project, RivalStudio } from '@/engine/types';
 import { RandomGenerator } from '../../utils/rng';
+import { RIVAL_BEHAVIOR_CONFIGS, RivalArchetype } from '../../data/archetypes';
+import { SeriesProject } from '@/engine/types/project.types';
 
 /**
  * Pure function to evaluate if an agency offers a "Package Deal".
@@ -62,4 +64,81 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
   });
 
   return impacts;
+}
+
+/**
+ * Generates a bid amount for a rival NPC studio at a festival market.
+ * Returns null if the rival has no interest in the project.
+ */
+export function generateFestivalBid(
+  rival: RivalStudio,
+  project: Project,
+  rng: RandomGenerator
+): number | null {
+  const config = RIVAL_BEHAVIOR_CONFIGS[(rival.archetype as RivalArchetype) ?? 'legacy_major'];
+  const festivalWeight = config?.festivalParticipation ?? 0.3;
+
+  if (rng.next() > festivalWeight) return null;
+
+  const reviewScore = project.reviewScore ?? 55;
+  const buzz = project.buzz ?? 40;
+  const interest = (reviewScore * 0.6 + buzz * 0.4) / 100;
+  if (interest < 0.4) return null;
+
+  const maxBid = rival.cash * 0.05; // rivals won't spend more than 5% of cash on one acquisition
+  const bid = Math.round(project.budget * interest * rng.range(0.8, 1.4));
+  return Math.min(bid, maxBid);
+}
+
+/**
+ * Assigns a TV time slot to a project based on rival archetype preferences and genre.
+ */
+export function assignRivalTimeSlot(
+  rival: RivalStudio,
+  project: Project,
+): 'monday_10pm' | 'sunday_9pm' | 'friday_8pm' | 'saturday_8pm' | null {
+  if (project.type !== 'SERIES') return null;
+
+  const series = project as SeriesProject;
+  const genre = project.genre?.toLowerCase() ?? '';
+  const archetype = (rival.archetype as RivalArchetype) ?? 'legacy_major';
+
+  // Prestige dramas go to Sunday 9pm
+  if (genre.includes('drama') || series.tvFormat === 'prestige_drama') {
+    return 'sunday_9pm';
+  }
+  // Genre/action to Friday
+  if (genre.includes('action') || genre.includes('sci-fi') || genre.includes('horror')) {
+    return 'friday_8pm';
+  }
+  // Streaming giants don't do traditional slots
+  if (archetype === 'streaming_giant') return null;
+  // Default Monday prestige slot for majors
+  return 'monday_10pm';
+}
+
+/**
+ * Determines if a rival should attempt a hostile takeover of another rival this week.
+ */
+export function shouldAttemptHostileTakeover(
+  attacker: RivalStudio,
+  target: RivalStudio,
+  state: GameState
+): boolean {
+  const config = RIVAL_BEHAVIOR_CONFIGS[(attacker.archetype as RivalArchetype) ?? 'legacy_major'];
+  if (!config) return false;
+
+  // Must have sufficient cash to make an offer
+  const minimumOfferSize = target.cash * 2 + target.strength * 1_000_000;
+  if (attacker.cash < minimumOfferSize * 0.8) return false;
+
+  // Antitrust: combined market share must stay under 40%
+  const attackerShare = attacker.marketShare ?? 0;
+  const targetShare = target.marketShare ?? 0;
+  if (attackerShare + targetShare > 0.40) return false;
+
+  // Aggression check
+  if (attacker.motivationProfile.aggression < 60) return false;
+
+  return attacker.currentMotivation === 'FRANCHISE_BUILDING' || attacker.currentMotivation === 'MARKET_DISRUPTION';
 }

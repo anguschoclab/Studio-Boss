@@ -50,7 +50,7 @@ export interface BoxOfficeResult {
   multiplier: number;
 }
 
-export type ProjectStatus = 'development' | 'needs_greenlight' | 'pitching' | 'production' | 'marketing' | 'released' | 'post_release' | 'archived' | 'turnaround';
+export type ProjectStatus = 'development' | 'needs_greenlight' | 'pitching' | 'production' | 'marketing' | 'released' | 'post_release' | 'archived' | 'turnaround' | 'pilot' | 'shopping';
 export type ProjectFormat = 'film' | 'tv' | 'unscripted';
 export type BudgetTierKey = 'low' | 'mid' | 'high' | 'blockbuster';
 
@@ -529,6 +529,12 @@ export interface ProjectBase {
   availableCuts?: RatingCut[];
   regionalRatings?: RegionalRating[];
   directorsCutNotified?: boolean;
+  // Phase 2: Deal & Revenue Mechanics
+  dealModel?: 'cost_plus' | 'deficit_financing';
+  backendPoints?: number;       // 0-100, % of net backend revenue to player
+  isPrimetimeAnchor?: boolean;  // triggers international format rights on season 2+ renewal
+  stage?: 'pilot';              // sub-state within 'development' for TV projects
+  shoppingExpiresWeek?: number; // week when 'shopping' status lapses
 }
 
 export interface ScriptedProject extends ProjectBase {

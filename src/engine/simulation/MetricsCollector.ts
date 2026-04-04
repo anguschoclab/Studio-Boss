@@ -135,14 +135,25 @@ export class MetricsCollector {
         });
     });
 
+    // 10. Talent Pool Analysis (Optimized single-pass)
+    let totalPrestige = 0;
+    let aListCount = 0;
+    const talentValues = Object.values(state.industry.talentPool);
+    const talentPoolSize = talentValues.length;
+    
+    talentValues.forEach(t => {
+        totalPrestige += t.prestige || 0;
+        if (t.prestige >= 80) aListCount++;
+    });
+
     const metrics: SimulationMetrics = {
       week: state.week,
-      playerCash: state.finance.cash,
+      playerCash: playerCash,
       rivalAvgCash: rivals.length > 0 ? rivalTotalCash / rivals.length : 0,
       totalSystemCash: totalAssets + activeBudgets,
       totalMarketSentiment: state.finance.marketState?.sentiment || 50,
-      talentPoolSize: Object.keys(state.industry.talentPool).length,
-      avgTalentPrestige: Object.values(state.industry.talentPool).reduce((sum, t) => sum + t.prestige, 0) / (Object.keys(state.industry.talentPool).length || 1),
+      talentPoolSize: talentPoolSize,
+      avgTalentPrestige: totalPrestige / (talentPoolSize || 1),
       activeProjects: Object.values(state.studio.internal.projects).filter(p => !['released', 'archived', 'post_release'].includes(p.state)).length,
       completedProjects: worldCompletedCount,
       retiredCount: this.totalRetired,
@@ -152,7 +163,7 @@ export class MetricsCollector {
       topGenreROI: { genre: topGenre, roi: maxROI },
       tvAwardsWon: this.totalTvAwards,
       tvGenreROI: { genre: topTvGenre, roi: maxTvROI },
-      averageA_ListCount: Object.values(state.industry.talentPool).filter(t => t.prestige >= 80).length,
+      averageA_ListCount: aListCount,
       totalBailoutCash: this.totalBailoutCash,
       avgNielsenKeyDemo: tvProjectCount > 0 ? totalNielsenDemo / tvProjectCount : 0,
       cutCounts: cutCounts,

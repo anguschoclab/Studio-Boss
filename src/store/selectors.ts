@@ -1,6 +1,7 @@
 import { createSelector } from 'reselect';
 import { GameState, Project, RivalStudio, Talent, GameEvent } from '../engine/types';
 import { FinanceState, MarketState } from '../engine/types/state.types';
+import { TalentRole, TalentTier } from '../engine/types/talent.types';
 
 const EMPTY_PROJECTS: Record<string, Project> = {};
 const EMPTY_FINANCE: FinanceState = {
@@ -200,3 +201,46 @@ export const selectRecentEvents = createSelector(
   [selectEventHistory],
   (history): GameEvent[] => history.slice(-10).reverse()
 );
+
+/**
+ * Filtered Talent Selector
+ */
+const TIER_RANK: Record<TalentTier, number> = {
+  S_LIST: 6, A_LIST: 5, B_LIST: 4, C_LIST: 3, RISING_STAR: 2, NEWCOMER: 1
+};
+
+export interface TalentFilter {
+  roles?: TalentRole[];
+  minTier?: TalentTier;
+  excludeHoldingDeals?: boolean;
+  availableAtWeek?: number;
+  genres?: string[];
+  excludeOnMedicalLeave?: boolean;
+}
+
+export const selectFilteredTalent = (state: GameState | null, filter: TalentFilter): Talent[] => {
+  if (!state) return [];
+  const pool = Object.values(state.industry.talentPool);
+  return pool.filter(t => {
+    if (filter.roles && !filter.roles.some(r => t.roles?.includes(r) || t.role === r)) return false;
+    if (filter.minTier && TIER_RANK[t.tier] < TIER_RANK[filter.minTier]) return false;
+    if (filter.excludeOnMedicalLeave && t.onMedicalLeave) return false;
+    if (filter.excludeHoldingDeals) {
+      const hasHold = t.commitments?.some(c => c.isHoldingDeal);
+      if (hasHold) return false;
+    }
+    if (filter.availableAtWeek !== undefined) {
+      const busy = t.commitments?.some(c =>
+        !c.isHoldingDeal &&
+        c.startWeek <= filter.availableAtWeek! &&
+        c.endWeek >= filter.availableAtWeek!
+      );
+      if (busy) return false;
+    }
+    if (filter.genres?.length && t.preferredGenres?.length) {
+      const overlap = filter.genres.some(g => t.preferredGenres.includes(g));
+      if (!overlap) return false;
+    }
+    return true;
+  });
+};

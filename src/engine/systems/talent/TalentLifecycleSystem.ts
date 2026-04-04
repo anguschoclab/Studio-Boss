@@ -15,6 +15,57 @@ export class TalentLifecycleSystem {
     const retiredIds: string[] = [];
 
     talentPool.forEach(talent => {
+      // 0. Medical leave expiry
+      if (talent.onMedicalLeave && talent.medicalLeaveEndsWeek !== undefined && state.week >= talent.medicalLeaveEndsWeek) {
+        impacts.push({
+          type: 'TALENT_UPDATED',
+          payload: { talentId: talent.id, update: { onMedicalLeave: false, medicalLeaveEndsWeek: undefined } }
+        });
+        return; // skip rest of processing while recovering
+      }
+      if (talent.onMedicalLeave) return; // still on leave
+
+      // 0b. Fatigue accumulation from active commitments
+      const activeCommitments = (talent.commitments || []).filter(
+        c => !c.isHoldingDeal && c.startWeek <= state.week && c.endWeek >= state.week
+      );
+      if (activeCommitments.length > 0) {
+        const fatigueGain = activeCommitments.some(c => c.format === 'animation') ? 10 : 20;
+        const newFatigue = Math.min(100, (talent.fatigue ?? 0) + fatigueGain * 0.1); // incremental weekly gain
+        impacts.push({
+          type: 'TALENT_UPDATED',
+          payload: { talentId: talent.id, update: { fatigue: newFatigue } }
+        });
+
+        // 0c. Burnout check
+        if (newFatigue > 90 && rng.next() < 0.25) {
+          impacts.push({
+            type: 'MEDICAL_LEAVE_TRIGGERED',
+            payload: { talentId: talent.id, weeks: 8 }
+          });
+          impacts.push({
+            type: 'NEWS_ADDED',
+            payload: {
+              id: `burnout-${talent.id}-${state.week}`,
+              headline: `${talent.name} steps back citing exhaustion`,
+              description: `The talent will be on medical leave for approximately 8 weeks.`,
+              category: 'talent',
+              publication: 'The Hollywood Reporter'
+            }
+          });
+          return;
+        }
+      } else {
+        // Natural fatigue recovery when not committed
+        const recovery = Math.min((talent.fatigue ?? 0), 5);
+        if (recovery > 0) {
+          impacts.push({
+            type: 'TALENT_UPDATED',
+            payload: { talentId: talent.id, update: { fatigue: Math.max(0, (talent.fatigue ?? 0) - recovery) } }
+          });
+        }
+      }
+
       // 1. Annual Aging & Prestige Decay
       if (isYearEnd) {
         // Prestige Decay: -2 per year if no projects released in the last 52 weeks

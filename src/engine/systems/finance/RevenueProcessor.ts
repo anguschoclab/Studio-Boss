@@ -67,6 +67,12 @@ export class RevenueProcessor {
         const weeklyMerch = this.calculateMerchRevenue(p.buzz, franchise?.relevanceScore || 0, p.rating ?? 'PG-13');
         merch += weeklyMerch;
 
+        // Backend points: player earns % of weekly gross on deficit/sold productions
+        if (p.backendPoints && p.backendPoints > 0 && weeklyGross > 0) {
+          const backendEarning = Math.round(weeklyGross * (p.backendPoints / 100));
+          distribution += backendEarning; // added to distribution bucket (passive income)
+        }
+
         totalRoyalties += this.calculateNetPointsRoyalty(p, weeklyGross + weeklyMerch, contracts);
       }
     });

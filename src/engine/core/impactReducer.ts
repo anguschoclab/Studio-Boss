@@ -451,7 +451,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     case 'FINANCE_TRANSACTION': {
       const { amount, targetId } = impact.payload;
       if (targetId && targetId !== 'player') {
-        const rivals = state.industry.rivals.map(r => 
+        const rivals = state.industry.rivals.map(r =>
           r.id === targetId ? { ...r, cash: r.cash + amount } as RivalStudio : r
         );
         return {
@@ -465,6 +465,63 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
       return applySingleImpact(state, { type: 'FUNDS_CHANGED', payload: { amount } });
     }
 
+    case 'PILOT_GRADUATED': {
+      // Moves a project out of stage='pilot' into full development/production
+      const { projectId, nextState } = impact.payload as { projectId: string; nextState?: import('@/engine/types/project.types').ProjectStatus };
+      const projects = { ...state.studio.internal.projects };
+      const project = projects[projectId];
+      if (project) {
+        const { stage: _stage, ...rest } = project as any;
+        projects[projectId] = { ...rest, state: nextState ?? 'production', weeksInPhase: 0 };
+      }
+      return {
+        ...state,
+        studio: { ...state.studio, internal: { ...state.studio.internal, projects } }
+      };
+    }
+
+    case 'FORMAT_LICENSED': {
+      // Adds a format rights IPAsset to ip.vault
+      const { asset } = impact.payload as { asset: import('@/engine/types/state.types').IPAsset };
+      const existingIds = new Set(state.ip.vault.map(a => a.id));
+      if (existingIds.has(asset.id)) return state;
+      return {
+        ...state,
+        ip: { ...state.ip, vault: [...state.ip.vault, asset] }
+      };
+    }
+
+    case 'MEDICAL_LEAVE_TRIGGERED': {
+      const { talentId, weeks } = impact.payload as { talentId: string; weeks: number };
+      const talentPool = { ...state.industry.talentPool };
+      const talent = talentPool[talentId];
+      if (talent) {
+        talentPool[talentId] = {
+          ...talent,
+          onMedicalLeave: true,
+          medicalLeaveEndsWeek: state.week + weeks,
+          fatigue: Math.max(0, talent.fatigue - 20), // partial fatigue relief on leave start
+        };
+      }
+      return { ...state, industry: { ...state.industry, talentPool } };
+    }
+
+    case 'DEAL_UPDATED': {
+      const { deal, action } = impact.payload as {
+        deal: import('@/engine/types/talent.types').TalentPact;
+        action: 'add' | 'expire' | 'terminate';
+      };
+      const current = state.deals;
+      let activeDeals = [...current.activeDeals];
+      let expiredDeals = [...current.expiredDeals];
+      if (action === 'add') {
+        activeDeals = [...activeDeals, deal];
+      } else {
+        activeDeals = activeDeals.filter(d => d.id !== deal.id);
+        expiredDeals = [{ ...deal, status: action === 'expire' ? 'expired' : 'terminated' }, ...expiredDeals].slice(0, 50);
+      }
+      return { ...state, deals: { ...current, activeDeals, expiredDeals } };
+    }
 
   }
 

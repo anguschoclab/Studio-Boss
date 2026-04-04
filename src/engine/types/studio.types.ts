@@ -3,7 +3,7 @@
 import { Project, Opportunity, GenreTrend, FestivalSubmission, Award } from './project.types';
 import { Contract, TalentPact, Family, Agency, Agent, Talent, Scandal, MotivationProfile, RivalStrategy } from './talent.types';
 import { NewsEvent, Rumor, MarketEvent } from './engine.types';
-import { FinanceState, NewsState, IPState } from './state.types';
+import { FinanceState, NewsState, IPState, DealsState } from './state.types';
 
 export interface GameEvent {
   id: string;
@@ -95,6 +95,7 @@ export interface GameState {
     scandals?: Scandal[];
     newsHistory: NewsEvent[];
   };
+  deals: DealsState;
   // UI Data Vis Extensions (Epic 4)
   culture: {
     genrePopularity: Record<string, number>;

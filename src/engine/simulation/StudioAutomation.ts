@@ -36,8 +36,24 @@ export class StudioAutomation {
         this.processProject(p, rival.id, state, rng, impacts);
       });
 
+      // ⚡ Project Recycling (Keep memory usage low in long-term sims)
+      const expiredProjectIds = projects
+        .filter(p => p.state === 'released' && (state.week - (p.releaseWeek || 0)) > 4)
+        .map(p => p.id);
+      
+      if (expiredProjectIds.length > 0) {
+          const updatedProjects = { ...rival.projects };
+          expiredProjectIds.forEach(id => {
+              updatedProjects[id] = { ...updatedProjects[id], state: 'archived' as any };
+          });
+          impacts.push({
+              type: 'RIVAL_UPDATED',
+              payload: { rivalId: rival.id, update: { projects: updatedProjects } }
+          });
+      }
+
       // 3. Pitch New Projects (If slot available)
-      if (projects.length < 5 && rng.next() < 0.1) {
+      if (projects.filter(p => p.state !== 'archived').length < 5 && rng.next() < 0.1) {
         this.pitchNewProject(rival, state, rng, impacts);
       }
     });

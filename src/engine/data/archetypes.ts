@@ -1,4 +1,120 @@
 import { ArchetypeKey, AgencyArchetype } from '@/engine/types';
+import { BudgetTierKey, ProjectFormat } from '@/engine/types/project.types';
+
+export type RivalArchetype =
+  | 'legacy_major'       // Disney/WB — franchise-first, defensive IP hoard
+  | 'streaming_giant'    // Netflix/Apple — volume + algorithm, global reach
+  | 'prestige_house'     // A24/Searchlight — awards-first, auteur-friendly
+  | 'genre_specialist'   // Blumhouse/Lionsgate — horror/action, low budget high ROI
+  | 'franchise_factory'  // MCU-adjacent — sequel machine, merchandising
+  | 'indie_aggressor'    // Annapurna-style — poaches prestige talent
+  | 'content_farm'       // low-budget volume — Hallmark/Asylum
+  | 'foreign_invader'    // international major entering US market
+  | 'talent_agency_arm'  // CAA/WME acquiring studio arm
+  | 'tech_disruptor';    // Amazon/Apple — uses cash to destabilize
+
+export interface RivalBehaviorConfig {
+  archetype: RivalArchetype;
+  greenlight_bias: ProjectFormat[];
+  budget_tier_weights: Record<BudgetTierKey, number>;
+  pact_aggression: number;      // 0-1: probability of poaching in any given week
+  ma_willingness: number;       // 0-1: willingness to attempt acquisition
+  festivalParticipation: number; // 0-1: weight for festival submissions
+  preferredGenres: string[];
+}
+
+export const RIVAL_BEHAVIOR_CONFIGS: Record<RivalArchetype, RivalBehaviorConfig> = {
+  legacy_major: {
+    archetype: 'legacy_major',
+    greenlight_bias: ['film'],
+    budget_tier_weights: { low: 0.05, mid: 0.20, high: 0.40, blockbuster: 0.35 },
+    pact_aggression: 0.3,
+    ma_willingness: 0.6,
+    festivalParticipation: 0.2,
+    preferredGenres: ['Action', 'Family', 'Animation', 'Fantasy'],
+  },
+  streaming_giant: {
+    archetype: 'streaming_giant',
+    greenlight_bias: ['film', 'tv'],
+    budget_tier_weights: { low: 0.15, mid: 0.35, high: 0.35, blockbuster: 0.15 },
+    pact_aggression: 0.5,
+    ma_willingness: 0.4,
+    festivalParticipation: 0.5,
+    preferredGenres: ['Drama', 'Thriller', 'Comedy', 'Documentary'],
+  },
+  prestige_house: {
+    archetype: 'prestige_house',
+    greenlight_bias: ['film'],
+    budget_tier_weights: { low: 0.30, mid: 0.45, high: 0.20, blockbuster: 0.05 },
+    pact_aggression: 0.4,
+    ma_willingness: 0.2,
+    festivalParticipation: 0.9,
+    preferredGenres: ['Drama', 'Horror', 'Romance', 'Animation'],
+  },
+  genre_specialist: {
+    archetype: 'genre_specialist',
+    greenlight_bias: ['film'],
+    budget_tier_weights: { low: 0.40, mid: 0.40, high: 0.15, blockbuster: 0.05 },
+    pact_aggression: 0.2,
+    ma_willingness: 0.2,
+    festivalParticipation: 0.3,
+    preferredGenres: ['Horror', 'Action', 'Thriller', 'Sci-Fi'],
+  },
+  franchise_factory: {
+    archetype: 'franchise_factory',
+    greenlight_bias: ['film'],
+    budget_tier_weights: { low: 0.02, mid: 0.10, high: 0.40, blockbuster: 0.48 },
+    pact_aggression: 0.5,
+    ma_willingness: 0.7,
+    festivalParticipation: 0.1,
+    preferredGenres: ['Action', 'Sci-Fi', 'Fantasy', 'Superhero'],
+  },
+  indie_aggressor: {
+    archetype: 'indie_aggressor',
+    greenlight_bias: ['film'],
+    budget_tier_weights: { low: 0.25, mid: 0.50, high: 0.20, blockbuster: 0.05 },
+    pact_aggression: 0.6,
+    ma_willingness: 0.3,
+    festivalParticipation: 0.8,
+    preferredGenres: ['Drama', 'Romance', 'Comedy', 'Documentary'],
+  },
+  content_farm: {
+    archetype: 'content_farm',
+    greenlight_bias: ['film', 'tv', 'unscripted'],
+    budget_tier_weights: { low: 0.70, mid: 0.25, high: 0.05, blockbuster: 0.00 },
+    pact_aggression: 0.05,
+    ma_willingness: 0.1,
+    festivalParticipation: 0.05,
+    preferredGenres: ['Comedy', 'Holiday', 'Romance', 'Family'],
+  },
+  foreign_invader: {
+    archetype: 'foreign_invader',
+    greenlight_bias: ['film', 'tv'],
+    budget_tier_weights: { low: 0.10, mid: 0.30, high: 0.40, blockbuster: 0.20 },
+    pact_aggression: 0.4,
+    ma_willingness: 0.5,
+    festivalParticipation: 0.4,
+    preferredGenres: ['Action', 'Drama', 'Thriller'],
+  },
+  talent_agency_arm: {
+    archetype: 'talent_agency_arm',
+    greenlight_bias: ['film', 'tv'],
+    budget_tier_weights: { low: 0.05, mid: 0.25, high: 0.45, blockbuster: 0.25 },
+    pact_aggression: 0.8,
+    ma_willingness: 0.4,
+    festivalParticipation: 0.3,
+    preferredGenres: ['Drama', 'Thriller', 'Comedy'],
+  },
+  tech_disruptor: {
+    archetype: 'tech_disruptor',
+    greenlight_bias: ['film', 'tv'],
+    budget_tier_weights: { low: 0.10, mid: 0.20, high: 0.40, blockbuster: 0.30 },
+    pact_aggression: 0.6,
+    ma_willingness: 0.9,
+    festivalParticipation: 0.4,
+    preferredGenres: ['Sci-Fi', 'Thriller', 'Drama', 'Documentary'],
+  },
+};
 
 export interface ArchetypeData {
   key: ArchetypeKey;

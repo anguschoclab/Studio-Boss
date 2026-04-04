@@ -1,5 +1,6 @@
 import { Headline } from './engine.types';
 import { Franchise } from './franchise.types';
+import { TalentPact, TalentPactType } from './talent.types';
 
 export interface WeeklyFinancialReport {
   week: number;
@@ -90,15 +91,15 @@ export interface IPState {
   franchises: Record<string, Franchise>;
 }
 
-export type ImpactType = 
-  | 'FUNDS_CHANGED' 
+export type ImpactType =
+  | 'FUNDS_CHANGED'
   | 'FUNDS_DEDUCTED'
-  | 'PROJECT_UPDATED' 
-  | 'PROJECT_REMOVED' 
-  | 'NEWS_ADDED' 
-  | 'TALENT_UPDATED' 
-  | 'TALENT_ADDED' 
-  | 'TALENT_REMOVED' 
+  | 'PROJECT_UPDATED'
+  | 'PROJECT_REMOVED'
+  | 'NEWS_ADDED'
+  | 'TALENT_UPDATED'
+  | 'TALENT_ADDED'
+  | 'TALENT_REMOVED'
   | 'PRESTIGE_CHANGED'
   | 'BUYER_UPDATED'
   | 'RIVAL_UPDATED'
@@ -115,7 +116,11 @@ export type ImpactType =
   | 'VAULT_ASSET_UPDATED'
   | 'INDUSTRY_UPDATE'
   | 'MODAL_TRIGGERED'
-  | 'SYSTEM_TICK';
+  | 'SYSTEM_TICK'
+  | 'PILOT_GRADUATED'
+  | 'FORMAT_LICENSED'
+  | 'MEDICAL_LEAVE_TRIGGERED'
+  | 'DEAL_UPDATED';
 
 export interface NewsImpact {
   id: string;
@@ -162,3 +167,18 @@ export interface BaseImpact {
 }
 
 export type StateImpact = BaseImpact & { type?: ImpactType ; payload?: any };
+
+export interface PendingDealOffer {
+  id: string;
+  talentId: string;
+  type: TalentPactType;
+  offeredWeek: number;
+  expiresWeek: number;
+  terms: Partial<TalentPact>;
+}
+
+export interface DealsState {
+  activeDeals: TalentPact[];
+  pendingOffers: PendingDealOffer[];
+  expiredDeals: TalentPact[];
+}

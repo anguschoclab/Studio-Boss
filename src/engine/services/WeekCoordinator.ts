@@ -40,6 +40,12 @@ import { SchedulingEngine } from '../systems/schedulingEngine';
 import { evaluateRatingForProject, evaluateRegionalRatings, checkDirectorsCutEligibility } from '../systems/ratings';
 import { generateMarketBanScandal } from '../systems/scandals';
 
+// Phase 2 Systems
+import { runUpfronts } from '../systems/television/upfrontsEngine';
+import { runFestivalMarket } from '../systems/festivals/festivalAuctionEngine';
+import { TalentLifecycleSystem } from '../systems/talent/TalentLifecycleSystem';
+import { shouldAttemptHostileTakeover } from '../systems/ai/AgentBrain';
+
 /**
  * Studio Boss - Simulation Tick Context
  */
@@ -225,10 +231,30 @@ export class WeekCoordinator {
 
     context.impacts.push(resolveFestivals(state, context.rng));
     context.impacts.push(...RegulatorSystem.tick(state, context.rng));
+
+    // Festival market auction at Sundance (w4), Cannes (w20), TIFF (w36)
+    const weekOfYear = context.week % 52 || 52;
+    if (weekOfYear === 4 || weekOfYear === 20 || weekOfYear === 36) {
+      context.impacts.push(...runFestivalMarket(state, context.rng));
+    }
+
+    // Upfronts — week 20 of each year
+    if (weekOfYear === 20) {
+      context.impacts.push(...runUpfronts(state, context.rng));
+    }
+
+    // Annual M&A hostile takeover scan
+    if (weekOfYear === 52) {
+      this.runAnnualMAScan(state, context);
+    }
+
+    // Shopping status expiry
+    this.runShoppingExpiry(state, context);
   }
 
   private static runTalentFilter(state: GameState, context: TickContext) {
     context.impacts.push(TalentSystem.advance(state, context.rng));
+    context.impacts.push(...TalentLifecycleSystem.tick(state, context.rng));
   }
 
   private static runMediaFilter(state: GameState, context: TickContext) {
@@ -286,6 +312,81 @@ export class WeekCoordinator {
 
   private static runFinanceFilter(state: GameState, context: TickContext) {
     context.impacts.push(...tickFinance(state, context.rng));
+  }
+
+  /**
+   * Annual scan for hostile takeover attempts between rivals.
+   * Fires once per year (week % 52 === 0).
+   */
+  private static runAnnualMAScan(state: GameState, context: TickContext) {
+    const rivals = state.industry.rivals;
+    for (let i = 0; i < rivals.length; i++) {
+      for (let j = 0; j < rivals.length; j++) {
+        if (i === j) continue;
+        const attacker = rivals[i];
+        const target = rivals[j];
+        if (!target.isAcquirable) continue;
+        if (shouldAttemptHostileTakeover(attacker, target, state)) {
+          context.impacts.push({
+            type: 'MODAL_TRIGGERED',
+            payload: {
+              modalType: 'BIDDING_WAR',
+              priority: 60,
+              payload: {
+                attackerId: attacker.id,
+                attackerName: attacker.name,
+                targetId: target.id,
+                targetName: target.name,
+                offerAmount: Math.round(target.cash * 2 + target.strength * 1_000_000),
+                week: context.week
+              }
+            }
+          });
+          context.impacts.push({
+            type: 'NEWS_ADDED',
+            payload: {
+              id: `ma-${attacker.id}-${target.id}-${context.week}`,
+              headline: `${attacker.name} makes hostile bid for ${target.name}`,
+              description: `Industry insiders confirm an unsolicited acquisition offer has been made.`,
+              category: 'acquisition',
+              publication: 'The Hollywood Reporter'
+            }
+          });
+          break; // one hostile move per attacker per year
+        }
+      }
+    }
+  }
+
+  /**
+   * Clears 'shopping' status for projects whose window has expired.
+   */
+  private static runShoppingExpiry(state: GameState, context: TickContext) {
+    for (const key in state.studio.internal.projects) {
+      const project = state.studio.internal.projects[key];
+      if (
+        project.state === 'shopping' &&
+        project.shoppingExpiresWeek !== undefined &&
+        context.week >= project.shoppingExpiresWeek
+      ) {
+        context.impacts.push({
+          type: 'PROJECT_UPDATED',
+          payload: {
+            projectId: project.id,
+            update: { state: 'archived' as const }
+          }
+        });
+        context.impacts.push({
+          type: 'NEWS_ADDED',
+          payload: {
+            id: `shop-expired-${project.id}`,
+            headline: `"${project.title}" shopping window closes without a deal`,
+            description: `The show has been shelved after failing to find a new network home.`,
+            category: 'cancellation'
+          }
+        });
+      }
+    }
   }
 
   private static buildSummary(before: GameState, after: GameState, context: TickContext): WeekSummary {

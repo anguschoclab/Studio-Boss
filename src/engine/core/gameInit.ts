@@ -246,6 +246,11 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
       awards: [],
       newsHistory: [],
     },
+    deals: {
+      activeDeals: [],
+      pendingOffers: [],
+      expiredDeals: [],
+    },
     culture: {
       genrePopularity,
     },

@@ -1,8 +1,10 @@
 // Types related to the Simulation Engine, News, and Events
 
-export type ModalType = 'CRISIS' | 'AWARDS' | 'SUMMARY' | 'DIRECTORS_CUT_AVAILABLE';
+export type ModalType = 'CRISIS' | 'AWARDS' | 'SUMMARY' | 'DIRECTORS_CUT_AVAILABLE' | 'UPFRONTS' | 'FESTIVAL_MARKET' | 'BIDDING_WAR';
 
-export type HeadlineCategory = 'rival' | 'market' | 'talent' | 'awards' | 'general' | 'rumor' | 'box_office' | 'streaming' | 'scandal' | 'dispute';
+export type HeadlineCategory = 'rival' | 'market' | 'talent' | 'awards' | 'general' | 'rumor' | 'box_office' | 'streaming' | 'scandal' | 'dispute'
+  | 'acquisition' | 'development' | 'production' | 'casting' | 'deal'
+  | 'festival' | 'ratings' | 'cancellation' | 'renewal' | 'premiere' | 'unscripted';
 
 export type NewsEventType = 'CRISIS' | 'AWARD' | 'RELEASE' | 'STUDIO_EVENT' | 'RIVAL' | 'MILESTONE' | 'SCANDAL' | 'LEGAL';
 

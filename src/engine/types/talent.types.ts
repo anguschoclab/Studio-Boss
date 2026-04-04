@@ -28,7 +28,7 @@ export interface Scandal {
 export type AgencyArchetype = 'powerhouse' | 'boutique' | 'shark' | 'comedy_specialist' | 'lit_agency' | 'mega_corp' | 'streaming_titan' | 'indie_darling' | 'nepotism_mill' | 'international_broker' | 'legacy_defenders' | 'genre_kings' | 'influencer_syndicate';
 export type AccessLevel = 'outsider' | 'soft-access' | 'legacy' | 'dynasty' | 'comeback';
 export type ProjectRole = 'actor' | 'director' | 'writer' | 'producer' | 'showrunner';
-export type TalentRole = 'actor' | 'director' | 'writer' | 'producer';
+export type TalentRole = 'actor' | 'director' | 'writer' | 'producer' | 'personality' | 'showrunner';
 export type AgencyTier = 'powerhouse' | 'major' | 'mid-tier' | 'boutique' | 'specialist';
 export type AgencyCulture = 'shark' | 'family' | 'volume' | 'prestige';
 export type AgentSpecialty = 'film_packaging' | 'tv_packaging' | 'literary' | 'talent' | 'comedy' | 'unscripted';
@@ -39,18 +39,24 @@ export interface TalentCommitment {
   startWeek: number;
   endWeek: number;
   role: TalentRole;
+  isHoldingDeal?: boolean;
+  isShowrunner?: boolean;
+  format?: 'film' | 'tv' | 'unscripted' | 'animation';
 }
+
+export type TalentPactType = 'first_look' | 'vanity_shingle' | 'overall_deal';
 
 export interface TalentPact {
   id: string;
   talentId: string;
   studioId: string;
-  type: 'first_look' | 'vanity_shingle';
+  type: TalentPactType;
   startDate: number;
   endDate: number;
   weeklyOverhead: number;
   exclusivity: boolean;
   status: 'active' | 'expired' | 'terminated';
+  spinoffCooldownWeek?: number; // week when next spinoff commission is allowed (overall_deal only)
 }
 
 export interface Agency {
@@ -183,6 +189,8 @@ export interface Talent {
   fatigue: number; // 0-100: Influences performance and conflict chance
   preferredGenres: string[];
   lastReleaseWeek?: number; // Last week a release happened (for prestige decay)
+  onMedicalLeave?: boolean;
+  medicalLeaveEndsWeek?: number;
 }
 
 export interface Contract {
