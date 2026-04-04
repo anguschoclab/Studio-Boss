@@ -12,6 +12,7 @@ import { useArchetypeTheme } from "./hooks/useArchetypeTheme";
 const queryClient = new QueryClient();
 
 import { GlobalThemeProvider } from "./components/Theme/GlobalThemeProvider";
+import { InstallPrompt } from "./components/pwa/InstallPrompt";
 
 const rootRoute = createRootRoute({
   component: () => (
@@ -19,6 +20,7 @@ const rootRoute = createRootRoute({
       <Outlet />
       <Toaster />
       <Sonner />
+      <InstallPrompt />
     </GlobalThemeProvider>
   ),
   notFoundComponent: () => <NotFound />
