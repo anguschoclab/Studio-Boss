@@ -1,0 +1,3677 @@
+[
+  {
+    "week": 1,
+    "playerCash": 500000000,
+    "rivalAvgCash": 164045789.34004533,
+    "totalSystemCash": 2140457893.4004533,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2500,
+    "avgTalentPrestige": 47.1512,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 0,
+    "bankruptcyCount": 0,
+    "marketShare": 23.35948777790118,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 83,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 0,
+      "directors_cut": 0,
+      "sanitized": 0,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 2,
+    "playerCash": 504424520,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2500,
+    "avgTalentPrestige": 47.1512,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 0,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 83,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 6,
+      "directors_cut": 0,
+      "sanitized": 0,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 3,
+    "playerCash": 508861978.4,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2500,
+    "avgTalentPrestige": 47.1512,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 0,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 83,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 8,
+      "directors_cut": 0,
+      "sanitized": 1,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 4,
+    "playerCash": 513323249.1999999,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2498,
+    "avgTalentPrestige": 47.15652522017614,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 2,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 83,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 8,
+      "directors_cut": 0,
+      "sanitized": 1,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 5,
+    "playerCash": 517811935.5999999,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2498,
+    "avgTalentPrestige": 47.15652522017614,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 2,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 83,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 10,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 6,
+    "playerCash": 522316686.79999995,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2498,
+    "avgTalentPrestige": 47.15652522017614,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 2,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 83,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 12,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 7,
+    "playerCash": 526455869.5999999,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2498,
+    "avgTalentPrestige": 47.15652522017614,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 2,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 83,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 8,
+    "playerCash": 530233389.9999999,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2498,
+    "avgTalentPrestige": 47.15652522017614,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 2,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 83,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 9,
+    "playerCash": 533144021.1999999,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2497,
+    "avgTalentPrestige": 47.15378454144974,
+    "activeProjects": 1,
+    "completedProjects": 5,
+    "retiredCount": 3,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 83,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 10,
+    "playerCash": 535719491.9999999,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2496,
+    "avgTalentPrestige": 47.15144230769231,
+    "activeProjects": 1,
+    "completedProjects": 7,
+    "retiredCount": 4,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 83,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 11,
+    "playerCash": 537979013.5999998,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2496,
+    "avgTalentPrestige": 47.15144230769231,
+    "activeProjects": 1,
+    "completedProjects": 8,
+    "retiredCount": 4,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 83,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 12,
+    "playerCash": 539914310.7999998,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2496,
+    "avgTalentPrestige": 47.15144230769231,
+    "activeProjects": 1,
+    "completedProjects": 8,
+    "retiredCount": 4,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 83,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 13,
+    "playerCash": 541556398.3999997,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2496,
+    "avgTalentPrestige": 47.15144230769231,
+    "activeProjects": 1,
+    "completedProjects": 10,
+    "retiredCount": 4,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 83,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 14,
+    "playerCash": 542901743.5999998,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2495,
+    "avgTalentPrestige": 47.1498997995992,
+    "activeProjects": 1,
+    "completedProjects": 12,
+    "retiredCount": 5,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 83,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 15,
+    "playerCash": 543961216.7999998,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2494,
+    "avgTalentPrestige": 47.16279069767442,
+    "activeProjects": 1,
+    "completedProjects": 14,
+    "retiredCount": 6,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 83,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 16,
+    "playerCash": 544768415.9999999,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2494,
+    "avgTalentPrestige": 47.16279069767442,
+    "activeProjects": 1,
+    "completedProjects": 16,
+    "retiredCount": 6,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 83,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 17,
+    "playerCash": 545322026.4,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2494,
+    "avgTalentPrestige": 47.16279069767442,
+    "activeProjects": 1,
+    "completedProjects": 18,
+    "retiredCount": 6,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 83,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 18,
+    "playerCash": 545348666.8000001,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2493,
+    "avgTalentPrestige": 47.17448856799037,
+    "activeProjects": 2,
+    "completedProjects": 21,
+    "retiredCount": 7,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 83,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 19,
+    "playerCash": 544925212.8000001,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2490,
+    "avgTalentPrestige": 47.18795180722891,
+    "activeProjects": 2,
+    "completedProjects": 24,
+    "retiredCount": 10,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 83,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 20,
+    "playerCash": 544283046.0000001,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2490,
+    "avgTalentPrestige": 47.18795180722891,
+    "activeProjects": 2,
+    "completedProjects": 25,
+    "retiredCount": 10,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 83,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 21,
+    "playerCash": 543414260.8000001,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2490,
+    "avgTalentPrestige": 47.18795180722891,
+    "activeProjects": 2,
+    "completedProjects": 26,
+    "retiredCount": 10,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 83,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 22,
+    "playerCash": 542322717.2000002,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2490,
+    "avgTalentPrestige": 47.18795180722891,
+    "activeProjects": 2,
+    "completedProjects": 27,
+    "retiredCount": 10,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 83,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 23,
+    "playerCash": 541025104.0000001,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2490,
+    "avgTalentPrestige": 47.18795180722891,
+    "activeProjects": 2,
+    "completedProjects": 28,
+    "retiredCount": 10,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 83,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 24,
+    "playerCash": 539536990.8000001,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2490,
+    "avgTalentPrestige": 47.18795180722891,
+    "activeProjects": 2,
+    "completedProjects": 29,
+    "retiredCount": 10,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 83,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 25,
+    "playerCash": 536932230.0000001,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2489,
+    "avgTalentPrestige": 47.18159903575733,
+    "activeProjects": 4,
+    "completedProjects": 32,
+    "retiredCount": 11,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 83,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 26,
+    "playerCash": 534060873.6000001,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2489,
+    "avgTalentPrestige": 47.18159903575733,
+    "activeProjects": 4,
+    "completedProjects": 33,
+    "retiredCount": 11,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 83,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 27,
+    "playerCash": 531023080.40000004,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2489,
+    "avgTalentPrestige": 47.18159903575733,
+    "activeProjects": 4,
+    "completedProjects": 34,
+    "retiredCount": 11,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 83,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 28,
+    "playerCash": 527803665.6000001,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2488,
+    "avgTalentPrestige": 47.17081993569132,
+    "activeProjects": 4,
+    "completedProjects": 34,
+    "retiredCount": 12,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 83,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 29,
+    "playerCash": 524421243.2000001,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2488,
+    "avgTalentPrestige": 47.17081993569132,
+    "activeProjects": 4,
+    "completedProjects": 38,
+    "retiredCount": 12,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 83,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 30,
+    "playerCash": 520876988.80000013,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2488,
+    "avgTalentPrestige": 47.17081993569132,
+    "activeProjects": 4,
+    "completedProjects": 38,
+    "retiredCount": 12,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 83,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 31,
+    "playerCash": 517166168.0000002,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2488,
+    "avgTalentPrestige": 47.17081993569132,
+    "activeProjects": 4,
+    "completedProjects": 38,
+    "retiredCount": 12,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 83,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 32,
+    "playerCash": 512381097.2000002,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2488,
+    "avgTalentPrestige": 47.17081993569132,
+    "activeProjects": 5,
+    "completedProjects": 38,
+    "retiredCount": 12,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 83,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 33,
+    "playerCash": 507868672.0000002,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2486,
+    "avgTalentPrestige": 47.160096540627514,
+    "activeProjects": 5,
+    "completedProjects": 38,
+    "retiredCount": 14,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 83,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 34,
+    "playerCash": 502455698.0000002,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2485,
+    "avgTalentPrestige": 47.14688128772636,
+    "activeProjects": 6,
+    "completedProjects": 38,
+    "retiredCount": 15,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 35,
+    "playerCash": 497167034.0000002,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2485,
+    "avgTalentPrestige": 47.14688128772636,
+    "activeProjects": 6,
+    "completedProjects": 38,
+    "retiredCount": 15,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 36,
+    "playerCash": 491756922.80000013,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2485,
+    "avgTalentPrestige": 47.14688128772636,
+    "activeProjects": 6,
+    "completedProjects": 38,
+    "retiredCount": 15,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 37,
+    "playerCash": 486212180.40000015,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2485,
+    "avgTalentPrestige": 47.14688128772636,
+    "activeProjects": 6,
+    "completedProjects": 38,
+    "retiredCount": 15,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 38,
+    "playerCash": 480548278.40000015,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2485,
+    "avgTalentPrestige": 47.14688128772636,
+    "activeProjects": 6,
+    "completedProjects": 38,
+    "retiredCount": 15,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 39,
+    "playerCash": 474766226.40000015,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2485,
+    "avgTalentPrestige": 47.14688128772636,
+    "activeProjects": 6,
+    "completedProjects": 38,
+    "retiredCount": 15,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 40,
+    "playerCash": 468870394.0000002,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2485,
+    "avgTalentPrestige": 47.14688128772636,
+    "activeProjects": 6,
+    "completedProjects": 38,
+    "retiredCount": 15,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 41,
+    "playerCash": 462879363.2000002,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2485,
+    "avgTalentPrestige": 47.14688128772636,
+    "activeProjects": 6,
+    "completedProjects": 38,
+    "retiredCount": 15,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 42,
+    "playerCash": 456775579.6000002,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2485,
+    "avgTalentPrestige": 47.14688128772636,
+    "activeProjects": 6,
+    "completedProjects": 38,
+    "retiredCount": 15,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 43,
+    "playerCash": 450580102.40000015,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2485,
+    "avgTalentPrestige": 47.14688128772636,
+    "activeProjects": 6,
+    "completedProjects": 38,
+    "retiredCount": 15,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 44,
+    "playerCash": 444293910.40000015,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2485,
+    "avgTalentPrestige": 47.14688128772636,
+    "activeProjects": 6,
+    "completedProjects": 38,
+    "retiredCount": 15,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 45,
+    "playerCash": 437091603.6000002,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2485,
+    "avgTalentPrestige": 47.14688128772636,
+    "activeProjects": 7,
+    "completedProjects": 38,
+    "retiredCount": 15,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 46,
+    "playerCash": 429092448.40000015,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2482,
+    "avgTalentPrestige": 47.12973408541499,
+    "activeProjects": 8,
+    "completedProjects": 38,
+    "retiredCount": 18,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 47,
+    "playerCash": 421519420.80000013,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2482,
+    "avgTalentPrestige": 47.12973408541499,
+    "activeProjects": 8,
+    "completedProjects": 38,
+    "retiredCount": 18,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 48,
+    "playerCash": 413867695.6000001,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2482,
+    "avgTalentPrestige": 47.12973408541499,
+    "activeProjects": 8,
+    "completedProjects": 38,
+    "retiredCount": 18,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 49,
+    "playerCash": 406123255.2000001,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2482,
+    "avgTalentPrestige": 47.12973408541499,
+    "activeProjects": 8,
+    "completedProjects": 38,
+    "retiredCount": 18,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 50,
+    "playerCash": 398306148.40000015,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2482,
+    "avgTalentPrestige": 47.12973408541499,
+    "activeProjects": 8,
+    "completedProjects": 38,
+    "retiredCount": 18,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 51,
+    "playerCash": 390410896.80000013,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2482,
+    "avgTalentPrestige": 47.12973408541499,
+    "activeProjects": 8,
+    "completedProjects": 38,
+    "retiredCount": 18,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 52,
+    "playerCash": 381785136.80000013,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2482,
+    "avgTalentPrestige": 47.12973408541499,
+    "activeProjects": 10,
+    "completedProjects": 38,
+    "retiredCount": 18,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 53,
+    "playerCash": 372732201.2000001,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2482,
+    "avgTalentPrestige": 47.12973408541499,
+    "activeProjects": 10,
+    "completedProjects": 38,
+    "retiredCount": 18,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 54,
+    "playerCash": 363613408.40000015,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2482,
+    "avgTalentPrestige": 47.12973408541499,
+    "activeProjects": 10,
+    "completedProjects": 38,
+    "retiredCount": 18,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 55,
+    "playerCash": 354433688.40000015,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2482,
+    "avgTalentPrestige": 47.12973408541499,
+    "activeProjects": 10,
+    "completedProjects": 38,
+    "retiredCount": 18,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 56,
+    "playerCash": 345192500.0000002,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2482,
+    "avgTalentPrestige": 47.12973408541499,
+    "activeProjects": 10,
+    "completedProjects": 38,
+    "retiredCount": 18,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 57,
+    "playerCash": 335895313.2000002,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2482,
+    "avgTalentPrestige": 47.12973408541499,
+    "activeProjects": 10,
+    "completedProjects": 38,
+    "retiredCount": 18,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 58,
+    "playerCash": 326534301.2000002,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2481,
+    "avgTalentPrestige": 47.118097541313986,
+    "activeProjects": 10,
+    "completedProjects": 38,
+    "retiredCount": 19,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 59,
+    "playerCash": 317106266.4000003,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2481,
+    "avgTalentPrestige": 47.118097541313986,
+    "activeProjects": 10,
+    "completedProjects": 38,
+    "retiredCount": 19,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 60,
+    "playerCash": 307615410.4000003,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2481,
+    "avgTalentPrestige": 47.118097541313986,
+    "activeProjects": 10,
+    "completedProjects": 38,
+    "retiredCount": 19,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 61,
+    "playerCash": 298061582.0000003,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2481,
+    "avgTalentPrestige": 47.118097541313986,
+    "activeProjects": 10,
+    "completedProjects": 38,
+    "retiredCount": 19,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 62,
+    "playerCash": 288450062.0000003,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2480,
+    "avgTalentPrestige": 47.13185483870968,
+    "activeProjects": 10,
+    "completedProjects": 38,
+    "retiredCount": 20,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 63,
+    "playerCash": 278781152.0000003,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2480,
+    "avgTalentPrestige": 47.13185483870968,
+    "activeProjects": 10,
+    "completedProjects": 38,
+    "retiredCount": 20,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 64,
+    "playerCash": 269068706.4000003,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2479,
+    "avgTalentPrestige": 47.12384025816861,
+    "activeProjects": 10,
+    "completedProjects": 38,
+    "retiredCount": 21,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 65,
+    "playerCash": 259309149.60000026,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2478,
+    "avgTalentPrestige": 47.11259079903148,
+    "activeProjects": 10,
+    "completedProjects": 38,
+    "retiredCount": 22,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 66,
+    "playerCash": 249497292.00000024,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2478,
+    "avgTalentPrestige": 47.11259079903148,
+    "activeProjects": 10,
+    "completedProjects": 38,
+    "retiredCount": 22,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 67,
+    "playerCash": 239637700.00000024,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2477,
+    "avgTalentPrestige": 47.10052482842148,
+    "activeProjects": 10,
+    "completedProjects": 38,
+    "retiredCount": 23,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 68,
+    "playerCash": 229663946.80000025,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2477,
+    "avgTalentPrestige": 47.10052482842148,
+    "activeProjects": 11,
+    "completedProjects": 38,
+    "retiredCount": 23,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 69,
+    "playerCash": 219209492.80000025,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2477,
+    "avgTalentPrestige": 47.10052482842148,
+    "activeProjects": 11,
+    "completedProjects": 38,
+    "retiredCount": 23,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 70,
+    "playerCash": 208708758.00000024,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2477,
+    "avgTalentPrestige": 47.10052482842148,
+    "activeProjects": 11,
+    "completedProjects": 38,
+    "retiredCount": 23,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 71,
+    "playerCash": 198168653.20000023,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2476,
+    "avgTalentPrestige": 47.08804523424879,
+    "activeProjects": 11,
+    "completedProjects": 38,
+    "retiredCount": 24,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 72,
+    "playerCash": 187587247.20000023,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2476,
+    "avgTalentPrestige": 47.08804523424879,
+    "activeProjects": 11,
+    "completedProjects": 38,
+    "retiredCount": 24,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 73,
+    "playerCash": 176964769.6000002,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2474,
+    "avgTalentPrestige": 47.09175424413905,
+    "activeProjects": 11,
+    "completedProjects": 38,
+    "retiredCount": 26,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 74,
+    "playerCash": 166298366.4000002,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2474,
+    "avgTalentPrestige": 47.09175424413905,
+    "activeProjects": 11,
+    "completedProjects": 38,
+    "retiredCount": 26,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 75,
+    "playerCash": 155592848.00000024,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2474,
+    "avgTalentPrestige": 47.09175424413905,
+    "activeProjects": 11,
+    "completedProjects": 38,
+    "retiredCount": 26,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 76,
+    "playerCash": 144847434.80000025,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2474,
+    "avgTalentPrestige": 47.09175424413905,
+    "activeProjects": 11,
+    "completedProjects": 38,
+    "retiredCount": 26,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 77,
+    "playerCash": 134065871.60000026,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2474,
+    "avgTalentPrestige": 47.09175424413905,
+    "activeProjects": 11,
+    "completedProjects": 38,
+    "retiredCount": 26,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 78,
+    "playerCash": 123253884.40000027,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2474,
+    "avgTalentPrestige": 47.09175424413905,
+    "activeProjects": 11,
+    "completedProjects": 38,
+    "retiredCount": 26,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 79,
+    "playerCash": 112408156.80000028,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2473,
+    "avgTalentPrestige": 47.08289526890417,
+    "activeProjects": 11,
+    "completedProjects": 38,
+    "retiredCount": 27,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 80,
+    "playerCash": 101531715.20000029,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2472,
+    "avgTalentPrestige": 47.08818770226537,
+    "activeProjects": 11,
+    "completedProjects": 38,
+    "retiredCount": 28,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 81,
+    "playerCash": 90623510.40000027,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2471,
+    "avgTalentPrestige": 47.08498583569405,
+    "activeProjects": 11,
+    "completedProjects": 38,
+    "retiredCount": 29,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 82,
+    "playerCash": 79681891.20000029,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2471,
+    "avgTalentPrestige": 47.08498583569405,
+    "activeProjects": 11,
+    "completedProjects": 38,
+    "retiredCount": 29,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 83,
+    "playerCash": 68707790.40000027,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2471,
+    "avgTalentPrestige": 47.08498583569405,
+    "activeProjects": 11,
+    "completedProjects": 38,
+    "retiredCount": 29,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 84,
+    "playerCash": 57702796.00000027,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2471,
+    "avgTalentPrestige": 47.08498583569405,
+    "activeProjects": 11,
+    "completedProjects": 38,
+    "retiredCount": 29,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 82,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 85,
+    "playerCash": 46667937.60000026,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2470,
+    "avgTalentPrestige": 47.06599190283401,
+    "activeProjects": 11,
+    "completedProjects": 38,
+    "retiredCount": 30,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 86,
+    "playerCash": 35604802.800000265,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2469,
+    "avgTalentPrestige": 47.05346294046173,
+    "activeProjects": 11,
+    "completedProjects": 38,
+    "retiredCount": 31,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 87,
+    "playerCash": 24514895.600000262,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2469,
+    "avgTalentPrestige": 47.05346294046173,
+    "activeProjects": 11,
+    "completedProjects": 38,
+    "retiredCount": 31,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 88,
+    "playerCash": 13399056.00000026,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2468,
+    "avgTalentPrestige": 47.06037277147488,
+    "activeProjects": 11,
+    "completedProjects": 38,
+    "retiredCount": 32,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 89,
+    "playerCash": 2257744.000000261,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2467,
+    "avgTalentPrestige": 47.06364004864208,
+    "activeProjects": 11,
+    "completedProjects": 38,
+    "retiredCount": 33,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 90,
+    "playerCash": -8907854.39999974,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2467,
+    "avgTalentPrestige": 47.06364004864208,
+    "activeProjects": 11,
+    "completedProjects": 38,
+    "retiredCount": 33,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 91,
+    "playerCash": -20155172.399999738,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2467,
+    "avgTalentPrestige": 47.06364004864208,
+    "activeProjects": 11,
+    "completedProjects": 38,
+    "retiredCount": 33,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 92,
+    "playerCash": -31499033.199999735,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2467,
+    "avgTalentPrestige": 47.06364004864208,
+    "activeProjects": 11,
+    "completedProjects": 38,
+    "retiredCount": 33,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 93,
+    "playerCash": -42939850.39999974,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2467,
+    "avgTalentPrestige": 47.06364004864208,
+    "activeProjects": 11,
+    "completedProjects": 38,
+    "retiredCount": 33,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 94,
+    "playerCash": -54476741.99999973,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2467,
+    "avgTalentPrestige": 47.06364004864208,
+    "activeProjects": 11,
+    "completedProjects": 38,
+    "retiredCount": 33,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 95,
+    "playerCash": -66823307.599999726,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2467,
+    "avgTalentPrestige": 47.06364004864208,
+    "activeProjects": 12,
+    "completedProjects": 38,
+    "retiredCount": 33,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 96,
+    "playerCash": -79060774.39999974,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2467,
+    "avgTalentPrestige": 47.06364004864208,
+    "activeProjects": 12,
+    "completedProjects": 38,
+    "retiredCount": 33,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 97,
+    "playerCash": -91401098.39999974,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2467,
+    "avgTalentPrestige": 47.06364004864208,
+    "activeProjects": 12,
+    "completedProjects": 38,
+    "retiredCount": 33,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 98,
+    "playerCash": -104445431.59999973,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2467,
+    "avgTalentPrestige": 47.06364004864208,
+    "activeProjects": 13,
+    "completedProjects": 38,
+    "retiredCount": 33,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 99,
+    "playerCash": -117497499.19999972,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2467,
+    "avgTalentPrestige": 47.06364004864208,
+    "activeProjects": 13,
+    "completedProjects": 38,
+    "retiredCount": 33,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 100,
+    "playerCash": -130653730.39999971,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2467,
+    "avgTalentPrestige": 47.06364004864208,
+    "activeProjects": 13,
+    "completedProjects": 38,
+    "retiredCount": 33,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 101,
+    "playerCash": -144476275.19999972,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2467,
+    "avgTalentPrestige": 47.06364004864208,
+    "activeProjects": 14,
+    "completedProjects": 38,
+    "retiredCount": 33,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 102,
+    "playerCash": -158354905.99999973,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2467,
+    "avgTalentPrestige": 47.06364004864208,
+    "activeProjects": 14,
+    "completedProjects": 38,
+    "retiredCount": 33,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 103,
+    "playerCash": -172343009.99999973,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2466,
+    "avgTalentPrestige": 47.052311435523116,
+    "activeProjects": 14,
+    "completedProjects": 38,
+    "retiredCount": 34,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 81,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 104,
+    "playerCash": -186444473.99999973,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2466,
+    "avgTalentPrestige": 45.0279805352798,
+    "activeProjects": 14,
+    "completedProjects": 38,
+    "retiredCount": 34,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 40,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  },
+  {
+    "week": 105,
+    "playerCash": -200653531.99999973,
+    "rivalAvgCash": null,
+    "totalSystemCash": null,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2466,
+    "avgTalentPrestige": 45.0279805352798,
+    "activeProjects": 14,
+    "completedProjects": 38,
+    "retiredCount": 34,
+    "bankruptcyCount": 0,
+    "marketShare": 0,
+    "industryLeader": "Headless Studio",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "tvAwardsWon": 0,
+    "tvGenreROI": {
+      "genre": "None",
+      "roi": 0
+    },
+    "averageA_ListCount": 40,
+    "totalBailoutCash": 0,
+    "avgNielsenKeyDemo": 0,
+    "cutCounts": {
+      "theatrical": 13,
+      "directors_cut": 0,
+      "sanitized": 2,
+      "unrated": 0
+    },
+    "activeStudioCount": 11,
+    "consolidationCount": 0
+  }
+]

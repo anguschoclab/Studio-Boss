@@ -19,6 +19,10 @@ export interface SimulationMetrics {
   tvGenreROI?: { genre: string; roi: number };
   averageA_ListCount: number;
   totalBailoutCash: number;
+  avgNielsenKeyDemo: number;
+  cutCounts: Record<string, number>;
+  activeStudioCount: number;
+  consolidationCount: number;
 }
 
 export class MetricsCollector {
@@ -37,8 +41,8 @@ export class MetricsCollector {
     const currentBailouts = (summary as any).totalBailouts || 0;
     this.totalBailoutCash += currentBailouts;
     
-    const rivalTotalCash = rivals.reduce((sum, r) => sum + r.cash, 0);
-    const platformTotalCash = platforms.reduce((sum, p) => sum + (p.cash || 0), 0);
+    const rivalTotalCash = rivals.reduce((sum, r) => sum + (Number(r.cash) || 0), 0);
+    const platformTotalCash = platforms.reduce((sum, p) => sum + (Number(p.cash) || 0), 0);
     
     // Increment total retirements
     this.totalRetired += (summary as any).retiredCount || 0;
@@ -47,8 +51,8 @@ export class MetricsCollector {
     let worldCompletedCount = 0;
     
     const allStudios = [
-        { id: 'PLAYER', projects: Object.values(state.studio.internal.projects), cash: state.finance.cash, name: state.studio.name },
-        ...rivals.map(r => ({ id: r.id, projects: Object.values(r.projects || {}), cash: r.cash, name: r.name }))
+        { id: 'PLAYER', projects: Object.values(state.studio.internal.projects), cash: Number(state.finance.cash) || 0, name: state.studio.name },
+        ...rivals.map(r => ({ id: r.id, projects: Object.values(r.projects || {}), cash: Number(r.cash) || 0, name: r.name }))
     ];
 
     allStudios.forEach(studio => {
@@ -110,6 +114,24 @@ export class MetricsCollector {
       .filter(p => !['released', 'archived', 'post_release'].includes(p.state))
       .reduce((sum, p) => sum + (p.budget || 0), 0);
 
+    // Nielsen & Cut Analytics
+    let totalNielsenDemo = 0;
+    let tvProjectCount = 0;
+    const cutCounts: Record<string, number> = { 'theatrical': 0, 'directors_cut': 0, 'sanitized': 0, 'unrated': 0 };
+
+    allStudios.forEach(studio => {
+        studio.projects.forEach(p => {
+            const formatMatch = (p.format || '').toLowerCase();
+            if ((formatMatch === 'tv' || formatMatch === 'series') && (p as any).nielsenProfile) {
+                totalNielsenDemo += (p as any).nielsenProfile.seasonAvgKeyDemo || 0;
+                tvProjectCount++;
+            }
+            if (p.activeCut) {
+                cutCounts[p.activeCut] = (cutCounts[p.activeCut] || 0) + 1;
+            }
+        });
+    });
+
     const metrics: SimulationMetrics = {
       week: state.week,
       playerCash: state.finance.cash,
@@ -128,7 +150,11 @@ export class MetricsCollector {
       tvAwardsWon: this.totalTvAwards,
       tvGenreROI: { genre: topTvGenre, roi: maxTvROI },
       averageA_ListCount: Object.values(state.industry.talentPool).filter(t => t.prestige >= 80).length,
-      totalBailoutCash: this.totalBailoutCash
+      totalBailoutCash: this.totalBailoutCash,
+      avgNielsenKeyDemo: tvProjectCount > 0 ? totalNielsenDemo / tvProjectCount : 0,
+      cutCounts: cutCounts,
+      activeStudioCount: rivals.length + 1,
+      consolidationCount: 11 - (rivals.length + 1)
     };
 
     this.history.push(metrics);
@@ -152,7 +178,7 @@ export class MetricsCollector {
     return `
 --- SIMULATION REPORT (Week ${last.week}) ---
 Player Cash: ${format(initial.playerCash)} -> ${format(last.playerCash)}
-Rival Avg Cash: ${format(last.rivalAvgCash)}
+Active Studios: ${last.activeStudioCount} / 11 (Mergers: ${last.consolidationCount})
 Total System Cash: ${format(last.totalSystemCash)}
 Industry Leader: ${last.industryLeader || 'None'}
 Talent Pool Size: ${last.talentPoolSize} (Avg Prestige: ${last.avgTalentPrestige.toFixed(1)})
@@ -165,6 +191,8 @@ Player Market Share: ${last.marketShare.toFixed(2)}%
 TV Awards Won: ${last.tvAwardsWon}
 Top TV Genre ROI: ${last.tvGenreROI?.genre} (${last.tvGenreROI?.roi.toFixed(2)}x)
 A-List Count: ${last.averageA_ListCount}
+Avg TV Rating (18-49): ${last.avgNielsenKeyDemo.toFixed(2)}
+Cut Variety: Theatrical (${last.cutCounts['theatrical']}), DirCut (${last.cutCounts['directors_cut']}), Sanitized (${last.cutCounts['sanitized']})
 Total Bailout Cash (Artifical): ${format(last.totalBailoutCash)}
 ------------------------------------------
     `;

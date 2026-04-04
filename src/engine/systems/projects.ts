@@ -260,10 +260,41 @@ function handlePostReleasePhase(p: Project, rng: RandomGenerator): { update: str
   return { update, talentUpdates: [] };
 }
 
-function handleMarketingPhase(p: Project): { update: string | null; talentUpdates: Talent[] } {
+function handleMarketingPhase(p: Project, talentPoolMap: Map<string, Talent>, projectContracts: Contract[], rng: RandomGenerator): { update: string | null; talentUpdates: Talent[]; newScandals: any[] } {
   p.state = 'marketing';
   p.weeksInPhase = 0;
-  return { update: `"${p.title}" has wrapped production and is ready for marketing strategy.`, talentUpdates: [] };
+  
+  const newScandals: any[] = [];
+  
+  // Auteur Friction Logic
+  if (p.activeCut === 'sanitized') {
+    const directorContract = projectContracts.find(c => c.role === 'director');
+    if (directorContract) {
+      const director = talentPoolMap.get(directorContract.talentId);
+      if (director && director.directorArchetype === 'auteur') {
+        // 80% chance of a scandal if an auteur is sanitized
+        if (rng.next() < 0.8) {
+          newScandals.push({
+            id: rng.uuid('sc-auteur'),
+            type: 'director_speaks_out',
+            talentId: director.id,
+            severity: 70,
+            headline: `${director.name} Slams Studio Over "${p.title}" Edit`,
+            description: `Renowned director ${director.name} has publically disowned the studio's "sanitized" cut of "${p.title}", claiming their creative vision was compromised for commercial gain.`,
+            isPublic: true,
+            weekDiscovered: 0 // Will be set by reducer
+          });
+          p.buzz = Math.max(0, p.buzz - 15); // Negative buzz from controversy
+        }
+      }
+    }
+  }
+
+  return { 
+    update: `"${p.title}" has wrapped production and is ready for marketing strategy.`, 
+    talentUpdates: [],
+    newScandals
+  };
 }
 
 export function executeMarketing(
@@ -332,8 +363,14 @@ export function advanceProject(
     const result = handleDevelopmentPhase(p);
     update = result.update;
   } else if (p.state === 'production' && p.weeksInPhase >= (p.productionWeeks || 20)) {
-    const result = handleMarketingPhase(p);
+    const result = handleMarketingPhase(p, talentPoolMap, projectContracts, rng);
     update = result.update;
+    if ((result as any).newScandals) {
+      // In a real implementation we'd append to a return object, 
+      // but here we rely on the reducer to pick up 'newScandals' on the PROJECT_UPDATED or similar if we modify the project.
+      // Actually, we'll mark the project with these scandals so the reducer can process them.
+      (p as any).pendingScandals = (result as any).newScandals;
+    }
   } else if (p.state === 'released') {
     const result = handleReleasedPhase(p, projectContracts, talentPoolMap, rivalStrengthAvg, projectAwards, rng, trendMultiplier, franchiseSynergy, franchiseFatigue);
     update = result.update;

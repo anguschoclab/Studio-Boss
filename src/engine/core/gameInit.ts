@@ -41,10 +41,14 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
     for (let i = 0; i < projCount; i++) {
         const pId = rng.uuid('p-init');
         const isProd = rng.next() < 0.5;
+        const isTv = rng.next() < 0.3; // 30% TV mix
         const genre = rng.pick(ALL_GENRES);
+        const format = isTv ? 'tv' : 'film';
+        
         rProjects[pId] = {
             id: pId,
-            title: generateProjectName('movie', genre, rng),
+            title: generateProjectName(format, genre, rng),
+            type: isTv ? 'SERIES' : 'FILM',
             state: isProd ? 'production' : 'development',
             weeksInPhase: rng.rangeInt(1, 10),
             productionWeeks: rng.rangeInt(12, 26),
@@ -52,9 +56,22 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
             budget: rng.rangeInt(10, 150) * 1_000_000,
             buzz: rng.rangeInt(20, 60),
             genre,
-            format: 'movie',
-            reviewScore: 50
+            format,
+            reviewScore: 50,
+            revenue: 0,
+            accumulatedCost: 0
         };
+
+        if (isTv) {
+            rProjects[pId].tvDetails = {
+                currentSeason: 1,
+                episodesOrdered: 10,
+                episodesCompleted: 0,
+                episodesAired: 0,
+                averageRating: 0,
+                status: 'IN_DEVELOPMENT'
+            };
+        }
     }
 
     return {

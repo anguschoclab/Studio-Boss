@@ -19,6 +19,7 @@ import { advanceMarketEvents } from '../systems/marketEvents';
 import { advanceScandals, generateScandals } from '../systems/scandals';
 import { advanceBuyers } from '../systems/buyerMergers';
 import { checkAndTriggerCrisis } from '../systems/crises';
+import { OpportunitySystem } from '../systems/market/OpportunitySystem';
 import { advanceDeals } from '../systems/deals';
 
 // New Industry Systems

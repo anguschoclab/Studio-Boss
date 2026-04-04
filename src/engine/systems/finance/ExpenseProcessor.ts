@@ -78,7 +78,7 @@ export class ExpenseProcessor {
    * Calculates weekly overhead for TalentPacts.
    */
   static calculatePactOverhead(pacts: TalentPact[]): number {
-    return (pacts || []).reduce((total, pact) => total + (pact.weeklyOverheadCost || 0), 0);
+    return (pacts || []).reduce((total, pact) => total + (pact.weeklyOverhead || 0), 0);
   }
 
   /**
@@ -87,7 +87,11 @@ export class ExpenseProcessor {
   static calculateConsolidatedExpenses(
     projects: Project[],
     state: GameState,
-    market: import('../../types/state.types').MarketState
+    market: import('../../types/state.types').MarketState,
+    studioArchetype: string,
+    studioCash: number,
+    studioPrestige: number,
+    pacts: TalentPact[]
   ): {
     production: number;
     marketing: number;
@@ -95,17 +99,17 @@ export class ExpenseProcessor {
     interest: number;
     pacts: number;
   } {
-    const studioLevel = state.studio.archetype === 'major' ? 3 : (state.studio.archetype === 'mid-tier' ? 2 : 1);
+    const studioLevel = studioArchetype === 'major' ? 3 : (studioArchetype === 'mid-tier' ? 2 : 1);
     const production = this.calculateProductionBurn(projects);
     const marketing = this.calculateMarketingBurn(projects);
     const overhead = this.calculateStudioBurn(studioLevel, projects.filter(p => p.state !== 'released' && p.state !== 'archived').length);
-    const pacts = this.calculatePactOverhead(state.studio.internal.firstLookDeals || []);
+    const pactsBurn = this.calculatePactOverhead(pacts);
 
-    const isDebt = state.finance.cash < 0;
+    const isDebt = studioCash < 0;
     const interest = isDebt 
-      ? this.calculateDebtInterest(state.finance.cash, market.debtRate, state.studio.prestige, state.industry.awards || [])
-      : -this.calculateSavingsYield(state.finance.cash, market.savingsYield);
+      ? this.calculateDebtInterest(studioCash, market.debtRate, studioPrestige, state.industry.awards || [])
+      : -this.calculateSavingsYield(studioCash, market.savingsYield);
 
-    return { production, marketing, overhead, interest, pacts };
+    return { production, marketing, overhead, interest, pacts: pactsBurn };
   }
 }

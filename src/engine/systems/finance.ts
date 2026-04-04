@@ -1,4 +1,4 @@
-import { Project, GameState, WeeklyFinancialReport, Buyer } from '@/engine/types';
+import { Project, GameState, WeeklyFinancialReport, Buyer, Contract, TalentPact } from '@/engine/types';
 import { StateImpact, FinancialSnapshot } from '../types/state.types';
 import { RevenueProcessor } from './finance/RevenueProcessor';
 import { ExpenseProcessor } from './finance/ExpenseProcessor';
@@ -32,28 +32,39 @@ export function calculateStudioNetWorth(state: GameState): number {
 
 /**
  * Integrated Economic Tick using modular processors.
+ * ⚡ Phase 5: Refactored to handle any studio (player or rival).
  */
 export function generateWeeklyFinancialReport(
-  state: GameState, 
+  state: GameState,
+  studioId: string,
+  projectsMap: Record<string, Project>,
+  studioCash: number,
+  studioArchetype: string,
+  studioPrestige: number,
+  contracts: Contract[],
+  pacts: TalentPact[],
   pendingImpacts: StateImpact[] = []
 ): { report: WeeklyFinancialReport; snapshot: FinancialSnapshot } {
-  const projects: Project[] = [];
-  for (const key in state.studio.internal.projects) {
-    const p = state.studio.internal.projects[key];
-    projects.push(p);
-  }
-
+  const projects = Object.values(projectsMap || {});
   const market = state.finance.marketState || InterestRateSimulator.initialize();
   
-  // 1. Calculate Passive Income from Vault
-  const passive = RevenueProcessor.calculateVaultDividends(state.ip.vault);
+  // 1. Calculate Passive Income from Vault (Filtered by Studio ownership in Phase 5)
+  const passive = RevenueProcessor.calculateVaultDividends(state.ip.vault, studioId);
   
   // 2. Calculate Active Revenue & Royalties
   const { boxOffice, distribution, merch, totalRoyalties, projectRecoupment } = 
-    RevenueProcessor.calculateActiveRevenue(projects, state);
+    RevenueProcessor.calculateActiveRevenue(projects, state, contracts, state.ip.vault, studioId);
 
   // 3. Calculate Operational Expenses (Consolidated)
-  const expenses = ExpenseProcessor.calculateConsolidatedExpenses(projects, state, market);
+  const expenses = ExpenseProcessor.calculateConsolidatedExpenses(
+      projects, 
+      state, 
+      market, 
+      studioArchetype, 
+      studioCash, 
+      studioPrestige, 
+      pacts
+  );
 
   // 4. Consolidated One-off Impacts (Awards, Festivals, Acquisitions)
   let otherRevenue = 0;
@@ -61,14 +72,20 @@ export function generateWeeklyFinancialReport(
 
   for (let i = 0; i < pendingImpacts.length; i++) {
     const impact = pendingImpacts[i];
-    if (impact.type === 'FINANCE_TRANSACTION' && impact.payload) {
-      const amount = (impact.payload as { amount: number }).amount || 0;
-      if (amount > 0) otherRevenue += amount;
-      else otherExpenses += Math.abs(amount);
-    } else if (impact.cashChange) {
-      const change = impact.cashChange as number;
-      if (change > 0) otherRevenue += change;
-      else otherExpenses += Math.abs(change);
+    // Only apply if target matches or it is a generic player impact
+    const isTarget = impact.payload && (impact.payload as any).targetId === studioId;
+    const isGenericPlayer = studioId === 'player' && !impact.payload?.targetId;
+
+    if (isTarget || isGenericPlayer) {
+        if (impact.type === 'FINANCE_TRANSACTION' && impact.payload) {
+            const amount = (impact.payload as { amount: number }).amount || 0;
+            if (amount > 0) otherRevenue += amount;
+            else otherExpenses += Math.abs(amount);
+        } else if (impact.cashChange) {
+            const change = impact.cashChange as number;
+            if (change > 0) otherRevenue += change;
+            else otherExpenses += Math.abs(change);
+        }
     }
   }
 
@@ -79,7 +96,7 @@ export function generateWeeklyFinancialReport(
   const report: WeeklyFinancialReport = {
     week: state.week,
     year: Math.floor((state.week - 1) / 52) + 1,
-    startingCash: state.finance.cash,
+    startingCash: studioCash,
     revenue: { 
       boxOffice, 
       distribution, 
@@ -91,7 +108,7 @@ export function generateWeeklyFinancialReport(
       overhead: expenses.overhead,
       pacts: expenses.pacts
     },
-    endingCash: state.finance.cash + netProfit,
+    endingCash: studioCash + netProfit,
     netProfit,
   };
 
@@ -112,7 +129,7 @@ export function generateWeeklyFinancialReport(
       pacts: expenses.pacts
     },
     net: netProfit,
-    cash: state.finance.cash + netProfit,
+    cash: studioCash + netProfit,
     projectRecoupment
   };
 
@@ -126,7 +143,15 @@ export function calculateWeeklyCosts(state: GameState): number {
   }
 
   const market = state.finance.marketState || InterestRateSimulator.initialize();
-  const expenses = ExpenseProcessor.calculateConsolidatedExpenses(projects, state, market);
+  const expenses = ExpenseProcessor.calculateConsolidatedExpenses(
+      projects, 
+      state, 
+      market, 
+      state.studio.archetype, 
+      state.finance.cash, 
+      state.studio.prestige, 
+      state.studio.internal.firstLookDeals || []
+  );
   return expenses.production + expenses.marketing + expenses.overhead + expenses.pacts;
 }
 
@@ -158,7 +183,16 @@ export function calculateWeeklyRevenue(state: GameState): number {
 }
 
 export function generateCashflowForecast(state: GameState, weeks: number = 12): { week: number; projected: number }[] {
-  const { report } = generateWeeklyFinancialReport(state);
+  const { report } = generateWeeklyFinancialReport(
+      state, 
+      'player', 
+      state.studio.internal.projects, 
+      state.finance.cash, 
+      state.studio.archetype, 
+      state.studio.prestige, 
+      state.studio.internal.contracts, 
+      state.studio.internal.firstLookDeals || []
+  );
   const netProfit = report.netProfit;
   
   const forecast: { week: number; projected: number }[] = [];

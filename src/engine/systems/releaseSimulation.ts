@@ -55,14 +55,24 @@ export function calculateOpeningWeekend(
     weeksInMarketing: 0
   } as MarketingCampaign;
 
-  // 1. Calculate Base Potential (based on Buzz and Talent Draw)
+  const buzzFactor = project.buzz / 50;
   const talentDraw = attachedTalent.reduce((sum, t) => sum + t.draw, 1);
   const avgTalentDraw = attachedTalent.length > 0 ? talentDraw / attachedTalent.length : 0;
-  const buzzFactor = project.buzz / 50;
-  const prestigeFactor = 0.8 + (studioPrestige / 200);
   
   // Base potential: roughly 5x budget for a perfect storm, 0.5x for a duds
-  const basePotential = (project.budget * 0.4) * buzzFactor * prestigeFactor * (1 + (avgTalentDraw / 100));
+  let basePotential = (project.budget * 0.4) * buzzFactor * (0.8 + (studioPrestige / 200)) * (1 + (avgTalentDraw / 100));
+  
+  // Rating Cut Multipliers
+  if (project.activeCut === 'directors_cut') {
+      basePotential *= 1.15; // Critical darling/fan service boost
+      project.reviewScore = Math.min(100, (project.reviewScore || 50) + 15);
+  } else if (project.activeCut === 'sanitized') {
+      basePotential *= 0.9; // Fan backlash/compromised vision
+      project.reviewScore = Math.max(1, (project.reviewScore || 50) - 10);
+  } else if (project.activeCut === 'unrated') {
+      basePotential *= 1.25; // Cult/curiosity interest
+  }
+
   const randomFactor = rng.range(0.85, 1.15);
   
   let effectiveGross = basePotential * randomFactor * franchiseSynergy; // Apply Halo Effect

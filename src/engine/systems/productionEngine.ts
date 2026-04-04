@@ -100,6 +100,16 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
     contractMap.set(contract.projectId, list);
   }
 
+  // collect rival contracts
+  for (const rival of state.industry.rivals) {
+    if (!rival.contracts) continue;
+    for (const contract of rival.contracts) {
+      const list = contractMap.get(contract.projectId) || [];
+      list.push(contract);
+      contractMap.set(contract.projectId, list);
+    }
+  }
+
   // 1. Player Projects
   const playerProjects = { ...state.studio.internal.projects };
   let playerChanged = false;
