@@ -93,7 +93,7 @@ export const TARGET_AUDIENCES = [
 export const CROSSOVER_AFFINITY: Record<string, string[]> = {
   'Superhero': ['Action', 'Sci-Fi', 'Fantasy', 'Comedy', 'Animation', 'Crime', 'Horror', 'Multiverse', 'IP Mashup'],
   'Action': ['Sci-Fi', 'Thriller', 'Crime', 'Superhero', 'Comedy', 'Video Game Adaptation'],
-  'Sci-Fi': ['Action', 'Horror', 'Fantasy', 'Animation', 'Thriller', 'Video Game Adaptation', 'Multiverse'],
+  'Sci-Fi': ['Action', 'Horror', 'Fantasy', 'Animation', 'Thriller', 'Video Game Adaptation', 'Multiverse', 'Space Opera', 'Cyberpunk'],
   'Horror': ['Sci-Fi', 'Thriller', 'Comedy', 'Fantasy', 'Documentary', 'Elevated Horror'],
   'Fantasy': ['Action', 'Romance', 'Animation', 'Sci-Fi', 'Multiverse'],
   'Comedy': ['Romance', 'Action', 'Animation', 'Superhero', 'Musical', 'Horror', 'IP Mashup'],
@@ -108,11 +108,13 @@ export const CROSSOVER_AFFINITY: Record<string, string[]> = {
   'Multiverse': ['Superhero', 'Sci-Fi', 'Fantasy', 'Action', 'Animation', 'IP Mashup'],
   'Elevated Horror': ['Horror', 'Thriller', 'Drama', 'Psychological Thriller'],
   'IP Mashup': ['Comedy', 'Action', 'Animation', 'Superhero', 'Multiverse', 'Sci-Fi', 'Video Game Adaptation'],
-  'Video Game Adaptation': ['Action', 'Sci-Fi', 'Fantasy', 'Animation', 'Horror', 'IP Mashup']
+  'Video Game Adaptation': ['Action', 'Sci-Fi', 'Fantasy', 'Animation', 'Horror', 'IP Mashup'],
+  'Space Opera': ['Sci-Fi', 'Action', 'Fantasy', 'Multiverse'],
+  'Cyberpunk': ['Sci-Fi', 'Action', 'Thriller', 'Crime']
 };
 
 export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
-  'Superhero': 0.85,
+  'Superhero': 0.95, // 🌌 The Universe Builder: Modern audiences burn out on superheroes much faster.
   'Action': 0.50,
   'Sci-Fi': 0.45,
   'Fantasy': 0.30,
@@ -126,9 +128,9 @@ export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
   'Crime': 0.20,
   'Musical': 0.25,
   'Unscripted': 0.40, // Reality/Unscripted can fatigue quickly if over-saturated
-  'Multiverse': 0.90, // Extremely high fatigue risk if overdone
+  'Multiverse': 0.95, // 🌌 The Universe Builder: Extremely high fatigue risk if overdone
   'Elevated Horror': 0.20,
-  'IP Mashup': 0.75, // High burnout potential
+  'IP Mashup': 0.85, // 🌌 The Universe Builder: High burnout potential
   'Video Game Adaptation': 0.60,
   'Space Opera': 0.65,
   'Cyberpunk': 0.55,

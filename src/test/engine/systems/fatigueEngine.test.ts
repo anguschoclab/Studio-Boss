@@ -19,11 +19,12 @@ describe('Fatigue Engine', () => {
 
   it('calculates high fatigue for a heavily penalized oversaturated genre (Superhero)', () => {
     const fatigue = calculateFranchiseFatigue(mockFranchise, 2, 'Superhero');
-    // activeCount (1) * 0.85 = 0.85
+    // baseRate is 0.95 now.
+    // activeCount (1) * 0.95 = 0.95
     // rivalPenalty (2/10 * 0.15 * 1.0) = 0.03
     // loyaltyShield (50/100 * 0.3) = 0.15
-    // 0.85 + 0.03 - 0.15 = 0.73
-    expect(fatigue).toBeCloseTo(0.73, 2);
+    // 0.95 + 0.03 - 0.15 = 0.83
+    expect(fatigue).toBeCloseTo(0.83, 2);
   });
 
   it('applies exponential dilution for multiple active projects', () => {
@@ -39,8 +40,8 @@ describe('Fatigue Engine', () => {
     expect(impact.fatigueReset).toBe(true);
   });
 
-  it('identifies The Dead Zone for 5 year gaps', () => {
-    const impact = calculateReleaseGapImpact([100], 360); // ~5 years
+  it('identifies The Dead Zone for 4.5 year gaps', () => {
+    const impact = calculateReleaseGapImpact([100], 334); // ~4.5 years
     expect(impact.buzzBonus).toBe(-25);
     expect(impact.label).toContain('Dead Zone');
   });

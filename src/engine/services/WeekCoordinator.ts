@@ -122,6 +122,8 @@ export class WeekCoordinator {
 
   private static runProductionFilter(state: GameState, context: TickContext) {
     context.impacts.push(...tickProduction(state, context.rng));
+    const activeStages = ['prep', 'production', 'post_production', 'marketing'];
+
     for (const key in state.studio.internal.projects) {
       const project = state.studio.internal.projects[key];
       if (project.state === 'development') {
@@ -133,9 +135,12 @@ export class WeekCoordinator {
           });
           if (result.impact) context.impacts.push(result.impact);
         }
+      } else if (!project.activeCrisis && activeStages.includes(project.state)) {
+        const impact = checkAndTriggerCrisis(project, context.rng);
+        if (impact) context.impacts.push(impact);
       }
     }
-    this.runCrisisFilter(state, context);
+
     context.impacts.push(...tickTelevision(state, context.rng));
     context.impacts.push(...calculateFranchiseEvolutionImpacts(state, context.rng));
     context.impacts.push(...tickIPVault(state));
@@ -147,7 +152,7 @@ export class WeekCoordinator {
     for (const key in state.studio.internal.projects) {
       const project = state.studio.internal.projects[key];
       if (!project.activeCrisis && activeStages.includes(project.state)) {
-        const impact = checkAndTriggerCrisis(project, context.rng);
+        const impact = checkAndTriggerCrisis(project, state, context.rng);
         if (impact) context.impacts.push(impact);
       }
     }

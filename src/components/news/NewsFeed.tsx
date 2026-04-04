@@ -41,7 +41,8 @@ export const NewsFeed = () => {
           </Badge>
         </div>
 
-        <div className="flex gap-1.5 overflow-x-auto pb-2 custom-scrollbar no-scrollbar">
+        {/* Switched from horizontal scroll to flex wrap for better mobile reflow. */}
+        <div className="flex flex-wrap gap-2 pb-2">
           <button 
             onClick={() => setFilter('ALL')}
             aria-pressed={filter === 'ALL'}
@@ -60,7 +61,7 @@ export const NewsFeed = () => {
                 filter === type ? 'bg-blue-600 text-white border-blue-500' : 'bg-slate-900 text-slate-400 border-slate-800'
               }`}
             >
-              {type}
+              {eventTypeConfig[type].label}
             </button>
           ))}
         </div>

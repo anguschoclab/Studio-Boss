@@ -33,8 +33,9 @@ export function advanceRumors(state: GameState, rng: RandomGenerator): StateImpa
   // Remove resolved rumors older than 4 weeks
   currentRumors = currentRumors.filter(r => !(r.resolved && state.week - r.week > 4));
   
-  // Generate new rumors (5% chance per week)
-  if (rng.next() < 0.05 && currentRumors.filter(r => !r.resolved).length < 3) {
+  // Generate new rumors based on studio size/prestige
+  const baseRumorChance = 0.05 + (state.studio.prestige * 0.001);
+  if (rng.next() < baseRumorChance && currentRumors.filter(r => !r.resolved).length < 3) {
     const isTrue = rng.next() > 0.5;
     const subjects = ['talent', 'rival', 'project'];
     const category = pick(subjects, rng) as 'talent' | 'rival' | 'project';
