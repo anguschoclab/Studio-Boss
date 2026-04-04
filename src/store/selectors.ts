@@ -38,11 +38,7 @@ export const selectProjectsRaw = createSelector(
 
 export const selectProjects = createSelector(
   [selectProjectsRaw],
-  (projects): Project[] => {
-    const arr: Project[] = [];
-    for (const key in projects) arr.push(projects[key]);
-    return arr;
-  }
+  (projects): Project[] => Object.values(projects)
 );
 
 export const selectFinance = createSelector(
