@@ -60,7 +60,7 @@ export function advanceDeals(deals: TalentPact[], currentWeek: number, rng: Rand
   
   for (let i = 0; i < deals.length; i++) {
     const deal = deals[i];
-    if (deal.endDate <= currentWeek && deal.status === 'active') {
+    if (deal.endDate === currentWeek && deal.status === 'active') {
       impacts.push({
         newsEvents: [{
           id: rng.uuid('news-expired'),
