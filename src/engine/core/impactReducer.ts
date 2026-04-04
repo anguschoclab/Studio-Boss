@@ -281,10 +281,13 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     }
 
     case 'SYSTEM_TICK': {
-      // Integration of new projects and IP assets usually happens here if triggered by a system tick
-      // but for manual actions like acquisition, we handle it in the default or RIVAL_UPDATED.
-      // However, BaseImpact has them as top-level fields, so we should handle them in the main reducer loop.
-      return state;
+      const { week, tickCount } = impact.payload;
+      state = {
+        ...state,
+        week: week ?? state.week,
+        tickCount: tickCount ?? state.tickCount
+      };
+      break;
     }
 
     case 'FRANCHISE_UPDATED': {
@@ -354,121 +357,122 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
 
     case 'SYSTEM_TICK': {
       const { week, tickCount } = impact.payload;
-      return {
+      state = {
         ...state,
         week: week ?? state.week,
         tickCount: tickCount ?? state.tickCount
       };
-    }
-
-    default: {
-      // Handle the "base" case for merged impacts (Recursive application)
-      let newState = state;
-      if (impact.cashChange !== undefined) {
-          newState = applySingleImpact(newState, { type: 'FUNDS_CHANGED', payload: { amount: impact.cashChange } });
-      }
-      if (impact.prestigeChange !== undefined) {
-          newState = applySingleImpact(newState, { type: 'PRESTIGE_CHANGED', payload: { amount: impact.prestigeChange } });
-      }
-      if (impact.projectUpdates) {
-          impact.projectUpdates.forEach(u => {
-              newState = applySingleImpact(newState, { type: 'PROJECT_UPDATED', payload: u });
-          });
-      }
-      if (impact.rivalUpdates) {
-          impact.rivalUpdates.forEach(u => {
-              newState = applySingleImpact(newState, { type: 'RIVAL_UPDATED', payload: u });
-          });
-      }
-      if (impact.newHeadlines) {
-          impact.newHeadlines.forEach(h => {
-              newState = applySingleImpact(newState, { 
-                type: 'NEWS_ADDED', 
-                payload: { id: h.id, headline: h.text, description: '', category: h.category, publication: h.publication } 
-              });
-          });
-      }
-      if (impact.newsEvents) {
-          impact.newsEvents.forEach(e => {
-              newState = applySingleImpact(newState, { 
-                type: 'NEWS_ADDED', 
-                payload: { id: e.id, headline: e.headline, description: e.description, publication: e.publication } 
-              });
-          });
-      }
-      if (impact.newAwards) {
-          impact.newAwards.forEach(award => {
-              const projects = { ...newState.studio.internal.projects };
-              const project = projects[award.projectId];
-              if (project) {
-                  projects[award.projectId] = { 
-                      ...project, 
-                      awards: [...(project.awards || []), award] 
-                  };
-              }
-              newState = { ...newState, studio: { ...newState.studio, internal: { ...newState.studio.internal, projects } } };
-          });
-      }
-      if (impact.cultClassicProjectIds) {
-          impact.cultClassicProjectIds.forEach(id => {
-              const projects = { ...newState.studio.internal.projects };
-              const project = projects[id];
-              if (project) {
-                  projects[id] = { ...project, isCultClassic: true };
-              }
-              newState = { ...newState, studio: { ...newState.studio, internal: { ...newState.studio.internal, projects } } };
-          });
-      }
-      if (impact.razzieWinnerTalents) {
-          impact.razzieWinnerTalents.forEach(id => {
-              const talentPool = { ...newState.industry.talentPool };
-              const talent = talentPool[id];
-              if (talent) {
-                  talentPool[id] = { ...talent, razzieWinner: true };
-              }
-              newState = { ...newState, industry: { ...newState.industry, talentPool } };
-          });
-      }
-      if (impact.newProjects) {
-        newState = {
-          ...newState,
-          studio: {
-            ...newState.studio,
-            internal: {
-              ...newState.studio.internal,
-              projects: { ...newState.studio.internal.projects, ...Object.fromEntries(impact.newProjects.map(p => [p.id, p])) }
-            }
-          }
-        };
-      }
-      if (impact.newContracts) {
-        newState = {
-          ...newState,
-          studio: {
-            ...newState.studio,
-            internal: {
-              ...newState.studio.internal,
-              contracts: [...newState.studio.internal.contracts, ...impact.newContracts]
-            }
-          }
-        };
-      }
-      if (impact.type === 'INDUSTRY_UPDATE') {
-        const payload = impact.payload as any;
-        Object.entries(payload).forEach(([path, value]) => {
-          if (path === 'market.opportunities') {
-            newState = { ...newState, market: { ...newState.market, opportunities: value as any } };
-          }
-        });
-      }
-      if (impact.newIPAssets) {
-          const newAssetIds = new Set(impact.newIPAssets.map(a => a.id));
-          const vault = [...newState.ip.vault.filter(a => !newAssetIds.has(a.id)), ...impact.newIPAssets];
-          newState = { ...newState, ip: { ...newState.ip, vault } };
-      }
-      return newState;
+      break;
     }
   }
+
+  // --- Root-Level Field Processing (Unified for all types) ---
+  let newState = state;
+  
+  if (impact.cashChange !== undefined) {
+    newState = applySingleImpact(newState, { type: 'FUNDS_CHANGED', payload: { amount: impact.cashChange } });
+  }
+  if (impact.prestigeChange !== undefined) {
+    newState = applySingleImpact(newState, { type: 'PRESTIGE_CHANGED', payload: { amount: impact.prestigeChange } });
+  }
+  if (impact.projectUpdates) {
+    impact.projectUpdates.forEach(u => {
+      newState = applySingleImpact(newState, { type: 'PROJECT_UPDATED', payload: u });
+    });
+  }
+  if (impact.rivalUpdates) {
+    impact.rivalUpdates.forEach(u => {
+      newState = applySingleImpact(newState, { type: 'RIVAL_UPDATED', payload: u });
+    });
+  }
+  if (impact.newHeadlines) {
+    impact.newHeadlines.forEach(h => {
+      newState = applySingleImpact(newState, { 
+        type: 'NEWS_ADDED', 
+        payload: { id: h.id, headline: h.text, description: '', category: h.category, publication: h.publication } 
+      });
+    });
+  }
+  if (impact.newsEvents) {
+    impact.newsEvents.forEach(e => {
+      newState = applySingleImpact(newState, { 
+        type: 'NEWS_ADDED', 
+        payload: { id: e.id, headline: e.headline, description: e.description, publication: e.publication } 
+      });
+    });
+  }
+  if (impact.newAwards) {
+    impact.newAwards.forEach(award => {
+      const projects = { ...newState.studio.internal.projects };
+      const project = projects[award.projectId];
+      if (project) {
+        projects[award.projectId] = { 
+          ...project, 
+          awards: [...(project.awards || []), award] 
+        };
+      }
+      newState = { ...newState, studio: { ...newState.studio, internal: { ...newState.studio.internal, projects } } };
+    });
+  }
+  if (impact.cultClassicProjectIds) {
+    impact.cultClassicProjectIds.forEach(id => {
+      const projects = { ...newState.studio.internal.projects };
+      const project = projects[id];
+      if (project) {
+        projects[id] = { ...project, isCultClassic: true };
+      }
+      newState = { ...newState, studio: { ...newState.studio, internal: { ...newState.studio.internal, projects } } };
+    });
+  }
+  if (impact.razzieWinnerTalents) {
+    impact.razzieWinnerTalents.forEach(id => {
+      const talentPool = { ...newState.industry.talentPool };
+      const talent = talentPool[id];
+      if (talent) {
+        talentPool[id] = { ...talent, razzieWinner: true };
+      }
+      newState = { ...newState, industry: { ...newState.industry, talentPool } };
+    });
+  }
+  if (impact.newProjects) {
+    newState = {
+      ...newState,
+      studio: {
+        ...newState.studio,
+        internal: {
+          ...newState.studio.internal,
+          projects: { ...newState.studio.internal.projects, ...Object.fromEntries(impact.newProjects.map(p => [p.id, p])) }
+        }
+      }
+    };
+  }
+  if (impact.newContracts) {
+    newState = {
+      ...newState,
+      studio: {
+        ...newState.studio,
+        internal: {
+          ...newState.studio.internal,
+          contracts: [...newState.studio.internal.contracts, ...impact.newContracts]
+        }
+      }
+    };
+  }
+  if (impact.type === 'INDUSTRY_UPDATE') {
+    const payload = impact.payload as any;
+    Object.entries(payload).forEach(([path, value]) => {
+      if (path === 'market.opportunities') {
+        newState = { ...newState, market: { ...newState.market, opportunities: value as any } };
+      }
+    });
+  }
+  if (impact.newIPAssets) {
+    const newAssetIds = new Set(impact.newIPAssets.map(a => a.id));
+    const vault = [...newState.ip.vault.filter(a => !newAssetIds.has(a.id)), ...impact.newIPAssets];
+    newState = { ...newState, ip: { ...newState.ip, vault } };
+  }
+  
+  return newState;
 }
 
 /**
