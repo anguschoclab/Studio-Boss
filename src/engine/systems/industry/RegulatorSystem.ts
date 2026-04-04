@@ -20,29 +20,29 @@ export class RegulatorSystem {
     studios.forEach(s => {
       const share = s.revenue / totalIndustryRevenue;
       if (share > threshold && s.type === 'major') {
-        const fine = 25_000_000; // Flat fine for dominance per TDD
+        const fine = 25_000_000; 
 
-        if (s.id === 'player') {
-          impacts.push({
-            type: 'FINANCE_TRANSACTION',
-            payload: {
-              amount: -fine,
-              category: 'EXPENSE',
-              description: 'Statutory Anti-Trust Fine (Market Share Exceeds 40%)',
-              week: state.week
-            }
-          });
-          impacts.push({
-            type: 'NEWS_ADDED',
-            payload: {
-              id: rng.uuid('news'),
-              headline: `Federal Trade Commission Rules Against ${s.name}`,
-              description: `With a ${Math.round(share * 100)}% market share, ${s.name} is cited for monopolistic dominance.`,
-              category: 'market',
-              publication: 'Financial Journal'
-            }
-          });
-        }
+        impacts.push({
+          type: 'FINANCE_TRANSACTION',
+          payload: {
+            amount: -fine,
+            category: 'EXPENSE',
+            description: `Anti-Trust Fine: ${s.name} Market Share (${Math.round(share * 100)}%)`,
+            week: state.week,
+            targetId: s.id // Route to the specific studio
+          }
+        });
+
+        impacts.push({
+          type: 'NEWS_ADDED',
+          payload: {
+            id: rng.uuid('news'),
+            headline: `Federal Trade Commission Fines ${s.name}`,
+            description: `Cited for market dominance (${Math.round(share * 100)}%), ${s.name} has been issued a $25M penalty.`,
+            category: 'market',
+            publication: 'Financial Journal'
+          }
+        });
       }
     });
 

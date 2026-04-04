@@ -141,6 +141,30 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
       };
     }
 
+    case 'TALENT_ADDED': {
+      const { talent } = impact.payload;
+      return {
+        ...state,
+        industry: {
+          ...state.industry,
+          talentPool: { ...state.industry.talentPool, [talent.id]: talent }
+        }
+      };
+    }
+
+    case 'TALENT_REMOVED': {
+      const { talentId } = impact.payload;
+      const talentPool = { ...state.industry.talentPool };
+      delete talentPool[talentId];
+      return {
+        ...state,
+        industry: {
+          ...state.industry,
+          talentPool
+        }
+      };
+    }
+
     case 'BUYER_UPDATED': {
       const { buyerId, update } = impact.payload;
       const buyers = state.market.buyers.map(b => 
@@ -312,7 +336,19 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     }
 
     case 'FINANCE_TRANSACTION': {
-      const { amount } = impact.payload;
+      const { amount, targetId } = impact.payload;
+      if (targetId && targetId !== 'player') {
+        const rivals = state.industry.rivals.map(r => 
+          r.id === targetId ? { ...r, cash: r.cash + amount } as RivalStudio : r
+        );
+        return {
+          ...state,
+          industry: {
+            ...state.industry,
+            rivals
+          }
+        };
+      }
       return applySingleImpact(state, { type: 'FUNDS_CHANGED', payload: { amount } });
     }
 
@@ -394,11 +430,36 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
           });
       }
       if (impact.newProjects) {
-          const projects = { ...newState.studio.internal.projects };
-          impact.newProjects.forEach(p => {
-              projects[p.id] = p;
-          });
-          newState = { ...newState, studio: { ...newState.studio, internal: { ...newState.studio.internal, projects } } };
+        newState = {
+          ...newState,
+          studio: {
+            ...newState.studio,
+            internal: {
+              ...newState.studio.internal,
+              projects: { ...newState.studio.internal.projects, ...Object.fromEntries(impact.newProjects.map(p => [p.id, p])) }
+            }
+          }
+        };
+      }
+      if (impact.newContracts) {
+        newState = {
+          ...newState,
+          studio: {
+            ...newState.studio,
+            internal: {
+              ...newState.studio.internal,
+              contracts: [...newState.studio.internal.contracts, ...impact.newContracts]
+            }
+          }
+        };
+      }
+      if (impact.type === 'INDUSTRY_UPDATE') {
+        const payload = impact.payload as any;
+        Object.entries(payload).forEach(([path, value]) => {
+          if (path === 'market.opportunities') {
+            newState = { ...newState, market: { ...newState.market, opportunities: value as any } };
+          }
+        });
       }
       if (impact.newIPAssets) {
           const newAssetIds = new Set(impact.newIPAssets.map(a => a.id));
