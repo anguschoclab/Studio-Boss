@@ -19,9 +19,22 @@ export class StudioAutomation {
       });
     } else {
       state.industry.rivals.forEach(rival => {
+        let weeklyRivalRevenue = 0;
         Object.values(rival.projects || {}).forEach(p => {
           this.processProject(p, state, rng, impacts, rival.id);
+          
+          // Rival Revenue Collection
+          if (p.state === 'released' || p.state === 'post_release') {
+            weeklyRivalRevenue += (p.weeklyRevenue || 0) + (p.ancillaryRevenue || 0);
+          }
         });
+
+        if (weeklyRivalRevenue > 0) {
+          impacts.push({
+            type: 'RIVAL_UPDATED',
+            payload: { rivalId: rival.id, update: { cash: rival.cash + weeklyRivalRevenue } }
+          });
+        }
       });
     }
 

@@ -59,12 +59,10 @@ export class OpportunitySystem {
           payload: { amount: bidData.amount }
         });
         impacts.push({
-          type: 'INDUSTRY_UPDATE', // We'll use a generic update to push the new project
-          payload: { 
-            newProjects: [winnerProject],
-            newContracts: newContracts // Note: impactReducer needs to handle newContracts
-          }
-        });
+          type: 'PROJECT_ADDED_FROM_AUCTION', // Custom type just for clarity
+          newProjects: [winnerProject],
+          newContracts: newContracts 
+        } as any);
         impacts.push({
           type: 'NEWS_ADDED',
           payload: {

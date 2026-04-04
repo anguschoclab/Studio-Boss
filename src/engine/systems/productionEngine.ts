@@ -46,7 +46,7 @@ function tickProject(
   }
 
   const nextWeeksInPhase = (project.weeksInPhase || 0) + 1;
-  const targetWeeks = project.productionWeeks || 20;
+  const targetWeeks = Math.max(4, Math.min(30, project.productionWeeks || 20));
   
   // Production efficiency influenced by talent fatigue and morale
   const attachedTalent = getAttachedTalent(projectContracts, talentPool);

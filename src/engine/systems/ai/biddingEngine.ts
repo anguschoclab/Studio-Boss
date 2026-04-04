@@ -40,13 +40,16 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
       // 🎭 Method Actor Tuning: Franchise builders are willing to run low on liquidity to grab key assets.
       const liquidityBuffer = isFranchiseBuilder ? 1.05 : (isCashCrunch ? 1.5 : 1.25 - (motivationAggression * 0.15));
 
-      if (myBid < currentHighest && rival.cash > currentHighest * liquidityBuffer) {
+      // Determine the minimum bid floor (current highest or reserve cost)
+      const bidFloor = Math.max(currentHighest, opportunity.costToAcquire);
+
+      if (myBid < bidFloor && rival.cash > bidFloor * liquidityBuffer) {
         // 🎭 Method Actor Tuning: Massive spike in multiplier if franchise builders bid on Sci-Fi/Action.
         const isKeyIPGenre = opportunity.genre === 'Sci-Fi' || opportunity.genre === 'Action' || opportunity.genre === 'Fantasy';
         const franchiseAggression = isFranchiseBuilder && isKeyIPGenre ? 1.5 : (isFranchiseBuilder ? 1.2 : 1.0);
 
         const multiplier = (ArchetypeMultipliers[rival.archetype]?.(opportunity.genre) || 1.0) * aggressionFactor * franchiseAggression;
-        const newBid = Math.floor(currentHighest * (1 + (rng.range(1.05, 1.25) - 1) * multiplier));
+        const newBid = Math.floor(bidFloor * (1 + (rng.range(1.05, 1.25) - 1) * multiplier));
 
         // 🎭 Method Actor Tuning: Raise the max bid cap for franchise builders and aggressive studios so they don't give up easily.
         const maxBidCap = isFranchiseBuilder ? 0.65 : (isCashCrunch ? 0.15 : 0.40 + (motivationAggression * 0.1));

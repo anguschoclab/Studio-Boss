@@ -95,17 +95,29 @@ export class SimulationRunner {
         });
       });
 
-      // 3. Headless Automation (Optional)
-      const automatedImpacts: StateImpact[] = autoPilot ? HeadlessController.tick(state, rng) : [];
+      // 3. Studio Automation (Greenlights, Pitches, Releases)
+      // This handles the operational "blocking" states for both player and rivals
+      const playerAutomation = autoPilot ? StudioAutomation.tick(state, rng, true) : [];
+      const rivalAutomation = StudioAutomation.tick(state, rng, false);
       
-      // 4. Talent Lifecycle (Aging/Retirement)
+      // 4. Headless Bidding/Buying for Player (Still use Controller for persona specific bidding)
+      const playerBidding = autoPilot ? HeadlessController.tick(state, rng) : [];
+      
+      // 5. Talent Lifecycle (Aging/Retirement)
       const lifecycleImpacts = TalentLifecycleSystem.tick(state, rng);
 
-      // 5. Consolidate and Apply All Side Impacts
-      const allImpacts = [...engineImpacts, ...advancementImpacts, ...automatedImpacts, ...lifecycleImpacts];
+      // 6. Consolidate and Apply All Side Impacts
+      const allImpacts = [
+          ...engineImpacts, 
+          ...advancementImpacts, 
+          ...playerAutomation, 
+          ...rivalAutomation, 
+          ...playerBidding, 
+          ...lifecycleImpacts
+      ];
       state = applyImpacts(state, allImpacts);
 
-      // 5. Update Metrics (Inject summary data for reporting)
+      // 7. Update Metrics (Inject summary data for reporting)
       const retiredCount = allImpacts.filter(imp => imp.type === 'TALENT_REMOVED').length;
       (summary as any).retiredCount = retiredCount;
       
