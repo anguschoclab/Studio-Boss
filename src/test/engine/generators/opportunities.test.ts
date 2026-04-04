@@ -22,7 +22,7 @@ describe('Opportunity Generator', () => {
     // Use a fresh independent RNG to avoid state dependency on previous tests
     const freshRng = new RandomGenerator(99999);
     let foundTalent = false;
-    for (let i = 0; i < 200; i++) {
+    for (let i = 0; i < 1000; i++) {
       const opp = generateOpportunity(freshRng, 1, ['t-1', 't-2']);
       if (opp.attachedTalentIds && opp.attachedTalentIds.length > 0) {
         foundTalent = true;
