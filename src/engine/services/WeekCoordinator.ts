@@ -19,6 +19,7 @@ import { advanceMarketEvents } from '../systems/marketEvents';
 import { advanceScandals, generateScandals } from '../systems/scandals';
 import { advanceBuyers } from '../systems/buyerMergers';
 import { checkAndTriggerCrisis } from '../systems/crises';
+import { OpportunitySystem } from '../systems/market/OpportunitySystem';
 
 // New Industry Systems
 import { tickVerticalIntegration } from '../systems/industry/VerticalIntegrationProcessor';
@@ -118,6 +119,7 @@ export class WeekCoordinator {
     context.impacts.push(...tickVerticalIntegration(state, context.rng));
     context.impacts.push(...tickIndustryUpstarts(state, context.rng));
     context.impacts.push(...tickConsolidation(state, context.rng));
+    context.impacts.push(...OpportunitySystem.tick(state, context.rng));
   }
 
   private static runProductionFilter(state: GameState, context: TickContext) {
