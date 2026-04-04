@@ -31,7 +31,7 @@ interface UIStore {
   
   selectedProjectId: string | null;
   selectedTalentId: string | null;
-  setActiveTab: (tab: 'command' | 'pipeline' | 'ip' | 'deals' | 'talent' | 'finance' | 'trades' | 'industry' | 'sbdb' | 'streaming') => void;
+  setActiveTab: (tab: TabId) => void;
   openCreateProject: () => void;
   closeCreateProject: () => void;
   openPitchProject: (projectId: string) => void;
