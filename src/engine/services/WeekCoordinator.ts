@@ -273,6 +273,12 @@ export class WeekCoordinator {
        totalCosts = report.expenses.production + report.expenses.marketing + report.expenses.overhead + report.expenses.pacts;
     }
 
+    // ⚡ Bolt: Refactored array .map() to a for loop, avoiding extra allocation overhead.
+    const eventTitles: string[] = [];
+    for (let i = 0; i < context.events.length; i++) {
+      eventTitles.push(context.events[i].title);
+    }
+
     return {
       fromWeek: before.week,
       toWeek: after.week,
@@ -282,7 +288,7 @@ export class WeekCoordinator {
       totalCosts,
       projectUpdates: Array.from(new Set(projectUpdates)),
       newHeadlines: allHeadlines,
-      events: context.events.map(e => e.title),
+      events: eventTitles,
     };
   }
 }

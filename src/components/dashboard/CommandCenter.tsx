@@ -7,12 +7,16 @@ import { Badge } from '@/components/ui/badge';
 import { Clapperboard, Users, Building2, TrendingUp, Star, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-export const CommandCenter: React.FC = () => {
-  const gameState = useGameStore((state) => state.gameState);
-  if (!gameState) return null;
+import { useShallow } from 'zustand/react/shallow';
 
-  const { studio, industry } = gameState;
-  const projects = Object.values(studio?.internal?.projects || {});
+export const CommandCenter: React.FC = () => {
+  // ⚡ Bolt: Destructured with useShallow to prevent unnecessary re-renders on minor state ticks
+  const studio = useGameStore(useShallow((state) => state.gameState?.studio));
+  const industry = useGameStore(useShallow((state) => state.gameState?.industry));
+
+  if (!studio || !industry) return null;
+
+  const projects = Object.values(studio.internal.projects || {});
   const { talentPool, rivals, newsHistory } = industry;
 
   const activeProjectsCount = projects.filter(p => p.state !== 'released' && p.state !== 'post_release' && p.state !== 'archived').length;
