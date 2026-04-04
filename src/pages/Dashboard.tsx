@@ -14,6 +14,7 @@ import { IPVault } from '@/components/ip/IPVault';
 import { DealsDesk } from '@/components/deals/DealsDesk';
 import { SBDBView } from '@/components/sbdb/SBDBView';
 import { StreamingPanel } from '@/components/streaming/StreamingPanel';
+import { NielsenDashboard } from '@/components/television/NielsenDashboard';
 import { AnimatePresence, motion } from 'framer-motion';
 
 // Modals
@@ -53,6 +54,7 @@ const Dashboard: React.FC = () => {
       case 'trades': return <DiscoveryBoard key="trades" />;
       case 'sbdb': return <SBDBView key="sbdb" />;
       case 'streaming': return <StreamingPanel key="streaming" />;
+      case 'nielsen': return <NielsenDashboard key="nielsen" />;
       default: return <CommandCenter key="default" />;
     }
   };

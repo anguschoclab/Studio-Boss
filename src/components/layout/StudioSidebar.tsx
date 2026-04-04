@@ -11,6 +11,7 @@ import {
   Briefcase, 
   Newspaper,
   Tv,
+  BarChart3,
   ChevronLeft,
   ChevronRight,
   LogOut,
@@ -40,6 +41,7 @@ const NAV_ITEMS: NavItem[] = [
   { id: 'trades', label: 'The Trades', icon: Newspaper, tooltip: 'Scout new IP opportunities and monitor industry headlines' },
   { id: 'sbdb', label: 'SBDB', icon: Users, tooltip: 'Comprehensive historical database of all industry talent and credits' },
   { id: 'streaming', label: 'Streaming & Distribution', icon: Tv, tooltip: 'Manage platform content licenses and home video syndication' },
+  { id: 'nielsen', label: 'Nielsen Ratings', icon: BarChart3, tooltip: 'TV viewership analytics, demographic breakdowns, and weekly rankings' },
 ];
 
 export const StudioSidebar = () => {
