@@ -50,18 +50,22 @@ describe('Production Engine (Target A2) - Symmetry', () => {
     }
   } as unknown as GameState;
 
-  it('should return PROJECT_UPDATED impacts for Player and Rival', () => {
+  it('should return INDUSTRY_UPDATE and RIVAL_UPDATED impacts for Player and Rival', () => {
     const impacts = tickProduction(mockState, rng);
-    
-    const playerImpact = impacts.find(i => i.type === 'PROJECT_UPDATED' && i.payload.projectId === 'player-p1') as ProjectUpdateImpact | undefined;
-    const rivalImpact = impacts.find(i => i.type === 'PROJECT_UPDATED' && i.payload.projectId === 'rival-p1') as ProjectUpdateImpact | undefined;
-    
-    expect(playerImpact).toBeDefined();
-    expect(rivalImpact).toBeDefined();
-    
-    // Assert weeksInPhase increment
-    expect(playerImpact?.payload.update.weeksInPhase).toBe(6);
-    expect(rivalImpact?.payload.update.weeksInPhase).toBe(6);
+
+    // Player projects are batched into INDUSTRY_UPDATE
+    const industryUpdate = impacts.find(i => i.type === 'INDUSTRY_UPDATE') as any;
+    expect(industryUpdate).toBeDefined();
+    const playerProject = industryUpdate?.payload?.['studio.internal.projects']?.['player-p1'];
+    expect(playerProject).toBeDefined();
+    expect(playerProject?.weeksInPhase).toBe(6);
+
+    // Rival projects are batched into RIVAL_UPDATED
+    const rivalUpdate = impacts.find(i => i.type === 'RIVAL_UPDATED') as any;
+    expect(rivalUpdate).toBeDefined();
+    const rivalProject = rivalUpdate?.payload?.update?.projects?.['rival-p1'];
+    expect(rivalProject).toBeDefined();
+    expect(rivalProject?.weeksInPhase).toBe(6);
   });
 });
 
@@ -115,10 +119,11 @@ describe('Production Engine (Target A2) - Edge Cases', () => {
         industry: { rivals: [], talentPool: {} }
      } as unknown as GameState;
      const impacts = tickProduction(state, rng);
-     const projectImpact = impacts.find(i => (i as ProjectUpdateImpact).payload.projectId === 'p1') as ProjectUpdateImpact;
-     expect(projectImpact.payload.update.progress).toBeDefined();
-     expect(projectImpact.payload.update.progress).toBeGreaterThan(0);
-     expect(projectImpact.payload.update.progress).toBeLessThanOrEqual(100);
+     const industryUpdate = impacts.find(i => i.type === 'INDUSTRY_UPDATE') as any;
+     const updatedProject = industryUpdate?.payload?.['studio.internal.projects']?.['p1'];
+     expect(updatedProject).toBeDefined();
+     expect(updatedProject?.progress).toBeGreaterThan(0);
+     expect(updatedProject?.progress).toBeLessThanOrEqual(100);
   });
 
   it('should apply maximum morale multiplier if talents are fully motivated', () => {
@@ -176,7 +181,8 @@ describe('Production Engine (Target A2) - Edge Cases', () => {
           }
       } as unknown as GameState;
       const impacts = tickProduction(state, rng);
-      const projectImpact = impacts.find(i => (i as ProjectUpdateImpact).payload.projectId === 'p1') as ProjectUpdateImpact;
-      expect(projectImpact.payload.update.progress).toBeGreaterThan(0);
+      const industryUpdate = impacts.find(i => i.type === 'INDUSTRY_UPDATE') as any;
+      const updatedProject = industryUpdate?.payload?.['studio.internal.projects']?.['p1'];
+      expect(updatedProject?.progress).toBeGreaterThan(0);
   });
 });
