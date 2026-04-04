@@ -192,7 +192,7 @@ export function generateProjectTitle(rng: RandomGenerator): string {
   return `${adj} ${noun}`;
 }
 
-export function generateOpportunity(rng: RandomGenerator, talentIds?: string[]): Opportunity {
+export function generateOpportunity(rng: RandomGenerator, currentWeek: number, talentIds?: string[]): Opportunity {
   const isFilm = rng.next() > 0.4;
   const genre: string = pick([...GENRES], rng);
   const targetAudience: string = pick([...TARGET_AUDIENCES], rng);
@@ -217,7 +217,7 @@ export function generateOpportunity(rng: RandomGenerator, talentIds?: string[]):
     attachedTalentIds: talentIds && talentIds.length > 0 && rng.next() > 0.5 ? [pick(talentIds, rng)] : undefined,
     bids: {},
     bidHistory: [],
-    expirationWeek: weeksUntilExpiry,
+    expirationWeek: (currentWeek || 1) + weeksUntilExpiry,
   };
 
   if (!isFilm) {

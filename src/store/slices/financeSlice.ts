@@ -69,12 +69,9 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
       const state = s.gameState;
       if (budget > state.finance.cash) return s;
 
-      const pIndex = Object.values(state.studio.internal.projects).findIndex(p => p.id === projectId);
-      if (pIndex === -1) return s;
-
-      // Extract original project
-      const originalProject = Object.values(state.studio.internal.projects)[pIndex];
-      if (originalProject.state !== 'marketing') return s;
+      // ⚡ Bolt: Replaced O(N) array allocation and findIndex with O(1) dictionary lookup for project selection
+      const originalProject = state.studio.internal.projects[projectId];
+      if (!originalProject || originalProject.state !== 'marketing') return s;
 
       const newCash = state.finance.cash - budget;
       const { project: p } = executeMarketing(originalProject, {

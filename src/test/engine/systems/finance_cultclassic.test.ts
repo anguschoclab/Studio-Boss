@@ -28,7 +28,7 @@ describe('Finance: Cult Classic Revenue', () => {
     } as any;
     const revCult = calculateWeeklyRevenue(mockStateCult);
 
-    // applyIronicViewingMultiplier gives Math.max(20000 * 1.8, 150000)
-    expect(revCult).toBe(150000); // Because 20000 * 1.8 = 36000, so it hits the 150000 minimum floor
+    // applyIronicViewingMultiplier gives Math.max(17500 * 1.8, 200000)
+    expect(revCult).toBe(200000); // Because 17500 * 1.8 = 31500, so it hits the 200000 minimum floor
   });
 });

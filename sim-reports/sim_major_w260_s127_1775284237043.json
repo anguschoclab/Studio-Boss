@@ -1,0 +1,4961 @@
+[
+  {
+    "week": 1,
+    "playerCash": 500000000,
+    "rivalAvgCash": 263321969.72216478,
+    "totalSystemCash": 3133219697.2216477,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2500,
+    "avgTalentPrestige": 46.8848,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 0,
+    "bankruptcyCount": 0,
+    "marketShare": 15.958025555736487,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 2,
+    "playerCash": 504424520,
+    "rivalAvgCash": 264416969.72216478,
+    "totalSystemCash": 3148594217.2216477,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2500,
+    "avgTalentPrestige": 46.8848,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 0,
+    "bankruptcyCount": 0,
+    "marketShare": 16.020626514556373,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 3,
+    "playerCash": 508857936.79999995,
+    "rivalAvgCash": 265492792.32216477,
+    "totalSystemCash": 3163785860.0216475,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2500,
+    "avgTalentPrestige": 46.8848,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 0,
+    "bankruptcyCount": 0,
+    "marketShare": 16.08382992129936,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 4,
+    "playerCash": 513301419.1999999,
+    "rivalAvgCash": 266549647.18216476,
+    "totalSystemCash": 3178797891.0216475,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2500,
+    "avgTalentPrestige": 46.8848,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 0,
+    "bankruptcyCount": 0,
+    "marketShare": 16.147658227967042,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 5,
+    "playerCash": 517784765.5999999,
+    "rivalAvgCash": 267587667.9621648,
+    "totalSystemCash": 3193661445.2216477,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2500,
+    "avgTalentPrestige": 46.8848,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 0,
+    "bankruptcyCount": 0,
+    "marketShare": 16.212888387863053,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 6,
+    "playerCash": 522290260.79999995,
+    "rivalAvgCash": 231911549.94216475,
+    "totalSystemCash": 2841405760.2216473,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2500,
+    "avgTalentPrestige": 46.8848,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 0,
+    "bankruptcyCount": 0,
+    "marketShare": 18.38140360351976,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 7,
+    "playerCash": 526428176.79999995,
+    "rivalAvgCash": 232838882.78216475,
+    "totalSystemCash": 2854817004.621648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2500,
+    "avgTalentPrestige": 46.8848,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 0,
+    "bankruptcyCount": 0,
+    "marketShare": 18.439997237923418,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 8,
+    "playerCash": 530215682.79999995,
+    "rivalAvgCash": 233678496.28216475,
+    "totalSystemCash": 2867000645.621648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2499,
+    "avgTalentPrestige": 46.87434973989596,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 1,
+    "bankruptcyCount": 0,
+    "marketShare": 18.49374131148945,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 9,
+    "playerCash": 533644459.5999999,
+    "rivalAvgCash": 234434827.88216478,
+    "totalSystemCash": 2877992738.4216475,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2499,
+    "avgTalentPrestige": 46.87434973989596,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 1,
+    "bankruptcyCount": 0,
+    "marketShare": 18.542244824865744,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 10,
+    "playerCash": 536720414.39999986,
+    "rivalAvgCash": 234769259.50216475,
+    "totalSystemCash": 2884413009.421647,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2498,
+    "avgTalentPrestige": 46.87870296236989,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 2,
+    "bankruptcyCount": 0,
+    "marketShare": 18.60761314856285,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 11,
+    "playerCash": 539464888.3999999,
+    "rivalAvgCash": 235371591.3021648,
+    "totalSystemCash": 2893180801.421648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2497,
+    "avgTalentPrestige": 46.89106928313977,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 3,
+    "bankruptcyCount": 0,
+    "marketShare": 18.64608282119521,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 12,
+    "playerCash": 541896060.3999999,
+    "rivalAvgCash": 235902561.36216474,
+    "totalSystemCash": 2900921674.0216475,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2497,
+    "avgTalentPrestige": 46.89106928313977,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 3,
+    "bankruptcyCount": 0,
+    "marketShare": 18.6801341536654,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 13,
+    "playerCash": 544010614.8,
+    "rivalAvgCash": 236280610.84216475,
+    "totalSystemCash": 2906816723.2216473,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2497,
+    "avgTalentPrestige": 46.89106928313977,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 3,
+    "bankruptcyCount": 0,
+    "marketShare": 18.7149953574324,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 14,
+    "playerCash": 545823982,
+    "rivalAvgCash": 236371514.8021648,
+    "totalSystemCash": 2909539130.021648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2497,
+    "avgTalentPrestige": 46.89106928313977,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 3,
+    "bankruptcyCount": 0,
+    "marketShare": 18.75980894595973,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 15,
+    "playerCash": 547353516,
+    "rivalAvgCash": 236490950.4621648,
+    "totalSystemCash": 2912263020.621648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2496,
+    "avgTalentPrestige": 46.90224358974359,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 4,
+    "bankruptcyCount": 0,
+    "marketShare": 18.794783030385855,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 16,
+    "playerCash": 548613866.4000001,
+    "rivalAvgCash": 236770306.08216476,
+    "totalSystemCash": 2916316927.2216477,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2496,
+    "avgTalentPrestige": 46.90224358974359,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 4,
+    "bankruptcyCount": 0,
+    "marketShare": 18.811874020930237,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 17,
+    "playerCash": 549611176.4000001,
+    "rivalAvgCash": 236994439.98216477,
+    "totalSystemCash": 2919555576.2216477,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2496,
+    "avgTalentPrestige": 46.90224358974359,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 4,
+    "bankruptcyCount": 0,
+    "marketShare": 18.8251657504421,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 18,
+    "playerCash": 550362855.2,
+    "rivalAvgCash": 237126724.08216476,
+    "totalSystemCash": 2921630096.0216475,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2496,
+    "avgTalentPrestige": 46.90224358974359,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 4,
+    "bankruptcyCount": 0,
+    "marketShare": 18.83752689806363,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 19,
+    "playerCash": 550868954.8,
+    "rivalAvgCash": 237248529.02216476,
+    "totalSystemCash": 2923354245.0216475,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2495,
+    "avgTalentPrestige": 46.90581162324649,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 5,
+    "bankruptcyCount": 0,
+    "marketShare": 18.84372910803086,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 20,
+    "playerCash": 551157398.8,
+    "rivalAvgCash": 237322934.58216476,
+    "totalSystemCash": 2924386744.621648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2495,
+    "avgTalentPrestige": 46.90581162324649,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 5,
+    "bankruptcyCount": 0,
+    "marketShare": 18.846939441701913,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 21,
+    "playerCash": 551215814.8,
+    "rivalAvgCash": 237338239.72216478,
+    "totalSystemCash": 2924598212.0216475,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2495,
+    "avgTalentPrestige": 46.90581162324649,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 5,
+    "bankruptcyCount": 0,
+    "marketShare": 18.84757408844097,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 22,
+    "playerCash": 551060804.3999999,
+    "rivalAvgCash": 236655378.06216478,
+    "totalSystemCash": 2917614585.0216475,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2494,
+    "avgTalentPrestige": 46.91459502806736,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 6,
+    "bankruptcyCount": 0,
+    "marketShare": 18.88737488594338,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 23,
+    "playerCash": 550691772.3999999,
+    "rivalAvgCash": 236601434.00216478,
+    "totalSystemCash": 2916706112.421648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2494,
+    "avgTalentPrestige": 46.91459502806736,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 6,
+    "bankruptcyCount": 0,
+    "marketShare": 18.88060542180501,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 24,
+    "playerCash": 550123177.1999998,
+    "rivalAvgCash": 236508982.9021648,
+    "totalSystemCash": 2915213006.2216477,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2494,
+    "avgTalentPrestige": 46.91459502806736,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 6,
+    "bankruptcyCount": 0,
+    "marketShare": 18.87077122755445,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 25,
+    "playerCash": 549367167.1999998,
+    "rivalAvgCash": 236379831.16216478,
+    "totalSystemCash": 2913165478.8216476,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2494,
+    "avgTalentPrestige": 46.91459502806736,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 6,
+    "bankruptcyCount": 0,
+    "marketShare": 18.858083112470993,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 26,
+    "playerCash": 548423610.3999999,
+    "rivalAvgCash": 236061636.52216476,
+    "totalSystemCash": 2909039975.621648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2494,
+    "avgTalentPrestige": 46.91459502806736,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 6,
+    "bankruptcyCount": 0,
+    "marketShare": 18.85239168233858,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 27,
+    "playerCash": 547288474.8,
+    "rivalAvgCash": 235830455.32216477,
+    "totalSystemCash": 2905593028.0216475,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2493,
+    "avgTalentPrestige": 46.903730445246694,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 7,
+    "bankruptcyCount": 0,
+    "marketShare": 18.835689290342092,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 28,
+    "playerCash": 545967862,
+    "rivalAvgCash": 235542106.82216483,
+    "totalSystemCash": 2901388930.221648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2493,
+    "avgTalentPrestige": 46.903730445246694,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 7,
+    "bankruptcyCount": 0,
+    "marketShare": 18.817465535662997,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 29,
+    "playerCash": 544470906,
+    "rivalAvgCash": 235283863.76216477,
+    "totalSystemCash": 2897309543.621648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2493,
+    "avgTalentPrestige": 46.903730445246694,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 7,
+    "bankruptcyCount": 0,
+    "marketShare": 18.792293256985214,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 30,
+    "playerCash": 542799993.2,
+    "rivalAvgCash": 235044105.9021648,
+    "totalSystemCash": 2893241052.221648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2491,
+    "avgTalentPrestige": 46.89040545965476,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 9,
+    "bankruptcyCount": 0,
+    "marketShare": 18.7609667982278,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 31,
+    "playerCash": 540991002.8,
+    "rivalAvgCash": 234718739.6421648,
+    "totalSystemCash": 2888178399.221648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2490,
+    "avgTalentPrestige": 46.888755020080325,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 10,
+    "bankruptcyCount": 0,
+    "marketShare": 18.73121836745939,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 32,
+    "playerCash": 539038273.5999999,
+    "rivalAvgCash": 234379714.66216478,
+    "totalSystemCash": 2882835420.2216477,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2490,
+    "avgTalentPrestige": 46.888755020080325,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 10,
+    "bankruptcyCount": 0,
+    "marketShare": 18.698197955350356,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 33,
+    "playerCash": 536959636,
+    "rivalAvgCash": 233649824.12216482,
+    "totalSystemCash": 2873457877.221648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2490,
+    "avgTalentPrestige": 46.888755020080325,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 10,
+    "bankruptcyCount": 0,
+    "marketShare": 18.686880370043472,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 34,
+    "playerCash": 534758018,
+    "rivalAvgCash": 232866008.4421648,
+    "totalSystemCash": 2863418102.421648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2490,
+    "avgTalentPrestige": 46.888755020080325,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 10,
+    "bankruptcyCount": 0,
+    "marketShare": 18.67551293147671,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 35,
+    "playerCash": 532410310,
+    "rivalAvgCash": 232457680.8421648,
+    "totalSystemCash": 2856987118.421648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2490,
+    "avgTalentPrestige": 46.888755020080325,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 10,
+    "bankruptcyCount": 0,
+    "marketShare": 18.635376637404367,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 36,
+    "playerCash": 529929348,
+    "rivalAvgCash": 231999646.8021648,
+    "totalSystemCash": 2849925816.021648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2490,
+    "avgTalentPrestige": 46.888755020080325,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 10,
+    "bankruptcyCount": 0,
+    "marketShare": 18.594496215334985,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 37,
+    "playerCash": 527317060.79999995,
+    "rivalAvgCash": 231456957.2421648,
+    "totalSystemCash": 2841886633.221648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2490,
+    "avgTalentPrestige": 46.888755020080325,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 10,
+    "bankruptcyCount": 0,
+    "marketShare": 18.555175798909946,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 38,
+    "playerCash": 524575160.4,
+    "rivalAvgCash": 230869793.72216478,
+    "totalSystemCash": 2833273097.621648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2490,
+    "avgTalentPrestige": 46.888755020080325,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 10,
+    "bankruptcyCount": 0,
+    "marketShare": 18.514811044524702,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 39,
+    "playerCash": 521731359.6,
+    "rivalAvgCash": 226100799.82216483,
+    "totalSystemCash": 2782739357.821648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2490,
+    "avgTalentPrestige": 46.888755020080325,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 10,
+    "bankruptcyCount": 0,
+    "marketShare": 18.748840351631628,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 40,
+    "playerCash": 518781852.4,
+    "rivalAvgCash": 225460462.30216485,
+    "totalSystemCash": 2773386475.4216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2490,
+    "avgTalentPrestige": 46.888755020080325,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 10,
+    "bankruptcyCount": 0,
+    "marketShare": 18.705717973227213,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 41,
+    "playerCash": 515726470.79999995,
+    "rivalAvgCash": 224941771.92216483,
+    "totalSystemCash": 2765144190.0216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2490,
+    "avgTalentPrestige": 46.888755020080325,
+    "activeProjects": 0,
+    "completedProjects": 1,
+    "retiredCount": 10,
+    "bankruptcyCount": 0,
+    "marketShare": 18.650979310990735,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 42,
+    "playerCash": 512577990.4,
+    "rivalAvgCash": 224407769.2221648,
+    "totalSystemCash": 2756655682.6216483,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2490,
+    "avgTalentPrestige": 46.888755020080325,
+    "activeProjects": 0,
+    "completedProjects": 1,
+    "retiredCount": 10,
+    "bankruptcyCount": 0,
+    "marketShare": 18.59419707841516,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 43,
+    "playerCash": 509328183.6,
+    "rivalAvgCash": 223859211.02216482,
+    "totalSystemCash": 2747920293.821648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2490,
+    "avgTalentPrestige": 46.888755020080325,
+    "activeProjects": 0,
+    "completedProjects": 1,
+    "retiredCount": 10,
+    "bankruptcyCount": 0,
+    "marketShare": 18.535042109669632,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 44,
+    "playerCash": 505969877.6,
+    "rivalAvgCash": 223270383.58216485,
+    "totalSystemCash": 2738673713.4216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2490,
+    "avgTalentPrestige": 46.888755020080325,
+    "activeProjects": 0,
+    "completedProjects": 1,
+    "retiredCount": 10,
+    "bankruptcyCount": 0,
+    "marketShare": 18.47499667887967,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 45,
+    "playerCash": 502510200.8000001,
+    "rivalAvgCash": 222689943.10216483,
+    "totalSystemCash": 2729409631.8216486,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2489,
+    "avgTalentPrestige": 46.88469264764966,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 11,
+    "bankruptcyCount": 0,
+    "marketShare": 18.410948468171753,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 46,
+    "playerCash": 498966706.4000001,
+    "rivalAvgCash": 222062961.06216484,
+    "totalSystemCash": 2719596317.0216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2489,
+    "avgTalentPrestige": 46.88469264764966,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 11,
+    "bankruptcyCount": 0,
+    "marketShare": 18.347087149553168,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 47,
+    "playerCash": 495350855.60000014,
+    "rivalAvgCash": 221463085.62216482,
+    "totalSystemCash": 2709981711.8216486,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2489,
+    "avgTalentPrestige": 46.88469264764966,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 11,
+    "bankruptcyCount": 0,
+    "marketShare": 18.278752710365172,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 48,
+    "playerCash": 491645758.4000001,
+    "rivalAvgCash": 220810157.9021648,
+    "totalSystemCash": 2699747337.421648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2489,
+    "avgTalentPrestige": 46.88469264764966,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 11,
+    "bankruptcyCount": 0,
+    "marketShare": 18.210806307139052,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 49,
+    "playerCash": 487862647.20000005,
+    "rivalAvgCash": 220188324.6021648,
+    "totalSystemCash": 2689745893.221648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2489,
+    "avgTalentPrestige": 46.88469264764966,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 11,
+    "bankruptcyCount": 0,
+    "marketShare": 18.13787125503003,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 50,
+    "playerCash": 484012404.8000001,
+    "rivalAvgCash": 219484854.8421648,
+    "totalSystemCash": 2678860953.221648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2489,
+    "avgTalentPrestige": 46.88469264764966,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 11,
+    "bankruptcyCount": 0,
+    "marketShare": 18.067843507066602,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 51,
+    "playerCash": 480076935.20000005,
+    "rivalAvgCash": 216152011.8821648,
+    "totalSystemCash": 2641597054.0216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2488,
+    "avgTalentPrestige": 46.87138263665595,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 12,
+    "bankruptcyCount": 0,
+    "marketShare": 18.173738287189416,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 52,
+    "playerCash": 476059524.8000001,
+    "rivalAvgCash": 215317460.06216484,
+    "totalSystemCash": 2629234125.4216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2488,
+    "avgTalentPrestige": 46.87138263665595,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 12,
+    "bankruptcyCount": 0,
+    "marketShare": 18.106395326192366,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 53,
+    "playerCash": 471962296.8000001,
+    "rivalAvgCash": 214624072.7821648,
+    "totalSystemCash": 2618203024.6216483,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2487,
+    "avgTalentPrestige": 46.86690792119019,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 13,
+    "bankruptcyCount": 0,
+    "marketShare": 18.026191718581583,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 54,
+    "playerCash": 467811072.0000001,
+    "rivalAvgCash": 213903980.9021648,
+    "totalSystemCash": 2606850881.021648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2487,
+    "avgTalentPrestige": 46.86690792119019,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 13,
+    "bankruptcyCount": 0,
+    "marketShare": 17.945448103907687,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 55,
+    "playerCash": 463598572.8000001,
+    "rivalAvgCash": 213220575.76216477,
+    "totalSystemCash": 2595804330.421648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2487,
+    "avgTalentPrestige": 46.86690792119019,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 13,
+    "bankruptcyCount": 0,
+    "marketShare": 17.859534610017995,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 56,
+    "playerCash": 459318988.4000001,
+    "rivalAvgCash": 212537444.66216484,
+    "totalSystemCash": 2584693435.0216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2487,
+    "avgTalentPrestige": 46.86690792119019,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 13,
+    "bankruptcyCount": 0,
+    "marketShare": 17.77073374259385,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 57,
+    "playerCash": 454971520.4000001,
+    "rivalAvgCash": 211721335.1021648,
+    "totalSystemCash": 2572184871.421648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2487,
+    "avgTalentPrestige": 46.86690792119019,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 13,
+    "bankruptcyCount": 0,
+    "marketShare": 17.688134529324756,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 58,
+    "playerCash": 450564494.8000001,
+    "rivalAvgCash": 211024371.20216483,
+    "totalSystemCash": 2560808206.8216486,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2487,
+    "avgTalentPrestige": 46.86690792119019,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 13,
+    "bankruptcyCount": 0,
+    "marketShare": 17.59462085445356,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 59,
+    "playerCash": 446095934.8000001,
+    "rivalAvgCash": 210203550.3821648,
+    "totalSystemCash": 2548131438.6216483,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2487,
+    "avgTalentPrestige": 46.86690792119019,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 13,
+    "bankruptcyCount": 0,
+    "marketShare": 17.506786660946545,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 60,
+    "playerCash": 441575613.20000005,
+    "rivalAvgCash": 209494087.06216484,
+    "totalSystemCash": 2536516483.8216486,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2487,
+    "avgTalentPrestige": 46.86690792119019,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 13,
+    "bankruptcyCount": 0,
+    "marketShare": 17.40874210818055,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 61,
+    "playerCash": 437001826,
+    "rivalAvgCash": 208778850.3621648,
+    "totalSystemCash": 2524790329.621648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2486,
+    "avgTalentPrestige": 46.866049879324216,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 14,
+    "bankruptcyCount": 0,
+    "marketShare": 17.308440264245107,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 62,
+    "playerCash": 432368320.79999995,
+    "rivalAvgCash": 208009506.2421648,
+    "totalSystemCash": 2512463383.221648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2486,
+    "avgTalentPrestige": 46.866049879324216,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 14,
+    "bankruptcyCount": 0,
+    "marketShare": 17.20894018545211,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 63,
+    "playerCash": 427680638.79999995,
+    "rivalAvgCash": 206736661.70216483,
+    "totalSystemCash": 2495047255.821648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2486,
+    "avgTalentPrestige": 46.866049879324216,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 14,
+    "bankruptcyCount": 0,
+    "marketShare": 17.141183911531154,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 64,
+    "playerCash": 422950254.4,
+    "rivalAvgCash": 205817103.28216478,
+    "totalSystemCash": 2481121287.2216477,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2486,
+    "avgTalentPrestige": 46.866049879324216,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 14,
+    "bankruptcyCount": 0,
+    "marketShare": 17.046738366975138,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 65,
+    "playerCash": 418166090.4,
+    "rivalAvgCash": 205069223.6621648,
+    "totalSystemCash": 2468858327.021648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2485,
+    "avgTalentPrestige": 46.87565392354125,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 15,
+    "bankruptcyCount": 0,
+    "marketShare": 16.937630070675713,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 66,
+    "playerCash": 413348554,
+    "rivalAvgCash": 204329158.9621648,
+    "totalSystemCash": 2456640143.621648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2485,
+    "avgTalentPrestige": 46.87565392354125,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 15,
+    "bankruptcyCount": 0,
+    "marketShare": 16.82576730145873,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 67,
+    "playerCash": 408499301.6,
+    "rivalAvgCash": 203658436.10216478,
+    "totalSystemCash": 2445083662.621648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2484,
+    "avgTalentPrestige": 46.86594202898551,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 16,
+    "bankruptcyCount": 0,
+    "marketShare": 16.706966221434,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 68,
+    "playerCash": 403600042.8000001,
+    "rivalAvgCash": 202516361.76216477,
+    "totalSystemCash": 2428763660.421648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2484,
+    "avgTalentPrestige": 46.86594202898551,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 16,
+    "bankruptcyCount": 0,
+    "marketShare": 16.61750994454243,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 69,
+    "playerCash": 398674143.6,
+    "rivalAvgCash": 201764180.2821648,
+    "totalSystemCash": 2416315946.421648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2484,
+    "avgTalentPrestige": 46.86594202898551,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 16,
+    "bankruptcyCount": 0,
+    "marketShare": 16.49925557915559,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 70,
+    "playerCash": 393721404,
+    "rivalAvgCash": 201008356.22216478,
+    "totalSystemCash": 2403804966.2216477,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2484,
+    "avgTalentPrestige": 46.86594202898551,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 16,
+    "bankruptcyCount": 0,
+    "marketShare": 16.37909104659434,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 71,
+    "playerCash": 388737987.20000005,
+    "rivalAvgCash": 200189822.64216477,
+    "totalSystemCash": 2390636213.621648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2484,
+    "avgTalentPrestige": 46.86594202898551,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 16,
+    "bankruptcyCount": 0,
+    "marketShare": 16.260859138040455,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 72,
+    "playerCash": 383709492.4000001,
+    "rivalAvgCash": 199351415.42216477,
+    "totalSystemCash": 2377223646.621648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2484,
+    "avgTalentPrestige": 46.86594202898551,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 16,
+    "bankruptcyCount": 0,
+    "marketShare": 16.141076711284715,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 73,
+    "playerCash": 378653196.4000001,
+    "rivalAvgCash": 198566778.66216478,
+    "totalSystemCash": 2364320983.021648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2484,
+    "avgTalentPrestige": 46.86594202898551,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 16,
+    "bankruptcyCount": 0,
+    "marketShare": 16.01530414521272,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 74,
+    "playerCash": 373555768.0000001,
+    "rivalAvgCash": 197567760.0421648,
+    "totalSystemCash": 2349233368.421648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2484,
+    "avgTalentPrestige": 46.86594202898551,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 16,
+    "bankruptcyCount": 0,
+    "marketShare": 15.901177508430195,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 75,
+    "playerCash": 368419662.0000001,
+    "rivalAvgCash": 196796283.9021648,
+    "totalSystemCash": 2336382501.021648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2483,
+    "avgTalentPrestige": 46.86991542488925,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 17,
+    "bankruptcyCount": 0,
+    "marketShare": 15.768807626272599,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 76,
+    "playerCash": 363263481.20000017,
+    "rivalAvgCash": 195822672.90216476,
+    "totalSystemCash": 2321490210.2216477,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2483,
+    "avgTalentPrestige": 46.86991542488925,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 17,
+    "bankruptcyCount": 0,
+    "marketShare": 15.647857552899913,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 77,
+    "playerCash": 358079987.20000017,
+    "rivalAvgCash": 195045973.26216477,
+    "totalSystemCash": 2308539719.821648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2482,
+    "avgTalentPrestige": 46.88154713940371,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 18,
+    "bankruptcyCount": 0,
+    "marketShare": 15.51110358316315,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 78,
+    "playerCash": 352873787.60000014,
+    "rivalAvgCash": 194259719.80216482,
+    "totalSystemCash": 2295470985.6216483,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2481,
+    "avgTalentPrestige": 46.89278516727126,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 19,
+    "bankruptcyCount": 0,
+    "marketShare": 15.372609360359071,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 79,
+    "playerCash": 347648052.8000002,
+    "rivalAvgCash": 193478313.7221648,
+    "totalSystemCash": 2282431190.0216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2481,
+    "avgTalentPrestige": 46.89278516727126,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 19,
+    "bankruptcyCount": 0,
+    "marketShare": 15.231480112953715,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 80,
+    "playerCash": 342387770.8000002,
+    "rivalAvgCash": 192694726.8621648,
+    "totalSystemCash": 2269335039.421648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2481,
+    "avgTalentPrestige": 46.89278516727126,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 19,
+    "bankruptcyCount": 0,
+    "marketShare": 15.087581377461987,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 81,
+    "playerCash": 337097645.20000017,
+    "rivalAvgCash": 191909069.7421648,
+    "totalSystemCash": 2256188342.6216483,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2481,
+    "avgTalentPrestige": 46.89278516727126,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 19,
+    "bankruptcyCount": 0,
+    "marketShare": 14.941024152633423,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 82,
+    "playerCash": 331780189.60000014,
+    "rivalAvgCash": 190998537.1621648,
+    "totalSystemCash": 2241765561.221648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2481,
+    "avgTalentPrestige": 46.89278516727126,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 19,
+    "bankruptcyCount": 0,
+    "marketShare": 14.799950331077296,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 83,
+    "playerCash": 326433760.0000001,
+    "rivalAvgCash": 190016816.5421648,
+    "totalSystemCash": 2226601925.421648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2481,
+    "avgTalentPrestige": 46.89278516727126,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 19,
+    "bankruptcyCount": 0,
+    "marketShare": 14.66062506607165,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 84,
+    "playerCash": 321057637.20000017,
+    "rivalAvgCash": 189215049.68216482,
+    "totalSystemCash": 2213208134.0216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2481,
+    "avgTalentPrestige": 46.89278516727126,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 19,
+    "bankruptcyCount": 0,
+    "marketShare": 14.50643670898689,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 85,
+    "playerCash": 315667334.0000001,
+    "rivalAvgCash": 188520920.46216482,
+    "totalSystemCash": 2200876538.6216483,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2481,
+    "avgTalentPrestige": 46.89278516727126,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 19,
+    "bankruptcyCount": 0,
+    "marketShare": 14.342800627866856,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 86,
+    "playerCash": 310256816.0000001,
+    "rivalAvgCash": 187726365.60216483,
+    "totalSystemCash": 2187520472.0216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2481,
+    "avgTalentPrestige": 46.89278516727126,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 19,
+    "bankruptcyCount": 0,
+    "marketShare": 14.1830359975223,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 87,
+    "playerCash": 304821950.4000001,
+    "rivalAvgCash": 186851808.2821648,
+    "totalSystemCash": 2173340033.221648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2481,
+    "avgTalentPrestige": 46.89278516727126,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 19,
+    "bankruptcyCount": 0,
+    "marketShare": 14.025506627609838,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 88,
+    "playerCash": 299361339.60000014,
+    "rivalAvgCash": 186047251.50216478,
+    "totalSystemCash": 2159833854.621648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2480,
+    "avgTalentPrestige": 46.90564516129032,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 20,
+    "bankruptcyCount": 0,
+    "marketShare": 13.860387407087904,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 89,
+    "playerCash": 293873313.60000014,
+    "rivalAvgCash": 185248356.80216482,
+    "totalSystemCash": 2146356881.6216483,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2480,
+    "avgTalentPrestige": 46.90564516129032,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 20,
+    "bankruptcyCount": 0,
+    "marketShare": 13.691726483899942,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 90,
+    "playerCash": 288374017.20000017,
+    "rivalAvgCash": 184448158.8221648,
+    "totalSystemCash": 2132855605.421648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2479,
+    "avgTalentPrestige": 46.90318676885841,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 21,
+    "bankruptcyCount": 0,
+    "marketShare": 13.520559782245128,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 91,
+    "playerCash": 282853896.4000002,
+    "rivalAvgCash": 183646640.66216478,
+    "totalSystemCash": 2119320303.021648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2478,
+    "avgTalentPrestige": 46.8954802259887,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 22,
+    "bankruptcyCount": 0,
+    "marketShare": 13.346443951710258,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 92,
+    "playerCash": 277312246.8000002,
+    "rivalAvgCash": 182657398.8821648,
+    "totalSystemCash": 2103886235.6216483,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2478,
+    "avgTalentPrestige": 46.8954802259887,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 22,
+    "bankruptcyCount": 0,
+    "marketShare": 13.180952567906365,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 93,
+    "playerCash": 271746660.4000002,
+    "rivalAvgCash": 174764839.4821648,
+    "totalSystemCash": 2019395055.2216482,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2478,
+    "avgTalentPrestige": 46.8954802259887,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 22,
+    "bankruptcyCount": 0,
+    "marketShare": 13.456834991119326,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 94,
+    "playerCash": 266158927.60000023,
+    "rivalAvgCash": 173928225.96216482,
+    "totalSystemCash": 2005441187.2216482,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2478,
+    "avgTalentPrestige": 46.8954802259887,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 22,
+    "bankruptcyCount": 0,
+    "marketShare": 13.271839099342456,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 95,
+    "playerCash": 260555130.40000024,
+    "rivalAvgCash": 173122417.52216482,
+    "totalSystemCash": 1991779305.6216486,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2478,
+    "avgTalentPrestige": 46.8954802259887,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 22,
+    "bankruptcyCount": 0,
+    "marketShare": 13.08152613417575,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 96,
+    "playerCash": 254929326.40000024,
+    "rivalAvgCash": 167896524.58216482,
+    "totalSystemCash": 1933894572.2216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2478,
+    "avgTalentPrestige": 46.8954802259887,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 22,
+    "bankruptcyCount": 0,
+    "marketShare": 13.182172909619302,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 97,
+    "playerCash": 249294233.20000026,
+    "rivalAvgCash": 166631956.6221648,
+    "totalSystemCash": 1915613799.421648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2478,
+    "avgTalentPrestige": 46.8954802259887,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 22,
+    "bankruptcyCount": 0,
+    "marketShare": 13.013804414818155,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 98,
+    "playerCash": 243642810.40000024,
+    "rivalAvgCash": 165702062.8021648,
+    "totalSystemCash": 1900663438.4216483,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2478,
+    "avgTalentPrestige": 46.8954802259887,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 22,
+    "bankruptcyCount": 1,
+    "marketShare": 12.81882975569449,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 99,
+    "playerCash": 237979114.80000022,
+    "rivalAvgCash": 164805716.68216482,
+    "totalSystemCash": 1886036281.6216483,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2477,
+    "avgTalentPrestige": 46.90956802583771,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 23,
+    "bankruptcyCount": 1,
+    "marketShare": 12.617949989561254,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 100,
+    "playerCash": 232305600.40000024,
+    "rivalAvgCash": 163995566.7421648,
+    "totalSystemCash": 1872261267.8216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2477,
+    "avgTalentPrestige": 46.90956802583771,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 23,
+    "bankruptcyCount": 1,
+    "marketShare": 12.407755498263594,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 101,
+    "playerCash": 226613196.80000022,
+    "rivalAvgCash": 163153908.02216476,
+    "totalSystemCash": 1858152277.021648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2477,
+    "avgTalentPrestige": 46.90956802583771,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 23,
+    "bankruptcyCount": 1,
+    "marketShare": 12.195620326835039,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 102,
+    "playerCash": 220914479.2000002,
+    "rivalAvgCash": 162342309.0221648,
+    "totalSystemCash": 1844337569.4216483,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2477,
+    "avgTalentPrestige": 46.90956802583771,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 23,
+    "bankruptcyCount": 1,
+    "marketShare": 11.977985096799557,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 103,
+    "playerCash": 215198307.2000002,
+    "rivalAvgCash": 161492909.08216482,
+    "totalSystemCash": 1830127398.0216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2477,
+    "avgTalentPrestige": 46.90956802583771,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 23,
+    "bankruptcyCount": 1,
+    "marketShare": 11.758651743732578,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 104,
+    "playerCash": 209471275.2000002,
+    "rivalAvgCash": 160621949.9021648,
+    "totalSystemCash": 1815690774.2216482,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2477,
+    "avgTalentPrestige": 46.90956802583771,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 23,
+    "bankruptcyCount": 1,
+    "marketShare": 11.536726306812707,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 105,
+    "playerCash": 203733579.60000017,
+    "rivalAvgCash": 159808438.8821648,
+    "totalSystemCash": 1801817968.4216483,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2477,
+    "avgTalentPrestige": 46.90956802583771,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 23,
+    "bankruptcyCount": 1,
+    "marketShare": 11.307112215029477,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 106,
+    "playerCash": 197988593.60000017,
+    "rivalAvgCash": 158994353.3221648,
+    "totalSystemCash": 1787932126.8216481,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2477,
+    "avgTalentPrestige": 46.90956802583771,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 23,
+    "bankruptcyCount": 1,
+    "marketShare": 11.073607920003003,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 107,
+    "playerCash": 192232417.60000017,
+    "rivalAvgCash": 158179721.8621648,
+    "totalSystemCash": 1774029636.2216482,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2477,
+    "avgTalentPrestige": 46.90956802583771,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 23,
+    "bankruptcyCount": 1,
+    "marketShare": 10.835919179423593,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 108,
+    "playerCash": 186461772.80000016,
+    "rivalAvgCash": 157236318.90216482,
+    "totalSystemCash": 1758824961.8216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2477,
+    "avgTalentPrestige": 46.90956802583771,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 23,
+    "bankruptcyCount": 1,
+    "marketShare": 10.601496842919387,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 109,
+    "playerCash": 180683258.80000016,
+    "rivalAvgCash": 156398416.74216482,
+    "totalSystemCash": 1744667426.2216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2477,
+    "avgTalentPrestige": 46.90956802583771,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 23,
+    "bankruptcyCount": 1,
+    "marketShare": 10.356315254380496,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 110,
+    "playerCash": 174890219.60000017,
+    "rivalAvgCash": 155533742.34216478,
+    "totalSystemCash": 1730227643.021648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2477,
+    "avgTalentPrestige": 46.90956802583771,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 23,
+    "bankruptcyCount": 1,
+    "marketShare": 10.107931190752106,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 111,
+    "playerCash": 169089047.60000017,
+    "rivalAvgCash": 154717188.70216483,
+    "totalSystemCash": 1716260934.6216483,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2477,
+    "avgTalentPrestige": 46.90956802583771,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 23,
+    "bankruptcyCount": 1,
+    "marketShare": 9.852175982626795,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 112,
+    "playerCash": 163275168.40000018,
+    "rivalAvgCash": 153889212.9021648,
+    "totalSystemCash": 1702167297.421648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2476,
+    "avgTalentPrestige": 46.90266558966074,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 24,
+    "bankruptcyCount": 1,
+    "marketShare": 9.592192767850767,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 113,
+    "playerCash": 157455108.0000002,
+    "rivalAvgCash": 153048001.00216478,
+    "totalSystemCash": 1687935118.0216482,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2476,
+    "avgTalentPrestige": 46.90266558966074,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 24,
+    "bankruptcyCount": 1,
+    "marketShare": 9.328267794116766,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 114,
+    "playerCash": 151623859.60000023,
+    "rivalAvgCash": 152123282.7221648,
+    "totalSystemCash": 1672856686.8216481,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2476,
+    "avgTalentPrestige": 46.90266558966074,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 24,
+    "bankruptcyCount": 1,
+    "marketShare": 9.06376862970125,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 115,
+    "playerCash": 145782212.0000002,
+    "rivalAvgCash": 151420076.32216477,
+    "totalSystemCash": 1659982975.221648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2476,
+    "avgTalentPrestige": 46.90266558966074,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 24,
+    "bankruptcyCount": 1,
+    "marketShare": 8.782151032635426,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 116,
+    "playerCash": 139934217.2000002,
+    "rivalAvgCash": 150732886.76216477,
+    "totalSystemCash": 1647263084.8216481,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2475,
+    "avgTalentPrestige": 46.904242424242426,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 25,
+    "bankruptcyCount": 1,
+    "marketShare": 8.494952536082062,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 117,
+    "playerCash": 134078176.40000018,
+    "rivalAvgCash": 149914096.6421648,
+    "totalSystemCash": 1633219142.8216481,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2475,
+    "avgTalentPrestige": 46.904242424242426,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 25,
+    "bankruptcyCount": 1,
+    "marketShare": 8.209441885940587,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 118,
+    "playerCash": 128217548.80000019,
+    "rivalAvgCash": 149094996.4221648,
+    "totalSystemCash": 1619167513.0216482,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2475,
+    "avgTalentPrestige": 46.904242424242426,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 25,
+    "bankruptcyCount": 1,
+    "marketShare": 7.9187327913171845,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 119,
+    "playerCash": 122348410.40000018,
+    "rivalAvgCash": 148035032.92216477,
+    "totalSystemCash": 1602698739.6216478,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2475,
+    "avgTalentPrestige": 46.904242424242426,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 25,
+    "bankruptcyCount": 1,
+    "marketShare": 7.63389945816537,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 120,
+    "playerCash": 116469994.80000019,
+    "rivalAvgCash": 147211156.6821648,
+    "totalSystemCash": 1588581561.621648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2474,
+    "avgTalentPrestige": 46.90218270008084,
+    "activeProjects": 0,
+    "completedProjects": 5,
+    "retiredCount": 26,
+    "bankruptcyCount": 1,
+    "marketShare": 7.331697510142687,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 121,
+    "playerCash": 110586042.40000018,
+    "rivalAvgCash": 146375044.26216477,
+    "totalSystemCash": 1574336485.021648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2473,
+    "avgTalentPrestige": 46.91548726243429,
+    "activeProjects": 0,
+    "completedProjects": 5,
+    "retiredCount": 27,
+    "bankruptcyCount": 1,
+    "marketShare": 7.024295215928987,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 122,
+    "playerCash": 104696546.80000019,
+    "rivalAvgCash": 145016305.4221648,
+    "totalSystemCash": 1554859601.0216482,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2472,
+    "avgTalentPrestige": 46.91949838187702,
+    "activeProjects": 0,
+    "completedProjects": 5,
+    "retiredCount": 28,
+    "bankruptcyCount": 1,
+    "marketShare": 6.733504859937672,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 123,
+    "playerCash": 98801966.00000018,
+    "rivalAvgCash": 144195870.02216476,
+    "totalSystemCash": 1540760666.221648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2472,
+    "avgTalentPrestige": 46.91949838187702,
+    "activeProjects": 0,
+    "completedProjects": 5,
+    "retiredCount": 28,
+    "bankruptcyCount": 1,
+    "marketShare": 6.412544671346569,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 124,
+    "playerCash": 92897982.00000018,
+    "rivalAvgCash": 143334886.2021648,
+    "totalSystemCash": 1526246844.0216482,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2470,
+    "avgTalentPrestige": 46.929959514170044,
+    "activeProjects": 0,
+    "completedProjects": 5,
+    "retiredCount": 30,
+    "bankruptcyCount": 1,
+    "marketShare": 6.086694453383093,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 125,
+    "playerCash": 86986437.20000017,
+    "rivalAvgCash": 142514005.78216478,
+    "totalSystemCash": 1512126495.021648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2470,
+    "avgTalentPrestige": 46.929959514170044,
+    "activeProjects": 0,
+    "completedProjects": 5,
+    "retiredCount": 30,
+    "bankruptcyCount": 1,
+    "marketShare": 5.75258997751738,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 126,
+    "playerCash": 81068649.20000017,
+    "rivalAvgCash": 141692919.34216478,
+    "totalSystemCash": 1497997842.6216478,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2470,
+    "avgTalentPrestige": 46.929959514170044,
+    "activeProjects": 0,
+    "completedProjects": 5,
+    "retiredCount": 30,
+    "bankruptcyCount": 1,
+    "marketShare": 5.411800130374142,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 127,
+    "playerCash": 75143706.00000018,
+    "rivalAvgCash": 140815887.22216478,
+    "totalSystemCash": 1483302578.221648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2470,
+    "avgTalentPrestige": 46.929959514170044,
+    "activeProjects": 0,
+    "completedProjects": 5,
+    "retiredCount": 30,
+    "bankruptcyCount": 1,
+    "marketShare": 5.065972857007436,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 128,
+    "playerCash": 69213730.00000018,
+    "rivalAvgCash": 139968589.0821648,
+    "totalSystemCash": 1468899620.8216481,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2470,
+    "avgTalentPrestige": 46.929959514170044,
+    "activeProjects": 0,
+    "completedProjects": 5,
+    "retiredCount": 30,
+    "bankruptcyCount": 1,
+    "marketShare": 4.711944166837253,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 129,
+    "playerCash": 63276677.200000174,
+    "rivalAvgCash": 139118252.50216478,
+    "totalSystemCash": 1454459202.2216482,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2470,
+    "avgTalentPrestige": 46.929959514170044,
+    "activeProjects": 0,
+    "completedProjects": 5,
+    "retiredCount": 30,
+    "bankruptcyCount": 1,
+    "marketShare": 4.350529537256645,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 130,
+    "playerCash": 57334477.200000174,
+    "rivalAvgCash": 138296439.9221648,
+    "totalSystemCash": 1440298876.4216483,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2470,
+    "avgTalentPrestige": 46.929959514170044,
+    "activeProjects": 0,
+    "completedProjects": 5,
+    "retiredCount": 30,
+    "bankruptcyCount": 1,
+    "marketShare": 3.98073470295588,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 131,
+    "playerCash": 51387326.40000018,
+    "rivalAvgCash": 137186813.2021648,
+    "totalSystemCash": 1423255458.421648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2470,
+    "avgTalentPrestige": 46.929959514170044,
+    "activeProjects": 0,
+    "completedProjects": 5,
+    "retiredCount": 30,
+    "bankruptcyCount": 1,
+    "marketShare": 3.6105483450586826,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 132,
+    "playerCash": 45434368.00000017,
+    "rivalAvgCash": 136311303.82216483,
+    "totalSystemCash": 1408547406.2216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2470,
+    "avgTalentPrestige": 46.929959514170044,
+    "activeProjects": 0,
+    "completedProjects": 5,
+    "retiredCount": 30,
+    "bankruptcyCount": 1,
+    "marketShare": 3.22561866212763,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 133,
+    "playerCash": 39475340.40000018,
+    "rivalAvgCash": 135474786.2821648,
+    "totalSystemCash": 1394223203.2216482,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2470,
+    "avgTalentPrestige": 46.929959514170044,
+    "activeProjects": 0,
+    "completedProjects": 5,
+    "retiredCount": 30,
+    "bankruptcyCount": 2,
+    "marketShare": 2.8313501244839445,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 134,
+    "playerCash": 33509805.200000174,
+    "rivalAvgCash": 149531229.4621648,
+    "totalSystemCash": 1528822099.8216481,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2470,
+    "avgTalentPrestige": 46.929959514170044,
+    "activeProjects": 0,
+    "completedProjects": 5,
+    "retiredCount": 30,
+    "bankruptcyCount": 1,
+    "marketShare": 2.191870800658194,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 135,
+    "playerCash": 27538712.800000176,
+    "rivalAvgCash": 148703340.16216478,
+    "totalSystemCash": 1514572114.421648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2470,
+    "avgTalentPrestige": 46.929959514170044,
+    "activeProjects": 0,
+    "completedProjects": 5,
+    "retiredCount": 30,
+    "bankruptcyCount": 1,
+    "marketShare": 1.8182503518834467,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 136,
+    "playerCash": 21562645.200000174,
+    "rivalAvgCash": 147835057.6621648,
+    "totalSystemCash": 1499913221.8216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2470,
+    "avgTalentPrestige": 46.929959514170044,
+    "activeProjects": 0,
+    "completedProjects": 5,
+    "retiredCount": 30,
+    "bankruptcyCount": 1,
+    "marketShare": 1.4375928477923734,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 137,
+    "playerCash": 15581433.600000173,
+    "rivalAvgCash": 147012282.8421648,
+    "totalSystemCash": 1485704262.0216482,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2470,
+    "avgTalentPrestige": 46.929959514170044,
+    "activeProjects": 0,
+    "completedProjects": 5,
+    "retiredCount": 30,
+    "bankruptcyCount": 1,
+    "marketShare": 1.048757414130184,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 138,
+    "playerCash": 9594567.200000174,
+    "rivalAvgCash": 146189396.76216477,
+    "totalSystemCash": 1471488534.8216481,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2470,
+    "avgTalentPrestige": 46.929959514170044,
+    "activeProjects": 0,
+    "completedProjects": 5,
+    "retiredCount": 30,
+    "bankruptcyCount": 1,
+    "marketShare": 0.6520313935822194,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 139,
+    "playerCash": 3601862.800000174,
+    "rivalAvgCash": 145423183.40216482,
+    "totalSystemCash": 1457833696.8216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2470,
+    "avgTalentPrestige": 46.929959514170044,
+    "activeProjects": 0,
+    "completedProjects": 5,
+    "retiredCount": 30,
+    "bankruptcyCount": 1,
+    "marketShare": 0.24706952568409635,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 140,
+    "playerCash": -2396354.399999826,
+    "rivalAvgCash": 144554639.7821648,
+    "totalSystemCash": 1443150043.4216483,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2470,
+    "avgTalentPrestige": 46.929959514170044,
+    "activeProjects": 0,
+    "completedProjects": 5,
+    "retiredCount": 30,
+    "bankruptcyCount": 1,
+    "marketShare": -0.16605026004906395,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 141,
+    "playerCash": -8412742.799999826,
+    "rivalAvgCash": 143731452.2221648,
+    "totalSystemCash": 1428901779.4216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2469,
+    "avgTalentPrestige": 46.92790603483191,
+    "activeProjects": 0,
+    "completedProjects": 5,
+    "retiredCount": 31,
+    "bankruptcyCount": 1,
+    "marketShare": -0.5887558488033309,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 142,
+    "playerCash": -14466741.999999825,
+    "rivalAvgCash": 142908173.92216483,
+    "totalSystemCash": 1414614997.2216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2468,
+    "avgTalentPrestige": 46.9209886547812,
+    "activeProjects": 0,
+    "completedProjects": 5,
+    "retiredCount": 32,
+    "bankruptcyCount": 1,
+    "marketShare": -1.0226628466694467,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 143,
+    "playerCash": -20558500.799999826,
+    "rivalAvgCash": 142183713.32216483,
+    "totalSystemCash": 1401278632.4216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2468,
+    "avgTalentPrestige": 46.9209886547812,
+    "activeProjects": 0,
+    "completedProjects": 5,
+    "retiredCount": 32,
+    "bankruptcyCount": 1,
+    "marketShare": -1.4671244051207166,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 144,
+    "playerCash": -26688131.599999823,
+    "rivalAvgCash": 141329712.18216482,
+    "totalSystemCash": 1386608990.2216482,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2468,
+    "avgTalentPrestige": 46.9209886547812,
+    "activeProjects": 0,
+    "completedProjects": 5,
+    "retiredCount": 32,
+    "bankruptcyCount": 1,
+    "marketShare": -1.9247049303880361,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 145,
+    "playerCash": -32855633.199999824,
+    "rivalAvgCash": 140412765.24216482,
+    "totalSystemCash": 1371272019.2216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2468,
+    "avgTalentPrestige": 46.9209886547812,
+    "activeProjects": 0,
+    "completedProjects": 6,
+    "retiredCount": 32,
+    "bankruptcyCount": 1,
+    "marketShare": -2.395996763548716,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 146,
+    "playerCash": -39060461.99999982,
+    "rivalAvgCash": 139589167.32216483,
+    "totalSystemCash": 1356831211.2216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2468,
+    "avgTalentPrestige": 46.9209886547812,
+    "activeProjects": 0,
+    "completedProjects": 6,
+    "retiredCount": 32,
+    "bankruptcyCount": 1,
+    "marketShare": -2.8788003752383466,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 147,
+    "playerCash": -45303546.39999983,
+    "rivalAvgCash": 138673765.90216482,
+    "totalSystemCash": 1341434112.6216483,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2467,
+    "avgTalentPrestige": 46.92298338062424,
+    "activeProjects": 0,
+    "completedProjects": 6,
+    "retiredCount": 33,
+    "bankruptcyCount": 1,
+    "marketShare": -3.3772472291956466,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 148,
+    "playerCash": -51585263.59999983,
+    "rivalAvgCash": 137767553.76216483,
+    "totalSystemCash": 1326090274.0216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2466,
+    "avgTalentPrestige": 46.933495539334956,
+    "activeProjects": 0,
+    "completedProjects": 6,
+    "retiredCount": 34,
+    "bankruptcyCount": 1,
+    "marketShare": -3.890026539713366,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 149,
+    "playerCash": 42093194.000000164,
+    "rivalAvgCash": 136913200.58216482,
+    "totalSystemCash": 1411225199.8216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2466,
+    "avgTalentPrestige": 46.933495539334956,
+    "activeProjects": 0,
+    "completedProjects": 6,
+    "retiredCount": 34,
+    "bankruptcyCount": 1,
+    "marketShare": 2.9827410965535432,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 150,
+    "playerCash": 36097800.40000017,
+    "rivalAvgCash": 136089342.2021648,
+    "totalSystemCash": 1396991222.421648,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2466,
+    "avgTalentPrestige": 46.933495539334956,
+    "activeProjects": 0,
+    "completedProjects": 6,
+    "retiredCount": 34,
+    "bankruptcyCount": 1,
+    "marketShare": 2.5839675883879623,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 151,
+    "playerCash": 30097998.40000017,
+    "rivalAvgCash": 135261532.2621648,
+    "totalSystemCash": 1382713321.0216482,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2466,
+    "avgTalentPrestige": 46.933495539334956,
+    "activeProjects": 0,
+    "completedProjects": 6,
+    "retiredCount": 34,
+    "bankruptcyCount": 1,
+    "marketShare": 2.1767345365387527,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 152,
+    "playerCash": 24092859.600000173,
+    "rivalAvgCash": 134437562.3821648,
+    "totalSystemCash": 1368468483.4216483,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2466,
+    "avgTalentPrestige": 46.933495539334956,
+    "activeProjects": 0,
+    "completedProjects": 7,
+    "retiredCount": 34,
+    "bankruptcyCount": 1,
+    "marketShare": 1.7605710246069846,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 153,
+    "playerCash": 18083058.00000017,
+    "rivalAvgCash": 133544072.12216482,
+    "totalSystemCash": 1353523779.2216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2466,
+    "avgTalentPrestige": 46.933495539334956,
+    "activeProjects": 0,
+    "completedProjects": 7,
+    "retiredCount": 34,
+    "bankruptcyCount": 1,
+    "marketShare": 1.335998545248975,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 154,
+    "playerCash": 12068744.40000017,
+    "rivalAvgCash": 132558497.76216483,
+    "totalSystemCash": 1337653722.0216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2465,
+    "avgTalentPrestige": 46.92048681541582,
+    "activeProjects": 0,
+    "completedProjects": 7,
+    "retiredCount": 35,
+    "bankruptcyCount": 1,
+    "marketShare": 0.9022323342217599,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 155,
+    "playerCash": 6050264.800000169,
+    "rivalAvgCash": 131727921.34216483,
+    "totalSystemCash": 1323329478.2216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2465,
+    "avgTalentPrestige": 46.92048681541582,
+    "activeProjects": 0,
+    "completedProjects": 7,
+    "retiredCount": 35,
+    "bankruptcyCount": 1,
+    "marketShare": 0.45720018329303724,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 156,
+    "playerCash": 27273.600000168663,
+    "rivalAvgCash": 130889375.22216482,
+    "totalSystemCash": 1308921025.8216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2465,
+    "avgTalentPrestige": 46.92048681541582,
+    "activeProjects": 0,
+    "completedProjects": 7,
+    "retiredCount": 35,
+    "bankruptcyCount": 1,
+    "marketShare": 0.002083670401967011,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 157,
+    "playerCash": -5999878.399999831,
+    "rivalAvgCash": 130051102.10216483,
+    "totalSystemCash": 1294511142.6216486,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2465,
+    "avgTalentPrestige": 46.92048681541582,
+    "activeProjects": 0,
+    "completedProjects": 7,
+    "retiredCount": 35,
+    "bankruptcyCount": 1,
+    "marketShare": -0.46348603750515854,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 158,
+    "playerCash": -12063445.59999983,
+    "rivalAvgCash": 129174074.96216483,
+    "totalSystemCash": 1279677304.0216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2464,
+    "avgTalentPrestige": 46.92086038961039,
+    "activeProjects": 0,
+    "completedProjects": 7,
+    "retiredCount": 36,
+    "bankruptcyCount": 1,
+    "marketShare": -0.9426943466206659,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 159,
+    "playerCash": -18163455.59999983,
+    "rivalAvgCash": 128349793.94216482,
+    "totalSystemCash": 1265334483.8216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2464,
+    "avgTalentPrestige": 46.92086038961039,
+    "activeProjects": 0,
+    "completedProjects": 7,
+    "retiredCount": 36,
+    "bankruptcyCount": 1,
+    "marketShare": -1.4354667348621797,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 160,
+    "playerCash": -24300585.59999983,
+    "rivalAvgCash": 127525476.90216482,
+    "totalSystemCash": 1250954183.4216483,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2463,
+    "avgTalentPrestige": 46.92488834754364,
+    "activeProjects": 0,
+    "completedProjects": 7,
+    "retiredCount": 37,
+    "bankruptcyCount": 1,
+    "marketShare": -1.9425639981099967,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 161,
+    "playerCash": -30474619.19999983,
+    "rivalAvgCash": 126343468.50216481,
+    "totalSystemCash": 1232960065.8216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2462,
+    "avgTalentPrestige": 46.917546709991875,
+    "activeProjects": 0,
+    "completedProjects": 7,
+    "retiredCount": 38,
+    "bankruptcyCount": 1,
+    "marketShare": -2.4716631174661323,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 162,
+    "playerCash": -36686235.59999983,
+    "rivalAvgCash": 125392735.8821648,
+    "totalSystemCash": 1217241123.2216482,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2461,
+    "avgTalentPrestige": 46.9057293783015,
+    "activeProjects": 0,
+    "completedProjects": 7,
+    "retiredCount": 39,
+    "bankruptcyCount": 1,
+    "marketShare": -3.013884011978094,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 163,
+    "playerCash": -42935553.999999836,
+    "rivalAvgCash": 124541490.20216481,
+    "totalSystemCash": 1202479348.0216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2461,
+    "avgTalentPrestige": 46.9057293783015,
+    "activeProjects": 0,
+    "completedProjects": 7,
+    "retiredCount": 39,
+    "bankruptcyCount": 1,
+    "marketShare": -3.570585563123273,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 164,
+    "playerCash": -49221844.39999984,
+    "rivalAvgCash": 123667486.28216484,
+    "totalSystemCash": 1187453018.4216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2461,
+    "avgTalentPrestige": 46.9057293783015,
+    "activeProjects": 0,
+    "completedProjects": 7,
+    "retiredCount": 39,
+    "bankruptcyCount": 1,
+    "marketShare": -4.145161419979804,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 165,
+    "playerCash": 44454469.20000015,
+    "rivalAvgCash": 122820439.54216483,
+    "totalSystemCash": 1272658864.6216483,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2461,
+    "avgTalentPrestige": 46.9057293783015,
+    "activeProjects": 0,
+    "completedProjects": 7,
+    "retiredCount": 39,
+    "bankruptcyCount": 1,
+    "marketShare": 3.4930388995652915,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 166,
+    "playerCash": 38440168.400000155,
+    "rivalAvgCash": 121995941.28216484,
+    "totalSystemCash": 1258399581.2216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2460,
+    "avgTalentPrestige": 46.89349593495935,
+    "activeProjects": 0,
+    "completedProjects": 8,
+    "retiredCount": 40,
+    "bankruptcyCount": 1,
+    "marketShare": 3.0546869987577887,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 167,
+    "playerCash": 32422160.80000016,
+    "rivalAvgCash": 121171417.92216483,
+    "totalSystemCash": 1244136340.0216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2460,
+    "avgTalentPrestige": 46.89349593495935,
+    "activeProjects": 0,
+    "completedProjects": 8,
+    "retiredCount": 40,
+    "bankruptcyCount": 1,
+    "marketShare": 2.605997410174194,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 168,
+    "playerCash": 26400767.20000016,
+    "rivalAvgCash": 120346870.68216483,
+    "totalSystemCash": 1229869474.0216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2460,
+    "avgTalentPrestige": 46.89349593495935,
+    "activeProjects": 0,
+    "completedProjects": 8,
+    "retiredCount": 40,
+    "bankruptcyCount": 1,
+    "marketShare": 2.146631635117358,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 169,
+    "playerCash": 20375908.400000162,
+    "rivalAvgCash": 134326609.32216483,
+    "totalSystemCash": 1363642001.6216483,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2460,
+    "avgTalentPrestige": 46.89349593495935,
+    "activeProjects": 0,
+    "completedProjects": 8,
+    "retiredCount": 40,
+    "bankruptcyCount": 0,
+    "marketShare": 1.494227104751031,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 170,
+    "playerCash": 14347208.000000164,
+    "rivalAvgCash": 133466698.32216482,
+    "totalSystemCash": 1349014191.2216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2460,
+    "avgTalentPrestige": 46.89349593495935,
+    "activeProjects": 0,
+    "completedProjects": 8,
+    "retiredCount": 40,
+    "bankruptcyCount": 0,
+    "marketShare": 1.0635327703267177,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 171,
+    "playerCash": 8314763.200000163,
+    "rivalAvgCash": 132735847.28216484,
+    "totalSystemCash": 1335673236.0216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2460,
+    "avgTalentPrestige": 46.89349593495935,
+    "activeProjects": 0,
+    "completedProjects": 8,
+    "retiredCount": 40,
+    "bankruptcyCount": 0,
+    "marketShare": 0.6225147720086082,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 172,
+    "playerCash": 2278776.800000163,
+    "rivalAvgCash": 131911215.82216482,
+    "totalSystemCash": 1321390935.0216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2460,
+    "avgTalentPrestige": 46.89349593495935,
+    "activeProjects": 0,
+    "completedProjects": 8,
+    "retiredCount": 40,
+    "bankruptcyCount": 0,
+    "marketShare": 0.17245288578908174,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 173,
+    "playerCash": -3760767.599999837,
+    "rivalAvgCash": 131081751.56216486,
+    "totalSystemCash": 1307056748.0216486,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2460,
+    "avgTalentPrestige": 46.89349593495935,
+    "activeProjects": 0,
+    "completedProjects": 8,
+    "retiredCount": 40,
+    "bankruptcyCount": 0,
+    "marketShare": -0.28772795103901244,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 174,
+    "playerCash": -9823920.799999837,
+    "rivalAvgCash": 130257084.02216482,
+    "totalSystemCash": 1292746919.4216483,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2460,
+    "avgTalentPrestige": 46.89349593495935,
+    "activeProjects": 0,
+    "completedProjects": 8,
+    "retiredCount": 40,
+    "bankruptcyCount": 0,
+    "marketShare": -0.7599260653736373,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 175,
+    "playerCash": -15922935.999999836,
+    "rivalAvgCash": 129432399.76216483,
+    "totalSystemCash": 1278401061.6216486,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2460,
+    "avgTalentPrestige": 46.89349593495935,
+    "activeProjects": 0,
+    "completedProjects": 8,
+    "retiredCount": 40,
+    "bankruptcyCount": 0,
+    "marketShare": -1.2455352610394137,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 176,
+    "playerCash": -22058013.599999838,
+    "rivalAvgCash": 128607699.68216482,
+    "totalSystemCash": 1264018983.2216482,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2460,
+    "avgTalentPrestige": 46.89349593495935,
+    "activeProjects": 0,
+    "completedProjects": 8,
+    "retiredCount": 40,
+    "bankruptcyCount": 0,
+    "marketShare": -1.7450698045514972,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 177,
+    "playerCash": -28229971.999999836,
+    "rivalAvgCash": 127280753.94216482,
+    "totalSystemCash": 1244577567.4216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2460,
+    "avgTalentPrestige": 46.89349593495935,
+    "activeProjects": 0,
+    "completedProjects": 8,
+    "retiredCount": 40,
+    "bankruptcyCount": 0,
+    "marketShare": -2.268237250851545,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 178,
+    "playerCash": -34438543.999999836,
+    "rivalAvgCash": 126456378.32216482,
+    "totalSystemCash": 1230125239.2216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2460,
+    "avgTalentPrestige": 46.89349593495935,
+    "activeProjects": 0,
+    "completedProjects": 8,
+    "retiredCount": 40,
+    "bankruptcyCount": 0,
+    "marketShare": -2.7995965696785916,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 179,
+    "playerCash": -40684872.39999984,
+    "rivalAvgCash": 125288384.78216481,
+    "totalSystemCash": 1212198975.4216483,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2460,
+    "avgTalentPrestige": 46.89349593495935,
+    "activeProjects": 0,
+    "completedProjects": 8,
+    "retiredCount": 40,
+    "bankruptcyCount": 0,
+    "marketShare": -3.356286651360031,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 180,
+    "playerCash": -46968753.999999836,
+    "rivalAvgCash": 124268238.74216482,
+    "totalSystemCash": 1195713633.4216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2459,
+    "avgTalentPrestige": 46.89304595363969,
+    "activeProjects": 0,
+    "completedProjects": 8,
+    "retiredCount": 41,
+    "bankruptcyCount": 0,
+    "marketShare": -3.9280938752529124,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 181,
+    "playerCash": 46709888.000000164,
+    "rivalAvgCash": 123520544.82216482,
+    "totalSystemCash": 1281915336.2216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2458,
+    "avgTalentPrestige": 46.90113913751017,
+    "activeProjects": 0,
+    "completedProjects": 8,
+    "retiredCount": 42,
+    "bankruptcyCount": 1,
+    "marketShare": 3.643757639851173,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 182,
+    "playerCash": 40688687.60000016,
+    "rivalAvgCash": 122695765.00216484,
+    "totalSystemCash": 1267646337.6216486,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2458,
+    "avgTalentPrestige": 46.90113913751017,
+    "activeProjects": 0,
+    "completedProjects": 8,
+    "retiredCount": 42,
+    "bankruptcyCount": 1,
+    "marketShare": 3.209782286464856,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 183,
+    "playerCash": 34664034.80000016,
+    "rivalAvgCash": 121824774.14216483,
+    "totalSystemCash": 1252911776.2216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2456,
+    "avgTalentPrestige": 46.91327361563518,
+    "activeProjects": 0,
+    "completedProjects": 8,
+    "retiredCount": 44,
+    "bankruptcyCount": 1,
+    "marketShare": 2.7666780261683694,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 184,
+    "playerCash": 28635202.000000164,
+    "rivalAvgCash": 120999972.74216485,
+    "totalSystemCash": 1238634929.4216487,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2455,
+    "avgTalentPrestige": 46.911608961303465,
+    "activeProjects": 0,
+    "completedProjects": 8,
+    "retiredCount": 45,
+    "bankruptcyCount": 1,
+    "marketShare": 2.3118354988883363,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 185,
+    "playerCash": 22603390.000000164,
+    "rivalAvgCash": 120175161.32216485,
+    "totalSystemCash": 1224355003.2216487,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2455,
+    "avgTalentPrestige": 46.911608961303465,
+    "activeProjects": 0,
+    "completedProjects": 8,
+    "retiredCount": 45,
+    "bankruptcyCount": 1,
+    "marketShare": 1.8461467417966033,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 186,
+    "playerCash": 16567724.400000162,
+    "rivalAvgCash": 119350340.46216483,
+    "totalSystemCash": 1210071129.0216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2454,
+    "avgTalentPrestige": 46.92257538712306,
+    "activeProjects": 0,
+    "completedProjects": 8,
+    "retiredCount": 46,
+    "bankruptcyCount": 1,
+    "marketShare": 1.3691529367695345,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 187,
+    "playerCash": 10528912.000000164,
+    "rivalAvgCash": 118457411.88216484,
+    "totalSystemCash": 1195103030.8216486,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2453,
+    "avgTalentPrestige": 46.92132083163473,
+    "activeProjects": 0,
+    "completedProjects": 8,
+    "retiredCount": 47,
+    "bankruptcyCount": 1,
+    "marketShare": 0.8810045434125795,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 188,
+    "playerCash": 4486566.800000165,
+    "rivalAvgCash": 117623209.52216482,
+    "totalSystemCash": 1180718662.0216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2453,
+    "avgTalentPrestige": 46.92132083163473,
+    "activeProjects": 0,
+    "completedProjects": 9,
+    "retiredCount": 47,
+    "bankruptcyCount": 1,
+    "marketShare": 0.37998610035672525,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 189,
+    "playerCash": -1559042.7999998352,
+    "rivalAvgCash": 116751322.90216485,
+    "totalSystemCash": 1165954186.2216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2453,
+    "avgTalentPrestige": 46.92132083163473,
+    "activeProjects": 0,
+    "completedProjects": 9,
+    "retiredCount": 47,
+    "bankruptcyCount": 1,
+    "marketShare": -0.1337138987469153,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 190,
+    "playerCash": -7616361.999999836,
+    "rivalAvgCash": 115757421.74216482,
+    "totalSystemCash": 1149957855.4216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2453,
+    "avgTalentPrestige": 46.92132083163473,
+    "activeProjects": 0,
+    "completedProjects": 9,
+    "retiredCount": 47,
+    "bankruptcyCount": 1,
+    "marketShare": -0.6623166200475398,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 191,
+    "playerCash": -13709452.799999837,
+    "rivalAvgCash": 114871635.42216483,
+    "totalSystemCash": 1135006901.4216483,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2453,
+    "avgTalentPrestige": 46.92132083163473,
+    "activeProjects": 0,
+    "completedProjects": 9,
+    "retiredCount": 47,
+    "bankruptcyCount": 1,
+    "marketShare": -1.2078739594295083,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 192,
+    "playerCash": -19838508.39999984,
+    "rivalAvgCash": 113885381.82216482,
+    "totalSystemCash": 1119015309.8216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2453,
+    "avgTalentPrestige": 46.92132083163473,
+    "activeProjects": 0,
+    "completedProjects": 9,
+    "retiredCount": 47,
+    "bankruptcyCount": 1,
+    "marketShare": -1.7728540642720745,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 193,
+    "playerCash": -26003832.39999984,
+    "rivalAvgCash": 113028376.48216483,
+    "totalSystemCash": 1104279932.4216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2453,
+    "avgTalentPrestige": 46.92132083163473,
+    "activeProjects": 0,
+    "completedProjects": 9,
+    "retiredCount": 47,
+    "bankruptcyCount": 1,
+    "marketShare": -2.3548225080006944,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 194,
+    "playerCash": -32206201.199999835,
+    "rivalAvgCash": 111987199.34216483,
+    "totalSystemCash": 1087665792.2216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2453,
+    "avgTalentPrestige": 46.92132083163473,
+    "activeProjects": 0,
+    "completedProjects": 9,
+    "retiredCount": 47,
+    "bankruptcyCount": 1,
+    "marketShare": -2.9610383474703172,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 195,
+    "playerCash": -38444709.59999984,
+    "rivalAvgCash": 111133786.02216482,
+    "totalSystemCash": 1072893150.6216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2453,
+    "avgTalentPrestige": 46.92132083163473,
+    "activeProjects": 0,
+    "completedProjects": 9,
+    "retiredCount": 47,
+    "bankruptcyCount": 1,
+    "marketShare": -3.5832747723036977,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 196,
+    "playerCash": -44721097.99999984,
+    "rivalAvgCash": 110307317.72216482,
+    "totalSystemCash": 1058352079.2216483,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2453,
+    "avgTalentPrestige": 46.92132083163473,
+    "activeProjects": 0,
+    "completedProjects": 9,
+    "retiredCount": 47,
+    "bankruptcyCount": 1,
+    "marketShare": -4.225540713529793,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 197,
+    "playerCash": -51033657.19999985,
+    "rivalAvgCash": 109456274.04216483,
+    "totalSystemCash": 1043529083.2216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2453,
+    "avgTalentPrestige": 46.92132083163473,
+    "activeProjects": 0,
+    "completedProjects": 9,
+    "retiredCount": 47,
+    "bankruptcyCount": 1,
+    "marketShare": -4.89048729168578,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 198,
+    "playerCash": 42617928.00000016,
+    "rivalAvgCash": 108631370.24216482,
+    "totalSystemCash": 1128931630.4216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2452,
+    "avgTalentPrestige": 46.93352365415987,
+    "activeProjects": 0,
+    "completedProjects": 9,
+    "retiredCount": 48,
+    "bankruptcyCount": 1,
+    "marketShare": 3.7750672274177175,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 199,
+    "playerCash": 36585635.60000015,
+    "rivalAvgCash": 107806461.56216483,
+    "totalSystemCash": 1114650251.2216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2452,
+    "avgTalentPrestige": 46.93352365415987,
+    "activeProjects": 0,
+    "completedProjects": 9,
+    "retiredCount": 48,
+    "bankruptcyCount": 1,
+    "marketShare": 3.282252487711061,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 200,
+    "playerCash": 30550885.20000015,
+    "rivalAvgCash": 106825984.48216483,
+    "totalSystemCash": 1098810730.0216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2452,
+    "avgTalentPrestige": 46.93352365415987,
+    "activeProjects": 0,
+    "completedProjects": 9,
+    "retiredCount": 48,
+    "bankruptcyCount": 1,
+    "marketShare": 2.7803591979301334,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 201,
+    "playerCash": 24513560.80000015,
+    "rivalAvgCash": 105990566.80216482,
+    "totalSystemCash": 1084419228.8216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2452,
+    "avgTalentPrestige": 46.93352365415987,
+    "activeProjects": 0,
+    "completedProjects": 9,
+    "retiredCount": 48,
+    "bankruptcyCount": 1,
+    "marketShare": 2.260524357045667,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 202,
+    "playerCash": 18472715.20000015,
+    "rivalAvgCash": 105119969.98216483,
+    "totalSystemCash": 1069672415.0216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2452,
+    "avgTalentPrestige": 46.93352365415987,
+    "activeProjects": 0,
+    "completedProjects": 9,
+    "retiredCount": 48,
+    "bankruptcyCount": 1,
+    "marketShare": 1.7269506944914803,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 203,
+    "playerCash": 12429489.600000147,
+    "rivalAvgCash": 104295044.18216482,
+    "totalSystemCash": 1055379931.4216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2452,
+    "avgTalentPrestige": 46.93352365415987,
+    "activeProjects": 0,
+    "completedProjects": 9,
+    "retiredCount": 48,
+    "bankruptcyCount": 1,
+    "marketShare": 1.1777265447199678,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 204,
+    "playerCash": 6383163.200000147,
+    "rivalAvgCash": 103470114.62216482,
+    "totalSystemCash": 1041084309.4216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2452,
+    "avgTalentPrestige": 46.93352365415987,
+    "activeProjects": 0,
+    "completedProjects": 9,
+    "retiredCount": 48,
+    "bankruptcyCount": 1,
+    "marketShare": 0.6131264434814289,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 205,
+    "playerCash": 334251.20000014734,
+    "rivalAvgCash": 102625966.50216484,
+    "totalSystemCash": 1026593916.2216486,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2452,
+    "avgTalentPrestige": 46.93352365415987,
+    "activeProjects": 0,
+    "completedProjects": 9,
+    "retiredCount": 48,
+    "bankruptcyCount": 1,
+    "marketShare": 0.032559242239653036,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 206,
+    "playerCash": -5717497.199999853,
+    "rivalAvgCash": 101801029.98216483,
+    "totalSystemCash": 1012292802.6216486,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2452,
+    "avgTalentPrestige": 46.93352365415987,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 48,
+    "bankruptcyCount": 1,
+    "marketShare": -0.5648066631702416,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 207,
+    "playerCash": -11802873.999999853,
+    "rivalAvgCash": 101013734.58216482,
+    "totalSystemCash": 998334471.8216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2451,
+    "avgTalentPrestige": 46.94818441452468,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 49,
+    "bankruptcyCount": 2,
+    "marketShare": -1.1822564814839356,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 208,
+    "playerCash": -17923749.99999985,
+    "rivalAvgCash": 100188791.74216482,
+    "totalSystemCash": 983964167.4216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2451,
+    "avgTalentPrestige": 46.94818441452468,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 49,
+    "bankruptcyCount": 2,
+    "marketShare": -1.8215856423884556,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 209,
+    "playerCash": -24080078.799999848,
+    "rivalAvgCash": 98997733.38216484,
+    "totalSystemCash": 965897255.0216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2450,
+    "avgTalentPrestige": 46.93469387755102,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 50,
+    "bankruptcyCount": 2,
+    "marketShare": -2.4930269420281292,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 210,
+    "playerCash": -30272697.199999847,
+    "rivalAvgCash": 98172784.84216483,
+    "totalSystemCash": 951455151.2216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2450,
+    "avgTalentPrestige": 46.93469387755102,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 50,
+    "bankruptcyCount": 2,
+    "marketShare": -3.181726134030631,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 211,
+    "playerCash": -36501021.19999985,
+    "rivalAvgCash": 97347833.70216483,
+    "totalSystemCash": 936977315.8216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2450,
+    "avgTalentPrestige": 46.93469387755102,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 50,
+    "bankruptcyCount": 2,
+    "marketShare": -3.895614182291232,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 212,
+    "playerCash": -42764709.99999984,
+    "rivalAvgCash": 96452364.08216484,
+    "totalSystemCash": 921758930.8216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2449,
+    "avgTalentPrestige": 46.94201714985709,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 51,
+    "bankruptcyCount": 2,
+    "marketShare": -4.6394679313689675,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 213,
+    "playerCash": -49065847.59999984,
+    "rivalAvgCash": 95213964.06216481,
+    "totalSystemCash": 903073793.0216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2449,
+    "avgTalentPrestige": 46.94201714985709,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 51,
+    "bankruptcyCount": 2,
+    "marketShare": -5.43320468151639,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 214,
+    "playerCash": 44597345.600000165,
+    "rivalAvgCash": 94389005.78216481,
+    "totalSystemCash": 988487403.4216483,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2449,
+    "avgTalentPrestige": 46.94201714985709,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 51,
+    "bankruptcyCount": 2,
+    "marketShare": 4.511675661786533,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 215,
+    "playerCash": 38561196.80000017,
+    "rivalAvgCash": 93564045.38216484,
+    "totalSystemCash": 974201650.6216486,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2449,
+    "avgTalentPrestige": 46.94201714985709,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 51,
+    "bankruptcyCount": 2,
+    "marketShare": 3.958235625590847,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 216,
+    "playerCash": 32521549.600000165,
+    "rivalAvgCash": 92687079.74216482,
+    "totalSystemCash": 959392347.0216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2449,
+    "avgTalentPrestige": 46.94201714985709,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 51,
+    "bankruptcyCount": 2,
+    "marketShare": 3.3898070691266753,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 217,
+    "playerCash": 26480185.600000165,
+    "rivalAvgCash": 91754807.28216484,
+    "totalSystemCash": 944028258.4216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2449,
+    "avgTalentPrestige": 46.94201714985709,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 51,
+    "bankruptcyCount": 2,
+    "marketShare": 2.805020439141647,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 218,
+    "playerCash": 20436346.400000162,
+    "rivalAvgCash": 105863781.78216483,
+    "totalSystemCash": 1079074164.2216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2449,
+    "avgTalentPrestige": 46.94201714985709,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 51,
+    "bankruptcyCount": 1,
+    "marketShare": 1.8938778332016866,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 219,
+    "playerCash": 14390106.800000161,
+    "rivalAvgCash": 105021488.86216483,
+    "totalSystemCash": 1064604995.4216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2448,
+    "avgTalentPrestige": 46.93096405228758,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 52,
+    "bankruptcyCount": 1,
+    "marketShare": 1.351685072105152,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 220,
+    "playerCash": 8341820.800000161,
+    "rivalAvgCash": 104196519.30216482,
+    "totalSystemCash": 1050307013.8216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2448,
+    "avgTalentPrestige": 46.93096405228758,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 52,
+    "bankruptcyCount": 1,
+    "marketShare": 0.7942268965383371,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 221,
+    "playerCash": 2291221.2000001613,
+    "rivalAvgCash": 102875482.26216483,
+    "totalSystemCash": 1031046043.8216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2448,
+    "avgTalentPrestige": 46.93096405228758,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 52,
+    "bankruptcyCount": 1,
+    "marketShare": 0.22222297575650263,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 222,
+    "playerCash": -3761820.7999998387,
+    "rivalAvgCash": 101966095.50216483,
+    "totalSystemCash": 1015899134.2216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2447,
+    "avgTalentPrestige": 46.919493257049446,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 53,
+    "bankruptcyCount": 1,
+    "marketShare": -0.37029471463050645,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 223,
+    "playerCash": -9837529.999999838,
+    "rivalAvgCash": 101141121.40216485,
+    "totalSystemCash": 1001573684.0216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2447,
+    "avgTalentPrestige": 46.919493257049446,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 53,
+    "bankruptcyCount": 1,
+    "marketShare": -0.9822073160407843,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 224,
+    "playerCash": -15948336.399999836,
+    "rivalAvgCash": 100316145.94216482,
+    "totalSystemCash": 987213123.0216484,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2446,
+    "avgTalentPrestige": 46.92681929681112,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 54,
+    "bankruptcyCount": 1,
+    "marketShare": -1.615490721110492,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 225,
+    "playerCash": -22094061.199999835,
+    "rivalAvgCash": 99491169.24216484,
+    "totalSystemCash": 972817631.2216486,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2446,
+    "avgTalentPrestige": 46.92681929681112,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 54,
+    "bankruptcyCount": 1,
+    "marketShare": -2.2711411153449665,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 226,
+    "playerCash": -28275071.599999834,
+    "rivalAvgCash": 98666191.30216484,
+    "totalSystemCash": 958386841.4216486,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2446,
+    "avgTalentPrestige": 46.92681929681112,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 54,
+    "bankruptcyCount": 1,
+    "marketShare": -2.9502775265629957,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 227,
+    "playerCash": -34491621.999999836,
+    "rivalAvgCash": 97791547.20216484,
+    "totalSystemCash": 943423850.0216485,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2445,
+    "avgTalentPrestige": 46.91411042944785,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 55,
+    "bankruptcyCount": 1,
+    "marketShare": -3.6560048804371825,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 228,
+    "playerCash": -40744631.59999983,
+    "rivalAvgCash": 96763154.14216484,
+    "totalSystemCash": 926886909.8216486,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2445,
+    "avgTalentPrestige": 46.91411042944785,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 55,
+    "bankruptcyCount": 1,
+    "marketShare": -4.395857916241357,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 229,
+    "playerCash": -47033777.59999983,
+    "rivalAvgCash": 95957854.22216484,
+    "totalSystemCash": 912544764.6216487,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2445,
+    "avgTalentPrestige": 46.91411042944785,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 55,
+    "bankruptcyCount": 1,
+    "marketShare": -5.154133739345988,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 230,
+    "playerCash": 46641064.800000176,
+    "rivalAvgCash": 95132872.00216486,
+    "totalSystemCash": 997969784.8216487,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2445,
+    "avgTalentPrestige": 46.91411042944785,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 55,
+    "bankruptcyCount": 1,
+    "marketShare": 4.673594883269496,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 231,
+    "playerCash": 40603458.00000018,
+    "rivalAvgCash": 94286888.82216485,
+    "totalSystemCash": 983472346.2216487,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2445,
+    "avgTalentPrestige": 46.91411042944785,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 55,
+    "bankruptcyCount": 1,
+    "marketShare": 4.128581566730625,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 232,
+    "playerCash": 34563388.800000176,
+    "rivalAvgCash": 93465283.44216485,
+    "totalSystemCash": 969216223.2216487,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2445,
+    "avgTalentPrestige": 46.91411042944785,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 55,
+    "bankruptcyCount": 1,
+    "marketShare": 3.5661174433412186,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 233,
+    "playerCash": 28520428.800000176,
+    "rivalAvgCash": 92249445.40216485,
+    "totalSystemCash": 951014882.8216486,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2445,
+    "avgTalentPrestige": 46.91411042944785,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 55,
+    "bankruptcyCount": 1,
+    "marketShare": 2.9989466321894396,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 234,
+    "playerCash": 22474714.800000176,
+    "rivalAvgCash": 91346670.38216485,
+    "totalSystemCash": 935941418.6216487,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2444,
+    "avgTalentPrestige": 46.926759410801964,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 56,
+    "bankruptcyCount": 1,
+    "marketShare": 2.4012950333043768,
+    "industryLeader": "Global Entertainment",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 235,
+    "playerCash": 16426392.800000176,
+    "rivalAvgCash": 90521683.88216487,
+    "totalSystemCash": 921643231.6216488,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2444,
+    "avgTalentPrestige": 46.926759410801964,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 56,
+    "bankruptcyCount": 1,
+    "marketShare": 1.782294084783504,
+    "industryLeader": "Legacy Pictures",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 236,
+    "playerCash": 10376025.200000174,
+    "rivalAvgCash": 89809293.86216487,
+    "totalSystemCash": 908468963.8216488,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2444,
+    "avgTalentPrestige": 46.926759410801964,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 56,
+    "bankruptcyCount": 1,
+    "marketShare": 1.1421441582716745,
+    "industryLeader": "Legacy Pictures",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 237,
+    "playerCash": 4323691.600000174,
+    "rivalAvgCash": 88969080.92216486,
+    "totalSystemCash": 894014500.8216487,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2443,
+    "avgTalentPrestige": 46.92345476872698,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 57,
+    "bankruptcyCount": 1,
+    "marketShare": 0.4836265626593822,
+    "industryLeader": "Legacy Pictures",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 238,
+    "playerCash": -1730269.5999998264,
+    "rivalAvgCash": 88144092.30216487,
+    "totalSystemCash": 879710653.4216489,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2443,
+    "avgTalentPrestige": 46.92345476872698,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 57,
+    "bankruptcyCount": 1,
+    "marketShare": -0.19668621645877707,
+    "industryLeader": "Legacy Pictures",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 239,
+    "playerCash": -7795084.799999826,
+    "rivalAvgCash": 87376167.92216486,
+    "totalSystemCash": 865966594.4216487,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2443,
+    "avgTalentPrestige": 46.92345476872698,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 57,
+    "bankruptcyCount": 1,
+    "marketShare": -0.9001599888741565,
+    "industryLeader": "Legacy Pictures",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 240,
+    "playerCash": -13894353.999999825,
+    "rivalAvgCash": 86489180.06216487,
+    "totalSystemCash": 850997446.6216488,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2443,
+    "avgTalentPrestige": 46.92345476872698,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 57,
+    "bankruptcyCount": 1,
+    "marketShare": -1.632713947046332,
+    "industryLeader": "Legacy Pictures",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 241,
+    "playerCash": -20028403.599999826,
+    "rivalAvgCash": 85658939.64216486,
+    "totalSystemCash": 836560992.8216487,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2443,
+    "avgTalentPrestige": 46.92345476872698,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 57,
+    "bankruptcyCount": 1,
+    "marketShare": -2.3941354870546534,
+    "industryLeader": "Legacy Pictures",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 242,
+    "playerCash": -26196973.999999825,
+    "rivalAvgCash": 84434736.14216487,
+    "totalSystemCash": 818150387.4216489,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2443,
+    "avgTalentPrestige": 46.92345476872698,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 57,
+    "bankruptcyCount": 1,
+    "marketShare": -3.2019753828581554,
+    "industryLeader": "Legacy Pictures",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 243,
+    "playerCash": -32401151.599999826,
+    "rivalAvgCash": 83609744.68216486,
+    "totalSystemCash": 803696295.2216488,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2443,
+    "avgTalentPrestige": 46.92345476872698,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 57,
+    "bankruptcyCount": 1,
+    "marketShare": -4.031516854393862,
+    "industryLeader": "Legacy Pictures",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 244,
+    "playerCash": -38640010.799999826,
+    "rivalAvgCash": 97784752.74216485,
+    "totalSystemCash": 939207516.6216487,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2443,
+    "avgTalentPrestige": 46.92345476872698,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 57,
+    "bankruptcyCount": 1,
+    "marketShare": -4.114107917171367,
+    "industryLeader": "Legacy Pictures",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 245,
+    "playerCash": -44913437.99999983,
+    "rivalAvgCash": 96907575.32216486,
+    "totalSystemCash": 924162315.2216487,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2443,
+    "avgTalentPrestige": 46.92345476872698,
+    "activeProjects": 0,
+    "completedProjects": 10,
+    "retiredCount": 57,
+    "bankruptcyCount": 1,
+    "marketShare": -4.859907968572371,
+    "industryLeader": "Legacy Pictures",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 246,
+    "playerCash": -51221353.59999982,
+    "rivalAvgCash": 96082582.42216487,
+    "totalSystemCash": 909604470.6216489,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2443,
+    "avgTalentPrestige": 46.92345476872698,
+    "activeProjects": 0,
+    "completedProjects": 11,
+    "retiredCount": 57,
+    "bankruptcyCount": 1,
+    "marketShare": -5.631167749757621,
+    "industryLeader": "Legacy Pictures",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 247,
+    "playerCash": 42436141.60000018,
+    "rivalAvgCash": 95224714.12216486,
+    "totalSystemCash": 994683282.8216487,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2443,
+    "avgTalentPrestige": 46.92345476872698,
+    "activeProjects": 0,
+    "completedProjects": 11,
+    "retiredCount": 57,
+    "bankruptcyCount": 1,
+    "marketShare": 4.266296853770405,
+    "industryLeader": "Legacy Pictures",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 248,
+    "playerCash": 36389663.200000174,
+    "rivalAvgCash": 94399720.42216484,
+    "totalSystemCash": 980386867.4216486,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2442,
+    "avgTalentPrestige": 46.92014742014742,
+    "activeProjects": 0,
+    "completedProjects": 11,
+    "retiredCount": 58,
+    "bankruptcyCount": 1,
+    "marketShare": 3.7117656722292223,
+    "industryLeader": "Legacy Pictures",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 249,
+    "playerCash": 30341418.400000177,
+    "rivalAvgCash": 93276790.62216486,
+    "totalSystemCash": 963109324.6216488,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2441,
+    "avgTalentPrestige": 46.91028267103646,
+    "activeProjects": 0,
+    "completedProjects": 11,
+    "retiredCount": 59,
+    "bankruptcyCount": 1,
+    "marketShare": 3.1503607767394013,
+    "industryLeader": "Legacy Pictures",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 250,
+    "playerCash": 24291542.00000018,
+    "rivalAvgCash": 92202813.30216485,
+    "totalSystemCash": 946319675.0216486,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2441,
+    "avgTalentPrestige": 46.91028267103646,
+    "activeProjects": 0,
+    "completedProjects": 12,
+    "retiredCount": 59,
+    "bankruptcyCount": 1,
+    "marketShare": 2.5669488483840803,
+    "industryLeader": "Legacy Pictures",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 251,
+    "playerCash": 18240931.60000018,
+    "rivalAvgCash": 91350833.52216485,
+    "totalSystemCash": 931749266.8216487,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2441,
+    "avgTalentPrestige": 46.91028267103646,
+    "activeProjects": 0,
+    "completedProjects": 12,
+    "retiredCount": 59,
+    "bankruptcyCount": 1,
+    "marketShare": 1.9577081785342343,
+    "industryLeader": "Legacy Pictures",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 252,
+    "playerCash": 12189190.400000181,
+    "rivalAvgCash": 90525838.46216486,
+    "totalSystemCash": 917447575.0216489,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2441,
+    "avgTalentPrestige": 46.91028267103646,
+    "activeProjects": 0,
+    "completedProjects": 12,
+    "retiredCount": 59,
+    "bankruptcyCount": 1,
+    "marketShare": 1.3285980291258117,
+    "industryLeader": "Legacy Pictures",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 253,
+    "playerCash": 6135917.60000018,
+    "rivalAvgCash": 89387037.32216486,
+    "totalSystemCash": 900006290.8216487,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2440,
+    "avgTalentPrestige": 46.91352459016394,
+    "activeProjects": 0,
+    "completedProjects": 12,
+    "retiredCount": 60,
+    "bankruptcyCount": 1,
+    "marketShare": 0.6817638568279869,
+    "industryLeader": "Legacy Pictures",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 254,
+    "playerCash": 81332.00000018044,
+    "rivalAvgCash": 88562041.70216486,
+    "totalSystemCash": 885701749.0216488,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2439,
+    "avgTalentPrestige": 46.91266912669127,
+    "activeProjects": 0,
+    "completedProjects": 12,
+    "retiredCount": 61,
+    "bankruptcyCount": 1,
+    "marketShare": 0.009182775137343946,
+    "industryLeader": "Legacy Pictures",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 255,
+    "playerCash": -5974257.59999982,
+    "rivalAvgCash": 87737045.80216485,
+    "totalSystemCash": 871396200.4216487,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2439,
+    "avgTalentPrestige": 46.91266912669127,
+    "activeProjects": 0,
+    "completedProjects": 12,
+    "retiredCount": 61,
+    "bankruptcyCount": 1,
+    "marketShare": -0.6855960121365015,
+    "industryLeader": "Legacy Pictures",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 256,
+    "playerCash": -12063027.99999982,
+    "rivalAvgCash": 86864379.62216486,
+    "totalSystemCash": 856580768.2216488,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2438,
+    "avgTalentPrestige": 46.92206726825267,
+    "activeProjects": 0,
+    "completedProjects": 12,
+    "retiredCount": 62,
+    "bankruptcyCount": 1,
+    "marketShare": -1.408276772900695,
+    "industryLeader": "Legacy Pictures",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 257,
+    "playerCash": -18185940.39999982,
+    "rivalAvgCash": 86039383.16216487,
+    "totalSystemCash": 842207891.2216488,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2436,
+    "avgTalentPrestige": 46.9055829228243,
+    "activeProjects": 0,
+    "completedProjects": 12,
+    "retiredCount": 64,
+    "bankruptcyCount": 1,
+    "marketShare": -2.1593172647219614,
+    "industryLeader": "Legacy Pictures",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 258,
+    "playerCash": -24342613.599999823,
+    "rivalAvgCash": 85193453.20216486,
+    "totalSystemCash": 827591918.4216489,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2435,
+    "avgTalentPrestige": 46.91950718685832,
+    "activeProjects": 0,
+    "completedProjects": 12,
+    "retiredCount": 65,
+    "bankruptcyCount": 1,
+    "marketShare": -2.941378843624417,
+    "industryLeader": "Legacy Pictures",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 259,
+    "playerCash": -30533314.799999826,
+    "rivalAvgCash": 84025004.94216487,
+    "totalSystemCash": 809716734.6216488,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2435,
+    "avgTalentPrestige": 46.91950718685832,
+    "activeProjects": 0,
+    "completedProjects": 12,
+    "retiredCount": 65,
+    "bankruptcyCount": 1,
+    "marketShare": -3.7708637470938444,
+    "industryLeader": "Legacy Pictures",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 260,
+    "playerCash": -36758589.199999824,
+    "rivalAvgCash": 83124016.32216486,
+    "totalSystemCash": 794481574.0216488,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2435,
+    "avgTalentPrestige": 46.91950718685832,
+    "activeProjects": 0,
+    "completedProjects": 12,
+    "retiredCount": 65,
+    "bankruptcyCount": 1,
+    "marketShare": -4.6267390461843725,
+    "industryLeader": "Legacy Pictures",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 261,
+    "playerCash": -43019503.99999982,
+    "rivalAvgCash": 82299019.06216486,
+    "totalSystemCash": 779970686.6216488,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2434,
+    "avgTalentPrestige": 46.91084634346754,
+    "activeProjects": 0,
+    "completedProjects": 12,
+    "retiredCount": 66,
+    "bankruptcyCount": 1,
+    "marketShare": -5.515528306112854,
+    "industryLeader": "Legacy Pictures",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  }
+]

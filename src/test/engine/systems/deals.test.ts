@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { evaluateFirstLookDeal, offerFirstLookDeal, advanceDeals } from '../../../engine/systems/deals';
-import { Talent, GameState, FirstLookDeal } from '../../../engine/types';
+import { evaluateFirstLookDeal, offerFirstLookDeal, advanceDeals, evaluatePackageStrength } from '../../../engine/systems/deals';
+import { Talent, GameState, TalentPact, Agency } from '../../../engine/types';
 import { RandomGenerator } from '../../../engine/utils/rng';
 
 describe('Deals System', () => {

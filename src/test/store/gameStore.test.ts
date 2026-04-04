@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { useGameStore } from "../../store/gameStore";
 import * as saveLoad from "../../persistence/saveLoad";
-import { Talent, Project, GameState } from "../../engine/types";
+import { Talent, Project, GameState, Contract } from "../../engine/types";
 
 // Mock saveLoad
 vi.mock("../../persistence/saveLoad", () => ({
@@ -42,7 +42,7 @@ describe("gameStore", () => {
     await useGameStore.getState().newGame("My Studio", "major");
     const state = useGameStore.getState().gameState!;
     // Ensure the necessary structures are present
-    state.studio.internal.contracts = [];
+    state.studio.internal.contracts = [] as Contract[];
     state.industry.talentPool = {};
     useGameStore.setState({ gameState: state });
 
@@ -80,7 +80,7 @@ describe("gameStore", () => {
     state.finance.cash = 1000000;
     state.industry.talentPool = {
       "t1": { 
-          id: "t1", name: "Star", roles: ["actor"], prestige: 85, draw: 80, fee: 100000, 
+          id: "t1", name: "Star", role: "actor", roles: ["actor"], prestige: 85, draw: 80, fee: 100000,
           agencyId: 'a1'
       } as any
     };

@@ -1,9 +1,10 @@
-import { GameState, Project, StateImpact, Contract, Talent, TalentPact, TalentRole } from '@/engine/types';
+import { GameState, Project, StateImpact, Contract, Talent, TalentPact, TalentRole } from '../types';
 import { RandomGenerator } from '../utils/rng';
 import { TalentMoraleSystem } from './talent/TalentMoraleSystem';
 import { processDirectorDisputes } from './directors';
 import { getProjectEstimatedWindow, isSeriesProject } from '../utils/projectUtils';
 import { SchedulingEngine } from './schedulingEngine';
+import { advanceProject } from './projects';
 
 function getAttachedTalent(contracts: Contract[], talentPool: Record<string, Talent>): Talent[] {
   const acc: Talent[] = [];
@@ -21,79 +22,65 @@ function tickProject(
   project: Project, 
   projectContracts: Contract[],
   talentPool: Record<string, Talent>,
-  rng: RandomGenerator
+  rng: RandomGenerator,
+  studioPrestige: number,
+  currentWeek: number
 ): StateImpact[] {
-  if (project.state === 'archived' || project.state === 'released' || project.state === 'post_release') {
+  if (project.state === 'archived') {
     return [];
   }
 
   const impacts: StateImpact[] = [];
+  const talentPoolMap = new Map(Object.entries(talentPool));
   
-  // Handle Turnaround logic
-  if (project.state === 'turnaround') {
-    const nextTurnaround = (project.turnaroundStartWeek || 0) + 1;
-    impacts.push({
-      type: 'PROJECT_UPDATED',
-      payload: {
-        projectId: project.id,
-        update: { turnaroundStartWeek: nextTurnaround }
+  // 1. Core Advancement Pulse (Always happens for non-archived)
+  const { project: advancedProject } = advanceProject(
+    project,
+    currentWeek,
+    studioPrestige,
+    projectContracts,
+    talentPoolMap as any,
+    rng
+  );
+
+  // 2. Production-Specific Logic (Only if in production)
+  if (advancedProject.state === 'production') {
+    const targetWeeks = Math.max(4, Math.min(30, advancedProject.productionWeeks || 20));
+    const attachedTalent = getAttachedTalent(projectContracts, talentPool);
+    const moraleMult = TalentMoraleSystem.getProductionSpeedMultiplier(attachedTalent);
+    
+    // Fatigue logic
+    attachedTalent.forEach(t => {
+      const newFatigue = SchedulingEngine.updateTalentFatigue(t, true);
+      if (newFatigue !== t.fatigue) {
+        impacts.push({
+          type: 'TALENT_UPDATED',
+          payload: { talentId: t.id, update: { fatigue: newFatigue } }
+        });
       }
     });
 
-    // Option: If project stays in turnaround too long, it might get cancelled?
-    // Not implemented yet, just tracking the time.
-    return impacts;
-  }
+    // Progress Increment
+    const baseProgress = (1 / targetWeeks) * 100;
+    const variance = rng.range(0.8, 1.2);
+    const actualProgressIncrement = baseProgress * variance * moraleMult; 
+    const newProgress = Math.min(100, (advancedProject.progress || 0) + actualProgressIncrement);
 
-  const nextWeeksInPhase = (project.weeksInPhase || 0) + 1;
-  const targetWeeks = project.productionWeeks || 20;
-  
-  // Production efficiency influenced by talent fatigue and morale
-  const attachedTalent = getAttachedTalent(projectContracts, talentPool);
-  const moraleMult = TalentMoraleSystem.getProductionSpeedMultiplier(attachedTalent);
-  
-  // Fatigue logic: increase fatigue for all attached talent
-  attachedTalent.forEach(t => {
-    const newFatigue = SchedulingEngine.updateTalentFatigue(t, true);
-    if (newFatigue !== t.fatigue) {
-      impacts.push({
-        type: 'TALENT_UPDATED',
-        payload: {
-          talentId: t.id,
-          update: { fatigue: newFatigue }
-        }
-      });
+    // Stochastic Quality Check
+    let qualityShift = 0;
+    if (rng.next() < 0.2) {
+      qualityShift = rng.range(-2, 3);
     }
-  });
 
-  // 1. Progress Increment
-  const baseProgress = (1 / targetWeeks) * 100;
-  const variance = rng.range(0.8, 1.2);
-  const actualProgressIncrement = baseProgress * variance * moraleMult; 
-  const newProgress = Math.min(100, (project.progress || 0) + actualProgressIncrement);
-
-  // 2. Stochastic Quality Check
-  let qualityShift = 0;
-  if (rng.next() < 0.2) {
-    qualityShift = rng.range(-2, 3);
-  }
-
-  // 3. Marketing & Buzz Tick
-  let buzzGain = 0;
-  if (project.state === 'marketing' && project.marketingBudget) {
-    buzzGain = (project.marketingBudget / 1_000_000) * rng.range(0.5, 1.5);
+    advancedProject.progress = newProgress;
+    advancedProject.reviewScore = Math.min(100, Math.max(0, (advancedProject.reviewScore || 50) + qualityShift));
   }
 
   impacts.push({
     type: 'PROJECT_UPDATED',
     payload: {
-      projectId: project.id,
-      update: {
-        weeksInPhase: nextWeeksInPhase,
-        progress: newProgress,
-        reviewScore: Math.min(100, Math.max(0, (project.reviewScore || 50) + qualityShift)),
-        buzz: Math.min(100, (project.buzz || 0) + buzzGain)
-      }
+      projectId: advancedProject.id,
+      update: advancedProject
     }
   });
 
@@ -114,17 +101,38 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
   }
 
   // 1. Player Projects
-  for (const key in state.studio.internal.projects) {
-    const project = state.studio.internal.projects[key];
+  const playerProjects = { ...state.studio.internal.projects };
+  let playerChanged = false;
+
+  for (const key in playerProjects) {
+    const project = playerProjects[key];
     const projectContracts = contractMap.get(project.id) || [];
     
-    allImpacts.push(...tickProject(project, projectContracts, state.industry.talentPool, rng));
+    // We reuse tickProject logic but handle impacts collection differently
+    // For simplicity, we'll temporarily use a modified tickProject or just integrate it
+    const projectImpacts = tickProject(project, projectContracts, state.industry.talentPool, rng, state.studio.prestige, state.week);
+    
+    projectImpacts.forEach(imp => {
+        if (imp.type === 'PROJECT_UPDATED') {
+            playerProjects[imp.payload.projectId] = imp.payload.update;
+            playerChanged = true;
+        } else {
+            allImpacts.push(imp);
+        }
+    });
 
     const disputeImpact = processDirectorDisputes(project, projectContracts, new Map(Object.entries(state.industry.talentPool)), rng);
     if (disputeImpact) allImpacts.push(disputeImpact);
   }
 
-  // Handle Resting Talent Fatigue (Those not assigned to any active production)
+  if (playerChanged) {
+      allImpacts.push({
+          type: 'INDUSTRY_UPDATE', // Root-level project injection is safer in bulk
+          payload: { 'studio.internal.projects': playerProjects }
+      } as any);
+  }
+
+  // Handle Resting Talent Fatigue
   const activeTalentIds = new Set(state.studio.internal.contracts.map(c => c.talentId));
   Object.values(state.industry.talentPool).forEach(talent => {
     if (!activeTalentIds.has(talent.id)) {
@@ -141,11 +149,28 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
   // 2. Rival Projects
   for (const rival of state.industry.rivals) {
     if (!rival.projects) continue;
-    for (const key in rival.projects) {
-      const project = rival.projects[key];
-      // Note: Rivals might need their own contract mapping if we track them deeply.
-      // For now, simple tick.
-      allImpacts.push(...tickProject(project, [], state.industry.talentPool, rng));
+    const rivalProjects = { ...rival.projects };
+    let rivalChanged = false;
+
+    for (const key in rivalProjects) {
+      const project = rivalProjects[key];
+      const projectImpacts = tickProject(project, [], state.industry.talentPool, rng, rival.prestige, state.week);
+      
+      projectImpacts.forEach(imp => {
+          if (imp.type === 'PROJECT_UPDATED') {
+              rivalProjects[imp.payload.projectId] = imp.payload.update;
+              rivalChanged = true;
+          } else {
+              allImpacts.push(imp);
+          }
+      });
+    }
+
+    if (rivalChanged) {
+        allImpacts.push({
+            type: 'RIVAL_UPDATED',
+            payload: { rivalId: rival.id, update: { projects: rivalProjects } }
+        });
     }
   }
 

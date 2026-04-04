@@ -1,4 +1,4 @@
-import { AwardBody, AwardCategory, AwardsProfile, GameState, Project } from '@/engine/types';
+import { AwardBody, AwardCategory, AwardsProfile, GameState, Project, SeriesProject } from '@/engine/types';
 import { RandomGenerator } from '../utils/rng';
 import { StateImpact } from '../types/state.types';
 import { 
@@ -7,6 +7,7 @@ import {
   CANNES_EQUIVALENTS, 
   SUNDANCE_EQUIVALENTS 
 } from '../data/awards.data';
+import { TV_FORMAT_TAXONOMY } from '../data/tvFormats';
 
 export function isCannesEquivalentFestival(body: AwardBody | string): boolean {
   return CANNES_EQUIVALENTS.includes(body as AwardBody);
@@ -17,11 +18,17 @@ export function isSundanceEquivalentFestival(body: AwardBody | string): boolean 
 }
 
 export function isMajorCategoryNomination(category: AwardCategory | string): boolean {
-  return (['Best Director', 'Best Actor', 'Best Actress', 'Palme d\'Or', 'Golden Lion', 'Golden Bear', 'Grand Jury Prize'] as string[]).includes(category as string);
+  const majorCategories = [
+    'Best Picture', 'Best Series', 'Best Drama Series', 'Best Comedy Series', 'Best Limited Series',
+    'Best Director', 'Best Actor', 'Best Actress', 'Best Actor (Drama)', 'Best Actress (Drama)', 
+    'Best Actor (Comedy)', 'Best Actress (Comedy)',
+    'Palme d\'Or', 'Golden Lion', 'Golden Bear', 'Grand Jury Prize'
+  ];
+  return majorCategories.includes(category as string);
 }
 
 export function isSupportingCategoryNomination(category: AwardCategory | string): boolean {
-  return (['Best Supporting Actor', 'Best Supporting Actress'] as string[]).includes(category as string);
+  return (['Best Supporting Actor', 'Best Supporting Actress', 'Best Supporting Actor (TV)', 'Best Supporting Actress (TV)'] as string[]).includes(category as string);
 }
 
 export function generateAwardsProfile(project: Project, rng: RandomGenerator): AwardsProfile {
@@ -116,6 +123,24 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
     let bestScore = -1;
 
     for (const p of candidates) {
+      // --- TV Taxonomy Check ---
+      if (config.format === 'tv' && p.format === 'tv') {
+        const tvP = p as SeriesProject;
+        const categoryLower = config.category.toLowerCase();
+        const currentFormat = tvP.tvFormat as any;
+        
+        if (categoryLower.includes('drama')) {
+          const dramaTax = TV_FORMAT_TAXONOMY.find(t => t.id === 'drama');
+          if (!dramaTax?.formats.includes(currentFormat)) continue;
+        } else if (categoryLower.includes('comedy')) {
+          const comedyTax = TV_FORMAT_TAXONOMY.find(t => t.id === 'comedy');
+          if (!comedyTax?.formats.includes(currentFormat)) continue;
+        } else if (categoryLower.includes('limited') || categoryLower.includes('movie')) {
+          const limitedTax = TV_FORMAT_TAXONOMY.find(t => t.id === 'anthology_limited');
+          if (!limitedTax?.formats.includes(currentFormat)) continue;
+        }
+      }
+
       const score = (config.evaluator(p) || 0) * (1 + (p.awardsProfile?.campaignStrength || 0) / 25);
       if (score > bestScore) {
         bestScore = score;

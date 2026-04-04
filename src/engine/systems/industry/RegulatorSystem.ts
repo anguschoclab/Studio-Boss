@@ -8,10 +8,24 @@ export class RegulatorSystem {
   static tick(state: GameState, rng: RandomGenerator): StateImpact[] {
     const impacts: StateImpact[] = [];
     
-    // 1. Market Share Monitoring (Revenue-based)
+    // 1. Calculate Trailing 4-Week Revenue for all studios
+    const calculateTrailingRevenue = (history: any[]) => {
+      return (history || []).slice(0, 4).reduce((sum, h) => sum + (h.revenue?.theatrical || 0) + (h.revenue?.streaming || 0), 0);
+    };
+
     const studios = [
-      { id: 'player', name: state.studio.name, revenue: state.finance.weeklyHistory[0]?.revenue?.theatrical || 0, type: state.studio.archetype },
-      ...state.industry.rivals.map(r => ({ id: r.id, name: r.name, revenue: 10_000_000, type: r.archetype })) // 🌌 PHASE 2: Fallback for rivals until they have history
+      { 
+        id: 'player', 
+        name: state.studio.name, 
+        revenue: calculateTrailingRevenue(state.finance.weeklyHistory), 
+        type: state.studio.archetype 
+      },
+      ...state.industry.rivals.map(r => ({ 
+        id: r.id, 
+        name: r.name, 
+        revenue: calculateTrailingRevenue(r.weeklyHistory || []), 
+        type: r.archetype 
+      }))
     ];
 
     const totalIndustryRevenue = studios.reduce((sum, s) => sum + s.revenue, 1);
@@ -19,30 +33,30 @@ export class RegulatorSystem {
 
     studios.forEach(s => {
       const share = s.revenue / totalIndustryRevenue;
-      if (share > threshold && s.type === 'major') {
-        const fine = 25_000_000; // Flat fine for dominance per TDD
+      if (share > threshold && s.type === 'major' && totalIndustryRevenue > 50_000_000) {
+        const fine = 25_000_000; 
 
-        if (s.id === 'player') {
-          impacts.push({
-            type: 'FINANCE_TRANSACTION',
-            payload: {
-              amount: -fine,
-              category: 'EXPENSE',
-              description: 'Statutory Anti-Trust Fine (Market Share Exceeds 40%)',
-              week: state.week
-            }
-          });
-          impacts.push({
-            type: 'NEWS_ADDED',
-            payload: {
-              id: rng.uuid('news'),
-              headline: `Federal Trade Commission Rules Against ${s.name}`,
-              description: `With a ${Math.round(share * 100)}% market share, ${s.name} is cited for monopolistic dominance.`,
-              category: 'market',
-              publication: 'Financial Journal'
-            }
-          });
-        }
+        impacts.push({
+          type: 'FINANCE_TRANSACTION',
+          payload: {
+            amount: -fine,
+            category: 'EXPENSE',
+            description: `Anti-Trust Fine: ${s.name} Market Share (${Math.round(share * 100)}%)`,
+            week: state.week,
+            targetId: s.id // Route to the specific studio
+          }
+        });
+
+        impacts.push({
+          type: 'NEWS_ADDED',
+          payload: {
+            id: rng.uuid('news'),
+            headline: `Federal Trade Commission Fines ${s.name}`,
+            description: `Cited for market dominance (${Math.round(share * 100)}%), ${s.name} has been issued a $25M penalty.`,
+            category: 'market',
+            publication: 'Financial Journal'
+          }
+        });
       }
     });
 
@@ -59,11 +73,23 @@ export class RegulatorSystem {
     targetId: string, 
     rng: RandomGenerator
   ): { blocked: boolean; reason?: string } {
-    const totalRev = state.finance.weeklyHistory[0]?.revenue?.theatrical || 100_000_000;
-    const playerRev = state.finance.weeklyHistory[0]?.revenue?.theatrical || 0;
+    const calculateTrailingRevenue = (history: any[]) => {
+      return (history || []).slice(0, 4).reduce((sum, h) => sum + (h.revenue?.theatrical || 0) + (h.revenue?.streaming || 0), 0);
+    };
+
+    const totalRev = calculateTrailingRevenue(state.finance.weeklyHistory) + 
+                   state.industry.rivals.reduce((sum, r) => sum + calculateTrailingRevenue(r.weeklyHistory || []), 0);
     
-    // Check if player current share + hypothetical target share > 40%
-    if (acquirerId === 'player' && playerRev > totalRev * 0.40) {
+    let acquirerRev = 0;
+    if (acquirerId === 'player') {
+      acquirerRev = calculateTrailingRevenue(state.finance.weeklyHistory);
+    } else {
+      const acquirer = state.industry.rivals.find(r => r.id === acquirerId);
+      acquirerRev = calculateTrailingRevenue(acquirer?.weeklyHistory || []);
+    }
+    
+    // Check if acquirer current share > 40% (Consolidation Barrier)
+    if (acquirerRev > totalRev * 0.40 && totalRev > 100_000_000) {
       return { blocked: true, reason: 'Market Dominance Threshold' };
     }
 

@@ -1,7 +1,8 @@
-import { Project, Talent, ActiveCrisis, MarketingCampaign } from '@/engine/types';
+import { Project, Talent, ActiveCrisis, MarketingCampaign, ProjectRating } from '@/engine/types';
 import { clamp } from '../utils';
 import { evaluateMarketingEfficiency } from './marketing/efficiencyEvaluator';
 import { calculateTerritorySplit } from './marketing/territoryDistributor';
+import { getRatingEconomics, calculateRegionalPenalties } from './ratings';
 import { RandomGenerator } from '../utils/rng';
 
 /**
@@ -71,6 +72,13 @@ export function calculateOpeningWeekend(
   const { multiplier, feedbackText } = evaluateMarketingEfficiency(project, campaign);
   effectiveGross *= multiplier;
 
+  // 2.5. Apply Rating Economics (theater access, audience reach, regional penalties)
+  const ratingEcon = getRatingEconomics(project.rating ?? 'PG-13');
+  effectiveGross *= ratingEcon.theaterAccessPct;
+  effectiveGross *= ratingEcon.audienceReachMultiplier;
+  const regionalMultiplier = calculateRegionalPenalties(project);
+  effectiveGross *= regionalMultiplier;
+
   // 3. Distribute Territories
   const territoryResult = calculateTerritorySplit(effectiveGross, campaign, project.genre);
 
@@ -98,17 +106,27 @@ export function simulateWeeklyBoxOffice(
   previousWeeklyRevenue: number,
   rivalStrength: number,
   trendMultiplier: number = 1.0,
-  franchiseSynergy: number = 1.0, 
-  franchiseFatigue: number = 0 
+  franchiseSynergy: number = 1.0,
+  franchiseFatigue: number = 0,
+  rating: ProjectRating = 'PG-13'
 ): number {
   if (weekInRelease === 0) return previousWeeklyRevenue;
 
   // 1. Base Decay based on Word of Mouth (Review Score)
   let decayFactor = 0.6; // 40% drop
-  
+
   if (reviewScore > 80) decayFactor = 0.8; // Leggy
   else if (reviewScore > 60) decayFactor = 0.7;
   else if (reviewScore < 40) decayFactor = 0.4; // Front-loaded disaster
+
+  // 1.5. Rating-specific decay modifiers
+  // R-rated dramas with strong reviews have prestige legs (word-of-mouth driven)
+  if ((rating === 'R') && reviewScore > 70) {
+    const g = project.genre.toUpperCase();
+    if (g === 'DRAMA' || g === 'THRILLER' || g === 'CRIME') decayFactor += 0.05;
+  }
+  // NC-17 / Unrated are front-loaded (specialty audience turns out opening weekend)
+  if (rating === 'NC-17' || rating === 'Unrated') decayFactor -= 0.05;
 
   // 2. Genre Specifics
   const g = project.genre.toUpperCase();

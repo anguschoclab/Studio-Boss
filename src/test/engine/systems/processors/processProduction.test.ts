@@ -53,25 +53,28 @@ describe('tickProduction', () => {
     state.studio.internal.projects['p1'] = releasedProject;
 
     const impacts = tickProduction(state, rng);
-    
-    // It actually returns 1 impact: the empty disputeImpact bag
-    expect(impacts).toHaveLength(1);
-    expect(impacts[0].projectUpdates).toEqual([]);
+
+    // Released projects are still ticked (advanceProject runs), producing INDUSTRY_UPDATE
+    // plus the empty disputeImpact bag — 2 impacts total
+    expect(impacts).toHaveLength(2);
+    const disputeImpact = impacts.find(i => i.projectUpdates !== undefined);
+    expect(disputeImpact?.projectUpdates).toEqual([]);
   });
 
-  it('generates PROJECT_UPDATED impact for production projects', () => {
+  it('generates INDUSTRY_UPDATE impact for production projects', () => {
     const state = getInitialState();
     const prodProject = createBaseProject('p1', 'production');
     state.studio.internal.projects['p1'] = prodProject;
 
     const impacts = tickProduction(state, rng);
-    
-    // Returns 2 impacts: [projectUpdate, disputeImpact]
+
+    // Player project updates are batched into INDUSTRY_UPDATE + empty disputeImpact
     expect(impacts).toHaveLength(2);
-    const impact = impacts.find(i => i.type === 'PROJECT_UPDATED') as ProjectUpdateImpact;
-    expect(impact).toBeDefined();
-    expect(impact.payload.projectId).toBe('p1');
-    expect(impact.payload.update.weeksInPhase).toBe(1);
-    expect(impact.payload.update.progress).toBeGreaterThan(0);
+    const industryUpdate = impacts.find(i => i.type === 'INDUSTRY_UPDATE') as any;
+    expect(industryUpdate).toBeDefined();
+    const updatedProject = industryUpdate?.payload?.['studio.internal.projects']?.['p1'];
+    expect(updatedProject).toBeDefined();
+    expect(updatedProject?.weeksInPhase).toBe(1);
+    expect(updatedProject?.progress).toBeGreaterThan(0);
   });
 });

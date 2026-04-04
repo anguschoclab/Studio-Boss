@@ -73,24 +73,27 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       const updatedContracts = [...state.studio.internal.contracts, contract];
 
       return {
-        gameState: applyStateImpact(state, [
-          { type: 'FUNDS_CHANGED', payload: { amount: -finalFee } },
-          { 
-            type: 'TALENT_UPDATED', 
-            payload: { 
-              talentId, 
-              update: updatedTalent 
-            } 
+        gameState: {
+          ...state,
+          finance: {
+            ...state.finance,
+            cash: newCash
           },
-          {
-            type: 'INDUSTRY_UPDATE',
-            payload: {
-              update: {
-                'studio.internal.contracts': updatedContracts
-              }
+          studio: {
+            ...state.studio,
+            internal: {
+              ...state.studio.internal,
+              contracts: updatedContracts
+            }
+          },
+          industry: {
+            ...state.industry,
+            talentPool: {
+              ...state.industry.talentPool,
+              [talentId]: updatedTalent
             }
           }
-        ])
+        }
       };
     });
   },

@@ -26,7 +26,7 @@ describe('applyAwardBoostsToTalent', () => {
 
   describe('Wins', () => {
     it('calculates boosts for a prestigious major win (e.g. Academy Award Best Actor)', () => {
-      const award: Award = { ...baseAward, category: 'Best Actor', body: 'Academy Awards', status: 'won' };
+      const award: Award = { ...baseAward2, category: 'Best Actor', body: 'Academy Awards', status: 'won' };
       const boosts = applyAwardBoostsToTalent(baseTalent, award, 1.0, true);
 
       expect(boosts.prestigeBoost).toBeCloseTo(108);
@@ -36,7 +36,7 @@ describe('applyAwardBoostsToTalent', () => {
     });
 
     it('calculates boosts for a Cannes equivalent supporting win', () => {
-      const award: Award = { ...baseAward, category: 'Best Supporting Actor', body: 'Cannes Film Festival', status: 'won' };
+      const award: Award = { ...baseAward2, category: 'Best Supporting Actor', body: 'Cannes Film Festival', status: 'won' };
       const boosts = applyAwardBoostsToTalent(baseTalent, award, 1.0, false);
 
       expect(boosts.prestigeBoost).toBeCloseTo(63);
@@ -46,7 +46,7 @@ describe('applyAwardBoostsToTalent', () => {
     });
 
     it('calculates boosts for a Sundance equivalent standard category win', () => {
-      const award: Award = { ...baseAward, category: 'Best Screenplay', body: 'Sundance Film Festival', status: 'won' };
+      const award: Award = { ...baseAward2, category: 'Best Screenplay', body: 'Sundance Film Festival', status: 'won' };
       const boosts = applyAwardBoostsToTalent(baseTalent, award, 1.0, false);
 
       expect(boosts.prestigeBoost).toBeCloseTo(20);
@@ -56,7 +56,7 @@ describe('applyAwardBoostsToTalent', () => {
     });
 
     it('calculates boosts for a standard non-prestige win', () => {
-      const award: Award = { ...baseAward, category: 'Best Original Song', body: 'Golden Globes', status: 'won' };
+      const award: Award = { ...baseAward2, category: 'Best Original Song', body: 'Golden Globes', status: 'won' };
       const boosts = applyAwardBoostsToTalent(baseTalent, award, 1.0, false);
 
       expect(boosts.prestigeBoost).toBeCloseTo(15);
@@ -68,7 +68,7 @@ describe('applyAwardBoostsToTalent', () => {
 
   describe('Nominations', () => {
     it('calculates boosts for a prestigious major nomination', () => {
-      const award: Award = { ...baseAward, category: 'Best Director', body: 'Academy Awards', status: 'nominated' };
+      const award: Award = { ...baseAward2, category: 'Best Director', body: 'Academy Awards', status: 'nominated' };
       const boosts = applyAwardBoostsToTalent(baseTalent, award, 1.0, true);
 
       expect(boosts.prestigeBoost).toBeCloseTo(18);
@@ -78,7 +78,7 @@ describe('applyAwardBoostsToTalent', () => {
     });
 
     it('calculates boosts for a Sundance equivalent supporting nomination', () => {
-      const award: Award = { ...baseAward, category: 'Best Supporting Actress', body: 'SXSW Film Festival', status: 'nominated' };
+      const award: Award = { ...baseAward2, category: 'Best Supporting Actress', body: 'SXSW Film Festival', status: 'nominated' };
       const boosts = applyAwardBoostsToTalent(baseTalent, award, 1.0, false);
 
       expect(boosts.prestigeBoost).toBeCloseTo(11.2);
@@ -88,7 +88,7 @@ describe('applyAwardBoostsToTalent', () => {
     });
 
     it('calculates boosts for a standard nomination', () => {
-      const award: Award = { ...baseAward, category: 'Best Score', body: 'BAFTAs', status: 'nominated' };
+      const award: Award = { ...baseAward2, category: 'Best Score', body: 'BAFTAs', status: 'nominated' };
       const boosts = applyAwardBoostsToTalent(baseTalent, award, 1.0, false);
 
       expect(boosts.prestigeBoost).toBeCloseTo(4);
@@ -100,7 +100,7 @@ describe('applyAwardBoostsToTalent', () => {
 
   describe('Multiplier parameter', () => {
     it('applies the external multiplier parameter correctly', () => {
-      const award: Award = { ...baseAward, category: 'Best Director', body: 'Academy Awards', status: 'won' };
+      const award: Award = { ...baseAward2, category: 'Best Director', body: 'Academy Awards', status: 'won' };
       const boosts = applyAwardBoostsToTalent(baseTalent, award, 0.5, true);
 
       expect(boosts.prestigeBoost).toBeCloseTo(54);
@@ -110,3 +110,48 @@ describe('applyAwardBoostsToTalent', () => {
     });
   });
 });
+
+
+    const baseTalent2 = {
+    id: 't1',
+    name: 'Test Actor',
+    roles: ['actor'],
+    prestige: 50,
+    fee: 1000000,
+    draw: 50,
+    temperament: 'Pro',
+    accessLevel: 'insider'
+  } as any;
+  const baseAward2: Award = {
+    id: 'a1',
+    projectId: 'p1',
+    name: 'Award',
+    category: 'Best Actor',
+    body: 'Academy Awards',
+    status: 'won',
+    year: 2024
+  };
+  describe('Edge Cases', () => {
+    it('handles talent with 0 skill but 100 ego', () => {
+      const edgeTalent = {
+        ...baseTalent2,
+        prestige: 0,
+        draw: 0,
+        fee: 50000,
+        psychology: {
+            ego: 100,
+            mood: 50,
+            scandalRisk: 50,
+            synergyAffinities: [],
+            synergyConflicts: []
+        }
+      };
+
+      const award: Award = { ...baseAward2, category: 'Best Actor', body: 'Academy Awards', status: 'won' };
+      const boosts = applyAwardBoostsToTalent(edgeTalent, award, 1.0, true);
+
+      // Ego should shoot way up and fee multiplier should be large
+      expect(boosts.egoBoost).toBeCloseTo(180);
+      expect(boosts.feeMultiplier).toBeGreaterThan(1);
+    });
+  });

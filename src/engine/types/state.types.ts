@@ -81,6 +81,7 @@ export interface IPAsset {
   totalEpisodes: number;
   rightsExpirationWeek: number; 
   rightsOwner: 'STUDIO' | 'MARKET' | 'RIVAL';
+  ownerStudioId?: string; // Specific ID for rival or player ownership
   isSynergyActive?: boolean; 
 }
 
@@ -96,6 +97,8 @@ export type ImpactType =
   | 'PROJECT_REMOVED' 
   | 'NEWS_ADDED' 
   | 'TALENT_UPDATED' 
+  | 'TALENT_ADDED' 
+  | 'TALENT_REMOVED' 
   | 'PRESTIGE_CHANGED'
   | 'BUYER_UPDATED'
   | 'RIVAL_UPDATED'
@@ -153,6 +156,8 @@ export interface BaseImpact {
   razzieWinnerTalents?: string[];
   newFestivalSubmissions?: import('./project.types').FestivalSubmission[];
   newProjects?: import('./project.types').Project[];
+  newContracts?: import('./talent.types').Contract[];
+  newTalents?: import('./talent.types').Talent[];
   newIPAssets?: IPAsset[];
 }
 

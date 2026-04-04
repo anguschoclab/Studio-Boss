@@ -35,6 +35,10 @@ import { resolveFestivals } from '../systems/festivals';
 import { advanceRumors } from '../systems/rumors';
 import { SchedulingEngine } from '../systems/schedulingEngine';
 
+// Rating Systems
+import { evaluateRatingForProject, evaluateRegionalRatings, checkDirectorsCutEligibility } from '../systems/ratings';
+import { generateMarketBanScandal } from '../systems/scandals';
+
 /**
  * Studio Boss - Simulation Tick Context
  */
@@ -64,6 +68,7 @@ export class WeekCoordinator {
     // 1. Run Filters
     this.runMarketFilter(state, context);
     this.runProductionFilter(state, context);
+    this.runRatingFilter(state, context);
     this.runAIFilter(state, context);
     this.runIndustryFilter(state, context);
     this.runTalentFilter(state, context);
@@ -119,10 +124,13 @@ export class WeekCoordinator {
     context.impacts.push(...tickVerticalIntegration(state, context.rng));
     context.impacts.push(...tickIndustryUpstarts(state, context.rng));
     context.impacts.push(...tickConsolidation(state, context.rng));
+    context.impacts.push(...OpportunitySystem.tick(state, context.rng));
   }
 
   private static runProductionFilter(state: GameState, context: TickContext) {
     context.impacts.push(...tickProduction(state, context.rng));
+    const activeStages = ['prep', 'production', 'post_production', 'marketing'];
+
     for (const key in state.studio.internal.projects) {
       const project = state.studio.internal.projects[key];
       if (project.state === 'development') {
@@ -134,13 +142,39 @@ export class WeekCoordinator {
           });
           if (result.impact) context.impacts.push(result.impact);
         }
+      } else if (!project.activeCrisis && activeStages.includes(project.state)) {
+        const impact = checkAndTriggerCrisis(project, state, context.rng);
+        if (impact) context.impacts.push(impact);
       }
     }
-    this.runCrisisFilter(state, context);
+
     context.impacts.push(...tickTelevision(state, context.rng));
     context.impacts.push(...calculateFranchiseEvolutionImpacts(state, context.rng));
     context.impacts.push(...tickIPVault(state));
     context.impacts.push(...SchedulingEngine.tick(state, context.rng));
+
+    // Check director's cut eligibility for post-theatrical projects
+    for (const key in state.studio.internal.projects) {
+      const project = state.studio.internal.projects[key];
+      if ((project.state === 'post_release' || project.state === 'released') && !project.directorsCutNotified) {
+        const { eligible } = checkDirectorsCutEligibility(project, context.week);
+        if (eligible) {
+          // Mark as notified to prevent re-triggering every week
+          context.impacts.push({
+            type: 'PROJECT_UPDATED',
+            payload: { projectId: project.id, update: { directorsCutNotified: true } }
+          });
+          context.impacts.push({
+            type: 'MODAL_TRIGGERED',
+            payload: {
+              modalType: 'DIRECTORS_CUT_AVAILABLE',
+              priority: 20,
+              payload: { projectId: project.id, projectTitle: project.title }
+            }
+          });
+        }
+      }
+    }
   }
 
   private static runCrisisFilter(state: GameState, context: TickContext) {
@@ -148,7 +182,7 @@ export class WeekCoordinator {
     for (const key in state.studio.internal.projects) {
       const project = state.studio.internal.projects[key];
       if (!project.activeCrisis && activeStages.includes(project.state)) {
-        const impact = checkAndTriggerCrisis(project, context.rng);
+        const impact = checkAndTriggerCrisis(project, state, context.rng);
         if (impact) context.impacts.push(impact);
       }
     }
@@ -218,6 +252,35 @@ export class WeekCoordinator {
   private static runScandalFilter(state: GameState, context: TickContext) {
     context.impacts.push(...generateScandals(state, context.rng));
     context.impacts.push(...advanceScandals(state));
+
+    // Scan released projects for newly banned markets and generate one-time headlines
+    for (const key in state.studio.internal.projects) {
+      const project = state.studio.internal.projects[key];
+      if (project.regionalRatings && (project.state === 'released' || project.state === 'post_release')) {
+        const bannedMarkets = project.regionalRatings
+          .filter(r => r.isBanned)
+          .map(r => r.market);
+        if (bannedMarkets.length > 0) {
+          const banImpact = generateMarketBanScandal(project, bannedMarkets, context.week, state, context.rng);
+          if (banImpact) context.impacts.push(banImpact);
+        }
+      }
+    }
+  }
+
+  private static runRatingFilter(state: GameState, context: TickContext) {
+    for (const key in state.studio.internal.projects) {
+      const project = state.studio.internal.projects[key];
+      // Auto-evaluate rating for projects with flags but no rating yet
+      if (project.contentFlags?.length && !project.rating) {
+        const newRating = evaluateRatingForProject(project.contentFlags, project.type);
+        const newRegional = evaluateRegionalRatings(project.contentFlags, newRating);
+        context.impacts.push({
+          type: 'PROJECT_UPDATED',
+          payload: { projectId: project.id, update: { rating: newRating, regionalRatings: newRegional } }
+        });
+      }
+    }
   }
 
   private static runFinanceFilter(state: GameState, context: TickContext) {
@@ -280,6 +343,12 @@ export class WeekCoordinator {
        totalCosts = report.expenses.production + report.expenses.marketing + report.expenses.overhead + report.expenses.pacts;
     }
 
+    // ⚡ Bolt: Refactored array .map() to a for loop, avoiding extra allocation overhead.
+    const eventTitles: string[] = [];
+    for (let i = 0; i < context.events.length; i++) {
+      eventTitles.push(context.events[i].title);
+    }
+
     return {
       fromWeek: before.week,
       toWeek: after.week,
@@ -289,7 +358,7 @@ export class WeekCoordinator {
       totalCosts,
       projectUpdates: Array.from(new Set(projectUpdates)),
       newHeadlines: allHeadlines,
-      events: context.events.map(e => e.title),
+      events: eventTitles,
     };
   }
 }

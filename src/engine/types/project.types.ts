@@ -328,8 +328,39 @@ export type ReleaseModelKey = 'weekly' | 'binge' | 'split';
 export type ProjectContractType = 'upfront' | 'deficit' | 'standard';
 export type MandateType = 'sci-fi' | 'comedy' | 'drama' | 'budget_freeze' | 'broad_appeal' | 'prestige';
 
-export type ProjectRating = 'G' | 'PG' | 'PG-13' | 'R' | 'NC-17' | 'Unrated';
-export type ContentFlag = 'violence' | 'profanity' | 'nudity' | 'gore' | 'political';
+export type RatingMarket = 'us' | 'uk' | 'europe' | 'china' | 'india' | 'latam' | 'middleeast' | 'apac';
+
+export type FilmRating = 'G' | 'PG' | 'PG-13' | 'R' | 'NC-17' | 'Unrated';
+export type TvRating = 'TV-Y' | 'TV-G' | 'TV-PG' | 'TV-14' | 'TV-MA';
+export type ProjectRating = FilmRating | TvRating;
+
+export type RatingCutType = 'theatrical' | 'directors_cut' | 'unrated' | 'sanitized';
+
+export type ContentFlag = 'violence' | 'profanity' | 'nudity' | 'gore' | 'political'
+  | 'sexual_content' | 'drug_use' | 'lgbtq_themes' | 'religious' | 'supernatural' | 'gambling';
+
+export interface RegionalRating {
+  market: RatingMarket;
+  rating: ProjectRating;
+  isBanned: boolean;
+  restrictionLevel: 'none' | 'minor' | 'major' | 'banned';
+}
+
+export interface RatingCut {
+  type: RatingCutType;
+  rating: ProjectRating;
+  contentFlags: ContentFlag[];
+  buzzCost: number;
+  revenueMultiplier: number;
+}
+
+export interface RatingEconomics {
+  theaterAccessPct: number;
+  audienceReachMultiplier: number;
+  merchMultiplier: number;
+  awardsPrestigeBonus: number;
+  streamingPremium: number;
+}
 
 export type DemographicGroup = 'gen-z' | 'millennial' | 'gen-x' | 'boomer';
 export type AudienceQuadrant = 'male_under_25' | 'female_under_25' | 'male_over_25' | 'female_over_25' | 'four_quadrant';
@@ -395,7 +426,17 @@ export type AwardCategory =
   | 'Golden Lion'
   | 'Golden Bear'
   | 'Audience Award'
-  | 'Best Narrative Feature';
+  | 'Best Narrative Feature'
+  | 'Best Drama Series'
+  | 'Best Comedy Series'
+  | 'Best Limited Series'
+  | 'Best TV Movie'
+  | 'Best Actor (Drama)'
+  | 'Best Actress (Drama)'
+  | 'Best Actor (Comedy)'
+  | 'Best Actress (Comedy)'
+  | 'Best Supporting Actor (TV)'
+  | 'Best Supporting Actress (TV)';
 
 export type AwardStatus = 'won' | 'nominated';
 
@@ -483,6 +524,11 @@ export interface ProjectBase {
   isRecasting?: boolean;
   turnaroundStartWeek?: number;
   estimatedWindow?: { startWeek: number; endWeek: number };
+  // Ratings System
+  activeCut?: RatingCutType;
+  availableCuts?: RatingCut[];
+  regionalRatings?: RegionalRating[];
+  directorsCutNotified?: boolean;
 }
 
 export interface ScriptedProject extends ProjectBase {
@@ -504,6 +550,7 @@ export interface SeriesProject extends ScriptedProject {
   tvFormat?: TvFormatKey;
   tvDetails: TVSeasonDetails;
   releaseModel?: ReleaseModelKey;
+  nielsenProfile?: import('../systems/television/nielsenSystem').NielsenProfile;
 }
 
 export type Project = FilmProject | SeriesProject | (UnscriptedProject & { type: 'SERIES' });

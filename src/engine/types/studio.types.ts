@@ -43,6 +43,7 @@ export interface RivalStudio {
   genreFocus?: string;
   acquisitionTarget?: string;
   isAcquirable?: boolean;
+  weeklyHistory?: import('./state.types').FinancialSnapshot[];
 }
 
 export interface StudioCulture {
@@ -73,6 +74,7 @@ export interface GameState {
       firstLookDeals?: TalentPact[];
     };
     ownedPlatforms?: string[];
+    isAcquirable?: boolean;
   };
   market: {
     opportunities: Opportunity[];

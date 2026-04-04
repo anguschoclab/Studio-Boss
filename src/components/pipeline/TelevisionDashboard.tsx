@@ -3,10 +3,11 @@ import { useGameStore } from '@/store/gameStore';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Tv, Activity, Star, AlertCircle, PlayCircle, Zap } from 'lucide-react';
+import { Tv, Activity, Star, AlertCircle, PlayCircle, Zap, BarChart3, Users, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { Project, SeriesProject } from '@/engine/types';
 import { useShallow } from 'zustand/react/shallow';
 import { cn } from '@/lib/utils';
+import { NielsenProfile } from '@/engine/systems/television/nielsenSystem';
 
 export const TelevisionDashboard = () => {
   const activeProjects = useGameStore(useShallow(s => Object.values(s.gameState?.studio?.internal?.projects || {})));
@@ -52,7 +53,10 @@ export const TelevisionDashboard = () => {
 
 const TVShowCard = ({ show }: { show: Project }) => {
   if (show.type !== 'SERIES' || !('tvDetails' in show)) return null;
-  const details = (show as SeriesProject).tvDetails;
+  const series = show as SeriesProject;
+  const details = series.tvDetails;
+  const nielsen = series.nielsenProfile as NielsenProfile | undefined;
+  const latestSnap = nielsen?.snapshots?.[nielsen.snapshots.length - 1];
   
   const statusColors: Record<string, string> = {
     'ON_AIR': 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20',
@@ -91,6 +95,37 @@ const TVShowCard = ({ show }: { show: Project }) => {
           </div>
         </div>
 
+        {/* Nielsen Ratings Strip */}
+        {latestSnap && (
+          <div className="px-6 py-3 bg-primary/5 border-y border-primary/10">
+            <div className="flex items-center gap-2 mb-2">
+              <BarChart3 className="h-3 w-3 text-primary" />
+              <span className="text-[9px] font-black uppercase tracking-widest text-primary">Nielsen Overnights</span>
+              {latestSnap.trend === 'UP' && <TrendingUp className="h-3 w-3 text-emerald-500" />}
+              {latestSnap.trend === 'DOWN' && <TrendingDown className="h-3 w-3 text-red-500" />}
+              {latestSnap.trend === 'STABLE' && <Minus className="h-3 w-3 text-muted-foreground" />}
+            </div>
+            <div className="grid grid-cols-4 gap-3">
+              <div>
+                <div className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">HH Rtg</div>
+                <div className="text-sm font-black">{latestSnap.householdRating.toFixed(1)}</div>
+              </div>
+              <div>
+                <div className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Share</div>
+                <div className="text-sm font-black">{latestSnap.householdShare.toFixed(0)}%</div>
+              </div>
+              <div>
+                <div className="text-[8px] font-black text-amber-500 uppercase tracking-widest">A18-49</div>
+                <div className="text-sm font-black text-amber-500">{latestSnap.keyDemo.toFixed(1)}</div>
+              </div>
+              <div>
+                <div className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Viewers</div>
+                <div className="text-sm font-black">{latestSnap.totalViewers.toFixed(1)}M</div>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="px-6 py-4 grid grid-cols-3 gap-4 border-y border-white/5 bg-white/2">
            <div className="space-y-1">
               <div className="text-[9px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-1.5">
@@ -126,7 +161,7 @@ const TVShowCard = ({ show }: { show: Project }) => {
            </span>
            <span className="flex items-center gap-1.5">
              <PlayCircle className="h-2.5 w-2.5" />
-             Cycle Week {show.productionWeeks}
+             {latestSnap ? `#${latestSnap.rank} This Week` : `Cycle Week ${show.productionWeeks}`}
            </span>
         </div>
       </CardContent>

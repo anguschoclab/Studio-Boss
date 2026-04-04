@@ -3,7 +3,7 @@ import { MarketState, StateImpact } from '../types/state.types';
 import { ALL_GENRES, initializeTrends } from '../systems/trends';
 import { ARCHETYPES } from '../data/archetypes';
 import { BrandSystem } from '../generators/BrandSystem';
-import { generateMotto } from '../generators/names';
+import { generateMotto, generateProjectName } from '../generators/names';
 import { generateFamilies, generateTalentPool } from '../generators/talent';
 import { generateBuyers } from '../generators/buyers';
 import { generateAgencies, generateAgents } from '../generators/agencies';
@@ -36,6 +36,27 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
 
     const motivations: StudioMotivation[] = ['CASH_CRUNCH', 'AWARD_CHASE', 'FRANCHISE_BUILDING', 'MARKET_DISRUPTION', 'STABILITY'];
 
+    const rProjects: Record<string, any> = {};
+    const projCount = rng.rangeInt(2, 5);
+    for (let i = 0; i < projCount; i++) {
+        const pId = rng.uuid('p-init');
+        const isProd = rng.next() < 0.5;
+        const genre = rng.pick(ALL_GENRES);
+        rProjects[pId] = {
+            id: pId,
+            title: generateProjectName('movie', genre, rng),
+            state: isProd ? 'production' : 'development',
+            weeksInPhase: rng.rangeInt(1, 10),
+            productionWeeks: rng.rangeInt(12, 26),
+            developmentWeeks: rng.rangeInt(4, 12),
+            budget: rng.rangeInt(10, 150) * 1_000_000,
+            buzz: rng.rangeInt(20, 60),
+            genre,
+            format: 'movie',
+            reviewScore: 50
+        };
+    }
+
     return {
       id: rng.uuid('rival'),
       name,
@@ -47,10 +68,10 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
       cash: rArchData.startingCash * rng.range(0.5, 1.2),
       prestige: rArchData.startingPrestige + rng.rangeInt(-10, 10),
       recentActivity: 'Setting up operations for the new season',
-      projectCount: rng.rangeInt(2, 7),
+      projectCount: projCount,
       motivationProfile,
       currentMotivation: rng.pick(motivations),
-      projects: {},
+      projects: rProjects,
       contracts: [],
       ownedPlatforms: []
     };
@@ -196,7 +217,7 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
       ownedPlatforms: playerOwnedPlatforms
     },
     market: {
-      opportunities: Array.from({ length: 4 }, () => generateOpportunity(rng, Object.keys(talentPool))),
+      opportunities: Array.from({ length: 4 }, () => generateOpportunity(rng, 1, Object.keys(talentPool))),
       buyers: initialBuyers,
     },
     industry: {

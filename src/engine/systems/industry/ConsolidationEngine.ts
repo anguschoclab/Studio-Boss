@@ -14,27 +14,28 @@ export function tickConsolidation(state: GameState, rng: RandomGenerator): State
 
   // Potential Acquirers: Majors with surplus cash
   const majors = rivals.filter(r => r.archetype === 'major' && r.cash > 250_000_000);
-  if (majors.length === 0 || rng.next() < 0.92) return []; // Only check 8% of the time
+  if (majors.length === 0 || rng.next() > 0.15) return []; // Only check 15% of the time (Phase 5 hardening)
 
   const acquirer = pick(majors, rng);
 
-  // Target: struggling Indie or Mid-tier studio
+  // Target: studios with "Distress Signals" (isAcquirable) or those struggling
   const targets = rivals.filter(r => 
     r.id !== acquirer.id && 
-    (r.cash < 50_000_000 || r.strength < 30)
+    (r.isAcquirable || r.cash < 25_000_000 || r.strength < 20)
   );
 
   // Target: unowned Streaming Platform
   const platforms = buyers.filter(b => 
     b.archetype === 'streamer' && !b.ownerId && !b.acquiredBy
   ) as StreamerPlatform[];
-
+  
   // Choose acquisition type
   const roll = rng.next();
-  if (roll < 0.5 && targets.length > 0) {
+  if (roll < 0.6 && targets.length > 0) {
     // Studio Acquisition
     const target = pick(targets, rng);
-    const cost = target.cash + (target.strength * 2_000_000);
+    // Base cost: liquidation value + strength premium
+    const cost = Math.max(10_000_000, target.cash + (target.strength * 1_500_000));
     
     // Check Regulators
     const reg = RegulatorSystem.isBlocked(state, acquirer.id, target.id, rng);
@@ -42,6 +43,7 @@ export function tickConsolidation(state: GameState, rng: RandomGenerator): State
       impacts.push({
         type: 'NEWS_ADDED',
         payload: {
+          id: rng.uuid('hl'),
           headline: `REGULATOR BLOCK: ${acquirer.name}'s bid for ${target.name} rejected on ${reg.reason}`,
           description: `The proposed acquisition of ${target.name} by ${acquirer.name} has been blocked by federal regulators citing ${reg.reason}.`,
           category: 'market'
@@ -50,21 +52,31 @@ export function tickConsolidation(state: GameState, rng: RandomGenerator): State
       return impacts;
     }
 
-    // Execute Acquisition
+    // Execute Acquisition (Using new Merger Payload from impactReducer)
     impacts.push({
       type: 'INDUSTRY_UPDATE',
       payload: { 
-        update: {},
-        rival: { rivalId: acquirer.id, update: { cash: acquirer.cash - cost, prestige: Math.min(100, acquirer.prestige + 10) } },
+        acquirerId: acquirer.id,
         mergedRivalId: target.id 
-      }
+      },
+      cashChange: -cost // Cash deduction for acquirer will be handled by RIVAL_UPDATED/INDUSTRY_UPDATE mix
+    });
+
+    // Deduct cash from acquirer explicitly via RIVAL_UPDATED
+    impacts.push({
+        type: 'RIVAL_UPDATED',
+        payload: {
+            rivalId: acquirer.id,
+            update: { cash: acquirer.cash - cost, prestige: Math.min(100, acquirer.prestige + 8) }
+        }
     });
 
     impacts.push({
       type: 'NEWS_ADDED',
       payload: {
+        id: rng.uuid('hl'),
         headline: `CONSOLIDATION: ${acquirer.name} acquires ${target.name} for $${(cost / 1_000_000).toFixed(1)}M`,
-        description: `In a major industry move, ${acquirer.name} today finalized the acquisition of ${target.name}, further consolidating the ${acquirer.archetype} tier.`,
+        description: `In a major industry move, ${acquirer.name} today finalized the acquisition of ${target.name}, consolidating its dominant market position.`,
         category: 'general'
       }
     });

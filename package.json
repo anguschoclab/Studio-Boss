@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "simulate": "bun src/engine/simulation/run.ts"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.11",

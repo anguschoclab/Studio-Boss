@@ -29,21 +29,30 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
 
       // Logic for should rebid: Outbid if highest is better AND rival has cash
       // If the player is the highest bidder, AI is more aggressive
+      // 🎭 Method Actor Tuning: Player threat makes rivals significantly more aggressive.
       const isPlayerLeading = opportunity.highestBidderId === 'PLAYER';
-      const aggressionFactor = isPlayerLeading ? 1.2 : 1.0;
+      const aggressionFactor = isPlayerLeading ? 1.35 : 1.0;
 
       const isFranchiseBuilder = rival.currentMotivation === 'FRANCHISE_BUILDING';
       const isCashCrunch = rival.currentMotivation === 'CASH_CRUNCH';
       const motivationAggression = (rival.motivationProfile?.aggression || 50) / 100;
 
-      const liquidityBuffer = isFranchiseBuilder ? 1.1 : (isCashCrunch ? 1.5 : 1.3 - (motivationAggression * 0.1));
+      // 🎭 Method Actor Tuning: Franchise builders are willing to run low on liquidity to grab key assets.
+      const liquidityBuffer = isFranchiseBuilder ? 1.05 : (isCashCrunch ? 1.5 : 1.25 - (motivationAggression * 0.15));
 
-      if (myBid < currentHighest && rival.cash > currentHighest * liquidityBuffer) {
-        const multiplier = (ArchetypeMultipliers[rival.archetype]?.(opportunity.genre) || 1.0) * aggressionFactor * (isFranchiseBuilder ? 1.2 : 1.0);
-        const newBid = Math.floor(currentHighest * (1 + (rng.range(1.05, 1.2) - 1) * multiplier));
+      // Determine the minimum bid floor (current highest or reserve cost)
+      const bidFloor = Math.max(currentHighest, opportunity.costToAcquire);
 
-        // Cap bid at 35% of total rival cash for "Strategic" behavior
-        const maxBidCap = isFranchiseBuilder ? 0.5 : (isCashCrunch ? 0.2 : 0.35 + (motivationAggression * 0.05));
+      if (myBid < bidFloor && rival.cash > bidFloor * liquidityBuffer) {
+        // 🎭 Method Actor Tuning: Massive spike in multiplier if franchise builders bid on Sci-Fi/Action.
+        const isKeyIPGenre = opportunity.genre === 'Sci-Fi' || opportunity.genre === 'Action' || opportunity.genre === 'Fantasy';
+        const franchiseAggression = isFranchiseBuilder && isKeyIPGenre ? 1.5 : (isFranchiseBuilder ? 1.2 : 1.0);
+
+        const multiplier = (ArchetypeMultipliers[rival.archetype]?.(opportunity.genre) || 1.0) * aggressionFactor * franchiseAggression;
+        const newBid = Math.floor(bidFloor * (1 + (rng.range(1.05, 1.25) - 1) * multiplier));
+
+        // 🎭 Method Actor Tuning: Raise the max bid cap for franchise builders and aggressive studios so they don't give up easily.
+        const maxBidCap = isFranchiseBuilder ? 0.65 : (isCashCrunch ? 0.15 : 0.40 + (motivationAggression * 0.1));
         if (newBid < rival.cash * maxBidCap) {
           impacts.push({
             type: 'OPPORTUNITY_UPDATED',
@@ -91,7 +100,13 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
   eligibleRivals.forEach(rival => {
     if (rng.next() < 0.1) {
       const target = rng.pick(availableTalent);
-      const lockFee = target.fee * (1.5 + rng.next());
+
+      // 🎭 Method Actor Tuning: Auteur directors heavily favor prestige, demanding massive premiums if the studio lacks it.
+      const isAuteur = target.prestige > 85;
+      const prestigeDelta = target.prestige - rival.prestige;
+      const prestigePenalty = isAuteur && prestigeDelta > 0 ? (prestigeDelta * 0.05) : 0;
+
+      const lockFee = target.fee * (1.5 + rng.next() + prestigePenalty);
       
       if (rival.cash > lockFee * 2) {
          const pact: TalentPact = {

@@ -11,7 +11,7 @@ export class SchedulingEngine {
     projects.forEach(project => {
       if (project.state !== 'production') return;
 
-      const { hasConflict, conflicts } = this.evaluateSchedulingConflicts(project, contracts, talentPool);
+      const { hasConflict, conflicts } = this.evaluateSchedulingConflicts(project, contracts, talentPool, state.week);
       
       if (hasConflict) {
         impacts.push({
@@ -42,7 +42,8 @@ export class SchedulingEngine {
   static evaluateSchedulingConflicts(
     project: Project,
     contracts: Contract[],
-    talentPool: Record<string, Talent>
+    talentPool: Record<string, Talent>,
+    currentWeek: number
   ): { hasConflict: boolean; conflicts: string[] } {
     const conflicts: string[] = [];
     
@@ -53,15 +54,15 @@ export class SchedulingEngine {
       const talent = talentPool[contract.talentId];
       if (!talent || !talent.commitments) continue;
 
-      // Find other active commitments that overlap with this project's production window
+      // Find other active commitments that overlap with THE CURRENT WEEK
       for (const commitment of talent.commitments) {
         if (commitment.projectId === project.id) continue;
 
-        // Simple overlap check: if the talent has another project active during this production week
-        const overlap = (commitment.startWeek <= project.productionWeeks + commitment.startWeek) && (commitment.endWeek >= project.weeksInPhase);
+        // Deterministic check: Is the talent working on ANOTHER project THIS week?
+        const isWorkingElsewhere = currentWeek >= commitment.startWeek && currentWeek <= commitment.endWeek;
         
-        if (overlap) {
-          conflicts.push(`${talent.name} has a conflicting commitment on "${commitment.projectTitle}"`);
+        if (isWorkingElsewhere) {
+          conflicts.push(`${talent.name} is currently filming "${commitment.projectTitle}" (Week ${currentWeek} overlap)`);
         }
       }
     }

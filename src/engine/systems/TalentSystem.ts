@@ -77,22 +77,22 @@ export class TalentSystem {
 
     // Talent-specific opportunity (using existing studio talent)
     if (rng.next() < 0.25 && availableTalentIds.length > 0) {
-        const newOpp = generateOpportunity(rng, availableTalentIds);
+        const newOpp = generateOpportunity(rng, state.week, availableTalentIds);
         tryAddOpp(newOpp, `A new package "${newOpp.title}" hit the market.`);
     }
 
     // General opportunities
     if (rng.next() < 0.2) {
-      tryAddOpp(generateOpportunity(rng, availableTalentIds), `A new script is doing the rounds in town.`);
+      tryAddOpp(generateOpportunity(rng, state.week, availableTalentIds), `A new script is doing the rounds in town.`);
     }
 
     if (rng.next() < 0.15) {
-      tryAddOpp(generateOpportunity(rng, availableTalentIds), `New opportunities have hit the market!`);
+      tryAddOpp(generateOpportunity(rng, state.week, availableTalentIds), `New opportunities have hit the market!`);
     }
 
     // Fallback/Density control
     if (updatedOpportunities.length < 4 && rng.next() < 0.3) {
-      tryAddOpp(generateOpportunity(rng, availableTalentIds));
+      tryAddOpp(generateOpportunity(rng, state.week, availableTalentIds));
     }
 
     return {
@@ -154,7 +154,7 @@ export class TalentSystem {
 
         if (qualifiesForBonus) {
           const multiplier = (award.category.includes('Director') || award.category.includes('Actor') || award.category.includes('Actress') || award.category.includes('Screenplay')) ? 1.0 : 0.5;
-          const isPrestige = ['Academy Awards', 'Cannes Film Festival', 'Venice Film Festival'].includes(award.body);
+          const isPrestige = ['Academy Awards', 'Primetime Emmys', 'Cannes Film Festival', 'Venice Film Festival'].includes(award.body);
           
           const boosts = applyAwardBoostsToTalent(talent, award, multiplier, isPrestige);
 
