@@ -57,10 +57,15 @@ export function calculateFranchiseFatigue(
     currentFatigue *= 2.0;
   }
 
+  // 🌌 The Universe Builder: Specific superhero fatigue logic
+  if (normalizedGenre === 'Superhero' && activeCount >= 2) {
+    currentFatigue *= 1.5;
+  }
+
   // 3. Rival Saturation (The 'Poison the Well' effect)
   // If genre is severely oversaturated, penalty multiplier increases heavily.
   // 🌌 The Universe Builder: The market rejects trend-chasing much faster now.
-  const oversaturationMultiplier = genreSaturation > 8 ? 2.0 : 1.0;
+  const oversaturationMultiplier = genreSaturation > 10 ? 3.0 : genreSaturation > 6 ? 1.5 : 1.0;
   const rivalPenalty = (genreSaturation / 10) * 0.15 * oversaturationMultiplier;
   
   // 4. Audience Loyalty (Protective Shield)
@@ -104,9 +109,19 @@ export function calculateReleaseGapImpact(
     };
   }
 
-  // 2. The Dead Zone (4-7 years / 208-364 weeks)
+  // Soft Reboot (IP Retention)
+  // 🌌 The Universe Builder: Soft reboots after a 5-year break can re-ignite IP.
+  if (yearsSince >= 5 && yearsSince < 7) {
+    return {
+      buzzBonus: 15,
+      label: 'Soft Reboot (IP Retention)',
+      fatigueReset: true
+    };
+  }
+
+  // 2. The Dead Zone (4-5 years / 208-260 weeks)
   // Real-life: Alice Through the Looking Glass, The LEGO Movie 2.
-  if (yearsSince >= 4 && yearsSince < 7) {
+  if (yearsSince >= 4 && yearsSince < 5) {
     return { 
       buzzBonus: -25, // 🌌 The Universe Builder: Apathy hits harder during the dead zone.
       label: 'The Dead Zone (Apathy)',

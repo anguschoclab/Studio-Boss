@@ -17,16 +17,18 @@ function calculateSubChange(platform: StreamerPlatform, rng: RandomGenerator): n
   const growth = (baseGrowthRate * qualityFactor + marketingFactor * 0.01) * platform.subscribers * variance;
 
   // 📺 The Syndication Baron: Streaming wars subscriber churn penalty for flatlining growth.
+  // Tweaked streaming subscriber churn rates to be more aggressive in the cutthroat environment.
   let dynamicChurnRate = platform.churnRate;
   const historyLen = platform.subscriberHistory?.length || 0;
   if (historyLen >= 4) {
     const currentSubs = platform.subscribers;
     const pastSubs = platform.subscriberHistory[historyLen - 4].count;
     const growthPercent = pastSubs > 0 ? (currentSubs - pastSubs) / pastSubs : 0;
-    if (growthPercent < 0.01) {
-      dynamicChurnRate = Math.min(0.20, dynamicChurnRate * 1.5); // Penalty
-    } else if (growthPercent > 0.05) {
-      dynamicChurnRate = Math.max(0.01, dynamicChurnRate * 0.8); // Bonus
+    // Harsher penalty for flatlining, better bonus for high growth
+    if (growthPercent < 0.015) {
+      dynamicChurnRate = Math.min(0.25, dynamicChurnRate * 1.8); // Aggressive Penalty
+    } else if (growthPercent > 0.08) {
+      dynamicChurnRate = Math.max(0.01, dynamicChurnRate * 0.7); // Strong Bonus
     }
   }
 

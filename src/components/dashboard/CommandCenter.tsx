@@ -25,7 +25,7 @@ export const CommandCenter: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/5 pb-4">
         <div>
           <div className="flex items-center gap-3 mb-1">
-            <h1 className="text-4xl font-extrabold tracking-tight uppercase bg-gradient-to-br from-white via-foreground/90 to-foreground/40 bg-clip-text text-transparent drop-shadow-md">
+            <h1 className="text-5xl font-display font-black tracking-tighter uppercase bg-gradient-to-br from-white via-foreground/90 to-foreground/40 bg-clip-text text-transparent drop-shadow-lg">
               {studio.name}
             </h1>
             <Badge className="bg-primary/10 text-primary border border-primary/20 uppercase tracking-[0.2em] text-[10px] py-0.5 px-3 rounded-full shadow-[0_0_15px_hsl(var(--primary) / 0.15)] transition-all duration-500 hover:bg-primary/20 hover:shadow-[0_0_20px_hsl(var(--primary) / 0.3)]">
@@ -41,7 +41,7 @@ export const CommandCenter: React.FC = () => {
         <div className="flex gap-2">
           <div className="px-5 py-2.5 bg-card/40 backdrop-blur-md rounded-xl border border-white/10 shadow-lg flex flex-col items-end transition-all hover:border-white/20 hover:bg-card/60">
             <span className="text-[9px] uppercase font-black text-muted-foreground/70 tracking-[0.2em] leading-none mb-1">Market Position</span>
-            <span className="text-sm font-extrabold flex items-center gap-1.5 bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
+            <span className="text-sm font-display font-black flex items-center gap-1.5 bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent drop-shadow-sm">
               <Zap className="h-3.5 w-3.5 text-primary drop-shadow-[0_0_5px_hsl(var(--primary) / 0.8)]" />
               Tier 2 Studio
             </span>
@@ -57,7 +57,7 @@ export const CommandCenter: React.FC = () => {
           { label: 'Industry Rivals', value: rivalCount, sub: 'Active competitors', icon: Building2, color: 'text-destructive' },
           { label: 'Prestige XP', value: studio.prestige, sub: 'Reputation level', icon: TrendingUp, color: 'text-success' },
         ].map((kpi, i) => (
-          <Card key={i} className="glass-card hover-glow group overflow-hidden relative border border-white/10 hover:border-white/20 transition-all duration-500 ease-out hover:-translate-y-1.5 hover:shadow-2xl bg-gradient-to-br from-white/10 via-white/5 to-transparent backdrop-blur-xl">
+          <Card key={i} className="glass-card hover-glow group overflow-hidden relative border border-white/10 hover:border-white/20 transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)] bg-gradient-to-br from-white/10 via-white/5 to-transparent backdrop-blur-xl">
             <div className={cn("absolute -top-6 -right-6 w-24 h-24 opacity-10 blur-[30px] rounded-full transition-all duration-700 group-hover:opacity-40 group-hover:blur-[40px] group-hover:scale-150", kpi.color.replace('text', 'bg'))} />
             <CardContent className="p-6 relative z-10">
               <div className="flex items-center justify-between mb-4">
@@ -66,7 +66,7 @@ export const CommandCenter: React.FC = () => {
                   <kpi.icon className={cn("h-4 w-4 drop-shadow-md group-hover:drop-shadow-[0_0_12px_currentColor]", kpi.color)} />
                 </div>
               </div>
-              <div className="text-4xl font-extrabold tracking-tighter mb-1 text-foreground/90 group-hover:text-white group-hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.2)] transition-all duration-300">{kpi.value}</div>
+              <div className="text-4xl font-display font-black tracking-tighter mb-1 text-foreground/90 group-hover:text-white group-hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.3)] transition-all duration-300">{kpi.value}</div>
               <p className="text-[10px] text-muted-foreground/50 font-bold uppercase tracking-wider group-hover:text-muted-foreground/80 transition-colors duration-300">{kpi.sub}</p>
             </CardContent>
           </Card>

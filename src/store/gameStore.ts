@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { GameState, WeekSummary, ArchetypeKey } from '@/engine/types';
+import { GameState, WeekSummary, ArchetypeKey, FinanceState, NewsState } from '@/engine/types';
 import { initializeGame } from '@/engine/core/gameInit';
 import { advanceWeek } from '@/engine/core/weekAdvance';
 import { RandomGenerator } from '@/engine/utils/rng';
@@ -24,8 +24,22 @@ export interface GameStore extends ProjectSlice, FinanceSlice, TalentSlice, Riva
   devAutoInit: (archetype?: ArchetypeKey) => void;
 }
 
-const INITIAL_FINANCE = { cash: 0, ledger: [] };
-const INITIAL_NEWS = { headlines: [] };
+const INITIAL_FINANCE: FinanceState = {
+  cash: 0,
+  ledger: [],
+  weeklyHistory: [],
+  marketState: {
+    cycle: 'STABLE',
+    sentiment: 0,
+    baseRate: 0.05,
+    consumerConfidence: 50,
+    debtRate: 0.08,
+    savingsYield: 0.02,
+    loanRate: 0.08,
+    rateHistory: []
+  }
+};
+const INITIAL_NEWS: NewsState = { headlines: [] };
 
 export const useGameStore = create<GameStore>((set, get, ...args) => ({
   gameState: null,
@@ -81,9 +95,9 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
       }
 
       if (modalImpacts.length > 0) {
-        modalImpacts.sort((a, b) => (b.payload.priority || 0) - (a.payload.priority || 0));
-        for (let i = 0; i < modalImpacts.length; i++) {
-          ui.enqueueModal(modalImpacts[i].payload.modalType, modalImpacts[i].payload.payload as Record<string, unknown>);
+        const sortedModalImpacts = [...modalImpacts].sort((a, b) => (b.payload.priority || 0) - (a.payload.priority || 0));
+        for (let i = 0; i < sortedModalImpacts.length; i++) {
+          ui.enqueueModal(sortedModalImpacts[i].payload.modalType, sortedModalImpacts[i].payload.payload as Record<string, unknown>);
         }
       }
     }
@@ -120,9 +134,9 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
     if (state.gameState === null) return state;
     return { 
         gameState: null,
-        finance: INITIAL_FINANCE as any,
-        news: INITIAL_NEWS as any
-    } as any;
+        finance: INITIAL_FINANCE,
+        news: INITIAL_NEWS
+    };
   }),
 
   devAutoInit: (archetype = 'major') => {
