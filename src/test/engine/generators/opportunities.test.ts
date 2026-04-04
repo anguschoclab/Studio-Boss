@@ -6,7 +6,7 @@ describe('Opportunity Generator', () => {
   const rng = new RandomGenerator(12345);
 
   it('should generate a valid opportunity', () => {
-    const opp = generateOpportunity(rng);
+    const opp = generateOpportunity(rng, 1);
 
     expect(opp).toBeDefined();
     expect(opp.id).toContain('opp-');
@@ -19,10 +19,11 @@ describe('Opportunity Generator', () => {
   });
 
   it('should generate attached talent if provided', () => {
-    // Generate many to ensure randomness catches one with talent
+    // Use a fresh independent RNG to avoid state dependency on previous tests
+    const freshRng = new RandomGenerator(99999);
     let foundTalent = false;
-    for (let i = 0; i < 50; i++) {
-      const opp = generateOpportunity(rng, ['t-1', 't-2']);
+    for (let i = 0; i < 200; i++) {
+      const opp = generateOpportunity(freshRng, 1, ['t-1', 't-2']);
       if (opp.attachedTalentIds && opp.attachedTalentIds.length > 0) {
         foundTalent = true;
         expect(['t-1', 't-2']).toContain(opp.attachedTalentIds[0]);
@@ -36,7 +37,7 @@ describe('Opportunity Generator', () => {
     // Generate until we get a TV project
     let tvOpp;
     for (let i = 0; i < 50; i++) {
-      const opp = generateOpportunity(rng);
+      const opp = generateOpportunity(rng, 1);
       if (opp.format === 'tv') {
         tvOpp = opp;
         break;

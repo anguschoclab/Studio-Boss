@@ -43,6 +43,7 @@ export interface RivalStudio {
   genreFocus?: string;
   acquisitionTarget?: string;
   isAcquirable?: boolean;
+  ipAssets?: Record<string, import('./state.types').IPAsset>;
   weeklyHistory?: import('./state.types').FinancialSnapshot[];
 }
 

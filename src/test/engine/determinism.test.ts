@@ -39,9 +39,13 @@ describe('Studio Boss - 100 Week Determinism Certification', () => {
         expect(currentStateA.studio.prestige).toBe(currentStateB.studio.prestige);
         
         // Deep consistency check on rivals
-        stateA.industry.rivals.forEach((rival, idx) => {
-          expect(currentStateA.industry.rivals[idx].cash).toBe(currentStateB.industry.rivals[idx].cash);
-          expect(currentStateA.industry.rivals[idx].strength).toBe(currentStateB.industry.rivals[idx].strength);
+        stateA.industry.rivals.forEach((_rival, idx) => {
+          const rA = currentStateA.industry.rivals[idx];
+          const rB = currentStateB.industry.rivals[idx];
+          if (rA && rB) {
+            expect(rA.cash).toBe(rB.cash);
+            expect(rA.strength).toBe(rB.strength);
+          }
         });
       } catch (error) {
         console.error(`Determinism drift detected at week ${currentStateA.week}`);

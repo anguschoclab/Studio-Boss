@@ -1,99 +1,57 @@
-import { GameState, StateImpact, Project, RivalStudio, Contract, Talent } from '@/engine/types';
+import { GameState, StateImpact, Project, RivalStudio, Opportunity, Contract } from '@/engine/types';
 import { RandomGenerator } from '../utils/rng';
 import { calculateOpeningWeekend } from '../systems/releaseSimulation';
+import { RegulatorSystem } from '../systems/industry/RegulatorSystem';
 
-/**
- * Studio Automation
- * Automated operational decisions for any studio (Player or Rival).
- * Handles Greenlights, Pitches, and Releasing from Marketing.
- */
 export class StudioAutomation {
-  static tick(state: GameState, rng: RandomGenerator, isPlayer: boolean = false): StateImpact[] {
+  /**
+   * Main simulation tick for rival studios.
+   * Handles project pitching, production, and high-level strategic adaptation.
+   */
+  static tick(state: GameState, rng: RandomGenerator): StateImpact[] {
     const impacts: StateImpact[] = [];
-    if (isPlayer) {
-      const projects = Object.values(state.studio.internal.projects);
-      projects.forEach(p => {
-        this.processProject(p, state, rng, impacts, 'PLAYER');
-      });
-    } else {
-      state.industry.rivals.forEach(rival => {
-        const projects = Object.values(rival.projects || {});
-        
-        projects.forEach(p => {
-          this.processProject(p, state, rng, impacts, rival.id);
-        });
+    
+    state.industry.rivals.forEach(rival => {
+      // 1. Studio Status & Liquidation
+      const isDistressed = (Number(rival.cash) || 0) < -50000000;
+      
+      if (isDistressed && (state.week % 4 === 0) && rng.next() < 0.1) {
+          this.triggerLiquidation(rival, state, rng, impacts);
+      } else if (rival.cash > 500000000 && (!rival.ownedPlatforms || rival.ownedPlatforms.length === 0)) {
+          if (rng.next() < 0.05) {
+              this.triggerPlatformLaunch(rival, state, rng, impacts);
+          }
+      }
 
-        // 4. Dynamic Persona Shifting
-        let persona: 'frugal' | 'aggressive' | 'balanced' = 'balanced';
-        if (rival.cash < 10000000) persona = 'frugal';
-        else if (rival.cash > 100000000) persona = 'aggressive';
-
-        // 5. Slate Management (Simulation Only)
-        const maxProjects = persona === 'frugal' ? 2 : (persona === 'aggressive' ? 6 : 4);
-        
-        if (projects.length < maxProjects) {
-            const opportunities = state.market.opportunities.filter(o => !o.bids[rival.id]);
-            if (opportunities.length > 0) {
-                const myGenres = projects.map(p => p.genre);
-                const candidates = opportunities.filter(o => myGenres.filter(g => g === o.genre).length < 2);
-                
-                if (candidates.length > 0) {
-                    const trends = state.market.trends || [];
-                    const topTrends = trends.filter(t => t.heat > 70).map(t => t.genre);
-                    const trendMatch = candidates.find(o => topTrends.includes(o.genre));
-                    const opp = trendMatch || rng.pick(candidates);
-                    
-                    let bidMult = topTrends.includes(opp.genre) ? 1.25 : 1.05;
-
-                    impacts.push({
-                        type: 'OPPORTUNITY_UPDATED',
-                        payload: {
-                            opportunityId: opp.id,
-                            rivalId: rival.id,
-                            bid: { amount: Math.floor(opp.costToAcquire * bidMult), terms: 'standard' }
-                        }
-                    });
-                }
-            }
-        }
-
-        // 6. Distress Signal & Consolidation Readiness
-        const isDistressed = rival.cash < 0;
-
-        // Phase 5 Strategic Adaptation
-        if (rival.cash < -50000000) {
-            this.triggerLiquidation(rival, state, rng, impacts);
-        } else if (rival.cash > 500000000 && (!rival.ownedPlatforms || rival.ownedPlatforms.length === 0)) {
-            if (rng.next() < 0.05) { // 5% weekly chance for a surge
-                this.triggerPlatformLaunch(rival, state, rng, impacts);
-            }
-        }
-
-        if (isDistressed !== rival.isAcquirable) {
+      if (isDistressed !== rival.isAcquirable) {
           impacts.push({
             type: 'RIVAL_UPDATED',
-            payload: { 
-              rivalId: rival.id, 
-              update: { 
-                isAcquirable: isDistressed 
-              } 
-            }
+            payload: { rivalId: rival.id, update: { isAcquirable: isDistressed } }
           });
-        }
+      }
+
+      // 2. Process Individual Projects
+      const projects = Object.values(rival.projects || {});
+      projects.forEach(p => {
+        this.processProject(p, rival.id, state, rng, impacts);
       });
-    }
+
+      // 3. Pitch New Projects (If slot available)
+      if (projects.length < 5 && rng.next() < 0.1) {
+        this.pitchNewProject(rival, state, rng, impacts);
+      }
+    });
 
     return impacts;
   }
 
-  private static processProject(p: Project, state: GameState, rng: RandomGenerator, impacts: StateImpact[], studioId: string | 'PLAYER'): void {
+  private static processProject(p: Project, studioId: string, state: GameState, rng: RandomGenerator, impacts: StateImpact[]): void {
     // 1. Resolve Pitching (Random buyer pickup)
     if (p.state === 'pitching') {
       const eligibleBuyers = state.market.buyers.filter(b => b.archetype === 'streamer' || b.archetype === 'network');
       const buyer = rng.pick(eligibleBuyers);
-      if (buyer) {
-        const { update, subImpacts } = this.initializeProduction(p, studioId, state, rng);
-        impacts.push(...subImpacts);
+      if (buyer && rng.next() < 0.3) {
+        const update: any = { state: 'production', weeksInPhase: 0 };
         impacts.push(this.createUpdateImpact(studioId, p.id, { 
           ...update,
           buyerId: buyer.id,
@@ -109,25 +67,33 @@ export class StudioAutomation {
       impacts.push(this.createUpdateImpact(studioId, p.id, update, state));
     }
 
-    // 3. Resolve Marketing -> Release (Opening Weekend Simulation)
+    // 3. Resolve Marketing -> Release
     if (p.state === 'marketing') {
       const tiers: ('none' | 'basic' | 'blockbuster')[] = ['none', 'basic', 'blockbuster'];
       const tier = rng.pick(tiers);
       const budgetMap = { 'none': 0, 'basic': 5000000, 'blockbuster': 25000000 };
       const marketingBudget = budgetMap[tier];
 
-      // ⚡ Phase 5 Hyper-Simulation: Rivals now use the same opening weekend logic as the player
       const rivalPrestige = studioId === 'PLAYER' ? state.studio.prestige : (state.industry.rivals.find(r => r.id === studioId)?.prestige || 50);
       const { project: releasedProject } = calculateOpeningWeekend(
           { ...p, marketingLevel: tier, marketingBudget }, 
-          [], // Talent filtered out for simulation speed unless needed
+          [], 
           rivalPrestige,
           rng
       );
 
+      // Status Transition (TV Special Case)
+      let nextStatus = 'released';
+      let tvUpdate = {};
+      if ((p.format === 'tv' || p.type === 'SERIES') && (p as any).tvDetails) {
+          nextStatus = 'ON_AIR';
+          tvUpdate = { tvDetails: { ...(p as any).tvDetails, status: 'ON_AIR' } };
+      }
+
       impacts.push(this.createUpdateImpact(studioId, p.id, { 
         ...releasedProject,
-        state: 'released', 
+        ...tvUpdate,
+        state: nextStatus as any, 
         weeksInPhase: 0,
         releaseWeek: state.week,
         activeCrisis: null
@@ -135,10 +101,87 @@ export class StudioAutomation {
     }
   }
 
-  private static initializeProduction(p: Project, studioId: string | 'PLAYER', state: GameState, rng: RandomGenerator): { update: Partial<Project>; subImpacts: StateImpact[] } {
+  private static triggerLiquidation(rival: RivalStudio, state: GameState, rng: RandomGenerator, impacts: StateImpact[]): void {
+      const ipAssets = Object.values(rival.ipAssets || {});
+      if (ipAssets.length === 0) return;
+      
+      const asset = rng.pick(ipAssets);
+      const bidPrice = (asset.baseValue || 10000000) * (0.5 + rng.next() * 0.5);
+      
+      impacts.push({
+          type: 'NEWS_ADDED',
+          payload: {
+              headline: `LIQUIDATION: ${rival.name} auctions IP!`,
+              description: `Facing financial pressure, ${rival.name} has sold ${asset.title} to the highest bidder for $${(bidPrice / 1000000).toFixed(1)}M.`,
+              category: 'business'
+          }
+      });
+      
+      impacts.push({
+          type: 'RIVAL_UPDATED',
+          payload: { 
+              rivalId: rival.id, 
+              update: { 
+                  cash: (Number(rival.cash) || 0) + bidPrice,
+                  ipAssets: Object.fromEntries(Object.entries(rival.ipAssets || {}).filter(([id]) => id !== asset.id))
+              } 
+          }
+      });
+  }
+
+  private static triggerPlatformLaunch(rival: RivalStudio, state: GameState, rng: RandomGenerator, impacts: StateImpact[]): void {
+      const cost = 200000000;
+      impacts.push({
+          type: 'NEWS_ADDED',
+          payload: {
+              headline: `BUSINESS: ${rival.name} launches streaming service!`,
+              description: `Aiming for vertical integration, ${rival.name} has invested $200M in a new SVOD platform.`,
+              category: 'business'
+          }
+      });
+      impacts.push({
+          type: 'RIVAL_UPDATED',
+          payload: { rivalId: rival.id, update: { cash: (Number(rival.cash) || 0) - cost } }
+      });
+  }
+
+  private static pitchNewProject(rival: RivalStudio, state: GameState, rng: RandomGenerator, impacts: StateImpact[]): void {
+    const genres = ['Action', 'Drama', 'Comedy', 'Sci-Fi', 'Horror', 'Family'];
+    const genre = rng.pick(genres);
+    const id = rng.uuid('p-auto');
+    const format = rng.next() < 0.3 ? 'tv' : 'film';
+
+    const project: any = {
+      id,
+      title: `${genre} ${rng.rangeInt(1, 100)}`,
+      genre,
+      format,
+      type: format === 'tv' ? 'SERIES' : 'MOVIE',
+      state: 'pitching',
+      weeksInPhase: 0,
+      budgetTier: rng.pick(['low', 'mid', 'high']),
+      buzz: rng.rangeInt(20, 50),
+      reviewScore: rng.rangeInt(40, 75),
+    };
+
+    if (format === 'tv') {
+        project.tvDetails = {
+            status: 'IN_DEVELOPMENT',
+            episodesOrdered: rng.rangeInt(8, 13),
+            episodesAired: 0,
+            averageRating: 0
+        };
+    }
+
+    impacts.push({
+      type: 'RIVAL_UPDATED',
+      payload: { rivalId: rival.id, update: { projects: { ...rival.projects, [id]: project } } }
+    });
+  }
+
+  private static initializeProduction(p: Project, studioId: string, state: GameState, rng: RandomGenerator): { update: Partial<Project>; subImpacts: StateImpact[] } {
     const subImpacts: StateImpact[] = [];
-    const contracts: Contract[] = [];
-    const update: Partial<Project> = {
+    const update: any = {
       state: 'production',
       weeksInPhase: 0,
       productionWeeks: rng.rangeInt(12, 26),
@@ -147,137 +190,19 @@ export class StudioAutomation {
       rating: 'PG-13',
       activeCut: rng.next() < 0.2 ? 'sanitized' : 'theatrical'
     };
-
-    if (studioId !== 'PLAYER') {
-      const pool = Object.values(state.industry.talentPool).filter(t => !t.contractId);
-      const directors = pool.filter(t => t.role === 'director');
-      const actors = pool.filter(t => t.role === 'actor');
-
-      const director = rng.pick(directors);
-      if (director) {
-        const contractId = rng.uuid('c-auto');
-        contracts.push({ id: contractId, talentId: director.id, projectId: p.id, role: 'director' as any, status: 'active', fee: director.fee } as any);
-        subImpacts.push({ type: 'TALENT_UPDATED', payload: { talentId: director.id, update: { contractId: contractId } } });
-      }
-
-      const lead = rng.pick(actors);
-      if (lead) {
-        const contractId = rng.uuid('c-auto');
-        contracts.push({ id: contractId, talentId: lead.id, projectId: p.id, role: 'lead' as any, status: 'active', fee: lead.fee * 1.2 } as any);
-        subImpacts.push({ type: 'TALENT_UPDATED', payload: { talentId: lead.id, update: { contractId: contractId } } });
-      }
-    }
-
-    return { 
-      update: { ...update, contracts: contracts as any } as any, 
-      subImpacts 
-    };
+    return { update, subImpacts };
   }
 
-  private static createUpdateImpact(studioId: string | 'PLAYER', projectId: string, update: Partial<Project>, state: GameState): StateImpact {
+  private static createUpdateImpact(studioId: string, projectId: string, update: Partial<Project>, state: GameState): StateImpact {
     if (studioId === 'PLAYER') {
-      return {
-        type: 'PROJECT_UPDATED',
-        payload: { projectId, update }
-      };
+      return { type: 'PROJECT_UPDATED', payload: { projectId, update } };
     } else {
       const rival = state.industry.rivals.find(r => r.id === studioId);
-      const currentProjects = rival?.projects || {};
-      const updatedProject = { ...currentProjects[projectId], ...update };
-      
-      return {
-        type: 'RIVAL_UPDATED',
-        payload: {
-            rivalId: studioId,
-            update: {
-                projects: { ...currentProjects, [projectId]: updatedProject }
-            }
-        }
+      const existingProject = rival?.projects?.[projectId] || {};
+      return { 
+        type: 'RIVAL_UPDATED', 
+        payload: { rivalId: studioId, update: { projects: { ...rival?.projects, [projectId]: { ...existingProject, ...update } } } } 
       };
     }
-  }
-
-  private static triggerLiquidation(rival: RivalStudio, state: GameState, rng: RandomGenerator, impacts: StateImpact[]): void {
-    // 1. Identify IP Assets to liquidate
-    const myAssets = state.ip.vault.filter(a => a.ownerStudioId === rival.id);
-    if (myAssets.length > 0) {
-        const asset = rng.pick(myAssets);
-        // Create an Opportunity for others to buy
-        impacts.push({
-            type: 'INDUSTRY_UPDATE',
-            payload: {
-                update: {
-                    [`market.opportunities.${rng.uuid('opp-liq')}`]: {
-                        id: rng.uuid('opp-liq'),
-                        type: 'rights',
-                        title: `${asset.title} (Library Rights)`,
-                        format: 'film',
-                        genre: 'Unknown',
-                        budgetTier: 'high',
-                        costToAcquire: Math.floor((asset.baseValue || 10000000) * 0.8), // Liquidation discount
-                        origin: 'agency_package',
-                        episodes: 0,
-                        bids: {},
-                        bidHistory: [],
-                        expirationWeek: state.week + 4,
-                        weeksUntilExpiry: 4,
-                        originalProjectId: asset.id // Link back to the original IP
-                    }
-                }
-            }
-        });
-        
-        impacts.push({
-            type: 'NEWS_ADDED',
-            payload: {
-                headline: `DISTRESS SALE: ${rival.name} liquidating IPs`,
-                description: `Facing severe liquidity constraints, ${rival.name} has put the rights to "${asset.title}" up for auction.`,
-                category: 'market'
-            }
-        });
-    }
-  }
-
-  private static triggerPlatformLaunch(rival: RivalStudio, state: GameState, rng: RandomGenerator, impacts: StateImpact[]): void {
-    const cost = 250_000_000; // Expensive to launch
-    const platformId = rng.uuid('streamer');
-    
-    impacts.push({
-        type: 'INDUSTRY_UPDATE',
-        payload: {
-            update: {
-                [`market.buyers.${platformId}`]: {
-                    id: platformId,
-                    name: `${rival.name}+`,
-                    archetype: 'streamer',
-                    ownerId: rival.id,
-                    parentBrand: rival.name,
-                    subscribers: 5_000_000,
-                    contentLibraryQuality: 40,
-                    activeLicenses: []
-                }
-            }
-        }
-    });
-
-    impacts.push({
-        type: 'RIVAL_UPDATED',
-        payload: {
-            rivalId: rival.id,
-            update: { 
-                cash: rival.cash - cost,
-                ownedPlatforms: [platformId]
-            }
-        }
-    });
-
-    impacts.push({
-        type: 'NEWS_ADDED',
-        payload: {
-            headline: `STREAMING WARS: ${rival.name} launches ${rival.name}+`,
-            description: `In a major strategic expansion, ${rival.name} has officially joined the streaming wars with the launch of their new platform.`,
-            category: 'market'
-        }
-    });
   }
 }
