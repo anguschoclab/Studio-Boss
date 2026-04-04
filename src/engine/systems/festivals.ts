@@ -1,6 +1,5 @@
-import { GameState, FestivalSubmission, AwardBody, Project } from '@/engine/types';
+import { GameState, StateImpact, Project, RivalStudio, FestivalSubmission, AwardBody } from '@/engine/types';
 import { RandomGenerator } from '../utils/rng';
-import { StateImpact } from '../types/state.types';
 
 export const FESTIVALS: { body: AwardBody, name: string, weeks: number[], cost: number, prestigeNeeded: number, buzzReward: number }[] = [
   { body: 'Sundance Film Festival', name: 'Sundance', weeks: [3, 4], cost: 25000, prestigeNeeded: 40, buzzReward: 30 },
@@ -9,54 +8,16 @@ export const FESTIVALS: { body: AwardBody, name: string, weeks: number[], cost: 
   { body: 'Berlin International Film Festival', name: 'Berlinale', weeks: [8, 9], cost: 35000, prestigeNeeded: 50, buzzReward: 35 }
 ];
 
-export function submitToFestival(
-  state: GameState,
-  projectId: string,
-  festivalBody: AwardBody,
-  rng: RandomGenerator
-): StateImpact | null {
-  const fest = FESTIVALS.find(f => f.body === festivalBody);
-  const project = state.studio.internal.projects[projectId];
+/**
+ * Weekly Festival Resolver
+ * Processes submissions from ALL studios.
+ */
+export function resolveFestivals(state: GameState, rng: RandomGenerator): StateImpact[] {
+  if (!state.industry.festivalSubmissions || state.industry.festivalSubmissions.length === 0) return [];
   
-  if (!fest || !project || state.finance.cash < fest.cost) return null;
-  
-  if (project.state === 'development' || project.state === 'pitching') return null;
-  
-  const submission: FestivalSubmission = {
-    id: rng.uuid('fest-sub'),
-    projectId,
-    festivalBody,
-    status: 'submitted',
-    buzzGain: 0,
-    week: state.week
-  };
-  
-  return {
-    cashChange: -fest.cost,
-    newFestivalSubmissions: [...(state.industry.festivalSubmissions || []), submission],
-    newHeadlines: [
-      {
-        id: rng.uuid('hl'),
-        week: state.week,
-        category: 'awards' as const,
-        text: `"${project.title}" officially submitted for consideration at ${fest.name}.`
-      }
-    ]
-  };
-}
-
-export function resolveFestivals(state: GameState, rng: RandomGenerator): StateImpact {
-  if (!state.industry.festivalSubmissions || state.industry.festivalSubmissions.length === 0) return {};
-  
-  const impact: StateImpact = {
-    newFestivalSubmissions: [],
-    projectUpdates: [],
-    prestigeChange: 0,
-    newHeadlines: []
-  };
-
+  const impacts: StateImpact[] = [];
   const updatedSubmissions: FestivalSubmission[] = [];
-  
+
   for (const sub of state.industry.festivalSubmissions) {
     if (sub.status !== 'submitted') {
         updatedSubmissions.push(sub);
@@ -71,27 +32,51 @@ export function resolveFestivals(state: GameState, rng: RandomGenerator): StateI
     
     const weekOfCycle = state.week % 52 === 0 ? 52 : state.week % 52;
     if (fest.weeks.includes(weekOfCycle)) {
-      const project = state.studio.internal.projects[sub.projectId];
+      // Find the project and its owner
+      const playerProject = state.studio.internal.projects[sub.projectId];
+      const rival = state.industry.rivals.find(r => !!(r.projects || {})[sub.projectId]);
+      const project = playerProject || (rival?.projects || {})[sub.projectId];
+      const ownerId = playerProject ? 'PLAYER' : (rival?.id || 'RIVAL');
+
       if (!project) {
           updatedSubmissions.push(sub);
           continue;
       }
       
-      const baseChance = (project.reviewScore || 50) + (state.studio.prestige * 0.5);
-      const isAccepted = baseChance > fest.prestigeNeeded + rng.range(-20, 20);
+      const ownerPrestige = playerProject ? state.studio.prestige : (rival?.prestige || 50);
+      const baseChance = (project.reviewScore || 50) + (ownerPrestige * 0.5);
+      const isAccepted = baseChance > (fest.prestigeNeeded + rng.range(-20, 20));
       
       if (isAccepted) {
-        impact.projectUpdates!.push({
-            projectId: sub.projectId,
-            update: { buzz: Math.min(100, project.buzz + fest.buzzReward) }
-        });
-        impact.prestigeChange! += 2;
+        // Success: Buzz and Prestige
+        const buzzGain = Math.min(100, project.buzz + fest.buzzReward);
         
-        impact.newHeadlines!.push({
-          id: rng.uuid('hl'),
-          week: state.week,
-          category: 'awards' as const,
-          text: `Massive buzz out of ${fest.name} as "${project.title}" premieres to standing ovation!`
+        if (ownerId === 'PLAYER') {
+            impacts.push({
+                type: 'PROJECT_UPDATED',
+                payload: { projectId: project.id, update: { buzz: buzzGain } }
+            });
+            impacts.push({ type: 'PRESTIGE_CHANGED', payload: 2 });
+        } else {
+            impacts.push({
+                type: 'RIVAL_UPDATED',
+                payload: {
+                    rivalId: ownerId,
+                    update: {
+                        projects: { ...(rival?.projects || {}), [project.id]: { ...(rival?.projects || {})[project.id], buzz: buzzGain } },
+                        prestige: Math.min(100, (rival?.prestige || 50) + 2)
+                    }
+                }
+            });
+        }
+        
+        impacts.push({
+            type: 'NEWS_ADDED',
+            payload: {
+                headline: `FESTIVALS: "${project.title}" premieres at ${fest.name}`,
+                description: `Receiving a standing ovation, ${project.title} has become the talk of the circuit.`,
+                category: 'awards'
+            }
         });
         
         updatedSubmissions.push({ ...sub, status: 'selected' as const, buzzGain: fest.buzzReward });
@@ -103,6 +88,13 @@ export function resolveFestivals(state: GameState, rng: RandomGenerator): StateI
     }
   }
   
-  impact.newFestivalSubmissions = updatedSubmissions.filter(s => s.status !== 'rejected' || state.week - s.week < 12);
-  return impact;
+  // Update state with a rolling 8-week TTL for all submissions to prevent state bloat
+  impacts.push({
+    type: 'INDUSTRY_UPDATE',
+    payload: {
+        update: { 'industry.festivalSubmissions': updatedSubmissions.filter(s => (state.week - s.week) < 8) }
+    }
+  });
+
+  return impacts;
 }

@@ -67,7 +67,8 @@ export class MetricsCollector {
                 this.genreStats[genre].cost += p.budget;
                 this.genreStats[genre].revenue += p.revenue;
 
-                if (p.format === 'tv') {
+                const formatMatch = (p.format || '').toLowerCase();
+                if (formatMatch === 'tv' || formatMatch === 'series') {
                   if (!this.tvGenreStats[genre]) this.tvGenreStats[genre] = { cost: 0, revenue: 0 };
                   this.tvGenreStats[genre].cost += p.budget;
                   this.tvGenreStats[genre].revenue += p.revenue;
@@ -106,7 +107,7 @@ export class MetricsCollector {
     });
 
     // Total industry cash (for market share)
-    const totalAssets = state.finance.cash + rivalTotalCash + platformTotalCash;
+    const totalAssets = (state.finance.cash || 0) + (rivalTotalCash || 0) + (platformTotalCash || 0);
     const marketShare = totalAssets > 0 ? (state.finance.cash / totalAssets) * 100 : 0;
 
     // totalSystemCash = player + rivals + platforms + (active budgets estimate)

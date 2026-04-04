@@ -295,7 +295,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
             });
             const mergedVault = nextState.ip.vault.map(asset => {
               if (asset.ownerStudioId === mergedRivalId) {
-                return { ...asset, ownerStudioId: acquirerId };
+                return { ...asset, rightsOwner: 'RIVAL' as const, ownerStudioId: acquirerId };
               }
               return asset;
             });
