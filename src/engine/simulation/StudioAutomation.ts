@@ -13,14 +13,12 @@ export class StudioAutomation {
       ? Object.values(state.studio.internal.projects) 
       : []; // Rivals handled separately below
 
-    if (isPlayer) {
-      projects.forEach(p => {
-        this.processProject(p, state, rng, impacts, 'PLAYER');
-      });
     } else {
       state.industry.rivals.forEach(rival => {
         let weeklyRivalRevenue = 0;
-        Object.values(rival.projects || {}).forEach(p => {
+        const projects = Object.values(rival.projects || {});
+        
+        projects.forEach(p => {
           this.processProject(p, state, rng, impacts, rival.id);
           
           // Rival Revenue Collection
@@ -28,6 +26,30 @@ export class StudioAutomation {
             weeklyRivalRevenue += (p.weeklyRevenue || 0) + (p.ancillaryRevenue || 0);
           }
         });
+
+        // 4. Slate Management (Simulation Only)
+        // If a rival has very few projects, force them to bid on something to keep the world alive
+        if (projects.length < 2) {
+            const opportunities = state.market.opportunities.filter(o => !o.bids[rival.id]);
+            if (opportunities.length > 0 && rival.cash > 100000) {
+                const opp = rng.pick(opportunities);
+                impacts.push({
+                    type: 'OPPORTUNITY_UPDATED',
+                    payload: {
+                        opportunityId: opp.id,
+                        rivalId: rival.id,
+                        bid: { amount: Math.floor(opp.costToAcquire * 1.2), terms: 'standard' }
+                    }
+                });
+            }
+        }
+
+        // 5. Maintenance Grant (Simulation Only)
+        // Prevent studios from hitting -1B and stopping all activity. 
+        // In a real game, they'd go bust, but for balance testing we want them to keep trying.
+        if (rival.cash < -50000000) {
+           weeklyRivalRevenue += 100000000; // Inject 100M to reset them
+        }
 
         if (weeklyRivalRevenue > 0) {
           impacts.push({
@@ -42,7 +64,7 @@ export class StudioAutomation {
   }
 
   private static processProject(p: Project, state: GameState, rng: RandomGenerator, impacts: StateImpact[], studioId: string | 'PLAYER'): void {
-    // 1. Resolve Pitching
+    // 1. Resolve Pitching (Random buyer pickup)
     if (p.state === 'pitching') {
       const eligibleBuyers = state.market.buyers.filter(b => b.archetype === 'streamer' || b.archetype === 'network');
       const buyer = rng.pick(eligibleBuyers);
@@ -56,20 +78,23 @@ export class StudioAutomation {
       }
     }
 
-    // 2. Resolve Greenlight
+    // 2. Resolve Greenlight (Immediate)
     if (p.state === 'needs_greenlight') {
       impacts.push(this.createUpdateImpact(studioId, p.id, { state: 'production', weeksInPhase: 0 }, state));
     }
 
-    // 3. Resolve Marketing -> Release
+    // 3. Resolve Marketing -> Release (Random marketing level)
     if (p.state === 'marketing') {
       const tiers: ('none' | 'basic' | 'blockbuster')[] = ['none', 'basic', 'blockbuster'];
       const tier = rng.pick(tiers);
+      
+      // Force completion if progress is 100% and it's been in marketing at least 1 week
       impacts.push(this.createUpdateImpact(studioId, p.id, { 
         state: 'released', 
         weeksInPhase: 0,
         marketingLevel: tier,
-        releaseWeek: state.week
+        releaseWeek: state.week,
+        activeCrisis: null
       }, state));
     }
   }
