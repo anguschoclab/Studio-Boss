@@ -138,7 +138,7 @@ export class WeekCoordinator {
           if (result.impact) context.impacts.push(result.impact);
         }
       } else if (!project.activeCrisis && activeStages.includes(project.state)) {
-        const impact = checkAndTriggerCrisis(project, context.rng);
+        const impact = checkAndTriggerCrisis(project, state, context.rng);
         if (impact) context.impacts.push(impact);
       }
     }
