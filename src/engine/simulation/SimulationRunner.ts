@@ -7,6 +7,7 @@ import { MetricsCollector } from './MetricsCollector';
 import { RandomGenerator } from '../utils/rng';
 import { advanceProject } from '../systems/projects';
 import { applyImpacts } from '../core/impactReducer';
+import { StudioAutomation } from './StudioAutomation';
 
 export interface SimulationResult {
   finalState: GameState;
