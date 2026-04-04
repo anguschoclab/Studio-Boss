@@ -281,7 +281,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     }
 
     case 'SYSTEM_TICK': {
-      const { week, tickCount } = impact.payload;
+      const { week, tickCount } = impact.payload || {};
       state = {
         ...state,
         week: week ?? state.week,
@@ -355,15 +355,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
       return applySingleImpact(state, { type: 'FUNDS_CHANGED', payload: { amount } });
     }
 
-    case 'SYSTEM_TICK': {
-      const { week, tickCount } = impact.payload;
-      state = {
-        ...state,
-        week: week ?? state.week,
-        tickCount: tickCount ?? state.tickCount
-      };
-      break;
-    }
+
   }
 
   // --- Root-Level Field Processing (Unified for all types) ---

@@ -196,7 +196,7 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
       ownedPlatforms: playerOwnedPlatforms
     },
     market: {
-      opportunities: Array.from({ length: 4 }, () => generateOpportunity(rng, Object.keys(talentPool))),
+      opportunities: Array.from({ length: 4 }, () => generateOpportunity(rng, 1, Object.keys(talentPool))),
       buyers: initialBuyers,
     },
     industry: {

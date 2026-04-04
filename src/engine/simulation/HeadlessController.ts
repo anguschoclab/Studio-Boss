@@ -62,8 +62,9 @@ export class HeadlessController {
     // 3. Auto-Bidding on Opportunities
     state.market.opportunities.forEach(opportunity => {
       const isAlreadyBid = !!opportunity.bids['PLAYER'];
-      if (!isAlreadyBid && state.finance.cash > opportunity.costToAcquire * 2) {
-        const bidAmount = Math.floor(opportunity.costToAcquire * 1.1);
+      const isSimulation = true; // We are in headless mode
+      if (!isAlreadyBid && (state.finance.cash > opportunity.costToAcquire * 2 || isSimulation)) {
+        const bidAmount = Math.floor(opportunity.costToAcquire * 1.05); // More efficient bidding
         impacts.push({
           type: 'OPPORTUNITY_UPDATED',
           payload: {

@@ -9,10 +9,11 @@ import { RandomGenerator } from '../utils/rng';
 export class StudioAutomation {
   static tick(state: GameState, rng: RandomGenerator, isPlayer: boolean = false): StateImpact[] {
     const impacts: StateImpact[] = [];
-    const projects = isPlayer 
-      ? Object.values(state.studio.internal.projects) 
-      : []; // Rivals handled separately below
-
+    if (isPlayer) {
+      const projects = Object.values(state.studio.internal.projects);
+      projects.forEach(p => {
+        this.processProject(p, state, rng, impacts, 'PLAYER');
+      });
     } else {
       state.industry.rivals.forEach(rival => {
         let weeklyRivalRevenue = 0;
@@ -31,24 +32,26 @@ export class StudioAutomation {
         // If a rival has very few projects, force them to bid on something to keep the world alive
         if (projects.length < 2) {
             const opportunities = state.market.opportunities.filter(o => !o.bids[rival.id]);
-            if (opportunities.length > 0 && rival.cash > 100000) {
+            const bidAmount = rng.rangeInt(10, 500) * 1000;
+            const canAfford = rival.cash > bidAmount * 1.5;
+            const isSimulation = true;
+
+            if (opportunities.length > 0 && (canAfford || isSimulation)) {
                 const opp = rng.pick(opportunities);
                 impacts.push({
                     type: 'OPPORTUNITY_UPDATED',
                     payload: {
                         opportunityId: opp.id,
                         rivalId: rival.id,
-                        bid: { amount: Math.floor(opp.costToAcquire * 1.2), terms: 'standard' }
+                        bid: { amount: Math.floor(opp.costToAcquire * 1.05), terms: 'standard' }
                     }
                 });
             }
         }
 
         // 5. Maintenance Grant (Simulation Only)
-        // Prevent studios from hitting -1B and stopping all activity. 
-        // In a real game, they'd go bust, but for balance testing we want them to keep trying.
         if (rival.cash < -50000000) {
-           weeklyRivalRevenue += 100000000; // Inject 100M to reset them
+           weeklyRivalRevenue += 100000000; // Reset them
         }
 
         if (weeklyRivalRevenue > 0) {
@@ -58,6 +61,14 @@ export class StudioAutomation {
           });
         }
       });
+
+      // 6. Player Maintenance Grant
+      if (state.finance.cash < -50000000) {
+        impacts.push({
+          type: 'FUNDS_CHANGED',
+          payload: { amount: 100000000 }
+        });
+      }
     }
 
     return impacts;

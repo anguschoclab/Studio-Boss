@@ -1,6 +1,7 @@
 import { GameState, StateImpact, Opportunity, Project, Contract, RivalStudio } from '@/engine/types';
 import { RandomGenerator } from '../../utils/rng';
 import { buildProjectAndContracts } from '../../../store/storeUtils';
+import { generateOpportunity } from '../../generators/opportunities';
 
 /**
  * Opportunity System
@@ -97,12 +98,19 @@ export class OpportunitySystem {
       }
     });
 
-    // 4. Remove expired opportunities from market
-    if (expired.length > 0) {
-        const remaining = state.market.opportunities.filter(o => o.expirationWeek > state.week);
+    // 5. Passive Market Refresh (Ensure pool doesn't stay empty)
+    const currentOpportunities = impacts.find(i => i.type === 'INDUSTRY_UPDATE' && (i.payload as any)['market.opportunities'])
+        ? (impacts.find(i => i.type === 'INDUSTRY_UPDATE')!.payload as any)['market.opportunities']
+        : state.market.opportunities.filter(o => o.expirationWeek > state.week);
+
+    if (currentOpportunities.length < 6) {
+        const toGenerate = 4;
+        const talentPoolIds = Object.keys(state.industry.talentPool);
+        const newOpps = Array.from({ length: toGenerate }, () => generateOpportunity(rng, state.week, talentPoolIds));
+        
         impacts.push({
             type: 'INDUSTRY_UPDATE',
-            payload: { 'market.opportunities': remaining }
+            payload: { 'market.opportunities': [...currentOpportunities, ...newOpps] }
         });
     }
 
