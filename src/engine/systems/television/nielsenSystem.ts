@@ -139,7 +139,7 @@ export function calculateNielsenRatings(
   totalShows: number,
   rng: RandomGenerator
 ): NielsenSnapshot {
-  const timeSlot = (project as any).nielsenProfile?.timeSlot || assignTimeSlot(project);
+  const timeSlot: TimeSlot = (project as any).nielsenProfile?.timeSlot || assignTimeSlot(project);
   const slotConfig = TIME_SLOTS[timeSlot];
   const buzz = project.buzz || 50;
   const quality = project.reviewScore || 50;
