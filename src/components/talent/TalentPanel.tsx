@@ -62,12 +62,12 @@ export const TalentPanel = () => {
             </SelectContent>
           </Select>
 
-          <div className="flex gap-1.5 h-9 items-center px-2 bg-muted/10 rounded-lg border border-border/20">
+          <div className="flex flex-wrap gap-1.5 h-auto py-1 items-center px-2 bg-muted/10 rounded-lg border border-border/20">
             {(['all', 'actor', 'director', 'writer', 'producer'] as (TalentRole | 'all')[]).map(type => (
               <TooltipWrapper key={type} tooltip={`Filter by ${type}`} side="bottom">
                 <button 
                   onClick={() => setRoleFilter(type)}
-                  className={`px-3 py-1 text-[9px] uppercase tracking-wider font-black rounded-md transition-all ${
+                  className={`px-3 py-2 text-[9px] uppercase tracking-wider font-black rounded-md transition-all ${
                     roleFilter === type
                       ? 'bg-primary text-primary-foreground'
                       : 'text-muted-foreground hover:text-foreground'

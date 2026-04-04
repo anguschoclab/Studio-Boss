@@ -42,7 +42,7 @@ export const CommandCenter: React.FC = () => {
           </p>
         </div>
         
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <div className="px-5 py-2.5 bg-card/40 backdrop-blur-md rounded-xl border border-white/10 shadow-lg flex flex-col items-end transition-all hover:border-white/20 hover:bg-card/60">
             <span className="text-[9px] uppercase font-black text-muted-foreground/70 tracking-[0.2em] leading-none mb-1">Market Position</span>
             <span className="text-sm font-display font-black flex items-center gap-1.5 bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent drop-shadow-sm">

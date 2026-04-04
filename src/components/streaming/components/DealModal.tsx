@@ -163,7 +163,7 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
                             <button aria-pressed={contractType === t}
                               onClick={() => setContractType(t)}
                               className={cn(
-                                "flex-1 h-9 rounded-lg border text-[9px] font-black uppercase tracking-widest transition-all",
+                                "flex-1 h-9 p-2 rounded-lg border text-[9px] font-black uppercase tracking-widest transition-all",
                                 contractType === t ? "bg-primary text-black border-primary shadow-lg" : "bg-white/5 border-white/5 text-muted-foreground hover:bg-white/10"
                               )}
                             >
