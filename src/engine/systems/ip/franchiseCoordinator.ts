@@ -62,6 +62,11 @@ export function calculateFranchiseEquity(
     if (assets.length >= 5) {
       crossoverBonus += 0.15;
     }
+
+    // 🌌 The Universe Builder: Penalty for chaotic crossovers (too many genres, not enough synergy)
+    if (genres.length >= 4 && synergyHits < 2) {
+      crossoverBonus -= 0.20;
+    }
   }
   
   // 2. Format Diversity Multiplier
@@ -115,10 +120,17 @@ export function updateFranchiseHub(state: GameState, project: Project, rng: Rand
       const nextAssetIds = [...hub.assetIds, newAssetId];
       const relevantAssets = state.ip.vault.filter(a => nextAssetIds.includes(a.id));
 
+      // 🌌 The Universe Builder: Audience loyalty dilution when pushing out too many active projects
+      let updatedLoyalty = hub.audienceLoyalty;
+      if (hub.activeProjectIds.length >= 3) {
+        updatedLoyalty = clamp(updatedLoyalty - 5, 0, 100);
+      }
+
       updatedFranchises[franchiseId] = {
         ...hub,
         assetIds: nextAssetIds,
         lastReleaseWeeks: [...hub.lastReleaseWeeks, project.releaseWeek || state.week],
+        audienceLoyalty: updatedLoyalty,
         // Update synergy based on format diversity
         synergyMultiplier: clamp(hub.synergyMultiplier + 0.15, 1.0, 3.0) // 🌌 The Universe Builder: Synergy cap raised for mega-franchises.
       };
@@ -216,6 +228,12 @@ export function calculateFranchiseEvolutionImpacts(state: GameState, rng: Random
           const nextAssetIds = [...hub.assetIds, newAssetId];
           const nextReleaseWeeks = [...hub.lastReleaseWeeks, state.week];
           
+          // 🌌 The Universe Builder: Audience loyalty dilution when pushing out too many active projects
+          let updatedLoyalty = hub.audienceLoyalty;
+          if (hub.activeProjectIds.length >= 3) {
+            updatedLoyalty = clamp(updatedLoyalty - 5, 0, 100);
+          }
+
           impacts.push({
             type: 'FRANCHISE_UPDATED',
             payload: {
@@ -223,6 +241,7 @@ export function calculateFranchiseEvolutionImpacts(state: GameState, rng: Random
               update: {
                 assetIds: nextAssetIds,
                 lastReleaseWeeks: nextReleaseWeeks,
+                audienceLoyalty: updatedLoyalty,
                 synergyMultiplier: clamp(hub.synergyMultiplier + 0.15, 1.0, 3.0) // 🌌 The Universe Builder: Synergy cap raised for mega-franchises.
               }
             }

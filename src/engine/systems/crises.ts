@@ -35,9 +35,12 @@ export function generateCrisis(project: Project, rng: RandomGenerator): StateImp
  * Weekly roll for a production crisis. 
  * Integrated into the WeekCoordinator pipeline.
  */
-export function checkAndTriggerCrisis(project: Project, rng: RandomGenerator): StateImpact | null {
-  // 3% base chance of a production crisis per week
-  if (rng.next() < 0.03) {
+export function checkAndTriggerCrisis(project: Project, state: GameState, rng: RandomGenerator): StateImpact | null {
+  const studioProjectsCount = Object.keys(state.studio.internal.projects || {}).length;
+  // Base 3% chance, plus 0.5% for every concurrent project (mega-studios have more moving parts)
+  const baseChance = 0.03 + (studioProjectsCount * 0.005);
+
+  if (rng.next() < baseChance) {
     return generateCrisis(project, rng);
   }
   return null;

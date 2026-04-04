@@ -4,7 +4,7 @@ import { UNSCRIPTED_FORMATS } from '@/engine/data/unscriptedFormats';
 
 export function getFilmStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS]) {
   // The Studio Comptroller: Raised risk multipliers for all high-budget films to ensure extreme volatility.
-  const riskMultiplier = tier.budget >= 200_000_000 ? 12.0 : tier.budget >= 100_000_000 ? 6.0 : tier.budget >= 50_000_000 ? 3.0 : 1.5;
+  const riskMultiplier = tier.budget >= 200_000_000 ? 15.0 : tier.budget >= 100_000_000 ? 7.5 : tier.budget >= 50_000_000 ? 3.5 : 1.8;
 
   return {
     budget: tier.budget,
@@ -17,7 +17,7 @@ export function getFilmStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS
 
 export function getTvStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS], tvFormatData: typeof TV_FORMATS[keyof typeof TV_FORMATS], episodes: number) {
   // The Studio Comptroller: Scaled up TV mega-budget risks to mirror film stakes.
-  const scaleMultiplier = tier.budget >= 150_000_000 ? 8.0 : tier.budget >= 100_000_000 ? 5.0 : tier.budget > 50_000_000 ? 4.0 : 1.5;
+  const scaleMultiplier = tier.budget >= 150_000_000 ? 10.0 : tier.budget >= 100_000_000 ? 6.0 : tier.budget > 50_000_000 ? 4.5 : 1.8;
   const weeklyCost = tier.weeklyCost * tvFormatData.productionCostMultiplier * scaleMultiplier;
   const productionWeeks = Math.ceil(episodes * tvFormatData.productionWeeksPerEpisode * scaleMultiplier);
 
@@ -25,8 +25,8 @@ export function getTvStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS],
     weeklyCost,
     productionWeeks,
     developmentWeeks: Math.ceil(tier.developmentWeeks * tvFormatData.developmentWeeksModifier * scaleMultiplier),
-    // Increased base estimate multiplier (0.3 -> 0.4) for TV overhead logic, padding the upfront risk.
-    budget: weeklyCost * productionWeeks + (tier.budget * 0.4),
+    // The Studio Comptroller: Increased base estimate multiplier (0.4 -> 0.5) for TV overhead logic, padding the upfront risk.
+    budget: weeklyCost * productionWeeks + (tier.budget * 0.5),
     renewable: tvFormatData.renewable,
   };
 }
@@ -34,7 +34,7 @@ export function getTvStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS],
 
 export function getUnscriptedStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS], unscriptedFormatData: typeof UNSCRIPTED_FORMATS[keyof typeof UNSCRIPTED_FORMATS], episodes: number) {
   // The Studio Comptroller: Increased unscripted overhead to penalize inefficient sprawling productions.
-  const scaleMultiplier = tier.budget >= 100_000_000 ? 6.0 : tier.budget > 50_000_000 ? 4.0 : 1.5;
+  const scaleMultiplier = tier.budget >= 100_000_000 ? 7.5 : tier.budget > 50_000_000 ? 5.0 : 2.0;
   const weeklyCost = tier.weeklyCost * unscriptedFormatData.productionCostMultiplier * scaleMultiplier;
   const productionWeeks = Math.ceil(episodes * unscriptedFormatData.productionWeeksPerEpisode);
 
@@ -42,8 +42,8 @@ export function getUnscriptedStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET
     weeklyCost,
     productionWeeks,
     developmentWeeks: Math.ceil(tier.developmentWeeks * unscriptedFormatData.developmentWeeksModifier),
-    // Added minor overhead buffer (0.15 -> 0.20) for large unscripted formats.
-    budget: weeklyCost * productionWeeks + (tier.budget * 0.20),
+    // The Studio Comptroller: Added minor overhead buffer (0.20 -> 0.25) for large unscripted formats.
+    budget: weeklyCost * productionWeeks + (tier.budget * 0.25),
     renewable: unscriptedFormatData.renewable,
   };
 }

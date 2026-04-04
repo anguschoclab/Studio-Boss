@@ -31,7 +31,12 @@ const GENRE_PATTERNS: Record<string, string[][]> = {
     ['No Time to', 'VERB'],
     ['Mission:', 'ADJECTIVE'],
     ['Escape from', 'PLACE'],
-    ['The', 'NOUN', 'Reckoning']
+    ['The', 'NOUN', 'Reckoning'],
+    ['The', 'ADJECTIVE', 'Protocol'],
+    ['Project', 'ADJECTIVE', 'Zero'],
+    ['Operation', 'NOUN', 'Drop'],
+    ['The', 'NOUN', 'Syndicate'],
+    ['Deadly', 'NOUN']
   ],
   Comedy: [
     ['The', 'ADJECTIVE', 'NOUN'],
@@ -296,11 +301,15 @@ const GENRE_PATTERNS: Record<string, string[][]> = {
 const WORDS: Record<string, string[]> = {
   ADJECTIVE: ['Dark', 'Silent', 'Golden', 'Broken', 'Hidden', 'Last', 'Lost', 'Secret', 'Lethal', 'Final', 'Red', 'Black', 'Wild', 'Crazy', 'Funny', 'Beautiful', 'Brave', 'Fierce', 'Uncut', 'Quantum', 'Cyber', 'Neon', 'Hyper', 'Meta', 'Toxic', 'Viral', 'Cancel', 'Elevated', 'Atmospheric', 'Subversive', 'Procedural', 'Algorithmic', 'Tactical', 'Strategic', 'Covert', 'Clandestine', 'Stealth', 'Phantom', 'Ghost', 'Shadow', 'Rogue', 'Maverick', 'Renegade', 'Outlaw', 'Vigilante', 'Mercenary', 'Expendable', 'Disposable', 'Collateral', 'Fatal', 'Mortal', 'Awkward', 'Cringe', 'Based', 'Woke', 'Problematic', 'Cancelled', 'Triggered', 'Savage', 'Petty', 'Salty', 'Thirsty', 'Basic', 'Extra', 'Bougie', 'Ratchet', 'Sus', 'Cap', 'Overbudget', 'Tone-Deaf', 'Pretentious', 'Self-Indulgent', 'Liminal', 'Uncanny', 'Cash-Grab', 'Soulless', 'Manufactured', 'Algorithm-Approved', 'Tax-Exempt', 'Rebooted', 'Focus-Grouped', 'Monetized', 'Demonetized', 'Post-Credit', 'Data-Driven', 'Derivative', 'Gritty', 'Four-Quadrant', 'Ghostwritten', 'Out-of-Touch', 'Venture-Backed', 'Uncancelled', 'Defamatory', 'AI-Generated', 'Generative', 'Tax-Haven', 'Pivoting',
     'Post-Cancellable', 'Metrics-Driven', 'Hyper-Local', 'Transmedia', 'Vertical-Slice', 'Shareholder-Approved', 'Risk-Adjusted', 'Asset-Backed', 'Over-Indexed', 'Pre-Packaged', 'Demographic-Agnostic', 'Cross-Platform', 'Syndication-Ready', 'Merchandisable', 'Franchisable', 'Algorithmic-Optimal', 'Machine-Learned', 'Focus-Tested', 'Sanitized', 'Corporate-Mandated', 'Data-Mined', 'Merch-Driven', 'Tax-Writeoff', 'Laundered', 'Market-Tested', 'Brand-Safe', 'CGI-Heavy',
-    'Bingeable', 'Non-Union', 'Subsidized', 'Franchise-Ready', 'Syndicated'
+    'Bingeable', 'Non-Union', 'Subsidized', 'Franchise-Ready', 'Syndicated',
+    'Crypto-Backed', 'Hyper-Monetized', 'Prompt-Engineered', 'Over-Focus-Grouped', 'Vibe-Shifted',
+    'Parasocial', 'Doomscrolled', 'Clickbait', 'Uncanny-Valley', 'Metrics-Obsessed'
   ],
   NOUN: ['Shadow', 'Mirror', 'Ghost', 'Knight', 'City', 'Storm', 'Weapon', 'Target', 'Agent', 'Game', 'House', 'Night', 'Day', 'Star', 'Dream', 'Heart', 'World', 'Man', 'Woman', 'Boy', 'Girl', 'Multiverse', 'Franchise', 'Content', 'Algorithm', 'Meme', 'Podcast', 'Trauma', 'Nepotism', 'Vibe', 'Aesthetic', 'Metaverse', 'Crypto', 'Grifter', 'Situationship', 'IP', 'Recon', 'Extraction', 'Payload', 'Objective', 'Bounty', 'Crossfire', 'Infiltration', 'Exfiltration', 'Takeover', 'Lockdown', 'Overdrive', 'Showdown', 'Blowback', 'Backlash', 'Flashpoint', 'Ground Zero', 'Vanguard', 'Sentinel', 'Outpost', 'Stronghold', 'Influencer', 'Streamer', 'Vlogger', 'Viral', 'Trending', 'Cancel Culture', 'Scam', 'Hustle', 'Flex', 'Clout', 'Drip', 'Mood', 'Energy', 'Synergy', 'Deepfake', 'Blockbuster', 'CGI', 'PR Crisis', 'Apology Video', 'Subtweet', 'Ratio', 'Oscars Bait', 'Method Acting', 'Tax Write-Off', 'Hedge Fund', 'CGI Mush', 'Neomaximalism', 'Engagement Metric', 'Retention Rate', 'Shell Company', 'Tax Haven', 'LLM', 'Zero-Day', 'Psy-Op', 'Astroturf', 'Focus Group', 'NDA', 'Clickfarm', 'Content Farm', 'Brand Deal',
     'Brand Ecosystem', 'Content Silo', 'Monetization Strategy', 'Value Extraction', 'Strategic Asset', 'Content Portfolio', 'Franchise Management', 'Demographic Target', 'Quarterly Earnings', 'Shareholder Meeting', 'Boardroom Coup', 'Hostile Takeover', 'Merger and Acquisition', 'Tax Loophole', 'NDA Violation', 'PR Spin', 'Damage Control', 'Focus Group Feedback', 'Audience Retention', 'CGI Void', 'Post-Credit Scene', 'Cinematic Universe', 'Merchandising Rights', 'Test Audience', 'Algorithm Spike', 'A.I. Artifact', 'Studio Mandate', 'Box Office Flop', 'Tax Shelter',
-    'Focus-Group Participant', 'Brand Identity', 'Product Placement', 'Merger', 'Acquisition'
+    'Focus-Group Participant', 'Brand Identity', 'Product Placement', 'Merger', 'Acquisition',
+    'Crypto-Wallet', 'Doomscroll', 'Parasocial Relationship', 'Microaggression', 'Burnout',
+    'Clickfarm', 'Generative AI', 'Large Language Model', 'Data Harvest', 'Engagement Bait'
   ],
   VERB: ['Die', 'Run', 'Shoot', 'Hide', 'Seek', 'Find', 'Kill', 'Save', 'Love', 'Kiss', 'Dance', 'Sing', 'Fly', 'Fall', 'Cancel', 'Reboot', 'Swipe', 'Ghost', 'Stream', 'Hack', 'Leak', 'Trend', 'Post', 'Upload', 'Download', 'Share', 'Like', 'Subscribe', 'Follow', 'Unfollow', 'Block', 'Mute', 'Report', 'Ban', 'Doxx', 'Gaslight', 'Girlboss', 'Gatekeep', 'Manifest', 'Vibe', 'Monetize', 'Synergize', 'Focus-Group', 'Test-Screen', 'A/B Test', 'Ratio', 'Doxx', 'Subtweet', 'Launder', 'Shelve', 'Pivot', 'Astroturf', 'Outsource',
     'Gamify', 'Syndicate', 'Cross-Promote', 'Divest', 'Liquidate', 'Acquire', 'Merchandize', 'Astroturf', 'Greenwash', 'Pinkwash', 'Retcon', 'Gaslight', 'Girlboss', 'Gatekeep',

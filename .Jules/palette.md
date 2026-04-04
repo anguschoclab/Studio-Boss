@@ -1,3 +1,3 @@
-## 2024-04-02 - Icon Button Accessibility
-**Learning:** Icon-only buttons used for dismiss/close actions (like the one in `LiveAuctionDashboard.tsx`) often lack descriptive labels, making them invisible or confusing to screen readers.
-**Action:** Always verify that buttons containing only an SVG/Icon have an `aria-label` attribute describing their function.
+## 2026-04-03 - Adding aria-pressed to toggleable UI cards and buttons
+**Learning:** In Studio Boss, many interactive selection components (like filter pills in NewsFeed or Archetype selection cards) use visual styling changes (like borders and background colors driven by Tailwind classes) to indicate selection state, but lack semantic HTML attributes for screen readers to identify this state.
+**Action:** Always verify if a custom interactive element that toggles state includes `aria-pressed={condition}`. This provides crucial context to accessibility tools without requiring structural HTML changes, ensuring "micro-UX" wins are easily maintainable.
