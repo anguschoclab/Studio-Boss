@@ -18,7 +18,7 @@ describe('Finance: Cult Classic Revenue', () => {
       market: { buyers: [] }
     } as any;
     const revNormal = calculateWeeklyRevenue(mockStateNormal);
-    expect(revNormal).toBe(20000); // 50000 * 0.40
+    expect(revNormal).toBe(17500); // 50000 * 0.35
 
     // Cult classic project overrides low base with ironic viewing multiplier
     const cultProject = { ...baseProject, isCultClassic: true, weeklyRevenue: 50000 };

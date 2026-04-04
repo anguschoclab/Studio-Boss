@@ -43,6 +43,7 @@ export class MetricsCollector {
     
     const rivalTotalCash = rivals.reduce((sum, r) => sum + (Number(r.cash) || 0), 0);
     const platformTotalCash = platforms.reduce((sum, p) => sum + (Number(p.cash) || 0), 0);
+    const playerCash = Number(state.finance.cash) || 0;
     
     // Increment total retirements
     this.totalRetired += (summary as any).retiredCount || 0;
@@ -107,8 +108,8 @@ export class MetricsCollector {
     });
 
     // Total industry cash (for market share)
-    const totalAssets = (state.finance.cash || 0) + (rivalTotalCash || 0) + (platformTotalCash || 0);
-    const marketShare = totalAssets > 0 ? (state.finance.cash / totalAssets) * 100 : 0;
+    const totalAssets = playerCash + rivalTotalCash + platformTotalCash;
+    const marketShare = totalAssets > 0 ? (playerCash / totalAssets) * 100 : 0;
 
     // totalSystemCash = player + rivals + platforms + (active budgets estimate)
     const activeBudgets = Object.values(state.studio.internal.projects)
@@ -123,8 +124,9 @@ export class MetricsCollector {
     allStudios.forEach(studio => {
         studio.projects.forEach(p => {
             const formatMatch = (p.format || '').toLowerCase();
-            if ((formatMatch === 'tv' || formatMatch === 'series') && (p as any).nielsenProfile) {
-                totalNielsenDemo += (p as any).nielsenProfile.seasonAvgKeyDemo || 0;
+            const nProfile = (p as any).nielsenProfile;
+            if ((formatMatch === 'tv' || formatMatch === 'series') && nProfile) {
+                totalNielsenDemo += Number(nProfile.seasonAvgKeyDemo) || 0;
                 tvProjectCount++;
             }
             if (p.activeCut) {
@@ -144,7 +146,7 @@ export class MetricsCollector {
       activeProjects: Object.values(state.studio.internal.projects).filter(p => !['released', 'archived', 'post_release'].includes(p.state)).length,
       completedProjects: worldCompletedCount,
       retiredCount: this.totalRetired,
-      bankruptcyCount: rivals.filter(r => r.cash <= -50000000).length,
+      bankruptcyCount: rivals.filter(r => (Number(r.cash) || 0) <= -50000000).length,
       marketShare: marketShare,
       industryLeader: leader?.name,
       topGenreROI: { genre: topGenre, roi: maxROI },
