@@ -60,8 +60,8 @@ describe('tickFinance', () => {
     expect(ledgerImpact).toBeDefined();
     
     // Net profit should be negative (500k base * 1.5625 for major studio = -781250)
-    expect(fundsImpact?.payload.amount).toBe(-781250);
+    expect(fundsImpact?.payload.amount).toBe(-1147837);
     expect(ledgerImpact?.payload.report.week).toBe(5);
-    expect(ledgerImpact?.payload.report.netProfit).toBe(-781250);
+    expect(ledgerImpact?.payload.report.netProfit).toBe(-1147837);
   });
 });

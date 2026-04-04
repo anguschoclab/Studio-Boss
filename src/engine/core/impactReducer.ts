@@ -141,6 +141,30 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
       };
     }
 
+    case 'TALENT_ADDED': {
+      const { talent } = impact.payload;
+      return {
+        ...state,
+        industry: {
+          ...state.industry,
+          talentPool: { ...state.industry.talentPool, [talent.id]: talent }
+        }
+      };
+    }
+
+    case 'TALENT_REMOVED': {
+      const { talentId } = impact.payload;
+      const talentPool = { ...state.industry.talentPool };
+      delete talentPool[talentId];
+      return {
+        ...state,
+        industry: {
+          ...state.industry,
+          talentPool
+        }
+      };
+    }
+
     case 'BUYER_UPDATED': {
       const { buyerId, update } = impact.payload;
       // ⚡ Bolt: Consolidated mapping array allocation to O(n) for loop
@@ -238,9 +262,9 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
           if (project) {
               const format = project.format;
               const genre = project.genre ? project.genre.toLowerCase() : '';
+                // Enhance the boost for trashy reality TV or horror on scandals
               if (format === 'unscripted' || genre.includes('horror')) {
-                  // Trashy reality TV or horror gets a temporary buzz boost from scandals
-                  projects[pid] = { ...project, buzz: Math.min(100, (project.buzz || 0) + Math.floor(scandal.severity / 5)) };
+                    projects[pid] = { ...project, buzz: Math.min(100, (project.buzz || 0) + Math.floor(scandal.severity / 2)) };
               }
           }
       }
@@ -340,7 +364,19 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     }
 
     case 'FINANCE_TRANSACTION': {
-      const { amount } = impact.payload;
+      const { amount, targetId } = impact.payload;
+      if (targetId && targetId !== 'player') {
+        const rivals = state.industry.rivals.map(r => 
+          r.id === targetId ? { ...r, cash: r.cash + amount } as RivalStudio : r
+        );
+        return {
+          ...state,
+          industry: {
+            ...state.industry,
+            rivals
+          }
+        };
+      }
       return applySingleImpact(state, { type: 'FUNDS_CHANGED', payload: { amount } });
     }
 
