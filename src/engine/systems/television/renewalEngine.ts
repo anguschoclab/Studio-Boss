@@ -14,9 +14,15 @@ export function evaluateRenewal(
     return 'ON_AIR';
   }
 
-  // 📺 The Syndication Baron: Tweaked streaming renewal thresholds: platforms now cancel expensive shows faster,
-  // but reward consistent multi-season hits and exceptionally high review scores (season-over-season quality).
+  // 🏆 The Prestige Effect: Successful award recognition now significantly lowers the cancellation threshold,
+  // acknowledging that critical acclaim (Emmys/Globes) can justify continuing a lower-rated series.
+  const awardWins = (project.awards || []).filter(a => a.status === 'won').length;
   let dynamicThreshold = threshold;
+  
+  // Each major award win lowers the required rating threshold by 1.5 points (limit to 3.0 total reduction)
+  const awardLeniency = Math.min(3.0, awardWins * 1.5);
+  dynamicThreshold -= awardLeniency;
+
   if (project.budgetTier === 'blockbuster') {
     dynamicThreshold += 2.0; // Cancel expensive shows faster
   } else if (project.budgetTier === 'high') {

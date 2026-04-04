@@ -395,7 +395,17 @@ export type AwardCategory =
   | 'Golden Lion'
   | 'Golden Bear'
   | 'Audience Award'
-  | 'Best Narrative Feature';
+  | 'Best Narrative Feature'
+  | 'Best Drama Series'
+  | 'Best Comedy Series'
+  | 'Best Limited Series'
+  | 'Best TV Movie'
+  | 'Best Actor (Drama)'
+  | 'Best Actress (Drama)'
+  | 'Best Actor (Comedy)'
+  | 'Best Actress (Comedy)'
+  | 'Best Supporting Actor (TV)'
+  | 'Best Supporting Actress (TV)';
 
 export type AwardStatus = 'won' | 'nominated';
 

@@ -154,7 +154,7 @@ export class TalentSystem {
 
         if (qualifiesForBonus) {
           const multiplier = (award.category.includes('Director') || award.category.includes('Actor') || award.category.includes('Actress') || award.category.includes('Screenplay')) ? 1.0 : 0.5;
-          const isPrestige = ['Academy Awards', 'Cannes Film Festival', 'Venice Film Festival'].includes(award.body);
+          const isPrestige = ['Academy Awards', 'Primetime Emmys', 'Cannes Film Festival', 'Venice Film Festival'].includes(award.body);
           
           const boosts = applyAwardBoostsToTalent(talent, award, multiplier, isPrestige);
 

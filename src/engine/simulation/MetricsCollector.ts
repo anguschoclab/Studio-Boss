@@ -15,16 +15,27 @@ export interface SimulationMetrics {
   marketShare: number;
   industryLeader?: string;
   topGenreROI?: { genre: string; roi: number };
+  tvAwardsWon?: number;
+  tvGenreROI?: { genre: string; roi: number };
+  averageA_ListCount: number;
+  totalBailoutCash: number;
 }
 
 export class MetricsCollector {
   private history: SimulationMetrics[] = [];
   private totalRetired = 0;
+  private totalBailoutCash = 0;
   private genreStats: Record<string, { cost: number; revenue: number }> = {};
+  private tvGenreStats: Record<string, { cost: number; revenue: number }> = {};
+  private totalTvAwards = 0;
   
   public record(state: GameState, summary: WeekSummary): void {
     const rivals = state.industry.rivals;
     const platforms = state.market.buyers.filter(b => b.archetype === 'streamer') as any[];
+    
+    // Total bails tracking (Phase 2 hardening)
+    const currentBailouts = (summary as any).totalBailouts || 0;
+    this.totalBailoutCash += currentBailouts;
     
     const rivalTotalCash = rivals.reduce((sum, r) => sum + r.cash, 0);
     const platformTotalCash = platforms.reduce((sum, p) => sum + (p.cash || 0), 0);
@@ -45,15 +56,25 @@ export class MetricsCollector {
             const isFinished = ['released', 'archived', 'post_release'].includes(p.state);
             if (isFinished) worldCompletedCount++;
 
-            // ROI Tracking (Accumulate data for all projects that have a budget, even if still in release)
+            // ROI Tracking
             if (p.budget > 0 && (p.revenue > 0 || isFinished)) {
                 const genre = p.genre || 'Unknown';
                 if (!this.genreStats[genre]) this.genreStats[genre] = { cost: 0, revenue: 0 };
                 this.genreStats[genre].cost += p.budget;
                 this.genreStats[genre].revenue += p.revenue;
+
+                if (p.format === 'tv') {
+                  if (!this.tvGenreStats[genre]) this.tvGenreStats[genre] = { cost: 0, revenue: 0 };
+                  this.tvGenreStats[genre].cost += p.budget;
+                  this.tvGenreStats[genre].revenue += p.revenue;
+                }
             }
         });
     });
+
+    // Track TV Awards dominance
+    const tvAwardEvents = (summary.newsEvents || []).filter(e => e.type === 'AWARD' && e.headline.includes('Best'));
+    this.totalTvAwards += tvAwardEvents.length;
 
     // Find Industry Leader (Highest Cash)
     const leader = allStudios.sort((a, b) => b.cash - a.cash)[0];
@@ -66,6 +87,17 @@ export class MetricsCollector {
         if (roi > maxROI) {
             maxROI = roi;
             topGenre = genre;
+        }
+    });
+
+    // Find Top TV Genre ROI
+    let topTvGenre = 'None';
+    let maxTvROI = 0;
+    Object.entries(this.tvGenreStats).forEach(([genre, stats]) => {
+        const roi = stats.cost > 0 ? (stats.revenue / stats.cost) : 0;
+        if (roi > maxTvROI) {
+            maxTvROI = roi;
+            topTvGenre = genre;
         }
     });
 
@@ -92,7 +124,11 @@ export class MetricsCollector {
       bankruptcyCount: rivals.filter(r => r.cash <= -50000000).length,
       marketShare: marketShare,
       industryLeader: leader?.name,
-      topGenreROI: { genre: topGenre, roi: maxROI }
+      topGenreROI: { genre: topGenre, roi: maxROI },
+      tvAwardsWon: this.totalTvAwards,
+      tvGenreROI: { genre: topTvGenre, roi: maxTvROI },
+      averageA_ListCount: Object.values(state.industry.talentPool).filter(t => t.prestige >= 80).length,
+      totalBailoutCash: this.totalBailoutCash
     };
 
     this.history.push(metrics);
@@ -126,6 +162,10 @@ World Releases: ${last.completedProjects}
 Player Active Projects: ${last.activeProjects}
 Total Retirements: ${last.retiredCount}
 Player Market Share: ${last.marketShare.toFixed(2)}%
+TV Awards Won: ${last.tvAwardsWon}
+Top TV Genre ROI: ${last.tvGenreROI?.genre} (${last.tvGenreROI?.roi.toFixed(2)}x)
+A-List Count: ${last.averageA_ListCount}
+Total Bailout Cash (Artifical): ${format(last.totalBailoutCash)}
 ------------------------------------------
     `;
   }

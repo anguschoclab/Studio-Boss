@@ -81,6 +81,7 @@ export interface IPAsset {
   totalEpisodes: number;
   rightsExpirationWeek: number; 
   rightsOwner: 'STUDIO' | 'MARKET' | 'RIVAL';
+  ownerStudioId?: string; // Specific ID for rival or player ownership
   isSynergyActive?: boolean; 
 }
 

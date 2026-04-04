@@ -455,13 +455,81 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     };
   }
   if (impact.type === 'INDUSTRY_UPDATE') {
-    const payload = impact.payload as any;
-    Object.entries(payload).forEach(([path, value]) => {
-      if (path === 'market.opportunities') {
-        newState = { ...newState, market: { ...newState.market, opportunities: value as any } };
+      const payload = impact.payload as any;
+      let nextState = { ...state };
+
+      // 1. Generic path updates (Existing)
+      Object.entries(payload).forEach(([path, value]) => {
+        if (path === 'market.opportunities') {
+          nextState = { ...nextState, market: { ...nextState.market, opportunities: value as any } };
+        }
+      });
+
+      // 2. Merger Logic (Phase 1 Refinement)
+      const { mergedRivalId, acquirerId } = payload;
+      if (mergedRivalId) {
+        const target = state.industry.rivals.find(r => r.id === mergedRivalId);
+        if (target) {
+          // Transfer Projects & Platforms
+          if (acquirerId === 'player') {
+            // --- Merge into Player ---
+            const mergedProjects = { ...nextState.studio.internal.projects, ...(target.projects || {}) };
+            // Transfer Vault IP
+            const mergedVault = nextState.ip.vault.map(asset => {
+              if (asset.ownerStudioId === mergedRivalId) {
+                return { ...asset, rightsOwner: 'STUDIO' as const, ownerStudioId: undefined };
+              }
+              return asset;
+            });
+
+            nextState = {
+              ...nextState,
+              studio: {
+                ...nextState.studio,
+                internal: { ...nextState.studio.internal, projects: mergedProjects }
+              },
+              ip: { ...nextState.ip, vault: mergedVault }
+            };
+          } else {
+            // --- Merge into another Rival ---
+            const rivals = nextState.industry.rivals.map(r => {
+              if (r.id === acquirerId) {
+                return {
+                  ...r,
+                  projects: { ...(r.projects || {}), ...(target.projects || {}) },
+                  ownedPlatforms: [...(r.ownedPlatforms || []), ...(target.ownedPlatforms || [])]
+                };
+              }
+              return r;
+            });
+            // Transfer Vault IP
+            const mergedVault = nextState.ip.vault.map(asset => {
+              if (asset.ownerStudioId === mergedRivalId) {
+                return { ...asset, ownerStudioId: acquirerId };
+              }
+              return asset;
+            });
+
+            nextState = { 
+                ...nextState, 
+                industry: { ...nextState.industry, rivals },
+                ip: { ...nextState.ip, vault: mergedVault }
+            };
+          }
+
+          // Final: Remove merged studio from the world
+          nextState = {
+            ...nextState,
+            industry: {
+              ...nextState.industry,
+              rivals: nextState.industry.rivals.filter(r => r.id !== mergedRivalId)
+            }
+          };
+        }
       }
-    });
-  }
+
+      return nextState;
+    }
   if (impact.newTalents) {
     const talentPool = { ...newState.industry.talentPool };
     impact.newTalents.forEach(t => {

@@ -71,25 +71,29 @@ export class StudioAutomation {
             }
         }
 
-        // 6. Maintenance Grant (Simulation Only)
-        if (rival.cash < -100000000) {
-           weeklyRivalRevenue += 150000000; // Reset them if they hit rock bottom
-        }
+        // 6. Distress Signal & Consolidation Readiness
+        const isDistressed = rival.cash < 0;
+        const totalBails = (rival.cash < -100000000) ? 1 : 0; // Log for metrics, but don't apply cash yet
 
-        if (weeklyRivalRevenue > 0) {
+        if (weeklyRivalRevenue > 0 || isDistressed !== rival.isAcquirable) {
           impacts.push({
             type: 'RIVAL_UPDATED',
-            payload: { rivalId: rival.id, update: { cash: rival.cash + weeklyRivalRevenue } }
-          });
+            payload: { 
+              rivalId: rival.id, 
+              update: { 
+                cash: rival.cash + weeklyRivalRevenue,
+                isAcquirable: isDistressed 
+              } 
+            },
+            // Metadata for MetricsCollector
+            totalBailouts: totalBails 
+          } as any);
         }
       });
 
-      // 6. Player Maintenance Grant
-      if (state.finance.cash < -50000000) {
-        impacts.push({
-          type: 'FUNDS_CHANGED',
-          payload: { amount: 100000000 }
-        });
+      // Player Distress Signal
+      if (state.finance.cash < 0 && !state.studio.isAcquirable) {
+         // Logic for player acquisition would go here in Phase 5
       }
     }
 

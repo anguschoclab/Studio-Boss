@@ -59,8 +59,32 @@ export const AWARD_CONFIGS: AwardConfig[] = [
 
   // --- PRIMETIME EMMYS ---
   {
-    body: 'Primetime Emmys', category: 'Best Series', format: 'tv',
-    evaluator: p => (p.awardsProfile?.criticScore || 0) + (p.awardsProfile?.culturalHeat || 0) + (p.awardsProfile?.industryNarrativeScore || 0) * 0.5
+    body: 'Primetime Emmys', category: 'Best Drama Series', format: 'tv',
+    evaluator: p => (p.awardsProfile?.criticScore || 0) + (p.awardsProfile?.prestigeScore || 0) + (p.awardsProfile?.industryNarrativeScore || 0) * 0.8
+  },
+  {
+    body: 'Primetime Emmys', category: 'Best Comedy Series', format: 'tv',
+    evaluator: p => (p.awardsProfile?.criticScore || 0) + (p.awardsProfile?.culturalHeat || 0) + (p.awardsProfile?.populistAppeal || 0) * 0.5
+  },
+  {
+    body: 'Primetime Emmys', category: 'Best Limited Series', format: 'tv',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.5 + (p.awardsProfile?.criticScore || 0)
+  },
+  {
+    body: 'Primetime Emmys', category: 'Best Actor (Drama)', format: 'tv',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) + (p.awardsProfile?.prestigeScore || 0) * 0.5
+  },
+  {
+    body: 'Primetime Emmys', category: 'Best Actress (Drama)', format: 'tv',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) + (p.awardsProfile?.prestigeScore || 0) * 0.5
+  },
+  {
+    body: 'Primetime Emmys', category: 'Best Actor (Comedy)', format: 'tv',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) + (p.awardsProfile?.culturalHeat || 0) * 0.5
+  },
+  {
+    body: 'Primetime Emmys', category: 'Best Actress (Comedy)', format: 'tv',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) + (p.awardsProfile?.culturalHeat || 0) * 0.5
   },
 
   // --- GOLDEN GLOBES ---
@@ -69,8 +93,16 @@ export const AWARD_CONFIGS: AwardConfig[] = [
     evaluator: p => (p.awardsProfile?.populistAppeal || 0) + (p.awardsProfile?.culturalHeat || 0) + (p.buzz / 2)
   },
   {
-    body: 'Golden Globes', category: 'Best Series', format: 'tv',
-    evaluator: p => (p.awardsProfile?.populistAppeal || 0) + (p.awardsProfile?.culturalHeat || 0) + (p.buzz / 2)
+    body: 'Golden Globes', category: 'Best Drama Series', format: 'tv',
+    evaluator: p => (p.awardsProfile?.prestigeScore || 0) + (p.awardsProfile?.culturalHeat || 0) + (p.buzz / 4)
+  },
+  {
+    body: 'Golden Globes', category: 'Best Comedy Series', format: 'tv',
+    evaluator: p => (p.awardsProfile?.populistAppeal || 0) + (p.awardsProfile?.culturalHeat || 0) + (p.buzz / 3)
+  },
+  {
+    body: 'Golden Globes', category: 'Best TV Movie', format: 'tv',
+    evaluator: p => (p.awardsProfile?.craftScore || 0) + (p.awardsProfile?.criticScore || 0)
   },
 
   // --- INDEPENDENT SPIRIT AWARDS ---
