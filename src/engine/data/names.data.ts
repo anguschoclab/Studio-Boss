@@ -160,7 +160,17 @@ export const MOTTOS: string[] = [
   'We know what you want before you do.',
   'Leveraging assets, expanding universes.',
   'Because art is just a tax write-off.',
-  'If it worked once, we will do it again.'
+  'If it worked once, we will do it again.',
+  'Because you will watch it anyway.',
+  'We don\'t make art, we make Q3 projections.',
+  'Your childhood, optimized for shareholder value.',
+  'Replacing creativity with data since 2025.',
+  'We own the rights, you own the subscription.',
+  'Every frame a focus group.',
+  'If it\'s not a cinematic universe, it\'s not cinema.',
+  'Lowering the bar so you don\'t have to.',
+  'We pivot to whatever the algorithm demands.',
+  'Art is dead, content is forever.'
 ];
 
 export const MALE_FIRST_NAMES: string[] = [

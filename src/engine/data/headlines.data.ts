@@ -197,7 +197,12 @@ export const MARKET_HEADLINES = [
   'Demographic data shows {pct}% of viewers are just scrolling on their phones while the movie plays.',
   'Theater chains report {pct}% increase in people asking for refunds after watching CGI disasters.',
   'Venture capitalists inject {pct}% more funding into AI-generated media start-ups.',
-  'Focus groups reject {pct}% of original ideas, preferring "things they already know".'
+  'Focus groups reject {pct}% of original ideas, preferring "things they already know".',
+  'Focus group refuses to leave testing facility until protagonist gets a dog',
+  'Algorithm forces {pct}% reduction in lighting budget, citing "gritty realism"',
+  'Analysts predict the entire indie film market will be replaced by a single TikTok filter',
+  'Studio accidentally creates a cinematic universe out of a discontinued breakfast cereal',
+  'Box office miraculously saved by {pct}% surge in ironic hate-watching'
 ];
 
 export const TALENT_HEADLINES = [
@@ -404,7 +409,12 @@ export const TALENT_HEADLINES = [
   'On-set \'vibe coordinator\' for {projectName} quits, citing unmanageable egos.',
   '{directorName} spends entirely too much of the {projectName} budget on vintage lenses.',
   'Lead actress in {projectName} refuses to do press, sending her publicist in a mask instead.',
-  'Studio brings in three ghostwriters to \'punch up\' the third act of {projectName}.'
+  'Studio brings in three ghostwriters to \'punch up\' the third act of {projectName}.',
+  '{directorName} insists the boom mic visible in {projectName} is a meta-commentary on the surveillance state',
+  'Actor in {projectName} demands a separate trailer for their spiritual advisor',
+  'Lead actress goes full method for {projectName}, officially divorces her husband for real',
+  '{directorName} uses AI to write their award acceptance speech, accidentally thanks a washing machine brand',
+  'Cast of {projectName} refuses to do press unless they are allowed to promote their crypto wallets'
 ];
 
 export const RIVAL_TEMPLATES = [
