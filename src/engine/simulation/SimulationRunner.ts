@@ -1,4 +1,4 @@
-import { GameState, StateImpact } from '@/engine/types';
+import { GameState, StateImpact, WeekSummary } from '../types';
 import { initializeGame } from '../core/gameInit';
 import { WeekCoordinator } from '../services/WeekCoordinator';
 import { TalentLifecycleSystem } from '../systems/talent/TalentLifecycleSystem';
@@ -23,10 +23,12 @@ export class SimulationRunner {
     weeks: number, 
     seed: number = 42, 
     archetype: any = 'major', 
+    persona: string = 'balanced',
     autoPilot: boolean = true
   ): SimulationResult {
     const metrics = new MetricsCollector();
     let state = initializeGame('Headless Studio', archetype, seed);
+    (state as any).persona = persona;
     
     // Initial record
     metrics.record(state, { fromWeek: 0, toWeek: 1 } as any);
@@ -38,69 +40,12 @@ export class SimulationRunner {
       const { newState: steppedState, summary, impacts: engineImpacts } = WeekCoordinator.execute(state, rng);
       state = steppedState;
 
-      // 2. Project Phase Advancement (The missing link)
-      const advancementImpacts: StateImpact[] = [];
-      const talentMap = new Map(Object.entries(state.industry.talentPool));
-      
-      // Player Projects
-      Object.values(state.studio.internal.projects).forEach(project => {
-        const contracts = state.studio.internal.contracts.filter(c => c.projectId === project.id);
-        const { project: nextProject, update } = advanceProject(
-          project, 
-          state.week, 
-          state.studio.prestige, 
-          contracts, 
-          talentMap as any, 
-          rng
-        );
-        
-        if (nextProject.state !== project.state || nextProject.weeksInPhase !== project.weeksInPhase) {
-          advancementImpacts.push({
-            type: 'PROJECT_UPDATED',
-            payload: { projectId: project.id, update: nextProject }
-          });
-          if (update) {
-            advancementImpacts.push({
-              type: 'NEWS_ADDED',
-              payload: { headline: update, description: '', category: 'general' }
-            });
-          }
-        }
-      });
-
-      // Rival Projects
-      state.industry.rivals.forEach(rival => {
-        if (!rival.projects) return;
-        Object.values(rival.projects).forEach(project => {
-          const { project: nextProject } = advanceProject(
-            project,
-            state.week,
-            rival.prestige,
-            [], // Rivals have simplified contracts for now
-            talentMap as any,
-            rng
-          );
-
-          if (nextProject.state !== project.state || nextProject.weeksInPhase !== project.weeksInPhase) {
-            advancementImpacts.push({
-              type: 'RIVAL_UPDATED',
-              payload: { 
-                rivalId: rival.id, 
-                update: { 
-                  projects: { ...rival.projects, [project.id]: nextProject } 
-                } 
-              }
-            });
-          }
-        });
-      });
-
       // 3. Studio Automation (Greenlights, Pitches, Releases)
       // This handles the operational "blocking" states for both player and rivals
       const playerAutomation = autoPilot ? StudioAutomation.tick(state, rng, true) : [];
       const rivalAutomation = StudioAutomation.tick(state, rng, false);
       
-      // 4. Headless Bidding/Buying for Player (Still use Controller for persona specific bidding)
+      // 4. Headless Bidding/Buying for Player
       const playerBidding = autoPilot ? HeadlessController.tick(state, rng) : [];
       
       // 5. Talent Lifecycle (Aging/Retirement)
@@ -109,7 +54,6 @@ export class SimulationRunner {
       // 6. Consolidate and Apply All Side Impacts
       const allImpacts = [
           ...engineImpacts, 
-          ...advancementImpacts, 
           ...playerAutomation, 
           ...rivalAutomation, 
           ...playerBidding, 

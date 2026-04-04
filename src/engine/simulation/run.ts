@@ -14,14 +14,15 @@ const args = (process.argv || []).slice(2);
 const weeks = parseInt(args.find((_: string, i: number) => args[i-1] === '--weeks') || '104');
 const runs = parseInt(args.find((_: string, i: number) => args[i-1] === '--runs') || '1');
 const archetype = (args.find((_: string, i: number) => args[i-1] === '--archetype') || 'major') as ArchetypeKey;
+const persona = args.find((_: string, i: number) => args[i-1] === '--persona') || 'balanced';
 const seed = parseInt(args.find((_: string, i: number) => args[i-1] === '--seed') || Date.now().toString().slice(-4));
 
 console.log(`🚀 Starting Studio Boss Headless Simulation...`);
-console.log(`Weeks: ${weeks} | Archetype: ${archetype} | Seed: ${seed} | Runs: ${runs}\n`);
+console.log(`Weeks: ${weeks} | Archetype: ${archetype} | Persona: ${persona} | Seed: ${seed} | Runs: ${runs}\n`);
 
 for (let r = 0; r < runs; r++) {
   const currentSeed = seed + r;
-  const result = SimulationRunner.run(weeks, currentSeed, archetype, true);
+  const result = SimulationRunner.run(weeks, currentSeed, archetype, persona, true);
   
   const report = result.metrics.getSummaryReport();
   console.log(`Run ${r + 1}: ${report}`);

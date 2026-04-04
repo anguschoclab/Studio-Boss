@@ -98,19 +98,18 @@ export class OpportunitySystem {
       }
     });
 
-    // 5. Passive Market Refresh (Ensure pool doesn't stay empty)
-    const currentOpportunities = impacts.find(i => i.type === 'INDUSTRY_UPDATE' && (i.payload as any)['market.opportunities'])
-        ? (impacts.find(i => i.type === 'INDUSTRY_UPDATE')!.payload as any)['market.opportunities']
-        : state.market.opportunities.filter(o => o.expirationWeek > state.week);
-
-    if (currentOpportunities.length < 6) {
-        const toGenerate = 4;
+    // 5. Cleanup & Replenishment
+    // We must ALWAYS apply an update if there were expired items or if we need replenishment
+    const remainingOpportunities = state.market.opportunities.filter(o => o.expirationWeek > state.week);
+    
+    if (expired.length > 0 || remainingOpportunities.length < 8) {
+        const toGenerate = Math.max(0, 8 - remainingOpportunities.length);
         const talentPoolIds = Object.keys(state.industry.talentPool);
         const newOpps = Array.from({ length: toGenerate }, () => generateOpportunity(rng, state.week, talentPoolIds));
         
         impacts.push({
             type: 'INDUSTRY_UPDATE',
-            payload: { 'market.opportunities': [...currentOpportunities, ...newOpps] }
+            payload: { 'market.opportunities': [...remainingOpportunities, ...newOpps] }
         });
     }
 

@@ -142,7 +142,9 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     }
 
     case 'TALENT_ADDED': {
+      if (!impact.payload) return state;
       const { talent } = impact.payload;
+      if (!talent) return state;
       return {
         ...state,
         industry: {
@@ -153,7 +155,9 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     }
 
     case 'TALENT_REMOVED': {
+      if (!impact.payload) return state;
       const { talentId } = impact.payload;
+      if (!talentId) return state;
       const talentPool = { ...state.industry.talentPool };
       delete talentPool[talentId];
       return {
@@ -457,6 +461,13 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
         newState = { ...newState, market: { ...newState.market, opportunities: value as any } };
       }
     });
+  }
+  if (impact.newTalents) {
+    const talentPool = { ...newState.industry.talentPool };
+    impact.newTalents.forEach(t => {
+      talentPool[t.id] = t;
+    });
+    newState = { ...newState, industry: { ...newState.industry, talentPool } };
   }
   if (impact.newIPAssets) {
     const newAssetIds = new Set(impact.newIPAssets.map(a => a.id));

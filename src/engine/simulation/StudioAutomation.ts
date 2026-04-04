@@ -28,30 +28,52 @@ export class StudioAutomation {
           }
         });
 
-        // 4. Slate Management (Simulation Only)
+        // 4. Dynamic Persona Shifting
+        let persona: 'frugal' | 'aggressive' | 'balanced' = 'balanced';
+        if (rival.cash < 10000000) persona = 'frugal';
+        else if (rival.cash > 100000000) persona = 'aggressive';
+
+        // 5. Slate Management (Simulation Only)
         // If a rival has very few projects, force them to bid on something to keep the world alive
-        if (projects.length < 2) {
+        const maxProjects = persona === 'frugal' ? 2 : (persona === 'aggressive' ? 6 : 4);
+        
+        if (projects.length < maxProjects) {
             const opportunities = state.market.opportunities.filter(o => !o.bids[rival.id]);
-            const bidAmount = rng.rangeInt(10, 500) * 1000;
-            const canAfford = rival.cash > bidAmount * 1.5;
             const isSimulation = true;
 
-            if (opportunities.length > 0 && (canAfford || isSimulation)) {
-                const opp = rng.pick(opportunities);
-                impacts.push({
-                    type: 'OPPORTUNITY_UPDATED',
-                    payload: {
-                        opportunityId: opp.id,
-                        rivalId: rival.id,
-                        bid: { amount: Math.floor(opp.costToAcquire * 1.05), terms: 'standard' }
-                    }
-                });
+            if (opportunities.length > 0 && isSimulation) {
+                // Genre Saturation Guard: Don't bid if we already have 2+ projects in this genre
+                const myGenres = projects.map(p => p.genre);
+                const candidates = opportunities.filter(o => myGenres.filter(g => g === o.genre).length < 2);
+                
+                if (candidates.length > 0) {
+                    // Trend-Aware Priority
+                    const trends = state.market.trends || [];
+                    const topTrends = trends.filter(t => t.heat > 70).map(t => t.genre);
+                    
+                    const trendMatch = candidates.find(o => topTrends.includes(o.genre));
+                    const opp = trendMatch || rng.pick(candidates);
+                    
+                    // Bid Multiplier based on Trend Heat
+                    let bidMult = 1.05;
+                    const isTrend = topTrends.includes(opp.genre);
+                    if (isTrend) bidMult = 1.25; // Bid more aggressively for trends
+
+                    impacts.push({
+                        type: 'OPPORTUNITY_UPDATED',
+                        payload: {
+                            opportunityId: opp.id,
+                            rivalId: rival.id,
+                            bid: { amount: Math.floor(opp.costToAcquire * bidMult), terms: 'standard' }
+                        }
+                    });
+                }
             }
         }
 
-        // 5. Maintenance Grant (Simulation Only)
-        if (rival.cash < -50000000) {
-           weeklyRivalRevenue += 100000000; // Reset them
+        // 6. Maintenance Grant (Simulation Only)
+        if (rival.cash < -100000000) {
+           weeklyRivalRevenue += 150000000; // Reset them if they hit rock bottom
         }
 
         if (weeklyRivalRevenue > 0) {
@@ -99,11 +121,14 @@ export class StudioAutomation {
       const tiers: ('none' | 'basic' | 'blockbuster')[] = ['none', 'basic', 'blockbuster'];
       const tier = rng.pick(tiers);
       
-      // Force completion if progress is 100% and it's been in marketing at least 1 week
+      const budgetMap = { 'none': 0, 'basic': 5000000, 'blockbuster': 25000000 };
+      const marketingBudget = budgetMap[tier];
+
       impacts.push(this.createUpdateImpact(studioId, p.id, { 
         state: 'released', 
         weeksInPhase: 0,
         marketingLevel: tier,
+        marketingBudget: marketingBudget,
         releaseWeek: state.week,
         activeCrisis: null
       }, state));

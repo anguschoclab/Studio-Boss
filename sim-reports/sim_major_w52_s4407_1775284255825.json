@@ -1,0 +1,1009 @@
+[
+  {
+    "week": 1,
+    "playerCash": 500000000,
+    "rivalAvgCash": 253851609.96213087,
+    "totalSystemCash": 3038516099.621309,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2500,
+    "avgTalentPrestige": 46.1848,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 0,
+    "bankruptcyCount": 0,
+    "marketShare": 16.45540071557676,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 2,
+    "playerCash": 504424520,
+    "rivalAvgCash": 254661609.96213087,
+    "totalSystemCash": 3051040619.621309,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2500,
+    "avgTalentPrestige": 46.1848,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 0,
+    "bankruptcyCount": 0,
+    "marketShare": 16.53286805675529,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 3,
+    "playerCash": 508865183.6,
+    "rivalAvgCash": 255457988.82213092,
+    "totalSystemCash": 3063445071.821309,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2498,
+    "avgTalentPrestige": 46.18294635708567,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 2,
+    "bankruptcyCount": 0,
+    "marketShare": 16.610879962586193,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 4,
+    "playerCash": 513322006.4,
+    "rivalAvgCash": 256240924.1021309,
+    "totalSystemCash": 3075731247.421309,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2498,
+    "avgTalentPrestige": 46.18294635708567,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 2,
+    "bankruptcyCount": 0,
+    "marketShare": 16.6894297682988,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 5,
+    "playerCash": 517819228.4,
+    "rivalAvgCash": 257010673.4221309,
+    "totalSystemCash": 3087925962.6213093,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2498,
+    "avgTalentPrestige": 46.18294635708567,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 2,
+    "bankruptcyCount": 0,
+    "marketShare": 16.769159450974286,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 6,
+    "playerCash": 522333672,
+    "rivalAvgCash": 257767160.0221309,
+    "totalSystemCash": 3100005272.221309,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2498,
+    "avgTalentPrestige": 46.18294635708567,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 2,
+    "bankruptcyCount": 0,
+    "marketShare": 16.849444634193212,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 7,
+    "playerCash": 526467383.20000005,
+    "rivalAvgCash": 258396684.0821309,
+    "totalSystemCash": 3110434224.021309,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2497,
+    "avgTalentPrestige": 46.195034040849016,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 3,
+    "bankruptcyCount": 0,
+    "marketShare": 16.925848459812773,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 8,
+    "playerCash": 530248371.20000005,
+    "rivalAvgCash": 259025684.0421309,
+    "totalSystemCash": 3120505211.6213093,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2497,
+    "avgTalentPrestige": 46.195034040849016,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 3,
+    "bankruptcyCount": 0,
+    "marketShare": 16.992388579428162,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 9,
+    "playerCash": 533679488.8000001,
+    "rivalAvgCash": 259496679.32213092,
+    "totalSystemCash": 3128646282.0213094,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2495,
+    "avgTalentPrestige": 46.20521042084168,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 5,
+    "bankruptcyCount": 0,
+    "marketShare": 17.05784037865758,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 10,
+    "playerCash": 536768024.4000001,
+    "rivalAvgCash": 259778631.86213088,
+    "totalSystemCash": 3134554343.021309,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2495,
+    "avgTalentPrestige": 46.20521042084168,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 5,
+    "bankruptcyCount": 0,
+    "marketShare": 17.12422136164417,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 11,
+    "playerCash": 539534034,
+    "rivalAvgCash": 258694689.5821309,
+    "totalSystemCash": 3126480929.821309,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2495,
+    "avgTalentPrestige": 46.20521042084168,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 5,
+    "bankruptcyCount": 0,
+    "marketShare": 17.25691108024243,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 12,
+    "playerCash": 542001302.8,
+    "rivalAvgCash": 259105052.86213088,
+    "totalSystemCash": 3133051831.4213085,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2494,
+    "avgTalentPrestige": 46.214915797915,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 6,
+    "bankruptcyCount": 0,
+    "marketShare": 17.29946812128292,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 13,
+    "playerCash": 544171004.3999999,
+    "rivalAvgCash": 259006820.1021309,
+    "totalSystemCash": 3134239205.4213085,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2493,
+    "avgTalentPrestige": 46.20537505014039,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 7,
+    "bankruptcyCount": 0,
+    "marketShare": 17.362140179305545,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 14,
+    "playerCash": 546045483.1999998,
+    "rivalAvgCash": 257382814.36213088,
+    "totalSystemCash": 3119873626.8213086,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2492,
+    "avgTalentPrestige": 46.207463884430176,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 8,
+    "bankruptcyCount": 0,
+    "marketShare": 17.5021667065515,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 15,
+    "playerCash": 547634287.9999998,
+    "rivalAvgCash": 257610025.0221309,
+    "totalSystemCash": 3123734538.2213087,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2491,
+    "avgTalentPrestige": 46.208751505419514,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 9,
+    "bankruptcyCount": 0,
+    "marketShare": 17.53139651590974,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 16,
+    "playerCash": 548953629.5999997,
+    "rivalAvgCash": 257744734.2621309,
+    "totalSystemCash": 3126400972.2213087,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2491,
+    "avgTalentPrestige": 46.208751505419514,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 9,
+    "bankruptcyCount": 0,
+    "marketShare": 17.558644411819255,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 17,
+    "playerCash": 550004245.9999998,
+    "rivalAvgCash": 257935006.70213094,
+    "totalSystemCash": 3129354313.021309,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2491,
+    "avgTalentPrestige": 46.208751505419514,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 9,
+    "bankruptcyCount": 0,
+    "marketShare": 17.575646315005642,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 18,
+    "playerCash": 550810758.3999999,
+    "rivalAvgCash": 258087005.6621309,
+    "totalSystemCash": 3131680815.021309,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2491,
+    "avgTalentPrestige": 46.208751505419514,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 9,
+    "bankruptcyCount": 0,
+    "marketShare": 17.588342839985497,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 19,
+    "playerCash": 551364213.9999998,
+    "rivalAvgCash": 258207481.12213093,
+    "totalSystemCash": 3133439025.2213087,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2491,
+    "avgTalentPrestige": 46.208751505419514,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 9,
+    "bankruptcyCount": 0,
+    "marketShare": 17.59613669077406,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 20,
+    "playerCash": 551687315.5999997,
+    "rivalAvgCash": 258232117.1821309,
+    "totalSystemCash": 3134008487.4213085,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2490,
+    "avgTalentPrestige": 46.2140562248996,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 10,
+    "bankruptcyCount": 0,
+    "marketShare": 17.603248932294154,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 21,
+    "playerCash": 551788856.3999996,
+    "rivalAvgCash": 258248070.96213087,
+    "totalSystemCash": 3134269566.0213084,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2488,
+    "avgTalentPrestige": 46.20257234726688,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 12,
+    "bankruptcyCount": 0,
+    "marketShare": 17.605022311480667,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 22,
+    "playerCash": 551670133.9999995,
+    "rivalAvgCash": 257795023.62213093,
+    "totalSystemCash": 3129620370.2213087,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2488,
+    "avgTalentPrestige": 46.20257234726688,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 12,
+    "bankruptcyCount": 0,
+    "marketShare": 17.627381878300742,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 23,
+    "playerCash": 551343343.5999994,
+    "rivalAvgCash": 257754262.70213088,
+    "totalSystemCash": 3128885970.6213083,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2488,
+    "avgTalentPrestige": 46.20257234726688,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 12,
+    "bankruptcyCount": 0,
+    "marketShare": 17.62107500167282,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 24,
+    "playerCash": 550825351.5999994,
+    "rivalAvgCash": 257286329.12213087,
+    "totalSystemCash": 3123688642.821308,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2488,
+    "avgTalentPrestige": 46.20257234726688,
+    "activeProjects": 0,
+    "completedProjects": 1,
+    "retiredCount": 12,
+    "bankruptcyCount": 0,
+    "marketShare": 17.63381100308689,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 25,
+    "playerCash": 550105815.5999994,
+    "rivalAvgCash": 257229168.82213086,
+    "totalSystemCash": 3122397503.821308,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2488,
+    "avgTalentPrestige": 46.20257234726688,
+    "activeProjects": 0,
+    "completedProjects": 1,
+    "retiredCount": 12,
+    "bankruptcyCount": 0,
+    "marketShare": 17.618058396689054,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 26,
+    "playerCash": 549204545.9999995,
+    "rivalAvgCash": 248106923.12213093,
+    "totalSystemCash": 3030273777.2213087,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2485,
+    "avgTalentPrestige": 46.19597585513078,
+    "activeProjects": 0,
+    "completedProjects": 1,
+    "retiredCount": 15,
+    "bankruptcyCount": 0,
+    "marketShare": 18.123924977617285,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 27,
+    "playerCash": 548118395.1999996,
+    "rivalAvgCash": 247982781.18213087,
+    "totalSystemCash": 3027946207.021308,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2485,
+    "avgTalentPrestige": 46.19597585513078,
+    "activeProjects": 0,
+    "completedProjects": 1,
+    "retiredCount": 15,
+    "bankruptcyCount": 0,
+    "marketShare": 18.101985891592243,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 28,
+    "playerCash": 546850619.1999996,
+    "rivalAvgCash": 247816424.50213084,
+    "totalSystemCash": 3025014864.2213078,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2483,
+    "avgTalentPrestige": 46.213451469995974,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 17,
+    "bankruptcyCount": 0,
+    "marketShare": 18.077617590178967,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 29,
+    "playerCash": 545431637.9999995,
+    "rivalAvgCash": 247586551.82213092,
+    "totalSystemCash": 3021297156.2213087,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2483,
+    "avgTalentPrestige": 46.213451469995974,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 17,
+    "bankruptcyCount": 0,
+    "marketShare": 18.05289615014773,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 30,
+    "playerCash": 543864131.1999996,
+    "rivalAvgCash": 247334773.18213087,
+    "totalSystemCash": 3017211863.021308,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2483,
+    "avgTalentPrestige": 46.213451469995974,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 17,
+    "bankruptcyCount": 0,
+    "marketShare": 18.025387539587527,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 31,
+    "playerCash": 542155169.1999996,
+    "rivalAvgCash": 247124043.62213087,
+    "totalSystemCash": 3013395605.4213085,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2481,
+    "avgTalentPrestige": 46.20274083031036,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 19,
+    "bankruptcyCount": 0,
+    "marketShare": 17.9915032803733,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 32,
+    "playerCash": 540298009.5999997,
+    "rivalAvgCash": 246960431.5421309,
+    "totalSystemCash": 3009902325.021309,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2480,
+    "avgTalentPrestige": 46.20725806451613,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 20,
+    "bankruptcyCount": 0,
+    "marketShare": 17.95068248921249,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 33,
+    "playerCash": 538304693.5999997,
+    "rivalAvgCash": 246737414.22213086,
+    "totalSystemCash": 3005678835.821308,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2480,
+    "avgTalentPrestige": 46.20725806451613,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 20,
+    "bankruptcyCount": 0,
+    "marketShare": 17.909587916864268,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 34,
+    "playerCash": 536187127.59999967,
+    "rivalAvgCash": 246498062.4421309,
+    "totalSystemCash": 3001167752.021309,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2480,
+    "avgTalentPrestige": 46.20725806451613,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 20,
+    "bankruptcyCount": 0,
+    "marketShare": 17.865949920289314,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 35,
+    "playerCash": 533925330.7999997,
+    "rivalAvgCash": 245882893.0021309,
+    "totalSystemCash": 2992754260.8213086,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2480,
+    "avgTalentPrestige": 46.20725806451613,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 20,
+    "bankruptcyCount": 0,
+    "marketShare": 17.840600472605235,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 36,
+    "playerCash": 531535855.1999997,
+    "rivalAvgCash": 245613229.9021309,
+    "totalSystemCash": 2987668154.2213087,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2479,
+    "avgTalentPrestige": 46.1968535699879,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 21,
+    "bankruptcyCount": 0,
+    "marketShare": 17.790993770475712,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 37,
+    "playerCash": 529031731.99999964,
+    "rivalAvgCash": 245329560.56213087,
+    "totalSystemCash": 2982327337.6213083,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2478,
+    "avgTalentPrestige": 46.2001614205004,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 22,
+    "bankruptcyCount": 0,
+    "marketShare": 17.738888864625878,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 38,
+    "playerCash": 526424205.1999997,
+    "rivalAvgCash": 244783183.08213085,
+    "totalSystemCash": 2974256036.0213084,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2478,
+    "avgTalentPrestige": 46.2001614205004,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 22,
+    "bankruptcyCount": 0,
+    "marketShare": 17.69935737960887,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 39,
+    "playerCash": 523706387.1999997,
+    "rivalAvgCash": 244378004.0821309,
+    "totalSystemCash": 2967486428.021309,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2478,
+    "avgTalentPrestige": 46.2001614205004,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 22,
+    "bankruptcyCount": 0,
+    "marketShare": 17.648147679960985,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 40,
+    "playerCash": 520876948.7999997,
+    "rivalAvgCash": 244056326.08213085,
+    "totalSystemCash": 2961440209.6213083,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2477,
+    "avgTalentPrestige": 46.208316511909565,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 23,
+    "bankruptcyCount": 0,
+    "marketShare": 17.588636336730445,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 41,
+    "playerCash": 517954123.59999967,
+    "rivalAvgCash": 243822305.1421309,
+    "totalSystemCash": 2956177175.021309,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2477,
+    "avgTalentPrestige": 46.208316511909565,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 23,
+    "bankruptcyCount": 0,
+    "marketShare": 17.521078505596204,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 42,
+    "playerCash": 514919874.3999996,
+    "rivalAvgCash": 243459705.4221309,
+    "totalSystemCash": 2949516928.621309,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2476,
+    "avgTalentPrestige": 46.222536348949916,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 24,
+    "bankruptcyCount": 0,
+    "marketShare": 17.457769758951287,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 43,
+    "playerCash": 511798953.1999996,
+    "rivalAvgCash": 236031862.7421309,
+    "totalSystemCash": 2872117580.6213083,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2476,
+    "avgTalentPrestige": 46.222536348949916,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 24,
+    "bankruptcyCount": 0,
+    "marketShare": 17.819568274404876,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 44,
+    "playerCash": 508586527.59999955,
+    "rivalAvgCash": 235667852.30213094,
+    "totalSystemCash": 2865265050.621309,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2476,
+    "avgTalentPrestige": 46.222536348949916,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 24,
+    "bankruptcyCount": 0,
+    "marketShare": 17.75006914245915,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 45,
+    "playerCash": 505291284.3999995,
+    "rivalAvgCash": 235286093.4421309,
+    "totalSystemCash": 2858152218.8213086,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2476,
+    "avgTalentPrestige": 46.222536348949916,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 24,
+    "bankruptcyCount": 0,
+    "marketShare": 17.67894939508784,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 46,
+    "playerCash": 501917446.3999995,
+    "rivalAvgCash": 234903965.3421309,
+    "totalSystemCash": 2850957099.8213086,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2476,
+    "avgTalentPrestige": 46.222536348949916,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 24,
+    "bankruptcyCount": 0,
+    "marketShare": 17.60522620391091,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 47,
+    "playerCash": 498461570.7999995,
+    "rivalAvgCash": 234183528.90213093,
+    "totalSystemCash": 2840296859.821309,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2476,
+    "avgTalentPrestige": 46.222536348949916,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 24,
+    "bankruptcyCount": 0,
+    "marketShare": 17.549629331046724,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 48,
+    "playerCash": 494933997.9999995,
+    "rivalAvgCash": 233785040.5421309,
+    "totalSystemCash": 2832784403.4213085,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2476,
+    "avgTalentPrestige": 46.222536348949916,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 24,
+    "bankruptcyCount": 0,
+    "marketShare": 17.471643708650777,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 49,
+    "playerCash": 491329436.3999995,
+    "rivalAvgCash": 233212158.1421309,
+    "totalSystemCash": 2823451017.8213086,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2476,
+    "avgTalentPrestige": 46.222536348949916,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 24,
+    "bankruptcyCount": 0,
+    "marketShare": 17.401734023320493,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 50,
+    "playerCash": 487650646.7999995,
+    "rivalAvgCash": 232822445.48213091,
+    "totalSystemCash": 2815875101.6213083,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2474,
+    "avgTalentPrestige": 46.2178658043654,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 26,
+    "bankruptcyCount": 0,
+    "marketShare": 17.317907549209934,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 51,
+    "playerCash": 483898731.19999945,
+    "rivalAvgCash": 232402336.88213092,
+    "totalSystemCash": 2807922100.0213084,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2474,
+    "avgTalentPrestige": 46.2178658043654,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 26,
+    "bankruptcyCount": 0,
+    "marketShare": 17.2333388877251,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 52,
+    "playerCash": 480085206.7999995,
+    "rivalAvgCash": 231975737.18213096,
+    "totalSystemCash": 2799842578.6213093,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2474,
+    "avgTalentPrestige": 46.2178658043654,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 26,
+    "bankruptcyCount": 0,
+    "marketShare": 17.14686427250498,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 53,
+    "playerCash": 476207545.19999945,
+    "rivalAvgCash": 231289492.38213095,
+    "totalSystemCash": 2789102469.021309,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2474,
+    "avgTalentPrestige": 46.2178658043654,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 26,
+    "bankruptcyCount": 0,
+    "marketShare": 17.073863383983156,
+    "industryLeader": "Omni Films",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  }
+]

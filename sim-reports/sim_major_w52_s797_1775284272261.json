@@ -1,0 +1,1009 @@
+[
+  {
+    "week": 1,
+    "playerCash": 500000000,
+    "rivalAvgCash": 161324136.22122258,
+    "totalSystemCash": 2113241362.2122257,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2500,
+    "avgTalentPrestige": 46.1776,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 0,
+    "bankruptcyCount": 0,
+    "marketShare": 23.660335678674205,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 2,
+    "playerCash": 504424520,
+    "rivalAvgCash": 161609136.22122258,
+    "totalSystemCash": 2120515882.2122257,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2500,
+    "avgTalentPrestige": 46.1776,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 0,
+    "bankruptcyCount": 0,
+    "marketShare": 23.787820889780825,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 3,
+    "playerCash": 508872954.79999995,
+    "rivalAvgCash": 161888543.48122257,
+    "totalSystemCash": 2127758389.6122255,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2500,
+    "avgTalentPrestige": 46.1776,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 0,
+    "bankruptcyCount": 0,
+    "marketShare": 23.915918145797548,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 4,
+    "playerCash": 513350270,
+    "rivalAvgCash": 162162415.24122256,
+    "totalSystemCash": 2134974422.4122257,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2500,
+    "avgTalentPrestige": 46.1776,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 0,
+    "bankruptcyCount": 0,
+    "marketShare": 24.04479719340081,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 5,
+    "playerCash": 517859153.6,
+    "rivalAvgCash": 162430809.00122255,
+    "totalSystemCash": 2142167243.6122255,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2499,
+    "avgTalentPrestige": 46.165666266506605,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 1,
+    "bankruptcyCount": 0,
+    "marketShare": 24.174543567698336,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 6,
+    "playerCash": 522401534.8000001,
+    "rivalAvgCash": 162556284.78122258,
+    "totalSystemCash": 2147964382.612226,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2498,
+    "avgTalentPrestige": 46.160128102481984,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 2,
+    "bankruptcyCount": 0,
+    "marketShare": 24.320772682677656,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 7,
+    "playerCash": 526569730.8000001,
+    "rivalAvgCash": 162744126.64122254,
+    "totalSystemCash": 2154010997.2122254,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2498,
+    "avgTalentPrestige": 46.160128102481984,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 2,
+    "bankruptcyCount": 0,
+    "marketShare": 24.446009397421818,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 8,
+    "playerCash": 530369269.20000005,
+    "rivalAvgCash": 162845676.70122254,
+    "totalSystemCash": 2158826036.2122254,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2498,
+    "avgTalentPrestige": 46.160128102481984,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 2,
+    "bankruptcyCount": 0,
+    "marketShare": 24.567485304677955,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 9,
+    "playerCash": 533808575.20000005,
+    "rivalAvgCash": 162525646.98122254,
+    "totalSystemCash": 2159065045.012225,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2498,
+    "avgTalentPrestige": 46.160128102481984,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 2,
+    "bankruptcyCount": 0,
+    "marketShare": 24.72406176151018,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 10,
+    "playerCash": 536909009.2,
+    "rivalAvgCash": 162400429.28122252,
+    "totalSystemCash": 2160913302.012225,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2498,
+    "avgTalentPrestige": 46.160128102481984,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 2,
+    "bankruptcyCount": 0,
+    "marketShare": 24.846392897856415,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 11,
+    "playerCash": 539681884.8,
+    "rivalAvgCash": 162480896.96122253,
+    "totalSystemCash": 2164490854.4122252,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2498,
+    "avgTalentPrestige": 46.160128102481984,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 2,
+    "bankruptcyCount": 0,
+    "marketShare": 24.9334333614707,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 12,
+    "playerCash": 542140664.3999999,
+    "rivalAvgCash": 162218966.36122254,
+    "totalSystemCash": 2164330328.012225,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2498,
+    "avgTalentPrestige": 46.160128102481984,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 2,
+    "bankruptcyCount": 0,
+    "marketShare": 25.048887287825206,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 13,
+    "playerCash": 544295100.3999999,
+    "rivalAvgCash": 162312528.94122255,
+    "totalSystemCash": 2167420389.8122253,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2498,
+    "avgTalentPrestige": 46.160128102481984,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 2,
+    "bankruptcyCount": 0,
+    "marketShare": 25.112576358440318,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 14,
+    "playerCash": 546172011.5999999,
+    "rivalAvgCash": 162007826.04122257,
+    "totalSystemCash": 2166250272.0122256,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2498,
+    "avgTalentPrestige": 46.160128102481984,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 2,
+    "bankruptcyCount": 0,
+    "marketShare": 25.212784443999713,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 15,
+    "playerCash": 547774575.5999999,
+    "rivalAvgCash": 162071845.02122253,
+    "totalSystemCash": 2168493025.8122253,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2498,
+    "avgTalentPrestige": 46.160128102481984,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 2,
+    "bankruptcyCount": 0,
+    "marketShare": 25.260610436818297,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 16,
+    "playerCash": 549115221.1999998,
+    "rivalAvgCash": 162102833.70122257,
+    "totalSystemCash": 2170143558.2122254,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2498,
+    "avgTalentPrestige": 46.160128102481984,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 2,
+    "bankruptcyCount": 0,
+    "marketShare": 25.303174949972597,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 17,
+    "playerCash": 550192527.5999999,
+    "rivalAvgCash": 162133830.20122257,
+    "totalSystemCash": 2171530829.6122255,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2498,
+    "avgTalentPrestige": 46.160128102481984,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 2,
+    "bankruptcyCount": 0,
+    "marketShare": 25.33662060410392,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 18,
+    "playerCash": 551018850,
+    "rivalAvgCash": 162129972.06122252,
+    "totalSystemCash": 2172318570.6122255,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2496,
+    "avgTalentPrestige": 46.16185897435897,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 4,
+    "bankruptcyCount": 0,
+    "marketShare": 25.365471595849137,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 19,
+    "playerCash": 551614575.5999999,
+    "rivalAvgCash": 162131069.76122257,
+    "totalSystemCash": 2172925273.212226,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2495,
+    "avgTalentPrestige": 46.1687374749499,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 5,
+    "bankruptcyCount": 0,
+    "marketShare": 25.38580513560646,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 20,
+    "playerCash": 551973882.3999999,
+    "rivalAvgCash": 162093547.94122252,
+    "totalSystemCash": 2172909361.8122253,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2495,
+    "avgTalentPrestige": 46.1687374749499,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 5,
+    "bankruptcyCount": 0,
+    "marketShare": 25.40252677358106,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 21,
+    "playerCash": 552118423.9999998,
+    "rivalAvgCash": 161988614.58122253,
+    "totalSystemCash": 2172004569.8122253,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2495,
+    "avgTalentPrestige": 46.1687374749499,
+    "activeProjects": 0,
+    "completedProjects": 0,
+    "retiredCount": 5,
+    "bankruptcyCount": 0,
+    "marketShare": 25.41976346061425,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 22,
+    "playerCash": 552058805.9999998,
+    "rivalAvgCash": 161950291.80122253,
+    "totalSystemCash": 2171561724.012225,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2493,
+    "avgTalentPrestige": 46.16847172081829,
+    "activeProjects": 0,
+    "completedProjects": 1,
+    "retiredCount": 7,
+    "bankruptcyCount": 0,
+    "marketShare": 25.422201906377488,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 23,
+    "playerCash": 551796734.3999999,
+    "rivalAvgCash": 161741019.78122255,
+    "totalSystemCash": 2169206932.2122254,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2493,
+    "avgTalentPrestige": 46.16847172081829,
+    "activeProjects": 0,
+    "completedProjects": 1,
+    "retiredCount": 7,
+    "bankruptcyCount": 0,
+    "marketShare": 25.437717637996858,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 24,
+    "playerCash": 551330241.5999999,
+    "rivalAvgCash": 161679603.82122257,
+    "totalSystemCash": 2168126279.8122253,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2492,
+    "avgTalentPrestige": 46.16131621187801,
+    "activeProjects": 0,
+    "completedProjects": 1,
+    "retiredCount": 8,
+    "bankruptcyCount": 0,
+    "marketShare": 25.428880537703225,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 25,
+    "playerCash": 550687351.5999999,
+    "rivalAvgCash": 161477872.66122252,
+    "totalSystemCash": 2165466078.212225,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2492,
+    "avgTalentPrestige": 46.16131621187801,
+    "activeProjects": 0,
+    "completedProjects": 1,
+    "retiredCount": 8,
+    "bankruptcyCount": 0,
+    "marketShare": 25.430430757642657,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 26,
+    "playerCash": 549860470.3999999,
+    "rivalAvgCash": 160826459.94122258,
+    "totalSystemCash": 2158125069.8122253,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2492,
+    "avgTalentPrestige": 46.16131621187801,
+    "activeProjects": 0,
+    "completedProjects": 1,
+    "retiredCount": 8,
+    "bankruptcyCount": 0,
+    "marketShare": 25.478619292803184,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 27,
+    "playerCash": 548841329.5999999,
+    "rivalAvgCash": 160734527.68122253,
+    "totalSystemCash": 2156186606.4122252,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2492,
+    "avgTalentPrestige": 46.16131621187801,
+    "activeProjects": 0,
+    "completedProjects": 1,
+    "retiredCount": 8,
+    "bankruptcyCount": 0,
+    "marketShare": 25.454259291279126,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 28,
+    "playerCash": 547635631.1999998,
+    "rivalAvgCash": 160361894.28122252,
+    "totalSystemCash": 2151254574.012225,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2492,
+    "avgTalentPrestige": 46.16131621187801,
+    "activeProjects": 0,
+    "completedProjects": 1,
+    "retiredCount": 8,
+    "bankruptcyCount": 0,
+    "marketShare": 25.456570217936825,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 29,
+    "playerCash": 546274697.1999998,
+    "rivalAvgCash": 160252091.84122252,
+    "totalSystemCash": 2148795615.612225,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2491,
+    "avgTalentPrestige": 46.153352067442796,
+    "activeProjects": 0,
+    "completedProjects": 1,
+    "retiredCount": 9,
+    "bankruptcyCount": 0,
+    "marketShare": 25.42236652155295,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 30,
+    "playerCash": 544744861.1999998,
+    "rivalAvgCash": 159893363.0412225,
+    "totalSystemCash": 2143678491.612225,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2491,
+    "avgTalentPrestige": 46.153352067442796,
+    "activeProjects": 0,
+    "completedProjects": 1,
+    "retiredCount": 9,
+    "bankruptcyCount": 0,
+    "marketShare": 25.411686655973593,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 31,
+    "playerCash": 543057797.9999998,
+    "rivalAvgCash": 159767450.40122253,
+    "totalSystemCash": 2140732302.012225,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2491,
+    "avgTalentPrestige": 46.153352067442796,
+    "activeProjects": 0,
+    "completedProjects": 1,
+    "retiredCount": 9,
+    "bankruptcyCount": 0,
+    "marketShare": 25.36785180891331,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 32,
+    "playerCash": 541215594.3999999,
+    "rivalAvgCash": 159474149.78122252,
+    "totalSystemCash": 2135957092.2122252,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2490,
+    "avgTalentPrestige": 46.16626506024097,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 10,
+    "bankruptcyCount": 0,
+    "marketShare": 25.3383177205802,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 33,
+    "playerCash": 539238717.1999998,
+    "rivalAvgCash": 159235357.44122258,
+    "totalSystemCash": 2131592291.6122255,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2490,
+    "avgTalentPrestige": 46.16626506024097,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 10,
+    "bankruptcyCount": 0,
+    "marketShare": 25.297460462861203,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 34,
+    "playerCash": 537125221.5999999,
+    "rivalAvgCash": 159088180.00122255,
+    "totalSystemCash": 2128007021.6122253,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2488,
+    "avgTalentPrestige": 46.159163987138264,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 12,
+    "bankruptcyCount": 0,
+    "marketShare": 25.240763594523386,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 35,
+    "playerCash": 534892874.79999995,
+    "rivalAvgCash": 158934592.58122253,
+    "totalSystemCash": 2124238800.6122253,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2488,
+    "avgTalentPrestige": 46.159163987138264,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 12,
+    "bankruptcyCount": 0,
+    "marketShare": 25.180449328288272,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 36,
+    "playerCash": 532540892.79999995,
+    "rivalAvgCash": 158563455.42122257,
+    "totalSystemCash": 2118175447.0122256,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2488,
+    "avgTalentPrestige": 46.159163987138264,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 12,
+    "bankruptcyCount": 0,
+    "marketShare": 25.141491161705748,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 37,
+    "playerCash": 530067531.1999999,
+    "rivalAvgCash": 158302106.72122252,
+    "totalSystemCash": 2113088598.4122252,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2487,
+    "avgTalentPrestige": 46.17289907519099,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 13,
+    "bankruptcyCount": 0,
+    "marketShare": 25.0849648045185,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 38,
+    "playerCash": 527479347.1999999,
+    "rivalAvgCash": 158117240.44122252,
+    "totalSystemCash": 2108651751.612225,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2486,
+    "avgTalentPrestige": 46.16291230893001,
+    "activeProjects": 0,
+    "completedProjects": 2,
+    "retiredCount": 14,
+    "bankruptcyCount": 0,
+    "marketShare": 25.015005289360925,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 39,
+    "playerCash": 524782701.9999999,
+    "rivalAvgCash": 157842548.98122254,
+    "totalSystemCash": 2103208191.8122253,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2486,
+    "avgTalentPrestige": 46.16291230893001,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 14,
+    "bankruptcyCount": 0,
+    "marketShare": 24.951533758901057,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 40,
+    "playerCash": 521960964.79999983,
+    "rivalAvgCash": 157594711.26122254,
+    "totalSystemCash": 2097908077.4122252,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2486,
+    "avgTalentPrestige": 46.16291230893001,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 14,
+    "bankruptcyCount": 0,
+    "marketShare": 24.88006840813731,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 41,
+    "playerCash": 519029186.39999986,
+    "rivalAvgCash": 157408973.02122253,
+    "totalSystemCash": 2093118916.6122253,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2486,
+    "avgTalentPrestige": 46.16291230893001,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 14,
+    "bankruptcyCount": 0,
+    "marketShare": 24.796927794244194,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 42,
+    "playerCash": 516007065.5999999,
+    "rivalAvgCash": 157218764.14122254,
+    "totalSystemCash": 2088194707.0122252,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2486,
+    "avgTalentPrestige": 46.16291230893001,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 14,
+    "bankruptcyCount": 0,
+    "marketShare": 24.710677786282645,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 43,
+    "playerCash": 512885572.79999995,
+    "rivalAvgCash": 151687738.14122254,
+    "totalSystemCash": 2029762954.2122252,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2486,
+    "avgTalentPrestige": 46.16291230893001,
+    "activeProjects": 0,
+    "completedProjects": 3,
+    "retiredCount": 14,
+    "bankruptcyCount": 0,
+    "marketShare": 25.268249759689642,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 44,
+    "playerCash": 509661278,
+    "rivalAvgCash": 151187486.04122257,
+    "totalSystemCash": 2021536138.4122257,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2486,
+    "avgTalentPrestige": 46.16291230893001,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 14,
+    "bankruptcyCount": 0,
+    "marketShare": 25.211583820623808,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 45,
+    "playerCash": 506334840,
+    "rivalAvgCash": 150985200.86122257,
+    "totalSystemCash": 2016186848.6122255,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2486,
+    "avgTalentPrestige": 46.16291230893001,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 14,
+    "bankruptcyCount": 0,
+    "marketShare": 25.1134878867263,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 46,
+    "playerCash": 502912664.4,
+    "rivalAvgCash": 150463444.82122257,
+    "totalSystemCash": 2007547112.6122255,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2486,
+    "avgTalentPrestige": 46.16291230893001,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 14,
+    "bankruptcyCount": 0,
+    "marketShare": 25.051101478042458,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 47,
+    "playerCash": 499414477.1999999,
+    "rivalAvgCash": 150215759.50122255,
+    "totalSystemCash": 2001572072.2122254,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2486,
+    "avgTalentPrestige": 46.16291230893001,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 14,
+    "bankruptcyCount": 0,
+    "marketShare": 24.951111385563305,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 48,
+    "playerCash": 495830792.4,
+    "rivalAvgCash": 149902146.00122255,
+    "totalSystemCash": 1994852252.4122257,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2486,
+    "avgTalentPrestige": 46.16291230893001,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 14,
+    "bankruptcyCount": 0,
+    "marketShare": 24.855514577604875,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 49,
+    "playerCash": 492182434.79999995,
+    "rivalAvgCash": 149661053.50122255,
+    "totalSystemCash": 1988792969.8122256,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2486,
+    "avgTalentPrestige": 46.16291230893001,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 14,
+    "bankruptcyCount": 0,
+    "marketShare": 24.747796390615257,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 50,
+    "playerCash": 488467883.1999999,
+    "rivalAvgCash": 149201481.40122256,
+    "totalSystemCash": 1980482697.2122254,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2486,
+    "avgTalentPrestige": 46.16291230893001,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 14,
+    "bankruptcyCount": 0,
+    "marketShare": 24.66408234152103,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 51,
+    "playerCash": 484693344.4,
+    "rivalAvgCash": 148979948.02122253,
+    "totalSystemCash": 1974492824.6122255,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2486,
+    "avgTalentPrestige": 46.16291230893001,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 14,
+    "bankruptcyCount": 0,
+    "marketShare": 24.547738961532556,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 52,
+    "playerCash": 480860272,
+    "rivalAvgCash": 148818598.62122256,
+    "totalSystemCash": 1969046258.2122254,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2484,
+    "avgTalentPrestige": 46.179951690821255,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 16,
+    "bankruptcyCount": 0,
+    "marketShare": 24.420973859526892,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  },
+  {
+    "week": 53,
+    "playerCash": 476961492.4,
+    "rivalAvgCash": 148581568.16122258,
+    "totalSystemCash": 1962777174.0122256,
+    "totalMarketSentiment": 50,
+    "talentPoolSize": 2484,
+    "avgTalentPrestige": 46.179951690821255,
+    "activeProjects": 0,
+    "completedProjects": 4,
+    "retiredCount": 16,
+    "bankruptcyCount": 0,
+    "marketShare": 24.30033825108204,
+    "industryLeader": "Megacorp Studios",
+    "topGenreROI": {
+      "genre": "None",
+      "roi": 0
+    }
+  }
+]

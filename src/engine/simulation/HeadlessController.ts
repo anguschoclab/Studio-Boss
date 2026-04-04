@@ -63,8 +63,40 @@ export class HeadlessController {
     state.market.opportunities.forEach(opportunity => {
       const isAlreadyBid = !!opportunity.bids['PLAYER'];
       const isSimulation = true; // We are in headless mode
-      if (!isAlreadyBid && (state.finance.cash > opportunity.costToAcquire * 2 || isSimulation)) {
-        const bidAmount = Math.floor(opportunity.costToAcquire * 1.05); // More efficient bidding
+      
+      let shouldBid = !isAlreadyBid && (state.finance.cash > opportunity.costToAcquire * 2 || isSimulation);
+      
+      // Persona Overrides
+      const persona = (state as any).persona || 'balanced';
+      
+      // Genre Saturation Guard for Player (Limit to 2 same-genre projects)
+      const playerGenres = internalProjects.map(p => p.genre);
+      const isSaturated = playerGenres.filter(g => g === opportunity.genre).length >= 2;
+
+      if (persona === 'frugal') {
+        // Frugal only bids on low/mid if cash is tight, or any if cash is high
+        if (opportunity.budgetTier === 'blockbuster' || opportunity.budgetTier === 'high') {
+          if (state.finance.cash < 100000000) shouldBid = false; 
+        }
+      } else if (persona === 'aggressive') {
+        // Aggressive always bids if not already bid
+        shouldBid = !isAlreadyBid;
+      }
+      
+      if (isSaturated) shouldBid = false;
+
+      if (shouldBid) {
+        let bidAmount = Math.floor(opportunity.costToAcquire * 1.05);
+        
+        // Predatory Bidding (Top the highest rival bid if Aggressive)
+        if (persona === 'aggressive') {
+           const rivalBids = Object.values(opportunity.bids || {}).map(b => b.amount);
+           if (rivalBids.length > 0) {
+             const highestRival = Math.max(...rivalBids);
+             bidAmount = Math.max(bidAmount, Math.floor(highestRival * 1.05));
+           }
+        }
+
         impacts.push({
           type: 'OPPORTUNITY_UPDATED',
           payload: {
