@@ -29,32 +29,40 @@ export const DemographicsWidget: React.FC = () => {
   };
 
   return (
-    <Card className="col-span-1 lg:col-span-1 border border-white/10 bg-gradient-to-br from-card/60 to-card/20 backdrop-blur-xl shadow-2xl hover:border-white/20 hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-500 relative overflow-hidden group h-full">
-      <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[100px] pointer-events-none group-hover:bg-primary/10 transition-colors duration-700" />
-      <CardHeader className="pb-4 border-b border-white/10 relative z-10 bg-white/5">
-        <CardTitle className="text-xs font-black text-muted-foreground/80 uppercase tracking-[0.2em] flex items-center justify-between">
-          <span className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-primary shadow-[0_0_10px_hsl(var(--primary) / 0.8)] animate-pulse" />
-            <span className="group-hover:text-foreground/90 transition-colors tracking-widest drop-shadow-sm">Audience Trends</span>
+    <Card className="col-span-1 lg:col-span-1 border border-white/10 bg-gradient-to-br from-card/60 via-card/40 to-card/20 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] hover:border-white/30 hover:shadow-[0_16px_48px_rgba(0,0,0,0.5)] transition-all duration-500 relative overflow-hidden group h-full">
+      <div className="absolute top-0 right-0 w-72 h-72 bg-primary/10 rounded-full blur-[120px] pointer-events-none group-hover:bg-primary/20 transition-colors duration-700" />
+      <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay pointer-events-none" />
+      <CardHeader className="pb-5 border-b border-white/10 relative z-10 bg-gradient-to-b from-white/10 to-transparent">
+        <CardTitle className="text-sm font-black text-white/90 uppercase tracking-[0.25em] flex items-center justify-between">
+          <span className="flex items-center gap-3">
+            <div className="relative flex items-center justify-center">
+              <div className="absolute inset-0 bg-primary/40 rounded-full blur-sm animate-pulse" />
+              <div className="w-2.5 h-2.5 rounded-full bg-primary relative z-10 shadow-[0_0_12px_hsl(var(--primary))]" />
+            </div>
+            <span className="group-hover:text-white transition-colors tracking-widest drop-shadow-md">Audience Trends</span>
           </span>
-          <span className="text-[9px] px-2.5 py-1 rounded-full bg-white/10 font-mono tracking-widest border border-white/5 shadow-inner">DATA</span>
+          <span className="text-[10px] px-3 py-1.5 rounded-md bg-black/40 font-mono tracking-widest border border-white/10 shadow-inner text-white/70">DATA</span>
         </CardTitle>
-        <CardDescription className="text-[10px] uppercase tracking-[0.2em] font-bold mt-2 text-muted-foreground/60">
+        <CardDescription className="text-[11px] uppercase tracking-[0.25em] font-bold mt-2 text-muted-foreground/70 group-hover:text-muted-foreground/90 transition-colors">
           Current hottest genres
         </CardDescription>
       </CardHeader>
-      <CardContent className="relative z-10 pt-6">
-        <div className="h-[220px] w-full mt-2">
+      <CardContent className="relative z-10 pt-8 pb-6 px-6">
+        <div className="h-[240px] w-full mt-2">
           <ChartContainer config={chartConfig} className="h-full w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData} layout="vertical" margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
                 <defs>
                   <linearGradient id="barGradient" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.6} />
+                    <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.7} />
                     <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={1} />
                   </linearGradient>
                   <filter id="barShadow" x="-20%" y="-20%" width="140%" height="140%">
-                    <feDropShadow dx="0" dy="4" stdDeviation="4" floodColor="rgba(0,0,0,0.3)" />
+                    <feDropShadow dx="0" dy="6" stdDeviation="6" floodColor="rgba(0,0,0,0.4)" />
+                  </filter>
+                  <filter id="barGlow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="3" result="blur" />
+                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
                   </filter>
                 </defs>
                 <XAxis type="number" hide />
@@ -63,17 +71,17 @@ export const DemographicsWidget: React.FC = () => {
                   type="category" 
                   axisLine={false} 
                   tickLine={false} 
-                  tick={{ fill: 'hsl(var(--foreground))', fontSize: 11, fontWeight: 800 }}
-                  width={90}
+                  tick={{ fill: 'hsl(var(--foreground))', fontSize: 12, fontWeight: 800, textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}
+                  width={100}
                 />
                 <ChartTooltip
-                  cursor={{ fill: 'rgba(255,255,255,0.05)' }}
-                  content={<ChartTooltipContent className="bg-card/95 border-white/20 backdrop-blur-xl text-xs font-mono uppercase shadow-2xl rounded-xl px-4 py-3" />}
+                  cursor={{ fill: 'rgba(255,255,255,0.08)' }}
+                  content={<ChartTooltipContent className="bg-black/90 border-white/20 backdrop-blur-2xl text-xs font-mono uppercase shadow-[0_8px_32px_rgba(0,0,0,0.5)] rounded-xl px-4 py-3" />}
                 />
                 <Bar 
                   dataKey="popularity" 
-                  radius={[0, 6, 6, 0]}
-                  barSize={20}
+                  radius={[0, 8, 8, 0]}
+                  barSize={24}
                   animationDuration={1500}
                   animationEasing="ease-out"
                 >
@@ -81,8 +89,8 @@ export const DemographicsWidget: React.FC = () => {
                     <Cell
                       key={`cell-${index}`}
                       fill="url(#barGradient)"
-                      style={{ filter: 'url(#barShadow)' }}
-                      className="hover:opacity-80 transition-opacity duration-300 cursor-pointer"
+                      style={{ filter: 'url(#barShadow) url(#barGlow)' }}
+                      className="hover:opacity-90 hover:brightness-110 transition-all duration-300 cursor-pointer"
                     />
                   ))}
                 </Bar>
