@@ -28,3 +28,7 @@ coverage/
 playwright-report/
 test-results/
 bun_output.txt
+
+# Electron build output
+release/
+out/
