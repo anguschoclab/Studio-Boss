@@ -514,6 +514,7 @@ export interface SeriesProject extends ScriptedProject {
   tvFormat?: TvFormatKey;
   tvDetails: TVSeasonDetails;
   releaseModel?: ReleaseModelKey;
+  nielsenProfile?: import('../systems/television/nielsenSystem').NielsenProfile;
 }
 
 export type Project = FilmProject | SeriesProject | (UnscriptedProject & { type: 'SERIES' });
