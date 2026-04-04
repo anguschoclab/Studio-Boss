@@ -11,6 +11,7 @@ import {
   Briefcase, 
   Newspaper,
   Tv,
+  BarChart3,
   ChevronLeft,
   ChevronRight,
   LogOut,
