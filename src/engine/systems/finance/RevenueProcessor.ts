@@ -1,6 +1,8 @@
 import { Project, Buyer, Contract } from '../../types';
+import { ProjectRating } from '../../types/project.types';
 import { IPAsset } from '../../types/state.types';
 import { calculateWeeklyIPRevenue } from '../ip/merchandisingEngine';
+import { getRatingEconomics } from '../ratings';
 
 /**
  * RevenueProcessor handles all income-related calculations for the studio.
@@ -52,7 +54,7 @@ export class RevenueProcessor {
         }
         
         const franchise = p.franchiseId ? state.ip.franchises[p.franchiseId] : null;
-        const weeklyMerch = this.calculateMerchRevenue(p.buzz, franchise?.relevanceScore || 0);
+        const weeklyMerch = this.calculateMerchRevenue(p.buzz, franchise?.relevanceScore || 0, p.rating ?? 'PG-13');
         merch += weeklyMerch;
 
         totalRoyalties += this.calculateNetPointsRoyalty(p, weeklyGross + weeklyMerch, state.studio.internal.contracts);
@@ -94,13 +96,16 @@ export class RevenueProcessor {
 
   /**
    * Calculates weekly streaming revenue for a project on a specific platform.
+   * Applies a streaming premium for adult/specialty ratings (TV-MA, NC-17, Unrated).
    */
   static calculateStreamingRevenue(project: Project, platform: Buyer): number {
     const quality = project.reviewScore || 50;
     const marketShare = platform.marketShare || 0.10;
-    const baseFeePerUnit = 2000; 
+    const baseFeePerUnit = 2000;
     const shareUnits = marketShare * 100;
-    return Math.round(baseFeePerUnit * shareUnits * (quality / 100));
+    const baseRevenue = Math.round(baseFeePerUnit * shareUnits * (quality / 100));
+    const streamingPremium = getRatingEconomics(project.rating ?? 'PG-13').streamingPremium;
+    return Math.round(baseRevenue * (1 + streamingPremium));
   }
 
   /**
@@ -115,14 +120,18 @@ export class RevenueProcessor {
   }
 
   /**
-   * Calculates passive merchandise revenue based on hype and franchise strength.
+   * Calculates passive merchandise revenue based on hype, franchise strength, and rating.
+   * G/PG-rated projects earn a merch bonus; R/NC-17/Unrated earn far less.
    */
-  static calculateMerchRevenue(hype: number, franchiseRelevance: number): number {
+  static calculateMerchRevenue(hype: number, franchiseRelevance: number, rating: ProjectRating = 'PG-13'): number {
+    if (rating === 'Unrated') return 0; // Unrated releases cannot merchandise
     if (hype < 70) return 0;
     const base = 5000;
     const hypeFactor = (hype - 70) / 30;
     const relevanceFactor = franchiseRelevance / 100;
-    return Math.round(base + (base * 5 * hypeFactor * relevanceFactor));
+    const baseRevenue = Math.round(base + (base * 5 * hypeFactor * relevanceFactor));
+    const merchMultiplier = getRatingEconomics(rating).merchMultiplier;
+    return Math.round(baseRevenue * merchMultiplier);
   }
 
   /**

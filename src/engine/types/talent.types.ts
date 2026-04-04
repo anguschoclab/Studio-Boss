@@ -14,7 +14,8 @@ export type RivalStrategy = 'blockbuster_focused' | 'prestige_chaser' | 'genre_s
 export type DirectorArchetype = 'auteur' | 'journeyman' | 'visionary' | 'commercial_hack';
 export type TalentTier = 'S_LIST' | 'A_LIST' | 'B_LIST' | 'C_LIST' | 'RISING_STAR' | 'NEWCOMER';
 
-export type ScandalType = 'financial' | 'personal' | 'onset_behavior' | 'legal' | 'feud';
+export type ScandalType = 'financial' | 'personal' | 'onset_behavior' | 'legal' | 'feud'
+  | 'rating_controversy' | 'director_speaks_out' | 'foreign_market_cut' | 'banned_in_market';
 
 export interface Scandal {
   id: string;
@@ -169,6 +170,9 @@ export interface Talent {
   };
   trivia?: string[];
   
+  // Director-specific
+  directorArchetype?: DirectorArchetype;
+
   // AI Motivations
   motivationProfile?: MotivationProfile;
   currentMotivation?: TalentMotivation;

@@ -2,6 +2,9 @@ import { pick } from '../utils';
 import { GameState, Scandal, ScandalType } from '@/engine/types';
 import { StateImpact } from '../types/state.types';
 import { RandomGenerator } from '../utils/rng';
+import { RatingMarket } from '../types/project.types';
+import { MARKET_CONFIGS } from '../data/ratingMarkets';
+import { Project } from '../types/project.types';
 
 /**
  * Randomly spawns a scandal for a talent in the pool based on their controversy risk.
@@ -160,4 +163,108 @@ export function advanceScandals(state: GameState): StateImpact[] {
   }
   
   return impacts;
+}
+
+// ---------------------------------------------------------------------------
+// Rating-Specific Studio-Level Events
+// ---------------------------------------------------------------------------
+
+export type RatingEventType = 'rating_controversy' | 'foreign_market_cut' | 'banned_in_market';
+
+/**
+ * Generates a studio-level rating event as news + prestige change.
+ * Does NOT create a Scandal object (no talentId). Use for studio-level
+ * controversies like bans and foreign market cuts.
+ */
+export function generateStudioRatingEvent(
+  type: RatingEventType,
+  context: { projectTitle: string; marketName?: string; week: number },
+  rng: RandomGenerator
+): StateImpact {
+  const prestigeLoss = type === 'banned_in_market' ? -10
+    : type === 'rating_controversy' ? -5
+    : -3;
+
+  const headline = type === 'banned_in_market'
+    ? `"${context.projectTitle}" BANNED in ${context.marketName ?? 'foreign market'}`
+    : type === 'rating_controversy'
+    ? `Rating controversy surrounds "${context.projectTitle}"`
+    : `Content cut for foreign release of "${context.projectTitle}"`;
+
+  const description = type === 'banned_in_market'
+    ? `Censors in ${context.marketName ?? 'the region'} have blocked the release, costing significant box office revenue.`
+    : type === 'rating_controversy'
+    ? `The unexpected rating has caused audience confusion and a wave of negative press.`
+    : `Local censors required content edits before approving distribution in ${context.marketName ?? 'the market'}.`;
+
+  const publication = type === 'banned_in_market' ? 'The Hollywood Reporter' as const
+    : 'Variety' as const;
+
+  return {
+    prestigeChange: prestigeLoss,
+    newsEvents: [{
+      id: rng.uuid('rating-event'),
+      week: context.week,
+      type: 'SCANDAL',
+      headline,
+      description,
+      publication
+    }],
+    newHeadlines: [{
+      id: rng.uuid('rating-headline'),
+      text: headline,
+      week: context.week,
+      category: 'scandal',
+      publication
+    }]
+  };
+}
+
+/**
+ * Checks if a project has banned markets and generates a one-time headline event.
+ * Returns null if already reported (deduplication via directorsCutNotified repurposed as
+ * a simple check against existing newsHistory).
+ */
+export function generateMarketBanScandal(
+  project: Project,
+  bannedMarkets: RatingMarket[],
+  week: number,
+  state: GameState,
+  rng: RandomGenerator
+): StateImpact | null {
+  if (bannedMarkets.length === 0) return null;
+
+  // Deduplication: check if we already generated a ban headline for this project
+  const alreadyReported = state.industry.newsHistory.some(e =>
+    e.headline.includes(project.title) && e.headline.includes('BANNED')
+  );
+  if (alreadyReported) return null;
+
+  const primaryBan = bannedMarkets[0];
+  const marketName = MARKET_CONFIGS[primaryBan]?.displayName ?? primaryBan;
+  const extraCount = bannedMarkets.length - 1;
+
+  const suffix = extraCount > 0 ? ` (and ${extraCount} other market${extraCount > 1 ? 's' : ''})` : '';
+  const headline = `"${project.title}" BANNED in ${marketName}${suffix}`;
+
+  const prestigeLoss = Math.min(15, bannedMarkets.length * 3);
+
+  return {
+    prestigeChange: -prestigeLoss,
+    newsEvents: [{
+      id: rng.uuid('ban-event'),
+      week,
+      type: 'SCANDAL',
+      headline,
+      description: `Censors have blocked the release, costing an estimated ${(bannedMarkets.length * 5).toFixed(0)}% of international box office.`,
+      publication: 'The Hollywood Reporter'
+    }],
+    newHeadlines: [{
+      id: rng.uuid('ban-headline'),
+      text: headline,
+      week,
+      category: 'scandal',
+      publication: 'The Hollywood Reporter'
+    }]
+  };
 }

@@ -1,6 +1,6 @@
 // Types related to the Simulation Engine, News, and Events
 
-export type ModalType = 'CRISIS' | 'AWARDS' | 'SUMMARY';
+export type ModalType = 'CRISIS' | 'AWARDS' | 'SUMMARY' | 'DIRECTORS_CUT_AVAILABLE';
 
 export type HeadlineCategory = 'rival' | 'market' | 'talent' | 'awards' | 'general' | 'rumor' | 'box_office' | 'streaming' | 'scandal' | 'dispute';
 

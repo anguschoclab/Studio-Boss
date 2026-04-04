@@ -454,6 +454,11 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
       }
     };
   }
+  if (impact.newScandals) {
+    impact.newScandals.forEach(scandal => {
+      newState = applySingleImpact(newState, { type: 'SCANDAL_ADDED', payload: { scandal } });
+    });
+  }
   if (impact.type === 'INDUSTRY_UPDATE') {
       const payload = impact.payload as any;
       let nextState = { ...state };
