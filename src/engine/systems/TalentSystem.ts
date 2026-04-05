@@ -25,16 +25,36 @@ export class TalentSystem {
       // Recovery phase (default)
       const nextFatigue = SchedulingEngine.updateTalentFatigue(talent, false);
       
+      let commitmentsChanged = false;
+      let nextCommitments = talent.commitments;
+
       // Cleanup expired commitments
-      const nextCommitments = (talent.commitments || []).filter((c: any) => c.endWeek >= state.week);
+      if (talent.commitments && talent.commitments.length > 0) {
+        let hasExpired = false;
+        for (let i = 0; i < talent.commitments.length; i++) {
+          if (talent.commitments[i].endWeek < state.week) {
+            hasExpired = true;
+            break;
+          }
+        }
+
+        if (hasExpired) {
+          nextCommitments = [];
+          for (let i = 0; i < talent.commitments.length; i++) {
+            if (talent.commitments[i].endWeek >= state.week) {
+              nextCommitments.push(talent.commitments[i]);
+            }
+          }
+          commitmentsChanged = true;
+        }
+      }
       
-      if (nextFatigue !== (talent.fatigue || 0) || nextCommitments.length !== (talent.commitments || []).length) {
+      if (nextFatigue !== (talent.fatigue || 0) || commitmentsChanged) {
+        const update: Partial<Talent> = { fatigue: nextFatigue };
+        if (commitmentsChanged) update.commitments = nextCommitments;
         talentUpdates.push({
           talentId: id,
-          update: {
-            fatigue: nextFatigue,
-            commitments: nextCommitments
-          }
+          update
         });
       }
     }
