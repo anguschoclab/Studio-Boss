@@ -76,3 +76,26 @@ export function applyIPDecay(asset: IPAsset): IPAsset {
     decayRate: clamp(asset.decayRate - effectiveDecay, 0.05, 1.0)
   };
 }
+
+/**
+ * The Cult Classic Engine:
+ * Automated Scanner: Week 1 of every year, scan all projects in history.
+ * Criteria: weeksReleased > 260 && reviewScore > 75 && ROI < 1.1.
+ */
+export function detectCultClassic(project: Project, currentWeek: number): boolean {
+  if (project.isCultClassic) return true;
+  if (!project.releaseWeek) return false;
+
+  const weeksReleased = currentWeek - project.releaseWeek;
+  if (weeksReleased < 260) return false;
+
+  const quality = project.reviewScore || 0;
+  if (quality < 75) return false;
+
+  const totalCost = project.budget + (project.marketingBudget || 0);
+  const roi = totalCost > 0 ? project.revenue / totalCost : 0;
+  
+  if (roi > 1.1) return false; // Must be a "flop" or "break-even" to qualify for cult status
+
+  return true;
+}

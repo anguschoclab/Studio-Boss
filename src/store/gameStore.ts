@@ -15,8 +15,12 @@ import { createSnapshotSlice, SnapshotSlice } from './slices/snapshotSlice';
 
 export interface GameStore extends ProjectSlice, FinanceSlice, TalentSlice, RivalSlice, NewsSlice, SnapshotSlice {
   gameState: GameState | null;
+  _isProcessingTick: boolean;
+  _isSaving: boolean;
+  _saveNextState: GameState | null;
+
   newGame: (studioName: string, archetype: ArchetypeKey) => Promise<void>;
-  doAdvanceWeek: () => WeekSummary;
+  doAdvanceWeek: () => WeekSummary | null;
   saveToSlot: (slot: number) => Promise<void>;
   loadFromSlot: (slot: number) => Promise<boolean>;
   getSaveSlots: () => Promise<SaveSlotInfo[]>;
@@ -32,7 +36,6 @@ const INITIAL_FINANCE: FinanceState = {
     cycle: 'STABLE',
     sentiment: 0,
     baseRate: 0.05,
-    consumerConfidence: 50,
     debtRate: 0.08,
     savingsYield: 0.02,
     loanRate: 0.08,
@@ -43,6 +46,9 @@ const INITIAL_NEWS: NewsState = { headlines: [] };
 
 export const useGameStore = create<GameStore>((set, get, ...args) => ({
   gameState: null,
+  _isProcessingTick: false,
+  _isSaving: false,
+  _saveNextState: null,
 
   ...createProjectSlice(set, get, ...args),
   ...createFinanceSlice(set, get, ...args),
@@ -63,51 +69,70 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
   },
 
   doAdvanceWeek: () => {
+    if (get()._isProcessingTick) {
+        console.warn('[GameStore] Tick already in progress, skipping...');
+        return null;
+    }
+
     const state = get().gameState;
     if (!state) throw new Error('No game in progress');
 
-    // Instantiate deterministic RNG for this week's simulation tick
-    const rng = new RandomGenerator((state.gameSeed || 12345) + (state.tickCount || 0));
+    set({ _isProcessingTick: true });
 
-    const { newState: nextState, summary, impacts } = advanceWeek(state, rng);
-    const finalState = nextState as GameState;
+    try {
+        const rng = new RandomGenerator((state.gameSeed || 12345) + (state.tickCount || 0));
+        const { newState: nextState, summary, impacts } = advanceWeek(state, rng);
+        const finalState = nextState as GameState;
 
-    // Trigger background save without blocking UI (Fire and forget)
-    saveGame(0, finalState);
-    
-    set({ 
-      gameState: finalState,
-      finance: finalState.finance,
-      news: finalState.news
-    });
+        // Queue background save (Latest-Only pattern)
+        const triggerSave = async (stateToSave: GameState) => {
+            if (get()._isSaving) {
+                set({ _saveNextState: stateToSave });
+                return;
+            }
 
-    // --- Modal Queue Integration ---
-    const ui = useUIStore.getState();
+            set({ _isSaving: true, _saveNextState: null });
+            await saveGame(0, stateToSave);
+            set({ _isSaving: false });
 
-    // Process simulation impacts for UI triggers (Modals, etc.)
-    if (impacts && impacts.length > 0) {
-      // Collect modal impacts for prioritized queueing
-      const modalImpacts: (import('@/engine/types').StateImpact & { type: 'MODAL_TRIGGERED', payload: any })[] = [];
-      for (let i = 0; i < impacts.length; i++) {
-        if (impacts[i].type === 'MODAL_TRIGGERED') {
-          modalImpacts.push(impacts[i] as any);
+            // If a new save was queued while we were saving, trigger it now.
+            const next = get()._saveNextState;
+            if (next) {
+                triggerSave(next);
+            }
+        };
+
+        triggerSave(finalState);
+        
+        set({ 
+          gameState: finalState,
+          finance: finalState.finance,
+          news: finalState.news,
+          _isProcessingTick: false
+        });
+
+        // --- Modal Queue Integration ---
+        const ui = useUIStore.getState();
+
+        if (impacts && impacts.length > 0) {
+          const modalImpacts = impacts.filter(imp => imp.type === 'MODAL_TRIGGERED');
+          if (modalImpacts.length > 0) {
+            const sortedModalImpacts = [...modalImpacts].sort((a, b) => (b.payload.priority || 0) - (a.payload.priority || 0));
+            for (const imp of sortedModalImpacts) {
+              ui.enqueueModal(imp.payload.modalType, imp.payload.payload as Record<string, unknown>);
+            }
+          }
         }
-      }
 
-      if (modalImpacts.length > 0) {
-        const sortedModalImpacts = [...modalImpacts].sort((a, b) => (b.payload.priority || 0) - (a.payload.priority || 0));
-        for (let i = 0; i < sortedModalImpacts.length; i++) {
-          ui.enqueueModal(sortedModalImpacts[i].payload.modalType, sortedModalImpacts[i].payload.payload as Record<string, unknown>);
+        if (summary && summary.fromWeek % 52 === 0 && summary.fromWeek > 0) {
+          get().captureSnapshot();
         }
-      }
-    }
 
-    // 4. Yearly Snapshot (Sprint G)
-    if (summary && summary.fromWeek % 52 === 0 && summary.fromWeek > 0) {
-      get().captureSnapshot();
+        return summary;
+    } catch (e) {
+        set({ _isProcessingTick: false });
+        throw e;
     }
-
-    return summary;
   },
 
   saveToSlot: async (slot) => {

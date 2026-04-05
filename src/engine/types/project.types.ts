@@ -51,7 +51,7 @@ export interface BoxOfficeResult {
 }
 
 export type ProjectStatus = 'development' | 'needs_greenlight' | 'pitching' | 'production' | 'marketing' | 'released' | 'post_release' | 'archived' | 'turnaround' | 'pilot' | 'shopping';
-export type ProjectFormat = 'film' | 'tv' | 'unscripted';
+export type ProjectFormat = 'film' | 'tv' | 'unscripted' | 'animation';
 export type BudgetTierKey = 'low' | 'mid' | 'high' | 'blockbuster';
 
 export type TvFormatKey =
@@ -186,6 +186,7 @@ export type UnscriptedFormatKey =
   | 'docuseries'
   | 'reality_ensemble'
   | 'game_show'
+  | 'talk_show'
   | 'lifestyle'
   | 'dating_island'
   | 'true_crime_doc'
@@ -503,6 +504,7 @@ export interface ProjectBase {
   // Release simulation fields
   reviewScore?: number;
   boxOfficeRank?: number;
+  acquisitionCost?: number; // 🌌 PHASE 2: Price paid in auction/market
   // Marketing fields
   marketingBudget?: number;
   marketingLevel?: 'none' | 'basic' | 'blockbuster';
@@ -530,10 +532,10 @@ export interface ProjectBase {
   regionalRatings?: RegionalRating[];
   directorsCutNotified?: boolean;
   // Phase 2: Deal & Revenue Mechanics
-  dealModel?: 'cost_plus' | 'deficit_financing';
+  dealModel?: 'cost_plus' | 'deficit_financing' | 'self_distributed' | 'independent';
   backendPoints?: number;       // 0-100, % of net backend revenue to player
   isPrimetimeAnchor?: boolean;  // triggers international format rights on season 2+ renewal
-  stage?: 'pilot';              // sub-state within 'development' for TV projects
+  stage?: 'pilot' | 'series' | 'shopping'; // sub-state for TV projects
   shoppingExpiresWeek?: number; // week when 'shopping' status lapses
 }
 

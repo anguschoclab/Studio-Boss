@@ -17,6 +17,10 @@ import { useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useShallow } from 'zustand/react/shallow';
 import { formatMoney } from '@/engine/utils';
+import { selectProjects } from '@/store/selectors';
+
+const EMPTY_HISTORY: import('@/engine/types/state.types').FinancialSnapshot[] = [];
+const EMPTY_PROJECTS: import('@/engine/types').Project[] = [];
 
 export const FinancePanel = () => {
   // Use atomic selectors to prevent unnecessary re-renders when unrelated gameState parts change
@@ -25,8 +29,9 @@ export const FinancePanel = () => {
   const snapshots = useGameStore(useShallow(s => s.snapshots || []));
 
   // Use useShallow for arrays/objects extracted from state
-  const projectsMemo = useGameStore(useShallow(s => Object.values(s.gameState?.studio.internal.projects || {})));
-  const financeHistory = useGameStore(useShallow(s => s.gameState?.finance?.weeklyHistory || []));
+  // ⚡ Bolt: Removed inline array allocation using Object.values() to prevent unnecessary re-renders
+  const projectsMemo = useGameStore(useShallow(s => s.gameState ? selectProjects(s.gameState) : EMPTY_PROJECTS));
+  const financeHistory = useGameStore(useShallow(s => s.gameState?.finance?.weeklyHistory || EMPTY_HISTORY));
 
   // Need entire gameState for complex calculations like Net Worth and Forecasts
   // but we extract it here to pass to memoized functions without triggering re-renders on the whole object

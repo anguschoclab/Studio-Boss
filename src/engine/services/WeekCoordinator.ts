@@ -75,7 +75,6 @@ export class WeekCoordinator {
     // 1. Run Filters
     this.runMarketFilter(state, context);
     this.runProductionFilter(state, context);
-    this.runRatingFilter(state, context);
     this.runAIFilter(state, context);
     this.runIndustryFilter(state, context);
     this.runTalentFilter(state, context);
@@ -153,16 +152,8 @@ export class WeekCoordinator {
         const impact = checkAndTriggerCrisis(project, state, context.rng);
         if (impact) context.impacts.push(impact);
       }
-    }
 
-    context.impacts.push(...tickTelevision(state, context.rng));
-    context.impacts.push(...calculateFranchiseEvolutionImpacts(state, context.rng));
-    context.impacts.push(...tickIPVault(state));
-    context.impacts.push(...SchedulingEngine.tick(state, context.rng));
-
-    // Check director's cut eligibility for post-theatrical projects
-    for (const key in state.studio.internal.projects) {
-      const project = state.studio.internal.projects[key];
+      // Check director's cut eligibility for post-theatrical projects
       if ((project.state === 'post_release' || project.state === 'released') && !project.directorsCutNotified) {
         const { eligible } = checkDirectorsCutEligibility(project, context.week);
         if (eligible) {
@@ -181,18 +172,58 @@ export class WeekCoordinator {
           });
         }
       }
-    }
-  }
 
-  private static runCrisisFilter(state: GameState, context: TickContext) {
-    const activeStages = ['prep', 'production', 'post_production', 'marketing'];
-    for (const key in state.studio.internal.projects) {
-      const project = state.studio.internal.projects[key];
-      if (!project.activeCrisis && activeStages.includes(project.state)) {
-        const impact = checkAndTriggerCrisis(project, state, context.rng);
-        if (impact) context.impacts.push(impact);
+      // Auto-evaluate rating for projects with flags but no rating yet
+      if (project.contentFlags?.length && !project.rating) {
+        const newRating = evaluateRatingForProject(project.contentFlags, project.type);
+        const newRegional = evaluateRegionalRatings(project.contentFlags, newRating);
+        context.impacts.push({
+          type: 'PROJECT_UPDATED',
+          payload: { projectId: project.id, update: { rating: newRating, regionalRatings: newRegional } }
+        });
+      }
+
+      // Scan released projects for newly banned markets and generate one-time headlines
+      if (project.regionalRatings && (project.state === 'released' || project.state === 'post_release')) {
+        const bannedMarkets = project.regionalRatings
+          .filter(r => r.isBanned)
+          .map(r => r.market);
+        if (bannedMarkets.length > 0) {
+          const banImpact = generateMarketBanScandal(project, bannedMarkets, context.week, state, context.rng);
+          if (banImpact) context.impacts.push(banImpact);
+        }
+      }
+
+      // Clears 'shopping' status for projects whose window has expired.
+      if (
+        project.state === 'shopping' &&
+        project.shoppingExpiresWeek !== undefined &&
+        context.week >= project.shoppingExpiresWeek
+      ) {
+        context.impacts.push({
+          type: 'PROJECT_UPDATED',
+          payload: {
+            projectId: project.id,
+            update: { state: 'archived' as const }
+          }
+        });
+        context.impacts.push({
+          type: 'NEWS_ADDED',
+          payload: {
+            id: `shop-expired-${project.id}`,
+            headline: `"${project.title}" shopping window closes without a deal`,
+            description: `The show has been shelved after failing to find a new network home.`,
+            category: 'cancellation'
+          }
+        });
       }
     }
+    // ⚡ Bolt: Consolidated multiple sequential O(n) iterations over projects into a single pass.
+
+    context.impacts.push(...tickTelevision(state, context.rng));
+    context.impacts.push(...calculateFranchiseEvolutionImpacts(state, context.rng));
+    context.impacts.push(...tickIPVault(state));
+    context.impacts.push(...SchedulingEngine.tick(state, context.rng));
   }
 
   private static runAIFilter(state: GameState, context: TickContext) {
@@ -204,10 +235,12 @@ export class WeekCoordinator {
 
   private static runIndustryFilter(state: GameState, context: TickContext) {
     const { year } = InterestRateSimulator.getWeekDisplay(context.week);
-    const awardsImpact = runAwardsCeremony(state, context.week, year, context.rng);
-    context.impacts.push(awardsImpact);
+    const awardsImpacts = runAwardsCeremony(state, context.week, year, context.rng);
+    context.impacts.push(...awardsImpacts);
     
-    if (awardsImpact.newAwards && awardsImpact.newAwards.length > 0) {
+    const allNewAwards = awardsImpacts.reduce((acc, imp) => [...acc, ...(imp.newAwards || [])], [] as any[]);
+    
+    if (allNewAwards.length > 0) {
       context.impacts.push({
         type: 'MODAL_TRIGGERED',
         payload: {
@@ -216,8 +249,8 @@ export class WeekCoordinator {
           payload: { 
             week: context.week,
             year,
-            awards: awardsImpact.newAwards,
-            body: awardsImpact.newAwards[0]?.body || 'Annual Industry Awards'
+            awards: allNewAwards,
+            body: allNewAwards[0]?.body || 'Annual Industry Awards'
           }
         }
       });
@@ -225,11 +258,10 @@ export class WeekCoordinator {
     
     const weekDisplay = context.week % 52 === 0 ? 52 : context.week % 52;
     if (weekDisplay === 4) {
-      const razzieImpact = processRazzies(state, context.week, context.rng);
-      context.impacts.push(razzieImpact);
+      context.impacts.push(...processRazzies(state, context.week, context.rng));
     }
 
-    context.impacts.push(resolveFestivals(state, context.rng));
+    context.impacts.push(...resolveFestivals(state, context.rng));
     context.impacts.push(...RegulatorSystem.tick(state, context.rng));
 
     // Festival market auction at Sundance (w4), Cannes (w20), TIFF (w36)
@@ -247,9 +279,6 @@ export class WeekCoordinator {
     if (weekOfYear === 52) {
       this.runAnnualMAScan(state, context);
     }
-
-    // Shopping status expiry
-    this.runShoppingExpiry(state, context);
   }
 
   private static runTalentFilter(state: GameState, context: TickContext) {
@@ -318,7 +347,9 @@ export class WeekCoordinator {
   }
 
   private static runFinanceFilter(state: GameState, context: TickContext) {
-    context.impacts.push(...tickFinance(state, context.rng));
+    // Pass context.impacts so the Weekly Report can account for news/awards/festival transactions
+    const financeImpacts = tickFinance(state, context.rng, context.impacts);
+    context.impacts.push(...financeImpacts);
   }
 
   /**
@@ -361,37 +392,6 @@ export class WeekCoordinator {
           });
           break; // one hostile move per attacker per year
         }
-      }
-    }
-  }
-
-  /**
-   * Clears 'shopping' status for projects whose window has expired.
-   */
-  private static runShoppingExpiry(state: GameState, context: TickContext) {
-    for (const key in state.studio.internal.projects) {
-      const project = state.studio.internal.projects[key];
-      if (
-        project.state === 'shopping' &&
-        project.shoppingExpiresWeek !== undefined &&
-        context.week >= project.shoppingExpiresWeek
-      ) {
-        context.impacts.push({
-          type: 'PROJECT_UPDATED',
-          payload: {
-            projectId: project.id,
-            update: { state: 'archived' as const }
-          }
-        });
-        context.impacts.push({
-          type: 'NEWS_ADDED',
-          payload: {
-            id: `shop-expired-${project.id}`,
-            headline: `"${project.title}" shopping window closes without a deal`,
-            description: `The show has been shelved after failing to find a new network home.`,
-            category: 'cancellation'
-          }
-        });
       }
     }
   }
