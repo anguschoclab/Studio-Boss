@@ -66,26 +66,12 @@ export const TalentPanel = () => {
             </SelectContent>
           </Select>
 
-          <TooltipWrapper tooltip="Filter by Overall Deals (Mega-Producers)">
-            <button 
-              onClick={() => setShowMegaProducers(!showMegaProducers)}
-              className={`h-9 px-3 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest border transition-all rounded-md ${
-                showMegaProducers 
-                  ? 'bg-amber-500/20 text-amber-500 border-amber-500/50 shadow-[0_0_10px_rgba(245,158,11,0.2)]' 
-                  : 'bg-muted/20 text-muted-foreground border-border/40 hover:text-foreground'
-              }`}
-            >
-              <Filter className="w-3 h-3" />
-              Mega-Producers
-            </button>
-          </TooltipWrapper>
-
-          <div className="flex gap-1.5 h-9 items-center px-2 bg-muted/10 rounded-lg border border-border/20">
+          <div className="flex flex-wrap gap-1.5 h-auto py-1 items-center px-2 bg-muted/10 rounded-lg border border-border/20">
             {(['all', 'actor', 'director', 'writer', 'producer'] as (TalentRole | 'all')[]).map(type => (
               <TooltipWrapper key={type} tooltip={`Filter by ${type}`} side="bottom">
                 <button 
                   onClick={() => setRoleFilter(type)}
-                  className={`px-3 py-1 text-[9px] uppercase tracking-wider font-black rounded-md transition-all ${
+                  className={`px-3 py-2 text-[9px] uppercase tracking-wider font-black rounded-md transition-all ${
                     roleFilter === type
                       ? 'bg-primary text-primary-foreground'
                       : 'text-muted-foreground hover:text-foreground'
