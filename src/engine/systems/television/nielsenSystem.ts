@@ -8,15 +8,7 @@ import { RandomGenerator } from '../../utils/rng';
  */
 
 // --- Time Slot System ---
-export type TimeSlot = 
-  | 'SUN_2000' | 'SUN_2100' | 'SUN_2200'
-  | 'MON_2000' | 'MON_2100' | 'MON_2200'
-  | 'TUE_2000' | 'TUE_2100' | 'TUE_2200'
-  | 'WED_2000' | 'WED_2100' | 'WED_2200'
-  | 'THU_2000' | 'THU_2100' | 'THU_2200'
-  | 'FRI_2000' | 'FRI_2100' | 'FRI_2200'
-  | 'SAT_2000' | 'SAT_2100' | 'SAT_2200'
-  | 'LATE_NIGHT' | 'DAYTIME' | 'STREAMING_BINGE' | 'STREAMING_WEEKLY';
+export type TimeSlot = '8PM' | '9PM' | '10PM' | 'LATE_NIGHT' | 'DAYTIME' | 'STREAMING';
 
 export interface TimeSlotConfig {
   id: TimeSlot;
@@ -27,32 +19,36 @@ export interface TimeSlotConfig {
 }
 
 export const TIME_SLOTS: Record<TimeSlot, TimeSlotConfig> = {
-  'SUN_2000': { id: 'SUN_2000', label: 'Sun 8:00 PM', baseHouseholds: 48, primeTimeMultiplier: 1.1, demographics: { 'P2+': 1.1, 'A18-49': 0.9, 'A25-54': 1.0, 'A18-34': 0.8, 'W18-49': 1.0, 'M18-49': 0.8, 'K2-11': 1.4, 'T12-17': 1.2 } },
-  'SUN_2100': { id: 'SUN_2100', label: 'Sun 9:00 PM', baseHouseholds: 52, primeTimeMultiplier: 1.2, demographics: { 'P2+': 1.0, 'A18-49': 1.3, 'A25-54': 1.2, 'A18-34': 1.1, 'W18-49': 1.2, 'M18-49': 1.4, 'K2-11': 0.4, 'T12-17': 0.8 } },
-  'SUN_2200': { id: 'SUN_2200', label: 'Sun 10:00 PM', baseHouseholds: 42, primeTimeMultiplier: 1.1, demographics: { 'P2+': 0.9, 'A18-49': 1.1, 'A25-54': 1.3, 'A18-34': 0.8, 'W18-49': 1.1, 'M18-49': 1.0, 'K2-11': 0.1, 'T12-17': 0.4 } },
-  'MON_2100': { id: 'MON_2100', label: 'Mon 9:00 PM', baseHouseholds: 55, primeTimeMultiplier: 1.3, demographics: { 'P2+': 1.0, 'A18-49': 1.4, 'A25-54': 1.1, 'A18-34': 1.2, 'W18-49': 1.0, 'M18-49': 1.5, 'K2-11': 0.3, 'T12-17': 0.7 } },
-  'THU_2100': { id: 'THU_2100', label: 'Thu 9:00 PM', baseHouseholds: 50, primeTimeMultiplier: 1.2, demographics: { 'P2+': 1.0, 'A18-49': 1.3, 'A25-54': 1.1, 'A18-34': 1.3, 'W18-49': 1.2, 'M18-49': 1.2, 'K2-11': 0.4, 'T12-17': 0.9 } },
-  // ... Fillers for other slots to satisfy the Record<TimeSlot, TimeSlotConfig>
-  'MON_2000': { id: 'MON_2000', label: 'Mon 8:00 PM', baseHouseholds: 40, primeTimeMultiplier: 1.0, demographics: { 'P2+': 1.0, 'A18-49': 0.8, 'A25-54': 0.9, 'A18-34': 1.0, 'W18-49': 1.0, 'M18-49': 0.7, 'K2-11': 1.1, 'T12-17': 1.0 } },
-  'MON_2200': { id: 'MON_2200', label: 'Mon 10:00 PM', baseHouseholds: 35, primeTimeMultiplier: 0.9, demographics: { 'P2+': 0.9, 'A18-49': 1.0, 'A25-54': 1.2, 'A18-34': 0.8, 'W18-49': 1.1, 'M18-49': 0.9, 'K2-11': 0.1, 'T12-17': 0.4 } },
-  'TUE_2000': { id: 'TUE_2000', label: 'Tue 8:00 PM', baseHouseholds: 38, primeTimeMultiplier: 1.0, demographics: { 'P2+': 1.0, 'A18-49': 0.8, 'A25-54': 0.9, 'A18-34': 0.9, 'W18-49': 1.0, 'M18-49': 0.7, 'K2-11': 1.2, 'T12-17': 1.1 } },
-  'TUE_2100': { id: 'TUE_2100', label: 'Tue 9:00 PM', baseHouseholds: 42, primeTimeMultiplier: 1.1, demographics: { 'P2+': 1.0, 'A18-49': 1.2, 'A25-54': 1.1, 'A18-34': 1.1, 'W18-49': 1.1, 'M18-49': 1.2, 'K2-11': 0.4, 'T12-17': 0.8 } },
-  'TUE_2200': { id: 'TUE_2200', label: 'Tue 10:00 PM', baseHouseholds: 36, primeTimeMultiplier: 1.0, demographics: { 'P2+': 0.9, 'A18-49': 1.0, 'A25-54': 1.2, 'A18-34': 0.8, 'W18-49': 1.1, 'M18-49': 1.0, 'K2-11': 0.1, 'T12-17': 0.5 } },
-  'WED_2000': { id: 'WED_2000', label: 'Wed 8:00 PM', baseHouseholds: 40, primeTimeMultiplier: 1.0, demographics: { 'P2+': 1.0, 'A18-49': 0.9, 'A25-54': 1.0, 'A18-34': 0.9, 'W18-49': 1.0, 'M18-49': 0.8, 'K2-11': 1.3, 'T12-17': 1.2 } },
-  'WED_2100': { id: 'WED_2100', label: 'Wed 9:00 PM', baseHouseholds: 45, primeTimeMultiplier: 1.1, demographics: { 'P2+': 1.0, 'A18-49': 1.2, 'A25-54': 1.1, 'A18-34': 1.2, 'W18-49': 1.1, 'M18-49': 1.3, 'K2-11': 0.5, 'T12-17': 0.9 } },
-  'WED_2200': { id: 'WED_2200', label: 'Wed 10:00 PM', baseHouseholds: 38, primeTimeMultiplier: 1.0, demographics: { 'P2+': 0.9, 'A18-49': 1.1, 'A25-54': 1.3, 'A18-34': 0.8, 'W18-49': 1.1, 'M18-49': 1.0, 'K2-11': 0.1, 'T12-17': 0.5 } },
-  'THU_2000': { id: 'THU_2000', label: 'Thu 8:00 PM', baseHouseholds: 42, primeTimeMultiplier: 1.0, demographics: { 'P2+': 1.0, 'A18-49': 0.8, 'A25-54': 0.9, 'A18-34': 0.9, 'W18-49': 1.0, 'M18-49': 0.7, 'K2-11': 1.4, 'T12-17': 1.3 } },
-  'THU_2200': { id: 'THU_2200', label: 'Thu 10:00 PM', baseHouseholds: 40, primeTimeMultiplier: 1.1, demographics: { 'P2+': 0.9, 'A18-49': 1.1, 'A25-54': 1.3, 'A18-34': 0.9, 'W18-49': 1.1, 'M18-49': 1.1, 'K2-11': 0.1, 'T12-17': 0.4 } },
-  'FRI_2000': { id: 'FRI_2000', label: 'Fri 8:00 PM', baseHouseholds: 35, primeTimeMultiplier: 0.9, demographics: { 'P2+': 1.0, 'A18-49': 0.7, 'A25-54': 0.8, 'A18-34': 0.9, 'W18-49': 0.9, 'M18-49': 0.6, 'K2-11': 1.5, 'T12-17': 1.4 } },
-  'FRI_2100': { id: 'FRI_2100', label: 'Fri 9:00 PM', baseHouseholds: 30, primeTimeMultiplier: 0.8, demographics: { 'P2+': 0.9, 'A18-49': 0.8, 'A25-54': 0.9, 'A18-34': 1.0, 'W18-49': 1.0, 'M18-49': 1.0, 'K2-11': 0.5, 'T12-17': 0.9 } },
-  'FRI_2200': { id: 'FRI_2200', label: 'Fri 10:00 PM', baseHouseholds: 25, primeTimeMultiplier: 0.7, demographics: { 'P2+': 0.8, 'A18-49': 0.9, 'A25-54': 1.0, 'A18-34': 1.1, 'W18-49': 1.0, 'M18-49': 1.2, 'K2-11': 0.1, 'T12-17': 0.6 } },
-  'SAT_2000': { id: 'SAT_2000', label: 'Sat 8:00 PM', baseHouseholds: 32, primeTimeMultiplier: 0.8, demographics: { 'P2+': 1.0, 'A18-49': 0.6, 'A25-54': 0.7, 'A18-34': 0.5, 'W18-49': 0.7, 'M18-49': 0.5, 'K2-11': 1.8, 'T12-17': 1.5 } },
-  'SAT_2100': { id: 'SAT_2100', label: 'Sat 9:00 PM', baseHouseholds: 28, primeTimeMultiplier: 0.7, demographics: { 'P2+': 0.9, 'A18-49': 0.7, 'A25-54': 0.8, 'A18-34': 0.6, 'W18-49': 0.8, 'M18-49': 0.6, 'K2-11': 1.2, 'T12-17': 1.3 } },
-  'SAT_2200': { id: 'SAT_2200', label: 'Sat 10:00 PM', baseHouseholds: 25, primeTimeMultiplier: 0.6, demographics: { 'P2+': 0.8, 'A18-49': 0.8, 'A25-54': 1.0, 'A18-34': 0.7, 'W18-49': 0.9, 'M18-49': 0.7, 'K2-11': 0.1, 'T12-17': 0.5 } },
-  'LATE_NIGHT': { id: 'LATE_NIGHT', label: 'Late Night', baseHouseholds: 20, primeTimeMultiplier: 0.6, demographics: { 'P2+': 0.6, 'A18-49': 1.1, 'A25-54': 0.8, 'A18-34': 1.4, 'W18-49': 0.9, 'M18-49': 1.3, 'K2-11': 0.05, 'T12-17': 0.6 } },
-  'DAYTIME': { id: 'DAYTIME', label: 'Daytime', baseHouseholds: 15, primeTimeMultiplier: 0.4, demographics: { 'P2+': 0.7, 'A18-49': 0.5, 'A25-54': 0.7, 'A18-34': 0.3, 'W18-49': 0.9, 'M18-49': 0.3, 'K2-11': 0.8, 'T12-17': 0.4 } },
-  'STREAMING_BINGE': { id: 'STREAMING_BINGE', label: 'Streaming (Binge)', baseHouseholds: 65, primeTimeMultiplier: 0.9, demographics: { 'P2+': 0.9, 'A18-49': 1.5, 'A25-54': 1.2, 'A18-34': 1.7, 'W18-49': 1.3, 'M18-49': 1.4, 'K2-11': 0.5, 'T12-17': 1.2 } },
-  'STREAMING_WEEKLY': { id: 'STREAMING_WEEKLY', label: 'Streaming (Weekly)', baseHouseholds: 60, primeTimeMultiplier: 0.85, demographics: { 'P2+': 0.9, 'A18-49': 1.4, 'A25-54': 1.1, 'A18-34': 1.6, 'W18-49': 1.2, 'M18-49': 1.3, 'K2-11': 0.6, 'T12-17': 1.3 } },
+  '8PM': {
+    id: '8PM', label: '8:00 PM (Family Hour)',
+    baseHouseholds: 45, primeTimeMultiplier: 1.0,
+    demographics: { 'P2+': 1.0, 'A18-49': 0.8, 'A25-54': 0.9, 'A18-34': 0.7, 'W18-49': 0.85, 'M18-49': 0.75, 'K2-11': 1.3, 'T12-17': 1.1 }
+  },
+  '9PM': {
+    id: '9PM', label: '9:00 PM (Power Hour)',
+    baseHouseholds: 50, primeTimeMultiplier: 1.15,
+    demographics: { 'P2+': 1.0, 'A18-49': 1.2, 'A25-54': 1.1, 'A18-34': 1.15, 'W18-49': 1.1, 'M18-49': 1.3, 'K2-11': 0.5, 'T12-17': 0.9 }
+  },
+  '10PM': {
+    id: '10PM', label: '10:00 PM (Prestige Hour)',
+    baseHouseholds: 40, primeTimeMultiplier: 1.05,
+    demographics: { 'P2+': 0.9, 'A18-49': 1.0, 'A25-54': 1.2, 'A18-34': 0.8, 'W18-49': 1.05, 'M18-49': 0.95, 'K2-11': 0.1, 'T12-17': 0.5 }
+  },
+  'LATE_NIGHT': {
+    id: 'LATE_NIGHT', label: 'Late Night (11:30 PM+)',
+    baseHouseholds: 20, primeTimeMultiplier: 0.6,
+    demographics: { 'P2+': 0.6, 'A18-49': 1.1, 'A25-54': 0.8, 'A18-34': 1.4, 'W18-49': 0.9, 'M18-49': 1.3, 'K2-11': 0.05, 'T12-17': 0.6 }
+  },
+  'DAYTIME': {
+    id: 'DAYTIME', label: 'Daytime',
+    baseHouseholds: 15, primeTimeMultiplier: 0.4,
+    demographics: { 'P2+': 0.7, 'A18-49': 0.5, 'A25-54': 0.7, 'A18-34': 0.3, 'W18-49': 0.9, 'M18-49': 0.3, 'K2-11': 0.8, 'T12-17': 0.4 }
+  },
+  'STREAMING': {
+    id: 'STREAMING', label: 'Streaming (On-Demand)',
+    baseHouseholds: 60, primeTimeMultiplier: 0.85,
+    demographics: { 'P2+': 0.9, 'A18-49': 1.3, 'A25-54': 1.0, 'A18-34': 1.5, 'W18-49': 1.1, 'M18-49': 1.2, 'K2-11': 0.7, 'T12-17': 1.3 }
+  }
 };
 
 // --- Demographic System ---
@@ -122,31 +118,16 @@ const GENRE_DEMO_AFFINITY: Record<string, Partial<Record<NielsenDemographic, num
  * Assign a time slot based on genre/format/budget.
  */
 export function assignTimeSlot(project: SeriesProject): TimeSlot {
-  if (project.distributionStatus === 'streaming') {
-    return project.releaseModel === 'binge' ? 'STREAMING_BINGE' : 'STREAMING_WEEKLY';
-  }
-  
+  if (project.distributionStatus === 'streaming') return 'STREAMING';
   const format = project.tvFormat || project.format;
   if (typeof format === 'string') {
     if (format.includes('late_night') || format.includes('sketch')) return 'LATE_NIGHT';
     if (format.includes('daytime') || format.includes('soap')) return 'DAYTIME';
   }
-
-  // Prime Time Matrix Assignment
-  if (project.genre === 'Drama' || project.genre === 'Crime') {
-    if (project.budgetTier === 'blockbuster') return 'MON_2100'; // Tentpole Monday
-    return 'SUN_2100'; // Prestige Sunday
-  }
-  
-  if (project.genre === 'Family' || project.genre === 'Animation') {
-    return 'SUN_2000'; // Family Sunday
-  }
-
-  if (project.genre === 'Comedy') {
-    return 'THU_2100'; // Comedy Thursday
-  }
-
-  return 'TUE_2100'; // Default Midweek
+  if (project.budgetTier === 'blockbuster' || project.budgetTier === 'high') return '9PM';
+  if (project.genre === 'Family' || project.genre === 'Animation') return '8PM';
+  if (project.genre === 'Drama' || project.genre === 'Crime') return '10PM';
+  return '9PM';
 }
 
 /**

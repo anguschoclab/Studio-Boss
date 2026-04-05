@@ -4,7 +4,15 @@ import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { TopBar } from '@/components/layout/TopBar';
 import { StudioSidebar } from '@/components/layout/StudioSidebar';
-import { CommandCenter } from '@/components/dashboard/CommandCenter'; 
+import { CommandCenter } from '@/components/dashboard/CommandCenter';
+import { PipelineBoard } from '@/components/pipeline/PipelineBoard';
+import { TalentHub } from '@/components/talent/TalentHub';
+import { FinancePanel } from '@/components/finance/FinancePanel';
+import { DiscoveryBoard } from '@/components/discovery/DiscoveryBoard';
+import { RivalsPanel } from '@/components/rivals/RivalsPanel';
+import { IPVault } from '@/components/ip/IPVault';
+import { DistributionHub } from '@/components/distribution/DistributionHub';
+import { AnimatePresence, motion } from 'framer-motion';
 
 // Lazy Loaded Panels
 const PipelineBoard = React.lazy(() => import('@/components/pipeline/PipelineBoard').then(m => ({ default: m.PipelineBoard })));
@@ -47,34 +55,23 @@ const Dashboard: React.FC = () => {
       case 'command': return <CommandCenter key="command" />;
       case 'pipeline': return <PipelineBoard key="pipeline" />;
       case 'ip': return <IPVault key="ip" />;
-      case 'deals': return <DealsDesk key="deals" />;
+      case 'distribution': return <DistributionHub key="distribution" />;
       case 'industry': return <RivalsPanel key="industry" />;
-      case 'talent': return <TalentPanel key="talent" />;
+      case 'talent': return <TalentHub key="talent" />;
       case 'finance': return <FinancePanel key="finance" />;
       case 'trades': return <DiscoveryBoard key="trades" />;
-      case 'sbdb': return <SBDBView key="sbdb" />;
-      case 'streaming': return <StreamingPanel key="streaming" />;
-      case 'nielsen': return <NielsenDashboard key="nielsen" />;
       default: return <CommandCenter key="default" />;
     }
   };
 
   return (
     <div className="flex bg-background min-h-screen text-foreground font-sans overflow-hidden">
-      {/* Sidebar Navigation */}
       <StudioSidebar />
-      
-      {/* Main Panel Content Area */}
       <div className="flex-1 flex flex-col h-screen overflow-hidden overflow-y-auto relative custom-scrollbar">
-        {/* Condensed Status Bar */}
         <TopBar />
-        
-        {/* Central Component View Area */}
         <main className="flex-1 w-full bg-gradient-to-br from-background via-background to-primary/5 p-4 md:p-6 lg:p-8 relative">
-          {/* Subtle Ambient Glow */}
           <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] -z-10 pointer-events-none" />
           <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-secondary/5 rounded-full blur-[100px] -z-10 pointer-events-none" />
-
           <div className="container mx-auto max-w-[1600px] h-full flex flex-col">
             <AnimatePresence mode="wait">
               <m.div
@@ -94,8 +91,6 @@ const Dashboard: React.FC = () => {
         </main>
       </div>
       
-      {/* Modals & Overlays */}
-      <ModalManager />
       <CreateProjectModal />
       <ProjectDetailModal />
       <PitchProjectModal />
