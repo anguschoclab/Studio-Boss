@@ -63,12 +63,18 @@ export class ExpenseProcessor {
 
   /**
    * Calculates production costs.
+   * Phase 2: TV projects use fractional burn (budget / episodes).
    */
   static calculateProductionBurn(projects: Project[]): number {
     let totalBurn = 0;
     projects.forEach((p) => {
       if (p.state === 'production') {
-        totalBurn += p.weeklyCost;
+        if (p.type === 'SERIES' && (p as any).tvDetails) {
+          const episodes = (p as any).tvDetails.episodesOrdered || 10;
+          totalBurn += p.budget / episodes;
+        } else {
+          totalBurn += p.weeklyCost;
+        }
       }
     });
     return Math.round(totalBurn);

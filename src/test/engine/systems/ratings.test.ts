@@ -251,6 +251,12 @@ describe("ratings system", () => {
       };
       expect(calculateRegionalPenalties(project)).toBeGreaterThanOrEqual(0.1);
     });
+
+    it("handles duplicate content flags gracefully (Guild Auditor)", () => {
+      const single = { ...mockProject, contentFlags: ["lgbtq_themes" as ContentFlag] };
+      const duplicate = { ...mockProject, contentFlags: ["lgbtq_themes" as ContentFlag, "lgbtq_themes" as ContentFlag] };
+      expect(calculateRegionalPenalties(duplicate)).toBeCloseTo(calculateRegionalPenalties(single));
+    });
   });
 
   // ---------------------------------------------------------------------------
@@ -314,6 +320,12 @@ describe("ratings system", () => {
       expect(result.data?.regionalRatings).toBeDefined();
       const china = result.data?.regionalRatings?.find(r => r.market === "china");
       expect(china?.isBanned).toBe(false); // lgbtq_themes removed → China no longer bans it
+    });
+
+    it("handles project with extreme negative buzz safely (Guild Auditor)", () => {
+      const project = { ...mockProject, contentFlags: ["gore" as ContentFlag], buzz: -50 };
+      const result = editForRating(project, mockState, "gore" as ContentFlag);
+      expect(result.data?.buzz).toBe(0); // Buzz is clamped to Math.max(0, ...)
     });
   });
 

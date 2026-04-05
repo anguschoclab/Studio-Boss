@@ -42,8 +42,8 @@ export class SimulationRunner {
 
       // 3. Studio Automation (Greenlights, Pitches, Releases)
       // This handles the operational "blocking" states for both player and rivals
-      const playerAutomation = autoPilot ? StudioAutomation.tick(state, rng, true) : [];
-      const rivalAutomation = StudioAutomation.tick(state, rng, false);
+      const playerAutomation = autoPilot ? StudioAutomation.tick(state, rng) : [];
+      const rivalAutomation = StudioAutomation.tick(state, rng);
       
       // 4. Headless Bidding/Buying for Player
       const playerBidding = autoPilot ? HeadlessController.tick(state, rng) : [];
@@ -51,9 +51,9 @@ export class SimulationRunner {
       // 5. Talent Lifecycle (Aging/Retirement)
       const lifecycleImpacts = TalentLifecycleSystem.tick(state, rng);
 
-      // 6. Consolidate and Apply All Side Impacts
+      // 6. Consolidate and Apply side-effect impacts ONLY
+      // Note: engineImpacts are already applied inside WeekCoordinator.execute
       const allImpacts = [
-          ...engineImpacts, 
           ...playerAutomation, 
           ...rivalAutomation, 
           ...playerBidding, 

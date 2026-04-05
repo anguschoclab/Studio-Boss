@@ -4,3 +4,6 @@
 ## 2024-05-16 - O(1) Dictionary Lookup for Zustand State
 **Learning:** The state tree uses dictionary structures (`Record<string, Project>`). Iterating over `Object.values` just to do a `findIndex` based on ID is an anti-pattern that creates unnecessary O(N) array allocations and O(N) search times.
 **Action:** Always use direct O(1) property access (e.g. `projects[id]`) when looking up items by their primary key in Redux/Zustand slice reducers.
+2023-10-27
+// ⚡ Bolt: Refactored WeekCoordinator engine ticks to perform a single O(N) pass over active projects instead of multiple independent filters.
+// ⚡ Bolt: Removed inline array allocation using Object.values() inside useGameStore in FinancePanel to prevent unnecessary re-renders.

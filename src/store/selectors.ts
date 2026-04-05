@@ -8,7 +8,16 @@ const EMPTY_FINANCE: FinanceState = {
   cash: 0, 
   ledger: [], 
   weeklyHistory: [], 
-  marketState: { cycle: 'STABLE', sentiment: 0, baseRate: 0.05, consumerConfidence: 50, debtRate: 0.08, savingsYield: 0.02 } as import('../engine/types/state.types').MarketState
+  marketState: { 
+    cycle: 'STABLE', 
+    sentiment: 0, 
+    baseRate: 0.05, 
+    consumerConfidence: 50, 
+    debtRate: 0.08, 
+    savingsYield: 0.02,
+    loanRate: 0.07,
+    rateHistory: [{ week: 1, rate: 0.05 }]
+  } as import('../engine/types/state.types').MarketState
 };
 const EMPTY_MARKET: GameState['market'] = { buyers: [], opportunities: [], trends: [], activeMarketEvents: [] };
 const EMPTY_TALENT_POOL: Record<string, Talent> = {};
@@ -207,7 +216,7 @@ export const selectRecentEvents = createSelector(
  * Filtered Talent Selector
  */
 const TIER_RANK: Record<TalentTier, number> = {
-  S_LIST: 6, A_LIST: 5, B_LIST: 4, C_LIST: 3, RISING_STAR: 2, NEWCOMER: 1
+  1: 4, 2: 3, 3: 2, 4: 1
 };
 
 export interface TalentFilter {

@@ -41,11 +41,9 @@ export class RevenueProcessor {
       }
 
       if (p.state === 'released') {
-        // 2.2: Talent Draw & Prestige Multiplier
         const talentMultiplier = this.calculateTalentRevenueMultiplier(p, state, contracts);
         let weeklyGross = 0;
         
-        // Regional Ban Impact (Phase 5)
         let banMultiplier = 1.0;
         if (p.regionalRatings) {
             const banCount = p.regionalRatings.filter(r => r.isBanned).length;
@@ -67,14 +65,30 @@ export class RevenueProcessor {
         const weeklyMerch = this.calculateMerchRevenue(p.buzz, franchise?.relevanceScore || 0, p.rating ?? 'PG-13');
         merch += weeklyMerch;
 
-        // Backend points: player earns % of weekly gross on deficit/sold productions
         if (p.backendPoints && p.backendPoints > 0 && weeklyGross > 0) {
-          const backendEarning = Math.round(weeklyGross * (p.backendPoints / 100));
-          distribution += backendEarning; // added to distribution bucket (passive income)
+          distribution += Math.round(weeklyGross * (p.backendPoints / 100));
         }
 
         totalRoyalties += this.calculateNetPointsRoyalty(p, weeklyGross + weeklyMerch, contracts);
       }
+    });
+
+    // 🌌 PHASE 2: Backend Streaming (Royalties from Rival Projects)
+    state.industry.rivals.forEach(rival => {
+      Object.values(rival.projects || {}).forEach(rp => {
+        if (rp.state === 'released') {
+          const weeklyGross = (rp.weeklyRevenue || 0);
+          if (weeklyGross <= 0) return;
+
+          // Check if any player contract is on this project
+          contracts.forEach(c => {
+            if (c.projectId === rp.id && c.backendPercent > 0) {
+              const royalty = Math.round(weeklyGross * (c.backendPercent / 100));
+              distribution += royalty; // Streaming into player's distribution bucket
+            }
+          });
+        }
+      });
     });
 
     return { boxOffice, distribution, merch, totalRoyalties, projectRecoupment };
@@ -127,9 +141,9 @@ export class RevenueProcessor {
    * Calculates box office decay for a project in a given week.
    */
   static calculateTheatricalDecay(currentRevenue: number, decayRate: number, isCultClassic: boolean = false): number {
-    let revenue = Math.round(currentRevenue * decayRate);
+    let revenue = Math.round(currentRevenue * decayRate * 0.88); // The Studio Comptroller: Increased box office decay by 12% to simulate modern front-loaded box office drops.
     if (isCultClassic) {
-      revenue = Math.max(revenue * 1.8, 200000); // The Studio Comptroller: Buffed cult classics (150000 -> 200000) to create dramatic financial anomalies.
+      revenue = Math.max(revenue * 2.0, 300000); // The Studio Comptroller: Buffed cult classics (200000 -> 300000) to create dramatic financial anomalies.
     }
     return revenue;
   }
