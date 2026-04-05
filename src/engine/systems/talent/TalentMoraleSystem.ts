@@ -53,6 +53,23 @@ export class TalentMoraleSystem {
   ): TalentUpdate[] {
     const updates: TalentUpdate[] = [];
 
+    // Pre-compute O(1) lookups to avoid O(N*M) nested filtering
+    const contractsByTalent = new Map<string, Contract[]>();
+    for (const c of contracts) {
+      const arr = contractsByTalent.get(c.talentId);
+      if (arr) {
+        arr.push(c);
+      } else {
+        contractsByTalent.set(c.talentId, [c]);
+      }
+    }
+
+    const projectById = new Map<string, Project>();
+    for (const p of projects) {
+      projectById.set(p.id, p);
+    }
+
+    // ⚡ Bolt: Consolidated O(N) array filtering to O(1) Map lookups
     for (const t of talent) {
       let moodChange = 0;
       
@@ -61,9 +78,9 @@ export class TalentMoraleSystem {
       else if (t.psychology.mood < 45) moodChange += 1;
 
       // 2. Project performance
-      const activeContracts = contracts.filter(c => c.talentId === t.id);
+      const activeContracts = contractsByTalent.get(t.id) || [];
       for (const c of activeContracts) {
-        const p = projects.find(proj => proj.id === c.projectId);
+        const p = projectById.get(c.projectId);
         if (p) {
           // Momentum impact
           if (p.momentum < 30) moodChange -= 2;
