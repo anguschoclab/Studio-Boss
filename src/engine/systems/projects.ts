@@ -80,6 +80,16 @@ export function handleReleasePhaseEntry(
     };
   }
 
+  if (p.type === 'FILM' && (p.format === 'tv' || p.format === 'unscripted')) {
+    const isTV = p.format === 'tv';
+    p.weeklyRevenue = (p.budget * (isTV ? 0.1 : 0.05)) * (p.buzz / 50) * franchiseSynergy * (1 - franchiseFatigue);
+    p.revenue = p.weeklyRevenue;
+    return {
+      update: isTV ? `"${p.title}" premieres on TV!` : `"${p.title}" documentary premieres!`,
+      talentUpdates: []
+    };
+  }
+
   // Fallback for types not yet fully handled
   return { update: `"${(p as Project).title}" has been released.`, talentUpdates: [] };
 }
@@ -218,6 +228,20 @@ function handleReleasedPhase(
         update: `"${p.title}" grossed ${(p.weeklyRevenue / 1_000_000).toFixed(1)}M this week.${trendText}`,
         talentUpdates: []
       };
+    }
+  } else if (p.type === 'FILM' && (p.format === 'tv' || p.format === 'unscripted')) {
+    p.revenue += p.weeklyRevenue;
+    p.weeklyRevenue *= rng.range(0.6, 0.8) * franchiseSynergy;
+
+    if (p.weeklyRevenue < (p.format === 'unscripted' ? 25_000 : 50_000) || p.weeksInPhase > 4) {
+      p.state = 'post_release';
+      p.weeksInPhase = 0;
+      return {
+        update: `"${p.title}" finishes its broadcast run.`,
+        talentUpdates: TalentSystem.applyProjectResults(p, projectContracts, Array.from(talentPoolMap.values()), projectAwards)
+      };
+    } else {
+      return { update: null, talentUpdates: [] };
     }
   }
 
