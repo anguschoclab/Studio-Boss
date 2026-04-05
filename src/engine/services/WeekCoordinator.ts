@@ -74,23 +74,45 @@ export class WeekCoordinator {
 
     // 1. Run Filters (Sequential state propagation to prevent baseline races)
     let currentState = state;
+    let impactPointer = 0;
+
+    const applyNewImpacts = (systemName: string) => {
+        const newImpacts = context.impacts.slice(impactPointer);
+        if (newImpacts.length > 0) {
+            currentState = applyImpacts(currentState, newImpacts);
+            impactPointer = context.impacts.length;
+        }
+    };
 
     this.runMarketFilter(currentState, context);
-    currentState = applyImpacts(currentState, context.impacts.slice(-10)); // Heuristic: apply recent impacts
+    applyNewImpacts('Market');
 
     this.runProductionFilter(currentState, context);
-    currentState = applyImpacts(currentState, context.impacts.slice(-20)); // Heuristic: apply production context
+    applyNewImpacts('Production');
 
     this.runRatingFilter(currentState, context);
-    this.runAIFilter(currentState, context);
-    this.runIndustryFilter(currentState, context);
-    this.runTalentFilter(currentState, context);
-    this.runMediaFilter(currentState, context);
-    this.runScandalFilter(currentState, context);
-    this.runFinanceFilter(currentState, context);
+    applyNewImpacts('Rating');
 
-    // 2. Final Consolidation & State Application
-    const nextState = applyImpacts(state, context.impacts);
+    this.runAIFilter(currentState, context);
+    applyNewImpacts('AI');
+
+    this.runIndustryFilter(currentState, context);
+    applyNewImpacts('Industry');
+
+    this.runTalentFilter(currentState, context);
+    applyNewImpacts('Talent');
+
+    this.runMediaFilter(currentState, context);
+    applyNewImpacts('Media');
+
+    this.runScandalFilter(currentState, context);
+    applyNewImpacts('Scandal');
+
+    this.runFinanceFilter(currentState, context);
+    applyNewImpacts('Finance');
+
+    // 2. Final Consolidation (currentState already has all impacts applied sequentially)
+    const nextState = currentState;
 
     const updatedMarketState = {
       ...nextState.finance.marketState,
@@ -318,7 +340,9 @@ export class WeekCoordinator {
   }
 
   private static runFinanceFilter(state: GameState, context: TickContext) {
-    context.impacts.push(...tickFinance(state, context.rng));
+    // Pass context.impacts so the Weekly Report can account for news/awards/festival transactions
+    const financeImpacts = tickFinance(state, context.rng, context.impacts);
+    context.impacts.push(...financeImpacts);
   }
 
   /**

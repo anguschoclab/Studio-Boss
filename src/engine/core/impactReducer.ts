@@ -4,6 +4,20 @@ import { GameState, StateImpact, NewsEvent, Project, RivalStudio, Talent, Buyer,
  * Pure function to apply a single StateImpact to the GameState.
  */
 function applySingleImpact(state: GameState, impact: StateImpact): GameState {
+  if (impact.type === 'FUNDS_CHANGED') {
+      let amount = impact.payload.amount;
+      if (isNaN(amount) || amount === null) amount = 0;
+      if (Math.abs(amount) > 10_000_000_000) amount = Math.sign(amount) * 10_000_000_000;
+      impact.payload.amount = amount;
+  }
+  
+  if (impact.type === 'RIVAL_UPDATED' && impact.payload.update?.cash !== undefined) {
+      let val = impact.payload.update.cash;
+      if (isNaN(val) || val === null) val = 0;
+      if (Math.abs(val) > 1_000_000_000_000) val = Math.sign(val) * 1_000_000_000_000;
+      impact.payload.update.cash = val;
+  }
+
   switch (impact.type) {
     case 'FUNDS_CHANGED': {
       const { amount } = impact.payload;
@@ -222,6 +236,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
 
     case 'INDUSTRY_UPDATE': {
       const payload = impact.payload as any;
+      // ⚡ Bolt: Robust Deep Clone for path updates to prevent reference mutation
       let nextState = { ...state };
       
       // 1. Generic Deep-Path Updates (User-Added Architecture)
@@ -229,32 +244,28 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
         for (const [path, value] of Object.entries(payload.update)) {
           const parts = (path as string).split('.');
           let current: any = nextState;
-          let validPath = true;
 
           for (let i = 0; i < parts.length - 1; i++) {
             const part = parts[i];
-            if (part === '__proto__' || part === 'constructor' || part === 'prototype') {
-              validPath = false;
-              break;
-            }
+            
+            // Security check
+            if (part === '__proto__' || part === 'constructor' || part === 'prototype') break;
 
-            if (current[part] === undefined || current[part] === null) {
-               current[part] = {};
-            }
-
+            // Deep clone the branch we are traversing to ensure true immutability
             if (Array.isArray(current[part])) {
               current[part] = [...current[part]];
-            } else if (typeof current[part] === 'object') {
+            } else if (typeof current[part] === 'object' && current[part] !== null) {
               current[part] = { ...current[part] };
+            } else {
+              current[part] = {};
             }
+            
             current = current[part];
           }
 
-          if (validPath) {
-            const lastPart = parts[parts.length - 1];
-            if (lastPart !== '__proto__' && lastPart !== 'constructor' && lastPart !== 'prototype') {
-              current[lastPart] = value;
-            }
+          const lastPart = parts[parts.length - 1];
+          if (lastPart !== '__proto__' && lastPart !== 'constructor' && lastPart !== 'prototype') {
+            current[lastPart] = value;
           }
         }
       }
@@ -518,7 +529,8 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
         activeDeals = [...activeDeals, deal];
       } else {
         activeDeals = activeDeals.filter(d => d.id !== deal.id);
-        expiredDeals = [{ ...deal, status: action === 'expire' ? 'expired' : 'terminated' }, ...expiredDeals].slice(0, 50);
+        const status = (action === 'expire' ? 'expired' : 'terminated') as 'expired' | 'terminated';
+        expiredDeals = [{ ...deal, status }, ...expiredDeals].slice(0, 50);
       }
       return { ...state, deals: { ...current, activeDeals, expiredDeals } };
     }
