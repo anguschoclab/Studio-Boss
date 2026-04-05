@@ -143,10 +143,10 @@ const FranchiseCard = ({ franchise, assets }: { franchise: Franchise, assets: IP
 
         {/* Footer Actions */}
         <div className="px-6 py-4 bg-white/5 flex gap-3">
-           <button className="flex-1 text-[10px] font-black bg-primary/20 hover:bg-primary text-primary hover:text-black border border-primary/20 p-2 rounded transition-all uppercase tracking-widest flex items-center justify-center gap-2 group">
+           <button className="flex-1 text-[10px] font-black bg-primary/20 hover:bg-primary text-primary hover:text-black border border-primary/20 p-3 rounded transition-all uppercase tracking-widest flex items-center justify-center gap-2 group">
              <Play className="h-3 w-3 fill-current" /> Exploit IP
            </button>
-           <button className="flex-1 text-[10px] font-black bg-white/5 hover:bg-white/20 text-white border border-white/10 p-2 rounded transition-all uppercase tracking-widest">
+           <button className="flex-1 text-[10px] font-black bg-white/5 hover:bg-white/20 text-white border border-white/10 p-3 rounded transition-all uppercase tracking-widest">
              Deep Analytics
            </button>
         </div>

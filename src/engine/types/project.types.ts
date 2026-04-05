@@ -50,8 +50,8 @@ export interface BoxOfficeResult {
   multiplier: number;
 }
 
-export type ProjectStatus = 'development' | 'needs_greenlight' | 'pitching' | 'production' | 'marketing' | 'released' | 'post_release' | 'archived';
-export type ProjectFormat = 'film' | 'tv' | 'unscripted';
+export type ProjectStatus = 'development' | 'needs_greenlight' | 'pitching' | 'production' | 'marketing' | 'released' | 'post_release' | 'archived' | 'turnaround' | 'pilot' | 'shopping';
+export type ProjectFormat = 'film' | 'tv' | 'unscripted' | 'animation';
 export type BudgetTierKey = 'low' | 'mid' | 'high' | 'blockbuster';
 
 export type TvFormatKey =
@@ -169,13 +169,24 @@ export type TvFormatKey =
   | 'teen_mystery_box'
   | 'workplace_mockumentary'
   | 'satirical_news_show'
-  | 'historical_romance';
+    | 'historical_romance'
+  | 'medical_soap'
+  | 'alien_invasion_thriller'
+  | 'political_family_drama'
+  | 'historical_comedy'
+  | 'superhero_parody_sitcom'
+  | 'prestige_espionage_miniseries'
+  | 'lawyer_comedy'
+  | 'gothic_romance'
+  | 'tech_startup_thriller'
+  | 'suburban_mystery';
 
 export type UnscriptedFormatKey =
   | 'competition'
   | 'docuseries'
   | 'reality_ensemble'
   | 'game_show'
+  | 'talk_show'
   | 'lifestyle'
   | 'dating_island'
   | 'true_crime_doc'
@@ -302,14 +313,55 @@ export type UnscriptedFormatKey =
   | 'extreme_makeover_cult'
   | 'crypto_scam_expose'
   | 'child_star_documentary'
-  | 'billionaire_yacht_crew';
+    | 'billionaire_yacht_crew'
+  | 'historical_reenactment_doc'
+  | 'celebrity_cooking_disasters'
+  | 'high_school_sports_doc'
+  | 'extreme_body_mods'
+  | 'polygraph_interrogation'
+  | 'rich_pets_of_instagram'
+  | 'survival_island_celebrity'
+  | 'art_forgery_expose'
+  | 'underground_racing_doc'
+  | 'extreme_decluttering';
 
 export type ReleaseModelKey = 'weekly' | 'binge' | 'split';
 export type ProjectContractType = 'upfront' | 'deficit' | 'standard';
 export type MandateType = 'sci-fi' | 'comedy' | 'drama' | 'budget_freeze' | 'broad_appeal' | 'prestige';
 
-export type ProjectRating = 'G' | 'PG' | 'PG-13' | 'R' | 'NC-17' | 'Unrated';
-export type ContentFlag = 'violence' | 'profanity' | 'nudity' | 'gore' | 'political';
+export type RatingMarket = 'us' | 'uk' | 'europe' | 'china' | 'india' | 'latam' | 'middleeast' | 'apac';
+
+export type FilmRating = 'G' | 'PG' | 'PG-13' | 'R' | 'NC-17' | 'Unrated';
+export type TvRating = 'TV-Y' | 'TV-G' | 'TV-PG' | 'TV-14' | 'TV-MA';
+export type ProjectRating = FilmRating | TvRating;
+
+export type RatingCutType = 'theatrical' | 'directors_cut' | 'unrated' | 'sanitized';
+
+export type ContentFlag = 'violence' | 'profanity' | 'nudity' | 'gore' | 'political'
+  | 'sexual_content' | 'drug_use' | 'lgbtq_themes' | 'religious' | 'supernatural' | 'gambling';
+
+export interface RegionalRating {
+  market: RatingMarket;
+  rating: ProjectRating;
+  isBanned: boolean;
+  restrictionLevel: 'none' | 'minor' | 'major' | 'banned';
+}
+
+export interface RatingCut {
+  type: RatingCutType;
+  rating: ProjectRating;
+  contentFlags: ContentFlag[];
+  buzzCost: number;
+  revenueMultiplier: number;
+}
+
+export interface RatingEconomics {
+  theaterAccessPct: number;
+  audienceReachMultiplier: number;
+  merchMultiplier: number;
+  awardsPrestigeBonus: number;
+  streamingPremium: number;
+}
 
 export type DemographicGroup = 'gen-z' | 'millennial' | 'gen-x' | 'boomer';
 export type AudienceQuadrant = 'male_under_25' | 'female_under_25' | 'male_over_25' | 'female_over_25' | 'four_quadrant';
@@ -375,7 +427,17 @@ export type AwardCategory =
   | 'Golden Lion'
   | 'Golden Bear'
   | 'Audience Award'
-  | 'Best Narrative Feature';
+  | 'Best Narrative Feature'
+  | 'Best Drama Series'
+  | 'Best Comedy Series'
+  | 'Best Limited Series'
+  | 'Best TV Movie'
+  | 'Best Actor (Drama)'
+  | 'Best Actress (Drama)'
+  | 'Best Actor (Comedy)'
+  | 'Best Actress (Comedy)'
+  | 'Best Supporting Actor (TV)'
+  | 'Best Supporting Actress (TV)';
 
 export type AwardStatus = 'won' | 'nominated';
 
@@ -438,9 +500,11 @@ export interface ProjectBase {
   isGlobalIcon?: boolean;
   razzieWinner?: boolean;
   franchiseId?: string;
+  originalProjectId?: string; // Links to the vault asset it's rebooting/spinning off
   // Release simulation fields
   reviewScore?: number;
   boxOfficeRank?: number;
+  acquisitionCost?: number; // 🌌 PHASE 2: Price paid in auction/market
   // Marketing fields
   marketingBudget?: number;
   marketingLevel?: 'none' | 'basic' | 'blockbuster';
@@ -458,6 +522,21 @@ export interface ProjectBase {
   isAcquired?: boolean;
   distributionStatus?: 'theatrical' | 'streaming' | 'syndicated';
   buyerId?: string;
+  // Phase 2: Dynamic Scheduling & Pipeline Management
+  isRecasting?: boolean;
+  turnaroundStartWeek?: number;
+  estimatedWindow?: { startWeek: number; endWeek: number };
+  // Ratings System
+  activeCut?: RatingCutType;
+  availableCuts?: RatingCut[];
+  regionalRatings?: RegionalRating[];
+  directorsCutNotified?: boolean;
+  // Phase 2: Deal & Revenue Mechanics
+  dealModel?: 'cost_plus' | 'deficit_financing' | 'self_distributed' | 'independent';
+  backendPoints?: number;       // 0-100, % of net backend revenue to player
+  isPrimetimeAnchor?: boolean;  // triggers international format rights on season 2+ renewal
+  stage?: 'pilot' | 'series' | 'shopping'; // sub-state for TV projects
+  shoppingExpiresWeek?: number; // week when 'shopping' status lapses
 }
 
 export interface ScriptedProject extends ProjectBase {

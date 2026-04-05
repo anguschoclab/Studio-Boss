@@ -10,26 +10,56 @@ import { generateWeeklyFinancialReport } from '../finance';
 export function tickFinance(state: GameState, rng: RandomGenerator, pendingImpacts: StateImpact[] = []): StateImpact[] {
   const impacts: StateImpact[] = [];
   
-  // Use the robust report generator
-  const { report, snapshot } = generateWeeklyFinancialReport(state, pendingImpacts);
+  // 1. Player Finance Tick
+  const { report, snapshot } = generateWeeklyFinancialReport(
+      state, 
+      'player', 
+      state.studio.internal.projects, 
+      state.finance.cash, 
+      state.studio.archetype, 
+      state.studio.prestige, 
+      state.studio.internal.contracts, 
+      state.studio.internal.firstLookDeals || [], 
+      pendingImpacts
+  );
   
-  // 1. Funds change (Already consolidated in report.netProfit)
   impacts.push({
     type: 'FUNDS_CHANGED',
     payload: { amount: report.netProfit }
   });
 
-  // 2. Ledger update
   impacts.push({
     type: 'LEDGER_UPDATED',
     payload: { report }
   });
 
-  // 3. History Snapshot update
   impacts.push({
     type: 'FINANCE_SNAPSHOT_ADDED',
     payload: { snapshot }
   });
+
+  // 2. Rival Finance Tick (Phase 5: Industry Symmetry)
+  for (const rival of state.industry.rivals) {
+      const { report: rivalReport } = generateWeeklyFinancialReport(
+          state,
+          rival.id,
+          rival.projects || {},
+          rival.cash,
+          rival.archetype,
+          rival.prestige,
+          [], // Rivals don't use player contracts (simplified for now)
+          [], // Rivals don't have pacts yet
+          pendingImpacts
+      );
+
+      impacts.push({
+          type: 'RIVAL_UPDATED',
+          payload: {
+              rivalId: rival.id,
+              update: { cash: rival.cash + rivalReport.netProfit }
+          }
+      });
+  }
   
   return impacts;
 }

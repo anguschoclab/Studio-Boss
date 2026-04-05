@@ -1,14 +1,14 @@
-import { GameState, RivalStudio, StateImpact, Buyer, StreamerPlatform } from '@/engine/types';
+import { GameState, RivalStudio, StateImpact, StreamerPlatform } from '@/engine/types';
 import { BrandSystem } from '../../generators/BrandSystem';
-import { pick, secureRandom, randRange } from '../../utils';
 import { ARCHETYPES } from '../../data/archetypes';
 import { generateMotto } from '../../generators/names';
+import { RandomGenerator } from '../../utils/rng';
 
 /**
  * Studio Boss - Industry Upstarts
  * Spawns new companies to ensure the market doesn't become a ghost town after mergers.
  */
-export function tickIndustryUpstarts(state: GameState): StateImpact[] {
+export function tickIndustryUpstarts(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
   const currentRivals = state.industry.rivals.length;
   const currentStreamers = state.market.buyers.filter(b => b.archetype === 'streamer').length;
@@ -21,22 +21,22 @@ export function tickIndustryUpstarts(state: GameState): StateImpact[] {
   const MIN_STREAMERS = 10;
 
   // Spawn Studio Upstart
-  if (currentRivals < MIN_RIVALS && secureRandom() < 0.1) {
-    const ident = BrandSystem.generateIdentity(usedNames);
-    const name = BrandSystem.getStudioName(ident);
+  if (currentRivals < MIN_RIVALS && rng.next() < 0.1) {
+    const ident = BrandSystem.generateIdentity(usedNames, rng);
+    const name = BrandSystem.getStudioName(ident, rng);
     const archetype = 'indie'; // Upstarts usually start small
     const archData = ARCHETYPES[archetype];
 
     const newStudio: RivalStudio = {
-      id: `upstart-studio-${Date.now()}`,
+      id: rng.uuid('upstart-studio'),
       name,
-      motto: generateMotto(),
+      motto: generateMotto(rng),
       archetype: archetype as any,
       foundedWeek: state.week,
       parentBrand: ident.core,
-      strength: 30 + Math.floor(secureRandom() * 20),
+      strength: 30 + Math.floor(rng.next() * 20),
       cash: archData.startingCash * 0.8,
-      prestige: 50 + Math.floor(randRange(0, 20)),
+      prestige: 50 + Math.floor(rng.range(0, 20)),
       recentActivity: 'A new boutique studio enters the fray with big ambitions.',
       projects: {},
       contracts: [],
@@ -57,6 +57,8 @@ export function tickIndustryUpstarts(state: GameState): StateImpact[] {
     impacts.push({
       type: 'NEWS_ADDED',
       payload: {
+        id: rng.uuid('news'),
+        week: state.week,
         headline: `NEW PLAYER: ${name} launches as artisanal studio`,
         description: `With a focus on quality over volume, ${name} has officially entered the market as a boutique ${archetype} studio.`,
         category: 'general'
@@ -65,12 +67,12 @@ export function tickIndustryUpstarts(state: GameState): StateImpact[] {
   }
 
   // Spawn Streamer Upstart
-  if (currentStreamers < MIN_STREAMERS && secureRandom() < 0.1) {
-     const ident = BrandSystem.generateIdentity(usedNames);
-     const name = BrandSystem.getStreamingName(ident);
+  if (currentStreamers < MIN_STREAMERS && rng.next() < 0.1) {
+     const ident = BrandSystem.generateIdentity(usedNames, rng);
+     const name = BrandSystem.getStreamingName(ident, rng);
      
      const newStreamer: StreamerPlatform = {
-        id: `upstart-streamer-${Date.now()}`,
+        id: rng.uuid('upstart-streamer'),
         name,
         archetype: 'streamer',
         foundedWeek: state.week,
@@ -81,7 +83,8 @@ export function tickIndustryUpstarts(state: GameState): StateImpact[] {
         marketingSpend: 1_000_000,
         subscriberHistory: [{ week: state.week, count: 2_000_000 }],
         marketShare: 0.02,
-        reach: 40
+        reach: 40,
+        activeLicenses: [] // 🌌 PHASE 2: Initializing empty license ledger.
      };
 
      impacts.push({
@@ -95,6 +98,8 @@ export function tickIndustryUpstarts(state: GameState): StateImpact[] {
      impacts.push({
         type: 'NEWS_ADDED',
         payload: {
+           id: rng.uuid('news'),
+           week: state.week,
            headline: `DISRUPTOR: ${name} enters the streaming wars`,
            description: `A new streaming platform, ${name}, has launched today with an aggressive subscriber acquisition strategy.`,
            category: 'market'

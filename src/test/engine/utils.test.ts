@@ -1,40 +1,54 @@
-import { describe, it, expect } from "vitest";
-import { formatMoney, getWeekDisplay, pick, randRange, clamp } from "../../engine/utils";
+import { formatMoney, getWeekDisplay, clamp, groupContractsByProject } from "../../engine/utils";
+import { Contract } from "@/engine/types";
 
 describe("utils", () => {
   describe("formatMoney", () => {
     it.each([
-      // thousands
-      [1500, "$2K"],
-      [1000, "$1K"],
-      [999, "$999"],
-
-      // millions
-      [1500000, "$1.5M"],
-      [1000000, "$1.0M"],
-
-      // billions
-      [1500000000, "$1.5B"],
-      [1000000000, "$1.0B"],
-
-      // negatives
-      [-1500, "-$2K"],
-      [-1500000, "-$1.5M"],
-      [-1500000000, "-$1.5B"],
-      [-500, "-$500"],
-
-      // small numbers
+      // Basic cases
       [0, "$0"],
       [50, "$50"],
+      [999, "$999"],
+      [1000, "$1K"],
+      [1500, "$2K"],
+      [999499, "$999K"],
+      [1000000, "$1.0M"],
+      [1500000, "$1.5M"],
+      [1000000000, "$1.0B"],
+      [1500000000, "$1.5B"],
 
-      // new edge cases
+      // Negatives
       [-0, "-$0"],
+      [-50, "-$50"],
+      [-999, "-$999"],
+      [-1000, "-$1K"],
+      [-1500, "-$2K"],
+      [-1000000, "-$1.0M"],
+      [-1500000, "-$1.5M"],
+      [-1000000000, "-$1.0B"],
+      [-1500000000, "-$1.5B"],
+
+      // Special Numbers
       [NaN, "$NaN"],
       [Infinity, "$InfinityB"],
       [-Infinity, "-$InfinityB"],
-      [999.9, "$1K"],
-      [999999.9, "$1.0M"],
-      [999999999.9, "$1.0B"],
+
+      // Rounding Boundary Cases (K tier)
+      [999.4, "$999"],
+      [999.5, "$1K"],
+      [1499.9, "$1K"], // .toFixed(0) rounds 1.4999 to 1
+      [1500, "$2K"],   // .toFixed(0) rounds 1.5 to 2
+
+      // Rounding Boundary Cases (M tier)
+      [999499.4, "$999K"],
+      [999950, "$1.0M"],
+      [1049999, "$1.0M"],
+      [1050000, "$1.1M"],
+
+      // Rounding Boundary Cases (B tier)
+      [999949999.9, "$999.9M"],
+      [999950000, "$1.0B"],
+      [1049999999, "$1.0B"],
+      [1050000000, "$1.1B"],
     ])("formats %p as %p", (amount, expected) => {
       expect(formatMoney(amount)).toBe(expected);
     });
@@ -49,22 +63,6 @@ describe("utils", () => {
     });
   });
 
-  describe("pick", () => {
-    it("picks an element from the array", () => {
-      const arr = [1, 2, 3];
-      const result = pick(arr);
-      expect(arr).toContain(result);
-    });
-  });
-
-  describe("randRange", () => {
-    it("returns a number within the range", () => {
-      const result = randRange(1, 10);
-      expect(result).toBeGreaterThanOrEqual(1);
-      expect(result).toBeLessThanOrEqual(10);
-    });
-  });
-
   describe("clamp", () => {
     it("returns the minimum when value is below min", () => {
       expect(clamp(0, 1, 10)).toBe(1);
@@ -76,6 +74,55 @@ describe("utils", () => {
 
     it("returns the maximum when value is above max", () => {
       expect(clamp(15, 1, 10)).toBe(10);
+    });
+  });
+
+  describe("groupContractsByProject", () => {
+    it("returns an empty map for an empty array", () => {
+      const result = groupContractsByProject([]);
+      expect(result.size).toBe(0);
+      expect(result instanceof Map).toBe(true);
+    });
+
+    it("groups a single contract correctly", () => {
+      const contract: Contract = {
+        id: "c1",
+        talentId: "t1",
+        projectId: "p1",
+        fee: 100,
+        backendPercent: 0,
+        role: "actor"
+      };
+      const result = groupContractsByProject([contract]);
+
+      expect(result.size).toBe(1);
+      expect(result.has("p1")).toBe(true);
+      expect(result.get("p1")).toEqual([contract]);
+    });
+
+    it("groups multiple contracts for the same project together", () => {
+      const c1: Contract = { id: "c1", talentId: "t1", projectId: "p1", fee: 100, backendPercent: 0, role: "actor" };
+      const c2: Contract = { id: "c2", talentId: "t2", projectId: "p1", fee: 200, backendPercent: 0, role: "director" };
+
+      const result = groupContractsByProject([c1, c2]);
+
+      expect(result.size).toBe(1);
+      expect(result.has("p1")).toBe(true);
+      expect(result.get("p1")).toEqual([c1, c2]);
+    });
+
+    it("groups multiple contracts for different projects separately", () => {
+      const c1: Contract = { id: "c1", talentId: "t1", projectId: "p1", fee: 100, backendPercent: 0, role: "actor" };
+      const c2: Contract = { id: "c2", talentId: "t2", projectId: "p2", fee: 200, backendPercent: 0, role: "director" };
+      const c3: Contract = { id: "c3", talentId: "t3", projectId: "p1", fee: 300, backendPercent: 0, role: "writer" };
+
+      const result = groupContractsByProject([c1, c2, c3]);
+
+      expect(result.size).toBe(2);
+      expect(result.has("p1")).toBe(true);
+      expect(result.get("p1")).toEqual([c1, c3]);
+      expect(result.has("p2")).toBe(true);
+      expect(result.get("p2")).toEqual([c2]);
     });
   });
 });

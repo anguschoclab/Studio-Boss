@@ -1,12 +1,7 @@
 import { create } from 'zustand';
 import { GameState, WeekSummary, ArchetypeKey, FinanceState, NewsState } from '@/engine/types';
-import { initializeGame } from '@/engine/core/gameInit';
-import { advanceWeek } from '@/engine/core/weekAdvance';
 import { saveGame, loadGame, getSaveSlots, SaveSlotInfo } from '@/persistence/saveLoad';
 import { useUIStore } from './uiStore';
-
-const EMPTY_FINANCE = { cash: 0, ledger: [] };
-const EMPTY_NEWS = { headlines: [] };
 
 import { createProjectSlice, ProjectSlice } from './slices/projectSlice';
 import { createFinanceSlice, FinanceSlice } from './slices/financeSlice';
@@ -17,8 +12,12 @@ import { createSnapshotSlice, SnapshotSlice } from './slices/snapshotSlice';
 
 export interface GameStore extends ProjectSlice, FinanceSlice, TalentSlice, RivalSlice, NewsSlice, SnapshotSlice {
   gameState: GameState | null;
+  _isProcessingTick: boolean;
+  _isSaving: boolean;
+  _saveNextState: GameState | null;
+
   newGame: (studioName: string, archetype: ArchetypeKey) => Promise<void>;
-  doAdvanceWeek: () => WeekSummary;
+  doAdvanceWeek: () => Promise<WeekSummary | null>;
   saveToSlot: (slot: number) => Promise<void>;
   loadFromSlot: (slot: number) => Promise<boolean>;
   getSaveSlots: () => Promise<SaveSlotInfo[]>;
@@ -26,8 +25,30 @@ export interface GameStore extends ProjectSlice, FinanceSlice, TalentSlice, Riva
   devAutoInit: (archetype?: ArchetypeKey) => void;
 }
 
+const INITIAL_FINANCE: FinanceState = {
+  cash: 0,
+  ledger: [],
+  weeklyHistory: [],
+  marketState: {
+    cycle: 'STABLE',
+    sentiment: 0,
+    baseRate: 0.05,
+    debtRate: 0.08,
+    savingsYield: 0.02,
+    loanRate: 0.08,
+    rateHistory: []
+  }
+};
+const INITIAL_NEWS: NewsState = { headlines: [] };
+
+// Initialize Web Worker
+const engineWorker = new Worker(new URL('../engine/engine.worker.ts', import.meta.url), { type: 'module' });
+
 export const useGameStore = create<GameStore>((set, get, ...args) => ({
   gameState: null,
+  _isProcessingTick: false,
+  _isSaving: false,
+  _saveNextState: null,
 
   ...createProjectSlice(set, get, ...args),
   ...createFinanceSlice(set, get, ...args),
@@ -36,94 +57,99 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
   ...createNewsSlice(set, get, ...args),
   ...createSnapshotSlice(set, get, ...args),
 
-  newGame: async (studioName, archetype) => {
-    const gameState = initializeGame(studioName, archetype);
-    await saveGame(0, gameState);
-    set({ 
-      gameState,
-      finance: gameState.finance,
-      news: gameState.news
+  newGame: async (studioName: string, archetype: ArchetypeKey) => {
+    const seed = Math.floor(Math.random() * 1_000_000);
+    
+    return new Promise<void>((resolve) => {
+      const handler = (e: MessageEvent) => {
+        if (e.data.type === 'INIT_RESULT') {
+          const gameState = e.data.payload as GameState;
+          saveGame(0, gameState);
+          set({ 
+            gameState,
+            finance: gameState.finance,
+            news: gameState.news
+          });
+          engineWorker.removeEventListener('message', handler);
+          resolve();
+        }
+      };
+      engineWorker.addEventListener('message', handler);
+      engineWorker.postMessage({ type: 'INIT_GAME', payload: { studioName, archetype, seed } });
     });
   },
 
-  doAdvanceWeek: () => {
-    let summary: WeekSummary | null = null;
-    let nextState: GameState | null = null;
+  doAdvanceWeek: async () => {
+    if (get()._isProcessingTick) {
+        console.warn('[GameStore] Tick already in progress, skipping...');
+        return null;
+    }
 
-    set((state) => {
-      if (!state.gameState) throw new Error('No game in progress');
-      const result = advanceWeek(state.gameState);
-      summary = result.summary;
-      nextState = result.newState;
+    const state = get().gameState;
+    if (!state) throw new Error('No game in progress');
 
-      if (state.gameState === result.newState) return state; 
+    set({ _isProcessingTick: true });
 
-      // Trigger background save without blocking UI (Fire and forget)
-      saveGame(0, result.newState);
-      
-      return { 
-        gameState: result.newState,
-        finance: result.newState.finance,
-        news: result.newState.news
-      };
-    });
+    return new Promise<WeekSummary | null>((resolve, reject) => {
+      const handler = async (e: MessageEvent) => {
+        if (e.data.type === 'ADVANCE_RESULT') {
+          try {
+            const { newState: nextState, summary, impacts } = e.data.payload;
+            const finalState = nextState as GameState;
 
-    if (!summary || !nextState) throw new Error('Failed to advance week');
+            // Queue background save
+            const triggerSave = async (stateToSave: GameState) => {
+                if (get()._isSaving) {
+                    set({ _saveNextState: stateToSave });
+                    return;
+                }
 
-    // --- Modal Queue Integration ---
-    const ui = useUIStore.getState();
-    const finalState = nextState as GameState;
+                set({ _isSaving: true, _saveNextState: null });
+                await saveGame(0, stateToSave);
+                set({ _isSaving: false });
 
-    // 1. Crises/Scandals
-    const crisisTitles = new Set<string>();
-    const summaryCast = summary as WeekSummary;
-    if (summaryCast?.events) {
-      const events = summaryCast.events as string[];
-      for (let i = 0; i < events.length; i++) {
-        const ev = events[i];
-        if (ev.startsWith('CRISIS: "')) {
-          const firstQuote = ev.indexOf('"');
-          const secondQuote = ev.indexOf('"', firstQuote + 1);
-          if (firstQuote !== -1 && secondQuote !== -1) {
-            crisisTitles.add(ev.substring(firstQuote + 1, secondQuote));
+                const next = get()._saveNextState;
+                if (next) triggerSave(next);
+            };
+
+            triggerSave(finalState);
+            
+            set({ 
+              gameState: finalState,
+              finance: finalState.finance,
+              news: finalState.news,
+              _isProcessingTick: false
+            });
+
+            // Modals
+            const ui = useUIStore.getState();
+            if (impacts && impacts.length > 0) {
+              const modalImpacts = impacts.filter((imp: any) => imp.type === 'MODAL_TRIGGERED');
+              if (modalImpacts.length > 0) {
+                const sortedModalImpacts = [...modalImpacts].sort((a, b) => (b.payload.priority || 0) - (a.payload.priority || 0));
+                for (const imp of sortedModalImpacts) {
+                  ui.enqueueModal(imp.payload.modalType, imp.payload.payload as Record<string, unknown>);
+                }
+              }
+            }
+
+            if (summary && (summary as WeekSummary).fromWeek % 52 === 0 && (summary as WeekSummary).fromWeek > 0) {
+              get().captureSnapshot();
+            }
+
+            engineWorker.removeEventListener('message', handler);
+            resolve(summary as WeekSummary);
+          } catch (err) {
+            set({ _isProcessingTick: false });
+            engineWorker.removeEventListener('message', handler);
+            reject(err);
           }
         }
-      }
-    }
-
-    if (crisisTitles.size > 0) {
-      const projects = finalState.studio.internal.projects;
-      for (const key in projects) {
-        const p = projects[key];
-        if (p.activeCrisis && !p.activeCrisis.resolved && crisisTitles.has(p.title)) {
-          ui.enqueueModal('CRISIS', { projectId: p.id, crisis: p.activeCrisis });
-        }
-      }
-    }
-
-    // 2. Awards Ceremony
-    const isAwardsWeek = finalState.week % 52 === 4 || finalState.week % 52 === 36;
-    if (isAwardsWeek) {
-      const year = Math.floor(finalState.week / 52) + 1;
-      const allAwards = finalState.industry.awards || [];
-      const currentAwards = [] as any[];
-      for (let i = 0; i < allAwards.length; i++) {
-        if (allAwards[i].year === year) {
-          currentAwards.push(allAwards[i]);
-        }
-      }
-      ui.enqueueModal('AWARDS', { week: finalState.week, year, awards: currentAwards });
-    }
-
-    // 3. Week Summary
-    ui.enqueueModal('SUMMARY', summary);
-
-    // 4. Yearly Snapshot (Sprint G)
-    if (summary && ((summary as any).fromWeek % 52 === 0) && (summary as any).fromWeek > 0) {
-      get().captureSnapshot();
-    }
-
-    return summary;
+      };
+      
+      engineWorker.addEventListener('message', handler);
+      engineWorker.postMessage({ type: 'ADVANCE_WEEK', payload: { state } });
+    });
   },
 
   saveToSlot: async (slot) => {
@@ -150,17 +176,25 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
     if (state.gameState === null) return state;
     return { 
         gameState: null,
-        finance: EMPTY_FINANCE as unknown as any,
-        news: EMPTY_NEWS as unknown as any
+        finance: INITIAL_FINANCE,
+        news: INITIAL_NEWS
     };
   }),
 
   devAutoInit: (archetype = 'major') => {
-    const gameState = initializeGame('Alpha Studios', archetype);
-    set({ 
-      gameState,
-      finance: gameState.finance,
-      news: gameState.news
-    });
+    const seed = 42;
+    const handler = (e: MessageEvent) => {
+      if (e.data.type === 'INIT_RESULT') {
+        const gameState = e.data.payload;
+        set({ 
+          gameState,
+          finance: gameState.finance,
+          news: gameState.news
+        });
+        engineWorker.removeEventListener('message', handler);
+      }
+    };
+    engineWorker.addEventListener('message', handler);
+    engineWorker.postMessage({ type: 'INIT_GAME', payload: { studioName: 'Alpha Studios', archetype, seed } });
   },
 }));

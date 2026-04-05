@@ -1,9 +1,10 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { useGameStore } from '@/store/gameStore';
+import { createMockProject } from '../utils/mockFactories';
 
 describe('Store Slice Isolation', () => {
-  beforeEach(() => {
-    useGameStore.getState().newGame('Test Studio', 'major');
+  beforeEach(async () => {
+    await useGameStore.getState().newGame('Test Studio', 'major');
   });
 
   describe('Finance Slice Isolation', () => {
@@ -29,15 +30,15 @@ describe('Store Slice Isolation', () => {
   describe('Project Slice Isolation', () => {
     it('should manage UUIDs internally and access by O(1) dictionary key', () => {
       const state = useGameStore.getState();
-      state.addProject({ id: 'p_O1', title: 'O1 Project', state: 'development' });
+      state.addProject(createMockProject({ id: 'p_O1', title: 'O1 Project', state: 'development' }));
       const newState = useGameStore.getState();
       expect(newState.gameState?.studio.internal.projects['p_O1']).toBeDefined();
       expect(Object.keys(newState.gameState?.studio.internal.projects || {}).includes('p_O1')).toBe(true);
     });
     it('should advance a specific project status immutably', () => {
       // Add mock projects
-      useGameStore.getState().addProject({ id: 'p1', state: 'development', title: 'P1' });
-      useGameStore.getState().addProject({ id: 'p2', state: 'production', title: 'P2' });
+      useGameStore.getState().addProject(createMockProject({ id: 'p1', state: 'development', title: 'P1' }));
+      useGameStore.getState().addProject(createMockProject({ id: 'p2', state: 'production', title: 'P2' }));
       
       // Action
       useGameStore.getState().advanceProjectPhase('p1', 'production');

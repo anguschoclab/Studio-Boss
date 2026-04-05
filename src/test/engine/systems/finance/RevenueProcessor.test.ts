@@ -35,7 +35,7 @@ describe('RevenueProcessor', () => {
       expect(revenue).toBe(500000);
     });
 
-    it('should reduce revenue by 75% over two weeks with 0.5 decay', () => {
+    it('should reduce revenue over two weeks with 0.5 decay', () => {
       const week1 = 1000000;
       const week2 = RevenueProcessor.calculateTheatricalDecay(week1, 0.5);
       const week3 = RevenueProcessor.calculateTheatricalDecay(week2, 0.5);

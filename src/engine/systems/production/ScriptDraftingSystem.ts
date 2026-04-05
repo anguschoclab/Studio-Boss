@@ -1,3 +1,4 @@
+import { pick } from '../../utils';
 import { Project, ScriptEvent, CharacterArchetype, StateImpact } from '@/engine/types/index';
 import { RandomGenerator } from '../../utils/rng';
 
@@ -49,7 +50,7 @@ export function tickScriptDevelopment(
     // ROLE SPLIT (High Heat)
     else if (evolutionRoll > 0.8 && p.activeRoles.length < 6) {
       if (p.scriptHeat > 70) {
-        const archetype: CharacterArchetype = rng.pick(['sidekick', 'love_interest', 'loose_cannon', 'femme_fatale']);
+        const archetype: CharacterArchetype = pick(['sidekick', 'love_interest', 'loose_cannon', 'femme_fatale'], rng);
         p.activeRoles.push(archetype);
 
         const event: import('@/engine/types').ScriptEvent = {

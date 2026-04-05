@@ -1,4 +1,6 @@
+import { pick } from '../../utils';
 import { TalentDemographics } from '../../types/talent.types';
+import { RandomGenerator } from '../../utils/rng';
 
 export type Ethnicity = 'Caucasian' | 'Black' | 'Hispanic' | 'Asian' | 'South Asian' | 'Middle Eastern' | 'Mixed';
 
@@ -51,27 +53,19 @@ const COUNTRY_PROFILES: Record<string, CountryProfile> = {
 
 const GENDERS = ['MALE', 'FEMALE', 'NON_BINARY'] as const;
 
-function pick<T>(arr: readonly T[] | T[]): T {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
-
-function randRange(min: number, max: number): number {
-  return Math.random() * (max - min) + min;
-}
-
-export function generateDemographics(isGlobalStar: boolean = false, localCountry?: string): TalentDemographics {
+export function generateDemographics(rng: RandomGenerator, isGlobalStar: boolean = false, localCountry?: string): TalentDemographics {
   const COUNTRIES = ['USA', 'UK', 'Canada', 'Australia', 'Japan', 'Mexico', 'South Korea', 'France', 'India'];
-  let finalCountry = pick(COUNTRIES);
+  let finalCountry = pick(COUNTRIES, rng);
   
   // Bias for local country if not a global star
-  if (!isGlobalStar && localCountry && Math.random() < 0.8) {
+  if (!isGlobalStar && localCountry && rng.next() < 0.8) {
     finalCountry = localCountry;
   }
 
   const profile = COUNTRY_PROFILES[finalCountry] || COUNTRY_PROFILES['Default'];
   
   // Weighted ethnicity pick
-  const roll = Math.random() * 100;
+  const roll = rng.next() * 100;
   let cumulative = 0;
   let ethnicity: Ethnicity = 'Mixed';
   
@@ -84,8 +78,8 @@ export function generateDemographics(isGlobalStar: boolean = false, localCountry
   }
 
   return {
-    age: Math.floor(randRange(18, isGlobalStar ? 65 : 45)),
-    gender: pick(GENDERS),
+    age: rng.rangeInt(18, isGlobalStar ? 65 : 45),
+    gender: pick([...GENDERS], rng),
     country: finalCountry,
     ethnicity
   };

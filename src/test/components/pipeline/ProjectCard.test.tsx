@@ -3,15 +3,22 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ProjectCard } from '@/components/pipeline/ProjectCard';
 import { useUIStore } from '@/store/uiStore';
 import { Project } from '@/engine/types';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { useGameStore } from '@/store/gameStore';
 
 // Mock the uiStore
 vi.mock('@/store/uiStore', () => ({
   useUIStore: vi.fn(),
 }));
 
+// Mock the gameStore
+vi.mock('@/store/gameStore', () => ({
+  useGameStore: vi.fn(),
+}));
+
 const mockSelectProject = vi.fn();
 const mockOpenPitchProject = vi.fn();
-const mockOpenCrisisModal = vi.fn();
+const mockEnqueueModal = vi.fn();
 
 const baseProject: Project = {
   id: 'test-project-1',
@@ -44,12 +51,24 @@ describe('ProjectCard', () => {
     (useUIStore as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
       selectProject: mockSelectProject,
       openPitchProject: mockOpenPitchProject,
-      openCrisisModal: mockOpenCrisisModal,
+      enqueueModal: mockEnqueueModal,
+    });
+    (useGameStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector) => {
+      return selector({
+        gameState: {
+          market: {
+            buyers: [
+              { id: 'buyer-1', name: 'Netflix' },
+              { id: 'buyer-2', name: 'Warner Bros' }
+            ]
+          }
+        }
+      });
     });
   });
 
   it('renders basic project details correctly', () => {
-    render(<ProjectCard project={baseProject} />);
+    render(<TooltipProvider><ProjectCard project={baseProject} /></TooltipProvider>);
 
     expect(screen.getByText('Test Movie')).toBeInTheDocument();
     expect(screen.getByText('Action')).toBeInTheDocument();
@@ -58,7 +77,7 @@ describe('ProjectCard', () => {
   });
 
   it('calls selectProject when the main card is clicked', () => {
-    render(<ProjectCard project={baseProject} />);
+    render(<TooltipProvider><ProjectCard project={baseProject} /></TooltipProvider>);
 
     const card = screen.getByRole('button');
     fireEvent.click(card);
@@ -66,9 +85,27 @@ describe('ProjectCard', () => {
     expect(mockSelectProject).toHaveBeenCalledWith('test-project-1');
   });
 
+  it('calls selectProject when the main card receives Enter keydown', () => {
+    render(<TooltipProvider><ProjectCard project={baseProject} /></TooltipProvider>);
+
+    const card = screen.getByRole('button');
+    fireEvent.keyDown(card, { key: 'Enter', code: 'Enter', charCode: 13 });
+
+    expect(mockSelectProject).toHaveBeenCalledWith('test-project-1');
+  });
+
+  it('calls selectProject when the main card receives Space keydown', () => {
+    render(<TooltipProvider><ProjectCard project={baseProject} /></TooltipProvider>);
+
+    const card = screen.getByRole('button');
+    fireEvent.keyDown(card, { key: ' ', code: 'Space', charCode: 32 });
+
+    expect(mockSelectProject).toHaveBeenCalledWith('test-project-1');
+  });
+
   it('shows Executive Review button for needs_greenlight state', () => {
      const project = { ...baseProject, state: 'needs_greenlight' as const };
-    render(<ProjectCard project={project} />);
+    render(<TooltipProvider><ProjectCard project={project} /></TooltipProvider>);
 
     const button = screen.getByRole('button', { name: /Executive Review/i });
     expect(button).toBeInTheDocument();
@@ -79,7 +116,7 @@ describe('ProjectCard', () => {
 
   it('shows Pitch Pipeline button for pitching state', () => {
     const project = { ...baseProject, state: 'pitching' as const };
-    render(<ProjectCard project={project} />);
+    render(<TooltipProvider><ProjectCard project={project} /></TooltipProvider>);
 
     const button = screen.getByRole('button', { name: /Pitch Pipeline/i });
     expect(button).toBeInTheDocument();
@@ -100,29 +137,67 @@ describe('ProjectCard', () => {
         weekTriggered: 1,
       },
     } as any;
-    render(<ProjectCard project={project} />);
+    render(<TooltipProvider><ProjectCard project={project} /></TooltipProvider>);
 
     const button = screen.getByRole('button', { name: /Neutralize Crisis/i });
     expect(button).toBeInTheDocument();
 
     fireEvent.click(button);
-    expect(mockOpenCrisisModal).toHaveBeenCalledWith('test-project-1');
+    expect(mockEnqueueModal).toHaveBeenCalledWith('CRISIS', { projectId: 'test-project-1' });
   });
 
   it('renders progress text for development state', () => {
-    render(<ProjectCard project={baseProject} />);
+    render(<TooltipProvider><ProjectCard project={baseProject} /></TooltipProvider>);
     const devElements = screen.getAllByText((content, element) => element?.textContent?.includes('development') ?? false);
     expect(devElements.length).toBeGreaterThan(0);
     expect(screen.getByText('4/8w')).toBeInTheDocument();
   });
 
-  it('renders gross revenue for released state', () => {
-    const project = { ...baseProject, state: 'released' as const, revenue: 150000000 };
-    render(<ProjectCard project={project} />);
+  it('renders recoupment status for released state', () => {
+    const project = { 
+      ...baseProject, 
+      state: 'released' as const, 
+      revenue: 50000000, 
+      budget: 25000000,
+      marketingBudget: 5000000 
+    }; // Total investment: 30M, Revenue: 50M -> Profitable
+    render(<TooltipProvider><ProjectCard project={project} /></TooltipProvider>);
 
-    const lifetimeElements = screen.getAllByText((content, element) => element?.textContent?.includes('Lifetime') ?? false);
-    expect(lifetimeElements.length).toBeGreaterThan(0);
-    expect(screen.getByText('$150.0M')).toBeInTheDocument(); // Format money logic
+    expect(screen.getByText('Profitable')).toBeInTheDocument();
+  });
+
+  it('renders distribution deal info for streaming status', () => {
+    const project = {
+      ...baseProject,
+      distributionStatus: 'streaming' as const,
+      buyerId: 'buyer-1',
+      budget: 1000000, // 2% of 1M is 20k
+    };
+
+    render(<TooltipProvider><ProjectCard project={project} /></TooltipProvider>);
+
+    // Check buyer name
+    expect(screen.getByText('Netflix')).toBeInTheDocument();
+
+    // Check weekly revenue forecast
+    expect(screen.getByText('$20K/wk')).toBeInTheDocument();
+  });
+
+  it('renders distribution deal info for theatrical status', () => {
+    const project = {
+      ...baseProject,
+      distributionStatus: 'theatrical' as const,
+      buyerId: 'buyer-2',
+      budget: 1000000, // 3% of 1M is 30k
+    };
+
+    render(<TooltipProvider><ProjectCard project={project} /></TooltipProvider>);
+
+    // Check buyer name
+    expect(screen.getByText('Warner Bros')).toBeInTheDocument();
+
+    // Check weekly revenue forecast
+    expect(screen.getByText('$30K/wk')).toBeInTheDocument();
   });
 
   it('renders TV format correctly', () => {
@@ -140,7 +215,7 @@ describe('ProjectCard', () => {
       },
       tvFormat: 'sitcom' as const,
     } as any;
-    render(<ProjectCard project={tvProject} />);
+    render(<TooltipProvider><ProjectCard project={tvProject} /></TooltipProvider>);
 
     expect(screen.getByText('S2')).toBeInTheDocument();
   });

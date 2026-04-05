@@ -60,9 +60,10 @@ export const TalentAvatar: React.FC<TalentAvatarProps> = React.memo(({
         className
       )}
       style={{ width: pixelSize, height: pixelSize }}
-      dangerouslySetInnerHTML={{ __html: svgMarkup }}
       aria-label={`Avatar for ${talent.name}`}
-    />
+    >
+      <img src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgMarkup)}`} alt={`Avatar for ${talent.name}`} className="w-full h-full object-cover" />
+    </div>
   );
 });
 

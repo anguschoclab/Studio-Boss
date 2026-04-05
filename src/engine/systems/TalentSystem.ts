@@ -1,9 +1,10 @@
 import { GameState, Talent, Project, Contract, Award, Opportunity } from '@/engine/types';
-type TalentProfile = Talent;
-import { StateImpact } from '../types/state.types';
+import { StateImpact, TalentUpdate } from '../types/state.types';
 import { generateOpportunity } from '../generators/opportunities';
-import { clamp, secureRandom } from '../utils';
+import { clamp } from '../utils';
+import { RandomGenerator } from '../utils/rng';
 import { applyAwardBoostsToTalent } from './talentStats';
+import { SchedulingEngine } from './schedulingEngine';
 
 /**
  * TalentSystem encapsulates all logic related to talent lifecycle, 
@@ -13,13 +14,70 @@ export class TalentSystem {
   /**
    * Advances the talent-related aspects of the game world (weekly tick).
    */
-  static advance(state: GameState): StateImpact {
+  static advance(state: GameState, rng: RandomGenerator): StateImpact {
     const uiNotifications: string[] = [];
+    const talentUpdates: TalentUpdate[] = [];
     
+    // 1. Fatigue & Commitment Decay (Deterministic via SchedulingEngine)
+    for (const id in state.industry.talentPool) {
+      const talent = state.industry.talentPool[id];
+      let update: Partial<Talent> = {};
+      let changed = false;
+
+      // --- MEDICAL LEAVE / BURNOUT ---
+      if (talent.onMedicalLeave) {
+        if (state.week >= (talent.medicalLeaveEndsWeek || 0)) {
+          update.onMedicalLeave = false;
+          update.fatigue = 20; // Recharged
+          changed = true;
+          uiNotifications.push(`${talent.name} has returned from medical leave.`);
+        }
+      } else if ((talent.fatigue || 0) > 95) {
+        update.onMedicalLeave = true;
+        update.medicalLeaveEndsWeek = state.week + 12;
+        changed = true;
+        uiNotifications.push(`${talent.name} has entered medical leave due to extreme burnout.`);
+      }
+
+      // Recovery phase (only if not on leave, or handled differently)
+      if (!update.onMedicalLeave && !talent.onMedicalLeave) {
+        const nextFatigue = SchedulingEngine.updateTalentFatigue(talent, false);
+        if (nextFatigue !== (talent.fatigue || 0)) {
+          update.fatigue = nextFatigue;
+          changed = true;
+        }
+      }
+      
+      // Commitment cleanup
+      let nextCommitments = talent.commitments;
+      if (talent.commitments && talent.commitments.length > 0) {
+        let hasExpired = false;
+        for (let i = 0; i < talent.commitments.length; i++) {
+          if (talent.commitments[i].endWeek < state.week) {
+            hasExpired = true;
+            break;
+          }
+        }
+
+        if (hasExpired) {
+          nextCommitments = talent.commitments.filter(c => c.endWeek >= state.week);
+          update.commitments = nextCommitments;
+          changed = true;
+        }
+      }
+      
+      if (changed) {
+        talentUpdates.push({
+          talentId: id,
+          update
+        });
+      }
+    }
+
     const currentOpportunities = state.market.opportunities || [];
     const updatedOpportunities: Opportunity[] = [];
 
-    // 1. Opportunity Lifecycle (Expiry)
+    // 2. Opportunity Lifecycle (Expiry)
     for (const opp of currentOpportunities) {
       if (opp.weeksUntilExpiry > 1) {
         updatedOpportunities.push({
@@ -31,7 +89,7 @@ export class TalentSystem {
 
     const oppTitles = new Set(updatedOpportunities.map(o => o.title));
 
-    // 2. Market Generation Logic
+    // 3. Market Generation Logic
     const tryAddOpp = (opp: Opportunity, message?: string) => {
       if (!oppTitles.has(opp.title)) {
         updatedOpportunities.push(opp);
@@ -42,40 +100,40 @@ export class TalentSystem {
       return false;
     };
 
-    // Talent-specific opportunity (using existing studio talent)
-    if (secureRandom() < 0.25) {
-      const activeTalentIds = new Set<string>();
-      for (let i = 0; i < state.studio.internal.contracts.length; i++) {
+    // Prepare available talent pool for opportunity generation
+    const activeTalentIds = new Set<string>();
+    for (let i = 0; i < (state.studio.internal.contracts || []).length; i++) {
         activeTalentIds.add(state.studio.internal.contracts[i].talentId);
-      }
-      const availableTalentIds: string[] = [];
-      for (const talent of Object.values(state.industry.talentPool)) {
-        const id = talent.id;
+    }
+    const availableTalentIds: string[] = [];
+    for (const id in state.industry.talentPool) {
         if (!activeTalentIds.has(id)) availableTalentIds.push(id);
-      }
+    }
 
-      if (availableTalentIds.length > 0) {
-        const newOpp = generateOpportunity(availableTalentIds);
+    // Talent-specific opportunity (using existing studio talent)
+    if (rng.next() < 0.25 && availableTalentIds.length > 0) {
+        const newOpp = generateOpportunity(rng, state.week, availableTalentIds);
         tryAddOpp(newOpp, `A new package "${newOpp.title}" hit the market.`);
-      }
     }
 
     // General opportunities
-    if (secureRandom() < 0.2) {
-      tryAddOpp(generateOpportunity(), `A new script is doing the rounds in town.`);
+    if (rng.next() < 0.2) {
+      tryAddOpp(generateOpportunity(rng, state.week, availableTalentIds), `A new script is doing the rounds in town.`);
     }
 
-    if (secureRandom() < 0.15) {
-      tryAddOpp(generateOpportunity(), `New opportunities have hit the market!`);
+    if (rng.next() < 0.15) {
+      tryAddOpp(generateOpportunity(rng, state.week, availableTalentIds), `New opportunities have hit the market!`);
     }
 
     // Fallback/Density control
-    if (updatedOpportunities.length < 4 && secureRandom() < 0.3) {
-      tryAddOpp(generateOpportunity());
+    if (updatedOpportunities.length < 4 && rng.next() < 0.3) {
+      tryAddOpp(generateOpportunity(rng, state.week, availableTalentIds));
     }
 
     return {
+      type: 'SYSTEM_TICK',
       newOpportunities: updatedOpportunities,
+      talentUpdates,
       uiNotifications
     };
   }
@@ -87,9 +145,9 @@ export class TalentSystem {
   static applyProjectResults(
     project: Project,
     contracts: Contract[],
-    talentPool: TalentProfile[],
+    talentPool: Talent[],
     projectAwards: Award[] = []
-  ): TalentProfile[] {
+  ): Talent[] {
     if (contracts.length === 0) return [];
 
     const talentPoolMap = new Map(talentPool.map(t => [t.id, t]));
@@ -107,7 +165,7 @@ export class TalentSystem {
     else if (ROI < 0.4) { drawChange = -12; prestigeChange = -6; feeMultiplier = 0.75; }
     else if (ROI < 0.8) { drawChange = -6; prestigeChange = -3; feeMultiplier = 0.85; }
 
-    const updatedTalent: TalentProfile[] = [];
+    const updatedTalent: Talent[] = [];
 
     for (const contract of contracts) {
       const talent = talentPoolMap.get(contract.talentId);
@@ -131,7 +189,7 @@ export class TalentSystem {
 
         if (qualifiesForBonus) {
           const multiplier = (award.category.includes('Director') || award.category.includes('Actor') || award.category.includes('Actress') || award.category.includes('Screenplay')) ? 1.0 : 0.5;
-          const isPrestige = ['Academy Awards', 'Cannes Film Festival', 'Venice Film Festival'].includes(award.body);
+          const isPrestige = ['Academy Awards', 'Primetime Emmys', 'Cannes Film Festival', 'Venice Film Festival'].includes(award.body);
           
           const boosts = applyAwardBoostsToTalent(talent, award, multiplier, isPrestige);
 
@@ -139,11 +197,7 @@ export class TalentSystem {
           talentAwardsDrawBonus += boosts.drawBoost;
 
           // feeMultiplier is multiplicative
-          // (Note: previous code used additive `+=`, we can either add the net boost or change to multiplier)
-          // The old code did `talentAwardsFeeMultiplier += (isPrestige ? 0.5 : 0.2) * multiplier;`
-          // So we accumulate the boost amount above 1.0 returned by our function:
           talentAwardsFeeMultiplier += (boosts.feeMultiplier - 1.0);
-
           talentAwardsEgoBoost += boosts.egoBoost;
         }
       }

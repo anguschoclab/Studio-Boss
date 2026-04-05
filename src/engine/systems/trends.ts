@@ -1,15 +1,21 @@
+import { pick } from '../utils';
 import { GenreTrend, GameState } from '@/engine/types';
 import { StateImpact } from '../types/state.types';
-import { secureRandom } from '../utils';
-
+import { RandomGenerator } from '../utils/rng';
 
 export const ALL_GENRES = [
   'Action', 'Comedy', 'Drama', 'Horror', 'Sci-Fi', 'Thriller', 'Romance', 'Animation', 'Documentary', 'Fantasy'
 ];
 
-export function initializeTrends(): GenreTrend[] {
+export function initializeTrends(rng: RandomGenerator): GenreTrend[] {
   // Pick 3 random genres to be the starting trends
-  const shuffled = [...ALL_GENRES].sort(() => 0.5 - secureRandom());
+  const shuffled = [...ALL_GENRES];
+  // Fisher-Yates shuffle with rng
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(rng.next() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  
   return [
     {
       genre: shuffled[0],
@@ -32,7 +38,7 @@ export function initializeTrends(): GenreTrend[] {
   ];
 }
 
-export function advanceTrends(trends: GenreTrend[]): StateImpact[] {
+export function advanceTrends(trends: GenreTrend[], rng: RandomGenerator): StateImpact[] {
   let updated = (trends || []).map(t => {
     let newHeat = t.heat;
     if (t.direction === 'rising') newHeat = Math.min(100, newHeat + 5);
@@ -55,16 +61,16 @@ export function advanceTrends(trends: GenreTrend[]): StateImpact[] {
   updated = updated.filter(t => t.weeksRemaining > 0 && t.heat > 0);
   
   // Randomly spawn new trends if we are low
-  if (updated.length < 5 && secureRandom() < 0.1) {
+  if (updated.length < 5 && rng.next() < 0.1) {
     const activeGenres = new Set(updated.map(t => t.genre));
     const available = ALL_GENRES.filter(g => !activeGenres.has(g));
     if (available.length > 0) {
-      const newGenre = available[Math.floor(secureRandom() * available.length)];
+      const newGenre = rng.pick(available);
       updated.push({
         genre: newGenre,
         heat: 30,
         direction: 'rising',
-        weeksRemaining: 16 + Math.floor(secureRandom() * 12)
+        weeksRemaining: 16 + Math.floor(rng.next() * 12)
       });
     }
   }

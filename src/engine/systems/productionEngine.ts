@@ -1,41 +1,95 @@
-import { GameState, Project, StateImpact } from '@/engine/types';
+import { GameState, Project, StateImpact, Contract, Talent, TalentPact, TalentRole } from '../types';
 import { RandomGenerator } from '../utils/rng';
+import { TalentMoraleSystem } from './talent/TalentMoraleSystem';
+import { processDirectorDisputes } from './directors';
+import { getProjectEstimatedWindow, isSeriesProject } from '../utils/projectUtils';
+import { SchedulingEngine } from './schedulingEngine';
+import { advanceProject } from './projects';
+
+function getAttachedTalent(contracts: Contract[], talentPool: Record<string, Talent>): Talent[] {
+  const acc: Talent[] = [];
+  for (let i = 0; i < contracts.length; i++) {
+    const t = talentPool[contracts[i].talentId];
+    if (t) acc.push(t);
+  }
+  return acc;
+}
 
 /**
  * Pure function to advance a single project's weekly production logic.
- * Handlers are kept under 50 lines per mandate.
  */
-function tickProject(project: Project, rng: RandomGenerator): StateImpact[] {
-  if (project.state === 'archived' || project.state === 'released' || project.state === 'post_release') {
+function tickProject(
+  project: Project, 
+  projectContracts: Contract[],
+  talentPool: Record<string, Talent>,
+  rng: RandomGenerator,
+  studioPrestige: number,
+  currentWeek: number
+): StateImpact[] {
+  if (project.state === 'archived') {
     return [];
   }
 
   const impacts: StateImpact[] = [];
-  const nextWeeksInPhase = (project.weeksInPhase || 0) + 1;
-  const targetWeeks = project.productionWeeks || 20;
+  const talentPoolMap = new Map(Object.entries(talentPool));
   
-  // 1. Progress Increment (with small stochastic variance)
-  const baseProgress = (1 / targetWeeks) * 100;
-  const variance = rng.range(0.8, 1.2);
-  const actualProgressIncrement = baseProgress * variance;
-  const newProgress = Math.min(100, (project.progress || 0) + actualProgressIncrement);
+  // 1. Core Advancement Pulse (Always happens for non-archived)
+  const { project: advancedProject, newScandals } = advanceProject(
+    project,
+    currentWeek,
+    studioPrestige,
+    projectContracts,
+    talentPoolMap as any,
+    rng
+  );
 
-  // 2. Stochastic Quality Check
-  // Each week has a chance to slightly shift the reviewScore based on progress milestones
-  let qualityShift = 0;
-  if (rng.next() < 0.2) {
-    qualityShift = rng.range(-2, 3); // Slightly biased towards improvement
+  if (newScandals && newScandals.length > 0) {
+    newScandals.forEach((scandal: any) => {
+      impacts.push({
+        type: 'SCANDAL_ADDED',
+        payload: { scandal }
+      });
+    });
+  }
+
+  // 2. Production-Specific Logic (Only if in production)
+  if (advancedProject.state === 'production') {
+    const targetWeeks = Math.max(4, Math.min(30, advancedProject.productionWeeks || 20));
+    const attachedTalent = getAttachedTalent(projectContracts, talentPool);
+    const moraleMult = TalentMoraleSystem.getProductionSpeedMultiplier(attachedTalent);
+    
+    // Fatigue logic
+    attachedTalent.forEach(t => {
+      const newFatigue = SchedulingEngine.updateTalentFatigue(t, true);
+      if (newFatigue !== t.fatigue) {
+        impacts.push({
+          type: 'TALENT_UPDATED',
+          payload: { talentId: t.id, update: { fatigue: newFatigue } }
+        });
+      }
+    });
+
+    // Progress Increment
+    const baseProgress = (1 / targetWeeks) * 100;
+    const variance = rng.range(0.8, 1.2);
+    const actualProgressIncrement = baseProgress * variance * moraleMult; 
+    const newProgress = Math.min(100, (advancedProject.progress || 0) + actualProgressIncrement);
+
+    // Stochastic Quality Check
+    let qualityShift = 0;
+    if (rng.next() < 0.2) {
+      qualityShift = rng.range(-2, 3);
+    }
+
+    advancedProject.progress = newProgress;
+    advancedProject.reviewScore = Math.min(100, Math.max(0, (advancedProject.reviewScore || 50) + qualityShift));
   }
 
   impacts.push({
     type: 'PROJECT_UPDATED',
     payload: {
-      projectId: project.id,
-      update: {
-        weeksInPhase: nextWeeksInPhase,
-        progress: newProgress,
-        reviewScore: Math.min(100, Math.max(0, (project.reviewScore || 50) + qualityShift))
-      }
+      projectId: advancedProject.id,
+      update: advancedProject
     }
   });
 
@@ -43,26 +97,99 @@ function tickProject(project: Project, rng: RandomGenerator): StateImpact[] {
 }
 
 /**
- * Unified Production Engine (Target A2).
- * Iterates over all projects (Player & Rivals) with identical math.
+ * Unified Production Engine.
  */
 export function tickProduction(state: GameState, rng: RandomGenerator): StateImpact[] {
   const allImpacts: StateImpact[] = [];
+  const contractMap = new Map<string, Contract[]>();
+  
+  for (const contract of state.studio.internal.contracts) {
+    const list = contractMap.get(contract.projectId) || [];
+    list.push(contract);
+    contractMap.set(contract.projectId, list);
+  }
+
+  // collect rival contracts
+  for (const rival of state.industry.rivals) {
+    if (!rival.contracts) continue;
+    for (const contract of rival.contracts) {
+      const list = contractMap.get(contract.projectId) || [];
+      list.push(contract);
+      contractMap.set(contract.projectId, list);
+    }
+  }
 
   // 1. Player Projects
-  // ⚡ Bolt: Iterate over project records using for...in to avoid O(N) array allocation per tick
-  for (const key in state.studio.internal.projects) {
-    const project = state.studio.internal.projects[key];
-    allImpacts.push(...tickProject(project, rng));
+  const playerProjects = { ...state.studio.internal.projects };
+  let playerChanged = false;
+
+  for (const key in playerProjects) {
+    const project = playerProjects[key];
+    const projectContracts = contractMap.get(project.id) || [];
+    
+    // We reuse tickProject logic but handle impacts collection differently
+    // For simplicity, we'll temporarily use a modified tickProject or just integrate it
+    const projectImpacts = tickProject(project, projectContracts, state.industry.talentPool, rng, state.studio.prestige, state.week);
+    
+    projectImpacts.forEach(imp => {
+        if (imp.type === 'PROJECT_UPDATED') {
+            playerProjects[imp.payload.projectId] = imp.payload.update;
+            playerChanged = true;
+        } else {
+            allImpacts.push(imp);
+        }
+    });
+
+    const disputeImpact = processDirectorDisputes(project, projectContracts, new Map(Object.entries(state.industry.talentPool)), rng);
+    if (disputeImpact) allImpacts.push(disputeImpact);
   }
+
+  if (playerChanged) {
+      allImpacts.push({
+          type: 'INDUSTRY_UPDATE', // Root-level project injection is safer in bulk
+          payload: { 'studio.internal.projects': playerProjects }
+      } as any);
+  }
+
+  // Handle Resting Talent Fatigue
+  const activeTalentIds = new Set(state.studio.internal.contracts.map(c => c.talentId));
+  Object.values(state.industry.talentPool).forEach(talent => {
+    if (!activeTalentIds.has(talent.id)) {
+      const newFatigue = SchedulingEngine.updateTalentFatigue(talent, false);
+      if (newFatigue !== talent.fatigue) {
+        allImpacts.push({
+          type: 'TALENT_UPDATED',
+          payload: { talentId: talent.id, update: { fatigue: newFatigue } }
+        });
+      }
+    }
+  });
 
   // 2. Rival Projects
   for (const rival of state.industry.rivals) {
     if (!rival.projects) continue;
-    // ⚡ Bolt: Iterate over project records using for...in to avoid O(N) array allocation per tick
-    for (const key in rival.projects) {
-      const project = rival.projects[key];
-      allImpacts.push(...tickProject(project, rng));
+    const rivalProjects = { ...rival.projects };
+    let rivalChanged = false;
+
+    for (const key in rivalProjects) {
+      const project = rivalProjects[key];
+      const projectImpacts = tickProject(project, [], state.industry.talentPool, rng, rival.prestige, state.week);
+      
+      projectImpacts.forEach(imp => {
+          if (imp.type === 'PROJECT_UPDATED') {
+              rivalProjects[imp.payload.projectId] = imp.payload.update;
+              rivalChanged = true;
+          } else {
+              allImpacts.push(imp);
+          }
+      });
+    }
+
+    if (rivalChanged) {
+        allImpacts.push({
+            type: 'RIVAL_UPDATED',
+            payload: { rivalId: rival.id, update: { projects: rivalProjects } }
+        });
     }
   }
 

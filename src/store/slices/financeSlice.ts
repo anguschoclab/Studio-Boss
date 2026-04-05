@@ -4,6 +4,7 @@ import { handleReleasePhaseEntry, executeMarketing } from '@/engine/systems/proj
 import { WeeklyFinancialReport, FinanceState, Contract, Project, Buyer, RivalStudio } from '@/engine/types';
 import { FinancialSnapshot, MarketState } from '@/engine/types/state.types';
 import { InterestRateSimulator } from '@/engine/systems/market/InterestRateSimulator';
+import { RandomGenerator } from '@/engine/utils/rng';
 
 export interface FinanceSlice {
   finance: FinanceState;
@@ -36,6 +37,7 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
           production: report.expenses.production,
           burn: report.expenses.overhead,
           marketing: report.expenses.marketing,
+          pacts: 0,
           royalties: 0,
           interest: 0,
         },
@@ -68,12 +70,9 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
       const state = s.gameState;
       if (budget > state.finance.cash) return s;
 
-      const pIndex = Object.values(state.studio.internal.projects).findIndex(p => p.id === projectId);
-      if (pIndex === -1) return s;
-
-      // Extract original project
-      const originalProject = Object.values(state.studio.internal.projects)[pIndex];
-      if (originalProject.state !== 'marketing') return s;
+      // ⚡ Bolt: Replaced O(N) array allocation and findIndex with O(1) dictionary lookup for project selection
+      const originalProject = state.studio.internal.projects[projectId];
+      if (!originalProject || originalProject.state !== 'marketing') return s;
 
       const newCash = state.finance.cash - budget;
       const { project: p } = executeMarketing(originalProject, {
@@ -97,12 +96,22 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
         talentMap.set(id, talentPool[id]);
       });
 
-      const result = handleReleasePhaseEntry(p, state.week, state.studio.prestige, contracts, talentMap);
+      // ⚡ Deterministic RNG for this manual action
+      const rng = new RandomGenerator(state.gameSeed + state.week + 77);
+
+      const result = handleReleasePhaseEntry(
+        p, 
+        state.week, 
+        state.studio.prestige, 
+        contracts, 
+        talentMap,
+        rng
+      );
 
       const headlines = [...state.news.headlines];
       if (result.update) {
         headlines.unshift({
-          id: crypto.randomUUID(),
+          id: rng.uuid('news-market'),
           week: state.week,
           category: 'general' as const,
           text: result.update

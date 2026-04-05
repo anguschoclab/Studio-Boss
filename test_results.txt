@@ -1,478 +1,1357 @@
 
- RUN  v3.2.4 /app
+ RUN  v3.2.4 /Users/amauricia/Documents/GitHub/Studio-Boss
 
- ❯ src/test/engine/systems/buyers.test.ts (22 tests | 1 failed) 31ms
-   ✓ buyers system > Guild Auditor: Edge Cases > handles an empty pipeline/buyers list safely during updateBuyers 2ms
-   × buyers system > Guild Auditor: Edge Cases > calculates fit score correctly with empty project history 13ms
-     → expected 65 to be 50 // Object.is equality
-   ✓ buyers system > updateBuyers > generates specific headlines for all mandate types 3ms
-   ✓ buyers system > updateBuyers > shifts mandate if buyer has no current mandate 1ms
-   ✓ buyers system > updateBuyers > shifts mandate if current mandate is expired 1ms
-   ✓ buyers system > updateBuyers > shifts mandate early due to random 5% chance 0ms
-   ✓ buyers system > updateBuyers > maintains mandate if active and random chance fails 1ms
-   ✓ buyers system > calculateFitScore > applies extreme market saturation penalty for 5 or more recent similar projects 0ms
-   ✓ buyers system > calculateFitScore > matches genres correctly for sci-fi/fantasy, comedy, and drama 1ms
-   ✓ buyers system > calculateFitScore > boosts score for prestige mandate based on budget tiers 0ms
-   ✓ buyers system > calculateFitScore > boosts score for broad_appeal mandate with family audience and mid/high budget 1ms
-   ✓ buyers system > calculateFitScore > penalizes low budget projects for premium archetype buyers 0ms
-   ✓ buyers system > calculateFitScore > applies market saturation penalty for similar projects released within 52 weeks 0ms
-   ✓ buyers system > calculateFitScore > returns exactly 65 if buyer has no mandate and no similar projects (early return check) 0ms
-   ✓ buyers system > calculateFitScore > applies extreme buzz multipliers correctly with negative buzz 0ms
-   ✓ buyers system > calculateFitScore > clamps score between 0 and 100 0ms
-   ✓ buyers system > calculateFitScore > handles budget freeze mandate with extreme blockbuster budget 0ms
-   ✓ buyers system > calculateFitScore > handles broad appeal mandate with niche indie project 0ms
-   ✓ buyers system > calculateFitScore > applies archetype specific penalties (network vs blockbuster) 0ms
-   ✓ buyers system > negotiateContract > requires a higher score (65) for upfront contracts 0ms
-   ✓ buyers system > negotiateContract > requires a lower score (40) for standard/deficit contracts 0ms
-   ✓ buyers system > negotiateContract > tests explicit fit score boundaries for contract acceptance 0ms
- ❯ src/test/components/discovery/DiscoveryBoard.test.tsx (4 tests | 2 failed) 118ms
-   ✓ DiscoveryBoard > renders empty state when there are no opportunities 51ms
-   ✓ DiscoveryBoard > calls openCreateProject when Create Original button is clicked 14ms
-   × DiscoveryBoard > renders opportunity cards when there are opportunities 25ms
-     → Unable to find an element with the text: Action • FILM • high budget. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+ ❯ src/test/engine/systems/production/ScriptDraftingSystem.test.ts (5 tests | 3 failed) 14ms
+   ✓ ScriptDraftingSystem - Edge Cases > returns unmodified project if not in development state 1ms
+   ✓ ScriptDraftingSystem - Edge Cases > returns unmodified project if not scripted 0ms
+   × ScriptDraftingSystem - Edge Cases > should cap scriptHeat at 100 and 0 10ms
+     → expected 60 to be 100 // Object.is equality
+   × ScriptDraftingSystem - Edge Cases > should force ROLE_MERGE on low heat 1ms
+     → expected +0 to be 3 // Object.is equality
+   × ScriptDraftingSystem - Edge Cases > should force ROLE_SPLIT on high heat 1ms
+     → expected +0 to be 4 // Object.is equality
+ ❯ src/test/engine/systems/rumors.test.ts (4 tests | 3 failed) 34ms
+   ✓ advanceRumors > handles missing rumors array gracefully 11ms
+   × advanceRumors > resolves truthful rumors and generates CONFIRMED headlines 21ms
+     → expected [] to have a length of 1 but got +0
+   × advanceRumors > resolves false rumors and generates DEBUNKED headlines 1ms
+     → expected [] to have a length of 1 but got +0
+   × advanceRumors > generates new rumors when random conditions are met 1ms
+     → expected undefined to be defined
+stderr | src/test/components/finance/FinancePanel.test.tsx > FinancePanel Component > renders gracefully with null/empty game state
+Warning: [object Object]: `ref` is not a prop. Trying to access it will result in `undefined` being returned. If you need to access the same value within the child component, you should pass it as a different prop. (https://reactjs.org/link/special-props)
+    at PopChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:43:21)
+    at PresenceChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PresenceChild.mjs:9:26)
+    at AnimatePresence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/index.mjs:44:28)
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:32:76
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:147:13
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:70:71
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:24:7
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:49:82)
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at TooltipProvider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tooltip/dist/index.mjs:29:5)
+Warning: The tag <stop> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+    at stop
+    at linearGradient
+    at defs
+    at div
+    at ComposedChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:19:27)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at div
+    at MotionDOMComponent (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/motion/index.mjs:45:16)
+    at PopChildMeasure (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:13:1)
+    at PopChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:43:21)
+    at PresenceChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PresenceChild.mjs:9:26)
+    at AnimatePresence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/index.mjs:44:28)
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:32:76
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:147:13
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:70:71
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:24:7
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:49:82)
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at TooltipProvider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tooltip/dist/index.mjs:29:5)
+Warning: <linearGradient /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at linearGradient
+    at defs
+    at div
+    at ComposedChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:19:27)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at div
+    at MotionDOMComponent (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/motion/index.mjs:45:16)
+    at PopChildMeasure (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:13:1)
+    at PopChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:43:21)
+    at PresenceChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PresenceChild.mjs:9:26)
+    at AnimatePresence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/index.mjs:44:28)
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:32:76
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:147:13
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:70:71
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:24:7
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:49:82)
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at TooltipProvider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tooltip/dist/index.mjs:29:5)
+Warning: The tag <linearGradient> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+    at linearGradient
+    at defs
+    at div
+    at ComposedChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:19:27)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at div
+    at MotionDOMComponent (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/motion/index.mjs:45:16)
+    at PopChildMeasure (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:13:1)
+    at PopChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:43:21)
+    at PresenceChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PresenceChild.mjs:9:26)
+    at AnimatePresence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/index.mjs:44:28)
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:32:76
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:147:13
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:70:71
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:24:7
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:49:82)
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at TooltipProvider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tooltip/dist/index.mjs:29:5)
+Warning: <linearGradient /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at linearGradient
+    at defs
+    at div
+    at ComposedChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:19:27)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at div
+    at MotionDOMComponent (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/motion/index.mjs:45:16)
+    at PopChildMeasure (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:13:1)
+    at PopChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:43:21)
+    at PresenceChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PresenceChild.mjs:9:26)
+    at AnimatePresence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/index.mjs:44:28)
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:32:76
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:147:13
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:70:71
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:24:7
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:49:82)
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at TooltipProvider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tooltip/dist/index.mjs:29:5)
+Warning: The tag <defs> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+    at defs
+    at div
+    at ComposedChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:19:27)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at div
+    at MotionDOMComponent (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/motion/index.mjs:45:16)
+    at PopChildMeasure (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:13:1)
+    at PopChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:43:21)
+    at PresenceChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PresenceChild.mjs:9:26)
+    at AnimatePresence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/index.mjs:44:28)
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:32:76
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:147:13
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:70:71
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:24:7
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:49:82)
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at TooltipProvider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tooltip/dist/index.mjs:29:5)
+Warning: <linearGradient /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at linearGradient
+    at defs
+    at div
+    at AreaChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:11:23)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at RevenueStreamChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/RevenueStreamChart.tsx:9:31)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at MotionDOMComponent (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/motion/index.mjs:45:16)
+    at PopChildMeasure (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:13:1)
+    at PopChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:43:21)
+    at PresenceChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PresenceChild.mjs:9:26)
+    at AnimatePresence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/index.mjs:44:28)
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:32:76
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:147:13
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:70:71
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:24:7
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:49:82)
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at TooltipProvider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tooltip/dist/index.mjs:29:5)
+Warning: <linearGradient /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at linearGradient
+    at defs
+    at div
+    at AreaChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:11:23)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at RevenueStreamChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/RevenueStreamChart.tsx:9:31)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at MotionDOMComponent (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/motion/index.mjs:45:16)
+    at PopChildMeasure (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:13:1)
+    at PopChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:43:21)
+    at PresenceChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PresenceChild.mjs:9:26)
+    at AnimatePresence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/index.mjs:44:28)
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:32:76
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:147:13
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:70:71
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:24:7
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:49:82)
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at TooltipProvider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tooltip/dist/index.mjs:29:5)
+Warning: <linearGradient /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at linearGradient
+    at defs
+    at div
+    at AreaChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:11:23)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at RevenueStreamChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/RevenueStreamChart.tsx:9:31)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at MotionDOMComponent (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/motion/index.mjs:45:16)
+    at PopChildMeasure (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:13:1)
+    at PopChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:43:21)
+    at PresenceChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PresenceChild.mjs:9:26)
+    at AnimatePresence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/index.mjs:44:28)
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:32:76
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:147:13
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:70:71
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:24:7
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:49:82)
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at TooltipProvider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tooltip/dist/index.mjs:29:5)
 
-Ignored nodes: comments, script, style
-[36m<body>[39m
-  [36m<div>[39m
-    [36m<div[39m
-      [33mclass[39m=[32m"space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500"[39m
-    [36m>[39m
-      [36m<div[39m
-        [33mclass[39m=[32m"flex items-center justify-between"[39m
-      [36m>[39m
-        [36m<h2[39m
-          [33mclass[39m=[32m"font-display text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70 tracking-tight"[39m
-        [36m>[39m
-          [0mDiscovery Market[0m
-        [36m</h2>[39m
-        [36m<button[39m
-          [33mclass[39m=[32m"inline-flex items-center justify-center whitespace-nowrap text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3 font-display gap-1.5 font-bold hover:scale-105 transition-transform active:scale-95 shadow-sm hover:shadow-[0_0_15px_rgba(234,179,8,0.3)]"[39m
-        [36m>[39m
-          [36m<svg[39m
-            [33mclass[39m=[32m"lucide lucide-plus h-4 w-4"[39m
-            [33mfill[39m=[32m"none"[39m
-            [33mheight[39m=[32m"24"[39m
-            [33mstroke[39m=[32m"currentColor"[39m
-            [33mstroke-linecap[39m=[32m"round"[39m
-            [33mstroke-linejoin[39m=[32m"round"[39m
-            [33mstroke-width[39m=[32m"2"[39m
-            [33mviewBox[39m=[32m"0 0 24 24"[39m
-            [33mwidth[39m=[32m"24"[39m
-            [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
-          [36m>[39m
-            [36m<path[39m
-              [33md[39m=[32m"M5 12h14"[39m
-            [36m/>[39m
-            [36m<path[39m
-              [33md[39m=[32m"M12 5v14"[39m
-            [36m/>[39m
-          [36m</svg>[39m
-          [0mCreate Original[0m
-        [36m</button>[39m
-      [36m</div>[39m
-      [36m<div[39m
-        [33mclass[39m=[32m"grid grid-cols-2 lg:grid-cols-3 gap-5"[39m
-      [36m>[39m
-        [36m<div[39m
-          [33mclass[39m=[32m"bg-card/40 backdrop-blur-md rounded-xl border border-border/60 p-5 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-primary/50 transition-all duration-300 flex flex-col justify-between h-full group relative overflow-hidden"[39m
-        [36m>[39m
-          [36m<div[39m
-            [33mclass[39m=[32m"absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"[39m
-          [36m/>[39m
-          [36m<div[39m
-            [33mclass[39m=[32m"space-y-3 relative z-10"[39m
-          [36m>[39m
-            [36m<div[39m
-              [33mclass[39m=[32m"flex justify-between items-start gap-3"[39m
-            [36m>[39m
-              [36m<h3[39m
-                [33mclass[39m=[32m"font-display font-bold text-foreground leading-tight group-hover:text-primary transition-colors drop-shadow-sm"[39m
-                [33mtitle[39m=[32m"Action Movie"[39m
-              [36m>[39m
-                [0mAction Movie[0m
-              [36m</h3>[39m
-              [36m<span[39m
-                [33mclass[39m=[32m"shrink-0 text-[10px] font-bold tracking-widest uppercase px-2 py-0.5 rounded-md bg-muted/60 border border-border/50 text-muted-foreground shadow-sm group-hover:border-primary/30 transition-colors"[39m
-              [36m>[39m
-                [0mscript[0m
-              [36m</span>[39m
-            [36m</div>[39m
-            [36m<div[39m
-              [33mclass[39m=[32m"flex flex-col gap-0.5"[39m
-            [36m>[39m
-              [36m<p[39m
-                [33mclass[39m=[32m"text-xs font-medium text-muted-foreground/90"[39m
-              [36m>[39m
-                [0mAction[0m
-                [0m [0m
-                [36m<span[39m
-                  [33mclass[39m=[32m"text-muted-foreground/50 mx-1"[39m
-                [36m>[39m
-                  [0m•[0m
-                [36m</span>[39m
-                [0m [0m
-                [0mFILM[0m
-              [36m</p>[39m
-              [36m<p[39m
-                [33mclass[39m=[32m"text-[11px] font-semibold text-secondary"[39m
-              [36m>[39m
-                [0mHIGH[0m
-                [0m BUDGET[0m
-              [36m</p>[39m
-            [36m</div>[39m
-            [36m<div[39m
-              [33mclass[39m=[32m"text-xs bg-muted/30 p-2.5 rounded-md italic text-foreground/80 border-l-2 border-primary/40 leading-relaxed shadow-inner"[39m
-            [36m>[39m
-              [0m"[0m
-              [0mExplosions everywhere.[0m
-              [0m"[0m
-            [36m</div>[39m
-          [36m</div>[39m
-          [36m<div[39m
-            [33mclass[39m=[32m"mt-5 pt-3 border-t border-border/50 flex justify-between items-center relative z-10"[39m
-          [36m>[39m
-            [36m<div[39m
-              [33mclass[39m=[32m"text-[11px] font-medium text-muted-foreground flex items-center gap-1.5"[39m
-            [36m>[39m
-              [36m<span[39m
-                [33mclass[39m=[32m"w-1.5 h-1.5 rounded-full bg-warning animate-pulse shadow-[0_0_5px_rgba(250,204,21,0.5)]"[39m
-              [36m/>[39m
-              [0m5[0m
-              [0m weeks left[0m
-            [36m</div>[39m
-            [36m<button[39m
-              [33mclass[39m=[32m"inline-flex items-center justify-center gap-2 whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-secondary text-secondary-foreground rounded-md h-8 text-[11px] px-4 font-bold hover:bg-primary hover:text-primary-foreground transition-colors hover:shadow-[0_0_10px_rgba(234,179,8,0.4)]"[39m
-            [36m>[39m
-              [0mAcquire[0m
-            [36m</button>[39m
-          [36m</div>[39m
-        [36m</div>[39m
-        [36m<div[39m
-          [33mclass[39m=[32m"bg-card/40 backdrop-blur-md rounded-xl border border-border/60 p-5 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-primary/50 transition-all duration-300 flex flex-col justify-between h-full group relative overflow-hidden"[39m
-        [36m>[39m
-          [36m<div[39m
-            [33mclass[39m=[32m"absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"[39m
-          [36m/>[39m
-          [36m<div[39m
-            [33mclass[39m=[32m"space-y-3 relative z-10"[39m
-          [36m>[39m
-            [36m<div[39m
-              [33mclass[39m=[32m"flex justify-between items-start gap-3"[39m
-            [36m>[39m
-              [36m<h3[39m
-                [33mclass[39m=[32m"font-display font-bold text-foreground leading-tight group-hover:text-primary transition-colors drop-shadow-sm"[39m
-                [33mtitle[39m=[32m"Comedy Show"[39m
-              [36m>[39m
-                [0mComedy Show[0m
-              [36m</h3>[39m
-              [36m<span[39m
-                [33mclass[39m=[32m"shrink-0 text-[10px] font-bold tracking-widest uppercase px-2 py-0.5 rounded-md bg-muted/60 border border-border/50 text-muted-foreground shadow-sm group-hover:border-primary/30 transition-colors"[39m
-              [36m>[39m
-                [0mpitch[0m
-              [36m</span>[39m
-            [36m</div>[39m
-            [36m<div[39m
-              [33mclass[39m=[32m"flex flex-col gap-0.5"[39m
-            [36m>[39m
-              [36m<p[39m
-                [33mclass[39m=[32m"text-xs font-medium text-muted-foreground/90"[39m
-              [36m>[39m
-                [0mComedy[0m
-                [0m [0m
-                [36m<span[39m
-                  [33mclass[39m=[32m"text-muted-foreground/50 mx-1"[39m
-                [36m>[39m
-                  [0m•[0m
-                [36m</span>[39m
-                [0m [0m
-                [0mTV[0m
-              [36m</p>[39m
-              [36m<p[39m
-                [33mclass[39m=[32m"text-[11px] font-semibold text-secondary"[39m
-              [36m>[39m
-                [0mLOW[0m
-                [0m BUDGET[0m
-              [36m</p>[39m
-            [36m</div>[39m
-            [36m<div[39m
-              [33mclass[39m=[32m"text-xs bg-muted/30 p-2.5 rounded-md italic text-foreground/80 border-l-2 border-primary/40 leading-relaxed shadow-inner"[39m
-            [36m>[39m
-              [0m"[0m
-              [0mLaugh out loud.[0m
-              [0m"[0m
-            [36m</div>[39m
-          [36m</div>[39m
-          [36m<div[39m
-            [33mclass[39m=[32m"mt-5 pt-3 border-t border-border/50 flex justify-between items-center relative z-10"[39m
-          [36m>[39m
-            [36m<div[39m
-              [33mclass[39m=[32m"text-[11px] font-medium text-muted-foreground flex items-center gap-1.5"[39m
-            [36m>[39m
-              [36m<span[39m
-                [33mclass[39m=[32m"w-1.5 h-1.5 rounded-full bg-warning animate-pulse shadow-[0_0_5px_rgba(250,204,21,0.5)]"[39m
-              [36m/>[39m
-              [0m3[0m
-              [0m weeks left[0m
-            [36m</div>[39m
-            [36m<button[39m
-              [33mclass[39m=[32m"inline-flex items-center justify-center gap-2 whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-secondary text-secondary-foreground rounded-md h-8 text-[11px] px-4 font-bold hover:bg-primary hover:text-primary-foreground transition-colors hover:shadow-[0_0_10px_rgba(234,179,8,0.4)]"[39m
-            [36m>[39m
-              [0mAcquire[0m
-            [36m</button>[39m
-          [36m</div>[39m
-        [36m</div>[39m
-      [36m</div>[39m
-    [36m</div>[39m
-  [36m</div>[39m
-[36m</body>[39m
-   × DiscoveryBoard > calls acquireOpportunity when Acquire button is clicked on a card 26ms
-     → expected "spy" to be called with arguments: [ 'opp-123' ][90m
+stderr | src/test/components/finance/FinancePanel.test.tsx > FinancePanel Component > renders correctly with positive cash flow and active projects
+Warning: <linearGradient /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at linearGradient
+    at defs
+    at div
+    at ComposedChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:19:27)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at div
+    at MotionDOMComponent (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/motion/index.mjs:45:16)
+    at PopChildMeasure (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:13:1)
+    at PopChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:43:21)
+    at PresenceChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PresenceChild.mjs:9:26)
+    at AnimatePresence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/index.mjs:44:28)
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:32:76
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:147:13
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:70:71
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:24:7
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:49:82)
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at TooltipProvider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tooltip/dist/index.mjs:29:5)
+Warning: <linearGradient /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at linearGradient
+    at defs
+    at div
+    at ComposedChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:19:27)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at div
+    at MotionDOMComponent (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/motion/index.mjs:45:16)
+    at PopChildMeasure (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:13:1)
+    at PopChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:43:21)
+    at PresenceChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PresenceChild.mjs:9:26)
+    at AnimatePresence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/index.mjs:44:28)
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:32:76
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:147:13
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:70:71
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:24:7
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:49:82)
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at TooltipProvider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tooltip/dist/index.mjs:29:5)
+Warning: <linearGradient /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at linearGradient
+    at defs
+    at div
+    at AreaChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:11:23)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at RevenueStreamChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/RevenueStreamChart.tsx:9:31)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at MotionDOMComponent (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/motion/index.mjs:45:16)
+    at PopChildMeasure (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:13:1)
+    at PopChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:43:21)
+    at PresenceChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PresenceChild.mjs:9:26)
+    at AnimatePresence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/index.mjs:44:28)
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:32:76
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:147:13
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:70:71
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:24:7
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:49:82)
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at TooltipProvider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tooltip/dist/index.mjs:29:5)
+Warning: <linearGradient /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at linearGradient
+    at defs
+    at div
+    at AreaChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:11:23)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at RevenueStreamChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/RevenueStreamChart.tsx:9:31)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at MotionDOMComponent (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/motion/index.mjs:45:16)
+    at PopChildMeasure (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:13:1)
+    at PopChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:43:21)
+    at PresenceChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PresenceChild.mjs:9:26)
+    at AnimatePresence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/index.mjs:44:28)
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:32:76
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:147:13
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:70:71
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:24:7
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:49:82)
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at TooltipProvider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tooltip/dist/index.mjs:29:5)
+Warning: <linearGradient /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at linearGradient
+    at defs
+    at div
+    at AreaChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:11:23)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at RevenueStreamChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/RevenueStreamChart.tsx:9:31)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at MotionDOMComponent (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/motion/index.mjs:45:16)
+    at PopChildMeasure (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:13:1)
+    at PopChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:43:21)
+    at PresenceChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PresenceChild.mjs:9:26)
+    at AnimatePresence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/index.mjs:44:28)
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:32:76
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:147:13
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:70:71
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:24:7
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:49:82)
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at TooltipProvider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tooltip/dist/index.mjs:29:5)
 
-Number of calls: [1m0[22m
-[39m
- ❯ src/test/components/talent/TalentPanel.test.tsx (3 tests | 2 failed) 109ms
-   ✓ TalentPanel > renders talent roster 63ms
-   × TalentPanel > filters talent by role 28ms
-     → Unable to find an element with the text: DIRECTOR. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+stderr | src/test/components/finance/FinancePanel.test.tsx > FinancePanel Component > renders correctly with negative cash flow and negative cash
+Warning: <linearGradient /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at linearGradient
+    at defs
+    at div
+    at ComposedChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:19:27)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at div
+    at MotionDOMComponent (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/motion/index.mjs:45:16)
+    at PopChildMeasure (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:13:1)
+    at PopChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:43:21)
+    at PresenceChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PresenceChild.mjs:9:26)
+    at AnimatePresence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/index.mjs:44:28)
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:32:76
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:147:13
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:70:71
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:24:7
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:49:82)
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at TooltipProvider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tooltip/dist/index.mjs:29:5)
+Warning: <linearGradient /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at linearGradient
+    at defs
+    at div
+    at ComposedChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:19:27)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at div
+    at MotionDOMComponent (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/motion/index.mjs:45:16)
+    at PopChildMeasure (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:13:1)
+    at PopChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:43:21)
+    at PresenceChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PresenceChild.mjs:9:26)
+    at AnimatePresence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/index.mjs:44:28)
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:32:76
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:147:13
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:70:71
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:24:7
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:49:82)
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at TooltipProvider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tooltip/dist/index.mjs:29:5)
+Warning: <linearGradient /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at linearGradient
+    at defs
+    at div
+    at AreaChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:11:23)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at RevenueStreamChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/RevenueStreamChart.tsx:9:31)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at MotionDOMComponent (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/motion/index.mjs:45:16)
+    at PopChildMeasure (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:13:1)
+    at PopChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:43:21)
+    at PresenceChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PresenceChild.mjs:9:26)
+    at AnimatePresence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/index.mjs:44:28)
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:32:76
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:147:13
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:70:71
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:24:7
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:49:82)
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at TooltipProvider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tooltip/dist/index.mjs:29:5)
+Warning: <linearGradient /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at linearGradient
+    at defs
+    at div
+    at AreaChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:11:23)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at RevenueStreamChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/RevenueStreamChart.tsx:9:31)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at MotionDOMComponent (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/motion/index.mjs:45:16)
+    at PopChildMeasure (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:13:1)
+    at PopChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:43:21)
+    at PresenceChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PresenceChild.mjs:9:26)
+    at AnimatePresence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/index.mjs:44:28)
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:32:76
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:147:13
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:70:71
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:24:7
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:49:82)
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at TooltipProvider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tooltip/dist/index.mjs:29:5)
+Warning: <linearGradient /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at linearGradient
+    at defs
+    at div
+    at AreaChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:11:23)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at RevenueStreamChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/RevenueStreamChart.tsx:9:31)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at MotionDOMComponent (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/motion/index.mjs:45:16)
+    at PopChildMeasure (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:13:1)
+    at PopChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:43:21)
+    at PresenceChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PresenceChild.mjs:9:26)
+    at AnimatePresence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/index.mjs:44:28)
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:32:76
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:147:13
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:70:71
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:24:7
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:49:82)
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at TooltipProvider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tooltip/dist/index.mjs:29:5)
 
-Ignored nodes: comments, script, style
-[36m<body>[39m
-  [36m<div>[39m
-    [36m<div[39m
-      [33mclass[39m=[32m"space-y-4 h-full flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-500 pb-12"[39m
-    [36m>[39m
-      [36m<div[39m
-        [33mclass[39m=[32m"flex items-center justify-between pb-2 border-b border-border/40"[39m
-      [36m>[39m
-        [36m<h2[39m
-          [33mclass[39m=[32m"text-2xl font-display font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70 drop-shadow-sm"[39m
-        [36m>[39m
-          [0mTalent Roster[0m
-        [36m</h2>[39m
-        [36m<div[39m
-          [33mclass[39m=[32m"flex gap-2 flex-wrap justify-end"[39m
-        [36m>[39m
-          [36m<button[39m
-            [33mclass[39m=[32m"px-3.5 py-1.5 text-[10px] uppercase tracking-wider font-black rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background bg-primary text-primary-foreground shadow-[0_0_15px_rgba(234,179,8,0.4)] scale-105 border border-primary/50"[39m
-          [36m>[39m
-            [0mall[0m
-          [36m</button>[39m
-          [36m<button[39m
-            [33mclass[39m=[32m"px-3.5 py-1.5 text-[10px] uppercase tracking-wider font-black rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background bg-muted/50 text-muted-foreground hover:bg-secondary/20 hover:text-foreground hover:-translate-y-0.5 border border-transparent hover:border-secondary/30"[39m
-          [36m>[39m
-            [0mactor[0m
-          [36m</button>[39m
-          [36m<button[39m
-            [33mclass[39m=[32m"px-3.5 py-1.5 text-[10px] uppercase tracking-wider font-black rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background bg-muted/50 text-muted-foreground hover:bg-secondary/20 hover:text-foreground hover:-translate-y-0.5 border border-transparent hover:border-secondary/30"[39m
-          [36m>[39m
-            [0mdirector[0m
-          [36m</button>[39m
-          [36m<button[39m
-            [33mclass[39m=[32m"px-3.5 py-1.5 text-[10px] uppercase tracking-wider font-black rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background bg-muted/50 text-muted-foreground hover:bg-secondary/20 hover:text-foreground hover:-translate-y-0.5 border border-transparent hover:border-secondary/30"[39m
-          [36m>[39m
-            [0mwriter[0m
-          [36m</button>[39m
-          [36m<button[39m
-            [33mclass[39m=[32m"px-3.5 py-1.5 text-[10px] uppercase tracking-wider font-black rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background bg-muted/50 text-muted-foreground hover:bg-secondary/20 hover:text-foreground hover:-translate-y-0.5 border border-transparent hover:border-secondary/30"[39m
-          [36m>[39m
-            [0mproducer[0m
-          [36m</button>[39m
-          [36m<button[39m
-            [33mclass[39m=[32m"px-3.5 py-1.5 text-[10px] uppercase tracking-wider font-black rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background bg-muted/50 text-muted-foreground hover:bg-secondary/20 hover:text-foreground hover:-translate-y-0.5 border border-transparent hover:border-secondary/30"[39m
-          [36m>[39m
-            [0mshowrunner[0m
-          [36m</button>[39m
-        [36m</div>[39m
-      [36m</div>[39m
-      [36m<div[39m
-        [33mclass[39m=[32m"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 overflow-y-auto pb-6 custom-scrollbar pr-2"[39m
-      [36m>[39m
-        [36m<div[39m
-          [33mclass[39m=[32m"p-4 rounded-xl border border-primary/50 shadow-[0_0_20px_rgba(234,179,8,0.15)] bg-card/80 bg-gradient-to-br from-primary/10 to-transparent backdrop-blur-md hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:border-primary/50 hover:-translate-y-1 transition-all duration-300 space-y-3.5 group relative overflow-hidden cursor-pointer"[39m
-        [36m>[39m
-          [36m<div[39m
-            [33mclass[39m=[32m"absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"[39m
-          [36m/>[39m
-          [36m<div[39m
-            [33mclass[39m=[32m"flex items-start justify-between gap-2 relative z-10"[39m
-          [36m>[39m
-            [36m<div[39m
-              [33mclass[39m=[32m"flex flex-col gap-1"[39m
-            [36m>[39m
-              [36m<h4[39m
-                [33mclass[39m=[32m"font-display font-bold text-[15px] text-foreground leading-tight group-hover:text-primary transition-colors drop-shadow-sm"[39m
-              [36m>[39m
-                [0mTom Hanks[0m
-              [36m</h4>[39m
-              [36m<div[39m
-                [33mclass[39m=[32m"flex flex-wrap gap-1.5"[39m
-              [36m>[39m
-                [36m<span[39m
-                  [33mclass[39m=[32m"text-[9px] font-black tracking-widest text-secondary uppercase drop-shadow-[0_0_2px_rgba(255,161,22,0.4)]"[39m
-                [36m>[39m
-                  [0ma-list[0m
-                [36m</span>[39m
-                [36m<span[39m
-                  [33mclass[39m=[32m"text-[9px] font-bold tracking-widest text-muted-foreground/80 uppercase bg-background/50 backdrop-blur-sm px-1.5 py-0.5 rounded border border-border/40 shadow-sm group-hover:border-primary/20 transition-colors"[39m
-                [36m>[39m
-                  [0mCAA[0m
-                [36m</span>[39m
-              [36m</div>[39m
-            [36m</div>[39m
-            [36m<div[39m
-              [33mclass[39m=[32m"inline-flex items-center rounded-full border px-2.5 py-0.5 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-[9px] font-black tracking-widest uppercase shrink-0 bg-background/80 backdrop-blur-md border-border/50 text-foreground/80 group-hover:border-primary/30 transition-colors shadow-sm"[39m
-            [36m>[39m
-              [0mactor[0m
-            [36m</div>[39m
-          [36m</div>[39m
-          [36m<div[39m
-            [33mclass[39m=[32m"grid grid-cols-2 gap-3 text-xs pt-3 border-t border-border/40 relative z-10"[39m
-          [36m>[39m
-            [36m<div[39m
-              [33mclass[39m=[32m"space-y-1"[39m
-            [36m>[39m
-              [36m<div[39m
-                [33mclass[39m=[32m"text-[10px] uppercase font-bold tracking-wider text-mute...
-   × TalentPanel > shows empty state when no talent matches filter 16ms
-     → Unable to find an element with the text: WRITER. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+ ✓ src/test/components/finance/FinancePanel.test.tsx (3 tests) 283ms
+stderr | src/test/components/sbdb/SBDBView.test.tsx > SBDBView > renders the header and subtitle
+Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?
 
-Ignored nodes: comments, script, style
-[36m<body>[39m
-  [36m<div>[39m
-    [36m<div[39m
-      [33mclass[39m=[32m"space-y-4 h-full flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-500 pb-12"[39m
-    [36m>[39m
-      [36m<div[39m
-        [33mclass[39m=[32m"flex items-center justify-between pb-2 border-b border-border/40"[39m
-      [36m>[39m
-        [36m<h2[39m
-          [33mclass[39m=[32m"text-2xl font-display font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70 drop-shadow-sm"[39m
-        [36m>[39m
-          [0mTalent Roster[0m
-        [36m</h2>[39m
-        [36m<div[39m
-          [33mclass[39m=[32m"flex gap-2 flex-wrap justify-end"[39m
-        [36m>[39m
-          [36m<button[39m
-            [33mclass[39m=[32m"px-3.5 py-1.5 text-[10px] uppercase tracking-wider font-black rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background bg-primary text-primary-foreground shadow-[0_0_15px_rgba(234,179,8,0.4)] scale-105 border border-primary/50"[39m
-          [36m>[39m
-            [0mall[0m
-          [36m</button>[39m
-          [36m<button[39m
-            [33mclass[39m=[32m"px-3.5 py-1.5 text-[10px] uppercase tracking-wider font-black rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background bg-muted/50 text-muted-foreground hover:bg-secondary/20 hover:text-foreground hover:-translate-y-0.5 border border-transparent hover:border-secondary/30"[39m
-          [36m>[39m
-            [0mactor[0m
-          [36m</button>[39m
-          [36m<button[39m
-            [33mclass[39m=[32m"px-3.5 py-1.5 text-[10px] uppercase tracking-wider font-black rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background bg-muted/50 text-muted-foreground hover:bg-secondary/20 hover:text-foreground hover:-translate-y-0.5 border border-transparent hover:border-secondary/30"[39m
-          [36m>[39m
-            [0mdirector[0m
-          [36m</button>[39m
-          [36m<button[39m
-            [33mclass[39m=[32m"px-3.5 py-1.5 text-[10px] uppercase tracking-wider font-black rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background bg-muted/50 text-muted-foreground hover:bg-secondary/20 hover:text-foreground hover:-translate-y-0.5 border border-transparent hover:border-secondary/30"[39m
-          [36m>[39m
-            [0mwriter[0m
-          [36m</button>[39m
-          [36m<button[39m
-            [33mclass[39m=[32m"px-3.5 py-1.5 text-[10px] uppercase tracking-wider font-black rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background bg-muted/50 text-muted-foreground hover:bg-secondary/20 hover:text-foreground hover:-translate-y-0.5 border border-transparent hover:border-secondary/30"[39m
-          [36m>[39m
-            [0mproducer[0m
-          [36m</button>[39m
-          [36m<button[39m
-            [33mclass[39m=[32m"px-3.5 py-1.5 text-[10px] uppercase tracking-wider font-black rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background bg-muted/50 text-muted-foreground hover:bg-secondary/20 hover:text-foreground hover:-translate-y-0.5 border border-transparent hover:border-secondary/30"[39m
-          [36m>[39m
-            [0mshowrunner[0m
-          [36m</button>[39m
-        [36m</div>[39m
-      [36m</div>[39m
-      [36m<div[39m
-        [33mclass[39m=[32m"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 overflow-y-auto pb-6 custom-scrollbar pr-2"[39m
-      [36m>[39m
-        [36m<div[39m
-          [33mclass[39m=[32m"p-4 rounded-xl border border-primary/50 shadow-[0_0_20px_rgba(234,179,8,0.15)] bg-card/80 bg-gradient-to-br from-primary/10 to-transparent backdrop-blur-md hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:border-primary/50 hover:-translate-y-1 transition-all duration-300 space-y-3.5 group relative overflow-hidden cursor-pointer"[39m
-        [36m>[39m
-          [36m<div[39m
-            [33mclass[39m=[32m"absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"[39m
-          [36m/>[39m
-          [36m<div[39m
-            [33mclass[39m=[32m"flex items-start justify-between gap-2 relative z-10"[39m
-          [36m>[39m
-            [36m<div[39m
-              [33mclass[39m=[32m"flex flex-col gap-1"[39m
-            [36m>[39m
-              [36m<h4[39m
-                [33mclass[39m=[32m"font-display font-bold text-[15px] text-foreground leading-tight group-hover:text-primary transition-colors drop-shadow-sm"[39m
-              [36m>[39m
-                [0mTom Hanks[0m
-              [36m</h4>[39m
-              [36m<div[39m
-                [33mclass[39m=[32m"flex flex-wrap gap-1.5"[39m
-              [36m>[39m
-                [36m<span[39m
-                  [33mclass[39m=[32m"text-[9px] font-black tracking-widest text-secondary uppercase drop-shadow-[0_0_2px_rgba(255,161,22,0.4)]"[39m
-                [36m>[39m
-                  [0ma-list[0m
-                [36m</span>[39m
-                [36m<span[39m
-                  [33mclass[39m=[32m"text-[9px] font-bold tracking-widest text-muted-foreground/80 uppercase bg-background/50 backdrop-blur-sm px-1.5 py-0.5 rounded border border-border/40 shadow-sm group-hover:border-primary/20 transition-colors"[39m
-                [36m>[39m
-                  [0mCAA[0m
-                [36m</span>[39m
-              [36m</div>[39m
-            [36m</div>[39m
-            [36m<div[39m
-              [33mclass[39m=[32m"inline-flex items-center rounded-full border px-2.5 py-0.5 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-[9px] font-black tracking-widest uppercase shrink-0 bg-background/80 backdrop-blur-md border-border/50 text-foreground/80 group-hover:border-primary/30 transition-colors shadow-sm"[39m
-            [36m>[39m
-              [0mactor[0m
-            [36m</div>[39m
-          [36m</div>[39m
-          [36m<div[39m
-            [33mclass[39m=[32m"grid grid-cols-2 gap-3 text-xs pt-3 border-t border-border/40 relative z-10"[39m
-          [36m>[39m
-            [36m<div[39m
-              [33mclass[39m=[32m"space-y-1"[39m
-            [36m>[39m
-              [36m<div[39m
-                [33mclass[39m=[32m"text-[10px] uppercase font-bold tracking-wider text-mute...
- ❯ src/test/engine/systems/greenlight.test.ts (25 tests | 1 failed) 23ms
-   ✓ evaluateGreenlight > Base Scoring Mechanics > calculates a baseline score without major modifiers 2ms
-   ✓ evaluateGreenlight > Base Scoring Mechanics > applies market saturation penalty for recent similar projects 0ms
-   ✓ evaluateGreenlight > Base Scoring Mechanics > applies heavy penalty for oversaturated genres (>= 5 similar) 0ms
-   × evaluateGreenlight > Base Scoring Mechanics > doubles penalty for oversaturated Superhero genre 12ms
-     → expected false to be true // Object.is equality
-   ✓ evaluateGreenlight > Base Scoring Mechanics > applies calendar gap bonus if no similar projects in 52 weeks 1ms
-   ✓ evaluateGreenlight > Base Scoring Mechanics > penalizes severe cashflow strain (cash < budget) 0ms
-   ✓ evaluateGreenlight > Base Scoring Mechanics > penalizes high financial exposure (cash < budget * 2) 0ms
-   ✓ evaluateGreenlight > Base Scoring Mechanics > rewards comfortable cash reserves (cash > budget * 5) 0ms
-   ✓ evaluateGreenlight > Base Scoring Mechanics > penalizes unpackaged projects (no talent) 0ms
-   ✓ evaluateGreenlight > Base Scoring Mechanics > rewards A-list packages (avg draw > 75) 0ms
-   ✓ evaluateGreenlight > Base Scoring Mechanics > rewards high prestige elements (total prestige > 150) 0ms
-   ✓ evaluateGreenlight > Base Scoring Mechanics > penalizes poor talent packages (avg draw <= 50) 0ms
-   ✓ evaluateGreenlight > Base Scoring Mechanics > rewards exceptional buzz (> 80) 0ms
-   ✓ evaluateGreenlight > Base Scoring Mechanics > penalizes very low buzz (< 30) 0ms
-   ✓ evaluateGreenlight > Recommendations Matrix and Edge Cases > returns Easy Greenlight for score >= 80 0ms
-   ✓ evaluateGreenlight > Recommendations Matrix and Edge Cases > returns Viable with Conditions for 60 <= score < 80 0ms
-   ✓ evaluateGreenlight > Recommendations Matrix and Edge Cases > returns Speculative Bet for 40 <= score < 60 on mid budget 0ms
-   ✓ evaluateGreenlight > Recommendations Matrix and Edge Cases > returns Dangerous Vanity Play for 40 <= score < 60 on blockbuster/high budget 0ms
-   ✓ evaluateGreenlight > Recommendations Matrix and Edge Cases > returns Do Not Greenlight Yet for score < 40 on mid budget 0ms
-   ✓ evaluateGreenlight > Recommendations Matrix and Edge Cases > returns Dangerous Vanity Play for score < 40 on blockbuster/high budget 0ms
-   ✓ evaluateGreenlight > Extreme Edge Cases (Guild Auditor) > handles negative budget securely without throwing 0ms
-   ✓ evaluateGreenlight > Extreme Edge Cases (Guild Auditor) > handles talent with 0 draw but 100 ego/prestige safely 0ms
-   ✓ evaluateGreenlight > Extreme Edge Cases (Guild Auditor) > handles an empty pipeline safely (allProjects = []) 1ms
-   ✓ evaluateGreenlight > Extreme Edge Cases (Guild Auditor) > bounds extreme negative scores to 0 0ms
-   ✓ evaluateGreenlight > Extreme Edge Cases (Guild Auditor) > bounds extreme positive scores to 100 0ms
- ✓ src/test/components/modals/ProjectDetailModal.test.tsx (6 tests) 477ms
- ✓ src/test/components/modals/CreateProjectModal.test.tsx (9 tests) 1381ms
- ✓ src/test/components/modals/PitchProjectModal.test.tsx (8 tests) 1941ms
-   ✓ PitchProjectModal > handles a successful pitch  1558ms
- ✓ src/test/components/pipeline/ProjectCard.test.tsx (9 tests) 367ms
- ✓ src/test/WeekSummaryModal.test.tsx (6 tests) 327ms
- ✓ src/test/components/modals/CrisisModal.test.tsx (7 tests) 195ms
- ✓ src/test/components/finance/FinancePanel.test.tsx (3 tests) 195ms
- ✓ src/test/components/pipeline/PipelineBoard.test.tsx (5 tests) 133ms
- ✓ src/test/components/rivals/RivalsPanel.test.tsx (3 tests) 133ms
- ✓ src/test/chart.test.tsx (1 test) 34ms
- ✓ src/test/store/gameStore.test.ts (12 tests) 24ms
+Check the render method of `Primitive.button.SlotClone`.
+    at Select (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-select/dist/index.mjs:42:5)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-popper/dist/index.mjs:38:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tooltip/dist/index.mjs:165:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at Popper (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-popper/dist/index.mjs:30:11)
+    at Tooltip (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tooltip/dist/index.mjs:73:5)
+    at TooltipWrapper (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tooltip-wrapper.tsx:7:27)
+    at div
+    at div
+    at div
+    at SBDBView (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/sbdb/SBDBView.tsx:23:55)
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at TooltipProvider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tooltip/dist/index.mjs:29:5)
+Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?
+
+Check the render method of `Primitive.button.SlotClone`.
+    at Select (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-select/dist/index.mjs:42:5)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-popper/dist/index.mjs:38:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tooltip/dist/index.mjs:165:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at Popper (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-popper/dist/index.mjs:30:11)
+    at Tooltip (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tooltip/dist/index.mjs:73:5)
+    at TooltipWrapper (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tooltip-wrapper.tsx:7:27)
+    at div
+    at div
+    at div
+    at SBDBView (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/sbdb/SBDBView.tsx:23:55)
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at TooltipProvider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tooltip/dist/index.mjs:29:5)
+
+ ✓ src/test/components/pipeline/ProjectCard.test.tsx (12 tests) 319ms
+stdout | src/test/engine/snapshots.test.ts > Historical Snapshots System > should capture a complete snapshot exactly on week 52
+[SaveLoad] State saved to slot 0 via OPFS.
+
+ ✓ src/test/components/sbdb/SBDBView.test.tsx (7 tests) 662ms
+ ✓ src/test/components/modals/PitchProjectModal.test.tsx (8 tests) 1690ms
+   ✓ PitchProjectModal > handles a successful pitch  1525ms
+ ✓ src/test/components/modals/CreateProjectModal.test.tsx (12 tests) 2740ms
+   ✓ CreateProjectModal > submits the form correctly for a TV series with episodes and release model  447ms
+   ✓ CreateProjectModal > submits the form correctly for an unscripted series  502ms
+ ✓ src/test/components/pipeline/PipelineBoard.test.tsx (6 tests) 245ms
+stderr | src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > renders project details when a project is selected
+Warning: [object Object]: `ref` is not a prop. Trying to access it will result in `undefined` being returned. If you need to access the same value within the child component, you should pass it as a different prop. (https://reactjs.org/link/special-props)
+    at PopChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PopChild.mjs:43:21)
+    at PresenceChild (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/PresenceChild.mjs:9:26)
+    at AnimatePresence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/framer-motion/dist/es/components/AnimatePresence/index.mjs:44:28)
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:32:76
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:147:13
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx:70:71
+    at div
+    at div
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-scroll-area/dist/index.mjs:94:13
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-scroll-area/dist/index.mjs:32:7
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/scroll-area.tsx:9:70
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tabs/dist/index.mjs:24:7
+    at div
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dismissable-layer/dist/index.mjs:24:7
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-focus-scope/dist/index.mjs:15:5
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:206:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:132:58
+    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:123:64
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-portal/dist/index.mjs:11:22
+    at Presence (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-presence/dist/index.mjs:19:11)
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at DialogPortal (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:85:11)
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/dialog.tsx:25:73
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at Dialog (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-dialog/dist/index.mjs:25:5)
+    at ProjectDetailModal (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/modals/ProjectDetailModal.tsx:66:67)
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at TooltipProvider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tooltip/dist/index.mjs:29:5)
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+stderr | src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > shows greenlight button when project needs greenlight
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+stdout | src/test/engine/snapshots.test.ts > Historical Snapshots System > should capture a complete snapshot exactly on week 52
+[SaveLoad] State saved to slot 0 via OPFS.
+
+stdout | src/test/engine/snapshots.test.ts > Historical Snapshots System > should capture a complete snapshot exactly on week 52
+[SaveLoad] State saved to slot 0 via OPFS.
+
+ ✓ src/test/engine/snapshots.test.ts (1 test) 1869ms
+   ✓ Historical Snapshots System > should capture a complete snapshot exactly on week 52  1869ms
+stderr | src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > shows marketing configuration and handles lock campaign
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+
+stderr | src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > shows renew button for tv project and handles renewal
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ ✓ src/test/components/modals/CrisisModal.test.tsx (8 tests) 128ms
+stderr | src/test/WeekSummaryModal.test.tsx > WeekSummaryModal > renders correctly with positive net financial data
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ ✓ src/test/components/modals/ProjectDetailModal.test.tsx (5 tests) 573ms
+stderr | src/test/WeekSummaryModal.test.tsx > WeekSummaryModal > renders correctly with negative net financial data
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+stderr | src/test/WeekSummaryModal.test.tsx > WeekSummaryModal > renders project updates, events, and headlines if they exist
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ ✓ src/test/components/talent/TalentPanel.test.tsx (3 tests) 580ms
+stderr | src/test/WeekSummaryModal.test.tsx > WeekSummaryModal > calls closeSummary when the Continue button is clicked
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ ✓ src/test/WeekSummaryModal.test.tsx (6 tests) 345ms
+stderr | src/test/components/discovery/DiscoveryBoard.test.tsx > DiscoveryBoard > renders opportunity cards when there are opportunities
+Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?
+
+Check the render method of `Primitive.button.SlotClone`.
+    at Badge (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/badge.tsx:22:18)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-popper/dist/index.mjs:38:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tooltip/dist/index.mjs:165:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at Popper (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-popper/dist/index.mjs:30:11)
+    at Tooltip (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tooltip/dist/index.mjs:73:5)
+    at TooltipWrapper (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tooltip-wrapper.tsx:7:27)
+    at div
+    at div
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-popper/dist/index.mjs:38:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tooltip/dist/index.mjs:165:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at Popper (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-popper/dist/index.mjs:30:11)
+    at Tooltip (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tooltip/dist/index.mjs:73:5)
+    at TooltipWrapper (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tooltip-wrapper.tsx:7:27)
+    at OpportunityCard (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/discovery/OpportunityCard.tsx:17:41)
+    at div
+    at div
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-scroll-area/dist/index.mjs:94:13
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-scroll-area/dist/index.mjs:32:7
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/scroll-area.tsx:9:70
+    at div
+    at div
+    at DiscoveryBoard (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/discovery/DiscoveryBoard.tsx:32:45)
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at TooltipProvider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tooltip/dist/index.mjs:29:5)
+Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?
+
+Check the render method of `Primitive.button.SlotClone`.
+    at Badge (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/badge.tsx:22:18)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-popper/dist/index.mjs:38:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tooltip/dist/index.mjs:165:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at Popper (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-popper/dist/index.mjs:30:11)
+    at Tooltip (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tooltip/dist/index.mjs:73:5)
+    at TooltipWrapper (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tooltip-wrapper.tsx:7:27)
+    at div
+    at div
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-popper/dist/index.mjs:38:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tooltip/dist/index.mjs:165:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at Popper (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-popper/dist/index.mjs:30:11)
+    at Tooltip (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tooltip/dist/index.mjs:73:5)
+    at TooltipWrapper (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tooltip-wrapper.tsx:7:27)
+    at OpportunityCard (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/discovery/OpportunityCard.tsx:17:41)
+    at div
+    at div
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-scroll-area/dist/index.mjs:94:13
+    at div
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-primitive/dist/index.mjs:28:13
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-scroll-area/dist/index.mjs:32:7
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/scroll-area.tsx:9:70
+    at div
+    at div
+    at DiscoveryBoard (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/discovery/DiscoveryBoard.tsx:32:45)
+    at Provider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at TooltipProvider (file:///Users/amauricia/Documents/GitHub/Studio-Boss/node_modules/@radix-ui/react-tooltip/dist/index.mjs:29:5)
+
+ ✓ src/test/components/discovery/DiscoveryBoard.test.tsx (4 tests) 406ms
+ ✓ src/test/components/modals/ModalManager.test.tsx (6 tests) 64ms
+stderr | src/test/components/modals/AwardsCeremonyModal.test.tsx > AwardsCeremonyModal > renders initial nominees phase with all awards
+`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
+
+If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/dialog
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+stderr | src/test/components/modals/AwardsCeremonyModal.test.tsx > AwardsCeremonyModal > handles phase transitions and multiple awards
+`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
+
+If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/dialog
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+stderr | src/test/components/modals/AwardsCeremonyModal.test.tsx > AwardsCeremonyModal > falls back gracefully if project title is missing
+`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
+
+If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/dialog
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ ✓ src/test/components/modals/AwardsCeremonyModal.test.tsx (6 tests) 451ms
+stderr | src/test/components/finance/YearInReviewChart.test.tsx > YearInReviewChart > renders chart data when ledger has entries
+The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+
+stderr | src/test/components/dashboard/DemographicsWidget.test.tsx > DemographicsWidget > renders component correctly and transforms data when culture state exists
+Warning: The tag <stop> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+    at stop
+    at linearGradient
+    at defs
+    at div
+    at BarChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/DemographicsWidget.test.tsx:11:22)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/DemographicsWidget.test.tsx:4:33)
+    at div
+    at ChartContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/DemographicsWidget.test.tsx:43:28)
+    at div
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at DemographicsWidget
+Warning: <linearGradient /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at linearGradient
+    at defs
+    at div
+    at BarChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/DemographicsWidget.test.tsx:11:22)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/DemographicsWidget.test.tsx:4:33)
+    at div
+    at ChartContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/DemographicsWidget.test.tsx:43:28)
+    at div
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at DemographicsWidget
+Warning: The tag <linearGradient> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+    at linearGradient
+    at defs
+    at div
+    at BarChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/DemographicsWidget.test.tsx:11:22)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/DemographicsWidget.test.tsx:4:33)
+    at div
+    at ChartContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/DemographicsWidget.test.tsx:43:28)
+    at div
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at DemographicsWidget
+Warning: <feDropShadow /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at feDropShadow
+    at filter
+    at defs
+    at div
+    at BarChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/DemographicsWidget.test.tsx:11:22)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/DemographicsWidget.test.tsx:4:33)
+    at div
+    at ChartContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/DemographicsWidget.test.tsx:43:28)
+    at div
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at DemographicsWidget
+Warning: The tag <feDropShadow> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+    at feDropShadow
+    at filter
+    at defs
+    at div
+    at BarChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/DemographicsWidget.test.tsx:11:22)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/DemographicsWidget.test.tsx:4:33)
+    at div
+    at ChartContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/DemographicsWidget.test.tsx:43:28)
+    at div
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at DemographicsWidget
+Warning: The tag <filter> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+    at filter
+    at defs
+    at div
+    at BarChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/DemographicsWidget.test.tsx:11:22)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/DemographicsWidget.test.tsx:4:33)
+    at div
+    at ChartContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/DemographicsWidget.test.tsx:43:28)
+    at div
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at DemographicsWidget
+Warning: <feGaussianBlur /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at feGaussianBlur
+    at filter
+    at defs
+    at div
+    at BarChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/DemographicsWidget.test.tsx:11:22)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/DemographicsWidget.test.tsx:4:33)
+    at div
+    at ChartContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/DemographicsWidget.test.tsx:43:28)
+    at div
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at DemographicsWidget
+Warning: The tag <feGaussianBlur> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+    at feGaussianBlur
+    at filter
+    at defs
+    at div
+    at BarChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/DemographicsWidget.test.tsx:11:22)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/DemographicsWidget.test.tsx:4:33)
+    at div
+    at ChartContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/DemographicsWidget.test.tsx:43:28)
+    at div
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at DemographicsWidget
+Warning: <feComposite /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at feComposite
+    at filter
+    at defs
+    at div
+    at BarChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/DemographicsWidget.test.tsx:11:22)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/DemographicsWidget.test.tsx:4:33)
+    at div
+    at ChartContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/DemographicsWidget.test.tsx:43:28)
+    at div
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at DemographicsWidget
+Warning: The tag <feComposite> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+    at feComposite
+    at filter
+    at defs
+    at div
+    at BarChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/DemographicsWidget.test.tsx:11:22)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/DemographicsWidget.test.tsx:4:33)
+    at div
+    at ChartContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/DemographicsWidget.test.tsx:43:28)
+    at div
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at DemographicsWidget
+Warning: The tag <defs> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+    at defs
+    at div
+    at BarChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/DemographicsWidget.test.tsx:11:22)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/DemographicsWidget.test.tsx:4:33)
+    at div
+    at ChartContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/DemographicsWidget.test.tsx:43:28)
+    at div
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at DemographicsWidget
+
+ ✓ src/test/components/dashboard/DemographicsWidget.test.tsx (2 tests) 236ms
+ ✓ src/test/components/finance/YearInReviewChart.test.tsx (2 tests) 85ms
+ ✓ src/test/components/NavLink.test.tsx (2 tests) 248ms
+ ✓ src/test/components/deals/DealsDesk.test.tsx (4 tests) 314ms
+ ✓ src/test/components/dashboard/CommandCenter.test.tsx (4 tests) 336ms
+ ✓ src/test/components/rivals/RivalsPanel.test.tsx (3 tests) 395ms
+stdout | src/test/integration/PersistenceRace.test.ts > Persistence Layer Race Hardening > handles rapid concurrent saves with unique requestIds
+[Test] Injected mock worker and attached handler
+
+stdout | src/test/integration/PersistenceRace.test.ts > Persistence Layer Race Hardening > handles rapid concurrent saves with unique requestIds
+[Test] Starting rapid save test
+[MockWorker] Received: SAVE_GAME (req: req_1_1775415116394)
+[MockWorker] Received: SAVE_GAME (req: req_2_1775415116395)
+[MockWorker] Received: SAVE_GAME (req: req_3_1775415116395)
+
+stdout | src/test/integration/PersistenceRace.test.ts > Persistence Layer Race Hardening > handles rapid concurrent saves with unique requestIds
+[MockWorker] Responding to: req_1_1775415116394
+
+stdout | src/test/integration/PersistenceRace.test.ts > Persistence Layer Race Hardening > handles rapid concurrent saves with unique requestIds
+[MockWorker] Responding to: req_2_1775415116395
+
+stdout | src/test/integration/PersistenceRace.test.ts > Persistence Layer Race Hardening > handles rapid concurrent saves with unique requestIds
+[MockWorker] Responding to: req_3_1775415116395
+
+stdout | src/test/integration/PersistenceRace.test.ts > Persistence Layer Race Hardening > handles rapid concurrent saves with unique requestIds
+[Test] Save results received: [ [33mtrue[39m, [33mtrue[39m, [33mtrue[39m ]
+
+stdout | src/test/integration/PersistenceRace.test.ts > Persistence Layer Race Hardening > correctly matches load responses to their specific request callers
+[Test] Injected mock worker and attached handler
+
+stdout | src/test/integration/PersistenceRace.test.ts > Persistence Layer Race Hardening > correctly matches load responses to their specific request callers
+[MockWorker] Received: LOAD_GAME (req: req_4_1775415116417)
+[MockWorker] Received: LOAD_GAME (req: req_5_1775415116417)
+
+stdout | src/test/integration/PersistenceRace.test.ts > Persistence Layer Race Hardening > correctly matches load responses to their specific request callers
+[MockWorker] Responding to: req_4_1775415116417
+
+stdout | src/test/integration/PersistenceRace.test.ts > Persistence Layer Race Hardening > correctly matches load responses to their specific request callers
+[MockWorker] Responding to: req_5_1775415116417
+
+ ✓ src/test/integration/PersistenceRace.test.ts (2 tests) 52ms
+stderr | src/test/persistence/saveLoad.test.ts > saveLoad > handles malformed or missing save data from persistence service
+[SaveLoad] Failed to load game state Error: Disk Error
+    at [90m/Users/amauricia/Documents/GitHub/Studio-Boss/[39msrc/test/persistence/saveLoad.test.ts:28:58
+    at [90mfile:///Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4m@vitest/runner[24m/dist/chunk-hooks.js:155:11
+    at [90mfile:///Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4m@vitest/runner[24m/dist/chunk-hooks.js:752:26
+    at [90mfile:///Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4m@vitest/runner[24m/dist/chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+    at runWithTimeout [90m(file:///Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4m@vitest/runner[24m/dist/chunk-hooks.js:1863:10[90m)[39m
+    at runTest [90m(file:///Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4m@vitest/runner[24m/dist/chunk-hooks.js:1574:12[90m)[39m
+[90m    at processTicksAndRejections (node:internal/process/task_queues:105:5)[39m
+    at runSuite [90m(file:///Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4m@vitest/runner[24m/dist/chunk-hooks.js:1729:8[90m)[39m
+    at runSuite [90m(file:///Users/amauricia/Documents/GitHub/Studio-Boss/[39mnode_modules/[4m@vitest/runner[24m/dist/chunk-hooks.js:1729:8[90m)[39m
+
+stdout | src/test/persistence/saveLoad.test.ts > saveLoad > saves and loads game state correctly
+[SaveLoad] State saved to slot 0 via OPFS.
+
+stdout | src/test/persistence/saveLoad.test.ts > saveLoad > saves and loads game state correctly
+[SaveLoad] State loaded from slot 0 via OPFS.
+
+stdout | src/test/persistence/saveLoad.test.ts > saveLoad > retrieves save slots info asynchronously
+[SaveLoad] State loaded from slot 1 via OPFS.
+
+ ✓ src/test/persistence/saveLoad.test.ts (5 tests) 48ms
+stderr | src/test/components/dashboard/FinancialOverviewWidget.test.tsx > FinancialOverviewWidget Component > renders correctly with valid cash and history
+Warning: The tag <stop> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+    at stop
+    at linearGradient
+    at defs
+    at div
+    at AreaChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/FinancialOverviewWidget.test.tsx:11:23)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/FinancialOverviewWidget.test.tsx:3:33)
+    at div
+    at ChartContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/FinancialOverviewWidget.test.tsx:78:28)
+    at div
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at FinancialOverviewWidget (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/dashboard/FinancialOverviewWidget.tsx:19:78)
+Warning: <linearGradient /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at linearGradient
+    at defs
+    at div
+    at AreaChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/FinancialOverviewWidget.test.tsx:11:23)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/FinancialOverviewWidget.test.tsx:3:33)
+    at div
+    at ChartContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/FinancialOverviewWidget.test.tsx:78:28)
+    at div
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at FinancialOverviewWidget (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/dashboard/FinancialOverviewWidget.tsx:19:78)
+Warning: The tag <linearGradient> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+    at linearGradient
+    at defs
+    at div
+    at AreaChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/FinancialOverviewWidget.test.tsx:11:23)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/FinancialOverviewWidget.test.tsx:3:33)
+    at div
+    at ChartContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/FinancialOverviewWidget.test.tsx:78:28)
+    at div
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at FinancialOverviewWidget (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/dashboard/FinancialOverviewWidget.tsx:19:78)
+Warning: <feGaussianBlur /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at feGaussianBlur
+    at filter
+    at defs
+    at div
+    at AreaChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/FinancialOverviewWidget.test.tsx:11:23)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/FinancialOverviewWidget.test.tsx:3:33)
+    at div
+    at ChartContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/FinancialOverviewWidget.test.tsx:78:28)
+    at div
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at FinancialOverviewWidget (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/dashboard/FinancialOverviewWidget.tsx:19:78)
+Warning: The tag <feGaussianBlur> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+    at feGaussianBlur
+    at filter
+    at defs
+    at div
+    at AreaChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/FinancialOverviewWidget.test.tsx:11:23)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/FinancialOverviewWidget.test.tsx:3:33)
+    at div
+    at ChartContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/FinancialOverviewWidget.test.tsx:78:28)
+    at div
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at FinancialOverviewWidget (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/dashboard/FinancialOverviewWidget.tsx:19:78)
+Warning: <feComposite /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at feComposite
+    at filter
+    at defs
+    at div
+    at AreaChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/FinancialOverviewWidget.test.tsx:11:23)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/FinancialOverviewWidget.test.tsx:3:33)
+    at div
+    at ChartContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/FinancialOverviewWidget.test.tsx:78:28)
+    at div
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at FinancialOverviewWidget (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/dashboard/FinancialOverviewWidget.tsx:19:78)
+Warning: The tag <feComposite> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+    at feComposite
+    at filter
+    at defs
+    at div
+    at AreaChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/FinancialOverviewWidget.test.tsx:11:23)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/FinancialOverviewWidget.test.tsx:3:33)
+    at div
+    at ChartContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/FinancialOverviewWidget.test.tsx:78:28)
+    at div
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at FinancialOverviewWidget (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/dashboard/FinancialOverviewWidget.tsx:19:78)
+Warning: The tag <filter> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+    at filter
+    at defs
+    at div
+    at AreaChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/FinancialOverviewWidget.test.tsx:11:23)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/FinancialOverviewWidget.test.tsx:3:33)
+    at div
+    at ChartContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/FinancialOverviewWidget.test.tsx:78:28)
+    at div
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at FinancialOverviewWidget (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/dashboard/FinancialOverviewWidget.tsx:19:78)
+Warning: The tag <defs> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+    at defs
+    at div
+    at AreaChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/FinancialOverviewWidget.test.tsx:11:23)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/FinancialOverviewWidget.test.tsx:3:33)
+    at div
+    at ChartContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/FinancialOverviewWidget.test.tsx:78:28)
+    at div
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at FinancialOverviewWidget (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/dashboard/FinancialOverviewWidget.tsx:19:78)
+
+ ✓ src/test/components/dashboard/FinancialOverviewWidget.test.tsx (3 tests) 55ms
+ ✓ src/test/components/pipeline/TelevisionDashboard.test.tsx (3 tests) 131ms
+ ✓ src/test/store/gameStore.test.ts (6 tests) 165ms
+ ✓ src/test/engine/core/weekAdvance.test.ts (2 tests) 111ms
+ ✓ src/test/components/layout/NewsTicker.test.tsx (2 tests) 56ms
+ ✓ src/test/engine/systems/trends.test.ts (5 tests) 3ms
+stdout | src/test/store/slices.test.ts > Store Slice Isolation > Finance Slice Isolation > should update funds without mutating project or talent state
+[SaveLoad] State saved to slot 0 via OPFS.
+
+stdout | src/test/store/slices.test.ts > Store Slice Isolation > Project Slice Isolation > should manage UUIDs internally and access by O(1) dictionary key
+[SaveLoad] State saved to slot 0 via OPFS.
+
+stdout | src/test/store/slices.test.ts > Store Slice Isolation > Project Slice Isolation > should advance a specific project status immutably
+[SaveLoad] State saved to slot 0 via OPFS.
+
+ ✓ src/test/store/slices.test.ts (3 tests) 80ms
+ ✓ src/test/engine/core/gameInit.test.ts (1 test) 17ms
+ ✓ src/test/engine/systems/mergers.test.ts (7 tests) 8ms
+stdout | src/test/engine/determinism.test.ts > Studio Boss - 100 Week Determinism Certification > should produce identical results over 100 weeks when given the same seed
+✅ 100-week Determinism Certification PASSED.
+
+ ✓ src/test/engine/determinism.test.ts (1 test) 7951ms
+   ✓ Studio Boss - 100 Week Determinism Certification > should produce identical results over 100 weeks when given the same seed  7944ms
+stdout | src/test/engine/systems/unscripted.test.ts > Unscripted Projects > creates an unscripted project with correct stats
+[SaveLoad] State saved to slot 0 via OPFS.
+
+ ✓ src/test/engine/systems/unscripted.test.ts (1 test) 21ms
 stdout | src/test/vitest_temp.test.tsx > ChartStyle Log > logs the innerHTML
 XSS innerHTML output:
 
@@ -486,36 +1365,178 @@ XSS innerHTML output:
 }
 
 
- ✓ src/test/vitest_temp.test.tsx (1 test) 48ms
- ✓ src/test/engine/systems/awards.test.ts (17 tests) 16ms
- ✓ src/test/persistence/saveLoad.test.ts (6 tests) 18ms
- ✓ src/test/engine/systems/TalentSystem.test.ts (15 tests) 14ms
- ✓ src/test/engine/core/weekAdvance.test.ts (4 tests) 19ms
- ✓ src/test/engine/systems/franchises.test.ts (18 tests) 16ms
- ✓ src/test/engine/systems/projects.test.ts (32 tests) 19ms
- ✓ src/test/engine/systems/releaseSimulation.test.ts (22 tests) 15ms
- ✓ src/test/engine/systems/crises.test.ts (11 tests) 12ms
- ✓ src/test/engine/utils.test.ts (26 tests) 10ms
- ✓ src/test/engine/generators/talent.test.ts (6 tests) 10ms
- ✓ src/test/engine/generators/opportunities.test.ts (4 tests) 7ms
- ✓ src/test/engine/systems/unscripted.test.ts (1 test) 8ms
- ✓ src/test/engine/generators/agencies.test.ts (6 tests) 9ms
- ✓ src/test/engine/core/gameInit.test.ts (1 test) 9ms
- ✓ src/test/engine/generators/headlines.test.ts (4 tests) 8ms
- ✓ src/test/engine/systems/stats.test.ts (11 tests) 10ms
- ✓ src/test/engine/systems/finance.test.ts (15 tests) 9ms
- ✓ src/test/engine/systems/rivals.test.ts (3 tests) 6ms
- ✓ src/test/engine/systems/deals.test.ts (2 tests) 6ms
- ✓ src/test/engine/systems/festivals.test.ts (3 tests) 7ms
- ✓ src/test/engine/generators/names.test.ts (8 tests) 7ms
- ✓ src/test/engine/systems/trends.test.ts (5 tests) 7ms
- ✓ src/test/engine/systems/culture.test.ts (4 tests) 5ms
- ✓ src/test/store/uiStore.test.ts (4 tests) 5ms
- ✓ src/test/example.test.ts (1 test) 3ms
+ ✓ src/test/vitest_temp.test.tsx (1 test) 104ms
+ ✓ src/test/engine/systems/TalentSystem.test.ts (4 tests) 6ms
+ ✓ src/test/App.test.tsx (1 test) 76ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts (6 tests) 3ms
+ ✓ src/test/store/applyStateImpact.test.ts (4 tests) 3ms
+ ✓ src/test/engine/systems/synergyEvaluator.test.ts (3 tests) 2ms
+ ✓ src/test/engine/systems/ai/biddingEngine.test.ts (3 tests) 2ms
+ ✓ src/test/engine/generators/headlines.test.ts (5 tests) 4ms
+ ✓ src/test/engine/generators/talent.test.ts (4 tests) 45ms
+ ✓ src/test/engine/systems/ratings.test.ts (50 tests) 7ms
+ ✓ src/test/engine/systems/marketing/efficiencyEvaluator.test.ts (3 tests) 4ms
+ ✓ src/test/engine/systems/crises.test.ts (6 tests) 9ms
+ ✓ src/test/engine/generators/talent/psychologyGenerator.test.ts (3 tests) 5ms
+ ✓ src/test/engine/utils.test.ts (42 tests) 28ms
+ ✓ src/test/engine/systems/projects.test.ts (9 tests) 4ms
+ ✓ src/test/engine/systems/greenlight.test.ts (10 tests) 3ms
+ ✓ src/test/engine/systems/ipRetention.test.ts (3 tests) 2ms
+ ✓ src/test/engine/systems/rivals.test.ts (4 tests) 3ms
+ ✓ src/test/engine/systems/finance.test.ts (7 tests) 3ms
+ ✓ src/test/engine/systems/awards.test.ts (4 tests) 3ms
+ ✓ src/test/engine/systems/scandals.test.ts (2 tests) 2ms
+ ✓ src/test/engine/systems/culture.test.ts (4 tests) 4ms
+ ✓ src/test/engine/systems/television/platformEngine.test.ts (1 test) 2ms
+ ✓ src/test/engine/systems/festivals.test.ts (3 tests) 3ms
+ ✓ src/test/engine/systems/stats.test.ts (13 tests) 3ms
+ ✓ src/test/engine/systems/finance/RevenueProcessor.test.ts (7 tests) 9ms
+ ✓ src/test/engine/systems/productionEngine.test.ts (5 tests) 5ms
+ ✓ src/test/engine/systems/marketEvents.test.ts (3 tests) 2ms
+ ✓ src/test/engine/systems/processors/processProduction.test.ts (2 tests) 3ms
+ ✓ src/test/engine/systems/processors/processFinance.test.ts (1 test) 5ms
+ ✓ src/test/engine/types/impactUtils.test.ts (3 tests) 19ms
+ ✓ src/test/engine/generators/names.test.ts (9 tests) 3ms
+ ✓ src/test/engine/systems/talentStats.test.ts (9 tests) 3ms
+ ✓ src/test/engine/systems/deals.test.ts (3 tests) 6ms
+ ✓ src/test/engine/systems/production/crisisEvaluator.test.ts (5 tests) 6ms
+ ✓ src/test/engine/generators/opportunities.test.ts (4 tests) 3ms
+ ✓ src/test/engine/systems/buyers.test.ts (5 tests) 2ms
+ ✓ src/test/example.test.ts (1 test) 1ms
+ ✓ src/test/engine/systems/demographics.test.ts (6 tests) 8ms
+ ✓ src/test/store/uiStore.test.ts (4 tests) 8ms
+ ✓ src/test/engine/systems/television/ratingsEvaluator.test.ts (2 tests) 2ms
+ ✓ src/test/engine/systems/finance/ExpenseProcessor.test.ts (5 tests) 15ms
+ ✓ src/test/engine/generators/agencies.test.ts (2 tests) 3ms
+ ✓ src/test/engine/systems/fatigueEngine.test.ts (4 tests) 4ms
+ ✓ src/test/engine/systems/production/progressCalculator.test.ts (5 tests) 2ms
+ ✓ src/test/engine/systems/awards_tv.test.ts (2 tests) 2ms
+ ✓ src/test/engine/systems/schedulingEngine.test.ts (3 tests) 2ms
+ ✓ src/test/store/financeSlice.test.ts (2 tests) 5ms
+ ✓ src/test/engine/generators/talent/demographicsGenerator.test.ts (3 tests) 2ms
+ ✓ src/test/engine/systems/directors.test.ts (3 tests) 2ms
+ ✓ src/test/engine/types/project.types.test.ts (2 tests) 2ms
+ ✓ src/test/engine/systems/television/renewalEngine.test.ts (3 tests) 2ms
+ ✓ src/test/engine/systems/spinoffFactory.test.ts (3 tests) 46ms
+ ✓ src/test/engine/systems/ai/motivationEngine.test.ts (2 tests) 4ms
+ ✓ src/test/engine/systems/marketing/territoryDistributor.test.ts (2 tests) 3ms
+ ✓ src/test/engine/systems/awards_razzies.test.ts (2 tests) 2ms
+ ✓ src/test/engine/systems/finance_cultclassic.test.ts (1 test) 1ms
+ ✓ src/test/engine/systems/ai/AgentBrain.test.ts (1 test) 2ms
+ ✓ src/test/engine/systems/processors/processWorldEvents.test.ts (2 tests) 1ms
 
- Test Files  4 failed | 37 passed (41)
-      Tests  6 failed | 347 passed (353)
-     Errors  1 error
-   Start at  08:00:44
-   Duration  16.78s (transform 1.27s, setup 3.35s, collect 6.51s, tests 5.79s, environment 21.11s, prepare 4.43s)
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/test/engine/systems/rumors.test.ts > advanceRumors > resolves truthful rumors and generates CONFIRMED headlines
+AssertionError: expected [] to have a length of 1 but got +0
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 1[39m
+[31m+ 0[39m
+
+ ❯ src/test/engine/systems/rumors.test.ts:39:33
+     37|     const impact = advanceRumors(stateWithRumor, rng);
+     38| 
+     39|     expect(impact.newHeadlines).toHaveLength(1);
+       |                                 ^
+     40|     expect(impact.newHeadlines![0].text).toBe('CONFIRMED: Test truthfu…
+     41|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  src/test/engine/systems/rumors.test.ts > advanceRumors > resolves false rumors and generates DEBUNKED headlines
+AssertionError: expected [] to have a length of 1 but got +0
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 1[39m
+[31m+ 0[39m
+
+ ❯ src/test/engine/systems/rumors.test.ts:60:33
+     58|     const impact = advanceRumors(stateWithRumor, rng);
+     59| 
+     60|     expect(impact.newHeadlines).toHaveLength(1);
+       |                                 ^
+     61|     expect(impact.newHeadlines![0].text).toBe('DEBUNKED: Previous rumo…
+     62|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  src/test/engine/systems/rumors.test.ts > advanceRumors > generates new rumors when random conditions are met
+AssertionError: expected undefined to be defined
+ ❯ src/test/engine/systems/rumors.test.ts:79:22
+     77|     const newRumor = impact.newRumors!.find(r => r.week === 10);
+     78| 
+     79|     expect(newRumor).toBeDefined();
+       |                      ^
+     80|     expect(newRumor!.resolved).toBe(false);
+     81|     expect(impact.newHeadlines!.some(h => h.text.includes('RUMOR:'))).…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  src/test/engine/systems/production/ScriptDraftingSystem.test.ts > ScriptDraftingSystem - Edge Cases > should cap scriptHeat at 100 and 0
+AssertionError: expected 60 to be 100 // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 100[39m
+[31m+ 60[39m
+
+ ❯ src/test/engine/systems/production/ScriptDraftingSystem.test.ts:30:64
+     28|        const p1 = createMockProject({ state: 'development', scriptHeat…
+     29|        const result1 = tickScriptDevelopment(p1, rng);
+     30|        expect((result1.project as ScriptedProject).scriptHeat).toBe(10…
+       |                                                                ^
+     31| 
+     32|        rng.rangeInt = () => -10; // Drift down
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  src/test/engine/systems/production/ScriptDraftingSystem.test.ts > ScriptDraftingSystem - Edge Cases > should force ROLE_MERGE on low heat
+AssertionError: expected +0 to be 3 // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 3[39m
+[31m+ 0[39m
+
+ ❯ src/test/engine/systems/production/ScriptDraftingSystem.test.ts:50:40
+     48|        const result = tickScriptDevelopment(p, rng);
+     49|        const pOut = result.project as ScriptedProject;
+     50|        expect(pOut.activeRoles.length).toBe(3); // 4 -> 3
+       |                                        ^
+     51|        expect(pOut.scriptEvents[0].type).toBe('ROLE_MERGE');
+     52|        expect(pOut.buzz).toBe(5); // 10 - 5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  src/test/engine/systems/production/ScriptDraftingSystem.test.ts > ScriptDraftingSystem - Edge Cases > should force ROLE_SPLIT on high heat
+AssertionError: expected +0 to be 4 // Object.is equality
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 4[39m
+[31m+ 0[39m
+
+ ❯ src/test/engine/systems/production/ScriptDraftingSystem.test.ts:69:40
+     67|        const result = tickScriptDevelopment(p, rng);
+     68|        const pOut = result.project as ScriptedProject;
+     69|        expect(pOut.activeRoles.length).toBe(4);
+       |                                        ^
+     70|        expect(pOut.scriptEvents[0].type).toBe('ROLE_SPLIT');
+     71|        expect(pOut.buzz).toBe(20); // 10 + 10
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  2 failed | 92 passed (94)
+      Tests  6 failed | 459 passed (465)
+   Start at  20:51:46
+   Duration  20.13s (transform 5.64s, setup 12.61s, collect 37.41s, tests 21.22s, environment 69.53s, prepare 8.97s)
 

@@ -1,10 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
-import { Trophy, Star, Award as AwardIcon, Sparkles, ChevronRight } from 'lucide-react';
+import { Trophy, Star, Sparkles, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+
+interface AwardsPayload {
+  awards: import('@/engine/types').Award[];
+  body?: string;
+  year?: number;
+}
 
 export const AwardsCeremonyModal = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();
@@ -15,8 +21,21 @@ export const AwardsCeremonyModal = () => {
 
   if (!gameState || !activeModal || activeModal.type !== 'AWARDS') return null;
 
-  const { awards, body, year } = activeModal.payload;
+  const payload = activeModal.payload as unknown as AwardsPayload;
+  const { awards = [], body = 'Annual Industry Awards', year = 2026 } = payload || {};
+  
+  // Safety guard for empty awards
+  if (awards.length === 0) {
+    // If the modal was triggered but has no awards, resolve it immediately to avoid a crash
+    resolveCurrentModal();
+    return null;
+  }
+
   const currentAward = awards[currentAwardIdx];
+  if (!currentAward) {
+    resolveCurrentModal();
+    return null;
+  }
 
   const handleNext = () => {
     if (currentAwardIdx < awards.length - 1) {
@@ -31,7 +50,7 @@ export const AwardsCeremonyModal = () => {
   };
 
   const getProjectTitle = (id: string) => {
-    return gameState.studio.internal.projects[id]?.title || "Unknown Project";
+    return gameState?.studio?.internal?.projects[id]?.title || "Unknown Project";
   };
 
   return (
@@ -57,7 +76,7 @@ export const AwardsCeremonyModal = () => {
                   {[1, 2, 3].map(i => <Star key={i} className="h-4 w-4 text-amber-500 animate-pulse" fill="currentColor" />)}
                 </div>
                 <h2 className="text-4xl font-serif font-black tracking-widest text-amber-500 uppercase">
-                  {body || 'Annual Industry Awards'}
+                  {body}
                 </h2>
                 <p className="text-stone-400 font-medium tracking-[0.2em] uppercase text-sm">
                   Class of {year} • Official Nominees
@@ -67,7 +86,7 @@ export const AwardsCeremonyModal = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
                 {awards.map((award: any, i: number) => (
                   <motion.div 
-                    key={award.id}
+                    key={award.id || i}
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.1 }}

@@ -1,4 +1,5 @@
 import { Contract } from '@/engine/types';
+import { RandomGenerator } from './utils/rng';
 // Shared utilities for the engine layer — no React imports
 
 export function formatMoney(amount: number): string {
@@ -24,58 +25,10 @@ export function getWeekDisplay(week: number): { displayWeek: number; year: numbe
   };
 }
 
-/**
- * A seedable, deterministic random number generator (Mulberry32).
- */
-let currentRandomSource = () => {
-  const array = new Uint32Array(1);
-  crypto.getRandomValues(array);
-  return array[0] / (0xffffffff + 1);
-};
-
-export function setDeterministicSeed(seed: number) {
-  let s = seed;
-  currentRandomSource = () => {
-    let t = (s += 0x6d2b79f5);
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-/**
- * The primary random function for the engine.
- */
-export function rand(): number {
-  return currentRandomSource();
-}
-
-/**
- * Centralized ID generation for engine entities.
- */
-export function generateId(prefix: string = ''): string {
-  const id = crypto.randomUUID();
-  return prefix ? `${prefix}-${id}` : id;
-}
-
-export function secureRandom(): number {
-  const array = new Uint32Array(1);
-  crypto.getRandomValues(array);
-  return array[0] / (0xffffffff + 1);
-}
-
-export function pick<T>(arr: T[]): T {
-  if (arr.length === 0) return undefined as T;
-  return arr[Math.floor(rand() * arr.length)];
-}
-
-export function randRange(min: number, max: number): number {
-  return min + rand() * (max - min);
-}
-
 export function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
 }
+
 
 export function groupContractsByProject(contracts: Contract[]): Map<string, Contract[]> {
   const map = new Map<string, Contract[]>();
@@ -93,9 +46,18 @@ export function groupContractsByProject(contracts: Contract[]): Map<string, Cont
  * Useful for resolving headlines, scandals, and rumors from data pools.
  */
 export function fillTemplate(template: string, vars: Record<string, string | number>): string {
-  // Regex matches ${key} (captures key in p2) or {key} (captures key in p4)
   return template.replace(/(\$\{([^}]+)\})|(\{([^}]+)\})/g, (match, p1, p2, p3, p4) => {
     const key = p2 || p4;
     return vars[key] !== undefined ? String(vars[key]) : match;
   });
+}
+
+export function pick<T>(arr: T[], rng?: RandomGenerator): T {
+  if (rng) return rng.pick(arr);
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+export function randRange(min: number, max: number, rng?: RandomGenerator): number {
+  if (rng) return rng.rangeInt(min, max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }

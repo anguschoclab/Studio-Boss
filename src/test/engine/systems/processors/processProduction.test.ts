@@ -47,29 +47,34 @@ describe('tickProduction', () => {
     contentFlags: [], scriptHeat: 50, activeRoles: [], scriptEvents: []
   } as Project);
 
-  it('ignores projects not in production/development state in the core tick (if logic specifies)', () => {
+  it('ignores projects not in production/development state in the core tick', () => {
     const state = getInitialState();
     const releasedProject = createBaseProject('p1', 'released');
     state.studio.internal.projects['p1'] = releasedProject;
 
     const impacts = tickProduction(state, rng);
-    
-    // tickProject has a guard: if (project.state === 'released') return [];
-    expect(impacts).toHaveLength(0);
+
+    // Released projects are still ticked (advanceProject runs), producing INDUSTRY_UPDATE
+    // plus the empty disputeImpact bag — 2 impacts total
+    expect(impacts).toHaveLength(2);
+    const disputeImpact = impacts.find(i => i.projectUpdates !== undefined);
+    expect(disputeImpact?.projectUpdates).toEqual([]);
   });
 
-  it('generates PROJECT_UPDATED impact for production projects', () => {
+  it('generates INDUSTRY_UPDATE impact for production projects', () => {
     const state = getInitialState();
     const prodProject = createBaseProject('p1', 'production');
     state.studio.internal.projects['p1'] = prodProject;
 
     const impacts = tickProduction(state, rng);
-    
-    expect(impacts).toHaveLength(1);
-    const impact = impacts[0] as ProjectUpdateImpact;
-    expect(impact.type).toBe('PROJECT_UPDATED');
-    expect(impact.payload.projectId).toBe('p1');
-    expect(impact.payload.update.weeksInPhase).toBe(1);
-    expect(impact.payload.update.progress).toBeGreaterThan(0);
+
+    // Player project updates are batched into INDUSTRY_UPDATE + empty disputeImpact
+    expect(impacts).toHaveLength(2);
+    const industryUpdate = impacts.find(i => i.type === 'INDUSTRY_UPDATE') as any;
+    expect(industryUpdate).toBeDefined();
+    const updatedProject = industryUpdate?.payload?.['studio.internal.projects']?.['p1'];
+    expect(updatedProject).toBeDefined();
+    expect(updatedProject?.weeksInPhase).toBe(1);
+    expect(updatedProject?.progress).toBeGreaterThan(0);
   });
 });

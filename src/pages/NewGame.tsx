@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Dices } from 'lucide-react';
 import { generateStudioName } from '@/engine/generators/names';
 import { useGameStore } from '@/store/gameStore';
+import { RandomGenerator } from '@/engine/utils/rng';
 import { ARCHETYPES, ArchetypeData } from '@/engine/data/archetypes';
 import { ArchetypeKey } from '@/engine/types';
 import { ArchetypeCard } from '@/components/setup/ArchetypeCard';
@@ -53,7 +54,10 @@ const NewGame = () => {
               variant="outline"
               size="icon"
               className="h-14 w-14 shrink-0"
-              onClick={() => setStudioName(generateStudioName([]))}
+              onClick={() => {
+                const rng = new RandomGenerator(Math.floor(Math.random() * 1000000));
+                setStudioName(generateStudioName([], rng));
+              }}
               title="Randomize Studio Name"
               aria-label="Randomize Studio Name"
             >

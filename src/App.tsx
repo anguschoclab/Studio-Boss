@@ -1,51 +1,16 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { RouterProvider, createRouter, createRoute, createRootRoute, Outlet } from "@tanstack/react-router";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { Toaster } from "@/components/ui/toaster";
+import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import TitleScreen from "./pages/TitleScreen";
-import NewGame from "./pages/NewGame";
-import Dashboard from "./pages/Dashboard";
-import NotFound from "./pages/NotFound";
-import { useArchetypeTheme } from "./hooks/useArchetypeTheme";
+
+// Import the generated route tree
+import { routeTree } from "./routeTree.gen";
 
 const queryClient = new QueryClient();
 
-import { GlobalThemeProvider } from "./components/Theme/GlobalThemeProvider";
-
-const rootRoute = createRootRoute({
-  component: () => (
-    <GlobalThemeProvider>
-      <Outlet />
-      <Toaster />
-      <Sonner />
-    </GlobalThemeProvider>
-  ),
-  notFoundComponent: () => <NotFound />
-});
-
-const indexRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/',
-  component: TitleScreen,
-});
-
-const newGameRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/new-game',
-  component: NewGame,
-});
-
-const dashboardRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/dashboard',
-  component: Dashboard,
-});
-
-const routeTree = rootRoute.addChildren([indexRoute, newGameRoute, dashboardRoute]);
-
+// Create the router instance
 const router = createRouter({ routeTree });
 
+// Register the router instance for type safety
 declare module '@tanstack/react-router' {
   interface Register {
     router: typeof router

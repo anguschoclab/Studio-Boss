@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ProjectDetailModal } from '@/components/modals/ProjectDetailModal';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { Project } from '@/engine/types';
@@ -11,7 +12,7 @@ class MockResizeObserver {
   unobserve() {}
   disconnect() {}
 }
-window.ResizeObserver = MockResizeObserver;
+global.ResizeObserver = MockResizeObserver;
 
 vi.mock('@/store/gameStore');
 vi.mock('@/store/uiStore');
@@ -84,7 +85,7 @@ describe('ProjectDetailModal', () => {
   } as Project);
 
   it('renders nothing when no project is selected', () => {
-    render(<ProjectDetailModal />);
+    render(<TooltipProvider><ProjectDetailModal /></TooltipProvider>);
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
@@ -115,7 +116,7 @@ describe('ProjectDetailModal', () => {
       return selector(state);
     });
 
-    render(<ProjectDetailModal />);
+    render(<TooltipProvider><ProjectDetailModal /></TooltipProvider>);
 
     expect(screen.getByRole('dialog')).toBeInTheDocument();
     expect(screen.getByText(mockProject.title)).toBeInTheDocument();
@@ -148,9 +149,9 @@ describe('ProjectDetailModal', () => {
       return selector(state);
     });
 
-    render(<ProjectDetailModal />);
+    render(<TooltipProvider><ProjectDetailModal /></TooltipProvider>);
 
-    const approveBtn = screen.getByText('Authorize Production');
+    const approveBtn = screen.getByText('Execute Authorization & Release Budgets');
     expect(approveBtn).toBeInTheDocument();
 
     fireEvent.click(approveBtn);
@@ -185,9 +186,9 @@ describe('ProjectDetailModal', () => {
       return selector(state);
     });
 
-    render(<ProjectDetailModal />);
+    render(<TooltipProvider><ProjectDetailModal /></TooltipProvider>);
 
-    const lockBtn = screen.getByText('Lock Campaign & Commit Capital');
+    const lockBtn = screen.getByText('Authorize Global Release & Dedicate Reserves');
     expect(lockBtn).toBeInTheDocument();
 
     fireEvent.click(lockBtn);
@@ -234,9 +235,9 @@ describe('ProjectDetailModal', () => {
       return selector(state);
     });
 
-    render(<ProjectDetailModal />);
+    render(<TooltipProvider><ProjectDetailModal /></TooltipProvider>);
 
-    const renewBtn = screen.getByText('Order Season 2');
+    const renewBtn = screen.getByText('Order Next Season (Production)');
     expect(renewBtn).toBeInTheDocument();
 
     fireEvent.click(renewBtn);

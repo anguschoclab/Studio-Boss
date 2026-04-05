@@ -1,69 +1,97 @@
-import { Button } from '@/components/ui/button';
+import React from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { formatMoney, getWeekDisplay } from '@/engine/utils';
-import { Save, FastForward, AlertTriangle, TrendingUp } from 'lucide-react';
-import { selectActiveProjects } from '@/store/selectors';
+import { 
+  Globe, 
+  TrendingUp, 
+  AlertTriangle, 
+  Save, 
+  FastForward 
+} from 'lucide-react';
+import { selectActiveProjects, selectMarketMetrics } from '@/store/selectors';
 import { Badge } from '@/components/ui/badge';
 import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
 import { NewsTicker } from './NewsTicker';
+import { Button } from '@/components/ui/button';
 
 export const TopBar = () => {
-  const gameState = useGameStore(s => s.gameState);
-  const doAdvanceWeek = useGameStore(s => s.doAdvanceWeek);
-  const saveToSlot = useGameStore(s => s.saveToSlot);
-
-  const { showSummary } = useUIStore();
-
-  const activeProjectsList = useGameStore(s => selectActiveProjects(s.gameState));
-
+  const { gameState, doAdvanceWeek, saveToSlot } = useGameStore();
+  const ui = useUIStore();
+  
   if (!gameState) return null;
 
-  const cash = gameState.finance.cash;
-  const { week, studio } = gameState;
-  const { displayWeek, year } = getWeekDisplay(week);
+  const { studio, week } = gameState;
+  const activeProjectsCount = useGameStore(s => selectActiveProjects(s.gameState).length);
+  const { cycle, debtRate } = useGameStore(s => selectMarketMetrics(s.gameState));
 
-  const handleAdvanceWeek = () => {
-    const summary = doAdvanceWeek();
-    showSummary(summary);
+  const handleAdvance = async () => {
+    await doAdvanceWeek();
   };
 
-  const handleSave = () => {
-    saveToSlot(1);
+  const handleSave = async () => {
+    await saveToSlot(0);
   };
 
   return (
-    <header className="h-14 glass-header flex items-center px-6 gap-8 shrink-0 relative transition-all duration-300">
-      {/* Date & Urgency Indicator */}
-      <TooltipWrapper tooltip={`Current Year: ${year}, Week: ${displayWeek}. Business quarters cycle every 13 weeks.`} side="bottom">
-        <div className="flex items-center gap-4 cursor-default">
-          <div className="flex flex-col">
-            <span className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em]">Fiscal Period</span>
-            <span className="font-mono font-bold text-sm tracking-tight">Week {displayWeek} · Year {year}</span>
+    <div className="h-16 border-b border-border bg-card/50 backdrop-blur-md flex items-center justify-between px-6 z-50 sticky top-0">
+      <div className="flex items-center gap-8">
+        {/* Studio Branding & Week */}
+        <div className="flex flex-col">
+          <span className="text-[10px] font-black uppercase tracking-tighter text-muted-foreground leading-none mb-1">Production Week</span>
+          <div className="flex items-center gap-3">
+            <span className="font-display font-black text-2xl italic tracking-tighter bg-gradient-to-br from-white to-white/40 bg-clip-text text-transparent">
+              {getWeekDisplay(week)}
+            </span>
+            <Badge variant="outline" className="font-mono text-[10px] border-primary/20 text-primary bg-primary/5 px-2 py-0">
+              Q{Math.ceil(((week - 1) % 52 + 1) / 13)}
+            </Badge>
           </div>
-          <Badge variant="outline" className="bg-primary/5 border-primary/20 text-primary font-mono px-2 py-0 text-[10px]">Q{(Math.floor((displayWeek-1)/13) + 1)}</Badge>
         </div>
-      </TooltipWrapper>
 
-      {/* Global News Ticker */}
-      <NewsTicker />
+        <div className="h-8 w-[1px] bg-border/50" />
 
-      {/* Primary Metrics Cluster */}
-      <div className="flex items-center gap-6 ml-auto">
-        {/* Cash Status */}
-        <TooltipWrapper tooltip="Total liquid capital available for acquisitions and project funding." side="bottom">
-          <div className="flex flex-col items-end cursor-default">
-            <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">Liquid Capital</span>
-            <span className={`font-mono font-bold text-sm ${cash < 0 ? 'text-destructive' : 'text-primary'} text-glow`}>
-              {formatMoney(cash)}
+        {/* Financials & Market */}
+        <div className="flex items-center gap-6">
+          <div className="flex flex-col">
+            <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest leading-none mb-1">Cash Reserves</span>
+            <span className={cn(
+               "font-mono font-bold text-lg",
+               studio.funds < 0 ? "text-destructive" : "text-emerald-400"
+            )}>
+              {formatMoney(studio.funds)}
             </span>
           </div>
-        </TooltipWrapper>
 
-        <div className="w-px h-6 bg-white/10" />
+          <div className="flex flex-col items-end cursor-default group">
+            <div className="flex items-center gap-1.5">
+              <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">Market: {cycle}</span>
+              <Globe className="h-2.5 w-2.5 text-blue-400 group-hover:animate-spin-slow" />
+            </div>
+            <span className="font-mono font-bold text-sm text-blue-300">
+              {(debtRate * 100).toFixed(1)}% <span className="text-[10px] font-normal text-muted-foreground">APR</span>
+            </span>
+          </div>
+        </div>
+      </div>
 
-        {/* Reputation/Prestige */}
-        <TooltipWrapper tooltip="Studio reputation level. High prestige unlocks elite talent and better distribution terms." side="bottom">
+      <div className="flex-1 max-w-xl px-12">
+        <NewsTicker />
+      </div>
+
+      <div className="flex items-center gap-4">
+        {/* Pipeline Status */}
+        <div className="flex items-center gap-6 mr-4">
+          <div className="flex flex-col items-end group cursor-default">
+            <div className="flex items-center gap-1.5">
+              <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">Projects</span>
+              <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+            </div>
+            <span className="font-mono font-bold text-sm">
+              {activeProjectsCount} <span className="text-[10px] font-normal text-muted-foreground">Active</span>
+            </span>
+          </div>
+
           <div className="flex flex-col items-end group cursor-default">
             <div className="flex items-center gap-1.5">
               <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">Prestige</span>
@@ -73,23 +101,8 @@ export const TopBar = () => {
               {studio.prestige}
             </span>
           </div>
-        </TooltipWrapper>
+        </div>
 
-        <div className="w-px h-6 bg-white/10" />
-
-        {/* Project Pipeline Count */}
-        <TooltipWrapper tooltip="Total number of properties currently in active development or production phases." side="bottom">
-          <div className="flex flex-col items-end cursor-default">
-            <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">Active Slate</span>
-            <span className="font-mono font-bold text-sm text-foreground/80">
-              {activeProjectsList.length}
-            </span>
-          </div>
-        </TooltipWrapper>
-      </div>
-
-      {/* Functional Actions */}
-      <div className="flex items-center gap-3 ml-4">
         {/* Market Event Alert */}
         {gameState.market.activeMarketEvents && gameState.market.activeMarketEvents.length > 0 && (
           <div className="relative group">
@@ -97,8 +110,8 @@ export const TopBar = () => {
             <div className="absolute top-full right-0 mt-2 p-3 bg-card border border-amber-500/20 rounded shadow-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 w-64 text-xs">
               <p className="font-bold text-amber-500 mb-1">Active Market Events</p>
               <ul className="list-disc list-inside text-muted-foreground">
-                {gameState.market.activeMarketEvents.map(e => (
-                  <li key={e.id}>{e.name}</li>
+                {gameState.market.activeMarketEvents.map((ev, i) => (
+                  <li key={i}>{ev.title}</li>
                 ))}
               </ul>
             </div>
@@ -108,24 +121,26 @@ export const TopBar = () => {
         <Button 
           variant="ghost" 
           size="icon" 
-          aria-label="Manual Cloud Save"
-          tooltip="Sync studio progress to cloud storage"
           onClick={handleSave} 
           className="h-8 w-8 rounded-full hover:bg-white/5 text-muted-foreground hover:text-primary transition-colors"
         >
-          <Save className="h-4 w-4" />
+          <Save className="w-4 h-4" />
         </Button>
 
         <Button 
-          onClick={handleAdvanceWeek} 
-          tooltip="Advance to next fiscal week and process all studio operations"
+          onClick={handleAdvance} 
+          disabled={gameState.tickCount > 0}
           className="h-9 px-4 font-display font-black uppercase tracking-widest text-[10px] gap-2 transition-all duration-300 shadow-[0_0_20px_rgba(var(--primary),0.1)] hover:shadow-[0_0_25px_rgba(var(--primary),0.3)] hover:scale-105 active:scale-95 group overflow-hidden relative"
         >
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
-          <FastForward className="h-3.5 w-3.5" />
+          <FastForward className="w-4 h-4 ml-1" />
           Advance Week
         </Button>
       </div>
-    </header>
+    </div>
   );
 };
+
+function cn(...classes: string[]) {
+  return classes.filter(Boolean).join(' ');
+}

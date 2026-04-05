@@ -15,7 +15,7 @@ export const WeekSummaryModal = () => {
 
   if (!activeModal || activeModal.type !== 'SUMMARY') return null;
 
-  const weekSummary = activeModal.payload;
+  const weekSummary = activeModal.payload as any;
   const { toWeek, cashBefore, cashAfter, totalRevenue, totalCosts, projectUpdates, newHeadlines, events } = weekSummary;
   const netDelta = cashAfter - cashBefore;
 

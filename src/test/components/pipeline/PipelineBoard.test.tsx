@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, within } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { PipelineBoard } from '@/components/pipeline/PipelineBoard';
 import { useGameStore } from '@/store/gameStore';
@@ -85,5 +85,21 @@ describe('PipelineBoard', () => {
     // 3 columns should be empty
     const noProjectsMessages = screen.queryAllByText(/No Projects/i);
     expect(noProjectsMessages.length).toBe(3);
+  });
+
+  it('groups multiple projects with the same state into the same column', () => {
+    const mockProjects: Project[] = [
+      { id: '1', title: 'Project 1', state: 'development', budgetTier: 'low', format: 'film', type: 'FILM', genre: 'Action', targetAudience: 'general', flavor: 'Standard', budget: 10, weeklyCost: 1, weeksInPhase: 0, developmentWeeks: 4, productionWeeks: 4, revenue: 0, weeklyRevenue: 0, releaseWeek: null, buzz: 0, activeCrisis: null, momentum: 50, progress: 0, accumulatedCost: 0, contentFlags: [], scriptHeat: 50, activeRoles: [], scriptEvents: [] } as Project,
+      { id: '2', title: 'Project 2', state: 'development', budgetTier: 'low', format: 'film', type: 'FILM', genre: 'Comedy', targetAudience: 'general', flavor: 'Standard', budget: 10, weeklyCost: 1, weeksInPhase: 0, developmentWeeks: 4, productionWeeks: 4, revenue: 0, weeklyRevenue: 0, releaseWeek: null, buzz: 0, activeCrisis: null, momentum: 50, progress: 0, accumulatedCost: 0, contentFlags: [], scriptHeat: 50, activeRoles: [], scriptEvents: [] } as Project,
+    ];
+
+    vi.mocked(useGameStore).mockReturnValue(mockProjects);
+    render(<PipelineBoard />);
+
+    const heading = screen.getByRole('heading', { name: 'Development' });
+    const col = heading.closest('.group\\/col');
+    expect(col).toBeInTheDocument();
+    expect(within(col as HTMLElement).getByTestId('project-card-1')).toBeInTheDocument();
+    expect(within(col as HTMLElement).getByTestId('project-card-2')).toBeInTheDocument();
   });
 });

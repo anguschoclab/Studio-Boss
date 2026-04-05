@@ -1,12 +1,10 @@
 import { create } from 'zustand';
-import { WeekSummary } from '@/engine/types';
-
-export type ModalType = 'CRISIS' | 'AWARDS' | 'SUMMARY';
+import { ModalType } from '@/engine/types';
 
 export interface QueuedModal {
   id: string;
   type: ModalType;
-  payload: any;
+  payload: Record<string, unknown> | null;
 }
 
 export type TabId = 'command' | 'pipeline' | 'ip' | 'distribution' | 'talent' | 'finance' | 'trades' | 'industry';
@@ -16,18 +14,12 @@ interface UIStore {
   showCreateProject: boolean;
   showPitchProject: boolean;
   pitchingProjectId: string | null;
-  
+  showSummary: boolean;
   // Modal Queue System
   modalQueue: QueuedModal[];
   activeModal: QueuedModal | null;
-  enqueueModal: (type: ModalType, payload: any) => void;
+  enqueueModal: (type: ModalType, payload: Record<string, unknown> | null) => void;
   resolveCurrentModal: () => void;
-
-  // Legacy (Will be refactored to use queue)
-  showCrisisModal: boolean;
-  crisisProjectId: string | null;
-  showWeekSummary: boolean;
-  weekSummary: WeekSummary | null;
   
   selectedProjectId: string | null;
   selectedTalentId: string | null;
@@ -36,12 +28,10 @@ interface UIStore {
   closeCreateProject: () => void;
   openPitchProject: (projectId: string) => void;
   closePitchProject: () => void;
-  openCrisisModal: (projectId: string) => void;
-  closeCrisisModal: () => void;
-  showSummary: (summary: WeekSummary) => void;
-  closeSummary: () => void;
   selectProject: (id: string | null) => void;
   selectTalent: (id: string | null) => void;
+  openSummary: () => void;
+  closeSummary: () => void;
 }
 
 export const useUIStore = create<UIStore>((set) => ({
@@ -49,6 +39,7 @@ export const useUIStore = create<UIStore>((set) => ({
   showCreateProject: false,
   showPitchProject: false,
   pitchingProjectId: null,
+  showSummary: false,
   
   modalQueue: [],
   activeModal: null,
@@ -56,13 +47,7 @@ export const useUIStore = create<UIStore>((set) => ({
   enqueueModal: (type, payload) => {
     const newModal = { id: crypto.randomUUID(), type, payload };
     set((state) => {
-      // If no modal is active, set it and return
-      if (!state.activeModal) {
-        return {
-          activeModal: newModal,
-        };
-      }
-      // Otherwise, add to queue
+      if (!state.activeModal) return { activeModal: newModal };
       return { modalQueue: [...state.modalQueue, newModal] };
     });
   },
@@ -70,9 +55,8 @@ export const useUIStore = create<UIStore>((set) => ({
   resolveCurrentModal: () => {
     set((state) => {
       if (state.modalQueue.length > 0) {
-        const nextModal = state.modalQueue[0];
         return {
-          activeModal: nextModal,
+          activeModal: state.modalQueue[0],
           modalQueue: state.modalQueue.slice(1),
         };
       }
@@ -80,10 +64,6 @@ export const useUIStore = create<UIStore>((set) => ({
     });
   },
 
-  showCrisisModal: false,
-  crisisProjectId: null,
-  showWeekSummary: false,
-  weekSummary: null,
   selectedProjectId: null,
   selectedTalentId: null,
   setActiveTab: (tab) => set({ activeTab: tab }),
@@ -91,11 +71,8 @@ export const useUIStore = create<UIStore>((set) => ({
   closeCreateProject: () => set({ showCreateProject: false }),
   openPitchProject: (projectId) => set({ showPitchProject: true, pitchingProjectId: projectId }),
   closePitchProject: () => set({ showPitchProject: false, pitchingProjectId: null }),
-  openCrisisModal: (projectId) => set({ showCrisisModal: true, crisisProjectId: projectId }),
-  closeCrisisModal: () => set({ showCrisisModal: false, crisisProjectId: null }),
-  showSummary: (summary) => set({ showWeekSummary: true, weekSummary: summary }),
-  closeSummary: () => set({ showWeekSummary: false }),
   selectProject: (id) => set({ selectedProjectId: id }),
   selectTalent: (id) => set({ selectedTalentId: id }),
+  openSummary: () => set({ showSummary: true }),
+  closeSummary: () => set({ showSummary: false }),
 }));
-

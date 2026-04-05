@@ -10,13 +10,15 @@ import { cn } from '@/lib/utils';
 import { formatMoney } from '@/engine/utils';
 import { DistributionBadge } from '../shared/DistributionBadge';
 import { RecoupmentStatus } from '../shared/RecoupmentStatus';
+import { isSeriesProject } from '@/engine/utils/projectUtils';
+
 
 interface ProjectCardProps {
   project: Project;
 }
 
 export const ProjectCard = ({ project }: ProjectCardProps) => {
-  const { selectProject, openPitchProject, openCrisisModal } = useUIStore();
+  const { selectProject, openPitchProject, enqueueModal } = useUIStore();
   const gameState = useGameStore(s => s.gameState);
   const tier = BUDGET_TIERS[project.budgetTier];
   
@@ -32,8 +34,8 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
     ? Math.floor(project.budget * 0.03)
     : 0;
 
-  const displayFormat = project.type === 'SERIES'
-      ? `S${(project as any).tvDetails?.currentSeason || 1}`
+  const displayFormat = isSeriesProject(project)
+      ? `S${project.tvDetails.currentSeason || 1}`
       : project.format.toUpperCase();
 
   const hasUnresolvedCrisis = project.activeCrisis && !project.activeCrisis.resolved;
@@ -88,7 +90,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
               <div className="space-y-1">
                 <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground/60 group-hover:text-muted-foreground/80 transition-colors">
                   <span className="flex items-center gap-1"><TrendingUp className="h-2.5 w-2.5 group-hover:text-secondary transition-colors" /> Market Buzz</span>
-                  <span className="text-secondary drop-shadow-[0_0_8px_rgba(var(--secondary),0.6)] font-mono">{Math.round(project.buzz)}%</span>
+                  <span className="text-secondary drop-shadow-[0_0_8px_hsl(var(--secondary) / 0.6)] font-mono">{Math.round(project.buzz)}%</span>
                 </div>
                 <div className="h-1 bg-black/40 rounded-full overflow-hidden border border-white/5">
                   <div
@@ -161,7 +163,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
               className="w-full h-8 text-[9px] font-black uppercase tracking-widest animate-pulse border border-white/20 bg-destructive/90 hover:bg-destructive shadow-[0_0_15px_rgba(239,68,68,0.4)] hover:shadow-[0_0_20px_rgba(239,68,68,0.6)] transition-all"
               onClick={(e) => {
                 e.stopPropagation();
-                openCrisisModal(project.id);
+                enqueueModal('CRISIS', { projectId: project.id });
               }}
             >
               <AlertTriangle className="w-3.5 h-3.5 mr-2 drop-shadow-sm" />
@@ -174,7 +176,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
               variant="default"
               size="sm"
               tooltip="Review final development packet for production greenlight"
-              className="w-full h-8 text-[9px] font-black uppercase tracking-widest bg-gradient-to-r from-primary to-primary/90 text-black hover:from-primary/90 hover:to-primary/80 shadow-[0_0_15px_rgba(var(--primary),0.3)] hover:shadow-[0_0_20px_rgba(var(--primary),0.5)] transition-all border border-primary/50"
+              className="w-full h-8 text-[9px] font-black uppercase tracking-widest bg-gradient-to-r from-primary to-primary/90 text-black hover:from-primary/90 hover:to-primary/80 shadow-[0_0_15px_hsl(var(--primary) / 0.3)] hover:shadow-[0_0_20px_hsl(var(--primary) / 0.5)] transition-all border border-primary/50"
               onClick={(e) => {
                 e.stopPropagation();
                 selectProject(project.id);
@@ -189,7 +191,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
             <Button
               size="sm"
               tooltip="Present project to distributors and streaming platforms"
-              className="w-full h-8 text-[9px] font-black uppercase tracking-widest bg-gradient-to-r from-secondary to-secondary/90 text-white hover:from-secondary/90 hover:to-secondary/80 shadow-[0_0_15px_rgba(var(--secondary),0.3)] hover:shadow-[0_0_20px_rgba(var(--secondary),0.5)] transition-all border border-secondary/50"
+              className="w-full h-8 text-[9px] font-black uppercase tracking-widest bg-gradient-to-r from-secondary to-secondary/90 text-white hover:from-secondary/90 hover:to-secondary/80 shadow-[0_0_15px_hsl(var(--secondary) / 0.3)] hover:shadow-[0_0_20px_hsl(var(--secondary) / 0.5)] transition-all border border-secondary/50"
               onClick={(e) => {
                 e.stopPropagation();
                 openPitchProject(project.id);

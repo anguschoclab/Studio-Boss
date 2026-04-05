@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { Buyer, Project, ProjectContractType } from '@/engine/types';
+import { RandomGenerator } from '@/engine/utils/rng';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { 
@@ -34,7 +35,7 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
 
   const eligibleProjects = useMemo(() => {
     if (!gameState) return [];
-    return Object.values(gameState.studio.internal.projects).filter(
+    return Object.values(gameState?.studio?.internal?.projects || {}).filter(
       (p: Project) => p.state === 'development' || p.state === 'production' || p.state === 'needs_greenlight'
     );
   }, [gameState]);
@@ -46,7 +47,8 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
 
   const fitScore = useMemo(() => {
     if (!selectedProjectObj || !gameState) return 0;
-    return calculateFitScore(selectedProjectObj, buyer, gameState.week, Object.values(gameState.studio.internal.projects));
+    const rng = new RandomGenerator(gameState.gameSeed + gameState.week);
+    return calculateFitScore(selectedProjectObj, buyer, gameState.week, Object.values(gameState?.studio?.internal?.projects || {}), rng);
   }, [selectedProjectObj, buyer, gameState]);
 
   const handlePitch = async () => {
@@ -113,7 +115,7 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
                    </h4>
                    <div className="space-y-2 max-h-[240px] overflow-y-auto pr-1">
                       {eligibleProjects.map(p => (
-                        <button
+                        <button aria-pressed={selectedProject === p.id}
                           key={p.id}
                           onClick={() => setSelectedProject(p.id)}
                           className={cn(
@@ -158,10 +160,10 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
                       <div className="flex gap-2">
                         {(['standard', 'deficit', 'upfront'] as ProjectContractType[]).map(t => (
                           <TooltipWrapper key={t} tooltip={DEAL_TYPE_TOOLTIPS[t]} side="bottom">
-                            <button
+                            <button aria-pressed={contractType === t}
                               onClick={() => setContractType(t)}
                               className={cn(
-                                "flex-1 h-9 rounded-lg border text-[9px] font-black uppercase tracking-widest transition-all",
+                                "flex-1 h-11 p-2 rounded-lg border text-[9px] font-black uppercase tracking-widest transition-all",
                                 contractType === t ? "bg-primary text-black border-primary shadow-lg" : "bg-white/5 border-white/5 text-muted-foreground hover:bg-white/10"
                               )}
                             >

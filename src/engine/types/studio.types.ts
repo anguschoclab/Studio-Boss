@@ -1,9 +1,9 @@
 // Types related to Studios, Rivals, and Game State
 
 import { Project, Opportunity, GenreTrend, FestivalSubmission, Award } from './project.types';
-import { Contract, FirstLookDeal, Family, Agency, Agent, Talent, Scandal, MotivationProfile, RivalStrategy } from './talent.types';
+import { Contract, TalentPact, Family, Agency, Agent, Talent, Scandal, MotivationProfile, RivalStrategy } from './talent.types';
 import { NewsEvent, Rumor, MarketEvent } from './engine.types';
-import { FinanceState, NewsState, IPState } from './state.types';
+import { FinanceState, NewsState, IPState, DealsState } from './state.types';
 
 export interface GameEvent {
   id: string;
@@ -43,6 +43,9 @@ export interface RivalStudio {
   genreFocus?: string;
   acquisitionTarget?: string;
   isAcquirable?: boolean;
+  behaviorId?: string; // 🌌 PHASE 2: Links to AI_ARCHETYPES
+  ipAssets?: Record<string, import('./state.types').IPAsset>;
+  weeklyHistory?: import('./state.types').FinancialSnapshot[];
 }
 
 export interface StudioCulture {
@@ -70,9 +73,13 @@ export interface GameState {
     internal: {
       projects: Record<string, Project>;
       contracts: Contract[];
-      firstLookDeals?: FirstLookDeal[];
+      firstLookDeals?: TalentPact[];
+      projectHistory: Project[]; // 🌌 PHASE 2: The Vault
     };
+    snapshotHistory: StudioSnapshot[]; // Renamed from history to avoid collision
     ownedPlatforms?: string[];
+    isAcquirable?: boolean;
+    marketShare?: number; // 🌌 PHASE 2: FTC Anti-Trust Cap (0.0 to 1.0)
   };
   market: {
     opportunities: Opportunity[];
@@ -92,6 +99,7 @@ export interface GameState {
     scandals?: Scandal[];
     newsHistory: NewsEvent[];
   };
+  deals: DealsState;
   // UI Data Vis Extensions (Epic 4)
   culture: {
     genrePopularity: Record<string, number>;
@@ -146,6 +154,13 @@ export interface PremiumPlatform extends BuyerBase {
   prestigeBonus: number; // 0-50: Influences review scores
 }
 
+export interface StreamingLicense {
+  projectId: string;
+  expiryWeek: number;
+  isAnchor: boolean; // If true, losing this causes mass churn
+  originalOwnerId: string;
+}
+
 export interface StreamerPlatform extends BuyerBase {
   archetype: 'streamer';
   subscribers: number;
@@ -153,6 +168,7 @@ export interface StreamerPlatform extends BuyerBase {
   contentLibraryQuality: number; // 0-100: Influences growth
   marketingSpend: number; // Weekly burn
   subscriberHistory: { week: number; count: number }[];
+  activeLicenses: StreamingLicense[];
 }
 
 export type Buyer = NetworkPlatform | PremiumPlatform | StreamerPlatform;

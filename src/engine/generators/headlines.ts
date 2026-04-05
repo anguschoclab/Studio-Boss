@@ -1,18 +1,26 @@
+import { pick } from '../utils';
 import { Headline, RivalStudio, HeadlineCategory, Project, Contract, Talent } from '@/engine/types';
-type TalentProfile = Talent;
-import { fillTemplate, pick, secureRandom } from '../utils';
-import { MARKET_HEADLINES, TALENT_HEADLINES, RIVAL_TEMPLATES } from '../data/headlines.data';
-
-let counter = 0;
+import { fillTemplate } from '../utils';
+import { RandomGenerator } from '../utils/rng';
+import { 
+  MARKET_HEADLINES, 
+  TALENT_HEADLINES, 
+  RIVAL_TEMPLATES,
+  BOX_OFFICE_MILESTONES,
+  STREAMING_RECORDS,
+  SCANDAL_TEMPLATES,
+  DISPUTE_TEMPLATES
+} from '../data/headlines.data';
 
 export function generateHeadlines(
+  rng: RandomGenerator,
   week: number, 
   rivals: RivalStudio[],
   projects: Project[] = [],
   contracts: Contract[] = [],
-  talentPool: TalentProfile[] = []
+  talentPool: Talent[] = []
 ): Headline[] {
-  const count = 1 + Math.floor(secureRandom() * 3);
+  const count = rng.rangeInt(1, 3);
   const headlines: Headline[] = [];
   const genrePool = ['sci-fi', 'drama', 'action', 'thriller', 'comedy', 'horror', 'fantasy'];
 
@@ -25,7 +33,7 @@ export function generateHeadlines(
     });
   });
 
-  const selectedProject = pick(projectsWithDirectors.length > 0 ? projectsWithDirectors : projects);
+  const selectedProject = pick(projectsWithDirectors.length > 0 ? projectsWithDirectors : (projects.length > 0 ? projects : []), rng);
   const selectedDirector = selectedProject ? (() => {
     const pContracts = contracts.filter(c => c.projectId === selectedProject.id);
     const dContract = pContracts.find(c => {
@@ -41,36 +49,57 @@ export function generateHeadlines(
 
   const vars = {
     projectName: selectedProject?.title || 'upcoming blockbuster',
-    directorName: selectedDirector?.name || pick(highDrawTalent.filter(t => t.roles.includes('director')))?.name || 'A-list director',
-    actorName: pick(actors)?.name || 'Major movie star',
-    actressName: pick(actors.slice().reverse())?.name || 'Highly acclaimed actress',
-    pct: String(Math.floor(5 + secureRandom() * 25))
+    directorName: selectedDirector?.name || pick(highDrawTalent.filter(t => t.roles.includes('director')), rng)?.name || 'A-list director',
+    actorName: pick(actors, rng)?.name || 'Major movie star',
+    actressName: pick(actors.slice().reverse(), rng)?.name || 'Highly acclaimed actress',
+    pct: String(rng.rangeInt(5, 30)),
+    amount: String(rng.rangeInt(100, 900)),
+    platform: pick(['Netflix', 'Max', 'Disney+', 'Hulu', 'Prime Video', 'Apple TV+'], rng)
   };
 
   for (let i = 0; i < count; i++) {
-    const roll = secureRandom();
+    const roll = rng.next();
     let text: string;
     let category: HeadlineCategory;
 
-    if (roll < 0.35 && rivals.length > 0) {
-      const rival = pick(rivals);
-      text = fillTemplate(pick(RIVAL_TEMPLATES), {
+    if (roll < 0.20 && rivals.length > 0) {
+      const rival = pick(rivals, rng);
+      text = fillTemplate(pick(RIVAL_TEMPLATES, rng), {
         ...vars,
         rival: rival.name,
-        budget: String(Math.floor(20 + secureRandom() * 180)),
-        genre: pick(genrePool),
+        budget: String(rng.rangeInt(20, 200)),
+        genre: pick(genrePool, rng),
       });
       category = 'rival';
-    } else if (roll < 0.7) {
-      text = fillTemplate(pick(MARKET_HEADLINES), vars);
+    } else if (roll < 0.40) {
+      text = fillTemplate(pick(MARKET_HEADLINES, rng), vars);
       category = 'market';
-    } else {
-      text = fillTemplate(pick(TALENT_HEADLINES), vars);
+    } else if (roll < 0.60) {
+      text = fillTemplate(pick(TALENT_HEADLINES, rng), vars);
       category = 'talent';
+    } else if (roll < 0.75) {
+      text = fillTemplate(pick(BOX_OFFICE_MILESTONES, rng), {
+        ...vars,
+        genre: selectedProject?.genre || pick(genrePool, rng)
+      });
+      category = 'box_office';
+    } else if (roll < 0.85) {
+      text = fillTemplate(pick(STREAMING_RECORDS, rng), {
+        ...vars,
+        genre: selectedProject?.genre || pick(genrePool, rng)
+      });
+      category = 'streaming';
+    } else if (roll < 0.95) {
+      text = fillTemplate(pick(SCANDAL_TEMPLATES, rng), vars);
+      category = 'scandal';
+    } else {
+      text = fillTemplate(pick(DISPUTE_TEMPLATES, rng), vars);
+      category = 'dispute';
     }
 
-    headlines.push({ id: `h-${++counter}-${week}`, text, week, category });
+    headlines.push({ id: rng.uuid('h'), text, week, category });
   }
 
   return headlines;
 }
+

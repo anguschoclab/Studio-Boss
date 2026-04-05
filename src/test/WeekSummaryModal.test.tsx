@@ -130,8 +130,8 @@ describe('WeekSummaryModal', () => {
     expect(screen.getByText('Market crashed')).toBeDefined();
 
     // Headlines
-    expect(screen.getByText('📰 Headlines')).toBeDefined();
-    expect(screen.getByText('— Studio hit with major controversy')).toBeDefined();
+    expect(screen.getByText('📰 The Trades')).toBeDefined();
+    expect(screen.getByText('Studio hit with major controversy')).toBeDefined();
   });
 
   it('calls closeSummary when the Continue button is clicked', () => {

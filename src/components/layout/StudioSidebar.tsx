@@ -166,7 +166,7 @@ export const StudioSidebar = () => {
               onClick={() => setIsCollapsed(!isCollapsed)}
               className="w-full flex justify-center hover:bg-accent/50"
             >
-              {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+              {isCollapsed ? <Icons.ChevronRight className="h-4 w-4" /> : <Icons.ChevronLeft className="h-4 w-4" />}
             </Button>
           </TooltipTrigger>
           <TooltipContent side="right" className="font-bold text-[11px] uppercase tracking-widest bg-card border-border">

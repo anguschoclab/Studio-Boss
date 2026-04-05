@@ -14,13 +14,24 @@ import { IPVault } from '@/components/ip/IPVault';
 import { DistributionHub } from '@/components/distribution/DistributionHub';
 import { AnimatePresence, motion } from 'framer-motion';
 
-// Modals
+// Lazy Loaded Panels
+const PipelineBoard = React.lazy(() => import('@/components/pipeline/PipelineBoard').then(m => ({ default: m.PipelineBoard })));
+const TalentPanel = React.lazy(() => import('@/components/talent/TalentPanel').then(m => ({ default: m.TalentPanel })));
+const FinancePanel = React.lazy(() => import('@/components/finance/FinancePanel').then(m => ({ default: m.FinancePanel })));
+const DiscoveryBoard = React.lazy(() => import('@/components/discovery/DiscoveryBoard').then(m => ({ default: m.DiscoveryBoard })));
+const RivalsPanel = React.lazy(() => import('@/components/rivals/RivalsPanel').then(m => ({ default: m.RivalsPanel })));
+const IPVault = React.lazy(() => import('@/components/ip/IPVault').then(m => ({ default: m.IPVault })));
+const DealsDesk = React.lazy(() => import('@/components/deals/DealsDesk').then(m => ({ default: m.DealsDesk })));
+const SBDBView = React.lazy(() => import('@/components/sbdb/SBDBView').then(m => ({ default: m.SBDBView })));
+const StreamingPanel = React.lazy(() => import('@/components/streaming/StreamingPanel').then(m => ({ default: m.StreamingPanel })));
+const NielsenDashboard = React.lazy(() => import('@/components/television/NielsenDashboard').then(m => ({ default: m.NielsenDashboard })));
+import { m, AnimatePresence } from 'framer-motion';
+
+// Modals & Overlays
+import { ModalManager } from '@/components/modals/ModalManager';
 import { CreateProjectModal } from '@/components/modals/CreateProjectModal';
-import { WeekSummaryModal } from '@/components/modals/WeekSummaryModal';
 import { ProjectDetailModal } from '@/components/modals/ProjectDetailModal';
 import { PitchProjectModal } from '@/components/modals/PitchProjectModal';
-import { CrisisModal } from '@/components/modals/CrisisModal';
-import { AwardsCeremonyModal } from '@/components/modals/AwardsCeremonyModal';
 
 const Dashboard: React.FC = () => {
   const gameState = useGameStore(s => s.gameState);
@@ -63,7 +74,7 @@ const Dashboard: React.FC = () => {
           <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-secondary/5 rounded-full blur-[100px] -z-10 pointer-events-none" />
           <div className="container mx-auto max-w-[1600px] h-full flex flex-col">
             <AnimatePresence mode="wait">
-              <motion.div
+              <m.div
                 key={activeTab}
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -71,19 +82,18 @@ const Dashboard: React.FC = () => {
                 transition={{ duration: 0.25, ease: "easeInOut" }}
                 className="h-full flex flex-col"
               >
-                {renderContent()}
-              </motion.div>
+                <React.Suspense fallback={<div className="flex items-center justify-center h-64 opacity-50 font-display uppercase tracking-widest text-xs">Loading Sub-System...</div>}>
+                  {renderContent()}
+                </React.Suspense>
+              </m.div>
             </AnimatePresence>
           </div>
         </main>
       </div>
       
       <CreateProjectModal />
-      <WeekSummaryModal />
       <ProjectDetailModal />
       <PitchProjectModal />
-      <CrisisModal />
-      <AwardsCeremonyModal />
     </div>
   );
 };

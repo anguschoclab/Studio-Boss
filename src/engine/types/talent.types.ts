@@ -12,9 +12,10 @@ export type AgencyMotivation = 'THE_PACKAGER' | 'THE_CLIMBER' | 'THE_PROTECTOR' 
 export type RivalStrategy = 'blockbuster_focused' | 'prestige_chaser' | 'genre_specialist' | 'acquirer' | 'poacher' | 'balanced';
 
 export type DirectorArchetype = 'auteur' | 'journeyman' | 'visionary' | 'commercial_hack';
-export type TalentTier = 'A_LIST' | 'B_LIST' | 'C_LIST' | 'RISING_STAR' | 'NEWCOMER';
+export type TalentTier = 1 | 2 | 3 | 4;
 
-export type ScandalType = 'financial' | 'personal' | 'onset_behavior' | 'legal' | 'feud';
+export type ScandalType = 'financial' | 'personal' | 'onset_behavior' | 'legal' | 'feud'
+  | 'rating_controversy' | 'director_speaks_out' | 'foreign_market_cut' | 'banned_in_market';
 
 export interface Scandal {
   id: string;
@@ -24,13 +25,41 @@ export interface Scandal {
   weeksRemaining: number;
 }
 
-export type AgencyArchetype = 'powerhouse' | 'boutique' | 'shark' | 'comedy_specialist' | 'lit_agency' | 'mega_corp' | 'streaming_titan' | 'indie_darling' | 'nepotism_mill' | 'international_broker';
+export type AgencyArchetype = 'powerhouse' | 'boutique' | 'shark' | 'comedy_specialist' | 'lit_agency' | 'mega_corp' | 'streaming_titan' | 'indie_darling' | 'nepotism_mill' | 'international_broker' | 'legacy_defenders' | 'genre_kings' | 'influencer_syndicate';
 export type AccessLevel = 'outsider' | 'soft-access' | 'legacy' | 'dynasty' | 'comeback';
-export type ProjectRole = 'actor' | 'director' | 'writer' | 'producer' | 'showrunner';
-export type TalentRole = 'actor' | 'director' | 'writer' | 'producer';
+export type ProjectRole = 'actor' | 'director' | 'writer' | 'producer' | 'showrunner' | 'personality';
+export type TalentRole = 'actor' | 'director' | 'writer' | 'producer' | 'personality' | 'showrunner';
 export type AgencyTier = 'powerhouse' | 'major' | 'mid-tier' | 'boutique' | 'specialist';
 export type AgencyCulture = 'shark' | 'family' | 'volume' | 'prestige';
 export type AgentSpecialty = 'film_packaging' | 'tv_packaging' | 'literary' | 'talent' | 'comedy' | 'unscripted';
+
+export interface TalentCommitment {
+  projectId: string;
+  projectTitle: string;
+  startWeek: number;
+  endWeek: number;
+  role: TalentRole;
+  format: 'feature' | 'series' | 'unscripted' | 'animation';
+  isHoldingDeal?: boolean;
+  isShowrunner?: boolean;
+}
+
+export type TalentPactType = 'first_look' | 'vanity_shingle' | 'overall_deal';
+
+export interface TalentPact {
+  id: string;
+  talentId: string;
+  studioId: string;
+  type: TalentPactType;
+  startDate: number;
+  endDate: number;
+  expiryWeek?: number; // Phase 2: Explicit tracking
+  weeklyOverhead: number;
+  upfrontCost?: number; // Phase 2: Signing bonus
+  exclusivity: boolean;
+  status: 'active' | 'expired' | 'terminated';
+  spinoffCooldownWeek?: number; // week when next spinoff commission is allowed (overall_deal only)
+}
 
 export interface Agency {
   id: string;
@@ -40,6 +69,8 @@ export interface Agency {
   culture: AgencyCulture;
   prestige: number;
   leverage: number; // 0-100
+  marketSensitivity: number; // 0-1.0 (How much market cycles affect their demands)
+  globalReach: number; // 0-100 (Influences foreign box office & distribution)
   traits?: string[];
   motivationProfile?: MotivationProfile;
   currentMotivation?: AgencyMotivation;
@@ -52,6 +83,7 @@ export interface Agent {
   specialty: AgentSpecialty;
   prestige: number;
   leverage: number;
+  negotiationTactic: 'SHARK' | 'DIPLOMAT' | 'VOLUME' | 'PRESTIGE';
   skill?: number;
   aggression?: number;
   motivationProfile?: MotivationProfile;
@@ -90,6 +122,7 @@ export interface Talent {
   role: string; // Primary role
   roles: TalentRole[]; // All roles
   tier: TalentTier;
+  contractId?: string; // ID of active TalentPact
   agencyId?: string;
   agentId?: string;
   prestige: number;
@@ -98,6 +131,12 @@ export interface Talent {
   familyId?: string;
   accessLevel: AccessLevel;
   momentum: number; // 0-100
+  skills: {
+    acting: number;
+    directing: number;
+    writing: number;
+    stardom: number;
+  };
   perks?: string[];
   bio?: string;
   demographics: TalentDemographics;
@@ -118,6 +157,7 @@ export interface Talent {
     type: 'movie' | 'tv';
   };
   hasRazzie?: boolean;
+  razzieWinner?: boolean; // 🌌 PHASE 2: Added for high-fidelity career tracking.
   
   // SBDB & Career Tracking
   knownFor?: string[]; // Top 3 Project IDs
@@ -138,10 +178,21 @@ export interface Talent {
   };
   trivia?: string[];
   
+  // Director-specific
+  directorArchetype?: DirectorArchetype;
+
   // AI Motivations
   motivationProfile?: MotivationProfile;
   currentMotivation?: TalentMotivation;
   motivationImpulse?: 'CASH_OUT' | 'AWARDS_RUN' | 'REHAB' | 'VANITY' | 'NONE';
+
+  // Phase 2 Expansion: Commitments & Fatigue
+  commitments: TalentCommitment[];
+  fatigue: number; // 0-100: Influences performance and conflict chance
+  preferredGenres: string[];
+  lastReleaseWeek?: number; // Last week a release happened (for prestige decay)
+  onMedicalLeave?: boolean;
+  medicalLeaveEndsWeek?: number;
 }
 
 export interface Contract {
@@ -154,11 +205,6 @@ export interface Contract {
   creativeControl?: boolean;
   sequelOption?: boolean;
   backendEscalator?: number; // % bump if revenue exceeds threshold
-}
-
-export interface FirstLookDeal {
-  id: string;
-  talentId: string;
-  weeksRemaining: number;
-  exclusivity: boolean;
+  // Phase 2: Dynamic Scheduling
+  role: TalentRole;
 }

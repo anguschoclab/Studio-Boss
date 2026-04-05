@@ -1,6 +1,7 @@
-import { GameState, MarketEvent, MarketEventType } from '@/engine/types';
+import { pick } from '../utils';
+import { GameState, MarketEvent } from '@/engine/types';
 import { StateImpact } from '../types/state.types';
-import { pick, randRange, secureRandom } from '../utils';
+import { RandomGenerator } from '../utils/rng';
 
 const EVENT_TEMPLATES: Omit<MarketEvent, 'id' | 'weeksRemaining'>[] = [
   {
@@ -9,7 +10,8 @@ const EVENT_TEMPLATES: Omit<MarketEvent, 'id' | 'weeksRemaining'>[] = [
     description: 'A global lock-down or tech shift leads to massive streaming growth.',
     revenueMultiplier: 1.5,
     costMultiplier: 1.2,
-    talentAvailabilityModifier: -0.1
+    talentAvailabilityModifier: -0.1,
+    economicShock: { sentimentShift: 20, baseRateShift: -0.01 } // Lower rates for growth
   },
   {
     type: 'theatrical_revival',
@@ -17,7 +19,8 @@ const EVENT_TEMPLATES: Omit<MarketEvent, 'id' | 'weeksRemaining'>[] = [
     description: 'Audiences are flocking back to cinemas globally.',
     revenueMultiplier: 1.4,
     costMultiplier: 1.0,
-    talentAvailabilityModifier: 0.1
+    talentAvailabilityModifier: 0.1,
+    economicShock: { sentimentShift: 10, baseRateShift: 0 }
   },
   {
     type: 'writers_strike',
@@ -25,7 +28,8 @@ const EVENT_TEMPLATES: Omit<MarketEvent, 'id' | 'weeksRemaining'>[] = [
     description: 'Writers are striking for better streaming residuals.',
     revenueMultiplier: 1.0,
     costMultiplier: 1.5,
-    talentAvailabilityModifier: -0.8
+    talentAvailabilityModifier: -0.8,
+    economicShock: { sentimentShift: -15, baseRateShift: 0.005 } // Slight rate hike from inflation
   },
   {
     type: 'actors_strike',
@@ -33,7 +37,8 @@ const EVENT_TEMPLATES: Omit<MarketEvent, 'id' | 'weeksRemaining'>[] = [
     description: 'Actors hit the picket lines over AI replacement fears.',
     revenueMultiplier: 0.8,
     costMultiplier: 1.5,
-    talentAvailabilityModifier: -0.9
+    talentAvailabilityModifier: -0.9,
+    economicShock: { sentimentShift: -20, baseRateShift: 0.005 }
   },
   {
     type: 'market_crash',
@@ -41,7 +46,8 @@ const EVENT_TEMPLATES: Omit<MarketEvent, 'id' | 'weeksRemaining'>[] = [
     description: 'An economic downturn dries up credit and suppresses entertainment spending.',
     revenueMultiplier: 0.7,
     costMultiplier: 0.9,
-    talentAvailabilityModifier: 0.3
+    talentAvailabilityModifier: 0.3,
+    economicShock: { sentimentShift: -50, baseRateShift: 0.04 } // Massive rate hike to combat inflation
   }
 ];
 
@@ -50,7 +56,7 @@ export function getActiveMarketEvent(state: GameState): MarketEvent | undefined 
   return state.market.activeMarketEvents[0]; // For simplicity, only 1 global event at a time
 }
 
-export function advanceMarketEvents(state: GameState): StateImpact[] {
+export function advanceMarketEvents(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
   let activeEvents = state.market.activeMarketEvents || [];
   
@@ -68,6 +74,8 @@ export function advanceMarketEvents(state: GameState): StateImpact[] {
     impacts.push({
       type: 'NEWS_ADDED',
       payload: {
+        id: rng.uuid('news'),
+        week: state.week,
         headline: 'Market Normalizes',
         description: `The ${exp.name} has finally ended.`,
       }
@@ -75,18 +83,20 @@ export function advanceMarketEvents(state: GameState): StateImpact[] {
   }
   
   // Chance to spawn new event if none active
-  if (activeEvents.length === 0 && secureRandom() < 0.02) {
-    const template = pick(EVENT_TEMPLATES);
+  if (activeEvents.length === 0 && rng.next() < 0.02) {
+    const template = pick(EVENT_TEMPLATES, rng);
     const newEvent: MarketEvent = {
       ...template,
-      id: crypto.randomUUID(),
-      weeksRemaining: randRange(12, 52)
+      id: rng.uuid('market-event'),
+      weeksRemaining: Math.floor(rng.range(12, 52))
     };
     
     activeEvents.push(newEvent);
     impacts.push({
       type: 'NEWS_ADDED',
       payload: {
+        id: rng.uuid('news'),
+        week: state.week,
         headline: `MAJOR INDUSTRY EVENT: ${newEvent.name}`,
         description: newEvent.description,
       }
@@ -100,4 +110,3 @@ export function advanceMarketEvents(state: GameState): StateImpact[] {
 
   return impacts;
 }
-

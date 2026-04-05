@@ -4,6 +4,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { RivalsPanel } from '@/components/rivals/RivalsPanel';
 import { useGameStore } from '@/store/gameStore';
 import { ArchetypeKey } from '@/engine/types';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 describe('RivalsPanel', () => {
   beforeEach(() => {
@@ -16,8 +17,8 @@ describe('RivalsPanel', () => {
   });
 
   it('renders correctly with an empty rivals list', () => {
-    render(<RivalsPanel />);
-    expect(screen.getByText('Rival Studios')).toBeInTheDocument();
+    render(<TooltipProvider><RivalsPanel /></TooltipProvider>);
+    expect(screen.getByText('Competitive Landscape')).toBeInTheDocument();
   });
 
   it('renders rivals correctly', () => {
@@ -62,7 +63,7 @@ describe('RivalsPanel', () => {
         industry: { rivals: mockRivals }
       }
     } as any);
-    render(<RivalsPanel />);
+    render(<TooltipProvider><RivalsPanel /></TooltipProvider>);
 
     // Check text elements
     expect(screen.getByText('Alpha Pictures')).toBeInTheDocument();
@@ -122,7 +123,7 @@ describe('RivalsPanel', () => {
       }
     } as any);
 
-    const { container } = render(<RivalsPanel />);
+    const { container } = render(<TooltipProvider><RivalsPanel /></TooltipProvider>);
 
     const strengthBars = container.querySelectorAll('.bg-muted\\/50 .rounded-full.transition-all');
     expect(strengthBars).toHaveLength(3);

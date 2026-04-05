@@ -1,9 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { initializeTrends, advanceTrends, getTrendMultiplier } from '../../../engine/systems/trends';
+import { RandomGenerator } from '../../../engine/utils/rng';
 
 describe('Trends System', () => {
+  const rng = new RandomGenerator(999);
+
   it('initializes with a set of default genre trends', () => {
-    const trends = initializeTrends();
+    const trends = initializeTrends(rng);
     expect(trends.length).toBeGreaterThan(0);
     
     // Check structure
@@ -13,8 +16,8 @@ describe('Trends System', () => {
   });
 
   it('advances trends correctly over a week', () => {
-    const initialTrends = initializeTrends();
-    const impacts = advanceTrends(initialTrends);
+    const initialTrends = initializeTrends(rng);
+    const impacts = advanceTrends(initialTrends, rng);
     const trendImpact = impacts.find(i => i.type === 'TRENDS_UPDATED');
     const newTrends = trendImpact?.payload.trends;
     
@@ -27,7 +30,7 @@ describe('Trends System', () => {
   });
 
   it('calculates the trend multiplier for a matching genre', () => {
-    const trends = initializeTrends();
+    const trends = initializeTrends(rng);
     // Force the first genre to have a very high heat
     trends[0].heat = 100;
     const state = { market: { trends } } as any;
@@ -43,9 +46,9 @@ describe('Trends System', () => {
   });
 
   it('shifts directions properly based on thresholds', () => {
-    let trends = initializeTrends();
+    let trends = initializeTrends(rng);
     for (let i = 0; i < 50; i++) {
-        const impacts = advanceTrends(trends);
+        const impacts = advanceTrends(trends, rng);
         const trendImpact = impacts.find(i => i.type === 'TRENDS_UPDATED');
         trends = trendImpact?.payload.trends || [];
     }

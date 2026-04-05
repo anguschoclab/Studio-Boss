@@ -15,24 +15,37 @@ import { DistributionBadge } from '@/components/shared/DistributionBadge';
 import { MarketRatesWidget } from '@/components/finance/MarketRatesWidget';
 import { useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
+import { useShallow } from 'zustand/react/shallow';
 import { formatMoney } from '@/engine/utils';
+import { selectProjects } from '@/store/selectors';
+import { useFinanceHistory } from '@/hooks/useFinanceHistory';
+
+const EMPTY_HISTORY: import('@/engine/types/state.types').FinancialSnapshot[] = [];
+const EMPTY_PROJECTS: import('@/engine/types').Project[] = [];
 
 export const FinancePanel = () => {
-  const gameState = useGameStore(s => s.gameState);
+  // Use atomic selectors to prevent unnecessary re-renders when unrelated gameState parts change
+  const cash = useGameStore(s => s.gameState?.finance?.cash ?? 0);
+  const prestige = useGameStore(s => s.gameState?.studio?.prestige ?? 75);
+  const snapshots = useGameStore(useShallow(s => s.snapshots || []));
 
-  const cash = gameState?.finance?.cash ?? 0;
-  const rawFinanceHistory = gameState?.finance?.weeklyHistory; // Use new structured history
-  const rawProjects = Object.values(gameState?.studio.internal.projects || {});
+  // Use useShallow for arrays/objects extracted from state
+  // ⚡ Bolt: Removed inline array allocation using Object.values() to prevent unnecessary re-renders
+  const projectsMemo = useGameStore(useShallow(s => s.gameState ? selectProjects(s.gameState) : EMPTY_PROJECTS));
+  
+  // Data Shedding: Use TanStack Query for historical data
+  const { data: financeHistory = EMPTY_HISTORY } = useFinanceHistory();
 
-  const projectsMemo = useMemo(() => rawProjects ?? [], [rawProjects]);
-  const financeHistory = useMemo(() => rawFinanceHistory ?? [], [rawFinanceHistory]);
+  // Need entire gameState for complex calculations like Net Worth and Forecasts
+  // but we extract it here to pass to memoized functions without triggering re-renders on the whole object
+  const fullGameState = useGameStore(s => s.gameState);
 
-  const weeklyCosts = useMemo(() => calculateWeeklyCosts(projectsMemo), [projectsMemo]);
-  const weeklyRevenue = useMemo(() => calculateWeeklyRevenue(projectsMemo), [projectsMemo]);
+  const weeklyCosts = useMemo(() => fullGameState ? calculateWeeklyCosts(fullGameState) : 0, [fullGameState]);
+  const weeklyRevenue = useMemo(() => fullGameState ? calculateWeeklyRevenue(fullGameState) : 0, [fullGameState]);
   const netDelta = useMemo(() => weeklyRevenue - weeklyCosts, [weeklyRevenue, weeklyCosts]);
   
-  const studioNetWorth = useMemo(() => gameState ? calculateStudioNetWorth(gameState) : 0, [gameState]);
-  const forecast = useMemo(() => gameState ? generateCashflowForecast(gameState, 12) : [], [gameState]);
+  const studioNetWorth = useMemo(() => fullGameState ? calculateStudioNetWorth(fullGameState) : 0, [fullGameState]);
+  const forecast = useMemo(() => fullGameState ? generateCashflowForecast(fullGameState, 12) : [], [fullGameState]);
 
   const activeProjects = useMemo(() =>
     projectsMemo.filter(p => p.state === 'development' || p.state === 'production'),
@@ -110,7 +123,7 @@ export const FinancePanel = () => {
               </SheetDescription>
             </SheetHeader>
             <div className="mt-8 space-y-4 overflow-y-auto max-h-[calc(100vh-180px)] pr-2 custom-scrollbar">
-              {(useGameStore().snapshots || []).slice().reverse().map((s, i) => (
+              {snapshots.slice().reverse().map((s, i) => (
                 <Card key={i} className="border-border/40 bg-card/40 backdrop-blur-md shadow-sm group hover:border-primary/30 transition-all duration-300">
                   <CardContent className="p-5">
                     <div className="flex justify-between items-start mb-4">
@@ -139,7 +152,7 @@ export const FinancePanel = () => {
                   </CardContent>
                 </Card>
               ))}
-              {((useGameStore().snapshots || []).length === 0) && (
+              {(snapshots.length === 0) && (
                 <div className="text-center py-12 opacity-50 px-8">
                    <History className="w-12 h-12 mx-auto mb-4 text-muted-foreground/30" />
                    <p className="text-sm font-bold uppercase tracking-widest mb-2">No Records Yet</p>
@@ -281,7 +294,7 @@ export const FinancePanel = () => {
              <CardTitle className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Revenue Mix (Last 12w)</CardTitle>
           </CardHeader>
           <CardContent className="h-[180px] pt-4">
-             <RevenueStreamChart data={gameState?.finance?.weeklyHistory || []} />
+             <RevenueStreamChart data={financeHistory} />
           </CardContent>
         </Card>
 
@@ -290,7 +303,7 @@ export const FinancePanel = () => {
              <CardTitle className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Weekly P&L Breakdown</CardTitle>
           </CardHeader>
           <CardContent className="h-[180px] pt-4">
-             <ProfitWaterfallChart snapshot={gameState?.finance?.weeklyHistory?.slice(-1)[0]} />
+             <ProfitWaterfallChart snapshot={financeHistory.slice(-1)[0]} />
           </CardContent>
         </Card>
 
@@ -299,7 +312,7 @@ export const FinancePanel = () => {
              <CardTitle className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Studio Efficiency</CardTitle>
           </CardHeader>
           <CardContent className="h-[180px] pt-4 flex items-center justify-center">
-             <CashEfficiencyGauge score={gameState?.studio?.prestige || 75} />
+             <CashEfficiencyGauge score={prestige} />
           </CardContent>
         </Card>
       </div>

@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { TalentPanel } from '@/components/talent/TalentPanel';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { useGameStore } from '@/store/gameStore';
 
 vi.mock('@/store/gameStore');
@@ -45,6 +46,11 @@ describe('TalentPanel', () => {
               { id: 'a1', name: 'CAA' },
               { id: 'a2', name: 'WME' }
             ]
+          },
+          deals: {
+            activeDeals: [],
+            pendingOffers: [],
+            expiredDeals: []
           }
         }
       };
@@ -53,14 +59,14 @@ describe('TalentPanel', () => {
   });
 
   it('renders talent roster', () => {
-    render(<TalentPanel />);
+    render(<TooltipProvider><TalentPanel /></TooltipProvider>);
     expect(screen.getByText('Talent Roster')).toBeInTheDocument();
     expect(screen.getByText('Tom Hanks')).toBeInTheDocument();
     expect(screen.getByText('Steven Spielberg')).toBeInTheDocument();
   });
 
   it('filters talent by role', () => {
-    render(<TalentPanel />);
+    render(<TooltipProvider><TalentPanel /></TooltipProvider>);
 
     // Initial state: both should be visible
     expect(screen.getByText('Tom Hanks')).toBeInTheDocument();
@@ -75,7 +81,7 @@ describe('TalentPanel', () => {
   });
 
   it('shows empty state when no talent matches filter', () => {
-    render(<TalentPanel />);
+    render(<TooltipProvider><TalentPanel /></TooltipProvider>);
 
     const writerButton = screen.getAllByText((content, element) => element?.textContent?.toLowerCase() === 'writer').find(el => el.tagName === 'BUTTON');
     if (writerButton) fireEvent.click(writerButton);
