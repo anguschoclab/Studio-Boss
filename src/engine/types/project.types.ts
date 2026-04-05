@@ -186,6 +186,7 @@ export type UnscriptedFormatKey =
   | 'docuseries'
   | 'reality_ensemble'
   | 'game_show'
+  | 'talk_show'
   | 'lifestyle'
   | 'dating_island'
   | 'true_crime_doc'

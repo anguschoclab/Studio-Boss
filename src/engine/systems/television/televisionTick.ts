@@ -224,24 +224,35 @@ export function tickTelevision(state: GameState, rng: RandomGenerator): StateImp
     }
 
     if (nextStatus === 'CANCELLED') {
-      if (isPlayer && project.dealModel === 'deficit_financing') {
-        // Deficit-financed cancelled show enters shopping window (4 weeks)
-        impacts.push({
-          type: 'PROJECT_UPDATED',
-          payload: {
-            projectId: project.id,
-            update: {
-              state: 'shopping' as const,
-              shoppingExpiresWeek: state.week + 4,
+      const usesDeficit = project.dealModel === 'deficit_financing';
+      if (usesDeficit) {
+        // Deficit-financed cancelled show (Player or Rival) enters shopping window (4 weeks)
+        const update = {
+          state: 'shopping' as const,
+          shoppingExpiresWeek: state.week + 4,
+        };
+
+        if (isPlayer) {
+          impacts.push({
+            type: 'PROJECT_UPDATED',
+            payload: { projectId: project.id, update }
+          });
+        } else if (rival) {
+          impacts.push({
+            type: 'RIVAL_UPDATED',
+            payload: {
+              rivalId: rival.id,
+              update: { projects: { ...rival.projects, [project.id]: { ...project, ...update } } }
             }
-          }
-        });
+          });
+        }
+
         impacts.push({
           type: 'NEWS_ADDED',
           payload: {
             id: `shopping-${project.id}`,
             headline: `"${project.title}" cancelled — shopping for new home`,
-            description: `The show is now available for pickup by another network.`,
+            description: `The series is now available for pickup by another network.`,
             category: 'cancellation'
           }
         });
@@ -253,6 +264,26 @@ export function tickTelevision(state: GameState, rng: RandomGenerator): StateImp
             : { rivalId: rival?.id, update: { projects: { ...rival?.projects, [project.id]: { ...project, state: 'archived' } } } } as any
         });
       }
+    }
+  });
+
+  // Phase 4: Handle Shopping Expiration
+  const allProjects = [
+    ...Object.values(state.studio.internal.projects),
+    ...state.industry.rivals.flatMap(r => Object.values(r.projects || {}))
+  ];
+
+  allProjects.forEach(p => {
+    if (p.state === 'shopping' && p.shoppingExpiresWeek && state.week >= p.shoppingExpiresWeek) {
+      const isPlayer = !!state.studio.internal.projects[p.id];
+      const rival = state.industry.rivals.find(r => !!(r.projects || {})[p.id]);
+
+      impacts.push({
+        type: isPlayer ? 'PROJECT_UPDATED' : 'RIVAL_UPDATED',
+        payload: isPlayer
+          ? { projectId: p.id, update: { state: 'archived' as const } }
+          : { rivalId: rival?.id, update: { projects: { ...rival?.projects, [p.id]: { ...p, state: 'archived' as const } } } } as any
+      });
     }
   });
 

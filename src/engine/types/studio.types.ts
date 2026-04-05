@@ -43,6 +43,7 @@ export interface RivalStudio {
   genreFocus?: string;
   acquisitionTarget?: string;
   isAcquirable?: boolean;
+  behaviorId?: string; // 🌌 PHASE 2: Links to AI_ARCHETYPES
   ipAssets?: Record<string, import('./state.types').IPAsset>;
   weeklyHistory?: import('./state.types').FinancialSnapshot[];
 }
