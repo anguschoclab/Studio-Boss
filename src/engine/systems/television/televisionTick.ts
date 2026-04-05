@@ -11,16 +11,22 @@ const PILOT_BURN_RATE = 0.30; // pilot costs 30% of full production weeklyCost
  * Processes projects in pilot stage: caps production at 2 weeks,
  * then graduates or cancels based on script quality and momentum.
  */
-function tickPilots(state: GameState, rng: RandomGenerator): StateImpact[] {
+/**
+ * Processes projects in pilot stage: caps production at 2 weeks.
+ * Graduation/Cancellation is now handled by processUpfronts on Week 20.
+ */
+function tickPilots(state: GameState): StateImpact[] {
   const impacts: StateImpact[] = [];
-  for (const key in state.studio.internal.projects) {
-    const project = state.studio.internal.projects[key];
-    if (project.type !== 'SERIES' || (project as any).stage !== 'pilot') continue;
+  const playerProjects = Object.values(state.studio.internal.projects);
+  const rivalProjects = state.industry.rivals.flatMap(r => Object.values(r.projects || {}));
+  const allProjects = [...playerProjects, ...rivalProjects];
+
+  for (const project of allProjects) {
+    if (project.type !== 'SERIES' || project.stage !== 'pilot') continue;
 
     const weeksInPilot = (project.weeksInPhase || 0) + 1;
 
-    if (weeksInPilot < PILOT_MAX_WEEKS) {
-      // Tick pilot week — reduced burn only (cost handled by finance tick via weeklyCost)
+    if (weeksInPilot <= PILOT_MAX_WEEKS) {
       impacts.push({
         type: 'PROJECT_UPDATED',
         payload: {
@@ -32,43 +38,68 @@ function tickPilots(state: GameState, rng: RandomGenerator): StateImpact[] {
           }
         }
       });
-    } else {
-      // Pilot complete — evaluate graduation
-      const quality = ((project as any).scriptHeat ?? 50) * 0.5 + (project.momentum ?? 50) * 0.5;
-      const graduated = quality >= 40 || rng.next() < 0.3;
+    }
+  }
+  return impacts;
+}
 
-      if (graduated) {
-        impacts.push({
-          type: 'PILOT_GRADUATED',
-          payload: { projectId: project.id, nextState: 'production' as const }
-        });
-        impacts.push({
-          type: 'NEWS_ADDED',
-          payload: {
-            id: `pilot-grad-${project.id}`,
-            headline: `"${project.title}" pilot greenlit to series`,
-            description: `The network has ordered a full series pickup.`,
-            category: 'development'
-          }
-        });
-      } else {
-        impacts.push({
-          type: 'PROJECT_UPDATED',
-          payload: {
-            projectId: project.id,
-            update: { state: 'archived' as const }
-          }
-        });
-        impacts.push({
-          type: 'NEWS_ADDED',
-          payload: {
-            id: `pilot-pass-${project.id}`,
-            headline: `"${project.title}" pilot passed on`,
-            description: `The network declined to order a full series.`,
-            category: 'cancellation'
-          }
-        });
-      }
+/**
+ * Week 20: The Upfronts.
+ * Evaluates all finished pilots and orders them to series or cancels them.
+ */
+export function processUpfronts(state: GameState, rng: RandomGenerator): StateImpact[] {
+  const impacts: StateImpact[] = [];
+  const playerProjects = Object.values(state.studio.internal.projects);
+  const rivalProjects = state.industry.rivals.flatMap(r => Object.values(r.projects || {}));
+  const allProjects = [...playerProjects, ...rivalProjects];
+
+  for (const project of allProjects) {
+    if (project.type !== 'SERIES' || project.stage !== 'pilot') continue;
+    if (project.weeksInPhase < PILOT_MAX_WEEKS) continue;
+
+    // Pilot complete — evaluate graduation
+    const quality = (project.reviewScore ?? project.momentum ?? 50);
+    const graduated = quality >= 45 || rng.next() < 0.25;
+
+    if (graduated) {
+      impacts.push({
+        type: 'PROJECT_UPDATED',
+        payload: { 
+          projectId: project.id, 
+          update: { 
+            state: 'production' as const, 
+            stage: 'series' as const,
+            weeksInPhase: 0,
+            progress: 0 
+          } 
+        }
+      });
+      impacts.push({
+        type: 'NEWS_ADDED',
+        payload: {
+          id: rng.uuid('news'),
+          headline: `UPFRONTS: "${project.title}" Picked Up to Series`,
+          description: `After a successful pilot screening, the network has ordered a full season.`,
+          category: 'production'
+        }
+      });
+    } else {
+      impacts.push({
+        type: 'PROJECT_UPDATED',
+        payload: {
+          projectId: project.id,
+          update: { state: 'archived' as const }
+        }
+      });
+      impacts.push({
+        type: 'NEWS_ADDED',
+        payload: {
+          id: rng.uuid('news'),
+          headline: `UPFRONTS: "${project.title}" Pilot Passed Over`,
+          description: `The network has declined to pick up the pilot for the upcoming fall season.`,
+          category: 'cancellation'
+        }
+      });
     }
   }
   return impacts;
@@ -82,25 +113,44 @@ export type TVStatus = 'IN_DEVELOPMENT' | 'ON_AIR' | 'ON_BUBBLE' | 'RENEWED' | '
  */
 export function tickTelevision(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [
-    ...tickPilots(state, rng),
+    ...tickPilots(state),
   ];
+
+  // The Upfronts: Week 20
+  if (state.week % 52 === 20) {
+    impacts.push(...processUpfronts(state, rng));
+  }
   
   // Collect all series from player and rivals
-  const playerSeries = Object.values(state.studio.internal.projects).filter(
-    (p): p is SeriesProject => p.type === 'SERIES' && 'tvDetails' in p
-  );
-  
-  const rivalSeries: SeriesProject[] = [];
-  state.industry.rivals.forEach(rival => {
-    Object.values(rival.projects || {}).forEach(p => {
-      if (p.type === 'SERIES' && 'tvDetails' in p) {
-        rivalSeries.push(p as SeriesProject);
-      }
-    });
-  });
+  const allSeries: SeriesProject[] = [];
+  const airingShows: SeriesProject[] = [];
 
-  const allSeries = [...playerSeries, ...rivalSeries];
-  const airingShows = allSeries.filter(p => p.tvDetails.status === 'ON_AIR');
+  const playerProjects = Object.values(state.studio.internal.projects);
+  for (let i = 0; i < playerProjects.length; i++) {
+    const p = playerProjects[i];
+    if (p.type === 'SERIES' && 'tvDetails' in p) {
+      const seriesProject = p as SeriesProject;
+      allSeries.push(seriesProject);
+      if (seriesProject.tvDetails.status === 'ON_AIR') {
+        airingShows.push(seriesProject);
+      }
+    }
+  }
+
+  const rivals = state.industry.rivals;
+  for (let i = 0; i < rivals.length; i++) {
+    const rivalProjects = Object.values(rivals[i].projects || {});
+    for (let j = 0; j < rivalProjects.length; j++) {
+      const p = rivalProjects[j];
+      if (p.type === 'SERIES' && 'tvDetails' in p) {
+        const seriesProject = p as SeriesProject;
+        allSeries.push(seriesProject);
+        if (seriesProject.tvDetails.status === 'ON_AIR') {
+          airingShows.push(seriesProject);
+        }
+      }
+    }
+  }
   const weekSnapshots = new Map<string, NielsenSnapshot>();
 
   // Phase 1: Generate Nielsen snapshots for all airing shows
@@ -174,24 +224,35 @@ export function tickTelevision(state: GameState, rng: RandomGenerator): StateImp
     }
 
     if (nextStatus === 'CANCELLED') {
-      if (isPlayer && project.dealModel === 'deficit_financing') {
-        // Deficit-financed cancelled show enters shopping window (4 weeks)
-        impacts.push({
-          type: 'PROJECT_UPDATED',
-          payload: {
-            projectId: project.id,
-            update: {
-              state: 'shopping' as const,
-              shoppingExpiresWeek: state.week + 4,
+      const usesDeficit = project.dealModel === 'deficit_financing';
+      if (usesDeficit) {
+        // Deficit-financed cancelled show (Player or Rival) enters shopping window (4 weeks)
+        const update = {
+          state: 'shopping' as const,
+          shoppingExpiresWeek: state.week + 4,
+        };
+
+        if (isPlayer) {
+          impacts.push({
+            type: 'PROJECT_UPDATED',
+            payload: { projectId: project.id, update }
+          });
+        } else if (rival) {
+          impacts.push({
+            type: 'RIVAL_UPDATED',
+            payload: {
+              rivalId: rival.id,
+              update: { projects: { ...rival.projects, [project.id]: { ...project, ...update } } }
             }
-          }
-        });
+          });
+        }
+
         impacts.push({
           type: 'NEWS_ADDED',
           payload: {
             id: `shopping-${project.id}`,
             headline: `"${project.title}" cancelled — shopping for new home`,
-            description: `The show is now available for pickup by another network.`,
+            description: `The series is now available for pickup by another network.`,
             category: 'cancellation'
           }
         });
@@ -203,6 +264,26 @@ export function tickTelevision(state: GameState, rng: RandomGenerator): StateImp
             : { rivalId: rival?.id, update: { projects: { ...rival?.projects, [project.id]: { ...project, state: 'archived' } } } } as any
         });
       }
+    }
+  });
+
+  // Phase 4: Handle Shopping Expiration
+  const allProjects = [
+    ...Object.values(state.studio.internal.projects),
+    ...state.industry.rivals.flatMap(r => Object.values(r.projects || {}))
+  ];
+
+  allProjects.forEach(p => {
+    if (p.state === 'shopping' && p.shoppingExpiresWeek && state.week >= p.shoppingExpiresWeek) {
+      const isPlayer = !!state.studio.internal.projects[p.id];
+      const rival = state.industry.rivals.find(r => !!(r.projects || {})[p.id]);
+
+      impacts.push({
+        type: isPlayer ? 'PROJECT_UPDATED' : 'RIVAL_UPDATED',
+        payload: isPlayer
+          ? { projectId: p.id, update: { state: 'archived' as const } }
+          : { rivalId: rival?.id, update: { projects: { ...rival?.projects, [p.id]: { ...p, state: 'archived' as const } } } } as any
+      });
     }
   });
 

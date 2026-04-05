@@ -77,7 +77,27 @@ export const GENRE_TAXONOMY: GenreCategory[] = [
       { id: 'reality_competition', name: 'Reality Competition' },
       { id: 'docuseries', name: 'Docuseries' },
       { id: 'talk_show', name: 'Talk Show' },
-      { id: 'variety', name: 'Variety' }
+      { id: 'variety', name: 'Variety' },
+      { id: 'unscripted_standard', name: 'Unscripted' }
+    ]
+  },
+  {
+    id: 'animation',
+    name: 'Animation',
+    subGenres: [
+      { id: 'adult_animation', name: 'Adult Animation' },
+      { id: 'kids_animation', name: 'Kids Animation' },
+      { id: 'anime', name: 'Anime' },
+      { id: 'animation_standard', name: 'Animation' }
+    ]
+  },
+  {
+    id: 'art_house',
+    name: 'Art House',
+    subGenres: [
+      { id: 'experimental', name: 'Experimental' },
+      { id: 'indie_drama', name: 'Indie Drama' },
+      { id: 'art_house_standard', name: 'Art House' }
     ]
   }
 ];
@@ -114,7 +134,7 @@ export const CROSSOVER_AFFINITY: Record<string, string[]> = {
 };
 
 export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
-  'Superhero': 0.95, // 🌌 The Universe Builder: Modern audiences burn out on superheroes much faster.
+  'Superhero': 1.05, // 🌌 The Universe Builder: Modern audiences burn out on superheroes and multiverses much faster.
   'Action': 0.50,
   'Sci-Fi': 0.45,
   'Fantasy': 0.30,
@@ -128,7 +148,7 @@ export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
   'Crime': 0.20,
   'Musical': 0.25,
   'Unscripted': 0.40, // Reality/Unscripted can fatigue quickly if over-saturated
-  'Multiverse': 0.95, // 🌌 The Universe Builder: Extremely high fatigue risk if overdone
+  'Multiverse': 1.15, // 🌌 The Universe Builder: Extremely high fatigue risk if overdone
   'Elevated Horror': 0.20,
   'IP Mashup': 0.85, // 🌌 The Universe Builder: High burnout potential
   'Video Game Adaptation': 0.60,

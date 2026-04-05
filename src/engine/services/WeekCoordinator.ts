@@ -72,19 +72,47 @@ export class WeekCoordinator {
       events: []
     };
 
-    // 1. Run Filters
-    this.runMarketFilter(state, context);
-    this.runProductionFilter(state, context);
-    this.runRatingFilter(state, context);
-    this.runAIFilter(state, context);
-    this.runIndustryFilter(state, context);
-    this.runTalentFilter(state, context);
-    this.runMediaFilter(state, context);
-    this.runScandalFilter(state, context);
-    this.runFinanceFilter(state, context);
+    // 1. Run Filters (Sequential state propagation to prevent baseline races)
+    let currentState = state;
+    let impactPointer = 0;
 
-    // 2. Consolidation & State Application
-    const nextState = applyImpacts(state, context.impacts);
+    const applyNewImpacts = (systemName: string) => {
+        const newImpacts = context.impacts.slice(impactPointer);
+        if (newImpacts.length > 0) {
+            currentState = applyImpacts(currentState, newImpacts);
+            impactPointer = context.impacts.length;
+        }
+    };
+
+    this.runMarketFilter(currentState, context);
+    applyNewImpacts('Market');
+
+    this.runProductionFilter(currentState, context);
+    applyNewImpacts('Production');
+
+    this.runRatingFilter(currentState, context);
+    applyNewImpacts('Rating');
+
+    this.runAIFilter(currentState, context);
+    applyNewImpacts('AI');
+
+    this.runIndustryFilter(currentState, context);
+    applyNewImpacts('Industry');
+
+    this.runTalentFilter(currentState, context);
+    applyNewImpacts('Talent');
+
+    this.runMediaFilter(currentState, context);
+    applyNewImpacts('Media');
+
+    this.runScandalFilter(currentState, context);
+    applyNewImpacts('Scandal');
+
+    this.runFinanceFilter(currentState, context);
+    applyNewImpacts('Finance');
+
+    // 2. Final Consolidation (currentState already has all impacts applied sequentially)
+    const nextState = currentState;
 
     const updatedMarketState = {
       ...nextState.finance.marketState,
@@ -204,10 +232,12 @@ export class WeekCoordinator {
 
   private static runIndustryFilter(state: GameState, context: TickContext) {
     const { year } = InterestRateSimulator.getWeekDisplay(context.week);
-    const awardsImpact = runAwardsCeremony(state, context.week, year, context.rng);
-    context.impacts.push(awardsImpact);
+    const awardsImpacts = runAwardsCeremony(state, context.week, year, context.rng);
+    context.impacts.push(...awardsImpacts);
     
-    if (awardsImpact.newAwards && awardsImpact.newAwards.length > 0) {
+    const allNewAwards = awardsImpacts.reduce((acc, imp) => [...acc, ...(imp.newAwards || [])], [] as any[]);
+    
+    if (allNewAwards.length > 0) {
       context.impacts.push({
         type: 'MODAL_TRIGGERED',
         payload: {
@@ -216,8 +246,8 @@ export class WeekCoordinator {
           payload: { 
             week: context.week,
             year,
-            awards: awardsImpact.newAwards,
-            body: awardsImpact.newAwards[0]?.body || 'Annual Industry Awards'
+            awards: allNewAwards,
+            body: allNewAwards[0]?.body || 'Annual Industry Awards'
           }
         }
       });
@@ -225,11 +255,10 @@ export class WeekCoordinator {
     
     const weekDisplay = context.week % 52 === 0 ? 52 : context.week % 52;
     if (weekDisplay === 4) {
-      const razzieImpact = processRazzies(state, context.week, context.rng);
-      context.impacts.push(razzieImpact);
+      context.impacts.push(...processRazzies(state, context.week, context.rng));
     }
 
-    context.impacts.push(resolveFestivals(state, context.rng));
+    context.impacts.push(...resolveFestivals(state, context.rng));
     context.impacts.push(...RegulatorSystem.tick(state, context.rng));
 
     // Festival market auction at Sundance (w4), Cannes (w20), TIFF (w36)
@@ -311,7 +340,9 @@ export class WeekCoordinator {
   }
 
   private static runFinanceFilter(state: GameState, context: TickContext) {
-    context.impacts.push(...tickFinance(state, context.rng));
+    // Pass context.impacts so the Weekly Report can account for news/awards/festival transactions
+    const financeImpacts = tickFinance(state, context.rng, context.impacts);
+    context.impacts.push(...financeImpacts);
   }
 
   /**

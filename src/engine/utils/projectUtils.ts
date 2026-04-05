@@ -34,17 +34,24 @@ export function getProjectSeasonDisplay(project: Project): string {
  * Calculates a match score (0-100) between a talent and a project.
  * Uses deterministic logic for scoring based on genre, tier, role fit, and power.
  */
-export function calculateTalentFitScore(talent: Talent, project: Project, targetRole?: string): number {
+export function calculateTalentFitScore(talent: Talent, project: Project, targetRole?: string, attachedTalent?: Talent[]): number {
+  // --- PRESTIGE GATE ---
+  // If high/blockbuster budget but talent prestige is < 40, the agent laughs you out of the room.
+  const isHighTier = project.budgetTier === 'high' || project.budgetTier === 'blockbuster';
+  if (isHighTier && (talent.prestige || 0) < 40) {
+    return 0;
+  }
+
   let score = 50; 
 
-  // Genre Alignment
+  // --- GENRE ALIGNMENT ---
   if (talent.preferredGenres?.includes(project.genre)) {
     score += 20;
   } else {
     score -= 10;
   }
 
-  // Tier Alignment
+  // --- TIER ALIGNMENT ---
   const tierMap: Record<BudgetTierKey, number> = { 'low': 1, 'mid': 2, 'high': 3, 'blockbuster': 4 };
   const tierValue = tierMap[project.budgetTier] || 1;
   const talentTier = talent.prestige > 80 ? 4 : talent.prestige > 60 ? 3 : talent.prestige > 30 ? 2 : 1;
@@ -53,8 +60,15 @@ export function calculateTalentFitScore(talent: Talent, project: Project, target
   else if (Math.abs(talentTier - tierValue) === 1) score += 5;
   else score -= 15;
 
+  // --- ANIMATION EXEMPTION ---
+  // Animation projects are more flexible with talent fits but focus on different synergies
+  if (project.format === 'animation' || project.genre === 'Animation') {
+    score += 15; // Baseline boost for "The Animation Loop"
+    if (talent.roles.includes('personality')) score += 10; // Personalities are great for animation
+  }
+
   // Specific Role Buffs
-  if (targetRole && talent.roles.includes(targetRole as any)) {
+  if (targetRole && (talent.roles || []).includes(targetRole as any)) {
     score += 10;
   }
 
@@ -63,8 +77,18 @@ export function calculateTalentFitScore(talent: Talent, project: Project, target
   if (project.budgetTier === 'low' && talent.prestige > 90) score -= 10;
 
   // Synergy Afficinities (Phase 2)
-  if (talent.psychology?.synergyAffinities?.length) {
-     // TODO: Implement synergy scoring if other talent are already attached
+  if (attachedTalent && attachedTalent.length > 0) {
+    const affinities = talent.psychology?.synergyAffinities || [];
+    const conflicts = talent.psychology?.synergyConflicts || [];
+
+    for (const attached of attachedTalent) {
+      if (affinities.includes(attached.id)) {
+        score += 15;
+      }
+      if (conflicts.includes(attached.id)) {
+        score -= 20;
+      }
+    }
   }
 
   return Math.max(0, Math.min(100, score));
@@ -73,9 +97,9 @@ export function calculateTalentFitScore(talent: Talent, project: Project, target
 /**
  * Returns a list of talent with fit scores and recommendation tags.
  */
-export function getRecommendedTalentForProject(talentPool: Talent[], project: Project, targetRole?: string) {
+export function getRecommendedTalentForProject(talentPool: Talent[], project: Project, targetRole?: string, attachedTalent?: Talent[]) {
   return talentPool.map(t => {
-    const score = calculateTalentFitScore(t, project, targetRole);
+    const score = calculateTalentFitScore(t, project, targetRole, attachedTalent);
     const tags: string[] = [];
     
     if (t.preferredGenres?.includes(project.genre)) tags.push("Genre Specialist");
@@ -84,6 +108,21 @@ export function getRecommendedTalentForProject(talentPool: Talent[], project: Pr
     const talentTier = t.prestige > 80 ? 4 : t.prestige > 60 ? 3 : t.prestige > 30 ? 2 : 1;
     if (talentTier === tierValue) tags.push("Perfect Tier Match");
     if (t.draw > 70 && project.budgetTier === 'blockbuster') tags.push("Box Office Draw");
+
+    if (attachedTalent && attachedTalent.length > 0) {
+      const affinities = t.psychology?.synergyAffinities || [];
+      const conflicts = t.psychology?.synergyConflicts || [];
+      let hasAffinity = false;
+      let hasConflict = false;
+
+      for (const attached of attachedTalent) {
+        if (affinities.includes(attached.id)) hasAffinity = true;
+        if (conflicts.includes(attached.id)) hasConflict = true;
+      }
+
+      if (hasAffinity) tags.push("Synergy Match");
+      if (hasConflict) tags.push("Synergy Conflict");
+    }
 
     return {
       talent: t,

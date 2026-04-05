@@ -22,7 +22,7 @@ export const BUDGET_TIERS: Record<BudgetTierKey, BudgetTierData> = {
     developmentWeeks: 6,
     productionWeeks: 8,
     // The Studio Comptroller: Widened top-end revenue further to allow for extreme high-ROI horror/indie breakout anomalies.
-    revenueRange: [1_000, 2_600_000_000], // The Studio Comptroller: Further widened ceiling to 2.6B to allow true Blair Witch anomalies and lowered floor to 1k.
+    revenueRange: [500, 3_000_000_000], // The Studio Comptroller: Lowered floor to 500 and widened ceiling to 3B to allow extreme true Blair Witch anomalies.
   },
   mid: {
     key: 'mid',
@@ -56,10 +56,10 @@ export const BUDGET_TIERS: Record<BudgetTierKey, BudgetTierData> = {
     // The Studio Comptroller: Adjusted blockbuster budget down to $200M to align with realistic scaling, but expanded revenue range to ensure catastrophic bomb risk and massive upside.
     budget: 200_000_000,
     // The Studio Comptroller: Increased base weekly cost from $35M to $45M to exponentially increase cashflow drain on delayed blockbusters.
-    weeklyCost: 120_000_000, // The Studio Comptroller: Unforgiving cashflow drain on delayed blockbusters to prevent snowballing.
+    weeklyCost: 150_000_000, // The Studio Comptroller: Punishing cashflow drain to prevent snowballing on blockbusters.
     developmentWeeks: 16,
     productionWeeks: 24,
     // The Studio Comptroller: Lowered floor to $100k to simulate catastrophic, studio-bankrupting box office bombs. Increased upside to $4.0B
-    revenueRange: [1_000, 6_500_000_000], // The Studio Comptroller: Floor lowered to 1k for apocalyptic bombs, ceiling to 6.5B.
+    revenueRange: [500, 7_500_000_000], // The Studio Comptroller: Floor lowered to 500 for apocalyptic bombs, ceiling to 7.5B for massive upside.
   },
 };

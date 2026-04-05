@@ -37,8 +37,9 @@ export function generateCrisis(project: Project, rng: RandomGenerator): StateImp
  */
 export function checkAndTriggerCrisis(project: Project, state: GameState, rng: RandomGenerator): StateImpact | null {
   const studioProjectsCount = Object.keys(state.studio.internal.projects || {}).length;
-  // Base 3% chance, plus 0.5% for every concurrent project (mega-studios have more moving parts)
-  const baseChance = 0.03 + (studioProjectsCount * 0.005);
+  const contractCount = state.studio.internal.contracts?.length || 0;
+  // Base 3% chance, plus 0.5% for every concurrent project and 0.2% for every contract (mega-studios have more leaks)
+  const baseChance = 0.03 + (studioProjectsCount * 0.005) + (contractCount * 0.002);
 
   if (rng.next() < baseChance) {
     return generateCrisis(project, rng);

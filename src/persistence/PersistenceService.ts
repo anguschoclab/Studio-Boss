@@ -8,7 +8,8 @@
 
 class PersistenceService {
   private worker: Worker | null = null;
-  private pendingResolves: Map<string, (data: any) => void> = new Map();
+  private pendingResolves: Map<string, { resolve: (data: any) => void; slotId: string | number }> = new Map();
+  private lastRequestId = 0;
 
   constructor() {
     this.initWorker();
@@ -16,47 +17,54 @@ class PersistenceService {
 
   private initWorker() {
     if (typeof window !== 'undefined' && 'Worker' in window) {
-      // Vite handles ?worker imports
       this.worker = new Worker(new URL('./saveWorker.ts', import.meta.url), {
         type: 'module',
       });
 
       this.worker.onmessage = (e: MessageEvent) => {
-        const { type, slotId, state, message } = e.data;
+        const { type, slotId, requestId, state, message } = e.data;
 
         if (type === 'SAVE_SUCCESS') {
-          console.log(`[PersistenceService] Save successful: ${slotId}`);
-          this.resolvePromise(`save_${slotId}`, true);
+          console.log(`[PersistenceService] Save successful: ${slotId} (req: ${requestId})`);
+          this.resolvePromise(requestId, true);
         } else if (type === 'LOAD_SUCCESS') {
-          console.log(`[PersistenceService] Load successful: ${slotId}`);
-          this.resolvePromise(`load_${slotId}`, state);
+          console.log(`[PersistenceService] Load successful: ${slotId} (req: ${requestId})`);
+          this.resolvePromise(requestId, state);
         } else if (type === 'ERROR') {
-          console.error(`[PersistenceService] Worker error: ${message}`);
-          this.resolvePromise(`error`, message);
+          console.error(`[PersistenceService] Worker error: ${message} (req: ${requestId})`);
+          this.resolvePromise(requestId, null);
         }
       };
     }
   }
 
-  private resolvePromise(key: string, result: any) {
-    const resolve = this.pendingResolves.get(key);
-    if (resolve) {
-      resolve(result);
-      this.pendingResolves.delete(key);
+  private resolvePromise(requestId: string, result: any) {
+    const entry = this.pendingResolves.get(requestId);
+    if (entry) {
+      entry.resolve(result);
+      this.pendingResolves.delete(requestId);
     }
   }
 
+  private generateRequestId(): string {
+    return `req_${++this.lastRequestId}_${Date.now()}`;
+  }
+
   /**
-   * Save the current game state to a named slot (.sb file).
+   * Save the current game state.
+   * Note: The store should ideally debounce/throttle this.
    */
   async save(slotId: string | number, state: any): Promise<boolean> {
     if (!this.worker) return false;
 
+    const requestId = this.generateRequestId();
+
     return new Promise((resolve) => {
-      this.pendingResolves.set(`save_${slotId}`, resolve);
+      this.pendingResolves.set(requestId, { resolve, slotId });
       this.worker?.postMessage({
         type: 'SAVE_GAME',
         slotId,
+        requestId,
         state
       });
     });
@@ -68,17 +76,20 @@ class PersistenceService {
   async load(slotId: string | number): Promise<any | null> {
     if (!this.worker) return null;
 
+    const requestId = this.generateRequestId();
+
     return new Promise((resolve) => {
-      this.pendingResolves.set(`load_${slotId}`, resolve);
+      this.pendingResolves.set(requestId, { resolve, slotId });
       this.worker?.postMessage({
         type: 'LOAD_GAME',
-        slotId
+        slotId,
+        requestId
       });
     });
   }
 
   /**
-   * Checks if a save slot exists (TBD: OPFS list files)
+   * Checks if a save slot exists.
    */
   async exists(slotId: string | number): Promise<boolean> {
     try {
