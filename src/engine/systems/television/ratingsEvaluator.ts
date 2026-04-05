@@ -14,7 +14,7 @@ export function calculateWeeklyRating(project: SeriesProject, currentBuzz: numbe
   const currentSeason = project.tvDetails?.currentSeason || 1;
   // Harsher initial decay, but more reward for season-over-season quality (review score)
   const qualityRetentionBonus = (project.reviewScore && project.reviewScore > 75) ? (project.reviewScore - 75) * 0.002 : 0;
-  const baseDecayRate = Math.min(0.97, 0.82 + (currentSeason - 1) * 0.02 + qualityRetentionBonus);
+  const baseDecayRate = Math.min(0.97, 0.86 + (currentSeason - 1) * 0.02 + qualityRetentionBonus);
   const decayValue = aired > 1 ? Math.pow(baseDecayRate, aired - 1) : 1;
   
   // Water Cooler Effect: High buzz can counteract decay
