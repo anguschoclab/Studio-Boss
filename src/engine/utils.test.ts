@@ -53,6 +53,6 @@ describe("pick", () => {
 
     expect(pickSpy).toHaveBeenCalledWith(arr);
     expect(pickSpy).toHaveBeenCalledTimes(1);
-    expect(result).toBe(pickSpy.mock.results[0].value);
+    expect(pickSpy).toHaveReturnedWith(result);
   });
 });
