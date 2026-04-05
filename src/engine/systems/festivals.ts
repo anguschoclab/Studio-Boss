@@ -11,7 +11,7 @@ export const FESTIVALS: { body: AwardBody, name: string, weeks: number[], cost: 
 export const FESTIVAL_BY_BODY = FESTIVALS.reduce((acc, f) => {
   acc[f.body] = f;
   return acc;
-}, {} as Record<AwardBody, typeof FESTIVALS[0]>);
+}, {} as Partial<Record<AwardBody, typeof FESTIVALS[0]>>);
 
 /**
  * Weekly Festival Resolver
