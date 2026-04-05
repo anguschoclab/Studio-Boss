@@ -9,8 +9,9 @@ import { createTalentSlice, TalentSlice } from './slices/talentSlice';
 import { createRivalSlice, RivalSlice } from './slices/rivalSlice';
 import { createNewsSlice, NewsSlice } from './slices/newsSlice';
 import { createSnapshotSlice, SnapshotSlice } from './slices/snapshotSlice';
+import { createCampaignSlice, CampaignSlice } from './slices/campaignSlice';
 
-export interface GameStore extends ProjectSlice, FinanceSlice, TalentSlice, RivalSlice, NewsSlice, SnapshotSlice {
+export interface GameStore extends ProjectSlice, FinanceSlice, TalentSlice, RivalSlice, NewsSlice, SnapshotSlice, CampaignSlice {
   gameState: GameState | null;
   _isProcessingTick: boolean;
   _isSaving: boolean;
@@ -56,6 +57,7 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
   ...createRivalSlice(set, get, ...args),
   ...createNewsSlice(set, get, ...args),
   ...createSnapshotSlice(set, get, ...args),
+  ...createCampaignSlice(set, get, ...args),
 
   newGame: async (studioName: string, archetype: ArchetypeKey) => {
     const seed = Math.floor(Math.random() * 1_000_000);
