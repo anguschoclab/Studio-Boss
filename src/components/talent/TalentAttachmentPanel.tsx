@@ -56,7 +56,7 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
       pool,
       project,
       selectedRole === 'ALL' ? undefined : selectedRole,
-      attachedTalent
+      Array.from(attachedTalentIds)
     );
 
     return recommendations.filter(rec => {

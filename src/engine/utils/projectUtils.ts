@@ -34,14 +34,7 @@ export function getProjectSeasonDisplay(project: Project): string {
  * Calculates a match score (0-100) between a talent and a project.
  * Uses deterministic logic for scoring based on genre, tier, role fit, and power.
  */
-export function calculateTalentFitScore(talent: Talent, project: Project, targetRole?: string, attachedTalent?: Talent[]): number {
-  // --- PRESTIGE GATE ---
-  // If high/blockbuster budget but talent prestige is < 40, the agent laughs you out of the room.
-  const isHighTier = project.budgetTier === 'high' || project.budgetTier === 'blockbuster';
-  if (isHighTier && (talent.prestige || 0) < 40) {
-    return 0;
-  }
-
+export function calculateTalentFitScore(talent: Talent, project: Project, targetRole?: string, attachedTalentIds?: string[]): number {
   let score = 50; 
 
   // --- GENRE ALIGNMENT ---
@@ -76,17 +69,20 @@ export function calculateTalentFitScore(talent: Talent, project: Project, target
   if (project.budgetTier === 'blockbuster' && (talent.draw || 0) < 50) score -= 20;
   if (project.budgetTier === 'low' && talent.prestige > 90) score -= 10;
 
-  // Synergy Afficinities (Phase 2)
-  if (attachedTalent && attachedTalent.length > 0) {
-    const affinities = talent.psychology?.synergyAffinities || [];
-    const conflicts = talent.psychology?.synergyConflicts || [];
-
-    for (const attached of attachedTalent) {
-      if (affinities.includes(attached.id)) {
-        score += 15;
+  // Synergy Afficinities & Conflicts (Phase 2)
+  if (attachedTalentIds && attachedTalentIds.length > 0) {
+    if (talent.psychology?.synergyAffinities?.length) {
+      for (const attachedId of attachedTalentIds) {
+        if (talent.psychology.synergyAffinities.includes(attachedId)) {
+          score += 15;
+        }
       }
-      if (conflicts.includes(attached.id)) {
-        score -= 20;
+    }
+    if (talent.psychology?.synergyConflicts?.length) {
+      for (const attachedId of attachedTalentIds) {
+        if (talent.psychology.synergyConflicts.includes(attachedId)) {
+          score -= 15;
+        }
       }
     }
   }
@@ -97,9 +93,9 @@ export function calculateTalentFitScore(talent: Talent, project: Project, target
 /**
  * Returns a list of talent with fit scores and recommendation tags.
  */
-export function getRecommendedTalentForProject(talentPool: Talent[], project: Project, targetRole?: string, attachedTalent?: Talent[]) {
+export function getRecommendedTalentForProject(talentPool: Talent[], project: Project, targetRole?: string, attachedTalentIds?: string[]) {
   return talentPool.map(t => {
-    const score = calculateTalentFitScore(t, project, targetRole, attachedTalent);
+    const score = calculateTalentFitScore(t, project, targetRole, attachedTalentIds);
     const tags: string[] = [];
     
     if (t.preferredGenres?.includes(project.genre)) tags.push("Genre Specialist");
