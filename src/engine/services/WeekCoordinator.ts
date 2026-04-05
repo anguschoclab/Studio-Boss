@@ -1,4 +1,4 @@
-import { GameState, StateImpact, WeekSummary, GameEvent } from '../types';
+import { GameState, StateImpact, WeekSummary, GameEvent, RatingMarket } from '../types';
 import { RandomGenerator } from '../utils/rng';
 import { applyImpacts } from '../core/impactReducer';
 import { RegulatorSystem } from '../systems/industry/RegulatorSystem';
@@ -211,10 +211,10 @@ export class WeekCoordinator {
 
       // 5. Scan released projects for newly banned markets
       if (project.regionalRatings && (project.state === 'released' || project.state === 'post_release')) {
-        const bannedMarkets: string[] = [];
+        const bannedMarkets: RatingMarket[] = [];
         for (let i = 0; i < project.regionalRatings.length; i++) {
           if (project.regionalRatings[i].isBanned) {
-            bannedMarkets.push(project.regionalRatings[i].market);
+            bannedMarkets.push(project.regionalRatings[i].market as RatingMarket);
           }
         }
         if (bannedMarkets.length > 0) {

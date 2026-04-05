@@ -34,7 +34,7 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
 
   // Filters
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedTier, setSelectedTier] = useState<TalentTier | 'ALL'>('ALL');
+  const [selectedTier, setSelectedTier] = useState<string>('ALL');
   const [selectedRole, setSelectedRole] = useState<TalentRole | 'ALL'>('ALL');
   const [showMatchesOnly, setShowMatchesOnly] = useState(false);
   const [hoveredTalentId, setHoveredTalentId] = useState<string | null>(null);
@@ -62,7 +62,7 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
     return recommendations.filter(rec => {
       const t = rec.talent;
       const matchesSearch = t.name.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesTier = selectedTier === 'ALL' || t.tier === selectedTier;
+      const matchesTier = selectedTier === 'ALL' || t.tier.toString() === selectedTier;
       const matchesRole = selectedRole === 'ALL' || t.roles.includes(selectedRole);
       const matchesScore = !showMatchesOnly || rec.score >= 70;
 
@@ -115,16 +115,16 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
             </div>
 
             <div className="flex gap-2">
-              <Select value={selectedTier} onValueChange={(v: any) => setSelectedTier(v)}>
+              <Select value={selectedTier} onValueChange={(v: string) => setSelectedTier(v)}>
                 <SelectTrigger className="flex-1 bg-slate-900 border-slate-700 h-9 text-[10px] font-bold uppercase">
                   <SelectValue placeholder="Tier" />
                 </SelectTrigger>
                 <SelectContent className="bg-slate-950 border-slate-800">
                   <SelectItem value="ALL">All Tiers</SelectItem>
-                  <SelectItem value="S_LIST">S-List</SelectItem>
-                  <SelectItem value="A_LIST">A-List</SelectItem>
-                  <SelectItem value="B_LIST">B-List</SelectItem>
-                  <SelectItem value="C_LIST">C-List</SelectItem>
+                  <SelectItem value="4">S-List</SelectItem>
+                  <SelectItem value="3">A-List</SelectItem>
+                  <SelectItem value="2">B-List</SelectItem>
+                  <SelectItem value="1">C-List</SelectItem>
                 </SelectContent>
               </Select>
 
@@ -167,7 +167,7 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                        <span className="font-bold text-sm text-white truncate">{t.name}</span>
-                       <Badge variant="outline" className="text-[8px] h-4 px-1 border-slate-700 text-slate-400">{t.tier.replace('_', '-')}</Badge>
+                       <Badge variant="outline" className="text-[8px] h-4 px-1 border-slate-700 text-slate-400">Tier {t.tier}</Badge>
                     </div>
                     <div className="flex items-center gap-2 mt-0.5">
                       {tags.map(tag => (

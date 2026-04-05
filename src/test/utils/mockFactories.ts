@@ -65,6 +65,10 @@ export const createMockProject = (overrides: Partial<Project> = {}): Project => 
     momentum: 50,
     progress: 0,
     accumulatedCost: 0,
+    // Scripted defaults (will be overwritten by overrides if present)
+    scriptHeat: 50,
+    activeRoles: [],
+    scriptEvents: [],
     ...overrides
   };
 
@@ -83,12 +87,7 @@ export const createMockProject = (overrides: Partial<Project> = {}): Project => 
     } as Project;
   }
 
-  return {
-    ...base,
-    scriptHeat: 50,
-    activeRoles: [],
-    scriptEvents: []
-  } as Project;
+  return base as Project;
 };
 
 export const createMockGameState = (overrides: Partial<GameState> = {}): GameState => ({

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+// @ts-ignore - Virtual module provided by vite-plugin-pwa
 import { useRegisterSW } from 'virtual:pwa-register/react';
 import { Button } from '@/components/ui/button';
 import { Download, RefreshCw, X } from 'lucide-react';
@@ -25,10 +26,10 @@ export function InstallPrompt() {
     needRefresh: [needRefresh],
     updateServiceWorker,
   } = useRegisterSW({
-    onRegistered(r) {
+    onRegistered(r: ServiceWorkerRegistration | undefined) {
       if (r) console.log('[PWA] Service worker registered:', r.scope);
     },
-    onRegisterError(e) {
+    onRegisterError(e: any) {
       console.warn('[PWA] Service worker registration failed:', e);
     },
   });

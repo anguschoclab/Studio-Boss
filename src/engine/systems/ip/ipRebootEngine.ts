@@ -13,7 +13,7 @@ export function applyRebootNostalgia(project: Project, sourceAsset: IPAsset): Pr
   // 🌌 The Universe Builder: Cynical IP Retention. If a studio reboots a legacy IP
   // with a low-budget tier just to retain rights, the market punishes it severely.
   let reviewPenalty = 0;
-  if (project.budgetTier === 'low' || project.budgetTier === 'micro') {
+  if (project.budgetTier === 'low') {
     nostalgiaBonus = -25;
     reviewPenalty = 15;
   }

@@ -1,36 +1,16 @@
 import { describe, it, expect, vi } from "vitest";
 import { advanceProject, handleReleasePhaseEntry } from "../../../engine/systems/projects";
 import { Project, Talent, Contract } from "../../../engine/types";
-import * as utils from "../../../engine/utils";
 import { RandomGenerator } from "../../../engine/utils/rng";
+import { createMockProject, createMockTalent, createMockContract } from "../../utils/mockFactories";
 
-const mockProject: Project = {
+const mockProject = createMockProject({
   id: "proj-1",
   title: "Test Project",
-  type: "FILM",
-  budgetTier: "low",
-  budget: 500000,
-  genre: "Comedy",
   state: "development",
   developmentWeeks: 2,
   productionWeeks: 2,
-  weeksInPhase: 0,
-  format: "film",
-  targetAudience: "General",
-  flavor: "Quirky",
-  releaseWeek: null,
-  weeklyCost: 10000,
-  buzz: 50,
-  revenue: 0,
-  weeklyRevenue: 0,
-  momentum: 50,
-  progress: 0,
-  accumulatedCost: 0,
-  activeCrisis: null,
-  scriptHeat: 50,
-  activeRoles: [],
-  scriptEvents: []
-} as import('../../../engine/types').Project;
+});
 
 describe("advanceProject", () => {
   const rng = new RandomGenerator(42);
@@ -90,16 +70,12 @@ describe("advanceProject", () => {
 
   it("drifts buzz with talent buzz bonus during dev", () => {
     const project = { ...mockProject, buzz: 50 };
-    const mockTalent: Talent = {
-      id: "t1", name: "Star", roles: ["actor"], prestige: 100, fee: 1000000, draw: 100, personality: "Pro", accessLevel: "legacy",
-    } as any;
+    const mockTalent = createMockTalent({ id: "t1", name: "Star", role: "actor", roles: ["actor"], prestige: 100 });
     const pool = new Map([["t1", mockTalent]]);
-    const contracts: Contract[] = [{ id: "c1", projectId: "proj-1", talentId: "t1", fee: 100000, backendPercent: 0 }];
+    const contracts = [createMockContract({ id: "c1", projectId: "proj-1", talentId: "t1", role: "actor" })];
     
     const { project: p } = advanceProject(project, 1, 50, contracts, pool, rng);
     
-    // With rng, we don't need to spy on old utils.
-    // Base buzz = 50. Draw = 100 => bonus approx +2 depending on rng.
     expect(p.buzz).toBeGreaterThanOrEqual(50);
   });
 

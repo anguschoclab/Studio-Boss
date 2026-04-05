@@ -1,5 +1,5 @@
-import { RevenueProcessor } from '../engine/systems/finance/RevenueProcessor';
-import { GameState, Project, Contract, Talent } from '../engine/types';
+import { RevenueProcessor } from '../systems/finance/RevenueProcessor';
+import { GameState, Project, Contract, Talent } from '../types';
 
 /**
  * Economic Audit Script: Verifies that player-contracted talent on rival projects

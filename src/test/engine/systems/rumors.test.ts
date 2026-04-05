@@ -1,46 +1,15 @@
 import { describe, it, expect, vi } from 'vitest';
 import { advanceRumors } from '../../../engine/systems/rumors';
-import { GameState, Rumor, Talent } from '../../../engine/types';
+import { Rumor } from '../../../engine/types';
 import { RandomGenerator } from '../../../engine/utils/rng';
+import { createMockGameState, createMockTalent } from '../../utils/mockFactories';
 
 describe('advanceRumors', () => {
   const rng = new RandomGenerator(111);
 
-  const baseState: GameState = {
-    week: 10,
-    gameSeed: 1,
-    tickCount: 0,
-    projects: { active: [] },
-    game: { currentWeek: 10 },
-    finance: { cash: 1000, ledger: [] },
-    news: { headlines: [] },
-    ip: { vault: [], franchises: {} },
-    studio: {
-      name: 'Test Studio',
-      archetype: 'major',
-      prestige: 50,
-      internal: { projects: {}, contracts: [] }
-    },
-    market: { opportunities: [], buyers: [] },
-    industry: {
-      rivals: [],
-      families: [],
-      agencies: [],
-      agents: [],
-      talentPool: {} as Record<string, Talent>,
-      newsHistory: [],
-      rumors: []
-    },
-    culture: { genrePopularity: {} },
-    history: [],
-    eventHistory: []
-  } as unknown as GameState;
-
   it('handles missing rumors array gracefully', () => {
-    const stateWithoutRumors = {
-      ...baseState,
-      industry: { ...baseState.industry, rumors: undefined }
-    } as unknown as GameState;
+    const stateWithoutRumors = createMockGameState();
+    stateWithoutRumors.industry.rumors = undefined as any;
 
     const unluckyRng = new RandomGenerator(99); 
     vi.spyOn(unluckyRng, 'next').mockReturnValue(0.99); // 0.99 > 0.05
@@ -61,10 +30,9 @@ describe('advanceRumors', () => {
       resolutionWeek: 10
     };
 
-    const stateWithRumor = {
-      ...baseState,
-      industry: { ...baseState.industry, rumors: [rumor] }
-    } as unknown as GameState;
+    const stateWithRumor = createMockGameState();
+    stateWithRumor.week = 10;
+    stateWithRumor.industry.rumors = [rumor];
 
     const impact = advanceRumors(stateWithRumor, rng);
 
@@ -83,10 +51,9 @@ describe('advanceRumors', () => {
       resolutionWeek: 10
     };
 
-    const stateWithRumor = {
-      ...baseState,
-      industry: { ...baseState.industry, rumors: [rumor] }
-    } as unknown as GameState;
+    const stateWithRumor = createMockGameState();
+    stateWithRumor.week = 10;
+    stateWithRumor.industry.rumors = [rumor];
 
     const impact = advanceRumors(stateWithRumor, rng);
 
@@ -95,25 +62,10 @@ describe('advanceRumors', () => {
   });
 
   it('generates new rumors when random conditions are met', () => {
-    const talent: Talent = {
-      id: 't1',
-      name: 'Star Actor',
-      role: 'actor',
-      roles: ['actor'],
-      tier: 'A_LIST',
-      prestige: 50,
-      fee: 1_000_000,
-      draw: 50,
-      accessLevel: 'outsider',
-      momentum: 50,
-      demographics: { age: 30, gender: 'MALE', ethnicity: 'White', country: 'USA' },
-      psychology: { ego: 50, mood: 100, scandalRisk: 0, synergyAffinities: [], synergyConflicts: [] }
-    } as Talent;
-
-    const stateWithTalent = {
-      ...baseState,
-      industry: { ...baseState.industry, talentPool: { [talent.id]: talent } }
-    } as unknown as GameState;
+    const talent = createMockTalent({ id: 't1', name: 'Star Actor' });
+    const stateWithTalent = createMockGameState();
+    stateWithTalent.week = 10;
+    stateWithTalent.industry.talentPool = { [talent.id]: talent };
 
     // Use a seed that triggers a rumor
     const luckyRng = new RandomGenerator(8); 
