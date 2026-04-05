@@ -95,7 +95,7 @@ export class WeekCoordinator {
       ...nextState,
       week: context.week,
       tickCount: context.tickCount,
-      eventHistory: [...(state.eventHistory || []), ...context.events].slice(-52),
+      eventHistory: context.events.length > 0 ? [...(state.eventHistory || []), ...context.events].slice(-52) : (state.eventHistory || []),
       finance: {
         ...nextState.finance,
         marketState: updatedMarketState as import('../types/state.types').MarketState
@@ -139,6 +139,8 @@ export class WeekCoordinator {
 
     for (const key in state.studio.internal.projects) {
       const project = state.studio.internal.projects[key];
+
+      // 1. Script drafting and crisis triggering
       if (project.state === 'development') {
         const result = tickScriptDevelopment(project, context.rng);
         if (result.project !== project) {
@@ -153,7 +155,7 @@ export class WeekCoordinator {
         if (impact) context.impacts.push(impact);
       }
 
-      // Check director's cut eligibility for post-theatrical projects
+      // 2. Director's cut eligibility
       if ((project.state === 'post_release' || project.state === 'released') && !project.directorsCutNotified) {
         const { eligible } = checkDirectorsCutEligibility(project, context.week);
         if (eligible) {
@@ -173,7 +175,7 @@ export class WeekCoordinator {
         }
       }
 
-      // Auto-evaluate rating for projects with flags but no rating yet
+      // 3. Auto-evaluate rating for projects with flags but no rating yet
       if (project.contentFlags?.length && !project.rating) {
         const newRating = evaluateRatingForProject(project.contentFlags, project.type);
         const newRegional = evaluateRegionalRatings(project.contentFlags, newRating);
@@ -183,18 +185,7 @@ export class WeekCoordinator {
         });
       }
 
-      // Scan released projects for newly banned markets and generate one-time headlines
-      if (project.regionalRatings && (project.state === 'released' || project.state === 'post_release')) {
-        const bannedMarkets = project.regionalRatings
-          .filter(r => r.isBanned)
-          .map(r => r.market);
-        if (bannedMarkets.length > 0) {
-          const banImpact = generateMarketBanScandal(project, bannedMarkets, context.week, state, context.rng);
-          if (banImpact) context.impacts.push(banImpact);
-        }
-      }
-
-      // Clears 'shopping' status for projects whose window has expired.
+      // 4. Shopping expiry
       if (
         project.state === 'shopping' &&
         project.shoppingExpiresWeek !== undefined &&
@@ -217,8 +208,21 @@ export class WeekCoordinator {
           }
         });
       }
+
+      // 5. Scan released projects for newly banned markets
+      if (project.regionalRatings && (project.state === 'released' || project.state === 'post_release')) {
+        const bannedMarkets: string[] = [];
+        for (let i = 0; i < project.regionalRatings.length; i++) {
+          if (project.regionalRatings[i].isBanned) {
+            bannedMarkets.push(project.regionalRatings[i].market);
+          }
+        }
+        if (bannedMarkets.length > 0) {
+          const banImpact = generateMarketBanScandal(project, bannedMarkets, context.week, state, context.rng);
+          if (banImpact) context.impacts.push(banImpact);
+        }
+      }
     }
-    // ⚡ Bolt: Consolidated multiple sequential O(n) iterations over projects into a single pass.
 
     context.impacts.push(...tickTelevision(state, context.rng));
     context.impacts.push(...calculateFranchiseEvolutionImpacts(state, context.rng));
@@ -279,7 +283,9 @@ export class WeekCoordinator {
     if (weekOfYear === 52) {
       this.runAnnualMAScan(state, context);
     }
-  }
+
+    // Shopping status expiry
+    }
 
   private static runTalentFilter(state: GameState, context: TickContext) {
     context.impacts.push(TalentSystem.advance(state, context.rng));
@@ -309,41 +315,7 @@ export class WeekCoordinator {
     context.impacts.push(...generateScandals(state, context.rng));
     context.impacts.push(...advanceScandals(state));
 
-    // Scan released projects for newly banned markets and generate one-time headlines
-    for (const key in state.studio.internal.projects) {
-      const project = state.studio.internal.projects[key];
-      if (project.regionalRatings && (project.state === 'released' || project.state === 'post_release')) {
-        // ⚡ Bolt: Refactored array .filter().map() chain to a simple for loop to reduce allocation overhead
-        let bannedMarkets: string[] | undefined;
-        const rr = project.regionalRatings;
-        for (let j = 0; j < rr.length; j++) {
-          const r = rr[j];
-          if (r.isBanned) {
-            if (!bannedMarkets) bannedMarkets = [];
-            bannedMarkets.push(r.market);
-          }
-        }
-        if (bannedMarkets) {
-          const banImpact = generateMarketBanScandal(project, bannedMarkets, context.week, state, context.rng);
-          if (banImpact) context.impacts.push(banImpact);
-        }
-      }
-    }
-  }
 
-  private static runRatingFilter(state: GameState, context: TickContext) {
-    for (const key in state.studio.internal.projects) {
-      const project = state.studio.internal.projects[key];
-      // Auto-evaluate rating for projects with flags but no rating yet
-      if (project.contentFlags?.length && !project.rating) {
-        const newRating = evaluateRatingForProject(project.contentFlags, project.type);
-        const newRegional = evaluateRegionalRatings(project.contentFlags, newRating);
-        context.impacts.push({
-          type: 'PROJECT_UPDATED',
-          payload: { projectId: project.id, update: { rating: newRating, regionalRatings: newRegional } }
-        });
-      }
-    }
   }
 
   private static runFinanceFilter(state: GameState, context: TickContext) {
@@ -396,6 +368,9 @@ export class WeekCoordinator {
     }
   }
 
+  /**
+   * Clears 'shopping' status for projects whose window has expired.
+   */
   private static buildSummary(before: GameState, after: GameState, context: TickContext): WeekSummary {
     const allHeadlines: import('../types/engine.types').Headline[] = [];
     const newsEvents: import('../types/engine.types').NewsEvent[] = [];
