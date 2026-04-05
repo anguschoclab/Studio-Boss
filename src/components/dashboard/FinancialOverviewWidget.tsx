@@ -75,7 +75,7 @@ export const FinancialOverviewWidget: React.FC = () => {
                   dataKey="week" 
                   axisLine={false} 
                   tickLine={false} 
-                  tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11, fontWeight: 800, textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}
+                  tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11, fontWeight: 800 }}
                   dy={12}
                 />
                 <YAxis hide domain={['auto', 'auto']} />

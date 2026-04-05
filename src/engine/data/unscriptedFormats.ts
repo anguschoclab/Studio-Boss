@@ -1575,5 +1575,18 @@ export const UNSCRIPTED_FORMATS: Record<UnscriptedFormatKey, UnscriptedFormatDat
     renewable: true,
     revenueDecayBinge: 0.4,
     revenueDecayWeekly: 0.95,
+  },
+  talk_show: {
+    key: 'talk_show',
+    name: 'Daytime / Late Night Talk',
+    defaultEpisodes: 50,
+    minEpisodes: 20,
+    maxEpisodes: 100,
+    productionCostMultiplier: 0.15,
+    developmentWeeksModifier: 0.2,
+    productionWeeksPerEpisode: 0.1,
+    renewable: true,
+    revenueDecayBinge: 0.2,
+    revenueDecayWeekly: 0.98,
   }
 };

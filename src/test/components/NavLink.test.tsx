@@ -39,7 +39,7 @@ const renderWithRouter = async (ui: React.ReactElement) => {
 describe('NavLink', () => {
   it('renders correctly and passes activeProps', async () => {
     await renderWithRouter(
-      <NavLink to="/test" className="base-class" activeClassName="active-class">
+      <NavLink to={"/test" as any} className="base-class" activeClassName="active-class">
         Test Link
       </NavLink>
     );
@@ -54,7 +54,7 @@ describe('NavLink', () => {
     const ref = React.createRef<HTMLAnchorElement>();
 
     await renderWithRouter(
-      <NavLink ref={ref} to="/test" className="base-class">
+      <NavLink ref={ref} to={"/test" as any} className="base-class">
         Test Link
       </NavLink>
     );

@@ -239,8 +239,10 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
       internal: {
         projects: {},
         contracts: [],
+        projectHistory: [],
       },
-      ownedPlatforms: playerOwnedPlatforms
+      ownedPlatforms: playerOwnedPlatforms,
+      snapshotHistory: []
     },
     market: {
       opportunities: Array.from({ length: 4 }, () => generateOpportunity(rng, 1, Object.keys(talentPool))),

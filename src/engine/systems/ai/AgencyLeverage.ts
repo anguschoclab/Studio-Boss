@@ -41,11 +41,11 @@ export class AgencyLeverageEngine {
       explanation.push('High project buzz increases talent bargaining power.');
     }
     switch (talent.tier) {
-      case 'A_LIST': talentEffect += 0.4; explanation.push('A-List status provides maximum leverage.'); break;
-      case 'B_LIST': talentEffect += 0.2; explanation.push('B-List status provides solid bargaining ground.'); break;
-      case 'RISING_STAR': talentEffect += 0.15; explanation.push('Rising star momentum increases leverage.'); break;
-      case 'C_LIST': talentEffect -= 0.1; explanation.push('C-List status limits negotiation power.'); break;
-      case 'NEWCOMER': talentEffect -= 0.3; explanation.push('Newcomers have minimal standing.'); break;
+      case 1: talentEffect += 0.4; explanation.push('A-List status provides maximum leverage.'); break;
+      case 2: talentEffect += 0.2; explanation.push('B-List status provides solid bargaining ground.'); break;
+      case 3: talentEffect += 0.15; explanation.push('Rising star momentum increases leverage.'); break;
+      case 4: talentEffect -= 0.1; explanation.push('C-List status limits negotiation power.'); break;
+      default: talentEffect -= 0.3; explanation.push('Newcomers have minimal standing.'); break;
     }
 
     // 2. Market Cycle Effect

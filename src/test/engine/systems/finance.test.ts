@@ -8,16 +8,16 @@ import { tickFinance } from "../../../engine/systems/finance/financeTick";
 import { Project, GameState } from "../../../engine/types";
 import { RandomGenerator } from "../../../engine/utils/rng";
 
-const mockProjectDev: import('../../../engine/types').Project = {
-  id: "proj-1", title: "Test Dev", budgetTier: "low", budget: 500000, genre: "Comedy",
-  state: "development", developmentWeeks: 2, productionWeeks: 2, weeksInPhase: 0,
-  revenue: 0, weeklyRevenue: 0, weeklyCost: 10000, buzz: 50, format: "film", targetAudience: "general", flavor: "indie", releaseWeek: 0,
-  momentum: 50, progress: 0, accumulatedCost: 0, activeCrisis: null,
-  type: 'FILM', scriptHeat: 50, activeRoles: [], scriptEvents: []
-} as import('../../../engine/types').FilmProject;
+import { createMockGameState, createMockProject } from "../../utils/mockFactories";
 
-const mockProjectProd: import('../../../engine/types').Project = { ...mockProjectDev, id: "proj-2", state: "production", weeklyCost: 20000 } as any;
-const mockProjectReleased: import('../../../engine/types').Project = { ...mockProjectDev, id: "proj-3", state: "released", weeklyCost: 0, weeklyRevenue: 100000 } as any;
+const mockProjectDev = createMockProject({
+  id: "proj-1", title: "Test Dev", budgetTier: "low", budget: 500000, 
+  state: "development", developmentWeeks: 2, productionWeeks: 2, 
+  weeklyCost: 10000, buzz: 50
+});
+
+const mockProjectProd = createMockProject({ ...mockProjectDev, id: "proj-2", state: "production", weeklyCost: 20000 });
+const mockProjectReleased = createMockProject({ ...mockProjectDev, id: "proj-3", state: "released", weeklyCost: 0, weeklyRevenue: 100000 });
 
 describe("Finance System", () => {
   describe("calculateProjectROI", () => {
@@ -28,21 +28,20 @@ describe("Finance System", () => {
   });
 
   describe("calculateStudioNetWorth", () => {
-    const mockState: GameState = {
-      week: 1,
-      finance: { cash: 500000, ledger: [] },
+    const mockState = createMockGameState({
+      finance: { 
+        cash: 500000, 
+        ledger: [], 
+        weeklyHistory: [],
+        marketState: { baseRate: 0.05, savingsYield: 0.02, debtRate: 0.1, loanRate: 0.08, rateHistory: [], sentiment: 50, cycle: 'STABLE' }
+      },
       studio: {
         name: "Test",
         archetype: "indie",
         prestige: 50,
-        internal: { projects: {}, contracts: [] }
-      },
-      market: { opportunities: [], buyers: [] },
-      industry: { rivals: [], headlines: [], talentPool: {} },
-      ip: { vault: [], franchises: {} }
-,
-
-    } as unknown as GameState;
+        internal: { projects: {}, contracts: [], projectHistory: [] }
+      } as any
+    });
 
     it("returns cash when there are no projects with catalog value", () => {
       expect(calculateStudioNetWorth(mockState)).toBe(500000);
@@ -56,9 +55,13 @@ describe("Finance System", () => {
   });
 
   describe("generateWeeklyFinancialReport", () => {
-    const mockState: GameState = {
-      week: 1,
-      finance: { cash: 1000000, ledger: [] },
+    const mockState = createMockGameState({
+      finance: { 
+        cash: 1000000, 
+        ledger: [], 
+        weeklyHistory: [],
+        marketState: { baseRate: 0.05, savingsYield: 0.02, debtRate: 0.1, loanRate: 0.08, rateHistory: [], sentiment: 50, cycle: 'STABLE' }
+      },
       studio: {
         name: "Test",
         archetype: "major",
@@ -69,15 +72,11 @@ describe("Finance System", () => {
              'prod': mockProjectProd,
              'rel': mockProjectReleased
           },
-          contracts: []
+          contracts: [],
+          projectHistory: []
         }
-      },
-      market: { opportunities: [], buyers: [], activeMarketEvents: [] },
-      industry: { rivals: [], headlines: [], talentPool: {}, newsHistory: [] },
-      ip: { vault: [], franchises: {} }
-
-
-    } as unknown as GameState;
+      } as any
+    });
 
     it("properly calculates burns, overhead, and box office", () => {
         const releasedWithDist = {
@@ -122,13 +121,11 @@ describe("Finance System", () => {
   });
 
   describe("tickFinance", () => {
-      const mockState: GameState = {
-        week: 1,
-        gameSeed: 1,
-        tickCount: 0,
+      const mockState = createMockGameState({
         finance: { 
           cash: 1000000, 
-          ledger: [],
+          ledger: [], 
+          weeklyHistory: [],
           marketState: {
             baseRate: 0.05,
             savingsYield: 0.02,
@@ -148,14 +145,11 @@ describe("Finance System", () => {
                'prod': mockProjectProd,
                'rel': mockProjectReleased
             },
-            contracts: []
+            contracts: [],
+            projectHistory: []
           }
-        },
-        market: { opportunities: [], buyers: [], trends: [] },
-        industry: { rivals: [], newsHistory: [], talentPool: {}, awards: [] },
-        ip: { vault: [], franchises: {} },
-        culture: { genrePopularity: {} }
-      } as unknown as GameState;
+        } as any
+      });
   
       it("returns StateImpact for funds change", () => {
          const rng = new RandomGenerator(12345);
@@ -198,22 +192,20 @@ describe("Finance System", () => {
 
 describe('Finance Edge Cases', () => {
     it('handles an empty project pipeline without crashing (Guild Auditor)', () => {
-      const state = {
-          week: 1,
-          gameSeed: 1,
-          tickCount: 0,
-          game: { currentWeek: 1 },
-          news: { headlines: [] },
-          history: [],
-          eventHistory: [],
-          culture: { genrePopularity: {} },
-          projects: { active: [] },
-          studio: { name: 'indie studio', internal: { projects: {}, contracts: [], firstLookDeals: [] }, archetype: 'indie', prestige: 50 },
-          finance: { cash: 1000000, ledger: [] },
-          ip: { vault: [], franchises: {} },
-          market: { buyers: [], opportunities: [], activeMarketEvents: [] },
-          industry: { talentPool: {}, rivals: [], families: [], agencies: [], agents: [], newsHistory: [], rumors: [] }
-      } as GameState;
+      const state = createMockGameState({
+          studio: { 
+            name: 'indie studio', 
+            internal: { projects: {}, contracts: [], projectHistory: [] }, 
+            archetype: 'indie', 
+            prestige: 50 
+          } as any,
+          finance: { 
+            cash: 1000000, 
+            ledger: [], 
+            weeklyHistory: [],
+            marketState: { baseRate: 0.05, savingsYield: 0.02, debtRate: 0.1, loanRate: 0.08, rateHistory: [], sentiment: 50, cycle: 'STABLE' }
+          }
+      });
 
       const { report, snapshot } = generateWeeklyFinancialReport(
         state,

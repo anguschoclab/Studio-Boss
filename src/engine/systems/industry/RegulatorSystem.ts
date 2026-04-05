@@ -100,4 +100,22 @@ export class RegulatorSystem {
 
     return { blocked: false };
   }
+
+  /**
+   * Calculate market share for a specific studio.
+   */
+  static getMarketShare(state: GameState, studioId: string): number {
+    const calculateTrailingRevenue = (history: any[]) => {
+      return (history || []).slice(0, 4).reduce((sum, h) => sum + (h.revenue?.theatrical || 0) + (h.revenue?.streaming || 0), 0);
+    };
+
+    const studios = [
+      { id: 'player', revenue: calculateTrailingRevenue(state.finance.weeklyHistory) },
+      ...state.industry.rivals.map(r => ({ id: r.id, revenue: calculateTrailingRevenue(r.weeklyHistory || []) }))
+    ];
+
+    const totalIndustryRevenue = studios.reduce((sum, s) => sum + s.revenue, 1);
+    const target = studios.find(s => s.id === studioId);
+    return (target?.revenue || 0) / totalIndustryRevenue;
+  }
 }

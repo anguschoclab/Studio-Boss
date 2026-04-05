@@ -193,3 +193,56 @@ export const createMockOpportunity = (overrides: Partial<Opportunity> = {}): Opp
   bidHistory: [],
   ...overrides
 });
+
+export const createMockRival = (overrides: Partial<RivalStudio> = {}): RivalStudio => ({
+  id: 'mock-rival',
+  name: 'Mock Rival',
+  motto: 'Mock Motto',
+  archetype: 'major',
+  strength: 50,
+  cash: 100000000,
+  prestige: 50,
+  foundedWeek: 1,
+  recentActivity: 'None',
+  projectCount: 0,
+  strategy: 'acquirer',
+  projects: {},
+  contracts: [],
+  motivationProfile: { financial: 50, prestige: 50, legacy: 50, aggression: 50 },
+  currentMotivation: 'STABILITY',
+  ...overrides
+});
+
+export const createMockBuyer = (overrides: Partial<Buyer> = {}): Buyer => {
+  const archetype = overrides.archetype || 'streamer';
+  const base: any = {
+    id: 'mock-buyer',
+    name: 'Mock Buyer',
+    archetype,
+    foundedWeek: 1,
+    marketShare: 0.1,
+    reach: 50,
+    ...overrides
+  };
+
+  if (archetype === 'streamer') {
+    return {
+      ...base,
+      subscribers: 1000000,
+      churnRate: 0.05,
+      contentLibraryQuality: 50,
+      marketingSpend: 10000,
+      subscriberHistory: [],
+      activeLicenses: []
+    } as Buyer;
+  }
+
+  if (archetype === 'premium') {
+    return {
+      ...base,
+      prestigeBonus: 20
+    } as Buyer;
+  }
+
+  return base as Buyer;
+};
