@@ -11,10 +11,10 @@ const TALENT_QUIRKS = [
 ];
 
 export function generateTalent(rng: RandomGenerator, params: { role: TalentRole; tier: TalentTier; localCountry?: string }): Talent {
-  const isGlobalSuperstar = params.tier === 'A_LIST' || params.tier === 'S_LIST';
+  const isGlobalSuperstar = params.tier === 1;
   
   const demographics = generateDemographics(rng, isGlobalSuperstar, params.localCountry);
-  const psychology = generatePsychology(rng, params.tier);
+  const psychology = generatePsychology(rng, params.tier === 1 ? 'S_LIST' : params.tier === 2 ? 'A_LIST' : 'B_LIST'); // Mapping for legacy compat until psychology is updated
   const name = generateDemographicName(demographics.gender, demographics.country, demographics.ethnicity, rng);
 
   const isNepo = rng.next() < 0.1;
@@ -60,7 +60,7 @@ export function generateTalent(rng: RandomGenerator, params: { role: TalentRole;
     fee,
     momentum: rng.rangeInt(40, 60),
     starMeter: Math.floor((prestige * 0.4) + (draw * 0.4) + (prestige * 0.2)),
-    bio: `${name} is a ${params.tier} ${params.role}.`,
+    bio: `${name} is a Tier ${params.tier} ${params.role}.`,
     motivationProfile: {
         financial: rng.rangeInt(20, 80),
         prestige: rng.rangeInt(20, 80),
@@ -93,25 +93,36 @@ export function generateTalentPool(
   count: number, 
   localCountry?: string
 ): Talent[] {
-    const roles: TalentRole[] = ['actor', 'director', 'writer', 'producer'];
-    const tiers: TalentTier[] = ['S_LIST', 'A_LIST', 'B_LIST', 'C_LIST', 'RISING_STAR', 'NEWCOMER'];
+    const talent: Talent[] = [];
+
+    // TDD Distribution:
+    // 275 Actors (55%)
+    // 75 Directors (15%)
+    // 60 Writers (12%)
+    // 40 Producers (8%)
+    // 50 Personalities (10%)
     
-    return Array.from({ length: count }).map(() => {
-        const roleRoll = rng.next();
-        let role: TalentRole = 'actor';
-        if (roleRoll > 0.50 && roleRoll <= 0.70) role = 'director';
-        else if (roleRoll > 0.70 && roleRoll <= 0.90) role = 'writer';
-        else if (roleRoll > 0.90) role = 'producer';
+    const roleStats = [
+      { role: 'actor' as TalentRole, count: Math.ceil(count * 0.55) },
+      { role: 'director' as TalentRole, count: Math.ceil(count * 0.15) },
+      { role: 'writer' as TalentRole, count: Math.ceil(count * 0.12) },
+      { role: 'producer' as TalentRole, count: Math.ceil(count * 0.08) },
+      { role: 'personality' as TalentRole, count: Math.ceil(count * 0.10) },
+    ];
 
+    roleStats.forEach(stat => {
+      for (let i = 0; i < stat.count; i++) {
         const tierRoll = rng.next();
-        let tier: TalentTier = 'C_LIST';
+        let tier: TalentTier = 4;
         
-        if (tierRoll > 0.985) tier = 'S_LIST';
-        else if (tierRoll > 0.92) tier = 'A_LIST';
-        else if (tierRoll > 0.75) tier = 'B_LIST';
-        else if (tierRoll < 0.15) tier = 'NEWCOMER';
-        else if (tierRoll < 0.35) tier = 'RISING_STAR';
+        if (tierRoll > 0.95) tier = 1; // 5%
+        else if (tierRoll > 0.80) tier = 2; // 15%
+        else if (tierRoll > 0.40) tier = 3; // 40%
+        else tier = 4; // 40%
 
-        return generateTalent(rng, { role, tier, localCountry });
+        talent.push(generateTalent(rng, { role: stat.role, tier, localCountry }));
+      }
     });
+
+    return talent;
 }

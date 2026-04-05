@@ -30,7 +30,8 @@ export function generateScandals(state: GameState, rng: RandomGenerator): StateI
 
   const numContracts = contracts.length;
   const studioProjectsCount = Object.keys(studioProjects).length;
-  const sizeModifier = 1.0 + (numContracts * 0.05) + (studioProjectsCount * 0.1);
+  // A mega-studio has more leaks than an indie darling. Increased scaling impact.
+  const sizeModifier = 1.0 + (numContracts * 0.08) + (studioProjectsCount * 0.15);
 
   const talentPool = state.industry.talentPool || {};
   for (const talentId in talentPool) {

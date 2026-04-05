@@ -61,31 +61,43 @@ export const NielsenDashboard = () => {
   }
 
   return (
-    <div className="h-full flex flex-col space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700 overflow-hidden">
+    <div className="h-full flex flex-col space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700 overflow-hidden">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 bg-white/5 p-5 rounded-xl border border-white/5 backdrop-blur-sm">
-        <div>
-          <div className="flex items-center gap-3 mb-1">
-            <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
-              <BarChart3 className="h-5 w-5 text-primary" />
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 bg-gradient-to-r from-white/10 to-transparent p-6 rounded-2xl border border-white/10 backdrop-blur-xl shadow-lg relative overflow-hidden group">
+        <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay pointer-events-none" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-[80px] pointer-events-none group-hover:bg-primary/20 transition-colors duration-700" />
+
+        <div className="relative z-10">
+          <div className="flex items-center gap-4 mb-2">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/30 flex items-center justify-center shadow-[0_0_20px_hsl(var(--primary)_/_0.2)]">
+              <BarChart3 className="h-6 w-6 text-primary drop-shadow-[0_0_10px_hsl(var(--primary)_/_0.5)]" />
             </div>
-            <h2 className="text-2xl font-black tracking-tighter uppercase leading-none">Nielsen Ratings</h2>
+            <h2 className="text-3xl font-display font-black tracking-tighter uppercase leading-none bg-gradient-to-br from-white to-white/70 bg-clip-text text-transparent drop-shadow-sm">
+              Nielsen Ratings
+            </h2>
           </div>
-          <p className="text-[11px] font-black uppercase text-muted-foreground/60 tracking-[0.2em]">
-            Week {week} • Live+SD & L+7 • Demographic Breakdowns
+          <p className="text-[11px] font-black uppercase text-muted-foreground/80 tracking-[0.25em] flex items-center gap-2">
+            <span className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+              Week {week}
+            </span>
+            <span className="text-white/20">•</span>
+            Live+SD & L+7
+            <span className="text-white/20">•</span>
+            Demographic Breakdowns
           </p>
         </div>
-        <div className="flex gap-3">
-          <StatChip label="Airing" value={airingShows.length} icon={<Tv className="h-3 w-3" />} />
-          <StatChip label="Tracked" value={allShows.length} icon={<Radio className="h-3 w-3" />} />
+        <div className="flex gap-3 relative z-10">
+          <StatChip label="Airing" value={airingShows.length} icon={<Tv className="h-3.5 w-3.5 text-primary" />} />
+          <StatChip label="Tracked" value={allShows.length} icon={<Radio className="h-3.5 w-3.5 text-secondary" />} />
         </div>
       </div>
 
       <Tabs defaultValue="rankings" className="flex-1 flex flex-col overflow-hidden">
-        <TabsList className="bg-white/5 border border-white/5">
-          <TabsTrigger value="rankings" className="text-xs font-black uppercase tracking-wider">Weekly Rankings</TabsTrigger>
-          <TabsTrigger value="details" className="text-xs font-black uppercase tracking-wider">Show Detail</TabsTrigger>
-          <TabsTrigger value="demographics" className="text-xs font-black uppercase tracking-wider">Demographics</TabsTrigger>
+        <TabsList className="bg-black/40 border border-white/10 rounded-xl p-1 shadow-inner h-auto">
+          <TabsTrigger value="rankings" className="text-[11px] font-black uppercase tracking-[0.2em] py-2.5 px-6 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_0_15px_hsl(var(--primary)_/_0.5)] transition-all duration-300 rounded-lg">Weekly Rankings</TabsTrigger>
+          <TabsTrigger value="details" className="text-[11px] font-black uppercase tracking-[0.2em] py-2.5 px-6 data-[state=active]:bg-white/10 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 rounded-lg">Show Detail</TabsTrigger>
+          <TabsTrigger value="demographics" className="text-[11px] font-black uppercase tracking-[0.2em] py-2.5 px-6 data-[state=active]:bg-white/10 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 rounded-lg">Demographics</TabsTrigger>
         </TabsList>
 
         <TabsContent value="rankings" className="flex-1 overflow-hidden mt-4">
@@ -121,10 +133,14 @@ export const NielsenDashboard = () => {
 // --- Sub-components ---
 
 const StatChip = ({ label, value, icon }: { label: string; value: number | string; icon: React.ReactNode }) => (
-  <div className="flex items-center gap-2 bg-white/5 border border-white/5 rounded-lg px-3 py-2">
-    {icon}
-    <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{label}</span>
-    <span className="text-sm font-black">{value}</span>
+  <div className="flex items-center gap-2.5 bg-black/40 backdrop-blur-md border border-white/10 rounded-xl px-4 py-2.5 shadow-inner hover:bg-black/60 hover:border-white/20 transition-all duration-300">
+    <div className="p-1.5 rounded-md bg-white/5 border border-white/10">
+      {icon}
+    </div>
+    <div className="flex flex-col">
+      <span className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground/80 leading-none mb-1">{label}</span>
+      <span className="text-base font-black leading-none drop-shadow-md">{value}</span>
+    </div>
   </div>
 );
 
@@ -168,24 +184,28 @@ const WeeklyRankingsTable = ({ rankings }: { rankings: RankingEntry[] }) => {
 
       {rankings.map(({ show, profile, latest }, idx) => (
         <Card key={show.id} className={cn(
-          "glass-card border-none overflow-hidden transition-all duration-300",
-          idx === 0 && "ring-1 ring-amber-500/30 bg-amber-500/5"
+          "glass-card border border-white/5 overflow-hidden transition-all duration-300 hover:border-white/20 hover:bg-white/5 group",
+          idx === 0 && "ring-1 ring-amber-500/50 bg-amber-500/10 shadow-[0_0_30px_rgba(245,158,11,0.15)]",
+          idx === 1 && "bg-slate-400/5",
+          idx === 2 && "bg-orange-400/5"
         )}>
-          <div className="grid grid-cols-12 gap-2 items-center px-4 py-3">
-            <div className="col-span-1">
+          <div className="grid grid-cols-12 gap-2 items-center px-4 py-3 relative">
+            {idx === 0 && <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 to-transparent pointer-events-none" />}
+            <div className="col-span-1 relative z-10">
               <span className={cn(
-                "text-lg font-black",
-                idx === 0 && "text-amber-500",
-                idx === 1 && "text-slate-400",
-                idx === 2 && "text-orange-400"
+                "text-2xl font-display font-black drop-shadow-md",
+                idx === 0 && "text-amber-500 drop-shadow-[0_0_10px_rgba(245,158,11,0.5)]",
+                idx === 1 && "text-slate-300",
+                idx === 2 && "text-orange-400",
+                idx > 2 && "text-muted-foreground/50"
               )}>
                 {idx + 1}
               </span>
             </div>
-            <div className="col-span-3">
-              <div className="text-sm font-black tracking-tight uppercase truncate">{show.title}</div>
-              <div className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">
-                S{show.tvDetails.currentSeason} E{latest?.episodeNumber || 0} • {show.genre}
+            <div className="col-span-3 relative z-10">
+              <div className="text-sm font-black tracking-tight uppercase truncate group-hover:text-white transition-colors">{show.title}</div>
+              <div className="text-[10px] font-bold text-muted-foreground/80 uppercase tracking-widest">
+                S{show.tvDetails.currentSeason} E{latest?.episodeNumber || 0} <span className="text-white/20">•</span> {show.genre}
               </div>
             </div>
             <div className="col-span-1">
@@ -231,19 +251,21 @@ const ShowDetailCard = ({ show }: { show: SeriesProject }) => {
   }));
 
   return (
-    <Card className="glass-card border-none overflow-hidden">
-      <CardHeader className="pb-2">
+    <Card className="glass-card border border-white/10 overflow-hidden relative group hover:border-white/20 transition-all duration-500 shadow-xl">
+      <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+      <CardHeader className="pb-4 border-b border-white/5 bg-black/20">
         <div className="flex justify-between items-start">
           <div>
-            <CardTitle className="text-lg font-black tracking-tighter uppercase">{show.title}</CardTitle>
-            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">
-              S{show.tvDetails.currentSeason} • {show.genre} • {TIME_SLOTS[profile.timeSlot]?.label || profile.timeSlot}
+            <CardTitle className="text-2xl font-display font-black tracking-tighter uppercase text-white drop-shadow-md">{show.title}</CardTitle>
+            <p className="text-[11px] font-bold text-muted-foreground/80 uppercase tracking-[0.2em] mt-1.5 flex items-center gap-2">
+              <Badge variant="outline" className="text-[9px] font-black tracking-widest py-0 px-2 bg-white/5">{TIME_SLOTS[profile.timeSlot]?.label || profile.timeSlot}</Badge>
+              Season {show.tvDetails.currentSeason} <span className="text-white/20">•</span> {show.genre}
             </p>
           </div>
-          <div className="text-right space-y-1">
-            <div className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Season Avg</div>
-            <div className="text-2xl font-black text-primary">{profile.seasonAvgKeyDemo.toFixed(1)}</div>
-            <div className="text-[9px] font-bold text-muted-foreground">A18-49</div>
+          <div className="text-right space-y-0.5 flex flex-col items-end">
+            <div className="text-[9px] font-black text-muted-foreground/70 uppercase tracking-[0.2em]">Season Avg</div>
+            <div className="text-3xl font-display font-black text-primary drop-shadow-[0_0_15px_hsl(var(--primary)_/_0.3)]">{profile.seasonAvgKeyDemo.toFixed(1)}</div>
+            <div className="text-[10px] font-bold text-muted-foreground/80 uppercase tracking-widest bg-white/5 px-2 py-0.5 rounded-md border border-white/10">A18-49</div>
           </div>
         </div>
       </CardHeader>
@@ -292,10 +314,11 @@ const DemoBreakdownCard = ({ show }: { show: SeriesProject }) => {
     }));
 
   return (
-    <Card className="glass-card border-none overflow-hidden">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-black tracking-tighter uppercase">{show.title} — Demographics</CardTitle>
-        <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">
+    <Card className="glass-card border border-white/10 overflow-hidden relative group hover:border-white/20 transition-all duration-500 shadow-xl">
+      <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+      <CardHeader className="pb-4 border-b border-white/5 bg-black/20">
+        <CardTitle className="text-base font-display font-black tracking-tighter uppercase text-white drop-shadow-md">{show.title} — Demographics</CardTitle>
+        <p className="text-[10px] font-bold text-muted-foreground/80 uppercase tracking-[0.2em] mt-1">
           Episode {latest.episodeNumber} Breakdown
         </p>
       </CardHeader>
@@ -324,8 +347,8 @@ const DemoBreakdownCard = ({ show }: { show: SeriesProject }) => {
 };
 
 const MetricBox = ({ label, value, color }: { label: string; value: string; color?: string }) => (
-  <div className="bg-white/5 rounded-lg p-3 border border-white/5 text-center">
-    <div className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-1">{label}</div>
-    <div className={cn("text-lg font-black tracking-tight", color)}>{value}</div>
+  <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 border border-white/10 text-center shadow-inner hover:bg-black/60 hover:border-white/20 transition-all duration-300">
+    <div className="text-[10px] font-black text-muted-foreground/80 uppercase tracking-[0.2em] mb-1.5">{label}</div>
+    <div className={cn("text-xl font-display font-black tracking-tighter drop-shadow-md", color || "text-white")}>{value}</div>
   </div>
 );

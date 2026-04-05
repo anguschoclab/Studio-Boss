@@ -57,7 +57,24 @@ export const PREFIXES: string[] = [
   'Shareholder-Approved',
   'Prestige-Bait',
   'IP-Farm',
-  'Metrics-Obsessed'
+  'Metrics-Obsessed',
+  'Capital-Intensive',
+  'Vertically-Integrated',
+  'Platform-Agnostic',
+  'Ad-Supported',
+  'Deep-Pocketed',
+  'Syndicated',
+  'Globalized',
+  'Hyper-Targeted',
+  'Focus-Tested',
+  'Board-Mandated',
+  'Profit-Driven',
+  'Venture-Funded',
+  'Aggregated',
+  'Engagement-Maximized',
+  'Data-Harvesting',
+  'Algorithmic',
+  'A.I.-Assisted'
 ];
 
 export const SUFFIXES: string[] = [
@@ -170,7 +187,17 @@ export const MOTTOS: string[] = [
   'If it\'s not a cinematic universe, it\'s not cinema.',
   'Lowering the bar so you don\'t have to.',
   'We pivot to whatever the algorithm demands.',
-  'Art is dead, content is forever.'
+  'Art is dead, content is forever.',
+  'We don\'t make films, we make intellectual property.',
+  'Your screen time is our bottom line.',
+  'Monetizing your attention span since Q1.',
+  'Because focus groups are cheaper than writers.',
+  'Synergy is our middle name.',
+  'We pivot to whatever the algorithm demands next.',
+  'Building cinematic universes out of public domain IP.',
+  'Don\'t worry, we\'ll fix the script in post-production.',
+  'Maximizing ROI through aggressive merchandising.',
+  'We are legally obligated to maximize shareholder value.'
 ];
 
 export const MALE_FIRST_NAMES: string[] = [
@@ -223,20 +250,20 @@ export const LAST_NAMES: string[] = [
 
 export const DICTIONARIES: Record<string, { nouns: string[], adjs: string[] }> = {
   'Action': {
-    nouns: ['Vengeance', 'Protocol', 'Strike', 'Force', 'Bullet', 'Assassin', 'Mercenary', 'Mission', 'Target', 'Rogue', 'Agent', 'Sniper', 'Vendetta', 'Cartel', 'Reckoning', 'Escape', 'Heist', 'Pursuit', 'Squad', 'Fist', 'Reboot', 'Franchise', 'Multiverse', 'Cinematic Universe', 'Sequel', 'Prequel', 'Spinoff', 'Remake', 'Crossover', 'Trilogy', 'Recon', 'Extraction', 'Payload', 'Objective', 'Bounty', 'Crossfire', 'Infiltration', 'Exfiltration', 'Takeover', 'Lockdown', 'Overdrive', 'Showdown', 'Blowback', 'Backlash', 'Flashpoint', 'Ground Zero', 'Vanguard', 'Sentinel', 'Outpost', 'Stronghold', 'Blockbuster', 'CGI', 'Explosion', 'Set Piece', 'Green Screen', 'Stunt Double', 'Body Double', 'CGI Mush', 'Wire-Fu', 'Greenscreen Void', 'Asset', 'Liability', 'Syndicate', 'Regime'],
-    adjs: ['Lethal', 'Deadly', 'Blind', 'Rogue', 'Final', 'Relentless', 'Silent', 'Hostile', 'Covert', 'Extreme', 'Tactical', 'Ruthless', 'Explosive', 'Unstoppable', 'Furious', 'Savage', 'Brutal', 'Uncut', 'Quantum', 'Cyber', 'Neon', 'Hyper', 'Meta', 'Post-Apocalyptic', 'Dystopian', 'Strategic', 'Clandestine', 'Stealth', 'Phantom', 'Ghost', 'Shadow', 'Maverick', 'Renegade', 'Outlaw', 'Vigilante', 'Mercenary', 'Expendable', 'Disposable', 'Collateral', 'Fatal', 'Mortal', 'Overbudget', 'Action-Packed', 'High-Octane', 'Adrenaline-Fueled', 'CGI-Heavy', 'Test-Screened', 'Motion-Smoothed', 'Pre-Vis', 'Focus-Grouped', 'Zero-Day', 'Psy-Op', 'Synergistic', 'Leveraged', 'Optimized', 'Franchised', 'Rebooted', 'Over-Budget']
+    nouns: ['Vengeance', 'Protocol', 'Strike', 'Force', 'Bullet', 'Assassin', 'Mercenary', 'Mission', 'Target', 'Rogue', 'Agent', 'Sniper', 'Vendetta', 'Cartel', 'Reckoning', 'Escape', 'Heist', 'Pursuit', 'Squad', 'Fist', 'Reboot', 'Franchise', 'Multiverse', 'Cinematic Universe', 'Sequel', 'Prequel', 'Spinoff', 'Remake', 'Crossover', 'Trilogy', 'Recon', 'Extraction', 'Payload', 'Objective', 'Bounty', 'Crossfire', 'Infiltration', 'Exfiltration', 'Takeover', 'Lockdown', 'Overdrive', 'Showdown', 'Blowback', 'Backlash', 'Flashpoint', 'Ground Zero', 'Vanguard', 'Sentinel', 'Outpost', 'Stronghold', 'Blockbuster', 'CGI', 'Explosion', 'Set Piece', 'Green Screen', 'Stunt Double', 'Body Double', 'CGI Mush', 'Wire-Fu', 'Greenscreen Void', 'Asset', 'Liability', 'Syndicate', 'Regime', 'IP', 'Merchandising', 'Optimization', 'Metrics'],
+    adjs: ['Lethal', 'Deadly', 'Blind', 'Rogue', 'Final', 'Relentless', 'Silent', 'Hostile', 'Covert', 'Extreme', 'Tactical', 'Ruthless', 'Explosive', 'Unstoppable', 'Furious', 'Savage', 'Brutal', 'Uncut', 'Quantum', 'Cyber', 'Neon', 'Hyper', 'Meta', 'Post-Apocalyptic', 'Dystopian', 'Strategic', 'Clandestine', 'Stealth', 'Phantom', 'Ghost', 'Shadow', 'Maverick', 'Renegade', 'Outlaw', 'Vigilante', 'Mercenary', 'Expendable', 'Disposable', 'Collateral', 'Fatal', 'Mortal', 'Overbudget', 'Action-Packed', 'High-Octane', 'Adrenaline-Fueled', 'CGI-Heavy', 'Test-Screened', 'Motion-Smoothed', 'Pre-Vis', 'Focus-Grouped', 'Zero-Day', 'Psy-Op', 'Synergistic', 'Leveraged', 'Optimized', 'Franchised', 'Rebooted', 'Over-Budget', 'Focus-Tested']
   },
   'Comedy': {
-    nouns: ['Weekend', 'Trip', 'Boss', 'Neighbors', 'Party', 'Wedding', 'Hangover', 'Mistake', 'Disaster', 'Fool', 'Family', 'Date', 'Road', 'Vacation', 'Mix-up', 'Camp', 'School', 'College', 'Misfits', 'Idiots', 'Content', 'Influencer', 'Streamer', 'Vlogger', 'Podcast', 'Cancel Culture', 'Algorithm', 'Meme', 'Viral', 'Trending', 'Grifter', 'Scam', 'Hustle', 'Flex', 'Clout', 'Drip', 'Vibe', 'Aesthetic', 'Mood', 'Energy', 'Synergy', 'PR Crisis', 'Apology Video', 'Notes App', 'Subtweet', 'Ratio', 'Hot Mic', 'Deepfake', 'Nepo Baby', 'Crowdfunded', 'Tax Write-off', 'Brand Deal', 'Stan', 'Sponsorship'],
-    adjs: ['Crazy', 'Bad', 'Awkward', 'Wild', 'Stupid', 'Dumb', 'Messy', 'Clumsy', 'Hilarious', 'Unlucky', 'Fake', 'Worst', 'Accidental', 'Unexpected', 'Secret', 'Embarrassing', 'Cringe', 'Based', 'Woke', 'Toxic', 'Problematic', 'Cancelled', 'Triggered', 'Savage', 'Petty', 'Salty', 'Thirsty', 'Basic', 'Extra', 'Bougie', 'Ratchet', 'Sus', 'Cap', 'No Cap', 'Bet', 'Demagnetized', 'Tone-Deaf', 'Out-of-Touch', 'Unrelatable', 'Algorithm-Approved', 'Ad-Supported', 'Demonetized', 'Defamatory', 'Litigious', 'Offensive', 'Unfunny', 'Try-Hard', 'Desperate']
+    nouns: ['Weekend', 'Trip', 'Boss', 'Neighbors', 'Party', 'Wedding', 'Hangover', 'Mistake', 'Disaster', 'Fool', 'Family', 'Date', 'Road', 'Vacation', 'Mix-up', 'Camp', 'School', 'College', 'Misfits', 'Idiots', 'Content', 'Influencer', 'Streamer', 'Vlogger', 'Podcast', 'Cancel Culture', 'Algorithm', 'Meme', 'Viral', 'Trending', 'Grifter', 'Scam', 'Hustle', 'Flex', 'Clout', 'Drip', 'Vibe', 'Aesthetic', 'Mood', 'Energy', 'Synergy', 'PR Crisis', 'Apology Video', 'Notes App', 'Subtweet', 'Ratio', 'Hot Mic', 'Deepfake', 'Nepo Baby', 'Crowdfunded', 'Tax Write-off', 'Brand Deal', 'Stan', 'Sponsorship', 'Demographic', 'Engagement', 'Focus Group'],
+    adjs: ['Crazy', 'Bad', 'Awkward', 'Wild', 'Stupid', 'Dumb', 'Messy', 'Clumsy', 'Hilarious', 'Unlucky', 'Fake', 'Worst', 'Accidental', 'Unexpected', 'Secret', 'Embarrassing', 'Cringe', 'Based', 'Woke', 'Toxic', 'Problematic', 'Cancelled', 'Triggered', 'Savage', 'Petty', 'Salty', 'Thirsty', 'Basic', 'Extra', 'Bougie', 'Ratchet', 'Sus', 'Cap', 'No Cap', 'Bet', 'Demagnetized', 'Tone-Deaf', 'Out-of-Touch', 'Unrelatable', 'Algorithm-Approved', 'Ad-Supported', 'Demonetized', 'Defamatory', 'Litigious', 'Offensive', 'Unfunny', 'Try-Hard', 'Desperate', 'Algorithm-Optimized', 'Syndicated']
   },
   'Drama': {
-    nouns: ['Tears', 'Silence', 'Promise', 'Secret', 'Shadow', 'Past', 'Letter', 'Journey', 'Heart', 'Sorrow', 'Truth', 'Lie', 'Winter', 'Summer', 'River', 'Road', 'House', 'Family', 'Son', 'Daughter', 'Wife', 'Husband', 'Memory', 'Sins', 'Trauma', 'Nepotism', 'Gaslighting', 'Narcissist', 'Sociopath', 'Empath', 'Therapy', 'Boundary', 'Trigger', 'Red Flag', 'Green Flag', 'Ick', 'Situationship', 'Attachment Style', 'Love Language', 'Toxic Trait', 'Coping Mechanism', 'Defense Mechanism', 'Projection', 'Deflection', 'Awards Bait', 'Oscar Campaign', 'Method Acting', 'Prestige TV', 'Limited Series', 'Showrunner', 'Monologue', 'Pity Party', 'Generational Wealth', 'Neomaximalism', 'Vibe Shift', 'Cancel Culture', 'Subtweet', 'Apology Video', 'PR Crisis', 'Trust Fund', 'Therapy Speak', 'Microaggression', 'Burnout', 'Doomscrolling', 'Echo Chamber', 'Safe Space', 'Trigger Warning', 'Boundaries', 'Main Character Energy', 'Parasocial Relationship', 'Accountability', 'Discourse'],
-    adjs: ['Broken', 'Hidden', 'Fading', 'Lost', 'Quiet', 'Dark', 'Cold', 'Bitter', 'Tender', 'Forgiven', 'Forgotten', 'Silent', 'Distant', 'Empty', 'Shattered', 'Blind', 'Toxic', 'Abusive', 'Narcissistic', 'Codependent', 'Triggering', 'Validating', 'Empowering', 'Healing', 'Growing', 'Evolving', 'Manifesting', 'Aligning', 'Vibrating', 'Resonating', 'Connecting', 'Disconnecting', 'Dissociating', 'Spiraling', 'Crashing', 'Burning', 'Oscar-Bait', 'Critically-Acclaimed', 'Pretentious', 'Self-Indulgent', 'Overlong', 'Auteur-Driven', 'Gritty', 'Overdirected', 'Self-Serious', 'Melodramatic', 'Bleak', 'Subversive', 'Elevated', 'Liminal', 'Uncanny', 'Post-Modern', 'Neurotic', 'Gaslit', 'Cancel-Worthy', 'Performative', 'Tone-Deaf', 'Out-of-Touch', 'Venture-Backed', 'Privileged', 'Microaggressive', 'Apologetic']
+    nouns: ['Tears', 'Silence', 'Promise', 'Secret', 'Shadow', 'Past', 'Letter', 'Journey', 'Heart', 'Sorrow', 'Truth', 'Lie', 'Winter', 'Summer', 'River', 'Road', 'House', 'Family', 'Son', 'Daughter', 'Wife', 'Husband', 'Memory', 'Sins', 'Trauma', 'Nepotism', 'Gaslighting', 'Narcissist', 'Sociopath', 'Empath', 'Therapy', 'Boundary', 'Trigger', 'Red Flag', 'Green Flag', 'Ick', 'Situationship', 'Attachment Style', 'Love Language', 'Toxic Trait', 'Coping Mechanism', 'Defense Mechanism', 'Projection', 'Deflection', 'Awards Bait', 'Oscar Campaign', 'Method Acting', 'Prestige TV', 'Limited Series', 'Showrunner', 'Monologue', 'Pity Party', 'Generational Wealth', 'Neomaximalism', 'Vibe Shift', 'Cancel Culture', 'Subtweet', 'Apology Video', 'PR Crisis', 'Trust Fund', 'Therapy Speak', 'Microaggression', 'Burnout', 'Doomscrolling', 'Echo Chamber', 'Safe Space', 'Trigger Warning', 'Boundaries', 'Main Character Energy', 'Parasocial Relationship', 'Accountability', 'Discourse', 'Quarterly Earnings'],
+    adjs: ['Broken', 'Hidden', 'Fading', 'Lost', 'Quiet', 'Dark', 'Cold', 'Bitter', 'Tender', 'Forgiven', 'Forgotten', 'Silent', 'Distant', 'Empty', 'Shattered', 'Blind', 'Toxic', 'Abusive', 'Narcissistic', 'Codependent', 'Triggering', 'Validating', 'Empowering', 'Healing', 'Growing', 'Evolving', 'Manifesting', 'Aligning', 'Vibrating', 'Resonating', 'Connecting', 'Disconnecting', 'Dissociating', 'Spiraling', 'Crashing', 'Burning', 'Oscar-Bait', 'Critically-Acclaimed', 'Pretentious', 'Self-Indulgent', 'Overlong', 'Auteur-Driven', 'Gritty', 'Overdirected', 'Self-Serious', 'Melodramatic', 'Bleak', 'Subversive', 'Elevated', 'Liminal', 'Uncanny', 'Post-Modern', 'Neurotic', 'Gaslit', 'Cancel-Worthy', 'Performative', 'Tone-Deaf', 'Out-of-Touch', 'Venture-Backed', 'Privileged', 'Microaggressive', 'Apologetic', 'Corporate-Mandated']
   },
   'Horror': {
-    nouns: ['Demon', 'Ghost', 'House', 'Woods', 'Cabin', 'Night', 'Curse', 'Entity', 'Devil', 'Spirits', 'Shadows', 'Darkness', 'Blood', 'Scream', 'Fear', 'Nightmare', 'Mirror', 'Doll', 'Asylum', 'Graveyard', 'Elevated', 'IP', 'Aesthetic', 'Vibe', 'Mood', 'Atmosphere', 'Trope', 'Cliché', 'Jump Scare', 'Gore', 'Final Girl', 'Body Horror', 'Found Footage', 'Slasher', 'Poltergeist', 'Exorcism', 'Cult', 'Sacrifice', 'Ritual', 'Analog Horror', 'Liminal Space', 'Creepypasta', 'Backrooms', 'ARG', 'Trauma Allegory', 'Grief Metaphor', 'A24 Ripoff', 'Apparition', 'Specter', 'Wraith', 'Phantom', 'Fiend', 'Ghoul', 'Vampire', 'Werewolf', 'Zombie', 'Mummy', 'Monster', 'Beast', 'Creature', 'Mutant', 'Alien', 'Thing', 'Abomination', 'Cultist'],
-    adjs: ['Haunted', 'Cursed', 'Possessed', 'Demonic', 'Evil', 'Creepy', 'Sinister', 'Dead', 'Undead', 'Macabre', 'Bloody', 'Terrifying', 'Wicked', 'Twisted', 'Unholy', 'Elevated', 'Atmospheric', 'Slow-Burn', 'Psychological', 'Subversive', 'Meta', 'Self-Aware', 'Satirical', 'Ironic', 'Campy', 'Schlocky', 'Gory', 'Gruesome', 'Disturbing', 'Unsettling', 'Spooky', 'Scary', 'Uncanny', 'Liminal', 'Viral', 'Trend-Chasing', 'Overlit', 'Underexposed', 'Jump-Scare-Heavy', 'Ghastly', 'Unnerving', 'Eldritch', 'Lovecraftian', 'Satanic', 'Bloodcurdling', 'Bone-Chilling', 'Hair-Raising', 'Spine-Tingling', 'Nightmarish', 'Grotesque', 'Repulsive', 'Hideous', 'Frightening', 'Ominous', 'Malevolent']
+    nouns: ['Demon', 'Ghost', 'House', 'Woods', 'Cabin', 'Night', 'Curse', 'Entity', 'Devil', 'Spirits', 'Shadows', 'Darkness', 'Blood', 'Scream', 'Fear', 'Nightmare', 'Mirror', 'Doll', 'Asylum', 'Graveyard', 'Elevated', 'IP', 'Aesthetic', 'Vibe', 'Mood', 'Atmosphere', 'Trope', 'Cliché', 'Jump Scare', 'Gore', 'Final Girl', 'Body Horror', 'Found Footage', 'Slasher', 'Poltergeist', 'Exorcism', 'Cult', 'Sacrifice', 'Ritual', 'Analog Horror', 'Liminal Space', 'Creepypasta', 'Backrooms', 'ARG', 'Trauma Allegory', 'Grief Metaphor', 'A24 Ripoff', 'Apparition', 'Specter', 'Wraith', 'Phantom', 'Fiend', 'Ghoul', 'Vampire', 'Werewolf', 'Zombie', 'Mummy', 'Monster', 'Beast', 'Creature', 'Mutant', 'Alien', 'Thing', 'Abomination', 'Cultist', 'Tax Write-off'],
+    adjs: ['Haunted', 'Cursed', 'Possessed', 'Demonic', 'Evil', 'Creepy', 'Sinister', 'Dead', 'Undead', 'Macabre', 'Bloody', 'Terrifying', 'Wicked', 'Twisted', 'Unholy', 'Elevated', 'Atmospheric', 'Slow-Burn', 'Psychological', 'Subversive', 'Meta', 'Self-Aware', 'Satirical', 'Ironic', 'Campy', 'Schlocky', 'Gory', 'Gruesome', 'Disturbing', 'Unsettling', 'Spooky', 'Scary', 'Uncanny', 'Liminal', 'Viral', 'Trend-Chasing', 'Overlit', 'Underexposed', 'Jump-Scare-Heavy', 'Ghastly', 'Unnerving', 'Eldritch', 'Lovecraftian', 'Satanic', 'Bloodcurdling', 'Bone-Chilling', 'Hair-Raising', 'Spine-Tingling', 'Nightmarish', 'Grotesque', 'Repulsive', 'Hideous', 'Frightening', 'Ominous', 'Malevolent', 'Focus-Grouped']
   },
   'Sci-Fi': {
     nouns: ['Planet', 'Star', 'Galaxy', 'Alien', 'Space', 'Future', 'Ship', 'Void', 'Dimension', 'Colony', 'Matrix', 'Cyborg', 'Robot', 'Nexus', 'Anomaly', 'Singularity', 'Orbit', 'System', 'Engine', 'Clone', 'Metaverse', 'Web3', 'Crypto', 'NFT', 'AI', 'Blockchain', 'Virtual Reality', 'Augmented Reality', 'Simulation', 'Algorithm', 'Post-Human', 'Android', 'Mutant', 'Extraterrestrial', 'UFO', 'UAP', 'Generative AI', 'LLM', 'Neural Net', 'Deepfake', 'Data Mining', 'Server Farm', 'Tech Bro', 'Venture Capital', 'Tokenomics', 'Smart Contract', 'Timeline', 'Feed', 'Grid', 'Network', 'Cloud', 'DAO'],

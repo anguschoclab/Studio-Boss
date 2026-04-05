@@ -8,6 +8,11 @@ export const FESTIVALS: { body: AwardBody, name: string, weeks: number[], cost: 
   { body: 'Berlin International Film Festival', name: 'Berlinale', weeks: [8, 9], cost: 35000, prestigeNeeded: 50, buzzReward: 35 }
 ];
 
+export const FESTIVAL_BY_BODY = FESTIVALS.reduce((acc, f) => {
+  acc[f.body] = f;
+  return acc;
+}, {} as Partial<Record<AwardBody, typeof FESTIVALS[0]>>);
+
 /**
  * Weekly Festival Resolver
  * Processes submissions from ALL studios.
@@ -24,7 +29,7 @@ export function resolveFestivals(state: GameState, rng: RandomGenerator): StateI
         continue;
     }
     
-    const fest = FESTIVALS.find(f => f.body === sub.festivalBody);
+    const fest = FESTIVAL_BY_BODY[sub.festivalBody];
     if (!fest) {
         updatedSubmissions.push(sub);
         continue;
@@ -95,6 +100,58 @@ export function resolveFestivals(state: GameState, rng: RandomGenerator): StateI
         update: { 'industry.festivalSubmissions': updatedSubmissions.filter(s => (state.week - s.week) < 8) }
     }
   });
+
+  return impacts;
+}
+
+/**
+ * Submits a project to a festival.
+ * Phase 2: Deducts entry fee and adds to global submissions list.
+ */
+export function submitToFestival(
+  state: GameState, 
+  projectId: string, 
+  festivalBody: AwardBody, 
+  rng: RandomGenerator
+): StateImpact[] | null {
+  const project = state.studio.internal.projects[projectId];
+  const fest = FESTIVAL_BY_BODY[festivalBody];
+  
+  if (!project || !fest) return null;
+  if (state.finance.cash < fest.cost) return null;
+
+  const impacts: StateImpact[] = [
+    {
+      type: 'FUNDS_DEDUCTED',
+      payload: { amount: fest.cost }
+    },
+    {
+      type: 'INDUSTRY_UPDATE',
+      payload: {
+        update: {
+          'industry.festivalSubmissions': [
+            ...(state.industry.festivalSubmissions || []),
+            {
+              id: rng.uuid('sub'),
+              projectId,
+              festivalBody,
+              status: 'submitted',
+              week: state.week
+            }
+          ]
+        }
+      }
+    },
+    {
+      type: 'NEWS_ADDED',
+      payload: {
+        id: rng.uuid('news-fest'),
+        headline: `Studio submits "${project.title}" to ${fest.name}`,
+        description: `Strategic awards push: The studio has officially entered the competition at ${fest.name}.`,
+        category: 'awards'
+      }
+    }
+  ];
 
   return impacts;
 }

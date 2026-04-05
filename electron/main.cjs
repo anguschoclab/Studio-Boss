@@ -72,14 +72,23 @@ app.whenReady().then(() => {
     let pathname = request.url.slice('app://'.length);
     pathname = pathname.split('?')[0].split('#')[0];
 
+    try {
+      pathname = decodeURIComponent(pathname);
+    } catch (e) {
+      return net.fetch(pathToFileURL(path.join(DIST, 'index.html')).toString());
+    }
+
     // Remove leading slash produced by standard-scheme resolution
     if (pathname.startsWith('/')) pathname = pathname.slice(1);
 
-    const filePath = path.join(DIST, pathname);
+    // Resolve path and ensure it's within DIST to prevent path traversal
+    const filePath = path.resolve(DIST, pathname);
+    const relative = path.relative(DIST, filePath);
+    const isSafe = relative === '' || (!relative.startsWith('..') && !path.isAbsolute(relative));
 
-    // If the file exists, serve it; otherwise fall back to index.html (SPA routing)
+    // If the file exists and is within DIST, serve it; otherwise fall back to index.html (SPA routing)
     const target =
-      fs.existsSync(filePath) && fs.statSync(filePath).isFile()
+      isSafe && fs.existsSync(filePath) && fs.statSync(filePath).isFile()
         ? filePath
         : path.join(DIST, 'index.html');
 

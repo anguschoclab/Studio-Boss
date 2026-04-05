@@ -18,7 +18,33 @@ export interface SpinoffTemplate {
   flavorTemplate: string;
 }
 
-export const SPINOFF_TEMPLATES: Record<'FATIGUED' | 'HEALTHY' | 'LEGACY', SpinoffTemplate[]> = {
+export const SPINOFF_TEMPLATES: Record<'FATIGUED' | 'HEALTHY' | 'LEGACY' | 'OVERALL_DEAL', SpinoffTemplate[]> = {
+  OVERALL_DEAL: [
+    {
+      titleSuffix: 'The Masterpiece',
+      format: 'tv',
+      tvFormat: 'prestige_limited_series',
+      budgetTier: 'high',
+      buzzBonus: 25,
+      flavorTemplate: 'A prestige commission from a top-tier creative under an overall deal, pushing the boundaries of {title}.'
+    },
+    {
+      titleSuffix: 'Universe Expansion',
+      format: 'tv',
+      tvFormat: 'sci_fi_epic',
+      budgetTier: 'blockbuster',
+      buzzBonus: 15,
+      flavorTemplate: 'An ambitious expansion of the {title} lore, commissioned through a first-look agreement.'
+    },
+    {
+      titleSuffix: 'The Anthology',
+      format: 'tv',
+      tvFormat: 'anthology_series',
+      budgetTier: 'mid',
+      buzzBonus: 10,
+      flavorTemplate: 'A creative anthology exploring different facets of the {title} world, produced under an overall deal.'
+    }
+  ],
   FATIGUED: [
     {
       titleSuffix: 'The True Story',
@@ -133,7 +159,7 @@ export const SPINOFF_TEMPLATES: Record<'FATIGUED' | 'HEALTHY' | 'LEGACY', Spinof
 export function generateSpinoffProposal(
   rng: RandomGenerator,
   sourceProject: Project, 
-  status: 'FATIGUED' | 'HEALTHY' | 'LEGACY',
+  status: 'FATIGUED' | 'HEALTHY' | 'LEGACY' | 'OVERALL_DEAL',
   relatedCount: number = 0
 ): Partial<Project> {
   const pool = SPINOFF_TEMPLATES[status];

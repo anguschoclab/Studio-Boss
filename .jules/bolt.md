@@ -4,3 +4,7 @@
 ## 2024-05-16 - O(1) Dictionary Lookup for Zustand State
 **Learning:** The state tree uses dictionary structures (`Record<string, Project>`). Iterating over `Object.values` just to do a `findIndex` based on ID is an anti-pattern that creates unnecessary O(N) array allocations and O(N) search times.
 **Action:** Always use direct O(1) property access (e.g. `projects[id]`) when looking up items by their primary key in Redux/Zustand slice reducers.
+## 2025-02-12 - Core Loop Refactoring: Pre-computed Maps & Direct Iteration
+**Learning:** Heavy O(N) array loops (like `.find()`, `.map()`, `.forEach()`) executed on hot paths within the `WeekCoordinator` orchestrator (like the awards ceremony logic) introduced severe GC pressure and O(N) linear search regressions inside inner loops. Even `Object.values(projects)` was creating substantial intermediate object graphs.
+**Action:** Substituted `.find()` with an O(1) dictionary lookup by pre-computing a fast reference map (`projectToRivalMap`) ahead of inner iteration paths. Used native `for` loops in place of map/forEach to preserve memory references and stop GC chug in tightly-wound simulation phases.
+- **festivals:** Replaced O(S * R * P) dictionary array filtering with a pre-computed O(R * P + S) map for rival projects lookup in the festival auction engine.
