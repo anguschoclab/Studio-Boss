@@ -5,13 +5,11 @@ import {
   LayoutDashboard, 
   Film, 
   Library, 
-  Handshake, 
   Globe, 
   Users, 
   Briefcase, 
   Newspaper,
-  Tv,
-  BarChart3,
+  Building2,
   ChevronLeft,
   ChevronRight,
   LogOut,
@@ -31,17 +29,14 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { id: 'command', label: 'Command Center', icon: LayoutDashboard, tooltip: 'Global studio overview, active alerts, and top-line metrics' },
-  { id: 'pipeline', label: 'Production Pipeline', icon: Film, tooltip: 'Manage active projects from development through principal photography' },
-  { id: 'ip', label: 'IP Vault', icon: Library, tooltip: 'Catalog of owned intellectual property, franchises, and library rights' },
-  { id: 'deals', label: 'Deals Desk', icon: Handshake, tooltip: 'Review incoming talent offers, script submissions, and production bids' },
-  { id: 'industry', label: 'Industry Analysis', icon: Globe, tooltip: 'Market trends, rival studio intelligence, and box office forecasts' },
-  { id: 'talent', label: 'Talent Roster', icon: Users, tooltip: 'Directory of represented talent and upcoming industry stars' },
-  { id: 'finance', label: 'Finance & P&L', icon: Briefcase, tooltip: 'Detailed financial statements, tax incentives, and studio overhead' },
-  { id: 'trades', label: 'The Trades', icon: Newspaper, tooltip: 'Scout new IP opportunities and monitor industry headlines' },
-  { id: 'sbdb', label: 'SBDB', icon: Users, tooltip: 'Comprehensive historical database of all industry talent and credits' },
-  { id: 'streaming', label: 'Streaming & Distribution', icon: Tv, tooltip: 'Manage platform content licenses and home video syndication' },
-  { id: 'nielsen', label: 'Nielsen Ratings', icon: BarChart3, tooltip: 'TV viewership analytics, demographic breakdowns, and weekly rankings' },
+  { id: 'command', label: 'HQ', icon: LayoutDashboard, tooltip: 'Studio overview, alerts, and top-line metrics' },
+  { id: 'pipeline', label: 'Production', icon: Film, tooltip: 'Active projects from development through release' },
+  { id: 'trades', label: 'The Trades', icon: Newspaper, tooltip: 'Scout IP opportunities, industry news, and market trends' },
+  { id: 'talent', label: 'Talent', icon: Users, tooltip: 'Talent roster and industry database (SBDB)' },
+  { id: 'distribution', label: 'Distribution', icon: Globe, tooltip: 'Deals desk, streaming platforms, and Nielsen ratings' },
+  { id: 'ip', label: 'IP Vault', icon: Library, tooltip: 'Owned intellectual property, franchises, and library rights' },
+  { id: 'industry', label: 'Industry', icon: Building2, tooltip: 'Rival studios, M&A activity, and market intelligence' },
+  { id: 'finance', label: 'Finance', icon: Briefcase, tooltip: 'P&L statements, revenue streams, and cash flow' },
 ];
 
 export const StudioSidebar = () => {
@@ -64,14 +59,14 @@ export const StudioSidebar = () => {
     <aside 
       className={cn(
         "glass-panel h-screen flex flex-col transition-all duration-300 ease-in-out z-40 sticky top-0",
-        isCollapsed ? "w-[72px]" : "w-64"
+        isCollapsed ? "w-[72px]" : "w-60"
       )}
     >
       {/* Brand Header */}
-      <div className="p-6 flex items-center justify-between overflow-hidden">
+      <div className="p-5 flex items-center justify-between overflow-hidden">
         {!isCollapsed && (
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center font-black text-primary-foreground text-xl shadow-[0_0_15px_rgba(var(--primary),0.3)]">
+            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center font-black text-primary-foreground text-xl shadow-[0_0_15px_hsl(var(--primary)/0.3)]">
               S
             </div>
             <span className="font-display font-black tracking-tighter text-xl">BOSS</span>
@@ -79,17 +74,17 @@ export const StudioSidebar = () => {
         )}
         {isCollapsed && (
            <div className="w-full flex justify-center">
-             <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center font-black text-primary-foreground text-xl shadow-[0_0_15px_rgba(var(--primary),0.3)] mx-auto">
+             <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center font-black text-primary-foreground text-xl shadow-[0_0_15px_hsl(var(--primary)/0.3)] mx-auto">
               S
             </div>
            </div>
         )}
       </div>
 
-      <Separator className="bg-white/5 mx-6 w-auto mb-6" />
+      <Separator className="bg-border/30 mx-5 w-auto mb-4" />
 
       {/* Navigation */}
-      <div className="flex-1 px-3 space-y-1 overflow-y-auto custom-scrollbar">
+      <div className="flex-1 px-3 space-y-0.5 overflow-y-auto custom-scrollbar">
         {NAV_ITEMS.map((item) => {
           const isActive = activeTab === item.id;
           return (
@@ -101,20 +96,18 @@ export const StudioSidebar = () => {
                   onClick={() => setActiveTab(item.id)}
                   className={cn(
                     "w-full justify-start gap-3 transition-all duration-200 relative group",
-                    isCollapsed ? "justify-center h-12" : "h-11 px-4",
+                    isCollapsed ? "justify-center h-11" : "h-10 px-4",
                     isActive 
                       ? "bg-primary/10 text-primary hover:bg-primary/20 hover:text-primary" 
-                      : "text-muted-foreground hover:bg-white/5 hover:text-foreground"
+                      : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
                   )}
                 >
-                  <item.icon className={cn("h-5 w-5 shrink-0", isActive && "drop-shadow-[0_0_8px_rgba(var(--primary),0.5)]")} />
+                  <item.icon className={cn("h-4.5 w-4.5 shrink-0", isActive && "drop-shadow-[0_0_8px_hsl(var(--primary)/0.5)]")} />
                   {!isCollapsed && (
-                    <span className="font-medium truncate text-[13px] tracking-tight">{item.label}</span>
+                    <span className="font-semibold truncate text-[13px] tracking-tight">{item.label}</span>
                   )}
-                  
-                  {/* Active Indicator Bar */}
                   {isActive && (
-                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-r-full shadow-[0_0_10px_rgba(var(--primary),0.5)]" />
+                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 bg-primary rounded-r-full shadow-[0_0_10px_hsl(var(--primary)/0.5)]" />
                   )}
                 </Button>
               </TooltipTrigger>
@@ -127,16 +120,16 @@ export const StudioSidebar = () => {
       </div>
 
       {/* Footer Actions */}
-      <div className="p-3 bg-white/5 space-y-1">
+      <div className="p-3 bg-accent/20 space-y-1">
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
               variant="ghost"
               size={isCollapsed ? "icon" : "default"}
-              className="w-full justify-start gap-3 text-muted-foreground hover:bg-white/5"
-              onClick={() => {}} // Future: Settings
+              className="w-full justify-start gap-3 text-muted-foreground hover:bg-accent/50"
+              onClick={() => {}}
             >
-              <Settings className="h-5 w-5 shrink-0" />
+              <Settings className="h-4.5 w-4.5 shrink-0" />
               {!isCollapsed && <span className="text-[13px]">Settings</span>}
             </Button>
           </TooltipTrigger>
@@ -153,16 +146,16 @@ export const StudioSidebar = () => {
               onClick={handleExit}
               className="w-full justify-start gap-3 text-destructive/70 hover:text-destructive hover:bg-destructive/10"
             >
-              <LogOut className="h-5 w-5 shrink-0" />
+              <LogOut className="h-4.5 w-4.5 shrink-0" />
               {!isCollapsed && <span className="text-[13px]">Quit Studio</span>}
             </Button>
           </TooltipTrigger>
           <TooltipContent side="right" className="font-bold text-[11px] uppercase tracking-widest bg-card border-border">
-            Terminate Session & Return to Menu
+            Return to Main Menu
           </TooltipContent>
         </Tooltip>
 
-        <Separator className="bg-white/5 my-2" />
+        <Separator className="bg-border/30 my-2" />
 
         <Tooltip>
           <TooltipTrigger asChild>
@@ -171,13 +164,13 @@ export const StudioSidebar = () => {
               size="icon"
               aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
               onClick={() => setIsCollapsed(!isCollapsed)}
-              className="w-full flex justify-center hover:bg-white/5"
+              className="w-full flex justify-center hover:bg-accent/50"
             >
               {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
             </Button>
           </TooltipTrigger>
           <TooltipContent side="right" className="font-bold text-[11px] uppercase tracking-widest bg-card border-border">
-            {isCollapsed ? "Expand Navigation" : "Collapse Navigation"}
+            {isCollapsed ? "Expand" : "Collapse"}
           </TooltipContent>
         </Tooltip>
       </div>
