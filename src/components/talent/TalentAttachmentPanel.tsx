@@ -55,7 +55,8 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
     const recommendations = getRecommendedTalentForProject(
       pool,
       project,
-      selectedRole === 'ALL' ? undefined : selectedRole
+      selectedRole === 'ALL' ? undefined : selectedRole,
+      attachedTalent
     );
 
     return recommendations.filter(rec => {
@@ -67,7 +68,7 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
 
       return matchesSearch && matchesTier && matchesRole && matchesScore;
     });
-  }, [talentPool, attachedTalentIds, project, searchQuery, selectedTier, selectedRole, showMatchesOnly]);
+  }, [talentPool, attachedTalentIds, project, searchQuery, selectedTier, selectedRole, showMatchesOnly, attachedTalent]);
 
   const talentMap = useMemo(() => new Map(talentPool.map(t => [t.id, t])), [talentPool]);
   const hoveredTalent = hoveredTalentId ? talentMap.get(hoveredTalentId) : null;
