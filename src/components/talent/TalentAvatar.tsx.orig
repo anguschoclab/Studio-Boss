@@ -33,16 +33,16 @@ const BORDER_SIZE_MAP = {
  * The avatar is deterministic (same talent = same face) and reflects
  * demographics, age progression, and family resemblance.
  */
-export const TalentAvatar: React.FC<TalentAvatarProps> = React.memo(({ 
-  talent, 
-  size = 'md', 
+export const TalentAvatar: React.FC<TalentAvatarProps> = React.memo(({
+  talent,
+  size = 'md',
   className,
-  week 
+  week
 }) => {
   const currentWeek = useGameStore(s => s.gameState?.week ?? 1);
   const effectiveWeek = week ?? currentWeek;
   const pixelSize = SIZE_MAP[size];
-  
+
   const svgMarkup = useMemo(() => {
     return generateAvatarSVG(talent, effectiveWeek);
   }, [talent.id, talent.demographics.age, talent.demographics.gender, talent.demographics.ethnicity, talent.familyId, effectiveWeek]);
@@ -60,10 +60,9 @@ export const TalentAvatar: React.FC<TalentAvatarProps> = React.memo(({
         className
       )}
       style={{ width: pixelSize, height: pixelSize }}
+      dangerouslySetInnerHTML={{ __html: svgMarkup }}
       aria-label={`Avatar for ${talent.name}`}
-    >
-      <img src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgMarkup)}`} alt={`Avatar for ${talent.name}`} className="w-full h-full object-cover" />
-    </div>
+    />
   );
 });
 

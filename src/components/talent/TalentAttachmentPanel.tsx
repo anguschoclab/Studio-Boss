@@ -55,7 +55,8 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
     const recommendations = getRecommendedTalentForProject(
       pool,
       project,
-      selectedRole === 'ALL' ? undefined : selectedRole
+      selectedRole === 'ALL' ? undefined : selectedRole,
+      Array.from(attachedTalentIds)
     );
 
     return recommendations.filter(rec => {
@@ -67,7 +68,7 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
 
       return matchesSearch && matchesTier && matchesRole && matchesScore;
     });
-  }, [talentPool, attachedTalentIds, project, searchQuery, selectedTier, selectedRole, showMatchesOnly]);
+  }, [talentPool, attachedTalentIds, project, searchQuery, selectedTier, selectedRole, showMatchesOnly, attachedTalent]);
 
   const talentMap = useMemo(() => new Map(talentPool.map(t => [t.id, t])), [talentPool]);
   const hoveredTalent = hoveredTalentId ? talentMap.get(hoveredTalentId) : null;
@@ -81,7 +82,7 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
             <Target className="w-4 h-4 text-primary" /> Active Production Slate
           </h3>
           {onClose && (
-            <Button variant="ghost" size="icon" onClick={onClose} className="h-8 w-8 text-slate-500 hover:text-white">
+            <Button variant="ghost" size="icon" aria-label="Close panel" onClick={onClose} className="h-8 w-8 text-slate-500 hover:text-white">
               <X className="w-4 h-4" />
             </Button>
           )}

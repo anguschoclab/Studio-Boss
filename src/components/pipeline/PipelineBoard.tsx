@@ -56,7 +56,7 @@ export const PipelineBoard = () => {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground group-focus-within:text-primary transition-colors" />
             <Input className="h-9 pl-9 text-[11px] bg-black/40 border-white/10 focus-visible:border-primary/50 focus-visible:ring-primary/20 transition-all font-mono" placeholder="Filter property..." />
           </div>
-          <Button variant="outline" size="icon" className="h-9 w-9 bg-black/40 border-white/10 text-muted-foreground hover:text-foreground hover:border-white/20 transition-all">
+          <Button variant="outline" size="icon" aria-label="Filter pipeline" className="h-9 w-9 bg-black/40 border-white/10 text-muted-foreground hover:text-foreground hover:border-white/20 transition-all">
             <ListFilter className="h-4 w-4" />
           </Button>
           <Button onClick={openCreateProject} className="h-9 px-5 font-display font-black uppercase tracking-widest text-[10px] gap-2 bg-gradient-to-br from-primary to-primary/80 text-black hover:from-primary/90 hover:to-primary/70 shadow-[0_0_20px_hsl(var(--primary) / 0.2)] hover:shadow-[0_0_30px_hsl(var(--primary) / 0.4)] transition-all hover:-translate-y-0.5 border border-primary/50">

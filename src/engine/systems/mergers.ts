@@ -1,7 +1,17 @@
-import { GameState, RivalStudio, Project, Talent, StateImpact } from '@/engine/types';
+import { GameState, IPAsset, Project, RivalStudio, StateImpact, Talent } from '@/engine/types';
 import { RandomGenerator } from '../utils/rng';
 
-export function evaluateAcquisitionTarget(target: RivalStudio, buyerCash: number): { viable: boolean; price: number; reason?: string } {
+export function evaluateAcquisitionTarget(
+  target: RivalStudio, 
+  buyerCash: number, 
+  buyerMarketShare: number = 0
+): { viable: boolean; price: number; reason?: string } {
+  // ⚖️ Anti-Trust Barrier: FTC blocks any acquisition that pushes combined market share past 40%.
+  const targetShare = target.marketShare || 0;
+  if (buyerMarketShare + targetShare > 0.40) {
+    return { viable: false, price: 0, reason: 'FTC BLOCK: Combined market share would exceed the 40% anti-trust threshold.' };
+  }
+
   let basePrice = Math.max(10_000_000, (target.strength * 2_000_000) + target.cash);
   if (target.archetype === 'major') basePrice *= 2.0;
   if (target.archetype === 'indie') basePrice *= 1.2;
@@ -22,8 +32,9 @@ export function executeAcquisition(state: GameState, targetId: string, rng: Rand
   // Transfer projects
   const targetProjects = target.projects || {};
   const newProjects: Project[] = [];
-  Object.keys(targetProjects).forEach(id => {
-      const p = targetProjects[id];
+  for (const id in targetProjects) {
+    if (!Object.prototype.hasOwnProperty.call(targetProjects, id)) continue;
+    const p = targetProjects[id];
       // Active projects get stuck in turnaround
       const newState = (p.state === 'production' || p.state === 'marketing') ? 'turnaround' : p.state;
       newProjects.push({ 
@@ -31,16 +42,22 @@ export function executeAcquisition(state: GameState, targetId: string, rng: Rand
         state: newState as any,
         isAcquired: true 
       });
-  });
+  }
 
   // Transfer IP assets
-  const newIPAssets = (state.ip.vault || []).filter(a => 
-    a.rightsOwner === 'RIVAL' && 
-    (a.originalProjectId in targetProjects || a.title.includes(target.name)) 
-  ).map(asset => ({
-    ...asset,
-    rightsOwner: 'STUDIO' as const
-  }));
+  const vault = state.ip.vault || [];
+  const targetName = target.name;
+  const newIPAssets: IPAsset[] = [];
+
+  for (let i = 0; i < vault.length; i++) {
+    const a = vault[i];
+    if (a.rightsOwner === 'RIVAL' && (Object.prototype.hasOwnProperty.call(targetProjects, a.originalProjectId) || a.title.includes(targetName))) {
+      newIPAssets.push({
+        ...a,
+        rightsOwner: 'STUDIO' as const
+      });
+    }
+  }
 
   return {
     cashChange: -evalResult.price + (target.cash || 0),

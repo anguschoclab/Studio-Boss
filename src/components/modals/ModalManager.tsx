@@ -3,6 +3,7 @@ import { useUIStore } from '@/store/uiStore';
 import { WeekSummaryModal } from './WeekSummaryModal';
 import { CrisisModal } from './CrisisModal';
 import { AwardsCeremonyModal } from './AwardsCeremonyModal';
+import { FestivalMarketModal } from './FestivalMarketModal';
 
 /**
  * Unified Modal Manager.
@@ -20,6 +21,8 @@ export const ModalManager: React.FC = () => {
       return <CrisisModal key={activeModal.id} />;
     case 'AWARDS':
       return <AwardsCeremonyModal key={activeModal.id} />;
+    case 'FESTIVAL_MARKET':
+      return <FestivalMarketModal key={activeModal.id} />;
     default:
       return null;
   }

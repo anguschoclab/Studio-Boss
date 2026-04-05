@@ -42,12 +42,11 @@ export const CommandCenter: React.FC = () => {
           </p>
         </div>
         
-        <div className="flex gap-3">
-          <div className="group relative px-6 py-3 bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl rounded-2xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.4)] flex flex-col items-end overflow-hidden transition-all duration-500 hover:border-primary/50 hover:shadow-[0_8px_32px_hsl(var(--primary)_/_0.2)]">
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/10 to-primary/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out" />
-            <span className="text-[9px] uppercase font-black text-muted-foreground/80 tracking-[0.25em] leading-none mb-1.5 relative z-10 group-hover:text-primary/80 transition-colors">Market Position</span>
-            <span className="text-base font-display font-black flex items-center gap-2 text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] relative z-10">
-              <Zap className="h-4 w-4 text-primary animate-pulse drop-shadow-[0_0_8px_hsl(var(--primary)_/_0.8)]" />
+        <div className="flex flex-wrap gap-2">
+          <div className="px-5 py-2.5 bg-card/40 backdrop-blur-md rounded-xl border border-white/10 shadow-lg flex flex-col items-end transition-all hover:border-white/20 hover:bg-card/60">
+            <span className="text-[9px] uppercase font-black text-muted-foreground/70 tracking-[0.2em] leading-none mb-1">Market Position</span>
+            <span className="text-sm font-display font-black flex items-center gap-1.5 bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent drop-shadow-sm">
+              <Zap className="h-3.5 w-3.5 text-primary drop-shadow-[0_0_5px_hsl(var(--primary) / 0.8)]" />
               Tier 2 Studio
             </span>
           </div>
