@@ -373,7 +373,7 @@ export function advanceProject(
   trendMultiplier: number = 1.0,
   franchiseSynergy: number = 1.0,
   franchiseFatigue: number = 0
-): { project: Project; update: string | null; talentUpdates: Talent[] } {
+): { project: Project; update: string | null; talentUpdates: Talent[]; newScandals?: any[] } {
   if (project.state === 'archived') return { project, update: null, talentUpdates: [] };
 
   const p = { ...project, weeksInPhase: project.weeksInPhase + 1 };
@@ -388,6 +388,7 @@ export function advanceProject(
 
   let update: string | null = null;
   let talentUpdates: Talent[] = [];
+  let newScandals: any[] = [];
 
   if (p.state === 'development' && p.weeksInPhase >= (p.developmentWeeks || 4)) {
     const result = handleDevelopmentPhase(p);
@@ -395,11 +396,8 @@ export function advanceProject(
   } else if (p.state === 'production' && p.weeksInPhase >= (p.productionWeeks || 20)) {
     const result = handleMarketingPhase(p, talentPoolMap, projectContracts, rng);
     update = result.update;
-    if ((result as any).newScandals) {
-      // In a real implementation we'd append to a return object, 
-      // but here we rely on the reducer to pick up 'newScandals' on the PROJECT_UPDATED or similar if we modify the project.
-      // Actually, we'll mark the project with these scandals so the reducer can process them.
-      (p as any).pendingScandals = (result as any).newScandals;
+    if ((result as any).newScandals && (result as any).newScandals.length > 0) {
+      newScandals = (result as any).newScandals;
     }
   } else if (p.state === 'released') {
     const result = handleReleasedPhase(p, projectContracts, talentPoolMap, rivalStrengthAvg, projectAwards, rng, trendMultiplier, franchiseSynergy, franchiseFatigue);
@@ -421,6 +419,6 @@ export function advanceProject(
     p.buzz = Math.max(0, Math.min(100, p.buzz + roll + talentBuzzBonus));
   }
 
-  return { project: p, update, talentUpdates };
+  return { project: p, update, talentUpdates, newScandals: newScandals.length > 0 ? newScandals : undefined };
 }
 
