@@ -1,6 +1,8 @@
 import React from 'react';
 import { useUIStore, TabId } from '@/store/uiStore';
 import { useGameStore } from '@/store/gameStore';
+import { selectActiveProjects } from '@/store/selectors';
+import { formatMoney } from '@/engine/utils';
 import { 
   LayoutDashboard, 
   Film, 
@@ -13,7 +15,10 @@ import {
   ChevronLeft,
   ChevronRight,
   LogOut,
-  Settings
+  Settings,
+  DollarSign,
+  Star,
+  Clapperboard
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -118,6 +123,59 @@ export const StudioSidebar = () => {
           );
         })}
       </div>
+
+      {/* Quick Stats */}
+      {!isCollapsed && (
+        <div className="px-4 py-3 border-t border-border/20 space-y-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <DollarSign className="h-3.5 w-3.5 text-primary" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Cash</span>
+            </div>
+            <span className={cn("text-xs font-mono font-bold", (gameState.finance?.cash ?? 0) < 0 ? "text-destructive" : "text-primary")}>
+              {formatMoney(gameState.finance?.cash ?? 0)}
+            </span>
+          </div>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Star className="h-3.5 w-3.5 text-secondary" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Prestige</span>
+            </div>
+            <span className="text-xs font-mono font-bold text-secondary">{gameState.studio.prestige}</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Clapperboard className="h-3.5 w-3.5 text-foreground/60" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Active</span>
+            </div>
+            <span className="text-xs font-mono font-bold text-foreground/80">
+              {Object.values(gameState.studio.internal.projects).filter(p => p.state !== 'released' && p.state !== 'post_release' && p.state !== 'archived').length}
+            </span>
+          </div>
+        </div>
+      )}
+      {isCollapsed && (
+        <div className="px-2 py-3 border-t border-border/20 flex flex-col items-center gap-2">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className={cn("text-[10px] font-mono font-bold", (gameState.finance?.cash ?? 0) < 0 ? "text-destructive" : "text-primary")}>
+                <DollarSign className="h-3.5 w-3.5 mx-auto" />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="right" className="text-xs bg-card border-border">
+              {formatMoney(gameState.finance?.cash ?? 0)}
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="text-secondary"><Star className="h-3.5 w-3.5 mx-auto" /></div>
+            </TooltipTrigger>
+            <TooltipContent side="right" className="text-xs bg-card border-border">
+              Prestige: {gameState.studio.prestige}
+            </TooltipContent>
+          </Tooltip>
+        </div>
+      )}
 
       {/* Footer Actions */}
       <div className="p-3 bg-accent/20 space-y-1">
