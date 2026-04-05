@@ -629,11 +629,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     });
     newState = { ...newState, industry: { ...newState.industry, talentPool } };
   }
-  if (impact.newIPAssets) {
-    const newAssetIds = new Set(impact.newIPAssets.map(a => a.id));
-    const vault = [...newState.ip.vault.filter(a => !newAssetIds.has(a.id)), ...impact.newIPAssets];
-    newState = { ...newState, ip: { ...newState.ip, vault } };
-  }
+
   
   return newState;
 }
@@ -642,5 +638,34 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
  * Pure reducer that processes an array of impacts without mutating original state.
  */
 export function applyImpacts(state: GameState, impacts: StateImpact[]): GameState {
-  return impacts.reduce((currentState, impact) => applySingleImpact(currentState, impact), state);
+  let newState = impacts.reduce((currentState, impact) => applySingleImpact(currentState, impact), state);
+
+  // Process all new IP assets efficiently in one pass
+  const allNewIPs = impacts.flatMap(i => i.newIPAssets || []);
+  if (allNewIPs.length > 0) {
+    // Keep only the latest version of each IP asset
+    const latestNewIPsMap = new Map();
+    for (const asset of allNewIPs) {
+      latestNewIPsMap.set(asset.id, asset);
+    }
+
+    const newAssetIds = new Set(latestNewIPsMap.keys());
+    const latestNewIPs = Array.from(latestNewIPsMap.values());
+
+    // O(N) single-pass filter instead of using the spread operator
+    const vault = [];
+    const currentVault = newState.ip.vault || [];
+    for (let i = 0; i < currentVault.length; i++) {
+      if (!newAssetIds.has(currentVault[i].id)) {
+        vault.push(currentVault[i]);
+      }
+    }
+    for (let i = 0; i < latestNewIPs.length; i++) {
+      vault.push(latestNewIPs[i]);
+    }
+
+    newState = { ...newState, ip: { ...newState.ip, vault } };
+  }
+
+  return newState;
 }
