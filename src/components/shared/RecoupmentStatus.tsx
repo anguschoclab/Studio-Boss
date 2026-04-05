@@ -4,7 +4,7 @@ import { formatMoney } from '@/engine/utils';
 import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
 import { TrendingUp, CheckCircle2, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { selectProjectRecoupment } from '@/store/selectors';
+import { selectRecoupmentMap } from '@/store/selectors';
 import { useGameStore } from '@/store/gameStore';
 
 interface RecoupmentStatusProps {
@@ -15,7 +15,7 @@ interface RecoupmentStatusProps {
 export const RecoupmentStatus: React.FC<RecoupmentStatusProps> = ({ project, className }) => {
   const investment = (project.budget || 0) + (project.marketingBudget || 0);
   const revenue = project.revenue || 0;
-  const progress = useGameStore(s => selectProjectRecoupment(project.id)(s.gameState));
+  const progress = useGameStore(s => selectRecoupmentMap(s.gameState)[project.id] || 0);
   
   if (investment === 0) return null;
 

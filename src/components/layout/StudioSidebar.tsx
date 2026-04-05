@@ -25,6 +25,7 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useNavigate } from '@tanstack/react-router';
+import { LineChart, Line, ResponsiveContainer } from 'recharts';
 
 interface NavItem {
   id: TabId;
@@ -52,6 +53,12 @@ export const StudioSidebar = () => {
   const navigate = useNavigate();
 
   if (!gameState) return null;
+
+  const cashHistory = React.useMemo(() => {
+    if (!gameState?.finance?.weeklyHistory) return [];
+    return gameState.finance.weeklyHistory.slice(-12).map(h => ({ cash: h.cash }));
+  }, [gameState?.finance?.weeklyHistory]);
+
 
   const handleExit = () => {
     if (window.confirm('Exit to main menu?')) {
@@ -132,9 +139,27 @@ export const StudioSidebar = () => {
               <DollarSign className="h-3.5 w-3.5 text-primary" />
               <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Cash</span>
             </div>
-            <span className={cn("text-xs font-mono font-bold", (gameState.finance?.cash ?? 0) < 0 ? "text-destructive" : "text-primary")}>
-              {formatMoney(gameState.finance?.cash ?? 0)}
-            </span>
+            <div className="flex items-center gap-2">
+              {cashHistory.length > 1 && (
+                <div className="w-12 h-4 opacity-70">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={cashHistory}>
+                      <Line
+                        type="monotone"
+                        dataKey="cash"
+                        stroke={(gameState.finance?.cash ?? 0) < 0 ? "hsl(var(--destructive))" : "hsl(var(--primary))"}
+                        strokeWidth={1.5}
+                        dot={false}
+                        isAnimationActive={false}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              )}
+              <span className={cn("text-xs font-mono font-bold", (gameState.finance?.cash ?? 0) < 0 ? "text-destructive" : "text-primary")}>
+                {formatMoney(gameState.finance?.cash ?? 0)}
+              </span>
+            </div>
           </div>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -224,7 +249,7 @@ export const StudioSidebar = () => {
               onClick={() => setIsCollapsed(!isCollapsed)}
               className="w-full flex justify-center hover:bg-accent/50"
             >
-              {isCollapsed ? <Icons.ChevronRight className="h-4 w-4" /> : <Icons.ChevronLeft className="h-4 w-4" />}
+              {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
             </Button>
           </TooltipTrigger>
           <TooltipContent side="right" className="font-bold text-[11px] uppercase tracking-widest bg-card border-border">
