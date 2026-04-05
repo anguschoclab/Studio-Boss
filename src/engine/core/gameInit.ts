@@ -106,12 +106,21 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
   }, {} as Record<string, Talent>);
   
   // Initialize some initial pacts for rivals to make the world feel alive
+  const availableTopTalents = talentPoolArray.filter(t => t.tier === 1 || t.tier === 2);
+  let topTalentIndex = 0;
+
   rivals.forEach(rival => {
     const pactCount = rival.archetype === 'major' ? 3 : (rival.archetype === 'mid-tier' ? 1 : 0);
     for (let i = 0; i < pactCount; i++) {
-        const topTalent = talentPoolArray
-            .filter(t => t.tier === 1 || t.tier === 2)
-            .find(t => !t.contractId); 
+        let topTalent = undefined;
+        while (topTalentIndex < availableTopTalents.length) {
+            const candidate = availableTopTalents[topTalentIndex];
+            topTalentIndex++;
+            if (!candidate.contractId) {
+                topTalent = candidate;
+                break;
+            }
+        }
 
         if (topTalent) {
             const pact: TalentPact = {
