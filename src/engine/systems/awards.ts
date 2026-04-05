@@ -1,4 +1,4 @@
-import { AwardBody, AwardCategory, AwardsProfile, GameState, Project, SeriesProject, StateImpact } from '@/engine/types';
+import { AwardBody, AwardCategory, AwardsProfile, GameState, Project, RivalStudio, SeriesProject, StateImpact } from '@/engine/types';
 import { RandomGenerator } from '../utils/rng';
 import { 
   AWARDS_CALENDAR, 
@@ -69,33 +69,30 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
   const eligibleFilm: Project[] = [];
   const eligibleTv: Project[] = [];
 
-  // ⚡ Bolt: Pre-compute project ownership map to eliminate O(N) array scans during award checks
-  const projectToRivalMap: Record<string, import('@/engine/types').RivalStudio> = {};
+  // ⚡ Bolt: Pre-calculate project-to-rival mapping to avoid O(N) lookup in award selection
+  const projectToRivalMap: Record<string, RivalStudio> = {};
 
-  const processProject = (p: Project, rival?: import('@/engine/types').RivalStudio) => {
-    if ((p.state === 'released' || p.state === 'post_release' || p.state === 'archived') &&
-        p.releaseWeek !== null &&
-        p.releaseWeek > currentWeek - 52 &&
-        p.awardsProfile !== undefined) {
+  const allStudios = [
+    { studio: null, projects: state.studio.internal.projects },
+    ...state.industry.rivals.map(r => ({ studio: r, projects: r.projects || {} }))
+  ];
 
-      const formatMatch = (p.format || '').toLowerCase();
-      if (formatMatch === 'film') eligibleFilm.push(p);
-      else if (formatMatch === 'tv' || formatMatch === 'series') eligibleTv.push(p);
+  for (const entry of allStudios) {
+    const studioProjects = entry.projects;
+    for (const id in studioProjects) {
+      const p = studioProjects[id];
+      if ((p.state === 'released' || p.state === 'post_release' || p.state === 'archived') &&
+          p.releaseWeek !== null &&
+          p.releaseWeek > currentWeek - 52 &&
+          p.awardsProfile !== undefined) {
 
-      if (rival) projectToRivalMap[p.id] = rival;
-    }
-  };
+        if (entry.studio) {
+          projectToRivalMap[p.id] = entry.studio;
+        }
 
-  for (const key in state.studio.internal.projects) {
-    processProject(state.studio.internal.projects[key]);
-  }
-
-  const rivals = state.industry.rivals;
-  for (let i = 0; i < rivals.length; i++) {
-    const rival = rivals[i];
-    if (rival.projects) {
-      for (const key in rival.projects) {
-        processProject(rival.projects[key], rival);
+        const formatMatch = (p.format || '').toLowerCase();
+        if (formatMatch === 'film') eligibleFilm.push(p);
+        else if (formatMatch === 'tv' || formatMatch === 'series') eligibleTv.push(p);
       }
     }
   }
@@ -128,8 +125,8 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
       const prestigeGain = isWin ? 15 : 3;
       
       const isPlayer = !!state.studio.internal.projects[bestProject.id];
-      // ⚡ Bolt: Fast O(1) lookup replaced O(N) array .find()
-      const rival = projectToRivalMap[bestProject.id];
+      // ⚡ Bolt: Use pre-calculated map for O(1) rival lookup
+      const rival = isPlayer ? null : projectToRivalMap[bestProject.id];
       const winnerId = isPlayer ? 'PLAYER' : (rival?.id || 'RIVAL');
 
       // Add Award Record (Global)
