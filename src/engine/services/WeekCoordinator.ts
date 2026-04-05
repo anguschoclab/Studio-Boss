@@ -72,47 +72,18 @@ export class WeekCoordinator {
       events: []
     };
 
-    // 1. Run Filters (Sequential state propagation to prevent baseline races)
-    let currentState = state;
-    let impactPointer = 0;
+    // 1. Run Filters
+    this.runMarketFilter(state, context);
+    this.runProductionFilter(state, context);
+    this.runAIFilter(state, context);
+    this.runIndustryFilter(state, context);
+    this.runTalentFilter(state, context);
+    this.runMediaFilter(state, context);
+    this.runScandalFilter(state, context);
+    this.runFinanceFilter(state, context);
 
-    const applyNewImpacts = (systemName: string) => {
-        const newImpacts = context.impacts.slice(impactPointer);
-        if (newImpacts.length > 0) {
-            currentState = applyImpacts(currentState, newImpacts);
-            impactPointer = context.impacts.length;
-        }
-    };
-
-    this.runMarketFilter(currentState, context);
-    applyNewImpacts('Market');
-
-    this.runProductionFilter(currentState, context);
-    applyNewImpacts('Production');
-
-    this.runRatingFilter(currentState, context);
-    applyNewImpacts('Rating');
-
-    this.runAIFilter(currentState, context);
-    applyNewImpacts('AI');
-
-    this.runIndustryFilter(currentState, context);
-    applyNewImpacts('Industry');
-
-    this.runTalentFilter(currentState, context);
-    applyNewImpacts('Talent');
-
-    this.runMediaFilter(currentState, context);
-    applyNewImpacts('Media');
-
-    this.runScandalFilter(currentState, context);
-    applyNewImpacts('Scandal');
-
-    this.runFinanceFilter(currentState, context);
-    applyNewImpacts('Finance');
-
-    // 2. Final Consolidation (currentState already has all impacts applied sequentially)
-    const nextState = currentState;
+    // 2. Consolidation & State Application
+    const nextState = applyImpacts(state, context.impacts);
 
     const updatedMarketState = {
       ...nextState.finance.marketState,
@@ -181,16 +152,8 @@ export class WeekCoordinator {
         const impact = checkAndTriggerCrisis(project, state, context.rng);
         if (impact) context.impacts.push(impact);
       }
-    }
 
-    context.impacts.push(...tickTelevision(state, context.rng));
-    context.impacts.push(...calculateFranchiseEvolutionImpacts(state, context.rng));
-    context.impacts.push(...tickIPVault(state));
-    context.impacts.push(...SchedulingEngine.tick(state, context.rng));
-
-    // Check director's cut eligibility for post-theatrical projects
-    for (const key in state.studio.internal.projects) {
-      const project = state.studio.internal.projects[key];
+      // Check director's cut eligibility for post-theatrical projects
       if ((project.state === 'post_release' || project.state === 'released') && !project.directorsCutNotified) {
         const { eligible } = checkDirectorsCutEligibility(project, context.week);
         if (eligible) {
@@ -209,18 +172,58 @@ export class WeekCoordinator {
           });
         }
       }
-    }
-  }
 
-  private static runCrisisFilter(state: GameState, context: TickContext) {
-    const activeStages = ['prep', 'production', 'post_production', 'marketing'];
-    for (const key in state.studio.internal.projects) {
-      const project = state.studio.internal.projects[key];
-      if (!project.activeCrisis && activeStages.includes(project.state)) {
-        const impact = checkAndTriggerCrisis(project, state, context.rng);
-        if (impact) context.impacts.push(impact);
+      // Auto-evaluate rating for projects with flags but no rating yet
+      if (project.contentFlags?.length && !project.rating) {
+        const newRating = evaluateRatingForProject(project.contentFlags, project.type);
+        const newRegional = evaluateRegionalRatings(project.contentFlags, newRating);
+        context.impacts.push({
+          type: 'PROJECT_UPDATED',
+          payload: { projectId: project.id, update: { rating: newRating, regionalRatings: newRegional } }
+        });
+      }
+
+      // Scan released projects for newly banned markets and generate one-time headlines
+      if (project.regionalRatings && (project.state === 'released' || project.state === 'post_release')) {
+        const bannedMarkets = project.regionalRatings
+          .filter(r => r.isBanned)
+          .map(r => r.market);
+        if (bannedMarkets.length > 0) {
+          const banImpact = generateMarketBanScandal(project, bannedMarkets, context.week, state, context.rng);
+          if (banImpact) context.impacts.push(banImpact);
+        }
+      }
+
+      // Clears 'shopping' status for projects whose window has expired.
+      if (
+        project.state === 'shopping' &&
+        project.shoppingExpiresWeek !== undefined &&
+        context.week >= project.shoppingExpiresWeek
+      ) {
+        context.impacts.push({
+          type: 'PROJECT_UPDATED',
+          payload: {
+            projectId: project.id,
+            update: { state: 'archived' as const }
+          }
+        });
+        context.impacts.push({
+          type: 'NEWS_ADDED',
+          payload: {
+            id: `shop-expired-${project.id}`,
+            headline: `"${project.title}" shopping window closes without a deal`,
+            description: `The show has been shelved after failing to find a new network home.`,
+            category: 'cancellation'
+          }
+        });
       }
     }
+    // ⚡ Bolt: Consolidated multiple sequential O(n) iterations over projects into a single pass.
+
+    context.impacts.push(...tickTelevision(state, context.rng));
+    context.impacts.push(...calculateFranchiseEvolutionImpacts(state, context.rng));
+    context.impacts.push(...tickIPVault(state));
+    context.impacts.push(...SchedulingEngine.tick(state, context.rng));
   }
 
   private static runAIFilter(state: GameState, context: TickContext) {
@@ -276,9 +279,6 @@ export class WeekCoordinator {
     if (weekOfYear === 52) {
       this.runAnnualMAScan(state, context);
     }
-
-    // Shopping status expiry
-    this.runShoppingExpiry(state, context);
   }
 
   private static runTalentFilter(state: GameState, context: TickContext) {
@@ -308,35 +308,6 @@ export class WeekCoordinator {
   private static runScandalFilter(state: GameState, context: TickContext) {
     context.impacts.push(...generateScandals(state, context.rng));
     context.impacts.push(...advanceScandals(state));
-
-    // Scan released projects for newly banned markets and generate one-time headlines
-    for (const key in state.studio.internal.projects) {
-      const project = state.studio.internal.projects[key];
-      if (project.regionalRatings && (project.state === 'released' || project.state === 'post_release')) {
-        const bannedMarkets = project.regionalRatings
-          .filter(r => r.isBanned)
-          .map(r => r.market);
-        if (bannedMarkets.length > 0) {
-          const banImpact = generateMarketBanScandal(project, bannedMarkets, context.week, state, context.rng);
-          if (banImpact) context.impacts.push(banImpact);
-        }
-      }
-    }
-  }
-
-  private static runRatingFilter(state: GameState, context: TickContext) {
-    for (const key in state.studio.internal.projects) {
-      const project = state.studio.internal.projects[key];
-      // Auto-evaluate rating for projects with flags but no rating yet
-      if (project.contentFlags?.length && !project.rating) {
-        const newRating = evaluateRatingForProject(project.contentFlags, project.type);
-        const newRegional = evaluateRegionalRatings(project.contentFlags, newRating);
-        context.impacts.push({
-          type: 'PROJECT_UPDATED',
-          payload: { projectId: project.id, update: { rating: newRating, regionalRatings: newRegional } }
-        });
-      }
-    }
   }
 
   private static runFinanceFilter(state: GameState, context: TickContext) {
@@ -385,37 +356,6 @@ export class WeekCoordinator {
           });
           break; // one hostile move per attacker per year
         }
-      }
-    }
-  }
-
-  /**
-   * Clears 'shopping' status for projects whose window has expired.
-   */
-  private static runShoppingExpiry(state: GameState, context: TickContext) {
-    for (const key in state.studio.internal.projects) {
-      const project = state.studio.internal.projects[key];
-      if (
-        project.state === 'shopping' &&
-        project.shoppingExpiresWeek !== undefined &&
-        context.week >= project.shoppingExpiresWeek
-      ) {
-        context.impacts.push({
-          type: 'PROJECT_UPDATED',
-          payload: {
-            projectId: project.id,
-            update: { state: 'archived' as const }
-          }
-        });
-        context.impacts.push({
-          type: 'NEWS_ADDED',
-          payload: {
-            id: `shop-expired-${project.id}`,
-            headline: `"${project.title}" shopping window closes without a deal`,
-            description: `The show has been shelved after failing to find a new network home.`,
-            category: 'cancellation'
-          }
-        });
       }
     }
   }
