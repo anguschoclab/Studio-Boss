@@ -34,7 +34,8 @@ export const TopBar = () => {
   };
 
   return (
-    <div className="h-16 border-b border-border bg-card/50 backdrop-blur-md flex items-center justify-between px-6 z-50 sticky top-0">
+    // Switched from fixed h-16 to min-h-[4rem] with flex-wrap to prevent horizontal overflow and improve mobile responsiveness.
+    <div className="min-h-[4rem] border-b border-border bg-card/50 backdrop-blur-md flex flex-wrap items-center justify-between px-6 py-2 z-50 sticky top-0">
       <div className="flex items-center gap-8">
         {/* Studio Branding & Week */}
         <div className="flex flex-col">
@@ -122,7 +123,8 @@ export const TopBar = () => {
           variant="ghost" 
           size="icon" 
           onClick={handleSave} 
-          className="h-8 w-8 rounded-full hover:bg-white/5 text-muted-foreground hover:text-primary transition-colors"
+          aria-label="Save Game"
+          className="h-11 w-11 p-3 m-2 rounded-full hover:bg-white/5 text-muted-foreground hover:text-primary transition-colors"
         >
           <Save className="w-4 h-4" />
         </Button>

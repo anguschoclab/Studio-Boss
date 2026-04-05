@@ -22,18 +22,19 @@ export const PipelineBoard = () => {
   const projects = useGameStore(useShallow(s => selectProjects(s.gameState)));
   const { openCreateProject } = useUIStore();
 
-  // Memoize project distribution to avoid recalculating on every re-render
-  const projectsByStatus = useMemo(() => {
-    const map = new Map<ProjectStatus, typeof projects>();
-    for (const project of projects) {
-      const list = map.get(project.state);
-      if (list) {
-        list.push(project);
-      } else {
-        map.set(project.state, [project]);
+  // Memoize project distribution by column to avoid allocating new arrays (.flatMap) on every re-render
+  const projectsByColumn = useMemo(() => {
+    const cols = COLUMNS.map(() => [] as typeof projects);
+    for (let i = 0; i < projects.length; i++) {
+      const project = projects[i];
+      for (let j = 0; j < COLUMNS.length; j++) {
+        if (COLUMNS[j].status.includes(project.state)) {
+          cols[j].push(project);
+          break;
+        }
       }
     }
-    return map;
+    return cols;
   }, [projects]);
 
   return (
@@ -68,8 +69,8 @@ export const PipelineBoard = () => {
 
       {/* Production Lanes */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 flex-1 min-h-0">
-        {COLUMNS.map(col => {
-          const colProjects = col.status.flatMap(status => projectsByStatus.get(status) || []);
+        {COLUMNS.map((col, idx) => {
+          const colProjects = projectsByColumn[idx];
           return (
             <div key={col.title} className="flex flex-col h-full space-y-4 group/col">
                 {/* Column Header */}
