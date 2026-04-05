@@ -100,6 +100,7 @@ export interface GameState {
     newsHistory: NewsEvent[];
   };
   deals: DealsState;
+  activeCampaigns: Record<string, import('./state.types').CampaignData>;
   // UI Data Vis Extensions (Epic 4)
   culture: {
     genrePopularity: Record<string, number>;
