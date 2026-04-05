@@ -202,7 +202,17 @@ export const MARKET_HEADLINES = [
   'Algorithm forces {pct}% reduction in lighting budget, citing "gritty realism"',
   'Analysts predict the entire indie film market will be replaced by a single TikTok filter',
   'Studio accidentally creates a cinematic universe out of a discontinued breakfast cereal',
-  'Box office miraculously saved by {pct}% surge in ironic hate-watching'
+  'Box office miraculously saved by {pct}% surge in ironic hate-watching',
+  'Wall Street analysts visibly shudder as legacy studio announces another "dark and gritty" reboot',
+  'Indie distributor saved from bankruptcy by unexpectedly profitable 4-hour {projectName}',
+  'Focus group unanimously begs for the main character in {projectName} to seek therapy',
+  'Studio greenlights a script generated entirely by scraping Reddit arguments',
+  'Venture capital firm demands {pct}% more "synergy" before funding new slate of films',
+  'Market reacts negatively after {projectName} features a completely coherent, unambiguous ending',
+  'Theater chains threaten to boycott studios unless they mandate intermission for films over 3 hours',
+  'Streaming giant raises prices again, claiming the cost of licensing nostalgic IP has skyrocketed',
+  'Audiences openly weeping in theaters after realizing {projectName} does not set up a sequel',
+  'Algorithm accidentally deletes {pct}% of studio\'s digital library, executives call it a "tax strategy"'
 ];
 
 export const TALENT_HEADLINES = [
@@ -414,7 +424,17 @@ export const TALENT_HEADLINES = [
   'Actor in {projectName} demands a separate trailer for their spiritual advisor',
   'Lead actress goes full method for {projectName}, officially divorces her husband for real',
   '{directorName} uses AI to write their award acceptance speech, accidentally thanks a washing machine brand',
-  'Cast of {projectName} refuses to do press unless they are allowed to promote their crypto wallets'
+  'Cast of {projectName} refuses to do press unless they are allowed to promote their crypto wallets',
+  '{directorName} demands that the entire crew of {projectName} communicate exclusively in haiku',
+  'On-set "vibe coordinator" fired from {projectName} after failing to correctly read {directorName}\'s aura',
+  'Lead of {projectName} refuses to wear anything but highly branded luxury streetwear in a period piece',
+  '{directorName} reportedly spent three weeks color grading a single tear in {projectName}',
+  'Star of {projectName} caught on hot mic complaining that their character doesn\'t have enough "drip"',
+  'Studio accidentally sends early draft of {projectName} to critics, exposing {directorName}\'s terrible spelling',
+  'Crew of {projectName} goes on strike after {directorName} bans all coffee on set for "aesthetic reasons"',
+  'Lead actor of {projectName} insists their contractually mandated {pct}% backend points be paid in dogecoin',
+  '{directorName} famously quoted saying "the script is more of a suggestion" during the catastrophic shoot of {projectName}',
+  'Press tour for {projectName} derailed when star goes on unhinged rant about the hollow nature of celebrity'
 ];
 
 export const RIVAL_TEMPLATES = [
@@ -594,7 +614,17 @@ export const RIVAL_TEMPLATES = [
   '{rival} pivots entirely to short-form content, cutting the runtime of all {genre} films to 45 minutes.',
   '{rival} launches a ${budget}M {genre} project starring exclusively TikTok influencers; it flops immediately.',
   '{rival} announces a 15-year roadmap for a {genre} franchise before the first film is even cast.',
-  '{rival} desperately tries to artificially manufacture a TikTok dance trend for their ${budget}M {genre} release.'
+  '{rival} desperately tries to artificially manufacture a TikTok dance trend for their ${budget}M {genre} release.',
+  '{rival} accidentally greenlights a ${budget}M {genre} film entirely by algorithm, and it\'s inexplicably good',
+  '{rival} forces their top executive to issue a tearful apology for greenlighting that ${budget}M {genre} disaster',
+  '{rival} proudly announces they have acquired the rights to a 20-year-old meme for a ${budget}M {genre} franchise',
+  '{rival} completely re-edits their ${budget}M {genre} tentpole after a single focus group participant frowned',
+  '{rival} attempts to launch a ${budget}M {genre} cinematic universe, but forgets to introduce any of the characters',
+  '{rival} gets caught trying to artificially boost the Rotten Tomatoes score of their new ${budget}M {genre} film',
+  '{rival} blames the failure of their ${budget}M {genre} reboot on "the general public not understanding art"',
+  '{rival} quietly changes the title of their ${budget}M {genre} film three days before release to avoid association with a PR scandal',
+  '{rival} creates an A.I. CEO to run the company, who immediately greenlights a $200M {genre} sequel to a film that bombed',
+  '{rival} spends more time designing the branded popcorn buckets than writing the script for their new ${budget}M {genre} film'
 ];
 
 export const BOX_OFFICE_MILESTONES = [

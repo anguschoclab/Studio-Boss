@@ -34,29 +34,22 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
     set((s) => {
       if (!s.gameState) return s;
       const rng = new RandomGenerator(s.gameState.gameSeed + s.gameState.week + s.gameState.tickCount);
-      const { talentFees } = buildProjectAndContracts(s.gameState, params, rng);
+      const { project, newContracts, talentFees } = buildProjectAndContracts(s.gameState, params, rng);
       
-      return {
-        gameState: applyStateImpact(s.gameState, {
-          type: 'FUNDS_DEDUCTED',
-          payload: { amount: talentFees }
-        })
-      };
-    });
-    
-    set(s => {
-      if (!s.gameState) return s;
-      const rng = new RandomGenerator(s.gameState.gameSeed + s.gameState.week + s.gameState.tickCount);
-      const { project, newContracts } = buildProjectAndContracts(s.gameState, params, rng);
+      const stateWithFees = applyStateImpact(s.gameState, {
+        type: 'FUNDS_DEDUCTED',
+        payload: { amount: talentFees }
+      });
+
       return {
         gameState: {
-          ...s.gameState,
+          ...stateWithFees,
           studio: {
-            ...s.gameState.studio,
+            ...stateWithFees.studio,
             internal: {
-              ...s.gameState.studio.internal,
-              projects: { ...s.gameState.studio.internal.projects, [project.id]: project },
-              contracts: [...s.gameState.studio.internal.contracts, ...newContracts]
+              ...stateWithFees.studio.internal,
+              projects: { ...stateWithFees.studio.internal.projects, [project.id]: project },
+              contracts: [...stateWithFees.studio.internal.contracts, ...newContracts]
             }
           }
         }

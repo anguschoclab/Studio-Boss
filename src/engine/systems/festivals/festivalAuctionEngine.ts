@@ -80,14 +80,27 @@ export function runFestivalMarket(state: GameState, rng: RandomGenerator): State
   const buyers = state.market.buyers;
   const auctionResults: FestivalAuctionResult[] = [];
 
+  // ⚡ Bolt: Pre-compute rival projects mapping for O(1) lookups
+  // This avoids O(S * R * P) iteration in the activeSubmissions loop.
+  const rivalProjectsMap: Record<string, Project> = {};
+  // Safely iterate whether rivals is an array or an object map
+  for (const key in state.industry.rivals) {
+    const rival = (state.industry.rivals as any)[key];
+    if (rival && rival.projects) {
+      for (const projId in rival.projects) {
+        rivalProjectsMap[projId] = rival.projects[projId];
+      }
+    }
+  }
+
   activeSubmissions.forEach(sub => {
-    const project =
-      state.studio.internal.projects[sub.projectId] ??
-      Object.values(state.industry.rivals).flatMap(r => Object.values(r.projects ?? {})).find(p => p.id === sub.projectId);
+    const isPlayerProject = !!state.studio.internal.projects[sub.projectId];
+    const project = isPlayerProject
+      ? state.studio.internal.projects[sub.projectId]
+      : rivalProjectsMap[sub.projectId];
 
     if (!project) return;
 
-    const isPlayerProject = !!state.studio.internal.projects[sub.projectId];
     const bids: FestivalBid[] = [];
 
     // Generate NPC bids from all buyers

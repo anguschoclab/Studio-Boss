@@ -2177,5 +2177,55 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
         reputationPenalty: 10
       }
     ]
+  },
+  // Added 'Lead Actor Live TV Meltdown' crisis event with massive prestige hit but huge buzz
+  {
+    id: 'lead_actor_live_tv_meltdown',
+    description: "Your lead actor just had a spectacular, profanity-laced meltdown on live national television promoting the movie.",
+    options: [
+      {
+        text: "Cancel the rest of the press tour.",
+        effectDescription: "The film loses 20 buzz, and you take a 15 prestige hit.",
+        buzzPenalty: 20,
+        reputationPenalty: 15
+      },
+      {
+        text: "Lean into the chaos and make it a meme.",
+        effectDescription: "Costs 25 prestige but gives a +40 buzz boost.",
+        reputationPenalty: 25,
+        buzzPenalty: -40
+      },
+      {
+        text: "Send them to an exclusive rehab facility immediately.",
+        effectDescription: "Costs $500k in PR and rehab fees. Lose 10 prestige.",
+        cashPenalty: 500000,
+        reputationPenalty: 10
+      }
+    ]
+  },
+  // Added 'Leaked Executive Emails' crisis event focusing on severe prestige and financial hits
+  {
+    id: 'leaked_executive_emails',
+    description: "A hack has leaked thousands of internal studio emails, revealing executives calling fans of your biggest franchise 'unwashed basement dwellers'.",
+    options: [
+      {
+        text: "Deny the authenticity and blame a rival studio.",
+        effectDescription: "The internet sees right through it. Lose 40 prestige and 30 buzz.",
+        reputationPenalty: 40,
+        buzzPenalty: 30
+      },
+      {
+        text: "Fire the executives responsible.",
+        effectDescription: "Costs $2.5M in severance packages. Lose 10 prestige.",
+        cashPenalty: 2500000,
+        reputationPenalty: 10
+      },
+      {
+        text: "Issue a highly publicized, tearful apology video.",
+        effectDescription: "Costs $500k in PR spin. Fans still hate you. Lose 25 prestige.",
+        cashPenalty: 500000,
+        reputationPenalty: 25
+      }
+    ]
   }
 ];

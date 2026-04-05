@@ -53,33 +53,107 @@ export const DealsDesk = () => {
         </div>
       </div>
 
-      {/* Talent Pacts Section */}
+      {/* 🌌 Phase 2: Overall Deals & Shingle Pacts */}
       {activeDeals.length > 0 && (
-        <div className="flex flex-col space-y-3">
+        <div className="flex flex-col space-y-4">
           <div className="flex items-center gap-3 px-2">
-            <div className="w-1.5 h-4 rounded-full bg-amber-500" />
-            <h3 className="text-xs font-black uppercase tracking-widest text-foreground/80">
-              Active Talent Pacts <span className="text-muted-foreground">({activeDeals.length})</span>
+            <div className="w-1.5 h-4 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.4)]" />
+            <h3 className="text-xs font-black uppercase tracking-widest text-foreground/80 flex items-center gap-2">
+              Development Overall Deals & Shingles
             </h3>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {activeDeals.map(deal => {
               const talent = talentPool[deal.talentId];
-              const pactLabel = deal.type === 'overall_deal' ? 'Overall Deal' : deal.type === 'vanity_shingle' ? 'Vanity Shingle' : 'First Look';
-              const pactColor = deal.type === 'overall_deal' ? 'text-amber-400 border-amber-500/30 bg-amber-500/10' : deal.type === 'vanity_shingle' ? 'text-purple-400 border-purple-500/30 bg-purple-500/10' : 'text-blue-400 border-blue-500/30 bg-blue-500/10';
+              const isOverall = deal.type === 'overall_deal';
+              const pactLabel = isOverall ? 'Overall Deal' : deal.type === 'vanity_shingle' ? 'Vanity Shingle' : 'First Look';
+              
               return (
-                <div key={deal.id} className="p-3 rounded-lg border border-white/5 bg-white/[0.02] flex items-start justify-between gap-3 hover:border-white/10 transition-colors">
-                  <div className="flex items-center gap-2 min-w-0">
-                    <FileSignature className="h-4 w-4 text-muted-foreground shrink-0" />
-                    <div className="min-w-0">
-                      <p className="text-[11px] font-black uppercase tracking-tight truncate">{talent?.name ?? deal.talentId}</p>
-                      <p className="text-[9px] text-muted-foreground/60 uppercase tracking-widest">${deal.weeklyOverhead.toLocaleString()}/wk overhead</p>
+                <div key={deal.id} className={cn(
+                  "relative p-4 rounded-xl border transition-all hover:scale-[1.02] duration-300 group",
+                  isOverall 
+                    ? "bg-gradient-to-br from-amber-500/10 to-amber-500/5 border-amber-500/30 shadow-[0_0_20px_rgba(245,158,11,0.05)]" 
+                    : "bg-white/[0.02] border-white/5 hover:border-white/10"
+                )}>
+                  {isOverall && <div className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />}
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <div className={cn(
+                        "w-10 h-10 rounded-lg flex items-center justify-center border",
+                        isOverall ? "bg-amber-500/20 border-amber-500/40" : "bg-white/5 border-white/10"
+                      )}>
+                        <FileSignature className={cn("h-5 w-5", isOverall ? "text-amber-400" : "text-muted-foreground")} />
+                      </div>
+                      <div>
+                        <p className="text-xs font-black uppercase tracking-tight truncate max-w-[120px]">{talent?.name ?? 'Anonymous Veteran'}</p>
+                        <p className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-widest">{pactLabel}</p>
+                      </div>
                     </div>
                   </div>
-                  <Badge variant="outline" className={cn('text-[9px] font-black uppercase tracking-wider shrink-0', pactColor)}>{pactLabel}</Badge>
+                  <div className="flex items-center justify-between pt-2 border-t border-white/5">
+                    <div className="flex flex-col">
+                       <span className="text-[9px] uppercase font-black text-muted-foreground/40 tracking-widest">Weekly Overhead</span>
+                       <span className={cn("text-xs font-bold tabular-nums", isOverall ? "text-amber-400" : "text-foreground/80")}>
+                         ${(deal.weeklyOverhead / 1000).toFixed(0)}k
+                       </span>
+                    </div>
+                    <Button variant="ghost" size="sm" className="h-7 text-[9px] font-black uppercase tracking-widest hover:bg-white/5">
+                      Management
+                    </Button>
+                  </div>
                 </div>
               );
             })}
+          </div>
+        </div>
+      )}
+
+      {/* 🌌 Phase 2: Market Opportunities (Festival Auctions) */}
+      {gameState?.market.opportunities && gameState.market.opportunities.length > 0 && (
+        <div className="flex flex-col space-y-4">
+          <div className="flex items-center gap-3 px-2">
+            <div className="w-1.5 h-4 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]" />
+            <h3 className="text-xs font-black uppercase tracking-widest text-foreground/80 flex items-center gap-2">
+              Market Opportunities & Festival Acquisitions
+            </h3>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {gameState.market.opportunities.map(opp => (
+              <div key={opp.id} className="p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/5 hover:bg-emerald-500/10 transition-all group flex flex-col gap-3">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h4 className="text-sm font-black uppercase tracking-tight text-emerald-400 leading-tight">{opp.title}</h4>
+                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{opp.genre} • {opp.format}</span>
+                  </div>
+                  <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/40 text-[9px] uppercase font-black">{opp.type}</Badge>
+                </div>
+                
+                <div className="flex items-center justify-between pt-2 border-t border-emerald-500/10 mt-auto">
+                   <div className="flex flex-col">
+                      <span className="text-[9px] uppercase font-black text-emerald-500/40 tracking-widest">Entry Bid</span>
+                      <span className="text-xs font-bold text-emerald-200">${(opp.costToAcquire / 1000000).toFixed(1)}M</span>
+                   </div>
+                   <Button 
+                     size="sm" 
+                     className="h-8 bg-emerald-500 text-black hover:bg-emerald-400 font-black text-[10px] uppercase tracking-widest px-4"
+                     onClick={() => {
+                        useUIStore.getState().enqueueModal('FESTIVAL_MARKET', { 
+                          project: { 
+                            id: opp.id, 
+                            title: opp.title, 
+                            genre: opp.genre, 
+                            budget: opp.costToAcquire,
+                            reviewScore: Math.floor(Math.random() * 30) + 60, // Simulated score for the auction
+                            type: opp.format === 'film' ? 'FILM' : 'SERIES'
+                          } 
+                        });
+                     }}
+                   >
+                     Enter Gavel Auction
+                   </Button>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}
@@ -88,9 +162,9 @@ export const DealsDesk = () => {
         {/* Buyers List */}
         <div className="flex-1 flex flex-col space-y-4 overflow-hidden">
           <div className="flex items-center gap-3 px-2">
-            <div className="w-1.5 h-4 rounded-full bg-blue-500" />
+            <div className="w-1.5 h-4 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.4)]" />
             <h3 className="text-xs font-black uppercase tracking-widest text-foreground/80 flex items-center gap-2">
-              Distribution Acquisitions
+              Distribution & Network Multi-Pacts
             </h3>
           </div>
           <ScrollArea className="flex-1 pr-4">

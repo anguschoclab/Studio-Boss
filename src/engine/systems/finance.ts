@@ -89,9 +89,12 @@ export function generateWeeklyFinancialReport(
     }
   }
 
-  const totalRevenue = boxOffice + distribution + merch + passive + otherRevenue + (expenses.interest < 0 ? Math.abs(expenses.interest) : 0);
-  const totalExpenses = expenses.production + expenses.marketing + expenses.overhead + expenses.pacts + totalRoyalties + (expenses.interest > 0 ? expenses.interest : 0) + otherExpenses;
-  const netProfit = totalRevenue - totalExpenses;
+  // 5. Final P&L Calculation
+  // ⚡ PHASE 6: netProfit now ONLY includes operational P&L. 
+  // One-off impacts (acquisitions, awards) are tracked in report.revenue.other/otherExpenses 
+  // but are excluded from netProfit because they are applied via their own StateImpacts (Double Accounting fix).
+  const netProfit = (boxOffice + distribution + merch + passive + (expenses.interest < 0 ? Math.abs(expenses.interest) : 0)) 
+                  - (expenses.production + expenses.marketing + expenses.overhead + expenses.pacts + totalRoyalties + (expenses.interest > 0 ? expenses.interest : 0));
 
   const report: WeeklyFinancialReport = {
     week: state.week,

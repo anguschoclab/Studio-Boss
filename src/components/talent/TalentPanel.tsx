@@ -14,6 +14,7 @@ export const TalentPanel = () => {
   const [roleFilter, setRoleFilter] = useState<TalentRole | 'all'>('all');
   const [tierFilter, setTierFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [showMegaProducers, setShowMegaProducers] = useState(false);
 
   const filteredTalent = useMemo(() => {
     return talentPool.filter(t => {
@@ -28,10 +29,13 @@ export const TalentPanel = () => {
         else if (tierFilter === 'rising') matchesTier = prestige >= 40 && prestige < 60;
         else if (tierFilter === 'undiscovered') matchesTier = prestige < 40;
       }
+
+      const isMegaProducer = state?.deals.activeDeals.some(d => d.talentId === t.id && d.type === 'overall_deal');
+      const matchesMega = !showMegaProducers || isMegaProducer;
       
-      return matchesSearch && matchesRole && matchesTier;
+      return matchesSearch && matchesRole && matchesTier && matchesMega;
     }).sort((a, b) => (b.starMeter || 0) - (a.starMeter || 0));
-  }, [talentPool, searchQuery, roleFilter, tierFilter]);
+  }, [talentPool, searchQuery, roleFilter, tierFilter, showMegaProducers, state?.deals.activeDeals]);
 
   return (
     <div className="space-y-4 h-full flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-500 pb-12">

@@ -61,17 +61,17 @@ export const CommandCenter: React.FC = () => {
           { label: 'Industry Rivals', value: rivalCount, sub: 'Active competitors', icon: Building2, color: 'text-destructive' },
           { label: 'Prestige XP', value: studio.prestige, sub: 'Reputation level', icon: TrendingUp, color: 'text-success' },
         ].map((kpi, i) => (
-          <Card key={i} className="glass-card hover-glow group overflow-hidden relative border border-white/10 hover:border-white/20 transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)] bg-gradient-to-br from-white/10 via-white/5 to-transparent backdrop-blur-xl">
-            <div className={cn("absolute -top-6 -right-6 w-24 h-24 opacity-10 blur-[30px] rounded-full transition-all duration-700 group-hover:opacity-40 group-hover:blur-[40px] group-hover:scale-150", kpi.color.replace('text', 'bg'))} />
+          <Card key={i} className="glass-card hover-glow group overflow-hidden relative border border-white/10 hover:border-white/30 transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-[0_24px_48px_rgba(0,0,0,0.5)] bg-gradient-to-br from-white/10 via-white/5 to-black/20 backdrop-blur-2xl">
+            <div className={cn("absolute -top-8 -right-8 w-32 h-32 opacity-10 blur-[40px] rounded-full transition-all duration-700 group-hover:opacity-50 group-hover:blur-[50px] group-hover:scale-150", kpi.color.replace('text', 'bg'))} />
             <CardContent className="p-6 relative z-10">
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/70 group-hover:text-foreground/90 transition-colors duration-300">{kpi.label}</span>
-                <div className={cn("p-2 rounded-lg bg-white/5 backdrop-blur-sm border border-white/5 transition-all duration-500 group-hover:scale-110 group-hover:bg-white/10 group-hover:border-white/20", kpi.color.replace('text', 'text'))}>
-                  <kpi.icon className={cn("h-4 w-4 drop-shadow-md group-hover:drop-shadow-[0_0_12px_currentColor]", kpi.color)} />
+              <div className="flex items-center justify-between mb-5">
+                <span className="text-[11px] font-black uppercase tracking-[0.25em] text-muted-foreground/80 group-hover:text-white transition-colors duration-300">{kpi.label}</span>
+                <div className={cn("p-2.5 rounded-xl bg-gradient-to-br from-white/10 to-transparent backdrop-blur-md border border-white/10 transition-all duration-500 group-hover:scale-110 group-hover:border-white/30 shadow-[0_4px_12px_rgba(0,0,0,0.2)]", kpi.color.replace('text', 'text'))}>
+                  <kpi.icon className={cn("h-5 w-5 drop-shadow-md group-hover:drop-shadow-[0_0_15px_currentColor]", kpi.color)} />
                 </div>
               </div>
-              <div className="text-4xl font-display font-black tracking-tighter mb-1 text-foreground/90 group-hover:text-white group-hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.3)] transition-all duration-300">{kpi.value}</div>
-              <p className="text-[10px] text-muted-foreground/50 font-bold uppercase tracking-wider group-hover:text-muted-foreground/80 transition-colors duration-300">{kpi.sub}</p>
+              <div className="text-5xl font-display font-black tracking-tighter mb-2 text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] group-hover:drop-shadow-[0_0_15px_rgba(255,255,255,0.4)] transition-all duration-300">{kpi.value}</div>
+              <p className="text-[10px] text-muted-foreground/60 font-extrabold uppercase tracking-widest group-hover:text-muted-foreground/90 transition-colors duration-300">{kpi.sub}</p>
             </CardContent>
           </Card>
         ))}

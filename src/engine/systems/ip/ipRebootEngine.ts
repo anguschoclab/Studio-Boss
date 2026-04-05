@@ -8,11 +8,20 @@ export function applyRebootNostalgia(project: Project, sourceAsset: IPAsset): Pr
   // Nostalgia Factor: If the original was a massive hit (high baseValue), 
   // the reboot starts with a significant Buzz floor.
   // We scale this so a huge hit provides a +30 buzz bump.
-  const nostalgiaBonus = Math.min(30, (sourceAsset.baseValue / 1000000) * 5); 
+  let nostalgiaBonus = Math.min(30, (sourceAsset.baseValue / 1000000) * 5);
   
+  // 🌌 The Universe Builder: Cynical IP Retention. If a studio reboots a legacy IP
+  // with a low-budget tier just to retain rights, the market punishes it severely.
+  let reviewPenalty = 0;
+  if (project.budgetTier === 'low' || project.budgetTier === 'micro') {
+    nostalgiaBonus = -25;
+    reviewPenalty = 15;
+  }
+
   return {
     ...project,
-    buzz: Math.min(100, project.buzz + Math.floor(nostalgiaBonus)),
+    buzz: Math.min(100, Math.max(0, project.buzz + Math.floor(nostalgiaBonus))),
+    reviewScore: project.reviewScore ? Math.max(1, project.reviewScore - reviewPenalty) : project.reviewScore,
     isSpinoff: true,
     parentProjectId: sourceAsset.originalProjectId,
     title: project.title || `Untitled ${sourceAsset.title} Reboot`

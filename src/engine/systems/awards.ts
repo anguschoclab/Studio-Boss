@@ -65,27 +65,40 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
   if (configsThisWeek.length === 0) return [];
 
   // 1. Collect ALL projects from ALL studios
+  // ⚡ Bolt: Replaced high-allocation .map() / .forEach() and Object.values with direct for...in loops.
   const eligibleFilm: Project[] = [];
   const eligibleTv: Project[] = [];
 
-  const allStudios = [
-    { id: 'PLAYER', projects: Object.values(state.studio.internal.projects) },
-    ...state.industry.rivals.map(r => ({ id: r.id, projects: Object.values(r.projects || {}) }))
-  ];
+  // ⚡ Bolt: Pre-compute project ownership map to eliminate O(N) array scans during award checks
+  const projectToRivalMap: Record<string, import('@/engine/types').RivalStudio> = {};
 
-  allStudios.forEach(studio => {
-    studio.projects.forEach(p => {
-        if ((p.state === 'released' || p.state === 'post_release' || p.state === 'archived') &&
-            p.releaseWeek !== null &&
-            p.releaseWeek > currentWeek - 52 &&
-            p.awardsProfile !== undefined) {
-          
-          const formatMatch = (p.format || '').toLowerCase();
-          if (formatMatch === 'film') eligibleFilm.push(p);
-          else if (formatMatch === 'tv' || formatMatch === 'series') eligibleTv.push(p);
-        }
-    });
-  });
+  const processProject = (p: Project, rival?: import('@/engine/types').RivalStudio) => {
+    if ((p.state === 'released' || p.state === 'post_release' || p.state === 'archived') &&
+        p.releaseWeek !== null &&
+        p.releaseWeek > currentWeek - 52 &&
+        p.awardsProfile !== undefined) {
+
+      const formatMatch = (p.format || '').toLowerCase();
+      if (formatMatch === 'film') eligibleFilm.push(p);
+      else if (formatMatch === 'tv' || formatMatch === 'series') eligibleTv.push(p);
+
+      if (rival) projectToRivalMap[p.id] = rival;
+    }
+  };
+
+  for (const key in state.studio.internal.projects) {
+    processProject(state.studio.internal.projects[key]);
+  }
+
+  const rivals = state.industry.rivals;
+  for (let i = 0; i < rivals.length; i++) {
+    const rival = rivals[i];
+    if (rival.projects) {
+      for (const key in rival.projects) {
+        processProject(rival.projects[key], rival);
+      }
+    }
+  }
 
   if (eligibleFilm.length === 0 && eligibleTv.length === 0) return [];
 
@@ -101,7 +114,8 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
     let bestProject = candidates[0];
     let bestScore = -1;
 
-    for (const p of candidates) {
+    for (let i = 0; i < candidates.length; i++) {
+      const p = candidates[i];
       const score = (config.evaluator(p) || 0) * (1 + (p.awardsProfile?.campaignStrength || 0) / 25);
       if (score > bestScore) {
         bestScore = score;
@@ -114,7 +128,8 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
       const prestigeGain = isWin ? 15 : 3;
       
       const isPlayer = !!state.studio.internal.projects[bestProject.id];
-      const rival = state.industry.rivals.find(r => !!(r.projects || {})[bestProject.id]);
+      // ⚡ Bolt: Fast O(1) lookup replaced O(N) array .find()
+      const rival = projectToRivalMap[bestProject.id];
       const winnerId = isPlayer ? 'PLAYER' : (rival?.id || 'RIVAL');
 
       // Add Award Record (Global)
@@ -167,4 +182,62 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
 export function processRazzies(state: GameState, week: number, rng: RandomGenerator): StateImpact[] {
   // Razzies are currently player-only for crisis generation, this is acceptable for v1 gold
   return [];
+}
+
+/**
+ * Strategy: Increases a project's awards profile strength via targeted spending.
+ */
+export function launchAwardsCampaign(
+    state: GameState, 
+    projectId: string, 
+    budget: number, 
+    rng: RandomGenerator
+): StateImpact[] | null {
+    const project = state.studio.internal.projects[projectId];
+    if (!project || state.finance.cash < budget) return null;
+
+    const campaignStrengthGain = Math.floor(budget / 1_000_000); // 1 point per $1M
+
+    const impacts: StateImpact[] = [
+        {
+            type: 'FUNDS_DEDUCTED',
+            payload: { amount: budget }
+        },
+        {
+            type: 'PROJECT_UPDATED',
+            payload: {
+                projectId,
+                update: {
+                    awardsProfile: {
+                        ...(project.awardsProfile || { 
+                            criticScore: 50, 
+                            audienceScore: 50, 
+                            prestigeScore: 30, 
+                            craftScore: 50, 
+                            culturalHeat: 40,
+                            controversyRisk: 0,
+                            festivalBuzz: 0,
+                            academyAppeal: 50,
+                            guildAppeal: 50,
+                            populistAppeal: 50,
+                            indieCredibility: 50,
+                            industryNarrativeScore: 20
+                        }),
+                        campaignStrength: (project.awardsProfile?.campaignStrength || 0) + campaignStrengthGain
+                    }
+                }
+            }
+        },
+        {
+            type: 'NEWS_ADDED',
+            payload: {
+                id: rng.uuid('news-aw-camp'),
+                headline: `Academy Alert: "${project.title}" Campaign Intensifies`,
+                description: `Industry analysts note a massive marketing offensive as the studio pushes for honors.`,
+                category: 'awards'
+            }
+        }
+    ];
+
+    return impacts;
 }
