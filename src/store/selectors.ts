@@ -8,7 +8,16 @@ const EMPTY_FINANCE: FinanceState = {
   cash: 0, 
   ledger: [], 
   weeklyHistory: [], 
-  marketState: { cycle: 'STABLE', sentiment: 0, baseRate: 0.05, consumerConfidence: 50, debtRate: 0.08, savingsYield: 0.02 } as import('../engine/types/state.types').MarketState
+  marketState: { 
+    cycle: 'STABLE', 
+    sentiment: 0, 
+    baseRate: 0.05, 
+    consumerConfidence: 50, 
+    debtRate: 0.08, 
+    savingsYield: 0.02,
+    loanRate: 0.07,
+    rateHistory: [{ week: 1, rate: 0.05 }]
+  } as import('../engine/types/state.types').MarketState
 };
 const EMPTY_MARKET: GameState['market'] = { buyers: [], opportunities: [], trends: [], activeMarketEvents: [] };
 const EMPTY_TALENT_POOL: Record<string, Talent> = {};
@@ -88,6 +97,16 @@ export const selectActiveProjects = createSelector(
   }
 );
 
+/**
+ * - [x] Phase A: Foundation & Refactoring
+ *   - [x] Update `GENRE_TAXONOMY` in `genres.ts` (add unscripted, animation, art_house)
+ *   - [x] Update `TalentRole` and `ProjectRole` (add personality) in `talent.types.ts`
+ *   - [x] Refactor `TalentPact` for overall deals and overhead in `talent.types.ts`
+ *   - [x] Implement 500-talent gen loop in `gameInit.ts` (Actors, Directors, Writers, Producers, Personalities)
+ *   - [x] Implement "Animation Exemption" and "Prestige Gates" in `projectUtils.ts` (calculateTalentFitScore)
+ *   - [x] Update `selectFilteredTalent` in `selectors.ts` for holding deals/mega-producers
+ * - [/] Phase B: Television & Pilot Pipeline
+ */
 export const selectReleasedProjects = createSelector(
   [selectProjectsRaw],
   (projects) => {
@@ -206,7 +225,7 @@ export const selectRecentEvents = createSelector(
  * Filtered Talent Selector
  */
 const TIER_RANK: Record<TalentTier, number> = {
-  S_LIST: 6, A_LIST: 5, B_LIST: 4, C_LIST: 3, RISING_STAR: 2, NEWCOMER: 1
+  1: 4, 2: 3, 3: 2, 4: 1
 };
 
 export interface TalentFilter {

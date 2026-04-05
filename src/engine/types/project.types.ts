@@ -51,7 +51,7 @@ export interface BoxOfficeResult {
 }
 
 export type ProjectStatus = 'development' | 'needs_greenlight' | 'pitching' | 'production' | 'marketing' | 'released' | 'post_release' | 'archived' | 'turnaround' | 'pilot' | 'shopping';
-export type ProjectFormat = 'film' | 'tv' | 'unscripted';
+export type ProjectFormat = 'film' | 'tv' | 'unscripted' | 'animation';
 export type BudgetTierKey = 'low' | 'mid' | 'high' | 'blockbuster';
 
 export type TvFormatKey =
