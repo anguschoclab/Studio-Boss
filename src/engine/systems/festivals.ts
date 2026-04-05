@@ -8,6 +8,11 @@ export const FESTIVALS: { body: AwardBody, name: string, weeks: number[], cost: 
   { body: 'Berlin International Film Festival', name: 'Berlinale', weeks: [8, 9], cost: 35000, prestigeNeeded: 50, buzzReward: 35 }
 ];
 
+export const FESTIVAL_BY_BODY = FESTIVALS.reduce((acc, f) => {
+  acc[f.body] = f;
+  return acc;
+}, {} as Record<AwardBody, typeof FESTIVALS[0]>);
+
 /**
  * Weekly Festival Resolver
  * Processes submissions from ALL studios.
@@ -24,7 +29,7 @@ export function resolveFestivals(state: GameState, rng: RandomGenerator): StateI
         continue;
     }
     
-    const fest = FESTIVALS.find(f => f.body === sub.festivalBody);
+    const fest = FESTIVAL_BY_BODY[sub.festivalBody];
     if (!fest) {
         updatedSubmissions.push(sub);
         continue;
