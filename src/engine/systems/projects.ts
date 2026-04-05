@@ -80,6 +80,16 @@ export function handleReleasePhaseEntry(
     };
   }
 
+  if (p.type === 'FILM' && (p.format === 'tv' || p.format === 'unscripted')) {
+    const isTV = p.format === 'tv';
+    p.weeklyRevenue = (p.budget * (isTV ? 0.1 : 0.05)) * (p.buzz / 50) * franchiseSynergy * (1 - franchiseFatigue);
+    p.revenue = p.weeklyRevenue;
+    return {
+      update: isTV ? `"${p.title}" premieres on TV!` : `"${p.title}" documentary premieres!`,
+      talentUpdates: []
+    };
+  }
+
   // Fallback for types not yet fully handled
   return { update: `"${(p as Project).title}" has been released.`, talentUpdates: [] };
 }
@@ -219,6 +229,20 @@ function handleReleasedPhase(
         talentUpdates: []
       };
     }
+  } else if (p.type === 'FILM' && (p.format === 'tv' || p.format === 'unscripted')) {
+    p.revenue += p.weeklyRevenue;
+    p.weeklyRevenue *= rng.range(0.6, 0.8) * franchiseSynergy;
+
+    if (p.weeklyRevenue < (p.format === 'unscripted' ? 25_000 : 50_000) || p.weeksInPhase > 4) {
+      p.state = 'post_release';
+      p.weeksInPhase = 0;
+      return {
+        update: `"${p.title}" finishes its broadcast run.`,
+        talentUpdates: TalentSystem.applyProjectResults(p, projectContracts, Array.from(talentPoolMap.values()), projectAwards)
+      };
+    } else {
+      return { update: null, talentUpdates: [] };
+    }
   }
 
   // Fallback for types not yet fully handled
@@ -239,6 +263,12 @@ function handlePostReleasePhase(p: Project, rng: RandomGenerator): { update: str
     } else if (p.format === 'film') {
       weeklyAncillary = p.revenue * rng.range(0.1, 0.3);
       update = `"${p.title}" drops on VOD and physical media.`;
+    } else if (p.format === 'tv') {
+      weeklyAncillary = p.revenue * rng.range(0.05, 0.15);
+      update = (isSeriesProject(p) && p.releaseModel === 'binge') ? `"${p.title}" continues to trend on streaming.` : `"${p.title}" becomes available in its entirety on streaming.`;
+    } else if (p.format === 'unscripted') {
+      weeklyAncillary = p.revenue * rng.range(0.02, 0.08);
+      update = `"${p.title}" begins its long-tail streaming and syndication run.`;
     }
   } else {
     if (isFamilyOrAnim) {

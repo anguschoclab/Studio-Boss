@@ -89,6 +89,27 @@ describe("TalentSystem", () => {
       expect(t1.draw).toBe(56); // 50 + 6
       expect(t1.prestige).toBe(53); // 50 + 3
     });
+
+    it("handles talent with 0 prestige, 0 draw, but 100 ego safely (Guild Auditor)", () => {
+      const edgeTalent: Talent = {
+        ...mockTalent1,
+        id: "edge-t",
+        prestige: 0,
+        draw: 0,
+        fee: 10000,
+        psychology: { ego: 100, mood: 100, scandalRisk: 0, synergyAffinities: [], synergyConflicts: [] }
+      };
+
+      const edgeContracts: Contract[] = [{ id: "c-edge", projectId: "p1", talentId: "edge-t", fee: 10000, backendPercent: 0 }];
+      const solidHit = { ...mockProject, revenue: 25_000_000 } as Project; // 2.5 ROI
+
+      const results = TalentSystem.applyProjectResults(solidHit, edgeContracts, [edgeTalent]);
+
+      const t = results.find(t => t.id === "edge-t")!;
+      expect(t.draw).toBeGreaterThan(0); // Draw should increase
+      expect(t.prestige).toBeGreaterThan(0); // Prestige should increase
+      expect(t.psychology?.ego).toBe(100); // Ego is clamped to 100 max
+    });
   });
 
   describe("advance", () => {

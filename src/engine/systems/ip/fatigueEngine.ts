@@ -72,6 +72,11 @@ export function calculateFranchiseFatigue(
   // High loyalty acts as a buffer against fatigue.
   const loyaltyShield = (franchise.audienceLoyalty / 100) * 0.3; // Up to 30% reduction in fatigue gain
 
+  // 🌌 The Universe Builder: Extreme oversaturation penalty if the franchise has >= 4 active projects and the genre is highly saturated
+  if (activeCount >= 4 && genreSaturation > 15) {
+    currentFatigue *= 3.0;
+  }
+
   return clamp(currentFatigue + rivalPenalty - loyaltyShield, 0, 1.0);
 }
 
@@ -140,7 +145,15 @@ export function calculateReleaseGapImpact(
 
   // Too Soon Penalty
   // 🌌 The Universe Builder: Rapid-fire sequels without breathing room kill anticipation.
-  if (yearsSince > 0 && yearsSince < 1.5) {
+  if (yearsSince > 0 && yearsSince < 1) {
+    return {
+      buzzBonus: -30,
+      label: 'IP Factory (Extreme Decay)',
+      fatigueReset: false
+    };
+  }
+
+  if (yearsSince >= 1 && yearsSince < 1.5) {
     return {
       buzzBonus: -10,
       label: 'Rushed Sequel (Market Oversaturation)',

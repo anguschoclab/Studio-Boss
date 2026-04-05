@@ -35,6 +35,7 @@ import {
 } from 'recharts';
 import { TalentAvatar } from './TalentAvatar';
 import { getTalentVisualAge, getCountryFlag } from '@/engine/generators/avatarGenerator';
+import { TalentGanttChart } from './TalentGanttChart';
 
 export const TalentModal = () => {
   const { selectedTalentId, selectTalent } = useUIStore();
@@ -184,6 +185,9 @@ export const TalentModal = () => {
               </TabsTrigger>
               <TabsTrigger value="filmography" className="rounded-xl data-[state=active]:bg-primary data-[state=active]:text-black uppercase text-[11px] font-black tracking-widest transition-all duration-300">
                 <Clapperboard className="h-4 w-4 mr-2" /> Filmography
+              </TabsTrigger>
+              <TabsTrigger value="schedule" className="rounded-xl data-[state=active]:bg-primary data-[state=active]:text-black uppercase text-[11px] font-black tracking-widest transition-all duration-300">
+                <Calendar className="h-4 w-4 mr-2" /> Schedule
               </TabsTrigger>
             </TabsList>
 
@@ -477,6 +481,13 @@ export const TalentModal = () => {
                   </tbody>
                 </table>
               </div>
+            </TabsContent>
+
+            {/* SCHEDULE TAB - 🌌 PHASE 2 */}
+            <TabsContent value="schedule" className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300 focus-visible:outline-none">
+               <div className="bg-slate-900/40 p-1 rounded-3xl border border-white/5 shadow-2xl overflow-hidden min-h-[500px]">
+                  <TalentGanttChart talent={talent} currentWeek={currentWeek} />
+               </div>
             </TabsContent>
           </Tabs>
         </div>

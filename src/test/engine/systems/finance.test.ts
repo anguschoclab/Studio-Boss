@@ -197,6 +197,40 @@ describe("Finance System", () => {
 });
 
 describe('Finance Edge Cases', () => {
+    it('handles an empty project pipeline without crashing (Guild Auditor)', () => {
+      const state = {
+          week: 1,
+          gameSeed: 1,
+          tickCount: 0,
+          game: { currentWeek: 1 },
+          news: { headlines: [] },
+          history: [],
+          eventHistory: [],
+          culture: { genrePopularity: {} },
+          projects: { active: [] },
+          studio: { name: 'indie studio', internal: { projects: {}, contracts: [], firstLookDeals: [] }, archetype: 'indie', prestige: 50 },
+          finance: { cash: 1000000, ledger: [] },
+          ip: { vault: [], franchises: {} },
+          market: { buyers: [], opportunities: [], activeMarketEvents: [] },
+          industry: { talentPool: {}, rivals: [], families: [], agencies: [], agents: [], newsHistory: [], rumors: [] }
+      } as GameState;
+
+      const { report, snapshot } = generateWeeklyFinancialReport(
+        state,
+        'player',
+        state.studio.internal.projects,
+        state.finance.cash,
+        state.studio.archetype,
+        state.studio.prestige,
+        state.studio.internal.contracts,
+        state.studio.internal.firstLookDeals || []
+      );
+
+      expect(report.expenses.production).toBe(0);
+      expect(report.expenses.overhead).toBeGreaterThan(0); // Level 1 studio baseline overhead
+      expect(snapshot.net).toBeLessThan(0); // Net loss due to overhead
+    });
+
   it('handles project with a negative budget safely', () => {
     const project = {
       id: 'p1',

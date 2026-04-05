@@ -101,10 +101,19 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
     if (rng.next() < 0.1) {
       const target = rng.pick(availableTalent);
 
-      // 🎭 Method Actor Tuning: Auteur directors heavily favor prestige, demanding massive premiums if the studio lacks it.
+      // 🎭 Method Actor Tuning: Auteur directors heavily favor prestige, demanding massive premiums if the studio lacks it, but will accept major discounts for highly prestigious studios.
       const isAuteur = target.prestige > 85;
       const prestigeDelta = target.prestige - rival.prestige;
-      const prestigePenalty = isAuteur && prestigeDelta > 0 ? (prestigeDelta * 0.05) : 0;
+      let prestigePenalty = 0;
+      if (isAuteur) {
+        if (prestigeDelta > 10) {
+          prestigePenalty = prestigeDelta * 0.15; // Heavy penalty for low prestige
+        } else if (prestigeDelta < -10) {
+          prestigePenalty = -0.3; // Major discount for high prestige
+        } else if (prestigeDelta > 0) {
+          prestigePenalty = prestigeDelta * 0.05;
+        }
+      }
 
       const lockFee = target.fee * (1.5 + rng.next() + prestigePenalty);
       

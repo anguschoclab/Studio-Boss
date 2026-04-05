@@ -4,6 +4,20 @@ import { GameState, StateImpact, NewsEvent, Project, RivalStudio, Talent, Buyer,
  * Pure function to apply a single StateImpact to the GameState.
  */
 function applySingleImpact(state: GameState, impact: StateImpact): GameState {
+  if (impact.type === 'FUNDS_CHANGED') {
+      let amount = impact.payload.amount;
+      if (isNaN(amount) || amount === null) amount = 0;
+      if (Math.abs(amount) > 10_000_000_000) amount = Math.sign(amount) * 10_000_000_000;
+      impact.payload.amount = amount;
+  }
+  
+  if (impact.type === 'RIVAL_UPDATED' && impact.payload.update?.cash !== undefined) {
+      let val = impact.payload.update.cash;
+      if (isNaN(val) || val === null) val = 0;
+      if (Math.abs(val) > 1_000_000_000_000) val = Math.sign(val) * 1_000_000_000_000;
+      impact.payload.update.cash = val;
+  }
+
   switch (impact.type) {
     case 'FUNDS_CHANGED': {
       const { amount } = impact.payload;
@@ -222,6 +236,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
 
     case 'INDUSTRY_UPDATE': {
       const payload = impact.payload as any;
+      // ⚡ Bolt: Robust Deep Clone for path updates to prevent reference mutation
       let nextState = { ...state };
       
       // 1. Generic Deep-Path Updates (User-Added Architecture)
@@ -229,32 +244,28 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
         for (const [path, value] of Object.entries(payload.update)) {
           const parts = (path as string).split('.');
           let current: any = nextState;
-          let validPath = true;
 
           for (let i = 0; i < parts.length - 1; i++) {
             const part = parts[i];
-            if (part === '__proto__' || part === 'constructor' || part === 'prototype') {
-              validPath = false;
-              break;
-            }
+            
+            // Security check
+            if (part === '__proto__' || part === 'constructor' || part === 'prototype') break;
 
-            if (current[part] === undefined || current[part] === null) {
-               current[part] = {};
-            }
-
+            // Deep clone the branch we are traversing to ensure true immutability
             if (Array.isArray(current[part])) {
               current[part] = [...current[part]];
-            } else if (typeof current[part] === 'object') {
+            } else if (typeof current[part] === 'object' && current[part] !== null) {
               current[part] = { ...current[part] };
+            } else {
+              current[part] = {};
             }
+            
             current = current[part];
           }
 
-          if (validPath) {
-            const lastPart = parts[parts.length - 1];
-            if (lastPart !== '__proto__' && lastPart !== 'constructor' && lastPart !== 'prototype') {
-              current[lastPart] = value;
-            }
+          const lastPart = parts[parts.length - 1];
+          if (lastPart !== '__proto__' && lastPart !== 'constructor' && lastPart !== 'prototype') {
+            current[lastPart] = value;
           }
         }
       }
@@ -341,8 +352,8 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
       const { scandal } = impact.payload;
       let newPrestige = state.studio.prestige;
 
-      // Calculate a prestige hit based on the severity
-      const prestigeHit = Math.floor(scandal.severity / 10);
+      // Calculate a prestige hit based on the severity (Punish prestige more severely for scandals)
+      const prestigeHit = Math.floor(scandal.severity / 5);
       newPrestige = Math.max(0, newPrestige - prestigeHit);
 
       // Check if there's an attached project to boost buzz for specific genres/formats
@@ -355,9 +366,9 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
           if (project) {
               const format = project.format;
               const genre = project.genre ? project.genre.toLowerCase() : '';
-                // Enhance the boost for trashy reality TV or horror on scandals
+                // Enhance the boost for trashy reality TV or horror on scandals (Significant boost)
               if (format === 'unscripted' || genre.includes('horror')) {
-                    projects[pid] = { ...project, buzz: Math.min(100, (project.buzz || 0) + Math.floor(scandal.severity / 2)) };
+                    projects[pid] = { ...project, buzz: Math.min(100, (project.buzz || 0) + scandal.severity) };
               }
           }
       }
@@ -518,7 +529,8 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
         activeDeals = [...activeDeals, deal];
       } else {
         activeDeals = activeDeals.filter(d => d.id !== deal.id);
-        expiredDeals = [{ ...deal, status: action === 'expire' ? 'expired' : 'terminated' }, ...expiredDeals].slice(0, 50);
+        const status = (action === 'expire' ? 'expired' : 'terminated') as 'expired' | 'terminated';
+        expiredDeals = [{ ...deal, status }, ...expiredDeals].slice(0, 50);
       }
       return { ...state, deals: { ...current, activeDeals, expiredDeals } };
     }
@@ -629,11 +641,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     });
     newState = { ...newState, industry: { ...newState.industry, talentPool } };
   }
-  if (impact.newIPAssets) {
-    const newAssetIds = new Set(impact.newIPAssets.map(a => a.id));
-    const vault = [...newState.ip.vault.filter(a => !newAssetIds.has(a.id)), ...impact.newIPAssets];
-    newState = { ...newState, ip: { ...newState.ip, vault } };
-  }
+
   
   return newState;
 }
@@ -642,5 +650,34 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
  * Pure reducer that processes an array of impacts without mutating original state.
  */
 export function applyImpacts(state: GameState, impacts: StateImpact[]): GameState {
-  return impacts.reduce((currentState, impact) => applySingleImpact(currentState, impact), state);
+  let newState = impacts.reduce((currentState, impact) => applySingleImpact(currentState, impact), state);
+
+  // Process all new IP assets efficiently in one pass
+  const allNewIPs = impacts.flatMap(i => i.newIPAssets || []);
+  if (allNewIPs.length > 0) {
+    // Keep only the latest version of each IP asset
+    const latestNewIPsMap = new Map();
+    for (const asset of allNewIPs) {
+      latestNewIPsMap.set(asset.id, asset);
+    }
+
+    const newAssetIds = new Set(latestNewIPsMap.keys());
+    const latestNewIPs = Array.from(latestNewIPsMap.values());
+
+    // O(N) single-pass filter instead of using the spread operator
+    const vault = [];
+    const currentVault = newState.ip.vault || [];
+    for (let i = 0; i < currentVault.length; i++) {
+      if (!newAssetIds.has(currentVault[i].id)) {
+        vault.push(currentVault[i]);
+      }
+    }
+    for (let i = 0; i < latestNewIPs.length; i++) {
+      vault.push(latestNewIPs[i]);
+    }
+
+    newState = { ...newState, ip: { ...newState.ip, vault } };
+  }
+
+  return newState;
 }
