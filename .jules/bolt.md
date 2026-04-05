@@ -7,3 +7,4 @@
 ## 2025-02-12 - Core Loop Refactoring: Pre-computed Maps & Direct Iteration
 **Learning:** Heavy O(N) array loops (like `.find()`, `.map()`, `.forEach()`) executed on hot paths within the `WeekCoordinator` orchestrator (like the awards ceremony logic) introduced severe GC pressure and O(N) linear search regressions inside inner loops. Even `Object.values(projects)` was creating substantial intermediate object graphs.
 **Action:** Substituted `.find()` with an O(1) dictionary lookup by pre-computing a fast reference map (`projectToRivalMap`) ahead of inner iteration paths. Used native `for` loops in place of map/forEach to preserve memory references and stop GC chug in tightly-wound simulation phases.
+- **festivals:** Replaced O(S * R * P) dictionary array filtering with a pre-computed O(R * P + S) map for rival projects lookup in the festival auction engine.
