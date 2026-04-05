@@ -81,7 +81,7 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
             <Target className="w-4 h-4 text-primary" /> Active Production Slate
           </h3>
           {onClose && (
-            <Button variant="ghost" size="icon" onClick={onClose} className="h-8 w-8 text-slate-500 hover:text-white">
+            <Button variant="ghost" size="icon" aria-label="Close panel" onClick={onClose} className="h-8 w-8 text-slate-500 hover:text-white">
               <X className="w-4 h-4" />
             </Button>
           )}
