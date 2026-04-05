@@ -1,19 +1,14 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { useGameStore } from '../../store/gameStore';
 import { WeeklyFinancialReport } from '../../engine/types';
+import { createMockGameState } from '../utils/mockFactories';
 
 describe('financeSlice', () => {
   beforeEach(() => {
     // Reset store before each test
-    useGameStore.setState({
-      gameState: {
-        finance: {
-          cash: 100000000,
-          ledger: [],
-          weeklyHistory: []
-        }
-      } as any
-    });
+    const gameState = createMockGameState();
+    gameState.finance.cash = 100000000;
+    useGameStore.setState({ gameState });
   });
 
   it('should initialize with an empty ledger', () => {
@@ -27,7 +22,7 @@ describe('financeSlice', () => {
       year: 2026,
       startingCash: 100000000,
       revenue: { boxOffice: 5000000, distribution: 0, other: 0 },
-      expenses: { production: 2000000, marketing: 1000000, overhead: 500000 },
+      expenses: { production: 2000000, marketing: 1000000, overhead: 500000, pacts: 0 },
       endingCash: 101500000,
       netProfit: 1500000,
     };
