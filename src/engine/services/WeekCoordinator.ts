@@ -284,9 +284,14 @@ export class WeekCoordinator {
     for (const key in state.studio.internal.projects) {
       const project = state.studio.internal.projects[key];
       if (project.regionalRatings && (project.state === 'released' || project.state === 'post_release')) {
-        const bannedMarkets = project.regionalRatings
-          .filter(r => r.isBanned)
-          .map(r => r.market);
+        // ⚡ Bolt: Refactored array .filter().map() chain to a simple for loop to reduce allocation overhead
+        const bannedMarkets: string[] = [];
+        const rr = project.regionalRatings;
+        for (let j = 0; j < rr.length; j++) {
+          if (rr[j].isBanned) {
+            bannedMarkets.push(rr[j].market);
+          }
+        }
         if (bannedMarkets.length > 0) {
           const banImpact = generateMarketBanScandal(project, bannedMarkets, context.week, state, context.rng);
           if (banImpact) context.impacts.push(banImpact);
