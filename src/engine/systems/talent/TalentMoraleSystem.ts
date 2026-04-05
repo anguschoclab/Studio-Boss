@@ -53,26 +53,24 @@ export class TalentMoraleSystem {
   ): TalentUpdate[] {
     const updates: TalentUpdate[] = [];
 
-    // ⚡ Bolt: Pre-compute dictionaries to eliminate O(N) filtering inside hot loops
-    const projectMap = new Map<string, Project>();
-    for (let i = 0; i < projects.length; i++) {
-      const p = projects[i];
-      projectMap.set(p.id, p);
-    }
-
-    const talentContractsMap = new Map<string, Contract[]>();
-    for (let i = 0; i < contracts.length; i++) {
-      const c = contracts[i];
-      let arr = talentContractsMap.get(c.talentId);
-      if (!arr) {
-        arr = [];
-        talentContractsMap.set(c.talentId, arr);
+    // Pre-compute O(1) lookups to avoid O(N*M) nested filtering
+    const contractsByTalent = new Map<string, Contract[]>();
+    for (const c of contracts) {
+      const arr = contractsByTalent.get(c.talentId);
+      if (arr) {
+        arr.push(c);
+      } else {
+        contractsByTalent.set(c.talentId, [c]);
       }
-      arr.push(c);
     }
 
-    for (let i = 0; i < talent.length; i++) {
-      const t = talent[i];
+    const projectById = new Map<string, Project>();
+    for (const p of projects) {
+      projectById.set(p.id, p);
+    }
+
+    // ⚡ Bolt: Consolidated O(N) array filtering to O(1) Map lookups
+    for (const t of talent) {
       let moodChange = 0;
       
       // 1. Natural drift toward 50
@@ -80,15 +78,13 @@ export class TalentMoraleSystem {
       else if (t.psychology.mood < 45) moodChange += 1;
 
       // 2. Project performance
-      const activeContracts = talentContractsMap.get(t.id);
-      if (activeContracts) {
-        for (let j = 0; j < activeContracts.length; j++) {
-          const c = activeContracts[j];
-          const p = projectMap.get(c.projectId);
-          if (p) {
-            // Momentum impact
-            if (p.momentum < 30) moodChange -= 2;
-            else if (p.momentum > 80) moodChange += 1;
+      const activeContracts = contractsByTalent.get(t.id) || [];
+      for (const c of activeContracts) {
+        const p = projectById.get(c.projectId);
+        if (p) {
+          // Momentum impact
+          if (p.momentum < 30) moodChange -= 2;
+          else if (p.momentum > 80) moodChange += 1;
 
             // Crisis impact
             if (p.activeCrisis && !p.activeCrisis.resolved) moodChange -= 5;
