@@ -1,4 +1,4 @@
-import { GameState, RivalStudio, Project, Talent, StateImpact, IPAsset } from '@/engine/types';
+import { GameState, IPAsset, Project, RivalStudio, StateImpact, Talent } from '@/engine/types';
 import { RandomGenerator } from '../utils/rng';
 
 export function evaluateAcquisitionTarget(target: RivalStudio, buyerCash: number): { viable: boolean; price: number; reason?: string } {
