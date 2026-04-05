@@ -37,7 +37,7 @@ export function executeAcquisition(state: GameState, targetId: string, rng: Rand
   // Transfer IP assets
   const vault = state.ip.vault || [];
   const targetName = target.name;
-  const newIPAssets: any[] = [];
+  const newIPAssets: IPAsset[] = [];
 
   for (let i = 0; i < vault.length; i++) {
     const a = vault[i];
