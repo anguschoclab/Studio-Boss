@@ -1,5 +1,5 @@
-import { formatMoney, getWeekDisplay, clamp } from "../../engine/utils";
-import { describe, it, expect } from "vitest";
+import { formatMoney, getWeekDisplay, clamp, groupContractsByProject } from "../../engine/utils";
+import { Contract } from "@/engine/types";
 
 describe("utils", () => {
   describe("formatMoney", () => {
@@ -78,43 +78,51 @@ describe("utils", () => {
   });
 
   describe("groupContractsByProject", () => {
-    it("returns an empty Map for an empty array", () => {
-      const map = groupContractsByProject([]);
-      expect(map.size).toBe(0);
-      expect(map instanceof Map).toBe(true);
+    it("returns an empty map for an empty array", () => {
+      const result = groupContractsByProject([]);
+      expect(result.size).toBe(0);
+      expect(result instanceof Map).toBe(true);
     });
 
-    it("groups a single contract by projectId", () => {
-      const contracts: Contract[] = [
-        { id: "c1", talentId: "t1", projectId: "p1", fee: 100, backendPercent: 0, role: "actor" },
-      ];
-      const map = groupContractsByProject(contracts);
-      expect(map.size).toBe(1);
-      expect(map.get("p1")).toEqual([contracts[0]]);
+    it("groups a single contract correctly", () => {
+      const contract: Contract = {
+        id: "c1",
+        talentId: "t1",
+        projectId: "p1",
+        fee: 100,
+        backendPercent: 0,
+        role: "actor"
+      };
+      const result = groupContractsByProject([contract]);
+
+      expect(result.size).toBe(1);
+      expect(result.has("p1")).toBe(true);
+      expect(result.get("p1")).toEqual([contract]);
     });
 
-    it("groups multiple contracts under the same projectId", () => {
-      const contracts: Contract[] = [
-        { id: "c1", talentId: "t1", projectId: "p1", fee: 100, backendPercent: 0, role: "actor" },
-        { id: "c2", talentId: "t2", projectId: "p1", fee: 200, backendPercent: 5, role: "director" },
-      ];
-      const map = groupContractsByProject(contracts);
-      expect(map.size).toBe(1);
-      expect(map.get("p1")).toEqual(contracts);
+    it("groups multiple contracts for the same project together", () => {
+      const c1: Contract = { id: "c1", talentId: "t1", projectId: "p1", fee: 100, backendPercent: 0, role: "actor" };
+      const c2: Contract = { id: "c2", talentId: "t2", projectId: "p1", fee: 200, backendPercent: 0, role: "director" };
+
+      const result = groupContractsByProject([c1, c2]);
+
+      expect(result.size).toBe(1);
+      expect(result.has("p1")).toBe(true);
+      expect(result.get("p1")).toEqual([c1, c2]);
     });
 
-    it("groups multiple contracts into different projectIds", () => {
-      const contracts: Contract[] = [
-        { id: "c1", talentId: "t1", projectId: "p1", fee: 100, backendPercent: 0, role: "actor" },
-        { id: "c2", talentId: "t2", projectId: "p2", fee: 200, backendPercent: 5, role: "director" },
-        { id: "c3", talentId: "t3", projectId: "p1", fee: 50, backendPercent: 0, role: "writer" },
-        { id: "c4", talentId: "t4", projectId: "p3", fee: 500, backendPercent: 10, role: "actor" },
-      ];
-      const map = groupContractsByProject(contracts);
-      expect(map.size).toBe(3);
-      expect(map.get("p1")).toEqual([contracts[0], contracts[2]]);
-      expect(map.get("p2")).toEqual([contracts[1]]);
-      expect(map.get("p3")).toEqual([contracts[3]]);
+    it("groups multiple contracts for different projects separately", () => {
+      const c1: Contract = { id: "c1", talentId: "t1", projectId: "p1", fee: 100, backendPercent: 0, role: "actor" };
+      const c2: Contract = { id: "c2", talentId: "t2", projectId: "p2", fee: 200, backendPercent: 0, role: "director" };
+      const c3: Contract = { id: "c3", talentId: "t3", projectId: "p1", fee: 300, backendPercent: 0, role: "writer" };
+
+      const result = groupContractsByProject([c1, c2, c3]);
+
+      expect(result.size).toBe(2);
+      expect(result.has("p1")).toBe(true);
+      expect(result.get("p1")).toEqual([c1, c3]);
+      expect(result.has("p2")).toBe(true);
+      expect(result.get("p2")).toEqual([c2]);
     });
   });
 });
