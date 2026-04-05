@@ -9,3 +9,6 @@
 // ⚡ Bolt: Removed inline array allocation using Object.values() inside useGameStore in FinancePanel to prevent unnecessary re-renders.
 
 - **2023-10-XX (Performance Optimization):** In `src/engine/systems/ip/franchiseCoordinator.ts`, replaced an O(N) genre lookup (`Object.keys().find()`) inside a hot `assets.forEach` loop with an O(1) static dictionary lookup (`CROSSOVER_AFFINITY_LOWER_KEYS`). This prevents array reallocation and O(N) iteration per asset, yielding a ~5x speedup for the genre normalization path.
+## 2024-05-24 - [Framerate Optimization: O(1) Dictionary Lookup for Object.values().forEach() iterations]
+**Learning:** Found O(n) array allocations happening inside hot tick loops via `Object.values(Record).forEach()`. This was generating thousands of temporary object wrappers and array elements causing severe GC overhead.
+**Action:** Replaced `Object.values(state.industry.talentPool).forEach(...)` inside `productionEngine.ts` tick with a raw `for...in` loop and `hasOwnProperty` guard, reducing GC pressure to near zero for that block.

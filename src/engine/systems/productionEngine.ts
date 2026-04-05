@@ -153,7 +153,9 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
 
   // Handle Resting Talent Fatigue
   const activeTalentIds = new Set(state.studio.internal.contracts.map(c => c.talentId));
-  Object.values(state.industry.talentPool).forEach(talent => {
+  for (const talentId in state.industry.talentPool) {
+    if (!Object.prototype.hasOwnProperty.call(state.industry.talentPool, talentId)) continue;
+    const talent = state.industry.talentPool[talentId];
     if (!activeTalentIds.has(talent.id)) {
       const newFatigue = SchedulingEngine.updateTalentFatigue(talent, false);
       if (newFatigue !== talent.fatigue) {
@@ -163,7 +165,7 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
         });
       }
     }
-  });
+  }
 
   // 2. Rival Projects
   for (const rival of state.industry.rivals) {
