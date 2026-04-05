@@ -57,6 +57,11 @@ export const FinancePanel = () => {
     [projectsMemo]
   );
 
+  const latestFinanceSnapshot = useMemo(() =>
+    financeHistory.length > 0 ? financeHistory[financeHistory.length - 1] : null,
+    [financeHistory]
+  );
+
   const chartData = useMemo(() => {
     if (!financeHistory || financeHistory.length === 0) return [];
     
@@ -303,7 +308,7 @@ export const FinancePanel = () => {
              <CardTitle className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Weekly P&L Breakdown</CardTitle>
           </CardHeader>
           <CardContent className="h-[180px] pt-4">
-             <ProfitWaterfallChart snapshot={financeHistory.slice(-1)[0]} />
+             {latestFinanceSnapshot && <ProfitWaterfallChart snapshot={latestFinanceSnapshot} />}
           </CardContent>
         </Card>
 

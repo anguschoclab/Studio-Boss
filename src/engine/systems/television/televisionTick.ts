@@ -3,6 +3,8 @@ import { calculateWeeklyRating } from './ratingsEvaluator';
 import { evaluateRenewal } from './renewalEngine';
 import { RandomGenerator } from '../../utils/rng';
 import { calculateNielsenRatings, buildNielsenProfile, rankShows, assignTimeSlot, NielsenSnapshot } from './nielsenSystem';
+import { runUpfronts } from './upfrontsEngine';
+import { tickPilots } from './pilotEvaluator';
 
 export type TVStatus = 'IN_DEVELOPMENT' | 'ON_AIR' | 'ON_BUBBLE' | 'RENEWED' | 'CANCELLED' | 'SYNDICATED';
 
@@ -11,24 +13,31 @@ export type TVStatus = 'IN_DEVELOPMENT' | 'ON_AIR' | 'ON_BUBBLE' | 'RENEWED' | '
  */
 export function tickTelevision(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [
-    ...tickPilots(state),
+    ...tickPilots(state, rng),
   ];
 
   // The Upfronts: Week 20
   if (state.week % 52 === 20) {
-    impacts.push(...processUpfronts(state, rng));
+    impacts.push(...runUpfronts(state, rng));
   }
   
-  // Collect all series from player and rivals
+  // Refactored array .find() inside map to a Set/Map lookup, improving performance from O(n^2) to O(n).
+  // Loop fusion: We collect allSeries, airingShows, and identify player/rival ownership in a single pass.
   const allSeries: SeriesProject[] = [];
   const airingShows: SeriesProject[] = [];
 
-  const playerProjects = Object.values(state.studio.internal.projects);
-  for (let i = 0; i < playerProjects.length; i++) {
-    const p = playerProjects[i];
+  // Track ownership to avoid O(N) lookups later
+  const isPlayerMap = new Map<string, boolean>();
+  const rivalIdMap = new Map<string, string>();
+
+  const playerProjects = state.studio.internal.projects;
+  for (const key in playerProjects) {
+    if (!Object.prototype.hasOwnProperty.call(playerProjects, key)) continue;
+    const p = playerProjects[key];
     if (p.type === 'SERIES' && 'tvDetails' in p) {
       const seriesProject = p as SeriesProject;
       allSeries.push(seriesProject);
+      isPlayerMap.set(p.id, true);
       if (seriesProject.tvDetails.status === 'ON_AIR') {
         airingShows.push(seriesProject);
       }
@@ -37,40 +46,43 @@ export function tickTelevision(state: GameState, rng: RandomGenerator): StateImp
 
   const rivals = state.industry.rivals;
   for (let i = 0; i < rivals.length; i++) {
-    const rivalProjects = Object.values(rivals[i].projects || {});
-    for (let j = 0; j < rivalProjects.length; j++) {
-      const p = rivalProjects[j];
+    const rival = rivals[i];
+    const rivalProjects = rival.projects || {};
+    for (const key in rivalProjects) {
+      if (!Object.prototype.hasOwnProperty.call(rivalProjects, key)) continue;
+      const p = rivalProjects[key];
       if (p.type === 'SERIES' && 'tvDetails' in p) {
         const seriesProject = p as SeriesProject;
         allSeries.push(seriesProject);
+        rivalIdMap.set(p.id, rival.id);
         if (seriesProject.tvDetails.status === 'ON_AIR') {
           airingShows.push(seriesProject);
         }
       }
     }
   }
-  const weekSnapshots = new Map<string, NielsenSnapshot>();
 
-  const airingShows = series.filter(p => p.tvDetails.status === 'ON_AIR');
   const weekSnapshots = new Map<string, NielsenSnapshot>();
 
   // Phase 1: Generate Nielsen snapshots for all airing shows
-  airingShows.forEach(project => {
+  for (let i = 0; i < airingShows.length; i++) {
+    const project = airingShows[i];
     const aired = (project.tvDetails.episodesAired || 0) + 1;
     const snapshot = calculateNielsenRatings(project, aired, airingShows.length, rng);
     snapshot.week = state.week + 1;
     weekSnapshots.set(project.id, snapshot);
-  });
+  }
 
   // Phase 2: Rank all shows by key demo
   const rankedSnapshots = rankShows(weekSnapshots);
 
   // Phase 3: Process each series
-  series.forEach(project => {
-    if (project.tvDetails.status !== 'ON_AIR') return;
+  for (let i = 0; i < allSeries.length; i++) {
+    const project = allSeries[i];
+    if (project.tvDetails.status !== 'ON_AIR') continue;
 
     const snapshot = rankedSnapshots.get(project.id);
-    if (!snapshot) return;
+    if (!snapshot) continue;
 
     const aired = (project.tvDetails.episodesAired || 0) + 1;
 
@@ -91,18 +103,24 @@ export function tickTelevision(state: GameState, rng: RandomGenerator): StateImp
     const updatedSnapshots = [...existingSnapshots, snapshot];
     const nielsenProfile = buildNielsenProfile(updatedSnapshots, timeSlot);
 
-    impacts.push({
-      type: 'PROJECT_UPDATED',
-      payload: {
-        projectId: project.id,
-        update: {
-          tvDetails: {
-            ...project.tvDetails,
-            episodesAired: aired,
-            averageRating: nextAverageRating,
-            status: nextStatus
-          },
-          nielsenProfile
+    const isPlayer = isPlayerMap.get(project.id);
+    const rivalId = rivalIdMap.get(project.id);
+    const rival = rivalId ? state.industry.rivals.find(r => r.id === rivalId) : undefined;
+
+    if (isPlayer) {
+      impacts.push({
+        type: 'PROJECT_UPDATED',
+        payload: {
+          projectId: project.id,
+          update: {
+            tvDetails: {
+              ...project.tvDetails,
+              episodesAired: aired,
+              averageRating: nextAverageRating,
+              status: nextStatus
+            },
+            nielsenProfile
+          }
         }
       });
     } else if (rival) {
@@ -165,27 +183,42 @@ export function tickTelevision(state: GameState, rng: RandomGenerator): StateImp
         });
       }
     }
-  });
+  }
 
   // Phase 4: Handle Shopping Expiration
-  const allProjects = [
-    ...Object.values(state.studio.internal.projects),
-    ...state.industry.rivals.flatMap(r => Object.values(r.projects || {}))
-  ];
-
-  allProjects.forEach(p => {
+  // Refactored array spread and .find() inside loop to direct object iteration, improving performance from O(n^2) to O(n).
+  const checkShoppingExpiration = (p: any, isPlayer: boolean, rivalId?: string) => {
     if (p.state === 'shopping' && p.shoppingExpiresWeek && state.week >= p.shoppingExpiresWeek) {
-      const isPlayer = !!state.studio.internal.projects[p.id];
-      const rival = state.industry.rivals.find(r => !!(r.projects || {})[p.id]);
-
-      impacts.push({
-        type: isPlayer ? 'PROJECT_UPDATED' : 'RIVAL_UPDATED',
-        payload: isPlayer
-          ? { projectId: p.id, update: { state: 'archived' as const } }
-          : { rivalId: rival?.id, update: { projects: { ...rival?.projects, [p.id]: { ...p, state: 'archived' as const } } } } as any
-      });
+      if (isPlayer) {
+        impacts.push({
+          type: 'PROJECT_UPDATED',
+          payload: { projectId: p.id, update: { state: 'archived' as const } }
+        });
+      } else if (rivalId) {
+        const rival = state.industry.rivals.find(r => r.id === rivalId);
+        if (rival) {
+          impacts.push({
+            type: 'RIVAL_UPDATED',
+            payload: { rivalId, update: { projects: { ...rival.projects, [p.id]: { ...p, state: 'archived' as const } } } } as any
+          });
+        }
+      }
     }
-  });
+  };
+
+  for (const key in playerProjects) {
+    if (!Object.prototype.hasOwnProperty.call(playerProjects, key)) continue;
+    checkShoppingExpiration(playerProjects[key], true);
+  }
+
+  for (let i = 0; i < rivals.length; i++) {
+    const rival = rivals[i];
+    const rivalProjects = rival.projects || {};
+    for (const key in rivalProjects) {
+      if (!Object.prototype.hasOwnProperty.call(rivalProjects, key)) continue;
+      checkShoppingExpiration(rivalProjects[key], false, rival.id);
+    }
+  }
 
   return impacts;
 }
