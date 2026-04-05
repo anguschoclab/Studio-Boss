@@ -5,27 +5,17 @@ import { useUIStore } from '@/store/uiStore';
 import { TopBar } from '@/components/layout/TopBar';
 import { StudioSidebar } from '@/components/layout/StudioSidebar';
 import { CommandCenter } from '@/components/dashboard/CommandCenter';
-import { PipelineBoard } from '@/components/pipeline/PipelineBoard';
-import { TalentHub } from '@/components/talent/TalentHub';
-import { FinancePanel } from '@/components/finance/FinancePanel';
-import { DiscoveryBoard } from '@/components/discovery/DiscoveryBoard';
-import { RivalsPanel } from '@/components/rivals/RivalsPanel';
-import { IPVault } from '@/components/ip/IPVault';
-import { DistributionHub } from '@/components/distribution/DistributionHub';
-import { AnimatePresence, motion } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 
 // Lazy Loaded Panels
 const PipelineBoard = React.lazy(() => import('@/components/pipeline/PipelineBoard').then(m => ({ default: m.PipelineBoard })));
-const TalentPanel = React.lazy(() => import('@/components/talent/TalentPanel').then(m => ({ default: m.TalentPanel })));
+const TalentHub = React.lazy(() => import('@/components/talent/TalentHub').then(m => ({ default: m.TalentHub })));
 const FinancePanel = React.lazy(() => import('@/components/finance/FinancePanel').then(m => ({ default: m.FinancePanel })));
 const DiscoveryBoard = React.lazy(() => import('@/components/discovery/DiscoveryBoard').then(m => ({ default: m.DiscoveryBoard })));
 const RivalsPanel = React.lazy(() => import('@/components/rivals/RivalsPanel').then(m => ({ default: m.RivalsPanel })));
 const IPVault = React.lazy(() => import('@/components/ip/IPVault').then(m => ({ default: m.IPVault })));
-const DealsDesk = React.lazy(() => import('@/components/deals/DealsDesk').then(m => ({ default: m.DealsDesk })));
-const SBDBView = React.lazy(() => import('@/components/sbdb/SBDBView').then(m => ({ default: m.SBDBView })));
-const StreamingPanel = React.lazy(() => import('@/components/streaming/StreamingPanel').then(m => ({ default: m.StreamingPanel })));
-const NielsenDashboard = React.lazy(() => import('@/components/television/NielsenDashboard').then(m => ({ default: m.NielsenDashboard })));
-import { m, AnimatePresence } from 'framer-motion';
+const DistributionHub = React.lazy(() => import('@/components/distribution/DistributionHub').then(m => ({ default: m.DistributionHub })));
+const AwardsHQ = React.lazy(() => import('@/components/awards/AwardsHQ').then(m => ({ default: m.AwardsHQ })));
 
 // Modals & Overlays
 import { ModalManager } from '@/components/modals/ModalManager';
@@ -60,6 +50,7 @@ const Dashboard: React.FC = () => {
       case 'talent': return <TalentHub key="talent" />;
       case 'finance': return <FinancePanel key="finance" />;
       case 'trades': return <DiscoveryBoard key="trades" />;
+      case 'awards': return <AwardsHQ key="awards" />;
       default: return <CommandCenter key="default" />;
     }
   };

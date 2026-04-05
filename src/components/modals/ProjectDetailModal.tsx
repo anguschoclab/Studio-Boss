@@ -292,6 +292,56 @@ export const ProjectDetailModal = () => {
                        </div>
                      ))}
                   </div>
+
+                  {project.reception && (
+                    <div className="mt-8 p-6 bg-black/60 border border-slate-800 rounded-3xl space-y-6 relative overflow-hidden group">
+                      <div className="absolute top-0 right-0 p-3">
+                         {project.reception.isCultPotential && (
+                           <Badge className="bg-fuchsia-600/20 text-fuchsia-400 border-fuchsia-600/50 animate-pulse font-black uppercase tracking-tighter">Cult Potential</Badge>
+                         )}
+                      </div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <Activity className="w-4 h-4 text-primary" />
+                        <span className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Critic & Audience Reception</span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-12">
+                        <div className="space-y-2">
+                          <div className="flex justify-between items-end">
+                            <span className="text-4xl font-black italic tracking-tighter text-white">{project.reception.metaScore}</span>
+                            <span className="text-[10px] font-black uppercase text-slate-500 mb-1">MetaScore</span>
+                          </div>
+                          <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+                            <div className={cn(
+                              "h-full transition-all duration-1000",
+                              project.reception.metaScore >= 75 ? 'bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.5)]' :
+                              project.reception.metaScore >= 40 ? 'bg-amber-500' : 'bg-rose-500'
+                            )} style={{ width: `${project.reception.metaScore}%` }} />
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <div className="flex justify-between items-end">
+                            <span className="text-4xl font-black italic tracking-tighter text-white">{project.reception.audienceScore}</span>
+                            <span className="text-[10px] font-black uppercase text-slate-500 mb-1">Audience</span>
+                          </div>
+                          <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+                            <div className={cn(
+                              "h-full bg-primary transition-all duration-1000",
+                              project.reception.audienceScore >= 75 ? 'shadow-[0_0_15px_rgba(var(--primary),0.5)]' : ''
+                            )} style={{ width: `${project.reception.audienceScore}%` }} />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="pt-4 border-t border-slate-800/50">
+                        <p className="text-xs font-bold text-slate-400">
+                           Status: <span className={cn(
+                             "uppercase font-black tracking-widest ml-1",
+                             project.reception.status === 'Acclaimed' ? 'text-emerald-400' :
+                             project.reception.status === 'Mixed' ? 'text-amber-400' : 'text-rose-400'
+                           )}>{project.reception.status}</span>
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </TabsContent>
 
                 {/* PRODUCTION TAB */}
@@ -495,37 +545,38 @@ export const ProjectDetailModal = () => {
                           </SelectContent>
                         </Select>
                         
-                        <Button 
-                          variant="outline" 
-                          className="w-full h-12 border-amber-600/30 text-amber-500 hover:bg-amber-600/10 font-black uppercase text-[10px] tracking-widest" 
-                          onClick={() => { launchAwardsCampaign(project.id, 500_000); selectProject(null); }}
-                        >
-                           Expand "For Your Consideration" Outreach ($500k)
-                        </Button>
-                      </div>
-                      
-                      {project.awardsProfile && (
-                        <div className="grid grid-cols-1 gap-4 pt-4 border-t border-slate-800">
-                          <div className="space-y-2">
-                            <div className="flex justify-between items-center text-[10px] font-black tracking-widest uppercase">
-                               <span className="text-slate-500">Academy Sentiment</span>
-                               <span className="text-amber-500">{project.awardsProfile.academyAppeal}%</span>
-                            </div>
-                            <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden shadow-inner">
-                               <div className="h-full bg-amber-500" style={{ width: `${project.awardsProfile.academyAppeal}%` }} />
-                            </div>
-                          </div>
-                   <div className="space-y-2">
-                            <div className="flex justify-between items-center text-[10px] font-black tracking-widest uppercase">
-                               <span className="text-slate-500">Campaign Force</span>
-                               <span className="text-white">{project.awardsProfile.campaignStrength}%</span>
-                            </div>
-                            <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden shadow-inner">
-                               <div className="h-full bg-white shadow-[0_0_10px_white]" style={{ width: `${project.awardsProfile.campaignStrength}%` }} />
-                            </div>
-                          </div>
+                        <div className="grid grid-cols-1 gap-2">
+                           <p className="text-[9px] font-black uppercase text-slate-500 tracking-widest">Active FYC Campaign</p>
+                           {gameState?.activeCampaigns?.[project.id] ? (
+                             <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30">
+                                <div className="flex justify-between items-center mb-2">
+                                   <span className="text-xs font-black text-amber-500 uppercase italic">Active Outreach</span>
+                                   <Badge className="bg-amber-500 text-black font-black">+{gameState.activeCampaigns[project.id].buzzBonus} BUZZ</Badge>
+                                </div>
+                                <p className="text-[10px] text-slate-400 font-bold uppercase">Targeting major categories for the upcoming season.</p>
+                             </div>
+                           ) : (
+                             <div className="grid grid-cols-3 gap-2">
+                                {[
+                                  { k: 'Grassroots', c: 250000 },
+                                  { k: 'Trade', c: 1000000 },
+                                  { k: 'Blitz', c: 5000000 }
+                                ].map(tier => (
+                                  <Button 
+                                    key={tier.k}
+                                    variant="outline" 
+                                    className="h-14 flex flex-col items-center justify-center border-slate-800 hover:border-amber-500/50 bg-black/40 group"
+                                    onClick={() => { (useGameStore.getState() as any).launchCampaign(project.id, tier.k); selectProject(null); }}
+                                    disabled={gameState ? gameState.finance.cash < tier.c : true}
+                                  >
+                                     <span className="text-[8px] font-black text-slate-500 uppercase group-hover:text-amber-500">{tier.k}</span>
+                                     <span className="text-[10px] font-mono font-black text-white">{formatMoney(tier.c)}</span>
+                                  </Button>
+                                ))}
+                             </div>
+                           )}
                         </div>
-                      )}
+                      </div>
                     </div>
 
                     <div className="bg-slate-900/40 border border-slate-800 p-6 rounded-2xl space-y-6 flex flex-col justify-between">

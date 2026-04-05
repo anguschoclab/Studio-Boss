@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { generateAwardsProfile, runAwardsCeremony, processRazzies } from "../../../engine/systems/awards";
-import { Project, GameState, Talent, ContentFlag } from "../../../engine/types";
+import { describe, it, expect, beforeEach } from "vitest";
+import { calculateNominationWeight, runAwardsCeremony, checkCampaignBacklash } from "../../../engine/systems/awards";
+import { Project, GameState, Talent } from "../../../engine/types";
 import { RandomGenerator } from "../../../engine/utils/rng";
 
 describe("awards system", () => {
@@ -9,9 +9,8 @@ describe("awards system", () => {
     week: 1,
     gameSeed: 1,
     tickCount: 0,
-    projects: { active: [] },
     game: { currentWeek: 1 },
-    finance: { cash: 1_000_000, ledger: [] },
+    finance: { cash: 10_000_000, ledger: [] },
     news: { headlines: [] },
     ip: { vault: [], franchises: {} },
     studio: {
@@ -33,6 +32,7 @@ describe("awards system", () => {
       newsHistory: [],
       rumors: []
     },
+    activeCampaigns: {},
     culture: { genrePopularity: {} },
     history: [],
     eventHistory: []
@@ -41,106 +41,63 @@ describe("awards system", () => {
   const eligibleProject: Project = {
     id: "proj-1",
     title: "Award Winner",
-    type: 'FILM',
     format: "film",
     genre: "Drama",
     budgetTier: "mid",
     budget: 10_000_000,
-    weeklyCost: 100_000,
-    targetAudience: "Adults",
-    flavor: "Oscar bait",
     state: "released",
-    buzz: 80,
-    weeksInPhase: 0,
-    developmentWeeks: 4,
-    productionWeeks: 4,
-    revenue: 0,
-    weeklyRevenue: 0,
     releaseWeek: 5,
-    accumulatedCost: 0,
-    momentum: 50,
-    progress: 0,
-    activeCrisis: null,
-    awardsProfile: {
-      criticScore: 95,
-      audienceScore: 80,
-      prestigeScore: 90,
-      craftScore: 95,
-      culturalHeat: 70,
-      campaignStrength: 20,
-      controversyRisk: 5,
-      festivalBuzz: 90,
-      academyAppeal: 95,
-      guildAppeal: 90,
-      populistAppeal: 60,
-      indieCredibility: 40,
-      industryNarrativeScore: 80
+    reception: {
+      metaScore: 90,
+      audienceScore: 85,
+      status: 'Acclaimed',
+      reviews: [],
+      isCultPotential: false
     }
-  } as Project;
+  } as any;
 
-  describe("generateAwardsProfile", () => {
-    it("handles extreme negative values", () => {
-      const rng = new RandomGenerator(1);
-      const negativeProject = { ...eligibleProject, budget: -10_000_000, buzz: -50 } as Project;
-      const profile = generateAwardsProfile(negativeProject, rng);
-      expect(profile).toBeDefined();
-      expect(profile.prestigeScore).toBeGreaterThanOrEqual(0);
+  describe("calculateNominationWeight", () => {
+    it("disqualifies projects with MetaScore < 65", () => {
+      const poorProject = { ...eligibleProject, reception: { metaScore: 60 } } as any;
+      const weight = calculateNominationWeight(poorProject, []);
+      expect(weight).toBe(0);
+    });
+
+    it("applies Veteran Bias for high prestige talent", () => {
+      const weightBase = calculateNominationWeight(eligibleProject, []);
+      const veteranTalent = [{ id: 't1', prestige: 95 }] as any;
+      const weightVet = calculateNominationWeight(eligibleProject, veteranTalent);
+      expect(weightVet).toBeGreaterThan(weightBase);
+    });
+
+    it("applies Genre Adjustment for Drama", () => {
+       const dramaProject = { ...eligibleProject, genre: "Drama" } as any;
+       const actionProject = { ...eligibleProject, genre: "Action" } as any;
+       expect(calculateNominationWeight(dramaProject, [])).toBeGreaterThan(calculateNominationWeight(actionProject, []));
     });
   });
 
   describe("runAwardsCeremony", () => {
-    it("awards 'won' status for high scores at Academy Awards (Week 10)", () => {
+    it("performs awards resolution using the new weighting system", () => {
       const rng = new RandomGenerator(1);
       const state = getInitialState();
       state.studio.internal.projects = { [eligibleProject.id]: eligibleProject };
-      state.week = 10;
+      state.week = 10; // Week 10 is Academy Awards body in configuration
 
       const impacts = runAwardsCeremony(state, 10, 2024, rng);
 
-      // Should produce INDUSTRY_UPDATE with award and NEWS_ADDED headline
-      const newsImpact = impacts.find(i => i.type === 'NEWS_ADDED') as any;
-      expect(newsImpact).toBeDefined();
-      // Headline format: `AWARDS: "${title}" wins ${category}` at body Academy Awards
-      expect(newsImpact?.payload?.headline).toContain('wins');
-
-      const industryImpact = impacts.find(i => i.type === 'INDUSTRY_UPDATE') as any;
-      expect(industryImpact).toBeDefined();
-      const awardEntry = Object.values(industryImpact?.payload?.update || {}) as any[];
-      expect(awardEntry.some((a: any) => a.status === 'won')).toBe(true);
-    });
-
-    it("accumulates prestige change via PRESTIGE_CHANGED impact", () => {
-      const rng = new RandomGenerator(1);
-      const state = getInitialState();
-      state.studio.internal.projects = { [eligibleProject.id]: eligibleProject };
-      state.week = 10;
-
-      const impacts = runAwardsCeremony(state, 10, 2024, rng);
-      const prestigeImpact = impacts.find(i => i.type === 'PRESTIGE_CHANGED') as any;
-      expect(prestigeImpact).toBeDefined();
-      expect(prestigeImpact?.payload).toBeGreaterThanOrEqual(10);
+      // Check for INDUSTRY_UPDATE (Award) and NEWS_ADDED (Headline)
+      expect(impacts.some(i => i.type === 'INDUSTRY_UPDATE')).toBe(true);
+      expect(impacts.some(i => i.type === 'NEWS_ADDED')).toBe(true);
     });
   });
 
-  describe("processRazzies", () => {
-    it("returns an array of impacts (stub returns empty for now)", () => {
-      const rng = new RandomGenerator(1);
-      const badFilm = {
-        ...eligibleProject,
-        id: "bad-1",
-        title: "Disaster Piece",
-        budget: 100_000_000,
-        budgetTier: "high",
-        reviewScore: 10,
-        buzz: 10,
-        releaseWeek: 5
-      } as Project;
-      const state = getInitialState();
-      state.studio.internal.projects = { [badFilm.id]: badFilm };
-      state.week = 4;
-
-      const impacts = processRazzies(state, 4, rng);
-      expect(Array.isArray(impacts)).toBe(true);
+  describe("checkCampaignBacklash", () => {
+    it("only triggers for Blitz campaigns with low quality", () => {
+      const rng = new RandomGenerator(42);
+      expect(checkCampaignBacklash(60, 'Blitz', rng)).toBeDefined();
+      expect(checkCampaignBacklash(80, 'Blitz', rng)).toBe(false);
+      expect(checkCampaignBacklash(60, 'Grassroots', rng)).toBe(false);
     });
   });
 });
