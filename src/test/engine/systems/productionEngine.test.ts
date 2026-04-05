@@ -185,4 +185,66 @@ describe('Production Engine (Target A2) - Edge Cases', () => {
       const updatedProject = industryUpdate?.payload?.['studio.internal.projects']?.['p1'];
       expect(updatedProject?.progress).toBeGreaterThan(0);
   });
+
+  it('should process project with a highly negative budget without throwing (Guild Auditor)', () => {
+      const state = {
+          week: 1,
+          gameSeed: 1,
+          tickCount: 0,
+          projects: { active: [] },
+          game: { currentWeek: 1 },
+          finance: { cash: 1000000, ledger: [] },
+          news: { headlines: [] },
+          ip: { vault: [], franchises: {} },
+          market: { opportunities: [], buyers: [] },
+          culture: { genrePopularity: {} },
+          history: [],
+          eventHistory: [],
+          studio: {
+              name: 'Player Studio',
+              archetype: 'major',
+              prestige: 50,
+              internal: {
+                  projects: {
+                      'p1': {
+                          id: 'p1',
+                          title: 'Test',
+                          type: 'FILM',
+                          format: 'film',
+                          genre: 'Drama',
+                          budgetTier: 'low',
+                          budget: -100_000_000,
+                          weeklyCost: 100000,
+                          targetAudience: 'General',
+                          flavor: 'test',
+                          state: 'production',
+                          buzz: 50,
+                          weeksInPhase: 0,
+                          developmentWeeks: 10,
+                          productionWeeks: 10,
+                          revenue: 0,
+                          weeklyRevenue: 0,
+                          releaseWeek: null,
+                          accumulatedCost: 0,
+                          momentum: 50,
+                          progress: 0,
+                          activeCrisis: null,
+                          contentFlags: [],
+                          scriptHeat: 50,
+                          activeRoles: [],
+                          scriptEvents: []
+                      } as import('@/engine/types').Project
+                  },
+                  contracts: []
+              }
+          },
+          industry: { rivals: [], families: [], agencies: [], agents: [], talentPool: {}, newsHistory: [], rumors: [] }
+      } as GameState;
+
+      const impacts = tickProduction(state, rng);
+      const industryUpdate = impacts.find(i => i.type === 'INDUSTRY_UPDATE') as any;
+      const updatedProject = industryUpdate?.payload?.['studio.internal.projects']?.['p1'];
+      expect(updatedProject).toBeDefined();
+      expect(updatedProject?.progress).toBeGreaterThan(0);
+  });
 });
