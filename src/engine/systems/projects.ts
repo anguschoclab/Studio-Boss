@@ -241,7 +241,7 @@ function handleReleasedPhase(
     p.revenue += p.weeklyRevenue;
     p.weeklyRevenue *= rng.range(0.6, 0.8) * franchiseSynergy;
 
-    if (p.weeklyRevenue < 50_000 || p.weeksInPhase > 4) {
+    if (p.weeklyRevenue < (p.format === 'unscripted' ? 25_000 : 50_000) || p.weeksInPhase > 4) {
       p.state = 'post_release';
       p.weeksInPhase = 0;
       return {
