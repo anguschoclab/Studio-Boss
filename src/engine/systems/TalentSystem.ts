@@ -21,14 +21,35 @@ export class TalentSystem {
     // 1. Fatigue & Commitment Decay (Deterministic via SchedulingEngine)
     for (const id in state.industry.talentPool) {
       const talent = state.industry.talentPool[id];
-      
-      // Recovery phase (default)
-      const nextFatigue = SchedulingEngine.updateTalentFatigue(talent, false);
-      
-      let commitmentsChanged = false;
-      let nextCommitments = talent.commitments;
+      let update: Partial<Talent> = {};
+      let changed = false;
 
-      // Cleanup expired commitments
+      // --- MEDICAL LEAVE / BURNOUT ---
+      if (talent.onMedicalLeave) {
+        if (state.week >= (talent.medicalLeaveEndsWeek || 0)) {
+          update.onMedicalLeave = false;
+          update.fatigue = 20; // Recharged
+          changed = true;
+          uiNotifications.push(`${talent.name} has returned from medical leave.`);
+        }
+      } else if ((talent.fatigue || 0) > 95) {
+        update.onMedicalLeave = true;
+        update.medicalLeaveEndsWeek = state.week + 12;
+        changed = true;
+        uiNotifications.push(`${talent.name} has entered medical leave due to extreme burnout.`);
+      }
+
+      // Recovery phase (only if not on leave, or handled differently)
+      if (!update.onMedicalLeave && !talent.onMedicalLeave) {
+        const nextFatigue = SchedulingEngine.updateTalentFatigue(talent, false);
+        if (nextFatigue !== (talent.fatigue || 0)) {
+          update.fatigue = nextFatigue;
+          changed = true;
+        }
+      }
+      
+      // Commitment cleanup
+      let nextCommitments = talent.commitments;
       if (talent.commitments && talent.commitments.length > 0) {
         let hasExpired = false;
         for (let i = 0; i < talent.commitments.length; i++) {
@@ -39,19 +60,13 @@ export class TalentSystem {
         }
 
         if (hasExpired) {
-          nextCommitments = [];
-          for (let i = 0; i < talent.commitments.length; i++) {
-            if (talent.commitments[i].endWeek >= state.week) {
-              nextCommitments.push(talent.commitments[i]);
-            }
-          }
-          commitmentsChanged = true;
+          nextCommitments = talent.commitments.filter(c => c.endWeek >= state.week);
+          update.commitments = nextCommitments;
+          changed = true;
         }
       }
       
-      if (nextFatigue !== (talent.fatigue || 0) || commitmentsChanged) {
-        const update: Partial<Talent> = { fatigue: nextFatigue };
-        if (commitmentsChanged) update.commitments = nextCommitments;
+      if (changed) {
         talentUpdates.push({
           talentId: id,
           update

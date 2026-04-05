@@ -73,7 +73,9 @@ export interface GameState {
       projects: Record<string, Project>;
       contracts: Contract[];
       firstLookDeals?: TalentPact[];
+      projectHistory: Project[]; // 🌌 PHASE 2: The Vault
     };
+    snapshotHistory: StudioSnapshot[]; // Renamed from history to avoid collision
     ownedPlatforms?: string[];
     isAcquirable?: boolean;
   };
