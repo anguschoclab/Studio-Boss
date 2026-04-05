@@ -285,14 +285,16 @@ export class WeekCoordinator {
       const project = state.studio.internal.projects[key];
       if (project.regionalRatings && (project.state === 'released' || project.state === 'post_release')) {
         // ⚡ Bolt: Refactored array .filter().map() chain to a simple for loop to reduce allocation overhead
-        const bannedMarkets: string[] = [];
+        let bannedMarkets: string[] | undefined;
         const rr = project.regionalRatings;
         for (let j = 0; j < rr.length; j++) {
-          if (rr[j].isBanned) {
-            bannedMarkets.push(rr[j].market);
+          const r = rr[j];
+          if (r.isBanned) {
+            if (!bannedMarkets) bannedMarkets = [];
+            bannedMarkets.push(r.market);
           }
         }
-        if (bannedMarkets.length > 0) {
+        if (bannedMarkets) {
           const banImpact = generateMarketBanScandal(project, bannedMarkets, context.week, state, context.rng);
           if (banImpact) context.impacts.push(banImpact);
         }
