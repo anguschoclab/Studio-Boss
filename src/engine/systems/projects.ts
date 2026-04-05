@@ -80,20 +80,12 @@ export function handleReleasePhaseEntry(
     };
   }
 
-  if (p.type === 'FILM' && p.format === 'tv') {
-    p.weeklyRevenue = (p.budget * 0.1) * (p.buzz / 50) * franchiseSynergy * (1 - franchiseFatigue);
+  if (p.type === 'FILM' && (p.format === 'tv' || p.format === 'unscripted')) {
+    const isTV = p.format === 'tv';
+    p.weeklyRevenue = (p.budget * (isTV ? 0.1 : 0.05)) * (p.buzz / 50) * franchiseSynergy * (1 - franchiseFatigue);
     p.revenue = p.weeklyRevenue;
     return {
-      update: `"${p.title}" premieres on TV!`,
-      talentUpdates: []
-    };
-  }
-
-  if (p.type === 'FILM' && p.format === 'unscripted') {
-    p.weeklyRevenue = (p.budget * 0.05) * (p.buzz / 50) * franchiseSynergy * (1 - franchiseFatigue);
-    p.revenue = p.weeklyRevenue;
-    return {
-      update: `"${p.title}" documentary premieres!`,
+      update: isTV ? `"${p.title}" premieres on TV!` : `"${p.title}" documentary premieres!`,
       talentUpdates: []
     };
   }
