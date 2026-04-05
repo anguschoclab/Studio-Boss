@@ -308,6 +308,42 @@ export class WeekCoordinator {
   private static runScandalFilter(state: GameState, context: TickContext) {
     context.impacts.push(...generateScandals(state, context.rng));
     context.impacts.push(...advanceScandals(state));
+
+    // Scan released projects for newly banned markets and generate one-time headlines
+    for (const key in state.studio.internal.projects) {
+      const project = state.studio.internal.projects[key];
+      if (project.regionalRatings && (project.state === 'released' || project.state === 'post_release')) {
+        // ⚡ Bolt: Refactored array .filter().map() chain to a simple for loop to reduce allocation overhead
+        let bannedMarkets: string[] | undefined;
+        const rr = project.regionalRatings;
+        for (let j = 0; j < rr.length; j++) {
+          const r = rr[j];
+          if (r.isBanned) {
+            if (!bannedMarkets) bannedMarkets = [];
+            bannedMarkets.push(r.market);
+          }
+        }
+        if (bannedMarkets) {
+          const banImpact = generateMarketBanScandal(project, bannedMarkets, context.week, state, context.rng);
+          if (banImpact) context.impacts.push(banImpact);
+        }
+      }
+    }
+  }
+
+  private static runRatingFilter(state: GameState, context: TickContext) {
+    for (const key in state.studio.internal.projects) {
+      const project = state.studio.internal.projects[key];
+      // Auto-evaluate rating for projects with flags but no rating yet
+      if (project.contentFlags?.length && !project.rating) {
+        const newRating = evaluateRatingForProject(project.contentFlags, project.type);
+        const newRegional = evaluateRegionalRatings(project.contentFlags, newRating);
+        context.impacts.push({
+          type: 'PROJECT_UPDATED',
+          payload: { projectId: project.id, update: { rating: newRating, regionalRatings: newRegional } }
+        });
+      }
+    }
   }
 
   private static runFinanceFilter(state: GameState, context: TickContext) {
