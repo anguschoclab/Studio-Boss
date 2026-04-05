@@ -97,16 +97,6 @@ export const selectActiveProjects = createSelector(
   }
 );
 
-/**
- * - [x] Phase A: Foundation & Refactoring
- *   - [x] Update `GENRE_TAXONOMY` in `genres.ts` (add unscripted, animation, art_house)
- *   - [x] Update `TalentRole` and `ProjectRole` (add personality) in `talent.types.ts`
- *   - [x] Refactor `TalentPact` for overall deals and overhead in `talent.types.ts`
- *   - [x] Implement 500-talent gen loop in `gameInit.ts` (Actors, Directors, Writers, Producers, Personalities)
- *   - [x] Implement "Animation Exemption" and "Prestige Gates" in `projectUtils.ts` (calculateTalentFitScore)
- *   - [x] Update `selectFilteredTalent` in `selectors.ts` for holding deals/mega-producers
- * - [/] Phase B: Television & Pilot Pipeline
- */
 export const selectReleasedProjects = createSelector(
   [selectProjectsRaw],
   (projects) => {
