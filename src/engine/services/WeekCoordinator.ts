@@ -72,18 +72,24 @@ export class WeekCoordinator {
       events: []
     };
 
-    // 1. Run Filters
-    this.runMarketFilter(state, context);
-    this.runProductionFilter(state, context);
-    this.runRatingFilter(state, context);
-    this.runAIFilter(state, context);
-    this.runIndustryFilter(state, context);
-    this.runTalentFilter(state, context);
-    this.runMediaFilter(state, context);
-    this.runScandalFilter(state, context);
-    this.runFinanceFilter(state, context);
+    // 1. Run Filters (Sequential state propagation to prevent baseline races)
+    let currentState = state;
 
-    // 2. Consolidation & State Application
+    this.runMarketFilter(currentState, context);
+    currentState = applyImpacts(currentState, context.impacts.slice(-10)); // Heuristic: apply recent impacts
+
+    this.runProductionFilter(currentState, context);
+    currentState = applyImpacts(currentState, context.impacts.slice(-20)); // Heuristic: apply production context
+
+    this.runRatingFilter(currentState, context);
+    this.runAIFilter(currentState, context);
+    this.runIndustryFilter(currentState, context);
+    this.runTalentFilter(currentState, context);
+    this.runMediaFilter(currentState, context);
+    this.runScandalFilter(currentState, context);
+    this.runFinanceFilter(currentState, context);
+
+    // 2. Final Consolidation & State Application
     const nextState = applyImpacts(state, context.impacts);
 
     const updatedMarketState = {
@@ -204,10 +210,12 @@ export class WeekCoordinator {
 
   private static runIndustryFilter(state: GameState, context: TickContext) {
     const { year } = InterestRateSimulator.getWeekDisplay(context.week);
-    const awardsImpact = runAwardsCeremony(state, context.week, year, context.rng);
-    context.impacts.push(awardsImpact);
+    const awardsImpacts = runAwardsCeremony(state, context.week, year, context.rng);
+    context.impacts.push(...awardsImpacts);
     
-    if (awardsImpact.newAwards && awardsImpact.newAwards.length > 0) {
+    const allNewAwards = awardsImpacts.reduce((acc, imp) => [...acc, ...(imp.newAwards || [])], [] as any[]);
+    
+    if (allNewAwards.length > 0) {
       context.impacts.push({
         type: 'MODAL_TRIGGERED',
         payload: {
@@ -216,8 +224,8 @@ export class WeekCoordinator {
           payload: { 
             week: context.week,
             year,
-            awards: awardsImpact.newAwards,
-            body: awardsImpact.newAwards[0]?.body || 'Annual Industry Awards'
+            awards: allNewAwards,
+            body: allNewAwards[0]?.body || 'Annual Industry Awards'
           }
         }
       });
@@ -225,11 +233,10 @@ export class WeekCoordinator {
     
     const weekDisplay = context.week % 52 === 0 ? 52 : context.week % 52;
     if (weekDisplay === 4) {
-      const razzieImpact = processRazzies(state, context.week, context.rng);
-      context.impacts.push(razzieImpact);
+      context.impacts.push(...processRazzies(state, context.week, context.rng));
     }
 
-    context.impacts.push(resolveFestivals(state, context.rng));
+    context.impacts.push(...resolveFestivals(state, context.rng));
     context.impacts.push(...RegulatorSystem.tick(state, context.rng));
 
     // Festival market auction at Sundance (w4), Cannes (w20), TIFF (w36)

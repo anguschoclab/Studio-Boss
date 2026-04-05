@@ -103,3 +103,55 @@ export function resolveFestivals(state: GameState, rng: RandomGenerator): StateI
 
   return impacts;
 }
+
+/**
+ * Submits a project to a festival.
+ * Phase 2: Deducts entry fee and adds to global submissions list.
+ */
+export function submitToFestival(
+  state: GameState, 
+  projectId: string, 
+  festivalBody: AwardBody, 
+  rng: RandomGenerator
+): StateImpact[] | null {
+  const project = state.studio.internal.projects[projectId];
+  const fest = FESTIVAL_BY_BODY[festivalBody];
+  
+  if (!project || !fest) return null;
+  if (state.finance.cash < fest.cost) return null;
+
+  const impacts: StateImpact[] = [
+    {
+      type: 'FUNDS_DEDUCTED',
+      payload: { amount: fest.cost }
+    },
+    {
+      type: 'INDUSTRY_UPDATE',
+      payload: {
+        update: {
+          'industry.festivalSubmissions': [
+            ...(state.industry.festivalSubmissions || []),
+            {
+              id: rng.uuid('sub'),
+              projectId,
+              festivalBody,
+              status: 'submitted',
+              week: state.week
+            }
+          ]
+        }
+      }
+    },
+    {
+      type: 'NEWS_ADDED',
+      payload: {
+        id: rng.uuid('news-fest'),
+        headline: `Studio submits "${project.title}" to ${fest.name}`,
+        description: `Strategic awards push: The studio has officially entered the competition at ${fest.name}.`,
+        category: 'awards'
+      }
+    }
+  ];
+
+  return impacts;
+}
