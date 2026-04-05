@@ -107,11 +107,11 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
       let prestigePenalty = 0;
       if (isAuteur) {
         if (prestigeDelta > 10) {
-          prestigePenalty = prestigeDelta * 0.15; // Heavy penalty for low prestige
+          prestigePenalty = prestigeDelta * 0.25; // Massive penalty for low prestige
         } else if (prestigeDelta < -10) {
-          prestigePenalty = -0.3; // Major discount for high prestige
+          prestigePenalty = -0.6; // Massive discount for high prestige
         } else if (prestigeDelta > 0) {
-          prestigePenalty = prestigeDelta * 0.05;
+          prestigePenalty = prestigeDelta * 0.1;
         }
       }
 
