@@ -13,6 +13,9 @@ describe('TalentPanel', () => {
       const state = {
         gameState: {
           week: 1,
+          deals: {
+            activeDeals: []
+          },
           industry: {
             talentPool: {
               't1': {
