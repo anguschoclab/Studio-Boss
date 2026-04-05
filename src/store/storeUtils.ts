@@ -56,7 +56,7 @@ function prepareTalentAndContracts(
                 projectId,
                 fee: t.fee,
                 backendPercent: t.prestige > 80 ? 10 : 0,
-                role: t.type // Default to their base type
+                role: t.role as any // Default to their base type
             });
         }
     }

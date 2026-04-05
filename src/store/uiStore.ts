@@ -14,7 +14,7 @@ interface UIStore {
   showCreateProject: boolean;
   showPitchProject: boolean;
   pitchingProjectId: string | null;
-  
+  showSummary: boolean;
   // Modal Queue System
   modalQueue: QueuedModal[];
   activeModal: QueuedModal | null;
@@ -30,6 +30,8 @@ interface UIStore {
   closePitchProject: () => void;
   selectProject: (id: string | null) => void;
   selectTalent: (id: string | null) => void;
+  openSummary: () => void;
+  closeSummary: () => void;
 }
 
 export const useUIStore = create<UIStore>((set) => ({
@@ -37,6 +39,7 @@ export const useUIStore = create<UIStore>((set) => ({
   showCreateProject: false,
   showPitchProject: false,
   pitchingProjectId: null,
+  showSummary: false,
   
   modalQueue: [],
   activeModal: null,
@@ -70,4 +73,6 @@ export const useUIStore = create<UIStore>((set) => ({
   closePitchProject: () => set({ showPitchProject: false, pitchingProjectId: null }),
   selectProject: (id) => set({ selectedProjectId: id }),
   selectTalent: (id) => set({ selectedTalentId: id }),
+  openSummary: () => set({ showSummary: true }),
+  closeSummary: () => set({ showSummary: false }),
 }));

@@ -13,7 +13,7 @@ export const TopBar = () => {
   const doAdvanceWeek = useGameStore(s => s.doAdvanceWeek);
   const saveToSlot = useGameStore(s => s.saveToSlot);
 
-  const { showSummary } = useUIStore();
+  const { enqueueModal } = useUIStore();
 
   const activeProjectsList = useGameStore(s => selectActiveProjects(s.gameState));
   const { cycle, debtRate } = useGameStore(s => selectMarketMetrics(s.gameState));
@@ -26,7 +26,7 @@ export const TopBar = () => {
 
   const handleAdvanceWeek = () => {
     const summary = doAdvanceWeek();
-    showSummary(summary);
+    if (summary) enqueueModal('SUMMARY', summary as any);
   };
 
   const handleSave = () => {

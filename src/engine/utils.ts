@@ -52,10 +52,12 @@ export function fillTemplate(template: string, vars: Record<string, string | num
   });
 }
 
-export function pick<T>(arr: T[], rng: RandomGenerator): T {
-  return rng.pick(arr);
+export function pick<T>(arr: T[], rng?: RandomGenerator): T {
+  if (rng) return rng.pick(arr);
+  return arr[Math.floor(Math.random() * arr.length)];
 }
 
-export function randRange(min: number, max: number, rng: RandomGenerator): number {
-  return rng.rangeInt(min, max);
+export function randRange(min: number, max: number, rng?: RandomGenerator): number {
+  if (rng) return rng.rangeInt(min, max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }

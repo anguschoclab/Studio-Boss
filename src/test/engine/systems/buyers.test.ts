@@ -1,51 +1,22 @@
 import { describe, it, expect } from "vitest";
 import { calculateFitScore, negotiateContract } from "../../../engine/systems/buyers";
-import { Project, Buyer, StreamerPlatform } from "../../../engine/types";
+import { Buyer, StreamerPlatform } from "../../../engine/types";
 import { RandomGenerator } from "../../../engine/utils/rng";
+import { createMockProject, createMockBuyer } from "../../utils/mockFactories";
 
-const mockProject: Project = {
+const mockProject = createMockProject({
   id: "p1",
   title: "Sci-Fi Epic",
-  type: "FILM",
-  format: "film",
   genre: "Sci-Fi",
   budgetTier: "blockbuster",
-  budget: 100000000,
-  weeklyCost: 1000000,
-  targetAudience: "General",
-  flavor: "Epic space journey",
-  state: "pitching",
   buzz: 50,
-  weeksInPhase: 0,
-  developmentWeeks: 10,
-  productionWeeks: 20,
-  revenue: 0,
-  weeklyRevenue: 0,
-  releaseWeek: null,
-  activeCrisis: null,
-  momentum: 50,
-  progress: 0,
-  accumulatedCost: 0,
-  contentFlags: [],
-  scriptHeat: 50,
-  activeRoles: [],
-  scriptEvents: []
-} as Project;
+});
 
-const mockBuyer: StreamerPlatform = {
+const mockBuyer = createMockBuyer({
   id: "b1",
   name: "Test Streamer",
   archetype: "streamer",
-  currentMandate: undefined,
-  subscribers: 50000000,
-  churnRate: 0.05,
-  contentLibraryQuality: 60,
-  marketingSpend: 1000000,
-  foundedWeek: 0,
-  marketShare: 0.1,
-  reach: 80,
-  subscriberHistory: []
-};
+}) as StreamerPlatform;
 
 describe("buyers system", () => {
   const rng = new RandomGenerator(42);

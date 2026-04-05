@@ -349,7 +349,7 @@ const WORDS: Record<string, string[]> = {
   ANIMAL: ['Bear', 'Dog', 'Cat', 'Lion', 'Tiger', 'Dragon', 'Unicorn', 'Dinosaur', 'Doge', 'Ape', 'Pepe', 'Capybara', 'Trash Panda', 'Vulture', 'Cash Cow', 'Dead Cat', 'Black Swan']
 };
 
-export function generateProjectTitle(genre: string, rng: RandomGenerator): string {
+export function generateProjectTitle(genre: string, rng?: RandomGenerator): string {
   const patterns = GENRE_PATTERNS[genre] || GENRE_PATTERNS['Drama'];
   const pattern = (rng && rng.pick ? rng.pick.bind(rng) : pick)(patterns);
 
