@@ -12,10 +12,23 @@ export class HeadlessController {
     const impacts: StateImpact[] = [];
     const internalProjects = Object.values(state.studio.internal.projects);
 
+    const contractsByProject = new Map<string, Contract[]>();
+    state.studio.internal.contracts.forEach(c => {
+      if (c.projectId) {
+        let list = contractsByProject.get(c.projectId);
+        if (!list) {
+          list = [];
+          contractsByProject.set(c.projectId, list);
+        }
+        list.push(c);
+      }
+    });
+
     internalProjects.forEach(project => {
       // 1. Auto-Greenlight
       if (project.state === 'needs_greenlight') {
-        const attachedTalent = this.getAttachedTalent(project, state.studio.internal.contracts, state.industry.talentPool);
+        const projectContracts = contractsByProject.get(project.id) || [];
+        const attachedTalent = projectContracts.map(c => state.industry.talentPool[c.talentId]).filter(Boolean);
         const report = evaluateGreenlight(project, state.finance.cash, attachedTalent, state.week, internalProjects);
         
         if (report.score > 60 || (state.finance.cash > project.budget * 3)) {
@@ -111,8 +124,5 @@ export class HeadlessController {
     return impacts;
   }
 
-  private static getAttachedTalent(project: Project, contracts: Contract[], talentPool: Record<string, Talent>): Talent[] {
-    const projectContracts = contracts.filter(c => c.projectId === project.id);
-    return projectContracts.map(c => talentPool[c.talentId]).filter(Boolean);
-  }
+
 }
