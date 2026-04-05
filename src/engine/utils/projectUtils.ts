@@ -34,7 +34,7 @@ export function getProjectSeasonDisplay(project: Project): string {
  * Calculates a match score (0-100) between a talent and a project.
  * Uses deterministic logic for scoring based on genre, tier, role fit, and power.
  */
-export function calculateTalentFitScore(talent: Talent, project: Project, targetRole?: string): number {
+export function calculateTalentFitScore(talent: Talent, project: Project, targetRole?: string, attachedTalentIds?: string[]): number {
   let score = 50; 
 
   // Genre Alignment
@@ -62,9 +62,22 @@ export function calculateTalentFitScore(talent: Talent, project: Project, target
   if (project.budgetTier === 'blockbuster' && (talent.draw || 0) < 50) score -= 20;
   if (project.budgetTier === 'low' && talent.prestige > 90) score -= 10;
 
-  // Synergy Afficinities (Phase 2)
-  if (talent.psychology?.synergyAffinities?.length) {
-     // TODO: Implement synergy scoring if other talent are already attached
+  // Synergy Afficinities & Conflicts (Phase 2)
+  if (attachedTalentIds && attachedTalentIds.length > 0) {
+    if (talent.psychology?.synergyAffinities?.length) {
+      for (const attachedId of attachedTalentIds) {
+        if (talent.psychology.synergyAffinities.includes(attachedId)) {
+          score += 15;
+        }
+      }
+    }
+    if (talent.psychology?.synergyConflicts?.length) {
+      for (const attachedId of attachedTalentIds) {
+        if (talent.psychology.synergyConflicts.includes(attachedId)) {
+          score -= 15;
+        }
+      }
+    }
   }
 
   return Math.max(0, Math.min(100, score));
@@ -73,9 +86,9 @@ export function calculateTalentFitScore(talent: Talent, project: Project, target
 /**
  * Returns a list of talent with fit scores and recommendation tags.
  */
-export function getRecommendedTalentForProject(talentPool: Talent[], project: Project, targetRole?: string) {
+export function getRecommendedTalentForProject(talentPool: Talent[], project: Project, targetRole?: string, attachedTalentIds?: string[]) {
   return talentPool.map(t => {
-    const score = calculateTalentFitScore(t, project, targetRole);
+    const score = calculateTalentFitScore(t, project, targetRole, attachedTalentIds);
     const tags: string[] = [];
     
     if (t.preferredGenres?.includes(project.genre)) tags.push("Genre Specialist");
