@@ -86,21 +86,35 @@ export function tickTelevision(state: GameState, rng: RandomGenerator): StateImp
   ];
   
   // Collect all series from player and rivals
-  const playerSeries = Object.values(state.studio.internal.projects).filter(
-    (p): p is SeriesProject => p.type === 'SERIES' && 'tvDetails' in p
-  );
-  
-  const rivalSeries: SeriesProject[] = [];
-  state.industry.rivals.forEach(rival => {
-    Object.values(rival.projects || {}).forEach(p => {
-      if (p.type === 'SERIES' && 'tvDetails' in p) {
-        rivalSeries.push(p as SeriesProject);
-      }
-    });
-  });
+  const allSeries: SeriesProject[] = [];
+  const airingShows: SeriesProject[] = [];
 
-  const allSeries = [...playerSeries, ...rivalSeries];
-  const airingShows = allSeries.filter(p => p.tvDetails.status === 'ON_AIR');
+  const playerProjects = Object.values(state.studio.internal.projects);
+  for (let i = 0; i < playerProjects.length; i++) {
+    const p = playerProjects[i];
+    if (p.type === 'SERIES' && 'tvDetails' in p) {
+      const seriesProject = p as SeriesProject;
+      allSeries.push(seriesProject);
+      if (seriesProject.tvDetails.status === 'ON_AIR') {
+        airingShows.push(seriesProject);
+      }
+    }
+  }
+
+  const rivals = state.industry.rivals;
+  for (let i = 0; i < rivals.length; i++) {
+    const rivalProjects = Object.values(rivals[i].projects || {});
+    for (let j = 0; j < rivalProjects.length; j++) {
+      const p = rivalProjects[j];
+      if (p.type === 'SERIES' && 'tvDetails' in p) {
+        const seriesProject = p as SeriesProject;
+        allSeries.push(seriesProject);
+        if (seriesProject.tvDetails.status === 'ON_AIR') {
+          airingShows.push(seriesProject);
+        }
+      }
+    }
+  }
   const weekSnapshots = new Map<string, NielsenSnapshot>();
 
   // Phase 1: Generate Nielsen snapshots for all airing shows
