@@ -3,8 +3,8 @@ import { TV_FORMATS } from '@/engine/data/tvFormats';
 import { UNSCRIPTED_FORMATS } from '@/engine/data/unscriptedFormats';
 
 export function getFilmStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS]) {
-  // The Studio Comptroller: Raised risk multipliers for all high-budget films to ensure extreme volatility.
-  const riskMultiplier = tier.budget >= 200_000_000 ? 15.0 : tier.budget >= 100_000_000 ? 7.5 : tier.budget >= 50_000_000 ? 3.5 : 1.8;
+  // The Studio Comptroller: Amplified volatility for all high-budget films to ensure extreme risk.
+  const riskMultiplier = tier.budget >= 200_000_000 ? 20.0 : tier.budget >= 100_000_000 ? 9.0 : tier.budget >= 50_000_000 ? 4.0 : 2.0;
 
   return {
     budget: tier.budget,
@@ -16,8 +16,8 @@ export function getFilmStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS
 }
 
 export function getTvStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS], tvFormatData: typeof TV_FORMATS[keyof typeof TV_FORMATS], episodes: number) {
-  // The Studio Comptroller: Scaled up TV mega-budget risks to mirror film stakes.
-  const scaleMultiplier = tier.budget >= 150_000_000 ? 10.0 : tier.budget >= 100_000_000 ? 6.0 : tier.budget > 50_000_000 ? 4.5 : 1.8;
+  // The Studio Comptroller: Amplified stakes for TV mega-budget risks to mirror extreme film stakes.
+  const scaleMultiplier = tier.budget >= 150_000_000 ? 12.0 : tier.budget >= 100_000_000 ? 7.5 : tier.budget > 50_000_000 ? 5.0 : 2.0;
   const weeklyCost = tier.weeklyCost * tvFormatData.productionCostMultiplier * scaleMultiplier;
   const productionWeeks = Math.ceil(episodes * tvFormatData.productionWeeksPerEpisode * scaleMultiplier);
 

@@ -127,9 +127,9 @@ export class RevenueProcessor {
    * Calculates box office decay for a project in a given week.
    */
   static calculateTheatricalDecay(currentRevenue: number, decayRate: number, isCultClassic: boolean = false): number {
-    let revenue = Math.round(currentRevenue * decayRate);
+    let revenue = Math.round(currentRevenue * decayRate * 0.88); // The Studio Comptroller: Increased box office decay by 12% to simulate modern front-loaded box office drops.
     if (isCultClassic) {
-      revenue = Math.max(revenue * 1.8, 200000); // The Studio Comptroller: Buffed cult classics (150000 -> 200000) to create dramatic financial anomalies.
+      revenue = Math.max(revenue * 2.0, 300000); // The Studio Comptroller: Buffed cult classics (200000 -> 300000) to create dramatic financial anomalies.
     }
     return revenue;
   }
