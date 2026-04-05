@@ -19,7 +19,8 @@ import { useShallow } from 'zustand/react/shallow';
 import { formatMoney } from '@/engine/utils';
 import { selectProjects } from '@/store/selectors';
 
-const EMPTY_HISTORY: any[] = [];
+const EMPTY_HISTORY: import('@/engine/types/state.types').FinancialSnapshot[] = [];
+const EMPTY_PROJECTS: import('@/engine/types').Project[] = [];
 
 export const FinancePanel = () => {
   // Use atomic selectors to prevent unnecessary re-renders when unrelated gameState parts change
