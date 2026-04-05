@@ -12,3 +12,18 @@
 * `docs/marketing_mechanics.md`: Document the new `executeMarketing` parameters, angle mappings, and how marketing budgets convert to pre-release project buzz.
 * **Code Paths Covered:** `src/engine/systems/projects.ts` (`executeMarketing`, `handleMarketingPhase`)
 * **Key Knowledge Gaps Addressed:** Explains the transition from production to the new marketing phase, how the `marketingAngle` impacts final project heat, and the math behind budget-driven buzz bonuses.
+
+### 📝 Daily Progress & Docs Update
+
+#### 🏗️ Codebase Status:
+* Added sparkline cash trend graph to the studio sidebar UI using `recharts`.
+* Current WIP focus appears to be on improving dashboard readability, data presentation, and financial UI in alignment with the master design bible (specifically sections on Dashboard-First Decision-Making and Finance UI).
+
+#### 📖 Design Bible Alignment:
+* ✅ **Aligned:** The addition of the sparkline cash trend aligns perfectly with Section 16.1 (Top-Bar Finance Widget) and 16.3 (Charting Intent), which call for visual charting of cashflow rather than just static balance-sheet snapshots. It also fulfills the goal of Dashboard-First Decision-Making (Section 4.4).
+* ⚠️ **Missing/Deviations:** While the cash trend chart is added, it is just a simple line. Section 16.2 mentions a "stacked weekly cashflow chart", "variance bars", and "forecast and warning indicators" for the finance screen core components. Section 16.6 mentions "threshold and alerting" for liquidity risks.
+
+#### 📄 Proposed Documentation Updates:
+* `docs/finance_ui.md`: Document the implementation details of the new `recharts` sparkline in the `StudioSidebar` component.
+* **Code Paths Covered:** `src/components/layout/StudioSidebar.tsx`
+* **Key Knowledge Gaps Addressed:** Explains how the `cashHistory` is derived from `gameState.finance.weeklyHistory` and visualized in the sidebar.

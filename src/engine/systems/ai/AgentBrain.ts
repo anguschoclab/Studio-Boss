@@ -94,9 +94,17 @@ export function generateFestivalBid(
     interest *= 1.3;
   }
 
+  // 🎭 The Method Actor Tuning: Adjusted AgentBrain to make rival studios aggressively outbid for IP.
+  if (rival.currentMotivation === 'FRANCHISE_BUILDING' && ['Sci-Fi', 'Action', 'Fantasy'].includes(project.genre)) {
+    interest *= 1.5;
+  }
+
   if (interest < 0.4) return null;
 
-  const maxBidPct = (0.05 + (archetype.riskAppetite / 1000)); // riskier rivals bid more of their total cash
+  let maxBidPct = (0.05 + (archetype.riskAppetite / 1000)); // riskier rivals bid more of their total cash
+  if (rival.currentMotivation === 'FRANCHISE_BUILDING' && ['Sci-Fi', 'Action', 'Fantasy'].includes(project.genre)) {
+    maxBidPct += 0.15; // aggressive outbidding
+  }
   const maxBid = rival.cash * maxBidPct;
   const bid = Math.round(project.budget * interest * rng.range(0.9, 1.6));
   

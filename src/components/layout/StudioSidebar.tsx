@@ -18,6 +18,7 @@ import {
   Settings,
   DollarSign,
   Star,
+  Trophy,
   Clapperboard
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -40,6 +41,7 @@ const NAV_ITEMS: NavItem[] = [
   { id: 'trades', label: 'The Trades', icon: Newspaper, tooltip: 'Scout IP opportunities, industry news, and market trends' },
   { id: 'talent', label: 'Talent', icon: Users, tooltip: 'Talent roster and industry database (SBDB)' },
   { id: 'distribution', label: 'Distribution', icon: Globe, tooltip: 'Deals desk, streaming platforms, and Nielsen ratings' },
+  { id: 'awards', label: 'Awards HQ', icon: Trophy, tooltip: 'Manage FYC campaigns, track industry ceremonies, and view accolades' },
   { id: 'ip', label: 'IP Vault', icon: Library, tooltip: 'Owned intellectual property, franchises, and library rights' },
   { id: 'industry', label: 'Industry', icon: Building2, tooltip: 'Rival studios, M&A activity, and market intelligence' },
   { id: 'finance', label: 'Finance', icon: Briefcase, tooltip: 'P&L statements, revenue streams, and cash flow' },

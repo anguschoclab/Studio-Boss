@@ -1,4 +1,4 @@
-import { AwardBody, AwardCategory, AwardsProfile, GameState, Project, RivalStudio, SeriesProject, StateImpact } from '@/engine/types';
+import { AwardBody, AwardCategory, AwardsProfile, GameState, Project, RivalStudio, SeriesProject, StateImpact, Talent, CampaignData } from '@/engine/types';
 import { RandomGenerator } from '../utils/rng';
 import { 
   AWARDS_CALENDAR, 
@@ -30,30 +30,63 @@ export function isSupportingCategoryNomination(category: AwardCategory | string)
   return (['Best Supporting Actor', 'Best Supporting Actress', 'Best Supporting Actor (TV)', 'Best Supporting Actress (TV)'] as string[]).includes(category as string);
 }
 
-export function generateAwardsProfile(project: Project, rng: RandomGenerator): AwardsProfile {
-  const basePrestige = (rng.next() * 50) + (project.budget / 1000000) * 0.5;
-  const baseCritic = rng.next() * 100;
+/**
+ * The Probability Engine: Calculates the absolute weight of a project for award consideration.
+ */
+export function calculateNominationWeight(
+  project: Project, 
+  talent: Talent[], 
+  campaignBuzz: number = 0
+): number {
+  const metaScore = project.reception?.metaScore || project.reviewScore || 0;
 
-  return {
-    criticScore: Math.min(100, Math.max(0, baseCritic)),
-    audienceScore: Math.min(100, Math.max(0, rng.next() * 100)),
-    prestigeScore: Math.min(100, Math.max(0, basePrestige)),
-    craftScore: Math.min(100, Math.max(0, rng.next() * 100)),
-    culturalHeat: Math.min(100, Math.max(0, rng.next() * 100)),
-    campaignStrength: 10,
-    controversyRisk: Math.min(100, Math.max(0, rng.next() * 30)),
-    festivalBuzz: Math.min(100, Math.max(0, rng.next() * 100)),
-    academyAppeal: Math.min(100, Math.max(0, basePrestige * 0.8 + rng.next() * 40)),
-    guildAppeal: Math.min(100, Math.max(0, baseCritic * 0.7 + rng.next() * 40)),
-    populistAppeal: Math.min(100, Math.max(0, rng.next() * 100)),
-    indieCredibility: Math.min(100, Math.max(0, project.budgetTier === 'low' ? rng.next() * 80 + 20 : rng.next() * 30)),
-    industryNarrativeScore: Math.min(100, Math.max(0, rng.next() * 100))
-  };
+  // Gatekeeper: If metaScore < 65, return 0 (Disqualified).
+  if (metaScore < 65) return 0;
+
+  // Base Weight: (metaScore - 60) * 1.5.
+  let weight = (metaScore - 60) * 1.5;
+
+  // The "Veteran" Bias: Find max prestige among lead actors and director.
+  const maxPrestige = talent.length > 0 
+    ? Math.max(...talent.map(t => t.prestige)) 
+    : 0;
+  
+  // If maxPrestige > 80, add (maxPrestige - 80) * 2.
+  if (maxPrestige > 80) {
+    weight += (maxPrestige - 80) * 2;
+  }
+
+  // Campaign Influence: Add campaignBuzz (derived from active state).
+  weight += campaignBuzz;
+
+  // Genre Adjustments: +10 if 'Drama', -15 if 'Horror'.
+  const genre = (project.genre || '').toLowerCase();
+  if (genre.includes('drama')) {
+    weight += 10;
+  } else if (genre.includes('horror')) {
+    weight -= 15;
+  }
+
+  return Math.max(0, Math.round(weight));
+}
+
+/**
+ * Checks for PR disasters caused by aggressive campaigning.
+ */
+export function checkCampaignBacklash(
+  metaScore: number, 
+  campaignTier: 'Grassroots' | 'Trade' | 'Blitz',
+  rng: RandomGenerator
+): boolean {
+  // If campaignTier === 'Blitz' AND metaScore < 70: Trigger a 20% RNG check.
+  if (campaignTier === 'Blitz' && metaScore < 70) {
+    return rng.next() < 0.20;
+  }
+  return false;
 }
 
 /**
  * Universal Awards Ceremony Resolver
- * Handles winners from all studios (Player & Rivals).
  */
 export function runAwardsCeremony(state: GameState, currentWeek: number, year: number, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
@@ -64,17 +97,13 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
   const configsThisWeek = AWARD_CONFIGS.filter(config => bodiesThisWeek.includes(config.body));
   if (configsThisWeek.length === 0) return [];
 
-  // 1. Collect ALL projects from ALL studios
-  // ⚡ Bolt: Replaced high-allocation .map() / .forEach() and Object.values with direct for...in loops.
   const eligibleFilm: Project[] = [];
   const eligibleTv: Project[] = [];
-
-  // ⚡ Bolt: Pre-calculate project-to-rival mapping to avoid O(N) lookup in award selection
   const projectToRivalMap: Record<string, RivalStudio> = {};
 
   const allStudios = [
-    { studio: null, projects: state.studio.internal.projects },
-    ...state.industry.rivals.map(r => ({ studio: r, projects: r.projects || {} }))
+    { studio: null, projects: state.studio.internal.projects, contracts: state.studio.internal.contracts },
+    ...state.industry.rivals.map(r => ({ studio: r, projects: r.projects || {}, contracts: r.contracts || [] }))
   ];
 
   for (const entry of allStudios) {
@@ -83,8 +112,7 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
       const p = studioProjects[id];
       if ((p.state === 'released' || p.state === 'post_release' || p.state === 'archived') &&
           p.releaseWeek !== null &&
-          p.releaseWeek > currentWeek - 52 &&
-          p.awardsProfile !== undefined) {
+          p.releaseWeek > currentWeek - 52) {
 
         if (entry.studio) {
           projectToRivalMap[p.id] = entry.studio;
@@ -113,23 +141,33 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
 
     for (let i = 0; i < candidates.length; i++) {
       const p = candidates[i];
-      const score = (config.evaluator(p) || 0) * (1 + (p.awardsProfile?.campaignStrength || 0) / 25);
+      
+      // Integrate new weighting system
+      const campaign = state.activeCampaigns?.[p.id];
+      const attachedTalentIds = (allStudios.find(s => !!s.projects[p.id])?.contracts || [])
+        .filter(c => c.projectId === p.id)
+        .map(c => c.talentId);
+      
+      const attachedTalent = attachedTalentIds.map(tid => state.industry.talentPool[tid]).filter(Boolean);
+      
+      const weight = calculateNominationWeight(p, attachedTalent, campaign?.buzzBonus || 0);
+      const randomFactor = rng.range(0.8, 1.2);
+      const score = weight * randomFactor;
+
       if (score > bestScore) {
         bestScore = score;
         bestProject = p;
       }
     }
 
-    if (bestScore > 100) {
-      const isWin = bestScore > 150;
+    if (bestScore > 0) {
+      // Threshold for a win vs nomination
+      const isWin = bestScore > 50; 
       const prestigeGain = isWin ? 15 : 3;
       
       const isPlayer = !!state.studio.internal.projects[bestProject.id];
-      // ⚡ Bolt: Use pre-calculated map for O(1) rival lookup
       const rival = isPlayer ? null : projectToRivalMap[bestProject.id];
-      const winnerId = isPlayer ? 'PLAYER' : (rival?.id || 'RIVAL');
 
-      // Add Award Record (Global)
       impacts.push({
         type: 'INDUSTRY_UPDATE',
         payload: {
@@ -147,7 +185,6 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
         }
       });
 
-      // Update Owner Prestige
       if (isPlayer) {
         impacts.push({ type: 'PRESTIGE_CHANGED', payload: prestigeGain });
       } else if (rival) {
@@ -177,64 +214,5 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
 }
 
 export function processRazzies(state: GameState, week: number, rng: RandomGenerator): StateImpact[] {
-  // Razzies are currently player-only for crisis generation, this is acceptable for v1 gold
   return [];
-}
-
-/**
- * Strategy: Increases a project's awards profile strength via targeted spending.
- */
-export function launchAwardsCampaign(
-    state: GameState, 
-    projectId: string, 
-    budget: number, 
-    rng: RandomGenerator
-): StateImpact[] | null {
-    const project = state.studio.internal.projects[projectId];
-    if (!project || state.finance.cash < budget) return null;
-
-    const campaignStrengthGain = Math.floor(budget / 1_000_000); // 1 point per $1M
-
-    const impacts: StateImpact[] = [
-        {
-            type: 'FUNDS_DEDUCTED',
-            payload: { amount: budget }
-        },
-        {
-            type: 'PROJECT_UPDATED',
-            payload: {
-                projectId,
-                update: {
-                    awardsProfile: {
-                        ...(project.awardsProfile || { 
-                            criticScore: 50, 
-                            audienceScore: 50, 
-                            prestigeScore: 30, 
-                            craftScore: 50, 
-                            culturalHeat: 40,
-                            controversyRisk: 0,
-                            festivalBuzz: 0,
-                            academyAppeal: 50,
-                            guildAppeal: 50,
-                            populistAppeal: 50,
-                            indieCredibility: 50,
-                            industryNarrativeScore: 20
-                        }),
-                        campaignStrength: (project.awardsProfile?.campaignStrength || 0) + campaignStrengthGain
-                    }
-                }
-            }
-        },
-        {
-            type: 'NEWS_ADDED',
-            payload: {
-                id: rng.uuid('news-aw-camp'),
-                headline: `Academy Alert: "${project.title}" Campaign Intensifies`,
-                description: `Industry analysts note a massive marketing offensive as the studio pushes for honors.`,
-                category: 'awards'
-            }
-        }
-    ];
-
-    return impacts;
 }
