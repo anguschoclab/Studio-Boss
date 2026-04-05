@@ -12,7 +12,7 @@ export type AgencyMotivation = 'THE_PACKAGER' | 'THE_CLIMBER' | 'THE_PROTECTOR' 
 export type RivalStrategy = 'blockbuster_focused' | 'prestige_chaser' | 'genre_specialist' | 'acquirer' | 'poacher' | 'balanced';
 
 export type DirectorArchetype = 'auteur' | 'journeyman' | 'visionary' | 'commercial_hack';
-export type TalentTier = 'S_LIST' | 'A_LIST' | 'B_LIST' | 'C_LIST' | 'RISING_STAR' | 'NEWCOMER';
+export type TalentTier = 1 | 2 | 3 | 4;
 
 export type ScandalType = 'financial' | 'personal' | 'onset_behavior' | 'legal' | 'feud'
   | 'rating_controversy' | 'director_speaks_out' | 'foreign_market_cut' | 'banned_in_market';
@@ -27,7 +27,7 @@ export interface Scandal {
 
 export type AgencyArchetype = 'powerhouse' | 'boutique' | 'shark' | 'comedy_specialist' | 'lit_agency' | 'mega_corp' | 'streaming_titan' | 'indie_darling' | 'nepotism_mill' | 'international_broker' | 'legacy_defenders' | 'genre_kings' | 'influencer_syndicate';
 export type AccessLevel = 'outsider' | 'soft-access' | 'legacy' | 'dynasty' | 'comeback';
-export type ProjectRole = 'actor' | 'director' | 'writer' | 'producer' | 'showrunner';
+export type ProjectRole = 'actor' | 'director' | 'writer' | 'producer' | 'showrunner' | 'personality';
 export type TalentRole = 'actor' | 'director' | 'writer' | 'producer' | 'personality' | 'showrunner';
 export type AgencyTier = 'powerhouse' | 'major' | 'mid-tier' | 'boutique' | 'specialist';
 export type AgencyCulture = 'shark' | 'family' | 'volume' | 'prestige';
@@ -39,9 +39,9 @@ export interface TalentCommitment {
   startWeek: number;
   endWeek: number;
   role: TalentRole;
+  format: 'feature' | 'series' | 'unscripted' | 'animation';
   isHoldingDeal?: boolean;
   isShowrunner?: boolean;
-  format?: 'film' | 'tv' | 'unscripted' | 'animation';
 }
 
 export type TalentPactType = 'first_look' | 'vanity_shingle' | 'overall_deal';
@@ -53,7 +53,9 @@ export interface TalentPact {
   type: TalentPactType;
   startDate: number;
   endDate: number;
+  expiryWeek?: number; // Phase 2: Explicit tracking
   weeklyOverhead: number;
+  upfrontCost?: number; // Phase 2: Signing bonus
   exclusivity: boolean;
   status: 'active' | 'expired' | 'terminated';
   spinoffCooldownWeek?: number; // week when next spinoff commission is allowed (overall_deal only)

@@ -8,12 +8,22 @@ const EMPTY_FINANCE: FinanceState = {
   cash: 0, 
   ledger: [], 
   weeklyHistory: [], 
-  marketState: { cycle: 'STABLE', sentiment: 0, baseRate: 0.05, consumerConfidence: 50, debtRate: 0.08, savingsYield: 0.02 } as import('../engine/types/state.types').MarketState
+  marketState: { 
+    cycle: 'STABLE', 
+    sentiment: 0, 
+    baseRate: 0.05, 
+    consumerConfidence: 50, 
+    debtRate: 0.08, 
+    savingsYield: 0.02,
+    loanRate: 0.07,
+    rateHistory: [{ week: 1, rate: 0.05 }]
+  } as import('../engine/types/state.types').MarketState
 };
 const EMPTY_MARKET: GameState['market'] = { buyers: [], opportunities: [], trends: [], activeMarketEvents: [] };
 const EMPTY_TALENT_POOL: Record<string, Talent> = {};
 const EMPTY_RIVALS: RivalStudio[] = [];
 const EMPTY_EVENT_HISTORY: GameEvent[] = [];
+const EMPTY_ARRAY: any[] = [];
 
 const DEFAULT_MARKET_METRICS = { cycle: 'STABLE', sentiment: 0, debtRate: 0.08, savingsRate: 0.02 };
 
@@ -136,17 +146,17 @@ export const selectMarket = createSelector(
 
 export const selectOpportunities = createSelector(
   [selectMarket],
-  (market) => market.opportunities || []
+  (market) => market.opportunities || EMPTY_ARRAY
 );
 
 export const selectBuyers = createSelector(
   [selectMarket],
-  (market) => market.buyers || []
+  (market) => market.buyers || EMPTY_ARRAY
 );
 
 export const selectMarketTrends = createSelector(
   [selectMarket],
-  (market) => market.trends || []
+  (market) => market.trends || EMPTY_ARRAY
 );
 
 /**
@@ -206,7 +216,7 @@ export const selectRecentEvents = createSelector(
  * Filtered Talent Selector
  */
 const TIER_RANK: Record<TalentTier, number> = {
-  S_LIST: 6, A_LIST: 5, B_LIST: 4, C_LIST: 3, RISING_STAR: 2, NEWCOMER: 1
+  1: 4, 2: 3, 3: 2, 4: 1
 };
 
 export interface TalentFilter {
@@ -219,15 +229,17 @@ export interface TalentFilter {
 }
 
 export const selectFilteredTalent = (state: GameState | null, filter: TalentFilter): Talent[] => {
-  if (!state) return [];
-  const pool = Object.values(state.industry.talentPool);
-  return pool.filter(t => {
-    if (filter.roles && !filter.roles.some(r => t.roles?.includes(r) || t.role === r)) return false;
-    if (filter.minTier && TIER_RANK[t.tier] < TIER_RANK[filter.minTier]) return false;
-    if (filter.excludeOnMedicalLeave && t.onMedicalLeave) return false;
+  if (!state) return EMPTY_ARRAY;
+  const result: Talent[] = [];
+  const pool = state.industry.talentPool;
+  for (const key in pool) {
+    const t = pool[key];
+    if (filter.roles && !filter.roles.some(r => t.roles?.includes(r) || t.role === r)) continue;
+    if (filter.minTier && TIER_RANK[t.tier] < TIER_RANK[filter.minTier]) continue;
+    if (filter.excludeOnMedicalLeave && t.onMedicalLeave) continue;
     if (filter.excludeHoldingDeals) {
       const hasHold = t.commitments?.some(c => c.isHoldingDeal);
-      if (hasHold) return false;
+      if (hasHold) continue;
     }
     if (filter.availableAtWeek !== undefined) {
       const busy = t.commitments?.some(c =>
@@ -235,12 +247,13 @@ export const selectFilteredTalent = (state: GameState | null, filter: TalentFilt
         c.startWeek <= filter.availableAtWeek! &&
         c.endWeek >= filter.availableAtWeek!
       );
-      if (busy) return false;
+      if (busy) continue;
     }
     if (filter.genres?.length && t.preferredGenres?.length) {
       const overlap = filter.genres.some(g => t.preferredGenres.includes(g));
-      if (!overlap) return false;
+      if (!overlap) continue;
     }
-    return true;
-  });
+    result.push(t);
+  }
+  return result;
 };
