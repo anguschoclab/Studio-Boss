@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from '@tanstack/react-router';
+import { useNavigate, useRouter } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useGameStore } from '@/store/gameStore';
@@ -8,6 +8,7 @@ import { SaveSlotInfo } from '@/persistence/saveLoad';
 
 const TitleScreen = () => {
   const navigate = useNavigate();
+  const router = useRouter();
   const { loadFromSlot, getSaveSlots } = useGameStore();
   const [showLoad, setShowLoad] = useState(false);
   const [slots, setSlots] = useState<SaveSlotInfo[]>([]);
@@ -53,6 +54,7 @@ const TitleScreen = () => {
         <div className="flex flex-col gap-3 w-72 mx-auto">
           <Button
             onClick={() => navigate({ to: '/new-game' })}
+            onMouseEnter={() => router.preloadRoute({ to: '/new-game' })}
             size="lg"
             className="w-full text-lg h-14 font-display font-bold tracking-wide"
           >
@@ -74,6 +76,7 @@ const TitleScreen = () => {
               devAutoInit();
               navigate({ to: '/dashboard' });
             }}
+            onMouseEnter={() => router.preloadRoute({ to: '/dashboard' })}
             variant="ghost"
             size="sm"
             className="w-full h-10 font-display text-muted-foreground hover:text-primary transition-colors opacity-50 hover:opacity-100"

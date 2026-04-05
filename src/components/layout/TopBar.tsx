@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { formatMoney, getWeekDisplay } from '@/engine/utils';
-import { Save, FastForward, AlertTriangle, TrendingUp, Globe } from 'lucide-react';
+import { Icons } from '@/components/shared/Icons';
 import { selectActiveProjects, selectMarketMetrics } from '@/store/selectors';
 import { Badge } from '@/components/ui/badge';
 import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
@@ -24,8 +24,8 @@ export const TopBar = () => {
   const { week, studio } = gameState;
   const { displayWeek, year } = getWeekDisplay(week);
 
-  const handleAdvanceWeek = () => {
-    const summary = doAdvanceWeek();
+  const handleAdvanceWeek = async () => {
+    const summary = await doAdvanceWeek();
     if (summary) enqueueModal('SUMMARY', summary as any);
   };
 
@@ -56,7 +56,7 @@ export const TopBar = () => {
           <div className="flex flex-col items-end cursor-default group">
             <div className="flex items-center gap-1.5">
               <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">Market: {cycle}</span>
-              <Globe className="h-2.5 w-2.5 text-blue-400 group-hover:animate-spin-slow" />
+              <Icons.Globe className="h-2.5 w-2.5 text-blue-400 group-hover:animate-spin-slow" />
             </div>
             <span className="font-mono font-bold text-sm text-blue-300">
               {(debtRate * 100).toFixed(1)}% <span className="text-[10px] font-normal text-muted-foreground">APR</span>
@@ -83,7 +83,7 @@ export const TopBar = () => {
           <div className="flex flex-col items-end group cursor-default">
             <div className="flex items-center gap-1.5">
               <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">Prestige</span>
-              <TrendingUp className="h-2.5 w-2.5 text-secondary" />
+              <Icons.TrendingUp className="h-2.5 w-2.5 text-secondary" />
             </div>
             <span className="font-mono font-bold text-sm text-secondary">
               {studio.prestige}
@@ -109,7 +109,7 @@ export const TopBar = () => {
         {/* Market Event Alert */}
         {gameState.market.activeMarketEvents && gameState.market.activeMarketEvents.length > 0 && (
           <div className="relative group">
-            <AlertTriangle className="h-4 w-4 text-amber-500 animate-pulse cursor-help" />
+            <Icons.AlertTriangle className="h-4 w-4 text-amber-500 animate-pulse cursor-help" />
             <div className="absolute top-full right-0 mt-2 p-3 bg-card border border-amber-500/20 rounded shadow-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 w-64 text-xs">
               <p className="font-bold text-amber-500 mb-1">Active Market Events</p>
               <ul className="list-disc list-inside text-muted-foreground">
@@ -129,7 +129,7 @@ export const TopBar = () => {
           onClick={handleSave} 
           className="h-8 w-8 rounded-full hover:bg-white/5 text-muted-foreground hover:text-primary transition-colors"
         >
-          <Save className="h-4 w-4" />
+          <Icons.Save className="w-4 h-4" />
         </Button>
 
         <Button 
@@ -138,7 +138,7 @@ export const TopBar = () => {
           className="h-9 px-4 font-display font-black uppercase tracking-widest text-[10px] gap-2 transition-all duration-300 shadow-[0_0_20px_rgba(var(--primary),0.1)] hover:shadow-[0_0_25px_rgba(var(--primary),0.3)] hover:scale-105 active:scale-95 group overflow-hidden relative"
         >
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
-          <FastForward className="h-3.5 w-3.5" />
+          <Icons.FastForward className="w-4 h-4 ml-1" />
           Advance Week
         </Button>
       </div>

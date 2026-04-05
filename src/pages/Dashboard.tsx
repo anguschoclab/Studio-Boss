@@ -4,18 +4,20 @@ import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { TopBar } from '@/components/layout/TopBar';
 import { StudioSidebar } from '@/components/layout/StudioSidebar';
-import { CommandCenter } from '@/components/dashboard/CommandCenter';
-import { PipelineBoard } from '@/components/pipeline/PipelineBoard';
-import { TalentPanel } from '@/components/talent/TalentPanel';
-import { FinancePanel } from '@/components/finance/FinancePanel';
-import { DiscoveryBoard } from '@/components/discovery/DiscoveryBoard';
-import { RivalsPanel } from '@/components/rivals/RivalsPanel';
-import { IPVault } from '@/components/ip/IPVault';
-import { DealsDesk } from '@/components/deals/DealsDesk';
-import { SBDBView } from '@/components/sbdb/SBDBView';
-import { StreamingPanel } from '@/components/streaming/StreamingPanel';
-import { NielsenDashboard } from '@/components/television/NielsenDashboard';
-import { AnimatePresence, motion } from 'framer-motion';
+import { CommandCenter } from '@/components/dashboard/CommandCenter'; 
+
+// Lazy Loaded Panels
+const PipelineBoard = React.lazy(() => import('@/components/pipeline/PipelineBoard').then(m => ({ default: m.PipelineBoard })));
+const TalentPanel = React.lazy(() => import('@/components/talent/TalentPanel').then(m => ({ default: m.TalentPanel })));
+const FinancePanel = React.lazy(() => import('@/components/finance/FinancePanel').then(m => ({ default: m.FinancePanel })));
+const DiscoveryBoard = React.lazy(() => import('@/components/discovery/DiscoveryBoard').then(m => ({ default: m.DiscoveryBoard })));
+const RivalsPanel = React.lazy(() => import('@/components/rivals/RivalsPanel').then(m => ({ default: m.RivalsPanel })));
+const IPVault = React.lazy(() => import('@/components/ip/IPVault').then(m => ({ default: m.IPVault })));
+const DealsDesk = React.lazy(() => import('@/components/deals/DealsDesk').then(m => ({ default: m.DealsDesk })));
+const SBDBView = React.lazy(() => import('@/components/sbdb/SBDBView').then(m => ({ default: m.SBDBView })));
+const StreamingPanel = React.lazy(() => import('@/components/streaming/StreamingPanel').then(m => ({ default: m.StreamingPanel })));
+const NielsenDashboard = React.lazy(() => import('@/components/television/NielsenDashboard').then(m => ({ default: m.NielsenDashboard })));
+import { m, AnimatePresence } from 'framer-motion';
 
 // Modals & Overlays
 import { ModalManager } from '@/components/modals/ModalManager';
@@ -75,7 +77,7 @@ const Dashboard: React.FC = () => {
 
           <div className="container mx-auto max-w-[1600px] h-full flex flex-col">
             <AnimatePresence mode="wait">
-              <motion.div
+              <m.div
                 key={activeTab}
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -83,8 +85,10 @@ const Dashboard: React.FC = () => {
                 transition={{ duration: 0.25, ease: "easeInOut" }}
                 className="h-full flex flex-col"
               >
-                {renderContent()}
-              </motion.div>
+                <React.Suspense fallback={<div className="flex items-center justify-center h-64 opacity-50 font-display uppercase tracking-widest text-xs">Loading Sub-System...</div>}>
+                  {renderContent()}
+                </React.Suspense>
+              </m.div>
             </AnimatePresence>
           </div>
         </main>

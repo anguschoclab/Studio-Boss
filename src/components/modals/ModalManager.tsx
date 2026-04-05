@@ -1,9 +1,10 @@
 import React from 'react';
 import { useUIStore } from '@/store/uiStore';
-import { WeekSummaryModal } from './WeekSummaryModal';
-import { CrisisModal } from './CrisisModal';
-import { AwardsCeremonyModal } from './AwardsCeremonyModal';
-import { FestivalMarketModal } from './FestivalMarketModal';
+// Lazy Loaded Modals
+const WeekSummaryModal = React.lazy(() => import('./WeekSummaryModal').then(m => ({ default: m.WeekSummaryModal })));
+const CrisisModal = React.lazy(() => import('./CrisisModal').then(m => ({ default: m.CrisisModal })));
+const AwardsCeremonyModal = React.lazy(() => import('./AwardsCeremonyModal').then(m => ({ default: m.AwardsCeremonyModal })));
+const FestivalMarketModal = React.lazy(() => import('./FestivalMarketModal').then(m => ({ default: m.FestivalMarketModal })));
 
 /**
  * Unified Modal Manager.
@@ -14,16 +15,22 @@ export const ModalManager: React.FC = () => {
 
   if (!activeModal) return null;
 
-  switch (activeModal.type) {
-    case 'SUMMARY':
-      return <WeekSummaryModal key={activeModal.id} />;
-    case 'CRISIS':
-      return <CrisisModal key={activeModal.id} />;
-    case 'AWARDS':
-      return <AwardsCeremonyModal key={activeModal.id} />;
-    case 'FESTIVAL_MARKET':
-      return <FestivalMarketModal key={activeModal.id} />;
-    default:
-      return null;
-  }
+  return (
+    <React.Suspense fallback={null}>
+      {(() => {
+        switch (activeModal.type) {
+          case 'SUMMARY':
+            return <WeekSummaryModal key={activeModal.id} />;
+          case 'CRISIS':
+            return <CrisisModal key={activeModal.id} />;
+          case 'AWARDS':
+            return <AwardsCeremonyModal key={activeModal.id} />;
+          case 'FESTIVAL_MARKET':
+            return <FestivalMarketModal key={activeModal.id} />;
+          default:
+            return null;
+        }
+      })()}
+    </React.Suspense>
+  );
 };

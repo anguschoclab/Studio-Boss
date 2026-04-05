@@ -1,8 +1,5 @@
 import { create } from 'zustand';
 import { GameState, WeekSummary, ArchetypeKey, FinanceState, NewsState } from '@/engine/types';
-import { initializeGame } from '@/engine/core/gameInit';
-import { advanceWeek } from '@/engine/core/weekAdvance';
-import { RandomGenerator } from '@/engine/utils/rng';
 import { saveGame, loadGame, getSaveSlots, SaveSlotInfo } from '@/persistence/saveLoad';
 import { useUIStore } from './uiStore';
 
@@ -20,7 +17,7 @@ export interface GameStore extends ProjectSlice, FinanceSlice, TalentSlice, Riva
   _saveNextState: GameState | null;
 
   newGame: (studioName: string, archetype: ArchetypeKey) => Promise<void>;
-  doAdvanceWeek: () => WeekSummary | null;
+  doAdvanceWeek: () => Promise<WeekSummary | null>;
   saveToSlot: (slot: number) => Promise<void>;
   loadFromSlot: (slot: number) => Promise<boolean>;
   getSaveSlots: () => Promise<SaveSlotInfo[]>;
@@ -44,6 +41,9 @@ const INITIAL_FINANCE: FinanceState = {
 };
 const INITIAL_NEWS: NewsState = { headlines: [] };
 
+// Initialize Web Worker
+const engineWorker = new Worker(new URL('../engine/engine.worker.ts', import.meta.url), { type: 'module' });
+
 export const useGameStore = create<GameStore>((set, get, ...args) => ({
   gameState: null,
   _isProcessingTick: false,
@@ -57,18 +57,29 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
   ...createNewsSlice(set, get, ...args),
   ...createSnapshotSlice(set, get, ...args),
 
-  newGame: async (studioName, archetype) => {
+  newGame: async (studioName: string, archetype: ArchetypeKey) => {
     const seed = Math.floor(Math.random() * 1_000_000);
-    const gameState = initializeGame(studioName, archetype, seed);
-    await saveGame(0, gameState);
-    set({ 
-      gameState,
-      finance: gameState.finance,
-      news: gameState.news
+    
+    return new Promise<void>((resolve) => {
+      const handler = (e: MessageEvent) => {
+        if (e.data.type === 'INIT_RESULT') {
+          const gameState = e.data.payload as GameState;
+          saveGame(0, gameState);
+          set({ 
+            gameState,
+            finance: gameState.finance,
+            news: gameState.news
+          });
+          engineWorker.removeEventListener('message', handler);
+          resolve();
+        }
+      };
+      engineWorker.addEventListener('message', handler);
+      engineWorker.postMessage({ type: 'INIT_GAME', payload: { studioName, archetype, seed } });
     });
   },
 
-  doAdvanceWeek: () => {
+  doAdvanceWeek: async () => {
     if (get()._isProcessingTick) {
         console.warn('[GameStore] Tick already in progress, skipping...');
         return null;
@@ -79,60 +90,66 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
 
     set({ _isProcessingTick: true });
 
-    try {
-        const rng = new RandomGenerator((state.gameSeed || 12345) + (state.tickCount || 0));
-        const { newState: nextState, summary, impacts } = advanceWeek(state, rng);
-        const finalState = nextState as GameState;
+    return new Promise<WeekSummary | null>((resolve, reject) => {
+      const handler = async (e: MessageEvent) => {
+        if (e.data.type === 'ADVANCE_RESULT') {
+          try {
+            const { newState: nextState, summary, impacts } = e.data.payload;
+            const finalState = nextState as GameState;
 
-        // Queue background save (Latest-Only pattern)
-        const triggerSave = async (stateToSave: GameState) => {
-            if (get()._isSaving) {
-                set({ _saveNextState: stateToSave });
-                return;
+            // Queue background save
+            const triggerSave = async (stateToSave: GameState) => {
+                if (get()._isSaving) {
+                    set({ _saveNextState: stateToSave });
+                    return;
+                }
+
+                set({ _isSaving: true, _saveNextState: null });
+                await saveGame(0, stateToSave);
+                set({ _isSaving: false });
+
+                const next = get()._saveNextState;
+                if (next) triggerSave(next);
+            };
+
+            triggerSave(finalState);
+            
+            set({ 
+              gameState: finalState,
+              finance: finalState.finance,
+              news: finalState.news,
+              _isProcessingTick: false
+            });
+
+            // Modals
+            const ui = useUIStore.getState();
+            if (impacts && impacts.length > 0) {
+              const modalImpacts = impacts.filter((imp: any) => imp.type === 'MODAL_TRIGGERED');
+              if (modalImpacts.length > 0) {
+                const sortedModalImpacts = [...modalImpacts].sort((a, b) => (b.payload.priority || 0) - (a.payload.priority || 0));
+                for (const imp of sortedModalImpacts) {
+                  ui.enqueueModal(imp.payload.modalType, imp.payload.payload as Record<string, unknown>);
+                }
+              }
             }
 
-            set({ _isSaving: true, _saveNextState: null });
-            await saveGame(0, stateToSave);
-            set({ _isSaving: false });
-
-            // If a new save was queued while we were saving, trigger it now.
-            const next = get()._saveNextState;
-            if (next) {
-                triggerSave(next);
+            if (summary && (summary as WeekSummary).fromWeek % 52 === 0 && (summary as WeekSummary).fromWeek > 0) {
+              get().captureSnapshot();
             }
-        };
 
-        triggerSave(finalState);
-        
-        set({ 
-          gameState: finalState,
-          finance: finalState.finance,
-          news: finalState.news,
-          _isProcessingTick: false
-        });
-
-        // --- Modal Queue Integration ---
-        const ui = useUIStore.getState();
-
-        if (impacts && impacts.length > 0) {
-          const modalImpacts = impacts.filter(imp => imp.type === 'MODAL_TRIGGERED');
-          if (modalImpacts.length > 0) {
-            const sortedModalImpacts = [...modalImpacts].sort((a, b) => (b.payload.priority || 0) - (a.payload.priority || 0));
-            for (const imp of sortedModalImpacts) {
-              ui.enqueueModal(imp.payload.modalType, imp.payload.payload as Record<string, unknown>);
-            }
+            engineWorker.removeEventListener('message', handler);
+            resolve(summary as WeekSummary);
+          } catch (err) {
+            set({ _isProcessingTick: false });
+            engineWorker.removeEventListener('message', handler);
+            reject(err);
           }
         }
-
-        if (summary && summary.fromWeek % 52 === 0 && summary.fromWeek > 0) {
-          get().captureSnapshot();
-        }
-
-        return summary;
-    } catch (e) {
-        set({ _isProcessingTick: false });
-        throw e;
-    }
+      };
+      
+      engineWorker.addEventListener('message', handler);
+      engineWorker.postMessage({ type: 'ADVANCE_WEEK', payload: { state } });
+    });
   },
 
   saveToSlot: async (slot) => {
@@ -165,12 +182,19 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
   }),
 
   devAutoInit: (archetype = 'major') => {
-    const seed = 42; // Constant seed for predictable dev testing
-    const gameState = initializeGame('Alpha Studios', archetype, seed);
-    set({ 
-      gameState,
-      finance: gameState.finance,
-      news: gameState.news
-    });
+    const seed = 42;
+    const handler = (e: MessageEvent) => {
+      if (e.data.type === 'INIT_RESULT') {
+        const gameState = e.data.payload;
+        set({ 
+          gameState,
+          finance: gameState.finance,
+          news: gameState.news
+        });
+        engineWorker.removeEventListener('message', handler);
+      }
+    };
+    engineWorker.addEventListener('message', handler);
+    engineWorker.postMessage({ type: 'INIT_GAME', payload: { studioName: 'Alpha Studios', archetype, seed } });
   },
 }));

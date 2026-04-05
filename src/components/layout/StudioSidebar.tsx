@@ -1,22 +1,7 @@
 import React from 'react';
 import { useUIStore, TabId } from '@/store/uiStore';
 import { useGameStore } from '@/store/gameStore';
-import { 
-  LayoutDashboard, 
-  Film, 
-  Library, 
-  Handshake, 
-  Globe, 
-  Users, 
-  Briefcase, 
-  Newspaper,
-  Tv,
-  BarChart3,
-  ChevronLeft,
-  ChevronRight,
-  LogOut,
-  Settings
-} from 'lucide-react';
+import { Icons } from '@/components/shared/Icons';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -31,17 +16,17 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { id: 'command', label: 'Command Center', icon: LayoutDashboard, tooltip: 'Global studio overview, active alerts, and top-line metrics' },
-  { id: 'pipeline', label: 'Production Pipeline', icon: Film, tooltip: 'Manage active projects from development through principal photography' },
-  { id: 'ip', label: 'IP Vault', icon: Library, tooltip: 'Catalog of owned intellectual property, franchises, and library rights' },
-  { id: 'deals', label: 'Deals Desk', icon: Handshake, tooltip: 'Review incoming talent offers, script submissions, and production bids' },
-  { id: 'industry', label: 'Industry Analysis', icon: Globe, tooltip: 'Market trends, rival studio intelligence, and box office forecasts' },
-  { id: 'talent', label: 'Talent Roster', icon: Users, tooltip: 'Directory of represented talent and upcoming industry stars' },
-  { id: 'finance', label: 'Finance & P&L', icon: Briefcase, tooltip: 'Detailed financial statements, tax incentives, and studio overhead' },
-  { id: 'trades', label: 'The Trades', icon: Newspaper, tooltip: 'Scout new IP opportunities and monitor industry headlines' },
-  { id: 'sbdb', label: 'SBDB', icon: Users, tooltip: 'Comprehensive historical database of all industry talent and credits' },
-  { id: 'streaming', label: 'Streaming & Distribution', icon: Tv, tooltip: 'Manage platform content licenses and home video syndication' },
-  { id: 'nielsen', label: 'Nielsen Ratings', icon: BarChart3, tooltip: 'TV viewership analytics, demographic breakdowns, and weekly rankings' },
+  { id: 'command', label: 'Command Center', icon: Icons.Dashboard, tooltip: 'Global studio overview, active alerts, and top-line metrics' },
+  { id: 'pipeline', label: 'Production Pipeline', icon: Icons.Film, tooltip: 'Manage active projects from development through principal photography' },
+  { id: 'ip', label: 'IP Vault', icon: Icons.Library, tooltip: 'Catalog of owned intellectual property, franchises, and library rights' },
+  { id: 'deals', label: 'Deals Desk', icon: Icons.Handshake, tooltip: 'Review incoming talent offers, script submissions, and production bids' },
+  { id: 'industry', label: 'Industry Analysis', icon: Icons.Globe, tooltip: 'Market trends, rival studio intelligence, and box office forecasts' },
+  { id: 'talent', label: 'Talent Roster', icon: Icons.Users, tooltip: 'Directory of represented talent and upcoming industry stars' },
+  { id: 'finance', label: 'Finance & P&L', icon: Icons.Briefcase, tooltip: 'Detailed financial statements, tax incentives, and studio overhead' },
+  { id: 'trades', label: 'The Trades', icon: Icons.Newspaper, tooltip: 'Scout new IP opportunities and monitor industry headlines' },
+  { id: 'sbdb', label: 'SBDB', icon: Icons.Users, tooltip: 'Comprehensive historical database of all industry talent and credits' },
+  { id: 'streaming', label: 'Streaming & Distribution', icon: Icons.Tv, tooltip: 'Manage platform content licenses and home video syndication' },
+  { id: 'nielsen', label: 'Nielsen Ratings', icon: Icons.BarChart, tooltip: 'TV viewership analytics, demographic breakdowns, and weekly rankings' },
 ];
 
 export const StudioSidebar = () => {
@@ -136,7 +121,7 @@ export const StudioSidebar = () => {
               className="w-full justify-start gap-3 text-muted-foreground hover:bg-white/5"
               onClick={() => {}} // Future: Settings
             >
-              <Settings className="h-5 w-5 shrink-0" />
+              <Icons.Settings className="h-5 w-5 shrink-0" />
               {!isCollapsed && <span className="text-[13px]">Settings</span>}
             </Button>
           </TooltipTrigger>
@@ -153,7 +138,7 @@ export const StudioSidebar = () => {
               onClick={handleExit}
               className="w-full justify-start gap-3 text-destructive/70 hover:text-destructive hover:bg-destructive/10"
             >
-              <LogOut className="h-5 w-5 shrink-0" />
+              <Icons.LogOut className="h-5 w-5 shrink-0" />
               {!isCollapsed && <span className="text-[13px]">Quit Studio</span>}
             </Button>
           </TooltipTrigger>
@@ -173,7 +158,7 @@ export const StudioSidebar = () => {
               onClick={() => setIsCollapsed(!isCollapsed)}
               className="w-full flex justify-center hover:bg-white/5"
             >
-              {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+              {isCollapsed ? <Icons.ChevronRight className="h-4 w-4" /> : <Icons.ChevronLeft className="h-4 w-4" />}
             </Button>
           </TooltipTrigger>
           <TooltipContent side="right" className="font-bold text-[11px] uppercase tracking-widest bg-card border-border">
