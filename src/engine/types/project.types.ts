@@ -52,7 +52,7 @@ export interface BoxOfficeResult {
 
 export type ProjectStatus = 'development' | 'needs_greenlight' | 'pitching' | 'production' | 'marketing' | 'released' | 'post_release' | 'archived' | 'turnaround' | 'pilot' | 'shopping';
 export type ProjectFormat = 'film' | 'tv' | 'unscripted' | 'animation';
-export type BudgetTierKey = 'low' | 'mid' | 'high' | 'blockbuster';
+export type BudgetTierKey = 'indie' | 'low' | 'mid' | 'high' | 'blockbuster';
 
 export type TvFormatKey =
   | 'sitcom'
@@ -366,6 +366,20 @@ export interface RatingEconomics {
 export type DemographicGroup = 'gen-z' | 'millennial' | 'gen-x' | 'boomer';
 export type AudienceQuadrant = 'male_under_25' | 'female_under_25' | 'male_over_25' | 'female_over_25' | 'four_quadrant';
 
+export interface Review {
+  criticName: string;
+  score: number;
+  text: string;
+}
+
+export interface CriticConsensus {
+  metaScore: number;       // 0-100
+  audienceScore: number;   // 0-100
+  reviews: Review[];
+  status: 'Acclaimed' | 'Mixed' | 'Panned';
+  isCultPotential: boolean;
+}
+
 export interface AwardsProfile {
   criticScore: number;
   audienceScore: number;
@@ -495,6 +509,7 @@ export interface ProjectBase {
   progress: number; // 0-100
   accumulatedCost: number;
   awardsProfile?: AwardsProfile;
+  reception?: CriticConsensus; 
   parentProjectId?: string;
   isSpinoff?: boolean;
   isGlobalIcon?: boolean;

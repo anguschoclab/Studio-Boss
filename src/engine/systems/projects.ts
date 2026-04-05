@@ -6,6 +6,7 @@ import { TV_FORMATS } from '../data/tvFormats';
 import { UNSCRIPTED_FORMATS } from '../data/unscriptedFormats';
 import { TalentMoraleSystem } from './talent/TalentMoraleSystem';
 import { RandomGenerator } from '../utils/rng';
+import { ReviewSystem } from './ReviewSystem';
 
 function getAttachedTalent(contracts: Contract[], talentPoolMap: Map<string, Talent>): Talent[] {
   const acc: Talent[] = [];
@@ -47,11 +48,10 @@ export function handleReleasePhaseEntry(
 
   const attachedTalent = getAttachedTalent(projectContracts, talentPoolMap);
   
-  // 1. Generate Review Score
-  if (p.reviewScore === undefined) {
-    const rawScore = calculateReviewScore(p, attachedTalent, p.activeCrisis, rng);
-    const moraleMult = TalentMoraleSystem.getQualityMultiplier(attachedTalent);
-    p.reviewScore = Math.round(rawScore * moraleMult);
+  // 1. Generate Review Score & Reception
+  if (p.reception === undefined) {
+    p.reception = ReviewSystem.generateReception(p, attachedTalent, rng);
+    p.reviewScore = p.reception.metaScore; // Backwards compatibility for now
   }
 
   // 2. Simulate Opening (Film vs TV)
