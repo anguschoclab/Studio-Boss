@@ -55,7 +55,7 @@ export const PipelineBoard = () => {
         <div className="flex items-center gap-3 relative z-10">
           <div className="relative w-48 hidden lg:block group">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground group-focus-within:text-primary transition-colors" />
-            <Input className="h-9 pl-9 text-[11px] bg-black/40 border-white/10 focus-visible:border-primary/50 focus-visible:ring-primary/20 transition-all font-mono" placeholder="Filter property..." />
+            <Input aria-label="Filter property" className="h-9 pl-9 text-[11px] bg-black/40 border-white/10 focus-visible:border-primary/50 focus-visible:ring-primary/20 transition-all font-mono" placeholder="Filter property..." />
           </div>
           <Button variant="outline" size="icon" aria-label="Filter pipeline" className="h-9 w-9 bg-black/40 border-white/10 text-muted-foreground hover:text-foreground hover:border-white/20 transition-all">
             <ListFilter className="h-4 w-4" />
