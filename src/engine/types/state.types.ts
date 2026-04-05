@@ -1,6 +1,8 @@
-import { Headline } from './engine.types';
+import { Headline, HeadlineCategory, PublicationType, NewsEvent, MarketEvent, Rumor } from './engine.types';
 import { Franchise } from './franchise.types';
-import { TalentPact, TalentPactType } from './talent.types';
+import { TalentPact, TalentPactType, Talent, Scandal, Contract } from './talent.types';
+import { Project, Opportunity, GenreTrend, Award, FestivalSubmission } from './project.types';
+import { RivalStudio, Buyer } from './studio.types';
 
 export interface WeeklyFinancialReport {
   week: number;
@@ -36,6 +38,7 @@ export interface FinancialSnapshot {
     pacts: number; 
     royalties: number; 
     interest: number; 
+    interestOnCeb?: number;
   };
   net: number;
   cash: number;
@@ -82,7 +85,7 @@ export interface IPAsset {
   totalEpisodes: number;
   rightsExpirationWeek: number; 
   rightsOwner: 'STUDIO' | 'MARKET' | 'RIVAL';
-  ownerStudioId?: string; // Specific ID for rival or player ownership
+  ownerStudioId?: string;
   isSynergyActive?: boolean; 
 }
 
@@ -126,16 +129,16 @@ export interface NewsImpact {
   id: string;
   headline: string;
   description: string;
-  category?: import('./engine.types').HeadlineCategory;
-  publication?: import('./engine.types').PublicationType;
+  category?: HeadlineCategory;
+  publication?: PublicationType;
 }
 
-export interface ProjectUpdate { projectId: string; update: Partial<import('./project.types').Project> }
-export interface TalentUpdate { talentId: string; update: Partial<import('./talent.types').Talent> }
-export interface RivalUpdate { rivalId: string; update: Partial<import('./studio.types').RivalStudio> }
-export interface BuyerUpdate { buyerId: string; update: Partial<import('./studio.types').Buyer> }
-export interface ScandalUpdate { scandalId: string; update: Partial<import('./talent.types').Scandal> }
-export interface FranchiseUpdate { franchiseId: string; update: Partial<import('./franchise.types').Franchise> }
+export interface ProjectUpdate { projectId: string; update: Partial<Project> }
+export interface TalentUpdate { talentId: string; update: Partial<Talent> }
+export interface RivalUpdate { rivalId: string; update: Partial<RivalStudio> }
+export interface BuyerUpdate { buyerId: string; update: Partial<Buyer> }
+export interface ScandalUpdate { scandalId: string; update: Partial<Scandal> }
+export interface FranchiseUpdate { franchiseId: string; update: Partial<Franchise> }
 export interface VaultAssetUpdate { assetId: string; update: Partial<IPAsset> }
 export interface OpportunityUpdate { 
   opportunityId: string; 
@@ -157,23 +160,23 @@ export interface BaseImpact {
   talentUpdates?: TalentUpdate[];
   rivalUpdates?: RivalUpdate[];
   buyerUpdates?: BuyerUpdate[];
-  newsEvents?: import('./engine.types').NewsEvent[];
-  newHeadlines?: import('./engine.types').Headline[];
-  newOpportunities?: import('./project.types').Opportunity[];
-  newTrends?: import('./project.types').GenreTrend[];
-  newMarketEvents?: import('./engine.types').MarketEvent[];
-  newRumors?: import('./engine.types').Rumor[];
-  newScandals?: import('./talent.types').Scandal[];
+  newsEvents?: NewsEvent[];
+  newHeadlines?: Headline[];
+  newOpportunities?: Opportunity[];
+  newTrends?: GenreTrend[];
+  newMarketEvents?: MarketEvent[];
+  newRumors?: Rumor[];
+  newScandals?: Scandal[];
   scandalUpdates?: ScandalUpdate[];
   removeContracts?: string[]; 
   uiNotifications?: string[];
-  newAwards?: import('./project.types').Award[];
+  newAwards?: Award[];
   cultClassicProjectIds?: string[];
   razzieWinnerTalents?: string[];
-  newFestivalSubmissions?: import('./project.types').FestivalSubmission[];
-  newProjects?: import('./project.types').Project[];
-  newContracts?: import('./talent.types').Contract[];
-  newTalents?: import('./talent.types').Talent[];
+  newFestivalSubmissions?: FestivalSubmission[];
+  newProjects?: Project[];
+  newContracts?: Contract[];
+  newTalents?: Talent[];
   newIPAssets?: IPAsset[];
 }
 
