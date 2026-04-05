@@ -90,7 +90,6 @@ export class TalentMoraleSystem {
             if (p.activeCrisis && !p.activeCrisis.resolved) moodChange -= 5;
           }
         }
-      }
 
       if (moodChange !== 0) {
         updates.push({

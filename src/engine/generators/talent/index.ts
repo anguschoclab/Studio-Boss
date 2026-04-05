@@ -102,13 +102,26 @@ export function generateTalentPool(
     // 40 Producers (8%)
     // 50 Personalities (10%)
     
-    const roleStats = [
-      { role: 'actor' as TalentRole, count: Math.ceil(count * 0.55) },
-      { role: 'director' as TalentRole, count: Math.ceil(count * 0.15) },
-      { role: 'writer' as TalentRole, count: Math.ceil(count * 0.12) },
-      { role: 'producer' as TalentRole, count: Math.ceil(count * 0.08) },
-      { role: 'personality' as TalentRole, count: Math.ceil(count * 0.10) },
+    const rolePercentages: { role: TalentRole; pct: number }[] = [
+      { role: 'actor', pct: 0.55 },
+      { role: 'director', pct: 0.15 },
+      { role: 'writer', pct: 0.12 },
+      { role: 'producer', pct: 0.08 },
+      { role: 'personality', pct: 0.10 },
     ];
+
+    const exact = rolePercentages.map(r => ({ ...r, exact: count * r.pct }));
+    const floors = exact.map(r => ({ ...r, n: Math.floor(r.exact), frac: r.exact - Math.floor(r.exact) }));
+    const currentSum = floors.reduce((s, r) => s + r.n, 0);
+    const remainder = count - currentSum;
+    
+    // Distribute remainder to roles with largest fractional parts
+    floors.sort((a, b) => b.frac - a.frac);
+    for (let j = 0; j < remainder; j++) {
+      floors[j].n++;
+    }
+
+    const roleStats = floors.map(r => ({ role: r.role, count: r.n }));
 
     roleStats.forEach(stat => {
       for (let i = 0; i < stat.count; i++) {

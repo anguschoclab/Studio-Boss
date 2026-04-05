@@ -1,0 +1,153 @@
+src/components/dashboard/DemographicsWidget.tsx(74,90): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(props: Props): YAxis', gave the following error.
+    Object literal may only specify known properties, and 'textShadow' does not exist in type 'SVGProps<SVGTextElement> | ReactElement<SVGElement, string | JSXElementConstructor<any>> | ((props: any) => ReactElement<...>)'.
+  Overload 2 of 2, '(props: Props, context: any): YAxis', gave the following error.
+    Object literal may only specify known properties, and 'textShadow' does not exist in type 'SVGProps<SVGTextElement> | ReactElement<SVGElement, string | JSXElementConstructor<any>> | ((props: any) => ReactElement<...>)'.
+src/components/dashboard/FinancialOverviewWidget.tsx(78,96): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(props: Props): XAxis', gave the following error.
+    Object literal may only specify known properties, and 'textShadow' does not exist in type 'SVGProps<SVGTextElement> | ReactElement<SVGElement, string | JSXElementConstructor<any>> | ((props: any) => ReactElement<...>)'.
+  Overload 2 of 2, '(props: Props, context: any): XAxis', gave the following error.
+    Object literal may only specify known properties, and 'textShadow' does not exist in type 'SVGProps<SVGTextElement> | ReactElement<SVGElement, string | JSXElementConstructor<any>> | ((props: any) => ReactElement<...>)'.
+src/components/industry/MADashboard.tsx(13,41): error TS2339: Property 'getMarketShare' does not exist on type 'typeof RegulatorSystem'.
+src/components/industry/MADashboard.tsx(20,32): error TS2339: Property 'getMarketShare' does not exist on type 'typeof RegulatorSystem'.
+src/components/layout/TopBar.tsx(16,11): error TS2339: Property 'showSummary' does not exist on type 'UIStore'.
+src/components/modals/CreateProjectModal.tsx(37,16): error TS2554: Expected 2 arguments, but got 1.
+src/components/modals/CreateProjectModal.tsx(94,91): error TS2554: Expected 2 arguments, but got 1.
+src/components/modals/WeekSummaryModal.tsx(19,11): error TS2339: Property 'toWeek' does not exist on type 'Record<string, unknown> | null'.
+src/components/modals/WeekSummaryModal.tsx(19,19): error TS2339: Property 'cashBefore' does not exist on type 'Record<string, unknown> | null'.
+src/components/modals/WeekSummaryModal.tsx(19,31): error TS2339: Property 'cashAfter' does not exist on type 'Record<string, unknown> | null'.
+src/components/modals/WeekSummaryModal.tsx(19,42): error TS2339: Property 'totalRevenue' does not exist on type 'Record<string, unknown> | null'.
+src/components/modals/WeekSummaryModal.tsx(19,56): error TS2339: Property 'totalCosts' does not exist on type 'Record<string, unknown> | null'.
+src/components/modals/WeekSummaryModal.tsx(19,68): error TS2339: Property 'projectUpdates' does not exist on type 'Record<string, unknown> | null'.
+src/components/modals/WeekSummaryModal.tsx(19,84): error TS2339: Property 'newHeadlines' does not exist on type 'Record<string, unknown> | null'.
+src/components/modals/WeekSummaryModal.tsx(19,98): error TS2339: Property 'events' does not exist on type 'Record<string, unknown> | null'.
+src/components/news/NewsFeed.tsx(14,7): error TS2739: Type '{ AWARD: { icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>; color: string; label: string; }; CRISIS: { ...; }; RELEASE: { ...; }; STUDIO_EVENT: { ...; }; RIVAL: { ...; }; }' is missing the following properties from type 'Record<NewsEventType, { icon: any; color: string; label: string; }>': MILESTONE, SCANDAL, LEGAL
+src/components/pipeline/ProjectCard.tsx(21,44): error TS2339: Property 'openCrisisModal' does not exist on type 'UIStore'.
+src/components/pwa/InstallPrompt.tsx(2,31): error TS2307: Cannot find module 'virtual:pwa-register/react' or its corresponding type declarations.
+src/components/pwa/InstallPrompt.tsx(28,18): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/components/pwa/InstallPrompt.tsx(31,21): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/components/talent/TalentAttachmentPanel.tsx(118,23): error TS2322: Type 'TalentTier | "ALL"' is not assignable to type 'string | undefined'.
+  Type 'number' is not assignable to type 'string'.
+src/components/talent/TalentAttachmentPanel.tsx(170,121): error TS2339: Property 'replace' does not exist on type 'TalentTier'.
+  Property 'replace' does not exist on type '1'.
+src/engine/core/gameInit.ts(239,7): error TS2741: Property 'projectHistory' is missing in type '{ projects: {}; contracts: never[]; }' but required in type '{ projects: Record<string, Project>; contracts: Contract[]; firstLookDeals?: TalentPact[] | undefined; projectHistory: Project[]; }'.
+src/engine/data/unscriptedFormats.ts(17,14): error TS2741: Property 'talk_show' is missing in type '{ competition: { key: "competition"; name: string; defaultEpisodes: number; minEpisodes: number; maxEpisodes: number; productionCostMultiplier: number; developmentWeeksModifier: number; productionWeeksPerEpisode: number; renewable: true; revenueDecayBinge: number; revenueDecayWeekly: number; }; ... 118 more ...; ext...' but required in type 'Record<UnscriptedFormatKey, UnscriptedFormatData>'.
+src/engine/generators/titles.ts(354,19): error TS2554: Expected 2 arguments, but got 1.
+src/engine/generators/titles.ts(358,14): error TS2554: Expected 2 arguments, but got 1.
+src/engine/services/WeekCoordinator.ts(221,63): error TS2345: Argument of type 'string[]' is not assignable to parameter of type 'RatingMarket[]'.
+  Type 'string' is not assignable to type 'RatingMarket'.
+src/engine/simulation/EconomicAudit.ts(1,34): error TS2307: Cannot find module '../engine/systems/finance/RevenueProcessor' or its corresponding type declarations.
+src/engine/simulation/EconomicAudit.ts(2,54): error TS2307: Cannot find module '../engine/types' or its corresponding type declarations.
+src/engine/systems/ai/AgencyLeverage.ts(44,12): error TS2678: Type '"A_LIST"' is not comparable to type 'TalentTier'.
+src/engine/systems/ai/AgencyLeverage.ts(45,12): error TS2678: Type '"B_LIST"' is not comparable to type 'TalentTier'.
+src/engine/systems/ai/AgencyLeverage.ts(46,12): error TS2678: Type '"RISING_STAR"' is not comparable to type 'TalentTier'.
+src/engine/systems/ai/AgencyLeverage.ts(47,12): error TS2678: Type '"C_LIST"' is not comparable to type 'TalentTier'.
+src/engine/systems/ai/AgencyLeverage.ts(48,12): error TS2678: Type '"NEWCOMER"' is not comparable to type 'TalentTier'.
+src/engine/systems/ai/prestigeCalculator.ts(8,23): error TS2322: Type '"A_LIST"' is not assignable to type 'TalentTier'.
+src/engine/systems/ai/prestigeCalculator.ts(9,23): error TS2322: Type '"B_LIST"' is not assignable to type 'TalentTier'.
+src/engine/systems/ai/prestigeCalculator.ts(10,23): error TS2322: Type '"C_LIST"' is not assignable to type 'TalentTier'.
+src/engine/systems/ai/prestigeCalculator.ts(11,23): error TS2322: Type '"RISING_STAR"' is not assignable to type 'TalentTier'.
+src/engine/systems/ai/prestigeCalculator.ts(12,3): error TS2322: Type '"NEWCOMER"' is not assignable to type 'TalentTier'.
+src/engine/systems/ip/ipRebootEngine.ts(16,39): error TS2367: This comparison appears to be unintentional because the types '"high" | "mid" | "blockbuster"' and '"micro"' have no overlap.
+src/engine/systems/production/crisisEvaluator.ts(1,43): error TS2724: '"@/engine/types"' has no exported member named 'ProjectUpdateImpact'. Did you mean 'ProjectUpdate'?
+src/engine/systems/projects.ts(83,9): error TS2339: Property 'type' does not exist on type 'never'.
+src/engine/systems/projects.ts(83,31): error TS2339: Property 'format' does not exist on type 'never'.
+src/engine/systems/projects.ts(83,52): error TS2339: Property 'format' does not exist on type 'never'.
+src/engine/systems/projects.ts(84,20): error TS2339: Property 'format' does not exist on type 'never'.
+src/engine/systems/projects.ts(85,7): error TS2339: Property 'weeklyRevenue' does not exist on type 'never'.
+src/engine/systems/projects.ts(85,26): error TS2339: Property 'budget' does not exist on type 'never'.
+src/engine/systems/projects.ts(85,61): error TS2339: Property 'buzz' does not exist on type 'never'.
+src/engine/systems/projects.ts(86,7): error TS2339: Property 'revenue' does not exist on type 'never'.
+src/engine/systems/projects.ts(86,19): error TS2339: Property 'weeklyRevenue' does not exist on type 'never'.
+src/engine/systems/projects.ts(88,28): error TS2339: Property 'title' does not exist on type 'never'.
+src/engine/systems/projects.ts(88,62): error TS2339: Property 'title' does not exist on type 'never'.
+src/engine/systems/projects.ts(232,16): error TS2339: Property 'type' does not exist on type 'never'.
+src/engine/systems/projects.ts(232,38): error TS2339: Property 'format' does not exist on type 'never'.
+src/engine/systems/projects.ts(232,59): error TS2339: Property 'format' does not exist on type 'never'.
+src/engine/systems/projects.ts(233,7): error TS2339: Property 'revenue' does not exist on type 'never'.
+src/engine/systems/projects.ts(233,20): error TS2339: Property 'weeklyRevenue' does not exist on type 'never'.
+src/engine/systems/projects.ts(234,7): error TS2339: Property 'weeklyRevenue' does not exist on type 'never'.
+src/engine/systems/projects.ts(236,11): error TS2339: Property 'weeklyRevenue' does not exist on type 'never'.
+src/engine/systems/projects.ts(236,30): error TS2339: Property 'format' does not exist on type 'never'.
+src/engine/systems/projects.ts(236,78): error TS2339: Property 'weeksInPhase' does not exist on type 'never'.
+src/engine/systems/projects.ts(237,9): error TS2339: Property 'state' does not exist on type 'never'.
+src/engine/systems/projects.ts(238,9): error TS2339: Property 'weeksInPhase' does not exist on type 'never'.
+src/engine/systems/projects.ts(240,23): error TS2339: Property 'title' does not exist on type 'never'.
+src/engine/systems/talent/TalentLifecycleSystem.ts(75,19): error TS2367: This comparison appears to be unintentional because the types 'number' and 'string' have no overlap.
+src/engine/systems/talent/TalentLifecycleSystem.ts(105,11): error TS2367: This comparison appears to be unintentional because the types 'number' and 'string' have no overlap.
+src/engine/systems/talent/TalentLifecycleSystem.ts(105,39): error TS2367: This comparison appears to be unintentional because the types 'number' and 'string' have no overlap.
+src/engine/systems/talent/TalentLifecycleSystem.ts(127,13): error TS2322: Type '"NEWCOMER"' is not assignable to type 'TalentTier'.
+src/engine/systems/talent/TalentLifecycleSystem.ts(128,30): error TS2322: Type '"RISING_STAR"' is not assignable to type 'TalentTier'.
+src/engine/utils/projectUtils.ts(108,9): error TS2552: Cannot find name 'attachedTalent'. Did you mean 'attachedTalentIds'?
+src/engine/utils/projectUtils.ts(108,27): error TS2552: Cannot find name 'attachedTalent'. Did you mean 'attachedTalentIds'?
+src/engine/utils/projectUtils.ts(114,30): error TS2552: Cannot find name 'attachedTalent'. Did you mean 'attachedTalentIds'?
+src/pages/NewGame.tsx(56,44): error TS2554: Expected 2 arguments, but got 1.
+src/store/slices/financeSlice.ts(36,9): error TS2741: Property 'pacts' is missing in type '{ production: number; burn: number; marketing: number; royalties: number; interest: number; }' but required in type '{ production: number; burn: number; marketing: number; pacts: number; royalties: number; interest: number; }'.
+src/store/slices/talentSlice.ts(60,13): error TS2741: Property 'format' is missing in type '{ projectId: string; projectTitle: string; startWeek: number; endWeek: number; role: TalentRole; }' but required in type 'TalentCommitment'.
+src/store/storeUtils.ts(59,25): error TS2339: Property 'type' does not exist on type 'Talent'.
+src/test/components/NavLink.test.tsx(42,16): error TS2322: Type '"/test"' is not assignable to type '"." | "/" | "/new-game" | "/dashboard" | ".." | undefined'.
+src/test/components/NavLink.test.tsx(57,26): error TS2322: Type '"/test"' is not assignable to type '"." | "/" | "/new-game" | "/dashboard" | ".." | undefined'.
+src/test/engine/systems/ai/AgentBrain.test.ts(9,9): error TS2739: Type '{ id: string; name: string; archetype: "powerhouse"; tier: "powerhouse"; culture: "shark"; prestige: number; leverage: number; currentMotivation: "THE_SHARK"; motivationProfile: { financial: number; prestige: number; legacy: number; aggression: number; }; }' is missing the following properties from type 'Agency': marketSensitivity, globalReach
+src/test/engine/systems/ai/AgentBrain.test.ts(77,21): error TS2339: Property 'type' does not exist on type 'NewsImpact'.
+src/test/engine/systems/ai/AgentBrain.test.ts(78,21): error TS2339: Property 'payload' does not exist on type 'NewsImpact'.
+src/test/engine/systems/ai/biddingEngine.test.ts(2,55): error TS2305: Module '"@/engine/types"' has no exported member 'OpportunityUpdateImpact'.
+src/test/engine/systems/buyers.test.ts(35,7): error TS2741: Property 'activeLicenses' is missing in type '{ id: string; name: string; archetype: "streamer"; currentMandate: undefined; subscribers: number; churnRate: number; contentLibraryQuality: number; marketingSpend: number; foundedWeek: number; marketShare: number; reach: number; subscriberHistory: never[]; }' but required in type 'StreamerPlatform'.
+src/test/engine/systems/directors.test.ts(47,11): error TS2741: Property 'role' is missing in type '{ id: string; talentId: string; projectId: string; creativeControl: true; fee: number; backendPercent: number; }' but required in type 'Contract'.
+src/test/engine/systems/directors.test.ts(54,11): error TS2741: Property 'role' is missing in type '{ id: string; talentId: string; projectId: string; creativeControl: true; fee: number; backendPercent: number; }' but required in type 'Contract'.
+src/test/engine/systems/finance.test.ts(201,21): error TS2352: Conversion of type '{ week: number; gameSeed: number; tickCount: number; game: { currentWeek: number; }; news: { headlines: never[]; }; history: never[]; eventHistory: never[]; culture: { genrePopularity: {}; }; projects: { active: never[]; }; ... 4 more ...; industry: { ...; }; }' to type 'GameState' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Property 'deals' is missing in type '{ week: number; gameSeed: number; tickCount: number; game: { currentWeek: number; }; news: { headlines: never[]; }; history: never[]; eventHistory: never[]; culture: { genrePopularity: {}; }; projects: { active: never[]; }; ... 4 more ...; industry: { ...; }; }' but required in type 'GameState'.
+src/test/engine/systems/processors/processProduction.test.ts(3,38): error TS2724: '"../../../../engine/types"' has no exported member named 'ProjectUpdateImpact'. Did you mean 'ProjectUpdate'?
+src/test/engine/systems/processors/processWorldEvents.test.ts(80,21): error TS2339: Property 'type' does not exist on type 'NewsImpact'.
+src/test/engine/systems/processors/processWorldEvents.test.ts(81,21): error TS2339: Property 'payload' does not exist on type 'NewsImpact'.
+src/test/engine/systems/processors/processWorldEvents.test.ts(92,7): error TS2322: Type 'string' is not assignable to type 'TalentTier'.
+src/test/engine/systems/processors/processWorldEvents.test.ts(108,45): error TS2339: Property 'payload' does not exist on type 'NewsImpact'.
+src/test/engine/systems/processors/processWorldEvents.test.ts(109,58): error TS2339: Property 'payload' does not exist on type 'NewsImpact'.
+src/test/engine/systems/processors/processWorldEvents.test.ts(110,21): error TS2339: Property 'type' does not exist on type 'NewsImpact'.
+src/test/engine/systems/production/crisisEvaluator.test.ts(55,20): error TS2352: Conversion of type '{ id: string; title: string; type: "FILM"; format: "film"; genre: string; budgetTier: "low"; budget: number; weeklyCost: number; targetAudience: string; flavor: string; state: "production"; buzz: number; ... 10 more ...; contentFlags: never[]; }' to type 'Project' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type '{ id: string; title: string; type: "FILM"; format: "film"; genre: string; budgetTier: "low"; budget: number; weeklyCost: number; targetAudience: string; flavor: string; state: "production"; buzz: number; ... 10 more ...; contentFlags: never[]; }' is missing the following properties from type 'FilmProject': scriptHeat, activeRoles, scriptEvents
+src/test/engine/systems/production/crisisEvaluator.test.ts(94,20): error TS2352: Conversion of type '{ id: string; title: string; type: "FILM"; format: "film"; genre: string; budgetTier: "low"; budget: number; weeklyCost: number; targetAudience: string; flavor: string; state: "production"; buzz: number; ... 10 more ...; activeCrisis: { ...; }; }' to type 'Project' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type '{ id: string; title: string; type: "FILM"; format: "film"; genre: string; budgetTier: "low"; budget: number; weeklyCost: number; targetAudience: string; flavor: string; state: "production"; buzz: number; ... 10 more ...; activeCrisis: { ...; }; }' is missing the following properties from type 'FilmProject': scriptHeat, activeRoles, scriptEvents
+src/test/engine/systems/production/crisisEvaluator.test.ts(133,20): error TS2352: Conversion of type '{ id: string; title: string; type: "FILM"; format: "film"; genre: string; budgetTier: "low"; budget: number; weeklyCost: number; targetAudience: string; flavor: string; state: "production"; buzz: number; ... 10 more ...; activeCrisis: { ...; }; }' to type 'Project' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type '{ id: string; title: string; type: "FILM"; format: "film"; genre: string; budgetTier: "low"; budget: number; weeklyCost: number; targetAudience: string; flavor: string; state: "production"; buzz: number; ... 10 more ...; activeCrisis: { ...; }; }' is missing the following properties from type 'FilmProject': scriptHeat, activeRoles, scriptEvents
+src/test/engine/systems/production/crisisEvaluator.test.ts(172,20): error TS2352: Conversion of type '{ id: string; title: string; type: "FILM"; format: "film"; genre: string; budgetTier: "low"; budget: number; weeklyCost: number; targetAudience: string; flavor: string; state: "production"; buzz: number; ... 10 more ...; activeCrisis: { ...; }; }' to type 'Project' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type '{ id: string; title: string; type: "FILM"; format: "film"; genre: string; budgetTier: "low"; budget: number; weeklyCost: number; targetAudience: string; flavor: string; state: "production"; buzz: number; ... 10 more ...; activeCrisis: { ...; }; }' is missing the following properties from type 'FilmProject': scriptHeat, activeRoles, scriptEvents
+src/test/engine/systems/production/ScriptDraftingSystem.test.ts(88,25): error TS2322: Type 'string' is not assignable to type 'T'.
+  'T' could be instantiated with an arbitrary type which could be unrelated to 'string'.
+src/test/engine/systems/productionEngine.test.ts(2,21): error TS2724: '"@/engine/types"' has no exported member named 'ProjectUpdateImpact'. Did you mean 'ProjectUpdate'?
+src/test/engine/systems/productionEngine.test.ts(90,27): error TS2352: Conversion of type '{ id: string; title: string; type: "FILM"; format: "film"; genre: string; budgetTier: "low"; budget: number; weeklyCost: number; targetAudience: string; flavor: string; state: "production"; buzz: number; ... 10 more ...; contentFlags: never[]; }' to type 'Project' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type '{ id: string; title: string; type: "FILM"; format: "film"; genre: string; budgetTier: "low"; budget: number; weeklyCost: number; targetAudience: string; flavor: string; state: "production"; buzz: number; ... 10 more ...; contentFlags: never[]; }' is missing the following properties from type 'FilmProject': scriptHeat, activeRoles, scriptEvents
+src/test/engine/systems/productionEngine.test.ts(134,29): error TS2352: Conversion of type '{ id: string; title: string; type: "FILM"; format: "film"; genre: string; budgetTier: "low"; budget: number; weeklyCost: number; targetAudience: string; flavor: string; state: "production"; buzz: number; ... 10 more ...; contentFlags: never[]; }' to type 'Project' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type '{ id: string; title: string; type: "FILM"; format: "film"; genre: string; budgetTier: "low"; budget: number; weeklyCost: number; targetAudience: string; flavor: string; state: "production"; buzz: number; ... 10 more ...; contentFlags: never[]; }' is missing the following properties from type 'FilmProject': scriptHeat, activeRoles, scriptEvents
+src/test/engine/systems/productionEngine.test.ts(166,25): error TS2352: Conversion of type '{ id: string; name: string; role: string; roles: "actor"[]; tier: string; prestige: number; fee: number; draw: number; accessLevel: "outsider"; momentum: number; demographics: { age: number; gender: "MALE"; ethnicity: string; country: string; }; psychology: { ...; }; }' to type 'Talent' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type '{ id: string; name: string; role: string; roles: "actor"[]; tier: string; prestige: number; fee: number; draw: number; accessLevel: "outsider"; momentum: number; demographics: { age: number; gender: "MALE"; ethnicity: string; country: string; }; psychology: { ...; }; }' is missing the following properties from type 'Talent': skills, commitments, fatigue, preferredGenres
+src/test/engine/systems/productionEngine.test.ts(190,21): error TS2352: Conversion of type '{ week: number; gameSeed: number; tickCount: number; projects: { active: never[]; }; game: { currentWeek: number; }; finance: { cash: number; ledger: never[]; }; news: { headlines: never[]; }; ip: { vault: never[]; franchises: {}; }; ... 5 more ...; industry: { ...; }; }' to type 'GameState' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Property 'deals' is missing in type '{ week: number; gameSeed: number; tickCount: number; projects: { active: never[]; }; game: { currentWeek: number; }; finance: { cash: number; ledger: never[]; }; news: { headlines: never[]; }; ip: { vault: never[]; franchises: {}; }; ... 5 more ...; industry: { ...; }; }' but required in type 'GameState'.
+src/test/engine/systems/projects.test.ts(97,36): error TS2741: Property 'role' is missing in type '{ id: string; projectId: string; talentId: string; fee: number; backendPercent: number; }' but required in type 'Contract'.
+src/test/engine/systems/releaseSimulation.test.ts(37,28): error TS2352: Conversion of type '{ id: string; name: string; role: string; roles: "actor"[]; tier: string; prestige: number; fee: number; draw: number; accessLevel: "outsider"; momentum: number; demographics: { age: number; gender: "MALE"; ethnicity: string; country: string; }; psychology: { ...; }; }' to type 'Talent' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type '{ id: string; name: string; role: string; roles: "actor"[]; tier: string; prestige: number; fee: number; draw: number; accessLevel: "outsider"; momentum: number; demographics: { age: number; gender: "MALE"; ethnicity: string; country: string; }; psychology: { ...; }; }' is missing the following properties from type 'Talent': skills, commitments, fatigue, preferredGenres
+src/test/engine/systems/rumors.test.ts(98,28): error TS2352: Conversion of type '{ id: string; name: string; role: string; roles: "actor"[]; tier: string; prestige: number; fee: number; draw: number; accessLevel: "outsider"; momentum: number; demographics: { age: number; gender: "MALE"; ethnicity: string; country: string; }; psychology: { ...; }; }' to type 'Talent' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type '{ id: string; name: string; role: string; roles: "actor"[]; tier: string; prestige: number; fee: number; draw: number; accessLevel: "outsider"; momentum: number; demographics: { age: number; gender: "MALE"; ethnicity: string; country: string; }; psychology: { ...; }; }' is missing the following properties from type 'Talent': skills, commitments, fatigue, preferredGenres
+src/test/engine/systems/synergyEvaluator.test.ts(21,160): error TS2739: Type '{ id: string; originalProjectId: string; title: string; baseValue: number; decayRate: number; merchandisingMultiplier: number; syndicationStatus: "SYNDICATED" | "NONE"; syndicationTier: "NONE" | ... 2 more ... | "GOLD"; totalEpisodes: number; rightsExpirationWeek: number; rightsOwner: "STUDIO"; }' is missing the following properties from type 'IPAsset': tier, quality
+src/test/engine/systems/TalentSystem.test.ts(33,29): error TS2352: Conversion of type '{ id: string; name: string; role: string; roles: "actor"[]; tier: string; prestige: number; fee: number; draw: number; accessLevel: "outsider"; momentum: number; demographics: { age: number; gender: "MALE"; ethnicity: string; country: string; }; psychology: { ...; }; }' to type 'Talent' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type '{ id: string; name: string; role: string; roles: "actor"[]; tier: string; prestige: number; fee: number; draw: number; accessLevel: "outsider"; momentum: number; demographics: { age: number; gender: "MALE"; ethnicity: string; country: string; }; psychology: { ...; }; }' is missing the following properties from type 'Talent': skills, commitments, fatigue, preferredGenres
+src/test/engine/systems/TalentSystem.test.ts(48,29): error TS2352: Conversion of type '{ id: string; name: string; role: string; roles: "director"[]; tier: string; prestige: number; fee: number; draw: number; accessLevel: "outsider"; momentum: number; demographics: { age: number; gender: "FEMALE"; ethnicity: string; country: string; }; psychology: { ...; }; }' to type 'Talent' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type '{ id: string; name: string; role: string; roles: "director"[]; tier: string; prestige: number; fee: number; draw: number; accessLevel: "outsider"; momentum: number; demographics: { age: number; gender: "FEMALE"; ethnicity: string; country: string; }; psychology: { ...; }; }' is missing the following properties from type 'Talent': skills, commitments, fatigue, preferredGenres
+src/test/engine/systems/TalentSystem.test.ts(64,3): error TS2741: Property 'role' is missing in type '{ id: string; projectId: string; talentId: string; fee: number; backendPercent: number; }' but required in type 'Contract'.
+src/test/engine/systems/TalentSystem.test.ts(65,3): error TS2741: Property 'role' is missing in type '{ id: string; projectId: string; talentId: string; fee: number; backendPercent: number; }' but required in type 'Contract'.
+src/test/engine/systems/TalentSystem.test.ts(103,42): error TS2741: Property 'role' is missing in type '{ id: string; projectId: string; talentId: string; fee: number; backendPercent: number; }' but required in type 'Contract'.
+src/test/engine/systems/television/platformEngine.test.ts(2,47): error TS2305: Module '"../../../../engine/types"' has no exported member 'BuyerUpdateImpact'.
+src/test/performance/weekAdvance.bench.ts(79,3): error TS2554: Expected 2 arguments, but got 1.
+src/test/persistence/saveLoad.test.ts(34,23): error TS2554: Expected 3 arguments, but got 2.
+src/test/persistence/saveLoad.test.ts(47,23): error TS2554: Expected 3 arguments, but got 2.
+src/test/persistence/saveLoad.test.ts(65,23): error TS2554: Expected 3 arguments, but got 2.
+src/test/store/financeSlice.test.ts(30,7): error TS2741: Property 'pacts' is missing in type '{ production: number; marketing: number; overhead: number; }' but required in type '{ production: number; marketing: number; overhead: number; pacts: number; }'.
+src/test/store/gameStore.test.ts(50,12): error TS18047: 'summary' is possibly 'null'.
+src/test/store/slices.test.ts(32,24): error TS2345: Argument of type '{ id: string; title: string; state: "development"; }' is not assignable to parameter of type 'Project'.
+  Type '{ id: string; title: string; state: "development"; }' is not assignable to type 'UnscriptedProject & { type: "SERIES"; }'.
+    Type '{ id: string; title: string; state: "development"; }' is missing the following properties from type 'UnscriptedProject': unscriptedFormat, type, format, genre, and 16 more.
+src/test/store/slices.test.ts(39,42): error TS2345: Argument of type '{ id: string; state: "development"; title: string; }' is not assignable to parameter of type 'Project'.
+  Type '{ id: string; state: "development"; title: string; }' is not assignable to type 'UnscriptedProject & { type: "SERIES"; }'.
+    Type '{ id: string; state: "development"; title: string; }' is missing the following properties from type 'UnscriptedProject': unscriptedFormat, type, format, genre, and 16 more.
+src/test/store/slices.test.ts(40,42): error TS2345: Argument of type '{ id: string; state: "production"; title: string; }' is not assignable to parameter of type 'Project'.
+  Type '{ id: string; state: "production"; title: string; }' is not assignable to type 'UnscriptedProject & { type: "SERIES"; }'.
+    Type '{ id: string; state: "production"; title: string; }' is missing the following properties from type 'UnscriptedProject': unscriptedFormat, type, format, genre, and 16 more.

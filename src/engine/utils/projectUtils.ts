@@ -105,15 +105,15 @@ export function getRecommendedTalentForProject(talentPool: Talent[], project: Pr
     if (talentTier === tierValue) tags.push("Perfect Tier Match");
     if (t.draw > 70 && project.budgetTier === 'blockbuster') tags.push("Box Office Draw");
 
-    if (attachedTalent && attachedTalent.length > 0) {
+    if (attachedTalentIds && attachedTalentIds.length > 0) {
       const affinities = t.psychology?.synergyAffinities || [];
       const conflicts = t.psychology?.synergyConflicts || [];
       let hasAffinity = false;
       let hasConflict = false;
 
-      for (const attached of attachedTalent) {
-        if (affinities.includes(attached.id)) hasAffinity = true;
-        if (conflicts.includes(attached.id)) hasConflict = true;
+      for (const attachedId of attachedTalentIds) {
+        if (affinities.includes(attachedId)) hasAffinity = true;
+        if (conflicts.includes(attachedId)) hasConflict = true;
       }
 
       if (hasAffinity) tags.push("Synergy Match");

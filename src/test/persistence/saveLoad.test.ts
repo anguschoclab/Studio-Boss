@@ -31,7 +31,7 @@ describe("saveLoad", () => {
   });
 
   it("saves and loads game state correctly", async () => {
-    const mockState = initializeGame("Save Studio", "major");
+    const mockState = initializeGame("Save Studio", "major", 42);
     vi.mocked(persistenceService.save).mockResolvedValue(true);
     vi.mocked(persistenceService.load).mockResolvedValue(mockState);
 
@@ -44,7 +44,7 @@ describe("saveLoad", () => {
   });
 
   it("retrieves save slots info asynchronously", async () => {
-    const mockState = initializeGame("Save Studio", "major");
+    const mockState = initializeGame("Save Studio", "major", 42);
     
     // Setup: Slot 1 exists, Slot 0 and 2 do not
     vi.mocked(persistenceService.load).mockImplementation(async (slot) => {
@@ -62,7 +62,7 @@ describe("saveLoad", () => {
   });
 
   it("logs errors when save fails", async () => {
-    const mockState = initializeGame("Error Studio", "indie");
+    const mockState = initializeGame("Error Studio", "indie", 42);
     vi.mocked(persistenceService.save).mockRejectedValue(new Error("Write failure"));
     
     const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});

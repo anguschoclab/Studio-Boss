@@ -74,7 +74,7 @@ export class RevenueProcessor {
     });
 
     // 🌌 PHASE 2: Backend Streaming (Royalties from Rival Projects)
-    state.industry.rivals.forEach(rival => {
+    (state.industry?.rivals || []).forEach(rival => {
       Object.values(rival.projects || {}).forEach(rp => {
         if (rp.state === 'released') {
           const weeklyGross = (rp.weeklyRevenue || 0);
@@ -141,9 +141,9 @@ export class RevenueProcessor {
    * Calculates box office decay for a project in a given week.
    */
   static calculateTheatricalDecay(currentRevenue: number, decayRate: number, isCultClassic: boolean = false): number {
-    let revenue = Math.round(currentRevenue * decayRate * 0.88); // The Studio Comptroller: Increased box office decay by 12% to simulate modern front-loaded box office drops.
+    let revenue = Math.round(currentRevenue * decayRate);
     if (isCultClassic) {
-      revenue = Math.max(revenue * 2.0, 300000); // The Studio Comptroller: Buffed cult classics (200000 -> 300000) to create dramatic financial anomalies.
+      revenue = Math.max(revenue * 1.8, 200000);
     }
     return revenue;
   }

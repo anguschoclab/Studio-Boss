@@ -137,6 +137,17 @@ export interface BuyerUpdate { buyerId: string; update: Partial<import('./studio
 export interface ScandalUpdate { scandalId: string; update: Partial<import('./talent.types').Scandal> }
 export interface FranchiseUpdate { franchiseId: string; update: Partial<import('./franchise.types').Franchise> }
 export interface VaultAssetUpdate { assetId: string; update: Partial<IPAsset> }
+export interface OpportunityUpdate { 
+  opportunityId: string; 
+  rivalId: string; 
+  bid: { amount: number; terms: string };
+}
+
+export interface BuyerUpdateImpact { type: 'BUYER_UPDATED'; payload: BuyerUpdate }
+export interface ProjectUpdateImpact { type: 'PROJECT_UPDATED'; payload: ProjectUpdate }
+export interface TalentUpdateImpact { type: 'TALENT_UPDATED'; payload: TalentUpdate }
+export interface RivalUpdateImpact { type: 'RIVAL_UPDATED'; payload: RivalUpdate }
+export interface OpportunityUpdateImpact { type: 'OPPORTUNITY_UPDATED'; payload: OpportunityUpdate }
 
 export interface BaseImpact {
   payload?: unknown;

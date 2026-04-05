@@ -62,7 +62,8 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
         projectTitle: p.title,
         startWeek: state.week,
         endWeek: state.week + (p.productionWeeks || estimatedWeeks),
-        role: contract.role
+        role: contract.role,
+        format: p.format === 'film' ? 'feature' : (p.format === 'tv' ? 'series' : p.format as any)
       };
 
       const updatedTalent = {

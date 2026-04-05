@@ -80,12 +80,13 @@ export function handleReleasePhaseEntry(
     };
   }
 
-  if (p.type === 'FILM' && (p.format === 'tv' || p.format === 'unscripted')) {
-    const isTV = p.format === 'tv';
-    p.weeklyRevenue = (p.budget * (isTV ? 0.1 : 0.05)) * (p.buzz / 50) * franchiseSynergy * (1 - franchiseFatigue);
-    p.revenue = p.weeklyRevenue;
+  const pAny = p as any;
+  if (pAny.type === 'FILM' && (pAny.format === 'tv' || pAny.format === 'unscripted')) {
+    const isTV = pAny.format === 'tv';
+    pAny.weeklyRevenue = (pAny.budget * (isTV ? 0.1 : 0.05)) * (pAny.buzz / 50) * franchiseSynergy * (1 - franchiseFatigue);
+    pAny.revenue = pAny.weeklyRevenue;
     return {
-      update: isTV ? `"${p.title}" premieres on TV!` : `"${p.title}" documentary premieres!`,
+      update: isTV ? `"${pAny.title}" premieres on TV!` : `"${pAny.title}" documentary premieres!`,
       talentUpdates: []
     };
   }
@@ -229,19 +230,22 @@ function handleReleasedPhase(
         talentUpdates: []
       };
     }
-  } else if (p.type === 'FILM' && (p.format === 'tv' || p.format === 'unscripted')) {
-    p.revenue += p.weeklyRevenue;
-    p.weeklyRevenue *= rng.range(0.6, 0.8) * franchiseSynergy;
+  } else {
+    const pAny = p as any;
+    if (pAny.type === 'FILM' && (pAny.format === 'tv' || pAny.format === 'unscripted')) {
+      pAny.revenue += pAny.weeklyRevenue;
+      pAny.weeklyRevenue *= rng.range(0.6, 0.8) * franchiseSynergy;
 
-    if (p.weeklyRevenue < (p.format === 'unscripted' ? 25_000 : 50_000) || p.weeksInPhase > 4) {
-      p.state = 'post_release';
-      p.weeksInPhase = 0;
-      return {
-        update: `"${p.title}" finishes its broadcast run.`,
-        talentUpdates: TalentSystem.applyProjectResults(p, projectContracts, Array.from(talentPoolMap.values()), projectAwards)
-      };
-    } else {
-      return { update: null, talentUpdates: [] };
+      if (pAny.weeklyRevenue < (pAny.format === 'unscripted' ? 25_000 : 50_000) || pAny.weeksInPhase > 4) {
+        pAny.state = 'post_release';
+        pAny.weeksInPhase = 0;
+        return {
+          update: `"${pAny.title}" finishes its broadcast run.`,
+          talentUpdates: TalentSystem.applyProjectResults(pAny, projectContracts, Array.from(talentPoolMap.values()), projectAwards)
+        };
+      } else {
+        return { update: null, talentUpdates: [] };
+      }
     }
   }
 

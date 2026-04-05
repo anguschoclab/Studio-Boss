@@ -72,7 +72,7 @@ export class TalentLifecycleSystem {
         const weeksSinceLastRelease = state.week - (talent.lastReleaseWeek || 0);
         let decay = 0;
         if (weeksSinceLastRelease > 52) {
-          decay = talent.tier === 'S_LIST' ? -4 : -2;
+          decay = talent.tier === 1 ? -4 : -2;
         }
 
         impacts.push({
@@ -102,7 +102,7 @@ export class TalentLifecycleSystem {
       
       if (rng.next() < 0.0001) retirementChance = 1.0; 
 
-      if (talent.tier === 'S_LIST' || talent.tier === 'A_LIST') {
+      if (talent.tier === 1) {
         retirementChance *= 0.2;
       }
 
@@ -124,8 +124,8 @@ export class TalentLifecycleSystem {
       const newTalents: Talent[] = [];
       for (let i = 0; i < needsReplacement; i++) {
         const tierRoll = rng.next();
-        let tier: TalentTier = 'NEWCOMER';
-        if (tierRoll > 0.90) tier = 'RISING_STAR';
+        let tier: TalentTier = 4;
+        if (tierRoll > 0.90) tier = 3;
         
         const roleRoll = rng.next();
         const role = roleRoll > 0.7 ? 'director' : (roleRoll > 0.5 ? 'writer' : (roleRoll > 0.4 ? 'producer' : 'actor'));

@@ -5,11 +5,10 @@ import { Talent, TalentTier } from '@/engine/types';
  * and relative standing.
  */
 export function calculateTalentTier(prestige: number): TalentTier {
-  if (prestige >= 90) return 'A_LIST';
-  if (prestige >= 70) return 'B_LIST';
-  if (prestige >= 50) return 'C_LIST';
-  if (prestige >= 30) return 'RISING_STAR';
-  return 'NEWCOMER';
+  if (prestige >= 90) return 1;
+  if (prestige >= 70) return 2;
+  if (prestige >= 50) return 3;
+  return 4;
 }
 
 /**

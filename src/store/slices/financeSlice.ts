@@ -37,6 +37,7 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
           production: report.expenses.production,
           burn: report.expenses.overhead,
           marketing: report.expenses.marketing,
+          pacts: 0,
           royalties: 0,
           interest: 0,
         },

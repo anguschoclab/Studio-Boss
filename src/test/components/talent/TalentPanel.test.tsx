@@ -13,9 +13,6 @@ describe('TalentPanel', () => {
       const state = {
         gameState: {
           week: 1,
-          deals: {
-            activeDeals: []
-          },
           industry: {
             talentPool: {
               't1': {
@@ -49,6 +46,11 @@ describe('TalentPanel', () => {
               { id: 'a1', name: 'CAA' },
               { id: 'a2', name: 'WME' }
             ]
+          },
+          deals: {
+            activeDeals: [],
+            pendingOffers: [],
+            expiredDeals: []
           }
         }
       };
