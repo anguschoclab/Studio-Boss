@@ -1,40 +1,54 @@
-import { formatMoney, getWeekDisplay, clamp, groupContractsByProject } from "../../engine/utils";
-import { Contract } from "../../engine/types";
+import { formatMoney, getWeekDisplay, clamp } from "../../engine/utils";
+import { describe, it, expect } from "vitest";
 
 describe("utils", () => {
   describe("formatMoney", () => {
     it.each([
-      // thousands
-      [1500, "$2K"],
-      [1000, "$1K"],
-      [999, "$999"],
-
-      // millions
-      [1500000, "$1.5M"],
-      [1000000, "$1.0M"],
-
-      // billions
-      [1500000000, "$1.5B"],
-      [1000000000, "$1.0B"],
-
-      // negatives
-      [-1500, "-$2K"],
-      [-1500000, "-$1.5M"],
-      [-1500000000, "-$1.5B"],
-      [-500, "-$500"],
-
-      // small numbers
+      // Basic cases
       [0, "$0"],
       [50, "$50"],
+      [999, "$999"],
+      [1000, "$1K"],
+      [1500, "$2K"],
+      [999499, "$999K"],
+      [1000000, "$1.0M"],
+      [1500000, "$1.5M"],
+      [1000000000, "$1.0B"],
+      [1500000000, "$1.5B"],
 
-      // new edge cases
+      // Negatives
       [-0, "-$0"],
+      [-50, "-$50"],
+      [-999, "-$999"],
+      [-1000, "-$1K"],
+      [-1500, "-$2K"],
+      [-1000000, "-$1.0M"],
+      [-1500000, "-$1.5M"],
+      [-1000000000, "-$1.0B"],
+      [-1500000000, "-$1.5B"],
+
+      // Special Numbers
       [NaN, "$NaN"],
       [Infinity, "$InfinityB"],
       [-Infinity, "-$InfinityB"],
-      [999.9, "$1K"],
-      [999999.9, "$1.0M"],
-      [999999999.9, "$1.0B"],
+
+      // Rounding Boundary Cases (K tier)
+      [999.4, "$999"],
+      [999.5, "$1K"],
+      [1499.9, "$1K"], // .toFixed(0) rounds 1.4999 to 1
+      [1500, "$2K"],   // .toFixed(0) rounds 1.5 to 2
+
+      // Rounding Boundary Cases (M tier)
+      [999499.4, "$999K"],
+      [999950, "$1.0M"],
+      [1049999, "$1.0M"],
+      [1050000, "$1.1M"],
+
+      // Rounding Boundary Cases (B tier)
+      [999949999.9, "$999.9M"],
+      [999950000, "$1.0B"],
+      [1049999999, "$1.0B"],
+      [1050000000, "$1.1B"],
     ])("formats %p as %p", (amount, expected) => {
       expect(formatMoney(amount)).toBe(expected);
     });
