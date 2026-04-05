@@ -12,7 +12,7 @@ class MockResizeObserver {
   unobserve() {}
   disconnect() {}
 }
-window.ResizeObserver = MockResizeObserver;
+global.ResizeObserver = MockResizeObserver;
 
 vi.mock('@/store/gameStore');
 vi.mock('@/store/uiStore');

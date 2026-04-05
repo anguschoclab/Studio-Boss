@@ -180,5 +180,71 @@ describe('CreateProjectModal', () => {
       attachedTalentIds: [],
     }));
   });
+
+  it('submits the form correctly for a TV series with episodes and release model', () => {
+    render(<CreateProjectModal />);
+
+    // Select TV Series
+    const tvBtn = screen.getByText('TV Series');
+    fireEvent.click(tvBtn);
+
+    // Enter a specific title
+    const input = screen.getByDisplayValue('Generated Test Title');
+    fireEvent.change(input, { target: { value: 'My Awesome Show' } });
+
+    const greenlightBtn = screen.getByText('Greenlight Project');
+    fireEvent.click(greenlightBtn);
+
+    expect(mockCreateProject).toHaveBeenCalledWith(expect.objectContaining({
+      title: 'My Awesome Show',
+      format: 'tv',
+      tvFormat: expect.any(String),
+      episodes: expect.any(Number),
+      releaseModel: expect.any(String),
+    }));
+  });
+
+  it('submits the form correctly for an unscripted series', () => {
+    render(<CreateProjectModal />);
+
+    // Select Unscripted
+    const unscriptedBtn = screen.getByText('Unscripted');
+    fireEvent.click(unscriptedBtn);
+
+    // Enter a specific title
+    const input = screen.getByDisplayValue('Generated Test Title');
+    fireEvent.change(input, { target: { value: 'Reality Trash' } });
+
+    const greenlightBtn = screen.getByText('Greenlight Project');
+    fireEvent.click(greenlightBtn);
+
+    expect(mockCreateProject).toHaveBeenCalledWith(expect.objectContaining({
+      title: 'Reality Trash',
+      format: 'unscripted',
+      unscriptedFormat: expect.any(String),
+      episodes: expect.any(Number),
+      releaseModel: expect.any(String),
+    }));
+  });
+
+  it('captures flavor text input on submission', () => {
+    render(<CreateProjectModal />);
+
+    // Type a specific title
+    const input = screen.getByDisplayValue('Generated Test Title');
+    fireEvent.change(input, { target: { value: 'My Awesome Movie' } });
+
+    // Type flavor text
+    const flavorInput = screen.getByPlaceholderText('A bold reimagining of...');
+    fireEvent.change(flavorInput, { target: { value: 'A visionary sci-fi epic' } });
+
+    const greenlightBtn = screen.getByText('Greenlight Project');
+    fireEvent.click(greenlightBtn);
+
+    expect(mockCreateProject).toHaveBeenCalledWith(expect.objectContaining({
+      title: 'My Awesome Movie',
+      flavor: 'A visionary sci-fi epic',
+    }));
+  });
 });
 

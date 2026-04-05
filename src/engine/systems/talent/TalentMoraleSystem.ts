@@ -86,8 +86,9 @@ export class TalentMoraleSystem {
           if (p.momentum < 30) moodChange -= 2;
           else if (p.momentum > 80) moodChange += 1;
 
-          // Crisis impact
-          if (p.activeCrisis && !p.activeCrisis.resolved) moodChange -= 5;
+            // Crisis impact
+            if (p.activeCrisis && !p.activeCrisis.resolved) moodChange -= 5;
+          }
         }
       }
 

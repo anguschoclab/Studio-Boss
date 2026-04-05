@@ -4,10 +4,16 @@ import { ProjectCard } from '@/components/pipeline/ProjectCard';
 import { useUIStore } from '@/store/uiStore';
 import { Project } from '@/engine/types';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { useGameStore } from '@/store/gameStore';
 
 // Mock the uiStore
 vi.mock('@/store/uiStore', () => ({
   useUIStore: vi.fn(),
+}));
+
+// Mock the gameStore
+vi.mock('@/store/gameStore', () => ({
+  useGameStore: vi.fn(),
 }));
 
 const mockSelectProject = vi.fn();
@@ -47,6 +53,18 @@ describe('ProjectCard', () => {
       openPitchProject: mockOpenPitchProject,
       enqueueModal: mockEnqueueModal,
     });
+    (useGameStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector) => {
+      return selector({
+        gameState: {
+          market: {
+            buyers: [
+              { id: 'buyer-1', name: 'Netflix' },
+              { id: 'buyer-2', name: 'Warner Bros' }
+            ]
+          }
+        }
+      });
+    });
   });
 
   it('renders basic project details correctly', () => {
@@ -63,6 +81,24 @@ describe('ProjectCard', () => {
 
     const card = screen.getByRole('button');
     fireEvent.click(card);
+
+    expect(mockSelectProject).toHaveBeenCalledWith('test-project-1');
+  });
+
+  it('calls selectProject when the main card receives Enter keydown', () => {
+    render(<TooltipProvider><ProjectCard project={baseProject} /></TooltipProvider>);
+
+    const card = screen.getByRole('button');
+    fireEvent.keyDown(card, { key: 'Enter', code: 'Enter', charCode: 13 });
+
+    expect(mockSelectProject).toHaveBeenCalledWith('test-project-1');
+  });
+
+  it('calls selectProject when the main card receives Space keydown', () => {
+    render(<TooltipProvider><ProjectCard project={baseProject} /></TooltipProvider>);
+
+    const card = screen.getByRole('button');
+    fireEvent.keyDown(card, { key: ' ', code: 'Space', charCode: 32 });
 
     expect(mockSelectProject).toHaveBeenCalledWith('test-project-1');
   });
@@ -128,6 +164,40 @@ describe('ProjectCard', () => {
     render(<TooltipProvider><ProjectCard project={project} /></TooltipProvider>);
 
     expect(screen.getByText('Profitable')).toBeInTheDocument();
+  });
+
+  it('renders distribution deal info for streaming status', () => {
+    const project = {
+      ...baseProject,
+      distributionStatus: 'streaming' as const,
+      buyerId: 'buyer-1',
+      budget: 1000000, // 2% of 1M is 20k
+    };
+
+    render(<TooltipProvider><ProjectCard project={project} /></TooltipProvider>);
+
+    // Check buyer name
+    expect(screen.getByText('Netflix')).toBeInTheDocument();
+
+    // Check weekly revenue forecast
+    expect(screen.getByText('$20K/wk')).toBeInTheDocument();
+  });
+
+  it('renders distribution deal info for theatrical status', () => {
+    const project = {
+      ...baseProject,
+      distributionStatus: 'theatrical' as const,
+      buyerId: 'buyer-2',
+      budget: 1000000, // 3% of 1M is 30k
+    };
+
+    render(<TooltipProvider><ProjectCard project={project} /></TooltipProvider>);
+
+    // Check buyer name
+    expect(screen.getByText('Warner Bros')).toBeInTheDocument();
+
+    // Check weekly revenue forecast
+    expect(screen.getByText('$30K/wk')).toBeInTheDocument();
   });
 
   it('renders TV format correctly', () => {
