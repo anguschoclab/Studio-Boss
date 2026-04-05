@@ -41,7 +41,7 @@ export function executeAcquisition(state: GameState, targetId: string, rng: Rand
 
   for (let i = 0; i < vault.length; i++) {
     const a = vault[i];
-    if (a.rightsOwner === 'RIVAL' && (a.originalProjectId in targetProjects || a.title.includes(targetName))) {
+    if (a.rightsOwner === 'RIVAL' && (Object.prototype.hasOwnProperty.call(targetProjects, a.originalProjectId) || a.title.includes(targetName))) {
       newIPAssets.push({
         ...a,
         rightsOwner: 'STUDIO' as const
