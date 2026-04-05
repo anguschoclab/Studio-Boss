@@ -72,6 +72,15 @@ export class HeadlessController {
       }
     });
 
+    // Pre-calculate genre counts to avoid O(N) inside the loop
+    const playerGenreCounts: Record<string, number> = {};
+    for (let i = 0; i < internalProjects.length; i++) {
+      const g = internalProjects[i].genre;
+      if (g) {
+        playerGenreCounts[g] = (playerGenreCounts[g] || 0) + 1;
+      }
+    }
+
     // 3. Auto-Bidding on Opportunities
     state.market.opportunities.forEach(opportunity => {
       const isAlreadyBid = !!opportunity.bids['PLAYER'];
@@ -83,8 +92,7 @@ export class HeadlessController {
       const persona = (state as any).persona || 'balanced';
       
       // Genre Saturation Guard for Player (Limit to 2 same-genre projects)
-      const playerGenres = internalProjects.map(p => p.genre);
-      const isSaturated = playerGenres.filter(g => g === opportunity.genre).length >= 2;
+      const isSaturated = (playerGenreCounts[opportunity.genre] || 0) >= 2;
 
       if (persona === 'frugal') {
         // Frugal only bids on low/mid if cash is tight, or any if cash is high
