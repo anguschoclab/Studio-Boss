@@ -1,8 +1,16 @@
 import { Headline, HeadlineCategory, PublicationType, NewsEvent, MarketEvent, Rumor } from './engine.types';
 import { Franchise } from './franchise.types';
 import { TalentPact, TalentPactType, Talent, Scandal, Contract } from './talent.types';
-import { Project, Opportunity, GenreTrend, Award, FestivalSubmission } from './project.types';
+import { Project, Opportunity, GenreTrend, Award, FestivalSubmission, CriticConsensus } from './project.types';
 import { RivalStudio, Buyer } from './studio.types';
+
+export interface CampaignData {
+  projectId: string;
+  budget: number;
+  targetCategories: string[];
+  buzzBonus: number;     // Multiplier for nomination odds
+  scandalRisk: number;   // Probability (0-100) of triggering a PR crisis
+}
 
 export interface WeeklyFinancialReport {
   week: number;
