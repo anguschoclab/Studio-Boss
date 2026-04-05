@@ -43,6 +43,7 @@ export interface RivalStudio {
   genreFocus?: string;
   acquisitionTarget?: string;
   isAcquirable?: boolean;
+  behaviorId?: string; // 🌌 PHASE 2: Links to AI_ARCHETYPES
   ipAssets?: Record<string, import('./state.types').IPAsset>;
   weeklyHistory?: import('./state.types').FinancialSnapshot[];
 }
@@ -73,7 +74,9 @@ export interface GameState {
       projects: Record<string, Project>;
       contracts: Contract[];
       firstLookDeals?: TalentPact[];
+      projectHistory: Project[]; // 🌌 PHASE 2: The Vault
     };
+    snapshotHistory: StudioSnapshot[]; // Renamed from history to avoid collision
     ownedPlatforms?: string[];
     isAcquirable?: boolean;
   };

@@ -31,21 +31,31 @@ export class StudioAutomation {
       }
 
       // 2. Process Individual Projects
-      const projects = Object.values(rival.projects || {});
-      projects.forEach(p => {
+      let activeCount = 0;
+      const expiredProjectIds: string[] = [];
+      const rivalProjects = rival.projects || {};
+
+      // ⚡ Bolt: Consolidated project iteration to prevent multiple filter/map array allocations
+      for (const id in rivalProjects) {
+        const p = rivalProjects[id];
         this.processProject(p, rival.id, state, rng, impacts);
-      });
+
+        if (p.state !== 'archived') {
+            if (p.state === 'released' && (state.week - (p.releaseWeek || 0)) > 4) {
+                expiredProjectIds.push(p.id);
+            } else {
+                activeCount++;
+            }
+        }
+      }
 
       // ⚡ Project Recycling (Keep memory usage low in long-term sims)
-      const expiredProjectIds = projects
-        .filter(p => p.state === 'released' && (state.week - (p.releaseWeek || 0)) > 4)
-        .map(p => p.id);
-      
       if (expiredProjectIds.length > 0) {
-          const updatedProjects = { ...rival.projects };
-          expiredProjectIds.forEach(id => {
+          const updatedProjects = { ...rivalProjects };
+          for (let i = 0; i < expiredProjectIds.length; i++) {
+              const id = expiredProjectIds[i];
               updatedProjects[id] = { ...updatedProjects[id], state: 'archived' as any };
-          });
+          }
           impacts.push({
               type: 'RIVAL_UPDATED',
               payload: { rivalId: rival.id, update: { projects: updatedProjects } }
@@ -53,7 +63,7 @@ export class StudioAutomation {
       }
 
       // 3. Pitch New Projects (If slot available)
-      if (projects.filter(p => p.state !== 'archived').length < 5 && rng.next() < 0.1) {
+      if (activeCount < 5 && rng.next() < 0.1) {
         this.pitchNewProject(rival, state, rng, impacts);
       }
     });
