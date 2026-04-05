@@ -239,6 +239,12 @@ function handlePostReleasePhase(p: Project, rng: RandomGenerator): { update: str
     } else if (p.format === 'film') {
       weeklyAncillary = p.revenue * rng.range(0.1, 0.3);
       update = `"${p.title}" drops on VOD and physical media.`;
+    } else if (p.format === 'tv') {
+      weeklyAncillary = p.revenue * rng.range(0.05, 0.15);
+      update = `"${p.title}" becomes available in its entirety on streaming.`;
+    } else if (p.format === 'unscripted') {
+      weeklyAncillary = p.revenue * rng.range(0.02, 0.08);
+      update = `"${p.title}" completes its initial broadcast window.`;
     }
   } else {
     if (isFamilyOrAnim) {
