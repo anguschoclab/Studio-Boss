@@ -244,7 +244,7 @@ function handlePostReleasePhase(p: Project, rng: RandomGenerator): { update: str
       update = (isSeriesProject(p) && p.releaseModel === 'binge') ? `"${p.title}" continues to trend on streaming.` : `"${p.title}" becomes available in its entirety on streaming.`;
     } else if (p.format === 'unscripted') {
       weeklyAncillary = p.revenue * rng.range(0.02, 0.08);
-      update = `"${p.title}" completes its initial broadcast window.`;
+      update = `"${p.title}" begins its long-tail streaming and syndication run.`;
     }
   } else {
     if (isFamilyOrAnim) {
