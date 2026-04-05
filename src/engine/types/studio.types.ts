@@ -79,6 +79,7 @@ export interface GameState {
     snapshotHistory: StudioSnapshot[]; // Renamed from history to avoid collision
     ownedPlatforms?: string[];
     isAcquirable?: boolean;
+    marketShare?: number; // 🌌 PHASE 2: FTC Anti-Trust Cap (0.0 to 1.0)
   };
   market: {
     opportunities: Opportunity[];

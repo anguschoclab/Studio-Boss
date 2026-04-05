@@ -14,6 +14,7 @@ export const TalentPanel = () => {
   const [roleFilter, setRoleFilter] = useState<TalentRole | 'all'>('all');
   const [tierFilter, setTierFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [showMegaProducers, setShowMegaProducers] = useState(false);
 
   const filteredTalent = useMemo(() => {
     return talentPool.filter(t => {
@@ -28,10 +29,13 @@ export const TalentPanel = () => {
         else if (tierFilter === 'rising') matchesTier = prestige >= 40 && prestige < 60;
         else if (tierFilter === 'undiscovered') matchesTier = prestige < 40;
       }
+
+      const isMegaProducer = state?.deals.activeDeals.some(d => d.talentId === t.id && d.type === 'overall_deal');
+      const matchesMega = !showMegaProducers || isMegaProducer;
       
-      return matchesSearch && matchesRole && matchesTier;
+      return matchesSearch && matchesRole && matchesTier && matchesMega;
     }).sort((a, b) => (b.starMeter || 0) - (a.starMeter || 0));
-  }, [talentPool, searchQuery, roleFilter, tierFilter]);
+  }, [talentPool, searchQuery, roleFilter, tierFilter, showMegaProducers, state?.deals.activeDeals]);
 
   return (
     <div className="space-y-4 h-full flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-500 pb-12">
@@ -61,6 +65,20 @@ export const TalentPanel = () => {
               <SelectItem value="undiscovered">Undiscovered (&lt;40)</SelectItem>
             </SelectContent>
           </Select>
+
+          <TooltipWrapper tooltip="Filter by Overall Deals (Mega-Producers)">
+            <button 
+              onClick={() => setShowMegaProducers(!showMegaProducers)}
+              className={`h-9 px-3 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest border transition-all rounded-md ${
+                showMegaProducers 
+                  ? 'bg-amber-500/20 text-amber-500 border-amber-500/50 shadow-[0_0_10px_rgba(245,158,11,0.2)]' 
+                  : 'bg-muted/20 text-muted-foreground border-border/40 hover:text-foreground'
+              }`}
+            >
+              <Filter className="w-3 h-3" />
+              Mega-Producers
+            </button>
+          </TooltipWrapper>
 
           <div className="flex gap-1.5 h-9 items-center px-2 bg-muted/10 rounded-lg border border-border/20">
             {(['all', 'actor', 'director', 'writer', 'producer'] as (TalentRole | 'all')[]).map(type => (

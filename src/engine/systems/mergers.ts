@@ -1,7 +1,17 @@
 import { GameState, IPAsset, Project, RivalStudio, StateImpact, Talent } from '@/engine/types';
 import { RandomGenerator } from '../utils/rng';
 
-export function evaluateAcquisitionTarget(target: RivalStudio, buyerCash: number): { viable: boolean; price: number; reason?: string } {
+export function evaluateAcquisitionTarget(
+  target: RivalStudio, 
+  buyerCash: number, 
+  buyerMarketShare: number = 0
+): { viable: boolean; price: number; reason?: string } {
+  // ⚖️ Anti-Trust Barrier: FTC blocks any acquisition that pushes combined market share past 40%.
+  const targetShare = target.marketShare || 0;
+  if (buyerMarketShare + targetShare > 0.40) {
+    return { viable: false, price: 0, reason: 'FTC BLOCK: Combined market share would exceed the 40% anti-trust threshold.' };
+  }
+
   let basePrice = Math.max(10_000_000, (target.strength * 2_000_000) + target.cash);
   if (target.archetype === 'major') basePrice *= 2.0;
   if (target.archetype === 'indie') basePrice *= 1.2;

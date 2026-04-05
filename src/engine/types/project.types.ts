@@ -504,6 +504,7 @@ export interface ProjectBase {
   // Release simulation fields
   reviewScore?: number;
   boxOfficeRank?: number;
+  acquisitionCost?: number; // 🌌 PHASE 2: Price paid in auction/market
   // Marketing fields
   marketingBudget?: number;
   marketingLevel?: 'none' | 'basic' | 'blockbuster';
