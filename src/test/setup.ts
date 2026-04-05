@@ -1,4 +1,5 @@
 import "@testing-library/jest-dom";
+import { vi } from "vitest";
 
 Object.defineProperty(window, "matchMedia", {
   writable: true,
@@ -13,3 +14,11 @@ Object.defineProperty(window, "matchMedia", {
     dispatchEvent: () => {},
   }),
 });
+
+// Mock vite-plugin-pwa virtual module
+vi.mock("virtual:pwa-register/react", () => ({
+  useRegisterSW: () => ({
+    needRefresh: [false, () => {}],
+    updateServiceWorker: () => {},
+  }),
+}));
