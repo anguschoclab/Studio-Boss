@@ -5,6 +5,12 @@ import { RandomGenerator } from '../../utils/rng';
 import { evaluateVaultSynergy } from './synergyEvaluator';
 import { applyIPDecay } from './ipValuation';
 
+// ⚡ Bolt: Pre-compute lowercased keys for O(1) lookups to avoid allocating keys array repeatedly in the loop
+const CROSSOVER_AFFINITY_LOWER_KEYS = Object.keys(CROSSOVER_AFFINITY).reduce((acc, key) => {
+  acc[key.toLowerCase()] = key;
+  return acc;
+}, {} as Record<string, string>);
+
 /**
  * Franchise Coordinator.
  * Orchestrates the Shared Universe Hub and calculates "Enterprise Value" for multi-format brands.
@@ -31,9 +37,9 @@ export function calculateFranchiseEquity(
       const p = sourceProjects[a.originalProjectId];
       if (p && p.genre) {
         // Normalize to Title Case to match CROSSOVER_AFFINITY keys (e.g. 'Action', 'Sci-Fi')
-        const normalizedGenre = Object.keys(CROSSOVER_AFFINITY).find(
-          k => k.toLowerCase() === p.genre!.toLowerCase()
-        ) || p.genre;
+        // ⚡ Bolt: Replaced O(N) Object.keys().find() with O(1) static lookup
+        const lowerGenre = p.genre!.toLowerCase();
+        const normalizedGenre = CROSSOVER_AFFINITY_LOWER_KEYS[lowerGenre] || p.genre;
         uniqueGenres.add(normalizedGenre);
       }
     });

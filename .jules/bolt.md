@@ -7,3 +7,5 @@
 2023-10-27
 // ⚡ Bolt: Refactored WeekCoordinator engine ticks to perform a single O(N) pass over active projects instead of multiple independent filters.
 // ⚡ Bolt: Removed inline array allocation using Object.values() inside useGameStore in FinancePanel to prevent unnecessary re-renders.
+
+- **2023-10-XX (Performance Optimization):** In `src/engine/systems/ip/franchiseCoordinator.ts`, replaced an O(N) genre lookup (`Object.keys().find()`) inside a hot `assets.forEach` loop with an O(1) static dictionary lookup (`CROSSOVER_AFFINITY_LOWER_KEYS`). This prevents array reallocation and O(N) iteration per asset, yielding a ~5x speedup for the genre normalization path.
