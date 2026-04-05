@@ -34,7 +34,7 @@ function tickProject(
   const talentPoolMap = new Map(Object.entries(talentPool));
   
   // 1. Core Advancement Pulse (Always happens for non-archived)
-  const { project: advancedProject } = advanceProject(
+  const { project: advancedProject, newScandals } = advanceProject(
     project,
     currentWeek,
     studioPrestige,
@@ -42,6 +42,15 @@ function tickProject(
     talentPoolMap as any,
     rng
   );
+
+  if (newScandals && newScandals.length > 0) {
+    newScandals.forEach((scandal: any) => {
+      impacts.push({
+        type: 'SCANDAL_ADDED',
+        payload: { scandal }
+      });
+    });
+  }
 
   // 2. Production-Specific Logic (Only if in production)
   if (advancedProject.state === 'production') {
