@@ -21,20 +21,55 @@ export class TalentSystem {
     // 1. Fatigue & Commitment Decay (Deterministic via SchedulingEngine)
     for (const id in state.industry.talentPool) {
       const talent = state.industry.talentPool[id];
+      let update: Partial<Talent> = {};
+      let changed = false;
+
+      // --- MEDICAL LEAVE / BURNOUT ---
+      if (talent.onMedicalLeave) {
+        if (state.week >= (talent.medicalLeaveEndsWeek || 0)) {
+          update.onMedicalLeave = false;
+          update.fatigue = 20; // Recharged
+          changed = true;
+          uiNotifications.push(`${talent.name} has returned from medical leave.`);
+        }
+      } else if ((talent.fatigue || 0) > 95) {
+        update.onMedicalLeave = true;
+        update.medicalLeaveEndsWeek = state.week + 12;
+        changed = true;
+        uiNotifications.push(`${talent.name} has entered medical leave due to extreme burnout.`);
+      }
+
+      // Recovery phase (only if not on leave, or handled differently)
+      if (!update.onMedicalLeave && !talent.onMedicalLeave) {
+        const nextFatigue = SchedulingEngine.updateTalentFatigue(talent, false);
+        if (nextFatigue !== (talent.fatigue || 0)) {
+          update.fatigue = nextFatigue;
+          changed = true;
+        }
+      }
       
-      // Recovery phase (default)
-      const nextFatigue = SchedulingEngine.updateTalentFatigue(talent, false);
+      // Commitment cleanup
+      let nextCommitments = talent.commitments;
+      if (talent.commitments && talent.commitments.length > 0) {
+        let hasExpired = false;
+        for (let i = 0; i < talent.commitments.length; i++) {
+          if (talent.commitments[i].endWeek < state.week) {
+            hasExpired = true;
+            break;
+          }
+        }
+
+        if (hasExpired) {
+          nextCommitments = talent.commitments.filter(c => c.endWeek >= state.week);
+          update.commitments = nextCommitments;
+          changed = true;
+        }
+      }
       
-      // Cleanup expired commitments
-      const nextCommitments = (talent.commitments || []).filter((c: any) => c.endWeek >= state.week);
-      
-      if (nextFatigue !== (talent.fatigue || 0) || nextCommitments.length !== (talent.commitments || []).length) {
+      if (changed) {
         talentUpdates.push({
           talentId: id,
-          update: {
-            fatigue: nextFatigue,
-            commitments: nextCommitments
-          }
+          update
         });
       }
     }

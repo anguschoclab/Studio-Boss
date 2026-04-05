@@ -98,19 +98,19 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
   const agents = generateAgents(rng, agencies, 4);
   const families = generateFamilies(rng, 5);
   
-  // SEED: 2,500+ Talents for a robust living world
-  const talentPoolArray = generateTalentPool(rng, 2500);
+  // SEED: 500 Talents as per Phase 2 TDD
+  const talentPoolArray = generateTalentPool(rng, 500);
   const talentPool = talentPoolArray.reduce((acc, t) => {
     acc[t.id] = t;
     return acc;
   }, {} as Record<string, Talent>);
-
+  
   // Initialize some initial pacts for rivals to make the world feel alive
   rivals.forEach(rival => {
     const pactCount = rival.archetype === 'major' ? 3 : (rival.archetype === 'mid-tier' ? 1 : 0);
     for (let i = 0; i < pactCount; i++) {
         const topTalent = talentPoolArray
-            .filter(t => t.tier === 'S_LIST' || t.tier === 'A_LIST')
+            .filter(t => t.tier === 1 || t.tier === 2)
             .find(t => !t.contractId); 
 
         if (topTalent) {

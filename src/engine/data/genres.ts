@@ -77,7 +77,27 @@ export const GENRE_TAXONOMY: GenreCategory[] = [
       { id: 'reality_competition', name: 'Reality Competition' },
       { id: 'docuseries', name: 'Docuseries' },
       { id: 'talk_show', name: 'Talk Show' },
-      { id: 'variety', name: 'Variety' }
+      { id: 'variety', name: 'Variety' },
+      { id: 'unscripted_standard', name: 'Unscripted' }
+    ]
+  },
+  {
+    id: 'animation',
+    name: 'Animation',
+    subGenres: [
+      { id: 'adult_animation', name: 'Adult Animation' },
+      { id: 'kids_animation', name: 'Kids Animation' },
+      { id: 'anime', name: 'Anime' },
+      { id: 'animation_standard', name: 'Animation' }
+    ]
+  },
+  {
+    id: 'art_house',
+    name: 'Art House',
+    subGenres: [
+      { id: 'experimental', name: 'Experimental' },
+      { id: 'indie_drama', name: 'Indie Drama' },
+      { id: 'art_house_standard', name: 'Art House' }
     ]
   }
 ];
