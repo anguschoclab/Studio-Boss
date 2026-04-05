@@ -63,6 +63,11 @@ export function calculateFranchiseEquity(
       crossoverBonus += 0.15;
     }
 
+    // 🌌 The Universe Builder: Added a 25% synergy bonus for massive crossover events linking 4 or more distinct IPs via IP Mashup.
+    if (assets.length >= 4 && genres.some(g => g === 'IP Mashup' || g === 'Multiverse')) {
+      crossoverBonus += 0.25;
+    }
+
     // 🌌 The Universe Builder: Penalty for chaotic crossovers (too many genres, not enough synergy)
     if (genres.length >= 4 && synergyHits < 2) {
       crossoverBonus -= 0.20;
@@ -75,7 +80,10 @@ export function calculateFranchiseEquity(
   // 🌌 The Universe Builder: A mega-franchise with 10+ assets holds a cultural premium.
   const megaFranchisePremium = assets.length >= 10 ? 1.25 : 1.0;
 
-  return Math.floor(baseEquity * crossoverBonus * multiplier * megaFranchisePremium);
+  // 🌌 The Universe Builder: Penalty applied for diluting the franchise brand with too many concurrent projects.
+  const overSaturationPenalty = franchise.activeProjectIds && franchise.activeProjectIds.length >= 4 ? 0.8 : 1.0;
+
+  return Math.floor(baseEquity * crossoverBonus * multiplier * megaFranchisePremium * overSaturationPenalty);
 }
 
 /**
@@ -122,8 +130,20 @@ export function updateFranchiseHub(state: GameState, project: Project, rng: Rand
 
       // 🌌 The Universe Builder: Audience loyalty dilution when pushing out too many active projects
       let updatedLoyalty = hub.audienceLoyalty;
+      let updatedSynergy = clamp(hub.synergyMultiplier + 0.15, 1.0, 3.0);
       if (hub.activeProjectIds.length >= 3) {
         updatedLoyalty = clamp(updatedLoyalty - 5, 0, 100);
+      }
+
+      // 🌌 The Universe Builder: Reboot Renaissance. If a dead franchise gets a new hit, loyalty spikes.
+      const lastRelease = hub.lastReleaseWeeks.length > 0 ? Math.max(...hub.lastReleaseWeeks) : state.week;
+      const yearsSince = (state.week - lastRelease) / 52;
+      const isBreakout = project.revenue > (project.budget * 2.5);
+      const isPrestigeHit = (project.awardsProfile?.prestigeScore || 0) > 85;
+
+      if (yearsSince >= 7 && (isBreakout || isPrestigeHit)) {
+        updatedLoyalty = clamp(updatedLoyalty + 20, 0, 100);
+        updatedSynergy = clamp(updatedSynergy + 0.5, 1.0, 3.0);
       }
 
       updatedFranchises[franchiseId] = {
@@ -132,7 +152,7 @@ export function updateFranchiseHub(state: GameState, project: Project, rng: Rand
         lastReleaseWeeks: [...hub.lastReleaseWeeks, project.releaseWeek || state.week],
         audienceLoyalty: updatedLoyalty,
         // Update synergy based on format diversity
-        synergyMultiplier: clamp(hub.synergyMultiplier + 0.15, 1.0, 3.0) // 🌌 The Universe Builder: Synergy cap raised for mega-franchises.
+        synergyMultiplier: updatedSynergy // 🌌 The Universe Builder: Synergy cap raised for mega-franchises.
       };
 
       // Recalculate Enterprise Value
