@@ -9,7 +9,7 @@ export interface QueuedModal {
   payload: any;
 }
 
-export type TabId = 'command' | 'pipeline' | 'ip' | 'deals' | 'talent' | 'finance' | 'trades' | 'industry' | 'sbdb' | 'streaming' | 'nielsen';
+export type TabId = 'command' | 'pipeline' | 'ip' | 'distribution' | 'talent' | 'finance' | 'trades' | 'industry';
 
 interface UIStore {
   activeTab: TabId;
