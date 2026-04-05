@@ -30,7 +30,7 @@ export const FinancePanel = () => {
 
   // Use useShallow for arrays/objects extracted from state
   // ⚡ Bolt: Removed inline array allocation using Object.values() to prevent unnecessary re-renders
-  const projectsMemo = useGameStore(useShallow(s => s.gameState ? selectProjects(s.gameState) : []));
+  const projectsMemo = useGameStore(useShallow(s => s.gameState ? selectProjects(s.gameState) : EMPTY_PROJECTS));
   const financeHistory = useGameStore(useShallow(s => s.gameState?.finance?.weeklyHistory || EMPTY_HISTORY));
 
   // Need entire gameState for complex calculations like Net Worth and Forecasts
