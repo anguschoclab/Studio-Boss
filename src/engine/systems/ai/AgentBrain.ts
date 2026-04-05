@@ -85,7 +85,11 @@ export function generateFestivalBid(
   const interest = (reviewScore * 0.6 + buzz * 0.4) / 100;
   if (interest < 0.4) return null;
 
-  const maxBid = rival.cash * 0.05; // rivals won't spend more than 5% of cash on one acquisition
+  // 🎭 Method Actor Tuning: Rivals with FRANCHISE_BUILDING or AWARD_CHASE motivation will aggressively spend a much larger percentage of their cash on festival acquisitions.
+  let maxBidPct = 0.05;
+  if (rival.currentMotivation === 'AWARD_CHASE') maxBidPct = 0.10;
+  if (rival.currentMotivation === 'FRANCHISE_BUILDING') maxBidPct = 0.15;
+  const maxBid = rival.cash * maxBidPct;
   const bid = Math.round(project.budget * interest * rng.range(0.8, 1.4));
   return Math.min(bid, maxBid);
 }
