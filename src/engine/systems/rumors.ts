@@ -34,8 +34,11 @@ export function advanceRumors(state: GameState, rng: RandomGenerator): StateImpa
   currentRumors = currentRumors.filter(r => !(r.resolved && state.week - r.week > 4));
   
   // Generate new rumors based on studio size/prestige
-  const baseRumorChance = 0.05 + (state.studio.prestige * 0.001);
-  if (rng.next() < baseRumorChance && currentRumors.filter(r => !r.resolved).length < 3) {
+  // The PR Spin Doctor: Heavily scale rumors with studio size (more prestige = higher chance, higher cap)
+  const baseRumorChance = 0.05 + (state.studio.prestige * 0.003);
+  const maxActiveRumors = Math.max(3, Math.floor(state.studio.prestige / 20));
+
+  if (rng.next() < baseRumorChance && currentRumors.filter(r => !r.resolved).length < maxActiveRumors) {
     const isTrue = rng.next() > 0.5;
     const subjects = ['talent', 'rival', 'project'];
     const category = pick(subjects, rng) as 'talent' | 'rival' | 'project';

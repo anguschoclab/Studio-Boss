@@ -31,7 +31,8 @@ export function generateScandals(state: GameState, rng: RandomGenerator): StateI
   const numContracts = contracts.length;
   const studioProjectsCount = Object.keys(studioProjects).length;
   // A mega-studio has more leaks than an indie darling. Increased scaling impact.
-  const sizeModifier = 1.0 + (numContracts * 0.08) + (studioProjectsCount * 0.15);
+  // The PR Spin Doctor: Heavily scale scandals with studio size (more contracts/projects = much higher risk)
+  const sizeModifier = 1.0 + (numContracts * 0.15) + (studioProjectsCount * 0.30);
 
   const talentPool = state.industry.talentPool || {};
   for (const talentId in talentPool) {

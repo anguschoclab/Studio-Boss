@@ -2227,5 +2227,74 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
         reputationPenalty: 25
       }
     ]
+  },
+  {
+    id: 'vfx_studio_strike',
+    description: "Your primary VFX studio's artists have unionized and immediately walked off the job, leaving your biggest setpieces as unrendered wireframes.",
+    options: [
+      {
+        text: "Pay their massive overtime demands to break the strike.",
+        effectDescription: "Costs $4M. Production finishes, but you set a dangerous industry precedent. Lose 10 prestige.",
+        cashPenalty: 4000000,
+        reputationPenalty: 10
+      },
+      {
+        text: "Wait it out.",
+        effectDescription: "Delays the film by 5 agonizing weeks.",
+        weeksDelay: 5
+      },
+      {
+        text: "Use generative AI to finish the shots.",
+        effectDescription: "Costs $500k in tech licenses, but the internet notices the hands have 7 fingers. Lose 40 buzz and 25 prestige.",
+        cashPenalty: 500000,
+        buzzPenalty: 40,
+        reputationPenalty: 25
+      }
+    ]
+  },
+  {
+    id: 'extortion_plot',
+    description: "A paparazzi has acquired compromising photos of your lead actor at a very illegal underground poker game and is demanding a massive payoff.",
+    options: [
+      {
+        text: "Pay the extortionist through a dummy corporation.",
+        effectDescription: "Costs $1.5M out of pocket. The story is buried.",
+        cashPenalty: 1500000
+      },
+      {
+        text: "Involve the FBI and launch a sting operation.",
+        effectDescription: "Costs $200k in legal prep. The actor's name is cleared, but the stress delays production by 2 weeks.",
+        cashPenalty: 200000,
+        weeksDelay: 2
+      },
+      {
+        text: "Refuse to pay. Let them publish.",
+        effectDescription: "The photos leak. The actor's brand is ruined. Lose 35 prestige and 20 buzz.",
+        reputationPenalty: 35,
+        buzzPenalty: 20
+      }
+    ]
+  },
+  {
+    id: 'stunt_double_coverup',
+    description: "The 'A-list action star' who famously 'does all their own stunts' was just caught on video drinking a latte while their stunt double fell out of a helicopter.",
+    options: [
+      {
+        text: "Pay off the person with the video.",
+        effectDescription: "Costs $800k in hush money.",
+        cashPenalty: 800000
+      },
+      {
+        text: "Admit the truth and praise the stunt team.",
+        effectDescription: "The star's tough-guy image is shattered. Lose 25 buzz.",
+        buzzPenalty: 25
+      },
+      {
+        text: "Claim it's a deepfake created by a rival studio.",
+        effectDescription: "Costs $300k in PR spin. Everyone knows it's a lie. Lose 15 prestige.",
+        cashPenalty: 300000,
+        reputationPenalty: 15
+      }
+    ]
   }
 ];
