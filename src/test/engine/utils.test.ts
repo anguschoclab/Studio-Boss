@@ -1,5 +1,5 @@
 import { formatMoney, getWeekDisplay, clamp, groupContractsByProject } from "../../engine/utils";
-import { Contract } from "../../engine/types/talent.types";
+import { Contract } from "@/engine/types";
 
 describe("utils", () => {
   describe("formatMoney", () => {
