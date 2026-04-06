@@ -18,7 +18,7 @@ describe('Finance: Cult Classic Revenue', () => {
       market: { buyers: [] }
     } as any;
     const revNormal = calculateWeeklyRevenue(mockStateNormal);
-    expect(revNormal).toBe(17500); // 50000 * 0.35
+    expect(revNormal).toBe(23500); // 50000 * 0.47
 
     // Cult classic project overrides low base with ironic viewing multiplier
     const cultProject = { ...baseProject, isCultClassic: true, weeklyRevenue: 50000 };
@@ -28,7 +28,7 @@ describe('Finance: Cult Classic Revenue', () => {
     } as any;
     const revCult = calculateWeeklyRevenue(mockStateCult);
 
-    // applyIronicViewingMultiplier gives Math.max(17500 * 1.8, 200000)
-    expect(revCult).toBe(200000); // Because 17500 * 1.8 = 31500, so it hits the 200000 minimum floor
+    // applyIronicViewingMultiplier gives Math.max(23500 * 1.8, 200000)
+    expect(revCult).toBe(200000); // Because 23500 * 1.8 = 42300, so it hits the 200000 minimum floor
   });
 });
