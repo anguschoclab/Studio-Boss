@@ -74,7 +74,28 @@ export const PREFIXES: string[] = [
   'Engagement-Maximized',
   'Data-Harvesting',
   'Algorithmic',
-  'A.I.-Assisted'
+  'A.I.-Assisted',
+  'A24-core',
+  'Elevated',
+  'Post-Horror',
+  'Hyper-Sanitized',
+  'Phase 7',
+  'TikTok-Tested',
+  'Focus-Grouped',
+  'Tax-Deductible',
+  'Nostalgia-Bait',
+  'Aggressively Mid',
+  'Corporate-Mandated',
+  'Demographically Optimized',
+  'Shareholder-Approved',
+  'Algorithmically Generated',
+  'Deepfaked',
+  'Crypto-Funded',
+  'IP-Harvested',
+  'Synergistically Aligned',
+  'Market-Corrected',
+  'Over-Budget',
+  'Reshot'
 ];
 
 export const SUFFIXES: string[] = [
@@ -125,7 +146,27 @@ export const SUFFIXES: string[] = [
   'Subsidiaries',
   'Shell Corporations',
   'Trusts',
-  'Web3 Ventures'
+  'Web3 Ventures',
+  'Content Silos',
+  'Media Monopolies',
+  'Entertainment Conglomerates',
+  'IP Vaults',
+  'Algorithm Farms',
+  'Data Mines',
+  'Franchise Factories',
+  'Synergy Groups',
+  'Engagement Hubs',
+  'Deliverables',
+  'Tax Shelters',
+  'Shell Corporations',
+  'Merchandising Wings',
+  'Digital Real Estate',
+  'Focus Groups',
+  'Analytics Teams',
+  'Demographic Targets',
+  'Conglomerates',
+  'Subsidiaries',
+  'Holding Companies'
 ];
 
 export const MOTTOS: string[] = [
@@ -197,7 +238,27 @@ export const MOTTOS: string[] = [
   'Building cinematic universes out of public domain IP.',
   'Don\'t worry, we\'ll fix the script in post-production.',
   'Maximizing ROI through aggressive merchandising.',
-  'We are legally obligated to maximize shareholder value.'
+  'We are legally obligated to maximize shareholder value.',
+  'Where the IP never dies, it just gets rebooted.',
+  'Producing content exclusively for second screens.',
+  'Our shareholders demand another sequel.',
+  'We prioritize brand safety over artistic integrity.',
+  'Proudly laundering money through prestige television.',
+  'Because public domain mascots make great horror villains.',
+  'We replaced our entire creative department with a spreadsheet.',
+  'Your favorite franchise, now with 40% more product placement.',
+  'We don\'t make art, we make a cinematic universe.',
+  'If you can\'t beat \'em, buy their studio and fire the staff.',
+  'Turning Wikipedia articles into 6-part limited series.',
+  'We greenlight movies based on TikTok comments.',
+  'We\'ll deepfake the dead if it saves on the budget.',
+  'Our movies are just two-hour commercials for action figures.',
+  'We test-screened the soul right out of this picture.',
+  'Please do not pause to think about the plot holes.',
+  'We spend more on catering than on the script.',
+  'A proud subsidiary of an offshore tax shelter.',
+  'We make the movies that play in the background at the dentist.',
+  'Quantity is our only quality.'
 ];
 
 export const MALE_FIRST_NAMES: string[] = [
@@ -250,7 +311,7 @@ export const LAST_NAMES: string[] = [
 
 export const DICTIONARIES: Record<string, { nouns: string[], adjs: string[] }> = {
   'Action': {
-    nouns: ['Vengeance', 'Protocol', 'Strike', 'Force', 'Bullet', 'Assassin', 'Mercenary', 'Mission', 'Target', 'Rogue', 'Agent', 'Sniper', 'Vendetta', 'Cartel', 'Reckoning', 'Escape', 'Heist', 'Pursuit', 'Squad', 'Fist', 'Reboot', 'Franchise', 'Multiverse', 'Cinematic Universe', 'Sequel', 'Prequel', 'Spinoff', 'Remake', 'Crossover', 'Trilogy', 'Recon', 'Extraction', 'Payload', 'Objective', 'Bounty', 'Crossfire', 'Infiltration', 'Exfiltration', 'Takeover', 'Lockdown', 'Overdrive', 'Showdown', 'Blowback', 'Backlash', 'Flashpoint', 'Ground Zero', 'Vanguard', 'Sentinel', 'Outpost', 'Stronghold', 'Blockbuster', 'CGI', 'Explosion', 'Set Piece', 'Green Screen', 'Stunt Double', 'Body Double', 'CGI Mush', 'Wire-Fu', 'Greenscreen Void', 'Asset', 'Liability', 'Syndicate', 'Regime', 'IP', 'Merchandising', 'Optimization', 'Metrics'],
+    nouns: ['Vengeance', 'Protocol', 'Strike', 'Force', 'Bullet', 'Assassin', 'Mercenary', 'Mission', 'Target', 'Rogue', 'Agent', 'Sniper', 'Vendetta', 'Cartel', 'Reckoning', 'Escape', 'Heist', 'Pursuit', 'Squad', 'Fist', 'Reboot', 'Franchise', 'Multiverse', 'Cinematic Universe', 'Sequel', 'Prequel', 'Spinoff', 'Remake', 'Crossover', 'Trilogy', 'Recon', 'Extraction', 'Payload', 'Objective', 'Bounty', 'Crossfire', 'Infiltration', 'Exfiltration', 'Takeover', 'Lockdown', 'Overdrive', 'Showdown', 'Blowback', 'Backlash', 'Flashpoint', 'Ground Zero', 'Vanguard', 'Sentinel', 'Outpost', 'Stronghold', 'Blockbuster', 'CGI', 'Explosion', 'Set Piece', 'Green Screen', 'Stunt Double', 'Body Double', 'CGI Mush', 'Wire-Fu', 'Greenscreen Void', 'Asset', 'Liability', 'Syndicate', 'Regime', 'IP', 'Merchandising', 'Optimization', 'Metrics', 'Reboot', 'Franchise', 'Multiverse', 'IP', 'Merchandising', 'Demographic', 'Algorithm', 'Tax Write-Off', 'Synergy', 'Deliverable'],
     adjs: ['Lethal', 'Deadly', 'Blind', 'Rogue', 'Final', 'Relentless', 'Silent', 'Hostile', 'Covert', 'Extreme', 'Tactical', 'Ruthless', 'Explosive', 'Unstoppable', 'Furious', 'Savage', 'Brutal', 'Uncut', 'Quantum', 'Cyber', 'Neon', 'Hyper', 'Meta', 'Post-Apocalyptic', 'Dystopian', 'Strategic', 'Clandestine', 'Stealth', 'Phantom', 'Ghost', 'Shadow', 'Maverick', 'Renegade', 'Outlaw', 'Vigilante', 'Mercenary', 'Expendable', 'Disposable', 'Collateral', 'Fatal', 'Mortal', 'Overbudget', 'Action-Packed', 'High-Octane', 'Adrenaline-Fueled', 'CGI-Heavy', 'Test-Screened', 'Motion-Smoothed', 'Pre-Vis', 'Focus-Grouped', 'Zero-Day', 'Psy-Op', 'Synergistic', 'Leveraged', 'Optimized', 'Franchised', 'Rebooted', 'Over-Budget', 'Focus-Tested']
   },
   'Comedy': {
