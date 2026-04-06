@@ -22,7 +22,7 @@ export const SBDBView = () => {
   const [roleFilter, setRoleFilter] = useState<string>('all');
   const [tierFilter, setTierFilter] = useState<string>('all');
   
-  const talentPool = useMemo(() => Object.values(gameState?.industry.talentPool || {}), [gameState]);
+  const talentPool = useMemo(() => Object.values(gameState?.entities.talents || {}), [gameState]);
   
   const filteredTalent = useMemo(() => {
     return talentPool.filter(t => {

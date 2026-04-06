@@ -14,11 +14,11 @@ export function tickFinance(state: GameState, rng: RandomGenerator, pendingImpac
   const { report, snapshot } = generateWeeklyFinancialReport(
       state, 
       'player', 
-      state.studio.internal.projects, 
+      state.entities.projects, 
       state.finance.cash, 
       state.studio.archetype, 
       state.studio.prestige, 
-      state.studio.internal.contracts, 
+      state.entities.contracts, 
       state.studio.internal.firstLookDeals || [], 
       pendingImpacts
   );
@@ -39,7 +39,7 @@ export function tickFinance(state: GameState, rng: RandomGenerator, pendingImpac
   });
 
   // 2. Rival Finance Tick (Phase 5: Industry Symmetry)
-  for (const rival of state.industry.rivals) {
+  for (const rival of state.entities.rivals) {
       const { report: rivalReport } = generateWeeklyFinancialReport(
           state,
           rival.id,

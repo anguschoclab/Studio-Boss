@@ -9,7 +9,7 @@ export const MADashboard: React.FC = () => {
   if (!state) return null;
   
   const industryData = useMemo(() => {
-    const rivals = state.industry.rivals;
+    const rivals = state.entities.rivals;
     const playerShare = RegulatorSystem.getMarketShare(state, 'player');
     
     const allStudios = [

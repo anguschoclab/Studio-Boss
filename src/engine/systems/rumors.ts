@@ -45,24 +45,24 @@ export function advanceRumors(state: GameState, rng: RandomGenerator): StateImpa
     
     let text = 'Unnamed studio in talks for a massive merger.';
     
-    if (category === 'talent' && Object.keys(state.industry.talentPool).length > 0) {
-      const talent = pick(Object.values(state.industry.talentPool), rng);
+    if (category === 'talent' && Object.keys(state.entities.talents).length > 0) {
+      const talent = pick(Object.values(state.entities.talents), rng);
       const rumors = [
         `${talent.name} reportedly demanding unprecedented back-end points on next project.`,
         `Sources say ${talent.name} is extremely difficult to work with on set.`,
         `${talent.name} is secretly looking to direct their next feature.`
       ];
       text = pick(rumors, rng);
-    } else if (category === 'rival' && state.industry.rivals.length > 0) {
-      const rival = pick(state.industry.rivals, rng);
+    } else if (category === 'rival' && state.entities.rivals.length > 0) {
+      const rival = pick(state.entities.rivals, rng);
       const rumors = [
         `${rival.name} is allegedly facing severe cash flow issues.`,
         `Word around town is ${rival.name} is preparing a monumental buyout offer.`,
         `Exec shakeups expected soon at ${rival.name}.`
       ];
       text = pick(rumors, rng);
-    } else if (category === 'project' && Object.keys(state.studio.internal.projects).length > 0) {
-      const project = pick(Object.values(state.studio.internal.projects), rng);
+    } else if (category === 'project' && Object.keys(state.entities.projects).length > 0) {
+      const project = pick(Object.values(state.entities.projects), rng);
       if (project.state === 'production') {
         text = `Production on "${project.title}" is rumored to be wildly over budget.`;
       } else {

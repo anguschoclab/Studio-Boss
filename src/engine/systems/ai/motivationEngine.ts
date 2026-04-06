@@ -60,7 +60,7 @@ export function calculateRivalMotivation(rival: RivalStudio, state: GameState, r
  * Weekly tick to update AI mindsets across the industry.
  */
 export function tickAIMinds(state: GameState, rng: RandomGenerator): StateImpact[] {
-  return state.industry.rivals.map(rival => ({
+  return state.entities.rivals.map(rival => ({
     type: 'RIVAL_UPDATED',
     payload: {
       rivalId: rival.id,

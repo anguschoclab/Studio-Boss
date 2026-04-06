@@ -106,7 +106,7 @@ export class RevenueProcessor {
       const contract = contracts[i];
       if (contract.projectId === project.id) {
         hasContract = true;
-        const talent = state.industry.talentPool[contract.talentId];
+        const talent = state.entities.talents[contract.talentId];
         if (talent) {
           // Draw contribution: 100 draw = +0.25 bonus
           const drawBonus = (talent.draw - 50) * 0.005;

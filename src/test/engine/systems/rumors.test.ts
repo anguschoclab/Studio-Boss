@@ -65,7 +65,7 @@ describe('advanceRumors', () => {
     const talent = createMockTalent({ id: 't1', name: 'Star Actor' });
     const stateWithTalent = createMockGameState();
     stateWithTalent.week = 10;
-    stateWithTalent.industry.talentPool = { [talent.id]: talent };
+    stateWithTalent.entities.talents = { [talent.id]: talent };
 
     // Use a seed that triggers a rumor
     const luckyRng = new RandomGenerator(8); 

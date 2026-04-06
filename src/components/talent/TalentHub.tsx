@@ -20,7 +20,7 @@ import { cn } from '@/lib/utils';
 
 export const TalentHub = () => {
   const state = useGameStore(s => s.gameState);
-  const talentPool = useMemo(() => Object.values(state?.industry.talentPool || {}), [state?.industry.talentPool]);
+  const talentPool = useMemo(() => Object.values(state?.entities.talents || {}), [state?.entities.talents]);
   
   // Roster filters
   const [rosterFilter, setRosterFilter] = useState<TalentRole | 'all'>('all');

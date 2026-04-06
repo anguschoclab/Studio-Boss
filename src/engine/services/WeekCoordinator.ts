@@ -139,10 +139,10 @@ export class WeekCoordinator {
   private static runProductionFilter(state: GameState, context: TickContext) {
     context.impacts.push(...tickProduction(state, context.rng));
 
-    for (const key in state.studio.internal.projects) {
+    for (const key in state.entities.projects) {
       // ⚡ Bolt: Safe for...in iteration guard
-      if (!Object.prototype.hasOwnProperty.call(state.studio.internal.projects, key)) continue;
-      const project = state.studio.internal.projects[key];
+      if (!Object.prototype.hasOwnProperty.call(state.entities.projects, key)) continue;
+      const project = state.entities.projects[key];
 
       // 1. Script drafting and crisis triggering
       if (project.state === 'development') {
@@ -333,7 +333,7 @@ export class WeekCoordinator {
    * Fires once per year (week % 52 === 0).
    */
   private static runAnnualMAScan(state: GameState, context: TickContext) {
-    const rivals = state.industry.rivals;
+    const rivals = state.entities.rivals;
     for (let i = 0; i < rivals.length; i++) {
       for (let j = 0; j < rivals.length; j++) {
         if (i === j) continue;

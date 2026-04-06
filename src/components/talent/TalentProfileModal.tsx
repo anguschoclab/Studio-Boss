@@ -42,7 +42,7 @@ export const TalentModal = () => {
   const gameState = useGameStore(s => s.gameState);
   const currentWeek = gameState?.week ?? 1;
   
-  const talentPool = useMemo(() => Object.values(gameState?.industry.talentPool || {}), [gameState?.industry.talentPool]);
+  const talentPool = useMemo(() => Object.values(gameState?.entities.talents || {}), [gameState?.entities.talents]);
   const talent = useMemo(() => talentPool.find(t => t.id === selectedTalentId), [talentPool, selectedTalentId]);
   
   const agencies = useMemo(() => gameState?.industry.agencies || [], [gameState?.industry.agencies]);

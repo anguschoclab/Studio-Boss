@@ -37,7 +37,7 @@ export class FestivalAuctionEngine {
     let auctionActive = true;
 
     const participants: AuctionParticipant[] = [
-      ...state.industry.rivals.map(r => ({
+      ...state.entities.rivals.map(r => ({
         id: r.id,
         name: r.name,
         isPlayer: false,

@@ -30,8 +30,8 @@ describe('Production Engine (Target A2) - Symmetry', () => {
     const rival = createMockRival({ id: 'rival-s1', name: 'Rival Studio', projects: { 'rival-p1': rivalProject }, prestige: 50 });
 
     const state = createMockGameState();
-    state.studio.internal.projects['player-p1'] = playerProject;
-    state.industry.rivals = [rival];
+    state.entities.projects['player-p1'] = playerProject;
+    state.entities.rivals = [rival];
 
     const impacts = tickProduction(state, rng);
 
@@ -48,46 +48,46 @@ describe('Production Engine (Target A2) - Edge Cases', () => {
 
   it('should handle empty projects pipeline safely', () => {
     const emptyState = createMockGameState();
-    emptyState.studio.internal.projects = {};
-    emptyState.industry.rivals = [];
+    emptyState.entities.projects = {};
+    emptyState.entities.rivals = [];
     expect(tickProduction(emptyState, rng)).toHaveLength(0);
   });
 
   it('should handle archived projects gracefully', () => {
       const project = createMockProject({ id: 'p1', state: 'archived' });
       const state = createMockGameState();
-      state.studio.internal.projects['p1'] = project;
+      state.entities.projects['p1'] = project;
       expect(tickProduction(state, rng).find(i => i.type === 'INDUSTRY_UPDATE')).toBeUndefined();
   });
 
   it('should process projects with 0 targetWeeks without Infinity progress', () => {
      const project = createMockProject({ id: 'p1', state: 'production', productionWeeks: 0, progress: 0 });
      const state = createMockGameState();
-     state.studio.internal.projects['p1'] = project;
+     state.entities.projects['p1'] = project;
      const impacts = tickProduction(state, rng);
      const industryUpdate = impacts.find(i => i.type === 'INDUSTRY_UPDATE') as any;
-     expect(industryUpdate?.payload?.['studio.internal.projects']?.['p1']?.progress).toBeGreaterThan(0);
+     expect(industryUpdate?.payload?.['entities.projects']?.['p1']?.progress).toBeGreaterThan(0);
   });
 
   it('should process project with a highly negative budget without throwing (Guild Auditor)', () => {
       const project = createMockProject({ id: 'p1', budget: -100_000_000, state: 'production', productionWeeks: 10, progress: 0 });
       const state = createMockGameState();
-      state.studio.internal.projects['p1'] = project;
+      state.entities.projects['p1'] = project;
       const impacts = tickProduction(state, rng);
       const industryUpdate = impacts.find(i => i.type === 'INDUSTRY_UPDATE') as any;
-      expect(industryUpdate?.payload?.['studio.internal.projects']?.['p1']).toBeDefined();
+      expect(industryUpdate?.payload?.['entities.projects']?.['p1']).toBeDefined();
   });
 
   it('should rest talent fatigue if they are not in active contracts', () => {
       const restingTalent = createMockTalent({ id: 't1', fatigue: 50 });
       const workingTalent = createMockTalent({ id: 't2', fatigue: 0 });
       const state = createMockGameState();
-      state.industry.talentPool['t1'] = restingTalent;
-      state.industry.talentPool['t2'] = workingTalent;
+      state.entities.talents['t1'] = restingTalent;
+      state.entities.talents['t2'] = workingTalent;
 
       const project = createMockProject({ id: 'p1', state: 'production' });
-      state.studio.internal.projects['p1'] = project;
-      state.studio.internal.contracts.push(createMockContract({ talentId: 't2', projectId: 'p1' }));
+      state.entities.projects['p1'] = project;
+      state.entities.contracts.push(createMockContract({ talentId: 't2', projectId: 'p1' }));
 
       const impacts = tickProduction(state, rng);
       const t1Update = impacts.find(i => i.type === 'TALENT_UPDATED' && i.payload.talentId === 't1') as any;
@@ -100,17 +100,17 @@ describe('Production Engine (Target A2) - Edge Cases', () => {
       const talent = createMockTalent({ id: 't1', role: 'actor', roles: ['actor'], psychology: { ego: 50, mood: 100, scandalRisk: 0, synergyAffinities: [], synergyConflicts: [] }, fatigue: 0 });
       const contract = createMockContract({ id: 'c1', projectId: 'p1', talentId: 't1', role: 'actor' });
       const state = createMockGameState();
-      state.studio.internal.projects['p1'] = project;
-      state.studio.internal.contracts.push(contract);
-      state.industry.talentPool['t1'] = talent;
+      state.entities.projects['p1'] = project;
+      state.entities.contracts.push(contract);
+      state.entities.talents['t1'] = talent;
       const impacts = tickProduction(state, rng);
       const industryUpdate = impacts.find(i => i.type === 'INDUSTRY_UPDATE') as any;
-      expect(industryUpdate?.payload?.['studio.internal.projects']?.['p1']?.progress).toBeGreaterThan(0);
+      expect(industryUpdate?.payload?.['entities.projects']?.['p1']?.progress).toBeGreaterThan(0);
   });
 
   it('should push SCANDAL_ADDED for player project if newScandals returned', () => {
       const state = createMockGameState();
-      state.studio.internal.projects['scandal-project'] = createMockProject({ id: 'scandal-project', state: 'production' });
+      state.entities.projects['scandal-project'] = createMockProject({ id: 'scandal-project', state: 'production' });
 
       const impacts = tickProduction(state, rng);
       const scandalAdded = impacts.find(i => i.type === 'SCANDAL_ADDED');
@@ -123,7 +123,7 @@ describe('Production Engine (Target A2) - Edge Cases', () => {
           id: 'r1',
           projects: { 'scandal-project': createMockProject({ id: 'scandal-project', state: 'production' }) }
       });
-      state.industry.rivals = [rival];
+      state.entities.rivals = [rival];
 
       const impacts = tickProduction(state, rng);
       const scandalAdded = impacts.find(i => i.type === 'SCANDAL_ADDED');
@@ -132,7 +132,7 @@ describe('Production Engine (Target A2) - Edge Cases', () => {
 
   it('should trigger quality shift in tickProject via rng chance', () => {
       const state = createMockGameState();
-      state.studio.internal.projects['p1'] = createMockProject({ id: 'p1', state: 'production', reviewScore: 50 });
+      state.entities.projects['p1'] = createMockProject({ id: 'p1', state: 'production', reviewScore: 50 });
 
       // rng.next() < 0.2 triggers it
       let call = 0;
@@ -145,7 +145,7 @@ describe('Production Engine (Target A2) - Edge Cases', () => {
 
       const impacts = tickProduction(state, mockRng);
       const industryUpdate = impacts.find(i => i.type === 'INDUSTRY_UPDATE') as any;
-      expect(industryUpdate?.payload?.['studio.internal.projects']?.['p1']?.reviewScore).toBe(53);
+      expect(industryUpdate?.payload?.['entities.projects']?.['p1']?.reviewScore).toBe(53);
   });
 });
 
@@ -153,9 +153,9 @@ describe('processDirectorDisputes edge cases in tickProduction', () => {
     it('should push dispute impact from processDirectorDisputes to allImpacts', () => {
         const state = createMockGameState();
 
-        state.studio.internal.projects['dispute-p'] = createMockProject({ id: 'dispute-p', state: 'production' });
-        state.studio.internal.contracts.push(createMockContract({ projectId: 'dispute-p', talentId: 't1', role: 'director' }));
-        state.industry.talentPool['t1'] = createMockTalent({ id: "t1", roles: ["director"], directorArchetype: "auteur" });
+        state.entities.projects['dispute-p'] = createMockProject({ id: 'dispute-p', state: 'production' });
+        state.entities.contracts.push(createMockContract({ projectId: 'dispute-p', talentId: 't1', role: 'director' }));
+        state.entities.talents['t1'] = createMockTalent({ id: "t1", roles: ["director"], directorArchetype: "auteur" });
 
         // Let's use the real processDirectorDisputes logic here
         // We know budget dispute chance for auteur is 0.05
@@ -185,7 +185,7 @@ describe('processDirectorDisputes edge cases in tickProduction', () => {
           projects: { 'p1': createMockProject({ id: 'p1', state: 'production' }) }
         });
         delete rival.contracts; // Remove it so it triggers the !rival.contracts continue path
-        state.industry.rivals = [rival];
+        state.entities.rivals = [rival];
 
         const mockRng = {
             next: () => 0.1,
@@ -207,7 +207,7 @@ describe('collect rival contracts', () => {
           id: 'r-contracts',
           contracts: [createMockContract({ projectId: 'r-p1' })]
         });
-        state.industry.rivals = [rival];
+        state.entities.rivals = [rival];
 
         const mockRng = {
             next: () => 0.1,
@@ -246,7 +246,7 @@ describe('tickProduction remaining branches', () => {
           id: 'r-noprojects',
         });
         delete rival.projects;
-        state.industry.rivals = [rival];
+        state.entities.rivals = [rival];
 
         const mockRng = {
             next: () => 0.1,

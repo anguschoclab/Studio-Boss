@@ -10,10 +10,10 @@ import { executeGreenlight, executeMarketing } from '../systems/projects';
 export class HeadlessController {
   static tick(state: GameState, rng: RandomGenerator): StateImpact[] {
     const impacts: StateImpact[] = [];
-    const internalProjects = Object.values(state.studio.internal.projects);
+    const internalProjects = Object.values(state.entities.projects);
 
     const contractsByProject = new Map<string, Contract[]>();
-    state.studio.internal.contracts.forEach(c => {
+    state.entities.contracts.forEach(c => {
       if (c.projectId) {
         let list = contractsByProject.get(c.projectId);
         if (!list) {
@@ -28,7 +28,7 @@ export class HeadlessController {
       // 1. Auto-Greenlight
       if (project.state === 'needs_greenlight') {
         const projectContracts = contractsByProject.get(project.id) || [];
-        const attachedTalent = projectContracts.map(c => state.industry.talentPool[c.talentId]).filter(Boolean);
+        const attachedTalent = projectContracts.map(c => state.entities.talents[c.talentId]).filter(Boolean);
         const report = evaluateGreenlight(project, state.finance.cash, attachedTalent, state.week, internalProjects);
         
         if (report.score > 60 || (state.finance.cash > project.budget * 3)) {

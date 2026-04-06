@@ -34,7 +34,7 @@ export class MetricsCollector {
   private totalTvAwards = 0;
   
   public record(state: GameState, summary: WeekSummary): void {
-    const rivals = state.industry.rivals;
+    const rivals = state.entities.rivals;
     const platforms = state.market.buyers.filter(b => b.archetype === 'streamer') as any[];
     
     // Total bails tracking (Phase 2 hardening)
@@ -52,7 +52,7 @@ export class MetricsCollector {
     let worldCompletedCount = 0;
     
     const allStudios = [
-        { id: 'PLAYER', projects: Object.values(state.studio.internal.projects), cash: Number(state.finance.cash) || 0, name: state.studio.name },
+        { id: 'PLAYER', projects: Object.values(state.entities.projects), cash: Number(state.finance.cash) || 0, name: state.studio.name },
         ...rivals.map(r => ({ id: r.id, projects: Object.values(r.projects || {}), cash: Number(r.cash) || 0, name: r.name }))
     ];
 
@@ -112,7 +112,7 @@ export class MetricsCollector {
     const marketShare = totalAssets > 0 ? (playerCash / totalAssets) * 100 : 0;
 
     // totalSystemCash = player + rivals + platforms + (active budgets estimate)
-    const activeBudgets = Object.values(state.studio.internal.projects)
+    const activeBudgets = Object.values(state.entities.projects)
       .filter(p => !['released', 'archived', 'post_release'].includes(p.state))
       .reduce((sum, p) => sum + (p.budget || 0), 0);
 
@@ -138,7 +138,7 @@ export class MetricsCollector {
     // 10. Talent Pool Analysis (Optimized single-pass)
     let totalPrestige = 0;
     let aListCount = 0;
-    const talentValues = Object.values(state.industry.talentPool);
+    const talentValues = Object.values(state.entities.talents);
     const talentPoolSize = talentValues.length;
     
     talentValues.forEach(t => {
@@ -154,7 +154,7 @@ export class MetricsCollector {
       totalMarketSentiment: state.finance.marketState?.sentiment || 50,
       talentPoolSize: talentPoolSize,
       avgTalentPrestige: totalPrestige / (talentPoolSize || 1),
-      activeProjects: Object.values(state.studio.internal.projects).filter(p => !['released', 'archived', 'post_release'].includes(p.state)).length,
+      activeProjects: Object.values(state.entities.projects).filter(p => !['released', 'archived', 'post_release'].includes(p.state)).length,
       completedProjects: worldCompletedCount,
       retiredCount: this.totalRetired,
       bankruptcyCount: rivals.filter(r => (Number(r.cash) || 0) <= -50000000).length,

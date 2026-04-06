@@ -15,7 +15,7 @@ export const AttachTalentModal = () => {
   
   const project = useMemo(() => {
     if (!selectedProjectId || !gameState) return null;
-    return gameState.studio.internal.projects[selectedProjectId];
+    return gameState.entities.projects[selectedProjectId];
   }, [selectedProjectId, gameState]);
   
   // Only show if the project is actually in a state that allows casting

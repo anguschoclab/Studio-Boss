@@ -173,14 +173,14 @@ export function updateFranchiseHub(state: GameState, project: Project, rng: Rand
       updatedFranchises[franchiseId].totalEquity = calculateFranchiseEquity(
         updatedFranchises[franchiseId],
         relevantAssets,
-        state.studio.internal.projects
+        state.entities.projects
       );
     }
   }
 
   // Update projects in the state with their new franchiseId if a hub was created
   const activeProjects = Object.fromEntries(
-    Object.entries(state.studio.internal.projects).map(([id, existingProject]) => [
+    Object.entries(state.entities.projects).map(([id, existingProject]) => [
       id,
       existingProject.id === project.id ? { ...existingProject, franchiseId } : existingProject
     ])
@@ -208,7 +208,7 @@ export function updateFranchiseHub(state: GameState, project: Project, rng: Rand
  */
 export function calculateFranchiseEvolutionImpacts(state: GameState, rng: RandomGenerator): import('../../types/state.types').StateImpact[] {
   const impacts: import('../../types/state.types').StateImpact[] = [];
-  const projects = Object.values(state.studio.internal.projects);
+  const projects = Object.values(state.entities.projects);
   
   projects.forEach(project => {
     // Only process for the week the project is released
@@ -300,7 +300,7 @@ export function calculateFranchiseEvolutionImpacts(state: GameState, rng: Random
  */
 export function tickIPVault(state: GameState): import('../../types/state.types').StateImpact[] {
   const impacts: import('../../types/state.types').StateImpact[] = [];
-  const activeProjects = Object.values(state.studio.internal.projects);
+  const activeProjects = Object.values(state.entities.projects);
 
   // 1. Evaluate Synergy (Reboots/Spinoffs in production) 
   // 2. Apply Decay (Synergy-shielded & Tiered)

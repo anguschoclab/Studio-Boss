@@ -31,7 +31,7 @@ export const createCampaignSlice: StateCreator<GameStore, [], [], CampaignSlice>
     
     // Create local RNG for backlash check
     const rng = new RandomGenerator(state.rngState);
-    const project = state.studio.internal.projects[projectId];
+    const project = state.entities.projects[projectId];
     const metaScore = project?.reception?.metaScore || project?.reviewScore || 60;
     
     const hasBacklash = checkCampaignBacklash(metaScore, tierKey, rng);

@@ -4,9 +4,9 @@ import { RandomGenerator } from '../utils/rng';
 export class SchedulingEngine {
   static tick(state: GameState, rng: RandomGenerator): StateImpact[] {
     const impacts: StateImpact[] = [];
-    const projects = Object.values(state.studio.internal.projects) as Project[];
-    const contracts = state.studio.internal.contracts;
-    const talentPool = state.industry.talentPool;
+    const projects = Object.values(state.entities.projects) as Project[];
+    const contracts = state.entities.contracts;
+    const talentPool = state.entities.talents;
 
     projects.forEach(project => {
       if (project.state !== 'production') return;

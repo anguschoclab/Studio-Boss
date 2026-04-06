@@ -84,8 +84,8 @@ export function runFestivalMarket(state: GameState, rng: RandomGenerator): State
   // This avoids O(S * R * P) iteration in the activeSubmissions loop.
   const rivalProjectsMap: Record<string, Project> = {};
   // Safely iterate whether rivals is an array or an object map
-  for (const key in state.industry.rivals) {
-    const rival = (state.industry.rivals as any)[key];
+  for (const key in state.entities.rivals) {
+    const rival = (state.entities.rivals as any)[key];
     if (rival && rival.projects) {
       for (const projId in rival.projects) {
         rivalProjectsMap[projId] = rival.projects[projId];
@@ -94,9 +94,9 @@ export function runFestivalMarket(state: GameState, rng: RandomGenerator): State
   }
 
   activeSubmissions.forEach(sub => {
-    const isPlayerProject = !!state.studio.internal.projects[sub.projectId];
+    const isPlayerProject = !!state.entities.projects[sub.projectId];
     const project = isPlayerProject
-      ? state.studio.internal.projects[sub.projectId]
+      ? state.entities.projects[sub.projectId]
       : rivalProjectsMap[sub.projectId];
 
     if (!project) return;
@@ -113,7 +113,7 @@ export function runFestivalMarket(state: GameState, rng: RandomGenerator): State
     });
 
     // Add NPC rival bids
-    state.industry.rivals.slice(0, 3).forEach(rival => {
+    state.entities.rivals.slice(0, 3).forEach(rival => {
       const bid = generateNPCBid(project, rival.cash, rng);
       if (bid) {
         bids.push({ ...bid, bidderId: rival.id, bidderName: rival.name });

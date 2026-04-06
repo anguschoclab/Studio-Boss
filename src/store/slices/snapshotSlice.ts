@@ -15,7 +15,7 @@ export const createSnapshotSlice: StateCreator<GameStore, [], [], SnapshotSlice>
     if (!state) return;
 
     // Derived counts
-    const projectsArray = Object.values(state.studio.internal.projects);
+    const projectsArray = Object.values(state.entities.projects);
     // Completed projects are those that have been released (including post-release and archived)
     const completedProjects = projectsArray.filter(p => 
       p.state === 'released' || p.state === 'post_release' || p.state === 'archived'

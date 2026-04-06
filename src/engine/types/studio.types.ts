@@ -56,6 +56,12 @@ export interface StudioCulture {
 }
 
 export interface GameState {
+  entities: {
+    projects: Record<string, Project>;
+    contracts: Record<string, Contract>;
+    talents: Record<string, Talent>;
+    rivals: Record<string, RivalStudio>;
+  };
   week: number;
   gameSeed: number;
   tickCount: number;
@@ -72,8 +78,6 @@ export interface GameState {
     prestige: number;
     culture?: StudioCulture;
     internal: {
-      projects: Record<string, Project>;
-      contracts: Contract[];
       firstLookDeals?: TalentPact[];
       projectHistory: Project[]; // 🌌 PHASE 2: The Vault
     };
@@ -89,11 +93,9 @@ export interface GameState {
     buyers: Buyer[];
   };
   industry: {
-    rivals: RivalStudio[];
     families: Family[];
     agencies: Agency[];
     agents: Agent[];
-    talentPool: Record<string, Talent>;
     awards?: Award[];
     festivalSubmissions?: FestivalSubmission[];
     rumors?: Rumor[];

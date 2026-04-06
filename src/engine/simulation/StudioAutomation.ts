@@ -11,7 +11,7 @@ export class StudioAutomation {
   static tick(state: GameState, rng: RandomGenerator): StateImpact[] {
     const impacts: StateImpact[] = [];
     
-    state.industry.rivals.forEach(rival => {
+    state.entities.rivals.forEach(rival => {
       // 1. Studio Status & Liquidation
       const isDistressed = (Number(rival.cash) || 0) < -50000000;
       
@@ -100,7 +100,7 @@ export class StudioAutomation {
       const budgetMap = { 'none': 0, 'basic': 5000000, 'blockbuster': 25000000 };
       const marketingBudget = budgetMap[tier];
 
-      const rivalPrestige = studioId === 'PLAYER' ? state.studio.prestige : (state.industry.rivals.find(r => r.id === studioId)?.prestige || 50);
+      const rivalPrestige = studioId === 'PLAYER' ? state.studio.prestige : (state.entities.rivals.find(r => r.id === studioId)?.prestige || 50);
       const { project: releasedProject } = calculateOpeningWeekend(
           { ...p, marketingLevel: tier, marketingBudget }, 
           [], 
@@ -223,7 +223,7 @@ export class StudioAutomation {
     if (studioId === 'PLAYER') {
       return { type: 'PROJECT_UPDATED', payload: { projectId, update } };
     } else {
-      const rival = state.industry.rivals.find(r => r.id === studioId);
+      const rival = state.entities.rivals.find(r => r.id === studioId);
       const existingProject = rival?.projects?.[projectId] || {};
       return { 
         type: 'RIVAL_UPDATED', 

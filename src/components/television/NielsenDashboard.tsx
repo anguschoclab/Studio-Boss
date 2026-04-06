@@ -24,7 +24,7 @@ const DEMO_COLORS: Record<NielsenDemographic, string> = {
 };
 
 export const NielsenDashboard = () => {
-  const projects = useGameStore(useShallow(s => Object.values(s.gameState?.studio.internal.projects || {})));
+  const projects = useGameStore(useShallow(s => Object.values(s.gameState?.entities.projects || {})));
   const week = useGameStore(s => s.gameState?.week || 0);
   
   const tvShows = React.useMemo(() => 

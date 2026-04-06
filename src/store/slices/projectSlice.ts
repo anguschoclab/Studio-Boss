@@ -47,8 +47,8 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
             ...stateWithFees.studio,
             internal: {
               ...stateWithFees.studio.internal,
-              projects: { ...stateWithFees.studio.internal.projects, [project.id]: project },
-              contracts: [...stateWithFees.studio.internal.contracts, ...newContracts]
+              projects: { ...stateWithFees.entities.projects, [project.id]: project },
+              contracts: [...stateWithFees.entities.contracts, ...newContracts]
             }
           },
           rngState: rng.getState()
@@ -62,7 +62,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
       const state = s.gameState;
       if (!state) return s;
 
-      const p = state.studio.internal.projects[id];
+      const p = state.entities.projects[id];
       if (!p) return s;
 
       if (p.type === 'SERIES') {
@@ -145,7 +145,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
     const state = get().gameState;
     if (!state) return;
 
-    const project = state.studio.internal.projects[projectId];
+    const project = state.entities.projects[projectId];
     if (!project) return;
 
     if (project.state !== 'needs_greenlight') return;
@@ -164,13 +164,13 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
     const state = get().gameState;
     if (!state) return false;
 
-    const project = state.studio.internal.projects[projectId];
+    const project = state.entities.projects[projectId];
     const buyer = state.market.buyers.find(b => b.id === buyerId);
 
     if (!project || !buyer) return false;
 
     const rng = new RandomGenerator(state.rngState);
-    const allProjects = Object.values(state.studio.internal.projects);
+    const allProjects = Object.values(state.entities.projects);
     const success = negotiateContract(project, buyer, contractType, state.week, allProjects, rng);
 
     if (success) {
@@ -211,7 +211,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
     const state = get().gameState;
     if (!state) return;
 
-    const project = state.studio.internal.projects[projectId];
+    const project = state.entities.projects[projectId];
     if (!project) return;
 
     let status: 'HEALTHY' | 'FATIGUED' | 'LEGACY' = 'HEALTHY';
@@ -221,7 +221,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
       const franchise = state.ip.franchises[project.franchiseId];
       relatedCount = franchise.assetIds.length;
       
-      const genreSaturation = Object.values(state.studio.internal.projects).filter(p => p.genre === project.genre).length;
+      const genreSaturation = Object.values(state.entities.projects).filter(p => p.genre === project.genre).length;
       const fatigue = calculateFranchiseFatigue(franchise, genreSaturation, project.genre);
       
       if (fatigue > 0.4) status = 'FATIGUED';
@@ -295,7 +295,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
             ...intermediateState.studio,
             internal: {
               ...intermediateState.studio.internal,
-              projects: { ...intermediateState.studio.internal.projects, [project.id]: project },
+              projects: { ...intermediateState.entities.projects, [project.id]: project },
             }
           },
           rngState: rng.getState()
@@ -308,7 +308,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
     const state = get().gameState;
     if (!state) return;
 
-    const project = state.studio.internal.projects[projectId];
+    const project = state.entities.projects[projectId];
     if (!project) return;
 
     const rng = new RandomGenerator(state.rngState); 
@@ -337,7 +337,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
       const state = s.gameState;
       if (!state) return s;
 
-      const project = state.studio.internal.projects[projectId];
+      const project = state.entities.projects[projectId];
       if (!project) return s;
       
       let cost = 0;
@@ -392,7 +392,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
             ...s.gameState.studio,
             internal: {
               ...s.gameState.studio.internal,
-              projects: { ...s.gameState.studio.internal.projects, [project.id]: project }
+              projects: { ...s.gameState.entities.projects, [project.id]: project }
             }
           }
         }

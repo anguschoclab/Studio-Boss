@@ -49,7 +49,7 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
     // Aggressive agencies (Sharks) leak rumors
     if (agency.culture === 'shark' || agency.currentMotivation === 'THE_SHARK') {
       if (rng.next() < 0.1) {
-        const brands = state.industry.rivals;
+        const brands = state.entities.rivals;
         const rival = pick(brands, rng);
         if (rival) {
           impacts.push({

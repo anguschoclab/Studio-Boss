@@ -50,8 +50,8 @@ describe('Impact Reducer (Target A1)', () => {
     ];
     
     const nextState = applyImpacts(initialState, impacts);
-    expect(nextState.studio.internal.projects['p1'].buzz).toBe(80);
-    expect(nextState.studio.internal.projects['p1']).not.toBe(initialState.studio.internal.projects['p1']);
+    expect(nextState.entities.projects['p1'].buzz).toBe(80);
+    expect(nextState.entities.projects['p1']).not.toBe(initialState.entities.projects['p1']);
   });
 
   it('should accurately process NEWS_ADDED impact', () => {

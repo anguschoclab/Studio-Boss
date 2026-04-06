@@ -11,7 +11,7 @@ export class TalentLifecycleSystem {
     const impacts: StateImpact[] = [];
     const isYearEnd = state.week % 52 === 0;
 
-    const talentPool = Object.values(state.industry.talentPool) as Talent[];
+    const talentPool = Object.values(state.entities.talents) as Talent[];
     const retiredIds: string[] = [];
 
     talentPool.forEach(talent => {

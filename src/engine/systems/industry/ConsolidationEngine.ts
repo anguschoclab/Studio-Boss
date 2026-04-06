@@ -9,7 +9,7 @@ import { RandomGenerator } from '../../utils/rng';
  */
 export function tickConsolidation(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const rivals = state.industry.rivals;
+  const rivals = state.entities.rivals;
   const buyers = state.market.buyers;
 
   // Potential Acquirers: Majors with surplus cash

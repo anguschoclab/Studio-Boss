@@ -74,7 +74,7 @@ export function calculateWillingness(
   }
 
   // 5b. Studio Infamy (Razzies & Bombs)
-  const studioProjects = Object.values(gameState.studio.internal.projects);
+  const studioProjects = Object.values(gameState.entities.projects);
   const recentRazzie = studioProjects.some(p => 
     p.awards?.some(a => a.body === 'The Razzies' && a.status === 'won')
   );
@@ -86,11 +86,11 @@ export function calculateWillingness(
 
   // 6. Directorial Influence (Check if a director is already attached)
   // ⚡ Bolt: Consolidated O(N) array .some() and .find() into a single O(N) array .find() scan
-  const directorContract = gameState.studio.internal.contracts.find(
-    c => c.projectId === project.id && gameState.industry.talentPool[c.talentId]?.roles.includes('director')
+  const directorContract = gameState.entities.contracts.find(
+    c => c.projectId === project.id && gameState.entities.talents[c.talentId]?.roles.includes('director')
   );
   if (directorContract) {
-    const director = gameState.industry.talentPool[directorContract.talentId];
+    const director = gameState.entities.talents[directorContract.talentId];
     if (director && director.prestige > 80) {
       score += 20;
       reasons.push(`The chance to work with ${director.name} is a significant motivator.`);

@@ -16,7 +16,7 @@ export const CommandCenter: React.FC = () => {
 
   if (!studio || !industry) return null;
 
-  const projects = Object.values(studio.internal.projects || {});
+  const projects = Object.values(entities.projects || {});
   const { talentPool, rivals, newsHistory } = industry;
 
   const activeProjectsCount = projects.filter(p => p.state !== 'released' && p.state !== 'post_release' && p.state !== 'archived').length;

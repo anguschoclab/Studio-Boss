@@ -43,7 +43,7 @@ export const FestivalMarketModal: React.FC = () => {
       // 🎭 UI Simulation: We use a non-deterministic local RNG for the "feeling" of a live auction.
       // The actual acquisition is committed to the state only on win.
       const localRng = new RandomGenerator(Date.now()); 
-      const rivals = gameState.industry.rivals;
+      const rivals = gameState.entities.rivals;
       
       rivals.forEach(rival => {
         if (rival.id === highestBidderId) return;

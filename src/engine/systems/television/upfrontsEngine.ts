@@ -17,7 +17,7 @@ export interface UpfrontResult {
 export function runUpfronts(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
 
-  const devSeries = Object.values(state.studio.internal.projects).filter(
+  const devSeries = Object.values(state.entities.projects).filter(
     (p): p is SeriesProject =>
       p.type === 'SERIES' &&
       (p.state === 'development' || p.state === 'needs_greenlight') &&
@@ -55,7 +55,7 @@ export function runUpfronts(state: GameState, rng: RandomGenerator): StateImpact
   // Apply project updates for pickups
   results.forEach(result => {
     if (result.decision !== 'pass') {
-      const project = state.studio.internal.projects[result.projectId] as SeriesProject;
+      const project = state.entities.projects[result.projectId] as SeriesProject;
       impacts.push({
         type: 'PROJECT_UPDATED',
         payload: {

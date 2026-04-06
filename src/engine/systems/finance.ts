@@ -20,8 +20,8 @@ export function calculateStudioNetWorth(state: GameState): number {
   }
 
   // 2. Active Projects Inventory (Work in Progress value)
-  for (const key in state.studio.internal.projects) {
-    const p = state.studio.internal.projects[key];
+  for (const key in state.entities.projects) {
+    const p = state.entities.projects[key];
     if (p.state !== 'released' && p.state !== 'archived') {
       netWorth += p.budget * 0.3;
     }
@@ -141,8 +141,8 @@ export function generateWeeklyFinancialReport(
 
 export function calculateWeeklyCosts(state: GameState): number {
   const projects: Project[] = [];
-  for (const key in state.studio.internal.projects) {
-    projects.push(state.studio.internal.projects[key]);
+  for (const key in state.entities.projects) {
+    projects.push(state.entities.projects[key]);
   }
 
   const market = state.finance.marketState || InterestRateSimulator.initialize();
@@ -189,11 +189,11 @@ export function generateCashflowForecast(state: GameState, weeks: number = 12): 
   const { report } = generateWeeklyFinancialReport(
       state, 
       'player', 
-      state.studio.internal.projects, 
+      state.entities.projects, 
       state.finance.cash, 
       state.studio.archetype, 
       state.studio.prestige, 
-      state.studio.internal.contracts, 
+      state.entities.contracts, 
       state.studio.internal.firstLookDeals || []
   );
   const netProfit = report.netProfit;

@@ -71,7 +71,7 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
       if (budget > state.finance.cash) return s;
 
       // ⚡ Bolt: Replaced O(N) array allocation and findIndex with O(1) dictionary lookup for project selection
-      const originalProject = state.studio.internal.projects[projectId];
+      const originalProject = state.entities.projects[projectId];
       if (!originalProject || originalProject.state !== 'marketing') return s;
 
       const newCash = state.finance.cash - budget;
@@ -82,7 +82,7 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
       });
 
       const contracts: Contract[] = [];
-      const allContracts = state.studio.internal.contracts;
+      const allContracts = state.entities.contracts;
       for (let i = 0; i < allContracts.length; i++) {
         const c = allContracts[i];
         if (c.projectId === p.id) {
@@ -90,7 +90,7 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
         }
       }
 
-      const talentPool = state.industry.talentPool;
+      const talentPool = state.entities.talents;
       const talentMap = new Map<string, any>();
       Object.keys(talentPool).forEach(id => {
         talentMap.set(id, talentPool[id]);
@@ -118,7 +118,7 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
         });
       }
 
-      const updatedProjects = { ...state.studio.internal.projects, [p.id]: p };
+      const updatedProjects = { ...state.entities.projects, [p.id]: p };
 
       return {
         finance: {

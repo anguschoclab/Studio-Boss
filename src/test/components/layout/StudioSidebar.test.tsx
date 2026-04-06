@@ -109,7 +109,7 @@ describe('StudioSidebar', () => {
     expect(screen.queryByTestId('mock-line-chart')).toBeNull();
   });
 
-  it('renders sparkline when historical financial data is present', () => {
+  it('renders sparkline when historical financial data is present', async () => {
     (useGameStore as any).mockImplementation((selector: any) => {
       const mockState = {
         gameState: {
@@ -132,7 +132,7 @@ describe('StudioSidebar', () => {
     });
 
     renderSidebar();
-    expect(screen.getByTestId('mock-responsive-container')).toBeDefined();
+    expect(await screen.findByTestId('mock-responsive-container')).toBeDefined();
     expect(screen.getByTestId('mock-line-chart')).toBeDefined();
     expect(screen.getByTestId('mock-line')).toBeDefined();
   });

@@ -15,7 +15,7 @@ export const AwardsHQ: React.FC = () => {
 
   const eligibleProjects = useMemo(() => {
     if (!gameState) return [];
-    return Object.values(gameState.studio.internal.projects).filter(p => 
+    return Object.values(gameState.entities.projects).filter(p => 
       (p.state === 'released' || p.state === 'post_release' || p.state === 'archived') &&
       p.releaseWeek !== null &&
       p.releaseWeek > gameState.week - 52

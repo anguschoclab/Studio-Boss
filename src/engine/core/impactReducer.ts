@@ -76,7 +76,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
 
     case 'PROJECT_UPDATED': {
       const { projectId, update } = impact.payload;
-      const projects = { ...state.studio.internal.projects };
+      const projects = { ...state.entities.projects };
       const project = projects[projectId];
       if (project) {
         projects[projectId] = { ...project, ...update };
@@ -114,7 +114,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
 
     case 'PROJECT_REMOVED': {
       const { projectId } = impact.payload;
-      const projects = { ...state.studio.internal.projects };
+      const projects = { ...state.entities.projects };
       delete projects[projectId];
       return {
         ...state,
@@ -141,7 +141,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
 
     case 'TALENT_UPDATED': {
       const { talentId, update } = impact.payload;
-      const talentPool = { ...state.industry.talentPool };
+      const talentPool = { ...state.entities.talents };
       const talent = talentPool[talentId];
       if (talent) {
         talentPool[talentId] = { ...talent, ...update };
@@ -163,7 +163,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
         ...state,
         industry: {
           ...state.industry,
-          talentPool: { ...state.industry.talentPool, [talent.id]: talent }
+          talentPool: { ...state.entities.talents, [talent.id]: talent }
         }
       };
     }
@@ -172,7 +172,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
       if (!impact.payload) return state;
       const { talentId } = impact.payload;
       if (!talentId) return state;
-      const talentPool = { ...state.industry.talentPool };
+      const talentPool = { ...state.entities.talents };
       delete talentPool[talentId];
       return {
         ...state,
@@ -199,7 +199,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
 
     case 'RIVAL_UPDATED': {
       const { rivalId, update } = impact.payload;
-      const rivals = state.industry.rivals.map(r => 
+      const rivals = state.entities.rivals.map(r => 
         r.id === rivalId ? { ...r, ...update } as RivalStudio : r
       );
       return {
@@ -273,11 +273,11 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
       // 2. Merger Logic (Systemic Asset Transfer)
       const { mergedRivalId, acquirerId } = payload;
       if (mergedRivalId) {
-        const target = state.industry.rivals.find(r => r.id === mergedRivalId);
+        const target = state.entities.rivals.find(r => r.id === mergedRivalId);
         if (target) {
           // Transfer Projects & Platforms
           if (acquirerId === 'player') {
-            const mergedProjects = { ...nextState.studio.internal.projects, ...(target.projects || {}) };
+            const mergedProjects = { ...nextState.entities.projects, ...(target.projects || {}) };
             const mergedVault = nextState.ip.vault.map(asset => {
               if (asset.ownerStudioId === mergedRivalId) {
                 return { ...asset, rightsOwner: 'STUDIO' as const, ownerStudioId: undefined };
@@ -294,7 +294,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
               ip: { ...nextState.ip, vault: mergedVault }
             };
           } else {
-            const rivals = nextState.industry.rivals.map(r => {
+            const rivals = nextState.entities.rivals.map(r => {
               if (r.id === acquirerId) {
                 return {
                   ...r,
@@ -323,7 +323,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
             ...nextState,
             industry: {
               ...nextState.industry,
-              rivals: nextState.industry.rivals.filter(r => r.id !== mergedRivalId)
+              rivals: nextState.entities.rivals.filter(r => r.id !== mergedRivalId)
             }
           };
         }
@@ -358,8 +358,8 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
       newPrestige = Math.max(0, newPrestige - prestigeHit);
 
       // Check if there's an attached project to boost buzz for specific genres/formats
-      const projects = { ...state.studio.internal.projects };
-      const contracts = state.studio.internal.contracts || [];
+      const projects = { ...state.entities.projects };
+      const contracts = state.entities.contracts || [];
       const projectIds = contracts.filter(c => c.talentId === scandal.talentId).map(c => c.projectId);
 
       for (const pid of projectIds) {
@@ -467,7 +467,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     case 'FINANCE_TRANSACTION': {
       const { amount, targetId } = impact.payload;
       if (targetId && targetId !== 'player') {
-        const rivals = state.industry.rivals.map(r =>
+        const rivals = state.entities.rivals.map(r =>
           r.id === targetId ? { ...r, cash: r.cash + amount } as RivalStudio : r
         );
         return {
@@ -484,7 +484,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     case 'PILOT_GRADUATED': {
       // Moves a project out of stage='pilot' into full development/production
       const { projectId, nextState } = impact.payload as { projectId: string; nextState?: import('@/engine/types/project.types').ProjectStatus };
-      const projects = { ...state.studio.internal.projects };
+      const projects = { ...state.entities.projects };
       const project = projects[projectId];
       if (project) {
         const { stage: _stage, ...rest } = project as any;
@@ -509,7 +509,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
 
     case 'MEDICAL_LEAVE_TRIGGERED': {
       const { talentId, weeks } = impact.payload as { talentId: string; weeks: number };
-      const talentPool = { ...state.industry.talentPool };
+      const talentPool = { ...state.entities.talents };
       const talent = talentPool[talentId];
       if (talent) {
         talentPool[talentId] = {
@@ -579,7 +579,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
   }
   if (impact.newAwards) {
     impact.newAwards.forEach(award => {
-      const projects = { ...newState.studio.internal.projects };
+      const projects = { ...newState.entities.projects };
       const project = projects[award.projectId];
       if (project) {
         projects[award.projectId] = { 
@@ -592,7 +592,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
   }
   if (impact.cultClassicProjectIds) {
     impact.cultClassicProjectIds.forEach(id => {
-      const projects = { ...newState.studio.internal.projects };
+      const projects = { ...newState.entities.projects };
       const project = projects[id];
       if (project) {
         projects[id] = { ...project, isCultClassic: true };
@@ -602,7 +602,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
   }
   if (impact.razzieWinnerTalents) {
     impact.razzieWinnerTalents.forEach(id => {
-      const talentPool = { ...newState.industry.talentPool };
+      const talentPool = { ...newState.entities.talents };
       const talent = talentPool[id];
       if (talent) {
         talentPool[id] = { ...talent, razzieWinner: true };
@@ -617,7 +617,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
         ...newState.studio,
         internal: {
           ...newState.studio.internal,
-          projects: { ...newState.studio.internal.projects, ...Object.fromEntries(impact.newProjects.map(p => [p.id, p])) }
+          projects: { ...newState.entities.projects, ...Object.fromEntries(impact.newProjects.map(p => [p.id, p])) }
         }
       }
     };
@@ -629,7 +629,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
         ...newState.studio,
         internal: {
           ...newState.studio.internal,
-          contracts: [...newState.studio.internal.contracts, ...impact.newContracts]
+          contracts: [...newState.entities.contracts, ...impact.newContracts]
         }
       }
     };
@@ -640,7 +640,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     });
   }
   if (impact.newTalents) {
-    const talentPool = { ...newState.industry.talentPool };
+    const talentPool = { ...newState.entities.talents };
     impact.newTalents.forEach(t => {
       talentPool[t.id] = t;
     });

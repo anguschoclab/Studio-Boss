@@ -19,8 +19,8 @@ export class TalentSystem {
     const talentUpdates: TalentUpdate[] = [];
     
     // 1. Fatigue & Commitment Decay (Deterministic via SchedulingEngine)
-    for (const id in state.industry.talentPool) {
-      const talent = state.industry.talentPool[id];
+    for (const id in state.entities.talents) {
+      const talent = state.entities.talents[id];
       let update: Partial<Talent> = {};
       let changed = false;
 
@@ -102,11 +102,11 @@ export class TalentSystem {
 
     // Prepare available talent pool for opportunity generation
     const activeTalentIds = new Set<string>();
-    for (let i = 0; i < (state.studio.internal.contracts || []).length; i++) {
-        activeTalentIds.add(state.studio.internal.contracts[i].talentId);
+    for (let i = 0; i < (state.entities.contracts || []).length; i++) {
+        activeTalentIds.add(state.entities.contracts[i].talentId);
     }
     const availableTalentIds: string[] = [];
-    for (const id in state.industry.talentPool) {
+    for (const id in state.entities.talents) {
         if (!activeTalentIds.has(id)) availableTalentIds.push(id);
     }
 

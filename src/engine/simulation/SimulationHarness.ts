@@ -41,22 +41,22 @@ export class SimulationHarness {
         state = newState;
 
         // Collect Snapshot Metrics
-        const totalRivalCash = state.industry.rivals.reduce((sum, r) => sum + r.cash, 0);
+        const totalRivalCash = state.entities.rivals.reduce((sum, r) => sum + r.cash, 0);
         const totalIndustryCash = totalRivalCash + state.finance.cash;
-        const totalProjects = state.industry.rivals.reduce((sum, r) => sum + Object.keys(r.projects).length, 0) + Object.keys(state.studio.internal.projects).length;
+        const totalProjects = state.entities.rivals.reduce((sum, r) => sum + Object.keys(r.projects).length, 0) + Object.keys(state.entities.projects).length;
         
         // Calculate Market Share Concentration (HHI - Herfindahl-Hirschman Index)
-        const marketShares = state.industry.rivals.map(r => r.marketShare || 0);
+        const marketShares = state.entities.rivals.map(r => r.marketShare || 0);
         const hhi = marketShares.reduce((sum, ms) => sum + (ms * 100) ** 2, 0);
 
         // Talent Burnout Audit
-        const talentPool = Object.values(state.industry.talentPool);
+        const talentPool = Object.values(state.entities.talents);
         const burntOutCount = talentPool.filter(t => t.fatigue > 80).length;
         const burnoutRate = burntOutCount / talentPool.length;
 
         metrics.push({
           totalIndustryCash,
-          avgRivalCash: totalRivalCash / state.industry.rivals.length,
+          avgRivalCash: totalRivalCash / state.entities.rivals.length,
           totalActiveProjects: totalProjects,
           marketShareConcentration: hhi,
           talentBurnoutRate: burnoutRate
@@ -74,7 +74,7 @@ export class SimulationHarness {
         }
 
         if (w % 52 === 0) {
-            console.log(`📍 Week ${w} Milestone: Industry Cash $${(totalIndustryCash / 1e9).toFixed(2)}B | Avg Rival Cash $${( (totalRivalCash / state.industry.rivals.length) / 1e6).toFixed(1)}M`);
+            console.log(`📍 Week ${w} Milestone: Industry Cash $${(totalIndustryCash / 1e9).toFixed(2)}B | Avg Rival Cash $${( (totalRivalCash / state.entities.rivals.length) / 1e6).toFixed(1)}M`);
         }
 
       } catch (error) {

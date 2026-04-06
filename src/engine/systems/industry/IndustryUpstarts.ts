@@ -10,10 +10,10 @@ import { RandomGenerator } from '../../utils/rng';
  */
 export function tickIndustryUpstarts(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const currentRivals = state.industry.rivals.length;
+  const currentRivals = state.entities.rivals.length;
   const currentStreamers = state.market.buyers.filter(b => b.archetype === 'streamer').length;
 
-  const usedNames = new Set(state.industry.rivals.map(r => r.name));
+  const usedNames = new Set(state.entities.rivals.map(r => r.name));
   state.market.buyers.forEach(b => usedNames.add(b.name));
 
   // Minimum thresholds

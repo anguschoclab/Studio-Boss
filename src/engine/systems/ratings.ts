@@ -333,7 +333,7 @@ export function requestStudioEdit(
 
   // Director mood reaction
   if (request.directorId) {
-    const director = state.industry.talentPool[request.directorId];
+    const director = state.entities.talents[request.directorId];
     if (director) {
       const moodDelta = request.directorArchetype === 'commercial_hack' ? 2
         : request.directorArchetype === 'journeyman' ? -5

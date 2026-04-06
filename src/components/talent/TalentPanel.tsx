@@ -10,7 +10,7 @@ import { Search, Filter } from 'lucide-react';
 
 export const TalentPanel = () => {
   const state = useGameStore(s => s.gameState);
-  const talentPool = useMemo(() => Object.values(state?.industry.talentPool || {}), [state?.industry.talentPool]);
+  const talentPool = useMemo(() => Object.values(state?.entities.talents || {}), [state?.entities.talents]);
   const [roleFilter, setRoleFilter] = useState<TalentRole | 'all'>('all');
   const [tierFilter, setTierFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');

@@ -65,7 +65,7 @@ export function simulateMarketingCampaign(
   target: AudienceQuadrant
 ): GameState {
   
-  const project = state.studio.internal.projects[projectId];
+  const project = state.entities.projects[projectId];
 
   if (!project || state.finance.cash < spend) return state;
   
@@ -87,7 +87,7 @@ export function simulateMarketingCampaign(
     targetDemographic: target
   };
   
-  const newProjects = { ...state.studio.internal.projects };
+  const newProjects = { ...state.entities.projects };
   newProjects[projectId] = updatedProject;
   
   return {

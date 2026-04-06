@@ -16,7 +16,7 @@ describe('Studio Boss - 100 Week Determinism Certification', () => {
     // Initial check: sanity check that initialization is deterministic
     expect(stateA.gameSeed).toBe(stateB.gameSeed);
     expect(stateA.finance.cash).toBe(stateB.finance.cash);
-    expect(Object.keys(stateA.industry.talentPool).length).toBe(Object.keys(stateB.industry.talentPool).length);
+    expect(Object.keys(stateA.entities.talents).length).toBe(Object.keys(stateB.entities.talents).length);
     
     let currentStateA = stateA;
     let currentStateB = stateB;
@@ -39,9 +39,9 @@ describe('Studio Boss - 100 Week Determinism Certification', () => {
         expect(currentStateA.studio.prestige).toBe(currentStateB.studio.prestige);
         
         // Deep consistency check on rivals
-        stateA.industry.rivals.forEach((_rival, idx) => {
-          const rA = currentStateA.industry.rivals[idx];
-          const rB = currentStateB.industry.rivals[idx];
+        stateA.entities.rivals.forEach((_rival, idx) => {
+          const rA = currentStateA.entities.rivals[idx];
+          const rB = currentStateB.entities.rivals[idx];
           if (rA && rB) {
             expect(rA.cash).toBe(rB.cash);
             expect(rA.strength).toBe(rB.strength);
@@ -58,8 +58,8 @@ describe('Studio Boss - 100 Week Determinism Certification', () => {
     expect(currentStateA.week).toBe(101);
     
     // Check that talent pool remains stable and identical
-    const talentPoolA = currentStateA.industry.talentPool;
-    const talentPoolB = currentStateB.industry.talentPool;
+    const talentPoolA = currentStateA.entities.talents;
+    const talentPoolB = currentStateB.entities.talents;
     
     Object.keys(talentPoolA).forEach(id => {
       expect(talentPoolA[id].prestige).toBe(talentPoolB[id].prestige);

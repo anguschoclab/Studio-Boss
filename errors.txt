@@ -1,0 +1,518 @@
+src/components/dashboard/CommandCenter.tsx(19,34): error TS2304: Cannot find name 'entities'.
+src/components/dashboard/CommandCenter.tsx(20,11): error TS2339: Property 'talentPool' does not exist on type '{ families: Family[]; agencies: Agency[]; agents: Agent[]; awards?: Award[] | undefined; festivalSubmissions?: FestivalSubmission[] | undefined; rumors?: Rumor[] | undefined; scandals?: Scandal[] | undefined; newsHistory: NewsEvent[]; }'.
+src/components/dashboard/CommandCenter.tsx(20,23): error TS2339: Property 'rivals' does not exist on type '{ families: Family[]; agencies: Agency[]; agents: Agent[]; awards?: Award[] | undefined; festivalSubmissions?: FestivalSubmission[] | undefined; rumors?: Rumor[] | undefined; scandals?: Scandal[] | undefined; newsHistory: NewsEvent[]; }'.
+src/components/dashboard/CommandCenter.tsx(22,52): error TS18046: 'p' is of type 'unknown'.
+src/components/dashboard/CommandCenter.tsx(22,78): error TS18046: 'p' is of type 'unknown'.
+src/components/dashboard/CommandCenter.tsx(22,108): error TS18046: 'p' is of type 'unknown'.
+src/components/deals/DealsDesk.tsx(23,43): error TS2339: Property 'talentPool' does not exist on type '{ families: Family[]; agencies: Agency[]; agents: Agent[]; awards?: Award[] | undefined; festivalSubmissions?: FestivalSubmission[] | undefined; rumors?: Rumor[] | undefined; scandals?: Scandal[] | undefined; newsHistory: NewsEvent[]; }'.
+src/components/discovery/LiveAuctionDashboard.tsx(36,68): error TS2349: This expression is not callable.
+  Not all constituents of type 'RivalStudio | { <S extends never>(predicate: (value: never, index: number, obj: never[]) => value is S, thisArg?: any): S | undefined; (predicate: (value: never, index: number, obj: never[]) => unknown, thisArg?: any): undefined; }' are callable.
+    Type 'RivalStudio' has no call signatures.
+src/components/discovery/LiveAuctionDashboard.tsx(36,73): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/components/discovery/LiveAuctionDashboard.tsx(237,143): error TS2349: This expression is not callable.
+  Not all constituents of type 'RivalStudio | { <S extends never>(predicate: (value: never, index: number, obj: never[]) => value is S, thisArg?: any): S | undefined; (predicate: (value: never, index: number, obj: never[]) => unknown, thisArg?: any): undefined; }' are callable.
+    Type 'RivalStudio' has no call signatures.
+src/components/discovery/LiveAuctionDashboard.tsx(237,148): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/components/industry/MADashboard.tsx(17,17): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/components/industry/MADashboard.tsx(17,21): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/components/marketing/MarketingWarRoom.tsx(32,48): error TS2339: Property 'projects' does not exist on type '{ firstLookDeals?: TalentPact[] | undefined; projectHistory: Project[]; }'.
+src/components/marketing/MarketingWarRoom.tsx(32,74): error TS18046: 'p' is of type 'unknown'.
+src/components/marketing/MarketingWarRoom.tsx(36,65): error TS2339: Property 'marketingCampaign' does not exist on type '{}'.
+src/components/marketing/MarketingWarRoom.tsx(37,63): error TS2339: Property 'marketingCampaign' does not exist on type '{}'.
+src/components/marketing/MarketingWarRoom.tsx(38,63): error TS2339: Property 'marketingCampaign' does not exist on type '{}'.
+src/components/marketing/MarketingWarRoom.tsx(49,33): error TS2339: Property 'marketingCampaign' does not exist on type '{}'.
+src/components/marketing/MarketingWarRoom.tsx(51,40): error TS2345: Argument of type '{}' is not assignable to parameter of type 'Project'.
+src/components/marketing/MarketingWarRoom.tsx(64,35): error TS2339: Property 'marketingCampaign' does not exist on type '{}'.
+src/components/marketing/MarketingWarRoom.tsx(77,88): error TS2339: Property 'title' does not exist on type '{}'.
+src/components/marketing/MarketingWarRoom.tsx(100,51): error TS2339: Property 'budget' does not exist on type '{}'.
+src/components/marketing/MarketingWarRoom.tsx(117,51): error TS2339: Property 'budget' does not exist on type '{}'.
+src/components/modals/AwardsCeremonyModal.tsx(53,41): error TS2339: Property 'projects' does not exist on type '{ firstLookDeals?: TalentPact[] | undefined; projectHistory: Project[]; }'.
+src/components/modals/CrisisModal.tsx(23,48): error TS2339: Property 'projects' does not exist on type '{ firstLookDeals?: TalentPact[] | undefined; projectHistory: Project[]; }'.
+src/components/modals/FestivalMarketModal.tsx(48,14): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/components/modals/FestivalMarketModal.tsx(48,22): error TS7006: Parameter 'rival' implicitly has an 'any' type.
+src/components/modals/PitchProjectModal.tsx(22,48): error TS2339: Property 'projects' does not exist on type '{ firstLookDeals?: TalentPact[] | undefined; projectHistory: Project[]; }'.
+src/components/modals/PitchProjectModal.tsx(65,127): error TS2339: Property 'projects' does not exist on type '{ firstLookDeals?: TalentPact[] | undefined; projectHistory: Project[]; }'.
+src/components/modals/ProjectDetailModal.tsx(69,52): error TS2551: Property 'launchAwardsCampaign' does not exist on type 'GameStore'. Did you mean 'launchCampaign'?
+src/components/modals/ProjectDetailModal.tsx(71,77): error TS2339: Property 'projects' does not exist on type '{ firstLookDeals?: TalentPact[] | undefined; projectHistory: Project[]; }'.
+src/components/modals/ProjectDetailModal.tsx(71,124): error TS2339: Property 'projects' does not exist on type '{ firstLookDeals?: TalentPact[] | undefined; projectHistory: Project[]; }'.
+src/components/modals/ProjectDetailModal.tsx(72,52): error TS18046: 'p' is of type 'unknown'.
+src/components/modals/ProjectDetailModal.tsx(73,71): error TS2339: Property 'talentPool' does not exist on type '{ families: Family[]; agencies: Agency[]; agents: Agent[]; awards?: Award[] | undefined; festivalSubmissions?: FestivalSubmission[] | undefined; rumors?: Rumor[] | undefined; scandals?: Scandal[] | undefined; newsHistory: NewsEvent[]; }'.
+src/components/modals/ProjectDetailModal.tsx(73,112): error TS2339: Property 'talentPool' does not exist on type '{ families: Family[]; agencies: Agency[]; agents: Agent[]; awards?: Award[] | undefined; festivalSubmissions?: FestivalSubmission[] | undefined; rumors?: Rumor[] | undefined; scandals?: Scandal[] | undefined; newsHistory: NewsEvent[]; }'.
+src/components/modals/ProjectDetailModal.tsx(74,64): error TS2339: Property 'contracts' does not exist on type '{ firstLookDeals?: TalentPact[] | undefined; projectHistory: Project[]; }'.
+src/components/modals/ProjectDetailModal.tsx(74,111): error TS2339: Property 'contracts' does not exist on type '{ firstLookDeals?: TalentPact[] | undefined; projectHistory: Project[]; }'.
+src/components/modals/ProjectDetailModal.tsx(75,64): error TS18046: 't' is of type 'unknown'.
+src/components/modals/ProjectDetailModal.tsx(84,23): error TS18046: 't' is of type 'unknown'.
+src/components/modals/ProjectDetailModal.tsx(87,20): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'Talent'.
+src/components/modals/ProjectDetailModal.tsx(94,26): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'Record<BudgetTierKey, BudgetTierData>'.
+src/components/modals/ProjectDetailModal.tsx(94,47): error TS2339: Property 'budgetTier' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(96,24): error TS2339: Property 'format' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(99,24): error TS2339: Property 'type' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(99,60): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.
+src/components/modals/ProjectDetailModal.tsx(113,47): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/components/modals/ProjectDetailModal.tsx(113,76): error TS2339: Property 'id' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(114,59): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/components/modals/ProjectDetailModal.tsx(137,29): error TS2339: Property 'state' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(138,47): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/components/modals/ProjectDetailModal.tsx(138,76): error TS2339: Property 'id' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(139,53): error TS7006: Parameter 'acc' implicitly has an 'any' type.
+src/components/modals/ProjectDetailModal.tsx(139,58): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/components/modals/ProjectDetailModal.tsx(144,31): error TS2345: Argument of type '{}' is not assignable to parameter of type 'Project'.
+src/components/modals/ProjectDetailModal.tsx(150,24): error TS2339: Property 'buzz' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(155,33): error TS2339: Property 'budget' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(180,30): error TS2339: Property 'title' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(184,147): error TS2339: Property 'state' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(186,98): error TS2339: Property 'genre' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(186,116): error TS2339: Property 'format' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(193,105): error TS2339: Property 'budget' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(204,21): error TS2339: Property 'state' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(205,22): error TS2339: Property 'state' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(205,62): error TS2339: Property 'state' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(205,97): error TS2339: Property 'state' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(221,68): error TS2339: Property 'state' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(221,103): error TS2339: Property 'state' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(221,137): error TS2339: Property 'state' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(221,177): error TS2339: Property 'state' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(248,34): error TS2339: Property 'flavor' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(250,40): error TS2339: Property 'flavor' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(264,100): error TS2339: Property 'accumulatedCost' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(268,94): error TS2339: Property 'weeklyCost' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(272,102): error TS2339: Property 'revenue' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(280,57): error TS2339: Property 'buzz' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(281,60): error TS2339: Property 'budgetTier' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(282,54): error TS2339: Property 'weeksInPhase' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(296,28): error TS2339: Property 'reception' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(299,35): error TS2339: Property 'reception' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(310,111): error TS2339: Property 'reception' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(316,39): error TS2339: Property 'reception' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(317,39): error TS2339: Property 'reception' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(318,59): error TS2339: Property 'reception' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(323,111): error TS2339: Property 'reception' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(329,39): error TS2339: Property 'reception' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(330,59): error TS2339: Property 'reception' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(338,38): error TS2339: Property 'reception' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(339,38): error TS2339: Property 'reception' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(340,40): error TS2339: Property 'reception' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(349,28): error TS2339: Property 'state' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(352,44): error TS2322: Type '{}' is not assignable to type 'Project'.
+src/components/modals/ProjectDetailModal.tsx(362,52): error TS2339: Property 'weeksInPhase' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(362,75): error TS2339: Property 'developmentWeeks' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(367,67): error TS2339: Property 'weeksInPhase' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(367,91): error TS2339: Property 'developmentWeeks' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(377,31): error TS2339: Property 'state' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(385,64): error TS2339: Property 'title' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(385,126): error TS2339: Property 'weeklyCost' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(390,48): error TS2339: Property 'weeksInPhase' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(390,73): error TS2339: Property 'productionWeeks' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(395,63): error TS2339: Property 'weeksInPhase' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(395,87): error TS2339: Property 'productionWeeks' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(401,31): error TS2339: Property 'state' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(434,74): error TS2339: Property 'id' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(446,42): error TS2322: Type '{}' is not assignable to type 'Project'.
+src/components/modals/ProjectDetailModal.tsx(454,79): error TS2339: Property 'budget' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(455,81): error TS2339: Property 'budget' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(457,54): error TS2339: Property 'marketingLevel' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(459,46): error TS2339: Property 'marketingLevel' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(463,36): error TS2339: Property 'marketingLevel' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(510,30): error TS2339: Property 'marketingLevel' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(513,125): error TS2339: Property 'budget' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(513,181): error TS2339: Property 'budget' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(514,71): error TS2339: Property 'id' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(522,125): error TS2339: Property 'marketingLevel' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(539,82): error TS2339: Property 'id' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(550,66): error TS2339: Property 'id' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(554,126): error TS2339: Property 'id' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(569,110): error TS2339: Property 'id' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(591,141): error TS2339: Property 'ipRights' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(595,102): error TS2339: Property 'franchiseId' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(603,144): error TS2339: Property 'ipRights' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(603,178): error TS2339: Property 'budget' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(616,23): error TS2339: Property 'state' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(616,55): error TS2339: Property 'state' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(616,87): error TS2339: Property 'state' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(616,124): error TS2339: Property 'type' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(617,60): error TS2339: Property 'id' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(620,24): error TS2339: Property 'state' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(620,56): error TS2339: Property 'revenue' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(620,74): error TS2339: Property 'budget' does not exist on type '{}'.
+src/components/modals/ProjectDetailModal.tsx(621,64): error TS2339: Property 'id' does not exist on type '{}'.
+src/components/pipeline/TelevisionDashboard.tsx(13,100): error TS2339: Property 'projects' does not exist on type '{ firstLookDeals?: TalentPact[] | undefined; projectHistory: Project[]; }'.
+src/components/pipeline/TelevisionDashboard.tsx(16,27): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(predicate: (value: unknown, index: number, array: unknown[]) => value is SeriesProject, thisArg?: any): SeriesProject[]', gave the following error.
+    Argument of type '(p: Project) => p is SeriesProject' is not assignable to parameter of type '(value: unknown, index: number, array: unknown[]) => value is SeriesProject'.
+      Types of parameters 'p' and 'value' are incompatible.
+        Type 'unknown' is not assignable to type 'Project'.
+  Overload 2 of 2, '(predicate: (value: unknown, index: number, array: unknown[]) => unknown, thisArg?: any): unknown[]', gave the following error.
+    Argument of type '(p: Project) => p is SeriesProject' is not assignable to parameter of type '(value: unknown, index: number, array: unknown[]) => unknown'.
+      Types of parameters 'p' and 'value' are incompatible.
+        Type 'unknown' is not assignable to type 'Project'.
+src/components/rivals/RivalsPanel.tsx(75,23): error TS2349: This expression is not callable.
+  Not all constituents of type 'RivalStudio | (<U>(callbackfn: (value: never, index: number, array: never[]) => U, thisArg?: any) => U[])' are callable.
+    Type 'RivalStudio' has no call signatures.
+src/components/rivals/RivalsPanel.tsx(75,27): error TS7006: Parameter 'rival' implicitly has an 'any' type.
+src/components/rivals/RivalsPanel.tsx(80,67): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'Record<ArchetypeKey, ArchetypeData>'.
+src/components/rivals/RivalsPanel.tsx(84,28): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'Record<ArchetypeKey, ArchetypeData>'.
+src/components/sbdb/SBDBView.tsx(72,15): error TS17001: JSX elements cannot have multiple attributes with the same name.
+src/components/streaming/components/DealModal.tsx(38,55): error TS2339: Property 'projects' does not exist on type '{ firstLookDeals?: TalentPact[] | undefined; projectHistory: Project[]; }'.
+src/components/streaming/components/DealModal.tsx(39,7): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(predicate: (value: unknown, index: number, array: unknown[]) => value is unknown, thisArg?: any): unknown[]', gave the following error.
+    Argument of type '(p: Project) => boolean' is not assignable to parameter of type '(value: unknown, index: number, array: unknown[]) => value is unknown'.
+      Types of parameters 'p' and 'value' are incompatible.
+        Type 'unknown' is not assignable to type 'Project'.
+  Overload 2 of 2, '(predicate: (value: unknown, index: number, array: unknown[]) => unknown, thisArg?: any): unknown[]', gave the following error.
+    Argument of type '(p: Project) => boolean' is not assignable to parameter of type '(value: unknown, index: number, array: unknown[]) => unknown'.
+      Types of parameters 'p' and 'value' are incompatible.
+        Type 'unknown' is not assignable to type 'Project'.
+src/components/streaming/components/DealModal.tsx(44,38): error TS18046: 'p' is of type 'unknown'.
+src/components/streaming/components/DealModal.tsx(51,30): error TS2345: Argument of type '{}' is not assignable to parameter of type 'Project'.
+src/components/streaming/components/DealModal.tsx(51,116): error TS2339: Property 'projects' does not exist on type '{ firstLookDeals?: TalentPact[] | undefined; projectHistory: Project[]; }'.
+src/components/streaming/components/DealModal.tsx(66,62): error TS2339: Property 'title' does not exist on type '{}'.
+src/components/streaming/components/DealModal.tsx(118,67): error TS18046: 'p' is of type 'unknown'.
+src/components/streaming/components/DealModal.tsx(119,32): error TS18046: 'p' is of type 'unknown'.
+src/components/streaming/components/DealModal.tsx(120,61): error TS18046: 'p' is of type 'unknown'.
+src/components/streaming/components/DealModal.tsx(123,49): error TS18046: 'p' is of type 'unknown'.
+src/components/streaming/components/DealModal.tsx(126,48): error TS18046: 'p' is of type 'unknown'.
+src/components/streaming/components/DealModal.tsx(127,126): error TS18046: 'p' is of type 'unknown'.
+src/components/streaming/components/DealModal.tsx(128,124): error TS18046: 'p' is of type 'unknown'.
+src/components/streaming/components/DealModal.tsx(128,136): error TS18046: 'p' is of type 'unknown'.
+src/components/talent/TalentAttachmentPanel.tsx(42,71): error TS2339: Property 'talentPool' does not exist on type '{ families: Family[]; agencies: Agency[]; agents: Agent[]; awards?: Award[] | undefined; festivalSubmissions?: FestivalSubmission[] | undefined; rumors?: Rumor[] | undefined; scandals?: Scandal[] | undefined; newsHistory: NewsEvent[]; }'.
+src/components/talent/TalentAttachmentPanel.tsx(42,112): error TS2339: Property 'talentPool' does not exist on type '{ families: Family[]; agencies: Agency[]; agents: Agent[]; awards?: Award[] | undefined; festivalSubmissions?: FestivalSubmission[] | undefined; rumors?: Rumor[] | undefined; scandals?: Scandal[] | undefined; newsHistory: NewsEvent[]; }'.
+src/components/talent/TalentAttachmentPanel.tsx(43,64): error TS2339: Property 'contracts' does not exist on type '{ firstLookDeals?: TalentPact[] | undefined; projectHistory: Project[]; }'.
+src/components/talent/TalentAttachmentPanel.tsx(43,111): error TS2339: Property 'contracts' does not exist on type '{ firstLookDeals?: TalentPact[] | undefined; projectHistory: Project[]; }'.
+src/components/talent/TalentAttachmentPanel.tsx(46,37): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/components/talent/TalentAttachmentPanel.tsx(46,74): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/components/talent/TalentAttachmentPanel.tsx(50,57): error TS18046: 't' is of type 'unknown'.
+src/components/talent/TalentAttachmentPanel.tsx(54,64): error TS18046: 't' is of type 'unknown'.
+src/components/talent/TalentAttachmentPanel.tsx(56,7): error TS2345: Argument of type 'unknown[]' is not assignable to parameter of type 'Talent[]'.
+  Type 'unknown' is not assignable to type 'Talent'.
+src/components/talent/TalentAttachmentPanel.tsx(73,64): error TS18046: 't' is of type 'unknown'.
+src/components/talent/TalentAttachmentPanel.tsx(94,27): error TS18046: 't' is of type 'unknown'.
+src/components/talent/TalentAttachmentPanel.tsx(95,31): error TS2322: Type 'unknown' is not assignable to type 'Talent'.
+src/components/talent/TalentAttachmentPanel.tsx(96,59): error TS18046: 't' is of type 'unknown'.
+src/components/talent/TalentAttachmentPanel.tsx(219,32): error TS2740: Type '{}' is missing the following properties from type 'Talent': id, name, role, roles, and 12 more.
+src/components/talent/TalentAttachmentPanel.tsx(221,116): error TS2339: Property 'name' does not exist on type '{}'.
+src/components/talent/TalentAttachmentPanel.tsx(222,121): error TS2339: Property 'roles' does not exist on type '{}'.
+src/components/talent/TalentAttachmentPanel.tsx(222,157): error TS2339: Property 'tier' does not exist on type '{}'.
+src/components/talent/TalentAttachmentPanel.tsx(226,32): error TS2740: Type '{}' is missing the following properties from type 'Talent': id, name, role, roles, and 12 more.
+src/components/talent/TalentAttachmentPanel.tsx(232,74): error TS2339: Property 'draw' does not exist on type '{}'.
+src/components/talent/TalentAttachmentPanel.tsx(235,135): error TS2339: Property 'draw' does not exist on type '{}'.
+src/engine/core/gameInit.ts(241,9): error TS2353: Object literal may only specify known properties, and 'projects' does not exist in type '{ firstLookDeals?: TalentPact[] | undefined; projectHistory: Project[]; }'.
+src/engine/core/gameInit.ts(253,7): error TS2353: Object literal may only specify known properties, and 'rivals' does not exist in type '{ families: Family[]; agencies: Agency[]; agents: Agent[]; awards?: Award[] | undefined; festivalSubmissions?: FestivalSubmission[] | undefined; rumors?: Rumor[] | undefined; scandals?: Scandal[] | undefined; newsHistory: NewsEvent[]; }'.
+src/engine/core/impactReducer.ts(90,13): error TS2353: Object literal may only specify known properties, and 'projects' does not exist in type '{ firstLookDeals?: TalentPact[] | undefined; projectHistory: Project[]; }'.
+src/engine/core/impactReducer.ts(125,13): error TS2353: Object literal may only specify known properties, and 'projects' does not exist in type '{ firstLookDeals?: TalentPact[] | undefined; projectHistory: Project[]; }'.
+src/engine/core/impactReducer.ts(153,11): error TS2353: Object literal may only specify known properties, and 'talentPool' does not exist in type '{ families: Family[]; agencies: Agency[]; agents: Agent[]; awards?: Award[] | undefined; festivalSubmissions?: FestivalSubmission[] | undefined; rumors?: Rumor[] | undefined; scandals?: Scandal[] | undefined; newsHistory: NewsEvent[]; }'.
+src/engine/core/impactReducer.ts(166,11): error TS2353: Object literal may only specify known properties, and 'talentPool' does not exist in type '{ families: Family[]; agencies: Agency[]; agents: Agent[]; awards?: Award[] | undefined; festivalSubmissions?: FestivalSubmission[] | undefined; rumors?: Rumor[] | undefined; scandals?: Scandal[] | undefined; newsHistory: NewsEvent[]; }'.
+src/engine/core/impactReducer.ts(181,11): error TS2353: Object literal may only specify known properties, and 'talentPool' does not exist in type '{ families: Family[]; agencies: Agency[]; agents: Agent[]; awards?: Award[] | undefined; festivalSubmissions?: FestivalSubmission[] | undefined; rumors?: Rumor[] | undefined; scandals?: Scandal[] | undefined; newsHistory: NewsEvent[]; }'.
+src/engine/core/impactReducer.ts(202,44): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/engine/core/impactReducer.ts(202,48): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/engine/core/impactReducer.ts(209,11): error TS2353: Object literal may only specify known properties, and 'rivals' does not exist in type '{ families: Family[]; agencies: Agency[]; agents: Agent[]; awards?: Award[] | undefined; festivalSubmissions?: FestivalSubmission[] | undefined; rumors?: Rumor[] | undefined; scandals?: Scandal[] | undefined; newsHistory: NewsEvent[]; }'.
+src/engine/core/impactReducer.ts(276,46): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/engine/core/impactReducer.ts(276,51): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/engine/core/impactReducer.ts(292,59): error TS2353: Object literal may only specify known properties, and 'projects' does not exist in type '{ firstLookDeals?: TalentPact[] | undefined; projectHistory: Project[]; }'.
+src/engine/core/impactReducer.ts(297,54): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/engine/core/impactReducer.ts(297,58): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/engine/core/impactReducer.ts(316,52): error TS2353: Object literal may only specify known properties, and 'rivals' does not exist in type '{ families: Family[]; agencies: Agency[]; agents: Agent[]; awards?: Award[] | undefined; festivalSubmissions?: FestivalSubmission[] | undefined; rumors?: Rumor[] | undefined; scandals?: Scandal[] | undefined; newsHistory: NewsEvent[]; }'.
+src/engine/core/impactReducer.ts(326,15): error TS2353: Object literal may only specify known properties, and 'rivals' does not exist in type '{ families: Family[]; agencies: Agency[]; agents: Agent[]; awards?: Award[] | undefined; festivalSubmissions?: FestivalSubmission[] | undefined; rumors?: Rumor[] | undefined; scandals?: Scandal[] | undefined; newsHistory: NewsEvent[]; }'.
+src/engine/core/impactReducer.ts(326,49): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/engine/core/impactReducer.ts(326,56): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/engine/core/impactReducer.ts(363,36): error TS2349: This expression is not callable.
+  Type 'Contract' has no call signatures.
+src/engine/core/impactReducer.ts(363,43): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/engine/core/impactReducer.ts(363,85): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/engine/core/impactReducer.ts(388,15): error TS2353: Object literal may only specify known properties, and 'projects' does not exist in type '{ firstLookDeals?: TalentPact[] | undefined; projectHistory: Project[]; }'.
+src/engine/core/impactReducer.ts(470,46): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/engine/core/impactReducer.ts(470,50): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/engine/core/impactReducer.ts(477,13): error TS2353: Object literal may only specify known properties, and 'rivals' does not exist in type '{ families: Family[]; agencies: Agency[]; agents: Agent[]; awards?: Award[] | undefined; festivalSubmissions?: FestivalSubmission[] | undefined; rumors?: Rumor[] | undefined; scandals?: Scandal[] | undefined; newsHistory: NewsEvent[]; }'.
+src/engine/core/impactReducer.ts(495,74): error TS2353: Object literal may only specify known properties, and 'projects' does not exist in type '{ firstLookDeals?: TalentPact[] | undefined; projectHistory: Project[]; }'.
+src/engine/core/impactReducer.ts(522,57): error TS2353: Object literal may only specify known properties, and 'talentPool' does not exist in type '{ families: Family[]; agencies: Agency[]; agents: Agent[]; awards?: Award[] | undefined; festivalSubmissions?: FestivalSubmission[] | undefined; rumors?: Rumor[] | undefined; scandals?: Scandal[] | undefined; newsHistory: NewsEvent[]; }'.
+src/engine/core/impactReducer.ts(590,104): error TS2353: Object literal may only specify known properties, and 'projects' does not exist in type '{ firstLookDeals?: TalentPact[] | undefined; projectHistory: Project[]; }'.
+src/engine/core/impactReducer.ts(600,104): error TS2353: Object literal may only specify known properties, and 'projects' does not exist in type '{ firstLookDeals?: TalentPact[] | undefined; projectHistory: Project[]; }'.
+src/engine/core/impactReducer.ts(610,67): error TS2353: Object literal may only specify known properties, and 'talentPool' does not exist in type '{ families: Family[]; agencies: Agency[]; agents: Agent[]; awards?: Award[] | undefined; festivalSubmissions?: FestivalSubmission[] | undefined; rumors?: Rumor[] | undefined; scandals?: Scandal[] | undefined; newsHistory: NewsEvent[]; }'.
+src/engine/core/impactReducer.ts(620,11): error TS2353: Object literal may only specify known properties, and 'projects' does not exist in type '{ firstLookDeals?: TalentPact[] | undefined; projectHistory: Project[]; }'.
+src/engine/core/impactReducer.ts(632,11): error TS2353: Object literal may only specify known properties, and 'contracts' does not exist in type '{ firstLookDeals?: TalentPact[] | undefined; projectHistory: Project[]; }'.
+src/engine/core/impactReducer.ts(632,26): error TS2488: Type 'Record<string, Contract>' must have a '[Symbol.iterator]()' method that returns an iterator.
+src/engine/core/impactReducer.ts(647,65): error TS2353: Object literal may only specify known properties, and 'talentPool' does not exist in type '{ families: Family[]; agencies: Agency[]; agents: Agent[]; awards?: Award[] | undefined; festivalSubmissions?: FestivalSubmission[] | undefined; rumors?: Rumor[] | undefined; scandals?: Scandal[] | undefined; newsHistory: NewsEvent[]; }'.
+src/engine/data/archetypes.ts(30,5): error TS2741: Property 'indie' is missing in type '{ low: number; mid: number; high: number; blockbuster: number; }' but required in type 'Record<BudgetTierKey, number>'.
+src/engine/data/archetypes.ts(39,5): error TS2741: Property 'indie' is missing in type '{ low: number; mid: number; high: number; blockbuster: number; }' but required in type 'Record<BudgetTierKey, number>'.
+src/engine/data/archetypes.ts(48,5): error TS2741: Property 'indie' is missing in type '{ low: number; mid: number; high: number; blockbuster: number; }' but required in type 'Record<BudgetTierKey, number>'.
+src/engine/data/archetypes.ts(57,5): error TS2741: Property 'indie' is missing in type '{ low: number; mid: number; high: number; blockbuster: number; }' but required in type 'Record<BudgetTierKey, number>'.
+src/engine/data/archetypes.ts(66,5): error TS2741: Property 'indie' is missing in type '{ low: number; mid: number; high: number; blockbuster: number; }' but required in type 'Record<BudgetTierKey, number>'.
+src/engine/data/archetypes.ts(75,5): error TS2741: Property 'indie' is missing in type '{ low: number; mid: number; high: number; blockbuster: number; }' but required in type 'Record<BudgetTierKey, number>'.
+src/engine/data/archetypes.ts(84,5): error TS2741: Property 'indie' is missing in type '{ low: number; mid: number; high: number; blockbuster: number; }' but required in type 'Record<BudgetTierKey, number>'.
+src/engine/data/archetypes.ts(93,5): error TS2741: Property 'indie' is missing in type '{ low: number; mid: number; high: number; blockbuster: number; }' but required in type 'Record<BudgetTierKey, number>'.
+src/engine/data/archetypes.ts(102,5): error TS2741: Property 'indie' is missing in type '{ low: number; mid: number; high: number; blockbuster: number; }' but required in type 'Record<BudgetTierKey, number>'.
+src/engine/data/archetypes.ts(111,5): error TS2741: Property 'indie' is missing in type '{ low: number; mid: number; high: number; blockbuster: number; }' but required in type 'Record<BudgetTierKey, number>'.
+src/engine/data/budgetTiers.ts(14,14): error TS2741: Property 'indie' is missing in type '{ low: { key: "low"; name: string; label: string; budget: number; weeklyCost: number; developmentWeeks: number; productionWeeks: number; revenueRange: [number, number]; }; mid: { key: "mid"; name: string; ... 5 more ...; revenueRange: [...]; }; high: { ...; }; blockbuster: { ...; }; }' but required in type 'Record<BudgetTierKey, BudgetTierData>'.
+src/engine/services/WeekCoordinator.ts(337,21): error TS2365: Operator '<' cannot be applied to types 'number' and 'RivalStudio'.
+src/engine/services/WeekCoordinator.ts(338,23): error TS2365: Operator '<' cannot be applied to types 'number' and 'RivalStudio'.
+src/engine/simulation/HeadlessController.ts(16,30): error TS2349: This expression is not callable.
+  Type 'Contract' has no call signatures.
+src/engine/simulation/HeadlessController.ts(16,38): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/engine/simulation/MetricsCollector.ts(44,35): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/engine/simulation/MetricsCollector.ts(44,43): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+src/engine/simulation/MetricsCollector.ts(44,48): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/engine/simulation/MetricsCollector.ts(56,19): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/engine/simulation/MetricsCollector.ts(56,23): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/engine/simulation/MetricsCollector.ts(60,33): error TS7006: Parameter 'p' implicitly has an 'any' type.
+src/engine/simulation/MetricsCollector.ts(125,33): error TS7006: Parameter 'p' implicitly has an 'any' type.
+src/engine/simulation/MetricsCollector.ts(152,21): error TS2365: Operator '>' cannot be applied to types 'RivalStudio' and 'number'.
+src/engine/simulation/MetricsCollector.ts(152,58): error TS2363: The right-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+src/engine/simulation/MetricsCollector.ts(160,31): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/engine/simulation/MetricsCollector.ts(160,38): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/engine/simulation/MetricsCollector.ts(170,26): error TS2365: Operator '+' cannot be applied to types 'RivalStudio' and 'number'.
+src/engine/simulation/MetricsCollector.ts(171,33): error TS2365: Operator '+' cannot be applied to types 'RivalStudio' and 'number'.
+src/engine/simulation/SimulationHarness.ts(44,54): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/engine/simulation/SimulationHarness.ts(44,62): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+src/engine/simulation/SimulationHarness.ts(44,67): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/engine/simulation/SimulationHarness.ts(46,53): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/engine/simulation/SimulationHarness.ts(46,61): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+src/engine/simulation/SimulationHarness.ts(46,66): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/engine/simulation/SimulationHarness.ts(49,52): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/engine/simulation/SimulationHarness.ts(49,56): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/engine/simulation/SimulationHarness.ts(50,42): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+src/engine/simulation/SimulationHarness.ts(50,47): error TS7006: Parameter 'ms' implicitly has an 'any' type.
+src/engine/simulation/SimulationHarness.ts(59,42): error TS2363: The right-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+src/engine/simulation/SimulationHarness.ts(77,146): error TS2363: The right-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+src/engine/simulation/StudioAutomation.ts(14,27): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/engine/simulation/StudioAutomation.ts(14,35): error TS7006: Parameter 'rival' implicitly has an 'any' type.
+src/engine/simulation/StudioAutomation.ts(103,100): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/engine/simulation/StudioAutomation.ts(103,105): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/engine/simulation/StudioAutomation.ts(226,43): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/engine/simulation/StudioAutomation.ts(226,48): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/engine/systems/ai/AgentBrain.ts(53,28): error TS2345: Argument of type 'Record<string, RivalStudio>' is not assignable to parameter of type 'RivalStudio[]'.
+  Type 'Record<string, RivalStudio>' is missing the following properties from type 'RivalStudio[]': length, pop, push, concat, and 29 more.
+src/engine/systems/ai/biddingEngine.ts(27,27): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/engine/systems/ai/biddingEngine.ts(27,35): error TS7006: Parameter 'rival' implicitly has an 'any' type.
+src/engine/systems/ai/biddingEngine.ts(51,29): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'Record<ArchetypeKey, (genre: string) => number>'.
+src/engine/systems/ai/biddingEngine.ts(93,48): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/engine/systems/ai/biddingEngine.ts(93,55): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/engine/systems/ai/biddingEngine.ts(100,26): error TS7006: Parameter 'rival' implicitly has an 'any' type.
+src/engine/systems/ai/motivationEngine.ts(63,32): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/engine/systems/ai/motivationEngine.ts(63,36): error TS7006: Parameter 'rival' implicitly has an 'any' type.
+src/engine/systems/awards.ts(106,30): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/engine/systems/awards.ts(106,34): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/engine/systems/awards.ts(148,17): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/engine/systems/awards.ts(149,14): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/engine/systems/awards.ts(151,52): error TS7006: Parameter 'tid' implicitly has an 'any' type.
+src/engine/systems/crises.ts(43,62): error TS2362: The left-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+src/engine/systems/demographics.ts(100,9): error TS2353: Object literal may only specify known properties, and 'projects' does not exist in type '{ firstLookDeals?: TalentPact[] | undefined; projectHistory: Project[]; }'.
+src/engine/systems/directors.ts(9,34): error TS2339: Property 'entities' does not exist on type '{ studio: { internal: { contracts: Contract[]; }; }; industry: { talentPool: Record<string, Talent>; }; }'.
+src/engine/systems/directors.ts(9,58): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/engine/systems/directors.ts(11,11): error TS2339: Property 'entities' does not exist on type '{ studio: { internal: { contracts: Contract[]; }; }; industry: { talentPool: Record<string, Talent>; }; }'.
+src/engine/systems/festivals.ts(42,43): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/engine/systems/festivals.ts(42,48): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/engine/systems/festivals/festivalAuctionEngine.ts(116,27): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/engine/systems/festivals/festivalAuctionEngine.ts(116,47): error TS7006: Parameter 'rival' implicitly has an 'any' type.
+src/engine/systems/finance.ts(162,58): error TS2339: Property 'projects' does not exist on type '{ firstLookDeals?: TalentPact[] | undefined; projectHistory: Project[]; }'.
+src/engine/systems/finance.ts(172,9): error TS18046: 'p' is of type 'unknown'.
+src/engine/systems/finance.ts(173,11): error TS18046: 'p' is of type 'unknown'.
+src/engine/systems/finance.ts(175,64): error TS18046: 'p' is of type 'unknown'.
+src/engine/systems/finance.ts(175,92): error TS18046: 'p' is of type 'unknown'.
+src/engine/systems/finance.ts(176,18): error TS18046: 'p' is of type 'unknown'.
+src/engine/systems/finance.ts(177,26): error TS18046: 'p' is of type 'unknown'.
+src/engine/systems/finance.ts(177,52): error TS18046: 'p' is of type 'unknown'.
+src/engine/systems/finance.ts(179,70): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'Project'.
+src/engine/systems/finance.ts(196,7): error TS2345: Argument of type 'Record<string, Contract>' is not assignable to parameter of type 'Contract[]'.
+  Type 'Record<string, Contract>' is missing the following properties from type 'Contract[]': length, pop, push, concat, and 29 more.
+src/engine/systems/finance/financeTick.ts(21,7): error TS2345: Argument of type 'Record<string, Contract>' is not assignable to parameter of type 'Contract[]'.
+  Type 'Record<string, Contract>' is missing the following properties from type 'Contract[]': length, pop, push, concat, and 29 more.
+src/engine/systems/finance/financeTick.ts(42,23): error TS2488: Type 'Record<string, RivalStudio>' must have a '[Symbol.iterator]()' method that returns an iterator.
+src/engine/systems/finance/RevenueProcessor.ts(77,22): error TS2339: Property 'rivals' does not exist on type '{ families: Family[]; agencies: Agency[]; agents: Agent[]; awards?: Award[] | undefined; festivalSubmissions?: FestivalSubmission[] | undefined; rumors?: Rumor[] | undefined; scandals?: Scandal[] | undefined; newsHistory: NewsEvent[]; }'.
+src/engine/systems/finance/RevenueProcessor.ts(77,44): error TS7006: Parameter 'rival' implicitly has an 'any' type.
+src/engine/systems/finance/RevenueProcessor.ts(79,13): error TS18046: 'rp' is of type 'unknown'.
+src/engine/systems/finance/RevenueProcessor.ts(80,32): error TS18046: 'rp' is of type 'unknown'.
+src/engine/systems/finance/RevenueProcessor.ts(85,33): error TS18046: 'rp' is of type 'unknown'.
+src/engine/systems/industry/ConsolidationEngine.ts(16,25): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/engine/systems/industry/ConsolidationEngine.ts(16,32): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/engine/systems/industry/ConsolidationEngine.ts(22,26): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/engine/systems/industry/ConsolidationEngine.ts(22,33): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/engine/systems/industry/ConsolidationEngine.ts(23,14): error TS18046: 'acquirer' is of type 'unknown'.
+src/engine/systems/industry/ConsolidationEngine.ts(38,39): error TS18046: 'target' is of type 'unknown'.
+src/engine/systems/industry/ConsolidationEngine.ts(38,54): error TS18046: 'target' is of type 'unknown'.
+src/engine/systems/industry/ConsolidationEngine.ts(41,50): error TS18046: 'acquirer' is of type 'unknown'.
+src/engine/systems/industry/ConsolidationEngine.ts(41,63): error TS18046: 'target' is of type 'unknown'.
+src/engine/systems/industry/ConsolidationEngine.ts(47,41): error TS18046: 'acquirer' is of type 'unknown'.
+src/engine/systems/industry/ConsolidationEngine.ts(47,68): error TS18046: 'target' is of type 'unknown'.
+src/engine/systems/industry/ConsolidationEngine.ts(48,55): error TS18046: 'target' is of type 'unknown'.
+src/engine/systems/industry/ConsolidationEngine.ts(48,73): error TS18046: 'acquirer' is of type 'unknown'.
+src/engine/systems/industry/ConsolidationEngine.ts(59,21): error TS18046: 'acquirer' is of type 'unknown'.
+src/engine/systems/industry/ConsolidationEngine.ts(60,24): error TS18046: 'target' is of type 'unknown'.
+src/engine/systems/industry/ConsolidationEngine.ts(69,22): error TS18046: 'acquirer' is of type 'unknown'.
+src/engine/systems/industry/ConsolidationEngine.ts(70,29): error TS18046: 'acquirer' is of type 'unknown'.
+src/engine/systems/industry/ConsolidationEngine.ts(70,75): error TS18046: 'acquirer' is of type 'unknown'.
+src/engine/systems/industry/ConsolidationEngine.ts(78,37): error TS18046: 'acquirer' is of type 'unknown'.
+src/engine/systems/industry/ConsolidationEngine.ts(78,63): error TS18046: 'target' is of type 'unknown'.
+src/engine/systems/industry/ConsolidationEngine.ts(79,51): error TS18046: 'acquirer' is of type 'unknown'.
+src/engine/systems/industry/ConsolidationEngine.ts(79,103): error TS18046: 'target' is of type 'unknown'.
+src/engine/systems/industry/ConsolidationEngine.ts(88,9): error TS18046: 'acquirer' is of type 'unknown'.
+src/engine/systems/industry/ConsolidationEngine.ts(91,50): error TS18046: 'acquirer' is of type 'unknown'.
+src/engine/systems/industry/ConsolidationEngine.ts(96,68): error TS18046: 'acquirer' is of type 'unknown'.
+src/engine/systems/industry/ConsolidationEngine.ts(97,111): error TS18046: 'acquirer' is of type 'unknown'.
+src/engine/systems/industry/ConsolidationEngine.ts(109,28): error TS18046: 'acquirer' is of type 'unknown'.
+src/engine/systems/industry/ConsolidationEngine.ts(109,54): error TS18046: 'acquirer' is of type 'unknown'.
+src/engine/systems/industry/ConsolidationEngine.ts(116,20): error TS18046: 'acquirer' is of type 'unknown'.
+src/engine/systems/industry/ConsolidationEngine.ts(118,19): error TS18046: 'acquirer' is of type 'unknown'.
+src/engine/systems/industry/ConsolidationEngine.ts(119,34): error TS18046: 'acquirer' is of type 'unknown'.
+src/engine/systems/industry/ConsolidationEngine.ts(127,44): error TS18046: 'acquirer' is of type 'unknown'.
+src/engine/systems/industry/ConsolidationEngine.ts(128,75): error TS18046: 'acquirer' is of type 'unknown'.
+src/engine/systems/industry/IndustryUpstarts.ts(16,51): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/engine/systems/industry/IndustryUpstarts.ts(16,55): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/engine/systems/industry/IndustryUpstarts.ts(24,7): error TS2365: Operator '<' cannot be applied to types 'RivalStudio' and 'number'.
+src/engine/systems/industry/IndustryUpstarts.ts(25,48): error TS2345: Argument of type 'Set<unknown>' is not assignable to parameter of type 'Set<string>'.
+  Type 'unknown' is not assignable to type 'string'.
+src/engine/systems/industry/IndustryUpstarts.ts(71,49): error TS2345: Argument of type 'Set<unknown>' is not assignable to parameter of type 'Set<string>'.
+  Type 'unknown' is not assignable to type 'string'.
+src/engine/systems/industry/RegulatorSystem.ts(23,32): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/engine/systems/industry/RegulatorSystem.ts(23,36): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/engine/systems/industry/RegulatorSystem.ts(81,42): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/engine/systems/industry/RegulatorSystem.ts(81,50): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+src/engine/systems/industry/RegulatorSystem.ts(81,55): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/engine/systems/industry/RegulatorSystem.ts(87,46): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/engine/systems/industry/RegulatorSystem.ts(87,51): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/engine/systems/industry/RegulatorSystem.ts(114,32): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/engine/systems/industry/RegulatorSystem.ts(114,36): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/engine/systems/industry/VerticalIntegrationProcessor.ts(35,43): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/engine/systems/industry/VerticalIntegrationProcessor.ts(35,48): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/engine/systems/ip/franchiseCoordinator.ts(195,9): error TS2353: Object literal may only specify known properties, and 'projects' does not exist in type '{ firstLookDeals?: TalentPact[] | undefined; projectHistory: Project[]; }'.
+src/engine/systems/market/festivalAuctionEngine.ts(40,32): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/engine/systems/market/festivalAuctionEngine.ts(40,36): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/engine/systems/market/OpportunitySystem.ts(77,45): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/engine/systems/market/OpportunitySystem.ts(77,50): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/engine/systems/mergers.ts(26,45): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/engine/systems/mergers.ts(26,55): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/engine/systems/mergers.ts(88,40): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/engine/systems/mergers.ts(88,45): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/engine/systems/mergers.ts(108,40): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/engine/systems/mergers.ts(108,45): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/engine/systems/productionEngine.ts(106,26): error TS2488: Type 'Record<string, Contract>' must have a '[Symbol.iterator]()' method that returns an iterator.
+src/engine/systems/productionEngine.ts(113,23): error TS2488: Type 'Record<string, RivalStudio>' must have a '[Symbol.iterator]()' method that returns an iterator.
+src/engine/systems/productionEngine.ts(155,60): error TS2349: This expression is not callable.
+  Type 'Contract' has no call signatures.
+src/engine/systems/productionEngine.ts(155,64): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/engine/systems/productionEngine.ts(171,23): error TS2488: Type 'Record<string, RivalStudio>' must have a '[Symbol.iterator]()' method that returns an iterator.
+src/engine/systems/ratings.ts(224,38): error TS2345: Argument of type 'GameState' is not assignable to parameter of type '{ studio: { internal: { contracts: Contract[]; }; }; industry: { talentPool: Record<string, Talent>; }; }'.
+  The types of 'studio.internal' are incompatible between these types.
+    Property 'contracts' is missing in type '{ firstLookDeals?: TalentPact[] | undefined; projectHistory: Project[]; }' but required in type '{ contracts: Contract[]; }'.
+src/engine/systems/rivals.ts(85,19): error TS2365: Operator '<' cannot be applied to types 'number' and 'RivalStudio'.
+src/engine/systems/rivals.ts(113,23): error TS2488: Type 'Record<string, RivalStudio>' must have a '[Symbol.iterator]()' method that returns an iterator.
+src/engine/systems/rumors.ts(56,40): error TS2365: Operator '>' cannot be applied to types 'RivalStudio' and 'number'.
+src/engine/systems/rumors.ts(57,26): error TS2345: Argument of type 'Record<string, RivalStudio>' is not assignable to parameter of type 'RivalStudio[]'.
+  Type 'Record<string, RivalStudio>' is missing the following properties from type 'RivalStudio[]': length, pop, push, concat, and 29 more.
+src/engine/systems/scandals.ts(25,19): error TS2488: Type 'Record<string, Contract>' must have a '[Symbol.iterator]()' method that returns an iterator.
+src/engine/systems/scandals.ts(35,31): error TS2362: The left-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+src/engine/systems/scandals.ts(148,19): error TS2488: Type 'Record<string, Contract>' must have a '[Symbol.iterator]()' method that returns an iterator.
+src/engine/systems/schedulingEngine.ts(14,84): error TS2345: Argument of type 'Record<string, Contract>' is not assignable to parameter of type 'Contract[]'.
+  Type 'Record<string, Contract>' is missing the following properties from type 'Contract[]': length, pop, push, concat, and 29 more.
+src/engine/systems/talent/willingnessEngine.ts(89,57): error TS2349: This expression is not callable.
+  Type 'Contract' has no call signatures.
+src/engine/systems/talent/willingnessEngine.ts(90,5): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/engine/systems/TalentSystem.ts(105,21): error TS2365: Operator '<' cannot be applied to types 'number' and 'Contract'.
+src/engine/systems/television/televisionTick.ts(111,19): error TS2365: Operator '<' cannot be applied to types 'number' and 'RivalStudio'.
+src/engine/systems/television/televisionTick.ts(171,51): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/engine/systems/television/televisionTick.ts(171,56): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/engine/systems/television/televisionTick.ts(261,45): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/engine/systems/television/televisionTick.ts(261,50): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/engine/systems/television/televisionTick.ts(277,19): error TS2365: Operator '<' cannot be applied to types 'number' and 'RivalStudio'.
+src/engine/utils/projectUtils.ts(48,9): error TS2741: Property 'indie' is missing in type '{ low: number; mid: number; high: number; blockbuster: number; }' but required in type 'Record<BudgetTierKey, number>'.
+src/engine/utils/projectUtils.ts(102,11): error TS2741: Property 'indie' is missing in type '{ low: number; mid: number; high: number; blockbuster: number; }' but required in type 'Record<BudgetTierKey, number>'.
+src/store/selectors.ts(49,81): error TS2339: Property 'rivals' does not exist on type '{ families: Family[]; agencies: Agency[]; agents: Agent[]; awards?: Award[] | undefined; festivalSubmissions?: FestivalSubmission[] | undefined; rumors?: Rumor[] | undefined; scandals?: Scandal[] | undefined; newsHistory: NewsEvent[]; }'.
+src/store/selectors.ts(50,85): error TS2339: Property 'talentPool' does not exist on type '{ families: Family[]; agencies: Agency[]; agents: Agent[]; awards?: Award[] | undefined; festivalSubmissions?: FestivalSubmission[] | undefined; rumors?: Rumor[] | undefined; scandals?: Scandal[] | undefined; newsHistory: NewsEvent[]; }'.
+src/store/slices/financeSlice.ts(86,23): error TS2365: Operator '<' cannot be applied to types 'number' and 'Contract'.
+src/store/slices/projectSlice.ts(51,30): error TS2488: Type 'Record<string, Contract>' must have a '[Symbol.iterator]()' method that returns an iterator.
+src/store/slices/rivalSlice.ts(30,46): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/store/slices/rivalSlice.ts(30,53): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/store/slices/talentSlice.ts(74,36): error TS2488: Type 'Record<string, Contract>' must have a '[Symbol.iterator]()' method that returns an iterator.
+src/store/slices/talentSlice.ts(249,30): error TS2488: Type 'Record<string, Contract>' must have a '[Symbol.iterator]()' method that returns an iterator.
+src/store/slices/talentSlice.ts(287,54): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/store/slices/talentSlice.ts(287,61): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/store/slices/talentSlice.ts(357,57): error TS2349: This expression is not callable.
+  Type 'Contract' has no call signatures.
+src/store/slices/talentSlice.ts(358,9): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/test/engine/determinism.test.ts(42,32): error TS2349: This expression is not callable.
+  Type 'RivalStudio' has no call signatures.
+src/test/engine/determinism.test.ts(42,41): error TS7006: Parameter '_rival' implicitly has an 'any' type.
+src/test/engine/determinism.test.ts(42,49): error TS7006: Parameter 'idx' implicitly has an 'any' type.
+src/test/engine/systems/ai/AgentBrain.test.ts(20,7): error TS2353: Object literal may only specify known properties, and 'rivals' does not exist in type '{ families: Family[]; agencies: Agency[]; agents: Agent[]; awards?: Award[] | undefined; festivalSubmissions?: FestivalSubmission[] | undefined; rumors?: Rumor[] | undefined; scandals?: Scandal[] | undefined; newsHistory: NewsEvent[]; }'.
+src/test/engine/systems/ai/biddingEngine.test.ts(23,7): error TS2353: Object literal may only specify known properties, and 'rivals' does not exist in type '{ families: Family[]; agencies: Agency[]; agents: Agent[]; awards?: Award[] | undefined; festivalSubmissions?: FestivalSubmission[] | undefined; rumors?: Rumor[] | undefined; scandals?: Scandal[] | undefined; newsHistory: NewsEvent[]; }'.
+src/test/engine/systems/directors.test.ts(9,41): error TS2345: Argument of type 'GameState' is not assignable to parameter of type '{ studio: { internal: { contracts: Contract[]; }; }; industry: { talentPool: Record<string, Talent>; }; }'.
+  The types of 'studio.internal' are incompatible between these types.
+    Property 'contracts' is missing in type '{ firstLookDeals?: TalentPact[] | undefined; projectHistory: Project[]; }' but required in type '{ contracts: Contract[]; }'.
+src/test/engine/systems/directors.test.ts(17,30): error TS2349: This expression is not callable.
+  Type 'Contract' has no call signatures.
+src/test/engine/systems/directors.test.ts(19,41): error TS2345: Argument of type 'GameState' is not assignable to parameter of type '{ studio: { internal: { contracts: Contract[]; }; }; industry: { talentPool: Record<string, Talent>; }; }'.
+  The types of 'studio.internal' are incompatible between these types.
+    Property 'contracts' is missing in type '{ firstLookDeals?: TalentPact[] | undefined; projectHistory: Project[]; }' but required in type '{ contracts: Contract[]; }'.
+src/test/engine/systems/directors.test.ts(27,30): error TS2349: This expression is not callable.
+  Type 'Contract' has no call signatures.
+src/test/engine/systems/directors.test.ts(29,41): error TS2345: Argument of type 'GameState' is not assignable to parameter of type '{ studio: { internal: { contracts: Contract[]; }; }; industry: { talentPool: Record<string, Talent>; }; }'.
+  The types of 'studio.internal' are incompatible between these types.
+    Property 'contracts' is missing in type '{ firstLookDeals?: TalentPact[] | undefined; projectHistory: Project[]; }' but required in type '{ contracts: Contract[]; }'.
+src/test/engine/systems/directors.test.ts(101,41): error TS2820: Type '"pre-production"' is not assignable to type 'ProjectStatus | undefined'. Did you mean '"production"'?
+src/test/engine/systems/finance.test.ts(217,9): error TS2345: Argument of type 'Record<string, Contract>' is not assignable to parameter of type 'Contract[]'.
+  Type 'Record<string, Contract>' is missing the following properties from type 'Contract[]': length, pop, push, concat, and 29 more.
+src/test/engine/systems/productionEngine.test.ts(10,5): error TS2698: Spread types may only be created from object types.
+src/test/engine/systems/productionEngine.test.ts(19,14): error TS18046: 'actual' is of type 'unknown'.
+src/test/engine/systems/productionEngine.test.ts(34,5): error TS2322: Type 'RivalStudio[]' is not assignable to type 'Record<string, RivalStudio>'.
+  Index signature for type 'string' is missing in type 'RivalStudio[]'.
+src/test/engine/systems/productionEngine.test.ts(52,5): error TS2322: Type 'never[]' is not assignable to type 'Record<string, RivalStudio>'.
+  Index signature for type 'string' is missing in type 'never[]'.
+src/test/engine/systems/productionEngine.test.ts(90,32): error TS2349: This expression is not callable.
+  Type 'Contract' has no call signatures.
+src/test/engine/systems/productionEngine.test.ts(104,32): error TS2349: This expression is not callable.
+  Type 'Contract' has no call signatures.
+src/test/engine/systems/productionEngine.test.ts(126,7): error TS2322: Type 'RivalStudio[]' is not assignable to type 'Record<string, RivalStudio>'.
+  Index signature for type 'string' is missing in type 'RivalStudio[]'.
+src/test/engine/systems/productionEngine.test.ts(157,34): error TS2349: This expression is not callable.
+  Type 'Contract' has no call signatures.
+src/test/engine/systems/productionEngine.test.ts(187,16): error TS2790: The operand of a 'delete' operator must be optional.
+src/test/engine/systems/productionEngine.test.ts(188,9): error TS2322: Type 'RivalStudio[]' is not assignable to type 'Record<string, RivalStudio>'.
+  Index signature for type 'string' is missing in type 'RivalStudio[]'.
+src/test/engine/systems/productionEngine.test.ts(210,9): error TS2322: Type 'RivalStudio[]' is not assignable to type 'Record<string, RivalStudio>'.
+  Index signature for type 'string' is missing in type 'RivalStudio[]'.
+src/test/engine/systems/productionEngine.test.ts(228,9): error TS7053: Element implicitly has an 'any' type because expression of type '"someProtoProp"' can't be used to index type 'Object'.
+  Property 'someProtoProp' does not exist on type 'Object'.
+src/test/engine/systems/productionEngine.test.ts(239,16): error TS7053: Element implicitly has an 'any' type because expression of type '"someProtoProp"' can't be used to index type 'Object'.
+  Property 'someProtoProp' does not exist on type 'Object'.
+src/test/engine/systems/productionEngine.test.ts(248,16): error TS2790: The operand of a 'delete' operator must be optional.
+src/test/engine/systems/productionEngine.test.ts(249,9): error TS2322: Type 'RivalStudio[]' is not assignable to type 'Record<string, RivalStudio>'.
+  Index signature for type 'string' is missing in type 'RivalStudio[]'.
+src/test/engine/systems/TalentSystem.test.ts(106,9): error TS2353: Object literal may only specify known properties, and 'rivals' does not exist in type '{ families: Family[]; agencies: Agency[]; agents: Agent[]; awards?: Award[] | undefined; festivalSubmissions?: FestivalSubmission[] | undefined; rumors?: Rumor[] | undefined; scandals?: Scandal[] | undefined; newsHistory: NewsEvent[]; }'.
+src/test/store/gameStore.test.ts(45,21): error TS2339: Property 'fromWeek' does not exist on type 'Promise<WeekSummary | null>'.

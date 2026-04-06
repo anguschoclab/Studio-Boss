@@ -40,7 +40,7 @@ function prepareTalentAndContracts(
     rng: RandomGenerator
 ) {
     const ids = attachedTalentIds || [];
-    const talentPool = state.industry.talentPool;
+    const talentPool = state.entities.talents;
     const attachedTalent: Talent[] = [];
     let talentFees = 0;
     const newContracts: Contract[] = [];

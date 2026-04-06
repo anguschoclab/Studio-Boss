@@ -102,8 +102,8 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
   const projectToRivalMap: Record<string, RivalStudio> = {};
 
   const allStudios = [
-    { studio: null, projects: state.studio.internal.projects, contracts: state.studio.internal.contracts },
-    ...state.industry.rivals.map(r => ({ studio: r, projects: r.projects || {}, contracts: r.contracts || [] }))
+    { studio: null, projects: state.entities.projects, contracts: state.entities.contracts },
+    ...state.entities.rivals.map(r => ({ studio: r, projects: r.projects || {}, contracts: r.contracts || [] }))
   ];
 
   for (const entry of allStudios) {
@@ -148,7 +148,7 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
         .filter(c => c.projectId === p.id)
         .map(c => c.talentId);
       
-      const attachedTalent = attachedTalentIds.map(tid => state.industry.talentPool[tid]).filter(Boolean);
+      const attachedTalent = attachedTalentIds.map(tid => state.entities.talents[tid]).filter(Boolean);
       
       const weight = calculateNominationWeight(p, attachedTalent, campaign?.buzzBonus || 0);
       const randomFactor = rng.range(0.8, 1.2);
@@ -165,7 +165,7 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
       const isWin = bestScore > 50; 
       const prestigeGain = isWin ? 15 : 3;
       
-      const isPlayer = !!state.studio.internal.projects[bestProject.id];
+      const isPlayer = !!state.entities.projects[bestProject.id];
       const rival = isPlayer ? null : projectToRivalMap[bestProject.id];
 
       impacts.push({

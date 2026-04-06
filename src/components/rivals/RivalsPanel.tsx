@@ -25,7 +25,7 @@ const strengthColor = (s: number) => {
 export const RivalsPanel = () => {
   const [activeSubTab, setActiveSubTab] = React.useState<'intel' | 'market'>('intel');
   const gameState = useGameStore(s => s.gameState);
-  const rivals = gameState?.industry.rivals || [];
+  const rivals = gameState?.entities.rivals || [];
   const playerCash = gameState?.finance?.cash || 0;
   
   const { corporateSabotage, poachExec, attemptTakeover } = useGameStore();

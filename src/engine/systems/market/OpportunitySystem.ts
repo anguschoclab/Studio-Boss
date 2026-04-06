@@ -74,7 +74,7 @@ export class OpportunitySystem {
         });
       } else {
         // Rival Winner
-        const rival = state.industry.rivals.find(r => r.id === winnerId);
+        const rival = state.entities.rivals.find(r => r.id === winnerId);
         if (rival) {
           impacts.push({
             type: 'RIVAL_UPDATED',
@@ -104,7 +104,7 @@ export class OpportunitySystem {
     
     if (expired.length > 0 || remainingOpportunities.length < 8) {
         const toGenerate = Math.max(0, 8 - remainingOpportunities.length);
-        const talentPoolIds = Object.keys(state.industry.talentPool);
+        const talentPoolIds = Object.keys(state.entities.talents);
         const newOpps = Array.from({ length: toGenerate }, () => generateOpportunity(rng, state.week, talentPoolIds));
         
         impacts.push({

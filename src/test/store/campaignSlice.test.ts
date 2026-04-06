@@ -64,7 +64,7 @@ describe("campaignSlice", () => {
   });
 
   it("triggers backlash for Blitz on low quality project", () => {
-    get().gameState.studio.internal.projects["proj-1"].reception.metaScore = 50;
+    get().gameState.entities.projects["proj-1"].reception.metaScore = 50;
     
     // We need to ensure the RNG triggers the 20%. 
     // With seed-based RNG in the slice, we might need multiple runs or to mock RNG if possible.

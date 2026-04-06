@@ -13,8 +13,8 @@ describe("hasCreativeControl", () => {
     const talent = createMockTalent({ id: "t-1", roles: ["actor"] });
     const contract = createMockContract({ id: "c-1", talentId: "t-1", projectId: "proj-1", role: "actor", creativeControl: true });
     const state = createMockGameState();
-    state.industry.talentPool["t-1"] = talent;
-    state.studio.internal.contracts.push(contract);
+    state.entities.talents["t-1"] = talent;
+    state.entities.contracts.push(contract);
     
     expect(hasCreativeControl("proj-1", state)).toBe(false);
   });
@@ -23,8 +23,8 @@ describe("hasCreativeControl", () => {
     const talent = createMockTalent({ id: "t-1", roles: ["director"] });
     const contract = createMockContract({ id: "c-1", talentId: "t-1", projectId: "proj-1", role: "director", creativeControl: true });
     const state = createMockGameState();
-    state.industry.talentPool["t-1"] = talent;
-    state.studio.internal.contracts.push(contract);
+    state.entities.talents["t-1"] = talent;
+    state.entities.contracts.push(contract);
     
     expect(hasCreativeControl("proj-1", state)).toBe(true);
   });

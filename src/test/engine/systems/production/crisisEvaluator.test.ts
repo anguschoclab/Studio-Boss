@@ -30,7 +30,7 @@ describe('Crisis Evaluator (Target A3)', () => {
     });
     
     const state = createMockGameState();
-    state.studio.internal.projects['p1'] = project;
+    state.entities.projects['p1'] = project;
 
     const impacts = resolveCrisisWithHandlers(state, 'p1', 0);
     
@@ -48,7 +48,7 @@ describe('Crisis Evaluator - Edge Cases', () => {
   it('should safely return empty array if no activeCrisis exists', () => {
      const project = createMockProject({ id: 'p1', state: 'production', activeCrisis: null });
      const state = createMockGameState();
-     state.studio.internal.projects['p1'] = project;
+     state.entities.projects['p1'] = project;
      
      const impacts = resolveCrisisWithHandlers(state, 'p1', 0);
      expect(impacts).toHaveLength(0);
@@ -61,7 +61,7 @@ describe('Crisis Evaluator - Edge Cases', () => {
        activeCrisis: { resolved: true, crisisId: '1', title: 'test', description: 'test', type: 'DELAY', resolvedWeek: 1, options: [] } as any
      });
      const state = createMockGameState();
-     state.studio.internal.projects['p1'] = project;
+     state.entities.projects['p1'] = project;
      
      const impacts = resolveCrisisWithHandlers(state, 'p1', 0);
      expect(impacts).toHaveLength(0);
@@ -74,7 +74,7 @@ describe('Crisis Evaluator - Edge Cases', () => {
        activeCrisis: { resolved: false, crisisId: '1', title: 'test', description: 'test', type: 'DELAY', resolvedWeek: 1, options: [] } as any
      });
      const state = createMockGameState();
-     state.studio.internal.projects['p1'] = project;
+     state.entities.projects['p1'] = project;
 
      const impacts = resolveCrisisWithHandlers(state, 'p1', 0);
      expect(impacts).toHaveLength(0);
@@ -87,7 +87,7 @@ describe('Crisis Evaluator - Edge Cases', () => {
        activeCrisis: { resolved: false, crisisId: '1', title: 'test', description: 'test', type: 'DELAY', resolvedWeek: 1, options: [{ text: 'Do nothing' }] } as any
      });
      const state = createMockGameState();
-     state.studio.internal.projects['p1'] = project;
+     state.entities.projects['p1'] = project;
 
      const impacts = resolveCrisisWithHandlers(state, 'p1', 0);
      // Should still emit NEWS_ADDED and PROJECT_UPDATED (resolved: true)

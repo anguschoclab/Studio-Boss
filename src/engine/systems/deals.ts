@@ -24,7 +24,7 @@ export function evaluateFirstLookDeal(talent: Talent, state: GameState, rng: Ran
 }
 
 export function offerFirstLookDeal(state: GameState, talentId: string, rng: RandomGenerator): StateImpact[] {
-  const talent = state.industry.talentPool[talentId];
+  const talent = state.entities.talents[talentId];
   if (!talent) return [];
   
   const accepted = evaluateFirstLookDeal(talent, state, rng);

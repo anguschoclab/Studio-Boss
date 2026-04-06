@@ -91,7 +91,7 @@ describe("Finance System", () => {
             internal: {
               ...mockState.studio.internal,
               projects: {
-                ...mockState.studio.internal.projects,
+                ...mockState.entities.projects,
                 'rel': releasedWithDist
               }
             }
@@ -101,11 +101,11 @@ describe("Finance System", () => {
         const { report } = generateWeeklyFinancialReport(
           stateWithDist,
           'player',
-          stateWithDist.studio.internal.projects,
+          stateWithDist.entities.projects,
           stateWithDist.finance.cash,
           stateWithDist.studio.archetype,
           stateWithDist.studio.prestige,
-          stateWithDist.studio.internal.contracts,
+          stateWithDist.entities.contracts,
           []
         );
         // ExpenseProcessor.calculateStudioBurn(Level 3, 2 active [unreleased])
@@ -210,11 +210,11 @@ describe('Finance Edge Cases', () => {
       const { report, snapshot } = generateWeeklyFinancialReport(
         state,
         'player',
-        state.studio.internal.projects,
+        state.entities.projects,
         state.finance.cash,
         state.studio.archetype,
         state.studio.prestige,
-        state.studio.internal.contracts,
+        state.entities.contracts,
         state.studio.internal.firstLookDeals || []
       );
 
@@ -264,11 +264,11 @@ describe('Finance Edge Cases', () => {
     const { report } = generateWeeklyFinancialReport(
       state,
       'player',
-      state.studio.internal.projects,
+      state.entities.projects,
       state.finance.cash,
       state.studio.archetype,
       state.studio.prestige,
-      state.studio.internal.contracts,
+      state.entities.contracts,
       state.studio.internal.firstLookDeals || []
     );
     expect(report.expenses.production).toBe(10000); // weeklyCost is 10k, even though budget is negative

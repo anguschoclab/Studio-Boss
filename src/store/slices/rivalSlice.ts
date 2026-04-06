@@ -27,7 +27,7 @@ export const createRivalSlice: StateCreator<GameStore, [], [], RivalSlice> = (se
           ...newState,
           industry: {
             ...newState.industry,
-            rivals: newState.industry.rivals.filter(r => r.id !== targetId)
+            rivals: newState.entities.rivals.filter(r => r.id !== targetId)
           },
           rngState: rng.getState()
         } 

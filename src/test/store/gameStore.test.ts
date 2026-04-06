@@ -59,7 +59,7 @@ describe("gameStore", () => {
     });
 
     const state = useGameStore.getState().gameState;
-    const projects = Object.values(state?.studio.internal.projects || {});
+    const projects = Object.values(state?.entities.projects || {});
     expect(projects).toHaveLength(1);
     expect(projects[0].title).toBe("Test Project");
   });
@@ -78,15 +78,15 @@ describe("gameStore", () => {
     const talent = createMockTalent({ id: "t1", name: "Star", role: "actor", roles: ["actor"], fee: 100000 });
     const project = createMockProject({ id: "p1", title: "Test", state: "development" });
     
-    state.industry.talentPool = { "t1": talent };
-    state.studio.internal.projects = { "p1": project };
+    state.entities.talents = { "t1": talent };
+    state.entities.projects = { "p1": project };
     useGameStore.setState({ gameState: state });
 
     useGameStore.getState().signContract("t1", "p1");
 
     const newState = useGameStore.getState().gameState!;
     expect(newState.finance.cash).toBe(900000); // 1M - 100k fee
-    expect(newState.studio.internal.contracts).toHaveLength(1);
-    expect(newState.studio.internal.contracts[0].talentId).toBe("t1");
+    expect(newState.entities.contracts).toHaveLength(1);
+    expect(newState.entities.contracts[0].talentId).toBe("t1");
   });
 });

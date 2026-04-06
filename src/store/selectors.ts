@@ -35,7 +35,7 @@ export const selectGameState = (state: GameState | null): GameState | null => st
 
 export const selectStudio = (state: GameState | null) => state?.studio || null;
 export const selectInternal = (state: GameState | null) => state?.studio.internal || null;
-export const selectProjectsRaw = (state: GameState | null) => state?.studio.internal.projects || EMPTY_PROJECTS;
+export const selectProjectsRaw = (state: GameState | null) => state?.entities.projects || EMPTY_PROJECTS;
 
 export const selectProjects = (state: GameState | null): Project[] => {
   const projects = selectProjectsRaw(state);
@@ -120,7 +120,7 @@ export interface TalentFilter {
 export const selectFilteredTalent = (state: GameState | null, filter: TalentFilter): Talent[] => {
   if (!state) return EMPTY_ARRAY;
   const result: Talent[] = [];
-  const pool = state.industry.talentPool;
+  const pool = state.entities.talents;
   for (const key in pool) {
     const t = pool[key];
     if (filter.roles && !filter.roles.some(r => t.roles?.includes(r) || t.role === r)) continue;

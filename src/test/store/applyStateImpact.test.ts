@@ -67,7 +67,7 @@ describe("applyStateImpact utility", () => {
       }
     };
     const newState = applyStateImpact(getInitialMockState(), impact);
-    const updatedProject = newState.studio.internal.projects["proj-1"];
+    const updatedProject = newState.entities.projects["proj-1"];
     expect(updatedProject?.state).toBe("production");
     expect(updatedProject?.buzz).toBe(70);
   });

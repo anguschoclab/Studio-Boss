@@ -36,8 +36,8 @@ export function generateCrisis(project: Project, rng: RandomGenerator): StateImp
  * Integrated into the WeekCoordinator pipeline.
  */
 export function checkAndTriggerCrisis(project: Project, state: GameState, rng: RandomGenerator): StateImpact | null {
-  const studioProjectsCount = Object.keys(state.studio.internal.projects || {}).length;
-  const contractCount = state.studio.internal.contracts?.length || 0;
+  const studioProjectsCount = Object.keys(state.entities.projects || {}).length;
+  const contractCount = state.entities.contracts?.length || 0;
   // The PR Spin Doctor: Heavily scale crises with studio size
   // Base 3% chance, plus 1.0% for every concurrent project and 0.5% for every contract
   const baseChance = 0.03 + (studioProjectsCount * 0.010) + (contractCount * 0.005);
@@ -53,7 +53,7 @@ export function checkAndTriggerCrisis(project: Project, state: GameState, rng: R
  * Always returns a deterministic impact based on the selected option.
  */
 export function resolveCrisis(state: GameState, projectId: string, optionIndex: number, rng: RandomGenerator): StateImpact {
-  const project = state.studio.internal.projects[projectId];
+  const project = state.entities.projects[projectId];
   if (!project || !project.activeCrisis || project.activeCrisis.resolved) {
     return {};
   }

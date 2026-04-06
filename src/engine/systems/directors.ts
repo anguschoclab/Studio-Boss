@@ -6,9 +6,9 @@ import { RandomGenerator } from '../utils/rng';
  * Checks if the director for a given project has final cut / creative control.
  */
 export function hasCreativeControl(projectId: string, state: { studio: { internal: { contracts: Contract[] } }, industry: { talentPool: Record<string, Talent> } }): boolean {
-  const directorContract = state.studio.internal.contracts.find(c =>
+  const directorContract = state.entities.contracts.find(c =>
     c.projectId === projectId &&
-    state.industry.talentPool[c.talentId]?.roles.includes('director')
+    state.entities.talents[c.talentId]?.roles.includes('director')
   );
 
   if (!directorContract) return false;

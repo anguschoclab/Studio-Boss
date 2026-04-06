@@ -24,7 +24,7 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
     // Current highest bid tracking
     const currentHighest = Object.values(opportunity.bids || {}).reduce((max: number, b) => Math.max(max, b.amount), 0);
     
-    state.industry.rivals.forEach(rival => {
+    state.entities.rivals.forEach(rival => {
       const myBid = opportunity.bids[rival.id]?.amount || 0;
 
       // Logic for should rebid: Outbid if highest is better AND rival has cash
@@ -90,10 +90,10 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
   
   if (state.week % 4 !== 0) return [];
 
-  const eligibleRivals = state.industry.rivals.filter(r => r.cash > 100_000_000);
+  const eligibleRivals = state.entities.rivals.filter(r => r.cash > 100_000_000);
   if (eligibleRivals.length === 0) return [];
 
-  const availableTalent = Object.values(state.industry.talentPool).filter(t => t.prestige > 85 && !t.contractId);
+  const availableTalent = Object.values(state.entities.talents).filter(t => t.prestige > 85 && !t.contractId);
   
   if (availableTalent.length === 0) return [];
 

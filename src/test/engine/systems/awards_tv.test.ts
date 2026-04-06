@@ -26,6 +26,13 @@ describe('TV Awards Filtering & Taxonomy', () => {
       culturalHeat: 50,
       campaignStrength: 0,
     },
+    reception: {
+      metaScore: criticScore,
+      audienceScore: criticScore,
+      status: 'Acclaimed',
+      reviews: [],
+      isCultPotential: false
+    },
     awards: []
   });
 

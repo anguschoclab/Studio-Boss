@@ -32,7 +32,7 @@ export function tickVerticalIntegration(state: GameState, rng: RandomGenerator):
       });
     } else {
       // Rival owner
-      const rival = state.industry.rivals.find(r => r.id === platform.ownerId);
+      const rival = state.entities.rivals.find(r => r.id === platform.ownerId);
       if (rival) {
         impacts.push({
           type: 'RIVAL_UPDATED',

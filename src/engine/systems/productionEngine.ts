@@ -103,14 +103,14 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
   const allImpacts: StateImpact[] = [];
   const contractMap = new Map<string, Contract[]>();
   
-  for (const contract of state.studio.internal.contracts) {
+  for (const contract of state.entities.contracts) {
     const list = contractMap.get(contract.projectId) || [];
     list.push(contract);
     contractMap.set(contract.projectId, list);
   }
 
   // collect rival contracts
-  for (const rival of state.industry.rivals) {
+  for (const rival of state.entities.rivals) {
     if (!rival.contracts) continue;
     for (const contract of rival.contracts) {
       const list = contractMap.get(contract.projectId) || [];
@@ -120,7 +120,7 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
   }
 
   // 1. Player Projects
-  const playerProjects = { ...state.studio.internal.projects };
+  const playerProjects = { ...state.entities.projects };
   let playerChanged = false;
 
   for (const key in playerProjects) {
@@ -129,7 +129,7 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
     
     // We reuse tickProject logic but handle impacts collection differently
     // For simplicity, we'll temporarily use a modified tickProject or just integrate it
-    const projectImpacts = tickProject(project, projectContracts, state.industry.talentPool, rng, state.studio.prestige, state.week);
+    const projectImpacts = tickProject(project, projectContracts, state.entities.talents, rng, state.studio.prestige, state.week);
     
     projectImpacts.forEach(imp => {
         if (imp.type === 'PROJECT_UPDATED') {
@@ -140,22 +140,22 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
         }
     });
 
-    const disputeImpact = processDirectorDisputes(project, projectContracts, new Map(Object.entries(state.industry.talentPool)), rng);
+    const disputeImpact = processDirectorDisputes(project, projectContracts, new Map(Object.entries(state.entities.talents)), rng);
     if (disputeImpact) allImpacts.push(disputeImpact);
   }
 
   if (playerChanged) {
       allImpacts.push({
           type: 'INDUSTRY_UPDATE', // Root-level project injection is safer in bulk
-          payload: { 'studio.internal.projects': playerProjects }
+          payload: { 'entities.projects': playerProjects }
       } as any);
   }
 
   // Handle Resting Talent Fatigue
-  const activeTalentIds = new Set(state.studio.internal.contracts.map(c => c.talentId));
-  for (const talentId in state.industry.talentPool) {
-    if (!Object.prototype.hasOwnProperty.call(state.industry.talentPool, talentId)) continue;
-    const talent = state.industry.talentPool[talentId];
+  const activeTalentIds = new Set(state.entities.contracts.map(c => c.talentId));
+  for (const talentId in state.entities.talents) {
+    if (!Object.prototype.hasOwnProperty.call(state.entities.talents, talentId)) continue;
+    const talent = state.entities.talents[talentId];
     if (!activeTalentIds.has(talent.id)) {
       const newFatigue = SchedulingEngine.updateTalentFatigue(talent, false);
       if (newFatigue !== talent.fatigue) {
@@ -168,14 +168,14 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
   }
 
   // 2. Rival Projects
-  for (const rival of state.industry.rivals) {
+  for (const rival of state.entities.rivals) {
     if (!rival.projects) continue;
     const rivalProjects = { ...rival.projects };
     let rivalChanged = false;
 
     for (const key in rivalProjects) {
       const project = rivalProjects[key];
-      const projectImpacts = tickProject(project, [], state.industry.talentPool, rng, rival.prestige, state.week);
+      const projectImpacts = tickProject(project, [], state.entities.talents, rng, rival.prestige, state.week);
       
       projectImpacts.forEach(imp => {
           if (imp.type === 'PROJECT_UPDATED') {

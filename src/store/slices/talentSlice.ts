@@ -27,10 +27,10 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       const state = s.gameState;
       if (!state) return s;
 
-      const talent = state.industry.talentPool[talentId];
+      const talent = state.entities.talents[talentId];
       if (!talent) return s;
       
-      const p = state.studio.internal.projects[projectId];
+      const p = state.entities.projects[projectId];
       if (!p) return s;
       
       let finalFee = talent.fee;
@@ -71,7 +71,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
         commitments: [...(talent.commitments || []), commitment]
       };
 
-      const updatedContracts = [...state.studio.internal.contracts, contract];
+      const updatedContracts = [...state.entities.contracts, contract];
 
       return {
         gameState: {
@@ -90,7 +90,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
           industry: {
             ...state.industry,
             talentPool: {
-              ...state.industry.talentPool,
+              ...state.entities.talents,
               [talentId]: updatedTalent
             }
           },
@@ -106,7 +106,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       const state = s.gameState;
       if (!state) return s;
       
-      const talent = state.industry.talentPool[talentId];
+      const talent = state.entities.talents[talentId];
       if (!talent) return s;
       
       const lockFee = fee || (talent.fee * 2);
@@ -245,8 +245,8 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
             ...state.studio,
             internal: {
               ...state.studio.internal,
-              projects: { ...state.studio.internal.projects, [project.id]: project },
-              contracts: [...state.studio.internal.contracts, ...newContracts]
+              projects: { ...state.entities.projects, [project.id]: project },
+              contracts: [...state.entities.contracts, ...newContracts]
             }
           },
           market: {
@@ -284,7 +284,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       };
 
       const rng = new RandomGenerator(state.rngState);
-      const aggressiveRivals = state.industry.rivals.filter(r => r.cash > amount * 1.5 && r.prestige > 40);
+      const aggressiveRivals = state.entities.rivals.filter(r => r.cash > amount * 1.5 && r.prestige > 40);
       
       if (aggressiveRivals.length > 0) {
         const rivalIdx = Math.floor(rng.next() * aggressiveRivals.length);
@@ -304,14 +304,14 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
   getTalentFilmography: (talentId) => {
     const s = get();
     if (!s.gameState) return [] as import('@/engine/types/talent.types').Talent['filmography'];
-    const talent = s.gameState.industry.talentPool[talentId];
+    const talent = s.gameState.entities.talents[talentId];
     return (talent?.filmography || []) as import('@/engine/types/talent.types').Talent['filmography'];
   },
 
   getTalentCareerStats: (talentId) => {
     const s = get();
     if (!s.gameState) return null;
-    const talent = s.gameState.industry.talentPool[talentId];
+    const talent = s.gameState.entities.talents[talentId];
     if (!talent) return null;
     
     return {
@@ -325,7 +325,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
   calculateStarMeter: (talentId) => {
     const s = get();
     if (!s.gameState) return 50;
-    const talent = s.gameState.industry.talentPool[talentId];
+    const talent = s.gameState.entities.talents[talentId];
     if (!talent) return 50;
 
     const filmography = talent.filmography || [];
@@ -342,10 +342,10 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       const state = s.gameState;
       if (!state) return s;
 
-      const talent = state.industry.talentPool[talentId];
+      const talent = state.entities.talents[talentId];
       if (!talent) return s;
 
-      const project = state.studio.internal.projects[projectId];
+      const project = state.entities.projects[projectId];
       if (!project) return s;
 
       // 🌌 PHASE 2: Apply 20% reshoot penalty if in production
@@ -354,7 +354,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
         penalty = Math.floor(project.budget * 0.20);
       }
 
-      const updatedContracts = state.studio.internal.contracts.filter(
+      const updatedContracts = state.entities.contracts.filter(
         c => !(c.talentId === talentId && c.projectId === projectId)
       );
 
@@ -375,7 +375,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
             type: 'INDUSTRY_UPDATE',
             payload: {
               update: {
-                'studio.internal.contracts': updatedContracts
+                'entities.contracts': updatedContracts
               }
             }
           }

@@ -16,7 +16,7 @@ describe('tickWorldEvents', () => {
       weeksInPhase: 1,
       revenue: 100_000_000,
     });
-    state.studio.internal.projects['p1'] = releasedProject;
+    state.entities.projects['p1'] = releasedProject;
 
     const impacts = tickWorldEvents(state, rng);
     
@@ -35,7 +35,7 @@ describe('tickWorldEvents', () => {
       tier: 1,
       momentum: 90,
     });
-    state.industry.talentPool = { 't1': star };
+    state.entities.talents = { 't1': star };
 
     const impacts = tickWorldEvents(state, rng);
     

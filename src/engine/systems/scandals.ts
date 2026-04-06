@@ -20,13 +20,13 @@ export function generateScandals(state: GameState, rng: RandomGenerator): StateI
     uiNotifications: []
   };
   
-  const contracts = state.studio.internal.contracts || [];
+  const contracts = state.entities.contracts || [];
   const talentToProjectMap = new Map<string, string>();
   for (const c of contracts) {
     talentToProjectMap.set(c.talentId, c.projectId);
   }
   
-  const studioProjects = state.studio.internal.projects || {};
+  const studioProjects = state.entities.projects || {};
 
   const numContracts = contracts.length;
   const studioProjectsCount = Object.keys(studioProjects).length;
@@ -34,7 +34,7 @@ export function generateScandals(state: GameState, rng: RandomGenerator): StateI
   // The PR Spin Doctor: Heavily scale scandals with studio size (more contracts/projects = much higher risk)
   const sizeModifier = 1.0 + (numContracts * 0.15) + (studioProjectsCount * 0.30);
 
-  const talentPool = state.industry.talentPool || {};
+  const talentPool = state.entities.talents || {};
   for (const talentId in talentPool) {
     const talent = talentPool[talentId];
     const risk = talent.psychology?.scandalRisk || 5; 
@@ -143,7 +143,7 @@ export function advanceScandals(state: GameState): StateImpact[] {
     }
   }
   
-  const contracts = state.studio.internal.contracts || [];
+  const contracts = state.entities.contracts || [];
   const penalizedProjectIds = new Set<string>();
   for (const c of contracts) {
     if (activeScandalTalent.has(c.talentId)) {
@@ -152,7 +152,7 @@ export function advanceScandals(state: GameState): StateImpact[] {
   }
   
   for (const projectId of penalizedProjectIds) {
-      const p = state.studio.internal.projects[projectId];
+      const p = state.entities.projects[projectId];
       if (p) {
           impacts.push({
               type: 'PROJECT_UPDATED',

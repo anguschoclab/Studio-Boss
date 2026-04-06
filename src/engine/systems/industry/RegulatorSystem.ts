@@ -20,7 +20,7 @@ export class RegulatorSystem {
         revenue: calculateTrailingRevenue(state.finance.weeklyHistory), 
         type: state.studio.archetype 
       },
-      ...state.industry.rivals.map(r => ({ 
+      ...state.entities.rivals.map(r => ({ 
         id: r.id, 
         name: r.name, 
         revenue: calculateTrailingRevenue(r.weeklyHistory || []), 
@@ -78,13 +78,13 @@ export class RegulatorSystem {
     };
 
     const totalRev = calculateTrailingRevenue(state.finance.weeklyHistory) + 
-                   state.industry.rivals.reduce((sum, r) => sum + calculateTrailingRevenue(r.weeklyHistory || []), 0);
+                   state.entities.rivals.reduce((sum, r) => sum + calculateTrailingRevenue(r.weeklyHistory || []), 0);
     
     let acquirerRev = 0;
     if (acquirerId === 'player') {
       acquirerRev = calculateTrailingRevenue(state.finance.weeklyHistory);
     } else {
-      const acquirer = state.industry.rivals.find(r => r.id === acquirerId);
+      const acquirer = state.entities.rivals.find(r => r.id === acquirerId);
       acquirerRev = calculateTrailingRevenue(acquirer?.weeklyHistory || []);
     }
     
@@ -111,7 +111,7 @@ export class RegulatorSystem {
 
     const studios = [
       { id: 'player', revenue: calculateTrailingRevenue(state.finance.weeklyHistory) },
-      ...state.industry.rivals.map(r => ({ id: r.id, revenue: calculateTrailingRevenue(r.weeklyHistory || []) }))
+      ...state.entities.rivals.map(r => ({ id: r.id, revenue: calculateTrailingRevenue(r.weeklyHistory || []) }))
     ];
 
     const totalIndustryRevenue = studios.reduce((sum, s) => sum + s.revenue, 1);

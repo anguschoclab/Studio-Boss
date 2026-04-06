@@ -40,40 +40,40 @@ describe('ModalManager', () => {
     expect(container.firstChild).toBeNull();
   });
 
-  it('renders WeekSummaryModal when activeModal type is SUMMARY', () => {
+  it('renders WeekSummaryModal when activeModal type is SUMMARY', async () => {
     (useUIStore as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
       activeModal: { id: 'test-1', type: 'SUMMARY', payload: null },
     });
 
     render(<ModalManager />);
-    expect(screen.getByTestId('week-summary-modal')).toBeInTheDocument();
+    expect(await screen.findByTestId('week-summary-modal')).toBeInTheDocument();
   });
 
-  it('renders CrisisModal when activeModal type is CRISIS', () => {
+  it('renders CrisisModal when activeModal type is CRISIS', async () => {
     (useUIStore as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
       activeModal: { id: 'test-2', type: 'CRISIS', payload: null },
     });
 
     render(<ModalManager />);
-    expect(screen.getByTestId('crisis-modal')).toBeInTheDocument();
+    expect(await screen.findByTestId('crisis-modal')).toBeInTheDocument();
   });
 
-  it('renders AwardsCeremonyModal when activeModal type is AWARDS', () => {
+  it('renders AwardsCeremonyModal when activeModal type is AWARDS', async () => {
     (useUIStore as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
       activeModal: { id: 'test-3', type: 'AWARDS', payload: null },
     });
 
     render(<ModalManager />);
-    expect(screen.getByTestId('awards-ceremony-modal')).toBeInTheDocument();
+    expect(await screen.findByTestId('awards-ceremony-modal')).toBeInTheDocument();
   });
 
-  it('renders FestivalMarketModal when activeModal type is FESTIVAL_MARKET', () => {
+  it('renders FestivalMarketModal when activeModal type is FESTIVAL_MARKET', async () => {
     (useUIStore as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
       activeModal: { id: 'test-4', type: 'FESTIVAL_MARKET', payload: null },
     });
 
     render(<ModalManager />);
-    expect(screen.getByTestId('festival-market-modal')).toBeInTheDocument();
+    expect(await screen.findByTestId('festival-market-modal')).toBeInTheDocument();
   });
 
   it('renders nothing for an unknown modal type', () => {

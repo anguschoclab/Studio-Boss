@@ -38,8 +38,8 @@ export function resolveFestivals(state: GameState, rng: RandomGenerator): StateI
     const weekOfCycle = state.week % 52 === 0 ? 52 : state.week % 52;
     if (fest.weeks.includes(weekOfCycle)) {
       // Find the project and its owner
-      const playerProject = state.studio.internal.projects[sub.projectId];
-      const rival = state.industry.rivals.find(r => !!(r.projects || {})[sub.projectId]);
+      const playerProject = state.entities.projects[sub.projectId];
+      const rival = state.entities.rivals.find(r => !!(r.projects || {})[sub.projectId]);
       const project = playerProject || (rival?.projects || {})[sub.projectId];
       const ownerId = playerProject ? 'PLAYER' : (rival?.id || 'RIVAL');
 
@@ -114,7 +114,7 @@ export function submitToFestival(
   festivalBody: AwardBody, 
   rng: RandomGenerator
 ): StateImpact[] | null {
-  const project = state.studio.internal.projects[projectId];
+  const project = state.entities.projects[projectId];
   const fest = FESTIVAL_BY_BODY[festivalBody];
   
   if (!project || !fest) return null;

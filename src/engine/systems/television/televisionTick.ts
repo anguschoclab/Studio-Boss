@@ -10,8 +10,8 @@ const PILOT_BURN_RATE = 0.30;
 
 function tickPilots(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
-  for (const key in state.studio.internal.projects) {
-    const project = state.studio.internal.projects[key];
+  for (const key in state.entities.projects) {
+    const project = state.entities.projects[key];
     if (project.type !== 'SERIES' || (project as any).stage !== 'pilot') continue;
 
     const weeksInPilot = (project.weeksInPhase || 0) + 1;
@@ -93,7 +93,7 @@ export function tickTelevision(state: GameState, rng: RandomGenerator): StateImp
   const isPlayerMap = new Map<string, boolean>();
   const rivalIdMap = new Map<string, string>();
 
-  const playerProjects = state.studio.internal.projects;
+  const playerProjects = state.entities.projects;
   for (const key in playerProjects) {
     if (!Object.prototype.hasOwnProperty.call(playerProjects, key)) continue;
     const p = playerProjects[key];
@@ -107,7 +107,7 @@ export function tickTelevision(state: GameState, rng: RandomGenerator): StateImp
     }
   }
 
-  const rivals = state.industry.rivals;
+  const rivals = state.entities.rivals;
   for (let i = 0; i < rivals.length; i++) {
     const rival = rivals[i];
     const rivalProjects = rival.projects || {};
@@ -168,7 +168,7 @@ export function tickTelevision(state: GameState, rng: RandomGenerator): StateImp
 
     const isPlayer = isPlayerMap.get(project.id);
     const rivalId = rivalIdMap.get(project.id);
-    const rival = rivalId ? state.industry.rivals.find(r => r.id === rivalId) : undefined;
+    const rival = rivalId ? state.entities.rivals.find(r => r.id === rivalId) : undefined;
 
     if (isPlayer) {
       impacts.push({
@@ -258,7 +258,7 @@ export function tickTelevision(state: GameState, rng: RandomGenerator): StateImp
           payload: { projectId: p.id, update: { state: 'archived' as const } }
         });
       } else if (rivalId) {
-        const rival = state.industry.rivals.find(r => r.id === rivalId);
+        const rival = state.entities.rivals.find(r => r.id === rivalId);
         if (rival) {
           impacts.push({
             type: 'RIVAL_UPDATED',

@@ -81,7 +81,7 @@ describe("awards system", () => {
     it("performs awards resolution using the new weighting system", () => {
       const rng = new RandomGenerator(1);
       const state = getInitialState();
-      state.studio.internal.projects = { [eligibleProject.id]: eligibleProject };
+      state.entities.projects = { [eligibleProject.id]: eligibleProject };
       state.week = 10; // Week 10 is Academy Awards body in configuration
 
       const impacts = runAwardsCeremony(state, 10, 2024, rng);

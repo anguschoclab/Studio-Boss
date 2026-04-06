@@ -42,11 +42,11 @@ vi.mock('@/engine/utils', () => ({
 // Mock finance calculation functions
 vi.mock('@/engine/systems/finance', () => ({
   calculateWeeklyCosts: vi.fn((state: any) => {
-    const projects = state?.studio?.internal?.projects ? Object.values(state.studio.internal.projects) : [];
+    const projects = state?.studio?.internal?.projects ? Object.values(state.entities.projects) : [];
     return projects.reduce((acc: number, p: any) => acc + (p.weeklyCost || 0), 0);
   }),
   calculateWeeklyRevenue: vi.fn((state: any) => {
-    const projects = state?.studio?.internal?.projects ? Object.values(state.studio.internal.projects) : [];
+    const projects = state?.studio?.internal?.projects ? Object.values(state.entities.projects) : [];
     return projects.reduce((acc: number, p: any) => acc + (p.weeklyRevenue || 0), 0);
   }),
   calculateStudioNetWorth: vi.fn(() => 10000000),

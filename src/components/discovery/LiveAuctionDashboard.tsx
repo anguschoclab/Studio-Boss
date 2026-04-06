@@ -25,7 +25,7 @@ interface LiveAuctionDashboardProps {
 
 export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ opportunity: opp, onClose }) => {
   const { placeBid, acquireOpportunity, gameState } = useGameStore();
-  const rivals = gameState?.industry.rivals || [];
+  const rivals = gameState?.entities.rivals || [];
   
   const currentHighest = useMemo(() => {
     return Object.values(opp.bids || {}).reduce((max, b) => Math.max(max, b.amount), 0);

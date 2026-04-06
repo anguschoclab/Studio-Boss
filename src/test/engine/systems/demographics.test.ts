@@ -103,8 +103,8 @@ describe("Demographics System", () => {
     it("deducts cash and increases project buzz", () => {
       const result = simulateMarketingCampaign(mockState, "p1", 500_000, "male_under_25");
       expect(result.finance.cash).toBe(500_000);
-      expect(result.studio.internal.projects["p1"].buzz).toBeGreaterThan(10);
-      expect(result.studio.internal.projects["p1"].targetDemographic).toBe("male_under_25");
+      expect(result.entities.projects["p1"].buzz).toBeGreaterThan(10);
+      expect(result.entities.projects["p1"].targetDemographic).toBe("male_under_25");
     });
   });
 });
