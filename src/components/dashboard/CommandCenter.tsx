@@ -4,19 +4,18 @@ import { DemographicsWidget } from './DemographicsWidget';
 import { Card, CardContent } from '@/components/ui/card';
 import { useGameStore } from '@/store/gameStore';
 import { Badge } from '@/components/ui/badge';
-import { Clapperboard, Users, Building2, TrendingUp, Star, Zap } from 'lucide-react';
+import { Clapperboard, Users, Building2, TrendingUp, Star, Zap, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 import { useShallow } from 'zustand/react/shallow';
 
 export const CommandCenter: React.FC = () => {
-  // ⚡ Bolt: Destructured with useShallow to prevent unnecessary re-renders on minor state ticks
   const gameState = useGameStore(useShallow((state) => state.gameState));
 
   if (!gameState || !gameState.studio || !gameState.industry) return null;
 
   const projects = Object.values(gameState.entities.projects || {});
-  const { talentPool, rivals, newsHistory } = gameState.industry; // talentPool/rivals are also in entities
+  const { talentPool, rivals, newsHistory } = gameState.industry;
   const normalizedTalents = gameState.entities.talents;
   const normalizedRivals = gameState.entities.rivals;
 
@@ -25,29 +24,30 @@ export const CommandCenter: React.FC = () => {
   const rivalCount = Object.keys(normalizedRivals).length;
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+    <div className="space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 ease-out">
       {/* Studio Executive Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/5 pb-4">
-        <div>
-          <div className="flex items-center gap-3 mb-1">
-            <h1 className="text-5xl font-display font-black tracking-tighter uppercase bg-gradient-to-br from-white via-foreground/90 to-foreground/40 bg-clip-text text-transparent drop-shadow-lg">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/10 pb-6 relative">
+        <div className="absolute -left-8 -top-8 w-64 h-64 bg-primary/10 rounded-full blur-[80px] pointer-events-none" />
+        <div className="relative z-10">
+          <div className="flex items-center gap-4 mb-2">
+            <h1 className="text-5xl md:text-6xl font-display font-black tracking-tighter uppercase bg-gradient-to-br from-white via-white/90 to-white/40 bg-clip-text text-transparent drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
               {gameState.studio.name}
             </h1>
-            <Badge className="bg-primary/10 text-primary border border-primary/20 uppercase tracking-[0.2em] text-[10px] py-0.5 px-3 rounded-full shadow-[0_0_15px_hsl(var(--primary) / 0.15)] transition-all duration-500 hover:bg-primary/20 hover:shadow-[0_0_20px_hsl(var(--primary) / 0.3)]">
+            <Badge className="bg-primary/10 hover:bg-primary/20 text-primary border border-primary/30 uppercase tracking-[0.25em] text-[11px] py-1 px-4 rounded-full shadow-[0_0_20px_hsl(var(--primary)_/_0.2)] hover:shadow-[0_0_30px_hsl(var(--primary)_/_0.4)] transition-all duration-500 backdrop-blur-md">
               {gameState.studio.archetype.replace('-', ' ')}
             </Badge>
           </div>
-          <p className="text-muted-foreground/80 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest drop-shadow-sm">
-            <Star className="h-3 w-3 text-secondary animate-pulse drop-shadow-[0_0_5px_hsl(var(--secondary) / 0.6)]" />
+          <p className="text-muted-foreground/90 flex items-center gap-2.5 text-xs font-bold uppercase tracking-[0.2em] drop-shadow-md">
+            <Star className="h-3.5 w-3.5 text-secondary animate-pulse drop-shadow-[0_0_8px_hsl(var(--secondary)_/_0.8)]" />
             Executive HQ & Operational Overview
           </p>
         </div>
         
-        <div className="flex flex-wrap gap-2">
-          <div className="px-5 py-2.5 bg-card/40 backdrop-blur-md rounded-xl border border-white/10 shadow-lg flex flex-col items-end transition-all hover:border-white/20 hover:bg-card/60">
-            <span className="text-[9px] uppercase font-black text-muted-foreground/70 tracking-[0.2em] leading-none mb-1">Market Position</span>
-            <span className="text-sm font-display font-black flex items-center gap-1.5 bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent drop-shadow-sm">
-              <Zap className="h-3.5 w-3.5 text-primary drop-shadow-[0_0_5px_hsl(var(--primary) / 0.8)]" />
+        <div className="flex flex-wrap gap-3 relative z-10">
+          <div className="px-6 py-3 bg-card/60 backdrop-blur-xl rounded-2xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] flex flex-col items-end transition-all duration-500 hover:border-white/30 hover:bg-card/80 hover:-translate-y-1 group">
+            <span className="text-[10px] uppercase font-black text-muted-foreground/60 tracking-[0.25em] leading-none mb-1.5 group-hover:text-muted-foreground/80 transition-colors">Market Position</span>
+            <span className="text-base font-display font-black flex items-center gap-2 bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent drop-shadow-md">
+              <Zap className="h-4 w-4 text-primary drop-shadow-[0_0_8px_hsl(var(--primary)_/_0.8)] group-hover:scale-110 transition-transform duration-300" />
               Tier 2 Studio
             </span>
           </div>
@@ -62,44 +62,52 @@ export const CommandCenter: React.FC = () => {
           { label: 'Industry Rivals', value: rivalCount, sub: 'Active competitors', icon: Building2, color: 'text-destructive' },
           { label: 'Prestige XP', value: gameState.studio.prestige, sub: 'Reputation level', icon: TrendingUp, color: 'text-success' },
         ].map((kpi, i) => (
-          <Card key={i} className="glass-card hover-glow group overflow-hidden relative border border-white/10 hover:border-white/30 transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-[0_24px_48px_rgba(0,0,0,0.5)] bg-gradient-to-br from-white/10 via-white/5 to-black/20 backdrop-blur-2xl">
-            <div className={cn("absolute -top-8 -right-8 w-32 h-32 opacity-10 blur-[40px] rounded-full transition-all duration-700 group-hover:opacity-50 group-hover:blur-[50px] group-hover:scale-150", kpi.color.replace('text', 'bg'))} />
+          <Card key={i} className="glass-card group overflow-hidden relative border border-white/10 hover:border-white/30 transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-[0_24px_48px_rgba(0,0,0,0.6)] bg-gradient-to-br from-white/10 via-white/5 to-black/40 backdrop-blur-3xl">
+            <div className={cn("absolute -top-10 -right-10 w-40 h-40 opacity-10 blur-[50px] rounded-full transition-all duration-700 group-hover:opacity-60 group-hover:blur-[60px] group-hover:scale-150", kpi.color.replace('text', 'bg'))} />
+            <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay pointer-events-none" />
             <CardContent className="p-6 relative z-10 text-left">
-              <div className="flex items-center justify-between mb-5">
-                <span className="text-[11px] font-black uppercase tracking-[0.25em] text-muted-foreground/80 group-hover:text-white transition-colors duration-300">{kpi.label}</span>
-                <div className={cn("p-2.5 rounded-xl bg-gradient-to-br from-white/10 to-transparent backdrop-blur-md border border-white/10 transition-all duration-500 group-hover:scale-110 group-hover:border-white/30 shadow-[0_4px_12px_rgba(0,0,0,0.2)]", kpi.color.replace('text', 'text'))}>
-                  <kpi.icon className={cn("h-5 w-5 drop-shadow-md group-hover:drop-shadow-[0_0_15px_currentColor]", kpi.color)} />
+              <div className="flex items-center justify-between mb-6">
+                <span className="text-xs font-black uppercase tracking-[0.3em] text-muted-foreground/70 group-hover:text-white/90 transition-colors duration-500">{kpi.label}</span>
+                <div className={cn("p-3 rounded-2xl bg-gradient-to-br from-white/10 to-transparent backdrop-blur-xl border border-white/10 transition-all duration-500 group-hover:scale-110 group-hover:border-white/40 shadow-[0_8px_16px_rgba(0,0,0,0.3)]", kpi.color.replace('text', 'text'))}>
+                  <kpi.icon className={cn("h-5 w-5 drop-shadow-lg group-hover:drop-shadow-[0_0_20px_currentColor]", kpi.color)} />
                 </div>
               </div>
-              <div className="text-5xl font-display font-black tracking-tighter mb-2 text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] group-hover:drop-shadow-[0_0_15px_rgba(255,255,255,0.4)] transition-all duration-300">{kpi.value}</div>
-              <p className="text-[10px] text-muted-foreground/60 font-extrabold uppercase tracking-widest group-hover:text-muted-foreground/90 transition-colors duration-300">{kpi.sub}</p>
+              <div className="text-6xl font-display font-black tracking-tighter mb-2 text-white drop-shadow-[0_4px_8px_rgba(0,0,0,0.6)] group-hover:drop-shadow-[0_0_25px_rgba(255,255,255,0.5)] transition-all duration-500">{kpi.value}</div>
+              <p className="text-[11px] text-muted-foreground/50 font-extrabold uppercase tracking-[0.2em] group-hover:text-muted-foreground/80 transition-colors duration-500">{kpi.sub}</p>
             </CardContent>
           </Card>
         ))}
       </div>
 
       {/* Strategic Visualization Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 text-left">
-        <div className="lg:col-span-2">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 text-left">
+        <div className="lg:col-span-2 relative group">
+          <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-transparent to-transparent rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
           <FinancialOverviewWidget />
         </div>
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-1 relative group">
+          <div className="absolute -inset-1 bg-gradient-to-l from-secondary/20 via-transparent to-transparent rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
           <DemographicsWidget />
         </div>
       </div>
       
       {/* Recent Industry Intelligence */}
-      <Card className="glass-card border border-white/10 hover:border-white/20 transition-colors duration-500 bg-card/40 backdrop-blur-xl relative overflow-hidden shadow-2xl text-left">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
+      <Card className="glass-card border border-white/10 hover:border-white/20 transition-all duration-700 bg-card/60 backdrop-blur-2xl relative overflow-hidden shadow-[0_16px_48px_rgba(0,0,0,0.5)] text-left group">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[150px] pointer-events-none group-hover:bg-primary/10 transition-colors duration-1000" />
+        <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.02] mix-blend-overlay pointer-events-none" />
         <CardContent className="p-0 relative z-10">
-          <div className="flex items-center justify-between p-6 border-b border-white/10 bg-white/5">
-            <h3 className="text-sm font-extrabold tracking-[0.1em] uppercase flex items-center gap-2 text-foreground/90 drop-shadow-md">
-              <Zap className="h-4 w-4 text-primary animate-pulse drop-shadow-[0_0_8px_hsl(var(--primary) / 0.6)]" />
-              Recent Intelligence
+          <div className="flex items-center justify-between p-6 border-b border-white/10 bg-gradient-to-r from-white/5 to-transparent">
+            <h3 className="text-sm font-extrabold tracking-[0.15em] uppercase flex items-center gap-3 text-foreground/90 drop-shadow-md">
+              <div className="p-1.5 rounded-lg bg-primary/20 border border-primary/30 shadow-[0_0_15px_hsl(var(--primary)_/_0.3)]">
+                <Zap className="h-4 w-4 text-primary animate-pulse" />
+              </div>
+              Global Intelligence Feed
             </h3>
-            <span className="text-[9px] font-black uppercase text-primary tracking-[0.2em] bg-primary/10 border border-primary/20 px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-[0_0_10px_hsl(var(--primary) / 0.1)]">
-              <div className="w-1.5 h-1.5 rounded-full bg-primary animate-ping" />
-              Live Feed
+            <span className="text-[10px] font-black uppercase text-primary tracking-[0.25em] bg-primary/10 border border-primary/30 px-3 py-1.5 rounded-full flex items-center gap-2 shadow-[0_0_15px_hsl(var(--primary)_/_0.2)] backdrop-blur-md">
+              <div className="w-2 h-2 rounded-full bg-primary animate-ping relative">
+                <div className="absolute inset-0 rounded-full bg-primary" />
+              </div>
+              Live
             </span>
           </div>
           
@@ -107,22 +115,27 @@ export const CommandCenter: React.FC = () => {
             {newsHistory && newsHistory.length > 0 ? (
               newsHistory.slice(0, 4).map((news, i) => (
                 <div key={news.id} className={cn(
-                  "flex items-center gap-5 p-5 transition-all duration-300 group cursor-default hover:bg-white/10 backdrop-blur-sm border-l-2 border-l-transparent hover:border-l-primary relative overflow-hidden",
+                  "flex items-center gap-6 p-6 transition-all duration-500 hover:bg-white/10 backdrop-blur-md border-l-4 border-l-transparent hover:border-l-primary relative overflow-hidden group/item cursor-pointer",
                   i === 0 && "bg-white/5 border-l-primary/50"
                 )}>
-                  {i === 0 && <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent pointer-events-none" />}
-                  <div className="w-12 h-12 rounded-xl bg-black/40 border border-white/10 shadow-inner flex items-center justify-center font-mono text-[11px] font-extrabold text-muted-foreground group-hover:text-primary group-hover:border-primary/30 group-hover:shadow-[0_0_15px_hsl(var(--primary) / 0.15)] transition-all duration-300 relative z-10">
+                  {i === 0 && <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent pointer-events-none opacity-50" />}
+                  <div className="w-14 h-14 rounded-2xl bg-black/60 border border-white/10 shadow-[inset_0_2px_10px_rgba(0,0,0,0.5)] flex items-center justify-center font-mono text-xs font-black text-muted-foreground group-hover/item:text-primary group-hover/item:border-primary/40 group-hover/item:shadow-[0_0_20px_hsl(var(--primary)_/_0.2)] transition-all duration-500 relative z-10 group-hover/item:scale-110">
                     W{news.week}
                   </div>
                   <div className="flex-1 min-w-0 relative z-10">
-                    <p className="text-sm font-extrabold text-foreground/80 leading-tight mb-1 truncate group-hover:text-white transition-colors tracking-tight">{news.headline}</p>
-                    <p className="text-xs text-muted-foreground/60 line-clamp-1 group-hover:text-muted-foreground/90 transition-colors font-medium">{news.description}</p>
+                    <p className="text-base font-extrabold text-foreground/90 leading-tight mb-1.5 truncate group-hover/item:text-white transition-colors tracking-tight drop-shadow-sm">{news.headline}</p>
+                    <p className="text-sm text-muted-foreground/60 line-clamp-1 group-hover/item:text-muted-foreground/90 transition-colors font-medium">{news.description}</p>
                   </div>
+                  <ChevronRight className="h-5 w-5 text-muted-foreground/30 group-hover/item:text-primary group-hover/item:translate-x-1 transition-all duration-300 relative z-10" />
                 </div>
               ))
             ) : (
-              <div className="text-center py-16 px-6 text-muted-foreground/40 italic font-medium">
-                No recent industry activity logged in the global feed.
+              <div className="text-center py-20 px-8 flex flex-col items-center justify-center gap-4">
+                <div className="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mb-2">
+                  <Zap className="h-6 w-6 text-muted-foreground/30" />
+                </div>
+                <p className="text-muted-foreground/50 font-bold uppercase tracking-widest text-sm">Awaiting Intelligence</p>
+                <p className="text-muted-foreground/30 text-xs max-w-sm">The global feed is currently silent. Industry activity will be logged here as it happens.</p>
               </div>
             )}
           </div>
