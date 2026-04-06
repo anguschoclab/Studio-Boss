@@ -49,25 +49,27 @@ export const SBDBView = () => {
       {/* SBDB Header */}
       <div className="flex flex-col space-y-1">
         <div className="flex items-center gap-2">
-          <Users className="w-5 h-5 text-primary" />
-          <h1 className="text-2xl font-black tracking-tighter uppercase italic">SBDB</h1>
+          <Users className="w-6 h-6 text-primary" />
+          <h1 className="text-3xl font-black tracking-tighter uppercase italic bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent drop-shadow-sm">Studio Boss Database</h1>
         </div>
+
         <p className="text-muted-foreground text-sm font-medium">
           The definitive industry database of talent, producers, and stars.
         </p>
       </div>
 
       {/* SBDB Toolbar */}
-      <div className="glass-panel p-4 flex flex-col md:flex-row gap-4 items-center justify-between">
+      <div className="bg-card/50 backdrop-blur-md border border-white/5 rounded-xl p-4 flex flex-col md:flex-row gap-4 items-center justify-between shadow-lg">
         <div className="relative w-full md:w-96">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <TooltipWrapper tooltip="Search by talent name or professional alias" side="bottom">
             <Input 
               aria-label="Search SBDB"
               placeholder="Search SBDB..." 
-              className="pl-10 bg-white/5 border-white/10"
+              className="pl-10 bg-black/40 border-white/10 hover:border-primary/50 focus-visible:ring-primary/50 transition-colors"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
+              aria-label="Search Talent"
             />
           </TooltipWrapper>
         </div>
@@ -75,7 +77,7 @@ export const SBDBView = () => {
         <div className="flex items-center gap-3 w-full md:w-auto">
           <TooltipWrapper tooltip="Filter by primary industry role" side="bottom">
             <Select value={roleFilter} onValueChange={setRoleFilter}>
-              <SelectTrigger className="w-[140px] bg-white/5 border-white/10">
+              <SelectTrigger className="w-[140px] bg-black/40 border-white/10 hover:border-primary/50 focus:ring-primary/50 transition-colors" aria-label="Filter by Role">
                 <SelectValue placeholder="All Roles" />
               </SelectTrigger>
               <SelectContent>
@@ -90,7 +92,7 @@ export const SBDBView = () => {
 
           <TooltipWrapper tooltip="Filter by career tier and prestige level" side="bottom">
             <Select value={tierFilter} onValueChange={setTierFilter}>
-              <SelectTrigger className="w-[140px] bg-white/5 border-white/10">
+              <SelectTrigger className="w-[140px] bg-black/40 border-white/10 hover:border-primary/50 focus:ring-primary/50 transition-colors" aria-label="Filter by Tier">
                 <SelectValue placeholder="All Tiers" />
               </SelectTrigger>
               <SelectContent>
