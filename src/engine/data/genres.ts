@@ -130,11 +130,15 @@ export const CROSSOVER_AFFINITY: Record<string, string[]> = {
   'IP Mashup': ['Comedy', 'Action', 'Animation', 'Superhero', 'Multiverse', 'Sci-Fi', 'Video Game Adaptation'],
   'Video Game Adaptation': ['Action', 'Sci-Fi', 'Fantasy', 'Animation', 'Horror', 'IP Mashup'],
   'Space Opera': ['Sci-Fi', 'Action', 'Fantasy', 'Multiverse'],
-  'Cyberpunk': ['Sci-Fi', 'Action', 'Thriller', 'Crime']
+  'Cyberpunk': ['Sci-Fi', 'Action', 'Thriller', 'Crime'],
+  // 🌌 The Universe Builder: Added specific subgenre crossover pools for massive event mapping.
+  'Psychological Thriller': ['Horror', 'Thriller', 'Drama', 'Crime', 'Elevated Horror'],
+  'True Crime': ['Documentary', 'Drama', 'Thriller', 'Crime'],
+  'Docuseries': ['Documentary', 'Unscripted', 'True Crime']
 };
 
 export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
-  'Superhero': 1.05, // 🌌 The Universe Builder: Modern audiences burn out on superheroes and multiverses much faster.
+  'Superhero': 1.20, // 🌌 The Universe Builder: Increased fatigue risk to reflect rapid audience burnout.
   'Action': 0.50,
   'Sci-Fi': 0.45,
   'Fantasy': 0.30,
@@ -148,10 +152,14 @@ export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
   'Crime': 0.20,
   'Musical': 0.25,
   'Unscripted': 0.40, // Reality/Unscripted can fatigue quickly if over-saturated
-  'Multiverse': 1.15, // 🌌 The Universe Builder: Extremely high fatigue risk if overdone
+  'Multiverse': 1.25, // 🌌 The Universe Builder: Extremely high fatigue risk if overdone. Increased to reflect hyper-saturation.
   'Elevated Horror': 0.20,
   'IP Mashup': 0.85, // 🌌 The Universe Builder: High burnout potential
   'Video Game Adaptation': 0.60,
   'Space Opera': 0.65,
   'Cyberpunk': 0.55,
+  // 🌌 The Universe Builder: Added true crime and docuseries fatigue risks.
+  'Psychological Thriller': 0.35,
+  'True Crime': 0.60,
+  'Docuseries': 0.20,
 };

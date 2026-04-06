@@ -19,12 +19,12 @@ describe('Fatigue Engine', () => {
 
   it('calculates high fatigue for a heavily penalized oversaturated genre (Superhero)', () => {
     const fatigue = calculateFranchiseFatigue(mockFranchise, 2, 'Superhero');
-    // baseRate is 1.05 now.
-    // activeCount (1) * 1.05 = 1.05
+    // baseRate is 1.20 now.
+    // activeCount (1) * 1.20 = 1.20
     // rivalPenalty (2/10 * 0.15 * 1.0) = 0.03
     // loyaltyShield (50/100 * 0.3) = 0.15
-    // 1.05 + 0.03 - 0.15 = 0.93
-    expect(fatigue).toBeCloseTo(0.93, 2);
+    // 1.20 + 0.03 - 0.15 = 1.08 -> clamped to 1.0
+    expect(fatigue).toBeCloseTo(1.0, 2);
   });
 
   it('applies exponential dilution for multiple active projects', () => {
