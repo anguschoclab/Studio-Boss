@@ -3,12 +3,12 @@ import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { formatMoney, getWeekDisplay } from '@/engine/utils';
 import { 
-  Globe, 
-  TrendingUp, 
-  AlertTriangle, 
-  Save, 
-  FastForward 
-} from 'lucide-react';
+  GlobeIcon as Globe, 
+  TrendingUpIcon as TrendingUp, 
+  AlertTriangleIcon as AlertTriangle, 
+  SaveIcon as Save, 
+  FastForwardIcon as FastForward 
+} from '@/components/shared/Icons';
 import { selectActiveProjects, selectMarketMetrics } from '@/store/selectors';
 import { Badge } from '@/components/ui/badge';
 import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';

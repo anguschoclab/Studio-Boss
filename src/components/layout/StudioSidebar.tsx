@@ -4,23 +4,23 @@ import { useGameStore } from '@/store/gameStore';
 import { selectActiveProjects } from '@/store/selectors';
 import { formatMoney } from '@/engine/utils';
 import { 
-  LayoutDashboard, 
-  Film, 
-  Library, 
-  Globe, 
-  Users, 
-  Briefcase, 
-  Newspaper,
-  Building2,
-  ChevronLeft,
-  ChevronRight,
-  LogOut,
-  Settings,
-  DollarSign,
-  Star,
-  Trophy,
-  Clapperboard
-} from 'lucide-react';
+  LayoutDashboardIcon as LayoutDashboard, 
+  FilmIcon as Film, 
+  LibraryIcon as Library, 
+  GlobeIcon as Globe, 
+  UsersIcon as Users, 
+  BriefcaseIcon as Briefcase, 
+  NewspaperIcon as Newspaper,
+  Building2Icon as Building2,
+  ChevronLeftIcon as ChevronLeft,
+  ChevronRightIcon as ChevronRight,
+  LogOutIcon as LogOut,
+  SettingsIcon as Settings,
+  DollarSignIcon as DollarSign,
+  StarIcon as Star,
+  TrophyIcon as Trophy,
+  ClapperboardIcon as Clapperboard
+} from '@/components/shared/Icons';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
