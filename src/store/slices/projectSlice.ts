@@ -22,7 +22,6 @@ export interface ProjectSlice {
   exploitFranchise: (projectId: string) => void;
   acquireAndRebootIP: (ipAssetId: string) => void;
   submitToFestival: (projectId: string, festivalBody: AwardBody) => void;
-  launchAwardsCampaign: (projectId: string, budget: number) => void;
   lockMarketingCampaign: (projectId: string, level: 'none' | 'basic' | 'blockbuster') => void;
   addProject: (project: Project) => void;
   advanceProjectPhase: (projectId: string, newState: string) => void;
@@ -331,17 +330,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
     });
   },
 
-  launchAwardsCampaign: (projectId, budget) => {
-    set((s) => {
-      if (!s.gameState) return s;
-      const rng = new RandomGenerator(s.gameState.rngState);
-      const impact = awardsEngine.launchAwardsCampaign(s.gameState, projectId, budget, rng);
-      if (!impact) return s;
-      const newState = applyStateImpact(s.gameState, impact);
-      newState.rngState = rng.getState();
-      return { gameState: newState };
-    });
-  },
+
 
   lockMarketingCampaign: (projectId, level) => {
     set((s) => {

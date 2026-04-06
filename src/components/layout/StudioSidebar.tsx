@@ -26,7 +26,8 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useNavigate } from '@tanstack/react-router';
-import { LineChart, Line, ResponsiveContainer } from 'recharts';
+
+const SidebarCashChart = React.lazy(() => import('./SidebarCashChart'));
 
 interface NavItem {
   id: TabId;
@@ -144,18 +145,12 @@ export const StudioSidebar = () => {
             <div className="flex items-center gap-2">
               {cashHistory.length > 1 && (
                 <div className="w-12 h-4 opacity-70">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={cashHistory}>
-                      <Line
-                        type="monotone"
-                        dataKey="cash"
-                        stroke={(gameState.finance?.cash ?? 0) < 0 ? "hsl(var(--destructive))" : "hsl(var(--primary))"}
-                        strokeWidth={1.5}
-                        dot={false}
-                        isAnimationActive={false}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
+                  <React.Suspense fallback={null}>
+                    <SidebarCashChart 
+                      data={cashHistory} 
+                      isNegative={(gameState.finance?.cash ?? 0) < 0} 
+                    />
+                  </React.Suspense>
                 </div>
               )}
               <span className={cn("text-xs font-mono font-bold", (gameState.finance?.cash ?? 0) < 0 ? "text-destructive" : "text-primary")}>
