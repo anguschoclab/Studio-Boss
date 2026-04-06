@@ -1,7 +1,7 @@
 import { StateCreator } from 'zustand';
 import { GameStore } from '../gameStore';
 import { handleReleasePhaseEntry, executeMarketing } from '@/engine/systems/projects';
-import { WeeklyFinancialReport, FinanceState, Contract, Project, Buyer, RivalStudio } from '@/engine/types';
+import { WeeklyFinancialReport, FinanceState, Contract, Project, Buyer, RivalStudio, Talent } from '@/engine/types';
 import { FinancialSnapshot, MarketState } from '@/engine/types/state.types';
 import { InterestRateSimulator } from '@/engine/systems/market/InterestRateSimulator';
 import { RandomGenerator } from '@/engine/utils/rng';
@@ -24,7 +24,8 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
 
   addLedgerEntry: (report: WeeklyFinancialReport) =>
     set((state) => {
-      if (!state.gameState) return state;
+      const gs = state.gameState;
+      if (!gs) return state;
       const snapshot: FinancialSnapshot = {
         week: report.week,
         revenue: {
@@ -53,12 +54,12 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
           weeklyHistory: [snapshot, ...state.finance.weeklyHistory].slice(0, 52),
         },
         gameState: {
-          ...state.gameState,
+          ...gs,
           finance: {
-            ...state.gameState.finance,
+            ...gs.finance,
             cash: report.endingCash,
-            ledger: [report, ...state.gameState.finance.ledger].slice(0, 100),
-            weeklyHistory: [snapshot, ...state.gameState.finance.weeklyHistory].slice(0, 52),
+            ledger: [report, ...gs.finance.ledger].slice(0, 100),
+            weeklyHistory: [snapshot, ...gs.finance.weeklyHistory].slice(0, 52),
           },
         },
       };
@@ -66,11 +67,10 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
 
   launchMarketingCampaign: (projectId, budget, domesticPct, angle) => {
     set((s) => {
-      if (!s.gameState) return s;
       const state = s.gameState;
+      if (!state) return s;
       if (budget > state.finance.cash) return s;
 
-      // ⚡ Bolt: Replaced O(N) array allocation and findIndex with O(1) dictionary lookup for project selection
       const originalProject = state.entities.projects[projectId];
       if (!originalProject || originalProject.state !== 'marketing') return s;
 
@@ -81,29 +81,21 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
         primaryAngle: angle as any,
       });
 
-      const contracts: Contract[] = [];
-      const allContracts = state.entities.contracts;
-      for (let i = 0; i < allContracts.length; i++) {
-        const c = allContracts[i];
-        if (c.projectId === p.id) {
-          contracts.push(c);
-        }
-      }
+      const projectContracts: Contract[] = Object.values(state.entities.contracts).filter(c => c.projectId === p.id);
 
       const talentPool = state.entities.talents;
-      const talentMap = new Map<string, any>();
+      const talentMap = new Map<string, Talent>();
       Object.keys(talentPool).forEach(id => {
         talentMap.set(id, talentPool[id]);
       });
 
-      // ⚡ Deterministic RNG for this manual action
       const rng = new RandomGenerator(state.rngState);
 
       const result = handleReleasePhaseEntry(
         p, 
         state.week, 
         state.studio.prestige, 
-        contracts, 
+        projectContracts, 
         talentMap,
         rng
       );
@@ -131,12 +123,9 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
             ...state.finance,
             cash: newCash,
           },
-          studio: {
-            ...state.studio,
-            internal: {
-              ...state.studio.internal,
-              projects: updatedProjects,
-            }
+          entities: {
+            ...state.entities,
+            projects: updatedProjects
           },
           news: {
             ...state.news,

@@ -82,8 +82,9 @@ export function advanceRivals(rng: RandomGenerator, state: GameState): StateImpa
   const rivalUpdates: RivalUpdate[] = [];
   const newsEvents: NewsEvent[] = [];
   
-  for (let i = 0; i < state.entities.rivals.length; i++) {
-    const rival = state.entities.rivals[i];
+  const rivalsList = Object.values(state.entities.rivals || {});
+
+  for (const rival of rivalsList) {
     const update = updateRival(rng, rival);
     
     rivalUpdates.push({
@@ -105,12 +106,9 @@ export function advanceRivals(rng: RandomGenerator, state: GameState): StateImpa
   }
 
   // Talent Poaching News
-  const talentPoolArr = [];
-  for (const id in state.entities.talents) {
-    talentPoolArr.push(state.entities.talents[id]);
-  }
+  const talentPoolArr = Object.values(state.entities.talents || {});
 
-  for (const rival of state.entities.rivals) {
+  for (const rival of rivalsList) {
      const poakMsg = rivalPoachTalent(rng, rival, talentPoolArr);
      if (poakMsg) {
        newsEvents.push({
@@ -129,4 +127,3 @@ export function advanceRivals(rng: RandomGenerator, state: GameState): StateImpa
     newsEvents
   };
 }
-

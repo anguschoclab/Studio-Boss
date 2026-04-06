@@ -6,14 +6,9 @@ import {
   IPAsset, 
   RivalStudio,
   Buyer,
-  ArchetypeKey,
   Agency,
   Opportunity,
-  OpportunityUpdate,
-  TalentRole,
-  TalentTier
 } from '@/engine/types';
-import { RandomGenerator } from '@/engine/utils/rng';
 
 export const createMockTalent = (overrides: Partial<Talent> = {}): Talent => ({
   id: 'mock-talent',
@@ -65,7 +60,7 @@ export const createMockProject = (overrides: Partial<Project> = {}): Project => 
     momentum: 50,
     progress: 0,
     accumulatedCost: 0,
-    // Scripted defaults (will be overwritten by overrides if present)
+    // Scripted defaults
     scriptHeat: 50,
     activeRoles: [],
     scriptEvents: [],
@@ -95,6 +90,12 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
   gameSeed: 42,
   tickCount: 0,
   game: { currentWeek: 1 },
+  entities: {
+    projects: {},
+    talents: {},
+    contracts: {},
+    rivals: {}
+  },
   finance: {
     cash: 5000000,
     ledger: [],
@@ -115,23 +116,26 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
     name: 'Test Studio',
     archetype: 'major',
     prestige: 50,
-    internal: { projects: {}, contracts: [] },
-    ownedPlatforms: []
+    ownedPlatforms: [],
+    internal: {
+        projectHistory: [],
+        firstLookDeals: []
+    }
   },
   market: { opportunities: [], buyers: [] },
   industry: {
-    rivals: [],
     families: [],
     agencies: [],
     agents: [],
-    talentPool: {},
     awards: [],
-    newsHistory: []
+    newsHistory: [],
+    rivals: []
   },
   deals: { activeDeals: [], pendingOffers: [], expiredDeals: [] },
   culture: { genrePopularity: {} },
   history: [],
   eventHistory: [],
+  activeCampaigns: {},
   ...overrides
 } as GameState);
 

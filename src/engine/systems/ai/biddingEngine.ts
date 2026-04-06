@@ -20,11 +20,13 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
   const currWeek = state.week;
   const opportunities = state.market.opportunities.filter(o => (o.expirationWeek || 0) >= currWeek);
 
+  const rivalsList = Object.values(state.entities.rivals || {});
+
   opportunities.forEach(opportunity => {
     // Current highest bid tracking
     const currentHighest = Object.values(opportunity.bids || {}).reduce((max: number, b) => Math.max(max, b.amount), 0);
     
-    state.entities.rivals.forEach(rival => {
+    rivalsList.forEach(rival => {
       const myBid = opportunity.bids[rival.id]?.amount || 0;
 
       // Logic for should rebid: Outbid if highest is better AND rival has cash
@@ -68,8 +70,11 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
             impacts.push({
               type: 'NEWS_ADDED',
               payload: {
+                id: rng.uuid('news'),
                 headline: `STREET TALK: ${rival.name} desperate for "${opportunity.title}"?`,
                 description: `${rival.name} has escalated the bidding for "${opportunity.title}", signaling they might view it as a cornerstone asset for their next slate.`,
+                category: 'market',
+                week: state.week
               }
             });
           }
@@ -90,7 +95,8 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
   
   if (state.week % 4 !== 0) return [];
 
-  const eligibleRivals = state.entities.rivals.filter(r => r.cash > 100_000_000);
+  const rivalsList = Object.values(state.entities.rivals || {});
+  const eligibleRivals = rivalsList.filter(r => r.cash > 100_000_000);
   if (eligibleRivals.length === 0) return [];
 
   const availableTalent = Object.values(state.entities.talents).filter(t => t.prestige > 85 && !t.contractId);
@@ -131,13 +137,12 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
          };
 
          impacts.push({
-           type: 'INDUSTRY_UPDATE',
+           type: 'RIVAL_UPDATED',
            payload: {
-             rival: {
-               rivalId: rival.id,
-               update: {
-                 cash: rival.cash - lockFee
-               }
+             rivalId: rival.id,
+             update: {
+               cash: rival.cash - lockFee
+               // Removed pacts update as it is not on RivalStudio type
              }
            }
          });
@@ -145,9 +150,11 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
          impacts.push({
            type: 'NEWS_ADDED',
            payload: {
+             id: rng.uuid('news'),
              headline: `BIDDING WAR: ${rival.name} locks down ${target.name}`,
              description: `In a major coup, ${rival.name} has signed ${target.name} to an exclusive first-look deal worth an estimated $${(lockFee / 1000000).toFixed(1)}M.`,
-             category: 'talent'
+             category: 'talent',
+             week: state.week
            }
          });
       }

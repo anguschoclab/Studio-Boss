@@ -102,8 +102,9 @@ export class TalentSystem {
 
     // Prepare available talent pool for opportunity generation
     const activeTalentIds = new Set<string>();
-    for (let i = 0; i < (state.entities.contracts || []).length; i++) {
-        activeTalentIds.add(state.entities.contracts[i].talentId);
+    const contractsList = Object.values(state.entities.contracts || {});
+    for (const contract of contractsList) {
+        activeTalentIds.add(contract.talentId);
     }
     const availableTalentIds: string[] = [];
     for (const id in state.entities.talents) {

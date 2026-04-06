@@ -11,17 +11,18 @@ import { useShallow } from 'zustand/react/shallow';
 
 export const CommandCenter: React.FC = () => {
   // ⚡ Bolt: Destructured with useShallow to prevent unnecessary re-renders on minor state ticks
-  const studio = useGameStore(useShallow((state) => state.gameState?.studio));
-  const industry = useGameStore(useShallow((state) => state.gameState?.industry));
+  const gameState = useGameStore(useShallow((state) => state.gameState));
 
-  if (!studio || !industry) return null;
+  if (!gameState || !gameState.studio || !gameState.industry) return null;
 
-  const projects = Object.values(entities.projects || {});
-  const { talentPool, rivals, newsHistory } = industry;
+  const projects = Object.values(gameState.entities.projects || {});
+  const { talentPool, rivals, newsHistory } = gameState.industry; // talentPool/rivals are also in entities
+  const normalizedTalents = gameState.entities.talents;
+  const normalizedRivals = gameState.entities.rivals;
 
   const activeProjectsCount = projects.filter(p => p.state !== 'released' && p.state !== 'post_release' && p.state !== 'archived').length;
-  const talentCount = Object.keys(talentPool).length;
-  const rivalCount = rivals.length;
+  const talentCount = Object.keys(normalizedTalents).length;
+  const rivalCount = Object.keys(normalizedRivals).length;
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
@@ -30,10 +31,10 @@ export const CommandCenter: React.FC = () => {
         <div>
           <div className="flex items-center gap-3 mb-1">
             <h1 className="text-5xl font-display font-black tracking-tighter uppercase bg-gradient-to-br from-white via-foreground/90 to-foreground/40 bg-clip-text text-transparent drop-shadow-lg">
-              {studio.name}
+              {gameState.studio.name}
             </h1>
             <Badge className="bg-primary/10 text-primary border border-primary/20 uppercase tracking-[0.2em] text-[10px] py-0.5 px-3 rounded-full shadow-[0_0_15px_hsl(var(--primary) / 0.15)] transition-all duration-500 hover:bg-primary/20 hover:shadow-[0_0_20px_hsl(var(--primary) / 0.3)]">
-              {studio.archetype.replace('-', ' ')}
+              {gameState.studio.archetype.replace('-', ' ')}
             </Badge>
           </div>
           <p className="text-muted-foreground/80 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest drop-shadow-sm">
@@ -59,11 +60,11 @@ export const CommandCenter: React.FC = () => {
           { label: 'Active Pipeline', value: activeProjectsCount, sub: 'Projects in dev', icon: Clapperboard, color: 'text-primary' },
           { label: 'Talent Roster', value: talentCount, sub: 'Contracted talent', icon: Users, color: 'text-secondary' },
           { label: 'Industry Rivals', value: rivalCount, sub: 'Active competitors', icon: Building2, color: 'text-destructive' },
-          { label: 'Prestige XP', value: studio.prestige, sub: 'Reputation level', icon: TrendingUp, color: 'text-success' },
+          { label: 'Prestige XP', value: gameState.studio.prestige, sub: 'Reputation level', icon: TrendingUp, color: 'text-success' },
         ].map((kpi, i) => (
           <Card key={i} className="glass-card hover-glow group overflow-hidden relative border border-white/10 hover:border-white/30 transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-[0_24px_48px_rgba(0,0,0,0.5)] bg-gradient-to-br from-white/10 via-white/5 to-black/20 backdrop-blur-2xl">
             <div className={cn("absolute -top-8 -right-8 w-32 h-32 opacity-10 blur-[40px] rounded-full transition-all duration-700 group-hover:opacity-50 group-hover:blur-[50px] group-hover:scale-150", kpi.color.replace('text', 'bg'))} />
-            <CardContent className="p-6 relative z-10">
+            <CardContent className="p-6 relative z-10 text-left">
               <div className="flex items-center justify-between mb-5">
                 <span className="text-[11px] font-black uppercase tracking-[0.25em] text-muted-foreground/80 group-hover:text-white transition-colors duration-300">{kpi.label}</span>
                 <div className={cn("p-2.5 rounded-xl bg-gradient-to-br from-white/10 to-transparent backdrop-blur-md border border-white/10 transition-all duration-500 group-hover:scale-110 group-hover:border-white/30 shadow-[0_4px_12px_rgba(0,0,0,0.2)]", kpi.color.replace('text', 'text'))}>
@@ -78,7 +79,7 @@ export const CommandCenter: React.FC = () => {
       </div>
 
       {/* Strategic Visualization Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 text-left">
         <div className="lg:col-span-2">
           <FinancialOverviewWidget />
         </div>
@@ -88,7 +89,7 @@ export const CommandCenter: React.FC = () => {
       </div>
       
       {/* Recent Industry Intelligence */}
-      <Card className="glass-card border border-white/10 hover:border-white/20 transition-colors duration-500 bg-card/40 backdrop-blur-xl relative overflow-hidden shadow-2xl">
+      <Card className="glass-card border border-white/10 hover:border-white/20 transition-colors duration-500 bg-card/40 backdrop-blur-xl relative overflow-hidden shadow-2xl text-left">
         <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
         <CardContent className="p-0 relative z-10">
           <div className="flex items-center justify-between p-6 border-b border-white/10 bg-white/5">

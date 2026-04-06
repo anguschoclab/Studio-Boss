@@ -39,9 +39,9 @@ describe('Studio Boss - 100 Week Determinism Certification', () => {
         expect(currentStateA.studio.prestige).toBe(currentStateB.studio.prestige);
         
         // Deep consistency check on rivals
-        stateA.entities.rivals.forEach((_rival, idx) => {
-          const rA = currentStateA.entities.rivals[idx];
-          const rB = currentStateB.entities.rivals[idx];
+        Object.keys(currentStateA.entities.rivals).forEach(rivalId => {
+          const rA = currentStateA.entities.rivals[rivalId];
+          const rB = currentStateB.entities.rivals[rivalId];
           if (rA && rB) {
             expect(rA.cash).toBe(rB.cash);
             expect(rA.strength).toBe(rB.strength);

@@ -11,19 +11,26 @@ describe('tickProduction', () => {
     gameSeed: 1,
     tickCount: 0,
     game: { currentWeek: 1 },
-    finance: { cash: 1000000, ledger: [] },
+    entities: {
+      projects: {},
+      talents: {},
+      contracts: {},
+      rivals: {}
+    },
+    finance: { cash: 1000000, ledger: [], weeklyHistory: [], marketState: { baseRate: 0.05, savingsYield: 0.02, debtRate: 0.1, loanRate: 0.08, rateHistory: [], sentiment: 50, cycle: 'STABLE' } },
     news: { headlines: [] },
     ip: { vault: [], franchises: {} },
     studio: {
       name: 'Test Studio',
       archetype: 'major',
       prestige: 50,
+      ownedPlatforms: [],
       internal: {
-        projects: {}, 
-        contracts: [],
+        projectHistory: [],
+        firstLookDeals: []
       }
     },
-    market: { opportunities: [], buyers: [], activeMarketEvents: [] },
+    market: { opportunities: [], buyers: [] },
     industry: {
       rivals: [],
       families: [],
@@ -31,7 +38,6 @@ describe('tickProduction', () => {
       agents: [],
       talentPool: {} as Record<string, Talent>,
       newsHistory: [],
-      rumors: []
     },
     culture: { genrePopularity: {} },
     history: [],

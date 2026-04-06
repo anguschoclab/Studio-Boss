@@ -10,22 +10,26 @@ describe('AI Bidding Engine (Target C2 Refactor)', () => {
   const mockRival: RivalStudio = createMockRival({
     id: 'rival-1',
     name: 'Major Studio',
+    cash: 500_000_000,
+    archetype: 'major',
+    currentMotivation: 'FRANCHISE_BUILDING'
   });
 
   const mockOpportunity: Opportunity = createMockOpportunity({
     id: 'script-1',
     title: 'Action Epic',
-    bids: { 'player-1': { amount: 1_100_000, terms: 'standard' } },
+    genre: 'Action',
+    costToAcquire: 1_000_000,
+    bids: { 'PLAYER': { amount: 1_100_000, terms: 'standard' } },
+    highestBidderId: 'PLAYER'
   });
 
   const mockState = createMockGameState({
-    industry: {
-      rivals: [mockRival],
-      families: [],
-      agencies: [],
-      agents: [],
-      talentPool: {},
-      newsHistory: []
+    entities: {
+      projects: {},
+      talents: {},
+      contracts: {},
+      rivals: { 'rival-1': mockRival }
     },
     market: { 
       opportunities: [mockOpportunity],
@@ -35,16 +39,21 @@ describe('AI Bidding Engine (Target C2 Refactor)', () => {
 
   it('generates a OPPORTUNITY_UPDATED impact representing a counter-bid', () => {
     const impacts = tickAuctions(mockState as any, rng);
-    const bidImpact = impacts.find(i => i.type === 'OPPORTUNITY_UPDATED') as OpportunityUpdateImpact | undefined;
+    const bidImpact = impacts.find(i => i.type === 'OPPORTUNITY_UPDATED');
     
     expect(bidImpact).toBeDefined();
-    expect(bidImpact?.payload.opportunityId).toBe('script-1');
-    expect(bidImpact?.payload.rivalId).toBe('rival-1');
-    expect(bidImpact?.payload.bid.amount).toBeGreaterThan(1_100_000);
+    const payload = (bidImpact as any).payload;
+    expect(payload.opportunityId).toBe('script-1');
+    expect(payload.rivalId).toBe('rival-1');
+    expect(payload.bid.amount).toBeGreaterThan(1_100_000);
   });
 
   it('does not bid if the rival is already the highest bidder', () => {
-    const winningOpportunity = { ...mockOpportunity, bids: { 'rival-1': { amount: 2_000_000, terms: 'standard' } } };
+    const winningOpportunity = { 
+      ...mockOpportunity, 
+      highestBidderId: 'rival-1',
+      bids: { 'rival-1': { amount: 2_000_000, terms: 'standard' } } 
+    };
     const winningState = {
       ...mockState,
       market: {
@@ -61,11 +70,11 @@ describe('AI Bidding Engine (Target C2 Refactor)', () => {
     const poorRival = { ...mockRival, cash: 1_000_000 };
     const poorState = { 
         ...mockState, 
-        industry: { ...mockState.industry, rivals: [poorRival] } 
+        entities: { ...mockState.entities, rivals: { 'rival-1': poorRival } } 
     } as unknown as GameState;
     
     const impacts = tickAuctions(poorState, rng);
-    // Should not bid because currentHighest (1.1M) * 1.5 is already more than available cash
+    // Should not bid because currentHighest (1.1M) * liquidityBuffer is already more than available cash
     expect(impacts.length).toBe(0);
   });
 });

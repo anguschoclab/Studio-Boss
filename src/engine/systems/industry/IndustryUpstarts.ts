@@ -10,10 +10,11 @@ import { RandomGenerator } from '../../utils/rng';
  */
 export function tickIndustryUpstarts(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const currentRivals = state.entities.rivals.length;
+  const rivalsList = Object.values(state.entities.rivals || {});
+  const currentRivals = rivalsList.length;
   const currentStreamers = state.market.buyers.filter(b => b.archetype === 'streamer').length;
 
-  const usedNames = new Set(state.entities.rivals.map(r => r.name));
+  const usedNames = new Set(rivalsList.map(r => r.name));
   state.market.buyers.forEach(b => usedNames.add(b.name));
 
   // Minimum thresholds
@@ -47,10 +48,10 @@ export function tickIndustryUpstarts(state: GameState, rng: RandomGenerator): St
     };
 
     impacts.push({
-      type: 'INDUSTRY_UPDATE',
+      type: 'RIVAL_UPDATED',
       payload: { 
-        update: {},
-        rival: { rivalId: newStudio.id, update: newStudio }
+        rivalId: newStudio.id, 
+        update: newStudio 
       }
     });
 

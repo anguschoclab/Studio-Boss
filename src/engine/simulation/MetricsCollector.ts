@@ -34,14 +34,14 @@ export class MetricsCollector {
   private totalTvAwards = 0;
   
   public record(state: GameState, summary: WeekSummary): void {
-    const rivals = state.entities.rivals;
+    const rivalsList = Object.values(state.entities.rivals || {});
     const platforms = state.market.buyers.filter(b => b.archetype === 'streamer') as any[];
     
     // Total bails tracking (Phase 2 hardening)
     const currentBailouts = (summary as any).totalBailouts || 0;
     this.totalBailoutCash += currentBailouts;
     
-    const rivalTotalCash = rivals.reduce((sum, r) => sum + (Number(r.cash) || 0), 0);
+    const rivalTotalCash = rivalsList.reduce((sum, r) => sum + (Number(r.cash) || 0), 0);
     const platformTotalCash = platforms.reduce((sum, p) => sum + (Number(p.cash) || 0), 0);
     const playerCash = Number(state.finance.cash) || 0;
     
@@ -53,7 +53,7 @@ export class MetricsCollector {
     
     const allStudios = [
         { id: 'PLAYER', projects: Object.values(state.entities.projects), cash: Number(state.finance.cash) || 0, name: state.studio.name },
-        ...rivals.map(r => ({ id: r.id, projects: Object.values(r.projects || {}), cash: Number(r.cash) || 0, name: r.name }))
+        ...rivalsList.map(r => ({ id: r.id, projects: Object.values(r.projects || {}), cash: Number(r.cash) || 0, name: r.name }))
     ];
 
     allStudios.forEach(studio => {
@@ -138,7 +138,7 @@ export class MetricsCollector {
     // 10. Talent Pool Analysis (Optimized single-pass)
     let totalPrestige = 0;
     let aListCount = 0;
-    const talentValues = Object.values(state.entities.talents);
+    const talentValues = Object.values(state.entities.talents || {});
     const talentPoolSize = talentValues.length;
     
     talentValues.forEach(t => {
@@ -149,7 +149,7 @@ export class MetricsCollector {
     const metrics: SimulationMetrics = {
       week: state.week,
       playerCash: playerCash,
-      rivalAvgCash: rivals.length > 0 ? rivalTotalCash / rivals.length : 0,
+      rivalAvgCash: rivalsList.length > 0 ? rivalTotalCash / rivalsList.length : 0,
       totalSystemCash: totalAssets + activeBudgets,
       totalMarketSentiment: state.finance.marketState?.sentiment || 50,
       talentPoolSize: talentPoolSize,
@@ -157,7 +157,7 @@ export class MetricsCollector {
       activeProjects: Object.values(state.entities.projects).filter(p => !['released', 'archived', 'post_release'].includes(p.state)).length,
       completedProjects: worldCompletedCount,
       retiredCount: this.totalRetired,
-      bankruptcyCount: rivals.filter(r => (Number(r.cash) || 0) <= -50000000).length,
+      bankruptcyCount: rivalsList.filter(r => (Number(r.cash) || 0) <= -50000000).length,
       marketShare: marketShare,
       industryLeader: leader?.name,
       topGenreROI: { genre: topGenre, roi: maxROI },
@@ -167,8 +167,8 @@ export class MetricsCollector {
       totalBailoutCash: this.totalBailoutCash,
       avgNielsenKeyDemo: tvProjectCount > 0 ? totalNielsenDemo / tvProjectCount : 0,
       cutCounts: cutCounts,
-      activeStudioCount: rivals.length + 1,
-      consolidationCount: 11 - (rivals.length + 1)
+      activeStudioCount: rivalsList.length + 1,
+      consolidationCount: 11 - (rivalsList.length + 1)
     };
 
     this.history.push(metrics);

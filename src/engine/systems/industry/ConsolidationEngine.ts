@@ -9,7 +9,8 @@ import { RandomGenerator } from '../../utils/rng';
  */
 export function tickConsolidation(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const rivals = state.entities.rivals;
+  const rivalsMap = state.entities.rivals || {};
+  const rivals = Object.values(rivalsMap);
   const buyers = state.market.buyers;
 
   // Potential Acquirers: Majors with surplus cash
@@ -46,7 +47,8 @@ export function tickConsolidation(state: GameState, rng: RandomGenerator): State
           id: rng.uuid('hl'),
           headline: `REGULATOR BLOCK: ${acquirer.name}'s bid for ${target.name} rejected on ${reg.reason}`,
           description: `The proposed acquisition of ${target.name} by ${acquirer.name} has been blocked by federal regulators citing ${reg.reason}.`,
-          category: 'market'
+          category: 'market',
+          week: state.week
         }
       });
       return impacts;
@@ -77,7 +79,8 @@ export function tickConsolidation(state: GameState, rng: RandomGenerator): State
         id: rng.uuid('hl'),
         headline: `CONSOLIDATION: ${acquirer.name} acquires ${target.name} for $${(cost / 1_000_000).toFixed(1)}M`,
         description: `In a major industry move, ${acquirer.name} today finalized the acquisition of ${target.name}, consolidating its dominant market position.`,
-        category: 'general'
+        category: 'general',
+        week: state.week
       }
     });
   } else if (platforms.length > 0) {
@@ -93,9 +96,11 @@ export function tickConsolidation(state: GameState, rng: RandomGenerator): State
       impacts.push({
         type: 'NEWS_ADDED',
         payload: {
+          id: rng.uuid('hl'),
           headline: `FEDERAL CRACKDOWN: ${platform.name} sale to ${acquirer.name} blocked`,
           description: `Regulators have intervened in the vertical integration of ${platform.name} into the ${acquirer.name} portfolio, citing market dominance concerns.`,
-          category: 'market'
+          category: 'market',
+          week: state.week
         }
       });
       return impacts;
@@ -124,13 +129,14 @@ export function tickConsolidation(state: GameState, rng: RandomGenerator): State
     impacts.push({
       type: 'NEWS_ADDED',
       payload: {
+        id: rng.uuid('hl'),
         headline: `VERTICAL INTEGRATION: ${acquirer.name} buys ${platform.name}`,
         description: `In a strategic shift toward vertical integration, ${acquirer.name} has acquired the ${platform.name} streaming platform to secure direct audience access.`,
-        category: 'market'
+        category: 'market',
+        week: state.week
       }
     });
   }
 
   return impacts;
 }
-

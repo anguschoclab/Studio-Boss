@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useGameStore } from '@/store/gameStore';
-import { Project, Talent, TalentTier, TalentRole } from '@/engine/types';
+import { Project, Talent, TalentRole } from '@/engine/types';
 import { formatMoney } from '@/engine/utils';
 import { getRecommendedTalentForProject } from '@/engine/utils/projectUtils';
 import { Button } from '@/components/ui/button';
@@ -11,13 +11,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { 
   Users, 
   Search, 
-  Filter, 
   Star, 
   TrendingUp, 
-  CheckCircle2, 
   X,
-  Target,
-  Award
+  Target
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { TalentAvatar } from './TalentAvatar';
@@ -39,8 +36,8 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
   const [showMatchesOnly, setShowMatchesOnly] = useState(false);
   const [hoveredTalentId, setHoveredTalentId] = useState<string | null>(null);
 
-  const talentPool = useMemo(() => Object.values(gameState?.industry?.talentPool || {}), [gameState?.industry?.talentPool]);
-  const contracts = useMemo(() => gameState?.studio?.internal?.contracts || [], [gameState?.studio?.internal?.contracts]);
+  const talentPool = useMemo(() => Object.values(gameState?.entities.talents || {}), [gameState?.entities.talents]);
+  const contracts = useMemo(() => Object.values(gameState?.entities.contracts || {}), [gameState?.entities.contracts]);
   
   const attachedTalentIds = useMemo(() => {
     return new Set(contracts.filter(c => c.projectId === project.id).map(c => c.talentId));
@@ -63,18 +60,18 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
       const t = rec.talent;
       const matchesSearch = t.name.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesTier = selectedTier === 'ALL' || t.tier.toString() === selectedTier;
-      const matchesRole = selectedRole === 'ALL' || t.roles.includes(selectedRole);
+      const matchesRole = selectedRole === 'ALL' || t.roles.includes(selectedRole as TalentRole) || t.role === selectedRole;
       const matchesScore = !showMatchesOnly || rec.score >= 70;
 
       return matchesSearch && matchesTier && matchesRole && matchesScore;
     });
-  }, [talentPool, attachedTalentIds, project, searchQuery, selectedTier, selectedRole, showMatchesOnly, attachedTalent]);
+  }, [talentPool, attachedTalentIds, project, searchQuery, selectedTier, selectedRole, showMatchesOnly]);
 
   const talentMap = useMemo(() => new Map(talentPool.map(t => [t.id, t])), [talentPool]);
   const hoveredTalent = hoveredTalentId ? talentMap.get(hoveredTalentId) : null;
 
   return (
-    <div className="flex flex-col h-full bg-slate-950/50 rounded-2xl border border-slate-800 overflow-hidden">
+    <div className="flex flex-col h-full bg-slate-950/50 rounded-2xl border border-slate-800 overflow-hidden text-left">
       {/* Header / Active Casting */}
       <div className="p-4 border-b border-slate-800 bg-black/40 space-y-4">
         <div className="flex items-center justify-between">
@@ -119,7 +116,7 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
                 <SelectTrigger className="flex-1 bg-slate-900 border-slate-700 h-9 text-[10px] font-bold uppercase">
                   <SelectValue placeholder="Tier" />
                 </SelectTrigger>
-                <SelectContent className="bg-slate-950 border-slate-800">
+                <SelectContent className="bg-slate-950 border-slate-800 text-slate-200">
                   <SelectItem value="ALL">All Tiers</SelectItem>
                   <SelectItem value="4">S-List</SelectItem>
                   <SelectItem value="3">A-List</SelectItem>
@@ -132,7 +129,7 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
                 <SelectTrigger className="flex-1 bg-slate-900 border-slate-700 h-9 text-[10px] font-bold uppercase">
                   <SelectValue placeholder="Role" />
                 </SelectTrigger>
-                <SelectContent className="bg-slate-950 border-slate-800">
+                <SelectContent className="bg-slate-950 border-slate-800 text-slate-200">
                   <SelectItem value="ALL">All Roles</SelectItem>
                   <SelectItem value="actor">Actors</SelectItem>
                   <SelectItem value="director">Directors</SelectItem>

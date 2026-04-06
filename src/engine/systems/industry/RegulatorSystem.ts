@@ -13,6 +13,8 @@ export class RegulatorSystem {
       return (history || []).slice(0, 4).reduce((sum, h) => sum + (h.revenue?.theatrical || 0) + (h.revenue?.streaming || 0), 0);
     };
 
+    const rivalsList = Object.values(state.entities.rivals || {});
+
     const studios = [
       { 
         id: 'player', 
@@ -20,7 +22,7 @@ export class RegulatorSystem {
         revenue: calculateTrailingRevenue(state.finance.weeklyHistory), 
         type: state.studio.archetype 
       },
-      ...state.entities.rivals.map(r => ({ 
+      ...rivalsList.map(r => ({ 
         id: r.id, 
         name: r.name, 
         revenue: calculateTrailingRevenue(r.weeklyHistory || []), 
@@ -54,7 +56,8 @@ export class RegulatorSystem {
             headline: `Federal Trade Commission Fines ${s.name}`,
             description: `Cited for market dominance (${Math.round(share * 100)}%), ${s.name} has been issued a $25M penalty.`,
             category: 'market',
-            publication: 'Financial Journal'
+            publication: 'Financial Journal',
+            week: state.week
           }
         });
       }
@@ -77,14 +80,16 @@ export class RegulatorSystem {
       return (history || []).slice(0, 4).reduce((sum, h) => sum + (h.revenue?.theatrical || 0) + (h.revenue?.streaming || 0), 0);
     };
 
+    const rivalsList = Object.values(state.entities.rivals || {});
+
     const totalRev = calculateTrailingRevenue(state.finance.weeklyHistory) + 
-                   state.entities.rivals.reduce((sum, r) => sum + calculateTrailingRevenue(r.weeklyHistory || []), 0);
+                   rivalsList.reduce((sum, r) => sum + calculateTrailingRevenue(r.weeklyHistory || []), 0);
     
     let acquirerRev = 0;
     if (acquirerId === 'player') {
       acquirerRev = calculateTrailingRevenue(state.finance.weeklyHistory);
     } else {
-      const acquirer = state.entities.rivals.find(r => r.id === acquirerId);
+      const acquirer = state.entities.rivals[acquirerId];
       acquirerRev = calculateTrailingRevenue(acquirer?.weeklyHistory || []);
     }
     
@@ -109,13 +114,15 @@ export class RegulatorSystem {
       return (history || []).slice(0, 4).reduce((sum, h) => sum + (h.revenue?.theatrical || 0) + (h.revenue?.streaming || 0), 0);
     };
 
+    const rivalsList = Object.values(state.entities.rivals || {});
+
     const studios = [
       { id: 'player', revenue: calculateTrailingRevenue(state.finance.weeklyHistory) },
-      ...state.entities.rivals.map(r => ({ id: r.id, revenue: calculateTrailingRevenue(r.weeklyHistory || []) }))
+      ...rivalsList.map(r => ({ id: r.id, revenue: calculateTrailingRevenue(r.weeklyHistory || []) }))
     ];
 
     const totalIndustryRevenue = studios.reduce((sum, s) => sum + s.revenue, 1);
     const target = studios.find(s => s.id === studioId);
-    return (target?.revenue || 0) / totalIndustryRevenue;
+    return (target?.revenue || 0) / (totalIndustryRevenue || 1);
   }
 }

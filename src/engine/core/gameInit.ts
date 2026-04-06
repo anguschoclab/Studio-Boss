@@ -238,8 +238,7 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
       archetype,
       prestige: arch.startingPrestige,
       internal: {
-        projects: {},
-        contracts: [],
+        firstLookDeals: [],
         projectHistory: [],
       },
       ownedPlatforms: playerOwnedPlatforms,
@@ -250,13 +249,20 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
       buyers: initialBuyers,
     },
     industry: {
-      rivals,
       families,
       agencies,
       agents,
-      talentPool,
       awards: [],
       newsHistory: [],
+    },
+    entities: {
+      projects: {},
+      contracts: {}, // Will be empty for player at start, but rivals might have some
+      talents: talentPool,
+      rivals: rivals.reduce((acc, r) => {
+        acc[r.id] = r;
+        return acc;
+      }, {} as Record<string, RivalStudio>),
     },
     deals: {
       activeDeals: [],

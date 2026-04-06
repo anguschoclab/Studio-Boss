@@ -8,16 +8,22 @@ describe('Week Advance Pipeline (Target A4)', () => {
     week: 1,
     gameSeed: 1,
     tickCount: 0,
-    projects: { active: [] },
     game: { currentWeek: 1 },
-    finance: { cash: 1_000_000, ledger: [], weeklyHistory: [] },
+    entities: {
+      projects: {},
+      talents: {},
+      contracts: {},
+      rivals: {}
+    },
+    finance: { cash: 1_000_000, ledger: [], weeklyHistory: [], marketState: { baseRate: 0.05, savingsYield: 0.02, debtRate: 0.1, loanRate: 0.08, rateHistory: [], sentiment: 50, cycle: 'STABLE' } },
     news: { headlines: [] },
     ip: { vault: [], franchises: {} },
     studio: {
       name: 'Player Studio',
       archetype: 'major',
       prestige: 50,
-      internal: { projects: {}, contracts: [] }
+      ownedPlatforms: [],
+      internal: { projectHistory: [], firstLookDeals: [] }
     },
     market: { opportunities: [], buyers: [] },
     industry: {
@@ -27,7 +33,6 @@ describe('Week Advance Pipeline (Target A4)', () => {
       agents: [],
       talentPool: {} as Record<string, Talent>,
       newsHistory: [],
-      rumors: []
     },
     culture: { genrePopularity: {} },
     history: [],
@@ -52,9 +57,20 @@ describe('Week Advance Pipeline (Target A4)', () => {
         week: 1,
         tickCount: 0,
         gameSeed: 123,
-        finance: { cash: 1000000, ledger: [{ week: 1, revenue: { boxOffice: 0, distribution: 0, other: 0 }, expenses: { production: 0, marketing: 0, overhead: 0, pacts: 0 }, netProfit: 0 }], weeklyHistory: [{ revenue: { theatrical: 0, streaming: 0, merch: 0, passive: 0 }, expenses: { production: 0, burn: 0, marketing: 0, royalties: 0, interest: 0, pacts: 0 }, net: 0, cash: 1000000, week: 1 }] },
-        studio: { name: 'Empty', prestige: 50, archetype: 'indie', internal: { projects: {}, contracts: [], firstLookDeals: [] } },
-        market: { opportunities: [], buyers: [], trends: [], activeMarketEvents: [] },
+        entities: {
+          projects: {},
+          talents: {},
+          contracts: {},
+          rivals: {}
+        },
+        finance: { 
+          cash: 1000000, 
+          ledger: [], 
+          weeklyHistory: [],
+          marketState: { baseRate: 0.05, savingsYield: 0.02, debtRate: 0.1, loanRate: 0.08, rateHistory: [], sentiment: 50, cycle: 'STABLE' }
+        },
+        studio: { name: 'Empty', prestige: 50, archetype: 'indie', ownedPlatforms: [], internal: { projectHistory: [], firstLookDeals: [] } },
+        market: { opportunities: [], buyers: [] },
         industry: { rivals: [], talentPool: {}, newsHistory: [], families: [], agencies: [], agents: [] },
         ip: { vault: [], franchises: {} },
         news: { headlines: [] },
@@ -65,7 +81,7 @@ describe('Week Advance Pipeline (Target A4)', () => {
       } as any;
 
       const localRng = new RandomGenerator(123);
-const { newState, summary } = advanceWeek(emptyState, localRng);
+      const { newState, summary } = advanceWeek(emptyState, localRng);
       expect(newState.week).toBe(2);
       expect(summary.totalRevenue).toBeGreaterThanOrEqual(0); // Should be 0 + interest
       expect(summary.totalCosts).toBeGreaterThanOrEqual(0); // Should just be overhead

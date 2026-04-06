@@ -1,4 +1,4 @@
-import { Project, Buyer, Contract } from '../../types';
+import { Project, Buyer, Contract, GameState } from '../../types';
 import { ProjectRating } from '../../types/project.types';
 import { IPAsset } from '../../types/state.types';
 import { calculateWeeklyIPRevenue } from '../ip/merchandisingEngine';
@@ -13,7 +13,7 @@ export class RevenueProcessor {
    */
   static calculateActiveRevenue(
     projects: Project[],
-    state: import('../../types').GameState,
+    state: GameState,
     contracts: Contract[],
     vault: IPAsset[],
     studioId: string
@@ -61,7 +61,8 @@ export class RevenueProcessor {
           }
         }
         
-        const franchise = p.franchiseId ? state.ip.franchises[p.franchiseId] : null;
+        const franchiseId = p.franchiseId;
+        const franchise = franchiseId ? state.ip.franchises[franchiseId] : null;
         const weeklyMerch = this.calculateMerchRevenue(p.buzz, franchise?.relevanceScore || 0, p.rating ?? 'PG-13');
         merch += weeklyMerch;
 
@@ -74,7 +75,8 @@ export class RevenueProcessor {
     });
 
     // 🌌 PHASE 2: Backend Streaming (Royalties from Rival Projects)
-    (state.industry?.rivals || []).forEach(rival => {
+    const rivalsList = Object.values(state.entities.rivals || {});
+    rivalsList.forEach(rival => {
       Object.values(rival.projects || {}).forEach(rp => {
         if (rp.state === 'released') {
           const weeklyGross = (rp.weeklyRevenue || 0);
@@ -98,7 +100,7 @@ export class RevenueProcessor {
    * Stage 2.2: Calculates a revenue multiplier based on the collective 'Draw' and 'Prestige' 
    * of attached talent. High-value stars act as a force multiplier for box office.
    */
-  static calculateTalentRevenueMultiplier(project: Project, state: import('../../types').GameState, contracts: Contract[]): number {
+  static calculateTalentRevenueMultiplier(project: Project, state: GameState, contracts: Contract[]): number {
     let totalBonus = 0;
     let hasContract = false;
 

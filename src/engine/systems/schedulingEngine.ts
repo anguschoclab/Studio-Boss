@@ -5,13 +5,13 @@ export class SchedulingEngine {
   static tick(state: GameState, rng: RandomGenerator): StateImpact[] {
     const impacts: StateImpact[] = [];
     const projects = Object.values(state.entities.projects) as Project[];
-    const contracts = state.entities.contracts;
+    const contractsList = Object.values(state.entities.contracts || {});
     const talentPool = state.entities.talents;
 
     projects.forEach(project => {
       if (project.state !== 'production') return;
 
-      const { hasConflict, conflicts } = this.evaluateSchedulingConflicts(project, contracts, talentPool, state.week);
+      const { hasConflict, conflicts } = this.evaluateSchedulingConflicts(project, contractsList, talentPool, state.week);
       
       if (hasConflict) {
         impacts.push({

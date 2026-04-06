@@ -10,11 +10,18 @@ describe('tickFinance', () => {
     week: 5,
     gameSeed: 1,
     tickCount: 0,
-    projects: { active: [] },
     game: { currentWeek: 5 },
+    entities: {
+      projects: {},
+      talents: {},
+      contracts: {},
+      rivals: {}
+    },
     finance: {
       cash: 50_000_000,
-      ledger: []
+      ledger: [],
+      weeklyHistory: [],
+      marketState: { baseRate: 0.05, savingsYield: 0.02, debtRate: 0.1, loanRate: 0.08, rateHistory: [], sentiment: 50, cycle: 'STABLE' }
     },
     news: { headlines: [] },
     ip: { vault: [], franchises: {} },
@@ -22,15 +29,15 @@ describe('tickFinance', () => {
       name: 'Test Studio',
       archetype: 'major',
       prestige: 50,
+      ownedPlatforms: [],
       internal: {
-        projects: {}, 
-        contracts: [],
+        projectHistory: [],
+        firstLookDeals: []
       }
     },
     market: {
       opportunities: [],
-      buyers: [],
-      activeMarketEvents: []
+      buyers: []
     },
     industry: {
       rivals: [],
@@ -39,7 +46,6 @@ describe('tickFinance', () => {
       agents: [],
       talentPool: {} as Record<string, Talent>,
       newsHistory: [],
-      rumors: []
     },
     culture: {
       genrePopularity: {}
@@ -60,8 +66,8 @@ describe('tickFinance', () => {
     expect(ledgerImpact).toBeDefined();
     
     // Net profit should be negative (overhead + interest cost for major studio with no projects)
-    expect(fundsImpact?.payload.amount).toBe(-1304087);
+    expect(fundsImpact?.payload.amount).toBe(-1330432);
     expect(ledgerImpact?.payload.report.week).toBe(5);
-    expect(ledgerImpact?.payload.report.netProfit).toBe(-1304087);
+    expect(ledgerImpact?.payload.report.netProfit).toBe(-1330432);
   });
 });

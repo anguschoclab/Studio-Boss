@@ -39,10 +39,11 @@ function tickPilots(state: GameState, rng: RandomGenerator): StateImpact[] {
         impacts.push({
           type: 'NEWS_ADDED',
           payload: {
-            id: `pilot-grad-${project.id}`,
+            id: rng.uuid('pilot-grad'),
             headline: `"${project.title}" pilot greenlit to series`,
             description: `The network has ordered a full series pickup.`,
-            category: 'development'
+            category: 'development',
+            week: state.week
           }
         });
       } else {
@@ -56,10 +57,11 @@ function tickPilots(state: GameState, rng: RandomGenerator): StateImpact[] {
         impacts.push({
           type: 'NEWS_ADDED',
           payload: {
-            id: `pilot-pass-${project.id}`,
+            id: rng.uuid('pilot-pass'),
             headline: `"${project.title}" pilot passed on`,
             description: `The network declined to order a full series.`,
-            category: 'cancellation'
+            category: 'cancellation',
+            week: state.week
           }
         });
       }
@@ -107,9 +109,11 @@ export function tickTelevision(state: GameState, rng: RandomGenerator): StateImp
     }
   }
 
-  const rivals = state.entities.rivals;
-  for (let i = 0; i < rivals.length; i++) {
-    const rival = rivals[i];
+  const rivalsMap = state.entities.rivals || {};
+  const rivalsList = Object.values(rivalsMap);
+
+  for (let i = 0; i < rivalsList.length; i++) {
+    const rival = rivalsList[i];
     const rivalProjects = rival.projects || {};
     for (const key in rivalProjects) {
       if (!Object.prototype.hasOwnProperty.call(rivalProjects, key)) continue;
@@ -168,7 +172,7 @@ export function tickTelevision(state: GameState, rng: RandomGenerator): StateImp
 
     const isPlayer = isPlayerMap.get(project.id);
     const rivalId = rivalIdMap.get(project.id);
-    const rival = rivalId ? state.entities.rivals.find(r => r.id === rivalId) : undefined;
+    const rival = rivalId ? rivalsMap[rivalId] : undefined;
 
     if (isPlayer) {
       impacts.push({
@@ -231,10 +235,11 @@ export function tickTelevision(state: GameState, rng: RandomGenerator): StateImp
         impacts.push({
           type: 'NEWS_ADDED',
           payload: {
-            id: `shopping-${project.id}`,
+            id: rng.uuid('shopping'),
             headline: `"${project.title}" cancelled — shopping for new home`,
             description: `The series is now available for pickup by another network.`,
-            category: 'cancellation'
+            category: 'cancellation',
+            week: state.week
           }
         });
       } else {
@@ -258,7 +263,7 @@ export function tickTelevision(state: GameState, rng: RandomGenerator): StateImp
           payload: { projectId: p.id, update: { state: 'archived' as const } }
         });
       } else if (rivalId) {
-        const rival = state.entities.rivals.find(r => r.id === rivalId);
+        const rival = state.entities.rivals[rivalId];
         if (rival) {
           impacts.push({
             type: 'RIVAL_UPDATED',
@@ -274,8 +279,8 @@ export function tickTelevision(state: GameState, rng: RandomGenerator): StateImp
     checkShoppingExpiration(playerProjects[key], true);
   }
 
-  for (let i = 0; i < rivals.length; i++) {
-    const rival = rivals[i];
+  for (let i = 0; i < rivalsList.length; i++) {
+    const rival = rivalsList[i];
     const rivalProjects = rival.projects || {};
     for (const key in rivalProjects) {
       if (!Object.prototype.hasOwnProperty.call(rivalProjects, key)) continue;

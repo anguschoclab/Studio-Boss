@@ -10,6 +10,8 @@ import { generateWeeklyFinancialReport } from '../finance';
 export function tickFinance(state: GameState, rng: RandomGenerator, pendingImpacts: StateImpact[] = []): StateImpact[] {
   const impacts: StateImpact[] = [];
   
+  const contractsList = Object.values(state.entities.contracts || {});
+
   // 1. Player Finance Tick
   const { report, snapshot } = generateWeeklyFinancialReport(
       state, 
@@ -18,7 +20,7 @@ export function tickFinance(state: GameState, rng: RandomGenerator, pendingImpac
       state.finance.cash, 
       state.studio.archetype, 
       state.studio.prestige, 
-      state.entities.contracts, 
+      contractsList, 
       state.studio.internal.firstLookDeals || [], 
       pendingImpacts
   );
@@ -39,7 +41,9 @@ export function tickFinance(state: GameState, rng: RandomGenerator, pendingImpac
   });
 
   // 2. Rival Finance Tick (Phase 5: Industry Symmetry)
-  for (const rival of state.entities.rivals) {
+  const rivalsList = Object.values(state.entities.rivals || {});
+
+  for (const rival of rivalsList) {
       const { report: rivalReport } = generateWeeklyFinancialReport(
           state,
           rival.id,

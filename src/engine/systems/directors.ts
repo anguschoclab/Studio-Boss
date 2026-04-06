@@ -1,12 +1,12 @@
-import { Project, Talent, Contract, StateImpact } from '@/engine/types';
+import { Project, Talent, Contract, StateImpact, GameState } from '@/engine/types';
 import { DirectorArchetype } from '@/engine/types/talent.types';
 import { RandomGenerator } from '../utils/rng';
 
 /**
  * Checks if the director for a given project has final cut / creative control.
  */
-export function hasCreativeControl(projectId: string, state: { studio: { internal: { contracts: Contract[] } }, industry: { talentPool: Record<string, Talent> } }): boolean {
-  const directorContract = state.entities.contracts.find(c =>
+export function hasCreativeControl(projectId: string, state: GameState): boolean {
+  const directorContract = Object.values(state.entities.contracts).find(c =>
     c.projectId === projectId &&
     state.entities.talents[c.talentId]?.roles.includes('director')
   );

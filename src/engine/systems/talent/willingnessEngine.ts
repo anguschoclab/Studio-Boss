@@ -1,4 +1,4 @@
-import { Talent, Project, GameState, CharacterArchetype } from '@/engine/types/index';
+import { Talent, Project, GameState, CharacterArchetype, Contract } from '@/engine/types/index';
 
 /**
  * Studio Boss - Willingness Engine
@@ -85,9 +85,9 @@ export function calculateWillingness(
   }
 
   // 6. Directorial Influence (Check if a director is already attached)
-  // ⚡ Bolt: Consolidated O(N) array .some() and .find() into a single O(N) array .find() scan
-  const directorContract = gameState.entities.contracts.find(
-    c => c.projectId === project.id && gameState.entities.talents[c.talentId]?.roles.includes('director')
+  const contractsList = Object.values(gameState.entities.contracts || {});
+  const directorContract = contractsList.find(
+    (c: Contract) => c.projectId === project.id && gameState.entities.talents[c.talentId]?.roles.includes('director')
   );
   if (directorContract) {
     const director = gameState.entities.talents[directorContract.talentId];

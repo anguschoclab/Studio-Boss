@@ -1,8 +1,7 @@
-import { GameState, Project, StateImpact, Contract, Talent, TalentPact, TalentRole } from '../types';
+import { GameState, Project, StateImpact, Contract, Talent } from '../types';
 import { RandomGenerator } from '../utils/rng';
 import { TalentMoraleSystem } from './talent/TalentMoraleSystem';
 import { processDirectorDisputes } from './directors';
-import { getProjectEstimatedWindow, isSeriesProject } from '../utils/projectUtils';
 import { SchedulingEngine } from './schedulingEngine';
 import { advanceProject } from './projects';
 
@@ -103,14 +102,18 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
   const allImpacts: StateImpact[] = [];
   const contractMap = new Map<string, Contract[]>();
   
-  for (const contract of state.entities.contracts) {
+  const contractsList = Object.values(state.entities.contracts || {});
+  for (const contract of contractsList) {
     const list = contractMap.get(contract.projectId) || [];
     list.push(contract);
     contractMap.set(contract.projectId, list);
   }
 
-  // collect rival contracts
-  for (const rival of state.entities.rivals) {
+  const rivalsMap = state.entities.rivals || {};
+  const rivalsList = Object.values(rivalsMap);
+
+  // collect rival contracts (Not used in the current engine version, but keeping for compatibility)
+  for (const rival of rivalsList) {
     if (!rival.contracts) continue;
     for (const contract of rival.contracts) {
       const list = contractMap.get(contract.projectId) || [];
@@ -128,7 +131,6 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
     const projectContracts = contractMap.get(project.id) || [];
     
     // We reuse tickProject logic but handle impacts collection differently
-    // For simplicity, we'll temporarily use a modified tickProject or just integrate it
     const projectImpacts = tickProject(project, projectContracts, state.entities.talents, rng, state.studio.prestige, state.week);
     
     projectImpacts.forEach(imp => {
@@ -146,13 +148,13 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
 
   if (playerChanged) {
       allImpacts.push({
-          type: 'INDUSTRY_UPDATE', // Root-level project injection is safer in bulk
+          type: 'STUDIO_UPDATED', 
           payload: { 'entities.projects': playerProjects }
       } as any);
   }
 
   // Handle Resting Talent Fatigue
-  const activeTalentIds = new Set(state.entities.contracts.map(c => c.talentId));
+  const activeTalentIds = new Set(contractsList.map(c => c.talentId));
   for (const talentId in state.entities.talents) {
     if (!Object.prototype.hasOwnProperty.call(state.entities.talents, talentId)) continue;
     const talent = state.entities.talents[talentId];
@@ -168,7 +170,7 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
   }
 
   // 2. Rival Projects
-  for (const rival of state.entities.rivals) {
+  for (const rival of rivalsList) {
     if (!rival.projects) continue;
     const rivalProjects = { ...rival.projects };
     let rivalChanged = false;

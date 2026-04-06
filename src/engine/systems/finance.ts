@@ -140,10 +140,7 @@ export function generateWeeklyFinancialReport(
 }
 
 export function calculateWeeklyCosts(state: GameState): number {
-  const projects: Project[] = [];
-  for (const key in state.entities.projects) {
-    projects.push(state.entities.projects[key]);
-  }
+  const projects = Object.values(state.entities.projects || {});
 
   const market = state.finance.marketState || InterestRateSimulator.initialize();
   const expenses = ExpenseProcessor.calculateConsolidatedExpenses(
@@ -159,7 +156,7 @@ export function calculateWeeklyCosts(state: GameState): number {
 }
 
 export function calculateWeeklyRevenue(state: GameState): number {
-  const projects = Object.values(state.studio?.internal?.projects || {});
+  const projects = Object.values(state.entities.projects || {});
   const buyers = state.market?.buyers || [];
 
   let boxOffice = 0;
@@ -193,7 +190,7 @@ export function generateCashflowForecast(state: GameState, weeks: number = 12): 
       state.finance.cash, 
       state.studio.archetype, 
       state.studio.prestige, 
-      state.entities.contracts, 
+      Object.values(state.entities.contracts || {}), 
       state.studio.internal.firstLookDeals || []
   );
   const netProfit = report.netProfit;

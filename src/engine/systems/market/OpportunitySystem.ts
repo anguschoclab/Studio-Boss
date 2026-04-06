@@ -62,7 +62,7 @@ export class OpportunitySystem {
         impacts.push({
           type: 'PROJECT_ADDED_FROM_AUCTION', // Custom type just for clarity
           newProjects: [winnerProject],
-          newContracts: newContracts 
+          newContracts: (newContracts as any)
         } as any);
         impacts.push({
           type: 'NEWS_ADDED',
@@ -74,7 +74,7 @@ export class OpportunitySystem {
         });
       } else {
         // Rival Winner
-        const rival = state.entities.rivals.find(r => r.id === winnerId);
+        const rival = state.entities.rivals[winnerId];
         if (rival) {
           impacts.push({
             type: 'RIVAL_UPDATED',
@@ -99,7 +99,6 @@ export class OpportunitySystem {
     });
 
     // 5. Cleanup & Replenishment
-    // We must ALWAYS apply an update if there were expired items or if we need replenishment
     const remainingOpportunities = state.market.opportunities.filter(o => o.expirationWeek > state.week);
     
     if (expired.length > 0 || remainingOpportunities.length < 8) {

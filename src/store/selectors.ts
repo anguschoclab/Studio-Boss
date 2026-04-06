@@ -11,7 +11,7 @@ import { TalentRole, TalentTier } from '../engine/types/talent.types';
 const EMPTY_PROJECTS: Record<string, Project> = {};
 const EMPTY_MARKET: GameState['market'] = { buyers: [], opportunities: [], trends: [], activeMarketEvents: [] };
 const EMPTY_TALENT_POOL: Record<string, Talent> = {};
-const EMPTY_RIVALS: RivalStudio[] = [];
+const EMPTY_RIVALS: Record<string, RivalStudio> = {};
 const EMPTY_EVENT_HISTORY: GameEvent[] = [];
 const EMPTY_ARRAY: any[] = [];
 const DEFAULT_MARKET_METRICS = { cycle: 'STABLE', sentiment: 0, debtRate: 0.08, savingsRate: 0.02 };
@@ -46,8 +46,11 @@ export const selectFinance = (state: GameState | null) => state?.finance || EMPT
 export const selectCash = (state: GameState | null) => selectFinance(state).cash || 0;
 
 export const selectIndustry = (state: GameState | null) => state?.industry || null;
-export const selectRivals = (state: GameState | null) => selectIndustry(state)?.rivals || EMPTY_RIVALS;
-export const selectTalentPool = (state: GameState | null) => selectIndustry(state)?.talentPool || EMPTY_TALENT_POOL;
+export const selectRivalsRaw = (state: GameState | null) => state?.entities.rivals || EMPTY_RIVALS;
+export const selectRivals = (state: GameState | null): RivalStudio[] => Object.values(selectRivalsRaw(state));
+
+export const selectTalentPoolRaw = (state: GameState | null) => state?.entities.talents || EMPTY_TALENT_POOL;
+export const selectTalentPool = (state: GameState | null): Talent[] => Object.values(selectTalentPoolRaw(state));
 
 export const selectActiveProjects = (state: GameState | null) => {
   const projects = selectProjectsRaw(state);

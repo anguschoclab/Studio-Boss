@@ -30,6 +30,12 @@ describe('SBDBView', () => {
     (useGameStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector) => {
       const state = {
         gameState: {
+          entities: {
+            talents: mockTalentPool,
+            projects: {},
+            contracts: {},
+            rivals: {}
+          },
           industry: {
             talentPool: mockTalentPool,
           },
@@ -68,12 +74,9 @@ describe('SBDBView', () => {
   it('filters talent by role', () => {
     render(<TooltipProvider><SBDBView /></TooltipProvider>);
 
-    // The component uses Radix UI Select, which might not render 'combobox' reliably or aria-labels exactly as expected in jsdom.
-    // Let's use a simpler approach: finding the trigger button by its text content "All Roles"
     const allRolesTrigger = screen.getByText('All Roles');
     fireEvent.click(allRolesTrigger);
 
-    // Radix portals the content to the body, so we query the document body
     const actorsOption = screen.getByText('Actors');
     fireEvent.click(actorsOption);
 
@@ -110,7 +113,7 @@ describe('SBDBView', () => {
   });
 
   it('returns null if gameState is null', () => {
-    (useGameStore as unknown as ReturnType<typeof vi.fn>).mockImplementation(() => null);
+    (useGameStore as unknown as ReturnType<typeof vi.fn>).mockImplementation(() => ({ gameState: null }));
     const { container } = render(<TooltipProvider><SBDBView /></TooltipProvider>);
     expect(container.firstChild).toBeNull();
   });

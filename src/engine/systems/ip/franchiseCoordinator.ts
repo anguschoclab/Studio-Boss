@@ -179,11 +179,8 @@ export function updateFranchiseHub(state: GameState, project: Project, rng: Rand
   }
 
   // Update projects in the state with their new franchiseId if a hub was created
-  const activeProjects = Object.fromEntries(
-    Object.entries(state.entities.projects).map(([id, existingProject]) => [
-      id,
-      existingProject.id === project.id ? { ...existingProject, franchiseId } : existingProject
-    ])
+  const historyUpdates = state.studio.internal.projectHistory.map(existingProject => 
+    existingProject.id === project.id ? { ...existingProject, franchiseId } : existingProject
   );
 
   return {
@@ -192,7 +189,7 @@ export function updateFranchiseHub(state: GameState, project: Project, rng: Rand
       ...state.studio,
       internal: {
         ...state.studio.internal,
-        projects: activeProjects
+        projectHistory: historyUpdates
       }
     },
     ip: {

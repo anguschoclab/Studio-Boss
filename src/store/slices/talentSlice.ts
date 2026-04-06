@@ -1,6 +1,6 @@
 import { StateCreator } from 'zustand';
 import { GameStore } from '../gameStore';
-import { Contract, Opportunity, StateImpact, TalentPact, TalentRole, CharacterArchetype } from '@/engine/types';
+import { Contract, Opportunity, StateImpact, TalentPact, TalentRole, CharacterArchetype, Talent } from '@/engine/types';
 import { buildProjectAndContracts, CreateProjectParams, applyStateImpact } from '../storeUtils';
 import { calculateLiveCounterBid } from '@/engine/systems/ai/biddingEngine';
 import { RandomGenerator } from '@/engine/utils/rng';
@@ -38,9 +38,8 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
          finalFee = talent.fee * 0.5;
       }
       
-      if (state.finance.cash < finalFee) return s;
-      
-      const newCash = state.finance.cash - finalFee;
+      const currentCash = state.finance.cash;
+      if (currentCash < finalFee) return s;
       
       const rng = new RandomGenerator(state.rngState);
       
@@ -56,7 +55,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
         role: (talent.role || 'actor') as TalentRole
       };
       
-      const estimatedWeeks = 40; // Default fallback if window not yet defined
+      const estimatedWeeks = 40; 
       const commitment: import('@/engine/types/talent.types').TalentCommitment = {
         projectId: p.id,
         projectTitle: p.title,
@@ -71,28 +70,17 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
         commitments: [...(talent.commitments || []), commitment]
       };
 
-      const updatedContracts = [...state.entities.contracts, contract];
-
       return {
         gameState: {
           ...state,
           finance: {
             ...state.finance,
-            cash: newCash
+            cash: currentCash - finalFee
           },
-          studio: {
-            ...state.studio,
-            internal: {
-              ...state.studio.internal,
-              contracts: updatedContracts
-            }
-          },
-          industry: {
-            ...state.industry,
-            talentPool: {
-              ...state.entities.talents,
-              [talentId]: updatedTalent
-            }
+          entities: {
+            ...state.entities,
+            contracts: { ...state.entities.contracts, [contract.id]: contract },
+            talents: { ...state.entities.talents, [talentId]: updatedTalent }
           },
           rngState: rng.getState()
         }
@@ -237,17 +225,17 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       const updatedOpportunities = [...state.market.opportunities];
       updatedOpportunities.splice(oppIndex, 1);
 
+      const contracts = { ...state.entities.contracts };
+      newContracts.forEach(c => { contracts[c.id] = c; });
+
       return {
         gameState: {
           ...state,
           finance: { ...state.finance, cash: state.finance.cash - cost - talentFees },
-          studio: {
-            ...state.studio,
-            internal: {
-              ...state.studio.internal,
-              projects: { ...state.entities.projects, [project.id]: project },
-              contracts: [...state.entities.contracts, ...newContracts]
-            }
+          entities: {
+            ...state.entities,
+            projects: { ...state.entities.projects, [project.id]: project },
+            contracts
           },
           market: {
             ...state.market,
@@ -284,7 +272,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       };
 
       const rng = new RandomGenerator(state.rngState);
-      const aggressiveRivals = state.entities.rivals.filter(r => r.cash > amount * 1.5 && r.prestige > 40);
+      const aggressiveRivals = Object.values(state.entities.rivals).filter(r => r.cash > amount * 1.5 && r.prestige > 40);
       
       if (aggressiveRivals.length > 0) {
         const rivalIdx = Math.floor(rng.next() * aggressiveRivals.length);
@@ -354,9 +342,13 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
         penalty = Math.floor(project.budget * 0.20);
       }
 
-      const updatedContracts = state.entities.contracts.filter(
-        c => !(c.talentId === talentId && c.projectId === projectId)
-      );
+      const updatedContracts = { ...state.entities.contracts };
+      Object.keys(updatedContracts).forEach(id => {
+        const c = updatedContracts[id];
+        if (c.talentId === talentId && c.projectId === projectId) {
+          delete updatedContracts[id];
+        }
+      });
 
       const updatedCommitments = (talent.commitments || []).filter(
         c => c.projectId !== projectId
@@ -368,18 +360,18 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       };
 
       return {
-        gameState: applyStateImpact(state, [
-          { type: 'FUNDS_CHANGED', payload: { amount: -penalty } },
-          { type: 'TALENT_UPDATED', payload: { talentId, update: updatedTalent } },
-          {
-            type: 'INDUSTRY_UPDATE',
-            payload: {
-              update: {
-                'entities.contracts': updatedContracts
-              }
-            }
+        gameState: {
+          ...state,
+          finance: {
+            ...state.finance,
+            cash: state.finance.cash - penalty
+          },
+          entities: {
+            ...state.entities,
+            talents: { ...state.entities.talents, [talentId]: updatedTalent },
+            contracts: updatedContracts
           }
-        ])
+        }
       };
     });
   },

@@ -14,7 +14,7 @@ describe("hasCreativeControl", () => {
     const contract = createMockContract({ id: "c-1", talentId: "t-1", projectId: "proj-1", role: "actor", creativeControl: true });
     const state = createMockGameState();
     state.entities.talents["t-1"] = talent;
-    state.entities.contracts.push(contract);
+    state.entities.contracts["c-1"] = contract;
     
     expect(hasCreativeControl("proj-1", state)).toBe(false);
   });
@@ -24,7 +24,7 @@ describe("hasCreativeControl", () => {
     const contract = createMockContract({ id: "c-1", talentId: "t-1", projectId: "proj-1", role: "director", creativeControl: true });
     const state = createMockGameState();
     state.entities.talents["t-1"] = talent;
-    state.entities.contracts.push(contract);
+    state.entities.contracts["c-1"] = contract;
     
     expect(hasCreativeControl("proj-1", state)).toBe(true);
   });
@@ -98,8 +98,12 @@ describe("evaluateCreativeControlOffer", () => {
 
 describe("processDirectorDisputes", () => {
   it("returns empty impact if project is not in production phase", () => {
-    const project = createMockProject({ state: 'pre-production' });
-    const impact = processDirectorDisputes(project, [], new Map(), new RandomGenerator(1));
+    const project = createMockProject({ state: 'production' });
+    // Should be something else than production to return empty impact if we want to test that branch,
+    // but the original test used 'pre-production' which might not be a valid state for ProjectStatus.
+    // Let's use 'development' or 'needs_greenlight'.
+    const p = { ...project, state: 'development' as any };
+    const impact = processDirectorDisputes(p, [], new Map(), new RandomGenerator(1));
     expect(impact.projectUpdates).toEqual([]);
     expect(impact.uiNotifications).toEqual([]);
   });

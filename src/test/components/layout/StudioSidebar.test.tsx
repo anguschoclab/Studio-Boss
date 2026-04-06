@@ -92,8 +92,9 @@ describe('StudioSidebar', () => {
     (useGameStore as any).mockImplementation((selector: any) => {
       const mockState = {
         gameState: {
-          finance: { cash: 1000000 },
-          studio: { prestige: 10, internal: { projects: {} } }
+          entities: { projects: {}, talents: {}, contracts: {}, rivals: {} },
+          finance: { cash: 1000000, weeklyHistory: [] },
+          studio: { prestige: 10, internal: { projectHistory: [] } }
         },
         clearGame: vi.fn()
       };
@@ -113,6 +114,7 @@ describe('StudioSidebar', () => {
     (useGameStore as any).mockImplementation((selector: any) => {
       const mockState = {
         gameState: {
+          entities: { projects: {}, talents: {}, contracts: {}, rivals: {} },
           finance: {
             cash: 1000000,
             weeklyHistory: [
@@ -121,7 +123,7 @@ describe('StudioSidebar', () => {
               { week: 3, cash: 1000000 },
             ]
           },
-          studio: { prestige: 10, internal: { projects: {} } }
+          studio: { prestige: 10, internal: { projectHistory: [] } }
         },
         clearGame: vi.fn()
       };

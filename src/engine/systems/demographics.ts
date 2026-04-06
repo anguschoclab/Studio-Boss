@@ -69,8 +69,6 @@ export function simulateMarketingCampaign(
 
   if (!project || state.finance.cash < spend) return state;
   
-
-  
   // Calculate how much buzz this spend buys
   const baseBuzzGain = (spend / 100_000); // 1 buzz point per 100k
   
@@ -87,17 +85,14 @@ export function simulateMarketingCampaign(
     targetDemographic: target
   };
   
-  const newProjects = { ...state.entities.projects };
-  newProjects[projectId] = updatedProject;
-  
   return {
     ...state,
     finance: { ...state.finance, cash: state.finance.cash - spend },
-    studio: {
-      ...state.studio,
-      internal: {
-        ...state.studio.internal,
-        projects: newProjects
+    entities: {
+      ...state.entities,
+      projects: {
+        ...state.entities.projects,
+        [projectId]: updatedProject
       }
     }
   };

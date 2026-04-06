@@ -1,12 +1,11 @@
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { formatMoney } from '@/engine/utils';
 import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
-import { TV_FORMATS } from '@/engine/data/tvFormats';
 import { evaluateGreenlight } from '@/engine/systems/greenlight';
 import { FESTIVALS } from '@/engine/systems/festivals';
-import { AwardBody, Project, Talent, ScriptedProject, SeriesProject } from '@/engine/types';
+import { AwardBody, Project, Talent, ScriptedProject, SeriesProject, Contract } from '@/engine/types';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
@@ -24,12 +23,11 @@ import {
   AlertCircle,
   Megaphone,
   ShieldAlert,
-  Search,
-  CheckCircle2,
   Brain,
   Type,
   Activity,
-  Package
+  Package,
+  CheckCircle2
 } from 'lucide-react';
 import { 
   AreaChart, 
@@ -42,36 +40,23 @@ import {
 } from 'recharts';
 import { cn } from '@/lib/utils';
 import { DevelopmentLog } from './DevelopmentLog';
-import { CastingFeedback } from '../talent/CastingFeedback';
 import { TalentAttachmentPanel } from '../talent/TalentAttachmentPanel';
-
-const MARKETING_ANGLES = [
-  { id: 'romance', label: 'Romance & Heart' },
-  { id: 'spectacle', label: 'Visual Spectacle' },
-  { id: 'thrills', label: 'Action & Thrills' },
-  { id: 'humor', label: 'Comedy & Fun' },
-  { id: 'prestige', label: 'Prestige & Awards' },
-  { id: 'mystery', label: 'Mystery & Intrigue' }
-];
 
 export const ProjectDetailModal = () => {
   const [selectedTier, setSelectedTier] = useState<'none' | 'basic' | 'blockbuster'>('none');
-  const [hoveredTalentId, setHoveredTalentId] = useState<string | null>(null);
 
   const { selectedProjectId, selectProject } = useUIStore();
   const gameState = useGameStore(s => s.gameState);
-  const signContract = useGameStore(s => s.signContract);
   const renewProject = useGameStore(s => s.renewProject);
   const greenlightProject = useGameStore(s => s.greenlightProject);
   const exploitFranchise = useGameStore(s => s.exploitFranchise);
   const lockMarketingCampaign = useGameStore(s => s.lockMarketingCampaign);
   const submitToFestival = useGameStore(s => s.submitToFestival);
-  const launchAwardsCampaign = useGameStore(s => s.launchAwardsCampaign);
 
-  const projects = useMemo(() => Object.values(gameState?.studio?.internal?.projects || {}), [gameState?.studio?.internal?.projects]);
+  const projects = useMemo(() => Object.values(gameState?.entities.projects || {}), [gameState?.entities.projects]);
   const project = useMemo(() => projects.find(p => p.id === selectedProjectId), [projects, selectedProjectId]);
-  const talentPool = useMemo(() => Object.values(gameState?.industry?.talentPool || {}), [gameState?.industry?.talentPool]);
-  const contracts = useMemo(() => gameState?.studio?.internal?.contracts || [], [gameState?.studio?.internal?.contracts]);
+  const talentPool = useMemo(() => Object.values(gameState?.entities.talents || {}), [gameState?.entities.talents]);
+  const contracts = useMemo(() => Object.values(gameState?.entities.contracts || {}), [gameState?.entities.contracts]);
   const talentMap = useMemo(() => new Map(talentPool.map(t => [t.id, t])), [talentPool]);
 
   const talentByRole = useMemo(() => {
@@ -98,40 +83,6 @@ export const ProjectDetailModal = () => {
   const seriesProject = useMemo(() => (
     project && project.type === 'SERIES' && 'tvDetails' in project ? project as SeriesProject : null
   ), [project]);
-
-  const roleGroups = useMemo(() => {
-    const groups = new Map<string, { attached: Talent[], available: Talent[] }>();
-    const rolesToTrack = scriptedProject?.activeRoles || ['director', 'writer', 'producer', 'protagonist'];
-
-    if (!project) {
-      for (const r of rolesToTrack) {
-        groups.set(r, { attached: [], available: [] });
-      }
-      return groups;
-    }
-
-    const projectContracts = contracts.filter(c => c.projectId === project.id);
-    const projectTalentIds = new Set(projectContracts.map(c => c.talentId));
-
-    for (const r of rolesToTrack) {
-      const roleKey = r === 'protagonist' ? 'actor' : (r === 'antagonist' ? 'actor' : (r === 'love_interest' ? 'actor' : r));
-      const allInRole = talentByRole.get(roleKey) || talentByRole.get('actor') || [];
-      const attached: Talent[] = [];
-      const available: Talent[] = [];
-
-      for (let i = 0; i < allInRole.length; i++) {
-        const t = allInRole[i];
-        if (projectTalentIds.has(t.id)) {
-          attached.push(t);
-        } else {
-          available.push(t);
-        }
-      }
-
-      groups.set(r, { attached, available });
-    }
-    return groups;
-  }, [project, scriptedProject, contracts, talentByRole]);
 
   const greenlightReport = useMemo(() => {
     if (!project || project.state !== 'needs_greenlight' || !gameState) return null;
@@ -170,7 +121,7 @@ export const ProjectDetailModal = () => {
 
   return (
     <Dialog open={!!selectedProjectId} onOpenChange={() => selectProject(null)}>
-      <DialogContent className="max-w-4xl h-[85vh] bg-slate-950 border-slate-800 text-slate-100 shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col p-0">
+      <DialogContent className="max-w-4xl h-[85vh] bg-slate-950 border-slate-800 text-slate-100 shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col p-0 text-left">
         <DialogHeader className="p-6 border-b border-slate-800 bg-black/40">
           <div className="flex items-center justify-between">
             <div className="space-y-1">
@@ -205,7 +156,7 @@ export const ProjectDetailModal = () => {
             (project.state === 'needs_greenlight' || project.state === 'development' || project.state === 'production') ? "production" :
             "overview"
           } className="flex-1 flex overflow-hidden">
-            <div className="w-16 border-r border-slate-800 bg-black/60 flex flex-col items-center py-6 space-y-8">
+            <div className="w-18 border-r border-slate-800 bg-black/60 flex flex-col items-center py-6 space-y-8 min-w-[72px]">
                <TabsList className="flex flex-col h-auto bg-transparent gap-6 p-0 border-none">
                  {[
                    { val: 'overview', icon: BarChart3, label: 'Intel' },
@@ -386,8 +337,8 @@ export const ProjectDetailModal = () => {
                            </p>
                            <div className="w-full max-w-lg space-y-2 pt-4">
                              <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-primary">
-                                <span>Shoot Completion</span>
-                                <span>{project.weeksInPhase} / {project.productionWeeks} Weeks</span>
+                                 <span>Shoot Completion</span>
+                                 <span>{project.weeksInPhase} / {project.productionWeeks} Weeks</span>
                              </div>
                              <div className="h-2 rounded-full bg-black/60 border border-white/5">
                                 <div 
@@ -563,13 +514,13 @@ export const ProjectDetailModal = () => {
                                   { k: 'Blitz', c: 5000000 }
                                 ].map(tier => (
                                   <Button 
-                                    key={tier.k}
+                                    key={tier.k as any}
                                     variant="outline" 
                                     className="h-14 flex flex-col items-center justify-center border-slate-800 hover:border-amber-500/50 bg-black/40 group"
                                     onClick={() => { (useGameStore.getState() as any).launchCampaign(project.id, tier.k); selectProject(null); }}
                                     disabled={gameState ? gameState.finance.cash < tier.c : true}
                                   >
-                                     <span className="text-[8px] font-black text-slate-500 uppercase group-hover:text-amber-500">{tier.k}</span>
+                                     <span className="text-[8px] font-black text-slate-500 uppercase group-hover:text-amber-500">{tier.k as any}</span>
                                      <span className="text-[10px] font-mono font-black text-white">{formatMoney(tier.c)}</span>
                                   </Button>
                                 ))}
@@ -588,7 +539,7 @@ export const ProjectDetailModal = () => {
                          <div className="space-y-4">
                             <div className="flex justify-between items-center p-3 rounded-xl bg-black/40 border border-white/5">
                                <span className="text-xs font-bold text-slate-400">Governance</span>
-                               <Badge variant="outline" className="text-[10px] font-black uppercase border-slate-700 bg-slate-800">{project.ipRights?.rightsOwner || 'Internal Development'}</Badge>
+                               <Badge variant="outline" className="text-[10px] font-black uppercase border-slate-700 bg-slate-800">Internal Development</Badge>
                             </div>
                             <div className="flex justify-between items-center p-3 rounded-xl bg-black/40 border border-white/5">
                                <span className="text-xs font-bold text-slate-400">Franchise Asset ID</span>
@@ -600,7 +551,7 @@ export const ProjectDetailModal = () => {
                       <div className="pt-4 border-t border-slate-800/50 flex justify-between items-end">
                          <div className="space-y-1">
                             <span className="text-[9px] font-black uppercase text-slate-500 tracking-widest">Library Residual Valuation</span>
-                            <div className="text-2xl font-black text-emerald-400 font-mono tracking-tighter tabular-nums">{formatMoney(project.ipRights?.catalogValue || project.budget * 0.15)}</div>
+                            <div className="text-2xl font-black text-emerald-400 font-mono tracking-tighter tabular-nums">{formatMoney(project.budget * 0.15)}</div>
                          </div>
                       </div>
                     </div>

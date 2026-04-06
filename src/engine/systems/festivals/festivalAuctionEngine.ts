@@ -1,4 +1,4 @@
-import { GameState, StateImpact, Project } from '@/engine/types';
+import { GameState, StateImpact, Project, RivalStudio } from '@/engine/types';
 import { RandomGenerator } from '../../utils/rng';
 import { FestivalSubmission } from '@/engine/types/project.types';
 
@@ -81,11 +81,10 @@ export function runFestivalMarket(state: GameState, rng: RandomGenerator): State
   const auctionResults: FestivalAuctionResult[] = [];
 
   // ⚡ Bolt: Pre-compute rival projects mapping for O(1) lookups
-  // This avoids O(S * R * P) iteration in the activeSubmissions loop.
   const rivalProjectsMap: Record<string, Project> = {};
-  // Safely iterate whether rivals is an array or an object map
-  for (const key in state.entities.rivals) {
-    const rival = (state.entities.rivals as any)[key];
+  const rivalsList = Object.values(state.entities.rivals || {});
+
+  for (const rival of rivalsList) {
     if (rival && rival.projects) {
       for (const projId in rival.projects) {
         rivalProjectsMap[projId] = rival.projects[projId];
@@ -113,7 +112,7 @@ export function runFestivalMarket(state: GameState, rng: RandomGenerator): State
     });
 
     // Add NPC rival bids
-    state.entities.rivals.slice(0, 3).forEach(rival => {
+    rivalsList.slice(0, 3).forEach(rival => {
       const bid = generateNPCBid(project, rival.cash, rng);
       if (bid) {
         bids.push({ ...bid, bidderId: rival.id, bidderName: rival.name });

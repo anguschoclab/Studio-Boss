@@ -27,7 +27,7 @@ export const RIVAL_BEHAVIOR_CONFIGS: Record<RivalArchetype, RivalBehaviorConfig>
   legacy_major: {
     archetype: 'legacy_major',
     greenlight_bias: ['film'],
-    budget_tier_weights: { low: 0.05, mid: 0.20, high: 0.40, blockbuster: 0.35 },
+    budget_tier_weights: { indie: 0.0, low: 0.05, mid: 0.20, high: 0.40, blockbuster: 0.35 },
     pact_aggression: 0.3,
     ma_willingness: 0.6,
     festivalParticipation: 0.2,
@@ -36,7 +36,7 @@ export const RIVAL_BEHAVIOR_CONFIGS: Record<RivalArchetype, RivalBehaviorConfig>
   streaming_giant: {
     archetype: 'streaming_giant',
     greenlight_bias: ['film', 'tv'],
-    budget_tier_weights: { low: 0.15, mid: 0.35, high: 0.35, blockbuster: 0.15 },
+    budget_tier_weights: { indie: 0.0, low: 0.15, mid: 0.35, high: 0.35, blockbuster: 0.15 },
     pact_aggression: 0.5,
     ma_willingness: 0.4,
     festivalParticipation: 0.5,
@@ -45,7 +45,7 @@ export const RIVAL_BEHAVIOR_CONFIGS: Record<RivalArchetype, RivalBehaviorConfig>
   prestige_house: {
     archetype: 'prestige_house',
     greenlight_bias: ['film'],
-    budget_tier_weights: { low: 0.30, mid: 0.45, high: 0.20, blockbuster: 0.05 },
+    budget_tier_weights: { indie: 0.10, low: 0.20, mid: 0.45, high: 0.20, blockbuster: 0.05 },
     pact_aggression: 0.4,
     ma_willingness: 0.2,
     festivalParticipation: 0.9,
@@ -54,7 +54,7 @@ export const RIVAL_BEHAVIOR_CONFIGS: Record<RivalArchetype, RivalBehaviorConfig>
   genre_specialist: {
     archetype: 'genre_specialist',
     greenlight_bias: ['film'],
-    budget_tier_weights: { low: 0.40, mid: 0.40, high: 0.15, blockbuster: 0.05 },
+    budget_tier_weights: { indie: 0.10, low: 0.30, mid: 0.40, high: 0.15, blockbuster: 0.05 },
     pact_aggression: 0.2,
     ma_willingness: 0.2,
     festivalParticipation: 0.3,
@@ -63,7 +63,7 @@ export const RIVAL_BEHAVIOR_CONFIGS: Record<RivalArchetype, RivalBehaviorConfig>
   franchise_factory: {
     archetype: 'franchise_factory',
     greenlight_bias: ['film'],
-    budget_tier_weights: { low: 0.02, mid: 0.10, high: 0.40, blockbuster: 0.48 },
+    budget_tier_weights: { indie: 0.0, low: 0.02, mid: 0.10, high: 0.40, blockbuster: 0.48 },
     pact_aggression: 0.5,
     ma_willingness: 0.7,
     festivalParticipation: 0.1,
@@ -72,7 +72,7 @@ export const RIVAL_BEHAVIOR_CONFIGS: Record<RivalArchetype, RivalBehaviorConfig>
   indie_aggressor: {
     archetype: 'indie_aggressor',
     greenlight_bias: ['film'],
-    budget_tier_weights: { low: 0.25, mid: 0.50, high: 0.20, blockbuster: 0.05 },
+    budget_tier_weights: { indie: 0.10, low: 0.15, mid: 0.50, high: 0.20, blockbuster: 0.05 },
     pact_aggression: 0.6,
     ma_willingness: 0.3,
     festivalParticipation: 0.8,
@@ -80,8 +80,8 @@ export const RIVAL_BEHAVIOR_CONFIGS: Record<RivalArchetype, RivalBehaviorConfig>
   },
   content_farm: {
     archetype: 'content_farm',
-    greenlight_bias: ['film', 'tv', 'unscripted'],
-    budget_tier_weights: { low: 0.70, mid: 0.25, high: 0.05, blockbuster: 0.00 },
+    greenlight_bias: ['film', 'tv'],
+    budget_tier_weights: { indie: 0.10, low: 0.60, mid: 0.25, high: 0.05, blockbuster: 0.00 },
     pact_aggression: 0.05,
     ma_willingness: 0.1,
     festivalParticipation: 0.05,
@@ -90,7 +90,7 @@ export const RIVAL_BEHAVIOR_CONFIGS: Record<RivalArchetype, RivalBehaviorConfig>
   foreign_invader: {
     archetype: 'foreign_invader',
     greenlight_bias: ['film', 'tv'],
-    budget_tier_weights: { low: 0.10, mid: 0.30, high: 0.40, blockbuster: 0.20 },
+    budget_tier_weights: { indie: 0.0, low: 0.10, mid: 0.30, high: 0.40, blockbuster: 0.20 },
     pact_aggression: 0.4,
     ma_willingness: 0.5,
     festivalParticipation: 0.4,
@@ -99,7 +99,7 @@ export const RIVAL_BEHAVIOR_CONFIGS: Record<RivalArchetype, RivalBehaviorConfig>
   talent_agency_arm: {
     archetype: 'talent_agency_arm',
     greenlight_bias: ['film', 'tv'],
-    budget_tier_weights: { low: 0.05, mid: 0.25, high: 0.45, blockbuster: 0.25 },
+    budget_tier_weights: { indie: 0.0, low: 0.05, mid: 0.25, high: 0.45, blockbuster: 0.25 },
     pact_aggression: 0.8,
     ma_willingness: 0.4,
     festivalParticipation: 0.3,
@@ -108,7 +108,7 @@ export const RIVAL_BEHAVIOR_CONFIGS: Record<RivalArchetype, RivalBehaviorConfig>
   tech_disruptor: {
     archetype: 'tech_disruptor',
     greenlight_bias: ['film', 'tv'],
-    budget_tier_weights: { low: 0.10, mid: 0.20, high: 0.40, blockbuster: 0.30 },
+    budget_tier_weights: { indie: 0.0, low: 0.10, mid: 0.20, high: 0.40, blockbuster: 0.30 },
     pact_aggression: 0.6,
     ma_willingness: 0.9,
     festivalParticipation: 0.4,
@@ -222,9 +222,14 @@ export const AGENCY_ARCHETYPES: Record<AgencyArchetype, AgencyArchetypeData> = {
     name: 'Genre Kings',
     description: 'Identity: The Genre Kings — Unapologetic masters of horror, sci-fi, and action. They mandate high script punch-up fees for their own writers, demand significant backend escalators for international gross, and strictly prohibit their talent from doing prestigious dramatic roles.'
   },
+  talent_agency_arm: {
+    key: 'talent_agency_arm',
+    name: 'Talent Agency Arm',
+    description: 'Identity: The Talent Agency Arm — High-level agency that has expanded into studio operations. They leverage their entire roster for cross-promotional synergy.'
+  },
   influencer_syndicate: {
     key: 'influencer_syndicate',
     name: 'Influencer Syndicate',
-    description: 'Identity: The Influencer Syndicate — Represents the TikTok and YouTube elite. They aggressively demand immediate upfront payments, mandate daily social media integration into scripts, and force the casting of fellow influencers with zero acting ability into supporting roles.'
+    description: 'Identity: The Influencer Syndicate — Represents the TikTok and YouTube elite. They aggressively demand daily social media integration into scripts and force casting regardless of ability.'
   }
 };

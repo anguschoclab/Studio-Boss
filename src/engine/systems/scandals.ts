@@ -20,15 +20,15 @@ export function generateScandals(state: GameState, rng: RandomGenerator): StateI
     uiNotifications: []
   };
   
-  const contracts = state.entities.contracts || [];
+  const contractsList = Object.values(state.entities.contracts || {});
   const talentToProjectMap = new Map<string, string>();
-  for (const c of contracts) {
+  for (const c of contractsList) {
     talentToProjectMap.set(c.talentId, c.projectId);
   }
   
   const studioProjects = state.entities.projects || {};
 
-  const numContracts = contracts.length;
+  const numContracts = contractsList.length;
   const studioProjectsCount = Object.keys(studioProjects).length;
   // A mega-studio has more leaks than an indie darling. Increased scaling impact.
   // The PR Spin Doctor: Heavily scale scandals with studio size (more contracts/projects = much higher risk)
@@ -143,9 +143,9 @@ export function advanceScandals(state: GameState): StateImpact[] {
     }
   }
   
-  const contracts = state.entities.contracts || [];
+  const contractsList = Object.values(state.entities.contracts || {});
   const penalizedProjectIds = new Set<string>();
-  for (const c of contracts) {
+  for (const c of contractsList) {
     if (activeScandalTalent.has(c.talentId)) {
       penalizedProjectIds.add(c.projectId);
     }
@@ -167,16 +167,8 @@ export function advanceScandals(state: GameState): StateImpact[] {
   return impacts;
 }
 
-// ---------------------------------------------------------------------------
-// Rating-Specific Studio-Level Events
-// ---------------------------------------------------------------------------
-
-export type RatingEventType = 'rating_controversy' | 'foreign_market_cut' | 'banned_in_market';
-
 /**
  * Generates a studio-level rating event as news + prestige change.
- * Does NOT create a Scandal object (no talentId). Use for studio-level
- * controversies like bans and foreign market cuts.
  */
 export function generateStudioRatingEvent(
   type: RatingEventType,
@@ -222,10 +214,10 @@ export function generateStudioRatingEvent(
   };
 }
 
+export type RatingEventType = 'rating_controversy' | 'foreign_market_cut' | 'banned_in_market';
+
 /**
  * Checks if a project has banned markets and generates a one-time headline event.
- * Returns null if already reported (deduplication via directorsCutNotified repurposed as
- * a simple check against existing newsHistory).
  */
 export function generateMarketBanScandal(
   project: Project,

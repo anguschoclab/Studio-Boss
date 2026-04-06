@@ -38,6 +38,8 @@ export function advanceRumors(state: GameState, rng: RandomGenerator): StateImpa
   const baseRumorChance = 0.05 + (state.studio.prestige * 0.003);
   const maxActiveRumors = Math.max(3, Math.floor(state.studio.prestige / 20));
 
+  const rivalsList = Object.values(state.entities.rivals || {});
+
   if (rng.next() < baseRumorChance && currentRumors.filter(r => !r.resolved).length < maxActiveRumors) {
     const isTrue = rng.next() > 0.5;
     const subjects = ['talent', 'rival', 'project'];
@@ -53,8 +55,8 @@ export function advanceRumors(state: GameState, rng: RandomGenerator): StateImpa
         `${talent.name} is secretly looking to direct their next feature.`
       ];
       text = pick(rumors, rng);
-    } else if (category === 'rival' && state.entities.rivals.length > 0) {
-      const rival = pick(state.entities.rivals, rng);
+    } else if (category === 'rival' && rivalsList.length > 0) {
+      const rival = pick(rivalsList, rng);
       const rumors = [
         `${rival.name} is allegedly facing severe cash flow issues.`,
         `Word around town is ${rival.name} is preparing a monumental buyout offer.`,

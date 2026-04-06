@@ -1,4 +1,4 @@
-import { GameState, WeekSummary, ArchetypeKey } from '../types';
+import { GameState, ArchetypeKey } from '../types';
 import { initializeGame } from '../core/gameInit';
 import { advanceWeek } from '../core/weekAdvance';
 import { RandomGenerator } from '../utils/rng';
@@ -27,7 +27,7 @@ export class SimulationHarness {
     weeks: number = 260,
     seed: number = 42
   ): SimulationResult {
-    console.log(`🚀 Starting headles simulation stress test: ${weeks} weeks...`);
+    console.log(`🚀 Starting headless simulation stress test: ${weeks} weeks...`);
     
     let state = initializeGame(studioName, archetype, seed);
     const anomalies: string[] = [];
@@ -37,26 +37,29 @@ export class SimulationHarness {
       const rng = new RandomGenerator(state.gameSeed + w + state.tickCount);
       
       try {
-        const { newState, summary } = advanceWeek(state, rng);
+        const { newState } = advanceWeek(state, rng);
         state = newState;
 
+        const rivalsList = Object.values(state.entities.rivals || {});
+        const projectsList = Object.values(state.entities.projects || {});
+
         // Collect Snapshot Metrics
-        const totalRivalCash = state.entities.rivals.reduce((sum, r) => sum + r.cash, 0);
+        const totalRivalCash = rivalsList.reduce((sum, r) => sum + r.cash, 0);
         const totalIndustryCash = totalRivalCash + state.finance.cash;
-        const totalProjects = state.entities.rivals.reduce((sum, r) => sum + Object.keys(r.projects).length, 0) + Object.keys(state.entities.projects).length;
+        const totalProjects = rivalsList.reduce((sum, r) => sum + Object.keys(r.projects || {}).length, 0) + projectsList.length;
         
         // Calculate Market Share Concentration (HHI - Herfindahl-Hirschman Index)
-        const marketShares = state.entities.rivals.map(r => r.marketShare || 0);
+        const marketShares = rivalsList.map(r => r.marketShare || 0);
         const hhi = marketShares.reduce((sum, ms) => sum + (ms * 100) ** 2, 0);
 
         // Talent Burnout Audit
-        const talentPool = Object.values(state.entities.talents);
+        const talentPool = Object.values(state.entities.talents || {});
         const burntOutCount = talentPool.filter(t => t.fatigue > 80).length;
-        const burnoutRate = burntOutCount / talentPool.length;
+        const burnoutRate = talentPool.length > 0 ? burntOutCount / talentPool.length : 0;
 
         metrics.push({
           totalIndustryCash,
-          avgRivalCash: totalRivalCash / state.entities.rivals.length,
+          avgRivalCash: rivalsList.length > 0 ? totalRivalCash / rivalsList.length : 0,
           totalActiveProjects: totalProjects,
           marketShareConcentration: hhi,
           talentBurnoutRate: burnoutRate
@@ -74,7 +77,8 @@ export class SimulationHarness {
         }
 
         if (w % 52 === 0) {
-            console.log(`📍 Week ${w} Milestone: Industry Cash $${(totalIndustryCash / 1e9).toFixed(2)}B | Avg Rival Cash $${( (totalRivalCash / state.entities.rivals.length) / 1e6).toFixed(1)}M`);
+            const avgRivalCash = rivalsList.length > 0 ? totalRivalCash / rivalsList.length : 0;
+            console.log(`📍 Week ${w} Milestone: Industry Cash $${(totalIndustryCash / 1e9).toFixed(2)}B | Avg Rival Cash $${(avgRivalCash / 1e6).toFixed(1)}M`);
         }
 
       } catch (error) {

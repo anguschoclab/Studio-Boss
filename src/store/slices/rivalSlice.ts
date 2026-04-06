@@ -14,20 +14,23 @@ export interface RivalSlice {
 export const createRivalSlice: StateCreator<GameStore, [], [], RivalSlice> = (set, get) => ({
   acquireRival: (targetId) => {
     set((s) => {
-      if (!s.gameState) return s;
-      const rng = new RandomGenerator(s.gameState.rngState);
-      const impact = executeAcquisition(s.gameState, targetId, rng);
+      const state = s.gameState;
+      if (!state) return s;
+      const rng = new RandomGenerator(state.rngState);
+      const impact = executeAcquisition(state, targetId, rng);
       if (!impact) return s;
 
-      // Special case: we need to manually remove the rival because the impact reducer 
-      // doesn't have a RIVAL_REMOVED generic impact yet.
-      const newState = applyImpacts(s.gameState, [impact]);
+      const newState = applyImpacts(state, [impact]);
+      
+      const rivals = { ...newState.entities.rivals };
+      delete rivals[targetId];
+
       return { 
         gameState: {
           ...newState,
-          industry: {
-            ...newState.industry,
-            rivals: newState.entities.rivals.filter(r => r.id !== targetId)
+          entities: {
+            ...newState.entities,
+            rivals
           },
           rngState: rng.getState()
         } 
@@ -37,25 +40,37 @@ export const createRivalSlice: StateCreator<GameStore, [], [], RivalSlice> = (se
 
   corporateSabotage: (targetId) => {
     set((s) => {
-      if (!s.gameState) return s;
-      const rng = new RandomGenerator(s.gameState.rngState);
-      const impact = executeSabotage(s.gameState, targetId, rng);
+      const state = s.gameState;
+      if (!state) return s;
+      const rng = new RandomGenerator(state.rngState);
+      const impact = executeSabotage(state, targetId, rng);
       if (!impact) return s;
-      const newState = applyImpacts(s.gameState, [impact]);
-      newState.rngState = rng.getState();
-      return { gameState: newState };
+      const newState = applyImpacts(state, [impact]);
+      
+      return { 
+        gameState: {
+          ...newState,
+          rngState: rng.getState()
+        } 
+      };
     });
   },
 
   poachExec: (targetId) => {
     set((s) => {
-      if (!s.gameState) return s;
-      const rng = new RandomGenerator(s.gameState.rngState);
-      const impact = executePoach(s.gameState, targetId, rng);
+      const state = s.gameState;
+      if (!state) return s;
+      const rng = new RandomGenerator(state.rngState);
+      const impact = executePoach(state, targetId, rng);
       if (!impact) return s;
-      const newState = applyImpacts(s.gameState, [impact]);
-      newState.rngState = rng.getState();
-      return { gameState: newState };
+      const newState = applyImpacts(state, [impact]);
+      
+      return { 
+        gameState: {
+          ...newState,
+          rngState: rng.getState()
+        } 
+      };
     });
   },
 
@@ -63,4 +78,3 @@ export const createRivalSlice: StateCreator<GameStore, [], [], RivalSlice> = (se
     get().acquireRival(targetId);
   },
 });
-

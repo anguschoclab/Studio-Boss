@@ -11,9 +11,10 @@ export class HeadlessController {
   static tick(state: GameState, rng: RandomGenerator): StateImpact[] {
     const impacts: StateImpact[] = [];
     const internalProjects = Object.values(state.entities.projects);
+    const contractsList = Object.values(state.entities.contracts || {});
 
     const contractsByProject = new Map<string, Contract[]>();
-    state.entities.contracts.forEach(c => {
+    contractsList.forEach((c: Contract) => {
       if (c.projectId) {
         let list = contractsByProject.get(c.projectId);
         if (!list) {

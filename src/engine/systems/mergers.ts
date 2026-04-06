@@ -1,4 +1,4 @@
-import { GameState, IPAsset, Project, RivalStudio, StateImpact, Talent } from '@/engine/types';
+import { GameState, IPAsset, Project, RivalStudio, StateImpact } from '@/engine/types';
 import { RandomGenerator } from '../utils/rng';
 
 export function evaluateAcquisitionTarget(
@@ -23,9 +23,9 @@ export function evaluateAcquisitionTarget(
 }
 
 export function executeAcquisition(state: GameState, targetId: string, rng: RandomGenerator): StateImpact | null {
-  const targetIndex = state.entities.rivals.findIndex(r => r.id === targetId);
-  if (targetIndex === -1) return null;
-  const target = state.entities.rivals[targetIndex];
+  const target = state.entities.rivals[targetId];
+  if (!target) return null;
+  
   const evalResult = evaluateAcquisitionTarget(target, state.finance.cash);
   if (!evalResult.viable) return null;
 
@@ -85,7 +85,7 @@ export function executeAcquisition(state: GameState, targetId: string, rng: Rand
 }
 
 export function executeSabotage(state: GameState, targetId: string, rng: RandomGenerator): StateImpact | null {
-  const target = state.entities.rivals.find(r => r.id === targetId);
+  const target = state.entities.rivals[targetId];
   if (!target || state.finance.cash < 1_000_000) return null;
 
   return {
@@ -105,7 +105,7 @@ export function executeSabotage(state: GameState, targetId: string, rng: RandomG
 }
 
 export function executePoach(state: GameState, targetId: string, rng: RandomGenerator): StateImpact | null {
-  const target = state.entities.rivals.find(r => r.id === targetId);
+  const target = state.entities.rivals[targetId];
   if (!target || state.finance.cash < 3_000_000) return null;
 
   const stealAmount = Math.min(5, target.strength);

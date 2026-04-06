@@ -11,7 +11,7 @@ export function evaluateMarketingEfficiency(
   const totalBudget = domesticBudget + foreignBudget;
 
   // 1. Angle Match Logic
-  const genre = project.genre.toUpperCase();
+  const genre = (project.genre || 'DRAMA').toUpperCase();
   
   const matches: Record<string, string[]> = {
     'ACTION': ['SELL_THE_SPECTACLE', 'SELL_THE_STARS'],

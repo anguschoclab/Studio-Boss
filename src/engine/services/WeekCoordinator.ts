@@ -139,10 +139,9 @@ export class WeekCoordinator {
   private static runProductionFilter(state: GameState, context: TickContext) {
     context.impacts.push(...tickProduction(state, context.rng));
 
-    for (const key in state.entities.projects) {
-      // ⚡ Bolt: Safe for...in iteration guard
-      if (!Object.prototype.hasOwnProperty.call(state.entities.projects, key)) continue;
-      const project = state.entities.projects[key];
+    const projectList = Object.values(state.entities.projects);
+    for (let i = 0; i < projectList.length; i++) {
+      const project = projectList[i];
 
       // 1. Script drafting and crisis triggering
       if (project.state === 'development') {
@@ -216,9 +215,9 @@ export class WeekCoordinator {
       // 5. Scan released projects for newly banned markets
       if (project.regionalRatings && (project.state === 'released' || project.state === 'post_release')) {
         const bannedMarkets: RatingMarket[] = [];
-        for (let i = 0; i < project.regionalRatings.length; i++) {
-          if (project.regionalRatings[i].isBanned) {
-            bannedMarkets.push(project.regionalRatings[i].market as RatingMarket);
+        for (let j = 0; j < project.regionalRatings.length; j++) {
+          if (project.regionalRatings[j].isBanned) {
+            bannedMarkets.push(project.regionalRatings[j].market as RatingMarket);
           }
         }
         if (bannedMarkets.length > 0) {
@@ -287,9 +286,7 @@ export class WeekCoordinator {
     if (weekOfYear === 52) {
       this.runAnnualMAScan(state, context);
     }
-
-    // Shopping status expiry
-    }
+  }
 
   private static runTalentFilter(state: GameState, context: TickContext) {
     context.impacts.push(TalentSystem.advance(state, context.rng));
@@ -318,8 +315,6 @@ export class WeekCoordinator {
   private static runScandalFilter(state: GameState, context: TickContext) {
     context.impacts.push(...generateScandals(state, context.rng));
     context.impacts.push(...advanceScandals(state));
-
-
   }
 
   private static runFinanceFilter(state: GameState, context: TickContext) {
@@ -333,7 +328,7 @@ export class WeekCoordinator {
    * Fires once per year (week % 52 === 0).
    */
   private static runAnnualMAScan(state: GameState, context: TickContext) {
-    const rivals = state.entities.rivals;
+    const rivals = Object.values(state.entities.rivals);
     for (let i = 0; i < rivals.length; i++) {
       for (let j = 0; j < rivals.length; j++) {
         if (i === j) continue;
@@ -372,9 +367,6 @@ export class WeekCoordinator {
     }
   }
 
-  /**
-   * Clears 'shopping' status for projects whose window has expired.
-   */
   private static buildSummary(before: GameState, after: GameState, context: TickContext): WeekSummary {
     const allHeadlines: import('../types/engine.types').Headline[] = [];
     const newsEvents: import('../types/engine.types').NewsEvent[] = [];
@@ -408,7 +400,6 @@ export class WeekCoordinator {
         });
       }
       
-      // ⚡ Bolt: Removed array spread syntax for aggregation in the hot loop
       if (impact.newHeadlines) {
         for (let j = 0; j < impact.newHeadlines.length; j++) {
           allHeadlines.push(impact.newHeadlines[j]);
@@ -440,7 +431,6 @@ export class WeekCoordinator {
        totalCosts = report.expenses.production + report.expenses.marketing + report.expenses.overhead + report.expenses.pacts;
     }
 
-    // ⚡ Bolt: Refactored array .map() to a for loop, avoiding extra allocation overhead.
     const eventTitles: string[] = [];
     for (let i = 0; i < context.events.length; i++) {
       eventTitles.push(context.events[i].title);

@@ -1,4 +1,4 @@
-import { AwardBody, AwardCategory, AwardsProfile, GameState, Project, RivalStudio, SeriesProject, StateImpact, Talent, CampaignData } from '@/engine/types';
+import { AwardBody, AwardCategory, GameState, Project, RivalStudio, StateImpact, Talent, Contract } from '@/engine/types';
 import { RandomGenerator } from '../utils/rng';
 import { 
   AWARDS_CALENDAR, 
@@ -6,7 +6,6 @@ import {
   CANNES_EQUIVALENTS, 
   SUNDANCE_EQUIVALENTS 
 } from '../data/awards.data';
-import { TV_FORMAT_TAXONOMY } from '../data/tvFormats';
 
 export function isCannesEquivalentFestival(body: AwardBody | string): boolean {
   return CANNES_EQUIVALENTS.includes(body as AwardBody);
@@ -99,28 +98,52 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
 
   const eligibleFilm: Project[] = [];
   const eligibleTv: Project[] = [];
-  const projectToRivalMap: Record<string, RivalStudio> = {};
+  const projectToRivalMap = new Map<string, RivalStudio>();
+  const projectToContractsMap = new Map<string, Contract[]>();
 
-  const allStudios = [
-    { studio: null, projects: state.entities.projects, contracts: state.entities.contracts },
-    ...state.entities.rivals.map(r => ({ studio: r, projects: r.projects || {}, contracts: r.contracts || [] }))
-  ];
+  const contractsList = Object.values(state.entities.contracts || {});
+  for (const c of contractsList) {
+    const list = projectToContractsMap.get(c.projectId) || [];
+    list.push(c);
+    projectToContractsMap.set(c.projectId, list);
+  }
 
-  for (const entry of allStudios) {
-    const studioProjects = entry.projects;
-    for (const id in studioProjects) {
-      const p = studioProjects[id];
+  // Add player projects
+  const playerProjects = Object.values(state.entities.projects || {});
+  for (const p of playerProjects) {
+    if ((p.state === 'released' || p.state === 'post_release' || p.state === 'archived') &&
+        p.releaseWeek !== null &&
+        p.releaseWeek > currentWeek - 52) {
+      
+      const formatMatch = (p.format || '').toLowerCase();
+      if (formatMatch === 'film') eligibleFilm.push(p);
+      else if (formatMatch === 'tv' || formatMatch === 'series') eligibleTv.push(p);
+    }
+  }
+
+  // Add rival projects
+  const rivalsList = Object.values(state.entities.rivals || {});
+  for (const rival of rivalsList) {
+    const rivalProjects = Object.values(rival.projects || {});
+    for (const p of rivalProjects) {
       if ((p.state === 'released' || p.state === 'post_release' || p.state === 'archived') &&
           p.releaseWeek !== null &&
           p.releaseWeek > currentWeek - 52) {
-
-        if (entry.studio) {
-          projectToRivalMap[p.id] = entry.studio;
-        }
-
+        
+        projectToRivalMap.set(p.id, rival);
+        
         const formatMatch = (p.format || '').toLowerCase();
         if (formatMatch === 'film') eligibleFilm.push(p);
         else if (formatMatch === 'tv' || formatMatch === 'series') eligibleTv.push(p);
+
+        // Rivals occasionally have internal contracts not in the global record
+        if (rival.contracts && rival.contracts.length > 0) {
+            const list = projectToContractsMap.get(p.id) || [];
+            rival.contracts.forEach(rc => {
+                if (rc.projectId === p.id) list.push(rc);
+            });
+            projectToContractsMap.set(p.id, list);
+        }
       }
     }
   }
@@ -142,17 +165,22 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
     for (let i = 0; i < candidates.length; i++) {
       const p = candidates[i];
       
-      // Integrate new weighting system
-      const campaign = state.activeCampaigns?.[p.id];
-      const attachedTalentIds = (allStudios.find(s => !!s.projects[p.id])?.contracts || [])
-        .filter(c => c.projectId === p.id)
-        .map(c => c.talentId);
+      // Weighting system
+      // Campaign data might be in different places depending on implementation, 
+      // but let's assume it's moved to the projects themselves or a specific registry.
+      // For now, checks buzz directly if active state campaign is missing.
+      const weight = calculateNominationWeight(p, [], p.buzz * 0.1); 
       
-      const attachedTalent = attachedTalentIds.map(tid => state.entities.talents[tid]).filter(Boolean);
+      // Add talent data if available
+      const projectContracts = projectToContractsMap.get(p.id) || [];
+      const attachedTalent = projectContracts
+        .map(c => state.entities.talents[c.talentId])
+        .filter(Boolean);
       
-      const weight = calculateNominationWeight(p, attachedTalent, campaign?.buzzBonus || 0);
+      const refinedWeight = calculateNominationWeight(p, attachedTalent, p.buzz * 0.1);
+
       const randomFactor = rng.range(0.8, 1.2);
-      const score = weight * randomFactor;
+      const score = refinedWeight * randomFactor;
 
       if (score > bestScore) {
         bestScore = score;
@@ -166,22 +194,20 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
       const prestigeGain = isWin ? 15 : 3;
       
       const isPlayer = !!state.entities.projects[bestProject.id];
-      const rival = isPlayer ? null : projectToRivalMap[bestProject.id];
+      const rival = isPlayer ? null : projectToRivalMap.get(bestProject.id);
 
       impacts.push({
         type: 'INDUSTRY_UPDATE',
         payload: {
-            update: {
-                [`industry.awards.${rng.uuid('aw')}`]: {
-                    id: rng.uuid('award'),
-                    projectId: bestProject.id,
-                    name: config.category,
-                    category: config.category,
-                    body: config.body,
-                    status: isWin ? 'won' : 'nominated',
-                    year
-                }
-            }
+          [`industry.awards.${rng.uuid('aw')}`]: {
+            id: rng.uuid('award'),
+            projectId: bestProject.id,
+            name: config.category,
+            category: config.category,
+            body: config.body,
+            status: isWin ? 'won' : 'nominated',
+            year
+          }
         }
       });
 
@@ -201,6 +227,8 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
         impacts.push({
             type: 'NEWS_ADDED',
             payload: {
+                id: rng.uuid('news'),
+                week: currentWeek,
                 headline: `AWARDS: "${bestProject.title}" wins ${config.category}`,
                 description: `A triumphant victory at the ${config.body} for the entire team behind "${bestProject.title}".`,
                 category: 'awards'

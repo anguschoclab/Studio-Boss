@@ -8,7 +8,6 @@ import { generateSpinoffProposal } from '@/engine/systems/ip/spinoffFactory';
 import { calculateFranchiseFatigue } from '@/engine/systems/ip/fatigueEngine';
 import { resolveCrisis } from '@/engine/systems/crises';
 import * as festivalsEngine from '@/engine/systems/festivals';
-import * as awardsEngine from '@/engine/systems/awards';
 import { RandomGenerator } from '@/engine/utils/rng';
 import { Project, GameState, AwardBody, ProjectContractType, MarketingCampaign, StateImpact, SeriesProject } from '@/engine/types';
 
@@ -40,16 +39,16 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
         payload: { amount: talentFees }
       });
 
+      const contracts = { ...stateWithFees.entities.contracts };
+      newContracts.forEach(c => { contracts[c.id] = c; });
+
       return {
         gameState: {
           ...stateWithFees,
-          studio: {
-            ...stateWithFees.studio,
-            internal: {
-              ...stateWithFees.studio.internal,
-              projects: { ...stateWithFees.entities.projects, [project.id]: project },
-              contracts: [...stateWithFees.entities.contracts, ...newContracts]
-            }
+          entities: {
+            ...stateWithFees.entities,
+            projects: { ...stateWithFees.entities.projects, [project.id]: project },
+            contracts
           },
           rngState: rng.getState()
         }
@@ -284,6 +283,9 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
 
       const intermediateState = applyStateImpact(state, impacts);
 
+      const contracts = { ...intermediateState.entities.contracts };
+      newContracts.forEach(c => { contracts[c.id] = c; });
+
       return {
         gameState: {
           ...intermediateState,
@@ -291,12 +293,10 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
             ...intermediateState.ip,
             vault: state.ip.vault.map(a => a.id === ipAssetId ? { ...a, rightsOwner: 'STUDIO' as const } : a)
           },
-          studio: {
-            ...intermediateState.studio,
-            internal: {
-              ...intermediateState.studio.internal,
-              projects: { ...intermediateState.entities.projects, [project.id]: project },
-            }
+          entities: {
+            ...intermediateState.entities,
+            projects: { ...intermediateState.entities.projects, [project.id]: project },
+            contracts
           },
           rngState: rng.getState()
         }
@@ -329,8 +329,6 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
       return { gameState: newState };
     });
   },
-
-
 
   lockMarketingCampaign: (projectId, level) => {
     set((s) => {
@@ -388,12 +386,9 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
       return {
         gameState: {
           ...s.gameState,
-          studio: {
-            ...s.gameState.studio,
-            internal: {
-              ...s.gameState.studio.internal,
-              projects: { ...s.gameState.entities.projects, [project.id]: project }
-            }
+          entities: {
+            ...s.gameState.entities,
+            projects: { ...s.gameState.entities.projects, [project.id]: project }
           }
         }
       };
@@ -430,4 +425,3 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
     });
   }
 });
-

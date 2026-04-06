@@ -1,7 +1,6 @@
-import { GameState, StateImpact, Project, RivalStudio, Opportunity, Contract } from '@/engine/types';
+import { GameState, StateImpact, Project, RivalStudio } from '@/engine/types';
 import { RandomGenerator } from '../utils/rng';
 import { calculateOpeningWeekend } from '../systems/releaseSimulation';
-import { RegulatorSystem } from '../systems/industry/RegulatorSystem';
 
 export class StudioAutomation {
   /**
@@ -11,7 +10,9 @@ export class StudioAutomation {
   static tick(state: GameState, rng: RandomGenerator): StateImpact[] {
     const impacts: StateImpact[] = [];
     
-    state.entities.rivals.forEach(rival => {
+    const rivalsList = Object.values(state.entities.rivals || {});
+
+    rivalsList.forEach(rival => {
       // 1. Studio Status & Liquidation
       const isDistressed = (Number(rival.cash) || 0) < -50000000;
       
@@ -100,7 +101,7 @@ export class StudioAutomation {
       const budgetMap = { 'none': 0, 'basic': 5000000, 'blockbuster': 25000000 };
       const marketingBudget = budgetMap[tier];
 
-      const rivalPrestige = studioId === 'PLAYER' ? state.studio.prestige : (state.entities.rivals.find(r => r.id === studioId)?.prestige || 50);
+      const rivalPrestige = studioId === 'PLAYER' ? state.studio.prestige : (state.entities.rivals[studioId]?.prestige || 50);
       const { project: releasedProject } = calculateOpeningWeekend(
           { ...p, marketingLevel: tier, marketingBudget }, 
           [], 
@@ -137,9 +138,11 @@ export class StudioAutomation {
       impacts.push({
           type: 'NEWS_ADDED',
           payload: {
+              id: rng.uuid('news'),
               headline: `LIQUIDATION: ${rival.name} auctions IP!`,
               description: `Facing financial pressure, ${rival.name} has sold ${asset.title} to the highest bidder for $${(bidPrice / 1000000).toFixed(1)}M.`,
-              category: 'business'
+              category: 'business',
+              week: state.week
           }
       });
       
@@ -160,9 +163,11 @@ export class StudioAutomation {
       impacts.push({
           type: 'NEWS_ADDED',
           payload: {
+              id: rng.uuid('news'),
               headline: `BUSINESS: ${rival.name} launches streaming service!`,
               description: `Aiming for vertical integration, ${rival.name} has invested $200M in a new SVOD platform.`,
-              category: 'business'
+              category: 'business',
+              week: state.week
           }
       });
       impacts.push({
@@ -223,7 +228,7 @@ export class StudioAutomation {
     if (studioId === 'PLAYER') {
       return { type: 'PROJECT_UPDATED', payload: { projectId, update } };
     } else {
-      const rival = state.entities.rivals.find(r => r.id === studioId);
+      const rival = state.entities.rivals[studioId];
       const existingProject = rival?.projects?.[projectId] || {};
       return { 
         type: 'RIVAL_UPDATED', 

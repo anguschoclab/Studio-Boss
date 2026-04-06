@@ -5,7 +5,7 @@ import {
   generateWeeklyFinancialReport 
 } from "../../../engine/systems/finance";
 import { tickFinance } from "../../../engine/systems/finance/financeTick";
-import { Project, GameState } from "../../../engine/types";
+import { Project, GameState, Contract } from "../../../engine/types";
 import { RandomGenerator } from "../../../engine/utils/rng";
 
 import { createMockGameState, createMockProject } from "../../utils/mockFactories";
@@ -39,7 +39,7 @@ describe("Finance System", () => {
         name: "Test",
         archetype: "indie",
         prestige: 50,
-        internal: { projects: {}, contracts: [], projectHistory: [] }
+        internal: { firstLookDeals: [], projectHistory: [] }
       } as any
     });
 
@@ -49,7 +49,11 @@ describe("Finance System", () => {
 
     it("adds 100% of catalogValue if rightsOwner is 'studio'", () => {
        const p1: Project = { ...mockProjectReleased, ipRights: { rightsOwner: 'studio', catalogValue: 200000 } } as any;
-       const state = { ...mockState, ip: { vault: [{ baseValue: 200000, decayRate: 1.0, projectId: 'p1', quality: 50, type: 'original' }] } } as any;
+       const state = { 
+         ...mockState, 
+         entities: { ...mockState.entities, projects: { 'p1': p1 } },
+         ip: { ...mockState.ip, vault: [{ id: 'v1', baseValue: 200000, decayRate: 1.0, projectId: 'p1', quality: 50, type: 'original' }] } 
+       } as any;
        expect(calculateStudioNetWorth(state)).toBe(700000);
     });
   });
@@ -67,15 +71,20 @@ describe("Finance System", () => {
         archetype: "major",
         prestige: 50,
         internal: {
-          projects: {
-             'dev': mockProjectDev,
-             'prod': mockProjectProd,
-             'rel': mockProjectReleased
-          },
-          contracts: [],
-          projectHistory: []
+          projectHistory: [],
+          firstLookDeals: []
         }
-      } as any
+      } as any,
+      entities: {
+        projects: {
+           'dev': mockProjectDev,
+           'prod': mockProjectProd,
+           'rel': mockProjectReleased
+        },
+        talents: {},
+        rivals: {},
+        contracts: {}
+      }
     });
 
     it("properly calculates burns, overhead, and box office", () => {
@@ -86,17 +95,16 @@ describe("Finance System", () => {
         };
         const stateWithDist = {
           ...mockState,
-          studio: {
-            ...mockState.studio,
-            internal: {
-              ...mockState.studio.internal,
-              projects: {
-                ...mockState.entities.projects,
-                'rel': releasedWithDist
-              }
+          entities: {
+            ...mockState.entities,
+            projects: {
+              ...mockState.entities.projects,
+              'rel': releasedWithDist
             }
           }
         } as any;
+
+        const contractsList = Object.values(stateWithDist.entities.contracts || {});
 
         const { report } = generateWeeklyFinancialReport(
           stateWithDist,
@@ -105,7 +113,7 @@ describe("Finance System", () => {
           stateWithDist.finance.cash,
           stateWithDist.studio.archetype,
           stateWithDist.studio.prestige,
-          stateWithDist.entities.contracts,
+          contractsList,
           []
         );
         // ExpenseProcessor.calculateStudioBurn(Level 3, 2 active [unreleased])
@@ -141,14 +149,19 @@ describe("Finance System", () => {
           archetype: "major",
           prestige: 50,
           internal: {
-            projects: {
-               'prod': mockProjectProd,
-               'rel': mockProjectReleased
-            },
-            contracts: [],
-            projectHistory: []
+            projectHistory: [],
+            firstLookDeals: []
           }
-        } as any
+        } as any,
+        entities: {
+          projects: {
+             'prod': mockProjectProd,
+             'rel': mockProjectReleased
+          },
+          talents: {},
+          rivals: {},
+          contracts: {}
+        }
       });
   
       it("returns StateImpact for funds change", () => {
@@ -160,14 +173,11 @@ describe("Finance System", () => {
          };
          const stateWithDist = {
            ...mockState,
-           studio: {
-             ...mockState.studio,
-             internal: {
-               ...mockState.studio.internal,
-               projects: {
-                 'prod': mockProjectProd,
-                 'rel': releasedWithDist
-               }
+           entities: {
+             ...mockState.entities,
+             projects: {
+               'prod': mockProjectProd,
+               'rel': releasedWithDist
              }
            }
          } as any;
@@ -183,8 +193,7 @@ describe("Finance System", () => {
          // Net: 70k - 1,577,740 = -1,507,740
          // Wait, the project was theatrical, 200k weekly revenue. 200k * 0.35 = 70k, but maybe box office is also distributed or total royalties apply?
          // In calculateActiveRevenue: boxOffice = calculateTheatricalDecay(200k, 0.35) = 70k.
-         // wait, the amount received was -1527740, which is exactly 20000 less than expected.
-         // Why 20000 less? Maybe production burn is 40k?
+         // amount received was -1527740
          expect(impact?.payload.amount).toBe(-1527740);
       });
   });
@@ -195,7 +204,7 @@ describe('Finance Edge Cases', () => {
       const state = createMockGameState({
           studio: { 
             name: 'indie studio', 
-            internal: { projects: {}, contracts: [], projectHistory: [] }, 
+            internal: { projectHistory: [], firstLookDeals: [] }, 
             archetype: 'indie', 
             prestige: 50 
           } as any,
@@ -204,8 +213,16 @@ describe('Finance Edge Cases', () => {
             ledger: [], 
             weeklyHistory: [],
             marketState: { baseRate: 0.05, savingsYield: 0.02, debtRate: 0.1, loanRate: 0.08, rateHistory: [], sentiment: 50, cycle: 'STABLE' }
+          },
+          entities: {
+            projects: {},
+            talents: {},
+            rivals: {},
+            contracts: {}
           }
       });
+
+      const contractsList = Object.values(state.entities.contracts || {});
 
       const { report, snapshot } = generateWeeklyFinancialReport(
         state,
@@ -214,7 +231,7 @@ describe('Finance Edge Cases', () => {
         state.finance.cash,
         state.studio.archetype,
         state.studio.prestige,
-        state.entities.contracts,
+        contractsList,
         state.studio.internal.firstLookDeals || []
       );
 
@@ -252,14 +269,19 @@ describe('Finance Edge Cases', () => {
       scriptEvents: []
     } as any;
 
-    const state = {
+    const state = createMockGameState({
         week: 1,
-        studio: { internal: { projects: { 'p1': project }, contracts: [], firstLookDeals: [] }, archetype: 'indie', prestige: 50 },
-        finance: { cash: 1000000 },
-        ip: { vault: [], franchises: {} },
-        market: { buyers: [] },
-        industry: { talentPool: {} }
-    } as any;
+        studio: { internal: { projectHistory: [], firstLookDeals: [] }, archetype: 'indie', prestige: 50 } as any,
+        finance: { cash: 1000000 } as any,
+        entities: {
+          projects: { 'p1': project },
+          talents: {},
+          rivals: {},
+          contracts: {}
+        }
+    });
+
+    const contractsList = Object.values(state.entities.contracts || {});
 
     const { report } = generateWeeklyFinancialReport(
       state,
@@ -268,7 +290,7 @@ describe('Finance Edge Cases', () => {
       state.finance.cash,
       state.studio.archetype,
       state.studio.prestige,
-      state.entities.contracts,
+      contractsList,
       state.studio.internal.firstLookDeals || []
     );
     expect(report.expenses.production).toBe(10000); // weeklyCost is 10k, even though budget is negative

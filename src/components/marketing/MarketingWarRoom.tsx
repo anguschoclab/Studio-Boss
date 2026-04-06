@@ -15,7 +15,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Globe, Home, Target, TrendingUp, AlertCircle } from 'lucide-react';
 import { evaluateMarketingEfficiency } from '@/engine/systems/marketing/efficiencyEvaluator';
-import { formatCurrency } from '@/lib/utils'; // Assuming this exists
+import { formatCurrency } from '@/lib/utils';
 import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
 
 interface MarketingWarRoomProps {
@@ -29,7 +29,7 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
   const studioCash = gameState?.finance.cash || 0;
 
   const project = useMemo(() => 
-    Object.values(gameState?.studio?.internal?.projects || {}).find(p => p.id === projectId),
+    gameState?.entities.projects[projectId],
     [gameState, projectId]
   );
 
@@ -69,7 +69,7 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
   };
 
   return (
-    <Card className="w-full max-w-4xl mx-auto glass-panel border-white/10 overflow-hidden">
+    <Card className="w-full max-w-4xl mx-auto glass-panel border-white/10 overflow-hidden text-left">
       <CardHeader className="bg-primary/10 border-b border-white/5">
         <div className="flex justify-between items-center">
           <div>

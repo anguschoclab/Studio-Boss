@@ -22,6 +22,7 @@ export function resolveFestivals(state: GameState, rng: RandomGenerator): StateI
   
   const impacts: StateImpact[] = [];
   const updatedSubmissions: FestivalSubmission[] = [];
+  const rivalsList = Object.values(state.entities.rivals || {});
 
   for (const sub of state.industry.festivalSubmissions) {
     if (sub.status !== 'submitted') {
@@ -39,7 +40,7 @@ export function resolveFestivals(state: GameState, rng: RandomGenerator): StateI
     if (fest.weeks.includes(weekOfCycle)) {
       // Find the project and its owner
       const playerProject = state.entities.projects[sub.projectId];
-      const rival = state.entities.rivals.find(r => !!(r.projects || {})[sub.projectId]);
+      const rival = rivalsList.find(r => !!(r.projects || {})[sub.projectId]);
       const project = playerProject || (rival?.projects || {})[sub.projectId];
       const ownerId = playerProject ? 'PLAYER' : (rival?.id || 'RIVAL');
 

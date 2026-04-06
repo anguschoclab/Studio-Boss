@@ -35,7 +35,7 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
 
   const eligibleProjects = useMemo(() => {
     if (!gameState) return [];
-    return Object.values(gameState?.studio?.internal?.projects || {}).filter(
+    return Object.values(gameState?.entities.projects || {}).filter(
       (p: Project) => p.state === 'development' || p.state === 'production' || p.state === 'needs_greenlight'
     );
   }, [gameState]);
@@ -48,7 +48,7 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
   const fitScore = useMemo(() => {
     if (!selectedProjectObj || !gameState) return 0;
     const rng = new RandomGenerator(gameState.gameSeed + gameState.week);
-    return calculateFitScore(selectedProjectObj, buyer, gameState.week, Object.values(gameState?.studio?.internal?.projects || {}), rng);
+    return calculateFitScore(selectedProjectObj, buyer, gameState.week, Object.values(gameState?.entities.projects || {}), rng);
   }, [selectedProjectObj, buyer, gameState]);
 
   const handlePitch = async () => {
@@ -71,12 +71,12 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-xl bg-card border-border shadow-2xl overflow-hidden p-0">
+      <DialogContent className="max-w-xl bg-card border-border shadow-2xl overflow-hidden p-0 text-left">
         <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-primary via-violet-500 to-primary/20" />
         
         <div className="p-6 space-y-6">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center shadow-inner">
+            <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center shadow-inner text-left">
                <Handshake className="w-6 h-6 text-primary" />
             </div>
             <div>
@@ -132,7 +132,7 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
                 </div>
 
                 {/* Analysis Column */}
-                <div className="space-y-4">
+                <div className="space-y-4 text-left">
                    <div className="glass-panel p-5 rounded-2xl border border-white/5 bg-black/20 space-y-4">
                       <div className="flex items-center justify-between">
                          <TooltipWrapper tooltip="Algorithmic alignment score between your project's genre/talent and the platform's current executive mandate." side="top">
