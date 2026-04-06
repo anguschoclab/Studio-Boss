@@ -22,8 +22,8 @@ export const TopBar = () => {
   if (!gameState) return null;
 
   const { studio, week } = gameState;
-  const activeProjectsCount = useGameStore(s => selectActiveProjects(s.gameState).length);
-  const { cycle, debtRate } = useGameStore(s => selectMarketMetrics(s.gameState));
+  const activeProjectsCount = selectActiveProjects(gameState).length;
+  const { cycle, debtRate } = selectMarketMetrics(gameState);
 
   const handleAdvance = async () => {
     await doAdvanceWeek();
@@ -42,7 +42,7 @@ export const TopBar = () => {
           <span className="text-[10px] font-black uppercase tracking-tighter text-muted-foreground leading-none mb-1">Production Week</span>
           <div className="flex items-center gap-3">
             <span className="font-display font-black text-2xl italic tracking-tighter bg-gradient-to-br from-white to-white/40 bg-clip-text text-transparent">
-              {getWeekDisplay(week)}
+              W{getWeekDisplay(week).displayWeek} {getWeekDisplay(week).year}
             </span>
             <Badge variant="outline" className="font-mono text-[10px] border-primary/20 text-primary bg-primary/5 px-2 py-0">
               Q{Math.ceil(((week - 1) % 52 + 1) / 13)}
