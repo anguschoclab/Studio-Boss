@@ -67,10 +67,15 @@ export function calculateFranchiseFatigue(
   // 🌌 The Universe Builder: The market rejects trend-chasing much faster now.
   const oversaturationMultiplier = genreSaturation > 10 ? 3.0 : genreSaturation > 6 ? 1.5 : 1.0;
   const rivalPenalty = (genreSaturation / 10) * 0.15 * oversaturationMultiplier;
+
+  // 🌌 The Universe Builder: Trend Chaser Penalty. Aggressively penalizes low-loyalty franchises jumping on over-saturated bandwagons.
+  if (genreSaturation > 12 && franchise.audienceLoyalty < 40) {
+    currentFatigue *= 2.0;
+  }
   
   // 4. Audience Loyalty (Protective Shield)
   // High loyalty acts as a buffer against fatigue.
-  const loyaltyShield = (franchise.audienceLoyalty / 100) * 0.3; // Up to 30% reduction in fatigue gain
+  const loyaltyShield = Math.min(0.4, (franchise.audienceLoyalty / 100) * 0.3); // Up to 30% reduction in fatigue gain, capped at 40%
 
   // 🌌 The Universe Builder: Extreme oversaturation penalty if the franchise has >= 4 active projects and the genre is highly saturated
   if (activeCount >= 4 && genreSaturation > 15) {
@@ -95,6 +100,16 @@ export function calculateReleaseGapImpact(
   const weeksSince = currentWeek - mostRecent;
   const yearsSince = weeksSince / 52;
   
+  // 0. The Generational Revival (15+ years / 780+ weeks)
+  // 🌌 The Universe Builder: When IP has been dormant for a full generation, it returns as a monumental cultural event.
+  if (yearsSince >= 15) {
+    return {
+      buzzBonus: 75,
+      label: 'Generational Revival (Cultural Event)',
+      fatigueReset: true
+    };
+  }
+
   // 1. The Nostalgia Spike (10+ years / 520+ weeks)
   // Real-life: Top Gun Maverick, The Force Awakens.
   if (yearsSince >= 10) {
@@ -143,9 +158,19 @@ export function calculateReleaseGapImpact(
     };
   }
 
+  // Cannibalized Release (0-6 months)
+  // 🌌 The Universe Builder: Releasing projects too close together in the same franchise destroys value.
+  if (yearsSince > 0 && yearsSince < 0.5) {
+    return {
+      buzzBonus: -50,
+      label: 'Cannibalized Release (Immediate Oversaturation)',
+      fatigueReset: false
+    };
+  }
+
   // Too Soon Penalty
   // 🌌 The Universe Builder: Rapid-fire sequels without breathing room kill anticipation.
-  if (yearsSince > 0 && yearsSince < 1) {
+  if (yearsSince >= 0.5 && yearsSince < 1) {
     return {
       buzzBonus: -30,
       label: 'IP Factory (Extreme Decay)',

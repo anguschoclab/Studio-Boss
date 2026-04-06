@@ -58,6 +58,11 @@ export function calculateFranchiseEquity(
     // Boost bonus significantly if diverse compatible genres cross over
     crossoverBonus += Math.min(0.5, synergyHits * 0.15);
 
+    // 🌌 The Universe Builder: Golden Age of Crossovers. When combining extremely compatible, highly synergistic IP genres.
+    if (synergyHits >= 4) {
+      crossoverBonus += 0.35;
+    }
+
     // Avengers-style crossover event check
     // 🌌 The Universe Builder: Massive event films generate unprecedented synergy.
     if (assets.length >= 3 && genres.some(g => g === 'Multiverse' || g === 'IP Mashup')) {
@@ -89,7 +94,10 @@ export function calculateFranchiseEquity(
   // 🌌 The Universe Builder: Penalty applied for diluting the franchise brand with too many concurrent projects.
   const overSaturationPenalty = franchise.activeProjectIds && franchise.activeProjectIds.length >= 4 ? 0.8 : 1.0;
 
-  return Math.floor(baseEquity * crossoverBonus * multiplier * megaFranchisePremium * overSaturationPenalty);
+  // 🌌 The Universe Builder: Massive penalty to valuation if the franchise is heavily fatigued
+  const fatiguePenalty = franchise.fatigueLevel > 0.8 ? 0.5 : 1.0;
+
+  return Math.floor(baseEquity * crossoverBonus * multiplier * megaFranchisePremium * overSaturationPenalty * fatiguePenalty);
 }
 
 /**
