@@ -118,7 +118,7 @@ function handleReleasedSeries(
       p.state = 'post_release';
       p.weeksInPhase = 0;
       update = `"${p.title}" Season ${currentSeason} finishes its run.`;
-      talentUpdates = TalentSystem.applyProjectResults(p, projectContracts, Object.values(talentPool), projectAwards);
+      talentUpdates = TalentSystem.applyProjectResults(p, projectContracts, talentPool, projectAwards);
     }
   } else if (p.releaseModel === 'split') {
     const part2DropWeek = Math.ceil(eps / 2) + 2;
@@ -137,7 +137,7 @@ function handleReleasedSeries(
       p.state = 'post_release';
       p.weeksInPhase = 0;
       update = `"${p.title}" Season ${currentSeason} finishes its run.`;
-      talentUpdates = TalentSystem.applyProjectResults(p, projectContracts, Object.values(talentPool), projectAwards);
+      talentUpdates = TalentSystem.applyProjectResults(p, projectContracts, talentPool, projectAwards);
     }
   } else {
     const episodesReleased = p.tvDetails.episodesAired || 0;
@@ -155,7 +155,7 @@ function handleReleasedSeries(
         p.state = 'post_release';
         p.weeksInPhase = 0;
         update = `"${p.title}" Season ${currentSeason} finishes its run.`;
-        talentUpdates = TalentSystem.applyProjectResults(p, projectContracts, Object.values(talentPool), projectAwards);
+        talentUpdates = TalentSystem.applyProjectResults(p, projectContracts, talentPool, projectAwards);
       }
     }
   }
@@ -183,7 +183,7 @@ function handleReleasedUnscripted(
     p.state = 'post_release';
     p.weeksInPhase = 0;
     update = `"${p.title}" concludes its broadcast.`;
-    talentUpdates = TalentSystem.applyProjectResults(p, projectContracts, Object.values(talentPool), projectAwards);
+    talentUpdates = TalentSystem.applyProjectResults(p, projectContracts, talentPool, projectAwards);
   }
 
   return { update, talentUpdates };
@@ -222,7 +222,7 @@ function handleReleasedPhase(
       p.weeksInPhase = 0;
       return {
         update: `"${p.title}" completes its theatrical run — total gross: ${(p.revenue / 1_000_000).toFixed(1)}M${trendText}`,
-        talentUpdates: TalentSystem.applyProjectResults(p, projectContracts, Object.values(talentPool), projectAwards)
+        talentUpdates: TalentSystem.applyProjectResults(p, projectContracts, talentPool, projectAwards)
       };
     } else {
       return {
@@ -241,7 +241,7 @@ function handleReleasedPhase(
         pAny.weeksInPhase = 0;
         return {
           update: `"${pAny.title}" finishes its broadcast run.`,
-          talentUpdates: TalentSystem.applyProjectResults(pAny, projectContracts, Object.values(talentPool), projectAwards)
+          talentUpdates: TalentSystem.applyProjectResults(pAny, projectContracts, talentPool, projectAwards)
         };
       } else {
         return { update: null, talentUpdates: [] };
