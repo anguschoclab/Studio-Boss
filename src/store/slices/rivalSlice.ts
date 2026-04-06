@@ -15,7 +15,7 @@ export const createRivalSlice: StateCreator<GameStore, [], [], RivalSlice> = (se
   acquireRival: (targetId) => {
     set((s) => {
       if (!s.gameState) return s;
-      const rng = new RandomGenerator((s.gameState.gameSeed || 0) + (s.gameState.tickCount || 0) + 777);
+      const rng = new RandomGenerator(s.gameState.rngState);
       const impact = executeAcquisition(s.gameState, targetId, rng);
       if (!impact) return s;
 
@@ -28,7 +28,8 @@ export const createRivalSlice: StateCreator<GameStore, [], [], RivalSlice> = (se
           industry: {
             ...newState.industry,
             rivals: newState.industry.rivals.filter(r => r.id !== targetId)
-          }
+          },
+          rngState: rng.getState()
         } 
       };
     });
@@ -37,20 +38,24 @@ export const createRivalSlice: StateCreator<GameStore, [], [], RivalSlice> = (se
   corporateSabotage: (targetId) => {
     set((s) => {
       if (!s.gameState) return s;
-      const rng = new RandomGenerator((s.gameState.gameSeed || 0) + (s.gameState.tickCount || 0) + 888);
+      const rng = new RandomGenerator(s.gameState.rngState);
       const impact = executeSabotage(s.gameState, targetId, rng);
       if (!impact) return s;
-      return { gameState: applyImpacts(s.gameState, [impact]) };
+      const newState = applyImpacts(s.gameState, [impact]);
+      newState.rngState = rng.getState();
+      return { gameState: newState };
     });
   },
 
   poachExec: (targetId) => {
     set((s) => {
       if (!s.gameState) return s;
-      const rng = new RandomGenerator((s.gameState.gameSeed || 0) + (s.gameState.tickCount || 0) + 999);
+      const rng = new RandomGenerator(s.gameState.rngState);
       const impact = executePoach(s.gameState, targetId, rng);
       if (!impact) return s;
-      return { gameState: applyImpacts(s.gameState, [impact]) };
+      const newState = applyImpacts(s.gameState, [impact]);
+      newState.rngState = rng.getState();
+      return { gameState: newState };
     });
   },
 

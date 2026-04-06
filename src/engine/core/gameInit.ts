@@ -203,6 +203,7 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
     week: 1,
     gameSeed: seed,
     tickCount: 0,
+    rngState: rng.getState(),
     game: { currentWeek: 1 },
     finance: {
       cash: arch.startingCash,
@@ -267,5 +268,6 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
     },
     history: [],
     eventHistory: [],
+    activeCampaigns: {},
   };
 }

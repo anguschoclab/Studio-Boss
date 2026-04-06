@@ -30,7 +30,7 @@ export const createCampaignSlice: StateCreator<GameStore, [], [], CampaignSlice>
     const newCash = state.finance.cash - tier.cost;
     
     // Create local RNG for backlash check
-    const rng = new RandomGenerator(state.gameSeed + state.week + state.tickCount + 555);
+    const rng = new RandomGenerator(state.rngState);
     const project = state.studio.internal.projects[projectId];
     const metaScore = project?.reception?.metaScore || project?.reviewScore || 60;
     
@@ -57,7 +57,8 @@ export const createCampaignSlice: StateCreator<GameStore, [], [], CampaignSlice>
         activeCampaigns: {
           ...s.gameState.activeCampaigns,
           [projectId]: newCampaign
-        }
+        },
+        rngState: rng.getState()
       };
 
       if (hasBacklash) {
@@ -70,6 +71,9 @@ export const createCampaignSlice: StateCreator<GameStore, [], [], CampaignSlice>
         };
         newState.news.headlines.unshift(scandalHeadline);
       }
+      
+      // We must recapture the updated RNG state in case the backlash check bumped it
+      newState.rngState = rng.getState();
 
       return {
         gameState: newState,

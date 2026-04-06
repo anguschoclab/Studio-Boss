@@ -42,7 +42,7 @@ export const TopBar = () => {
           <span className="text-[10px] font-black uppercase tracking-tighter text-muted-foreground leading-none mb-1">Production Week</span>
           <div className="flex items-center gap-3">
             <span className="font-display font-black text-2xl italic tracking-tighter bg-gradient-to-br from-white to-white/40 bg-clip-text text-transparent">
-              {getWeekDisplay(week)}
+              W{getWeekDisplay(week).displayWeek} Y{getWeekDisplay(week).year}
             </span>
             <Badge variant="outline" className="font-mono text-[10px] border-primary/20 text-primary bg-primary/5 px-2 py-0">
               Q{Math.ceil(((week - 1) % 52 + 1) / 13)}
@@ -58,10 +58,11 @@ export const TopBar = () => {
             <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest leading-none mb-1">Cash Reserves</span>
             <span className={cn(
                "font-mono font-bold text-lg",
-               studio.funds < 0 ? "text-destructive" : "text-emerald-400"
+               (gameState.finance?.cash ?? 0) < 0 ? "text-destructive" : "text-emerald-400"
             )}>
-              {formatMoney(studio.funds)}
+              {formatMoney(gameState.finance?.cash ?? 0)}
             </span>
+
           </div>
 
           <div className="flex flex-col items-end cursor-default group">
@@ -112,7 +113,7 @@ export const TopBar = () => {
               <p className="font-bold text-amber-500 mb-1">Active Market Events</p>
               <ul className="list-disc list-inside text-muted-foreground">
                 {gameState.market.activeMarketEvents.map((ev, i) => (
-                  <li key={i}>{ev.title}</li>
+                  <li key={i}>{ev.name}</li>
                 ))}
               </ul>
             </div>

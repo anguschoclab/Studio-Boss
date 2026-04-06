@@ -59,6 +59,7 @@ export interface GameState {
   week: number;
   gameSeed: number;
   tickCount: number;
+  rngState: number;
   game: {
     currentWeek: number;
   };
