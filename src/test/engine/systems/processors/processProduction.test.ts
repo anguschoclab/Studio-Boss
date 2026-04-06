@@ -78,7 +78,7 @@ describe('tickProduction', () => {
     expect(impacts).toHaveLength(2);
     const industryUpdate = impacts.find(i => i.type === 'INDUSTRY_UPDATE') as any;
     expect(industryUpdate).toBeDefined();
-    const updatedProject = industryUpdate?.payload?.['entities.projects']?.['p1'];
+    const updatedProject = industryUpdate?.payload?.update?.['entities.projects']?.['p1'];
     expect(updatedProject).toBeDefined();
     expect(updatedProject?.weeksInPhase).toBe(1);
     expect(updatedProject?.progress).toBeGreaterThan(0);

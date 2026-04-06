@@ -1,32 +1,31 @@
 import { describe, expect, test } from 'vitest';
 import { calculateWeeklyRevenue } from '../../../engine/systems/finance';
 import { Project } from '../../../engine/types';
+import { createMockGameState } from '../../utils/mockFactories';
 
 describe('Finance: Cult Classic Revenue', () => {
   const baseProject: Project = {
     id: 'p1', title: 'Flop', format: 'film', genre: 'Drama', budgetTier: 'low',
     budget: 1000000, weeklyCost: 10000, targetAudience: 'General Audience', flavor: 'A nice drama',
     state: 'released', buzz: 50, weeksInPhase: 0, developmentWeeks: 4, productionWeeks: 4,
-    revenue: 0, weeklyRevenue: 50000, releaseWeek: null
+    revenue: 0, weeklyRevenue: 50000, releaseWeek: 1
   } as Project;
 
-  it('Cult Classic projects generate long-tail revenue minimums', () => {
+  test('Cult Classic projects generate long-tail revenue minimums', () => {
     // Normal project
     const normalProject = { ...baseProject, weeklyRevenue: 50000 };
-    const mockStateNormal = {
-      studio: { internal: { projects: { p1: { ...normalProject, distributionStatus: 'theatrical' } } } },
-      market: { buyers: [] }
-    } as any;
-    const revNormal = calculateWeeklyRevenue(mockStateNormal);
+    const stateNormal = createMockGameState();
+    stateNormal.entities.projects['p1'] = { ...normalProject, distributionStatus: 'theatrical' } as any;
+    
+    const revNormal = calculateWeeklyRevenue(stateNormal);
     expect(revNormal).toBe(23500); // 50000 * 0.47
 
     // Cult classic project overrides low base with ironic viewing multiplier
     const cultProject = { ...baseProject, isCultClassic: true, weeklyRevenue: 50000 };
-    const mockStateCult = {
-      studio: { internal: { projects: { p1: { ...cultProject, distributionStatus: 'theatrical' } } } },
-      market: { buyers: [] }
-    } as any;
-    const revCult = calculateWeeklyRevenue(mockStateCult);
+    const stateCult = createMockGameState();
+    stateCult.entities.projects['p1'] = { ...cultProject, distributionStatus: 'theatrical' } as any;
+    
+    const revCult = calculateWeeklyRevenue(stateCult);
 
     // applyIronicViewingMultiplier gives Math.max(23500 * 1.8, 200000)
     expect(revCult).toBe(200000); // Because 23500 * 1.8 = 42300, so it hits the 200000 minimum floor

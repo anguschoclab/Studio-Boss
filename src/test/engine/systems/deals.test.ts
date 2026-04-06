@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { evaluateFirstLookDeal, offerFirstLookDeal, advanceDeals, evaluatePackageStrength } from '../../../engine/systems/deals';
 import { Talent, GameState, TalentPact, Agency } from '../../../engine/types';
 import { RandomGenerator } from '../../../engine/utils/rng';
+import { createMockGameState } from '../../utils/mockFactories';
 
 describe('Deals System', () => {
   let mockTalent: Talent;
@@ -21,8 +22,8 @@ describe('Deals System', () => {
   });
 
   it('evaluates whether talent will accept a first-look deal based on prestige', () => {
-    const poorState = { studio: { prestige: 20 } } as unknown as GameState;
-    const okState = { studio: { prestige: 90 } } as unknown as GameState;
+    const poorState = createMockGameState({ studio: { prestige: 20 } as any });
+    const okState = createMockGameState({ studio: { prestige: 90 } as any });
 
     const luckyRng = new RandomGenerator(123);
     vi.spyOn(luckyRng, 'next').mockReturnValue(0.5); // mid roll = 50
@@ -39,11 +40,11 @@ describe('Deals System', () => {
   });
 
   it('offers a deal and returns newsEvents impact if accepted', () => {
-    const state = {
+    const state = createMockGameState({
         week: 10,
-        studio: { name: 'Test Studio', prestige: 90 },
-        industry: { talentPool: { [mockTalent.id]: mockTalent } }
-    } as unknown as GameState;
+        studio: { name: 'Test Studio', prestige: 90 } as any
+    });
+    state.entities.talents[mockTalent.id] = mockTalent;
     
     const luckyRng = new RandomGenerator(456);
     vi.spyOn(luckyRng, 'next').mockReturnValue(0.01); // Trigger success

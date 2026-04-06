@@ -7,6 +7,7 @@ import {
 } from '../../../engine/systems/mergers';
 import { GameState, RivalStudio, Talent, Project } from '../../../engine/types';
 import { RandomGenerator } from '../../../engine/utils/rng';
+import { createMockGameState } from '../../utils/mockFactories';
 
 describe('Mergers and Sabotage System', () => {
   let mockState: GameState;
@@ -25,53 +26,20 @@ describe('Mergers and Sabotage System', () => {
       recentActivity: 'Testing',
       foundedWeek: 1,
       projectCount: 2,
-      strategy: 'genre_specialist',
+      strategy: 'genre_specialist' as any,
       genreFocus: 'Horror',
       motivationProfile: { financial: 50, prestige: 50, legacy: 50, aggression: 50 },
       currentMotivation: 'STABILITY',
       projects: {},
-      contracts: []
-    };
+      contracts: [],
+      ownedPlatforms: []
+    } as RivalStudio;
 
-    mockState = {
+    mockState = createMockGameState({
       week: 10,
-      gameSeed: 12345,
-      tickCount: 0,
-      projects: { active: [] },
-      game: { currentWeek: 10 },
-      finance: { cash: 100_000_000, ledger: [] },
-      news: { headlines: [] },
-      ip: { vault: [], franchises: {} },
-      studio: {
-        name: 'Player Studio',
-        archetype: 'major',
-        prestige: 50,
-        internal: {
-          projects: {},
-          contracts: []
-        }
-      },
-      market: {
-        opportunities: [],
-        buyers: [],
-        trends: [],
-        activeMarketEvents: []
-      },
-      industry: {
-        rivals: [mockTarget],
-        families: [],
-        agencies: [],
-        agents: [],
-        talentPool: {} as Record<string, Talent>,
-        newsHistory: [],
-        rumors: []
-      },
-      culture: {
-        genrePopularity: {}
-      },
-      history: [],
-      eventHistory: []
-    } as unknown as GameState;
+      finance: { cash: 100_000_000, ledger: [] } as any
+    });
+    mockState.entities.rivals = { [mockTarget.id]: mockTarget };
   });
 
   describe('evaluateAcquisitionTarget', () => {
@@ -111,7 +79,7 @@ describe('Mergers and Sabotage System', () => {
       
       // Add a rival IP to the state
       mockState.ip.vault = [
-        { id: 'ip-1', title: 'Rival IP', rightsOwner: 'RIVAL', originalProjectId: 'p-1', baseValue: 10_000_000, decayRate: 1 } as any
+        { id: 'ip-1', title: 'Rival IP', rightsOwner: 'RIVAL', ownerStudioId: 'rival-1', originalProjectId: 'p-1', baseValue: 10_000_000, decayRate: 1 } as any
       ];
 
       const impact = executeAcquisition(mockState, mockTarget.id, rng);

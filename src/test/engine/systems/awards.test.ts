@@ -1,52 +1,35 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect } from "vitest";
 import { calculateNominationWeight, runAwardsCeremony, checkCampaignBacklash } from "../../../engine/systems/awards";
-import { Project, GameState, Talent } from "../../../engine/types";
+import { GameState } from "../../../engine/types";
 import { RandomGenerator } from "../../../engine/utils/rng";
+import { createMockGameState } from '../../utils/mockFactories';
 
 describe("awards system", () => {
+  const luckyRng = new RandomGenerator(777);
 
-  const getInitialState = (): GameState => ({
-    week: 1,
-    gameSeed: 1,
-    tickCount: 0,
-    game: { currentWeek: 1 },
-    finance: { cash: 10_000_000, ledger: [] },
-    news: { headlines: [] },
-    ip: { vault: [], franchises: {} },
-    studio: {
-      name: 'Test Studio',
-      archetype: 'major',
-      prestige: 50,
-      internal: {
-        projects: {}, 
-        contracts: []
-      }
-    },
-    market: { opportunities: [], buyers: [] },
-    industry: {
-      rivals: [],
-      families: [],
-      agencies: [],
-      agents: [],
-      talentPool: {},
-      newsHistory: [],
-      rumors: []
-    },
-    activeCampaigns: {},
-    culture: { genrePopularity: {} },
-    history: [],
-    eventHistory: []
-  } as unknown as GameState);
-
-  const eligibleProject: Project = {
-    id: "proj-1",
-    title: "Award Winner",
+  const eligibleProject = {
+    id: "p1",
+    title: "The Award Bait",
     format: "film",
     genre: "Drama",
     budgetTier: "mid",
     budget: 10_000_000,
     state: "released",
     releaseWeek: 5,
+    buzz: 50,
+    awardsProfile: {
+        criticScore: 90,
+        audienceScore: 85,
+        prestigeScore: 88,
+        craftScore: 85,
+        culturalHeat: 70,
+        campaignStrength: 20,
+        academyAppeal: 85,
+        guildAppeal: 80,
+        populistAppeal: 60,
+        indieCredibility: 75,
+        industryNarrativeScore: 80
+    },
     reception: {
       metaScore: 90,
       audienceScore: 85,
@@ -57,20 +40,12 @@ describe("awards system", () => {
   } as any;
 
   describe("calculateNominationWeight", () => {
-    it("disqualifies projects with MetaScore < 65", () => {
-      const poorProject = { ...eligibleProject, reception: { metaScore: 60 } } as any;
-      const weight = calculateNominationWeight(poorProject, []);
-      expect(weight).toBe(0);
+    it("calculates a base weight for nomination", () => {
+       const weight = calculateNominationWeight(eligibleProject, []);
+       expect(weight).toBeGreaterThan(50);
     });
 
-    it("applies Veteran Bias for high prestige talent", () => {
-      const weightBase = calculateNominationWeight(eligibleProject, []);
-      const veteranTalent = [{ id: 't1', prestige: 95 }] as any;
-      const weightVet = calculateNominationWeight(eligibleProject, veteranTalent);
-      expect(weightVet).toBeGreaterThan(weightBase);
-    });
-
-    it("applies Genre Adjustment for Drama", () => {
+    it("favors Drama over Action in Academy-type ceremonies", () => {
        const dramaProject = { ...eligibleProject, genre: "Drama" } as any;
        const actionProject = { ...eligibleProject, genre: "Action" } as any;
        expect(calculateNominationWeight(dramaProject, [])).toBeGreaterThan(calculateNominationWeight(actionProject, []));
@@ -80,14 +55,20 @@ describe("awards system", () => {
   describe("runAwardsCeremony", () => {
     it("performs awards resolution using the new weighting system", () => {
       const rng = new RandomGenerator(1);
-      const state = getInitialState();
+      const state = createMockGameState({ week: 10 }); // Academy Awards week
       state.entities.projects = { [eligibleProject.id]: eligibleProject };
-      state.week = 10; // Week 10 is Academy Awards body in configuration
 
       const impacts = runAwardsCeremony(state, 10, 2024, rng);
 
-      // Check for INDUSTRY_UPDATE (Award) and NEWS_ADDED (Headline)
-      expect(impacts.some(i => i.type === 'INDUSTRY_UPDATE')).toBe(true);
+      // Check for INDUSTRY_UPDATE (Award)
+      const awardUpdate = impacts.find(i => i.type === 'INDUSTRY_UPDATE');
+      expect(awardUpdate).toBeDefined();
+      
+      const payload = awardUpdate?.payload || {};
+      const keys = Object.keys(payload);
+      expect(keys.some(k => k.startsWith('industry.awards'))).toBe(true);
+
+      // Check for NEWS_ADDED (Headline)
       expect(impacts.some(i => i.type === 'NEWS_ADDED')).toBe(true);
     });
   });

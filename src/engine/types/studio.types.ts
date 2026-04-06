@@ -100,6 +100,7 @@ export interface GameState {
     festivalSubmissions?: FestivalSubmission[];
     rumors?: Rumor[];
     scandals?: Scandal[];
+    activeMergers?: Merger[];
     newsHistory: NewsEvent[];
   };
   deals: DealsState;
@@ -185,4 +186,13 @@ export interface StudioSnapshot {
   completedProjects: number;  // Count of projects in 'Released' state
   totalPrestige: number;      // Derived from studio prestige/awards
   timestamp: string;          // ISO string of when snapshot was taken
+}
+
+export interface Merger {
+  id: string;
+  buyerId: string;
+  targetId: string;
+  valuation: number;
+  activeUntilWeek: number;
+  status: 'pending' | 'completed' | 'cancelled';
 }

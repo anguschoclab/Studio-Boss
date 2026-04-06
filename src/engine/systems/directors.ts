@@ -91,7 +91,7 @@ export function evaluateCreativeControlOffer(
 export function processDirectorDisputes(
   project: Project,
   projectContracts: Contract[],
-  talentPoolMap: Map<string, Talent>,
+  talentPool: Record<string, Talent>,
   rng: RandomGenerator
 ): StateImpact {
   const impact: StateImpact = {
@@ -104,7 +104,7 @@ export function processDirectorDisputes(
   const dirContract = projectContracts.find(c => c.projectId === project.id);
   if (!dirContract) return impact;
 
-  const director = talentPoolMap.get(dirContract.talentId);
+  const director = talentPool[dirContract.talentId];
   if (!director || !director.roles.includes('director')) return impact;
 
   const archetype: DirectorArchetype = director.directorArchetype ?? 'journeyman';

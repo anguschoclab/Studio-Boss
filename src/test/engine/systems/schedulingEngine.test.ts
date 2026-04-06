@@ -7,6 +7,7 @@ describe('SchedulingEngine Hardening Tests', () => {
     id: 't1',
     name: 'Star Actor',
     type: 'actor',
+    roles: ['actor'],
     tier: 'A_LIST',
     prestige: 80,
     draw: 80,
@@ -44,14 +45,11 @@ describe('SchedulingEngine Hardening Tests', () => {
 
   const mockState: GameState = {
     week: 10,
-    studio: {
-      internal: {
-        projects: { 'p-current': mockProject },
-        contracts: mockContracts
-      }
-    },
-    industry: {
-      talentPool: { 't1': mockTalent }
+    entities: {
+      projects: { 'p-current': mockProject },
+      contracts: { 'c1': mockContracts[0] },
+      talents: { 't1': mockTalent },
+      rivals: {}
     }
   } as any;
 

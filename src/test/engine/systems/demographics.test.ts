@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { simulateMarketingCampaign, calculateAudienceIndex } from "../../../engine/systems/demographics";
-import { GameState, Project, AudienceQuadrant, ContentFlag } from "../../../engine/types";
+import { GameState, Project, ContentFlag } from "../../../engine/types";
+import { createMockGameState } from "../../utils/mockFactories";
 
 const mockProject: Project = {
   id: "p1",
@@ -33,19 +34,16 @@ describe("Demographics System", () => {
   describe("calculateAudienceIndex", () => {
     it("evaluates male_under_25 quadrant correctly", () => {
       const actionProject = { ...mockProject, genre: "Action" } as Project;
-      // target contains 'male' (+0.3 for Action), contains 'under_25' (+0 for Action). Base 1.0 + 0.3 = 1.3
       expect(calculateAudienceIndex(actionProject, "male_under_25")).toBeCloseTo(1.3);
     });
 
     it("evaluates four_quadrant correctly with budget", () => {
       const blockbuster = { ...mockProject, genre: "Action", budgetTier: "blockbuster" } as Project;
-      // target is 'four_quadrant'. budgetTier 'blockbuster' (+0.5). Base 1.0 + 0.5 = 1.5
       expect(calculateAudienceIndex(blockbuster, "four_quadrant")).toBeCloseTo(1.5);
     });
 
     it("applies rating penalties correctly", () => {
       const rRatedUnder25 = { ...mockProject, rating: "R", genre: "Action" } as Project;
-      // Index: 1.0 + 0.3 (action-male) - 0.5 (R-under25) = 0.8
       expect(calculateAudienceIndex(rRatedUnder25, "male_under_25")).toBeCloseTo(0.8);
     });
   });
@@ -54,39 +52,11 @@ describe("Demographics System", () => {
     let mockState: GameState;
 
     beforeEach(() => {
-      mockState = {
+      mockState = createMockGameState({
         week: 1,
-        gameSeed: 1,
-        tickCount: 0,
-        projects: { active: [] },
-        game: { currentWeek: 1 },
-        finance: { cash: 1_000_000, ledger: [] },
-        news: { headlines: [] },
-        ip: { vault: [], franchises: {} },
-        studio: {
-          name: "Test Studio",
-          archetype: 'major',
-          prestige: 50,
-          internal: {
-            projects: {
-              "p1": { ...mockProject }
-            },
-            contracts: []
-          }
-        },
-        market: { opportunities: [], buyers: [] },
-        industry: {
-          rivals: [],
-          families: [],
-          agencies: [],
-          agents: [],
-          talentPool: {},
-          newsHistory: []
-        },
-        culture: { genrePopularity: {} },
-        history: [],
-        eventHistory: []
-      } as unknown as GameState;
+        finance: { cash: 1_000_000, ledger: [] } as any
+      });
+      mockState.entities.projects["p1"] = { ...mockProject };
     });
 
     it("returns unmodified state if project is not found", () => {

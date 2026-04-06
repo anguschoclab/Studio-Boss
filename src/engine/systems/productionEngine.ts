@@ -30,15 +30,13 @@ function tickProject(
   }
 
   const impacts: StateImpact[] = [];
-  const talentPoolMap = new Map(Object.entries(talentPool));
-  
   // 1. Core Advancement Pulse (Always happens for non-archived)
   const { project: advancedProject, newScandals } = advanceProject(
     project,
     currentWeek,
     studioPrestige,
     projectContracts,
-    talentPoolMap as any,
+    talentPool,
     rng
   );
 
@@ -135,21 +133,26 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
     
     projectImpacts.forEach(imp => {
         if (imp.type === 'PROJECT_UPDATED') {
-            playerProjects[imp.payload.projectId] = imp.payload.update;
+            playerProjects[imp.payload.projectId] = { 
+                ...playerProjects[imp.payload.projectId], 
+                ...imp.payload.update 
+            };
             playerChanged = true;
         } else {
             allImpacts.push(imp);
         }
     });
 
-    const disputeImpact = processDirectorDisputes(project, projectContracts, new Map(Object.entries(state.entities.talents)), rng);
-    if (disputeImpact) allImpacts.push(disputeImpact);
+    const disputeImpact = processDirectorDisputes(project, projectContracts, state.entities.talents, rng);
+    if (disputeImpact && (disputeImpact.projectUpdates?.length || disputeImpact.uiNotifications?.length)) {
+        allImpacts.push(disputeImpact);
+    }
   }
 
   if (playerChanged) {
       allImpacts.push({
-          type: 'STUDIO_UPDATED', 
-          payload: { 'entities.projects': playerProjects }
+          type: 'INDUSTRY_UPDATE', 
+          payload: { update: { 'entities.projects': playerProjects } }
       } as any);
   }
 
@@ -181,7 +184,10 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
       
       projectImpacts.forEach(imp => {
           if (imp.type === 'PROJECT_UPDATED') {
-              rivalProjects[imp.payload.projectId] = imp.payload.update;
+              rivalProjects[imp.payload.projectId] = {
+                  ...rivalProjects[imp.payload.projectId],
+                  ...imp.payload.update
+              };
               rivalChanged = true;
           } else {
               allImpacts.push(imp);
@@ -198,4 +204,34 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
   }
 
   return allImpacts;
+}
+
+/**
+ * Evaluates pending mergers and resolves them if the deadline is reached.
+ */
+export function evaluateActiveMergers(state: GameState, rng: RandomGenerator): StateImpact[] {
+    const impacts: StateImpact[] = [];
+    const activeMergers = state.industry.activeMergers || [];
+    
+    for (const merger of activeMergers) {
+        if (state.week >= (merger.activeUntilWeek || 0)) {
+            // Resolution Logic
+            impacts.push({
+                type: 'MERGER_RESOLVED',
+                payload: { mergerId: merger.id, status: 'completed' as const }
+            });
+            
+            impacts.push({
+                type: 'NEWS_ADDED',
+                payload: {
+                    id: rng.uuid('news-merger'),
+                    headline: `MERGER FINALIZED: ${merger.id}`,
+                    description: `The acquisition process has officially concluded.`,
+                    category: 'market'
+                }
+            });
+        }
+    }
+    
+    return impacts;
 }

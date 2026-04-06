@@ -1,7 +1,8 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { resolveCrisis, checkAndTriggerCrisis } from "../../../engine/systems/crises";
 import { Project, GameState } from "../../../engine/types";
 import { RandomGenerator } from "../../../engine/utils/rng";
+import { createMockGameState } from "../../utils/mockFactories";
 
 describe("crises system", () => {
   const rng = new RandomGenerator(99);
@@ -50,20 +51,14 @@ describe("crises system", () => {
     }
   } as unknown as Project;
 
-  const mockGameState: GameState = {
+  const mockGameState: GameState = createMockGameState({
       week: 1,
-      studio: {
-          internal: {
-              projects: { [mockProject.id]: mockProject }
-          }
-      }
-  } as any;
+  });
+  mockGameState.entities.projects[mockProject.id] = mockProject;
 
   describe("checkAndTriggerCrisis", () => {
     it("should return null if project is not in production", () => {
       const devProject = { ...mockProject, state: "marketing" as const } as unknown as Project;
-      // In the game loop activeStages filter includes 'marketing', but if RNG fails it returns null
-      // The test previously relied on mock state not triggering it. We pass mockState.
       vi.spyOn(rng, 'next').mockReturnValue(0.99);
       const impact = checkAndTriggerCrisis(devProject, mockGameState, rng);
       expect(impact).toBeNull();
@@ -102,10 +97,9 @@ describe("crises system", () => {
         ...mockProject,
         activeCrisis: { ...mockProject.activeCrisis!, resolved: true }
       };
-      const stateWithResolved = {
-          ...mockGameState,
-          studio: { internal: { projects: { [resolvedProject.id]: resolvedProject } } }
-      } as any;
+      const stateWithResolved = createMockGameState();
+      stateWithResolved.entities.projects[resolvedProject.id] = resolvedProject as any;
+
       const impact = resolveCrisis(stateWithResolved, resolvedProject.id, 0, rng);
       expect(impact).toEqual({});
     });

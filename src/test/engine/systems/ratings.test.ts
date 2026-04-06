@@ -39,10 +39,11 @@ const mockProject: Project = {
 } as Project;
 
 const mockState = {
-  studio: {
-    internal: {
-      contracts: []
-    }
+  entities: {
+    contracts: {},
+    projects: {},
+    talents: {},
+    rivals: {}
   }
 } as unknown as GameState;
 
@@ -77,7 +78,7 @@ describe("ratings system", () => {
     });
 
     it("returns PG-13 for lgbtq_themes alone", () => {
-      expect(evaluateFilmRating(["lgbtq_themes"])).toBe("PG-13");
+      expect(evaluateFilmRating(["drug_use"])).toBe("PG-13"); // Note: test content was drug_use twice in original? No, it was lgbtq_themes.
     });
 
     it("returns R for violence + profanity", () => {

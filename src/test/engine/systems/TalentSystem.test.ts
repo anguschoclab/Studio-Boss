@@ -1,8 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { TalentSystem } from "../../../engine/systems/TalentSystem";
-import { Project, Contract, Talent, Award, GameState, ContentFlag } from "../../../engine/types";
+import { Project, Contract, Talent, Award, GameState } from "../../../engine/types";
 import { RandomGenerator } from "../../../engine/utils/rng";
-import * as utils from '../../../engine/utils';
 import { createMockTalent, createMockProject, createMockGameState, createMockContract } from '../../utils/mockFactories';
 
 const mockProject = createMockProject({
@@ -80,40 +79,32 @@ describe("TalentSystem", () => {
   });
 
   describe("advance", () => {
-    const getMockState = (): GameState => createMockGameState({
-      market: {
-        opportunities: [
-          { 
-            id: "o1", 
-            type: "script", 
-            title: "Existing Opportunity", 
-            genre: "Drama",
-            budgetTier: "mid",
-            targetAudience: "General",
-            flavor: "Classic tale",
-            costToAcquire: 100_000,
-            weeksUntilExpiry: 2,
-            format: 'film',
-            origin: 'open_spec',
-            expirationWeek: 10,
-            bids: {},
-            bidHistory: []
-          }
-        ],
-        buyers: []
-      },
-      industry: {
-        rivals: [],
-        families: [],
-        agencies: [],
-        agents: [],
-        talentPool: { 
-            "t1": { ...mockTalent1 },
-            "t2": { ...mockTalent2 }
-        },
-        newsHistory: []
-      }
-    });
+    const getMockState = (): GameState => {
+      const state = createMockGameState({ week: 10 });
+      state.market.opportunities = [
+        { 
+          id: "o1", 
+          type: "script", 
+          title: "Existing Opportunity", 
+          genre: "Drama",
+          budgetTier: "mid",
+          targetAudience: "General",
+          flavor: "Classic tale",
+          costToAcquire: 100_000,
+          weeksUntilExpiry: 2,
+          format: 'film',
+          origin: 'open_spec',
+          expirationWeek: 10,
+          bids: {},
+          bidHistory: []
+        }
+      ];
+      state.entities.talents = { 
+          "t1": { ...mockTalent1 },
+          "t2": { ...mockTalent2 }
+      };
+      return state;
+    };
 
     it("decrements opportunity expiry", () => {
       const rng = new RandomGenerator(12345);

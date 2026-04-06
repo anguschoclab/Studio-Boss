@@ -1,7 +1,8 @@
 import { describe, it, expect } from "vitest";
 import { updateRival, advanceRivals } from "../../../engine/systems/rivals";
-import { RivalStudio, GameState, Talent } from "../../../engine/types";
+import { RivalStudio, GameState } from "../../../engine/types";
 import { RandomGenerator } from "../../../engine/utils/rng";
+import { createMockGameState } from "../../utils/mockFactories";
 
 const mockRival: RivalStudio = {
   id: "rival-1",
@@ -18,8 +19,9 @@ const mockRival: RivalStudio = {
   projects: {},
   contracts: [],
   motivationProfile: { financial: 50, prestige: 50, legacy: 50, aggression: 50 },
-  currentMotivation: 'STABILITY'
-};
+  currentMotivation: 'STABILITY',
+  ownedPlatforms: []
+} as any;
 
 describe("rivals system", () => {
   const rng = new RandomGenerator(42);
@@ -32,7 +34,6 @@ describe("rivals system", () => {
     });
 
     it("sets isAcquirable correctly on cash crunch", () => {
-      // Create a deterministic RNG that rolls low
       const lowRng = new RandomGenerator(1); 
       const brokeRival = { ...mockRival, cash: -50_000_000, strength: 30 };
       const update = updateRival(lowRng, brokeRival);
@@ -43,14 +44,8 @@ describe("rivals system", () => {
 
   describe("advanceRivals", () => {
     it("returns StateImpact with rivalUpdates for all rivals in state", () => {
-      const state = {
-        industry: {
-          rivals: [mockRival],
-          talentPool: {} as Record<string, Talent>,
-          newsHistory: []
-        },
-        week: 1
-      } as unknown as GameState;
+      const state = createMockGameState();
+      state.entities.rivals[mockRival.id] = mockRival;
 
       const impact = advanceRivals(rng, state);
 
@@ -62,14 +57,8 @@ describe("rivals system", () => {
     it("triggers news events for newly acquirable rivals", () => {
       const lowRng = new RandomGenerator(1);
       const brokeRival = { ...mockRival, cash: -50_000_000, strength: 30, isAcquirable: false };
-      const state = {
-        industry: {
-          rivals: [brokeRival],
-          talentPool: {},
-          newsHistory: []
-        },
-        week: 1
-      } as unknown as GameState;
+      const state = createMockGameState();
+      state.entities.rivals[brokeRival.id] = brokeRival;
 
       const impact = advanceRivals(lowRng, state);
 

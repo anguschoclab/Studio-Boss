@@ -131,7 +131,9 @@ export type ImpactType =
   | 'PILOT_GRADUATED'
   | 'FORMAT_LICENSED'
   | 'MEDICAL_LEAVE_TRIGGERED'
-  | 'DEAL_UPDATED';
+  | 'DEAL_UPDATED'
+  | 'MERGER_OFFERED'
+  | 'MERGER_RESOLVED';
 
 export interface NewsImpact {
   id: string;

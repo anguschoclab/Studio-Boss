@@ -1,139 +1,57 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { FESTIVALS, resolveFestivals } from '../../../engine/systems/festivals';
-import { Project, GameState, FestivalSubmission, ContentFlag } from '../../../engine/types';
-import { RandomGenerator } from '../../../engine/utils/rng';
+import { describe, it, expect, beforeEach } from "vitest";
+import { resolveFestivals, submitToFestival } from "../../../engine/systems/festivals";
+import { GameState, Project, FestivalSubmission } from "../../../engine/types";
+import { createMockGameState, createMockProject } from "../../utils/mockFactories";
+import { RandomGenerator } from "../../../engine/utils/rng";
 
-const mockProject: Project = {
-  id: "proj-1",
-  title: "Arthouse Darling",
-  type: 'FILM',
-  format: "film",
-  genre: "Drama",
-  budgetTier: "low",
-  budget: 5_000_000,
-  weeklyCost: 100_000,
-  targetAudience: "Niche",
-  flavor: "Deep",
-  state: "post_release",
-  buzz: 10,
-  weeksInPhase: 0,
-  developmentWeeks: 10,
-  productionWeeks: 10,
-  revenue: 0,
-  weeklyRevenue: 0,
-  releaseWeek: 20,
-  accumulatedCost: 0,
-  momentum: 50,
-  progress: 0,
-  activeCrisis: null,
-  reviewScore: 100,
-  awardsProfile: {
-    criticScore: 90,
-    audienceScore: 80,
-    prestigeScore: 85,
-    craftScore: 80,
-    culturalHeat: 40,
-    campaignStrength: 20,
-    controversyRisk: 5,
-    festivalBuzz: 0,
-    academyAppeal: 80,
-    guildAppeal: 75,
-    populistAppeal: 30,
-    indieCredibility: 95,
-    industryNarrativeScore: 60
-  }
-} as Project;
+describe("festivals system", () => {
+  const rng = new RandomGenerator(42);
 
-describe('Festivals System', () => {
-  let mockState: GameState;
-
-  beforeEach(() => {
-    vi.spyOn(crypto, 'randomUUID').mockReturnValue('test-uuid-1234' as `${string}-${string}-${string}-${string}-${string}`);
-
-    mockState = {
-      week: 1,
-      gameSeed: 1,
-      tickCount: 0,
-      projects: { active: [] },
-      game: { currentWeek: 1 },
-      finance: { cash: 1_000_000, ledger: [] },
-      news: { headlines: [] },
-      ip: { vault: [], franchises: {} },
-      studio: {
-        name: "Test",
-        archetype: 'major',
-        prestige: 50,
-        internal: {
-          projects: { [mockProject.id]: { ...mockProject } },
-          contracts: []
-        }
-      },
-      market: { opportunities: [], buyers: [] },
-      industry: {
-        rivals: [],
-        families: [],
-        agencies: [],
-        agents: [],
-        talentPool: {},
-        newsHistory: [],
-        festivalSubmissions: [],
-        rumors: []
-      },
-      culture: { genrePopularity: {} },
-      history: [],
-      eventHistory: []
-    } as unknown as GameState;
+  describe("submitToFestival", () => {
+    it("deducts cash and records submission", () => {
+      const state = createMockGameState({ 
+        finance: { cash: 1_000_000, ledger: [] } as any 
+      });
+      state.entities.projects["p1"] = createMockProject({ id: "p1" });
+      
+      const impacts = submitToFestival(state, "p1", "Sundance Film Festival", rng);
+      
+      expect(impacts).not.toBeNull();
+      expect(impacts).toHaveLength(3); // FUNDS_DEDUCTED, INDUSTRY_UPDATE, NEWS_ADDED
+      expect(impacts?.find(i => i.type === 'FUNDS_DEDUCTED')).toBeDefined();
+      expect(impacts?.find(i => i.type === 'INDUSTRY_UPDATE')).toBeDefined();
+    });
   });
 
-  it('submits a project to a festival if cash is sufficient', () => {
-    // submitToFestival is handled via game actions; test FESTIVALS data shape
-    const festival = FESTIVALS[0]; // Sundance
-    expect(festival.body).toBe('Sundance Film Festival');
-    expect(festival.cost).toBeGreaterThan(0);
-    expect(mockState.finance.cash).toBeGreaterThan(festival.cost);
-  });
+  describe("resolveFestivals", () => {
+    it("resolves festivals and updates state", () => {
+      const state = createMockGameState({ week: 3 }); // Sundance is weeks [3, 4]
+      state.entities.projects["p1"] = createMockProject({ 
+        id: "p1", 
+        state: "released",
+        format: "film",
+        buzz: 10,
+        reviewScore: 90
+      });
+      
+      const submission: FestivalSubmission = {
+        id: "sub-1",
+        projectId: "p1",
+        festivalBody: "Sundance Film Festival",
+        status: "submitted",
+        week: 1,
+        buzzGain: 0
+      };
+      state.industry.festivalSubmissions = [submission];
 
-  it('declines submission if cash is too low', () => {
-    const festival = FESTIVALS[0];
-    mockState.finance.cash = 0;
-    // With no cash, game logic prevents submission (tested via game action layer)
-    expect(mockState.finance.cash).toBeLessThan(festival.cost);
-  });
-
-  it('resolves festival results and awards rewards', () => {
-    const festival = FESTIVALS.find(f => f.body === "Sundance Film Festival")!;
-    const submission: FestivalSubmission = {
-      id: 'sub-1',
-      projectId: mockProject.id,
-      festivalBody: festival.body,
-      status: 'submitted',
-      buzzGain: 0,
-      week: 1
-    };
-
-    mockState.industry.festivalSubmissions = [submission];
-    mockState.week = 3; // Sundance week
-
-    const rng = new RandomGenerator(1);
-
-    const impacts = resolveFestivals(mockState, rng);
-
-    // resolveFestivals returns StateImpact[]
-    expect(Array.isArray(impacts)).toBe(true);
-
-    // Check INDUSTRY_UPDATE with updated submissions
-    const industryUpdate = impacts.find(i => i.type === 'INDUSTRY_UPDATE') as any;
-    expect(industryUpdate).toBeDefined();
-    const updatedSubs = industryUpdate?.payload?.update?.['industry.festivalSubmissions'] as FestivalSubmission[];
-    expect(updatedSubs).toBeDefined();
-
-    // High review score (100) should produce 'selected' status
-    const selectedSub = updatedSubs?.find(s => s.projectId === mockProject.id && s.status === 'selected');
-    expect(selectedSub).toBeDefined();
-
-    // PRESTIGE_CHANGED impact should exist
-    const prestigeImpact = impacts.find(i => i.type === 'PRESTIGE_CHANGED') as any;
-    expect(prestigeImpact).toBeDefined();
-    expect(prestigeImpact?.payload).toBeGreaterThan(0);
+      const impacts = resolveFestivals(state, rng);
+      
+      // Should have PROJECT_UPDATED (buzz), PRESTIGE_CHANGED, NEWS_ADDED, and INDUSTRY_UPDATE (submissions update)
+      expect(impacts.some(i => i.type === 'PRESTIGE_CHANGED')).toBe(true);
+      expect(impacts.some(i => i.type === 'PROJECT_UPDATED')).toBe(true);
+      
+      const prestigeImpact = impacts.find(i => i.type === 'PRESTIGE_CHANGED');
+      expect((prestigeImpact as any).payload).toBe(2);
+    });
   });
 });
