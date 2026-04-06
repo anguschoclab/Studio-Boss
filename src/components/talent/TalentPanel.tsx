@@ -46,6 +46,7 @@ export const TalentPanel = () => {
           <div className="relative w-64">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
             <Input 
+              aria-label="Search talent"
               placeholder="Search talent..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -71,7 +72,7 @@ export const TalentPanel = () => {
               <TooltipWrapper key={type} tooltip={`Filter by ${type}`} side="bottom">
                 <button 
                   onClick={() => setRoleFilter(type)}
-                  className={`px-3 py-2 text-[9px] uppercase tracking-wider font-black rounded-md transition-all ${
+                  className={`px-3 py-1.5 min-w-[3rem] text-[9px] uppercase tracking-wider font-black rounded-md transition-all ${
                     roleFilter === type
                       ? 'bg-primary text-primary-foreground'
                       : 'text-muted-foreground hover:text-foreground'
