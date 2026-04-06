@@ -45,6 +45,10 @@ const INITIAL_NEWS: NewsState = { headlines: [] };
 // Initialize Web Worker
 const engineWorker = new Worker(new URL('../engine/engine.worker.ts', import.meta.url), { type: 'module' });
 
+// Module-level background save queue
+let _saveQueue: GameState | null = null;
+let _isBackgroundSaving = false;
+
 export const useGameStore = create<GameStore>((set, get, ...args) => ({
   gameState: null,
   _isProcessingTick: false,
@@ -99,19 +103,20 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
             const { newState: nextState, summary, impacts } = e.data.payload;
             const finalState = nextState as GameState;
 
-            // Queue background save
+            // ⚡ Bolt: Refactored background save queue to use a module-level queue
+            // bypassing Zustand completely. This prevents multiple cascading React re-renders per tick.
             const triggerSave = async (stateToSave: GameState) => {
-                if (get()._isSaving) {
-                    set({ _saveNextState: stateToSave });
+                if (_isBackgroundSaving) {
+                    _saveQueue = stateToSave;
                     return;
                 }
 
-                set({ _isSaving: true, _saveNextState: null });
+                _isBackgroundSaving = true;
+                _saveQueue = null;
                 await saveGame(0, stateToSave);
-                set({ _isSaving: false });
+                _isBackgroundSaving = false;
 
-                const next = get()._saveNextState;
-                if (next) triggerSave(next);
+                if (_saveQueue) triggerSave(_saveQueue);
             };
 
             triggerSave(finalState);
@@ -124,13 +129,20 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
             });
 
             // Modals
+            // ⚡ Bolt: Refactored array filter and spread sort into a single-pass extraction loop to minimize memory allocations.
             const ui = useUIStore.getState();
             if (impacts && impacts.length > 0) {
-              const modalImpacts = impacts.filter((imp: any) => imp.type === 'MODAL_TRIGGERED');
+              const modalImpacts = [];
+              for (let i = 0; i < impacts.length; i++) {
+                if (impacts[i].type === 'MODAL_TRIGGERED') {
+                  modalImpacts.push(impacts[i]);
+                }
+              }
               if (modalImpacts.length > 0) {
-                const sortedModalImpacts = [...modalImpacts].sort((a, b) => (b.payload.priority || 0) - (a.payload.priority || 0));
-                for (const imp of sortedModalImpacts) {
-                  ui.enqueueModal(imp.payload.modalType, imp.payload.payload as Record<string, unknown>);
+                modalImpacts.sort((a, b) => ((b.payload as any).priority || 0) - ((a.payload as any).priority || 0));
+                for (let i = 0; i < modalImpacts.length; i++) {
+                  const imp = modalImpacts[i];
+                  ui.enqueueModal((imp.payload as any).modalType, (imp.payload as any).payload as Record<string, unknown>);
                 }
               }
             }
