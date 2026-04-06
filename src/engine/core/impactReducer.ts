@@ -353,7 +353,8 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
       let newPrestige = state.studio.prestige;
 
       // Calculate a prestige hit based on the severity (Punish prestige more severely for scandals)
-      const prestigeHit = Math.floor(scandal.severity / 5);
+      // The PR Spin Doctor: Increased prestige hit by 50%
+      const prestigeHit = Math.floor((scandal.severity / 5) * 1.5);
       newPrestige = Math.max(0, newPrestige - prestigeHit);
 
       // Check if there's an attached project to boost buzz for specific genres/formats
@@ -368,7 +369,11 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
               const genre = project.genre ? project.genre.toLowerCase() : '';
                 // Enhance the boost for trashy reality TV or horror on scandals (Significant boost)
               if (format === 'unscripted' || genre.includes('horror')) {
-                    projects[pid] = { ...project, buzz: Math.min(100, (project.buzz || 0) + scandal.severity) };
+                    // The PR Spin Doctor: Massively boost buzz for unscripted/horror genres
+                    projects[pid] = { ...project, buzz: Math.min(100, (project.buzz || 0) + scandal.severity * 1.5) };
+              } else {
+                    // The PR Spin Doctor: Apply a buzz penalty for regular prestige projects
+                    projects[pid] = { ...project, buzz: Math.max(0, (project.buzz || 0) - Math.floor(scandal.severity / 2)) };
               }
           }
       }

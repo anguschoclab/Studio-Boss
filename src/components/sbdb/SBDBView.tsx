@@ -64,6 +64,7 @@ export const SBDBView = () => {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <TooltipWrapper tooltip="Search by talent name or professional alias" side="bottom">
             <Input 
+              aria-label="Search SBDB"
               placeholder="Search SBDB..." 
               className="pl-10 bg-black/40 border-white/10 hover:border-primary/50 focus-visible:ring-primary/50 transition-colors"
               value={search}

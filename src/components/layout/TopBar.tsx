@@ -3,12 +3,12 @@ import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { formatMoney, getWeekDisplay } from '@/engine/utils';
 import { 
-  Globe, 
-  TrendingUp, 
-  AlertTriangle, 
-  Save, 
-  FastForward 
-} from 'lucide-react';
+  GlobeIcon as Globe, 
+  TrendingUpIcon as TrendingUp, 
+  AlertTriangleIcon as AlertTriangle, 
+  SaveIcon as Save, 
+  FastForwardIcon as FastForward 
+} from '@/components/shared/Icons';
 import { selectActiveProjects, selectMarketMetrics } from '@/store/selectors';
 import { Badge } from '@/components/ui/badge';
 import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
@@ -58,10 +58,11 @@ export const TopBar = () => {
             <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest leading-none mb-1">Cash Reserves</span>
             <span className={cn(
                "font-mono font-bold text-lg",
-               studio.funds < 0 ? "text-destructive" : "text-emerald-400"
+               (gameState.finance?.cash ?? 0) < 0 ? "text-destructive" : "text-emerald-400"
             )}>
-              {formatMoney(studio.funds)}
+              {formatMoney(gameState.finance?.cash ?? 0)}
             </span>
+
           </div>
 
           <div className="flex flex-col items-end cursor-default group">
@@ -112,7 +113,7 @@ export const TopBar = () => {
               <p className="font-bold text-amber-500 mb-1">Active Market Events</p>
               <ul className="list-disc list-inside text-muted-foreground">
                 {gameState.market.activeMarketEvents.map((ev, i) => (
-                  <li key={i}>{ev.title}</li>
+                  <li key={i}>{ev.name}</li>
                 ))}
               </ul>
             </div>

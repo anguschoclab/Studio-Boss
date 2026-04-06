@@ -97,7 +97,7 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
       });
 
       // ⚡ Deterministic RNG for this manual action
-      const rng = new RandomGenerator(state.gameSeed + state.week + 77);
+      const rng = new RandomGenerator(state.rngState);
 
       const result = handleReleasePhaseEntry(
         p, 
@@ -141,7 +141,8 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
           news: {
             ...state.news,
             headlines,
-          }
+          },
+          rngState: rng.getState()
         }
       };
     });

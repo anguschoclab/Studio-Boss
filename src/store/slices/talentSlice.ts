@@ -42,7 +42,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       
       const newCash = state.finance.cash - finalFee;
       
-      const rng = new RandomGenerator(state.gameSeed + state.week + 11);
+      const rng = new RandomGenerator(state.rngState);
       
       const contract: Contract = {
         id: rng.uuid('contract'),
@@ -93,7 +93,8 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
               ...state.industry.talentPool,
               [talentId]: updatedTalent
             }
-          }
+          },
+          rngState: rng.getState()
         }
       };
     });
@@ -111,7 +112,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       const lockFee = fee || (talent.fee * 2);
       if (state.finance.cash < lockFee) return s;
       
-      const rng = new RandomGenerator(state.gameSeed + state.week + 22);
+      const rng = new RandomGenerator(state.rngState);
       const acceptanceChance = 70; 
       const accepted = (rng.next() * 100) <= acceptanceChance;
       
@@ -152,7 +153,8 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
               industry: {
                 ...state.industry,
                 newsHistory: newNewsHistory,
-              }
+              },
+              rngState: rng.getState()
             }
           };
        } else {
@@ -171,7 +173,8 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
               industry: {
                 ...state.industry,
                 newsHistory: newNewsHistory,
-              }
+              },
+              rngState: rng.getState()
             }
           };
        }
@@ -188,7 +191,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       if (oppIndex === -1) return s;
 
       const opp = state.market.opportunities[oppIndex];
-      const rng = new RandomGenerator(state.gameSeed + state.week + 33);
+      const rng = new RandomGenerator(state.rngState);
       const currentHighest = Object.values(opp.bids || {}).reduce((max: number, b) => Math.max(max, b.amount || 0), 0);
       const isWinner = opp.highestBidderId === 'PLAYER';
       const isExpired = state.week >= opp.expirationWeek;
@@ -249,7 +252,8 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
           market: {
             ...state.market,
             opportunities: updatedOpportunities
-          }
+          },
+          rngState: rng.getState()
         }
       };
     });
@@ -279,7 +283,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
         }
       };
 
-      const rng = new RandomGenerator(state.gameSeed + state.week + amount);
+      const rng = new RandomGenerator(state.rngState);
       const aggressiveRivals = state.industry.rivals.filter(r => r.cash > amount * 1.5 && r.prestige > 40);
       
       if (aggressiveRivals.length > 0) {
@@ -292,6 +296,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
         }
       }
 
+      nextState.rngState = rng.getState();
       return { gameState: nextState };
     });
   },

@@ -4,29 +4,30 @@ import { useGameStore } from '@/store/gameStore';
 import { selectActiveProjects } from '@/store/selectors';
 import { formatMoney } from '@/engine/utils';
 import { 
-  LayoutDashboard, 
-  Film, 
-  Library, 
-  Globe, 
-  Users, 
-  Briefcase, 
-  Newspaper,
-  Building2,
-  ChevronLeft,
-  ChevronRight,
-  LogOut,
-  Settings,
-  DollarSign,
-  Star,
-  Trophy,
-  Clapperboard
-} from 'lucide-react';
+  LayoutDashboardIcon as LayoutDashboard, 
+  FilmIcon as Film, 
+  LibraryIcon as Library, 
+  GlobeIcon as Globe, 
+  UsersIcon as Users, 
+  BriefcaseIcon as Briefcase, 
+  NewspaperIcon as Newspaper,
+  Building2Icon as Building2,
+  ChevronLeftIcon as ChevronLeft,
+  ChevronRightIcon as ChevronRight,
+  LogOutIcon as LogOut,
+  SettingsIcon as Settings,
+  DollarSignIcon as DollarSign,
+  StarIcon as Star,
+  TrophyIcon as Trophy,
+  ClapperboardIcon as Clapperboard
+} from '@/components/shared/Icons';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useNavigate } from '@tanstack/react-router';
-import { LineChart, Line, ResponsiveContainer } from 'recharts';
+
+const SidebarCashChart = React.lazy(() => import('./SidebarCashChart'));
 
 interface NavItem {
   id: TabId;
@@ -144,18 +145,12 @@ export const StudioSidebar = () => {
             <div className="flex items-center gap-2">
               {cashHistory.length > 1 && (
                 <div className="w-12 h-4 opacity-70">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={cashHistory}>
-                      <Line
-                        type="monotone"
-                        dataKey="cash"
-                        stroke={(gameState.finance?.cash ?? 0) < 0 ? "hsl(var(--destructive))" : "hsl(var(--primary))"}
-                        strokeWidth={1.5}
-                        dot={false}
-                        isAnimationActive={false}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
+                  <React.Suspense fallback={null}>
+                    <SidebarCashChart 
+                      data={cashHistory} 
+                      isNegative={(gameState.finance?.cash ?? 0) < 0} 
+                    />
+                  </React.Suspense>
                 </div>
               )}
               <span className={cn("text-xs font-mono font-bold", (gameState.finance?.cash ?? 0) < 0 ? "text-destructive" : "text-primary")}>

@@ -62,6 +62,9 @@ export interface TickContext {
  * The "Pipe and Filter" Orchestrator.
  */
 export class WeekCoordinator {
+  // ⚡ Bolt: Hoisted static Set for active stages to prevent per-tick reallocation overhead
+  private static readonly ACTIVE_STAGES = new Set(['prep', 'production', 'post_production', 'marketing']);
+
   static execute(state: GameState, rng: RandomGenerator): { newState: GameState; summary: WeekSummary; impacts: StateImpact[] } {
     const context: TickContext = {
       week: state.week + 1,
@@ -135,9 +138,10 @@ export class WeekCoordinator {
 
   private static runProductionFilter(state: GameState, context: TickContext) {
     context.impacts.push(...tickProduction(state, context.rng));
-    const activeStages = ['prep', 'production', 'post_production', 'marketing'];
 
     for (const key in state.studio.internal.projects) {
+      // ⚡ Bolt: Safe for...in iteration guard
+      if (!Object.prototype.hasOwnProperty.call(state.studio.internal.projects, key)) continue;
       const project = state.studio.internal.projects[key];
 
       // 1. Script drafting and crisis triggering
@@ -150,7 +154,7 @@ export class WeekCoordinator {
           });
           if (result.impact) context.impacts.push(result.impact);
         }
-      } else if (!project.activeCrisis && activeStages.includes(project.state)) {
+      } else if (!project.activeCrisis && WeekCoordinator.ACTIVE_STAGES.has(project.state)) {
         const impact = checkAndTriggerCrisis(project, state, context.rng);
         if (impact) context.impacts.push(impact);
       }
@@ -404,8 +408,17 @@ export class WeekCoordinator {
         });
       }
       
-      if (impact.newHeadlines) allHeadlines.push(...impact.newHeadlines);
-      if (impact.newsEvents) newsEvents.push(...impact.newsEvents);
+      // ⚡ Bolt: Removed array spread syntax for aggregation in the hot loop
+      if (impact.newHeadlines) {
+        for (let j = 0; j < impact.newHeadlines.length; j++) {
+          allHeadlines.push(impact.newHeadlines[j]);
+        }
+      }
+      if (impact.newsEvents) {
+        for (let j = 0; j < impact.newsEvents.length; j++) {
+          newsEvents.push(impact.newsEvents[j]);
+        }
+      }
     }
 
     for (let i = 0; i < newsEvents.length; i++) {

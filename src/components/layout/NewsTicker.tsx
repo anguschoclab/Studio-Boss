@@ -14,6 +14,7 @@ const eventTypeConfig: Record<string, { icon: any, color: string, label: string 
   GENERAL: { icon: Newspaper, color: 'text-primary', label: 'News' },
 };
 
+
 export const NewsTicker: React.FC = () => {
   const headlines = useGameStore(s => s.news.headlines);
   const [selectedHeadline, setSelectedHeadline] = useState<Headline | null>(null);
