@@ -74,7 +74,7 @@ export const DemographicsWidget: React.FC = () => {
                   type="category" 
                   axisLine={false} 
                   tickLine={false} 
-                  tick={{ fill: 'hsl(var(--foreground))', fontSize: 13, fontWeight: 800, textAnchor: 'start', dx: 20, dy: -20 }}
+                  tick={{ fill: 'hsl(var(--foreground))', fontSize: 13, fontWeight: 800 }}
                   width={120}
                 />
                 <ChartTooltip
