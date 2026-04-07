@@ -352,7 +352,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
       let newPrestige = state.studio.prestige;
 
       // Calculate a prestige hit based on the severity (Punish prestige more severely for scandals)
-      // The PR Spin Doctor: Increased prestige hit by 200% (from 2.0 multiplier to 3.0 multiplier)
+      // The PR Spin Doctor: Increased prestige hit multiplier from 2.0 to 3.0
       const prestigeHit = Math.floor((scandal.severity / 5) * 3.0);
       newPrestige = Math.max(0, newPrestige - prestigeHit);
 
