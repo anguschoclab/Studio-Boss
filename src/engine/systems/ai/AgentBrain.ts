@@ -49,16 +49,20 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
     // Aggressive agencies (Sharks) leak rumors
     if (agency.culture === 'shark' || agency.currentMotivation === 'THE_SHARK') {
       if (rng.next() < 0.1) {
-        const rivalsList = Object.values(state.entities.rivals || {});
-        const rival = pick(rivalsList, rng);
-        if (rival) {
-          impacts.push({
-            type: 'NEWS_ADDED',
-            payload: {
-              headline: `${agency.name} is looking to poach top talent from ${rival.name}.`,
-              description: `Industry whispers suggest ${agency.name} is making aggressive overtures to talent currently under contract at ${rival.name}.`,
-            }
-          });
+        const rivalsObj = state.entities.rivals || {};
+        const rivalKeys = Object.keys(rivalsObj);
+        if (rivalKeys.length > 0) {
+          const rivalKey = pick(rivalKeys, rng);
+          const rival = rivalsObj[rivalKey];
+          if (rival) {
+            impacts.push({
+              type: 'NEWS_ADDED',
+              payload: {
+                headline: `${agency.name} is looking to poach top talent from ${rival.name}.`,
+                description: `Industry whispers suggest ${agency.name} is making aggressive overtures to talent currently under contract at ${rival.name}.`,
+              }
+            });
+          }
         }
       }
     }
