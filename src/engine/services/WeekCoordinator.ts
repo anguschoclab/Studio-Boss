@@ -139,9 +139,9 @@ export class WeekCoordinator {
   private static runProductionFilter(state: GameState, context: TickContext) {
     context.impacts.push(...tickProduction(state, context.rng));
 
-    const projectList = Object.values(state.entities.projects);
-    for (let i = 0; i < projectList.length; i++) {
-      const project = projectList[i];
+    const projectsObj = state.entities.projects || {};
+    for (const key in projectsObj) {
+      const project = projectsObj[key];
 
       // 1. Script drafting and crisis triggering
       if (project.state === 'development') {
@@ -328,12 +328,13 @@ export class WeekCoordinator {
    * Fires once per year (week % 52 === 0).
    */
   private static runAnnualMAScan(state: GameState, context: TickContext) {
-    const rivals = Object.values(state.entities.rivals);
-    for (let i = 0; i < rivals.length; i++) {
-      for (let j = 0; j < rivals.length; j++) {
+    const rivalsObj = state.entities.rivals || {};
+    const rivalKeys = Object.keys(rivalsObj);
+    for (let i = 0; i < rivalKeys.length; i++) {
+      for (let j = 0; j < rivalKeys.length; j++) {
         if (i === j) continue;
-        const attacker = rivals[i];
-        const target = rivals[j];
+        const attacker = rivalsObj[rivalKeys[i]];
+        const target = rivalsObj[rivalKeys[j]];
         if (!target.isAcquirable) continue;
         if (shouldAttemptHostileTakeover(attacker, target, state)) {
           context.impacts.push({
