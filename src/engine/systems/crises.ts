@@ -41,7 +41,7 @@ export function checkAndTriggerCrisis(project: Project, state: GameState, rng: R
   const contractCount = Object.keys(state.entities.contracts || {}).length;
   // The PR Spin Doctor: Heavily scale crises with studio size
   // Adjusted: Base 5% chance, plus 5.0% for every concurrent project and 2.5% for every contract
-  const baseChance = 0.05 + (studioProjectsCount * 0.050) + (contractCount * 0.025);
+  const baseChance = Math.min(0.8, 0.05 + (studioProjectsCount * 0.050) + (contractCount * 0.025));
 
   if (rng.next() < baseChance) {
     return generateCrisis(project, rng);
