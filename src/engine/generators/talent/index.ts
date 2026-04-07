@@ -41,7 +41,7 @@ export function generateTalent(rng: RandomGenerator, params: { role: TalentRole;
   const GENRES = ['Action', 'Comedy', 'Drama', 'Horror', 'Sci-Fi', 'Thriller', 'Romance', 'Musical', 'Documentary', 'Western', 'Fantasy', 'Adventure'];
 
   return {
-    id: rng.uuid('talent'),
+    id: rng.uuid('TAL'),
     name,
     role: params.role,
     roles: [params.role],
@@ -77,7 +77,7 @@ export function generateTalent(rng: RandomGenerator, params: { role: TalentRole;
 
 export function generateFamilies(rng: RandomGenerator, count: number): Family[] {
   return Array.from({ length: count }).map((_, i) => ({
-    id: rng.uuid('family'),
+    id: rng.uuid('FAM'),
     name: `Family ${i}`,
     recognition: rng.rangeInt(0, 100),
     prestigeLegacy: rng.rangeInt(0, 100),

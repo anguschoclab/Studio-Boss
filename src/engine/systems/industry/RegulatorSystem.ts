@@ -52,7 +52,7 @@ export class RegulatorSystem {
         impacts.push({
           type: 'NEWS_ADDED',
           payload: {
-            id: rng.uuid('news'),
+            id: rng.uuid('NWS'),
             headline: `Federal Trade Commission Fines ${s.name}`,
             description: `Cited for market dominance (${Math.round(share * 100)}%), ${s.name} has been issued a $25M penalty.`,
             category: 'market',

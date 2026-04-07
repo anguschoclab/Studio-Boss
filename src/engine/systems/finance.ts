@@ -99,7 +99,7 @@ export function generateWeeklyFinancialReport(
                   - (expenses.production + expenses.marketing + expenses.overhead + expenses.pacts + totalRoyalties + (expenses.interest > 0 ? expenses.interest : 0));
 
   const report: WeeklyFinancialReport = {
-    id: rng.uuid('fin-rep'), // 🌌 Standardized UUID
+    id: rng.uuid('SNP'), // 🌌 Standardized UUID
     week: state.week,
     year: Math.floor((state.week - 1) / 52) + 1,
     startingCash: studioCash,
@@ -119,7 +119,7 @@ export function generateWeeklyFinancialReport(
   };
 
   const snapshot: FinancialSnapshot = {
-    id: rng.uuid('fin-snap'), // 🌌 Standardized UUID
+    id: rng.uuid('SNP'), // 🌌 Standardized UUID
     week: state.week,
     revenue: {
       theatrical: boxOffice,

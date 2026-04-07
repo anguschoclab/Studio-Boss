@@ -39,7 +39,7 @@ function tickPilots(state: GameState, rng: RandomGenerator): StateImpact[] {
         impacts.push({
           type: 'NEWS_ADDED',
           payload: {
-            id: rng.uuid('pilot-grad'),
+            id: rng.uuid('NWS'),
             headline: `"${project.title}" pilot greenlit to series`,
             description: `The network has ordered a full series pickup.`,
             category: 'development',
@@ -57,7 +57,7 @@ function tickPilots(state: GameState, rng: RandomGenerator): StateImpact[] {
         impacts.push({
           type: 'NEWS_ADDED',
           payload: {
-            id: rng.uuid('pilot-pass'),
+            id: rng.uuid('NWS'),
             headline: `"${project.title}" pilot passed on`,
             description: `The network declined to order a full series.`,
             category: 'cancellation',
@@ -235,7 +235,7 @@ export function tickTelevision(state: GameState, rng: RandomGenerator): StateImp
         impacts.push({
           type: 'NEWS_ADDED',
           payload: {
-            id: rng.uuid('shopping'),
+            id: rng.uuid('NWS'),
             headline: `"${project.title}" cancelled — shopping for new home`,
             description: `The series is now available for pickup by another network.`,
             category: 'cancellation',

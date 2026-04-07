@@ -37,7 +37,7 @@ export class FestivalAuctionEngine {
     let auctionActive = true;
 
     const participants: AuctionParticipant[] = [
-      ...state.entities.rivals.map(r => ({
+      ...Object.values(state.entities.rivals).map(r => ({
         id: r.id,
         name: r.name,
         isPlayer: false,
@@ -107,7 +107,7 @@ export class FestivalAuctionEngine {
       },
       newHeadlines: [
         {
-          id: rng.uuid('hl'),
+          id: rng.uuid('NWS'),
           week: state.week,
           category: 'acquisition',
           text: `FESTIVAL: ${winner.name} wins bidding war for "${project.title}" for $${(currentBid / 1000000).toFixed(1)}M!`

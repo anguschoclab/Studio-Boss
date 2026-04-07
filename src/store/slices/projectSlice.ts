@@ -119,7 +119,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
       {
         type: 'NEWS_ADDED',
         payload: {
-          id: rng.uuid('news-prod'),
+          id: rng.uuid('NWS'),
           headline: headlineText,
           description: `Strategic shift: ${project.title} enters production.`
         }
@@ -274,7 +274,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
         {
           type: 'NEWS_ADDED',
           payload: {
-            id: rng.uuid('ip-acq'),
+            id: rng.uuid('NWS'),
             headline: `STUDIO ACQUIRES "${asset.title}" RIGHTS`,
             description: `Major industry shift as rights for the classic property return to production slate.`
           }

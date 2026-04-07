@@ -224,7 +224,7 @@ export function evaluateActiveMergers(state: GameState, rng: RandomGenerator): S
             impacts.push({
                 type: 'NEWS_ADDED',
                 payload: {
-                    id: rng.uuid('news-merger'),
+                    id: rng.uuid('NWS'),
                     headline: `MERGER FINALIZED: ${merger.id}`,
                     description: `The acquisition process has officially concluded.`,
                     category: 'market'

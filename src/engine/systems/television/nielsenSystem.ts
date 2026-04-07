@@ -1,5 +1,5 @@
-import { SeriesProject, Project } from '@/engine/types/project.types';
-import { GameState, StateImpact } from '@/engine/types';
+import { SeriesProject, Project } from '../../types/project.types';
+import { GameState, StateImpact } from '../../types';
 import { RandomGenerator } from '../../utils/rng';
 
 /**
@@ -205,7 +205,7 @@ export function calculateNielsenRatings(
   else if (variance < 0.96) trend = 'DOWN';
 
   return {
-    id: rng.uuid('nielsen'), // 🌌 Standardized UUID for snapshot
+    id: rng.uuid('SNP'), // 🌌 Standardized UUID for snapshot
     week: 0, // Set by caller
     episodeNumber,
     householdRating: baseHHRating,

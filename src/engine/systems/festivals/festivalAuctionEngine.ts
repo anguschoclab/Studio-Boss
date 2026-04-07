@@ -53,7 +53,7 @@ export function generateNPCBid(
   if (cappedBid < 100_000) return null;
 
   return {
-    bidderId: rng.uuid('BID'),
+    bidderId: rng.uuid('SUB'),
     bidderName: 'NPC Buyer',
     amount: cappedBid,
     terms: reviewScore > 75 ? 'theatrical + streaming rights' : 'streaming rights only',

@@ -29,7 +29,7 @@ export function generateBuyers(rng: RandomGenerator, config?: { networks?: numbe
     const name = generateBuyerName('network', usedNames, rng);
     usedNames.add(name);
     const buyer: NetworkPlatform = {
-      id: rng.uuid('buyer-net'),
+      id: rng.uuid('BUY'),
       name,
       archetype: 'network',
       foundedWeek: 1,
@@ -44,7 +44,7 @@ export function generateBuyers(rng: RandomGenerator, config?: { networks?: numbe
     const name = generateBuyerName('premium', usedNames, rng);
     usedNames.add(name);
     const buyer: PremiumPlatform = {
-      id: rng.uuid('buyer-prem'),
+      id: rng.uuid('BUY'),
       name,
       archetype: 'premium',
       foundedWeek: 1,
@@ -60,7 +60,7 @@ export function generateBuyers(rng: RandomGenerator, config?: { networks?: numbe
     const name = generateBuyerName('streamer', usedNames, rng);
     usedNames.add(name);
     const buyer: StreamerPlatform = {
-      id: rng.uuid('buyer-str'),
+      id: rng.uuid('BUY'),
       name,
       archetype: 'streamer',
       foundedWeek: 1,

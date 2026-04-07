@@ -32,7 +32,7 @@ export function offerFirstLookDeal(state: GameState, talentId: string, rng: Rand
     return [
       {
         newsEvents: [{
-          id: rng.uuid('news'),
+          id: rng.uuid('NWS'),
           week: state.week,
           type: 'RIVAL',
           headline: `${talent.name} passes on first-look deal`,
@@ -45,7 +45,7 @@ export function offerFirstLookDeal(state: GameState, talentId: string, rng: Rand
   return [
     {
       newsEvents: [{
-        id: rng.uuid('news'),
+        id: rng.uuid('NWS'),
         week: state.week,
         type: 'RIVAL',
         headline: `${talent.name} signs first-look pact`,
@@ -63,7 +63,7 @@ export function advanceDeals(deals: TalentPact[], currentWeek: number, rng: Rand
     if (deal.endDate === currentWeek && deal.status === 'active') {
       impacts.push({
         newsEvents: [{
-          id: rng.uuid('news-expired'),
+          id: rng.uuid('NWS'),
           week: currentWeek,
           type: 'STUDIO_EVENT',
           headline: `Deal Expired`,

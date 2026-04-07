@@ -27,6 +27,7 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
       const gs = state.gameState;
       if (!gs) return state;
       const snapshot: FinancialSnapshot = {
+        id: new RandomGenerator(gs.rngState).uuid('SNP'),
         week: report.week,
         revenue: {
           theatrical: report.revenue.boxOffice,
@@ -84,9 +85,9 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
       const projectContracts: Contract[] = Object.values(state.entities.contracts).filter(c => c.projectId === p.id);
 
       const talentPool = state.entities.talents;
-      const talentMap = new Map<string, Talent>();
+      const talentMap: Record<string, Talent> = {};
       Object.keys(talentPool).forEach(id => {
-        talentMap.set(id, talentPool[id]);
+        talentMap[id] = talentPool[id];
       });
 
       const rng = new RandomGenerator(state.rngState);
@@ -103,7 +104,7 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
       const headlines = [...state.news.headlines];
       if (result.update) {
         headlines.unshift({
-          id: rng.uuid('news-market'),
+          id: rng.uuid('NWS'),
           week: state.week,
           category: 'general' as const,
           text: result.update

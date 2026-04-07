@@ -199,8 +199,8 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
       impacts.push({
         type: 'INDUSTRY_UPDATE',
         payload: {
-          [`industry.awards.${rng.uuid('aw')}`]: {
-            id: rng.uuid('award'),
+          [`industry.awards.${rng.uuid('AWD')}`]: {
+            id: rng.uuid('AWD'),
             projectId: bestProject.id,
             name: config.category,
             category: config.category,
@@ -227,7 +227,7 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
         impacts.push({
             type: 'NEWS_ADDED',
             payload: {
-                id: rng.uuid('news'),
+                id: rng.uuid('NWS'),
                 week: currentWeek,
                 headline: `AWARDS: "${bestProject.title}" wins ${config.category}`,
                 description: `A triumphant victory at the ${config.body} for the entire team behind "${bestProject.title}".`,

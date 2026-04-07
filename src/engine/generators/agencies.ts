@@ -267,7 +267,7 @@ export function generateAgencies(rng: RandomGenerator, count: number): Agency[] 
     };
 
     agencies.push({
-      id: rng.uuid('agency'),
+      id: rng.uuid('AGY'),
       name: actualName,
       archetype,
       tier,
@@ -311,7 +311,7 @@ export function generateAgents(rng: RandomGenerator, agencies: Agency[], countPe
       }
 
       agents.push({
-        id: rng.uuid('agent'),
+        id: rng.uuid('AGT'),
         agencyId: agency.id,
         name: `${firstName} ${lastName}`,
         specialty,

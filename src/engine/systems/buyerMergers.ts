@@ -67,7 +67,7 @@ export function advanceBuyers(state: GameState, rng: RandomGenerator): StateImpa
 
       if (rng.next() < 0.02) {
         impact.newHeadlines!.push({
-          id: rng.uuid('hl'),
+          id: rng.uuid('NWS'),
           week: currWeek,
           category: 'market',
           text: pick(performance > 0 ? STREAMER_GROWTH_EVENTS : STREAMER_DECLINE_EVENTS, rng)(buyer.name),
@@ -87,7 +87,7 @@ export function advanceBuyers(state: GameState, rng: RandomGenerator): StateImpa
       if (!buyer.isAcquirable) {
         update.isAcquirable = true;
         impact.newHeadlines!.push({
-          id: rng.uuid('hl'),
+          id: rng.uuid('NWS'),
           week: currWeek,
           category: 'market',
           text: pick(VULNERABILITY_HEADLINES, rng)(buyer.name),
@@ -135,7 +135,7 @@ export function advanceBuyers(state: GameState, rng: RandomGenerator): StateImpa
         });
 
         impact.newHeadlines!.push({
-          id: rng.uuid('hl'),
+          id: rng.uuid('NWS'),
           week: currWeek,
           category: 'market',
           text: pick(MERGER_HEADLINES, rng)(acquirer.name, target.name),

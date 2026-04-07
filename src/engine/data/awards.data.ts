@@ -106,281 +106,281 @@ export const AWARD_CONFIGS: AwardConfig[] = [
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.5 + (p.awardsProfile?.criticScore || 0)
   },
   {
-    id: 'awd-cfg-010',
+    id: 'AWD-0d10b106-9a43-a5be-8644-b86d2e54',
     body: 'Primetime Emmys', category: 'Best Actor (Drama)', format: 'tv',
     evaluator: p => (p.awardsProfile?.craftScore || 0) + (p.awardsProfile?.prestigeScore || 0) * 0.5
   },
   {
-    id: 'awd-cfg-011',
+    id: 'AWD-0d118187-9a43-a5be-8644-b86d2e54',
     body: 'Primetime Emmys', category: 'Best Actress (Drama)', format: 'tv',
     evaluator: p => (p.awardsProfile?.craftScore || 0) + (p.awardsProfile?.prestigeScore || 0) * 0.5
   },
   {
-    id: 'awd-cfg-012',
+    id: 'AWD-0d128187-9a43-a5be-8644-b86d2e54',
     body: 'Primetime Emmys', category: 'Best Actor (Comedy)', format: 'tv',
     evaluator: p => (p.awardsProfile?.craftScore || 0) + (p.awardsProfile?.culturalHeat || 0) * 0.5
   },
   {
-    id: 'awd-cfg-013',
+    id: 'AWD-0d138187-9a43-a5be-8644-b86d2e54',
     body: 'Primetime Emmys', category: 'Best Actress (Comedy)', format: 'tv',
     evaluator: p => (p.awardsProfile?.craftScore || 0) + (p.awardsProfile?.culturalHeat || 0) * 0.5
   },
 
   // --- GOLDEN GLOBES ---
   {
-    id: 'awd-cfg-014',
+    id: 'AWD-0d148187-9a43-a5be-8644-b86d2e54',
     body: 'Golden Globes', category: 'Best Picture', format: 'film',
     evaluator: p => (p.awardsProfile?.populistAppeal || 0) + (p.awardsProfile?.culturalHeat || 0) + (p.buzz / 2)
   },
   {
-    id: 'awd-cfg-015',
+    id: 'AWD-0d158187-9a43-a5be-8644-b86d2e54',
     body: 'Golden Globes', category: 'Best Drama Series', format: 'tv',
     evaluator: p => (p.awardsProfile?.prestigeScore || 0) + (p.awardsProfile?.culturalHeat || 0) + (p.buzz / 4)
   },
   {
-    id: 'awd-cfg-016',
+    id: 'AWD-0d168187-9a43-a5be-8644-b86d2e54',
     body: 'Golden Globes', category: 'Best Comedy Series', format: 'tv',
     evaluator: p => (p.awardsProfile?.populistAppeal || 0) + (p.awardsProfile?.culturalHeat || 0) + (p.buzz / 3)
   },
   {
-    id: 'awd-cfg-017',
+    id: 'AWD-0d178187-9a43-a5be-8644-b86d2e54',
     body: 'Golden Globes', category: 'Best TV Movie', format: 'tv',
     evaluator: p => (p.awardsProfile?.craftScore || 0) + (p.awardsProfile?.criticScore || 0)
   },
 
   // --- INDEPENDENT SPIRIT AWARDS ---
   {
-    id: 'awd-cfg-018',
+    id: 'AWD-0d188187-9a43-a5be-8644-b86d2e54',
     body: 'Independent Spirit Awards', category: 'Best Picture', format: 'film',
     evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 2 + (p.awardsProfile?.criticScore || 0)
   },
 
   // --- BAFTAs ---
   {
-    id: 'awd-cfg-019',
+    id: 'AWD-0d198187-9a43-a5be-8644-b86d2e54',
     body: 'BAFTAs', category: 'Best Picture', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) + (p.awardsProfile?.prestigeScore || 0)
   },
   {
-    id: 'awd-cfg-020',
+    id: 'AWD-0d208187-9a43-a5be-8644-b86d2e54',
     body: 'BAFTAs', category: 'Best Series', format: 'tv',
     evaluator: p => (p.awardsProfile?.craftScore || 0) + (p.awardsProfile?.prestigeScore || 0)
   },
   {
-    id: 'awd-cfg-021',
+    id: 'AWD-0d218187-9a43-a5be-8644-b86d2e54',
     body: 'BAFTAs', category: 'Best Supporting Actor', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 0.8 + (p.awardsProfile?.prestigeScore || 0) * 0.5
   },
   {
-    id: 'awd-cfg-022',
+    id: 'AWD-0d228187-9a43-a5be-8644-b86d2e54',
     body: 'BAFTAs', category: 'Best Supporting Actress', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 0.8 + (p.awardsProfile?.prestigeScore || 0) * 0.5
   },
 
   // --- SAG AWARDS ---
   {
-    id: 'awd-cfg-023',
+    id: 'AWD-0d238187-9a43-a5be-8644-b86d2e54',
     body: 'SAG Awards', category: 'Best Ensemble', format: 'both',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 0.5 + (p.awardsProfile?.industryNarrativeScore || 0) * 0.5 + (p.buzz || 0)
   },
 
   // --- GUILDS ---
   {
-    id: 'awd-cfg-024',
+    id: 'AWD-0d248187-9a43-a5be-8644-b86d2e54',
     body: 'Directors Guild Awards', category: 'Best Director', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) + (p.awardsProfile?.prestigeScore || 0) * 0.8
   },
   {
-    id: 'awd-cfg-025',
+    id: 'AWD-0d258187-9a43-a5be-8644-b86d2e54',
     body: 'Producers Guild Awards', category: 'Best Picture', format: 'film',
     evaluator: p => (p.awardsProfile?.prestigeScore || 0) * 0.8 + (p.awardsProfile?.industryNarrativeScore || 0) * 0.5
   },
   {
-    id: 'awd-cfg-026',
+    id: 'AWD-0d268187-9a43-a5be-8644-b86d2e54',
     body: 'Writers Guild Awards', category: 'Best Screenplay', format: 'both',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.5
   },
 
   // --- CRITICS CHOICE ---
   {
-    id: 'awd-cfg-027',
+    id: 'AWD-0d278187-9a43-a5be-8644-b86d2e54',
     body: 'Critics Choice Awards', category: 'Best Picture', format: 'film',
     evaluator: p => (p.awardsProfile?.criticScore || 0) * 2
   },
   {
-    id: 'awd-cfg-028',
+    id: 'AWD-0d288187-9a43-a5be-8644-b86d2e54',
     body: 'Critics Choice Awards', category: 'Best Series', format: 'tv',
     evaluator: p => (p.awardsProfile?.criticScore || 0) * 2
   },
 
   // --- ANNIE AWARDS ---
   {
-    id: 'awd-cfg-029',
+    id: 'AWD-0d298187-9a43-a5be-8644-b86d2e54',
     body: 'Annie Awards', category: 'Best Animated Feature', format: 'film',
     evaluator: p => (p.genre === 'Animation' ? 200 : 0) + (p.awardsProfile?.craftScore || 0) + (p.awardsProfile?.audienceScore || 0)
   },
 
   // --- PEABODY AWARDS ---
   {
-    id: 'awd-cfg-030',
+    id: 'AWD-0d308187-9a43-a5be-8644-b86d2e54',
     body: 'Peabody Awards', category: 'Special Achievement', format: 'tv',
     evaluator: p => (p.awardsProfile?.culturalHeat || 0) * 1.5 + (p.awardsProfile?.prestigeScore || 0)
   },
 
   // --- CANNES FILM FESTIVAL ---
   {
-    id: 'awd-cfg-031',
+    id: 'AWD-0d318187-9a43-a5be-8644-b86d2e54',
     body: 'Cannes Film Festival', category: 'Palme d\'Or', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.5 + (p.awardsProfile?.prestigeScore || 0) * 1.2
   },
   {
-    id: 'awd-cfg-032',
+    id: 'AWD-0d328187-9a43-a5be-8644-b86d2e54',
     body: 'Cannes Film Festival', category: 'Grand Jury Prize', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.2 + (p.awardsProfile?.prestigeScore || 0) * 1.0
   },
   {
-    id: 'awd-cfg-033',
+    id: 'AWD-0d338187-9a43-a5be-8644-b86d2e54',
     body: 'Cannes Film Festival', category: 'Best Director', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 2 + (p.awardsProfile?.indieCredibility || 0) * 0.5
   },
   {
-    id: 'awd-cfg-034',
+    id: 'AWD-0d348187-9a43-a5be-8644-b86d2e54',
     body: 'Cannes Film Festival', category: 'Best Actor', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.2 + (p.awardsProfile?.prestigeScore || 0) * 0.8
   },
   {
-    id: 'awd-cfg-035',
+    id: 'AWD-0d358187-9a43-a5be-8644-b86d2e54',
     body: 'Cannes Film Festival', category: 'Best Actress', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.2 + (p.awardsProfile?.prestigeScore || 0) * 0.8
   },
   {
-    id: 'awd-cfg-036',
+    id: 'AWD-0d368187-9a43-a5be-8644-b86d2e54',
     body: 'Cannes Film Festival', category: 'Best Supporting Actor', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.0 + (p.awardsProfile?.prestigeScore || 0) * 0.6
   },
   {
-    id: 'awd-cfg-037',
+    id: 'AWD-0d378187-9a43-a5be-8644-b86d2e54',
     body: 'Cannes Film Festival', category: 'Best Supporting Actress', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.0 + (p.awardsProfile?.prestigeScore || 0) * 0.6
   },
   {
-    id: 'awd-cfg-038',
+    id: 'AWD-0d388187-9a43-a5be-8644-b86d2e54',
     body: 'Cannes Film Festival', category: 'Best Screenplay', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.8 + (p.awardsProfile?.indieCredibility || 0) * 0.8
   },
 
   // --- SUNDANCE FILM FESTIVAL ---
   {
-    id: 'awd-cfg-039',
+    id: 'AWD-0d398187-9a43-a5be-8644-b86d2e54',
     body: 'Sundance Film Festival', category: 'Grand Jury Prize', format: 'film',
     evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 2 + (p.awardsProfile?.criticScore || 0)
   },
   {
-    id: 'awd-cfg-040',
+    id: 'AWD-0d408187-9a43-a5be-8644-b86d2e54',
     body: 'Sundance Film Festival', category: 'Audience Award', format: 'film',
     evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 1.2 + (p.awardsProfile?.audienceScore || 0) * 1.5
   },
   {
-    id: 'awd-cfg-041',
+    id: 'AWD-0d418187-9a43-a5be-8644-b86d2e54',
     body: 'Sundance Film Festival', category: 'Best Director', format: 'film',
     evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 1.5 + (p.awardsProfile?.craftScore || 0)
   },
   {
-    id: 'awd-cfg-042',
+    id: 'AWD-0d428187-9a43-a5be-8644-b86d2e54',
     body: 'Sundance Film Festival', category: 'Best Actor', format: 'film',
     evaluator: p => (p.awardsProfile?.indieCredibility || 0) + (p.awardsProfile?.criticScore || 0) * 0.8
   },
   {
-    id: 'awd-cfg-043',
+    id: 'AWD-0d438187-9a43-a5be-8644-b86d2e54',
     body: 'Sundance Film Festival', category: 'Best Actress', format: 'film',
     evaluator: p => (p.awardsProfile?.indieCredibility || 0) + (p.awardsProfile?.criticScore || 0) * 0.8
   },
   {
-    id: 'awd-cfg-044',
+    id: 'AWD-0d448187-9a43-a5be-8644-b86d2e54',
     body: 'Sundance Film Festival', category: 'Best Supporting Actor', format: 'film',
     evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 0.8 + (p.awardsProfile?.criticScore || 0) * 0.5
   },
   {
-    id: 'awd-cfg-045',
+    id: 'AWD-0d458187-9a43-a5be-8644-b86d2e54',
     body: 'Sundance Film Festival', category: 'Best Supporting Actress', format: 'film',
     evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 0.8 + (p.awardsProfile?.criticScore || 0) * 0.5
   },
   {
-    id: 'awd-cfg-046',
+    id: 'AWD-0d468187-9a43-a5be-8644-b86d2e54',
     body: 'Sundance Film Festival', category: 'Best Screenplay', format: 'film',
     evaluator: p => (p.awardsProfile?.indieCredibility || 0) * 1.5 + (p.awardsProfile?.craftScore || 0) * 0.5
   },
 
   // --- BERLIN INTERNATIONAL FILM FESTIVAL ---
   {
-    id: 'awd-cfg-047',
+    id: 'AWD-0d478187-9a43-a5be-8644-b86d2e54',
     body: 'Berlin International Film Festival', category: 'Golden Bear', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.5 + (p.awardsProfile?.prestigeScore || 0) * 1.2
   },
   {
-    id: 'awd-cfg-048',
+    id: 'AWD-0d488187-9a43-a5be-8644-b86d2e54',
     body: 'Berlin International Film Festival', category: 'Grand Jury Prize', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.2 + (p.awardsProfile?.prestigeScore || 0) * 1.0
   },
   {
-    id: 'awd-cfg-049',
+    id: 'AWD-0d498187-9a43-a5be-8644-b86d2e54',
     body: 'Berlin International Film Festival', category: 'Best Director', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 2 + (p.awardsProfile?.prestigeScore || 0) * 0.5
   },
   {
-    id: 'awd-cfg-050',
+    id: 'AWD-0d508187-9a43-a5be-8644-b86d2e54',
     body: 'Berlin International Film Festival', category: 'Best Actor', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.2 + (p.awardsProfile?.prestigeScore || 0) * 1.0
   },
   {
-    id: 'awd-cfg-051',
+    id: 'AWD-0d518187-9a43-a5be-8644-b86d2e54',
     body: 'Berlin International Film Festival', category: 'Best Actress', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.2 + (p.awardsProfile?.prestigeScore || 0) * 1.0
   },
   {
-    id: 'awd-cfg-052',
+    id: 'AWD-0d528187-9a43-a5be-8644-b86d2e54',
     body: 'Berlin International Film Festival', category: 'Best Supporting Actor', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.0 + (p.awardsProfile?.prestigeScore || 0) * 0.8
   },
   {
-    id: 'awd-cfg-053',
+    id: 'AWD-0d538187-9a43-a5be-8644-b86d2e54',
     body: 'Berlin International Film Festival', category: 'Best Supporting Actress', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.0 + (p.awardsProfile?.prestigeScore || 0) * 0.8
   },
   {
-    id: 'awd-cfg-054',
+    id: 'AWD-0d548187-9a43-a5be-8644-b86d2e54',
     body: 'Berlin International Film Festival', category: 'Best Screenplay', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.8 + (p.awardsProfile?.industryNarrativeScore || 0) * 0.8
   },
 
   // --- VENICE FILM FESTIVAL ---
   {
-    id: 'awd-cfg-055',
+    id: 'AWD-0d558187-9a43-a5be-8644-b86d2e54',
     body: 'Venice Film Festival', category: 'Golden Lion', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.5 + (p.awardsProfile?.prestigeScore || 0) * 1.5
   },
   {
-    id: 'awd-cfg-056',
+    id: 'AWD-0d568187-9a43-a5be-8644-b86d2e54',
     body: 'Venice Film Festival', category: 'Grand Jury Prize', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.2 + (p.awardsProfile?.prestigeScore || 0) * 1.2
   },
   {
-    id: 'awd-cfg-057',
+    id: 'AWD-0d578187-9a43-a5be-8644-b86d2e54',
     body: 'Venice Film Festival', category: 'Best Director', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 2 + (p.awardsProfile?.prestigeScore || 0) * 0.5
   },
   {
-    id: 'awd-cfg-058',
+    id: 'AWD-0d588187-9a43-a5be-8644-b86d2e54',
     body: 'Venice Film Festival', category: 'Best Actor', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.2 + (p.awardsProfile?.prestigeScore || 0) * 1.0
   },
   {
-    id: 'awd-cfg-059',
+    id: 'AWD-0d598187-9a43-a5be-8644-b86d2e54',
     body: 'Venice Film Festival', category: 'Best Actress', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.2 + (p.awardsProfile?.prestigeScore || 0) * 1.0
   },
   {
-    id: 'awd-cfg-060',
+    id: 'AWD-0d608187-9a43-a5be-8644-b86d2e54',
     body: 'Venice Film Festival', category: 'Best Supporting Actor', format: 'film',
     evaluator: p => (p.awardsProfile?.craftScore || 0) * 1.0 + (p.awardsProfile?.prestigeScore || 0) * 0.8
   },

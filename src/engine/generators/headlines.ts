@@ -97,7 +97,7 @@ export function generateHeadlines(
       category = 'dispute';
     }
 
-    headlines.push({ id: rng.uuid('h'), text, week, category });
+    headlines.push({ id: rng.uuid('NWS'), text, week, category });
   }
 
   return headlines;

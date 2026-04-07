@@ -27,7 +27,7 @@ export class SchedulingEngine {
         impacts.push({
           type: 'NEWS_ADDED',
           payload: {
-            id: rng.uuid('news'),
+            id: rng.uuid('NWS'),
             headline: `Scheduling Conflict Halts "${project.title}"`,
             description: conflicts.join('. '),
             category: 'talent'

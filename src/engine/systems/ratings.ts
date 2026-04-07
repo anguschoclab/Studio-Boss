@@ -296,9 +296,9 @@ export function requestStudioEdit(
         modalType: 'CRISIS',
         priority: 80,
         payload: {
-          projectId: request.projectId,
+          id: rng.uuid('CRS'),
           crisis: {
-            crisisId: rng.uuid('rating-edit'),
+            crisisId: rng.uuid('CRS'),
             triggeredWeek: state.week,
             haltedProduction: false,
             description: `The director has final cut. You cannot edit "${project.title}" for rating without their approval.`,
@@ -360,14 +360,14 @@ export function requestStudioEdit(
       if (scandalChance > 0 && rng.next() < scandalChance) {
         impacts.push({
           newScandals: [{
-            id: rng.uuid('rating-scandal'),
+            id: rng.uuid('SND'),
             talentId: request.directorId,
             severity: 40 + Math.floor(rng.next() * 40),
             type: 'director_speaks_out',
             weeksRemaining: 3 + Math.floor(rng.next() * 4)
           }],
           newsEvents: [{
-            id: rng.uuid('rating-news'),
+            id: rng.uuid('NWS'),
             week: state.week,
             type: 'SCANDAL',
             headline: 'DIRECTOR SPEAKS OUT',
@@ -461,7 +461,7 @@ export function releaseDirectorsCut(
       }
     }],
     newHeadlines: [{
-      id: rng.uuid('dc-headline'),
+      id: rng.uuid('NWS'),
       text: `Director's Cut of "${project.title}" arrives to critical acclaim`,
       week: 0, // will be set by coordinator context
       category: 'box_office',
@@ -483,7 +483,7 @@ export function releaseDirectorsCut(
     // change happens via the TalentSystem weekly cycle. We mark it via a news event.
     impacts.push({
       newsEvents: [{
-        id: rng.uuid('dc-director'),
+        id: rng.uuid('NWS'),
         week: 0,
         type: 'MILESTONE',
         headline: "DIRECTOR'S VISION VINDICATED",
@@ -540,7 +540,7 @@ export function releaseUnrated(
   if (hasExtremeStack && rng.next() < 0.40) {
     impacts.push({
       newsEvents: [{
-        id: rng.uuid('unrated-controversy'),
+        id: rng.uuid('NWS'),
         week,
         type: 'SCANDAL',
         headline: 'CONTROVERSY ERUPTS',

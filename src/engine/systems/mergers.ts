@@ -66,7 +66,7 @@ export function executeAcquisition(state: GameState, targetId: string, rng: Rand
     newIPAssets,
     newHeadlines: [
       {
-        id: rng.uuid('hl'),
+        id: rng.uuid('NWS'),
         week: state.week,
         category: 'market' as const,
         text: `CONSOLIDATED: ${state.studio.name} absorbs ${target.name}!`
@@ -74,7 +74,7 @@ export function executeAcquisition(state: GameState, targetId: string, rng: Rand
     ],
     newsEvents: [
       {
-        id: rng.uuid('news'),
+        id: rng.uuid('NWS'),
         week: state.week,
         type: 'STUDIO_EVENT' as const,
         headline: `M&A Finalized`,
@@ -92,7 +92,7 @@ export function executeSabotage(state: GameState, targetId: string, rng: RandomG
     cashChange: -1_000_000,
     newRumors: [
       {
-        id: rng.uuid('rumor'),
+        id: rng.uuid('RMR'),
         week: state.week,
         text: `Rumors swirl that ${target.name}'s upcoming blockbuster is facing massive reshoots.`,
         truthful: false,
@@ -121,7 +121,7 @@ export function executePoach(state: GameState, targetId: string, rng: RandomGene
     ],
     newHeadlines: [
       {
-        id: rng.uuid('hl'),
+        id: rng.uuid('NWS'),
         week: state.week,
         category: 'talent' as const,
         text: `${state.studio.name} poaches top executive from ${target.name}!`

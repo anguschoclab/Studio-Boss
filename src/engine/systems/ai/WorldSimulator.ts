@@ -19,7 +19,7 @@ export function tickWorldEvents(state: GameState, rng: RandomGenerator): StateIm
         impacts.push({
           type: 'NEWS_ADDED',
           payload: {
-            id: rng.uuid('market-news'),
+            id: rng.uuid('NWS'),
             headline: `MARKET SATURATION: The success of ${project.title} has flooded the ${project.genre} market.`,
             description: `Analysts are warning of potential genre fatigue in the ${project.genre} space following the blockbuster debut of "${project.title}".`,
             publication: rng.pick(PUBLICATIONS)
@@ -35,7 +35,7 @@ export function tickWorldEvents(state: GameState, rng: RandomGenerator): StateIm
       impacts.push({
         type: 'NEWS_ADDED',
         payload: {
-          id: rng.uuid('star-news'),
+          id: rng.uuid('NWS'),
           headline: `STAR RISING: Agents report massive demand for ${talent.name} after a breakout season.`,
           description: `Industry insiders are calling ${talent.name} the "one to watch" as demand for the star hits an all-time high.`,
           publication: rng.pick(PUBLICATIONS)

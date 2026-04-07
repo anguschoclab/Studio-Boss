@@ -309,7 +309,7 @@ function handleMarketingPhase(p: Project, talentPool: Record<string, Talent>, pr
         // 80% chance of a scandal if an auteur is sanitized
         if (rng.next() < 0.8) {
           newScandals.push({
-            id: rng.uuid('sc-auteur'),
+            id: rng.uuid('SND'),
             type: 'director_speaks_out',
             talentId: director.id,
             severity: 70,

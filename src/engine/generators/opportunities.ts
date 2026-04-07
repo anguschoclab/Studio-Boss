@@ -203,7 +203,7 @@ export function generateOpportunity(rng: RandomGenerator, currentWeek: number, t
 
   const weeksUntilExpiry = rng.rangeInt(4, 12);
   const opt: Opportunity = {
-    id: rng.uuid('opp'),
+    id: rng.uuid('OPP'),
     type,
     title: generateProjectTitle(rng),
     format: isFilm ? 'film' : 'tv',

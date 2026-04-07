@@ -59,7 +59,7 @@ export function updateBuyers(buyers: Buyer[], currentWeek: number, rng: RandomGe
       
       if (headlineText && rng.next() < 0.6) { 
         impact.newHeadlines!.push({
-          id: rng.uuid('hl'),
+          id: rng.uuid('NWS'),
           week: currentWeek,
           category: 'market',
           text: headlineText

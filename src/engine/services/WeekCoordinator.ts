@@ -204,7 +204,7 @@ export class WeekCoordinator {
         context.impacts.push({
           type: 'NEWS_ADDED',
           payload: {
-            id: `shop-expired-${project.id}`,
+            id: context.rng.uuid('NWS'),
             headline: `"${project.title}" shopping window closes without a deal`,
             description: `The show has been shelved after failing to find a new network home.`,
             category: 'cancellation'
@@ -392,7 +392,7 @@ export class WeekCoordinator {
       if (impact.type === 'NEWS_ADDED') {
         const payload = impact.payload as import('../types/state.types').NewsImpact;
         allHeadlines.push({
-          id: context.rng.uuid('news'),
+          id: context.rng.uuid('NWS'),
           text: payload.headline || 'Breaking News',
           week: context.week,
           category: payload.category || 'general',
@@ -437,6 +437,7 @@ export class WeekCoordinator {
     }
 
     return {
+      id: context.rng.uuid('WSM'),
       fromWeek: before.week,
       toWeek: after.week,
       cashBefore: before.finance.cash,

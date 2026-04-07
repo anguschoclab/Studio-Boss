@@ -70,7 +70,7 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
             impacts.push({
               type: 'NEWS_ADDED',
               payload: {
-                id: rng.uuid('news'),
+                id: rng.uuid('NWS'),
                 headline: `STREET TALK: ${rival.name} desperate for "${opportunity.title}"?`,
                 description: `${rival.name} has escalated the bidding for "${opportunity.title}", signaling they might view it as a cornerstone asset for their next slate.`,
                 category: 'market',
@@ -131,7 +131,7 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
       
       if (rival.cash > lockFee * 2) {
          const pact: TalentPact = {
-           id: rng.uuid('pact'),
+           id: rng.uuid('PCT'),
            talentId: target.id,
            studioId: rival.id,
            type: 'first_look',
@@ -156,7 +156,7 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
          impacts.push({
            type: 'NEWS_ADDED',
            payload: {
-             id: rng.uuid('news'),
+             id: rng.uuid('NWS'),
              headline: `BIDDING WAR: ${rival.name} locks down ${target.name}`,
              description: `In a major coup, ${rival.name} has signed ${target.name} to an exclusive first-look deal worth an estimated $${(lockFee / 1000000).toFixed(1)}M.`,
              category: 'talent',

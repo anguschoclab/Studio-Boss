@@ -13,7 +13,7 @@ import { Talent, TalentPact, StreamerPlatform, Buyer, StudioMotivation, Contract
 
 export function initializeGame(studioName: string, archetype: ArchetypeKey, seed: number): GameState {
   const rng = new RandomGenerator(seed);
-  const playerStudioId = rng.uuid('player'); // 🌌 Standardized player ID
+  const playerStudioId = rng.uuid('PLR'); // 🌌 Standardized player ID
   const arch = ARCHETYPES[archetype];
   const rivalArchetypes: ArchetypeKey[] = ['major', 'mid-tier', 'indie'];
   const usedNames = new Set<string>([studioName]);
@@ -40,7 +40,7 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
     const rProjects: Record<string, any> = {};
     const projCount = rng.rangeInt(2, 5);
     for (let i = 0; i < projCount; i++) {
-        const pId = rng.uuid('p-init');
+        const pId = rng.uuid('PRJ');
         const isProd = rng.next() < 0.5;
         const isTv = rng.next() < 0.3; // 30% TV mix
         const genre = rng.pick(ALL_GENRES);
@@ -76,7 +76,7 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
     }
 
     return {
-      id: rng.uuid('rival'),
+      id: rng.uuid('RIV'),
       name,
       motto: generateMotto(rng),
       archetype: rArch,
@@ -125,7 +125,7 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
 
         if (topTalent) {
             const pact: TalentPact = {
-                id: rng.uuid('pact'),
+                id: rng.uuid('PCT'),
                 talentId: topTalent.id,
                 studioId: rival.id,
                 type: 'first_look',
@@ -156,7 +156,7 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
   if (archetype !== 'indie') {
     const playerBrand = { core: studioName.split(' ')[0], isConglomerate: true };
     const playerStreamer: StreamerPlatform = {
-      id: rng.uuid('player-streamer'),
+      id: rng.uuid('BUY'),
       name: BrandSystem.getStreamingName(playerBrand, rng),
       archetype: 'streamer',
       foundedWeek: 1,
@@ -180,7 +180,7 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
     if (rival.archetype !== 'indie' && rng.next() < 0.7) {
       const rivalBrand = { core: rival.parentBrand!, isConglomerate: true };
       const rivalStreamer: StreamerPlatform = {
-        id: rng.uuid('rival-streamer'),
+        id: rng.uuid('BUY'),
         name: BrandSystem.getStreamingName(rivalBrand, rng),
         archetype: 'streamer',
         foundedWeek: 1,
@@ -223,7 +223,7 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
     news: {
       headlines: [
         {
-          id: rng.uuid('h-init'),
+          id: rng.uuid('NWS'),
           text: `${studioName} launches operations — the industry takes notice.`,
           week: 1,
           category: 'general' as const,

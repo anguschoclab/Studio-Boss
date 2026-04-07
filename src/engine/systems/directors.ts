@@ -119,7 +119,8 @@ export function processDirectorDisputes(
       projectId: project.id,
       update: {
         activeCrisis: {
-          crisisId: rng.uuid('crisis'),
+          id: rng.uuid('CRS'),
+          crisisId: rng.uuid('CRS'),
           triggeredWeek: 0,
           haltedProduction: false,
           description: `Director ${director.name} is demanding an immediate $5M budget increase to shoot a highly ambitious sequence, threatening to walk off set!`,
@@ -153,7 +154,8 @@ export function processDirectorDisputes(
       projectId: project.id,
       update: {
         activeCrisis: {
-          crisisId: rng.uuid('vision-crisis'),
+          id: rng.uuid('CRS'),
+          crisisId: rng.uuid('CRS'),
           triggeredWeek: 0,
           haltedProduction: false,
           description: `Director ${director.name} is threatening to publicly disown "${project.title}" unless given creative approval over the final cut.`,

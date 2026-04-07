@@ -13,7 +13,7 @@ export function generateCrisis(project: Project, rng: RandomGenerator): StateImp
   if (!template) return null;
 
   const crisis: ActiveCrisis = {
-    id: rng.uuid('crisis-inst'), // 🌌 Unique instance ID
+    id: rng.uuid('CRS'), // 🌌 Unique instance ID
     crisisId: template.id,       // 🌌 Refers back to template data
     triggeredWeek: 0, // Will be set by the coordinator or reducer
     haltedProduction: false,
@@ -96,14 +96,14 @@ export function resolveCrisis(state: GameState, projectId: string, optionIndex: 
   }
 
   impact.newHeadlines!.push({
-    id: rng.uuid('hl'),
+    id: rng.uuid('NWS'),
     week: state.week,
     category: 'general',
     text: `Crisis resolved for "${project.title}": ${option.text}`
   });
 
   impact.newsEvents!.push({
-    id: rng.uuid('news'),
+    id: rng.uuid('NWS'),
     week: state.week,
     type: 'CRISIS',
     headline: `Crisis at ${project.title}`,

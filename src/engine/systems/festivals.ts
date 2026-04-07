@@ -133,7 +133,7 @@ export function submitToFestival(
           'industry.festivalSubmissions': [
             ...(state.industry.festivalSubmissions || []),
             {
-              id: rng.uuid('sub'),
+              id: rng.uuid('SUB'),
               projectId,
               festivalBody,
               status: 'submitted',
@@ -146,7 +146,7 @@ export function submitToFestival(
     {
       type: 'NEWS_ADDED',
       payload: {
-        id: rng.uuid('news-fest'),
+        id: rng.uuid('NWS'),
         headline: `Studio submits "${project.title}" to ${fest.name}`,
         description: `Strategic awards push: The studio has officially entered the competition at ${fest.name}.`,
         category: 'awards'

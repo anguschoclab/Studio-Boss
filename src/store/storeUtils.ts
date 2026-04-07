@@ -51,7 +51,7 @@ function prepareTalentAndContracts(
             attachedTalent.push(t);
             talentFees += t.fee || 0;
             newContracts.push({
-                id: rng.uuid('contract'),
+                id: rng.uuid('CON'),
                 talentId: t.id,
                 projectId,
                 fee: t.fee,
@@ -69,7 +69,7 @@ export function buildProjectAndContracts(state: GameState, params: CreateProject
     const stats = getProjectStats(params, tier);
     const { budget, weeklyCost, developmentWeeks, productionWeeks, renewable } = stats;
 
-    const projectId = rng.uuid('project');
+    const projectId = rng.uuid('PRJ');
     const { talentFees, newContracts } = prepareTalentAndContracts(state, params.attachedTalentIds, projectId, rng);
 
     const totalBudget = budget + talentFees;

@@ -29,7 +29,7 @@ export function tickIndustryUpstarts(state: GameState, rng: RandomGenerator): St
     const archData = ARCHETYPES[archetype];
 
     const newStudio: RivalStudio = {
-      id: rng.uuid('upstart-studio'),
+      id: rng.uuid('RIV'),
       name,
       motto: generateMotto(rng),
       archetype: archetype as any,
@@ -58,7 +58,7 @@ export function tickIndustryUpstarts(state: GameState, rng: RandomGenerator): St
     impacts.push({
       type: 'NEWS_ADDED',
       payload: {
-        id: rng.uuid('news'),
+        id: rng.uuid('NWS'),
         week: state.week,
         headline: `NEW PLAYER: ${name} launches as artisanal studio`,
         description: `With a focus on quality over volume, ${name} has officially entered the market as a boutique ${archetype} studio.`,
@@ -73,7 +73,7 @@ export function tickIndustryUpstarts(state: GameState, rng: RandomGenerator): St
      const name = BrandSystem.getStreamingName(ident, rng);
      
      const newStreamer: StreamerPlatform = {
-        id: rng.uuid('upstart-streamer'),
+        id: rng.uuid('BUY'),
         name,
         archetype: 'streamer',
         foundedWeek: state.week,
@@ -99,7 +99,7 @@ export function tickIndustryUpstarts(state: GameState, rng: RandomGenerator): St
      impacts.push({
         type: 'NEWS_ADDED',
         payload: {
-           id: rng.uuid('news'),
+           id: rng.uuid('NWS'),
            week: state.week,
            headline: `DISRUPTOR: ${name} enters the streaming wars`,
            description: `A new streaming platform, ${name}, has launched today with an aggressive subscriber acquisition strategy.`,

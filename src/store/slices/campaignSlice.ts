@@ -41,6 +41,7 @@ export const createCampaignSlice: StateCreator<GameStore, [], [], CampaignSlice>
       if (!s.gameState) return s;
 
       const newCampaign: CampaignData = {
+        id: rng.uuid('OPP'),
         projectId,
         budget: tier.cost,
         targetCategories: ['Best Picture'], // Default for now
@@ -64,7 +65,7 @@ export const createCampaignSlice: StateCreator<GameStore, [], [], CampaignSlice>
       if (hasBacklash) {
         // Dispatch crisis/scandal
         const scandalHeadline = {
-          id: rng.uuid('scandal'),
+          id: rng.uuid('NWS'),
           text: `BACKLASH: Aggressive campaigning for "${project?.title}" sparks industry outcry!`,
           week: s.gameState.week,
           category: 'scandal' as const

@@ -44,7 +44,7 @@ export function generateScandals(state: GameState, rng: RandomGenerator): StateI
        const type = pick(types, rng);
        
        const s: Scandal = {
-         id: rng.uuid('scandal'),
+         id: rng.uuid('SND'),
          talentId: talent.id,
          severity: 20 + Math.floor(rng.next() * 80), // 20-100
          type,
@@ -54,7 +54,7 @@ export function generateScandals(state: GameState, rng: RandomGenerator): StateI
        impact.newScandals!.push(s);
 
        impact.newsEvents!.push({
-         id: rng.uuid('news'),
+         id: rng.uuid('NWS'),
          week: state.week,
          type: 'CRISIS',
          headline: 'PR NIGHTMARE',
@@ -64,9 +64,10 @@ export function generateScandals(state: GameState, rng: RandomGenerator): StateI
        const projectId = talentToProjectMap.get(talent.id);
        if (projectId && studioProjects[projectId]) {
          const project = studioProjects[projectId];
-         const crisisId = rng.uuid('scandal-crisis');
+         const crisisId = rng.uuid('CRS');
          
          const crisisPayload = {
+            id: crisisId,
             crisisId,
             triggeredWeek: state.week,
             haltedProduction: false,
@@ -198,7 +199,7 @@ export function generateStudioRatingEvent(
   return {
     prestigeChange: prestigeLoss,
     newsEvents: [{
-      id: rng.uuid('rating-event'),
+      id: rng.uuid('NWS'),
       week: context.week,
       type: 'SCANDAL',
       headline,
@@ -206,7 +207,7 @@ export function generateStudioRatingEvent(
       publication
     }],
     newHeadlines: [{
-      id: rng.uuid('rating-headline'),
+      id: rng.uuid('NWS'),
       text: headline,
       week: context.week,
       category: 'scandal',
@@ -247,7 +248,7 @@ export function generateMarketBanScandal(
   return {
     prestigeChange: -prestigeLoss,
     newsEvents: [{
-      id: rng.uuid('ban-event'),
+      id: rng.uuid('NWS'),
       week,
       type: 'SCANDAL',
       headline,
@@ -255,7 +256,7 @@ export function generateMarketBanScandal(
       publication: 'The Hollywood Reporter'
     }],
     newHeadlines: [{
-      id: rng.uuid('ban-headline'),
+      id: rng.uuid('NWS'),
       text: headline,
       week,
       category: 'scandal',

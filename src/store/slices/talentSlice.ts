@@ -44,7 +44,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       const rng = new RandomGenerator(state.rngState);
       
       const contract: Contract = {
-        id: rng.uuid('contract'),
+        id: rng.uuid('CON'),
         projectId,
         talentId,
         fee: finalFee,
@@ -107,7 +107,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       if (accepted) {
           success = true;
           const deal: TalentPact = {
-            id: rng.uuid('pact'),
+            id: rng.uuid('PCT'),
             talentId,
             studioId: 'PLAYER',
             type: 'first_look',
@@ -120,7 +120,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
           const currentDeals = state.studio.internal.firstLookDeals || [];
           const newNewsHistory = [...state.industry.newsHistory];
           newNewsHistory.unshift({
-            id: rng.uuid('news-pact'),
+            id: rng.uuid('NWS'),
             week: state.week,
             type: 'STUDIO_EVENT' as const,
             headline: `${talent.name} signs first-look pact with ${state.studio.name}.`,
@@ -148,7 +148,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
        } else {
           const newNewsHistory = [...state.industry.newsHistory];
           newNewsHistory.unshift({
-            id: rng.uuid('news-pact-reject'),
+            id: rng.uuid('NWS'),
             week: state.week,
             type: 'STUDIO_EVENT' as const,
             headline: `${talent.name} passes on first-look deal with ${state.studio.name}.`,
