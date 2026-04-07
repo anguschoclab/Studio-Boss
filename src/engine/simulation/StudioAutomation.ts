@@ -138,7 +138,7 @@ export class StudioAutomation {
       impacts.push({
           type: 'NEWS_ADDED',
           payload: {
-              id: rng.uuid('news'),
+              id: rng.uuid('NWS'),
               headline: `LIQUIDATION: ${rival.name} auctions IP!`,
               description: `Facing financial pressure, ${rival.name} has sold ${asset.title} to the highest bidder for $${(bidPrice / 1000000).toFixed(1)}M.`,
               category: 'business',
@@ -163,7 +163,7 @@ export class StudioAutomation {
       impacts.push({
           type: 'NEWS_ADDED',
           payload: {
-              id: rng.uuid('news'),
+              id: rng.uuid('NWS'),
               headline: `BUSINESS: ${rival.name} launches streaming service!`,
               description: `Aiming for vertical integration, ${rival.name} has invested $200M in a new SVOD platform.`,
               category: 'business',
@@ -179,7 +179,7 @@ export class StudioAutomation {
   private static pitchNewProject(rival: RivalStudio, state: GameState, rng: RandomGenerator, impacts: StateImpact[]): void {
     const genres = ['Action', 'Drama', 'Comedy', 'Sci-Fi', 'Horror', 'Family'];
     const genre = rng.pick(genres);
-    const id = rng.uuid('p-auto');
+    const id = rng.uuid('PRJ');
     const format = rng.next() < 0.3 ? 'tv' : 'film';
 
     const project: any = {

@@ -8,7 +8,7 @@ export interface CrisisTemplate {
 
 export const CRISIS_POOLS: CrisisTemplate[] = [
   {
-    id: 'actors_hot_mic',
+    id: 'CRS-95ec2bf6-c927-a3c0-9008-29aac0ab',
     description: "Your lead actor has been caught on a hot mic making disparaging remarks about the studio's latest streaming platform, calling it 'a digital graveyard for dreams'.",
     options: [
       {
@@ -31,7 +31,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_1',
+    id: 'CRS-d7be4b32-a15e-a664-edcd-78487f56',
     description: "The film's primary editor accidentally formatted the main server, losing three weeks of 'impossible to replicate' footage shot on location in the Himalayas.",
     options: [
       {
@@ -55,7 +55,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_2',
+    id: 'CRS-e3068187-9a43-a5be-8644-b86d2e54',
     description: "Your 'visionary' director has demanded an additional $5M to render every strand of hair on a CGI cat that only appears on screen for four seconds.",
     options: [
       {
@@ -77,7 +77,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_3',
+    id: 'CRS-9d3f3136-7fff-2ec6-79fc-89b1af87',
     description: "A rival studio has just announced a near-identical project with a bigger star, scheduled to release on the exact same weekend as yours.",
     options: [
       {
@@ -99,7 +99,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_4',
+    id: 'CRS-21f22cd4-37c7-2eb3-ecfe-cf307efd',
     description: "The star's romantic comedy interest has gone public with a devastating breakup—with your movie’s director.",
     options: [
       {
@@ -121,7 +121,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_5',
+    id: 'CRS-5a30431e-cc05-70d2-ee2d-6b8fdd9f',
     description: "The primary filming location—a historic 14th-century castle—has been haunted by a 'very active' poltergeist that keeps throwing lighting rigs at the crew.",
     options: [
       {
@@ -144,7 +144,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_6',
+    id: 'CRS-81258a19-2163-d5db-eed8-9ffee5ef',
     description: "The script for your highly guarded sci-fi epic has been leaked to a popular fan forum, and the ending is being universally mocked.",
     options: [
       {
@@ -167,7 +167,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_7',
+    id: 'CRS-eeccf630-e5a7-1040-32a3-cf182d78',
     description: "Your lead actress has decided to pivot to an exclusive 'spiritual wellness' retreat in the middle of principal photography and refuses to check her phone.",
     options: [
       {
@@ -189,7 +189,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_8',
+    id: 'CRS-c166b66d-7c0f-09d2-27c8-a09647d2',
     description: "During a stunt gone wrong, the film's only hero vehicle—a one-of-a-kind vintage Italian supercar—was driven into a lake.",
     options: [
       {
@@ -212,7 +212,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_9',
+    id: 'CRS-233ec2bf-5704-4b6b-7e20-65cc408f',
     description: "The studio's highly touted 'carbon neutral' initiative has been exposed as a sham: a local journalist found a secret diesel generator hidden under a pile of bamboo sets.",
     options: [
       {
@@ -234,7 +234,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_10',
+    id: 'CRS-f6662661-3e26-3955-a484-d46fefa4',
     description: "Your 'method' lead actor has refused to wear modern shoes on set, even when out of character, and has now contracted a severe foot infection.",
     options: [
       {
@@ -255,7 +255,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_11',
+    id: 'CRS-74f19bc2-b8e8-8c4b-3afb-8b9316b0',
     description: "The film's most expensive practical effect—a scale model of London—was accidentally sat on by a tired PA.",
     options: [
       {
@@ -277,7 +277,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_12',
+    id: 'CRS-600cfc40-badc-8cb8-f1e0-c4f17429',
     description: "Your director has gone 'rogue' and is shooting an experimental, 4-hour documentative cut about the 'nature of craft services', ignoring the original rom-com script.",
     options: [
       {
@@ -300,7 +300,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_13',
+    id: 'CRS-01986a47-58fa-f2a9-fd77-145cabfd',
     description: "A major religious group has called for a worldwide boycott of the studio because your family-friendly animated film features a 'too realistic' depiction of a demon.",
     options: [
       {
@@ -323,7 +323,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_14',
+    id: 'CRS-7f09d704-9dc1-406f-e44e-19a67511',
     description: "Your lead actor just announced their retirement from acting to become a professional competitive eater, effective immediately.",
     options: [
       {
@@ -345,7 +345,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_15',
+    id: 'CRS-ec1bbcec-369c-46b9-2238-4c4316d8',
     description: "During a night shoot, the crew accidentally 'borrowed' power from a local hospital, causing a brief blackout in the ICU.",
     options: [
       {
@@ -369,7 +369,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_16',
+    id: 'CRS-c1cc9c8e-5f42-4e37-d9c3-a67f946c',
     description: "A rogue intern accidentally deleted the only backup of the film's 10-minute climactic sequence.",
     options: [
       {
@@ -393,7 +393,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_17',
+    id: 'CRS-fd399b79-f502-7d8a-5d9f-f2b85f30',
     description: "Your star actor's dog has passed away, and they have declared a 'month of mourning', refusing to leave their bedroom.",
     options: [
       {
@@ -414,7 +414,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_18',
+    id: 'CRS-12edfa78-b6f1-bc05-6a66-985ba51c',
     description: "A prominent 'cultural consultant' you hired has gone rogue on TikTok, detailing every single change you made to their traditional story, calling the film 'profoundly offensive'.",
     options: [
       {
@@ -437,7 +437,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_19',
+    id: 'CRS-96af908b-5918-5149-01fd-148681b7',
     description: "Extreme weather has literally blown the rooftop off your primary soundstage, destroying $2M in electronics and ruining your 'rain-free' set.",
     options: [
       {
@@ -461,7 +461,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_20',
+    id: 'CRS-81258a19-2163-d5db-eed8-9ffee5ef',
     description: "Leaked emails show your lead actor mocking the film's source material, calling the original book 'trash for idiots'.",
     options: [
       {
@@ -483,7 +483,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_21',
+    id: 'CRS-eeccf630-e5a7-1040-32a3-cf182d78',
     description: "The film's most anticipated action scene—a motorcycle jump onto a moving train—was performed perfectly, but the camera operator forgot to press record.",
     options: [
       {
@@ -505,7 +505,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_22',
+    id: 'CRS-c166b66d-7c0f-09d2-27c8-a09647d2',
     description: "Your lead actor has decided to go full 'Method' and refuses to break character, communicating only in grunts and throwing their own feces on set.",
     options: [
       {
@@ -527,7 +527,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_23',
+    id: 'CRS-233ec2bf-5704-4b6b-7e20-65cc408f',
     description: "The film's incredibly expensive, bespoke physical prop—a MacGuffin critical to the plot—was accidentally sold at a local garage sale by a disgruntled PA.",
     options: [
       {
@@ -549,7 +549,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_24',
+    id: 'CRS-f6662661-3e26-3955-a484-d46fefa4',
     description: "The director of your gritty urban thriller insists on shooting exclusively during 'magic hour', reducing usable filming time to 15 minutes a day.",
     options: [
       {
@@ -571,7 +571,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_25',
+    id: 'CRS-74f19bc2-b8e8-8c4b-3afb-8b9316b0',
     description: "The studio's highly publicized 'carbon neutral' initiative is a sham, and an investigative journalist just found the massive hidden diesel generators powering the set.",
     options: [
       {
@@ -593,7 +593,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_26',
+    id: 'CRS-600cfc40-badc-8cb8-f1e0-c4f17429',
     description: "A prominent supporting actor was just exposed for running a bizarre, multi-level marketing scheme selling 'brain-enhancing' essential oils to their fans.",
     options: [
       {
@@ -616,7 +616,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_27',
+    id: 'CRS-01986a47-58fa-f2a9-fd77-145cabfd',
     description: "The film's highly touted 'groundbreaking' CGI monster design was leaked, and the internet unanimously agrees it looks exactly like a popular children's cartoon character.",
     options: [
       {
@@ -639,7 +639,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_28',
+    id: 'CRS-7f09d704-9dc1-406f-e44e-19a67511',
     description: "Your 'visionary' director has demanded that the entire third act be reshot because they 'had a dream where the villain was actually a misunderstood mime'.",
     options: [
       {
@@ -662,7 +662,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_29',
+    id: 'CRS-ec1bbcec-369c-46b9-2238-4c4316d8',
     description: "Your lead actor has decided to go full 'Method' and refuses to break character, communicating only in grunts and throwing their own feces on set.",
     options: [
       {
@@ -684,7 +684,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_30',
+    id: 'CRS-c1cc9c8e-5f42-4e37-d9c3-a67f946c',
     description: "The primary VFX studio just declared bankruptcy, taking the only server holding your unrendered CGI assets offline.",
     options: [
       {
@@ -707,7 +707,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_31',
+    id: 'CRS-fd399b79-f502-7d8a-5d9f-f2b85f30',
     description: "A decade-old tweet from your visionary director has just resurfaced, and it contains some incredibly problematic takes on a beloved cartoon franchise.",
     options: [
       {
@@ -731,7 +731,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_32',
+    id: 'CRS-12edfa78-b6f1-bc05-6a66-985ba51c',
     description: "An extra managed to smuggle a script onto Reddit, and a 4-hour video essay dismantling your plot holes is currently trending #1 on YouTube.",
     options: [
       {
@@ -753,7 +753,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_33',
+    id: 'CRS-96af908b-5918-5149-01fd-148681b7',
     description: "A ransomware syndicate has stolen the director's cut of your highly anticipated blockbuster and is threatening to release it with comic-sans subtitles.",
     options: [
       {
@@ -775,7 +775,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_34',
+    id: 'CRS-4699bd27-e511-e44c-f049-add1f162',
     description: "Your lead actor refuses to promote the movie unless the studio funds their side project: a 3-hour black-and-white silent film about crypto-mining.",
     options: [
       {
@@ -797,7 +797,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_35',
+    id: 'CRS-f07cedac-9b8e-99a4-57ef-4ae8b62d',
     description: "The highly-touted practical explosion sequence accidentally ignited a nearby prop warehouse, destroying $500k worth of vintage costumes.",
     options: [
       {
@@ -819,7 +819,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_36',
+    id: 'CRS-3c36ded0-484e-afc3-3ac6-22f5db28',
     description: "Your 'inclusive' historical epic just cast a wildly historically inaccurate lead, and historians on TikTok are destroying the film's credibility.",
     options: [
       {
@@ -841,7 +841,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_37',
+    id: 'CRS-9932bb3e-6c85-8db2-4e52-a8dcbabc',
     description: "The studio's highly publicized 'carbon neutral' initiative is a sham, and an investigative journalist just found the massive hidden diesel generators powering the set.",
     options: [
       {
@@ -863,7 +863,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_38',
+    id: 'CRS-36016f89-2533-2bd4-1e35-8b380772',
     description: "The star of your romantic comedy is publicly feuding with their co-star. The paparazzi just caught them brawling outside a vegan restaurant.",
     options: [
       {
@@ -885,7 +885,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_39',
+    id: 'CRS-40413b8c-6323-1080-824d-e6dc697f',
     description: "A prominent supporting actor was just exposed for running a bizarre, multi-level marketing scheme selling 'brain-enhancing' essential oils to their fans.",
     options: [
       {
@@ -908,7 +908,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_40',
+    id: 'CRS-e3e052db-2a4a-6a09-1ea6-c1e802b8',
     description: "The film's highly touted 'groundbreaking' CGI monster design was leaked, and the internet unanimously agrees it looks exactly like a popular children's cartoon character.",
     options: [
       {
@@ -931,7 +931,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_41',
+    id: 'CRS-a223eba8-3b32-fc5a-8159-d15d4cd6',
     description: "Your 'visionary' director has demanded that the entire third act be reshot because they 'had a dream where the villain was actually a misunderstood mime'.",
     options: [
       {
@@ -954,7 +954,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_42',
+    id: 'CRS-c9cdd78a-388f-b2b5-8d7e-de0e0b87',
     description: "The movie's lead has been accused of stealing the plot from a wildly popular, self-published fan-fiction blog.",
     options: [
       {
@@ -977,7 +977,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_43',
+    id: 'CRS-5f11f0da-da72-b9bb-fbfe-78ca3183',
     description: "A rogue marketing intern accidentally tweeted the entire plot twist from the official studio account.",
     options: [
       {
@@ -1000,7 +1000,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_44',
+    id: 'CRS-1a2325e6-e0e1-e73a-704c-c7f1e093',
     description: "Your lead method actor has fully immersed themselves in their character as an 18th-century cobbler and is refusing to wear modern shoes, perform lines correctly, or acknowledge anyone by their real names.",
     options: [
       {
@@ -1022,7 +1022,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_45',
+    id: 'CRS-26e36d8a-7a2b-e8f6-1091-744012e8',
     description: "The primary VFX studio hired for the film has suddenly declared bankruptcy, leaving 80% of your CGI shots unfinished and held hostage by their creditors.",
     options: [
       {
@@ -1045,7 +1045,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_46',
+    id: 'CRS-b2a2e0bc-dfdd-c075-2402-7639839d',
     description: "Extremely problematic tweets from your director dating back to 2011 have suddenly resurfaced and are trending globally on social media.",
     options: [
       {
@@ -1068,7 +1068,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_47',
+    id: 'CRS-d4d54427-d7af-85d9-c0b2-77008cd3',
     description: "Your A-list lead actor has been arrested in a foreign country for attempting to smuggle an endangered iguana through customs.",
     options: [
       {
@@ -1090,7 +1090,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_48',
+    id: 'CRS-48f28ae1-b962-1377-eac5-58dc80b2',
     description: "An anonymous hacker group is threatening to leak the unfinished, un-color-graded film unless a $2M ransom is paid in cryptocurrency.",
     options: [
       {
@@ -1112,7 +1112,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
     ]
   },
   {
-    id: 'crisis_49',
+    id: 'CRS-66bcc7a8-9d5f-f9fa-94f1-e133a16f',
     description: "Your two co-stars have developed a deep, burning hatred for each other and absolutely refuse to film any scenes together.",
     options: [
       {
