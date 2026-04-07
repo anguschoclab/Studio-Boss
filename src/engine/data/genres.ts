@@ -134,7 +134,11 @@ export const CROSSOVER_AFFINITY: Record<string, string[]> = {
   // 🌌 The Universe Builder: Added specific subgenre crossover pools for massive event mapping.
   'Psychological Thriller': ['Horror', 'Thriller', 'Drama', 'Crime', 'Elevated Horror'],
   'True Crime': ['Documentary', 'Drama', 'Thriller', 'Crime'],
-  'Docuseries': ['Documentary', 'Unscripted', 'True Crime']
+  'Docuseries': ['Documentary', 'Unscripted', 'True Crime'],
+  // 🌌 The Universe Builder: Modern trends crossover affinities.
+  'Anime': ['Sci-Fi', 'Fantasy', 'Action', 'Video Game Adaptation', 'IP Mashup'],
+  'Adult Animation': ['Comedy', 'Sci-Fi', 'Action', 'IP Mashup'],
+  'Reality Competition': ['Unscripted', 'Docuseries']
 };
 
 export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
@@ -162,4 +166,8 @@ export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
   'Psychological Thriller': 0.35,
   'True Crime': 0.60,
   'Docuseries': 0.20,
+  // 🌌 The Universe Builder: Modern trends fatigue risks.
+  'Anime': 0.10, // very low fatigue due to dedicated fanbase
+  'Adult Animation': 0.15,
+  'Reality Competition': 0.55, // burns out fast
 };

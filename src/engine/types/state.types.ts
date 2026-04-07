@@ -5,6 +5,7 @@ import { Project, Opportunity, GenreTrend, Award, FestivalSubmission, CriticCons
 import { RivalStudio, Buyer } from './studio.types';
 
 export interface CampaignData {
+  id: string; // 🌌 Standardized UUID for this campaign
   projectId: string;
   budget: number;
   targetCategories: string[];
@@ -13,6 +14,7 @@ export interface CampaignData {
 }
 
 export interface WeeklyFinancialReport {
+  id: string; // 🌌 Standardized UUID for this record
   week: number;
   year: number;
   startingCash: number;
@@ -32,6 +34,7 @@ export interface WeeklyFinancialReport {
 }
 
 export interface FinancialSnapshot {
+  id: string; // 🌌 Standardized UUID for this snapshot
   week: number;
   revenue: {
     theatrical: number;
