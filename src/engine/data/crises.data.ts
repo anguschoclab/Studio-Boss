@@ -2296,5 +2296,55 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
         reputationPenalty: 15
       }
     ]
+  },
+  // Added 'Massive CGI Asset Leak' crisis event with massive buzz penalty and cash hit.
+  {
+    id: 'massive_cgi_asset_leak',
+    description: "Hackers have leaked the raw, unrendered CGI assets for your flagship project, turning your menacing villain into a T-posing, textureless meme across the internet.",
+    options: [
+      {
+        text: "Rush out the actual trailer to combat the meme.",
+        effectDescription: "Costs $1.5M in expedited VFX rendering. Restores some prestige but ruins the marketing timeline.",
+        cashPenalty: 1500000,
+        reputationPenalty: 5
+      },
+      {
+        text: "Issue DMCA takedowns across all platforms.",
+        effectDescription: "The internet retaliates. You become the villain. Lose 30 buzz and 25 prestige.",
+        buzzPenalty: 30,
+        reputationPenalty: 25
+      },
+      {
+        text: "Lean into it. Sell T-posing merchandise.",
+        effectDescription: "Gains massive ironic buzz (+35) but absolutely torches the studio's prestige (-40).",
+        buzzPenalty: -35,
+        reputationPenalty: 40
+      }
+    ]
+  },
+  // Added 'A-Lister On-Set Feud' crisis event with heavy delays and buzz impact.
+  {
+    id: 'a_lister_onset_feud',
+    description: "Your two lead actors have developed an intense hatred for each other and now refuse to be on set at the same time, demanding all scenes be shot with body doubles and tennis balls.",
+    options: [
+      {
+        text: "Accommodate their insane demands.",
+        effectDescription: "Production crawls to a halt. Costs $2M in extra shooting days and delays by 4 weeks.",
+        cashPenalty: 2000000,
+        weeksDelay: 4
+      },
+      {
+        text: "Fire the instigator and recast immediately.",
+        effectDescription: "Costs $3M in contract buyouts and reshoots. Delays project by 3 weeks.",
+        cashPenalty: 3000000,
+        weeksDelay: 3
+      },
+      {
+        text: "Lock them in a room until they work it out.",
+        effectDescription: "They physically fight. The story leaks to the press. Gain +25 buzz but lose 20 prestige.",
+        buzzPenalty: -25,
+        reputationPenalty: 20
+      }
+    ]
   }
 ];
