@@ -2399,7 +2399,7 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
   },
   // The PR Spin Doctor: Added 'Social Media Manager Gone Rogue' crisis...
   {
-    id: 'CRS-9f8e7d6c-5b4a-3210-abcdef1234567890',
+    id: 'CRS-9f8e7d6c-5b4a-4210-8def-1234567890ab',
     description: "Your official studio social media manager accidentally posted a wildly inappropriate, profanity-laced tirade on the main account instead of their personal alt.",
     options: [
       {
