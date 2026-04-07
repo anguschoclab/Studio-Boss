@@ -36,8 +36,8 @@
 * Current focus is clearly expanding the Television ecosystem and network buyer behavior, providing seasonal rhythms (Week 20 Upfronts) and more granular project states (Pilots vs Series orders).
 
 #### 📖 Design Bible Alignment:
-* ✅ **Aligned:** The codebase now correctly simulates the TV buying cycle and episodic pickups (Section 13.2 Television Model, where TV involves 'network politics', 'episodes', and 'commissions'). The integration into `televisionTick` ensures a living TV market.
-* ⚠️ **Missing/Deviations:** While 'Upfronts' are successfully simulated mechanically, the master design bible does not explicitly use the term 'Upfronts' as a fixed week-20 event (though it mentions 'television buyer ecosystems' and 'pickup negotiations' in Section 13). The simulation also currently uses a simplified quality formula (`buzz * 0.4 + scriptHeat * 0.3 + momentum * 0.3`) rather than deeply querying the buyer's mandate or executive archetype mentioned in Section 13.31.5.
+* ✅ **Aligned:** The codebase now simulates the TV buying cycle and episodic pickups for the player (Section 13.2 Television Model). The integration into televisionTick provides a foundation for a living TV market.
+* ⚠️ **Missing/Deviations:** While Upfronts are simulated mechanically for the player, the system currently excludes rival studios. Additionally, the transition from IN_DEVELOPMENT to ON_AIR status is missing, preventing new pickups from airing. The simulation also uses a simplified quality formula ((buzz * 0.4 + scriptHeat * 0.3 + momentum * 0.3) + RNG) rather than deeply querying the buyer's mandate or executive archetype mentioned in Section 13.31.5.
 
 #### 📄 Proposed Documentation Updates:
 * `docs/television_mechanics.md`: Document the new `runUpfronts` mechanic, how it fires on week 20, and how project momentum/buzz convert to episode pickup orders.
