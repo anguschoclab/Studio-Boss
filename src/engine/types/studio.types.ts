@@ -73,6 +73,7 @@ export interface GameState {
   news: NewsState;
   ip: IPState;
   studio: {
+    id: string; // 🌌 Standardized UUID for the player studio
     name: string;
     archetype: ArchetypeKey;
     prestige: number;

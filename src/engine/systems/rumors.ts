@@ -12,14 +12,14 @@ export function advanceRumors(state: GameState, rng: RandomGenerator): StateImpa
     if (!r.resolved && state.week >= (r.resolutionWeek || state.week)) {
       if (r.truthful) {
         newHeadlines.push({
-          id: rng.uuid(`confirm-${r.id}-${state.week}`),
+          id: rng.uuid('NWS'),
           week: state.week,
           category: 'rumor',
           text: `CONFIRMED: ${r.text}`
         });
       } else {
         newHeadlines.push({
-          id: rng.uuid(`debunk-${r.id}-${state.week}`),
+          id: rng.uuid('NWS'),
           week: state.week,
           category: 'rumor',
           text: `DEBUNKED: Previous rumors regarding ${r.text.toLowerCase()} turn out to be false.`
@@ -73,7 +73,7 @@ export function advanceRumors(state: GameState, rng: RandomGenerator): StateImpa
     }
     
     const rumor: Rumor = {
-      id: rng.uuid('rumor'),
+      id: rng.uuid('RMR'),
       text,
       week: state.week,
       category,
@@ -85,7 +85,7 @@ export function advanceRumors(state: GameState, rng: RandomGenerator): StateImpa
     currentRumors.push(rumor);
     
     newHeadlines.push({
-      id: rng.uuid(`rumor-headline-${rumor.id}`),
+      id: rng.uuid('NWS'),
       week: state.week,
       category: 'rumor',
       text: `RUMOR: ${text}`
