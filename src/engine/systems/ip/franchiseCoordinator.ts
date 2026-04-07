@@ -86,7 +86,7 @@ export function calculateFranchiseEquity(
   }
   
   // 🌌 The Universe Builder: Curated Universe Premium.
-  if (assets.length >= 5 && franchise.activeProjectIds && franchise.activeProjectIds.length <= 2) {
+  if (assets.length >= 5 && franchise.activeProjectIds.length <= 2) {
     crossoverBonus += 0.30;
   }
 
