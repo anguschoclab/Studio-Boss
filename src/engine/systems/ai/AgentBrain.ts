@@ -99,11 +99,19 @@ export function generateFestivalBid(
     interest *= 1.5;
   }
 
+  // 🎭 The Method Actor Tuning: Award chasers overvalue high-review projects
+  if (rival.currentMotivation === 'AWARD_CHASE' && reviewScore > 75) {
+    interest *= 1.4;
+  }
+
   if (interest < 0.4) return null;
 
   let maxBidPct = (0.05 + (archetype.riskAppetite / 1000)); // riskier rivals bid more of their total cash
   if (rival.currentMotivation === 'FRANCHISE_BUILDING' && ['Sci-Fi', 'Action', 'Fantasy'].includes(project.genre)) {
     maxBidPct += 0.15; // aggressive outbidding
+  }
+  if (rival.currentMotivation === 'AWARD_CHASE' && reviewScore > 75) {
+    maxBidPct += 0.20; // aggressively overpay for prestige
   }
   const maxBid = rival.cash * maxBidPct;
   const bid = Math.round(project.budget * interest * rng.range(0.9, 1.6));

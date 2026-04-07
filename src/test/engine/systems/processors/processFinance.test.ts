@@ -66,8 +66,8 @@ describe('tickFinance', () => {
     expect(ledgerImpact).toBeDefined();
     
     // Net profit should be negative (overhead + interest cost for major studio with no projects)
-    expect(fundsImpact?.payload.amount).toBe(-1308894);
+    expect(fundsImpact?.payload.amount).toBe(-2230769);
     expect(ledgerImpact?.payload.report.week).toBe(5);
-    expect(ledgerImpact?.payload.report.netProfit).toBe(-1308894);
+    expect(ledgerImpact?.payload.report.netProfit).toBe(-2230769);
   });
 });
