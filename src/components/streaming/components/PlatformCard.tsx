@@ -77,14 +77,14 @@ export const PlatformCard: React.FC<PlatformCardProps> = ({ buyer, allBuyers, on
             </div>
           </TooltipWrapper>
           <div>
-            <h3 
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onViewHistory(buyer); } }}
-              className="font-display font-black text-[15px] tracking-tight text-foreground leading-tight group-hover:text-primary transition-colors cursor-pointer"
-              onClick={() => onViewHistory(buyer)}
-            >
-              {buyer.name}
+            <h3>
+              <button
+                type="button"
+                className="font-display font-black text-[15px] tracking-tight text-foreground leading-tight group-hover:text-primary transition-colors cursor-pointer text-left"
+                onClick={() => onViewHistory(buyer)}
+              >
+                {buyer.name}
+              </button>
             </h3>
             <div className="flex items-center gap-1.5 mt-1">
               <Badge variant="outline" className={cn("text-[9px] font-black tracking-widest uppercase px-1.5 py-0 h-4 border-none", config.bg, config.color)}>

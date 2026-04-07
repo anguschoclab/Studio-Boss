@@ -294,9 +294,10 @@ export const TalentModal = () => {
                           </p>
                           <div className="flex flex-wrap gap-2">
                             {familyMembers.slice(0, 4).map(member => (
-                              <div 
+                              <button
+                                type="button"
                                 key={member.id} 
-                                role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectTalent(member.id); } }} className="flex items-center gap-2 bg-amber-950/30 px-2 py-1.5 rounded-xl border border-amber-500/10 hover:border-amber-500/30 transition-colors cursor-pointer text-left"
+                                className="flex items-center w-full sm:w-auto gap-2 bg-amber-950/30 px-2 py-1.5 rounded-xl border border-amber-500/10 hover:border-amber-500/30 transition-colors cursor-pointer text-left"
                                 onClick={() => selectTalent(member.id)}
                               >
                                 <TalentAvatar talent={member} size="xs" className="border-amber-500/20" />
@@ -304,7 +305,7 @@ export const TalentModal = () => {
                                   <p className="text-[10px] font-bold text-amber-200 leading-tight">{member.name}</p>
                                   <p className="text-[8px] font-bold text-amber-500/50 uppercase">{member.roles[0]}</p>
                                 </div>
-                              </div>
+                              </button>
                             ))}
                           </div>
                         </div>

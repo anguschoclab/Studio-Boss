@@ -90,7 +90,7 @@ export const CreateProjectModal = () => {
               Title <span className="text-destructive">*</span>
             </Label>
             <div className="flex gap-2 group relative">
-              <Input id="project-title" required value={title} onChange={e => setTitle(e.target.value)} placeholder="Untitled Project" className="flex-1 font-display font-bold text-lg h-11 bg-background/50 border-border/50 focus-visible:ring-primary/50 transition-all shadow-inner" />
+              <Input id="project-title" required aria-label="Project Title" value={title} onChange={e => setTitle(e.target.value)} placeholder="Untitled Project" className="flex-1 font-display font-bold text-lg h-11 bg-background/50 border-border/50 focus-visible:ring-primary/50 transition-all shadow-inner" />
               <Button type="button" variant="outline" size="icon" onClick={() => setTitle(generateProjectTitle(genre))} title="Generate Random Title" aria-label="Generate Random Title" className="h-11 w-11 shrink-0 bg-background/50 hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-all shadow-sm">
                 <Dices className="h-5 w-5" />
               </Button>
@@ -280,7 +280,7 @@ export const CreateProjectModal = () => {
           {/* Flavor */}
           <div className="space-y-2">
             <Label htmlFor="project-flavor" className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground/80">Positioning <span className="text-muted-foreground/50 font-normal">(optional)</span></Label>
-            <Input id="project-flavor" value={flavor} onChange={e => setFlavor(e.target.value)} placeholder="A bold reimagining of..." className="bg-background/50 border-border/50 transition-all shadow-inner focus-visible:ring-primary/50" />
+            <Input id="project-flavor" aria-label="Project Positioning" value={flavor} onChange={e => setFlavor(e.target.value)} placeholder="A bold reimagining of..." className="bg-background/50 border-border/50 transition-all shadow-inner focus-visible:ring-primary/50" />
           </div>
         </div>
 

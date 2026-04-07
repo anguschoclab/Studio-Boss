@@ -205,16 +205,14 @@ export const DealsDesk = () => {
                   </div>
                 ) : (
                   pitchingProjects.map(p => (
-                    <div 
+                    <button
+                      type="button"
                       key={p.id} 
                       className={cn(
-                        "p-4 rounded-lg bg-white/5 border border-white/5 hover:border-primary/40 transition-all group cursor-pointer",
+                        "w-full text-left p-4 rounded-lg bg-white/5 border border-white/5 hover:border-primary/40 transition-all group cursor-pointer",
                         selectedProjectId === p.id && "border-primary bg-primary/5 shadow-[0_0_15px_rgba(var(--primary),0.1)]"
                       )}
-                      role="button" 
-                      tabIndex={0} 
                       onClick={() => setSelectedProjectId(p.id)} 
-                      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedProjectId(p.id); } }}
                     >
                       <div className={cn(
                         "text-[11px] font-black uppercase tracking-tight transition-colors truncate",
@@ -224,7 +222,7 @@ export const DealsDesk = () => {
                         <span className="text-[9px] uppercase text-muted-foreground/60 font-black tracking-widest">{p.genre}</span>
                         <Badge className="text-[9px] px-1.5 h-4 bg-primary/10 text-primary border-primary/20 font-black uppercase">{p.budgetTier}</Badge>
                       </div>
-                    </div>
+                    </button>
                   ))
                 )}
               </div>
