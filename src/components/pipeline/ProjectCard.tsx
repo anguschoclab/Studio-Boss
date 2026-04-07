@@ -81,7 +81,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
           {project.state !== 'archived' && (
             <TooltipWrapper tooltip="Market anticipation and social sentiment for this title." side="top">
               <div className="space-y-1">
-                <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground/80 group-hover:text-muted-foreground/80 transition-colors">
+                <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground/80">
                   <span className="flex items-center gap-1"><TrendingUp className="h-2.5 w-2.5 group-hover:text-secondary transition-colors" /> Market Buzz</span>
                   <span className="text-secondary drop-shadow-[0_0_8px_hsl(var(--secondary) / 0.6)] font-mono">{Math.round(project.buzz)}%</span>
                 </div>
