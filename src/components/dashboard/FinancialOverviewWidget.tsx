@@ -32,7 +32,7 @@ export const FinancialOverviewWidget: React.FC = () => {
   };
 
   return (
-    <Card className="col-span-1 lg:col-span-2 border border-white/10 bg-gradient-to-br from-card/80 via-card/60 to-card/40 backdrop-blur-3xl shadow-[0_16px_48px_rgba(0,0,0,0.5)] hover:border-white/30 hover:shadow-[0_24px_64px_rgba(0,0,0,0.6)] transition-all duration-700 relative overflow-hidden group h-full">
+    <Card aria-label="Financial Overview Chart" className="col-span-1 animate-in fade-in zoom-in-95 duration-700 lg:col-span-2 border border-white/10 bg-gradient-to-br from-card/80 via-card/60 to-card/40 backdrop-blur-3xl shadow-[0_16px_48px_rgba(0,0,0,0.5)] hover:border-white/30 hover:shadow-[0_24px_64px_rgba(0,0,0,0.6)] transition-all duration-700 relative overflow-hidden group h-full">
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080801a_1px,transparent_1px),linear-gradient(to_bottom,#8080801a_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none opacity-20 group-hover:opacity-40 transition-opacity duration-1000" />
       <div className="absolute -top-40 -right-40 w-[800px] h-[800px] bg-[hsl(var(--chart-2))]/10 rounded-full blur-[160px] pointer-events-none group-hover:bg-[hsl(var(--chart-2))]/20 transition-colors duration-1000 group-hover:scale-110" />
       <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay pointer-events-none" />
@@ -45,12 +45,12 @@ export const FinancialOverviewWidget: React.FC = () => {
             </div>
             <span className="group-hover:text-white transition-colors tracking-widest drop-shadow-md">Studio Valuation</span>
           </span>
-          <span className="text-[10px] px-3 py-1.5 rounded-md bg-black/60 font-mono tracking-[0.2em] border border-white/10 shadow-[inset_0_1px_4px_rgba(0,0,0,0.5)] text-white/70 backdrop-blur-md">LIVE</span>
+          <span className="text-[10px] px-3 py-1.5 rounded-md bg-black/60 font-mono tracking-[0.2em] border border-white/10 shadow-[inset_0_1px_4px_rgba(0,0,0,0.5)] text-foreground/90 backdrop-blur-md">LIVE</span>
         </CardTitle>
         <div className="text-7xl font-display font-black tracking-tighter mt-6 mb-2 bg-gradient-to-br from-white via-white/90 to-white/40 bg-clip-text text-transparent drop-shadow-[0_8px_24px_rgba(0,0,0,0.8)] group-hover:drop-shadow-[0_0_40px_rgba(255,255,255,0.4)] transition-all duration-700">
           {formatCurrency(finance.cash)}
         </div>
-        <CardDescription className="text-xs uppercase tracking-[0.2em] font-bold text-muted-foreground/60 group-hover:text-muted-foreground/90 transition-colors duration-500">
+        <CardDescription className="text-xs uppercase tracking-[0.2em] font-bold text-muted-foreground/80 group-hover:text-muted-foreground/90 transition-colors duration-500">
           12-Week Cash Flow Trend
         </CardDescription>
       </CardHeader>
