@@ -12,3 +12,6 @@
 ## 2024-05-24 - [Framerate Optimization: O(1) Dictionary Lookup for Object.values().forEach() iterations]
 **Learning:** Found O(n) array allocations happening inside hot tick loops via `Object.values(Record).forEach()`. This was generating thousands of temporary object wrappers and array elements causing severe GC overhead.
 **Action:** Replaced `Object.values(state.industry.talentPool).forEach(...)` inside `productionEngine.ts` tick with a raw `for...in` loop and `hasOwnProperty` guard, reducing GC pressure to near zero for that block.
+## 2026-04-06 - [Framerate Optimization: O(1) Dictionary Lookup for Object.values().forEach() iterations]
+**Learning:** Found unnecessary `Object.values(talentPool)` array allocations happening 6 times per tick inside hot paths like `projects.ts` when calling `TalentSystem.applyProjectResults`. This was generating temporary arrays of the entire talent pool just to perform a `Map` allocation for lookups, causing GC overhead and O(N) operations.
+**Action:** Refactored `TalentSystem.applyProjectResults` to accept `Record<string, Talent>` directly and use `O(1)` dictionary lookups. Eliminated `Object.values()` wrappers in `projects.ts`, reducing GC pressure and lookup time complexity from O(N) to O(1).
