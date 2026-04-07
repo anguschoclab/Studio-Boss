@@ -16,9 +16,9 @@ export function evaluatePackageOffer(
 ): { requiredTalentId?: string; packageDiscount?: number; reason: string } {
   const motivation = agency.currentMotivation || 'VOLUME_RETAIL';
   
-  // 🎭 Method Actor Tuning: Auteurs heavily mandate their own creative teams, effectively overriding agency norms.
+  // 🎭 The Method Actor Tuning: Auteurs heavily mandate their own creative teams, effectively overriding agency norms. Probability increased to 50%.
   const isAuteur = leadTalent.prestige > 85;
-  const packageProbability = motivation === 'THE_PACKAGER' ? 0.40 : (isAuteur ? 0.35 : 0.15);
+  const packageProbability = motivation === 'THE_PACKAGER' ? 0.40 : (isAuteur ? 0.50 : 0.15);
 
   if (rng.next() < packageProbability) {
     const otherClients = talentPool.filter(t => t.agencyId === agency.id && t.id !== leadTalent.id);
@@ -96,7 +96,7 @@ export function generateFestivalBid(
 
   // 🎭 The Method Actor Tuning: Adjusted AgentBrain to make rival studios aggressively outbid for IP.
   if (rival.currentMotivation === 'FRANCHISE_BUILDING' && ['Sci-Fi', 'Action', 'Fantasy'].includes(project.genre)) {
-    interest *= 1.5;
+    interest *= 1.6;
   }
 
   // 🎭 The Method Actor Tuning: Award chasers overvalue high-review projects
@@ -108,10 +108,10 @@ export function generateFestivalBid(
 
   let maxBidPct = (0.05 + (archetype.riskAppetite / 1000)); // riskier rivals bid more of their total cash
   if (rival.currentMotivation === 'FRANCHISE_BUILDING' && ['Sci-Fi', 'Action', 'Fantasy'].includes(project.genre)) {
-    maxBidPct += 0.15; // aggressive outbidding
+    maxBidPct += 0.25; // aggressive outbidding
   }
   if (rival.currentMotivation === 'AWARD_CHASE' && reviewScore > 75) {
-    maxBidPct += 0.20; // aggressively overpay for prestige
+    maxBidPct += 0.30; // aggressively overpay for prestige
   }
   const maxBid = rival.cash * maxBidPct;
   const bid = Math.round(project.budget * interest * rng.range(0.9, 1.6));
