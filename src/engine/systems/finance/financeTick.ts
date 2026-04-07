@@ -15,13 +15,14 @@ export function tickFinance(state: GameState, rng: RandomGenerator, pendingImpac
   // 1. Player Finance Tick
   const { report, snapshot } = generateWeeklyFinancialReport(
       state, 
-      'player', 
+      state.studio.id, // 🌌 Standardized ID
       state.entities.projects, 
       state.finance.cash, 
       state.studio.archetype, 
       state.studio.prestige, 
       contractsList, 
       state.studio.internal.firstLookDeals || [], 
+      rng, 
       pendingImpacts
   );
   
@@ -53,6 +54,7 @@ export function tickFinance(state: GameState, rng: RandomGenerator, pendingImpac
           rival.prestige,
           [], // Rivals don't use player contracts (simplified for now)
           [], // Rivals don't have pacts yet
+          rng,
           pendingImpacts
       );
 

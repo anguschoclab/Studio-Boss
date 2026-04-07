@@ -13,7 +13,8 @@ export function generateCrisis(project: Project, rng: RandomGenerator): StateImp
   if (!template) return null;
 
   const crisis: ActiveCrisis = {
-    crisisId: rng.uuid('crisis'),
+    id: rng.uuid('crisis-inst'), // 🌌 Unique instance ID
+    crisisId: template.id,       // 🌌 Refers back to template data
     triggeredWeek: 0, // Will be set by the coordinator or reducer
     haltedProduction: false,
     description: template.description,
