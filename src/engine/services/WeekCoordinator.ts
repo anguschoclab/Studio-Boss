@@ -141,6 +141,7 @@ export class WeekCoordinator {
 
     const projectsObj = state.entities.projects || {};
     for (const key in projectsObj) {
+      if (!Object.prototype.hasOwnProperty.call(projectsObj, key)) continue;
       const project = projectsObj[key];
 
       // 1. Script drafting and crisis triggering
