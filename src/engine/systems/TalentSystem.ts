@@ -153,12 +153,12 @@ export class TalentSystem {
 
     // ⚡ Bolt: Use direct O(1) dictionary lookup when a Record is passed to avoid O(N) array allocation.
     // Backward compatibility handles Array by building a temporary Map.
-    let getTalent: (id: string) => Talent | undefined;
-    if (Array.isArray(talentPool)) {
-      const talentPoolMap = new Map(talentPool.map(t => [t.id, t]));
-      getTalent = (id: string) => talentPoolMap.get(id);
-    } else {
-      getTalent = (id: string) => talentPool[id];
+    const isArray = Array.isArray(talentPool);
+    const talentPoolMap = isArray ? new Map<string, Talent>() : null;
+    if (isArray) {
+      for (const t of (talentPool as Talent[])) {
+        talentPoolMap!.set(t.id, t);
+      }
     }
 
     const totalCost = project.budget + (project.marketingBudget || 0);
