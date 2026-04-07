@@ -38,14 +38,28 @@ export const FinancePanel = () => {
 
   // Need entire gameState for complex calculations like Net Worth and Forecasts
   // but we extract it here to pass to memoized functions without triggering re-renders on the whole object
+  // ⚡ The Framerate Fanatic: Retrieve specific objects via useShallow, then useMemo to prevent recalculating on every state change.
+  // This prevents the component from re-rendering on every single tick (which updates gameState reference) and prevents selector execution overload.
+  const cashState = useGameStore(s => s.finance?.cash || 0);
+  const prestigeState = useGameStore(s => s.gameState?.studio?.prestige || 0);
+  const archetypeState = useGameStore(s => s.gameState?.studio?.archetype || 'major');
+  const marketState = useGameStore(useShallow(s => s.finance?.marketState));
+  const firstLookDeals = useGameStore(useShallow(s => s.gameState?.studio?.internal?.firstLookDeals || []));
+  const contracts = useGameStore(useShallow(s => s.gameState?.entities?.contracts || {}));
+  const vault = useGameStore(useShallow(s => s.gameState?.ip?.vault || []));
+  const buyersStore = useGameStore(useShallow(s => s.market?.buyers || []));
+  const gameSeed = useGameStore(s => s.gameState?.gameSeed || 0);
+  const week = useGameStore(s => s.gameState?.week || 0);
+  const studioId = useGameStore(s => s.gameState?.studio?.id || 'player');
+  // Need entire gameState to pass to calculate functions, but we memoize the derivation based on actual dependency variables.
   const fullGameState = useGameStore(s => s.gameState);
 
-  const weeklyCosts = useMemo(() => fullGameState ? calculateWeeklyCosts(fullGameState) : 0, [fullGameState]);
-  const weeklyRevenue = useMemo(() => fullGameState ? calculateWeeklyRevenue(fullGameState) : 0, [fullGameState]);
+  const weeklyCosts = useMemo(() => fullGameState ? calculateWeeklyCosts(fullGameState) : 0, [fullGameState?.entities?.projects, cashState, marketState, prestigeState, archetypeState, firstLookDeals]);
+  const weeklyRevenue = useMemo(() => fullGameState ? calculateWeeklyRevenue(fullGameState) : 0, [fullGameState?.entities?.projects, buyersStore]);
   const netDelta = useMemo(() => weeklyRevenue - weeklyCosts, [weeklyRevenue, weeklyCosts]);
   
-  const studioNetWorth = useMemo(() => fullGameState ? calculateStudioNetWorth(fullGameState) : 0, [fullGameState]);
-  const forecast = useMemo(() => fullGameState ? generateCashflowForecast(fullGameState, 12) : [], [fullGameState]);
+  const studioNetWorth = useMemo(() => fullGameState ? calculateStudioNetWorth(fullGameState) : 0, [cashState, vault, fullGameState?.entities?.projects]);
+  const forecast = useMemo(() => fullGameState ? generateCashflowForecast(fullGameState, 12) : [], [fullGameState?.entities?.projects, cashState, marketState, prestigeState, archetypeState, firstLookDeals, contracts, gameSeed, week, studioId]);
 
   const activeProjects = useMemo(() =>
     projectsMemo.filter(p => p.state === 'development' || p.state === 'production'),

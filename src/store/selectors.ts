@@ -31,6 +31,23 @@ const EMPTY_FINANCE: FinanceState = {
   } as MarketState
 };
 
+
+// ⚡ The Framerate Fanatic: Atomic selectors memoization cache
+// ⚡ The Framerate Fanatic: Two-level atomic selectors memoization cache
+const cache = new WeakMap<any, Map<string, any>>();
+
+function memoize<T extends object, R>(keyObj: T, selectorKey: string, compute: () => R): R {
+  let innerMap = cache.get(keyObj);
+  if (!innerMap) {
+    innerMap = new Map();
+    cache.set(keyObj, innerMap);
+  }
+  if (innerMap.has(selectorKey)) return innerMap.get(selectorKey);
+  const result = compute();
+  innerMap.set(selectorKey, result);
+  return result;
+}
+
 export const selectGameState = (state: GameState | null): GameState | null => state;
 
 export const selectStudio = (state: GameState | null) => state?.studio || null;
@@ -39,7 +56,8 @@ export const selectProjectsRaw = (state: GameState | null) => state?.entities.pr
 
 export const selectProjects = (state: GameState | null): Project[] => {
   const projects = selectProjectsRaw(state);
-  return Object.values(projects);
+  if (projects === EMPTY_PROJECTS) return EMPTY_ARRAY;
+  return memoize(projects, 'all', () => Object.values(projects));
 };
 
 export const selectFinance = (state: GameState | null) => state?.finance || EMPTY_FINANCE;
@@ -47,33 +65,47 @@ export const selectCash = (state: GameState | null) => selectFinance(state).cash
 
 export const selectIndustry = (state: GameState | null) => state?.industry || null;
 export const selectRivalsRaw = (state: GameState | null) => state?.entities.rivals || EMPTY_RIVALS;
-export const selectRivals = (state: GameState | null): RivalStudio[] => Object.values(selectRivalsRaw(state));
+export const selectRivals = (state: GameState | null): RivalStudio[] => {
+  const rivals = selectRivalsRaw(state);
+  if (rivals === EMPTY_RIVALS) return EMPTY_ARRAY;
+  return memoize(rivals, 'all', () => Object.values(rivals));
+};
 
 export const selectTalentPoolRaw = (state: GameState | null) => state?.entities.talents || EMPTY_TALENT_POOL;
-export const selectTalentPool = (state: GameState | null): Talent[] => Object.values(selectTalentPoolRaw(state));
+export const selectTalentPool = (state: GameState | null): Talent[] => {
+  const talents = selectTalentPoolRaw(state);
+  if (talents === EMPTY_TALENT_POOL) return EMPTY_ARRAY;
+  return memoize(talents, 'all', () => Object.values(talents));
+};
 
 export const selectActiveProjects = (state: GameState | null) => {
   const projects = selectProjectsRaw(state);
-  const arr: Project[] = [];
-  for (const key in projects) {
-    const p = projects[key];
-    if (p.state !== 'released' && p.state !== 'archived' && p.state !== 'post_release') {
-      arr.push(p);
+  if (projects === EMPTY_PROJECTS) return EMPTY_ARRAY;
+  return memoize(projects, 'active', () => {
+    const arr: Project[] = [];
+    for (const key in projects) {
+      const p = projects[key];
+      if (p.state !== 'released' && p.state !== 'archived' && p.state !== 'post_release') {
+        arr.push(p);
+      }
     }
-  }
-  return arr;
+    return arr;
+  });
 };
 
 export const selectReleasedProjects = (state: GameState | null) => {
   const projects = selectProjectsRaw(state);
-  const arr: Project[] = [];
-  for (const key in projects) {
-    const p = projects[key];
-    if (p.state === 'released' || p.state === 'post_release' || p.state === 'archived') {
-      arr.push(p);
+  if (projects === EMPTY_PROJECTS) return EMPTY_ARRAY;
+  return memoize(projects, 'released', () => {
+    const arr: Project[] = [];
+    for (const key in projects) {
+      const p = projects[key];
+      if (p.state === 'released' || p.state === 'post_release' || p.state === 'archived') {
+        arr.push(p);
+      }
     }
-  }
-  return arr;
+    return arr;
+  });
 };
 
 export const selectIsBankrupt = (state: GameState | null) => {

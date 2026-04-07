@@ -139,9 +139,10 @@ export class WeekCoordinator {
   private static runProductionFilter(state: GameState, context: TickContext) {
     context.impacts.push(...tickProduction(state, context.rng));
 
-    const projectList = Object.values(state.entities.projects);
-    for (let i = 0; i < projectList.length; i++) {
-      const project = projectList[i];
+    // ⚡ The Framerate Fanatic: Refactored Object.values() iteration to for...in loop, removing O(n) array allocation overhead per tick.
+    const projects = state.entities.projects;
+    for (const projectId in projects) {
+      const project = projects[projectId];
 
       // 1. Script drafting and crisis triggering
       if (project.state === 'development') {
@@ -328,12 +329,13 @@ export class WeekCoordinator {
    * Fires once per year (week % 52 === 0).
    */
   private static runAnnualMAScan(state: GameState, context: TickContext) {
-    const rivals = Object.values(state.entities.rivals);
-    for (let i = 0; i < rivals.length; i++) {
-      for (let j = 0; j < rivals.length; j++) {
-        if (i === j) continue;
-        const attacker = rivals[i];
-        const target = rivals[j];
+    // ⚡ The Framerate Fanatic: Refactored Object.values() iteration to for...in loop, removing O(n) array allocation overhead per tick.
+    const rivals = state.entities.rivals;
+    for (const attackerId in rivals) {
+      for (const targetId in rivals) {
+        if (attackerId === targetId) continue;
+        const attacker = rivals[attackerId];
+        const target = rivals[targetId];
         if (!target.isAcquirable) continue;
         if (shouldAttemptHostileTakeover(attacker, target, state)) {
           context.impacts.push({
@@ -372,7 +374,9 @@ export class WeekCoordinator {
     const newsEvents: import('../types/engine.types').NewsEvent[] = [];
     
     let ledgerImpact: StateImpact | undefined;
-    const projectUpdates: string[] = [];
+
+    // ⚡ The Framerate Fanatic: Replaced Array.push() with a Set to achieve O(1) deduplication instead of O(n) conversion at the end.
+    const projectUpdates = new Set<string>();
 
     for (let i = 0; i < context.impacts.length; i++) {
       const impact = context.impacts[i];
@@ -381,11 +385,11 @@ export class WeekCoordinator {
       
       if (impact.type === 'PROJECT_UPDATED') {
         const payload = impact.payload as import('../types/state.types').ProjectUpdate;
-        projectUpdates.push(payload.projectId);
+        projectUpdates.add(payload.projectId);
       }
       if (impact.projectUpdates) {
         for (let j = 0; j < impact.projectUpdates.length; j++) {
-          projectUpdates.push(impact.projectUpdates[j].projectId);
+          projectUpdates.add(impact.projectUpdates[j].projectId);
         }
       }
 
@@ -444,7 +448,7 @@ export class WeekCoordinator {
       cashAfter: after.finance.cash,
       totalRevenue,
       totalCosts,
-      projectUpdates: Array.from(new Set(projectUpdates)),
+      projectUpdates: Array.from(projectUpdates),
       newHeadlines: allHeadlines,
       events: eventTitles,
     };
