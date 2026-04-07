@@ -150,7 +150,7 @@ export function calculateReleaseGapImpact(
 
   // Soft Reboot (IP Retention)
   // 🌌 The Universe Builder: Soft reboots after a 5-year break can re-ignite IP.
-  if (yearsSince >= 5 && yearsSince < 7) {
+  if (yearsSince >= 5 && yearsSince < 6) {
     return {
       buzzBonus: 15,
       label: 'Soft Reboot (IP Retention)',
