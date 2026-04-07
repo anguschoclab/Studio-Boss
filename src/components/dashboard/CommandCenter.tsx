@@ -45,7 +45,7 @@ export const CommandCenter: React.FC = () => {
         
         <div className="flex flex-wrap gap-3 relative z-10">
           <div className="px-6 py-3 bg-card/60 backdrop-blur-xl rounded-2xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] flex flex-col items-end transition-all duration-500 hover:border-white/30 hover:bg-card/80 hover:-translate-y-1 group">
-            <span className="text-[10px] uppercase font-black text-muted-foreground/80 tracking-[0.25em] leading-none mb-1.5 group-hover:text-muted-foreground/80 transition-colors">Market Position</span>
+            <span className="text-[10px] uppercase font-black text-muted-foreground/80 tracking-[0.25em] leading-none mb-1.5">Market Position</span>
             <span className="text-base font-display font-black flex items-center gap-2 bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent drop-shadow-md">
               <Zap className="h-4 w-4 text-primary drop-shadow-[0_0_8px_hsl(var(--primary)_/_0.8)] group-hover:scale-110 transition-transform duration-300" />
               Tier 2 Studio
