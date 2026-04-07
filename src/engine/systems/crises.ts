@@ -13,7 +13,8 @@ export function generateCrisis(project: Project, rng: RandomGenerator): StateImp
   if (!template) return null;
 
   const crisis: ActiveCrisis = {
-    crisisId: rng.uuid('crisis'),
+    id: rng.uuid('crisis-inst'), // 🌌 Unique instance ID
+    crisisId: template.id,       // 🌌 Refers back to template data
     triggeredWeek: 0, // Will be set by the coordinator or reducer
     haltedProduction: false,
     description: template.description,
@@ -39,8 +40,8 @@ export function checkAndTriggerCrisis(project: Project, state: GameState, rng: R
   const studioProjectsCount = Object.keys(state.entities.projects || {}).length;
   const contractCount = Object.keys(state.entities.contracts || {}).length;
   // The PR Spin Doctor: Heavily scale crises with studio size
-  // Base 3% chance, plus 1.0% for every concurrent project and 0.5% for every contract
-  const baseChance = 0.03 + (studioProjectsCount * 0.010) + (contractCount * 0.005);
+  // Adjusted: Base 5% chance, plus 2.0% for every concurrent project and 1.0% for every contract
+  const baseChance = 0.05 + (studioProjectsCount * 0.020) + (contractCount * 0.010);
 
   if (rng.next() < baseChance) {
     return generateCrisis(project, rng);

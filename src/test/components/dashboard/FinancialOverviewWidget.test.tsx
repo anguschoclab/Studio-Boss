@@ -16,7 +16,8 @@ vi.mock('recharts', () => ({
   linearGradient: ({ children }: { children: React.ReactNode }) => <linearGradient>{children}</linearGradient>,
   filter: ({ children }: { children: React.ReactNode }) => <filter>{children}</filter>,
   feGaussianBlur: () => <feGaussianBlur />,
-  feComposite: () => <feComposite />
+  feComposite: () => <feComposite />,
+  CartesianGrid: () => <div data-testid="cartesian-grid" />
 }));
 
 // Mock the Chart components to avoid context errors
