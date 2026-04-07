@@ -85,6 +85,11 @@ export function calculateFranchiseEquity(
     }
   }
   
+  // 🌌 The Universe Builder: Curated Universe Premium.
+  if (assets.length >= 5 && franchise.activeProjectIds.length <= 2) {
+    crossoverBonus += 0.30;
+  }
+
   // 2. Format Diversity Multiplier
   const multiplier = franchise.synergyMultiplier;
   
@@ -158,6 +163,9 @@ export function updateFranchiseHub(state: GameState, project: Project, rng: Rand
       if (yearsSince >= 7 && (isBreakout || isPrestigeHit)) {
         updatedLoyalty = clamp(updatedLoyalty + 20, 0, 100);
         updatedSynergy = clamp(updatedSynergy + 0.5, 1.0, 3.0);
+      } else if (yearsSince >= 7 && !isBreakout && !isPrestigeHit) {
+        // 🌌 The Universe Builder: Failed legacy reboot damages the brand
+        updatedLoyalty = clamp(updatedLoyalty - 15, 0, 100);
       }
 
       updatedFranchises[franchiseId] = {

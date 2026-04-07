@@ -95,7 +95,8 @@ export const PREFIXES: string[] = [
   'Synergistically Aligned',
   'Market-Corrected',
   'Over-Budget',
-  'Reshot'
+  'Reshot',
+  'Algorithmically-Optimized', 'Focus-Tested', 'Boardroom-Approved', 'Micro-Targeted', 'Synergistically-Integrated', 'Venture-Backed', 'Uncancelled', 'Zero-Day', 'Four-Quadrant', 'Ghostwritten', 'CGI-Heavy', 'Defamatory', 'Risk-Averse', 'Franchise-Ready', 'Brand-Safe', 'Data-Mined', 'A/B-Tested', 'Demographically-Agnostic', 'Generative', 'Subprime'
 ];
 
 export const SUFFIXES: string[] = [
@@ -166,7 +167,8 @@ export const SUFFIXES: string[] = [
   'Demographic Targets',
   'Conglomerates',
   'Subsidiaries',
-  'Holding Companies'
+  'Holding Companies',
+  'Tax Shelters', 'Holding Corps', 'Mergers', 'Acquisitions', 'Offshore Accounts', 'Leveraged Buyouts', 'Data Lakes', 'Algorithm Farms', 'Content Pipelines', 'Synergy Hubs', 'Deliverables', 'Analytics Teams', 'Focus Groups', 'Market Research', 'Demographic Targets', 'Conglomerates', 'Subsidiaries', 'IP Vaults', 'Franchise Portfolios', 'Merchandising Wings'
 ];
 
 export const MOTTOS: string[] = [
@@ -258,7 +260,8 @@ export const MOTTOS: string[] = [
   'We spend more on catering than on the script.',
   'A proud subsidiary of an offshore tax shelter.',
   'We make the movies that play in the background at the dentist.',
-  'Quantity is our only quality.'
+  'Quantity is our only quality.',
+  'We don\'t make art, we make Q3 projections.', 'Your childhood, optimized for shareholder value.', 'Replacing creativity with data since 2025.', 'We own the rights, you own the subscription.', 'Every frame a focus group.', 'If it\'s not a cinematic universe, it\'s not cinema.', 'Lowering the bar so you don\'t have to.', 'We pivot to whatever the algorithm demands.', 'Art is dead, content is forever.', 'We don\'t make films, we make intellectual property.', 'Your screen time is our bottom line.', 'Monetizing your attention span since Q1.', 'Because focus groups are cheaper than writers.', 'Synergy is our middle name.', 'Building cinematic universes out of public domain IP.', 'Don\'t worry, we\'ll fix the script in post-production.', 'Maximizing ROI through aggressive merchandising.', 'We are legally obligated to maximize shareholder value.', 'Where the IP never dies, it just gets rebooted.'
 ];
 
 export const MALE_FIRST_NAMES: string[] = [
