@@ -110,6 +110,12 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
       // 🎭 Method Actor Tuning: Auteur directors heavily favor prestige, demanding massive premiums if the studio lacks it, but will accept major discounts for highly prestigious studios.
       const isAuteur = target.prestige > 85;
       const prestigeDelta = target.prestige - rival.prestige;
+
+      // 🎭 The Method Actor Tuning: Auteurs heavily favor prestige. They will flat-out reject low prestige studios unless they are money grabbers.
+      if (isAuteur && prestigeDelta > 30 && target.currentMotivation !== 'MONEY_GRABBER') {
+          return;
+      }
+
       let prestigePenalty = 0;
       if (isAuteur) {
         if (prestigeDelta > 10) {
@@ -179,9 +185,22 @@ export function calculateLiveCounterBid(
   const multiplier = ArchetypeMultipliers[rival.archetype]?.(opportunity.genre) || 1.1;
   const reactionThreshold = 0.3;
   
-  if (rng.next() < reactionThreshold) {
-    const counterAmount = Math.floor(playerBid * rng.range(1.05, 1.15) * multiplier);
-    if (counterAmount < rival.cash * 0.4) {
+  // 🎭 The Method Actor Tuning: Adjust reaction thresholds and multipliers based on motivation
+  let adjustedThreshold = reactionThreshold;
+  let adjustedMultiplier = multiplier;
+  if (rival.currentMotivation === 'AWARD_CHASE' && (opportunity.genre === 'Drama' || opportunity.genre === 'Historical')) {
+    adjustedThreshold += 0.2;
+    adjustedMultiplier *= 1.3;
+  }
+  if (rival.currentMotivation === 'FRANCHISE_BUILDING' && (opportunity.genre === 'Sci-Fi' || opportunity.genre === 'Action' || opportunity.genre === 'Fantasy')) {
+    adjustedThreshold += 0.25;
+    adjustedMultiplier *= 1.4;
+  }
+
+  if (rng.next() < adjustedThreshold) {
+    const counterAmount = Math.floor(playerBid * rng.range(1.05, 1.15) * adjustedMultiplier);
+    const cashLimit = rival.currentMotivation === 'FRANCHISE_BUILDING' ? 0.6 : 0.4;
+    if (counterAmount < rival.cash * cashLimit) {
       return {
         type: 'OPPORTUNITY_UPDATED',
         payload: {

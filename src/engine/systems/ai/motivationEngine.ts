@@ -8,7 +8,7 @@ import { RandomGenerator } from '../../utils/rng';
 const MotivationScores: Record<StudioMotivation, (rival: RivalStudio, state: GameState) => number> = {
   // 🎭 Method Actor Tuning: Adjusted motivation scores to create more emergent and realistic studio behavior.
   CASH_CRUNCH: (rival) => (rival.cash < 1000000 ? 100 : 0),
-  AWARD_CHASE: (rival) => (rival.prestige < 60 && rival.cash > 5000000 ? 95 : (rival.prestige > 80 ? 85 : 30)),
+  AWARD_CHASE: (rival) => (rival.prestige < 60 && rival.cash > 5000000 ? 95 : (rival.prestige > 80 ? 85 : 30)) + (rival.motivationProfile.prestige > 70 ? 20 : 0),
   FRANCHISE_BUILDING: (rival) => {
     let score = rival.cash > 4000000 && Object.keys(rival.projects).length < 2 ? 100 : (Object.keys(rival.projects).length > 4 ? 80 : 40);
     // 🎭 Method Actor Tuning: Adjusted AgentBrain to prioritize franchise potential by 20% when the rival studio cash reserves are low.
@@ -17,7 +17,7 @@ const MotivationScores: Record<StudioMotivation, (rival: RivalStudio, state: Gam
     }
     return score;
   },
-  MARKET_DISRUPTION: (rival) => (rival.motivationProfile.aggression > 75 && rival.cash > 2000000 ? 85 : 15),
+  MARKET_DISRUPTION: (rival) => (rival.motivationProfile.aggression > 75 && rival.cash > 2000000 ? 85 : 15) + (rival.motivationProfile.aggression > 80 && rival.cash > 10000000 ? 20 : 0),
   STABILITY: (rival) => (rival.cash >= 1000000 && rival.cash <= 3000000 ? 60 : 10),
 };
 

@@ -22,65 +22,65 @@ export interface TvFormatTaxonomyItem {
 
 export const TV_FORMAT_TAXONOMY: TvFormatTaxonomyItem[] = [
   {
-    id: 'comedy',
+    id: 'FRM-4699bd27-e511-e44c-f049-add1f162',
     name: 'Comedy',
     formats: ['sitcom', 'sketch_comedy', 'animated_comedy', 'satirical_comedy', 'workplace_comedy', 'mockumentary', 'workplace_mockumentary', 'retro_sitcom', 'spy_comedy', 'high_concept_comedy', 'docu_comedy', 'sports_comedy', 'vampire_sitcom', 'fantasy_workplace_comedy', 'satirical_news_show']
   },
   {
-    id: 'drama',
+    id: 'FRM-f07cedac-9b8e-99a4-57ef-4ae8b62d',
     name: 'Drama',
     formats: ['procedural', 'prestige_drama', 'limited_series', 'prestige_limited_series', 'teen_drama', 'historical_drama', 'medical_procedural', 'legal_drama', 'family_drama', 'neo_western', 'daytime_soap', 'telenovela', 'musical_dramedy', 'dark_academia', 'music_industry_drama', 'prestige_biopic', 'historical_romance', 'teen_mystery_box']
   },
   {
-    id: 'thriller_crime',
+    id: 'FRM-3c36ded0-484e-afc3-3ac6-22f5db28',
     name: 'Thriller & Crime',
     formats: ['espionage_thriller', 'mystery_box', 'political_thriller', 'binge_thriller', 'international_thriller', 'heist_thriller', 'dark_comedy_thriller', 'workplace_thriller', 'neo_noir_procedural', 'true_crime_dramatization', 'true_crime_miniseries', 'erotic_thriller']
   },
   {
-    id: 'scifi_fantasy',
+    id: 'FRM-9932bb3e-6c85-8db2-4e52-a8dcbabc',
     name: 'Sci-Fi & Fantasy',
     formats: ['sci_fi_epic', 'fantasy_epic', 'cyberpunk_dystopia', 'space_opera', 'high_fantasy_epic', 'tech_dystopia', 'sci_fi_noir', 'scifi_procedural', 'retro_sci_fi', 'cyberpunk_anime', 'cyberpunk_satire', 'steampunk_fantasy', 'space_western', 'sci_fi_anthology', 'fantasy_prequel', 'multiverse_anthology', 'time_travel_romance', 'mecha_anime']
   },
   {
-    id: 'horror_supernatural',
+    id: 'FRM-36016f89-2533-2bd4-1e35-8b380772',
     name: 'Horror & Supernatural',
     formats: ['vampire_romance', 'zombie_apocalypse', 'gothic_horror', 'paranormal_romance', 'supernatural_teen_drama', 'supernatural_procedural', 'prestige_horror_anthology', 'post_apocalyptic_survival']
   },
   {
-    id: 'action_military',
+    id: 'FRM-40413b8c-6323-1080-824d-e6dc697f',
     name: 'Action & Military',
     formats: ['superhero_serial', 'superhero_origin', 'superhero_teamup', 'superhero_parody', 'military_action', 'action_comedy', 'western_procedural']
   },
   {
-    id: 'animation',
+    id: 'FRM-e3e052db-2a4a-6a09-1ea6-c1e802b8',
     name: 'Animation',
     formats: ['animated_comedy', 'animated_prestige', 'adult_animation', 'cyberpunk_anime', 'sports_anime', 'live_action_anime']
   },
   {
-    id: 'anthology_limited',
+    id: 'FRM-a223eba8-3b32-fc5a-8159-d15d4cd6',
     name: 'Anthology & Limited',
     formats: ['anthology_series', 'limited_series', 'prestige_limited_series', 'sci_fi_anthology', 'prestige_horror_anthology', 'holiday_miniseries', 'true_crime_miniseries', 'micro_series']
   },
   {
-    id: 'variety_talk',
+    id: 'FRM-c9cdd78a-388f-b2b5-8d7e-de0e0b87',
     name: 'Variety & Talk',
     formats: ['late_night_talk', 'sketch_comedy', 'sketch_show_revival', 'satirical_news', 'satirical_news_show', 'standup_comedy_series', 'musical_competition', 'cooking_showdown', 'interactive_special', 'live_event_series']
   },
   {
-    id: 'sports',
+    id: 'FRM-5f11f0da-da72-b9bb-fbfe-78ca3183',
     name: 'Sports',
     formats: ['sports_drama', 'sports_comedy', 'sports_docudrama', 'sports_anime', 'sports_soap_opera']
   },
   {
-    id: 'historical',
+    id: 'FRM-1a2325e6-e0e1-e73a-704c-c7f1e093',
     name: 'Historical & Period',
     formats: ['historical_drama', 'historical_fiction_epic', 'historical_romance', 'historical_heist', 'docudrama']
   },
   {
-    id: 'trending_niche',
+    id: 'FRM-26e36d8a-7a2b-e8f6-1091-744012e8',
     name: 'Trending & Niche',
     formats: ['k_drama_adaptation', 'foreign_language_hit', 'nostalgia_reunion', 'gritty_reboot', 'franchise_spinoff', 'vr_immersive_show', 'musical_soap', 'post_apocalyptic_soap', 'true_crime_spoof']
-  }
+  },
 ];
 
 export const TV_FORMATS: Record<TvFormatKey, TvFormatData> = {
