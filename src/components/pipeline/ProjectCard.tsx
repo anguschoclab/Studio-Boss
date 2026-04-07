@@ -101,7 +101,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
           {(project.state === 'development' || project.state === 'production') && (
             <TooltipWrapper tooltip={`Current Phase: ${project.state.toUpperCase()}. Progress tracks estimated time to completion.`} side="top">
               <div className="space-y-1">
-                <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground/80 group-hover:text-muted-foreground/80 transition-colors">
+                <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground/80">
                   <span className="flex items-center gap-1"><Activity className={cn("h-2.5 w-2.5 transition-colors", hasUnresolvedCrisis ? "group-hover:text-destructive" : "group-hover:text-primary")} /> {project.state.replace('_', ' ')}</span>
                   <span className="font-mono">{project.weeksInPhase}/{project.state === 'development' ? project.developmentWeeks : project.productionWeeks}w</span>
                 </div>
