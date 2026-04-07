@@ -43,7 +43,13 @@ const GENRE_PATTERNS: Record<string, string[][]> = {
     ['Project', 'ADJECTIVE', 'Zero'],
     ['Operation', 'NOUN', 'Drop'],
     ['The', 'NOUN', 'Syndicate'],
-    ['Deadly', 'NOUN']
+    ['Deadly', 'NOUN'],
+    ['The', 'IP', 'Re-acquisition'],
+    ['Project', 'Synergy'],
+    ['ADJECTIVE', 'Franchise Fatigue'],
+    ['The', 'Generative', 'Prompt'],
+    ['Algorithm', 'Spike'],
+    ['Tax Shelter', 'Zero']
   ],
   Comedy: [
     ['The', 'ADJECTIVE', 'NOUN'],
@@ -73,7 +79,11 @@ const GENRE_PATTERNS: Record<string, string[][]> = {
     ['Notes App', 'Apology'],
     ['Ratioed in', 'PLACE'],
     ['Main Character', 'Energy'],
-    ['Chronically', 'ADJECTIVE']
+    ['Chronically', 'ADJECTIVE'],
+    ['The', 'Notes App', 'Apology'],
+    ['Cancel', 'the', 'Algorithm'],
+    ['Focus Group', 'Disaster'],
+    ['Accidentally', 'Corporate-Mandated']
   ],
   Drama: [
     ['The', 'NOUN', 'of', 'NAME'],
@@ -117,7 +127,11 @@ const GENRE_PATTERNS: Record<string, string[][]> = {
     ['Unspoken', 'NOUN'],
     ['The', 'NOUN', 'Divide'],
     ['Beneath the', 'NOUN'],
-    ['The', 'ADJECTIVE', 'Truth']
+    ['The', 'ADJECTIVE', 'Truth'],
+    ['The', 'Nepo Baby', 'Dilemma'],
+    ['Portrait of a', 'Subprime', 'CEO'],
+    ['Quarterly Earnings', 'and', 'Men'],
+    ['The', 'Engagement Metric']
   ],
   Horror: [
     ['The', 'NOUN', 'in the', 'PLACE'],
@@ -148,7 +162,11 @@ const GENRE_PATTERNS: Record<string, string[][]> = {
     ['The', 'NOUN', 'Paradox'],
     ['Analog', 'NOUN'],
     ['Liminal', 'PLACE'],
-    ['The', 'NOUN', 'Project']
+    ['The', 'NOUN', 'Project'],
+    ['The', 'A24-style', 'Nightmare'],
+    ['The', 'Post-Modern', 'Curse'],
+    ['Focus-Tested', 'Terror'],
+    ['The', 'IP-Harvested', 'Entity']
   ],
   'Sci-Fi': [
     ['Project', 'NOUN'],
@@ -189,7 +207,11 @@ const GENRE_PATTERNS: Record<string, string[][]> = {
     ['The', 'NOUN', 'Directive'],
     ['Ghosts in the', 'NOUN'],
     ['The', 'NOUN', 'Anomaly'],
-    ['Virtual', 'NOUN']
+    ['Virtual', 'NOUN'],
+    ['The', 'Generative', 'Frontier'],
+    ['Beyond the', 'Crypto Wallet'],
+    ['The', 'Algorithm', 'Spike'],
+    ['Escape from', 'Tax Shelter']
   ],
   Thriller: [
     ['The', 'ADJECTIVE', 'NOUN'],
@@ -348,7 +370,8 @@ const WORDS: Record<string, string[]> = {
     'Crypto-Backed',
     'Generative-AI',
     'Derivative',
-    'Un-Unionized'
+    'Un-Unionized',
+    'Demographically-Optimized', 'Aggressively-Bland', 'Corporate-Mandated', 'IP-Harvested', 'Synergistically Aligned', 'A24-style', 'Post-Modern', 'Algorithmic', 'Leveraged', 'Asset-Backed', 'Over-Indexed', 'Pre-Packaged', 'Demographic-Agnostic', 'Cross-Platform', 'Syndication-Ready', 'Merchandisable', 'Franchisable', 'Machine-Learned', 'Data-Scraped', 'A.I. Generated', 'Subprime'
   ],
   NOUN: ['Shadow', 'Mirror', 'Ghost', 'Knight', 'City', 'Storm', 'Weapon', 'Target', 'Agent', 'Game', 'House', 'Night', 'Day', 'Star', 'Dream', 'Heart', 'World', 'Man', 'Woman', 'Boy', 'Girl', 'Multiverse', 'Franchise', 'Content', 'Algorithm', 'Meme', 'Podcast', 'Trauma', 'Nepotism', 'Vibe', 'Aesthetic', 'Metaverse', 'Crypto', 'Grifter', 'Situationship', 'IP', 'Recon', 'Extraction', 'Payload', 'Objective', 'Bounty', 'Crossfire', 'Infiltration', 'Exfiltration', 'Takeover', 'Lockdown', 'Overdrive', 'Showdown', 'Blowback', 'Backlash', 'Flashpoint', 'Ground Zero', 'Vanguard', 'Sentinel', 'Outpost', 'Stronghold', 'Influencer', 'Streamer', 'Vlogger', 'Viral', 'Trending', 'Cancel Culture', 'Scam', 'Hustle', 'Flex', 'Clout', 'Drip', 'Mood', 'Energy', 'Synergy', 'Deepfake', 'Blockbuster', 'CGI', 'PR Crisis', 'Apology Video', 'Subtweet', 'Ratio', 'Oscars Bait', 'Method Acting', 'Tax Write-Off', 'Hedge Fund', 'CGI Mush', 'Neomaximalism', 'Engagement Metric', 'Retention Rate', 'Shell Company', 'Tax Haven', 'LLM', 'Zero-Day', 'Psy-Op', 'Astroturf', 'Focus Group', 'NDA', 'Clickfarm', 'Content Farm', 'Brand Deal',
     'Brand Ecosystem', 'Content Silo', 'Monetization Strategy', 'Value Extraction', 'Strategic Asset', 'Content Portfolio', 'Franchise Management', 'Demographic Target', 'Quarterly Earnings', 'Shareholder Meeting', 'Boardroom Coup', 'Hostile Takeover', 'Merger and Acquisition', 'Tax Loophole', 'NDA Violation', 'PR Spin', 'Damage Control', 'Focus Group Feedback', 'Audience Retention', 'CGI Void', 'Post-Credit Scene', 'Cinematic Universe', 'Merchandising Rights', 'Test Audience', 'Algorithm Spike', 'A.I. Artifact', 'Studio Mandate', 'Box Office Flop', 'Tax Shelter',
@@ -375,7 +398,8 @@ const WORDS: Record<string, string[]> = {
     'Deepfake',
     'Metaverse Property',
     'NFT Collection',
-    'Streaming Service'
+    'Streaming Service',
+    'Franchise Fatigue', 'IP Re-acquisition', 'Generative Prompt', 'Algorithm Spike', 'Tax Shelter', 'Focus Group', 'Subprime', 'Crypto Wallet', 'Quarterly Earnings', 'Engagement Metric', 'Deliverable', 'Merger', 'Acquisition', 'Metrics', 'Analytics', 'Demographics', 'Synergies', 'Pipelines', 'Ecosystem', 'Portfolio', 'Asset', 'Web3 Venture', 'Metaverse Property', 'NFT Collection', 'Deepfake'
   ],
   VERB: ['Die', 'Run', 'Shoot', 'Hide', 'Seek', 'Find', 'Kill', 'Save', 'Love', 'Kiss', 'Dance', 'Sing', 'Fly', 'Fall', 'Cancel', 'Reboot', 'Swipe', 'Ghost', 'Stream', 'Hack', 'Leak', 'Trend', 'Post', 'Upload', 'Download', 'Share', 'Like', 'Subscribe', 'Follow', 'Unfollow', 'Block', 'Mute', 'Report', 'Ban', 'Doxx', 'Gaslight', 'Girlboss', 'Gatekeep', 'Manifest', 'Vibe', 'Monetize', 'Synergize', 'Focus-Group', 'Test-Screen', 'A/B Test', 'Ratio', 'Doxx', 'Subtweet', 'Launder', 'Shelve', 'Pivot', 'Astroturf', 'Outsource',
     'Gamify', 'Syndicate', 'Cross-Promote', 'Divest', 'Liquidate', 'Acquire', 'Merchandize', 'Astroturf', 'Greenwash', 'Pinkwash', 'Retcon', 'Gaslight', 'Girlboss', 'Gatekeep',

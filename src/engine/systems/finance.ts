@@ -1,4 +1,5 @@
 import { Project, GameState, WeeklyFinancialReport, Buyer, Contract, TalentPact } from '@/engine/types';
+import { RandomGenerator } from '../utils/rng';
 import { StateImpact, FinancialSnapshot } from '../types/state.types';
 import { RevenueProcessor } from './finance/RevenueProcessor';
 import { ExpenseProcessor } from './finance/ExpenseProcessor';
@@ -43,6 +44,7 @@ export function generateWeeklyFinancialReport(
   studioPrestige: number,
   contracts: Contract[],
   pacts: TalentPact[],
+  rng: RandomGenerator, // 🌌 Added for deterministic ID generation
   pendingImpacts: StateImpact[] = []
 ): { report: WeeklyFinancialReport; snapshot: FinancialSnapshot } {
   const projects = Object.values(projectsMap || {});
@@ -97,6 +99,7 @@ export function generateWeeklyFinancialReport(
                   - (expenses.production + expenses.marketing + expenses.overhead + expenses.pacts + totalRoyalties + (expenses.interest > 0 ? expenses.interest : 0));
 
   const report: WeeklyFinancialReport = {
+    id: rng.uuid('fin-rep'), // 🌌 Standardized UUID
     week: state.week,
     year: Math.floor((state.week - 1) / 52) + 1,
     startingCash: studioCash,
@@ -116,6 +119,7 @@ export function generateWeeklyFinancialReport(
   };
 
   const snapshot: FinancialSnapshot = {
+    id: rng.uuid('fin-snap'), // 🌌 Standardized UUID
     week: state.week,
     revenue: {
       theatrical: boxOffice,
@@ -168,8 +172,8 @@ export function calculateWeeklyRevenue(state: GameState): number {
   projects.forEach(p => {
     if (p.state === 'released') {
       if (p.distributionStatus === 'theatrical') {
-        // The Studio Comptroller: Increased marketing decay by 12% to simulate modern front-loaded box office drops.
-        boxOffice += RevenueProcessor.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.47, p.isCultClassic);
+        // The Studio Comptroller: Synchronized theatrical decay rate to 0.30 to simulate ruthless modern front-loaded box office drops.
+        boxOffice += RevenueProcessor.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.30, p.isCultClassic);
       } else if (p.distributionStatus === 'streaming') {
         const platform = p.buyerId ? buyersMap.get(p.buyerId) : undefined;
         if (platform) {
@@ -185,13 +189,15 @@ export function calculateWeeklyRevenue(state: GameState): number {
 export function generateCashflowForecast(state: GameState, weeks: number = 12): { week: number; projected: number }[] {
   const { report } = generateWeeklyFinancialReport(
       state, 
-      'player', 
+      state.studio.id, // 🌌 Refactored from 'player'
       state.entities.projects, 
       state.finance.cash, 
       state.studio.archetype, 
       state.studio.prestige, 
       Object.values(state.entities.contracts || {}), 
-      state.studio.internal.firstLookDeals || []
+      state.studio.internal.firstLookDeals || [],
+      new RandomGenerator(state.gameSeed + state.week), // 🌌 Seeded RNG for forecast reports
+      []
   );
   const netProfit = report.netProfit;
   

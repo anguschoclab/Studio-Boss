@@ -13,6 +13,7 @@ import { Talent, TalentPact, StreamerPlatform, Buyer, StudioMotivation, Contract
 
 export function initializeGame(studioName: string, archetype: ArchetypeKey, seed: number): GameState {
   const rng = new RandomGenerator(seed);
+  const playerStudioId = rng.uuid('player'); // 🌌 Standardized player ID
   const arch = ARCHETYPES[archetype];
   const rivalArchetypes: ArchetypeKey[] = ['major', 'mid-tier', 'indie'];
   const usedNames = new Set<string>([studioName]);
@@ -160,7 +161,7 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
       archetype: 'streamer',
       foundedWeek: 1,
       parentBrand: playerBrand.core,
-      ownerId: 'player',
+      ownerId: playerStudioId,
       subscribers: archetype === 'major' ? 25_000_000 : 10_000_000,
       churnRate: 0.05,
       contentLibraryQuality: 60,
@@ -234,6 +235,7 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
       franchises: {},
     },
     studio: {
+      id: playerStudioId,
       name: studioName,
       archetype,
       prestige: arch.startingPrestige,

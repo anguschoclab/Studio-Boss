@@ -18,8 +18,8 @@ export const OpportunityCard = ({ opportunity: opp, onEnterAuction }: Opportunit
   
   return (
     <TooltipWrapper tooltip="View Opportunity Details & Bid History" side="top">
-      <div role="button" tabIndex={0} onClick={onEnterAuction} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onEnterAuction(); } }} className="glass-panel p-6 rounded-2xl group relative overflow-hidden flex flex-col justify-between h-full border border-white/5 hover:border-amber-500/20 hover:bg-amber-500/3 transition-all duration-500 cursor-pointer active:scale-[0.99] text-left">
-        <div className="absolute top-0 right-0 p-3 opacity-20 group-hover:opacity-100 transition-opacity">
+      <button onClick={onEnterAuction} className="w-full text-left glass-panel p-6 rounded-2xl group relative overflow-hidden flex flex-col justify-between h-full border border-white/5 hover:border-amber-500/20 hover:bg-amber-500/3 transition-all duration-500 cursor-pointer active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/50">
+        <div className="absolute top-0 right-0 p-3 opacity-20 group-hover:opacity-100 transition-opacity pointer-events-none">
            <Gavel className="w-5 h-5 text-amber-500" />
         </div>
 
@@ -96,7 +96,7 @@ export const OpportunityCard = ({ opportunity: opp, onEnterAuction }: Opportunit
             Enter War
           </Button>
         </div>
-      </div>
+      </button>
     </TooltipWrapper>
   );
 };
