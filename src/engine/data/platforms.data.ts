@@ -16,7 +16,7 @@ export const PLATFORMS_REGISTRY: PlatformData[] = [
     archetype: 'streamer',
     baseMarketShare: 0.22,
     reach: 85,
-    description: 'The incumbent global leader, now facing fierce subscriber churn in the cutthroat streaming wars as audiences demand consistent season-over-season quality.'
+    description: 'The incumbent global leader, now facing fierce subscriber churn in the cutthroat streaming wars as audiences demand consistent season-over-season quality and 100-episode syndication hits.'
   },
   {
     id: 'plat-4d8e5f2b-1a6c-4b3d-98e7-f1c9d2b3e4f5',
@@ -48,6 +48,6 @@ export const PLATFORMS_REGISTRY: PlatformData[] = [
     archetype: 'streamer',
     baseMarketShare: 0.38,
     reach: 98,
-    description: 'A ruthless corporate titan aggressively outspending rivals to monopolize watch time, known for instantly canceling expensive shows that flatline.'
+    description: 'A ruthless corporate titan aggressively outspending rivals to monopolize watch time, known for instantly canceling expensive shows that flatline and focusing on high-retention syndication deals.'
   }
 ];
