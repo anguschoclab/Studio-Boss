@@ -178,7 +178,7 @@ export class TalentSystem {
     const updatedTalent: Talent[] = [];
 
     for (const contract of contracts) {
-      const talent = getTalent(contract.talentId);
+      const talent = talentPoolMap ? talentPoolMap.get(contract.talentId) : (talentPool as Record<string, Talent>)[contract.talentId];
       if (!talent) continue;
 
       let talentAwardsDrawBonus = 0;
