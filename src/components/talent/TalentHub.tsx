@@ -113,6 +113,7 @@ export const TalentHub = () => {
               <Input
                 aria-label="Search SBDB"
                 placeholder="Search SBDB..."
+                aria-label="Search SBDB"
                 className="pl-10 bg-muted/30 border-border/40"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}

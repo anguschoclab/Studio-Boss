@@ -48,6 +48,7 @@ export const TalentPanel = () => {
             <Input 
               aria-label="Search talent"
               placeholder="Search talent..." 
+              aria-label="Search talent"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-9 h-9 text-xs bg-muted/20 border-border/40 focus:ring-primary/20"
