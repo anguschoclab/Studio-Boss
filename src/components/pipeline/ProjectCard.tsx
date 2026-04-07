@@ -194,7 +194,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
             </Button>
           )}
         </div>
-      </button>
+      </div>
     </TooltipWrapper>
   );
 };
