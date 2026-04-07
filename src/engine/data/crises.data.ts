@@ -2346,5 +2346,80 @@ export const CRISIS_POOLS: CrisisTemplate[] = [
         reputationPenalty: 20
       }
     ]
+  },
+  // The PR Spin Doctor: Added 'Method Actor Gone Too Far' crisis...
+  {
+    id: 'CRS-52f1b4a9-7c8d-4e9f-81b2-13c5f6a9e1d7',
+    description: "Your lead star has taken 'method acting' too far, living as a 19th-century pirate off-set and biting an executive at a recent marketing meeting.",
+    options: [
+      {
+        text: "Publicly support their dedication to the craft.",
+        effectDescription: "The public finds it pretentious. Lose 25 prestige and 15 buzz.",
+        reputationPenalty: 25,
+        buzzPenalty: 15
+      },
+      {
+        text: "Force them into immediate therapy.",
+        effectDescription: "Costs $500k in discrete therapy and delays production by 2 weeks.",
+        cashPenalty: 500000,
+        weeksDelay: 2
+      },
+      {
+        text: "Leak the bite video to a tabloid.",
+        effectDescription: "Gains massive morbid curiosity (+40 buzz) but severely damages the studio's reputation (-35 prestige).",
+        buzzPenalty: -40,
+        reputationPenalty: 35
+      }
+    ]
+  },
+  // The PR Spin Doctor: Added 'Test Screening Disaster' crisis...
+  {
+    id: 'CRS-b8a9c7d6-e5f4-4321-9876-5a4b3c2d1e0f',
+    description: "The first test screening of your major project was a disaster. Audiences laughed at the dramatic climax and several people walked out.",
+    options: [
+      {
+        text: "Order massive reshoots of the third act.",
+        effectDescription: "Costs $3.5M and delays the film by 5 weeks.",
+        cashPenalty: 3500000,
+        weeksDelay: 5
+      },
+      {
+        text: "Fire the director and take over the edit.",
+        effectDescription: "Costs $1.5M in contract severances. Lose 15 prestige.",
+        cashPenalty: 1500000,
+        reputationPenalty: 15
+      },
+      {
+        text: "Release it as is and market it as a 'campy cult classic'.",
+        effectDescription: "The internet sees right through it. Lose 45 buzz and 20 prestige.",
+        buzzPenalty: 45,
+        reputationPenalty: 20
+      }
+    ]
+  },
+  // The PR Spin Doctor: Added 'Social Media Manager Gone Rogue' crisis...
+  {
+    id: 'CRS-9f8e7d6c-5b4a-4210-8def-1234567890ab',
+    description: "Your official studio social media manager accidentally posted a wildly inappropriate, profanity-laced tirade on the main account instead of their personal alt.",
+    options: [
+      {
+        text: "Claim the account was hacked.",
+        effectDescription: "Nobody believes you. Lose 25 prestige and 10 buzz.",
+        reputationPenalty: 25,
+        buzzPenalty: 10
+      },
+      {
+        text: "Lean into it. Claim it was an 'edgy marketing stunt'.",
+        effectDescription: "Generates weird viral attention (+30 buzz) but absolutely torches your corporate image (-40 prestige).",
+        buzzPenalty: -30,
+        reputationPenalty: 40
+      },
+      {
+        text: "Issue a boring, corporate apology and fire the manager.",
+        effectDescription: "Costs $100k in PR. Lose 10 prestige.",
+        cashPenalty: 100000,
+        reputationPenalty: 10
+      }
+    ]
   }
 ];
