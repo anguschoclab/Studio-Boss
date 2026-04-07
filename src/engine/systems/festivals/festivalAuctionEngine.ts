@@ -53,7 +53,7 @@ export function generateNPCBid(
   if (cappedBid < 100_000) return null;
 
   return {
-    bidderId: `npc-${rng.uuid('bid')}`,
+    bidderId: rng.uuid('BID'),
     bidderName: 'NPC Buyer',
     amount: cappedBid,
     terms: reviewScore > 75 ? 'theatrical + streaming rights' : 'streaming rights only',
@@ -162,7 +162,7 @@ export function runFestivalMarket(state: GameState, rng: RandomGenerator): State
   impacts.push({
     type: 'NEWS_ADDED',
     payload: {
-      id: `festival-market-${state.week}`,
+      id: rng.uuid('NWS'),
       headline: `${festivalBody} market opens — acquisition frenzy underway`,
       description: `Buyers and sellers converge as distribution rights go up for grabs.`,
       category: 'festival',
