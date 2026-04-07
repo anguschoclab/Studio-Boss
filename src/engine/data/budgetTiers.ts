@@ -20,7 +20,8 @@ export const BUDGET_TIERS: Record<BudgetTierKey, BudgetTierData> = {
     weeklyCost: 25_000,
     developmentWeeks: 4,
     productionWeeks: 4,
-    revenueRange: [10_000, 10_000_000],
+    // The Studio Comptroller: Adjusted indie range.
+    revenueRange: [5_000, 15_000_000],
   },
   low: {
     key: 'low',
@@ -30,7 +31,8 @@ export const BUDGET_TIERS: Record<BudgetTierKey, BudgetTierData> = {
     weeklyCost: 250_000,
     developmentWeeks: 6,
     productionWeeks: 8,
-    revenueRange: [100_000, 350_000_000],
+    // The Studio Comptroller: Expanded top bound for micro-budget horror anomalies.
+    revenueRange: [50_000, 450_000_000],
   },
   mid: {
     key: 'mid',
@@ -50,7 +52,8 @@ export const BUDGET_TIERS: Record<BudgetTierKey, BudgetTierData> = {
     weeklyCost: 3_000_000,
     developmentWeeks: 12,
     productionWeeks: 16,
-    revenueRange: [10_000_000, 1_200_000_000],
+    // The Studio Comptroller: Adjusted high risk/reward.
+    revenueRange: [5_000_000, 1_500_000_000],
   },
   blockbuster: {
     key: 'blockbuster',
@@ -60,6 +63,7 @@ export const BUDGET_TIERS: Record<BudgetTierKey, BudgetTierData> = {
     weeklyCost: 6_000_000,
     developmentWeeks: 16,
     productionWeeks: 24,
-    revenueRange: [50_000_000, 2_500_000_000],
+    // The Studio Comptroller: Lowered floor so flops are devastating.
+    revenueRange: [20_000_000, 3_000_000_000],
   },
 };

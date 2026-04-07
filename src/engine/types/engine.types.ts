@@ -31,6 +31,7 @@ export interface CrisisOption {
 }
 
 export interface ActiveCrisis {
+  id: string; // 🌌 Standardized UUID for this specific crisis instance
   crisisId: string;
   triggeredWeek: number;
   haltedProduction: boolean;
@@ -49,6 +50,7 @@ export interface Headline {
 }
 
 export interface WeekSummary {
+  id: string; // 🌌 Unique ID for this summary
   fromWeek: number;
   toWeek: number;
   cashBefore: number;
@@ -62,6 +64,7 @@ export interface WeekSummary {
 }
 
 export interface FinanceRecord {
+  id: string; // 🌌 Unique ID for this record
   week: number;
   cash: number;
   revenue: number;

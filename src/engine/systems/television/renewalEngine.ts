@@ -16,7 +16,15 @@ export function evaluateRenewal(
 
   // 🏆 The Prestige Effect: Successful award recognition now significantly lowers the cancellation threshold,
   // acknowledging that critical acclaim (Emmys/Globes) can justify continuing a lower-rated series.
-  const awardWins = (project.awards || []).filter(a => a.status === 'won').length;
+  // ⚡ The Framerate Fanatic: Refactored .filter().length into a direct counter loop to prevent unnecessary array allocations.
+  let awardWins = 0;
+  if (project.awards) {
+    for (let i = 0; i < project.awards.length; i++) {
+      if (project.awards[i].status === 'won') {
+        awardWins++;
+      }
+    }
+  }
   let dynamicThreshold = threshold;
   
   // Each major award win lowers the required rating threshold by 1.5 points (limit to 3.0 total reduction)

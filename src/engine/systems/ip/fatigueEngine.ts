@@ -62,6 +62,16 @@ export function calculateFranchiseFatigue(
     currentFatigue *= 1.5;
   }
 
+  // 🌌 The Universe Builder: Cinematic Universe Collapse.
+  if (activeCount >= 5) {
+    currentFatigue *= 4.0;
+  }
+
+  // 🌌 The Universe Builder: Terminal Superhero Fatigue.
+  if (activeCount >= 3 && genreSaturation > 15 && (normalizedGenre === 'Superhero' || normalizedGenre === 'Multiverse')) {
+    currentFatigue *= 3.5;
+  }
+
   // 3. Rival Saturation (The 'Poison the Well' effect)
   // If genre is severely oversaturated, penalty multiplier increases heavily.
   // 🌌 The Universe Builder: The market rejects trend-chasing much faster now.
@@ -129,9 +139,18 @@ export function calculateReleaseGapImpact(
     };
   }
 
+  // 🌌 The Universe Builder: IP Squatting / Rights Retention.
+  if (yearsSince >= 6 && yearsSince < 7) {
+    return {
+      buzzBonus: -40,
+      label: 'Rights Retention Ploy (Cynical Cash Grab)',
+      fatigueReset: false
+    };
+  }
+
   // Soft Reboot (IP Retention)
   // 🌌 The Universe Builder: Soft reboots after a 5-year break can re-ignite IP.
-  if (yearsSince >= 5 && yearsSince < 7) {
+  if (yearsSince >= 5 && yearsSince < 6) {
     return {
       buzzBonus: 15,
       label: 'Soft Reboot (IP Retention)',
