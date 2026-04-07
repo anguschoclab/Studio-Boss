@@ -103,6 +103,7 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
   
   const contractsObj = state.entities.contracts || {};
   for (const key in contractsObj) {
+    if (!Object.prototype.hasOwnProperty.call(contractsObj, key)) continue;
     const contract = contractsObj[key];
     const list = contractMap.get(contract.projectId) || [];
     list.push(contract);
