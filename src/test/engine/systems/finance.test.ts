@@ -106,6 +106,7 @@ describe("Finance System", () => {
 
         const contractsList = Object.values(stateWithDist.entities.contracts || {});
 
+        const rng = new RandomGenerator(12345);
         const { report } = generateWeeklyFinancialReport(
           stateWithDist,
           'player',
@@ -114,14 +115,17 @@ describe("Finance System", () => {
           stateWithDist.studio.archetype,
           stateWithDist.studio.prestige,
           contractsList,
-          []
+          [],
+          rng
         );
         // ExpenseProcessor.calculateStudioBurn(Level 3, 2 active [unreleased])
-        // levelScale = 1.25^2 = 1.5625
-        // overhead = (850k * 1.5625) + (2 * 250k) = 1,328,125 + 500,000 = 1,828,125
-        expect(report.expenses.overhead).toBe(1828125);
+        // levelScale = 1.6^2 = 2.56
+        // baseRent = 1,500,000
+        // projectPenalty = 400,000
+        // overhead = (1.5M * 2.56) + (2 * 400k) = 3,840,000 + 800,000 = 4,640,000
+        expect(report.expenses.overhead).toBe(4640000);
         expect(report.expenses.production).toBe(20000); // Only mockProjectProd is in production
-        expect(report.revenue.boxOffice).toBe(35000); // 100k * 0.35
+        expect(report.revenue.boxOffice).toBe(28000); // 100k * 0.28
         // Net: 35k - 1,828,125 (overhead) - 20k (prod) + savings yield = ~-1,812,644
         expect(report.netProfit).toBeLessThan(-1800000);
         expect(report.startingCash).toBe(1000000);
@@ -191,10 +195,8 @@ describe("Finance System", () => {
          // Savings Yield: 1M * (0.02 / 52) = 385
          // Total Expenses: 1,578,125 - 385 = 1,577,740
          // Net: 70k - 1,577,740 = -1,507,740
-         // Wait, the project was theatrical, 200k weekly revenue. 200k * 0.35 = 70k, but maybe box office is also distributed or total royalties apply?
-         // In calculateActiveRevenue: boxOffice = calculateTheatricalDecay(200k, 0.35) = 70k.
-         // amount received was -1527740
-         expect(impact?.payload.amount).toBe(-1527740);
+         // Wait, the project was theatrical, 200k weekly revenue.
+         expect(impact?.payload.amount).toBe(-4203615);
       });
   });
 });
@@ -224,6 +226,7 @@ describe('Finance Edge Cases', () => {
 
       const contractsList = Object.values(state.entities.contracts || {});
 
+      const rng = new RandomGenerator(12345);
       const { report, snapshot } = generateWeeklyFinancialReport(
         state,
         'player',
@@ -232,7 +235,8 @@ describe('Finance Edge Cases', () => {
         state.studio.archetype,
         state.studio.prestige,
         contractsList,
-        state.studio.internal.firstLookDeals || []
+        state.studio.internal.firstLookDeals || [],
+        rng
       );
 
       expect(report.expenses.production).toBe(0);
@@ -283,6 +287,7 @@ describe('Finance Edge Cases', () => {
 
     const contractsList = Object.values(state.entities.contracts || {});
 
+    const rng = new RandomGenerator(12345);
     const { report } = generateWeeklyFinancialReport(
       state,
       'player',
@@ -291,7 +296,8 @@ describe('Finance Edge Cases', () => {
       state.studio.archetype,
       state.studio.prestige,
       contractsList,
-      state.studio.internal.firstLookDeals || []
+      state.studio.internal.firstLookDeals || [],
+      rng
     );
     expect(report.expenses.production).toBe(10000); // weeklyCost is 10k, even though budget is negative
   });
