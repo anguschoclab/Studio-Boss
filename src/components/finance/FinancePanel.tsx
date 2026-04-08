@@ -37,15 +37,20 @@ export const FinancePanel = () => {
   const { data: financeHistory = EMPTY_HISTORY } = useFinanceHistory();
 
   // Need entire gameState for complex calculations like Net Worth and Forecasts
-  // but we extract it here to pass to memoized functions without triggering re-renders on the whole object
-  const fullGameState = useGameStore(s => s.gameState);
-
-  const weeklyCosts = useMemo(() => fullGameState ? calculateWeeklyCosts(fullGameState) : 0, [fullGameState]);
-  const weeklyRevenue = useMemo(() => fullGameState ? calculateWeeklyRevenue(fullGameState) : 0, [fullGameState]);
-  const netDelta = useMemo(() => weeklyRevenue - weeklyCosts, [weeklyRevenue, weeklyCosts]);
-  
-  const studioNetWorth = useMemo(() => fullGameState ? calculateStudioNetWorth(fullGameState) : 0, [fullGameState]);
-  const forecast = useMemo(() => fullGameState ? generateCashflowForecast(fullGameState, 12) : [], [fullGameState]);
+  // ⚡ The Framerate Fanatic: Moved complex calculations inside the Zustand selector with useShallow to prevent React from re-rendering unless the final computed numbers actually change.
+  const { weeklyCosts, weeklyRevenue, netDelta, studioNetWorth, forecast } = useGameStore(useShallow(s => {
+    const state = s.gameState;
+    if (!state) return { weeklyCosts: 0, weeklyRevenue: 0, netDelta: 0, studioNetWorth: 0, forecast: [] };
+    const costs = calculateWeeklyCosts(state);
+    const rev = calculateWeeklyRevenue(state);
+    return {
+      weeklyCosts: costs,
+      weeklyRevenue: rev,
+      netDelta: rev - costs,
+      studioNetWorth: calculateStudioNetWorth(state),
+      forecast: generateCashflowForecast(state, 12)
+    };
+  }));
 
   const activeProjects = useMemo(() =>
     projectsMemo.filter(p => p.state === 'development' || p.state === 'production'),
