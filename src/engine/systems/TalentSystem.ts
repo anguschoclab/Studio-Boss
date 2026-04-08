@@ -35,7 +35,8 @@ export class TalentSystem {
             domain: 'Talent',
             subDomain: 'Health',
             intensity: 80, // Recovered
-            context: { actor: talent.name }
+            context: { actor: talent.name },
+            rng
           }));
         }
       } else if ((talent.fatigue || 0) > 95) {
@@ -46,7 +47,8 @@ export class TalentSystem {
           domain: 'Talent',
           subDomain: 'Health',
           intensity: 10, // Burnout
-          context: { actor: talent.name }
+          context: { actor: talent.name },
+          rng
         }));
       }
 

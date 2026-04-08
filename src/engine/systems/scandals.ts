@@ -63,14 +63,16 @@ export function generateScandals(state: GameState, rng: RandomGenerator): StateI
             subDomain: 'Scandal',
             intensity: s.severity,
             tone: 'Trade',
-            context: { actor: talent.name, type }
+            context: { actor: talent.name, type },
+            rng
          }),
          description: BardResolver.resolve({
             domain: 'Industry',
             subDomain: 'Scandal',
             intensity: s.severity,
             tone: 'Tabloid',
-            context: { actor: talent.name, type }
+            context: { actor: talent.name, type },
+            rng
          }),
        });
 
@@ -88,7 +90,8 @@ export function generateScandals(state: GameState, rng: RandomGenerator): StateI
                domain: 'Crisis',
                subDomain: 'PR',
                intensity: s.severity,
-               context: { actor: talent.name, project: project.title, type }
+               context: { actor: talent.name, project: project.title, type },
+               rng
             }),
             resolved: false,
             severity: s.severity > 75 ? 'high' as const : 'medium' as const,
@@ -204,7 +207,8 @@ export function generateStudioRatingEvent(
     subDomain: 'Scandal',
     variant: type, // 'rating_controversy' | 'foreign_market_cut' | 'banned_in_market'
     intensity: 50,
-    context: { project: context.projectTitle }
+    context: { project: context.projectTitle },
+    rng
   });
 
   const description = BardResolver.resolve({
@@ -212,7 +216,8 @@ export function generateStudioRatingEvent(
     subDomain: 'Scandal',
     intensity: prestigeLoss < -5 ? 20 : 50,
     tone: 'Trade',
-    context: { project: context.projectTitle, market: context.marketName }
+    context: { project: context.projectTitle, market: context.marketName },
+    rng
   });
 
   const publication = type === 'banned_in_market' ? 'The Hollywood Reporter' as const
@@ -279,7 +284,8 @@ export function generateMarketBanScandal(
         subDomain: 'Scandal',
         intensity: 20,
         tone: 'Trade',
-        context: { project: project.title, market: marketName }
+        context: { project: project.title, market: marketName },
+        rng
       }),
       publication: 'The Hollywood Reporter'
     }],

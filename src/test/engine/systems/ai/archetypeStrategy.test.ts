@@ -10,7 +10,8 @@ import {
   createMockTalent, 
   createMockProject, 
   createMockRival, 
-  createMockGameState 
+  createMockGameState,
+  createMockMarketState
 } from '../../../utils/mockFactories';
 import { AI_ARCHETYPES } from '../../../../engine/data/aiArchetypes';
 
@@ -22,9 +23,11 @@ describe('AI Archetype Strategy (AgentBrain)', () => {
       const lead = createMockTalent({ id: 'lead', prestige: 50, agencyId: agency.id });
       const client = createMockTalent({ id: 'client', agencyId: agency.id });
       
+      const market = createMockMarketState();
+      
       // Force next() to be small enough to trigger (0.4 prob)
       // Since it's deterministic, let's just assert results or use a seed that works.
-      const result = evaluatePackageOffer(agency, lead, [lead, client], rng);
+      const result = evaluatePackageOffer(agency, lead, [lead, client], market, rng);
       
       expect(result.reason).toBeDefined();
     });
@@ -35,7 +38,8 @@ describe('AI Archetype Strategy (AgentBrain)', () => {
       const auteur = createMockTalent({ id: 'auteur', prestige: 95, agencyId: agency.id });
       const collaborator = createMockTalent({ id: 'collateral', agencyId: agency.id });
 
-      const result = evaluatePackageOffer(agency, auteur, [auteur, collaborator], rng);
+      const market = createMockMarketState();
+      const result = evaluatePackageOffer(agency, auteur, [auteur, collaborator], market, rng);
       // Prob is 0.5 for Auteurs vs 0.15 normal
       expect(result.reason).toContain('Creative Mandate');
     });

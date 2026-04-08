@@ -85,7 +85,8 @@ export function resolveFestivals(state: GameState, rng: RandomGenerator): StateI
                     domain: 'Festival',
                     subDomain: 'Reaction',
                     intensity: 90,
-                    context: { project: project.title, body: fest.body }
+                    context: { project: project.title, body: fest.body },
+                    rng
                 }),
                 category: 'awards'
             }
@@ -158,7 +159,8 @@ export function submitToFestival(
             domain: 'Festival',
             subDomain: 'Buzz',
             intensity: 40,
-            context: { project: project.title, body: fest.body }
+            context: { project: project.title, body: fest.body },
+            rng
         }),
         category: 'awards'
       }

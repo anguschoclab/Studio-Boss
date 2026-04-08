@@ -22,7 +22,8 @@ export function generateCrisis(project: Project, rng: RandomGenerator): StateImp
       domain: 'Crisis',
       subDomain: template.description, // e.g., 'PR' or 'Production'
       intensity: 75,
-      context: { project: project.title }
+      context: { project: project.title },
+      rng
     }),
     options: template.options.map(opt => ({
       ...opt,
@@ -30,7 +31,8 @@ export function generateCrisis(project: Project, rng: RandomGenerator): StateImp
         domain: 'Crisis',
         subDomain: `${template.description}.Options`, // e.g., 'PR.Options'
         variant: opt.text, // e.g., 'Aggressive'
-        intensity: 50
+        intensity: 50,
+        rng
       })
     })),
     resolved: false,

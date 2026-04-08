@@ -8,6 +8,7 @@ import {
   Buyer,
   Agency,
   Opportunity,
+  MarketState,
 } from '@/engine/types';
 
 export const createMockTalent = (overrides: Partial<Talent> = {}): Talent => ({
@@ -100,15 +101,7 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
     cash: 5000000,
     ledger: [],
     weeklyHistory: [],
-    marketState: {
-      baseRate: 0.05,
-      savingsYield: 0.02,
-      debtRate: 0.1,
-      loanRate: 0.08,
-      rateHistory: [],
-      sentiment: 50,
-      cycle: 'STABLE'
-    }
+    marketState: createMockMarketState()
   },
   news: { headlines: [] },
   ip: { vault: [], franchises: {} },
@@ -250,3 +243,14 @@ export const createMockBuyer = (overrides: Partial<Buyer> = {}): Buyer => {
 
   return base as Buyer;
 };
+
+export const createMockMarketState = (overrides: Partial<MarketState> = {}): MarketState => ({
+  baseRate: 0.05,
+  savingsYield: 0.02,
+  debtRate: 0.1,
+  loanRate: 0.08,
+  rateHistory: [],
+  sentiment: 50,
+  cycle: 'STABLE',
+  ...overrides
+});

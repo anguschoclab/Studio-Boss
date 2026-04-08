@@ -4,6 +4,8 @@ import { CROSSOVER_AFFINITY } from '../../data/genres';
 import { RandomGenerator } from '../../utils/rng';
 import { evaluateVaultSynergy } from './synergyEvaluator';
 import { applyIPDecay } from './ipValuation';
+import { calculateFranchiseFatigue } from './fatigueEngine';
+import { determineSyndicationTier } from './syndicationEngine';
 
 // ⚡ Bolt: Pre-compute lowercased keys for O(1) lookups to avoid allocating keys array repeatedly in the loop
 const CROSSOVER_AFFINITY_LOWER_KEYS = Object.keys(CROSSOVER_AFFINITY).reduce((acc, key) => {
@@ -331,14 +333,72 @@ export function tickIPVault(state: GameState): import('../../types/state.types')
 
   // 1. Evaluate Synergy (Reboots/Spinoffs in production) 
   // 2. Apply Decay (Synergy-shielded & Tiered)
-  const updatedVault = evaluateVaultSynergy(activeProjects, state.ip.vault).map(asset => applyIPDecay(asset));
+  const updatedVault = evaluateVaultSynergy(activeProjects, state.ip.vault).map(asset => {
+    let updatedAsset = applyIPDecay(asset);
 
-  // 3. Generate individual update impacts
+    // 📺 Phase 3: Syndication Integration
+    // If it's a TV show with episodes, check for syndication milestones
+    if (updatedAsset.totalEpisodes > 0) {
+      // We need a genre. Try to find it from history or default to 'DRAMA'.
+      const sourceProject = state.studio.internal.projectHistory.find(p => p.id === updatedAsset.originalProjectId);
+      const genre = sourceProject?.genre || 'DRAMA';
+      
+      const newTier = determineSyndicationTier(updatedAsset.totalEpisodes, genre);
+      if (newTier !== updatedAsset.syndicationTier) {
+        updatedAsset = {
+          ...updatedAsset,
+          syndicationTier: newTier,
+          syndicationStatus: newTier !== 'NONE' ? 'SYNDICATED' : 'NONE'
+        };
+      }
+    }
+
+    return updatedAsset;
+  });
+
+  // 3. Generate individual update impacts for assets
   updatedVault.forEach(asset => {
     impacts.push({
       type: 'VAULT_ASSET_UPDATED',
       payload: { assetId: asset.id, update: asset }
     });
+  });
+
+  // 4. Phase 3: Franchise Fatigue Integration
+  // Calculate industry-wide genre saturation
+  const genreSaturation: Record<string, number> = {};
+  [
+    ...Object.values(state.entities.projects),
+    ...Object.values(state.entities.rivals).flatMap(r => Object.values(r.projects || {}))
+  ].forEach((p: Project) => {
+    if (p.genre) {
+      const g = p.genre.toUpperCase();
+      genreSaturation[g] = (genreSaturation[g] || 0) + 1;
+    }
+  });
+
+  Object.values(state.ip.franchises).forEach(franchise => {
+    // Find a representative genre for the franchise
+    const firstAssetId = franchise.assetIds[0];
+    const firstAsset = state.ip.vault.find(a => a.id === firstAssetId);
+    // Search both current projects and history to find the genre
+    const sourceProject = Object.values(state.entities.projects).find(p => p.id === (firstAsset?.originalProjectId)) 
+      || state.studio.internal.projectHistory.find(p => p.id === (firstAsset?.originalProjectId));
+    
+    const genre = sourceProject?.genre || 'Action';
+    
+    const saturation = genreSaturation[genre.toUpperCase()] || 0;
+    const newFatigue = calculateFranchiseFatigue(franchise, saturation, genre);
+
+    if (newFatigue !== franchise.fatigueLevel) {
+      impacts.push({
+        type: 'FRANCHISE_UPDATED',
+        payload: {
+          franchiseId: franchise.id,
+          update: { fatigueLevel: newFatigue }
+        }
+      });
+    }
   });
 
   return impacts;

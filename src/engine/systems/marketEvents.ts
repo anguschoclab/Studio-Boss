@@ -48,13 +48,15 @@ export function advanceMarketEvents(state: GameState, rng: RandomGenerator): Sta
             domain: 'Market',
             subDomain: 'Headline',
             intensity,
-            context: {}
+            context: {},
+            rng
         }),
         description: BardResolver.resolve({
             domain: 'Market',
             subDomain: 'Event',
             intensity,
-            context: {}
+            context: {},
+            rng
         }),
         weeksRemaining: Math.floor(rng.range(12, 52)),
         revenueMultiplier: type === 'BOOM' ? 1.5 : 0.7,

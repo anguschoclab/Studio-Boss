@@ -1,5 +1,6 @@
 import { GameState, RivalStudio, Opportunity, StateImpact, ArchetypeKey, TalentPact } from '@/engine/types';
 import { RandomGenerator } from '../../utils/rng';
+import { AgencyLeverageEngine } from './AgencyLeverage';
 
 /**
  * AI Decision Multipliers.
@@ -46,15 +47,33 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
       const bidFloor = Math.max(currentHighest, opportunity.costToAcquire);
 
       if (myBid < bidFloor && rival.cash > bidFloor * liquidityBuffer) {
+        // Phase 2: Agency Leverage Integration
+        let leverageAggression = 1.0;
+        if (opportunity.attachedTalentIds && opportunity.attachedTalentIds.length > 0) {
+          const mainTalent = state.entities.talents[opportunity.attachedTalentIds[0]];
+          if (mainTalent) {
+            const agency = mainTalent.agencyId ? state.industry.agencies.find(a => a.id === mainTalent.agencyId) : undefined;
+            const agent = mainTalent.agentId ? state.industry.agents.find(a => a.id === mainTalent.agentId) : undefined;
+            const leverage = AgencyLeverageEngine.calculateNegotiationLeverage(
+              mainTalent,
+              agency,
+              agent,
+              state.finance.marketState
+            );
+            // High leverage agencies make the project more desirable/expensive
+            leverageAggression = 1.0 + (leverage.score * 0.3);
+          }
+        }
+
         // 🎭 The Method Actor Tuning: Massive spike in multiplier if franchise builders bid on Sci-Fi/Action.
         const isKeyIPGenre = opportunity.genre === 'Sci-Fi' || opportunity.genre === 'Action' || opportunity.genre === 'Fantasy';
         const franchiseAggression = isFranchiseBuilder && isKeyIPGenre ? 1.5 : (isFranchiseBuilder ? 1.2 : 1.0);
 
-        const multiplier = (ArchetypeMultipliers[rival.archetype]?.(opportunity.genre) || 1.0) * aggressionFactor * franchiseAggression;
+        const multiplier = (ArchetypeMultipliers[rival.archetype]?.(opportunity.genre) || 1.0) * aggressionFactor * franchiseAggression * leverageAggression;
         const newBid = Math.floor(bidFloor * (1 + (rng.range(1.05, 1.25) - 1) * multiplier));
 
         // 🎭 The Method Actor Tuning: Raise the max bid cap for franchise builders and aggressive studios so they don't give up easily.
-        const maxBidCap = isFranchiseBuilder ? 0.80 : (isCashCrunch ? 0.15 : 0.40 + (motivationAggression * 0.1));
+        const maxBidCap = (isFranchiseBuilder ? 0.80 : (isCashCrunch ? 0.15 : 0.40 + (motivationAggression * 0.1))) * leverageAggression;
         if (newBid < rival.cash * maxBidCap) {
           impacts.push({
             type: 'OPPORTUNITY_UPDATED',
@@ -129,7 +148,18 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
 
       const lockFee = target.fee * (1.5 + rng.next() + prestigePenalty);
       
-      if (rival.cash > lockFee * 2) {
+      // Phase 2: Agency Leverage Integration
+      const agency = target.agencyId ? state.industry.agencies.find(a => a.id === target.agencyId) : undefined;
+      const agent = target.agentId ? state.industry.agents.find(a => a.id === target.agentId) : undefined;
+      const leverage = AgencyLeverageEngine.calculateNegotiationLeverage(
+        target,
+        agency,
+        agent,
+        state.finance.marketState
+      );
+      const leveragedFee = AgencyLeverageEngine.getRequiredFee(lockFee, leverage);
+
+      if (rival.cash > leveragedFee * 2) {
          const pact: TalentPact = {
            id: rng.uuid('PCT'),
            talentId: target.id,
@@ -137,7 +167,7 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
            type: 'first_look',
            startDate: state.week,
            endDate: state.week + 52,
-           weeklyOverhead: Math.floor(lockFee * 0.05),
+           weeklyOverhead: Math.floor(leveragedFee * 0.05),
            exclusivity: true,
            status: 'active'
          };
@@ -147,8 +177,7 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
            payload: {
              rivalId: rival.id,
              update: {
-               cash: rival.cash - lockFee
-               // Removed pacts update as it is not on RivalStudio type
+               cash: rival.cash - leveragedFee
              }
            }
          });

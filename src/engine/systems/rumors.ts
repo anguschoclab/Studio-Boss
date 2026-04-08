@@ -55,7 +55,8 @@ export function advanceRumors(state: GameState, rng: RandomGenerator): StateImpa
         subDomain: 'Rumor',
         intensity: rng.range(0, 100),
         tone: 'Tabloid',
-        context: { actor: talent.name }
+        context: { actor: talent.name },
+        rng
       });
     } else if (category === 'rival') {
       const rival = pick(Object.values(state.entities.rivals || {}), rng);
@@ -64,7 +65,8 @@ export function advanceRumors(state: GameState, rng: RandomGenerator): StateImpa
         subDomain: 'Rumor',
         intensity: rng.range(0, 100),
         tone: 'Tabloid',
-        context: { actor: rival.name }
+        context: { actor: rival.name },
+        rng
       });
     } else if (category === 'project' && Object.keys(state.entities.projects).length > 0) {
       const project = pick(Object.values(state.entities.projects), rng);
@@ -73,7 +75,8 @@ export function advanceRumors(state: GameState, rng: RandomGenerator): StateImpa
         subDomain: 'Rumor',
         intensity: rng.range(0, 100),
         tone: 'Trade',
-        context: { project: project.title }
+        context: { project: project.title },
+        rng
       });
     } else {
       text = 'Unnamed studio in talks for a massive merger.';

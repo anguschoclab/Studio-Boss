@@ -1,5 +1,6 @@
 import { Project, Talent } from '@/engine/types';
 import { BardResolver } from './bardResolver';
+import { RandomGenerator } from '../utils/rng';
 
 export type GreenlightRecommendation =
   | 'Easy Greenlight'
@@ -19,6 +20,7 @@ export function evaluateGreenlight(
   project: Project,
   cash: number,
   attachedTalent: Talent[],
+  rng: RandomGenerator,
   currentWeek: number = 0,
   allProjects: Project[] = []
 ): GreenlightReport {
@@ -59,7 +61,8 @@ export function evaluateGreenlight(
       domain: 'Greenlight',
       subDomain: 'MarketSat',
       intensity: 10, // Risky
-      context: { genre: project.genre, count: recentSimilarProjectsCount }
+      context: { genre: project.genre, count: recentSimilarProjectsCount },
+      rng
     }));
   } else if (recentSimilarProjectsCount === 0) {
     // Trend-modifier: Calendar Gap Bonus
@@ -69,7 +72,8 @@ export function evaluateGreenlight(
       domain: 'Greenlight',
       subDomain: 'MarketSat',
       intensity: 80, // Prestige/Gap
-      context: { genre: project.genre }
+      context: { genre: project.genre },
+      rng
     }));
   }
 
@@ -80,7 +84,8 @@ export function evaluateGreenlight(
       domain: 'Greenlight',
       subDomain: 'Finance',
       intensity: 0,
-      context: { amount: project.budget }
+      context: { amount: project.budget },
+      rng
     }));
   } else if (cash < project.budget * 2) {
     score -= 15;
@@ -88,7 +93,8 @@ export function evaluateGreenlight(
       domain: 'Greenlight',
       subDomain: 'Finance',
       intensity: 30,
-      context: { amount: project.budget }
+      context: { amount: project.budget },
+      rng
     }));
   } else if (cash > project.budget * 5) {
     score += 10;
@@ -96,7 +102,8 @@ export function evaluateGreenlight(
       domain: 'Greenlight',
       subDomain: 'Finance',
       intensity: 90,
-      context: { amount: project.budget }
+      context: { amount: project.budget },
+      rng
     }));
   }
 
@@ -107,7 +114,8 @@ export function evaluateGreenlight(
       domain: 'Greenlight',
       subDomain: 'Talent',
       intensity: 10,
-      context: {}
+      context: {},
+      rng
     }));
   } else {
     let totalDraw = 0;
@@ -125,7 +133,8 @@ export function evaluateGreenlight(
         domain: 'Greenlight',
         subDomain: 'Talent',
         intensity: 90,
-        context: {}
+        context: {},
+        rng
       }));
     } else if (avgDraw > 50) {
       score += 15;
@@ -133,7 +142,8 @@ export function evaluateGreenlight(
         domain: 'Greenlight',
         subDomain: 'Talent',
         intensity: 60,
-        context: {}
+        context: {},
+        rng
       }));
     } else {
       score -= 5;
@@ -141,7 +151,8 @@ export function evaluateGreenlight(
         domain: 'Greenlight',
         subDomain: 'Talent',
         intensity: 30,
-        context: {}
+        context: {},
+        rng
       }));
     }
 
@@ -158,7 +169,8 @@ export function evaluateGreenlight(
       domain: 'Greenlight',
       subDomain: 'Marketing',
       intensity: 90,
-      context: {}
+      context: {},
+      rng
     }));
   } else if (project.buzz > 60) {
     score += 10;
@@ -166,7 +178,8 @@ export function evaluateGreenlight(
       domain: 'Greenlight',
       subDomain: 'Marketing',
       intensity: 70,
-      context: {}
+      context: {},
+      rng
     }));
   } else if (project.buzz < 30) {
     score -= 15;
@@ -174,7 +187,8 @@ export function evaluateGreenlight(
       domain: 'Greenlight',
       subDomain: 'Marketing',
       intensity: 20,
-      context: {}
+      context: {},
+      rng
     }));
   }
 

@@ -1,5 +1,6 @@
 import archiveData from '../data/narrative/archive.json';
 import { NarrativeArchive, ResolutionRequest } from '../data/narrative/archive';
+import { RandomGenerator } from '../utils/rng';
 
 /**
  * The Bard Resolver
@@ -21,14 +22,14 @@ export const BardResolver = {
 
     // 0. Handle Flat Dictionary/Tier Entry
     if (Array.isArray(subDomainData)) {
-      return this.interpolate(this.pick(subDomainData), context || {});
+      return this.interpolate(this.pick(subDomainData, request.rng), context || {}, request.rng);
     }
 
     // 1. Variant-Specific Resolution (High Priority)
     // If a specific variant key is requested (e.g. for Options or specific story arcs)
     if (variant && subDomainData[variant]) {
       const templates = subDomainData[variant];
-      return this.interpolate(this.pick(templates), context || {});
+      return this.interpolate(this.pick(templates, request.rng), context || {}, request.rng);
     }
 
     // 2. Find Tier Data
@@ -79,8 +80,8 @@ export const BardResolver = {
       return `[EMPTY ARCHIVE: ${domain}.${subDomain}]`;
     }
 
-    const template = this.pick(templates);
-    return this.interpolate(template, context || {});
+    const template = this.pick(templates, request.rng);
+    return this.interpolate(template, context || {}, request.rng);
   },
 
   /**
@@ -113,7 +114,7 @@ export const BardResolver = {
    * Interpolates templates using double curly braces {{key}}.
    * If a key is missing from context, it checks the Dictionary domain in the archive.
    */
-  interpolate(template: string, context: Record<string, any>): string {
+  interpolate(template: string, context: Record<string, any>, rng?: RandomGenerator): string {
     const archive = archiveData as any;
     const dictionary = archive['Dictionary'] || {};
 
@@ -132,7 +133,7 @@ export const BardResolver = {
 
         // 2. Check Dictionary
         if (dictionary[trimmedKey] && Array.isArray(dictionary[trimmedKey])) {
-          return this.pick(dictionary[trimmedKey]);
+          return this.pick(dictionary[trimmedKey], rng);
         }
 
         // 3. Keep as is if not found
@@ -149,8 +150,12 @@ export const BardResolver = {
 
   /**
    * Picks a random item from an array.
+   * If rng is provided, it uses the deterministic pool.
    */
-  pick<T>(items: T[]): T {
+  pick<T>(items: T[], rng?: RandomGenerator): T {
+    if (rng) {
+      return rng.pick(items);
+    }
     return items[Math.floor(Math.random() * items.length)];
   }
 };

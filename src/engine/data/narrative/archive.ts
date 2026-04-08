@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { RandomGenerator } from '../../utils/rng';
 
 /**
  * The Bard Engine Archive Schema
@@ -51,4 +52,5 @@ export interface ResolutionRequest {
   tone?: NarrativeTone;
   variant?: string; // Specific key in the SubDomain (e.g. for Options or specific story beats)
   context?: NarrativeContext;
+  rng?: RandomGenerator;
 }

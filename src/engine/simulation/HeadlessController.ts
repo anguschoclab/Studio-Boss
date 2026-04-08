@@ -30,7 +30,7 @@ export class HeadlessController {
       if (project.state === 'needs_greenlight') {
         const projectContracts = contractsByProject.get(project.id) || [];
         const attachedTalent = projectContracts.map(c => state.entities.talents[c.talentId]).filter(Boolean);
-        const report = evaluateGreenlight(project, state.finance.cash, attachedTalent, state.week, internalProjects);
+        const report = evaluateGreenlight(project, state.finance.cash, attachedTalent, rng, state.week, internalProjects);
         
         if (report.score > 60 || (state.finance.cash > project.budget * 3)) {
           const result = executeGreenlight(project);

@@ -12,7 +12,7 @@ const PipelineBoard = React.lazy(() => import('@/components/pipeline/PipelineBoa
 const TalentHub = React.lazy(() => import('@/components/talent/TalentHub').then(m => ({ default: m.TalentHub })));
 const FinancePanel = React.lazy(() => import('@/components/finance/FinancePanel').then(m => ({ default: m.FinancePanel })));
 const DiscoveryBoard = React.lazy(() => import('@/components/discovery/DiscoveryBoard').then(m => ({ default: m.DiscoveryBoard })));
-const RivalsPanel = React.lazy(() => import('@/components/rivals/RivalsPanel').then(m => ({ default: m.RivalsPanel })));
+const IndustryPage = React.lazy(() => import('@/pages/IndustryPage').then(m => ({ default: m.IndustryPage })));
 const IPVault = React.lazy(() => import('@/components/ip/IPVault').then(m => ({ default: m.IPVault })));
 const DistributionHub = React.lazy(() => import('@/components/distribution/DistributionHub').then(m => ({ default: m.DistributionHub })));
 const AwardsHQ = React.lazy(() => import('@/components/awards/AwardsHQ').then(m => ({ default: m.AwardsHQ })));
@@ -46,7 +46,7 @@ const Dashboard: React.FC = () => {
       case 'pipeline': return <PipelineBoard key="pipeline" />;
       case 'ip': return <IPVault key="ip" />;
       case 'distribution': return <DistributionHub key="distribution" />;
-      case 'industry': return <RivalsPanel key="industry" />;
+      case 'industry': return <IndustryPage key="industry" />;
       case 'talent': return <TalentHub key="talent" />;
       case 'finance': return <FinancePanel key="finance" />;
       case 'trades': return <DiscoveryBoard key="trades" />;

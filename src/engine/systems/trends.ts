@@ -27,7 +27,8 @@ export function initializeTrends(rng: RandomGenerator): GenreTrend[] {
         domain: 'Market',
         subDomain: 'Trend',
         intensity: 80,
-        context: { genre: shuffled[0] }
+        context: { genre: shuffled[0] },
+        rng
       })
     },
     {
@@ -39,7 +40,8 @@ export function initializeTrends(rng: RandomGenerator): GenreTrend[] {
         domain: 'Market',
         subDomain: 'Trend',
         intensity: 50,
-        context: { genre: shuffled[1] }
+        context: { genre: shuffled[1] },
+        rng
       })
     },
     {
@@ -51,7 +53,8 @@ export function initializeTrends(rng: RandomGenerator): GenreTrend[] {
         domain: 'Market',
         subDomain: 'Trend',
         intensity: 20,
-        context: { genre: shuffled[2] }
+        context: { genre: shuffled[2] },
+        rng
       })
     }
   ];
@@ -94,7 +97,8 @@ export function advanceTrends(trends: GenreTrend[], rng: RandomGenerator): State
           domain: 'Market',
           subDomain: 'Trend',
           intensity: 30,
-          context: { genre: newGenre }
+          context: { genre: newGenre },
+          rng
         })
       });
     }

@@ -44,6 +44,7 @@ import { generateMarketBanScandal } from '../systems/scandals';
 import { runUpfronts } from '../systems/television/upfrontsEngine';
 import { runFestivalMarket } from '../systems/festivals/festivalAuctionEngine';
 import { TalentLifecycleSystem } from '../systems/talent/TalentLifecycleSystem';
+import { TalentMoraleSystem } from '../systems/talent/TalentMoraleSystem';
 import { shouldAttemptHostileTakeover } from '../systems/ai/AgentBrain';
 
 /**
@@ -292,6 +293,19 @@ export class WeekCoordinator {
   private static runTalentFilter(state: GameState, context: TickContext) {
     context.impacts.push(TalentSystem.advance(state, context.rng));
     context.impacts.push(...TalentLifecycleSystem.tick(state, context.rng));
+
+    // Phase 1: Register Weekly Morale
+    const talentList = Object.values(state.entities.talents);
+    const projectsList = Object.values(state.entities.projects);
+    const contractsList = Object.values(state.entities.contracts);
+    const moraleUpdates = TalentMoraleSystem.processWeeklyMorale(talentList, projectsList, contractsList);
+    
+    for (const update of moraleUpdates) {
+      context.impacts.push({
+        type: 'TALENT_UPDATED',
+        payload: { talentId: update.talentId, update: update.update }
+      });
+    }
   }
 
   private static runMediaFilter(state: GameState, context: TickContext) {

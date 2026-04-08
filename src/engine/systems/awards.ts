@@ -235,7 +235,8 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
                 domain: 'Industry',
                 subDomain: 'Award',
                 intensity: isWin ? 90 : 30,
-                context: { project: bestProject.title, body: config.body, category: config.category }
+                context: { project: bestProject.title, body: config.body, category: config.category },
+                rng
             }),
             category: 'awards'
             }

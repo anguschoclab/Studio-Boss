@@ -4,6 +4,8 @@ import { RandomGenerator } from '../../utils/rng';
 import { AI_ARCHETYPES } from '../../data/aiArchetypes';
 import { SeriesProject } from '@/engine/types/project.types';
 import { assignTimeSlot, TimeSlot } from '../television/nielsenSystem';
+import { AgencyLeverageEngine } from './AgencyLeverage';
+import { MarketState } from '../../types';
 
 /**
  * Pure function to evaluate if an agency offers a "Package Deal".
@@ -12,13 +14,21 @@ export function evaluatePackageOffer(
   agency: Agency, 
   leadTalent: Talent, 
   talentPool: Talent[],
+  market: MarketState,
   rng: RandomGenerator
 ): { requiredTalentId?: string; packageDiscount?: number; reason: string } {
   const motivation = agency.currentMotivation || 'VOLUME_RETAIL';
   
   // 🎭 The Method Actor Tuning: Auteurs heavily mandate their own creative teams, effectively overriding agency norms. Probability increased to 50%.
   const isAuteur = leadTalent.prestige > 85;
-  const packageProbability = motivation === 'THE_PACKAGER' ? 0.40 : (isAuteur ? 0.50 : 0.15);
+
+  // Phase 2: Agency Leverage Integration
+  // Agent lookup removed as it's not strictly necessary for the core bundling logic here, 
+  // and we don't have a direct map without the full industry state.
+  const leverage = AgencyLeverageEngine.calculateNegotiationLeverage(leadTalent, agency, undefined, market);
+  
+  // High leverage agencies (Powerhouse/Major) packager probability increases
+  const packageProbability = (motivation === 'THE_PACKAGER' ? 0.40 : (isAuteur ? 0.50 : 0.15)) + (leverage.score * 0.2);
 
   if (rng.next() < packageProbability) {
     const otherClients = talentPool.filter(t => t.agencyId === agency.id && t.id !== leadTalent.id);

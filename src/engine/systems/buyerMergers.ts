@@ -49,7 +49,8 @@ export function advanceBuyers(state: GameState, rng: RandomGenerator): StateImpa
             domain: 'Market',
             subDomain: 'StreamerEvent',
             intensity: performance > 0 ? 80 : 20,
-            context: { actor: buyer.name }
+            context: { actor: buyer.name },
+            rng
           })
         });
       }
@@ -74,7 +75,8 @@ export function advanceBuyers(state: GameState, rng: RandomGenerator): StateImpa
             domain: 'Industry',
             subDomain: 'Vulnerability',
             intensity: 10,
-            context: { actor: buyer.name }
+            context: { actor: buyer.name },
+            rng
           })
         });
       }
@@ -127,7 +129,8 @@ export function advanceBuyers(state: GameState, rng: RandomGenerator): StateImpa
             domain: 'Industry',
             subDomain: 'Merger',
             intensity: 90,
-            context: { actor: acquirer.name, target: target.name }
+            context: { actor: acquirer.name, target: target.name },
+            rng
           })
         });
       }

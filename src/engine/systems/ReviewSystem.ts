@@ -93,7 +93,8 @@ export const ReviewSystem = {
           domain: 'Review',
           subDomain: 'Critic',
           intensity: s,
-          context: { project: projectTitle }
+          context: { project: projectTitle },
+          rng
         })
       });
     });

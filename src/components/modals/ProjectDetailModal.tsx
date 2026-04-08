@@ -5,6 +5,7 @@ import { formatMoney } from '@/engine/utils';
 import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
 import { evaluateGreenlight } from '@/engine/systems/greenlight';
 import { FESTIVALS } from '@/engine/systems/festivals';
+import { RandomGenerator } from '@/engine/utils/rng';
 import { AwardBody, Project, Talent, ScriptedProject, SeriesProject, Contract } from '@/engine/types';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -92,8 +93,12 @@ export const ProjectDetailModal = () => {
       if (t) acc.push(t);
       return acc;
     }, [] as Talent[]);
-    return evaluateGreenlight(project, gameState.finance.cash, attachedTalent);
-  }, [project, gameState, contracts, talentMap]);
+
+    const seedValue = (gameState.gameSeed ? Number(gameState.gameSeed) : 0) + gameState.week + project.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const uiRng = new RandomGenerator(seedValue);
+    
+    return evaluateGreenlight(project, gameState.finance.cash, attachedTalent, uiRng, gameState.week, projects);
+  }, [project, gameState, contracts, talentMap, projects]);
 
   const projectionData = useMemo(() => {
     if (!project) return [];
