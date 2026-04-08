@@ -27,6 +27,24 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
     // Current highest bid tracking
     const currentHighest = Object.values(opportunity.bids || {}).reduce((max: number, b) => Math.max(max, b.amount), 0);
     
+    // ⚡ Bolt: Hoisted leverage calculation out of the rivals loop to prevent O(R * A) repeated agency lookups
+    let opportunityLeverageAggression = 1.0;
+    if (opportunity.attachedTalentIds && opportunity.attachedTalentIds.length > 0) {
+      const mainTalent = state.entities.talents[opportunity.attachedTalentIds[0]];
+      if (mainTalent) {
+        const agency = mainTalent.agencyId ? state.industry.agencies.find(a => a.id === mainTalent.agencyId) : undefined;
+        const agent = mainTalent.agentId ? state.industry.agents.find(a => a.id === mainTalent.agentId) : undefined;
+        const leverage = AgencyLeverageEngine.calculateNegotiationLeverage(
+          mainTalent,
+          agency,
+          agent,
+          state.finance.marketState
+        );
+        // High leverage agencies make the project more desirable/expensive
+        opportunityLeverageAggression = 1.0 + (leverage.score * 0.3);
+      }
+    }
+
     rivalsList.forEach(rival => {
       const myBid = opportunity.bids[rival.id]?.amount || 0;
 
@@ -48,22 +66,7 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
 
       if (myBid < bidFloor && rival.cash > bidFloor * liquidityBuffer) {
         // Phase 2: Agency Leverage Integration
-        let leverageAggression = 1.0;
-        if (opportunity.attachedTalentIds && opportunity.attachedTalentIds.length > 0) {
-          const mainTalent = state.entities.talents[opportunity.attachedTalentIds[0]];
-          if (mainTalent) {
-            const agency = mainTalent.agencyId ? state.industry.agencies.find(a => a.id === mainTalent.agencyId) : undefined;
-            const agent = mainTalent.agentId ? state.industry.agents.find(a => a.id === mainTalent.agentId) : undefined;
-            const leverage = AgencyLeverageEngine.calculateNegotiationLeverage(
-              mainTalent,
-              agency,
-              agent,
-              state.finance.marketState
-            );
-            // High leverage agencies make the project more desirable/expensive
-            leverageAggression = 1.0 + (leverage.score * 0.3);
-          }
-        }
+        const leverageAggression = opportunityLeverageAggression;
 
         // 🎭 The Method Actor Tuning: Massive spike in multiplier if franchise builders bid on Sci-Fi/Action.
         const isKeyIPGenre = opportunity.genre === 'Sci-Fi' || opportunity.genre === 'Action' || opportunity.genre === 'Fantasy';
