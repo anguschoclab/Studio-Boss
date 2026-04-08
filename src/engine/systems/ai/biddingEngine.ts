@@ -126,21 +126,21 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
     if (rng.next() < 0.1) {
       const target = rng.pick(availableTalent);
 
-      // 🎭 The Method Actor Tuning: Auteur directors heavily favor prestige, demanding massive premiums if the studio lacks it, but will accept major discounts for highly prestigious studios.
+      // 🎭 The Method Actor Tuning: Auteur directors heavily prioritize prestige over upfront cash, demanding steeper premiums or flatly rejecting low-prestige studios while offering massive discounts to highly prestigious ones.
       const isAuteur = target.prestige > 85;
       const prestigeDelta = target.prestige - rival.prestige;
 
       // 🎭 The Method Actor Tuning: Auteurs heavily favor prestige. They will flat-out reject low prestige studios unless they are money grabbers.
-      if (isAuteur && prestigeDelta > 20 && target.currentMotivation !== 'MONEY_GRABBER') {
+      if (isAuteur && prestigeDelta > 15 && target.currentMotivation !== 'MONEY_GRABBER') {
           return;
       }
 
       let prestigePenalty = 0;
       if (isAuteur) {
         if (prestigeDelta > 10) {
-          prestigePenalty = prestigeDelta * 0.40; // Massive penalty for low prestige
-        } else if (prestigeDelta < -10) {
-          prestigePenalty = -0.6; // Massive discount for high prestige
+          prestigePenalty = prestigeDelta * 0.50; // Massive penalty for low prestige
+        } else if (prestigeDelta < -15) {
+          prestigePenalty = -0.8; // Massive discount for high prestige
         } else if (prestigeDelta > 0) {
           prestigePenalty = prestigeDelta * 0.1;
         }
