@@ -19,6 +19,11 @@ export const BardResolver = {
     const subDomainData = domainData[subDomain];
     if (!subDomainData) return `[MISSING SUB-DOMAIN: ${subDomain}]`;
 
+    // 0. Handle Flat Dictionary/Tier Entry
+    if (Array.isArray(subDomainData)) {
+      return this.interpolate(this.pick(subDomainData), context || {});
+    }
+
     // 1. Variant-Specific Resolution (High Priority)
     // If a specific variant key is requested (e.g. for Options or specific story arcs)
     if (variant && subDomainData[variant]) {

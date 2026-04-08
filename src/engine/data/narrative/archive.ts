@@ -18,7 +18,7 @@ export const NarrativeSubDomainSchema = z.record(
   ])
 );
 
-export const NarrativeDomainSchema = z.record(z.string(), NarrativeSubDomainSchema);
+export const NarrativeDomainSchema = z.record(z.string(), z.union([NarrativeSubDomainSchema, NarrativeTierSchema]));
 
 export const NarrativeArchiveSchema = z.record(z.string(), NarrativeDomainSchema);
 
