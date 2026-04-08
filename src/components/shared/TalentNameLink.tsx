@@ -16,8 +16,15 @@ export const TalentNameLink: React.FC<TalentNameLinkProps> = ({ talentId, name, 
   const { selectTalent } = useUIStore();
 
   return (
-    <button
-      type="button"
+    <span
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          selectTalent(talentId);
+        }
+      }}
       onClick={(e) => {
         e.stopPropagation();
         selectTalent(talentId);
