@@ -67,6 +67,11 @@ export function calculateFranchiseFatigue(
     currentFatigue *= 4.0;
   }
 
+  // 🌌 The Universe Builder: Complete Structural Collapse of a Mega-Franchise.
+  if (activeCount >= 6 && franchise.audienceLoyalty < 70) {
+    currentFatigue *= 5.0; // Total audience apathy
+  }
+
   // 🌌 The Universe Builder: Terminal Superhero Fatigue.
   if (activeCount >= 3 && genreSaturation > 15 && (normalizedGenre === 'Superhero' || normalizedGenre === 'Multiverse')) {
     currentFatigue *= 3.5;
@@ -155,6 +160,16 @@ export function calculateReleaseGapImpact(
       buzzBonus: 15,
       label: 'Soft Reboot (IP Retention)',
       fatigueReset: true
+    };
+  }
+
+  // Desperate Reboot (3-4 years)
+  // 🌌 The Universe Builder: Trying to reboot too quickly after a failure just pisses everyone off.
+  if (yearsSince >= 3 && yearsSince < 4) {
+    return {
+      buzzBonus: -35,
+      label: 'Desperate Reboot (Too Soon)',
+      fatigueReset: false
     };
   }
 
