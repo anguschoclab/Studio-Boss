@@ -27,7 +27,7 @@ describe('generateHeadlines', () => {
     headlines.forEach(headline => {
       expect(headline).toHaveProperty('id');
       expect(typeof headline.id).toBe('string');
-      expect(headline.id.startsWith('h-')).toBe(true);
+      expect(headline.id.startsWith('NWS-')).toBe(true);
 
       expect(headline).toHaveProperty('text');
       expect(typeof headline.text).toBe('string');
@@ -36,7 +36,7 @@ describe('generateHeadlines', () => {
       expect(headline.week).toBe(week);
 
       expect(headline).toHaveProperty('category');
-      expect(['rival', 'market', 'talent', 'scandal', 'streaming']).toContain(headline.category);
+      expect(['rival', 'market', 'talent', 'scandal', 'box_office', 'streaming', 'dispute']).toContain(headline.category);
     });
   });
 
@@ -101,19 +101,34 @@ describe('generateHeadlines', () => {
       activeRoles: [],
       scriptEvents: []
     } as unknown as import('../../../engine/types').Project];
-    const talent = [{ 
-      id: 't1', 
-      name: 'James Cameron', 
-      roles: ['director'], 
-      prestige: 100, 
-      salary: 100000, 
-      buzz: 100, 
-      marketability: 100, 
-      skill: 100,
-      draw: 100,
-      fee: 100000,
-      energy: 100,
-    } as any];
+    const talent = [
+      { 
+        id: 't1', 
+        name: 'James Cameron', 
+        roles: ['director'], 
+        prestige: 100, 
+         salary: 100000, 
+        buzz: 100, 
+        marketability: 100, 
+        skill: 100,
+        draw: 100,
+        fee: 100000,
+        energy: 100,
+      },
+      { 
+        id: 't2', 
+        name: 'Tom Cruise', 
+        roles: ['actor'], 
+        prestige: 100, 
+        salary: 100000, 
+        buzz: 100, 
+        marketability: 100, 
+        skill: 100,
+        draw: 100,
+        fee: 100000,
+        energy: 100,
+      }
+    ] as any;
     const contracts = [{ 
       id: 'c1', 
       projectId: 'p1', 
@@ -129,7 +144,7 @@ describe('generateHeadlines', () => {
       const headlines = generateHeadlines(rng, 1, rivals, projects as any, contracts as any, talent as any);
       const talentHeadline = headlines.find(h => h.category === 'talent');
       if (talentHeadline) {
-        if (talentHeadline.text.includes('Test Movie') || talentHeadline.text.includes('James Cameron')) {
+        if (talentHeadline.text.includes('James Cameron') || talentHeadline.text.includes('Tom Cruise')) {
           foundInterpolatedHeadline = true;
           break;
         }

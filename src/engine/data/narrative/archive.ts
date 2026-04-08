@@ -7,7 +7,16 @@ import { z } from 'zod';
 
 export const NarrativeTierSchema = z.array(z.string());
 
-export const NarrativeSubDomainSchema = z.record(z.string(), NarrativeTierSchema);
+// A subdomain can contain either flat tiers (string -> string[]) 
+// or nested tones/variants (string -> string -> string[])
+export const NarrativeSubDomainSchema = z.record(
+  z.string(),
+  z.union([
+    NarrativeTierSchema,
+    z.record(z.string(), NarrativeTierSchema),
+    z.record(z.string(), z.record(z.string(), NarrativeTierSchema)) // Support Options nesting
+  ])
+);
 
 export const NarrativeDomainSchema = z.record(z.string(), NarrativeSubDomainSchema);
 
@@ -31,7 +40,7 @@ export interface NarrativeContext {
 /**
  * Metadata Mapper helper types
  */
-export type NarrativeDomainKey = 'Review' | 'Greenlight' | 'Talent' | 'Industry' | 'Market' | 'Crisis' | 'Scandal' | 'Festival' | 'Trend';
+export type NarrativeDomainKey = 'Review' | 'Greenlight' | 'Talent' | 'Industry' | 'Market' | 'Crisis' | 'Scandal' | 'Festival' | 'Trend' | 'Project' | 'Dictionary';
 
 export type NarrativeTone = 'Trade' | 'Tabloid' | 'Social' | 'Standard';
 

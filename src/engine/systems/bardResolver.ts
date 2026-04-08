@@ -26,36 +26,55 @@ export const BardResolver = {
       return this.interpolate(this.pick(templates), context || {});
     }
 
-    // 2. Tiered/Intensity Resolution (Legacy Fallback)
-    // Attempt to drill down into Tone if it exists in the archive
-    let tierData = subDomainData;
-    if (subDomainData[tone]) {
-      tierData = subDomainData[tone];
-    } else if (subDomainData['Standard']) {
-      tierData = subDomainData['Standard'];
-    }
-
-    // Map intensity (0-100) to Tiers
+    // 2. Find Tier Data
+    // A tone can be: specified in request, 'Standard' (default), or inferred.
+    let templates: string[] = [];
     const tierKey = this.getTier(domain, intensity);
-    let templates = tierData[tierKey];
 
-    // Final fallback: if the specific tier is missing, check the base subDomainData for that tier
-    if (!templates || templates.length === 0) {
+    // Try finding templates in order of specificity:
+    // 1. Specified tone OR 'Standard'
+    if (subDomainData[tone] && subDomainData[tone][tierKey]) {
+      templates = subDomainData[tone][tierKey];
+    } 
+    // 2. 'Trade' fallback (the industry standard)
+    else if (subDomainData['Trade'] && subDomainData['Trade'][tierKey]) {
+      templates = subDomainData['Trade'][tierKey];
+    }
+    // 3. 'Standard' fallback
+    else if (subDomainData['Standard'] && subDomainData['Standard'][tierKey]) {
+      templates = subDomainData['Standard'][tierKey];
+    }
+    // 4. Flat structure (domain[subDomain][tier])
+    else if (subDomainData[tierKey]) {
       templates = subDomainData[tierKey];
     }
 
     if (!templates || templates.length === 0) {
-      // Find any available tier
-      const allPossibleTiers = Object.keys(tierData);
-      const fallbackTier = allPossibleTiers[0];
-      const fallbackTemplates = tierData[fallbackTier];
-      if (!fallbackTemplates || fallbackTemplates.length === 0) {
-        return `[EMPTY ARCHIVE: ${domain}.${subDomain}]`;
+      // 5. Extreme fallback: Pick any valid tier in any available tone
+      const allPossibleKeys = Object.keys(subDomainData);
+      for (const key of allPossibleKeys) {
+        const potentialTierData = subDomainData[key];
+        if (typeof potentialTierData === 'object' && !Array.isArray(potentialTierData)) {
+          // It's a tone/bucket object, check its tiers
+          const nestedTiers = Object.keys(potentialTierData);
+          const firstValidTier = nestedTiers.find(t => Array.isArray(potentialTierData[t]) && potentialTierData[t].length > 0);
+          if (firstValidTier) {
+            templates = potentialTierData[firstValidTier];
+            break;
+          }
+        } else if (Array.isArray(potentialTierData) && potentialTierData.length > 0) {
+          // It's a flat tier array
+          templates = potentialTierData;
+          break;
+        }
       }
-      return this.interpolate(this.pick(fallbackTemplates), context || {});
     }
 
-    const template = this.pick(templates) as string;
+    if (!templates || templates.length === 0) {
+      return `[EMPTY ARCHIVE: ${domain}.${subDomain}]`;
+    }
+
+    const template = this.pick(templates);
     return this.interpolate(template, context || {});
   },
 
@@ -87,12 +106,40 @@ export const BardResolver = {
 
   /**
    * Interpolates templates using double curly braces {{key}}.
+   * If a key is missing from context, it checks the Dictionary domain in the archive.
    */
   interpolate(template: string, context: Record<string, any>): string {
-    return template.replace(/\{\{(.*?)\}\}/g, (match, key) => {
-      const trimmedKey = key.trim();
-      return context[trimmedKey] !== undefined ? context[trimmedKey] : match;
-    });
+    const archive = archiveData as any;
+    const dictionary = archive['Dictionary'] || {};
+
+    // Use a loop or iterative replacement to handle potential recursive tags
+    let result = template;
+    let limit = 5; // Prevent infinite loops
+
+    while (result.includes('{{') && limit > 0) {
+      const nextResult = result.replace(/\{\{(.*?)\}\}/g, (match, key) => {
+        const trimmedKey = key.trim();
+        
+        // 1. Check direct context
+        if (context[trimmedKey] !== undefined) {
+          return context[trimmedKey];
+        }
+
+        // 2. Check Dictionary
+        if (dictionary[trimmedKey] && Array.isArray(dictionary[trimmedKey])) {
+          return this.pick(dictionary[trimmedKey]);
+        }
+
+        // 3. Keep as is if not found
+        return match;
+      });
+
+      if (nextResult === result) break;
+      result = nextResult;
+      limit--;
+    }
+
+    return result;
   },
 
   /**
