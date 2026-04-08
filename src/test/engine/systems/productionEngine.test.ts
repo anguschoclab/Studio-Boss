@@ -40,6 +40,22 @@ describe('Production Engine - Normalization', () => {
     const rivalUpdate = impacts.find(i => i.type === 'RIVAL_UPDATED') as any;
     expect(rivalUpdate).toBeDefined();
   });
+
+  it('handles advancing weeks with an empty pipeline (Guild Auditor)', () => {
+    const state = createMockGameState();
+    state.entities.projects = {};
+    state.entities.rivals = {
+      'empty-rival': createMockRival({ id: 'empty-rival', projects: {} })
+    };
+
+    const impacts = tickProduction(state, rng);
+
+    const industryUpdate = impacts.find(i => i.type === 'INDUSTRY_UPDATE') as any;
+    expect(industryUpdate).toBeUndefined(); // Should not emit update if empty
+
+    // Verify no crashes occurred
+    expect(impacts.length).toBeGreaterThanOrEqual(0); // Should just return an array, likely empty or with resting talent fatigue
+  });
 });
 
 describe('Merger Resolution', () => {
