@@ -40,5 +40,6 @@ export interface ResolutionRequest {
   subDomain: string;
   intensity: number; // 0-100
   tone?: NarrativeTone;
-  context: NarrativeContext;
+  variant?: string; // Specific key in the SubDomain (e.g. for Options or specific story beats)
+  context?: NarrativeContext;
 }

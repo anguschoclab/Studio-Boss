@@ -199,11 +199,13 @@ export function generateStudioRatingEvent(
     : type === 'rating_controversy' ? -5
     : -3;
 
-  const headline = type === 'banned_in_market'
-    ? `"${context.projectTitle}" BANNED in ${context.marketName ?? 'foreign market'}`
-    : type === 'rating_controversy'
-    ? `Rating controversy surrounds "${context.projectTitle}"`
-    : `Content cut for foreign release of "${context.projectTitle}"`;
+  const headline = BardResolver.resolve({
+    domain: 'Industry',
+    subDomain: 'Scandal',
+    variant: type, // 'rating_controversy' | 'foreign_market_cut' | 'banned_in_market'
+    intensity: 50,
+    context: { project: context.projectTitle }
+  });
 
   const description = BardResolver.resolve({
     domain: 'Industry',

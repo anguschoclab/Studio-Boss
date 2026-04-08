@@ -20,11 +20,19 @@ export function generateCrisis(project: Project, rng: RandomGenerator): StateImp
     haltedProduction: false,
     description: BardResolver.resolve({
       domain: 'Crisis',
-      subDomain: template.id.split('_')[0], // e.g., 'production' or 'pr'
-      intensity: 50,
+      subDomain: template.description, // e.g., 'PR' or 'Production'
+      intensity: 75,
       context: { project: project.title }
     }),
-    options: template.options,
+    options: template.options.map(opt => ({
+      ...opt,
+      text: BardResolver.resolve({
+        domain: 'Crisis',
+        subDomain: `${template.description}.Options`, // e.g., 'PR.Options'
+        variant: opt.text, // e.g., 'Aggressive'
+        intensity: 50
+      })
+    })),
     resolved: false,
     severity: 'medium'
   };

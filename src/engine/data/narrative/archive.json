@@ -1,6 +1,6 @@
 {
   "Review": {
-    "Critic": {
+    "Standard": {
       "Trade": {
         "Acclaimed": [
           "{{project}} is a landmark achievement in contemporary cinema and a lock for awards consideration.",
@@ -55,6 +55,18 @@
     }
   },
   "Talent": {
+    "Career": {
+      "Trade": {
+        "Elite": [
+          "{{actor}} is currently the most sought-after name in the industry following a string of hits.",
+          "Agencies are in a bidding war to represent {{actor}} after their latest performance."
+        ],
+        "Standard": [
+          "{{actor}} continues to build a solid filmography with diverse project choices.",
+          "Industry insiders note {{actor}}'s steady rise in marketability this quarter."
+        ]
+      }
+    },
     "Health": {
       "Trade": {
         "Recovered": [
@@ -97,6 +109,80 @@
         "Monster Merger: {{actor}} just swallowed {{target}}! Who's next on the menu?",
         "Greed is good? {{actor}} and {{target}} are joining forces to take over the world."
       ]
+    },
+    "Rumor": {
+      "Trade": [
+        "Whispers suggest {{actor}} is looking to acquire a major indie IP.",
+        "Word around town is that {{actor}} is preparing a monumental buyout offer.",
+        "Exec shakeups expected soon at {{actor}}."
+      ],
+      "Tabloid": [
+        "Spotted: {{actor}} meeting secretly with a rival CEO. Buying or selling?",
+        "Gossip is heating up about {{actor}}'s next project being wildly over budget.",
+        "Is {{actor}} headed for a meltdown? Sources say 'yes'."
+      ]
+    },
+    "Scandal": {
+      "Trade": [
+        "A high-profile talent dispute involving {{actor}} makes industry headlines.",
+        "Regulators announce new content distribution guidelines for {{actor}}."
+      ],
+      "Tabloid": [
+        "Nepotism debate dominates the weekly trades after {{actor}}'s casting.",
+        "Famous dynasty patriarch announces retirement; {{actor}} left out of the will?"
+      ],
+      "rating_controversy": [
+        "Rating controversy surrounds {{project}} over Mature content rating.",
+        "Board of censors flags {{project}} for extreme thematic elements."
+      ],
+      "foreign_market_cut": [
+        "Major sequences cut from {{project}} to secure release in international markets.",
+        "{{project}} edited for content sensitivity in key foreign territories."
+      ],
+      "banned_in_market": [
+        "{{project}} officially BANNED in major foreign market after regulatory review.",
+        "International release of {{project}} canceled due to local ban."
+      ]
+    }
+  },
+  "Market": {
+    "Headline": {
+      "Standard": [
+        "Market analysts upgrade entertainment sector outlook.",
+        "International box office sets new quarterly record.",
+        "A viral social media trend boosts {{genre}} film interest."
+      ]
+    },
+    "Event": {
+      "Standard": [
+        "Regulators announce new content distribution guidelines.",
+        "Major studio lot fire disrupts production schedules city-wide.",
+        "Virtual Reality pioneer announces a 'cinema killer' platform."
+      ]
+    }
+  },
+  "Crisis": {
+    "PR": {
+      "Dramatic": [
+        "Public family feud leaks during an awards press tour for {{actor}}.",
+        "Leaked audio reveals {{actor}}'s onset tantrum during {{project}}."
+      ],
+      "Options": {
+        "Aggressive": ["Hire a high-powered crisis management firm to spin the story.", "Launch a counter-leak to discredit the sources."],
+        "Apologetic": ["Issue a sincere notes-app apology and donate to a related charity.", "Coordinate a sit-down interview to explain the situation."],
+        "Ignored": ["Maintain total radio silence and hope the next news cycle buries it.", "Continue business as usual and block any reporters asking questions."]
+      }
+    },
+    "Production": {
+      "Dramatic": [
+        "{{project}} reportedly facing severe production delays after a set accident.",
+        "Unexpected script leaks for {{project}} send the studio into damage control."
+      ],
+      "Options": {
+        "BudgetExpansion": ["Inject emergency funds to solve the issue immediately.", "Authorize overtime for the entire crew to catch up."],
+        "Delay": ["Push the release date back to ensure safety and quality.", "Temporarily halt production while a solution is found."],
+        "CuttingCorners": ["Cut the affected scenes entirely to stay on schedule.", "Fix the issues with cheaper CGI in post-production."]
+      }
     }
   }
 }

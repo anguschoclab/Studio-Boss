@@ -10,7 +10,7 @@ export const BardResolver = {
    * Resolves a narrative string based on domain, sub-domain, and intensity.
    */
   resolve(request: ResolutionRequest): string {
-    const { domain, subDomain, intensity, context, tone = 'Standard' } = request;
+    const { domain, subDomain, intensity, context, tone = 'Standard', variant } = request;
     const archive = archiveData as any;
 
     const domainData = archive[domain];
@@ -19,6 +19,14 @@ export const BardResolver = {
     const subDomainData = domainData[subDomain];
     if (!subDomainData) return `[MISSING SUB-DOMAIN: ${subDomain}]`;
 
+    // 1. Variant-Specific Resolution (High Priority)
+    // If a specific variant key is requested (e.g. for Options or specific story arcs)
+    if (variant && subDomainData[variant]) {
+      const templates = subDomainData[variant];
+      return this.interpolate(this.pick(templates), context || {});
+    }
+
+    // 2. Tiered/Intensity Resolution (Legacy Fallback)
     // Attempt to drill down into Tone if it exists in the archive
     let tierData = subDomainData;
     if (subDomainData[tone]) {
@@ -44,11 +52,11 @@ export const BardResolver = {
       if (!fallbackTemplates || fallbackTemplates.length === 0) {
         return `[EMPTY ARCHIVE: ${domain}.${subDomain}]`;
       }
-      return this.interpolate(this.pick(fallbackTemplates), context);
+      return this.interpolate(this.pick(fallbackTemplates), context || {});
     }
 
     const template = this.pick(templates) as string;
-    return this.interpolate(template, context);
+    return this.interpolate(template, context || {});
   },
 
   /**
