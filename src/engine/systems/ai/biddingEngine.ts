@@ -31,30 +31,30 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
 
       // Logic for should rebid: Outbid if highest is better AND rival has cash
       // If the player is the highest bidder, AI is more aggressive
-      // 🎭 Method Actor Tuning: Player threat makes rivals significantly more aggressive.
+      // 🎭 The Method Actor Tuning: Player threat makes rivals significantly more aggressive.
       const isPlayerLeading = opportunity.highestBidderId === 'PLAYER';
-      const aggressionFactor = isPlayerLeading ? 1.35 : 1.0;
+      const aggressionFactor = isPlayerLeading ? 1.5 : 1.0;
 
       const isFranchiseBuilder = rival.currentMotivation === 'FRANCHISE_BUILDING';
       const isCashCrunch = rival.currentMotivation === 'CASH_CRUNCH';
       const motivationAggression = (rival.motivationProfile?.aggression || 50) / 100;
 
-      // 🎭 Method Actor Tuning: Franchise builders are willing to run low on liquidity to grab key assets.
+      // 🎭 The Method Actor Tuning: Franchise builders are willing to run low on liquidity to grab key assets.
       const liquidityBuffer = isFranchiseBuilder ? 1.05 : (isCashCrunch ? 1.5 : 1.25 - (motivationAggression * 0.15));
 
       // Determine the minimum bid floor (current highest or reserve cost)
       const bidFloor = Math.max(currentHighest, opportunity.costToAcquire);
 
       if (myBid < bidFloor && rival.cash > bidFloor * liquidityBuffer) {
-        // 🎭 Method Actor Tuning: Massive spike in multiplier if franchise builders bid on Sci-Fi/Action.
+        // 🎭 The Method Actor Tuning: Massive spike in multiplier if franchise builders bid on Sci-Fi/Action.
         const isKeyIPGenre = opportunity.genre === 'Sci-Fi' || opportunity.genre === 'Action' || opportunity.genre === 'Fantasy';
         const franchiseAggression = isFranchiseBuilder && isKeyIPGenre ? 1.5 : (isFranchiseBuilder ? 1.2 : 1.0);
 
         const multiplier = (ArchetypeMultipliers[rival.archetype]?.(opportunity.genre) || 1.0) * aggressionFactor * franchiseAggression;
         const newBid = Math.floor(bidFloor * (1 + (rng.range(1.05, 1.25) - 1) * multiplier));
 
-        // 🎭 Method Actor Tuning: Raise the max bid cap for franchise builders and aggressive studios so they don't give up easily.
-        const maxBidCap = isFranchiseBuilder ? 0.65 : (isCashCrunch ? 0.15 : 0.40 + (motivationAggression * 0.1));
+        // 🎭 The Method Actor Tuning: Raise the max bid cap for franchise builders and aggressive studios so they don't give up easily.
+        const maxBidCap = isFranchiseBuilder ? 0.80 : (isCashCrunch ? 0.15 : 0.40 + (motivationAggression * 0.1));
         if (newBid < rival.cash * maxBidCap) {
           impacts.push({
             type: 'OPPORTUNITY_UPDATED',
@@ -107,19 +107,19 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
     if (rng.next() < 0.1) {
       const target = rng.pick(availableTalent);
 
-      // 🎭 Method Actor Tuning: Auteur directors heavily favor prestige, demanding massive premiums if the studio lacks it, but will accept major discounts for highly prestigious studios.
+      // 🎭 The Method Actor Tuning: Auteur directors heavily favor prestige, demanding massive premiums if the studio lacks it, but will accept major discounts for highly prestigious studios.
       const isAuteur = target.prestige > 85;
       const prestigeDelta = target.prestige - rival.prestige;
 
       // 🎭 The Method Actor Tuning: Auteurs heavily favor prestige. They will flat-out reject low prestige studios unless they are money grabbers.
-      if (isAuteur && prestigeDelta > 30 && target.currentMotivation !== 'MONEY_GRABBER') {
+      if (isAuteur && prestigeDelta > 20 && target.currentMotivation !== 'MONEY_GRABBER') {
           return;
       }
 
       let prestigePenalty = 0;
       if (isAuteur) {
         if (prestigeDelta > 10) {
-          prestigePenalty = prestigeDelta * 0.25; // Massive penalty for low prestige
+          prestigePenalty = prestigeDelta * 0.40; // Massive penalty for low prestige
         } else if (prestigeDelta < -10) {
           prestigePenalty = -0.6; // Massive discount for high prestige
         } else if (prestigeDelta > 0) {
@@ -183,6 +183,7 @@ export function calculateLiveCounterBid(
   if (rival.cash < playerBid * 2 || rival.prestige < 60) return null;
 
   const multiplier = ArchetypeMultipliers[rival.archetype]?.(opportunity.genre) || 1.1;
+  // 🎭 The Method Actor Tuning: Increased reaction aggression
   const reactionThreshold = 0.3;
   
   // 🎭 The Method Actor Tuning: Adjust reaction thresholds and multipliers based on motivation
