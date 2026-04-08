@@ -5,6 +5,7 @@ import { clamp } from '../utils';
 import { RandomGenerator } from '../utils/rng';
 import { applyAwardBoostsToTalent } from './talentStats';
 import { SchedulingEngine } from './schedulingEngine';
+import { BardResolver } from './bardResolver';
 
 /**
  * TalentSystem encapsulates all logic related to talent lifecycle, 
@@ -30,13 +31,23 @@ export class TalentSystem {
           update.onMedicalLeave = false;
           update.fatigue = 20; // Recharged
           changed = true;
-          uiNotifications.push(`${talent.name} has returned from medical leave.`);
+          uiNotifications.push(BardResolver.resolve({
+            domain: 'Talent',
+            subDomain: 'Health',
+            intensity: 80, // Recovered
+            context: { actor: talent.name }
+          }));
         }
       } else if ((talent.fatigue || 0) > 95) {
         update.onMedicalLeave = true;
         update.medicalLeaveEndsWeek = state.week + 12;
         changed = true;
-        uiNotifications.push(`${talent.name} has entered medical leave due to extreme burnout.`);
+        uiNotifications.push(BardResolver.resolve({
+          domain: 'Talent',
+          subDomain: 'Health',
+          intensity: 10, // Burnout
+          context: { actor: talent.name }
+        }));
       }
 
       // Recovery phase (only if not on leave, or handled differently)

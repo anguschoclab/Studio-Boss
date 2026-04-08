@@ -1,5 +1,6 @@
 import { AwardBody, AwardCategory, GameState, Project, RivalStudio, StateImpact, Talent, Contract } from '@/engine/types';
 import { RandomGenerator } from '../utils/rng';
+import { BardResolver } from './bardResolver';
 import { 
   AWARDS_CALENDAR, 
   AWARD_CONFIGS, 
@@ -229,9 +230,14 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
             payload: {
                 id: rng.uuid('NWS'),
                 week: currentWeek,
-                headline: `AWARDS: "${bestProject.title}" wins ${config.category}`,
-                description: `A triumphant victory at the ${config.body} for the entire team behind "${bestProject.title}".`,
-                category: 'awards'
+            headline: `AWARDS: ${bestProject.title}`,
+            description: BardResolver.resolve({
+                domain: 'Industry',
+                subDomain: 'Award',
+                intensity: isWin ? 90 : 30,
+                context: { project: bestProject.title, body: config.body, category: config.category }
+            }),
+            category: 'awards'
             }
         });
       }

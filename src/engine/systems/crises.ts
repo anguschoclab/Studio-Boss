@@ -3,6 +3,7 @@ import { Project, ActiveCrisis, GameState } from '@/engine/types';
 import { StateImpact } from '../types/state.types';
 import { CRISIS_POOLS } from '../data/crises.data';
 import { RandomGenerator } from '../utils/rng';
+import { BardResolver } from './bardResolver';
 
 /**
  * Procedural Crisis Generation (Hardened)
@@ -13,11 +14,16 @@ export function generateCrisis(project: Project, rng: RandomGenerator): StateImp
   if (!template) return null;
 
   const crisis: ActiveCrisis = {
-    id: rng.uuid('CRS'), // 🌌 Unique instance ID
-    crisisId: template.id,       // 🌌 Refers back to template data
-    triggeredWeek: 0, // Will be set by the coordinator or reducer
+    id: rng.uuid('CRS'), 
+    crisisId: template.id,       
+    triggeredWeek: 0, 
     haltedProduction: false,
-    description: template.description,
+    description: BardResolver.resolve({
+      domain: 'Crisis',
+      subDomain: template.id.split('_')[0], // e.g., 'production' or 'pr'
+      intensity: 50,
+      context: { project: project.title }
+    }),
     options: template.options,
     resolved: false,
     severity: 'medium'

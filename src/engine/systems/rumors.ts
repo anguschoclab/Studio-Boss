@@ -2,6 +2,9 @@ import { pick } from '../utils';
 import { GameState, Rumor } from '@/engine/types';
 import { StateImpact } from '../types/state.types';
 import { RandomGenerator } from '../utils/rng';
+import { BardResolver } from './bardResolver';
+
+type RumorCategory = 'talent' | 'rival' | 'market' | 'project';
 
 export function advanceRumors(state: GameState, rng: RandomGenerator): StateImpact {
   const newHeadlines: import('../types/engine.types').Headline[] = [];
@@ -38,38 +41,42 @@ export function advanceRumors(state: GameState, rng: RandomGenerator): StateImpa
   const baseRumorChance = 0.05 + (state.studio.prestige * 0.003);
   const maxActiveRumors = Math.max(3, Math.floor(state.studio.prestige / 20));
 
-  const rivalsList = Object.values(state.entities.rivals || {});
-
   if (rng.next() < baseRumorChance && currentRumors.filter(r => !r.resolved).length < maxActiveRumors) {
-    const isTrue = rng.next() > 0.5;
-    const subjects = ['talent', 'rival', 'project'];
-    const category = pick(subjects, rng) as 'talent' | 'rival' | 'project';
+    const isTrue = rng.next() < 0.6;
+    const subjects: RumorCategory[] = ['talent', 'rival', 'project'];
+    const category = pick(subjects, rng);
     
-    let text = 'Unnamed studio in talks for a massive merger.';
+    let text = '';
     
     if (category === 'talent' && Object.keys(state.entities.talents).length > 0) {
       const talent = pick(Object.values(state.entities.talents), rng);
-      const rumors = [
-        `${talent.name} reportedly demanding unprecedented back-end points on next project.`,
-        `Sources say ${talent.name} is extremely difficult to work with on set.`,
-        `${talent.name} is secretly looking to direct their next feature.`
-      ];
-      text = pick(rumors, rng);
-    } else if (category === 'rival' && rivalsList.length > 0) {
-      const rival = pick(rivalsList, rng);
-      const rumors = [
-        `${rival.name} is allegedly facing severe cash flow issues.`,
-        `Word around town is ${rival.name} is preparing a monumental buyout offer.`,
-        `Exec shakeups expected soon at ${rival.name}.`
-      ];
-      text = pick(rumors, rng);
+      text = BardResolver.resolve({
+        domain: 'Industry',
+        subDomain: 'Rumor',
+        intensity: rng.range(0, 100),
+        tone: 'Tabloid',
+        context: { actor: talent.name }
+      });
+    } else if (category === 'rival') {
+      const rival = pick(Object.values(state.entities.rivals || {}), rng);
+      text = BardResolver.resolve({
+        domain: 'Industry',
+        subDomain: 'Rumor',
+        intensity: rng.range(0, 100),
+        tone: 'Tabloid',
+        context: { actor: rival.name }
+      });
     } else if (category === 'project' && Object.keys(state.entities.projects).length > 0) {
       const project = pick(Object.values(state.entities.projects), rng);
-      if (project.state === 'production') {
-        text = `Production on "${project.title}" is rumored to be wildly over budget.`;
-      } else {
-        text = `Early test screenings for "${project.title}" are supposedly disastrous.`;
-      }
+      text = BardResolver.resolve({
+        domain: 'Industry',
+        subDomain: 'Rumor',
+        intensity: rng.range(0, 100),
+        tone: 'Trade',
+        context: { project: project.title }
+      });
+    } else {
+      text = 'Unnamed studio in talks for a massive merger.';
     }
     
     const rumor: Rumor = {

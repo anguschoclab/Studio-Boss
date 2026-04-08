@@ -2,6 +2,7 @@ import { pick } from '../utils';
 import { GenreTrend, GameState } from '@/engine/types';
 import { StateImpact } from '../types/state.types';
 import { RandomGenerator } from '../utils/rng';
+import { BardResolver } from './bardResolver';
 
 export const ALL_GENRES = [
   'Action', 'Comedy', 'Drama', 'Horror', 'Sci-Fi', 'Thriller', 'Romance', 'Animation', 'Documentary', 'Fantasy'
@@ -20,20 +21,38 @@ export function initializeTrends(rng: RandomGenerator): GenreTrend[] {
     {
       genre: shuffled[0],
       heat: 80,
-      direction: 'rising',
-      weeksRemaining: 12
+      direction: 'hot',
+      weeksRemaining: 12,
+      description: BardResolver.resolve({
+        domain: 'Market',
+        subDomain: 'Trend',
+        intensity: 80,
+        context: { genre: shuffled[0] }
+      })
     },
     {
       genre: shuffled[1],
       heat: 50,
       direction: 'stable',
-      weeksRemaining: 24
+      weeksRemaining: 24,
+      description: BardResolver.resolve({
+        domain: 'Market',
+        subDomain: 'Trend',
+        intensity: 50,
+        context: { genre: shuffled[1] }
+      })
     },
     {
       genre: shuffled[2],
       heat: 20,
       direction: 'cooling',
-      weeksRemaining: 6
+      weeksRemaining: 6,
+      description: BardResolver.resolve({
+        domain: 'Market',
+        subDomain: 'Trend',
+        intensity: 20,
+        context: { genre: shuffled[2] }
+      })
     }
   ];
 }
@@ -70,7 +89,13 @@ export function advanceTrends(trends: GenreTrend[], rng: RandomGenerator): State
         genre: newGenre,
         heat: 30,
         direction: 'rising',
-        weeksRemaining: 16 + Math.floor(rng.next() * 12)
+        weeksRemaining: 16 + Math.floor(rng.next() * 12),
+        description: BardResolver.resolve({
+          domain: 'Market',
+          subDomain: 'Trend',
+          intensity: 30,
+          context: { genre: newGenre }
+        })
       });
     }
   }

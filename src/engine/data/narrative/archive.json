@@ -1,0 +1,102 @@
+{
+  "Review": {
+    "Critic": {
+      "Trade": {
+        "Acclaimed": [
+          "{{project}} is a landmark achievement in contemporary cinema and a lock for awards consideration.",
+          "A tour de force that reaffirms the director's status at the top of the A-list.",
+          "Exquisitely crafted and deepy resonant, {{project}} is the gold standard for the genre."
+        ],
+        "Mixed": [
+          "{{project}} is a handsomely produced but ultimately hollow exercise in genre play.",
+          "Strong performances can't quite save {{project}} from its own narrative weight.",
+          "A middle-of-the-road effort that will satisfy enthusiasts but likely miss the broader zeitgeist."
+        ],
+        "Panned": [
+          "A disastrous miscalculation that squanders its high-profile talent and budget.",
+          "{{project}} fails to find a pulse, despite the heavy lifting by its technical team.",
+          "Critics are questioning the commercial viability of {{project}} after this critical drubbing."
+        ]
+      },
+      "Tabloid": {
+        "Acclaimed": [
+          "OMG! {{project}} is the hottest thing in Hollywood right now. Everyone is obsessed!",
+          "Total MUST-SEE! {{project}} is turning heads and breaking hearts on every screen.",
+          "The buzz is REAL. {{project}} is a total slay and we're here for it."
+        ],
+        "Panned": [
+          "Yikes. {{project}} is a total trainwreck. We're embarrassed for everyone involved.",
+          "Dumpster fire alert! {{project}} is the biggest flop of the season.",
+          "Can someone please check on {{actor}}? Because {{project}} is a career disaster."
+        ]
+      }
+    }
+  },
+  "Greenlight": {
+    "Finance": {
+      "Risky": [
+        "Funding is spread too thin; this project is a financial time bomb.",
+        "The budget to cash ratio is dangerous. One mistake and the studio is underwater."
+      ],
+      "Prestige": [
+        "Comfortable cash reserves for this budget tier.",
+        "A financially sound package that won't break the bank."
+      ]
+    },
+    "Talent": {
+      "Risky": [
+        "The package lacks a bankable lead; audience draw will be difficult.",
+        "Talent attached is unproven at this budget level."
+      ],
+      "Prestige": [
+        "A-list package provides a strong market floor and awards potential.",
+        "The attached talent brings immediate gravity and awards buzz."
+      ]
+    }
+  },
+  "Talent": {
+    "Health": {
+      "Trade": {
+        "Recovered": [
+          "{{actor}} has returned from medical leave, reportedly recharged and ready for upcoming commitments.",
+          "Production schedules resume as {{actor}} is cleared for return from a health-related hiatus."
+        ],
+        "Burnout": [
+          "{{actor}} has entered medical leave due to extreme burnout. Several projects have been delayed indefinitely."
+        ]
+      },
+      "Tabloid": {
+        "Burnout": [
+          "Spotted: {{actor}} lookin' totally exhausted before checking into a 'wellness retreat'. Recovery or rehab?",
+          "Career on ice! {{actor}} disappears from the spotlight after total burnout meltdown."
+        ]
+      }
+    },
+    "Scandal": {
+      "Arc": {
+        "Continuation": [
+          "{{actor}} continues their downward spiral after yet another public incident.",
+          "The legend of {{actor}}'s erratic behavior grows as a second scandal breaks this month.",
+          "No lessons learned? {{actor}} is back in the headlines for all the wrong reasons."
+        ],
+        "Fresh": [
+          "Shocker: {{actor}} caught in a compromising position at a post-premiere party.",
+          "Industry gasps as leaked audio reveals {{actor}}'s onset tantrum.",
+          "Legal team on high alert: {{actor}} facing serious allegations after weekend altercation."
+        ]
+      }
+    }
+  },
+  "Industry": {
+    "Merger": {
+      "Trade": [
+        "BREAKING: {{actor}} acquires {{target}} in a landmark media deal!",
+        "Industry shocked as {{actor}} announces a strategic merger with {{target}}."
+      ],
+      "Tabloid": [
+        "Monster Merger: {{actor}} just swallowed {{target}}! Who's next on the menu?",
+        "Greed is good? {{actor}} and {{target}} are joining forces to take over the world."
+      ]
+    }
+  }
+}

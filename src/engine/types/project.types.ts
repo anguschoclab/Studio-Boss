@@ -346,6 +346,7 @@ export interface GenreTrend {
   heat: number; // 0-100
   direction: TrendDirection;
   weeksRemaining: number;
+  description?: string;
 }
 
 export type FestivalSubmissionStatus = 'submitted' | 'selected' | 'rejected' | 'won' | 'special_mention';

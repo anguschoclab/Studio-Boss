@@ -4,32 +4,7 @@ import { StateImpact } from '../types/state.types';
 import { RandomGenerator } from '../utils/rng';
 import { updateBuyers } from './buyers';
 import { mergeImpacts } from '../utils/impactUtils';
-
-const MERGER_HEADLINES = [
-  (a: string, b: string) => `BREAKING: ${a} acquires ${b} in landmark media deal!`,
-  (a: string, b: string) => `Industry shocked as ${a} announces hostile takeover of ${b}.`,
-  (a: string, b: string) => `${a} and ${b} announce merger — regulators concerned.`,
-  (a: string, b: string) => `${a} absorbs ${b} in a bid for streaming dominance.`,
-  (a: string, b: string) => `Consolidation continues: ${a} swallows ${b} whole.`,
-];
-
-const VULNERABILITY_HEADLINES = [
-  (name: string) => `${name} reportedly exploring strategic options amid subscriber losses.`,
-  (name: string) => `Analysts downgrade ${name} — acquisition target rumors swirl.`,
-  (name: string) => `${name} cash reserves dwindling — sale imminent?`,
-];
-
-const STREAMER_GROWTH_EVENTS = [
-  (name: string) => `${name} reports record subscriber growth this quarter.`,
-  (name: string) => `${name} announces ambitious content spending increase.`,
-  (name: string) => `${name} poaches top executive from rival platform.`,
-];
-
-const STREAMER_DECLINE_EVENTS = [
-  (name: string) => `${name} faces backlash over sudden price hike.`,
-  (name: string) => `${name} loses exclusive rights to major franchise.`,
-  (name: string) => `Subscriber exodus hits ${name} after controversial content purge.`,
-];
+import { BardResolver } from './bardResolver';
 
 /**
  * Simulate weekly buyer/platform dynamics — financial health and M&A activity.
@@ -70,7 +45,12 @@ export function advanceBuyers(state: GameState, rng: RandomGenerator): StateImpa
           id: rng.uuid('NWS'),
           week: currWeek,
           category: 'market',
-          text: pick(performance > 0 ? STREAMER_GROWTH_EVENTS : STREAMER_DECLINE_EVENTS, rng)(buyer.name),
+          text: BardResolver.resolve({
+            domain: 'Market',
+            subDomain: 'StreamerEvent',
+            intensity: performance > 0 ? 80 : 20,
+            context: { actor: buyer.name }
+          })
         });
       }
     } else {
@@ -90,7 +70,12 @@ export function advanceBuyers(state: GameState, rng: RandomGenerator): StateImpa
           id: rng.uuid('NWS'),
           week: currWeek,
           category: 'market',
-          text: pick(VULNERABILITY_HEADLINES, rng)(buyer.name),
+          text: BardResolver.resolve({
+            domain: 'Industry',
+            subDomain: 'Vulnerability',
+            intensity: 10,
+            context: { actor: buyer.name }
+          })
         });
       }
     } else {
@@ -138,7 +123,12 @@ export function advanceBuyers(state: GameState, rng: RandomGenerator): StateImpa
           id: rng.uuid('NWS'),
           week: currWeek,
           category: 'market',
-          text: pick(MERGER_HEADLINES, rng)(acquirer.name, target.name),
+          text: BardResolver.resolve({
+            domain: 'Industry',
+            subDomain: 'Merger',
+            intensity: 90,
+            context: { actor: acquirer.name, target: target.name }
+          })
         });
       }
     }
