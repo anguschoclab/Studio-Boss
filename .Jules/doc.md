@@ -43,3 +43,18 @@
 * `docs/television_mechanics.md`: Document the new `runUpfronts` mechanic, how it fires on week 20, and how project momentum/buzz convert to episode pickup orders.
 * **Code Paths Covered:** `src/engine/systems/television/upfrontsEngine.ts`, `src/engine/systems/television/televisionTick.ts`
 * **Key Knowledge Gaps Addressed:** Explains the transition of TV projects from development to production via the Week 20 Upfronts and how episodic orders are assigned.
+
+### 📝 Daily Progress & Docs Update
+
+#### 🏗️ Codebase Status:
+* Updated `evaluateRenewal` in `src/engine/systems/television/renewalEngine.ts` to include dynamic thresholding based on award wins (Emmys/Globes) lowering the required rating, and budget tiers ('blockbuster', 'high') increasing the required rating for renewal. Refactored the array filtering into a loop for performance.
+* Current focus appears to be on TV renewal mechanics, simulating the streaming wars' tendency to cancel expensive shows faster while keeping prestige or award-winning shows alive despite lower ratings.
+
+#### 📖 Design Bible Alignment:
+* ✅ **Aligned:** The changes align with Section 31.9.3 and the general direction of Section 13.27, where prestige and awards influence the strategic value of renewals, and where streaming platforms evaluate cost-to-engagement ratios (canceling expensive shows faster).
+* ⚠️ **Missing/Deviations:** While the core mechanic is updated, it lacks integration with cast renegotiation escalations upon renewal (Section 31.10.5) and the broader syndication afterlife effects mentioned in Section 31.9.3.
+
+#### 📄 Proposed Documentation Updates:
+* `docs/television_mechanics.md`: Document the dynamic `evaluateRenewal` thresholds, specifically how budget tiers and award wins adjust the cancellation rating threshold.
+* **Code Paths Covered:** `src/engine/systems/television/renewalEngine.ts` (`evaluateRenewal`)
+* **Key Knowledge Gaps Addressed:** Explains the math behind television show renewals and how the 'Prestige Effect' and 'Syndication Baron' budget penalties are calculated against the average show rating.
