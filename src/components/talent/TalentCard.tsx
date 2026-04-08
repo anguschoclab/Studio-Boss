@@ -55,18 +55,11 @@ export const TalentCard: React.FC<TalentCardProps> = ({
 
   return (
     <TooltipWrapper tooltip={tooltip || `View ${talent.name} Profile`} side="top">
-      <div 
+      <button
+        type="button"
         onClick={handleClick}
-        role="button"
-        tabIndex={0}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            handleClick(e as any);
-          }
-        }}
         className={cn(
-          "p-4 rounded-xl border backdrop-blur-md transition-all duration-300 space-y-3 group relative overflow-hidden cursor-pointer",
+          "w-full text-left p-4 rounded-xl border backdrop-blur-md transition-all duration-300 space-y-3 group relative overflow-hidden cursor-pointer",
           talent.prestige >= 80 
             ? 'border-primary/50 shadow-[0_0_20px_rgba(234,179,8,0.15)] bg-card/80 bg-gradient-to-br from-primary/10 to-transparent' 
             : 'border-border/60 bg-card/60 bg-gradient-to-br from-card/80 to-transparent',
@@ -171,7 +164,7 @@ export const TalentCard: React.FC<TalentCardProps> = ({
             <div className="font-semibold truncate text-foreground/90 capitalize">{talent.psychology?.mood > 70 ? 'Confident' : talent.psychology?.mood > 40 ? 'Steady' : 'Volatile'}</div>
           </div>
         </div>
-      </div>
+      </button>
     </TooltipWrapper>
   );
 };

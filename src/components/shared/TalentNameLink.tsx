@@ -19,18 +19,18 @@ export const TalentNameLink: React.FC<TalentNameLinkProps> = ({ talentId, name, 
     <span
       role="button"
       tabIndex={0}
-      onClick={(e) => {
-        e.stopPropagation();
-        selectTalent(talentId);
-      }}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           selectTalent(talentId);
         }
       }}
+      onClick={(e) => {
+        e.stopPropagation();
+        selectTalent(talentId);
+      }}
       className={cn(
-        "text-primary hover:text-primary/80 cursor-pointer underline decoration-primary/30 hover:decoration-primary/60 transition-colors font-bold",
+        "text-primary hover:text-primary/80 cursor-pointer underline decoration-primary/30 hover:decoration-primary/60 transition-colors font-bold inline-block text-left",
         className
       )}
     >
