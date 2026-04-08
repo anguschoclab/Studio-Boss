@@ -1,67 +1,66 @@
-import { BrandSystem } from './BrandSystem';
-import { ProjectFormat } from '@/engine/types';
 import { RandomGenerator } from '../utils/rng';
-import { 
-  MOTTOS, 
-  MALE_FIRST_NAMES, 
-  FEMALE_FIRST_NAMES, 
-  LAST_NAMES, 
-  DICTIONARIES,
-  PREFIX_PATTERNS,
-  CONNECTORS,
-  LOCATIONS
-} from '../data/names.data';
+import { BardResolver } from '../systems/bardResolver';
+import { generateProjectTitle } from './titles';
+import { ProjectFormat } from '@/engine/types';
 
-export function generateStudioName(existing: string[], rng: RandomGenerator): string {
-  const existingSet = new Set(existing);
-  const identity = BrandSystem.generateIdentity(existingSet, rng);
-  return BrandSystem.getStudioName(identity, rng);
+/**
+ * Generates a studio name using the Bard Engine.
+ */
+export function generateStudioName(_existing: string[], rng: RandomGenerator): string {
+  // We use intensity 50 as a neutral default for name generation
+  const prefix = BardResolver.resolve({ 
+    domain: 'Dictionary' as any, 
+    subDomain: 'STUDIO_PREFIX', 
+    intensity: rng.range(0, 100) 
+  });
+  const suffix = BardResolver.resolve({ 
+    domain: 'Dictionary' as any, 
+    subDomain: 'STUDIO_SUFFIX', 
+    intensity: rng.range(0, 100) 
+  });
+  return `${prefix} ${suffix}`;
 }
 
+/**
+ * Generates a studio motto using the Bard Engine.
+ */
 export function generateMotto(rng: RandomGenerator): string {
-  return rng.pick(MOTTOS);
+  return BardResolver.resolve({
+    domain: 'Dictionary' as any,
+    subDomain: 'STUDIO_MOTTO',
+    intensity: rng.range(0, 100)
+  });
 }
 
-const REGIONAL_NAMES: Record<string, { firstM: string[], firstF: string[], last: string[] }> = {
-  'USA': { firstM: MALE_FIRST_NAMES, firstF: FEMALE_FIRST_NAMES, last: LAST_NAMES },
-  // Additional regions could be added here
-};
-
-export function generateDemographicName(gender: 'MALE' | 'FEMALE' | 'NON_BINARY', country: string, _ethnicity: string, rng: RandomGenerator): string {
-  const region = REGIONAL_NAMES[country] || REGIONAL_NAMES['USA'];
+/**
+ * Generates a character name using the Bard Engine.
+ */
+export function generateDemographicName(
+  gender: 'MALE' | 'FEMALE' | 'NON_BINARY', 
+  _country: string, 
+  _ethnicity: string, 
+  rng: RandomGenerator
+): string {
+  const firstSubDomain = gender === 'FEMALE' ? 'FIRST_NAME_FEMALE' : 'FIRST_NAME_MALE';
   
-  const firstPool = gender === 'FEMALE' ? region.firstF : region.firstM;
-  const first = rng.pick(firstPool);
-  const last = rng.pick(region.last);
+  const first = BardResolver.resolve({
+    domain: 'Dictionary' as any,
+    subDomain: firstSubDomain,
+    intensity: rng.range(0, 100)
+  });
+  
+  const last = BardResolver.resolve({
+    domain: 'Dictionary' as any,
+    subDomain: 'LAST_NAME',
+    intensity: rng.range(0, 100)
+  });
   
   return `${first} ${last}`;
 }
 
-export function generateProjectName(format: ProjectFormat, genre: string, rng: RandomGenerator): string {
-  const dict = DICTIONARIES[genre] || DICTIONARIES['Drama'];
-
-  if (format === 'tv') {
-    const tvPatterns = [
-      () => `${rng.pick(dict.adjs)} ${rng.pick(dict.nouns)}s`,
-      () => `The ${rng.pick(dict.nouns)}`,
-      () => `${rng.pick(dict.nouns)} ${rng.pick(LOCATIONS)}`,
-      () => `${rng.pick(dict.nouns)} and ${rng.pick(dict.nouns)}`,
-      () => `${rng.pick(LOCATIONS)} ${rng.pick(dict.nouns)}s`,
-      () => `Project: ${rng.pick(dict.nouns)}`,
-      () => `${rng.pick(dict.adjs)}`,
-    ];
-    return rng.pick(tvPatterns)();
-  } else {
-    // Film
-    const filmPatterns = [
-      () => `The ${rng.pick(dict.adjs)} ${rng.pick(dict.nouns)}`,
-      () => `${rng.pick(PREFIX_PATTERNS)} ${rng.pick(dict.nouns)}`,
-      () => `${rng.pick(dict.nouns)} of ${rng.pick(LOCATIONS)}`,
-      () => `${rng.pick(dict.adjs)} ${rng.pick(dict.nouns)}`,
-      () => `${rng.pick(dict.nouns)} ${rng.pick(CONNECTORS)} ${rng.pick(dict.nouns)}`,
-      () => `${rng.pick(dict.nouns)}`,
-      () => `The ${rng.pick(dict.nouns)} ${rng.pick(dict.nouns)}`,
-    ];
-    return rng.pick(filmPatterns)();
-  }
+/**
+ * Redirects to the centralized Project Title generator in the Bard Engine.
+ */
+export function generateProjectName(_format: ProjectFormat, genre: string, rng: RandomGenerator): string {
+  return generateProjectTitle(genre, rng);
 }
