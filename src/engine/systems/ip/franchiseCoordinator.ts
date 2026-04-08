@@ -79,6 +79,11 @@ export function calculateFranchiseEquity(
       crossoverBonus += 0.25;
     }
 
+    // 🌌 The Universe Builder: Legacy Character Return Massive Crossover
+    if (assets.length >= 4 && genres.some(g => g === 'Legacy Sequel')) {
+      crossoverBonus += 0.35;
+    }
+
     // 🌌 The Universe Builder: Penalty for chaotic crossovers (too many genres, not enough synergy)
     if (genres.length >= 4 && synergyHits < 2) {
       crossoverBonus -= 0.20;
@@ -176,6 +181,18 @@ export function updateFranchiseHub(state: GameState, project: Project, rng: Rand
         // Update synergy based on format diversity
         synergyMultiplier: updatedSynergy // 🌌 The Universe Builder: Synergy cap raised for mega-franchises.
       };
+
+      // 🌌 The Universe Builder: Spin-off Fatigue Cascade - a bomb tanks relevance
+      if (!isBreakout && !isPrestigeHit && project.revenue < project.budget) {
+        updatedFranchises[franchiseId].relevanceScore = clamp(updatedFranchises[franchiseId].relevanceScore - 10, 0, 100);
+      } else if (isBreakout || isPrestigeHit) {
+        updatedFranchises[franchiseId].relevanceScore = clamp(updatedFranchises[franchiseId].relevanceScore + 10, 0, 100);
+      }
+
+      // 🌌 The Universe Builder: Over-saturation Relevance Penalty.
+      if (updatedFranchises[franchiseId].activeProjectIds.length >= 5) {
+        updatedFranchises[franchiseId].relevanceScore = clamp(updatedFranchises[franchiseId].relevanceScore - 15, 0, 100);
+      }
 
       // Recalculate Enterprise Value
       updatedFranchises[franchiseId].totalEquity = calculateFranchiseEquity(
@@ -281,7 +298,12 @@ export function calculateFranchiseEvolutionImpacts(state: GameState, rng: Random
                 assetIds: nextAssetIds,
                 lastReleaseWeeks: nextReleaseWeeks,
                 audienceLoyalty: updatedLoyalty,
-                synergyMultiplier: clamp(hub.synergyMultiplier + 0.15, 1.0, 3.0) // 🌌 The Universe Builder: Synergy cap raised for mega-franchises.
+                synergyMultiplier: clamp(hub.synergyMultiplier + 0.15, 1.0, 3.0), // 🌌 The Universe Builder: Synergy cap raised for mega-franchises.
+                relevanceScore: clamp(
+                  hub.relevanceScore - (hub.activeProjectIds.length >= 5 ? 15 : 0),
+                  0,
+                  100
+                ) // 🌌 The Universe Builder: Over-saturation Relevance Penalty
               }
             }
           });
