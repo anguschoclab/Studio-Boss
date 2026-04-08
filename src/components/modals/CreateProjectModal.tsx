@@ -280,7 +280,7 @@ export const CreateProjectModal = () => {
           {/* Flavor */}
           <div className="space-y-2">
             <Label htmlFor="project-flavor" className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground/80">Positioning <span className="text-muted-foreground/50 font-normal">(optional)</span></Label>
-            <Input id="project-flavor" aria-label="Project Positioning" value={flavor} onChange={e => setFlavor(e.target.value)} placeholder="A bold reimagining of..." className="bg-background/50 border-border/50 transition-all shadow-inner focus-visible:ring-primary/50" />
+            <Input id="project-flavor" value={flavor} onChange={e => setFlavor(e.target.value)} placeholder="A bold reimagining of..." className="bg-background/50 border-border/50 transition-all shadow-inner focus-visible:ring-primary/50" />
           </div>
         </div>
 
