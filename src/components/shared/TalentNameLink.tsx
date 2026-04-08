@@ -35,6 +35,6 @@ export const TalentNameLink: React.FC<TalentNameLinkProps> = ({ talentId, name, 
       )}
     >
       {name}
-    </button>
+    </span>
   );
 };
