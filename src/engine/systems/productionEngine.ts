@@ -99,12 +99,16 @@ function tickProject(
 export function tickProduction(state: GameState, rng: RandomGenerator): StateImpact[] {
   const allImpacts: StateImpact[] = [];
   const contractMap = new Map<string, Contract[]>();
+  const activeTalentIds = new Set<string>();
   
-  const contractsList = Object.values(state.entities.contracts || {});
-  for (const contract of contractsList) {
+  const contractsObj = state.entities.contracts || {};
+  for (const key in contractsObj) {
+    if (!Object.prototype.hasOwnProperty.call(contractsObj, key)) continue;
+    const contract = contractsObj[key];
     const list = contractMap.get(contract.projectId) || [];
     list.push(contract);
     contractMap.set(contract.projectId, list);
+    activeTalentIds.add(contract.talentId);
   }
 
   const rivalsMap = state.entities.rivals || {};
@@ -157,7 +161,6 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
   }
 
   // Handle Resting Talent Fatigue
-  const activeTalentIds = new Set(contractsList.map(c => c.talentId));
   for (const talentId in state.entities.talents) {
     if (!Object.prototype.hasOwnProperty.call(state.entities.talents, talentId)) continue;
     const talent = state.entities.talents[talentId];
