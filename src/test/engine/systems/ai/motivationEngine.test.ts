@@ -64,19 +64,26 @@ describe('AI Motivation Engine (Target C1)', () => {
   });
 
   it("should switch to AWARD_CHASE if prestige is high, cash is fine, and enough projects exist", () => {
-    // We need to avoid FRANCHISE_BUILDING (95 base if projects < 2).
-    // So we add 3 projects to the richRival.
+    // We need to avoid FRANCHISE_BUILDING and MARKET_DISRUPTION
+    // So we add 5 projects to the richRival, and adjust profile so they don't get massive boosts
     const richRival: RivalStudio = { 
       ...mockRival, 
       cash: 50_000_000, 
       prestige: 90,
-      projects: { 'p1': {} as any, 'p2': {} as any, 'p3': {} as any }
+      projectCount: 5,
+      motivationProfile: {
+        financial: 50,
+        prestige: 100, // heavily bias towards prestige
+        legacy: 0,     // heavily bias away from franchise
+        aggression: 0  // heavily bias away from market disruption
+      },
+      projects: { 'p1': {} as any, 'p2': {} as any, 'p3': {} as any, 'p4': {} as any, 'p5': {} as any }
     };
     
-    // AWARD_CHASE base = 80 (since prestige > 70). Profile bias = 50. Total 130 + var.
-    // FRANCHISE_BUILDING base = 90 (since projects > 3). Profile bias = 50. Wait, length is 3, not > 3.
-    // If length is 3, base is 30. Total 80 + var.
-    // STABILITY base = 50. Profile bias = 50. Total 100 + var.
+    // AWARD_CHASE base = 85 (since prestige > 80) + 20 (profile prestige > 70) = 105. Profile bias = 100. Total 205 + var.
+    // FRANCHISE_BUILDING base = 80 (since projectCount > 4). Profile bias = 0. Total 80 + var.
+    // MARKET_DISRUPTION base = 15 (since aggression < 75). Profile bias = 0. Total 15 + var.
+    // STABILITY base = 10. Profile bias = 50. Total 60 + var.
     // AWARD_CHASE wins.
     const nextMotivation = calculateRivalMotivation(richRival, mockState, rng);
     expect(nextMotivation).toBe('AWARD_CHASE');

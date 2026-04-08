@@ -108,9 +108,9 @@ export function generateFestivalBid(
     interest *= 1.3;
   }
 
-  // 🎭 The Method Actor Tuning: Adjusted AgentBrain to make rival studios aggressively outbid for IP.
+  // 🎭 The Method Actor Tuning: Increased festival bid aggression and max budget percentage for franchise builders to provide a more dynamic challenge.
   if (rival.currentMotivation === 'FRANCHISE_BUILDING' && ['Sci-Fi', 'Action', 'Fantasy'].includes(project.genre)) {
-    interest *= 1.6;
+    interest *= 1.8;
   }
 
   // 🎭 The Method Actor Tuning: Award chasers overvalue high-review projects
@@ -122,7 +122,7 @@ export function generateFestivalBid(
 
   let maxBidPct = (0.05 + (archetype.riskAppetite / 1000)); // riskier rivals bid more of their total cash
   if (rival.currentMotivation === 'FRANCHISE_BUILDING' && ['Sci-Fi', 'Action', 'Fantasy'].includes(project.genre)) {
-    maxBidPct += 0.25; // aggressive outbidding
+    maxBidPct += 0.40; // aggressive outbidding
   }
   if (rival.currentMotivation === 'AWARD_CHASE' && reviewScore > 75) {
     maxBidPct += 0.30; // aggressively overpay for prestige

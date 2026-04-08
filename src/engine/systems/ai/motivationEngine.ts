@@ -17,7 +17,8 @@ const MotivationScores: Record<StudioMotivation, (rival: RivalStudio, state: Gam
     }
     return score;
   },
-  MARKET_DISRUPTION: (rival) => (rival.motivationProfile.aggression > 75 && rival.cash > 2000000 ? 85 : 15) + (rival.motivationProfile.aggression > 80 && rival.cash > 10000000 ? 40 : 0),
+  // 🎭 The Method Actor Tuning: Added a major score boost for MARKET_DISRUPTION when a studio has over $20M in cash, encouraging wealthy studios to aggressively outbid for talent and IP.
+  MARKET_DISRUPTION: (rival) => (rival.motivationProfile.aggression > 75 && rival.cash > 2000000 ? 85 : 15) + (rival.motivationProfile.aggression > 80 && rival.cash > 10000000 ? 40 : 0) + (rival.cash > 20000000 ? 30 : 0),
   STABILITY: (rival) => (rival.cash >= 1000000 && rival.cash <= 3000000 ? 60 : 10),
 };
 
