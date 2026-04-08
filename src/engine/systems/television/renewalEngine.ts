@@ -36,19 +36,32 @@ export function evaluateRenewal(
     dynamicThreshold += 6.0; // Cancel expensive shows faster
   } else if (project.budgetTier === 'high') {
     dynamicThreshold += 4.0;
+  } else if (project.budgetTier === 'indie') {
+    dynamicThreshold -= 2.0; // Give leniency to cheap shows
+  } else if (project.budgetTier === 'low') {
+    dynamicThreshold -= 1.0;
   }
 
-  // Reward consistent season-over-season quality
-  if (project.tvDetails && project.tvDetails.currentSeason > 2) {
-    dynamicThreshold -= 1.5;
+  // 📺 The Syndication Baron: Reward consistent season-over-season quality and syndication potential.
+  if (project.tvDetails && project.tvDetails.currentSeason >= 4) {
+    dynamicThreshold -= 2.5; // Massive reward for reaching syndication milestone
+    if (project.reviewScore && project.reviewScore >= 80) {
+      dynamicThreshold -= 1.0;
+    }
+  } else if (project.tvDetails && project.tvDetails.currentSeason > 1) {
+    dynamicThreshold -= 1.5; // Reward season-over-season quality
     if (project.reviewScore && project.reviewScore >= 80) {
       dynamicThreshold -= 1.5; // Extra leniency for high quality established shows
     }
     if (project.reviewScore && project.reviewScore >= 90) {
       dynamicThreshold -= 0.5; // Additional reward for top tier shows
     }
-  } else if (project.reviewScore && project.reviewScore >= 85) {
-    dynamicThreshold -= 0.5; // Give a chance to promising new shows
+  } else if (project.tvDetails && project.tvDetails.currentSeason === 1) {
+    if (project.reviewScore && project.reviewScore < 60) {
+      dynamicThreshold += 3.0; // Penalize freshman shows heavily if their review score is too low
+    } else if (project.reviewScore && project.reviewScore >= 85) {
+      dynamicThreshold -= 0.5; // Give a chance to promising new shows
+    }
   }
 
   // Renewal decision logic
