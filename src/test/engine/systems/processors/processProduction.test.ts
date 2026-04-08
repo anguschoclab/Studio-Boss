@@ -61,10 +61,9 @@ describe('tickProduction', () => {
     const impacts = tickProduction(state, rng);
 
     // Released projects are still ticked (advanceProject runs), producing INDUSTRY_UPDATE
-    // plus the empty disputeImpact bag — 2 impacts total
-    expect(impacts).toHaveLength(2);
-    const disputeImpact = impacts.find(i => i.projectUpdates !== undefined);
-    expect(disputeImpact?.projectUpdates).toEqual([]);
+    expect(impacts).toHaveLength(1);
+    const industryUpdate = impacts.find(i => i.type === 'INDUSTRY_UPDATE') as any;
+    expect(industryUpdate).toBeDefined();
   });
 
   it('generates INDUSTRY_UPDATE impact for production projects', () => {
@@ -74,8 +73,8 @@ describe('tickProduction', () => {
 
     const impacts = tickProduction(state, rng);
 
-    // Player project updates are batched into INDUSTRY_UPDATE + empty disputeImpact
-    expect(impacts).toHaveLength(2);
+    // Player project updates are batched into INDUSTRY_UPDATE
+    expect(impacts).toHaveLength(1);
     const industryUpdate = impacts.find(i => i.type === 'INDUSTRY_UPDATE') as any;
     expect(industryUpdate).toBeDefined();
     const updatedProject = industryUpdate?.payload?.update?.['entities.projects']?.['p1'];

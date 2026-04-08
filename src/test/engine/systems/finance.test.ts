@@ -189,8 +189,8 @@ describe("Finance System", () => {
          const impacts = tickFinance(stateWithDist, rng);
          const impact = impacts.find(i => i.type === 'FUNDS_CHANGED');
          
-         // Revenue: 200k * 0.35 = 70k
-         // Overhead: Level 3, 1 active unreleased = (850k * 1.5625) + (1 * 250k) = 1,328,125 + 250,000 = 1,578,125
+         // Revenue: 200k * 0.30 = 60k
+         // Overhead: Level 3, 1 active unreleased = (1M * 2.25) + (1 * 300k) = 2,250,000 + 300,000 = 2,550,000
          // Production: 20k
          // Savings Yield: 1M * (0.02 / 52) = 385
          // Total Expenses: 1,578,125 - 385 = 1,577,740

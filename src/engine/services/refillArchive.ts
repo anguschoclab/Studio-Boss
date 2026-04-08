@@ -16,9 +16,16 @@ async function refillArchive() {
   console.log('--- Starting Bard Engine Content Farm ---');
 
   for (const domain in archive) {
+    // Skip Dictionary domain (static constants)
+    if (domain === 'Dictionary') continue;
+
     for (const subDomain in archive[domain]) {
       const subDomainData = archive[domain][subDomain];
       
+      // If the sub-domain is a flat array, it's a simple list (handled above by skipping Dictionary, 
+      // but added here for safety for other domains that might use flat structures)
+      if (Array.isArray(subDomainData)) continue;
+
       // Handle Tones (if the subdomain contains nested tone objects)
       const possibleTones = Object.keys(subDomainData);
       const isToneStructure = ['Trade', 'Tabloid', 'Social', 'Standard'].some(t => possibleTones.includes(t));
