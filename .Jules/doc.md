@@ -52,7 +52,7 @@
 
 #### 📖 Design Bible Alignment:
 * ✅ **Aligned:** The changes align with Section 31.9.3 and the general direction of Section 13.27, where prestige and awards influence the strategic value of renewals, and where streaming platforms evaluate cost-to-engagement ratios (canceling expensive shows faster).
-* ⚠️ **Missing/Deviations:** While the core mechanic is updated, it lacks integration with cast renegotiation escalations upon renewal (Section 31.10.5) and the broader syndication afterlife effects mentioned in Section 31.9.3. The 'consistent season-over-season quality' reward mentioned in the comment is not yet mathematically implemented in the snippet.
+* ⚠️ **Missing/Deviations:** While the core mechanic is updated, it lacks integration with cast renegotiation escalations upon renewal (Section 31.10.5) and the broader syndication afterlife effects mentioned in Section 31.9.3.
 
 #### 📄 Proposed Documentation Updates:
 * `docs/television_mechanics.md`: Document the dynamic `evaluateRenewal` thresholds, specifically how budget tiers and award wins adjust the cancellation rating threshold.
