@@ -28,7 +28,7 @@ export const CreateProjectModal = () => {
   const [targetAudience, setTargetAudience] = useState<string>(TARGET_AUDIENCES[0]);
   const [flavor, setFlavor] = useState('');
   const [tvFormat, setTvFormat] = useState<TvFormatKey>('prestige_drama');
-  const [unscriptedFormat, setUnscriptedFormat] = useState<UnscriptedFormatKey>('competition');
+  const [unscriptedFormat, setUnscriptedFormat] = useState<UnscriptedFormatKey>('USF-43d3c07f-53dd-c40f-c5dd-8c6b939b');
   const [episodes, setEpisodes] = useState<number>(10);
   const [releaseModel, setReleaseModel] = useState<ReleaseModelKey>('weekly');
 

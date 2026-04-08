@@ -129,7 +129,8 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
     agents: [],
     awards: [],
     newsHistory: [],
-    rivals: []
+    rivals: [],
+    scandals: []
   },
   deals: { activeDeals: [], pendingOffers: [], expiredDeals: [] },
   culture: { genrePopularity: {} },

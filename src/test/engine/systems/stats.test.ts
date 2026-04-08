@@ -115,7 +115,7 @@ describe('stats system', () => {
   });
 
   describe('getUnscriptedStats', () => {
-    const format = UNSCRIPTED_FORMATS.competition;
+    const format = Object.values(UNSCRIPTED_FORMATS).find(f => f.name === 'Competition Reality')!;
     const episodes = 8;
 
     it('calculates unscripted stats correctly for low-mid tier (budget <= 50M)', () => {
