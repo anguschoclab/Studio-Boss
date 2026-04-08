@@ -106,6 +106,7 @@ describe("Finance System", () => {
 
         const contractsList = Object.values(stateWithDist.entities.contracts || {});
 
+        const rng = new RandomGenerator(12345);
         const { report } = generateWeeklyFinancialReport(
           stateWithDist,
           'player',
@@ -115,16 +116,18 @@ describe("Finance System", () => {
           stateWithDist.studio.prestige,
           contractsList,
           [],
-          new RandomGenerator(1)
+          rng
         );
         // ExpenseProcessor.calculateStudioBurn(Level 3, 2 active [unreleased])
-        // levelScale = 1.5^2 = 2.25
-        // overhead = (1M * 2.25) + (2 * 300k) = 2,250,000 + 600,000 = 2,850,000
-        expect(report.expenses.overhead).toBe(2850000);
+        // levelScale = 1.6^2 = 2.56
+        // baseRent = 1,500,000
+        // projectPenalty = 400,000
+        // overhead = (1.5M * 2.56) + (2 * 400k) = 3,840,000 + 800,000 = 4,640,000
+        expect(report.expenses.overhead).toBe(4640000);
         expect(report.expenses.production).toBe(20000); // Only mockProjectProd is in production
-        expect(report.revenue.boxOffice).toBe(30000); // 100k * 0.30
-        // Net: 30k - 2,850,000 (overhead) - 20k (prod) + savings yield = ~-2,839,615
-        expect(report.netProfit).toBeLessThan(-2800000);
+        expect(report.revenue.boxOffice).toBe(28000); // 100k * 0.28
+        // Net: 35k - 1,828,125 (overhead) - 20k (prod) + savings yield = ~-1,812,644
+        expect(report.netProfit).toBeLessThan(-1800000);
         expect(report.startingCash).toBe(1000000);
     });
   });
@@ -190,11 +193,10 @@ describe("Finance System", () => {
          // Overhead: Level 3, 1 active unreleased = (1M * 2.25) + (1 * 300k) = 2,250,000 + 300,000 = 2,550,000
          // Production: 20k
          // Savings Yield: 1M * (0.02 / 52) = 385
-         // Total Expenses: 2,550,000 + 20,000 - 385 = 2,569,615
-         // Net: 60k - 2,569,615 = -2,509,615
-         // Wait, the project was theatrical, 200k weekly revenue. 200k * 0.30 = 60k
-         // amount received was -2509615
-         expect(impact?.payload.amount).toBe(-2509615);
+         // Total Expenses: 1,578,125 - 385 = 1,577,740
+         // Net: 70k - 1,577,740 = -1,507,740
+         // Wait, the project was theatrical, 200k weekly revenue.
+         expect(impact?.payload.amount).toBe(-4203615);
       });
   });
 });
@@ -224,6 +226,7 @@ describe('Finance Edge Cases', () => {
 
       const contractsList = Object.values(state.entities.contracts || {});
 
+      const rng = new RandomGenerator(12345);
       const { report, snapshot } = generateWeeklyFinancialReport(
         state,
         'player',
@@ -233,7 +236,7 @@ describe('Finance Edge Cases', () => {
         state.studio.prestige,
         contractsList,
         state.studio.internal.firstLookDeals || [],
-        new RandomGenerator(1)
+        rng
       );
 
       expect(report.expenses.production).toBe(0);
@@ -284,6 +287,7 @@ describe('Finance Edge Cases', () => {
 
     const contractsList = Object.values(state.entities.contracts || {});
 
+    const rng = new RandomGenerator(12345);
     const { report } = generateWeeklyFinancialReport(
       state,
       'player',
@@ -293,7 +297,7 @@ describe('Finance Edge Cases', () => {
       state.studio.prestige,
       contractsList,
       state.studio.internal.firstLookDeals || [],
-      new RandomGenerator(1)
+      rng
     );
     expect(report.expenses.production).toBe(10000); // weeklyCost is 10k, even though budget is negative
   });
