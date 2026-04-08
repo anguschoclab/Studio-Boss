@@ -16,9 +16,9 @@ export function evaluatePackageOffer(
 ): { requiredTalentId?: string; packageDiscount?: number; reason: string } {
   const motivation = agency.currentMotivation || 'VOLUME_RETAIL';
   
-  // 🎭 Method Actor Tuning: Auteurs heavily mandate their own creative teams, effectively overriding agency norms.
+  // 🎭 The Method Actor Tuning: Auteurs heavily mandate their own creative teams, effectively overriding agency norms. Probability increased to 50%.
   const isAuteur = leadTalent.prestige > 85;
-  const packageProbability = motivation === 'THE_PACKAGER' ? 0.40 : (isAuteur ? 0.35 : 0.15);
+  const packageProbability = motivation === 'THE_PACKAGER' ? 0.40 : (isAuteur ? 0.50 : 0.15);
 
   if (rng.next() < packageProbability) {
     const otherClients = talentPool.filter(t => t.agencyId === agency.id && t.id !== leadTalent.id);
@@ -49,16 +49,20 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
     // Aggressive agencies (Sharks) leak rumors
     if (agency.culture === 'shark' || agency.currentMotivation === 'THE_SHARK') {
       if (rng.next() < 0.1) {
-        const rivalsList = Object.values(state.entities.rivals || {});
-        const rival = pick(rivalsList, rng);
-        if (rival) {
-          impacts.push({
-            type: 'NEWS_ADDED',
-            payload: {
-              headline: `${agency.name} is looking to poach top talent from ${rival.name}.`,
-              description: `Industry whispers suggest ${agency.name} is making aggressive overtures to talent currently under contract at ${rival.name}.`,
-            }
-          });
+        const rivalsObj = state.entities.rivals || {};
+        const rivalKeys = Object.keys(rivalsObj);
+        if (rivalKeys.length > 0) {
+          const rivalKey = pick(rivalKeys, rng);
+          const rival = rivalsObj[rivalKey];
+          if (rival) {
+            impacts.push({
+              type: 'NEWS_ADDED',
+              payload: {
+                headline: `${agency.name} is looking to poach top talent from ${rival.name}.`,
+                description: `Industry whispers suggest ${agency.name} is making aggressive overtures to talent currently under contract at ${rival.name}.`,
+              }
+            });
+          }
         }
       }
     }
@@ -96,7 +100,7 @@ export function generateFestivalBid(
 
   // 🎭 The Method Actor Tuning: Adjusted AgentBrain to make rival studios aggressively outbid for IP.
   if (rival.currentMotivation === 'FRANCHISE_BUILDING' && ['Sci-Fi', 'Action', 'Fantasy'].includes(project.genre)) {
-    interest *= 1.5;
+    interest *= 1.6;
   }
 
   // 🎭 The Method Actor Tuning: Award chasers overvalue high-review projects
@@ -108,10 +112,10 @@ export function generateFestivalBid(
 
   let maxBidPct = (0.05 + (archetype.riskAppetite / 1000)); // riskier rivals bid more of their total cash
   if (rival.currentMotivation === 'FRANCHISE_BUILDING' && ['Sci-Fi', 'Action', 'Fantasy'].includes(project.genre)) {
-    maxBidPct += 0.15; // aggressive outbidding
+    maxBidPct += 0.25; // aggressive outbidding
   }
   if (rival.currentMotivation === 'AWARD_CHASE' && reviewScore > 75) {
-    maxBidPct += 0.20; // aggressively overpay for prestige
+    maxBidPct += 0.30; // aggressively overpay for prestige
   }
   const maxBid = rival.cash * maxBidPct;
   const bid = Math.round(project.budget * interest * rng.range(0.9, 1.6));

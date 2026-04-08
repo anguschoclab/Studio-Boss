@@ -5,6 +5,7 @@ import { RandomGenerator } from '../utils/rng';
 import { RatingMarket } from '../types/project.types';
 import { MARKET_CONFIGS } from '../data/ratingMarkets';
 import { Project } from '../types/project.types';
+import { BardResolver } from './bardResolver';
 
 /**
  * Randomly spawns a scandal for a talent in the pool based on their controversy risk.
@@ -32,8 +33,8 @@ export function generateScandals(state: GameState, rng: RandomGenerator): StateI
   const studioProjectsCount = Object.keys(studioProjects).length;
   // A mega-studio has more leaks than an indie darling. Increased scaling impact.
   // The PR Spin Doctor: Heavily scale scandals with studio size (more contracts/projects = much higher risk)
-  // Adjusted: significantly higher multiplier for mega-studios
-  const sizeModifier = 1.0 + (numContracts * 0.25) + (studioProjectsCount * 0.40);
+  // Adjusted: significantly higher multiplier for mega-studios (0.25 -> 0.5, 0.40 -> 0.75)
+  const sizeModifier = 1.0 + (numContracts * 0.50) + (studioProjectsCount * 0.75);
 
   const talentPool = state.entities.talents || {};
   for (const talentId in talentPool) {
@@ -57,8 +58,20 @@ export function generateScandals(state: GameState, rng: RandomGenerator): StateI
          id: rng.uuid('NWS'),
          week: state.week,
          type: 'CRISIS',
-         headline: 'PR NIGHTMARE',
-         description: `A massive ${type} scandal erupts violently around ${talent.name}!`,
+         headline: BardResolver.resolve({
+            domain: 'Industry',
+            subDomain: 'Scandal',
+            intensity: s.severity,
+            tone: 'Trade',
+            context: { actor: talent.name, type }
+         }),
+         description: BardResolver.resolve({
+            domain: 'Industry',
+            subDomain: 'Scandal',
+            intensity: s.severity,
+            tone: 'Tabloid',
+            context: { actor: talent.name, type }
+         }),
        });
 
        const projectId = talentToProjectMap.get(talent.id);
@@ -71,7 +84,12 @@ export function generateScandals(state: GameState, rng: RandomGenerator): StateI
             crisisId,
             triggeredWeek: state.week,
             haltedProduction: false,
-            description: `BREAKING NEWS: ${talent.name.toUpperCase()} has been involved in a massive ${type} scandal while working on "${project.title}". The press is circling.`,
+            description: BardResolver.resolve({
+               domain: 'Crisis',
+               subDomain: 'PR',
+               intensity: s.severity,
+               context: { actor: talent.name, project: project.title, type }
+            }),
             resolved: false,
             severity: s.severity > 75 ? 'high' as const : 'medium' as const,
             options: [
@@ -181,17 +199,21 @@ export function generateStudioRatingEvent(
     : type === 'rating_controversy' ? -5
     : -3;
 
-  const headline = type === 'banned_in_market'
-    ? `"${context.projectTitle}" BANNED in ${context.marketName ?? 'foreign market'}`
-    : type === 'rating_controversy'
-    ? `Rating controversy surrounds "${context.projectTitle}"`
-    : `Content cut for foreign release of "${context.projectTitle}"`;
+  const headline = BardResolver.resolve({
+    domain: 'Industry',
+    subDomain: 'Scandal',
+    variant: type, // 'rating_controversy' | 'foreign_market_cut' | 'banned_in_market'
+    intensity: 50,
+    context: { project: context.projectTitle }
+  });
 
-  const description = type === 'banned_in_market'
-    ? `Censors in ${context.marketName ?? 'the region'} have blocked the release, costing significant box office revenue.`
-    : type === 'rating_controversy'
-    ? `The unexpected rating has caused audience confusion and a wave of negative press.`
-    : `Local censors required content edits before approving distribution in ${context.marketName ?? 'the market'}.`;
+  const description = BardResolver.resolve({
+    domain: 'Industry',
+    subDomain: 'Scandal',
+    intensity: prestigeLoss < -5 ? 20 : 50,
+    tone: 'Trade',
+    context: { project: context.projectTitle, market: context.marketName }
+  });
 
   const publication = type === 'banned_in_market' ? 'The Hollywood Reporter' as const
     : 'Variety' as const;
@@ -252,7 +274,13 @@ export function generateMarketBanScandal(
       week,
       type: 'SCANDAL',
       headline,
-      description: `Censors have blocked the release, costing an estimated ${(bannedMarkets.length * 5).toFixed(0)}% of international box office.`,
+      description: BardResolver.resolve({
+        domain: 'Industry',
+        subDomain: 'Scandal',
+        intensity: 20,
+        tone: 'Trade',
+        context: { project: project.title, market: marketName }
+      }),
       publication: 'The Hollywood Reporter'
     }],
     newHeadlines: [{

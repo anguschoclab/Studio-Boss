@@ -2,54 +2,7 @@ import { pick } from '../utils';
 import { GameState, MarketEvent } from '@/engine/types';
 import { StateImpact } from '../types/state.types';
 import { RandomGenerator } from '../utils/rng';
-
-const EVENT_TEMPLATES: Omit<MarketEvent, 'id' | 'weeksRemaining'>[] = [
-  {
-    type: 'streaming_boom',
-    name: 'Streaming Subscription Boom',
-    description: 'A global lock-down or tech shift leads to massive streaming growth.',
-    revenueMultiplier: 1.5,
-    costMultiplier: 1.2,
-    talentAvailabilityModifier: -0.1,
-    economicShock: { sentimentShift: 20, baseRateShift: -0.01 } // Lower rates for growth
-  },
-  {
-    type: 'theatrical_revival',
-    name: 'Theatrical Revival',
-    description: 'Audiences are flocking back to cinemas globally.',
-    revenueMultiplier: 1.4,
-    costMultiplier: 1.0,
-    talentAvailabilityModifier: 0.1,
-    economicShock: { sentimentShift: 10, baseRateShift: 0 }
-  },
-  {
-    type: 'writers_strike',
-    name: 'WGA Strike',
-    description: 'Writers are striking for better streaming residuals.',
-    revenueMultiplier: 1.0,
-    costMultiplier: 1.5,
-    talentAvailabilityModifier: -0.8,
-    economicShock: { sentimentShift: -15, baseRateShift: 0.005 } // Slight rate hike from inflation
-  },
-  {
-    type: 'actors_strike',
-    name: 'SAG-AFTRA Strike',
-    description: 'Actors hit the picket lines over AI replacement fears.',
-    revenueMultiplier: 0.8,
-    costMultiplier: 1.5,
-    talentAvailabilityModifier: -0.9,
-    economicShock: { sentimentShift: -20, baseRateShift: 0.005 }
-  },
-  {
-    type: 'market_crash',
-    name: 'Economic Recession',
-    description: 'An economic downturn dries up credit and suppresses entertainment spending.',
-    revenueMultiplier: 0.7,
-    costMultiplier: 0.9,
-    talentAvailabilityModifier: 0.3,
-    economicShock: { sentimentShift: -50, baseRateShift: 0.04 } // Massive rate hike to combat inflation
-  }
-];
+import { BardResolver } from './bardResolver';
 
 export function getActiveMarketEvent(state: GameState): MarketEvent | undefined {
   if (!state.market.activeMarketEvents || state.market.activeMarketEvents.length === 0) return undefined;
@@ -84,11 +37,30 @@ export function advanceMarketEvents(state: GameState, rng: RandomGenerator): Sta
   
   // Chance to spawn new event if none active
   if (activeEvents.length === 0 && rng.next() < 0.02) {
-    const template = pick(EVENT_TEMPLATES, rng);
+    const type = rng.next() > 0.5 ? 'BOOM' : 'CRASH';
+    const id = rng.uuid('EVT');
+    const intensity = type === 'BOOM' ? 80 : 20;
+
     const newEvent: MarketEvent = {
-      ...template,
-      id: rng.uuid('EVT'),
-      weeksRemaining: Math.floor(rng.range(12, 52))
+        id,
+        type: type === 'BOOM' ? 'streaming_boom' : 'market_crash',
+        name: BardResolver.resolve({
+            domain: 'Market',
+            subDomain: 'Headline',
+            intensity,
+            context: {}
+        }),
+        description: BardResolver.resolve({
+            domain: 'Market',
+            subDomain: 'Event',
+            intensity,
+            context: {}
+        }),
+        weeksRemaining: Math.floor(rng.range(12, 52)),
+        revenueMultiplier: type === 'BOOM' ? 1.5 : 0.7,
+        costMultiplier: type === 'BOOM' ? 1.2 : 0.9,
+        talentAvailabilityModifier: type === 'BOOM' ? -0.1 : 0.3,
+        economicShock: { sentimentShift: type === 'BOOM' ? 20 : -50, baseRateShift: type === 'BOOM' ? -0.01 : 0.04 }
     };
     
     activeEvents.push(newEvent);

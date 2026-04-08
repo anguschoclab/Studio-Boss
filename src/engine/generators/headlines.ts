@@ -1,16 +1,7 @@
 import { pick } from '../utils';
 import { Headline, RivalStudio, HeadlineCategory, Project, Contract, Talent } from '@/engine/types';
-import { fillTemplate } from '../utils';
 import { RandomGenerator } from '../utils/rng';
-import { 
-  MARKET_HEADLINES, 
-  TALENT_HEADLINES, 
-  RIVAL_TEMPLATES,
-  BOX_OFFICE_MILESTONES,
-  STREAMING_RECORDS,
-  SCANDAL_TEMPLATES,
-  DISPUTE_TEMPLATES
-} from '../data/headlines.data';
+import { BardResolver } from '../systems/bardResolver';
 
 export function generateHeadlines(
   rng: RandomGenerator,
@@ -64,36 +55,64 @@ export function generateHeadlines(
 
     if (roll < 0.20 && rivals.length > 0) {
       const rival = pick(rivals, rng);
-      text = fillTemplate(pick(RIVAL_TEMPLATES, rng), {
-        ...vars,
-        rival: rival.name,
-        budget: String(rng.rangeInt(20, 200)),
-        genre: pick(genrePool, rng),
+      text = BardResolver.resolve({
+        domain: 'Industry',
+        subDomain: 'Rumor',
+        intensity: rng.range(0, 100),
+        tone: 'Trade',
+        context: { actor: rival.name }
       });
       category = 'rival';
     } else if (roll < 0.40) {
-      text = fillTemplate(pick(MARKET_HEADLINES, rng), vars);
+      text = BardResolver.resolve({
+        domain: 'Market',
+        subDomain: 'Headline',
+        intensity: rng.range(0, 100),
+        context: { genre: pick(genrePool, rng) }
+      });
       category = 'market';
     } else if (roll < 0.60) {
-      text = fillTemplate(pick(TALENT_HEADLINES, rng), vars);
+      text = BardResolver.resolve({
+        domain: 'Talent',
+        subDomain: 'Career',
+        intensity: rng.range(0, 100),
+        tone: 'Trade',
+        context: { actor: vars.actorName }
+      });
       category = 'talent';
     } else if (roll < 0.75) {
-      text = fillTemplate(pick(BOX_OFFICE_MILESTONES, rng), {
-        ...vars,
-        genre: selectedProject?.genre || pick(genrePool, rng)
+      text = BardResolver.resolve({
+        domain: 'Market',
+        subDomain: 'Event',
+        intensity: rng.range(50, 100),
+        context: { genre: selectedProject?.genre || pick(genrePool, rng) }
       });
       category = 'box_office';
     } else if (roll < 0.85) {
-      text = fillTemplate(pick(STREAMING_RECORDS, rng), {
-        ...vars,
-        genre: selectedProject?.genre || pick(genrePool, rng)
+      text = BardResolver.resolve({
+        domain: 'Market',
+        subDomain: 'Event',
+        intensity: rng.range(50, 100),
+        context: { project: vars.projectName }
       });
       category = 'streaming';
     } else if (roll < 0.95) {
-      text = fillTemplate(pick(SCANDAL_TEMPLATES, rng), vars);
+      text = BardResolver.resolve({
+        domain: 'Industry',
+        subDomain: 'Scandal',
+        intensity: rng.range(0, 100),
+        tone: 'Tabloid',
+        context: { actor: vars.actorName }
+      });
       category = 'scandal';
     } else {
-      text = fillTemplate(pick(DISPUTE_TEMPLATES, rng), vars);
+      text = BardResolver.resolve({
+        domain: 'Industry',
+        subDomain: 'Scandal',
+        intensity: rng.range(0, 100),
+        tone: 'Trade',
+        context: { actor: vars.actorName || vars.actressName }
+      });
       category = 'dispute';
     }
 

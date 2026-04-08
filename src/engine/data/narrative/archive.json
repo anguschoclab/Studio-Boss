@@ -1,0 +1,270 @@
+{
+  "Review": {
+    "Standard": {
+      "Trade": {
+        "Acclaimed": [
+          "{{project}} is a landmark achievement in contemporary cinema and a lock for awards consideration.",
+          "A tour de force that reaffirms the director's status at the top of the A-list.",
+          "Exquisitely crafted and deepy resonant, {{project}} is the gold standard for the genre."
+        ],
+        "Mixed": [
+          "{{project}} is a handsomely produced but ultimately hollow exercise in genre play.",
+          "Strong performances can't quite save {{project}} from its own narrative weight.",
+          "A middle-of-the-road effort for {{project}} that will satisfy enthusiasts but likely miss the broader zeitgeist."
+        ],
+        "Panned": [
+          "A disastrous miscalculation that squanders its high-profile talent and budget.",
+          "{{project}} fails to find a pulse, despite the heavy lifting by its technical team.",
+          "Critics are questioning the commercial viability of {{project}} after this critical drubbing."
+        ]
+      },
+      "Tabloid": {
+        "Acclaimed": [
+          "OMG! {{project}} is the hottest thing in Hollywood right now. Everyone is obsessed!",
+          "Total MUST-SEE! {{project}} is turning heads and breaking hearts on every screen.",
+          "The buzz is REAL. {{project}} is a total slay and we're here for it."
+        ],
+        "Panned": [
+          "Yikes. {{project}} is a total trainwreck. We're embarrassed for everyone involved.",
+          "Dumpster fire alert! {{project}} is the biggest flop of the season.",
+          "Can someone please check on {{actor}}? Because {{project}} is a career disaster."
+        ]
+      }
+    }
+  },
+  "Greenlight": {
+    "Finance": {
+      "Risky": [
+        "Funding is spread too thin; this project is a financial time bomb.",
+        "The budget to cash ratio is dangerous. One mistake and the studio is underwater."
+      ],
+      "Prestige": [
+        "Comfortable cash reserves for this budget tier.",
+        "A financially sound package that won't break the bank."
+      ]
+    },
+    "Talent": {
+      "Risky": [
+        "The package lacks a bankable lead; audience draw will be difficult.",
+        "Talent attached is unproven at this budget level."
+      ],
+      "Prestige": [
+        "A-list package provides a strong market floor and awards potential.",
+        "The attached talent brings immediate gravity and awards buzz."
+      ]
+    }
+  },
+  "Talent": {
+    "Career": {
+      "Trade": {
+        "Elite": [
+          "{{actor}} is currently the most sought-after name in the industry following a string of hits.",
+          "Agencies are in a bidding war to represent {{actor}} after their latest performance."
+        ],
+        "Standard": [
+          "{{actor}} continues to build a solid filmography with diverse project choices.",
+          "Industry insiders note {{actor}}'s steady rise in marketability this quarter."
+        ]
+      }
+    },
+    "Health": {
+      "Trade": {
+        "Recovered": [
+          "{{actor}} has returned from medical leave, reportedly recharged and ready for upcoming commitments.",
+          "Production schedules resume as {{actor}} is cleared for return from a health-related hiatus."
+        ],
+        "Burnout": [
+          "{{actor}} has entered medical leave due to extreme burnout. Several projects have been delayed indefinitely."
+        ]
+      },
+      "Tabloid": {
+        "Burnout": [
+          "Spotted: {{actor}} lookin' totally exhausted before checking into a 'wellness retreat'. Recovery or rehab?",
+          "Career on ice! {{actor}} disappears from the spotlight after total burnout meltdown."
+        ]
+      }
+    },
+    "Scandal": {
+      "Arc": {
+        "Continuation": [
+          "{{actor}} continues their downward spiral after yet another public incident.",
+          "The legend of {{actor}}'s erratic behavior grows as a second scandal breaks this month.",
+          "No lessons learned? {{actor}} is back in the headlines for all the wrong reasons."
+        ],
+        "Fresh": [
+          "Shocker: {{actor}} caught in a compromising position at a post-premiere party.",
+          "Industry gasps as leaked audio reveals {{actor}}'s onset tantrum.",
+          "Legal team on high alert: {{actor}} facing serious allegations after weekend altercation."
+        ]
+      }
+    }
+  },
+  "Industry": {
+    "Merger": {
+      "Trade": [
+        "BREAKING: {{actor}} acquires {{target}} in a landmark media deal!",
+        "Industry shocked as {{actor}} announces a strategic merger with {{target}}."
+      ],
+      "Tabloid": [
+        "Monster Merger: {{actor}} just swallowed {{target}}! Who's next on the menu?",
+        "Greed is good? {{actor}} and {{target}} are joining forces to take over the world."
+      ]
+    },
+    "Rumor": {
+      "Trade": [
+        "Whispers suggest {{actor}} is looking to acquire a major indie IP.",
+        "Word around town is that {{actor}} is preparing a monumental buyout offer.",
+        "Exec shakeups expected soon at {{actor}}."
+      ],
+      "Tabloid": [
+        "Spotted: {{actor}} meeting secretly with a rival CEO. Buying or selling?",
+        "Gossip is heating up about {{actor}}'s next project being wildly over budget.",
+        "Is {{actor}} headed for a meltdown? Sources say 'yes'."
+      ]
+    },
+    "Scandal": {
+      "Trade": [
+        "A high-profile talent dispute involving {{actor}} makes industry headlines.",
+        "Regulators announce new content distribution guidelines for {{actor}}."
+      ],
+      "Tabloid": [
+        "Nepotism debate dominates the weekly trades after {{actor}}'s casting.",
+        "Famous dynasty patriarch announces retirement; {{actor}} left out of the will?"
+      ],
+      "rating_controversy": [
+        "Rating controversy surrounds {{project}} over Mature content rating.",
+        "Board of censors flags {{project}} for extreme thematic elements."
+      ],
+      "foreign_market_cut": [
+        "Major sequences cut from {{project}} to secure release in international markets.",
+        "{{project}} edited for content sensitivity in key foreign territories."
+      ],
+      "banned_in_market": [
+        "{{project}} officially BANNED in major foreign market after regulatory review.",
+        "International release of {{project}} canceled due to local ban."
+      ]
+    }
+  },
+  "Market": {
+    "Headline": {
+      "Standard": [
+        "Market analysts update entertainment sector outlook.",
+        "International box office sets new quarterly record.",
+        "A viral social media trend boosts {{genre}} film interest."
+      ]
+    },
+    "Event": {
+      "Standard": [
+        "Regulators announce new content distribution guidelines.",
+        "Major studio lot fire disrupts production schedules city-wide.",
+        "Virtual Reality pioneer announces a 'cinema killer' platform."
+      ]
+    }
+  },
+  "Crisis": {
+    "PR": {
+      "Dramatic": [
+        "Public family feud leaks during an awards press tour for {{actor}}.",
+        "Leaked audio reveals {{actor}}'s onset tantrum during {{project}}."
+      ],
+      "Options": {
+        "Aggressive": ["Hire a high-powered crisis management firm to spin the story.", "Launch a counter-leak to discredit the sources."],
+        "Apologetic": ["Issue a sincere notes-app apology and donate to a related charity.", "Coordinate a sit-down interview to explain the situation."],
+        "Ignored": ["Maintain total radio silence and hope the next news cycle buries it.", "Continue business as usual and block any reporters asking questions."]
+      }
+    },
+    "Production": {
+      "Dramatic": [
+        "{{project}} reportedly facing severe production delays after a set accident.",
+        "Unexpected script leaks for {{project}} send the studio into damage control."
+      ],
+      "Options": {
+        "BudgetExpansion": ["Inject emergency funds to solve the issue immediately.", "Authorize overtime for the entire crew to catch up."],
+        "Delay": ["Push the release date back to ensure safety and quality.", "Temporarily halt production while a solution is found."]
+      }
+    }
+  },
+  "Project": {
+    "Title": {
+      "Action": [
+        "The {{ADJECTIVE}} {{NOUN}} Protocol",
+        "{{NOUN}} Down",
+        "Operation {{ADJECTIVE}} Asset",
+        "The {{NOUN}} Directive",
+        "{{ADJECTIVE}} Extraction",
+        "Project {{NOUN}} Zero",
+        "{{NAME}} Ultimatum",
+        "The {{ADJECTIVE}} Cinematic Universe",
+        "Operation {{NOUN}} Drop",
+        "Tax Shelter Zero"
+      ],
+      "Comedy": [
+        "Cancel {{NAME}}",
+        "The {{ADJECTIVE}} Influencer",
+        "Trending in {{PLACE}}",
+        "Too {{ADJECTIVE}} to {{VERB}}",
+        "The Podcast Disaster",
+        "Algorithm Fails",
+        "Notes App Apology",
+        "Ratioed in {{PLACE}}",
+        "Main Character Energy",
+        "Accidentally Corporate-Mandated"
+      ],
+      "Drama": [
+        "Portrait of a {{ADJECTIVE}} CEO",
+        "Death of a {{NOUN}}",
+        "The Award-Baited {{NOUN}}",
+        "The Shareholder Paradox",
+        "Tax Write-Off in {{PLACE}}",
+        "The Nepo Baby Dilemma",
+        "Hostile Takeover",
+        "The {{ADJECTIVE}} Boardroom",
+        "Vibe Shift",
+        "Quarterly Earnings"
+      ],
+      "Horror": [
+        "The {{NOUN}} in the {{PLACE}}",
+        "The Algorithm of Fear",
+        "A Liminal Nightmare",
+        "The Analog Curse",
+        "The Focus-Tested Entity",
+        "A Four-Quadrant Nightmare",
+        "Aesthetic of {{PLACE}}",
+        "The {{PLACE}} Jump Scare",
+        "Nightmare in {{PLACE}}",
+        "The IP-Harvested Entity"
+      ],
+      "Sci-Fi": [
+        "The Generative Frontier",
+        "Beyond the Simulation",
+        "The A.I. Paradigm",
+        "The Metaverse Collapse",
+        "The NFT Protocol",
+        "Deepfake Chronicles",
+        "Project Synergy",
+        "Machine-Learned Love",
+        "Escape from Tax Shelter",
+        "Algorithm of {{PLACE}}"
+      ]
+    }
+  },
+  "Dictionary": {
+    "ADJECTIVE": ["Dark", "Silent", "Golden", "Broken", "Hidden", "Last", "Lost", "Secret", "Lethal", "Final", "Red", "Black", "Wild", "Crazy", "Funny", "Beautiful", "Brave", "Fierce", "Uncut", "Quantum", "Cyber", "Neon", "Hyper", "Meta", "Toxic", "Viral", "Cancel", "Elevated", "Atmospheric", "Subversive", "Procedural", "Algorithmic", "Tactical", "Strategic", "Covert", "Clandestine", "Stealth", "Phantom", "Ghost", "Shadow", "Rogue", "Maverick", "Renegade", "Outlaw", "Vigilante", "Mercenary", "Expendable", "Disposable", "Collateral", "Fatal", "Mortal", "Awkward", "Cringe", "Based", "Woke", "Problematic", "Cancelled", "Triggered", "Savage", "Petty", "Salty", "Thirsty", "Basic", "Extra", "Bougie", "Ratchet", "Sus", "Cap", "Overbudget", "Tone-Deaf", "Pretentious", "Self-Indulgent", "Liminal", "Uncanny", "Cash-Grab", "Soulless", "Manufactured", "Algorithm-Approved", "Tax-Exempt", "Rebooted", "Focus-Grouped", "Monetized", "Demonetized", "Post-Credit", "Data-Driven", "Derivative", "Gritty", "Four-Quadrant", "Ghostwritten", "Out-of-Touch", "Venture-Backed", "Uncancelled", "Defamatory", "AI-Generated", "Generative", "Tax-Haven", "Pivoting", "Vertically-Integrated", "Capital-Intensive", "Syndicated", "Globalized", "Engagement-Maximized", "Board-Mandated", "Post-Cancellable", "Metrics-Driven", "Hyper-Local", "Transmedia", "Vertical-Slice", "Shareholder-Approved", "Risk-Adjusted", "Asset-Backed", "Over-Indexed", "Pre-Packaged", "Demographic-Agnostic", "Cross-Platform", "Syndication-Ready", "Merchandisable", "Franchisable", "Algorithmic-Optimal", "Machine-Learned", "Focus-Tested", "Sanitized", "Corporate-Mandated", "Data-Mined", "Merch-Driven", "Tax-Writeoff", "Laundered", "Market-Tested", "Brand-Safe", "CGI-Heavy", "Bingeable", "Non-Union", "Subsidized", "Franchise-Ready", "Syndicated", "Crypto-Backed", "Hyper-Monetized", "Prompt-Engineered", "Over-Focus-Grouped", "Vibe-Shifted", "Parasocial", "Doomscrolled", "Clickbait", "Uncanny-Valley", "Metrics-Obsessed", "A24-style", "Post-Modern", "Algorithmic", "Synergistic", "Hyper-Monetized", "Focus-Tested", "Market-Corrected", "Demographically-Optimized", "Shareholder-Approved", "Tax-Deductible", "Nostalgia-Driven", "Aggressively-Bland", "Corporate-Mandated", "IP-Farm", "Over-Leveraged", "Subprime", "Crypto-Backed", "Generative-AI", "Derivative", "Un-Unionized", "Demographically-Optimized", "Aggressively-Bland", "Corporate-Mandated", "IP-Harvested", "Synergistically Aligned", "A24-style", "Post-Modern", "Algorithmic", "Leveraged", "Asset-Backed", "Over-Indexed", "Pre-Packaged", "Demographic-Agnostic", "Cross-Platform", "Syndication-Ready", "Merchandisable", "Franchisable", "Machine-Learned", "Data-Scraped", "A.I. Generated", "Subprime"],
+    "NOUN": ["Shadow", "Mirror", "Ghost", "Knight", "City", "Storm", "Weapon", "Target", "Agent", "Game", "House", "Night", "Day", "Star", "Dream", "Heart", "World", "Man", "Woman", "Boy", "Girl", "Multiverse", "Franchise", "Content", "Algorithm", "Meme", "Podcast", "Trauma", "Nepotism", "Vibe", "Aesthetic", "Metaverse", "Crypto", "Grifter", "Situationship", "IP", "Recon", "Extraction", "Payload", "Objective", "Bounty", "Crossfire", "Infiltration", "Exfiltration", "Takeover", "Lockdown", "Overdrive", "Showdown", "Blowback", "Backlash", "Flashpoint", "Ground Zero", "Vanguard", "Sentinel", "Outpost", "Stronghold", "Influencer", "Streamer", "Vlogger", "Viral", "Trending", "Cancel Culture", "Scam", "Hustle", "Flex", "Clout", "Drip", "Mood", "Energy", "Synergy", "Deepfake", "Blockbuster", "CGI", "PR Crisis", "Apology Video", "Subtweet", "Ratio", "Oscars Bait", "Method Acting", "Tax Write-Off", "Hedge Fund", "CGI Mush", "Neomaximalism", "Engagement Metric", "Retention Rate", "Shell Company", "Tax Haven", "LLM", "Zero-Day", "Psy-Op", "Astroturf", "Focus Group", "NDA", "Clickfarm", "Content Farm", "Brand Deal", "Brand Ecosystem", "Content Silo", "Monetization Strategy", "Value Extraction", "Strategic Asset", "Content Portfolio", "Franchise Management", "Demographic Target", "Quarterly Earnings", "Shareholder Meeting", "Boardroom Coup", "Hostile Takeover", "Merger and Acquisition", "Tax Loophole", "NDA Violation", "PR Spin", "Damage Control", "Focus Group Feedback", "Audience Retention", "CGI Void", "Post-Credit Scene", "Cinematic Universe", "Merchandising Rights", "Test Audience", "Algorithm Spike", "A.I. Artifact", "Studio Mandate", "Box Office Flop", "Tax Shelter", "Focus-Group Participant", "Brand Identity", "Product Placement", "Merger", "Acquisition", "Crypto-Wallet", "Doomscroll", "Parasocial Relationship", "Microaggression", "Burnout", "Clickfarm", "Generative AI", "Large Language Model", "Data Harvest", "Engagement Bait", "Shareholder Meeting", "Focus Group", "Algorithmic Output", "Venture Capital", "Crypto Wallet", "NFT Collection", "Nepotism Baby", "Tax Write-Off", "Content Farm", "Engagement Metric", "Focus Group", "Cinematic Universe", "Shareholder Meeting", "Merger", "Acquisition", "IP Vault", "Brand Identity", "Demographic", "Quarterly Earnings", "Synergy", "Deliverable", "Analytics", "Algorithm", "Deepfake", "Metaverse Property", "NFT Collection", "Streaming Service", "Franchise Fatigue", "IP Re-acquisition", "Generative Prompt", "Algorithm Spike", "Tax Shelter", "Focus Group", "Subprime", "Crypto Wallet", "Quarterly Earnings", "Engagement Metric", "Deliverable", "Merger", "Acquisition", "Metrics", "Analytics", "Demographics", "Synergies", "Pipelines", "Ecosystem", "Portfolio", "Asset", "Web3 Venture", "Metaverse Property", "NFT Collection", "Deepfake"],
+    "VERB": ["Die", "Run", "Shoot", "Hide", "Seek", "Find", "Kill", "Save", "Love", "Kiss", "Dance", "Sing", "Fly", "Fall", "Cancel", "Reboot", "Swipe", "Ghost", "Stream", "Hack", "Leak", "Trend", "Post", "Upload", "Download", "Share", "Like", "Subscribe", "Follow", "Unfollow", "Block", "Mute", "Report", "Ban", "Doxx", "Gaslight", "Girlboss", "Gatekeep", "Manifest", "Vibe", "Monetize", "Synergize", "Focus-Group", "Test-Screen", "A/B Test", "Ratio", "Doxx", "Subtweet", "Launder", "Shelve", "Pivot", "Astroturf", "Outsource", "Gamify", "Syndicate", "Cross-Promote", "Divest", "Liquidate", "Acquire", "Merchandize", "Astroturf", "Greenwash", "Pinkwash", "Retcon", "Gaslight", "Girlboss", "Gatekeep", "Consolidate", "Restructure", "Depreciate", "Overextend", "Underperform"],
+    "PLACE": ["Darkness", "City", "Woods", "Space", "Future", "Mars", "London", "Paris", "New York", "Moon", "Sun", "Island", "Village", "Metaverse", "Simulation", "Web3", "Timeline", "Algorithm", "Feed", "Grid", "Matrix", "Network", "Cloud", "Server", "Database", "Mainframe", "Hub", "Node", "Nexus", "Core", "Vortex", "Void", "Abyss", "Backrooms", "Discord Server", "Subreddit", "TikTok FYP", "Tax Haven", "Offshore Account", "Content Farm", "Clickfarm", "Boardroom", "Focus Group Facility", "The Write-Off Bin", "The Streaming Vault", "The Data Center", "The LLC"],
+    "NAME": ["John", "Mary", "Bourne", "Bond", "Ripley", "Neo", "Trinity", "Luke", "Leia", "Harry", "Hermione", "Gatsby", "Holmes", "Elon", "Zuck", "Chad", "Karen", "Influencer", "Streamer", "Creator", "Grifter", "Scammer", "Hacker", "Troll", "Bot", "NPC", "Main Character", "Side Character", "Villain", "Hero", "Anti-Hero", "Protagonist", "Antagonist", "Nepo Baby", "Industry Plant", "Auteur", "Hedge Fund Manager", "Venture Capitalist", "Shareholder", "CEO", "Board Member", "Algorithm", "The VP of Content", "The IP Lawyer", "The Brand Manager", "The Private Equity Firm"],
+    "TIME": ["Midnight", "Dawn", "Dusk", "Night", "Tomorrow", "Yesterday", "Upload", "Drop", "Stream", "Post", "The Golden Hour", "Crunch Time", "Q1", "Q2", "Q3", "Q4", "Fiscal Year", "Earnings Call", "Tax Season", "Zero-Day"],
+    "ANIMAL": ["Bear", "Dog", "Cat", "Lion", "Tiger", "Dragon", "Unicorn", "Dinosaur", "Doge", "Ape", "Pepe", "Capybara", "Trash Panda", "Vulture", "Cash Cow", "Dead Cat", "Black Swan"],
+    "STUDIO_PREFIX": ["Universal", "Paramount", "Silver", "Golden", "Grand", "Royal", "Majestic", "A25", "Auteur", "Artisan", "Boutique", "Cinephile", "Gritty", "Authentic", "Raw", "Visceral", "Indie", "Micro", "Prestige", "Trophy", "Icon", "Aura", "Elevated", "Derivative", "Algorithm", "Nostalgia", "Tentpole", "Reboot", "Cinematic", "Blockbuster", "Streaming", "Viral", "Meme", "Synergy", "Corporate", "Focus Group", "Celluloid", "Kinetoscope", "Marquee", "Backlot", "Soundstage", "Mogul", "Box Office", "Popcorn", "Multiplex", "Drive-In", "Matinee", "Premiere", "Red Carpet", "Paparazzi", "Starlet", "Montage", "Jump Cut", "Fade In", "Lens Flare", "Clapperboard", "Green Screen", "CGI", "Showrunner", "Method", "Typecast", "A-List", "B-Movie", "Cult Classic", "Sleeper Hit", "Flop", "Bomb", "Sequel", "Prequel", "Spin-off", "Remake", "Franchise", "Trilogy", "Cinematic Universe", "Fandom", "Four Quadrant", "Demographic", "IP", "Oscar Bait", "Festival Darling", "Direct-to-Video", "Streaming Wars", "Binge", "Content", "Monetized", "Synergistic", "Vertical", "Reshoot", "Director's Cut", "Golden Age", "New Wave", "Avant-Garde", "Dogme", "Mumblecore", "Grindhouse", "Midnight Movie", "Tax-Exempt", "Algorithm-Approved", "Deepfake", "Focus-Tested", "Sanitized", "Corporate-Mandated", "Nepo", "Vulture", "Hedge Fund", "Private Equity", "Data-Mined", "A.I. Generated", "Post-Credit", "Focus-Grouped", "Merch-Driven", "Tax-Writeoff", "Shell", "Laundered", "Overleveraged", "Boutique", "Uncancelled", "Crypto-Funded", "De-Aged", "Shelved", "Straight-to-Streaming", "Zero-Day", "Market-Tested", "Brand-Safe", "Four-Quadrant", "Ghostwritten", "Re-Edited", "Director-Jailed", "CGI-Heavy", "Defamatory", "Venture-Backed", "Crowdfunded", "Cash-Grab", "Tax-Haven", "Pivoting", "Offshore", "Monopolized", "Astroturfed", "Laundered", "Plagiarized", "Uncredited", "Ghost-Directed", "Off-the-Books", "Defunct", "Delisted", "Over-Hyped", "Review-Bombed", "B-Roll", "Out-of-Touch", "Subprime", "Shadow-Banned", "Engagement-Driven", "Microtargeted", "Metrics-Obsessed", "A/B-Tested", "Manufactured", "Soulless", "Demographic", "Four-Quadrant", "Risk-Averse", "Focus-Grouped", "Franchise-Ready", "Market-Researched", "Algorithmic", "Sanitized", "IP-Driven", "Corporate-Mandated", "Tax-Haven", "Subsidized", "Leveraged", "Crowdsourced", "Unfinished", "Generative", "Post-Modern", "Tax-Shelter", "Franchised", "Rebooted", "Marketable", "Post-Cancellable", "Metrics-Driven", "Hyper-Local", "Transmedia", "Vertical-Slice", "Quarterly-Earnings", "Shareholder-Approved", "Risk-Adjusted", "Asset-Backed", "Over-Indexed", "Pre-Packaged", "Demographic-Agnostic", "Cross-Platform", "Syndication-Ready", "Merchandisable", "Franchisable", "Algorithmic-Optimal", "Machine-Learned", "Data-Scraped", "A.I. Generated", "Subprime", "Un-Unionized", "Tax-Shelter", "Algorithm-Driven", "Shareholder-Approved", "Prestige-Bait", "IP-Farm", "Metrics-Obsessed", "Demographic-Targeted", "Focus-Group-Tested", "Corporate-Synergy", "Subprime", "Venture-Capital", "Offshore-Account", "Data-Mined", "A/B-Tested", "Post-Cancellable", "Brand-Safe", "Risk-Adjusted", "Asset-Backed", "Over-Leveraged", "Nepotism-Fueled", "Ghost-Directed", "Generative-AI", "Derivative", "Plagiarized", "Market-Corrected", "Vanguard", "Paradigm", "Synergistic", "Optimal", "Metrics", "Focus-Grouped", "A/B-Tested", "Demographic", "Shareholder", "Leveraged", "Asset", "Derivative", "Plagiarized", "Generative", "Prompt-Engineered", "Tax-Exempt", "Subsidized", "Offshore", "Shell", "Laundered", "Overleveraged", "Boutique", "Uncancelled", "Crypto-Funded", "De-Aged", "Shelved", "Straight-to-Streaming", "Zero-Day", "Market-Tested", "Brand-Safe", "Four-Quadrant", "Ghostwritten", "Re-Edited", "Director-Jailed", "CGI-Heavy", "Defamatory", "Venture-Backed", "Crowdfunded", "Cash-Grab", "Tax-Haven", "Pivoting", "Monopolized", "Data-Scraped", "A.I. Generated", "Subprime", "Un-Unionized", "Tax-Shelter", "Algorithm-Driven", "Shareholder-Approved", "Prestige-Bait", "IP-Farm", "Metrics-Obsessed", "Capital-Intensive", "Vertically-Integrated", "Platform-Agnostic", "Ad-Supported", "Deep-Pocketed", "Syndicated", "Globalized", "Hyper-Targeted", "Focus-Tested", "Board-Mandated", "Profit-Driven", "Venture-Funded", "Aggregated", "Engagement-Maximized", "Data-Harvesting", "Algorithmic", "A.I.-Assisted", "A24-core", "Elevated", "Post-Horror", "Hyper-Sanitized", "Phase 7", "TikTok-Tested", "Focus-Grouped", "Tax-Deductible", "Nostalgia-Bait", "Aggressively Mid", "Corporate-Mandated", "Demographically Optimized", "Shareholder-Approved", "Algorithmically Generated", "Deepfaked", "Crypto-Funded", "IP-Harvested", "Synergistically Aligned", "Market-Corrected", "Over-Budget", "Reshot", "Algorithmically-Optimized", "Focus-Tested", "Boardroom-Approved", "Micro-Targeted", "Synergistically-Integrated", "Venture-Backed", "Uncancelled", "Zero-Day", "Four-Quadrant", "Ghostwritten", "CGI-Heavy", "Defamatory", "Risk-Averse", "Franchise-Ready", "Brand-Safe", "Data-Mined", "A/B-Tested", "Demographically-Agnostic", "Generative", "Subprime"],
+    "STUDIO_SUFFIX": ["Pictures", "Studios", "Entertainment", "Films", "Media", "Productions", "Cinema", "Motion Pictures", "Network", "Broadcasting", "Vision", "Works", "Arts", "Interactive", "Digital", "Creative", "Features", "Releasing", "Collective", "Syndicate", "Ventures", "Partners", "Holdings", "Group", "Enterprises", "Corp", "Inc", "Labs", "Workshop", "Factory", "Foundry", "Forge", "Vault", "Archive", "Content", "IP", "Universe", "Franchise", "Algorithm", "Brand", "Properties", "Synergy Group", "Tax Shelters", "Equity Partners", "Dividend Streams", "Shell Corps", "Licensing Boards", "Distribution", "Motion Picture Company", "International", "Worldwide", "Global", "Plus", "Max", "Play", "Go", "On Demand", "Originals", "Releasing Company", "Acquisitions", "Assets", "Portfolios", "Capital", "Trust", "Conglomerate", "Monopoly", "Subsidiary", "Media Empire", "Omnicorp", "Content Farm", "Clickfarm", "Metrics", "Data Systems", "Data Analytics", "Tax Haven", "LLC", "GmbH", "Equities", "Merchandising", "Licensing", "Metaverse", "Web3", "Blockchain", "NFTs", "Virtuals", "Deepfakes", "Algorithms", "Metrics", "Deliverables", "Content Solutions", "Analytics", "Synergies", "Aggregators", "Pipelines", "Ecosystems", "Portfolios", "Assets", "Data Mining", "Tax Shelters", "Offshores", "Holdings", "Monopolies", "Cartels", "Conglomerates", "Subsidiaries", "Shell Corporations", "Trusts", "Web3 Ventures", "Metaverse Properties", "Crypto Assets", "NFT Collections", "Algorithms", "Deepfakes", "Generative Media", "Focus Groups", "Market Research", "Demographics", "Media Solutions", "Data Mine", "Rights Management", "Capital Partners", "IP Holdings", "Asset Management", "Content Silos", "Delivery Systems", "Monetization Group", "Value Extraction", "Brand Ecosystems", "Digital Real Estate", "Media Consolidation", "Strategic Assets", "Content Portfolios", "Franchise Management", "Global Reach", "Demographic Targets", "Monopolies", "Tax Havens", "Content Farms", "Shell Corporations", "Synergies", "Deliverables", "Holding Companies", "Analytics", "Focus Groups", "Market Research", "IP Vaults", "Franchise Portfolios", "Merchandising Wings", "Rights Management", "Engagement Hubs", "Hedge Funds", "Trusts", "Data Centers", "Creative Silos", "Content Pipelines", "Conglomerates", "Subsidiaries", "Web3 Ventures", "Metaverse Properties", "Deepfakes", "Cartel", "Syndicate", "Conglomerate", "Monopoly", "Subsidiary", "Holdings", "Trust", "Hedge Fund", "Private Equity", "Offshore", "Tax Haven", "Shell Corporation", "Content Farm", "Clickfarm", "Data Mine", "Algorithm", "Metrics", "Analytics", "Demographics", "Focus Group", "Deliverables", "Synergies", "Pipelines", "Ecosystem", "Portfolio", "Asset", "Web3 Venture", "Metaverse Property", "NFT Collection", "Deepfake", "Tax Shelters", "Offshores", "Holdings", "Monopolies", "Cartels", "Conglomerates", "Subsidiaries", "Shell Corporations", "Trusts", "Web3 Ventures", "Content Silos", "Media Monopolies", "Entertainment Conglomerates", "IP Vaults", "Algorithm Farms", "Data Mines", "Franchise Factories", "Synergy Groups", "Engagement Hubs", "Deliverables", "Tax Shelters", "Shell Corporations", "Merchandising Wings", "Digital Real Estate", "Focus Groups", "Analytics Teams", "Demographic Targets", "Conglomerates", "Subsidiaries", "Holding Companies", "Tax Shelters", "Holding Corps", "Mergers", "Acquisitions", "Offshore Accounts", "Leveraged Buyouts", "Data Lakes", "Algorithm Farms", "Content Pipelines", "Synergy Hubs", "Deliverables", "Analytics Teams", "Focus Groups", "Market Research", "Demographic Targets", "Conglomerates", "Subsidiaries", "IP Vaults", "Franchise Portfolios", "Merchandising Wings"],
+    "FIRST_NAME_MALE": ["James", "John", "Robert", "Michael", "William", "David", "Richard", "Joseph", "Thomas", "Charles", "Christopher", "Daniel", "Matthew", "Anthony", "Mark", "Donald", "Steven", "Paul", "Andrew", "Joshua", "Kenneth", "Kevin", "Brian", "George", "Edward", "Ronald", "Timothy", "Jason", "Jeffrey", "Ryan", "Jacob", "Gary", "Nicholas", "Eric", "Jonathan", "Stephen", "Larry", "Justin", "Scott", "Brandon", "Benjamin", "Samuel", "Gregory", "Frank", "Alexander", "Raymond", "Patrick", "Jack", "Dennis", "Jerry", "Tyler", "Aaron", "Jose", "Adam", "Henry", "Nathan", "Douglas", "Zachary", "Peter", "Kyle", "Walter", "Ethan", "Jeremy", "Harold", "Keith", "Christian", "Roger", "Noah", "Gerald", "Carl", "Terry", "Sean", "Austin", "Arthur", "Lawrence", "Jesse", "Dylan", "Bryan", "Joe", "Jordan", "Billy", "Bruce", "Albert", "Willie", "Gabriel", "Logan", "Alan", "Juan", "Wayne", "Ralph", "Roy", "Eugene", "Randy", "Vincent", "Russell", "Louis", "Philip", "Bobby", "Johnny", "Bradley"],
+    "FIRST_NAME_FEMALE": ["Mary", "Patricia", "Linda", "Barbara", "Elizabeth", "Jennifer", "Maria", "Susan", "Margaret", "Douglas", "Lisa", "Nancy", "Karen", "Betty", "Helen", "Sandra", "Donna", "Carol", "Ruth", "Sharon", "Michelle", "Laura", "Sarah", "Kimberly", "Deborah", "Jessica", "Shirley", "Cynthia", "Angela", "Melissa", "Brenda", "Amy", "Anna", "Rebecca", "Virginia", "Kathleen", "Pamela", "Martha", "Debra", "Amanda", "Stephanie", "Carolyn", "Christine", "Marie", "Janet", "Catherine", "Frances", "Ann", "Joyce", "Diane", "Alice", "Julie", "Heather", "Teresa", "Doris", "Gloria", "Evelyn", "Jean", "Cheryl", "Mildred", "Katherine", "Joan", "Ashley", "Judith", "Rose", "Janice", "Kelly", "Nicole", "Judy", "Christina", "Kathy", "Theresa", "Beverly", "Denise", "Tammy", "Irene", "Jane", "Lori", "Rachel", "Marilyn", "Andrea", "Kathryn", "Louise", "Sara", "Anne", "Jacqueline", "Wanda", "Bonnie", "Julia", "Ruby", "Lois", "Tina", "Phyllis", "Norma", "Paula", "Diana", "Annie", "Lillian", "Emily", "Robin"],
+    "LAST_NAME": ["Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller", "Davis", "Rodriguez", "Martinez", "Hernandez", "Lopez", "Gonzalez", "Wilson", "Anderson", "Thomas", "Taylor", "Moore", "Jackson", "Martin", "Lee", "Perez", "Thompson", "White", "Harris", "Sanchez", "Clark", "Ramirez", "Lewis", "Robinson", "Walker", "Young", "Allen", "King", "Wright", "Scott", "Torres", "Nguyen", "Hill", "Flores", "Green", "Adams", "Nelson", "Baker", "Hall", "Rivera", "Campbell", "Mitchell", "Carter", "Roberts", "Gomez", "Phillips", "Evans", "Turner", "Diaz", "Parker", "Cruz", "Edwards", "Collins", "Reyes", "Stewart", "Morris", "Morales", "Murphy", "Cook", "Rogers", "Gutierrez", "Ortiz", "Morgan", "Cooper", "Peterson", "Bailey", "Reed", "Kelly", "Howard", "Ramos", "Kim", "Cox", "Ward", "Richardson", "Watson", "Brooks", "Chavez", "Wood", "James", "Bennett", "Gray", "Mendoza", "Ruiz", "Hughes", "Price", "Alvarez", "Castillo", "Sanders", "Patel", "Myers", "Long", "Ross", "Foster", "Jimenez"],
+    "STUDIO_MOTTO": [
+      "Where stories come alive", "The future of cinema", "Bold stories, bigger audiences", "Defining the culture", "Dream factory", "Stories that move the world", "Inspiring the imagination", "Creating the extraordinary", "Beyond the screen", "Magic in every moment", "Your ticket to adventure", "Unleashing creativity", "The art of storytelling", "Worlds without end", "Monetizing your childhood", "Content is King", "Four quadrants, one vision", "Synergy in motion", "Maximizing shareholder value", "IP above all", "We make the memes", "Data-driven storytelling", "Algorithms do not lie", "Quantity has a quality all its own", "Rebooting the culture", "Franchises are forever", "Your nostalgia, our profit", "Selling the dream", "Pivoting to video", "Building the metaverse", "Vertical integration realized", "From script to stream", "Disrupting the narrative", "Art as a service", "Monetizing the zeitgeist", "We own your childhood", "A cinematic universe of our own", "Quantity over quality", "Fast and cheap", "Good enough for streaming", "We fix it in post", "Trust the algorithm", "Four quadrants or bust", "IP is king", "Franchises forever", "Rebooting your childhood", "Monetizing nostalgia", "Content is content", "Engagement at all costs", "Viral marketing is free", "We only make sequels", "Original ideas are risky", "Focus grouped to perfection", "Bland but profitable", "Safely generic", "Write it off for taxes", "Don't read the reviews", "Our trailers are better than the movie", "Cancel culture is our best marketing", "Replacing actors with AI since 2024", "Please subscribe to our streaming tier", "We own the rights to your dreams", "Greenlighting based on TikTok trends", "Milking the IP dry", "Another reboot no one asked for", "Lowering the bar daily",
+      "We'll fix it in the edit.", "Generated by our proprietary LLM.", "More content than you could ever watch.", "Tax evasion is an art form.", "Art is just a byproduct of commerce.", "A subsidiary of a hedge fund.", "We buy your dreams and sell them back to you.", "Quantity over quality, always.", "The algorithm loved it.", "We focus grouped the soul out of it.", "Please don't unionize.", "Replacing our writers with interns.", "Merchandising rights reserved.", "We only greenlight existing IP.", "A tax write-off in the making.", "Content to fold laundry to.", "We paid for the bots to make it trend.", "Cancel us, we need the PR.", "Our CEO makes 400x your salary.", "Content is a commodity.", "We own the rights to your nostalgia.", "Optimized for second screens.", "Don't read the contract.", "Artificially inflating box office since 1999.", "No original ideas allowed.", "Catering exclusively to demographics.", "Written by an intern, directed by an algorithm.", "Pre-approved by the board of directors.", "We don't make movies, we make content.", "Because you'll watch anything on a plane.", "Synergy isn't just a buzzword, it's our religion.", "We pivot to whatever is trending.", "Lowering expectations daily.", "Your subscription is non-refundable.", "We have the rights, you have the money.", "Failing upwards.", "Monetizing your childhood trauma.",
+      "Where the algorithm writes the script.", "Test audiences loved it, critics will hate it.", "We fix the plot in the trailer.", "Four quadrants, zero risks.", "Franchising your childhood memories since 1998.", "A wholly-owned subsidiary of a tech conglomerate.", "We make content, not cinema.", "Cinematic universes built on shifting sand.", "Because focus groups said so.", "Recycling IP for a modern audience.", "Greenlit by a spreadsheet.", "We bought the rights to your tweet.", "More lens flares, less character development.", "Catering to the lowest common denominator.", "It's not a movie, it's a four-week brand activation.", "We only do legacy sequels.", "Putting the 'art' in 'artificial intelligence'.", "Where indie directors go to sell out.", "We turn podcasts into cinematic universes.", "The studio that killed the mid-budget drama."
+    ]
+  }
+}

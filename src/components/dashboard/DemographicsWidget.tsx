@@ -28,7 +28,7 @@ export const DemographicsWidget: React.FC = () => {
   };
 
   return (
-    <Card className="col-span-1 lg:col-span-1 border border-white/10 bg-gradient-to-br from-card/80 via-card/60 to-card/40 backdrop-blur-3xl shadow-[0_16px_48px_rgba(0,0,0,0.5)] hover:border-white/30 hover:shadow-[0_24px_64px_rgba(0,0,0,0.6)] transition-all duration-700 relative overflow-hidden group h-full">
+    <Card aria-label="Demographics Chart" className="col-span-1 animate-in zoom-in-95 duration-500 lg:col-span-1 border border-white/10 bg-gradient-to-br from-card/80 via-card/60 to-card/40 backdrop-blur-3xl shadow-[0_16px_48px_rgba(0,0,0,0.5)] hover:border-white/30 hover:shadow-[0_24px_64px_rgba(0,0,0,0.6)] transition-all duration-700 relative overflow-hidden group h-full">
       <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-[140px] pointer-events-none group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-1000" />
       <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-secondary/5 rounded-full blur-[100px] pointer-events-none group-hover:bg-secondary/10 transition-colors duration-1000" />
       <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay pointer-events-none" />
@@ -41,9 +41,9 @@ export const DemographicsWidget: React.FC = () => {
             </div>
             <span className="group-hover:text-white transition-colors tracking-widest drop-shadow-md">Audience Trends</span>
           </span>
-          <span className="text-[10px] px-3 py-1.5 rounded-md bg-black/60 font-mono tracking-[0.2em] border border-white/10 shadow-[inset_0_1px_4px_rgba(0,0,0,0.5)] text-white/70 backdrop-blur-md">DATA</span>
+          <span className="text-[10px] px-3 py-1.5 rounded-md bg-black/60 font-mono tracking-[0.2em] border border-white/10 shadow-[inset_0_1px_4px_rgba(0,0,0,0.5)] text-foreground/90 backdrop-blur-md">DATA</span>
         </CardTitle>
-        <CardDescription className="text-xs uppercase tracking-[0.2em] font-bold mt-3 text-muted-foreground/60 group-hover:text-muted-foreground/90 transition-colors duration-500">
+        <CardDescription className="text-xs uppercase tracking-[0.2em] font-bold mt-3 text-muted-foreground/80 group-hover:text-muted-foreground/90 transition-colors duration-500">
           Current hottest genres
         </CardDescription>
       </CardHeader>

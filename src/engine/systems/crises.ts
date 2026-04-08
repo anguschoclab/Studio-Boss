@@ -3,6 +3,7 @@ import { Project, ActiveCrisis, GameState } from '@/engine/types';
 import { StateImpact } from '../types/state.types';
 import { CRISIS_POOLS } from '../data/crises.data';
 import { RandomGenerator } from '../utils/rng';
+import { BardResolver } from './bardResolver';
 
 /**
  * Procedural Crisis Generation (Hardened)
@@ -13,12 +14,25 @@ export function generateCrisis(project: Project, rng: RandomGenerator): StateImp
   if (!template) return null;
 
   const crisis: ActiveCrisis = {
-    id: rng.uuid('CRS'), // 🌌 Unique instance ID
-    crisisId: template.id,       // 🌌 Refers back to template data
-    triggeredWeek: 0, // Will be set by the coordinator or reducer
+    id: rng.uuid('CRS'), 
+    crisisId: template.id,       
+    triggeredWeek: 0, 
     haltedProduction: false,
-    description: template.description,
-    options: template.options,
+    description: BardResolver.resolve({
+      domain: 'Crisis',
+      subDomain: template.description, // e.g., 'PR' or 'Production'
+      intensity: 75,
+      context: { project: project.title }
+    }),
+    options: template.options.map(opt => ({
+      ...opt,
+      text: BardResolver.resolve({
+        domain: 'Crisis',
+        subDomain: `${template.description}.Options`, // e.g., 'PR.Options'
+        variant: opt.text, // e.g., 'Aggressive'
+        intensity: 50
+      })
+    })),
     resolved: false,
     severity: 'medium'
   };
@@ -40,8 +54,8 @@ export function checkAndTriggerCrisis(project: Project, state: GameState, rng: R
   const studioProjectsCount = Object.keys(state.entities.projects || {}).length;
   const contractCount = Object.keys(state.entities.contracts || {}).length;
   // The PR Spin Doctor: Heavily scale crises with studio size
-  // Adjusted: Base 5% chance, plus 2.0% for every concurrent project and 1.0% for every contract
-  const baseChance = 0.05 + (studioProjectsCount * 0.020) + (contractCount * 0.010);
+  // Adjusted: Base 5% chance, plus 5.0% for every concurrent project and 2.5% for every contract
+  const baseChance = Math.min(0.8, 0.05 + (studioProjectsCount * 0.050) + (contractCount * 0.025));
 
   if (rng.next() < baseChance) {
     return generateCrisis(project, rng);

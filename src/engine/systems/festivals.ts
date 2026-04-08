@@ -1,5 +1,6 @@
 import { GameState, StateImpact, Project, RivalStudio, FestivalSubmission, AwardBody } from '@/engine/types';
 import { RandomGenerator } from '../utils/rng';
+import { BardResolver } from './bardResolver';
 
 export const FESTIVALS: { body: AwardBody, name: string, weeks: number[], cost: number, prestigeNeeded: number, buzzReward: number }[] = [
   { body: 'Sundance Film Festival', name: 'Sundance', weeks: [3, 4], cost: 25000, prestigeNeeded: 40, buzzReward: 30 },
@@ -79,8 +80,13 @@ export function resolveFestivals(state: GameState, rng: RandomGenerator): StateI
         impacts.push({
             type: 'NEWS_ADDED',
             payload: {
-                headline: `FESTIVALS: "${project.title}" premieres at ${fest.name}`,
-                description: `Receiving a standing ovation, ${project.title} has become the talk of the circuit.`,
+                headline: `FESTIVALS: ${project.title}`,
+                description: BardResolver.resolve({
+                    domain: 'Festival',
+                    subDomain: 'Reaction',
+                    intensity: 90,
+                    context: { project: project.title, body: fest.body }
+                }),
                 category: 'awards'
             }
         });
@@ -147,8 +153,13 @@ export function submitToFestival(
       type: 'NEWS_ADDED',
       payload: {
         id: rng.uuid('NWS'),
-        headline: `Studio submits "${project.title}" to ${fest.name}`,
-        description: `Strategic awards push: The studio has officially entered the competition at ${fest.name}.`,
+        headline: `Submission: ${project.title}`,
+        description: BardResolver.resolve({
+            domain: 'Festival',
+            subDomain: 'Buzz',
+            intensity: 40,
+            context: { project: project.title, body: fest.body }
+        }),
         category: 'awards'
       }
     }

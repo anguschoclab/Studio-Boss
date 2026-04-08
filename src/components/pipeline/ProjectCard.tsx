@@ -52,7 +52,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
         onClick={() => selectProject(project.id)}
         aria-label={`View details for ${project.title}`}
         data-testid={`project-card-${project.id}`}
-        className="w-full text-left p-4 rounded-xl border border-white/5 bg-gradient-to-br from-white/[0.05] to-transparent backdrop-blur-md hover:bg-white/[0.08] hover:border-primary/30 transition-all duration-500 space-y-4 group relative overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl hover:-translate-y-1"
+        className="w-full text-left p-4 rounded-xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-transparent backdrop-blur-md hover:bg-white/[0.12] hover:border-primary/40 transition-all duration-500 space-y-4 group relative overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl hover:-translate-y-1 animate-in fade-in slide-in-from-bottom-2 duration-500"
       >
         {/* Visual Accent */}
         <div className={cn(
@@ -66,7 +66,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
             <h4 className="font-display font-black text-sm text-foreground/90 uppercase tracking-tight truncate group-hover:text-primary transition-colors drop-shadow-sm">{project.title}</h4>
             <div className="flex items-center gap-1.5 mt-0.5">
               <span className="text-[10px] font-bold text-muted-foreground/80 uppercase tracking-[0.2em] group-hover:text-muted-foreground transition-colors">{project.genre}</span>
-              <span className="text-[10px] text-muted-foreground/30">•</span>
+              <span className="text-[10px] text-muted-foreground/50">•</span>
               <span className="text-[10px] font-bold text-muted-foreground/80 uppercase tracking-[0.2em] group-hover:text-muted-foreground transition-colors">{tier.label}</span>
             </div>
           </div>
@@ -81,7 +81,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
           {project.state !== 'archived' && (
             <TooltipWrapper tooltip="Market anticipation and social sentiment for this title." side="top">
               <div className="space-y-1">
-                <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground/60 group-hover:text-muted-foreground/80 transition-colors">
+                <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground/80">
                   <span className="flex items-center gap-1"><TrendingUp className="h-2.5 w-2.5 group-hover:text-secondary transition-colors" /> Market Buzz</span>
                   <span className="text-secondary drop-shadow-[0_0_8px_hsl(var(--secondary) / 0.6)] font-mono">{Math.round(project.buzz)}%</span>
                 </div>
@@ -101,7 +101,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
           {(project.state === 'development' || project.state === 'production') && (
             <TooltipWrapper tooltip={`Current Phase: ${project.state.toUpperCase()}. Progress tracks estimated time to completion.`} side="top">
               <div className="space-y-1">
-                <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground/60 group-hover:text-muted-foreground/80 transition-colors">
+                <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground/80">
                   <span className="flex items-center gap-1"><Activity className={cn("h-2.5 w-2.5 transition-colors", hasUnresolvedCrisis ? "group-hover:text-destructive" : "group-hover:text-primary")} /> {project.state.replace('_', ' ')}</span>
                   <span className="font-mono">{project.weeksInPhase}/{project.state === 'development' ? project.developmentWeeks : project.productionWeeks}w</span>
                 </div>
@@ -126,7 +126,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1.5">
                   <DistributionBadge status={project.distributionStatus} className="h-5" />
-                  <span className="text-[9px] font-bold text-muted-foreground/60 truncate max-w-[100px]">{buyer.name}</span>
+                  <span className="text-[9px] font-bold text-muted-foreground/80 truncate max-w-[100px]">{buyer.name}</span>
                 </div>
                 {weeklyRevenueForecast > 0 && (
                   <TooltipWrapper tooltip={`Projected weekly revenue from ${buyer.name} distribution deal`} side="top">

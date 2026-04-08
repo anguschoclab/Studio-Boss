@@ -2,6 +2,7 @@ import { Project, CriticConsensus, Review } from '../types/project.types';
 import { Talent } from '../types/talent.types';
 import { RandomGenerator } from '../utils/rng';
 import { clamp } from '../utils';
+import { BardResolver } from './bardResolver';
 
 export const ReviewSystem = {
   /**
@@ -11,7 +12,7 @@ export const ReviewSystem = {
     const metaScore = this.calculateMetaScore(project, attachedTalent, rng);
     const audienceScore = this.calculateAudienceScore(project, metaScore, rng);
     
-    const reviews = this.generatePlaceholderReviews(metaScore, rng);
+    const reviews = this.generatePlaceholderReviews(metaScore, rng, project.title);
     const status = this.getStatus(metaScore);
     const isCultPotential = this.checkCultPotential(project, metaScore, audienceScore);
 
@@ -79,15 +80,21 @@ export const ReviewSystem = {
     return 'Panned';
   },
 
-  generatePlaceholderReviews(score: number, rng: RandomGenerator): Review[] {
+  generatePlaceholderReviews(score: number, rng: RandomGenerator, projectTitle: string): Review[] {
     const critics = ['Variety', 'The Hollywood Reporter', 'IndieWire', 'Rolling Stone', 'Empire'];
     const reviews: Review[] = [];
     
     critics.forEach(name => {
+      const s = clamp(score + rng.range(-10, 10), 0, 100);
       reviews.push({
         criticName: name,
-        score: clamp(score + rng.range(-10, 10), 0, 100),
-        text: 'Review text generation is pending...'
+        score: s,
+        text: BardResolver.resolve({
+          domain: 'Review',
+          subDomain: 'Critic',
+          intensity: s,
+          context: { project: projectTitle }
+        })
       });
     });
     

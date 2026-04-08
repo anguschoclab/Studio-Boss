@@ -57,12 +57,13 @@ describe("TalentSystem", () => {
       expect(t1.prestige).toBe(53); // 50 + 3
     });
 
-    it("handles talent with 0 prestige, 0 draw, but 100 ego safely (Guild Auditor)", () => {
+    it("handles talent with 0 skill but 100 ego safely (Guild Auditor)", () => {
       const edgeTalent = createMockTalent({
         id: "edge-t",
         prestige: 0,
         draw: 0,
         fee: 10000,
+        skills: { acting: 0, directing: 0, writing: 0, stardom: 0 },
         psychology: { ego: 100, mood: 100, scandalRisk: 0, synergyAffinities: [], synergyConflicts: [] }
       });
 

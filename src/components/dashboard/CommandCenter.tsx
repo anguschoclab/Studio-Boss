@@ -45,7 +45,7 @@ export const CommandCenter: React.FC = () => {
         
         <div className="flex flex-wrap gap-3 relative z-10">
           <div className="px-6 py-3 bg-card/60 backdrop-blur-xl rounded-2xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] flex flex-col items-end transition-all duration-500 hover:border-white/30 hover:bg-card/80 hover:-translate-y-1 group">
-            <span className="text-[10px] uppercase font-black text-muted-foreground/60 tracking-[0.25em] leading-none mb-1.5 group-hover:text-muted-foreground/80 transition-colors">Market Position</span>
+            <span className="text-[10px] uppercase font-black text-muted-foreground/80 tracking-[0.25em] leading-none mb-1.5">Market Position</span>
             <span className="text-base font-display font-black flex items-center gap-2 bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent drop-shadow-md">
               <Zap className="h-4 w-4 text-primary drop-shadow-[0_0_8px_hsl(var(--primary)_/_0.8)] group-hover:scale-110 transition-transform duration-300" />
               Tier 2 Studio
@@ -62,7 +62,7 @@ export const CommandCenter: React.FC = () => {
           { label: 'Industry Rivals', value: rivalCount, sub: 'Active competitors', icon: Building2, color: 'text-destructive' },
           { label: 'Prestige XP', value: gameState.studio.prestige, sub: 'Reputation level', icon: TrendingUp, color: 'text-success' },
         ].map((kpi, i) => (
-          <Card key={i} className="glass-card group overflow-hidden relative border border-white/10 hover:border-white/30 transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-[0_24px_48px_rgba(0,0,0,0.6)] bg-gradient-to-br from-white/10 via-white/5 to-black/40 backdrop-blur-3xl">
+          <Card key={i} className="glass-card animate-in zoom-in-95 duration-500 group overflow-hidden relative border border-white/10 hover:border-white/30 transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-[0_24px_48px_rgba(0,0,0,0.6)] bg-gradient-to-br from-white/10 via-white/5 to-black/40 backdrop-blur-3xl">
             <div className={cn("absolute -top-10 -right-10 w-40 h-40 opacity-10 blur-[50px] rounded-full transition-all duration-700 group-hover:opacity-60 group-hover:blur-[60px] group-hover:scale-150", kpi.color.replace('text', 'bg'))} />
             <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay pointer-events-none" />
             <CardContent className="p-6 relative z-10 text-left">
@@ -73,7 +73,7 @@ export const CommandCenter: React.FC = () => {
                 </div>
               </div>
               <div className="text-6xl font-display font-black tracking-tighter mb-2 text-white drop-shadow-[0_4px_8px_rgba(0,0,0,0.6)] group-hover:drop-shadow-[0_0_25px_rgba(255,255,255,0.5)] transition-all duration-500">{kpi.value}</div>
-              <p className="text-[11px] text-muted-foreground/50 font-extrabold uppercase tracking-[0.2em] group-hover:text-muted-foreground/80 transition-colors duration-500">{kpi.sub}</p>
+              <p className="text-[11px] text-muted-foreground/70 font-extrabold uppercase tracking-[0.2em] group-hover:text-muted-foreground/80 transition-colors duration-500">{kpi.sub}</p>
             </CardContent>
           </Card>
         ))}
@@ -92,7 +92,7 @@ export const CommandCenter: React.FC = () => {
       </div>
       
       {/* Recent Industry Intelligence */}
-      <Card className="glass-card border border-white/10 hover:border-white/20 transition-all duration-700 bg-card/60 backdrop-blur-2xl relative overflow-hidden shadow-[0_16px_48px_rgba(0,0,0,0.5)] text-left group">
+      <Card aria-label="Studio Intelligence Feed" className="glass-card animate-in fade-in slide-in-from-bottom-8 duration-1000 border border-white/10 hover:border-white/20 transition-all duration-700 bg-card/60 backdrop-blur-2xl relative overflow-hidden shadow-[0_16px_48px_rgba(0,0,0,0.5)] text-left group">
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[150px] pointer-events-none group-hover:bg-primary/10 transition-colors duration-1000" />
         <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.02] mix-blend-overlay pointer-events-none" />
         <CardContent className="p-0 relative z-10">
@@ -124,18 +124,18 @@ export const CommandCenter: React.FC = () => {
                   </div>
                   <div className="flex-1 min-w-0 relative z-10">
                     <p className="text-base font-extrabold text-foreground/90 leading-tight mb-1.5 truncate group-hover/item:text-white transition-colors tracking-tight drop-shadow-sm">{news.headline}</p>
-                    <p className="text-sm text-muted-foreground/60 line-clamp-1 group-hover/item:text-muted-foreground/90 transition-colors font-medium">{news.description}</p>
+                    <p className="text-sm text-muted-foreground/80 line-clamp-1 group-hover/item:text-muted-foreground/90 transition-colors font-medium">{news.description}</p>
                   </div>
-                  <ChevronRight className="h-5 w-5 text-muted-foreground/30 group-hover/item:text-primary group-hover/item:translate-x-1 transition-all duration-300 relative z-10" />
+                  <ChevronRight className="h-5 w-5 text-muted-foreground/60 group-hover/item:text-primary group-hover/item:translate-x-1 transition-all duration-300 relative z-10" />
                 </div>
               ))
             ) : (
               <div className="text-center py-20 px-8 flex flex-col items-center justify-center gap-4">
                 <div className="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mb-2">
-                  <Zap className="h-6 w-6 text-muted-foreground/30" />
+                  <Zap className="h-6 w-6 text-muted-foreground/60" />
                 </div>
-                <p className="text-muted-foreground/50 font-bold uppercase tracking-widest text-sm">Awaiting Intelligence</p>
-                <p className="text-muted-foreground/30 text-xs max-w-sm">The global feed is currently silent. Industry activity will be logged here as it happens.</p>
+                <p className="text-muted-foreground/70 font-bold uppercase tracking-widest text-sm">Awaiting Intelligence</p>
+                <p className="text-muted-foreground/60 text-xs max-w-sm">The global feed is currently silent. Industry activity will be logged here as it happens.</p>
               </div>
             )}
           </div>
