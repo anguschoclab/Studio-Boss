@@ -22,3 +22,6 @@
 ## 2025-03-08 - Optimized AI bidding engine loop
 **Learning:** Hoisting repetitive calculations (like `leverageAggression` inside `biddingEngine.ts`) outside of deeply nested loops significantly reduces Time Complexity and unnecessary GC allocations. Here, calculating it per opportunity instead of per rival per opportunity reduced the complexity from `O(O * R * (A + a))` to `O(O * (R + A + a))`.
 **Action:** When iterating over combinations of items (like opportunities and rivals), look for derived values that only depend on the outer loop variable and hoist their calculation before the inner loop.
+## 2024-06-19 - Removed Object.values allocations in weekly engine tick
+**Learning:** High-frequency game engine tick systems (`WeekCoordinator`) can suffer from severe GC pressure if `Object.values` is heavily used to convert dictionary-based entity pools (e.g. `state.entities.talents`) to arrays.
+**Action:** When performing `O(N)` passes over engine state, modify consumers like `TalentMoraleSystem.processWeeklyMorale` to accept the `Record<string, Entity>` directly, iterating via `for...in` and using standard property lookups (`record[key]`) to avoid intermediate array allocations entirely.
