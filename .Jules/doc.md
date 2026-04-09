@@ -67,7 +67,7 @@
 
 #### 📖 Design Bible Alignment:
 * ✅ **Aligned:** The codebase now supports dynamic script evolution with events like Role Merge, Role Split, Plot Twists, and Dialogue Polish. This satisfies the "Example Emergent Stories" (Section 35.28) where scripts evolve dynamically to create real packaging constraints.
-* ⚠️ **Missing/Deviations:** While script heat drifts and roles modify dynamically, the system currently lacks the explicit multi-draft development gates, script doctors, and the ability to hire talent as a writer/director mentioned in Section 35.1. The broader `Role Map` generation based on Format/Genre (Section 35.2) is also not fully integrated into this tick.
+* ⚠️ **Missing/Deviations:** While script heat drifts and roles modify dynamically, the system currently lacks the explicit multi-draft development gates, script doctors, and the ability to hire talent as a writer/director mentioned in Section 35.1. The broader `Role Map` generation based on Format/Genre (Section 35.2) is also not fully integrated into this tick, and the function itself is not yet called within the main simulation loops.
 
 #### 📄 Proposed Documentation Updates:
 * `docs/script_drafting_mechanics.md`: Document the conditions, percentages, and mechanical impacts of the new `tickScriptDevelopment` evolution events.
