@@ -466,7 +466,8 @@ export class WeekCoordinator {
     const newsEvents: import('../types/engine.types').NewsEvent[] = [];
     
     let ledgerImpact: StateImpact | undefined;
-    const projectUpdates: string[] = [];
+    // ⚡ The Framerate Fanatic: Refactored array .push() and Set conversion to direct Set accumulation, improving performance from O(n^2) to O(n).
+    const projectUpdates = new Set<string>();
 
     for (let i = 0; i < context.impacts.length; i++) {
       const impact = context.impacts[i];
@@ -475,11 +476,11 @@ export class WeekCoordinator {
       
       if (impact.type === 'PROJECT_UPDATED') {
         const payload = impact.payload as import('../types/state.types').ProjectUpdate;
-        projectUpdates.push(payload.projectId);
+        projectUpdates.add(payload.projectId);
       }
       if (impact.projectUpdates) {
         for (let j = 0; j < impact.projectUpdates.length; j++) {
-          projectUpdates.push(impact.projectUpdates[j].projectId);
+          projectUpdates.add(impact.projectUpdates[j].projectId);
         }
       }
 
@@ -538,7 +539,7 @@ export class WeekCoordinator {
       cashAfter: after.finance.cash,
       totalRevenue,
       totalCosts,
-      projectUpdates: Array.from(new Set(projectUpdates)),
+      projectUpdates: Array.from(projectUpdates),
       newHeadlines: allHeadlines,
       events: eventTitles,
     };

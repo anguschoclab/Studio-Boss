@@ -397,8 +397,8 @@ export function tickIPVault(state: GameState): import('../../types/state.types')
     const firstAssetId = franchise.assetIds[0];
     const firstAsset = state.ip.vault.find(a => a.id === firstAssetId);
     // Search both current projects and history to find the genre
-    const sourceProject = Object.values(state.entities.projects).find(p => p.id === (firstAsset?.originalProjectId)) 
-      || state.studio.internal.projectHistory.find(p => p.id === (firstAsset?.originalProjectId));
+    // ⚡ The Framerate Fanatic: Refactored array .find() on Object.values() to direct O(1) dictionary lookup.
+    const sourceProject = firstAsset?.originalProjectId ? (state.entities.projects[firstAsset.originalProjectId] || state.studio.internal.projectHistory.find(p => p.id === firstAsset.originalProjectId)) : undefined;
     
     const genre = sourceProject?.genre || 'Action';
     

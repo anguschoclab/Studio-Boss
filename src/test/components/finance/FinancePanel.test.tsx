@@ -42,11 +42,11 @@ vi.mock('@/engine/utils', () => ({
 // Mock finance calculation functions
 vi.mock('@/engine/systems/finance', () => ({
   calculateWeeklyCosts: vi.fn((state: any) => {
-    const projects = state?.studio?.internal?.projects ? Object.values(state.entities.projects) : [];
+    const projects = state?.entities?.projects ? Object.values(state.entities.projects) : [];
     return projects.reduce((acc: number, p: any) => acc + (p.weeklyCost || 0), 0);
   }),
   calculateWeeklyRevenue: vi.fn((state: any) => {
-    const projects = state?.studio?.internal?.projects ? Object.values(state.entities.projects) : [];
+    const projects = state?.entities?.projects ? Object.values(state.entities.projects) : [];
     return projects.reduce((acc: number, p: any) => acc + (p.weeklyRevenue || 0), 0);
   }),
   calculateStudioNetWorth: vi.fn(() => 10000000),
@@ -82,7 +82,8 @@ describe('FinancePanel Component', () => {
         ledger: [],
         marketState: mockMarketState,
       },
-      studio: { internal: { projects: {} } }
+      studio: { internal: { projects: {} } },
+      entities: { projects: {} }
     } as any;
 
     vi.mocked(useGameStore).mockImplementation((selector: any) => {
@@ -123,6 +124,9 @@ describe('FinancePanel Component', () => {
         internal: {
           projects: mockProjects,
         }
+      },
+      entities: {
+        projects: mockProjects
       }
     };
 
@@ -161,6 +165,9 @@ describe('FinancePanel Component', () => {
         internal: {
           projects: mockProjects,
         }
+      },
+      entities: {
+        projects: mockProjects
       }
     } as any;
 
