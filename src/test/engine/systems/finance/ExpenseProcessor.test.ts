@@ -6,7 +6,7 @@ describe('ExpenseProcessor', () => {
   describe('calculateStudioBurn', () => {
     it('should calculate 2M for studio level 1 with 0 active projects', () => {
       const burn = ExpenseProcessor.calculateStudioBurn(1, 0);
-      expect(burn).toBe(2000000); // Base rent * 1.6^0 + 0
+      expect(burn).toBe(2000000); // Base rent * 1.8^0 + 0
     });
 
     it('should calculate correct burn for studio level 3 with 4 active projects', () => {
