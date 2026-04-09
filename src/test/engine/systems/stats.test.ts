@@ -18,19 +18,19 @@ describe('stats system', () => {
       expect(stats.renewable).toBe(false);
     });
 
-    it('applies 1.4x risk multiplier for mid-high tier (budget >= 50M)', () => {
+    it('applies 1.5x risk multiplier for mid-high tier (budget >= 50M)', () => {
         const tier: typeof BUDGET_TIERS.high = { ...BUDGET_TIERS.high, budget: 50_000_000 };
         const stats = getFilmStats(tier);
-        const riskMultiplier = 1.4;
+        const riskMultiplier = 1.5;
   
         expect(stats.budget).toBe(tier.budget);
         expect(stats.weeklyCost).toBe(tier.weeklyCost * riskMultiplier);
     });
 
-    it('applies 2.0x risk multiplier for high tier (budget >= 100M)', () => {
+    it('applies 2.5x risk multiplier for high tier (budget >= 100M)', () => {
       const tier: typeof BUDGET_TIERS.high = { ...BUDGET_TIERS.high, budget: 100_000_000 };
       const stats = getFilmStats(tier);
-      const riskMultiplier = 2.0;
+      const riskMultiplier = 2.5;
 
       expect(stats.budget).toBe(tier.budget);
       expect(stats.weeklyCost).toBe(tier.weeklyCost * riskMultiplier);
@@ -39,10 +39,10 @@ describe('stats system', () => {
       expect(stats.renewable).toBe(false);
     });
 
-    it('applies 4.0x risk multiplier for blockbuster tier (budget >= 200M)', () => {
+    it('applies 5.0x risk multiplier for blockbuster tier (budget >= 200M)', () => {
       const tier = BUDGET_TIERS.blockbuster;
       const stats = getFilmStats(tier);
-      const riskMultiplier = 4.0;
+      const riskMultiplier = 5.0;
 
       expect(stats.budget).toBe(tier.budget);
       expect(stats.weeklyCost).toBe(tier.weeklyCost * riskMultiplier);
