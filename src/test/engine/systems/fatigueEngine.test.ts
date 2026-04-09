@@ -34,9 +34,9 @@ describe('Fatigue Engine', () => {
     expect(fatigue).toBe(1.0);
   });
 
-  it('triggers Nostalgia Spike for 10+ year gaps', () => {
+  it('triggers Nostalgia Spike for exactly 10 year gaps', () => {
     const impact = calculateReleaseGapImpact([100], 620); // 520 weeks = 10 years
-    expect(impact.buzzBonus).toBe(50);
+    expect(impact.buzzBonus).toBe(60);
     expect(impact.fatigueReset).toBe(true);
   });
 

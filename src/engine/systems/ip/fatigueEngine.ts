@@ -57,6 +57,11 @@ export function calculateFranchiseFatigue(
     currentFatigue *= 2.0;
   }
 
+  // 🌌 The Universe Builder: Lore Exhaustion. Over-serialized genres alienate casual audiences when hyper-active.
+  if (activeCount >= 4 && (normalizedGenre === 'Multiverse' || normalizedGenre === 'Space Opera')) {
+    currentFatigue *= 2.5;
+  }
+
   // 🌌 The Universe Builder: Specific superhero fatigue logic
   if (normalizedGenre === 'Superhero' && activeCount >= 2) {
     currentFatigue *= 1.5;
@@ -127,10 +132,29 @@ export function calculateReleaseGapImpact(
 
   // 1. The Nostalgia Spike (10+ years / 520+ weeks)
   // Real-life: Top Gun Maverick, The Force Awakens.
-  if (yearsSince >= 10) {
+  if (yearsSince >= 15) {
+    // 🌌 The Universe Builder: Already covered by Generational Revival above, but adding this for safety.
+    return {
+      buzzBonus: 75,
+      label: 'Generational Revival (Cultural Event)',
+      fatigueReset: true
+    };
+  }
+
+  // 🌌 The Universe Builder: Belated Sequel Apathy. Releasing a sequel after 11-14 years is often seen as "too late" but not quite a full nostalgic revival yet.
+  if (yearsSince >= 11 && yearsSince < 15) {
+    return {
+      buzzBonus: -15,
+      label: 'Belated Sequel (Lost the Plot)',
+      fatigueReset: false
+    };
+  }
+
+  // 🌌 The Universe Builder: Perfect Legacy Capstone. The sweet spot for a massive reunion event (10-11 years).
+  if (yearsSince >= 10 && yearsSince < 11) {
     return { 
-      buzzBonus: 50, // 🌌 The Universe Builder: Nostalgia hype is stronger than ever.
-      label: 'Legacy Sequel (Nostalgia)',
+      buzzBonus: 60, // 🌌 The Universe Builder: Nostalgia hype is stronger than ever.
+      label: 'Perfect Legacy Capstone',
       fatigueReset: true // A legacy reset removes current fatigue as the brand is "re-introduced"
     };
   }
