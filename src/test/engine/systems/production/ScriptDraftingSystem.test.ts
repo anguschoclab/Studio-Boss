@@ -81,3 +81,33 @@ describe('ScriptDraftingSystem - Edge Cases', () => {
        expect(pOut.buzz).toBe(20); // 10 + 10
     });
 });
+
+describe('ScriptDraftingSystem - General Evolution', () => {
+    it('triggers PLOT_TWIST_ADDED and DIALOGUE_POLISH correctly', () => {
+       const rng = new RandomGenerator(555);
+
+       let callCount = 0;
+       vi.spyOn(rng, 'next').mockImplementation(() => {
+         callCount++;
+         return callCount === 1 ? 0.1 : 0.6; // < 0.15 for event, > 0.5 for twist
+       });
+       vi.spyOn(rng, 'rangeInt').mockReturnValue(0);
+
+       const p1 = createMockProject({ state: 'development', scriptHeat: 50, buzz: 10 });
+       const result1 = tickScriptDevelopment(p1, rng);
+       const pOut1 = result1.project as ScriptedProject;
+       expect(pOut1.scriptEvents[0].type).toBe('PLOT_TWIST_ADDED');
+       expect(pOut1.buzz).toBe(22); // 10 + 12
+
+       callCount = 0;
+       vi.spyOn(rng, 'next').mockImplementation(() => {
+         callCount++;
+         return callCount === 1 ? 0.1 : 0.45; // < 0.15 for event, <= 0.5 for polish
+       });
+       const p2 = createMockProject({ state: 'development', scriptHeat: 50, buzz: 10 });
+       const result2 = tickScriptDevelopment(p2, rng);
+       const pOut2 = result2.project as ScriptedProject;
+       expect(pOut2.scriptEvents[0].type).toBe('DIALOGUE_POLISH');
+       expect(pOut2.buzz).toBe(15); // 10 + 5
+    });
+});

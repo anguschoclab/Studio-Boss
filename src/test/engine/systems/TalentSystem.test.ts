@@ -118,4 +118,62 @@ describe("TalentSystem", () => {
       expect(impact.newOpportunities![0].weeksUntilExpiry).toBe(1);
     });
   });
+
+  describe("advance - Medical Leave and Fatigue", () => {
+    it("handles recovery from medical leave", () => {
+      const state = createMockGameState({ week: 10 });
+      state.entities.talents = {
+         "t1": createMockTalent({ id: "t1", onMedicalLeave: true, medicalLeaveEndsWeek: 10, name: "Sick Actor" })
+      };
+      const rng = new RandomGenerator(42);
+      const impact = TalentSystem.advance(state, rng);
+      expect(impact.talentUpdates[0].update.onMedicalLeave).toBe(false);
+      expect(impact.talentUpdates[0].update.fatigue).toBe(20);
+    });
+
+    it("triggers medical leave if fatigue > 95", () => {
+      const state = createMockGameState({ week: 10 });
+      state.entities.talents = {
+         "t2": createMockTalent({ id: "t2", fatigue: 96, onMedicalLeave: false, name: "Tired Actor" })
+      };
+      const rng = new RandomGenerator(42);
+      const impact = TalentSystem.advance(state, rng);
+      expect(impact.talentUpdates[0].update.onMedicalLeave).toBe(true);
+      expect(impact.talentUpdates[0].update.medicalLeaveEndsWeek).toBe(22);
+    });
+
+    it("cleans up expired commitments", () => {
+      const state = createMockGameState({ week: 10 });
+      state.entities.talents = {
+         "t3": createMockTalent({ id: "t3", commitments: [{ projectId: 'p1', endWeek: 9, weeklyFee: 1000 }] })
+      };
+      const rng = new RandomGenerator(42);
+      const impact = TalentSystem.advance(state, rng);
+      expect(impact.talentUpdates[0].update.commitments).toEqual([]);
+    });
+  });
+
+  describe("applyProjectResults - Awards and Multipliers", () => {
+     it("calculates award bonuses and massive ROI modifiers", () => {
+        const hitProj = { ...mockProject, budget: 10_000_000, revenue: 50_000_000, marketingBudget: 0 } as Project; // ROI = 5.0
+
+        const award: Award = {
+           id: 'a1', projectId: 'p1', name: 'Oscars', category: 'Best Director', body: 'Academy Awards', status: 'won', year: 2024
+        };
+
+        const tPool = [
+          { ...mockTalent1 },
+          { ...mockTalent2 }
+        ];
+
+        const results = TalentSystem.applyProjectResults(hitProj, mockContracts, tPool, [award]);
+        const director = results.find(t => t.id === "t2")!;
+
+        // Base ROI > 4.0: draw + 12, prestige + 6, fee * 1.6
+        // Award: isPrestige=true, multiplier=1.0. prestigeBoost=60, drawBoost=30, feeMultiplier +8.0, egoBoost +100
+        expect(director.draw).toBe(100);
+        expect(director.prestige).toBe(100);
+        expect(director.fee).toBeGreaterThan(1000000);
+     });
+  });
 });
