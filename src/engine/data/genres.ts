@@ -130,7 +130,7 @@ export const CROSSOVER_AFFINITY: Record<string, string[]> = {
   'IP Mashup': ['Comedy', 'Action', 'Animation', 'Superhero', 'Multiverse', 'Sci-Fi', 'Video Game Adaptation'],
   'Legacy Sequel': ['Action', 'Sci-Fi', 'Horror', 'Comedy', 'Drama'],
   // 🌌 The Universe Builder: Live-Action Remakes lean more into pure Action and Drama to justify the medium shift.
-  'Live-Action Remake': ['Animation', 'Fantasy', 'Family', 'Musical', 'Action', 'Drama', 'Comedy'],
+  'Live-Action Remake': ['Animation', 'Fantasy', 'Family', 'Musical', 'Action', 'Drama'],
   'Video Game Adaptation': ['Action', 'Sci-Fi', 'Fantasy', 'Animation', 'Horror', 'IP Mashup'],
   'Space Opera': ['Sci-Fi', 'Action', 'Fantasy', 'Multiverse'],
   'Cyberpunk': ['Sci-Fi', 'Action', 'Thriller', 'Crime'],
