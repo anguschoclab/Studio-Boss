@@ -25,17 +25,23 @@ function calculateSubChange(platform: StreamerPlatform, rng: RandomGenerator): n
     const pastSubs = platform.subscriberHistory[historyLen - 4].count;
     const growthPercent = pastSubs > 0 ? (currentSubs - pastSubs) / pastSubs : 0;
     // 📺 The Syndication Baron: Tweaked streaming subscriber churn rates. Aggressively penalizing platforms that fail to retain subscribers or flatline in the cutthroat streaming wars.
-    if (growthPercent < 0.01) {
+    if (growthPercent < 0.0) {
+      dynamicChurnRate = Math.min(0.80, dynamicChurnRate * 8.0); // Devastating Penalty for negative growth
+    } else if (growthPercent < 0.01) {
       dynamicChurnRate = Math.min(0.60, dynamicChurnRate * 6.0); // Extreme Penalty
     } else if (growthPercent < 0.02) {
       dynamicChurnRate = Math.min(0.45, dynamicChurnRate * 4.5); // Aggressive Penalty
+    } else if (growthPercent > 0.15) {
+      dynamicChurnRate = Math.max(0.005, dynamicChurnRate * 0.3); // Massive Bonus for hyper growth
     } else if (growthPercent > 0.08) {
-      dynamicChurnRate = Math.max(0.01, dynamicChurnRate * 0.7); // Strong Bonus
+      dynamicChurnRate = Math.max(0.01, dynamicChurnRate * 0.5); // Strong Bonus
     }
   }
 
-  // Reward consistent season-over-season quality (high library quality)
-  if (qualityFactor > 0.85) {
+  // 📺 The Syndication Baron: Reward consistent season-over-season quality and mega-hit library quality (sticky subscribers).
+  if (qualityFactor > 0.90) {
+    dynamicChurnRate = Math.max(0.005, dynamicChurnRate * 0.4); // Sticky subscribers for mega-hit library
+  } else if (qualityFactor > 0.85) {
     dynamicChurnRate = Math.max(0.01, dynamicChurnRate * 0.7);
   }
 
