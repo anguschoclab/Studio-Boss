@@ -103,6 +103,11 @@ export function calculateFranchiseEquity(
   // 🌌 The Universe Builder: A mega-franchise with 10+ assets holds a cultural premium.
   const megaFranchisePremium = assets.length >= 10 ? 1.25 : 1.0;
 
+  // 🌌 The Universe Builder: Cinematic Universe Phase Fatigue. Low relevance mega-franchises running on fumes.
+  if (assets.length >= 10 && franchise.relevanceScore < 50 && franchise.activeProjectIds.length >= 3) {
+    crossoverBonus -= 0.25;
+  }
+
   // 🌌 The Universe Builder: Penalty applied for diluting the franchise brand with too many concurrent projects.
   const overSaturationPenalty = franchise.activeProjectIds && franchise.activeProjectIds.length >= 4 ? 0.8 : 1.0;
 
@@ -169,10 +174,20 @@ export function updateFranchiseHub(state: GameState, project: Project, rng: Rand
 
       if (yearsSince >= 7 && (isBreakout || isPrestigeHit)) {
         updatedLoyalty = clamp(updatedLoyalty + 20, 0, 100);
-        updatedSynergy = clamp(updatedSynergy + 0.5, 1.0, 3.0);
+        updatedSynergy = clamp(updatedSynergy + 0.5, 1.0, 3.5);
       } else if (yearsSince >= 7 && !isBreakout && !isPrestigeHit) {
         // 🌌 The Universe Builder: Failed legacy reboot damages the brand
         updatedLoyalty = clamp(updatedLoyalty - 15, 0, 100);
+      }
+
+      // 🌌 The Universe Builder: Generational Pass-Down. Resurrecting a dormant IP successfully creates massive synergy.
+      if (yearsSince >= 15 && (isBreakout || isPrestigeHit)) {
+        updatedSynergy = clamp(updatedSynergy + 0.75, 1.0, 3.5);
+      }
+
+      // 🌌 The Universe Builder: Toxic Fandom Backlash. A bad entry after a long gap destroys goodwill.
+      if (yearsSince >= 5 && !isBreakout && !isPrestigeHit && project.revenue < project.budget) {
+        updatedLoyalty = clamp(updatedLoyalty - 25, 0, 100);
       }
 
       updatedFranchises[franchiseId] = {

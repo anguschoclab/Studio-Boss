@@ -65,17 +65,16 @@ describe('AI Motivation Engine (Target C1)', () => {
 
   it("should switch to AWARD_CHASE if prestige is high, cash is fine, and enough projects exist", () => {
     // We need to avoid FRANCHISE_BUILDING (95 base if projects < 2).
-    // So we add 3 projects to the richRival.
+    // The engine evaluates rival.projectCount.
     const richRival: RivalStudio = { 
       ...mockRival, 
       cash: 50_000_000, 
       prestige: 90,
-      projects: { 'p1': {} as any, 'p2': {} as any, 'p3': {} as any }
+      projectCount: 3, // < 4, not < 2, so base = 40. Award chase should be higher
     };
     
     // AWARD_CHASE base = 80 (since prestige > 70). Profile bias = 50. Total 130 + var.
-    // FRANCHISE_BUILDING base = 90 (since projects > 3). Profile bias = 50. Wait, length is 3, not > 3.
-    // If length is 3, base is 30. Total 80 + var.
+    // FRANCHISE_BUILDING base = 40 (since projects = 3). Profile bias = 50. Total 90 + var.
     // STABILITY base = 50. Profile bias = 50. Total 100 + var.
     // AWARD_CHASE wins.
     const nextMotivation = calculateRivalMotivation(richRival, mockState, rng);
