@@ -82,7 +82,7 @@ describe('AI Motivation Engine (Target C1)', () => {
     
     // AWARD_CHASE base = 85 (since prestige > 80) + 20 (profile prestige > 70) = 105. Profile bias = 100. Total 205 + var.
     // FRANCHISE_BUILDING base = 80 (since projectCount > 4). Profile bias = 0. Total 80 + var.
-    // MARKET_DISRUPTION base = 15 (since aggression < 75). Profile bias = 0. Total 15 + var.
+    // MARKET_DISRUPTION base = 15 (since aggression < 75) + 30 (cash > 20M) = 45. Profile bias = 0. Total 45 + var.
     // STABILITY base = 10. Profile bias = 50. Total 60 + var.
     // AWARD_CHASE wins.
     const nextMotivation = calculateRivalMotivation(richRival, mockState, rng);
