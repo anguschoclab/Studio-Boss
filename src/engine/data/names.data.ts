@@ -11,3 +11,11 @@ export const PREFIXES = [
 export const NETWORK_SUFFIXES = [
   'Network', 'Broadcasting', 'Interactive', 'Digital', 'Systems', 'Group'
 ];
+
+export const PREMIUM_PREFIXES = [
+  'HBO', 'Showtime', 'Starz', 'Cinemax', 'Epix', 'Sundance', 'Criterion'
+];
+
+export const PREMIUM_SUFFIXES = [
+  'Premium', 'Plus', 'Gold', 'Select', 'Exclusive', 'Ultra'
+];
