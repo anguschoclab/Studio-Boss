@@ -47,15 +47,16 @@ export class TalentMoraleSystem {
    * Updates talent psychology based on the current week's events.
    */
   static processWeeklyMorale(
-    talent: Talent[],
-    projects: Project[],
-    contracts: Contract[]
+    talent: Record<string, Talent>,
+    projects: Record<string, Project>,
+    contracts: Record<string, Contract>
   ): TalentUpdate[] {
     const updates: TalentUpdate[] = [];
 
     // Pre-compute O(1) lookups to avoid O(N*M) nested filtering
     const contractsByTalent = new Map<string, Contract[]>();
-    for (const c of contracts) {
+    for (const id in contracts) {
+      const c = contracts[id];
       const arr = contractsByTalent.get(c.talentId);
       if (arr) {
         arr.push(c);
@@ -64,13 +65,9 @@ export class TalentMoraleSystem {
       }
     }
 
-    const projectById = new Map<string, Project>();
-    for (const p of projects) {
-      projectById.set(p.id, p);
-    }
-
-    // ⚡ Bolt: Consolidated O(N) array filtering to O(1) Map lookups
-    for (const t of talent) {
+    // ⚡ The Framerate Fanatic: Iterating directly over the record to avoid Object.values allocation
+    for (const id in talent) {
+      const t = talent[id];
       let moodChange = 0;
       
       // 1. Natural drift toward 50
@@ -80,7 +77,7 @@ export class TalentMoraleSystem {
       // 2. Project performance
       const activeContracts = contractsByTalent.get(t.id) || [];
       for (const c of activeContracts) {
-        const p = projectById.get(c.projectId);
+        const p = projects[c.projectId];
         if (p) {
           // Momentum impact
           if (p.momentum < 30) moodChange -= 2;

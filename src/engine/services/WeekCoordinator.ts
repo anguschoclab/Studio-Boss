@@ -330,10 +330,12 @@ export class WeekCoordinator {
     context.impacts.push(...TalentLifecycleSystem.tick(state, context.rng));
 
     // Phase 1: Register Weekly Morale
-    const talentList = Object.values(state.entities.talents);
-    const projectsList = Object.values(state.entities.projects);
-    const contractsList = Object.values(state.entities.contracts);
-    const moraleUpdates = TalentMoraleSystem.processWeeklyMorale(talentList, projectsList, contractsList);
+    // ⚡ Bolt: Pass dictionaries directly to avoid Object.values allocation
+    const moraleUpdates = TalentMoraleSystem.processWeeklyMorale(
+      state.entities.talents,
+      state.entities.projects,
+      state.entities.contracts
+    );
     
     for (const update of moraleUpdates) {
       context.impacts.push({
