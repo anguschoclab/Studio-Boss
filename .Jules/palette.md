@@ -10,6 +10,6 @@
 ### 2024-03-24 - Missing aria-labels on Search Inputs
 **Learning:** React components frequently rely purely on placeholders and adjacent icons to communicate function for Search Inputs, rendering them inaccessible to screen readers.
 **Action:** Always proactively verify `<Input>` elements have explicit `aria-label` attributes to support accessibility, particularly in the talent and pipeline modules.
-## 2024-05-20 - Adding Accessible Focus States to Marquee Interactive Elements
+### 2024-05-20 - Adding Accessible Focus States to Marquee Interactive Elements
 **Learning:** Animated, marquee-style components (like `NewsTicker.tsx`) often utilize interactive elements to pause or trigger modals. These elements frequently omit `focus-visible` styling or meaningful `aria-label`s since they are primarily designed as visual, looping displays.
 **Action:** When working on animated or non-standard layouts with interactive items, explicitly test keyboard navigation and screen reader output. Always ensure `<button>` elements within these flows have semantic ARIA descriptions that encapsulate the full action (e.g., "Read full story...") and robust `focus-visible` states to aid sighted keyboard users.
