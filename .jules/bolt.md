@@ -18,3 +18,7 @@
 ## 2024-05-27 - [Framerate Optimization: Removing Object.values() from hot engine loops]
 **Learning:** Calling \`Object.values()\` on large dictionaries (like \`state.entities.contracts\` or \`state.entities.projects\`) inside weekly engine tick functions (e.g. \`tickProduction\`, \`WeekCoordinator\`) creates significant garbage collection pressure by allocating temporary arrays every tick.
 **Action:** Refactored these operations to use raw \`for...in\` loops and \`Object.keys()\` over the dictionaries, extracting the values directly without generating intermediate arrays. This is especially critical for collections that grow linearly as the game progresses (e.g. contracts, projects).
+
+## 2025-03-08 - Optimized AI bidding engine loop
+**Learning:** Hoisting repetitive calculations (like `leverageAggression` inside `biddingEngine.ts`) outside of deeply nested loops significantly reduces Time Complexity and unnecessary GC allocations. Here, calculating it per opportunity instead of per rival per opportunity reduced the complexity from `O(O * R * (A + a))` to `O(O * (R + A + a))`.
+**Action:** When iterating over combinations of items (like opportunities and rivals), look for derived values that only depend on the outer loop variable and hoist their calculation before the inner loop.
