@@ -58,3 +58,18 @@
 * `docs/television_mechanics.md`: Document the dynamic `evaluateRenewal` thresholds, specifically how budget tiers and award wins adjust the cancellation rating threshold.
 * **Code Paths Covered:** `src/engine/systems/television/renewalEngine.ts` (`evaluateRenewal`)
 * **Key Knowledge Gaps Addressed:** Explains the math behind television show renewals and how the 'Prestige Effect' and 'Syndication Baron' budget penalties are calculated against the average show rating.
+
+### 📝 Daily Progress & Docs Update
+
+#### 🏗️ Codebase Status:
+* Implemented the `tickScriptDevelopment` engine in `src/engine/systems/production/ScriptDraftingSystem.ts` to manage dynamic script evolution during the development phase, alongside creating `docs/script_drafting_mechanics.md`.
+* Current focus appears to be on expanding the project pre-production lifecycle, specifically around screenplay development and dynamic role map generation.
+
+#### 📖 Design Bible Alignment:
+* ✅ **Aligned:** The codebase now supports dynamic script evolution with events like Role Merge, Role Split, Plot Twists, and Dialogue Polish. This satisfies the "Example Emergent Stories" (Section 35.28) where scripts evolve dynamically to create real packaging constraints.
+* ⚠️ **Missing/Deviations:** While script heat drifts and roles modify dynamically, the system currently lacks the explicit multi-draft development gates, script doctors, and the ability to hire talent as a writer/director mentioned in Section 35.1. The broader `Role Map` generation based on Format/Genre (Section 35.2) is also not fully integrated into this tick, and the function itself is not yet called within the main simulation loops.
+
+#### 📄 Proposed Documentation Updates:
+* `docs/script_drafting_mechanics.md`: Document the conditions, percentages, and mechanical impacts of the new `tickScriptDevelopment` evolution events.
+* **Code Paths Covered:** `src/engine/systems/production/ScriptDraftingSystem.ts` (`tickScriptDevelopment`)
+* **Key Knowledge Gaps Addressed:** Explains how a project's `activeRoles`, `scriptHeat`, and `buzz` dynamically shift during the `development` phase, clarifying the emergent packaging stories.
