@@ -6,12 +6,12 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Trophy, TrendingUp, Sparkles, Filter, Info, Target } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { CAMPAIGN_TIERS } from '@/store/slices/campaignSlice';
+import { CAMPAIGN_TIERS } from '@/store/slices/marketingSlice';
 
 export const AwardsHQ: React.FC = () => {
   const gameState = useGameStore(s => s.gameState);
   const { selectProject } = useUIStore();
-  const launchCampaign = useGameStore(s => (s as any).launchCampaign);
+  const launchAwardsCampaign = useGameStore(s => s.launchAwardsCampaign);
 
   const eligibleProjects = useMemo(() => {
     if (!gameState) return [];
@@ -53,7 +53,7 @@ export const AwardsHQ: React.FC = () => {
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
          {[
-           { label: 'Active Campaigns', val: Object.keys(gameState.activeCampaigns || {}).length, icon: Target, color: 'text-primary' },
+           { label: 'Active Campaigns', val: Object.keys(gameState.studio.activeCampaigns || {}).length, icon: Target, color: 'text-primary' },
            { label: 'Total Accolades', val: gameState.industry.awards?.filter(a => a.status === 'won').length || 0, icon: Sparkles, color: 'text-amber-400' },
            { label: 'Critically Acclaimed', val: eligibleProjects.filter(p => (p.reception?.metaScore || 0) >= 75).length, icon: Trophy, color: 'text-emerald-400' },
            { label: 'Academy Standing', val: `${gameState.studio.prestige}/100`, icon: Info, color: 'text-violet-400' }
@@ -78,7 +78,7 @@ export const AwardsHQ: React.FC = () => {
                <p className="text-slate-500 font-bold uppercase tracking-widest text-sm">No projects released in the last year are eligible for honors.</p>
             </div>
           ) : eligibleProjects.map(project => {
-            const campaign = gameState.activeCampaigns?.[project.id];
+            const campaign = gameState.studio.activeCampaigns?.[project.id];
             return (
               <div key={project.id} className="group relative p-6 rounded-3xl bg-slate-900/40 border border-slate-800 hover:border-primary/30 transition-all overflow-hidden">
                 <div className="absolute top-0 left-0 w-1 h-full bg-slate-800 group-hover:bg-primary/50 transition-colors" />
@@ -120,19 +120,19 @@ export const AwardsHQ: React.FC = () => {
                     <div className="space-y-3">
                        <p className="text-[9px] font-black uppercase text-slate-500 tracking-widest">Launch FYC Campaign</p>
                        <div className="grid grid-cols-3 gap-2">
-                          {Object.entries(CAMPAIGN_TIERS).map(([key, tier]) => (
+                          {Object.entries(CAMPAIGN_TIERS).filter(([_, t]) => t.type === 'awards').map(([key, tier]) => (
                             <Button 
                               key={key}
-                              variant="outline" 
-                              className="h-16 flex flex-col items-center justify-center border-slate-800 hover:border-amber-500/50 bg-black/40 group/btn"
-                              onClick={() => launchCampaign(project.id, key as any)}
-                              disabled={gameState.finance.cash < tier.cost || (project.reception?.metaScore || 0) < 65}
-                            >
-                               <span className="text-[8px] font-black text-slate-500 uppercase group-hover/btn:text-amber-500">{key}</span>
-                               <span className="text-[10px] font-mono font-black text-white">{formatMoney(tier.cost)}</span>
-                            </Button>
-                          ))}
-                       </div>
+                               variant="outline" 
+                               className="h-16 flex flex-col items-center justify-center border-slate-800 hover:border-amber-500/50 bg-black/40 group/btn"
+                               onClick={() => launchAwardsCampaign(project.id, key as any)}
+                               disabled={gameState.finance.cash < tier.cost || (project.reception?.metaScore || 0) < 65}
+                             >
+                                <span className="text-[8px] font-black text-slate-500 uppercase group-hover/btn:text-amber-500">{key}</span>
+                                <span className="text-[10px] font-mono font-black text-white">{formatMoney(tier.cost)}</span>
+                             </Button>
+                           ))}
+                        </div>
                        {(project.reception?.metaScore || 0) < 65 && (
                          <div className="flex items-center gap-2 text-[9px] font-black uppercase text-rose-500/60 tracking-widest">
                             <Info className="w-3 h-3" /> Project quality below threshold (65+) for FYC efforts.

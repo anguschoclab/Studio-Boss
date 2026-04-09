@@ -244,7 +244,15 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
         projectHistory: [],
       },
       ownedPlatforms: playerOwnedPlatforms,
-      snapshotHistory: []
+      snapshotHistory: [],
+      culture: {
+        prestigeVsCommercial: 0,
+        talentFriendlyVsControlling: 0,
+        nicheVsBroad: 0,
+        filmFirstVsTvFirst: 0,
+        genrePopularity
+      },
+      activeCampaigns: {},
     },
     market: {
       opportunities: Array.from({ length: 4 }, () => generateOpportunity(rng, 1, Object.keys(talentPool))),
@@ -270,9 +278,6 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
       activeDeals: [],
       pendingOffers: [],
       expiredDeals: [],
-    },
-    culture: {
-      genrePopularity,
     },
     history: [],
     eventHistory: [],

@@ -3,6 +3,7 @@ import { ProjectRating } from '../../types/project.types';
 import { IPAsset } from '../../types/state.types';
 import { calculateWeeklyIPRevenue } from '../ip/merchandisingEngine';
 import { getRatingEconomics } from '../ratings';
+import { calculateAudienceIndex } from '../demographics';
 
 /**
  * RevenueProcessor handles all income-related calculations for the studio.
@@ -42,6 +43,8 @@ export class RevenueProcessor {
 
       if (p.state === 'released') {
         const talentMultiplier = this.calculateTalentRevenueMultiplier(p, state, contracts);
+        const target = p.targetDemographic || 'four_quadrant';
+        const demographicMultiplier = calculateAudienceIndex(p, target);
         let weeklyGross = 0;
         
         let banMultiplier = 1.0;
@@ -52,12 +55,12 @@ export class RevenueProcessor {
 
         if (p.distributionStatus === 'theatrical') {
           // The Studio Comptroller: Base theatrical decay rate lowered from 0.30 to 0.28 representing a ruthless front-loaded drop
-          weeklyGross = this.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.28, p.isCultClassic) * talentMultiplier * banMultiplier;
+          weeklyGross = this.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.28, p.isCultClassic) * talentMultiplier * banMultiplier * demographicMultiplier;
           boxOffice += weeklyGross;
         } else if (p.distributionStatus === 'streaming') {
           const platform = p.buyerId ? buyersMap.get(p.buyerId) : undefined;
           if (platform) {
-            weeklyGross = this.calculateStreamingRevenue(p, platform) * talentMultiplier * banMultiplier;
+            weeklyGross = this.calculateStreamingRevenue(p, platform) * talentMultiplier * banMultiplier * demographicMultiplier;
             distribution += weeklyGross;
           }
         }

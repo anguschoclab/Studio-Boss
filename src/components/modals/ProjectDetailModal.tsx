@@ -53,6 +53,7 @@ export const ProjectDetailModal = () => {
   const exploitFranchise = useGameStore(s => s.exploitFranchise);
   const lockMarketingCampaign = useGameStore(s => s.lockMarketingCampaign);
   const submitToFestival = useGameStore(s => s.submitToFestival);
+  const launchAwardsCampaign = useGameStore(s => s.launchAwardsCampaign);
 
   const projects = useMemo(() => Object.values(gameState?.entities.projects || {}), [gameState?.entities.projects]);
   const project = useMemo(() => projects.find(p => p.id === selectedProjectId), [projects, selectedProjectId]);
@@ -247,6 +248,28 @@ export const ProjectDetailModal = () => {
                           </div>
                        </div>
                      ))}
+                  </div>
+
+                  {/* Audience Intel (New Phase 4) */}
+                  <div className="bg-slate-900/40 p-5 rounded-2xl border border-slate-800/50 space-y-4">
+                    <div className="flex items-center gap-2">
+                      <Users className="w-4 h-4 text-primary" />
+                      <span className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Audience Resonance Breakdown</span>
+                    </div>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                       {['male_under_25', 'female_under_25', 'male_over_25', 'female_over_25'].map(q => {
+                         const score = calculateAudienceIndex(project, q as any);
+                         return (
+                           <div key={q} className="p-3 rounded-xl bg-black/40 border border-white/5 space-y-1">
+                             <p className="text-[8px] font-black text-slate-500 uppercase tracking-tighter">{q.replace(/_/g, ' ')}</p>
+                             <div className="flex items-center justify-between">
+                               <span className="text-sm font-black text-white">{score.toFixed(2)}x</span>
+                               <div className={cn("w-1.5 h-1.5 rounded-full", score > 1.2 ? "bg-emerald-500" : score > 0.8 ? "bg-amber-500" : "bg-rose-500")} />
+                             </div>
+                           </div>
+                         );
+                       })}
+                    </div>
                   </div>
 
                   {project.reception && (
@@ -503,11 +526,11 @@ export const ProjectDetailModal = () => {
                         
                         <div className="grid grid-cols-1 gap-2">
                            <p className="text-[9px] font-black uppercase text-slate-500 tracking-widest">Active FYC Campaign</p>
-                           {gameState?.activeCampaigns?.[project.id] ? (
+                           {gameState?.studio.activeCampaigns?.[project.id] ? (
                              <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30">
                                 <div className="flex justify-between items-center mb-2">
                                    <span className="text-xs font-black text-amber-500 uppercase italic">Active Outreach</span>
-                                   <Badge className="bg-amber-500 text-black font-black">+{gameState.activeCampaigns[project.id].buzzBonus} BUZZ</Badge>
+                                    <Badge className="bg-amber-500 text-black font-black">+{gameState.studio.activeCampaigns[project.id].buzzBonus} BUZZ</Badge>
                                 </div>
                                 <p className="text-[10px] text-slate-400 font-bold uppercase">Targeting major categories for the upcoming season.</p>
                              </div>
@@ -522,7 +545,7 @@ export const ProjectDetailModal = () => {
                                     key={tier.k as any}
                                     variant="outline" 
                                     className="h-14 flex flex-col items-center justify-center border-slate-800 hover:border-amber-500/50 bg-black/40 group"
-                                    onClick={() => { (useGameStore.getState() as any).launchCampaign(project.id, tier.k); selectProject(null); }}
+                                    onClick={() => { launchAwardsCampaign(project.id, tier.k as any); selectProject(null); }}
                                     disabled={gameState ? gameState.finance.cash < tier.c : true}
                                   >
                                      <span className="text-[8px] font-black text-slate-500 uppercase group-hover:text-amber-500">{tier.k as any}</span>

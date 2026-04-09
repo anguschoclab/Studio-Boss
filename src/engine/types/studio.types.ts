@@ -53,6 +53,7 @@ export interface StudioCulture {
   talentFriendlyVsControlling: number; // -100 (friendly) to 100 (controlling)
   nicheVsBroad: number; // -100 (niche) to 100 (broad)
   filmFirstVsTvFirst: number; // -100 (film) to 100 (tv)
+  genrePopularity: Record<string, number>; // Global genre popularity shifts
 }
 
 export interface GameState {
@@ -86,6 +87,7 @@ export interface GameState {
     ownedPlatforms?: string[];
     isAcquirable?: boolean;
     marketShare?: number; // 🌌 PHASE 2: FTC Anti-Trust Cap (0.0 to 1.0)
+    activeCampaigns: Record<string, import('./state.types').CampaignData>;
   };
   market: {
     opportunities: Opportunity[];
@@ -105,11 +107,7 @@ export interface GameState {
     newsHistory: NewsEvent[];
   };
   deals: DealsState;
-  activeCampaigns: Record<string, import('./state.types').CampaignData>;
   // UI Data Vis Extensions (Epic 4)
-  culture: {
-    genrePopularity: Record<string, number>;
-  };
   history: StudioSnapshot[];
   eventHistory: GameEvent[];
 }

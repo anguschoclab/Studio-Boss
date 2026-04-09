@@ -7,11 +7,11 @@ import { useGameStore } from '@/store/gameStore';
 import { useShallow } from 'zustand/react/shallow';
 
 export const DemographicsWidget: React.FC = () => {
-  const culture = useGameStore(useShallow((state) => state.gameState?.culture));
-  if (!culture) return null;
+  const genrePopularity = useGameStore(useShallow((state) => state.gameState?.studio?.culture?.genrePopularity));
+  if (!genrePopularity) return null;
 
   // Transform engine culture data into chart data
-  const chartData = Object.entries(culture.genrePopularity)
+  const chartData = Object.entries(genrePopularity)
     .map(([genre, popularity]) => ({
       genre: genre.charAt(0).toUpperCase() + genre.slice(1),
       popularity: Math.round(popularity * 100),

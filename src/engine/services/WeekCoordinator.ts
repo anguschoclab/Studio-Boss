@@ -47,6 +47,13 @@ import { TalentLifecycleSystem } from '../systems/talent/TalentLifecycleSystem';
 import { TalentMoraleSystem } from '../systems/talent/TalentMoraleSystem';
 import { shouldAttemptHostileTakeover } from '../systems/ai/AgentBrain';
 
+// Orphan Wiring
+import { detectCultClassic } from '../systems/ip/ipValuation';
+import { generateRebootProposal } from '../systems/ip/ipRebootEngine';
+import { evaluatePilot } from '../systems/production/pilotEvaluator';
+import { calculateAudienceIndex } from '../systems/demographics';
+import { resolveCrisisWithHandlers } from '../systems/production/crisisEvaluator';
+
 /**
  * Studio Boss - Simulation Tick Context
  */
@@ -158,6 +165,12 @@ export class WeekCoordinator {
       } else if (!project.activeCrisis && WeekCoordinator.ACTIVE_STAGES.has(project.state)) {
         const impact = checkAndTriggerCrisis(project, state, context.rng);
         if (impact) context.impacts.push(impact);
+
+        // Wiring: Resolve Crisis with Handlers (Strategy Pattern)
+        if (project.activeCrisis) {
+           const crisisImpacts = resolveCrisisWithHandlers(state, project, context.rng);
+           context.impacts.push(...crisisImpacts);
+        }
       }
 
       // 2. Director's cut eligibility
@@ -227,6 +240,23 @@ export class WeekCoordinator {
           if (banImpact) context.impacts.push(banImpact);
         }
       }
+
+      // 6. Release Simulation - calculate demographic resonance
+      if (project.state === 'released' && !project.targetDemographic) {
+         // Default to four quadrant if not set by marketing
+         const target = (project as any).targetDemographic || 'four_quadrant';
+         const resonance = calculateAudienceIndex(project, target);
+         context.impacts.push({
+           type: 'PROJECT_UPDATED',
+           payload: { 
+             projectId: project.id, 
+             update: { 
+               // Store resonance for revenue calculation later
+               momentum: Math.min(100, (project.momentum || 50) * resonance)
+             } 
+           }
+         });
+      }
     }
 
     context.impacts.push(...tickTelevision(state, context.rng));
@@ -282,6 +312,11 @@ export class WeekCoordinator {
     // Upfronts — week 20 of each year
     if (weekOfYear === 20) {
       context.impacts.push(...runUpfronts(state, context.rng));
+    }
+
+    // Annual IP Scan — Week 1
+    if (weekOfYear === 1) {
+      this.runAnnualIPScan(state, context);
     }
 
     // Annual M&A hostile takeover scan
@@ -380,6 +415,49 @@ export class WeekCoordinator {
           break; // one hostile move per attacker per year
         }
       }
+    }
+  }
+
+  /**
+   * Annual scan for Cult Classics and Reboot opportunities.
+   */
+  private static runAnnualIPScan(state: GameState, context: TickContext) {
+    // 1. Cult Classic Scan
+    const vault = state.ip.vault || [];
+    vault.forEach(asset => {
+       const project = state.studio.internal.projectHistory.find(p => p.id === asset.originalProjectId);
+       if (project && !project.isCultClassic && detectCultClassic(project, context.week)) {
+          context.impacts.push({
+             type: 'VAULT_ASSET_UPDATED',
+             payload: { assetId: asset.id, update: { tier: 'CULT_CLASSIC' } }
+          });
+          context.impacts.push({
+             type: 'NEWS_ADDED',
+             payload: {
+                id: context.rng.uuid('NWS'),
+                headline: `"${project.title}" achieves cult status!`,
+                description: `Years later, fans have rediscovered this hidden gem. Catalog value is surging.`,
+                category: 'general'
+             }
+          });
+       }
+    });
+
+    // 2. Reboot Proposal
+    const internalIP = vault.filter(v => v.rightsOwner === 'STUDIO');
+    if (internalIP.length > 0 && context.rng.next() < 0.2) {
+       const targetIP = context.rng.pick(internalIP);
+       const proposal = generateRebootProposal(context.rng, targetIP);
+       if (proposal) {
+          context.impacts.push({
+             type: 'MODAL_TRIGGERED',
+             payload: {
+                modalType: 'REBOOT_OPPORTUNITY',
+                priority: 30,
+                payload: proposal
+             }
+          });
+       }
     }
   }
 
