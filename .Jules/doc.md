@@ -87,3 +87,18 @@
 * `docs/marketing_mechanics.md`: Add a section detailing the planned implementation of the Audience Definition Layer and expand the list of Marketing Focus Modes (Angles) to fully cover all options described in the Master Design Bible.
 * **Code Paths Covered:** `evaluateMarketingEfficiency` in `src/engine/systems/marketing/efficiencyEvaluator.ts` and `MarketingAngle` / `MarketingCampaign` interfaces in `src/engine/types/project.types.ts`.
 * **Key Knowledge Gaps Addressed:** Clarifies the divergence between the current implementation of Marketing Angles and the full feature set outlined in the Master Design Bible, preparing for future expansions.
+
+### 📝 Daily Progress & Docs Update
+
+#### 🏗️ Codebase Status:
+* Implemented the test suite layout and basic global configurations (vitest, tsconfig.app, etc).
+* Current focus appears to be on getting test stability for UI components like `DealsDesk`, `FinancePanel`, and handling React context/state mocking in testing environments.
+
+#### 📖 Design Bible Alignment:
+* ✅ **Aligned:** The `DealsDesk` UI is rendering "Phase 2: Overall Deals & Shingle Pacts", which aligns directly with the master design document for talent pacts and studio negotiation layers.
+* ⚠️ **Missing/Deviations:** No architectural deviations found in the latest commit. The primary issue was a test failure (`ReferenceError: gameState is not defined`) because `gameState` was introduced into `DealsDesk.tsx` without proper mocking or passing in `DealsDesk.test.tsx`. This has been resolved.
+
+#### 📄 Proposed Documentation Updates:
+* `docs/deals_mechanics.md`: A placeholder should be created here soon to document how the 'Phase 2 Deals' (First Look, Shingle Pacts, Festival Auctions) are structured, matching sections 13.26 and 29.20 of the Master Design Bible.
+* **Code Paths Covered:** `src/components/deals/DealsDesk.tsx`
+* **Key Knowledge Gaps Addressed:** Reminds the team that the "Deals" system spans multiple mechanics (Talent, Auctions, Renewals) and should be formally documented outside the main bible as it expands.
