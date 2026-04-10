@@ -85,9 +85,9 @@ export const AwardsHQ: React.FC = () => {
                 
                 <div className="flex justify-between items-start mb-6">
                   <div className="space-y-1">
-                    <h3 className="text-xl font-black italic uppercase tracking-tight text-white group-hover:text-primary transition-colors cursor-pointer" onClick={() => selectProject(project.id)}>
+                    <button type="button" className="text-left w-full text-xl font-black italic uppercase tracking-tight text-white group-hover:text-primary transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded" onClick={() => selectProject(project.id)}>
                       {project.title}
-                    </h3>
+                    </button>
                     <p className="text-[10px] font-black uppercase text-slate-500 tracking-widest">
                       {project.genre} • {project.format} • Released W{project.releaseWeek}
                     </p>

@@ -22,7 +22,7 @@ export const IPAssetCard = ({ asset, isMarket = false }: IPAssetCardProps) => {
   
   return (
     <TooltipWrapper tooltip="View IP Asset Financials & Licensing Details" side="top">
-      <Card className="glass-card border-none hover-glow group transition-all duration-300 relative overflow-hidden cursor-pointer active:scale-[0.98]">
+      <Card className="glass-card border-none hover-glow group transition-all duration-300 relative overflow-hidden">
         {/* Decorative background element */}
         <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
         
