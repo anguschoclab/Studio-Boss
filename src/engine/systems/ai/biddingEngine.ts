@@ -62,7 +62,7 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
 
       // 🎭 The Method Actor Tuning: Franchise builders are willing to run low on liquidity to grab key assets.
       // Market disruptors run even lower.
-      const liquidityBuffer = isMarketDisruptor ? 1.02 : (isFranchiseBuilder ? 1.05 : (isCashCrunch ? 1.5 : 1.25 - (motivationAggression * 0.15)));
+      const liquidityBuffer = isMarketDisruptor ? 1.02 : (isFranchiseBuilder ? 1.05 : (isAwardChaser ? 1.10 : (isCashCrunch ? 1.5 : 1.25 - (motivationAggression * 0.15))));
 
       // Determine the minimum bid floor (current highest or reserve cost)
       const bidFloor = Math.max(currentHighest, opportunity.costToAcquire);
