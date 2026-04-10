@@ -13,3 +13,6 @@
 ### 2024-05-20 - Adding Accessible Focus States to Marquee Interactive Elements
 **Learning:** Animated, marquee-style components (like `NewsTicker.tsx`) often utilize interactive elements to pause or trigger modals. These elements frequently omit `focus-visible` styling or meaningful `aria-label`s since they are primarily designed as visual, looping displays.
 **Action:** When working on animated or non-standard layouts with interactive items, explicitly test keyboard navigation and screen reader output. Always ensure `<button>` elements within these flows have semantic ARIA descriptions that encapsulate the full action (e.g., "Read full story...") and robust `focus-visible` states to aid sighted keyboard users.
+## 2025-02-18 - Missing ARIA Labels on Placeholder-Driven Search Inputs
+**Learning:** Across the Studio Boss dashboard, multiple `<Input>` components used for search or inline forms rely exclusively on `placeholder` attributes or adjacent icons to convey their purpose, lacking explicit `aria-label`s. This pattern impairs screen reader accessibility by leaving form fields unlabeled.
+**Action:** Proactively audit instances of `<Input>` that function without a connected `<label>` element and attach descriptive `aria-label`s to them.
