@@ -21,7 +21,7 @@ export function tickFinance(state: GameState, rng: RandomGenerator, pendingImpac
       state.studio.archetype, 
       state.studio.prestige, 
       contractsList, 
-      state.studio.internal.firstLookDeals || [], 
+      state.deals?.activeDeals || [], 
       rng, 
       pendingImpacts
   );

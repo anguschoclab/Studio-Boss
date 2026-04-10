@@ -34,8 +34,8 @@ const EMPTY_FINANCE: FinanceState = {
 export const selectGameState = (state: GameState | null): GameState | null => state;
 
 export const selectStudio = (state: GameState | null) => state?.studio || null;
-export const selectInternal = (state: GameState | null) => state?.studio.internal || null;
-export const selectProjectsRaw = (state: GameState | null) => state?.entities.projects || EMPTY_PROJECTS;
+export const selectInternal = (state: GameState | null) => state?.studio?.internal || null;
+export const selectProjectsRaw = (state: GameState | null) => state?.entities?.projects || EMPTY_PROJECTS;
 
 export const selectProjects = (state: GameState | null): Project[] => {
   const projects = selectProjectsRaw(state);
@@ -46,10 +46,10 @@ export const selectFinance = (state: GameState | null) => state?.finance || EMPT
 export const selectCash = (state: GameState | null) => selectFinance(state).cash || 0;
 
 export const selectIndustry = (state: GameState | null) => state?.industry || null;
-export const selectRivalsRaw = (state: GameState | null) => state?.entities.rivals || EMPTY_RIVALS;
+export const selectRivalsRaw = (state: GameState | null) => state?.entities?.rivals || EMPTY_RIVALS;
 export const selectRivals = (state: GameState | null): RivalStudio[] => Object.values(selectRivalsRaw(state));
 
-export const selectTalentPoolRaw = (state: GameState | null) => state?.entities.talents || EMPTY_TALENT_POOL;
+export const selectTalentPoolRaw = (state: GameState | null) => state?.entities?.talents || EMPTY_TALENT_POOL;
 export const selectTalentPool = (state: GameState | null): Talent[] => Object.values(selectTalentPoolRaw(state));
 
 export const selectActiveProjects = (state: GameState | null) => {
@@ -121,9 +121,9 @@ export interface TalentFilter {
 }
 
 export const selectFilteredTalent = (state: GameState | null, filter: TalentFilter): Talent[] => {
-  if (!state) return EMPTY_ARRAY;
+  if (!state || !state.entities) return EMPTY_ARRAY;
   const result: Talent[] = [];
-  const pool = state.entities.talents;
+  const pool = state.entities.talents || EMPTY_TALENT_POOL;
   for (const key in pool) {
     const t = pool[key];
     if (filter.roles && !filter.roles.some(r => t.roles?.includes(r) || t.role === r)) continue;

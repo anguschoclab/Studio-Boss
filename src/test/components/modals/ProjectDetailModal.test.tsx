@@ -36,14 +36,11 @@ describe('ProjectDetailModal', () => {
     vi.mocked(useGameStore).mockImplementation((selector: any) => {
       const state = {
         gameState: {
-          studio: {
-            internal: {
-              projects: {},
-              contracts: [],
-            }
-          },
-          industry: {
-            talentPool: {},
+          entities: {
+            projects: {},
+            talents: {},
+            contracts: {},
+            rivals: {}
           },
           finance: { cash: 100_000_000 },
         },
@@ -100,14 +97,11 @@ describe('ProjectDetailModal', () => {
     vi.mocked(useGameStore).mockImplementation((selector: any) => {
       const state = {
         gameState: {
-          studio: {
-            internal: {
-              projects: { [mockProject.id]: mockProject },
-              contracts: [],
-            }
-          },
-          industry: {
-            talentPool: {},
+          entities: {
+            projects: { [mockProject.id]: mockProject },
+            talents: {},
+            contracts: {},
+            rivals: {}
           },
           finance: { cash: 100_000_000 },
         },
@@ -133,14 +127,11 @@ describe('ProjectDetailModal', () => {
     vi.mocked(useGameStore).mockImplementation((selector: any) => {
       const state = {
         gameState: {
-          studio: {
-            internal: {
-              projects: { [mockProject.id]: mockProject },
-              contracts: [],
-            }
-          },
-          industry: {
-            talentPool: {},
+          entities: {
+            projects: { [mockProject.id]: mockProject },
+            talents: {},
+            contracts: {},
+            rivals: {}
           },
           finance: { cash: 100_000_000 },
         },
@@ -170,14 +161,11 @@ describe('ProjectDetailModal', () => {
     vi.mocked(useGameStore).mockImplementation((selector: any) => {
       const state = {
         gameState: {
-          studio: {
-            internal: {
-              projects: { [mockProject.id]: mockProject },
-              contracts: [],
-            }
-          },
-          industry: {
-            talentPool: {},
+          entities: {
+            projects: { [mockProject.id]: mockProject },
+            talents: {},
+            contracts: {},
+            rivals: {}
           },
           finance: { cash: 100_000_000 },
         },
@@ -219,14 +207,11 @@ describe('ProjectDetailModal', () => {
     vi.mocked(useGameStore).mockImplementation((selector: any) => {
       const state = {
         gameState: {
-          studio: {
-            internal: {
-              projects: { [mockProject.id]: mockProject },
-              contracts: [],
-            }
-          },
-          industry: {
-            talentPool: {},
+          entities: {
+            projects: { [mockProject.id]: mockProject },
+            talents: {},
+            contracts: {},
+            rivals: {}
           },
           finance: { cash: 100_000_000 },
         },

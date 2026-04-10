@@ -23,7 +23,7 @@ export const DealsDesk = () => {
       projects: selectProjects(s.gameState),
       week: s.gameState?.week || 0,
       activeDeals: s.gameState?.deals?.activeDeals ?? [],
-      talentPool: s.gameState?.industry?.talentPool ?? {},
+      talentPool: s.gameState?.entities?.talents ?? {},
     }))
   );
 
@@ -118,7 +118,7 @@ export const DealsDesk = () => {
       )}
 
       {/* 🌌 Phase 2: Market Opportunities (Festival Auctions) */}
-      {gameState?.market.opportunities && gameState.market.opportunities.length > 0 && (
+      {gameState?.market?.opportunities && gameState.market.opportunities.length > 0 && (
         <div className="flex flex-col space-y-4">
           <div className="flex items-center gap-3 px-2">
             <div className="w-1.5 h-4 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]" />

@@ -295,10 +295,11 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
           } else {
             const rivals = { ...nextState.entities.rivals };
             if (rivals[acquirerId]) {
+              const acquirer = rivals[acquirerId];
               rivals[acquirerId] = {
-                ...rivals[acquirerId],
-                projects: { ...(rivals[acquirerId].projects || {}), ...(target.projects || {}) },
-                ownedPlatforms: [...(rivals[acquirerId].ownedPlatforms || []), ...(target.ownedPlatforms || [])]
+                ...acquirer,
+                projects: { ...(acquirer.projects || {}), ...(target.projects || {}) },
+                ownedPlatforms: [...(acquirer.ownedPlatforms || []), ...(target.ownedPlatforms || [])]
               };
             }
             
@@ -309,10 +310,14 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
               return asset;
             });
 
+            // ⚡ Single Source of Truth: Ensure merged rival projects are also mirrored in global entities
+            const mergedProjects = { ...nextState.entities.projects, ...(target.projects || {}) };
+
             nextState = { 
                 ...nextState, 
                 entities: {
                   ...nextState.entities,
+                  projects: mergedProjects,
                   rivals
                 },
                 ip: { ...nextState.ip, vault: mergedVault }

@@ -34,7 +34,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       if (!p) return s;
       
       let finalFee = talent.fee;
-      if (state.studio.internal.firstLookDeals?.some(d => d.talentId === talentId)) {
+      if (state.deals?.activeDeals?.some(d => d.talentId === talentId)) {
          finalFee = talent.fee * 0.5;
       }
       
@@ -117,7 +117,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
             exclusivity: true,
             status: 'active'
           };
-          const currentDeals = state.studio.internal.firstLookDeals || [];
+          const currentDeals = state.deals?.activeDeals || [];
           const newNewsHistory = [...state.industry.newsHistory];
           newNewsHistory.unshift({
             id: rng.uuid('NWS'),
@@ -131,12 +131,9 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
             gameState: {
               ...state,
               finance: { ...state.finance, cash: state.finance.cash - lockFee },
-              studio: {
-                ...state.studio,
-                internal: {
-                  ...state.studio.internal,
-                  firstLookDeals: [...currentDeals, deal]
-                }
+              deals: {
+                ...state.deals,
+                activeDeals: [...currentDeals, deal]
               },
               industry: {
                 ...state.industry,

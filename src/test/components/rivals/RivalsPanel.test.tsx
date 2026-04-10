@@ -11,7 +11,12 @@ describe('RivalsPanel', () => {
     vi.clearAllMocks();
     useGameStore.setState({
       gameState: {
-        industry: { rivals: [] }
+        entities: {
+          rivals: {},
+          projects: {},
+          talents: {},
+          contracts: {}
+        }
       }
     } as any);
   });
@@ -21,8 +26,15 @@ describe('RivalsPanel', () => {
     expect(screen.getByText('Competitive Landscape')).toBeInTheDocument();
   });
 
+  const generateMockRivalsMap = (rivals: any[]) => {
+    return rivals.reduce((acc, r) => {
+      acc[r.id] = r;
+      return acc;
+    }, {} as Record<string, any>);
+  };
+
   it('renders rivals correctly', () => {
-    const mockRivals = [
+    const mockRivalsArray = [
       {
         id: 'r1',
         name: 'Alpha Pictures',
@@ -60,28 +72,33 @@ describe('RivalsPanel', () => {
 
     useGameStore.setState({
       gameState: {
-        industry: { rivals: mockRivals }
+        entities: {
+          rivals: generateMockRivalsMap(mockRivalsArray),
+          projects: {},
+          talents: {},
+          contracts: {}
+        }
       }
     } as any);
     render(<TooltipProvider><RivalsPanel /></TooltipProvider>);
 
     // Check text elements
     expect(screen.getByText('Alpha Pictures')).toBeInTheDocument();
-    expect(screen.getByText('Major Studio')).toBeInTheDocument();
+    expect(screen.getByText(/MAJOR/i)).toBeInTheDocument();
     expect(screen.getByText('Released a blockbuster')).toBeInTheDocument();
-    // Replaced proj suffix assertions since the component might just use numbers or text
+    
     expect(screen.getByText('Beta Indies')).toBeInTheDocument();
-    expect(screen.getByText('Indie Studio')).toBeInTheDocument();
+    expect(screen.getByText(/INDIE/i)).toBeInTheDocument();
     expect(screen.getByText('Won a festival award')).toBeInTheDocument();
 
     expect(screen.getByText('Gamma Mid')).toBeInTheDocument();
-    expect(screen.getByText('Mid-Tier Studio')).toBeInTheDocument();
+    expect(screen.getByText(/MID-TIER/i)).toBeInTheDocument();
     expect(screen.getByText('Signed a new director')).toBeInTheDocument();
   });
 
 
   it('applies correct strength styling based on strength value', () => {
-    const mockRivals = [
+    const mockRivalsArray = [
       {
         id: 'r1',
         name: 'Strong Rival',
@@ -119,7 +136,12 @@ describe('RivalsPanel', () => {
 
     useGameStore.setState({
       gameState: {
-        industry: { rivals: mockRivals }
+        entities: {
+          rivals: generateMockRivalsMap(mockRivalsArray),
+          projects: {},
+          talents: {},
+          contracts: {}
+        }
       }
     } as any);
 
@@ -137,5 +159,4 @@ describe('RivalsPanel', () => {
     // Weak Rival < 45
     expect(strengthBars[2].className).toContain('from-muted-foreground');
   });
-
 });

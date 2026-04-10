@@ -49,8 +49,6 @@ import { shouldAttemptHostileTakeover } from '../systems/ai/AgentBrain';
 
 // Orphan Wiring
 import { detectCultClassic } from '../systems/ip/ipValuation';
-// import { generateRebootProposal } from '../systems/ip/ipRebootEngine';
-// import { evaluatePilot } from '../systems/production/pilotEvaluator';
 import { calculateAudienceIndex } from '../systems/demographics';
 import { resolveCrisisWithHandlers } from '../systems/production/crisisEvaluator';
 
@@ -243,17 +241,17 @@ export class WeekCoordinator {
       }
 
       // 6. Release Simulation - calculate demographic resonance
-      if (project.state === 'released' && !project.targetDemographic) {
+      if (project.state === 'released') {
          // Default to four quadrant if not set by marketing
          const target = (project as any).targetDemographic || 'four_quadrant';
-         const resonance = calculateAudienceIndex(project, target);
+         const resonance = calculateAudienceIndex(project, target) || 1.0;
          context.impacts.push({
            type: 'PROJECT_UPDATED',
            payload: { 
              projectId: project.id, 
              update: { 
                // Store resonance for revenue calculation later
-               momentum: Math.min(100, (project.momentum || 50) * resonance)
+               momentum: Math.min(100, Math.round((project.momentum || 50) * resonance))
              } 
            }
          });
@@ -347,19 +345,12 @@ export class WeekCoordinator {
   private static runMediaFilter(state: GameState, context: TickContext) {
     context.impacts.push(advanceRumors(state, context.rng));
     
-    // Process First-Look Deal decay
-    const updatedPacts = SchedulingEngine.processPacts(state.studio.internal.firstLookDeals || []);
-    if (JSON.stringify(updatedPacts) !== JSON.stringify(state.studio.internal.firstLookDeals)) {
-       context.impacts.push({
-         type: 'INDUSTRY_UPDATE',
-         payload: { update: { 'studio.internal.firstLookDeals': updatedPacts } }
-       });
+    // Process all active deals (First-Look & Overall) via global pool
+    if (state.deals?.activeDeals && state.deals.activeDeals.length > 0) {
+       const dealImpacts = advanceDeals(state.deals.activeDeals, state.week, context.rng);
+       dealImpacts.forEach(i => context.impacts.push(i));
     }
 
-    // Process deal expiration news via advanceDeals
-    if (state.studio.internal.firstLookDeals && state.studio.internal.firstLookDeals.length > 0) {
-       const dealImpacts = advanceDeals(state.studio.internal.firstLookDeals, state.week, context.rng);
-       dealImpacts.forEach(i => context.impacts.push(i));
     }
   }
 

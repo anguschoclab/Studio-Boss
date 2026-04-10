@@ -154,7 +154,7 @@ export function calculateWeeklyCosts(state: GameState): number {
       state.studio.archetype, 
       state.finance.cash, 
       state.studio.prestige, 
-      state.studio.internal.firstLookDeals || []
+      state.deals?.activeDeals || []
   );
   return expenses.production + expenses.marketing + expenses.overhead + expenses.pacts;
 }
@@ -195,7 +195,7 @@ export function generateCashflowForecast(state: GameState, weeks: number = 12): 
       state.studio.archetype, 
       state.studio.prestige, 
       Object.values(state.entities.contracts || {}), 
-      state.studio.internal.firstLookDeals || [],
+      state.deals?.activeDeals || [],
       new RandomGenerator(state.gameSeed + state.week), // 🌌 Seeded RNG for forecast reports
       []
   );

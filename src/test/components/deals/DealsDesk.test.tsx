@@ -47,7 +47,7 @@ describe('DealsDesk', () => {
       const state = {
         gameState: {
           week: 1,
-          studio: { internal: { projects: {}, contracts: [] } },
+          entities: { projects: {}, talents: {}, contracts: {}, rivals: {} },
           market: {
             buyers: [
               generateMockBuyer('b1', 'Netflix', 'streamer', { type: 'prestige', activeUntilWeek: 10 }),
@@ -74,15 +74,15 @@ describe('DealsDesk', () => {
       const state = {
         gameState: {
           week: 1,
-          studio: {
-            internal: {
-              projects: {
-                'p1': generateMockProject('Pitch', 'pitching', 'Action', 'high'),
-                'p2': generateMockProject('Dev', 'development', 'Drama', 'low'),
-                'p3': generateMockProject('Prod', 'production', 'Comedy', 'mid')
-              },
-              contracts: []
-            }
+          entities: {
+            projects: {
+              'p1': generateMockProject('Pitch', 'pitching', 'Action', 'high'),
+              'p2': generateMockProject('Dev', 'development', 'Drama', 'low'),
+              'p3': generateMockProject('Prod', 'production', 'Comedy', 'mid')
+            },
+            talents: {},
+            contracts: [],
+            rivals: {}
           },
           market: { buyers: [] }
         }
@@ -105,13 +105,13 @@ describe('DealsDesk', () => {
       const state = {
         gameState: {
           week: 1,
-          studio: {
-            internal: {
-              projects: {
-                'p1': { id: 'p1', title: 'Fit Project', state: 'pitching', genre: 'Action', budgetTier: 'high', budget: 1000000 } as Project
-              },
-              contracts: []
-            }
+          entities: {
+            projects: {
+              'p1': { id: 'p1', title: 'Fit Project', state: 'pitching', genre: 'Action', budgetTier: 'high', budget: 1000000 } as Project
+            },
+            talents: {},
+            contracts: [],
+            rivals: {}
           },
           market: {
             buyers: [

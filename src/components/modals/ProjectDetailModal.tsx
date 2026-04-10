@@ -56,10 +56,10 @@ export const ProjectDetailModal = () => {
   const submitToFestival = useGameStore(s => s.submitToFestival);
   const launchAwardsCampaign = useGameStore(s => s.launchAwardsCampaign);
 
-  const projects = useMemo(() => Object.values(gameState?.entities.projects || {}), [gameState?.entities.projects]);
+  const projects = useMemo(() => Object.values(gameState?.entities?.projects || {}), [gameState?.entities?.projects]);
   const project = useMemo(() => projects.find(p => p.id === selectedProjectId), [projects, selectedProjectId]);
-  const talentPool = useMemo(() => Object.values(gameState?.entities.talents || {}), [gameState?.entities.talents]);
-  const contracts = useMemo(() => Object.values(gameState?.entities.contracts || {}), [gameState?.entities.contracts]);
+  const talentPool = useMemo(() => Object.values(gameState?.entities?.talents || {}), [gameState?.entities?.talents]);
+  const contracts = useMemo(() => Object.values(gameState?.entities?.contracts || {}), [gameState?.entities?.contracts]);
   const talentMap = useMemo(() => new Map(talentPool.map(t => [t.id, t])), [talentPool]);
 
   const talentByRole = useMemo(() => {

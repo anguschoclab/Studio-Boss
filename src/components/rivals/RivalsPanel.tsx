@@ -25,7 +25,7 @@ const strengthColor = (s: number) => {
 export const RivalsPanel = () => {
   const [activeSubTab, setActiveSubTab] = React.useState<'intel' | 'market'>('intel');
   const gameState = useGameStore(s => s.gameState);
-  const rivalsMap = gameState?.entities.rivals || {};
+  const rivalsMap = gameState?.entities?.rivals || {};
   const rivalsList = Object.values(rivalsMap);
   const playerCash = gameState?.finance?.cash || 0;
   

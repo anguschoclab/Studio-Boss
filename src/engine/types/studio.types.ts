@@ -80,7 +80,6 @@ export interface GameState {
     prestige: number;
     culture?: StudioCulture;
     internal: {
-      firstLookDeals?: TalentPact[];
       projectHistory: Project[]; // 🌌 PHASE 2: The Vault
     };
     snapshotHistory: StudioSnapshot[]; // Renamed from history to avoid collision
