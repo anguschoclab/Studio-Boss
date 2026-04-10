@@ -22,3 +22,9 @@
 ## 2025-03-08 - Optimized AI bidding engine loop
 **Learning:** Hoisting repetitive calculations (like `leverageAggression` inside `biddingEngine.ts`) outside of deeply nested loops significantly reduces Time Complexity and unnecessary GC allocations. Here, calculating it per opportunity instead of per rival per opportunity reduced the complexity from `O(O * R * (A + a))` to `O(O * (R + A + a))`.
 **Action:** When iterating over combinations of items (like opportunities and rivals), look for derived values that only depend on the outer loop variable and hoist their calculation before the inner loop.
+### 2024-06-05
+- **⚡ Bolt: [performance improvement]**
+  - 💡 **What:** Optimized React render cycles in `DiscoveryBoard` and `LiveAuctionDashboard` using `useShallow`, and refactored M&A scan to pre-filter attackers and targets. Also optimized AI_ARCHETYPES .find() to an O(1) Map lookup.
+  - 🎯 **Why:** To prevent unnecessary re-renders when other parts of `gameState` change, and to reduce M&A scan from O(N^2) to near O(N).
+  - 📊 **Impact:** Faster UI renders and reduced CPU cycles during engine tick calculations.
+  - 🔬 **Measurement:** Reduced redundant re-renders and decreased tick duration during year-end.

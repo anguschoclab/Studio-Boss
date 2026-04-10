@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useGameStore } from '@/store/gameStore';
+import { useShallow } from 'zustand/react/shallow';
 import { useUIStore } from '@/store/uiStore';
 import { Button } from '@/components/ui/button';
 import { Plus, Search, Newspaper, Sparkles } from 'lucide-react';
@@ -15,8 +16,7 @@ import { LiveAuctionDashboard } from '@/components/talent/LiveAuctionDashboard';
 import { OpportunityCard } from './OpportunityCard';
 
 export const DiscoveryBoard = () => {
-  const gameState = useGameStore(s => s.gameState);
-  const opportunities = selectOpportunities(gameState);
+  const opportunities = useGameStore(useShallow(s => selectOpportunities(s.gameState)));
   const { openCreateProject } = useUIStore();
   const [selectedAuctionOpp, setSelectedAuctionOpp] = useState<Opportunity | null>(null);
 

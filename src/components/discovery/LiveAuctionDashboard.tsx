@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useGameStore } from '@/store/gameStore';
+import { useShallow } from 'zustand/react/shallow';
 import { Opportunity, RivalStudio } from '@/engine/types';
 import { formatMoney } from '@/engine/utils';
 import { Button } from '@/components/ui/button';
@@ -24,8 +25,13 @@ interface LiveAuctionDashboardProps {
 }
 
 export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ opportunity: opp, onClose }) => {
-  const { placeBid, acquireOpportunity, gameState } = useGameStore();
-  const rivals = gameState?.entities.rivals || {};
+  const { placeBid, acquireOpportunity, rivals, cash, currentWeek } = useGameStore(useShallow(s => ({
+    placeBid: s.placeBid,
+    acquireOpportunity: s.acquireOpportunity,
+    rivals: s.gameState?.entities.rivals || {},
+    cash: s.gameState?.finance.cash || 0,
+    currentWeek: s.gameState?.week || 0
+  })));
   
   const currentHighest = useMemo(() => {
     return Object.values(opp.bids || {}).reduce((max, b) => Math.max(max, b.amount), 0);
@@ -42,11 +48,11 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ oppo
   }, [currentHighest]);
 
   const handleBid = (amount: number) => {
-    if (gameState && gameState.finance.cash < amount) return;
+    if (cash < amount) return;
     placeBid(opp.id, amount);
   };
 
-  const isExpired = gameState && gameState.week >= opp.expirationWeek;
+  const isExpired = currentWeek >= opp.expirationWeek;
 
   return (
     <div className="flex flex-col h-full space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
@@ -114,7 +120,7 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ oppo
                         key={btn.label}
                         variant="outline"
                         onClick={() => handleBid(btn.amount)}
-                        disabled={isExpired || (gameState?.finance.cash || 0) < btn.amount}
+                        disabled={isExpired || cash < btn.amount}
                         className={cn("h-12 flex flex-col items-center justify-center gap-0.5 border-white/5 group/btn transition-all active:scale-95", btn.color)}
                       >
                          <span className="text-[9px] font-black uppercase tracking-widest leading-none text-muted-foreground group-hover/btn:text-foreground">{btn.label}</span>
@@ -127,12 +133,12 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ oppo
                 <div className="p-4 rounded-xl bg-black/20 border border-white/5 space-y-4">
                    <div className="flex items-center justify-between">
                       <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">Your Liquidity</span>
-                      <span className="text-[10px] font-black text-foreground">{formatMoney(gameState?.finance.cash || 0)}</span>
+                      <span className="text-[10px] font-black text-foreground">{formatMoney(cash)}</span>
                    </div>
                    <div className="h-1.5 rounded-full bg-white/5 overflow-hidden">
                       <div 
                         className="h-full bg-primary transition-all duration-1000" 
-                        style={{ width: `${Math.min(100, (currentHighest / (gameState?.finance.cash || 1)) * 100)}%` }} 
+                        style={{ width: `${Math.min(100, (currentHighest / (cash || 1)) * 100)}%` }}
                       />
                    </div>
                    <div className="flex items-center gap-2 text-[9px] font-bold text-muted-foreground/40 italic">
