@@ -33,7 +33,7 @@ export function evaluateRenewal(
 
   // 📺 The Syndication Baron: Tweaked streaming renewal thresholds: platforms now cancel expensive shows faster if subscriber growth flatlines. Added further rewards for consistent season-over-season quality.
   if (project.budgetTier === 'blockbuster') {
-    dynamicThreshold += 6.5; // Cancel expensive shows faster (streaming wars penalty)
+    dynamicThreshold += 8.5; // 📺 The Syndication Baron: Cancel expensive shows instantly if they don't deliver.
   } else if (project.budgetTier === 'high') {
     dynamicThreshold += 4.5;
   } else if (project.budgetTier === 'indie') {
@@ -44,12 +44,12 @@ export function evaluateRenewal(
 
   // 📺 The Syndication Baron: Reward consistent season-over-season quality and syndication potential.
   if (project.tvDetails && project.tvDetails.currentSeason >= 4) {
-    dynamicThreshold -= 2.5; // Massive reward for reaching syndication milestone
+    dynamicThreshold -= 4.0; // 📺 The Syndication Baron: Massive reward for 100-episode syndication milestone
     if (project.reviewScore && project.reviewScore >= 80) {
       dynamicThreshold -= 1.0;
     }
   } else if (project.tvDetails && project.tvDetails.currentSeason > 1) {
-    dynamicThreshold -= 1.5; // Reward season-over-season quality
+    dynamicThreshold -= 2.0; // 📺 The Syndication Baron: Stronger reward for season-over-season quality retention.
     if (project.reviewScore && project.reviewScore >= 80) {
       dynamicThreshold -= 1.5; // Extra leniency for high quality established shows
     }
