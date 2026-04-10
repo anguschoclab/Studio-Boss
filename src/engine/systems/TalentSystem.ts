@@ -232,7 +232,10 @@ export class TalentSystem {
         draw: clamp(talent.draw + drawChange + talentAwardsDrawBonus, 0, 100),
         prestige: clamp(talent.prestige + prestigeChange + talentAwardsPrestigeBonus, 0, 100),
         fee: Math.round(clamp(talent.fee * finalFeeMultiplier, 10000, 75000000)),
-        ego: clamp((talent.psychology?.ego || 50) + talentAwardsEgoBoost, 0, 100)
+        psychology: {
+          ...talent.psychology,
+          ego: clamp((talent.psychology?.ego || 50) + talentAwardsEgoBoost, 0, 100)
+        }
       };
 
       updatedTalent.push(newTalent);

@@ -42,6 +42,7 @@ import {
 import { cn } from '@/lib/utils';
 import { DevelopmentLog } from './DevelopmentLog';
 import { TalentAttachmentPanel } from '../talent/TalentAttachmentPanel';
+import { calculateAudienceIndex } from '@/engine/systems/demographics';
 
 export const ProjectDetailModal = () => {
   const [selectedTier, setSelectedTier] = useState<'none' | 'basic' | 'blockbuster'>('none');

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { createCampaignSlice } from "../../store/slices/campaignSlice";
+import { createCampaignSlice } from "../../store/campaignSlice";
 import { GameState } from "../../engine/types";
 
 describe("campaignSlice", () => {

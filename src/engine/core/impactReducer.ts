@@ -76,6 +76,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
 
     case 'PROJECT_UPDATED': {
       const { projectId, update } = impact.payload;
+      if (!state.entities?.projects) return state;
       const projects = { ...state.entities.projects };
       const project = projects[projectId];
       if (project) {
@@ -111,6 +112,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
 
     case 'PROJECT_REMOVED': {
       const { projectId } = impact.payload;
+      if (!state.entities?.projects) return state;
       const projects = { ...state.entities.projects };
       delete projects[projectId];
       return {
@@ -135,6 +137,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
 
     case 'TALENT_UPDATED': {
       const { talentId, update } = impact.payload;
+      if (!state.entities?.talents) return state;
       const talents = { ...state.entities.talents };
       const talent = talents[talentId];
       if (talent) {
@@ -152,7 +155,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     case 'TALENT_ADDED': {
       if (!impact.payload) return state;
       const { talent } = impact.payload;
-      if (!talent) return state;
+      if (!talent || !state.entities) return state;
       return {
         ...state,
         entities: {
@@ -165,7 +168,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     case 'TALENT_REMOVED': {
       if (!impact.payload) return state;
       const { talentId } = impact.payload;
-      if (!talentId) return state;
+      if (!talentId || !state.entities?.talents) return state;
       const talents = { ...state.entities.talents };
       delete talents[talentId];
       return {
@@ -193,6 +196,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
 
     case 'RIVAL_UPDATED': {
       const { rivalId, update } = impact.payload;
+      if (!state.entities?.rivals) return state;
       const rivals = { ...state.entities.rivals };
       if (rivals[rivalId]) {
         rivals[rivalId] = { ...rivals[rivalId], ...update };

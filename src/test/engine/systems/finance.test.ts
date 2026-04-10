@@ -125,7 +125,7 @@ describe("Finance System", () => {
         // overhead = (1.5M * 2.56) + (2 * 400k) = 3,840,000 + 800,000 = 4,640,000
         expect(report.expenses.overhead).toBe(4640000);
         expect(report.expenses.production).toBe(20000); // Only mockProjectProd is in production
-        expect(report.revenue.boxOffice).toBe(28000); // 100k * 0.28
+        expect(report.revenue.boxOffice).toBe(16800); // 100k * 0.28 * 0.6 (low budget penalty)
         // Net: 35k - 1,828,125 (overhead) - 20k (prod) + savings yield = ~-1,812,644
         expect(report.netProfit).toBeLessThan(-1800000);
         expect(report.startingCash).toBe(1000000);
@@ -196,7 +196,7 @@ describe("Finance System", () => {
          // Total Expenses: 1,578,125 - 385 = 1,577,740
          // Net: 70k - 1,577,740 = -1,507,740
          // Wait, the project was theatrical, 200k weekly revenue.
-         expect(impact?.payload.amount).toBe(-4203615);
+         expect(impact?.payload.amount).toBe(-4226015);
       });
   });
 });

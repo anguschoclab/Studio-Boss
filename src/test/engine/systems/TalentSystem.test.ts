@@ -108,7 +108,7 @@ describe("TalentSystem", () => {
     };
 
     it("decrements opportunity expiry", () => {
-      const rng = new RandomGenerator(12345);
+        let rng = new RandomGenerator(12345);
       const state = getMockState();
       
       const impact = TalentSystem.advance(state, rng);
@@ -127,8 +127,8 @@ describe("TalentSystem", () => {
       };
       const rng = new RandomGenerator(42);
       const impact = TalentSystem.advance(state, rng);
-      expect(impact.talentUpdates[0].update.onMedicalLeave).toBe(false);
-      expect(impact.talentUpdates[0].update.fatigue).toBe(20);
+      expect(impact.talentUpdates![0].update.onMedicalLeave).toBe(false);
+      expect(impact.talentUpdates![0].update.fatigue).toBe(20);
     });
 
     it("triggers medical leave if fatigue > 95", () => {
@@ -138,18 +138,18 @@ describe("TalentSystem", () => {
       };
       const rng = new RandomGenerator(42);
       const impact = TalentSystem.advance(state, rng);
-      expect(impact.talentUpdates[0].update.onMedicalLeave).toBe(true);
-      expect(impact.talentUpdates[0].update.medicalLeaveEndsWeek).toBe(22);
+      expect(impact.talentUpdates![0].update.onMedicalLeave).toBe(true);
+      expect(impact.talentUpdates![0].update.medicalLeaveEndsWeek).toBe(22);
     });
 
     it("cleans up expired commitments", () => {
       const state = createMockGameState({ week: 10 });
       state.entities.talents = {
-         "t3": createMockTalent({ id: "t3", commitments: [{ projectId: 'p1', endWeek: 9, weeklyFee: 1000 }] })
+         "t3": createMockTalent({ id: "t3", commitments: [{ projectId: 'p1', endWeek: 9, startWeek: 1, projectTitle: 'Old Show', role: 'actor', format: 'series' }] })
       };
       const rng = new RandomGenerator(42);
       const impact = TalentSystem.advance(state, rng);
-      expect(impact.talentUpdates[0].update.commitments).toEqual([]);
+      expect(impact.talentUpdates![0].update.commitments).toEqual([]);
     });
   });
 

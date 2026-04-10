@@ -166,6 +166,9 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
     for (let i = 0; i < candidates.length; i++) {
       const p = candidates[i];
       
+      // Skip if category evaluator is defined and project doesn't match
+      if (config.evaluator && !config.evaluator(p)) continue;
+      
       // Weighting system
       // Campaign data might be in different places depending on implementation, 
       // but let's assume it's moved to the projects themselves or a specific registry.

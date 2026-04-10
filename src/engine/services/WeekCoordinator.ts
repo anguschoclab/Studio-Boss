@@ -49,7 +49,7 @@ import { shouldAttemptHostileTakeover } from '../systems/ai/AgentBrain';
 
 // Orphan Wiring
 import { detectCultClassic } from '../systems/ip/ipValuation';
-import { generateRebootProposal } from '../systems/ip/ipRebootEngine';
+// import { generateRebootProposal } from '../systems/ip/ipRebootEngine';
 import { evaluatePilot } from '../systems/production/pilotEvaluator';
 import { calculateAudienceIndex } from '../systems/demographics';
 import { resolveCrisisWithHandlers } from '../systems/production/crisisEvaluator';
@@ -106,6 +106,7 @@ export class WeekCoordinator {
       ...nextState,
       week: context.week,
       tickCount: context.tickCount,
+      rngState: context.rng.getState(),
       eventHistory: context.events.length > 0 ? [...(state.eventHistory || []), ...context.events].slice(-52) : (state.eventHistory || []),
       finance: {
         ...nextState.finance,
@@ -364,6 +365,7 @@ export class WeekCoordinator {
 
   private static runScandalFilter(state: GameState, context: TickContext) {
     context.impacts.push(...generateScandals(state, context.rng));
+    // if (context.week % 8 === 0) context.impacts.push(generateRebootProposal(state, context.rng));
     context.impacts.push(...advanceScandals(state));
   }
 
@@ -447,7 +449,7 @@ export class WeekCoordinator {
     const internalIP = vault.filter(v => v.rightsOwner === 'STUDIO');
     if (internalIP.length > 0 && context.rng.next() < 0.2) {
        const targetIP = context.rng.pick(internalIP);
-       const proposal = generateRebootProposal(context.rng, targetIP);
+       // const proposal = generateRebootProposal(context.rng, targetIP);
        if (proposal) {
           context.impacts.push({
              type: 'MODAL_TRIGGERED',

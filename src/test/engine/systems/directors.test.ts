@@ -94,14 +94,14 @@ describe("processDirectorDisputes", () => {
   it("returns empty impact if project is not in production phase", () => {
     const project = createMockProject({ state: 'development' as any });
     const results = processDirectorDisputes(project, [], {}, new RandomGenerator(1));
-    expect(results).toEqual([]);
+    expect(results).toEqual({ projectUpdates: [], uiNotifications: [] });
   });
 
   it("returns empty impact if there is no director contract", () => {
     const project = createMockProject({ id: "p-current", state: 'production' });
     const contract = createMockContract({ projectId: "p-other" });
     const results = processDirectorDisputes(project, [contract], {}, new RandomGenerator(1));
-    expect(results).toEqual([]);
+    expect(results).toEqual({ projectUpdates: [], uiNotifications: [] });
   });
 
   it("returns empty impact if talent is not a director", () => {
@@ -111,7 +111,7 @@ describe("processDirectorDisputes", () => {
     const pool = { "t-1": talent };
 
     const results = processDirectorDisputes(project, [contract], pool, new RandomGenerator(1));
-    expect(results).toEqual([]);
+    expect(results).toEqual({ projectUpdates: [], uiNotifications: [] });
   });
 
   it("can spawn a budget dispute for auteur", () => {

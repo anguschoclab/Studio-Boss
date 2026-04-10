@@ -47,7 +47,7 @@ export interface TalentCommitment {
 export type TalentPactType = 'first_look' | 'vanity_shingle' | 'overall_deal';
 
 export interface TalentPact {
-  id: string;
+  id?: string;
   talentId: string;
   studioId: string;
   type: TalentPactType;

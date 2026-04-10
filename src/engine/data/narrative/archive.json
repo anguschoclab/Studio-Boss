@@ -52,6 +52,28 @@
         "A-list package provides a strong market floor and awards potential.",
         "The attached talent brings immediate gravity and awards buzz."
       ]
+    },
+    "MarketSat": {
+      "Risky": [
+        "The market is oversaturated with {{genre}} projects; audiences are reaching a breaking point.",
+        "Significant market saturation for {{genre}} makes this a difficult sell right now.",
+        "Competing projects have exhausted the {{genre}} audience this season."
+      ],
+      "Prestige": [
+        "A clear calendar gap for {{genre}} provides a massive opportunity for market capture.",
+        "The market is starved for a quality {{genre}} project; excellent timing.",
+        "Zero competition in the {{genre}} space for the next year."
+      ]
+    },
+    "Marketing": {
+      "Risky": [
+        "Low project buzz makes this a risky theatrical proposition.",
+        "The audience awareness is non-existent; marketing will be an uphill battle."
+      ],
+      "Prestige": [
+        "Massive organic buzz provides a built-in audience and reduced marketing risk.",
+        "Viral momentum for this project is through the roof."
+      ]
     }
   },
   "Talent": {

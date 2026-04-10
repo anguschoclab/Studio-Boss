@@ -8,7 +8,7 @@ describe('System Connectivity - Phase 3 Integration', () => {
     let rng: RandomGenerator;
 
     beforeEach(() => {
-        rng = new RandomGenerator('test-seed');
+        rng = new RandomGenerator(12345);
         state = initializeGame('Test Studio', 'major', 12345);
     });
 

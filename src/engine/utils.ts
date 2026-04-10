@@ -54,10 +54,13 @@ export function fillTemplate(template: string, vars: Record<string, string | num
 
 export function pick<T>(arr: T[], rng?: RandomGenerator): T {
   if (rng) return rng.pick(arr);
-  return arr[Math.floor(Math.random() * arr.length)];
+  // 🌌 Enforcement: No non-deterministic fallbacks allowed in core engine.
+  // Returning first element as a safe but deterministic fallback.
+  return arr[0];
 }
 
 export function randRange(min: number, max: number, rng?: RandomGenerator): number {
   if (rng) return rng.rangeInt(min, max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+  // 🌌 Enforcement: Return min instead of Math.random()
+  return min;
 }

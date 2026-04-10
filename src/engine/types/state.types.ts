@@ -14,7 +14,7 @@ export interface CampaignData {
 }
 
 export interface WeeklyFinancialReport {
-  id: string; // 🌌 Standardized UUID for this record
+  id?: string; // 🌌 Standardized UUID for this record
   week: number;
   year: number;
   startingCash: number;
@@ -34,7 +34,7 @@ export interface WeeklyFinancialReport {
 }
 
 export interface FinancialSnapshot {
-  id: string; // 🌌 Standardized UUID for this snapshot
+  id?: string; // 🌌 Standardized UUID for this snapshot
   week: number;
   revenue: {
     theatrical: number;
@@ -82,7 +82,7 @@ export interface NewsState {
 export type IPAssetTier = 'ORIGINAL' | 'BLOCKBUSTER' | 'CULT_CLASSIC' | 'LEGACY';
 
 export interface IPAsset {
-  id: string;
+  id?: string;
   originalProjectId: string;
   title: string;
   franchiseId?: string; 

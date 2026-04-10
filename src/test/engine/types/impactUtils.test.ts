@@ -5,6 +5,14 @@ import { applyImpacts } from '@/engine/core/impactReducer';
 describe('Impact Reducer (Target A1)', () => {
   const initialState: GameState = {
     week: 1,
+    entities: {
+      projects: {
+        'p1': { id: 'p1', title: 'Movie A', type: 'FILM', buzz: 50 } as any
+      },
+      talents: {},
+      contracts: {},
+      rivals: {}
+    },
     finance: {
       cash: 1000000,
       ledger: []
@@ -13,24 +21,16 @@ describe('Impact Reducer (Target A1)', () => {
       name: 'Alpha Studios',
       prestige: 50,
       internal: {
-        projects: {
-          'p1': { id: 'p1', title: 'Movie A', type: 'FILM', buzz: 50 } as any
-        },
-        contracts: []
+        projectHistory: [],
+        firstLookDeals: []
       }
     },
     industry: {
-       talentPool: {},
-       rivals: [],
-       awards: [],
-       scandals: [],
        newsHistory: []
     },
     market: {
-       buyers: [],
-       trends: [],
-       activeMarketEvents: [],
-       opportunities: []
+       opportunities: [],
+       trends: []
     }
   } as unknown as GameState;
 

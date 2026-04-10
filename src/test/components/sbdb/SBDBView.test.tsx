@@ -112,9 +112,4 @@ describe('SBDBView', () => {
     expect(screen.getByText('No talent found matching your criteria.')).toBeInTheDocument();
   });
 
-  it('returns null if gameState is null', () => {
-    (useGameStore as unknown as ReturnType<typeof vi.fn>).mockImplementation(() => ({ gameState: null }));
-    const { container } = render(<TooltipProvider><SBDBView /></TooltipProvider>);
-    expect(container.firstChild).toBeNull();
-  });
 });

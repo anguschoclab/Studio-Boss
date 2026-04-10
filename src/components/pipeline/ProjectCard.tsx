@@ -52,6 +52,12 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
         onClick={() => selectProject(project.id)}
         aria-label={`View details for ${project.title}`}
         data-testid={`project-card-${project.id}`}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            selectProject(project.id);
+          }
+        }}
         className="w-full text-left p-4 rounded-xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-transparent backdrop-blur-md hover:bg-white/[0.12] hover:border-primary/40 transition-all duration-500 space-y-4 group relative overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl hover:-translate-y-1 animate-in fade-in slide-in-from-bottom-2 duration-500"
       >
         {/* Visual Accent */}
@@ -194,7 +200,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
             </Button>
           )}
         </div>
-      </div>
+      </button>
     </TooltipWrapper>
   );
 };

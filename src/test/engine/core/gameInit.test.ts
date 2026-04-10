@@ -7,8 +7,8 @@ describe("initializeGame", () => {
     const state = initializeGame("My Studio", "major", seed);
     expect(state.studio.name).toBe("My Studio");
     expect(state.studio.archetype).toBe("major");
-    expect(state.entities.projects).toEqual({});
-    expect(state.entities.rivals).toHaveLength(10);
+    expect(Object.keys(state.entities.projects).length).toBeGreaterThan(0);
+    expect(Object.keys(state.entities.rivals)).toHaveLength(10);
     expect(state.week).toBe(1);
     expect(state.news.headlines).toHaveLength(1);
     expect(state.news.headlines[0].text).toContain("My Studio");

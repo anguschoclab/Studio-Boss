@@ -40,7 +40,7 @@ describe("gameStore", () => {
     const state = useGameStore.getState().gameState!;
     useGameStore.setState({ gameState: state });
 
-    const summary = useGameStore.getState().doAdvanceWeek();
+    const summary = await useGameStore.getState().doAdvanceWeek();
     expect(summary).not.toBeNull();
     expect(summary!.fromWeek).toBe(1);
     expect(useGameStore.getState().gameState?.week).toBe(2);

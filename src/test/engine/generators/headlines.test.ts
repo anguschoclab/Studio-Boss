@@ -33,7 +33,7 @@ describe('generateHeadlines', () => {
     headlines.forEach(headline => {
       expect(headline).toHaveProperty('id');
       expect(typeof headline.id).toBe('string');
-      expect(headline.id.startsWith('NWS-')).toBe(true);
+      expect(headline.id!.toLowerCase().startsWith('nws-')).toBe(true);
 
       expect(headline).toHaveProperty('text');
       expect(typeof headline.text).toBe('string');

@@ -156,6 +156,7 @@ export const BardResolver = {
     if (rng) {
       return rng.pick(items);
     }
-    return items[Math.floor(Math.random() * items.length)];
+    // 🌌 Enforcement: Return first element instead of using Math.random()
+    return items[0];
   }
 };

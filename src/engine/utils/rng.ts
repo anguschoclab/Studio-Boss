@@ -52,7 +52,8 @@ export class RandomGenerator {
   uuid(prefix: string = ''): string {
     const part = () => Math.floor(this.next() * 0xffffffff).toString(16).padStart(8, '0');
     const id = `${part()}-${part().slice(0, 4)}-${part().slice(0, 4)}-${part().slice(0, 4)}-${part().slice(0, 12)}`;
-    return prefix ? `${prefix}-${id}` : id;
+    const lowerPrefix = prefix.toLowerCase();
+    return lowerPrefix ? `${lowerPrefix}-${id}` : id;
   }
 
   /**

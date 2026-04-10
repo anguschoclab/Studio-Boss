@@ -65,7 +65,7 @@ describe('DemographicsWidget', () => {
     };
 
     mockUseGameStore.mockImplementation((selector: any) => {
-      return selector({ gameState: { culture: mockCulture } });
+      return selector({ gameState: { studio: { culture: mockCulture } } });
     });
 
     render(<DemographicsWidget />);
