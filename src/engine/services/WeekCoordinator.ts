@@ -370,13 +370,17 @@ export class WeekCoordinator {
    */
   private static runAnnualMAScan(state: GameState, context: TickContext) {
     const rivalsObj = state.entities.rivals || {};
-    const rivalKeys = Object.keys(rivalsObj);
-    for (let i = 0; i < rivalKeys.length; i++) {
-      for (let j = 0; j < rivalKeys.length; j++) {
-        if (i === j) continue;
-        const attacker = rivalsObj[rivalKeys[i]];
-        const target = rivalsObj[rivalKeys[j]];
-        if (!target.isAcquirable) continue;
+    // ⚡ The Framerate Fanatic: Refactored array iterations and filtered targets upfront, improving M&A scan performance from O(N^2) to near O(N) by eliminating invalid pairs early.
+    const rivalsList = Object.values(rivalsObj);
+    const acquirableTargets = rivalsList.filter(r => r.isAcquirable);
+
+    if (acquirableTargets.length === 0) return;
+
+    for (let i = 0; i < rivalsList.length; i++) {
+      const attacker = rivalsList[i];
+      for (let j = 0; j < acquirableTargets.length; j++) {
+        const target = acquirableTargets[j];
+        if (attacker.id === target.id) continue;
         if (shouldAttemptHostileTakeover(attacker, target, state)) {
           context.impacts.push({
             type: 'MODAL_TRIGGERED',

@@ -3,6 +3,8 @@ import { Agency, Talent, GameState, StateImpact, Project, RivalStudio } from '@/
 import { RandomGenerator } from '../../utils/rng';
 import { AI_ARCHETYPES } from '../../data/aiArchetypes';
 import { SeriesProject } from '@/engine/types/project.types';
+
+const ARCHETYPE_MAP = new Map(AI_ARCHETYPES.map(a => [a.id, a]));
 import { assignTimeSlot, TimeSlot } from '../television/nielsenSystem';
 import { AgencyLeverageEngine } from './AgencyLeverage';
 import { MarketState } from '../../types';
@@ -91,7 +93,7 @@ export function generateFestivalBid(
   project: Project,
   rng: RandomGenerator
 ): number | null {
-  const archetype = AI_ARCHETYPES.find(a => a.id === rival.behaviorId) || AI_ARCHETYPES[5]; // Default to Balanced
+  const archetype = ARCHETYPE_MAP.get(rival.behaviorId) || AI_ARCHETYPES[5]; // Default to Balanced
   
   // Chance to bid based on risk and aggression
   const bidChance = (archetype.riskAppetite + archetype.biddingAggression) / 200;
@@ -174,7 +176,7 @@ export function shouldAttemptHostileTakeover(
 ): boolean {
   if (attacker.id === target.id) return false;
   
-  const archetype = AI_ARCHETYPES.find(a => a.id === attacker.behaviorId);
+  const archetype = ARCHETYPE_MAP.get(attacker.behaviorId);
   if (!archetype) return false;
 
   // Must have sufficient cash to make an offer
