@@ -7,7 +7,7 @@ import { RandomGenerator } from '../../utils/rng';
  * Churn = CurrentSubs * ChurnRate
  */
 function calculateSubChange(platform: StreamerPlatform, rng: RandomGenerator, seasonOverSeasonQuality: number = 0): number {
-  const baseGrowthRate = 0.02; // 2% weekly base potential
+  const baseGrowthRate = 0.015; // 📺 The Syndication Baron: Slower base growth as streaming market saturates.
   const qualityFactor = platform.contentLibraryQuality / 100;
   // Use a fallback for marketingSpend if not defined
   const marketingFactor = (platform.marketingSpend || 0) / 500000; // Normalized to 500k
@@ -26,13 +26,13 @@ function calculateSubChange(platform: StreamerPlatform, rng: RandomGenerator, se
     const growthPercent = pastSubs > 0 ? (currentSubs - pastSubs) / pastSubs : 0;
     // 📺 The Syndication Baron: Tweaked streaming subscriber churn rates. Aggressively penalizing platforms that fail to retain subscribers or flatline in the cutthroat streaming wars.
     if (growthPercent < 0.0) {
-      dynamicChurnRate = Math.min(0.85, dynamicChurnRate * 8.5); // Devastating Penalty for negative growth
+      dynamicChurnRate = Math.min(0.95, dynamicChurnRate * 12.0); // 📺 The Syndication Baron: Total subscriber exodus for negative growth.
     } else if (growthPercent < 0.01) {
-      dynamicChurnRate = Math.min(0.65, dynamicChurnRate * 6.5); // Extreme Penalty
+      dynamicChurnRate = Math.min(0.80, dynamicChurnRate * 8.5); // Extreme Penalty
     } else if (growthPercent < 0.02) {
       dynamicChurnRate = Math.min(0.50, dynamicChurnRate * 5.0); // Aggressive Penalty
     } else if (growthPercent > 0.15) {
-      dynamicChurnRate = Math.max(0.005, dynamicChurnRate * 0.3); // Massive Bonus for hyper growth
+      dynamicChurnRate = Math.max(0.001, dynamicChurnRate * 0.15); // Massive Bonus for hyper growth
     } else if (growthPercent > 0.08) {
       dynamicChurnRate = Math.max(0.01, dynamicChurnRate * 0.5); // Strong Bonus
     }
