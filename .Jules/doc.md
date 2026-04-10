@@ -73,3 +73,17 @@
 * `docs/script_drafting_mechanics.md`: Document the conditions, percentages, and mechanical impacts of the new `tickScriptDevelopment` evolution events.
 * **Code Paths Covered:** `src/engine/systems/production/ScriptDraftingSystem.ts` (`tickScriptDevelopment`)
 * **Key Knowledge Gaps Addressed:** Explains how a project's `activeRoles`, `scriptHeat`, and `buzz` dynamically shift during the `development` phase, clarifying the emergent packaging stories.
+### 📝 Daily Progress & Docs Update
+
+#### 🏗️ Codebase Status:
+* Implemented core Marketing System evaluation logic (`efficiencyEvaluator.ts` and `marketing_mechanics.md`), including angle mismatch penalties, budget scale logic, and hype decay.
+* The current work in progress appears to be focused on refining the Marketing System and execution pipeline.
+
+#### 📖 Design Bible Alignment:
+* ✅ **Aligned:** The implementation correctly includes a mismatch penalty when angles don't align with the genre, and hype decay for campaigns that run too long, matching the logic specified in the design doc.
+* ⚠️ **Missing/Deviations:** Missing the "Audience Definition Layer" (Section 36.39.1) where players should define primary/secondary audiences, age bands, etc. Missing the secondary messaging strategy selection (Section 36.39.2). Additionally, several marketing angles mentioned in the design doc are missing from `MarketingAngle` in `project.types.ts` (e.g., "sell the scares", "sell the romance", "sell the comedy", "sell the world / mythology", "sell the true-story hook", "sell the music").
+
+#### 📄 Proposed Documentation Updates:
+* `docs/marketing_mechanics.md`: Add a section detailing the planned implementation of the Audience Definition Layer and expand the list of Marketing Focus Modes (Angles) to fully cover all options described in the Master Design Bible.
+* **Code Paths Covered:** `evaluateMarketingEfficiency` in `src/engine/systems/marketing/efficiencyEvaluator.ts` and `MarketingAngle` / `MarketingCampaign` interfaces in `src/engine/types/project.types.ts`.
+* **Key Knowledge Gaps Addressed:** Clarifies the divergence between the current implementation of Marketing Angles and the full feature set outlined in the Master Design Bible, preparing for future expansions.
