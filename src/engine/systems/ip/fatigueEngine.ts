@@ -51,6 +51,11 @@ export function calculateFranchiseFatigue(
     currentFatigue *= 2.5;
   }
 
+  // 🌌 The Universe Builder: Severe superhero burnout for 4+ active projects.
+  if (activeCount >= 4 && normalizedGenre === 'Superhero') {
+    currentFatigue *= 2.5;
+  }
+
   // Space Opera / Sci-Fi massive fatigue after 4 active projects
   // 🌌 The Universe Builder: High-concept universes collapse under their own weight.
   if (activeCount >= 4 && (normalizedGenre === 'Space Opera' || normalizedGenre === 'Sci-Fi')) {
@@ -120,9 +125,18 @@ export function calculateReleaseGapImpact(
   const weeksSince = currentWeek - mostRecent;
   const yearsSince = weeksSince / 52;
   
+  // 🌌 The Universe Builder: Generational Pass-Down for legendary IPs.
+  if (yearsSince >= 20) {
+    return {
+      buzzBonus: 85,
+      label: 'Generational Pass-Down (Legendary Status)',
+      fatigueReset: true
+    };
+  }
+
   // 0. The Generational Revival (15+ years / 780+ weeks)
   // 🌌 The Universe Builder: When IP has been dormant for a full generation, it returns as a monumental cultural event.
-  if (yearsSince >= 15) {
+  if (yearsSince >= 15 && yearsSince < 20) {
     return {
       buzzBonus: 75,
       label: 'Generational Revival (Cultural Event)',
@@ -132,14 +146,6 @@ export function calculateReleaseGapImpact(
 
   // 1. The Nostalgia Spike (10+ years / 520+ weeks)
   // Real-life: Top Gun Maverick, The Force Awakens.
-  if (yearsSince >= 15) {
-    // 🌌 The Universe Builder: Already covered by Generational Revival above, but adding this for safety.
-    return {
-      buzzBonus: 75,
-      label: 'Generational Revival (Cultural Event)',
-      fatigueReset: true
-    };
-  }
 
   // 🌌 The Universe Builder: Belated Sequel Apathy. Releasing a sequel after 11-14 years is often seen as "too late" but not quite a full nostalgic revival yet.
   if (yearsSince >= 11 && yearsSince < 15) {
