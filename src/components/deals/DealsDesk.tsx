@@ -17,11 +17,15 @@ export const DealsDesk = () => {
   const { openPitchProject } = useUIStore();
   const [selectedProjectId, setSelectedProjectId] = React.useState<string | null>(null);
 
-  const buyers = useGameStore(useShallow(s => selectBuyers(s.gameState)));
-  const projects = useGameStore(useShallow(s => selectProjects(s.gameState)));
-  const week = useGameStore(s => s.gameState?.week || 0);
-  const activeDeals: TalentPact[] = useGameStore(useShallow(s => s.gameState?.deals?.activeDeals ?? []));
-  const talentPool = useGameStore(useShallow(s => s.gameState?.industry?.talentPool ?? {}));
+  const { buyers, projects, week, activeDeals, talentPool } = useGameStore(
+    useShallow(s => ({
+      buyers: selectBuyers(s.gameState),
+      projects: selectProjects(s.gameState),
+      week: s.gameState?.week || 0,
+      activeDeals: s.gameState?.deals?.activeDeals ?? [],
+      talentPool: s.gameState?.industry?.talentPool ?? {},
+    }))
+  );
 
   const pitchingProjects = React.useMemo(() =>
     projects.filter(p => p.state === 'pitching' || p.state === 'development'),
