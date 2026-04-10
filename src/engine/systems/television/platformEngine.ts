@@ -78,7 +78,7 @@ export function tickPlatforms(state: GameState, rng: RandomGenerator): StateImpa
           const project = state.entities.projects[license.projectId];
           if (project && project.type === 'SERIES' && 'tvDetails' in project) {
             const seriesProject = project as import('@/engine/types').SeriesProject;
-            if (seriesProject.tvDetails && seriesProject.tvDetails.currentSeason > 1 && seriesProject.reviewScore) {
+            if (seriesProject.tvDetails.currentSeason > 1 && seriesProject.reviewScore != null) {
               totalScore += seriesProject.reviewScore;
               count++;
             }
