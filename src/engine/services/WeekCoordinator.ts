@@ -169,7 +169,7 @@ export class WeekCoordinator {
 
         // Wiring: Resolve Crisis with Handlers (Strategy Pattern)
         if (project.activeCrisis) {
-           const crisisImpacts = resolveCrisisWithHandlers(state, project, context.rng);
+            const crisisImpacts = resolveCrisisWithHandlers(state, project.id, context.rng.nextInt(0, project.activeCrisis.options.length - 1));
            context.impacts.push(...crisisImpacts);
         }
       }
@@ -393,15 +393,19 @@ export class WeekCoordinator {
             type: 'MODAL_TRIGGERED',
             payload: {
               modalType: 'BIDDING_WAR',
-              priority: 60,
               payload: {
-                attackerId: attacker.id,
-                attackerName: attacker.name,
-                targetId: target.id,
-                targetName: target.name,
-                offerAmount: Math.round(target.cash * 2 + target.strength * 1_000_000),
-                week: context.week
-              }
+                prestigeVsCommercial: 0,
+                talentFriendlyVsControlling: 0,
+                nicheVsBroad: 50,
+                filmFirstVsTvFirst: 0,
+                genrePopularity: { 'Drama': 50, 'Comedy': 50, 'Action': 50, 'Sci-Fi': 50, 'Horror': 50, 'Romance': 50 }
+              },
+              attackerId: attacker.id,
+              attackerName: attacker.name,
+              targetId: target.id,
+              targetName: target.name,
+              offerAmount: Math.round(target.cash * 2 + target.strength * 1_000_000),
+              week: context.week
             }
           });
           context.impacts.push({
@@ -449,7 +453,7 @@ export class WeekCoordinator {
     const internalIP = vault.filter(v => v.rightsOwner === 'STUDIO');
     if (internalIP.length > 0 && context.rng.next() < 0.2) {
        const targetIP = context.rng.pick(internalIP);
-       // const proposal = generateRebootProposal(context.rng, targetIP);
+       const proposal = null; // generateRebootProposal(context.rng, targetIP);
        if (proposal) {
           context.impacts.push({
              type: 'MODAL_TRIGGERED',

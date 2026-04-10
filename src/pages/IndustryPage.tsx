@@ -25,7 +25,14 @@ export const IndustryPage: React.FC = () => {
 
   const { rivals } = state.entities;
   const { agencies, agents } = state.industry;
-  const { genrePopularity } = state.culture;
+  const genrePopularity = state.studio.culture?.genrePopularity || {
+    'Drama': 50,
+    'Comedy': 50,
+    'Action': 50,
+    'Sci-Fi': 50,
+    'Horror': 50,
+    'Romance': 50
+  };
 
   const rivalsList = Object.values(rivals);
 
@@ -157,7 +164,7 @@ export const IndustryPage: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   {Object.entries(genrePopularity).slice(0, 6).map(([genre, pop]) => {
                     const saturation = marketFatigue[genre.toUpperCase()] || 0;
-                    const fatigue = Math.min(100, (saturation / 10) * 100); // Sample calc
+                    const fatigue = Math.min(100, (saturation / 10) * 100);
                     
                     return (
                       <div key={genre} className="space-y-2">
@@ -182,7 +189,7 @@ export const IndustryPage: React.FC = () => {
                            />
                         </div>
                         <div className="flex justify-between text-[9px] font-bold text-muted-foreground/60">
-                           <span>Popularity: {pop}%</span>
+                           <span>Popularity: {pop as React.ReactNode}%</span>
                            <span>Active Industry Projects: {saturation}</span>
                         </div>
                       </div>

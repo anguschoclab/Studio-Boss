@@ -18,10 +18,11 @@ export function initializeCulture(archetype: ArchetypeKey): StudioCulture {
       };
     default:
       return {
-        prestigeVsCommercial: 50,
-        talentFriendlyVsControlling: 50,
+        prestigeVsCommercial: 0,
+        talentFriendlyVsControlling: 0,
         nicheVsBroad: 50,
-        filmFirstVsTvFirst: 50
+        filmFirstVsTvFirst: 0,
+        genrePopularity: { 'Drama': 50, 'Comedy': 50, 'Action': 50, 'Sci-Fi': 50, 'Horror': 50, 'Romance': 50 }
       };
   }
 }

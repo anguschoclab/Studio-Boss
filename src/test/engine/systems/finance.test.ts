@@ -114,7 +114,7 @@ describe("Finance System", () => {
           stateWithDist.finance.cash,
           stateWithDist.studio.archetype,
           stateWithDist.studio.prestige,
-          contractsList,
+          contractsList as Contract[],
           [],
           rng
         );
@@ -234,7 +234,7 @@ describe('Finance Edge Cases', () => {
         state.finance.cash,
         state.studio.archetype,
         state.studio.prestige,
-        contractsList,
+        contractsList as Contract[],
         state.studio.internal.firstLookDeals || [],
         rng
       );
@@ -295,7 +295,7 @@ describe('Finance Edge Cases', () => {
       state.finance.cash,
       state.studio.archetype,
       state.studio.prestige,
-      contractsList,
+      contractsList as Contract[],
       state.studio.internal.firstLookDeals || [],
       rng
     );

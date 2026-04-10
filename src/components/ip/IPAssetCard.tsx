@@ -125,7 +125,7 @@ export const IPAssetCard = ({ asset, isMarket = false }: IPAssetCardProps) => {
                 className="h-7 text-[8px] font-black bg-amber-500/10 hover:bg-amber-500 text-amber-500 hover:text-black border border-amber-500/20 px-3 uppercase tracking-widest"
                 onClick={(e) => {
                   e.stopPropagation();
-                  acquireAndRebootIP(asset.id);
+                  if (asset.id) acquireAndRebootIP(asset.id);
                 }}
                >
                  Acquire & Reboot

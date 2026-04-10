@@ -9,7 +9,7 @@ import { RandomGenerator } from '@/engine/utils/rng';
 export interface FinanceSlice {
   finance: FinanceState;
   addLedgerEntry: (report: WeeklyFinancialReport) => void;
-  launchMarketingCampaign: (projectId: string, budget: number, domesticPct: number, angle: string) => void;
+  launchReleaseMarketing: (projectId: string, budget: number, domesticPct: number, angle: string) => void;
   executeMarketingEvent: (eventName: 'superbowl_ad' | 'viral_campaign' | 'press_tour', cost: number, projectId: string) => void;
   addFunds: (amount: number) => void;
 }
@@ -66,7 +66,7 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
       };
     }),
 
-  launchMarketingCampaign: (projectId, budget, domesticPct, angle) => {
+  launchReleaseMarketing: (projectId, budget, domesticPct, angle) => {
     set((s) => {
       const state = s.gameState;
       if (!state) return s;

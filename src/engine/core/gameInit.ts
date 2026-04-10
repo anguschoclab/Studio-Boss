@@ -248,9 +248,9 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
       culture: {
         prestigeVsCommercial: 0,
         talentFriendlyVsControlling: 0,
-        nicheVsBroad: 0,
+        nicheVsBroad: 50,
         filmFirstVsTvFirst: 0,
-        genrePopularity
+        genrePopularity: { 'Drama': 50, 'Comedy': 50, 'Action': 50, 'Sci-Fi': 50, 'Horror': 50, 'Romance': 50 }
       },
       activeCampaigns: {},
     },
@@ -281,6 +281,5 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
     },
     history: [],
     eventHistory: [],
-    activeCampaigns: {},
   };
 }

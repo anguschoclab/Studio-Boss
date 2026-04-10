@@ -16,12 +16,16 @@ describe('Agent Brain (Target C2)', () => {
   });
 
   const mockState = createMockGameState({
+    entities: {
+      rivals: {},
+      projects: {},
+      talents: {},
+      contracts: {}
+    },
     industry: {
-      rivals: [],
       families: [],
       agencies: [mockAgency],
       agents: [],
-      talentPool: {},
       newsHistory: []
     }
   });
