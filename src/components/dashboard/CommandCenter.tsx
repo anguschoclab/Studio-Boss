@@ -15,7 +15,10 @@ export const CommandCenter: React.FC = () => {
   if (!gameState || !gameState.studio || !gameState.industry) return null;
 
   const projects = Object.values(gameState.entities.projects || {});
-  const { talentPool, rivals, newsHistory } = gameState.industry;
+  const talentPool = gameState?.entities?.talents ?? {};
+  const rivals = gameState?.entities?.rivals ?? {};
+  const newsHistory = gameState?.industry?.newsHistory ?? [];
+
   const normalizedTalents = gameState.entities.talents;
   const normalizedRivals = gameState.entities.rivals;
 

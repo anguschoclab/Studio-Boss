@@ -58,10 +58,8 @@ describe('PitchProjectModal', () => {
   ];
 
   const mockGameState = {
-    studio: {
-      internal: {
-        projects: { [mockProject.id]: mockProject }
-      }
+    entities: {
+      projects: { [mockProject.id]: mockProject }
     },
     market: {
       buyers: mockBuyers

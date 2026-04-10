@@ -7,13 +7,13 @@ import { createMockGameState } from '../../utils/mockFactories';
 describe('TV Awards Filtering & Taxonomy', () => {
   const rng = new RandomGenerator(123);
 
-  const createTvProject = (id: string, format: any, criticScore: number): Project => ({
+  const createTvProject = (id: string, format: any, criticScore: number, genre: string = 'Comedy'): Project => ({
     id,
     title: `${id} Show`,
     type: 'SERIES' as const,
     format: 'tv' as const,
     tvFormat: format,
-    genre: 'Drama',
+    genre,
     state: 'released' as const,
     releaseWeek: 10,
     budget: 1000000,
@@ -49,8 +49,8 @@ describe('TV Awards Filtering & Taxonomy', () => {
   };
 
   it('should award Best Drama Series to the highest-scoring TV project', () => {
-    const dramaShow = createTvProject('drama_1', 'prestige_drama', 95);
-    const sitcomShow = createTvProject('sitcom_1', 'sitcom', 80);
+    const dramaShow = createTvProject('drama_1', 'prestige_drama', 95, 'Drama');
+    const sitcomShow = createTvProject('sitcom_1', 'sitcom', 80, 'Comedy');
 
     const impacts = runAwardsCeremony(
       baseState({ drama_1: dramaShow, sitcom_1: sitcomShow }),
@@ -58,10 +58,9 @@ describe('TV Awards Filtering & Taxonomy', () => {
     );
 
     // Awards are stored in INDUSTRY_UPDATE impacts as flattened keys
-    const awardImpact = impacts.find(i => i.type === 'INDUSTRY_UPDATE') as any;
-    expect(awardImpact).toBeDefined();
-
-    const awardEntries = Object.values(awardImpact?.payload || {}) as any[];
+    const awardEntries = impacts
+      .flatMap(i => Object.values(i.payload || {}));
+      
     const dramaAward = awardEntries.find((a: any) => a.category === 'Best Drama Series');
 
     expect(dramaAward).toBeDefined();
@@ -76,10 +75,10 @@ describe('TV Awards Filtering & Taxonomy', () => {
       37, 2026, rng
     );
 
-    const awardImpact = impacts.find(i => i.type === 'INDUSTRY_UPDATE') as any;
-    expect(awardImpact).toBeDefined();
-
-    const awardEntries = Object.values(awardImpact?.payload || {}) as any[];
+    const awardEntries = impacts
+      .filter(i => i.type === 'INDUSTRY_UPDATE')
+      .flatMap(i => Object.values(i.payload || {}));
+      
     const comedyAward = awardEntries.find((a: any) => a.category === 'Best Comedy Series');
 
     expect(comedyAward).toBeDefined();

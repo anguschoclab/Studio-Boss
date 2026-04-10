@@ -50,7 +50,7 @@ import { shouldAttemptHostileTakeover } from '../systems/ai/AgentBrain';
 // Orphan Wiring
 import { detectCultClassic } from '../systems/ip/ipValuation';
 // import { generateRebootProposal } from '../systems/ip/ipRebootEngine';
-import { evaluatePilot } from '../systems/production/pilotEvaluator';
+// import { evaluatePilot } from '../systems/production/pilotEvaluator';
 import { calculateAudienceIndex } from '../systems/demographics';
 import { resolveCrisisWithHandlers } from '../systems/production/crisisEvaluator';
 
@@ -169,7 +169,7 @@ export class WeekCoordinator {
 
         // Wiring: Resolve Crisis with Handlers (Strategy Pattern)
         if (project.activeCrisis) {
-            const crisisImpacts = resolveCrisisWithHandlers(state, project.id, context.rng.nextInt(0, project.activeCrisis.options.length - 1));
+            const crisisImpacts = resolveCrisisWithHandlers(state, project.id, context.rng.rangeInt(0, (project as any).activeCrisis!.options.length - 1));
            context.impacts.push(...crisisImpacts);
         }
       }

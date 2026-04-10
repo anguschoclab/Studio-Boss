@@ -20,7 +20,7 @@ export const CrisisModal = () => {
   }
 
   const { projectId, crisis: modalCrisis } = payload;
-  const project = gameState?.studio?.internal?.projects[projectId];
+  const project = gameState?.entities?.projects[projectId];
   
   // Use either the crisis passed in the modal payload, or the one on the project
   const activeCrisis = modalCrisis || project?.activeCrisis;

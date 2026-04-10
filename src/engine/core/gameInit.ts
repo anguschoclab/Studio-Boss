@@ -140,6 +140,42 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
         }
     }
   });
+  
+  // Generate Player Projects based on Archetype
+  const playerProjects: Record<string, any> = {};
+  const startingProjectCount = archetype === 'major' ? 3 : (archetype === 'mid-tier' ? 1 : 0);
+  for (let i = 0; i < startingProjectCount; i++) {
+    const pId = rng.uuid('PRJ');
+    const genre = rng.pick(ALL_GENRES);
+    const format = rng.next() < 0.3 ? 'tv' : 'film';
+    playerProjects[pId] = {
+        id: pId,
+        title: generateProjectName(format, genre, rng),
+        type: format === 'tv' ? 'SERIES' : 'FILM',
+        state: 'production',
+        weeksInPhase: rng.rangeInt(1, 4),
+        productionWeeks: rng.rangeInt(12, 20),
+        developmentWeeks: rng.rangeInt(4, 8),
+        budget: (archetype === 'major' ? 100 : 40) * 1_000_000,
+        buzz: 40,
+        genre,
+        format,
+        reviewScore: 0,
+        revenue: 0,
+        accumulatedCost: 0,
+        studioId: playerStudioId
+    };
+    if (format === 'tv') {
+        playerProjects[pId].tvDetails = {
+            currentSeason: 1,
+            episodesOrdered: 10,
+            episodesCompleted: 0,
+            episodesAired: 0,
+            averageRating: 0,
+            status: 'IN_PRODUCTION'
+        };
+    }
+  }
 
   const initialTrends = initializeTrends(rng);
   const genrePopularity: Record<string, number> = {};
@@ -266,8 +302,14 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
       newsHistory: [],
     },
     entities: {
-      projects: {},
-      contracts: {}, // Will be empty for player at start, but rivals might have some
+      projects: {
+        ...playerProjects,
+        ...Object.values(rivals).reduce((acc, r) => {
+          Object.assign(acc, r.projects);
+          return acc;
+        }, {} as Record<string, any>)
+      },
+      contracts: {}, 
       talents: talentPool,
       rivals: rivals.reduce((acc, r) => {
         acc[r.id] = r;

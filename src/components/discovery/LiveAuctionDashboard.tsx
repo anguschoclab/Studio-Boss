@@ -25,7 +25,7 @@ interface LiveAuctionDashboardProps {
 
 export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ opportunity: opp, onClose }) => {
   const { placeBid, acquireOpportunity, gameState } = useGameStore();
-  const rivals = gameState?.entities.rivals || [];
+  const rivals = gameState?.entities.rivals || {};
   
   const currentHighest = useMemo(() => {
     return Object.values(opp.bids || {}).reduce((max, b) => Math.max(max, b.amount), 0);
@@ -33,7 +33,7 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ oppo
 
   const isPlayerWinning = opp.highestBidderId === 'PLAYER';
   const playerBid = opp.bids['PLAYER']?.amount || 0;
-  const highestBidder = isPlayerWinning ? { name: 'YOU' } : rivals.find(r => r.id === opp.highestBidderId);
+  const highestBidder = isPlayerWinning ? { name: 'YOU' } : Object.values(rivals).find(r => r.id === opp.highestBidderId);
 
   const [bidAmount, setBidAmount] = useState(currentHighest + 1_000_000);
 
@@ -234,7 +234,7 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ oppo
                           {bid.rivalId === 'PLAYER' ? 'P' : 'R'}
                        </div>
                        <div>
-                          <div className="text-[10px] font-black uppercase tracking-tight">{bid.rivalId === 'PLAYER' ? 'YOUR STUDIO' : rivals.find(r => r.id === bid.rivalId)?.name || 'RIVAL'}</div>
+                          <div className="text-[10px] font-black uppercase tracking-tight">{bid.rivalId === 'PLAYER' ? 'YOUR STUDIO' : Object.values(rivals).find(r => r.id === bid.rivalId)?.name || 'RIVAL'}</div>
                           <div className="text-[8px] font-bold text-muted-foreground/60 uppercase tracking-widest">Week {bid.week}</div>
                        </div>
                     </div>

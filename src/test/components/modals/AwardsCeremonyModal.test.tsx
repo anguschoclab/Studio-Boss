@@ -38,12 +38,10 @@ describe('AwardsCeremonyModal', () => {
   const mockResolveCurrentModal = vi.fn();
 
   const mockGameState = {
-    studio: {
-      internal: {
-        projects: {
-          'proj-1': { title: 'The Great Movie' },
-          'proj-2': { title: 'Another Great Movie' },
-        }
+    entities: {
+      projects: {
+        'proj-1': { title: 'The Great Movie' },
+        'proj-2': { title: 'Another Great Movie' },
       }
     }
   } as any;

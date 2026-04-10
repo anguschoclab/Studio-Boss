@@ -18,7 +18,7 @@ describe('System Connectivity - Phase 3 Integration', () => {
         state.studio.internal.projectHistory = [{
             id: projId,
             title: 'Cult Movie',
-            releaseWeek: 1,
+            releaseWeek: -300, // 5+ years ago
             reviewScore: 85,
             budget: 100000000,
             revenue: 20000000,
@@ -55,6 +55,7 @@ describe('System Connectivity - Phase 3 Integration', () => {
             genre: 'ACTION',
             budget: 50000000,
             revenue: 0,
+            buzz: 80,
             distributionStatus: 'theatrical'
         } as any;
 

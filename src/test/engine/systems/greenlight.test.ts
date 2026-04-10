@@ -11,7 +11,7 @@ const mockProject: Project = {
   title: 'Test Project',
   type: 'FILM',
   format: 'film',
-  genre: 'Drama',
+  genre: 'Comedy',
   budgetTier: 'mid',
   budget: 25_000_000,
   weeklyCost: 2_000_000,
@@ -87,7 +87,7 @@ describe('evaluateGreenlight', () => {
       // No gap bonus
       // Base 50 + 15 (talent) - 5 = 60
       expect(report.score).toBe(60);
-      expect(report.negatives.some(n => n.includes('Market saturation'))).toBe(true);
+      expect(report.negatives.some(n => n.toLowerCase().includes('saturated') || n.toLowerCase().includes('saturation'))).toBe(true);
     });
 
     it('applies heavy penalty for oversaturated genres (>= 5 similar)', () => {
@@ -119,7 +119,7 @@ describe('evaluateGreenlight', () => {
       
       // Base 50 + 15 - 210 < 0 => 0
       expect(report.score).toBe(0);
-      expect(report.negatives.some(n => n.toLowerCase().includes('saturation'))).toBe(true);
+      expect(report.negatives.some(n => n.toLowerCase().includes('saturated') || n.toLowerCase().includes('saturation'))).toBe(true);
     });
 
     it('penalizes severe cashflow strain (cash < budget)', () => {

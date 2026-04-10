@@ -14,7 +14,7 @@ export const MADashboard: React.FC = () => {
     
     const allStudios = [
       { id: 'player', name: state.studio.name, share: playerShare, isPlayer: true, archetype: state.studio.archetype },
-      ...rivals.map(r => ({
+      ...Object.values(rivals).map(r => ({
         id: r.id,
         name: r.name,
         share: RegulatorSystem.getMarketShare(state, r.id),

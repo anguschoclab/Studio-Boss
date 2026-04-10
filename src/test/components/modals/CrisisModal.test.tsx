@@ -73,10 +73,8 @@ describe('CrisisModal', () => {
   } as any;
 
   const mockGameState = {
-    studio: {
-      internal: {
-        projects: { [mockProject.id]: mockProject }
-      }
+    entities: {
+      projects: { [mockProject.id]: mockProject }
     }
   } as any;
 
@@ -150,12 +148,10 @@ describe('CrisisModal', () => {
     const projectWithoutCrisis = { ...mockProject, activeCrisis: undefined };
     (useGameStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector: any) => {
       const state = {
-        gameState: { 
-          studio: {
-            internal: {
-              projects: { [projectWithoutCrisis.id]: projectWithoutCrisis }
-            }
-          }
+        gameState: {
+          week: 1,
+          entities: { projects: {}, talents: {}, contracts: {}, rivals: {} },
+          market: { buyers: [] }
         },
         resolveProjectCrisis: mockResolveProjectCrisis,
       };
@@ -188,10 +184,8 @@ describe('CrisisModal', () => {
     (useGameStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector: any) => {
       const state = {
         gameState: {
-          studio: {
-            internal: {
-              projects: { [projectWithNoOptionsCrisis.id]: projectWithNoOptionsCrisis }
-            }
+          entities: {
+            projects: { [projectWithNoOptionsCrisis.id]: projectWithNoOptionsCrisis }
           }
         },
         resolveProjectCrisis: mockResolveProjectCrisis,

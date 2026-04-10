@@ -90,7 +90,6 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
   week: 1,
   gameSeed: 42,
   tickCount: 0,
-  game: { currentWeek: 1 },
   entities: {
     projects: {},
     talents: {},
@@ -113,7 +112,15 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
     internal: {
         projectHistory: [],
         firstLookDeals: []
-    }
+    },
+    culture: { 
+      prestigeVsCommercial: 0,
+      talentFriendlyVsControlling: 0,
+      nicheVsBroad: 50,
+      filmFirstVsTvFirst: 0,
+      genrePopularity: { 'Drama': 50, 'Comedy': 50, 'Action': 50, 'Sci-Fi': 50, 'Horror': 50, 'Romance': 50 }
+    },
+    activeCampaigns: {},
   },
   market: { opportunities: [], buyers: [] },
   industry: {
@@ -122,14 +129,11 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
     agents: [],
     awards: [],
     newsHistory: [],
-    rivals: [],
     scandals: []
   },
   deals: { activeDeals: [], pendingOffers: [], expiredDeals: [] },
-  culture: { genrePopularity: {} },
   history: [],
   eventHistory: [],
-  activeCampaigns: {},
   ...overrides
 } as GameState);
 

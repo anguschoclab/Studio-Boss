@@ -29,7 +29,7 @@ describe('DealsDesk', () => {
       const state = {
         gameState: {
           week: 1,
-          studio: { internal: { projects: {}, contracts: [] } },
+          entities: { projects: {}, talents: {}, contracts: {}, rivals: {} },
           market: { buyers: [] }
         }
       };

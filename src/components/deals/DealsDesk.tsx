@@ -20,7 +20,7 @@ export const DealsDesk = () => {
   const projects = selectProjects(gameState);
   const pitchingProjects = projects.filter(p => p.state === 'pitching' || p.state === 'development');
   const activeDeals: TalentPact[] = gameState?.deals?.activeDeals ?? [];
-  const talentPool = gameState?.industry?.talentPool ?? {};
+  const talentPool = gameState?.entities?.talents ?? {};
 
   const handleNegotiate = (buyerId: string) => {
     if (!selectedProjectId) return;

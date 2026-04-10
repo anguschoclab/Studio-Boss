@@ -9,7 +9,7 @@ describe('Unscripted Projects', () => {
     useGameStore.getState().createProject({
       title: 'Real World Test',
       format: 'unscripted',
-      unscriptedFormat: 'reality_ensemble',
+      unscriptedFormat: 'USF-c53cddac-c5db-4ff5-90ee-58c2a532', // Ensemble Reality
       genre: 'Ensemble Reality',
       budgetTier: 'mid',
       targetAudience: 'Adults 25-54',
@@ -23,7 +23,7 @@ describe('Unscripted Projects', () => {
 
     expect(project).toBeDefined();
     expect(project?.format).toBe('unscripted');
-    expect(project?.unscriptedFormat).toBe('reality_ensemble');
+    expect(project?.unscriptedFormat).toBe('USF-c53cddac-c5db-4ff5-90ee-58c2a532');
     expect(project?.tvDetails?.episodesOrdered).toBe(12);
     expect(project?.tvDetails?.currentSeason).toBe(1);
     expect(project?.renewable).toBe(true);

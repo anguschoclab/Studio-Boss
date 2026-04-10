@@ -157,7 +157,7 @@ export function updateFranchiseHub(state: GameState, project: Project, rng: Rand
     // Avoid duplicate links
     if (!hub.assetIds.includes(newAssetId)) {
       const nextAssetIds = [...hub.assetIds, newAssetId];
-      const relevantAssets = state.ip.vault.filter(a => nextAssetIds.includes(a.id));
+      const relevantAssets = state.ip.vault.filter(a => a.id && nextAssetIds.includes(a.id));
 
       // 🌌 The Universe Builder: Audience loyalty dilution when pushing out too many active projects
       let updatedLoyalty = hub.audienceLoyalty;

@@ -2,19 +2,19 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { useGameStore } from '@/store/gameStore';
 
 describe('Historical Snapshots System', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     // Start a new game
     const store = useGameStore.getState();
     store.clearGame();
-    store.newGame('Test Studio', 'major');
+    await store.newGame('Test Studio', 'major');
   });
 
-  it('should capture a complete snapshot exactly on week 52', () => {
+  it('should capture a complete snapshot exactly on week 52', async () => {
      const store = useGameStore.getState();
      
      // Advance 51 weeks (getting to week 52)
      for (let i = 1; i < 52; i++) {
-        useGameStore.getState().doAdvanceWeek();
+        await useGameStore.getState().doAdvanceWeek();
      }
      
      expect(useGameStore.getState().gameState?.week).toBe(52);
@@ -22,7 +22,7 @@ describe('Historical Snapshots System', () => {
 
      // Action: Advance from week 52 to 53/1
      // This triggers the snapshot in weekAdvance.ts
-     useGameStore.getState().doAdvanceWeek();
+     await useGameStore.getState().doAdvanceWeek();
      
      // Verification
      const snapshots = useGameStore.getState().snapshots;

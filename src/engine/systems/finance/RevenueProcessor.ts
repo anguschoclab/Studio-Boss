@@ -161,10 +161,12 @@ export class RevenueProcessor {
    */
   static calculateMerchRevenue(hype: number, franchiseRelevance: number, rating: ProjectRating = 'PG-13'): number {
     if (rating === 'Unrated') return 0; // Unrated releases cannot merchandise
-    if (hype < 70) return 0;
+    const h = hype || 0;
+    const f = franchiseRelevance || 0;
+    if (h < 70) return 0;
     const base = 5000;
-    const hypeFactor = (hype - 70) / 30;
-    const relevanceFactor = franchiseRelevance / 100;
+    const hypeFactor = (h - 70) / 30;
+    const relevanceFactor = f / 100;
     const baseRevenue = Math.round(base + (base * 5 * hypeFactor * relevanceFactor));
     const merchMultiplier = getRatingEconomics(rating).merchMultiplier;
     return Math.round(baseRevenue * merchMultiplier);

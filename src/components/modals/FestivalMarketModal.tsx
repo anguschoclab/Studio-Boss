@@ -45,7 +45,7 @@ export const FestivalMarketModal: React.FC = () => {
       const localRng = new RandomGenerator(Date.now()); 
       const rivals = gameState.entities.rivals;
       
-      rivals.forEach(rival => {
+      Object.values(rivals).forEach(rival => {
         if (rival.id === highestBidderId) return;
 
         // Determine if this rival wants to bid

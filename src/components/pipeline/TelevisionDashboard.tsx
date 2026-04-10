@@ -10,10 +10,10 @@ import { cn } from '@/lib/utils';
 import { NielsenProfile } from '@/engine/systems/television/nielsenSystem';
 
 export const TelevisionDashboard = () => {
-  const activeProjects = useGameStore(useShallow(s => Object.values(s.gameState?.studio?.internal?.projects || {})));
+  const activeProjects = useGameStore(useShallow(s => Object.values(s.gameState?.entities?.projects || {})));
   
   const tvShows = React.useMemo(() => 
-    activeProjects.filter((p: Project) => p.type === 'SERIES' && 'tvDetails' in p),
+    (activeProjects as Project[]).filter((p: Project) => p.type === 'SERIES' && 'tvDetails' in p),
   [activeProjects]);
 
   if (tvShows.length === 0) {
@@ -42,7 +42,7 @@ export const TelevisionDashboard = () => {
 
       <ScrollArea className="flex-1 pr-4">
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 pb-10">
-          {tvShows.map((show: Project) => (
+          {(tvShows as Project[]).map((show: Project) => (
             <TVShowCard key={show.id} show={show} />
           ))}
         </div>
