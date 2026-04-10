@@ -97,6 +97,11 @@ export function calculateFranchiseEquity(
     crossoverBonus += 0.30;
   }
 
+  // 🌌 The Universe Builder: Transmedia Universe Event synergy bonus.
+  if (assets.length >= 6 && genres.some(g => g === 'Superhero' || g === 'Video Game Adaptation')) {
+    crossoverBonus += 0.40;
+  }
+
   // 2. Format Diversity Multiplier
   const multiplier = franchise.synergyMultiplier;
   
@@ -172,7 +177,13 @@ export function updateFranchiseHub(state: GameState, project: Project, rng: Rand
       const isBreakout = project.revenue > (project.budget * 2.5);
       const isPrestigeHit = (project.awardsProfile?.prestigeScore || 0) > 85;
 
-      if (yearsSince >= 7 && (isBreakout || isPrestigeHit)) {
+      if (yearsSince >= 12 && (isBreakout || isPrestigeHit)) {
+        updatedLoyalty = clamp(updatedLoyalty + 30, 0, 100);
+        updatedSynergy = clamp(updatedSynergy + 0.85, 1.0, 3.5);
+      } else if (yearsSince >= 12 && !isBreakout && !isPrestigeHit) {
+        // 🌌 The Universe Builder: Failed legendary reboot permanent damage
+        updatedLoyalty = clamp(updatedLoyalty - 25, 0, 100);
+      } else if (yearsSince >= 7 && (isBreakout || isPrestigeHit)) {
         updatedLoyalty = clamp(updatedLoyalty + 20, 0, 100);
         updatedSynergy = clamp(updatedSynergy + 0.5, 1.0, 3.5);
       } else if (yearsSince >= 7 && !isBreakout && !isPrestigeHit) {
