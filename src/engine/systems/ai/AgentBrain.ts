@@ -100,6 +100,12 @@ export function generateFestivalBid(
   const reviewScore = project.reviewScore ?? 55;
   const buzz = project.buzz ?? 40;
   
+  // 🎭 The Method Actor Tuning: CASH_CRUNCH rejects projects lacking buzz or that exceed 30% of their cash.
+  if (rival.currentMotivation === 'CASH_CRUNCH') {
+    if (project.budget > rival.cash * 0.3) return null;
+    if (buzz < 50) return null;
+  }
+
   // Interest calculation weighted by archetype obsession
   let interest = (reviewScore * (archetype.awardObsession / 100) + buzz * (1 - archetype.awardObsession / 100)) / 100;
   
@@ -118,6 +124,16 @@ export function generateFestivalBid(
     interest *= 1.4;
   }
 
+  // 🎭 The Method Actor Tuning: MARKET_DISRUPTION inflates their interest to act as a wildcard
+  if (rival.currentMotivation === 'MARKET_DISRUPTION') {
+    interest *= 1.5;
+  }
+
+  // 🎭 The Method Actor Tuning: CASH_CRUNCH significantly boosts interest in cheap "sure hits".
+  if (rival.currentMotivation === 'CASH_CRUNCH' && buzz > 70 && project.budget < rival.cash * 0.15) {
+    interest *= 1.8;
+  }
+
   if (interest < 0.4) return null;
 
   let maxBidPct = (0.05 + (archetype.riskAppetite / 1000)); // riskier rivals bid more of their total cash
@@ -126,6 +142,9 @@ export function generateFestivalBid(
   }
   if (rival.currentMotivation === 'AWARD_CHASE' && reviewScore > 75) {
     maxBidPct += 0.30; // aggressively overpay for prestige
+  }
+  if (rival.currentMotivation === 'MARKET_DISRUPTION') {
+    maxBidPct += 0.35; // wildcard max bid percentage
   }
   const maxBid = rival.cash * maxBidPct;
   const bid = Math.round(project.budget * interest * rng.range(0.9, 1.6));

@@ -71,12 +71,13 @@ export function updateBuyers(buyers: Buyer[], currentWeek: number, rng: RandomGe
   return impact;
 }
 
-export function calculateFitScore(project: Project, buyer: Buyer, currentWeek: number, allProjects: Project[], rng: RandomGenerator): number {
+export function calculateFitScore(project: Project, buyer: Buyer, currentWeek: number, allProjects: Record<string, Project>, rng: RandomGenerator): number {
   let score = 50; 
 
   let recentSimilarProjectsCount = 0;
-  for (let i = 0; i < allProjects.length; i++) {
-    const p = allProjects[i];
+  for (const key in allProjects) {
+    if (!Object.prototype.hasOwnProperty.call(allProjects, key)) continue;
+    const p = allProjects[key];
     if (
       p.state === 'released' &&
       p.genre === project.genre &&
@@ -137,7 +138,7 @@ export function calculateFitScore(project: Project, buyer: Buyer, currentWeek: n
   return Math.max(0, Math.min(100, score));
 }
 
-export function negotiateContract(project: Project, buyer: Buyer, requestedType: ProjectContractType, currentWeek: number, allProjects: Project[], rng: RandomGenerator): boolean {
+export function negotiateContract(project: Project, buyer: Buyer, requestedType: ProjectContractType, currentWeek: number, allProjects: Record<string, Project>, rng: RandomGenerator): boolean {
     const fitScore = calculateFitScore(project, buyer, currentWeek, allProjects, rng);
     const requiredScore = requestedType === 'upfront' ? 65 : 40;
     return fitScore >= requiredScore;

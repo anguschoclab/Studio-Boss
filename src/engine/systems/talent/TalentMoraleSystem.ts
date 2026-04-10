@@ -47,15 +47,17 @@ export class TalentMoraleSystem {
    * Updates talent psychology based on the current week's events.
    */
   static processWeeklyMorale(
-    talent: Talent[],
-    projects: Project[],
-    contracts: Contract[]
+    talentDict: Record<string, Talent>,
+    projectsDict: Record<string, Project>,
+    contractsDict: Record<string, Contract>
   ): TalentUpdate[] {
     const updates: TalentUpdate[] = [];
 
     // Pre-compute O(1) lookups to avoid O(N*M) nested filtering
     const contractsByTalent = new Map<string, Contract[]>();
-    for (const c of contracts) {
+    for (const key in contractsDict) {
+      if (!Object.prototype.hasOwnProperty.call(contractsDict, key)) continue;
+      const c = contractsDict[key];
       const arr = contractsByTalent.get(c.talentId);
       if (arr) {
         arr.push(c);
@@ -64,13 +66,11 @@ export class TalentMoraleSystem {
       }
     }
 
-    const projectById = new Map<string, Project>();
-    for (const p of projects) {
-      projectById.set(p.id, p);
-    }
-
     // ⚡ Bolt: Consolidated O(N) array filtering to O(1) Map lookups
-    for (const t of talent) {
+    // ⚡ The Framerate Fanatic: Direct iteration over dictionaries avoids Array allocations
+    for (const talentId in talentDict) {
+      if (!Object.prototype.hasOwnProperty.call(talentDict, talentId)) continue;
+      const t = talentDict[talentId];
       let moodChange = 0;
       
       // 1. Natural drift toward 50
@@ -80,7 +80,7 @@ export class TalentMoraleSystem {
       // 2. Project performance
       const activeContracts = contractsByTalent.get(t.id) || [];
       for (const c of activeContracts) {
-        const p = projectById.get(c.projectId);
+        const p = projectsDict[c.projectId];
         if (p) {
           // Momentum impact
           if (p.momentum < 30) moodChange -= 2;

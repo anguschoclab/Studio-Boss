@@ -6,7 +6,7 @@ import { RandomGenerator } from '../../utils/rng';
  * Growth = (LibraryQuality / 100) * (GrowthRate)
  * Churn = CurrentSubs * ChurnRate
  */
-function calculateSubChange(platform: StreamerPlatform, rng: RandomGenerator): number {
+function calculateSubChange(platform: StreamerPlatform, rng: RandomGenerator, seasonOverSeasonQuality: number = 0): number {
   const baseGrowthRate = 0.02; // 2% weekly base potential
   const qualityFactor = platform.contentLibraryQuality / 100;
   // Use a fallback for marketingSpend if not defined
@@ -26,11 +26,11 @@ function calculateSubChange(platform: StreamerPlatform, rng: RandomGenerator): n
     const growthPercent = pastSubs > 0 ? (currentSubs - pastSubs) / pastSubs : 0;
     // 📺 The Syndication Baron: Tweaked streaming subscriber churn rates. Aggressively penalizing platforms that fail to retain subscribers or flatline in the cutthroat streaming wars.
     if (growthPercent < 0.0) {
-      dynamicChurnRate = Math.min(0.80, dynamicChurnRate * 8.0); // Devastating Penalty for negative growth
+      dynamicChurnRate = Math.min(0.85, dynamicChurnRate * 8.5); // Devastating Penalty for negative growth
     } else if (growthPercent < 0.01) {
-      dynamicChurnRate = Math.min(0.60, dynamicChurnRate * 6.0); // Extreme Penalty
+      dynamicChurnRate = Math.min(0.65, dynamicChurnRate * 6.5); // Extreme Penalty
     } else if (growthPercent < 0.02) {
-      dynamicChurnRate = Math.min(0.45, dynamicChurnRate * 4.5); // Aggressive Penalty
+      dynamicChurnRate = Math.min(0.50, dynamicChurnRate * 5.0); // Aggressive Penalty
     } else if (growthPercent > 0.15) {
       dynamicChurnRate = Math.max(0.005, dynamicChurnRate * 0.3); // Massive Bonus for hyper growth
     } else if (growthPercent > 0.08) {
@@ -40,9 +40,16 @@ function calculateSubChange(platform: StreamerPlatform, rng: RandomGenerator): n
 
   // 📺 The Syndication Baron: Reward consistent season-over-season quality and mega-hit library quality (sticky subscribers).
   if (qualityFactor > 0.90) {
-    dynamicChurnRate = Math.max(0.005, dynamicChurnRate * 0.4); // Sticky subscribers for mega-hit library
+    dynamicChurnRate = Math.max(0.002, dynamicChurnRate * 0.3); // Sticky subscribers for mega-hit library
   } else if (qualityFactor > 0.85) {
     dynamicChurnRate = Math.max(0.01, dynamicChurnRate * 0.7);
+  }
+
+  // 📺 The Syndication Baron: Reward consistent season-over-season quality for active shows.
+  if (seasonOverSeasonQuality > 90) {
+    dynamicChurnRate = Math.max(0.005, dynamicChurnRate * 0.4); // Extreme loyalty for highly rated ongoing shows
+  } else if (seasonOverSeasonQuality > 80) {
+    dynamicChurnRate = Math.max(0.01, dynamicChurnRate * 0.6); // Strong loyalty for good ongoing shows
   }
 
   const churn = platform.subscribers * dynamicChurnRate;
@@ -61,7 +68,28 @@ export function tickPlatforms(state: GameState, rng: RandomGenerator): StateImpa
   state.market.buyers.forEach(buyer => {
     if (buyer.archetype === 'streamer') {
       const platform = buyer as StreamerPlatform;
-      const subChange = calculateSubChange(platform, rng);
+
+      let seasonOverSeasonQuality = 0;
+      if (platform.activeLicenses && platform.activeLicenses.length > 0) {
+        let totalScore = 0;
+        let count = 0;
+        for (let i = 0; i < platform.activeLicenses.length; i++) {
+          const license = platform.activeLicenses[i];
+          const project = state.entities.projects[license.projectId];
+          if (project && project.type === 'SERIES' && 'tvDetails' in project) {
+            const seriesProject = project as import('@/engine/types').SeriesProject;
+            if (seriesProject.tvDetails.currentSeason > 1 && seriesProject.reviewScore != null) {
+              totalScore += seriesProject.reviewScore;
+              count++;
+            }
+          }
+        }
+        if (count > 0) {
+          seasonOverSeasonQuality = totalScore / count;
+        }
+      }
+
+      const subChange = calculateSubChange(platform, rng, seasonOverSeasonQuality);
       const newSubCount = Math.max(0, platform.subscribers + subChange);
       
       // Update subscribers and history

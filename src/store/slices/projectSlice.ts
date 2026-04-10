@@ -169,7 +169,7 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
     if (!project || !buyer) return false;
 
     const rng = new RandomGenerator(state.rngState);
-    const allProjects = Object.values(state.entities.projects);
+    const allProjects = state.entities.projects;
     const success = negotiateContract(project, buyer, contractType, state.week, allProjects, rng);
 
     if (success) {
@@ -220,7 +220,13 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
       const franchise = state.ip.franchises[project.franchiseId];
       relatedCount = franchise.assetIds.length;
       
-      const genreSaturation = Object.values(state.entities.projects).filter(p => p.genre === project.genre).length;
+      let genreSaturation = 0;
+      for (const key in state.entities.projects) {
+        if (!Object.prototype.hasOwnProperty.call(state.entities.projects, key)) continue;
+        if (state.entities.projects[key].genre === project.genre) {
+          genreSaturation++;
+        }
+      }
       const fatigue = calculateFranchiseFatigue(franchise, genreSaturation, project.genre);
       
       if (fatigue > 0.4) status = 'FATIGUED';

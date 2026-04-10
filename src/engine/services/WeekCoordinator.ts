@@ -331,10 +331,10 @@ export class WeekCoordinator {
     context.impacts.push(...TalentLifecycleSystem.tick(state, context.rng));
 
     // Phase 1: Register Weekly Morale
-    const talentList = Object.values(state.entities.talents);
-    const projectsList = Object.values(state.entities.projects);
-    const contractsList = Object.values(state.entities.contracts);
-    const moraleUpdates = TalentMoraleSystem.processWeeklyMorale(talentList, projectsList, contractsList);
+    const talentDict = state.entities.talents;
+    const projectsDict = state.entities.projects;
+    const contractsDict = state.entities.contracts;
+    const moraleUpdates = TalentMoraleSystem.processWeeklyMorale(talentDict, projectsDict, contractsDict);
     
     for (const update of moraleUpdates) {
       context.impacts.push({
@@ -426,8 +426,16 @@ export class WeekCoordinator {
   private static runAnnualIPScan(state: GameState, context: TickContext) {
     // 1. Cult Classic Scan
     const vault = state.ip.vault || [];
+
+    // ⚡ The Framerate Fanatic: Refactored array .find() inside map to a Map lookup, improving performance from O(n^2) to O(n).
+    const projectHistoryMap = new Map();
+    const history = state.studio.internal.projectHistory || [];
+    for (let i = 0; i < history.length; i++) {
+       projectHistoryMap.set(history[i].id, history[i]);
+    }
+
     vault.forEach(asset => {
-       const project = state.studio.internal.projectHistory.find(p => p.id === asset.originalProjectId);
+       const project = projectHistoryMap.get(asset.originalProjectId);
        if (project && !project.isCultClassic && detectCultClassic(project, context.week)) {
           context.impacts.push({
              type: 'VAULT_ASSET_UPDATED',

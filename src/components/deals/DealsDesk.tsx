@@ -11,16 +11,25 @@ import { calculateFitScore } from '@/engine/systems/buyers';
 import { cn } from '@/lib/utils';
 import { useUIStore } from '@/store/uiStore';
 import { RandomGenerator } from '@/engine/utils/rng';
+import { useShallow } from 'zustand/react/shallow';
 
 export const DealsDesk = () => {
   const { openPitchProject } = useUIStore();
   const [selectedProjectId, setSelectedProjectId] = React.useState<string | null>(null);
-  const gameState = useGameStore(s => s.gameState);
-  const buyers = selectBuyers(gameState);
-  const projects = selectProjects(gameState);
-  const pitchingProjects = projects.filter(p => p.state === 'pitching' || p.state === 'development');
-  const activeDeals: TalentPact[] = gameState?.deals?.activeDeals ?? [];
-  const talentPool = gameState?.entities?.talents ?? {};
+
+  const { buyers, projects, week, activeDeals, talentPool } = useGameStore(
+    useShallow(s => ({
+      buyers: selectBuyers(s.gameState),
+      projects: selectProjects(s.gameState),
+      week: s.gameState?.week || 0,
+      activeDeals: s.gameState?.deals?.activeDeals ?? [],
+      talentPool: s.gameState?.industry?.talentPool ?? {},
+    }))
+  );
+
+  const pitchingProjects = React.useMemo(() =>
+    projects.filter(p => p.state === 'pitching' || p.state === 'development'),
+  [projects]);
 
   const handleNegotiate = (buyerId: string) => {
     if (!selectedProjectId) return;
@@ -174,7 +183,7 @@ export const DealsDesk = () => {
                   key={buyer.id} 
                   buyer={buyer} 
                   projects={pitchingProjects} 
-                  week={gameState?.week || 0} 
+                  week={week}
                   allProjects={projects} 
                   onNegotiate={() => handleNegotiate(buyer.id)}
                   canNegotiate={!!selectedProjectId}
