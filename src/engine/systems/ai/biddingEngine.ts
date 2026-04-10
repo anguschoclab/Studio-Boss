@@ -60,6 +60,8 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
       const isAwardChaser = rival.currentMotivation === 'AWARD_CHASE';
       const motivationAggression = (rival.motivationProfile?.aggression || 50) / 100;
 
+      const maxAttachedPrestige = opportunity.attachedTalentIds && opportunity.attachedTalentIds.length > 0 ? Math.max(...opportunity.attachedTalentIds.map(id => state.entities.talents[id]?.prestige || 0)) : 0;
+
       // 🎭 The Method Actor Tuning: Franchise builders are willing to run low on liquidity to grab key assets.
       // Market disruptors run even lower.
       const liquidityBuffer = isMarketDisruptor ? 1.02 : (isFranchiseBuilder ? 1.05 : (isAwardChaser ? 1.10 : (isCashCrunch ? 1.5 : 1.25 - (motivationAggression * 0.15))));
@@ -77,7 +79,11 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
 
         // 🎭 The Method Actor Tuning: Award chasers aggressively overpay for Drama/Historical.
         const isPrestigeGenre = opportunity.genre === 'Drama' || opportunity.genre === 'Historical' || opportunity.genre === 'Biopic';
-        const awardAggression = isAwardChaser && isPrestigeGenre ? 1.4 : (isAwardChaser ? 1.1 : 1.0);
+        let awardAggression = isAwardChaser && isPrestigeGenre ? 1.4 : (isAwardChaser ? 1.1 : 1.0);
+        // 🎭 The Method Actor Tuning: Award chasers suffer from extreme FOMO when highly prestigious talent is attached, bidding recklessly.
+        if (isAwardChaser && maxAttachedPrestige > 80) {
+          awardAggression *= 1.5;
+        }
 
         // 🎭 The Method Actor Tuning: Disruptors bid aggressively across the board to box out competitors.
         const disruptorAggression = isMarketDisruptor ? 1.6 : 1.0;
@@ -86,7 +92,7 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
         const newBid = Math.floor(bidFloor * (1 + (rng.range(1.05, 1.25) - 1) * multiplier));
 
         // 🎭 The Method Actor Tuning: Raise the max bid cap for franchise builders and aggressive studios so they don't give up easily.
-        const maxBidCap = Math.min(0.95, (isMarketDisruptor ? 0.90 : (isFranchiseBuilder ? 0.80 : (isAwardChaser && isPrestigeGenre ? 0.75 : (isCashCrunch ? 0.15 : 0.40 + (motivationAggression * 0.1))))) * leverageAggression);
+        const maxBidCap = Math.min(0.95, (isMarketDisruptor ? 0.90 : (isFranchiseBuilder ? 0.80 : (isAwardChaser && (isPrestigeGenre || maxAttachedPrestige > 80) ? 0.85 : (isCashCrunch ? 0.15 : 0.40 + (motivationAggression * 0.1))))) * leverageAggression);
         if (newBid < rival.cash * maxBidCap) {
           impacts.push({
             type: 'OPPORTUNITY_UPDATED',
@@ -143,9 +149,10 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
       const isAuteur = target.prestige > 85;
       const prestigeDelta = target.prestige - rival.prestige;
       const isMoneyGrabber = target.currentMotivation === 'MONEY_GRABBER';
+      const isMarketDisruptor = rival.currentMotivation === 'MARKET_DISRUPTION';
 
       // 🎭 The Method Actor Tuning: Auteurs heavily favor prestige. They will flat-out reject low prestige studios unless they are money grabbers.
-      if (isAuteur && prestigeDelta > 20 && !isMoneyGrabber) {
+      if (isAuteur && prestigeDelta > 20 && !isMoneyGrabber && !isMarketDisruptor) {
           return;
       }
 
@@ -164,6 +171,10 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
       let lockFeeMultiplier = 1.5;
       if (isMoneyGrabber) {
         lockFeeMultiplier = 2.0;
+      }
+      // 🎭 The Method Actor Tuning: Market Disruptors overpay for talent simply to starve their competitors of resources.
+      if (isMarketDisruptor) {
+        lockFeeMultiplier += 1.0;
       }
 
       const lockFee = target.fee * (lockFeeMultiplier + rng.next() + prestigePenalty);

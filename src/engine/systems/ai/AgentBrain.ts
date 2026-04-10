@@ -28,7 +28,11 @@ export function evaluatePackageOffer(
   const leverage = AgencyLeverageEngine.calculateNegotiationLeverage(leadTalent, agency, undefined, market);
   
   // High leverage agencies (Powerhouse/Major) packager probability increases
-  const packageProbability = (motivation === 'THE_PACKAGER' ? 0.40 : (isAuteur ? 0.50 : 0.15)) + (leverage.score * 0.2);
+  let packageProbability = (motivation === 'THE_PACKAGER' ? 0.40 : (isAuteur ? 0.50 : 0.15)) + (leverage.score * 0.2);
+  // 🎭 The Method Actor Tuning: High-leverage agencies ruthlessly enforce package deals, strong-arming studios into accepting lesser-known clients.
+  if (leverage.score > 0.7) {
+    packageProbability += 0.20;
+  }
 
   if (rng.next() < packageProbability) {
     const otherClients = talentPool.filter(t => t.agencyId === agency.id && t.id !== leadTalent.id);
@@ -178,7 +182,11 @@ export function shouldAttemptHostileTakeover(
   if (!archetype) return false;
 
   // Must have sufficient cash to make an offer
-  const minimumOfferSize = target.cash * 1.5 + (target.prestige * 1_000_000);
+  let minimumOfferSize = target.cash * 1.5 + (target.prestige * 1_000_000);
+  // 🎭 The Method Actor Tuning: Market Disruptors act like corporate raiders, requiring less safety margin to execute a hostile takeover against a weakened rival.
+  if (attacker.currentMotivation === 'MARKET_DISRUPTION' && target.cash < 5000000) {
+    minimumOfferSize = target.cash * 1.1 + (target.prestige * 500_000);
+  }
   if (attacker.cash < minimumOfferSize) return false;
 
   // ⚖️ Anti-Trust Barrier: Hostile takeovers are strictly prohibited if the combined market share exceeds 40%.
