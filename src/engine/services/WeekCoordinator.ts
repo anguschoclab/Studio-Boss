@@ -393,19 +393,15 @@ export class WeekCoordinator {
             type: 'MODAL_TRIGGERED',
             payload: {
               modalType: 'BIDDING_WAR',
+              priority: 60,
               payload: {
-                prestigeVsCommercial: 0,
-                talentFriendlyVsControlling: 0,
-                nicheVsBroad: 50,
-                filmFirstVsTvFirst: 0,
-                genrePopularity: { 'Drama': 50, 'Comedy': 50, 'Action': 50, 'Sci-Fi': 50, 'Horror': 50, 'Romance': 50 }
-              },
-              attackerId: attacker.id,
-              attackerName: attacker.name,
-              targetId: target.id,
-              targetName: target.name,
-              offerAmount: Math.round(target.cash * 2 + target.strength * 1_000_000),
-              week: context.week
+                attackerId: attacker.id,
+                attackerName: attacker.name,
+                targetId: target.id,
+                targetName: target.name,
+                offerAmount: Math.round(target.cash * 2 + target.strength * 1_000_000),
+                week: context.week
+              }
             }
           });
           context.impacts.push({
