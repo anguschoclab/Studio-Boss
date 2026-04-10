@@ -111,6 +111,7 @@ export const TalentHub = () => {
             <div className="relative w-full md:w-96">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
+                aria-label="Search talent"
                 placeholder="Search talent..."
                 className="pl-10 bg-muted/30 border-border/40"
                 value={search}
