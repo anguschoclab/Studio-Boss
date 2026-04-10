@@ -22,3 +22,7 @@
 ## 2025-03-08 - Optimized AI bidding engine loop
 **Learning:** Hoisting repetitive calculations (like `leverageAggression` inside `biddingEngine.ts`) outside of deeply nested loops significantly reduces Time Complexity and unnecessary GC allocations. Here, calculating it per opportunity instead of per rival per opportunity reduced the complexity from `O(O * R * (A + a))` to `O(O * (R + A + a))`.
 **Action:** When iterating over combinations of items (like opportunities and rivals), look for derived values that only depend on the outer loop variable and hoist their calculation before the inner loop.
+
+## 2024-06-25 - Object.values() combined with filter() and map() creates unnecessary garbage
+**Learning:** Found a common anti-pattern where Object.values() is called on a dictionary, followed by chained .filter() and .map() calls. In a game loop context like `impactReducer.ts` when a `SCANDAL_ADDED` impact is evaluated, converting dictionaries (like `state.entities.contracts`) to arrays only to map over them generates unnecessary garbage and puts pressure on the GC, causing frame drops during busy simulation weeks.
+**Action:** Replaced chained `Object.values().filter().map()` calls with single `for..in` loops checking properties directly, avoiding intermediate arrays and performing work in O(n) without additional allocations.
