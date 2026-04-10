@@ -17,7 +17,14 @@ const MotivationScores: Record<StudioMotivation, (rival: RivalStudio, state: Gam
     }
     return score;
   },
-  MARKET_DISRUPTION: (rival) => (rival.motivationProfile.aggression > 75 && rival.cash > 2000000 ? 85 : 15) + (rival.motivationProfile.aggression > 80 && rival.cash > 10000000 ? 40 : 0),
+  MARKET_DISRUPTION: (rival) => {
+    let score = (rival.motivationProfile.aggression > 75 && rival.cash > 2000000 ? 85 : 15) + (rival.motivationProfile.aggression > 80 && rival.cash > 10000000 ? 40 : 0);
+    // 🎭 The Method Actor Tuning: Substantial score boost for mega-studios to simulate aggressive market leaders starving out smaller competitors.
+    if (rival.cash > 50000000 && rival.prestige > 70) {
+      score += 40;
+    }
+    return score;
+  },
   STABILITY: (rival) => (rival.cash >= 1000000 && rival.cash <= 3000000 ? 60 : 10),
 };
 

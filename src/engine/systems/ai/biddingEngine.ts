@@ -56,10 +56,13 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
 
       const isFranchiseBuilder = rival.currentMotivation === 'FRANCHISE_BUILDING';
       const isCashCrunch = rival.currentMotivation === 'CASH_CRUNCH';
+      const isMarketDisruptor = rival.currentMotivation === 'MARKET_DISRUPTION';
+      const isAwardChaser = rival.currentMotivation === 'AWARD_CHASE';
       const motivationAggression = (rival.motivationProfile?.aggression || 50) / 100;
 
       // 🎭 The Method Actor Tuning: Franchise builders are willing to run low on liquidity to grab key assets.
-      const liquidityBuffer = isFranchiseBuilder ? 1.05 : (isCashCrunch ? 1.5 : 1.25 - (motivationAggression * 0.15));
+      // Market disruptors run even lower.
+      const liquidityBuffer = isMarketDisruptor ? 1.02 : (isFranchiseBuilder ? 1.05 : (isAwardChaser ? 1.10 : (isCashCrunch ? 1.5 : 1.25 - (motivationAggression * 0.15))));
 
       // Determine the minimum bid floor (current highest or reserve cost)
       const bidFloor = Math.max(currentHighest, opportunity.costToAcquire);
@@ -72,11 +75,18 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
         const isKeyIPGenre = opportunity.genre === 'Sci-Fi' || opportunity.genre === 'Action' || opportunity.genre === 'Fantasy';
         const franchiseAggression = isFranchiseBuilder && isKeyIPGenre ? 1.5 : (isFranchiseBuilder ? 1.2 : 1.0);
 
-        const multiplier = (ArchetypeMultipliers[rival.archetype]?.(opportunity.genre) || 1.0) * aggressionFactor * franchiseAggression * leverageAggression;
+        // 🎭 The Method Actor Tuning: Award chasers aggressively overpay for Drama/Historical.
+        const isPrestigeGenre = opportunity.genre === 'Drama' || opportunity.genre === 'Historical' || opportunity.genre === 'Biopic';
+        const awardAggression = isAwardChaser && isPrestigeGenre ? 1.4 : (isAwardChaser ? 1.1 : 1.0);
+
+        // 🎭 The Method Actor Tuning: Disruptors bid aggressively across the board to box out competitors.
+        const disruptorAggression = isMarketDisruptor ? 1.6 : 1.0;
+
+        const multiplier = (ArchetypeMultipliers[rival.archetype]?.(opportunity.genre) || 1.0) * aggressionFactor * franchiseAggression * awardAggression * disruptorAggression * leverageAggression;
         const newBid = Math.floor(bidFloor * (1 + (rng.range(1.05, 1.25) - 1) * multiplier));
 
         // 🎭 The Method Actor Tuning: Raise the max bid cap for franchise builders and aggressive studios so they don't give up easily.
-        const maxBidCap = (isFranchiseBuilder ? 0.80 : (isCashCrunch ? 0.15 : 0.40 + (motivationAggression * 0.1))) * leverageAggression;
+        const maxBidCap = Math.min(0.95, (isMarketDisruptor ? 0.90 : (isFranchiseBuilder ? 0.80 : (isAwardChaser && isPrestigeGenre ? 0.75 : (isCashCrunch ? 0.15 : 0.40 + (motivationAggression * 0.1))))) * leverageAggression);
         if (newBid < rival.cash * maxBidCap) {
           impacts.push({
             type: 'OPPORTUNITY_UPDATED',
@@ -132,14 +142,16 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
       // 🎭 The Method Actor Tuning: Auteur directors heavily favor prestige, demanding massive premiums if the studio lacks it, but will accept major discounts for highly prestigious studios.
       const isAuteur = target.prestige > 85;
       const prestigeDelta = target.prestige - rival.prestige;
+      const isMoneyGrabber = target.currentMotivation === 'MONEY_GRABBER';
 
       // 🎭 The Method Actor Tuning: Auteurs heavily favor prestige. They will flat-out reject low prestige studios unless they are money grabbers.
-      if (isAuteur && prestigeDelta > 20 && target.currentMotivation !== 'MONEY_GRABBER') {
+      if (isAuteur && prestigeDelta > 20 && !isMoneyGrabber) {
           return;
       }
 
       let prestigePenalty = 0;
-      if (isAuteur) {
+      // 🎭 The Method Actor Tuning: Money grabbers ignore prestige penalties but demand massive base fee increases.
+      if (isAuteur && !isMoneyGrabber) {
         if (prestigeDelta > 10) {
           prestigePenalty = prestigeDelta * 0.40; // Massive penalty for low prestige
         } else if (prestigeDelta < -10) {
@@ -149,7 +161,12 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
         }
       }
 
-      const lockFee = target.fee * (1.5 + rng.next() + prestigePenalty);
+      let lockFeeMultiplier = 1.5;
+      if (isMoneyGrabber) {
+        lockFeeMultiplier = 2.0;
+      }
+
+      const lockFee = target.fee * (lockFeeMultiplier + rng.next() + prestigePenalty);
       
       // Phase 2: Agency Leverage Integration
       const agency = target.agencyId ? state.industry.agencies.find(a => a.id === target.agencyId) : undefined;
@@ -229,10 +246,14 @@ export function calculateLiveCounterBid(
     adjustedThreshold += 0.25;
     adjustedMultiplier *= 1.4;
   }
+  if (rival.currentMotivation === 'MARKET_DISRUPTION') {
+    adjustedThreshold += 0.35;
+    adjustedMultiplier *= 1.5;
+  }
 
   if (rng.next() < adjustedThreshold) {
     const counterAmount = Math.floor(playerBid * rng.range(1.05, 1.15) * adjustedMultiplier);
-    const cashLimit = rival.currentMotivation === 'FRANCHISE_BUILDING' ? 0.6 : 0.4;
+    const cashLimit = rival.currentMotivation === 'MARKET_DISRUPTION' ? 0.8 : (rival.currentMotivation === 'FRANCHISE_BUILDING' ? 0.6 : 0.4);
     if (counterAmount < rival.cash * cashLimit) {
       return {
         type: 'OPPORTUNITY_UPDATED',
