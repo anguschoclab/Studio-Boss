@@ -94,7 +94,7 @@ export const DemographicsWidget: React.FC = () => {
                       key={`cell-${index}`}
                       fill="url(#barGradient)"
                       style={{ filter: 'url(#barShadow) url(#barGlow)' }}
-                      className="hover:opacity-100 hover:brightness-125 hover:drop-shadow-[0_0_15px_hsl(var(--primary))] transition-all duration-300 cursor-pointer"
+                      className="hover:opacity-100 hover:brightness-125 hover:drop-shadow-[0_0_15px_hsl(var(--primary))] transition-all duration-300"
                     />
                   ))}
                 </Bar>

@@ -16,25 +16,18 @@ export const TalentNameLink: React.FC<TalentNameLinkProps> = ({ talentId, name, 
   const { selectTalent } = useUIStore();
 
   return (
-    <span
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          selectTalent(talentId);
-        }
-      }}
+    <button
+      type="button"
       onClick={(e) => {
         e.stopPropagation();
         selectTalent(talentId);
       }}
       className={cn(
-        "text-primary hover:text-primary/80 cursor-pointer underline decoration-primary/30 hover:decoration-primary/60 transition-colors font-bold inline-block text-left",
+        "text-primary hover:text-primary/80 cursor-pointer underline decoration-primary/30 hover:decoration-primary/60 transition-colors font-bold inline-block text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded",
         className
       )}
     >
       {name}
-    </span>
+    </button>
   );
 };

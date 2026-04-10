@@ -115,7 +115,7 @@ export const CommandCenter: React.FC = () => {
             {newsHistory && newsHistory.length > 0 ? (
               newsHistory.slice(0, 4).map((news, i) => (
                 <div key={news.id} className={cn(
-                  "flex items-center gap-6 p-6 transition-all duration-500 hover:bg-white/10 backdrop-blur-md border-l-4 border-l-transparent hover:border-l-primary relative overflow-hidden group/item cursor-pointer",
+                  "flex items-center gap-6 p-6 transition-all duration-500 hover:bg-white/10 backdrop-blur-md border-l-4 border-l-transparent hover:border-l-primary relative overflow-hidden group/item",
                   i === 0 && "bg-white/5 border-l-primary/50"
                 )}>
                   {i === 0 && <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent pointer-events-none opacity-50" />}
