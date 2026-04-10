@@ -86,7 +86,7 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
         const newBid = Math.floor(bidFloor * (1 + (rng.range(1.05, 1.25) - 1) * multiplier));
 
         // 🎭 The Method Actor Tuning: Raise the max bid cap for franchise builders and aggressive studios so they don't give up easily.
-        const maxBidCap = (isMarketDisruptor ? 0.90 : (isFranchiseBuilder ? 0.80 : (isCashCrunch ? 0.15 : 0.40 + (motivationAggression * 0.1)))) * leverageAggression;
+        const maxBidCap = Math.min(0.95, (isMarketDisruptor ? 0.90 : (isFranchiseBuilder ? 0.80 : (isAwardChaser && isPrestigeGenre ? 0.75 : (isCashCrunch ? 0.15 : 0.40 + (motivationAggression * 0.1))))) * leverageAggression);
         if (newBid < rival.cash * maxBidCap) {
           impacts.push({
             type: 'OPPORTUNITY_UPDATED',
