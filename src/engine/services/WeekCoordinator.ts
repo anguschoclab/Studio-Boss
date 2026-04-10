@@ -350,8 +350,6 @@ export class WeekCoordinator {
        const dealImpacts = advanceDeals(state.deals.activeDeals, state.week, context.rng);
        dealImpacts.forEach(i => context.impacts.push(i));
     }
-
-    }
   }
 
   private static runScandalFilter(state: GameState, context: TickContext) {

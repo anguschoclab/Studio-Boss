@@ -14,13 +14,10 @@ export const CommandCenter: React.FC = () => {
 
   if (!gameState || !gameState.studio || !gameState.industry) return null;
 
-  const projects = Object.values(gameState.entities.projects || {});
-  const talentPool = gameState?.entities?.talents ?? {};
-  const rivals = gameState?.entities?.rivals ?? {};
+  const projects = Object.values(gameState.entities?.projects || {});
+  const normalizedTalents = gameState.entities?.talents || {};
+  const normalizedRivals = gameState.entities?.rivals || {};
   const newsHistory = gameState?.industry?.newsHistory ?? [];
-
-  const normalizedTalents = gameState.entities.talents;
-  const normalizedRivals = gameState.entities.rivals;
 
   const activeProjectsCount = projects.filter(p => p.state !== 'released' && p.state !== 'post_release' && p.state !== 'archived').length;
   const talentCount = Object.keys(normalizedTalents).length;

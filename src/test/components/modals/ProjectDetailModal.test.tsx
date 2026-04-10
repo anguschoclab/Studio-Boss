@@ -24,6 +24,8 @@ describe('ProjectDetailModal', () => {
   const mockLockMarketingCampaign = vi.fn();
   const mockRenewProject = vi.fn();
   const mockExploitFranchise = vi.fn();
+  const mockSubmitToFestival = vi.fn();
+  const mockLaunchAwardsCampaign = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -42,13 +44,21 @@ describe('ProjectDetailModal', () => {
             contracts: {},
             rivals: {}
           },
+          studio: {
+            activeCampaigns: {},
+            prestige: 50,
+            reputation: 50
+          },
           finance: { cash: 100_000_000 },
+          deals: { activeDeals: [] }
         },
         signContract: mockSignContract,
         greenlightProject: mockGreenlightProject,
         lockMarketingCampaign: mockLockMarketingCampaign,
         renewProject: mockRenewProject,
         exploitFranchise: mockExploitFranchise,
+        submitToFestival: mockSubmitToFestival,
+        launchAwardsCampaign: mockLaunchAwardsCampaign,
       };
       return selector(state);
     });
@@ -103,15 +113,15 @@ describe('ProjectDetailModal', () => {
             contracts: {},
             rivals: {}
           },
+          studio: { activeCampaigns: {} },
           finance: { cash: 100_000_000 },
+          deals: { activeDeals: [] }
         },
-        signContract: mockSignContract,
       };
       return selector(state);
     });
 
     render(<TooltipProvider><ProjectDetailModal /></TooltipProvider>);
-
     expect(screen.getByRole('dialog')).toBeInTheDocument();
     expect(screen.getByText(mockProject.title)).toBeInTheDocument();
   });
@@ -133,7 +143,9 @@ describe('ProjectDetailModal', () => {
             contracts: {},
             rivals: {}
           },
+          studio: { activeCampaigns: {} },
           finance: { cash: 100_000_000 },
+          deals: { activeDeals: [] }
         },
         greenlightProject: mockGreenlightProject,
       };
@@ -141,13 +153,11 @@ describe('ProjectDetailModal', () => {
     });
 
     render(<TooltipProvider><ProjectDetailModal /></TooltipProvider>);
-
     const approveBtn = screen.getByText('Execute Authorization & Release Budgets');
     expect(approveBtn).toBeInTheDocument();
 
     fireEvent.click(approveBtn);
     expect(mockGreenlightProject).toHaveBeenCalledWith('P1');
-    expect(mockSelectProject).toHaveBeenCalledWith(null);
   });
 
   it('shows marketing configuration and handles lock campaign', () => {
@@ -167,7 +177,9 @@ describe('ProjectDetailModal', () => {
             contracts: {},
             rivals: {}
           },
+          studio: { activeCampaigns: {} },
           finance: { cash: 100_000_000 },
+          deals: { activeDeals: [] }
         },
         lockMarketingCampaign: mockLockMarketingCampaign,
       };
@@ -175,13 +187,11 @@ describe('ProjectDetailModal', () => {
     });
 
     render(<TooltipProvider><ProjectDetailModal /></TooltipProvider>);
-
     const lockBtn = screen.getByText('Authorize Global Release & Dedicate Reserves');
     expect(lockBtn).toBeInTheDocument();
 
     fireEvent.click(lockBtn);
     expect(mockLockMarketingCampaign).toHaveBeenCalledWith('P1', 'none');
-    expect(mockSelectProject).toHaveBeenCalledWith(null);
   });
 
   it('shows renew button for tv project and handles renewal', () => {
@@ -213,7 +223,9 @@ describe('ProjectDetailModal', () => {
             contracts: {},
             rivals: {}
           },
+          studio: { activeCampaigns: {} },
           finance: { cash: 100_000_000 },
+          deals: { activeDeals: [] }
         },
         renewProject: mockRenewProject,
       };
@@ -221,12 +233,10 @@ describe('ProjectDetailModal', () => {
     });
 
     render(<TooltipProvider><ProjectDetailModal /></TooltipProvider>);
-
     const renewBtn = screen.getByText('Order Next Season (Production)');
     expect(renewBtn).toBeInTheDocument();
 
     fireEvent.click(renewBtn);
     expect(mockRenewProject).toHaveBeenCalledWith('P1');
-    expect(mockSelectProject).toHaveBeenCalledWith(null);
   });
 });

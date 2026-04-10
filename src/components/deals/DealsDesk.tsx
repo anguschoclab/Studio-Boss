@@ -17,13 +17,14 @@ export const DealsDesk = () => {
   const { openPitchProject } = useUIStore();
   const [selectedProjectId, setSelectedProjectId] = React.useState<string | null>(null);
 
-  const { buyers, projects, week, activeDeals, talentPool } = useGameStore(
+  const { buyers, projects, week, activeDeals, talentPool, opportunities } = useGameStore(
     useShallow(s => ({
       buyers: selectBuyers(s.gameState),
       projects: selectProjects(s.gameState),
       week: s.gameState?.week || 0,
       activeDeals: s.gameState?.deals?.activeDeals ?? [],
       talentPool: s.gameState?.entities?.talents ?? {},
+      opportunities: s.gameState?.market?.opportunities ?? [],
     }))
   );
 
@@ -118,7 +119,7 @@ export const DealsDesk = () => {
       )}
 
       {/* 🌌 Phase 2: Market Opportunities (Festival Auctions) */}
-      {gameState?.market?.opportunities && gameState.market.opportunities.length > 0 && (
+      {opportunities.length > 0 && (
         <div className="flex flex-col space-y-4">
           <div className="flex items-center gap-3 px-2">
             <div className="w-1.5 h-4 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]" />
@@ -127,7 +128,7 @@ export const DealsDesk = () => {
             </h3>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {gameState.market.opportunities.map(opp => (
+            {opportunities.map(opp => (
               <div key={opp.id} className="p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/5 hover:bg-emerald-500/10 transition-all group flex flex-col gap-3">
                 <div className="flex justify-between items-start">
                   <div>

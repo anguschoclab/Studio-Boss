@@ -57,7 +57,7 @@ export const ProjectDetailModal = () => {
   const launchAwardsCampaign = useGameStore(s => s.launchAwardsCampaign);
 
   const projects = useMemo(() => Object.values(gameState?.entities?.projects || {}), [gameState?.entities?.projects]);
-  const project = useMemo(() => projects.find(p => p.id === selectedProjectId), [projects, selectedProjectId]);
+  const project = useMemo(() => (projects as any[]).find(p => p.id === selectedProjectId), [projects, selectedProjectId]);
   const talentPool = useMemo(() => Object.values(gameState?.entities?.talents || {}), [gameState?.entities?.talents]);
   const contracts = useMemo(() => Object.values(gameState?.entities?.contracts || {}), [gameState?.entities?.contracts]);
   const talentMap = useMemo(() => new Map(talentPool.map(t => [t.id, t])), [talentPool]);
@@ -527,13 +527,15 @@ export const ProjectDetailModal = () => {
                         
                         <div className="grid grid-cols-1 gap-2">
                            <p className="text-[9px] font-black uppercase text-slate-500 tracking-widest">Active FYC Campaign</p>
-                           {gameState?.studio.activeCampaigns?.[project.id] ? (
+                           {gameState?.studio?.activeCampaigns?.[project.id] ? (
                              <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30">
                                 <div className="flex justify-between items-center mb-2">
                                    <span className="text-xs font-black text-amber-500 uppercase italic">Active Outreach</span>
                                     <Badge className="bg-amber-500 text-black font-black">+{gameState.studio.activeCampaigns[project.id].buzzBonus} BUZZ</Badge>
                                 </div>
-                                <p className="text-[10px] text-slate-400 font-bold uppercase">Targeting major categories for the upcoming season.</p>
+                                <p className="text-[10px] text-slate-300 font-medium leading-relaxed italic border-l border-amber-500/30 pl-3">
+                                   "Direct studio outreach with Academy voters is amplifying {project.title}'s prestige profile."
+                                </p>
                              </div>
                            ) : (
                              <div className="grid grid-cols-3 gap-2">
