@@ -8,7 +8,12 @@ import { RandomGenerator } from '../../utils/rng';
 const MotivationScores: Record<StudioMotivation, (rival: RivalStudio, state: GameState) => number> = {
   // 🎭 Method Actor Tuning: Adjusted motivation scores to create more emergent and realistic studio behavior.
   CASH_CRUNCH: (rival) => (rival.cash < 1000000 ? 100 : 0),
-  AWARD_CHASE: (rival) => (rival.prestige < 60 && rival.cash > 5000000 ? 95 : (rival.prestige > 80 ? 85 : 30)) + (rival.motivationProfile.prestige > 70 ? 20 : 0),
+  AWARD_CHASE: (rival) => {
+    let score = (rival.prestige < 60 && rival.cash > 5000000 ? 95 : (rival.prestige > 80 ? 85 : 30)) + (rival.motivationProfile.prestige > 70 ? 20 : 0);
+    // 🎭 The Method Actor Tuning: Studios flush with cash but starved for prestige become desperate award chasers.
+    if (rival.cash > 20000000 && rival.prestige < 40) { score += 50; }
+    return score;
+  },
   FRANCHISE_BUILDING: (rival) => {
     let score = rival.cash > 4000000 && rival.projectCount < 2 ? 120 : (rival.projectCount > 4 ? 80 : 40);
     // 🎭 Method Actor Tuning: Adjusted AgentBrain to prioritize franchise potential by 20% when the rival studio cash reserves are low.
@@ -25,7 +30,12 @@ const MotivationScores: Record<StudioMotivation, (rival: RivalStudio, state: Gam
     }
     return score;
   },
-  STABILITY: (rival) => (rival.cash >= 1000000 && rival.cash <= 3000000 ? 60 : 10),
+  STABILITY: (rival) => {
+    let score = (rival.cash >= 1000000 && rival.cash <= 3000000 ? 60 : 10);
+    // 🎭 The Method Actor Tuning: Successful mid-tier studios prioritize stability over reckless expansion.
+    if (rival.projectCount > 3 && rival.cash > 5000000) { score += 30; }
+    return score;
+  },
 };
 
 /**
