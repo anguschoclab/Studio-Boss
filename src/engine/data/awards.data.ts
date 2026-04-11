@@ -37,7 +37,7 @@ export const AWARD_CONFIGS: AwardConfig[] = [
     id: 'AWD-98beaa23-e89a-0a3b-ea53-2485fde6',
     body: 'Academy Awards', category: 'Best Picture', format: 'film',
     evaluator: p => {
-      let base = (p.awardsProfile?.academyAppeal || 0) + (p.awardsProfile?.prestigeScore || 0) + (p.awardsProfile?.industryNarrativeScore || 0) * 0.5;
+      const base = (p.awardsProfile?.academyAppeal || 0) + (p.awardsProfile?.prestigeScore || 0) + (p.awardsProfile?.industryNarrativeScore || 0) * 0.5;
       // Award Season Momentum: +15% if won Golden Globe Best Picture
       const hasGlobe = p.awards?.some(a => a.body === 'Golden Globes' && a.category === 'Best Picture' && a.status === 'won');
       return hasGlobe ? base * 1.15 : base;
@@ -47,7 +47,7 @@ export const AWARD_CONFIGS: AwardConfig[] = [
     id: 'AWD-2aa20225-3650-149e-4037-06160e95',
     body: 'Academy Awards', category: 'Best Director', format: 'film',
     evaluator: p => {
-      let base = (p.awardsProfile?.craftScore || 0) + (p.awardsProfile?.academyAppeal || 0) * 0.8;
+      const base = (p.awardsProfile?.craftScore || 0) + (p.awardsProfile?.academyAppeal || 0) * 0.8;
       const hasGlobe = p.awards?.some(a => a.body === 'Golden Globes' && a.status === 'won'); // Any Globe win helps Director momentum
       return hasGlobe ? base * 1.10 : base;
     }
@@ -56,7 +56,7 @@ export const AWARD_CONFIGS: AwardConfig[] = [
     id: 'AWD-148e9c3f-c5b5-fda5-6fed-59c02cf5',
     body: 'Academy Awards', category: 'Best Actor', format: 'film',
     evaluator: p => {
-      let base = (p.awardsProfile?.craftScore || 0) + (p.buzz || 0) * 0.5;
+      const base = (p.awardsProfile?.craftScore || 0) + (p.buzz || 0) * 0.5;
       const hasGlobe = p.awards?.some(a => a.body === 'Golden Globes' && a.category.includes('Actor') && a.status === 'won');
       return hasGlobe ? base * 1.15 : base;
     }
@@ -65,7 +65,7 @@ export const AWARD_CONFIGS: AwardConfig[] = [
     id: 'AWD-58774c16-ed7c-9ac0-77ea-fb9effd9',
     body: 'Academy Awards', category: 'Best Actress', format: 'film',
     evaluator: p => {
-      let base = (p.awardsProfile?.craftScore || 0) + (p.buzz || 0) * 0.5;
+      const base = (p.awardsProfile?.craftScore || 0) + (p.buzz || 0) * 0.5;
       const hasGlobe = p.awards?.some(a => a.body === 'Golden Globes' && a.category.includes('Actress') && a.status === 'won');
       return hasGlobe ? base * 1.15 : base;
     }
@@ -74,7 +74,7 @@ export const AWARD_CONFIGS: AwardConfig[] = [
     id: 'AWD-c9b2aee6-464f-fdcc-cf34-c8c90664',
     body: 'Academy Awards', category: 'Best Supporting Actor', format: 'film',
     evaluator: p => {
-      let base = (p.awardsProfile?.craftScore || 0) * 0.8 + (p.buzz || 0) * 0.4;
+      const base = (p.awardsProfile?.craftScore || 0) * 0.8 + (p.buzz || 0) * 0.4;
       const hasGlobe = p.awards?.some(a => a.body === 'Golden Globes' && a.category.includes('Actor') && a.status === 'won');
       return hasGlobe ? base * 1.15 : base;
     }
@@ -83,7 +83,7 @@ export const AWARD_CONFIGS: AwardConfig[] = [
     id: 'AWD-95ec2bf6-c927-a3c0-9008-29aac0ab',
     body: 'Academy Awards', category: 'Best Supporting Actress', format: 'film',
     evaluator: p => {
-      let base = (p.awardsProfile?.craftScore || 0) * 0.8 + (p.buzz || 0) * 0.4;
+      const base = (p.awardsProfile?.craftScore || 0) * 0.8 + (p.buzz || 0) * 0.4;
       const hasGlobe = p.awards?.some(a => a.body === 'Golden Globes' && a.category.includes('Actress') && a.status === 'won');
       return hasGlobe ? base * 1.15 : base;
     }

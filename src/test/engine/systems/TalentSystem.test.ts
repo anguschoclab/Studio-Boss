@@ -108,7 +108,7 @@ describe("TalentSystem", () => {
     };
 
     it("decrements opportunity expiry", () => {
-        let rng = new RandomGenerator(12345);
+        const rng = new RandomGenerator(12345);
       const state = getMockState();
       
       const impact = TalentSystem.advance(state, rng);

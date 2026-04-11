@@ -28,11 +28,10 @@ import { MarketTrendsHeatmap } from '@/components/industry/MarketTrendsHeatmap';
 
 export const IndustryPage: React.FC = () => {
   const state = useGameStore(s => s.gameState);
-  if (!state) return null;
 
-  const { rivals } = state.entities;
-  const { agencies, agents } = state.industry;
-  const genrePopularity = state.studio.culture?.genrePopularity || {
+  const { rivals } = state?.entities || { rivals: {} };
+  const { agencies, agents } = state?.industry || { agencies: [], agents: [] };
+  const genrePopularity = state?.studio?.culture?.genrePopularity || {
     'Drama': 50,
     'Comedy': 50,
     'Action': 50,
@@ -41,11 +40,14 @@ export const IndustryPage: React.FC = () => {
     'Romance': 50
   };
 
-  const rivalsList = Object.values(rivals);
+  const rivalsList = Object.values(rivals) as any[];
 
   // Calculate Genre Fatigue (Sample logic: comparing popularity vs saturation)
   // In a real scenario, we'd pull this from the fatigueEngine state if we persist it
   const marketFatigue = useMemo(() => {
+    if (!state) {
+      return {};
+    }
     const saturation: Record<string, number> = {};
     [
       ...Object.values(state.entities.projects),
@@ -58,6 +60,8 @@ export const IndustryPage: React.FC = () => {
     });
     return saturation;
   }, [state]);
+
+  if (!state) return null;
 
   const containerVariants = {
     hidden: { opacity: 0 },

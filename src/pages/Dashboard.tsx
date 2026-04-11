@@ -4,12 +4,18 @@ import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { TopBar } from '@/components/layout/TopBar';
 import { StudioSidebar } from '@/components/layout/StudioSidebar';
-import { CommandCenter } from '@/components/dashboard/CommandCenter';
 import { m, AnimatePresence } from 'framer-motion';
 
-// Lazy Loaded Panels
+// New 4-Hub Architecture (Phase 1)
+const StudioHQ = React.lazy(() => import('@/components/hubs/StudioHQ').then(m => ({ default: m.StudioHQ })));
+const ProductionHub = React.lazy(() => import('@/components/hubs/ProductionHub').then(m => ({ default: m.ProductionHub })));
+const TalentHub = React.lazy(() => import('@/components/hubs/TalentHub').then(m => ({ default: m.TalentHub })));
+const IntelligenceHub = React.lazy(() => import('@/components/hubs/IntelligenceHub').then(m => ({ default: m.IntelligenceHub })));
+
+// Legacy panels for backward compatibility during transition
+const CommandCenter = React.lazy(() => import('@/components/dashboard/CommandCenter').then(m => ({ default: m.CommandCenter })));
 const PipelineBoard = React.lazy(() => import('@/components/pipeline/PipelineBoard').then(m => ({ default: m.PipelineBoard })));
-const TalentHub = React.lazy(() => import('@/components/talent/TalentHub').then(m => ({ default: m.TalentHub })));
+const TalentHubLegacy = React.lazy(() => import('@/components/talent/TalentHub').then(m => ({ default: m.TalentHub })));
 const FinancePanel = React.lazy(() => import('@/components/finance/FinancePanel').then(m => ({ default: m.FinancePanel })));
 const DiscoveryBoard = React.lazy(() => import('@/components/discovery/DiscoveryBoard').then(m => ({ default: m.DiscoveryBoard })));
 const IndustryPage = React.lazy(() => import('@/pages/IndustryPage').then(m => ({ default: m.IndustryPage })));
@@ -25,7 +31,7 @@ import { PitchProjectModal } from '@/components/modals/PitchProjectModal';
 
 const Dashboard: React.FC = () => {
   const gameState = useGameStore(s => s.gameState);
-  const { activeTab } = useUIStore();
+  const { activeHub, activeTab } = useUIStore();
   const devAutoInit = useGameStore(s => s.devAutoInit);
   const searchParams = new URLSearchParams(window.location.search);
   const isAutoStarting = searchParams.get('autoStart') === 'true';
@@ -40,19 +46,44 @@ const Dashboard: React.FC = () => {
   if (!gameState && !isAutoStarting) return <Navigate to="/" />;
   if (!gameState) return <div className="flex items-center justify-center h-screen font-sans">Initializing Studio...</div>;
 
-  const renderContent = () => {
+  // New 4-Hub render system (Phase 1)
+  const renderHubContent = () => {
+    switch (activeHub) {
+      case 'hq': return <StudioHQ key="hq" />;
+      case 'production': return <ProductionHub key="production" />;
+      case 'talent': return <TalentHub key="talent" />;
+      case 'intelligence': return <IntelligenceHub key="intelligence" />;
+      default: return <StudioHQ key="default" />;
+    }
+  };
+
+  // Legacy render system for backward compatibility (fallback)
+  const renderLegacyContent = () => {
     switch (activeTab) {
-      case 'command': return <CommandCenter key="command" />;
-      case 'pipeline': return <PipelineBoard key="pipeline" />;
+      case 'command': 
+      case 'hq': return <CommandCenter key="command" />;
+      case 'pipeline': 
+      case 'production': return <PipelineBoard key="pipeline" />;
       case 'ip': return <IPVault key="ip" />;
       case 'distribution': return <DistributionHub key="distribution" />;
-      case 'industry': return <IndustryPage key="industry" />;
-      case 'talent': return <TalentHub key="talent" />;
+      case 'industry': 
+      case 'intelligence': return <IndustryPage key="industry" />;
+      case 'talent': return <TalentHubLegacy key="talent" />;
       case 'finance': return <FinancePanel key="finance" />;
       case 'trades': return <DiscoveryBoard key="trades" />;
       case 'awards': return <AwardsHQ key="awards" />;
       default: return <CommandCenter key="default" />;
     }
+  };
+  
+  // Use new hub system when available, fallback to legacy for edge cases
+  const renderContent = () => {
+    // If activeHub is set to a new hub, use new system
+    if (['hq', 'production', 'talent', 'intelligence'].includes(activeHub)) {
+      return renderHubContent();
+    }
+    // Fallback to legacy for any edge cases during transition
+    return renderLegacyContent();
   };
 
   return (
@@ -66,7 +97,7 @@ const Dashboard: React.FC = () => {
           <div className="container mx-auto max-w-[1600px] h-full flex flex-col">
             <AnimatePresence mode="wait">
               <m.div
-                key={activeTab}
+                key={activeHub}
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}

@@ -28,24 +28,35 @@ export const StudioPulse: React.FC = () => {
   const gameState = useGameStore(s => s.gameState);
   const setActiveTab = useUIStore(s => s.setActiveTab);
 
-  if (!gameState) return null;
-
-  const { studio, finance, week, entities, market } = gameState;
-  const projects = Object.values(entities.projects);
-  const talents = Object.values(entities.talents);
+  const { studio, finance, week, entities, market } = gameState || {};
+  const projects = entities ? Object.values(entities.projects) : [];
+  const talents = entities ? Object.values(entities.talents) : [];
 
   // Calculate health metrics
   const healthMetrics = useMemo(() => {
+    if (!gameState || !finance) {
+      return {
+        runway: 999,
+        runwayWeeks: 999,
+        activeProjects: 0,
+        atRiskProjects: 0,
+        cashTrend: 0,
+        cashHistory: [],
+        talentCount: 0,
+        marketSentiment: 50,
+      };
+    }
+
     const cash = finance.cash;
     const weeklyBurn = projects
       .filter(p => p.state === 'production' || p.state === 'development')
       .reduce((sum, p) => sum + (p.weeklyCost || 0), 0);
     const runway = weeklyBurn > 0 ? cash / weeklyBurn : 999;
-    
-    const activeProjects = projects.filter(p => 
+
+    const activeProjects = projects.filter(p =>
       p.state !== 'released' && p.state !== 'archived'
     ).length;
-    
+
     const atRiskProjects = projects.filter(p => {
       // Projects in turnaround or with high accumulated cost vs budget are at risk
       const isOverBudget = (p.accumulatedCost || 0) > (p.budget || 0) * 1.2;
@@ -54,7 +65,7 @@ export const StudioPulse: React.FC = () => {
     }).length;
 
     const cashHistory = finance.weeklyHistory?.slice(-8).map(h => h.cash) || [];
-    const cashTrend = cashHistory.length > 1 
+    const cashTrend = cashHistory.length > 1
       ? (cashHistory[cashHistory.length - 1] - cashHistory[0]) / Math.abs(cashHistory[0] || 1)
       : 0;
 
@@ -68,12 +79,12 @@ export const StudioPulse: React.FC = () => {
       talentCount: talents.length,
       marketSentiment: finance.marketState?.sentiment || 50,
     };
-  }, [finance, projects, talents, market]);
+  }, [gameState, finance, projects, talents]);
 
   // Generate alerts based on game state
   const alerts: PulseAlert[] = useMemo(() => {
     const list: PulseAlert[] = [];
-    
+
     if (healthMetrics.runway < 4 && healthMetrics.runway > 0) {
       list.push({
         id: 'cash-critical',
@@ -128,6 +139,8 @@ export const StudioPulse: React.FC = () => {
     if (healthMetrics.marketSentiment < 30) score -= 10;
     return Math.max(0, Math.min(100, score));
   }, [healthMetrics]);
+
+  if (!gameState) return null;
 
   const handleAlertAction = (tab?: string) => {
     if (tab) {

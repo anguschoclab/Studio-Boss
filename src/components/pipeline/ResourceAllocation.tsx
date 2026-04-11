@@ -12,16 +12,17 @@ interface ResourceAllocationProps {
 
 export const ResourceAllocation: React.FC<ResourceAllocationProps> = ({ className }) => {
   const gameState = useGameStore(s => s.gameState);
-  
-  if (!gameState) return null;
 
   const { projects, finance } = useMemo(() => {
+    if (!gameState) {
+      return { projects: [], finance: { cash: 0 } };
+    }
     const projects = Object.values(gameState.entities.projects);
     return { projects, finance: gameState.finance };
   }, [gameState]);
 
   const allocationData = useMemo(() => {
-    const activeProjects = projects.filter(p => 
+    const activeProjects = projects.filter(p =>
       p.state === 'production' || p.state === 'development' || p.state === 'marketing'
     );
 
@@ -46,15 +47,17 @@ export const ResourceAllocation: React.FC<ResourceAllocationProps> = ({ classNam
       production: [],
       marketing: [],
     };
-    
+
     allocationData.forEach(p => {
       if (groups[p.state]) {
         groups[p.state].push(p);
       }
     });
-    
+
     return groups;
   }, [allocationData]);
+
+  if (!gameState) return null;
 
   const isOverallocated = runway < 8;
   const isCritical = runway < 4;

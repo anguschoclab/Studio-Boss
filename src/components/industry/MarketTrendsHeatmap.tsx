@@ -14,29 +14,30 @@ const QUARTERS = ['Q1', 'Q2', 'Q3', 'Q4'];
 
 export const MarketTrendsHeatmap: React.FC<MarketTrendsHeatmapProps> = ({ className }) => {
   const gameState = useGameStore(s => s.gameState);
-  
-  if (!gameState) return null;
 
   // Generate heatmap data based on genre trends and market saturation
   const heatmapData = useMemo(() => {
+    if (!gameState) {
+      return [];
+    }
     const { trends = [] } = gameState.market;
-    const marketSentiment = gameState.finance.marketState?.sentiment || 50;
-    const { genrePopularity = {} } = gameState.studio.culture || {};
-    
+    const marketSentiment = gameState.finance?.marketState?.sentiment || 50;
+    const { genrePopularity = {} } = gameState.studio?.culture || {};
+
     const data: { id: string; row: string; col: string; value: number; tooltip: string }[] = [];
-    
+
     GENRES.forEach(genre => {
       QUARTERS.forEach(quarter => {
         // Calculate opportunity score based on multiple factors
         const trendData = trends.find(t => t.genre.toLowerCase() === genre.toLowerCase());
         const popularity = genrePopularity[genre as keyof typeof genrePopularity] || 50;
-        
+
         // Count active projects in this genre
         const genreProjects = Object.values(gameState.entities.projects).filter(
-          p => p.genre.toLowerCase() === genre.toLowerCase() && 
+          p => p.genre.toLowerCase() === genre.toLowerCase() &&
                p.state !== 'archived' && p.state !== 'post_release'
         ).length;
-        
+
         // Calculate saturation (how crowded the market is)
         const rivalProjects = Object.values(gameState.entities.rivals).reduce(
           (sum, rival) => sum + Object.values(rival.projects || {})
@@ -44,19 +45,19 @@ export const MarketTrendsHeatmap: React.FC<MarketTrendsHeatmapProps> = ({ classN
           0
         );
         const saturation = Math.min(100, (genreProjects + rivalProjects) * 10);
-        
+
         // Combine factors for opportunity score
         const heat = trendData?.heat || 50;
-        const opportunity = Math.max(0, Math.min(100, 
+        const opportunity = Math.max(0, Math.min(100,
           (popularity * 0.3) + (heat * 0.4) - (saturation * 0.3) + (marketSentiment * 0.1)
         ));
-        
+
         let status = 'Stable';
         if (opportunity > 70) status = 'Hot';
         else if (opportunity > 50) status = 'Growing';
         else if (opportunity < 30) status = 'Cooling';
         else if (saturation > 70) status = 'Oversaturated';
-        
+
         data.push({
           id: `${genre}-${quarter}`,
           row: genre,
@@ -66,7 +67,7 @@ export const MarketTrendsHeatmap: React.FC<MarketTrendsHeatmapProps> = ({ classN
         });
       });
     });
-    
+
     return data;
   }, [gameState]);
 
@@ -77,7 +78,7 @@ export const MarketTrendsHeatmap: React.FC<MarketTrendsHeatmapProps> = ({ classN
       const genreData = heatmapData.filter(d => d.row === genre);
       avgByGenre[genre] = genreData.reduce((sum, d) => sum + d.value, 0) / (genreData.length || 1);
     });
-    
+
     return Object.entries(avgByGenre)
       .sort((a, b) => b[1] - a[1])
       .slice(0, 3);
@@ -90,11 +91,13 @@ export const MarketTrendsHeatmap: React.FC<MarketTrendsHeatmapProps> = ({ classN
       const genreData = heatmapData.filter(d => d.row === genre);
       avgByGenre[genre] = genreData.reduce((sum, d) => sum + d.value, 0) / (genreData.length || 1);
     });
-    
+
     return Object.entries(avgByGenre)
       .sort((a, b) => a[1] - b[1])
       .slice(0, 3);
   }, [heatmapData]);
+
+  if (!gameState) return null;
 
   return (
     <Card className={cn("border-border/50", className)}>

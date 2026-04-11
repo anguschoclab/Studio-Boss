@@ -115,38 +115,38 @@ export default defineConfig(({ mode }) => ({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          'vendor-recharts': ['recharts'],
-          'vendor-framer': ['framer-motion'],
-          'vendor-radix': [
-            '@radix-ui/react-accordion',
-            '@radix-ui/react-alert-dialog',
-            '@radix-ui/react-aspect-ratio',
-            '@radix-ui/react-avatar',
-            '@radix-ui/react-checkbox',
-            '@radix-ui/react-collapsible',
-            '@radix-ui/react-context-menu',
-            '@radix-ui/react-dialog',
-            '@radix-ui/react-dropdown-menu',
-            '@radix-ui/react-hover-card',
-            '@radix-ui/react-label',
-            '@radix-ui/react-menubar',
-            '@radix-ui/react-navigation-menu',
-            '@radix-ui/react-popover',
-            '@radix-ui/react-progress',
-            '@radix-ui/react-radio-group',
-            '@radix-ui/react-scroll-area',
-            '@radix-ui/react-select',
-            '@radix-ui/react-separator',
-            '@radix-ui/react-slider',
-            '@radix-ui/react-slot',
-            '@radix-ui/react-switch',
-            '@radix-ui/react-tabs',
-            '@radix-ui/react-toast',
-            '@radix-ui/react-toggle',
-            '@radix-ui/react-toggle-group',
-            '@radix-ui/react-tooltip',
-          ],
+        manualChunks: (id) => {
+          if (id.includes('recharts')) return 'vendor-recharts';
+          if (id.includes('framer-motion')) return 'vendor-framer';
+          if (id.includes('sonner')) return 'vendor-sonner';
+          if (id.includes('cmdk')) return 'vendor-cmdk';
+          
+          // Group Radix UI components to avoid circular dependencies
+          if (id.includes('@radix-ui')) {
+            if (id.includes('react-slot') || id.includes('react-label') || 
+                id.includes('react-separator') || id.includes('react-progress') ||
+                id.includes('react-dialog') || id.includes('react-popover') ||
+                id.includes('react-tooltip') || id.includes('react-alert-dialog') ||
+                id.includes('react-dropdown-menu') || id.includes('react-context-menu')) {
+              return 'vendor-radix-core';
+            }
+            if (id.includes('react-checkbox') || id.includes('react-radio-group') ||
+                id.includes('react-select') || id.includes('react-switch') ||
+                id.includes('react-slider') || id.includes('react-tabs') ||
+                id.includes('react-toggle') || id.includes('react-toggle-group')) {
+              return 'vendor-radix-inputs';
+            }
+            if (id.includes('react-accordion') || id.includes('react-aspect-ratio') ||
+                id.includes('react-avatar') || id.includes('react-collapsible') ||
+                id.includes('react-hover-card') || id.includes('react-scroll-area') ||
+                id.includes('react-menubar') || id.includes('react-navigation-menu')) {
+              return 'vendor-radix-layout';
+            }
+            if (id.includes('react-toast')) {
+              return 'vendor-radix-feedback';
+            }
+            return 'vendor-radix-core';
+          }
         },
       },
     },

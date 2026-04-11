@@ -1,24 +1,18 @@
 import React from 'react';
-import { useUIStore, TabId } from '@/store/uiStore';
+import { useUIStore, HubId } from '@/store/uiStore';
 import { useGameStore } from '@/store/gameStore';
-import { selectActiveProjects } from '@/store/selectors';
 import { formatMoney } from '@/engine/utils';
 import { 
   LayoutDashboardIcon as LayoutDashboard, 
   FilmIcon as Film, 
-  LibraryIcon as Library, 
-  GlobeIcon as Globe, 
   UsersIcon as Users, 
-  BriefcaseIcon as Briefcase, 
-  NewspaperIcon as Newspaper,
-  Building2Icon as Building2,
+  GlobeIcon as Globe,
   ChevronLeftIcon as ChevronLeft,
   ChevronRightIcon as ChevronRight,
   LogOutIcon as LogOut,
   SettingsIcon as Settings,
   DollarSignIcon as DollarSign,
   StarIcon as Star,
-  TrophyIcon as Trophy,
   ClapperboardIcon as Clapperboard
 } from '@/components/shared/Icons';
 import { cn } from '@/lib/utils';
@@ -26,20 +20,23 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useNavigate } from '@tanstack/react-router';
+import { Badge } from '@/components/ui/badge';
 
 const SidebarCashChart = React.lazy(() => import('./SidebarCashChart'));
 
 interface NavItem {
-  id: TabId;
+  id: HubId;
   label: string;
   icon: React.ElementType;
   tooltip: string;
   badge?: (state: GameState) => number | null;
+  badgeType?: 'urgent' | 'info' | 'neutral';
 }
 
 import { GameState } from '@/engine/types';
 
-const getProjectsNeedingAttention = (state: GameState) => {
+// Badge calculation functions for each hub
+const getOpsAlertsCount = (state: GameState) => {
   const projects = Object.values(state.entities.projects);
   return projects.filter(p => {
     const isOverBudget = (p.accumulatedCost || 0) > (p.budget || 0) * 1.2;
@@ -50,37 +47,71 @@ const getProjectsNeedingAttention = (state: GameState) => {
   }).length;
 };
 
+const getProductionAlerts = (state: GameState) => {
+  const projects = Object.values(state.entities.projects);
+  const needsGreenlight = projects.filter(p => p.state === 'needs_greenlight').length;
+  return needsGreenlight > 0 ? needsGreenlight : null;
+};
+
+const getMarketplaceAlerts = (state: GameState) => {
+  return Object.values(state.market?.opportunities || {}).length;
+};
+
+const getIntelligenceAlerts = (state: GameState) => {
+  const marketEvents = state.market?.activeMarketEvents?.length || 0;
+  const rivals = Object.keys(state.entities?.rivals || {}).length;
+  return marketEvents > 0 ? marketEvents : rivals > 0 ? null : null;
+};
+
+// New 4-Hub Navigation
 const NAV_ITEMS: NavItem[] = [
-  { id: 'command', label: 'HQ', icon: LayoutDashboard, tooltip: 'Studio overview, alerts, and top-line metrics' },
   { 
-    id: 'pipeline', 
+    id: 'hq', 
+    label: 'Studio HQ', 
+    icon: LayoutDashboard, 
+    tooltip: 'Studio overview, operations, strategy, and news',
+    badge: getOpsAlertsCount,
+    badgeType: 'urgent'
+  },
+  { 
+    id: 'production', 
     label: 'Production', 
     icon: Film, 
-    tooltip: 'Active projects from development through release',
-    badge: getProjectsNeedingAttention
+    tooltip: 'Complete project lifecycle: slate, development, distribution, catalog',
+    badge: getProductionAlerts,
+    badgeType: 'info'
   },
-  { id: 'trades', label: 'The Trades', icon: Newspaper, tooltip: 'Scout IP opportunities, industry news, and market trends' },
-  { id: 'talent', label: 'Talent', icon: Users, tooltip: 'Talent roster and industry database (SBDB)' },
-  { id: 'distribution', label: 'Distribution', icon: Globe, tooltip: 'Deals desk, streaming platforms, and Nielsen ratings' },
-  { id: 'awards', label: 'Awards HQ', icon: Trophy, tooltip: 'Manage FYC campaigns, track industry ceremonies, and view accolades' },
-  { id: 'ip', label: 'IP Vault', icon: Library, tooltip: 'Owned intellectual property, franchises, and library rights' },
-  { id: 'industry', label: 'Industry', icon: Building2, tooltip: 'Rival studios, M&A activity, and market intelligence' },
-  { id: 'finance', label: 'Finance', icon: Briefcase, tooltip: 'P&L statements, revenue streams, and cash flow' },
+  { 
+    id: 'talent', 
+    label: 'Talent & Deals', 
+    icon: Users, 
+    tooltip: 'Roster, marketplace, negotiations, and agency network',
+    badge: getMarketplaceAlerts,
+    badgeType: 'neutral'
+  },
+  { 
+    id: 'intelligence', 
+    label: 'Intelligence', 
+    icon: Globe, 
+    tooltip: 'Rivals, awards, market trends, and financial analysis',
+    badge: getIntelligenceAlerts,
+    badgeType: 'neutral'
+  },
 ];
 
 export const StudioSidebar = () => {
-  const { activeTab, setActiveTab } = useUIStore();
+  const { activeHub, setActiveHub } = useUIStore();
   const gameState = useGameStore(s => s.gameState);
   const clearGame = useGameStore(s => s.clearGame);
   const [isCollapsed, setIsCollapsed] = React.useState(false);
   const navigate = useNavigate();
 
-  if (!gameState) return null;
-
   const cashHistory = React.useMemo(() => {
     if (!gameState?.finance?.weeklyHistory) return [];
     return gameState.finance.weeklyHistory.slice(-12).map(h => ({ cash: h.cash }));
   }, [gameState?.finance?.weeklyHistory]);
+
+  if (!gameState) return null;
 
 
   const handleExit = () => {
@@ -119,11 +150,22 @@ export const StudioSidebar = () => {
       <Separator className="bg-border/30 mx-5 w-auto mb-4" />
 
       {/* Navigation */}
-      <div className="flex-1 px-3 space-y-0.5 overflow-y-auto custom-scrollbar">
+      <div className="flex-1 px-3 space-y-1 overflow-y-auto custom-scrollbar">
         {NAV_ITEMS.map((item) => {
-          const isActive = activeTab === item.id;
+          const isActive = activeHub === item.id;
           const badgeCount = item.badge ? item.badge(gameState) : null;
           const hasBadge = badgeCount && badgeCount > 0;
+          
+          // Determine badge styling based on type and state
+          const getBadgeStyles = () => {
+            if (!hasBadge) return '';
+            if (isActive) return "bg-primary text-primary-foreground";
+            switch (item.badgeType) {
+              case 'urgent': return "bg-red-500 text-white animate-pulse";
+              case 'info': return "bg-amber-500/80 text-white";
+              default: return "bg-muted text-muted-foreground";
+            }
+          };
           
           return (
             <Tooltip key={item.id}>
@@ -131,41 +173,62 @@ export const StudioSidebar = () => {
                 <Button
                   variant="ghost"
                   size={isCollapsed ? "icon" : "default"}
-                  onClick={() => setActiveTab(item.id)}
+                  onClick={() => setActiveHub(item.id)}
                   className={cn(
-                    "w-full justify-start gap-3 transition-all duration-200 relative group",
-                    isCollapsed ? "justify-center h-11" : "h-10 px-4",
+                    "w-full justify-start gap-3 transition-all duration-200 relative group rounded-lg",
+                    isCollapsed ? "justify-center h-12" : "h-11 px-4",
                     isActive 
-                      ? "bg-primary/10 text-primary hover:bg-primary/20 hover:text-primary" 
-                      : "text-muted-foreground hover:bg-accent/50 hover:text-foreground",
-                    hasBadge && !isActive && "text-amber-400"
+                      ? "bg-primary/15 text-primary hover:bg-primary/25 hover:text-primary shadow-[0_0_15px_hsl(var(--primary)/0.15)]" 
+                      : "text-muted-foreground hover:bg-white/5 hover:text-foreground",
+                    hasBadge && !isActive && item.badgeType === 'urgent' && "border-l-2 border-l-red-500/50"
                   )}
                 >
                   <div className="relative">
-                    <item.icon className={cn("h-4.5 w-4.5 shrink-0", isActive && "drop-shadow-[0_0_8px_hsl(var(--primary)/0.5)]")} />
+                    <item.icon className={cn(
+                      "h-5 w-5 shrink-0 transition-all",
+                      isActive ? "drop-shadow-[0_0_8px_hsl(var(--primary)/0.6)]" : "opacity-70 group-hover:opacity-100"
+                    )} />
                     {hasBadge && isCollapsed && (
-                      <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+                      <span className={cn(
+                        "absolute -top-1 -right-1 min-w-[16px] h-4 px-1 rounded-full text-[9px] font-bold flex items-center justify-center",
+                        item.badgeType === 'urgent' ? "bg-red-500 text-white" : "bg-amber-500 text-white"
+                      )}>
+                        {badgeCount > 9 ? '9+' : badgeCount}
+                      </span>
                     )}
                   </div>
                   {!isCollapsed && (
-                    <span className="font-semibold truncate text-[13px] tracking-tight">{item.label}</span>
-                  )}
-                  {hasBadge && !isCollapsed && (
                     <span className={cn(
-                      "ml-auto text-[10px] font-bold px-1.5 py-0.5 rounded-full",
-                      isActive ? "bg-primary text-primary-foreground" : "bg-red-500/20 text-red-400"
+                      "font-semibold truncate text-[13px] tracking-tight",
+                      isActive && "font-bold"
                     )}>
-                      {badgeCount}
+                      {item.label}
                     </span>
                   )}
+                  {hasBadge && !isCollapsed && (
+                    <Badge 
+                      variant="secondary"
+                      className={cn(
+                        "ml-auto h-5 min-w-5 px-1.5 text-[10px] font-bold flex items-center justify-center",
+                        getBadgeStyles()
+                      )}
+                    >
+                      {badgeCount > 99 ? '99+' : badgeCount}
+                    </Badge>
+                  )}
                   {isActive && (
-                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 bg-primary rounded-r-full shadow-[0_0_10px_hsl(var(--primary)/0.5)]" />
+                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-6 bg-primary rounded-r-full shadow-[0_0_10px_hsl(var(--primary)/0.5)]" />
                   )}
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="right" className="font-bold text-[11px] uppercase tracking-widest bg-card border-border">
-                {isCollapsed ? item.label : item.tooltip}
-                {hasBadge && <span className="ml-2 text-red-400">({badgeCount} need attention)</span>}
+              <TooltipContent side="right" className="font-bold text-[11px] uppercase tracking-widest bg-card border-border max-w-[200px]">
+                <div className="space-y-1">
+                  <p>{item.label}</p>
+                  <p className="text-[10px] font-normal normal-case text-muted-foreground">{item.tooltip}</p>
+                  {hasBadge && item.badgeType === 'urgent' && (
+                    <p className="text-[10px] text-red-400">{badgeCount} items need attention</p>
+                  )}
+                </div>
               </TooltipContent>
             </Tooltip>
           );

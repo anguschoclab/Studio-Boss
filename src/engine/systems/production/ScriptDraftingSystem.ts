@@ -27,7 +27,7 @@ export function tickScriptDevelopment(
   const newScriptHeat = Math.max(0, Math.min(100, p.scriptHeat + heatDrift));
   let newBuzz = p.buzz;
   let newActiveRoles = [...p.activeRoles];
-  let newScriptEvents = [...p.scriptEvents];
+  const newScriptEvents = [...p.scriptEvents];
 
   // 2. Evolution Events (Low Probability)
   if (roll < 0.15) {

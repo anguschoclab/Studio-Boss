@@ -12,10 +12,14 @@ interface CompetitorComparisonProps {
 
 export const CompetitorComparison: React.FC<CompetitorComparisonProps> = ({ className }) => {
   const gameState = useGameStore(s => s.gameState);
-  
-  if (!gameState) return null;
 
   const { studio, rivals } = useMemo(() => {
+    if (!gameState) {
+      return {
+        studio: { name: '', prestige: 0 },
+        rivals: [],
+      };
+    }
     return {
       studio: gameState.studio,
       rivals: Object.values(gameState.entities.rivals),
@@ -24,6 +28,9 @@ export const CompetitorComparison: React.FC<CompetitorComparisonProps> = ({ clas
 
   // Prepare bar chart data
   const financialData = useMemo(() => {
+    if (!gameState) {
+      return [];
+    }
     const allStudios = [
       { name: studio.name.slice(0, 10), cash: gameState.finance.cash, prestige: studio.prestige, isPlayer: true },
       ...rivals.map(r => ({
@@ -34,10 +41,13 @@ export const CompetitorComparison: React.FC<CompetitorComparisonProps> = ({ clas
       })),
     ];
     return allStudios.sort((a, b) => b.cash - a.cash);
-  }, [studio, rivals, gameState.finance.cash]);
+  }, [studio, rivals, gameState]);
 
   // Prepare radar chart data for multi-dimensional comparison
   const radarData = useMemo(() => {
+    if (!gameState || !gameState.finance) {
+      return [];
+    }
     const maxCash = Math.max(gameState.finance.cash, ...rivals.map(r => r.cash)) || 1;
     const maxProjects = Math.max(
       Object.keys(gameState.entities.projects).length,
@@ -62,13 +72,15 @@ export const CompetitorComparison: React.FC<CompetitorComparisonProps> = ({ clas
       },
       {
         metric: 'Strength',
-        player: rivals.length > 0 
-          ? 100 - (rivals.reduce((sum, r) => sum + r.strength, 0) / rivals.length) 
+        player: rivals.length > 0
+          ? 100 - (rivals.reduce((sum, r) => sum + r.strength, 0) / rivals.length)
           : 50,
         avgRival: 50,
       },
     ];
   }, [studio, rivals, gameState]);
+
+  if (!gameState) return null;
 
   const getRank = (value: number, values: number[], ascending = false) => {
     const sorted = [...values].sort((a, b) => ascending ? a - b : b - a);

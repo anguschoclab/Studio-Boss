@@ -6,12 +6,14 @@ import { TrendingUp, ShieldAlert, History, Users, Activity } from 'lucide-react'
 
 export const MADashboard: React.FC = () => {
   const state = useGameStore(s => s.gameState);
-  if (!state) return null;
-  
+
   const industryData = useMemo(() => {
+    if (!state) {
+      return { allStudios: [], mnaEvents: [] };
+    }
     const rivals = state.entities.rivals;
     const playerShare = RegulatorSystem.getMarketShare(state, 'player');
-    
+
     const allStudios = [
       { id: 'player', name: state.studio.name, share: playerShare, isPlayer: true, archetype: state.studio.archetype },
       ...Object.values(rivals).map(r => ({
@@ -23,8 +25,8 @@ export const MADashboard: React.FC = () => {
       }))
     ].sort((a, b) => b.share - a.share);
 
-    const mnaEvents = state.industry.newsHistory.filter(n => 
-      n.headline.toLowerCase().includes('consolidation') || 
+    const mnaEvents = state.industry.newsHistory.filter(n =>
+      n.headline.toLowerCase().includes('consolidation') ||
       n.headline.toLowerCase().includes('acquisition') ||
       n.headline.toLowerCase().includes('merger') ||
       n.headline.toLowerCase().includes('vertical integration')
@@ -32,6 +34,8 @@ export const MADashboard: React.FC = () => {
 
     return { allStudios, mnaEvents };
   }, [state]);
+
+  if (!state) return null;
 
   return (
     <div className="p-6 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">

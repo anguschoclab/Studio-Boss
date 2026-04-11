@@ -22,7 +22,7 @@ export class TalentSystem {
     // 1. Fatigue & Commitment Decay (Deterministic via SchedulingEngine)
     for (const id in state.entities.talents) {
       const talent = state.entities.talents[id];
-      let update: Partial<Talent> = {};
+      const update: Partial<Talent> = {};
       let changed = false;
 
       // --- MEDICAL LEAVE / BURNOUT ---

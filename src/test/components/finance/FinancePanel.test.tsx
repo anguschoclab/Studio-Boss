@@ -4,7 +4,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { FinancePanel } from '@/components/finance/FinancePanel';
 import { useGameStore } from '@/store/gameStore';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 // Mock Recharts to avoid SVG/JSDOM issues
 vi.mock('recharts', () => ({
@@ -55,11 +54,8 @@ vi.mock('@/engine/systems/finance', () => ({
 }));
 
 describe('FinancePanel Component', () => {
-  const queryClient = new QueryClient();
-
   beforeEach(() => {
     vi.clearAllMocks();
-    queryClient.clear();
   });
 
   const generateMockProject = (id: string, state: string, cost: number, rev: number) => ({
@@ -96,9 +92,7 @@ describe('FinancePanel Component', () => {
     });
 
     render(
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider><FinancePanel /></TooltipProvider>
-      </QueryClientProvider>
+      <TooltipProvider><FinancePanel /></TooltipProvider>
     );
 
     expect(screen.getByText('Financials & Forecasts')).toBeDefined();
@@ -140,9 +134,7 @@ describe('FinancePanel Component', () => {
     });
 
     render(
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider><FinancePanel /></TooltipProvider>
-      </QueryClientProvider>
+      <TooltipProvider><FinancePanel /></TooltipProvider>
     );
 
     expect(screen.getByText('$2,500,000')).toBeDefined();
@@ -181,9 +173,7 @@ describe('FinancePanel Component', () => {
     });
 
     render(
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider><FinancePanel /></TooltipProvider>
-      </QueryClientProvider>
+      <TooltipProvider><FinancePanel /></TooltipProvider>
     );
 
     // Cash on hand should be negative
