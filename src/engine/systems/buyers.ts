@@ -131,6 +131,17 @@ export function calculateFitScore(project: Project, buyer: Buyer, currentWeek: n
   if (buyer.archetype === 'network' && project.budgetTier === 'blockbuster') score -= 20;
   if (buyer.archetype === 'premium' && project.budgetTier === 'low') score -= 30;
 
+  // 🎭 The Method Actor Tuning: Premium buyers are obsessed with prestige and heavily penalize low buzz.
+  if (buyer.archetype === 'premium') {
+      if (project.buzz > 80) score += 25;
+      else if (project.buzz < 50) score -= 20;
+  }
+
+  // 🎭 The Method Actor Tuning: Streamers desperately want high buzz content to drive subscriptions.
+  if (buyer.archetype === 'streamer' && project.buzz > 75) {
+      score += 20;
+  }
+
   const buzzFactor = (project.buzz / 100) * 20; 
   score += buzzFactor;
   score += rng.range(-10, 10);
