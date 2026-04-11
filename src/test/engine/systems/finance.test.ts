@@ -119,15 +119,15 @@ describe("Finance System", () => {
           rng
         );
         // ExpenseProcessor.calculateStudioBurn(Level 3, 2 active [unreleased])
-        // levelScale = 1.6^2 = 2.56
-        // baseRent = 1,500,000
-        // projectPenalty = 400,000
-        // overhead = (1.5M * 2.56) + (2 * 400k) = 3,840,000 + 800,000 = 4,640,000
-        expect(report.expenses.overhead).toBe(4640000);
+        // levelScale = 1.8^2 = 3.24
+        // baseRent = 2,000,000
+        // projectPenalty = 500,000
+        // overhead = (2.0M * 3.24) + (2 * 500k) = 6,480,000 + 1,000,000 = 7,480,000
+        expect(report.expenses.overhead).toBe(7480000);
         expect(report.expenses.production).toBe(20000); // Only mockProjectProd is in production
-        expect(report.revenue.boxOffice).toBe(16800); // 100k * 0.28 * 0.6 (low budget penalty)
-        // Net: 35k - 1,828,125 (overhead) - 20k (prod) + savings yield = ~-1,812,644
-        expect(report.netProfit).toBeLessThan(-1800000);
+        expect(report.revenue.boxOffice).toBe(15000); // 100k * 0.25 * 0.6 (low budget penalty)
+        // Net: 15k - 7,480,000 (overhead) - 20k (prod) + 385 savings yield = ~-7,484,615
+        expect(report.netProfit).toBeLessThan(-7400000);
         expect(report.startingCash).toBe(1000000);
     });
   });
@@ -189,14 +189,14 @@ describe("Finance System", () => {
          const impacts = tickFinance(stateWithDist, rng);
          const impact = impacts.find(i => i.type === 'FUNDS_CHANGED');
          
-         // Revenue: 200k * 0.30 = 60k
-         // Overhead: Level 3, 1 active unreleased = (1M * 2.25) + (1 * 300k) = 2,250,000 + 300,000 = 2,550,000
+         // Revenue: 200k * 0.25 = 50k
+         // Overhead: Level 3, 1 active unreleased = (2M * 3.24) + (1 * 500k) = 6,480,000 + 500,000 = 6,980,000
          // Production: 20k
          // Savings Yield: 1M * (0.02 / 52) = 385
-         // Total Expenses: 1,578,125 - 385 = 1,577,740
-         // Net: 70k - 1,577,740 = -1,507,740
+         // Total Expenses: 6,980,000 + 20,000 - 385 = 6,999,615
+         // Net: 50k - 6,999,615 = -6,949,615
          // Wait, the project was theatrical, 200k weekly revenue.
-         expect(impact?.payload.amount).toBe(-4226015);
+         expect(impact?.payload.amount).toBe(-6969615);
       });
   });
 });

@@ -20,8 +20,8 @@ export const BUDGET_TIERS: Record<BudgetTierKey, BudgetTierData> = {
     weeklyCost: 25_000,
     developmentWeeks: 4,
     productionWeeks: 4,
-    // The Studio Comptroller: Adjusted indie range.
-    revenueRange: [5_000, 15_000_000],
+    // The Studio Comptroller: Adjusted indie range for highly profitable low-budget horrors.
+    revenueRange: [5_000, 25_000_000],
   },
   low: {
     key: 'low',
@@ -31,8 +31,8 @@ export const BUDGET_TIERS: Record<BudgetTierKey, BudgetTierData> = {
     weeklyCost: 250_000,
     developmentWeeks: 6,
     productionWeeks: 8,
-    // The Studio Comptroller: Expanded top bound for micro-budget horror anomalies.
-    revenueRange: [50_000, 600_000_000],
+    // The Studio Comptroller: Expanded top bound for huge anomaly payoffs.
+    revenueRange: [20_000, 750_000_000],
   },
   mid: {
     key: 'mid',
@@ -52,8 +52,8 @@ export const BUDGET_TIERS: Record<BudgetTierKey, BudgetTierData> = {
     weeklyCost: 3_000_000,
     developmentWeeks: 12,
     productionWeeks: 16,
-    // The Studio Comptroller: Adjusted high risk/reward.
-    revenueRange: [5_000_000, 1_500_000_000],
+    // The Studio Comptroller: Increased risk on the bottom end for high budgets.
+    revenueRange: [2_500_000, 1_600_000_000],
   },
   blockbuster: {
     key: 'blockbuster',
@@ -63,7 +63,7 @@ export const BUDGET_TIERS: Record<BudgetTierKey, BudgetTierData> = {
     weeklyCost: 8_000_000,
     developmentWeeks: 16,
     productionWeeks: 24,
-    // The Studio Comptroller: Lowered floor and increased burn so flops are devastating.
-    revenueRange: [10_000_000, 3_000_000_000],
+    // The Studio Comptroller: Lowered floor and raised ceiling to make flops truly devastating while allowing huge returns.
+    revenueRange: [5_000_000, 3_500_000_000],
   },
 };
