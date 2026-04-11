@@ -15,7 +15,7 @@ export const PLATFORMS_REGISTRY: PlatformData[] = [
     id: 'plat-6f3b7d1a-9c4e-4e2a-bb0a-25de8fc4ad13',
     name: 'Nebula+',
     archetype: 'streamer',
-    baseMarketShare: 0.20,
+    baseMarketShare: 0.15,
     reach: 85,
     description: 'The incumbent global leader, now facing fierce subscriber churn in the cutthroat streaming wars as audiences demand consistent season-over-season quality and 100-episode syndication hits.'
   },
@@ -31,7 +31,7 @@ export const PLATFORMS_REGISTRY: PlatformData[] = [
     id: 'plat-2a1b3c4d-5e6f-4a0b-9c8d-7e6f5a4b3c2d',
     name: 'GBC Network',
     archetype: 'network',
-    baseMarketShare: 0.12,
+    baseMarketShare: 0.10,
     reach: 100,
     description: 'Traditional broadcast dinosaur bleeding viewers but holding onto lucrative live sports and 100-episode syndication rights.'
   },
@@ -39,7 +39,7 @@ export const PLATFORMS_REGISTRY: PlatformData[] = [
     id: 'plat-9a8b7c6d-5e4f-3a2b-1c0d-e9f8a7b6c5d4',
     name: 'IndieHub',
     archetype: 'streamer',
-    baseMarketShare: 0.06,
+    baseMarketShare: 0.08,
     reach: 35,
     description: 'Niche platform surviving the streaming wars through low-cost, high-engagement cult hits that guarantee low churn.'
   },
@@ -47,7 +47,7 @@ export const PLATFORMS_REGISTRY: PlatformData[] = [
     id: 'plat-f1e2d3c4-b5a6-9788-7766-554433221100',
     name: 'MegaStreaming',
     archetype: 'streamer',
-    baseMarketShare: 0.40,
+    baseMarketShare: 0.45,
     reach: 98,
     description: 'A ruthless corporate titan aggressively outspending rivals to monopolize watch time, known for instantly canceling expensive shows that flatline and focusing on high-retention syndication deals.'
   }

@@ -6,7 +6,7 @@ import { RandomGenerator } from '../../utils/rng';
  * Growth = (LibraryQuality / 100) * (GrowthRate)
  * Churn = CurrentSubs * ChurnRate
  */
-function calculateSubChange(platform: StreamerPlatform, rng: RandomGenerator, seasonOverSeasonQuality: number = 0): number {
+function calculateSubChange(platform: StreamerPlatform, rng: RandomGenerator, seasonOverSeasonQuality: number = 0, syndicationHits: number = 0): number {
   const baseGrowthRate = 0.02; // 2% weekly base potential
   const qualityFactor = platform.contentLibraryQuality / 100;
   // Use a fallback for marketingSpend if not defined
@@ -52,6 +52,11 @@ function calculateSubChange(platform: StreamerPlatform, rng: RandomGenerator, se
     dynamicChurnRate = Math.max(0.01, dynamicChurnRate * 0.6); // Strong loyalty for good ongoing shows
   }
 
+  // 📺 The Syndication Baron: Sticky subscribers from 100-episode syndication deals.
+  if (syndicationHits > 0) {
+    dynamicChurnRate = Math.max(0.001, dynamicChurnRate * Math.pow(0.8, syndicationHits));
+  }
+
   const churn = platform.subscribers * dynamicChurnRate;
   
   return Math.floor(growth - churn);
@@ -70,6 +75,7 @@ export function tickPlatforms(state: GameState, rng: RandomGenerator): StateImpa
       const platform = buyer as StreamerPlatform;
 
       let seasonOverSeasonQuality = 0;
+      let syndicationHits = 0;
       if (platform.activeLicenses && platform.activeLicenses.length > 0) {
         let totalScore = 0;
         let count = 0;
@@ -82,6 +88,9 @@ export function tickPlatforms(state: GameState, rng: RandomGenerator): StateImpa
               totalScore += seriesProject.reviewScore;
               count++;
             }
+            if ((seriesProject.tvDetails.episodesCompleted || 0) >= 88) {
+              syndicationHits++;
+            }
           }
         }
         if (count > 0) {
@@ -89,7 +98,7 @@ export function tickPlatforms(state: GameState, rng: RandomGenerator): StateImpa
         }
       }
 
-      const subChange = calculateSubChange(platform, rng, seasonOverSeasonQuality);
+      const subChange = calculateSubChange(platform, rng, seasonOverSeasonQuality, syndicationHits);
       const newSubCount = Math.max(0, platform.subscribers + subChange);
       
       // Update subscribers and history
