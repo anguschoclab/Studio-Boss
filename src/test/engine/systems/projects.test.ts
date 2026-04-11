@@ -89,4 +89,43 @@ describe("advanceProject", () => {
       expect(update).toBeTruthy();
     });
   });
+
+  describe("Edge Cases (Guild Auditor)", () => {
+    it("handles post_release with a massive negative budget (Prestige Drama)", () => {
+      const project = {
+        ...mockProject,
+        state: "post_release" as const,
+        weeksInPhase: 0, // will become 1
+        genre: "Drama",
+        reviewScore: 85,
+        budget: -50000000,
+        revenue: 0,
+      };
+
+      const { project: p, update } = advanceProject(project, 1, 50, [], {}, rng);
+
+      expect(p.ancillaryRevenue).toBeLessThan(0);
+      expect(p.revenue).toBeLessThan(0);
+      expect(update).toBe('A fierce bidding war erupts for the streaming rights to "Test Project"!');
+    });
+
+    it("handles post_release with negative revenue (Family Film)", () => {
+      const project = {
+        ...mockProject,
+        state: "post_release" as const,
+        weeksInPhase: 0, // will become 1
+        genre: "Family",
+        format: "film" as const,
+        reviewScore: 50,
+        budget: 10000,
+        revenue: -100000,
+      };
+
+      const { project: p, update } = advanceProject(project, 1, 50, [], {}, rng);
+
+      expect(p.ancillaryRevenue).toBeLessThan(0);
+      expect(p.revenue).toBeLessThan(0);
+      expect(update).toBe('"Test Project" drops on VOD and physical media.');
+    });
+  });
 });
