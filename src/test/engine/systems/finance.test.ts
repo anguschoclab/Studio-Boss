@@ -39,7 +39,7 @@ describe("Finance System", () => {
         name: "Test",
         archetype: "indie",
         prestige: 50,
-        internal: { firstLookDeals: [], projectHistory: [] }
+        internal: { projectHistory: [] }
       } as any
     });
 
@@ -72,7 +72,6 @@ describe("Finance System", () => {
         prestige: 50,
         internal: {
           projectHistory: [],
-          firstLookDeals: []
         }
       } as any,
       entities: {
@@ -154,7 +153,6 @@ describe("Finance System", () => {
           prestige: 50,
           internal: {
             projectHistory: [],
-            firstLookDeals: []
           }
         } as any,
         entities: {
@@ -235,7 +233,7 @@ describe('Finance Edge Cases', () => {
         state.studio.archetype,
         state.studio.prestige,
         contractsList as Contract[],
-        state.studio.internal.firstLookDeals || [],
+        state.deals.activeDeals || [],
         rng
       );
 
@@ -275,8 +273,9 @@ describe('Finance Edge Cases', () => {
 
     const state = createMockGameState({
         week: 1,
-        studio: { internal: { projectHistory: [], firstLookDeals: [] }, archetype: 'indie', prestige: 50 } as any,
+        studio: { internal: { projectHistory: [] }, archetype: 'indie', prestige: 50 } as any,
         finance: { cash: 1000000 } as any,
+        deals: { activeDeals: [], pendingOffers: [], expiredDeals: [] } as any,
         entities: {
           projects: { 'p1': project },
           talents: {},
@@ -296,7 +295,7 @@ describe('Finance Edge Cases', () => {
       state.studio.archetype,
       state.studio.prestige,
       contractsList as Contract[],
-      state.studio.internal.firstLookDeals || [],
+      state.deals.activeDeals || [],
       rng
     );
     expect(report.expenses.production).toBe(10000); // weeklyCost is 10k, even though budget is negative

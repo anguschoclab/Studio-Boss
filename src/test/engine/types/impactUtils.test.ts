@@ -22,7 +22,6 @@ describe('Impact Reducer (Target A1)', () => {
       prestige: 50,
       internal: {
         projectHistory: [],
-        firstLookDeals: []
       }
     },
     industry: {

@@ -210,6 +210,26 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
       };
     }
 
+    case 'AWARD_WON': {
+      const { projectId, award } = impact.payload;
+      if (!state.entities?.projects) return state;
+      const projects = { ...state.entities.projects };
+      const project = projects[projectId];
+      if (project) {
+        projects[projectId] = { 
+          ...project, 
+          awards: [...(project.awards || []), award] 
+        };
+      }
+      return {
+        ...state,
+        entities: {
+          ...state.entities,
+          projects
+        }
+      };
+    }
+
     case 'OPPORTUNITY_UPDATED': {
       const { opportunityId, rivalId, bid } = impact.payload;
       const opportunities = state.market.opportunities.map(o => {

@@ -167,7 +167,7 @@ export class WeekCoordinator {
 
         // Wiring: Resolve Crisis with Handlers (Strategy Pattern)
         if (project.activeCrisis) {
-            const crisisImpacts = resolveCrisisWithHandlers(state, project.id, context.rng.rangeInt(0, (project as any).activeCrisis!.options.length - 1));
+            const crisisImpacts = resolveCrisisWithHandlers(state, project.id, context.rng.rangeInt(0, project.activeCrisis.options.length - 1));
            context.impacts.push(...crisisImpacts);
         }
       }
@@ -243,7 +243,7 @@ export class WeekCoordinator {
       // 6. Release Simulation - calculate demographic resonance
       if (project.state === 'released') {
          // Default to four quadrant if not set by marketing
-         const target = (project as any).targetDemographic || 'four_quadrant';
+         const target = project.targetDemographic || 'four_quadrant';
          const resonance = calculateAudienceIndex(project, target) || 1.0;
          context.impacts.push({
            type: 'PROJECT_UPDATED',
@@ -276,7 +276,7 @@ export class WeekCoordinator {
     const awardsImpacts = runAwardsCeremony(state, context.week, year, context.rng);
     context.impacts.push(...awardsImpacts);
     
-    const allNewAwards = awardsImpacts.reduce((acc, imp) => [...acc, ...(imp.newAwards || [])], [] as any[]);
+    const allNewAwards = awardsImpacts.reduce((acc, imp) => [...acc, ...(imp.newAwards || [])], [] as import('../types').Award[]);
     
     if (allNewAwards.length > 0) {
       context.impacts.push({
@@ -520,7 +520,7 @@ export class WeekCoordinator {
     let totalCosts = 0;
 
     if (ledgerImpact && ledgerImpact.type === 'LEDGER_UPDATED') {
-       const report = (ledgerImpact.payload as any).report;
+       const report = ledgerImpact.payload.report;
        totalRevenue = report.revenue.boxOffice + report.revenue.distribution + report.revenue.other;
        totalCosts = report.expenses.production + report.expenses.marketing + report.expenses.overhead + report.expenses.pacts;
     }

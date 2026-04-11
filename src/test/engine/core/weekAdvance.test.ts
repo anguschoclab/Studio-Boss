@@ -23,7 +23,7 @@ describe('Week Advance Pipeline (Target A4)', () => {
       archetype: 'major',
       prestige: 50,
       ownedPlatforms: [],
-      internal: { projectHistory: [], firstLookDeals: [] }
+      internal: { projectHistory: [] }
     },
     market: { opportunities: [], buyers: [] },
     industry: {
@@ -35,6 +35,7 @@ describe('Week Advance Pipeline (Target A4)', () => {
       newsHistory: [],
     },
     culture: { genrePopularity: {} },
+    deals: { activeDeals: [], pendingOffers: [], expiredDeals: [] },
     history: [],
     eventHistory: []
   } as unknown as GameState;
@@ -69,7 +70,8 @@ describe('Week Advance Pipeline (Target A4)', () => {
           weeklyHistory: [],
           marketState: { baseRate: 0.05, savingsYield: 0.02, debtRate: 0.1, loanRate: 0.08, rateHistory: [], sentiment: 50, cycle: 'STABLE' }
         },
-        studio: { name: 'Empty', prestige: 50, archetype: 'indie', ownedPlatforms: [], internal: { projectHistory: [], firstLookDeals: [] } },
+        studio: { name: 'Empty', prestige: 50, archetype: 'indie', ownedPlatforms: [], internal: { projectHistory: [] } },
+        deals: { activeDeals: [], pendingOffers: [], expiredDeals: [] },
         market: { opportunities: [], buyers: [] },
         industry: { rivals: [], talentPool: {}, newsHistory: [], families: [], agencies: [], agents: [] },
         ip: { vault: [], franchises: {} },

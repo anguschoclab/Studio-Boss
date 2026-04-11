@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { CommandCenter } from '@/components/dashboard/CommandCenter';
 import { useGameStore } from '@/store/gameStore';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 vi.mock('@/store/gameStore');
 vi.mock('@/components/dashboard/FinancialOverviewWidget', () => ({
@@ -41,7 +42,11 @@ describe('CommandCenter', () => {
 
   it('renders null when state is missing', () => {
     vi.mocked(useGameStore).mockImplementation((selector: any) => selector({ gameState: null }));
-    const { container } = render(<CommandCenter />);
+    const { container } = render(
+      <TooltipProvider>
+        <CommandCenter />
+      </TooltipProvider>
+    );
     expect(container.firstChild).toBeNull();
   });
 
@@ -70,7 +75,11 @@ describe('CommandCenter', () => {
       return selector(state);
     });
 
-    render(<CommandCenter />);
+    render(
+      <TooltipProvider>
+        <CommandCenter />
+      </TooltipProvider>
+    );
 
     expect(screen.getByText('Acme Studios')).toBeInTheDocument();
     expect(screen.getByText('boutique indie')).toBeInTheDocument();
@@ -99,7 +108,11 @@ describe('CommandCenter', () => {
       return selector(state);
     });
 
-    render(<CommandCenter />);
+    render(
+      <TooltipProvider>
+        <CommandCenter />
+      </TooltipProvider>
+    );
 
     expect(screen.getByText('W12')).toBeInTheDocument();
     expect(screen.getByText('Huge Box Office')).toBeInTheDocument();
@@ -112,7 +125,11 @@ describe('CommandCenter', () => {
 
   it('renders empty state for news history when empty', () => {
     vi.mocked(useGameStore).mockImplementation((selector: any) => selector(mockState()));
-    render(<CommandCenter />);
+    render(
+      <TooltipProvider>
+        <CommandCenter />
+      </TooltipProvider>
+    );
     expect(screen.getByText('Awaiting Intelligence')).toBeInTheDocument();
   });
 });

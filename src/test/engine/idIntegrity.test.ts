@@ -29,7 +29,7 @@ describe('ID Integrity Standards', () => {
     // Project Layer
     'state.entities.projects.*.id': 'PRJ',
     'state.entities.contracts.*.id': 'CNT',
-    'state.studio.internal.firstLookDeals.*.id': 'PCT',
+    'state.deals.activeDeals.*.id': 'PCT',
     
     // Market & Industry
     'state.market.opportunities.*.id': 'OPP',

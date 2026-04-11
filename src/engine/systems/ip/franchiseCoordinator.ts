@@ -31,6 +31,7 @@ export function calculateFranchiseEquity(
   
   // 1. Shared Universe Premium
   let crossoverBonus = assets.length >= 3 ? 1.20 : 1.05;
+  let genres: string[] = [];
 
   // 1b. Genre Crossover Events Hook
   if (sourceProjects && assets.length > 1) {
@@ -46,7 +47,7 @@ export function calculateFranchiseEquity(
       }
     });
 
-    const genres = Array.from(uniqueGenres);
+    genres = Array.from(uniqueGenres);
     let synergyHits = 0;
     for (let i = 0; i < genres.length; i++) {
       for (let j = i + 1; j < genres.length; j++) {

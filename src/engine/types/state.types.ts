@@ -129,6 +129,7 @@ export type ImpactType =
   | 'SYNC_M_A_FUNDS'
   | 'VAULT_ASSET_UPDATED'
   | 'INDUSTRY_UPDATE'
+  | 'AWARD_WON'
   | 'MODAL_TRIGGERED'
   | 'SYSTEM_TICK'
   | 'PILOT_GRADUATED'
@@ -165,6 +166,14 @@ export interface TalentUpdateImpact { type: 'TALENT_UPDATED'; payload: TalentUpd
 export interface RivalUpdateImpact { type: 'RIVAL_UPDATED'; payload: RivalUpdate }
 export interface OpportunityUpdateImpact { type: 'OPPORTUNITY_UPDATED'; payload: OpportunityUpdate }
 
+export interface AwardImpact {
+  type: 'AWARD_WON';
+  payload: {
+    projectId: string;
+    award: Award;
+  };
+}
+
 export interface BaseImpact {
   payload?: unknown;
   cashChange?: number;
@@ -193,7 +202,10 @@ export interface BaseImpact {
   newIPAssets?: IPAsset[];
 }
 
-export type StateImpact = BaseImpact & { type?: ImpactType ; payload?: any };
+export type StateImpact = BaseImpact & { 
+  type?: ImpactType; 
+  payload?: any;
+};
 
 export interface PendingDealOffer {
   id: string;

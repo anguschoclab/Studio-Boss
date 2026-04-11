@@ -34,7 +34,7 @@ export interface RivalStudio {
   currentMotivation: StudioMotivation;
   // Dynamic State
   projects: Record<string, Project>;
-  contracts: Contract[];
+  contracts: Record<string, Contract>;
   // Consolidation & Vertical Integration
   ownedPlatforms?: string[]; // IDs of platforms this studio owns
   parentBrand?: string;

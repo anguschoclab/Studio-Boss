@@ -32,7 +32,6 @@ describe('tickFinance', () => {
       ownedPlatforms: [],
       internal: {
         projectHistory: [],
-        firstLookDeals: []
       }
     },
     market: {
@@ -50,6 +49,7 @@ describe('tickFinance', () => {
     culture: {
       genrePopularity: {}
     },
+    deals: { activeDeals: [], pendingOffers: [], expiredDeals: [] },
     history: [],
     eventHistory: []
   } as unknown as GameState);

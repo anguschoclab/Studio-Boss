@@ -1,6 +1,6 @@
 import React from 'react';
 import { useGameStore } from '@/store/gameStore';
-import { selectBuyers, selectProjects } from '@/store/selectors';
+import { selectBuyers, selectProjects, selectProjectsRaw } from '@/store/selectors';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -21,6 +21,7 @@ export const DealsDesk = () => {
     useShallow(s => ({
       buyers: selectBuyers(s.gameState),
       projects: selectProjects(s.gameState),
+      projectsRaw: selectProjectsRaw(s.gameState),
       week: s.gameState?.week || 0,
       activeDeals: s.gameState?.deals?.activeDeals ?? [],
       talentPool: s.gameState?.entities?.talents ?? {},
@@ -185,7 +186,7 @@ export const DealsDesk = () => {
                   buyer={buyer} 
                   projects={pitchingProjects} 
                   week={week}
-                  allProjects={projects} 
+                  allProjects={projectsRaw} 
                   onNegotiate={() => handleNegotiate(buyer.id)}
                   canNegotiate={!!selectedProjectId}
                 />
@@ -267,7 +268,7 @@ const BuyerCard = ({
   buyer: Buyer, 
   projects: Project[], 
   week: number, 
-  allProjects: Project[],
+  allProjects: Record<string, Project>,
   onNegotiate: () => void,
   canNegotiate: boolean
 }) => {

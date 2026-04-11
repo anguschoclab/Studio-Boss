@@ -80,13 +80,13 @@ export function handleReleasePhaseEntry(
     };
   }
 
-  const pAny = p as any;
-  if (pAny.type === 'FILM' && (pAny.format === 'tv' || pAny.format === 'unscripted')) {
-    const isTV = pAny.format === 'tv';
-    pAny.weeklyRevenue = (pAny.budget * (isTV ? 0.1 : 0.05)) * (pAny.buzz / 50) * franchiseSynergy * (1 - franchiseFatigue);
-    pAny.revenue = pAny.weeklyRevenue;
+  if (isSeriesProject(p) || isUnscriptedProject(p)) {
+    const isTV = p.format === 'tv';
+    const weeklyRevenue = (p.budget * (isTV ? 0.1 : 0.05)) * (p.buzz / 50) * franchiseSynergy * (1 - franchiseFatigue);
+    p.weeklyRevenue = weeklyRevenue;
+    p.revenue = weeklyRevenue;
     return {
-      update: isTV ? `"${pAny.title}" premieres on TV!` : `"${pAny.title}" documentary premieres!`,
+      update: isTV ? `"${p.title}" premieres on TV!` : `"${p.title}" documentary premieres!`,
       talentUpdates: []
     };
   }
@@ -231,17 +231,16 @@ function handleReleasedPhase(
       };
     }
   } else {
-    const pAny = p as any;
-    if (pAny.type === 'FILM' && (pAny.format === 'tv' || pAny.format === 'unscripted')) {
-      pAny.revenue += pAny.weeklyRevenue;
-      pAny.weeklyRevenue *= rng.range(0.6, 0.8) * franchiseSynergy;
+    if ((isSeriesProject(p) || isUnscriptedProject(p)) && p.format !== 'film') {
+      p.revenue += p.weeklyRevenue;
+      p.weeklyRevenue *= rng.range(0.6, 0.8) * franchiseSynergy;
 
-      if (pAny.weeklyRevenue < (pAny.format === 'unscripted' ? 25_000 : 50_000) || pAny.weeksInPhase > 4) {
-        pAny.state = 'post_release';
-        pAny.weeksInPhase = 0;
+      if (p.weeklyRevenue < (isUnscriptedProject(p) ? 25_000 : 50_000) || p.weeksInPhase > 4) {
+        p.state = 'post_release';
+        p.weeksInPhase = 0;
         return {
-          update: `"${pAny.title}" finishes its broadcast run.`,
-          talentUpdates: TalentSystem.applyProjectResults(pAny, projectContracts, talentPool, projectAwards)
+          update: `"${p.title}" finishes its broadcast run.`,
+          talentUpdates: TalentSystem.applyProjectResults(p, projectContracts, talentPool, projectAwards)
         };
       } else {
         return { update: null, talentUpdates: [] };
@@ -294,11 +293,11 @@ function handlePostReleasePhase(p: Project, rng: RandomGenerator): { update: str
   return { update, talentUpdates: [] };
 }
 
-function handleMarketingPhase(p: Project, talentPool: Record<string, Talent>, projectContracts: Contract[], rng: RandomGenerator): { update: string | null; talentUpdates: Talent[]; newScandals: any[] } {
+function handleMarketingPhase(p: Project, talentPool: Record<string, Talent>, projectContracts: Contract[], rng: RandomGenerator): { update: string | null; talentUpdates: Talent[]; newScandals: import('@/engine/types').Scandal[] } {
   p.state = 'marketing';
   p.weeksInPhase = 0;
   
-  const newScandals: any[] = [];
+  const newScandals: import('@/engine/types').Scandal[] = [];
   
   // Auteur Friction Logic
   if (p.activeCut === 'sanitized') {
@@ -400,8 +399,8 @@ export function advanceProject(
   } else if (p.state === 'production' && p.weeksInPhase >= (p.productionWeeks || 20)) {
     const result = handleMarketingPhase(p, talentPool, projectContracts, rng);
     update = result.update;
-    if ((result as any).newScandals && (result as any).newScandals.length > 0) {
-      newScandals = (result as any).newScandals;
+    if (result.newScandals.length > 0) {
+      newScandals = result.newScandals;
     }
   } else if (p.state === 'released') {
     const result = handleReleasedPhase(p, projectContracts, talentPool, rivalStrengthAvg, projectAwards, rng, trendMultiplier, franchiseSynergy, franchiseFatigue);

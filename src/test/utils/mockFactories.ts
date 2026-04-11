@@ -9,6 +9,9 @@ import {
   Agency,
   Opportunity,
   MarketState,
+  TVSeasonDetails,
+  CriticConsensus,
+  AwardsProfile,
 } from '@/engine/types';
 
 export const createMockTalent = (overrides: Partial<Talent> = {}): Talent => ({
@@ -37,10 +40,13 @@ export const createMockTalent = (overrides: Partial<Talent> = {}): Talent => ({
 });
 
 export const createMockProject = (overrides: Partial<Project> = {}): Project => {
+  const id = overrides.id || 'mock-project';
   const type = overrides.type || 'FILM';
+  const title = overrides.title || 'Mock Project';
+  
   const base: any = {
-    id: 'mock-project',
-    title: 'Mock Project',
+    id,
+    title,
     type,
     format: type === 'SERIES' ? 'tv' : 'film',
     genre: 'Drama',
@@ -61,10 +67,34 @@ export const createMockProject = (overrides: Partial<Project> = {}): Project => 
     momentum: 50,
     progress: 0,
     accumulatedCost: 0,
-    // Scripted defaults
     scriptHeat: 50,
     activeRoles: [],
     scriptEvents: [],
+    marketingBudget: 0,
+    marketingLevel: 'none',
+    awards: [],
+    reception: {
+      metaScore: 0,
+      audienceScore: 0,
+      reviews: [],
+      status: 'Mixed',
+      isCultPotential: false
+    } as CriticConsensus,
+    awardsProfile: {
+      criticScore: 0,
+      audienceScore: 0,
+      prestigeScore: 0,
+      craftScore: 0,
+      culturalHeat: 0,
+      campaignStrength: 0,
+      controversyRisk: 0,
+      festivalBuzz: 0,
+      academyAppeal: 0,
+      guildAppeal: 0,
+      populistAppeal: 0,
+      indieCredibility: 0,
+      industryNarrativeScore: 0
+    } as AwardsProfile,
     ...overrides
   };
 
@@ -79,11 +109,11 @@ export const createMockProject = (overrides: Partial<Project> = {}): Project => 
         averageRating: 0,
         status: 'IN_DEVELOPMENT',
         ...((overrides as any).tvDetails || {})
-      }
-    } as Project;
+      } as TVSeasonDetails
+    } as SeriesProject;
   }
 
-  return base as Project;
+  return base as FilmProject;
 };
 
 export const createMockGameState = (overrides: Partial<GameState> = {}): GameState => ({
@@ -111,7 +141,6 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
     ownedPlatforms: [],
     internal: {
         projectHistory: [],
-        firstLookDeals: []
     },
     culture: { 
       prestigeVsCommercial: 0,
@@ -208,7 +237,7 @@ export const createMockRival = (overrides: Partial<RivalStudio> = {}): RivalStud
   projectCount: 0,
   strategy: 'acquirer',
   projects: {},
-  contracts: [],
+  contracts: {},
   motivationProfile: { financial: 50, prestige: 50, legacy: 50, aggression: 50 },
   currentMotivation: 'STABILITY',
   ...overrides

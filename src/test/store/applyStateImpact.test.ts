@@ -37,7 +37,6 @@ describe("applyStateImpact utility", () => {
       prestige: 50,
       internal: {
         projectHistory: [],
-        firstLookDeals: []
       }
     },
     industry: {

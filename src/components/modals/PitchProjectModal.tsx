@@ -62,7 +62,7 @@ export const PitchProjectModal = () => {
             <div className="space-y-2">
               {gameState.market.buyers.map(buyer => {
                 const rng = new RandomGenerator(gameState.gameSeed + gameState.week);
-                const fitScore = calculateFitScore(project, buyer, gameState.week, Object.values(gameState?.entities?.projects || {}), rng);
+                const fitScore = calculateFitScore(project, buyer, gameState.week, gameState.entities.projects, rng);
                 return (
                   <button
                     key={buyer.id}

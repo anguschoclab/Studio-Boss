@@ -27,7 +27,6 @@ describe('tickProduction', () => {
       ownedPlatforms: [],
       internal: {
         projectHistory: [],
-        firstLookDeals: []
       }
     },
     market: { opportunities: [], buyers: [] },
@@ -40,6 +39,7 @@ describe('tickProduction', () => {
       newsHistory: [],
     },
     culture: { genrePopularity: {} },
+    deals: { activeDeals: [], pendingOffers: [], expiredDeals: [] },
     history: [],
     eventHistory: []
     } as unknown as GameState);

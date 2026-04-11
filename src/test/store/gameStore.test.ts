@@ -85,8 +85,9 @@ describe("gameStore", () => {
     useGameStore.getState().signContract("t1", "p1");
 
     const newState = useGameStore.getState().gameState!;
+    const contracts = Object.values(newState.entities.contracts);
     expect(newState.finance.cash).toBe(900000); // 1M - 100k fee
-    expect(newState.entities.contracts).toHaveLength(1);
-    expect(newState.entities.contracts[0].talentId).toBe("t1");
+    expect(contracts).toHaveLength(1);
+    expect(contracts[0].talentId).toBe("t1");
   });
 });
