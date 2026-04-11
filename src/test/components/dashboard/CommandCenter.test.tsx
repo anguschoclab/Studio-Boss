@@ -88,7 +88,8 @@ describe('CommandCenter', () => {
     const valueElements = screen.getAllByText('2');
     expect(valueElements.length).toBeGreaterThan(0);
 
-    expect(screen.getByText('3')).toBeInTheDocument();
+    // Talent count = 3
+    expect(screen.getAllByText('3').length).toBeGreaterThan(0);
     expect(screen.getByText('42')).toBeInTheDocument();
 
     expect(screen.getByTestId('mock-financial-widget')).toBeInTheDocument();

@@ -117,7 +117,8 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
   // collect rival contracts (Not used in the current engine version, but keeping for compatibility)
   for (const rival of rivalsList) {
     if (!rival.contracts) continue;
-    for (const contract of rival.contracts) {
+    const rivalContracts = Object.values(rival.contracts);
+    for (const contract of rivalContracts) {
       const list = contractMap.get(contract.projectId) || [];
       list.push(contract);
       contractMap.set(contract.projectId, list);

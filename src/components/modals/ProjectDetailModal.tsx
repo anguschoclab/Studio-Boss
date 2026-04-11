@@ -57,7 +57,7 @@ export const ProjectDetailModal = () => {
   const launchAwardsCampaign = useGameStore(s => s.launchAwardsCampaign);
 
   const projects = useMemo(() => Object.values(gameState?.entities?.projects || {}), [gameState?.entities?.projects]);
-  const project = useMemo(() => (projects as any[]).find(p => p.id === selectedProjectId), [projects, selectedProjectId]);
+  const project = useMemo(() => projects.find(p => p.id === selectedProjectId), [projects, selectedProjectId]);
   const talentPool = useMemo(() => Object.values(gameState?.entities?.talents || {}), [gameState?.entities?.talents]);
   const contracts = useMemo(() => Object.values(gameState?.entities?.contracts || {}), [gameState?.entities?.contracts]);
   const talentMap = useMemo(() => new Map(talentPool.map(t => [t.id, t])), [talentPool]);
@@ -258,8 +258,8 @@ export const ProjectDetailModal = () => {
                       <span className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Audience Resonance Breakdown</span>
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                       {['male_under_25', 'female_under_25', 'male_over_25', 'female_over_25'].map(q => {
-                         const score = calculateAudienceIndex(project, q as any);
+                        {['male_under_25', 'female_under_25', 'male_over_25', 'female_over_25'].map(q => {
+                          const score = calculateAudienceIndex(project, q as import('@/engine/types').AudienceQuadrant);
                          return (
                            <div key={q} className="p-3 rounded-xl bg-black/40 border border-white/5 space-y-1">
                              <p className="text-[8px] font-black text-slate-500 uppercase tracking-tighter">{q.replace(/_/g, ' ')}</p>

@@ -48,7 +48,7 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
   const fitScore = useMemo(() => {
     if (!selectedProjectObj || !gameState) return 0;
     const rng = new RandomGenerator(gameState.gameSeed + gameState.week);
-    return calculateFitScore(selectedProjectObj, buyer, gameState.week, Object.values(gameState?.entities.projects || {}), rng);
+    return calculateFitScore(selectedProjectObj, buyer, gameState.week, gameState.entities.projects, rng);
   }, [selectedProjectObj, buyer, gameState]);
 
   const handlePitch = async () => {

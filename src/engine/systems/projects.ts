@@ -49,8 +49,10 @@ export function handleReleasePhaseEntry(
   const attachedTalent = getAttachedTalent(projectContracts, talentPool);
   
   // 1. Generate Review Score & Reception
-  if (p.reception === undefined) {
-    p.reception = ReviewSystem.generateReception(p, attachedTalent, rng);
+  if (p.reception === undefined || p.reviewScore === undefined) {
+    if (p.reception === undefined) {
+      p.reception = ReviewSystem.generateReception(p, attachedTalent, rng);
+    }
     p.reviewScore = p.reception.metaScore; // Backwards compatibility for now
   }
 

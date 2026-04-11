@@ -17,7 +17,7 @@ export const DealsDesk = () => {
   const { openPitchProject } = useUIStore();
   const [selectedProjectId, setSelectedProjectId] = React.useState<string | null>(null);
 
-  const { buyers, projects, week, activeDeals, talentPool, opportunities } = useGameStore(
+  const { buyers, projects, projectsRaw, week, activeDeals, talentPool, opportunities } = useGameStore(
     useShallow(s => ({
       buyers: selectBuyers(s.gameState),
       projects: selectProjects(s.gameState),
