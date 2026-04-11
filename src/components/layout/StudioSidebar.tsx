@@ -34,11 +34,31 @@ interface NavItem {
   label: string;
   icon: React.ElementType;
   tooltip: string;
+  badge?: (state: GameState) => number | null;
 }
+
+import { GameState } from '@/engine/types';
+
+const getProjectsNeedingAttention = (state: GameState) => {
+  const projects = Object.values(state.entities.projects);
+  return projects.filter(p => {
+    const isOverBudget = (p.accumulatedCost || 0) > (p.budget || 0) * 1.2;
+    const isTroubled = p.state === 'turnaround' || p.state === 'needs_greenlight';
+    const hasCrisis = p.activeCrisis && !p.activeCrisis.resolved;
+    return (isOverBudget || isTroubled || hasCrisis) && 
+           p.state !== 'released' && p.state !== 'archived';
+  }).length;
+};
 
 const NAV_ITEMS: NavItem[] = [
   { id: 'command', label: 'HQ', icon: LayoutDashboard, tooltip: 'Studio overview, alerts, and top-line metrics' },
-  { id: 'pipeline', label: 'Production', icon: Film, tooltip: 'Active projects from development through release' },
+  { 
+    id: 'pipeline', 
+    label: 'Production', 
+    icon: Film, 
+    tooltip: 'Active projects from development through release',
+    badge: getProjectsNeedingAttention
+  },
   { id: 'trades', label: 'The Trades', icon: Newspaper, tooltip: 'Scout IP opportunities, industry news, and market trends' },
   { id: 'talent', label: 'Talent', icon: Users, tooltip: 'Talent roster and industry database (SBDB)' },
   { id: 'distribution', label: 'Distribution', icon: Globe, tooltip: 'Deals desk, streaming platforms, and Nielsen ratings' },
@@ -102,6 +122,9 @@ export const StudioSidebar = () => {
       <div className="flex-1 px-3 space-y-0.5 overflow-y-auto custom-scrollbar">
         {NAV_ITEMS.map((item) => {
           const isActive = activeTab === item.id;
+          const badgeCount = item.badge ? item.badge(gameState) : null;
+          const hasBadge = badgeCount && badgeCount > 0;
+          
           return (
             <Tooltip key={item.id}>
               <TooltipTrigger asChild>
@@ -114,12 +137,26 @@ export const StudioSidebar = () => {
                     isCollapsed ? "justify-center h-11" : "h-10 px-4",
                     isActive 
                       ? "bg-primary/10 text-primary hover:bg-primary/20 hover:text-primary" 
-                      : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
+                      : "text-muted-foreground hover:bg-accent/50 hover:text-foreground",
+                    hasBadge && !isActive && "text-amber-400"
                   )}
                 >
-                  <item.icon className={cn("h-4.5 w-4.5 shrink-0", isActive && "drop-shadow-[0_0_8px_hsl(var(--primary)/0.5)]")} />
+                  <div className="relative">
+                    <item.icon className={cn("h-4.5 w-4.5 shrink-0", isActive && "drop-shadow-[0_0_8px_hsl(var(--primary)/0.5)]")} />
+                    {hasBadge && isCollapsed && (
+                      <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+                    )}
+                  </div>
                   {!isCollapsed && (
                     <span className="font-semibold truncate text-[13px] tracking-tight">{item.label}</span>
+                  )}
+                  {hasBadge && !isCollapsed && (
+                    <span className={cn(
+                      "ml-auto text-[10px] font-bold px-1.5 py-0.5 rounded-full",
+                      isActive ? "bg-primary text-primary-foreground" : "bg-red-500/20 text-red-400"
+                    )}>
+                      {badgeCount}
+                    </span>
                   )}
                   {isActive && (
                     <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 bg-primary rounded-r-full shadow-[0_0_10px_hsl(var(--primary)/0.5)]" />
@@ -128,6 +165,7 @@ export const StudioSidebar = () => {
               </TooltipTrigger>
               <TooltipContent side="right" className="font-bold text-[11px] uppercase tracking-widest bg-card border-border">
                 {isCollapsed ? item.label : item.tooltip}
+                {hasBadge && <span className="ml-2 text-red-400">({badgeCount} need attention)</span>}
               </TooltipContent>
             </Tooltip>
           );

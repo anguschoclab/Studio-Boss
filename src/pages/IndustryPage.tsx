@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
+import { StatCard } from '@/components/shared/StatCard';
 import { formatMoney } from '@/engine/utils';
 import { 
   Building2, 
@@ -14,10 +15,16 @@ import {
   Target,
   Brain,
   BarChart3,
-  Globe2
+  Globe2,
+  TrendingUp,
+  DollarSign,
+  Activity,
+  AlertTriangle
 } from 'lucide-react';
 import { m, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { CompetitorComparison } from '@/components/industry/CompetitorComparison';
+import { MarketTrendsHeatmap } from '@/components/industry/MarketTrendsHeatmap';
 
 export const IndustryPage: React.FC = () => {
   const state = useGameStore(s => s.gameState);
@@ -80,6 +87,42 @@ export const IndustryPage: React.FC = () => {
           Real-time analysis of competitor motivations, agency leverage, and market saturation.
         </p>
       </header>
+
+      {/* Market Overview Stats */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <StatCard
+          title="Market Sentiment"
+          value={`${state.finance.marketState?.sentiment || 50}%`}
+          subtitle={state.finance.marketState?.cycle || 'STABLE'}
+          icon={Activity}
+          color={(state.finance.marketState?.sentiment || 50) > 60 ? 'success' : (state.finance.marketState?.sentiment || 50) < 40 ? 'warning' : 'info'}
+          size="sm"
+        />
+        <StatCard
+          title="Active Rivals"
+          value={rivalsList.length}
+          subtitle="Competing studios"
+          icon={Building2}
+          color="destructive"
+          size="sm"
+        />
+        <StatCard
+          title="Genre Diversity"
+          value={Object.keys(genrePopularity).length}
+          subtitle="Tracked categories"
+          icon={BarChart3}
+          color="secondary"
+          size="sm"
+        />
+        <StatCard
+          title="Agencies"
+          value={agencies.length}
+          subtitle="Active representatives"
+          icon={Users}
+          color="primary"
+          size="sm"
+        />
+      </div>
 
       <m.div 
         variants={containerVariants}
@@ -258,6 +301,11 @@ export const IndustryPage: React.FC = () => {
             </div>
           </m.section>
 
+          {/* Market Trends Heatmap */}
+          <m.section variants={itemVariants}>
+            <MarketTrendsHeatmap />
+          </m.section>
+
           {/* Quick Industry Summary */}
           <m.section variants={itemVariants}>
             <Card className="bg-primary/5 border-primary/20 overflow-hidden relative">
@@ -285,6 +333,11 @@ export const IndustryPage: React.FC = () => {
                  </p>
               </CardContent>
             </Card>
+          </m.section>
+
+          {/* Competitor Comparison */}
+          <m.section variants={itemVariants}>
+            <CompetitorComparison />
           </m.section>
         </div>
       </m.div>
