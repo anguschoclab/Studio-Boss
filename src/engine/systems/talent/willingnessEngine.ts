@@ -36,6 +36,15 @@ export function calculateWillingness(
     reasons.push(`${talent.name} feels this "low-budget horror" is beneath their current prestige level.`);
   }
 
+  // 🎭 The Method Actor Tuning: Auteurs heavily prioritize prestige over upfront cash.
+  if (isPrestigeActor && talent.roles.includes('director')) {
+    const isMoneyGrabber = talent.currentMotivation === 'MONEY_GRABBER';
+    if (!isMoneyGrabber) {
+       score += 20;
+       reasons.push(`${talent.name} is an auteur director heavily prioritizing the artistic prestige of the project over upfront cash.`);
+    }
+  }
+
   // 2. Prestige Gap
   const prestigeDiff = project.buzz - talent.prestige;
   if (prestigeDiff > 20) {
@@ -49,8 +58,14 @@ export function calculateWillingness(
   // 3. Financial Incentive (Fee vs Star Meter)
   const starMeter = talent.starMeter || 50;
   if (talent.fee > project.budget * 0.4) {
-    score -= 15;
-    reasons.push(`The talent's quote consumes ${Math.round((talent.fee / project.budget) * 100)}% of the production budget, causing friction.`);
+    // 🎭 The Method Actor Tuning: Auteurs are less offended by low pay if they like the project.
+    if (isPrestigeActor && talent.roles.includes('director') && talent.currentMotivation !== 'MONEY_GRABBER') {
+       score -= 5;
+       reasons.push(`The low pay is barely an issue for an auteur director like ${talent.name}.`);
+    } else {
+       score -= 15;
+       reasons.push(`The talent's quote consumes ${Math.round((talent.fee / project.budget) * 100)}% of the production budget, causing friction.`);
+    }
   }
 
   // 4. Script Heat
