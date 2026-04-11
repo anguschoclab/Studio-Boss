@@ -30,8 +30,9 @@ function tickProject(
   }
 
   const impacts: StateImpact[] = [];
+  
   // 1. Core Advancement Pulse (Always happens for non-archived)
-  const { project: advancedProject, newScandals } = advanceProject(
+  const advancementImpacts = advanceProject(
     project,
     currentWeek,
     studioPrestige,
@@ -39,19 +40,13 @@ function tickProject(
     talentPool,
     rng
   );
-
-  if (newScandals && newScandals.length > 0) {
-    newScandals.forEach((scandal: any) => {
-      impacts.push({
-        type: 'SCANDAL_ADDED',
-        payload: { scandal }
-      });
-    });
-  }
+  
+  // Collect all advancement impacts
+  impacts.push(...advancementImpacts);
 
   // 2. Production-Specific Logic (Only if in production)
-  if (advancedProject.state === 'production') {
-    const targetWeeks = Math.max(4, Math.min(30, advancedProject.productionWeeks || 20));
+  if (project.state === 'production') {
+    const targetWeeks = Math.max(4, Math.min(30, project.productionWeeks || 20));
     const attachedTalent = getAttachedTalent(projectContracts, talentPool);
     const moraleMult = TalentMoraleSystem.getProductionSpeedMultiplier(attachedTalent);
     
@@ -70,7 +65,7 @@ function tickProject(
     const baseProgress = (1 / targetWeeks) * 100;
     const variance = rng.range(0.8, 1.2);
     const actualProgressIncrement = baseProgress * variance * moraleMult; 
-    const newProgress = Math.min(100, (advancedProject.progress || 0) + actualProgressIncrement);
+    const newProgress = Math.min(100, (project.progress || 0) + actualProgressIncrement);
 
     // Stochastic Quality Check
     let qualityShift = 0;
@@ -78,17 +73,20 @@ function tickProject(
       qualityShift = rng.range(-2, 3);
     }
 
-    advancedProject.progress = newProgress;
-    advancedProject.reviewScore = Math.min(100, Math.max(0, (advancedProject.reviewScore || 50) + qualityShift));
+    // Add production-specific progress update
+    // Note: We need to merge this with any existing PROJECT_UPDATED impacts
+    const progressUpdateImpact = {
+      type: 'PROJECT_UPDATED' as const,
+      payload: {
+        projectId: project.id,
+        update: {
+          progress: newProgress,
+          reviewScore: Math.min(100, Math.max(0, (project.reviewScore || 50) + qualityShift))
+        }
+      }
+    };
+    impacts.push(progressUpdateImpact);
   }
-
-  impacts.push({
-    type: 'PROJECT_UPDATED',
-    payload: {
-      projectId: advancedProject.id,
-      update: advancedProject
-    }
-  });
 
   return impacts;
 }

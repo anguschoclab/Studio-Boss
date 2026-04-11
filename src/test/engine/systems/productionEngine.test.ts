@@ -10,10 +10,16 @@ vi.mock('@/engine/systems/projects', async (importOriginal) => {
     ...actual,
     advanceProject: vi.fn((project, currentWeek, studioPrestige, projectContracts, talentPoolMap, rng) => {
       if (project.id === 'scandal-project') {
-        return {
-          project: { ...project, state: 'production', progress: 50 },
-          newScandals: [{ id: 'sc-1' }]
-        };
+        return [{
+          type: 'SCANDAL_ADDED',
+          payload: { scandal: { id: 'sc-1' } }
+        }, {
+          type: 'PROJECT_UPDATED',
+          payload: {
+            projectId: project.id,
+            update: { state: 'production', progress: 50 }
+          }
+        }];
       }
       return actual.advanceProject(project, currentWeek, studioPrestige, projectContracts, talentPoolMap, rng);
     })

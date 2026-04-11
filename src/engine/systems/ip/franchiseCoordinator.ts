@@ -1,4 +1,4 @@
-import { GameState, Project, Franchise, IPAsset } from '../../types';
+import { GameState, Project, Franchise, IPAsset, StateImpact } from '../../types';
 import { clamp } from '../../utils';
 import { CROSSOVER_AFFINITY } from '../../data/genres';
 import { RandomGenerator } from '../../utils/rng';
@@ -126,10 +126,11 @@ export function calculateFranchiseEquity(
 /**
  * Evaluates a finished project and updates or creates its Franchise Hub.
  * This is the entry point for turning successful originals into persistent franchises.
+ * Returns StateImpact[] describing the changes.
  */
-export function updateFranchiseHub(state: GameState, project: Project, rng: RandomGenerator): GameState {
+export function updateFranchiseHub(state: GameState, project: Project, rng: RandomGenerator): StateImpact[] {
+  const impacts: StateImpact[] = [];
   let franchiseId = project.franchiseId;
-  const updatedFranchises = { ...state.ip.franchises };
 
   // 1. Breakout Success Detection
   // If an original IP (no franchiseId) hits a high ROI or Prestige, it "Spawns" a Hub.
@@ -152,12 +153,22 @@ export function updateFranchiseHub(state: GameState, project: Project, rng: Rand
       lastReleaseWeeks: [project.releaseWeek || state.week],
       creationWeek: state.week
     };
-    updatedFranchises[franchiseId] = newFranchise;
+    
+    impacts.push({
+      type: 'FRANCHISE_UPDATED',
+      payload: { franchiseId, update: newFranchise }
+    });
+    
+    // Link the project back to the hub
+    impacts.push({
+      type: 'PROJECT_UPDATED',
+      payload: { projectId: project.id, update: { franchiseId } }
+    });
   } 
   
   // 2. Existing Franchise Maintenance
-  else if (franchiseId && updatedFranchises[franchiseId]) {
-    const hub = updatedFranchises[franchiseId];
+  else if (franchiseId && state.ip.franchises[franchiseId]) {
+    const hub = state.ip.franchises[franchiseId];
     const newAssetId = `ip-${project.id}`;
     
     // Avoid duplicate links
@@ -202,55 +213,44 @@ export function updateFranchiseHub(state: GameState, project: Project, rng: Rand
         updatedLoyalty = clamp(updatedLoyalty - 25, 0, 100);
       }
 
-      updatedFranchises[franchiseId] = {
-        ...hub,
-        assetIds: nextAssetIds,
-        lastReleaseWeeks: [...hub.lastReleaseWeeks, project.releaseWeek || state.week],
-        audienceLoyalty: updatedLoyalty,
-        // Update synergy based on format diversity
-        synergyMultiplier: updatedSynergy // 🌌 The Universe Builder: Synergy cap raised for mega-franchises.
-      };
-
+      let updatedRelevance = hub.relevanceScore;
       // 🌌 The Universe Builder: Spin-off Fatigue Cascade - a bomb tanks relevance
       if (!isBreakout && !isPrestigeHit && project.revenue < project.budget) {
-        updatedFranchises[franchiseId].relevanceScore = clamp(updatedFranchises[franchiseId].relevanceScore - 10, 0, 100);
+        updatedRelevance = clamp(updatedRelevance - 10, 0, 100);
       } else if (isBreakout || isPrestigeHit) {
-        updatedFranchises[franchiseId].relevanceScore = clamp(updatedFranchises[franchiseId].relevanceScore + 10, 0, 100);
+        updatedRelevance = clamp(updatedRelevance + 10, 0, 100);
       }
 
       // 🌌 The Universe Builder: Over-saturation Relevance Penalty.
-      if (updatedFranchises[franchiseId].activeProjectIds.length >= 5) {
-        updatedFranchises[franchiseId].relevanceScore = clamp(updatedFranchises[franchiseId].relevanceScore - 15, 0, 100);
+      if (hub.activeProjectIds.length >= 5) {
+        updatedRelevance = clamp(updatedRelevance - 15, 0, 100);
       }
 
       // Recalculate Enterprise Value
-      updatedFranchises[franchiseId].totalEquity = calculateFranchiseEquity(
-        updatedFranchises[franchiseId],
+      const updatedTotalEquity = calculateFranchiseEquity(
+        { ...hub, synergyMultiplier: updatedSynergy, relevanceScore: updatedRelevance },
         relevantAssets,
         state.entities.projects
       );
+
+      impacts.push({
+        type: 'FRANCHISE_UPDATED',
+        payload: {
+          franchiseId,
+          update: {
+            assetIds: nextAssetIds,
+            lastReleaseWeeks: [...hub.lastReleaseWeeks, project.releaseWeek || state.week],
+            audienceLoyalty: updatedLoyalty,
+            synergyMultiplier: updatedSynergy,
+            relevanceScore: updatedRelevance,
+            totalEquity: updatedTotalEquity
+          }
+        }
+      });
     }
   }
 
-  // Update projects in the state with their new franchiseId if a hub was created
-  const historyUpdates = state.studio.internal.projectHistory.map(existingProject => 
-    existingProject.id === project.id ? { ...existingProject, franchiseId } : existingProject
-  );
-
-  return {
-    ...state,
-    studio: {
-      ...state.studio,
-      internal: {
-        ...state.studio.internal,
-        projectHistory: historyUpdates
-      }
-    },
-    ip: {
-      ...state.ip,
-      franchises: updatedFranchises
-    }
-  };
+  return impacts;
 }
 
 /**
