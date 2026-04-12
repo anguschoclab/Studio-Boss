@@ -89,9 +89,24 @@ export function tickFinance(state: GameState, rng: RandomGenerator, pendingImpac
   // 2. Rival Finance Tick (Phase 5: Industry Symmetry)
   const rivalsList = Object.values(state.entities.rivals || {});
 
+  // ⚡ The Framerate Fanatic: Replaced O(N*M) project filtering with O(N) grouping pass to prevent unnecessary intermediate array allocations.
+  const projectsByOwnerId: Record<string, typeof state.entities.projects[string][]> = {};
+  const projects = state.entities.projects;
+  for (const key in projects) {
+    if (Object.prototype.hasOwnProperty.call(projects, key)) {
+      const p = projects[key];
+      if (p.ownerId) {
+        if (!projectsByOwnerId[p.ownerId]) {
+          projectsByOwnerId[p.ownerId] = [];
+        }
+        projectsByOwnerId[p.ownerId].push(p);
+      }
+    }
+  }
+
   for (const rival of rivalsList) {
     // Use unified storage for rival projects
-    const rivalProjects = Object.values(state.entities.projects).filter(p => p.ownerId === rival.id);
+    const rivalProjects = projectsByOwnerId[rival.id] || [];
     const archetype = getRivalArchetype(rival);
 
     const { report: rivalReport } = generateWeeklyFinancialReport(
