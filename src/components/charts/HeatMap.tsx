@@ -53,7 +53,7 @@ export const HeatMap: React.FC<HeatMapProps> = ({
   };
 
   return (
-    <div className={cn('overflow-x-auto', className)}>
+    <div className={cn('overflow-x-auto custom-scrollbar', className)}>
       <div className="inline-block min-w-full">
         {/* Header row with X labels */}
         <div className="flex">
@@ -81,20 +81,37 @@ export const HeatMap: React.FC<HeatMapProps> = ({
               const value = getCellValue(xLabel, yLabel);
               const cell = data.find(d => d.x === xLabel && d.y === yLabel);
               
-              return (
+              const isInteractive = Boolean(onCellClick && cell);
+
+              const content = (
                 <div
                   key={`${xLabel}-${yLabel}`}
                   className={cn(
-                    'w-16 h-10 flex-shrink-0 flex items-center justify-center text-[9px] font-medium cursor-pointer transition-all hover:ring-2 hover:ring-primary',
-                    onCellClick && 'cursor-pointer'
+                    'w-16 h-10 flex-shrink-0 flex items-center justify-center text-[9px] font-medium transition-all hover:ring-2 hover:ring-primary',
+                    isInteractive && 'cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary'
                   )}
                   style={{ backgroundColor: getColor(value) }}
-                  onClick={() => cell && onCellClick?.(cell)}
                   title={`${yLabel} × ${xLabel}: ${valueFormatter(value)}`}
                 >
                   {valueFormatter(value)}
                 </div>
               );
+
+              if (isInteractive) {
+                return (
+                  <button
+                    key={`${xLabel}-${yLabel}`}
+                    type="button"
+                    onClick={() => onCellClick?.(cell!)}
+                    aria-label={`Heatmap cell for ${yLabel} and ${xLabel}, value ${valueFormatter(value)}`}
+                    className="p-0 border-none bg-transparent focus-visible:outline-none"
+                  >
+                    {content}
+                  </button>
+                );
+              }
+
+              return content;
             })}
           </div>
         ))}
