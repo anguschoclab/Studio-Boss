@@ -22,3 +22,7 @@
 ## 2025-03-08 - Optimized AI bidding engine loop
 **Learning:** Hoisting repetitive calculations (like `leverageAggression` inside `biddingEngine.ts`) outside of deeply nested loops significantly reduces Time Complexity and unnecessary GC allocations. Here, calculating it per opportunity instead of per rival per opportunity reduced the complexity from `O(O * R * (A + a))` to `O(O * (R + A + a))`.
 **Action:** When iterating over combinations of items (like opportunities and rivals), look for derived values that only depend on the outer loop variable and hoist their calculation before the inner loop.
+
+## 2024-05-18 - [Optimizing Core Engine Ticks: Avoiding O(N*M) Array Allocations]
+**Learning:** High-frequency game loops (like `financeTick.ts`) frequently suffer from hidden O(N*M) performance bottlenecks when using `Object.values(projects).filter(p => p.ownerId === rival.id)` inside a loop over all rivals. This causes repeated intermediate array allocations and excessive garbage collection pressure, compounding significantly as the late-game state grows.
+**Action:** Always refactor these N*M `filter` operations by pre-computing a grouped dictionary with a single `for...in` pass over the root dictionary (e.g., grouping projects by `ownerId`). This enables O(1) lookups during the inner loop and eliminates intermediate array allocations entirely.
