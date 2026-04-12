@@ -86,10 +86,18 @@ export function calculateWillingness(
   }
 
   // 6. Directorial Influence (Check if a director is already attached)
-  const contractsList = Object.values(gameState.entities.contracts || {});
-  const directorContract = contractsList.find(
-    (c: Contract) => c.projectId === project.id && gameState.entities.talents[c.talentId]?.roles.includes('director')
-  );
+  // ⚡ The Framerate Fanatic: Refactored Object.values().find() to a direct for...in loop, preventing intermediate array allocations.
+  let directorContract: Contract | undefined;
+  for (const key in gameState.entities.contracts) {
+    if (Object.prototype.hasOwnProperty.call(gameState.entities.contracts, key)) {
+      const c = gameState.entities.contracts[key];
+      if (c.projectId === project.id && gameState.entities.talents[c.talentId]?.roles.includes('director')) {
+        directorContract = c;
+        break;
+      }
+    }
+  }
+
   if (directorContract) {
     const director = gameState.entities.talents[directorContract.talentId];
     if (director && director.prestige > 80) {

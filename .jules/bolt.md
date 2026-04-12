@@ -22,3 +22,8 @@
 ## 2025-03-08 - Optimized AI bidding engine loop
 **Learning:** Hoisting repetitive calculations (like `leverageAggression` inside `biddingEngine.ts`) outside of deeply nested loops significantly reduces Time Complexity and unnecessary GC allocations. Here, calculating it per opportunity instead of per rival per opportunity reduced the complexity from `O(O * R * (A + a))` to `O(O * (R + A + a))`.
 **Action:** When iterating over combinations of items (like opportunities and rivals), look for derived values that only depend on the outer loop variable and hoist their calculation before the inner loop.
+2024-06-25
+* ⚡ The Framerate Fanatic: Optimized `src/components/pipeline/PipelineBoard.tsx` by eliminating O(n*m) nested iterations during React render.
+* ⚡ The Framerate Fanatic: Replaced multiple `Object.values().find` invocations inside engine simulation functions (`src/engine/systems/directors.ts`, `src/engine/systems/talent/willingnessEngine.ts`) with `for...in` loops to skip unnecessary intermediate array creation and prevent GC thrashing.
+* ⚡ The Framerate Fanatic: Switched a nested array `.find()` loop in `src/engine/systems/ip/franchiseCoordinator.ts` to a `Map` lookup, achieving linear time execution.
+* ⚡ The Framerate Fanatic: Secured component rendering bounds by ensuring `useShallow` was correctly utilized for store selectors in `TopBar.tsx` and `MediaPage.tsx` that construct new state objects or arrays.

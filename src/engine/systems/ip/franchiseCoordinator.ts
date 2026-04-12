@@ -466,10 +466,16 @@ export function tickIPVault(state: GameState, archetype?: import('../../data/aiA
     }
   });
 
+  // ⚡ The Framerate Fanatic: Refactored array .find() inside loop to a pre-built Map lookup, improving performance from O(n^2) to O(n).
+  const vaultMap = new Map();
+  for (let i = 0; i < state.ip.vault.length; i++) {
+    vaultMap.set(state.ip.vault[i].id, state.ip.vault[i]);
+  }
+
   Object.values(state.ip.franchises).forEach(franchise => {
     // Find a representative genre for the franchise
     const firstAssetId = franchise.assetIds[0];
-    const firstAsset = state.ip.vault.find(a => a.id === firstAssetId);
+    const firstAsset = vaultMap.get(firstAssetId);
     // Search both current projects and history to find the genre
     // ⚡ The Framerate Fanatic: Refactored array .find() on Object.values() to direct O(1) dictionary lookup.
     const sourceProject = firstAsset?.originalProjectId ? (state.entities.projects[firstAsset.originalProjectId] || state.studio.internal.projectHistory.find(p => p.id === firstAsset.originalProjectId)) : undefined;

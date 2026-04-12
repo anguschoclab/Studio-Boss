@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
+import { useShallow } from 'zustand/react/shallow';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Newspaper, Trophy, TrendingUp, MonitorPlay, Activity } from 'lucide-react';
@@ -77,8 +78,8 @@ function mapNewsEvent(ev: NewsEvent): MappedHeadline {
 }
 
 export const MediaPage = () => {
-  const newsHistory = useGameStore((s) => s.gameState?.industry.newsHistory || []);
-  const newsHeadlines = useGameStore((s) => s.gameState?.news.headlines || []);
+  const newsHistory = useGameStore(useShallow((s) => s.gameState?.industry.newsHistory || []));
+  const newsHeadlines = useGameStore(useShallow((s) => s.gameState?.news.headlines || []));
 
   // Combine both sources into a unified headline format
   const allHeadlines = useMemo(() => {
