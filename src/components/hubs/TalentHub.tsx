@@ -88,10 +88,12 @@ const RosterPanel = () => {
       <div className="flex-1 overflow-y-auto custom-scrollbar">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-4">
           {filteredTalent.map((talent: Talent) => (
-            <div 
+            <button
               key={talent.id}
+              type="button"
+              aria-label={`Select ${talent.name}`}
               onClick={() => selectTalent(talent.id)}
-              className="group p-4 bg-card/40 border border-border/40 rounded-xl hover:border-primary/30 hover:bg-card/60 transition-all cursor-pointer"
+              className="group p-4 w-full text-left bg-card/40 border border-border/40 rounded-xl hover:border-primary/30 hover:bg-card/60 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               <div className="flex items-start gap-3">
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center text-lg font-black">
@@ -116,7 +118,7 @@ const RosterPanel = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </button>
           ))}
         </div>
         
@@ -182,9 +184,11 @@ const MarketplacePanel = () => {
                 opportunities.map(opp => {
                   const hasBids = Object.keys(opp.bids || {}).length > 0;
                   return (
-                    <div 
+                    <button
                       key={opp.id}
-                      className="p-4 bg-card/40 border border-border/40 rounded-xl hover:border-primary/30 transition-all cursor-pointer"
+                      type="button"
+                      aria-label={`Select auction for ${opp.title}`}
+                      className="p-4 w-full text-left bg-card/40 border border-border/40 rounded-xl hover:border-primary/30 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                       onClick={() => setSelectedAuction(opp)}
                     >
                       <div className="flex justify-between items-start mb-2">
@@ -201,7 +205,7 @@ const MarketplacePanel = () => {
                           </Badge>
                         )}
                       </div>
-                    </div>
+                    </button>
                   );
                 })
               )}
