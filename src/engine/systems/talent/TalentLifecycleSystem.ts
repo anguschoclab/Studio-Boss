@@ -1,6 +1,7 @@
 import { GameState, StateImpact, Talent, TalentTier } from '../../types';
 import { RandomGenerator } from '../../utils/rng';
 import { generateTalent } from '../../generators/talent/index';
+import { TalentDriftEngine, DEFAULT_DRIFT_CONFIG } from './driftEngine';
 
 /**
  * Talent Lifecycle System
@@ -10,6 +11,20 @@ export class TalentLifecycleSystem {
   static tick(state: GameState, rng: RandomGenerator): StateImpact[] {
     const impacts: StateImpact[] = [];
     const isYearEnd = state.week % 52 === 0;
+
+    // Process archetype/personality drift
+    const driftResults = TalentDriftEngine.processAllDrift(state.entities.talents, DEFAULT_DRIFT_CONFIG, rng);
+    
+    // Apply drift changes
+    for (const [talentId, driftResult] of Object.entries(driftResults.driftResults)) {
+      if (driftResult.archetypeChanged || driftResult.personalityChanged || driftResult.careerTrajectoryChanged) {
+        const updatedTalent = TalentDriftEngine.applyDriftChanges(state.entities.talents[talentId], driftResult);
+        impacts.push({
+          type: 'TALENT_UPDATED',
+          payload: { talentId, update: updatedTalent }
+        });
+      }
+    }
 
     const talentPool = Object.values(state.entities.talents) as Talent[];
     const retiredIds: string[] = [];

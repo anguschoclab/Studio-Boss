@@ -90,14 +90,14 @@ export function tickFinance(state: GameState, rng: RandomGenerator, pendingImpac
   const rivalsList = Object.values(state.entities.rivals || {});
 
   for (const rival of rivalsList) {
-    // Backward compatibility for projects field
-    const rivalProjects = ('projects' in rival && rival.projects) ? (rival as any).projects : {};
+    // Use unified storage for rival projects
+    const rivalProjects = Object.values(state.entities.projects).filter(p => p.ownerId === rival.id);
     const archetype = getRivalArchetype(rival);
 
     const { report: rivalReport } = generateWeeklyFinancialReport(
         state,
         rival.id,
-        rivalProjects,
+        Object.fromEntries(rivalProjects.map(p => [p.id, p])),
         rival.cash,
         rival.archetype,
         rival.prestige,

@@ -79,27 +79,10 @@ export function runFestivalMarket(state: GameState, rng: RandomGenerator): State
 
   const buyers = state.market.buyers;
   const auctionResults: FestivalAuctionResult[] = [];
-
-  // ⚡ Bolt: Pre-compute rival projects mapping for O(1) lookups
-  const rivalProjectsMap: Record<string, Project> = {};
   const rivalsList = Object.values(state.entities.rivals || {});
 
-  for (const rival of rivalsList) {
-    // Backward compatibility for projects field
-    const rivalProjects = ('projects' in rival && rival.projects) ? (rival as any).projects : {};
-    if (rival && rivalProjects) {
-      for (const projId in rivalProjects) {
-        rivalProjectsMap[projId] = rivalProjects[projId];
-      }
-    }
-  }
-
   activeSubmissions.forEach(sub => {
-    const isPlayerProject = !!state.entities.projects[sub.projectId];
-    const project = isPlayerProject
-      ? state.entities.projects[sub.projectId]
-      : rivalProjectsMap[sub.projectId];
-
+    const project = state.entities.projects[sub.projectId];
     if (!project) return;
 
     const bids: FestivalBid[] = [];
@@ -123,6 +106,8 @@ export function runFestivalMarket(state: GameState, rng: RandomGenerator): State
 
     bids.sort((a, b) => b.amount - a.amount);
     const winner = bids[0] ?? null;
+
+    const isPlayerProject = project.ownerId === 'PLAYER' || !project.ownerId;
 
     auctionResults.push({
       projectId: project.id,

@@ -1,4 +1,4 @@
-import { RivalStudio, Project } from '@/engine/types';
+import { RivalStudio, Project, GameState } from '@/engine/types';
 import { RandomGenerator } from '../../utils/rng';
 
 /**
@@ -13,18 +13,27 @@ export class RivalRevenueCalculator {
   static calculateWeeklyRevenue(
     rival: RivalStudio,
     currentWeek: number,
-    rng: RandomGenerator
+    rng: RandomGenerator,
+    state?: GameState
   ): {
     boxOffice: number;
     streaming: number;
     merch: number;
     total: number;
   } {
-    // Backward compatibility for projects field
-    const rivalProjects = ('projects' in rival && rival.projects) ? (rival as any).projects : {};
-    const projects = Object.values(rivalProjects).filter(
-      (p: any) => p.state === 'released'
-    );
+    // Use unified storage if state is provided, otherwise fall back to backward compatibility
+    let projects: Project[];
+    if (state && state.entities.projects) {
+      projects = Object.values(state.entities.projects).filter(
+        p => p.ownerId === rival.id && p.state === 'released'
+      );
+    } else {
+      // Backward compatibility for projects field
+      const rivalProjects = ('projects' in rival && rival.projects) ? (rival as any).projects : {};
+      projects = Object.values(rivalProjects).filter(
+        (p: any) => p.state === 'released'
+      ) as Project[];
+    }
 
     if (projects.length === 0) {
       return { boxOffice: 0, streaming: 0, merch: 0, total: 0 };

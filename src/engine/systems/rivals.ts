@@ -90,7 +90,7 @@ export function advanceRivals(rng: RandomGenerator, state: GameState): StateImpa
     
     // Calculate weekly revenue
     const weeklyRevenue = RivalRevenueCalculator.calculateWeeklyRevenue(
-      rival, state.week, rng
+      rival, state.week, rng, state
     );
     
     // Update revenue history

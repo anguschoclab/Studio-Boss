@@ -122,33 +122,24 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
     }
   }
 
-  // Add rival projects
+  // Add rival projects from unified storage
   const rivalsList = Object.values(state.entities.rivals || {});
-  for (const rival of rivalsList) {
-    // Backward compatibility for projects field
-    const rivalProjects = ('projects' in rival && rival.projects) ? Object.values((rival as any).projects) : [];
-    for (const p of rivalProjects) {
-      const project = p as any;
-      if ((project.state === 'released' || project.state === 'post_release' || project.state === 'archived') &&
-          project.releaseWeek !== null &&
-          project.releaseWeek > currentWeek - 52) {
+  const rivalProjects = Object.values(state.entities.projects).filter(p =>
+    rivalsList.some(r => r.id === p.ownerId)
+  );
 
+  for (const project of rivalProjects) {
+    if ((project.state === 'released' || project.state === 'post_release' || project.state === 'archived') &&
+        project.releaseWeek !== null &&
+        project.releaseWeek > currentWeek - 52) {
+
+      const rival = rivalsList.find(r => r.id === project.ownerId);
+      if (rival) {
         projectToRivalMap.set(project.id, rival);
 
         const formatMatch = (project.format || '').toLowerCase();
         if (formatMatch === 'film') eligibleFilm.push(project);
         else if (formatMatch === 'tv' || formatMatch === 'series') eligibleTv.push(project);
-
-        // Rivals occasionally have internal contracts not in the global record
-        // Backward compatibility for contracts field
-        const rivalContracts = ('contracts' in rival && rival.contracts) ? (rival as any).contracts : [];
-        if (rivalContracts.length > 0) {
-            const list = projectToContractsMap.get(project.id) || [];
-            rivalContracts.forEach((rc: any) => {
-                if (rc.projectId === project.id) list.push(rc);
-            });
-            projectToContractsMap.set(project.id, list);
-        }
       }
     }
   }

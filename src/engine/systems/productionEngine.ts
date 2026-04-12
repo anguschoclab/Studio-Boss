@@ -114,17 +114,14 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
   const rivalsMap = state.entities.rivals || {};
   const rivalsList = Object.values(rivalsMap);
 
-  // Backward compatibility: collect rival contracts during transition
-  // TODO: Remove after migration of rival.contracts to state.entities.contracts
-  for (const rival of rivalsList) {
-    // Check for old contracts field (backward compatibility)
-    if ('contracts' in rival && rival.contracts) {
-      const rivalContracts = Object.values(rival.contracts as Record<string, Contract>);
-      for (const contract of rivalContracts) {
-        const list = contractMap.get(contract.projectId) || [];
-        list.push(contract);
-        contractMap.set(contract.projectId, list);
-      }
+  // Unified contract storage: Collect all contracts from state.entities.contracts
+  const rivalIds = new Set(rivalsList.map(r => r.id));
+  for (const contract of Object.values(state.entities.contracts)) {
+    // Only add contracts for rival studios
+    if (contract.ownerId && rivalIds.has(contract.ownerId)) {
+      const list = contractMap.get(contract.projectId) || [];
+      list.push(contract);
+      contractMap.set(contract.projectId, list);
     }
   }
 
@@ -179,40 +176,6 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
           type: 'INDUSTRY_UPDATE',
           payload: { update: { 'entities.projects': allProjects } }
       } as any);
-  }
-
-  // Backward compatibility: Process rival projects from rival.projects during transition
-  // TODO: Remove after migration of rival.projects to state.entities.projects
-  for (const rival of rivalsList) {
-    // Check for old projects field (backward compatibility)
-    if ('projects' in rival && rival.projects) {
-      const rivalProjects = { ...rival.projects as Record<string, Project> };
-      let rivalChanged = false;
-
-      for (const key in rivalProjects) {
-        const project = rivalProjects[key];
-        const projectImpacts = tickProject(project, [], state.entities.talents, rng, rival.prestige, state.week);
-
-        projectImpacts.forEach(imp => {
-            if (imp.type === 'PROJECT_UPDATED') {
-                rivalProjects[imp.payload.projectId] = {
-                    ...rivalProjects[imp.payload.projectId],
-                    ...imp.payload.update
-                };
-                rivalChanged = true;
-            } else {
-                allImpacts.push(imp);
-            }
-        });
-      }
-
-      if (rivalChanged) {
-          allImpacts.push({
-              type: 'RIVAL_UPDATED',
-              payload: { rivalId: rival.id, update: { projects: rivalProjects } }
-          });
-      }
-    }
   }
 
   // Handle Resting Talent Fatigue

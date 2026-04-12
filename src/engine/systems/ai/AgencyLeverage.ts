@@ -1,5 +1,6 @@
 import { Agency, Agent, Talent, MarketState } from '../../types';
 import { clamp } from '../../utils';
+import { AGENCY_ARCHETYPES } from '../../data/archetypes';
 
 /**
  * Phase 7: Agency Leverage Engine.
@@ -75,32 +76,65 @@ export class AgencyLeverageEngine {
     // 3. Agency & Agent Effect
     let agencyEffect = 0;
     if (agency) {
-      switch (agency.tier) {
-        case 'powerhouse': agencyEffect += 0.15; explanation.push(`${agency.name}'s powerhouse status adds significant weight.`); break;
-        case 'major': agencyEffect += 0.1; break;
-        case 'specialist': agencyEffect += 0.05; break;
-        case 'boutique': agencyEffect -= 0.05; break;
+      // Use agency archetype leverage_base if available
+      const archetype = agency.culture ? AGENCY_ARCHETYPES[agency.culture as keyof typeof AGENCY_ARCHETYPES] : undefined;
+      if (archetype) {
+        // Convert leverage_base (0-100) to effect (0-0.2)
+        const leverageBonus = (archetype.leverage_base / 100) * 0.2;
+        agencyEffect += leverageBonus;
+        explanation.push(`${agency.name}'s ${archetype.name} archetype provides leverage base of ${archetype.leverage_base}.`);
+      } else {
+        // Fallback to tier-based calculation
+        switch (agency.tier) {
+          case 'powerhouse': agencyEffect += 0.15; explanation.push(`${agency.name}'s powerhouse status adds significant weight.`); break;
+          case 'major': agencyEffect += 0.1; break;
+          case 'specialist': agencyEffect += 0.05; break;
+          case 'boutique': agencyEffect -= 0.05; break;
+        }
       }
     }
 
     // 4. Agent Tactic
     let tacticEffect = 0;
     if (agent) {
+      // Check if agent's tactic aligns with agency archetype preferences
+      const archetype = agency?.culture ? AGENCY_ARCHETYPES[agency.culture as keyof typeof AGENCY_ARCHETYPES] : undefined;
+      const tacticMatchesArchetype = archetype?.negotiation_tactic_preferences.includes(agent.negotiationTactic.toUpperCase());
+      
       switch (agent.negotiationTactic) {
         case 'SHARK': 
-          tacticEffect = 0.1; 
-          explanation.push(`${agent.name} is using aggressive 'Shark' tactics.`); 
+          tacticEffect = 0.1;
+          if (tacticMatchesArchetype) {
+            tacticEffect += 0.05; // Bonus if tactic matches archetype preference
+            explanation.push(`${agent.name} is using aggressive 'Shark' tactics, aligned with ${archetype?.name} archetype.`);
+          } else {
+            explanation.push(`${agent.name} is using aggressive 'Shark' tactics.`);
+          }
           break;
         case 'PRESTIGE': 
-          tacticEffect = 0.05; 
-          explanation.push(`${agent.name} is leveraging critical acclaim.`); 
+          tacticEffect = 0.05;
+          if (tacticMatchesArchetype) {
+            tacticEffect += 0.05;
+            explanation.push(`${agent.name} is leveraging critical acclaim, aligned with ${archetype?.name} archetype.`);
+          } else {
+            explanation.push(`${agent.name} is leveraging critical acclaim.`);
+          }
           break;
         case 'VOLUME': 
-          tacticEffect = -0.05; 
-          explanation.push(`${agent.name} prefers deal velocity over top dollar.`); 
+          tacticEffect = -0.05;
+          if (tacticMatchesArchetype) {
+            tacticEffect += 0.05; // Reduce penalty if tactic matches archetype preference
+            explanation.push(`${agent.name} prefers deal velocity over top dollar, aligned with ${archetype?.name} archetype.`);
+          } else {
+            explanation.push(`${agent.name} prefers deal velocity over top dollar.`);
+          }
           break;
         case 'DIPLOMAT': 
-          tacticEffect = 0; 
+          tacticEffect = 0;
+          if (tacticMatchesArchetype) {
+            tacticEffect += 0.05;
+            explanation.push(`${agent.name} is using diplomatic tactics, aligned with ${archetype?.name} archetype.`);
+          }
           break;
       }
     }

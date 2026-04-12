@@ -53,26 +53,20 @@ export function resolveFestivals(state: GameState, rng: RandomGenerator, rivalAr
 
     const weekOfCycle = state.week % 52 === 0 ? 52 : state.week % 52;
     if (fest.weeks.includes(weekOfCycle)) {
-      // Find the project and its owner
-      const playerProject = state.entities.projects[sub.projectId];
-      // Backward compatibility for projects field
-      const rival = rivalsList.find(r => {
-        const rivalProjects = ('projects' in r && r.projects) ? (r as any).projects : {};
-        return !!rivalProjects[sub.projectId];
-      });
-      const rivalProjects = rival ? (('projects' in rival && rival.projects) ? (rival as any).projects : {}) : {};
-      const project = playerProject || rivalProjects[sub.projectId];
-      const ownerId = playerProject ? 'PLAYER' : (rival?.id || 'RIVAL');
-
+      // Find the project and its owner from unified storage
+      const project = state.entities.projects[sub.projectId];
       if (!project) {
           updatedSubmissions.push(sub);
           continue;
       }
 
-      const ownerPrestige = playerProject ? state.studio.prestige : (rival?.prestige || 50);
+      const ownerId = project.ownerId || 'PLAYER';
+      const rival = ownerId !== 'PLAYER' ? rivalsList.find(r => r.id === ownerId) : null;
+
+      const ownerPrestige = ownerId === 'PLAYER' ? state.studio.prestige : (rival?.prestige || 50);
       const baseChance = (project.reviewScore || 50) + (ownerPrestige * 0.5);
 
-      // Use archetype awardObsession to adjust acceptance chance if available
+      // Use archetype properties to adjust acceptance chance if available
       let adjustedChance = baseChance;
       if (ownerId !== 'PLAYER' && rival && rivalArchetypes?.[rival.id]) {
         const archetype = rivalArchetypes[rival.id];
@@ -95,11 +89,14 @@ export function resolveFestivals(state: GameState, rng: RandomGenerator, rivalAr
             impacts.push({ type: 'PRESTIGE_CHANGED', payload: 2 });
         } else {
             impacts.push({
+                type: 'PROJECT_UPDATED',
+                payload: { projectId: project.id, update: { buzz: buzzGain } }
+            });
+            impacts.push({
                 type: 'RIVAL_UPDATED',
                 payload: {
                     rivalId: ownerId,
                     update: {
-                        projects: { ...rivalProjects, [project.id]: { ...rivalProjects[project.id], buzz: buzzGain } },
                         prestige: Math.min(100, (rival?.prestige || 50) + 2)
                     }
                 }

@@ -1,4 +1,5 @@
 import { Talent, Project, GameState, CharacterArchetype, Contract } from '@/engine/types/index';
+import { ACTOR_ARCHETYPES, WRITER_ARCHETYPES, PRODUCER_ARCHETYPES, PERSONALITY_ARCHETYPES, PERSONALITY_TRAITS } from '../../data/talentArchetypes';
 
 /**
  * Studio Boss - Willingness Engine
@@ -101,6 +102,52 @@ export function calculateWillingness(
   if (talent.psychology?.ego && talent.psychology.ego > 80) {
     score -= 10;
     reasons.push(`${talent.name} is being notoriously difficult during negotiations.`);
+  }
+
+  // 8. Personality Trait Influence
+  if (talent.personality) {
+    const personalityTrait = PERSONALITY_TRAITS[talent.personality];
+    if (personalityTrait) {
+      // Adjust based on personality negotiation modifier
+      score += personalityTrait.negotiationModifier;
+      if (personalityTrait.negotiationModifier > 0) {
+        reasons.push(`${talent.name}'s ${talent.personality} nature makes them more open to this deal.`);
+      } else if (personalityTrait.negotiationModifier < 0) {
+        reasons.push(`${talent.name}'s ${talent.personality} nature makes them more cautious.`);
+      }
+    }
+  }
+
+  // 9. Archetype-Specific Preferences
+  let archetypeConfig: any;
+  if (talent.actorArchetype) {
+    archetypeConfig = ACTOR_ARCHETYPES[talent.actorArchetype];
+  } else if (talent.writerArchetype) {
+    archetypeConfig = WRITER_ARCHETYPES[talent.writerArchetype];
+  } else if (talent.producerArchetype) {
+    archetypeConfig = PRODUCER_ARCHETYPES[talent.producerArchetype];
+  } else if (talent.personalityArchetype) {
+    archetypeConfig = PERSONALITY_ARCHETYPES[talent.personalityArchetype];
+  }
+
+  if (archetypeConfig) {
+    // Check genre preferences
+    if (archetypeConfig.genrePreferences && archetypeConfig.genrePreferences.includes(project.genre)) {
+      score += 10;
+      reasons.push(`${talent.name}'s archetype favors this genre.`);
+    } else if (archetypeConfig.genreDislikes && archetypeConfig.genreDislikes.includes(project.genre)) {
+      score -= 15;
+      reasons.push(`${talent.name}'s archetype typically avoids this genre.`);
+    }
+
+    // Check budget tier preferences
+    if (archetypeConfig.budgetPreferences) {
+      const budgetMatch = archetypeConfig.budgetPreferences.includes(project.budgetTier);
+      if (budgetMatch) {
+        score += 5;
+        reasons.push(`This budget tier aligns with ${talent.name}'s archetype preferences.`);
+      }
+    }
   }
 
   // Final Bound and Verdict

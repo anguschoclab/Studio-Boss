@@ -49,20 +49,18 @@ export function tickTelevision(state: GameState, rng: RandomGenerator): StateImp
   const rivalsMap = state.entities.rivals || {};
   const rivalsList = Object.values(rivalsMap);
 
-  for (let i = 0; i < rivalsList.length; i++) {
-    const rival = rivalsList[i];
-    // Backward compatibility for projects field
-    const rivalProjects = ('projects' in rival && rival.projects) ? (rival as any).projects : {};
-    for (const key in rivalProjects) {
-      if (!Object.prototype.hasOwnProperty.call(rivalProjects, key)) continue;
-      const p = rivalProjects[key];
-      if (p.type === 'SERIES' && 'tvDetails' in p) {
-        const seriesProject = p as SeriesProject;
-        allSeries.push(seriesProject);
-        rivalIdMap.set(p.id, rival.id);
-        if (seriesProject.tvDetails.status === 'ON_AIR') {
-          airingShows.push(seriesProject);
-        }
+  // Use unified storage for rival projects
+  const rivalProjects = Object.values(state.entities.projects).filter(p =>
+    rivalsList.some(r => r.id === p.ownerId)
+  );
+
+  for (const p of rivalProjects) {
+    if (p.type === 'SERIES' && 'tvDetails' in p) {
+      const seriesProject = p as SeriesProject;
+      allSeries.push(seriesProject);
+      rivalIdMap.set(p.id, p.ownerId || '');
+      if (seriesProject.tvDetails.status === 'ON_AIR') {
+        airingShows.push(seriesProject);
       }
     }
   }

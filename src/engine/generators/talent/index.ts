@@ -1,8 +1,9 @@
-import { Talent, TalentRole, Family, TalentTier } from '../../types/talent.types';
+import { Talent, TalentRole, Family, TalentTier, DirectorArchetype } from '../../types/talent.types';
 import { generateDemographics } from './demographicsGenerator';
 import { generatePsychology } from './psychologyGenerator';
 import { generateDemographicName } from '../names';
 import { RandomGenerator } from '../../utils/rng';
+import { generateArchetypeForRole, generatePersonalityTrait, generateCareerTrajectory } from '../../data/talentArchetypes';
 
 const TALENT_QUIRKS = [
   'method_actor', 'difficult', 'box_office_draw', 'critics_darling', 
@@ -40,6 +41,30 @@ export function generateTalent(rng: RandomGenerator, params: { role: TalentRole;
 
   const GENRES = ['Action', 'Comedy', 'Drama', 'Horror', 'Sci-Fi', 'Thriller', 'Romance', 'Musical', 'Documentary', 'Western', 'Fantasy', 'Adventure'];
 
+  // Generate archetypes and personality traits
+  const archetype = generateArchetypeForRole(params.role, params.tier, rng);
+  const personality = generatePersonalityTrait(rng);
+  const careerTrajectory = generateCareerTrajectory(params.tier);
+
+  // Set role-specific archetype fields
+  let actorArchetype, writerArchetype, producerArchetype, personalityArchetype, directorArchetype;
+  
+  if (params.role === 'actor') {
+    actorArchetype = archetype as any;
+  } else if (params.role === 'writer' || params.role === 'showrunner') {
+    writerArchetype = archetype as any;
+  } else if (params.role === 'producer') {
+    producerArchetype = archetype as any;
+  } else if (params.role === 'personality') {
+    personalityArchetype = archetype as any;
+  } else if (params.role === 'director') {
+    // Use existing directorArchetype system
+    const directorArchetypes: DirectorArchetype[] = ['auteur', 'journeyman', 'visionary', 'commercial_hack'];
+    const tierBias = params.tier === 1 ? ['auteur', 'visionary'] : params.tier === 2 ? ['auteur', 'visionary', 'journeyman'] : ['journeyman', 'commercial_hack'];
+    const availableArchetypes = directorArchetypes.filter(a => tierBias.includes(a));
+    directorArchetype = availableArchetypes[Math.floor(rng.next() * availableArchetypes.length)] || 'journeyman';
+  }
+
   return {
     id: rng.uuid('TAL'),
     name,
@@ -71,7 +96,17 @@ export function generateTalent(rng: RandomGenerator, params: { role: TalentRole;
     motivationImpulse: 'NONE',
     commitments: [],
     fatigue: 0,
-    preferredGenres: Array.from({ length: rng.rangeInt(1, 3) }, () => rng.pick(GENRES))
+    preferredGenres: Array.from({ length: rng.rangeInt(1, 3) }, () => rng.pick(GENRES)),
+    // Role-specific archetypes
+    actorArchetype,
+    writerArchetype,
+    producerArchetype,
+    personalityArchetype,
+    directorArchetype,
+    // Universal personality trait
+    personality,
+    // Career trajectory
+    careerTrajectory
   };
 }
 

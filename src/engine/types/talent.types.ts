@@ -12,6 +12,19 @@ export type AgencyMotivation = 'THE_PACKAGER' | 'THE_CLIMBER' | 'THE_PROTECTOR' 
 export type RivalStrategy = 'blockbuster_focused' | 'prestige_chaser' | 'genre_specialist' | 'acquirer' | 'poacher' | 'balanced';
 
 export type DirectorArchetype = 'auteur' | 'journeyman' | 'visionary' | 'commercial_hack';
+
+// Role-specific archetypes for talent
+export type ActorArchetype = 'movie_star' | 'tv_star' | 'character_actor' | 'action_hero' | 'comedy_star' | 'prestige_actor' | 'indie_darling' | 'viral_sensation' | 'kid_actor' | 'young_adult' | 'veteran';
+export type WriterArchetype = 'showrunner' | 'screenwriter' | 'script_doctor' | 'novelist' | 'comedy_writer' | 'genre_specialist' | 'prestige_writer';
+export type ProducerArchetype = 'blockbuster_producer' | 'indie_producer' | 'studio_exec' | 'packager' | 'line_producer' | 'creative_producer';
+export type PersonalityArchetype = 'influencer' | 'reality_star' | 'talk_show_host' | 'news_anchor' | 'viral_creator' | 'legacy_personality';
+
+// Universal personality traits applicable to all talents
+export type TalentPersonality = 'perfectionist' | 'collaborative' | 'difficult' | 'charismatic' | 'method' | 'pragmatic' | 'artistic' | 'commercial' | 'loyal' | 'ambitious';
+
+// Career trajectory for talent lifecycle
+export type CareerTrajectory = 'rising' | 'peak' | 'declining' | 'resurgent';
+
 export type TalentTier = 1 | 2 | 3 | 4;
 
 export type ScandalType = 'financial' | 'personal' | 'onset_behavior' | 'legal' | 'feud'
@@ -180,6 +193,18 @@ export interface Talent {
   
   // Director-specific
   directorArchetype?: DirectorArchetype;
+
+  // Role-specific archetypes
+  actorArchetype?: ActorArchetype;
+  writerArchetype?: WriterArchetype;
+  producerArchetype?: ProducerArchetype;
+  personalityArchetype?: PersonalityArchetype;
+
+  // Universal personality trait
+  personality?: TalentPersonality;
+
+  // Career trajectory
+  careerTrajectory?: CareerTrajectory;
 
   // AI Motivations
   motivationProfile?: MotivationProfile;
