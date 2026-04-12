@@ -3,6 +3,8 @@ import { HeatMap } from '@/components/charts/HeatMap';
 import { Card } from '@/components/ui/card';
 import { tokens } from '@/lib/tokens';
 import { cn } from '@/lib/utils';
+import { useGameStore } from '@/store/gameStore';
+import { selectGenrePerformanceMatrix } from '@/store/selectors';
 
 interface GenrePerformanceData {
   genre: string;
@@ -11,14 +13,17 @@ interface GenrePerformanceData {
 }
 
 interface GenrePerformanceMatrixProps {
-  data: GenrePerformanceData[];
+  data?: GenrePerformanceData[];
   className?: string;
 }
 
 export const GenrePerformanceMatrix: React.FC<GenrePerformanceMatrixProps> = ({
-  data,
+  data: externalData,
   className,
 }) => {
+  const gameState = useGameStore(s => s.gameState);
+  const data = externalData || selectGenrePerformanceMatrix(gameState);
+
   // Extract unique genres and metrics
   const genres = Array.from(new Set(data.map(d => d.genre)));
   const metrics = Array.from(new Set(data.map(d => d.metric)));

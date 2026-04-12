@@ -287,6 +287,7 @@ export const selectBoxOfficeData = (state: GameState | null) => {
         projectTitle: project.title,
         openingWeekend: opening,
         totalGross,
+        perTheater: opening > 0 ? opening / 3000 : 0, // Estimate: 3000 theaters average
         trend
       };
     })
@@ -443,7 +444,7 @@ export const selectTalentSatisfaction = (state: GameState | null) => {
   
   const overallScore = scores.reduce((sum, s) => sum + s.score, 0) / scores.length;
   const byCategory = [1, 2, 3, 4].map(tier => ({
-    tier: tier === 1 ? 'A-list' : tier === 2 ? 'B-list' : tier === 3 ? 'C-list' : 'Emerging',
+    category: tier === 1 ? 'A-list' : tier === 2 ? 'B-list' : tier === 3 ? 'C-list' : 'Emerging',
     score: scores.filter(s => s.tier === tier).length > 0 
       ? scores.filter(s => s.tier === tier).reduce((sum, s) => sum + s.score, 0) / scores.filter(s => s.tier === tier).length
       : 50

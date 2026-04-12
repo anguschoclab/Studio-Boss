@@ -4,18 +4,24 @@ import { Card } from '@/components/ui/card';
 import { tokens } from '@/lib/tokens';
 import { cn } from '@/lib/utils';
 import { TrendingUp, TrendingDown } from 'lucide-react';
+import { useGameStore } from '@/store/gameStore';
+import { selectWeeklyRevenueHistory } from '@/store/selectors';
 
 interface WeeklyRevenueSparkProps {
-  data: number[];
-  label: string;
+  data?: number[];
+  label?: string;
   className?: string;
+  weeks?: number;
 }
 
 export const WeeklyRevenueSpark: React.FC<WeeklyRevenueSparkProps> = ({
-  data,
-  label,
+  data: externalData,
+  label = 'Weekly Revenue',
   className,
+  weeks = 12,
 }) => {
+  const gameState = useGameStore(s => s.gameState);
+  const data = externalData || selectWeeklyRevenueHistory(gameState, weeks);
   const latest = data[data.length - 1] || 0;
   const previous = data[data.length - 2] || latest;
   const change = latest - previous;

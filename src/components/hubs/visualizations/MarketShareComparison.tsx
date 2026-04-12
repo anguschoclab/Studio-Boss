@@ -1,8 +1,9 @@
 import React from 'react';
-import { SimpleBarChart } from '@/components/charts/SimpleBarChart';
 import { Card } from '@/components/ui/card';
 import { tokens } from '@/lib/tokens';
 import { cn } from '@/lib/utils';
+import { useGameStore } from '@/store/gameStore';
+import { selectMarketShareData } from '@/store/selectors';
 import { Building2, Trophy } from 'lucide-react';
 
 interface StudioShare {
@@ -12,14 +13,17 @@ interface StudioShare {
 }
 
 interface MarketShareComparisonProps {
-  studios: StudioShare[];
+  studios?: StudioShare[];
   className?: string;
 }
 
 export const MarketShareComparison: React.FC<MarketShareComparisonProps> = ({
-  studios,
+  studios: externalStudios,
   className,
 }) => {
+  const gameState = useGameStore(s => s.gameState);
+  const studios = externalStudios || selectMarketShareData(gameState);
+
   // Sort by share descending
   const sortedStudios = [...studios].sort((a, b) => b.share - a.share);
   const playerStudio = sortedStudios.find(s => s.isPlayer);
@@ -30,6 +34,8 @@ export const MarketShareComparison: React.FC<MarketShareComparisonProps> = ({
     value: s.share,
     color: s.isPlayer ? '#3b82f6' : '#94a3b8',
   }));
+
+  const maxShare = Math.max(...studios.map(s => s.share));
 
   return (
     <Card className={cn('p-4', tokens.border.default, className)}>
@@ -50,12 +56,30 @@ export const MarketShareComparison: React.FC<MarketShareComparisonProps> = ({
         )}
       </div>
 
-      <SimpleBarChart
-        data={data}
-        height={160}
-        showGrid={false}
-        valueFormatter={(v) => `${v}%`}
-      />
+      <div className="space-y-2">
+        {studios.map((studio) => (
+          <div key={studio.name} className="flex items-center gap-3">
+            <div className="w-24 text-[11px] font-medium truncate">
+              {studio.name}
+              {studio.isPlayer && (
+                <span className="ml-1 text-[9px] text-primary">(You)</span>
+              )}
+            </div>
+            <div className="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
+              <div
+                className={cn(
+                  'h-full rounded-full transition-all',
+                  studio.isPlayer ? 'bg-primary' : 'bg-slate-600'
+                )}
+                style={{ width: `${(studio.share / maxShare) * 100}%` }}
+              />
+            </div>
+            <div className="w-12 text-right text-[11px] font-medium">
+              {studio.share.toFixed(1)}%
+            </div>
+          </div>
+        ))}
+      </div>
 
       {/* Player indicator */}
       {playerStudio && (

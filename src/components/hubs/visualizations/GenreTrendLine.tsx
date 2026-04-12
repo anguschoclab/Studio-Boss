@@ -5,6 +5,8 @@ import { tokens } from '@/lib/tokens';
 import { cn } from '@/lib/utils';
 import { TrendingUp, TrendingDown, Flame, Snowflake } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { useGameStore } from '@/store/gameStore';
+import { selectMarketTrends } from '@/store/selectors';
 
 interface GenreTrendPoint {
   week: number;
@@ -12,18 +14,45 @@ interface GenreTrendPoint {
 }
 
 interface GenreTrendLineProps {
-  genre: string;
-  data: GenreTrendPoint[];
-  trend: 'rising' | 'stable' | 'cooling';
+  genre?: string;
+  data?: GenreTrendPoint[];
+  trend?: 'rising' | 'stable' | 'cooling';
   className?: string;
 }
 
 export const GenreTrendLine: React.FC<GenreTrendLineProps> = ({
-  genre,
-  data,
-  trend,
+  genre: externalGenre,
+  data: externalData,
+  trend: externalTrend,
   className,
 }) => {
+  const gameState = useGameStore(s => s.gameState);
+  const allTrends = selectMarketTrends(gameState);
+  
+  // Filter by genre if specified
+  const genreTrends = externalGenre 
+    ? allTrends.filter(t => t.genre === externalGenre)
+    : allTrends;
+  
+  const data = externalData || genreTrends.map(t => ({
+    week: t.week,
+    heat: t.heat || 50
+  }));
+  
+  const genre = externalGenre || genreTrends[0]?.genre || 'Action';
+  
+  // Determine trend from data
+  const trend = externalTrend || (() => {
+    if (data.length < 2) return 'stable';
+    const recent = data.slice(-4);
+    const avgChange = recent.reduce((sum, d, i) => {
+      if (i === 0) return 0;
+      return sum + (d.heat - recent[i-1].heat);
+    }, 0) / Math.max(recent.length - 1, 1);
+    if (avgChange > 2) return 'rising';
+    if (avgChange < -2) return 'cooling';
+    return 'stable';
+  })();
   const currentHeat = data[data.length - 1]?.heat || 0;
   const previousHeat = data[data.length - 2]?.heat || currentHeat;
   const change = currentHeat - previousHeat;

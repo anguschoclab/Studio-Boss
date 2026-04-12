@@ -4,6 +4,8 @@ import { Card } from '@/components/ui/card';
 import { tokens } from '@/lib/tokens';
 import { cn } from '@/lib/utils';
 import { TrendingUp, TrendingDown } from 'lucide-react';
+import { useGameStore } from '@/store/gameStore';
+import { selectCashFlowTrends } from '@/store/selectors';
 
 interface CashFlowData {
   week: number;
@@ -13,16 +15,18 @@ interface CashFlowData {
 }
 
 interface CashFlowChartProps {
-  data: CashFlowData[];
+  data?: CashFlowData[];
   weeks?: number;
   className?: string;
 }
 
 export const CashFlowChart: React.FC<CashFlowChartProps> = ({
-  data,
+  data: externalData,
   weeks = 12,
   className,
 }) => {
+  const gameState = useGameStore(s => s.gameState);
+  const data = externalData || selectCashFlowTrends(gameState, weeks);
   const recentData = data.slice(-weeks);
   const chartData = recentData.map(d => ({
     date: `W${d.week}`,

@@ -5,6 +5,8 @@ import { tokens } from '@/lib/tokens';
 import { cn } from '@/lib/utils';
 import { Tv, Eye, TrendingUp } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { useGameStore } from '@/store/gameStore';
+import { selectStreamingViewership } from '@/store/selectors';
 
 interface ViewershipData {
   week: number;
@@ -14,16 +16,19 @@ interface ViewershipData {
 }
 
 interface StreamingViewershipChartProps {
-  data: ViewershipData[];
-  platformName: string;
+  data?: ViewershipData[];
+  platformName?: string;
   className?: string;
 }
 
 export const StreamingViewershipChart: React.FC<StreamingViewershipChartProps> = ({
-  data,
-  platformName,
+  data: externalData,
+  platformName: externalPlatform,
   className,
 }) => {
+  const gameState = useGameStore(s => s.gameState);
+  const data = externalData || selectStreamingViewership(gameState, externalPlatform || 'Netflix');
+  const platformName = externalPlatform || 'Netflix';
   const current = data[data.length - 1];
   const previous = data[data.length - 2] || current;
   

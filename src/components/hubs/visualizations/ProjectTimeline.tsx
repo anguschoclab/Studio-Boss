@@ -4,6 +4,8 @@ import { Card } from '@/components/ui/card';
 import { tokens } from '@/lib/tokens';
 import { cn } from '@/lib/utils';
 import { Calendar, Clock } from 'lucide-react';
+import { useGameStore } from '@/store/gameStore';
+import { selectProjectTimelineData } from '@/store/selectors';
 
 interface TimelineData {
   week: string;
@@ -15,16 +17,20 @@ interface TimelineData {
 }
 
 interface ProjectTimelineProps {
-  data: TimelineData[];
+  data?: TimelineData[];
   className?: string;
   currentWeek?: number;
+  weeks?: number;
 }
 
 export const ProjectTimeline: React.FC<ProjectTimelineProps> = ({
-  data,
+  data: externalData,
   className,
-  currentWeek,
+  currentWeek: externalWeek,
+  weeks = 12,
 }) => {
+  const gameState = useGameStore(s => s.gameState);
+  const data = externalData || selectProjectTimelineData(gameState, weeks);
   const series = [
     { key: 'development', name: 'Development', color: '#94a3b8' },
     { key: 'preProduction', name: 'Pre-Production', color: '#3b82f6' },

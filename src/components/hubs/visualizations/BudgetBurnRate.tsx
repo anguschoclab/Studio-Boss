@@ -5,6 +5,8 @@ import { tokens } from '@/lib/tokens';
 import { cn } from '@/lib/utils';
 import { Flame, AlertTriangle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { useGameStore } from '@/store/gameStore';
+import { selectBudgetBurnData } from '@/store/selectors';
 
 interface BurnRateData {
   week: number;
@@ -14,16 +16,22 @@ interface BurnRateData {
 }
 
 interface BudgetBurnRateProps {
-  data: BurnRateData[];
-  totalBudget: number;
+  data?: BurnRateData[];
+  totalBudget?: number;
+  projectId?: string;
   className?: string;
 }
 
 export const BudgetBurnRate: React.FC<BudgetBurnRateProps> = ({
-  data,
-  totalBudget,
+  data: externalData,
+  totalBudget: externalBudget,
+  projectId,
   className,
 }) => {
+  const gameState = useGameStore(s => s.gameState);
+  const selectorData = projectId ? selectBudgetBurnData(gameState, projectId) : null;
+  const data = externalData || selectorData || [];
+  const totalBudget = externalBudget || (selectorData && selectorData[0]?.remaining + selectorData.reduce((sum, d) => sum + d.actual, 0)) || 0;
   const currentBurn = data[data.length - 1]?.actual || 0;
   const plannedBurn = data[data.length - 1]?.planned || 0;
   const variance = currentBurn - plannedBurn;

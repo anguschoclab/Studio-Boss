@@ -4,6 +4,8 @@ import { Card } from '@/components/ui/card';
 import { tokens } from '@/lib/tokens';
 import { cn } from '@/lib/utils';
 import { Star, Users } from 'lucide-react';
+import { useGameStore } from '@/store/gameStore';
+import { selectTalentTierDistribution } from '@/store/selectors';
 
 interface TierData {
   tier: 'A-list' | 'B-list' | 'C-list' | 'Emerging' | 'Unknown';
@@ -12,16 +14,20 @@ interface TierData {
 }
 
 interface TalentTierDistributionProps {
-  data: TierData[];
-  totalTalent: number;
+  data?: TierData[];
+  totalTalent?: number;
   className?: string;
 }
 
 export const TalentTierDistribution: React.FC<TalentTierDistributionProps> = ({
-  data,
-  totalTalent,
+  data: externalData,
+  totalTalent: externalTotal,
   className,
 }) => {
+  const gameState = useGameStore(s => s.gameState);
+  const { data, totalTalent } = externalData !== undefined
+    ? { data: externalData, totalTalent: externalTotal || 0 }
+    : selectTalentTierDistribution(gameState);
   const tierColors: Record<string, string> = {
     'A-list': '#f59e0b',    // Amber
     'B-list': '#3b82f6',    // Blue

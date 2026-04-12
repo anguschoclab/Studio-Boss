@@ -3,6 +3,8 @@ import { RadarChart } from '@/components/charts/RadarChart';
 import { Card } from '@/components/ui/card';
 import { tokens } from '@/lib/tokens';
 import { cn } from '@/lib/utils';
+import { useGameStore } from '@/store/gameStore';
+import { selectStudioHealthMetrics } from '@/store/selectors';
 
 interface StudioHealthMetrics {
   metric: string;
@@ -11,18 +13,20 @@ interface StudioHealthMetrics {
 }
 
 interface StudioHealthRadarProps {
-  metrics: StudioHealthMetrics[];
+  metrics?: StudioHealthMetrics[];
   className?: string;
   showComparison?: boolean;
   previousMetrics?: StudioHealthMetrics[];
 }
 
 export const StudioHealthRadar: React.FC<StudioHealthRadarProps> = ({
-  metrics,
+  metrics: externalMetrics,
   className,
   showComparison = false,
   previousMetrics,
 }) => {
+  const gameState = useGameStore(s => s.gameState);
+  const metrics = externalMetrics || selectStudioHealthMetrics(gameState);
   const radarData = metrics.map(m => ({
     metric: m.metric,
     value: m.score,

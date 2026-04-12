@@ -5,6 +5,8 @@ import { tokens } from '@/lib/tokens';
 import { cn } from '@/lib/utils';
 import { Clock, AlertTriangle, CheckCircle2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { useGameStore } from '@/store/gameStore';
+import { selectProductionSlippage } from '@/store/selectors';
 
 interface SlippageData {
   projectName: string;
@@ -15,14 +17,16 @@ interface SlippageData {
 }
 
 interface ProductionSlippageIndicatorProps {
-  projects: SlippageData[];
+  projects?: SlippageData[];
   className?: string;
 }
 
 export const ProductionSlippageIndicator: React.FC<ProductionSlippageIndicatorProps> = ({
-  projects,
+  projects: externalProjects,
   className,
 }) => {
+  const gameState = useGameStore(s => s.gameState);
+  const projects = externalProjects || selectProductionSlippage(gameState);
   const totalSlipped = projects.length;
   const avgSlippage = totalSlipped > 0 
     ? projects.reduce((sum, p) => sum + p.weeksSlipped, 0) / totalSlipped 

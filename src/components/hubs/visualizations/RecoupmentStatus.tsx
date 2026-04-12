@@ -5,6 +5,8 @@ import { tokens } from '@/lib/tokens';
 import { cn } from '@/lib/utils';
 import { TrendingUp, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { useGameStore } from '@/store/gameStore';
+import { selectRecoupmentStatus } from '@/store/selectors';
 
 interface RecoupmentProject {
   title: string;
@@ -15,14 +17,16 @@ interface RecoupmentProject {
 }
 
 interface RecoupmentStatusProps {
-  projects: RecoupmentProject[];
+  projects?: RecoupmentProject[];
   className?: string;
 }
 
 export const RecoupmentStatus: React.FC<RecoupmentStatusProps> = ({
-  projects,
+  projects: externalProjects,
   className,
 }) => {
+  const gameState = useGameStore(s => s.gameState);
+  const projects = externalProjects || selectRecoupmentStatus(gameState);
   const profitable = projects.filter(p => p.status === 'profitable').length;
   const atRisk = projects.filter(p => p.status === 'at_risk').length;
   const totalRecouped = projects.reduce((sum, p) => sum + p.revenue, 0);

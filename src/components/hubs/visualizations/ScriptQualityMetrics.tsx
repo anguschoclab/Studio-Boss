@@ -4,6 +4,8 @@ import { Card } from '@/components/ui/card';
 import { tokens } from '@/lib/tokens';
 import { cn } from '@/lib/utils';
 import { FileText, Star, TrendingUp } from 'lucide-react';
+import { useGameStore } from '@/store/gameStore';
+import { selectScriptQualityMetrics } from '@/store/selectors';
 
 interface QualityMetric {
   metric: string;
@@ -20,14 +22,38 @@ interface ScriptData {
 }
 
 interface ScriptQualityMetricsProps {
-  script: ScriptData;
+  script?: ScriptData;
   className?: string;
+  projectId?: string;
 }
 
 export const ScriptQualityMetrics: React.FC<ScriptQualityMetricsProps> = ({
-  script,
+  script: externalScript,
   className,
+  projectId,
 }) => {
+  const gameState = useGameStore(s => s.gameState);
+  const selectorResult = projectId ? selectScriptQualityMetrics(gameState, projectId) : null;
+  
+  // Handle both ScriptData format and selector's array format
+  const script = externalScript || (selectorResult ? {
+    title: 'Script',
+    writer: 'Unknown',
+    overallScore: selectorResult.reduce((sum, m) => sum + m.value, 0) / selectorResult.length,
+    metrics: selectorResult.map(m => ({ metric: m.metric, score: m.value, fullMark: 100 })),
+    trend: 'stable' as const
+  } : null);
+
+  if (!script) {
+    return (
+      <Card className={cn('p-4', tokens.border.default, className)}>
+        <div className="text-center text-muted-foreground text-sm">
+          No script data available
+        </div>
+      </Card>
+    );
+  }
+
   const radarData = script.metrics.map(m => ({
     metric: m.metric,
     value: m.score,

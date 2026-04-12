@@ -4,20 +4,30 @@ import { Card } from '@/components/ui/card';
 import { tokens } from '@/lib/tokens';
 import { cn } from '@/lib/utils';
 import { TrendingUp, TrendingDown, Minus, BarChart3 } from 'lucide-react';
+import { useGameStore } from '@/store/gameStore';
+import { selectMarketMetrics } from '@/store/selectors';
 
 interface MarketSentimentGaugeProps {
-  sentiment: number; // 0-100 (bearish to bullish)
-  trend: 'bullish' | 'bearish' | 'neutral';
-  volatility: number; // 0-100
+  sentiment?: number; // 0-100 (bearish to bullish)
+  trend?: 'bullish' | 'bearish' | 'neutral';
+  volatility?: number; // 0-100
   className?: string;
 }
 
 export const MarketSentimentGauge: React.FC<MarketSentimentGaugeProps> = ({
-  sentiment,
-  trend,
-  volatility,
+  sentiment: externalSentiment,
+  trend: externalTrend,
+  volatility: externalVolatility,
   className,
 }) => {
+  const gameState = useGameStore(s => s.gameState);
+  const marketMetrics = selectMarketMetrics(gameState);
+  
+  const sentiment = externalSentiment ?? marketMetrics.sentiment;
+  const cycle = marketMetrics.cycle;
+  const trend = externalTrend ?? (cycle === 'BOOM' || cycle === 'RECOVERY' ? 'bullish' : 
+                    cycle === 'BEAR' || cycle === 'RECESSION' ? 'bearish' : 'neutral');
+  const volatility = externalVolatility ?? Math.abs(sentiment - 50) * 2;
   const getSentimentLabel = (value: number) => {
     if (value < 20) return 'Very Bearish';
     if (value < 40) return 'Bearish';

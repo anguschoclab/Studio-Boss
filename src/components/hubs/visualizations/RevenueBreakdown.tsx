@@ -3,6 +3,8 @@ import { PieChart } from '@/components/charts/PieChart';
 import { Card } from '@/components/ui/card';
 import { tokens } from '@/lib/tokens';
 import { cn } from '@/lib/utils';
+import { useGameStore } from '@/store/gameStore';
+import { selectRevenueBreakdown } from '@/store/selectors';
 
 interface RevenueSource {
   name: string;
@@ -11,16 +13,19 @@ interface RevenueSource {
 }
 
 interface RevenueBreakdownProps {
-  sources: RevenueSource[];
-  totalRevenue: number;
+  sources?: RevenueSource[];
+  totalRevenue?: number;
   className?: string;
 }
 
 export const RevenueBreakdown: React.FC<RevenueBreakdownProps> = ({
-  sources,
-  totalRevenue,
+  sources: externalSources,
+  totalRevenue: externalTotal,
   className,
 }) => {
+  const gameState = useGameStore(s => s.gameState);
+  const sources = externalSources || selectRevenueBreakdown(gameState);
+  const totalRevenue = externalTotal || sources.reduce((sum, s) => sum + s.value, 0);
   const defaultColors = [
     '#3b82f6', // Theatrical
     '#10b981', // Streaming

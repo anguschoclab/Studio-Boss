@@ -5,18 +5,24 @@ import { tokens } from '@/lib/tokens';
 import { cn } from '@/lib/utils';
 import { AlertTriangle, Shield, AlertOctagon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { useGameStore } from '@/store/gameStore';
+import { selectCrisisRiskLevel } from '@/store/selectors';
 
 interface CrisisRiskMeterProps {
-  riskLevel: number; // 0-100
-  activeThreats: string[];
+  riskLevel?: number; // 0-100
+  activeThreats?: string[];
   className?: string;
 }
 
 export const CrisisRiskMeter: React.FC<CrisisRiskMeterProps> = ({
-  riskLevel,
-  activeThreats,
+  riskLevel: externalRiskLevel,
+  activeThreats: externalThreats,
   className,
 }) => {
+  const gameState = useGameStore(s => s.gameState);
+  const { riskLevel, activeThreats } = externalRiskLevel !== undefined
+    ? { riskLevel: externalRiskLevel, activeThreats: externalThreats || [] }
+    : selectCrisisRiskLevel(gameState);
   const getRiskStatus = (level: number) => {
     if (level < 25) return { label: 'Low Risk', color: '#10b981', icon: Shield };
     if (level < 50) return { label: 'Moderate', color: '#f59e0b', icon: AlertTriangle };

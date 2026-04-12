@@ -5,28 +5,32 @@ import { tokens } from '@/lib/tokens';
 import { cn } from '@/lib/utils';
 import { Film, DollarSign, TrendingUp, Users } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { useGameStore } from '@/store/gameStore';
+import { selectBoxOfficeData } from '@/store/selectors';
 
 interface BoxOfficeData {
   projectTitle: string;
   openingWeekend: number;
   totalGross: number;
-  theaters: number;
-  perTheater: number;
+  theaters?: number;
+  perTheater?: number;
   trend: 'blockbuster' | 'hit' | 'average' | 'flop' | 'bomb';
 }
 
 interface BoxOfficePerformanceProps {
-  projects: BoxOfficeData[];
+  projects?: BoxOfficeData[];
   className?: string;
 }
 
 export const BoxOfficePerformance: React.FC<BoxOfficePerformanceProps> = ({
-  projects,
+  projects: externalProjects,
   className,
 }) => {
+  const gameState = useGameStore(s => s.gameState);
+  const projects = externalProjects || selectBoxOfficeData(gameState);
   const totalGross = projects.reduce((sum, p) => sum + p.totalGross, 0);
   const avgPerTheater = projects.length > 0
-    ? projects.reduce((sum, p) => sum + p.perTheater, 0) / projects.length
+    ? projects.reduce((sum, p) => sum + (p.perTheater || 0), 0) / projects.length
     : 0;
 
   const formatCurrency = (value: number) => {

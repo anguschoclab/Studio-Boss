@@ -4,6 +4,8 @@ import { Card } from '@/components/ui/card';
 import { tokens } from '@/lib/tokens';
 import { cn } from '@/lib/utils';
 import { Handshake, CheckCircle2, XCircle, Clock } from 'lucide-react';
+import { useGameStore } from '@/store/gameStore';
+import { selectDealStats } from '@/store/selectors';
 
 interface DealStats {
   total: number;
@@ -14,14 +16,16 @@ interface DealStats {
 }
 
 interface DealSuccessRateProps {
-  stats: DealStats;
+  stats?: DealStats;
   className?: string;
 }
 
 export const DealSuccessRate: React.FC<DealSuccessRateProps> = ({
-  stats,
+  stats: externalStats,
   className,
 }) => {
+  const gameState = useGameStore(s => s.gameState);
+  const stats = externalStats || selectDealStats(gameState);
   const successRate = stats.total > 0 ? (stats.accepted / stats.total) * 100 : 0;
   const rejectionRate = stats.total > 0 ? (stats.rejected / stats.total) * 100 : 0;
 

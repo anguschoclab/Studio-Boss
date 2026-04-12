@@ -5,6 +5,8 @@ import { tokens } from '@/lib/tokens';
 import { cn } from '@/lib/utils';
 import { Award, Star } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { useGameStore } from '@/store/gameStore';
+import { selectAwardsProbability } from '@/store/selectors';
 
 interface AwardNomination {
   projectTitle: string;
@@ -15,14 +17,16 @@ interface AwardNomination {
 }
 
 interface AwardsProbabilityChartProps {
-  nominations: AwardNomination[];
+  nominations?: AwardNomination[];
   className?: string;
 }
 
 export const AwardsProbabilityChart: React.FC<AwardsProbabilityChartProps> = ({
-  nominations,
+  nominations: externalNominations,
   className,
 }) => {
+  const gameState = useGameStore(s => s.gameState);
+  const nominations = externalNominations || selectAwardsProbability(gameState);
   // Sort by probability descending
   const sortedNominations = [...nominations]
     .sort((a, b) => b.probability - a.probability)

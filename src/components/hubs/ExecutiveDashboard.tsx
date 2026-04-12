@@ -8,10 +8,6 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
-  selectStudioHealthMetrics,
-  selectCashFlowTrends,
-  selectWeeklyRevenueHistory,
-  selectCrisisRiskLevel,
   selectMarketMetrics
 } from '@/store/selectors';
 import { 
@@ -122,11 +118,10 @@ export const ExecutiveDashboard: React.FC = () => {
   }, [gameState, setActiveHub, setActiveSubTab]);
 
   // Real data from selectors
-  const healthMetrics = selectStudioHealthMetrics(gameState);
-  const cashFlowData = selectCashFlowTrends(gameState);
-  const weeklyRevenue = selectWeeklyRevenueHistory(gameState, 12);
-  const crisisRisk = selectCrisisRiskLevel(gameState);
   const marketMetrics = selectMarketMetrics(gameState);
+
+  // Note: Visualization components now use selectors internally
+  // and don't need data passed as props. They will fetch from gameState directly.
 
   const getAlertStyles = (type: string) => {
     switch (type) {
@@ -241,10 +236,7 @@ export const ExecutiveDashboard: React.FC = () => {
         {/* Left Column - Health & Sentiment */}
         <div className="col-span-4 space-y-4">
           <React.Suspense fallback={<SkeletonPage rows={4} />}>
-            <StudioHealthRadar 
-              metrics={healthMetrics}
-              className="h-full"
-            />
+            <StudioHealthRadar className="h-full" />
           </React.Suspense>
 
           <React.Suspense fallback={<SkeletonPage rows={3} />}>
@@ -257,10 +249,7 @@ export const ExecutiveDashboard: React.FC = () => {
           </React.Suspense>
 
           <React.Suspense fallback={<SkeletonPage rows={3} />}>
-            <CrisisRiskMeter
-              riskLevel={crisisRisk.riskLevel}
-              activeThreats={crisisRisk.activeThreats}
-            />
+            <CrisisRiskMeter />
           </React.Suspense>
         </div>
 
@@ -268,14 +257,11 @@ export const ExecutiveDashboard: React.FC = () => {
         <div className="col-span-8 space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <React.Suspense fallback={<SkeletonPage rows={5} />}>
-              <CashFlowChart data={cashFlowData} weeks={6} />
+              <CashFlowChart weeks={6} />
             </React.Suspense>
 
             <React.Suspense fallback={<SkeletonPage rows={3} />}>
-              <WeeklyRevenueSpark
-                data={weeklyRevenue}
-                label="Weekly Revenue"
-              />
+              <WeeklyRevenueSpark label="Weekly Revenue" />
             </React.Suspense>
           </div>
 

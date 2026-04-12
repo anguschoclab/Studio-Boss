@@ -4,10 +4,12 @@ import { Card } from '@/components/ui/card';
 import { tokens } from '@/lib/tokens';
 import { cn } from '@/lib/utils';
 import { Smile, Frown, Meh } from 'lucide-react';
+import { useGameStore } from '@/store/gameStore';
+import { selectTalentSatisfaction } from '@/store/selectors';
 
 interface TalentSatisfactionGaugeProps {
-  overallScore: number; // 0-100
-  byCategory: {
+  overallScore?: number; // 0-100
+  byCategory?: {
     category: string;
     score: number;
   }[];
@@ -15,10 +17,14 @@ interface TalentSatisfactionGaugeProps {
 }
 
 export const TalentSatisfactionGauge: React.FC<TalentSatisfactionGaugeProps> = ({
-  overallScore,
-  byCategory,
+  overallScore: externalScore,
+  byCategory: externalCategories,
   className,
 }) => {
+  const gameState = useGameStore(s => s.gameState);
+  const { overallScore, byCategory } = externalScore !== undefined 
+    ? { overallScore: externalScore, byCategory: externalCategories || [] }
+    : selectTalentSatisfaction(gameState);
   const getIcon = () => {
     if (overallScore >= 70) return <Smile className="h-8 w-8 text-emerald-500" />;
     if (overallScore >= 40) return <Meh className="h-8 w-8 text-amber-500" />;
