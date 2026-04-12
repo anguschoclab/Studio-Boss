@@ -1,5 +1,6 @@
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { KeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 
 // Import the generated route tree
 import { routeTree } from "./routeTree.gen";
@@ -15,9 +16,11 @@ declare module '@tanstack/react-router' {
 }
 
 const App = () => (
-  <TooltipProvider delayDuration={300}>
-    <RouterProvider router={router} />
-  </TooltipProvider>
+  <KeyboardShortcuts>
+    <TooltipProvider delayDuration={300}>
+      <RouterProvider router={router} />
+    </TooltipProvider>
+  </KeyboardShortcuts>
 );
 
 export default App;

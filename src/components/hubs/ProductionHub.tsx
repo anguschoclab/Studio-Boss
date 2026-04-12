@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Section } from '@/components/layout/Section';
 import { Stack, HorizontalStack } from '@/components/layout/Stack';
-import { EmptyState, ComingSoon } from '@/components/shared/EmptyState';
+import { EmptyState } from '@/components/shared/EmptyState';
 import { SkeletonPage } from '@/components/shared/SkeletonCard';
 import { tokens, patterns } from '@/lib/tokens';
 import { 
@@ -22,7 +22,8 @@ import {
   Package,
   Handshake,
   Tv,
-  BarChart3
+  BarChart3,
+  CheckCircle2
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -33,6 +34,8 @@ const DistributionHub = React.lazy(() => import('@/components/distribution/Distr
 const DealsDesk = React.lazy(() => import('@/components/deals/DealsDesk').then(m => ({ default: m.DealsDesk })));
 const StreamingPanel = React.lazy(() => import('@/components/streaming/StreamingPanel').then(m => ({ default: m.StreamingPanel })));
 const NielsenDashboard = React.lazy(() => import('@/components/television/NielsenDashboard').then(m => ({ default: m.NielsenDashboard })));
+const ScriptList = React.lazy(() => import('@/components/development/ScriptList').then(m => ({ default: m.ScriptList })));
+const GreenlightQueue = React.lazy(() => import('@/components/development/GreenlightQueue').then(m => ({ default: m.GreenlightQueue })));
 
 // Development sub-panel for concepts and greenlight queue
 const DevelopmentPanel = () => {
@@ -85,10 +88,41 @@ const DevelopmentPanel = () => {
         </div>
       )}
       
-      <ComingSoon 
-        title="Development View" 
-        description="Detailed development tracking and project pipeline management coming soon."
-      />
+      {/* Script Pipeline */}
+      <Section
+        title="Script Development Pipeline"
+        subtitle="Track scripts from concept to final draft"
+        icon={Film}
+      >
+        <React.Suspense fallback={<SkeletonPage contentCards={2} />}>
+          <ScriptList scripts={[]} />
+        </React.Suspense>
+      </Section>
+
+      {/* Greenlight Queue */}
+      <Section
+        title="Greenlight Queue"
+        subtitle={`${needsGreenlight} project${needsGreenlight > 1 ? 's' : ''} awaiting approval`}
+        icon={CheckCircle2}
+      >
+        <React.Suspense fallback={<SkeletonPage contentCards={2} />}>
+          <GreenlightQueue 
+            projects={developmentProjects.filter(p => p.state === 'needs_greenlight')}
+            onReview={(id) => {
+              // Navigate to project review
+              console.log('Review project', id);
+            }}
+            onApprove={(id) => {
+              // Approve project for production
+              console.log('Approve project', id);
+            }}
+            onReject={(id) => {
+              // Reject project
+              console.log('Reject project', id);
+            }}
+          />
+        </React.Suspense>
+      </Section>
     </Stack>
   );
 };

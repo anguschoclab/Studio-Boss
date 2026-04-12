@@ -26,6 +26,8 @@ import { selectOpportunities } from '@/store/selectors';
 const TalentHubLegacy = React.lazy(() => import('@/components/talent/TalentHub').then(m => ({ default: m.TalentHub })));
 const DiscoveryBoard = React.lazy(() => import('@/components/discovery/DiscoveryBoard').then(m => ({ default: m.DiscoveryBoard })));
 const LiveAuctionDashboard = React.lazy(() => import('@/components/talent/LiveAuctionDashboard').then(m => ({ default: m.LiveAuctionDashboard })));
+const AgencyPackagesPanel = React.lazy(() => import('@/components/agencies/AgencyPackagesPanel').then(m => ({ default: m.AgencyPackagesPanel })));
+const SkeletonPage = React.lazy(() => import('@/components/shared/SkeletonCard').then(m => ({ default: m.SkeletonPage })));
 
 // Roster View
 const RosterPanel = () => {
@@ -206,13 +208,15 @@ const MarketplacePanel = () => {
             </div>
           </div>
         ) : (
-          <div className="flex items-center justify-center h-full text-muted-foreground">
-            <div className="text-center">
-              <Sparkles className="w-12 h-12 mx-auto mb-4 opacity-20" />
-              <p className="text-sm font-bold uppercase tracking-widest">Talent Packages</p>
-              <p className="text-xs mt-2">Coming soon - WME, CAA, UTA talent packages</p>
-            </div>
-          </div>
+          <React.Suspense fallback={<SkeletonPage contentCards={3} />}>
+            <AgencyPackagesPanel 
+              agencies={(gameState?.industry?.agencies || []) as any}
+              packages={[]}
+              onCreatePackage={() => console.log('Create package')}
+              onViewPackage={(id) => console.log('View package', id)}
+              onBidPackage={(id) => console.log('Bid on package', id)}
+            />
+          </React.Suspense>
         )}
       </div>
       
@@ -296,13 +300,22 @@ export const TalentHub: React.FC = () => {
   // Calculate badge counts
   const badgeCounts = useMemo(() => {
     const talents = Object.values(gameState?.entities?.talents || {}).length;
-    const opportunities = selectOpportunities(gameState).length;
+    const opportunities = selectOpportunities(gameState);
     const agencies = gameState?.industry?.agencies?.length || 0;
+    // Count active bids/negotiations from marketplace opportunities
+    const opportunitiesWithBids = opportunities.filter((opp: Opportunity) => {
+      const hasBids = Object.keys(opp.bids || {}).length > 0;
+      const userHasBid = opp.bids && Object.values(opp.bids).some(
+        (bid) => bid.amount > 0
+      );
+      return hasBids || userHasBid;
+    });
+    const negotiations = opportunitiesWithBids.length;
     
     return {
       roster: talents > 0 ? talents : null,
-      marketplace: opportunities > 0 ? opportunities : null,
-      negotiations: null, // TODO: Add active negotiations count
+      marketplace: opportunities.length > 0 ? opportunities.length : null,
+      negotiations: negotiations > 0 ? negotiations : null,
       agencies: agencies > 0 ? agencies : null,
     };
   }, [gameState]);
