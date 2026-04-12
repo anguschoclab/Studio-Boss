@@ -51,7 +51,8 @@ export function tickTelevision(state: GameState, rng: RandomGenerator): StateImp
 
   for (let i = 0; i < rivalsList.length; i++) {
     const rival = rivalsList[i];
-    const rivalProjects = rival.projects || {};
+    // Backward compatibility for projects field
+    const rivalProjects = ('projects' in rival && rival.projects) ? (rival as any).projects : {};
     for (const key in rivalProjects) {
       if (!Object.prototype.hasOwnProperty.call(rivalProjects, key)) continue;
       const p = rivalProjects[key];
@@ -134,12 +135,14 @@ export function tickTelevision(state: GameState, rng: RandomGenerator): StateImp
             tvDetails: { ...project.tvDetails, episodesAired: aired, averageRating: nextAverageRating, status: nextStatus },
             nielsenProfile
         };
+        // Backward compatibility for projects field
+        const rivalProjects = ('projects' in rival && rival.projects) ? (rival as any).projects : {};
         impacts.push({
             type: 'RIVAL_UPDATED',
             payload: {
                 rivalId: rival.id,
                 update: {
-                    projects: { ...rival.projects, [project.id]: updatedProject }
+                    projects: { ...rivalProjects, [project.id]: updatedProject }
                 }
             }
         });
@@ -150,25 +153,26 @@ export function tickTelevision(state: GameState, rng: RandomGenerator): StateImp
       if (usesDeficit) {
         // Deficit-financed cancelled show (Player or Rival) enters shopping window (4 weeks)
         const update = {
-          state: 'shopping' as const,
-          shoppingExpiresWeek: state.week + 4,
+            shoppingWindow: 4
         };
-
         if (isPlayer) {
           impacts.push({
             type: 'PROJECT_UPDATED',
             payload: { projectId: project.id, update }
           });
         } else if (rival) {
+          // Backward compatibility for projects field
+          const rivalProjects = ('projects' in rival && rival.projects) ? (rival as any).projects : {};
           impacts.push({
             type: 'RIVAL_UPDATED',
             payload: {
-              rivalId: rival.id,
-              update: { projects: { ...rival.projects, [project.id]: { ...project, ...update } } }
+                rivalId: rival.id,
+                update: {
+                    projects: { ...rivalProjects, [project.id]: { ...rivalProjects[project.id], ...update } }
+                }
             }
           });
         }
-
         impacts.push({
           type: 'NEWS_ADDED',
           payload: {
@@ -180,11 +184,13 @@ export function tickTelevision(state: GameState, rng: RandomGenerator): StateImp
           }
         });
       } else {
+        // Backward compatibility for projects field
+        const rivalProjectsForArchive = rival ? (('projects' in rival && rival.projects) ? (rival as any).projects : {}) : {};
         impacts.push({
           type: isPlayer ? 'PROJECT_REMOVED' : 'RIVAL_UPDATED',
           payload: isPlayer
             ? { projectId: project.id }
-            : { rivalId: rival?.id, update: { projects: { ...rival?.projects, [project.id]: { ...project, state: 'archived' } } } } as any
+            : { rivalId: rival?.id, update: { projects: { ...rivalProjectsForArchive, [project.id]: { ...project, state: 'archived' } } } } as any
         });
       }
     }
@@ -202,9 +208,11 @@ export function tickTelevision(state: GameState, rng: RandomGenerator): StateImp
       } else if (rivalId) {
         const rival = state.entities.rivals[rivalId];
         if (rival) {
+          // Backward compatibility for projects field
+          const rivalProjects = ('projects' in rival && rival.projects) ? (rival as any).projects : {};
           impacts.push({
             type: 'RIVAL_UPDATED',
-            payload: { rivalId, update: { projects: { ...rival.projects, [p.id]: { ...p, state: 'archived' as const } } } } as any
+            payload: { rivalId, update: { projects: { ...rivalProjects, [p.id]: { ...p, state: 'archived' as const } } } } as any
           });
         }
       }
@@ -218,7 +226,8 @@ export function tickTelevision(state: GameState, rng: RandomGenerator): StateImp
 
   for (let i = 0; i < rivalsList.length; i++) {
     const rival = rivalsList[i];
-    const rivalProjects = rival.projects || {};
+    // Backward compatibility for projects field
+    const rivalProjects = ('projects' in rival && rival.projects) ? (rival as any).projects : {};
     for (const key in rivalProjects) {
       if (!Object.prototype.hasOwnProperty.call(rivalProjects, key)) continue;
       checkShoppingExpiration(rivalProjects[key], false, rival.id);

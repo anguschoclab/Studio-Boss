@@ -125,25 +125,29 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
   // Add rival projects
   const rivalsList = Object.values(state.entities.rivals || {});
   for (const rival of rivalsList) {
-    const rivalProjects = Object.values(rival.projects || {});
+    // Backward compatibility for projects field
+    const rivalProjects = ('projects' in rival && rival.projects) ? Object.values((rival as any).projects) : [];
     for (const p of rivalProjects) {
-      if ((p.state === 'released' || p.state === 'post_release' || p.state === 'archived') &&
-          p.releaseWeek !== null &&
-          p.releaseWeek > currentWeek - 52) {
-        
-        projectToRivalMap.set(p.id, rival);
-        
-        const formatMatch = (p.format || '').toLowerCase();
-        if (formatMatch === 'film') eligibleFilm.push(p);
-        else if (formatMatch === 'tv' || formatMatch === 'series') eligibleTv.push(p);
+      const project = p as any;
+      if ((project.state === 'released' || project.state === 'post_release' || project.state === 'archived') &&
+          project.releaseWeek !== null &&
+          project.releaseWeek > currentWeek - 52) {
+
+        projectToRivalMap.set(project.id, rival);
+
+        const formatMatch = (project.format || '').toLowerCase();
+        if (formatMatch === 'film') eligibleFilm.push(project);
+        else if (formatMatch === 'tv' || formatMatch === 'series') eligibleTv.push(project);
 
         // Rivals occasionally have internal contracts not in the global record
-        if (rival.contracts && rival.contracts.length > 0) {
-            const list = projectToContractsMap.get(p.id) || [];
-            rival.contracts.forEach(rc => {
-                if (rc.projectId === p.id) list.push(rc);
+        // Backward compatibility for contracts field
+        const rivalContracts = ('contracts' in rival && rival.contracts) ? (rival as any).contracts : [];
+        if (rivalContracts.length > 0) {
+            const list = projectToContractsMap.get(project.id) || [];
+            rivalContracts.forEach((rc: any) => {
+                if (rc.projectId === project.id) list.push(rc);
             });
-            projectToContractsMap.set(p.id, list);
+            projectToContractsMap.set(project.id, list);
         }
       }
     }

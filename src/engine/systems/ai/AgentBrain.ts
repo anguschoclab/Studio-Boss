@@ -13,7 +13,7 @@ import { MarketState } from '../../types';
  */
 function getAgencyArchetype(agency: Agency) {
   const key = agency.culture as keyof typeof AGENCY_ARCHETYPES;
-  return AGENCY_ARCHETYPES[key];
+  return AGENCY_ARCHETYPES[key] || AGENCY_ARCHETYPES.boutique; // Default to boutique if not found
 }
 
 /**
@@ -42,7 +42,8 @@ export function evaluatePackageOffer(
   const packageProbability = baseProbability + (leverage.score * 0.2) + leverageBonus;
 
   // Check if package deal is in negotiation tactic preferences
-  const prefersPackageDeal = archetype.negotiation_tactic_preferences.includes('PACKAGE_DEAL');
+  // Auteurs always get package deals regardless of archetype (backward compatibility)
+  const prefersPackageDeal = isAuteur || archetype.negotiation_tactic_preferences.includes('PACKAGE_DEAL');
 
   if (prefersPackageDeal && rng.next() < packageProbability) {
     const otherClients = talentPool.filter(t => t.agencyId === agency.id && t.id !== leadTalent.id);

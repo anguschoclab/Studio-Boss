@@ -83,7 +83,9 @@ export class RevenueProcessor {
     // 🌌 PHASE 2: Backend Streaming (Royalties from Rival Projects)
     const rivalsList = Object.values(state.entities.rivals || {});
     rivalsList.forEach(rival => {
-      Object.values(rival.projects || {}).forEach(rp => {
+      // Backward compatibility for projects field
+      const rivalProjects = ('projects' in rival && rival.projects) ? (rival as any).projects : {};
+      Object.values(rivalProjects).forEach((rp: any) => {
         if (rp.state === 'released') {
           const weeklyGross = (rp.weeklyRevenue || 0);
           if (weeklyGross <= 0) return;

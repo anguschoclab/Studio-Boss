@@ -20,19 +20,21 @@ export class RivalRevenueCalculator {
     merch: number;
     total: number;
   } {
-    const projects = Object.values(rival.projects || {}).filter(
-      p => p.state === 'released'
+    // Backward compatibility for projects field
+    const rivalProjects = ('projects' in rival && rival.projects) ? (rival as any).projects : {};
+    const projects = Object.values(rivalProjects).filter(
+      (p: any) => p.state === 'released'
     );
-    
+
     if (projects.length === 0) {
       return { boxOffice: 0, streaming: 0, merch: 0, total: 0 };
     }
-    
+
     let boxOffice = 0;
     let streaming = 0;
     let merch = 0;
     
-    projects.forEach(p => {
+    projects.forEach((p: any) => {
       if (p.distributionStatus === 'theatrical') {
         // Use same decay model as player
         const weeklyGross = this.calculateTheatricalRevenue(p, currentWeek);
@@ -42,9 +44,7 @@ export class RivalRevenueCalculator {
         streaming += weeklyGross;
       }
       
-      // Merchandise (same formula as player)
-      const weeklyMerch = this.calculateMerchRevenue(p);
-      merch += weeklyMerch;
+      merch += this.calculateMerchRevenue(p);
     });
     
     return {

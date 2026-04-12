@@ -76,13 +76,15 @@ export class OpportunitySystem {
         // Rival Winner
         const rival = state.entities.rivals[winnerId];
         if (rival) {
+          // Backward compatibility for projects field
+          const rivalProjects = ('projects' in rival && rival.projects) ? (rival as any).projects : {};
           impacts.push({
             type: 'RIVAL_UPDATED',
             payload: {
               rivalId: winnerId,
               update: {
                 cash: rival.cash - bidData.amount,
-                projects: { ...rival.projects, [winnerProject.id]: winnerProject }
+                projects: { ...rivalProjects, [winnerProject.id]: winnerProject }
               }
             }
           });

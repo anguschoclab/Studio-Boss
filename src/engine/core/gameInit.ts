@@ -91,8 +91,14 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
       currentMotivation: rng.pick(motivations),
       projects: rProjects,
       contracts: [],
-      ownedPlatforms: []
-    };
+      ownedPlatforms: [],
+      // New required properties for unified storage
+      projectIds: Object.keys(rProjects),
+      contractIds: [],
+      ipAssetIds: [],
+      // Backward compatibility: use archetypeId instead of behaviorId
+      archetypeId: rArchData.id || rArch
+    } as any;
   });
 
   const agencies = generateAgencies(rng, 5);
@@ -135,7 +141,9 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
                 endDate: 52,
                 status: 'active'
             };
-            rival.contracts.push(pact as unknown as Contract); 
+            // Backward compatibility for contracts field
+            const rivalContracts = ('contracts' in rival && rival.contracts) ? (rival as any).contracts : [];
+            rivalContracts.push(pact as unknown as Contract);
             topTalent.contractId = pact.id;
         }
     }
@@ -304,11 +312,13 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
       projects: {
         ...playerProjects,
         ...Object.values(rivals).reduce((acc, r) => {
-          Object.assign(acc, r.projects);
+          // Backward compatibility for projects field
+          const rivalProjects = ('projects' in r && r.projects) ? (r as any).projects : {};
+          Object.assign(acc, rivalProjects);
           return acc;
         }, {} as Record<string, any>)
       },
-      contracts: {}, 
+      contracts: {},
       talents: talentPool,
       rivals: rivals.reduce((acc, r) => {
         acc[r.id] = r;

@@ -85,9 +85,11 @@ export function runFestivalMarket(state: GameState, rng: RandomGenerator): State
   const rivalsList = Object.values(state.entities.rivals || {});
 
   for (const rival of rivalsList) {
-    if (rival && rival.projects) {
-      for (const projId in rival.projects) {
-        rivalProjectsMap[projId] = rival.projects[projId];
+    // Backward compatibility for projects field
+    const rivalProjects = ('projects' in rival && rival.projects) ? (rival as any).projects : {};
+    if (rival && rivalProjects) {
+      for (const projId in rivalProjects) {
+        rivalProjectsMap[projId] = rivalProjects[projId];
       }
     }
   }
