@@ -28,6 +28,8 @@ import { m } from 'framer-motion';
 
 // Lazy load heavy components
 const CommandCenter = React.lazy(() => import('@/components/dashboard/CommandCenter').then(m => ({ default: m.CommandCenter })));
+const ExecutiveDashboard = React.lazy(() => import('@/components/hubs/ExecutiveDashboard').then(m => ({ default: m.ExecutiveDashboard })));
+const CrisisTriageDashboard = React.lazy(() => import('@/components/hubs/CrisisTriageDashboard').then(m => ({ default: m.CrisisTriageDashboard })));
 const NewsFeed = React.lazy(() => import('@/components/news/NewsFeed').then(m => ({ default: m.NewsFeed })));
 
 // Operations Panel - Alerts and Actionable Items
@@ -379,8 +381,8 @@ export const StudioHQ: React.FC = () => {
       {/* Content */}
       <div className="flex-1 min-h-0 overflow-hidden">
         <React.Suspense fallback={<div className="flex items-center justify-center h-64">Loading...</div>}>
-          {activeSubTab === 'overview' && <CommandCenter />}
-          {activeSubTab === 'operations' && <OperationsPanel />}
+          {activeSubTab === 'overview' && <ExecutiveDashboard />}
+          {activeSubTab === 'operations' && <CrisisTriageDashboard />}
           {activeSubTab === 'strategy' && <StrategyPanel />}
           {activeSubTab === 'news' && <NewsPanel />}
         </React.Suspense>

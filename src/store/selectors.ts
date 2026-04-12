@@ -149,3 +149,468 @@ export const selectFilteredTalent = (state: GameState | null, filter: TalentFilt
   }
   return result;
 };
+
+// ============================================================================
+// VISUALIZATION SELECTORS - Phase 1: Financial Core
+// ============================================================================
+
+/**
+ * Cash flow trends over time for CashFlowChart visualization
+ * Aggregates revenue and expenses from weekly financial snapshots
+ */
+export const selectCashFlowTrends = (state: GameState | null, weeks: number = 12) => {
+  const history = selectFinance(state).weeklyHistory || [];
+  return history.slice(-weeks).map(snapshot => ({
+    week: snapshot.week,
+    revenue: snapshot.revenue.theatrical + snapshot.revenue.streaming + 
+              snapshot.revenue.merch + snapshot.revenue.passive,
+    expenses: Object.values(snapshot.expenses).reduce((a, b) => a + b, 0),
+    net: snapshot.net
+  }));
+};
+
+/**
+ * Revenue breakdown by source for RevenueBreakdown visualization
+ */
+export const selectRevenueBreakdown = (state: GameState | null) => {
+  const snapshot = selectLatestSnapshot(state);
+  if (!snapshot) return [];
+  
+  return [
+    { name: 'Theatrical', value: snapshot.revenue.theatrical, color: '#3b82f6' },
+    { name: 'Streaming', value: snapshot.revenue.streaming, color: '#10b981' },
+    { name: 'Merchandise', value: snapshot.revenue.merch, color: '#f59e0b' },
+    { name: 'Passive', value: snapshot.revenue.passive, color: '#8b5cf6' },
+  ].filter(item => item.value > 0);
+};
+
+/**
+ * Weekly revenue history for WeeklyRevenueSpark visualization
+ */
+export const selectWeeklyRevenueHistory = (state: GameState | null, weeks: number = 12) => {
+  const history = selectFinance(state).weeklyHistory || [];
+  return history.slice(-weeks).map(h => h.net);
+};
+
+/**
+ * Budget burn rate for a specific project for BudgetBurnRate visualization
+ */
+export const selectBudgetBurnData = (state: GameState | null, projectId: string) => {
+  const project = selectProjectsRaw(state)[projectId];
+  if (!project) return null;
+  
+  const weeksInProduction = project.productionWeeks || 0;
+  const weeklyHistory = selectFinance(state).weeklyHistory || [];
+  
+  // Calculate weekly burn from financial snapshots
+  return weeklyHistory
+    .filter(h => h.projectRecoupment?.[projectId] !== undefined)
+    .map(h => ({
+      week: h.week,
+      planned: project.budget / Math.max(weeksInProduction, 1),
+      actual: h.expenses.production / Math.max(weeksInProduction, 1),
+      remaining: project.budget - (project.accumulatedCost || 0)
+    }));
+};
+
+/**
+ * Recoupment status for all projects for RecoupmentStatus visualization
+ */
+export const selectRecoupmentStatus = (state: GameState | null) => {
+  const projects = selectProjects(state);
+  const recoupmentMap = selectRecoupmentMap(state);
+  
+  return projects.map(project => {
+    const recouped = recoupmentMap[project.id] || 0;
+    const percentage = project.budget > 0 ? (recouped / project.budget) * 100 : 0;
+    
+    return {
+      title: project.title,
+      recouped: percentage,
+      revenue: recouped,
+      budget: project.budget,
+      status: percentage >= 120 ? 'profitable' : 
+              percentage >= 100 ? 'recouped' : 
+              percentage >= 50 ? 'in_progress' : 'at_risk'
+    };
+  });
+};
+
+// ============================================================================
+// VISUALIZATION SELECTORS - Phase 2: Project Status
+// ============================================================================
+
+/**
+ * Project timeline data for ProjectTimeline visualization
+ * Shows project counts by state over time
+ */
+export const selectProjectTimelineData = (state: GameState | null, weeks: number = 12) => {
+  const projects = selectProjects(state);
+  const currentWeek = state?.week || 1;
+  
+  return Array.from({ length: weeks }, (_, i) => {
+    const week = currentWeek - weeks + i + 1;
+    
+    return {
+      week: `W${week}`,
+      development: projects.filter(p => p.state === 'development').length,
+      preProduction: projects.filter(p => p.state === 'pitching').length,
+      production: projects.filter(p => p.state === 'production').length,
+      postProduction: projects.filter(p => p.state === 'post_release').length,
+      release: projects.filter(p => p.state === 'released' && p.releaseWeek === week).length,
+    };
+  });
+};
+
+/**
+ * Box office data for BoxOfficePerformance visualization
+ */
+export const selectBoxOfficeData = (state: GameState | null) => {
+  const releasedProjects = selectReleasedProjects(state);
+  
+  return releasedProjects
+    .filter(p => p.boxOffice || p.revenue > 0)
+    .map(project => {
+      const boxOffice = project.boxOffice || { openingWeekendDomestic: 0, totalDomestic: 0 };
+      const totalGross = boxOffice.totalDomestic || project.revenue || 0;
+      
+      // Determine trend
+      let trend: 'blockbuster' | 'hit' | 'average' | 'flop' | 'bomb';
+      const opening = boxOffice.openingWeekendDomestic || 0;
+      if (opening > 50000000) trend = 'blockbuster';
+      else if (opening > 20000000) trend = 'hit';
+      else if (opening > 10000000) trend = 'average';
+      else if (opening > 5000000) trend = 'flop';
+      else trend = 'bomb';
+      
+      return {
+        projectTitle: project.title,
+        openingWeekend: opening,
+        totalGross,
+        trend
+      };
+    })
+    .sort((a, b) => b.totalGross - a.totalGross);
+};
+
+/**
+ * Production slippage data for ProductionSlippageIndicator visualization
+ */
+export const selectProductionSlippage = (state: GameState | null) => {
+  const projects = selectActiveProjects(state);
+  
+  return projects
+    .filter(p => p.estimatedWindow && p.state !== 'released')
+    .map(project => {
+      const originalEnd = project.estimatedWindow?.endWeek || 0;
+      const currentEnd = originalEnd + (project.weeksInPhase || 0);
+      const weeksSlipped = Math.max(0, currentEnd - originalEnd);
+      
+      return {
+        projectName: project.title,
+        originalEndWeek: originalEnd,
+        currentEndWeek: currentEnd,
+        weeksSlipped,
+        reason: project.activeCrisis ? project.activeCrisis.description : 'Schedule variance'
+      };
+    })
+    .filter(p => p.weeksSlipped > 0);
+};
+
+/**
+ * Script quality metrics for ScriptQualityMetrics visualization
+ * Derived from scriptHeat and scriptEvents
+ */
+export const selectScriptQualityMetrics = (state: GameState | null, projectId: string) => {
+  const project = selectProjectsRaw(state)[projectId];
+  if (!project || !('scriptHeat' in project)) return null;
+  
+  const scripted = project as any; // Type assertion for ScriptedProject
+  const scriptHeat = scripted.scriptHeat || 50;
+  const events = scripted.scriptEvents || [];
+  
+  // Derive metrics from existing data
+  const structure = Math.min(100, events.filter((e: any) => e.type === 'ARCHETYPE_CHANGE').length * 15 + 50);
+  const dialogue = Math.min(100, events.filter((e: any) => e.type === 'DIALOGUE_POLISH').reduce((sum: number, e: any) => sum + (e.qualityImpact || 0), 0) + 50);
+  const originality = Math.min(100, events.filter((e: any) => e.type === 'PLOT_TWIST_ADDED').length * 20 + 40);
+  const pacing = Math.min(100, events.length * 5 + 40);
+  const emotionalImpact = scriptHeat;
+  const commercialViability = Math.round((scriptHeat + structure) / 2);
+  
+  return [
+    { metric: 'Structure', value: structure },
+    { metric: 'Dialogue', value: dialogue },
+    { metric: 'Originality', value: originality },
+    { metric: 'Pacing', value: pacing },
+    { metric: 'Emotional Impact', value: emotionalImpact },
+    { metric: 'Commercial Viability', value: commercialViability },
+  ];
+};
+
+// ============================================================================
+// VISUALIZATION SELECTORS - Phase 3: Market Intelligence
+// ============================================================================
+
+/**
+ * Genre performance matrix for GenrePerformanceMatrix visualization
+ */
+export const selectGenrePerformanceMatrix = (state: GameState | null) => {
+  const trends = selectMarketTrends(state);
+  const projects = selectReleasedProjects(state);
+  
+  // Get unique genres from trends
+  const genres = [...new Set(trends.map(t => t.genre))];
+  const metrics = ['ROI', 'Audience', 'Critical', 'Commercial'];
+  
+  return genres.flatMap(genre => {
+    const genreProjects = projects.filter(p => p.genre === genre);
+    const avgROI = genreProjects.length > 0
+      ? genreProjects.reduce((sum, p) => sum + ((p.revenue || 0) / Math.max(p.budget || 1, 1)), 0) / genreProjects.length
+      : 0;
+    
+    return metrics.map(metric => ({
+      genre,
+      metric,
+      value: calculateGenreMetric(genreProjects, metric, avgROI)
+    }));
+  });
+};
+
+function calculateGenreMetric(projects: Project[], metric: string, roi: number): number {
+  switch (metric) {
+    case 'ROI': return Math.round((roi - 1) * 100);
+    case 'Audience': return Math.round(projects.reduce((sum, p) => sum + (p.reception?.audienceScore || 0), 0) / Math.max(projects.length, 1));
+    case 'Critical': return Math.round(projects.reduce((sum, p) => sum + (p.reception?.metaScore || 0), 0) / Math.max(projects.length, 1));
+    case 'Commercial': return Math.round(projects.reduce((sum, p) => sum + ((p.boxOffice as any)?.totalDomestic || 0), 0) / 1000000);
+    default: return 0;
+  }
+}
+
+/**
+ * Market share data for MarketShareComparison visualization
+ * Uses existing marketShare field from RivalStudio
+ */
+export const selectMarketShareData = (state: GameState | null) => {
+  const rivals = selectRivals(state);
+  const myProjects = selectReleasedProjects(state);
+  const myRevenue = myProjects.reduce((sum, p) => sum + (p.revenue || 0), 0);
+  
+  // Use existing marketShare field
+  return [
+    { name: 'Your Studio', share: state?.studio?.marketShare || 0, isPlayer: true },
+    ...rivals.map(r => ({
+      name: r.name,
+      share: r.marketShare || 0,
+      isPlayer: false
+    }))
+  ].sort((a, b) => b.share - a.share);
+};
+
+/**
+ * Streaming viewership data for StreamingViewershipChart visualization
+ * Derives from revenue data for films, uses nielsenProfile for TV
+ */
+export const selectStreamingViewership = (state: GameState | null, platformName: string) => {
+  const projects = selectProjects(state).filter(p => 
+    p.distributionStatus === 'streaming' && p.buyerId === platformName
+  );
+  
+  return projects.map(p => ({
+    week: p.releaseWeek || 1,
+    hoursWatched: (p.revenue || 0) / 0.01, // rough estimate: $0.01 per hour
+    uniqueViewers: Math.floor((p.revenue || 0) / 5), // rough: $5 per viewer
+    completionRate: p.reception?.audienceScore || 50
+  }));
+};
+
+// ============================================================================
+// VISUALIZATION SELECTORS - Phase 4: Talent Management
+// ============================================================================
+
+/**
+ * Talent satisfaction data for TalentSatisfactionGauge visualization
+ * Uses existing psychology.mood field as morale
+ */
+export const selectTalentSatisfaction = (state: GameState | null) => {
+  const talents = selectTalentPool(state);
+  if (talents.length === 0) return { overallScore: 0, byCategory: [] };
+  
+  const scores = talents.map(t => ({
+    id: t.id,
+    score: t.psychology.mood || 70, // Uses existing psychology.mood field
+    tier: t.tier
+  }));
+  
+  const overallScore = scores.reduce((sum, s) => sum + s.score, 0) / scores.length;
+  const byCategory = [1, 2, 3, 4].map(tier => ({
+    tier: tier === 1 ? 'A-list' : tier === 2 ? 'B-list' : tier === 3 ? 'C-list' : 'Emerging',
+    score: scores.filter(s => s.tier === tier).length > 0 
+      ? scores.filter(s => s.tier === tier).reduce((sum, s) => sum + s.score, 0) / scores.filter(s => s.tier === tier).length
+      : 50
+  }));
+  
+  return { overallScore: Math.round(overallScore), byCategory };
+};
+
+/**
+ * Talent tier distribution for TalentTierDistribution visualization
+ */
+export const selectTalentTierDistribution = (state: GameState | null) => {
+  const talents = selectTalentPool(state);
+  
+  const tierNames: Record<number, string> = { 1: 'A-list', 2: 'B-list', 3: 'C-list', 4: 'Emerging' };
+  
+  const byTier = [1, 2, 3, 4].map(tier => {
+    const tierTalents = talents.filter(t => t.tier === tier);
+    const avgSalary = tierTalents.length > 0
+      ? tierTalents.reduce((sum, t) => sum + (t.fee || 0), 0) / tierTalents.length
+      : 0;
+    
+    return {
+      tier: tierNames[tier],
+      count: tierTalents.length,
+      avgSalary
+    };
+  });
+  
+  return {
+    data: byTier,
+    totalTalent: talents.length
+  };
+};
+
+/**
+ * Deal statistics for DealSuccessRate visualization
+ */
+export const selectDealStats = (state: GameState | null) => {
+  const opportunities = selectOpportunities(state);
+  const bids = opportunities.filter(o => Object.keys(o.bids || {}).length > 0);
+  
+  // Calculate from bid history
+  const totalDeals = opportunities.reduce((sum, o) => sum + (o.bidHistory?.length || 0), 0);
+  const accepted = opportunities.reduce((sum, o) => {
+    return sum + (o.bidHistory?.filter(b => b.rivalId === 'PLAYER').length || 0);
+  }, 0);
+  const rejected = totalDeals - accepted;
+  
+  return {
+    total: totalDeals,
+    accepted,
+    rejected,
+    pending: bids.length,
+    avgNegotiationWeeks: totalDeals > 0 ? 2 : 0 // Simplified - would need actual duration tracking
+  };
+};
+
+// ============================================================================
+// VISUALIZATION SELECTORS - Phase 5: Studio Health & Crisis
+// ============================================================================
+
+/**
+ * Studio health metrics for StudioHealthRadar visualization
+ * Complex aggregation of multiple data sources
+ */
+export const selectStudioHealthMetrics = (state: GameState | null) => {
+  const finance = selectFinance(state);
+  const projects = selectProjects(state);
+  const talents = selectTalentPool(state);
+  const studio = selectStudio(state);
+  const marketMetrics = selectMarketMetrics(state);
+  
+  // Finances score: based on cash position vs burn rate
+  const cash = finance.cash || 0;
+  const monthlyBurn = finance.weeklyHistory?.slice(-4).reduce((sum, h) => sum + h.expenses.burn, 0) || 0;
+  const financeScore = Math.min(100, Math.max(0, (cash / Math.max(monthlyBurn, 1)) * 20));
+  
+  // Talent score: based on average mood (psychology.mood)
+  const talentScores = talents.map(t => t.psychology.mood || 70);
+  const talentScore = talentScores.length > 0 
+    ? talentScores.reduce((sum, t) => sum + t, 0) / talentScores.length 
+    : 70;
+  
+  // Projects score: based on on-time, on-budget percentage
+  const activeProjects = projects.filter(p => p.state !== 'released' && p.state !== 'archived');
+  const onTrackProjects = activeProjects.filter(p => {
+    const onTime = (p.progress || 0) >= ((p.weeksInPhase || 0) / Math.max(p.productionWeeks || 1, 1)) * 100;
+    const onBudget = (p.accumulatedCost || 0) <= (p.budget || 0) * 1.1;
+    return onTime && onBudget;
+  });
+  const projectScore = activeProjects.length > 0 ? (onTrackProjects.length / activeProjects.length) * 100 : 70;
+  
+  // Reputation: studio prestige
+  const reputationScore = studio?.prestige || 50;
+  
+  // Market: based on trend alignment
+  const marketScore = 50 + (marketMetrics.sentiment || 0) / 2;
+  
+  // Operations: based on crisis count
+  const crisisCount = projects.filter(p => p.activeCrisis && !p.activeCrisis.resolved).length;
+  const operationsScore = Math.max(0, 100 - (crisisCount * 15));
+  
+  return [
+    { metric: 'Finances', score: Math.round(financeScore), fullMark: 100 },
+    { metric: 'Talent', score: Math.round(talentScore), fullMark: 100 },
+    { metric: 'Projects', score: Math.round(projectScore), fullMark: 100 },
+    { metric: 'Reputation', score: Math.round(reputationScore), fullMark: 100 },
+    { metric: 'Market', score: Math.round(marketScore), fullMark: 100 },
+    { metric: 'Operations', score: Math.round(operationsScore), fullMark: 100 },
+  ];
+};
+
+/**
+ * Crisis risk level for CrisisRiskMeter visualization
+ */
+export const selectActiveCrisisCount = (state: GameState | null) => {
+  const projects = selectProjects(state);
+  return projects.filter(p => p.activeCrisis && !p.activeCrisis.resolved).length;
+};
+
+export const selectCrisisRiskLevel = (state: GameState | null) => {
+  const projects = selectProjects(state);
+  const talents = selectTalentPool(state);
+  
+  const crisisCount = projects.filter(p => p.activeCrisis && !p.activeCrisis.resolved).length;
+  const overBudget = projects.filter(p => 
+    (p.accumulatedCost || 0) > (p.budget || 0) * 1.1
+  ).length;
+  const lowMorale = talents.filter(t => t.psychology.mood < 40).length;
+  
+  // Calculate risk level 0-100
+  const riskScore = Math.min(100, 
+    (crisisCount * 15) + 
+    (overBudget * 10) + 
+    (lowMorale * 5)
+  );
+  
+  return {
+    riskLevel: riskScore,
+    activeThreats: [
+      ...(crisisCount > 0 ? [`${crisisCount} production crises`] : []),
+      ...(overBudget > 0 ? [`${overBudget} budget overruns`] : []),
+      ...(lowMorale > 0 ? [`${lowMorale} talent issues`] : []),
+    ]
+  };
+};
+
+// ============================================================================
+// VISUALIZATION SELECTORS - Phase 6: Awards
+// ============================================================================
+
+/**
+ * Awards probability data for AwardsProbabilityChart visualization
+ */
+export const selectAwardsProbability = (state: GameState | null) => {
+  const projects = selectProjects(state).filter(p => p.awardsProfile || (p.awards && p.awards.length > 0));
+  
+  return projects.flatMap(project => {
+    const profiles = project.awardsProfile ? [project.awardsProfile] : [];
+    
+    return profiles.map(profile => ({
+      projectTitle: project.title,
+      awardBody: 'Academy Awards', // Default, would need to track per-award-body profiles
+      category: profile.craftScore > 80 ? 'Best Picture' : 'Supporting',
+      probability: profile.craftScore || 50,
+      trend: 'stable'
+    }));
+  });
+};

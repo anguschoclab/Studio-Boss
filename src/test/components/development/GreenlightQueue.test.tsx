@@ -80,7 +80,11 @@ describe('GreenlightQueue', () => {
 
     render(<GreenlightQueue projects={projects as any} onReject={handleReject} />);
     
-    fireEvent.click(screen.getByRole('button', { name: /close/i }));
+    // The reject button has XCircle icon - find by the destructive button class
+    const rejectButton = document.querySelector('button[class*="destructive"]') 
+      || document.querySelector('button svg[data-lucide="x-circle"]')?.closest('button')
+      || screen.getAllByRole('button')[1]; // Fallback to second button
+    if (rejectButton) fireEvent.click(rejectButton);
     expect(handleReject).toHaveBeenCalledWith('proj-1');
   });
 

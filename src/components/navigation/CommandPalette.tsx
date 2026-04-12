@@ -15,6 +15,10 @@ import {
   ArrowRight,
   Clock,
   Sparkles,
+  AlertTriangle,
+  Activity,
+  Zap,
+  Flame,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { tokens } from '@/lib/tokens';
@@ -113,6 +117,107 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
         icon: Clock,
         action: () => {}, // Would trigger week advancement
         section: 'Actions',
+      },
+      // Crisis Management
+      {
+        id: 'crisis-dashboard',
+        title: 'Crisis Dashboard',
+        subtitle: 'View all active crises and issues',
+        icon: AlertTriangle,
+        shortcut: '⌘⇧C',
+        action: () => {
+          setActiveHub('hq');
+          setActiveSubTab('operations');
+        },
+        section: 'Crisis Management',
+        keywords: ['emergency', 'problems', 'issues', 'alerts'],
+      },
+      {
+        id: 'greenlight-queue',
+        title: 'Greenlight Queue',
+        subtitle: 'Review projects awaiting approval',
+        icon: Zap,
+        action: () => {
+          setActiveHub('production');
+          setActiveSubTab('slate');
+        },
+        section: 'Crisis Management',
+        keywords: ['approve', 'projects', 'slate'],
+      },
+      // Intelligence Views
+      {
+        id: 'market-trends',
+        title: 'Market Trends',
+        subtitle: 'View genre trends and market sentiment',
+        icon: TrendingUp,
+        action: () => {
+          setActiveHub('intelligence');
+          setActiveSubTab('market');
+        },
+        section: 'Intelligence',
+        keywords: ['genres', 'trends', 'market', 'analysis'],
+      },
+      {
+        id: 'studio-health',
+        title: 'Studio Health',
+        subtitle: 'Check overall studio performance metrics',
+        icon: Activity,
+        action: () => {
+          setActiveHub('hq');
+          setActiveSubTab('overview');
+        },
+        section: 'Intelligence',
+        keywords: ['health', 'metrics', 'performance', 'dashboard'],
+      },
+      // Talent Views  
+      {
+        id: 'talent-morale',
+        title: 'Talent Morale',
+        subtitle: 'Check roster satisfaction levels',
+        icon: Users,
+        action: () => {
+          setActiveHub('talent');
+          setActiveSubTab('roster');
+        },
+        section: 'Talent',
+        keywords: ['morale', 'happiness', 'satisfaction', 'roster'],
+      },
+      {
+        id: 'deal-history',
+        title: 'Deal History',
+        subtitle: 'View negotiation history and offers',
+        icon: Briefcase,
+        action: () => {
+          setActiveHub('talent');
+          setActiveSubTab('negotiations');
+        },
+        section: 'Talent',
+        keywords: ['offers', 'negotiations', 'deals', 'history'],
+      },
+      // Financial Views
+      {
+        id: 'budget-burn',
+        title: 'Budget Burn Rate',
+        subtitle: 'Monitor production spending vs planned',
+        icon: Flame,
+        action: () => {
+          setActiveHub('production');
+          setActiveSubTab('development');
+        },
+        section: 'Finance',
+        keywords: ['budget', 'spending', 'overrun', 'costs'],
+      },
+      {
+        id: 'cash-flow',
+        title: 'Cash Flow',
+        subtitle: 'View revenue and expense trends',
+        icon: DollarSign,
+        action: () => {
+          setActiveHub('intelligence');
+          setActiveSubTab('financials');
+        },
+        section: 'Finance',
+        keywords: ['cash', 'revenue', 'expenses', 'financials'],
       },
     ];
 
