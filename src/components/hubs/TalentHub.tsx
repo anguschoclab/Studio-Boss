@@ -209,12 +209,24 @@ const MarketplacePanel = () => {
           </div>
         ) : (
           <React.Suspense fallback={<SkeletonPage contentCards={3} />}>
-            <AgencyPackagesPanel 
+            <AgencyPackagesPanel
               agencies={(gameState?.industry?.agencies || []) as any}
               packages={[]}
-              onCreatePackage={() => console.log('Create package')}
-              onViewPackage={(id) => console.log('View package', id)}
-              onBidPackage={(id) => console.log('Bid on package', id)}
+              onCreatePackage={() => {
+                // TODO: Implement package creation modal with agency, tier, and talent selection
+                // Requires: package data structure, game store action for createPackage
+                alert('Package creation coming soon - select agency, tier, and talent to create a package');
+              }}
+              onViewPackage={(id) => {
+                // TODO: Implement package detail modal/view
+                // Requires: package detail component, navigation to package detail
+                alert(`View package ${id} - package detail modal coming soon`);
+              }}
+              onBidPackage={(id) => {
+                // TODO: Implement bidding mechanics with cost calculation and success chance
+                // Requires: bidding logic, game store action for bidPackage
+                alert(`Bid on package ${id} - bidding mechanics coming soon`);
+              }}
             />
           </React.Suspense>
         )}
@@ -232,12 +244,60 @@ const MarketplacePanel = () => {
 
 // Negotiations Panel
 const NegotiationsPanel = () => {
+  const gameState = useGameStore(s => s.gameState);
+  const activeDeals = gameState?.deals?.activeDeals || [];
+
+  if (activeDeals.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-full text-muted-foreground">
+        <div className="text-center">
+          <Handshake className="w-16 h-16 mx-auto mb-4 opacity-20" />
+          <p className="text-lg font-bold uppercase tracking-widest">Active Negotiations</p>
+          <p className="text-sm mt-2">No pending offers or counter-offers</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex items-center justify-center h-full text-muted-foreground">
-      <div className="text-center">
-        <Handshake className="w-16 h-16 mx-auto mb-4 opacity-20" />
-        <p className="text-lg font-bold uppercase tracking-widest">Active Negotiations</p>
-        <p className="text-sm mt-2">No pending offers or counter-offers</p>
+    <div className="h-full flex flex-col">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-lg font-bold uppercase tracking-wider">Active Negotiations</h3>
+        <Badge variant="outline">{activeDeals.length} Active</Badge>
+      </div>
+
+      <div className="flex-1 space-y-3 overflow-y-auto">
+        {activeDeals.map((deal: any) => (
+          <div
+            key={deal.id}
+            className="p-4 rounded-lg bg-secondary/50 border border-border hover:border-primary/50 transition-colors"
+          >
+            <div className="flex items-start justify-between mb-2">
+              <div>
+                <p className="font-bold text-sm">{deal.projectTitle || 'Unnamed Project'}</p>
+                <p className="text-xs text-muted-foreground">{deal.buyerName || 'Unknown Buyer'}</p>
+              </div>
+              <Badge variant={deal.status === 'pending' ? 'default' : 'secondary'}>
+                {deal.status || 'Pending'}
+              </Badge>
+            </div>
+
+            <div className="flex items-center gap-4 text-xs text-muted-foreground mb-3">
+              <span>Week {deal.startWeek || 0}</span>
+              <span>•</span>
+              <span>{deal.contractType || 'Standard Deal'}</span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Button size="sm" variant="outline" className="text-xs">
+                Renegotiate
+              </Button>
+              <Button size="sm" variant="ghost" className="text-xs text-destructive">
+                Terminate
+              </Button>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

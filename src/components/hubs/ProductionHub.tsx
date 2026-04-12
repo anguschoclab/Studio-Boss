@@ -40,15 +40,34 @@ const GreenlightQueue = React.lazy(() => import('@/components/development/Greenl
 // Development sub-panel for concepts and greenlight queue
 const DevelopmentPanel = () => {
   const { openCreateProject } = useUIStore();
+  const greenlightProject = useGameStore(s => s.greenlightProject);
+  const advanceProjectPhase = useGameStore(s => s.advanceProjectPhase);
   const projects = useGameStore(useShallow(s => s.gameState ? selectProjects(s.gameState) : []));
-  
-  const developmentProjects = useMemo(() => 
+
+  const developmentProjects = useMemo(() =>
     projects.filter(p => p.state === 'development' || p.state === 'needs_greenlight'),
     [projects]
   );
-  
+
   const needsGreenlight = developmentProjects.filter(p => p.state === 'needs_greenlight').length;
-  
+
+  const handleReview = (id: string) => {
+    // Navigate to project detail modal
+    // For now, this could open a project review modal or navigate to project detail
+    // TODO: Implement project review modal with script details
+    console.log(`Review project ${id} - navigate to project detail`);
+  };
+
+  const handleApprove = async (id: string) => {
+    // Approve project for production using existing greenlightProject function
+    await greenlightProject(id);
+  };
+
+  const handleReject = (id: string) => {
+    // Reject project by archiving it
+    advanceProjectPhase(id, 'archived');
+  };
+
   return (
     <Stack direction="vertical" gap="lg">
       <div className={cn(
@@ -62,7 +81,7 @@ const DevelopmentPanel = () => {
             {developmentProjects.length} projects in development • {needsGreenlight} awaiting greenlight
           </p>
         </Stack>
-        <Button 
+        <Button
           onClick={openCreateProject}
           className={cn('h-10 px-5 gap-2', patterns.button.primary)}
         >
@@ -70,7 +89,7 @@ const DevelopmentPanel = () => {
           <span className={tokens.text.label}>New IP Concept</span>
         </Button>
       </div>
-      
+
       {needsGreenlight > 0 && (
         <div className={cn(
           'flex items-center gap-3 p-4 rounded-lg',
@@ -87,7 +106,7 @@ const DevelopmentPanel = () => {
           </div>
         </div>
       )}
-      
+
       {/* Script Pipeline */}
       <Section
         title="Script Development Pipeline"
@@ -106,20 +125,11 @@ const DevelopmentPanel = () => {
         icon={CheckCircle2}
       >
         <React.Suspense fallback={<SkeletonPage contentCards={2} />}>
-          <GreenlightQueue 
+          <GreenlightQueue
             projects={developmentProjects.filter(p => p.state === 'needs_greenlight')}
-            onReview={(id) => {
-              // Navigate to project review
-              console.log('Review project', id);
-            }}
-            onApprove={(id) => {
-              // Approve project for production
-              console.log('Approve project', id);
-            }}
-            onReject={(id) => {
-              // Reject project
-              console.log('Reject project', id);
-            }}
+            onReview={handleReview}
+            onApprove={handleApprove}
+            onReject={handleReject}
           />
         </React.Suspense>
       </Section>

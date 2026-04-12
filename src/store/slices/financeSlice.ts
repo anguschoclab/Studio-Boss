@@ -139,7 +139,7 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
   },
 
   executeMarketingEvent: (eventName, cost, projectId) => {
-    console.log(`Executing marketing event: ${eventName} for project ${projectId} costing ${cost}`);
+    // Marketing event execution - logic to be implemented
   },
 
   addFunds: (amount) => {

@@ -359,16 +359,67 @@ export function tickIPVault(state: GameState, archetype?: import('../../data/aiA
   const impacts: import('../../types/state.types').StateImpact[] = [];
   const activeProjects = Object.values(state.entities.projects);
 
-  // TODO: Use archetype properties to adjust IP behavior
-  // - strategy: determine IP acquisition preferences
-  // - genreFocus: IP genre preferences
-  // - festivalParticipation: IP festival submissions
-  // For now, this provides the infrastructure for future enhancement
+  // Use archetype properties to adjust IP behavior
+  // - strategy: determine IP acquisition preferences (affects decay rate)
+  // - genreFocus: IP genre preferences (affects valuation for matching genres)
+  // - festivalParticipation: IP festival submissions (affects prestige/buzz)
+  let decayMultiplier = 1.0;
+  let genreFocusBonus: Record<string, number> = {};
+  let festivalPrestigeBonus = 0;
 
-  // 1. Evaluate Synergy (Reboots/Spinoffs in production) 
-  // 2. Apply Decay (Synergy-shielded & Tiered)
+  if (archetype) {
+    // Strategy affects IP decay: acquirers preserve IP better, others decay faster
+    if (archetype.strategy === 'acquirer') {
+      decayMultiplier = 0.8; // Slower decay for IP-focused archetypes
+    } else if (archetype.strategy === 'prestige_chaser') {
+      decayMultiplier = 1.2; // Faster decay as they focus on new prestige projects
+    }
+
+    // Genre focus: bonus valuation for matching genres
+    if (archetype.genreFocus && archetype.genreFocus.length > 0) {
+      archetype.genreFocus.forEach(genre => {
+        genreFocusBonus[genre.toLowerCase()] = 0.15; // 15% bonus for focus genres
+      });
+    }
+
+    // Festival participation: prestige bonus for IP from festival submissions
+    if (archetype.festivalParticipation && archetype.festivalParticipation > 50) {
+      festivalPrestigeBonus = 10; // Prestige boost for festival-active archetypes
+    }
+  }
+
+  // 1. Evaluate Synergy (Reboots/Spinoffs in production)
+  // 2. Apply Decay (Synergy-shielded & Tiered) with archetype adjustments
   const updatedVault = evaluateVaultSynergy(activeProjects, state.ip.vault).map(asset => {
     let updatedAsset = applyIPDecay(asset);
+
+    // Apply archetype-based decay adjustment
+    if (decayMultiplier !== 1.0) {
+      const adjustedDecay = Math.max(0.1, updatedAsset.decayRate * decayMultiplier);
+      updatedAsset = { ...updatedAsset, decayRate: adjustedDecay };
+    }
+
+    // Apply genre focus bonus to valuation
+    if (Object.keys(genreFocusBonus).length > 0) {
+      const sourceProject = state.studio.internal.projectHistory.find(p => p.id === updatedAsset.originalProjectId);
+      if (sourceProject && sourceProject.genre) {
+        const genreBonus = genreFocusBonus[sourceProject.genre.toLowerCase()] || 0;
+        if (genreBonus > 0) {
+          updatedAsset = {
+            ...updatedAsset,
+            baseValue: Math.floor(updatedAsset.baseValue * (1 + genreBonus))
+          };
+        }
+      }
+    }
+
+    // Apply festival prestige bonus
+    if (festivalPrestigeBonus > 0) {
+      updatedAsset = {
+        ...updatedAsset,
+        baseValue: updatedAsset.baseValue + festivalPrestigeBonus * 1000
+      };
+    }
 
     // 📺 Phase 3: Syndication Integration
     // If it's a TV show with episodes, check for syndication milestones

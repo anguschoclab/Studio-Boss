@@ -12,11 +12,25 @@ import { StudioArchetype } from '../data/aiArchetypes';
  * Uses archetype strategy to determine crisis type preferences if archetype is provided.
  */
 export function generateCrisis(project: Project, rng: RandomGenerator, archetype?: StudioArchetype): StateImpact | null {
-  const template = pick(CRISIS_POOLS, rng);
-  if (!template) return null;
+  // Use archetype strategy to determine crisis type preferences
+  let crisisPool = CRISIS_POOLS;
 
-  // TODO: Use archetype strategy to determine crisis type preferences
-  // For now, keep the random selection but this can be enhanced later
+  if (archetype) {
+    // Risk-averse archetypes avoid production crises (prefer PR/financial crises)
+    // Production crises have descriptions containing "PRODUCTION" or "SAFETY"
+    if (archetype.strategy === 'prestige_chaser' || archetype.riskAppetite < 40) {
+      crisisPool = crisisPool.filter(c => !c.description.includes('PRODUCTION') && !c.description.includes('SAFETY'));
+    }
+    // Risk-seeking archetypes have higher chance of production crises
+    else if (archetype.strategy === 'acquirer' || archetype.riskAppetite > 60) {
+      // Give higher weight to production crises by duplicating them in the pool
+      const productionCrises = crisisPool.filter(c => c.description.includes('PRODUCTION') || c.description.includes('SAFETY'));
+      crisisPool = [...crisisPool, ...productionCrises];
+    }
+  }
+
+  const template = pick(crisisPool, rng);
+  if (!template) return null;
 
   const crisis: ActiveCrisis = {
     id: rng.uuid('CRS'),

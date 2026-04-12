@@ -87,7 +87,6 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
 
   doAdvanceWeek: async () => {
     if (get()._isProcessingTick) {
-        console.warn('[GameStore] Tick already in progress, skipping...');
         return null;
     }
 

@@ -38,7 +38,6 @@ export const createMarketingSlice: StateCreator<GameStore, [], [], MarketingSlic
     if (!state) return;
 
     if (state.finance.cash < tier.cost) {
-      console.warn('Insufficient funds for awards campaign');
       return;
     }
 
@@ -101,7 +100,6 @@ export const createMarketingSlice: StateCreator<GameStore, [], [], MarketingSlic
     if (!state || !state.entities.projects[projectId]) return;
 
     if (state.finance.cash < tier.cost) {
-      console.warn('Insufficient funds for marketing campaign');
       return;
     }
 

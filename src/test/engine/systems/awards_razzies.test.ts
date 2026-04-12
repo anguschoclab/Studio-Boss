@@ -5,23 +5,23 @@ import { RandomGenerator } from '../../../engine/utils/rng';
 
 describe('Razzies Award System', () => {
   const createProject = (id: string, budget: number, score: number, flavor: string, genre: string): Project => ({
-    id, 
-    title: `Title ${id}`, 
+    id,
+    title: `Title ${id}`,
     type: 'FILM',
-    format: 'film', 
-    genre, 
-    budgetTier: 'high', 
-    budget, 
+    format: 'film',
+    genre,
+    budgetTier: 'high',
+    budget,
     weeklyCost: 10,
-    targetAudience: 'General Audience', 
-    flavor, 
-    state: 'released', 
-    buzz: 50, 
+    targetAudience: 'General Audience',
+    flavor,
+    state: 'released',
+    buzz: 50,
     weeksInPhase: 1,
-    developmentWeeks: 1, 
-    productionWeeks: 1, 
-    revenue: 10, 
-    weeklyRevenue: 10, 
+    developmentWeeks: 1,
+    productionWeeks: 1,
+    revenue: 10,
+    weeklyRevenue: 10,
     releaseWeek: 1,
     reviewScore: score,
     activeCrisis: null,
@@ -31,18 +31,22 @@ describe('Razzies Award System', () => {
     contentFlags: [],
     scriptHeat: 50,
     activeRoles: [],
-    scriptEvents: []
+    scriptEvents: [],
+    ownerId: 'PLAYER'
   } as Project);
 
   it('Razzies are only awarded to projects with Budget >= 50M and Score <= 30', () => {
     const bigFlop = createProject('big', 60_000_000, 20, '', 'Action');
+    const smallFlop = createProject('small', 40_000_000, 20, '', 'Action'); // Below budget threshold
+    const goodFilm = createProject('good', 60_000_000, 80, '', 'Action'); // Above score threshold
 
     const state = {
       week: 4,
-      studio: {
-        internal: {
-          projects: { big: bigFlop },
-          contracts: []
+      entities: {
+        projects: {
+          big: bigFlop,
+          small: smallFlop,
+          good: goodFilm
         }
       },
       industry: {
@@ -53,18 +57,28 @@ describe('Razzies Award System', () => {
     const rng = new RandomGenerator(1);
     const result = processRazzies(state, 4, rng);
 
-    // processRazzies is currently a stub — returns empty array
+    // Should return impacts for eligible projects
     expect(Array.isArray(result)).toBe(true);
+    expect(result.length).toBeGreaterThan(0);
+
+    // Should have PROJECT_UPDATED impact for the eligible project
+    const projectUpdate = result.find(imp => imp.type === 'PROJECT_UPDATED');
+    expect(projectUpdate).toBeDefined();
+    expect((projectUpdate?.payload as any).projectId).toBe('big');
+    expect((projectUpdate?.payload as any).update.razzieWinner).toBe(true);
+
+    // Should have NEWS_ADDED impact
+    const newsImpact = result.find(imp => imp.type === 'NEWS_ADDED');
+    expect(newsImpact).toBeDefined();
   });
 
   it('Razzie win triggers Studio Prestige penalty and marks cult classic if absurd', () => {
     const absurdFlop = createProject('absurd', 60_000_000, 20, 'a bizarre and absurd mess', 'Action');
     const state = {
       week: 4,
-      studio: {
-        internal: {
-          projects: { absurd: absurdFlop },
-          contracts: []
+      entities: {
+        projects: {
+          absurd: absurdFlop
         }
       },
       industry: {
@@ -75,7 +89,26 @@ describe('Razzies Award System', () => {
     const rng = new RandomGenerator(1);
     const result = processRazzies(state, 4, rng);
 
-    // processRazzies is currently a stub — returns empty array
     expect(Array.isArray(result)).toBe(true);
+    expect(result.length).toBeGreaterThan(0);
+
+    // Should mark as Razzie winner
+    const projectUpdate = result.find(imp => imp.type === 'PROJECT_UPDATED');
+    expect(projectUpdate).toBeDefined();
+    expect((projectUpdate?.payload as any).update.razzieWinner).toBe(true);
+
+    // Should mark as cult classic due to absurd flavor
+    expect((projectUpdate?.payload as any).update.isCultClassic).toBe(true);
+
+    // Should have prestige penalty
+    const prestigeImpact = result.find(imp => imp.type === 'PRESTIGE_CHANGED');
+    expect(prestigeImpact).toBeDefined();
+    expect(prestigeImpact?.payload).toBeLessThan(0);
+
+    // Should have news event about cult following
+    const cultNews = result.filter(imp => imp.type === 'NEWS_ADDED').find(imp => 
+      (imp.payload as any).headline.includes('cult')
+    );
+    expect(cultNews).toBeDefined();
   });
 });
