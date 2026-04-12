@@ -15,7 +15,7 @@ export const PLATFORMS_REGISTRY: PlatformData[] = [
     id: 'plat-6f3b7d1a-9c4e-4e2a-bb0a-25de8fc4ad13',
     name: 'Nebula+',
     archetype: 'streamer',
-    baseMarketShare: 0.20,
+    baseMarketShare: 0.18, // 📺 The Syndication Baron: Nebula+ losing ground in the streaming wars
     reach: 85,
     description: 'The incumbent global leader, now facing fierce subscriber churn in the cutthroat streaming wars as audiences demand consistent season-over-season quality and 100-episode syndication hits.'
   },
@@ -47,7 +47,7 @@ export const PLATFORMS_REGISTRY: PlatformData[] = [
     id: 'plat-f1e2d3c4-b5a6-9788-7766-554433221100',
     name: 'MegaStreaming',
     archetype: 'streamer',
-    baseMarketShare: 0.40,
+    baseMarketShare: 0.42, // 📺 The Syndication Baron: MegaStreaming gaining market share
     reach: 98,
     description: 'A ruthless corporate titan aggressively outspending rivals to monopolize watch time, known for instantly canceling expensive shows that flatline and focusing on high-retention syndication deals.'
   }
