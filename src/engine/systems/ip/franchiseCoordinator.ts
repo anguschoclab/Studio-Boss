@@ -103,6 +103,15 @@ export function calculateFranchiseEquity(
     crossoverBonus += 0.40;
   }
 
+    // 🌌 The Universe Builder: The Transmedia Empire Effect
+    if (assets.length >= 2 && genres.some(g => g === 'Video Game Adaptation') && genres.some(g => g === 'Animation')) {
+      crossoverBonus += 0.35;
+    }
+    // 🌌 The Universe Builder: The Spider-Verse Effect
+    if (assets.length >= 2 && genres.some(g => g === 'Animation') && genres.some(g => g === 'Multiverse')) {
+      crossoverBonus += 0.40;
+    }
+
   // 2. Format Diversity Multiplier
   const multiplier = franchise.synergyMultiplier;
   
@@ -183,11 +192,26 @@ export function updateFranchiseHub(state: GameState, project: Project, rng: Rand
         updatedLoyalty = clamp(updatedLoyalty - 5, 0, 100);
       }
 
+      const isBreakout = project.revenue > (project.budget * 2.5);
+      const isPrestigeHit = (project.awardsProfile?.prestigeScore || 0) > 85;
+
+      let updatedRelevance = hub.relevanceScore;
+
+      // 🌌 The Universe Builder: IP Squatting penalty
+      if (project.revenue < project.budget * 0.5 && project.budget < 50000000 && !isPrestigeHit) {
+        updatedLoyalty = clamp(updatedLoyalty - 20, 0, 100);
+        updatedRelevance = clamp(updatedRelevance - 15, 0, 100);
+      }
+
+      // 🌌 The Universe Builder: Prestige Spin-off Bump
+      if (isPrestigeHit && project.revenue >= project.budget) {
+        updatedLoyalty = clamp(updatedLoyalty + 15, 0, 100);
+        updatedRelevance = clamp(updatedRelevance + 20, 0, 100);
+      }
+
       // 🌌 The Universe Builder: Reboot Renaissance. If a dead franchise gets a new hit, loyalty spikes.
       const lastRelease = hub.lastReleaseWeeks.length > 0 ? Math.max(...hub.lastReleaseWeeks) : state.week;
       const yearsSince = (state.week - lastRelease) / 52;
-      const isBreakout = project.revenue > (project.budget * 2.5);
-      const isPrestigeHit = (project.awardsProfile?.prestigeScore || 0) > 85;
 
       if (yearsSince >= 12 && (isBreakout || isPrestigeHit)) {
         updatedLoyalty = clamp(updatedLoyalty + 30, 0, 100);
@@ -213,7 +237,6 @@ export function updateFranchiseHub(state: GameState, project: Project, rng: Rand
         updatedLoyalty = clamp(updatedLoyalty - 25, 0, 100);
       }
 
-      let updatedRelevance = hub.relevanceScore;
       // 🌌 The Universe Builder: Spin-off Fatigue Cascade - a bomb tanks relevance
       if (!isBreakout && !isPrestigeHit && project.revenue < project.budget) {
         updatedRelevance = clamp(updatedRelevance - 10, 0, 100);

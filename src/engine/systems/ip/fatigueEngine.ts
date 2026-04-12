@@ -87,6 +87,19 @@ export function calculateFranchiseFatigue(
     currentFatigue *= 3.5;
   }
 
+  // 🌌 The Universe Builder: Homework Fatigue penalty
+  if (activeCount >= 3 && franchise.audienceLoyalty < 50) {
+    currentFatigue *= 1.75;
+  }
+
+  // 🌌 The Universe Builder: Live-Action Remake / Legacy Sequel burnout
+  if (normalizedGenre === 'Live-Action Remake' && activeCount >= 2) {
+    currentFatigue *= 2.0;
+  }
+  if (normalizedGenre === 'Legacy Sequel' && activeCount >= 2) {
+    currentFatigue *= 1.5;
+  }
+
   // 3. Rival Saturation (The 'Poison the Well' effect)
   // If genre is severely oversaturated, penalty multiplier increases heavily.
   // 🌌 The Universe Builder: The market rejects trend-chasing much faster now.
@@ -130,6 +143,15 @@ export function calculateReleaseGapImpact(
     return {
       buzzBonus: 85,
       label: 'Generational Pass-Down (Legendary Status)',
+      fatigueReset: true
+    };
+  }
+
+  // 🌌 The Universe Builder: IP Necromancy (Historic Event)
+  if (yearsSince >= 30) {
+    return {
+      buzzBonus: 95,
+      label: 'IP Necromancy (Historic Event)',
       fatigueReset: true
     };
   }
