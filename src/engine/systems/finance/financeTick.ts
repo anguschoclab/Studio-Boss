@@ -2,6 +2,19 @@ import { GameState, StateImpact, Project } from '@/engine/types';
 import { RandomGenerator } from '../../utils/rng';
 import { generateWeeklyFinancialReport } from '../finance';
 import { StreamingViewershipTracker } from '../production/StreamingViewershipTracker';
+import { StudioArchetype, AI_ARCHETYPES } from '../../data/aiArchetypes';
+
+/**
+ * Helper function to get the StudioArchetype for a rival studio.
+ */
+function getRivalArchetype(rival: any): StudioArchetype | undefined {
+  const archetypeId = rival.archetypeId || ('behaviorId' in rival ? rival.behaviorId : undefined);
+  if (archetypeId) {
+    const archetype = AI_ARCHETYPES.find(a => a.id === archetypeId);
+    if (archetype) return archetype;
+  }
+  return undefined;
+}
 
 /**
  * Weekly Finance Tick (Target A4/B).
@@ -10,23 +23,23 @@ import { StreamingViewershipTracker } from '../production/StreamingViewershipTra
  */
 export function tickFinance(state: GameState, rng: RandomGenerator, pendingImpacts: StateImpact[] = []): StateImpact[] {
   const impacts: StateImpact[] = [];
-  
+
   const contractsList = Object.values(state.entities.contracts || {});
 
   // 1. Player Finance Tick
   const { report, snapshot } = generateWeeklyFinancialReport(
-      state, 
+      state,
       state.studio.id, // 🌌 Standardized ID
-      state.entities.projects, 
-      state.finance.cash, 
-      state.studio.archetype, 
-      state.studio.prestige, 
-      contractsList, 
-      state.deals?.activeDeals || [], 
-      rng, 
+      state.entities.projects,
+      state.finance.cash,
+      state.studio.archetype,
+      state.studio.prestige,
+      contractsList,
+      state.deals?.activeDeals || [],
+      rng,
       pendingImpacts
   );
-  
+
   impacts.push({
     type: 'FUNDS_CHANGED',
     payload: { amount: report.netProfit }
@@ -42,14 +55,14 @@ export function tickFinance(state: GameState, rng: RandomGenerator, pendingImpac
     payload: { snapshot }
   });
 
-  // Update streaming viewership for player projects with streaming distribution
-  const playerProjects = Object.values(state.entities.projects || {});
-  playerProjects.forEach(project => {
+  // Update streaming viewership for all projects with streaming distribution (player and rival)
+  const allProjects = Object.values(state.entities.projects || {});
+  allProjects.forEach(project => {
     if (project.state === 'released' && project.distributionStatus === 'streaming' && project.streamingViewership && project.streamingViewership.length > 0) {
       // Find the viewership history for this project's platform
       const platformId = project.buyerId || '';
       const historyIndex = project.streamingViewership.findIndex(v => v.platform === platformId);
-      
+
       if (historyIndex >= 0) {
         const updatedViewership = StreamingViewershipTracker.updateViewership(
           project.streamingViewership[historyIndex],
@@ -57,11 +70,11 @@ export function tickFinance(state: GameState, rng: RandomGenerator, pendingImpac
           project,
           rng
         );
-        
+
         // Update the specific history in the array
         const updatedArray = [...project.streamingViewership];
         updatedArray[historyIndex] = updatedViewership;
-        
+
         impacts.push({
           type: 'PROJECT_UPDATED',
           payload: {
@@ -77,27 +90,31 @@ export function tickFinance(state: GameState, rng: RandomGenerator, pendingImpac
   const rivalsList = Object.values(state.entities.rivals || {});
 
   for (const rival of rivalsList) {
-      const { report: rivalReport } = generateWeeklyFinancialReport(
-          state,
-          rival.id,
-          rival.projects || {},
-          rival.cash,
-          rival.archetype,
-          rival.prestige,
-          [], // Rivals don't use player contracts (simplified for now)
-          [], // Rivals don't have pacts yet
-          rng,
-          pendingImpacts
-      );
+    // Backward compatibility for projects field
+    const rivalProjects = ('projects' in rival && rival.projects) ? (rival as any).projects : {};
+    const archetype = getRivalArchetype(rival);
 
-      impacts.push({
-          type: 'RIVAL_UPDATED',
-          payload: {
-              rivalId: rival.id,
-              update: { cash: rival.cash + rivalReport.netProfit }
-          }
-      });
+    const { report: rivalReport } = generateWeeklyFinancialReport(
+        state,
+        rival.id,
+        rivalProjects,
+        rival.cash,
+        rival.archetype,
+        rival.prestige,
+        [], // Rivals don't use player contracts (simplified for now)
+        [], // Rivals don't have pacts yet
+        rng,
+        pendingImpacts
+    );
+
+    impacts.push({
+        type: 'RIVAL_UPDATED',
+        payload: {
+            rivalId: rival.id,
+            update: { cash: rival.cash + rivalReport.netProfit }
+        }
+    });
   }
-  
+
   return impacts;
 }

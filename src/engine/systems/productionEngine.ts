@@ -93,12 +93,14 @@ function tickProject(
 
 /**
  * Unified Production Engine.
+ * Processes all projects (player and rival) from state.entities.projects with ownerId filtering.
  */
 export function tickProduction(state: GameState, rng: RandomGenerator): StateImpact[] {
   const allImpacts: StateImpact[] = [];
   const contractMap = new Map<string, Contract[]>();
   const activeTalentIds = new Set<string>();
-  
+
+  // Build contract map from state.entities.contracts (unified storage)
   const contractsObj = state.entities.contracts || {};
   for (const key in contractsObj) {
     if (!Object.prototype.hasOwnProperty.call(contractsObj, key)) continue;
@@ -112,35 +114,55 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
   const rivalsMap = state.entities.rivals || {};
   const rivalsList = Object.values(rivalsMap);
 
-  // collect rival contracts (Not used in the current engine version, but keeping for compatibility)
+  // Backward compatibility: collect rival contracts during transition
+  // TODO: Remove after migration of rival.contracts to state.entities.contracts
   for (const rival of rivalsList) {
-    if (!rival.contracts) continue;
-    const rivalContracts = Object.values(rival.contracts);
-    for (const contract of rivalContracts) {
-      const list = contractMap.get(contract.projectId) || [];
-      list.push(contract);
-      contractMap.set(contract.projectId, list);
+    // Check for old contracts field (backward compatibility)
+    if ('contracts' in rival && rival.contracts) {
+      const rivalContracts = Object.values(rival.contracts as Record<string, Contract>);
+      for (const contract of rivalContracts) {
+        const list = contractMap.get(contract.projectId) || [];
+        list.push(contract);
+        contractMap.set(contract.projectId, list);
+      }
     }
   }
 
-  // 1. Player Projects
-  const playerProjects = { ...state.entities.projects };
-  let playerChanged = false;
+  // Unified project storage: Process all projects from state.entities.projects
+  const allProjects = { ...state.entities.projects };
+  let projectsChanged = false;
 
-  for (const key in playerProjects) {
-    const project = playerProjects[key];
+  // Build rival prestige map for studio-specific logic
+  const rivalPrestigeMap = new Map<string, number>();
+  rivalsList.forEach(rival => {
+    rivalPrestigeMap.set(rival.id, rival.prestige);
+  });
+
+  // Process all projects with ownerId filtering
+  for (const key in allProjects) {
+    const project = allProjects[key];
+    const ownerId = project.ownerId || 'player'; // Default to player for backward compatibility
+
+    // Determine studio prestige based on ownerId
+    let studioPrestige: number;
+    if (ownerId === 'player') {
+      studioPrestige = state.studio.prestige;
+    } else {
+      studioPrestige = rivalPrestigeMap.get(ownerId) || 50; // Default to 50 if not found
+    }
+
     const projectContracts = contractMap.get(project.id) || [];
-    
+
     // We reuse tickProject logic but handle impacts collection differently
-    const projectImpacts = tickProject(project, projectContracts, state.entities.talents, rng, state.studio.prestige, state.week);
-    
+    const projectImpacts = tickProject(project, projectContracts, state.entities.talents, rng, studioPrestige, state.week);
+
     projectImpacts.forEach(imp => {
         if (imp.type === 'PROJECT_UPDATED') {
-            playerProjects[imp.payload.projectId] = { 
-                ...playerProjects[imp.payload.projectId], 
-                ...imp.payload.update 
+            allProjects[imp.payload.projectId] = {
+                ...allProjects[imp.payload.projectId],
+                ...imp.payload.update
             };
-            playerChanged = true;
+            projectsChanged = true;
         } else {
             allImpacts.push(imp);
         }
@@ -152,11 +174,45 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
     }
   }
 
-  if (playerChanged) {
+  if (projectsChanged) {
       allImpacts.push({
-          type: 'INDUSTRY_UPDATE', 
-          payload: { update: { 'entities.projects': playerProjects } }
+          type: 'INDUSTRY_UPDATE',
+          payload: { update: { 'entities.projects': allProjects } }
       } as any);
+  }
+
+  // Backward compatibility: Process rival projects from rival.projects during transition
+  // TODO: Remove after migration of rival.projects to state.entities.projects
+  for (const rival of rivalsList) {
+    // Check for old projects field (backward compatibility)
+    if ('projects' in rival && rival.projects) {
+      const rivalProjects = { ...rival.projects as Record<string, Project> };
+      let rivalChanged = false;
+
+      for (const key in rivalProjects) {
+        const project = rivalProjects[key];
+        const projectImpacts = tickProject(project, [], state.entities.talents, rng, rival.prestige, state.week);
+
+        projectImpacts.forEach(imp => {
+            if (imp.type === 'PROJECT_UPDATED') {
+                rivalProjects[imp.payload.projectId] = {
+                    ...rivalProjects[imp.payload.projectId],
+                    ...imp.payload.update
+                };
+                rivalChanged = true;
+            } else {
+                allImpacts.push(imp);
+            }
+        });
+      }
+
+      if (rivalChanged) {
+          allImpacts.push({
+              type: 'RIVAL_UPDATED',
+              payload: { rivalId: rival.id, update: { projects: rivalProjects } }
+          });
+      }
+    }
   }
 
   // Handle Resting Talent Fatigue
@@ -171,37 +227,6 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
           payload: { talentId: talent.id, update: { fatigue: newFatigue } }
         });
       }
-    }
-  }
-
-  // 2. Rival Projects
-  for (const rival of rivalsList) {
-    if (!rival.projects) continue;
-    const rivalProjects = { ...rival.projects };
-    let rivalChanged = false;
-
-    for (const key in rivalProjects) {
-      const project = rivalProjects[key];
-      const projectImpacts = tickProject(project, [], state.entities.talents, rng, rival.prestige, state.week);
-      
-      projectImpacts.forEach(imp => {
-          if (imp.type === 'PROJECT_UPDATED') {
-              rivalProjects[imp.payload.projectId] = {
-                  ...rivalProjects[imp.payload.projectId],
-                  ...imp.payload.update
-              };
-              rivalChanged = true;
-          } else {
-              allImpacts.push(imp);
-          }
-      });
-    }
-
-    if (rivalChanged) {
-        allImpacts.push({
-            type: 'RIVAL_UPDATED',
-            payload: { rivalId: rival.id, update: { projects: rivalProjects } }
-        });
     }
   }
 

@@ -32,9 +32,10 @@ export interface RivalStudio {
   // AI Motivations
   motivationProfile: MotivationProfile;
   currentMotivation: StudioMotivation;
-  // Dynamic State
-  projects: Record<string, Project>;
-  contracts: Record<string, Contract>;
+  // Dynamic State - Unified Storage: Store IDs instead of full objects
+  projectIds: string[]; // IDs of projects owned by this rival
+  contractIds: string[]; // IDs of contracts owned by this rival
+  ipAssetIds: string[]; // IDs of IP assets owned by this rival
   // Consolidation & Vertical Integration
   ownedPlatforms?: string[]; // IDs of platforms this studio owns
   parentBrand?: string;
@@ -43,8 +44,7 @@ export interface RivalStudio {
   genreFocus?: string;
   acquisitionTarget?: string;
   isAcquirable?: boolean;
-  behaviorId?: string; // 🌌 PHASE 2: Links to AI_ARCHETYPES
-  ipAssets?: Record<string, import('./state.types').IPAsset>;
+  archetypeId?: string; // Links to unified StudioArchetype (replaces behaviorId)
   weeklyHistory?: import('./state.types').FinancialSnapshot[];
   // Phase 6: Revenue tracking for market share comparison
   boxOfficeTotal?: number;        // Total annual box office revenue

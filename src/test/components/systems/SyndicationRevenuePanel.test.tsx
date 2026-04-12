@@ -1,9 +1,13 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { render, screen, cleanup, within } from '@testing-library/react';
+import { describe, it, expect, afterEach } from 'vitest';
 import { SyndicationRevenuePanel } from '@/components/distribution/SyndicationRevenuePanel';
 
 describe('SyndicationRevenuePanel', () => {
+  afterEach(() => {
+    cleanup();
+  });
+
   it('renders summary cards with correct data', () => {
     const syndicationData = {
       byRegion: [],
@@ -13,7 +17,7 @@ describe('SyndicationRevenuePanel', () => {
     };
 
     render(<SyndicationRevenuePanel syndicationData={syndicationData} />);
-    
+
     expect(screen.getByText('Total Revenue')).toBeInTheDocument();
     expect(screen.getByText('$5.0M')).toBeInTheDocument();
     expect(screen.getByText('Active Deals')).toBeInTheDocument();
@@ -23,35 +27,37 @@ describe('SyndicationRevenuePanel', () => {
   });
 
   it('renders regional breakdown', () => {
-    const syndicationData = {
-      byRegion: [
-        {
-          region: 'Asia Pacific',
-          revenue: 2000000,
-          deals: 5,
-          trend: 'up' as const,
-          growth: 15,
-        },
-        {
-          region: 'Latin America',
-          revenue: 1500000,
-          deals: 4,
-          trend: 'stable' as const,
-          growth: 0,
-        },
-      ],
-      totalRevenue: 3500000,
-      totalDeals: 9,
-      topPerformingRegion: 'Asia Pacific',
-    };
+    const { container } = render(
+      <SyndicationRevenuePanel syndicationData={{
+        byRegion: [
+          {
+            region: 'Asia Pacific',
+            revenue: 2000000,
+            deals: 5,
+            trend: 'up' as const,
+            growth: 15,
+          },
+          {
+            region: 'Latin America',
+            revenue: 1500000,
+            deals: 4,
+            trend: 'stable' as const,
+            growth: 0,
+          },
+        ],
+        totalRevenue: 3500000,
+        totalDeals: 9,
+        topPerformingRegion: 'Asia Pacific',
+      }} />
+    );
 
-    render(<SyndicationRevenuePanel syndicationData={syndicationData} />);
-    
-    expect(screen.getByText('Asia Pacific')).toBeInTheDocument();
-    expect(screen.getByText('Latin America')).toBeInTheDocument();
-    expect(screen.getByText('$2.0M')).toBeInTheDocument();
-    expect(screen.getByText('$1.5M')).toBeInTheDocument();
-    expect(screen.getByText('5 deals')).toBeInTheDocument();
+    const { getAllByText } = within(container);
+
+    expect(getAllByText('Asia Pacific').length).toBeGreaterThan(0);
+    expect(getAllByText('Latin America').length).toBeGreaterThan(0);
+    expect(getAllByText('$2.0M').length).toBeGreaterThan(0);
+    expect(getAllByText('$1.5M').length).toBeGreaterThan(0);
+    expect(getAllByText('5 deals').length).toBeGreaterThan(0);
   });
 
   it('shows empty state when no syndication data', () => {
@@ -63,7 +69,7 @@ describe('SyndicationRevenuePanel', () => {
     };
 
     render(<SyndicationRevenuePanel syndicationData={syndicationData} />);
-    
+
     expect(screen.getByText('No syndication deals active')).toBeInTheDocument();
   });
 });

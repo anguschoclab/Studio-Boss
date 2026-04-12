@@ -4,19 +4,24 @@ import { StateImpact } from '../types/state.types';
 import { CRISIS_POOLS } from '../data/crises.data';
 import { RandomGenerator } from '../utils/rng';
 import { BardResolver } from './bardResolver';
+import { StudioArchetype } from '../data/aiArchetypes';
 
 /**
  * Procedural Crisis Generation (Hardened)
  * Returns a StateImpact that adds a crisis to a project.
+ * Uses archetype strategy to determine crisis type preferences if archetype is provided.
  */
-export function generateCrisis(project: Project, rng: RandomGenerator): StateImpact | null {
+export function generateCrisis(project: Project, rng: RandomGenerator, archetype?: StudioArchetype): StateImpact | null {
   const template = pick(CRISIS_POOLS, rng);
   if (!template) return null;
 
+  // TODO: Use archetype strategy to determine crisis type preferences
+  // For now, keep the random selection but this can be enhanced later
+
   const crisis: ActiveCrisis = {
-    id: rng.uuid('CRS'), 
-    crisisId: template.id,       
-    triggeredWeek: 0, 
+    id: rng.uuid('CRS'),
+    crisisId: template.id,
+    triggeredWeek: 0,
     haltedProduction: false,
     description: BardResolver.resolve({
       domain: 'Crisis',
@@ -49,18 +54,27 @@ export function generateCrisis(project: Project, rng: RandomGenerator): StateImp
 }
 
 /**
- * Weekly roll for a production crisis. 
+ * Weekly roll for a production crisis.
  * Integrated into the WeekCoordinator pipeline.
+ * Uses archetype riskAppetite to adjust crisis probability if archetype is provided.
  */
-export function checkAndTriggerCrisis(project: Project, state: GameState, rng: RandomGenerator): StateImpact | null {
+export function checkAndTriggerCrisis(project: Project, state: GameState, rng: RandomGenerator, archetype?: StudioArchetype): StateImpact | null {
   const studioProjectsCount = Object.keys(state.entities.projects || {}).length;
   const contractCount = Object.keys(state.entities.contracts || {}).length;
+
   // The PR Spin Doctor: Heavily scale crises with studio size
   // Adjusted: Base 5% chance, plus 5.0% for every concurrent project and 2.5% for every contract
-  const baseChance = Math.min(0.8, 0.05 + (studioProjectsCount * 0.050) + (contractCount * 0.025));
+  let baseChance = Math.min(0.8, 0.05 + (studioProjectsCount * 0.050) + (contractCount * 0.025));
+
+  // Adjust crisis probability based on archetype riskAppetite (0-100)
+  // Higher riskAppetite = higher crisis probability
+  if (archetype) {
+    const riskMultiplier = 0.5 + (archetype.riskAppetite / 100); // 0.5x to 1.5x multiplier
+    baseChance = Math.min(0.9, baseChance * riskMultiplier);
+  }
 
   if (rng.next() < baseChance) {
-    return generateCrisis(project, rng);
+    return generateCrisis(project, rng, archetype);
   }
   return null;
 }

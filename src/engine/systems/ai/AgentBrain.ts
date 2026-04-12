@@ -2,37 +2,51 @@ import { pick } from '../../utils';
 import { Agency, Talent, GameState, StateImpact, Project, RivalStudio } from '@/engine/types';
 import { RandomGenerator } from '../../utils/rng';
 import { AI_ARCHETYPES } from '../../data/aiArchetypes';
+import { AGENCY_ARCHETYPES } from '../../data/archetypes';
 import { SeriesProject } from '@/engine/types/project.types';
 import { assignTimeSlot, TimeSlot } from '../television/nielsenSystem';
 import { AgencyLeverageEngine } from './AgencyLeverage';
 import { MarketState } from '../../types';
 
 /**
+ * Helper function to get the AgencyArchetype for an agency.
+ */
+function getAgencyArchetype(agency: Agency) {
+  const key = agency.culture as keyof typeof AGENCY_ARCHETYPES;
+  return AGENCY_ARCHETYPES[key];
+}
+
+/**
  * Pure function to evaluate if an agency offers a "Package Deal".
+ * Uses AgencyArchetype properties for decision making.
  */
 export function evaluatePackageOffer(
-  agency: Agency, 
-  leadTalent: Talent, 
+  agency: Agency,
+  leadTalent: Talent,
   talentPool: Talent[],
   market: MarketState,
   rng: RandomGenerator
 ): { requiredTalentId?: string; packageDiscount?: number; reason: string } {
+  const archetype = getAgencyArchetype(agency);
   const motivation = agency.currentMotivation || 'VOLUME_RETAIL';
-  
+
   // 🎭 The Method Actor Tuning: Auteurs heavily mandate their own creative teams, effectively overriding agency norms. Probability increased to 50%.
   const isAuteur = leadTalent.prestige > 85;
 
   // Phase 2: Agency Leverage Integration
-  // Agent lookup removed as it's not strictly necessary for the core bundling logic here, 
-  // and we don't have a direct map without the full industry state.
   const leverage = AgencyLeverageEngine.calculateNegotiationLeverage(leadTalent, agency, undefined, market);
-  
-  // High leverage agencies (Powerhouse/Major) packager probability increases
-  const packageProbability = (motivation === 'THE_PACKAGER' ? 0.40 : (isAuteur ? 0.50 : 0.15)) + (leverage.score * 0.2);
 
-  if (rng.next() < packageProbability) {
+  // Use archetype leverage_base to adjust package probability
+  const baseProbability = motivation === 'THE_PACKAGER' ? 0.40 : (isAuteur ? 0.50 : 0.15);
+  const leverageBonus = (archetype.leverage_base / 100) * 0.3; // 0-0.3 bonus based on leverage
+  const packageProbability = baseProbability + (leverage.score * 0.2) + leverageBonus;
+
+  // Check if package deal is in negotiation tactic preferences
+  const prefersPackageDeal = archetype.negotiation_tactic_preferences.includes('PACKAGE_DEAL');
+
+  if (prefersPackageDeal && rng.next() < packageProbability) {
     const otherClients = talentPool.filter(t => t.agencyId === agency.id && t.id !== leadTalent.id);
-    
+
     if (otherClients.length > 0) {
       const bundled = pick(otherClients, rng);
       const discount = motivation === 'THE_PACKAGER' ? 0.20 : 0.10;
@@ -51,28 +65,31 @@ export function evaluatePackageOffer(
 /**
  * Agency Weekly Tick (Target C2).
  * Generates rumors and poach attempts as discrete state impacts.
+ * Uses AgencyArchetype properties for behavior patterns.
  */
 export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
 
   state.industry.agencies.forEach(agency => {
-    // Aggressive agencies (Sharks) leak rumors
-    if (agency.culture === 'shark' || agency.currentMotivation === 'THE_SHARK') {
-      if (rng.next() < 0.1) {
-        const rivalsObj = state.entities.rivals || {};
-        const rivalKeys = Object.keys(rivalsObj);
-        if (rivalKeys.length > 0) {
-          const rivalKey = pick(rivalKeys, rng);
-          const rival = rivalsObj[rivalKey];
-          if (rival) {
-            impacts.push({
-              type: 'NEWS_ADDED',
-              payload: {
-                headline: `${agency.name} is looking to poach top talent from ${rival.name}.`,
-                description: `Industry whispers suggest ${agency.name} is making aggressive overtures to talent currently under contract at ${rival.name}.`,
-              }
-            });
-          }
+    const archetype = getAgencyArchetype(agency);
+
+    // Use archetype pact_aggression to determine poaching/rumor probability
+    const poachProbability = archetype.pact_aggression * 0.3; // Scale 0-1 to 0-0.3
+
+    if (rng.next() < poachProbability) {
+      const rivalsObj = state.entities.rivals || {};
+      const rivalKeys = Object.keys(rivalsObj);
+      if (rivalKeys.length > 0) {
+        const rivalKey = pick(rivalKeys, rng);
+        const rival = rivalsObj[rivalKey];
+        if (rival) {
+          impacts.push({
+            type: 'NEWS_ADDED',
+            payload: {
+              headline: `${agency.name} is looking to poach top talent from ${rival.name}.`,
+              description: `Industry whispers suggest ${agency.name} is making aggressive overtures to talent currently under contract at ${rival.name}.`,
+            }
+          });
         }
       }
     }
@@ -91,8 +108,10 @@ export function generateFestivalBid(
   project: Project,
   rng: RandomGenerator
 ): number | null {
-  const archetype = AI_ARCHETYPES.find(a => a.id === rival.behaviorId) || AI_ARCHETYPES[5]; // Default to Balanced
-  
+  // Backward compatibility for behaviorId
+  const behaviorId = rival.archetypeId || ('behaviorId' in rival ? (rival as any).behaviorId : undefined);
+  const archetype = AI_ARCHETYPES.find(a => a.id === behaviorId) || AI_ARCHETYPES[5]; // Default to Balanced
+
   // Chance to bid based on risk and aggression
   const bidChance = (archetype.riskAppetite + archetype.biddingAggression) / 200;
   if (rng.next() > bidChance) return null;
@@ -173,8 +192,10 @@ export function shouldAttemptHostileTakeover(
   state: GameState
 ): boolean {
   if (attacker.id === target.id) return false;
-  
-  const archetype = AI_ARCHETYPES.find(a => a.id === attacker.behaviorId);
+
+  // Backward compatibility for behaviorId
+  const behaviorId = attacker.archetypeId || ('behaviorId' in attacker ? (attacker as any).behaviorId : undefined);
+  const archetype = AI_ARCHETYPES.find(a => a.id === behaviorId);
   if (!archetype) return false;
 
   // Must have sufficient cash to make an offer

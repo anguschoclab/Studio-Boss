@@ -317,6 +317,9 @@ export interface ProjectBase {
   stage?: 'pilot' | 'series' | 'shopping'; // sub-state for TV projects
   shoppingExpiresWeek?: number; // week when 'shopping' status lapses
   streamingViewership?: StreamingViewershipHistory[]; // NEW FIELD for Phase 6
+  // Unified Storage: Owner tracking
+  ownerId: string; // 'player' or rival studio ID
+  archetypeId?: string; // Links to StudioArchetype for archetype-driven behavior
 }
 
 export interface ScriptedProject extends ProjectBase {

@@ -207,4 +207,6 @@ export interface Contract {
   backendEscalator?: number; // % bump if revenue exceeds threshold
   // Phase 2: Dynamic Scheduling
   role: TalentRole;
+  // Unified Storage: Owner tracking
+  ownerId: string; // 'player' or rival studio ID
 }

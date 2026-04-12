@@ -107,6 +107,7 @@ export const UnifiedModal: React.FC<UnifiedModalProps> = ({
                   size="icon"
                   onClick={onClose}
                   className="h-8 w-8 rounded-full"
+                  aria-label="Close"
                 >
                   <X className="h-4 w-4" />
                 </Button>

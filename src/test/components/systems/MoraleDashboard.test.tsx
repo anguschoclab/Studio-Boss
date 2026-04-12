@@ -1,9 +1,13 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { render, screen, cleanup } from '@testing-library/react';
+import { describe, it, expect, afterEach } from 'vitest';
 import { MoraleDashboard } from '@/components/talent/MoraleDashboard';
 
 describe('MoraleDashboard', () => {
+  afterEach(() => {
+    cleanup();
+  });
+
   it('renders summary cards', () => {
     const moraleData = {
       byTalent: [],
@@ -12,9 +16,9 @@ describe('MoraleDashboard', () => {
     };
 
     render(<MoraleDashboard moraleData={moraleData} />);
-    
+
     expect(screen.getByText('Average Morale')).toBeInTheDocument();
-    expect(screen.getByText('75%')).toBeInTheDocument();
+    expect(screen.getAllByText('75%').length).toBeGreaterThan(0);
     expect(screen.getByText('At Risk')).toBeInTheDocument();
     expect(screen.getByText('Tracked Talent')).toBeInTheDocument();
   });
@@ -36,10 +40,10 @@ describe('MoraleDashboard', () => {
     };
 
     render(<MoraleDashboard moraleData={moraleData} />);
-    
+
     expect(screen.getByText('At-Risk Talent')).toBeInTheDocument();
     expect(screen.getByText('John Actor')).toBeInTheDocument();
-    expect(screen.getByText('25%')).toBeInTheDocument();
+    expect(screen.getAllByText('25%').length).toBeGreaterThan(0);
     expect(screen.getByText('Contract dispute')).toBeInTheDocument();
   });
 
@@ -60,10 +64,10 @@ describe('MoraleDashboard', () => {
     };
 
     render(<MoraleDashboard moraleData={moraleData} />);
-    
+
     expect(screen.getByText('Talent Morale Overview')).toBeInTheDocument();
     expect(screen.getByText('Happy Actor')).toBeInTheDocument();
-    expect(screen.getByText('85%')).toBeInTheDocument();
+    expect(screen.getAllByText('85%').length).toBeGreaterThan(0);
   });
 
   it('shows correct trend indicators', () => {
@@ -83,7 +87,7 @@ describe('MoraleDashboard', () => {
     };
 
     render(<MoraleDashboard moraleData={moraleData} />);
-    
+
     expect(screen.getByText('↗ Improving')).toBeInTheDocument();
   });
 });

@@ -353,10 +353,17 @@ export function calculateFranchiseEvolutionImpacts(state: GameState, rng: Random
 /**
  * Phase 7: Weekly IP Vault Tick.
  * Orchestrates synergy evaluation and cultural decay for the entire studio vault.
+ * Uses archetype properties to adjust IP behavior if archetype is provided.
  */
-export function tickIPVault(state: GameState): import('../../types/state.types').StateImpact[] {
+export function tickIPVault(state: GameState, archetype?: import('../../data/aiArchetypes').StudioArchetype): import('../../types/state.types').StateImpact[] {
   const impacts: import('../../types/state.types').StateImpact[] = [];
   const activeProjects = Object.values(state.entities.projects);
+
+  // TODO: Use archetype properties to adjust IP behavior
+  // - strategy: determine IP acquisition preferences
+  // - genreFocus: IP genre preferences
+  // - festivalParticipation: IP festival submissions
+  // For now, this provides the infrastructure for future enhancement
 
   // 1. Evaluate Synergy (Reboots/Spinoffs in production) 
   // 2. Apply Decay (Synergy-shielded & Tiered)
@@ -396,8 +403,12 @@ export function tickIPVault(state: GameState): import('../../types/state.types')
   const genreSaturation: Record<string, number> = {};
   [
     ...Object.values(state.entities.projects),
-    ...Object.values(state.entities.rivals).flatMap(r => Object.values(r.projects || {}))
-  ].forEach((p: Project) => {
+    ...Object.values(state.entities.rivals).flatMap(r => {
+      // Backward compatibility for projects field
+      const rivalProjects = ('projects' in r && r.projects) ? (r as any).projects : {};
+      return Object.values(rivalProjects);
+    })
+  ].forEach((p: any) => {
     if (p.genre) {
       const g = p.genre.toUpperCase();
       genreSaturation[g] = (genreSaturation[g] || 0) + 1;

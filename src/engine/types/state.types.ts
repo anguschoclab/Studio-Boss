@@ -98,6 +98,8 @@ export interface IPAsset {
   rightsOwner: 'STUDIO' | 'MARKET' | 'RIVAL';
   ownerStudioId?: string;
   isSynergyActive?: boolean; 
+  // Unified Storage: Owner tracking
+  ownerId: string; // 'player' or rival studio ID
 }
 
 export interface IPState {
