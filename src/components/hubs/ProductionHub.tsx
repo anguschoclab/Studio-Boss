@@ -6,6 +6,11 @@ import { selectProjects, selectOpportunities, selectActiveProjects } from '@/sto
 import { SubNav } from '@/components/navigation/SubNav';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Section } from '@/components/layout/Section';
+import { Stack, HorizontalStack } from '@/components/layout/Stack';
+import { EmptyState, ComingSoon } from '@/components/shared/EmptyState';
+import { SkeletonPage } from '@/components/shared/SkeletonCard';
+import { tokens, patterns } from '@/lib/tokens';
 import { 
   LayoutGrid, 
   Film, 
@@ -32,7 +37,6 @@ const NielsenDashboard = React.lazy(() => import('@/components/television/Nielse
 // Development sub-panel for concepts and greenlight queue
 const DevelopmentPanel = () => {
   const { openCreateProject } = useUIStore();
-  const gameState = useGameStore(s => s.gameState);
   const projects = useGameStore(useShallow(s => s.gameState ? selectProjects(s.gameState) : []));
   
   const developmentProjects = useMemo(() => 
@@ -43,39 +47,49 @@ const DevelopmentPanel = () => {
   const needsGreenlight = developmentProjects.filter(p => p.state === 'needs_greenlight').length;
   
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between bg-gradient-to-r from-secondary/10 to-transparent p-5 rounded-xl border border-secondary/20">
-        <div>
-          <h3 className="text-lg font-black tracking-tight uppercase">Development Queue</h3>
-          <p className="text-[11px] font-bold text-muted-foreground/60 uppercase tracking-wider">
+    <Stack direction="vertical" gap="lg">
+      <div className={cn(
+        'flex items-center justify-between p-5 rounded-xl',
+        tokens.bg.secondary,
+        tokens.border.default
+      )}>
+        <Stack direction="vertical" gap="xs">
+          <h3 className={tokens.text.title}>Development Queue</h3>
+          <p className={tokens.text.caption}>
             {developmentProjects.length} projects in development • {needsGreenlight} awaiting greenlight
           </p>
-        </div>
+        </Stack>
         <Button 
           onClick={openCreateProject}
-          className="h-10 px-5 font-display font-black uppercase tracking-widest text-[10px] gap-2"
+          className={cn('h-10 px-5 gap-2', patterns.button.primary)}
         >
           <Plus className="h-4 w-4" />
-          New IP Concept
+          <span className={tokens.text.label}>New IP Concept</span>
         </Button>
       </div>
       
       {needsGreenlight > 0 && (
-        <div className="flex items-center gap-3 p-4 bg-amber-500/10 border border-amber-500/20 rounded-lg">
+        <div className={cn(
+          'flex items-center gap-3 p-4 rounded-lg',
+          'bg-amber-500/10 border border-amber-500/20'
+        )}>
           <AlertTriangle className="h-5 w-5 text-amber-500" />
           <div>
-            <p className="text-sm font-bold text-amber-500">{needsGreenlight} project{needsGreenlight > 1 ? 's' : ''} ready for greenlight</p>
-            <p className="text-[10px] text-amber-500/70 uppercase tracking-wider">Review in Slate tab to approve</p>
+            <p className="text-sm font-bold text-amber-500">
+              {needsGreenlight} project{needsGreenlight > 1 ? 's' : ''} ready for greenlight
+            </p>
+            <p className={cn(tokens.text.caption, 'text-amber-500/70')}>
+              Review in Slate tab to approve
+            </p>
           </div>
         </div>
       )}
       
-      <div className="text-center py-20 text-muted-foreground">
-        <Film className="h-12 w-12 mx-auto mb-4 opacity-20" />
-        <p className="text-sm font-bold uppercase tracking-widest">Development View</p>
-        <p className="text-xs mt-2">Detailed development tracking coming soon</p>
-      </div>
-    </div>
+      <ComingSoon 
+        title="Development View" 
+        description="Detailed development tracking and project pipeline management coming soon."
+      />
+    </Stack>
   );
 };
 
@@ -99,7 +113,7 @@ const DistributionPanel = () => {
       />
       
       <div className="flex-1 min-h-0 overflow-hidden">
-        <React.Suspense fallback={<div className="flex items-center justify-center h-64">Loading...</div>}>
+        <React.Suspense fallback={<SkeletonPage contentCards={3} />}>
           {distTab === 'deals' && <DealsDesk />}
           {distTab === 'streaming' && <StreamingPanel />}
           {distTab === 'nielsen' && <NielsenDashboard />}
@@ -251,7 +265,7 @@ export const ProductionHub: React.FC = () => {
       
       {/* Content Area */}
       <div className="flex-1 min-h-0 overflow-hidden">
-        <React.Suspense fallback={<div className="flex items-center justify-center h-64">Loading...</div>}>
+        <React.Suspense fallback={<SkeletonPage contentCards={3} />}>
           {activeSubTab === 'slate' && <PipelineBoard />}
           {activeSubTab === 'development' && <DevelopmentPanel />}
           {activeSubTab === 'distribution' && <DistributionPanel />}

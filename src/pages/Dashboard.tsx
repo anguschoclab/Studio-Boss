@@ -4,6 +4,10 @@ import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { TopBar } from '@/components/layout/TopBar';
 import { StudioSidebar } from '@/components/layout/StudioSidebar';
+import { QuickActionsDock } from '@/components/layout/QuickActionsDock';
+import { CommandPalette, useCommandPalette } from '@/components/navigation/CommandPalette';
+import { SkeletonPage } from '@/components/shared/SkeletonCard';
+import { PageTransition } from '@/components/layout/PageTransition';
 import { m, AnimatePresence } from 'framer-motion';
 
 // New 4-Hub Architecture (Phase 1)
@@ -104,7 +108,7 @@ const Dashboard: React.FC = () => {
                 transition={{ duration: 0.25, ease: "easeInOut" }}
                 className="h-full flex flex-col"
               >
-                <React.Suspense fallback={<div className="flex items-center justify-center h-64 opacity-50 font-display uppercase tracking-widest text-xs">Loading Sub-System...</div>}>
+                <React.Suspense fallback={<SkeletonPage headerRows={2} contentCards={4} />}>
                   {renderContent()}
                 </React.Suspense>
               </m.div>
@@ -116,8 +120,19 @@ const Dashboard: React.FC = () => {
       <CreateProjectModal />
       <ProjectDetailModal />
       <PitchProjectModal />
+      
+      {/* Global UI Components */}
+      <ModalManager />
+      <CommandPaletteWrapper />
+      <QuickActionsDock />
     </div>
   );
+};
+
+// CommandPalette wrapper with hook
+const CommandPaletteWrapper: React.FC = () => {
+  const { isOpen, close } = useCommandPalette();
+  return <CommandPalette isOpen={isOpen} onClose={close} />;
 };
 
 export default Dashboard;
