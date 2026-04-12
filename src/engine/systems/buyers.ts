@@ -121,15 +121,21 @@ export function calculateFitScore(project: Project, buyer: Buyer, currentWeek: n
     if (mandate === 'broad_appeal' && (project.budgetTier === 'mid' || project.budgetTier === 'high')) score += 20;
     if (mandate === 'broad_appeal' && project.targetAudience.toLowerCase().includes('family')) score += 15;
 
+    // 🎭 The Method Actor Tuning: Buyers experiencing a "budget_freeze" mandate will aggressively target low-budget projects and heavily penalize blockbusters.
     if (mandate === 'budget_freeze') {
-      if (project.budgetTier === 'blockbuster') score -= 50;
-      if (project.budgetTier === 'high') score -= 30;
-      if (project.budgetTier === 'low') score += 20;
+      if (project.budgetTier === 'blockbuster') score -= 60;
+      if (project.budgetTier === 'high') score -= 40;
+      if (project.budgetTier === 'low') score += 35;
     }
   }
 
   if (buyer.archetype === 'network' && project.budgetTier === 'blockbuster') score -= 20;
   if (buyer.archetype === 'premium' && project.budgetTier === 'low') score -= 30;
+
+  // 🎭 The Method Actor Tuning: Network buyers heavily penalize low-buzz projects as they require immediate viewership, whereas Premium buyers take risks on low-budget prestige projects.
+  if (buyer.archetype === 'network' && project.buzz < 40) score -= 25;
+  const scriptHeat = 'scriptHeat' in project ? (project as any).scriptHeat : 50;
+  if (buyer.archetype === 'premium' && project.budgetTier === 'low' && scriptHeat > 70) score += 20;
 
   const buzzFactor = (project.buzz / 100) * 20; 
   score += buzzFactor;
