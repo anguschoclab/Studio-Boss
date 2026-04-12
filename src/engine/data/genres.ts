@@ -120,7 +120,8 @@ export const CROSSOVER_AFFINITY: Record<string, string[]> = {
   'Crime': ['Thriller', 'Drama', 'Action', 'Horror', 'Documentary'],
   'Thriller': ['Horror', 'Crime', 'Sci-Fi', 'Drama', 'Action', 'Elevated Horror'],
   'Romance': ['Comedy', 'Drama', 'Musical', 'Fantasy'],
-  'Animation': ['Comedy', 'Family', 'Musical', 'Fantasy', 'Sci-Fi', 'Superhero', 'Action', 'Video Game Adaptation', 'IP Mashup'],
+  // 🌌 The Universe Builder: Added Transmedia and Spider-Verse crossover hooks.
+  'Animation': ['Comedy', 'Family', 'Musical', 'Fantasy', 'Sci-Fi', 'Superhero', 'Action', 'Video Game Adaptation', 'IP Mashup', 'Multiverse'],
   'Drama': ['Romance', 'Crime', 'Thriller', 'Documentary'],
   'Musical': ['Romance', 'Comedy', 'Animation', 'Drama'],
   'Documentary': ['Drama', 'Crime', 'Horror'],
@@ -162,8 +163,8 @@ export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
   'Multiverse': 1.25, // 🌌 The Universe Builder: Extremely high fatigue risk if overdone. Increased to reflect hyper-saturation.
   'Elevated Horror': 0.20,
   'IP Mashup': 0.85, // 🌌 The Universe Builder: High burnout potential
-  'Legacy Sequel': 0.45, // 🌌 The Universe Builder: Nostalgia can wear thin if overused
-  'Live-Action Remake': 0.85, // 🌌 The Universe Builder: High fatigue for lazy cash grabs
+  'Legacy Sequel': 0.55, // 🌌 The Universe Builder: Nostalgia can wear thin if overused
+  'Live-Action Remake': 0.95, // 🌌 The Universe Builder: High fatigue for lazy cash grabs
   'Video Game Adaptation': 0.60,
   'Space Opera': 0.65,
   'Cyberpunk': 0.55,
