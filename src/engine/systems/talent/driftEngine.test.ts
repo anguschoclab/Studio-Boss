@@ -313,4 +313,180 @@ describe('TalentDriftEngine', () => {
       expect(Object.keys(result.updatedTalents).length).toBe(2);
     });
   });
+
+  describe('Age-Based Archetype Transitions', () => {
+    it('should transition kid_actor to young_adult when age > 22', () => {
+      const talent: Talent = {
+        id: 'kid-actor-1',
+        name: 'Child Star',
+        role: 'actor',
+        roles: ['actor'],
+        tier: 3,
+        demographics: { gender: 'MALE', country: 'US', ethnicity: 'white', age: 23 },
+        psychology: { ego: 50, mood: 50, scandalRisk: 50, synergyAffinities: [], synergyConflicts: [] },
+        skills: { acting: 70, directing: 50, writing: 50, stardom: 60 },
+        prestige: 60,
+        draw: 65,
+        fee: 1000000,
+        momentum: 50,
+        starMeter: 60,
+        bio: 'Test talent',
+        motivationProfile: { financial: 50, prestige: 50, legacy: 50, aggression: 50 },
+        currentMotivation: 'NONE',
+        motivationImpulse: 'NONE',
+        commitments: [],
+        fatigue: 0,
+        preferredGenres: ['Drama'],
+        actorArchetype: 'kid_actor',
+        accessLevel: 'outsider' as any
+      };
+
+      const mockRng = new RandomGenerator(99999);
+
+      const result = TalentDriftEngine.processDrift(talent, DEFAULT_DRIFT_CONFIG, mockRng);
+
+      // Age-based transition should trigger
+      expect(result.archetypeChanged).toBe(true);
+      expect(result.changes.oldArchetype).toBe('kid_actor');
+      expect(['young_adult', 'tv_star', 'character_actor']).toContain(result.changes.newArchetype);
+    });
+
+    it('should not transition kid_actor when age < 16', () => {
+      const talent: Talent = {
+        id: 'kid-actor-2',
+        name: 'Child Star',
+        role: 'actor',
+        roles: ['actor'],
+        tier: 3,
+        demographics: { gender: 'MALE', country: 'US', ethnicity: 'white', age: 15 },
+        psychology: { ego: 50, mood: 50, scandalRisk: 50, synergyAffinities: [], synergyConflicts: [] },
+        skills: { acting: 70, directing: 50, writing: 50, stardom: 60 },
+        prestige: 60,
+        draw: 65,
+        fee: 1000000,
+        momentum: 50,
+        starMeter: 60,
+        bio: 'Test talent',
+        motivationProfile: { financial: 50, prestige: 50, legacy: 50, aggression: 50 },
+        currentMotivation: 'NONE',
+        motivationImpulse: 'NONE',
+        commitments: [],
+        fatigue: 0,
+        preferredGenres: ['Drama'],
+        actorArchetype: 'kid_actor',
+        accessLevel: 'outsider' as any
+      };
+
+      const mockRng = new RandomGenerator(99999);
+
+      const result = TalentDriftEngine.processDrift(talent, DEFAULT_DRIFT_CONFIG, mockRng);
+
+      // Too young for age-based transition
+      expect(result.archetypeChanged).toBe(false);
+    });
+
+    it('should transition adult actor to veteran when age >= 50', () => {
+      const talent: Talent = {
+        id: 'veteran-actor-1',
+        name: 'Veteran Actor',
+        role: 'actor',
+        roles: ['actor'],
+        tier: 2,
+        demographics: { gender: 'MALE', country: 'US', ethnicity: 'white', age: 55 },
+        psychology: { ego: 50, mood: 50, scandalRisk: 50, synergyAffinities: [], synergyConflicts: [] },
+        skills: { acting: 70, directing: 50, writing: 50, stardom: 60 },
+        prestige: 60,
+        draw: 65,
+        fee: 1000000,
+        momentum: 50,
+        starMeter: 60,
+        bio: 'Test talent',
+        motivationProfile: { financial: 50, prestige: 50, legacy: 50, aggression: 50 },
+        currentMotivation: 'NONE',
+        motivationImpulse: 'NONE',
+        commitments: [],
+        fatigue: 0,
+        preferredGenres: ['Drama'],
+        actorArchetype: 'prestige_actor',
+        accessLevel: 'outsider' as any
+      };
+
+      const mockRng = new RandomGenerator(99999);
+
+      const result = TalentDriftEngine.processDrift(talent, DEFAULT_DRIFT_CONFIG, mockRng);
+
+      // Age-based transition to veteran should trigger
+      expect(result.archetypeChanged).toBe(true);
+      expect(result.changes.newArchetype).toBe('veteran');
+    });
+
+    it('should only apply age-based transitions to actors', () => {
+      const writer: Talent = {
+        id: 'writer-1',
+        name: 'Writer',
+        role: 'writer',
+        roles: ['writer'],
+        tier: 2,
+        demographics: { gender: 'MALE', country: 'US', ethnicity: 'white', age: 23 },
+        psychology: { ego: 50, mood: 50, scandalRisk: 50, synergyAffinities: [], synergyConflicts: [] },
+        skills: { acting: 50, directing: 50, writing: 70, stardom: 60 },
+        prestige: 60,
+        draw: 65,
+        fee: 1000000,
+        momentum: 50,
+        starMeter: 60,
+        bio: 'Test talent',
+        motivationProfile: { financial: 50, prestige: 50, legacy: 50, aggression: 50 },
+        currentMotivation: 'NONE',
+        motivationImpulse: 'NONE',
+        commitments: [],
+        fatigue: 0,
+        preferredGenres: ['Drama'],
+        writerArchetype: 'showrunner',
+        accessLevel: 'outsider' as any
+      };
+
+      const mockRng = new RandomGenerator(99999);
+
+      const result = TalentDriftEngine.processDrift(writer, DEFAULT_DRIFT_CONFIG, mockRng);
+
+      // Writers don't have age-based archetype transitions
+      expect(result.archetypeChanged).toBe(false);
+    });
+
+    it('should respect enableAgeBasedTransitions config', () => {
+      const talent: Talent = {
+        id: 'kid-actor-3',
+        name: 'Child Star',
+        role: 'actor',
+        roles: ['actor'],
+        tier: 3,
+        demographics: { gender: 'MALE', country: 'US', ethnicity: 'white', age: 23 },
+        psychology: { ego: 50, mood: 50, scandalRisk: 50, synergyAffinities: [], synergyConflicts: [] },
+        skills: { acting: 70, directing: 50, writing: 50, stardom: 60 },
+        prestige: 60,
+        draw: 65,
+        fee: 1000000,
+        momentum: 50,
+        starMeter: 60,
+        bio: 'Test talent',
+        motivationProfile: { financial: 50, prestige: 50, legacy: 50, aggression: 50 },
+        currentMotivation: 'NONE',
+        motivationImpulse: 'NONE',
+        commitments: [],
+        fatigue: 0,
+        preferredGenres: ['Drama'],
+        actorArchetype: 'kid_actor',
+        accessLevel: 'outsider' as any
+      };
+
+      const mockRng = new RandomGenerator(99999);
+      const configDisabled = { ...DEFAULT_DRIFT_CONFIG, enableAgeBasedTransitions: false };
+
+      const result = TalentDriftEngine.processDrift(talent, configDisabled, mockRng);
+
+      // Age-based transitions should be disabled
+      expect(result.archetypeChanged).toBe(false);
+    });
+  });
 });
