@@ -23,6 +23,44 @@ export class TalentLifecycleSystem {
           type: 'TALENT_UPDATED',
           payload: { talentId, update: updatedTalent }
         });
+
+        // Add news event for age-based archetype transitions
+        if (driftResult.archetypeChanged && updatedTalent.role === 'actor') {
+          const ageTransitions = ['kid_actor', 'young_adult', 'veteran'];
+          const isAgeTransition = ageTransitions.some(t => 
+            driftResult.changes.oldArchetype === t || driftResult.changes.newArchetype === t
+          );
+          
+          if (isAgeTransition) {
+            const oldArchetype = driftResult.changes.oldArchetype || 'unknown';
+            const newArchetype = driftResult.changes.newArchetype || 'unknown';
+            const talentName = updatedTalent.name;
+            const talentAge = updatedTalent.demographics.age;
+            
+            let headline = `${talentName} transitions from ${oldArchetype} to ${newArchetype}`;
+            let description = `At age ${talentAge}, ${talentName} is evolving their career archetype.`;
+            
+            // Special messages for key transitions
+            if (oldArchetype === 'kid_actor') {
+              headline = `${talentName} transitions from child star to adult roles`;
+              description = `After starting as a child actor, ${talentName} (now ${talentAge}) is taking on more mature roles and has adopted the ${newArchetype} archetype.`;
+            } else if (newArchetype === 'veteran') {
+              headline = `${talentName} enters veteran phase of career`;
+              description = `With decades of experience, ${talentName} (age ${talentAge}) has transitioned to the veteran archetype, taking on mentorship and character roles.`;
+            }
+            
+            impacts.push({
+              type: 'NEWS_ADDED',
+              payload: {
+                id: `archetype-transition-${talentId}-${state.week}`,
+                headline,
+                description,
+                category: 'talent',
+                publication: 'Variety'
+              }
+            });
+          }
+        }
       }
     }
 
