@@ -6,10 +6,17 @@ import { RandomGenerator } from '../utils/rng';
  * Checks if the director for a given project has final cut / creative control.
  */
 export function hasCreativeControl(projectId: string, state: GameState): boolean {
-  const directorContract = Object.values(state.entities.contracts).find(c =>
-    c.projectId === projectId &&
-    state.entities.talents[c.talentId]?.roles.includes('director')
-  );
+  // ⚡ The Framerate Fanatic: Refactored Object.values().find() to a direct for...in loop, preventing intermediate array allocations and GC overhead.
+  let directorContract: Contract | undefined;
+  for (const key in state.entities.contracts) {
+    if (Object.prototype.hasOwnProperty.call(state.entities.contracts, key)) {
+      const c = state.entities.contracts[key];
+      if (c.projectId === projectId && state.entities.talents[c.talentId]?.roles.includes('director')) {
+        directorContract = c;
+        break;
+      }
+    }
+  }
 
   if (!directorContract) return false;
   return !!directorContract.creativeControl;

@@ -27,15 +27,20 @@ export const PipelineBoard = () => {
   const [viewMode, setViewMode] = useState<'board' | 'timeline'>('board');
 
   // Memoize project distribution by column to avoid allocating new arrays (.flatMap) on every re-render
+  // ⚡ The Framerate Fanatic: Refactored nested array loop to a dictionary lookup, improving performance from O(n * m) to O(n).
   const projectsByColumn = useMemo(() => {
     const cols = COLUMNS.map(() => [] as typeof projects);
+    const statusToIdx: Record<string, number> = {};
+    for (let j = 0; j < COLUMNS.length; j++) {
+      for (let k = 0; k < COLUMNS[j].status.length; k++) {
+        statusToIdx[COLUMNS[j].status[k]] = j;
+      }
+    }
     for (let i = 0; i < projects.length; i++) {
       const project = projects[i];
-      for (let j = 0; j < COLUMNS.length; j++) {
-        if (COLUMNS[j].status.includes(project.state)) {
-          cols[j].push(project);
-          break;
-        }
+      const idx = statusToIdx[project.state];
+      if (idx !== undefined) {
+        cols[idx].push(project);
       }
     }
     return cols;

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useGameStore } from '@/store/gameStore';
+import { useShallow } from 'zustand/react/shallow';
 import { useUIStore } from '@/store/uiStore';
 import { formatMoney, getWeekDisplay } from '@/engine/utils';
 import { 
@@ -16,7 +17,11 @@ import { NewsTicker } from './NewsTicker';
 import { Button } from '@/components/ui/button';
 
 export const TopBar = () => {
-  const { gameState, doAdvanceWeek, saveToSlot } = useGameStore();
+  const { gameState, doAdvanceWeek, saveToSlot } = useGameStore(useShallow(s => ({
+    gameState: s.gameState,
+    doAdvanceWeek: s.doAdvanceWeek,
+    saveToSlot: s.saveToSlot
+  })));
   const ui = useUIStore();
   
   if (!gameState) return null;
