@@ -2,6 +2,7 @@ import { pick } from '../utils';
 import { RivalStudio, GameState, Talent, NewsEvent } from '@/engine/types';
 import { StateImpact, RivalUpdate } from '../types/state.types';
 import { RandomGenerator } from '../utils/rng';
+import { RivalRevenueCalculator } from './rivals/RivalRevenueCalculator';
 
 const INDIE_ACTIVITIES = [
   'Quietly developing a prestige drama slate',
@@ -86,6 +87,31 @@ export function advanceRivals(rng: RandomGenerator, state: GameState): StateImpa
 
   for (const rival of rivalsList) {
     const update = updateRival(rng, rival);
+    
+    // Calculate weekly revenue
+    const weeklyRevenue = RivalRevenueCalculator.calculateWeeklyRevenue(
+      rival, state.week, rng
+    );
+    
+    // Update revenue history
+    const history = rival.revenueHistory || [];
+    history.push({
+      week: state.week,
+      revenue: weeklyRevenue.total,
+      boxOffice: weeklyRevenue.boxOffice,
+      streaming: weeklyRevenue.streaming,
+      merch: weeklyRevenue.merch
+    });
+    
+    // Keep only last 104 weeks (2 years)
+    const trimmedHistory = history.filter(h => state.week - h.week <= 104);
+    
+    // Calculate annual totals
+    const annualTotals = RivalRevenueCalculator.calculateAnnualRevenue(rival, state.week);
+    
+    update.revenueHistory = trimmedHistory;
+    update.boxOfficeTotal = annualTotals.boxOfficeTotal;
+    update.annualRevenue = annualTotals.annualRevenue;
     
     rivalUpdates.push({
       rivalId: rival.id,

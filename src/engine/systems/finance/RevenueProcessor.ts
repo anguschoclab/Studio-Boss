@@ -4,6 +4,8 @@ import { IPAsset } from '../../types/state.types';
 import { calculateWeeklyIPRevenue } from '../ip/merchandisingEngine';
 import { getRatingEconomics } from '../ratings';
 import { calculateAudienceIndex } from '../demographics';
+import { StreamingViewershipTracker } from '../production/StreamingViewershipTracker';
+import { RandomGenerator } from '../../utils/rng';
 
 /**
  * RevenueProcessor handles all income-related calculations for the studio.
@@ -210,5 +212,15 @@ export class RevenueProcessor {
     }
 
     return Math.round(totalRoyalty);
+  }
+
+  /**
+   * Calculates streaming revenue from viewership data.
+   * Real-world: ~$0.015 per hour watched (varies by platform).
+   */
+  static calculateStreamingRevenueFromViewership(history: any): number {
+    const latestEntry = history.entries[history.entries.length - 1];
+    const revenuePerHour = 0.015;
+    return Math.round(latestEntry.hoursWatched * revenuePerHour);
   }
 }

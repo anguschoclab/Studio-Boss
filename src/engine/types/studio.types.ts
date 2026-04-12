@@ -46,6 +46,16 @@ export interface RivalStudio {
   behaviorId?: string; // 🌌 PHASE 2: Links to AI_ARCHETYPES
   ipAssets?: Record<string, import('./state.types').IPAsset>;
   weeklyHistory?: import('./state.types').FinancialSnapshot[];
+  // Phase 6: Revenue tracking for market share comparison
+  boxOfficeTotal?: number;        // Total annual box office revenue
+  annualRevenue?: number;          // Total annual revenue (all sources)
+  revenueHistory?: {              // Weekly revenue tracking
+    week: number;
+    revenue: number;
+    boxOffice: number;
+    streaming: number;
+    merch: number;
+  }[];
 }
 
 export interface StudioCulture {

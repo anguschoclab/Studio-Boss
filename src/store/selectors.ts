@@ -327,10 +327,24 @@ export const selectScriptQualityMetrics = (state: GameState | null, projectId: s
   if (!project || !('scriptHeat' in project)) return null;
   
   const scripted = project as any; // Type assertion for ScriptedProject
+  
+  // Use real scriptMetrics if available
+  if (scripted.scriptMetrics) {
+    const metrics = scripted.scriptMetrics;
+    return [
+      { metric: 'Structure', value: metrics.structure, fullMark: 100 },
+      { metric: 'Dialogue', value: metrics.dialogue, fullMark: 100 },
+      { metric: 'Originality', value: metrics.originality, fullMark: 100 },
+      { metric: 'Pacing', value: metrics.pacing, fullMark: 100 },
+      { metric: 'Emotional Impact', value: metrics.emotionalImpact, fullMark: 100 },
+      { metric: 'Commercial Viability', value: metrics.commercialViability, fullMark: 100 },
+    ];
+  }
+  
+  // Fallback to derived calculation if metrics not yet calculated
   const scriptHeat = scripted.scriptHeat || 50;
   const events = scripted.scriptEvents || [];
   
-  // Derive metrics from existing data
   const structure = Math.min(100, events.filter((e: any) => e.type === 'ARCHETYPE_CHANGE').length * 15 + 50);
   const dialogue = Math.min(100, events.filter((e: any) => e.type === 'DIALOGUE_POLISH').reduce((sum: number, e: any) => sum + (e.qualityImpact || 0), 0) + 50);
   const originality = Math.min(100, events.filter((e: any) => e.type === 'PLOT_TWIST_ADDED').length * 20 + 40);
@@ -339,12 +353,12 @@ export const selectScriptQualityMetrics = (state: GameState | null, projectId: s
   const commercialViability = Math.round((scriptHeat + structure) / 2);
   
   return [
-    { metric: 'Structure', value: structure },
-    { metric: 'Dialogue', value: dialogue },
-    { metric: 'Originality', value: originality },
-    { metric: 'Pacing', value: pacing },
-    { metric: 'Emotional Impact', value: emotionalImpact },
-    { metric: 'Commercial Viability', value: commercialViability },
+    { metric: 'Structure', value: structure, fullMark: 100 },
+    { metric: 'Dialogue', value: dialogue, fullMark: 100 },
+    { metric: 'Originality', value: originality, fullMark: 100 },
+    { metric: 'Pacing', value: pacing, fullMark: 100 },
+    { metric: 'Emotional Impact', value: emotionalImpact, fullMark: 100 },
+    { metric: 'Commercial Viability', value: commercialViability, fullMark: 100 },
   ];
 };
 
@@ -389,19 +403,27 @@ function calculateGenreMetric(projects: Project[], metric: string, roi: number):
 
 /**
  * Market share data for MarketShareComparison visualization
- * Uses existing marketShare field from RivalStudio
+ * Derived from rival market share and studio prestige
  */
 export const selectMarketShareData = (state: GameState | null) => {
   const rivals = selectRivals(state);
   const myProjects = selectReleasedProjects(state);
   const myRevenue = myProjects.reduce((sum, p) => sum + (p.revenue || 0), 0);
   
-  // Use existing marketShare field
+  // Use real annualRevenue if available
+  const rivalRevenues = rivals.map(r => ({
+    name: r.name,
+    share: 0,
+    revenue: r.annualRevenue || r.boxOfficeTotal || Math.random() * 500000000 // Fallback
+  }));
+  
+  const totalRevenue = myRevenue + rivalRevenues.reduce((sum, r) => sum + r.revenue, 0);
+  
   return [
-    { name: 'Your Studio', share: state?.studio?.marketShare || 0, isPlayer: true },
-    ...rivals.map(r => ({
+    { name: 'Your Studio', share: totalRevenue > 0 ? (myRevenue / totalRevenue) * 100 : 0, isPlayer: true },
+    ...rivalRevenues.map(r => ({
       name: r.name,
-      share: r.marketShare || 0,
+      share: totalRevenue > 0 ? (r.revenue / totalRevenue) * 100 : 0,
       isPlayer: false
     }))
   ].sort((a, b) => b.share - a.share);
@@ -409,17 +431,33 @@ export const selectMarketShareData = (state: GameState | null) => {
 
 /**
  * Streaming viewership data for StreamingViewershipChart visualization
- * Derives from revenue data for films, uses nielsenProfile for TV
+ * Derived from project revenue and streaming distribution
  */
 export const selectStreamingViewership = (state: GameState | null, platformName: string) => {
   const projects = selectProjects(state).filter(p => 
     p.distributionStatus === 'streaming' && p.buyerId === platformName
   );
   
+  // If projects have real viewership data, use it
+  if (projects.some(p => p.streamingViewership && p.streamingViewership.length > 0)) {
+    return projects.flatMap(p => {
+      const history = p.streamingViewership?.find(v => v.platform === platformName);
+      if (!history) return [];
+      
+      return history.entries.map(entry => ({
+        week: entry.week,
+        hoursWatched: entry.hoursWatched,
+        uniqueViewers: entry.uniqueViewers,
+        completionRate: entry.completionRate
+      }));
+    }).sort((a, b) => a.week - b.week);
+  }
+  
+  // Fallback to estimated data (existing logic)
   return projects.map(p => ({
     week: p.releaseWeek || 1,
-    hoursWatched: (p.revenue || 0) / 0.01, // rough estimate: $0.01 per hour
-    uniqueViewers: Math.floor((p.revenue || 0) / 5), // rough: $5 per viewer
+    hoursWatched: (p.revenue || 0) / 0.01,
+    uniqueViewers: Math.floor((p.revenue || 0) / 5),
     completionRate: p.reception?.audienceScore || 50
   }));
 };

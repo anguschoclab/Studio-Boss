@@ -23,6 +23,18 @@ export interface ScriptEvent {
   heatGain: number;
 }
 
+export interface ScriptMetrics {
+  structure: number;        // 0-100: Narrative coherence, pacing, act structure
+  dialogue: number;         // 0-100: Character voice, subtext, memorable lines
+  originality: number;      // 0-100: Fresh concepts, avoiding clichés
+  pacing: number;           // 0-100: Rhythm, tension building, scene economy
+  emotionalImpact: number;  // 0-100: Audience engagement, stakes, payoff
+  commercialViability: number; // 0-100: Market appeal, four-quadrant potential
+  overallScore: number;     // 0-100: Weighted average of above metrics
+  trend: 'improving' | 'stable' | 'declining';
+  lastCalculatedWeek: number; // Track when metrics were calculated
+}
+
 export type MarketingAngle = 
   | 'SELL_THE_SPECTACLE' 
   | 'SELL_THE_STORY' 
@@ -48,6 +60,24 @@ export interface BoxOfficeResult {
   totalDomestic: number;
   totalForeign: number;
   multiplier: number;
+}
+
+export interface StreamingViewershipEntry {
+  week: number;
+  hoursWatched: number;      // Total hours watched that week
+  uniqueViewers: number;      // Unique viewers that week
+  completionRate: number;    // % of viewers who finished
+  dropoffRate: number;        // % drop from previous week
+  platform: string;          // Platform ID (Netflix, etc.)
+}
+
+export interface StreamingViewershipHistory {
+  platform: string;
+  entries: StreamingViewershipEntry[];
+  totalHoursWatched: number;
+  peakViewers: number;
+  peakWeek: number;
+  averageCompletionRate: number;
 }
 
 export type ProjectStatus = 'development' | 'needs_greenlight' | 'pitching' | 'production' | 'marketing' | 'released' | 'post_release' | 'archived' | 'turnaround' | 'pilot' | 'shopping';
@@ -286,12 +316,14 @@ export interface ProjectBase {
   isPrimetimeAnchor?: boolean;  // triggers international format rights on season 2+ renewal
   stage?: 'pilot' | 'series' | 'shopping'; // sub-state for TV projects
   shoppingExpiresWeek?: number; // week when 'shopping' status lapses
+  streamingViewership?: StreamingViewershipHistory[]; // NEW FIELD for Phase 6
 }
 
 export interface ScriptedProject extends ProjectBase {
   scriptHeat: number; // 0-100: Influences evolution events
   activeRoles: CharacterArchetype[];
   scriptEvents: ScriptEvent[];
+  scriptMetrics?: ScriptMetrics;
 }
 
 export interface UnscriptedProject extends ProjectBase {
