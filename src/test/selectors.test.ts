@@ -406,6 +406,89 @@ describe('Phase 1: Financial Selectors', () => {
       expect(result[0].status).toBe('profitable');
     });
   });
+
+  describe('selectBudgetBurnData', () => {
+    it('returns null for non-existent project', () => {
+      const state = createMockGameState();
+      expect(selectBudgetBurnData(state, 'nonexistent')).toBeNull();
+    });
+
+    it('calculates budget burn from financial snapshots', () => {
+      const state = createMockGameState({
+        entities: {
+          projects: {
+            'proj-1': {
+              id: 'proj-1',
+              title: 'Test Project',
+              type: 'FILM',
+              format: 'film',
+              genre: 'Action',
+              budgetTier: 'mid',
+              budget: 10000000,
+              weeklyCost: 100000,
+              targetAudience: 'General',
+              flavor: 'Action',
+              state: 'production',
+              buzz: 70,
+              weeksInPhase: 5,
+              developmentWeeks: 5,
+              productionWeeks: 10,
+              revenue: 0,
+              weeklyRevenue: 0,
+              releaseWeek: null,
+              activeCrisis: null,
+              momentum: 70,
+              progress: 50,
+              accumulatedCost: 5000000,
+            } as Project,
+          },
+          contracts: {},
+          talents: {},
+          rivals: {},
+        },
+        finance: {
+          cash: 5000000,
+          ledger: [],
+          weeklyHistory: [
+            {
+              week: 1,
+              revenue: { theatrical: 0, streaming: 0, merch: 0, passive: 0 },
+              expenses: { production: 1000000, burn: 100000, marketing: 0, pacts: 0, royalties: 0, interest: 0 },
+              net: -1100000,
+              cash: 5000000,
+              projectRecoupment: { 'proj-1': 0 },
+            },
+            {
+              week: 2,
+              revenue: { theatrical: 0, streaming: 0, merch: 0, passive: 0 },
+              expenses: { production: 1000000, burn: 100000, marketing: 0, pacts: 0, royalties: 0, interest: 0 },
+              net: -1100000,
+              cash: 3900000,
+              projectRecoupment: { 'proj-1': 0 },
+            },
+          ],
+          marketState: {
+            cycle: 'STABLE',
+            sentiment: 50,
+            baseRate: 0.05,
+            debtRate: 0.08,
+            savingsYield: 0.02,
+            loanRate: 0.07,
+            rateHistory: [],
+          },
+        },
+      });
+
+      const result = selectBudgetBurnData(state, 'proj-1');
+      expect(result).not.toBeNull();
+      if (result) {
+        expect(result).toHaveLength(2);
+        expect(result[0].week).toBe(1);
+        expect(result[0].planned).toBe(1000000); // budget / productionWeeks
+        expect(result[0].actual).toBe(100000); // production / productionWeeks (1000000 / 10)
+      }
+    });
+  });
 });
 
 describe('Phase 2: Project Status Selectors', () => {
@@ -477,6 +560,114 @@ describe('Phase 2: Project Status Selectors', () => {
       expect(result).toHaveLength(1);
       expect(result[0].trend).toBe('blockbuster');
       expect(result[0].totalGross).toBe(150000000);
+    });
+  });
+
+  describe('selectProductionSlippage', () => {
+    it('returns empty array for no slipped projects', () => {
+      const state = createMockGameState();
+      expect(selectProductionSlippage(state)).toEqual([]);
+    });
+
+    it('identifies projects with schedule delays', () => {
+      const state = createMockGameState({
+        entities: {
+          projects: {
+            'proj-1': {
+              id: 'proj-1',
+              title: 'Delayed Project',
+              type: 'FILM',
+              format: 'film',
+              genre: 'Drama',
+              budgetTier: 'mid',
+              budget: 10000000,
+              weeklyCost: 100000,
+              targetAudience: 'General',
+              flavor: 'Drama',
+              state: 'production',
+              buzz: 70,
+              weeksInPhase: 8,
+              developmentWeeks: 5,
+              productionWeeks: 10,
+              revenue: 0,
+              weeklyRevenue: 0,
+              releaseWeek: null,
+              activeCrisis: null,
+              momentum: 70,
+              progress: 50,
+              accumulatedCost: 6000000,
+              estimatedWindow: { startWeek: 1, endWeek: 10 },
+            } as any, // Type assertion for test mock
+          },
+          contracts: {},
+          talents: {},
+          rivals: {},
+        },
+      });
+
+      const result = selectProductionSlippage(state);
+      expect(result).toHaveLength(1);
+      expect(result[0].projectName).toBe('Delayed Project');
+      expect(result[0].weeksSlipped).toBe(8); // weeksInPhase
+    });
+  });
+});
+
+describe('Phase 3: Market Intelligence Selectors', () => {
+  describe('selectGenrePerformanceMatrix', () => {
+    it('returns empty array for no market trends', () => {
+      const state = createMockGameState();
+      expect(selectGenrePerformanceMatrix(state)).toEqual([]);
+    });
+
+    it('calculates ROI by genre and metric from market trends', () => {
+      const state = createMockGameState({
+        market: {
+          opportunities: [],
+          trends: [
+            { genre: 'Action', heat: 80, direction: 'hot' as const, weeksRemaining: 10 },
+            { genre: 'Drama', heat: 60, direction: 'stable' as const, weeksRemaining: 8 },
+          ],
+          activeMarketEvents: [],
+          buyers: [],
+        },
+        entities: {
+          projects: {
+            'proj-1': {
+              id: 'proj-1',
+              title: 'Action Hit',
+              type: 'FILM',
+              format: 'film',
+              genre: 'Action',
+              budgetTier: 'mid',
+              budget: 10000000,
+              weeklyCost: 100000,
+              targetAudience: 'General',
+              flavor: 'Action',
+              state: 'released',
+              buzz: 80,
+              weeksInPhase: 10,
+              developmentWeeks: 5,
+              productionWeeks: 10,
+              revenue: 25000000,
+              weeklyRevenue: 0,
+              releaseWeek: 5,
+              activeCrisis: null,
+              momentum: 80,
+              progress: 100,
+              accumulatedCost: 10000000,
+            } as Project,
+          },
+          contracts: {},
+          talents: {},
+          rivals: {},
+        },
+      });
+
+      const result = selectGenrePerformanceMatrix(state);
+      expect(result.length).toBeGreaterThan(0);
+      // Should have 2 genres (Action, Drama) x 4 metrics (ROI, Audience, Critical, Commercial) = 8 entries
+      expect(result.length).toBe(8);
     });
   });
 });
@@ -606,6 +797,63 @@ describe('Phase 4: Talent Selectors', () => {
       expect(result.data[1].tier).toBe('B-list');
       expect(result.data[1].count).toBe(1);
       expect(result.totalTalent).toBe(2);
+    });
+  });
+
+  describe('selectDealStats', () => {
+    it('returns zero stats for no deals', () => {
+      const state = createMockGameState();
+      const result = selectDealStats(state);
+      expect(result.total).toBe(0);
+      expect(result.accepted).toBe(0);
+      expect(result.rejected).toBe(0);
+      expect(result.pending).toBe(0);
+    });
+
+    it('calculates deal statistics from opportunities with bid history', () => {
+      const state = createMockGameState({
+        market: {
+          opportunities: [
+            {
+              id: 'opp-1',
+              talentId: 'talent-1',
+              projectId: 'proj-1',
+              bidHistory: [
+                { rivalId: 'PLAYER', amount: 5000000, week: 1 },
+                { rivalId: 'RIVAL-1', amount: 4500000, week: 1 },
+              ],
+              bids: {},
+            } as any,
+            {
+              id: 'opp-2',
+              talentId: 'talent-2',
+              projectId: 'proj-2',
+              bidHistory: [
+                { rivalId: 'PLAYER', amount: 3000000, week: 2 },
+              ],
+              bids: {},
+            } as any,
+            {
+              id: 'opp-3',
+              talentId: 'talent-3',
+              projectId: 'proj-3',
+              bidHistory: [
+                { rivalId: 'RIVAL-1', amount: 4000000, week: 3 },
+              ],
+              bids: {},
+            } as any,
+          ],
+          trends: [],
+          activeMarketEvents: [],
+          buyers: [],
+        },
+      });
+
+      const result = selectDealStats(state);
+      expect(result.total).toBe(4); // 4 bidHistory entries total (2 + 1 + 1)
+      expect(result.accepted).toBe(2); // 2 PLAYER bids
+      expect(result.rejected).toBe(2); // 2 non-PLAYER bids
+      expect(result.pending).toBe(0);
     });
   });
 });
