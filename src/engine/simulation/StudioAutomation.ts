@@ -1,6 +1,7 @@
-import { GameState, StateImpact, Project, RivalStudio } from '@/engine/types';
+import { GameState, StateImpact, Project, RivalStudio, Buyer } from '@/engine/types';
 import { RandomGenerator } from '../utils/rng';
 import { calculateOpeningWeekend } from '../systems/releaseSimulation';
+import { StreamingViewershipTracker } from '../systems/production/StreamingViewershipTracker';
 
 export class StudioAutomation {
   /**
@@ -117,10 +118,28 @@ export class StudioAutomation {
           tvUpdate = { tvDetails: { ...(p as any).tvDetails, status: 'ON_AIR' } };
       }
 
-      impacts.push(this.createUpdateImpact(studioId, p.id, { 
+      // Initialize streaming viewership for streaming distribution
+      let streamingUpdate = {};
+      if (p.distributionStatus === 'streaming' && p.buyerId) {
+        const platform = state.market.buyers.find(b => b.id === p.buyerId);
+        if (platform) {
+          const streamingViewership = StreamingViewershipTracker.initializeViewership(
+            p,
+            platform.id,
+            platform,
+            state.week,
+            rng
+          );
+          // Store as array to match type definition (streamingViewership?: StreamingViewershipHistory[])
+          streamingUpdate = { streamingViewership: [streamingViewership] };
+        }
+      }
+
+      impacts.push(this.createUpdateImpact(studioId, p.id, {
         ...releasedProject,
         ...tvUpdate,
-        state: nextStatus as any, 
+        ...streamingUpdate,
+        state: nextStatus as any,
         weeksInPhase: 0,
         releaseWeek: state.week,
         activeCrisis: null

@@ -1,6 +1,7 @@
-import { GameState, StateImpact } from '@/engine/types';
+import { GameState, StateImpact, Project } from '@/engine/types';
 import { RandomGenerator } from '../../utils/rng';
 import { generateWeeklyFinancialReport } from '../finance';
+import { StreamingViewershipTracker } from '../production/StreamingViewershipTracker';
 
 /**
  * Weekly Finance Tick (Target A4/B).
@@ -39,6 +40,37 @@ export function tickFinance(state: GameState, rng: RandomGenerator, pendingImpac
   impacts.push({
     type: 'FINANCE_SNAPSHOT_ADDED',
     payload: { snapshot }
+  });
+
+  // Update streaming viewership for player projects with streaming distribution
+  const playerProjects = Object.values(state.entities.projects || {});
+  playerProjects.forEach(project => {
+    if (project.state === 'released' && project.distributionStatus === 'streaming' && project.streamingViewership && project.streamingViewership.length > 0) {
+      // Find the viewership history for this project's platform
+      const platformId = project.buyerId || '';
+      const historyIndex = project.streamingViewership.findIndex(v => v.platform === platformId);
+      
+      if (historyIndex >= 0) {
+        const updatedViewership = StreamingViewershipTracker.updateViewership(
+          project.streamingViewership[historyIndex],
+          state.week,
+          project,
+          rng
+        );
+        
+        // Update the specific history in the array
+        const updatedArray = [...project.streamingViewership];
+        updatedArray[historyIndex] = updatedViewership;
+        
+        impacts.push({
+          type: 'PROJECT_UPDATED',
+          payload: {
+            projectId: project.id,
+            update: { streamingViewership: updatedArray }
+          }
+        });
+      }
+    }
   });
 
   // 2. Rival Finance Tick (Phase 5: Industry Symmetry)
