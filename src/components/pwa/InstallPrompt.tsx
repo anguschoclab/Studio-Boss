@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react';
-// @ts-ignore - Virtual module provided by vite-plugin-pwa
-import { useRegisterSW } from 'virtual:pwa-register/react';
 import { Button } from '@/components/ui/button';
 import { Download, RefreshCw, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -9,6 +7,8 @@ import { cn } from '@/lib/utils';
  * Handles two banners:
  * 1. "Install" — shown when the browser fires beforeinstallprompt (Chrome/Edge on Mac)
  * 2. "Update ready" — shown when a new service worker is waiting
+ * 
+ * NOTE: PWA functionality is disabled for Electron desktop app
  */
 
 interface BeforeInstallPromptEvent extends Event {
@@ -16,31 +16,63 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
 }
 
+// Check if running in Electron environment
+const isElectron = typeof window !== 'undefined' && 'electronAPI' in window;
+
+// Stub PWA functionality since PWA plugin is removed for Electron
+let needRefresh = false;
+let updateServiceWorker = (_reload: boolean) => {};
+
+// Try to load PWA module if available (for web version)
+try {
+  // @ts-ignore - Virtual module provided by vite-plugin-pwa (may not exist)
+  const pwaModule = require('virtual:pwa-register/react');
+  if (pwaModule && pwaModule.useRegisterSW) {
+    const { useRegisterSW } = pwaModule;
+    // This would be used in a component, but for now we stub it
+  }
+} catch (e) {
+  // PWA module not available (Electron or plugin removed)
+  console.log('PWA module not available (expected for Electron)');
+}
+
 export function InstallPrompt() {
   const [installEvent, setInstallEvent] = useState<BeforeInstallPromptEvent | null>(null);
-  const [dismissed, setDismissed] = useState(() => {
-    try { return localStorage.getItem('pwa-install-dismissed') === '1'; } catch { return false; }
-  });
+  const [dismissed, setDismissed] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
-  const {
-    needRefresh: [needRefresh],
-    updateServiceWorker,
-  } = useRegisterSW({
-    onRegistered(r: ServiceWorkerRegistration | undefined) {
-      if (r) console.log('[PWA] Service worker registered:', r.scope);
-    },
-    onRegisterError(e: any) {
-      console.warn('[PWA] Service worker registration failed:', e);
-    },
-  });
+  // Load dismissed state from electron-store or localStorage
+  useEffect(() => {
+    const loadDismissedState = async () => {
+      if (isElectron && window.electronAPI) {
+        try {
+          const dismissed = await window.electronAPI.store.get('pwa-install-dismissed');
+          setDismissed(dismissed === '1');
+        } catch (e) {
+          console.error('Failed to load dismissed state from electron-store:', e);
+        }
+      } else {
+        try {
+          setDismissed(localStorage.getItem('pwa-install-dismissed') === '1');
+        } catch (e) {
+          console.error('Failed to load dismissed state from localStorage:', e);
+        }
+      }
+      setLoaded(true);
+    };
+    loadDismissedState();
+  }, []);
 
   useEffect(() => {
-    const handler = (e: Event) => {
-      e.preventDefault();
-      setInstallEvent(e as BeforeInstallPromptEvent);
-    };
-    window.addEventListener('beforeinstallprompt', handler);
-    return () => window.removeEventListener('beforeinstallprompt', handler);
+    // Only add beforeinstallprompt listener in web mode
+    if (!isElectron) {
+      const handler = (e: Event) => {
+        e.preventDefault();
+        setInstallEvent(e as BeforeInstallPromptEvent);
+      };
+      window.addEventListener('beforeinstallprompt', handler);
+      return () => window.removeEventListener('beforeinstallprompt', handler);
+    }
   }, []);
 
   const handleInstall = async () => {
@@ -50,62 +82,82 @@ export function InstallPrompt() {
     if (outcome === 'accepted') setInstallEvent(null);
   };
 
-  const handleDismiss = () => {
+  const handleDismiss = async () => {
     setDismissed(true);
-    try { localStorage.setItem('pwa-install-dismissed', '1'); } catch {}
+    if (isElectron && window.electronAPI) {
+      try {
+        await window.electronAPI.store.set('pwa-install-dismissed', '1');
+      } catch (e) {
+        console.error('Failed to save dismissed state to electron-store:', e);
+      }
+    } else {
+      try {
+        localStorage.setItem('pwa-install-dismissed', '1');
+      } catch (e) {
+        console.error('Failed to save dismissed state to localStorage:', e);
+      }
+    }
     setInstallEvent(null);
   };
 
-  // Update banner takes priority
-  if (needRefresh) {
+  // PWA features are disabled in Electron
+  if (isElectron) {
+    return null;
+  }
+
+  // Update banner (only in web mode with PWA)
+  if (needRefresh && !isElectron) {
     return (
       <div className={cn(
         'fixed bottom-6 left-1/2 -translate-x-1/2 z-[9999]',
         'flex items-center gap-3 px-5 py-3 rounded-xl',
         'bg-indigo-950/95 border border-indigo-500/40 backdrop-blur-md shadow-2xl',
-        'animate-in slide-in-from-bottom-4 duration-500'
+        'text-white'
       )}>
-        <RefreshCw className="h-4 w-4 text-indigo-400 shrink-0" />
-        <span className="text-xs font-bold text-indigo-100 uppercase tracking-wider">
-          New version available
-        </span>
+        <RefreshCw className="w-5 h-5 text-indigo-400" />
+        <span className="text-sm font-medium">Update available</span>
         <Button
           size="sm"
-          className="h-7 text-[10px] font-black uppercase tracking-widest bg-indigo-600 hover:bg-indigo-500 border-0"
+          variant="outline"
+          className="bg-white/10 border-white/20 hover:bg-white/20 text-white"
           onClick={() => updateServiceWorker(true)}
         >
           Update
         </Button>
+        <button
+          onClick={handleDismiss}
+          className="p-1 hover:bg-white/10 rounded-lg transition-colors"
+        >
+          <X className="w-4 h-4" />
+        </button>
       </div>
     );
   }
 
-  // Install prompt (only shown once, dismissable)
-  if (installEvent && !dismissed) {
+  // Install banner (only in browsers, not Electron)
+  if (!isElectron && installEvent && !dismissed) {
     return (
       <div className={cn(
         'fixed bottom-6 left-1/2 -translate-x-1/2 z-[9999]',
         'flex items-center gap-3 px-5 py-3 rounded-xl',
-        'bg-slate-900/95 border border-white/10 backdrop-blur-md shadow-2xl',
-        'animate-in slide-in-from-bottom-4 duration-500'
+        'bg-indigo-950/95 border border-indigo-500/40 backdrop-blur-md shadow-2xl',
+        'text-white'
       )}>
-        <Download className="h-4 w-4 text-indigo-400 shrink-0" />
-        <span className="text-xs font-bold text-slate-200 uppercase tracking-wider">
-          Install Studio Boss for offline play
-        </span>
+        <Download className="w-5 h-5 text-indigo-400" />
+        <span className="text-sm font-medium">Install Studio Boss</span>
         <Button
           size="sm"
-          className="h-7 text-[10px] font-black uppercase tracking-widest bg-indigo-600 hover:bg-indigo-500 border-0"
+          variant="outline"
+          className="bg-white/10 border-white/20 hover:bg-white/20 text-white"
           onClick={handleInstall}
         >
           Install
         </Button>
         <button
-          className="text-slate-500 hover:text-slate-300 transition-colors"
           onClick={handleDismiss}
-          aria-label="Dismiss"
+          className="p-1 hover:bg-white/10 rounded-lg transition-colors"
         >
-          <X className="h-3.5 w-3.5" />
+          <X className="w-4 h-4" />
         </button>
       </div>
     );

@@ -1,8 +1,11 @@
+// @DEPRECATED - This file is unused and will be removed
+// Progress calculation is handled by productionEngine.ts
+// This function is only used in test files
+
 import { Project } from '../../types';
 
 /**
- * Pure function to advance production progress and calculate costs.
- * Respects crisis states (halted production).
+ * @DEPRECATED - Use productionEngine.ts for progress calculation
  */
 export function advanceProjectProgress(project: Project): Project {
   // Use momentum to modify base progress/burn

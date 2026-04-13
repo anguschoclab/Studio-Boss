@@ -20,7 +20,9 @@
     "simulate": "bun src/engine/simulation/run.ts",
     "electron:dev": "vite build && electron .",
     "electron:build": "vite build && electron-builder --mac",
-    "electron:build:dir": "vite build && electron-builder --mac --dir"
+    "electron:build:all": "vite build && electron-builder -mwl",
+    "electron:build:dir": "vite build && electron-builder --mac --dir",
+    "electron:pack": "vite build && electron-builder --dir"
   },
   "build": {
     "appId": "com.studioboss.app",
@@ -34,11 +36,34 @@
           "arch": [
             "arm64"
           ]
+        },
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64"
+          ]
         }
       ],
       "icon": "public/pwa-512x512.png",
       "darkModeSupport": true,
       "identity": null
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "dir",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "public/pwa-512x512.png"
     },
     "files": [
       "dist/**/*",
@@ -83,6 +108,8 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
+    "electron-is-dev": "^3.0.1",
+    "electron-store": "10",
     "embla-carousel-react": "^8.6.0",
     "framer-motion": "^12.38.0",
     "input-otp": "^1.4.2",
@@ -130,11 +157,9 @@
     "terser": "^5.46.1",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.19.1",
-    "vite": "^5.4.21",
+    "vite": "5.3.5",
     "vite-bundle-visualizer": "^1.2.1",
-    "vite-plugin-pwa": "^1.2.0",
-    "vitest": "^3.2.4",
-    "workbox-window": "^7.4.0"
+    "vitest": "^3.2.4"
   },
   "browserslist": [
     "defaults",

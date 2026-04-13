@@ -1,7 +1,8 @@
-import { GameState, RivalStudio, Opportunity, StateImpact, ArchetypeKey, TalentPact } from '@/engine/types';
+import { GameState, RivalStudio, Opportunity, StateImpact, ArchetypeKey, TalentPact, Project } from '@/engine/types';
 import { RandomGenerator } from '../../utils/rng';
 import { AgencyLeverageEngine } from './AgencyLeverage';
 import { TalentAgentInteractionEngine } from '../talent/talentAgentInteractions';
+import { calculateWillingness } from '../talent/willingnessEngine';
 
 /**
  * AI Decision Multipliers.
@@ -139,6 +140,27 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
   eligibleRivals.forEach(rival => {
     if (rng.next() < 0.1) {
       const target = rng.pick(availableTalent);
+
+      // Headless NPC: Use willingnessEngine to evaluate talent willingness for pact signing
+      // Create a dummy project for willingness calculation (pacts are studio-wide, not project-specific)
+      const dummyProject: Project = {
+        id: 'dummy-pact-project',
+        title: 'First-Look Pact',
+        genre: 'Drama', // Neutral genre for pact evaluation
+        budget: rival.cash * 0.1, // Representative budget
+        buzz: rival.prestige,
+        reviewScore: 70,
+        state: 'development',
+        weeksInPhase: 0,
+        ownerId: rival.id
+      } as any;
+
+      const willingnessReport = calculateWillingness(target, dummyProject, state);
+
+      // Skip if talent is unwilling to sign with this studio
+      if (willingnessReport.finalVerdict === 'unwilling') {
+        return;
+      }
 
       // 🎭 The Method Actor Tuning: Auteur directors heavily favor prestige, demanding massive premiums if the studio lacks it, but will accept major discounts for highly prestigious studios.
       const isAuteur = target.prestige > 85;

@@ -11,12 +11,12 @@ import { Stack, HorizontalStack } from '@/components/layout/Stack';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { SkeletonPage } from '@/components/shared/SkeletonCard';
 import { tokens, patterns } from '@/lib/tokens';
-import { 
-  LayoutGrid, 
-  Film, 
-  Globe, 
-  Library, 
-  Plus, 
+import {
+  LayoutGrid,
+  Film,
+  Globe,
+  Library,
+  Plus,
   Search,
   AlertTriangle,
   Package,
@@ -39,7 +39,7 @@ const GreenlightQueue = React.lazy(() => import('@/components/development/Greenl
 
 // Development sub-panel for concepts and greenlight queue
 const DevelopmentPanel = () => {
-  const { openCreateProject } = useUIStore();
+  const { openCreateProject, selectProject } = useUIStore();
   const greenlightProject = useGameStore(s => s.greenlightProject);
   const advanceProjectPhase = useGameStore(s => s.advanceProjectPhase);
   const projects = useGameStore(useShallow(s => s.gameState ? selectProjects(s.gameState) : []));
@@ -52,10 +52,8 @@ const DevelopmentPanel = () => {
   const needsGreenlight = developmentProjects.filter(p => p.state === 'needs_greenlight').length;
 
   const handleReview = (id: string) => {
-    // Navigate to project detail modal
-    // For now, this could open a project review modal or navigate to project detail
-    // TODO: Implement project review modal with script details
-    console.log(`Review project ${id} - navigate to project detail`);
+    // Open ProjectDetailModal for project review with script details
+    selectProject(id);
   };
 
   const handleApprove = async (id: string) => {

@@ -53,6 +53,7 @@ import { TalentAgentInteractionEngine } from '../systems/talent/talentAgentInter
 import { detectCultClassic } from '../systems/ip/ipValuation';
 import { calculateAudienceIndex } from '../systems/demographics';
 import { resolveCrisisWithHandlers } from '../systems/production/crisisEvaluator';
+import { advanceRivals } from '../systems/rivals';
 
 /**
  * Studio Boss - Simulation Tick Context
@@ -274,6 +275,10 @@ export class WeekCoordinator {
   }
 
   private static runIndustryFilter(state: GameState, context: TickContext) {
+    // Advance rival studios (cash, strength, revenue, poaching)
+    const rivalImpacts = advanceRivals(context.rng, state);
+    context.impacts.push(rivalImpacts);
+
     const { year } = InterestRateSimulator.getWeekDisplay(context.week);
     const awardsImpacts = runAwardsCeremony(state, context.week, year, context.rng);
     context.impacts.push(...awardsImpacts);
