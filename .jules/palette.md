@@ -13,3 +13,10 @@
 ### 2024-05-20 - Adding Accessible Focus States to Marquee Interactive Elements
 **Learning:** Animated, marquee-style components (like `NewsTicker.tsx`) often utilize interactive elements to pause or trigger modals. These elements frequently omit `focus-visible` styling or meaningful `aria-label`s since they are primarily designed as visual, looping displays.
 **Action:** When working on animated or non-standard layouts with interactive items, explicitly test keyboard navigation and screen reader output. Always ensure `<button>` elements within these flows have semantic ARIA descriptions that encapsulate the full action (e.g., "Read full story...") and robust `focus-visible` states to aid sighted keyboard users.
+
+## 2026-04-13
+**🎨 Palette: Elevated UI for IP Asset Cards and Franchise Hub**
+- **💡 What:** Migrated `IPAssetCard.tsx`, `FranchiseHub.tsx`, and `MerchandiseRevenuePanel.tsx` to utilize premium "SaaS-meets-Hollywood" glass-card styling (using `bg-white/5 border border-white/10 backdrop-blur-sm`). Introduced contextual animations (`hover:-translate-y-1`, `group-hover:rotate-6`, `group-hover:animate-pulse`) and explicit gradient backdrops (`bg-gradient-to-br from-primary/20 via-transparent to-black/40`). Enhanced accessibility across the board.
+- **🎯 Why:** The components were functional but lacked the tactile, premium feedback expected of a high-end simulation dashboard. Static borders and missing focus states reduced the immersive quality of the interface.
+- **📸 Before/After:** Before, cards used generic utility tokens without explicit hover/active transforms. After, cards react dynamically to user input with shadow-scaling and focus-rings.
+- **♿ Accessibility:** Upgraded interactive `<Card>` and `<button>` elements to include strict `focus-visible:ring-2`, `focus-visible:outline-none`, explicit `type="button"`, and semantic `aria-label` attributes where appropriate to satisfy WCAG focus state guidelines.

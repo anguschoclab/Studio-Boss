@@ -22,9 +22,10 @@ export const IPAssetCard = ({ asset, isMarket = false }: IPAssetCardProps) => {
   
   return (
     <TooltipWrapper tooltip="View IP Asset Financials & Licensing Details" side="top">
-      <Card className="glass-card border-none hover-glow group transition-all duration-300 relative overflow-hidden cursor-pointer active:scale-[0.98]">
+      <Card tabIndex={0} role="button" aria-label={`View details for ${asset.title}`} className="glass-card border-none hover-glow group transition-all duration-300 relative overflow-hidden cursor-pointer hover:shadow-2xl hover:-translate-y-0.5 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-black">
         {/* Decorative background element */}
-        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
+        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full -mr-16 -mt-16 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className="absolute bottom-0 left-0 w-24 h-24 bg-secondary/10 rounded-full -ml-12 -mb-12 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
         
         <CardContent className="p-6 flex flex-col h-full space-y-5 relative z-10">
           <div className="flex justify-between items-start gap-4">
@@ -34,7 +35,7 @@ export const IPAssetCard = ({ asset, isMarket = false }: IPAssetCardProps) => {
                    <TooltipWrapper tooltip={`This IP is currently in ${tier.label} level syndication, generating recurring global royalties.`}>
                      <Badge 
                        style={{ backgroundColor: `${tier.color}20`, color: tier.color, borderColor: `${tier.color}30` }}
-                       className="text-[8px] font-black uppercase tracking-widest px-1.5 h-4 border cursor-help"
+                       className="text-[8px] font-black uppercase tracking-widest px-1.5 h-4 border cursor-help transition-all duration-300 group-hover:animate-pulse"
                      >
                         {tier.label}
                      </Badge>
@@ -42,7 +43,7 @@ export const IPAssetCard = ({ asset, isMarket = false }: IPAssetCardProps) => {
                  )}
                  {isMarket && (
                    <TooltipWrapper tooltip="Publicly available intellectual property rights available for acquisition.">
-                     <Badge className="bg-amber-500/20 text-amber-400 border-amber-500/30 text-[8px] font-black uppercase tracking-widest px-1.5 h-4 cursor-help">
+                     <Badge className="bg-amber-500/20 text-amber-400 border-amber-500/30 text-[8px] font-black uppercase tracking-widest px-1.5 h-4 cursor-help transition-all duration-300 group-hover:shadow-[0_0_8px_rgba(245,158,11,0.4)]">
                         Open Rights
                      </Badge>
                    </TooltipWrapper>
@@ -62,7 +63,7 @@ export const IPAssetCard = ({ asset, isMarket = false }: IPAssetCardProps) => {
                  </div>
                </TooltipWrapper>
             </div>
-            <div className="w-10 h-10 rounded bg-white/5 border border-white/10 flex items-center justify-center">
+            <div className="w-10 h-10 rounded bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-white/10 transition-colors duration-300 group-hover:rotate-3">
               {isMarket ? <Globe className="h-5 w-5 text-amber-500/40" /> : <Lock className="h-5 w-5 text-primary/40" />}
             </div>
           </div>
@@ -122,7 +123,8 @@ export const IPAssetCard = ({ asset, isMarket = false }: IPAssetCardProps) => {
                 size="sm"
                 variant="outline"
                 tooltip={`Spend ${formatMoney(asset.baseValue)} to acquire rights and initiate a modern reboot of ${asset.title}`}
-                className="h-7 text-[8px] font-black bg-amber-500/10 hover:bg-amber-500 text-amber-500 hover:text-black border border-amber-500/20 px-3 uppercase tracking-widest"
+                className="h-7 text-[8px] font-black bg-amber-500/10 hover:bg-amber-500 text-amber-500 hover:text-black border border-amber-500/20 px-3 uppercase tracking-widest transition-all duration-300 hover:shadow-[0_0_15px_rgba(245,158,11,0.5)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-1 focus-visible:ring-offset-black"
+                type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   if (asset.id) acquireAndRebootIP(asset.id);

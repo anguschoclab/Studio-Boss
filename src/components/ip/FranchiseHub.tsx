@@ -42,10 +42,12 @@ const FranchiseCard = ({ franchise, assets }: { franchise: Franchise, assets: IP
   const isDanger = fatiguePercent > 70;
 
   return (
-    <Card className="glass-card border-none overflow-hidden group hover-glow transition-all duration-500">
+    <Card className="glass-card border-none overflow-hidden group hover-glow transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl">
       <CardContent className="p-0">
         {/* Header Section */}
-        <div className="p-6 bg-gradient-to-r from-primary/10 to-transparent border-b border-white/5">
+        <div className="p-6 bg-gradient-to-br from-primary/20 via-transparent to-black/40 border-b border-white/5 relative">
+          {/* Subtle animated background glow for header */}
+          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/20 rounded-full -mr-16 -mt-16 blur-[40px] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
           <div className="flex justify-between items-start mb-4">
             <div>
               <div className="flex items-center gap-2 mb-1">
@@ -65,7 +67,7 @@ const FranchiseCard = ({ franchise, assets }: { franchise: Franchise, assets: IP
                 Founded Week {franchise.creationWeek} • {assets.length} Persistent Assets
               </p>
             </div>
-            <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center group-hover:bg-primary/20 transition-all duration-500 group-hover:rotate-6">
               <Layers className="h-6 w-6 text-primary" />
             </div>
           </div>
@@ -121,7 +123,7 @@ const FranchiseCard = ({ franchise, assets }: { franchise: Franchise, assets: IP
           <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">Component Properties</h4>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {assets.slice(0, 4).map(asset => (
-              <div key={asset.id} className="flex items-center gap-3 p-2 rounded bg-white/5 border border-white/5 hover:bg-white/10 transition-colors">
+              <div key={asset.id} className="flex items-center gap-3 p-2 rounded bg-white/5 border border-white/5 hover:bg-white/10 hover:border-white/20 transition-all duration-300 cursor-pointer">
                 <div className="w-8 h-8 rounded bg-black/40 flex items-center justify-center shrink-0">
                   {asset.totalEpisodes > 0 ? <Tv className="h-4 w-4 text-purple-400" /> : <Film className="h-4 w-4 text-blue-400" />}
                 </div>
@@ -143,10 +145,10 @@ const FranchiseCard = ({ franchise, assets }: { franchise: Franchise, assets: IP
 
         {/* Footer Actions */}
         <div className="px-6 py-4 bg-white/5 flex gap-3">
-           <button className="flex-1 text-[10px] font-black bg-primary/20 hover:bg-primary text-primary hover:text-black border border-primary/20 p-3 rounded transition-all uppercase tracking-widest flex items-center justify-center gap-2 group">
-             <Play className="h-3 w-3 fill-current" /> Exploit IP
+           <button type="button" className="flex-1 text-[10px] font-black bg-primary/20 hover:bg-primary text-primary hover:text-black border border-primary/20 p-3 rounded transition-all duration-300 uppercase tracking-widest flex items-center justify-center gap-2 group hover:shadow-[0_0_15px_rgba(var(--primary),0.5)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-black">
+             <Play className="h-3 w-3 fill-current transition-transform group-hover:scale-110" /> Exploit IP
            </button>
-           <button className="flex-1 text-[10px] font-black bg-white/5 hover:bg-white/20 text-white border border-white/10 p-3 rounded transition-all uppercase tracking-widest">
+           <button type="button" className="flex-1 text-[10px] font-black bg-white/5 hover:bg-white/20 text-white border border-white/10 p-3 rounded transition-all duration-300 uppercase tracking-widest focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black">
              Deep Analytics
            </button>
         </div>

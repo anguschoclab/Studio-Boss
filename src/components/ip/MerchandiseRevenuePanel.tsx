@@ -55,9 +55,9 @@ export const MerchandiseRevenuePanel: React.FC<MerchandiseRevenuePanelProps> = (
     <div className="space-y-6">
       {/* Summary Cards */}
       <div className="grid grid-cols-3 gap-4">
-        <Card className={cn('p-4', tokens.border.default)}>
+        <Card className={cn('p-4 glass-card bg-white/5 border border-white/10 backdrop-blur-sm hover-glow group transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg')}>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-primary/10">
+            <div className="p-2 rounded-lg bg-primary/10 transition-colors duration-300 group-hover:bg-primary/20">
               <DollarSign className="h-5 w-5 text-primary" />
             </div>
             <div>
@@ -67,9 +67,9 @@ export const MerchandiseRevenuePanel: React.FC<MerchandiseRevenuePanelProps> = (
           </div>
         </Card>
 
-        <Card className={cn('p-4', tokens.border.default)}>
+        <Card className={cn('p-4 glass-card bg-white/5 border border-white/10 backdrop-blur-sm hover-glow group transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg')}>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-emerald-500/10">
+            <div className="p-2 rounded-lg bg-emerald-500/10 transition-colors duration-300 group-hover:bg-emerald-500/20">
               <Package className="h-5 w-5 text-emerald-500" />
             </div>
             <div>
@@ -79,9 +79,9 @@ export const MerchandiseRevenuePanel: React.FC<MerchandiseRevenuePanelProps> = (
           </div>
         </Card>
 
-        <Card className={cn('p-4', tokens.border.default)}>
+        <Card className={cn('p-4 glass-card bg-white/5 border border-white/10 backdrop-blur-sm hover-glow group transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg')}>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-amber-500/10">
+            <div className="p-2 rounded-lg bg-amber-500/10 transition-colors duration-300 group-hover:bg-amber-500/20">
               <TrendingUp className="h-5 w-5 text-amber-500" />
             </div>
             <div>
@@ -101,7 +101,7 @@ export const MerchandiseRevenuePanel: React.FC<MerchandiseRevenuePanelProps> = (
         icon={ShoppingBag}
       >
         {byCategory.length === 0 ? (
-          <div className={cn('text-center py-8', tokens.border.default, 'border-dashed rounded-xl')}>
+          <div className={cn('text-center py-8 bg-white/5 border border-white/10 backdrop-blur-sm', 'border-dashed rounded-xl transition-all duration-300')}>
             <ShoppingBag className="h-10 w-10 mx-auto mb-3 opacity-20" />
             <p className={cn('text-sm', tokens.text.caption)}>
               No merchandise data available
@@ -112,7 +112,7 @@ export const MerchandiseRevenuePanel: React.FC<MerchandiseRevenuePanelProps> = (
             {byCategory.map((category) => (
               <Card
                 key={category.category}
-                className={cn('p-4', tokens.border.default)}
+                className={cn('p-4 glass-card bg-white/5 border border-white/10 backdrop-blur-sm hover-glow group transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg')}
               >
                 <div className="flex items-center justify-between mb-2">
                   <h4 className="font-bold text-sm">{category.category}</h4>
@@ -140,7 +140,7 @@ export const MerchandiseRevenuePanel: React.FC<MerchandiseRevenuePanelProps> = (
         icon={Star}
       >
         {byFranchise.length === 0 ? (
-          <div className={cn('text-center py-8', tokens.border.default, 'border-dashed rounded-xl')}>
+          <div className={cn('text-center py-8 bg-white/5 border border-white/10 backdrop-blur-sm', 'border-dashed rounded-xl transition-all duration-300')}>
             <Star className="h-10 w-10 mx-auto mb-3 opacity-20" />
             <p className={cn('text-sm', tokens.text.caption)}>
               No franchise merchandise data
@@ -151,7 +151,7 @@ export const MerchandiseRevenuePanel: React.FC<MerchandiseRevenuePanelProps> = (
             {byFranchise.map((franchise) => (
               <Card
                 key={franchise.franchiseId}
-                className={cn('p-4', tokens.border.default)}
+                className={cn('p-4 glass-card bg-white/5 border border-white/10 backdrop-blur-sm hover-glow group transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg')}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
