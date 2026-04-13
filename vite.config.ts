@@ -110,6 +110,7 @@ export default defineConfig(({ mode }) => ({
         enabled: true,
         type: "module",
       },
+      strategies: "generateSW",
     }),
   ].filter(Boolean),
   build: {
