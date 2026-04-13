@@ -37,21 +37,37 @@ export function calculateWillingness(
     reasons.push(`${talent.name} feels this "low-budget horror" is beneath their current prestige level.`);
   }
 
+  // 🎭 The Method Actor Tuning: Auteur directors prioritize prestige over upfront cash, taking a pay cut for high-buzz projects but demanding a premium for low-buzz ones.
+  const isAuteurDirector = talent.directorArchetype === 'auteur' || (talent.roles.includes('director') && talent.prestige > 80);
+
   // 2. Prestige Gap
   const prestigeDiff = project.buzz - talent.prestige;
   if (prestigeDiff > 20) {
     score += 10;
     reasons.push(`The high buzz around "${project.title}" is a major draw.`);
+    if (isAuteurDirector) {
+      score += 20;
+      reasons.push(`${talent.name} considers this a guaranteed masterpiece.`);
+    }
   } else if (prestigeDiff < -30) {
     score -= 20;
     reasons.push(`${talent.name} is hesitant about a project with such low industry heat.`);
+    if (isAuteurDirector) {
+      score -= 30;
+      reasons.push(`${talent.name} refuses to tarnish their legacy with a low-buzz project.`);
+    }
   }
 
   // 3. Financial Incentive (Fee vs Star Meter)
   const starMeter = talent.starMeter || 50;
   if (talent.fee > project.budget * 0.4) {
-    score -= 15;
-    reasons.push(`The talent's quote consumes ${Math.round((talent.fee / project.budget) * 100)}% of the production budget, causing friction.`);
+    if (isAuteurDirector && prestigeDiff > 0) {
+      score -= 5;
+      reasons.push(`The fee is high, but ${talent.name} is willing to negotiate for the sake of the art.`);
+    } else {
+      score -= 15;
+      reasons.push(`The talent's quote consumes ${Math.round((talent.fee / project.budget) * 100)}% of the production budget, causing friction.`);
+    }
   }
 
   // 4. Script Heat
