@@ -4,6 +4,7 @@ import { Project, Opportunity, GenreTrend, FestivalSubmission, Award } from './p
 import { Contract, TalentPact, Family, Agency, Agent, Talent, Scandal, MotivationProfile, RivalStrategy } from './talent.types';
 import { NewsEvent, Rumor, MarketEvent } from './engine.types';
 import { FinanceState, NewsState, IPState, DealsState } from './state.types';
+import { TalentAgentRelationship } from '../systems/talent/talentAgentInteractions';
 
 export interface GameEvent {
   id: string;
@@ -116,6 +117,7 @@ export interface GameState {
     newsHistory: NewsEvent[];
   };
   deals: DealsState;
+  talentAgentRelationships: Record<string, TalentAgentRelationship>;
   // UI Data Vis Extensions (Epic 4)
   history: StudioSnapshot[];
   eventHistory: GameEvent[];

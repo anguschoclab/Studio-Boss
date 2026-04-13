@@ -10,6 +10,7 @@ import { generateAgencies, generateAgents } from '../generators/agencies';
 import { RandomGenerator } from '../utils/rng';
 import { generateOpportunity } from '../generators/opportunities';
 import { Talent, TalentPact, StreamerPlatform, Buyer, StudioMotivation, Contract } from '@/engine/types';
+import { TalentAgentInteractionEngine, AgentPersonality } from '../systems/talent/talentAgentInteractions';
 
 export function initializeGame(studioName: string, archetype: ArchetypeKey, seed: number): GameState {
   const rng = new RandomGenerator(seed);
@@ -244,6 +245,38 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
     }
   });
 
+  // Initialize talent-agent relationships
+  const talentAgentRelationships: Record<string, import('../systems/talent/talentAgentInteractions').TalentAgentRelationship> = {};
+
+  // Create relationships for talents that already have agents
+  for (const [talentId, talent] of Object.entries(talentPool)) {
+    if (talent.agentId) {
+      const agent = agents.find(a => a.id === talent.agentId);
+      if (agent && talent.personality) {
+        const agentPersonality = agent.personality || derivePersonalityFromAgent(agent);
+        const agency = agencies.find(a => a.id === agent.agencyId);
+        const relationship = TalentAgentInteractionEngine.createRelationship(
+          talentId,
+          talent.agentId,
+          talent.personality,
+          agentPersonality,
+          agency?.tier
+        );
+        talentAgentRelationships[`${talentId}-${talent.agentId}`] = relationship;
+      }
+    }
+  }
+
+  function derivePersonalityFromAgent(agent: any): AgentPersonality {
+    const tacticMap: Record<string, AgentPersonality> = {
+      'SHARK': 'shark',
+      'DIPLOMAT': 'diplomat',
+      'VOLUME': 'volume',
+      'PRESTIGE': 'prestige'
+    };
+    return tacticMap[agent.negotiationTactic] || 'diplomat';
+  }
+
   return {
     week: 1,
     gameSeed: seed,
@@ -330,6 +363,7 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
       pendingOffers: [],
       expiredDeals: [],
     },
+    talentAgentRelationships,
     history: [],
     eventHistory: [],
   };

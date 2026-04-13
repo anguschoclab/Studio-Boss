@@ -46,6 +46,8 @@ import { runFestivalMarket } from '../systems/festivals/festivalAuctionEngine';
 import { TalentLifecycleSystem } from '../systems/talent/TalentLifecycleSystem';
 import { TalentMoraleSystem } from '../systems/talent/TalentMoraleSystem';
 import { shouldAttemptHostileTakeover } from '../systems/ai/AgentBrain';
+import { shouldTalentHireAgent, shouldTalentFireAgent, selectAgentForTalent, createAgentHiringEvent, createAgentFiringEvent } from '../systems/talent/talentAgentEvents';
+import { TalentAgentInteractionEngine } from '../systems/talent/talentAgentInteractions';
 
 // Orphan Wiring
 import { detectCultClassic } from '../systems/ip/ipValuation';
@@ -339,6 +341,103 @@ export class WeekCoordinator {
         type: 'TALENT_UPDATED',
         payload: { talentId: update.talentId, update: update.update }
       });
+    }
+
+    // Phase 3: Talent-Agent Hiring/Firing Events
+    for (const [talentId, talent] of Object.entries(talentDict)) {
+      const hiringCheck = shouldTalentHireAgent(talent, state, context.rng);
+      if (hiringCheck.shouldHire) {
+        const newAgent = selectAgentForTalent(talent, state, context.rng);
+        if (newAgent) {
+          // Fire current agent if exists
+          if (talent.agentId) {
+            const currentRelationshipId = `${talentId}-${talent.agentId}`;
+            const newRelationships = { ...state.talentAgentRelationships };
+            delete newRelationships[currentRelationshipId];
+            
+            context.impacts.push({
+              type: 'TALENT_UPDATED',
+              payload: {
+                talentId,
+                update: { agentId: undefined, agencyId: undefined }
+              }
+            });
+          }
+
+          // Create new relationship
+          const agentPersonality = newAgent.personality || derivePersonalityFromAgent(newAgent);
+          const agency = state.industry.agencies.find(a => a.id === newAgent.agencyId);
+          const relationship = TalentAgentInteractionEngine.createRelationship(
+            talentId,
+            newAgent.id,
+            talent.personality || 'pragmatic',
+            agentPersonality,
+            agency?.tier
+          );
+
+          context.impacts.push({
+            type: 'TALENT_UPDATED',
+            payload: {
+              talentId,
+              update: { agentId: newAgent.id, agencyId: newAgent.agencyId }
+            }
+          });
+
+          context.impacts.push({
+            type: 'NEWS_ADDED',
+            payload: createAgentHiringEvent(talent, newAgent, context.week)
+          });
+        }
+      }
+
+      if (talent.agentId) {
+        const relationship = state.talentAgentRelationships[`${talentId}-${talent.agentId}`];
+        if (relationship && shouldTalentFireAgent(talent, relationship, state)) {
+          const agent = state.industry.agents.find(a => a.id === talent.agentId);
+          context.impacts.push({
+            type: 'NEWS_ADDED',
+            payload: createAgentFiringEvent(talent, talent.agentId, context.week)
+          });
+
+          context.impacts.push({
+            type: 'TALENT_UPDATED',
+            payload: {
+              talentId,
+              update: { agentId: undefined, agencyId: undefined }
+            }
+          });
+
+          // Note: Relationship removal will be handled by impact reducer when talent agentId is cleared
+        }
+      }
+
+      // Phase 6: Weekly Relationship Evolution
+      if (talent.agentId) {
+        const relationshipId = `${talentId}-${talent.agentId}`;
+        const relationship = state.talentAgentRelationships[relationshipId];
+        if (relationship) {
+          // Evolve relationship over time
+          // Use 0 for weeksSinceLastInteraction since we don't track last interaction week
+          const evolved = TalentAgentInteractionEngine.evolveRelationship(
+            relationship,
+            0,
+            context.rng
+          );
+          
+          // Note: Relationship updates will be handled by impact reducer in a future update
+          // For now, we track evolution but don't update state directly
+        }
+      }
+    }
+
+    function derivePersonalityFromAgent(agent: any): import('../systems/talent/talentAgentInteractions').AgentPersonality {
+      const tacticMap: Record<string, import('../systems/talent/talentAgentInteractions').AgentPersonality> = {
+        'SHARK': 'shark',
+        'DIPLOMAT': 'diplomat',
+        'VOLUME': 'volume',
+        'PRESTIGE': 'prestige'
+      };
+      return tacticMap[agent.negotiationTactic] || 'diplomat';
     }
   }
 

@@ -117,7 +117,8 @@ export class TalentAgentInteractionEngine {
    */
   static calculateCompatibility(
     talentPersonality: TalentPersonality,
-    agentPersonality: AgentPersonality
+    agentPersonality: AgentPersonality,
+    agencyArchetype?: string
   ): CompatibilityScore {
     const factors: string[] = [];
     let score = 0;
@@ -168,7 +169,7 @@ export class TalentAgentInteractionEngine {
     }
 
     // Agency archetype influence
-    const agencyBonus = this.getAgencyArchetypeCompatibility(talentPersonality);
+    const agencyBonus = this.getAgencyArchetypeCompatibility(talentPersonality, agencyArchetype);
     score += agencyBonus;
 
     if (agencyBonus > 10) {
@@ -188,10 +189,10 @@ export class TalentAgentInteractionEngine {
 
   /**
    * Get agency archetype compatibility bonus for a talent personality
+   * Enhanced with more nuanced archetype matching
    */
-  private static getAgencyArchetypeCompatibility(talentPersonality: TalentPersonality): number {
-    // Simplified archetype compatibility
-    // In a full implementation, this would use the AGENCY_ARCHETYPES data
+  private static getAgencyArchetypeCompatibility(talentPersonality: TalentPersonality, agencyArchetype?: string): number {
+    // Enhanced archetype compatibility matrix
     const archetypeCompatibility: Record<TalentPersonality, number> = {
       perfectionist: 5,
       collaborative: 15,
@@ -199,13 +200,26 @@ export class TalentAgentInteractionEngine {
       charismatic: 10,
       method: 5,
       pragmatic: 10,
-      artistic: 5,
-      commercial: 0,
-      loyal: 15,
+      artistic: 15,
+      commercial: -5,
+      loyal: 10,
       ambitious: 5
     };
-
-    return archetypeCompatibility[talentPersonality] || 0;
+    
+    const baseBonus = archetypeCompatibility[talentPersonality] || 0;
+    
+    // Additional bonus based on agency archetype if provided
+    if (agencyArchetype) {
+      const agencyBonus: Record<string, number> = {
+        'powerhouse': 5,  // Major agencies have more leverage
+        'major': 3,
+        'boutique': 10,  // Boutique agencies offer more personalized service
+        'independent': 8
+      };
+      return baseBonus + (agencyBonus[agencyArchetype] || 0);
+    }
+    
+    return baseBonus;
   }
 
   /**
@@ -268,9 +282,10 @@ export class TalentAgentInteractionEngine {
     talentId: string,
     agentId: string,
     talentPersonality: TalentPersonality,
-    agentPersonality: AgentPersonality
+    agentPersonality: AgentPersonality,
+    agencyArchetype?: string
   ): TalentAgentRelationship {
-    const compatibility = this.calculateCompatibility(talentPersonality, agentPersonality);
+    const compatibility = this.calculateCompatibility(talentPersonality, agentPersonality, agencyArchetype);
 
     return {
       talentId,

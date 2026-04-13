@@ -289,6 +289,18 @@ export function generateAgencies(rng: RandomGenerator, count: number): Agency[] 
 const AGENT_FIRST_NAMES = ['Ari', 'Bryan', 'Maha', 'Jeremy', 'Richard', 'Sue', 'Ali', 'Kevin', 'Aaron', 'Emma', 'David', 'Laura'];
 const AGENT_LAST_NAMES = ['Gold', 'Lourd', 'Dakhil', 'Zimmer', 'Lovett', 'Mengers', 'Emanuel', 'Huvane', 'Sorkin', 'Stone', 'Smith', 'Jones'];
 
+function assignAgentPersonality(culture: string, rng: RandomGenerator): import('../systems/talent/talentAgentInteractions').AgentPersonality {
+  const personalityMap: Record<string, import('../systems/talent/talentAgentInteractions').AgentPersonality[]> = {
+    'shark': ['shark', 'volume'],
+    'family': ['diplomat', 'protector'],
+    'volume': ['volume', 'shark'],
+    'prestige': ['prestige', 'visionary']
+  };
+  
+  const personalities = personalityMap[culture] || ['diplomat'];
+  return personalities[Math.floor(rng.next() * personalities.length)];
+}
+
 export function generateAgents(rng: RandomGenerator, agencies: Agency[], countPerAgency: number): Agent[] {
 
   const agents: Agent[] = [];
@@ -318,6 +330,7 @@ export function generateAgents(rng: RandomGenerator, agencies: Agency[], countPe
         prestige: Math.floor(rng.range(agency.prestige - 20, agency.prestige + 20)),
         leverage: agency.culture === 'shark' ? Math.floor(rng.range(70, 100)) : Math.floor(rng.range(30, 80)),
         negotiationTactic: agency.culture === 'shark' ? 'SHARK' : (agency.culture === 'prestige' ? 'PRESTIGE' : 'VOLUME'),
+        personality: assignAgentPersonality(agency.culture, rng),
         motivationProfile: agency.motivationProfile ? { 
           ...agency.motivationProfile, 
           aggression: agency.motivationProfile.aggression + rng.range(-10, 10)

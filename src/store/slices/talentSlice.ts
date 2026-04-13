@@ -4,6 +4,7 @@ import { Contract, Opportunity, StateImpact, TalentPact, TalentRole, CharacterAr
 import { buildProjectAndContracts, CreateProjectParams, applyStateImpact } from '../storeUtils';
 import { calculateLiveCounterBid } from '@/engine/systems/ai/biddingEngine';
 import { RandomGenerator } from '@/engine/utils/rng';
+import { TalentAgentInteractionEngine } from '@/engine/systems/talent/talentAgentInteractions';
 
 export interface TalentSlice {
   signContract: (talentId: string, projectId: string) => void;
@@ -37,6 +38,17 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       if (state.deals?.activeDeals?.some(d => d.talentId === talentId)) {
          finalFee = talent.fee * 0.5;
       }
+
+      // Apply relationship bonus if talent has an agent
+      let relationshipBonus = 0;
+      if (talent.agentId) {
+        const relationship = state.talentAgentRelationships[`${talentId}-${talent.agentId}`];
+        if (relationship) {
+          relationshipBonus = TalentAgentInteractionEngine.getLoyaltyBonus(relationship);
+          // Apply loyalty bonus to reduce fee (max 20% reduction)
+          finalFee = finalFee * (1 - (relationshipBonus / 100));
+        }
+      }
       
       const currentCash = state.finance.cash;
       if (currentCash < finalFee) return s;
@@ -48,6 +60,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
         projectId,
         talentId,
         fee: finalFee,
+        ownerId: state.studio.id,
         backendPercent: talent.accessLevel === 'dynasty' ? 10 : 5,
         creativeControl: talent.accessLevel === 'dynasty' || talent.prestige > 85 ? true : undefined,
         sequelOption: talent.accessLevel === 'dynasty' || talent.prestige > 75 ? true : undefined,
@@ -70,6 +83,20 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
         commitments: [...(talent.commitments || []), commitment]
       };
 
+      // Update relationship after successful signing
+      const updatedRelationships = { ...state.talentAgentRelationships };
+      if (talent.agentId) {
+        const relationshipId = `${talentId}-${talent.agentId}`;
+        const relationship = updatedRelationships[relationshipId];
+        if (relationship) {
+          updatedRelationships[relationshipId] = TalentAgentInteractionEngine.updateRelationship(
+            relationship,
+            true,
+            finalFee
+          );
+        }
+      }
+
       return {
         gameState: {
           ...state,
@@ -82,6 +109,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
             contracts: { ...state.entities.contracts, [contract.id]: contract },
             talents: { ...state.entities.talents, [talentId]: updatedTalent }
           },
+          talentAgentRelationships: updatedRelationships,
           rngState: rng.getState()
         }
       };

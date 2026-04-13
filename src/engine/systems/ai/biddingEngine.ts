@@ -1,6 +1,7 @@
 import { GameState, RivalStudio, Opportunity, StateImpact, ArchetypeKey, TalentPact } from '@/engine/types';
 import { RandomGenerator } from '../../utils/rng';
 import { AgencyLeverageEngine } from './AgencyLeverage';
+import { TalentAgentInteractionEngine } from '../talent/talentAgentInteractions';
 
 /**
  * AI Decision Multipliers.
@@ -177,7 +178,18 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
         agent,
         state.finance.marketState
       );
-      const leveragedFee = AgencyLeverageEngine.getRequiredFee(lockFee, leverage);
+      let leveragedFee = AgencyLeverageEngine.getRequiredFee(lockFee, leverage);
+
+      // Phase 3: Talent-Agent Relationship Bonus
+      let relationshipBonus = 0;
+      if (target.agentId) {
+        const relationship = state.talentAgentRelationships[`${target.id}-${target.agentId}`];
+        if (relationship) {
+          relationshipBonus = TalentAgentInteractionEngine.getLoyaltyBonus(relationship);
+          // Apply loyalty bonus to reduce lock fee
+          leveragedFee = leveragedFee * (1 - (relationshipBonus / 100));
+        }
+      }
 
       if (rival.cash > leveragedFee * 2) {
          const pact: TalentPact = {

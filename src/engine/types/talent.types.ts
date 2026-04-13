@@ -97,6 +97,7 @@ export interface Agent {
   prestige: number;
   leverage: number;
   negotiationTactic: 'SHARK' | 'DIPLOMAT' | 'VOLUME' | 'PRESTIGE';
+  personality?: import('../systems/talent/talentAgentInteractions').AgentPersonality;
   skill?: number;
   aggression?: number;
   motivationProfile?: MotivationProfile;
