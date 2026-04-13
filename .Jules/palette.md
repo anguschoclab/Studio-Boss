@@ -13,3 +13,9 @@
 ### 2024-05-20 - Adding Accessible Focus States to Marquee Interactive Elements
 **Learning:** Animated, marquee-style components (like `NewsTicker.tsx`) often utilize interactive elements to pause or trigger modals. These elements frequently omit `focus-visible` styling or meaningful `aria-label`s since they are primarily designed as visual, looping displays.
 **Action:** When working on animated or non-standard layouts with interactive items, explicitly test keyboard navigation and screen reader output. Always ensure `<button>` elements within these flows have semantic ARIA descriptions that encapsulate the full action (e.g., "Read full story...") and robust `focus-visible` states to aid sighted keyboard users.
+
+## 2024-05-24: Interactive Elements & Scroll Containers
+* **Focus States & Semantics:** Replaced multiple `<div role="button">` and `<span>` elements with standard `<button type="button">` wrappers in `TalentNameLink.tsx`, `ContentCard.tsx` and `HeatMap.tsx`. Added `focus-visible:ring-2 focus-visible:ring-primary` for proper keyboard focus accessibility, preventing layout breaks by appending `w-full text-left`.
+* **Motion Components:** Switched `motion.div` to `motion.button` in conditional interactive wrappers (like `ContentCard`), preserving Framer Motion animations while upgrading semantic value.
+* **Scrollbars:** Replaced generic `overflow-x-auto` with `overflow-x-auto max-w-full custom-scrollbar` on wide visual components (`Heatmap.tsx`, `TalentGanttChart.tsx`, `PipelineTimeline.tsx`) to unify the visual scrollbar style across the app.
+* **ARIA Labels:** Explicitly aggregated text content to generate comprehensive `aria-label`s for grid-based interactions (like HeatMap cells).

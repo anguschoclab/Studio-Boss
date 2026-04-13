@@ -53,7 +53,7 @@ export const HeatMap: React.FC<HeatMapProps> = ({
   };
 
   return (
-    <div className={cn('overflow-x-auto', className)}>
+    <div className={cn('overflow-x-auto max-w-full custom-scrollbar', className)}>
       <div className="inline-block min-w-full">
         {/* Header row with X labels */}
         <div className="flex">
@@ -81,16 +81,33 @@ export const HeatMap: React.FC<HeatMapProps> = ({
               const value = getCellValue(xLabel, yLabel);
               const cell = data.find(d => d.x === xLabel && d.y === yLabel);
               
+              const isInteractive = !!onCellClick && !!cell;
+              const titleText = `${yLabel} × ${xLabel}: ${valueFormatter(value)}`;
+
+              if (isInteractive) {
+                return (
+                  <button
+                    key={`${xLabel}-${yLabel}`}
+                    type="button"
+                    className={cn(
+                      'w-16 h-10 flex-shrink-0 flex items-center justify-center text-[9px] font-medium cursor-pointer transition-all hover:ring-2 hover:ring-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+                    )}
+                    style={{ backgroundColor: getColor(value) }}
+                    onClick={() => onCellClick(cell)}
+                    title={titleText}
+                    aria-label={titleText}
+                  >
+                    {valueFormatter(value)}
+                  </button>
+                );
+              }
+
               return (
                 <div
                   key={`${xLabel}-${yLabel}`}
-                  className={cn(
-                    'w-16 h-10 flex-shrink-0 flex items-center justify-center text-[9px] font-medium cursor-pointer transition-all hover:ring-2 hover:ring-primary',
-                    onCellClick && 'cursor-pointer'
-                  )}
+                  className="w-16 h-10 flex-shrink-0 flex items-center justify-center text-[9px] font-medium transition-all"
                   style={{ backgroundColor: getColor(value) }}
-                  onClick={() => cell && onCellClick?.(cell)}
-                  title={`${yLabel} × ${xLabel}: ${valueFormatter(value)}`}
+                  title={titleText}
                 >
                   {valueFormatter(value)}
                 </div>

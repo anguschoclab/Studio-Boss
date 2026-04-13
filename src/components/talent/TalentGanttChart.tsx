@@ -29,6 +29,7 @@ export const TalentGanttChart: React.FC<TalentGanttChartProps> = ({ talent, curr
         )}
       </div>
 
+      {/* Standardized horizontal scrolling utility for wide data visualizations */}
       <div className="relative overflow-x-auto max-w-full pb-4 custom-scrollbar">
         <div className="grid grid-cols-52 gap-px min-w-[800px] h-12 bg-slate-800 rounded overflow-hidden shadow-inner">
           {weeks.map((week) => {
