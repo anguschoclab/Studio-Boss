@@ -30,7 +30,7 @@ describe('RevenueProcessor', () => {
   });
 
   describe('calculateTheatricalDecay', () => {
-    it('should reduce revenue by 22% when decay rate is 0.22', () => {
+    it('should reduce revenue to 22% when decay rate is 0.22', () => {
       const revenue = RevenueProcessor.calculateTheatricalDecay(1000000, 0.22);
       expect(revenue).toBe(220000);
     });
