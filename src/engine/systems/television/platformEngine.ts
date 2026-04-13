@@ -26,11 +26,11 @@ function calculateSubChange(platform: StreamerPlatform, rng: RandomGenerator, se
     const growthPercent = pastSubs > 0 ? (currentSubs - pastSubs) / pastSubs : 0;
     // 📺 The Syndication Baron: Tweaked streaming subscriber churn rates. Aggressively penalizing platforms that fail to retain subscribers or flatline in the cutthroat streaming wars.
     if (growthPercent < 0.0) {
-      dynamicChurnRate = Math.min(0.85, dynamicChurnRate * 8.5); // Devastating Penalty for negative growth
+      dynamicChurnRate = Math.min(0.85, dynamicChurnRate * 12.0); // Devastating Penalty for negative growth
     } else if (growthPercent < 0.01) {
-      dynamicChurnRate = Math.min(0.65, dynamicChurnRate * 6.5); // Extreme Penalty
+      dynamicChurnRate = Math.min(0.65, dynamicChurnRate * 8.0); // Extreme Penalty
     } else if (growthPercent < 0.02) {
-      dynamicChurnRate = Math.min(0.50, dynamicChurnRate * 5.0); // Aggressive Penalty
+      dynamicChurnRate = Math.min(0.50, dynamicChurnRate * 6.0); // Aggressive Penalty
     } else if (growthPercent > 0.15) {
       dynamicChurnRate = Math.max(0.005, dynamicChurnRate * 0.3); // Massive Bonus for hyper growth
     } else if (growthPercent > 0.08) {
@@ -40,16 +40,16 @@ function calculateSubChange(platform: StreamerPlatform, rng: RandomGenerator, se
 
   // 📺 The Syndication Baron: Reward consistent season-over-season quality and mega-hit library quality (sticky subscribers).
   if (qualityFactor > 0.90) {
-    dynamicChurnRate = Math.max(0.002, dynamicChurnRate * 0.3); // Sticky subscribers for mega-hit library
+    dynamicChurnRate = Math.max(0.002, dynamicChurnRate * 0.15); // Sticky subscribers for mega-hit library
   } else if (qualityFactor > 0.85) {
-    dynamicChurnRate = Math.max(0.01, dynamicChurnRate * 0.7);
+    dynamicChurnRate = Math.max(0.01, dynamicChurnRate * 0.4);
   }
 
   // 📺 The Syndication Baron: Reward consistent season-over-season quality for active shows.
   if (seasonOverSeasonQuality > 90) {
-    dynamicChurnRate = Math.max(0.005, dynamicChurnRate * 0.4); // Extreme loyalty for highly rated ongoing shows
+    dynamicChurnRate = Math.max(0.005, dynamicChurnRate * 0.2); // Extreme loyalty for highly rated ongoing shows
   } else if (seasonOverSeasonQuality > 80) {
-    dynamicChurnRate = Math.max(0.01, dynamicChurnRate * 0.6); // Strong loyalty for good ongoing shows
+    dynamicChurnRate = Math.max(0.01, dynamicChurnRate * 0.4); // Strong loyalty for good ongoing shows
   }
 
   const churn = platform.subscribers * dynamicChurnRate;
