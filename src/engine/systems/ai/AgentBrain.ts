@@ -154,6 +154,17 @@ export function generateFestivalBid(
     interest *= 1.8;
   }
 
+  // 🎭 The Method Actor Tuning: 'Indie' archetypes take larger risks on high-buzz Horror projects to simulate breakouts.
+  if (archetype.id === 'indie' && project.genre === 'Horror' && buzz > 65) {
+    interest *= 1.5;
+  }
+
+  // 🎭 The Method Actor Tuning: Studios with high aggression but low prestige will dramatically overpay for high-buzz festival projects to buy relevance.
+  const isAggressiveUpstart = archetype.biddingAggression > 75 && rival.prestige < 40;
+  if (isAggressiveUpstart && buzz > 80) {
+    interest *= 1.6;
+  }
+
   if (interest < 0.4) return null;
 
   let maxBidPct = (0.05 + (archetype.riskAppetite / 1000)); // riskier rivals bid more of their total cash
@@ -166,6 +177,14 @@ export function generateFestivalBid(
   if (rival.currentMotivation === 'MARKET_DISRUPTION') {
     maxBidPct += 0.35; // wildcard max bid percentage
   }
+
+  if (archetype.id === 'indie' && project.genre === 'Horror' && buzz > 65) {
+    maxBidPct += 0.40; // Indes risk everything on a potential horror breakout
+  }
+  if (isAggressiveUpstart && buzz > 80) {
+    maxBidPct += 0.50; // Massively overpay to buy relevance
+  }
+
   const maxBid = rival.cash * maxBidPct;
   const bid = Math.round(project.budget * interest * rng.range(0.9, 1.6));
   

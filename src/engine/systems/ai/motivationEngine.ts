@@ -25,7 +25,14 @@ const MotivationScores: Record<StudioMotivation, (rival: RivalStudio, state: Gam
     }
     return score;
   },
-  STABILITY: (rival) => (rival.cash >= 1000000 && rival.cash <= 3000000 ? 60 : 10),
+  STABILITY: (rival) => {
+    let score = (rival.cash >= 1000000 && rival.cash <= 3000000 ? 60 : 10);
+    // 🎭 The Method Actor Tuning: Studios with low prestige but high output (recent flops) prioritize stability to recover.
+    if (rival.prestige < 40 && rival.projectCount > 5) {
+      score += 40;
+    }
+    return score;
+  },
 };
 
 /**

@@ -65,8 +65,15 @@ export function calculateWillingness(
       score -= 5;
       reasons.push(`The fee is high, but ${talent.name} is willing to negotiate for the sake of the art.`);
     } else {
-      score -= 15;
-      reasons.push(`The talent's quote consumes ${Math.round((talent.fee / project.budget) * 100)}% of the production budget, causing friction.`);
+      // 🎭 The Method Actor Tuning: High-ego talent heavily penalize projects where their fee consumes the budget.
+      const isHighEgo = talent.psychology?.ego && talent.psychology.ego > 80;
+      if (isHighEgo) {
+        score -= 25;
+        reasons.push(`The talent's quote consumes ${Math.round((talent.fee / project.budget) * 100)}% of the budget. Their ego won't let them take a pay cut.`);
+      } else {
+        score -= 15;
+        reasons.push(`The talent's quote consumes ${Math.round((talent.fee / project.budget) * 100)}% of the production budget, causing friction.`);
+      }
     }
   }
 
@@ -75,6 +82,13 @@ export function calculateWillingness(
   if (scriptHeat > 80) {
     score += 15;
     reasons.push(`The script is considered a "Must-Read" in town.`);
+
+    // 🎭 The Method Actor Tuning: Character actors prioritize script heat over financial constraints.
+    const isCharacterActor = talent.roles.includes('actor') && talent.draw < 40 && talent.prestige > 70;
+    if (isCharacterActor) {
+      score += 20;
+      reasons.push(`${talent.name} loves the material and is eager to sign on.`);
+    }
   } else if (scriptHeat < 30) {
     score -= 10;
     reasons.push(`Word of mouth on the current draft is lukewarm.`);

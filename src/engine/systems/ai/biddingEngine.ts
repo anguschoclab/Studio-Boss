@@ -84,7 +84,11 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
         // 🎭 The Method Actor Tuning: Disruptors bid aggressively across the board to box out competitors.
         const disruptorAggression = isMarketDisruptor ? 1.6 : 1.0;
 
-        const multiplier = (ArchetypeMultipliers[rival.archetype]?.(opportunity.genre) || 1.0) * aggressionFactor * franchiseAggression * awardAggression * disruptorAggression * leverageAggression;
+        // 🎭 The Method Actor Tuning: Mega-studios aggressively bully smaller bids to starve competitors if cash is abundant.
+        const isMegaStudioBully = rival.cash > 500_000_000 && rival.cash > bidFloor * 5;
+        const bullyAggression = isMegaStudioBully ? 1.4 : 1.0;
+
+        const multiplier = (ArchetypeMultipliers[rival.archetype]?.(opportunity.genre) || 1.0) * aggressionFactor * franchiseAggression * awardAggression * disruptorAggression * bullyAggression * leverageAggression;
         const newBid = Math.floor(bidFloor * (1 + (rng.range(1.05, 1.25) - 1) * multiplier));
 
         // 🎭 The Method Actor Tuning: Raise the max bid cap for franchise builders and aggressive studios so they don't give up easily.
@@ -283,6 +287,13 @@ export function calculateLiveCounterBid(
   if (rival.currentMotivation === 'MARKET_DISRUPTION') {
     adjustedThreshold += 0.35;
     adjustedMultiplier *= 1.5;
+  }
+
+  // 🎭 The Method Actor Tuning: Mega-studios aggressively bully smaller bids to starve competitors if cash is abundant.
+  const isMegaStudioBully = rival.cash > 500_000_000 && rival.cash > playerBid * 5;
+  if (isMegaStudioBully) {
+    adjustedThreshold += 0.3;
+    adjustedMultiplier *= 1.4;
   }
 
   if (rng.next() < adjustedThreshold) {
