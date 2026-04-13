@@ -134,7 +134,7 @@ export function calculateFitScore(project: Project, buyer: Buyer, currentWeek: n
 
   // 🎭 The Method Actor Tuning: Network buyers heavily penalize low-buzz projects as they require immediate viewership, whereas Premium buyers take risks on low-budget prestige projects.
   if (buyer.archetype === 'network' && project.buzz < 40) score -= 25;
-  const scriptHeat = 'scriptHeat' in project ? (project as any).scriptHeat : 50;
+  const scriptHeat = 'scriptHeat' in project ? project.scriptHeat : 50;
   if (buyer.archetype === 'premium' && project.budgetTier === 'low' && scriptHeat > 70) score += 20;
 
   const buzzFactor = (project.buzz / 100) * 20; 
