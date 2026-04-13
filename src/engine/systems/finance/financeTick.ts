@@ -89,9 +89,18 @@ export function tickFinance(state: GameState, rng: RandomGenerator, pendingImpac
   // 2. Rival Finance Tick (Phase 5: Industry Symmetry)
   const rivalsList = Object.values(state.entities.rivals || {});
 
+  // ⚡ The Framerate Fanatic: Pre-calculate rival projects map in O(P) to avoid O(R * P) filtering loop
+  const rivalProjectsMap: Record<string, any[]> = {};
+  allProjects.forEach(p => {
+    if (p.ownerId) {
+      if (!rivalProjectsMap[p.ownerId]) rivalProjectsMap[p.ownerId] = [];
+      rivalProjectsMap[p.ownerId].push(p);
+    }
+  });
+
   for (const rival of rivalsList) {
-    // Use unified storage for rival projects
-    const rivalProjects = Object.values(state.entities.projects).filter(p => p.ownerId === rival.id);
+    // Use pre-calculated map for rival projects
+    const rivalProjects = rivalProjectsMap[rival.id] || [];
     const archetype = getRivalArchetype(rival);
 
     const { report: rivalReport } = generateWeeklyFinancialReport(

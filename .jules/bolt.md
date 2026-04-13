@@ -22,3 +22,6 @@
 ## 2025-03-08 - Optimized AI bidding engine loop
 **Learning:** Hoisting repetitive calculations (like `leverageAggression` inside `biddingEngine.ts`) outside of deeply nested loops significantly reduces Time Complexity and unnecessary GC allocations. Here, calculating it per opportunity instead of per rival per opportunity reduced the complexity from `O(O * R * (A + a))` to `O(O * (R + A + a))`.
 **Action:** When iterating over combinations of items (like opportunities and rivals), look for derived values that only depend on the outer loop variable and hoist their calculation before the inner loop.
+## 2024-05-24 - [Framerate Optimization: Removing O(R * P) filtering loop]
+**Learning:** Calling `Object.values(state.entities.projects).filter(...)` inside the loop that iterates over rivals creates an O(R * P) algorithm and excessive intermediate arrays. This is an anti-pattern for large sets like `projects` in hot engine ticks.
+**Action:** Replaced the nested `.filter()` loop with a single $O(P)$ pass that pre-calculates a map of projects grouped by `ownerId`, then do O(1) lookups during the rivals loop. Also replaced large `Object.values().forEach()` on `projects` and `contracts` with raw `for...in` loops to remove array allocation overhead.
