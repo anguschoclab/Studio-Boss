@@ -38,7 +38,7 @@ export function calculateWillingness(
   }
 
   // 🎭 The Method Actor Tuning: Auteur directors prioritize prestige over upfront cash, taking a pay cut for high-buzz projects but demanding a premium for low-buzz ones.
-  const isAuteurDirector = talent.roles.includes('director') && talent.prestige > 80;
+  const isAuteurDirector = talent.directorArchetype === 'auteur' || (talent.roles.includes('director') && talent.prestige > 80);
 
   // 2. Prestige Gap
   const prestigeDiff = project.buzz - talent.prestige;
