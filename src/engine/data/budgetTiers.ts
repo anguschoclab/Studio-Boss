@@ -31,8 +31,8 @@ export const BUDGET_TIERS: Record<BudgetTierKey, BudgetTierData> = {
     weeklyCost: 250_000,
     developmentWeeks: 6,
     productionWeeks: 8,
-    // The Studio Comptroller: Expanded top bound for micro-budget horror anomalies.
-    revenueRange: [50_000, 600_000_000],
+    // The Studio Comptroller: Expanded top bound to 800M for micro-budget horror anomalies.
+    revenueRange: [50_000, 800_000_000],
   },
   mid: {
     key: 'mid',
@@ -60,10 +60,11 @@ export const BUDGET_TIERS: Record<BudgetTierKey, BudgetTierData> = {
     name: 'Blockbuster',
     label: '$200M',
     budget: 200_000_000,
-    weeklyCost: 8_000_000,
+    // The Studio Comptroller: Increased burn rate to 10M to increase blockbuster stakes.
+    weeklyCost: 10_000_000,
     developmentWeeks: 16,
     productionWeeks: 24,
-    // The Studio Comptroller: Lowered floor and increased burn so flops are devastating.
-    revenueRange: [10_000_000, 3_000_000_000],
+    // The Studio Comptroller: Lowered floor and increased ceiling, making flops more devastating and mega-hits bigger.
+    revenueRange: [5_000_000, 3_500_000_000],
   },
 };
