@@ -4,7 +4,7 @@ import { IPAsset, Project } from '../../types';
  * Logic for "Rebooting" historical IP.
  * A rebooted project inherits a "Nostalgia Bonus" based on the original IP's success.
  */
-export function applyRebootNostalgia(project: Project, sourceAsset: IPAsset): Project {
+export function applyRebootNostalgia(project: Partial<Project>, sourceAsset: IPAsset): Partial<Project> {
   // Nostalgia Factor: If the original was a massive hit (high baseValue), 
   // the reboot starts with a significant Buzz floor.
   // We scale this so a huge hit provides a +30 buzz bump.
@@ -20,7 +20,7 @@ export function applyRebootNostalgia(project: Project, sourceAsset: IPAsset): Pr
 
   return {
     ...project,
-    buzz: Math.min(100, Math.max(0, project.buzz + Math.floor(nostalgiaBonus))),
+    buzz: project.buzz !== undefined ? Math.min(100, Math.max(0, project.buzz + Math.floor(nostalgiaBonus))) : project.buzz,
     reviewScore: project.reviewScore ? Math.max(1, project.reviewScore - reviewPenalty) : project.reviewScore,
     isSpinoff: true,
     parentProjectId: sourceAsset.originalProjectId,

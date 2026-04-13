@@ -1,5 +1,6 @@
-import { Project, TvFormatKey, BudgetTierKey, UnscriptedFormatKey } from '../../types';
+import { Project, TvFormatKey, BudgetTierKey, UnscriptedFormatKey, IPAsset } from '../../types';
 import { RandomGenerator } from '../../utils/rng';
+import { applyRebootNostalgia } from './ipRebootEngine';
 
 /**
  * Spinoff Factory.
@@ -160,7 +161,8 @@ export function generateSpinoffProposal(
   rng: RandomGenerator,
   sourceProject: Project, 
   status: 'FATIGUED' | 'HEALTHY' | 'LEGACY' | 'OVERALL_DEAL',
-  relatedCount: number = 0
+  relatedCount: number = 0,
+  sourceAsset?: IPAsset
 ): Partial<Project> {
   const pool = SPINOFF_TEMPLATES[status];
   const template = rng.pick(pool);
@@ -194,7 +196,7 @@ export function generateSpinoffProposal(
      };
   }
 
-  return {
+  const proposal = {
     title: `${sourceProject.title}: ${template.titleSuffix}`,
     format: template.format || sourceProject.format,
     tvFormat: template.tvFormat,
@@ -206,4 +208,11 @@ export function generateSpinoffProposal(
     parentProjectId: sourceProject.id,
     isSpinoff: true
   };
+
+  // Apply nostalgia bonus if source asset is available
+  if (sourceAsset) {
+    return applyRebootNostalgia(proposal, sourceAsset);
+  }
+
+  return proposal;
 }

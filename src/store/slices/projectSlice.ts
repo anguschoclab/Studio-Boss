@@ -236,7 +236,8 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
     }
 
     const rng = new RandomGenerator(state.rngState);
-    const spinoffParams = generateSpinoffProposal(rng, project, status, relatedCount);
+    const sourceAsset = state.ip.vault.find(a => a.originalProjectId === project.id);
+    const spinoffParams = generateSpinoffProposal(rng, project, status, relatedCount, sourceAsset);
     
     const finalParams = {
       ...spinoffParams,
