@@ -66,6 +66,11 @@ export function calculateFranchiseEquity(
       crossoverBonus += 0.35;
     }
 
+    // 🌌 The Universe Builder: Superhero + Multiverse Cross-over event bonus.
+    if (genres.includes('Superhero') && genres.includes('Multiverse')) {
+      crossoverBonus += 0.20;
+    }
+
     // Avengers-style crossover event check
     // 🌌 The Universe Builder: Massive event films generate unprecedented synergy.
     if (assets.length >= 3 && genres.some(g => g === 'Multiverse' || g === 'IP Mashup')) {
@@ -112,6 +117,11 @@ export function calculateFranchiseEquity(
   // 🌌 The Universe Builder: Cinematic Universe Phase Fatigue. Low relevance mega-franchises running on fumes.
   if (assets.length >= 10 && franchise.relevanceScore < 50 && franchise.activeProjectIds.length >= 3) {
     crossoverBonus -= 0.25;
+  }
+
+  // 🌌 The Universe Builder: Cinematic Universe Phase Fatigue (Poorly Performing Spin-offs)
+  if (assets.length >= 5 && franchise.audienceLoyalty < 40 && franchise.activeProjectIds.length >= 3) {
+    crossoverBonus -= 0.35;
   }
 
   // 🌌 The Universe Builder: Penalty applied for diluting the franchise brand with too many concurrent projects.
@@ -319,6 +329,12 @@ export function calculateFranchiseEvolutionImpacts(state: GameState, rng: Random
             updatedLoyalty = clamp(updatedLoyalty - 5, 0, 100);
           }
 
+          // 🌌 The Universe Builder: Penalty to synergy multiplier if franchise is poorly performing
+          let newSynergy = hub.synergyMultiplier + 0.15;
+          if (!isBreakout && !isPrestigeHit && project.revenue < project.budget) {
+            newSynergy = hub.synergyMultiplier - 0.10;
+          }
+
           impacts.push({
             type: 'FRANCHISE_UPDATED',
             payload: {
@@ -327,7 +343,7 @@ export function calculateFranchiseEvolutionImpacts(state: GameState, rng: Random
                 assetIds: nextAssetIds,
                 lastReleaseWeeks: nextReleaseWeeks,
                 audienceLoyalty: updatedLoyalty,
-                synergyMultiplier: clamp(hub.synergyMultiplier + 0.15, 1.0, 3.0), // 🌌 The Universe Builder: Synergy cap raised for mega-franchises.
+                synergyMultiplier: clamp(newSynergy, 1.0, 3.0), // 🌌 The Universe Builder: Synergy cap raised for mega-franchises.
                 relevanceScore: clamp(
                   hub.relevanceScore - (hub.activeProjectIds.length >= 5 ? 15 : 0),
                   0,

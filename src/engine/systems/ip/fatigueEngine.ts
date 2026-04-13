@@ -77,6 +77,11 @@ export function calculateFranchiseFatigue(
     currentFatigue *= 4.0;
   }
 
+  // 🌌 The Universe Builder: Back-to-Back Saturation Penalty. If severely overmined in a saturated market.
+  if (activeCount >= 3 && genreSaturation > 20) {
+    currentFatigue *= 1.5;
+  }
+
   // 🌌 The Universe Builder: Complete Structural Collapse of a Mega-Franchise.
   if (activeCount >= 6 && franchise.audienceLoyalty < 70) {
     currentFatigue *= 5.0; // Total audience apathy
@@ -199,6 +204,15 @@ export function calculateReleaseGapImpact(
     return {
       buzzBonus: -35,
       label: 'Desperate Reboot (Too Soon)',
+      fatigueReset: false
+    };
+  }
+
+  // 🌌 The Universe Builder: Failed Cinematic Universe Penalty.
+  if (yearsSince >= 2 && yearsSince < 3 && lastReleaseWeeks.length >= 3) {
+    return {
+      buzzBonus: -45,
+      label: 'Failed Cinematic Universe (Toxic Word of Mouth)',
       fatigueReset: false
     };
   }
