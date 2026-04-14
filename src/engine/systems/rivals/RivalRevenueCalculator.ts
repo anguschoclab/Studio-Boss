@@ -95,11 +95,11 @@ export class RivalRevenueCalculator {
     const openingWeekend = project.boxOffice?.openingWeekendDomestic || 0;
     const reviewScore = project.reception?.metaScore || project.reviewScore || 50;
     
-    // Same decay logic as RevenueProcessor.calculateTheatricalDecay
-    let decayFactor = 0.28; // Base decay
-    if (reviewScore > 80) decayFactor = 0.35; // Leggy
-    else if (reviewScore > 60) decayFactor = 0.30;
-    else if (reviewScore < 40) decayFactor = 0.20; // Front-loaded
+    // The Studio Comptroller: Aligned rival decay rates with the harsher front-loaded player model.
+    let decayFactor = 0.22; // Base decay
+    if (reviewScore > 80) decayFactor = 0.28; // Leggy
+    else if (reviewScore > 60) decayFactor = 0.24;
+    else if (reviewScore < 40) decayFactor = 0.15; // Front-loaded
     
     const weeklyGross = openingWeekend * Math.pow(decayFactor, weeksSinceRelease);
     

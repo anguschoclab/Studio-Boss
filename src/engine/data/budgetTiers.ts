@@ -20,8 +20,8 @@ export const BUDGET_TIERS: Record<BudgetTierKey, BudgetTierData> = {
     weeklyCost: 25_000,
     developmentWeeks: 4,
     productionWeeks: 4,
-    // The Studio Comptroller: Adjusted indie range.
-    revenueRange: [5_000, 15_000_000],
+    // The Studio Comptroller: Adjusted bounds to make blockbusters riskier and low-budget horrors have higher anomaly potential.
+    revenueRange: [5_000, 30_000_000],
   },
   low: {
     key: 'low',
@@ -31,8 +31,8 @@ export const BUDGET_TIERS: Record<BudgetTierKey, BudgetTierData> = {
     weeklyCost: 250_000,
     developmentWeeks: 6,
     productionWeeks: 8,
-    // The Studio Comptroller: Expanded top bound to 800M for micro-budget horror anomalies.
-    revenueRange: [50_000, 800_000_000],
+    // The Studio Comptroller: Adjusted bounds to make blockbusters riskier and low-budget horrors have higher anomaly potential.
+    revenueRange: [50_000, 1_000_000_000],
   },
   mid: {
     key: 'mid',
@@ -64,7 +64,7 @@ export const BUDGET_TIERS: Record<BudgetTierKey, BudgetTierData> = {
     weeklyCost: 10_000_000,
     developmentWeeks: 16,
     productionWeeks: 24,
-    // The Studio Comptroller: Lowered floor and increased ceiling, making flops more devastating and mega-hits bigger.
-    revenueRange: [5_000_000, 3_500_000_000],
+    // The Studio Comptroller: Adjusted bounds to make blockbusters riskier and low-budget horrors have higher anomaly potential.
+    revenueRange: [1_000_000, 3_500_000_000],
   },
 };

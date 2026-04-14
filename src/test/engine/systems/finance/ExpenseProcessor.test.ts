@@ -4,14 +4,14 @@ import { Project } from '../../../../engine/types';
 
 describe('ExpenseProcessor', () => {
   describe('calculateStudioBurn', () => {
-    it('should calculate 1.8M for studio level 1 with 0 active projects', () => {
+    it('should calculate 2M for studio level 1 with 0 active projects', () => {
       const burn = ExpenseProcessor.calculateStudioBurn(1, 0);
-      expect(burn).toBe(1800000); // Base rent * 1.75^0 + 0
+      expect(burn).toBe(2000000); // Base rent * 1.85^0 + 0
     });
 
     it('should calculate correct burn for studio level 3 with 4 active projects', () => {
       const burn = ExpenseProcessor.calculateStudioBurn(3, 4);
-      expect(burn).toBe(7512500); // 1.8M * 1.75^2 + (4 * 500k)
+      expect(burn).toBe(8845000); // 2.0M * 1.85^2 + (4 * 500k) = 6845000 + 2000000 = 8845000
     });
     
     it('should exceed base rent for higher levels', () => {
