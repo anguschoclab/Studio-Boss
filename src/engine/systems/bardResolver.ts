@@ -1,5 +1,5 @@
 import archiveData from '../data/narrative/archive.json';
-import { NarrativeArchive, ResolutionRequest } from '../data/narrative/archive';
+import { ResolutionRequest } from '../data/narrative/archive';
 import { RandomGenerator } from '../utils/rng';
 
 /**

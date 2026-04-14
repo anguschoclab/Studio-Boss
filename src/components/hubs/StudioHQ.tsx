@@ -3,7 +3,6 @@ import { useGameStore } from '@/store/gameStore';
 import { useUIStore, HQSubTab } from '@/store/uiStore';
 import { useShallow } from 'zustand/react/shallow';
 import { SubNav } from '@/components/navigation/SubNav';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import {
@@ -11,8 +10,6 @@ import {
   AlertTriangle,
   Target,
   Newspaper,
-  Zap,
-  Plus,
   TrendingUp,
   Award
 } from 'lucide-react';

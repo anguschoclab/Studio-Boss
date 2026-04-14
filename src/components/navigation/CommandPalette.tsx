@@ -1,17 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Search,
-  Command,
   Film,
   Users,
   TrendingUp,
   DollarSign,
-  Star,
   Briefcase,
   Globe,
   LayoutDashboard,
-  X,
   ArrowRight,
   Clock,
   Sparkles,
@@ -22,7 +19,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { tokens } from '@/lib/tokens';
-import { scaleFadeTransition, transitions } from '@/lib/animations';
+import { transitions } from '@/lib/animations';
 import { useUIStore } from '@/store/uiStore';
 
 interface CommandItem {
@@ -294,7 +291,6 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
 
   // Get selected item from flat list
   const flatCommands = Object.values(groupedCommands).flat();
-  const selectedItem = flatCommands[selectedIndex];
 
   if (!isOpen) return null;
 
@@ -351,7 +347,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                       <div className="px-4 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                         {section}
                       </div>
-                      {items.map((item, idx) => {
+                      {items.map((item) => {
                         const flatIdx = flatCommands.indexOf(item);
                         const isSelected = flatIdx === selectedIndex;
                         const Icon = item.icon;

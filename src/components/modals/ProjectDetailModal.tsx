@@ -6,7 +6,7 @@ import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
 import { evaluateGreenlight } from '@/engine/systems/greenlight';
 import { FESTIVALS } from '@/engine/systems/festivals';
 import { RandomGenerator } from '@/engine/utils/rng';
-import { AwardBody, Project, Talent, ScriptedProject, SeriesProject, Contract } from '@/engine/types';
+import { AwardBody, Talent, ScriptedProject, SeriesProject } from '@/engine/types';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
@@ -61,23 +61,6 @@ export const ProjectDetailModal = () => {
   const talentPool = useMemo(() => Object.values(gameState?.entities?.talents || {}), [gameState?.entities?.talents]);
   const contracts = useMemo(() => Object.values(gameState?.entities?.contracts || {}), [gameState?.entities?.contracts]);
   const talentMap = useMemo(() => new Map(talentPool.map(t => [t.id, t])), [talentPool]);
-
-  const talentByRole = useMemo(() => {
-    const map = new Map<string, Talent[]>();
-    const rolesToTrack = ['director', 'actor', 'writer', 'producer'];
-    for (const r of rolesToTrack) {
-      map.set(r, []);
-    }
-    for (const t of talentPool) {
-      for (const r of t.roles) {
-        const arr = map.get(r);
-        if (arr) {
-          arr.push(t);
-        }
-      }
-    }
-    return map;
-  }, [talentPool]);
 
   const tier = project ? BUDGET_TIERS[project.budgetTier] : null;
   const scriptedProject = useMemo(() => (

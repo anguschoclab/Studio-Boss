@@ -56,7 +56,7 @@ const RivalsPanel = () => {
               </div>
               <div className="flex justify-between text-[11px]">
                 <span className="text-muted-foreground">Projects:</span>
-                <span className="font-mono font-bold">{Object.keys(rival.projects || {}).length}</span>
+                <span className="font-mono font-bold">{rival.projectIds?.length || 0}</span>
               </div>
             </div>
           </div>

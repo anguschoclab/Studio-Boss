@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
-import { useUIStore } from '@/store/uiStore';
+import { useUIStore, TabId } from '@/store/uiStore';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
@@ -142,7 +142,7 @@ export const StudioPulse: React.FC = () => {
 
   const handleAlertAction = (tab?: string) => {
     if (tab) {
-      setActiveTab(tab as any);
+      setActiveTab(tab as TabId);
     }
   };
 
@@ -333,7 +333,7 @@ export const StudioPulse: React.FC = () => {
             variant="outline"
             size="sm"
             className="flex-1 h-8 text-[10px] font-bold uppercase tracking-wider"
-            onClick={() => setActiveTab('pipeline' as any)}
+            onClick={() => setActiveTab('pipeline' as TabId)}
           >
             <Film className="w-3.5 h-3.5 mr-1.5" />
             Pipeline
@@ -342,7 +342,7 @@ export const StudioPulse: React.FC = () => {
             variant="outline"
             size="sm"
             className="flex-1 h-8 text-[10px] font-bold uppercase tracking-wider"
-            onClick={() => setActiveTab('finance' as any)}
+            onClick={() => setActiveTab('finance' as TabId)}
           >
             <DollarSign className="w-3.5 h-3.5 mr-1.5" />
             Finances
@@ -351,7 +351,7 @@ export const StudioPulse: React.FC = () => {
             variant="outline"
             size="sm"
             className="flex-1 h-8 text-[10px] font-bold uppercase tracking-wider"
-            onClick={() => setActiveTab('talent' as any)}
+            onClick={() => setActiveTab('talent' as TabId)}
           >
             <Users className="w-3.5 h-3.5 mr-1.5" />
             Talent

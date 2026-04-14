@@ -13,10 +13,7 @@ import {
   selectProjectTimelineData,
   selectBoxOfficeData,
   selectProductionSlippage,
-  selectScriptQualityMetrics,
   selectGenrePerformanceMatrix,
-  selectMarketShareData,
-  selectStreamingViewership,
   selectTalentSatisfaction,
   selectTalentTierDistribution,
   selectDealStats,
@@ -24,7 +21,7 @@ import {
   selectCrisisRiskLevel,
   selectAwardsProbability,
 } from '@/store/selectors';
-import type { GameState, Project, Talent, RivalStudio } from '@/engine/types';
+import type { GameState, Project, Talent } from '@/engine/types';
 
 // Helper to create mock game state
 const createMockGameState = (overrides: Partial<GameState> = {}): GameState => ({

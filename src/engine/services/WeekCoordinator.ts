@@ -156,21 +156,16 @@ export class WeekCoordinator {
 
       // 1. Script drafting and crisis triggering
       if (project.state === 'development') {
-        const result = tickScriptDevelopment(project, context.rng);
-        if (result.project !== project) {
-          context.impacts.push({
-            type: 'PROJECT_UPDATED',
-            payload: { projectId: project.id, update: result.project }
-          });
-          if (result.impact) context.impacts.push(result.impact);
-        }
+        const impacts = tickScriptDevelopment(project, context.rng);
+        context.impacts.push(...impacts);
       } else if (!project.activeCrisis && WeekCoordinator.ACTIVE_STAGES.has(project.state)) {
         const impact = checkAndTriggerCrisis(project, state, context.rng);
         if (impact) context.impacts.push(impact);
 
         // Wiring: Resolve Crisis with Handlers (Strategy Pattern)
         if (project.activeCrisis) {
-            const crisisImpacts = resolveCrisisWithHandlers(state, project.id, context.rng.rangeInt(0, project.activeCrisis.options.length - 1));
+            const crisis = project.activeCrisis as import('@/engine/types').ActiveCrisis;
+            const crisisImpacts = resolveCrisisWithHandlers(state, project.id, context.rng.rangeInt(0, crisis.options.length - 1));
            context.impacts.push(...crisisImpacts);
         }
       }

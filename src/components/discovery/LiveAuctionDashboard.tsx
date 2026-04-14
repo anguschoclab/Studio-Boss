@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { Opportunity } from '@/engine/types';
 import { formatMoney } from '@/engine/utils';

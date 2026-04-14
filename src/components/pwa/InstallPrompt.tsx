@@ -35,7 +35,6 @@ try {
 export function InstallPrompt() {
   const [installEvent, setInstallEvent] = useState<BeforeInstallPromptEvent | null>(null);
   const [dismissed, setDismissed] = useState(false);
-  const [loaded, setLoaded] = useState(false);
 
   // Load dismissed state from electron-store or localStorage
   useEffect(() => {
@@ -54,7 +53,6 @@ export function InstallPrompt() {
           console.error('Failed to load dismissed state from localStorage:', e);
         }
       }
-      setLoaded(true);
     };
     loadDismissedState();
   }, []);
@@ -116,7 +114,7 @@ export function InstallPrompt() {
           size="sm"
           variant="outline"
           className="bg-white/10 border-white/20 hover:bg-white/20 text-white"
-          onClick={() => updateServiceWorker(true)}
+          onClick={() => updateServiceWorker()}
         >
           Update
         </Button>

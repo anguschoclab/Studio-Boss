@@ -12,6 +12,8 @@ interface AwardsPayload {
   year?: number;
 }
 
+type Award = import('@/engine/types').Award;
+
 export const AwardsCeremonyModal = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();
   const gameState = useGameStore(s => s.gameState);
@@ -84,7 +86,7 @@ export const AwardsCeremonyModal = () => {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
-                {awards.map((award: any, i: number) => (
+                {awards.map((award: Award, i: number) => (
                   <motion.div 
                     key={award.id || i}
                     initial={{ opacity: 0, x: -10 }}

@@ -161,7 +161,7 @@ export const RivalsPanel = () => {
                     </div>
                     <div className="flex justify-between items-center text-[9px] text-muted-foreground/60 pt-1 font-bold italic tracking-tight">
                         <TooltipWrapper tooltip="Number of properties this studio currently has in production." side="bottom">
-                          <span className="cursor-help">{Object.keys(rival.projects || {}).length} active projects</span>
+                          <span className="cursor-help">{rival.projectIds?.length || 0} active projects</span>
                         </TooltipWrapper>
                         {rival.cash > 0 && (
                           <TooltipWrapper tooltip="Projected studio valuation based on current cash reserves and IP assets." side="bottom">

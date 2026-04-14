@@ -296,7 +296,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
         if (target) {
           // Transfer Projects & Platforms
           if (acquirerId === 'player') {
-            const mergedProjects = { ...nextState.entities.projects, ...(target.projects || {}) };
+            const mergedProjects = { ...nextState.entities.projects };
             const mergedVault = nextState.ip.vault.map(asset => {
               if (asset.ownerStudioId === mergedRivalId) {
                 return { ...asset, rightsOwner: 'STUDIO' as const, ownerStudioId: undefined };
@@ -318,11 +318,11 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
               const acquirer = rivals[acquirerId];
               rivals[acquirerId] = {
                 ...acquirer,
-                projects: { ...(acquirer.projects || {}), ...(target.projects || {}) },
+                projectIds: [...(acquirer.projectIds || []), ...(target.projectIds || [])],
                 ownedPlatforms: [...(acquirer.ownedPlatforms || []), ...(target.ownedPlatforms || [])]
               };
             }
-            
+
             const mergedVault = nextState.ip.vault.map(asset => {
               if (asset.ownerStudioId === mergedRivalId) {
                 return { ...asset, rightsOwner: 'RIVAL' as const, ownerStudioId: acquirerId };
@@ -331,7 +331,7 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
             });
 
             // ⚡ Single Source of Truth: Ensure merged rival projects are also mirrored in global entities
-            const mergedProjects = { ...nextState.entities.projects, ...(target.projects || {}) };
+            const mergedProjects = { ...nextState.entities.projects };
 
             nextState = { 
                 ...nextState, 

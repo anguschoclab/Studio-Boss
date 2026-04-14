@@ -36,8 +36,6 @@ interface DataListProps<T> {
   interactive?: boolean;
   /** Enable stagger animation on mount */
   animate?: boolean;
-  /** Virtualization for large lists (optional) */
-  virtualized?: boolean;
   /** Header content */
   header?: React.ReactNode;
   /** Footer content */
@@ -69,7 +67,6 @@ export function DataList<T>({
   itemClassName,
   interactive = false,
   animate = true,
-  virtualized = false,
   header,
   footer,
   dividers = false,

@@ -1,11 +1,19 @@
 import { createMarketingSlice } from "../../store/slices/marketingSlice";
-import { GameState } from "../../engine/types";
 
 describe("marketingSlice", () => {
-  let store: any;
-  let slice: any;
-  let set: any;
-  let get: any;
+  let store: {
+    gameState: {
+      week: number;
+      gameSeed: number;
+      tickCount: number;
+      rngState: number;
+      finance: { cash: number };
+      entities: { projects: Record<string, never> };
+    };
+  };
+  let slice: unknown;
+  let set: unknown;
+  let get: unknown;
 
   beforeEach(() => {
     store = {
@@ -34,7 +42,7 @@ describe("marketingSlice", () => {
       }
     };
 
-    set = (fn: any) => {
+    set = (fn: (state: typeof store) => Partial<typeof store> | typeof store) => {
       const result = typeof fn === 'function' ? fn(store) : fn;
       store = { ...store, ...result };
     };

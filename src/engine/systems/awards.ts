@@ -165,17 +165,16 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
       if (config.evaluator && !config.evaluator(p)) continue;
       
       // Weighting system
-      // Campaign data might be in different places depending on implementation, 
+      // Campaign data might be in different places depending on implementation,
       // but let's assume it's moved to the projects themselves or a specific registry.
       // For now, checks buzz directly if active state campaign is missing.
-      const weight = calculateNominationWeight(p, [], p.buzz * 0.1); 
-      
+
       // Add talent data if available
       const projectContracts = projectToContractsMap.get(p.id) || [];
       const attachedTalent = projectContracts
         .map(c => state.entities.talents[c.talentId])
         .filter(Boolean);
-      
+
       const refinedWeight = calculateNominationWeight(p, attachedTalent, p.buzz * 0.1);
 
       const randomFactor = rng.range(0.8, 1.2);
