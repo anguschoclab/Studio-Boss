@@ -97,13 +97,15 @@ export const ContentCard: React.FC<ContentCardProps> = ({
   disabled = false,
 }) => {
   const isInteractive = variant === 'interactive' && onClick && !disabled;
-  const CardWrapper = isInteractive ? motion.div : 'div';
+  const CardWrapper = isInteractive ? motion.button : 'div';
 
   return (
     <CardWrapper
       onClick={isInteractive ? onClick : undefined}
+      {...(isInteractive && { type: "button" })}
       className={cn(
         'rounded-xl border overflow-hidden',
+        isInteractive && 'w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
         tokens.transition.normal,
         variantStyles[variant],
         sizeStyles[size].container,
