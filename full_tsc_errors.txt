@@ -1,1 +1,0 @@
-src/components/pipeline/ProjectCard.tsx(197,9): error TS17002: Expected corresponding JSX closing tag for 'button'.

@@ -6,35 +6,45 @@ import tseslint from 'typescript-eslint';
 import prettier from 'eslint-config-prettier';
 
 export default tseslint.config(
-  {
-    ignores: ['dist', 'dev-dist', 'node_modules', 'electron', 'release'],
-  },
-  {
-    extends: [js.configs.recommended, ...tseslint.configs.recommended, prettier],
-    files: ['**/*.{ts,tsx}'],
-    languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
+    {
+        // Common folders to exclude from linting
+        ignores: ['dist', 'dev-dist', 'node_modules', 'electron', 'release'],
     },
-    plugins: {
-      'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
-    },
-    rules: {
-      ...reactHooks.configs.recommended.rules,
-      'react-refresh/only-export-components': 'off',
-      // Allow @ts-ignore for legacy code and test files
-      '@typescript-eslint/ban-ts-comment': 'off',
-      // Allow any in test files and legacy code
-      '@typescript-eslint/no-explicit-any': 'off',
-      // Allow unused vars with underscore prefix
-      '@typescript-eslint/no-unused-vars': 'off',
-      // Re-enable react-hooks rules
-      'react-hooks/rules-of-hooks': 'error',
-      'react-hooks/exhaustive-deps': 'warn',
-      'no-empty': 'off',
-      'no-case-declarations': 'off',
-      'no-useless-assignment': 'off',
-    },
-  }
+    {
+        // Extending the strictest possible standards
+        extends: [
+            js.configs.recommended,
+            ...tseslint.configs.strict,
+            prettier
+        ],
+        files: ['**/*.{ts,tsx}'],
+        languageOptions: {
+            ecmaVersion: 2020,
+            globals: globals.browser,
+        },
+        plugins: {
+            'react-hooks': reactHooks,
+            'react-refresh': reactRefresh,
+        },
+        rules: {
+            // Standard React Hooks enforcement
+            ...reactHooks.configs.recommended.rules,
+
+            // Mandatory React Refresh rule (standard for Vite/React setups)
+            'react-refresh/only-export-components': [
+                'warn',
+                { allowConstantExport: true },
+            ],
+
+            /**
+             * Note: Rule silencing has been removed. 
+             * The following are now ENFORCED by the 'strict' preset:
+             * - @typescript-eslint/no-explicit-any (Error)
+             * - @typescript-eslint/ban-ts-comment (Error)
+             * - @typescript-eslint/no-unused-vars (Error)
+             * - no-empty (Error)
+             * - no-case-declarations (Error)
+             */
+        },
+    }
 );
