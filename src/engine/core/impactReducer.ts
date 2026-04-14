@@ -362,6 +362,78 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
       };
     }
 
+    case 'TALK_SHOW_APPEARANCE_CREATED': {
+      if (!impact.payload) return state;
+      const { appearance } = impact.payload;
+      if (!appearance) return state;
+
+      const existingAppearances = state.relationships?.marketingPromotions?.talkShowAppearances || {};
+
+      return {
+        ...state,
+        relationships: {
+          ...state.relationships,
+          marketingPromotions: {
+            ...state.relationships?.marketingPromotions,
+            talkShowAppearances: {
+              ...existingAppearances,
+              [appearance.id]: appearance,
+            },
+            photoshoots: state.relationships?.marketingPromotions?.photoshoots || {},
+            activePressTours: state.relationships?.marketingPromotions?.activePressTours || {},
+          },
+        },
+      };
+    }
+
+    case 'PHOTOSHOOT_CREATED': {
+      if (!impact.payload) return state;
+      const { photoshoot } = impact.payload;
+      if (!photoshoot) return state;
+
+      const existingPhotoshoots = state.relationships?.marketingPromotions?.photoshoots || {};
+
+      return {
+        ...state,
+        relationships: {
+          ...state.relationships,
+          marketingPromotions: {
+            ...state.relationships?.marketingPromotions,
+            talkShowAppearances: state.relationships?.marketingPromotions?.talkShowAppearances || {},
+            photoshoots: {
+              ...existingPhotoshoots,
+              [photoshoot.id]: photoshoot,
+            },
+            activePressTours: state.relationships?.marketingPromotions?.activePressTours || {},
+          },
+        },
+      };
+    }
+
+    case 'PRESS_TOUR_CREATED': {
+      if (!impact.payload) return state;
+      const { tour } = impact.payload;
+      if (!tour) return state;
+
+      const existingTours = state.relationships?.marketingPromotions?.activePressTours || {};
+
+      return {
+        ...state,
+        relationships: {
+          ...state.relationships,
+          marketingPromotions: {
+            ...state.relationships?.marketingPromotions,
+            talkShowAppearances: state.relationships?.marketingPromotions?.talkShowAppearances || {},
+            photoshoots: state.relationships?.marketingPromotions?.photoshoots || {},
+            activePressTours: {
+              ...existingTours,
+              [tour.id]: tour,
+            },
+          },
+        },
+      };
+    }
+
     case 'BUYER_UPDATED': {
       const { buyerId, update } = impact.payload;
       const buyers = state.market.buyers.map(b => 

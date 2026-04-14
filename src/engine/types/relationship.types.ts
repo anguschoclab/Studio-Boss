@@ -41,6 +41,11 @@ export interface RelationshipsState {
     productionAdditions: Record<string, import('./production.types').ProductionAddition>;
     creditScenes: Record<string, import('./production.types').CreditScene>;
   };
+  marketingPromotions?: {
+    talkShowAppearances: Record<string, import('./marketing.types').TalkShowAppearance>;
+    photoshoots: Record<string, import('./marketing.types').MagazinePhotoshoot>;
+    activePressTours: Record<string, import('./marketing.types').PressTour>;
+  };
 }
 
 // Helper type for relationship formation

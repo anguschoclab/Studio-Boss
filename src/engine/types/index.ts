@@ -8,3 +8,5 @@ export * from './state.types';
 export * from './franchise.types';
 export * from './relationship.types';
 export * from './clique.types';
+export * from './production.types';
+export * from './marketing.types';
