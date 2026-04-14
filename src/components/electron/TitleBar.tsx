@@ -29,14 +29,14 @@ export function TitleBar() {
   };
 
   return (
-    <div className="fixed top-0 left-0 right-0 h-12 bg-[#0a0e1a] border-b border-white/10 flex items-center justify-between select-none z-50">
+    <div className="electron-title-bar fixed top-0 left-0 right-0 h-12 bg-[#0a0e1a] border-b border-white/10 flex items-center justify-between select-none z-50">
       {/* Left side - drag area */}
-      <div className="flex-1 flex items-center px-4">
+      <div className="flex-1 flex items-center px-4 electron-drag-region">
         <span className="text-white/80 text-sm font-medium">Studio Boss</span>
       </div>
 
-      {/* Window controls */}
-      <div className="flex items-center">
+      {/* Window controls - no-drag to make buttons clickable */}
+      <div className="flex items-center electron-no-drag">
         <button
           onClick={handleMinimize}
           className="h-12 w-12 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-colors"

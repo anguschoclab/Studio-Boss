@@ -90,8 +90,22 @@ class PersistenceService {
 
   /**
    * Checks if a save slot exists.
+   * Note: In Electron, this is handled via IPC in saveLoad.ts
+   * This method is only used for web version (OPFS)
    */
   async exists(slotId: string | number): Promise<boolean> {
+    // Check if running in Electron - use IPC instead
+    if (typeof window !== 'undefined' && 'electronAPI' in window && window.electronAPI) {
+      try {
+        const saves = await window.electronAPI.listSaves();
+        return saves.includes(Number(slotId));
+      } catch (e) {
+        console.error('Failed to check save existence via IPC:', e);
+        return false;
+      }
+    }
+    
+    // Fallback to OPFS for web version
     try {
       const root = await navigator.storage.getDirectory();
       await root.getFileHandle(`slot_${slotId}.sb`);
