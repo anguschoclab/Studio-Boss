@@ -5,8 +5,7 @@ Thank you for your interest in contributing to Studio Boss!
 ## Development Setup
 
 ### Prerequisites
-- Node.js (v20 or higher)
-- Bun (project package manager)
+- Bun (v1.1 or higher)
 
 ### Installation
 

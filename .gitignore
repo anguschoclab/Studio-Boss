@@ -41,5 +41,5 @@ bun_output.txt
 # Verification artifacts
 verification/
 
-# Stale lock files (project uses bun)
-package-lock.json
+# Stale lock files
+# (Project uses bun)
