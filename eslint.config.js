@@ -8,7 +8,16 @@ import prettier from 'eslint-config-prettier';
 export default tseslint.config(
     {
         // Common folders to exclude from linting
-        ignores: ['dist', 'dev-dist', 'node_modules', 'electron', 'release'],
+        ignores: [
+            'dist',
+            'dev-dist',
+            'node_modules',
+            'node_modules_old',
+            'node_modules_old_v2',
+            'electron',
+            'release',
+            '.bun_cache'
+        ],
     },
     {
         // Extending the strictest possible standards
