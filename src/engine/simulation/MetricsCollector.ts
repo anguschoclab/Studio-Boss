@@ -154,7 +154,7 @@ export class MetricsCollector {
       totalMarketSentiment: state.finance.marketState?.sentiment || 50,
       talentPoolSize: talentPoolSize,
       avgTalentPrestige: totalPrestige / (talentPoolSize || 1),
-      activeProjects: Object.values(state.entities.projects).filter(p => !['released', 'archived', 'post_release'].includes(p.state)).length,
+      activeProjects: Object.values(state.entities.projects).reduce((acc, p) => acc + (!['released', 'archived', 'post_release'].includes(p.state) ? 1 : 0), 0),
       completedProjects: worldCompletedCount,
       retiredCount: this.totalRetired,
       bankruptcyCount: rivalsList.filter(r => (Number(r.cash) || 0) <= -50000000).length,

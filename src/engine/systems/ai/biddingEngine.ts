@@ -133,7 +133,16 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
   const eligibleRivals = rivalsList.filter(r => r.cash > 100_000_000);
   if (eligibleRivals.length === 0) return [];
 
-  const availableTalent = Object.values(state.entities.talents).filter(t => t.prestige > 85 && !t.contractId);
+  const availableTalent: typeof state.entities.talents[string][] = [];
+  const talents = state.entities.talents;
+  for (const id in talents) {
+    if (Object.prototype.hasOwnProperty.call(talents, id)) {
+      const t = talents[id];
+      if (t.prestige > 85 && !t.contractId) {
+        availableTalent.push(t);
+      }
+    }
+  }
   
   if (availableTalent.length === 0) return [];
 

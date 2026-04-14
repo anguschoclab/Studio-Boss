@@ -112,7 +112,14 @@ export class HeadlessController {
         
         // Predatory Bidding (Top the highest rival bid if Aggressive)
         if (persona === 'aggressive') {
-           const rivalBids = Object.values(opportunity.bids || {}).map(b => b.amount);
+           const rivalBids: number[] = [];
+           if (opportunity.bids) {
+             for (const id in opportunity.bids) {
+               if (Object.prototype.hasOwnProperty.call(opportunity.bids, id)) {
+                 rivalBids.push(opportunity.bids[id].amount);
+               }
+             }
+           }
            if (rivalBids.length > 0) {
              const highestRival = Math.max(...rivalBids);
              bidAmount = Math.max(bidAmount, Math.floor(highestRival * 1.05));
