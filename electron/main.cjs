@@ -333,8 +333,16 @@ ipcMain.handle('set-badge', (event, count) => {
   if (process.platform === 'darwin') {
     app.dock.setBadge(count.toString());
   } else if (process.platform === 'win32' && mainWindow) {
-    // Windows taskbar badge
-    mainWindow.setOverlayIcon(null, count.toString());
+    // Windows taskbar badge - use setOverlayBadgeCount (Electron 27+)
+    if (mainWindow.setOverlayBadgeCount) {
+      mainWindow.setOverlayBadgeCount(count);
+    }
+    // Fallback for older Electron versions
+    if (mainWindow.setOverlayIcon) {
+      // For older versions, we would need to create a badge image
+      // For now, skip this as it requires image generation
+      mainWindow.setOverlayIcon(null, count > 0 ? count.toString() : '');
+    }
   }
 });
 
