@@ -5,6 +5,7 @@ import { Section } from '@/components/layout/Section';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { tokens } from '@/lib/tokens';
+import { TalentNameLink } from '@/components/shared/TalentNameLink';
 
 interface TalentMorale {
   talentId: string;
@@ -94,7 +95,7 @@ export const MoraleDashboard: React.FC<MoraleDashboardProps> = ({ moraleData }) 
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <h4 className="font-bold text-sm">{talent.talentName}</h4>
+                    <TalentNameLink talentId={talent.talentId} name={talent.talentName} className="font-bold text-sm" />
                     <div className="flex flex-wrap gap-1 mt-1">
                       {talent.factors.map((factor, idx) => (
                         <Badge key={idx} variant="outline" className="text-[9px]">
@@ -130,7 +131,7 @@ export const MoraleDashboard: React.FC<MoraleDashboardProps> = ({ moraleData }) 
               className={cn('p-3', tokens.border.default)}
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="font-medium text-sm truncate">{talent.talentName}</span>
+                <TalentNameLink talentId={talent.talentId} name={talent.talentName} />
                 <span className={cn(
                   'text-xs font-bold',
                   talent.morale >= 70 ? 'text-emerald-500' :

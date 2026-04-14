@@ -12,6 +12,7 @@ import { cn } from '@/lib/utils';
 import { useUIStore } from '@/store/uiStore';
 import { RandomGenerator } from '@/engine/utils/rng';
 import { useShallow } from 'zustand/react/shallow';
+import { TalentNameLink } from '@/components/shared/TalentNameLink';
 
 export const DealsDesk = () => {
   const { openPitchProject } = useUIStore();
@@ -96,7 +97,11 @@ export const DealsDesk = () => {
                         <FileSignature className={cn("h-5 w-5", isOverall ? "text-amber-400" : "text-muted-foreground")} />
                       </div>
                       <div>
-                        <p className="text-xs font-black uppercase tracking-tight truncate max-w-[120px]">{talent?.name ?? 'Anonymous Veteran'}</p>
+                        {talent ? (
+                          <TalentNameLink talentId={talent.id} name={talent.name} className="text-xs font-black uppercase tracking-tight max-w-[120px]" />
+                        ) : (
+                          <span className="text-xs font-black uppercase tracking-tight truncate max-w-[120px]">Anonymous Veteran</span>
+                        )}
                         <p className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-widest">{pactLabel}</p>
                       </div>
                     </div>

@@ -19,6 +19,7 @@ import {
 import { cn } from '@/lib/utils';
 import { TalentAvatar } from './TalentAvatar';
 import { CastingFeedback } from './CastingFeedback';
+import { useUIStore } from '@/store/uiStore';
 
 interface TalentAttachmentPanelProps {
   project: Project;
@@ -28,6 +29,7 @@ interface TalentAttachmentPanelProps {
 export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ project, onClose }) => {
   const gameState = useGameStore(s => s.gameState);
   const signContract = useGameStore(s => s.signContract);
+  const { selectTalent } = useUIStore();
 
   // Filters
   const [searchQuery, setSearchQuery] = useState('');
@@ -88,7 +90,12 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
         {attachedTalent.length > 0 && (
           <div className="flex flex-wrap gap-2">
             {attachedTalent.map(t => (
-              <Badge key={t.id} variant="secondary" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 py-1 pl-1 pr-2 gap-2 flex items-center h-8">
+              <Badge 
+              key={t.id} 
+              variant="secondary" 
+              className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 py-1 pl-1 pr-2 gap-2 flex items-center h-8 cursor-pointer hover:border-emerald-500/50 transition-colors"
+              onClick={() => selectTalent(t.id)}
+            >
                 <TalentAvatar talent={t} size="xs" />
                 <span className="text-[10px] font-black">{t.name}</span>
               </Badge>
@@ -163,7 +170,10 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
                   <TalentAvatar talent={t} size="sm" />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                       <span className="font-bold text-sm text-white truncate">{t.name}</span>
+                       <span 
+                      className="font-bold text-sm text-white truncate cursor-pointer hover:text-primary transition-colors"
+                      onClick={() => selectTalent(t.id)}
+                    >{t.name}</span>
                        <Badge variant="outline" className="text-[8px] h-4 px-1 border-slate-700 text-slate-400">Tier {t.tier}</Badge>
                     </div>
                     <div className="flex items-center gap-2 mt-0.5">
@@ -215,7 +225,10 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
               <div className="flex flex-col items-center text-center space-y-4">
                  <TalentAvatar talent={hoveredTalent} size="xl" className="ring-4 ring-primary/20 shadow-2xl" />
                  <div>
-                    <h4 className="text-xl font-black italic uppercase tracking-tighter text-white">{hoveredTalent.name}</h4>
+                    <h4 
+                    className="text-xl font-black italic uppercase tracking-tighter text-white cursor-pointer hover:text-primary transition-colors"
+                    onClick={() => selectTalent(hoveredTalent.id)}
+                  >{hoveredTalent.name}</h4>
                     <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{hoveredTalent.roles.join(' / ')} • {hoveredTalent.tier}</p>
                  </div>
               </div>

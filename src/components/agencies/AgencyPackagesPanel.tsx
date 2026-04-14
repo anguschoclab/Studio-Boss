@@ -6,6 +6,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { tokens } from '@/lib/tokens';
+import { TalentNameLink } from '@/components/shared/TalentNameLink';
 import type { Agency } from '@/engine/types';
 
 // Extended agency interface for UI display
@@ -189,7 +190,7 @@ export const AgencyPackagesPanel: React.FC<AgencyPackagesPanelProps> = ({
                       )}
                     >
                       <Users className="h-3 w-3 mr-1" />
-                      {attachment.talentName}
+                      <TalentNameLink talentId={attachment.talentId} name={attachment.talentName} />
                       <span className="ml-1 opacity-60">(T{attachment.tier})</span>
                     </Badge>
                   ))}

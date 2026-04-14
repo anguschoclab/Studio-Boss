@@ -6,6 +6,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { tokens } from '@/lib/tokens';
+import { TalentNameLink } from '@/components/shared/TalentNameLink';
 
 interface ScandalEffect {
   type: 'box_office' | 'reputation' | 'talent_relations' | 'awards';
@@ -30,6 +31,7 @@ interface ActiveScandal {
 interface ScandalTrackerProps {
   activeScandals: ActiveScandal[];
   scandalHistory: {
+    talentId: string;
     talentName: string;
     type: string;
     resolvedWeek: number;
@@ -158,7 +160,7 @@ export const ScandalTracker: React.FC<ScandalTrackerProps> = ({
                 <div className="flex items-start justify-between mb-3">
                   <div>
                     <div className="flex items-center gap-2 mb-1">
-                      <h4 className="font-bold text-sm">{scandal.talentName}</h4>
+                      <TalentNameLink talentId={scandal.talentId} name={scandal.talentName} className="font-bold text-sm" />
                       <Badge className={cn('text-[9px]', getSeverityColor(scandal.severity))}>
                         {scandal.severity.toUpperCase()}
                       </Badge>
@@ -252,7 +254,7 @@ export const ScandalTracker: React.FC<ScandalTrackerProps> = ({
               <Card key={idx} className={cn('p-3', tokens.border.default)}>
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium text-sm">{scandal.talentName}</p>
+                    <TalentNameLink talentId={scandal.talentId} name={scandal.talentName} />
                     <p className={cn('text-[10px]', tokens.text.caption)}>
                       {scandal.type.replace('_', ' ')} • Week {scandal.resolvedWeek}
                     </p>

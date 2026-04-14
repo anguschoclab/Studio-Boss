@@ -5,6 +5,7 @@ import { Section } from '@/components/layout/Section';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { tokens } from '@/lib/tokens';
+import { TalentNameLink } from '@/components/shared/TalentNameLink';
 
 interface OfferAction {
   type: 'made' | 'countered' | 'accepted' | 'rejected' | 'expired';
@@ -75,7 +76,7 @@ export const OfferHistoryLog: React.FC<OfferHistoryLogProps> = ({
       <div className="flex items-center justify-between mb-3">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <h4 className="font-bold text-sm">{offer.talentName}</h4>
+            <TalentNameLink talentId={offer.talentId} name={offer.talentName} className="font-bold text-sm" />
             {getStatusBadge(offer.status)}
           </div>
           <p className={cn('text-[10px]', tokens.text.caption)}>

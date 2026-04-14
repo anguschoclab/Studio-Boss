@@ -6,9 +6,11 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { tokens } from '@/lib/tokens';
+import { TalentNameLink } from '@/components/shared/TalentNameLink';
 
 interface TalentPact {
   id: string;
+  talentId: string;
   talentName: string;
   pactType: 'overall_deal' | 'first_look' | 'exclusive' | 'consulting';
   weeklyCost: number;
@@ -56,7 +58,7 @@ export const TalentPactPanel: React.FC<TalentPactPanelProps> = ({
       <div className="flex items-start justify-between mb-3">
         <div>
           <div className="flex items-center gap-2">
-            <h4 className="font-bold text-sm">{pact.talentName}</h4>
+            <TalentNameLink talentId={pact.talentId} name={pact.talentName} className="font-bold text-sm" />
             <Badge 
               variant={pact.status === 'active' ? 'default' : 'secondary'}
               className="text-[9px]"
