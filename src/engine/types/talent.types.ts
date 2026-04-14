@@ -30,6 +30,28 @@ export type TalentTier = 1 | 2 | 3 | 4;
 export type ScandalType = 'financial' | 'personal' | 'onset_behavior' | 'legal' | 'feud'
   | 'rating_controversy' | 'director_speaks_out' | 'foreign_market_cut' | 'banned_in_market';
 
+export type DeathType =
+  | 'natural'           // Age-related
+  | 'accident'          // On-set accident or general accident
+  | 'overdose'          // Substance-related
+  | 'suicide'           // Mental health
+  | 'violence'          // Crime/murder
+  | 'illness';          // Disease during filming
+
+export interface DeathEvent {
+  id: string;
+  talentId: string;
+  week: number;
+  type: DeathType;
+  cause: string;
+  location: string;
+  isPublic: boolean;
+  impactsProduction: boolean;
+  griefLevel: number; // 0-100, affects co-stars
+  isDuringProduction: boolean;
+  projectId?: string; // If died during production
+}
+
 export interface Scandal {
   id: string;
   talentId: string;
@@ -219,6 +241,12 @@ export interface Talent {
   lastReleaseWeek?: number; // Last week a release happened (for prestige decay)
   onMedicalLeave?: boolean;
   medicalLeaveEndsWeek?: number;
+
+  // Dynasty System: Family relationships
+  parentIds?: string[]; // IDs of parent talents (nepo baby lineage)
+  childIds?: string[]; // IDs of children in talent pool
+  isNepoBaby?: boolean; // True if has at least one parent in industry
+  spouseId?: string; // Current spouse/partner
 }
 
 export interface Contract {
