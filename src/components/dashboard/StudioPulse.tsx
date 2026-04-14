@@ -2,15 +2,13 @@ import React, { useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { 
-  Activity, AlertTriangle, TrendingUp, TrendingDown, 
-  Users, Film, DollarSign, Target, Zap, CheckCircle2,
+import {
+  Activity, AlertTriangle,
+  Users, Film, DollarSign, Zap, CheckCircle2,
   Clock, AlertCircle
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { formatMoney } from '@/engine/utils';
 import { ProgressIndicator } from '@/components/shared/ProgressIndicator';
 import { SparklineChart } from '@/components/shared/SparklineChart';
 import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
@@ -28,7 +26,7 @@ export const StudioPulse: React.FC = () => {
   const gameState = useGameStore(s => s.gameState);
   const setActiveTab = useUIStore(s => s.setActiveTab);
 
-  const { studio, finance, week, entities, market } = gameState || {};
+  const { finance, entities } = gameState || {};
   const projects = entities ? Object.values(entities.projects) : [];
   const talents = entities ? Object.values(entities.talents) : [];
 

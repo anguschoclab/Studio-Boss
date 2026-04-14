@@ -27,7 +27,6 @@ export const DealSuccessRate: React.FC<DealSuccessRateProps> = ({
   const gameState = useGameStore(s => s.gameState);
   const stats = externalStats || selectDealStats(gameState);
   const successRate = stats.total > 0 ? (stats.accepted / stats.total) * 100 : 0;
-  const rejectionRate = stats.total > 0 ? (stats.rejected / stats.total) * 100 : 0;
 
   const getStatusColor = (rate: number) => {
     if (rate >= 60) return '#10b981';

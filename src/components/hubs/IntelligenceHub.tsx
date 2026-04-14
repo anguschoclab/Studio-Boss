@@ -1,19 +1,15 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore, IntelligenceSubTab } from '@/store/uiStore';
-import { useShallow } from 'zustand/react/shallow';
 import { SubNav } from '@/components/navigation/SubNav';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Building2, 
-  Trophy, 
-  TrendingUp, 
+import {
+  Building2,
+  Trophy,
+  TrendingUp,
   DollarSign,
-  Globe2,
-  Target,
   Activity,
   BarChart3,
-  Users,
   Brain,
   ShieldAlert
 } from 'lucide-react';
@@ -22,9 +18,6 @@ import { formatMoney } from '@/engine/utils';
 import { m } from 'framer-motion';
 
 // Lazy load the heavy components
-const IndustryPage = React.lazy(() => import('@/pages/IndustryPage').then(m => ({ default: m.IndustryPage })));
-const AwardsHQ = React.lazy(() => import('@/components/awards/AwardsHQ').then(m => ({ default: m.AwardsHQ })));
-const FinancePanel = React.lazy(() => import('@/components/finance/FinancePanel').then(m => ({ default: m.FinancePanel })));
 const TrendBoard = React.lazy(() => import('@/components/trends/TrendBoard').then(m => ({ default: m.TrendBoard })));
 
 // Rivals Panel (simplified from IndustryPage)

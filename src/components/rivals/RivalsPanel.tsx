@@ -2,7 +2,6 @@ import React from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { Button } from '@/components/ui/button';
 import { Building2, MoreVertical, Zap, UserPlus, ShieldAlert } from 'lucide-react';
-import { ARCHETYPES } from '@/engine/data/archetypes';
 import {
   DropdownMenu,
   DropdownMenuContent,

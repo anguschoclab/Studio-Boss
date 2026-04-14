@@ -3,7 +3,7 @@ import { TimeSeriesChart } from '@/components/charts/TimeSeriesChart';
 import { Card } from '@/components/ui/card';
 import { tokens } from '@/lib/tokens';
 import { cn } from '@/lib/utils';
-import { Flame, AlertTriangle } from 'lucide-react';
+import { AlertTriangle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useGameStore } from '@/store/gameStore';
 import { selectBudgetBurnData } from '@/store/selectors';

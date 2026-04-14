@@ -1,21 +1,20 @@
 import React, { useState, useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
-import { MarketingAngle, MarketingCampaign, AudienceQuadrant } from '@/engine/types';
+import { MarketingAngle, AudienceQuadrant } from '@/engine/types';
 import { Button } from '@/components/ui/button';
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
 } from '@/components/ui/select';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Target, TrendingUp, AlertCircle, Users, Sparkles, DollarSign } from 'lucide-react';
+import { Target, TrendingUp, Users, Sparkles, DollarSign } from 'lucide-react';
 import { calculateAudienceIndex } from '@/engine/systems/demographics';
 import { formatCurrency } from '@/lib/utils';
-import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
 import { cn } from '@/lib/utils';
 
 interface MarketingWarRoomProps {
@@ -60,9 +59,9 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
 
   const handleLaunch = () => {
     if (campaignType === 'marketing') {
-      launchMarketingCampaign(projectId, selectedTier as any, selectedAngle, selectedQuadrant);
+      launchMarketingCampaign(projectId, selectedTier as 'Standard' | 'Tentpole' | 'Saturation', selectedAngle, selectedQuadrant);
     } else {
-      launchAwardsCampaign(projectId, selectedTier as any);
+      launchAwardsCampaign(projectId, selectedTier as 'Grassroots' | 'Trade' | 'Blitz');
     }
     if (onClose) onClose();
   };

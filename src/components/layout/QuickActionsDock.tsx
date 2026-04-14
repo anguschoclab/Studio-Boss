@@ -38,7 +38,7 @@ interface QuickActionsDockProps {
 export const QuickActionsDock: React.FC<QuickActionsDockProps> = ({
   className,
 }) => {
-  const { activeHub, openCreateProject, showQuickActions, toggleQuickActions } = useUIStore();
+  const { activeHub, openCreateProject, showQuickActions } = useUIStore();
   const [isExpanded, setIsExpanded] = React.useState(false);
 
   // Contextual actions based on active hub

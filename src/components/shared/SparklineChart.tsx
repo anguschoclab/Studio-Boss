@@ -174,7 +174,6 @@ export const BarSparkline: React.FC<BarSparklineProps> = ({
 }) => {
   const maxValue = Math.max(...data, 1);
   const barWidth = Math.min(maxBarWidth, width / data.length - 2);
-  const gap = 2;
 
   return (
     <div 

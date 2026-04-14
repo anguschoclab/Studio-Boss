@@ -5,18 +5,16 @@ import { formatMoney } from '@/engine/utils';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  User, 
-  BarChart3, 
-  Clapperboard, 
-  Trophy, 
+import {
+  BarChart3,
+  Clapperboard,
+  Trophy,
   Briefcase,
   Heart,
   TrendingUp,
   DollarSign,
   History,
   Star,
-  Award,
   Zap,
   Info,
   MapPin,

@@ -29,12 +29,6 @@ export const MarketShareComparison: React.FC<MarketShareComparisonProps> = ({
   const playerStudio = sortedStudios.find(s => s.isPlayer);
   const playerRank = sortedStudios.findIndex(s => s.isPlayer) + 1;
 
-  const data = sortedStudios.map((s) => ({
-    label: s.name,
-    value: s.share,
-    color: s.isPlayer ? '#3b82f6' : '#94a3b8',
-  }));
-
   const maxShare = Math.max(...studios.map(s => s.share));
 
   return (

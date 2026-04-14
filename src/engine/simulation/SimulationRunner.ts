@@ -1,11 +1,10 @@
-import { GameState, StateImpact, WeekSummary } from '../types';
+import { GameState } from '../types';
 import { initializeGame } from '../core/gameInit';
 import { WeekCoordinator } from '../services/WeekCoordinator';
 import { TalentLifecycleSystem } from '../systems/talent/TalentLifecycleSystem';
 import { HeadlessController } from './HeadlessController';
 import { MetricsCollector } from './MetricsCollector';
 import { RandomGenerator } from '../utils/rng';
-import { advanceProject } from '../systems/projects';
 import { applyImpacts } from '../core/impactReducer';
 import { StudioAutomation } from './StudioAutomation';
 

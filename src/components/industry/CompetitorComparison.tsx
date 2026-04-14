@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Legend, Cell } from 'recharts';
 import { formatMoney } from '@/engine/utils';
 import { cn } from '@/lib/utils';
-import { Building2, Wallet, Film, Trophy, TrendingUp } from 'lucide-react';
+import { Building2, Wallet, Trophy, TrendingUp } from 'lucide-react';
 
 interface CompetitorComparisonProps {
   className?: string;

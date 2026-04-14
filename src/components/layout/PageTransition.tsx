@@ -126,11 +126,9 @@ export const AnimatedNumber: React.FC<{
   suffix?: string;
 }> = ({ value, className, duration = 0.4, prefix = '', suffix = '' }) => {
   const [displayValue, setDisplayValue] = React.useState(0);
-  const [isAnimating, setIsAnimating] = React.useState(false);
 
   React.useEffect(() => {
     if (value !== displayValue) {
-      setIsAnimating(true);
       const startTime = Date.now();
       const startValue = displayValue;
       const diff = value - startValue;
@@ -147,7 +145,6 @@ export const AnimatedNumber: React.FC<{
           requestAnimationFrame(animate);
         } else {
           setDisplayValue(value);
-          setIsAnimating(false);
         }
       };
 

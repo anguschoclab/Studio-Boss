@@ -1,4 +1,4 @@
-import { GameState, StateImpact, Project, RivalStudio, Buyer } from '@/engine/types';
+import { GameState, StateImpact, Project, RivalStudio } from '@/engine/types';
 import { BudgetTierKey } from '@/engine/types/project.types';
 import { RandomGenerator } from '../utils/rng';
 import { calculateOpeningWeekend } from '../systems/releaseSimulation';

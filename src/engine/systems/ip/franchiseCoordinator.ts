@@ -380,7 +380,7 @@ export function tickIPVault(state: GameState, archetype?: import('../../data/aiA
   // - genreFocus: IP genre preferences (affects valuation for matching genres)
   // - festivalParticipation: IP festival submissions (affects prestige/buzz)
   let decayMultiplier = 1.0;
-  let genreFocusBonus: Record<string, number> = {};
+  const genreFocusBonus: Record<string, number> = {};
   let festivalPrestigeBonus = 0;
 
   if (archetype) {

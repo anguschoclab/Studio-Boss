@@ -1,0 +1,1535 @@
+$ eslint .
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/Theme/GlobalThemeProvider.tsx
+  10:14  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/agencies/AgencyPackagesPanel.tsx
+  55:9  error  'agenciesWithPackages' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/awards/AwardsHQ.tsx
+  123:68  error  '_' is defined but never used             @typescript-eslint/no-unused-vars
+  128:87  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/awards/AwardsTracker.tsx
+  47:9  error  'wonAwards' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/charts/SimpleBarChart.tsx
+  35:3  error  'color' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/dashboard/CommandCenter.tsx
+   6:29  error  'CardHeader' is defined but never used  @typescript-eslint/no-unused-vars
+   6:41  error  'CardTitle' is defined but never used   @typescript-eslint/no-unused-vars
+  10:24  error  'Building2' is defined but never used   @typescript-eslint/no-unused-vars
+  10:35  error  'TrendingUp' is defined but never used  @typescript-eslint/no-unused-vars
+  11:29  error  'Target' is defined but never used      @typescript-eslint/no-unused-vars
+  11:44  error  'Activity' is defined but never used    @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/dashboard/DemographicsWidget.tsx
+  90:91  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/dashboard/StudioPulse.tsx
+    5:10  error    'Badge' is defined but never used                                                                                                                                                                                                @typescript-eslint/no-unused-vars
+    8:28  error    'TrendingUp' is defined but never used                                                                                                                                                                                           @typescript-eslint/no-unused-vars
+    8:40  error    'TrendingDown' is defined but never used                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+    9:28  error    'Target' is defined but never used                                                                                                                                                                                               @typescript-eslint/no-unused-vars
+   13:10  error    'formatMoney' is defined but never used                                                                                                                                                                                          @typescript-eslint/no-unused-vars
+   31:11  error    'studio' is assigned a value but never used                                                                                                                                                                                      @typescript-eslint/no-unused-vars
+   31:28  error    'week' is assigned a value but never used                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+   31:44  error    'market' is assigned a value but never used                                                                                                                                                                                      @typescript-eslint/no-unused-vars
+   32:9   warning  The 'projects' conditional could make the dependencies of useMemo Hook (at line 82) change on every render. Move it inside the useMemo callback. Alternatively, wrap the initialization of 'projects' in its own useMemo() Hook  react-hooks/exhaustive-deps
+   33:9   warning  The 'talents' conditional could make the dependencies of useMemo Hook (at line 82) change on every render. Move it inside the useMemo callback. Alternatively, wrap the initialization of 'talents' in its own useMemo() Hook    react-hooks/exhaustive-deps
+  147:27  error    Unexpected any. Specify a different type                                                                                                                                                                                         @typescript-eslint/no-explicit-any
+  338:55  error    Unexpected any. Specify a different type                                                                                                                                                                                         @typescript-eslint/no-explicit-any
+  347:54  error    Unexpected any. Specify a different type                                                                                                                                                                                         @typescript-eslint/no-explicit-any
+  356:53  error    Unexpected any. Specify a different type                                                                                                                                                                                         @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/deals/DealsDesk.tsx
+   8:21  error  'Tv' is defined but never used          @typescript-eslint/no-unused-vars
+   8:25  error  'Globe' is defined but never used       @typescript-eslint/no-unused-vars
+   8:32  error  'Zap' is defined but never used         @typescript-eslint/no-unused-vars
+   8:37  error  'BarChart3' is defined but never used   @typescript-eslint/no-unused-vars
+   8:48  error  'Info' is defined but never used        @typescript-eslint/no-unused-vars
+   9:39  error  'TalentPact' is defined but never used  @typescript-eslint/no-unused-vars
+  36:28  error  'buyerId' is defined but never used     @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/development/ScriptList.tsx
+  4:10  error  'Section' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/discovery/LiveAuctionDashboard.tsx
+   3:23  error  'RivalStudio' is defined but never used         @typescript-eslint/no-unused-vars
+  10:3   error  'TrendingUp' is defined but never used          @typescript-eslint/no-unused-vars
+  11:3   error  'Users' is defined but never used               @typescript-eslint/no-unused-vars
+  35:9   error  'playerBid' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  38:10  error  'bidAmount' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/distribution/RivalReleaseTracker.tsx
+  3:39  error  'TrendingUp' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/distribution/SyndicationRevenuePanel.tsx
+  3:17  error  'DollarSign' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/electron/TitleBar.tsx
+  3:10  error  'cn' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx
+   41:24  error  'weeklyRevenue' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  100:12  error  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/PiracyImpactMonitor.tsx
+  3:20  error  'TrendingDown' is defined but never used  @typescript-eslint/no-unused-vars
+  7:10  error  'Progress' is defined but never used      @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/ProfitWaterfallChart.tsx
+  2:45  error  'CartesianGrid' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/RecoupmentTracker.tsx
+  3:10  error  'DollarSign' is defined but never used  @typescript-eslint/no-unused-vars
+  7:10  error  'Progress' is defined but never used    @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/YearInReviewChart.tsx
+  104:34  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/hubs/CrisisTriageDashboard.tsx
+  27:7   error  'WriterStrikeImpact' is assigned a value but never used   @typescript-eslint/no-unused-vars
+  28:7   error  'PiracyImpactMonitor' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  29:7   error  'ScandalTracker' is assigned a value but never used       @typescript-eslint/no-unused-vars
+  93:26  error  Unexpected any. Specify a different type                  @typescript-eslint/no-explicit-any
+  93:47  error  Unexpected any. Specify a different type                  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/hubs/ExecutiveDashboard.tsx
+   9:10  error  'Badge' is defined but never used         @typescript-eslint/no-unused-vars
+  18:3   error  'TrendingDown' is defined but never used  @typescript-eslint/no-unused-vars
+  98:26  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  98:47  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/hubs/IntelligenceHub.tsx
+   1:17  error  'useState' is defined but never used               @typescript-eslint/no-unused-vars
+   4:10  error  'useShallow' is defined but never used             @typescript-eslint/no-unused-vars
+  12:3   error  'Globe2' is defined but never used                 @typescript-eslint/no-unused-vars
+  13:3   error  'Target' is defined but never used                 @typescript-eslint/no-unused-vars
+  16:3   error  'Users' is defined but never used                  @typescript-eslint/no-unused-vars
+  25:7   error  'IndustryPage' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  26:7   error  'AwardsHQ' is assigned a value but never used      @typescript-eslint/no-unused-vars
+  27:7   error  'FinancePanel' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/hubs/ProductionHub.tsx
+   5:26  error  'selectOpportunities' is defined but never used       @typescript-eslint/no-unused-vars
+   5:47  error  'selectActiveProjects' is defined but never used      @typescript-eslint/no-unused-vars
+   8:10  error  'Badge' is defined but never used                     @typescript-eslint/no-unused-vars
+  10:17  error  'HorizontalStack' is defined but never used           @typescript-eslint/no-unused-vars
+  11:10  error  'EmptyState' is defined but never used                @typescript-eslint/no-unused-vars
+  22:3   error  'Package' is defined but never used                   @typescript-eslint/no-unused-vars
+  33:7   error  'DistributionHub' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/hubs/StudioHQ.tsx
+    8:29  error  'CardHeader' is defined but never used                                                                                                                                                           @typescript-eslint/no-unused-vars
+    8:41  error  'CardTitle' is defined but never used                                                                                                                                                            @typescript-eslint/no-unused-vars
+    9:10  error  'StatCard' is defined but never used                                                                                                                                                             @typescript-eslint/no-unused-vars
+   16:3   error  'Star' is defined but never used                                                                                                                                                                 @typescript-eslint/no-unused-vars
+   17:3   error  'Clapperboard' is defined but never used                                                                                                                                                         @typescript-eslint/no-unused-vars
+   18:3   error  'DollarSign' is defined but never used                                                                                                                                                           @typescript-eslint/no-unused-vars
+   19:3   error  'Users' is defined but never used                                                                                                                                                                @typescript-eslint/no-unused-vars
+   20:3   error  'ChevronRight' is defined but never used                                                                                                                                                         @typescript-eslint/no-unused-vars
+   30:7   error  'CommandCenter' is assigned a value but never used                                                                                                                                               @typescript-eslint/no-unused-vars
+   36:7   error  'OperationsPanel' is assigned a value but never used                                                                                                                                             @typescript-eslint/no-unused-vars
+   38:44  error  'setActiveSubTab' is assigned a value but never used                                                                                                                                             @typescript-eslint/no-unused-vars
+   49:9   error  'needsGreenlight' is assigned a value but never used                                                                                                                                             @typescript-eslint/no-unused-vars
+  232:42  error  'openCreateProject' is assigned a value but never used                                                                                                                                           @typescript-eslint/no-unused-vars
+  238:9   error  'talentCount' is assigned a value but never used                                                                                                                                                 @typescript-eslint/no-unused-vars
+  241:23  error  React Hook "React.useMemo" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/hubs/TalentHub.tsx
+    4:10  error  'useShallow' is defined but never used                @typescript-eslint/no-unused-vars
+   15:3   error  'Filter' is defined but never used                    @typescript-eslint/no-unused-vars
+   26:7   error  'TalentHubLegacy' is assigned a value but never used  @typescript-eslint/no-unused-vars
+   27:7   error  'DiscoveryBoard' is assigned a value but never used   @typescript-eslint/no-unused-vars
+  213:66  error  Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
+  270:33  error  Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/hubs/visualizations/BoxOfficePerformance.tsx
+  6:10  error  'Film' is defined but never used        @typescript-eslint/no-unused-vars
+  6:16  error  'DollarSign' is defined but never used  @typescript-eslint/no-unused-vars
+  6:40  error  'Users' is defined but never used       @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/hubs/visualizations/BudgetBurnRate.tsx
+  6:10  error  'Flame' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/hubs/visualizations/DealSuccessRate.tsx
+  30:9  error  'rejectionRate' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/hubs/visualizations/MarketShareComparison.tsx
+  32:9  error  'data' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/hubs/visualizations/ProjectTimeline.tsx
+   6:10  error  'Calendar' is defined but never used      @typescript-eslint/no-unused-vars
+  29:16  error  'externalWeek' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/hubs/visualizations/RecoupmentStatus.tsx
+  7:10  error  'Badge' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/hubs/visualizations/StreamingViewershipChart.tsx
+  6:14  error  'Eye' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/hubs/visualizations/TalentTierDistribution.tsx
+  46:9  error  'formatCurrency' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/industry/CompetitorComparison.tsx
+  7:29  error  'Film' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/industry/MADashboard.tsx
+    3:10  error  'RivalStudio' is defined but never used  @typescript-eslint/no-unused-vars
+    3:23  error  'Buyer' is defined but never used        @typescript-eslint/no-unused-vars
+  135:53  error  'i' is defined but never used            @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ip/IPVault.tsx
+  12:9  warning  The 'ipState' logical expression could make the dependencies of useMemo Hook (at line 26) change on every render. To fix this, wrap the initialization of 'ipState' in its own useMemo() Hook  react-hooks/exhaustive-deps
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/layout/NewsTicker.tsx
+  4:10  error  'NewsEvent' is defined but never used      @typescript-eslint/no-unused-vars
+  4:31  error  'NewsEventType' is defined but never used  @typescript-eslint/no-unused-vars
+  8:47  error  Unexpected any. Specify a different type   @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/layout/PageTransition.tsx
+  129:10  error  'isAnimating' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/layout/QuickActionsDock.tsx
+  41:59  error  'toggleQuickActions' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/layout/TopBar.tsx
+  14:10  error  'TooltipWrapper' is defined but never used  @typescript-eslint/no-unused-vars
+  20:9   error  'ui' is assigned a value but never used     @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/marketing/MarketingWarRoom.tsx
+   3:26  error  'MarketingCampaign' is defined but never used  @typescript-eslint/no-unused-vars
+  15:30  error  'AlertCircle' is defined but never used        @typescript-eslint/no-unused-vars
+  18:10  error  'TooltipWrapper' is defined but never used     @typescript-eslint/no-unused-vars
+  63:58  error  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  65:55  error  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/modals/AwardsCeremonyModal.tsx
+  87:37  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/modals/CreateProjectModal.tsx
+  40:6  warning  React Hook useEffect has a missing dependency: 'title'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/modals/DevelopmentLog.tsx
+  10:3  error  'ArrowRight' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/modals/FestivalMarketModal.tsx
+  68:6  warning  React Hook useEffect has a missing dependency: 'handleFinalize'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/modals/NewsStoryModal.tsx
+   1:17  error  'useMemo' is defined but never used         @typescript-eslint/no-unused-vars
+   2:10  error  'useGameStore' is defined but never used    @typescript-eslint/no-unused-vars
+   3:10  error  'useUIStore' is defined but never used      @typescript-eslint/no-unused-vars
+   4:33  error  'DialogHeader' is defined but never used    @typescript-eslint/no-unused-vars
+   4:47  error  'DialogTitle' is defined but never used     @typescript-eslint/no-unused-vars
+   8:10  error  'Newspaper' is defined but never used       @typescript-eslint/no-unused-vars
+   8:21  error  'ExternalLink' is defined but never used    @typescript-eslint/no-unused-vars
+   8:35  error  'X' is defined but never used               @typescript-eslint/no-unused-vars
+   9:20  error  'NewsEvent' is defined but never used       @typescript-eslint/no-unused-vars
+  10:10  error  'TalentNameLink' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/modals/ProjectDetailModal.tsx
+    9:21   error  'Project' is defined but never used                @typescript-eslint/no-unused-vars
+    9:70   error  'Contract' is defined but never used               @typescript-eslint/no-unused-vars
+   65:9    error  'talentByRole' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  440:68   error  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  548:52   error  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  551:97   error  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  554:141  error  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/modals/WeekSummaryModal.tsx
+  18:46  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/navigation/CommandPalette.tsx
+    1:38  error    'useCallback' is defined but never used                                                                                         @typescript-eslint/no-unused-vars
+    5:3   error    'Command' is defined but never used                                                                                             @typescript-eslint/no-unused-vars
+   10:3   error    'Star' is defined but never used                                                                                                @typescript-eslint/no-unused-vars
+   14:3   error    'X' is defined but never used                                                                                                   @typescript-eslint/no-unused-vars
+   25:10  error    'scaleFadeTransition' is defined but never used                                                                                 @typescript-eslint/no-unused-vars
+  297:9   error    'selectedItem' is assigned a value but never used                                                                               @typescript-eslint/no-unused-vars
+  354:41  error    'idx' is defined but never used                                                                                                 @typescript-eslint/no-unused-vars
+  426:14  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/news/MediaPage.tsx
+  72:9   error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+  86:46  error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/news/NewsFeed.tsx
+  11:3   error  'Filter' is defined but never used        @typescript-eslint/no-unused-vars
+  14:54  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/pipeline/PipelineBoard.tsx
+   9:58  error  'BarChart3' is defined but never used    @typescript-eslint/no-unused-vars
+  15:10  error  'Tabs' is defined but never used         @typescript-eslint/no-unused-vars
+  15:16  error  'TabsContent' is defined but never used  @typescript-eslint/no-unused-vars
+  15:29  error  'TabsList' is defined but never used     @typescript-eslint/no-unused-vars
+  15:39  error  'TabsTrigger' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/pipeline/PipelineTimeline.tsx
+  6:10  error  'Calendar' is defined but never used           @typescript-eslint/no-unused-vars
+  6:20  error  'Clock' is defined but never used              @typescript-eslint/no-unused-vars
+  7:10  error  'ProgressIndicator' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/pipeline/TelevisionDashboard.tsx
+  6:71  error  'Users' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/production/BudgetOverrunAlert.tsx
+  8:10  error  'Progress' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/production/WriterStrikeImpact.tsx
+   7:10  error  'Progress' is defined but never used            @typescript-eslint/no-unused-vars
+  45:9   error  'rewriting' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/pwa/InstallPrompt.tsx
+  23:5   error  'needRefresh' is never reassigned. Use 'const' instead                                                               prefer-const
+  24:5   error  'updateServiceWorker' is never reassigned. Use 'const' instead                                                       prefer-const
+  24:28  error  '_reload' is defined but never used                                                                                  @typescript-eslint/no-unused-vars
+  28:3   error  Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  29:21  error  A `require()` style import is forbidden                                                                              @typescript-eslint/no-require-imports
+  31:13  error  'useRegisterSW' is assigned a value but never used                                                                   @typescript-eslint/no-unused-vars
+  34:10  error  'e' is defined but never used                                                                                        @typescript-eslint/no-unused-vars
+  42:10  error  'loaded' is assigned a value but never used                                                                          @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/rivals/RivalsPanel.tsx
+  5:10  error  'ARCHETYPES' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/shared/ContentCard.tsx
+  7:21  error  'transitions' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/shared/DataList.tsx
+   1:17  error  'useCallback' is defined but never used           @typescript-eslint/no-unused-vars
+   6:24  error  'SkeletonListItem' is defined but never used      @typescript-eslint/no-unused-vars
+  72:3   error  'virtualized' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/shared/EmptyState.tsx
+  2:10  error  'LucideIcon' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/shared/FilterBar.tsx
+  2:18  error  'SlidersHorizontal' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/shared/SkeletonCard.tsx
+  3:10  error  'tokens' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/shared/SparklineChart.tsx
+  177:9  error  'gap' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/streaming/components/MAHistoryFeed.tsx
+  5:10  error  'cn' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/streaming/components/SubscriberTrendChart.tsx
+  3:3  error  'LineChart' is defined but never used  @typescript-eslint/no-unused-vars
+  4:3  error  'Line' is defined but never used       @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/talent/CastingFeedback.tsx
+   2:27  error  'GameState' is defined but never used   @typescript-eslint/no-unused-vars
+   6:3   error  'Heart' is defined but never used       @typescript-eslint/no-unused-vars
+   7:3   error  'TrendingUp' is defined but never used  @typescript-eslint/no-unused-vars
+   8:3   error  'Building2' is defined but never used   @typescript-eslint/no-unused-vars
+  12:3   error  'Star' is defined but never used        @typescript-eslint/no-unused-vars
+  13:3   error  'Zap' is defined but never used         @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/talent/LiveAuctionDashboard.tsx
+  10:3  error  'ArrowUpRight' is defined but never used  @typescript-eslint/no-unused-vars
+  11:3  error  'Clock' is defined but never used         @typescript-eslint/no-unused-vars
+  13:3  error  'ChevronRight' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/talent/MoraleDashboard.tsx
+  3:32  error  'TrendingUp' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/talent/OfferHistoryLog.tsx
+  3:61  error  'ArrowRight' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/talent/TalentAttachmentPanel.tsx
+    3:19  error  'Talent' is defined but never used        @typescript-eslint/no-unused-vars
+  128:63  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/talent/TalentAvatar.tsx
+  48:6  warning  React Hook useMemo has a missing dependency: 'talent'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/talent/TalentHub.tsx
+  17:18  error  'Filter' is defined but never used  @typescript-eslint/no-unused-vars
+  18:10  error  'Button' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/talent/TalentPactPanel.tsx
+  34:9  error  'negotiatingPacts' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/talent/TalentPanel.tsx
+   9:18  error  'Filter' is defined but never used                         @typescript-eslint/no-unused-vars
+  17:29  error  'setShowMegaProducers' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/talent/TalentProfileModal.tsx
+    9:3   error  'User' is defined but never used          @typescript-eslint/no-unused-vars
+   19:3   error  'Award' is defined but never used         @typescript-eslint/no-unused-vars
+  517:23  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/television/NielsenDashboard.tsx
+    7:14   error  'TrendingUp' is defined but never used    @typescript-eslint/no-unused-vars
+    7:26   error  'TrendingDown' is defined but never used  @typescript-eslint/no-unused-vars
+    7:58   error  'Users' is defined but never used         @typescript-eslint/no-unused-vars
+    7:72   error  'Clock' is defined but never used         @typescript-eslint/no-unused-vars
+   12:107  error  'Legend' is defined but never used        @typescript-eslint/no-unused-vars
+   12:115  error  'LineChart' is defined but never used     @typescript-eslint/no-unused-vars
+   12:126  error  'Line' is defined but never used          @typescript-eslint/no-unused-vars
+   32:58   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   43:34   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   48:24   error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+   48:46   error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+  222:28   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  281:28   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/badge.tsx
+  30:17  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/button.tsx
+  80:18  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/form.tsx
+  130:10  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/navigation-menu.tsx
+  112:3  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/sidebar.tsx
+  638:3  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/sonner.tsx
+  28:19  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tabs.tsx
+  44:11  error  'hidden' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  44:45  error  Unexpected any. Specify a different type     @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/toggle.tsx
+  38:18  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/tooltip-wrapper.tsx
+  5:3  error  'TooltipProvider' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/core/gameInit.ts
+    2:23  error  'StateImpact' is defined but never used   @typescript-eslint/no-unused-vars
+   12:48  error  'Buyer' is defined but never used         @typescript-eslint/no-unused-vars
+   41:37  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  102:10  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  146:90  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  154:40  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  226:34  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+  270:46  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  349:73  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  352:33  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/core/impactReducer.ts
+    1:45  error  'Project' is defined but never used               @typescript-eslint/no-unused-vars
+    1:54  error  'RivalStudio' is defined but never used           @typescript-eslint/no-unused-vars
+    1:67  error  'Talent' is defined but never used                @typescript-eslint/no-unused-vars
+    1:93  error  'Contract' is defined but never used              @typescript-eslint/no-unused-vars
+  117:23  error  Do not delete dynamically computed property keys  @typescript-eslint/no-dynamic-delete
+  173:22  error  Do not delete dynamically computed property keys  @typescript-eslint/no-dynamic-delete
+  257:41  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  265:24  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  349:25  error  Do not delete dynamically computed property keys  @typescript-eslint/no-dynamic-delete
+  518:24  error  '_stage' is assigned a value but never used       @typescript-eslint/no-unused-vars
+  518:55  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/data/narrative/archive.ts
+  38:18  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/data/talentArchetypes.ts
+  1016:12  error  'Math.random' is restricted from being used. Do not use Math.random() in engine code. Use rngFromSeed/rngForWorld (src/engine/rng.ts)  no-restricted-properties
+  1018:18  error  'Math.random' is restricted from being used. Do not use Math.random() in engine code. Use rngFromSeed/rngForWorld (src/engine/rng.ts)  no-restricted-properties
+  1023:18  error  'Math.random' is restricted from being used. Do not use Math.random() in engine code. Use rngFromSeed/rngForWorld (src/engine/rng.ts)  no-restricted-properties
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/generators/BrandSystem.ts
+  18:14  error  Unexpected class with only static properties  @typescript-eslint/no-extraneous-class
+  72:61  error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/generators/avatar/core.ts
+  3:31  error  'Gender' is defined but never used        @typescript-eslint/no-unused-vars
+  4:3   error  'ColorPalette' is defined but never used  @typescript-eslint/no-unused-vars
+  4:17  error  'HairColor' is defined but never used     @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/generators/avatar/features/accessories.ts
+  1:26  error  'ColorPalette' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  error  'darkenColor' is defined but never used   @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/generators/avatar/features/hairStyles.ts
+   1:26  error  'HairColor' is defined but never used         @typescript-eslint/no-unused-vars
+  45:7   error  Unexpected lexical declaration in case block  no-case-declarations
+  89:7   error  Unexpected lexical declaration in case block  no-case-declarations
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/generators/names.ts
+  12:29  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  17:29  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  29:29  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  47:29  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  53:29  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/generators/talent/index.ts
+  53:35  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  55:36  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  57:38  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  59:41  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  76:63  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/migrations/talentArchetypeMigration.ts
+   1:18   error  'TalentRole' is defined but never used                                                                                                 @typescript-eslint/no-unused-vars
+   1:30   error  'TalentTier' is defined but never used                                                                                                 @typescript-eslint/no-unused-vars
+  32:58   error  'Math.random' is restricted from being used. Do not use Math.random() in engine code. Use rngFromSeed/rngForWorld (src/engine/rng.ts)  no-restricted-properties
+  39:88   error  Unexpected any. Specify a different type                                                                                               @typescript-eslint/no-explicit-any
+  43:90   error  Unexpected any. Specify a different type                                                                                               @typescript-eslint/no-explicit-any
+  47:94   error  Unexpected any. Specify a different type                                                                                               @typescript-eslint/no-explicit-any
+  51:100  error  Unexpected any. Specify a different type                                                                                               @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/services/WeekCoordinator.ts
+   73:14  error  Unexpected class with only static properties       @typescript-eslint/no-extraneous-class
+  361:37  error  Do not delete dynamically computed property keys   @typescript-eslint/no-dynamic-delete
+  375:17  error  'relationship' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  401:17  error  'agent' is assigned a value but never used         @typescript-eslint/no-unused-vars
+  426:17  error  'evolved' is assigned a value but never used       @typescript-eslint/no-unused-vars
+  438:48  error  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  552:14  error  'targetIP' is assigned a value but never used      @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/services/refillArchive.ts
+  4:8  error  'archiveData' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/simulation/EconomicAudit.ts
+  24:8  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  42:8  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  52:8  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  71:8  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/simulation/HeadlessController.ts
+   1:34  error  'Project' is defined but never used           @typescript-eslint/no-unused-vars
+   1:43  error  'Talent' is defined but never used            @typescript-eslint/no-unused-vars
+  10:14  error  Unexpected class with only static properties  @typescript-eslint/no-extraneous-class
+  61:62  error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+  93:33  error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/simulation/MetricsCollector.ts
+   38:86  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   41:41  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   49:38  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  127:36  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/simulation/SimulationHarness.ts
+  23:14  error  Unexpected class with only static properties  @typescript-eslint/no-extraneous-class
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/simulation/SimulationRunner.ts
+   1:21  error  'StateImpact' is defined but never used             @typescript-eslint/no-unused-vars
+   1:34  error  'WeekSummary' is defined but never used             @typescript-eslint/no-unused-vars
+   8:10  error  'advanceProject' is defined but never used          @typescript-eslint/no-unused-vars
+  21:14  error  Unexpected class with only static properties        @typescript-eslint/no-extraneous-class
+  25:16  error  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+  31:15  error  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+  34:57  error  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+  40:57  error  'engineImpacts' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  66:19  error  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/simulation/StudioAutomation.ts
+    1:56   error  'Buyer' is defined but never used             @typescript-eslint/no-unused-vars
+    8:14   error  Unexpected class with only static properties  @typescript-eslint/no-extraneous-class
+   14:81   error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+   58:81   error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+   79:84   error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+   96:127  error  'archetype' is defined but never used         @typescript-eslint/no-unused-vars
+  102:23   error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+  136:63   error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+  138:46   error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+  162:30   error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+  172:90   error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+  175:43   error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+  195:73   error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+  237:20   error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+  262:79   error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+  284:19   error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+  302:81   error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/simulation/run.ts
+  11:15  error  'Bun' is defined but never used           @typescript-eslint/no-unused-vars
+  11:20  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/ReviewSystem.ts
+  34:37  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/TalentSystem.ts
+   14:14  error  Unexpected class with only static properties  @typescript-eslint/no-extraneous-class
+  173:9   error  Forbidden non-null assertion                  @typescript-eslint/no-non-null-assertion
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/ai/AgencyLeverage.ts
+  22:14  error  Unexpected class with only static properties  @typescript-eslint/no-extraneous-class
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/ai/AgentBrain.ts
+  113:78  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  193:3   error  'state' is defined but never used         @typescript-eslint/no-unused-vars
+  198:87  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/ai/biddingEngine.ts
+   14:16  error  'genre' is defined but never used          @typescript-eslint/no-unused-vars
+  156:12  error  Unexpected any. Specify a different type   @typescript-eslint/no-explicit-any
+  217:16  error  'pact' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  264:3   error  'week' is defined but never used           @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/ai/motivationEngine.ts
+  51:46  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/awards.ts
+  171:13  error  'weight' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/bardResolver.ts
+    2:10  error  'NarrativeArchive' is defined but never used  @typescript-eslint/no-unused-vars
+   15:36  error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+  117:57  error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+  118:36  error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/buyerMergers.ts
+   44:9  error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+   70:9  error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+   87:5  error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+  107:9  error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+  116:9  error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+  124:9  error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/buyers.ts
+  28:7  error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+  61:9  error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/crises.ts
+  133:3  error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+  139:5  error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+  142:3  error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+  149:3  error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/demographics.ts
+  1:37  error  'DemographicGroup' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/directors.ts
+  118:5  error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+  145:5  error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+  153:5  error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+  179:5  error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/festivals.ts
+   1:34  error  'Project' is defined but never used            @typescript-eslint/no-unused-vars
+  21:10  error  'getRivalArchetype' is defined but never used  @typescript-eslint/no-unused-vars
+  22:79  error  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/festivals/festivalAuctionEngine.ts
+   1:43  error  'RivalStudio' is defined but never used   @typescript-eslint/no-unused-vars
+  92:35  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/finance.ts
+  78:59  error  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+  89:18  error  'otherExpenses' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/finance/ExpenseProcessor.ts
+   6:14  error  Unexpected class with only static properties  @typescript-eslint/no-extraneous-class
+  72:42  error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+  73:34  error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/finance/RevenueProcessor.ts
+    7:10  error  'StreamingViewershipTracker' is defined but never used  @typescript-eslint/no-unused-vars
+    8:10  error  'RandomGenerator' is defined but never used             @typescript-eslint/no-unused-vars
+   13:14  error  Unexpected class with only static properties            @typescript-eslint/no-extraneous-class
+   21:5   error  'vault' is defined but never used                       @typescript-eslint/no-unused-vars
+   22:5   error  'studioId' is defined but never used                    @typescript-eslint/no-unused-vars
+   87:81  error  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+   88:49  error  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+  223:59  error  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/finance/financeTick.ts
+   1:34  error  'Project' is defined but never used             @typescript-eslint/no-unused-vars
+  10:35  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+  95:11  error  'archetype' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/industry/IndustryUpstarts.ts
+  35:31  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/industry/RegulatorSystem.ts
+    7:14  error  Unexpected class with only static properties  @typescript-eslint/no-extraneous-class
+   12:48  error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+   79:48  error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+  113:48  error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/industry/VerticalIntegrationProcessor.ts
+  1:52  error  'RivalStudio' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/ip/franchiseCoordinator.ts
+   44:28  error  Forbidden non-null assertion                                @typescript-eslint/no-non-null-assertion
+  383:7   error  'genreFocusBonus' is never reassigned. Use 'const' instead  prefer-const
+  475:69  error  Unexpected any. Specify a different type                    @typescript-eslint/no-explicit-any
+  478:17  error  Unexpected any. Specify a different type                    @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/ip/spinoffFactory.ts
+  205:69  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/ip/syndicationEngine.ts
+  2:10  error  'IPAsset' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/ipRetention.ts
+  45:11  error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+  46:11  error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+  60:9   error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/market/InterestRateSimulator.ts
+  11:14  error  Unexpected class with only static properties  @typescript-eslint/no-extraneous-class
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/market/OpportunitySystem.ts
+   1:34  error  'Opportunity' is defined but never used       @typescript-eslint/no-unused-vars
+   1:47  error  'Project' is defined but never used           @typescript-eslint/no-unused-vars
+   1:56  error  'Contract' is defined but never used          @typescript-eslint/no-unused-vars
+   1:66  error  'RivalStudio' is defined but never used       @typescript-eslint/no-unused-vars
+  10:14  error  Unexpected class with only static properties  @typescript-eslint/no-extraneous-class
+  47:83  error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+  65:42  error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+  66:14  error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/marketEvents.ts
+  1:10  error  'pick' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/marketing/territoryDistributor.ts
+  12:9  error  'foreignWeight' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/mergers.ts
+  42:28  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/production/ScriptDraftingSystem.ts
+   2:19  error  'ScriptEvent' is defined but never used   @typescript-eslint/no-unused-vars
+  94:11  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/production/ScriptMetricsCalculator.ts
+  2:10  error  'RandomGenerator' is defined but never used   @typescript-eslint/no-unused-vars
+  8:14  error  Unexpected class with only static properties  @typescript-eslint/no-extraneous-class
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/production/StreamingViewershipTracker.ts
+    8:14  error  Unexpected class with only static properties  @typescript-eslint/no-extraneous-class
+   17:5   error  'rng' is defined but never used               @typescript-eslint/no-unused-vars
+   21:40  error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+   58:5   error  'rng' is defined but never used               @typescript-eslint/no-unused-vars
+  113:33  error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/production/crisisEvaluator.ts
+  7:65  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/productionEngine.ts
+  178:12  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/projects.ts
+    3:10  error  'calculateReviewScore' is defined but never used  @typescript-eslint/no-unused-vars
+    7:10  error  'TalentMoraleSystem' is defined but never used    @typescript-eslint/no-unused-vars
+   34:28  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  101:29  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  103:5   error  'updateText' is assigned a value but never used   @typescript-eslint/no-unused-vars
+  200:9   error  'updateText' is assigned a value but never used   @typescript-eslint/no-unused-vars
+  252:5   error  'updateText' is assigned a value but never used   @typescript-eslint/no-unused-vars
+  304:7   error  'trendText' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  344:29  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  392:28  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  392:60  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  393:27  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  404:49  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  407:7   error  'updateText' is assigned a value but never used   @typescript-eslint/no-unused-vars
+  415:49  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  420:37  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  432:28  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  458:48  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  541:32  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/ratings.ts
+  473:11  error  'director' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  473:28  error  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/rivals/RivalRevenueCalculator.ts
+   8:14  error  Unexpected class with only static properties  @typescript-eslint/no-extraneous-class
+  32:81  error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+  34:13  error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+  46:26  error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/scandals.ts
+   55:8   error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+   57:8   error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+  120:10  error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+  127:10  error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/schedulingEngine.ts
+   4:14   error  Unexpected class with only static properties  @typescript-eslint/no-extraneous-class
+  73:66   error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+  73:112  error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/talent/TalentLifecycleSystem.ts
+   10:14  error  Unexpected class with only static properties  @typescript-eslint/no-extraneous-class
+  186:61  error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+  191:12  error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+  200:10  error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/talent/TalentMoraleSystem.ts
+   1:37  error  'StateImpact' is defined but never used       @typescript-eslint/no-unused-vars
+  13:14  error  Unexpected class with only static properties  @typescript-eslint/no-extraneous-class
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/talent/driftEngine.test.ts
+   41:19  error  'personality' is assigned a value but never used  @typescript-eslint/no-unused-vars
+   81:36  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  118:36  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  153:36  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  194:36  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  235:36  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  279:38  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  303:38  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  341:36  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  377:36  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  411:36  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  446:36  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  480:36  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/talent/driftEngine.ts
+    2:10   error  'ACTOR_ARCHETYPES' is defined but never used          @typescript-eslint/no-unused-vars
+    2:28   error  'WRITER_ARCHETYPES' is defined but never used         @typescript-eslint/no-unused-vars
+    2:47   error  'PRODUCER_ARCHETYPES' is defined but never used       @typescript-eslint/no-unused-vars
+    2:68   error  'PERSONALITY_ARCHETYPES' is defined but never used    @typescript-eslint/no-unused-vars
+    2:92   error  'PERSONALITY_TRAITS' is defined but never used        @typescript-eslint/no-unused-vars
+    2:112  error  'generateCareerTrajectory' is defined but never used  @typescript-eslint/no-unused-vars
+   39:73   error  Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
+   49:67   error  Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
+   63:58   error  Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
+  131:14   error  Unexpected class with only static properties          @typescript-eslint/no-extraneous-class
+  227:61   error  Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
+  291:75   error  Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
+  391:70   error  Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
+  393:71   error  Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
+  395:73   error  Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
+  397:76   error  Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
+  399:73   error  Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
+  404:67   error  Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
+  408:77   error  Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/talent/talentAgentEvents.ts
+   18:3  error  'state' is defined but never used           @typescript-eslint/no-unused-vars
+   19:3  error  'rng' is defined but never used             @typescript-eslint/no-unused-vars
+   44:3  error  'state' is defined but never used           @typescript-eslint/no-unused-vars
+  132:9  error  'agent' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/talent/talentAgentInteractions.test.ts
+  355:38  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  366:14  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  374:34  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  377:14  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/talent/talentAgentInteractions.ts
+    3:10  error  'PERSONALITY_TRAITS' is defined but never used  @typescript-eslint/no-unused-vars
+  114:14  error  Unexpected class with only static properties    @typescript-eslint/no-extraneous-class
+  373:23  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+  374:40  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/talent/willingnessEngine.ts
+   20:3   error  'proposedRole' is defined but never used        @typescript-eslint/no-unused-vars
+   62:9   error  'starMeter' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  138:24  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/television/nielsenSystem.ts
+    1:25  error  'Project' is defined but never used       @typescript-eslint/no-unused-vars
+    2:10  error  'GameState' is defined but never used     @typescript-eslint/no-unused-vars
+    2:21  error  'StateImpact' is defined but never used   @typescript-eslint/no-unused-vars
+  144:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/television/pilotEvaluator.ts
+  11:50  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  27:36  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/television/televisionTick.ts
+  137:83   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  163:85   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  186:102  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  191:144  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  199:39   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  210:85   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  213:127  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  228:79   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/television/upfrontsEngine.ts
+  30:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  34:44  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/trends.ts
+  1:10  error  'pick' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/types/state.types.ts
+    4:71  error  'CriticConsensus' is defined but never used  @typescript-eslint/no-unused-vars
+  209:13  error  Unexpected any. Specify a different type     @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/types/studio.types.ts
+  4:20  error  'TalentPact' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/utils.ts
+  39:5  error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/utils/projectUtils.ts
+  64:65  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/utils/rng.ts
+  31:47  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/hooks/useKeyboardShortcuts.tsx
+    7:14  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+   38:17  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+   67:41  error    Unexpected any. Specify a different type                                                                                        @typescript-eslint/no-explicit-any
+  105:16  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/lib/animations.ts
+  8:20  error  'Transition' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/main.tsx
+  5:12  error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/pages/Dashboard.tsx
+  10:10  error  'PageTransition' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/pages/IndustryPage.tsx
+  19:3   error  'TrendingUp' is defined but never used       @typescript-eslint/no-unused-vars
+  20:3   error  'DollarSign' is defined but never used       @typescript-eslint/no-unused-vars
+  22:3   error  'AlertTriangle' is defined but never used    @typescript-eslint/no-unused-vars
+  24:13  error  'AnimatePresence' is defined but never used  @typescript-eslint/no-unused-vars
+  43:47  error  Unexpected any. Specify a different type     @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/pages/TitleScreen.tsx
+  21:33  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/persistence/PersistenceService.ts
+  11:58  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  41:53  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  57:46  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  76:48  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/persistence/saveLoad.ts
+  19:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  20:35  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  23:35  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  27:82  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  28:50  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/persistence/saveWorker.ts
+  25:59  error  Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+  29:21  error  Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+  34:7   error  Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  62:3   error  Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/routeTree.gen 2.ts
+   3:1  error  Do not use "@ts-nocheck" because it alters compilation errors  @typescript-eslint/ban-ts-comment
+  20:6  error  Unexpected any. Specify a different type                       @typescript-eslint/no-explicit-any
+  25:6  error  Unexpected any. Specify a different type                       @typescript-eslint/no-explicit-any
+  30:6  error  Unexpected any. Specify a different type                       @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/store/gameStore.ts
+   25:39  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+   26:35  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+   29:35  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+   33:82  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+   34:50  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+   99:30  error  Promise executor functions should not be async  no-async-promise-executor
+  148:44  error  Promise executor functions should not be async  no-async-promise-executor
+  193:60  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+  193:97  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+  196:51  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+  196:83  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+  256:60  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+  256:97  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+  259:51  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+  259:83  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/store/selectors.ts
+   16:20   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  139:24   error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+  140:22   error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+  329:31   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  348:53   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  349:52   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  349:114  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  350:55   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  399:93   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/store/slices/financeSlice.ts
+    4:57  error  'Project' is defined but never used       @typescript-eslint/no-unused-vars
+    4:66  error  'Buyer' is defined but never used         @typescript-eslint/no-unused-vars
+    4:73  error  'RivalStudio' is defined but never used   @typescript-eslint/no-unused-vars
+    5:29  error  'MarketState' is defined but never used   @typescript-eslint/no-unused-vars
+   17:88  error  'get' is defined but never used           @typescript-eslint/no-unused-vars
+   82:32  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  141:27  error  'eventName' is defined but never used     @typescript-eslint/no-unused-vars
+  141:38  error  'cost' is defined but never used          @typescript-eslint/no-unused-vars
+  141:44  error  'projectId' is defined but never used     @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/store/slices/marketingSlice.ts
+  131:61  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  131:81  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/store/slices/newsSlice.ts
+  11:82  error  'get' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/store/slices/projectSlice.ts
+  204:31  error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/store/slices/rivalSlice.ts
+  26:21  error  Do not delete dynamically computed property keys  @typescript-eslint/no-dynamic-delete
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/store/slices/talentSlice.ts
+    3:20  error  'Opportunity' is defined but never used           @typescript-eslint/no-unused-vars
+    3:33  error  'StateImpact' is defined but never used           @typescript-eslint/no-unused-vars
+    3:90  error  'Talent' is defined but never used                @typescript-eslint/no-unused-vars
+   78:95  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  374:35  error  Do not delete dynamically computed property keys  @typescript-eslint/no-dynamic-delete
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/store/storeUtils.ts
+  59:33  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/WeekSummaryModal.test.tsx
+  35:41  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/NavLink.test.tsx
+  31:15  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  42:31  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  57:41  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/CommandCenter.test.tsx
+   21:33  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   44:59  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   54:59  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  100:59  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  128:59  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/DemographicsWidget.test.tsx
+  10:41  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  11:36  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  13:24  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  30:34  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  37:28  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  41:20  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  67:52  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/dashboard/FinancialOverviewWidget.test.tsx
+  53:59  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  68:59  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  93:59  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/deals/DealsDesk.test.tsx
+    7:10  error  'GameState' is defined but never used     @typescript-eslint/no-unused-vars
+   23:85  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   36:32  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   59:32  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   90:32  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  123:32  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/development/GreenlightQueue.test.tsx
+   26:51  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   44:51  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   62:51  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   81:51  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  104:51  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/development/ScriptList.test.tsx
+  38:44  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  61:44  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  82:66  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/discovery/DiscoveryBoard.test.tsx
+   40:10  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   53:10  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   88:10  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  122:10  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx
+   43:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   45:45  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   47:41  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   49:45  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   83:10  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   85:59  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  127:59  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  130:36  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  164:10  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  166:59  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/YearInReviewChart.test.tsx
+  18:71  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  38:71  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/forms/FormField.test.tsx
+  5:16  error  'AlertCircle' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/forms/FormSection.test.tsx
+  5:20  error  'ChevronDown' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/layout/NewsTicker.test.tsx
+  10:71  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  18:71  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/layout/StudioSidebar.test.tsx
+   20:41  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   21:31  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   71:20  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   71:55  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   80:22  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   80:57  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   92:22  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   92:57  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  114:22  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  114:57  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/modals/AwardsCeremonyModal.test.tsx
+  20:35  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  22:35  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  47:8   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  52:89  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/modals/CreateProjectModal.test.tsx
+  31:14  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  35:38  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  63:87  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  68:89  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  75:87  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/modals/CrisisModal.test.tsx
+   35:40  error  Unexpected any. Specify a different type                   @typescript-eslint/no-explicit-any
+   40:33  error  Unexpected any. Specify a different type                   @typescript-eslint/no-explicit-any
+   41:32  error  Unexpected any. Specify a different type                   @typescript-eslint/no-explicit-any
+   42:31  error  Unexpected any. Specify a different type                   @typescript-eslint/no-explicit-any
+   43:37  error  Unexpected any. Specify a different type                   @typescript-eslint/no-explicit-any
+   73:8   error  Unexpected any. Specify a different type                   @typescript-eslint/no-explicit-any
+   79:8   error  Unexpected any. Specify a different type                   @typescript-eslint/no-explicit-any
+  100:89  error  Unexpected any. Specify a different type                   @typescript-eslint/no-explicit-any
+  110:89  error  Unexpected any. Specify a different type                   @typescript-eslint/no-explicit-any
+  148:11  error  'projectWithoutCrisis' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  149:89  error  Unexpected any. Specify a different type                   @typescript-eslint/no-explicit-any
+  184:89  error  Unexpected any. Specify a different type                   @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/modals/PitchProjectModal.test.tsx
+  130:21  error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+  141:21  error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+  151:21  error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+  172:21  error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+  175:21  error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+  190:21  error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+  194:21  error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/modals/ProjectDetailModal.test.tsx
+   36:10  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   38:59  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  105:10  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  107:59  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  135:10  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  137:59  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  169:10  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  171:59  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  215:10  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  217:59  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/modals/UnifiedModal.test.tsx
+    5:20  error  'X' is defined but never used                   @typescript-eslint/no-unused-vars
+  127:13  error  'container' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/pipeline/PipelineBoard.test.tsx
+  26:10  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/pipeline/ProjectCard.test.tsx
+  139:10  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  217:10  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/rivals/RivalsPanel.test.tsx
+  16:35   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  30:88   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  61:101  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  79:101  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/sbdb/SBDBView.test.tsx
+  1:37  error  'within' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/talent/TalentPanel.test.tsx
+  62:32  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/core/weekAdvance.test.ts
+  83:12  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/generators/headlines.test.ts
+   36:14   error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+   84:77   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   95:29   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  101:71   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  101:89   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  101:104  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/idIntegrity.test.ts
+   4:10  error  'RandomGenerator' is defined but never used      @typescript-eslint/no-unused-vars
+  18:9   error  'PREFIX_MAP' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  45:9   error  'validateID' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/snapshots.test.ts
+  13:12  error  'store' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/TalentSystem.test.ts
+    1:44  error  'vi' is defined but never used            @typescript-eslint/no-unused-vars
+   19:14  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   27:14  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   55:18  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+   75:17  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+  117:14  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+  118:14  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+  130:14  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+  131:14  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+  141:14  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+  142:14  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+  152:14  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+  170:26  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/ai/AgentBrain.test.ts
+   1:32  error  'vi' is defined but never used            @typescript-eslint/no-unused-vars
+   2:10  error  'GameState' is defined but never used     @typescript-eslint/no-unused-vars
+   2:29  error  'Talent' is defined but never used        @typescript-eslint/no-unused-vars
+   2:37  error  'RivalStudio' is defined but never used   @typescript-eslint/no-unused-vars
+  43:33  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/ai/biddingEngine.test.ts
+   2:47  error  'Talent' is defined but never used                   @typescript-eslint/no-unused-vars
+   2:55  error  'OpportunityUpdateImpact' is defined but never used  @typescript-eslint/no-unused-vars
+   2:80  error  'StateImpact' is defined but never used              @typescript-eslint/no-unused-vars
+  41:47  error  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  45:35  error  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/awards.test.ts
+   3:10  error  'GameState' is defined but never used          @typescript-eslint/no-unused-vars
+   8:9   error  'luckyRng' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  40:8   error  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  49:71  error  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  50:73  error  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/awards_razzies.test.ts
+    1:32  error  'vi' is defined but never used            @typescript-eslint/no-unused-vars
+   67:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   68:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   98:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  101:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  110:23  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/awards_tv.test.ts
+  10:48  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  43:8   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  45:47  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  64:46  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  82:47  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/bardIntegration.test.ts
+  84:34  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/buyers.test.ts
+  3:35  error  'Project' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/crises.test.ts
+   72:14  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+   73:14  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+   73:14  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+   81:14  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+   86:14  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+   91:14  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+   98:28  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+  101:84  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/deals.test.ts
+   2:67  error  'evaluatePackageStrength' is defined but never used  @typescript-eslint/no-unused-vars
+   3:18  error  'GameState' is defined but never used                @typescript-eslint/no-unused-vars
+   3:29  error  'TalentPact' is defined but never used               @typescript-eslint/no-unused-vars
+   3:41  error  'Agency' is defined but never used                   @typescript-eslint/no-unused-vars
+  21:10  error  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  25:73  error  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  26:71  error  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  45:58  error  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  55:12  error  Forbidden non-null assertion                         @typescript-eslint/no-non-null-assertion
+  69:10  error  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  74:12  error  Forbidden non-null assertion                         @typescript-eslint/no-non-null-assertion
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/demographics.test.ts
+  57:53  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/directors.test.ts
+    5:10  error  'Talent' is defined but never used                                                                                   @typescript-eslint/no-unused-vars
+   52:5   error  Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+   95:65  error  Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+  126:32  error  'max' is defined but never used                                                                                      @typescript-eslint/no-unused-vars
+  127:12  error  Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+  131:14  error  Forbidden non-null assertion                                                                                         @typescript-eslint/no-non-null-assertion
+  131:14  error  Forbidden non-null assertion                                                                                         @typescript-eslint/no-non-null-assertion
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/festivals.test.ts
+   1:32  error  'beforeEach' is defined but never used    @typescript-eslint/no-unused-vars
+   3:10  error  'GameState' is defined but never used     @typescript-eslint/no-unused-vars
+   3:21  error  'Project' is defined but never used       @typescript-eslint/no-unused-vars
+  13:53  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  54:33  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/finance.test.ts
+    1:32   error  'vi' is defined but never used            @typescript-eslint/no-unused-vars
+    8:19   error  'GameState' is defined but never used     @typescript-eslint/no-unused-vars
+   25:85   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   43:12   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   51:117  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   56:13   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   76:12   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  104:14   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  157:14   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  185:15   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  210:16   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  272:10   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  276:91   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  277:39   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  278:76   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/finance_cultclassic.test.ts
+  18:101  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  26:97   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/greenlight.test.ts
+  39:6  error  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+  50:6  error  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+  52:7  error  'mockTalentEgo' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  61:6  error  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/marketEvents.test.ts
+  65:31  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  66:31  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  89:31  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  95:61  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/marketing/territoryDistributor.test.ts
+  10:47  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  28:43  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/mergers.test.ts
+    1:44   error  'vi' is defined but never used            @typescript-eslint/no-unused-vars
+    8:34   error  'Talent' is defined but never used        @typescript-eslint/no-unused-vars
+   29:39   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   40:53   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   82:157  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   88:14   error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+   91:14   error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+   92:14   error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+   92:14   error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+   93:14   error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+   93:14   error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+   94:14   error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+   94:14   error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+   97:14   error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+   98:14   error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+   98:14   error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+   99:14   error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+   99:14   error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+  101:14   error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+  102:24   error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+  102:24   error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+  110:14   error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+  111:14   error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+  118:14   error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+  119:14   error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+  120:14   error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+  120:14   error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/processors/processProduction.test.ts
+   3:38  error  'ProjectUpdateImpact' is defined but never used  @typescript-eslint/no-unused-vars
+  65:79  error  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  78:79  error  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/processors/processWorldEvents.test.ts
+   3:10  error  'GameState' is defined but never used     @typescript-eslint/no-unused-vars
+   3:21  error  'Project' is defined but never used       @typescript-eslint/no-unused-vars
+   3:30  error  'Talent' is defined but never used        @typescript-eslint/no-unused-vars
+  26:33  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  43:48  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/production/ScriptDraftingSystem.test.ts
+   2:19  error  'ScriptedProject' is defined but never used        @typescript-eslint/no-unused-vars
+  19:17  error  'scriptHeat' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  19:29  error  'activeRoles' is assigned a value but never used   @typescript-eslint/no-unused-vars
+  19:42  error  'scriptEvents' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  19:93  error  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  70:60  error  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/production/crisisEvaluator.test.ts
+  29:12   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  61:140  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  74:141  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  87:163  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/productionEngine.test.ts
+   4:50  error  'createMockTalent' is defined but never used    @typescript-eslint/no-unused-vars
+   4:68  error  'createMockContract' is defined but never used  @typescript-eslint/no-unused-vars
+   5:13  error  'projectsModule' is defined but never used      @typescript-eslint/no-unused-vars
+   8:44  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+  43:79  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+  46:74  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+  59:79  error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/projects.test.ts
+   1:32   error  'vi' is defined but never used            @typescript-eslint/no-unused-vars
+   3:10   error  'Project' is defined but never used       @typescript-eslint/no-unused-vars
+   3:19   error  'Talent' is defined but never used        @typescript-eslint/no-unused-vars
+   3:27   error  'Contract' is defined but never used      @typescript-eslint/no-unused-vars
+  64:108  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/releaseSimulation.test.ts
+  11:47   error  'createMockGameState' is defined but never used  @typescript-eslint/no-unused-vars
+  28:14   error  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  45:144  error  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/rivals.test.ts
+   3:23  error  'GameState' is defined but never used     @typescript-eslint/no-unused-vars
+  24:6   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  53:14  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+  54:14  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/rumors.test.ts
+  12:55  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  40:12  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+  61:12  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+  76:12  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+  77:22  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+  80:12  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+  81:12  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/schedulingEngine.test.ts
+  24:8   error  Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+  33:8   error  Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+  54:8   error  Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+  83:46  error  Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+  88:5   error  Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/spinoffFactory.test.ts
+  27:22  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  28:29  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  29:29  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/stats.test.ts
+  166:50  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  175:46  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/talentStats.test.ts
+    3:10  error  'Talent' is defined but never used              @typescript-eslint/no-unused-vars
+   15:8   error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+   17:9   error  'baseAward' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  124:8   error  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/television/platformEngine.test.ts
+   2:39  error  'Talent' is defined but never used        @typescript-eslint/no-unused-vars
+  31:10  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/trends.test.ts
+  26:32  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  36:45  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  43:49  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/unscripted.test.ts
+  22:111  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/types/impactUtils.test.ts
+  10:73  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/integration/PersistenceRace.test.ts
+   6:21  error  Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+  43:9   error  Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  45:9   error  Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  49:9   error  Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  50:30  error  Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+  54:13  error  Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  71:9   error  Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  75:9   error  Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  77:9   error  Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/integration/connectivity_wiring.test.ts
+  28:14   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  37:14   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  44:106  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  60:14   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/persistence/saveLoad.test.ts
+  1:48  error  'afterEach' is defined but never used  @typescript-eslint/no-unused-vars
+  4:10  error  'GameState' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/rivalRevenue.test.ts
+   12:93  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   57:14  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   62:93  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   78:14  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   83:93  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   99:14  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  104:93  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  118:14  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  123:93  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  138:14  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  150:14  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  155:97  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  159:97  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/scriptMetrics.test.ts
+    8:92  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   22:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   36:53  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   52:53  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   69:53  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   84:92  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  114:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  141:80  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  160:80  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/selectors.test.ts
+   16:3   error  'selectScriptQualityMetrics' is defined but never used  @typescript-eslint/no-unused-vars
+   18:3   error  'selectMarketShareData' is defined but never used       @typescript-eslint/no-unused-vars
+   19:3   error  'selectStreamingViewership' is defined but never used   @typescript-eslint/no-unused-vars
+   27:43  error  'RivalStudio' is defined but never used                 @typescript-eslint/no-unused-vars
+   86:6   error  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+  600:18  error  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+  826:18  error  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+  835:18  error  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+  844:18  error  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+  940:18  error  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/setup.ts
+  36:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  68:43  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  72:46  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  79:31  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/store/campaignSlice.test.ts
+   2:10  error  'GameState' is defined but never used     @typescript-eslint/no-unused-vars
+   5:14  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   6:14  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   7:12  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   8:12  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  37:16  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  43:50  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/store/financeSlice.test.ts
+  31:33  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/store/gameStore.test.ts
+  40:19  error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+  45:12  error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+  75:19  error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+  87:22  error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/streamingViewership.test.ts
+   29:112  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   39:20   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   54:100  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   63:20   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   78:100  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  107:112  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  115:20   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  134:100  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  141:20   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  156:100  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  164:20   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  179:100  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/utils/mockFactories.ts
+   47:15  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  111:27  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  248:15  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+✖ 1005 problems (987 errors, 18 warnings)
+  3 errors and 0 warnings potentially fixable with the `--fix` option.
+
+error: script "lint" exited with code 1

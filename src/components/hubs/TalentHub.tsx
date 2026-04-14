@@ -1,18 +1,16 @@
 import React, { useState, useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore, TalentSubTab } from '@/store/uiStore';
-import { useShallow } from 'zustand/react/shallow';
 import { SubNav } from '@/components/navigation/SubNav';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Users, 
-  Search, 
+import {
+  Users,
+  Search,
   Handshake,
   Building2,
   Sparkles,
   Star,
-  Filter,
   Gavel,
   TrendingUp,
   Newspaper,
@@ -23,8 +21,6 @@ import { Talent, TalentRole, Opportunity } from '@/engine/types';
 import { selectOpportunities } from '@/store/selectors';
 
 // Lazy load components
-const TalentHubLegacy = React.lazy(() => import('@/components/talent/TalentHub').then(m => ({ default: m.TalentHub })));
-const DiscoveryBoard = React.lazy(() => import('@/components/discovery/DiscoveryBoard').then(m => ({ default: m.DiscoveryBoard })));
 const LiveAuctionDashboard = React.lazy(() => import('@/components/talent/LiveAuctionDashboard').then(m => ({ default: m.LiveAuctionDashboard })));
 const AgencyPackagesPanel = React.lazy(() => import('@/components/agencies/AgencyPackagesPanel').then(m => ({ default: m.AgencyPackagesPanel })));
 const SkeletonPage = React.lazy(() => import('@/components/shared/SkeletonCard').then(m => ({ default: m.SkeletonPage })));

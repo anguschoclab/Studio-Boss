@@ -214,18 +214,6 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
       }
 
       if (rival.cash > leveragedFee * 2) {
-         const pact: TalentPact = {
-           id: rng.uuid('PCT'),
-           talentId: target.id,
-           studioId: rival.id,
-           type: 'first_look',
-           startDate: state.week,
-           endDate: state.week + 52,
-           weeklyOverhead: Math.floor(leveragedFee * 0.05),
-           exclusivity: true,
-           status: 'active'
-         };
-
          impacts.push({
            type: 'RIVAL_UPDATED',
            payload: {

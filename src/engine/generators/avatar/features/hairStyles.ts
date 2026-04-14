@@ -1,4 +1,4 @@
-import { AvatarFeatures, HairColor } from '../types';
+import { AvatarFeatures } from '../types';
 
 /**
  * Renders the back layer of the hair (for long styles).

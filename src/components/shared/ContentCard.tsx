@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { tokens } from '@/lib/tokens';
 import { Badge } from '@/components/ui/badge';
-import { cardHover, transitions } from '@/lib/animations';
+import { cardHover } from '@/lib/animations';
 
 type CardVariant = 'default' | 'interactive' | 'active' | 'glass' | 'subtle';
 type CardSize = 'sm' | 'md' | 'lg';

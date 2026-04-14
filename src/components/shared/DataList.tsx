@@ -1,9 +1,9 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { tokens } from '@/lib/tokens';
 import { EmptyState } from './EmptyState';
-import { SkeletonList, SkeletonListItem } from './SkeletonCard';
+import { SkeletonList } from './SkeletonCard';
 import { staggerContainer, staggerItem } from '@/lib/animations';
 import { Search, AlertCircle } from 'lucide-react';
 

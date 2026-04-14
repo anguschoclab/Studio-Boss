@@ -1,11 +1,10 @@
 import { Talent } from '../../types/talent.types';
-import { 
-  AvatarFeatures, AgeBracket, Gender, 
-  ColorPalette, HairColor 
+import {
+  AvatarFeatures, AgeBracket
 } from './types';
-import { 
-  hashString, seededRandom, seededRange, seededPick, 
-  blendColor 
+import {
+  hashString, seededRandom, seededRange, seededPick,
+  blendColor
 } from './utils';
 import { 
   SKIN_PALETTES, HAIR_COLORS, GRAY_HAIR, WHITE_HAIR, 

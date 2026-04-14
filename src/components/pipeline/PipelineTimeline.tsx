@@ -3,8 +3,7 @@ import { useGameStore } from '@/store/gameStore';
 import { Project, ProjectStatus } from '@/engine/types';
 import { cn } from '@/lib/utils';
 import { formatMoney } from '@/engine/utils';
-import { Calendar, Clock, DollarSign } from 'lucide-react';
-import { ProgressIndicator } from '@/components/shared/ProgressIndicator';
+import { DollarSign } from 'lucide-react';
 
 interface TimelineItem {
   project: Project;

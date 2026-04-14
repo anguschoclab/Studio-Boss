@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useGameStore } from '@/store/gameStore';
-import { Project, Talent, TalentRole } from '@/engine/types';
+import { Project, TalentRole } from '@/engine/types';
 import { formatMoney } from '@/engine/utils';
 import { getRecommendedTalentForProject } from '@/engine/utils/projectUtils';
 import { Button } from '@/components/ui/button';

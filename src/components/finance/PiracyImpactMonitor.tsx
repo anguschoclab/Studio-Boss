@@ -1,10 +1,9 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { Download, TrendingDown, AlertTriangle, Globe, Lock } from 'lucide-react';
+import { Download, AlertTriangle, Globe, Lock } from 'lucide-react';
 import { Section } from '@/components/layout/Section';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import { tokens } from '@/lib/tokens';
 
 interface PiracyRegion {

@@ -2,13 +2,11 @@ import React, { useState, useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore, ProductionSubTab } from '@/store/uiStore';
 import { useShallow } from 'zustand/react/shallow';
-import { selectProjects, selectOpportunities, selectActiveProjects } from '@/store/selectors';
+import { selectProjects } from '@/store/selectors';
 import { SubNav } from '@/components/navigation/SubNav';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Section } from '@/components/layout/Section';
-import { Stack, HorizontalStack } from '@/components/layout/Stack';
-import { EmptyState } from '@/components/shared/EmptyState';
+import { Stack } from '@/components/layout/Stack';
 import { SkeletonPage } from '@/components/shared/SkeletonCard';
 import { tokens, patterns } from '@/lib/tokens';
 import {
@@ -19,7 +17,6 @@ import {
   Plus,
   Search,
   AlertTriangle,
-  Package,
   Handshake,
   Tv,
   BarChart3,
@@ -30,7 +27,6 @@ import { cn } from '@/lib/utils';
 // Lazy load the heavy components
 const PipelineBoard = React.lazy(() => import('@/components/pipeline/PipelineBoard').then(m => ({ default: m.PipelineBoard })));
 const IPVault = React.lazy(() => import('@/components/ip/IPVault').then(m => ({ default: m.IPVault })));
-const DistributionHub = React.lazy(() => import('@/components/distribution/DistributionHub').then(m => ({ default: m.DistributionHub })));
 const DealsDesk = React.lazy(() => import('@/components/deals/DealsDesk').then(m => ({ default: m.DealsDesk })));
 const StreamingPanel = React.lazy(() => import('@/components/streaming/StreamingPanel').then(m => ({ default: m.StreamingPanel })));
 const NielsenDashboard = React.lazy(() => import('@/components/television/NielsenDashboard').then(m => ({ default: m.NielsenDashboard })));

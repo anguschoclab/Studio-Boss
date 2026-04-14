@@ -1,13 +1,12 @@
 import React from 'react';
 import { Project, ScriptEvent, ScriptedProject } from '@/engine/types';
-import { 
-  FileEdit, 
-  Split, 
-  Merge, 
-  Search, 
-  Zap, 
-  Type, 
-  ArrowRight,
+import {
+  FileEdit,
+  Split,
+  Merge,
+  Search,
+  Zap,
+  Type,
   TrendingUp,
   Brain,
   History as LucideHistory

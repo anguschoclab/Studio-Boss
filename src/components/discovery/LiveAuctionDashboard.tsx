@@ -1,15 +1,13 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useGameStore } from '@/store/gameStore';
-import { Opportunity, RivalStudio } from '@/engine/types';
+import { Opportunity } from '@/engine/types';
 import { formatMoney } from '@/engine/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Gavel, 
-  Clock, 
-  TrendingUp, 
-  Users, 
-  History, 
+import {
+  Gavel,
+  Clock,
+  History,
   AlertCircle,
   Zap,
   Target,
@@ -26,25 +24,22 @@ interface LiveAuctionDashboardProps {
 export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ opportunity: opp, onClose }) => {
   const { placeBid, acquireOpportunity, gameState } = useGameStore();
   const rivals = gameState?.entities.rivals || {};
-  
+
   const currentHighest = useMemo(() => {
     return Object.values(opp.bids || {}).reduce((max, b) => Math.max(max, b.amount), 0);
   }, [opp.bids]);
 
   const isPlayerWinning = opp.highestBidderId === 'PLAYER';
-  const playerBid = opp.bids['PLAYER']?.amount || 0;
   const highestBidder = isPlayerWinning ? { name: 'YOU' } : Object.values(rivals).find(r => r.id === opp.highestBidderId);
-
-  const [bidAmount, setBidAmount] = useState(currentHighest + 1_000_000);
-
-  useEffect(() => {
-    setBidAmount(currentHighest + 1_000_000);
-  }, [currentHighest]);
 
   const handleBid = (amount: number) => {
     if (gameState && gameState.finance.cash < amount) return;
     placeBid(opp.id, amount);
   };
+
+  useEffect(() => {
+    handleBid(currentHighest + 1_000_000);
+  }, [currentHighest, handleBid]);
 
   const isExpired = gameState && gameState.week >= opp.expirationWeek;
 

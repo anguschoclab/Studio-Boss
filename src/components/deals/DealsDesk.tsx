@@ -5,8 +5,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
-import { Handshake, Tv, Globe, Zap, BarChart3, Info, Target, Briefcase, FileSignature } from 'lucide-react';
-import { Buyer, Project, MandateType, TalentPact } from '@/engine/types';
+import { Handshake, Target, Briefcase, FileSignature } from 'lucide-react';
+import { Buyer, Project, MandateType } from '@/engine/types';
 import { calculateFitScore } from '@/engine/systems/buyers';
 import { cn } from '@/lib/utils';
 import { useUIStore } from '@/store/uiStore';
@@ -33,7 +33,7 @@ export const DealsDesk = () => {
     projects.filter(p => p.state === 'pitching' || p.state === 'development'),
   [projects]);
 
-  const handleNegotiate = (buyerId: string) => {
+  const handleNegotiate = () => {
     if (!selectedProjectId) return;
     openPitchProject(selectedProjectId);
   };
@@ -187,7 +187,7 @@ export const DealsDesk = () => {
                   projects={pitchingProjects} 
                   week={week}
                   allProjects={projectsRaw} 
-                  onNegotiate={() => handleNegotiate(buyer.id)}
+                  onNegotiate={() => handleNegotiate()}
                   canNegotiate={!!selectedProjectId}
                 />
               ))}

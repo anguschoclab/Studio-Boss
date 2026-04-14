@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 import { AIService } from './aiService';
-import archiveData from '../data/narrative/archive.json';
 
 const ARCHIVE_PATH = path.resolve(__dirname, '../data/narrative/archive.json');
 

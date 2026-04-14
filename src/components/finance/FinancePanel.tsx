@@ -38,14 +38,13 @@ export const FinancePanel = () => {
 
   // Need entire gameState for complex calculations like Net Worth and Forecasts
   // ⚡ The Framerate Fanatic: Moved complex calculations inside the Zustand selector with useShallow to prevent React from re-rendering unless the final computed numbers actually change.
-  const { weeklyCosts, weeklyRevenue, netDelta, studioNetWorth, forecast } = useGameStore(useShallow(s => {
+  const { weeklyCosts, netDelta, studioNetWorth, forecast } = useGameStore(useShallow(s => {
     const state = s.gameState;
-    if (!state) return { weeklyCosts: 0, weeklyRevenue: 0, netDelta: 0, studioNetWorth: 0, forecast: [] };
+    if (!state) return { weeklyCosts: 0, netDelta: 0, studioNetWorth: 0, forecast: [] };
     const costs = calculateWeeklyCosts(state);
     const rev = calculateWeeklyRevenue(state);
     return {
       weeklyCosts: costs,
-      weeklyRevenue: rev,
       netDelta: rev - costs,
       studioNetWorth: calculateStudioNetWorth(state),
       forecast: generateCashflowForecast(state, 12)

@@ -5,19 +5,13 @@ import { useShallow } from 'zustand/react/shallow';
 import { SubNav } from '@/components/navigation/SubNav';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { StatCard } from '@/components/shared/StatCard';
-import { 
-  LayoutDashboard, 
+import { Card, CardContent } from '@/components/ui/card';
+import {
+  LayoutDashboard,
   AlertTriangle,
   Target,
   Newspaper,
   Zap,
-  Star,
-  Clapperboard,
-  DollarSign,
-  Users,
-  ChevronRight,
   Plus,
   TrendingUp,
   Award
@@ -27,111 +21,9 @@ import { formatMoney } from '@/engine/utils';
 import { m } from 'framer-motion';
 
 // Lazy load heavy components
-const CommandCenter = React.lazy(() => import('@/components/dashboard/CommandCenter').then(m => ({ default: m.CommandCenter })));
 const ExecutiveDashboard = React.lazy(() => import('@/components/hubs/ExecutiveDashboard').then(m => ({ default: m.ExecutiveDashboard })));
 const CrisisTriageDashboard = React.lazy(() => import('@/components/hubs/CrisisTriageDashboard').then(m => ({ default: m.CrisisTriageDashboard })));
 const NewsFeed = React.lazy(() => import('@/components/news/NewsFeed').then(m => ({ default: m.NewsFeed })));
-
-// Operations Panel - Alerts and Actionable Items
-const OperationsPanel = () => {
-  const gameState = useGameStore(s => s.gameState);
-  const { openCreateProject, setActiveHub, setActiveSubTab } = useUIStore();
-  
-  const projects = Object.values(gameState?.entities?.projects || {});
-  const needsAttention = projects.filter(p => {
-    const isOverBudget = (p.accumulatedCost || 0) > (p.budget || 0) * 1.2;
-    const isTroubled = p.state === 'turnaround' || p.state === 'needs_greenlight';
-    const hasCrisis = p.activeCrisis && !p.activeCrisis.resolved;
-    return (isOverBudget || isTroubled || hasCrisis) && 
-           p.state !== 'released' && p.state !== 'archived';
-  });
-  
-  const needsGreenlight = projects.filter(p => p.state === 'needs_greenlight');
-  
-  const alerts = [
-    ...needsAttention.map(p => ({
-      type: p.activeCrisis ? 'crisis' : p.state === 'needs_greenlight' ? 'greenlight' : 'warning',
-      project: p,
-      message: p.activeCrisis ? `Crisis: ${p.activeCrisis.description}` :
-               p.state === 'needs_greenlight' ? 'Ready for greenlight decision' :
-               'Over budget - review required',
-      action: p.state === 'needs_greenlight' ? 'Review' : 'View',
-      onClick: () => {
-        if (p.state === 'needs_greenlight') {
-          setActiveHub('production', 'slate');
-        }
-      }
-    })),
-  ];
-  
-  return (
-    <div className="h-full overflow-y-auto custom-scrollbar space-y-4 pb-4">
-      {alerts.length === 0 ? (
-        <div className="p-12 text-center border border-dashed border-border/40 rounded-xl">
-          <Zap className="w-12 h-12 mx-auto mb-4 opacity-20 text-primary" />
-          <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">
-            All Systems Operational
-          </p>
-          <p className="text-xs mt-2 text-muted-foreground/60">
-            No urgent actions requiring your attention
-          </p>
-        </div>
-      ) : (
-        <>
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-black uppercase tracking-wider flex items-center gap-2">
-              <AlertTriangle className="h-4 w-4 text-amber-500" />
-              Action Required ({alerts.length})
-            </h3>
-            <Button 
-              onClick={openCreateProject}
-              size="sm"
-              className="h-8 text-[10px] font-black uppercase tracking-wider"
-            >
-              <Plus className="h-3.5 w-3.5 mr-1" />
-              New Project
-            </Button>
-          </div>
-          
-          {alerts.map((alert, i) => (
-            <Card 
-              key={`${alert.project.id}-${i}`}
-              className={cn(
-                "border-l-4 cursor-pointer hover:shadow-lg transition-all",
-                alert.type === 'crisis' ? 'border-l-destructive bg-destructive/5' :
-                alert.type === 'greenlight' ? 'border-l-primary bg-primary/5' :
-                'border-l-amber-500 bg-amber-500/5'
-              )}
-              onClick={alert.onClick}
-            >
-              <CardContent className="p-4">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h4 className="font-bold text-sm">{alert.project.title}</h4>
-                    <p className={cn(
-                      "text-xs mt-1",
-                      alert.type === 'crisis' ? 'text-destructive' :
-                      alert.type === 'greenlight' ? 'text-primary' :
-                      'text-amber-500'
-                    )}>
-                      {alert.message}
-                    </p>
-                  </div>
-                  <Badge 
-                    variant={alert.type === 'crisis' ? 'destructive' : 'outline'}
-                    className="text-[9px]"
-                  >
-                    {alert.action}
-                  </Badge>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </>
-      )}
-    </div>
-  );
-};
 
 // Strategy Panel - Long-term Goals
 const StrategyPanel = () => {
@@ -229,26 +121,31 @@ const NewsPanel = () => {
 };
 
 export const StudioHQ: React.FC = () => {
-  const { activeSubTab, setActiveSubTab, openCreateProject } = useUIStore();
+  const { activeSubTab, setActiveSubTab } = useUIStore();
   const gameState = useGameStore(useShallow(s => s.gameState));
-  
-  if (!gameState) return null;
-  
-  const projects = Object.values(gameState.entities?.projects || {});
-  const talentCount = Object.keys(gameState.entities?.talents || {}).length;
-  
+
+  const projects = Object.values(gameState?.entities?.projects || {});
+
   // Calculate badge counts
   const badgeCounts = React.useMemo(() => {
+    if (!gameState) {
+      return {
+        overview: null,
+        operations: null,
+        strategy: null,
+        news: null,
+      };
+    }
     const needsAttention = projects.filter(p => {
       const isOverBudget = (p.accumulatedCost || 0) > (p.budget || 0) * 1.2;
       const isTroubled = p.state === 'turnaround' || p.state === 'needs_greenlight';
       const hasCrisis = p.activeCrisis && !p.activeCrisis.resolved;
-      return (isOverBudget || isTroubled || hasCrisis) && 
+      return (isOverBudget || isTroubled || hasCrisis) &&
              p.state !== 'released' && p.state !== 'archived';
     }).length;
-    
+
     const newsCount = gameState.industry?.newsHistory?.length || 0;
-    
+
     return {
       overview: null,
       operations: needsAttention > 0 ? needsAttention : null,
@@ -256,7 +153,9 @@ export const StudioHQ: React.FC = () => {
       news: newsCount > 0 ? Math.min(newsCount, 9) : null,
     };
   }, [projects, gameState]);
-  
+
+  if (!gameState) return null;
+
   const tabs = [
     { 
       id: 'overview', 

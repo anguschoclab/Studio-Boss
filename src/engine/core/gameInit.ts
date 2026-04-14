@@ -1,5 +1,5 @@
 import { ArchetypeKey, RivalStudio, GameState } from '../types/studio.types';
-import { MarketState, StateImpact } from '../types/state.types';
+import { MarketState } from '../types/state.types';
 import { ALL_GENRES, initializeTrends } from '../systems/trends';
 import { ARCHETYPES } from '../data/archetypes';
 import { BrandSystem } from '../generators/BrandSystem';
@@ -9,7 +9,7 @@ import { generateBuyers } from '../generators/buyers';
 import { generateAgencies, generateAgents } from '../generators/agencies';
 import { RandomGenerator } from '../utils/rng';
 import { generateOpportunity } from '../generators/opportunities';
-import { Talent, TalentPact, StreamerPlatform, Buyer, StudioMotivation, Contract } from '@/engine/types';
+import { Talent, TalentPact, StreamerPlatform, StudioMotivation, Contract } from '@/engine/types';
 import { TalentAgentInteractionEngine, AgentPersonality } from '../systems/talent/talentAgentInteractions';
 
 export function initializeGame(studioName: string, archetype: ArchetypeKey, seed: number): GameState {

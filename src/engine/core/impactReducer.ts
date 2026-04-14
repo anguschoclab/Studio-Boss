@@ -1,4 +1,4 @@
-import { GameState, StateImpact, NewsEvent, Project, RivalStudio, Talent, Buyer, Franchise, Contract } from '@/engine/types';
+import { GameState, StateImpact, NewsEvent, Buyer, Franchise } from '@/engine/types';
 
 /**
  * Pure function to apply a single StateImpact to the GameState.

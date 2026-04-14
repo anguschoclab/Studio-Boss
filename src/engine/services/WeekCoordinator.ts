@@ -372,7 +372,7 @@ export class WeekCoordinator {
           // Create new relationship
           const agentPersonality = newAgent.personality || derivePersonalityFromAgent(newAgent);
           const agency = state.industry.agencies.find(a => a.id === newAgent.agencyId);
-          const relationship = TalentAgentInteractionEngine.createRelationship(
+          TalentAgentInteractionEngine.createRelationship(
             talentId,
             newAgent.id,
             talent.personality || 'pragmatic',
@@ -398,7 +398,6 @@ export class WeekCoordinator {
       if (talent.agentId) {
         const relationship = state.talentAgentRelationships[`${talentId}-${talent.agentId}`];
         if (relationship && shouldTalentFireAgent(talent, relationship, state)) {
-          const agent = state.industry.agents.find(a => a.id === talent.agentId);
           context.impacts.push({
             type: 'NEWS_ADDED',
             payload: createAgentFiringEvent(talent, talent.agentId, context.week)
@@ -423,12 +422,12 @@ export class WeekCoordinator {
         if (relationship) {
           // Evolve relationship over time
           // Use 0 for weeksSinceLastInteraction since we don't track last interaction week
-          const evolved = TalentAgentInteractionEngine.evolveRelationship(
+          TalentAgentInteractionEngine.evolveRelationship(
             relationship,
             0,
             context.rng
           );
-          
+
           // Note: Relationship updates will be handled by impact reducer in a future update
           // For now, we track evolution but don't update state directly
         }
@@ -549,8 +548,7 @@ export class WeekCoordinator {
     // 2. Reboot Proposal
     const internalIP = vault.filter(v => v.rightsOwner === 'STUDIO');
     if (internalIP.length > 0 && context.rng.next() < 0.2) {
-       const targetIP = context.rng.pick(internalIP);
-       const proposal = null; // generateRebootProposal(context.rng, targetIP);
+       const proposal = null; // generateRebootProposal(context.rng);
        if (proposal) {
           context.impacts.push({
              type: 'MODAL_TRIGGERED',

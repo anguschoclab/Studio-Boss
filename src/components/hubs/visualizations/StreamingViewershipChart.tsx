@@ -3,7 +3,7 @@ import { TimeSeriesChart } from '@/components/charts/TimeSeriesChart';
 import { Card } from '@/components/ui/card';
 import { tokens } from '@/lib/tokens';
 import { cn } from '@/lib/utils';
-import { Tv, Eye, TrendingUp } from 'lucide-react';
+import { Tv, TrendingUp } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useGameStore } from '@/store/gameStore';
 import { selectStreamingViewership } from '@/store/selectors';

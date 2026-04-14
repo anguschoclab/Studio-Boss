@@ -1,4 +1,4 @@
-import { Talent, TalentRole, TalentTier, DirectorArchetype } from '../types/talent.types';
+import { Talent, DirectorArchetype } from '../types/talent.types';
 import { generateArchetypeForRole, generatePersonalityTrait, generateCareerTrajectory } from '../data/talentArchetypes';
 
 /**

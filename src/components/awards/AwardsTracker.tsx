@@ -38,15 +38,9 @@ export const AwardsTracker: React.FC<AwardsTrackerProps> = ({
   totalWins,
   totalNominations,
 }) => {
-  const upcomingCeremonies = projects.flatMap(p => 
+  const upcomingCeremonies = projects.flatMap(p =>
     p.nominations
       .filter(n => n.status === 'nominated' || n.status === 'shortlisted')
-      .map(n => ({ ...n, projectTitle: p.projectTitle }))
-  );
-
-  const wonAwards = projects.flatMap(p =>
-    p.nominations
-      .filter(n => n.status === 'won')
       .map(n => ({ ...n, projectTitle: p.projectTitle }))
   );
 

@@ -20,18 +20,14 @@ interface BeforeInstallPromptEvent extends Event {
 const isElectron = typeof window !== 'undefined' && 'electronAPI' in window;
 
 // Stub PWA functionality since PWA plugin is removed for Electron
-let needRefresh = false;
-let updateServiceWorker = (_reload: boolean) => {};
+const needRefresh = false;
+const updateServiceWorker = () => {};
 
 // Try to load PWA module if available (for web version)
 try {
   // @ts-ignore - Virtual module provided by vite-plugin-pwa (may not exist)
-  const pwaModule = require('virtual:pwa-register/react');
-  if (pwaModule && pwaModule.useRegisterSW) {
-    const { useRegisterSW } = pwaModule;
-    // This would be used in a component, but for now we stub it
-  }
-} catch (e) {
+  require('virtual:pwa-register/react');
+} catch {
   // PWA module not available (Electron or plugin removed)
   console.log('PWA module not available (expected for Electron)');
 }

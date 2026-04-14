@@ -2,15 +2,12 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { Opportunity } from '@/engine/types';
 import { formatMoney } from '@/engine/utils';
-import { 
-  Gavel, 
-  TrendingUp, 
-  AlertCircle, 
-  CheckCircle2, 
-  ArrowUpRight, 
-  Clock,
+import {
+  Gavel,
+  TrendingUp,
+  AlertCircle,
+  CheckCircle2,
   ShieldAlert,
-  ChevronRight,
   History as LucideHistory,
   X
 } from 'lucide-react';

@@ -4,7 +4,6 @@ import { AlertTriangle, PenTool, Clock, DollarSign, Users, AlertOctagon } from '
 import { Section } from '@/components/layout/Section';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import { tokens } from '@/lib/tokens';
 
 interface AffectedProject {
@@ -42,7 +41,6 @@ export const WriterStrikeImpact: React.FC<WriterStrikeImpactProps> = ({
 }) => {
   const halted = affectedProjects.filter(p => p.status === 'halted');
   const delayed = affectedProjects.filter(p => p.status === 'delayed');
-  const rewriting = affectedProjects.filter(p => p.status === 'rewriting');
 
   const formatCurrency = (value: number) => {
     if (value >= 1000000) return `$${(value / 1000000).toFixed(1)}M`;

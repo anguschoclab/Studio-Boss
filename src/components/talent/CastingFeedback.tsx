@@ -1,16 +1,11 @@
 import React from 'react';
-import { Talent, Project, GameState } from '@/engine/types';
+import { Talent, Project } from '@/engine/types';
 import { calculateWillingness } from '@/engine/systems/talent/willingnessEngine';
 import { useGameStore } from '@/store/gameStore';
-import { 
-  Heart, 
-  TrendingUp, 
-  Building2, 
-  AlertCircle, 
+import {
+  AlertCircle,
   CheckCircle2,
-  Brain,
-  Star,
-  Zap
+  Brain
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 

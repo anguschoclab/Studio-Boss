@@ -3,12 +3,12 @@ import { FinancialOverviewWidget } from './FinancialOverviewWidget';
 import { DemographicsWidget } from './DemographicsWidget';
 import { StudioPulse } from './StudioPulse';
 import { StatCard } from '@/components/shared/StatCard';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { useGameStore } from '@/store/gameStore';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Clapperboard, Users, Building2, TrendingUp, Star, Zap, 
-  ChevronRight, DollarSign, Target, Award, Activity
+import {
+  Clapperboard, Users, Star, Zap,
+  ChevronRight, DollarSign, Award
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { formatMoney } from '@/engine/utils';

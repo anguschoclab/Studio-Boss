@@ -24,9 +24,6 @@ import {
 // Lazy load crisis components
 const CrisisAlertPanel = React.lazy(() => import('@/components/crisis/CrisisAlertPanel'));
 const BudgetOverrunAlert = React.lazy(() => import('@/components/production/BudgetOverrunAlert'));
-const WriterStrikeImpact = React.lazy(() => import('@/components/production/WriterStrikeImpact'));
-const PiracyImpactMonitor = React.lazy(() => import('@/components/finance/PiracyImpactMonitor'));
-const ScandalTracker = React.lazy(() => import('@/components/talent/ScandalTracker'));
 const SkeletonPage = React.lazy(() => import('@/components/shared/SkeletonCard'));
 
 interface CrisisItem {

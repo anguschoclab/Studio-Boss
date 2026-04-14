@@ -1,5 +1,4 @@
-import { AvatarFeatures, ColorPalette } from '../types';
-import { darkenColor } from '../utils';
+import { AvatarFeatures } from '../types';
 
 /**
  * Renders facial hair (beards, stubble).

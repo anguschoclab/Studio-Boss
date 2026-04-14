@@ -14,8 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Search, Filter, Users, Star } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Search, Users, Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export const TalentHub = () => {

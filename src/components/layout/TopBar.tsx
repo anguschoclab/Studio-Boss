@@ -1,6 +1,5 @@
 import React from 'react';
 import { useGameStore } from '@/store/gameStore';
-import { useUIStore } from '@/store/uiStore';
 import { formatMoney, getWeekDisplay } from '@/engine/utils';
 import { 
   GlobeIcon as Globe, 
@@ -11,13 +10,11 @@ import {
 } from '@/components/shared/Icons';
 import { selectActiveProjects, selectMarketMetrics } from '@/store/selectors';
 import { Badge } from '@/components/ui/badge';
-import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
 import { NewsTicker } from './NewsTicker';
 import { Button } from '@/components/ui/button';
 
 export const TopBar = () => {
   const { gameState, doAdvanceWeek, saveToSlot } = useGameStore();
-  const ui = useUIStore();
   
   if (!gameState) return null;
 

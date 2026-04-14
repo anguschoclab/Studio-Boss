@@ -32,7 +32,6 @@ export const SimpleBarChart: React.FC<SimpleBarChartProps> = ({
   height = 200,
   showGrid = true,
   showTooltip = true,
-  color = '#3b82f6',
   className,
   valueFormatter = (v) => v.toString(),
 }) => {

@@ -52,8 +52,6 @@ export const AgencyPackagesPanel: React.FC<AgencyPackagesPanelProps> = ({
   onViewPackage,
   onBidPackage,
 }) => {
-  const agenciesWithPackages = agencies.filter(a => (a.packages?.length || 0) > 0);
-
   if (agencies.length === 0) {
     return (
       <div className={cn('text-center py-12', tokens.border.default, 'border-dashed rounded-xl')}>

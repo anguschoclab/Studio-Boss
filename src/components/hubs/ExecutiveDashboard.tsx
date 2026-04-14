@@ -6,17 +6,14 @@ import { tokens } from '@/lib/tokens';
 import { Section } from '@/components/layout/Section';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { 
+import {
   selectMarketMetrics
 } from '@/store/selectors';
-import { 
-  LayoutDashboard, 
-  AlertTriangle, 
-  DollarSign, 
+import {
+  LayoutDashboard,
+  AlertTriangle,
+  DollarSign,
   TrendingUp,
-  TrendingDown,
-  Activity,
   Zap,
   ArrowRight,
   Plus,

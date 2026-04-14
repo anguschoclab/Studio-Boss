@@ -1,4 +1,4 @@
-import { GameState, StateImpact, Project, Talent, Contract } from '@/engine/types';
+import { GameState, StateImpact, Contract } from '@/engine/types';
 import { RandomGenerator } from '../utils/rng';
 import { evaluateGreenlight } from '../systems/greenlight';
 import { executeGreenlight, executeMarketing } from '../systems/projects';

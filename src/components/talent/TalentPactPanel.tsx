@@ -31,7 +31,6 @@ export const TalentPactPanel: React.FC<TalentPactPanelProps> = ({
 }) => {
   const activePacts = pacts.filter(p => p.status === 'active');
   const expiringPacts = pacts.filter(p => p.status === 'expiring');
-  const negotiatingPacts = pacts.filter(p => p.status === 'negotiating');
   const totalWeeklyCost = pacts.reduce((sum, p) => sum + p.weeklyCost, 0);
 
   const getPactTypeLabel = (type: string) => {

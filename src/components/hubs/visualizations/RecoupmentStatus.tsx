@@ -4,7 +4,6 @@ import { Card } from '@/components/ui/card';
 import { tokens } from '@/lib/tokens';
 import { cn } from '@/lib/utils';
 import { TrendingUp, CheckCircle2, AlertTriangle } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
 import { useGameStore } from '@/store/gameStore';
 import { selectRecoupmentStatus } from '@/store/selectors';
 

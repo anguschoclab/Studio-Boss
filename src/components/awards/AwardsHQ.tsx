@@ -120,12 +120,12 @@ export const AwardsHQ: React.FC = () => {
                     <div className="space-y-3">
                        <p className="text-[9px] font-black uppercase text-slate-500 tracking-widest">Launch FYC Campaign</p>
                        <div className="grid grid-cols-3 gap-2">
-                          {Object.entries(CAMPAIGN_TIERS).filter(([_, t]) => t.type === 'awards').map(([key, tier]) => (
+                          {Object.entries(CAMPAIGN_TIERS).filter(([, t]) => t.type === 'awards').map(([key, tier]) => (
                             <Button 
                               key={key}
                                variant="outline" 
                                className="h-16 flex flex-col items-center justify-center border-slate-800 hover:border-amber-500/50 bg-black/40 group/btn"
-                               onClick={() => launchAwardsCampaign(project.id, key as any)}
+                               onClick={() => launchAwardsCampaign(project.id, key as 'Grassroots' | 'Trade' | 'Blitz')}
                                disabled={gameState.finance.cash < tier.cost || (project.reception?.metaScore || 0) < 65}
                              >
                                 <span className="text-[8px] font-black text-slate-500 uppercase group-hover/btn:text-amber-500">{key}</span>

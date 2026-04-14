@@ -6,13 +6,12 @@ import { ProjectCard } from './ProjectCard';
 import { PipelineTimeline } from './PipelineTimeline';
 import { ResourceAllocation } from './ResourceAllocation';
 import { Button } from '@/components/ui/button';
-import { Plus, LayoutGrid, ListFilter, Search, Calendar, BarChart3, Kanban } from 'lucide-react';
+import { Plus, LayoutGrid, ListFilter, Search, Calendar, Kanban } from 'lucide-react';
 import { ProjectStatus } from '@/engine/types';
 import { selectProjects } from '@/store/selectors';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const COLUMNS: { status: ProjectStatus[]; title: string; color: string; description: string }[] = [
   { status: ['development', 'needs_greenlight'], title: 'Development', color: 'bg-secondary', description: 'Scripts & Concept' },

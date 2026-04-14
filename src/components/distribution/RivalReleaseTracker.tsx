@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { Building2, Calendar, Target, TrendingUp, AlertTriangle } from 'lucide-react';
+import { Building2, Calendar, Target, AlertTriangle } from 'lucide-react';
 import { Section } from '@/components/layout/Section';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';

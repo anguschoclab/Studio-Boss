@@ -6,7 +6,7 @@ import { TalentCard } from './TalentCard';
 import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, Filter } from 'lucide-react';
+import { Search } from 'lucide-react';
 
 export const TalentPanel = () => {
   const state = useGameStore(s => s.gameState);

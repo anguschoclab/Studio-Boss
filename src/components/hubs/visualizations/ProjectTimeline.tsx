@@ -3,7 +3,7 @@ import { StackedBarChart } from '@/components/charts/StackedBarChart';
 import { Card } from '@/components/ui/card';
 import { tokens } from '@/lib/tokens';
 import { cn } from '@/lib/utils';
-import { Calendar, Clock } from 'lucide-react';
+import { Clock } from 'lucide-react';
 import { useGameStore } from '@/store/gameStore';
 import { selectProjectTimelineData } from '@/store/selectors';
 
@@ -19,14 +19,12 @@ interface TimelineData {
 interface ProjectTimelineProps {
   data?: TimelineData[];
   className?: string;
-  currentWeek?: number;
   weeks?: number;
 }
 
 export const ProjectTimeline: React.FC<ProjectTimelineProps> = ({
   data: externalData,
   className,
-  currentWeek: externalWeek,
   weeks = 12,
 }) => {
   const gameState = useGameStore(s => s.gameState);

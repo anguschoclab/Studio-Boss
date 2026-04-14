@@ -3,7 +3,7 @@ import { SimpleBarChart } from '@/components/charts/SimpleBarChart';
 import { Card } from '@/components/ui/card';
 import { tokens } from '@/lib/tokens';
 import { cn } from '@/lib/utils';
-import { Film, DollarSign, TrendingUp, Users } from 'lucide-react';
+import { TrendingUp } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useGameStore } from '@/store/gameStore';
 import { selectBoxOfficeData } from '@/store/selectors';

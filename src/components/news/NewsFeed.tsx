@@ -2,16 +2,15 @@ import { useGameStore } from '@/store/gameStore';
 import { NewsEventType } from '@/engine/types';
 import { Badge } from '@/components/ui/badge';
 import { useState } from 'react';
-import { 
-  Trophy, 
-  AlertTriangle, 
-  TrendingUp, 
+import {
+  Trophy,
+  AlertTriangle,
+  TrendingUp,
   Search,
-  History,
-  Filter
+  History
 } from 'lucide-react';
 
-const eventTypeConfig: Record<NewsEventType, { icon: any, color: string, label: string }> = {
+const eventTypeConfig: Record<NewsEventType, { icon: React.ElementType, color: string, label: string }> = {
   AWARD: { icon: Trophy, color: 'text-amber-500 bg-amber-500/10 border-amber-500/20', label: 'Awards' },
   CRISIS: { icon: AlertTriangle, color: 'text-destructive bg-destructive/10 border-destructive/20', label: 'Crises' },
   RELEASE: { icon: TrendingUp, color: 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20', label: 'Release' },
