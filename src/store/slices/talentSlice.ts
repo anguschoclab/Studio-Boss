@@ -205,7 +205,16 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
 
       const opp = state.market.opportunities[oppIndex];
       const rng = new RandomGenerator(state.rngState);
-      const currentHighest = Object.values(opp.bids || {}).reduce((max: number, b) => Math.max(max, b.amount || 0), 0);
+
+      let currentHighest = 0;
+      if (opp.bids) {
+        for (const bidId in opp.bids) {
+          if (Object.prototype.hasOwnProperty.call(opp.bids, bidId)) {
+            currentHighest = Math.max(currentHighest, opp.bids[bidId].amount || 0);
+          }
+        }
+      }
+
       const isWinner = opp.highestBidderId === 'PLAYER';
       const isExpired = state.week >= opp.expirationWeek;
 
@@ -297,7 +306,16 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       };
 
       const rng = new RandomGenerator(state.rngState);
-      const aggressiveRivals = Object.values(state.entities.rivals).filter(r => r.cash > amount * 1.5 && r.prestige > 40);
+      const aggressiveRivals: RivalStudio[] = [];
+      const rivals = state.entities.rivals;
+      for (const rid in rivals) {
+        if (Object.prototype.hasOwnProperty.call(rivals, rid)) {
+          const r = rivals[rid];
+          if (r.cash > amount * 1.5 && r.prestige > 40) {
+            aggressiveRivals.push(r);
+          }
+        }
+      }
       
       if (aggressiveRivals.length > 0) {
         const rivalIdx = Math.floor(rng.next() * aggressiveRivals.length);
@@ -368,12 +386,13 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       }
 
       const updatedContracts = { ...state.entities.contracts };
-      Object.keys(updatedContracts).forEach(id => {
+      for (const id in updatedContracts) {
+        if (!Object.prototype.hasOwnProperty.call(updatedContracts, id)) continue;
         const c = updatedContracts[id];
         if (c.talentId === talentId && c.projectId === projectId) {
           delete updatedContracts[id];
         }
-      });
+      }
 
       const updatedCommitments = (talent.commitments || []).filter(
         c => c.projectId !== projectId

@@ -82,13 +82,15 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
         primaryAngle: angle as any,
       });
 
-      const projectContracts: Contract[] = Object.values(state.entities.contracts).filter(c => c.projectId === p.id);
-
-      const talentPool = state.entities.talents;
-      const talentMap: Record<string, Talent> = {};
-      Object.keys(talentPool).forEach(id => {
-        talentMap[id] = talentPool[id];
-      });
+      const projectContracts: Contract[] = [];
+      const allContracts = state.entities.contracts;
+      for (const cid in allContracts) {
+        if (Object.prototype.hasOwnProperty.call(allContracts, cid)) {
+          if (allContracts[cid].projectId === p.id) {
+            projectContracts.push(allContracts[cid]);
+          }
+        }
+      }
 
       const rng = new RandomGenerator(state.rngState);
 
@@ -97,7 +99,7 @@ export const createFinanceSlice: StateCreator<GameStore, [], [], FinanceSlice> =
         state.week, 
         state.studio.prestige, 
         projectContracts, 
-        talentMap,
+        state.entities.talents,
         rng
       );
 

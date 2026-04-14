@@ -22,3 +22,9 @@
 ## 2025-03-08 - Optimized AI bidding engine loop
 **Learning:** Hoisting repetitive calculations (like `leverageAggression` inside `biddingEngine.ts`) outside of deeply nested loops significantly reduces Time Complexity and unnecessary GC allocations. Here, calculating it per opportunity instead of per rival per opportunity reduced the complexity from `O(O * R * (A + a))` to `O(O * (R + A + a))`.
 **Action:** When iterating over combinations of items (like opportunities and rivals), look for derived values that only depend on the outer loop variable and hoist their calculation before the inner loop.
+## 2025-02-18
+- **Role:** The Tech Supervisor
+- **What:** Refactored multiple core game loop state functions (e.g., in `financeSlice.ts`, `talentSlice.ts`, `WeekCoordinator.ts`) to eliminate redundant `Object.values()` and `Object.keys()` array allocations. Replaced them with native `for...in` loops. Also implemented lightweight module-level memoization for core dictionary-to-array conversions in `selectors.ts` (`selectProjects`, `selectRivals`, `selectTalentPool`).
+- **Why:** The game loop was unnecessarily allocating hundreds of intermediate arrays per tick, generating excessive garbage collection pressure. Furthermore, standard selectors returning `Object.values(dict)` generated new reference arrays every time the Redux-like state store ticked, causing cascading unneeded React renders for any component attached via `useShallow`.
+- **Impact:** Decreased JS heap allocations and GC pauses during the weekly tick. Eliminated widespread React component re-renders that were failing `useShallow` checks on core arrays.
+- **Measurement:** Code execution verification via Vitest to confirm exact state mutations without loss of logic (`npm run test`), while avoiding the $O(n)$ redundant copies.

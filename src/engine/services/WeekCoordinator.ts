@@ -474,12 +474,13 @@ export class WeekCoordinator {
    */
   private static runAnnualMAScan(state: GameState, context: TickContext) {
     const rivalsObj = state.entities.rivals || {};
-    const rivalKeys = Object.keys(rivalsObj);
-    for (let i = 0; i < rivalKeys.length; i++) {
-      for (let j = 0; j < rivalKeys.length; j++) {
-        if (i === j) continue;
-        const attacker = rivalsObj[rivalKeys[i]];
-        const target = rivalsObj[rivalKeys[j]];
+    for (const attackerId in rivalsObj) {
+      if (!Object.prototype.hasOwnProperty.call(rivalsObj, attackerId)) continue;
+      for (const targetId in rivalsObj) {
+        if (!Object.prototype.hasOwnProperty.call(rivalsObj, targetId)) continue;
+        if (attackerId === targetId) continue;
+        const attacker = rivalsObj[attackerId];
+        const target = rivalsObj[targetId];
         if (!target.isAcquirable) continue;
         if (shouldAttemptHostileTakeover(attacker, target, state)) {
           context.impacts.push({

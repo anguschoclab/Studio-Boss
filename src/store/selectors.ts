@@ -37,9 +37,15 @@ export const selectStudio = (state: GameState | null) => state?.studio || null;
 export const selectInternal = (state: GameState | null) => state?.studio?.internal || null;
 export const selectProjectsRaw = (state: GameState | null) => state?.entities?.projects || EMPTY_PROJECTS;
 
+// Memoization helpers
+let _lastProjectsRaw: Record<string, Project> | null = null;
+let _lastProjectsArr: Project[] = [];
 export const selectProjects = (state: GameState | null): Project[] => {
   const projects = selectProjectsRaw(state);
-  return Object.values(projects);
+  if (projects === _lastProjectsRaw) return _lastProjectsArr;
+  _lastProjectsRaw = projects;
+  _lastProjectsArr = Object.values(projects);
+  return _lastProjectsArr;
 };
 
 export const selectFinance = (state: GameState | null) => state?.finance || EMPTY_FINANCE;
@@ -47,10 +53,28 @@ export const selectCash = (state: GameState | null) => selectFinance(state).cash
 
 export const selectIndustry = (state: GameState | null) => state?.industry || null;
 export const selectRivalsRaw = (state: GameState | null) => state?.entities?.rivals || EMPTY_RIVALS;
-export const selectRivals = (state: GameState | null): RivalStudio[] => Object.values(selectRivalsRaw(state));
+
+let _lastRivalsRaw: Record<string, RivalStudio> | null = null;
+let _lastRivalsArr: RivalStudio[] = [];
+export const selectRivals = (state: GameState | null): RivalStudio[] => {
+  const rivals = selectRivalsRaw(state);
+  if (rivals === _lastRivalsRaw) return _lastRivalsArr;
+  _lastRivalsRaw = rivals;
+  _lastRivalsArr = Object.values(rivals);
+  return _lastRivalsArr;
+};
 
 export const selectTalentPoolRaw = (state: GameState | null) => state?.entities?.talents || EMPTY_TALENT_POOL;
-export const selectTalentPool = (state: GameState | null): Talent[] => Object.values(selectTalentPoolRaw(state));
+
+let _lastTalentPoolRaw: Record<string, Talent> | null = null;
+let _lastTalentPoolArr: Talent[] = [];
+export const selectTalentPool = (state: GameState | null): Talent[] => {
+  const talentPool = selectTalentPoolRaw(state);
+  if (talentPool === _lastTalentPoolRaw) return _lastTalentPoolArr;
+  _lastTalentPoolRaw = talentPool;
+  _lastTalentPoolArr = Object.values(talentPool);
+  return _lastTalentPoolArr;
+};
 
 export const selectActiveProjects = (state: GameState | null) => {
   const projects = selectProjectsRaw(state);
