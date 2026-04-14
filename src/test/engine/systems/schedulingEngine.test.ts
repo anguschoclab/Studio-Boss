@@ -39,7 +39,8 @@ describe('SchedulingEngine Hardening Tests', () => {
       projectId: 'p-current',
       fee: 1000000,
       role: 'actor',
-      backendPercent: 0
+      backendPercent: 0,
+      ownerId: 'player'
     }
   ];
 
@@ -85,6 +86,7 @@ describe('SchedulingEngine Hardening Tests', () => {
 
     const projectUpdate = impacts.find(i => i.type === 'PROJECT_UPDATED');
     expect(projectUpdate).toBeDefined();
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     expect(projectUpdate.payload.update.weeksInPhase).toBe(0); // 1 - 1 = 0
   });

@@ -31,7 +31,7 @@ async function handleSave(slotId: string | number, state: any, retries = 3) {
 
   while (attempt < retries) {
     try {
-      // @ts-ignore - createSyncAccessHandle is only in Workers
+      // @ts-expect-error - createSyncAccessHandle is only in Workers
       accessHandle = await fileHandle.createSyncAccessHandle();
       break; 
     } catch (e) {
@@ -59,7 +59,7 @@ async function handleLoad(slotId: string | number) {
   const root = await navigator.storage.getDirectory();
   const fileHandle = await root.getFileHandle(`slot_${slotId}.sb`);
 
-  // @ts-ignore - createSyncAccessHandle is only in Workers
+  // @ts-expect-error - createSyncAccessHandle is only in Workers
   const accessHandle = await fileHandle.createSyncAccessHandle();
 
   try {

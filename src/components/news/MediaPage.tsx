@@ -69,7 +69,7 @@ function mapNewsEvent(ev: NewsEvent): MappedHeadline {
     'RIVAL': 'rival',
   };
   return {
-    id: ev.id!,
+    id: ev.id ?? '',
     week: ev.week,
     category: categoryMap[ev.type] || 'general',
     text: ev.headline,
@@ -83,7 +83,7 @@ export const MediaPage = () => {
   // Combine both sources into a unified headline format
   const allHeadlines = useMemo(() => {
     const mapped: MappedHeadline[] = [
-      ...newsHeadlines.map(h => ({ ...h, id: h.id! })),
+      ...newsHeadlines.map(h => ({ ...h, id: h.id ?? '' })),
       ...newsHistory.map(mapNewsEvent),
     ];
     // Sort by week descending

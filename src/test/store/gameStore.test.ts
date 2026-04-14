@@ -37,12 +37,14 @@ describe("gameStore", () => {
 
   it("advances week", async () => {
     await useGameStore.getState().newGame("My Studio", "major");
-    const state = useGameStore.getState().gameState!;
+    const state = useGameStore.getState().gameState;
+    if (!state) throw new Error("Game state not initialized");
     useGameStore.setState({ gameState: state });
 
     const summary = await useGameStore.getState().doAdvanceWeek();
     expect(summary).not.toBeNull();
-    expect(summary!.fromWeek).toBe(1);
+    if (!summary) throw new Error("Summary not generated");
+    expect(summary.fromWeek).toBe(1);
     expect(useGameStore.getState().gameState?.week).toBe(2);
   });
 
@@ -72,19 +74,21 @@ describe("gameStore", () => {
 
   it("signs a contract if sufficient funds", async () => {
     await useGameStore.getState().newGame("My Studio", "major");
-    const state = useGameStore.getState().gameState!;
+    const state = useGameStore.getState().gameState;
+    if (!state) throw new Error("Game state not initialized");
     state.finance.cash = 1000000;
-    
+
     const talent = createMockTalent({ id: "t1", name: "Star", role: "actor", roles: ["actor"], fee: 100000 });
     const project = createMockProject({ id: "p1", title: "Test", state: "development" });
-    
+
     state.entities.talents = { "t1": talent };
     state.entities.projects = { "p1": project };
     useGameStore.setState({ gameState: state });
 
     useGameStore.getState().signContract("t1", "p1");
 
-    const newState = useGameStore.getState().gameState!;
+    const newState = useGameStore.getState().gameState;
+    if (!newState) throw new Error("Game state not initialized");
     const contracts = Object.values(newState.entities.contracts);
     expect(newState.finance.cash).toBe(900000); // 1M - 100k fee
     expect(contracts).toHaveLength(1);

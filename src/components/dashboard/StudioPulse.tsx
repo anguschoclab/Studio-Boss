@@ -27,8 +27,8 @@ export const StudioPulse: React.FC = () => {
   const setActiveTab = useUIStore(s => s.setActiveTab);
 
   const { finance, entities } = gameState || {};
-  const projects = entities ? Object.values(entities.projects) : [];
-  const talents = entities ? Object.values(entities.talents) : [];
+  const projects = useMemo(() => entities ? Object.values(entities.projects) : [], [entities?.projects]);
+  const talents = useMemo(() => entities ? Object.values(entities.talents) : [], [entities?.talents]);
 
   // Calculate health metrics
   const healthMetrics = useMemo(() => {

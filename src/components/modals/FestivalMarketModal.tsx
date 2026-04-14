@@ -65,7 +65,7 @@ export const FestivalMarketModal: React.FC = () => {
     }, 1500);
 
     return () => clearInterval(timer);
-  }, [currentBid, highestBidderId, isResolved, project, gameState]);
+  }, [currentBid, highestBidderId, isResolved, project, gameState, handleFinalize]);
 
   const handlePlayerBid = () => {
     if (!gameState) return;

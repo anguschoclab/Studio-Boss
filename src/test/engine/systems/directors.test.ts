@@ -49,6 +49,7 @@ describe("getCreativeControlDemandChance", () => {
   });
 
   it("should return correct chance for default", () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     expect(getCreativeControlDemandChance("unknown")).toBe(0.10);
   });

@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from 'react';
+import React, { useMemo, useEffect, useCallback } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { Opportunity } from '@/engine/types';
 import { formatMoney } from '@/engine/utils';
@@ -32,10 +32,10 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ oppo
   const isPlayerWinning = opp.highestBidderId === 'PLAYER';
   const highestBidder = isPlayerWinning ? { name: 'YOU' } : Object.values(rivals).find(r => r.id === opp.highestBidderId);
 
-  const handleBid = (amount: number) => {
+  const handleBid = useCallback((amount: number) => {
     if (gameState && gameState.finance.cash < amount) return;
     placeBid(opp.id, amount);
-  };
+  }, [gameState, opp.id, placeBid]);
 
   useEffect(() => {
     handleBid(currentHighest + 1_000_000);
