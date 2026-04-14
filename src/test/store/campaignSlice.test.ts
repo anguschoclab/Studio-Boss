@@ -1,19 +1,10 @@
 import { createMarketingSlice } from "../../store/slices/marketingSlice";
 
 describe("marketingSlice", () => {
-  let store: {
-    gameState: {
-      week: number;
-      gameSeed: number;
-      tickCount: number;
-      rngState: number;
-      finance: { cash: number };
-      entities: { projects: Record<string, never> };
-    };
-  };
-  let slice: unknown;
-  let set: unknown;
-  let get: unknown;
+  let store: any;
+  let slice: any;
+  let set: any;
+  let get: any;
 
   beforeEach(() => {
     store = {
@@ -25,13 +16,13 @@ describe("marketingSlice", () => {
         finance: { cash: 10_000_000 },
         entities: {
           projects: {
-            "proj-1": { 
-              id: "proj-1", 
-              title: "Test", 
-              budget: 10_000_000,
-              state: "released",
-              releaseWeek: 5,
-              reception: { metaScore: 80 } 
+            "proj-1": {
+              id: "proj-1",
+              title: "Test Project",
+              budget: 5_000_000,
+              state: "development",
+              releaseWeek: 10,
+              reception: { metaScore: 75 }
             }
           }
         },
@@ -42,7 +33,7 @@ describe("marketingSlice", () => {
       }
     };
 
-    set = (fn: (state: typeof store) => Partial<typeof store> | typeof store) => {
+    set = (fn: any) => {
       const result = typeof fn === 'function' ? fn(store) : fn;
       store = { ...store, ...result };
     };
