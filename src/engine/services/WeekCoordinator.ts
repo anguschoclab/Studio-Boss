@@ -338,6 +338,7 @@ export class WeekCoordinator {
     context.impacts.push(...tickDynastySystem(state, context.rng));
     context.impacts.push(...tickRelationshipSystem(state, context.rng));
     context.impacts.push(...tickCliqueSystem(state, context.rng));
+    context.impacts.push(...tickProductionEnhancementSystem(state, context.rng));
 
     // Phase 1: Register Weekly Morale
     const talentDict = state.entities.talents;
