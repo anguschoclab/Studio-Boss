@@ -180,6 +180,188 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
       };
     }
 
+    case 'RELATIONSHIP_FORMED': {
+      if (!impact.payload) return state;
+      const { key, relationship } = impact.payload;
+      if (!key || !relationship) return state;
+      return {
+        ...state,
+        relationships: {
+          ...state.relationships,
+          relationships: {
+            ...state.relationships?.relationships,
+            [key]: relationship,
+          },
+        },
+      };
+    }
+
+    case 'RELATIONSHIP_UPDATED': {
+      if (!impact.payload) return state;
+      const { key, relationship } = impact.payload;
+      if (!key || !relationship) return state;
+      return {
+        ...state,
+        relationships: {
+          ...state.relationships,
+          relationships: {
+            ...state.relationships?.relationships,
+            [key]: relationship,
+          },
+        },
+      };
+    }
+
+    case 'CLIQUE_FORMED': {
+      if (!impact.payload) return state;
+      const { cliqueId, clique } = impact.payload;
+      if (!cliqueId || !clique) return state;
+
+      // Ensure cliques object exists
+      const existingCliques = state.relationships?.cliques?.cliques || {};
+      const existingMemberMap = state.relationships?.cliques?.memberCliqueMap || {};
+
+      // Update member clique map
+      const updatedMemberMap = { ...existingMemberMap };
+      for (const memberId of clique.members) {
+        updatedMemberMap[memberId] = [...(updatedMemberMap[memberId] || []), cliqueId];
+      }
+
+      return {
+        ...state,
+        relationships: {
+          ...state.relationships,
+          cliques: {
+            cliques: {
+              ...existingCliques,
+              [cliqueId]: clique,
+            },
+            memberCliqueMap: updatedMemberMap,
+          },
+        },
+      };
+    }
+
+    case 'CLIQUE_UPDATED': {
+      if (!impact.payload) return state;
+      const { cliqueId, clique } = impact.payload;
+      if (!cliqueId || !clique) return state;
+
+      const existingCliques = state.relationships?.cliques?.cliques || {};
+      const existingMemberMap = state.relationships?.cliques?.memberCliqueMap || {};
+
+      return {
+        ...state,
+        relationships: {
+          ...state.relationships,
+          cliques: {
+            cliques: {
+              ...existingCliques,
+              [cliqueId]: clique,
+            },
+            memberCliqueMap: existingMemberMap,
+          },
+        },
+      };
+    }
+
+    case 'SCREENPLAY_NOTE_CREATED': {
+      if (!impact.payload) return state;
+      const { note } = impact.payload;
+      if (!note) return state;
+
+      const existingNotes = state.relationships?.productionEnhancements?.screenplayNotes || {};
+
+      return {
+        ...state,
+        relationships: {
+          ...state.relationships,
+          productionEnhancements: {
+            ...state.relationships?.productionEnhancements,
+            screenplayNotes: {
+              ...existingNotes,
+              [note.id]: note,
+            },
+            productionAdditions: state.relationships?.productionEnhancements?.productionAdditions || {},
+            creditScenes: state.relationships?.productionEnhancements?.creditScenes || {},
+          },
+        },
+      };
+    }
+
+    case 'SCREENPLAY_NOTE_IMPLEMENTED': {
+      if (!impact.payload) return state;
+      const { noteId, note } = impact.payload;
+      if (!noteId || !note) return state;
+
+      const existingNotes = state.relationships?.productionEnhancements?.screenplayNotes || {};
+
+      return {
+        ...state,
+        relationships: {
+          ...state.relationships,
+          productionEnhancements: {
+            ...state.relationships?.productionEnhancements,
+            screenplayNotes: {
+              ...existingNotes,
+              [noteId]: note,
+            },
+            productionAdditions: state.relationships?.productionEnhancements?.productionAdditions || {},
+            creditScenes: state.relationships?.productionEnhancements?.creditScenes || {},
+          },
+        },
+      };
+    }
+
+    case 'PRODUCTION_ADDITION_CREATED': {
+      if (!impact.payload) return state;
+      const { addition } = impact.payload;
+      if (!addition) return state;
+
+      const existingAdditions = state.relationships?.productionEnhancements?.productionAdditions || {};
+
+      return {
+        ...state,
+        relationships: {
+          ...state.relationships,
+          productionEnhancements: {
+            ...state.relationships?.productionEnhancements,
+            screenplayNotes: state.relationships?.productionEnhancements?.screenplayNotes || {},
+            productionAdditions: {
+              ...existingAdditions,
+              [addition.id]: addition,
+            },
+            creditScenes: state.relationships?.productionEnhancements?.creditScenes || {},
+          },
+        },
+      };
+    }
+
+    case 'CREDIT_SCENE_CREATED':
+    case 'CREDIT_SCENE_UPDATED': {
+      if (!impact.payload) return state;
+      const { scene } = impact.payload;
+      if (!scene) return state;
+
+      const existingScenes = state.relationships?.productionEnhancements?.creditScenes || {};
+
+      return {
+        ...state,
+        relationships: {
+          ...state.relationships,
+          productionEnhancements: {
+            ...state.relationships?.productionEnhancements,
+            screenplayNotes: state.relationships?.productionEnhancements?.screenplayNotes || {},
+            productionAdditions: state.relationships?.productionEnhancements?.productionAdditions || {},
+            creditScenes: {
+              ...existingScenes,
+              [scene.id]: scene,
+            },
+          },
+        },
+      };
+    }
+
     case 'BUYER_UPDATED': {
       const { buyerId, update } = impact.payload;
       const buyers = state.market.buyers.map(b => 

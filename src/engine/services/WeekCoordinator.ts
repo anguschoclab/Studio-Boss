@@ -47,6 +47,9 @@ import { TalentLifecycleSystem } from '../systems/talent/TalentLifecycleSystem';
 import { TalentMoraleSystem } from '../systems/talent/TalentMoraleSystem';
 import { tickDeathSystem } from '../systems/talent/DeathSystem';
 import { tickDynastySystem } from '../systems/talent/DynastySystem';
+import { tickRelationshipSystem } from '../systems/talent/RelationshipSystem';
+import { tickCliqueSystem } from '../systems/talent/CliqueSystem';
+import { tickProductionEnhancementSystem } from '../systems/talent/ProductionEnhancementSystem';
 import { shouldAttemptHostileTakeover } from '../systems/ai/AgentBrain';
 import { shouldTalentHireAgent, shouldTalentFireAgent, selectAgentForTalent, createAgentHiringEvent, createAgentFiringEvent } from '../systems/talent/talentAgentEvents';
 import { TalentAgentInteractionEngine } from '../systems/talent/talentAgentInteractions';
@@ -333,6 +336,8 @@ export class WeekCoordinator {
     context.impacts.push(...TalentLifecycleSystem.tick(state, context.rng));
     context.impacts.push(...tickDeathSystem(state, context.rng));
     context.impacts.push(...tickDynastySystem(state, context.rng));
+    context.impacts.push(...tickRelationshipSystem(state, context.rng));
+    context.impacts.push(...tickCliqueSystem(state, context.rng));
 
     // Phase 1: Register Weekly Morale
     const talentDict = state.entities.talents;
