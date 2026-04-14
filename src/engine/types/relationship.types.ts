@@ -46,6 +46,12 @@ export interface RelationshipsState {
     photoshoots: Record<string, import('./marketing.types').MagazinePhotoshoot>;
     activePressTours: Record<string, import('./marketing.types').PressTour>;
   };
+  discovery?: {
+    breakoutStars: Record<string, import('./discovery.types').BreakoutStar>;
+    guestStarBookings: Record<string, import('./discovery.types').GuestStarBooking>;
+    hiddenTalentPool: Record<string, import('./discovery.types').HiddenTalent>;
+    discoveryLog: string[];
+  };
 }
 
 // Helper type for relationship formation

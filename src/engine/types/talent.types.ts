@@ -247,6 +247,9 @@ export interface Talent {
   childIds?: string[]; // IDs of children in talent pool
   isNepoBaby?: boolean; // True if has at least one parent in industry
   spouseId?: string; // Current spouse/partner
+
+  // Discovery System: Breakout star tracking
+  isBreakout?: boolean; // True if currently experiencing breakout hype
 }
 
 export interface Contract {

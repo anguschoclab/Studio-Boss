@@ -228,34 +228,39 @@ function discoverHiddenTalent(
   const newTalent: Talent = {
     id: hiddenTalent.id,
     name: hiddenTalent.name,
+    role: 'actor',
+    roles: ['actor'],
     tier: 4, // Start as unknown
-    age: hiddenTalent.age,
     demographics: {
       age: hiddenTalent.age,
-      gender: rng.next() < 0.5 ? 'male' : 'female',
+      gender: rng.next() < 0.5 ? 'MALE' : 'FEMALE',
       country: rng.pick(['USA', 'UK', 'Canada', 'Australia', 'Other']),
       ethnicity: 'varied',
     },
-    accessLevel: 'standard',
+    accessLevel: 'outsider',
+    momentum: 50,
+    skills: {
+      acting: hiddenTalent.currentSkill,
+      directing: rng.rangeInt(20, 50),
+      writing: rng.rangeInt(20, 50),
+      stardom: hiddenTalent.charisma,
+    },
     prestige: hiddenTalent.prestige,
     starMeter: rng.rangeInt(15, 35), // Unknown
     draw: hiddenTalent.draw,
     fee: hiddenTalent.askingPrice,
-    availability: 'AVAILABLE',
+    commitments: [],
+    fatigue: 0,
+    preferredGenres: [],
     psychology: {
-      loyalty: rng.rangeInt(40, 80),
+      ego: rng.rangeInt(30, 70),
+      mood: rng.rangeInt(40, 80),
       scandalRisk: rng.rangeInt(20, 60),
-      workEthic: rng.rangeInt(50, 90),
+      synergyAffinities: [],
+      synergyConflicts: [],
     },
     personality: rng.pick(['charismatic', 'collaborative', 'difficult', 'perfectionist']),
-    signatureGenres: [],
-    signatureFormats: [],
-    signatureDemographics: [],
-    preferredReleaseMonths: [],
-    contractStatus: 'FREE_AGENT',
-    knownRisks: [],
-    exclusiveAgencyId: undefined,
-    createdWeek: week,
+    actorArchetype: rng.pick(['movie_star', 'prestige_actor', 'tv_star', 'character_actor']),
   };
 
   const event: DiscoveryEvent = {
@@ -422,11 +427,11 @@ export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator
   // 4. Hidden talent discovery
   // Studios can discover hidden talent
   if (rng.next() < DISCOVERY_CHANCE) {
-    const undiscovered = Object.values(hiddenPool)
-      .filter((h: HiddenTalent) => !h.discoveredBy);
+    const undiscovered = (Object.values(hiddenPool) as HiddenTalent[])
+      .filter(h => !h.discoveredBy);
 
     if (undiscovered.length > 0) {
-      const toDiscover = rng.pick(undiscovered) as HiddenTalent;
+      const toDiscover = rng.pick(undiscovered);
       const { talent, event } = discoverHiddenTalent(
         { ...toDiscover, discoveredBy: 'player', discoveryWeek: state.week },
         'player',

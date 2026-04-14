@@ -434,6 +434,77 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
       };
     }
 
+    case 'BREAKOUT_STAR_CREATED':
+    case 'BREAKOUT_STAR_UPDATED': {
+      if (!impact.payload) return state;
+      const { breakoutId, breakout } = impact.payload;
+      if (!breakout) return state;
+
+      const existingBreakouts = state.relationships?.discovery?.breakoutStars || {};
+      const id = breakoutId || breakout.id;
+
+      return {
+        ...state,
+        relationships: {
+          ...state.relationships,
+          discovery: {
+            ...state.relationships?.discovery,
+            breakoutStars: {
+              ...existingBreakouts,
+              [id]: breakout,
+            },
+            guestStarBookings: state.relationships?.discovery?.guestStarBookings || {},
+            hiddenTalentPool: state.relationships?.discovery?.hiddenTalentPool || {},
+            discoveryLog: state.relationships?.discovery?.discoveryLog || [],
+          },
+        },
+      };
+    }
+
+    case 'GUEST_STAR_OPPORTUNITY':
+    case 'GUEST_STAR_BOOKED': {
+      if (!impact.payload) return state;
+      const { bookingId, booking } = impact.payload;
+      if (!booking) return state;
+
+      const existingBookings = state.relationships?.discovery?.guestStarBookings || {};
+      const id = bookingId || booking.id;
+
+      return {
+        ...state,
+        relationships: {
+          ...state.relationships,
+          discovery: {
+            ...state.relationships?.discovery,
+            breakoutStars: state.relationships?.discovery?.breakoutStars || {},
+            guestStarBookings: {
+              ...existingBookings,
+              [id]: booking,
+            },
+            hiddenTalentPool: state.relationships?.discovery?.hiddenTalentPool || {},
+            discoveryLog: state.relationships?.discovery?.discoveryLog || [],
+          },
+        },
+      };
+    }
+
+    case 'DISCOVERY_STATE_UPDATED': {
+      if (!impact.payload) return state;
+      const { discovery } = impact.payload;
+      if (!discovery) return state;
+
+      return {
+        ...state,
+        relationships: {
+          ...state.relationships,
+          discovery: {
+            ...state.relationships?.discovery,
+            ...discovery,
+          },
+        },
+      };
+    }
+
     case 'BUYER_UPDATED': {
       const { buyerId, update } = impact.payload;
       const buyers = state.market.buyers.map(b => 
