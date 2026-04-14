@@ -2,7 +2,7 @@
 
 const { app, BrowserWindow, protocol, net, shell, Menu, ipcMain, Notification, dialog, Tray } = require('electron');
 const path = require('path');
-const fs = require('fs');
+const fs = require('fs').promises;
 const { pathToFileURL } = require('url');
 
 const DIST = path.join(__dirname, '../dist');
@@ -11,44 +11,53 @@ const IS_DEV = process.env.NODE_ENV === 'development';
 // Initialize electron-store for configuration persistence
 // Use a simple JSON-based store instead of electron-store to avoid ESM/CJS issues
 const store = {
-  get: (key) => {
+  get: async (key) => {
     try {
       const userDataPath = app.getPath('userData');
       const configPath = path.join(userDataPath, 'config.json');
-      if (fs.existsSync(configPath)) {
-        const data = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
-        return data[key];
+      try {
+        const data = await fs.readFile(configPath, 'utf-8');
+        const parsed = JSON.parse(data);
+        return parsed[key];
+      } catch (e) {
+        // File doesn't exist or can't be read
+        return undefined;
       }
-      return undefined;
     } catch (e) {
       console.error('Store get error:', e);
       return undefined;
     }
   },
-  set: (key, value) => {
+  set: async (key, value) => {
     try {
       const userDataPath = app.getPath('userData');
       const configPath = path.join(userDataPath, 'config.json');
       let data = {};
-      if (fs.existsSync(configPath)) {
-        data = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+      try {
+        const existing = await fs.readFile(configPath, 'utf-8');
+        data = JSON.parse(existing);
+      } catch (e) {
+        // File doesn't exist, start with empty object
       }
       data[key] = value;
-      fs.writeFileSync(configPath, JSON.stringify(data, null, 2));
+      await fs.writeFile(configPath, JSON.stringify(data, null, 2));
       return true;
     } catch (e) {
       console.error('Store set error:', e);
       return false;
     }
   },
-  delete: (key) => {
+  delete: async (key) => {
     try {
       const userDataPath = app.getPath('userData');
       const configPath = path.join(userDataPath, 'config.json');
-      if (fs.existsSync(configPath)) {
-        const data = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
-        delete data[key];
-        fs.writeFileSync(configPath, JSON.stringify(data, null, 2));
+      try {
+        const data = await fs.readFile(configPath, 'utf-8');
+        const parsed = JSON.parse(data);
+        delete parsed[key];
+        await fs.writeFile(configPath, JSON.stringify(parsed, null, 2));
+      } catch (e) {
+        // File doesn't exist, nothing to delete
       }
       return true;
     } catch (e) {
@@ -59,11 +68,13 @@ const store = {
 };
 
 // Set up save directory structure
-const getSaveDir = () => {
+const getSaveDir = async () => {
   const userDataPath = app.getPath('userData');
   const saveDir = path.join(userDataPath, 'saves');
-  if (!fs.existsSync(saveDir)) {
-    fs.mkdirSync(saveDir, { recursive: true });
+  try {
+    await fs.mkdir(saveDir, { recursive: true });
+  } catch (e) {
+    // Directory might already exist, that's fine
   }
   return saveDir;
 };
@@ -85,13 +96,32 @@ protocol.registerSchemesAsPrivileged([
 let mainWindow = null;
 let tray = null;
 
-function createWindow() {
+async function createWindow() {
   // Load saved window bounds if available
-  const savedBounds = store.get('windowBounds');
+  const savedBounds = await store.get('windowBounds');
   const width = savedBounds?.width || 1440;
   const height = savedBounds?.height || 900;
-  const x = savedBounds?.x;
-  const y = savedBounds?.y;
+  let x = savedBounds?.x;
+  let y = savedBounds?.y;
+
+  // Validate window bounds are within available screen area
+  if (savedBounds) {
+    const { screen } = require('electron');
+    const displays = screen.getAllDisplays();
+    const boundsValid = displays.some(display => {
+      const area = display.workArea;
+      return x >= area.x && 
+             y >= area.y && 
+             x + width <= area.x + area.width && 
+             y + height <= area.y + area.height;
+    });
+
+    if (!boundsValid) {
+      console.warn('Saved window bounds are outside available displays, using defaults');
+      x = undefined;
+      y = undefined;
+    }
+  }
 
   mainWindow = new BrowserWindow({
     width,
@@ -137,27 +167,66 @@ function createWindow() {
   }
 
   // Create system tray
-  createTray();
+  await createTray();
+
+  // Debounced window bounds saving
+  let boundsTimeout = null;
+  const saveBoundsDebounced = () => {
+    if (boundsTimeout) clearTimeout(boundsTimeout);
+    boundsTimeout = setTimeout(async () => {
+      const bounds = mainWindow.getBounds();
+      await store.set('windowBounds', bounds);
+    }, 500); // 500ms debounce
+  };
 
   // Save window bounds when window is moved or resized
-  mainWindow.on('resize', () => {
-    const bounds = mainWindow.getBounds();
-    store.set('windowBounds', bounds);
-  });
+  mainWindow.on('resize', saveBoundsDebounced);
+  mainWindow.on('move', saveBoundsDebounced);
 
-  mainWindow.on('move', () => {
-    const bounds = mainWindow.getBounds();
-    store.set('windowBounds', bounds);
+  // Clean up timeout on window close
+  mainWindow.on('closed', () => {
+    if (boundsTimeout) clearTimeout(boundsTimeout);
   });
 }
 
-function createTray() {
+async function createTray() {
   if (tray) return; // Already created
 
-  // For now, use a simple icon path - in production you'd use a proper icon
-  const iconPath = path.join(__dirname, '../public/pwa-512x512.png');
+  // Use a proper icon path - check multiple possible locations
+  const { nativeImage } = require('electron');
+  let iconPath = path.join(__dirname, '../public/pwa-512x512.png');
   
-  tray = new Tray(iconPath);
+  // Check if icon exists, if not use a fallback
+  try {
+    await fs.access(iconPath);
+  } catch (e) {
+    // Try alternative paths
+    const alternativePaths = [
+      path.join(__dirname, '../public/favicon.ico'),
+      path.join(__dirname, '../public/apple-touch-icon.png'),
+      path.join(process.resourcesPath, 'icon.png'),
+    ];
+    
+    for (const altPath of alternativePaths) {
+      try {
+        await fs.access(altPath);
+        iconPath = altPath;
+        break;
+      } catch (e) {
+        // Continue to next path
+      }
+    }
+  }
+  
+  // If icon file doesn't exist, create a simple empty icon
+  try {
+    await fs.access(iconPath);
+    tray = new Tray(iconPath);
+  } catch (e) {
+    console.warn('Tray icon not found, using default icon');
+    // Use Electron's default icon or create one
+    tray = new Tray(nativeImage.createEmpty());
+  }
   
   const contextMenu = Menu.buildFromTemplate([
     {
@@ -197,9 +266,23 @@ function createTray() {
 // File system operations
 ipcMain.handle('save-game', async (event, slot, state) => {
   try {
-    const saveDir = getSaveDir();
+    // Validate slot number
+    if (!Number.isInteger(slot) || slot < 0 || slot > 99) {
+      console.error('Invalid slot number:', slot);
+      return false;
+    }
+
+    const saveDir = await getSaveDir();
     const savePath = path.join(saveDir, `slot_${slot}.sb`);
-    fs.writeFileSync(savePath, JSON.stringify(state, null, 2));
+    
+    // Add file size limit (10MB max)
+    const jsonString = JSON.stringify(state, null, 2);
+    if (jsonString.length > 10 * 1024 * 1024) {
+      console.error('Save file too large:', jsonString.length);
+      return false;
+    }
+    
+    await fs.writeFile(savePath, jsonString);
     return true;
   } catch (error) {
     console.error('Save error:', error);
@@ -209,11 +292,26 @@ ipcMain.handle('save-game', async (event, slot, state) => {
 
 ipcMain.handle('load-game', async (event, slot) => {
   try {
-    const saveDir = getSaveDir();
+    // Validate slot number
+    if (!Number.isInteger(slot) || slot < 0 || slot > 99) {
+      console.error('Invalid slot number:', slot);
+      return null;
+    }
+
+    const saveDir = await getSaveDir();
     const savePath = path.join(saveDir, `slot_${slot}.sb`);
-    if (!fs.existsSync(savePath)) return null;
-    const data = fs.readFileSync(savePath, 'utf-8');
-    return JSON.parse(data);
+    try {
+      const data = await fs.readFile(savePath, 'utf-8');
+      // Add specific JSON parse error handling
+      try {
+        return JSON.parse(data);
+      } catch (jsonError) {
+        console.error('JSON parse error:', jsonError);
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
   } catch (error) {
     console.error('Load error:', error);
     return null;
@@ -222,10 +320,13 @@ ipcMain.handle('load-game', async (event, slot) => {
 
 ipcMain.handle('list-saves', async () => {
   try {
-    const saveDir = getSaveDir();
-    if (!fs.existsSync(saveDir)) return [];
-    const files = fs.readdirSync(saveDir).filter(f => f.endsWith('.sb'));
-    return files.map(f => parseInt(f.replace('slot_', '').replace('.sb', '')));
+    const saveDir = await getSaveDir();
+    try {
+      const files = await fs.readdir(saveDir);
+      return files.filter(f => f.endsWith('.sb')).map(f => parseInt(f.replace('slot_', '').replace('.sb', '')));
+    } catch (e) {
+      return [];
+    }
   } catch (error) {
     console.error('List saves error:', error);
     return [];
@@ -234,10 +335,18 @@ ipcMain.handle('list-saves', async () => {
 
 ipcMain.handle('delete-save', async (event, slot) => {
   try {
-    const saveDir = getSaveDir();
+    // Validate slot number
+    if (!Number.isInteger(slot) || slot < 0 || slot > 99) {
+      console.error('Invalid slot number:', slot);
+      return false;
+    }
+
+    const saveDir = await getSaveDir();
     const savePath = path.join(saveDir, `slot_${slot}.sb`);
-    if (fs.existsSync(savePath)) {
-      fs.unlinkSync(savePath);
+    try {
+      await fs.unlink(savePath);
+    } catch (e) {
+      // File doesn't exist, that's fine
     }
     return true;
   } catch (error) {
@@ -248,9 +357,19 @@ ipcMain.handle('delete-save', async (event, slot) => {
 
 ipcMain.handle('export-save', async (event, slot) => {
   try {
-    const saveDir = getSaveDir();
+    // Validate slot number
+    if (!Number.isInteger(slot) || slot < 0 || slot > 99) {
+      console.error('Invalid slot number:', slot);
+      return false;
+    }
+
+    const saveDir = await getSaveDir();
     const savePath = path.join(saveDir, `slot_${slot}.sb`);
-    if (!fs.existsSync(savePath)) return false;
+    try {
+      await fs.access(savePath);
+    } catch (e) {
+      return false;
+    }
     
     const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
       defaultPath: `studio-boss-save-slot-${slot}.sb`,
@@ -258,7 +377,7 @@ ipcMain.handle('export-save', async (event, slot) => {
     });
     
     if (canceled || !filePath) return false;
-    fs.copyFileSync(savePath, filePath);
+    await fs.copyFile(savePath, filePath);
     return true;
   } catch (error) {
     console.error('Export save error:', error);
@@ -275,8 +394,14 @@ ipcMain.handle('import-save', async () => {
     
     if (canceled || filePaths.length === 0) return null;
     
-    const data = fs.readFileSync(filePaths[0], 'utf-8');
-    return JSON.parse(data);
+    const data = await fs.readFile(filePaths[0], 'utf-8');
+    // Add specific JSON parse error handling
+    try {
+      return JSON.parse(data);
+    } catch (jsonError) {
+      console.error('JSON parse error:', jsonError);
+      return null;
+    }
   } catch (error) {
     console.error('Import save error:', error);
     return null;
@@ -285,16 +410,16 @@ ipcMain.handle('import-save', async () => {
 
 // electron-store operations
 ipcMain.handle('store-get', async (event, key) => {
-  return store.get(key);
+  return await store.get(key);
 });
 
 ipcMain.handle('store-set', async (event, key, value) => {
-  store.set(key, value);
+  await store.set(key, value);
   return true;
 });
 
 ipcMain.handle('store-delete', async (event, key) => {
-  store.delete(key);
+  await store.delete(key);
   return true;
 });
 
@@ -382,13 +507,14 @@ ipcMain.handle('get-platform', () => {
   return process.platform;
 });
 
-app.whenReady().then(() => {
-  // Set file associations for Windows
-  if (process.platform === 'win32') {
-    app.setAsDefaultProtocolClient('studio-boss');
-  }
+app.whenReady().then(async () => {
+  try {
+    // Set file associations for Windows
+    if (process.platform === 'win32') {
+      app.setAsDefaultProtocolClient('studio-boss');
+    }
 
-  // Handle app:// requests by serving files from dist/
+    // Handle app:// requests by serving files from dist/
   protocol.handle('app', (request) => {
     // Strip scheme, query string, and fragment
     let pathname = request.url.slice('app://'.length);
@@ -468,15 +594,27 @@ app.whenReady().then(() => {
   ]);
   Menu.setApplicationMenu(menu);
 
-  createWindow();
+  await createWindow();
 
   // macOS: re-create window when clicking the dock icon if no windows are open
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
+  app.on('activate', async () => {
+    if (BrowserWindow.getAllWindows().length === 0) await createWindow();
   });
+  } catch (error) {
+    console.error('Failed to initialize app:', error);
+    app.quit();
+  }
 });
 
 // Quit when all windows are closed (except on macOS)
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
+});
+
+// Clean up tray icon before quit
+app.on('before-quit', () => {
+  if (tray) {
+    tray.destroy();
+    tray = null;
+  }
 });
