@@ -96,6 +96,16 @@ export function calculateFranchiseEquity(
     if (genres.length >= 4 && synergyHits < 2) {
       crossoverBonus -= 0.20;
     }
+
+    // 🌌 The Universe Builder: Desperate IP Mashup penalty.
+    if (genres.length >= 5 && franchise.audienceLoyalty < 50) {
+      crossoverBonus -= 0.35;
+    }
+  }
+
+  // 🌌 The Universe Builder: Endgame/Culmination bonus for massive, highly relevant cinematic universes.
+  if (assets.length >= 8 && franchise.relevanceScore >= 85) {
+    crossoverBonus += 0.50;
   }
   
   // 🌌 The Universe Builder: Curated Universe Premium.
