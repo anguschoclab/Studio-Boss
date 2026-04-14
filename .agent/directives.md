@@ -9,7 +9,7 @@
 ## 2. Execution, Safety & Risk Control
 
 - **Low Risk**: Read-only tools (`view_file`, `list_dir`, `grep_search`), running existing tests (`vitest`), documentation updates. (Auto-approve)
-- **Medium Risk**: `npm install`, project-wide refactors of non-core logic, `package.json` non-breaking edits. (Approval required)
+- **Medium Risk**: `bun install`, project-wide refactors of non-core logic, `package.json` non-breaking edits. (Approval required)
 - **High Risk**: Deleting files/utilities, modifying `GameState` interfaces, breaking `RNG` contracts, external network requests. (Explicit approval required)
 - **Proactive "Daemon" Limits**: Maintain strict daily logs of all actions in `.agent/logs/execution.log`. Enforce rate limits and blocking budgets.
 

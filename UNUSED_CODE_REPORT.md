@@ -242,8 +242,8 @@ This exhaustive analysis used:
 
 3. **Verify build still works:**
    ```bash
-   npm run build
-   npm test
+   bun run build
+   bun run test
    ```
 
 4. **Commit changes with message:**

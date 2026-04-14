@@ -55,13 +55,13 @@ Required variables:
 
 ## Scripts
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run lint` - Run ESLint
-- `npm run format` - Format code with Prettier
-- `npm run test` - Run tests
-- `npm run analyze` - Analyze bundle size
-- `npm run electron:dev` - Run Electron app
+- `bun run dev` - Start development server
+- `bun run build` - Build for production
+- `bun run lint` - Run ESLint
+- `bun run format` - Format code with Prettier
+- `bun run test` - Run tests
+- `bun run analyze` - Analyze bundle size
+- `bun run electron:dev` - Run Electron app
 
 ## License
 

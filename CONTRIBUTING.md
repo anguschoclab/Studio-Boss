@@ -6,7 +6,7 @@ Thank you for your interest in contributing to Studio Boss!
 
 ### Prerequisites
 - Node.js (v20 or higher)
-- npm or Bun (project uses Bun as package manager)
+- Bun (project package manager)
 
 ### Installation
 
@@ -16,10 +16,10 @@ git clone <your-repo-url>
 cd Studio-Boss
 
 # Install dependencies
-npm install --legacy-peer-deps
+bun install
 
 # Start development server
-npm run dev
+bun run dev
 ```
 
 ### Environment Variables
@@ -35,17 +35,17 @@ Required environment variables:
 
 ## Development Scripts
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run build:dev` - Build for development
-- `npm run lint` - Run ESLint
-- `npm run lint:fix` - Fix ESLint issues automatically
-- `npm run format` - Format code with Prettier
-- `npm run format:check` - Check code formatting
-- `npm run test` - Run tests
-- `npm run test:watch` - Run tests in watch mode
-- `npm run analyze` - Analyze bundle size
-- `npm run electron:dev` - Run Electron app in development mode
+- `bun run dev` - Start development server
+- `bun run build` - Build for production
+- `bun run build:dev` - Build for development
+- `bun run lint` - Run ESLint
+- `bun run lint:fix` - Fix ESLint issues automatically
+- `bun run format` - Format code with Prettier
+- `bun run format:check` - Check code formatting
+- `bun run test` - Run tests
+- `bun run test:watch` - Run tests in watch mode
+- `bun run analyze` - Analyze bundle size
+- `bun run electron:dev` - Run Electron app in development mode
 
 ## Tech Stack
 
@@ -62,8 +62,8 @@ Required environment variables:
 
 ## Code Style
 
-- Use Prettier for code formatting (run `npm run format` before committing)
-- Follow ESLint rules (run `npm run lint` before committing)
+- Use Prettier for code formatting (run `bun run format` before committing)
+- Follow ESLint rules (run `bun run lint` before committing)
 - Use TypeScript for type safety
 - Follow existing code patterns and conventions
 
@@ -71,7 +71,7 @@ Required environment variables:
 
 - Write unit tests for utility functions and business logic
 - Write integration tests for components
-- Run `npm run test` before committing
+- Run `bun run test` before committing
 - Ensure all tests pass
 
 ## Submitting Changes

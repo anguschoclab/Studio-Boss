@@ -17,21 +17,20 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
         with:
-          node-version: '20'
-          cache: 'npm'
+          bun-version: latest
 
       - name: Install Dependencies
-        run: npm ci
+        run: bun install
 
       - name: Run Narrative Refill
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-          # Use ts-node to run the refiller script
-          npx ts-node src/engine/services/refillArchive.ts
+          # Use bun to run the refiller script
+          bun run src/engine/services/refillArchive.ts
 
       - name: Commit and Push Changes
         run: |
