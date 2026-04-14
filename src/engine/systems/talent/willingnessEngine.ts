@@ -61,7 +61,14 @@ export function calculateWillingness(
   // 3. Financial Incentive (Fee vs Star Meter)
   const starMeter = talent.starMeter || 50;
   if (talent.fee > project.budget * 0.4) {
-    if (isAuteurDirector && prestigeDiff > 0) {
+    // 🎭 The Method Actor Tuning: Auteur directors prioritize prestige over upfront cash, taking a pay cut for high-buzz projects but demanding a premium for low-buzz ones.
+    if (isAuteurDirector && prestigeDiff > 10) {
+      score += 10;
+      reasons.push(`The fee is high, but ${talent.name} is willing to take a pay cut for a guaranteed masterpiece.`);
+    } else if (isAuteurDirector && prestigeDiff < -10) {
+      score -= 30;
+      reasons.push(`${talent.name} demands a massive premium to work on such a low-buzz project.`);
+    } else if (isAuteurDirector && prestigeDiff > 0) {
       score -= 5;
       reasons.push(`The fee is high, but ${talent.name} is willing to negotiate for the sake of the art.`);
     } else {

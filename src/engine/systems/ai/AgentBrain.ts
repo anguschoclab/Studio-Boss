@@ -136,7 +136,7 @@ export function generateFestivalBid(
 
   // 🎭 The Method Actor Tuning: Adjusted AgentBrain to make rival studios aggressively outbid for IP.
   if (rival.currentMotivation === 'FRANCHISE_BUILDING' && ['Sci-Fi', 'Action', 'Fantasy'].includes(project.genre)) {
-    interest *= 1.6;
+    interest *= 2.0;
   }
 
   // 🎭 The Method Actor Tuning: Award chasers overvalue high-review projects
