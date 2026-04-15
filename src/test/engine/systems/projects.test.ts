@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { advanceProject, handleReleasePhaseEntry } from "../../../engine/systems/projects";
+import { advanceProject, handleReleasePhaseEntry, executeMarketing, executeGreenlight, executePitching } from "../../../engine/systems/projects";
 import { Project, Talent, Contract } from "../../../engine/types";
 import { RandomGenerator } from "../../../engine/utils/rng";
 import { createMockProject, createMockTalent, createMockContract } from "../../utils/mockFactories";
@@ -89,6 +89,119 @@ describe("advanceProject", () => {
       expect(projectUpdate?.payload.update.state).toBe("released");
       expect(projectUpdate?.payload.update.releaseWeek).toBe(1);
       expect(projectUpdate?.payload.update.reviewScore).toBeDefined();
+    });
+  });
+
+  describe("executeMarketing", () => {
+    it("should apply campaign buzz bonus to project", () => {
+      const project = { ...mockProject, buzz: 50 };
+      const campaign = {
+        id: "campaign-1",
+        projectId: "proj-1",
+        budget: 1000000,
+        domesticBudget: 700000,
+        foreignBudget: 300000,
+        targetCategories: ["action"],
+        buzzBonus: 10,
+        scandalRisk: 5,
+        primaryAngle: "star_power" as const,
+      } as any;
+
+      const result = executeMarketing(project, campaign);
+      expect(result.project.buzz).toBe(60); // 50 + 10
+    });
+
+    it("should handle project with existing buzz correctly", () => {
+      const project = { ...mockProject, buzz: 75 };
+      const campaign = {
+        id: "campaign-1",
+        projectId: "proj-1",
+        budget: 500000,
+        domesticBudget: 350000,
+        foreignBudget: 150000,
+        targetCategories: ["drama"],
+        buzzBonus: 5,
+        scandalRisk: 2,
+        primaryAngle: "star_power" as const,
+      } as any;
+
+      const result = executeMarketing(project, campaign);
+      expect(result.project.buzz).toBe(80); // 75 + 5
+    });
+
+    it("should return updated project object", () => {
+      const project = { ...mockProject, buzz: 50 };
+      const campaign = {
+        id: "campaign-1",
+        projectId: "proj-1",
+        budget: 1000000,
+        domesticBudget: 700000,
+        foreignBudget: 300000,
+        targetCategories: ["comedy"],
+        buzzBonus: 15,
+        scandalRisk: 3,
+        primaryAngle: "star_power" as const,
+      } as any;
+
+      const result = executeMarketing(project, campaign);
+      expect(result.project).toBeDefined();
+      expect(result.project.id).toBe("proj-1");
+    });
+  });
+
+  describe("executeGreenlight", () => {
+    it("should transition project to production state", () => {
+      const project = { ...mockProject, state: "needs_greenlight" as const };
+      const result = executeGreenlight(project);
+      
+      expect(result.project.state).toBe("production");
+      expect(result.project.weeksInPhase).toBe(0);
+    });
+
+    it("should return update message", () => {
+      const project = { ...mockProject, state: "needs_greenlight" as const };
+      const result = executeGreenlight(project);
+      
+      expect(result.update).toBeDefined();
+      expect(typeof result.update).toBe("string");
+    });
+
+    it("should reset weeksInPhase to 0", () => {
+      const project = { ...mockProject, state: "needs_greenlight" as const, weeksInPhase: 5 };
+      const result = executeGreenlight(project);
+      
+      expect(result.project.weeksInPhase).toBe(0);
+    });
+  });
+
+  describe("executePitching", () => {
+    it("should update project with buyer and contract type", () => {
+      const project = { ...mockProject, state: "pitching" as const };
+      const result = executePitching(project, "Netflix", "exclusive");
+      
+      expect(result.project.buyerId).toBe("Netflix");
+      expect(result.project.contractType).toBe("exclusive");
+    });
+
+    it("should transition project to development state", () => {
+      const project = { ...mockProject, state: "pitching" as const };
+      const result = executePitching(project, "HBO", "licensing");
+      
+      expect(result.project.state).toBe("development");
+    });
+
+    it("should handle different buyer names", () => {
+      const project = { ...mockProject, state: "pitching" as const };
+      const result = executePitching(project, "Amazon Prime", "exclusive");
+      
+      expect(result.project.buyerId).toBe("Amazon Prime");
+    });
+
+    it("should handle different contract types", () => {
+      const project = { ...mockProject, state: "pitching" as const };
+      const result = executePitching(project, "Disney+", "licensing");
+      
+      expect(result.project.contractType).toBe("licensing");
     });
   });
 });

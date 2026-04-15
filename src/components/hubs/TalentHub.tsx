@@ -4,7 +4,6 @@ import { useUIStore, TalentSubTab } from '@/store/uiStore';
 import { SubNav } from '@/components/navigation/SubNav';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { toast } from '@/components/ui/sonner';
 import {
   Users,
   Search,
@@ -210,19 +209,16 @@ const MarketplacePanel = () => {
               agencies={gameState?.industry?.agencies || []}
               packages={(gameState?.market?.opportunities || []).filter((o) => o.type === 'package' && o.origin === 'agency_package')}
               onCreatePackage={() => {
-                toast.info('Package creation coming soon', {
-                  description: 'Select agency, tier, and talent to create a package'
-                });
+                const { enqueueModal } = useUIStore.getState();
+                enqueueModal('CREATE_PACKAGE', null);
               }}
               onViewPackage={(id) => {
-                toast.info('Package details coming soon', {
-                  description: `View package ${id} - package detail modal coming soon`
-                });
+                const { enqueueModal } = useUIStore.getState();
+                enqueueModal('PACKAGE_DETAIL', { packageId: id });
               }}
               onBidPackage={(id) => {
-                toast.info('Bidding mechanics coming soon', {
-                  description: `Bid on package ${id} - bidding mechanics coming soon`
-                });
+                const { enqueueModal } = useUIStore.getState();
+                enqueueModal('PACKAGE_DETAIL', { packageId: id });
               }}
             />
           </React.Suspense>

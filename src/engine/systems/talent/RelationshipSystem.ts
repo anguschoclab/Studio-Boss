@@ -127,11 +127,34 @@ function haveWorkedTogether(talentAId: string, talentBId: string, state: GameSta
 
 /**
  * Check if talents competed for same award
- * Currently awards don't track individual talent nominees
- * This could be expanded when Award type includes nominee data
+ * Awards are tied to projects, so we check if talents worked on award-winning/nominated projects
  */
-function haveCompeted(talentAId: string, talentBId: string, state: GameState): boolean {
-  return false;
+export function haveCompeted(talentAId: string, talentBId: string, state: GameState): boolean {
+  // Get all awards
+  const awards = state.industry?.awards || [];
+  
+  // Get all projects that won or were nominated for awards
+  const awardedProjectIds = awards.map(a => a.projectId);
+  
+  // Find projects that both talents worked on that received awards
+  const talentAProjects = state.entities.projects ? 
+    Object.values(state.entities.projects).filter((p: any) => 
+      awardedProjectIds.includes(p.id) && 
+      (p.attachedTalentIds || []).includes(talentAId)
+    ) : [];
+  
+  const talentBProjects = state.entities.projects ? 
+    Object.values(state.entities.projects).filter((p: any) => 
+      awardedProjectIds.includes(p.id) && 
+      (p.attachedTalentIds || []).includes(talentBId)
+    ) : [];
+  
+  // Check if they worked on the same award-winning/nominated project
+  const sharedAwardedProjects = talentAProjects.filter((p: any) => 
+    talentBProjects.some((bp: any) => bp.id === p.id)
+  );
+  
+  return sharedAwardedProjects.length > 0;
 }
 
 /**

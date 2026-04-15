@@ -6,20 +6,22 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Package, Building2, Users } from 'lucide-react';
-import type { Agency, Talent, Opportunity } from '@/engine/types';
+import type { Agency, Talent, Opportunity, BudgetTierKey, ProjectFormat } from '@/engine/types';
 
 interface CreatePackageModalProps {
-  agencies: Agency[];
-  talents: Record<string, Talent>;
-  onClose?: () => void;
+  agencies?: Agency[];
+  talents?: Record<string, Talent>;
 }
 
-export const CreatePackageModal = ({ agencies, talents, onClose }: CreatePackageModalProps) => {
-  const { showCreatePackage, closeCreatePackage } = useUIStore();
+export const CreatePackageModal = ({ agencies: propAgencies, talents: propTalents }: CreatePackageModalProps) => {
+  const { resolveCurrentModal } = useUIStore();
+  const gameState = useGameStore(s => s.gameState);
   const [selectedAgency, setSelectedAgency] = useState<string>('');
   const [selectedTier, setSelectedTier] = useState<string>('mid');
   const [selectedTalents, setSelectedTalents] = useState<string[]>([]);
 
+  const agencies = propAgencies || gameState?.industry?.agencies || [];
+  const talents = propTalents || gameState?.entities.talents || {};
   const talentList = Object.values(talents).filter(t => t.contractId && t.tier <= 3);
 
   const handleCreatePackage = () => {
@@ -27,23 +29,29 @@ export const CreatePackageModal = ({ agencies, talents, onClose }: CreatePackage
       return;
     }
 
-    // Create package opportunity
+    // Create package opportunity with all required fields
     const newPackage: Opportunity = {
       id: `pkg-${Date.now()}`,
-      type: 'package',
-      origin: 'agency_package',
+      type: 'package' as any,
       title: `${selectedAgency} Talent Package`,
+      format: 'film' as ProjectFormat,
+      genre: 'Drama',
+      budgetTier: selectedTier as BudgetTierKey,
+      targetAudience: 'General',
       flavor: `Custom talent package from ${selectedAgency}`,
+      origin: 'agency_package' as any,
       costToAcquire: selectedTier === 'high' ? 5000000 : selectedTier === 'mid' ? 2500000 : 1000000,
-      qualityBonus: selectedTier === 'high' ? 15 : selectedTier === 'mid' ? 10 : 5,
-      attachedTalentIds: selectedTalents,
       weeksUntilExpiry: 12,
+      attachedTalentIds: selectedTalents,
+      qualityBonus: selectedTier === 'high' ? 15 : selectedTier === 'mid' ? 10 : 5,
+      bids: {},
+      bidHistory: [],
+      expirationWeek: gameState ? gameState.week + 12 : 12,
     };
 
     // Add to game state (this would need a proper store action)
     // For now, just close the modal
-    closeCreatePackage();
-    onClose?.();
+    resolveCurrentModal();
   };
 
   const handleToggleTalent = (talentId: string) => {
@@ -54,8 +62,12 @@ export const CreatePackageModal = ({ agencies, talents, onClose }: CreatePackage
     );
   };
 
+  const handleClose = () => {
+    resolveCurrentModal();
+  };
+
   return (
-    <Dialog open={showCreatePackage} onOpenChange={closeCreatePackage}>
+    <Dialog open={true} onOpenChange={handleClose}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
@@ -142,7 +154,7 @@ export const CreatePackageModal = ({ agencies, talents, onClose }: CreatePackage
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={closeCreatePackage}>
+          <Button variant="outline" onClick={handleClose}>
             Cancel
           </Button>
           <Button
