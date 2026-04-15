@@ -20,7 +20,7 @@ jobs:
           bun-version: latest
 
       - name: Install Dependencies
-        run: bun install
+        run: bun install || bun install || bun install
 
       - name: Type Check
         run: bun run type-check
@@ -46,7 +46,7 @@ jobs:
           bun-version: latest
 
       - name: Install Dependencies
-        run: bun install
+        run: bun install || bun install || bun install
 
       - name: Build
         run: bun run build

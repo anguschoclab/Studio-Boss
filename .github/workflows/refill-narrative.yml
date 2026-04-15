@@ -25,7 +25,7 @@ jobs:
           bun-version: latest
 
       - name: Install Dependencies
-        run: bun install
+        run: bun install || bun install || bun install
 
       - name: Run Narrative Refill
         env:
