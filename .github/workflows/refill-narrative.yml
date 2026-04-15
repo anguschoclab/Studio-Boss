@@ -25,7 +25,7 @@ jobs:
           bun-version: latest
 
       - name: Install Dependencies
-        run: bun install || bun install || bun install
+        run: for i in 1 2 3 4 5; do bun install && break || sleep 15; done
 
       - name: Run Narrative Refill
         env:
