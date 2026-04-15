@@ -1009,19 +1009,18 @@ export function generatePersonalityTrait(rng: { next: () => number }): TalentPer
 /**
  * Generate career trajectory based on tier
  */
-export function generateCareerTrajectory(tier: TalentTier, rng?: { next(): number }): CareerTrajectory {
-  const random = rng ? rng.next() : Math.random();
+export function generateCareerTrajectory(tier: TalentTier, rng: { next(): number }): CareerTrajectory {
   // Higher tiers more likely to be at peak
   // Lower tiers more likely to be rising
   if (tier === 1) {
-    return random > 0.3 ? 'peak' : 'declining';
+    return rng.next() > 0.3 ? 'peak' : 'declining';
   } else if (tier === 2) {
-    const roll = rng ? rng.next() : Math.random();
+    const roll = rng.next();
     if (roll < 0.3) return 'rising';
     if (roll < 0.6) return 'peak';
     return 'declining';
   } else if (tier === 3) {
-    const roll = rng ? rng.next() : Math.random();
+    const roll = rng.next();
     if (roll < 0.5) return 'rising';
     if (roll < 0.8) return 'peak';
     return 'declining';

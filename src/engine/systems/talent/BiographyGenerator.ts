@@ -55,7 +55,7 @@ export function generateBiography(
   const sections: string[] = [];
 
   // Opening: Basic info
-  sections.push(generateOpening(talent));
+  sections.push(generateOpening(talent, rng));
 
   // Career Summary
   sections.push(generateCareerSummary(talent, state));
@@ -85,7 +85,7 @@ export function generateBiography(
 /**
  * Generate opening paragraph
  */
-function generateOpening(talent: Talent): string {
+function generateOpening(talent: Talent, rng: RandomGenerator): string {
   const age = talent.demographics?.age || 30;
   const ageBracket = age < 30 ? 'rising' : age < 50 ? 'established' : 'veteran';
   const role = talent.role || 'performer';
@@ -97,7 +97,7 @@ function generateOpening(talent: Talent): string {
     `${talent.name}, ${age}, is a ${tier} talent known for their work as a ${role}.`,
   ];
 
-  return openers[Math.floor(Math.random() * openers.length)];
+  return openers[Math.floor(rng.next() * openers.length)];
 }
 
 /**
