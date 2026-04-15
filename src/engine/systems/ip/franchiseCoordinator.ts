@@ -99,7 +99,7 @@ export function calculateFranchiseEquity(
 
     // 🌌 The Universe Builder: Desperate IP Mashup penalty.
     if (genres.length >= 5 && franchise.audienceLoyalty < 50) {
-      crossoverBonus -= 0.35;
+      crossoverBonus = Math.max(0.1, crossoverBonus - 0.35);
     }
   }
 
