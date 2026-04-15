@@ -24,9 +24,9 @@ describe("buyers system", () => {
   describe("calculateFitScore", () => {
     it("calculates base fit score correctly", () => {
       const score = calculateFitScore(mockProject, mockBuyer, 10, [], rng);
-      // Base (50) + Gap (15) + Buzz (10) + Rng(-10 to 10)
+      // Base (50) + Gap (15) + Buzz (10) + Streamer IP boost (25) + Rng(-10 to 10)
       expect(score).toBeGreaterThanOrEqual(65);
-      expect(score).toBeLessThanOrEqual(85);
+      expect(score).toBeLessThanOrEqual(100);
     });
 
     describe("Guild Auditor: Edge Cases", () => {

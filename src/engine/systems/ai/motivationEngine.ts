@@ -11,8 +11,8 @@ const MotivationScores: Record<StudioMotivation, (rival: RivalStudio, state: Gam
   AWARD_CHASE: (rival) => (rival.prestige < 60 && rival.cash > 5000000 ? 95 : (rival.prestige > 80 ? 85 : 30)) + (rival.motivationProfile.prestige > 70 ? 20 : 0),
   FRANCHISE_BUILDING: (rival) => {
     let score = rival.cash > 4000000 && rival.projectCount < 2 ? 120 : (rival.projectCount > 4 ? 80 : 40);
-    // 🎭 Method Actor Tuning: Adjusted AgentBrain to prioritize franchise potential by 20% when the rival studio cash reserves are low.
-    if (rival.cash >= 1000000 && rival.cash <= 4000000) {
+    // 🎭 The Method Actor Tuning: Prioritize franchise potential by adding 20 to the score when the rival studio cash reserves are low.
+    if (rival.cash < 5000000) {
       score += 20;
     }
     return score;

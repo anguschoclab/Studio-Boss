@@ -137,6 +137,11 @@ export function calculateFitScore(project: Project, buyer: Buyer, currentWeek: n
   const scriptHeat = 'scriptHeat' in project ? project.scriptHeat : 50;
   if (buyer.archetype === 'premium' && project.budgetTier === 'low' && scriptHeat > 70) score += 20;
 
+  // 🎭 The Method Actor Tuning: Streamers bid aggressively on franchise IP genres (Action/Sci-Fi/Fantasy).
+  if (buyer.archetype === 'streamer' && ['action', 'sci-fi', 'fantasy'].includes(project.genre.toLowerCase())) {
+    score += 25;
+  }
+
   const buzzFactor = (project.buzz / 100) * 20; 
   score += buzzFactor;
   score += rng.range(-10, 10);

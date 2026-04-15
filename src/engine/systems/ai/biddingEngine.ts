@@ -75,7 +75,8 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
 
         // 🎭 The Method Actor Tuning: Massive spike in multiplier if franchise builders bid on Sci-Fi/Action.
         const isKeyIPGenre = opportunity.genre === 'Sci-Fi' || opportunity.genre === 'Action' || opportunity.genre === 'Fantasy';
-        const franchiseAggression = isFranchiseBuilder && isKeyIPGenre ? 1.5 : (isFranchiseBuilder ? 1.2 : 1.0);
+        // 🎭 The Method Actor Tuning: Increased auction multiplier for franchise builders from 1.5 to 2.0.
+        const franchiseAggression = isFranchiseBuilder && isKeyIPGenre ? 2.0 : (isFranchiseBuilder ? 1.2 : 1.0);
 
         // 🎭 The Method Actor Tuning: Award chasers aggressively overpay for Drama/Historical.
         const isPrestigeGenre = opportunity.genre === 'Drama' || opportunity.genre === 'Historical' || opportunity.genre === 'Biopic';
