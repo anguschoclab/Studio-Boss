@@ -4,6 +4,7 @@ import { generatePsychology } from './psychologyGenerator';
 import { generateDemographicName } from '../names';
 import { RandomGenerator } from '../../utils/rng';
 import { generateArchetypeForRole, generatePersonalityTrait, generateCareerTrajectory } from '../../data/talentArchetypes';
+import { applyComfortLevelToTalent } from '../../systems/talent/CastingConstraintSystem';
 
 const TALENT_QUIRKS = [
   'method_actor', 'difficult', 'box_office_draw', 'critics_darling', 
@@ -45,6 +46,9 @@ export function generateTalent(rng: RandomGenerator, params: { role: TalentRole;
   const archetype = generateArchetypeForRole(params.role, params.tier, rng);
   const personality = generatePersonalityTrait(rng);
   const careerTrajectory = generateCareerTrajectory(params.tier);
+
+  // Generate comfort levels for casting constraints
+  const comfortData = applyComfortLevelToTalent({ personality, prestige, tier: params.tier } as Talent, rng);
 
   // Set role-specific archetype fields
   let actorArchetype, writerArchetype, producerArchetype, personalityArchetype, directorArchetype;
@@ -106,7 +110,10 @@ export function generateTalent(rng: RandomGenerator, params: { role: TalentRole;
     // Universal personality trait
     personality,
     // Career trajectory
-    careerTrajectory
+    careerTrajectory,
+    // Casting constraint comfort levels
+    comfortLevel: comfortData.comfortLevel,
+    comfortPremiumRates: comfortData.comfortPremiumRates
   };
 }
 
