@@ -26,35 +26,35 @@ function calculateSubChange(platform: StreamerPlatform, rng: RandomGenerator, se
     const growthPercent = pastSubs > 0 ? (currentSubs - pastSubs) / pastSubs : 0;
     // 📺 The Syndication Baron: Tweaked streaming subscriber churn rates. Aggressively penalizing platforms that fail to retain subscribers or flatline in the cutthroat streaming wars.
     if (growthPercent < 0.0) {
-      dynamicChurnRate = Math.min(0.90, dynamicChurnRate * 10.0); // 📺 The Syndication Baron: Devastating Penalty for negative growth (cutthroat)
+      dynamicChurnRate = Math.min(0.95, dynamicChurnRate * 12.0); // 📺 The Syndication Baron: Devastating Penalty for negative growth (cutthroat)
     } else if (growthPercent < 0.01) {
-      dynamicChurnRate = Math.min(0.75, dynamicChurnRate * 7.5); // 📺 The Syndication Baron: Extreme Penalty
+      dynamicChurnRate = Math.min(0.85, dynamicChurnRate * 9.0); // 📺 The Syndication Baron: Extreme Penalty for flatlining
     } else if (growthPercent < 0.02) {
-      dynamicChurnRate = Math.min(0.50, dynamicChurnRate * 5.0); // Aggressive Penalty
+      dynamicChurnRate = Math.min(0.60, dynamicChurnRate * 6.0); // Aggressive Penalty
     } else if (growthPercent > 0.15) {
-      dynamicChurnRate = Math.max(0.005, dynamicChurnRate * 0.3); // Massive Bonus for hyper growth
+      dynamicChurnRate = Math.max(0.002, dynamicChurnRate * 0.2); // Massive Bonus for hyper growth
     } else if (growthPercent > 0.08) {
-      dynamicChurnRate = Math.max(0.01, dynamicChurnRate * 0.5); // Strong Bonus
+      dynamicChurnRate = Math.max(0.008, dynamicChurnRate * 0.4); // Strong Bonus
     }
   }
 
   // 📺 The Syndication Baron: Reward consistent season-over-season quality and mega-hit library quality (sticky subscribers).
   if (qualityFactor > 0.90) {
-    dynamicChurnRate = Math.max(0.002, dynamicChurnRate * 0.3); // Sticky subscribers for mega-hit library
+    dynamicChurnRate = Math.max(0.001, dynamicChurnRate * 0.2); // Sticky subscribers for mega-hit library
   } else if (qualityFactor > 0.85) {
-    dynamicChurnRate = Math.max(0.01, dynamicChurnRate * 0.7);
+    dynamicChurnRate = Math.max(0.005, dynamicChurnRate * 0.5);
   }
 
   // 📺 The Syndication Baron: Reward consistent season-over-season quality for active shows.
   if (seasonOverSeasonQuality > 90) {
-    dynamicChurnRate = Math.max(0.005, dynamicChurnRate * 0.4); // Extreme loyalty for highly rated ongoing shows
+    dynamicChurnRate = Math.max(0.003, dynamicChurnRate * 0.3); // Extreme loyalty for highly rated ongoing shows
   } else if (seasonOverSeasonQuality > 80) {
-    dynamicChurnRate = Math.max(0.01, dynamicChurnRate * 0.6); // Strong loyalty for good ongoing shows
+    dynamicChurnRate = Math.max(0.008, dynamicChurnRate * 0.5); // Strong loyalty for good ongoing shows
   }
 
-  // 📺 The Syndication Baron: Reward platforms with sticky syndication hits (88+ episodes).
+  // 📺 The Syndication Baron: Reward platforms with sticky syndication hits (100+ episodes gold tier).
   if (syndicationHits > 0) {
-    const syndicationShield = Math.max(0.2, 1.0 - (syndicationHits * 0.15));
+    const syndicationShield = Math.max(0.1, 1.0 - (syndicationHits * 0.25));
     dynamicChurnRate *= syndicationShield;
   }
 
@@ -89,7 +89,7 @@ export function tickPlatforms(state: GameState, rng: RandomGenerator): StateImpa
               totalScore += seriesProject.reviewScore;
               count++;
             }
-            if (seriesProject.tvDetails.episodesAired >= 88) {
+            if (seriesProject.tvDetails.episodesAired >= 100) { // 📺 The Syndication Baron: 100-episode syndication deals
               syndicationHits++;
             }
           }
