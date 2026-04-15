@@ -37,9 +37,20 @@ export const selectStudio = (state: GameState | null) => state?.studio || null;
 export const selectInternal = (state: GameState | null) => state?.studio?.internal || null;
 export const selectProjectsRaw = (state: GameState | null) => state?.entities?.projects || EMPTY_PROJECTS;
 
+let _lastProjectsRaw: Record<string, Project> | null = null;
+let _lastProjectsArray: Project[] = [];
 export const selectProjects = (state: GameState | null): Project[] => {
   const projects = selectProjectsRaw(state);
-  return Object.values(projects);
+  if (projects !== _lastProjectsRaw) {
+    _lastProjectsRaw = projects;
+    _lastProjectsArray = [];
+    for (const key in projects) {
+      if (Object.prototype.hasOwnProperty.call(projects, key)) {
+        _lastProjectsArray.push(projects[key]);
+      }
+    }
+  }
+  return _lastProjectsArray;
 };
 
 export const selectFinance = (state: GameState | null) => state?.finance || EMPTY_FINANCE;
@@ -47,33 +58,77 @@ export const selectCash = (state: GameState | null) => selectFinance(state).cash
 
 export const selectIndustry = (state: GameState | null) => state?.industry || null;
 export const selectRivalsRaw = (state: GameState | null) => state?.entities?.rivals || EMPTY_RIVALS;
-export const selectRivals = (state: GameState | null): RivalStudio[] => Object.values(selectRivalsRaw(state));
 
-export const selectTalentPoolRaw = (state: GameState | null) => state?.entities?.talents || EMPTY_TALENT_POOL;
-export const selectTalentPool = (state: GameState | null): Talent[] => Object.values(selectTalentPoolRaw(state));
-
-export const selectActiveProjects = (state: GameState | null) => {
-  const projects = selectProjectsRaw(state);
-  const arr: Project[] = [];
-  for (const key in projects) {
-    const p = projects[key];
-    if (p.state !== 'released' && p.state !== 'archived' && p.state !== 'post_release') {
-      arr.push(p);
+let _lastRivalsRaw: Record<string, RivalStudio> | null = null;
+let _lastRivalsArray: RivalStudio[] = [];
+export const selectRivals = (state: GameState | null): RivalStudio[] => {
+  const rivals = selectRivalsRaw(state);
+  if (rivals !== _lastRivalsRaw) {
+    _lastRivalsRaw = rivals;
+    _lastRivalsArray = [];
+    for (const key in rivals) {
+      if (Object.prototype.hasOwnProperty.call(rivals, key)) {
+        _lastRivalsArray.push(rivals[key]);
+      }
     }
   }
-  return arr;
+  return _lastRivalsArray;
 };
 
-export const selectReleasedProjects = (state: GameState | null) => {
-  const projects = selectProjectsRaw(state);
-  const arr: Project[] = [];
-  for (const key in projects) {
-    const p = projects[key];
-    if (p.state === 'released' || p.state === 'post_release' || p.state === 'archived') {
-      arr.push(p);
+export const selectTalentPoolRaw = (state: GameState | null) => state?.entities?.talents || EMPTY_TALENT_POOL;
+
+let _lastTalentPoolRaw: Record<string, Talent> | null = null;
+let _lastTalentPoolArray: Talent[] = [];
+export const selectTalentPool = (state: GameState | null): Talent[] => {
+  const talents = selectTalentPoolRaw(state);
+  if (talents !== _lastTalentPoolRaw) {
+    _lastTalentPoolRaw = talents;
+    _lastTalentPoolArray = [];
+    for (const key in talents) {
+      if (Object.prototype.hasOwnProperty.call(talents, key)) {
+        _lastTalentPoolArray.push(talents[key]);
+      }
     }
   }
-  return arr;
+  return _lastTalentPoolArray;
+};
+
+let _lastActiveProjectsRaw: Record<string, Project> | null = null;
+let _lastActiveProjectsArray: Project[] = [];
+export const selectActiveProjects = (state: GameState | null): Project[] => {
+  const projects = selectProjectsRaw(state);
+  if (projects !== _lastActiveProjectsRaw) {
+    _lastActiveProjectsRaw = projects;
+    _lastActiveProjectsArray = [];
+    for (const key in projects) {
+      if (Object.prototype.hasOwnProperty.call(projects, key)) {
+        const p = projects[key];
+        if (p.state !== 'released' && p.state !== 'archived' && p.state !== 'post_release') {
+          _lastActiveProjectsArray.push(p);
+        }
+      }
+    }
+  }
+  return _lastActiveProjectsArray;
+};
+
+let _lastReleasedProjectsRaw: Record<string, Project> | null = null;
+let _lastReleasedProjectsArray: Project[] = [];
+export const selectReleasedProjects = (state: GameState | null): Project[] => {
+  const projects = selectProjectsRaw(state);
+  if (projects !== _lastReleasedProjectsRaw) {
+    _lastReleasedProjectsRaw = projects;
+    _lastReleasedProjectsArray = [];
+    for (const key in projects) {
+      if (Object.prototype.hasOwnProperty.call(projects, key)) {
+        const p = projects[key];
+        if (p.state === 'released' || p.state === 'post_release' || p.state === 'archived') {
+          _lastReleasedProjectsArray.push(p);
+        }
+      }
+    }
+  }
+  return _lastReleasedProjectsArray;
 };
 
 export const selectIsBankrupt = (state: GameState | null) => {
@@ -160,13 +215,21 @@ export const selectFilteredTalent = (state: GameState | null, filter: TalentFilt
  */
 export const selectCashFlowTrends = (state: GameState | null, weeks: number = 12) => {
   const history = selectFinance(state).weeklyHistory || [];
-  return history.slice(-weeks).map(snapshot => ({
-    week: snapshot.week,
-    revenue: snapshot.revenue.theatrical + snapshot.revenue.streaming + 
-              snapshot.revenue.merch + snapshot.revenue.passive,
-    expenses: Object.values(snapshot.expenses).reduce((a, b) => a + b, 0),
-    net: snapshot.net
-  }));
+  return history.slice(-weeks).map(snapshot => {
+    let totalExpenses = 0;
+    for (const key in snapshot.expenses) {
+      if (Object.prototype.hasOwnProperty.call(snapshot.expenses, key)) {
+        totalExpenses += snapshot.expenses[key as keyof typeof snapshot.expenses];
+      }
+    }
+    return {
+      week: snapshot.week,
+      revenue: snapshot.revenue.theatrical + snapshot.revenue.streaming +
+                snapshot.revenue.merch + snapshot.revenue.passive,
+      expenses: totalExpenses,
+      net: snapshot.net
+    };
+  });
 };
 
 /**

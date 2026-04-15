@@ -112,16 +112,25 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
   }
 
   const rivalsMap = state.entities.rivals || {};
-  const rivalsList = Object.values(rivalsMap);
+
+  const rivalIds = new Set<string>();
+  for (const key in rivalsMap) {
+    if (Object.prototype.hasOwnProperty.call(rivalsMap, key)) {
+      rivalIds.add(rivalsMap[key].id);
+    }
+  }
 
   // Unified contract storage: Collect all contracts from state.entities.contracts
-  const rivalIds = new Set(rivalsList.map(r => r.id));
-  for (const contract of Object.values(state.entities.contracts)) {
-    // Only add contracts for rival studios
-    if (contract.ownerId && rivalIds.has(contract.ownerId)) {
-      const list = contractMap.get(contract.projectId) || [];
-      list.push(contract);
-      contractMap.set(contract.projectId, list);
+  const contractsRaw = state.entities.contracts;
+  for (const key in contractsRaw) {
+    if (Object.prototype.hasOwnProperty.call(contractsRaw, key)) {
+      const contract = contractsRaw[key];
+      // Only add contracts for rival studios
+      if (contract.ownerId && rivalIds.has(contract.ownerId)) {
+        const list = contractMap.get(contract.projectId) || [];
+        list.push(contract);
+        contractMap.set(contract.projectId, list);
+      }
     }
   }
 
@@ -131,9 +140,11 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
 
   // Build rival prestige map for studio-specific logic
   const rivalPrestigeMap = new Map<string, number>();
-  rivalsList.forEach(rival => {
-    rivalPrestigeMap.set(rival.id, rival.prestige);
-  });
+  for (const key in rivalsMap) {
+    if (Object.prototype.hasOwnProperty.call(rivalsMap, key)) {
+      rivalPrestigeMap.set(rivalsMap[key].id, rivalsMap[key].prestige);
+    }
+  }
 
   // Process all projects with ownerId filtering
   for (const key in allProjects) {
