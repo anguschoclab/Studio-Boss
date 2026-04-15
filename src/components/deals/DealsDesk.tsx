@@ -113,7 +113,7 @@ export const DealsDesk = () => {
                          ${(deal.weeklyOverhead / 1000).toFixed(0)}k
                        </span>
                     </div>
-                    <Button variant="ghost" size="sm" className="h-7 text-[9px] font-black uppercase tracking-widest hover:bg-white/5">
+                    <Button variant="ghost" size="sm" className="h-7 text-[9px] font-black uppercase tracking-widest hover:bg-white/10 transition-colors duration-200">
                       Management
                     </Button>
                   </div>

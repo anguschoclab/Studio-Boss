@@ -84,7 +84,7 @@ export const BudgetOverrunAlert: React.FC<BudgetOverrunAlertProps> = ({
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Summary Alert */}
       <div className={cn(
         'border rounded-lg p-4',

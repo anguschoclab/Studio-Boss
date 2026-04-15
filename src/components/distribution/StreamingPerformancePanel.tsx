@@ -47,7 +47,7 @@ export const StreamingPerformancePanel: React.FC<StreamingPerformancePanelProps>
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Streaming Summary */}
       <div className="grid grid-cols-3 gap-4">
         <Card className={cn('p-4', tokens.border.default)}>

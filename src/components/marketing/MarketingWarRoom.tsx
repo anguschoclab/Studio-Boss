@@ -93,7 +93,7 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
       <CardContent className="p-8 space-y-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           {/* Left Column: Strategic Controls */}
-          <div className="space-y-8">
+          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="space-y-3">
               <label className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground flex items-center gap-2">
                 <Users className="w-3 h-3" /> Objective
