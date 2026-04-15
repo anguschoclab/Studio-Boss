@@ -63,13 +63,13 @@ describe('Impact Reducer (Target A1)', () => {
     expect(nextState.industry.newsHistory[0].headline).toBe('New Hit!');
   });
 
-  it('should add extreme FUNDS_CHANGED amounts without clamping', () => {
+  it('should clamp extreme FUNDS_CHANGED amounts to 10B before adding', () => {
     const impacts: StateImpact[] = [
       { type: 'FUNDS_CHANGED', payload: { amount: 20_000_000_000 } }
     ];
     
     const nextState = applyImpacts(initialState, impacts);
-    expect(nextState.finance.cash).toBe(20_001_000_000); // 1M + 20B
+    expect(nextState.finance.cash).toBe(10_001_000_000); // 1M + 10B (clamped)
   });
 
   it('should handle NaN/null FUNDS_CHANGED amounts gracefully', () => {
