@@ -33,6 +33,14 @@ export const FormSection: React.FC<FormSectionProps> = ({
           'flex items-center justify-between',
           collapsible && 'cursor-pointer'
         )}
+        role={collapsible ? "button" : undefined}
+        tabIndex={collapsible ? 0 : undefined}
+        onKeyDown={(e) => {
+          if (collapsible && (e.key === 'Enter' || e.key === ' ')) {
+            e.preventDefault();
+            setIsOpen(!isOpen);
+          }
+        }}
         onClick={() => collapsible && setIsOpen(!isOpen)}
       >
         <div className="flex items-center gap-3">

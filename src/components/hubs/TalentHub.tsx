@@ -86,6 +86,14 @@ const RosterPanel = () => {
           {filteredTalent.map((talent: Talent) => (
             <div 
               key={talent.id}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  selectTalent(talent.id);
+                }
+              }}
               onClick={() => selectTalent(talent.id)}
               className="group p-4 bg-card/40 border border-border/40 rounded-xl hover:border-primary/30 hover:bg-card/60 transition-all cursor-pointer"
             >
@@ -181,6 +189,14 @@ const MarketplacePanel = () => {
                     <div 
                       key={opp.id}
                       className="p-4 bg-card/40 border border-border/40 rounded-xl hover:border-primary/30 transition-all cursor-pointer"
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          setSelectedAuction(opp);
+                        }
+                      }}
                       onClick={() => setSelectedAuction(opp)}
                     >
                       <div className="flex justify-between items-start mb-2">

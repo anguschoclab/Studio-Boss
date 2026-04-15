@@ -85,7 +85,18 @@ export const AwardsHQ: React.FC = () => {
                 
                 <div className="flex justify-between items-start mb-6">
                   <div className="space-y-1">
-                    <h3 className="text-xl font-black italic uppercase tracking-tight text-white group-hover:text-primary transition-colors cursor-pointer" onClick={() => selectProject(project.id)}>
+                    <h3
+                      className="text-xl font-black italic uppercase tracking-tight text-white group-hover:text-primary transition-colors cursor-pointer"
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          selectProject(project.id);
+                        }
+                      }}
+                      onClick={() => selectProject(project.id)}
+                    >
                       {project.title}
                     </h3>
                     <p className="text-[10px] font-black uppercase text-slate-500 tracking-widest">

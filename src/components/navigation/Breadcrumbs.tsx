@@ -71,6 +71,14 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
                   isLast && 'text-foreground font-medium',
                   !isLast && 'text-muted-foreground'
                 )}
+                role={!isLast && item.onClick ? "button" : undefined}
+                tabIndex={!isLast && item.onClick ? 0 : undefined}
+                onKeyDown={(e) => {
+                  if (!isLast && item.onClick && (e.key === 'Enter' || e.key === ' ')) {
+                    e.preventDefault();
+                    item.onClick();
+                  }
+                }}
                 onClick={!isLast && item.onClick ? item.onClick : undefined}
                 aria-current={isLast ? 'page' : undefined}
               >

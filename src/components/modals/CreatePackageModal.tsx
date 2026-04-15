@@ -129,6 +129,14 @@ export const CreatePackageModal = ({ agencies: propAgencies, talents: propTalent
                   <div
                     key={talent.id}
                     className="flex items-center justify-between p-2 rounded hover:bg-muted cursor-pointer"
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleToggleTalent(talent.id);
+                      }
+                    }}
                     onClick={() => handleToggleTalent(talent.id)}
                   >
                     <div className="flex-1">

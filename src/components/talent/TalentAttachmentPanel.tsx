@@ -172,6 +172,14 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
                     <div className="flex items-center gap-2">
                        <span 
                       className="font-bold text-sm text-white truncate cursor-pointer hover:text-primary transition-colors"
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          selectTalent(t.id);
+                        }
+                      }}
                       onClick={() => selectTalent(t.id)}
                     >{t.name}</span>
                        <Badge variant="outline" className="text-[8px] h-4 px-1 border-slate-700 text-slate-400">Tier {t.tier}</Badge>
@@ -227,6 +235,14 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
                  <div>
                     <h4 
                     className="text-xl font-black italic uppercase tracking-tighter text-white cursor-pointer hover:text-primary transition-colors"
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        selectTalent(hoveredTalent.id);
+                      }
+                    }}
                     onClick={() => selectTalent(hoveredTalent.id)}
                   >{hoveredTalent.name}</h4>
                     <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{hoveredTalent.roles.join(' / ')} • {hoveredTalent.tier}</p>
