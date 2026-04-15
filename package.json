@@ -17,6 +17,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
+    "type-check": "tsc --noEmit",
     "test:coverage": "vitest run --coverage",
     "simulate": "bun src/engine/simulation/run.ts",
     "electron:dev": "vite build && electron .",
