@@ -88,6 +88,10 @@ export function checkAndTriggerCrisis(project: Project, state: GameState, rng: R
     baseChance = Math.min(0.9, baseChance * riskMultiplier);
   }
 
+  // Apply social crisis modifier (feuds, toxic cliques increase crisis chance)
+  const socialModifier = calculateSocialCrisisModifier(project.id, state);
+  baseChance = Math.min(0.95, baseChance * socialModifier);
+
   if (rng.next() < baseChance) {
     return generateCrisis(project, rng, archetype);
   }
