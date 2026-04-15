@@ -13,7 +13,7 @@ const EMPTY_MARKET: GameState['market'] = { buyers: [], opportunities: [], trend
 const EMPTY_TALENT_POOL: Record<string, Talent> = {};
 const EMPTY_RIVALS: Record<string, RivalStudio> = {};
 const EMPTY_EVENT_HISTORY: GameEvent[] = [];
-const EMPTY_ARRAY: any[] = [];
+const EMPTY_ARRAY: never[] = [];
 const DEFAULT_MARKET_METRICS = { cycle: 'STABLE', sentiment: 0, debtRate: 0.08, savingsRate: 0.02 };
 
 const EMPTY_FINANCE: FinanceState = {
@@ -408,9 +408,9 @@ export const selectScriptQualityMetrics = (state: GameState | null, projectId: s
   const scriptHeat = scripted.scriptHeat || 50;
   const events = scripted.scriptEvents || [];
   
-  const structure = Math.min(100, events.filter((e: any) => e.type === 'ARCHETYPE_CHANGE').length * 15 + 50);
-  const dialogue = Math.min(100, events.filter((e: any) => e.type === 'DIALOGUE_POLISH').reduce((sum: number, e: any) => sum + (e.qualityImpact || 0), 0) + 50);
-  const originality = Math.min(100, events.filter((e: any) => e.type === 'PLOT_TWIST_ADDED').length * 20 + 40);
+  const structure = Math.min(100, events.filter((e: { type?: string }) => e.type === 'ARCHETYPE_CHANGE').length * 15 + 50);
+  const dialogue = Math.min(100, events.filter((e: { type?: string; qualityImpact?: number }) => e.type === 'DIALOGUE_POLISH').reduce((sum: number, e: { qualityImpact?: number }) => sum + (e.qualityImpact || 0), 0) + 50);
+  const originality = Math.min(100, events.filter((e: { type?: string }) => e.type === 'PLOT_TWIST_ADDED').length * 20 + 40);
   const pacing = Math.min(100, events.length * 5 + 40);
   const emotionalImpact = scriptHeat;
   const commercialViability = Math.round((scriptHeat + structure) / 2);

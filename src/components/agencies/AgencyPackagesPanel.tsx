@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { tokens } from '@/lib/tokens';
 import { TalentNameLink } from '@/components/shared/TalentNameLink';
-import type { Agency } from '@/engine/types';
+import type { Agency, Opportunity } from '@/engine/types';
 
 // Extended agency interface for UI display
 interface AgencyDisplay extends Agency {
@@ -17,30 +17,9 @@ interface AgencyDisplay extends Agency {
   firstLookExpiry?: number;
 }
 
-interface TalentAttachment {
-  talentId: string;
-  talentName: string;
-  role: string;
-  tier: 1 | 2 | 3 | 4;
-  commitment: 'attached' | 'interested' | 'considering';
-}
-
-interface TalentPackage {
-  id: string;
-  agencyId: string;
-  agencyName: string;
-  title: string;
-  scriptTitle: string;
-  genre: string;
-  talentAttachments: TalentAttachment[];
-  askingPrice: number;
-  weeksOnMarket: number;
-  heatScore: number; // 0-100 buzz level
-}
-
 interface AgencyPackagesPanelProps {
   agencies: AgencyDisplay[];
-  packages: TalentPackage[];
+  packages: Opportunity[];
   onCreatePackage?: () => void;
   onViewPackage?: (packageId: string) => void;
   onBidPackage?: (packageId: string) => void;
@@ -161,37 +140,31 @@ export const AgencyPackagesPanel: React.FC<AgencyPackagesPanelProps> = ({
                     <div className="flex items-center gap-2">
                       <h4 className="font-bold text-sm truncate">{pkg.title}</h4>
                       <Badge variant="outline" className="text-[9px]">
-                        {pkg.agencyName}
+                        {pkg.type}
                       </Badge>
                     </div>
                     <p className={cn('text-xs mt-0.5', tokens.text.caption)}>
-                      Script: {pkg.scriptTitle}
+                      {pkg.flavor}
                     </p>
                   </div>
                   <Badge 
-                    variant={pkg.heatScore > 70 ? 'default' : 'secondary'}
+                    variant="secondary"
                     className="text-[9px]"
                   >
                     <Star className="h-3 w-3 mr-1" />
-                    {pkg.heatScore} Heat
+                    {pkg.qualityBonus || 0} Quality
                   </Badge>
                 </div>
 
                 <div className="flex flex-wrap gap-1 mb-3">
-                  {pkg.talentAttachments.map((attachment) => (
+                  {(pkg.attachedTalentIds || []).map((talentId) => (
                     <Badge 
-                      key={attachment.talentId}
+                      key={talentId}
                       variant="outline" 
-                      className={cn(
-                        'text-[9px]',
-                        attachment.commitment === 'attached' ? 'bg-primary/10' :
-                        attachment.commitment === 'interested' ? 'bg-amber-500/10' :
-                        'bg-muted'
-                      )}
+                      className="text-[9px] bg-primary/10"
                     >
                       <Users className="h-3 w-3 mr-1" />
-                      <TalentNameLink talentId={attachment.talentId} name={attachment.talentName} />
-                      <span className="ml-1 opacity-60">(T{attachment.tier})</span>
+                      <TalentNameLink talentId={talentId} name={`Talent ${talentId.slice(-4)}`} />
                     </Badge>
                   ))}
                 </div>
@@ -201,11 +174,11 @@ export const AgencyPackagesPanel: React.FC<AgencyPackagesPanelProps> = ({
                     <div className="flex items-center gap-1">
                       <DollarSign className="h-3.5 w-3.5 text-muted-foreground" />
                       <span className={cn('text-xs font-medium', tokens.text.caption)}>
-                        ${(pkg.askingPrice / 1000000).toFixed(1)}M
+                        ${(pkg.costToAcquire / 1000000).toFixed(1)}M
                       </span>
                     </div>
                     <span className={cn('text-xs', tokens.text.caption)}>
-                      {pkg.weeksOnMarket} weeks on market
+                      {pkg.weeksUntilExpiry || 0} weeks until expiry
                     </span>
                   </div>
                   

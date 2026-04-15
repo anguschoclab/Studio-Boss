@@ -451,7 +451,7 @@ export class WeekCoordinator {
       }
     }
 
-    function derivePersonalityFromAgent(agent: any): import('../systems/talent/talentAgentInteractions').AgentPersonality {
+    function derivePersonalityFromAgent(agent: { negotiationTactic: string }): import('../systems/talent/talentAgentInteractions').AgentPersonality {
       const tacticMap: Record<string, import('../systems/talent/talentAgentInteractions').AgentPersonality> = {
         'SHARK': 'shark',
         'DIPLOMAT': 'diplomat',

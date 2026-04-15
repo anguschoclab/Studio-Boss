@@ -25,7 +25,8 @@ for (let r = 0; r < runs; r++) {
   const result = SimulationRunner.run(weeks, currentSeed, archetype, persona, true);
   
   const report = result.metrics.getSummaryReport();
-  console.log(`Run ${r + 1}: ${report}`);
+  console.log(`Run ${r + 1}: ${report}`);  console.log(`Run ${r + 1}: ${report}`);
+
 
   // Save detailed history
   const dir = path.join(process.cwd(), 'sim-reports');
@@ -35,7 +36,6 @@ for (let r = 0; r < runs; r++) {
   const filepath = path.join(dir, filename);
   
   fs.writeFileSync(filepath, JSON.stringify(result.metrics.getHistory(), null, 2));
-  console.log(`✅ Detailed report saved to: ${filepath}\n`);
 }
 
 console.log('--- ALL SIMULATIONS COMPLETE ---');

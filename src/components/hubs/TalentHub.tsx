@@ -207,7 +207,7 @@ const MarketplacePanel = () => {
           <React.Suspense fallback={<SkeletonPage contentCards={3} />}>
             <AgencyPackagesPanel
               agencies={(gameState?.industry?.agencies || []) as any}
-              packages={[]}
+              packages={(gameState?.market?.opportunities || []).filter((o: any) => o.type === 'package' && o.origin === 'agency_package')}
               onCreatePackage={() => {
                 // TODO: Implement package creation modal with agency, tier, and talent selection
                 // Requires: package data structure, game store action for createPackage

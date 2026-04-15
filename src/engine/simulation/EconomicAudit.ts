@@ -80,13 +80,11 @@ function runAudit() {
   );
 
   console.log(`📊 Audit Results:`);
-  console.log(`Rival Weekly Gross: $${mockRivalProject.weeklyRevenue?.toLocaleString()}`);
   console.log(`Player Backend %: ${mockPlayerContract.backendPercent}%`);
   console.log(`Calculated Distribution Revenue: $${result.distribution.toLocaleString()}`);
 
   const expectedRoyalty = 100000; // 10% of $1M
   if (result.distribution === expectedRoyalty) {
-    console.log("✅ SUCCESS: Backend royalties correctly calculated and routed to player.");
   } else {
     console.error(`❌ FAILURE: Expected $${expectedRoyalty.toLocaleString()}, but got $${result.distribution.toLocaleString()}`);
   }

@@ -17,9 +17,11 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "simulate": "bun src/engine/simulation/run.ts",
     "electron:dev": "vite build && electron .",
     "electron:build": "vite build && electron-builder --mac",
+    "electron:build:win": "vite build && electron-builder --win",
     "electron:build:all": "vite build && electron-builder -mwl",
     "electron:build:dir": "vite build && electron-builder --mac --dir",
     "electron:pack": "vite build && electron-builder --dir"

@@ -28,8 +28,8 @@ class SeededRNG implements RNG {
  * Migrate a single talent to have archetypes and personality traits
  * This ensures backward compatibility for existing save files
  */
-export function migrateTalent(talent: Talent, seed?: number): Talent {
-  const rng = seed ? new SeededRNG(seed) : { next: () => Math.random() };
+export function migrateTalent(talent: Talent, seed: number): Talent {
+  const rng = new SeededRNG(seed);
   
   // Generate archetypes if not already set
   const migrated = { ...talent };
@@ -66,7 +66,7 @@ export function migrateTalent(talent: Talent, seed?: number): Talent {
   
   // Set career trajectory if not already set
   if (!migrated.careerTrajectory) {
-    migrated.careerTrajectory = generateCareerTrajectory(migrated.tier);
+    migrated.careerTrajectory = generateCareerTrajectory(migrated.tier, rng);
   }
   
   return migrated;
@@ -76,9 +76,9 @@ export function migrateTalent(talent: Talent, seed?: number): Talent {
  * Migrate all talents in a talent pool
  */
 export function migrateTalentPool(talents: Talent[], seedBase?: number): Talent[] {
+  const baseSeed = seedBase ?? 12345;
   return talents.map((talent, index) => {
-    const seed = seedBase ? seedBase + index : undefined;
-    return migrateTalent(talent, seed);
+    return migrateTalent(talent, baseSeed + index);
   });
 }
 
@@ -88,9 +88,10 @@ export function migrateTalentPool(talents: Talent[], seedBase?: number): Talent[
  */
 export function migrateGameTalents(talents: Record<string, Talent>, seedBase?: number): Record<string, Talent> {
   const migrated: Record<string, Talent> = {};
+  const baseSeed = seedBase ?? 54321;
   
   for (const [id, talent] of Object.entries(talents)) {
-    const seed = seedBase ? seedBase + id.length : undefined;
+    const seed = baseSeed + id.length;
     migrated[id] = migrateTalent(talent, seed);
   }
   

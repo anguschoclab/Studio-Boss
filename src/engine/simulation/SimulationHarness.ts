@@ -27,7 +27,6 @@ export class SimulationHarness {
     weeks: number = 260,
     seed: number = 42
   ): SimulationResult {
-    console.log(`🚀 Starting headless simulation stress test: ${weeks} weeks...`);
     
     let state = initializeGame(studioName, archetype, seed);
     const anomalies: string[] = [];
@@ -46,7 +45,8 @@ export class SimulationHarness {
         // Collect Snapshot Metrics
         const totalRivalCash = rivalsList.reduce((sum, r) => sum + r.cash, 0);
         const totalIndustryCash = totalRivalCash + state.finance.cash;
-        const totalProjects = rivalsList.reduce((sum, r) => sum + Object.keys(r.projects || {}).length, 0) + projectsList.length;
+        const totalProjects = Object.keys(state.entities.projects).length + 
+          rivalsList.reduce((sum, r) => sum + r.projectIds.length, 0);
         
         // Calculate Market Share Concentration (HHI - Herfindahl-Hirschman Index)
         const marketShares = rivalsList.map(r => r.marketShare || 0);
@@ -87,7 +87,6 @@ export class SimulationHarness {
       }
     }
 
-    console.log(`✅ Simulation Complete. Final State: Week ${state.week}. Total Anomalies: ${anomalies.length}`);
 
     return {
       finalState: state,

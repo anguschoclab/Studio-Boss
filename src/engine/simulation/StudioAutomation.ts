@@ -99,7 +99,7 @@ export class StudioAutomation {
       const eligibleBuyers = state.market.buyers.filter(b => b.archetype === 'streamer' || b.archetype === 'network');
       const buyer = rng.pick(eligibleBuyers);
       if (buyer && rng.next() < 0.3) {
-        const update: any = { state: 'production', weeksInPhase: 0 };
+        const update: Partial<Project> = { state: 'production', weeksInPhase: 0 };
         impacts.push(this.createUpdateImpact(studioId, p.id, { 
           ...update,
           buyerId: buyer.id,
@@ -281,7 +281,7 @@ export class StudioAutomation {
 
   private static initializeProduction(p: Project, studioId: string, state: GameState, rng: RandomGenerator): { update: Partial<Project>; subImpacts: StateImpact[] } {
     const subImpacts: StateImpact[] = [];
-    const update: any = {
+    const update: Partial<Project> = {
       state: 'production',
       weeksInPhase: 0,
       productionWeeks: rng.rangeInt(12, 26),

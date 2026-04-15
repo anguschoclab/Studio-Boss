@@ -46,7 +46,6 @@ async function refillArchive() {
 
   async function processTier(domain: string, subDomain: string, tier: string, templates: string[], tone: string = 'Standard') {
     if (templates.length < 10) {
-      console.log(`[DEFICIT] ${domain}.${subDomain}.${tier} (${tone}) has ${templates.length} templates. Refilling...`);
       
       const history = domain === 'Talent' && subDomain === 'Scandal' 
         ? ["{{actor}} was arrested for a DUI last month.", "{{actor}}'s last film flopped after an onset meltdown."]
@@ -69,7 +68,6 @@ async function refillArchive() {
     fs.writeFileSync(ARCHIVE_PATH, JSON.stringify(archive, null, 2));
     console.log('--- Archive Updated Successfully ---');
   } else {
-    console.log('--- Archive Already Exhaustive. No Refill Needed ---');
   }
 }
 
