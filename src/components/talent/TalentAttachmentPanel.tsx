@@ -165,7 +165,7 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
                 <div 
                   key={t.id}
                   onMouseEnter={() => setHoveredTalentId(t.id)}
-                  className="group flex items-center gap-4 p-3 rounded-xl hover:bg-white/10 transition-colors duration-200 border border-transparent hover:border-white/5 transition-all cursor-pointer"
+                  className="group flex items-center gap-4 p-3 rounded-xl hover:bg-white/10 transition-all duration-200 border border-transparent hover:border-white/5 cursor-pointer"
                 >
                   <TalentAvatar talent={t} size="sm" />
                   <div className="flex-1 min-w-0">
