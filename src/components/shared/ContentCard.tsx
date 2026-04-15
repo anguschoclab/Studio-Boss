@@ -105,7 +105,7 @@ export const ContentCard: React.FC<ContentCardProps> = ({
       {...(isInteractive && { type: "button" })}
       className={cn(
         'rounded-xl border overflow-hidden',
-        isInteractive && 'w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+        isInteractive && 'w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
         tokens.transition.normal,
         variantStyles[variant],
         sizeStyles[size].container,
