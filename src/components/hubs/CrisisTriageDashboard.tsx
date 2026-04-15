@@ -171,7 +171,7 @@ export const CrisisTriageDashboard: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Crisis Summary Banner */}
       {crises.length > 0 && (
         <Card className={cn(

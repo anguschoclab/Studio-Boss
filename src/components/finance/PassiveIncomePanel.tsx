@@ -71,7 +71,7 @@ export const PassiveIncomePanel: React.FC<PassiveIncomePanelProps> = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Summary Card */}
       <Card className={cn('p-6', tokens.border.default)}>
         <div className="flex items-center justify-between mb-4">

@@ -122,7 +122,7 @@ export const TopBar = () => {
           size="icon" 
           onClick={handleSave} 
           aria-label="Save Game"
-          className="h-11 w-11 p-3 m-2 rounded-full hover:bg-white/5 text-muted-foreground hover:text-primary transition-colors"
+          className="h-11 w-11 p-3 m-2 rounded-full hover:bg-white/10 transition-colors duration-200 text-muted-foreground hover:text-primary transition-colors"
         >
           <Save className="w-4 h-4" />
         </Button>

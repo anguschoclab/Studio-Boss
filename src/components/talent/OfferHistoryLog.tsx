@@ -127,7 +127,7 @@ export const OfferHistoryLog: React.FC<OfferHistoryLogProps> = ({
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Summary */}
       <div className="grid grid-cols-3 gap-4">
         <Card className={cn('p-4', tokens.border.default)}>

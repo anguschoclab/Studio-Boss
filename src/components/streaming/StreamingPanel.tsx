@@ -128,7 +128,7 @@ export const StreamingPanel: React.FC = () => {
                     size="sm" 
                     tooltip="Reset intelligence feed to show global industry history"
                     onClick={() => setSelectedBuyerForHistory(null)}
-                    className="h-6 text-[8px] font-black uppercase hover:bg-white/5 px-2"
+                    className="h-6 text-[8px] font-black uppercase hover:bg-white/10 transition-colors duration-200 px-2"
                    >
                      Clear Filter
                    </Button>

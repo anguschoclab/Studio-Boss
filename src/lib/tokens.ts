@@ -85,17 +85,17 @@ export const tokens = {
    * Glassmorphism presets
    */
   glass: {
-    card: 'bg-card/60 backdrop-blur-xl border border-white/5',
+    card: 'bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-xl border border-white/10 hover:border-white/20 transition-all duration-300',
     panel: 'bg-background/40 backdrop-blur-2xl border-r border-white/5',
     header: 'bg-background/60 backdrop-blur-xl border-b border-white/5',
-    elevated: 'bg-card/80 backdrop-blur-2xl border border-white/10 shadow-xl',
+    elevated: 'bg-gradient-to-br from-card/90 to-card/50 backdrop-blur-2xl border border-white/20 shadow-2xl hover:shadow-[0_0_30px_hsl(var(--primary)/0.15)] transition-all duration-300',
   },
 
   /**
    * Interactive state styles
    */
   interactive: {
-    default: 'hover:bg-white/5 hover:border-white/20 transition-all duration-200',
+    default: 'hover:bg-white/10 hover:border-white/30 hover:shadow-lg transition-all duration-300',
     active: 'bg-primary/15 text-primary border-primary/30 shadow-[0_0_15px_hsl(var(--primary)/0.15)]',
     disabled: 'opacity-50 cursor-not-allowed pointer-events-none',
   },
@@ -138,11 +138,11 @@ export function combineTokens(...tokenClasses: string[]): string {
  */
 export const patterns = {
   card: combineTokens(
-    'bg-card/40 backdrop-blur-sm',
+    'bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-xl',
     tokens.border.default,
     'rounded-xl',
     tokens.spacing.md,
-    'hover:border-white/20',
+    'hover:border-white/30 hover:shadow-xl hover:-translate-y-0.5',
     tokens.transition.normal
   ),
   

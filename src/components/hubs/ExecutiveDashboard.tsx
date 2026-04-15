@@ -132,7 +132,7 @@ export const ExecutiveDashboard: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Quick Stats Row */}
       <div className="grid grid-cols-4 gap-4">
         <Card className={cn('p-4', tokens.border.default)}>
@@ -215,7 +215,7 @@ export const ExecutiveDashboard: React.FC = () => {
                   <Button
                     size="sm"
                     variant="outline"
-                    className="h-7 text-xs"
+                    className="h-7 text-xs focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus:outline-none"
                     onClick={alert.action.onClick}
                   >
                     {alert.action.label}

@@ -338,7 +338,7 @@ export const ProjectDetailModal = () => {
                         </div>
                      </div>
                   ) : project.state === 'production' ? (
-                     <div className="space-y-6">
+                     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
                         <div className="glass-panel p-8 rounded-2xl border border-primary/20 bg-primary/5 flex flex-col items-center text-center space-y-4">
                            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
                               <Clapperboard className="w-8 h-8 text-primary animate-bounce" />
@@ -362,7 +362,7 @@ export const ProjectDetailModal = () => {
                         </div>
                      </div>
                   ) : project.state === 'needs_greenlight' && greenlightReport ? (
-                    <div className="space-y-6">
+                    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
                        <div className="border border-primary/20 bg-primary/5 p-8 rounded-2xl space-y-6">
                          <div className="flex items-center justify-between">
                            <div className="flex items-center gap-3">
@@ -545,7 +545,7 @@ export const ProjectDetailModal = () => {
                     </div>
 
                     <div className="bg-slate-900/40 border border-slate-800 p-6 rounded-2xl space-y-6 flex flex-col justify-between">
-                      <div className="space-y-6">
+                      <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
                          <div className="flex items-center gap-3">
                             <Package className="w-5 h-5 text-violet-400" />
                             <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">IP Vault & Catalog Properties</span>

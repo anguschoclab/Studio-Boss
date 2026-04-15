@@ -71,7 +71,7 @@ export const WriterStrikeImpact: React.FC<WriterStrikeImpactProps> = ({
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Strike Alert Banner */}
       <div className="bg-red-500/10 border border-red-500/50 rounded-lg p-4">
         <div className="flex items-start gap-3">

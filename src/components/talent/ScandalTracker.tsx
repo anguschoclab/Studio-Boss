@@ -72,7 +72,7 @@ export const ScandalTracker: React.FC<ScandalTrackerProps> = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Crisis Alert */}
       {majorScandals.length > 0 && (
         <div className="bg-red-500/10 border border-red-500/50 rounded-lg p-4">
