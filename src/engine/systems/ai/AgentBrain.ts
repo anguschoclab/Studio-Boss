@@ -75,14 +75,30 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
     const archetype = getAgencyArchetype(agency);
 
     // Use archetype pact_aggression to determine poaching/rumor probability
-    const poachProbability = archetype.pact_aggression * 0.3; // Scale 0-1 to 0-0.3
+    let poachProbability = archetype.pact_aggression * 0.3; // Scale 0-1 to 0-0.3
+
+    // 🎭 The Method Actor Tuning: Talent agents adapt their poaching strategies based on motivation.
+    // THE_PACKAGER aggressively hunts for big names across the board, increasing poach probability.
+    if (agency.currentMotivation === 'THE_PACKAGER') {
+       poachProbability *= 1.5;
+    }
 
     if (rng.next() < poachProbability) {
       const rivalsObj = state.entities.rivals || {};
       const rivalKeys = Object.keys(rivalsObj);
       if (rivalKeys.length > 0) {
-        const rivalKey = pick(rivalKeys, rng);
-        const rival = rivalsObj[rivalKey];
+        let rivalKey = pick(rivalKeys, rng);
+        let rival = rivalsObj[rivalKey];
+
+        // 🎭 The Method Actor Tuning: VOLUME_RETAIL agents specifically target lower-prestige studios that are struggling to retain talent.
+        if (agency.currentMotivation === 'VOLUME_RETAIL') {
+           const vulnerableRivals = rivalKeys.filter(k => rivalsObj[k].prestige < 50);
+           if (vulnerableRivals.length > 0 && rng.next() < 0.7) {
+             rivalKey = pick(vulnerableRivals, rng);
+             rival = rivalsObj[rivalKey];
+           }
+        }
+
         if (rival) {
           impacts.push({
             type: 'NEWS_ADDED',
