@@ -34,7 +34,7 @@ export function getTvStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS],
 
 export function getUnscriptedStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS], unscriptedFormatData: typeof UNSCRIPTED_FORMATS[keyof typeof UNSCRIPTED_FORMATS], episodes: number) {
   // The Studio Comptroller: Increased scale multiplier for large unscripted formats to reflect bloated modern reality TV costs.
-  const scaleMultiplier = tier.budget >= 100_000_000 ? 2.5 : tier.budget > 50_000_000 ? 1.5 : 1.0;
+  const scaleMultiplier = tier.budget >= 100_000_000 ? 2.5 : tier.budget >= 50_000_000 ? 1.5 : 1.0;
   const weeklyCost = tier.weeklyCost * unscriptedFormatData.productionCostMultiplier * scaleMultiplier;
   const productionWeeks = Math.ceil(episodes * unscriptedFormatData.productionWeeksPerEpisode);
 
