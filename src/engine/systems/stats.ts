@@ -17,7 +17,7 @@ export function getFilmStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS
 
 export function getTvStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS], tvFormatData: typeof TV_FORMATS[keyof typeof TV_FORMATS], episodes: number) {
   // The Studio Comptroller: Increased TV scaling to add more risk to prestige and blockbuster television.
-  const scaleMultiplier = tier.budget >= 150_000_000 ? 4.0 : tier.budget >= 100_000_000 ? 2.0 : tier.budget > 50_000_000 ? 1.5 : 1.0;
+  const scaleMultiplier = tier.budget >= 150_000_000 ? 4.0 : tier.budget >= 100_000_000 ? 2.0 : tier.budget >= 50_000_000 ? 1.5 : 1.0;
   const weeklyCost = tier.weeklyCost * tvFormatData.productionCostMultiplier * scaleMultiplier;
   const productionWeeks = Math.ceil(episodes * tvFormatData.productionWeeksPerEpisode * scaleMultiplier);
 
