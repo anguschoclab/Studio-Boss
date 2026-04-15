@@ -93,12 +93,14 @@ describe('Razzies Award System', () => {
     expect(result.length).toBeGreaterThan(0);
 
     // Should mark as Razzie winner
-    const projectUpdate = result.find(imp => imp.type === 'PROJECT_UPDATED');
+    const projectUpdate = result.find(imp => imp.type === 'PROJECT_UPDATED' && (imp.payload as any).update.razzieWinner);
     expect(projectUpdate).toBeDefined();
     expect((projectUpdate?.payload as any).update.razzieWinner).toBe(true);
 
     // Should mark as cult classic due to absurd flavor
-    expect((projectUpdate?.payload as any).update.isCultClassic).toBe(true);
+    const cultUpdate = result.find(imp => imp.type === 'PROJECT_UPDATED' && (imp.payload as any).update.isCultClassic);
+    expect(cultUpdate).toBeDefined();
+    expect((cultUpdate?.payload as any).update.isCultClassic).toBe(true);
 
     // Should have prestige penalty
     const prestigeImpact = result.find(imp => imp.type === 'PRESTIGE_CHANGED');

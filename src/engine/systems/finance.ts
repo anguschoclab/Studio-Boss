@@ -172,8 +172,8 @@ export function calculateWeeklyRevenue(state: GameState): number {
   projects.forEach(p => {
     if (p.state === 'released') {
       if (p.distributionStatus === 'theatrical') {
-        // The Studio Comptroller: Synchronized theatrical decay rate to 0.22 to simulate ruthless modern front-loaded box office drops.
-        boxOffice += RevenueProcessor.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.22, p.isCultClassic);
+        // The Studio Comptroller: Synchronized theatrical decay rate to 0.18 to simulate incredibly ruthless modern front-loaded box office drops, forcing high initial marketing.
+        boxOffice += RevenueProcessor.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.18, p.isCultClassic);
       } else if (p.distributionStatus === 'streaming') {
         const platform = p.buyerId ? buyersMap.get(p.buyerId) : undefined;
         if (platform) {

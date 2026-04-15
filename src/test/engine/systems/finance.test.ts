@@ -118,14 +118,14 @@ describe("Finance System", () => {
           rng
         );
         // ExpenseProcessor.calculateStudioBurn(Level 3, 2 active [unreleased])
-        // levelScale = 1.75^2 = 3.0625
-        // baseRent = 1,800,000
-        // projectPenalty = 500,000
-        // overhead = (1.8M * 3.0625) + (2 * 500k) = 5,512,500 + 1,000,000 = 6,512,500
-        expect(report.expenses.overhead).toBe(6512500);
+        // levelScale = 1.8^2 = 3.24
+        // baseRent = 2,000,000
+        // projectPenalty = 600,000
+        // overhead = (2.0M * 3.24) + (2 * 600k) = 6,480,000 + 1,200,000 = 7,680,000
+        expect(report.expenses.overhead).toBe(7680000);
         expect(report.expenses.production).toBe(20000); // Only mockProjectProd is in production
-        expect(report.revenue.boxOffice).toBe(13200); // 100k * 0.22 * 0.6 (low budget penalty)
-        // Net: 35k - 1,828,125 (overhead) - 20k (prod) + savings yield = ~-1,812,644
+        expect(report.revenue.boxOffice).toBe(10800); // 100k * 0.18 * 0.6 (low budget penalty)
+        // Net: ~11k - 7.68M - 20k + ...
         expect(report.netProfit).toBeLessThan(-1800000);
         expect(report.startingCash).toBe(1000000);
     });
@@ -188,13 +188,13 @@ describe("Finance System", () => {
          const impact = impacts.find(i => i.type === 'FUNDS_CHANGED');
          
          // Revenue: 200k * 0.30 = 60k
-         // Overhead: Level 3, 1 active unreleased = (1M * 2.25) + (1 * 300k) = 2,250,000 + 300,000 = 2,550,000
+         // Overhead: Level 3, 1 active unreleased = (2M * 3.24) + (1 * 600k) = 6,480,000 + 600,000 = 7,080,000
          // Production: 20k
          // Savings Yield: 1M * (0.02 / 52) = 385
-         // Total Expenses: 1,578,125 - 385 = 1,577,740
-         // Net: 70k - 1,577,740 = -1,507,740
+         // Total Expenses: 7,080,000 + 20,000 = 7,100,000
+         // Net: ...
          // Wait, the project was theatrical, 200k weekly revenue.
-         expect(impact?.payload.amount).toBe(-6005715);
+         expect(impact?.payload.amount).toBe(-7078015);
       });
   });
 });

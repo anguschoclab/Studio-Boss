@@ -30,18 +30,18 @@ describe('RevenueProcessor', () => {
   });
 
   describe('calculateTheatricalDecay', () => {
-    it('should reduce revenue to 22% when decay rate is 0.22', () => {
-      const revenue = RevenueProcessor.calculateTheatricalDecay(1000000, 0.22);
-      expect(revenue).toBe(220000);
+    it('should reduce revenue to 18% when decay rate is 0.18', () => {
+      const revenue = RevenueProcessor.calculateTheatricalDecay(1000000, 0.18);
+      expect(revenue).toBe(180000);
     });
 
-    it('should reduce revenue over two weeks with 0.22 decay', () => {
+    it('should reduce revenue over two weeks with 0.18 decay', () => {
       const week1 = 1000000;
-      const week2 = RevenueProcessor.calculateTheatricalDecay(week1, 0.22);
-      const week3 = RevenueProcessor.calculateTheatricalDecay(week2, 0.22);
+      const week2 = RevenueProcessor.calculateTheatricalDecay(week1, 0.18);
+      const week3 = RevenueProcessor.calculateTheatricalDecay(week2, 0.18);
       
-      expect(week2).toBe(220000);
-      expect(week3).toBe(48400);
+      expect(week2).toBe(180000);
+      expect(week3).toBe(32400);
     });
   });
 
