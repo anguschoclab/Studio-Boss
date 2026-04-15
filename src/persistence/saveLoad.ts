@@ -43,12 +43,10 @@ export async function saveGame(slot: number, state: GameState): Promise<void> {
       if (!success) {
         throw new Error('Failed to save game via Electron IPC');
       }
-      console.log(`[SaveLoad] State saved to slot ${slot} via Electron IPC.`);
     } else {
       // Fallback to OPFS for web version
       const { persistenceService } = await import('./PersistenceService');
       await persistenceService.save(slot, state);
-      console.log(`[SaveLoad] State saved to slot ${slot} via OPFS (web fallback).`);
     }
   } catch (e) {
     console.error('[SaveLoad] Failed to save game state', e);
@@ -61,14 +59,12 @@ export async function loadGame(slot: number): Promise<GameState | null> {
       // Use Electron IPC for file system operations
       const state = await window.electronAPI.loadGame(slot);
       if (!state) return null;
-      console.log(`[SaveLoad] State loaded from slot ${slot} via Electron IPC.`);
       return state as GameState;
     } else {
       // Fallback to OPFS for web version
       const { persistenceService } = await import('./PersistenceService');
       const state = await persistenceService.load(slot);
       if (!state) return null;
-      console.log(`[SaveLoad] State loaded from slot ${slot} via OPFS (web fallback).`);
       return state as GameState;
     }
   } catch (e) {

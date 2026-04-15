@@ -79,6 +79,41 @@ const engineWorker = new Worker(new URL('../engine/engine.worker.ts', import.met
 let _saveQueue: GameState | null = null;
 let _isBackgroundSaving = false;
 
+// Shared background save queue handler (used by both Electron IPC and Web Worker paths)
+const triggerSave = async (stateToSave: GameState) => {
+  if (_isBackgroundSaving) {
+    _saveQueue = stateToSave;
+    return;
+  }
+
+  _isBackgroundSaving = true;
+  _saveQueue = null;
+  await saveGame(0, stateToSave);
+  _isBackgroundSaving = false;
+
+  if (_saveQueue) triggerSave(_saveQueue);
+};
+
+// Shared modal processing logic
+const processModals = (impacts: any[]) => {
+  const ui = useUIStore.getState();
+  if (impacts && impacts.length > 0) {
+    const modalImpacts = [];
+    for (let i = 0; i < impacts.length; i++) {
+      if (impacts[i].type === 'MODAL_TRIGGERED') {
+        modalImpacts.push(impacts[i]);
+      }
+    }
+    if (modalImpacts.length > 0) {
+      modalImpacts.sort((a, b) => ((b.payload as any).priority || 0) - ((a.payload as any).priority || 0));
+      for (let i = 0; i < modalImpacts.length; i++) {
+        const imp = modalImpacts[i];
+        ui.enqueueModal((imp.payload as any).modalType, (imp.payload as any).payload as Record<string, unknown>);
+      }
+    }
+  }
+};
+
 export const useGameStore = create<GameStore>((set, get, ...args) => ({
   gameState: null,
   _isProcessingTick: false,
@@ -154,22 +189,6 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
             const { newState: nextState, summary, impacts } = result;
             const finalState = nextState as GameState;
 
-            // ⚡ Bolt: Refactored background save queue to use a module-level queue
-            // bypassing Zustand completely. This prevents multiple cascading React re-renders per tick.
-            const triggerSave = async (stateToSave: GameState) => {
-                if (_isBackgroundSaving) {
-                    _saveQueue = stateToSave;
-                    return;
-                }
-
-                _isBackgroundSaving = true;
-                _saveQueue = null;
-                await saveGame(0, stateToSave);
-                _isBackgroundSaving = false;
-
-                if (_saveQueue) triggerSave(_saveQueue);
-            };
-
             triggerSave(finalState);
             
             set({ 
@@ -179,24 +198,7 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
               _isProcessingTick: false
             });
 
-            // Modals
-            // ⚡ Bolt: Refactored array filter and spread sort into a single-pass extraction loop to minimize memory allocations.
-            const ui = useUIStore.getState();
-            if (impacts && impacts.length > 0) {
-              const modalImpacts = [];
-              for (let i = 0; i < impacts.length; i++) {
-                if (impacts[i].type === 'MODAL_TRIGGERED') {
-                  modalImpacts.push(impacts[i]);
-                }
-              }
-              if (modalImpacts.length > 0) {
-                modalImpacts.sort((a, b) => ((b.payload as any).priority || 0) - ((a.payload as any).priority || 0));
-                for (let i = 0; i < modalImpacts.length; i++) {
-                  const imp = modalImpacts[i];
-                  ui.enqueueModal((imp.payload as any).modalType, (imp.payload as any).payload as Record<string, unknown>);
-                }
-              }
-            }
+            processModals(impacts);
 
             if (summary && (summary as WeekSummary).fromWeek % 52 === 0 && (summary as WeekSummary).fromWeek > 0) {
               get().captureSnapshot();
@@ -217,22 +219,6 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
             const { newState: nextState, summary, impacts } = e.data.payload;
             const finalState = nextState as GameState;
 
-            // ⚡ Bolt: Refactored background save queue to use a module-level queue
-            // bypassing Zustand completely. This prevents multiple cascading React re-renders per tick.
-            const triggerSave = async (stateToSave: GameState) => {
-                if (_isBackgroundSaving) {
-                    _saveQueue = stateToSave;
-                    return;
-                }
-
-                _isBackgroundSaving = true;
-                _saveQueue = null;
-                await saveGame(0, stateToSave);
-                _isBackgroundSaving = false;
-
-                if (_saveQueue) triggerSave(_saveQueue);
-            };
-
             triggerSave(finalState);
             
             set({ 
@@ -242,24 +228,7 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
               _isProcessingTick: false
             });
 
-            // Modals
-            // ⚡ Bolt: Refactored array filter and spread sort into a single-pass extraction loop to minimize memory allocations.
-            const ui = useUIStore.getState();
-            if (impacts && impacts.length > 0) {
-              const modalImpacts = [];
-              for (let i = 0; i < impacts.length; i++) {
-                if (impacts[i].type === 'MODAL_TRIGGERED') {
-                  modalImpacts.push(impacts[i]);
-                }
-              }
-              if (modalImpacts.length > 0) {
-                modalImpacts.sort((a, b) => ((b.payload as any).priority || 0) - ((a.payload as any).priority || 0));
-                for (let i = 0; i < modalImpacts.length; i++) {
-                  const imp = modalImpacts[i];
-                  ui.enqueueModal((imp.payload as any).modalType, (imp.payload as any).payload as Record<string, unknown>);
-                }
-              }
-            }
+            processModals(impacts);
 
             if (summary && (summary as WeekSummary).fromWeek % 52 === 0 && (summary as WeekSummary).fromWeek > 0) {
               get().captureSnapshot();

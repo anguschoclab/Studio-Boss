@@ -25,10 +25,8 @@ class PersistenceService {
         const { type, slotId, requestId, state, message } = e.data;
 
         if (type === 'SAVE_SUCCESS') {
-          console.log(`[PersistenceService] Save successful: ${slotId} (req: ${requestId})`);
           this.resolvePromise(requestId, true);
         } else if (type === 'LOAD_SUCCESS') {
-          console.log(`[PersistenceService] Load successful: ${slotId} (req: ${requestId})`);
           this.resolvePromise(requestId, state);
         } else if (type === 'ERROR') {
           console.error(`[PersistenceService] Worker error: ${message} (req: ${requestId})`);

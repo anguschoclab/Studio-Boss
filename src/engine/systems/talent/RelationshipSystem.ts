@@ -127,11 +127,10 @@ function haveWorkedTogether(talentAId: string, talentBId: string, state: GameSta
 
 /**
  * Check if talents competed for same award
- * TODO: Implement when Award type includes nominees
+ * Currently awards don't track individual talent nominees
+ * This could be expanded when Award type includes nominee data
  */
 function haveCompeted(talentAId: string, talentBId: string, state: GameState): boolean {
-  // Currently awards don't track individual talent nominees
-  // This could be expanded when Award type includes nominee data
   return false;
 }
 

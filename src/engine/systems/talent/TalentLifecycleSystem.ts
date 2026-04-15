@@ -183,12 +183,12 @@ export class TalentLifecycleSystem {
         const roleRoll = rng.next();
         const role = roleRoll > 0.7 ? 'director' : (roleRoll > 0.5 ? 'writer' : (roleRoll > 0.4 ? 'producer' : 'actor'));
 
-        newTalents.push(generateTalent(rng, { role: role as any, tier }));
+        newTalents.push(generateTalent(rng, { role: role as 'actor' | 'director' | 'writer' | 'producer', tier }));
       }
       impacts.push({
         type: 'TALENT_ADDED',
         newTalents
-      } as any);
+      } as StateImpact);
     }
 
     // Pass metadata to industry tick for metrics
@@ -197,7 +197,7 @@ export class TalentLifecycleSystem {
       payload: { 
         retiredCount: retiredIds.length 
       }
-    } as any);
+    } as StateImpact);
 
     return impacts;
   }

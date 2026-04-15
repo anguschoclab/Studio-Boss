@@ -4,6 +4,7 @@ import { useUIStore, TalentSubTab } from '@/store/uiStore';
 import { SubNav } from '@/components/navigation/SubNav';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { toast } from '@/components/ui/sonner';
 import {
   Users,
   Search,
@@ -206,22 +207,22 @@ const MarketplacePanel = () => {
         ) : (
           <React.Suspense fallback={<SkeletonPage contentCards={3} />}>
             <AgencyPackagesPanel
-              agencies={(gameState?.industry?.agencies || []) as any}
-              packages={(gameState?.market?.opportunities || []).filter((o: any) => o.type === 'package' && o.origin === 'agency_package')}
+              agencies={gameState?.industry?.agencies || []}
+              packages={(gameState?.market?.opportunities || []).filter((o) => o.type === 'package' && o.origin === 'agency_package')}
               onCreatePackage={() => {
-                // TODO: Implement package creation modal with agency, tier, and talent selection
-                // Requires: package data structure, game store action for createPackage
-                alert('Package creation coming soon - select agency, tier, and talent to create a package');
+                toast.info('Package creation coming soon', {
+                  description: 'Select agency, tier, and talent to create a package'
+                });
               }}
               onViewPackage={(id) => {
-                // TODO: Implement package detail modal/view
-                // Requires: package detail component, navigation to package detail
-                alert(`View package ${id} - package detail modal coming soon`);
+                toast.info('Package details coming soon', {
+                  description: `View package ${id} - package detail modal coming soon`
+                });
               }}
               onBidPackage={(id) => {
-                // TODO: Implement bidding mechanics with cost calculation and success chance
-                // Requires: bidding logic, game store action for bidPackage
-                alert(`Bid on package ${id} - bidding mechanics coming soon`);
+                toast.info('Bidding mechanics coming soon', {
+                  description: `Bid on package ${id} - bidding mechanics coming soon`
+                });
               }}
             />
           </React.Suspense>

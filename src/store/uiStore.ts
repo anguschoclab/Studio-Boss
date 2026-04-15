@@ -36,6 +36,9 @@ interface UIStore {
   showPitchProject: boolean;
   pitchingProjectId: string | null;
   showSummary: boolean;
+  showCreatePackage: boolean;
+  showPackageDetail: boolean;
+  selectedPackageId: string | null;
   // Modal Queue System
   modalQueue: QueuedModal[];
   activeModal: QueuedModal | null;
@@ -52,6 +55,10 @@ interface UIStore {
   selectTalent: (id: string | null) => void;
   openSummary: () => void;
   closeSummary: () => void;
+  openCreatePackage: () => void;
+  closeCreatePackage: () => void;
+  openPackageDetail: (packageId: string) => void;
+  closePackageDetail: () => void;
   
   // Quick Actions Dock visibility
   showQuickActions: boolean;
@@ -128,6 +135,9 @@ export const useUIStore = create<UIStore>((set) => ({
   showPitchProject: false,
   pitchingProjectId: null,
   showSummary: false,
+  showCreatePackage: false,
+  showPackageDetail: false,
+  selectedPackageId: null,
   showQuickActions: true,
   
   modalQueue: [],
