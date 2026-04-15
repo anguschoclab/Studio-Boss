@@ -5,6 +5,7 @@ import { CRISIS_POOLS } from '../data/crises.data';
 import { RandomGenerator } from '../utils/rng';
 import { BardResolver } from './bardResolver';
 import { StudioArchetype } from '../data/aiArchetypes';
+import { calculateSocialCrisisModifier } from './talent/OrganicEventEnhancer';
 
 /**
  * Procedural Crisis Generation (Hardened)
