@@ -77,6 +77,21 @@ export function calculateFranchiseFatigue(
     currentFatigue *= 4.0;
   }
 
+  // 🌌 The Universe Builder: B-Tier Character Fatigue.
+  if (activeCount >= 3 && franchise.audienceLoyalty < 60 && (normalizedGenre === 'Superhero' || normalizedGenre === 'Space Opera')) {
+    currentFatigue *= 2.5;
+  }
+
+  // 🌌 The Universe Builder: Franchise Necromancy.
+  if (activeCount >= 1 && franchise.relevanceScore < 30) {
+    currentFatigue *= 3.0;
+  }
+
+  // 🌌 The Universe Builder: Streaming Spin-Off Dilution.
+  if (activeCount >= 4 && franchise.audienceLoyalty < 75) {
+    currentFatigue *= 1.8;
+  }
+
   // 🌌 The Universe Builder: Back-to-Back Saturation Penalty. If severely overmined in a saturated market.
   if (activeCount >= 3 && genreSaturation > 20) {
     currentFatigue *= 1.5;

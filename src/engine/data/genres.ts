@@ -130,8 +130,8 @@ export const CROSSOVER_AFFINITY: Record<string, string[]> = {
   'IP Mashup': ['Comedy', 'Action', 'Animation', 'Superhero', 'Multiverse', 'Sci-Fi', 'Video Game Adaptation'],
   'Legacy Sequel': ['Action', 'Sci-Fi', 'Horror', 'Comedy', 'Drama'],
   // 🌌 The Universe Builder: Live-Action Remakes lean more into pure Action and Drama to justify the medium shift.
-  'Live-Action Remake': ['Animation', 'Fantasy', 'Family', 'Musical', 'Action', 'Drama', 'Multiverse', 'Anime'], // 🌌 The Universe Builder: Added Multiverse and Anime.
-  'Video Game Adaptation': ['Action', 'Sci-Fi', 'Fantasy', 'Animation', 'Horror', 'IP Mashup', 'Comedy', 'Crime'], // 🌌 The Universe Builder: Added Comedy and Crime crossover affinity...
+  'Live-Action Remake': ['Animation', 'Fantasy', 'Family', 'Musical', 'Action', 'Drama', 'Multiverse', 'Anime', 'Superhero', 'IP Mashup'], // 🌌 The Universe Builder: Added Multiverse, Anime, Superhero, IP Mashup.
+  'Video Game Adaptation': ['Action', 'Sci-Fi', 'Fantasy', 'Animation', 'Horror', 'IP Mashup', 'Comedy', 'Crime', 'Drama', 'Thriller'], // 🌌 The Universe Builder: Added Comedy, Crime, Drama, Thriller crossover affinity...
   'Space Opera': ['Sci-Fi', 'Action', 'Fantasy', 'Multiverse'], // Already contains Multiverse, but keeping script intact
   'Cyberpunk': ['Sci-Fi', 'Action', 'Thriller', 'Crime'],
   // 🌌 The Universe Builder: Added specific subgenre crossover pools for massive event mapping.
@@ -145,7 +145,7 @@ export const CROSSOVER_AFFINITY: Record<string, string[]> = {
 };
 
 export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
-  'Superhero': 1.55, // 🌌 The Universe Builder: Increased superhero fatigue to represent severe modern burnout.
+  'Superhero': 1.70, // 🌌 The Universe Builder: Increased superhero fatigue to represent severe modern burnout.
   'Action': 0.50,
   'Sci-Fi': 0.45,
   'Fantasy': 0.30,
@@ -163,7 +163,7 @@ export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
   'Elevated Horror': 0.20,
   'IP Mashup': 0.85, // 🌌 The Universe Builder: High burnout potential
   'Legacy Sequel': 0.45, // 🌌 The Universe Builder: Nostalgia can wear thin if overused
-  'Live-Action Remake': 1.00, // 🌌 The Universe Builder: High fatigue for lazy cash grabs.
+  'Live-Action Remake': 1.15, // 🌌 The Universe Builder: High fatigue for lazy cash grabs.
   'Video Game Adaptation': 0.60,
   'Space Opera': 0.65,
   'Cyberpunk': 0.55,
