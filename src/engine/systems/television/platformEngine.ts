@@ -6,7 +6,7 @@ import { RandomGenerator } from '../../utils/rng';
  * Growth = (LibraryQuality / 100) * (GrowthRate)
  * Churn = CurrentSubs * ChurnRate
  */
-function calculateSubChange(platform: StreamerPlatform, rng: RandomGenerator, seasonOverSeasonQuality: number = 0): number {
+function calculateSubChange(platform: StreamerPlatform, rng: RandomGenerator, seasonOverSeasonQuality: number = 0, syndicationHits: number = 0): number {
   const baseGrowthRate = 0.02; // 2% weekly base potential
   const qualityFactor = platform.contentLibraryQuality / 100;
   // Use a fallback for marketingSpend if not defined
@@ -26,9 +26,9 @@ function calculateSubChange(platform: StreamerPlatform, rng: RandomGenerator, se
     const growthPercent = pastSubs > 0 ? (currentSubs - pastSubs) / pastSubs : 0;
     // 📺 The Syndication Baron: Tweaked streaming subscriber churn rates. Aggressively penalizing platforms that fail to retain subscribers or flatline in the cutthroat streaming wars.
     if (growthPercent < 0.0) {
-      dynamicChurnRate = Math.min(0.85, dynamicChurnRate * 8.5); // Devastating Penalty for negative growth
+      dynamicChurnRate = Math.min(0.90, dynamicChurnRate * 10.0); // 📺 The Syndication Baron: Devastating Penalty for negative growth (cutthroat)
     } else if (growthPercent < 0.01) {
-      dynamicChurnRate = Math.min(0.65, dynamicChurnRate * 6.5); // Extreme Penalty
+      dynamicChurnRate = Math.min(0.75, dynamicChurnRate * 7.5); // 📺 The Syndication Baron: Extreme Penalty
     } else if (growthPercent < 0.02) {
       dynamicChurnRate = Math.min(0.50, dynamicChurnRate * 5.0); // Aggressive Penalty
     } else if (growthPercent > 0.15) {
@@ -52,6 +52,12 @@ function calculateSubChange(platform: StreamerPlatform, rng: RandomGenerator, se
     dynamicChurnRate = Math.max(0.01, dynamicChurnRate * 0.6); // Strong loyalty for good ongoing shows
   }
 
+  // 📺 The Syndication Baron: Reward platforms with sticky syndication hits (88+ episodes).
+  if (syndicationHits > 0) {
+    const syndicationShield = Math.max(0.2, 1.0 - (syndicationHits * 0.15));
+    dynamicChurnRate *= syndicationShield;
+  }
+
   const churn = platform.subscribers * dynamicChurnRate;
   
   return Math.floor(growth - churn);
@@ -70,6 +76,7 @@ export function tickPlatforms(state: GameState, rng: RandomGenerator): StateImpa
       const platform = buyer as StreamerPlatform;
 
       let seasonOverSeasonQuality = 0;
+      let syndicationHits = 0;
       if (platform.activeLicenses && platform.activeLicenses.length > 0) {
         let totalScore = 0;
         let count = 0;
@@ -82,6 +89,9 @@ export function tickPlatforms(state: GameState, rng: RandomGenerator): StateImpa
               totalScore += seriesProject.reviewScore;
               count++;
             }
+            if (seriesProject.tvDetails.episodesAired >= 88) {
+              syndicationHits++;
+            }
           }
         }
         if (count > 0) {
@@ -89,7 +99,7 @@ export function tickPlatforms(state: GameState, rng: RandomGenerator): StateImpa
         }
       }
 
-      const subChange = calculateSubChange(platform, rng, seasonOverSeasonQuality);
+      const subChange = calculateSubChange(platform, rng, seasonOverSeasonQuality, syndicationHits);
       const newSubCount = Math.max(0, platform.subscribers + subChange);
       
       // Update subscribers and history
