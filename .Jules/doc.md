@@ -87,3 +87,33 @@
 * `docs/marketing_mechanics.md`: Add a section detailing the planned implementation of the Audience Definition Layer and expand the list of Marketing Focus Modes (Angles) to fully cover all options described in the Master Design Bible.
 * **Code Paths Covered:** `evaluateMarketingEfficiency` in `src/engine/systems/marketing/efficiencyEvaluator.ts` and `MarketingAngle` / `MarketingCampaign` interfaces in `src/engine/types/project.types.ts`.
 * **Key Knowledge Gaps Addressed:** Clarifies the divergence between the current implementation of Marketing Angles and the full feature set outlined in the Master Design Bible, preparing for future expansions.
+### 📝 Daily Progress & Docs Update
+
+#### 🏗️ Codebase Status:
+* Merge pull request #523 from anguschoclab/feature/universe-builder-ip-expansion-12798238960963794737
+* Current Focus: UI Components (forms, marketing, industry, modals, electron, shared, pipeline, streaming, setup, discovery, distribution, finance, trends, awards, news, rivals, deals, production, pwa, Theme, dashboard, layout, market, crisis, ip, charts, systems, talent, television, navigation, hubs, sbdb, agencies, development, ui) and Engine Systems (spinoffFactory.test, culture, fatigueEngine.test, directors, TalentSystem.test, buyers, directors.test, greenlight, projects, productionEngine, talentStats.test, deals.test, marketEvents.test, stats, finance, mergers, scandals.test, talentStats, TalentSystem, trends, rumors, projects.test, crises, releaseSimulation, buyerMergers, awards, releaseSimulation.test, rivals, ReviewSystem, deals, culture.test, greenlight.test, rivals.test, synergyEvaluator.test, schedulingEngine.test, trends.test, festivals, marketEvents, buyers.test, demographics, schedulingEngine, productionEngine.test, ReviewSystem.test, bardResolver, festivals.test, ipRetention, bardIntegration.test, stats.test, finance_cultclassic.test, ratings, rumors.test, awards_razzies.test, ipRetention.test, mergers.test, awards_tv.test, unscripted.test, scandals, ratings.test, crises.test, awards.test, demographics.test, finance.test)
+
+#### 📖 Design Bible Alignment:
+* ✅ **Aligned:** Universe Builder IP expansion features have been integrated into the engine.
+* ⚠️ **Missing/Deviations:** Verify cross-over event frequency and franchise fatigue decay rates against the Master Design Bible benchmarks.
+
+#### 📄 Proposed Documentation Updates:
+* `docs/mechanics/universe_builder.md`: Documented the new IP expansion rules and franchise mechanics.
+* **Code Paths Covered:** `src/engine/systems/ipRetention.ts`, `src/engine/systems/spinoffFactory.ts`
+* **Key Knowledge Gaps Addressed:** Explains how franchise fatigue and cross-over synergy are calculated in the simulation.
+
+
+### 📝 Daily Progress & Docs Update
+
+#### 🏗️ Codebase Status:
+* Implemented new franchise mechanics including IP Factory decay, Reboot Renaissance, Crossover Synergy bonuses (4+ IP), and Cynical IP Retention penalties.
+* Current focus is expanding the IP and Universe building mechanics to reflect modern Hollywood trends (crossovers, reboot fatigue).
+
+#### 📖 Design Bible Alignment:
+* ✅ **Aligned:** The implementation of 'Crossover Events', 'Reboot Renaissance', and franchise fatigue directly supports Section 30 (Shared Universes, Crossovers, and Legacy) and Section 34.33 (AI Rivalry Effects).
+* ⚠️ **Missing/Deviations:** While crossovers give a 25% synergy bonus, the Design Bible (Section 30.1) implies actual *linked projects with continuity*. Currently, the synergy is calculated dynamically but may lack a persistent 'Shared Universe' entity in the `gameState` for the UI to represent.
+
+#### 📄 Proposed Documentation Updates:
+* `docs/mechanics/universe_builder.md`: Document the math behind Franchise Oversaturation, Reboot Renaissance, and IP Mashups.
+* **Code Paths Covered:** `src/engine/systems/franchiseCoordinator.ts`, `src/engine/systems/ipRebootEngine.ts`, `src/engine/systems/fatigueEngine.ts`
+* **Key Knowledge Gaps Addressed:** Explains exactly when a reboot triggers 'Cynical Rights Retention' vs 'Reboot Renaissance'.
