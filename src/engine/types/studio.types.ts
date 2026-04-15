@@ -120,6 +120,9 @@ export interface GameState {
   deals: DealsState;
   talentAgentRelationships: Record<string, TalentAgentRelationship>;
   relationships: RelationshipsState; // Talent-talent relationships
+  tvRecommendations?: {
+    recommendations: Record<string, import('./tv-recommendations.types').TVShowRecommendation>;
+  };
   // UI Data Vis Extensions (Epic 4)
   history: StudioSnapshot[];
   eventHistory: GameEvent[];

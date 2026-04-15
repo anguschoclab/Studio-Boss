@@ -3,6 +3,7 @@ import { RandomGenerator } from '../../utils/rng';
 import { TalentRelationship } from '../../types/relationship.types';
 import { BreakoutStar } from '../../types/discovery.types';
 import { Clique } from '../../types/clique.types';
+import { TVShowRecommendation } from '../../types/tv-recommendations.types';
 
 /**
  * Biography Generator System
@@ -13,6 +14,34 @@ import { Clique } from '../../types/clique.types';
 interface BioSection {
   header: string;
   content: string;
+}
+
+/**
+ * Generate TV recommendations section
+ */
+function generateTVRecommendationsSection(talent: Talent, state: GameState): string | null {
+  const tvRecommendations = (state as any).tvRecommendations?.recommendations || {};
+  const talentRecommendations = Object.values(tvRecommendations)
+    .filter((r: any) => r.talentId === talent.id && r.expiresWeek > state.week && !r.accepted) as TVShowRecommendation[];
+
+  if (talentRecommendations.length === 0) return null;
+
+  // Get the highest-scoring recommendation
+  const topRecommendation = talentRecommendations.sort((a, b) => b.matchScore - a.matchScore)[0];
+
+  const parts: string[] = [];
+
+  parts.push(`Considered a strong fit for ${topRecommendation.roleType.replace('_', ' ')} roles in ${topRecommendation.genre} series.`);
+
+  if (topRecommendation.matchScore > 75) {
+    parts.push(`Excellent match with ${topRecommendation.platform.replace('_', '-')} platforms.`);
+  }
+
+  if (topRecommendation.suggestedShowTitles.length > 0) {
+    parts.push(`Potential projects include ${topRecommendation.suggestedShowTitles.slice(0, 2).join(' and ')}.`);
+  }
+
+  return parts.join(' ');
 }
 
 /**
@@ -42,6 +71,10 @@ export function generateBiography(
   // Recent Events
   const recentSection = generateRecentEventsSection(talent, state);
   if (recentSection) sections.push(recentSection);
+
+  // TV Role Recommendations
+  const tvSection = generateTVRecommendationsSection(talent, state);
+  if (tvSection) sections.push(tvSection);
 
   // Personality/Work Style
   sections.push(generatePersonalitySection(talent));

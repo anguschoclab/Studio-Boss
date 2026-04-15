@@ -45,7 +45,7 @@ export function generateTalent(rng: RandomGenerator, params: { role: TalentRole;
   // Generate archetypes and personality traits
   const archetype = generateArchetypeForRole(params.role, params.tier, rng);
   const personality = generatePersonalityTrait(rng);
-  const careerTrajectory = generateCareerTrajectory(params.tier);
+  const careerTrajectory = generateCareerTrajectory(params.tier, rng);
 
   // Generate comfort levels for casting constraints
   const comfortData = applyComfortLevelToTalent({ personality, prestige, tier: params.tier } as Talent, rng);

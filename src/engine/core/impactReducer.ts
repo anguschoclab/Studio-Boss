@@ -534,6 +534,64 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
       return state;
     }
 
+    case 'TV_RECOMMENDATION_CREATED': {
+      if (!impact.payload) return state;
+      const { recommendation } = impact.payload;
+      if (!recommendation) return state;
+
+      return {
+        ...state,
+        tvRecommendations: {
+          ...state.tvRecommendations,
+          recommendations: {
+            ...state.tvRecommendations?.recommendations,
+            [recommendation.id]: recommendation,
+          },
+        },
+      };
+    }
+
+    case 'TV_RECOMMENDATION_ACCEPTED': {
+      if (!impact.payload) return state;
+      const { recommendationId } = impact.payload;
+      if (!recommendationId) return state;
+
+      const recommendations = state.tvRecommendations?.recommendations || {};
+      const recommendation = recommendations[recommendationId];
+
+      if (recommendation) {
+        return {
+          ...state,
+          tvRecommendations: {
+            ...state.tvRecommendations,
+            recommendations: {
+              ...recommendations,
+              [recommendationId]: {
+                ...recommendation,
+                accepted: true,
+                acceptedWeek: state.week,
+              },
+            },
+          },
+        };
+      }
+      return state;
+    }
+
+    case 'TV_RECOMMENDATION_STATE_UPDATED': {
+      if (!impact.payload) return state;
+      const { tvRecommendations } = impact.payload;
+      if (!tvRecommendations) return state;
+
+      return {
+        ...state,
+        tvRecommendations: {
+          ...state.tvRecommendations,
+          ...tvRecommendations,
+        },
+      };
+    }
+
     case 'BUYER_UPDATED': {
       const { buyerId, update } = impact.payload;
       const buyers = state.market.buyers.map(b => 

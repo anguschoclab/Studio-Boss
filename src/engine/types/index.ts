@@ -12,3 +12,4 @@ export * from './production.types';
 export * from './marketing.types';
 export * from './discovery.types';
 export * from './casting.types';
+export * from './tv-recommendations.types';

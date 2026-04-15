@@ -55,6 +55,7 @@ import { tickTalentDiscoverySystem } from '../systems/talent/TalentDiscoverySyst
 import { tickCastingConstraintSystem } from '../systems/talent/CastingConstraintSystem';
 import { tickBiographyGenerator } from '../systems/talent/BiographyGenerator';
 import { tickOrganicEvents } from '../systems/talent/OrganicEventEnhancer';
+import { tickTVRecommendationSystem } from '../systems/talent/TVRecommendationSystem';
 import { shouldAttemptHostileTakeover } from '../systems/ai/AgentBrain';
 import { shouldTalentHireAgent, shouldTalentFireAgent, selectAgentForTalent, createAgentHiringEvent, createAgentFiringEvent } from '../systems/talent/talentAgentEvents';
 import { TalentAgentInteractionEngine } from '../systems/talent/talentAgentInteractions';
@@ -349,6 +350,7 @@ export class WeekCoordinator {
     context.impacts.push(...tickCastingConstraintSystem(state, context.rng));
     context.impacts.push(...tickBiographyGenerator(state, context.rng));
     context.impacts.push(...tickOrganicEvents(state, context.rng));
+    context.impacts.push(...tickTVRecommendationSystem(state, undefined, context.rng));
 
     // Phase 1: Register Weekly Morale
     const talentDict = state.entities.talents;
