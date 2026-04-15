@@ -94,7 +94,7 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
               key={t.id} 
               variant="secondary" 
               className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 py-1 pl-1 pr-2 gap-2 flex items-center h-8 cursor-pointer hover:border-emerald-500/50 transition-colors"
-              onClick={() => selectTalent(t.id)}
+              aria-label={`View ${t.name} profile`} onClick={() => selectTalent(t.id)}
             >
                 <TalentAvatar talent={t} size="xs" />
                 <span className="text-[10px] font-black">{t.name}</span>
@@ -243,7 +243,7 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
                         selectTalent(hoveredTalent.id);
                       }
                     }}
-                    onClick={() => selectTalent(hoveredTalent.id)}
+                    aria-label={`View ${hoveredTalent.name} profile`} onClick={() => selectTalent(hoveredTalent.id)}
                   >{hoveredTalent.name}</h4>
                     <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{hoveredTalent.roles.join(' / ')} • {hoveredTalent.tier}</p>
                  </div>

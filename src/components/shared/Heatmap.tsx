@@ -86,7 +86,7 @@ export const Heatmap: React.FC<HeatmapProps> = ({
   };
 
   return (
-    <div className={cn('overflow-x-auto', className)}>
+    <div className={cn('overflow-x-auto custom-scrollbar w-full', className)}>
       <div className="inline-block min-w-full">
         {/* Column headers */}
         <div className="flex">

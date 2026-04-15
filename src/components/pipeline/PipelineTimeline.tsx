@@ -107,7 +107,7 @@ export const PipelineTimeline: React.FC<PipelineTimelineProps> = ({
   const headerHeight = 32;
 
   return (
-    <div className={cn("w-full overflow-x-auto", className)}>
+    <div className={cn("w-full overflow-x-auto custom-scrollbar", className)}>
       <div 
         className="relative min-w-full"
         style={{ height: headerHeight + lanes * laneHeight + 16 }}

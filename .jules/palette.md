@@ -21,3 +21,7 @@
 **Learning:** When using non-interactive elements like `div`, `span`, or `h3` as clickable elements by attaching an `onClick` handler, they are inaccessible via keyboard navigation. They lack focusability (`tabIndex`) and keyboard interaction (`onKeyDown` handling for Space/Enter keys).
 
 **Action:** Standardized clickable components by explicitly adding `role="button"`, `tabIndex={0}`, and `onKeyDown` handlers across the codebase (`HeatMap`, `FormSection`, `CreatePackageModal`, `Breadcrumbs`, `AwardsHQ`, `TalentHub`, and `TalentAttachmentPanel`) to allow complete keyboard operability.
+## 2024-05-24 - Resolving overflow and touch target spacing
+
+**Learning:** Replacing `overflow-x-auto` with `overflow-x-hidden` on data visualizations (heatmaps, timelines) causes critical functional regressions by clipping content out of view. In addition, applying literal margin instructions like `m-2` on grouped UI elements (like breadcrumbs and tabs) ruins layout proximity.
+**Action:** Restored horizontal scrolling but styled with `custom-scrollbar` to ensure visibility. Refined touch targets to use padding (`py-2.5`, `py-3`) instead of jarring margins, preserving the original visual flow.

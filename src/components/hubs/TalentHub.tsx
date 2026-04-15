@@ -57,7 +57,7 @@ const RosterPanel = () => {
               key={role}
               onClick={() => setFilter(role)}
               className={cn(
-                'px-3.5 py-1.5 text-[10px] uppercase tracking-wider font-black rounded-full transition-all duration-300 border',
+                'px-3.5 py-2.5 text-[10px] uppercase tracking-wider font-black rounded-full transition-all duration-300 border',
                 filter === role
                   ? 'bg-primary text-primary-foreground shadow-[0_0_15px_hsl(var(--primary)/0.4)] scale-105 border-primary/50'
                   : 'bg-muted/50 text-muted-foreground hover:bg-secondary/20 hover:text-foreground border-transparent hover:border-secondary/30'
@@ -148,7 +148,7 @@ const MarketplacePanel = () => {
         <button
           onClick={() => setActiveTab('scripts')}
           className={cn(
-            'px-4 py-2 text-[11px] font-bold uppercase tracking-wider rounded-lg transition-all',
+            'px-4 py-3 text-[11px] font-bold uppercase tracking-wider rounded-lg transition-all',
             activeTab === 'scripts'
               ? 'bg-primary/20 text-primary'
               : 'text-muted-foreground hover:text-foreground'

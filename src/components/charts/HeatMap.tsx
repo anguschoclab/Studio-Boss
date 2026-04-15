@@ -53,7 +53,7 @@ export const HeatMap: React.FC<HeatMapProps> = ({
   };
 
   return (
-    <div className={cn('overflow-x-auto', className)}>
+    <div className={cn('overflow-x-auto custom-scrollbar w-full', className)}>
       <div className="inline-block min-w-full">
         {/* Header row with X labels */}
         <div className="flex">
@@ -88,7 +88,7 @@ export const HeatMap: React.FC<HeatMapProps> = ({
                     'w-16 h-10 flex-shrink-0 flex items-center justify-center text-[9px] font-medium cursor-pointer transition-all hover:ring-2 hover:ring-primary',
                     onCellClick && 'cursor-pointer'
                   )}
-                  role="button"
+                  role="button" aria-label={`Heatmap cell ${xLabel} ${yLabel}`}
                   tabIndex={0}
                   onKeyDown={(e) => {
                     if ((e.key === 'Enter' || e.key === ' ') && cell) {

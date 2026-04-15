@@ -33,7 +33,7 @@ export const FormSection: React.FC<FormSectionProps> = ({
           'flex items-center justify-between',
           collapsible && 'cursor-pointer'
         )}
-        role={collapsible ? "button" : undefined}
+        role={collapsible ? "button" : undefined} aria-expanded={collapsible ? isOpen : undefined} aria-label={collapsible ? `Toggle ${title}` : undefined}
         tabIndex={collapsible ? 0 : undefined}
         onKeyDown={(e) => {
           if (collapsible && (e.key === 'Enter' || e.key === ' ')) {

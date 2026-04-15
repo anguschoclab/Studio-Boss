@@ -128,7 +128,7 @@ export const CreatePackageModal = ({ agencies: propAgencies, talents: propTalent
                 talentList.map(talent => (
                   <div
                     key={talent.id}
-                    className="flex items-center justify-between p-2 rounded hover:bg-muted cursor-pointer"
+                    className="flex items-center justify-between p-3 m-2 rounded-lg shadow-sm hover:shadow-md hover:bg-muted cursor-pointer transition-all"
                     role="button"
                     tabIndex={0}
                     onKeyDown={(e) => {

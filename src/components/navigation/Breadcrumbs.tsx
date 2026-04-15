@@ -63,7 +63,7 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
               {/* Item */}
               <div
                 className={cn(
-                  'flex items-center gap-1.5 px-2 py-1 rounded-md',
+                  'flex items-center gap-1.5 px-3 py-2 rounded-md',
                   !isLast && [
                     'hover:bg-white/5 cursor-pointer',
                     tokens.transition.fast,
