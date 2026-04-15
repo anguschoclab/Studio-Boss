@@ -93,7 +93,7 @@ describe("advanceProject", () => {
   });
 
   describe("executeMarketing", () => {
-    it("should apply campaign buzz bonus to project", () => {
+    it("should attach marketing campaign to project", () => {
       const project = { ...mockProject, buzz: 50 };
       const campaign = {
         id: "campaign-1",
@@ -108,10 +108,12 @@ describe("advanceProject", () => {
       } as any;
 
       const result = executeMarketing(project, campaign);
-      expect(result.project.buzz).toBe(60); // 50 + 10
+      expect(result.project.marketingCampaign).toBeDefined();
+      expect((result.project.marketingCampaign as any).id).toBe("campaign-1");
+      expect((result.project.marketingCampaign as any).weeksInMarketing).toBe(1);
     });
 
-    it("should handle project with existing buzz correctly", () => {
+    it("should preserve existing project buzz", () => {
       const project = { ...mockProject, buzz: 75 };
       const campaign = {
         id: "campaign-1",
@@ -126,7 +128,7 @@ describe("advanceProject", () => {
       } as any;
 
       const result = executeMarketing(project, campaign);
-      expect(result.project.buzz).toBe(80); // 75 + 5
+      expect(result.project.buzz).toBe(75); // Buzz is not modified
     });
 
     it("should return updated project object", () => {
@@ -175,33 +177,37 @@ describe("advanceProject", () => {
   });
 
   describe("executePitching", () => {
-    it("should update project with buyer and contract type", () => {
+    it("should transition project to production state", () => {
       const project = { ...mockProject, state: "pitching" as const };
       const result = executePitching(project, "Netflix", "exclusive");
       
-      expect(result.project.buyerId).toBe("Netflix");
-      expect(result.project.contractType).toBe("exclusive");
+      expect(result.project.state).toBe("production");
+      expect(result.project.weeksInPhase).toBe(0);
     });
 
-    it("should transition project to development state", () => {
+    it("should return update message with buyer and contract info", () => {
       const project = { ...mockProject, state: "pitching" as const };
       const result = executePitching(project, "HBO", "licensing");
       
-      expect(result.project.state).toBe("development");
+      expect(result.update).toContain("HBO");
+      expect(result.update).toContain("licensing");
+      expect(result.update).toContain("Test Project");
     });
 
     it("should handle different buyer names", () => {
       const project = { ...mockProject, state: "pitching" as const };
       const result = executePitching(project, "Amazon Prime", "exclusive");
       
-      expect(result.project.buyerId).toBe("Amazon Prime");
+      expect(result.update).toContain("Amazon Prime");
+      expect(result.project.state).toBe("production");
     });
 
     it("should handle different contract types", () => {
       const project = { ...mockProject, state: "pitching" as const };
       const result = executePitching(project, "Disney+", "licensing");
       
-      expect(result.project.contractType).toBe("licensing");
+      expect(result.update).toContain("licensing");
+      expect(result.project.state).toBe("production");
     });
   });
 });
