@@ -173,5 +173,9 @@ export const useUIStore = create<UIStore>((set) => ({
   selectTalent: (id) => set({ selectedTalentId: id }),
   openSummary: () => set({ showSummary: true }),
   closeSummary: () => set({ showSummary: false }),
+  openCreatePackage: () => set({ showCreatePackage: true }),
+  closeCreatePackage: () => set({ showCreatePackage: false }),
+  openPackageDetail: (packageId) => set({ showPackageDetail: true, selectedPackageId: packageId }),
+  closePackageDetail: () => set({ showPackageDetail: false, selectedPackageId: null }),
   toggleQuickActions: () => set((state) => ({ showQuickActions: !state.showQuickActions })),
 }));
