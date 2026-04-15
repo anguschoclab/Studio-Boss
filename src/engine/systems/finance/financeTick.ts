@@ -90,7 +90,7 @@ export function tickFinance(state: GameState, rng: RandomGenerator, pendingImpac
   const rivalsList = Object.values(state.entities.rivals || {});
 
   // ⚡ The Framerate Fanatic: Pre-calculate rival projects map in O(P) to avoid O(R * P) filtering loop
-  const rivalProjectsMap: Record<string, any[]> = {};
+  const rivalProjectsMap: Record<string, Project[]> = {};
   allProjects.forEach(p => {
     if (p.ownerId) {
       if (!rivalProjectsMap[p.ownerId]) rivalProjectsMap[p.ownerId] = [];
