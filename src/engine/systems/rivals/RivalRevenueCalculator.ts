@@ -23,16 +23,28 @@ export class RivalRevenueCalculator {
   } {
     // Use unified storage if state is provided, otherwise fall back to backward compatibility
     let projects: Project[];
+    projects = [];
     if (state && state.entities.projects) {
-      projects = Object.values(state.entities.projects).filter(
-        p => p.ownerId === rival.id && p.state === 'released'
-      );
+      const allProjects = state.entities.projects;
+      for (const id in allProjects) {
+        if (Object.prototype.hasOwnProperty.call(allProjects, id)) {
+          const p = allProjects[id];
+          if (p.ownerId === rival.id && p.state === 'released') {
+            projects.push(p);
+          }
+        }
+      }
     } else {
       // Backward compatibility for projects field
       const rivalProjects = ('projects' in rival && rival.projects) ? (rival as any).projects : {};
-      projects = Object.values(rivalProjects).filter(
-        (p: any) => p.state === 'released'
-      ) as Project[];
+      for (const id in rivalProjects) {
+        if (Object.prototype.hasOwnProperty.call(rivalProjects, id)) {
+          const p = rivalProjects[id];
+          if (p.state === 'released') {
+            projects.push(p as Project);
+          }
+        }
+      }
     }
 
     if (projects.length === 0) {

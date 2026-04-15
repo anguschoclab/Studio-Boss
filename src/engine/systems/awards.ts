@@ -123,10 +123,15 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
   }
 
   // Add rival projects from unified storage
-  const rivalsList = Object.values(state.entities.rivals || {});
-  const rivalProjects = Object.values(state.entities.projects).filter(p =>
-    rivalsList.some(r => r.id === p.ownerId)
-  );
+  const rivalsMap = state.entities.rivals || {};
+  const allProjects = Object.values(state.entities.projects || {});
+
+  const rivalProjects: Project[] = [];
+  for (const p of allProjects) {
+    if (p.ownerId && rivalsMap[p.ownerId]) {
+      rivalProjects.push(p);
+    }
+  }
 
   for (const project of rivalProjects) {
     if ((project.state === 'released' || project.state === 'post_release' || project.state === 'archived') &&

@@ -22,3 +22,6 @@
 ## 2025-03-08 - Optimized AI bidding engine loop
 **Learning:** Hoisting repetitive calculations (like `leverageAggression` inside `biddingEngine.ts`) outside of deeply nested loops significantly reduces Time Complexity and unnecessary GC allocations. Here, calculating it per opportunity instead of per rival per opportunity reduced the complexity from `O(O * R * (A + a))` to `O(O * (R + A + a))`.
 **Action:** When iterating over combinations of items (like opportunities and rivals), look for derived values that only depend on the outer loop variable and hoist their calculation before the inner loop.
+## 2025-05-18 - [Eliminating Object.values().filter().map() anti-pattern in high-frequency functions]
+**Learning:** Chaining array methods like `Object.values().filter().map()` over dictionaries within engine tick functions creates immense garbage collection pressure by generating intermediate arrays that are immediately discarded. This was found across multiple modules including `televisionTick`, `awards`, `financeTick`, `RivalRevenueCalculator`, and `MetricsCollector`.
+**Action:** Replace `Object.values().filter().map()` chains with single-pass `for...in` loops and `hasOwnProperty` checks, and utilize precomputed Maps/dictionaries for O(1) lookups where possible instead of repeated iterations over the entire dataset.

@@ -50,9 +50,17 @@ export function tickTelevision(state: GameState, rng: RandomGenerator): StateImp
   const rivalsList = Object.values(rivalsMap);
 
   // Use unified storage for rival projects
-  const rivalProjects = Object.values(state.entities.projects).filter(p =>
-    rivalsList.some(r => r.id === p.ownerId)
-  );
+  const rivalProjects: SeriesProject[] = [];
+  const projectsDict = state.entities.projects;
+  const rivalIds = new Set(rivalsList.map(r => r.id));
+
+  for (const key in projectsDict) {
+    if (!Object.prototype.hasOwnProperty.call(projectsDict, key)) continue;
+    const p = projectsDict[key];
+    if (p.ownerId && rivalIds.has(p.ownerId)) {
+      rivalProjects.push(p as SeriesProject);
+    }
+  }
 
   for (const p of rivalProjects) {
     if (p.type === 'SERIES' && 'tvDetails' in p) {
