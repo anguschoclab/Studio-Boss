@@ -16,3 +16,7 @@
 ### 2024-06-03 - Interactive Framer Motion wrappers accessibility
 **Learning:** Using `motion.div` for interactive elements (such as clickable cards) can cause keyboard accessibility issues, as standard `div`s do not natively support standard button behaviors (like focusing or triggering on Enter/Space).
 **Action:** When conditionally rendering Framer Motion interactive wrappers (e.g., in `ContentCard.tsx`), always prefer `motion.button` and include `type="button"` alongside `w-full text-left focus-visible:outline-none focus-visible:ring-2` to ensure proper keyboard navigation and prevent standard browser button styles from altering the layout.
+
+### 2024-05-25 - Talent Hub Search and Role Filters Accessibility
+**Learning:** Similar to the search inputs, custom role filter buttons often lack proper ARIA labels, `aria-pressed` state to indicate the current selection, and visible focus states, rendering them hard to navigate for keyboard and screen reader users. In addition, standalone search inputs may only rely on their visual placeholder.
+**Action:** When implementing custom button groups for filtering or standalone search inputs, ensure the container has `role="group"` and `aria-label`, buttons use `aria-pressed`, and inputs/buttons both implement robust `focus-visible` styling (like `focus-visible:ring-2`) along with `aria-label`s on inputs that lack standard `<label>` elements.

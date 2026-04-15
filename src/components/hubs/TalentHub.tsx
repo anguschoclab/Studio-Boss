@@ -51,13 +51,14 @@ const RosterPanel = () => {
     <div className="h-full flex flex-col space-y-4">
       {/* Filters */}
       <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between bg-white/5 p-4 rounded-xl border border-white/5">
-        <div className="flex gap-2 flex-wrap">
+        <div className="flex gap-2 flex-wrap" role="group" aria-label="Filter by role">
           {roleFilters.map(role => (
             <button
               key={role}
               onClick={() => setFilter(role)}
+              aria-pressed={filter === role}
               className={cn(
-                'px-3.5 py-1.5 text-[10px] uppercase tracking-wider font-black rounded-full transition-all duration-300 border',
+                'px-3.5 py-1.5 text-[10px] uppercase tracking-wider font-black rounded-full transition-all duration-300 border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
                 filter === role
                   ? 'bg-primary text-primary-foreground shadow-[0_0_15px_hsl(var(--primary)/0.4)] scale-105 border-primary/50'
                   : 'bg-muted/50 text-muted-foreground hover:bg-secondary/20 hover:text-foreground border-transparent hover:border-secondary/30'
@@ -75,7 +76,8 @@ const RosterPanel = () => {
             placeholder="Search talent..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full h-9 pl-10 pr-3 text-[11px] bg-black/40 border border-white/10 rounded-md focus:outline-none focus:border-primary/50"
+            aria-label="Search talent"
+            className="w-full h-9 pl-10 pr-3 text-[11px] bg-black/40 border border-white/10 rounded-md focus:outline-none focus:border-primary/50 focus-visible:ring-2 focus-visible:ring-primary/50"
           />
         </div>
       </div>
