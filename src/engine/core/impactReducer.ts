@@ -741,8 +741,17 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
 
       // Check if there's an attached project to boost buzz for specific genres/formats
       const projects = { ...state.entities.projects };
-      const contracts = Object.values(state.entities.contracts);
-      const projectIds = contracts.filter(c => c.talentId === scandal.talentId).map(c => c.projectId);
+
+      const projectIds: string[] = [];
+      const contractsRaw = state.entities.contracts;
+      for (const key in contractsRaw) {
+        if (Object.prototype.hasOwnProperty.call(contractsRaw, key)) {
+          const c = contractsRaw[key];
+          if (c.talentId === scandal.talentId) {
+            projectIds.push(c.projectId);
+          }
+        }
+      }
 
       for (const pid of projectIds) {
           const project = projects[pid];
