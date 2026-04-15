@@ -250,6 +250,19 @@ export interface Talent {
 
   // Discovery System: Breakout star tracking
   isBreakout?: boolean; // True if currently experiencing breakout hype
+
+  // Casting Constraint System: Comfort levels for script requirements
+  comfortLevel?: {
+    nudity: 'none' | 'tasteful' | 'partial' | 'full';
+    stunts: 'none' | 'minor' | 'moderate' | 'extreme';
+    intimacy: 'none' | 'tasteful' | 'passionate';
+    risk: 'conservative' | 'moderate' | 'adventurous';
+  };
+  comfortPremiumRates?: {
+    nudityMultiplier: number;
+    stuntMultiplier: number;
+    intimacyMultiplier: number;
+  };
 }
 
 export interface Contract {

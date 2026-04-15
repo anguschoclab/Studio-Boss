@@ -505,6 +505,35 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
       };
     }
 
+    case 'CASTING_CONSTRAINT_CHECKED': {
+      if (!impact.payload) return state;
+      const { talentId, comfortLevel, premiumRates } = impact.payload;
+      if (!talentId) return state;
+
+      return {
+        ...state,
+        entities: {
+          ...state.entities,
+          talents: {
+            ...state.entities.talents,
+            [talentId]: {
+              ...state.entities.talents?.[talentId],
+              comfortLevel,
+              comfortPremiumRates: premiumRates,
+            },
+          },
+        },
+      };
+    }
+
+    case 'CASTING_CONSTRAINT_VIOLATION':
+    case 'CASTING_PREMIUM_DEMAND':
+    case 'CASTING_ALTERNATIVE_SUGGESTED': {
+      // These impacts trigger UI modals/notifications
+      // State updates handled through other impact types (TALENT_UPDATED, PROJECT_UPDATED)
+      return state;
+    }
+
     case 'BUYER_UPDATED': {
       const { buyerId, update } = impact.payload;
       const buyers = state.market.buyers.map(b => 

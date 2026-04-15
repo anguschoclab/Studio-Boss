@@ -11,3 +11,4 @@ export * from './clique.types';
 export * from './production.types';
 export * from './marketing.types';
 export * from './discovery.types';
+export * from './casting.types';
