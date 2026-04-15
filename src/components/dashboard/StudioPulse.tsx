@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore, TabId } from '@/store/uiStore';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import {
   Activity, AlertTriangle,
@@ -149,7 +150,7 @@ export const StudioPulse: React.FC = () => {
   const healthColor = healthScore >= 80 ? 'success' : healthScore >= 50 ? 'warning' : 'destructive';
 
   return (
-    <Card className="border-border/50 bg-gradient-to-br from-card/80 via-card/50 to-transparent backdrop-blur-md overflow-hidden">
+    <Card className={cn("overflow-hidden", "bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-xl border border-white/10 hover:border-white/20 transition-all duration-300")}>
       <CardHeader className="pb-3 border-b border-border/30">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -198,7 +199,7 @@ export const StudioPulse: React.FC = () => {
         {/* Quick Stats Row */}
         <div className="grid grid-cols-4 gap-3">
           <TooltipWrapper tooltip="Weeks of operation remaining at current burn rate">
-            <div className="p-3 rounded-lg bg-background/50 border border-border/30 space-y-2">
+            <div className={cn("p-3 rounded-lg bg-background/50 border", "border-white/10 hover:border-white/20 focus:border-primary/50", "space-y-2")}>
               <div className="flex items-center gap-1.5">
                 <Clock className="w-3.5 h-3.5 text-muted-foreground" />
                 <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">Runway</span>
@@ -217,7 +218,7 @@ export const StudioPulse: React.FC = () => {
           </TooltipWrapper>
 
           <TooltipWrapper tooltip="Active projects in development or production">
-            <div className="p-3 rounded-lg bg-background/50 border border-border/30 space-y-2">
+            <div className={cn("p-3 rounded-lg bg-background/50 border", "border-white/10 hover:border-white/20 focus:border-primary/50", "space-y-2")}>
               <div className="flex items-center gap-1.5">
                 <Film className="w-3.5 h-3.5 text-muted-foreground" />
                 <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">Active</span>
@@ -230,7 +231,7 @@ export const StudioPulse: React.FC = () => {
           </TooltipWrapper>
 
           <TooltipWrapper tooltip="Contracted talent on your roster">
-            <div className="p-3 rounded-lg bg-background/50 border border-border/30 space-y-2">
+            <div className={cn("p-3 rounded-lg bg-background/50 border", "border-white/10 hover:border-white/20 focus:border-primary/50", "space-y-2")}>
               <div className="flex items-center gap-1.5">
                 <Users className="w-3.5 h-3.5 text-muted-foreground" />
                 <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">Talent</span>
@@ -243,7 +244,7 @@ export const StudioPulse: React.FC = () => {
           </TooltipWrapper>
 
           <TooltipWrapper tooltip="8-week cash trend">
-            <div className="p-3 rounded-lg bg-background/50 border border-border/30 space-y-1">
+            <div className={cn("p-3 rounded-lg bg-background/50 border", "border-white/10 hover:border-white/20 focus:border-primary/50", "space-y-1")}>
               <div className="flex items-center gap-1.5">
                 <DollarSign className="w-3.5 h-3.5 text-muted-foreground" />
                 <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">Trend</span>
