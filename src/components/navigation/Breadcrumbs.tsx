@@ -63,7 +63,7 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
               {/* Item */}
               <div
                 className={cn(
-                  'flex items-center gap-1.5 px-2 py-1 rounded-md',
+                  'flex items-center gap-1.5 px-3 py-2 rounded-md',
                   !isLast && [
                     'hover:bg-white/5 cursor-pointer',
                     tokens.transition.fast,
@@ -71,6 +71,14 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
                   isLast && 'text-foreground font-medium',
                   !isLast && 'text-muted-foreground'
                 )}
+                role={!isLast && item.onClick ? "button" : undefined}
+                tabIndex={!isLast && item.onClick ? 0 : undefined}
+                onKeyDown={(e) => {
+                  if (!isLast && item.onClick && (e.key === 'Enter' || e.key === ' ')) {
+                    e.preventDefault();
+                    item.onClick();
+                  }
+                }}
                 onClick={!isLast && item.onClick ? item.onClick : undefined}
                 aria-current={isLast ? 'page' : undefined}
               >

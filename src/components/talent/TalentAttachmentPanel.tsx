@@ -94,7 +94,7 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
               key={t.id} 
               variant="secondary" 
               className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 py-1 pl-1 pr-2 gap-2 flex items-center h-8 cursor-pointer hover:border-emerald-500/50 transition-colors"
-              onClick={() => selectTalent(t.id)}
+              aria-label={`View ${t.name} profile`} onClick={() => selectTalent(t.id)}
             >
                 <TalentAvatar talent={t} size="xs" />
                 <span className="text-[10px] font-black">{t.name}</span>
@@ -172,6 +172,14 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
                     <div className="flex items-center gap-2">
                        <span 
                       className="font-bold text-sm text-white truncate cursor-pointer hover:text-primary transition-colors"
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          selectTalent(t.id);
+                        }
+                      }}
                       onClick={() => selectTalent(t.id)}
                     >{t.name}</span>
                        <Badge variant="outline" className="text-[8px] h-4 px-1 border-slate-700 text-slate-400">Tier {t.tier}</Badge>
@@ -227,7 +235,15 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
                  <div>
                     <h4 
                     className="text-xl font-black italic uppercase tracking-tighter text-white cursor-pointer hover:text-primary transition-colors"
-                    onClick={() => selectTalent(hoveredTalent.id)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        selectTalent(hoveredTalent.id);
+                      }
+                    }}
+                    aria-label={`View ${hoveredTalent.name} profile`} onClick={() => selectTalent(hoveredTalent.id)}
                   >{hoveredTalent.name}</h4>
                     <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{hoveredTalent.roles.join(' / ')} • {hoveredTalent.tier}</p>
                  </div>
