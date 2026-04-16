@@ -21,3 +21,6 @@
 **Learning:** When using non-interactive elements like `div`, `span`, or `h3` as clickable elements by attaching an `onClick` handler, they are inaccessible via keyboard navigation. They lack focusability (`tabIndex`) and keyboard interaction (`onKeyDown` handling for Space/Enter keys).
 
 **Action:** Standardized clickable components by explicitly adding `role="button"`, `tabIndex={0}`, and `onKeyDown` handlers across the codebase (`HeatMap`, `FormSection`, `CreatePackageModal`, `Breadcrumbs`, `AwardsHQ`, `TalentHub`, and `TalentAttachmentPanel`) to allow complete keyboard operability.
+## 2026-04-16 - Add focus states to ProjectCard
+**Learning:** Found that some interactive `div`/`button` elements that act as cards lack keyboard focus indicators making them difficult to navigate via keyboard.
+**Action:** When implementing custom interactive elements (like custom cards acting as buttons), always ensure focus-visible states are explicitly defined.

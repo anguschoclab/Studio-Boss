@@ -58,7 +58,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
             selectProject(project.id);
           }
         }}
-        className="w-full text-left p-4 rounded-xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-transparent backdrop-blur-md hover:bg-white/[0.12] hover:border-primary/40 transition-all duration-500 space-y-4 group relative overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl hover:-translate-y-1 animate-in fade-in slide-in-from-bottom-2 duration-500"
+        className="w-full text-left p-4 rounded-xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-transparent backdrop-blur-md hover:bg-white/[0.12] hover:border-primary/40 transition-all duration-500 space-y-4 group relative overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl hover:-translate-y-1 animate-in fade-in slide-in-from-bottom-2 duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
       >
         {/* Visual Accent */}
         <div className={cn(
