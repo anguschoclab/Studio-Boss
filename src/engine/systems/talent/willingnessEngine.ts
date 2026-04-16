@@ -173,6 +173,25 @@ export function calculateWillingness(
     }
   }
 
+  // 🎭 The Method Actor Tuning: 'movie_star' actors strongly prefer films and penalize TV series unless buzz is extremely high. 'tv_star' actors prefer TV stability and penalize films unless buzz is high.
+  if (talent.actorArchetype === 'movie_star' && project.type === 'SERIES') {
+    if (project.buzz > 80) {
+      score += 5;
+      reasons.push(`${talent.name} is a movie star, but the incredible buzz around this series is too good to pass up.`);
+    } else {
+      score -= 25;
+      reasons.push(`${talent.name} is a movie star and prefers feature films over standard TV/Streaming roles.`);
+    }
+  } else if (talent.actorArchetype === 'tv_star' && project.type === 'FILM') {
+    if (project.buzz > 70) {
+      score += 10;
+      reasons.push(`${talent.name} is looking to make the leap to features and this high-profile film is perfect.`);
+    } else {
+      score -= 20;
+      reasons.push(`${talent.name} prefers the stability of series work over taking a risk on a low-buzz film.`);
+    }
+  }
+
   // Final Bound and Verdict
   const finalScore = Math.max(0, Math.min(100, score));
   let verdict: 'willing' | 'hesitant' | 'unwilling';

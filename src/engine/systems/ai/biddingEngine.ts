@@ -9,8 +9,9 @@ import { calculateWillingness } from '../talent/willingnessEngine';
  * Archetypes now have clear, deterministic bidding biases.
  */
 const ArchetypeMultipliers: Record<ArchetypeKey, (genre: string) => number> = {
-  'indie': (genre) => (genre === 'Drama' || genre === 'Horror' ? 1.4 : 0.8),
-  'major': (genre) => (genre === 'Sci-Fi' || genre === 'Action' ? 1.6 : 0.6),
+  // 🎭 The Method Actor Tuning: Indie studios bid aggressively on prestige genres but avoid commercial IP, while Major studios ruthlessly bid on franchise IP genres.
+  'indie': (genre) => (genre === 'Drama' || genre === 'Horror' || genre === 'Historical' || genre === 'Biopic' ? 1.5 : 0.7),
+  'major': (genre) => (genre === 'Sci-Fi' || genre === 'Action' || genre === 'Fantasy' || genre === 'Superhero' ? 1.8 : 0.8),
   'mid-tier': (genre) => 1.15, 
 };
 

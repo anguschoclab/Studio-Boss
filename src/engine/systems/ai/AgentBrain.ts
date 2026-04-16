@@ -210,6 +210,9 @@ export function shouldAttemptHostileTakeover(
 ): boolean {
   if (attacker.id === target.id) return false;
 
+  // 🎭 The Method Actor Tuning: Studios in a cash crunch never attempt hostile takeovers.
+  if (attacker.currentMotivation === 'CASH_CRUNCH') return false;
+
   // Backward compatibility for behaviorId
   const behaviorId = attacker.archetypeId || ('behaviorId' in attacker ? (attacker as any).behaviorId : undefined);
   const archetype = AI_ARCHETYPES.find(a => a.id === behaviorId);
@@ -224,9 +227,12 @@ export function shouldAttemptHostileTakeover(
   const targetShare = target.marketShare ?? 0;
   if (attackerShare + targetShare > 0.40) return false;
 
-  // Aggression and Strategy check
-  if (archetype.biddingAggression < 70) return false;
-  if (archetype.strategy !== 'acquirer' && archetype.strategy !== 'poacher') return false;
+  // 🎭 The Method Actor Tuning: MARKET_DISRUPTION studios bypass standard aggression/strategy constraints to ruthlessly expand.
+  if (attacker.currentMotivation !== 'MARKET_DISRUPTION') {
+    // Aggression and Strategy check
+    if (archetype.biddingAggression < 70) return false;
+    if (archetype.strategy !== 'acquirer' && archetype.strategy !== 'poacher') return false;
+  }
 
   return attacker.currentMotivation === 'FRANCHISE_BUILDING' || attacker.currentMotivation === 'MARKET_DISRUPTION';
 }
