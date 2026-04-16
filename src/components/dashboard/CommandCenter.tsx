@@ -67,7 +67,7 @@ export const CommandCenter: React.FC = () => {
               Tier {gameState.studio.prestige >= 80 ? '1' : gameState.studio.prestige >= 50 ? '2' : '3'} Studio
             </span>
           </div>
-          <div className={cn("px-5 py-2.5 flex flex-col items-end rounded-xl", "bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-xl border border-white/10 hover:border-white/20 transition-all duration-300", "hover:bg-white/10 hover:border-white/30 hover:shadow-lg transition-all duration-300")}>
+          <div className={cn("px-5 py-2.5 flex flex-col items-end rounded-xl", "bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-xl border border-white/10 transition-all duration-300", "hover:bg-white/10 hover:border-white/30 hover:shadow-lg")}>
             <span className="text-[9px] uppercase font-black text-muted-foreground/80 tracking-[0.25em] leading-none mb-1">Fiscal Year</span>
             <span className="text-sm font-display font-black text-white">{Math.floor(gameState.week / 52) + 1}</span>
           </div>
