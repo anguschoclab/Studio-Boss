@@ -14,7 +14,8 @@ export const CashEfficiencyGauge: React.FC<CashEfficiencyGaugeProps> = ({ score 
   const COLORS = ['#f59e0b', '#1e293b'];
 
   return (
-    <div className="h-full w-full">
+    <div className="h-full w-full relative group">
+      <div className="absolute inset-0 bg-primary/5 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie

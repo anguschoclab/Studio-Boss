@@ -123,11 +123,11 @@ export const ExecutiveDashboard: React.FC = () => {
   const getAlertStyles = (type: string) => {
     switch (type) {
       case 'critical':
-        return 'bg-red-500/10 border-red-500/30';
+        return 'bg-gradient-to-r from-red-500/10 to-transparent border-red-500/30 backdrop-blur-md shadow-[0_0_15px_rgba(239,68,68,0.1)]';
       case 'warning':
-        return 'bg-amber-500/10 border-amber-500/30';
+        return 'bg-gradient-to-r from-amber-500/10 to-transparent border-amber-500/30 backdrop-blur-md shadow-[0_0_15px_rgba(245,158,11,0.1)]';
       default:
-        return 'bg-blue-500/10 border-blue-500/30';
+        return 'bg-gradient-to-r from-blue-500/10 to-transparent border-blue-500/30 backdrop-blur-md shadow-[0_0_15px_rgba(59,130,246,0.1)]';
     }
   };
 
@@ -135,7 +135,7 @@ export const ExecutiveDashboard: React.FC = () => {
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Quick Stats Row */}
       <div className="grid grid-cols-4 gap-4">
-        <Card className={cn('p-4', tokens.border.default)}>
+        <Card className={cn('p-4', 'bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-xl hover:border-white/20 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5', tokens.border.default)}>
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-emerald-500/10">
               <DollarSign className="h-5 w-5 text-emerald-500" />
@@ -149,7 +149,7 @@ export const ExecutiveDashboard: React.FC = () => {
           </div>
         </Card>
 
-        <Card className={cn('p-4', tokens.border.default)}>
+        <Card className={cn('p-4', 'bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-xl hover:border-white/20 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5', tokens.border.default)}>
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-blue-500/10">
               <LayoutDashboard className="h-5 w-5 text-blue-500" />
@@ -163,7 +163,7 @@ export const ExecutiveDashboard: React.FC = () => {
           </div>
         </Card>
 
-        <Card className={cn('p-4', tokens.border.default)}>
+        <Card className={cn('p-4', 'bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-xl hover:border-white/20 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5', tokens.border.default)}>
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-purple-500/10">
               <Activity className="h-5 w-5 text-purple-500" />
@@ -177,7 +177,7 @@ export const ExecutiveDashboard: React.FC = () => {
           </div>
         </Card>
 
-        <Card className={cn('p-4', tokens.border.default)}>
+        <Card className={cn('p-4', 'bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-xl hover:border-white/20 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5', tokens.border.default)}>
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-amber-500/10">
               <TrendingUp className="h-5 w-5 text-amber-500" />
@@ -263,7 +263,7 @@ export const ExecutiveDashboard: React.FC = () => {
           </div>
 
           {/* Quick Actions */}
-          <Card className={cn('p-4', tokens.border.default)}>
+          <Card className={cn('p-4', 'bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-xl border-white/10 hover:border-white/20 transition-all duration-300 shadow-lg', tokens.border.default)}>
             <h4 className="font-bold text-sm mb-3">Quick Actions</h4>
             <div className="grid grid-cols-4 gap-2">
               <Button
