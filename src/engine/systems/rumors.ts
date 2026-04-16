@@ -58,7 +58,7 @@ export function advanceRumors(state: GameState, rng: RandomGenerator): StateImpa
         context: { actor: talent.name },
         rng
       });
-    } else if (category === 'rival') {
+    } else if (category === 'rival' && Object.keys(state.entities.rivals || {}).length > 0) {
       const rival = pick(Object.values(state.entities.rivals || {}), rng);
       text = BardResolver.resolve({
         domain: 'Industry',
