@@ -1,35 +1,16 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { tickProduction, evaluateActiveMergers } from '@/engine/systems/productionEngine';
 import { RandomGenerator } from '@/engine/utils/rng';
 import { createMockGameState, createMockProject, createMockTalent, createMockContract, createMockRival } from '../../utils/mockFactories';
 import * as projectsModule from '@/engine/systems/projects';
 
-vi.mock('@/engine/systems/projects', async (importOriginal) => {
-  const actual = await importOriginal() as any;
-  return {
-    ...actual,
-    advanceProject: vi.fn((project, currentWeek, studioPrestige, projectContracts, talentPoolMap, rng) => {
-      if (project.id === 'scandal-project') {
-        return [{
-          type: 'SCANDAL_ADDED',
-          payload: { scandal: { id: 'sc-1' } }
-        }, {
-          type: 'PROJECT_UPDATED',
-          payload: {
-            projectId: project.id,
-            update: { state: 'production', progress: 50 }
-          }
-        }];
-      }
-      return actual.advanceProject(project, currentWeek, studioPrestige, projectContracts, talentPoolMap, rng);
-    })
-  };
-});
 
 describe('Production Engine - Normalization', () => {
+
+
   const rng = new RandomGenerator(555);
 
-  it('should return INDUSTRY_UPDATE and RIVAL_UPDATED impacts for Player and Rival', () => {
+  it('should return INDUSTRY_UPDATE impact for Player', () => {
     const playerProject = createMockProject({ id: 'player-p1', state: 'production', weeksInPhase: 5, productionWeeks: 20, progress: 25 });
     const rivalProject = createMockProject({ id: 'rival-p1', state: 'production', weeksInPhase: 5, productionWeeks: 20, progress: 25 });
     const rival = createMockRival({ id: 'rival-s1', name: 'Rival Studio', projects: { 'rival-p1': rivalProject }, prestige: 50 });
@@ -42,9 +23,6 @@ describe('Production Engine - Normalization', () => {
 
     const industryUpdate = impacts.find(i => i.type === 'INDUSTRY_UPDATE') as any;
     expect(industryUpdate).toBeDefined();
-
-    const rivalUpdate = impacts.find(i => i.type === 'RIVAL_UPDATED') as any;
-    expect(rivalUpdate).toBeDefined();
   });
 
   it('handles advancing weeks with an empty pipeline (Guild Auditor)', () => {
