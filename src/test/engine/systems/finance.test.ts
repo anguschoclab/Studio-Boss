@@ -125,7 +125,7 @@ describe("Finance System", () => {
         expect(report.expenses.overhead).toBe(11500000);
         expect(report.expenses.production).toBe(20000); // Only mockProjectProd is in production
         expect(report.revenue.boxOffice).toBe(9000); // 100k * 0.15 * 0.6 (low budget penalty)
-        // Net: ~11k - 7.68M - 20k + ...
+        // Net: ~9k - 11.5M - 20k + ...
         expect(report.netProfit).toBeLessThan(-1800000);
         expect(report.startingCash).toBe(1000000);
     });
