@@ -10,5 +10,5 @@
 
 #### 📄 Proposed Documentation Updates:
 * `docs/Testing_Strategy.md`: Document the new Vitest and JSDOM environment setup, and the testing patterns for television systems.
-* **Code Paths Covered:** `src/test/engine/systems/television/platformEngine.test.ts`, `src/test/engine/systems/television/ratingsEvaluator.test.ts`, `src/test/engine/systems/television/renewalEngine.test.ts`, `src/test/engine/systems/production/progressCalculator.test.ts`
+* **Code Paths Covered:** `src/test/engine/systems/television/platformEngine.test.ts`, `src/test/engine/systems/television/ratingsEvaluator.test.ts`, `src/test/engine/systems/television/renewalEngine.test.ts`
 * **Key Knowledge Gaps Addressed:** Establishes the baseline expectations and testing standards for the television and streaming simulation logic.
