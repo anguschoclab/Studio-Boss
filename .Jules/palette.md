@@ -16,3 +16,8 @@
 ### 2024-06-03 - Interactive Framer Motion wrappers accessibility
 **Learning:** Using `motion.div` for interactive elements (such as clickable cards) can cause keyboard accessibility issues, as standard `div`s do not natively support standard button behaviors (like focusing or triggering on Enter/Space).
 **Action:** When conditionally rendering Framer Motion interactive wrappers (e.g., in `ContentCard.tsx`), always prefer `motion.button` and include `type="button"` alongside `w-full text-left focus-visible:outline-none focus-visible:ring-2` to ensure proper keyboard navigation and prevent standard browser button styles from altering the layout.
+## 2024-05-24 - Accessibility upgrades for onClick handlers
+
+**Learning:** When using non-interactive elements like `div`, `span`, or `h3` as clickable elements by attaching an `onClick` handler, they are inaccessible via keyboard navigation. They lack focusability (`tabIndex`) and keyboard interaction (`onKeyDown` handling for Space/Enter keys).
+
+**Action:** Standardized clickable components by explicitly adding `role="button"`, `tabIndex={0}`, and `onKeyDown` handlers across the codebase (`HeatMap`, `FormSection`, `CreatePackageModal`, `Breadcrumbs`, `AwardsHQ`, `TalentHub`, and `TalentAttachmentPanel`) to allow complete keyboard operability.
