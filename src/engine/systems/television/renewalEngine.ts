@@ -31,11 +31,22 @@ export function evaluateRenewal(
   const awardLeniency = Math.min(3.0, awardWins * 1.5);
   dynamicThreshold -= awardLeniency;
 
+  // 📺 The Syndication Baron: Factor audience retention into renewal thresholds. High retention provides leniency, poor retention increases cancellation risk.
+  if (project.nielsenProfile && project.nielsenProfile.audienceRetention != null) {
+    if (project.nielsenProfile.audienceRetention > 85) {
+      dynamicThreshold -= 2.0; // Significant leniency for sticky shows
+    } else if (project.nielsenProfile.audienceRetention > 70) {
+      dynamicThreshold -= 1.0;
+    } else if (project.nielsenProfile.audienceRetention < 50) {
+      dynamicThreshold += 2.0; // Increased cancellation risk for shows that bleed viewers
+    }
+  }
+
   // 📺 The Syndication Baron: Tweaked streaming renewal thresholds: platforms now cancel expensive shows faster if subscriber growth flatlines. Added further rewards for consistent season-over-season quality.
   if (project.budgetTier === 'blockbuster') {
-    dynamicThreshold += 8.5; // 📺 The Syndication Baron: Cancel expensive shows faster (streaming wars penalty)
+    dynamicThreshold += 10.0; // 📺 The Syndication Baron: Cancel expensive shows faster (cutthroat streaming wars penalty)
   } else if (project.budgetTier === 'high') {
-    dynamicThreshold += 6.5; // 📺 The Syndication Baron: Cancel expensive shows faster
+    dynamicThreshold += 8.0; // 📺 The Syndication Baron: Cancel expensive shows faster
   } else if (project.budgetTier === 'indie') {
     dynamicThreshold -= 2.0; // Give leniency to cheap shows
   } else if (project.budgetTier === 'low') {

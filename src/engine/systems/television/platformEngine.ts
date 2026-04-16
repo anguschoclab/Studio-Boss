@@ -6,7 +6,7 @@ import { RandomGenerator } from '../../utils/rng';
  * Growth = (LibraryQuality / 100) * (GrowthRate)
  * Churn = CurrentSubs * ChurnRate
  */
-function calculateSubChange(platform: StreamerPlatform, rng: RandomGenerator, seasonOverSeasonQuality: number = 0, syndicationHits: number = 0): number {
+function calculateSubChange(platform: StreamerPlatform, rng: RandomGenerator, seasonOverSeasonQuality: number = 0, syndicationHits: number = 0, avgRetention: number = 0): number {
   const baseGrowthRate = 0.02; // 2% weekly base potential
   const qualityFactor = platform.contentLibraryQuality / 100;
   // Use a fallback for marketingSpend if not defined
@@ -25,7 +25,9 @@ function calculateSubChange(platform: StreamerPlatform, rng: RandomGenerator, se
     const pastSubs = platform.subscriberHistory[historyLen - 4].count;
     const growthPercent = pastSubs > 0 ? (currentSubs - pastSubs) / pastSubs : 0;
     // 📺 The Syndication Baron: Tweaked streaming subscriber churn rates. Aggressively penalizing platforms that fail to retain subscribers or flatline in the cutthroat streaming wars.
-    if (growthPercent < 0.0) {
+    if (growthPercent < -0.05) {
+      dynamicChurnRate = Math.min(0.98, dynamicChurnRate * 20.0); // 📺 The Syndication Baron: Death spiral for bleeding subs (cutthroat streaming wars)
+    } else if (growthPercent < 0.0) {
       dynamicChurnRate = Math.min(0.95, dynamicChurnRate * 12.0); // 📺 The Syndication Baron: Devastating Penalty for negative growth (cutthroat)
     } else if (growthPercent < 0.01) {
       dynamicChurnRate = Math.min(0.85, dynamicChurnRate * 9.0); // 📺 The Syndication Baron: Extreme Penalty for flatlining
@@ -58,6 +60,15 @@ function calculateSubChange(platform: StreamerPlatform, rng: RandomGenerator, se
     dynamicChurnRate *= syndicationShield;
   }
 
+  // 📺 The Syndication Baron: Subscriber stickiness based on average audience retention.
+  if (avgRetention > 90) {
+    dynamicChurnRate = Math.max(0.001, dynamicChurnRate * 0.4); // 📺 The Syndication Baron: Incredible retention keeps subscribers locked in
+  } else if (avgRetention > 80) {
+    dynamicChurnRate = Math.max(0.005, dynamicChurnRate * 0.7);
+  } else if (avgRetention > 0 && avgRetention < 50) {
+    dynamicChurnRate = Math.min(0.95, dynamicChurnRate * 1.5); // 📺 The Syndication Baron: Poor viewer retention causes subscriber churn
+  }
+
   const churn = platform.subscribers * dynamicChurnRate;
   
   return Math.floor(growth - churn);
@@ -77,6 +88,8 @@ export function tickPlatforms(state: GameState, rng: RandomGenerator): StateImpa
 
       let seasonOverSeasonQuality = 0;
       let syndicationHits = 0;
+      let totalAudienceRetention = 0;
+      let retentionCount = 0;
       if (platform.activeLicenses && platform.activeLicenses.length > 0) {
         let totalScore = 0;
         let count = 0;
@@ -92,6 +105,10 @@ export function tickPlatforms(state: GameState, rng: RandomGenerator): StateImpa
             if (seriesProject.tvDetails.episodesAired >= 100) { // 📺 The Syndication Baron: 100-episode syndication deals
               syndicationHits++;
             }
+            if (seriesProject.nielsenProfile?.audienceRetention != null) {
+              totalAudienceRetention += seriesProject.nielsenProfile.audienceRetention;
+              retentionCount++;
+            }
           }
         }
         if (count > 0) {
@@ -99,7 +116,9 @@ export function tickPlatforms(state: GameState, rng: RandomGenerator): StateImpa
         }
       }
 
-      const subChange = calculateSubChange(platform, rng, seasonOverSeasonQuality, syndicationHits);
+      const avgRetention = retentionCount > 0 ? totalAudienceRetention / retentionCount : 0;
+
+      const subChange = calculateSubChange(platform, rng, seasonOverSeasonQuality, syndicationHits, avgRetention);
       const newSubCount = Math.max(0, platform.subscribers + subChange);
       
       // Update subscribers and history
