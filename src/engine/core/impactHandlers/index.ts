@@ -114,7 +114,7 @@ export function applySingleImpact(state: GameState, impact: StateImpact): GameSt
   }
 
   // Look up handler and apply
-  const handler = handlerRegistry[impact.type];
+  const handler = handlerRegistry[impact.type as keyof typeof handlerRegistry];
   if (handler) {
     return handler(state, impact);
   }
