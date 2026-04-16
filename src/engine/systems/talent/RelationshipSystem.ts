@@ -110,16 +110,15 @@ function calculateCompatibility(talentA: Talent, talentB: Talent): number {
  * Check if two talents worked together on a project
  */
 function haveWorkedTogether(talentAId: string, talentBId: string, state: GameState): boolean {
+  // ⚡ Bolt: Removed O(N) contracts `.filter()` per project inside O(N^2) loops.
+  // Leveraging pre-computed `attachedTalentIds` array for O(1) membership checks.
   const projects = Object.values(state.entities.projects || {});
 
   for (const project of projects) {
-    const contracts = Object.values(state.entities.contracts || {})
-      .filter(c => c.projectId === project.id);
-
-    const hasA = contracts.some(c => c.talentId === talentAId);
-    const hasB = contracts.some(c => c.talentId === talentBId);
-
-    if (hasA && hasB) return true;
+    const attached = project.attachedTalentIds;
+    if (attached && attached.includes(talentAId) && attached.includes(talentBId)) {
+      return true;
+    }
   }
 
   return false;
@@ -132,29 +131,23 @@ function haveWorkedTogether(talentAId: string, talentBId: string, state: GameSta
 export function haveCompeted(talentAId: string, talentBId: string, state: GameState): boolean {
   // Get all awards
   const awards = state.industry?.awards || [];
+  if (awards.length === 0) return false;
   
-  // Get all projects that won or were nominated for awards
-  const awardedProjectIds = awards.map(a => a.projectId);
+  // ⚡ Bolt: Refactored O(N) filtering to use a Set for O(1) lookups
+  // and eliminated duplicate iterations over projects.
+  const awardedProjectIds = new Set(awards.map(a => a.projectId));
+  const projects = state.entities.projects ? Object.values(state.entities.projects) : [];
   
-  // Find projects that both talents worked on that received awards
-  const talentAProjects = state.entities.projects ? 
-    Object.values(state.entities.projects).filter((p: any) => 
-      awardedProjectIds.includes(p.id) && 
-      (p.attachedTalentIds || []).includes(talentAId)
-    ) : [];
+  for (const project of projects) {
+    if (awardedProjectIds.has(project.id)) {
+      const attached = project.attachedTalentIds;
+      if (attached && attached.includes(talentAId) && attached.includes(talentBId)) {
+        return true;
+      }
+    }
+  }
   
-  const talentBProjects = state.entities.projects ? 
-    Object.values(state.entities.projects).filter((p: any) => 
-      awardedProjectIds.includes(p.id) && 
-      (p.attachedTalentIds || []).includes(talentBId)
-    ) : [];
-  
-  // Check if they worked on the same award-winning/nominated project
-  const sharedAwardedProjects = talentAProjects.filter((p: any) => 
-    talentBProjects.some((bp: any) => bp.id === p.id)
-  );
-  
-  return sharedAwardedProjects.length > 0;
+  return false;
 }
 
 /**

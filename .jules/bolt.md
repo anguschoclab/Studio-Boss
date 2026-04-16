@@ -25,3 +25,6 @@
 ## 2025-05-18 - [Eliminating Object.values().filter().map() anti-pattern in high-frequency functions]
 **Learning:** Chaining array methods like `Object.values().filter().map()` over dictionaries within engine tick functions creates immense garbage collection pressure by generating intermediate arrays that are immediately discarded. This was found across multiple modules including `televisionTick`, `awards`, `financeTick`, `RivalRevenueCalculator`, and `MetricsCollector`.
 **Action:** Replace `Object.values().filter().map()` chains with single-pass `for...in` loops and `hasOwnProperty` checks, and utilize precomputed Maps/dictionaries for O(1) lookups where possible instead of repeated iterations over the entire dataset.
+## 2025-05-19 - [O(1) Array Lookups in Nested Loops]
+**Learning:** Found O(N^2) complexity in `RelationshipSystem.ts` where `haveWorkedTogether` was iterating over all contracts and projects. This was a severe bottleneck during weekly engine ticks since it was called inside a nested loop comparing all pairs of talents.
+**Action:** Replaced the O(N) array filtering of contracts with O(1) membership checks using the pre-computed `attachedTalentIds` array on each project. Also refactored `haveCompeted` to use a `Set` for O(1) lookups instead of duplicate iterations over the entire project list.
