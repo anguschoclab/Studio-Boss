@@ -5,7 +5,7 @@
 * Current WIP focus appears to be hardening the core simulation engine via rigorous unit testing, specifically targeting television systems (platforms, ratings, renewals) and production crisis handling.
 
 #### 📖 Design Bible Alignment:
-* ✅ **Aligned:** The implemented test cases for `renewalEngine` and `ratingsEvaluator` perfectly align with the design docs for TV/streaming simulation, appropriately modeling viewership decay based on low review scores and handling syndication/renewal thresholds based on average ratings. The `progressCalculator` appropriately halts progress and burns budget during active crises.
+* ✅ **Aligned:** The implemented test cases for `renewalEngine` and `ratingsEvaluator` perfectly align with the design docs for TV/streaming simulation, appropriately modeling viewership decay based on low review scores and handling syndication/renewal thresholds based on average ratings.
 * ⚠️ **Missing/Deviations:** While subscriber growth and churn are calculated in `platformEngine.test.ts`, there is no explicit mention in the recent test additions of the "88+ episodes syndication hit" critical threshold which heavily influences subscriber retention/churn and renewal leniency as outlined in the Design Bible.
 
 #### 📄 Proposed Documentation Updates:
