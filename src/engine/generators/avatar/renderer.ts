@@ -87,6 +87,9 @@ export function renderAvatarSVG(f: AvatarFeatures): string {
     svg += renderWrinkleLines(f, cx, cy, faceW, faceH);
   }
 
+  // 9. Skin Details
+  svg += renderSkinDetails(f, cx, cy, faceW, faceH);
+
   // Final Lighting Overlay (Rim Light)
   svg += `<ellipse cx="100" cy="80" rx="90" ry="85" stroke="white" stroke-width="0.5" opacity="0.1" pointer-events="none"/>`;
 
@@ -100,6 +103,7 @@ function renderWrinkleLines(f: AvatarFeatures, cx: number, cy: number, faceW: nu
   const browY = cy - faceH * 0.18;
   const eyeY = cy - faceH * 0.08;
   const mouthY = cy + faceH * 0.28;
+  const chinY = cy + faceH * 0.48;
 
   let lines = '';
   // Forehead
@@ -107,10 +111,69 @@ function renderWrinkleLines(f: AvatarFeatures, cx: number, cy: number, faceW: nu
     lines += `<path d="M ${cx - faceW/4} ${browY - 8} Q ${cx} ${browY - 10} ${cx + faceW/4} ${browY - 8}" stroke="${shadow}" stroke-width="0.5" opacity="${opacity}"/>`;
     lines += `<path d="M ${cx - faceW/5} ${browY - 14} Q ${cx} ${browY - 16} ${cx + faceW/5} ${browY - 14}" stroke="${shadow}" stroke-width="0.5" opacity="${opacity * 0.7}"/>`;
   }
+  // Crow's feet (around eyes)
+  if (f.age >= 45) {
+    lines += `<path d="M ${cx - faceW/3} ${eyeY} Q ${cx - faceW/3 - 5} ${eyeY - 5} ${cx - faceW/3 - 3} ${eyeY - 8}" stroke="${shadow}" stroke-width="0.4" fill="none" opacity="${opacity * 0.8}"/>`;
+    lines += `<path d="M ${cx + faceW/3} ${eyeY} Q ${cx + faceW/3 + 5} ${eyeY - 5} ${cx + faceW/3 + 3} ${eyeY - 8}" stroke="${shadow}" stroke-width="0.4" fill="none" opacity="${opacity * 0.8}"/>`;
+  }
   // Laugh lines
   if (f.age >= 50) {
     lines += `<path d="M ${cx - 15} ${eyeY + 15} Q ${cx - 18} ${mouthY} ${cx - 12} ${mouthY + 5}" stroke="${shadow}" stroke-width="0.8" fill="none" opacity="${opacity * 1.5}"/>`;
     lines += `<path d="M ${cx + 15} ${eyeY + 15} Q ${cx + 18} ${mouthY} ${cx + 12} ${mouthY + 5}" stroke="${shadow}" stroke-width="0.8" fill="none" opacity="${opacity * 1.5}"/>`;
   }
+  // Marionette lines (mouth to chin)
+  if (f.age >= 55) {
+    lines += `<path d="M ${cx - 10} ${mouthY + 5} Q ${cx - 12} ${chinY} ${cx - 8} ${chinY + 3}" stroke="${shadow}" stroke-width="0.6" fill="none" opacity="${opacity * 1.2}"/>`;
+    lines += `<path d="M ${cx + 10} ${mouthY + 5} Q ${cx + 12} ${chinY} ${cx + 8} ${chinY + 3}" stroke="${shadow}" stroke-width="0.6" fill="none" opacity="${opacity * 1.2}"/>`;
+  }
+  // Jowl rendering
+  if (f.jowlAmount > 0.1) {
+    const jowlOpacity = f.jowlAmount * 0.4;
+    lines += `<path d="M ${cx - faceW/3} ${chinY} Q ${cx - faceW/3 + 3} ${chinY + 5} ${cx - faceW/4} ${chinY + 2}" fill="${f.skin.shadow}" opacity="${jowlOpacity}"/>`;
+    lines += `<path d="M ${cx + faceW/3} ${chinY} Q ${cx + faceW/3 - 3} ${chinY + 5} ${cx + faceW/4} ${chinY + 2}" fill="${f.skin.shadow}" opacity="${jowlOpacity}"/>`;
+  }
   return lines;
+}
+
+function renderSkinDetails(f: AvatarFeatures, cx: number, cy: number, faceW: number, faceH: number): string {
+  let details = '';
+  const mouthY = cy + faceH * 0.28;
+
+  // Beauty mark
+  if (f.hasBeautyMark) {
+    details += `<circle cx="${cx + (f.beautyMarkPosition.x - 0.5) * faceW}" cy="${cy + (f.beautyMarkPosition.y - 0.5) * faceH}" r="1.2" fill="#5D4037" opacity="0.7"/>`;
+  }
+
+  // Age spots
+  if (f.hasAgeSpots) {
+    for (let i = 0; i < 3; i++) {
+      const spotX = cx + (Math.random() - 0.5) * faceW * 0.6;
+      const spotY = cy + (Math.random() - 0.3) * faceH * 0.6;
+      details += `<circle cx="${spotX}" cy="${spotY}" r="${1 + Math.random() * 1.5}" fill="#8B7355" opacity="0.3"/>`;
+    }
+  }
+
+  // Rosy cheeks
+  if (f.hasRosyCheeks) {
+    const cheekY = cy + faceH * 0.1;
+    details += `<ellipse cx="${cx - faceW * 0.3}" cy="${cheekY}" rx="8" ry="5" fill="#FFB6C1" opacity="0.15"/>`;
+    details += `<ellipse cx="${cx + faceW * 0.3}" cy="${cheekY}" rx="8" ry="5" fill="#FFB6C1" opacity="0.15"/>`;
+  }
+
+  // Skin texture
+  if (f.skinTexture === 'pores') {
+    for (let i = 0; i < 15; i++) {
+      const texX = cx + (Math.random() - 0.5) * faceW * 0.8;
+      const texY = cy + (Math.random() - 0.3) * faceH * 0.8;
+      details += `<circle cx="${texX}" cy="${texY}" r="0.3" fill="${f.skin.shadow}" opacity="0.1"/>`;
+    }
+  } else if (f.skinTexture === 'rough') {
+    for (let i = 0; i < 25; i++) {
+      const texX = cx + (Math.random() - 0.5) * faceW * 0.8;
+      const texY = cy + (Math.random() - 0.3) * faceH * 0.8;
+      details += `<circle cx="${texX}" cy="${texY}" r="0.4" fill="${f.skin.shadow}" opacity="0.15"/>`;
+    }
+  }
+
+  return details;
 }

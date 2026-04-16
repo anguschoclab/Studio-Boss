@@ -7,22 +7,83 @@ import { blendColor, darkenColor, lightenColor } from '../utils';
 export function renderMouth(f: AvatarFeatures, cx: number, cy: number, faceW: number, faceH: number, skin: ColorPalette): string {
   const mouthY = cy + faceH * 0.28;
   const mouthW = 10 + f.mouthWidth * 14;
-  const lipH = 2 + f.lipFullness * 4;
+  let lipH = 2 + f.lipFullness * 4;
   const lipColor = blendColor(skin.base, '#C06060', 0.3 + f.lipFullness * 0.2);
-  
+
+  // Apply smile asymmetry
+  const smileOffset = f.smileAsymmetry * 5;
+
+  // Adjust lip height based on shape
+  switch (f.lipShape) {
+    case 'thin':
+      lipH *= 0.6;
+      break;
+    case 'full':
+      lipH *= 1.4;
+      break;
+  }
+
   let svg = '';
 
+  // Helper function to render lips based on shape
+  const renderLips = (upperPath: string, lowerPath: string, mouthLine?: string) => {
+    return `
+      <!-- Upper Lip -->
+      <path d="${upperPath}" fill="${lipColor}" stroke="${darkenColor(lipColor, 0.2)}" stroke-width="0.3"/>
+      <!-- Lower Lip -->
+      <path d="${lowerPath}" fill="${lightenColor(lipColor, 0.1)}" stroke="${darkenColor(lipColor, 0.2)}" stroke-width="0.3"/>
+      ${mouthLine ? `<path d="${mouthLine}" stroke="${darkenColor(lipColor, 0.4)}" stroke-width="0.8" fill="none" opacity="0.6"/>` : ''}
+    `.trim();
+  };
+
+  // Get lip paths based on shape
+  const getLipPaths = () => {
+    switch (f.lipShape) {
+      case 'cupid-bow':
+        return {
+          upper: `M ${cx - mouthW/2} ${mouthY} Q ${cx - mouthW/4} ${mouthY - lipH * 1.3} ${cx} ${mouthY - lipH * 0.8} Q ${cx + mouthW/4} ${mouthY - lipH * 1.3} ${cx + mouthW/2} ${mouthY}`,
+          lower: `M ${cx - mouthW/2} ${mouthY + 1} Q ${cx} ${mouthY + lipH * 2.5} ${cx + mouthW/2} ${mouthY + 1}`,
+          mouthLine: `M ${cx - mouthW/2 + 2} ${mouthY} Q ${cx} ${mouthY + 3 + smileOffset} ${cx + mouthW/2 - 2} ${mouthY}`
+        };
+      case 'heart-shaped':
+        return {
+          upper: `M ${cx - mouthW/2} ${mouthY} Q ${cx} ${mouthY - lipH * 1.1} ${cx + mouthW/2} ${mouthY}`,
+          lower: `M ${cx - mouthW/2} ${mouthY + 1} Q ${cx} ${mouthY + lipH * 3} ${cx + mouthW/2} ${mouthY + 1}`,
+          mouthLine: `M ${cx - mouthW/2 + 1} ${mouthY} Q ${cx} ${mouthY + 2 + smileOffset} ${cx + mouthW/2 - 1} ${mouthY}`
+        };
+      case 'thin':
+        return {
+          upper: `M ${cx - mouthW/2} ${mouthY} Q ${cx} ${mouthY - lipH * 0.8} ${cx + mouthW/2} ${mouthY}`,
+          lower: `M ${cx - mouthW/2} ${mouthY + 1} Q ${cx} ${mouthY + lipH * 1.2} ${cx + mouthW/2} ${mouthY + 1}`,
+          mouthLine: `M ${cx - mouthW/2 + 1} ${mouthY} Q ${cx} ${mouthY + 1 + smileOffset} ${cx + mouthW/2 - 1} ${mouthY}`
+        };
+      case 'full':
+        return {
+          upper: `M ${cx - mouthW/2} ${mouthY} Q ${cx} ${mouthY - lipH * 1.5} ${cx + mouthW/2} ${mouthY}`,
+          lower: `M ${cx - mouthW/2} ${mouthY + 1} Q ${cx} ${mouthY + lipH * 3} ${cx + mouthW/2} ${mouthY + 1}`,
+          mouthLine: `M ${cx - mouthW/2 + 2} ${mouthY} Q ${cx} ${mouthY + 4 + smileOffset} ${cx + mouthW/2 - 2} ${mouthY}`
+        };
+      case 'uneven':
+        return {
+          upper: `M ${cx - mouthW/2} ${mouthY} Q ${cx - mouthW/4} ${mouthY - lipH * 1.2} ${cx + mouthW/2} ${mouthY}`,
+          lower: `M ${cx - mouthW/2} ${mouthY + 1} Q ${cx + mouthW/4} ${mouthY + lipH * 2} ${cx + mouthW/2} ${mouthY + 1}`,
+          mouthLine: `M ${cx - mouthW/2 + 1} ${mouthY} Q ${cx} ${mouthY + 3 + smileOffset} ${cx + mouthW/2 - 2} ${mouthY}`
+        };
+      default:
+        return {
+          upper: `M ${cx - mouthW/2} ${mouthY} Q ${cx} ${mouthY - lipH} ${cx + mouthW/2} ${mouthY}`,
+          lower: `M ${cx - mouthW/2} ${mouthY + 1} Q ${cx} ${mouthY + lipH * 1.5} ${cx + mouthW/2} ${mouthY + 1}`,
+          mouthLine: `M ${cx - mouthW/2 + 1} ${mouthY} Q ${cx} ${mouthY + 2 + smileOffset} ${cx + mouthW/2 - 1} ${mouthY}`
+        };
+    }
+  };
+
   switch (f.expression) {
-    case 'smile':
-      svg += `
-        <!-- Upper Lip -->
-        <path d="M ${cx - mouthW/2} ${mouthY} Q ${cx} ${mouthY - lipH * 1.2} ${cx + mouthW/2} ${mouthY}" fill="${lipColor}" stroke="${darkenColor(lipColor, 0.2)}" stroke-width="0.3"/>
-        <!-- Lower Lip -->
-        <path d="M ${cx - mouthW/2} ${mouthY + 1} Q ${cx} ${mouthY + lipH * 2.5} ${cx + mouthW/2} ${mouthY + 1}" fill="${lightenColor(lipColor, 0.1)}" stroke="${darkenColor(lipColor, 0.2)}" stroke-width="0.3"/>
-        <!-- Mouth Line -->
-        <path d="M ${cx - mouthW/2 + 2} ${mouthY} Q ${cx} ${mouthY + 3} ${cx + mouthW/2 - 2} ${mouthY}" stroke="${darkenColor(lipColor, 0.4)}" stroke-width="0.8" fill="none" opacity="0.6"/>
-      `.trim();
+    case 'smile': {
+      const paths = getLipPaths();
+      svg += renderLips(paths.upper, paths.lower, paths.mouthLine);
       break;
+    }
 
     case 'smirk':
       svg += `
@@ -47,13 +108,11 @@ export function renderMouth(f: AvatarFeatures, cx: number, cy: number, faceW: nu
       break;
 
     case 'neutral':
-    default:
-      svg += `
-        <path d="M ${cx - mouthW/2} ${mouthY} Q ${cx} ${mouthY - lipH} ${cx + mouthW/2} ${mouthY}" fill="${lipColor}" stroke="${darkenColor(lipColor, 0.2)}" stroke-width="0.3"/>
-        <path d="M ${cx - mouthW/2} ${mouthY + 1} Q ${cx} ${mouthY + lipH * 1.5} ${cx + mouthW/2} ${mouthY + 1}" fill="${lightenColor(lipColor, 0.1)}" stroke="${darkenColor(lipColor, 0.2)}" stroke-width="0.3"/>
-        <line x1="${cx - mouthW/2 + 1}" y1="${mouthY}" x2="${cx + mouthW/2 - 1}" y2="${mouthY}" stroke="${darkenColor(lipColor, 0.4)}" stroke-width="0.6" opacity="0.5"/>
-      `.trim();
+    default: {
+      const paths = getLipPaths();
+      svg += renderLips(paths.upper, paths.lower, paths.mouthLine);
       break;
+    }
   }
 
   return svg;

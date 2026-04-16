@@ -6,7 +6,7 @@ import { ColorPalette } from '../types';
  * w, h: Width and Height
  */
 export function getFaceShapePath(
-  shape: 'oval' | 'square' | 'heart' | 'round' | 'oblong',
+  shape: 'oval' | 'square' | 'heart' | 'round' | 'oblong' | 'diamond' | 'pear' | 'inverted-triangle' | 'rectangular',
   cx: number, cy: number, w: number, h: number,
   jawWidth: number, chinPointiness: number
 ): string {
@@ -51,6 +51,47 @@ export function getFaceShapePath(
         Q ${cx + rx} ${cy} ${cx + rx * 0.8} ${cy + ry}
         L ${cx - rx * 0.8} ${cy + ry}
         Q ${cx - rx} ${cy} ${cx - rx * 0.8} ${cy - ry}
+        Z
+      `.replace(/\s+/g, ' ').trim();
+
+    case 'diamond':
+      return `
+        M ${cx} ${cy - ry}
+        L ${cx + rx * 0.7} ${cy}
+        L ${cx} ${cy + ry + cp}
+        L ${cx - rx * 0.7} ${cy}
+        Z
+      `.replace(/\s+/g, ' ').trim();
+
+    case 'pear':
+      return `
+        M ${cx - rx * 0.6} ${cy - ry}
+        Q ${cx - rx} ${cy - ry * 0.5} ${cx - rx * 0.8} ${cy}
+        L ${cx + jw/2} ${cy + ry + cp}
+        L ${cx - jw/2} ${cy + ry + cp}
+        L ${cx + rx * 0.8} ${cy}
+        Q ${cx + rx} ${cy - ry * 0.5} ${cx + rx * 0.6} ${cy - ry}
+        Q ${cx} ${cy - ry * 1.2} ${cx - rx * 0.6} ${cy - ry}
+        Z
+      `.replace(/\s+/g, ' ').trim();
+
+    case 'inverted-triangle':
+      return `
+        M ${cx - rx} ${cy - ry * 0.5}
+        L ${cx + rx} ${cy - ry * 0.5}
+        L ${cx + jw/2} ${cy + ry + cp}
+        L ${cx - jw/2} ${cy + ry + cp}
+        Z
+      `.replace(/\s+/g, ' ').trim();
+
+    case 'rectangular':
+      return `
+        M ${cx - rx} ${cy - ry * 0.4}
+        L ${cx + rx} ${cy - ry * 0.4}
+        L ${cx + rx} ${cy + ry * 0.3}
+        Q ${cx + rx} ${cy + ry} ${cx + jw/2} ${cy + ry + cp/2}
+        L ${cx - jw/2} ${cy + ry + cp/2}
+        Q ${cx - rx} ${cy + ry} ${cx - rx} ${cy + ry * 0.3}
         Z
       `.replace(/\s+/g, ' ').trim();
 

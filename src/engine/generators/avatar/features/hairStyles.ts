@@ -10,9 +10,20 @@ export function renderHairBack(f: AvatarFeatures, cx: number, cy: number, faceW:
   switch (f.hairStyle) {
     case 'long-straight':
     case 'long-wavy':
+    case 'long-curly':
       return `<path d="M ${cx - faceW/2 - 5} ${topY + 15} Q ${cx - faceW/2 - 10} ${topY + 80} ${cx - faceW/3} ${topY + 110} L ${cx + faceW/3} ${topY + 110} Q ${cx + faceW/2 + 10} ${topY + 80} ${cx + faceW/2 + 5} ${topY + 15}" fill="${color}" opacity="0.9"/>`;
     case 'shoulder-bob':
       return `<path d="M ${cx - faceW/2 - 4} ${topY + 20} Q ${cx - faceW/2 - 8} ${topY + 50} ${cx} ${topY + 60} Q ${cx + faceW/2 + 8} ${topY + 50} ${cx + faceW/2 + 4} ${topY + 20}" fill="${color}"/>`;
+    case 'dreadlocks':
+      let dreads = '';
+      for (let i = 0; i < 8; i++) {
+        const x = cx - faceW/2 + 10 + i * 12;
+        dreads += `<path d="M ${x} ${topY + 10} Q ${x + (i % 2 ? 5 : -5)} ${topY + 60} ${x} ${topY + 100}" stroke="${color}" stroke-width="4" fill="none"/>`;
+      }
+      return dreads;
+    case 'bun':
+    case 'double-bun':
+      return `<circle cx="${cx}" cy="${topY - 20}" r="18" fill="${color}"/>`;
     default:
       return '';
   }
@@ -106,6 +117,78 @@ export function renderHairFront(f: AvatarFeatures, cx: number, cy: number, faceW
     case 'wavy-shoulder':
       return `
         <path d="M ${cx - faceW/2 - 8} ${topY + 10} Q ${cx} ${topY - 30} ${cx + faceW/2 + 8} ${topY + 10} Q ${cx + faceW/2 + 15} ${topY + 40} ${cx + faceW/2} ${topY + 70} Q ${cx} ${topY + 65} ${cx - faceW/2} ${topY + 70} Q ${cx - faceW/2 - 15} ${topY + 40} ${cx - faceW/2 - 8} ${topY + 10}" fill="${color}"/>
+      `.trim();
+
+    case 'cornrows':
+      let rows = '';
+      for (let i = 0; i < 6; i++) {
+        const y = topY - 10 + i * 6;
+        rows += `<path d="M ${cx - faceW/2 + 5} ${y} Q ${cx} ${y - 3} ${cx + faceW/2 - 5} ${y}" stroke="${color}" stroke-width="2.5" fill="none"/>`;
+      }
+      return rows.trim();
+
+    case 'dreadlocks':
+      let frontDreads = '';
+      for (let i = 0; i < 5; i++) {
+        const x = cx - faceW/2 + 10 + i * 15;
+        frontDreads += `<path d="M ${x} ${topY} Q ${x + (i % 2 ? 3 : -3)} ${topY + 20} ${x} ${topY + 40}" stroke="${color}" stroke-width="3" fill="none"/>`;
+      }
+      return frontDreads.trim();
+
+    case 'mohawk':
+      return `
+        <path d="M ${cx - 8} ${topY + 5} Q ${cx} ${topY - 20} ${cx + 8} ${topY + 5}" fill="${color}"/>
+        <path d="M ${cx - 5} ${topY} L ${cx - 5} ${topY + 30}" stroke="${color}" stroke-width="3"/>
+        <path d="M ${cx} ${topY - 5} L ${cx} ${topY + 35}" stroke="${color}" stroke-width="3"/>
+        <path d="M ${cx + 5} ${topY} L ${cx + 5} ${topY + 30}" stroke="${color}" stroke-width="3"/>
+      `.trim();
+
+    case 'undercut':
+      return `
+        <path d="M ${cx - faceW/2} ${topY + 15} Q ${cx} ${topY - 15} ${cx + faceW/2} ${topY + 15}" fill="${color}"/>
+        <path d="M ${cx - faceW/2} ${topY + 15} L ${cx - faceW/2} ${topY + 25}" stroke="${color}" stroke-width="2"/>
+        <path d="M ${cx + faceW/2} ${topY + 15} L ${cx + faceW/2} ${topY + 25}" stroke="${color}" stroke-width="2"/>
+      `.trim();
+
+    case 'afro-short':
+      return `<circle cx="${cx}" cy="${topY}" r="${faceW * 0.5}" fill="${color}" opacity="0.95"/>`;
+
+    case 'box-braids':
+      let braids = '';
+      for (let i = 0; i < 7; i++) {
+        const x = cx - faceW/2 + 8 + i * 12;
+        braids += `<path d="M ${x} ${topY} Q ${x + 2} ${topY + 25} ${x - 2} ${topY + 50}" stroke="${color}" stroke-width="2.5" fill="none"/>`;
+      }
+      return braids.trim();
+
+    case 'bun':
+      return `
+        <path d="M ${cx - faceW/2} ${topY + 10} Q ${cx} ${topY - 15} ${cx + faceW/2} ${topY + 10}" fill="${color}"/>
+      `.trim();
+
+    case 'double-bun':
+      return `
+        <path d="M ${cx - faceW/2} ${topY + 10} Q ${cx} ${topY - 15} ${cx + faceW/2} ${topY + 10}" fill="${color}"/>
+        <circle cx="${cx - 15}" cy="${topY - 10}" r="10" fill="${color}"/>
+        <circle cx="${cx + 15}" cy="${topY - 10}" r="10" fill="${color}"/>
+      `.trim();
+
+    case 'long-curly':
+      let longCurls = '';
+      for (let i = 0; i < 20; i++) {
+        const x = cx - faceW/2 - 5 + (i/20) * (faceW + 10);
+        const y = topY + (Math.sin(i * 2) * 8);
+        longCurls += `<circle cx="${x}" cy="${y}" r="5" fill="${color}"/>`;
+      }
+      return `
+        <path d="M ${cx - faceW/2 - 6} ${topY + 10} Q ${cx} ${topY - 25} ${cx + faceW/2 + 6} ${topY + 10}" fill="${color}"/>
+        ${longCurls}
+      `.trim();
+
+    case 'bangs':
+      return `
+        <path d="M ${cx - faceW/2 - 2} ${topY + 10} Q ${cx} ${topY - 20} ${cx + faceW/2 + 2} ${topY + 10}" fill="${color}"/>
+        <path d="M ${cx - faceW/2} ${topY + 5} Q ${cx - faceW/4} ${topY + 15} ${cx} ${topY + 12} Q ${cx + faceW/4} ${topY + 15} ${cx + faceW/2} ${topY + 5}" fill="${secondary}"/>
       `.trim();
 
     case 'bald':

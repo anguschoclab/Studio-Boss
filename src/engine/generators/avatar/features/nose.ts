@@ -16,9 +16,26 @@ export function renderNose(f: AvatarFeatures, cx: number, cy: number, faceW: num
   let svg = '';
 
   // ── Nose Bridge ──
-  // Using a single shadow path for the bridge to create depth
-  svg += `<path d="M ${cx - bridgeW/2} ${eyeY + eyeH + 2} Q ${cx - bridgeW/2 - 2} ${noseY} ${cx - noseW/2} ${noseY + noseLen/2}" stroke="${skin.shadow}" stroke-width="0.8" fill="none" opacity="0.6"/>`;
-  
+  switch (f.noseBridgeShape) {
+    case 'roman':
+      svg += `<path d="M ${cx - bridgeW/2} ${eyeY + eyeH + 2} Q ${cx - bridgeW/2 - 1} ${noseY - 3} ${cx - noseW/2} ${noseY + noseLen/2}" stroke="${skin.shadow}" stroke-width="0.8" fill="none" opacity="0.6"/>`;
+      svg += `<path d="M ${cx} ${eyeY + eyeH + 2} Q ${cx} ${noseY - 2} ${cx} ${noseY + noseLen/2}" stroke="${skin.shadow}" stroke-width="1" fill="none" opacity="0.4"/>`;
+      break;
+    case 'button':
+      svg += `<path d="M ${cx - bridgeW/2} ${eyeY + eyeH + 2} Q ${cx - bridgeW/2 - 3} ${noseY + 2} ${cx - noseW/2} ${noseY + noseLen/2}" stroke="${skin.shadow}" stroke-width="0.8" fill="none" opacity="0.6"/>`;
+      break;
+    case 'concave':
+      svg += `<path d="M ${cx - bridgeW/2} ${eyeY + eyeH + 2} Q ${cx - bridgeW/2 + 2} ${noseY + 4} ${cx - noseW/2} ${noseY + noseLen/2}" stroke="${skin.shadow}" stroke-width="0.8" fill="none" opacity="0.6"/>`;
+      break;
+    case 'humped':
+      svg += `<path d="M ${cx - bridgeW/2} ${eyeY + eyeH + 2} Q ${cx - bridgeW/2 - 2} ${noseY - 2} ${cx - bridgeW/2 + 2} ${noseY} ${cx - noseW/2} ${noseY + noseLen/2}" stroke="${skin.shadow}" stroke-width="0.8" fill="none" opacity="0.6"/>`;
+      break;
+    case 'straight':
+    default:
+      svg += `<path d="M ${cx - bridgeW/2} ${eyeY + eyeH + 2} Q ${cx - bridgeW/2 - 2} ${noseY} ${cx - noseW/2} ${noseY + noseLen/2}" stroke="${skin.shadow}" stroke-width="0.8" fill="none" opacity="0.6"/>`;
+      break;
+  }
+
   // ── Nose Tip ──
   switch (f.noseTipShape) {
     case 'pointed':
@@ -32,6 +49,27 @@ export function renderNose(f: AvatarFeatures, cx: number, cy: number, faceW: num
       svg += `
         <ellipse cx="${cx}" cy="${noseY + noseLen/2}" rx="${noseW/2 + 2}" ry="${noseW/4}" fill="${skin.shadow}" opacity="0.1"/>
         <path d="M ${cx - noseW/2 - 1} ${noseY + noseLen/2} Q ${cx} ${noseY + noseLen/2 + 2} ${cx + noseW/2 + 1} ${noseY + noseLen/2}" stroke="${skin.shadow}" stroke-width="1.5" fill="none" opacity="0.8"/>
+      `.trim();
+      break;
+
+    case 'bulbous':
+      svg += `
+        <circle cx="${cx}" cy="${noseY + noseLen/2}" r="${noseW/2.2}" fill="${skin.shadow}" opacity="0.15"/>
+        <path d="M ${cx - noseW/2} ${noseY + noseLen/2} Q ${cx} ${noseY + noseLen/2 + 3} ${cx + noseW/2} ${noseY + noseLen/2}" stroke="${skin.shadow}" stroke-width="1.2" fill="none"/>
+      `.trim();
+      break;
+
+    case 'upturned':
+      svg += `
+        <path d="M ${cx - noseW/2} ${noseY + noseLen/2 + 2} Q ${cx} ${noseY + noseLen/2 - 1} ${cx + noseW/2} ${noseY + noseLen/2 + 2}" stroke="${skin.shadow}" stroke-width="1.2" fill="none"/>
+        <circle cx="${cx}" cy="${noseY + noseLen/2 - 1}" r="${noseW/3}" fill="${skin.shadow}" opacity="0.1"/>
+      `.trim();
+      break;
+
+    case 'hooked':
+      svg += `
+        <path d="M ${cx - noseW/2} ${noseY + noseLen/2} Q ${cx} ${noseY + noseLen/2 + 6} ${cx + noseW/2 + 2} ${noseY + noseLen/2}" stroke="${skin.shadow}" stroke-width="1.2" fill="none"/>
+        <path d="M ${cx} ${noseY + noseLen/2} Q ${cx + 2} ${noseY + noseLen/2 + 4} ${cx + 2} ${noseY + noseLen/2 + 2}" stroke="${shadowColor}" stroke-width="0.5" fill="none" opacity="0.4"/>
       `.trim();
       break;
 

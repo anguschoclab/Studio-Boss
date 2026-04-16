@@ -11,10 +11,11 @@ import { renderAvatarSVG } from './avatar/renderer';
 
 /**
  * The primary entry point for generating an avatar SVG string.
+ * Optional parentTalent parameter for family resemblance integration.
  */
-export function generateAvatarSVG(talent: Talent, currentWeek: number = 1): string {
+export function generateAvatarSVG(talent: Talent, currentWeek: number = 1, parentTalent?: Talent): string {
   // Use our new modular derivation and rendering logic
-  const features = deriveFeatures(talent, currentWeek);
+  const features = deriveFeatures(talent, currentWeek, parentTalent);
   return renderAvatarSVG(features);
 }
 
