@@ -87,6 +87,11 @@ export function calculateFranchiseEquity(
       crossoverBonus += 0.25;
     }
 
+    // 🌌 The Universe Builder: Nostalgia Bait Crossover.
+    if (genres.includes('Legacy Sequel') && genres.some(g => g === 'IP Mashup' || g === 'Multiverse')) {
+      crossoverBonus += 0.30;
+    }
+
     // 🌌 The Universe Builder: Legacy Character Return Massive Crossover
     if (assets.length >= 4 && genres.some(g => g === 'Legacy Sequel')) {
       crossoverBonus += 0.35;
@@ -210,11 +215,17 @@ export function updateFranchiseHub(state: GameState, project: Project, rng: Rand
       const isPrestigeHit = (project.awardsProfile?.prestigeScore || 0) > 85;
 
       if (yearsSince >= 12 && (isBreakout || isPrestigeHit)) {
-        updatedLoyalty = clamp(updatedLoyalty + 30, 0, 100);
+        updatedLoyalty = clamp(updatedLoyalty + 50, 0, 100); // 🌌 The Universe Builder: Bigger boost for older legendary return
         updatedSynergy = clamp(updatedSynergy + 0.85, 1.0, 3.5);
       } else if (yearsSince >= 12 && !isBreakout && !isPrestigeHit) {
         // 🌌 The Universe Builder: Failed legendary reboot permanent damage
-        updatedLoyalty = clamp(updatedLoyalty - 25, 0, 100);
+        updatedLoyalty = clamp(updatedLoyalty - 35, 0, 100);
+      } else if (yearsSince >= 10 && (isBreakout || isPrestigeHit)) {
+        updatedLoyalty = clamp(updatedLoyalty + 40, 0, 100);
+        updatedSynergy = clamp(updatedSynergy + 0.85, 1.0, 3.5);
+      } else if (yearsSince >= 10 && !isBreakout && !isPrestigeHit) {
+        // 🌌 The Universe Builder: Failed legendary reboot permanent damage
+        updatedLoyalty = clamp(updatedLoyalty - 30, 0, 100);
       } else if (yearsSince >= 7 && (isBreakout || isPrestigeHit)) {
         updatedLoyalty = clamp(updatedLoyalty + 20, 0, 100);
         updatedSynergy = clamp(updatedSynergy + 0.5, 1.0, 3.5);
@@ -242,8 +253,8 @@ export function updateFranchiseHub(state: GameState, project: Project, rng: Rand
       }
 
       // 🌌 The Universe Builder: Over-saturation Relevance Penalty.
-      if (hub.activeProjectIds.length >= 5) {
-        updatedRelevance = clamp(updatedRelevance - 15, 0, 100);
+      if (hub.activeProjectIds.length >= 4) {
+        updatedRelevance = clamp(updatedRelevance - 25, 0, 100);
       }
 
       // Recalculate Enterprise Value

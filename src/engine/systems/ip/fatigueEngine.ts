@@ -104,7 +104,7 @@ export function calculateFranchiseFatigue(
 
   // 🌌 The Universe Builder: Terminal Superhero Fatigue.
   if (activeCount >= 3 && genreSaturation > 15 && (normalizedGenre === 'Superhero' || normalizedGenre === 'Multiverse')) {
-    currentFatigue *= 3.5;
+    currentFatigue *= 4.5;
   }
 
   // 3. Rival Saturation (The 'Poison the Well' effect)
@@ -124,7 +124,7 @@ export function calculateFranchiseFatigue(
 
   // 🌌 The Universe Builder: Extreme oversaturation penalty if the franchise has >= 4 active projects and the genre is highly saturated
   if (activeCount >= 4 && genreSaturation > 15) {
-    currentFatigue *= 3.0;
+    currentFatigue *= 4.5;
   }
 
   return clamp(currentFatigue + rivalPenalty - loyaltyShield, 0, 1.0);
@@ -197,7 +197,7 @@ export function calculateReleaseGapImpact(
   // 🌌 The Universe Builder: IP Squatting / Rights Retention.
   if (yearsSince >= 6 && yearsSince < 7) {
     return {
-      buzzBonus: -40,
+      buzzBonus: -50,
       label: 'Rights Retention Ploy (Cynical Cash Grab)',
       fatigueReset: false
     };

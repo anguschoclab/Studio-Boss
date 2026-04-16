@@ -120,7 +120,7 @@ export const CROSSOVER_AFFINITY: Record<string, string[]> = {
   'Crime': ['Thriller', 'Drama', 'Action', 'Horror', 'Documentary'],
   'Thriller': ['Horror', 'Crime', 'Sci-Fi', 'Drama', 'Action', 'Elevated Horror'],
   'Romance': ['Comedy', 'Drama', 'Musical', 'Fantasy'],
-  'Animation': ['Comedy', 'Family', 'Musical', 'Fantasy', 'Sci-Fi', 'Superhero', 'Action', 'Video Game Adaptation', 'IP Mashup'],
+  'Animation': ['Comedy', 'Family', 'Musical', 'Fantasy', 'Sci-Fi', 'Superhero', 'Action', 'Video Game Adaptation', 'IP Mashup', 'Live-Action Remake'],
   'Drama': ['Romance', 'Crime', 'Thriller', 'Documentary'],
   'Musical': ['Romance', 'Comedy', 'Animation', 'Drama'],
   'Documentary': ['Drama', 'Crime', 'Horror'],
@@ -131,7 +131,7 @@ export const CROSSOVER_AFFINITY: Record<string, string[]> = {
   'Legacy Sequel': ['Action', 'Sci-Fi', 'Horror', 'Comedy', 'Drama'],
   // 🌌 The Universe Builder: Live-Action Remakes lean more into pure Action and Drama to justify the medium shift.
   'Live-Action Remake': ['Animation', 'Fantasy', 'Family', 'Musical', 'Action', 'Drama', 'Multiverse', 'Anime', 'Superhero', 'IP Mashup'], // 🌌 The Universe Builder: Added Multiverse, Anime, Superhero, IP Mashup.
-  'Video Game Adaptation': ['Action', 'Sci-Fi', 'Fantasy', 'Animation', 'Horror', 'IP Mashup', 'Comedy', 'Crime', 'Drama', 'Thriller'], // 🌌 The Universe Builder: Added Comedy, Crime, Drama, Thriller crossover affinity...
+  'Video Game Adaptation': ['Action', 'Sci-Fi', 'Fantasy', 'Animation', 'Horror', 'IP Mashup', 'Comedy', 'Crime', 'Drama', 'Thriller', 'Anime'], // 🌌 The Universe Builder: Added Comedy, Crime, Drama, Thriller crossover affinity...
   'Space Opera': ['Sci-Fi', 'Action', 'Fantasy', 'Multiverse'], // Already contains Multiverse, but keeping script intact
   'Cyberpunk': ['Sci-Fi', 'Action', 'Thriller', 'Crime'],
   // 🌌 The Universe Builder: Added specific subgenre crossover pools for massive event mapping.
@@ -145,7 +145,7 @@ export const CROSSOVER_AFFINITY: Record<string, string[]> = {
 };
 
 export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
-  'Superhero': 1.70, // 🌌 The Universe Builder: Increased superhero fatigue to represent severe modern burnout.
+  'Superhero': 2.00, // 🌌 The Universe Builder: Increased superhero fatigue to represent severe modern burnout.
   'Action': 0.50,
   'Sci-Fi': 0.45,
   'Fantasy': 0.30,
@@ -159,7 +159,7 @@ export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
   'Crime': 0.20,
   'Musical': 0.25,
   'Unscripted': 0.40, // Reality/Unscripted can fatigue quickly if over-saturated
-  'Multiverse': 1.40, // 🌌 The Universe Builder: Extremely high fatigue risk if overdone. Increased to reflect hyper-saturation.
+  'Multiverse': 1.80, // 🌌 The Universe Builder: Extremely high fatigue risk if overdone. Increased to reflect hyper-saturation.
   'Elevated Horror': 0.20,
   'IP Mashup': 0.85, // 🌌 The Universe Builder: High burnout potential
   'Legacy Sequel': 0.45, // 🌌 The Universe Builder: Nostalgia can wear thin if overused
