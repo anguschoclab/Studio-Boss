@@ -37,20 +37,9 @@ export const selectStudio = (state: GameState | null) => state?.studio || null;
 export const selectInternal = (state: GameState | null) => state?.studio?.internal || null;
 export const selectProjectsRaw = (state: GameState | null) => state?.entities?.projects || EMPTY_PROJECTS;
 
-let _lastProjectsRaw: Record<string, Project> | null = null;
-let _lastProjectsArray: Project[] = [];
 export const selectProjects = (state: GameState | null): Project[] => {
   const projects = selectProjectsRaw(state);
-  if (projects !== _lastProjectsRaw) {
-    _lastProjectsRaw = projects;
-    _lastProjectsArray = [];
-    for (const key in projects) {
-      if (Object.prototype.hasOwnProperty.call(projects, key)) {
-        _lastProjectsArray.push(projects[key]);
-      }
-    }
-  }
-  return _lastProjectsArray;
+  return Object.values(projects);
 };
 
 export const selectFinance = (state: GameState | null) => state?.finance || EMPTY_FINANCE;
@@ -59,76 +48,30 @@ export const selectCash = (state: GameState | null) => selectFinance(state).cash
 export const selectIndustry = (state: GameState | null) => state?.industry || null;
 export const selectRivalsRaw = (state: GameState | null) => state?.entities?.rivals || EMPTY_RIVALS;
 
-let _lastRivalsRaw: Record<string, RivalStudio> | null = null;
-let _lastRivalsArray: RivalStudio[] = [];
 export const selectRivals = (state: GameState | null): RivalStudio[] => {
   const rivals = selectRivalsRaw(state);
-  if (rivals !== _lastRivalsRaw) {
-    _lastRivalsRaw = rivals;
-    _lastRivalsArray = [];
-    for (const key in rivals) {
-      if (Object.prototype.hasOwnProperty.call(rivals, key)) {
-        _lastRivalsArray.push(rivals[key]);
-      }
-    }
-  }
-  return _lastRivalsArray;
+  return Object.values(rivals);
 };
 
 export const selectTalentPoolRaw = (state: GameState | null) => state?.entities?.talents || EMPTY_TALENT_POOL;
 
-let _lastTalentPoolRaw: Record<string, Talent> | null = null;
-let _lastTalentPoolArray: Talent[] = [];
 export const selectTalentPool = (state: GameState | null): Talent[] => {
   const talents = selectTalentPoolRaw(state);
-  if (talents !== _lastTalentPoolRaw) {
-    _lastTalentPoolRaw = talents;
-    _lastTalentPoolArray = [];
-    for (const key in talents) {
-      if (Object.prototype.hasOwnProperty.call(talents, key)) {
-        _lastTalentPoolArray.push(talents[key]);
-      }
-    }
-  }
-  return _lastTalentPoolArray;
+  return Object.values(talents);
 };
 
-let _lastActiveProjectsRaw: Record<string, Project> | null = null;
-let _lastActiveProjectsArray: Project[] = [];
 export const selectActiveProjects = (state: GameState | null): Project[] => {
   const projects = selectProjectsRaw(state);
-  if (projects !== _lastActiveProjectsRaw) {
-    _lastActiveProjectsRaw = projects;
-    _lastActiveProjectsArray = [];
-    for (const key in projects) {
-      if (Object.prototype.hasOwnProperty.call(projects, key)) {
-        const p = projects[key];
-        if (p.state !== 'released' && p.state !== 'archived' && p.state !== 'post_release') {
-          _lastActiveProjectsArray.push(p);
-        }
-      }
-    }
-  }
-  return _lastActiveProjectsArray;
+  return Object.values(projects).filter(p => 
+    p.state !== 'released' && p.state !== 'archived' && p.state !== 'post_release'
+  );
 };
 
-let _lastReleasedProjectsRaw: Record<string, Project> | null = null;
-let _lastReleasedProjectsArray: Project[] = [];
 export const selectReleasedProjects = (state: GameState | null): Project[] => {
   const projects = selectProjectsRaw(state);
-  if (projects !== _lastReleasedProjectsRaw) {
-    _lastReleasedProjectsRaw = projects;
-    _lastReleasedProjectsArray = [];
-    for (const key in projects) {
-      if (Object.prototype.hasOwnProperty.call(projects, key)) {
-        const p = projects[key];
-        if (p.state === 'released' || p.state === 'post_release' || p.state === 'archived') {
-          _lastReleasedProjectsArray.push(p);
-        }
-      }
-    }
-  }
-  return _lastReleasedProjectsArray;
+  return Object.values(projects).filter(p => 
+    p.state === 'released' || p.state === 'post_release' || p.state === 'archived'
+  );
 };
 
 export const selectIsBankrupt = (state: GameState | null) => {
@@ -177,16 +120,14 @@ export interface TalentFilter {
 
 export const selectFilteredTalent = (state: GameState | null, filter: TalentFilter): Talent[] => {
   if (!state || !state.entities) return EMPTY_ARRAY;
-  const result: Talent[] = [];
   const pool = state.entities.talents || EMPTY_TALENT_POOL;
-  for (const key in pool) {
-    const t = pool[key];
-    if (filter.roles && !filter.roles.some(r => t.roles?.includes(r) || t.role === r)) continue;
-    if (filter.minTier && TIER_RANK[t.tier] < TIER_RANK[filter.minTier]) continue;
-    if (filter.excludeOnMedicalLeave && t.onMedicalLeave) continue;
+  return Object.values(pool).filter(t => {
+    if (filter.roles && !filter.roles.some(r => t.roles?.includes(r) || t.role === r)) return false;
+    if (filter.minTier && TIER_RANK[t.tier] < TIER_RANK[filter.minTier]) return false;
+    if (filter.excludeOnMedicalLeave && t.onMedicalLeave) return false;
     if (filter.excludeHoldingDeals) {
       const hasHold = t.commitments?.some(c => c.isHoldingDeal);
-      if (hasHold) continue;
+      if (hasHold) return false;
     }
     if (filter.availableAtWeek !== undefined) {
       const busy = t.commitments?.some(c =>
@@ -194,15 +135,14 @@ export const selectFilteredTalent = (state: GameState | null, filter: TalentFilt
         c.startWeek <= filter.availableAtWeek! &&
         c.endWeek >= filter.availableAtWeek!
       );
-      if (busy) continue;
+      if (busy) return false;
     }
     if (filter.genres?.length && t.preferredGenres?.length) {
       const overlap = filter.genres.some(g => t.preferredGenres.includes(g));
-      if (!overlap) continue;
+      if (!overlap) return false;
     }
-    result.push(t);
-  }
-  return result;
+    return true;
+  });
 };
 
 // ============================================================================
@@ -216,12 +156,7 @@ export const selectFilteredTalent = (state: GameState | null, filter: TalentFilt
 export const selectCashFlowTrends = (state: GameState | null, weeks: number = 12) => {
   const history = selectFinance(state).weeklyHistory || [];
   return history.slice(-weeks).map(snapshot => {
-    let totalExpenses = 0;
-    for (const key in snapshot.expenses) {
-      if (Object.prototype.hasOwnProperty.call(snapshot.expenses, key)) {
-        totalExpenses += snapshot.expenses[key as keyof typeof snapshot.expenses];
-      }
-    }
+    const totalExpenses = Object.values(snapshot.expenses).reduce((sum, val) => sum + val, 0);
     return {
       week: snapshot.week,
       revenue: snapshot.revenue.theatrical + snapshot.revenue.streaming +

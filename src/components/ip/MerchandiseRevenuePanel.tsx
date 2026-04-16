@@ -1,5 +1,5 @@
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn, formatCurrency } from '@/lib/utils';
 import { ShoppingBag, DollarSign, Package, TrendingUp, Star } from 'lucide-react';
 import { Section } from '@/components/layout/Section';
 import { Card } from '@/components/ui/card';
@@ -34,12 +34,6 @@ export const MerchandiseRevenuePanel: React.FC<MerchandiseRevenuePanelProps> = (
   merchandiseData,
 }) => {
   const { byCategory, byFranchise, totalRevenue, totalUnits } = merchandiseData;
-
-  const formatCurrency = (value: number) => {
-    if (value >= 1000000) return `$${(value / 1000000).toFixed(1)}M`;
-    if (value >= 1000) return `$${(value / 1000).toFixed(1)}K`;
-    return `$${value}`;
-  };
 
   const getTierColor = (tier: string) => {
     switch (tier) {

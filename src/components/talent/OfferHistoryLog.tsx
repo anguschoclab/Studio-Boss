@@ -1,5 +1,5 @@
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn, formatCurrency } from '@/lib/utils';
 import { History, DollarSign, CheckCircle2, XCircle, Clock } from 'lucide-react';
 import { Section } from '@/components/layout/Section';
 import { Card } from '@/components/ui/card';

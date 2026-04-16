@@ -1,5 +1,5 @@
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn, formatCurrency } from '@/lib/utils';
 import { AlertTriangle, DollarSign, TrendingUp, AlertOctagon, CheckCircle2, Clock } from 'lucide-react';
 import { Section } from '@/components/layout/Section';
 import { Card } from '@/components/ui/card';
@@ -43,12 +43,6 @@ export const BudgetOverrunAlert: React.FC<BudgetOverrunAlertProps> = ({
   const critical = alerts.filter(a => a.severity === 'critical' || a.severity === 'catastrophic');
   const warnings = alerts.filter(a => a.severity === 'warning');
   const totalOverrun = alerts.reduce((sum, a) => sum + a.overrunAmount, 0);
-
-  const formatCurrency = (value: number) => {
-    if (value >= 1000000) return `$${(value / 1000000).toFixed(1)}M`;
-    if (value >= 1000) return `$${(value / 1000).toFixed(1)}K`;
-    return `$${value}`;
-  };
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
