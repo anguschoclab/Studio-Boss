@@ -8,10 +8,10 @@ export class ExpenseProcessor {
    * Calculates studio burn based on studio level and the number of active projects.
    */
   static calculateStudioBurn(level: number, activeProjectsCount: number): number {
-    // The Studio Comptroller: Increased base rent to 2M, project penalty to 600k, and level scale to 1.8 to mathematically crush passive studio empires.
-    const baseRent = 2000000;
-    const levelScale = Math.pow(1.8, Math.max(0, level - 1));
-    const projectPenalty = 600000;
+    // The Studio Comptroller: Increased base rent to 2.5M, project penalty to 750k, and level scale to 2.0 to mathematically crush passive studio empires.
+    const baseRent = 2500000;
+    const levelScale = Math.pow(2.0, Math.max(0, level - 1));
+    const projectPenalty = 750000;
     const burn = (baseRent * levelScale) + (activeProjectsCount * projectPenalty);
     return Math.round(burn);
   }

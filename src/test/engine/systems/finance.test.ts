@@ -118,13 +118,13 @@ describe("Finance System", () => {
           rng
         );
         // ExpenseProcessor.calculateStudioBurn(Level 3, 2 active [unreleased])
-        // levelScale = 1.8^2 = 3.24
-        // baseRent = 2,000,000
-        // projectPenalty = 600,000
-        // overhead = (2.0M * 3.24) + (2 * 600k) = 6,480,000 + 1,200,000 = 7,680,000
-        expect(report.expenses.overhead).toBe(7680000);
+        // levelScale = 2.0^2 = 4.0
+        // baseRent = 2,500,000
+        // projectPenalty = 750,000
+        // overhead = (2.5M * 4.0) + (2 * 750k) = 10,000,000 + 1,500,000 = 11,500,000
+        expect(report.expenses.overhead).toBe(11500000);
         expect(report.expenses.production).toBe(20000); // Only mockProjectProd is in production
-        expect(report.revenue.boxOffice).toBe(10800); // 100k * 0.18 * 0.6 (low budget penalty)
+        expect(report.revenue.boxOffice).toBe(9000); // 100k * 0.15 * 0.6 (low budget penalty)
         // Net: ~11k - 7.68M - 20k + ...
         expect(report.netProfit).toBeLessThan(-1800000);
         expect(report.startingCash).toBe(1000000);
@@ -191,10 +191,10 @@ describe("Finance System", () => {
          // Overhead: Level 3, 1 active unreleased = (2M * 3.24) + (1 * 600k) = 6,480,000 + 600,000 = 7,080,000
          // Production: 20k
          // Savings Yield: 1M * (0.02 / 52) = 385
-         // Total Expenses: 7,080,000 + 20,000 = 7,100,000
+         // Total Expenses: 10,750,000 + 20,000 = 10,770,000
          // Net: ...
          // Wait, the project was theatrical, 200k weekly revenue.
-         expect(impact?.payload.amount).toBe(-7078015);
+         expect(impact?.payload.amount).toBe(-10751615);
       });
   });
 });
