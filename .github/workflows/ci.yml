@@ -28,7 +28,7 @@ jobs:
           bun-version: latest
 
       - name: Install Dependencies
-        run: npm ci
+        run: for i in 1 2 3 4 5; do bun install && exit 0 || sleep 15; done; exit 1
 
       - name: Type Check
         run: bun run type-check
@@ -59,7 +59,7 @@ jobs:
           bun-version: latest
 
       - name: Install Dependencies
-        run: npm ci
+        run: for i in 1 2 3 4 5; do bun install && exit 0 || sleep 15; done; exit 1
 
       - name: Build
         run: bun run build
