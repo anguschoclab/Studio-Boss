@@ -86,7 +86,7 @@ export const AwardsHQ: React.FC = () => {
                 <div className="flex justify-between items-start mb-6">
                   <div className="space-y-1">
                     <h3
-                      className="text-xl font-black italic uppercase tracking-tight text-white group-hover:text-primary transition-colors cursor-pointer"
+                      className="text-xl font-black italic uppercase tracking-tight text-white group-hover:text-primary transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                       role="button"
                       tabIndex={0}
                       onKeyDown={(e) => {
