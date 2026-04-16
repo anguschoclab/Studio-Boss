@@ -148,7 +148,7 @@ export function calculateFitScore(project: Project, buyer: Buyer, currentWeek: n
       score += 20;
     } else {
       // 🎭 The Method Actor Tuning: Streamers penalize standalone movies unless they are established franchise IPs.
-      if (!('isFranchise' in project && project.isFranchise)) {
+      if (!project.franchiseId) {
          score -= 15;
       }
     }
