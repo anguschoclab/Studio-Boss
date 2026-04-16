@@ -1,7 +1,7 @@
 ### 📝 Daily Progress & Docs Update
 
 #### 🏗️ Codebase Status:
-* A massive test suite and configuration update was just merged, adding comprehensive Vitest coverage across core engine systems (e.g., `progressCalculator`, `platformEngine`, `ratingsEvaluator`, `renewalEngine`) and introducing Vite/TypeScript config files.
+* A massive test suite and configuration update was just merged, adding comprehensive Vitest coverage across core engine systems (e.g., `platformEngine`, `ratingsEvaluator`, `renewalEngine`) and introducing Vite/TypeScript config files.
 * Current WIP focus appears to be hardening the core simulation engine via rigorous unit testing, specifically targeting television systems (platforms, ratings, renewals) and production crisis handling.
 
 #### 📖 Design Bible Alignment:
