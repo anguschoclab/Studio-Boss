@@ -60,7 +60,7 @@ export const CommandCenter: React.FC = () => {
         </div>
         
         <div className="flex flex-wrap gap-3 relative z-10">
-          <div className={cn("px-5 py-2.5 flex flex-col items-end group rounded-xl", "bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-xl border border-white/10 hover:border-white/20 transition-all duration-300", "hover:bg-white/10 hover:border-white/30 hover:shadow-lg transition-all duration-300")}>
+          <div className={cn("px-5 py-2.5 flex flex-col items-end group rounded-xl", "bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-xl border border-white/10 transition-all duration-300", "hover:bg-white/10 hover:border-white/30 hover:shadow-lg")}>
             <span className="text-[9px] uppercase font-black text-muted-foreground/80 tracking-[0.25em] leading-none mb-1">Market Position</span>
             <span className="text-sm font-display font-black flex items-center gap-2 bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent drop-shadow-md">
               <Zap className="h-3.5 w-3.5 text-primary drop-shadow-[0_0_8px_hsl(var(--primary)_/_0.8)] group-hover:scale-110 transition-transform duration-300" />
