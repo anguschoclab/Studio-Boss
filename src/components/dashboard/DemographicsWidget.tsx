@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Cell } from 'recharts';
 import { useGameStore } from '@/store/gameStore';
+import { cn } from '@/lib/utils';
 
 import { useShallow } from 'zustand/react/shallow';
 
@@ -28,12 +29,12 @@ export const DemographicsWidget: React.FC = () => {
   };
 
   return (
-    <Card aria-label="Demographics Chart" className="col-span-1 animate-in zoom-in-95 duration-500 lg:col-span-1 border border-white/10 bg-gradient-to-br from-card/80 via-card/60 to-card/40 backdrop-blur-3xl shadow-[0_16px_48px_rgba(0,0,0,0.5)] hover:border-white/30 hover:shadow-[0_24px_64px_rgba(0,0,0,0.6)] transition-all duration-700 relative overflow-hidden group h-full">
+    <Card aria-label="Demographics Chart" className={cn("col-span-1 animate-in zoom-in-95 lg:col-span-1 relative overflow-hidden group h-full", "bg-gradient-to-br from-card/90 to-card/50 backdrop-blur-2xl border border-white/20 shadow-2xl hover:shadow-[0_0_30px_hsl(var(--primary)/0.15)] transition-all duration-300")}>
       <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-[140px] pointer-events-none group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-1000" />
       <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-secondary/5 rounded-full blur-[100px] pointer-events-none group-hover:bg-secondary/10 transition-colors duration-1000" />
       <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay pointer-events-none" />
 
-      <CardHeader className="pb-6 border-b border-white/10 relative z-10 bg-gradient-to-b from-white/5 to-transparent p-6">
+      <CardHeader className={cn("pb-6 relative z-10 p-6", "bg-background/60 backdrop-blur-xl border-b border-white/5")}>
         <CardTitle className="text-sm font-black text-white/90 uppercase tracking-[0.25em] flex items-center justify-between">
           <span className="flex items-center gap-3">
             <div className="relative flex items-center justify-center p-1.5 rounded-lg bg-primary/20 border border-primary/30 shadow-[0_0_15px_hsl(var(--primary)_/_0.3)]">

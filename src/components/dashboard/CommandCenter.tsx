@@ -6,6 +6,7 @@ import { StatCard } from '@/components/shared/StatCard';
 import { Card, CardContent } from '@/components/ui/card';
 import { useGameStore } from '@/store/gameStore';
 import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 import {
   Clapperboard, Users, Star, Zap,
   ChevronRight, DollarSign, Award
@@ -59,14 +60,14 @@ export const CommandCenter: React.FC = () => {
         </div>
         
         <div className="flex flex-wrap gap-3 relative z-10">
-          <div className="px-5 py-2.5 bg-card/60 backdrop-blur-xl rounded-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] flex flex-col items-end transition-all duration-500 hover:border-white/30 hover:bg-card/80 hover:-translate-y-1 group">
+          <div className={cn("px-5 py-2.5 flex flex-col items-end group rounded-xl", "bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-xl border border-white/10 transition-all duration-300", "hover:bg-white/10 hover:border-white/30 hover:shadow-lg")}>
             <span className="text-[9px] uppercase font-black text-muted-foreground/80 tracking-[0.25em] leading-none mb-1">Market Position</span>
             <span className="text-sm font-display font-black flex items-center gap-2 bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent drop-shadow-md">
               <Zap className="h-3.5 w-3.5 text-primary drop-shadow-[0_0_8px_hsl(var(--primary)_/_0.8)] group-hover:scale-110 transition-transform duration-300" />
               Tier {gameState.studio.prestige >= 80 ? '1' : gameState.studio.prestige >= 50 ? '2' : '3'} Studio
             </span>
           </div>
-          <div className="px-5 py-2.5 bg-card/60 backdrop-blur-xl rounded-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] flex flex-col items-end transition-all duration-500 hover:border-white/30 hover:bg-card/80 hover:-translate-y-1">
+          <div className={cn("px-5 py-2.5 flex flex-col items-end rounded-xl", "bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-xl border border-white/10 transition-all duration-300", "hover:bg-white/10 hover:border-white/30 hover:shadow-lg")}>
             <span className="text-[9px] uppercase font-black text-muted-foreground/80 tracking-[0.25em] leading-none mb-1">Fiscal Year</span>
             <span className="text-sm font-display font-black text-white">{Math.floor(gameState.week / 52) + 1}</span>
           </div>
@@ -151,7 +152,7 @@ export const CommandCenter: React.FC = () => {
       </div>
       
       {/* Recent Industry Intelligence */}
-      <Card aria-label="Studio Intelligence Feed" className="glass-card animate-in fade-in slide-in-from-bottom-8 duration-1000 border border-white/10 hover:border-white/20 transition-all duration-700 bg-card/60 backdrop-blur-2xl relative overflow-hidden shadow-[0_16px_48px_rgba(0,0,0,0.5)] text-left group">
+      <Card aria-label="Studio Intelligence Feed" className={cn("animate-in fade-in slide-in-from-bottom-8 duration-1000 relative overflow-hidden text-left group", "bg-gradient-to-br from-card/90 to-card/50 backdrop-blur-2xl border border-white/20 shadow-2xl hover:shadow-[0_0_30px_hsl(var(--primary)/0.15)] transition-all duration-300")}>
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[150px] pointer-events-none group-hover:bg-primary/10 transition-colors duration-1000" />
         <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.02] mix-blend-overlay pointer-events-none" />
         <CardContent className="p-0 relative z-10">
