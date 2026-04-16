@@ -142,6 +142,18 @@ export function calculateFitScore(project: Project, buyer: Buyer, currentWeek: n
     score += 25;
   }
 
+  // 🎭 The Method Actor Tuning: Streamers prioritize serialized content and established IPs to build subscriber loyalty.
+  if (buyer.archetype === 'streamer') {
+    if (project.type === 'SERIES') {
+      score += 20;
+    } else {
+      // 🎭 The Method Actor Tuning: Streamers penalize standalone movies unless they are established franchise IPs.
+      if (!project.franchiseId) {
+         score -= 15;
+      }
+    }
+  }
+
   const buzzFactor = (project.buzz / 100) * 20; 
   score += buzzFactor;
   score += rng.range(-10, 10);

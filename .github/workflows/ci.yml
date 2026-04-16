@@ -12,13 +12,18 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
       - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
+        uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
 
       - name: Install Dependencies
-        run: bun install
+        run: npm ci
 
       - name: Type Check
         run: bun run type-check
@@ -27,7 +32,7 @@ jobs:
         run: bun run lint
 
       - name: Test
-        run: bun run test
+        run: bun test
 
   build:
     needs: test
@@ -36,13 +41,18 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
       - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
+        uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
 
       - name: Install Dependencies
-        run: bun install
+        run: npm ci
 
       - name: Build
         run: bun run build
