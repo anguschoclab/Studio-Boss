@@ -1,3 +1,6 @@
+/**
+ * @vitest-environment jsdom
+ */
 import { render, screen, act } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { NavLink } from '../../../src/components/NavLink';

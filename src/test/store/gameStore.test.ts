@@ -1,10 +1,10 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { useGameStore } from "../../store/gameStore";
-import * as saveLoad from "../../persistence/saveLoad";
+import * as saveLoad from "@/persistence/saveLoad";
 import { createMockGameState, createMockTalent, createMockProject } from "../utils/mockFactories";
 
 // Mock saveLoad
-vi.mock("../../persistence/saveLoad", () => ({
+vi.mock("@/persistence/saveLoad", () => ({
   saveGame: vi.fn(),
   loadGame: vi.fn(async (slot) => {
     if (slot === 1) {

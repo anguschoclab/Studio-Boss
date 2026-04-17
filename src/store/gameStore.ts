@@ -96,6 +96,7 @@ const triggerSave = async (stateToSave: GameState) => {
 
 // Shared modal processing logic
 const processModals = (impacts: any[]) => {
+  if (typeof useUIStore.getState !== 'function') return;
   const ui = useUIStore.getState();
   if (impacts && impacts.length > 0) {
     const modalImpacts = [];

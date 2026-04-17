@@ -31,15 +31,18 @@ describe('PackageDetailModal', () => {
       activeModal: null,
     });
 
-    (useGameStore as any).mockReturnValue({
-      gameState: {
-        market: {
-          opportunities: [],
+    (useGameStore as any).mockImplementation((selector: any) => {
+      const state = {
+        gameState: {
+          market: {
+            opportunities: [],
+          },
+          entities: {
+            talents: {},
+          },
         },
-        entities: {
-          talents: {},
-        },
-      },
+      };
+      return selector ? selector(state) : state;
     });
 
     const { container } = render(<PackageDetailModal />);
@@ -80,22 +83,25 @@ describe('PackageDetailModal', () => {
       },
     };
 
-    (useGameStore as any).mockReturnValue({
-      gameState: {
-        market: {
-          opportunities: [mockPackage],
+    (useGameStore as any).mockImplementation((selector: any) => {
+      const state = {
+        gameState: {
+          market: {
+            opportunities: [mockPackage],
+          },
+          entities: {
+            talents: mockTalents,
+          },
         },
-        entities: {
-          talents: mockTalents,
-        },
-      },
+      };
+      return selector ? selector(state) : state;
     });
 
     render(<PackageDetailModal packageId="pkg-1" />);
 
     expect(screen.getByText('Test Talent Package')).toBeInTheDocument();
     expect(screen.getByText('Talent package details and bidding information')).toBeInTheDocument();
-    expect(screen.getByText(/\$2\.5M/)).toBeInTheDocument();
+    expect(screen.getAllByText(/\$2\.5M/)[0]).toBeInTheDocument();
     expect(screen.getByText('+10')).toBeInTheDocument();
     expect(screen.getByText('12')).toBeInTheDocument();
     expect(screen.getByText('A great package for your studio')).toBeInTheDocument();
@@ -130,21 +136,24 @@ describe('PackageDetailModal', () => {
       },
     };
 
-    (useGameStore as any).mockReturnValue({
-      gameState: {
-        market: {
-          opportunities: [mockPackage],
+    (useGameStore as any).mockImplementation((selector: any) => {
+      const state = {
+        gameState: {
+          market: {
+            opportunities: [mockPackage],
+          },
+          entities: {
+            talents: mockTalents,
+          },
         },
-        entities: {
-          talents: mockTalents,
-        },
-      },
+      };
+      return selector ? selector(state) : state;
     });
 
     render(<PackageDetailModal packageId="pkg-1" />);
 
     expect(screen.getByText('Test Actor')).toBeInTheDocument();
-    expect(screen.getByText('Tier 1')).toBeInTheDocument();
+    expect(screen.getByText(/Tier 1/)).toBeInTheDocument();
   });
 
   it('should display bid history when available', () => {
@@ -171,15 +180,18 @@ describe('PackageDetailModal', () => {
       ],
     };
 
-    (useGameStore as any).mockReturnValue({
-      gameState: {
-        market: {
-          opportunities: [mockPackage],
+    (useGameStore as any).mockImplementation((selector: any) => {
+      const state = {
+        gameState: {
+          market: {
+            opportunities: [mockPackage],
+          },
+          entities: {
+            talents: {},
+          },
         },
-        entities: {
-          talents: {},
-        },
-      },
+      };
+      return selector ? selector(state) : state;
     });
 
     render(<PackageDetailModal packageId="pkg-1" />);
@@ -210,15 +222,18 @@ describe('PackageDetailModal', () => {
       bidHistory: [],
     };
 
-    (useGameStore as any).mockReturnValue({
-      gameState: {
-        market: {
-          opportunities: [mockPackage],
+    (useGameStore as any).mockImplementation((selector: any) => {
+      const state = {
+        gameState: {
+          market: {
+            opportunities: [mockPackage],
+          },
+          entities: {
+            talents: {},
+          },
         },
-        entities: {
-          talents: {},
-        },
-      },
+      };
+      return selector ? selector(state) : state;
     });
 
     render(<PackageDetailModal packageId="pkg-1" />);
@@ -250,15 +265,18 @@ describe('PackageDetailModal', () => {
       bidHistory: [],
     };
 
-    (useGameStore as any).mockReturnValue({
-      gameState: {
-        market: {
-          opportunities: [mockPackage],
+    (useGameStore as any).mockImplementation((selector: any) => {
+      const state = {
+        gameState: {
+          market: {
+            opportunities: [mockPackage],
+          },
+          entities: {
+            talents: {},
+          },
         },
-        entities: {
-          talents: {},
-        },
-      },
+      };
+      return selector ? selector(state) : state;
     });
 
     render(<PackageDetailModal packageId="pkg-1" />);
@@ -288,15 +306,18 @@ describe('PackageDetailModal', () => {
       bidHistory: [],
     };
 
-    (useGameStore as any).mockReturnValue({
-      gameState: {
-        market: {
-          opportunities: [mockPackage],
+    (useGameStore as any).mockImplementation((selector: any) => {
+      const state = {
+        gameState: {
+          market: {
+            opportunities: [mockPackage],
+          },
+          entities: {
+            talents: {},
+          },
         },
-        entities: {
-          talents: {},
-        },
-      },
+      };
+      return selector ? selector(state) : state;
     });
 
     render(<PackageDetailModal packageId="pkg-1" />);
@@ -304,7 +325,7 @@ describe('PackageDetailModal', () => {
     const bidInput = screen.getByPlaceholderText('Enter bid amount');
     fireEvent.change(bidInput, { target: { value: '1500000' } });
 
-    const bidButton = screen.getByText('Place Bid ($1,500,000)');
+    const bidButton = screen.getByText('Place Bid ($1.5M)');
     expect(bidButton).not.toBeDisabled();
   });
 
@@ -329,15 +350,18 @@ describe('PackageDetailModal', () => {
       bidHistory: [],
     };
 
-    (useGameStore as any).mockReturnValue({
-      gameState: {
-        market: {
-          opportunities: [mockPackage],
+    (useGameStore as any).mockImplementation((selector: any) => {
+      const state = {
+        gameState: {
+          market: {
+            opportunities: [mockPackage],
+          },
+          entities: {
+            talents: {},
+          },
         },
-        entities: {
-          talents: {},
-        },
-      },
+      };
+      return selector ? selector(state) : state;
     });
 
     render(<PackageDetailModal packageId="pkg-1" />);

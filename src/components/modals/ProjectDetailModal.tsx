@@ -508,13 +508,12 @@ export const ProjectDetailModal = () => {
                           </SelectContent>
                         </Select>
                         
-                        <div className="grid grid-cols-1 gap-2">
                            <p className="text-[9px] font-black uppercase text-slate-500 tracking-widest">Active FYC Campaign</p>
                            {gameState?.studio?.activeCampaigns?.[project.id] ? (
                              <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30">
                                 <div className="flex justify-between items-center mb-2">
                                    <span className="text-xs font-black text-amber-500 uppercase italic">Active Outreach</span>
-                                    <Badge className="bg-amber-500 text-black font-black">+{gameState.studio.activeCampaigns[project.id].buzzBonus} BUZZ</Badge>
+                                    <Badge className="bg-amber-500 text-black font-black">+{gameState?.studio?.activeCampaigns[project.id].buzzBonus} BUZZ</Badge>
                                 </div>
                                 <p className="text-[10px] text-slate-300 font-medium leading-relaxed italic border-l border-amber-500/30 pl-3">
                                    "Direct studio outreach with Academy voters is amplifying {project.title}'s prestige profile."

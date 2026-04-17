@@ -3,11 +3,11 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { DiscoveryBoard } from '../../../components/discovery/DiscoveryBoard';
 import { useGameStore } from '../../../store/gameStore';
-import { useUIStore } from '../../../store/uiStore';
+import { useUIStore } from '@/store/uiStore';
 import { Opportunity } from '../../../engine/types';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
-vi.mock('../../../store/uiStore', () => ({
+vi.mock('@/store/uiStore', () => ({
   useUIStore: vi.fn(),
 }));
 
@@ -20,9 +20,9 @@ describe('DiscoveryBoard', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    (useUIStore as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
+    vi.mocked(useUIStore).mockReturnValue({
       openCreateProject: mockOpenCreateProject,
-    });
+    } as any);
   });
 
   const getBaseGameState = (opportunities: Opportunity[] = []) => ({

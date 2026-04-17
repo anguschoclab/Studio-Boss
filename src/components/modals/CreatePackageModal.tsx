@@ -149,7 +149,9 @@ export const CreatePackageModal = ({ agencies: propAgencies, talents: propTalent
                       type="checkbox"
                       checked={selectedTalents.includes(talent.id)}
                       onChange={() => handleToggleTalent(talent.id)}
+                      onClick={(e) => e.stopPropagation()}
                       className="ml-2"
+                      tabIndex={-1}
                     />
                   </div>
                 ))

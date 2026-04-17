@@ -17,24 +17,24 @@ vi.mock('@/components/ui/dialog', () => ({
 }));
 
 // Mock the Select components to render content directly in tests
+// Mock the Select components to render content directly in tests
 vi.mock('@/components/ui/select', () => ({
-  Select: ({ children, value, onValueChange }: any) => (
-    <div data-testid="select">
+  Select: ({ children, value, onValueChange, 'aria-label': ariaLabel }: any) => (
+    <select 
+      data-testid={ariaLabel || 'select'} 
+      value={value} 
+      onChange={(e) => onValueChange(e.target.value)}
+    >
       {children}
-      {value && <span data-testid="select-value">{value}</span>}
-    </div>
+    </select>
   ),
-  SelectTrigger: ({ children, placeholder }: any) => (
-    <div data-testid="select-trigger">
-      {children || <span data-testid="select-placeholder">{placeholder}</span>}
-    </div>
-  ),
-  SelectValue: ({ placeholder }: any) => <span data-testid="select-value">{placeholder}</span>,
-  SelectContent: ({ children }: any) => <div data-testid="select-content">{children}</div>,
+  SelectTrigger: ({ children }: any) => <>{children}</>,
+  SelectValue: () => null,
+  SelectContent: ({ children }: any) => <>{children}</>,
   SelectItem: ({ children, value }: any) => (
-    <div data-value={value} data-testid={`select-item-${value}`} onClick={() => {}}>
+    <option value={value} data-testid={`select-item-${value}`}>
       {children}
-    </div>
+    </option>
   ),
 }));
 
@@ -114,9 +114,8 @@ describe('CreatePackageModal', () => {
     render(<CreatePackageModal agencies={mockAgencies as any} talents={mockTalents as any} />);
 
     // Select agency - click the first select trigger (agency selection)
-    const selectTriggers = screen.getAllByTestId('select-trigger');
-    fireEvent.click(selectTriggers[0]);
-    fireEvent.click(screen.getByTestId('select-item-CAA'));
+    const selects = screen.getAllByRole('combobox');
+    fireEvent.change(selects[0], { target: { value: 'CAA' } });
 
     // Select talent
     const talentCheckbox = screen.getByRole('checkbox');
@@ -160,9 +159,8 @@ describe('CreatePackageModal', () => {
     render(<CreatePackageModal agencies={mockAgencies as any} talents={mockTalents as any} />);
 
     // Select agency - click the first select trigger (agency selection)
-    const selectTriggers = screen.getAllByTestId('select-trigger');
-    fireEvent.click(selectTriggers[0]);
-    fireEvent.click(screen.getByTestId('select-item-CAA'));
+    const selects = screen.getAllByRole('combobox');
+    fireEvent.change(selects[0], { target: { value: 'CAA' } });
 
     // Select talent
     const talentCheckbox = screen.getByRole('checkbox');
@@ -193,9 +191,8 @@ describe('CreatePackageModal', () => {
     render(<CreatePackageModal agencies={mockAgencies as any} talents={mockTalents as any} />);
 
     // Select agency - click the first select trigger (agency selection)
-    const selectTriggers = screen.getAllByTestId('select-trigger');
-    fireEvent.click(selectTriggers[0]);
-    fireEvent.click(screen.getByTestId('select-item-CAA'));
+    const selects = screen.getAllByRole('combobox');
+    fireEvent.change(selects[0], { target: { value: 'CAA' } });
 
     // Select 6 talents
     const checkboxes = screen.getAllByRole('checkbox');
