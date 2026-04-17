@@ -25,13 +25,14 @@ export function calculateLiveCounterBid(
     adjustedThreshold += 0.2;
     adjustedMultiplier *= 1.3;
   }
+  // 🎭 The Method Actor Tuning: Make rivals with FRANCHISE_BUILDING and MARKET_DISRUPTION motivations bid more aggressively.
   if (rival.currentMotivation === 'FRANCHISE_BUILDING' && (opportunity.genre === 'Sci-Fi' || opportunity.genre === 'Action' || opportunity.genre === 'Fantasy')) {
     adjustedThreshold += 0.25;
-    adjustedMultiplier *= 1.4;
+    adjustedMultiplier *= 1.6;
   }
   if (rival.currentMotivation === 'MARKET_DISRUPTION') {
     adjustedThreshold += 0.35;
-    adjustedMultiplier *= 1.5;
+    adjustedMultiplier *= 1.8;
   }
 
   if (rng.next() < adjustedThreshold) {
