@@ -37,9 +37,17 @@ export const selectStudio = (state: GameState | null) => state?.studio || null;
 export const selectInternal = (state: GameState | null) => state?.studio?.internal || null;
 export const selectProjectsRaw = (state: GameState | null) => state?.entities?.projects || EMPTY_PROJECTS;
 
+// ⚡ Bolt: Cache array references to prevent unnecessary React re-renders when useShallow is used
+let lastProjectsRaw: Record<string, Project> | null = null;
+let lastProjectsArray: Project[] = [];
+
 export const selectProjects = (state: GameState | null): Project[] => {
-  const projects = selectProjectsRaw(state);
-  return Object.values(projects);
+  const raw = selectProjectsRaw(state);
+  if (raw !== lastProjectsRaw) {
+    lastProjectsRaw = raw;
+    lastProjectsArray = Object.values(raw);
+  }
+  return lastProjectsArray;
 };
 
 export const selectFinance = (state: GameState | null) => state?.finance || EMPTY_FINANCE;
@@ -48,30 +56,62 @@ export const selectCash = (state: GameState | null) => selectFinance(state).cash
 export const selectIndustry = (state: GameState | null) => state?.industry || null;
 export const selectRivalsRaw = (state: GameState | null) => state?.entities?.rivals || EMPTY_RIVALS;
 
+// ⚡ Bolt: Cache array reference to prevent unnecessary re-renders
+let lastRivalsRaw: Record<string, RivalStudio> | null = null;
+let lastRivalsArray: RivalStudio[] = [];
+
 export const selectRivals = (state: GameState | null): RivalStudio[] => {
-  const rivals = selectRivalsRaw(state);
-  return Object.values(rivals);
+  const raw = selectRivalsRaw(state);
+  if (raw !== lastRivalsRaw) {
+    lastRivalsRaw = raw;
+    lastRivalsArray = Object.values(raw);
+  }
+  return lastRivalsArray;
 };
 
 export const selectTalentPoolRaw = (state: GameState | null) => state?.entities?.talents || EMPTY_TALENT_POOL;
 
+// ⚡ Bolt: Cache array reference to prevent unnecessary re-renders
+let lastTalentRaw: Record<string, Talent> | null = null;
+let lastTalentArray: Talent[] = [];
+
 export const selectTalentPool = (state: GameState | null): Talent[] => {
-  const talents = selectTalentPoolRaw(state);
-  return Object.values(talents);
+  const raw = selectTalentPoolRaw(state);
+  if (raw !== lastTalentRaw) {
+    lastTalentRaw = raw;
+    lastTalentArray = Object.values(raw);
+  }
+  return lastTalentArray;
 };
+
+// ⚡ Bolt: Cache array reference to prevent unnecessary re-renders
+let lastActiveProjectsRaw: Record<string, Project> | null = null;
+let lastActiveProjectsArray: Project[] = [];
 
 export const selectActiveProjects = (state: GameState | null): Project[] => {
-  const projects = selectProjectsRaw(state);
-  return Object.values(projects).filter(p => 
-    p.state !== 'released' && p.state !== 'archived' && p.state !== 'post_release'
-  );
+  const raw = selectProjectsRaw(state);
+  if (raw !== lastActiveProjectsRaw) {
+    lastActiveProjectsRaw = raw;
+    lastActiveProjectsArray = Object.values(raw).filter(p =>
+      p.state !== 'released' && p.state !== 'archived' && p.state !== 'post_release'
+    );
+  }
+  return lastActiveProjectsArray;
 };
 
+// ⚡ Bolt: Cache array reference to prevent unnecessary re-renders
+let lastReleasedProjectsRaw: Record<string, Project> | null = null;
+let lastReleasedProjectsArray: Project[] = [];
+
 export const selectReleasedProjects = (state: GameState | null): Project[] => {
-  const projects = selectProjectsRaw(state);
-  return Object.values(projects).filter(p => 
-    p.state === 'released' || p.state === 'post_release' || p.state === 'archived'
-  );
+  const raw = selectProjectsRaw(state);
+  if (raw !== lastReleasedProjectsRaw) {
+    lastReleasedProjectsRaw = raw;
+    lastReleasedProjectsArray = Object.values(raw).filter(p =>
+      p.state === 'released' || p.state === 'post_release' || p.state === 'archived'
+    );
+  }
+  return lastReleasedProjectsArray;
 };
 
 export const selectIsBankrupt = (state: GameState | null) => {
