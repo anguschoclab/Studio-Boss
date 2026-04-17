@@ -1,18 +1,16 @@
-import { calculateWeeklyCosts, calculateWeeklyRevenue, calculateStudioNetWorth, generateCashflowForecast, calculateProjectROI } from '@/engine/systems/finance';
+import { calculateWeeklyCosts, calculateWeeklyRevenue, calculateStudioNetWorth, generateCashflowForecast } from '@/engine/systems/finance';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Area, XAxis, YAxis, Tooltip, ResponsiveContainer, ComposedChart, Line } from 'recharts';
-import { Badge } from '@/components/ui/badge';
 import { YearInReviewChart } from '@/components/finance/YearInReviewChart';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { History, LayoutDashboard, ReceiptText, TrendingUp, Package, Coins } from 'lucide-react';
-import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
-import { RevenueStreamChart } from '@/components/finance/RevenueStreamChart';
-import { ProfitWaterfallChart } from '@/components/finance/ProfitWaterfallChart';
-import { CashEfficiencyGauge } from '@/components/finance/CashEfficiencyGauge';
-import { DistributionBadge } from '@/components/shared/DistributionBadge';
 import { MarketRatesWidget } from '@/components/finance/MarketRatesWidget';
+import { SummaryCards } from '@/components/finance/SummaryCards';
+import { ActiveProjectCosts } from '@/components/finance/ActiveProjectCosts';
+import { EconomicAnalytics } from '@/components/finance/EconomicAnalytics';
+import { ProjectROIAnalytics } from '@/components/finance/ProjectROIAnalytics';
 import { useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useShallow } from 'zustand/react/shallow';
@@ -188,24 +186,12 @@ export const FinancePanel = () => {
         <TabsContent value="current" className="space-y-6 m-0 outline-none">
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-4 gap-4">
-        {[
-          { label: 'Available Cash', value: formatMoney(cash), color: cash < 0 ? 'text-destructive drop-shadow-[0_0_8px_rgba(239,68,68,0.4)]' : 'text-primary drop-shadow-[0_0_8px_rgba(234,179,8,0.4)]', bg: 'from-card/80 to-card/40', tooltip: 'Total liquid capital available for studio operations and project funding.' },
-          { label: 'Total Net Worth', value: formatMoney(studioNetWorth), color: 'text-foreground', bg: 'from-card/80 to-card/40', tooltip: 'Estimated total value of all studio assets, including cash, IP, and talent contracts.' },
-          { label: 'Projected Net Delta', value: `${netDelta >= 0 ? '+' : ''}${formatMoney(netDelta)}/wk`, color: netDelta >= 0 ? 'text-success drop-shadow-[0_0_8px_rgba(34,197,94,0.4)]' : 'text-destructive drop-shadow-[0_0_8px_rgba(239,68,68,0.4)]', bg: netDelta >= 0 ? 'from-success/5 to-transparent' : 'from-destructive/5 to-transparent', tooltip: 'Estimated weekly profit or loss based on current revenue streams and production burn.' },
-          { label: '12-Wk Forecast Cash', value: formatMoney(forecast.length > 0 ? forecast[forecast.length - 1].projected : 0), color: 'text-purple-400 drop-shadow-[0_0_8px_rgba(192,132,252,0.4)]', bg: 'from-purple-500/5 to-transparent', tooltip: 'Projected cash position in 12 weeks based on current trajectory and known milestones.' },
-        ].map((metric, i) => (
-          <TooltipWrapper key={metric.label} tooltip={metric.tooltip} side="top">
-            <Card className={`border-border/50 bg-card/60 bg-gradient-to-br ${metric.bg} backdrop-blur-md shadow-sm hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:-translate-y-1 hover:border-primary/30 transition-all duration-300 relative overflow-hidden group cursor-help`} style={{ animationDelay: `${i * 100}ms` }}>
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
-              <CardContent className="p-5 relative z-10">
-                <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-black drop-shadow-sm group-hover:text-foreground/80 transition-colors">{metric.label}</p>
-                <p className={`text-2xl font-display font-black tracking-tighter mt-2 ${metric.color} transition-colors duration-300`}>{metric.value}</p>
-              </CardContent>
-            </Card>
-          </TooltipWrapper>
-        ))}
-      </div>
+      <SummaryCards metrics={[
+        { label: 'Available Cash', value: formatMoney(cash), color: cash < 0 ? 'text-destructive drop-shadow-[0_0_8px_rgba(239,68,68,0.4)]' : 'text-primary drop-shadow-[0_0_8px_rgba(234,179,8,0.4)]', bg: 'from-card/80 to-card/40', tooltip: 'Total liquid capital available for studio operations and project funding.' },
+        { label: 'Total Net Worth', value: formatMoney(studioNetWorth), color: 'text-foreground', bg: 'from-card/80 to-card/40', tooltip: 'Estimated total value of all studio assets, including cash, IP, and talent contracts.' },
+        { label: 'Projected Net Delta', value: `${netDelta >= 0 ? '+' : ''}${formatMoney(netDelta)}/wk`, color: netDelta >= 0 ? 'text-success drop-shadow-[0_0_8px_rgba(34,197,94,0.4)]' : 'text-destructive drop-shadow-[0_0_8px_rgba(239,68,68,0.4)]', bg: netDelta >= 0 ? 'from-success/5 to-transparent' : 'from-destructive/5 to-transparent', tooltip: 'Estimated weekly profit or loss based on current revenue streams and production burn.' },
+        { label: '12-Wk Forecast Cash', value: formatMoney(forecast.length > 0 ? forecast[forecast.length - 1].projected : 0), color: 'text-purple-400 drop-shadow-[0_0_8px_rgba(192,132,252,0.4)]', bg: 'from-purple-500/5 to-transparent', tooltip: 'Projected cash position in 12 weeks based on current trajectory and known milestones.' },
+      ]} />
 
       <div className="grid grid-cols-3 gap-6 h-[400px]">
         {/* Cash Flow Chart */}
@@ -265,124 +251,19 @@ export const FinancePanel = () => {
 
         {/* Active Project Costs */}
         <div className="col-span-1 flex flex-col h-full">
-          <Card className="border-border/40 bg-card/60 bg-gradient-to-br from-card/80 to-transparent backdrop-blur-md shadow-sm hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-300 flex-1 flex flex-col overflow-hidden">
-            <CardHeader className="pb-3 border-b border-border/30 bg-background/40 backdrop-blur-sm shrink-0">
-              <CardTitle className="text-xs font-display font-black uppercase tracking-widest text-foreground/80 drop-shadow-sm flex justify-between items-center">
-                <span>Active Costs</span>
-                <span className="text-destructive drop-shadow-[0_0_4px_rgba(239,68,68,0.3)] font-mono">-{formatMoney(weeklyCosts)}/wk</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-0 flex-1 overflow-y-auto custom-scrollbar">
-              <div className="flex flex-col divide-y divide-border/20">
-                {activeProjects.length > 0 ? activeProjects.map(p => (
-                  <div key={p.id} className="flex flex-col gap-1.5 p-4 hover:bg-muted/10 transition-colors group relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 pointer-events-none" />
-                    <div className="flex items-center justify-between relative z-10">
-                      <span className="text-sm font-black text-foreground/90 group-hover:text-primary transition-colors tracking-tight">{p.title}</span>
-                      <span className="text-sm text-destructive font-bold drop-shadow-[0_0_2px_rgba(239,68,68,0.2)] font-mono">-{formatMoney(p.weeklyCost)}/wk</span>
-                    </div>
-                    <div className="flex items-center gap-2 relative z-10">
-                       <span className="text-[9px] font-bold tracking-widest text-muted-foreground uppercase bg-background/50 backdrop-blur-sm border border-border/40 px-2 py-0.5 rounded-full shadow-sm">{p.state}</span>
-                    </div>
-                  </div>
-                )) : (
-                  <div className="p-8 text-center flex flex-col items-center justify-center h-full opacity-60">
-                    <p className="text-xs font-black uppercase tracking-widest text-muted-foreground bg-muted/10 inline-block px-4 py-2 rounded-full border border-border/20 shadow-inner">No active burn</p>
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+          <ActiveProjectCosts activeProjects={activeProjects} weeklyCosts={weeklyCosts} />
         </div>
       </div>
       
       {/* Deep Economic Analytics */}
-      <div className="grid grid-cols-3 gap-6 h-[250px]">
-        <Card className="col-span-1 border-border/40 bg-card/40 backdrop-blur-md shadow-sm">
-          <CardHeader className="pb-2 border-b border-border/20">
-             <CardTitle className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Revenue Mix (Last 12w)</CardTitle>
-          </CardHeader>
-          <CardContent className="h-[180px] pt-4">
-             <RevenueStreamChart data={financeHistory} />
-          </CardContent>
-        </Card>
-
-        <Card className="col-span-1 border-border/40 bg-card/40 backdrop-blur-md shadow-sm">
-          <CardHeader className="pb-2 border-b border-border/20">
-             <CardTitle className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Weekly P&L Breakdown</CardTitle>
-          </CardHeader>
-          <CardContent className="h-[180px] pt-4">
-             {latestFinanceSnapshot && <ProfitWaterfallChart snapshot={latestFinanceSnapshot} />}
-          </CardContent>
-        </Card>
-
-        <Card className="col-span-1 border-border/40 bg-card/40 backdrop-blur-md shadow-sm">
-          <CardHeader className="pb-2 border-b border-border/20">
-             <CardTitle className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Studio Efficiency</CardTitle>
-          </CardHeader>
-          <CardContent className="h-[180px] pt-4 flex items-center justify-center">
-             <CashEfficiencyGauge score={prestige} />
-          </CardContent>
-        </Card>
-      </div>
+      <EconomicAnalytics 
+        financeHistory={financeHistory} 
+        latestFinanceSnapshot={latestFinanceSnapshot} 
+        prestige={prestige} 
+      />
 
       {/* Project ROI Analytics */}
-      <Card className="border-border/40 bg-card/60 backdrop-blur-md shadow-sm">
-        <CardHeader className="pb-4 border-b border-border/30 bg-background/40">
-           <CardTitle className="text-xs font-display font-black uppercase tracking-widest text-foreground/80">
-            Project ROI Performance
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-0">
-           <div className="grid grid-cols-2 lg:grid-cols-4 gap-0 divide-y lg:divide-y-0 lg:divide-x divide-border/30">
-             {releasedProjects.length > 0 ? releasedProjects.slice(0, 8).map(p => {
-               const roi = calculateProjectROI(p);
-               const isProfitable = roi > 1; // Assuming roi represents a raw multiplier where 1.0 is break-even (revenue / totalCost)
-               
-               return (
-                 <div key={p.id} className="p-5 flex flex-col gap-3 hover:bg-muted/10 transition-colors group relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-                     <div className="flex items-start justify-between relative z-10 gap-2">
-                       <h4 className="font-bold text-[15px] tracking-tight group-hover:text-primary transition-colors truncate">{p.title}</h4>
-                       <div className="flex flex-col items-end gap-1 shrink-0">
-                         <Badge variant="outline" className={`text-[9px] uppercase font-black tracking-widest shadow-sm bg-background/50 backdrop-blur-sm ${isProfitable ? 'text-success border-success/30 shadow-[0_0_8px_rgba(34,197,94,0.2)]' : 'text-destructive border-destructive/30 shadow-[0_0_8px_rgba(239,68,68,0.2)]'}`}>
-                           {isProfitable ? 'Profit' : 'Loss'}
-                         </Badge>
-                         <DistributionBadge status={p.distributionStatus} className="scale-75 origin-right" />
-                       </div>
-                    </div>
-                    <div className="space-y-1.5 relative z-10">
-                      <TooltipWrapper tooltip="Total project earnings from box office receipts, distribution deals, and licensing." side="bottom">
-                        <div className="flex justify-between text-[11px] font-medium cursor-help">
-                           <span className="text-muted-foreground uppercase tracking-wider text-[9px] font-bold">Rev</span>
-                           <span className="font-mono text-success drop-shadow-[0_0_2px_rgba(34,197,94,0.3)]">{formatMoney(p.revenue)}</span>
-                        </div>
-                      </TooltipWrapper>
-                      <TooltipWrapper tooltip="Total project expenditure including production budget, marketing spend, and talent fees." side="bottom">
-                        <div className="flex justify-between text-[11px] font-medium cursor-help">
-                           <span className="text-muted-foreground uppercase tracking-wider text-[9px] font-bold">Cost</span>
-                           <span className="font-mono text-destructive drop-shadow-[0_0_2px_rgba(239,68,68,0.3)]">{formatMoney(p.budget + (p.marketingBudget||0))}</span>
-                        </div>
-                      </TooltipWrapper>
-                      <TooltipWrapper tooltip="Return on Investment ratio. Values above 1.0x signify capital growth." side="top">
-                        <div className="mt-3 pt-3 border-t border-border/30 flex justify-between items-center group-hover:border-primary/20 transition-colors cursor-help">
-                           <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">ROI</span>
-                           <span className={`text-xl font-display font-black drop-shadow-sm ${isProfitable ? 'text-success' : 'text-destructive'}`}>
-                             {roi.toFixed(2)}x
-                           </span>
-                        </div>
-                      </TooltipWrapper>
-                    </div>
-                 </div>
-               )
-             }) : (
-                <div className="col-span-full p-12 text-center bg-muted/5 opacity-70">
-                  <p className="text-xs font-black uppercase tracking-widest text-muted-foreground border border-dashed border-border/40 inline-block px-6 py-3 rounded-xl">No projects released yet</p>
-                </div>
-             )}
-           </div>
-        </CardContent>
-      </Card>
+      <ProjectROIAnalytics releasedProjects={releasedProjects} />
 
         </TabsContent>
 

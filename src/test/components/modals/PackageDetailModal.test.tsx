@@ -3,6 +3,17 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { PackageDetailModal } from '@/components/modals/PackageDetailModal';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+
+// Mock the Dialog components to render content directly in tests
+vi.mock('@/components/ui/dialog', () => ({
+  Dialog: ({ children }: any) => <div data-testid="dialog">{children}</div>,
+  DialogContent: ({ children }: any) => <div data-testid="dialog-content">{children}</div>,
+  DialogHeader: ({ children }: any) => <div data-testid="dialog-header">{children}</div>,
+  DialogTitle: ({ children }: any) => <h2 data-testid="dialog-title">{children}</h2>,
+  DialogDescription: ({ children }: any) => <p data-testid="dialog-description">{children}</p>,
+  DialogFooter: ({ children }: any) => <div data-testid="dialog-footer">{children}</div>,
+}));
 
 // Mock the stores
 vi.mock('@/store/gameStore');

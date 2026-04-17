@@ -19,7 +19,7 @@ describe('MerchandiseRevenuePanel', () => {
     render(<MerchandiseRevenuePanel merchandiseData={merchandiseData} />);
     
     expect(screen.getByText('Total Revenue')).toBeInTheDocument();
-    expect(screen.getByText('$10.0M')).toBeInTheDocument();
+    expect(screen.getByText('$10,000,000')).toBeInTheDocument();
     expect(screen.getByText('Units Sold')).toBeInTheDocument();
     expect(screen.getByText('50,000')).toBeInTheDocument();
     expect(screen.getByText('Avg per Unit')).toBeInTheDocument();
@@ -51,8 +51,8 @@ describe('MerchandiseRevenuePanel', () => {
     
     expect(screen.getByText('Apparel')).toBeInTheDocument();
     expect(screen.getByText('Toys')).toBeInTheDocument();
-    expect(screen.getByText('$3.0M')).toBeInTheDocument();
-    expect(screen.getByText('$2.0M')).toBeInTheDocument();
+    expect(screen.getByText('$3,000,000')).toBeInTheDocument();
+    expect(screen.getByText('$2,000,000')).toBeInTheDocument();
     expect(screen.getByText('+10%')).toBeInTheDocument();
     expect(screen.getByText('-5%')).toBeInTheDocument();
   });
@@ -79,7 +79,7 @@ describe('MerchandiseRevenuePanel', () => {
 
     expect(getAllByText('Space Saga').length).toBeGreaterThan(0);
     expect(getAllByText('Top: Apparel').length).toBeGreaterThan(0);
-    expect(getAllByText('$5.0M').length).toBeGreaterThan(0);
+    expect(getAllByText('$5,000,000').length).toBeGreaterThan(0);
   });
 
   it('shows empty states when no data', () => {
