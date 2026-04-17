@@ -109,17 +109,22 @@ function calculateCompatibility(talentA: Talent, talentB: Talent): number {
 /**
  * Check if two talents worked together on a project
  */
-function haveWorkedTogether(talentAId: string, talentBId: string, state: GameState): boolean {
+/**
+ * Check if two talents worked together on a project
+ */
+function haveWorkedTogether(talentAId: string, talentBId: string, state: GameState, projectTalentMap?: Map<string, Set<string>>): boolean {
+  if (projectTalentMap) {
+    for (const talentSet of projectTalentMap.values()) {
+      if (talentSet.has(talentAId) && talentSet.has(talentBId)) return true;
+    }
+    return false;
+  }
+
   const projects = Object.values(state.entities.projects || {});
 
   for (const project of projects) {
-    const contracts = Object.values(state.entities.contracts || {})
-      .filter(c => c.projectId === project.id);
-
-    const hasA = contracts.some(c => c.talentId === talentAId);
-    const hasB = contracts.some(c => c.talentId === talentBId);
-
-    if (hasA && hasB) return true;
+    const talentIds = (project as any).attachedTalentIds || [];
+    if (talentIds.includes(talentAId) && talentIds.includes(talentBId)) return true;
   }
 
   return false;
@@ -129,32 +134,26 @@ function haveWorkedTogether(talentAId: string, talentBId: string, state: GameSta
  * Check if talents competed for same award
  * Awards are tied to projects, so we check if talents worked on award-winning/nominated projects
  */
-export function haveCompeted(talentAId: string, talentBId: string, state: GameState): boolean {
+export function haveCompeted(talentAId: string, talentBId: string, state: GameState, awardedProjectsTalentSets?: Set<string>[]): boolean {
+  if (awardedProjectsTalentSets) {
+    for (const talentSet of awardedProjectsTalentSets) {
+      if (talentSet.has(talentAId) && talentSet.has(talentBId)) return true;
+    }
+    return false;
+  }
+
   // Get all awards
   const awards = state.industry?.awards || [];
-  
-  // Get all projects that won or were nominated for awards
   const awardedProjectIds = awards.map(a => a.projectId);
   
-  // Find projects that both talents worked on that received awards
-  const talentAProjects = state.entities.projects ? 
-    Object.values(state.entities.projects).filter((p: any) => 
-      awardedProjectIds.includes(p.id) && 
-      (p.attachedTalentIds || []).includes(talentAId)
-    ) : [];
+  const projects = Object.values(state.entities.projects || {});
+  for (const project of projects) {
+    if (!awardedProjectIds.includes(project.id)) continue;
+    const talentIds = (project as any).attachedTalentIds || [];
+    if (talentIds.includes(talentAId) && talentIds.includes(talentBId)) return true;
+  }
   
-  const talentBProjects = state.entities.projects ? 
-    Object.values(state.entities.projects).filter((p: any) => 
-      awardedProjectIds.includes(p.id) && 
-      (p.attachedTalentIds || []).includes(talentBId)
-    ) : [];
-  
-  // Check if they worked on the same award-winning/nominated project
-  const sharedAwardedProjects = talentAProjects.filter((p: any) => 
-    talentBProjects.some((bp: any) => bp.id === p.id)
-  );
-  
-  return sharedAwardedProjects.length > 0;
+  return false;
 }
 
 /**
@@ -253,7 +252,9 @@ function checkNaturalFormation(
   talentA: Talent,
   talentB: Talent,
   state: GameState,
-  rng: RandomGenerator
+  rng: RandomGenerator,
+  projectTalentMap?: Map<string, Set<string>>,
+  awardedProjectsTalentSets?: Set<string>[]
 ): RelationshipFormation | null {
   // Skip if relationship already exists
   const existing = getRelationship(talentA.id, talentB.id, state);
@@ -262,7 +263,7 @@ function checkNaturalFormation(
   const compatibility = calculateCompatibility(talentA, talentB);
 
   // Worked together on project
-  if (haveWorkedTogether(talentA.id, talentB.id, state)) {
+  if (haveWorkedTogether(talentA.id, talentB.id, state, projectTalentMap)) {
     // High compatibility + worked together = friendship likely
     if (compatibility > 20 && rng.next() < 0.4) {
       return {
@@ -287,7 +288,7 @@ function checkNaturalFormation(
   }
 
   // Competed for award = rivalry
-  if (haveCompeted(talentA.id, talentB.id, state) && rng.next() < 0.3) {
+  if (haveCompeted(talentA.id, talentB.id, state, awardedProjectsTalentSets) && rng.next() < 0.3) {
     return {
       talentAId: talentA.id,
       talentBId: talentB.id,
@@ -472,49 +473,92 @@ function evolveRelationship(
 export function tickRelationshipSystem(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
   const talents = Object.values(state.entities.talents || {});
+  const projects = Object.values(state.entities.projects || {});
+  const awards = state.industry?.awards || [];
+  const awardedProjectIds = new Set(awards.map(a => a.projectId));
 
-  // 1. Check for new relationship formations
-  for (let i = 0; i < talents.length; i++) {
-    for (let j = i + 1; j < talents.length; j++) {
-      const formation = checkNaturalFormation(talents[i], talents[j], state, rng);
+  // ⚡ The Framerate Fanatic: Massive O(N²) optimization.
+  // Instead of checking all pairs, we check project interactions and a random sample of the rest.
+  
+  // 1. Pre-index talent clusters by project
+  const projectTalentMap = new Map<string, Set<string>>();
+  const awardedProjectsTalentSets: Set<string>[] = [];
 
-      if (formation) {
-        const { relationship, impacts: formationImpacts } = formRelationship(
-          formation,
-          state.week,
-          state,
-          rng
-        );
+  for (const project of projects) {
+    const attachedIds = (project as any).attachedTalentIds || [];
+    if (attachedIds.length < 2) continue;
+    
+    const set = new Set<string>(attachedIds);
+    projectTalentMap.set(project.id, set);
+    if (awardedProjectIds.has(project.id)) {
+      awardedProjectsTalentSets.push(set);
+    }
+  }
 
-        impacts.push(...formationImpacts);
+  // Candidates for relationship formation
+  const formationCandidates: [Talent, Talent][] = [];
 
-        // Add to state
-        const key = getRelationshipKey(formation.talentAId, formation.talentBId);
+  // A. Same project candidates (High probability)
+  for (const talentSet of projectTalentMap.values()) {
+    const ids = Array.from(talentSet);
+    for (let i = 0; i < ids.length; i++) {
+      for (let j = i + 1; j < ids.length; j++) {
+        const tA = state.entities.talents[ids[i]];
+        const tB = state.entities.talents[ids[j]];
+        if (tA && tB) formationCandidates.push([tA, tB]);
+      }
+    }
+  }
+
+  // B. Random sample for world events (Prevents O(N²) cross-product)
+  const RANDOM_SAMPLES = 200;
+  for (let i = 0; i < RANDOM_SAMPLES; i++) {
+    const idxA = rng.rangeInt(0, talents.length - 1);
+    const idxB = rng.rangeInt(0, talents.length - 1);
+    if (idxA === idxB) continue;
+    formationCandidates.push([talents[idxA], talents[idxB]]);
+  }
+
+  // 2. Process Candidates
+  for (const [talentA, talentB] of formationCandidates) {
+    const formation = checkNaturalFormation(talentA, talentB, state, rng, projectTalentMap, awardedProjectsTalentSets);
+
+    if (formation) {
+      const { relationship, impacts: formationImpacts } = formRelationship(
+        formation,
+        state.week,
+        state,
+        rng
+      );
+
+      impacts.push(...formationImpacts);
+
+      // Add to state
+      const key = getRelationshipKey(formation.talentAId, formation.talentBId);
+      impacts.push({
+        type: 'RELATIONSHIP_FORMED',
+        payload: {
+          key,
+          relationship,
+        },
+      } as any);
+
+      // Update spouseId for public romantic relationships
+      if (relationship.type === 'romantic' && relationship.isPublic) {
         impacts.push({
-          type: 'RELATIONSHIP_FORMED',
+          type: 'TALENT_UPDATED',
           payload: {
-            key,
-            relationship,
+            talentId: relationship.talentAId,
+            update: { spouseId: relationship.talentBId },
           },
-        } as any);
-
-        // Update spouseId for public romantic relationships
-        if (relationship.type === 'romantic' && relationship.isPublic) {
-          impacts.push({
-            type: 'TALENT_UPDATED',
-            payload: {
-              talentId: relationship.talentAId,
-              update: { spouseId: relationship.talentBId },
-            },
-          });
-          impacts.push({
-            type: 'TALENT_UPDATED',
-            payload: {
-              talentId: relationship.talentBId,
-              update: { spouseId: relationship.talentAId },
-            },
-          });
-        }
+        });
+        impacts.push({
+          type: 'TALENT_UPDATED',
+          payload: {
+            talentId: relationship.talentBId,
+            update: { spouseId: relationship.talentAId },
+          },
+        });
       }
     }
   }

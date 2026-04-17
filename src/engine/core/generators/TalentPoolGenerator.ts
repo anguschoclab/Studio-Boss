@@ -2,6 +2,7 @@ import { Talent } from '@/engine/types';
 import { generateFamilies, generateTalentPool } from '../../generators/talent';
 import { generateAgencies, generateAgents } from '../../generators/agencies';
 import { RandomGenerator } from '../../utils/rng';
+import { TalentAgentInteractionEngine } from '../../systems/talent/talentAgentInteractions';
 
 interface TalentPoolGeneratorOptions {
   talentCount?: number;
@@ -32,6 +33,10 @@ export function generateTalentPoolWithRelationships(
   const agents = generateAgents(rng, agencies, agentsPerAgency);
   const families = generateFamilies(rng, familyCount);
 
+  // Pre-index for O(1) lookups
+  const agenciesMap = new Map(agencies.map(a => [a.id, a]));
+  const agentsMap = new Map(agents.map(a => [a.id, a]));
+
   const talentPoolArray = generateTalentPool(rng, talentCount);
   const talentPool = talentPoolArray.reduce((acc, t) => {
     acc[t.id] = t;
@@ -43,12 +48,11 @@ export function generateTalentPoolWithRelationships(
 
   for (const [talentId, talent] of Object.entries(talentPool)) {
     if (talent.agentId) {
-      const agent = agents.find(a => a.id === talent.agentId);
+      const agent = agentsMap.get(talent.agentId);
       if (agent && talent.personality) {
         const agentPersonality = agent.personality || derivePersonalityFromAgent(agent);
-        const agency = agencies.find(a => a.id === agent.agencyId);
+        const agency = agenciesMap.get(agent.agencyId);
         
-        const { TalentAgentInteractionEngine } = require('../../systems/talent/talentAgentInteractions');
         const relationship = TalentAgentInteractionEngine.createRelationship(
           talentId,
           talent.agentId,
