@@ -420,7 +420,7 @@ export const ProjectDetailModal = () => {
                        <button aria-pressed={project.marketingLevel === tier.id || selectedTier === tier.id}
                          key={tier.id}
                          disabled={!!project.marketingLevel || (gameState ? gameState.finance.cash < tier.cost : false)}
-                         onClick={() => setSelectedTier(tier.id as any)}
+                         onClick={() => setSelectedTier(tier.id as 'none' | 'basic' | 'blockbuster')}
                          className={cn(
                            "p-6 rounded-2xl border text-left transition-all relative overflow-hidden flex flex-col justify-between group h-52",
                            project.marketingLevel === tier.id || selectedTier === tier.id 
@@ -527,13 +527,13 @@ export const ProjectDetailModal = () => {
                                   { k: 'Blitz', c: 5000000 }
                                 ].map(tier => (
                                   <Button 
-                                    key={tier.k as any}
+                                    key={tier.k as 'Grassroots' | 'Trade' | 'Blitz'}
                                     variant="outline" 
                                     className="h-14 flex flex-col items-center justify-center border-slate-800 hover:border-amber-500/50 bg-black/40 group"
-                                    onClick={() => { launchAwardsCampaign(project.id, tier.k as any); selectProject(null); }}
+                                    onClick={() => { launchAwardsCampaign(project.id, tier.k as 'Grassroots' | 'Trade' | 'Blitz'); selectProject(null); }}
                                     disabled={gameState ? gameState.finance.cash < tier.c : true}
                                   >
-                                     <span className="text-[8px] font-black text-slate-500 uppercase group-hover:text-amber-500">{tier.k as any}</span>
+                                     <span className="text-[8px] font-black text-slate-500 uppercase group-hover:text-amber-500">{tier.k}</span>
                                      <span className="text-[10px] font-mono font-black text-white">{formatMoney(tier.c)}</span>
                                   </Button>
                                 ))}

@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { GameState, WeekSummary, ArchetypeKey, FinanceState, NewsState } from '@/engine/types';
+import { GameState, WeekSummary, ArchetypeKey, FinanceState, NewsState, ModalType } from '@/engine/types';
 import { saveGame, loadGame, getSaveSlots, SaveSlotInfo } from '@/persistence/saveLoad';
 import { useUIStore } from './uiStore';
 
@@ -10,33 +10,6 @@ import { createRivalSlice, RivalSlice } from './slices/rivalSlice';
 import { createNewsSlice, NewsSlice } from './slices/newsSlice';
 import { createSnapshotSlice, SnapshotSlice } from './slices/snapshotSlice';
 import { createMarketingSlice, MarketingSlice } from './slices/marketingSlice';
-
-// Type declaration for electronAPI
-declare global {
-  interface Window {
-    electronAPI?: {
-      saveGame: (slot: number, state: GameState) => Promise<boolean>;
-      loadGame: (slot: number) => Promise<GameState | null>;
-      listSaves: () => Promise<number[]>;
-      deleteSave: (slot: number) => Promise<boolean>;
-      exportSave: (slot: number) => Promise<boolean>;
-      importSave: () => Promise<GameState | null>;
-      store: {
-        get: (key: string) => Promise<unknown>;
-        set: (key: string, value: unknown) => Promise<boolean>;
-        delete: (key: string) => Promise<boolean>;
-      };
-      showNotification: (options: { title: string; body: string }) => Promise<boolean>;
-      minimizeWindow: () => void;
-      maximizeWindow: () => void;
-      closeWindow: () => void;
-      initGame: (studioName: string, archetype: string, seed: number) => Promise<unknown>;
-      advanceWeek: (state: GameState) => Promise<unknown>;
-      getVersion: () => Promise<string>;
-      getPlatform: () => Promise<string>;
-    };
-  }
-}
 
 export interface GameStore extends ProjectSlice, FinanceSlice, TalentSlice, RivalSlice, NewsSlice, SnapshotSlice, MarketingSlice {
   gameState: GameState | null;
@@ -94,22 +67,27 @@ const triggerSave = async (stateToSave: GameState) => {
   if (_saveQueue) triggerSave(_saveQueue);
 };
 
+interface Impact {
+  type: string;
+  payload: {
+    modalType: ModalType;
+    priority?: number;
+    payload?: Record<string, unknown>;
+  };
+}
+
 // Shared modal processing logic
-const processModals = (impacts: any[]) => {
+const processModals = (impacts: Impact[]) => {
   if (typeof useUIStore.getState !== 'function') return;
   const ui = useUIStore.getState();
   if (impacts && impacts.length > 0) {
-    const modalImpacts = [];
-    for (let i = 0; i < impacts.length; i++) {
-      if (impacts[i].type === 'MODAL_TRIGGERED') {
-        modalImpacts.push(impacts[i]);
-      }
-    }
+    const modalImpacts = impacts.filter(imp => imp.type === 'MODAL_TRIGGERED');
+    
     if (modalImpacts.length > 0) {
-      modalImpacts.sort((a, b) => ((b.payload as any).priority || 0) - ((a.payload as any).priority || 0));
+      modalImpacts.sort((a, b) => (b.payload.priority || 0) - (a.payload.priority || 0));
       for (let i = 0; i < modalImpacts.length; i++) {
         const imp = modalImpacts[i];
-        ui.enqueueModal((imp.payload as any).modalType, (imp.payload as any).payload as Record<string, unknown>);
+        ui.enqueueModal(imp.payload.modalType, imp.payload.payload || null);
       }
     }
   }
@@ -129,124 +107,137 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
   ...createSnapshotSlice(set, get, ...args),
   ...createMarketingSlice(set, get, ...args),
 
-  newGame: async (studioName: string, archetype: ArchetypeKey) => {
+  newGame: (studioName: string, archetype: ArchetypeKey) => {
     const seed = Math.floor(Math.random() * 1_000_000);
     
-    return new Promise<void>(async (resolve) => {
-      if (isElectron && window.electronAPI) {
-        // Try to use Electron IPC
-        try {
-          const gameState = await window.electronAPI.initGame(studioName, archetype, seed);
-          if (gameState) {
+    return new Promise<void>((resolve) => {
+      const initElectron = async () => {
+        if (isElectron && window.electronAPI) {
+          try {
+            const gameState = await window.electronAPI.initGame(studioName, archetype, seed);
+            if (gameState) {
+              const state = gameState as GameState;
+              saveGame(0, state);
+              set({ 
+                gameState: state,
+                finance: state.finance,
+                news: state.news
+              });
+              resolve();
+              return true;
+            }
+          } catch (e) {
+            console.error('Electron IPC init-game failed, falling back to worker:', e);
+          }
+        }
+        return false;
+      };
+
+      initElectron().then((success) => {
+        if (success) return;
+
+        // Fallback to Web Worker
+        const handler = (e: MessageEvent) => {
+          if (e.data.type === 'INIT_RESULT') {
+            const gameState = e.data.payload as GameState;
             saveGame(0, gameState);
             set({ 
               gameState,
               finance: gameState.finance,
               news: gameState.news
             });
+            engineWorker.removeEventListener('message', handler);
             resolve();
-            return;
           }
-        } catch (e) {
-          console.error('Electron IPC init-game failed, falling back to worker:', e);
-        }
-      }
-      
-      // Fallback to Web Worker
-      const handler = (e: MessageEvent) => {
-        if (e.data.type === 'INIT_RESULT') {
-          const gameState = e.data.payload as GameState;
-          saveGame(0, gameState);
-          set({ 
-            gameState,
-            finance: gameState.finance,
-            news: gameState.news
-          });
-          engineWorker.removeEventListener('message', handler);
-          resolve();
-        }
-      };
-      engineWorker.addEventListener('message', handler);
-      engineWorker.postMessage({ type: 'INIT_GAME', payload: { studioName, archetype, seed } });
+        };
+        engineWorker.addEventListener('message', handler);
+        engineWorker.postMessage({ type: 'INIT_GAME', payload: { studioName, archetype, seed } });
+      });
     });
   },
 
-  doAdvanceWeek: async () => {
+  doAdvanceWeek: () => {
     if (get()._isProcessingTick) {
-        return null;
+        return Promise.resolve(null);
     }
 
     const state = get().gameState;
-    if (!state) throw new Error('No game in progress');
+    if (!state) return Promise.reject(new Error('No game in progress'));
 
     set({ _isProcessingTick: true });
 
-    return new Promise<WeekSummary | null>(async (resolve, reject) => {
-      if (isElectron && window.electronAPI) {
-        // Try to use Electron IPC
-        try {
-          const result = await window.electronAPI.advanceWeek(state);
-          if (result) {
-            const { newState: nextState, summary, impacts } = result;
-            const finalState = nextState as GameState;
-
-            triggerSave(finalState);
-            
-            set({ 
-              gameState: finalState,
-              finance: finalState.finance,
-              news: finalState.news,
-              _isProcessingTick: false
-            });
-
-            processModals(impacts);
-
-            if (summary && (summary as WeekSummary).fromWeek % 52 === 0 && (summary as WeekSummary).fromWeek > 0) {
-              get().captureSnapshot();
-            }
-
-            resolve(summary as WeekSummary);
-            return;
-          }
-        } catch (e) {
-          console.error('Electron IPC advance-week failed, falling back to worker:', e);
-        }
-      }
-      
-      // Fallback to Web Worker
-      const handler = async (e: MessageEvent) => {
-        if (e.data.type === 'ADVANCE_RESULT') {
+    return new Promise<WeekSummary | null>((resolve, reject) => {
+      const advanceElectron = async () => {
+        if (isElectron && window.electronAPI) {
           try {
-            const { newState: nextState, summary, impacts } = e.data.payload;
-            const finalState = nextState as GameState;
+            const result = await window.electronAPI.advanceWeek(state);
+            if (result) {
+              const { newState: nextState, summary, impacts } = result as { newState: GameState, summary: WeekSummary, impacts: Impact[] };
+              const finalState = nextState;
 
-            triggerSave(finalState);
-            
-            set({ 
-              gameState: finalState,
-              finance: finalState.finance,
-              news: finalState.news,
-              _isProcessingTick: false
-            });
+              triggerSave(finalState);
+              
+              set({ 
+                gameState: finalState,
+                finance: finalState.finance,
+                news: finalState.news,
+                _isProcessingTick: false
+              });
 
-            processModals(impacts);
+              processModals(impacts);
 
-            if (summary && (summary as WeekSummary).fromWeek % 52 === 0 && (summary as WeekSummary).fromWeek > 0) {
-              get().captureSnapshot();
+              if (summary && summary.fromWeek % 52 === 0 && summary.fromWeek > 0) {
+                get().captureSnapshot();
+              }
+
+              resolve(summary);
+              return true;
             }
-
-            engineWorker.removeEventListener('message', handler);
-            resolve(summary as WeekSummary);
-          } catch (err) {
-            set({ _isProcessingTick: false });
-            engineWorker.removeEventListener('message', handler);
-            reject(err);
+          } catch (e) {
+            console.error('Electron IPC advance-week failed, falling back to worker:', e);
           }
         }
+        return false;
       };
-      
-      engineWorker.addEventListener('message', handler);
-      engineWorker.postMessage({ type: 'ADVANCE_WEEK', payload: { state } });
+
+      advanceElectron().then((success) => {
+        if (success) return;
+
+        // Fallback to Web Worker
+        const handler = async (e: MessageEvent) => {
+          if (e.data.type === 'ADVANCE_RESULT') {
+            try {
+              const { newState: nextState, summary, impacts } = e.data.payload;
+              const finalState = nextState as GameState;
+
+              triggerSave(finalState);
+              
+              set({ 
+                gameState: finalState,
+                finance: finalState.finance,
+                news: finalState.news,
+                _isProcessingTick: false
+              });
+
+              processModals(impacts);
+
+              if (summary && (summary as WeekSummary).fromWeek % 52 === 0 && (summary as WeekSummary).fromWeek > 0) {
+                get().captureSnapshot();
+              }
+
+              engineWorker.removeEventListener('message', handler);
+              resolve(summary as WeekSummary);
+            } catch (err) {
+              set({ _isProcessingTick: false });
+              engineWorker.removeEventListener('message', handler);
+              reject(err);
+            }
+          }
+        };
+        
+        engineWorker.addEventListener('message', handler);
+        engineWorker.postMessage({ type: 'ADVANCE_WEEK', payload: { state } });
+      });
     });
   },
 

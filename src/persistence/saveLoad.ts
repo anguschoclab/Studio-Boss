@@ -5,7 +5,6 @@ import { GameState, SaveSlotMeta } from '@/engine/types';
  * This bridges the UI/Store to Electron file system via IPC.
  */
 
-// Type declaration for electronAPI
 declare global {
   interface Window {
     electronAPI?: {
@@ -16,16 +15,16 @@ declare global {
       exportSave: (slot: number) => Promise<boolean>;
       importSave: () => Promise<GameState | null>;
       store: {
-        get: (key: string) => Promise<any>;
-        set: (key: string, value: any) => Promise<boolean>;
+        get: (key: string) => Promise<unknown>;
+        set: (key: string, value: unknown) => Promise<boolean>;
         delete: (key: string) => Promise<boolean>;
       };
-      showNotification: (options: any) => Promise<boolean>;
+      showNotification: (options: { title: string; body: string }) => Promise<boolean>;
       minimizeWindow: () => void;
       maximizeWindow: () => void;
       closeWindow: () => void;
-      initGame: (studioName: string, archetype: string, seed: number) => Promise<any>;
-      advanceWeek: (state: GameState) => Promise<any>;
+      initGame: (studioName: string, archetype: string, seed: number) => Promise<unknown>;
+      advanceWeek: (state: GameState) => Promise<unknown>;
       getVersion: () => Promise<string>;
       getPlatform: () => Promise<string>;
     };

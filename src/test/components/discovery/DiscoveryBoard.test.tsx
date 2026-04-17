@@ -22,7 +22,7 @@ describe('DiscoveryBoard', () => {
     vi.clearAllMocks();
     vi.mocked(useUIStore).mockReturnValue({
       openCreateProject: mockOpenCreateProject,
-    } as any);
+    } as unknown as ReturnType<typeof useUIStore>);
   });
 
   const getBaseGameState = (opportunities: Opportunity[] = []) => ({
@@ -37,7 +37,7 @@ describe('DiscoveryBoard', () => {
     useGameStore.setState({
       gameState,
       finance: gameState.finance,
-    } as any);
+    } as unknown as Parameters<typeof useGameStore.setState>[0]);
 
     render(<TooltipProvider><DiscoveryBoard /></TooltipProvider>);
 
@@ -50,7 +50,7 @@ describe('DiscoveryBoard', () => {
     useGameStore.setState({
       gameState,
       finance: gameState.finance,
-    } as any);
+    } as unknown as Parameters<typeof useGameStore.setState>[0]);
 
     render(<TooltipProvider><DiscoveryBoard /></TooltipProvider>);
 
@@ -85,7 +85,7 @@ describe('DiscoveryBoard', () => {
     useGameStore.setState({
       gameState,
       finance: gameState.finance,
-    } as any);
+    } as unknown as Parameters<typeof useGameStore.setState>[0]);
 
     render(<TooltipProvider><DiscoveryBoard /></TooltipProvider>);
 
@@ -119,7 +119,7 @@ describe('DiscoveryBoard', () => {
     useGameStore.setState({
       gameState,
       finance: gameState.finance,
-    } as any);
+    } as unknown as Parameters<typeof useGameStore.setState>[0]);
 
     render(<TooltipProvider><DiscoveryBoard /></TooltipProvider>);
 

@@ -1,25 +1,22 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { CreatePackageModal } from '@/components/modals/CreatePackageModal';
-import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 // Mock the Dialog components to render content directly in tests
 vi.mock('@/components/ui/dialog', () => ({
-  Dialog: ({ children }: any) => <div data-testid="dialog">{children}</div>,
-  DialogContent: ({ children }: any) => <div data-testid="dialog-content">{children}</div>,
-  DialogHeader: ({ children }: any) => <div data-testid="dialog-header">{children}</div>,
-  DialogTitle: ({ children }: any) => <h2 data-testid="dialog-title">{children}</h2>,
-  DialogDescription: ({ children }: any) => <p data-testid="dialog-description">{children}</p>,
-  DialogFooter: ({ children }: any) => <div data-testid="dialog-footer">{children}</div>,
+  Dialog: ({ children }: { children: React.ReactNode }) => <div data-testid="dialog">{children}</div>,
+  DialogContent: ({ children }: { children: React.ReactNode }) => <div data-testid="dialog-content">{children}</div>,
+  DialogHeader: ({ children }: { children: React.ReactNode }) => <div data-testid="dialog-header">{children}</div>,
+  DialogTitle: ({ children }: { children: React.ReactNode }) => <h2 data-testid="dialog-title">{children}</h2>,
+  DialogDescription: ({ children }: { children: React.ReactNode }) => <p data-testid="dialog-description">{children}</p>,
+  DialogFooter: ({ children }: { children: React.ReactNode }) => <div data-testid="dialog-footer">{children}</div>,
 }));
 
 // Mock the Select components to render content directly in tests
 // Mock the Select components to render content directly in tests
 vi.mock('@/components/ui/select', () => ({
-  Select: ({ children, value, onValueChange, 'aria-label': ariaLabel }: any) => (
+  Select: ({ children, value, onValueChange, 'aria-label': ariaLabel }: { children: React.ReactNode, value: string, onValueChange: (v: string) => void, 'aria-label'?: string }) => (
     <select 
       data-testid={ariaLabel || 'select'} 
       value={value} 
@@ -28,10 +25,10 @@ vi.mock('@/components/ui/select', () => ({
       {children}
     </select>
   ),
-  SelectTrigger: ({ children }: any) => <>{children}</>,
+  SelectTrigger: ({ children }: { children: React.ReactNode }) => <>{children}</>,
   SelectValue: () => null,
-  SelectContent: ({ children }: any) => <>{children}</>,
-  SelectItem: ({ children, value }: any) => (
+  SelectContent: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  SelectItem: ({ children, value }: { children: React.ReactNode, value: string }) => (
     <option value={value} data-testid={`select-item-${value}`}>
       {children}
     </option>
@@ -49,9 +46,9 @@ describe('CreatePackageModal', () => {
 
   it('should render the modal with agency selection', () => {
     const mockResolveCurrentModal = vi.fn();
-    (useUIStore as any).mockReturnValue({
+    vi.mocked(useUIStore).mockReturnValue({
       resolveCurrentModal: mockResolveCurrentModal,
-    });
+    } as unknown as ReturnType<typeof useUIStore>);
 
     const mockAgencies = [
       { id: 'agency-1', name: 'CAA', leverage: 80, archetype: 'major' },
@@ -75,7 +72,7 @@ describe('CreatePackageModal', () => {
       },
     };
 
-    render(<CreatePackageModal agencies={mockAgencies as any} talents={mockTalents as any} />);
+    render(<CreatePackageModal agencies={mockAgencies as any[]} talents={mockTalents as any} />);
 
     expect(screen.getByText('Create Talent Package')).toBeInTheDocument();
     expect(screen.getByText('Assemble a talent package to offer to agencies')).toBeInTheDocument();
@@ -84,9 +81,9 @@ describe('CreatePackageModal', () => {
 
   it('should disable create button when no agency or talent selected', () => {
     const mockResolveCurrentModal = vi.fn();
-    (useUIStore as any).mockReturnValue({
+    vi.mocked(useUIStore).mockReturnValue({
       resolveCurrentModal: mockResolveCurrentModal,
-    });
+    } as unknown as ReturnType<typeof useUIStore>);
 
     render(<CreatePackageModal agencies={[]} talents={{}} />);
 
@@ -96,9 +93,9 @@ describe('CreatePackageModal', () => {
 
   it('should enable create button when agency and talent selected', () => {
     const mockResolveCurrentModal = vi.fn();
-    (useUIStore as any).mockReturnValue({
+    vi.mocked(useUIStore).mockReturnValue({
       resolveCurrentModal: mockResolveCurrentModal,
-    });
+    } as unknown as ReturnType<typeof useUIStore>);
 
     const mockAgencies = [{ id: 'agency-1', name: 'CAA', leverage: 80, archetype: 'major' }];
     const mockTalents = {
@@ -111,7 +108,7 @@ describe('CreatePackageModal', () => {
       },
     };
 
-    render(<CreatePackageModal agencies={mockAgencies as any} talents={mockTalents as any} />);
+    render(<CreatePackageModal agencies={mockAgencies as any[]} talents={mockTalents as any} />);
 
     // Select agency - click the first select trigger (agency selection)
     const selects = screen.getAllByRole('combobox');
@@ -127,9 +124,9 @@ describe('CreatePackageModal', () => {
 
   it('should close modal when cancel button clicked', () => {
     const mockResolveCurrentModal = vi.fn();
-    (useUIStore as any).mockReturnValue({
+    vi.mocked(useUIStore).mockReturnValue({
       resolveCurrentModal: mockResolveCurrentModal,
-    });
+    } as unknown as ReturnType<typeof useUIStore>);
 
     render(<CreatePackageModal agencies={[]} talents={{}} />);
 
@@ -141,9 +138,9 @@ describe('CreatePackageModal', () => {
 
   it('should close modal when create button clicked', () => {
     const mockResolveCurrentModal = vi.fn();
-    (useUIStore as any).mockReturnValue({
+    vi.mocked(useUIStore).mockReturnValue({
       resolveCurrentModal: mockResolveCurrentModal,
-    });
+    } as unknown as ReturnType<typeof useUIStore>);
 
     const mockAgencies = [{ id: 'agency-1', name: 'CAA', leverage: 80, archetype: 'major' }];
     const mockTalents = {
@@ -156,7 +153,7 @@ describe('CreatePackageModal', () => {
       },
     };
 
-    render(<CreatePackageModal agencies={mockAgencies as any} talents={mockTalents as any} />);
+    render(<CreatePackageModal agencies={mockAgencies as any[]} talents={mockTalents as any} />);
 
     // Select agency - click the first select trigger (agency selection)
     const selects = screen.getAllByRole('combobox');
@@ -174,9 +171,9 @@ describe('CreatePackageModal', () => {
 
   it('should limit talent selection to 5', () => {
     const mockResolveCurrentModal = vi.fn();
-    (useUIStore as any).mockReturnValue({
+    vi.mocked(useUIStore).mockReturnValue({
       resolveCurrentModal: mockResolveCurrentModal,
-    });
+    } as unknown as ReturnType<typeof useUIStore>);
 
     const mockAgencies = [{ id: 'agency-1', name: 'CAA', leverage: 80, archetype: 'major' }];
     const mockTalents = {

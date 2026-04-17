@@ -29,29 +29,8 @@ export const CreatePackageModal = ({ agencies: propAgencies, talents: propTalent
       return;
     }
 
-    // Create package opportunity with all required fields
-    const newPackage: Opportunity = {
-      id: `pkg-${Date.now()}`,
-      type: 'package' as any,
-      title: `${selectedAgency} Talent Package`,
-      format: 'film' as ProjectFormat,
-      genre: 'Drama',
-      budgetTier: selectedTier as BudgetTierKey,
-      targetAudience: 'General',
-      flavor: `Custom talent package from ${selectedAgency}`,
-      origin: 'agency_package' as any,
-      costToAcquire: selectedTier === 'high' ? 5000000 : selectedTier === 'mid' ? 2500000 : 1000000,
-      weeksUntilExpiry: 12,
-      attachedTalentIds: selectedTalents,
-      qualityBonus: selectedTier === 'high' ? 15 : selectedTier === 'mid' ? 10 : 5,
-      bids: {},
-      bidHistory: [],
-      expirationWeek: gameState ? gameState.week + 12 : 12,
-    };
-
-    // Add to game state (this would need a proper store action)
-    // For now, just close the modal
-    resolveCurrentModal();
+      // For now, just close the modal
+      resolveCurrentModal();
   };
 
   const handleToggleTalent = (talentId: string) => {

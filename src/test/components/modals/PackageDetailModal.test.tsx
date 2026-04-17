@@ -3,16 +3,16 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { PackageDetailModal } from '@/components/modals/PackageDetailModal';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { useUIStore } from '@/store/uiStore';
 
 // Mock the Dialog components to render content directly in tests
 vi.mock('@/components/ui/dialog', () => ({
-  Dialog: ({ children }: any) => <div data-testid="dialog">{children}</div>,
-  DialogContent: ({ children }: any) => <div data-testid="dialog-content">{children}</div>,
-  DialogHeader: ({ children }: any) => <div data-testid="dialog-header">{children}</div>,
-  DialogTitle: ({ children }: any) => <h2 data-testid="dialog-title">{children}</h2>,
-  DialogDescription: ({ children }: any) => <p data-testid="dialog-description">{children}</p>,
-  DialogFooter: ({ children }: any) => <div data-testid="dialog-footer">{children}</div>,
+  Dialog: ({ children }: { children: React.ReactNode }) => <div data-testid="dialog">{children}</div>,
+  DialogContent: ({ children }: { children: React.ReactNode }) => <div data-testid="dialog-content">{children}</div>,
+  DialogHeader: ({ children }: { children: React.ReactNode }) => <div data-testid="dialog-header">{children}</div>,
+  DialogTitle: ({ children }: { children: React.ReactNode }) => <h2 data-testid="dialog-title">{children}</h2>,
+  DialogDescription: ({ children }: { children: React.ReactNode }) => <p data-testid="dialog-description">{children}</p>,
+  DialogFooter: ({ children }: { children: React.ReactNode }) => <div data-testid="dialog-footer">{children}</div>,
 }));
 
 // Mock the stores
@@ -26,12 +26,12 @@ describe('PackageDetailModal', () => {
 
   it('should render null when no package data exists', () => {
     const mockResolveCurrentModal = vi.fn();
-    (useUIStore as any).mockReturnValue({
+    vi.mocked(useUIStore).mockReturnValue({
       resolveCurrentModal: mockResolveCurrentModal,
       activeModal: null,
     });
 
-    (useGameStore as any).mockImplementation((selector: any) => {
+    vi.mocked(useGameStore).mockImplementation((selector: any) => {
       const state = {
         gameState: {
           market: {
@@ -51,7 +51,7 @@ describe('PackageDetailModal', () => {
 
   it('should render modal with package details', () => {
     const mockResolveCurrentModal = vi.fn();
-    (useUIStore as any).mockReturnValue({
+    vi.mocked(useUIStore).mockReturnValue({
       resolveCurrentModal: mockResolveCurrentModal,
       activeModal: { payload: { packageId: 'pkg-1' } },
     });
@@ -83,7 +83,7 @@ describe('PackageDetailModal', () => {
       },
     };
 
-    (useGameStore as any).mockImplementation((selector: any) => {
+    vi.mocked(useGameStore).mockImplementation((selector: any) => {
       const state = {
         gameState: {
           market: {
@@ -109,7 +109,7 @@ describe('PackageDetailModal', () => {
 
   it('should display attached talent', () => {
     const mockResolveCurrentModal = vi.fn();
-    (useUIStore as any).mockReturnValue({
+    vi.mocked(useUIStore).mockReturnValue({
       resolveCurrentModal: mockResolveCurrentModal,
       activeModal: { payload: { packageId: 'pkg-1' } },
     });
@@ -136,7 +136,7 @@ describe('PackageDetailModal', () => {
       },
     };
 
-    (useGameStore as any).mockImplementation((selector: any) => {
+    vi.mocked(useGameStore).mockImplementation((selector: any) => {
       const state = {
         gameState: {
           market: {
@@ -158,7 +158,7 @@ describe('PackageDetailModal', () => {
 
   it('should display bid history when available', () => {
     const mockResolveCurrentModal = vi.fn();
-    (useUIStore as any).mockReturnValue({
+    vi.mocked(useUIStore).mockReturnValue({
       resolveCurrentModal: mockResolveCurrentModal,
       activeModal: { payload: { packageId: 'pkg-1' } },
     });
@@ -180,7 +180,7 @@ describe('PackageDetailModal', () => {
       ],
     };
 
-    (useGameStore as any).mockImplementation((selector: any) => {
+    vi.mocked(useGameStore).mockImplementation((selector: any) => {
       const state = {
         gameState: {
           market: {
@@ -203,7 +203,7 @@ describe('PackageDetailModal', () => {
 
   it('should close modal when cancel button clicked', () => {
     const mockResolveCurrentModal = vi.fn();
-    (useUIStore as any).mockReturnValue({
+    vi.mocked(useUIStore).mockReturnValue({
       resolveCurrentModal: mockResolveCurrentModal,
       activeModal: { payload: { packageId: 'pkg-1' } },
     });
@@ -222,7 +222,7 @@ describe('PackageDetailModal', () => {
       bidHistory: [],
     };
 
-    (useGameStore as any).mockImplementation((selector: any) => {
+    vi.mocked(useGameStore).mockImplementation((selector: any) => {
       const state = {
         gameState: {
           market: {
@@ -246,7 +246,7 @@ describe('PackageDetailModal', () => {
 
   it('should disable bid button when bid amount is 0', () => {
     const mockResolveCurrentModal = vi.fn();
-    (useUIStore as any).mockReturnValue({
+    vi.mocked(useUIStore).mockReturnValue({
       resolveCurrentModal: mockResolveCurrentModal,
       activeModal: { payload: { packageId: 'pkg-1' } },
     });
@@ -265,7 +265,7 @@ describe('PackageDetailModal', () => {
       bidHistory: [],
     };
 
-    (useGameStore as any).mockImplementation((selector: any) => {
+    vi.mocked(useGameStore).mockImplementation((selector: any) => {
       const state = {
         gameState: {
           market: {
@@ -287,7 +287,7 @@ describe('PackageDetailModal', () => {
 
   it('should enable bid button when bid amount is set', () => {
     const mockResolveCurrentModal = vi.fn();
-    (useUIStore as any).mockReturnValue({
+    vi.mocked(useUIStore).mockReturnValue({
       resolveCurrentModal: mockResolveCurrentModal,
       activeModal: { payload: { packageId: 'pkg-1' } },
     });
@@ -306,7 +306,7 @@ describe('PackageDetailModal', () => {
       bidHistory: [],
     };
 
-    (useGameStore as any).mockImplementation((selector: any) => {
+    vi.mocked(useGameStore).mockImplementation((selector: any) => {
       const state = {
         gameState: {
           market: {
@@ -331,7 +331,7 @@ describe('PackageDetailModal', () => {
 
   it('should set bid amount to min +10% when button clicked', () => {
     const mockResolveCurrentModal = vi.fn();
-    (useUIStore as any).mockReturnValue({
+    vi.mocked(useUIStore).mockReturnValue({
       resolveCurrentModal: mockResolveCurrentModal,
       activeModal: { payload: { packageId: 'pkg-1' } },
     });
@@ -350,7 +350,7 @@ describe('PackageDetailModal', () => {
       bidHistory: [],
     };
 
-    (useGameStore as any).mockImplementation((selector: any) => {
+    vi.mocked(useGameStore).mockImplementation((selector: any) => {
       const state = {
         gameState: {
           market: {

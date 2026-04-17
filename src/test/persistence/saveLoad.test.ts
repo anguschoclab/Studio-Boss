@@ -18,21 +18,21 @@ describe("saveLoad", () => {
   });
 
   it("returns null when loading an empty slot", async () => {
-    (persistenceService.load as any).mockResolvedValue(null);
+    vi.mocked(persistenceService.load).mockResolvedValue(null);
     const result = await loadGame(1);
     expect(result).toBeNull();
   });
 
   it("handles malformed or missing save data from persistence service", async () => {
-    (persistenceService.load as any).mockRejectedValue(new Error("Disk Error"));
+    vi.mocked(persistenceService.load).mockRejectedValue(new Error("Disk Error"));
     const result = await loadGame(1);
     expect(result).toBeNull();
   });
 
   it("saves and loads game state correctly", async () => {
     const mockState = initializeGame("Save Studio", "major", 42);
-    (persistenceService.save as any).mockResolvedValue(true);
-    (persistenceService.load as any).mockResolvedValue(mockState);
+    vi.mocked(persistenceService.save).mockResolvedValue(true);
+    vi.mocked(persistenceService.load).mockResolvedValue(mockState);
 
     await saveGame(0, mockState);
     expect(persistenceService.save).toHaveBeenCalledWith(0, mockState);
@@ -46,7 +46,7 @@ describe("saveLoad", () => {
     const mockState = initializeGame("Save Studio", "major", 42);
     
     // Setup: Slot 1 exists, Slot 0 and 2 do not
-    (persistenceService.load as any).mockImplementation(async (slot: number) => {
+    vi.mocked(persistenceService.load).mockImplementation(async (slot: number) => {
         if (slot === 1) return mockState;
         return null;
     });
@@ -62,7 +62,7 @@ describe("saveLoad", () => {
 
   it("logs errors when save fails", async () => {
     const mockState = initializeGame("Error Studio", "indie", 42);
-    (persistenceService.save as any).mockRejectedValue(new Error("Write failure"));
+    vi.mocked(persistenceService.save).mockRejectedValue(new Error("Write failure"));
     
     const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     
