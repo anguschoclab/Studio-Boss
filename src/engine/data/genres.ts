@@ -128,7 +128,7 @@ export const CROSSOVER_AFFINITY: Record<string, string[]> = {
   'Multiverse': ['Superhero', 'Sci-Fi', 'Fantasy', 'Action', 'Animation', 'IP Mashup'],
   'Elevated Horror': ['Horror', 'Thriller', 'Drama', 'Psychological Thriller'],
   'IP Mashup': ['Comedy', 'Action', 'Animation', 'Superhero', 'Multiverse', 'Sci-Fi', 'Video Game Adaptation'],
-  'Legacy Sequel': ['Action', 'Sci-Fi', 'Horror', 'Comedy', 'Drama'],
+  'Legacy Sequel': ['Action', 'Sci-Fi', 'Horror', 'Comedy', 'Drama', 'Superhero', 'Fantasy', 'Animation'], // 🌌 The Universe Builder: Added Superhero, Fantasy, Animation for more massive cross-over potential
   // 🌌 The Universe Builder: Live-Action Remakes lean more into pure Action and Drama to justify the medium shift.
   'Live-Action Remake': ['Animation', 'Fantasy', 'Family', 'Musical', 'Action', 'Drama', 'Multiverse', 'Anime', 'Superhero', 'IP Mashup'], // 🌌 The Universe Builder: Added Multiverse, Anime, Superhero, IP Mashup.
   'Video Game Adaptation': ['Action', 'Sci-Fi', 'Fantasy', 'Animation', 'Horror', 'IP Mashup', 'Comedy', 'Crime', 'Drama', 'Thriller'], // 🌌 The Universe Builder: Added Comedy, Crime, Drama, Thriller crossover affinity...
@@ -145,7 +145,7 @@ export const CROSSOVER_AFFINITY: Record<string, string[]> = {
 };
 
 export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
-  'Superhero': 1.70, // 🌌 The Universe Builder: Increased superhero fatigue to represent severe modern burnout.
+  'Superhero': 1.85, // 🌌 The Universe Builder: Increased superhero fatigue further to represent severe modern burnout and franchise exhaustion.
   'Action': 0.50,
   'Sci-Fi': 0.45,
   'Fantasy': 0.30,
@@ -170,9 +170,9 @@ export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
   // 🌌 The Universe Builder: Added true crime and docuseries fatigue risks.
   'Psychological Thriller': 0.35,
   'True Crime': 0.60,
-  'Docuseries': 0.20,
+  'Docuseries': 0.35, // 🌌 The Universe Builder: Increased fatigue for Docuseries to account for true crime oversaturation
   // 🌌 The Universe Builder: Modern trends fatigue risks.
   'Anime': 0.10, // very low fatigue due to dedicated fanbase
   'Adult Animation': 0.15,
-  'Reality Competition': 0.55, // burns out fast
+  'Reality Competition': 0.70, // 🌌 The Universe Builder: Reality Competition burns out extremely fast if over-mined
 };

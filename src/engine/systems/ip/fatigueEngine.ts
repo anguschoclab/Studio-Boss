@@ -87,6 +87,11 @@ export function calculateFranchiseFatigue(
     currentFatigue *= 3.0;
   }
 
+  // 🌌 The Universe Builder: Forced IP Retention (Rebooting Dead Franchises)
+  if (activeCount >= 2 && franchise.relevanceScore < 40) {
+    currentFatigue *= 3.5;
+  }
+
   // 🌌 The Universe Builder: Streaming Spin-Off Dilution.
   if (activeCount >= 4 && franchise.audienceLoyalty < 75) {
     currentFatigue *= 1.8;

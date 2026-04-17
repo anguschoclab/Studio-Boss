@@ -113,6 +113,13 @@ export function calculateFranchiseEquity(
     crossoverBonus += 0.30;
   }
 
+  // 🌌 The Universe Builder: High-Loyalty Revival Bonus.
+  // Massive synergy when a beloved dormant IP gets a highly anticipated revival crossover.
+  if (franchise.audienceLoyalty > 80 && franchise.lastReleaseWeeks.length > 0) {
+    // Pure loyalty-based revival synergy without complex gap tracking in this scope
+    crossoverBonus += 0.30;
+  }
+
   // 🌌 The Universe Builder: Transmedia Universe Event synergy bonus.
   if (assets.length >= 6 && genres.some(g => g === 'Superhero' || g === 'Video Game Adaptation')) {
     crossoverBonus += 0.40;
