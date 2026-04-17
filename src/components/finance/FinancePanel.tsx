@@ -1,5 +1,6 @@
 import { calculateWeeklyCosts, calculateWeeklyRevenue, calculateStudioNetWorth, generateCashflowForecast } from '@/engine/systems/finance';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Area, XAxis, YAxis, Tooltip, ResponsiveContainer, ComposedChart, Line } from 'recharts';
 import { YearInReviewChart } from '@/components/finance/YearInReviewChart';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -32,7 +33,7 @@ export const FinancePanel = () => {
   const projectsMemo = useGameStore(useShallow(s => s.gameState ? selectProjects(s.gameState) : EMPTY_PROJECTS));
   
   // Data Shedding: Use TanStack Query for historical data
-  const { data: financeHistory = EMPTY_HISTORY } = useFinanceHistory();
+  const financeHistory = useFinanceHistory() ?? EMPTY_HISTORY;
 
   // Need entire gameState for complex calculations like Net Worth and Forecasts
   // ⚡ The Framerate Fanatic: Moved complex calculations inside the Zustand selector with useShallow to prevent React from re-rendering unless the final computed numbers actually change.
@@ -68,7 +69,7 @@ export const FinancePanel = () => {
     if (!financeHistory || financeHistory.length === 0) return [];
     
     // Convert snapshots to chart format
-    const history = financeHistory.map(h => ({
+    const history = financeHistory.map((h: any) => ({
       week: h.week,
       isForecast: false,
       histCash: h.cash,
