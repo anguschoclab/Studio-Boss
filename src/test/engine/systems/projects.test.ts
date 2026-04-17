@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
-import { advanceProject, handleReleasePhaseEntry, executeMarketing, executeGreenlight, executePitching } from "../../../engine/systems/projects";
+import { advanceProject, handleReleasePhaseEntry, executeGreenlight, executePitching } from "../../../engine/systems/projects";
+import { executeMarketing } from "../../../engine/systems/projectHandlers";
 import { Project, Talent, Contract } from "../../../engine/types";
 import { RandomGenerator } from "../../../engine/utils/rng";
 import { createMockProject, createMockTalent, createMockContract } from "../../utils/mockFactories";

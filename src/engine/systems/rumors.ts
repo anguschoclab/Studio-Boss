@@ -44,7 +44,7 @@ export function advanceRumors(state: GameState, rng: RandomGenerator): StateImpa
   if (rng.next() < baseRumorChance && currentRumors.filter(r => !r.resolved).length < maxActiveRumors) {
     const isTrue = rng.next() < 0.6;
     const subjects: RumorCategory[] = ['talent', 'rival', 'project'];
-    const category = pick(subjects, rng);
+    let category = pick(subjects, rng);
     
     let text = '';
     
@@ -60,25 +60,35 @@ export function advanceRumors(state: GameState, rng: RandomGenerator): StateImpa
       });
     } else if (category === 'rival') {
       const rival = pick(Object.values(state.entities.rivals || {}), rng);
-      text = BardResolver.resolve({
-        domain: 'Industry',
-        subDomain: 'Rumor',
-        intensity: rng.range(0, 100),
-        tone: 'Tabloid',
-        context: { actor: rival.name },
-        rng
-      });
+      if (!rival) {
+        category = 'market';
+      } else {
+        text = BardResolver.resolve({
+          domain: 'Industry',
+          subDomain: 'Rumor',
+          intensity: rng.range(0, 100),
+          tone: 'Tabloid',
+          context: { actor: rival.name },
+          rng
+        });
+      }
     } else if (category === 'project' && Object.keys(state.entities.projects).length > 0) {
       const project = pick(Object.values(state.entities.projects), rng);
-      text = BardResolver.resolve({
-        domain: 'Industry',
-        subDomain: 'Rumor',
-        intensity: rng.range(0, 100),
-        tone: 'Trade',
-        context: { project: project.title },
-        rng
-      });
-    } else {
+      if (!project) {
+        category = 'market';
+      } else {
+        text = BardResolver.resolve({
+          domain: 'Industry',
+          subDomain: 'Rumor',
+          intensity: rng.range(0, 100),
+          tone: 'Trade',
+          context: { project: project.title },
+          rng
+        });
+      }
+    }
+    
+    if (!text) {
       text = 'Unnamed studio in talks for a massive merger.';
     }
     
