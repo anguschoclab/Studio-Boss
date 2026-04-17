@@ -50,3 +50,17 @@ Campaigns cannot run indefinitely without the audience losing interest.
 - The current multiplier is multiplied by this `decay` value.
 
 The final efficiency multiplier is clamped to a minimum of `0.1`.
+
+## Future Implementation & Design Deviations
+
+While the current implementation covers the fundamental 'Angle Match' mechanic, it deviates slightly from the specifications laid out in the Master Design Bible (Section 36.39.2):
+
+- **Secondary Messaging Strategies:** The design bible specifies selecting both a *primary* and *secondary* messaging strategy. The current implementation only tracks a single `primaryAngle`.
+- **Extended Angle List:** The design bible calls for a wider variety of specific angles, including:
+  - 'sell the scares'
+  - 'sell the romance'
+  - 'sell the world / mythology'
+  - 'sell the true-story hook'
+  - 'sell the music'
+  - 'broad four-quadrant marketing'
+  These remain to be implemented in a future update to provide deeper strategic choice.
