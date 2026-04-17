@@ -541,7 +541,6 @@ export const ProjectDetailModal = () => {
                            )}
                         </div>
                       </div>
-                    </div>
 
                     <div className="bg-slate-900/40 border border-slate-800 p-6 rounded-2xl space-y-6 flex flex-col justify-between">
                       <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
