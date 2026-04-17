@@ -5,7 +5,7 @@ import { AgencyLeverageEngine } from '../AgencyLeverage';
 const ArchetypeMultipliers: Record<ArchetypeKey, (genre: string) => number> = {
   'indie': (genre) => (genre === 'Drama' || genre === 'Horror' ? 1.4 : 0.8),
   'major': (genre) => (genre === 'Sci-Fi' || genre === 'Action' ? 1.6 : 0.6),
-  'mid-tier': (genre) => 1.15, 
+  'mid-tier': () => 1.15,
 };
 
 export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpact[] {

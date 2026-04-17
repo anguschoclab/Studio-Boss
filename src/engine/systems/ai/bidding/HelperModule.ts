@@ -4,7 +4,7 @@ import { RandomGenerator } from '../../../utils/rng';
 const ArchetypeMultipliers: Record<ArchetypeKey, (genre: string) => number> = {
   'indie': (genre) => (genre === 'Drama' || genre === 'Horror' ? 1.4 : 0.8),
   'major': (genre) => (genre === 'Sci-Fi' || genre === 'Action' ? 1.6 : 0.6),
-  'mid-tier': (genre) => 1.15, 
+  'mid-tier': () => 1.15,
 };
 
 export function calculateLiveCounterBid(
@@ -12,7 +12,8 @@ export function calculateLiveCounterBid(
   playerBid: number,
   rival: RivalStudio,
   rng: RandomGenerator,
-  week: number
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _week: number
 ): StateImpact | null {
   if (rival.cash < playerBid * 2 || rival.prestige < 60) return null;
 
