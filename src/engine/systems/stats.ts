@@ -3,8 +3,8 @@ import { TV_FORMATS } from '@/engine/data/tvFormats';
 import { UNSCRIPTED_FORMATS } from '@/engine/data/unscriptedFormats';
 
 export function getFilmStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS]) {
-  // The Studio Comptroller: Further increased risk multipliers for high-budget films to make tentpoles genuinely risky while maintaining stakes.
-  const riskMultiplier = tier.budget >= 200_000_000 ? 6.0 : tier.budget >= 100_000_000 ? 2.5 : tier.budget >= 50_000_000 ? 1.5 : 1.0;
+  // The Studio Comptroller: Further increased risk multipliers for high-budget films to make tentpoles genuinely risky while maintaining stakes (adjusted to match specific 200M/80M/30M tiers).
+  const riskMultiplier = tier.budget >= 200_000_000 ? 8.0 : tier.budget >= 80_000_000 ? 3.0 : tier.budget >= 30_000_000 ? 1.8 : 1.0;
 
   return {
     budget: tier.budget,
@@ -16,8 +16,8 @@ export function getFilmStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS
 }
 
 export function getTvStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS], tvFormatData: typeof TV_FORMATS[keyof typeof TV_FORMATS], episodes: number) {
-  // The Studio Comptroller: Increased TV scaling to add more risk to prestige and blockbuster television.
-  const scaleMultiplier = tier.budget >= 150_000_000 ? 4.0 : tier.budget >= 100_000_000 ? 2.0 : tier.budget >= 50_000_000 ? 1.5 : 1.0;
+  // The Studio Comptroller: Increased TV scaling to add more risk to prestige and blockbuster television (adjusted to match specific 200M/80M/30M tiers).
+  const scaleMultiplier = tier.budget >= 200_000_000 ? 5.0 : tier.budget >= 80_000_000 ? 2.5 : tier.budget >= 30_000_000 ? 1.8 : 1.0;
   const weeklyCost = tier.weeklyCost * tvFormatData.productionCostMultiplier * scaleMultiplier;
   const productionWeeks = Math.ceil(episodes * tvFormatData.productionWeeksPerEpisode * scaleMultiplier);
 
@@ -33,8 +33,8 @@ export function getTvStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS],
 
 
 export function getUnscriptedStats(tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS], unscriptedFormatData: typeof UNSCRIPTED_FORMATS[keyof typeof UNSCRIPTED_FORMATS], episodes: number) {
-  // The Studio Comptroller: Increased scale multiplier for large unscripted formats to reflect bloated modern reality TV costs.
-  const scaleMultiplier = tier.budget >= 100_000_000 ? 2.5 : tier.budget >= 50_000_000 ? 1.5 : 1.0;
+  // The Studio Comptroller: Increased scale multiplier for large unscripted formats to reflect bloated modern reality TV costs (adjusted to match specific 80M/30M tiers).
+  const scaleMultiplier = tier.budget >= 80_000_000 ? 3.0 : tier.budget >= 30_000_000 ? 1.8 : 1.0;
   const weeklyCost = tier.weeklyCost * unscriptedFormatData.productionCostMultiplier * scaleMultiplier;
   const productionWeeks = Math.ceil(episodes * unscriptedFormatData.productionWeeksPerEpisode);
 
