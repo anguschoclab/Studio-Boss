@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { Project } from '@/engine/types';
@@ -26,6 +26,48 @@ export const FestivalMarketModal: React.FC = () => {
   const [timeLeft, setTimeLeft] = useState(10); // Ticks until gavel falls
   const [isResolved, setIsResolved] = useState(false);
 
+  // Refs so the interval always reads the latest values without re-creating on every state change
+  const currentBidRef = useRef(currentBid);
+  const highestBidderIdRef = useRef(highestBidderId);
+  const resolveRef = useRef(resolveCurrentModal);
+  const isMounted = useRef(true);
+
+  useEffect(() => { currentBidRef.current = currentBid; }, [currentBid]);
+  useEffect(() => { highestBidderIdRef.current = highestBidderId; }, [highestBidderId]);
+  useEffect(() => { resolveRef.current = resolveCurrentModal; }, [resolveCurrentModal]);
+  useEffect(() => {
+    isMounted.current = true;
+    return () => { isMounted.current = false; };
+  }, []);
+
+  // Hoisted above useEffect so the dep array is satisfied without re-creation churn
+  const handleFinalize = useCallback(() => {
+    setIsResolved(true);
+    const bidderId = highestBidderIdRef.current;
+    const bid = currentBidRef.current;
+
+    if (!bidderId || !project) {
+      resolveRef.current();
+      return;
+    }
+
+    // Dispatch victory impact
+    if (bidderId === 'PLAYER') {
+      addProject({
+        ...project,
+        state: 'released',
+        isAcquired: true,
+        acquisitionCost: bid,
+      });
+      addFunds(-bid);
+    }
+
+    // Wait 2 seconds then close — only if still mounted
+    setTimeout(() => {
+      if (isMounted.current) resolveRef.current();
+    }, 2000);
+  }, [project, addProject, addFunds]);
+
   // AI Bidding Logic (Simulated ticks)
   useEffect(() => {
     if (isResolved || !project || !gameState) return;
@@ -42,19 +84,22 @@ export const FestivalMarketModal: React.FC = () => {
 
       // 🎭 UI Simulation: We use a non-deterministic local RNG for the "feeling" of a live auction.
       // The actual acquisition is committed to the state only on win.
-      const localRng = new RandomGenerator(Date.now()); 
+      const localRng = new RandomGenerator(Date.now());
       const rivals = gameState.entities.rivals;
-      
+      // Read latest bid/bidder from refs — avoids stale closure on each interval tick
+      const latestBid = currentBidRef.current;
+      const latestBidderId = highestBidderIdRef.current;
+
       Object.values(rivals).forEach(rival => {
-        if (rival.id === highestBidderId) return;
+        if (rival.id === latestBidderId) return;
 
         // Determine if this rival wants to bid
         const potentialBid = generateFestivalBid(rival, project, localRng);
-        const nextIncrementalBid = Math.round(currentBid * 1.05);
+        const nextIncrementalBid = Math.round(latestBid * 1.05);
 
         if (potentialBid && potentialBid >= nextIncrementalBid && rival.cash >= nextIncrementalBid) {
           // AI Bids! - Add some jitter to make it feel more human/rivalrous
-          if (localRng.next() < 0.25) { 
+          if (localRng.next() < 0.25) {
             setCurrentBid(nextIncrementalBid);
             setHighestBidderId(rival.id);
             setHighestBidderName(rival.name);
@@ -65,41 +110,19 @@ export const FestivalMarketModal: React.FC = () => {
     }, 1500);
 
     return () => clearInterval(timer);
-  }, [currentBid, highestBidderId, isResolved, project, gameState, handleFinalize]);
+  // Only re-create when the modal opens/closes or game state identity changes — not on every bid
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isResolved, project, gameState, handleFinalize]);
 
   const handlePlayerBid = () => {
     if (!gameState) return;
-    const nextBid = Math.round(currentBid * 1.05);
+    const nextBid = Math.round(currentBidRef.current * 1.05);
     if (studioFinance.cash < nextBid) return;
 
     setCurrentBid(nextBid);
     setHighestBidderId('PLAYER');
     setHighestBidderName(gameState.studio.name);
     setTimeLeft(5); // Reset timer
-  };
-
-  const handleFinalize = () => {
-    setIsResolved(true);
-    if (!highestBidderId || !project) {
-       resolveCurrentModal();
-       return;
-    }
-
-    // Dispatch victory impact
-    if (highestBidderId === 'PLAYER') {
-      addProject({
-        ...project,
-        state: 'released',
-        isAcquired: true,
-        acquisitionCost: currentBid
-      });
-      addFunds(-currentBid);
-    }
-
-    // Wait 2 seconds then close
-    setTimeout(() => {
-        resolveCurrentModal();
-    }, 2000);
   };
 
   if (!project || !gameState) return null;

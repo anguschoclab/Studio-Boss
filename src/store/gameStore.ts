@@ -52,7 +52,9 @@ const triggerSave = async (stateToSave: GameState) => {
   await saveGame(0, stateToSave);
   _isBackgroundSaving = false;
 
-  if (_saveQueue) triggerSave(_saveQueue);
+  if (_saveQueue) {
+    try { triggerSave(_saveQueue); } catch (e) { console.error('[triggerSave] tail-call failed:', e); }
+  }
 };
 
 interface Impact {
@@ -124,7 +126,7 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
       initElectron().then((success) => {
         if (success) return;
 
-        // Fallback to Web Worker
+        // Fallback to Web Worker — { once: true } prevents double-fire on concurrent newGame calls
         const handler = (e: MessageEvent) => {
           if (e.data.type === 'INIT_RESULT') {
             const gameState = e.data.payload as GameState;
@@ -134,11 +136,10 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
               finance: gameState.finance,
               news: gameState.news
             });
-            engineWorker.removeEventListener('message', handler);
             resolve();
           }
         };
-        engineWorker.addEventListener('message', handler);
+        engineWorker.addEventListener('message', handler, { once: true });
         engineWorker.postMessage({ type: 'INIT_GAME', payload: { studioName, archetype, seed } });
       });
     });
@@ -194,6 +195,7 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
         // Fallback to Web Worker
         const handler = async (e: MessageEvent) => {
           if (e.data.type === 'ADVANCE_RESULT') {
+            clearTimeout(workerTimeout);
             try {
               const { newState: nextState, summary, impacts } = e.data.payload;
               const finalState = nextState as GameState;
@@ -222,9 +224,20 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
             }
           }
         };
-        
+
+        // 30-second safety net: if the worker never responds, unlock the tick flag
+        const workerTimeout = setTimeout(() => {
+          engineWorker.removeEventListener('message', handler);
+          set({ _isProcessingTick: false });
+          reject(new Error('Engine worker timed out after 30s'));
+        }, 30_000);
+
         engineWorker.addEventListener('message', handler);
         engineWorker.postMessage({ type: 'ADVANCE_WEEK', payload: { state } });
+      }).catch((err) => {
+        // Ensure the lock is cleared if advanceElectron itself throws unexpectedly
+        set({ _isProcessingTick: false });
+        reject(err);
       });
     });
   },
