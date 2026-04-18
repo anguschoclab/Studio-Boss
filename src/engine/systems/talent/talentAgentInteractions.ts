@@ -313,11 +313,11 @@ export class TalentAgentInteractionEngine {
     const updated = { ...relationship };
 
     // Relationship decay over time if no recent interaction
-    if (weeksSinceLastInteraction > 26) { // 6 months
-      updated.relationshipScore = Math.max(0, updated.relationshipScore - 5);
-    } else if (weeksSinceLastInteraction > 52) { // 1 year
+    if (weeksSinceLastInteraction > 52) { // 1 year
       updated.relationshipScore = Math.max(0, updated.relationshipScore - 10);
       updated.history.yearsTogether++;
+    } else if (weeksSinceLastInteraction > 26) { // 6 months
+      updated.relationshipScore = Math.max(0, updated.relationshipScore - 5);
     }
 
     // Small random fluctuation
