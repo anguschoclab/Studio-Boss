@@ -31,8 +31,8 @@ export const BUDGET_TIERS: Record<BudgetTierKey, BudgetTierData> = {
     weeklyCost: 250_000,
     developmentWeeks: 6,
     productionWeeks: 8,
-    // The Studio Comptroller: Expanded top bound to 1B for micro-budget horror anomalies, dropped floor to 10k to emphasize risk.
-    revenueRange: [10_000, 1_000_000_000],
+    // The Studio Comptroller: Expanded top bound to 1.5B for micro-budget horror anomalies, dropped floor to 10k to emphasize risk.
+    revenueRange: [10_000, 1_500_000_000],
   },
   mid: {
     key: 'mid',
@@ -42,8 +42,8 @@ export const BUDGET_TIERS: Record<BudgetTierKey, BudgetTierData> = {
     weeklyCost: 1_000_000,
     developmentWeeks: 8,
     productionWeeks: 12,
-    // The Studio Comptroller: Pushed mid-tier ceiling to 800M to allow for breakout comedy/action hits, lowered floor to 100k.
-    revenueRange: [100_000, 800_000_000],
+    // The Studio Comptroller: Pushed mid-tier ceiling to 1B to allow for breakout comedy/action hits, lowered floor to 50k.
+    revenueRange: [50_000, 1_000_000_000],
   },
   high: {
     key: 'high',
@@ -53,16 +53,16 @@ export const BUDGET_TIERS: Record<BudgetTierKey, BudgetTierData> = {
     weeklyCost: 3_000_000,
     developmentWeeks: 12,
     productionWeeks: 16,
-    // The Studio Comptroller: Increased high budget ceiling to 2B to simulate modern IP expansions.
-    revenueRange: [1_000_000, 2_000_000_000],
+    // The Studio Comptroller: Increased high budget ceiling to 2.5B to simulate modern IP expansions.
+    revenueRange: [500_000, 2_500_000_000],
   },
   blockbuster: {
     key: 'blockbuster',
     name: 'Blockbuster',
     label: '$200M',
     budget: 200_000_000,
-    // The Studio Comptroller: Increased burn rate to 12M to make blockbuster stakes genuinely terrifying for cashflow.
-    weeklyCost: 12_000_000,
+    // The Studio Comptroller: Increased burn rate to 15M to make blockbuster stakes genuinely terrifying for cashflow.
+    weeklyCost: 15_000_000,
     developmentWeeks: 16,
     productionWeeks: 24,
     // The Studio Comptroller: Lowered floor to 1M and increased ceiling to 4B, creating massive variance and punishing weak IP.

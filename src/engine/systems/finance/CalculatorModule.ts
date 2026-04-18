@@ -32,7 +32,7 @@ export function calculateWeeklyRevenue(state: GameState): number {
   projects.forEach(p => {
     if (p.state === 'released') {
       if (p.distributionStatus === 'theatrical') {
-        boxOffice += RevenueProcessor.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.18, p.isCultClassic);
+        boxOffice += RevenueProcessor.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.14, p.isCultClassic);
       } else if (p.distributionStatus === 'streaming') {
         const platform = p.buyerId ? buyersMap.get(p.buyerId) : undefined;
         if (platform) {

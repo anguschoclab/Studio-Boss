@@ -18,7 +18,7 @@ describe('Finance: Cult Classic Revenue', () => {
     stateNormal.entities.projects['p1'] = { ...normalProject, distributionStatus: 'theatrical' } as any;
     
     const revNormal = calculateWeeklyRevenue(stateNormal);
-    expect(revNormal).toBe(9000); // 50000 * 0.18
+    expect(revNormal).toBe(7000); // 50000 * 0.14
 
     // Cult classic project overrides low base with ironic viewing multiplier
     const cultProject = { ...baseProject, isCultClassic: true, weeklyRevenue: 50000 };
@@ -27,7 +27,7 @@ describe('Finance: Cult Classic Revenue', () => {
     
     const revCult = calculateWeeklyRevenue(stateCult);
 
-    // applyIronicViewingMultiplier gives Math.max(9000 * 2.0, 100000)
-    expect(revCult).toBe(100000); // Because 9000 * 2.0 = 18000, so it hits the 100000 minimum floor
+    // applyIronicViewingMultiplier gives Math.max(7000 * 3.0, 100000)
+    expect(revCult).toBe(100000); // Because 7000 * 3.0 = 21000, so it hits the 100000 minimum floor
   });
 });

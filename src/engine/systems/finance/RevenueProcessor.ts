@@ -56,8 +56,8 @@ export class RevenueProcessor {
         }
 
         if (p.distributionStatus === 'theatrical') {
-          // The Studio Comptroller: Base theatrical decay rate lowered from 0.22 to 0.18 representing an incredibly ruthless front-loaded drop.
-          weeklyGross = this.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.18, p.isCultClassic) * talentMultiplier * banMultiplier * demographicMultiplier;
+          // The Studio Comptroller: Base theatrical decay rate lowered from 0.18 to 0.14 representing an incredibly ruthless front-loaded drop.
+          weeklyGross = this.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.14, p.isCultClassic) * talentMultiplier * banMultiplier * demographicMultiplier;
           boxOffice += weeklyGross;
         } else if (p.distributionStatus === 'streaming') {
           const platform = p.buyerId ? buyersMap.get(p.buyerId) : undefined;
@@ -153,8 +153,8 @@ export class RevenueProcessor {
   static calculateTheatricalDecay(currentRevenue: number, decayRate: number, isCultClassic: boolean = false): number {
     let revenue = Math.round(currentRevenue * decayRate);
     if (isCultClassic) {
-      // The Studio Comptroller: Modified cult classic bump to prevent flat minimums and enforce long-tail decay instead
-      revenue = Math.max(revenue * 2.0, 100000);
+      // The Studio Comptroller: Modified cult classic bump to 3.0 to enforce long-tail decay instead of flat minimums.
+      revenue = Math.max(revenue * 3.0, 100000);
     }
     return revenue;
   }
