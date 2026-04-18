@@ -126,11 +126,11 @@ export const ExecutiveDashboard: React.FC = () => {
   const getAlertStyles = (type: string) => {
     switch (type) {
       case 'critical':
-        return 'bg-red-500/10 border-red-500/30';
+        return 'bg-destructive/10 border-destructive/30 shadow-[0_0_15px_hsl(var(--destructive)/0.15)]';
       case 'warning':
-        return 'bg-amber-500/10 border-amber-500/30';
+        return 'bg-amber-500/10 border-amber-500/30 shadow-[0_0_15px_rgba(245,158,11,0.15)]';
       default:
-        return 'bg-blue-500/10 border-blue-500/30';
+        return 'bg-blue-500/10 border-blue-500/30 shadow-[0_0_15px_rgba(59,130,246,0.15)]';
     }
   };
 
@@ -138,56 +138,62 @@ export const ExecutiveDashboard: React.FC = () => {
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Quick Stats Row */}
       <div className="grid grid-cols-4 gap-4">
-        <Card className={cn('p-4', tokens.border.default)}>
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-emerald-500/10">
-              <DollarSign className="h-5 w-5 text-emerald-500" />
+        <Card className={cn('p-5 flex flex-col justify-center relative overflow-hidden group', tokens.glass.card)}>
+          <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl -mr-10 -mt-10 transition-all duration-500 group-hover:bg-emerald-500/10" />
+          <div className="flex items-center gap-4 relative z-10">
+            <div className="p-3 rounded-xl bg-emerald-500/10 shadow-[inset_0_0_10px_rgba(16,185,129,0.1)] border border-emerald-500/20 group-hover:scale-110 transition-transform duration-300">
+              <DollarSign className="h-5 w-5 text-emerald-400 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
             </div>
             <div>
-              <p className={cn('text-[10px] uppercase', tokens.text.caption)}>Cash</p>
-              <p className="text-xl font-bold">
+              <p className={cn(tokens.text.label, 'mb-0.5 group-hover:text-emerald-400/80 transition-colors')}>Cash</p>
+              <p className="text-2xl font-black font-mono tracking-tight bg-gradient-to-br from-white to-white/70 bg-clip-text text-transparent group-hover:drop-shadow-[0_0_8px_rgba(16,185,129,0.3)] transition-all">
                 ${(gameState?.finance?.cash || 0).toLocaleString()}
               </p>
             </div>
           </div>
         </Card>
 
-        <Card className={cn('p-4', tokens.border.default)}>
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-blue-500/10">
-              <LayoutDashboard className="h-5 w-5 text-blue-500" />
+        <Card className={cn('p-5 flex flex-col justify-center relative overflow-hidden group', tokens.glass.card)}>
+          <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full blur-2xl -mr-10 -mt-10 transition-all duration-500 group-hover:bg-blue-500/10" />
+          <div className="flex items-center gap-4 relative z-10">
+            <div className="p-3 rounded-xl bg-blue-500/10 shadow-[inset_0_0_10px_rgba(59,130,246,0.1)] border border-blue-500/20 group-hover:scale-110 transition-transform duration-300">
+              <LayoutDashboard className="h-5 w-5 text-blue-400 drop-shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
             </div>
             <div>
-              <p className={cn('text-[10px] uppercase', tokens.text.caption)}>Projects</p>
-              <p className="text-xl font-bold">
+              <p className={cn(tokens.text.label, 'mb-0.5 group-hover:text-blue-400/80 transition-colors')}>Projects</p>
+              <p className="text-2xl font-black font-mono tracking-tight bg-gradient-to-br from-white to-white/70 bg-clip-text text-transparent group-hover:drop-shadow-[0_0_8px_rgba(59,130,246,0.3)] transition-all">
                 {selectProjects(gameState).length}
               </p>
             </div>
           </div>
         </Card>
 
-        <Card className={cn('p-4', tokens.border.default)}>
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-purple-500/10">
-              <Activity className="h-5 w-5 text-purple-500" />
+        <Card className={cn('p-5 flex flex-col justify-center relative overflow-hidden group', tokens.glass.card)}>
+          <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/5 rounded-full blur-2xl -mr-10 -mt-10 transition-all duration-500 group-hover:bg-purple-500/10" />
+          <div className="flex items-center gap-4 relative z-10">
+            <div className="p-3 rounded-xl bg-purple-500/10 shadow-[inset_0_0_10px_rgba(168,85,247,0.1)] border border-purple-500/20 group-hover:scale-110 transition-transform duration-300">
+              <Activity className="h-5 w-5 text-purple-400 drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]" />
             </div>
             <div>
-              <p className={cn('text-[10px] uppercase', tokens.text.caption)}>Talent</p>
-              <p className="text-xl font-bold">
+              <p className={cn(tokens.text.label, 'mb-0.5 group-hover:text-purple-400/80 transition-colors')}>Talent</p>
+              <p className="text-2xl font-black font-mono tracking-tight bg-gradient-to-br from-white to-white/70 bg-clip-text text-transparent group-hover:drop-shadow-[0_0_8px_rgba(168,85,247,0.3)] transition-all">
                 {selectTalentPool(gameState).length}
               </p>
             </div>
           </div>
         </Card>
 
-        <Card className={cn('p-4', tokens.border.default)}>
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-amber-500/10">
-              <TrendingUp className="h-5 w-5 text-amber-500" />
+        <Card className={cn('p-5 flex flex-col justify-center relative overflow-hidden group', tokens.glass.card)}>
+          <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl -mr-10 -mt-10 transition-all duration-500 group-hover:bg-amber-500/10" />
+          <div className="flex items-center gap-4 relative z-10">
+            <div className="p-3 rounded-xl bg-amber-500/10 shadow-[inset_0_0_10px_rgba(245,158,11,0.1)] border border-amber-500/20 group-hover:scale-110 transition-transform duration-300">
+              <TrendingUp className="h-5 w-5 text-amber-400 drop-shadow-[0_0_8px_rgba(245,158,11,0.5)]" />
             </div>
             <div>
-              <p className={cn('text-[10px] uppercase', tokens.text.caption)}>Week</p>
-              <p className="text-xl font-bold">{gameState?.week || 1}</p>
+              <p className={cn(tokens.text.label, 'mb-0.5 group-hover:text-amber-400/80 transition-colors')}>Week</p>
+              <p className="text-2xl font-black font-mono tracking-tight bg-gradient-to-br from-white to-white/70 bg-clip-text text-transparent group-hover:drop-shadow-[0_0_8px_rgba(245,158,11,0.3)] transition-all">
+                {gameState?.week || 1}
+              </p>
             </div>
           </div>
         </Card>
@@ -196,20 +202,22 @@ export const ExecutiveDashboard: React.FC = () => {
       {/* Alert Banner */}
       {alerts.length > 0 && (
         <Section title="Requires Attention" icon={AlertTriangle}>
-          <div className="space-y-2">
+          <div className="space-y-3">
             {alerts.map((alert) => (
               <div
                 key={alert.id}
                 className={cn(
-                  'flex items-center justify-between p-3 rounded-lg border',
+                  'flex items-center justify-between p-4 rounded-xl border backdrop-blur-md transition-all duration-300 hover:shadow-lg',
                   getAlertStyles(alert.type)
                 )}
               >
-                <div className="flex items-center gap-3">
-                  {alert.icon}
+                <div className="flex items-center gap-4">
+                  <div className="p-2 rounded-full bg-background/50 backdrop-blur-sm border border-white/5">
+                    {alert.icon}
+                  </div>
                   <div>
-                    <p className="font-medium text-sm">{alert.title}</p>
-                    <p className={cn('text-xs', tokens.text.caption)}>
+                    <p className="font-bold text-[13px] tracking-tight text-foreground/90">{alert.title}</p>
+                    <p className={cn('text-xs mt-0.5', tokens.text.caption)}>
                       {alert.description}
                     </p>
                   </div>
@@ -217,12 +225,12 @@ export const ExecutiveDashboard: React.FC = () => {
                 {alert.action && (
                   <Button
                     size="sm"
-                    variant="outline"
-                    className="h-7 text-xs focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus:outline-none"
+                    variant="secondary"
+                    className="h-8 px-4 text-[10px] font-black uppercase tracking-widest bg-white/5 hover:bg-white/10 border border-white/10 text-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none transition-all shadow-sm hover:shadow-md"
                     onClick={alert.action.onClick}
                   >
                     {alert.action.label}
-                    <ArrowRight className="h-3 w-3 ml-1" />
+                    <ArrowRight className="h-3 w-3 ml-2 opacity-70" />
                   </Button>
                 )}
               </div>
@@ -266,49 +274,60 @@ export const ExecutiveDashboard: React.FC = () => {
           </div>
 
           {/* Quick Actions */}
-          <Card className={cn('p-4', tokens.border.default)}>
-            <h4 className="font-bold text-sm mb-3">Quick Actions</h4>
-            <div className="grid grid-cols-4 gap-2">
+          <Card className={cn('p-5 relative overflow-hidden', tokens.glass.card)}>
+            <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
+            <h4 className={cn(tokens.text.heading, "mb-4 text-foreground/90 flex items-center gap-2")}>
+              <Zap className="h-4 w-4 text-primary" /> Quick Actions
+            </h4>
+            <div className="grid grid-cols-4 gap-3 relative z-10">
               <Button
                 variant="outline"
-                className="h-auto py-3 flex flex-col items-center gap-1"
+                className="h-auto py-4 flex flex-col items-center gap-2 bg-card/40 hover:bg-primary/10 border-white/10 hover:border-primary/40 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none transition-all duration-300 group rounded-xl hover:shadow-[0_0_20px_hsl(var(--primary)/0.15)]"
                 onClick={openCreateProject}
               >
-                <Plus className="h-4 w-4" />
-                <span className="text-[10px]">New Project</span>
+                <div className="p-2 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors duration-300">
+                  <Plus className="h-4 w-4 text-primary drop-shadow-[0_0_8px_hsl(var(--primary)/0.5)]" />
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-wider text-muted-foreground group-hover:text-primary transition-colors">New Project</span>
               </Button>
               <Button
                 variant="outline"
-                className="h-auto py-3 flex flex-col items-center gap-1"
+                className="h-auto py-4 flex flex-col items-center gap-2 bg-card/40 hover:bg-emerald-500/10 border-white/10 hover:border-emerald-500/40 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:outline-none transition-all duration-300 group rounded-xl hover:shadow-[0_0_20px_rgba(16,185,129,0.15)]"
                 onClick={() => {
                   setActiveHub('production');
                   setActiveSubTab('slate');
                 }}
               >
-                <Zap className="h-4 w-4" />
-                <span className="text-[10px]">Greenlight</span>
+                <div className="p-2 rounded-full bg-emerald-500/10 group-hover:bg-emerald-500/20 transition-colors duration-300">
+                  <Zap className="h-4 w-4 text-emerald-400 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-wider text-muted-foreground group-hover:text-emerald-400 transition-colors">Greenlight</span>
               </Button>
               <Button
                 variant="outline"
-                className="h-auto py-3 flex flex-col items-center gap-1"
+                className="h-auto py-4 flex flex-col items-center gap-2 bg-card/40 hover:bg-secondary/10 border-white/10 hover:border-secondary/40 focus-visible:ring-2 focus-visible:ring-secondary focus-visible:outline-none transition-all duration-300 group rounded-xl hover:shadow-[0_0_20px_hsl(var(--secondary)/0.15)]"
                 onClick={() => {
                   setActiveHub('talent');
                   setActiveSubTab('marketplace');
                 }}
               >
-                <TrendingUp className="h-4 w-4" />
-                <span className="text-[10px]">Market</span>
+                <div className="p-2 rounded-full bg-secondary/10 group-hover:bg-secondary/20 transition-colors duration-300">
+                  <TrendingUp className="h-4 w-4 text-secondary drop-shadow-[0_0_8px_hsl(var(--secondary)/0.5)]" />
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-wider text-muted-foreground group-hover:text-secondary transition-colors">Market</span>
               </Button>
               <Button
                 variant="outline"
-                className="h-auto py-3 flex flex-col items-center gap-1"
+                className="h-auto py-4 flex flex-col items-center gap-2 bg-card/40 hover:bg-blue-500/10 border-white/10 hover:border-blue-500/40 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none transition-all duration-300 group rounded-xl hover:shadow-[0_0_20px_rgba(59,130,246,0.15)]"
                 onClick={() => {
                   setActiveHub('intelligence');
                   setActiveSubTab('financials');
                 }}
               >
-                <DollarSign className="h-4 w-4" />
-                <span className="text-[10px]">Finance</span>
+                <div className="p-2 rounded-full bg-blue-500/10 group-hover:bg-blue-500/20 transition-colors duration-300">
+                  <DollarSign className="h-4 w-4 text-blue-400 drop-shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-wider text-muted-foreground group-hover:text-blue-400 transition-colors">Finance</span>
               </Button>
             </div>
           </Card>
