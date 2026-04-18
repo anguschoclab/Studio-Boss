@@ -60,11 +60,13 @@ function calculateSubChange(platform: StreamerPlatform, rng: RandomGenerator, se
 
   // 📺 The Syndication Baron: Adjust streaming subscriber churn rates based on audience retention.
   if (avgAudienceRetention < 40) {
-    dynamicChurnRate = Math.min(0.85, dynamicChurnRate * 1.5); // Punish platforms keeping shows that hemorrhage viewers
+    dynamicChurnRate = Math.min(0.95, dynamicChurnRate * 2.0); // Punish platforms keeping shows that hemorrhage viewers
+  } else if (avgAudienceRetention < 60) {
+    dynamicChurnRate = Math.min(0.90, dynamicChurnRate * 1.2); // Punish platforms with dropping viewers
   } else if (avgAudienceRetention > 90) {
-    dynamicChurnRate = Math.min(dynamicChurnRate, Math.max(0.005, dynamicChurnRate * 0.7)); // Reward platforms with sticky viewers that return episode after episode
-  } else if (avgAudienceRetention > 75) {
-    dynamicChurnRate = Math.min(dynamicChurnRate, Math.max(0.008, dynamicChurnRate * 0.85));
+    dynamicChurnRate = Math.min(dynamicChurnRate, Math.max(0.005, dynamicChurnRate * 0.6)); // Reward platforms with sticky viewers that return episode after episode
+  } else if (avgAudienceRetention > 80) {
+    dynamicChurnRate = Math.min(dynamicChurnRate, Math.max(0.008, dynamicChurnRate * 0.8));
   }
 
   const churn = platform.subscribers * dynamicChurnRate;
