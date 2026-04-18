@@ -20,7 +20,7 @@ export function evaluatePackageOffer(
   const motivation = agency.currentMotivation || 'VOLUME_RETAIL';
 
   // 🎭 The Method Actor Tuning: Agencies will actively attempt to force package deals when their lead talent is an Auteur director.
-  const isAuteur = leadTalent.roles.includes('director') && leadTalent.prestige > 85;
+const isAuteur = leadTalent.roles?.includes('director') && leadTalent.prestige > 85;
 
   const leverage = AgencyLeverageEngine.calculateNegotiationLeverage(leadTalent, agency, undefined, market);
 
