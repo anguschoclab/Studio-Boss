@@ -54,16 +54,6 @@ export default tseslint.config(
              * - no-empty (Error)
              * - no-case-declarations (Error)
              */
-            '@typescript-eslint/no-explicit-any': 'warn',
-            '@typescript-eslint/no-unused-vars': 'warn',
-            '@typescript-eslint/no-non-null-assertion': 'warn',
-            '@typescript-eslint/no-require-imports': 'warn',
-            '@typescript-eslint/no-dynamic-delete': 'warn',
-            '@typescript-eslint/no-extraneous-class': 'warn',
-            'prefer-const': 'warn',
-            'no-case-declarations': 'warn',
-            'no-empty': 'warn',
-            '@typescript-eslint/no-non-null-asserted-optional-chain': 'warn',
         },
     },
     {
@@ -71,7 +61,7 @@ export default tseslint.config(
         files: ["src/engine/**/*.{ts,tsx}"],
         rules: {
             "no-restricted-properties": [
-                "warn",
+                "error",
                 {
                     "object": "Math",
                     "property": "random",
