@@ -1,11 +1,9 @@
-// @DEPRECATED - This file is unused and will be removed
-// Progress calculation is handled by productionEngine.ts
-// This function is only used in test files
-
 import { Project } from '../../types';
 
 /**
- * @DEPRECATED - Use productionEngine.ts for progress calculation
+ * Standalone single-project progress calculator.
+ * Used for UI-layer simulations and unit tests.
+ * The engine tick loop uses TickModule for batch progress.
  */
 export function advanceProjectProgress(project: Project): Project {
   // Use momentum to modify base progress/burn

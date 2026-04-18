@@ -8,17 +8,79 @@ import {
   LayoutDashboard,
   AlertTriangle,
   Target,
-  Newspaper
+  Newspaper,
+  Megaphone
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { formatMoney } from '@/engine/utils';
 import { m } from 'framer-motion';
 import { StrategyPanel } from './StrategyPanel';
+import { BuzzMeter } from '@/components/_unconnected/BuzzMeter';
+import { MarketingWarRoom } from '@/components/_unconnected/MarketingWarRoom';
 
 // Lazy load heavy components
 const ExecutiveDashboard = React.lazy(() => import('@/components/hubs/ExecutiveDashboard').then(m => ({ default: m.ExecutiveDashboard })));
 const CrisisTriageDashboard = React.lazy(() => import('@/components/hubs/CrisisTriageDashboard').then(m => ({ default: m.CrisisTriageDashboard })));
 const NewsFeed = React.lazy(() => import('@/components/news/NewsFeed').then(m => ({ default: m.NewsFeed })));
+
+const MarketingPanel = () => {
+  const gameState = useGameStore(useShallow(s => s.gameState));
+  const [selectedProjectId, setSelectedProjectId] = React.useState<string | null>(null);
+
+  const activeProjects = React.useMemo(() => {
+    return Object.values(gameState?.entities?.projects || {})
+      .filter(p => p.state === 'production' || p.state === 'development' || p.state === 'released')
+      .slice(0, 10);
+  }, [gameState]);
+
+  const projectBuzzData = React.useMemo(() => activeProjects.map(p => ({
+    projectId: p.id,
+    projectTitle: p.title,
+    totalBuzz: p.buzz || 0,
+    trend: (p.momentum || 50) > 55 ? 'rising' as const : (p.momentum || 50) < 45 ? 'falling' as const : 'stable' as const,
+    sources: [] as any[],
+    audienceSentiment: (p.buzz || 0) > 60 ? 'positive' as const : (p.buzz || 0) > 30 ? 'mixed' as const : 'negative' as const,
+    pressCoverage: Math.round((p.buzz || 0) * 0.3),
+  })), [activeProjects]);
+
+  const studioBuzz = React.useMemo(() => {
+    if (activeProjects.length === 0) return 0;
+    return Math.round(activeProjects.reduce((sum, p) => sum + (p.buzz || 0), 0) / activeProjects.length);
+  }, [activeProjects]);
+
+  const currentProject = selectedProjectId
+    ? activeProjects.find(p => p.id === selectedProjectId)
+    : activeProjects[0];
+
+  return (
+    <div className="h-full overflow-y-auto custom-scrollbar space-y-6 pb-4">
+      <BuzzMeter
+        projects={projectBuzzData}
+        studioBuzz={studioBuzz}
+        industryRank={Math.max(1, Math.round(10 - (gameState?.studio?.prestige || 50) / 10))}
+      />
+      {activeProjects.length > 0 && (
+        <div>
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-xs font-black uppercase tracking-wider text-muted-foreground">Select Project</span>
+            <select
+              className="text-xs bg-card/60 border border-border rounded px-2 py-1"
+              value={selectedProjectId || activeProjects[0]?.id || ''}
+              onChange={e => setSelectedProjectId(e.target.value)}
+            >
+              {activeProjects.map(p => (
+                <option key={p.id} value={p.id}>{p.title}</option>
+              ))}
+            </select>
+          </div>
+          {currentProject && (
+            <MarketingWarRoom projectId={currentProject.id} />
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
 
 const NewsPanel = () => {
   return (
@@ -54,6 +116,7 @@ export const StudioHQ: React.FC = () => {
         operations: null,
         strategy: null,
         news: null,
+        marketing: null,
       };
     }
     const needsAttention = projects.filter(p => {
@@ -71,6 +134,7 @@ export const StudioHQ: React.FC = () => {
       operations: needsAttention > 0 ? needsAttention : null,
       strategy: null,
       news: newsCount > 0 ? Math.min(newsCount, 9) : null,
+      marketing: null,
     };
   }, [projects, gameState]);
 
@@ -105,6 +169,13 @@ export const StudioHQ: React.FC = () => {
       badge: badgeCounts.news,
       description: 'Industry intelligence feed'
     },
+    {
+      id: 'marketing',
+      label: 'Marketing',
+      icon: <Megaphone className="h-3.5 w-3.5" />,
+      badge: badgeCounts.marketing,
+      description: 'Campaign management and buzz tracking'
+    },
   ];
   
   const getHeaderContent = () => {
@@ -132,6 +203,12 @@ export const StudioHQ: React.FC = () => {
           icon: <Newspaper className="h-6 w-6 text-primary" />,
           title: 'Industry News',
           subtitle: 'Global entertainment intelligence'
+        };
+      case 'marketing':
+        return {
+          icon: <Megaphone className="h-6 w-6 text-primary" />,
+          title: 'Marketing War Room',
+          subtitle: 'Campaign management, buzz, and audience targeting'
         };
       default:
         return { icon: null, title: '', subtitle: '' };
@@ -204,6 +281,7 @@ export const StudioHQ: React.FC = () => {
           {activeSubTab === 'operations' && <CrisisTriageDashboard />}
           {activeSubTab === 'strategy' && <StrategyPanel />}
           {activeSubTab === 'news' && <NewsPanel />}
+          {activeSubTab === 'marketing' && <MarketingPanel />}
         </React.Suspense>
       </div>
     </m.div>

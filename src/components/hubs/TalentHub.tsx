@@ -14,7 +14,8 @@ import {
   Gavel,
   TrendingUp,
   Newspaper,
-  Briefcase
+  Briefcase,
+  AlertTriangle
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Talent, TalentRole, Opportunity } from '@/engine/types';
@@ -22,6 +23,7 @@ import { selectOpportunities, selectTalentPool, selectLowMoraleTalent } from '@/
 import { MoraleDashboard } from '@/components/talent/MoraleDashboard';
 import { TalentPactPanel } from '@/components/talent/TalentPactPanel';
 import { OfferHistoryLog } from '@/components/talent/OfferHistoryLog';
+import { ScandalTracker } from '@/components/_unconnected/ScandalTracker';
 
 // Lazy load components
 const LiveAuctionDashboard = React.lazy(() => import('@/components/talent/LiveAuctionDashboard').then(m => ({ default: m.LiveAuctionDashboard })));
@@ -382,6 +384,35 @@ const AgenciesPanel = () => {
   );
 };
 
+// Scandals Panel
+const ScandalsPanel = () => {
+  const gameState = useGameStore(s => s.gameState);
+  const talents = useMemo(() => Object.values(gameState?.entities?.talents || {}), [gameState]);
+
+  const activeScandals = useMemo(() => (gameState?.industry?.scandals || []).map(s => {
+    const talent = talents.find(t => t.id === s.talentId);
+    return {
+      talentId: s.talentId,
+      talentName: talent?.name || 'Unknown',
+      scandalType: s.type as 'controversy' | 'legal_issue' | 'personal_drama' | 'professional_dispute',
+      severity: s.severity > 75 ? 'career_ending' as const : s.severity > 50 ? 'major' as const : s.severity > 25 ? 'moderate' as const : 'minor' as const,
+      headline: `${talent?.name || 'Talent'} scandal`,
+      weekStarted: (gameState?.week || 1) - Math.floor((100 - s.weeksRemaining)),
+      weeksRemaining: s.weeksRemaining,
+      publicSentiment: s.severity > 60 ? 'outraged' as const : 'divided' as const,
+      pressCoverage: Math.round(s.severity * 0.5),
+      effects: [] as any[],
+      hasInsurance: false,
+    };
+  }), [gameState, talents]);
+
+  return (
+    <div className="h-full overflow-y-auto custom-scrollbar pb-4">
+      <ScandalTracker activeScandals={activeScandals} scandalHistory={[]} />
+    </div>
+  );
+};
+
 export const TalentHub: React.FC = () => {
   const { activeSubTab, setActiveSubTab } = useUIStore();
   const gameState = useGameStore(s => s.gameState);
@@ -391,6 +422,7 @@ export const TalentHub: React.FC = () => {
     const talents = Object.values(gameState?.entities?.talents || {}).length;
     const opportunities = selectOpportunities(gameState);
     const agencies = gameState?.industry?.agencies?.length || 0;
+    const activeScandals = gameState?.industry?.scandals?.length || 0;
     // Count active bids/negotiations from marketplace opportunities
     const opportunitiesWithBids = opportunities.filter((opp: Opportunity) => {
       const hasBids = Object.keys(opp.bids || {}).length > 0;
@@ -406,6 +438,7 @@ export const TalentHub: React.FC = () => {
       marketplace: opportunities.length > 0 ? opportunities.length : null,
       negotiations: negotiations > 0 ? negotiations : null,
       agencies: agencies > 0 ? agencies : null,
+      scandals: activeScandals > 0 ? activeScandals : null,
     };
   }, [gameState]);
   
@@ -438,6 +471,13 @@ export const TalentHub: React.FC = () => {
       badge: badgeCounts.agencies,
       description: 'Agency power rankings and relationships'
     },
+    {
+      id: 'scandals',
+      label: 'Scandals',
+      icon: <AlertTriangle className="h-3.5 w-3.5" />,
+      badge: badgeCounts.scandals,
+      description: 'Active PR crises and talent controversies'
+    },
   ];
   
   const getHeaderContent = () => {
@@ -465,6 +505,12 @@ export const TalentHub: React.FC = () => {
           icon: <Building2 className="h-6 w-6 text-secondary" />,
           title: 'Agency Network',
           subtitle: 'Power rankings and relationship status'
+        };
+      case 'scandals':
+        return {
+          icon: <AlertTriangle className="h-6 w-6 text-destructive" />,
+          title: 'Scandal Tracker',
+          subtitle: 'Active PR crises and talent controversies'
         };
       default:
         return { icon: null, title: '', subtitle: '' };
@@ -505,6 +551,7 @@ export const TalentHub: React.FC = () => {
           {activeSubTab === 'marketplace' && <MarketplacePanel />}
           {activeSubTab === 'negotiations' && <NegotiationsPanel />}
           {activeSubTab === 'agencies' && <AgenciesPanel />}
+          {activeSubTab === 'scandals' && <ScandalsPanel />}
         </React.Suspense>
       </div>
     </div>

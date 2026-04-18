@@ -11,9 +11,9 @@ export interface QueuedModal {
 export type HubId = 'hq' | 'production' | 'talent' | 'intelligence';
 
 // Sub-tabs for each hub
-export type HQSubTab = 'overview' | 'operations' | 'strategy' | 'news';
+export type HQSubTab = 'overview' | 'operations' | 'strategy' | 'news' | 'marketing';
 export type ProductionSubTab = 'slate' | 'development' | 'distribution' | 'catalog';
-export type TalentSubTab = 'roster' | 'marketplace' | 'negotiations' | 'agencies';
+export type TalentSubTab = 'roster' | 'marketplace' | 'negotiations' | 'agencies' | 'scandals';
 export type IntelligenceSubTab = 'rivals' | 'awards' | 'market' | 'financials';
 
 export type SubTabId = HQSubTab | ProductionSubTab | TalentSubTab | IntelligenceSubTab;

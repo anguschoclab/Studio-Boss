@@ -4,7 +4,8 @@ import { useUIStore, IntelligenceSubTab } from '@/store/uiStore';
 import {
   selectRivals,
   selectActiveProjects,
-  selectAwardsEligibleProjects
+  selectAwardsEligibleProjects,
+  selectReleasedProjects,
 } from '@/store/selectors';
 import { SubNav } from '@/components/navigation/SubNav';
 import { Badge } from '@/components/ui/badge';
@@ -15,147 +16,107 @@ import {
   DollarSign,
   Activity,
   BarChart3,
-  Brain,
   ShieldAlert
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { formatMoney } from '@/engine/utils';
 import { m } from 'framer-motion';
+import { GenreTrendsPanel } from '@/components/_unconnected/GenreTrendsPanel';
+import { AwardsTracker } from '@/components/_unconnected/AwardsTracker';
+import { RivalReleaseTracker } from '@/components/_unconnected/RivalReleaseTracker';
 
-// Lazy load the heavy components
-const TrendBoard = React.lazy(() => import('@/components/trends/TrendBoard').then(m => ({ default: m.TrendBoard })));
-
-// Rivals Panel (simplified from IndustryPage)
+// Rivals Panel
 const RivalsPanel = () => {
   const gameState = useGameStore(s => s.gameState);
   const rivals = selectRivals(gameState);
-  
+  const releasedProjects = useMemo(() => selectReleasedProjects(gameState), [gameState]);
+
+  const yourReleases = useMemo(() => releasedProjects
+    .filter(p => p.releaseWeek != null)
+    .map(p => ({ week: p.releaseWeek!, title: p.title }))
+    .slice(-12), [releasedProjects]);
+
+  const rivalReleases = useMemo(() => rivals.flatMap(r =>
+    (r.projectIds || []).map(pid => ({
+      studioId: r.id,
+      studioName: r.name,
+      projectTitle: `${r.name} Project`,
+      releaseDate: (gameState?.week || 1) + Math.floor(Math.random() * 12),
+      genre: 'Drama',
+      budgetTier: 'mid' as const,
+      targetOverlap: Math.round(r.strength * 0.6),
+      threatLevel: r.strength > 70 ? 'high' as const : r.strength > 40 ? 'medium' as const : 'low' as const,
+      projectedOpening: r.cash * 0.05,
+    }))
+  ).slice(0, 10), [rivals, gameState?.week]);
+
   return (
-    <div className="h-full overflow-y-auto custom-scrollbar space-y-4 pb-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {rivals.map(rival => (
-          <div 
-            key={rival.id}
-            className="p-4 bg-card/40 border border-border/40 rounded-xl hover:border-destructive/30 transition-all"
-          >
-            <div className="flex justify-between items-start mb-3">
-              <div>
-                <h4 className="font-bold text-sm">{rival.name}</h4>
-                <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">
-                  {rival.archetype}
-                </p>
-              </div>
-              <Badge variant="outline" className="text-[9px] font-mono">
-                PWR {rival.strength}%
-              </Badge>
-            </div>
-            
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 text-[10px] font-bold text-muted-foreground">
-                <Brain className="h-3 w-3" />
-                <span className="capitalize">{rival.currentMotivation?.replace('_', ' ') || 'Unknown'}</span>
-              </div>
-              <div className="flex justify-between text-[11px]">
-                <span className="text-muted-foreground">Cash:</span>
-                <span className="font-mono font-bold">{formatMoney(rival.cash)}</span>
-              </div>
-              <div className="flex justify-between text-[11px]">
-                <span className="text-muted-foreground">Projects:</span>
-                <span className="font-mono font-bold">{rival.projectIds?.length || 0}</span>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+    <div className="h-full overflow-y-auto custom-scrollbar pb-4">
+      <RivalReleaseTracker releases={rivalReleases} yourReleases={yourReleases} />
     </div>
   );
 };
 
-// Awards Panel (simplified from AwardsHQ)
+// Awards Panel
 const AwardsPanel = () => {
   const gameState = useGameStore(s => s.gameState);
   const eligibleProjects = useMemo(() => {
     return selectAwardsEligibleProjects(gameState)
       .sort((a, b) => (b.reception?.metaScore || 0) - (a.reception?.metaScore || 0));
   }, [gameState]);
-  
+
+  const allAwards = useMemo(() => gameState?.industry?.awards || [], [gameState]);
+
+  const awardsData = useMemo(() => eligibleProjects.map(p => {
+    const projectAwards = allAwards.filter(a => a.projectId === p.id);
+    const nominations = projectAwards.map(a => ({
+      awardBody: a.body,
+      category: a.category,
+      nominationDate: gameState?.week || 1,
+      ceremonyDate: (gameState?.week || 1) + 4,
+      odds: a.status === 'won' ? 100 : 50,
+      status: a.status === 'won' ? 'won' as const : 'nominated' as const,
+      buzzBonus: 5,
+    }));
+    return {
+      projectId: p.id,
+      projectTitle: p.title,
+      format: (p.format === 'tv' ? 'tv' : 'film') as 'film' | 'tv',
+      nominations,
+      wins: projectAwards.filter(a => a.status === 'won').length,
+      totalNominations: nominations.length,
+    };
+  }), [eligibleProjects, allAwards, gameState?.week]);
+
+  const totalWins = gameState?.studio?.internal?.projectHistory?.reduce((sum, p) => sum + (p.awards?.length || 0), 0) || 0;
+  const totalNominations = awardsData.reduce((sum, p) => sum + p.totalNominations, 0);
+  const studioRank = Math.max(1, Math.round(10 - (gameState?.studio?.prestige || 50) / 10));
+
   return (
-    <div className="h-full overflow-y-auto custom-scrollbar space-y-4 pb-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {eligibleProjects.length === 0 ? (
-          <div className="col-span-full p-12 text-center border border-dashed border-border/40 rounded-xl">
-            <Trophy className="w-12 h-12 mx-auto mb-4 opacity-20" />
-            <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">
-              No eligible projects
-            </p>
-          </div>
-        ) : (
-          eligibleProjects.map(project => (
-            <div 
-              key={project.id}
-              className="p-4 bg-card/40 border border-border/40 rounded-xl hover:border-primary/30 transition-all"
-            >
-              <div className="flex justify-between items-start mb-2">
-                <div>
-                  <h4 className="font-bold text-sm">{project.title}</h4>
-                  <p className="text-[10px] uppercase text-muted-foreground font-bold tracking-wider">
-                    {project.genre} • Released W{project.releaseWeek}
-                  </p>
-                </div>
-                <div className={cn(
-                  "text-2xl font-black italic",
-                  (project.reception?.metaScore || 0) >= 75 ? 'text-emerald-500' :
-                  (project.reception?.metaScore || 0) >= 40 ? 'text-amber-500' : 'text-rose-500'
-                )}>
-                  {project.reception?.metaScore || '??'}
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-2 mt-3">
-                <Badge variant="outline" className="text-[9px]">
-                  <Activity className="h-3 w-3 mr-1" />
-                  {project.reception?.metaScore && project.reception.metaScore >= 75 ? 'Award Contender' : 'Eligible'}
-                </Badge>
-              </div>
-            </div>
-          ))
-        )}
-      </div>
+    <div className="h-full overflow-y-auto custom-scrollbar pb-4">
+      <AwardsTracker
+        projects={awardsData}
+        studioRank={studioRank}
+        totalWins={totalWins}
+        totalNominations={totalNominations}
+      />
     </div>
   );
 };
 
 // Market Trends Panel
 const MarketPanel = () => {
+  const gameState = useGameStore(s => s.gameState);
+  const trends = useMemo(() => (gameState?.market?.trends || []).map(t => ({
+    genre: t.genre,
+    heat: t.heat,
+    direction: t.direction as 'hot' | 'rising' | 'stable' | 'cooling' | 'dead',
+    weeksRemaining: t.weeksRemaining,
+  })), [gameState]);
+
   return (
-    <div className="h-full flex flex-col space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {['Drama', 'Comedy', 'Action', 'Sci-Fi', 'Horror', 'Romance'].map((genre, i) => (
-          <div key={genre} className="p-4 bg-card/40 border border-border/40 rounded-xl">
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-xs font-black uppercase tracking-wider">{genre}</span>
-              <Badge variant={i < 3 ? 'default' : 'secondary'} className="text-[9px]">
-                {i < 2 ? 'Hot' : i < 4 ? 'Stable' : 'Cooling'}
-              </Badge>
-            </div>
-            <div className="h-2 bg-muted/30 rounded-full overflow-hidden">
-              <div 
-                className={cn(
-                  "h-full rounded-full",
-                  i < 2 ? 'bg-primary' : i < 4 ? 'bg-secondary' : 'bg-muted-foreground/30'
-                )}
-                style={{ width: `${Math.max(30, 90 - i * 10)}%` }}
-              />
-            </div>
-          </div>
-        ))}
-      </div>
-      
-      <div className="flex-1 bg-card/20 border border-border/20 rounded-xl p-6">
-        <React.Suspense fallback={<div>Loading trends...</div>}>
-          <TrendBoard />
-        </React.Suspense>
-      </div>
+    <div className="h-full overflow-y-auto custom-scrollbar pb-4">
+      <GenreTrendsPanel trends={trends} />
     </div>
   );
 };

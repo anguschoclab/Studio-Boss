@@ -23,6 +23,9 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { StreamingPerformancePanel } from '@/components/_unconnected/StreamingPerformancePanel';
+import { WriterStrikeImpact } from '@/components/_unconnected/WriterStrikeImpact';
+import { LocationScoutPanel } from '@/components/_unconnected/LocationScoutPanel';
 
 // Lazy load the heavy components
 const PipelineBoard = React.lazy(() => import('@/components/pipeline/PipelineBoard').then(m => ({ default: m.PipelineBoard })));
@@ -131,14 +134,91 @@ const DevelopmentPanel = () => {
   );
 };
 
+// Slate Panel — PipelineBoard + contextual tools
+const SlatePanel = () => {
+  const gameState = useGameStore(s => s.gameState);
+
+  const strikeEvent = useMemo(() => (gameState?.market?.activeMarketEvents || []).find(
+    e => e.type === 'writers_strike' || e.type === 'actors_strike'
+  ), [gameState]);
+
+  const productionProjects = useMemo(() => Object.values(gameState?.entities?.projects || {})
+    .filter(p => p.state === 'production'), [gameState]);
+
+  const affectedProjects = useMemo(() => productionProjects.map(p => ({
+    projectId: p.id,
+    projectTitle: p.title,
+    status: 'at_risk' as const,
+    weeksDelayed: 0,
+    costImpact: Math.round((p.budget || 0) * 0.05),
+    affectedWriters: [],
+  })), [productionProjects]);
+
+  const [showLocations, setShowLocations] = useState(false);
+
+  return (
+    <div className="h-full flex flex-col gap-4 overflow-y-auto custom-scrollbar pb-4">
+      {strikeEvent && (
+        <WriterStrikeImpact
+          strike={{
+            isActive: true,
+            weekStarted: (gameState?.week || 1) - (20 - strikeEvent.weeksRemaining),
+            estimatedDuration: 20,
+            weeksElapsed: 20 - strikeEvent.weeksRemaining,
+            industrySolidarity: 70,
+          }}
+          affectedProjects={affectedProjects}
+          totalCostImpact={affectedProjects.reduce((sum, p) => sum + p.costImpact, 0)}
+        />
+      )}
+      <div className="flex-1 min-h-0">
+        <React.Suspense fallback={<SkeletonPage contentCards={3} />}>
+          <PipelineBoard />
+        </React.Suspense>
+      </div>
+      <div>
+        <button
+          className="text-xs font-bold uppercase tracking-wider text-muted-foreground hover:text-foreground flex items-center gap-1 mb-2"
+          onClick={() => setShowLocations(v => !v)}
+        >
+          <AlertTriangle className="h-3.5 w-3.5" />
+          {showLocations ? 'Hide' : 'Show'} Location Scout
+        </button>
+        {showLocations && <LocationScoutPanel locations={[]} selectedLocations={[]} />}
+      </div>
+    </div>
+  );
+};
+
 // Distribution sub-panel with tabs
 const DistributionPanel = () => {
-  const [distTab, setDistTab] = useState<'deals' | 'streaming' | 'nielsen'>('deals');
+  const [distTab, setDistTab] = useState<'deals' | 'streaming' | 'nielsen' | 'performance'>('deals');
+  const gameState = useGameStore(s => s.gameState);
+
+  const streamingProjects = useMemo(() => {
+    return Object.values(gameState?.entities?.projects || {})
+      .filter(p => p.state === 'released' && p.format === 'tv')
+      .map(p => ({
+        projectId: p.id,
+        projectTitle: p.title,
+        platforms: [{
+          platformName: 'Streaming',
+          subscribers: 0,
+          hoursWatched: Math.round((p.revenue || 0) / 1000),
+          completionRate: Math.min(100, (p.buzz || 0) * 0.8),
+          trending: ((p.momentum || 50) > 55 ? 'up' : (p.momentum || 50) < 45 ? 'down' : 'stable') as 'up' | 'stable' | 'down',
+          topTerritory: 'Domestic',
+        }],
+        totalHoursWatched: Math.round((p.revenue || 0) / 1000),
+        avgCompletionRate: Math.min(100, (p.buzz || 0) * 0.8),
+      }));
+  }, [gameState]);
   
   const tabs = [
     { id: 'deals', label: 'Deals Desk', icon: <Handshake className="h-3.5 w-3.5" /> },
     { id: 'streaming', label: 'Streaming', icon: <Tv className="h-3.5 w-3.5" /> },
     { id: 'nielsen', label: 'TV Ratings', icon: <BarChart3 className="h-3.5 w-3.5" /> },
+    { id: 'performance', label: 'Performance', icon: <BarChart3 className="h-3.5 w-3.5" /> },
   ];
   
   return (
@@ -155,6 +235,15 @@ const DistributionPanel = () => {
           {distTab === 'deals' && <DealsDesk />}
           {distTab === 'streaming' && <StreamingPanel />}
           {distTab === 'nielsen' && <NielsenDashboard />}
+          {distTab === 'performance' && (
+            <div className="h-full overflow-y-auto custom-scrollbar pb-4">
+              <StreamingPerformancePanel
+                projects={streamingProjects}
+                totalSubscribers={0}
+                growthRate={0}
+              />
+            </div>
+          )}
         </React.Suspense>
       </div>
     </div>
@@ -304,7 +393,7 @@ export const ProductionHub: React.FC = () => {
       {/* Content Area */}
       <div className="flex-1 min-h-0 overflow-hidden">
         <React.Suspense fallback={<SkeletonPage contentCards={3} />}>
-          {activeSubTab === 'slate' && <PipelineBoard />}
+          {activeSubTab === 'slate' && <SlatePanel />}
           {activeSubTab === 'development' && <DevelopmentPanel />}
           {activeSubTab === 'distribution' && <DistributionPanel />}
           {activeSubTab === 'catalog' && <IPVault />}

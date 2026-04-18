@@ -21,6 +21,7 @@ import { ModalManager } from '@/components/modals/ModalManager';
 import { CreateProjectModal } from '@/components/modals/CreateProjectModal';
 import { ProjectDetailModal } from '@/components/modals/ProjectDetailModal';
 import { PitchProjectModal } from '@/components/modals/PitchProjectModal';
+import { AttachTalentModal } from '@/components/_unconnected/AttachTalentModal';
 
 const Dashboard: React.FC = () => {
   const gameState = useGameStore(s => s.gameState);
@@ -78,6 +79,7 @@ const Dashboard: React.FC = () => {
       <CreateProjectModal />
       <ProjectDetailModal />
       <PitchProjectModal />
+      <AttachTalentModal />
       
       {/* Global UI Components */}
       <ModalManager />
