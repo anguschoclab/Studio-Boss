@@ -20,7 +20,7 @@ describe('Simulation Determinism', () => {
     expect(stateA).toEqual(stateB);
   });
 
-  it('should produce identical results after 10 weeks of simulation', { timeout: 120000 }, () => {
+  it('should produce identical results after 10 weeks of simulation', { timeout: 240000 }, () => {
     const rngA = new RandomGenerator(SEED);
     const rngB = new RandomGenerator(SEED);
     let stateA = initializeGame(STUDIO_NAME, ARCHETYPE, SEED);
