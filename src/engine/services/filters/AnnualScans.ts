@@ -4,6 +4,7 @@ import { TickContext } from './types';
 // System Imports
 import { detectCultClassic } from '../../systems/ip/ipValuation';
 import { shouldAttemptHostileTakeover } from '../../systems/ai/AgentBrain';
+import { generateRebootProposal } from '../../systems/ip/ipRebootEngine';
 
 /**
  * Annual Scans
@@ -105,7 +106,7 @@ export class AnnualScans {
     // 2. Reboot Proposal
     const internalIP = vault.filter(v => v.rightsOwner === 'STUDIO');
     if (internalIP.length > 0 && context.rng.next() < 0.2) {
-       const proposal = null; // generateRebootProposal(context.rng);
+       const proposal = generateRebootProposal(internalIP, context.rng);
        if (proposal) {
           context.impacts.push({
              type: 'MODAL_TRIGGERED',

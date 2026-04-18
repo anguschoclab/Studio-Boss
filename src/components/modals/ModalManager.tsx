@@ -11,6 +11,7 @@ const DirectorsCutModal = React.lazy(() => import('./DirectorsCutModal').then(m 
 const UpfrontsModal = React.lazy(() => import('./UpfrontsModal').then(m => ({ default: m.UpfrontsModal })));
 const BiddingWarModal = React.lazy(() => import('./BiddingWarModal').then(m => ({ default: m.BiddingWarModal })));
 const BreakoutBiddingWarModal = React.lazy(() => import('./BreakoutBiddingWarModal').then(m => ({ default: m.BreakoutBiddingWarModal })));
+const RebootOpportunityModal = React.lazy(() => import('./RebootOpportunityModal').then(m => ({ default: m.RebootOpportunityModal })));
 
 /**
  * Unified Modal Manager.
@@ -45,6 +46,8 @@ export const ModalManager: React.FC = () => {
             return <BiddingWarModal key={activeModal.id} />;
           case 'BREAKOUT_BIDDING_WAR':
             return <BreakoutBiddingWarModal key={activeModal.id} />;
+          case 'REBOOT_OPPORTUNITY':
+            return <RebootOpportunityModal key={activeModal.id} />;
           default:
             return null;
         }

@@ -1,6 +1,6 @@
 // Types related to the Simulation Engine, News, and Events
 
-export type ModalType = 'CRISIS' | 'AWARDS' | 'SUMMARY' | 'DIRECTORS_CUT_AVAILABLE' | 'UPFRONTS' | 'FESTIVAL_MARKET' | 'BIDDING_WAR' | 'BREAKOUT_BIDDING_WAR' | 'CREATE_PACKAGE' | 'PACKAGE_DETAIL';
+export type ModalType = 'CRISIS' | 'AWARDS' | 'SUMMARY' | 'DIRECTORS_CUT_AVAILABLE' | 'UPFRONTS' | 'FESTIVAL_MARKET' | 'BIDDING_WAR' | 'BREAKOUT_BIDDING_WAR' | 'CREATE_PACKAGE' | 'PACKAGE_DETAIL' | 'REBOOT_OPPORTUNITY';
 
 export type HeadlineCategory = 'rival' | 'market' | 'talent' | 'awards' | 'general' | 'rumor' | 'box_office' | 'streaming' | 'scandal' | 'dispute'
   | 'acquisition' | 'development' | 'production' | 'casting' | 'deal'
