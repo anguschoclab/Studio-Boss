@@ -1,6 +1,14 @@
-import { Contract } from '@/engine/types';
+import { Contract, Project, Talent, GameState } from '@/engine/types';
 import { RandomGenerator } from './utils/rng';
 // Shared utilities for the engine layer — no React imports
+
+export function getProjects(state: GameState): Project[] {
+  return Object.values(state.entities.projects || {});
+}
+
+export function getTalents(state: GameState): Talent[] {
+  return Object.values(state.entities.talents || {});
+}
 
 export function formatMoney(amount: number): string {
   if (Number.isNaN(amount)) return "$NaN";

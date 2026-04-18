@@ -186,3 +186,26 @@ export function handleRivalUpdated(state: GameState, impact: StateImpact): GameS
     }
   };
 }
+
+export function handleMergerOffered(state: GameState, impact: StateImpact): GameState {
+  const merger = impact.payload.merger;
+  if (!merger) return state;
+  return {
+    ...state,
+    industry: {
+      ...state.industry,
+      activeMergers: [...(state.industry.activeMergers || []), merger]
+    }
+  };
+}
+
+export function handleMergerResolved(state: GameState, impact: StateImpact): GameState {
+  const { mergerId } = impact.payload;
+  return {
+    ...state,
+    industry: {
+      ...state.industry,
+      activeMergers: (state.industry.activeMergers || []).filter(m => m.id !== mergerId)
+    }
+  };
+}

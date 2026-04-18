@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { formatMoney } from '@/engine/utils';
+import { selectAwardsEligibleProjects } from '@/store/selectors';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Trophy, TrendingUp, Sparkles, Filter, Info, Target } from 'lucide-react';
@@ -14,12 +15,8 @@ export const AwardsHQ: React.FC = () => {
   const launchAwardsCampaign = useGameStore(s => s.launchAwardsCampaign);
 
   const eligibleProjects = useMemo(() => {
-    if (!gameState) return [];
-    return Object.values(gameState.entities.projects).filter(p => 
-      (p.state === 'released' || p.state === 'post_release' || p.state === 'archived') &&
-      p.releaseWeek !== null &&
-      p.releaseWeek > gameState.week - 52
-    ).sort((a, b) => (b.reception?.metaScore || 0) - (a.reception?.metaScore || 0));
+    return selectAwardsEligibleProjects(gameState)
+      .sort((a, b) => (b.reception?.metaScore || 0) - (a.reception?.metaScore || 0));
   }, [gameState]);
 
   if (!gameState) return null;

@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { formatMoney } from '@/engine/utils';
+import { selectTalentPool } from '@/store/selectors';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -40,7 +41,7 @@ export const TalentModal = () => {
   const gameState = useGameStore(s => s.gameState);
   const currentWeek = gameState?.week ?? 1;
   
-  const talentPool = useMemo(() => Object.values(gameState?.entities.talents || {}), [gameState?.entities.talents]);
+  const talentPool = useMemo(() => selectTalentPool(gameState), [gameState?.entities?.talents]);
   const talent = useMemo(() => talentPool.find(t => t.id === selectedTalentId), [talentPool, selectedTalentId]);
   
   const agencies = useMemo(() => gameState?.industry.agencies || [], [gameState?.industry.agencies]);

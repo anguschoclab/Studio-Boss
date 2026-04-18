@@ -7,11 +7,16 @@ import { Section } from '@/components/layout/Section';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
-  selectMarketMetrics
+  selectMarketMetrics,
+  selectOverBudgetProjects,
+  selectLowMoraleTalent,
+  selectProjects,
+  selectTalentPool
 } from '@/store/selectors';
 import {
   LayoutDashboard,
   AlertTriangle,
+  Activity,
   DollarSign,
   TrendingUp,
   Zap,
@@ -49,7 +54,7 @@ export const ExecutiveDashboard: React.FC = () => {
     const items: AlertItem[] = [];
     
     // Check for projects needing greenlight
-    const needsGreenlight = Object.values(gameState?.entities?.projects || {})
+    const needsGreenlight = selectProjects(gameState)
       .filter(p => p.state === 'needs_greenlight').length;
     
     if (needsGreenlight > 0) {
@@ -70,8 +75,7 @@ export const ExecutiveDashboard: React.FC = () => {
     }
 
     // Check for budget overruns
-    const overBudget = Object.values(gameState?.entities?.projects || {})
-      .filter(p => (p.accumulatedCost || 0) > (p.budget || 0) * 1.1).length;
+    const overBudget = selectOverBudgetProjects(gameState).length;
     
     if (overBudget > 0) {
       items.push({
@@ -90,9 +94,8 @@ export const ExecutiveDashboard: React.FC = () => {
       });
     }
 
-    // Check for low talent morale (using relationshipScore as proxy)
-    const lowMorale = Object.values(gameState?.entities?.talents || {})
-      .filter(t => (t as any).morale || (t as any).relationshipScore || 100 < 40).length;
+    // Check for low talent morale
+    const lowMorale = selectLowMoraleTalent(gameState).length;
     
     if (lowMorale > 0) {
       items.push({
@@ -157,7 +160,7 @@ export const ExecutiveDashboard: React.FC = () => {
             <div>
               <p className={cn('text-[10px] uppercase', tokens.text.caption)}>Projects</p>
               <p className="text-xl font-bold">
-                {Object.keys(gameState?.entities?.projects || {}).length}
+                {selectProjects(gameState).length}
               </p>
             </div>
           </div>
@@ -171,7 +174,7 @@ export const ExecutiveDashboard: React.FC = () => {
             <div>
               <p className={cn('text-[10px] uppercase', tokens.text.caption)}>Talent</p>
               <p className="text-xl font-bold">
-                {Object.keys(gameState?.entities?.talents || {}).length}
+                {selectTalentPool(gameState).length}
               </p>
             </div>
           </div>

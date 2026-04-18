@@ -68,6 +68,8 @@ const handlerRegistry: Record<string, (state: GameState, impact: StateImpact) =>
   'SCANDAL_ADDED': industryHandlers.handleScandalAdded,
   'SCANDAL_REMOVED': industryHandlers.handleScandalRemoved,
   'RIVAL_UPDATED': industryHandlers.handleRivalUpdated,
+  'MERGER_OFFERED': industryHandlers.handleMergerOffered,
+  'MERGER_RESOLVED': industryHandlers.handleMergerResolved,
 
   // Studio handlers
   'PRESTIGE_CHANGED': studioHandlers.handlePrestigeChanged,

@@ -3,6 +3,11 @@ import { cn } from '@/lib/utils';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { tokens } from '@/lib/tokens';
+import {
+  selectProjects,
+  selectOverBudgetProjects,
+  selectLowMoraleTalent
+} from '@/store/selectors';
 import { Section } from '@/components/layout/Section';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -47,8 +52,7 @@ export const CrisisTriageDashboard: React.FC = () => {
     const items: CrisisItem[] = [];
     
     // Budget overruns
-    const overBudget = Object.values(gameState?.entities?.projects || {})
-      .filter(p => (p.accumulatedCost || 0) > (p.budget || 0) * 1.1);
+    const overBudget = selectOverBudgetProjects(gameState);
     
     if (overBudget.length > 0) {
       const totalOverrun = overBudget.reduce((sum, p) => 
@@ -68,7 +72,7 @@ export const CrisisTriageDashboard: React.FC = () => {
     }
 
     // Projects needing greenlight (opportunity cost)
-    const needsGreenlight = Object.values(gameState?.entities?.projects || {})
+    const needsGreenlight = selectProjects(gameState)
       .filter(p => p.state === 'needs_greenlight');
     
     if (needsGreenlight.length > 0) {
@@ -86,8 +90,7 @@ export const CrisisTriageDashboard: React.FC = () => {
     }
 
     // Low talent morale
-    const lowMorale = Object.values(gameState?.entities?.talents || {})
-      .filter(t => (t as any).morale || (t as any).relationshipScore || 100 < 40);
+    const lowMorale = selectLowMoraleTalent(gameState);
     
     if (lowMorale.length > 0) {
       items.push({
@@ -104,7 +107,7 @@ export const CrisisTriageDashboard: React.FC = () => {
     }
 
     // Active production crises
-    const productionCrises = Object.values(gameState?.entities?.projects || {})
+    const productionCrises = selectProjects(gameState)
       .filter(p => p.activeCrisis && !p.activeCrisis.resolved);
     
     if (productionCrises.length > 0) {

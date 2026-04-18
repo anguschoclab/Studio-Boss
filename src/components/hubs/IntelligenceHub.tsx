@@ -1,6 +1,11 @@
 import React, { useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore, IntelligenceSubTab } from '@/store/uiStore';
+import {
+  selectRivals,
+  selectActiveProjects,
+  selectAwardsEligibleProjects
+} from '@/store/selectors';
 import { SubNav } from '@/components/navigation/SubNav';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -23,7 +28,7 @@ const TrendBoard = React.lazy(() => import('@/components/trends/TrendBoard').the
 // Rivals Panel (simplified from IndustryPage)
 const RivalsPanel = () => {
   const gameState = useGameStore(s => s.gameState);
-  const rivals = Object.values(gameState?.entities?.rivals || {});
+  const rivals = selectRivals(gameState);
   
   return (
     <div className="h-full overflow-y-auto custom-scrollbar space-y-4 pb-4">
@@ -70,12 +75,8 @@ const RivalsPanel = () => {
 const AwardsPanel = () => {
   const gameState = useGameStore(s => s.gameState);
   const eligibleProjects = useMemo(() => {
-    if (!gameState) return [];
-    return Object.values(gameState.entities.projects).filter(p => 
-      (p.state === 'released' || p.state === 'post_release') &&
-      p.releaseWeek !== null &&
-      p.releaseWeek > gameState.week - 52
-    ).sort((a, b) => (b.reception?.metaScore || 0) - (a.reception?.metaScore || 0));
+    return selectAwardsEligibleProjects(gameState)
+      .sort((a, b) => (b.reception?.metaScore || 0) - (a.reception?.metaScore || 0));
   }, [gameState]);
   
   return (
@@ -170,7 +171,7 @@ const FinancialsPanel = () => {
     { label: 'Cash Reserves', value: formatMoney(cash), icon: DollarSign, color: cash > 0 ? 'text-emerald-400' : 'text-destructive' },
     { label: 'Prestige', value: prestige.toString(), icon: Trophy, color: 'text-amber-400' },
     { label: 'Market Sentiment', value: `${gameState?.finance?.marketState?.sentiment || 50}%`, icon: Activity, color: 'text-primary' },
-    { label: 'Active Projects', value: Object.values(gameState?.entities?.projects || {}).filter(p => p.state !== 'released' && p.state !== 'archived').length.toString(), icon: BarChart3, color: 'text-secondary' },
+    { label: 'Active Projects', value: selectActiveProjects(gameState).length.toString(), icon: BarChart3, color: 'text-secondary' },
   ];
   
   return (
@@ -233,11 +234,8 @@ export const IntelligenceHub: React.FC = () => {
   
   // Calculate badge counts
   const badgeCounts = useMemo(() => {
-    const rivals = Object.keys(gameState?.entities?.rivals || {}).length;
-    const eligibleAwards = Object.values(gameState?.entities?.projects || {})
-      .filter(p => (p.state === 'released' || p.state === 'post_release') && 
-                   p.releaseWeek && 
-                   gameState && p.releaseWeek > gameState.week - 52).length;
+    const rivals = selectRivals(gameState).length;
+    const eligibleAwards = selectAwardsEligibleProjects(gameState).length;
     const marketEvents = gameState?.market?.activeMarketEvents?.length || 0;
     
     return {

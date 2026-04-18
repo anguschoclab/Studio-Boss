@@ -3,6 +3,7 @@ import { useGameStore } from '@/store/gameStore';
 import { Project, TalentRole } from '@/engine/types';
 import { formatMoney } from '@/engine/utils';
 import { getRecommendedTalentForProject } from '@/engine/utils/projectUtils';
+import { selectTalentPool } from '@/store/selectors';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -38,7 +39,7 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
   const [showMatchesOnly, setShowMatchesOnly] = useState(false);
   const [hoveredTalentId, setHoveredTalentId] = useState<string | null>(null);
 
-  const talentPool = useMemo(() => Object.values(gameState?.entities.talents || {}), [gameState?.entities.talents]);
+  const talentPool = useMemo(() => selectTalentPool(gameState), [gameState?.entities?.talents]);
   const contracts = useMemo(() => Object.values(gameState?.entities.contracts || {}), [gameState?.entities.contracts]);
   
   const attachedTalentIds = useMemo(() => {

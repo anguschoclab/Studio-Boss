@@ -7,6 +7,10 @@ const AwardsCeremonyModal = React.lazy(() => import('./AwardsCeremonyModal').the
 const FestivalMarketModal = React.lazy(() => import('./FestivalMarketModal').then(m => ({ default: m.FestivalMarketModal })));
 const CreatePackageModal = React.lazy(() => import('./CreatePackageModal').then(m => ({ default: m.CreatePackageModal })));
 const PackageDetailModal = React.lazy(() => import('./PackageDetailModal').then(m => ({ default: m.PackageDetailModal })));
+const DirectorsCutModal = React.lazy(() => import('./DirectorsCutModal').then(m => ({ default: m.DirectorsCutModal })));
+const UpfrontsModal = React.lazy(() => import('./UpfrontsModal').then(m => ({ default: m.UpfrontsModal })));
+const BiddingWarModal = React.lazy(() => import('./BiddingWarModal').then(m => ({ default: m.BiddingWarModal })));
+const BreakoutBiddingWarModal = React.lazy(() => import('./BreakoutBiddingWarModal').then(m => ({ default: m.BreakoutBiddingWarModal })));
 
 /**
  * Unified Modal Manager.
@@ -33,6 +37,14 @@ export const ModalManager: React.FC = () => {
             return <CreatePackageModal key={activeModal.id} {...(activeModal.payload as any)} />;
           case 'PACKAGE_DETAIL':
             return <PackageDetailModal key={activeModal.id} />;
+          case 'DIRECTORS_CUT_AVAILABLE':
+            return <DirectorsCutModal key={activeModal.id} />;
+          case 'UPFRONTS':
+            return <UpfrontsModal key={activeModal.id} />;
+          case 'BIDDING_WAR':
+            return <BiddingWarModal key={activeModal.id} />;
+          case 'BREAKOUT_BIDDING_WAR':
+            return <BreakoutBiddingWarModal key={activeModal.id} />;
           default:
             return null;
         }

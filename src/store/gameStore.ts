@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { GameState, WeekSummary, ArchetypeKey, FinanceState, NewsState, ModalType } from '@/engine/types';
+import { GameState, WeekSummary, ArchetypeKey, NewsState, ModalType } from '@/engine/types';
 import { saveGame, loadGame, getSaveSlots, SaveSlotInfo } from '@/persistence/saveLoad';
 import { useUIStore } from './uiStore';
 
@@ -10,6 +10,7 @@ import { createRivalSlice, RivalSlice } from './slices/rivalSlice';
 import { createNewsSlice, NewsSlice } from './slices/newsSlice';
 import { createSnapshotSlice, SnapshotSlice } from './slices/snapshotSlice';
 import { createMarketingSlice, MarketingSlice } from './slices/marketingSlice';
+import { DEFAULT_FINANCE_STATE } from './selectors';
 
 export interface GameStore extends ProjectSlice, FinanceSlice, TalentSlice, RivalSlice, NewsSlice, SnapshotSlice, MarketingSlice {
   gameState: GameState | null;
@@ -26,20 +27,7 @@ export interface GameStore extends ProjectSlice, FinanceSlice, TalentSlice, Riva
   devAutoInit: (archetype?: ArchetypeKey) => void;
 }
 
-const INITIAL_FINANCE: FinanceState = {
-  cash: 0,
-  ledger: [],
-  weeklyHistory: [],
-  marketState: {
-    cycle: 'STABLE',
-    sentiment: 0,
-    baseRate: 0.05,
-    debtRate: 0.08,
-    savingsYield: 0.02,
-    loanRate: 0.08,
-    rateHistory: []
-  }
-};
+const INITIAL_FINANCE = DEFAULT_FINANCE_STATE;
 const INITIAL_NEWS: NewsState = { headlines: [] };
 
 // Check if running in Electron environment

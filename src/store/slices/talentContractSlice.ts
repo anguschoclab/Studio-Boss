@@ -8,6 +8,7 @@ export interface TalentContractSlice {
   signContract: (talentId: string, projectId: string) => void;
   offerFirstLook: (talentId: string, duration: number, fee: number) => boolean;
   removeTalentFromProject: (talentId: string, projectId: string) => void;
+  signBreakoutTalent: (talentId: string, premiumFee: number) => void;
 }
 
 export const createTalentContractSlice: StateCreator<GameStore, [], [], TalentContractSlice> = (set, get) => ({
@@ -178,6 +179,47 @@ export const createTalentContractSlice: StateCreator<GameStore, [], [], TalentCo
        }
     });
     return success;
+  },
+
+  signBreakoutTalent: (talentId, premiumFee) => {
+    set((s) => {
+      const state = s.gameState;
+      if (!state) return s;
+      const talent = state.entities.talents[talentId];
+      if (!talent) return s;
+      if (state.finance.cash < premiumFee) return s;
+      const rng = new RandomGenerator(state.rngState);
+      const deal: TalentPact = {
+        id: rng.uuid('PCT'),
+        talentId,
+        studioId: 'PLAYER',
+        type: 'first_look',
+        startDate: state.week,
+        endDate: state.week + 52,
+        weeklyOverhead: Math.floor(premiumFee * 0.02),
+        exclusivity: true,
+        status: 'active'
+      };
+      const updatedTalent = { ...talent, fee: premiumFee };
+      const currentDeals = state.deals?.activeDeals || [];
+      const newsEntry = {
+        id: rng.uuid('NWS'),
+        week: state.week,
+        type: 'STUDIO_EVENT' as const,
+        headline: `${state.studio.name} wins bidding war, signs breakout star ${talent.name}.`,
+        description: `${talent.name} signed amid heavy rival interest.`,
+      };
+      return {
+        gameState: {
+          ...state,
+          finance: { ...state.finance, cash: state.finance.cash - premiumFee },
+          entities: { ...state.entities, talents: { ...state.entities.talents, [talentId]: updatedTalent } },
+          deals: { ...state.deals, activeDeals: [...currentDeals, deal] },
+          industry: { ...state.industry, newsHistory: [newsEntry, ...state.industry.newsHistory] },
+          rngState: rng.getState()
+        }
+      };
+    });
   },
 
   removeTalentFromProject: (talentId, projectId) => {

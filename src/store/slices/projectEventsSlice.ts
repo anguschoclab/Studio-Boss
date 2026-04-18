@@ -3,6 +3,7 @@ import { GameStore } from '../gameStore';
 import { applyStateImpact } from '../storeUtils';
 import { resolveCrisis } from '@/engine/systems/crises';
 import * as festivalsEngine from '@/engine/systems/festivals';
+import { releaseDirectorsCut } from '@/engine/systems/ratings/directorsCuts';
 import { RandomGenerator } from '@/engine/utils/rng';
 import { Project, GameState, AwardBody, MarketingCampaign } from '@/engine/types';
 
@@ -10,6 +11,8 @@ export interface ProjectEventsSlice {
   resolveProjectCrisis: (projectId: string, optionIndex: number) => void;
   submitToFestival: (projectId: string, festivalBody: AwardBody) => void;
   lockMarketingCampaign: (projectId: string, level: 'none' | 'basic' | 'blockbuster') => void;
+  releaseDirectorsCutAction: (projectId: string) => void;
+  resolveMerger: (accept: boolean, attackerId: string, targetId: string, offerAmount: number) => void;
 }
 
 export const createProjectEventsSlice: StateCreator<GameStore, [], [], ProjectEventsSlice> = (set, get) => ({
@@ -36,6 +39,44 @@ export const createProjectEventsSlice: StateCreator<GameStore, [], [], ProjectEv
       const newState = applyStateImpact(s.gameState, impact);
       newState.rngState = rng.getState();
       return { gameState: newState };
+    });
+  },
+
+  releaseDirectorsCutAction: (projectId) => {
+    set((s) => {
+      const state = s.gameState;
+      if (!state) return s;
+      const project = state.entities.projects[projectId];
+      if (!project) return s;
+      const rng = new RandomGenerator(state.rngState);
+      const contractsArr = Object.values(state.entities.contracts || {});
+      const directorContract = contractsArr.find(c => c.projectId === projectId && c.role === 'director');
+      const directorId = directorContract?.talentId ?? null;
+      const impacts = releaseDirectorsCut(project, directorId, rng);
+      const newState = applyStateImpact(state, impacts);
+      newState.rngState = rng.getState();
+      return { gameState: newState };
+    });
+  },
+
+  resolveMerger: (accept, attackerId, targetId, offerAmount) => {
+    set((s) => {
+      const state = s.gameState;
+      if (!state) return s;
+      if (accept) {
+        const newState = applyStateImpact(state, [
+          {
+            type: 'FUNDS_CHANGED',
+            payload: { amount: offerAmount }
+          },
+          {
+            type: 'INDUSTRY_UPDATE',
+            payload: { mergedRivalId: targetId, acquirerId: attackerId }
+          }
+        ]);
+        return { gameState: newState };
+      }
+      return s;
     });
   },
 

@@ -16,7 +16,7 @@ const EMPTY_EVENT_HISTORY: GameEvent[] = [];
 const EMPTY_ARRAY: never[] = [];
 const DEFAULT_MARKET_METRICS = { cycle: 'STABLE', sentiment: 0, debtRate: 0.08, savingsRate: 0.02 };
 
-const EMPTY_FINANCE: FinanceState = {
+export const DEFAULT_FINANCE_STATE: FinanceState = {
   cash: 0, 
   ledger: [], 
   weeklyHistory: [], 
@@ -26,10 +26,12 @@ const EMPTY_FINANCE: FinanceState = {
     baseRate: 0.05, 
     debtRate: 0.08, 
     savingsYield: 0.02,
-    loanRate: 0.07,
-    rateHistory: [{ week: 1, rate: 0.05 }]
+    loanRate: 0.08,
+    rateHistory: []
   } as MarketState
 };
+
+const EMPTY_FINANCE = DEFAULT_FINANCE_STATE;
 
 export const selectGameState = (state: GameState | null): GameState | null => state;
 
@@ -672,6 +674,40 @@ export const selectCrisisRiskLevel = (state: GameState | null) => {
 // ============================================================================
 // VISUALIZATION SELECTORS - Phase 6: Awards
 // ============================================================================
+
+// ============================================================================
+// DERIVED STATE SELECTORS — shared predicates to eliminate component-level duplication
+// ============================================================================
+
+/**
+ * Projects over budget (accumulated cost > 110% of budget)
+ */
+export const selectOverBudgetProjects = (state: GameState | null): Project[] => {
+  return selectProjects(state).filter(p =>
+    (p.accumulatedCost || 0) > (p.budget || 0) * 1.1
+  );
+};
+
+/**
+ * Talent with mood below a threshold (default 40).
+ * Replaces the bugged inline filter: `|| 100 < 40` was always false.
+ */
+export const selectLowMoraleTalent = (state: GameState | null, threshold = 40): Talent[] => {
+  return selectTalentPool(state).filter(t => (t.psychology?.mood ?? 100) < threshold);
+};
+
+/**
+ * Projects eligible for awards consideration: released or post_release
+ * within the last 52 weeks. Canonical definition — replaces three diverging inline filters.
+ */
+export const selectAwardsEligibleProjects = (state: GameState | null): Project[] => {
+  const currentWeek = state?.week ?? 0;
+  return selectProjects(state).filter(p =>
+    (p.state === 'released' || p.state === 'post_release') &&
+    p.releaseWeek !== null &&
+    (p.releaseWeek ?? 0) > currentWeek - 52
+  );
+};
 
 /**
  * Awards probability data for AwardsProbabilityChart visualization

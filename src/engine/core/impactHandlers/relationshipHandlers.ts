@@ -23,7 +23,20 @@ export function handleRelationshipFormed(state: GameState, impact: StateImpact):
 
 export function handleRelationshipUpdated(state: GameState, impact: StateImpact): GameState {
   if (!impact.payload) return state;
-  const { key, relationship } = impact.payload;
+  const { key, relationship, relationshipId } = impact.payload;
+
+  // Talent-agent relationship path
+  if (relationshipId && relationship) {
+    return {
+      ...state,
+      talentAgentRelationships: {
+        ...(state.talentAgentRelationships || {}),
+        [relationshipId]: relationship,
+      },
+    };
+  }
+
+  // Talent-talent relationship path
   if (!key || !relationship) return state;
   return {
     ...state,

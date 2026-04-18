@@ -1,6 +1,16 @@
 import { Project, FilmProject, SeriesProject, UnscriptedProject, BudgetTierKey } from '../types/project.types';
 import { Talent } from '../types/talent.types';
 
+const BUDGET_TIER_RANK: Record<BudgetTierKey, number> = { 'indie': 1, 'low': 2, 'mid': 3, 'high': 4, 'blockbuster': 5 };
+
+function getTalentPrestigeTier(prestige: number): number {
+  if (prestige > 80) return 5;
+  if (prestige > 60) return 4;
+  if (prestige > 40) return 3;
+  if (prestige > 20) return 2;
+  return 1;
+}
+
 /**
  * Project Type Guards for Strict Type Safety
  */
@@ -45,9 +55,8 @@ export function calculateTalentFitScore(talent: Talent, project: Project, target
   }
 
   // --- TIER ALIGNMENT ---
-  const tierMap: Record<BudgetTierKey, number> = { 'indie': 1, 'low': 2, 'mid': 3, 'high': 4, 'blockbuster': 5 };
-  const tierValue = tierMap[project.budgetTier] || 1;
-  const talentTier = talent.prestige > 80 ? 5 : talent.prestige > 60 ? 4 : talent.prestige > 40 ? 3 : talent.prestige > 20 ? 2 : 1;
+  const tierValue = BUDGET_TIER_RANK[project.budgetTier] || 1;
+  const talentTier = getTalentPrestigeTier(talent.prestige);
 
   if (talentTier === tierValue) score += 20;
   else if (Math.abs(talentTier - tierValue) === 1) score += 5;
@@ -99,9 +108,8 @@ export function getRecommendedTalentForProject(talentPool: Talent[], project: Pr
     const tags: string[] = [];
     
     if (t.preferredGenres?.includes(project.genre)) tags.push("Genre Specialist");
-    const tierMap: Record<BudgetTierKey, number> = { 'indie': 1, 'low': 2, 'mid': 3, 'high': 4, 'blockbuster': 5 };
-    const tierValue = tierMap[project.budgetTier] || 1;
-    const talentTier = t.prestige > 80 ? 5 : t.prestige > 60 ? 4 : t.prestige > 40 ? 3 : t.prestige > 20 ? 2 : 1;
+    const tierValue = BUDGET_TIER_RANK[project.budgetTier] || 1;
+    const talentTier = getTalentPrestigeTier(t.prestige);
     if (talentTier === tierValue) tags.push("Perfect Tier Match");
     if (t.draw > 70 && project.budgetTier === 'blockbuster') tags.push("Box Office Draw");
 

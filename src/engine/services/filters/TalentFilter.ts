@@ -127,16 +127,18 @@ export class TalentFilter implements WeekFilter {
         const relationshipId = `${talentId}-${talent.agentId}`;
         const relationship = state.talentAgentRelationships[relationshipId];
         if (relationship) {
-          // Evolve relationship over time
-          // Use 0 for weeksSinceLastInteraction since we don't track last interaction week
-          TalentAgentInteractionEngine.evolveRelationship(
+          // Evolve relationship over time and persist the result
+          const evolved = TalentAgentInteractionEngine.evolveRelationship(
             relationship,
             0,
             context.rng
           );
-
-          // Note: Relationship updates will be handled by impact reducer in a future update
-          // For now, we track evolution but don't update state directly
+          if (evolved !== relationship) {
+            context.impacts.push({
+              type: 'RELATIONSHIP_UPDATED',
+              payload: { relationshipId, relationship: evolved }
+            });
+          }
         }
       }
     }
