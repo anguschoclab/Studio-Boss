@@ -263,7 +263,7 @@ describe('TalentAgentInteractionEngine', () => {
 
       const evolved = TalentAgentInteractionEngine.evolveRelationship(relationship, 60, mockRng);
 
-      expect(evolved.history.yearsTogether).toBeGreaterThanOrEqual(2);
+      expect(evolved.history.yearsTogether).toBe(3);
     });
   });
 
