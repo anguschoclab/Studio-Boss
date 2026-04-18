@@ -55,7 +55,7 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
 
         const isKeyIPGenre = opportunity.genre === 'Sci-Fi' || opportunity.genre === 'Action' || opportunity.genre === 'Fantasy';
         // 🎭 The Method Actor Tuning: Boost franchise aggression for key IP genres to simulate fierce studio bidding wars.
-        const franchiseAggression = isFranchiseBuilder && isKeyIPGenre ? 2.5 : (isFranchiseBuilder ? 1.2 : 1.0);
+const franchiseAggression = isFranchiseBuilder && isKeyIPGenre ? 2.2 : (isFranchiseBuilder ? 1.2 : 1.0);
 
         const isPrestigeGenre = opportunity.genre === 'Drama' || opportunity.genre === 'Historical' || opportunity.genre === 'Biopic';
         const awardAggression = isAwardChaser && isPrestigeGenre ? 1.4 : (isAwardChaser ? 1.1 : 1.0);
