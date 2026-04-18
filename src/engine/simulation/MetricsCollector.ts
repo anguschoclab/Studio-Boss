@@ -51,8 +51,9 @@ export class MetricsCollector {
     // Track total completed & Genre ROI
     let worldCompletedCount = 0;
     
+    const playerProjectsList = Object.values(state.entities.projects);
     const allStudios = [
-        { id: 'PLAYER', projects: Object.values(state.entities.projects), cash: Number(state.finance.cash) || 0, name: state.studio.name },
+        { id: 'PLAYER', projects: playerProjectsList, cash: Number(state.finance.cash) || 0, name: state.studio.name },
         ...rivalsList.map(r => ({ id: r.id, projects: Object.values(r.projects || {}), cash: Number(r.cash) || 0, name: r.name }))
     ];
 
@@ -112,9 +113,14 @@ export class MetricsCollector {
     const marketShare = totalAssets > 0 ? (playerCash / totalAssets) * 100 : 0;
 
     // totalSystemCash = player + rivals + platforms + (active budgets estimate)
-    const activeBudgets = Object.values(state.entities.projects)
-      .filter(p => !['released', 'archived', 'post_release'].includes(p.state))
-      .reduce((sum, p) => sum + (p.budget || 0), 0);
+    let activeBudgets = 0;
+    let activeProjectsCount = 0;
+    playerProjectsList.forEach(p => {
+        if (!['released', 'archived', 'post_release'].includes(p.state)) {
+            activeBudgets += p.budget || 0;
+            activeProjectsCount += 1;
+        }
+    });
 
     // Nielsen & Cut Analytics
     let totalNielsenDemo = 0;
@@ -154,7 +160,7 @@ export class MetricsCollector {
       totalMarketSentiment: state.finance.marketState?.sentiment || 50,
       talentPoolSize: talentPoolSize,
       avgTalentPrestige: totalPrestige / (talentPoolSize || 1),
-      activeProjects: Object.values(state.entities.projects).reduce((acc, p) => acc + (!['released', 'archived', 'post_release'].includes(p.state) ? 1 : 0), 0),
+      activeProjects: activeProjectsCount,
       completedProjects: worldCompletedCount,
       retiredCount: this.totalRetired,
       bankruptcyCount: rivalsList.filter(r => (Number(r.cash) || 0) <= -50000000).length,
