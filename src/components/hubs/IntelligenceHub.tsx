@@ -21,9 +21,9 @@ import {
 import { cn } from '@/lib/utils';
 import { formatMoney } from '@/engine/utils';
 import { m } from 'framer-motion';
-import { GenreTrendsPanel } from '@/components/_unconnected/GenreTrendsPanel';
-import { AwardsTracker } from '@/components/_unconnected/AwardsTracker';
-import { RivalReleaseTracker } from '@/components/_unconnected/RivalReleaseTracker';
+import { GenreTrendsPanel } from './intelligence/GenreTrendsPanel';
+import { AwardsTracker } from './intelligence/AwardsTracker';
+import { RivalReleaseTracker } from './intelligence/RivalReleaseTracker';
 
 // Rivals Panel
 const RivalsPanel = () => {

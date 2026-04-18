@@ -21,7 +21,7 @@ import { ModalManager } from '@/components/modals/ModalManager';
 import { CreateProjectModal } from '@/components/modals/CreateProjectModal';
 import { ProjectDetailModal } from '@/components/modals/ProjectDetailModal';
 import { PitchProjectModal } from '@/components/modals/PitchProjectModal';
-import { AttachTalentModal } from '@/components/_unconnected/AttachTalentModal';
+import { AttachTalentModal } from '@/components/modals/AttachTalentModal';
 
 const Dashboard: React.FC = () => {
   const gameState = useGameStore(s => s.gameState);

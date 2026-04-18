@@ -15,8 +15,8 @@ import { cn } from '@/lib/utils';
 import { formatMoney } from '@/engine/utils';
 import { m } from 'framer-motion';
 import { StrategyPanel } from './StrategyPanel';
-import { BuzzMeter } from '@/components/_unconnected/BuzzMeter';
-import { MarketingWarRoom } from '@/components/_unconnected/MarketingWarRoom';
+import { BuzzMeter } from './hq/BuzzMeter';
+import { MarketingWarRoom } from './hq/MarketingWarRoom';
 
 // Lazy load heavy components
 const ExecutiveDashboard = React.lazy(() => import('@/components/hubs/ExecutiveDashboard').then(m => ({ default: m.ExecutiveDashboard })));

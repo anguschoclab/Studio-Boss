@@ -21,6 +21,7 @@ import { cn } from '@/lib/utils';
 import { tokens } from '@/lib/tokens';
 import { transitions } from '@/lib/animations';
 import { useUIStore } from '@/store/uiStore';
+import { useGameStore } from '@/store/gameStore';
 
 interface CommandItem {
   id: string;
@@ -55,7 +56,8 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
 }) => {
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const { setActiveHub, setActiveSubTab, openCreateProject } = useUIStore();
+  const { openCreateProject, setActiveHub, setActiveSubTab } = useUIStore();
+  const doAdvanceWeek = useGameStore((s) => s.doAdvanceWeek);
 
   // Build command list
   const commands: CommandItem[] = React.useMemo(() => {
@@ -112,7 +114,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
         title: 'Advance Week',
         subtitle: 'Progress to next production week',
         icon: Clock,
-        action: () => {}, // Would trigger week advancement
+        action: () => { doAdvanceWeek(); },
         section: 'Actions',
       },
       // Crisis Management

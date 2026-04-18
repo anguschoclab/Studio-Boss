@@ -23,7 +23,7 @@ import { selectOpportunities, selectTalentPool, selectLowMoraleTalent } from '@/
 import { MoraleDashboard } from '@/components/talent/MoraleDashboard';
 import { TalentPactPanel } from '@/components/talent/TalentPactPanel';
 import { OfferHistoryLog } from '@/components/talent/OfferHistoryLog';
-import { ScandalTracker } from '@/components/_unconnected/ScandalTracker';
+import { ScandalTracker } from './talent/ScandalTracker';
 
 // Lazy load components
 const LiveAuctionDashboard = React.lazy(() => import('@/components/talent/LiveAuctionDashboard').then(m => ({ default: m.LiveAuctionDashboard })));

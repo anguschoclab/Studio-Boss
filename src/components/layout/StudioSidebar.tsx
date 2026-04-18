@@ -308,7 +308,7 @@ export const StudioSidebar = () => {
               variant="ghost"
               size={isCollapsed ? "icon" : "default"}
               className="w-full justify-start gap-3 text-muted-foreground hover:bg-accent/50"
-              onClick={() => {}}
+              onClick={() => navigate({ to: '/' })}
             >
               <Settings className="h-4.5 w-4.5 shrink-0" />
               {!isCollapsed && <span className="text-[13px]">Settings</span>}

@@ -14,6 +14,7 @@ import {
 import { cn } from '@/lib/utils';
 import { tokens } from '@/lib/tokens';
 import { useUIStore } from '@/store/uiStore';
+import { useGameStore } from '@/store/gameStore';
 import { transitions } from '@/lib/animations';
 
 interface QuickAction {
@@ -38,7 +39,8 @@ interface QuickActionsDockProps {
 export const QuickActionsDock: React.FC<QuickActionsDockProps> = ({
   className,
 }) => {
-  const { activeHub, openCreateProject, showQuickActions } = useUIStore();
+  const { activeHub, openCreateProject, showQuickActions, setActiveHub } = useUIStore();
+  const doAdvanceWeek = useGameStore(s => s.doAdvanceWeek);
   const [isExpanded, setIsExpanded] = React.useState(false);
 
   // Contextual actions based on active hub
@@ -56,47 +58,47 @@ export const QuickActionsDock: React.FC<QuickActionsDockProps> = ({
         id: 'advance-week',
         icon: Clock,
         label: 'Advance Week',
-        action: () => {}, // Would trigger week advancement
+        action: () => { doAdvanceWeek(); },
       },
     ];
 
     const hubSpecificActions: Record<string, QuickAction[]> = {
       hq: [
         {
-          id: 'studio-settings',
+          id: 'studio-marketing',
           icon: Settings,
-          label: 'Studio Settings',
-          action: () => {},
+          label: 'Marketing',
+          action: () => { setActiveHub('hq', 'marketing'); },
         },
       ],
       production: [
         {
           id: 'pipeline-view',
           icon: Film,
-          label: 'Pipeline Overview',
-          action: () => {},
+          label: 'Slate',
+          action: () => { setActiveHub('production', 'slate'); },
         },
       ],
       talent: [
         {
           id: 'discover-talent',
           icon: Users,
-          label: 'Discover Talent',
-          action: () => {},
+          label: 'Marketplace',
+          action: () => { setActiveHub('talent', 'marketplace'); },
         },
       ],
       intelligence: [
         {
           id: 'market-analysis',
           icon: TrendingUp,
-          label: 'Market Analysis',
-          action: () => {},
+          label: 'Market Trends',
+          action: () => { setActiveHub('intelligence', 'market'); },
         },
       ],
     };
 
     return [...baseActions, ...(hubSpecificActions[activeHub] || [])];
-  }, [activeHub, openCreateProject]);
+  }, [activeHub, openCreateProject, doAdvanceWeek, setActiveHub]);
 
   if (!showQuickActions) return null;
 

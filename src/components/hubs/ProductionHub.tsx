@@ -23,9 +23,9 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { StreamingPerformancePanel } from '@/components/_unconnected/StreamingPerformancePanel';
-import { WriterStrikeImpact } from '@/components/_unconnected/WriterStrikeImpact';
-import { LocationScoutPanel } from '@/components/_unconnected/LocationScoutPanel';
+import { StreamingPerformancePanel } from './production/StreamingPerformancePanel';
+import { WriterStrikeImpact } from './production/WriterStrikeImpact';
+import { LocationScoutPanel } from './production/LocationScoutPanel';
 
 // Lazy load the heavy components
 const PipelineBoard = React.lazy(() => import('@/components/pipeline/PipelineBoard').then(m => ({ default: m.PipelineBoard })));
