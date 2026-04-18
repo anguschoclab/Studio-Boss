@@ -42,7 +42,9 @@ import {
 import { cn } from '@/lib/utils';
 import { DevelopmentLog } from './DevelopmentLog';
 import { TalentAttachmentPanel } from '../talent/TalentAttachmentPanel';
-import { calculateAudienceIndex } from '@/engine/systems/demographics';
+import { ProjectOverviewTab } from './tabs/ProjectOverviewTab';
+import { ProjectMarketingTab } from './tabs/ProjectMarketingTab';
+import { ProjectCampaignsTab } from './tabs/ProjectCampaignsTab';
 
 export const ProjectDetailModal = () => {
   const [selectedTier, setSelectedTier] = useState<'none' | 'basic' | 'blockbuster'>('none');
@@ -170,142 +172,9 @@ export const ProjectDetailModal = () => {
 
             <ScrollArea className="flex-1 p-6">
               <div className="min-h-full">
-                {/* OVERVIEW TAB */}
-                <TabsContent value="overview" className="mt-0 space-y-6">
-                  <div className="grid grid-cols-2 gap-6">
-                    <div className="bg-slate-900/40 p-5 rounded-2xl border border-slate-800/50 space-y-4">
-                      <div className="flex items-center gap-2">
-                        <TrendingUp className="w-4 h-4 text-primary" />
-                        <span className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Package Analysis</span>
-                      </div>
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between">
-                           <span className="text-xs font-bold text-slate-400">Town Heat</span>
-                            <span className="text-sm font-black text-primary">{scriptedProject?.scriptHeat || 50}%</span>
-                        </div>
-                        <div className="h-1.5 rounded-full bg-slate-800 overflow-hidden">
-                           <div className="h-full bg-primary" style={{ width: `${scriptedProject?.scriptHeat || 50}%` }} />
-                        </div>
-                        {project.flavor && (
-                          <div className="relative p-4 rounded-xl bg-black/40 border-l-4 border-primary/40 italic text-sm text-slate-300">
-                             "{project.flavor}"
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    
-                    <div className="bg-slate-900/40 p-5 rounded-2xl border border-slate-800/50 space-y-4">
-                      <div className="flex items-center gap-2">
-                        <DollarSign className="w-4 h-4 text-emerald-400" />
-                        <span className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">P&L Forecast</span>
-                      </div>
-                      <div className="space-y-3">
-                        <div className="flex justify-between items-center">
-                          <span className="text-xs font-bold text-slate-400">Accumulated Cost</span>
-                          <span className="text-sm font-black text-rose-400">-{formatMoney(project.accumulatedCost || 0)}</span>
-                        </div>
-                        <div className="flex justify-between items-center text-xs">
-                          <span className="text-slate-500">Weekly Burn</span>
-                          <span className="text-rose-400/60 font-bold">-{formatMoney(project.weeklyCost)}</span>
-                        </div>
-                        <div className="pt-3 border-t border-slate-800/50 flex justify-between items-center">
-                          <span className="text-xs font-black uppercase text-slate-400">Current Yield</span>
-                          <span className="text-xl font-black text-emerald-500">{formatMoney(project.revenue)}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                <ProjectOverviewTab project={project} scriptedProject={scriptedProject} />
 
-                  <div className="grid grid-cols-3 gap-4">
-                     {[
-                       { label: 'Buzz', val: `${project.buzz.toFixed(0)}%`, icon: TrendingUp, color: 'text-violet-400' },
-                       { label: 'Complexity', val: project.budgetTier.toUpperCase(), icon: Brain, color: 'text-emerald-400' },
-                       { label: 'Week', val: project.weeksInPhase, icon: Calendar, color: 'text-amber-400' }
-                     ].map(card => (
-                       <div key={card.label} className="p-4 rounded-xl bg-slate-900/20 border border-slate-800/50 flex items-center gap-4">
-                          <div className={cn("w-10 h-10 rounded-lg bg-black/40 flex items-center justify-center border border-white/5", card.color)}>
-                             <card.icon className="w-5 h-5" />
-                          </div>
-                          <div>
-                             <div className="text-[9px] font-black uppercase text-slate-500 tracking-widest">{card.label}</div>
-                             <div className="text-lg font-black text-foreground leading-none">{card.val}</div>
-                          </div>
-                       </div>
-                     ))}
-                  </div>
-
-                  {/* Audience Intel (New Phase 4) */}
-                  <div className="bg-slate-900/40 p-5 rounded-2xl border border-slate-800/50 space-y-4">
-                    <div className="flex items-center gap-2">
-                      <Users className="w-4 h-4 text-primary" />
-                      <span className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Audience Resonance Breakdown</span>
-                    </div>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                        {['male_under_25', 'female_under_25', 'male_over_25', 'female_over_25'].map(q => {
-                          const score = calculateAudienceIndex(project, q as import('@/engine/types').AudienceQuadrant);
-                         return (
-                           <div key={q} className="p-3 rounded-xl bg-black/40 border border-white/5 space-y-1">
-                             <p className="text-[8px] font-black text-slate-500 uppercase tracking-tighter">{q.replace(/_/g, ' ')}</p>
-                             <div className="flex items-center justify-between">
-                               <span className="text-sm font-black text-white">{score.toFixed(2)}x</span>
-                               <div className={cn("w-1.5 h-1.5 rounded-full", score > 1.2 ? "bg-emerald-500" : score > 0.8 ? "bg-amber-500" : "bg-rose-500")} />
-                             </div>
-                           </div>
-                         );
-                       })}
-                    </div>
-                  </div>
-
-                  {project.reception && (
-                    <div className="mt-8 p-6 bg-black/60 border border-slate-800 rounded-3xl space-y-6 relative overflow-hidden group">
-                      <div className="absolute top-0 right-0 p-3">
-                         {project.reception.isCultPotential && (
-                           <Badge className="bg-fuchsia-600/20 text-fuchsia-400 border-fuchsia-600/50 animate-pulse font-black uppercase tracking-tighter">Cult Potential</Badge>
-                         )}
-                      </div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <Activity className="w-4 h-4 text-primary" />
-                        <span className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Critic & Audience Reception</span>
-                      </div>
-                      <div className="grid grid-cols-2 gap-12">
-                        <div className="space-y-2">
-                          <div className="flex justify-between items-end">
-                            <span className="text-4xl font-black italic tracking-tighter text-white">{project.reception.metaScore}</span>
-                            <span className="text-[10px] font-black uppercase text-slate-500 mb-1">MetaScore</span>
-                          </div>
-                          <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                            <div className={cn(
-                              "h-full transition-all duration-1000",
-                              project.reception.metaScore >= 75 ? 'bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.5)]' :
-                              project.reception.metaScore >= 40 ? 'bg-amber-500' : 'bg-rose-500'
-                            )} style={{ width: `${project.reception.metaScore}%` }} />
-                          </div>
-                        </div>
-                        <div className="space-y-2">
-                          <div className="flex justify-between items-end">
-                            <span className="text-4xl font-black italic tracking-tighter text-white">{project.reception.audienceScore}</span>
-                            <span className="text-[10px] font-black uppercase text-slate-500 mb-1">Audience</span>
-                          </div>
-                          <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                            <div className={cn(
-                              "h-full bg-primary transition-all duration-1000",
-                              project.reception.audienceScore >= 75 ? 'shadow-[0_0_15px_rgba(var(--primary),0.5)]' : ''
-                            )} style={{ width: `${project.reception.audienceScore}%` }} />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="pt-4 border-t border-slate-800/50">
-                        <p className="text-xs font-bold text-slate-400">
-                           Status: <span className={cn(
-                             "uppercase font-black tracking-widest ml-1",
-                             project.reception.status === 'Acclaimed' ? 'text-emerald-400' :
-                             project.reception.status === 'Mixed' ? 'text-amber-400' : 'text-rose-400'
-                           )}>{project.reception.status}</span>
-                        </p>
-                      </div>
-                    </div>
-                  )}
-                </TabsContent>
+                {/* OVERVIEW TAB — extracted to ProjectOverviewTab; marker kept for JSX tree */}
 
                 {/* PRODUCTION TAB */}
                 <TabsContent value="production" className="mt-0 space-y-6">
@@ -409,166 +278,26 @@ export const ProjectDetailModal = () => {
                   <TalentAttachmentPanel project={project} />
                 </TabsContent>
 
-                {/* MARKETING TAB */}
-                <TabsContent value="marketing" className="mt-0 space-y-8">
-                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                     {[
-                       { id: 'none', name: 'Word of Mouth', cost: 0, buzz: 0, desc: 'Rely on natural cultural momentum.' },
-                       { id: 'basic', name: 'Targeted Digital', cost: project.budget * 0.1, buzz: 15, desc: 'Coordinated social campaign.' },
-                       { id: 'blockbuster', name: 'Global Blitz', cost: project.budget * 0.5, buzz: 40, desc: 'Omnichannel market saturation.' }
-                     ].map(tier => (
-                       <button aria-pressed={project.marketingLevel === tier.id || selectedTier === tier.id}
-                         key={tier.id}
-                         disabled={!!project.marketingLevel || (gameState ? gameState.finance.cash < tier.cost : false)}
-                         onClick={() => setSelectedTier(tier.id as 'none' | 'basic' | 'blockbuster')}
-                         className={cn(
-                           "p-6 rounded-2xl border text-left transition-all relative overflow-hidden flex flex-col justify-between group h-52",
-                           project.marketingLevel === tier.id || selectedTier === tier.id 
-                             ? 'border-primary bg-primary/10 shadow-[0_0_30px_rgba(var(--primary),0.1)]' 
-                             : 'border-slate-800 bg-slate-900/40 hover:border-slate-700'
-                         )}
-                       >
-                         {selectedTier === tier.id && <div className="absolute top-0 right-0 w-8 h-8 bg-primary rounded-bl-2xl flex items-center justify-center"><CheckCircle2 className="w-4 h-4 text-black" /></div>}
-                         
-                         <div>
-                            <p className="text-[10px] font-black uppercase text-primary tracking-widest mb-1">{tier.name}</p>
-                            <p className="text-2xl font-black text-white mb-2 tabular-nums">{formatMoney(tier.cost)}</p>
-                            <p className="text-xs text-slate-400 font-medium leading-relaxed">{tier.desc}</p>
-                         </div>
-                         
-                         <div className="flex items-center gap-2 text-[10px] font-black text-emerald-400 uppercase tracking-widest">
-                           <TrendingUp className="w-4 h-4" /> +{tier.buzz} Project Momentum
-                         </div>
-                       </button>
-                     ))}
-                   </div>
+                <ProjectMarketingTab
+                  project={project}
+                  selectedTier={selectedTier}
+                  onSelectTier={setSelectedTier}
+                  projectionData={projectionData}
+                  cash={gameState?.finance.cash ?? 0}
+                  onLockCampaign={() => { lockMarketingCampaign(project.id, selectedTier); selectProject(null); }}
+                />
 
-                   <div className="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
-                     <div className="p-5 border-b border-white/5 bg-white/3 flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                           <BarChart3 className="w-4 h-4 text-primary" />
-                           <p className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Yield Simulation (8-Week Lifecycle)</p>
-                        </div>
-                        <Badge variant="outline" className="text-[9px] font-bold text-muted-foreground border-white/5">Algorithm V3.1</Badge>
-                     </div>
-                     <div className="h-[240px] w-full p-4">
-                        <ResponsiveContainer width="100%" height="100%">
-                          <AreaChart data={projectionData}>
-                            <defs>
-                              <linearGradient id="colorRev" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
-                                <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
-                              </linearGradient>
-                            </defs>
-                            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-                            <XAxis dataKey="week" hide />
-                            <YAxis hide />
-                            <Tooltip contentStyle={{ backgroundColor: '#000', border: '1px solid #333', borderRadius: '12px', fontSize: '11px', fontWeight: 'bold' }} />
-                            <Area type="monotone" dataKey="revenue" stroke="hsl(var(--primary))" fillOpacity={1} fill="url(#colorRev)" strokeWidth={3} animationDuration={2000} />
-                          </AreaChart>
-                        </ResponsiveContainer>
-                     </div>
-                   </div>
+                {/* MARKETING TAB — extracted to ProjectMarketingTab */}
 
-                   {!project.marketingLevel ? (
-                     <Button 
-                       className="w-full h-16 bg-primary text-black hover:bg-primary/90 font-black text-sm uppercase tracking-[0.3em] rounded-xl shadow-2xl transition-all active:scale-[0.98]"
-                       disabled={!selectedTier || (gameState ? gameState.finance.cash < (selectedTier === 'basic' ? project.budget * 0.1 : selectedTier === 'blockbuster' ? project.budget * 0.5 : 0) : false)}
-                       onClick={() => { lockMarketingCampaign(project.id, selectedTier); selectProject(null); }}
-                     >
-                       Authorize Global Release & Dedicate Reserves
-                     </Button>
-                   ) : (
-                     <div className="p-6 bg-slate-900/80 border border-slate-700 rounded-xl flex flex-col items-center justify-center gap-2">
-                        <div className="flex items-center gap-3">
-                           <Megaphone className="h-6 w-6 text-primary animate-pulse" />
-                           <span className="text-base font-black uppercase text-white tracking-widest">Deployment: {project.marketingLevel} Initiative</span>
-                        </div>
-                        <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest opacity-60">Box office data will populate in the week summary</p>
-                     </div>
-                   )}
-                </TabsContent>
+                <ProjectCampaignsTab
+                  project={project}
+                  cash={gameState?.finance.cash ?? 0}
+                  activeCampaign={gameState?.studio?.activeCampaigns?.[project.id]}
+                  onSubmitToFestival={(v) => { submitToFestival(project.id, v); selectProject(null); }}
+                  onLaunchAwardsCampaign={(tier) => { launchAwardsCampaign(project.id, tier); selectProject(null); }}
+                />
 
-                {/* CAMPAIGNS TAB */}
-                <TabsContent value="campaigns" className="mt-0 space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="bg-slate-900/40 border border-slate-800 p-6 rounded-2xl space-y-6">
-                      <div className="flex items-center gap-3">
-                         <Trophy className="w-5 h-5 text-amber-500" />
-                         <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Awards & Festivals Pipeline</span>
-                      </div>
-                      
-                      <div className="space-y-4">
-                        <Select onValueChange={(v) => { submitToFestival(project.id, v as AwardBody); selectProject(null); }}>
-                          <SelectTrigger className="h-12 bg-slate-950 border-slate-800 text-xs font-black uppercase tracking-widest"><SelectValue placeholder="Festival Submission..." /></SelectTrigger>
-                          <SelectContent className="bg-slate-950 border-slate-800 text-slate-200">
-                             {FESTIVALS.map(f => <SelectItem key={f.body} value={f.body} className="font-bold flex items-center">
-                               {f.name} <span className="ml-2 text-emerald-400">({formatMoney(f.cost)})</span>
-                             </SelectItem>)}
-                          </SelectContent>
-                        </Select>
-                        
-                           <p className="text-[9px] font-black uppercase text-slate-500 tracking-widest">Active FYC Campaign</p>
-                           {gameState?.studio?.activeCampaigns?.[project.id] ? (
-                             <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30">
-                                <div className="flex justify-between items-center mb-2">
-                                   <span className="text-xs font-black text-amber-500 uppercase italic">Active Outreach</span>
-                                    <Badge className="bg-amber-500 text-black font-black">+{gameState?.studio?.activeCampaigns[project.id].buzzBonus} BUZZ</Badge>
-                                </div>
-                                <p className="text-[10px] text-slate-300 font-medium leading-relaxed italic border-l border-amber-500/30 pl-3">
-                                   "Direct studio outreach with Academy voters is amplifying {project.title}'s prestige profile."
-                                </p>
-                             </div>
-                           ) : (
-                             <div className="grid grid-cols-3 gap-2">
-                                {[
-                                  { k: 'Grassroots', c: 250000 },
-                                  { k: 'Trade', c: 1000000 },
-                                  { k: 'Blitz', c: 5000000 }
-                                ].map(tier => (
-                                  <Button 
-                                    key={tier.k as 'Grassroots' | 'Trade' | 'Blitz'}
-                                    variant="outline" 
-                                    className="h-14 flex flex-col items-center justify-center border-slate-800 hover:border-amber-500/50 bg-black/40 group"
-                                    onClick={() => { launchAwardsCampaign(project.id, tier.k as 'Grassroots' | 'Trade' | 'Blitz'); selectProject(null); }}
-                                    disabled={gameState ? gameState.finance.cash < tier.c : true}
-                                  >
-                                     <span className="text-[8px] font-black text-slate-500 uppercase group-hover:text-amber-500">{tier.k}</span>
-                                     <span className="text-[10px] font-mono font-black text-white">{formatMoney(tier.c)}</span>
-                                  </Button>
-                                ))}
-                             </div>
-                           )}
-                        </div>
-                      </div>
-
-                    <div className="bg-slate-900/40 border border-slate-800 p-6 rounded-2xl space-y-6 flex flex-col justify-between">
-                      <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                         <div className="flex items-center gap-3">
-                            <Package className="w-5 h-5 text-violet-400" />
-                            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">IP Vault & Catalog Properties</span>
-                         </div>
-                         <div className="space-y-4">
-                            <div className="flex justify-between items-center p-3 rounded-xl bg-black/40 border border-white/5">
-                               <span className="text-xs font-bold text-slate-400">Governance</span>
-                               <Badge variant="outline" className="text-[10px] font-black uppercase border-slate-700 bg-slate-800">Internal Development</Badge>
-                            </div>
-                            <div className="flex justify-between items-center p-3 rounded-xl bg-black/40 border border-white/5">
-                               <span className="text-xs font-bold text-slate-400">Franchise Asset ID</span>
-                               <span className="text-xs font-mono text-slate-500 uppercase">{project.franchiseId || 'New/Standalone'}</span>
-                            </div>
-                         </div>
-                      </div>
-
-                      <div className="pt-4 border-t border-slate-800/50 flex justify-between items-end">
-                         <div className="space-y-1">
-                            <span className="text-[9px] font-black uppercase text-slate-500 tracking-widest">Library Residual Valuation</span>
-                            <div className="text-2xl font-black text-emerald-400 font-mono tracking-tighter tabular-nums">{formatMoney(project.budget * 0.15)}</div>
-                         </div>
-                      </div>
-                    </div>
-                  </div>
-                </TabsContent>
+                {/* CAMPAIGNS TAB — extracted to ProjectCampaignsTab */}
               </div>
             </ScrollArea>
           </Tabs>

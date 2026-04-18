@@ -19,7 +19,6 @@ const IntelligenceHub = React.lazy(() => import('@/components/hubs/IntelligenceH
 // Legacy panels for backward compatibility during transition
 const CommandCenter = React.lazy(() => import('@/components/dashboard/CommandCenter').then(m => ({ default: m.CommandCenter })));
 const PipelineBoard = React.lazy(() => import('@/components/pipeline/PipelineBoard').then(m => ({ default: m.PipelineBoard })));
-const TalentHubLegacy = React.lazy(() => import('@/components/talent/TalentHub').then(m => ({ default: m.TalentHub })));
 const FinancePanel = React.lazy(() => import('@/components/finance/FinancePanel').then(m => ({ default: m.FinancePanel })));
 const DiscoveryBoard = React.lazy(() => import('@/components/discovery/DiscoveryBoard').then(m => ({ default: m.DiscoveryBoard })));
 const IndustryPage = React.lazy(() => import('@/pages/IndustryPage').then(m => ({ default: m.IndustryPage })));
@@ -71,7 +70,7 @@ const Dashboard: React.FC = () => {
       case 'distribution': return <DistributionHub key="distribution" />;
       case 'industry': 
       case 'intelligence': return <IndustryPage key="industry" />;
-      case 'talent': return <TalentHubLegacy key="talent" />;
+      case 'talent': return <TalentHub key="talent" />;
       case 'finance': return <FinancePanel key="finance" />;
       case 'trades': return <DiscoveryBoard key="trades" />;
       case 'awards': return <AwardsHQ key="awards" />;
