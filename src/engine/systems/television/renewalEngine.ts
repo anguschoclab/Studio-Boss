@@ -34,8 +34,7 @@ export function evaluateRenewal(
   // 📺 The Syndication Baron: Tweaked streaming renewal thresholds: platforms now cancel expensive shows faster if subscriber growth flatlines. Added further rewards for consistent season-over-season quality.
 
   // 📺 The Syndication Baron: Add dynamic renewal leniency based on nielsenProfile.audienceRetention
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const retention = (project as any).nielsenProfile?.audienceRetention;
+  const retention = project.nielsenProfile?.audienceRetention;
   if (typeof retention === 'number') {
     if (retention < 40) {
       dynamicThreshold += 2.5; // Huge penalty for hemorrhaging viewers
