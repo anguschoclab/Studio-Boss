@@ -65,7 +65,7 @@ export function calculateFranchiseEquity(
       crossoverBonus += 0.45;
     }
 
-    // Synergy bonus when combining two Level 3+ franchises in a crossover event
+    // 🌌 The Universe Builder: Added a 15% synergy bonus when combining two Level 3 franchises in a crossover event.
     if (assets.length >= 5) {
       crossoverBonus += 0.15;
     }
@@ -104,6 +104,11 @@ export function calculateFranchiseEquity(
   // Transmedia Universe Event synergy bonus
   if (assets.length >= 6 && genres.some(g => g === 'Superhero' || g === 'Video Game Adaptation')) {
     crossoverBonus += 0.40;
+  }
+
+  // 🌌 The Universe Builder: Transmedia Empire Bonus for franchises spanning 3+ genres including Video Game Adaptation.
+  if (genres.length >= 3 && genres.includes('Video Game Adaptation')) {
+    crossoverBonus += 0.25;
   }
 
   // 2. Format Diversity Multiplier

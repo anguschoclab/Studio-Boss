@@ -87,6 +87,11 @@ export function calculateFranchiseFatigue(
     currentFatigue *= 3.0;
   }
 
+  // 🌌 The Universe Builder: Rebooting a dead franchise (relevance < 20) with active projects causes severe whiplash.
+  if (activeCount >= 1 && franchise.relevanceScore < 20) {
+    currentFatigue *= 4.0;
+  }
+
   // 🌌 The Universe Builder: Streaming Spin-Off Dilution.
   if (activeCount >= 4 && franchise.audienceLoyalty < 75) {
     currentFatigue *= 1.8;
@@ -105,6 +110,11 @@ export function calculateFranchiseFatigue(
   // 🌌 The Universe Builder: Terminal Superhero Fatigue.
   if (activeCount >= 3 && genreSaturation > 15 && (normalizedGenre === 'Superhero' || normalizedGenre === 'Multiverse')) {
     currentFatigue *= 3.5;
+  }
+
+  // 🌌 The Universe Builder: Severe market oversaturation for Superhero/Multiverse causes terminal fatigue acceleration.
+  if (genreSaturation >= 20 && (normalizedGenre === 'Superhero' || normalizedGenre === 'Multiverse')) {
+    currentFatigue *= 4.0;
   }
 
   // 3. Rival Saturation (The 'Poison the Well' effect)
@@ -186,11 +196,20 @@ export function calculateReleaseGapImpact(
   }
 
   // Brand Reboot (Fresh Start)
-  if (yearsSince >= 7 && yearsSince < 10) {
+  if (yearsSince >= 7 && yearsSince < 8) {
     return {
       buzzBonus: 25, // 🌌 The Universe Builder: Reboots still carry significant fresh-start buzz.
       label: 'Brand Reboot (Fresh Start)',
       fatigueReset: true
+    };
+  }
+
+  // 🌌 The Universe Builder: Awkward Reboot (Too Late, Not Nostalgic).
+  if (yearsSince >= 8 && yearsSince < 10) {
+    return {
+      buzzBonus: -20,
+      label: 'Awkward Reboot (Too Late, Not Nostalgic)',
+      fatigueReset: false
     };
   }
 
