@@ -35,7 +35,7 @@ describe('AI Archetype Strategy (AgentBrain)', () => {
     it('increases package deal probability for high-prestige Auteurs', () => {
       const rng = mockRandomSeed('1'); // first next() is low
       const agency = createMockAgency({ currentMotivation: 'VOLUME_RETAIL' });
-      const auteur = createMockTalent({ id: 'auteur', prestige: 95, agencyId: agency.id });
+      const auteur = createMockTalent({ id: 'auteur', prestige: 95, roles: ['director'], agencyId: agency.id });
       const collaborator = createMockTalent({ id: 'collateral', agencyId: agency.id });
 
       const market = createMockMarketState();

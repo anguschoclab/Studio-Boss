@@ -4,7 +4,7 @@ import { RandomGenerator } from '../../../utils/rng';
 const ArchetypeMultipliers: Record<ArchetypeKey, (genre: string) => number> = {
   'indie': (genre) => (genre === 'Drama' || genre === 'Horror' ? 1.4 : 0.8),
   'major': (genre) => (genre === 'Sci-Fi' || genre === 'Action' ? 1.6 : 0.6),
-  'mid-tier': (genre) => 1.15, 
+  'mid-tier': () => 1.15,
 };
 
 export function calculateLiveCounterBid(
@@ -12,7 +12,8 @@ export function calculateLiveCounterBid(
   playerBid: number,
   rival: RivalStudio,
   rng: RandomGenerator,
-  week: number
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _week: number
 ): StateImpact | null {
   if (rival.cash < playerBid * 2 || rival.prestige < 60) return null;
 
@@ -25,13 +26,14 @@ export function calculateLiveCounterBid(
     adjustedThreshold += 0.2;
     adjustedMultiplier *= 1.3;
   }
+  // 🎭 The Method Actor Tuning: Make rivals with FRANCHISE_BUILDING and MARKET_DISRUPTION motivations bid more aggressively.
   if (rival.currentMotivation === 'FRANCHISE_BUILDING' && (opportunity.genre === 'Sci-Fi' || opportunity.genre === 'Action' || opportunity.genre === 'Fantasy')) {
     adjustedThreshold += 0.25;
-    adjustedMultiplier *= 1.4;
+    adjustedMultiplier *= 1.6;
   }
   if (rival.currentMotivation === 'MARKET_DISRUPTION') {
     adjustedThreshold += 0.35;
-    adjustedMultiplier *= 1.5;
+    adjustedMultiplier *= 1.8;
   }
 
   if (rng.next() < adjustedThreshold) {
