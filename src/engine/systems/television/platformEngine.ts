@@ -62,9 +62,9 @@ function calculateSubChange(platform: StreamerPlatform, rng: RandomGenerator, se
   if (avgAudienceRetention < 40) {
     dynamicChurnRate = Math.min(0.85, dynamicChurnRate * 1.5); // Punish platforms keeping shows that hemorrhage viewers
   } else if (avgAudienceRetention > 90) {
-    dynamicChurnRate = Math.max(0.005, dynamicChurnRate * 0.7); // Reward platforms with sticky viewers that return episode after episode
+    dynamicChurnRate = Math.min(dynamicChurnRate, Math.max(0.005, dynamicChurnRate * 0.7)); // Reward platforms with sticky viewers that return episode after episode
   } else if (avgAudienceRetention > 75) {
-    dynamicChurnRate = Math.max(0.008, dynamicChurnRate * 0.85);
+    dynamicChurnRate = Math.min(dynamicChurnRate, Math.max(0.008, dynamicChurnRate * 0.85));
   }
 
   const churn = platform.subscribers * dynamicChurnRate;
