@@ -6,7 +6,7 @@
 
 #### 📖 Design Bible Alignment:
 * ✅ **Aligned:** The `evaluateMarketingEfficiency` function correctly implements an angle match check that penalizes (wastes money) or boosts the campaign multiplier based on the project genre, aligning with the "mismatch between audience and message should waste money" rule in section 36.39.2.
-* ⚠️ **Missing/Deviations:** We have not fully implemented all the primary and secondary messaging strategies outlined in section 36.39.2. Our current system ('SELL_THE_SPECTACLE', 'SELL_THE_STORY', etc.) is simpler than the comprehensive list in the bible ('sell the scares', 'sell the romance', 'sell the world / mythology', 'sell the true-story hook', 'sell the music', etc.). We also do not have "primary and secondary" messaging strategies, just a single `primaryAngle`.
+* ⚠️ **Missing/Deviations:** We have not fully implemented all the primary and secondary messaging strategies outlined in section 36.39.2. Our current system (`SELL_THE_SPECTACLE`, `SELL_THE_STORY`, etc.) is simpler than the comprehensive list in the bible (`SELL_THE_SCARES`, `SELL_THE_ROMANCE`, `SELL_THE_WORLD_MYTHOLOGY`, `SELL_THE_TRUE_STORY_HOOK`, `SELL_THE_MUSIC`, etc.). We also do not have "primary and secondary" messaging strategies, just a single `primaryAngle`.
 
 #### 📄 Proposed Documentation Updates:
 * `docs/marketing_mechanics.md`: Document the current single primary angle approach and the missing secondary strategy, updating the angles to match what is currently implemented vs the design bible.
