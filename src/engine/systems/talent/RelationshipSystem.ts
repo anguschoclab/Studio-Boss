@@ -120,9 +120,12 @@ function haveWorkedTogether(talentAId: string, talentBId: string, state: GameSta
     return false;
   }
 
-  const projects = Object.values(state.entities.projects || {});
+  // ⚡ Bolt: Prevent massive object allocation and GC pressure in tight relationship loops
+  const projectsDict = state.entities.projects || {};
+  const projectIds = Object.keys(projectsDict);
 
-  for (const project of projects) {
+  for (const pid of projectIds) {
+    const project = projectsDict[pid];
     const talentIds = (project as any).attachedTalentIds || [];
     if (talentIds.includes(talentAId) && talentIds.includes(talentBId)) return true;
   }
@@ -146,8 +149,11 @@ export function haveCompeted(talentAId: string, talentBId: string, state: GameSt
   const awards = state.industry?.awards || [];
   const awardedProjectIds = awards.map(a => a.projectId);
   
-  const projects = Object.values(state.entities.projects || {});
-  for (const project of projects) {
+  // ⚡ Bolt: Prevent massive object allocation and GC pressure in tight relationship loops
+  const projectsDict = state.entities.projects || {};
+  const projectIds = Object.keys(projectsDict);
+  for (const pid of projectIds) {
+    const project = projectsDict[pid];
     if (!awardedProjectIds.includes(project.id)) continue;
     const talentIds = (project as any).attachedTalentIds || [];
     if (talentIds.includes(talentAId) && talentIds.includes(talentBId)) return true;
@@ -473,7 +479,9 @@ function evolveRelationship(
 export function tickRelationshipSystem(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
   const talents = Object.values(state.entities.talents || {});
-  const projects = Object.values(state.entities.projects || {});
+  // ⚡ Bolt: Use Object.keys iteration to prevent massive intermediate array allocation
+  const projectsDict = state.entities.projects || {};
+  const projects = Object.keys(projectsDict).map(pid => projectsDict[pid]);
   const awards = state.industry?.awards || [];
   const awardedProjectIds = new Set(awards.map(a => a.projectId));
 
