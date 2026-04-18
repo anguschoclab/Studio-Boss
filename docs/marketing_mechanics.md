@@ -57,10 +57,10 @@ While the current implementation covers the fundamental 'Angle Match' mechanic, 
 
 - **Secondary Messaging Strategies:** The design bible specifies selecting both a *primary* and *secondary* messaging strategy. The current implementation only tracks a single `primaryAngle`.
 - **Extended Angle List:** The design bible calls for a wider variety of specific angles, including:
-  - 'sell the scares'
-  - 'sell the romance'
-  - 'sell the world / mythology'
-  - 'sell the true-story hook'
-  - 'sell the music'
-  - 'broad four-quadrant marketing'
+  - `SELL_THE_SCARES`
+  - `SELL_THE_ROMANCE`
+  - `SELL_THE_WORLD_MYTHOLOGY`
+  - `SELL_THE_TRUE_STORY_HOOK`
+  - `SELL_THE_MUSIC`
+  - `BROAD_FOUR_QUADRANT_MARKETING`
   These remain to be implemented in a future update to provide deeper strategic choice.
