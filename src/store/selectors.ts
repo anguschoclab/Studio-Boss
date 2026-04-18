@@ -56,7 +56,7 @@ export const selectCash = (state: GameState | null) => selectFinance(state).cash
 export const selectIndustry = (state: GameState | null) => state?.industry || null;
 export const selectRivalsRaw = (state: GameState | null) => state?.entities?.rivals || EMPTY_RIVALS;
 
-// ⚡ Bolt: Cache array reference to prevent unnecessary re-renders
+// ⚡ Bolt: Cache array references to prevent unnecessary React re-renders when useShallow is used
 let lastRivalsRaw: Record<string, RivalStudio> | null = null;
 let lastRivalsArray: RivalStudio[] = [];
 
@@ -71,20 +71,20 @@ export const selectRivals = (state: GameState | null): RivalStudio[] => {
 
 export const selectTalentPoolRaw = (state: GameState | null) => state?.entities?.talents || EMPTY_TALENT_POOL;
 
-// ⚡ Bolt: Cache array reference to prevent unnecessary re-renders
-let lastTalentRaw: Record<string, Talent> | null = null;
-let lastTalentArray: Talent[] = [];
+// ⚡ Bolt: Cache array references to prevent unnecessary React re-renders when useShallow is used
+let lastTalentPoolRaw: Record<string, Talent> | null = null;
+let lastTalentPoolArray: Talent[] = [];
 
 export const selectTalentPool = (state: GameState | null): Talent[] => {
   const raw = selectTalentPoolRaw(state);
-  if (raw !== lastTalentRaw) {
-    lastTalentRaw = raw;
-    lastTalentArray = Object.values(raw);
+  if (raw !== lastTalentPoolRaw) {
+    lastTalentPoolRaw = raw;
+    lastTalentPoolArray = Object.values(raw);
   }
-  return lastTalentArray;
+  return lastTalentPoolArray;
 };
 
-// ⚡ Bolt: Cache array reference to prevent unnecessary re-renders
+// ⚡ Bolt: Cache array references to prevent unnecessary React re-renders when useShallow is used
 let lastActiveProjectsRaw: Record<string, Project> | null = null;
 let lastActiveProjectsArray: Project[] = [];
 
@@ -99,7 +99,7 @@ export const selectActiveProjects = (state: GameState | null): Project[] => {
   return lastActiveProjectsArray;
 };
 
-// ⚡ Bolt: Cache array reference to prevent unnecessary re-renders
+// ⚡ Bolt: Cache array references to prevent unnecessary React re-renders when useShallow is used
 let lastReleasedProjectsRaw: Record<string, Project> | null = null;
 let lastReleasedProjectsArray: Project[] = [];
 
