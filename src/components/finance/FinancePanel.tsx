@@ -12,6 +12,9 @@ import { SummaryCards } from '@/components/finance/SummaryCards';
 import { ActiveProjectCosts } from '@/components/finance/ActiveProjectCosts';
 import { EconomicAnalytics } from '@/components/finance/EconomicAnalytics';
 import { ProjectROIAnalytics } from '@/components/finance/ProjectROIAnalytics';
+import { RecoupmentTracker } from '@/components/finance/RecoupmentTracker';
+import { PiracyImpactMonitor } from '@/components/finance/PiracyImpactMonitor';
+import { PassiveIncomePanel } from '@/components/finance/PassiveIncomePanel';
 import { useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useShallow } from 'zustand/react/shallow';
@@ -59,6 +62,44 @@ export const FinancePanel = () => {
     projectsMemo.filter(p => p.state === 'released' || p.state === 'post_release' || p.state === 'archived').sort((a,b) => (b.revenue || 0) - (a.revenue || 0)),
     [projectsMemo]
   );
+
+  const recoupmentData = useMemo(() => releasedProjects.map(p => {
+    const revenue = p.revenue || 0;
+    const budget = p.budget || 1;
+    const recouped = Math.min(100, Math.round((revenue / budget) * 100));
+    return {
+      projectId: p.id,
+      projectTitle: p.title,
+      format: (p.format === 'film' ? 'film' : p.format === 'tv' ? 'tv' : 'streaming') as 'film' | 'tv' | 'streaming',
+      budget,
+      revenue,
+      recouped,
+      status: revenue >= budget * 2 ? 'profitable' as const : revenue >= budget ? 'recouped' as const : revenue >= budget * 0.7 ? 'in_progress' as const : 'at_risk' as const,
+      profitMargin: budget > 0 ? Math.round(((revenue - budget) / budget) * 100) : 0,
+    };
+  }), [releasedProjects]);
+
+  const piracyData = useMemo(() => releasedProjects.slice(0, 5).map(p => ({
+    projectId: p.id,
+    projectTitle: p.title,
+    format: (p.format === 'film' ? 'film' : 'tv') as 'film' | 'tv',
+    totalDownloads: 0,
+    estimatedRevenueLoss: 0,
+    byRegion: [],
+    daysSinceRelease: 0,
+  })), [releasedProjects]);
+
+  const passiveStreams = useMemo(() => releasedProjects.slice(0, 5).map(p => ({
+    type: 'library' as const,
+    source: p.title,
+    weeklyRevenue: Math.round((p.revenue || 0) * 0.005),
+    totalToDate: Math.round((p.revenue || 0) * 0.05),
+    growth: 2,
+    trend: 'stable' as const,
+  })), [releasedProjects]);
+
+  const passiveTotalWeekly = useMemo(() => passiveStreams.reduce((s, p) => s + p.weeklyRevenue, 0), [passiveStreams]);
+  const passiveTotalYTD = useMemo(() => passiveStreams.reduce((s, p) => s + p.totalToDate, 0), [passiveStreams]);
 
   const latestFinanceSnapshot = useMemo(() =>
     financeHistory.length > 0 ? financeHistory[financeHistory.length - 1] : null,
@@ -265,6 +306,31 @@ export const FinancePanel = () => {
 
       {/* Project ROI Analytics */}
       <ProjectROIAnalytics releasedProjects={releasedProjects} />
+
+      {/* Recoupment Tracker */}
+      {recoupmentData.length > 0 && (
+        <RecoupmentTracker projects={recoupmentData} />
+      )}
+
+      {/* Passive Income Streams */}
+      {passiveStreams.length > 0 && (
+        <PassiveIncomePanel
+          streams={passiveStreams}
+          totalWeekly={passiveTotalWeekly}
+          totalYTD={passiveTotalYTD}
+          topPerformingSource={passiveStreams[0]?.source ?? ''}
+        />
+      )}
+
+      {/* Piracy Impact Monitor */}
+      {piracyData.length > 0 && (
+        <PiracyImpactMonitor
+          projects={piracyData}
+          totalLoss={0}
+          studioRiskLevel="low"
+          activeProtections={['DRM', 'Watermarking']}
+        />
+      )}
 
         </TabsContent>
 

@@ -18,7 +18,10 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Talent, TalentRole, Opportunity } from '@/engine/types';
-import { selectOpportunities } from '@/store/selectors';
+import { selectOpportunities, selectTalentPool, selectLowMoraleTalent } from '@/store/selectors';
+import { MoraleDashboard } from '@/components/talent/MoraleDashboard';
+import { TalentPactPanel } from '@/components/talent/TalentPactPanel';
+import { OfferHistoryLog } from '@/components/talent/OfferHistoryLog';
 
 // Lazy load components
 const LiveAuctionDashboard = React.lazy(() => import('@/components/talent/LiveAuctionDashboard').then(m => ({ default: m.LiveAuctionDashboard })));
@@ -32,10 +35,23 @@ const RosterPanel = () => {
   const [filter, setFilter] = useState<TalentRole | 'all'>('all');
   const [search, setSearch] = useState('');
   
-  const talentPool = useMemo(() => 
-    Object.values(state?.entities.talents || {}),
-    [state?.entities.talents]
-  );
+  const talentPool = useMemo(() => selectTalentPool(state), [state?.entities?.talents]);
+
+  const moraleData = useMemo(() => {
+    const low = selectLowMoraleTalent(state);
+    const byTalent = talentPool.map(t => ({
+      talentId: t.id,
+      talentName: t.name,
+      morale: t.psychology?.mood ?? 100,
+      trend: 'stable' as const,
+      factors: [],
+      atRisk: (t.psychology?.mood ?? 100) < 40
+    }));
+    const averageMorale = talentPool.length > 0
+      ? Math.round(talentPool.reduce((s, t) => s + (t.psychology?.mood ?? 100), 0) / talentPool.length)
+      : 100;
+    return { byTalent, averageMorale, atRiskCount: low.length };
+  }, [talentPool, state]);
   
   const filteredTalent = useMemo(() => {
     return talentPool.filter(t => {
@@ -131,6 +147,10 @@ const RosterPanel = () => {
           </div>
         )}
       </div>
+
+      {moraleData.byTalent.length > 0 && (
+        <MoraleDashboard moraleData={moraleData} />
+      )}
     </div>
   );
 };
@@ -254,60 +274,60 @@ const MarketplacePanel = () => {
 // Negotiations Panel
 const NegotiationsPanel = () => {
   const gameState = useGameStore(s => s.gameState);
-  const activeDeals = gameState?.deals?.activeDeals || [];
+  const currentWeek = gameState?.week ?? 0;
 
-  if (activeDeals.length === 0) {
-    return (
-      <div className="flex items-center justify-center h-full text-muted-foreground">
-        <div className="text-center">
-          <Handshake className="w-16 h-16 mx-auto mb-4 opacity-20" />
-          <p className="text-lg font-bold uppercase tracking-widest">Active Negotiations</p>
-          <p className="text-sm mt-2">No pending offers or counter-offers</p>
-        </div>
-      </div>
-    );
-  }
+  const pacts = useMemo(() => {
+    const deals = gameState?.deals?.activeDeals || [];
+    const talents = gameState?.entities?.talents || {};
+    return deals.map(deal => {
+      const talent = talents[deal.talentId || ''];
+      const weeksRemaining = Math.max(0, (deal.endDate || 0) - currentWeek);
+      const durationWeeks = Math.max(1, (deal.endDate || 0) - (deal.startDate || 0));
+      return {
+        id: deal.id ?? '',
+        talentId: deal.talentId || '',
+        talentName: talent?.name || deal.talentId || 'Unknown',
+        pactType: (deal.type || 'first_look') as 'overall_deal' | 'first_look' | 'exclusive' | 'consulting',
+        weeklyCost: deal.weeklyOverhead || 0,
+        durationWeeks,
+        weeksRemaining,
+        benefits: deal.exclusivity ? ['Exclusivity'] : [],
+        status: weeksRemaining < 4 ? 'expiring' as const : 'active' as const,
+      };
+    });
+  }, [gameState, currentWeek]);
+
+  const offerHistory = useMemo(() => {
+    const contracts = Object.values(gameState?.entities?.contracts || {});
+    const talents = gameState?.entities?.talents || {};
+    const projects = gameState?.entities?.projects || {};
+    return contracts.map(c => {
+      const talent = talents[c.talentId];
+      const project = projects[c.projectId];
+      return {
+        offerId: c.id,
+        talentName: talent?.name || c.talentId,
+        talentId: c.talentId,
+        role: c.role || 'actor',
+        projectTitle: project?.title,
+        initialOffer: c.fee,
+        finalAmount: c.fee,
+        status: 'accepted' as const,
+        actions: [{
+          type: 'accepted' as const,
+          date: currentWeek,
+          amount: c.fee,
+          by: 'player' as const,
+        }],
+        weeksActive: 0,
+      };
+    });
+  }, [gameState, currentWeek]);
 
   return (
-    <div className="h-full flex flex-col">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-bold uppercase tracking-wider">Active Negotiations</h3>
-        <Badge variant="outline">{activeDeals.length} Active</Badge>
-      </div>
-
-      <div className="flex-1 space-y-3 overflow-y-auto">
-        {activeDeals.map((deal: any) => (
-          <div
-            key={deal.id}
-            className="p-4 rounded-lg bg-secondary/50 border border-border hover:border-primary/50 transition-colors"
-          >
-            <div className="flex items-start justify-between mb-2">
-              <div>
-                <p className="font-bold text-sm">{deal.projectTitle || 'Unnamed Project'}</p>
-                <p className="text-xs text-muted-foreground">{deal.buyerName || 'Unknown Buyer'}</p>
-              </div>
-              <Badge variant={deal.status === 'pending' ? 'default' : 'secondary'}>
-                {deal.status || 'Pending'}
-              </Badge>
-            </div>
-
-            <div className="flex items-center gap-4 text-xs text-muted-foreground mb-3">
-              <span>Week {deal.startWeek || 0}</span>
-              <span>•</span>
-              <span>{deal.contractType || 'Standard Deal'}</span>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <Button size="sm" variant="outline" className="text-xs">
-                Renegotiate
-              </Button>
-              <Button size="sm" variant="ghost" className="text-xs text-destructive">
-                Terminate
-              </Button>
-            </div>
-          </div>
-        ))}
-      </div>
+    <div className="h-full overflow-y-auto custom-scrollbar space-y-6 pb-4">
+      <TalentPactPanel pacts={pacts} />
+      <OfferHistoryLog offers={offerHistory} />
     </div>
   );
 };

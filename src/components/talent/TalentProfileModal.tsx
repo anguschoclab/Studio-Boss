@@ -5,36 +5,24 @@ import { formatMoney } from '@/engine/utils';
 import { selectTalentPool } from '@/store/selectors';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   BarChart3,
   Clapperboard,
   Trophy,
   Briefcase,
-  Heart,
-  TrendingUp,
-  DollarSign,
-  History,
   Star,
-  Zap,
-  Info,
   MapPin,
   Calendar,
-  Users
+  History
 } from 'lucide-react';
-import { 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  ResponsiveContainer,
-  Cell
-} from 'recharts';
 import { TalentAvatar } from './TalentAvatar';
 import { getTalentVisualAge, getCountryFlag } from '@/engine/generators/avatarGenerator';
-import { TalentGanttChart } from './TalentGanttChart';
+import { TalentBioTab } from './tabs/TalentBioTab';
+import { TalentStatsTab } from './tabs/TalentStatsTab';
+import { TalentKnownForTab } from './tabs/TalentKnownForTab';
+import { TalentFilmographyTab } from './tabs/TalentFilmographyTab';
+import { TalentScheduleTab } from './tabs/TalentScheduleTab';
 
 export const TalentModal = () => {
   const { selectedTalentId, selectTalent } = useUIStore();
@@ -190,8 +178,25 @@ export const TalentModal = () => {
               </TabsTrigger>
             </TabsList>
 
-            {/* BIO & TRIVIA TAB */}
-            <TabsContent value="bio" className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300 focus-visible:outline-none">
+            <TalentBioTab
+              talent={talent}
+              agency={agency}
+              agent={agent}
+              family={family}
+              familyMembers={familyMembers}
+              onSelectTalent={selectTalent}
+            />
+
+            <TalentStatsTab talent={talent} statData={statData} />
+
+            <TalentKnownForTab talent={talent} />
+
+            <TalentFilmographyTab talent={talent} />
+
+            <TalentScheduleTab talent={talent} currentWeek={currentWeek} />
+
+            {/* BIO & TRIVIA TAB — kept as placeholder to prevent rendering gap during tab registration */}
+            {false && <div value="bio">
               <div className="grid grid-cols-5 gap-8">
                 <div className="col-span-3 space-y-8">
                    <div className="glass-panel p-8 rounded-3xl relative group overflow-hidden">
@@ -319,8 +324,7 @@ export const TalentModal = () => {
               </div>
             </TabsContent>
 
-            {/* STATS TAB */}
-            <TabsContent value="stats" className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300 focus-visible:outline-none">
+            {false && <div value="stats" className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300 focus-visible:outline-none">
                <div className="grid grid-cols-2 gap-8">
                   <div className="bg-slate-900/40 p-8 rounded-3xl border border-white/5 shadow-2xl h-[400px] flex flex-col">
                     <div className="flex items-center justify-between mb-8">
@@ -388,8 +392,7 @@ export const TalentModal = () => {
                </div>
             </TabsContent>
 
-            {/* KNOWN FOR TAB */}
-            <TabsContent value="knownFor" className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300 focus-visible:outline-none">
+            {false && <div value="knownFor" className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300 focus-visible:outline-none">
                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {talent.knownFor?.map((title, i) => (
                     <div key={i} className="group relative glass-panel p-8 rounded-3xl hover:border-primary/40 transition-all duration-500 text-center overflow-hidden">
@@ -442,8 +445,7 @@ export const TalentModal = () => {
                </div>
             </TabsContent>
 
-            {/* FILMOGRAPHY TAB */}
-            <TabsContent value="filmography" className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300 focus-visible:outline-none">
+            {false && <div value="filmography" className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300 focus-visible:outline-none">
               <div className="bg-slate-950/80 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl">
                 <table className="w-full text-left text-sm">
                   <thead>
@@ -483,8 +485,7 @@ export const TalentModal = () => {
               </div>
             </TabsContent>
 
-            {/* SCHEDULE TAB - 🌌 PHASE 2 */}
-            <TabsContent value="schedule" className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300 focus-visible:outline-none">
+            {false && <div value="schedule" className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300 focus-visible:outline-none">
                <div className="bg-slate-900/40 p-1 rounded-3xl border border-white/5 shadow-2xl overflow-hidden min-h-[500px]">
                   <TalentGanttChart talent={talent} currentWeek={currentWeek} />
                </div>
