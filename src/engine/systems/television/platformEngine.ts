@@ -6,7 +6,7 @@ import { RandomGenerator } from '../../utils/rng';
  * Growth = (LibraryQuality / 100) * (GrowthRate)
  * Churn = CurrentSubs * ChurnRate
  */
-function calculateSubChange(platform: StreamerPlatform, rng: RandomGenerator, seasonOverSeasonQuality: number = 0, syndicationHits: number = 0): number {
+function calculateSubChange(platform: StreamerPlatform, rng: RandomGenerator, seasonOverSeasonQuality: number = 0, syndicationHits: number = 0, avgAudienceRetention: number = 60): number {
   const baseGrowthRate = 0.02; // 2% weekly base potential
   const qualityFactor = platform.contentLibraryQuality / 100;
   // Use a fallback for marketingSpend if not defined
@@ -58,6 +58,15 @@ function calculateSubChange(platform: StreamerPlatform, rng: RandomGenerator, se
     dynamicChurnRate *= syndicationShield;
   }
 
+  // 📺 The Syndication Baron: Adjust streaming subscriber churn rates based on audience retention.
+  if (avgAudienceRetention < 40) {
+    dynamicChurnRate = Math.min(0.85, dynamicChurnRate * 1.5); // Punish platforms keeping shows that hemorrhage viewers
+  } else if (avgAudienceRetention > 90) {
+    dynamicChurnRate = Math.min(dynamicChurnRate, Math.max(0.005, dynamicChurnRate * 0.7)); // Reward platforms with sticky viewers that return episode after episode
+  } else if (avgAudienceRetention > 75) {
+    dynamicChurnRate = Math.min(dynamicChurnRate, Math.max(0.008, dynamicChurnRate * 0.85));
+  }
+
   const churn = platform.subscribers * dynamicChurnRate;
   
   return Math.floor(growth - churn);
@@ -77,6 +86,9 @@ export function tickPlatforms(state: GameState, rng: RandomGenerator): StateImpa
 
       let seasonOverSeasonQuality = 0;
       let syndicationHits = 0;
+      let totalRetention = 0;
+      let retentionCount = 0;
+
       if (platform.activeLicenses && platform.activeLicenses.length > 0) {
         let totalScore = 0;
         let count = 0;
@@ -92,6 +104,13 @@ export function tickPlatforms(state: GameState, rng: RandomGenerator): StateImpa
             if (seriesProject.tvDetails.episodesAired >= 100) { // 📺 The Syndication Baron: 100-episode syndication deals
               syndicationHits++;
             }
+
+            // @ts-expect-error - Check for NielsenProfile without strong typing issue
+            if (seriesProject.nielsenProfile && typeof seriesProject.nielsenProfile.audienceRetention === 'number') {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              totalRetention += (seriesProject as any).nielsenProfile.audienceRetention;
+              retentionCount++;
+            }
           }
         }
         if (count > 0) {
@@ -99,7 +118,9 @@ export function tickPlatforms(state: GameState, rng: RandomGenerator): StateImpa
         }
       }
 
-      const subChange = calculateSubChange(platform, rng, seasonOverSeasonQuality, syndicationHits);
+      const avgAudienceRetention = retentionCount > 0 ? totalRetention / retentionCount : 60;
+
+      const subChange = calculateSubChange(platform, rng, seasonOverSeasonQuality, syndicationHits, avgAudienceRetention);
       const newSubCount = Math.max(0, platform.subscribers + subChange);
       
       // Update subscribers and history
