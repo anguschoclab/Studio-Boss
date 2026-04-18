@@ -7,8 +7,6 @@ import { StudioStatsGrid } from './StudioStatsGrid';
 import { IntelligenceFeed } from './IntelligenceFeed';
 import { useGameStore } from '@/store/gameStore';
 import { useShallow } from 'zustand/react/shallow';
-import { formatMoney } from '@/engine/utils';
-import { NewsEvent } from '@/engine/types';
 
 export const CommandCenter: React.FC = () => {
   const gameState = useGameStore(useShallow((state) => state.gameState));
