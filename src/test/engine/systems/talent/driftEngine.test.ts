@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { TalentDriftEngine, DEFAULT_DRIFT_CONFIG, ARCHETYPE_TRANSITIONS, PERSONALITY_TRANSITIONS, CAREER_TRAJECTORY_TRANSITIONS } from './driftEngine';
-import { Talent } from '../../types/talent.types';
-import { RandomGenerator } from '../../utils/rng';
+import { TalentDriftEngine, DEFAULT_DRIFT_CONFIG, ARCHETYPE_TRANSITIONS, PERSONALITY_TRANSITIONS, CAREER_TRAJECTORY_TRANSITIONS } from '@/engine/systems/talent/driftEngine';
+import { Talent } from '@/engine/types';
+import { RandomGenerator } from '@/engine/utils/rng';
 
 describe('TalentDriftEngine', () => {
   describe('ARCHETYPE_TRANSITIONS', () => {
