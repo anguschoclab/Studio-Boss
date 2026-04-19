@@ -48,13 +48,15 @@ const triggerSave = async (stateToSave: GameState) => {
   }
 
   _isBackgroundSaving = true;
-  _saveQueue = null;
-  await saveGame(0, stateToSave);
-  _isBackgroundSaving = false;
+  let currentState = stateToSave;
 
-  if (_saveQueue) {
-    try { triggerSave(_saveQueue); } catch (e) { console.error('[triggerSave] tail-call failed:', e); }
+  while (currentState) {
+    await saveGame(0, currentState);
+    currentState = _saveQueue as GameState;
+    _saveQueue = null;
   }
+
+  _isBackgroundSaving = false;
 };
 
 interface Impact {
@@ -71,7 +73,12 @@ const processModals = (impacts: Impact[]) => {
   if (typeof useUIStore.getState !== 'function') return;
   const ui = useUIStore.getState();
   if (impacts && impacts.length > 0) {
-    const modalImpacts = impacts.filter(imp => imp.type === 'MODAL_TRIGGERED');
+    const modalImpacts: Impact[] = [];
+    for (let i = 0; i < impacts.length; i++) {
+      if (impacts[i].type === 'MODAL_TRIGGERED') {
+        modalImpacts.push(impacts[i]);
+      }
+    }
     
     if (modalImpacts.length > 0) {
       modalImpacts.sort((a, b) => (b.payload.priority || 0) - (a.payload.priority || 0));

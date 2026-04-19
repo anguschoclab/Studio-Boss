@@ -50,6 +50,9 @@ export class MetricsCollector {
 
     // Track total completed & Genre ROI
     let worldCompletedCount = 0;
+    let playerActiveProjectsCount = 0;
+    let activeBudgets = 0;
+    let bankruptcyCount = 0;
     
     const allStudios = [
         { id: 'PLAYER', projects: Object.values(state.entities.projects), cash: Number(state.finance.cash) || 0, name: state.studio.name },
@@ -57,9 +60,19 @@ export class MetricsCollector {
     ];
 
     allStudios.forEach(studio => {
+        if (studio.id !== 'PLAYER' && studio.cash <= -50000000) {
+            bankruptcyCount++;
+        }
         studio.projects.forEach(p => {
             const isFinished = ['released', 'archived', 'post_release'].includes(p.state);
-            if (isFinished) worldCompletedCount++;
+            if (isFinished) {
+                worldCompletedCount++;
+            } else {
+                if (studio.id === 'PLAYER') {
+                    playerActiveProjectsCount++;
+                    activeBudgets += (p.budget || 0);
+                }
+            }
 
             // ROI Tracking
             if (p.budget > 0 && (p.revenue > 0 || isFinished)) {
@@ -112,9 +125,7 @@ export class MetricsCollector {
     const marketShare = totalAssets > 0 ? (playerCash / totalAssets) * 100 : 0;
 
     // totalSystemCash = player + rivals + platforms + (active budgets estimate)
-    const activeBudgets = Object.values(state.entities.projects)
-      .filter(p => !['released', 'archived', 'post_release'].includes(p.state))
-      .reduce((sum, p) => sum + (p.budget || 0), 0);
+    // activeBudgets calculated during allStudios loop above
 
     // Nielsen & Cut Analytics
     let totalNielsenDemo = 0;
@@ -154,10 +165,10 @@ export class MetricsCollector {
       totalMarketSentiment: state.finance.marketState?.sentiment || 50,
       talentPoolSize: talentPoolSize,
       avgTalentPrestige: totalPrestige / (talentPoolSize || 1),
-      activeProjects: Object.values(state.entities.projects).reduce((acc, p) => acc + (!['released', 'archived', 'post_release'].includes(p.state) ? 1 : 0), 0),
+      activeProjects: playerActiveProjectsCount,
       completedProjects: worldCompletedCount,
       retiredCount: this.totalRetired,
-      bankruptcyCount: rivalsList.filter(r => (Number(r.cash) || 0) <= -50000000).length,
+      bankruptcyCount: bankruptcyCount,
       marketShare: marketShare,
       industryLeader: leader?.name,
       topGenreROI: { genre: topGenre, roi: maxROI },
