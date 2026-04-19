@@ -6,7 +6,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Star, Zap, DollarSign, Building2, TrendingUp } from 'lucide-react';
-import { cn } from '@/lib/utils';
 
 export const BreakoutBiddingWarModal: React.FC = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();

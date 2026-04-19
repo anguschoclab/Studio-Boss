@@ -4,9 +4,7 @@ import { useGameStore } from '@/store/gameStore';
 import { formatMoney } from '@/engine/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Swords, Building2, DollarSign, AlertTriangle, Shield } from 'lucide-react';
-import { cn } from '@/lib/utils';
 
 export const BiddingWarModal: React.FC = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();

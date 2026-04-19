@@ -38,7 +38,7 @@ const MarketingPanel = () => {
     projectTitle: p.title,
     totalBuzz: p.buzz || 0,
     trend: (p.momentum || 50) > 55 ? 'rising' as const : (p.momentum || 50) < 45 ? 'falling' as const : 'stable' as const,
-    sources: [] as any[],
+    sources: [],
     audienceSentiment: (p.buzz || 0) > 60 ? 'positive' as const : (p.buzz || 0) > 30 ? 'mixed' as const : 'negative' as const,
     pressCoverage: Math.round((p.buzz || 0) * 0.3),
   })), [activeProjects]);

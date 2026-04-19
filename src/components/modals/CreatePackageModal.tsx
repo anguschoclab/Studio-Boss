@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Package, Building2, Users } from 'lucide-react';
-import type { Agency, Talent, Opportunity, BudgetTierKey, ProjectFormat } from '@/engine/types';
+import type { Agency, Talent, BudgetTierKey, ProjectFormat } from '@/engine/types';
 
 interface CreatePackageModalProps {
   agencies?: Agency[];
