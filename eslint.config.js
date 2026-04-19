@@ -48,7 +48,7 @@ export default tseslint.config(
             /**
              * Note: Rule silencing has been removed. 
              * The following are now ENFORCED by the 'strict' preset:
-             * - @typescript-eslint/no-explicit-any (Error)
+             * - @typescript-eslint/no-explicit-any
              * - @typescript-eslint/ban-ts-comment (Error)
              * - @typescript-eslint/no-unused-vars (Error)
              * - no-empty (Error)

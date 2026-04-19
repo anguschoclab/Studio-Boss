@@ -34,8 +34,8 @@ function getEyeShapePath(
 export function renderEyes(f: AvatarFeatures, cx: number, cy: number, faceW: number, faceH: number, skin: ColorPalette): string {
   const eyeY = cy - faceH * 0.08;
   const eyeSpacing = 12 + f.eyeSpacing * 10;
-  let eyeW = 8 + f.eyeSize * 7;
-  let eyeH = 5 + f.eyeSize * 5;
+  const eyeW = 8 + f.eyeSize * 7;
+  const eyeH = 5 + f.eyeSize * 5;
   const slant = f.eyeSlant * 5;
   const irisR = eyeH * 0.7;
   const pupilR = irisR * 0.45;
