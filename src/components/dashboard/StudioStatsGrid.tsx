@@ -3,9 +3,10 @@ import { Clapperboard, DollarSign, Award, Users } from 'lucide-react';
 import { formatMoney } from '@/engine/utils';
 import { SparklineChart } from '@/components/shared/SparklineChart';
 import { ProgressIndicator } from '@/components/shared/ProgressIndicator';
+import { FinanceState } from '@/engine/types';
 
 interface StudioStatsGridProps {
-  finance: any;
+  finance: FinanceState;
   activeProjectsCount: number;
   releasedProjectsCount: number;
   prestige: number;

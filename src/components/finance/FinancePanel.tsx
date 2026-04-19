@@ -110,7 +110,7 @@ export const FinancePanel = () => {
     if (!financeHistory || financeHistory.length === 0) return [];
     
     // Convert snapshots to chart format
-    const history = financeHistory.map((h: any) => ({
+    const history = financeHistory.map((h) => ({
       week: h.week,
       isForecast: false,
       histCash: h.cash,
@@ -136,7 +136,7 @@ export const FinancePanel = () => {
         projRevenue: last.histRevenue,
         projCosts: last.histCosts,
         isForecast: true,
-      } as any);
+      } as typeof projected[0]);
     }
 
     return [...history, ...projected];

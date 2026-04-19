@@ -221,7 +221,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     ];
 
     return list;
-  }, [setActiveHub, setActiveSubTab, openCreateProject]);
+  }, [setActiveHub, setActiveSubTab, openCreateProject, doAdvanceWeek]);
 
   // Filter commands based on query
   const filteredCommands = React.useMemo(() => {

@@ -24,6 +24,16 @@ describe('applyAwardBoostsToTalent', () => {
     year: 2024
   };
 
+  const baseAward2: Award = {
+    id: 'a1',
+    projectId: 'p1',
+    name: 'Award',
+    category: 'Best Actor',
+    body: 'Academy Awards',
+    status: 'won',
+    year: 2024
+  };
+
   describe('Wins', () => {
     it('calculates boosts for a prestigious major win (e.g. Academy Award Best Actor)', () => {
       const award: Award = { ...baseAward2, category: 'Best Actor', body: 'Academy Awards', status: 'won' };
@@ -109,10 +119,7 @@ describe('applyAwardBoostsToTalent', () => {
       expect(boosts.feeMultiplier).toBeCloseTo(8.2);
     });
   });
-});
-
-
-    const baseTalent2 = {
+  const baseTalent2 = {
     id: 't1',
     name: 'Test Actor',
     roles: ['actor'],
@@ -122,15 +129,7 @@ describe('applyAwardBoostsToTalent', () => {
     temperament: 'Pro',
     accessLevel: 'insider'
   } as any;
-  const baseAward2: Award = {
-    id: 'a1',
-    projectId: 'p1',
-    name: 'Award',
-    category: 'Best Actor',
-    body: 'Academy Awards',
-    status: 'won',
-    year: 2024
-  };
+
   describe('Edge Cases', () => {
     it('handles talent with 0 skill but 100 ego', () => {
       const edgeTalent = {
@@ -155,3 +154,4 @@ describe('applyAwardBoostsToTalent', () => {
       expect(boosts.feeMultiplier).toBeGreaterThan(1);
     });
   });
+});

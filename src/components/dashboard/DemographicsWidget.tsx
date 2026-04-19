@@ -88,7 +88,7 @@ export const DemographicsWidget: React.FC = () => {
                   barSize={28}
                   animationDuration={2000}
                   animationEasing="ease-out"
-                  background={{ fill: 'rgba(255,255,255,0.03)', radius: [0, 12, 12, 0] as any }}
+                  background={{ fill: 'rgba(255,255,255,0.03)', radius: 12 }}
                 >
                   {chartData.map((entry, index) => (
                     <Cell
