@@ -65,6 +65,11 @@ export function calculateFranchiseEquity(
       crossoverBonus += 0.45;
     }
 
+    // 🌌 The Universe Builder: Legacy Character Return Massive Crossover Bonus.
+    if (assets.length >= 4 && genres.some(g => g === 'Legacy Sequel') && genres.some(g => g === 'Multiverse' || g === 'Superhero')) {
+      crossoverBonus += 0.60;
+    }
+
     // 🌌 The Universe Builder: Added a 15% synergy bonus when combining two Level 3 franchises in a crossover event.
     if (assets.length >= 5) {
       crossoverBonus += 0.15;
@@ -131,7 +136,7 @@ export function calculateFranchiseEquity(
   const overSaturationPenalty = franchise.activeProjectIds && franchise.activeProjectIds.length >= 4 ? 0.8 : 1.0;
 
   // Massive penalty to valuation if the franchise is heavily fatigued
-  const fatiguePenalty = franchise.fatigueLevel > 0.8 ? 0.5 : 1.0;
+  const fatiguePenalty = franchise.fatigueLevel > 0.9 ? 0.2 : franchise.fatigueLevel > 0.8 ? 0.5 : 1.0;
 
   return Math.floor(baseEquity * crossoverBonus * multiplier * megaFranchisePremium * overSaturationPenalty * fatiguePenalty);
 }

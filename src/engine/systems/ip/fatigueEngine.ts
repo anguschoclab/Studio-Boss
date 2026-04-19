@@ -56,6 +56,11 @@ export function calculateFranchiseFatigue(
     currentFatigue *= 2.5;
   }
 
+  // 🌌 The Universe Builder: Massive penalty for "IP Factory" nested spinoffs in over-saturated Superhero genres.
+  if (activeCount >= 3 && genreSaturation > 10 && normalizedGenre === 'Superhero') {
+    currentFatigue *= 4.0;
+  }
+
   // Space Opera / Sci-Fi massive fatigue after 4 active projects
   // 🌌 The Universe Builder: High-concept universes collapse under their own weight.
   if (activeCount >= 4 && (normalizedGenre === 'Space Opera' || normalizedGenre === 'Sci-Fi')) {
@@ -90,6 +95,11 @@ export function calculateFranchiseFatigue(
   // 🌌 The Universe Builder: Rebooting a dead franchise (relevance < 20) with active projects causes severe whiplash.
   if (activeCount >= 1 && franchise.relevanceScore < 20) {
     currentFatigue *= 4.0;
+  }
+
+  // 🌌 The Universe Builder: Severe penalties for rebooting deeply fatigued franchises.
+  if (activeCount >= 1 && franchise.relevanceScore < 15 && franchise.fatigueLevel > 0.8) {
+    currentFatigue *= 5.0;
   }
 
   // 🌌 The Universe Builder: Streaming Spin-Off Dilution.
@@ -207,7 +217,7 @@ export function calculateReleaseGapImpact(
   // 🌌 The Universe Builder: Awkward Reboot (Too Late, Not Nostalgic).
   if (yearsSince >= 8 && yearsSince < 10) {
     return {
-      buzzBonus: -20,
+      buzzBonus: -60,
       label: 'Awkward Reboot (Too Late, Not Nostalgic)',
       fatigueReset: false
     };
