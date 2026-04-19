@@ -324,7 +324,7 @@ describe('RelationshipSystem - Query Functions', () => {
             history: [],
             formedWeek: 1,
             lastUpdatedWeek: 1,
-          }
+          },
           'talent-1-talent-3': {
             id: 'talent-1-talent-3',
             talentAId: 'talent-1',
