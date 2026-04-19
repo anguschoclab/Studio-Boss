@@ -60,7 +60,14 @@ export function calculateOpeningWeekend(
   const avgTalentDraw = attachedTalent.length > 0 ? talentDraw / attachedTalent.length : 0;
   
   // Base potential: roughly 5x budget for a perfect storm, 0.5x for a duds
-  let basePotential = (project.budget * 0.4) * buzzFactor * (0.8 + (studioPrestige / 200)) * (1 + (avgTalentDraw / 100));
+  // The Studio Comptroller: Introduce diminishing returns on massive budgets and explosive multipliers for micro-budgets.
+  let effectiveBudget = project.budget;
+  if (project.budget > 150_000_000) {
+    effectiveBudget = 150_000_000 + Math.pow(project.budget - 150_000_000, 0.85);
+  } else if (project.budget < 10_000_000) {
+    effectiveBudget = project.budget * 2.5; // Micro-budget anomaly potential
+  }
+  let basePotential = (effectiveBudget * 0.4) * buzzFactor * (0.8 + (studioPrestige / 200)) * (1 + (avgTalentDraw / 100));
   
   // Rating Cut Multipliers
   if (project.activeCut === 'directors_cut') {
@@ -123,11 +130,12 @@ export function simulateWeeklyBoxOffice(
   if (weekInRelease === 0) return previousWeeklyRevenue;
 
   // 1. Base Decay based on Word of Mouth (Review Score)
-  let decayFactor = 0.6; // 40% drop
+  // The Studio Comptroller: Steeper modern front-loaded weekend drops.
+  let decayFactor = 0.55; // Base 45% drop
 
-  if (reviewScore > 80) decayFactor = 0.8; // Leggy
-  else if (reviewScore > 60) decayFactor = 0.7;
-  else if (reviewScore < 40) decayFactor = 0.4; // Front-loaded disaster
+  if (reviewScore > 80) decayFactor = 0.75;
+  else if (reviewScore > 60) decayFactor = 0.65;
+  else if (reviewScore < 40) decayFactor = 0.35; // 65% disaster drop
 
   // 1.5. Rating-specific decay modifiers
   // R-rated dramas with strong reviews have prestige legs (word-of-mouth driven)
@@ -140,7 +148,11 @@ export function simulateWeeklyBoxOffice(
 
   // 2. Genre Specifics
   const g = project.genre.toUpperCase();
-  if (g === 'HORROR') decayFactor -= 0.15; // Horror drops fast
+  if (g === 'HORROR') {
+    decayFactor -= 0.20; // Horror drops incredibly fast
+    // The Studio Comptroller: Low budget horror with decent reviews has bizarre legs.
+    if (project.budget <= 10_000_000 && reviewScore >= 65) decayFactor += 0.30;
+  }
   if (g === 'FAMILY' || g === 'ANIMATION') decayFactor += 0.1; // Families have legs
 
   // 3. Competition Penalty

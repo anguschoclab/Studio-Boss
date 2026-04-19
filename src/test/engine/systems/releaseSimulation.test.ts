@@ -62,13 +62,13 @@ describe("releaseSimulation system", () => {
   describe("simulateWeeklyBoxOffice", () => {
     it("applies decay based on review score legs", () => {
       const excellentRevenue = simulateWeeklyBoxOffice(mockProject, 2, 90, 1_000_000, 0);
-      expect(excellentRevenue).toBe(800_000);
+      expect(excellentRevenue).toBe(750_000); // 0.75 base decay
 
       const averageRevenue = simulateWeeklyBoxOffice(mockProject, 2, 70, 1_000_000, 0);
-      expect(averageRevenue).toBe(700_000);
+      expect(averageRevenue).toBe(650_000); // 0.65 base decay
 
       const badRevenue = simulateWeeklyBoxOffice(mockProject, 2, 30, 100_000, 0);
-      expect(badRevenue).toBe(40_000);
+      expect(badRevenue).toBe(35_000); // 0.35 base decay
     });
   });
 
