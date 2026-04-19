@@ -81,7 +81,7 @@ export const StatCard: React.FC<StatCardProps> = ({
 
   return (
     <Card className={cn(
-      'relative overflow-hidden border bg-gradient-to-br backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl group',
+      'relative overflow-hidden border bg-gradient-to-br backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl group focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none focus-visible:ring-inset',
       colorVariants[color],
       glow && 'shadow-lg',
       className

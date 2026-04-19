@@ -15,7 +15,7 @@ export const StudioHeader = ({ gameState }: StudioHeaderProps) => {
           <h1 className="text-4xl md:text-5xl font-display font-black tracking-tighter uppercase bg-gradient-to-br from-white via-white/90 to-white/40 bg-clip-text text-transparent drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
             {gameState.studio.name}
           </h1>
-          <Badge className="bg-primary/10 hover:bg-primary/20 text-primary border border-primary/30 uppercase tracking-[0.25em] text-[11px] py-1 px-4 rounded-full shadow-[0_0_20px_hsl(var(--primary)_/_0.2)] hover:shadow-[0_0_30px_hsl(var(--primary)_/_0.4)] transition-all duration-500 backdrop-blur-md">
+          <Badge tabIndex={0} className="bg-primary/10 hover:bg-primary/20 text-primary border border-primary/30 uppercase tracking-[0.25em] text-[11px] py-1 px-4 rounded-full shadow-[0_0_20px_hsl(var(--primary)_/_0.2)] hover:shadow-[0_0_30px_hsl(var(--primary)_/_0.4)] transition-all duration-500 backdrop-blur-md focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none hover:scale-105 cursor-default">
             {gameState.studio.archetype.replace('-', ' ')}
           </Badge>
         </div>

@@ -31,9 +31,13 @@ export const IntelligenceFeed = ({ newsHistory }: IntelligenceFeedProps) => {
         <div className="divide-y divide-white/5">
           {newsHistory && newsHistory.length > 0 ? (
             newsHistory.slice(0, 4).map((news, i) => (
-              <div key={news.id} className={cn(
-                "flex items-center gap-6 p-6 transition-all duration-500 hover:bg-white/10 backdrop-blur-md border-l-4 border-l-transparent hover:border-l-primary relative overflow-hidden group/item cursor-pointer",
-                i === 0 && "bg-white/5 border-l-primary/50"
+              <div
+                key={news.id}
+                tabIndex={0}
+                className={cn(
+                  "flex items-center gap-6 p-6 transition-all duration-500 hover:bg-white/10 backdrop-blur-md border-l-4 border-l-transparent hover:border-l-primary relative overflow-hidden group/item cursor-pointer",
+                  "focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none",
+                  i === 0 && "bg-white/5 border-l-primary/50"
               )}>
                 {i === 0 && <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent pointer-events-none opacity-50" />}
                 <div className="w-14 h-14 rounded-2xl bg-black/60 border border-white/10 shadow-[inset_0_2px_10px_rgba(0,0,0,0.5)] flex items-center justify-center font-mono text-xs font-black text-muted-foreground group-hover/item:text-primary group-hover/item:border-primary/40 group-hover/item:shadow-[0_0_20px_hsl(var(--primary)_/_0.2)] transition-all duration-500 relative z-10 group-hover/item:scale-110">

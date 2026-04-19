@@ -32,7 +32,7 @@ export const FinancialOverviewWidget: React.FC = () => {
   };
 
   return (
-    <Card aria-label="Financial Overview Chart" className={cn("col-span-1 animate-in fade-in zoom-in-95 lg:col-span-2 relative overflow-hidden group h-full", "bg-gradient-to-br from-card/90 to-card/50 backdrop-blur-2xl border border-white/20 shadow-2xl hover:shadow-[0_0_30px_hsl(var(--primary)/0.15)] transition-all duration-300")}>
+    <Card aria-label="Financial Overview Chart" className={cn("col-span-1 animate-in fade-in zoom-in-95 lg:col-span-2 relative overflow-hidden group h-full focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none", "bg-gradient-to-br from-card/90 to-card/50 backdrop-blur-2xl border border-white/20 shadow-2xl hover:shadow-[0_0_30px_hsl(var(--primary)/0.15)] transition-all duration-300")}>
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080801a_1px,transparent_1px),linear-gradient(to_bottom,#8080801a_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none opacity-20 group-hover:opacity-40 transition-opacity duration-1000" />
       <div className="absolute -top-40 -right-40 w-[800px] h-[800px] bg-[hsl(var(--chart-2))]/10 rounded-full blur-[160px] pointer-events-none group-hover:bg-[hsl(var(--chart-2))]/20 transition-colors duration-1000 group-hover:scale-110" />
       <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay pointer-events-none" />

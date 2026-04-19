@@ -29,7 +29,7 @@ export const DemographicsWidget: React.FC = () => {
   };
 
   return (
-    <Card aria-label="Demographics Chart" className={cn("col-span-1 animate-in zoom-in-95 lg:col-span-1 relative overflow-hidden group h-full", "bg-gradient-to-br from-card/90 to-card/50 backdrop-blur-2xl border border-white/20 shadow-2xl hover:shadow-[0_0_30px_hsl(var(--primary)/0.15)] transition-all duration-300")}>
+    <Card aria-label="Demographics Chart" className={cn("col-span-1 animate-in zoom-in-95 lg:col-span-1 relative overflow-hidden group h-full focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none", "bg-gradient-to-br from-card/90 to-card/50 backdrop-blur-2xl border border-white/20 shadow-2xl hover:shadow-[0_0_30px_hsl(var(--primary)/0.15)] transition-all duration-300")}>
       <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-[140px] pointer-events-none group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-1000" />
       <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-secondary/5 rounded-full blur-[100px] pointer-events-none group-hover:bg-secondary/10 transition-colors duration-1000" />
       <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay pointer-events-none" />

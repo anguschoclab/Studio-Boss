@@ -287,11 +287,11 @@ export const StudioPulse: React.FC = () => {
                 <div
                   key={alert.id}
                   className={cn(
-                    "flex items-center justify-between p-3 rounded-lg border transition-colors",
-                    alert.type === 'danger' && "bg-red-500/5 border-red-500/20",
-                    alert.type === 'warning' && "bg-amber-500/5 border-amber-500/20",
-                    alert.type === 'info' && "bg-blue-500/5 border-blue-500/20",
-                    alert.type === 'success' && "bg-emerald-500/5 border-emerald-500/20",
+                    "flex items-center justify-between p-3 rounded-lg border transition-colors relative overflow-hidden",
+                    alert.type === 'danger' && "bg-gradient-to-r from-red-500/10 to-transparent backdrop-blur-md border-red-500/30",
+                    alert.type === 'warning' && "bg-gradient-to-r from-amber-500/10 to-transparent backdrop-blur-md border-amber-500/30",
+                    alert.type === 'info' && "bg-gradient-to-r from-blue-500/10 to-transparent backdrop-blur-md border-blue-500/30",
+                    alert.type === 'success' && "bg-gradient-to-r from-emerald-500/10 to-transparent backdrop-blur-md border-emerald-500/30",
                   )}
                 >
                   <div className="flex items-start gap-2.5">
@@ -308,7 +308,7 @@ export const StudioPulse: React.FC = () => {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-7 text-[10px] font-bold uppercase tracking-wider shrink-0"
+                      className="h-7 text-[10px] font-bold uppercase tracking-wider shrink-0 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none focus-visible:ring-offset-1 focus-visible:ring-offset-background"
                       onClick={() => handleAlertAction(alert.tab)}
                     >
                       {alert.action}
@@ -333,7 +333,7 @@ export const StudioPulse: React.FC = () => {
           <Button
             variant="outline"
             size="sm"
-            className="flex-1 h-8 text-[10px] font-bold uppercase tracking-wider"
+            className="flex-1 h-8 text-[10px] font-bold uppercase tracking-wider focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none focus-visible:ring-offset-1 focus-visible:ring-offset-background hover:bg-primary/10 hover:text-primary transition-colors"
             onClick={() => setActiveTab('pipeline' as TabId)}
           >
             <Film className="w-3.5 h-3.5 mr-1.5" />
@@ -342,7 +342,7 @@ export const StudioPulse: React.FC = () => {
           <Button
             variant="outline"
             size="sm"
-            className="flex-1 h-8 text-[10px] font-bold uppercase tracking-wider"
+            className="flex-1 h-8 text-[10px] font-bold uppercase tracking-wider focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none focus-visible:ring-offset-1 focus-visible:ring-offset-background hover:bg-primary/10 hover:text-primary transition-colors"
             onClick={() => setActiveTab('finance' as TabId)}
           >
             <DollarSign className="w-3.5 h-3.5 mr-1.5" />
@@ -351,7 +351,7 @@ export const StudioPulse: React.FC = () => {
           <Button
             variant="outline"
             size="sm"
-            className="flex-1 h-8 text-[10px] font-bold uppercase tracking-wider"
+            className="flex-1 h-8 text-[10px] font-bold uppercase tracking-wider focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none focus-visible:ring-offset-1 focus-visible:ring-offset-background hover:bg-primary/10 hover:text-primary transition-colors"
             onClick={() => setActiveTab('talent' as TabId)}
           >
             <Users className="w-3.5 h-3.5 mr-1.5" />
