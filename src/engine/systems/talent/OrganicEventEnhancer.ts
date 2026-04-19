@@ -25,10 +25,10 @@ export function checkRelationshipCrises(
   if (talentIds.length < 2) return null;
 
   // Check for feuds among cast
-  const relationships = Object.values((state as any).relationships?.relationships || {})
-    .filter((r: any) =>
+  const relationships = Object.values(state.relationships?.relationships || {})
+    .filter((r) =>
       talentIds.includes(r.talentAId) && talentIds.includes(r.talentBId)
-    ) as TalentRelationship[];
+    );
 
   const feuds = relationships.filter(r => r.type === 'rival' || r.type === 'enemy');
 
@@ -99,8 +99,8 @@ export function checkCliqueCrises(
 
   if (talentIds.length < 3) return null;
 
-  const cliques = (state as any).relationships?.cliques?.cliques || {};
-  const memberCliqueMap = (state as any).relationships?.cliques?.memberCliqueMap || {};
+  const cliques = state.relationships?.cliques?.cliques || {};
+  const memberCliqueMap = state.relationships?.cliques?.memberCliqueMap || {};
 
   // Find cliques that have multiple members on this project
   const cliquePresence: Record<string, number> = {};
@@ -148,7 +148,7 @@ export function generateRelationshipScandals(
 ): StateImpact[] {
   const impacts: StateImpact[] = [];
 
-  const relationships = Object.values((state as any).relationships?.relationships || {}) as TalentRelationship[];
+  const relationships = Object.values(state.relationships?.relationships || {});
 
   // Check for affair scandals (secret romantic relationships becoming public)
   const secretRomances = relationships.filter(r =>
@@ -208,7 +208,7 @@ export function generateRelationshipScandals(
             relationshipId: romance.id,
             update: { isPublic: true },
           },
-        } as any);
+        });
 
         // News
         impacts.push({
@@ -270,7 +270,7 @@ export function tickOrganicEvents(
   // 1. Check projects for relationship-based crises
   const projects = Object.values(state.entities.projects || {});
   for (const project of projects) {
-    const projectState = (project as any).status || (project as any).state;
+    const projectState = project.state;
     if (['IN_PRODUCTION', 'production', 'filming'].some(s =>
       projectState?.toLowerCase().includes(s.toLowerCase())
     )) {
@@ -310,17 +310,17 @@ export function calculateSocialCrisisModifier(
   if (talentIds.length < 2) return modifier;
 
   // Check for feuds
-  const relationships = Object.values((state as any).relationships?.relationships || {})
-    .filter((r: any) =>
+  const relationships = Object.values(state.relationships?.relationships || {})
+    .filter((r) =>
       talentIds.includes(r.talentAId) && talentIds.includes(r.talentBId)
-    ) as TalentRelationship[];
+    );
 
   const feuds = relationships.filter(r => r.type === 'rival' || r.type === 'enemy');
   modifier += feuds.length * 0.15; // +15% per feud
 
   // Check for toxic cliques
-  const memberCliqueMap = (state as any).relationships?.cliques?.memberCliqueMap || {};
-  const cliques = (state as any).relationships?.cliques?.cliques || {};
+  const memberCliqueMap = state.relationships?.cliques?.memberCliqueMap || {};
+  const cliques = state.relationships?.cliques?.cliques || {};
 
   const toxicCliqueMembers = talentIds.filter(id => {
     const talentCliques = memberCliqueMap[id] || [];

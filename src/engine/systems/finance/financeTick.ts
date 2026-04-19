@@ -7,8 +7,11 @@ import { StudioArchetype, AI_ARCHETYPES } from '../../data/aiArchetypes';
 /**
  * Helper function to get the StudioArchetype for a rival studio.
  */
-function getRivalArchetype(rival: any): StudioArchetype | undefined {
-  const archetypeId = rival.archetypeId || ('behaviorId' in rival ? rival.behaviorId : undefined);
+/**
+ * Helper function to get the StudioArchetype for a rival studio.
+ */
+function getRivalArchetype(rival: import('@/engine/types').RivalStudio): StudioArchetype | undefined {
+  const archetypeId = rival.archetypeId;
   if (archetypeId) {
     const archetype = AI_ARCHETYPES.find(a => a.id === archetypeId);
     if (archetype) return archetype;

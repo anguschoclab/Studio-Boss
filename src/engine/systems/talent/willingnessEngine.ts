@@ -78,7 +78,7 @@ export function calculateWillingness(
   }
 
   // 4. Script Heat
-  const scriptHeat = 'scriptHeat' in project ? project.scriptHeat : 50;
+  const scriptHeat = project.scriptHeat;
   if (scriptHeat > 80) {
     score += 15;
     reasons.push(`The script is considered a "Must-Read" in town.`);
@@ -111,7 +111,7 @@ export function calculateWillingness(
   // 6. Directorial Influence (Check if a director is already attached)
   const contractsList = Object.values(gameState.entities.contracts || {});
   const directorContract = contractsList.find(
-    (c: Contract) => c.projectId === project.id && gameState.entities.talents[c.talentId]?.roles.includes('director')
+    c => c.projectId === project.id && gameState.entities.talents[c.talentId]?.roles.includes('director')
   );
   if (directorContract) {
     const director = gameState.entities.talents[directorContract.talentId];
@@ -142,7 +142,12 @@ export function calculateWillingness(
   }
 
   // 9. Archetype-Specific Preferences
-  let archetypeConfig: any;
+  let archetypeConfig: {
+    genrePreferences?: string[];
+    genreDislikes?: string[];
+    budgetPreferences?: string[];
+  } | undefined;
+  
   if (talent.actorArchetype) {
     archetypeConfig = ACTOR_ARCHETYPES[talent.actorArchetype];
   } else if (talent.writerArchetype) {

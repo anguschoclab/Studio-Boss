@@ -70,7 +70,7 @@ export class SchedulingEngine {
   }
 
   static processPacts(pacts: TalentPact[]): TalentPact[] {
-    return (pacts || []).map(p => ({ ...p, weeksRemaining: (p as any).weeksRemaining - 1 })).filter(p => (p as any).weeksRemaining > 0);
+    return (pacts || []).map(p => ({ ...p, weeksRemaining: p.weeksRemaining - 1 })).filter(p => p.weeksRemaining > 0);
   }
 
   static updateTalentFatigue(talent: Talent, isWorking: boolean): number {

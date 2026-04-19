@@ -26,20 +26,16 @@ export class StudioAutomation {
    */
   static tick(state: GameState, rng: RandomGenerator): StateImpact[] {
     const impacts: StateImpact[] = [];
-
     const rivalsList = Object.values(state.entities.rivals || {});
 
+    // 1. Studio-Level Logic (Liquidation, Platform Launch, Strategy)
     rivalsList.forEach(rival => {
-      // Get archetype for archetype-driven decisions
       const archetype = this.getRivalArchetype(rival);
-
-      // 1. Studio Status & Liquidation (use ma_willingness for platform launch decision)
       const isDistressed = (Number(rival.cash) || 0) < -50000000;
 
       if (isDistressed && (state.week % 4 === 0) && rng.next() < 0.1) {
           this.triggerLiquidation(rival, state, rng, impacts);
       } else if (rival.cash > 500000000 && (!rival.ownedPlatforms || rival.ownedPlatforms.length === 0)) {
-          // Use ma_willingness for platform launch decision
           if (rng.next() < (0.05 * archetype.ma_willingness)) {
               this.triggerPlatformLaunch(rival, state, rng, impacts);
           }
@@ -51,41 +47,39 @@ export class StudioAutomation {
             payload: { rivalId: rival.id, update: { isAcquirable: isDistressed } }
           });
       }
+    });
 
-      // 2. Process Individual Projects (backward compatibility for projects field)
-      let activeCount = 0;
-      const expiredProjectIds: string[] = [];
-      const rivalProjects = ('projects' in rival && rival.projects) ? (rival as any).projects : {};
+    // 2. Project-Level Logic (Centralized iteration)
+    const allProjects = Object.values(state.entities.projects || {});
+    const rivalProjectCounts: Record<string, number> = {};
 
-      // ⚡ Bolt: Consolidated project iteration to prevent multiple filter/map array allocations
-      for (const id in rivalProjects) {
-        const p = rivalProjects[id];
-        this.processProject(p, rival.id, state, rng, impacts, archetype);
+    allProjects.forEach(p => {
+      if (p.ownerId === 'player' || !p.ownerId) return;
+      
+      const rival = state.entities.rivals[p.ownerId];
+      if (!rival) return;
 
-        if (p.state !== 'archived') {
-            if (p.state === 'released' && (state.week - (p.releaseWeek || 0)) > 4) {
-                expiredProjectIds.push(p.id);
-            } else {
-                activeCount++;
-            }
-        }
+      const archetype = this.getRivalArchetype(rival);
+      this.processProject(p, rival.id, state, rng, impacts, archetype);
+
+      if (p.state !== 'archived') {
+        rivalProjectCounts[rival.id] = (rivalProjectCounts[rival.id] || 0) + 1;
       }
 
-      // ⚡ Project Recycling (Keep memory usage low in long-term sims)
-      if (expiredProjectIds.length > 0) {
-          const updatedProjects = { ...rivalProjects };
-          for (let i = 0; i < expiredProjectIds.length; i++) {
-              const id = expiredProjectIds[i];
-              updatedProjects[id] = { ...updatedProjects[id], state: 'archived' as any };
-          }
-          impacts.push({
-              type: 'RIVAL_UPDATED',
-              payload: { rivalId: rival.id, update: { projects: updatedProjects } }
-          });
+      // Project Recycling (Keep memory usage low)
+      if (p.state === 'released' && (state.week - (p.releaseWeek || 0)) > 4) {
+        impacts.push({
+          type: 'PROJECT_UPDATED',
+          payload: { projectId: p.id, update: { state: 'archived' } }
+        });
       }
+    });
 
-      // 3. Pitch New Projects (If slot available) - use archetype for decisions
+    // 3. Pitch New Projects (If slots available)
+    rivalsList.forEach(rival => {
+      const activeCount = rivalProjectCounts[rival.id] || 0;
       if (activeCount < 5 && rng.next() < 0.1) {
+        const archetype = this.getRivalArchetype(rival);
         this.pitchNewProject(rival, state, rng, impacts, archetype);
       }
     });
@@ -155,24 +149,31 @@ export class StudioAutomation {
         }
       }
 
-      impacts.push(this.createUpdateImpact(studioId, p.id, {
-        ...releasedProject,
-        ...tvUpdate,
-        ...streamingUpdate,
-        state: nextStatus as any,
-        weeksInPhase: 0,
-        releaseWeek: state.week,
-        activeCrisis: null
-      }, state));
+      impacts.push({
+        type: 'PROJECT_UPDATED',
+        payload: {
+          projectId: p.id,
+          update: {
+            ...releasedProject,
+            ...tvUpdate,
+            ...streamingUpdate,
+            state: nextStatus,
+            weeksInPhase: 0,
+            releaseWeek: state.week,
+            activeCrisis: null
+          }
+        }
+      });
     }
   }
 
   private static triggerLiquidation(rival: RivalStudio, state: GameState, rng: RandomGenerator, impacts: StateImpact[]): void {
-      // Backward compatibility for ipAssets field
-      const ipAssets = ('ipAssets' in rival && rival.ipAssets) ? Object.values((rival as any).ipAssets) : [];
-      if (ipAssets.length === 0) return;
+      const vault = state.ip.vault || [];
+      const rivalIPs = vault.filter(a => a.ownerStudioId === rival.id);
 
-      const asset = rng.pick(ipAssets) as any;
+      if (rivalIPs.length === 0) return;
+
+      const asset = rng.pick(rivalIPs);
       const bidPrice = (asset.baseValue || 10000000) * (0.5 + rng.next() * 0.5);
 
       impacts.push({
@@ -191,8 +192,18 @@ export class StudioAutomation {
           payload: {
               rivalId: rival.id,
               update: {
-                  cash: (Number(rival.cash) || 0) + bidPrice,
-                  ipAssets: Object.fromEntries(Object.entries((rival as any).ipAssets || {}).filter(([id]) => id !== asset.id))
+                  cash: (Number(rival.cash) || 0) + bidPrice
+              }
+          }
+      });
+
+      impacts.push({
+          type: 'IP_UPDATED',
+          payload: {
+              assetId: asset.id,
+              update: { 
+                rightsOwner: 'STUDIO', 
+                ownerStudioId: 'player' 
               }
           }
       });
@@ -219,17 +230,13 @@ export class StudioAutomation {
   private static pitchNewProject(rival: RivalStudio, state: GameState, rng: RandomGenerator, impacts: StateImpact[], archetype: StudioArchetype): void {
     const id = rng.uuid('PRJ');
 
-    // Use archetype properties for decision making
-    // greenlight_bias: ProjectFormat[] - determines format bias
     const formatBias = archetype.greenlight_bias;
     const format = formatBias.length > 0 ? rng.pick(formatBias) : (rng.next() < 0.3 ? 'tv' : 'film');
 
-    // genreFocus: string[] - determines genre preference
     const genreFocus = archetype.genreFocus;
     const genres = genreFocus.length > 0 && genreFocus[0] !== 'Any' ? genreFocus : ['Action', 'Drama', 'Comedy', 'Sci-Fi', 'Horror', 'Family'];
     const genre = rng.pick(genres);
 
-    // budget_tier_weights: Record<BudgetTierKey, number> - determines budget tier
     const budgetTiers: BudgetTierKey[] = ['indie', 'low', 'mid', 'high', 'blockbuster'];
     const weights = budgetTiers.map(tier => archetype.budget_tier_weights[tier]);
     const budgetTier = this.weightedRandom(budgetTiers, weights, rng);
@@ -244,9 +251,12 @@ export class StudioAutomation {
       weeksInPhase: 0,
       budgetTier,
       buzz: rng.rangeInt(20, 50),
-      reviewScore: rng.rangeInt(40, 75),
-      ownerId: rival.id, // Set ownerId for unified storage
-      archetypeId: archetype.id, // Set archetypeId for archetype-driven behavior
+      ownerId: rival.id,
+      quality: 50,
+      scriptHeat: 50,
+      progress: 0,
+      accumulatedCost: 0,
+      weeksInDevelopment: 0,
     };
 
     if (format === 'tv') {
@@ -254,15 +264,15 @@ export class StudioAutomation {
             status: 'IN_DEVELOPMENT',
             episodesOrdered: rng.rangeInt(8, 13),
             episodesAired: 0,
-            averageRating: 0
+            averageRating: 0,
+            currentSeason: 1,
+            episodesCompleted: 0
         };
     }
 
-    // Backward compatibility for projects field
-    const rivalProjects = ('projects' in rival && rival.projects) ? (rival as any).projects : {};
     impacts.push({
-      type: 'RIVAL_UPDATED',
-      payload: { rivalId: rival.id, update: { projects: { ...rivalProjects, [id]: project } } }
+      type: 'PROJECT_CREATED',
+      payload: { project }
     });
   }
 
@@ -287,24 +297,11 @@ export class StudioAutomation {
       productionWeeks: rng.rangeInt(12, 26),
       budget: p.budget || rng.rangeInt(10, 80) * 1_000_000,
       buzz: p.buzz || 40,
-      rating: 'PG-13',
-      activeCut: rng.next() < 0.2 ? 'sanitized' : 'theatrical'
     };
     return { update, subImpacts };
   }
 
   private static createUpdateImpact(studioId: string, projectId: string, update: Partial<Project>, state: GameState): StateImpact {
-    if (studioId === 'PLAYER') {
-      return { type: 'PROJECT_UPDATED', payload: { projectId, update } };
-    } else {
-      const rival = state.entities.rivals[studioId];
-      // Backward compatibility for projects field
-      const rivalProjects = ('projects' in rival && rival.projects) ? (rival as any).projects : {};
-      const existingProject = rivalProjects[projectId] || {};
-      return {
-        type: 'RIVAL_UPDATED',
-        payload: { rivalId: studioId, update: { projects: { ...rivalProjects, [projectId]: { ...existingProject, ...update } } } }
-      };
-    }
+    return { type: 'PROJECT_UPDATED', payload: { projectId, update } };
   }
 }

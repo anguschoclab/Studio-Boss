@@ -4,7 +4,7 @@ import { GameState, Project, StateImpact, ProjectUpdateImpact } from '@/engine/t
  * Strategy Pattern for Crisis Resolution (Target A3).
  * Each handler processes a specific type of impact from a crisis option.
  */
-const CrisisHandlers: Record<string, (project: Project, option: any) => StateImpact[]> = {
+const CrisisHandlers: Record<string, (project: Project, option: import('@/engine/types/engine.types').CrisisOption) => StateImpact[]> = {
   CASH: (project, option) => 
     option.cashPenalty ? [{ type: 'FUNDS_CHANGED', payload: { amount: -option.cashPenalty } }] : [],
 

@@ -36,7 +36,7 @@ export function generateRivals(
 
     const motivations: StudioMotivation[] = ['CASH_CRUNCH', 'AWARD_CHASE', 'FRANCHISE_BUILDING', 'MARKET_DISRUPTION', 'STABILITY'];
 
-    const rProjects: Record<string, any> = {};
+    const rProjects: Record<string, import('@/engine/types').Project> = {};
     const projCount = rng.rangeInt(2, 5);
     for (let i = 0; i < projCount; i++) {
       const pId = rng.uuid('PRJ');
@@ -45,25 +45,36 @@ export function generateRivals(
       const genre = rng.pick(ALL_GENRES);
       const format = isTv ? 'tv' : 'film';
 
-      rProjects[pId] = {
+      const project: any = { // Temporary partial to satisfy Project union
         id: pId,
         title: generateProjectName(format, genre, rng),
         type: isTv ? 'SERIES' : 'FILM',
+        format,
+        genre,
+        budgetTier: 'indie', // default
+        budget: rng.rangeInt(10, 150) * 1_000_000,
+        weeklyCost: 0,
+        targetAudience: 'four_quadrant',
+        flavor: 'Standard',
         state: isProd ? 'production' : 'development',
         weeksInPhase: rng.rangeInt(1, 10),
-        productionWeeks: rng.rangeInt(12, 26),
         developmentWeeks: rng.rangeInt(4, 12),
-        budget: rng.rangeInt(10, 150) * 1_000_000,
-        buzz: rng.rangeInt(20, 60),
-        genre,
-        format,
-        reviewScore: 50,
+        productionWeeks: rng.rangeInt(12, 26),
         revenue: 0,
-        accumulatedCost: 0
+        weeklyRevenue: 0,
+        accumulatedCost: 0,
+        progress: 0,
+        quality: 50,
+        scriptHeat: 50,
+        buzz: rng.rangeInt(20, 60),
+        momentum: 50,
+        ownerId: '', // set later
+        reviewScore: 50
       };
 
       if (isTv) {
-        rProjects[pId].tvDetails = {
+        project.tvFormat = 'Scripted';
+        project.tvDetails = {
           currentSeason: 1,
           episodesOrdered: 10,
           episodesCompleted: 0,
@@ -71,11 +82,22 @@ export function generateRivals(
           averageRating: 0,
           status: 'IN_DEVELOPMENT'
         };
+        project.activeRoles = [];
+        project.scriptEvents = [];
+      } else {
+        project.activeRoles = [];
+        project.scriptEvents = [];
       }
+
+      rProjects[pId] = project as import('@/engine/types').Project;
     }
 
+    const rivalId = rng.uuid('RIV');
+    // Set ownerId for projects
+    Object.values(rProjects).forEach(p => { p.ownerId = rivalId; });
+
     return {
-      id: rng.uuid('RIV'),
+      id: rivalId,
       name,
       motto: generateMotto(rng),
       archetype: rArch,
@@ -95,13 +117,13 @@ export function generateRivals(
       contractIds: [],
       ipAssetIds: [],
       archetypeId: rArchData.id || rArch
-    } as any;
+    };
   });
 }
 
 export function assignInitialPactsToRivals(
   rivals: RivalStudio[],
-  talentPoolArray: any[],
+  talentPoolArray: import('@/engine/types').Talent[],
   rng: RandomGenerator
 ): void {
   const availableTopTalents = talentPoolArray.filter(t => t.tier === 1 || t.tier === 2);
@@ -114,7 +136,7 @@ export function assignInitialPactsToRivals(
       while (topTalentIndex < availableTopTalents.length) {
         const candidate = availableTopTalents[topTalentIndex];
         topTalentIndex++;
-        if (!candidate.contractId) {
+        if (!(candidate as any).contractId) {
           topTalent = candidate;
           break;
         }
@@ -132,9 +154,8 @@ export function assignInitialPactsToRivals(
           endDate: 52,
           status: 'active'
         };
-        const rivalContracts = ('contracts' in rival && rival.contracts) ? (rival as any).contracts : [];
-        rivalContracts.push(pact as unknown as Contract);
-        topTalent.contractId = pact.id;
+        rival.contracts.push(pact as unknown as Contract);
+        (topTalent as any).contractId = pact.id;
       }
     }
   });

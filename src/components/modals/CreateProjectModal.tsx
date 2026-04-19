@@ -37,8 +37,7 @@ export const CreateProjectModal = () => {
       setTitle(generateProjectTitle(genre));
     }
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showCreateProject, genre]);
+  }, [showCreateProject, genre, title]);
 
   const tier = BUDGET_TIERS[budgetTier];
   let calculatedWeeklyCost = tier.weeklyCost;

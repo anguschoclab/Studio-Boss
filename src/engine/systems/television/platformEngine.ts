@@ -1,4 +1,4 @@
-import { GameState, StateImpact, StreamerPlatform } from '@/engine/types';
+import { GameState, StateImpact, StreamerPlatform, SeriesProject } from '@/engine/types';
 import { RandomGenerator } from '../../utils/rng';
 
 /**
@@ -96,7 +96,7 @@ export function tickPlatforms(state: GameState, rng: RandomGenerator): StateImpa
           const license = platform.activeLicenses[i];
           const project = state.entities.projects[license.projectId];
           if (project && project.type === 'SERIES' && 'tvDetails' in project) {
-            const seriesProject = project as import('@/engine/types').SeriesProject;
+            const seriesProject = project as SeriesProject;
             if (seriesProject.tvDetails.currentSeason > 1 && seriesProject.reviewScore != null) {
               totalScore += seriesProject.reviewScore;
               count++;
@@ -105,10 +105,8 @@ export function tickPlatforms(state: GameState, rng: RandomGenerator): StateImpa
               syndicationHits++;
             }
 
-            // @ts-expect-error - Check for NielsenProfile without strong typing issue
             if (seriesProject.nielsenProfile && typeof seriesProject.nielsenProfile.audienceRetention === 'number') {
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              totalRetention += (seriesProject as any).nielsenProfile.audienceRetention;
+              totalRetention += seriesProject.nielsenProfile.audienceRetention;
               retentionCount++;
             }
           }

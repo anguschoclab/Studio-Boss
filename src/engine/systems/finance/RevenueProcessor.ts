@@ -81,11 +81,12 @@ export class RevenueProcessor {
     });
 
     // 🌌 PHASE 2: Backend Streaming (Royalties from Rival Projects)
+    const allProjectList = Object.values(state.entities.projects);
     const rivalsList = Object.values(state.entities.rivals || {});
+    
     rivalsList.forEach(rival => {
-      // Backward compatibility for projects field
-      const rivalProjects = ('projects' in rival && rival.projects) ? (rival as any).projects : {};
-      Object.values(rivalProjects).forEach((rp: any) => {
+      const rivalProjects = allProjectList.filter(p => p.ownerId === rival.id);
+      rivalProjects.forEach((rp) => {
         if (rp.state === 'released') {
           const weeklyGross = (rp.weeklyRevenue || 0);
           if (weeklyGross <= 0) return;
@@ -220,7 +221,7 @@ export class RevenueProcessor {
    * Calculates streaming revenue from viewership data.
    * Real-world: ~$0.015 per hour watched (varies by platform).
    */
-  static calculateStreamingRevenueFromViewership(history: any): number {
+  static calculateStreamingRevenueFromViewership(history: import('../../types/project.types').StreamingViewershipHistory): number {
     const latestEntry = history.entries[history.entries.length - 1];
     const revenuePerHour = 0.015;
     return Math.round(latestEntry.hoursWatched * revenuePerHour);

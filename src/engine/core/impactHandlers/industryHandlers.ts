@@ -6,14 +6,16 @@ import { GameState, StateImpact, Franchise } from '@/engine/types';
  */
 
 export function handleIndustryUpdate(state: GameState, impact: StateImpact): GameState {
-  const payload = impact.payload as any;
+  const payload = impact.payload;
+  if (!payload || typeof payload !== 'object') return state;
   let nextState = { ...state };
   
+  const update = (payload as { update?: Record<string, any> }).update;
   // Generic Deep-Path Updates
-  if (payload.update && typeof payload.update === 'object' && !Array.isArray(payload.update)) {
-    for (const [path, value] of Object.entries(payload.update)) {
-      const parts = (path as string).split('.');
-      let current: any = nextState;
+  if (update && typeof update === 'object' && !Array.isArray(update)) {
+    for (const [path, value] of Object.entries(update)) {
+      const parts = path.split('.');
+      let current: Record<string, any> = nextState as any;
 
       for (let i = 0; i < parts.length - 1; i++) {
         const part = parts[i];
@@ -39,8 +41,9 @@ export function handleIndustryUpdate(state: GameState, impact: StateImpact): Gam
   }
 
   // Merger Logic
-  const { mergedRivalId, acquirerId } = payload;
-  if (mergedRivalId) {
+  const industryPayload = payload as { mergedRivalId?: string; acquirerId?: string };
+  const { mergedRivalId, acquirerId } = industryPayload;
+  if (mergedRivalId && acquirerId) {
     const target = state.entities.rivals[mergedRivalId];
     if (target) {
       if (acquirerId === 'player') {
@@ -103,15 +106,16 @@ export function handleIndustryUpdate(state: GameState, impact: StateImpact): Gam
     }
   }
 
-  if (payload['market.opportunities']) {
-    nextState = { ...nextState, market: { ...nextState.market, opportunities: payload['market.opportunities'] } };
+  const marketPayload = payload as Record<string, any>;
+  if (marketPayload['market.opportunities']) {
+    nextState = { ...nextState, market: { ...nextState.market, opportunities: marketPayload['market.opportunities'] } };
   }
 
   return nextState;
 }
 
 export function handleScandalAdded(state: GameState, impact: StateImpact): GameState {
-  const { scandal } = impact.payload;
+  const { scandal } = impact.payload as { scandal: import('@/engine/types/industry.types').Scandal };
   let newPrestige = state.studio.prestige;
 
   const prestigeHit = Math.floor((scandal.severity / 5) * 3.0);
@@ -161,7 +165,7 @@ export function handleScandalAdded(state: GameState, impact: StateImpact): GameS
 }
 
 export function handleScandalRemoved(state: GameState, impact: StateImpact): GameState {
-  const { scandalId } = impact.payload;
+  const { scandalId } = impact.payload as { scandalId: string };
   return {
     ...state,
     industry: {
@@ -172,7 +176,7 @@ export function handleScandalRemoved(state: GameState, impact: StateImpact): Gam
 }
 
 export function handleRivalUpdated(state: GameState, impact: StateImpact): GameState {
-  const { rivalId, update } = impact.payload;
+  const { rivalId, update } = impact.payload as { rivalId: string, update: Partial<import('@/engine/types').RivalStudio> };
   if (!state.entities?.rivals) return state;
   const rivals = { ...state.entities.rivals };
   if (rivals[rivalId]) {
@@ -188,7 +192,7 @@ export function handleRivalUpdated(state: GameState, impact: StateImpact): GameS
 }
 
 export function handleMergerOffered(state: GameState, impact: StateImpact): GameState {
-  const merger = impact.payload.merger;
+  const merger = (impact.payload as { merger?: import('@/engine/types/industry.types').MergerOffer }).merger;
   if (!merger) return state;
   return {
     ...state,
@@ -200,7 +204,7 @@ export function handleMergerOffered(state: GameState, impact: StateImpact): Game
 }
 
 export function handleMergerResolved(state: GameState, impact: StateImpact): GameState {
-  const { mergerId } = impact.payload;
+  const { mergerId } = impact.payload as { mergerId: string };
   return {
     ...state,
     industry: {

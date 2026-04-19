@@ -11,68 +11,7 @@ import {
 import { RandomGenerator } from '@/engine/utils/rng';
 import type { GameState } from '@/engine/types';
 
-const createTestGameState = (overrides: Partial<GameState> = {}): GameState => ({
-  entities: {
-    projects: {},
-    contracts: {},
-    talents: {},
-    rivals: {},
-  },
-  industry: {
-    awards: [],
-    agencies: [],
-    agents: [],
-    families: [],
-    festivalSubmissions: [],
-    rumors: [],
-    scandals: [],
-    activeMergers: [],
-    newsHistory: [],
-  },
-  week: 1,
-  gameSeed: 42,
-  tickCount: 0,
-  rngState: 0,
-  game: { currentWeek: 1 },
-  finance: {
-    cash: 0,
-    ledger: [],
-    weeklyHistory: [],
-    marketState: {
-      cycle: 'STABLE',
-      sentiment: 0,
-      baseRate: 0.05,
-      debtRate: 0.08,
-      savingsYield: 0.02,
-      loanRate: 0.08,
-      rateHistory: [],
-    },
-  },
-  news: { headlines: [] },
-  ip: { vault: [], ipRights: {}, franchises: [] },
-  studio: {
-    id: 'studio-1',
-    name: 'Test Studio',
-    archetype: 'major',
-    prestige: 50,
-    internal: { projectHistory: [] },
-    snapshotHistory: [],
-    activeCampaigns: {},
-  },
-  market: {
-    opportunities: [],
-    buyers: [],
-  },
-  deals: {
-    activeDeals: [],
-    dealHistory: [],
-  },
-  talentAgentRelationships: [],
-  relationships: [],
-  history: [],
-  eventHistory: [],
-  ...overrides,
-} as GameState);
+import { createMockGameState, createMockProject, createMockTalent, createMockContract } from '../../utils/mockFactories';
 
 describe('RelationshipSystem - Award Nominee Tracking', () => {
   it('should return false when no awards exist', () => {
@@ -84,15 +23,15 @@ describe('RelationshipSystem - Award Nominee Tracking', () => {
     const state = createTestGameState({
       entities: {
         projects: {
-          'project-1': {
+          'project-1': createMockProject({
             id: 'project-1',
             attachedTalentIds: ['talent-1'],
-          },
-          'project-2': {
+          }),
+          'project-2': createMockProject({
             id: 'project-2',
             attachedTalentIds: ['talent-2'],
-          },
-        } as any,
+          }),
+        },
         contracts: {},
         talents: {},
         rivals: {},
@@ -140,7 +79,7 @@ describe('RelationshipSystem - Award Nominee Tracking', () => {
             id: 'project-1',
             attachedTalentIds: ['talent-1', 'talent-2'],
           },
-        } as any,
+        },
         contracts: {},
         talents: {},
         rivals: {},
@@ -172,14 +111,14 @@ describe('RelationshipSystem - Award Nominee Tracking', () => {
   });
 
   it('should return true when talents worked on the same nominated project', () => {
-    const state = createTestGameState({
+    const state = createMockGameState({
       entities: {
         projects: {
           'project-1': {
             id: 'project-1',
             attachedTalentIds: ['talent-1', 'talent-2'],
           },
-        } as any,
+        },
         contracts: {},
         talents: {},
         rivals: {},
@@ -213,7 +152,7 @@ describe('RelationshipSystem - Award Nominee Tracking', () => {
 
 describe('RelationshipSystem - Query Functions', () => {
   it('should return true for friends with sufficient strength', () => {
-    const state = createTestGameState({
+    const state = createMockGameState({
       relationships: {
         relationships: {
           'talent-1-talent-2': {
@@ -226,7 +165,7 @@ describe('RelationshipSystem - Query Functions', () => {
             history: [],
             formedWeek: 1,
             lastUpdatedWeek: 1,
-          } as any,
+          },
         },
       },
     });
@@ -235,7 +174,7 @@ describe('RelationshipSystem - Query Functions', () => {
   });
 
   it('should return false for friends with insufficient strength', () => {
-    const state = createTestGameState({
+    const state = createMockGameState({
       relationships: {
         relationships: {
           'talent-1-talent-2': {
@@ -248,7 +187,7 @@ describe('RelationshipSystem - Query Functions', () => {
             history: [],
             formedWeek: 1,
             lastUpdatedWeek: 1,
-          } as any,
+          },
         },
       },
     });
@@ -257,12 +196,12 @@ describe('RelationshipSystem - Query Functions', () => {
   });
 
   it('should return false when no relationship exists', () => {
-    const state = createTestGameState();
+    const state = createMockGameState();
     expect(areFriends('talent-1', 'talent-2', state)).toBe(false);
   });
 
   it('should return true for rivals with sufficient negative strength', () => {
-    const state = createTestGameState({
+    const state = createMockGameState({
       relationships: {
         relationships: {
           'talent-1-talent-2': {
@@ -275,7 +214,7 @@ describe('RelationshipSystem - Query Functions', () => {
             history: [],
             formedWeek: 1,
             lastUpdatedWeek: 1,
-          } as any,
+          },
         },
       },
     });
@@ -284,7 +223,7 @@ describe('RelationshipSystem - Query Functions', () => {
   });
 
   it('should return true for enemies with sufficient negative strength', () => {
-    const state = createTestGameState({
+    const state = createMockGameState({
       relationships: {
         relationships: {
           'talent-1-talent-2': {
@@ -297,7 +236,7 @@ describe('RelationshipSystem - Query Functions', () => {
             history: [],
             formedWeek: 1,
             lastUpdatedWeek: 1,
-          } as any,
+          }
         },
       },
     });
@@ -306,7 +245,7 @@ describe('RelationshipSystem - Query Functions', () => {
   });
 
   it('should return false for rivals with insufficient negative strength', () => {
-    const state = createTestGameState({
+    const state = createMockGameState({
       relationships: {
         relationships: {
           'talent-1-talent-2': {
@@ -319,7 +258,7 @@ describe('RelationshipSystem - Query Functions', () => {
             history: [],
             formedWeek: 1,
             lastUpdatedWeek: 1,
-          } as any,
+          }
         },
       },
     });
@@ -328,7 +267,7 @@ describe('RelationshipSystem - Query Functions', () => {
   });
 
   it('should return true for romantic relationships with sufficient strength', () => {
-    const state = createTestGameState({
+    const state = createMockGameState({
       relationships: {
         relationships: {
           'talent-1-talent-2': {
@@ -341,7 +280,7 @@ describe('RelationshipSystem - Query Functions', () => {
             history: [],
             formedWeek: 1,
             lastUpdatedWeek: 1,
-          } as any,
+          }
         },
       },
     });
@@ -350,7 +289,7 @@ describe('RelationshipSystem - Query Functions', () => {
   });
 
   it('should return false for romantic relationships with insufficient strength', () => {
-    const state = createTestGameState({
+    const state = createMockGameState({
       relationships: {
         relationships: {
           'talent-1-talent-2': {
@@ -363,7 +302,7 @@ describe('RelationshipSystem - Query Functions', () => {
             history: [],
             formedWeek: 1,
             lastUpdatedWeek: 1,
-          } as any,
+          }
         },
       },
     });
@@ -372,7 +311,7 @@ describe('RelationshipSystem - Query Functions', () => {
   });
 
   it('should return all relationships for a talent', () => {
-    const state = createTestGameState({
+    const state = createMockGameState({
       relationships: {
         relationships: {
           'talent-1-talent-2': {
@@ -385,7 +324,7 @@ describe('RelationshipSystem - Query Functions', () => {
             history: [],
             formedWeek: 1,
             lastUpdatedWeek: 1,
-          } as any,
+          }
           'talent-1-talent-3': {
             id: 'talent-1-talent-3',
             talentAId: 'talent-1',
@@ -396,7 +335,7 @@ describe('RelationshipSystem - Query Functions', () => {
             history: [],
             formedWeek: 1,
             lastUpdatedWeek: 1,
-          } as any,
+          }
           'talent-2-talent-3': {
             id: 'talent-2-talent-3',
             talentAId: 'talent-2',
@@ -407,7 +346,7 @@ describe('RelationshipSystem - Query Functions', () => {
             history: [],
             formedWeek: 1,
             lastUpdatedWeek: 1,
-          } as any,
+          }
         },
       },
     });
@@ -419,13 +358,13 @@ describe('RelationshipSystem - Query Functions', () => {
   });
 
   it('should return empty array for talent with no relationships', () => {
-    const state = createTestGameState();
+    const state = createMockGameState();
     const relationships = getTalentRelationships('talent-1', state);
     expect(relationships).toEqual([]);
   });
 
   it('should return positive chemistry for friends', () => {
-    const state = createTestGameState({
+    const state = createMockGameState({
       relationships: {
         relationships: {
           'talent-1-talent-2': {
@@ -438,7 +377,7 @@ describe('RelationshipSystem - Query Functions', () => {
             history: [],
             formedWeek: 1,
             lastUpdatedWeek: 1,
-          } as any,
+          }
         },
       },
     });
@@ -449,7 +388,7 @@ describe('RelationshipSystem - Query Functions', () => {
   });
 
   it('should return negative chemistry for rivals', () => {
-    const state = createTestGameState({
+    const state = createMockGameState({
       relationships: {
         relationships: {
           'talent-1-talent-2': {
@@ -462,7 +401,7 @@ describe('RelationshipSystem - Query Functions', () => {
             history: [],
             formedWeek: 1,
             lastUpdatedWeek: 1,
-          } as any,
+          }
         },
       },
     });
@@ -473,7 +412,7 @@ describe('RelationshipSystem - Query Functions', () => {
   });
 
   it('should return bonus chemistry for romantic relationships', () => {
-    const state = createTestGameState({
+    const state = createMockGameState({
       relationships: {
         relationships: {
           'talent-1-talent-2': {
@@ -486,7 +425,7 @@ describe('RelationshipSystem - Query Functions', () => {
             history: [],
             formedWeek: 1,
             lastUpdatedWeek: 1,
-          } as any,
+          }
         },
       },
     });
@@ -497,14 +436,14 @@ describe('RelationshipSystem - Query Functions', () => {
   });
 
   it('should return zero chemistry when no relationship exists', () => {
-    const state = createTestGameState();
+    const state = createMockGameState();
     const rng = new RandomGenerator(42);
     const chemistry = getCastingChemistry('talent-1', 'talent-2', state, rng);
     expect(chemistry).toBe(0);
   });
 
   it('should return negative chemistry for ex-relationships', () => {
-    const state = createTestGameState({
+    const state = createMockGameState({
       relationships: {
         relationships: {
           'talent-1-talent-2': {
@@ -517,7 +456,7 @@ describe('RelationshipSystem - Query Functions', () => {
             history: [],
             formedWeek: 1,
             lastUpdatedWeek: 1,
-          } as any,
+          }
         },
       },
     });
@@ -530,37 +469,31 @@ describe('RelationshipSystem - Query Functions', () => {
 
 describe('RelationshipSystem - tickRelationshipSystem', () => {
   it('should return impacts for relationship formation', () => {
-    const state = createTestGameState({
+    const state = createMockGameState({
       entities: {
         talents: {
-          'talent-1': {
+          'talent-1': createMockTalent({
             id: 'talent-1',
             name: 'Actor 1',
-            demographics: { age: 30, country: 'USA' },
-            personality: 'collaborative',
             prestige: 70,
-            draw: 60,
             starMeter: 65,
-          } as any,
-          'talent-2': {
+          }),
+          'talent-2': createMockTalent({
             id: 'talent-2',
             name: 'Actor 2',
-            demographics: { age: 32, country: 'USA' },
-            personality: 'charismatic',
             prestige: 65,
-            draw: 55,
             starMeter: 60,
-          } as any,
+          }),
         },
         projects: {
-          'project-1': {
+          'project-1': createMockProject({
             id: 'project-1',
             attachedTalentIds: ['talent-1', 'talent-2'],
-          } as any,
+          }),
         },
         contracts: {
-          'contract-1': { id: 'contract-1', projectId: 'project-1', talentId: 'talent-1' } as any,
-          'contract-2': { id: 'contract-2', projectId: 'project-1', talentId: 'talent-2' } as any,
+          'contract-1': createMockContract({ id: 'contract-1', projectId: 'project-1', talentId: 'talent-1' }),
+          'contract-2': createMockContract({ id: 'contract-2', projectId: 'project-1', talentId: 'talent-2' }),
         },
         rivals: {},
       },
@@ -574,7 +507,7 @@ describe('RelationshipSystem - tickRelationshipSystem', () => {
   });
 
   it('should handle state with no talents gracefully', () => {
-    const state = createTestGameState({
+    const state = createMockGameState({
       entities: {
         talents: {},
         projects: {},
@@ -591,7 +524,7 @@ describe('RelationshipSystem - tickRelationshipSystem', () => {
   });
 
   it('should evolve existing relationships', () => {
-    const state = createTestGameState({
+    const state = createMockGameState({
       entities: {
         talents: {
           'talent-1': {
@@ -602,16 +535,14 @@ describe('RelationshipSystem - tickRelationshipSystem', () => {
             prestige: 70,
             draw: 60,
             starMeter: 65,
-          } as any,
-          'talent-2': {
+          }
+          'talent-2': createMockTalent({
             id: 'talent-2',
             name: 'Actor 2',
-            demographics: { age: 32, country: 'USA' },
-            personality: 'charismatic',
+            demographics: { age: 32, gender: 'MALE', ethnicity: 'Caucasian', country: 'USA' },
             prestige: 65,
-            draw: 55,
             starMeter: 60,
-          } as any,
+          }),
         },
         projects: {},
         contracts: {},
@@ -629,7 +560,7 @@ describe('RelationshipSystem - tickRelationshipSystem', () => {
             history: [],
             formedWeek: 1,
             lastUpdatedWeek: 1,
-          } as any,
+          }
         },
       },
     });

@@ -14,34 +14,45 @@ export function generatePlayerProjects(
   playerStudioId: string,
   archetype: ArchetypeKey,
   options: PlayerProjectOptions = {}
-): Record<string, any> {
+): Record<string, import('@/engine/types').Project> {
   const { startingProjectCount = archetype === 'major' ? 3 : (archetype === 'mid-tier' ? 1 : 0) } = options;
-  const arch = ARCHETYPES[archetype];
-
-  const playerProjects: Record<string, any> = {};
+  
+  const playerProjects: Record<string, import('@/engine/types').Project> = {};
   for (let i = 0; i < startingProjectCount; i++) {
     const pId = rng.uuid('PRJ');
     const genre = rng.pick(ALL_GENRES);
     const format = rng.next() < 0.3 ? 'tv' : 'film';
-    playerProjects[pId] = {
+    
+    const project: any = { // Partial to satisfy union
       id: pId,
       title: generateProjectName(format, genre, rng),
       type: format === 'tv' ? 'SERIES' : 'FILM',
+      format,
+      genre,
+      budgetTier: archetype === 'major' ? 'high' : 'mid',
+      budget: (archetype === 'major' ? 100 : 40) * 1_000_000,
+      weeklyCost: 0,
+      targetAudience: 'four_quadrant',
+      flavor: 'Standard',
       state: 'production',
       weeksInPhase: rng.rangeInt(1, 4),
       productionWeeks: rng.rangeInt(12, 20),
       developmentWeeks: rng.rangeInt(4, 8),
-      budget: (archetype === 'major' ? 100 : 40) * 1_000_000,
-      buzz: 40,
-      genre,
-      format,
-      reviewScore: 0,
       revenue: 0,
+      weeklyRevenue: 0,
       accumulatedCost: 0,
-      studioId: playerStudioId
+      progress: 0,
+      quality: 50,
+      scriptHeat: 50,
+      buzz: 40,
+      momentum: 50,
+      ownerId: playerStudioId,
+      reviewScore: 0
     };
+
     if (format === 'tv') {
-      playerProjects[pId].tvDetails = {
+      project.tvFormat = 'Scripted';
+      project.tvDetails = {
         currentSeason: 1,
         episodesOrdered: 10,
         episodesCompleted: 0,
@@ -49,7 +60,14 @@ export function generatePlayerProjects(
         averageRating: 0,
         status: 'IN_PRODUCTION'
       };
+      project.activeRoles = [];
+      project.scriptEvents = [];
+    } else {
+      project.activeRoles = [];
+      project.scriptEvents = [];
     }
+
+    playerProjects[pId] = project as import('@/engine/types').Project;
   }
 
   return playerProjects;
@@ -59,8 +77,8 @@ export function initializePlayerStudio(
   studioName: string,
   archetype: ArchetypeKey,
   playerStudioId: string,
-  arch: any
-): any {
+  arch: import('../../data/archetypes').StudioArchetype
+): import('@/engine/types').PlayerStudio {
   return {
     id: playerStudioId,
     name: studioName,

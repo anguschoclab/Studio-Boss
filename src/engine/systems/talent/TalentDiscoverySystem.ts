@@ -34,7 +34,7 @@ export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator
   // 1. Check for breakout stars from recent releases
   const recentProjects = Object.values(state.entities.projects || {})
     .filter(p => {
-      const releaseWeek = (p as any).releaseWeek;
+      const releaseWeek = p.releaseWeek;
       return releaseWeek && state.week - releaseWeek >= 0 && state.week - releaseWeek <= 4;
     });
 
@@ -57,7 +57,7 @@ export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator
             breakout,
             notification: `${talent.name} is breaking out from "${project.title}"!`,
           },
-        } as any);
+        });
 
         // Update talent stats
         impacts.push({
@@ -110,7 +110,7 @@ export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator
 
   // 2. Check for guest star opportunities on TV series
   const activeSeries = Object.values(state.entities.projects || {})
-    .filter(p => p.type === 'SERIES' && (p as any).status === 'ON_AIR');
+    .filter(p => p.type === 'SERIES' && p.state === 'released');
 
   // Get guest star candidates (famous but not lead cast)
   const guestCandidates = Object.values(state.entities.talents || {})
@@ -121,8 +121,8 @@ export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator
       const guest = rng.pick(guestCandidates);
 
       // Check if already booked
-      const existingBookings = Object.values((state as any).relationships?.discovery?.guestStarBookings || {})
-        .filter((b: any) => b.talentId === guest.id && b.seriesId === series.id);
+      const existingBookings = Object.values(state.relationships.discovery?.guestStarBookings || {})
+        .filter((b) => b.talentId === guest.id && b.seriesId === series.id);
 
       if (existingBookings.length === 0) {
         const booking = generateGuestStarBooking(series, guest, state, rng);
@@ -153,7 +153,7 @@ export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator
   }
 
   // 3. Maintain hidden talent pool
-  const discoveryState = (state as any).relationships?.discovery || {};
+  const discoveryState = state.relationships.discovery || {};
   let hiddenPool = discoveryState.hiddenTalentPool || {};
 
   // Replenish pool if low
@@ -173,13 +173,13 @@ export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator
           hiddenTalentPool: hiddenPool,
         },
       },
-    } as any);
+    });
   }
 
   // 4. Hidden talent discovery
   // Studios can discover hidden talent
   if (rng.next() < DISCOVERY_CHANCE) {
-    const undiscovered = (Object.values(hiddenPool) as HiddenTalent[])
+    const undiscovered = Object.values(hiddenPool)
       .filter(h => !h.discoveredBy);
 
     if (undiscovered.length > 0) {
@@ -211,7 +211,7 @@ export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator
             discoveryLog: [...(discoveryState.discoveryLog || []), toDiscover.id],
           },
         },
-      } as any);
+      });
 
       // Discovery news
       const methodDescriptions: Record<string, string> = {
@@ -254,7 +254,7 @@ export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator
           breakoutId: breakout.id,
           breakout: updatedBreakout,
         },
-      } as any);
+      });
     }
   }
 
@@ -270,8 +270,8 @@ export function acceptGuestStarBooking(
   rng: RandomGenerator
 ): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const discovery = (state as any).relationships?.discovery || {};
-  const booking = discovery.guestStarBookings?.[bookingId] as GuestStarBooking | undefined;
+  const discovery = state.relationships.discovery || {};
+  const booking = discovery.guestStarBookings?.[bookingId];
 
   if (!booking) return impacts;
 
@@ -290,7 +290,7 @@ export function acceptGuestStarBooking(
       bookingId,
       booking: updatedBooking,
     },
-  } as any);
+  });
 
   // Add contract for guest appearance
   impacts.push({
@@ -305,7 +305,7 @@ export function acceptGuestStarBooking(
         isGuestAppearance: true,
       },
     },
-  } as any);
+  });
 
   // News
   const series = state.entities.projects?.[booking.seriesId];
@@ -336,8 +336,8 @@ export function signBreakoutStar(
   rng: RandomGenerator
 ): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const discovery = (state as any).relationships?.discovery || {};
-  const breakout = discovery.breakoutStars?.[breakoutId] as BreakoutStar | undefined;
+  const discovery = state.relationships.discovery || {};
+  const breakout = discovery.breakoutStars?.[breakoutId];
 
   if (!breakout || !breakout.biddingWarActive) return impacts;
 
@@ -360,7 +360,7 @@ export function signBreakoutStar(
       breakoutId,
       breakout: updatedBreakout,
     },
-  } as any);
+  });
 
   // Update talent contract status
   const talent = state.entities.talents?.[breakout.talentId];

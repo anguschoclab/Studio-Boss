@@ -21,16 +21,24 @@ export class SimulationRunner {
   static run(
     weeks: number, 
     seed: number = 42, 
-    archetype: any = 'major', 
+    archetype: ArchetypeKey = 'major', 
     persona: string = 'balanced',
     autoPilot: boolean = true
   ): SimulationResult {
     const metrics = new MetricsCollector();
     let state = initializeGame('Headless Studio', archetype, seed);
-    (state as any).persona = persona;
     
     // Initial record
-    metrics.record(state, { fromWeek: 0, toWeek: 1 } as any);
+    metrics.record(state, { 
+      fromWeek: 0, 
+      toWeek: 1, 
+      activeProjects: 0, 
+      completedProjects: 0, 
+      revenue: 0, 
+      expenses: 0, 
+      net: 0, 
+      headlines: [] 
+    });
 
     for (let i = 0; i < weeks; i++) {
       const rng = new RandomGenerator(state.gameSeed + state.week + (state.tickCount || 0));
@@ -61,9 +69,6 @@ export class SimulationRunner {
       state = applyImpacts(state, allImpacts);
 
       // 7. Update Metrics (Inject summary data for reporting)
-      const retiredCount = allImpacts.filter(imp => imp.type === 'TALENT_REMOVED').length;
-      (summary as any).retiredCount = retiredCount;
-      
       metrics.record(state, summary);
     }
 

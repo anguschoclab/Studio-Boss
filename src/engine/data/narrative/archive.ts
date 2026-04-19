@@ -35,7 +35,7 @@ export interface NarrativeContext {
   genre?: string;
   platform?: string;
   week?: number;
-  [key: string]: any;
+  [key: string]: string | number | boolean | undefined;
 }
 
 /**

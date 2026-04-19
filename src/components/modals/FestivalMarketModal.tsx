@@ -110,9 +110,7 @@ export const FestivalMarketModal: React.FC = () => {
     }, 1500);
 
     return () => clearInterval(timer);
-  // Only re-create when the modal opens/closes or game state identity changes — not on every bid
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isResolved, project, gameState, handleFinalize]);
+  }, [isResolved, project, gameState, handleFinalize, setCurrentBid, setHighestBidderId, setHighestBidderName, setTimeLeft]);
 
   const handlePlayerBid = () => {
     if (!gameState) return;

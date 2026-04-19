@@ -89,6 +89,7 @@ export interface TalentPact {
   startDate: number;
   endDate: number;
   expiryWeek?: number; // Phase 2: Explicit tracking
+  weeksRemaining: number;
   weeklyOverhead: number;
   upfrontCost?: number; // Phase 2: Signing bonus
   exclusivity: boolean;
@@ -241,6 +242,10 @@ export interface Talent {
   lastReleaseWeek?: number; // Last week a release happened (for prestige decay)
   onMedicalLeave?: boolean;
   medicalLeaveEndsWeek?: number;
+  retired?: boolean;
+  awards?: import('./project.types').Award[];
+  comfortLevel?: import('./casting.types').TalentComfortLevel;
+  comfortPremiumRates?: import('./casting.types').ComfortPremiumRates;
 
   // Dynasty System: Family relationships
   parentIds?: string[]; // IDs of parent talents (nepo baby lineage)

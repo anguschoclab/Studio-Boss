@@ -97,8 +97,8 @@ export function checkTalentWillingness(
   rng: RandomGenerator
 ): CastingConstraintCheck {
   // Get or generate comfort level
-  let comfort = (talent as any).comfortLevel as TalentComfortLevel | undefined;
-  let rates = (talent as any).comfortPremiumRates as ComfortPremiumRates | undefined;
+  let comfort = talent.comfortLevel;
+  let rates = talent.comfortPremiumRates;
 
   if (!comfort || !rates) {
     const generated = generateTalentComfortLevel(talent, rng);
@@ -160,7 +160,7 @@ export function checkTalentWillingness(
     for (const other of allTalents) {
       if (other.id === talent.id) continue;
 
-      const otherComfort = (other as any).comfortLevel || generateTalentComfortLevel(other, rng).comfort;
+      const otherComfort = other.comfortLevel || generateTalentComfortLevel(other, rng).comfort;
       const otherAcceptable = REQUIREMENT_COMFORT_MAPPING[requirement.level];
 
       let otherWilling = false;
@@ -199,7 +199,7 @@ export function generateRequirementsFromNotes(
   rng: RandomGenerator
 ): ScriptRequirement[] {
   const requirements: ScriptRequirement[] = [];
-  const notes = (state as any).relationships?.productionEnhancements?.screenplayNotes || {};
+  const notes = state.relationships.productionEnhancements?.screenplayNotes || {};
 
   for (const note of Object.values(notes)) {
     const n = note as any;
@@ -315,7 +315,7 @@ export function tickCastingConstraintSystem(
 
   for (const project of projects) {
     // Only check projects in pre-production or production
-    const projectState = (project as any).status || (project as any).state;
+    const projectState = project.state;
     if (!['PRE_PRODUCTION', 'IN_PRODUCTION', 'scripting', 'casting', 'production'].some(s =>
       projectState?.toLowerCase().includes(s.toLowerCase())
     )) {
@@ -347,10 +347,10 @@ export function tickCastingConstraintSystem(
           type: 'CASTING_CONSTRAINT_CHECKED',
           payload: {
             check,
-            comfortLevel: (talent as any).comfortLevel || generateTalentComfortLevel(talent, rng).comfort,
-            premiumRates: (talent as any).comfortPremiumRates || generateTalentComfortLevel(talent, rng).rates,
+            comfortLevel: talent.comfortLevel || generateTalentComfortLevel(talent, rng).comfort,
+            premiumRates: talent.comfortPremiumRates || generateTalentComfortLevel(talent, rng).rates,
           },
-        } as any);
+        });
 
         // If not willing, create violation
         if (!check.willing) {

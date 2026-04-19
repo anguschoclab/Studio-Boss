@@ -48,7 +48,7 @@ export function handleFilmReleasedPhase(
   projectContracts: Contract[],
   talentPool: Record<string, Talent>,
   rivalStrengthAvg: number,
-  projectAwards: any[],
+  projectAwards: import('@/engine/types').Award[],
   rng: RandomGenerator,
   trendMultiplier: number = 1.0,
   franchiseSynergy: number = 1.0,

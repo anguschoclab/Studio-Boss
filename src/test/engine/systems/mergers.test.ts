@@ -15,29 +15,24 @@ describe('Mergers and Sabotage System', () => {
   const rng = new RandomGenerator(333);
 
   beforeEach(() => {
-    mockTarget = {
+    mockTarget = createMockRival({
       id: 'rival-1',
       name: 'Test Indie Studio',
-      motto: 'We make test films',
-      archetype: 'indie',
       strength: 10,
       cash: 5_000_000,
       prestige: 20,
-      recentActivity: 'Testing',
-      foundedWeek: 1,
-      projectCount: 2,
-      strategy: 'genre_specialist' as any,
+      archetype: 'indie',
       genreFocus: 'Horror',
-      motivationProfile: { financial: 50, prestige: 50, legacy: 50, aggression: 50 },
-      currentMotivation: 'STABILITY',
-      projects: {},
-      contracts: [],
-      ownedPlatforms: []
-    } as RivalStudio;
+    });
 
     mockState = createMockGameState({
       week: 10,
-      finance: { cash: 100_000_000, ledger: [] } as any
+      finance: { 
+        cash: 100_000_000, 
+        ledger: [], 
+        weeklyHistory: [], 
+        marketState: { baseRate: 0.05, savingsYield: 0.02, debtRate: 0.1, loanRate: 0.08, rateHistory: [], sentiment: 50, cycle: 'STABLE' } 
+      },
     });
     mockState.entities.rivals = { [mockTarget.id]: mockTarget };
   });
@@ -72,14 +67,27 @@ describe('Mergers and Sabotage System', () => {
     });
 
     it('successfully executes acquisition impact with project and IP transfer', () => {
-      // Add a project to the target
-      mockTarget.projects = {
-        'p-1': { id: 'p-1', title: 'Rival Hit', state: 'production', budget: 50_000_000 } as Project
-      };
+      // Add a project to the state, owned by target
+      const rivalProject = { id: 'p-1', title: 'Rival Hit', state: 'production', budget: 50_000_000, ownerId: 'rival-1' } as Project;
+      mockState.entities.projects['p-1'] = rivalProject;
       
       // Add a rival IP to the state
       mockState.ip.vault = [
-        { id: 'ip-1', title: 'Rival IP', rightsOwner: 'RIVAL', ownerStudioId: 'rival-1', originalProjectId: 'p-1', baseValue: 10_000_000, decayRate: 1 } as any
+        { 
+          id: 'ip-1', 
+          title: 'Rival IP', 
+          rightsOwner: 'RIVAL', 
+          ownerStudioId: 'rival-1', 
+          originalProjectId: 'p-1', 
+          baseValue: 10_000_000, 
+          decayRate: 1,
+          quality: 50,
+          merchandisingMultiplier: 1.1,
+          syndicationStatus: 'NONE',
+          syndicationTier: 'NONE',
+          totalEpisodes: 0,
+          rightsExpirationWeek: 100
+        } as any
       ];
 
       const impact = executeAcquisition(mockState, mockTarget.id, rng);

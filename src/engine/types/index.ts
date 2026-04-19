@@ -1,4 +1,5 @@
 // Central aggregator for engine types
+export * from './shared.types';
 
 export * from './project.types';
 export * from './talent.types';

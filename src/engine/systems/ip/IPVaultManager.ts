@@ -9,7 +9,7 @@ import { determineSyndicationTier } from './syndicationEngine';
  * Orchestrates synergy evaluation and cultural decay for the entire studio vault.
  * Uses archetype properties to adjust IP behavior if archetype is provided.
  */
-export function tickIPVault(state: GameState, archetype?: any): StateImpact[] {
+export function tickIPVault(state: GameState, archetype?: import('../../data/aiArchetypes').StudioArchetype): StateImpact[] {
   const impacts: StateImpact[] = [];
   const activeProjects = Object.values(state.entities.projects);
 
@@ -88,13 +88,8 @@ export function tickIPVault(state: GameState, archetype?: any): StateImpact[] {
   });
 
   const genreSaturation: Record<string, number> = {};
-  [
-    ...Object.values(state.entities.projects),
-    ...Object.values(state.entities.rivals).flatMap(r => {
-      const rivalProjects = ('projects' in r && r.projects) ? (r as any).projects : {};
-      return Object.values(rivalProjects);
-    })
-  ].forEach((p: any) => {
+  const projects = Object.values(state.entities.projects);
+  projects.forEach((p) => {
     if (p.genre) {
       const g = p.genre.toUpperCase();
       genreSaturation[g] = (genreSaturation[g] || 0) + 1;

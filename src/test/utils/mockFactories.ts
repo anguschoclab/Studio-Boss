@@ -44,7 +44,7 @@ export const createMockProject = (overrides: Partial<Project> = {}): Project => 
   const type = overrides.type || 'FILM';
   const title = overrides.title || 'Mock Project';
   
-  const base: any = {
+  const base: ProjectBase = {
     id,
     title,
     type,
@@ -65,9 +65,11 @@ export const createMockProject = (overrides: Partial<Project> = {}): Project => 
     releaseWeek: null,
     activeCrisis: null,
     momentum: 50,
+    quality: 50,
+    scriptHeat: 50,
     progress: 0,
     accumulatedCost: 0,
-    scriptHeat: 50,
+    ownerId: 'player',
     activeRoles: [],
     scriptEvents: [],
     marketingBudget: 0,
@@ -108,18 +110,20 @@ export const createMockProject = (overrides: Partial<Project> = {}): Project => 
         episodesAired: 0,
         averageRating: 0,
         status: 'IN_DEVELOPMENT',
-        ...((overrides as any).tvDetails || {})
+        ...(overrides.type === 'SERIES' ? (overrides as any).tvDetails : {})
       } as TVSeasonDetails
-    } as SeriesProject;
+    } as import('@/engine/types').SeriesProject;
   }
 
-  return base as FilmProject;
+  return base as import('@/engine/types').FilmProject;
 };
 
 export const createMockGameState = (overrides: Partial<GameState> = {}): GameState => ({
   week: 1,
   gameSeed: 42,
   tickCount: 0,
+  rngState: 12345,
+  game: { currentWeek: 1 },
   entities: {
     projects: {},
     talents: {},
@@ -135,6 +139,7 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
   news: { headlines: [] },
   ip: { vault: [], franchises: {} },
   studio: {
+    id: 'player-studio',
     name: 'Test Studio',
     archetype: 'major',
     prestige: 50,
@@ -142,13 +147,7 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
     internal: {
         projectHistory: [],
     },
-    culture: { 
-      prestigeVsCommercial: 0,
-      talentFriendlyVsControlling: 0,
-      nicheVsBroad: 50,
-      filmFirstVsTvFirst: 0,
-      genrePopularity: { 'Drama': 50, 'Comedy': 50, 'Action': 50, 'Sci-Fi': 50, 'Horror': 50, 'Romance': 50 }
-    },
+    snapshotHistory: [],
     activeCampaigns: {},
   },
   market: { opportunities: [], buyers: [] },
@@ -161,10 +160,14 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
     scandals: []
   },
   deals: { activeDeals: [], pendingOffers: [], expiredDeals: [] },
+  talentAgentRelationships: {},
+  relationships: {
+    relationships: {}
+  },
   history: [],
   eventHistory: [],
   ...overrides
-} as GameState);
+});
 
 export const createMockContract = (overrides: Partial<Contract> = {}): Contract => ({
   id: 'mock-contract',
@@ -173,6 +176,7 @@ export const createMockContract = (overrides: Partial<Contract> = {}): Contract 
   role: 'actor',
   fee: 500000,
   backendPercent: 0,
+  ownerId: 'player',
   ...overrides
 });
 
@@ -190,6 +194,7 @@ export const createMockIPAsset = (overrides: Partial<IPAsset> = {}): IPAsset => 
   totalEpisodes: 0,
   rightsExpirationWeek: 100,
   rightsOwner: 'STUDIO',
+  ownerId: 'player',
   ...overrides
 });
 
@@ -236,8 +241,9 @@ export const createMockRival = (overrides: Partial<RivalStudio> = {}): RivalStud
   recentActivity: 'None',
   projectCount: 0,
   strategy: 'acquirer',
-  projects: {},
-  contracts: {},
+  projectIds: [],
+  contractIds: [],
+  ipAssetIds: [],
   motivationProfile: { financial: 50, prestige: 50, legacy: 50, aggression: 50 },
   currentMotivation: 'STABILITY',
   ...overrides
@@ -245,7 +251,7 @@ export const createMockRival = (overrides: Partial<RivalStudio> = {}): RivalStud
 
 export const createMockBuyer = (overrides: Partial<Buyer> = {}): Buyer => {
   const archetype = overrides.archetype || 'streamer';
-  const base: any = {
+  const base = {
     id: 'mock-buyer',
     name: 'Mock Buyer',
     archetype,
@@ -264,17 +270,17 @@ export const createMockBuyer = (overrides: Partial<Buyer> = {}): Buyer => {
       marketingSpend: 10000,
       subscriberHistory: [],
       activeLicenses: []
-    } as Buyer;
+    } as import('@/engine/types').StreamerPlatform;
   }
 
   if (archetype === 'premium') {
     return {
       ...base,
       prestigeBonus: 20
-    } as Buyer;
+    } as import('@/engine/types').PremiumPlatform;
   }
 
-  return base as Buyer;
+  return base as import('@/engine/types').NetworkPlatform;
 };
 
 export const createMockMarketState = (overrides: Partial<MarketState> = {}): MarketState => ({

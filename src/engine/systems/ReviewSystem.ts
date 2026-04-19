@@ -31,7 +31,7 @@ export const ReviewSystem = {
     // Let's assume project.quality exists or use momentum as proxy.
     // Wait, project.types.ts doesn't have 'quality' but 'momentum'. 
     // I will use (project as any).quality || project.momentum || 50 as base.
-    const baseQuality = (project as any).quality || project.momentum || 50;
+    const baseQuality = project.quality || project.momentum || 50;
     let score = baseQuality;
 
     // Director Modifier: Find the director in the talent array. Add (director.prestige - 50) / 5 to the base score.

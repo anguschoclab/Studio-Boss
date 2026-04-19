@@ -21,28 +21,18 @@ export class RivalRevenueCalculator {
     merch: number;
     total: number;
   } {
-    // Use unified storage if state is provided, otherwise fall back to backward compatibility
-    let projects: Project[];
-    projects = [];
-    if (state && state.entities.projects) {
-      const allProjects = state.entities.projects;
-      for (const id in allProjects) {
-        if (Object.prototype.hasOwnProperty.call(allProjects, id)) {
-          const p = allProjects[id];
-          if (p.ownerId === rival.id && p.state === 'released') {
-            projects.push(p);
-          }
-        }
-      }
-    } else {
-      // Backward compatibility for projects field
-      const rivalProjects = ('projects' in rival && rival.projects) ? (rival as any).projects : {};
-      for (const id in rivalProjects) {
-        if (Object.prototype.hasOwnProperty.call(rivalProjects, id)) {
-          const p = rivalProjects[id];
-          if (p.state === 'released') {
-            projects.push(p as Project);
-          }
+    if (!state) {
+      // In strict architecture, state is required for rival revenue calculation
+      return { boxOffice: 0, streaming: 0, merch: 0, total: 0 };
+    }
+
+    const projects: Project[] = [];
+    const allProjects = state.entities.projects;
+    for (const id in allProjects) {
+      if (Object.prototype.hasOwnProperty.call(allProjects, id)) {
+        const p = allProjects[id];
+        if (p.ownerId === rival.id && p.state === 'released') {
+          projects.push(p);
         }
       }
     }
@@ -55,7 +45,7 @@ export class RivalRevenueCalculator {
     let streaming = 0;
     let merch = 0;
     
-    projects.forEach((p: any) => {
+    projects.forEach((p) => {
       if (p.distributionStatus === 'theatrical') {
         // Use same decay model as player
         const weeklyGross = this.calculateTheatricalRevenue(p, currentWeek);

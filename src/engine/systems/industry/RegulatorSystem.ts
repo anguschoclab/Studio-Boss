@@ -9,7 +9,7 @@ export class RegulatorSystem {
     const impacts: StateImpact[] = [];
     
     // 1. Calculate Trailing 4-Week Revenue for all studios
-    const calculateTrailingRevenue = (history: any[]) => {
+    const calculateTrailingRevenue = (history: import('../types/state.types').FinancialSnapshot[]) => {
       return (history || []).slice(0, 4).reduce((sum, h) => sum + (h.revenue?.theatrical || 0) + (h.revenue?.streaming || 0), 0);
     };
 
@@ -76,7 +76,7 @@ export class RegulatorSystem {
     targetId: string, 
     rng: RandomGenerator
   ): { blocked: boolean; reason?: string } {
-    const calculateTrailingRevenue = (history: any[]) => {
+    const calculateTrailingRevenue = (history: import('../types/state.types').FinancialSnapshot[]) => {
       return (history || []).slice(0, 4).reduce((sum, h) => sum + (h.revenue?.theatrical || 0) + (h.revenue?.streaming || 0), 0);
     };
 
@@ -110,7 +110,7 @@ export class RegulatorSystem {
    * Calculate market share for a specific studio.
    */
   static getMarketShare(state: GameState, studioId: string): number {
-    const calculateTrailingRevenue = (history: any[]) => {
+    const calculateTrailingRevenue = (history: import('../types/state.types').FinancialSnapshot[]) => {
       return (history || []).slice(0, 4).reduce((sum, h) => sum + (h.revenue?.theatrical || 0) + (h.revenue?.streaming || 0), 0);
     };
 

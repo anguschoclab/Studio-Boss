@@ -54,7 +54,7 @@ function evolveRelationship(
   }
 
   if (relationship.type === 'romantic') {
-    const romanceData = (relationship as any).romanceData as RomanceData;
+    const romanceData = (relationship as import('../../types/relationship.types').RomanticRelationship).romanceData;
 
     if (romanceData?.isSecret && rng.next() < 0.1) {
       strengthChange -= 3;
@@ -122,7 +122,7 @@ export function tickRelationshipSystem(state: GameState, rng: RandomGenerator): 
   const awardedProjectsTalentSets: Set<string>[] = [];
 
   for (const project of projects) {
-    const attachedIds = (project as any).attachedTalentIds || [];
+    const attachedIds = project.attachedTalentIds || [];
     if (attachedIds.length < 2) continue;
     
     const set = new Set<string>(attachedIds);
@@ -201,7 +201,7 @@ export function tickRelationshipSystem(state: GameState, rng: RandomGenerator): 
   }
 
   // 2. Evolve existing relationships
-  const existingRelationships = Object.values((state as any).relationships?.relationships || {}) as TalentRelationship[];
+  const existingRelationships = Object.values(state.relationships?.relationships || {});
   for (const relationship of existingRelationships) {
     // 30% chance to evolve each existing relationship per week
     if (rng.next() < 0.3) {
@@ -253,8 +253,8 @@ export function areRomantic(talentAId: string, talentBId: string, state: GameSta
  * Get all relationships for a talent
  */
 export function getTalentRelationships(talentId: string, state: GameState): TalentRelationship[] {
-  return Object.values((state as any).relationships?.relationships || {})
-    .filter((r: any) => r.talentAId === talentId || r.talentBId === talentId) as TalentRelationship[];
+  return Object.values(state.relationships?.relationships || {})
+    .filter((r) => r.talentAId === talentId || r.talentBId === talentId);
 }
 
 /**

@@ -40,23 +40,17 @@ describe('Persistence Layer Race Hardening', () => {
         vi.clearAllMocks();
 
         const mock = new MockWorker();
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        persistenceService.worker = mock;
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore - reset resolves
-        persistenceService.pendingResolves.clear();
+        (persistenceService as any).worker = mock;
+        // reset resolves
+        (persistenceService as any).pendingResolves.clear();
 
         // ⚡ Manually attach the message handling logic since initWorker likely skipped it in Node
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
         mock.onmessage = (e: any) => {
             const { requestId, state, type } = e.data;
             let result = state;
             if (type === 'SAVE_SUCCESS') result = true;
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore - reaching into private method for test purposes
-            persistenceService.resolvePromise(requestId, result);
+            // reaching into private method for test purposes
+            (persistenceService as any).resolvePromise(requestId, result);
         };
 
         console.log('[Test] Injected mock worker and attached handler');
@@ -72,17 +66,10 @@ describe('Persistence Layer Race Hardening', () => {
         console.log('[Test] Save results received:', results);
 
         expect(results).toEqual([true, true, true]);
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        expect(persistenceService.worker.postMessage).toHaveBeenCalledTimes(3);
+        expect((persistenceService as any).worker.postMessage).toHaveBeenCalledTimes(3);
 
-        // Ensure request IDs were unique in the calls
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        const firstId = persistenceService.worker.postMessage.mock.calls[0][0].requestId;
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        const secondId = persistenceService.worker.postMessage.mock.calls[1][0].requestId;
+        const firstId = (persistenceService as any).worker.postMessage.mock.calls[0][0].requestId;
+        const secondId = (persistenceService as any).worker.postMessage.mock.calls[1][0].requestId;
         expect(firstId).not.toBe(secondId);
     });
 

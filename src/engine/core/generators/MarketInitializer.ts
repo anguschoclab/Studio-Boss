@@ -18,7 +18,7 @@ export function initializeMarket(
   studioName: string,
   options: MarketInitializerOptions = {}
 ): {
-  initialBuyers: any[];
+  initialBuyers: import('@/engine/types').Buyer[];
   playerOwnedPlatforms: string[];
 } {
   const { networks = 4, premium = 4, streamers = 5 } = options;

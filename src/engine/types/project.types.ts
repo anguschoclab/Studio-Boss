@@ -272,6 +272,9 @@ export interface ProjectBase {
   momentum: number; // 1-100: Influences budget burn and final quality
   progress: number; // 0-100
   accumulatedCost: number;
+  quality: number;
+  scriptHeat: number;
+  estimatedWindow?: { startWeek: number; endWeek: number };
   awardsProfile?: AwardsProfile;
   reception?: CriticConsensus; 
   parentProjectId?: string;
@@ -320,10 +323,10 @@ export interface ProjectBase {
   // Unified Storage: Owner tracking
   ownerId: string; // 'player' or rival studio ID
   archetypeId?: string; // Links to StudioArchetype for archetype-driven behavior
+  attachedTalentIds?: string[];
 }
 
 export interface ScriptedProject extends ProjectBase {
-  scriptHeat: number; // 0-100: Influences evolution events
   activeRoles: CharacterArchetype[];
   scriptEvents: ScriptEvent[];
   scriptMetrics?: ScriptMetrics;

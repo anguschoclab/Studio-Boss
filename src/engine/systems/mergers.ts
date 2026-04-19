@@ -30,28 +30,29 @@ export function executeAcquisition(state: GameState, targetId: string, rng: Rand
   if (!evalResult.viable) return null;
 
   // Transfer projects
-  const targetProjects = target.projects || {};
   const newProjects: Project[] = [];
-  for (const id in targetProjects) {
-    if (!Object.prototype.hasOwnProperty.call(targetProjects, id)) continue;
-    const p = targetProjects[id];
+  const allProjects = state.entities.projects;
+  for (const id in allProjects) {
+    const p = allProjects[id];
+    if (p.ownerId === target.id) {
       // Active projects get stuck in turnaround
       const newState = (p.state === 'production' || p.state === 'marketing') ? 'turnaround' : p.state;
       newProjects.push({ 
         ...p, 
-        state: newState as any,
+        state: newState,
         isAcquired: true 
       });
+    }
   }
 
   // Transfer IP assets
   const vault = state.ip.vault || [];
-  const targetName = target.name;
+  const targetIdStr = target.id;
   const newIPAssets: IPAsset[] = [];
 
   for (let i = 0; i < vault.length; i++) {
     const a = vault[i];
-    if (a.rightsOwner === 'RIVAL' && (Object.prototype.hasOwnProperty.call(targetProjects, a.originalProjectId) || a.title.includes(targetName))) {
+    if (a.rightsOwner === 'RIVAL' && a.ownerStudioId === targetIdStr) {
       newIPAssets.push({
         ...a,
         rightsOwner: 'STUDIO' as const

@@ -27,11 +27,11 @@ export function runUpfronts(state: GameState, rng: RandomGenerator): StateImpact
     if (
       project.type === 'SERIES' &&
       (project.state === 'development' || project.state === 'needs_greenlight') &&
-      (project as any).stage !== 'pilot'
+      project.stage !== 'pilot'
     ) {
       const seriesProject = project as SeriesProject;
       const buzz = seriesProject.buzz ?? 50;
-      const scriptHeat = (seriesProject as any).scriptHeat ?? 50;
+      const scriptHeat = seriesProject.scriptHeat ?? 50;
       const momentum = seriesProject.momentum ?? 50;
       const quality = (buzz * 0.4 + scriptHeat * 0.3 + momentum * 0.3) + rng.range(-10, 10);
 

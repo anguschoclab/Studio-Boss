@@ -36,7 +36,7 @@ export const ARCHETYPE_TRANSITIONS: {
   director: Record<DirectorArchetype, DirectorArchetype[]>;
 } = {
   actor: {
-    movie_star: ['tv_star', 'prestige_actor', 'veteran', 'declining' as any],
+    movie_star: ['tv_star', 'prestige_actor', 'veteran'],
     tv_star: ['movie_star', 'character_actor', 'prestige_actor', 'veteran'],
     character_actor: ['prestige_actor', 'indie_darling', 'veteran'],
     action_hero: ['movie_star', 'prestige_actor', 'veteran'],
@@ -46,7 +46,7 @@ export const ARCHETYPE_TRANSITIONS: {
     viral_sensation: ['tv_star', 'comedy_star', 'young_adult'],
     kid_actor: ['young_adult', 'tv_star', 'character_actor'],
     young_adult: ['movie_star', 'tv_star', 'character_actor', 'action_hero', 'comedy_star'],
-    veteran: ['prestige_actor', 'character_actor', 'declining' as any]
+    veteran: ['prestige_actor', 'character_actor']
   },
   writer: {
     showrunner: ['screenwriter', 'prestige_writer'],
@@ -60,7 +60,7 @@ export const ARCHETYPE_TRANSITIONS: {
   producer: {
     blockbuster_producer: ['studio_exec', 'creative_producer'],
     indie_producer: ['creative_producer', 'line_producer'],
-    studio_exec: ['blockbuster_producer', 'mega_corp' as any],
+    studio_exec: ['blockbuster_producer'],
     packager: ['studio_exec', 'creative_producer'],
     line_producer: ['indie_producer', 'creative_producer'],
     creative_producer: ['indie_producer', 'blockbuster_producer']
@@ -223,8 +223,8 @@ export class TalentDriftEngine {
     if (!transitionRule) {
       // Check if talent is old enough to become a veteran
       if (age >= 50 && currentArchetype !== 'veteran') {
-        const veteranTransitions = ARCHETYPE_TRANSITIONS.actor.veteran;
-        if (veteranTransitions.includes(currentArchetype as any)) {
+        const veteranTransitions: string[] = ARCHETYPE_TRANSITIONS.actor.veteran;
+        if (veteranTransitions.includes(currentArchetype)) {
           return { old: currentArchetype, new: 'veteran' };
         }
       }
@@ -288,7 +288,7 @@ export class TalentDriftEngine {
     }
 
     // Filter out invalid transitions
-    const validTransitions = transitions.filter(t => t !== 'declining' as any);
+    const validTransitions = transitions;
     if (validTransitions.length === 0) return null;
 
     // Select new archetype based on intensity
@@ -387,25 +387,26 @@ export class TalentDriftEngine {
     const updated = { ...talent };
 
     if (driftResult.changes.newArchetype) {
+      const newVal = driftResult.changes.newArchetype;
       if (talent.role === 'actor') {
-        updated.actorArchetype = driftResult.changes.newArchetype as any;
+        updated.actorArchetype = newVal as ActorArchetype;
       } else if (talent.role === 'writer' || talent.role === 'showrunner') {
-        updated.writerArchetype = driftResult.changes.newArchetype as any;
+        updated.writerArchetype = newVal as WriterArchetype;
       } else if (talent.role === 'producer') {
-        updated.producerArchetype = driftResult.changes.newArchetype as any;
+        updated.producerArchetype = newVal as ProducerArchetype;
       } else if (talent.role === 'personality') {
-        updated.personalityArchetype = driftResult.changes.newArchetype as any;
+        updated.personalityArchetype = newVal as PersonalityArchetype;
       } else if (talent.role === 'director') {
-        updated.directorArchetype = driftResult.changes.newArchetype as any;
+        updated.directorArchetype = newVal as DirectorArchetype;
       }
     }
 
     if (driftResult.changes.newPersonality) {
-      updated.personality = driftResult.changes.newPersonality as any;
+      updated.personality = driftResult.changes.newPersonality as TalentPersonality;
     }
 
     if (driftResult.changes.newCareerTrajectory) {
-      updated.careerTrajectory = driftResult.changes.newCareerTrajectory as any;
+      updated.careerTrajectory = driftResult.changes.newCareerTrajectory as CareerTrajectory;
     }
 
     return updated;

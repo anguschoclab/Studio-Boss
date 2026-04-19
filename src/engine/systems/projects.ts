@@ -75,8 +75,7 @@ export function handleReleasePhaseEntry(
   }
   
   // Fallback for other project types
-  const projectAny = p as any;
-  const weeklyRevenue = (projectAny.budget * 0.1) * (projectAny.buzz / 50) * franchiseSynergy * (1 - franchiseFatigue);
+  const weeklyRevenue = (p.budget * 0.1) * (p.buzz / 50) * franchiseSynergy * (1 - franchiseFatigue);
   
   impacts.push({
     type: 'PROJECT_UPDATED',
@@ -110,19 +109,18 @@ function handleReleasedPhase(
   franchiseFatigue: number = 0
 ): StateImpact[] {
   if (isSeriesProject(p)) {
-    return handleTVReleasedPhase(p as SeriesProject, projectContracts, talentPool, projectAwards, franchiseSynergy, rng);
+    return handleTVReleasedPhase(p, projectContracts, talentPool, projectAwards, franchiseSynergy, rng);
   } else if (isUnscriptedProject(p)) {
-    return handleUnscriptedReleasedPhase(p as UnscriptedProject & { type: 'SERIES' }, projectContracts, talentPool, projectAwards, franchiseSynergy, rng);
+    return handleUnscriptedReleasedPhase(p as any, projectContracts, talentPool, projectAwards, franchiseSynergy, rng);
   } else if (isFilmProject(p)) {
     return handleFilmReleasedPhase(p, projectContracts, talentPool, rivalStrengthAvg, projectAwards, rng, trendMultiplier, franchiseSynergy, franchiseFatigue);
   } else {
     // Fallback for other project types
     const impacts: StateImpact[] = [];
-    const projectAny = p as any;
-    const currentRevenue = (projectAny.revenue || 0) + (projectAny.weeklyRevenue || 0);
-    const newWeeklyRevenue = (projectAny.weeklyRevenue || 0) * rng.range(0.6, 0.8) * franchiseSynergy;
+    const currentRevenue = (p.revenue || 0) + (p.weeklyRevenue || 0);
+    const newWeeklyRevenue = (p.weeklyRevenue || 0) * rng.range(0.6, 0.8) * franchiseSynergy;
 
-    if (newWeeklyRevenue < 50_000 || (projectAny.weeksInPhase || 0) > 4) {
+    if (newWeeklyRevenue < 50_000 || (p.weeksInPhase || 0) > 4) {
       const talentUpdates = TalentSystem.applyProjectResults(p, projectContracts, talentPool, projectAwards);
       talentUpdates.forEach(t => {
         impacts.push({
@@ -134,7 +132,7 @@ function handleReleasedPhase(
       impacts.push({
         type: 'PROJECT_UPDATED',
         payload: {
-          projectId: projectAny.id,
+          projectId: p.id,
           update: {
             revenue: currentRevenue,
             weeklyRevenue: newWeeklyRevenue,
@@ -147,7 +145,7 @@ function handleReleasedPhase(
       impacts.push({
         type: 'PROJECT_UPDATED',
         payload: {
-          projectId: projectAny.id,
+          projectId: p.id,
           update: {
             revenue: currentRevenue,
             weeklyRevenue: newWeeklyRevenue

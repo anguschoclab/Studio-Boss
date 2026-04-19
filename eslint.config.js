@@ -16,7 +16,8 @@ export default tseslint.config(
             'node_modules_old_v2',
             'electron',
             'release',
-            '.bun_cache'
+            '.bun_cache',
+            'src/routeTree.gen.ts'
         ],
     },
     {

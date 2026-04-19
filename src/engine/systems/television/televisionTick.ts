@@ -118,7 +118,7 @@ export function tickTelevision(state: GameState, rng: RandomGenerator): StateImp
     const rivalId = rivalIdMap.get(project.id);
     const rival = rivalId ? rivalsMap[rivalId] : undefined;
 
-    if (isPlayer) {
+    if (isPlayer || rival) {
       impacts.push({
         type: 'PROJECT_UPDATED',
         payload: {
@@ -134,24 +134,6 @@ export function tickTelevision(state: GameState, rng: RandomGenerator): StateImp
           }
         }
       });
-    } else if (rival) {
-        // Correctly update rival project
-        const updatedProject = {
-            ...project,
-            tvDetails: { ...project.tvDetails, episodesAired: aired, averageRating: nextAverageRating, status: nextStatus },
-            nielsenProfile
-        };
-        // Backward compatibility for projects field
-        const rivalProjects = ('projects' in rival && rival.projects) ? (rival as any).projects : {};
-        impacts.push({
-            type: 'RIVAL_UPDATED',
-            payload: {
-                rivalId: rival.id,
-                update: {
-                    projects: { ...rivalProjects, [project.id]: updatedProject }
-                }
-            }
-        });
     }
 
     if (nextStatus === 'CANCELLED') {
@@ -159,26 +141,12 @@ export function tickTelevision(state: GameState, rng: RandomGenerator): StateImp
       if (usesDeficit) {
         // Deficit-financed cancelled show (Player or Rival) enters shopping window (4 weeks)
         const update = {
-            shoppingWindow: 4
+          shoppingWindow: 4
         };
-        if (isPlayer) {
-          impacts.push({
-            type: 'PROJECT_UPDATED',
-            payload: { projectId: project.id, update }
-          });
-        } else if (rival) {
-          // Backward compatibility for projects field
-          const rivalProjects = ('projects' in rival && rival.projects) ? (rival as any).projects : {};
-          impacts.push({
-            type: 'RIVAL_UPDATED',
-            payload: {
-                rivalId: rival.id,
-                update: {
-                    projects: { ...rivalProjects, [project.id]: { ...rivalProjects[project.id], ...update } }
-                }
-            }
-          });
-        }
+        impacts.push({
+          type: 'PROJECT_UPDATED',
+          payload: { projectId: project.id, update }
+        });
         impacts.push({
           type: 'NEWS_ADDED',
           payload: {
@@ -190,53 +158,24 @@ export function tickTelevision(state: GameState, rng: RandomGenerator): StateImp
           }
         });
       } else {
-        // Backward compatibility for projects field
-        const rivalProjectsForArchive = rival ? (('projects' in rival && rival.projects) ? (rival as any).projects : {}) : {};
-        impacts.push({
-          type: isPlayer ? 'PROJECT_REMOVED' : 'RIVAL_UPDATED',
-          payload: isPlayer
-            ? { projectId: project.id }
-            : { rivalId: rival?.id, update: { projects: { ...rivalProjectsForArchive, [project.id]: { ...project, state: 'archived' } } } } as any
-        });
-      }
-    }
-  }
-
-  // Phase 4: Handle Shopping Expiration
-  // Refactored array spread and .find() inside loop to direct object iteration, improving performance from O(n^2) to O(n).
-  const checkShoppingExpiration = (p: any, isPlayer: boolean, rivalId?: string) => {
-    if (p.state === 'shopping' && p.shoppingExpiresWeek && state.week >= p.shoppingExpiresWeek) {
-      if (isPlayer) {
         impacts.push({
           type: 'PROJECT_UPDATED',
-          payload: { projectId: p.id, update: { state: 'archived' as const } }
+          payload: { 
+            projectId: project.id, 
+            update: { state: 'archived' as const } 
+          }
         });
-      } else if (rivalId) {
-        const rival = state.entities.rivals[rivalId];
-        if (rival) {
-          // Backward compatibility for projects field
-          const rivalProjects = ('projects' in rival && rival.projects) ? (rival as any).projects : {};
-          impacts.push({
-            type: 'RIVAL_UPDATED',
-            payload: { rivalId, update: { projects: { ...rivalProjects, [p.id]: { ...p, state: 'archived' as const } } } } as any
-          });
-        }
       }
     }
-  };
-
-  for (const key in playerProjects) {
-    if (!Object.prototype.hasOwnProperty.call(playerProjects, key)) continue;
-    checkShoppingExpiration(playerProjects[key], true);
   }
 
-  for (let i = 0; i < rivalsList.length; i++) {
-    const rival = rivalsList[i];
-    // Backward compatibility for projects field
-    const rivalProjects = ('projects' in rival && rival.projects) ? (rival as any).projects : {};
-    for (const key in rivalProjects) {
-      if (!Object.prototype.hasOwnProperty.call(rivalProjects, key)) continue;
-      checkShoppingExpiration(rivalProjects[key], false, rival.id);
+  for (const key in state.entities.projects) {
+    const p = state.entities.projects[key];
+    if (p.state === 'shopping' && p.shoppingExpiresWeek && state.week >= p.shoppingExpiresWeek) {
+      impacts.push({
+        type: 'PROJECT_UPDATED',
+        payload: { projectId: p.id, update: { state: 'archived' as const } }
+      });
     }
   }
 

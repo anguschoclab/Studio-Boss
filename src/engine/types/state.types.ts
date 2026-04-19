@@ -228,10 +228,15 @@ export interface BaseImpact {
   newIPAssets?: IPAsset[];
 }
 
-export type StateImpact = BaseImpact & { 
-  type?: ImpactType; 
-  payload?: any;
-};
+export type StateImpact = 
+  | BuyerUpdateImpact
+  | ProjectUpdateImpact
+  | TalentUpdateImpact
+  | RivalUpdateImpact
+  | OpportunityUpdateImpact
+  | AwardImpact
+  | (BaseImpact & { type?: ImpactType; payload?: any });
+
 
 export interface PendingDealOffer {
   id: string;
