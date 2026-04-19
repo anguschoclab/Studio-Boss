@@ -48,9 +48,9 @@ export function evaluateRenewal(
   }
 
   if (project.budgetTier === 'blockbuster') {
-    dynamicThreshold += 8.5; // 📺 The Syndication Baron: Cancel expensive shows faster (streaming wars penalty)
+    dynamicThreshold += 10.5; // 📺 The Syndication Baron: Cancel expensive shows faster (streaming wars penalty)
   } else if (project.budgetTier === 'high') {
-    dynamicThreshold += 6.5; // 📺 The Syndication Baron: Cancel expensive shows faster
+    dynamicThreshold += 8.0; // 📺 The Syndication Baron: Cancel expensive shows faster
   } else if (project.budgetTier === 'indie') {
     dynamicThreshold -= 2.0; // Give leniency to cheap shows
   } else if (project.budgetTier === 'low') {

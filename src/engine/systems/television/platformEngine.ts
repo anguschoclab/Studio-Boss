@@ -47,9 +47,11 @@ function calculateSubChange(platform: StreamerPlatform, rng: RandomGenerator, se
 
   // 📺 The Syndication Baron: Reward consistent season-over-season quality for active shows.
   if (seasonOverSeasonQuality > 90) {
-    dynamicChurnRate = Math.max(0.003, dynamicChurnRate * 0.3); // Extreme loyalty for highly rated ongoing shows
+    dynamicChurnRate = Math.max(0.001, dynamicChurnRate * 0.15); // Unshakable loyalty for elite ongoing shows
   } else if (seasonOverSeasonQuality > 80) {
-    dynamicChurnRate = Math.max(0.008, dynamicChurnRate * 0.5); // Strong loyalty for good ongoing shows
+    dynamicChurnRate = Math.max(0.004, dynamicChurnRate * 0.35); // Very strong loyalty for great ongoing shows
+  } else if (seasonOverSeasonQuality > 70) {
+    dynamicChurnRate = Math.max(0.008, dynamicChurnRate * 0.7); // Moderate loyalty for good ongoing shows
   }
 
   // 📺 The Syndication Baron: Reward platforms with sticky syndication hits (100+ episodes gold tier).
