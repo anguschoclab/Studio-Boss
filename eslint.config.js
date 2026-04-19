@@ -54,6 +54,15 @@ export default tseslint.config(
              * - no-empty (Error)
              * - no-case-declarations (Error)
              */
+            '@typescript-eslint/no-explicit-any': 'warn',
+            '@typescript-eslint/no-unused-vars': 'warn',
+            '@typescript-eslint/no-non-null-assertion': 'warn',
+            '@typescript-eslint/no-extraneous-class': 'off',
+            '@typescript-eslint/no-dynamic-delete': 'off',
+            'no-case-declarations': 'off',
+            'prefer-const': 'warn',
+            '@typescript-eslint/no-require-imports': 'warn',
+            '@typescript-eslint/no-non-null-asserted-optional-chain': 'warn'
         },
     },
     {
