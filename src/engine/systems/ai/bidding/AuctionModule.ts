@@ -38,11 +38,15 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
       const myBid = opportunity.bids[rival.id]?.amount || 0;
 
       const isPlayerLeading = opportunity.highestBidderId === 'PLAYER';
-      const aggressionFactor = isPlayerLeading ? 1.5 : 1.0;
 
       const isFranchiseBuilder = rival.currentMotivation === 'FRANCHISE_BUILDING';
-      const isCashCrunch = rival.currentMotivation === 'CASH_CRUNCH';
       const isMarketDisruptor = rival.currentMotivation === 'MARKET_DISRUPTION';
+
+      // 🎭 The Method Actor Tuning: Rivals with MARKET_DISRUPTION bid much more aggressively when the player is leading to run up the price.
+      const baseAggression = isPlayerLeading ? 1.5 : 1.0;
+      const aggressionFactor = isPlayerLeading && isMarketDisruptor ? 2.0 : baseAggression;
+
+      const isCashCrunch = rival.currentMotivation === 'CASH_CRUNCH';
       const isAwardChaser = rival.currentMotivation === 'AWARD_CHASE';
       const motivationAggression = (rival.motivationProfile?.aggression || 50) / 100;
 

@@ -25,7 +25,8 @@ const MotivationScores: Record<StudioMotivation, (rival: RivalStudio, state: Gam
     }
     return score;
   },
-  STABILITY: (rival) => (rival.cash >= 1000000 && rival.cash <= 3000000 ? 60 : 10),
+  // 🎭 The Method Actor Tuning: Studios in dire financial straits will aggressively seek stability rather than continuing to spend normally.
+  STABILITY: (rival) => (rival.cash < 2000000 ? 90 : (rival.cash <= 3000000 ? 60 : 10)),
 };
 
 /**

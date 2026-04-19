@@ -72,6 +72,12 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
         lockFeeMultiplier = 2.0;
       }
 
+      // 🎭 The Method Actor Tuning: MARKET_DISRUPTION rivals overpay significantly for top talent and ignore standard prestige gap penalties.
+      if (rival.currentMotivation === 'MARKET_DISRUPTION') {
+        lockFeeMultiplier += 1.0;
+        prestigePenalty = 0;
+      }
+
       const lockFee = target.fee * (lockFeeMultiplier + rng.next() + prestigePenalty);
       
       const agency = target.agencyId ? state.industry.agencies.find(a => a.id === target.agencyId) : undefined;

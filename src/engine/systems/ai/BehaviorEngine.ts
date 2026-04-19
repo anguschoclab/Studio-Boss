@@ -71,7 +71,12 @@ export function shouldAttemptHostileTakeover(
   if (attackerShare + targetShare > 0.40) return false;
 
   if (archetype.biddingAggression < 70) return false;
-  if (archetype.strategy !== 'acquirer' && archetype.strategy !== 'poacher') return false;
+
+  // 🎭 The Method Actor Tuning: Hyper-aggressive studios seeking market disruption can bypass strategy limits if the target is significantly weaker or cash-poor.
+  const isTargetVulnerable = target.cash < 5000000 || target.prestige < attacker.prestige - 20;
+  const canBypassStrategy = attacker.currentMotivation === 'MARKET_DISRUPTION' && isTargetVulnerable && archetype.biddingAggression >= 85;
+
+  if (archetype.strategy !== 'acquirer' && archetype.strategy !== 'poacher' && !canBypassStrategy) return false;
 
   return attacker.currentMotivation === 'FRANCHISE_BUILDING' || attacker.currentMotivation === 'MARKET_DISRUPTION';
 }

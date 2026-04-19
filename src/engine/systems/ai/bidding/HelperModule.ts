@@ -36,7 +36,8 @@ export function calculateLiveCounterBid(
 
   if (rng.next() < adjustedThreshold) {
     const counterAmount = Math.floor(playerBid * rng.range(1.05, 1.15) * adjustedMultiplier);
-    const cashLimit = rival.currentMotivation === 'MARKET_DISRUPTION' ? 0.8 : (rival.currentMotivation === 'FRANCHISE_BUILDING' ? 0.6 : 0.4);
+    // 🎭 The Method Actor Tuning: Rivals with MARKET_DISRUPTION engage in "spite-bidding", stretching their cash limits to run up the player's acquisition cost.
+    const cashLimit = rival.currentMotivation === 'MARKET_DISRUPTION' ? 0.95 : (rival.currentMotivation === 'FRANCHISE_BUILDING' ? 0.6 : 0.4);
     if (counterAmount < rival.cash * cashLimit) {
       return {
         type: 'OPPORTUNITY_UPDATED',
