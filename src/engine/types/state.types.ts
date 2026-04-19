@@ -1,12 +1,25 @@
-import { Headline, HeadlineCategory, PublicationType, NewsEvent, MarketEvent, Rumor } from './engine.types';
+import { Headline, HeadlineCategory, PublicationType, NewsEvent, MarketEvent, Rumor, SimulationReportId, NewsId } from './engine.types';
 import { Franchise } from './franchise.types';
 import { TalentPact, TalentPactType, Talent, Scandal, Contract } from './talent.types';
 import { Project, Opportunity, GenreTrend, Award, FestivalSubmission, CriticConsensus } from './project.types';
 import { RivalStudio, Buyer } from './studio.types';
+import { 
+  type TalentId, 
+  type ProjectId, 
+  type StudioId, 
+  type FranchiseId, 
+  type AssetId, 
+  type OpportunityId, 
+  type ScandalId, 
+  type AwardId,
+  type BuyerId,
+  type ContractId,
+  type PactId
+} from './shared.types';
 
 export interface CampaignData {
   id: string; // 🌌 Standardized UUID for this campaign
-  projectId: string;
+  projectId: ProjectId;
   budget: number;
   targetCategories: string[];
   buzzBonus: number;     // Multiplier for nomination odds
@@ -14,7 +27,7 @@ export interface CampaignData {
 }
 
 export interface WeeklyFinancialReport {
-  id?: string; // 🌌 Standardized UUID for this record
+  id?: SimulationReportId; // 🌌 Standardized UUID for this record
   week: number;
   year: number;
   startingCash: number;
@@ -53,7 +66,7 @@ export interface FinancialSnapshot {
   };
   net: number;
   cash: number;
-  projectRecoupment?: Record<string, number>;
+  projectRecoupment?: Record<ProjectId, number>;
 }
 
 export type MarketCycle = 'BOOM' | 'STABLE' | 'BEAR' | 'RECESSION' | 'RECOVERY';
@@ -82,10 +95,10 @@ export interface NewsState {
 export type IPAssetTier = 'ORIGINAL' | 'BLOCKBUSTER' | 'CULT_CLASSIC' | 'LEGACY';
 
 export interface IPAsset {
-  id?: string;
-  originalProjectId: string;
+  id?: AssetId;
+  originalProjectId: ProjectId;
   title: string;
-  franchiseId?: string; 
+  franchiseId?: FranchiseId; 
   tier: IPAssetTier;
   quality: number; 
   baseValue: number; 
@@ -96,15 +109,15 @@ export interface IPAsset {
   totalEpisodes: number;
   rightsExpirationWeek: number; 
   rightsOwner: 'STUDIO' | 'MARKET' | 'RIVAL';
-  ownerStudioId?: string;
+  ownerStudioId?: StudioId;
   isSynergyActive?: boolean; 
   // Unified Storage: Owner tracking
-  ownerId: string; // 'player' or rival studio ID
+  ownerId: StudioId; // 'player' or rival studio ID
 }
 
 export interface IPState {
   vault: IPAsset[];
-  franchises: Record<string, Franchise>;
+  franchises: Record<FranchiseId, Franchise>;
 }
 
 export type ImpactType =
@@ -166,23 +179,23 @@ export type ImpactType =
   | 'TV_RECOMMENDATION_STATE_UPDATED';
 
 export interface NewsImpact {
-  id: string;
+  id: NewsId;
   headline: string;
   description: string;
   category?: HeadlineCategory;
   publication?: PublicationType;
 }
 
-export interface ProjectUpdate { projectId: string; update: Partial<Project> }
-export interface TalentUpdate { talentId: string; update: Partial<Talent> }
-export interface RivalUpdate { rivalId: string; update: Partial<RivalStudio> }
-export interface BuyerUpdate { buyerId: string; update: Partial<Buyer> }
-export interface ScandalUpdate { scandalId: string; update: Partial<Scandal> }
-export interface FranchiseUpdate { franchiseId: string; update: Partial<Franchise> }
-export interface VaultAssetUpdate { assetId: string; update: Partial<IPAsset> }
+export interface ProjectUpdate { projectId: ProjectId; update: Partial<Project> }
+export interface TalentUpdate { talentId: TalentId; update: Partial<Talent> }
+export interface RivalUpdate { rivalId: StudioId; update: Partial<RivalStudio> }
+export interface BuyerUpdate { buyerId: BuyerId; update: Partial<Buyer> }
+export interface ScandalUpdate { scandalId: ScandalId; update: Partial<Scandal> }
+export interface FranchiseUpdate { franchiseId: FranchiseId; update: Partial<Franchise> }
+export interface VaultAssetUpdate { assetId: AssetId; update: Partial<IPAsset> }
 export interface OpportunityUpdate { 
-  opportunityId: string; 
-  rivalId: string; 
+  opportunityId: OpportunityId; 
+  rivalId: StudioId; 
   bid: { amount: number; terms: string };
 }
 
@@ -195,7 +208,7 @@ export interface OpportunityUpdateImpact { type: 'OPPORTUNITY_UPDATED'; payload:
 export interface AwardImpact {
   type: 'AWARD_WON';
   payload: {
-    projectId: string;
+    projectId: ProjectId;
     award: Award;
   };
 }
@@ -216,11 +229,11 @@ export interface BaseImpact {
   newRumors?: Rumor[];
   newScandals?: Scandal[];
   scandalUpdates?: ScandalUpdate[];
-  removeContracts?: string[]; 
+  removeContracts?: ContractId[]; 
   uiNotifications?: string[];
   newAwards?: Award[];
-  cultClassicProjectIds?: string[];
-  razzieWinnerTalents?: string[];
+  cultClassicProjectIds?: ProjectId[];
+  razzieWinnerTalents?: TalentId[];
   newFestivalSubmissions?: FestivalSubmission[];
   newProjects?: Project[];
   newContracts?: Contract[];
@@ -235,12 +248,12 @@ export type StateImpact =
   | RivalUpdateImpact
   | OpportunityUpdateImpact
   | AwardImpact
-  | (BaseImpact & { type?: ImpactType; payload?: any });
+  | (BaseImpact & { type?: ImpactType });
 
 
 export interface PendingDealOffer {
-  id: string;
-  talentId: string;
+  id: PactId;
+  talentId: TalentId;
   type: TalentPactType;
   offeredWeek: number;
   expiresWeek: number;

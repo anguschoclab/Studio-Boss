@@ -1,4 +1,13 @@
 // Types related to Projects, Formats, and Markets
+import { 
+  type ProjectId, 
+  type TalentId, 
+  type StudioId, 
+  type FranchiseId, 
+  type AwardId, 
+  type BuyerId, 
+  type OpportunityId 
+} from './shared.types';
 import { ActiveCrisis } from './engine.types';
 
 export type CharacterArchetype = 
@@ -220,8 +229,8 @@ export type AwardCategory =
 export type AwardStatus = 'won' | 'nominated';
 
 export interface Award {
-  id: string;
-  projectId: string;
+  id: AwardId;
+  projectId: ProjectId;
   name: string;
   category: string;
   body: AwardBody;
@@ -247,7 +256,7 @@ export interface TVSeasonDetails {
 export type ProjectType = 'FILM' | 'SERIES';
 
 export interface ProjectBase {
-  id: string;
+  id: ProjectId;
   title: string;
   type: ProjectType;
   format: ProjectFormat;
@@ -277,12 +286,12 @@ export interface ProjectBase {
   estimatedWindow?: { startWeek: number; endWeek: number };
   awardsProfile?: AwardsProfile;
   reception?: CriticConsensus; 
-  parentProjectId?: string;
+  parentProjectId?: ProjectId;
   isSpinoff?: boolean;
   isGlobalIcon?: boolean;
   razzieWinner?: boolean;
-  franchiseId?: string;
-  originalProjectId?: string; // Links to the vault asset it's rebooting/spinning off
+  franchiseId?: FranchiseId;
+  originalProjectId?: ProjectId; // Links to the vault asset it's rebooting/spinning off
   // Release simulation fields
   reviewScore?: number;
   boxOfficeRank?: number;
@@ -303,7 +312,7 @@ export interface ProjectBase {
   boxOffice?: BoxOfficeResult;
   isAcquired?: boolean;
   distributionStatus?: 'theatrical' | 'streaming' | 'syndicated';
-  buyerId?: string;
+  buyerId?: BuyerId;
   // Phase 2: Dynamic Scheduling & Pipeline Management
   isRecasting?: boolean;
   turnaroundStartWeek?: number;
@@ -321,9 +330,9 @@ export interface ProjectBase {
   shoppingExpiresWeek?: number; // week when 'shopping' status lapses
   streamingViewership?: StreamingViewershipHistory[]; // NEW FIELD for Phase 6
   // Unified Storage: Owner tracking
-  ownerId: string; // 'player' or rival studio ID
+  ownerId: StudioId; // 'player' or rival studio ID
   archetypeId?: string; // Links to StudioArchetype for archetype-driven behavior
-  attachedTalentIds?: string[];
+  attachedTalentIds?: TalentId[];
 }
 
 export interface ScriptedProject extends ProjectBase {
@@ -354,7 +363,7 @@ export type OpportunityType = 'script' | 'package' | 'pitch' | 'rights';
 export type DiscoveryOrigin = 'open_spec' | 'agency_package' | 'writer_sample' | 'heat_list' | 'annual_list' | 'passion_project';
 
 export interface Opportunity {
-  id: string;
+  id: OpportunityId;
   type: OpportunityType;
   title: string;
   format: ProjectFormat;
@@ -365,15 +374,15 @@ export interface Opportunity {
   origin: DiscoveryOrigin;
   costToAcquire: number;
   weeksUntilExpiry: number;
-  attachedTalentIds?: string[];
+  attachedTalentIds?: TalentId[];
   tvFormat?: TvFormatKey;
   unscriptedFormat?: UnscriptedFormatKey;
   episodes?: number;
   releaseModel?: ReleaseModelKey;
   qualityBonus?: number;
-  bids: Record<string, { amount: number; terms: string }>; // StudioId -> Bid Data
-  highestBidderId?: string | 'PLAYER';
-  bidHistory: { rivalId: string | 'PLAYER'; amount: number; week: number }[];
+  bids: Record<StudioId, { amount: number; terms: string }>; // StudioId -> Bid Data
+  highestBidderId?: StudioId | 'PLAYER';
+  bidHistory: { rivalId: StudioId | 'PLAYER'; amount: number; week: number }[];
   expirationWeek: number; // When the auction resolves
 }
 
@@ -391,7 +400,7 @@ export type FestivalSubmissionStatus = 'submitted' | 'selected' | 'rejected' | '
 
 export interface FestivalSubmission {
   id: string;
-  projectId: string;
+  projectId: ProjectId;
   festivalBody: AwardBody;
   status: FestivalSubmissionStatus;
   buzzGain: number;

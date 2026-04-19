@@ -202,7 +202,7 @@ export function generateRequirementsFromNotes(
   const notes = state.relationships.productionEnhancements?.screenplayNotes || {};
 
   for (const note of Object.values(notes)) {
-    const n = note as any;
+    const n = note as import('../../types/state.types').ScreenplayNote;
     if (n.projectId !== project.id || n.status !== 'implemented') continue;
 
     // Check note type for requirements
@@ -362,7 +362,7 @@ export function tickCastingConstraintSystem(
               violation,
               notification: `Casting Issue: ${talent.name} refuses ${requirement.type} requirement in "${project.title}"`,
             },
-          } as any);
+          });
 
           // Modal for player decision
           impacts.push({
@@ -388,7 +388,7 @@ export function tickCastingConstraintSystem(
               requestedPremium: check.requestedPremium,
               notification: `${talent.name} requests $${check.requestedPremium.toLocaleString()} premium for ${requirement.type} scenes`,
             },
-          } as any);
+          });
         }
 
         // Suggest alternatives if not willing
@@ -401,7 +401,7 @@ export function tickCastingConstraintSystem(
               alternativeTalentIds: check.alternativeTalentIds,
               requirement,
             },
-          } as any);
+          });
         }
       }
     }
@@ -420,7 +420,7 @@ export function applyComfortLevelToTalent(
   const { comfort, rates } = generateTalentComfortLevel(talent, rng);
 
   return {
-    comfortLevel: comfort as any,
-    comfortPremiumRates: rates as any,
+    comfortLevel: comfort,
+    comfortPremiumRates: rates,
   };
 }

@@ -1,4 +1,15 @@
 // Types related to Talent, Agencies, and Scandals
+import { 
+  type TalentId, 
+  type ProjectId, 
+  type StudioId, 
+  type AgencyId, 
+  type AgentId, 
+  type FamilyId, 
+  type ContractId,
+  type PactId,
+  type ScandalId
+} from './shared.types';
 
 export interface MotivationProfile {
   financial: number; // 0-100, prioritizing profit/cash
@@ -40,7 +51,7 @@ export type DeathType =
 
 export interface DeathEvent {
   id: string;
-  talentId: string;
+  talentId: TalentId;
   week: number;
   type: DeathType;
   cause: string;
@@ -49,12 +60,12 @@ export interface DeathEvent {
   impactsProduction: boolean;
   griefLevel: number; // 0-100, affects co-stars
   isDuringProduction: boolean;
-  projectId?: string; // If died during production
+  projectId?: ProjectId; // If died during production
 }
 
 export interface Scandal {
-  id: string;
-  talentId: string;
+  id: ScandalId;
+  talentId: TalentId;
   severity: number; // 0-100
   type: ScandalType;
   weeksRemaining: number;
@@ -69,7 +80,7 @@ export type AgencyCulture = 'shark' | 'family' | 'volume' | 'prestige';
 export type AgentSpecialty = 'film_packaging' | 'tv_packaging' | 'literary' | 'talent' | 'comedy' | 'unscripted';
 
 export interface TalentCommitment {
-  projectId: string;
+  projectId: ProjectId;
   projectTitle: string;
   startWeek: number;
   endWeek: number;
@@ -82,9 +93,9 @@ export interface TalentCommitment {
 export type TalentPactType = 'first_look' | 'vanity_shingle' | 'overall_deal';
 
 export interface TalentPact {
-  id?: string;
-  talentId: string;
-  studioId: string;
+  id?: PactId;
+  talentId: TalentId;
+  studioId: StudioId;
   type: TalentPactType;
   startDate: number;
   endDate: number;
@@ -98,7 +109,7 @@ export interface TalentPact {
 }
 
 export interface Agency {
-  id: string;
+  id: AgencyId;
   name: string;
   archetype: AgencyArchetype;
   tier: AgencyTier;
@@ -113,9 +124,9 @@ export interface Agency {
 }
 
 export interface Agent {
-  id: string;
+  id: AgentId;
   name: string;
-  agencyId?: string;
+  agencyId?: AgencyId;
   specialty: AgentSpecialty;
   prestige: number;
   leverage: number;
@@ -127,7 +138,7 @@ export interface Agent {
 }
 
 export interface Family {
-  id: string;
+  id: FamilyId;
   name: string;
   recognition: number;
   prestigeLegacy: number;
@@ -149,23 +160,23 @@ export interface TalentPsychology {
   ego: number;         // 1-100
   mood: number;        // 1-100
   scandalRisk: number; // 1-100
-  synergyAffinities: string[]; // Talent IDs
-  synergyConflicts: string[];  // Talent IDs
+  synergyAffinities: TalentId[]; // Talent IDs
+  synergyConflicts: TalentId[];  // Talent IDs
 }
 
 export interface Talent {
-  id: string;
+  id: TalentId;
   name: string;
   role: string; // Primary role
   roles: TalentRole[]; // All roles
   tier: TalentTier;
-  contractId?: string; // ID of active TalentPact
-  agencyId?: string;
-  agentId?: string;
+  contractId?: PactId; // ID of active TalentPact
+  agencyId?: AgencyId;
+  agentId?: AgentId;
   prestige: number;
   fee: number;
   draw: number;
-  familyId?: string;
+  familyId?: FamilyId;
   accessLevel: AccessLevel;
   momentum: number; // 0-100
   skills: {
@@ -197,7 +208,7 @@ export interface Talent {
   razzieWinner?: boolean; // 🌌 PHASE 2: Added for high-fidelity career tracking.
   
   // SBDB & Career Tracking
-  knownFor?: string[]; // Top 3 Project IDs
+  knownFor?: ProjectId[]; // Top 3 Project IDs
   starMeter?: number; // 0-100 derived metric
   showrunningExperience?: number; // 0-100 (Writers only)
   unscriptedExperience?: number; // 0-100 (Transition potential)
@@ -248,10 +259,10 @@ export interface Talent {
   comfortPremiumRates?: import('./casting.types').ComfortPremiumRates;
 
   // Dynasty System: Family relationships
-  parentIds?: string[]; // IDs of parent talents (nepo baby lineage)
-  childIds?: string[]; // IDs of children in talent pool
+  parentIds?: TalentId[]; // IDs of parent talents (nepo baby lineage)
+  childIds?: TalentId[]; // IDs of children in talent pool
   isNepoBaby?: boolean; // True if has at least one parent in industry
-  spouseId?: string; // Current spouse/partner
+  spouseId?: TalentId; // Current spouse/partner
 
   // Discovery System: Breakout star tracking
   isBreakout?: boolean; // True if currently experiencing breakout hype
@@ -271,9 +282,9 @@ export interface Talent {
 }
 
 export interface Contract {
-  id: string;
-  talentId: string;
-  projectId: string;
+  id: ContractId;
+  talentId: TalentId;
+  projectId: ProjectId;
   fee: number;
   backendPercent: number;
   // Sprint E enrichments
@@ -283,5 +294,5 @@ export interface Contract {
   // Phase 2: Dynamic Scheduling
   role: TalentRole;
   // Unified Storage: Owner tracking
-  ownerId: string; // 'player' or rival studio ID
+  ownerId: StudioId; // 'player' or rival studio ID
 }
