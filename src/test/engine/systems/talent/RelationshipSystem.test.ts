@@ -11,7 +11,11 @@ import {
 import { RandomGenerator } from '@/engine/utils/rng';
 import type { GameState } from '@/engine/types';
 
-import { createMockGameState, createMockProject, createMockTalent, createMockContract } from '../../utils/mockFactories';
+import { createMockGameState, createMockProject, createMockTalent, createMockContract } from '../../../utils/mockFactories';
+
+const createTestGameState = (overrides?: Partial<GameState>) => {
+  return createMockGameState(overrides);
+};
 
 describe('RelationshipSystem - Award Nominee Tracking', () => {
   it('should return false when no awards exist', () => {
@@ -335,7 +339,7 @@ describe('RelationshipSystem - Query Functions', () => {
             history: [],
             formedWeek: 1,
             lastUpdatedWeek: 1,
-          }
+          },
           'talent-2-talent-3': {
             id: 'talent-2-talent-3',
             talentAId: 'talent-2',
@@ -535,7 +539,7 @@ describe('RelationshipSystem - tickRelationshipSystem', () => {
             prestige: 70,
             draw: 60,
             starMeter: 65,
-          }
+          },
           'talent-2': createMockTalent({
             id: 'talent-2',
             name: 'Actor 2',
