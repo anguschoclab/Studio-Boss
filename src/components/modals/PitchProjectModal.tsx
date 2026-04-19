@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
@@ -16,6 +16,12 @@ export const PitchProjectModal = () => {
   const [selectedBuyerId, setSelectedBuyerId] = useState<string>('');
   const [selectedContract, setSelectedContract] = useState<ProjectContractType>('upfront');
   const [feedback, setFeedback] = useState<string | null>(null);
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Clear any pending close timer on unmount
+  useEffect(() => () => {
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+  }, []);
 
   if (!gameState || !pitchingProjectId) return null;
 
@@ -30,7 +36,7 @@ export const PitchProjectModal = () => {
 
     if (success) {
       setFeedback('Pitch Successful! Project picked up.');
-      setTimeout(() => {
+      closeTimerRef.current = setTimeout(() => {
         setFeedback(null);
         setSelectedBuyerId('');
         closePitchProject();
@@ -41,6 +47,10 @@ export const PitchProjectModal = () => {
   };
 
   const handleClose = () => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
     setFeedback(null);
     setSelectedBuyerId('');
     closePitchProject();
