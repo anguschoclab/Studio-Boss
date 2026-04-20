@@ -1,13 +1,14 @@
 import { StateCreator } from 'zustand';
 import { GameStore } from '../gameStore';
-import { Opportunity, CharacterArchetype } from '@/engine/types';
+import { Opportunity, CharacterArchetype, StateImpact } from '@/engine/types';
+import { type ProjectId, type OpportunityId, type StudioId, type TalentId, type ContractId } from '@/engine/types/shared.types';
 import { buildProjectAndContracts, CreateProjectParams, applyStateImpact } from '../storeUtils';
 import { calculateLiveCounterBid } from '@/engine/systems/ai/biddingEngine';
 import { RandomGenerator } from '@/engine/utils/rng';
 
 export interface TalentMarketplaceSlice {
-  acquireOpportunity: (oppId: string) => void;
-  placeBid: (oppId: string, amount: number) => void;
+  acquireOpportunity: (oppId: OpportunityId) => void;
+  placeBid: (oppId: OpportunityId, amount: number) => void;
 }
 
 export const createTalentMarketplaceSlice: StateCreator<GameStore, [], [], TalentMarketplaceSlice> = (set, get) => ({
@@ -16,7 +17,7 @@ export const createTalentMarketplaceSlice: StateCreator<GameStore, [], [], Talen
       const state = s.gameState;
       if (!state) return s;
 
-      const oppIndex = state.market.opportunities.findIndex(o => o.id === oppId);
+      const oppIndex = state.market.opportunities.findIndex(o => (o.id as any) === oppId);
       if (oppIndex === -1) return s;
 
       const opp = state.market.opportunities[oppIndex];
@@ -67,7 +68,7 @@ export const createTalentMarketplaceSlice: StateCreator<GameStore, [], [], Talen
       updatedOpportunities.splice(oppIndex, 1);
 
       const contracts = { ...state.entities.contracts };
-      newContracts.forEach(c => { contracts[c.id] = c; });
+      newContracts.forEach(c => { contracts[c.id as ContractId] = c; });
 
       return {
         gameState: {
@@ -75,7 +76,7 @@ export const createTalentMarketplaceSlice: StateCreator<GameStore, [], [], Talen
           finance: { ...state.finance, cash: state.finance.cash - cost - talentFees },
           entities: {
             ...state.entities,
-            projects: { ...state.entities.projects, [project.id]: project },
+            projects: { ...state.entities.projects, [project.id as ProjectId]: project },
             contracts
           },
           market: {
@@ -93,21 +94,21 @@ export const createTalentMarketplaceSlice: StateCreator<GameStore, [], [], Talen
       const state = s.gameState;
       if (!state) return s;
 
-      const oppIndex = state.market.opportunities.findIndex(o => o.id === oppId);
+      const oppIndex = state.market.opportunities.findIndex(o => (o.id as any) === oppId);
       if (oppIndex === -1) return s;
 
       const opp = state.market.opportunities[oppIndex];
       if (state.finance.cash < amount) return s;
 
       const updatedBids = { ...opp.bids, PLAYER: { amount, terms: 'standard' } };
-      const bidHistory = [...(opp.bidHistory || []), { rivalId: 'PLAYER', amount, week: state.week }];
+      const bidHistory = [...(opp.bidHistory || []), { rivalId: 'PLAYER' as StudioId, amount, week: state.week }];
       
       let nextState = {
         ...state,
         market: {
           ...state.market,
           opportunities: state.market.opportunities.map(o => 
-            o.id === oppId ? { ...o, bids: updatedBids, highestBidderId: 'PLAYER', bidHistory } : o
+            (o.id as any) === oppId ? { ...o, bids: updatedBids, highestBidderId: 'PLAYER', bidHistory } : o
           )
         }
       };

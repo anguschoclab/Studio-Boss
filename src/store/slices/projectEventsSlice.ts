@@ -6,13 +6,14 @@ import * as festivalsEngine from '@/engine/systems/festivals';
 import { releaseDirectorsCut } from '@/engine/systems/ratings/directorsCuts';
 import { RandomGenerator } from '@/engine/utils/rng';
 import { Project, GameState, AwardBody, MarketingCampaign } from '@/engine/types';
+import { type ProjectId, type StudioId, type TalentId } from '@/engine/types/shared.types';
 
 export interface ProjectEventsSlice {
-  resolveProjectCrisis: (projectId: string, optionIndex: number) => void;
-  submitToFestival: (projectId: string, festivalBody: AwardBody) => void;
-  lockMarketingCampaign: (projectId: string, level: 'none' | 'basic' | 'blockbuster') => void;
-  releaseDirectorsCutAction: (projectId: string) => void;
-  resolveMerger: (accept: boolean, attackerId: string, targetId: string, offerAmount: number) => void;
+  resolveProjectCrisis: (projectId: ProjectId, optionIndex: number) => void;
+  submitToFestival: (projectId: ProjectId, festivalBody: AwardBody) => void;
+  lockMarketingCampaign: (projectId: ProjectId, level: 'none' | 'basic' | 'blockbuster') => void;
+  releaseDirectorsCutAction: (projectId: ProjectId) => void;
+  resolveMerger: (accept: boolean, attackerId: StudioId, targetId: StudioId, offerAmount: number) => void;
 }
 
 export const createProjectEventsSlice: StateCreator<GameStore, [], [], ProjectEventsSlice> = (set, get) => ({
@@ -20,7 +21,7 @@ export const createProjectEventsSlice: StateCreator<GameStore, [], [], ProjectEv
     const state = get().gameState;
     if (!state) return;
 
-    const project = state.entities.projects[projectId];
+    const project = state.entities.projects[projectId as ProjectId];
     if (!project) return;
 
     const rng = new RandomGenerator(state.rngState); 
@@ -46,7 +47,7 @@ export const createProjectEventsSlice: StateCreator<GameStore, [], [], ProjectEv
     set((s) => {
       const state = s.gameState;
       if (!state) return s;
-      const project = state.entities.projects[projectId];
+      const project = state.entities.projects[projectId as ProjectId];
       if (!project) return s;
       const rng = new RandomGenerator(state.rngState);
       const contractsArr = Object.values(state.entities.contracts || {});
@@ -85,7 +86,7 @@ export const createProjectEventsSlice: StateCreator<GameStore, [], [], ProjectEv
       const state = s.gameState;
       if (!state) return s;
 
-      const project = state.entities.projects[projectId];
+      const project = state.entities.projects[projectId as ProjectId];
       if (!project) return s;
       
       let cost = 0;

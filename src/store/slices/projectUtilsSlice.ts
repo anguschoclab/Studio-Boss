@@ -2,11 +2,12 @@ import { StateCreator } from 'zustand';
 import { GameStore } from '../gameStore';
 import { applyStateImpact } from '../storeUtils';
 import { Project, GameState } from '@/engine/types';
+import { type ProjectId } from '@/engine/types/shared.types';
 
 export interface ProjectUtilsSlice {
   addProject: (project: Project) => void;
-  advanceProjectPhase: (projectId: string, newState: string) => void;
-  updateProject: (projectId: string, update: Partial<Project>) => void;
+  advanceProjectPhase: (projectId: ProjectId, newState: Project['state']) => void;
+  updateProject: (projectId: ProjectId, update: Partial<Project>) => void;
 }
 
 export const createProjectUtilsSlice: StateCreator<GameStore, [], [], ProjectUtilsSlice> = (set) => ({
@@ -18,7 +19,7 @@ export const createProjectUtilsSlice: StateCreator<GameStore, [], [], ProjectUti
           ...s.gameState,
           entities: {
             ...s.gameState.entities,
-            projects: { ...s.gameState.entities.projects, [project.id]: project }
+            projects: { ...s.gameState.entities.projects, [project.id as ProjectId]: project }
           }
         }
       };

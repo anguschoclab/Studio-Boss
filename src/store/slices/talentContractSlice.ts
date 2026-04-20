@@ -1,14 +1,15 @@
 import { StateCreator } from 'zustand';
 import { GameStore } from '../gameStore';
-import { Contract, TalentPact, TalentRole, Talent } from '@/engine/types';
+import { Contract, TalentPact, TalentRole, Talent, NewsId } from '@/engine/types';
+import { type TalentId, type ProjectId, type PactId, type ContractId, type StudioId } from '@/engine/types/shared.types';
 import { RandomGenerator } from '@/engine/utils/rng';
 import { TalentAgentInteractionEngine } from '@/engine/systems/talent/talentAgentInteractions';
 
 export interface TalentContractSlice {
-  signContract: (talentId: string, projectId: string) => void;
-  offerFirstLook: (talentId: string, duration: number, fee: number) => boolean;
-  removeTalentFromProject: (talentId: string, projectId: string) => void;
-  signBreakoutTalent: (talentId: string, premiumFee: number) => void;
+  signContract: (talentId: TalentId, projectId: ProjectId) => void;
+  offerFirstLook: (talentId: TalentId, duration: number, fee: number) => boolean;
+  removeTalentFromProject: (talentId: TalentId, projectId: ProjectId) => void;
+  signBreakoutTalent: (talentId: TalentId, premiumFee: number) => void;
 }
 
 export const createTalentContractSlice: StateCreator<GameStore, [], [], TalentContractSlice> = (set, get) => ({
@@ -43,11 +44,11 @@ export const createTalentContractSlice: StateCreator<GameStore, [], [], TalentCo
       const rng = new RandomGenerator(state.rngState);
       
       const contract: Contract = {
-        id: rng.uuid('CON'),
+        id: rng.uuid('CON') as ContractId,
         projectId,
         talentId,
         fee: finalFee,
-        ownerId: state.studio.id,
+        ownerId: state.studio.id as StudioId,
         backendPercent: talent.accessLevel === 'dynasty' ? 10 : 5,
         creativeControl: talent.accessLevel === 'dynasty' || talent.prestige > 85 ? true : undefined,
         sequelOption: talent.accessLevel === 'dynasty' || talent.prestige > 75 ? true : undefined,
@@ -57,7 +58,7 @@ export const createTalentContractSlice: StateCreator<GameStore, [], [], TalentCo
       
       const estimatedWeeks = 40; 
       const commitment: import('@/engine/types/talent.types').TalentCommitment = {
-        projectId: p.id,
+        projectId,
         projectTitle: p.title,
         startWeek: state.week,
         endWeek: state.week + (p.productionWeeks || estimatedWeeks),
@@ -65,7 +66,7 @@ export const createTalentContractSlice: StateCreator<GameStore, [], [], TalentCo
         format: p.format === 'film' ? 'feature' : (p.format === 'tv' ? 'series' : p.format as any)
       };
 
-      const updatedTalent = {
+      const updatedTalent: Talent = {
         ...talent,
         commitments: [...(talent.commitments || []), commitment]
       };
@@ -83,6 +84,12 @@ export const createTalentContractSlice: StateCreator<GameStore, [], [], TalentCo
         }
       }
 
+      const contracts = { ...state.entities.contracts };
+      contracts[contract.id] = contract;
+
+      const talents = { ...state.entities.talents };
+      talents[talentId] = updatedTalent;
+
       return {
         gameState: {
           ...state,
@@ -92,8 +99,8 @@ export const createTalentContractSlice: StateCreator<GameStore, [], [], TalentCo
           },
           entities: {
             ...state.entities,
-            contracts: { ...state.entities.contracts, [contract.id]: contract },
-            talents: { ...state.entities.talents, [talentId]: updatedTalent }
+            contracts,
+            talents
           },
           talentAgentRelationships: updatedRelationships,
           rngState: rng.getState()
@@ -121,9 +128,9 @@ export const createTalentContractSlice: StateCreator<GameStore, [], [], TalentCo
       if (accepted) {
           success = true;
           const deal: TalentPact = {
-            id: rng.uuid('PCT'),
+            id: rng.uuid('PCT') as PactId,
             talentId,
-            studioId: 'PLAYER',
+            studioId: 'PLAYER' as StudioId,
             type: 'first_look',
             startDate: state.week,
             endDate: state.week + duration,
@@ -131,10 +138,9 @@ export const createTalentContractSlice: StateCreator<GameStore, [], [], TalentCo
             exclusivity: true,
             status: 'active'
           };
-          const currentDeals = state.deals?.activeDeals || [];
           const newNewsHistory = [...state.industry.newsHistory];
           newNewsHistory.unshift({
-            id: rng.uuid('NWS'),
+            id: rng.uuid('NWS') as NewsId,
             week: state.week,
             type: 'STUDIO_EVENT' as const,
             headline: `${talent.name} signs first-look pact with ${state.studio.name}.`,
@@ -190,9 +196,9 @@ export const createTalentContractSlice: StateCreator<GameStore, [], [], TalentCo
       if (state.finance.cash < premiumFee) return s;
       const rng = new RandomGenerator(state.rngState);
       const deal: TalentPact = {
-        id: rng.uuid('PCT'),
+        id: rng.uuid('PCT') as PactId,
         talentId,
-        studioId: 'PLAYER',
+        studioId: 'PLAYER' as StudioId,
         type: 'first_look',
         startDate: state.week,
         endDate: state.week + 52,
