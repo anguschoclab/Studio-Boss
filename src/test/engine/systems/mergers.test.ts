@@ -1,11 +1,11 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import {
   evaluateAcquisitionTarget,
   executeAcquisition,
   executeSabotage,
   executePoach
 } from '../../../engine/systems/mergers';
-import { GameState, RivalStudio, Talent, Project } from '../../../engine/types';
+import { GameState, RivalStudio, Project } from '../../../engine/types';
 import { RandomGenerator } from '../../../engine/utils/rng';
 import { createMockGameState, createMockRival } from '../../utils/mockFactories';
 
@@ -87,45 +87,48 @@ describe('Mergers and Sabotage System', () => {
           syndicationTier: 'NONE',
           totalEpisodes: 0,
           rightsExpirationWeek: 100
-        } as any
+        } as never
       ];
 
       const impact = executeAcquisition(mockState, mockTarget.id, rng);
+      expect(impact).not.toBeNull();
 
       // Price 30m, but we get target's 5m cash. Net -25m
-      expect(impact!.cashChange).toBe(-25000000);
+      expect(impact?.cashChange).toBe(-25000000);
       
       // Verify Project Transfer
-      expect(impact!.newProjects).toHaveLength(1);
-      expect(impact!.newProjects![0].id).toBe('p-1');
-      expect(impact!.newProjects![0].state).toBe('turnaround'); // Stuck in turnaround
-      expect(impact!.newProjects![0].isAcquired).toBe(true);
+      expect(impact?.newProjects).toHaveLength(1);
+      expect(impact?.newProjects?.[0].id).toBe('p-1');
+      expect(impact?.newProjects?.[0].state).toBe('turnaround'); // Stuck in turnaround
+      expect(impact?.newProjects?.[0].isAcquired).toBe(true);
 
       // Verify IP Transfer
-      expect(impact!.newIPAssets).toHaveLength(1);
-      expect(impact!.newIPAssets![0].id).toBe('ip-1');
-      expect(impact!.newIPAssets![0].rightsOwner).toBe('STUDIO');
+      expect(impact?.newIPAssets).toHaveLength(1);
+      expect(impact?.newIPAssets?.[0].id).toBe('ip-1');
+      expect(impact?.newIPAssets?.[0].rightsOwner).toBe('STUDIO');
 
-      expect(impact!.newHeadlines).toHaveLength(1);
-      const headline = impact!.newHeadlines![0];
-      expect(headline.text).toContain('absorbs Test Indie Studio');
+      expect(impact?.newHeadlines).toHaveLength(1);
+      const headline = impact?.newHeadlines?.[0];
+      expect(headline?.text).toContain('absorbs Test Indie Studio');
     });
   });
 
   describe('executeSabotage', () => {
     it('successfully executes sabotage impact and generates a rumor', () => {
       const impact = executeSabotage(mockState, mockTarget.id, rng);
-      expect(impact!.cashChange).toBe(-1_000_000);
-      expect(impact!.newRumors).toHaveLength(1);
+      expect(impact).not.toBeNull();
+      expect(impact?.cashChange).toBe(-1_000_000);
+      expect(impact?.newRumors).toHaveLength(1);
     });
   });
 
   describe('executePoach', () => {
     it('successfully executes poach impact, stealing strength', () => {
       const impact = executePoach(mockState, mockTarget.id, rng);
-      expect(impact!.cashChange).toBe(-3_000_000);
-      expect(impact!.prestigeChange).toBe(5);
-      expect(impact!.rivalUpdates![0].update.strength).toBe(5); // 10 - 5
+      expect(impact).not.toBeNull();
+      expect(impact?.cashChange).toBe(-3_000_000);
+      expect(impact?.prestigeChange).toBe(5);
+      expect(impact?.rivalUpdates?.[0].update.strength).toBe(5); // 10 - 5
     });
   });
 });

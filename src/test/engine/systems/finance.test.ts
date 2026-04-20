@@ -1,11 +1,11 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { 
   calculateProjectROI, 
   calculateStudioNetWorth, 
   generateWeeklyFinancialReport 
 } from "../../../engine/systems/finance";
 import { tickFinance } from "../../../engine/systems/finance/financeTick";
-import { Project, GameState, Contract } from "../../../engine/types";
+import { Contract } from "../../../engine/types";
 import { RandomGenerator } from "../../../engine/utils/rng";
 
 import { createMockGameState, createMockProject } from "../../utils/mockFactories";

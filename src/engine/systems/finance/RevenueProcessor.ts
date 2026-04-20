@@ -4,12 +4,11 @@ import { IPAsset } from '../../types/state.types';
 import { calculateWeeklyIPRevenue } from '../ip/merchandisingEngine';
 import { getRatingEconomics } from '../ratings';
 import { calculateAudienceIndex } from '../demographics';
-import { StreamingViewershipTracker } from '../production/StreamingViewershipTracker';
-import { RandomGenerator } from '../../utils/rng';
 
 /**
  * RevenueProcessor handles all income-related calculations for the studio.
  */
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class RevenueProcessor {
   /**
    * Calculates total active revenue and recoupment for all studio projects.
@@ -18,7 +17,9 @@ export class RevenueProcessor {
     projects: Project[],
     state: GameState,
     contracts: Contract[],
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     vault: IPAsset[],
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     studioId: string
   ): {
     boxOffice: number;

@@ -2,9 +2,13 @@ import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { createMarketingSlice } from "../../store/slices/marketingSlice";
 
 describe("marketingSlice", () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let store: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let slice: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let set: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let get: any;
 
   beforeEach(() => {
@@ -34,12 +38,14 @@ describe("marketingSlice", () => {
       }
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     set = (fn: any) => {
       const result = typeof fn === 'function' ? fn(store) : fn;
       store = { ...store, ...result };
     };
     get = () => store;
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     slice = createMarketingSlice(set, get, {} as any);
   });
 

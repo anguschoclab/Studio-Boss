@@ -163,7 +163,7 @@ describe('stats system', () => {
   describe('Extreme Edge Cases (Guild Auditor)', () => {
     it('handles negative budget safely by using base multiplier', () => {
       const negativeTier = { ...BUDGET_TIERS.mid, budget: -10_000_000 };
-      const stats = getFilmStats(negativeTier as any);
+      const stats = getFilmStats(negativeTier as never);
       const riskMultiplier = 1.0;
 
       expect(stats.budget).toBe(-10_000_000);
@@ -172,7 +172,7 @@ describe('stats system', () => {
 
     it('handles 0 budget safely', () => {
       const zeroTier = { ...BUDGET_TIERS.low, budget: 0 };
-      const stats = getFilmStats(zeroTier as any);
+      const stats = getFilmStats(zeroTier as never);
       const riskMultiplier = 1.0;
 
       expect(stats.budget).toBe(0);

@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect } from "vitest";
 import { resolveFestivals, submitToFestival } from "../../../engine/systems/festivals";
-import { GameState, Project, FestivalSubmission } from "../../../engine/types";
+import { FestivalSubmission } from "../../../engine/types";
 import { createMockGameState, createMockProject } from "../../utils/mockFactories";
 import { RandomGenerator } from "../../../engine/utils/rng";
 
@@ -10,7 +10,7 @@ describe("festivals system", () => {
   describe("submitToFestival", () => {
     it("deducts cash and records submission", () => {
       const state = createMockGameState({ 
-        finance: { cash: 1_000_000, ledger: [] } as any 
+        finance: { cash: 1_000_000, ledger: [] } as never
       });
       state.entities.projects["p1"] = createMockProject({ id: "p1" });
       
@@ -57,7 +57,7 @@ describe("festivals system", () => {
       expect(impacts.some(i => i.type === 'PROJECT_UPDATED')).toBe(true);
       
       const prestigeImpact = impacts.find(i => i.type === 'PRESTIGE_CHANGED');
-      expect((prestigeImpact as any).payload).toBe(2);
+      expect((prestigeImpact as never).payload).toBe(2);
     });
   });
 });
