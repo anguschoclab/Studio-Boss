@@ -10,6 +10,16 @@ interface ResourceAllocationProps {
   className?: string;
 }
 
+interface AllocationEntry {
+  name: string;
+  fullName: string;
+  weeklyCost: number;
+  state: string;
+  budget: number;
+  accumulated: number;
+  percentUsed: number;
+}
+
 export const ResourceAllocation: React.FC<ResourceAllocationProps> = ({ className }) => {
   const gameState = useGameStore(s => s.gameState);
 
@@ -17,11 +27,11 @@ export const ResourceAllocation: React.FC<ResourceAllocationProps> = ({ classNam
     if (!gameState) {
       return { projects: [], finance: { cash: 0 } };
     }
-    const projects = Object.values(gameState.entities.projects);
-    return { projects, finance: gameState.finance };
+    const projectsArray = Object.values(gameState.entities.projects);
+    return { projects: projectsArray, finance: gameState.finance };
   }, [gameState]);
 
-  const allocationData = useMemo(() => {
+  const allocationData = useMemo<AllocationEntry[]>(() => {
     const activeProjects = projects.filter(p =>
       p.state === 'production' || p.state === 'development' || p.state === 'marketing'
     );
@@ -42,7 +52,7 @@ export const ResourceAllocation: React.FC<ResourceAllocationProps> = ({ classNam
 
   // Group by state for stacked view
   const stateGroups = useMemo(() => {
-    const groups: Record<string, typeof allocationData> = {
+    const groups: Record<string, AllocationEntry[]> = {
       development: [],
       production: [],
       marketing: [],
@@ -126,7 +136,7 @@ export const ResourceAllocation: React.FC<ResourceAllocationProps> = ({ classNam
                 <Tooltip
                   content={({ active, payload }) => {
                     if (active && payload && payload.length) {
-                      const data = payload[0].payload;
+                      const data = payload[0].payload as AllocationEntry;
                       return (
                         <div className="bg-card border border-border p-2 rounded-lg shadow-lg">
                           <p className="text-xs font-bold mb-1">{data.fullName}</p>

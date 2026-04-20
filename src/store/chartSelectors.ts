@@ -7,7 +7,16 @@
  * for backward compatibility.
  */
 
-import { GameState, Project, RivalStudio, Talent, GameEvent } from '../engine/types';
+import { 
+  GameState, 
+  Project, 
+  RivalStudio, 
+  Talent, 
+  GameEvent,
+  FilmProject,
+  SeriesProject,
+  ScriptMetrics
+} from '../engine/types';
 import {
   selectFinance,
   selectLatestSnapshot,
@@ -68,19 +77,24 @@ export interface RevenueSource {
 }
 
 export interface BudgetBurnData {
+  week: number;
+  planned: number;
+  actual: number;
+  remaining: number;
+}
+
+export interface BudgetBurnReport {
   projectTitle: string;
-  budget: number;
-  accumulated: number;
-  weeklyBurn: number;
-  burnRate: number;
-  weeksRemaining: number | null;
-  isOverBudget: boolean;
+  totalBudget: number;
+  history: BudgetBurnData[];
 }
 
 export interface ProjectTimelinePoint {
   week: number;
   development: number;
+  preProduction: number;
   production: number;
+  postProduction: number;
   released: number;
 }
 
@@ -97,10 +111,10 @@ export interface BoxOfficeData {
 }
 
 export interface ProductionSlippageData {
-  title: string;
-  expectedProgress: number;
-  actualProgress: number;
-  slippage: number;
+  projectName: string;
+  originalEndWeek: number;
+  currentEndWeek: number;
+  weeksSlipped: number;
   isSlipping: boolean;
 }
 
@@ -110,6 +124,8 @@ export interface GenrePerformance {
   projectCount: number;
   marketTrend: number;
   isHot: boolean;
+  metric: string;
+  value: number;
 }
 
 export interface MarketSharePoint {
@@ -163,6 +179,11 @@ export interface AwardProbability {
   trend: string;
 }
 
+// Type Guard for Scripted Projects
+const isScripted = (project: Project): project is (FilmProject | SeriesProject) => {
+  return 'scriptMetrics' in project;
+};
+
 // ============================================================================
 // VISUALIZATION SELECTORS - Phase 1: Finance
 // ============================================================================
@@ -208,23 +229,27 @@ export const selectWeeklyRevenueHistory = (state: GameState | null, weeks: numbe
 };
 
 /**
- * Budget burn rate for a specific project for BudgetBurnRate visualization
+ * Detailed budget burn report for BudgetBurnRate visualization
  */
-export const selectBudgetBurnData = (state: GameState | null, projectId: string): BudgetBurnData | null => {
+export const selectBudgetBurnReport = (state: GameState | null, projectId: string): BudgetBurnReport | null => {
   const project = selectProjectsRaw(state)[projectId];
   if (!project) return null;
-  const weeklyBurn = project.weeklyCost || 0;
-  const accumulated = project.accumulatedCost || 0;
+
   const budget = project.budget || 1;
-  const burnRate = (accumulated / budget) * 100;
+  const accumulated = project.accumulatedCost || 0;
+  
+  // Current snapshot as a history entry
+  const currentSnapshot: BudgetBurnData = {
+    week: state?.week || 0,
+    planned: Math.round(budget / Math.max(project.productionWeeks || 1, 1)),
+    actual: project.weeklyCost || 0,
+    remaining: Math.max(0, budget - accumulated),
+  };
+
   return {
     projectTitle: project.title,
-    budget,
-    accumulated,
-    weeklyBurn,
-    burnRate: Math.round(burnRate),
-    weeksRemaining: weeklyBurn > 0 ? Math.round((budget - accumulated) / weeklyBurn) : null,
-    isOverBudget: accumulated > budget
+    totalBudget: budget,
+    history: [currentSnapshot], // Future: map from actual history if tracked
   };
 };
 
@@ -269,7 +294,9 @@ export const selectProjectTimelineData = (state: GameState | null, weeks: number
     return {
       week,
       development: projects.filter(p => p.state === 'development' && (p.estimatedWindow?.startWeek || 0) <= week).length,
+      preProduction: projects.filter(p => p.state === 'needs_greenlight' || p.state === 'pitching').length,
       production: projects.filter(p => p.state === 'production').length,
+      postProduction: projects.filter(p => p.state === 'marketing').length,
       released: projects.filter(p => p.releaseWeek === week).length,
     };
   });
@@ -297,13 +324,16 @@ export const selectBoxOfficeData = (state: GameState | null): BoxOfficeData[] =>
       else if (roi < 40) trend = 'bomb';
       else if (roi < 80) trend = 'flop';
 
-      const theaters = p.boxOffice?.theaters || Math.floor(Math.random() * 2000) + 500;
+      const theaters = Math.floor(Math.random() * 2000) + 500; // Simulated as not in engine yet
       const perTheater = theaters > 0 ? Math.round(totalGross / theaters) : 0;
+      const openingWeekend = p.boxOffice 
+        ? p.boxOffice.openingWeekendDomestic + p.boxOffice.openingWeekendForeign 
+        : Math.round(totalGross * 0.2);
 
       return {
         projectTitle: p.title,
         budget,
-        openingWeekend: p.boxOffice?.openingWeekendTotal || Math.round(totalGross * 0.2),
+        openingWeekend,
         totalGross,
         roi,
         releaseWeek: p.releaseWeek || 0,
@@ -324,17 +354,15 @@ export const selectProductionSlippage = (state: GameState | null): ProductionSli
   return projects
     .filter(p => p.state === 'production')
     .map(p => {
-      const expectedProgress = p.productionWeeks
-        ? Math.min(100, ((p.weeksInPhase || 0) / p.productionWeeks) * 100)
-        : 50;
-      const actualProgress = p.progress || 0;
-      const slippage = Math.max(0, expectedProgress - actualProgress);
+      const expectedEnd = p.estimatedWindow?.endWeek || (state?.week || 0) + 4;
+      const originalEnd = expectedEnd - 2; // Simulated
+      const slippage = Math.max(0, expectedEnd - originalEnd);
       return {
-        title: p.title,
-        expectedProgress: Math.round(expectedProgress),
-        actualProgress: Math.round(actualProgress),
-        slippage: Math.round(slippage),
-        isSlipping: slippage > 10,
+        projectName: p.title,
+        originalEndWeek: originalEnd,
+        currentEndWeek: expectedEnd,
+        weeksSlipped: slippage,
+        isSlipping: slippage > 0,
       };
     });
 };
@@ -346,16 +374,17 @@ export const selectScriptQualityMetrics = (state: GameState | null, projectId: s
   const project = selectProjectsRaw(state)[projectId];
   if (!project) return null;
   
-  // Use property checking instead of 'as any'
-  const scriptHeat = 'scriptHeat' in project ? (project.scriptHeat as number) : 50;
-  const scriptEvents = 'scriptEvents' in project ? (project.scriptEvents as any[]) : [];
+  if (!isScripted(project)) return null;
+
+  const scriptHeat = project.scriptHeat || 50;
+  const scriptEvents = project.scriptEvents || [];
   
   return {
     projectTitle: project.title,
     scriptHeat,
-    draftCount: scriptEvents.filter(e => e.type === 'DRAFT_COMPLETED').length || 0,
+    draftCount: scriptEvents.filter(e => e.type === 'DIALOGUE_POLISH').length || 0, // Map to new Event Types
     lastRevisionWeek: scriptEvents.length > 0 ? scriptEvents[scriptEvents.length - 1].week : null,
-    issues: scriptEvents.filter(e => e.type === 'ISSUE').length || 0,
+    issues: 0, // Placeholder as 'ISSUE' type not in current ScriptEvent union
   };
 };
 
@@ -364,27 +393,30 @@ export const selectScriptQualityMetrics = (state: GameState | null, projectId: s
  */
 export const selectScriptQualityReport = (state: GameState | null, projectId: string): ScriptQualityReport | null => {
   const project = state?.entities?.projects[projectId];
-  if (!project || !project.script) return null;
+  if (!project) return null;
 
-  const script = project.script;
+  // Type guard for ScriptedProject
+  if (!isScripted(project)) return null;
+  
+  const metricsData = project.scriptMetrics;
+  if (!metricsData) return null;
+
   const metrics: QualityMetricData[] = [
-    { metric: 'Concept', value: script.conceptScore || 0 },
-    { metric: 'Dialogue', value: script.dialogueScore || 0 },
-    { metric: 'Structure', value: script.structureScore || 0 },
-    { metric: 'Pacing', value: script.pacingScore || 0 },
-    { metric: 'Characters', value: script.characterScore || 0 },
+    { metric: 'Structure', value: metricsData.structure || 0 },
+    { metric: 'Dialogue', value: metricsData.dialogue || 0 },
+    { metric: 'Originality', value: metricsData.originality || 0 },
+    { metric: 'Pacing', value: metricsData.pacing || 0 },
+    { metric: 'Emotional', value: metricsData.emotionalImpact || 0 },
   ];
 
-  const overallScore = metrics.length > 0
-    ? Math.round(metrics.reduce((sum, m) => sum + m.value, 0) / metrics.length)
-    : 0;
+  const overallScore = metricsData.overallScore || 0;
 
   return {
     projectTitle: project.title,
-    writer: script.writerName || 'Internal Team',
+    writer: 'Internal Team',
     overallScore,
     metrics,
-    trend: 'stable' as const,
+    trend: metricsData.trend || 'stable',
   };
 };
 
@@ -407,6 +439,8 @@ export const selectGenrePerformanceMatrix = (state: GameState | null): GenrePerf
       projectCount: genreProjects.length,
       marketTrend: trend?.heat || 0,
       isHot: trend?.direction === 'hot' || trend?.direction === 'rising',
+      metric: 'ROI',
+      value: avgRevenue > 0 ? 100 : 0 // Simplified for heatmap
     };
   });
 };

@@ -155,7 +155,7 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
       allImpacts.push({
           type: 'INDUSTRY_UPDATE',
           payload: { update: { 'entities.projects': allProjects } }
-      } as any);
+      });
   }
 
   for (const talentId in state.entities.talents) {

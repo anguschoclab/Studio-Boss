@@ -8,6 +8,8 @@ import { useState } from 'react';
 import { Headline } from '@/engine/types';
 import { NewsStoryModal } from './NewsStoryModal';
 
+import { WeekSummary } from '@/engine/types';
+
 export const WeekSummaryModal = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();
   const snapshots = useGameStore(s => s.snapshots);
@@ -15,7 +17,7 @@ export const WeekSummaryModal = () => {
 
   if (!activeModal || activeModal.type !== 'SUMMARY') return null;
 
-  const weekSummary = activeModal.payload as any;
+  const weekSummary = activeModal.payload as WeekSummary;
   const { toWeek, cashBefore, cashAfter, totalRevenue, totalCosts, projectUpdates, newHeadlines, events } = weekSummary;
   const netDelta = cashAfter - cashBefore;
 

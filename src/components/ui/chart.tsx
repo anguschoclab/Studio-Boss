@@ -95,9 +95,6 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
           return `\n${prefix} [data-chart=${safeId}] {\n${rules}\n}\n`;
         })
         .join("\n")
-        // Replace '<' to prevent XSS breakout from <style> tags if rendered as text
-        // (React already escapes this, but we'll apply it to the generated string too,
-        //  just to be safe or to pass the specific test checking for \3C)
         .replace(/</g, "\\3C ")}
     </style>
   );
@@ -176,21 +173,22 @@ const ChartTooltipContent = React.forwardRef<
       >
         {!nestLabel ? tooltipLabel : null}
         <div className="grid gap-1.5">
-          {payload.map((item, index) => {
-            const key = `${nameKey || item.name || item.dataKey || "value"}`;
+          {payload.map((rawItem, index) => {
+            const item = rawItem as RechartsPrimitive.TooltipProps<number, string>["payload"] extends Array<infer T> ? T : any;
+            const key = `${nameKey || item.name || (item.dataKey as string) || "value"}`;
             const itemConfig = getPayloadConfigFromPayload(config, item, key);
-            const indicatorColor = color || item.payload.fill || item.color;
+            const indicatorColor = color || (item.payload as Record<string, any>)?.fill || item.color;
 
             return (
               <div
-                key={item.dataKey}
+                key={item.dataKey as string}
                 className={cn(
                   "flex w-full flex-wrap items-stretch gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5 [&>svg]:text-muted-foreground",
                   indicator === "dot" && "items-center",
                 )}
               >
                 {formatter && item?.value !== undefined && item.name ? (
-                  formatter(item.value, item.name, item, index, item.payload)
+                  formatter(item.value, item.name, item as any, index, item.payload as any)
                 ) : (
                   <>
                     {itemConfig?.icon ? (
@@ -206,8 +204,8 @@ const ChartTooltipContent = React.forwardRef<
                           })}
                           style={
                             {
-                              "--color-bg": indicatorColor,
-                              "--color-border": indicatorColor,
+                              "--color-bg": (indicatorColor || "transparent") as string,
+                              "--color-border": (indicatorColor || "transparent") as string,
                             } as React.CSSProperties
                           }
                         />
@@ -263,7 +261,7 @@ const ChartLegendContent = React.forwardRef<
       className={cn("flex items-center justify-center gap-4", verticalAlign === "top" ? "pb-3" : "pt-3", className)}
     >
       {payload.map((item) => {
-        const key = `${nameKey || item.dataKey || "value"}`;
+        const key = `${nameKey || (item.dataKey as string) || "value"}`;
         const itemConfig = getPayloadConfigFromPayload(config, item, key);
 
         return (
@@ -296,14 +294,17 @@ function getPayloadConfigFromPayload(config: ChartConfig, payload: unknown, key:
     return undefined;
   }
 
-  const payloadObj = payload as Record<string, unknown>;
+  const payloadObj = payload as { 
+    payload?: Record<string, unknown>; 
+    [key: string]: unknown 
+  };
   let configLabelKey: string = key;
 
   if (typeof payloadObj[key] === "string") {
     configLabelKey = payloadObj[key] as string;
   } else if (
+    payloadObj.payload &&
     typeof payloadObj.payload === "object" &&
-    payloadObj.payload !== null &&
     typeof (payloadObj.payload as Record<string, unknown>)[key] === "string"
   ) {
     configLabelKey = (payloadObj.payload as Record<string, unknown>)[key] as string;

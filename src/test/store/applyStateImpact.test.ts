@@ -1,56 +1,22 @@
 import { describe, it, expect } from "vitest";
 import { applyStateImpact } from "../../store/storeUtils";
-import { GameState, Project, StateImpact } from "../../engine/types";
+import { GameState, StateImpact, IndustryUpdateImpact } from "../../engine/types";
+import { createMockGameState, createMockProject } from "../utils/mockFactories";
 
 describe("applyStateImpact utility", () => {
-  const getInitialMockState = (): GameState => ({
-    week: 1,
-    entities: {
-      projects: {
-        "proj-1": {
-          id: "proj-1",
-          title: "Test Project",
-          state: "development",
-          buzz: 50,
-          weeksInPhase: 0,
-          developmentWeeks: 10,
-          productionWeeks: 10,
-          budget: 5000000,
-          budgetTier: 'mid',
-          format: 'film',
-          genre: 'Action',
-          targetAudience: 'General',
-          flavor: 'Test',
-          weeklyCost: 100000,
-          revenue: 0,
-          weeklyRevenue: 0,
-          releaseWeek: null
-        } as Project
-      },
-      contracts: {},
-      talents: {},
-      rivals: {}
-    },
-    studio: {
-      name: "Test Studio",
-      archetype: "major",
-      prestige: 50,
-      internal: {
-        projectHistory: [],
-      }
-    },
-    industry: {
-      newsHistory: [],
-    },
-    market: {
-        opportunities: [],
-        trends: []
-    },
-    finance: {
-        cash: 1000000,
-        ledger: []
-    }
-  } as unknown as GameState);
+  const getInitialMockState = (): GameState => {
+    const state = createMockGameState();
+    const project = createMockProject({
+      id: "proj-1",
+      title: "Test Project",
+      state: "development",
+      buzz: 50
+    });
+    
+    state.entities.projects["proj-1"] = project;
+    state.finance.cash = 1000000;
+    return state;
+  };
 
   it("should update cash correctly", () => {
     const impact: StateImpact = { type: 'FUNDS_CHANGED', payload: { amount: -500000 } };
@@ -81,11 +47,25 @@ describe("applyStateImpact utility", () => {
   it("should add news events", () => {
     const impact: StateImpact = {
       type: 'NEWS_ADDED',
-      payload: { id: "news-1", headline: "Award Won!", description: "Win" }
+      payload: { id: "news-1", headline: "Award Won!", description: "Win", category: 'market' }
     };
     const newState = applyStateImpact(getInitialMockState(), impact);
     expect(newState.industry.newsHistory).toHaveLength(1);
     expect(newState.industry.newsHistory[0].headline).toBe("Award Won!");
     expect(newState.industry.newsHistory[0].id).toBe("news-1");
+  });
+
+  it("should process INDUSTRY_UPDATE impact", () => {
+    const impact: IndustryUpdateImpact = {
+        type: 'INDUSTRY_UPDATE',
+        payload: {
+            projects: [
+                { projectId: 'proj-1', update: { buzz: 99 } }
+            ]
+        }
+    };
+    
+    const newState = applyStateImpact(getInitialMockState(), impact as any as StateImpact);
+    expect(newState.entities.projects['proj-1']?.buzz).toBe(99);
   });
 });

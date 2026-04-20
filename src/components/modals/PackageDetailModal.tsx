@@ -7,9 +7,9 @@ import { Badge } from '@/components/ui/badge';
 import { Package, DollarSign, Star, Users, Calendar, Building2, TrendingUp } from 'lucide-react';
 import { TalentNameLink } from '@/components/shared/TalentNameLink';
 import { formatMoney } from '@/engine/utils';
-import type { Opportunity, Talent } from '@/engine/types';
+import type { Talent } from '@/engine/types';
 
-interface PackageDetailModalProps {
+interface PackageDetailPayload {
   packageId?: string;
 }
 
@@ -19,8 +19,10 @@ export const PackageDetailModal = ({ packageId: propPackageId }: PackageDetailMo
   
   const [bidAmount, setBidAmount] = useState<number>(0);
 
-  const packageId = propPackageId || (activeModal?.payload as any)?.packageId;
-  const packageData = gameState?.market?.opportunities?.find(o => o.id === packageId);
+  const payload = activeModal?.payload as PackageDetailPayload | null;
+  const packageId = (propPackageId || payload?.packageId) as string | undefined;
+  const opportunities = gameState?.market?.opportunities || [];
+  const packageData = packageId ? opportunities.find(o => String(o.id) === packageId) : undefined;
   const packageTalents = (packageData?.attachedTalentIds || [])
     .map(id => gameState?.entities.talents?.[id])
     .filter(Boolean) as Talent[];

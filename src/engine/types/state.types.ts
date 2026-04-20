@@ -204,6 +204,17 @@ export interface ProjectUpdateImpact { type: 'PROJECT_UPDATED'; payload: Project
 export interface TalentUpdateImpact { type: 'TALENT_UPDATED'; payload: TalentUpdate }
 export interface RivalUpdateImpact { type: 'RIVAL_UPDATED'; payload: RivalUpdate }
 export interface OpportunityUpdateImpact { type: 'OPPORTUNITY_UPDATED'; payload: OpportunityUpdate }
+export interface IndustryUpdateImpact { 
+  type: 'INDUSTRY_UPDATE'; 
+  payload: { 
+    update: { 
+      'entities.projects'?: Record<string, Project>; 
+      'entities.talents'?: Record<string, Talent>;
+      'entities.rivals'?: Record<string, RivalStudio>;
+    } 
+  } 
+}
+export interface ScandalAddedImpact { type: 'SCANDAL_ADDED'; payload: { scandal: Scandal } }
 
 export interface AwardImpact {
   type: 'AWARD_WON';
@@ -247,6 +258,8 @@ export type StateImpact =
   | TalentUpdateImpact
   | RivalUpdateImpact
   | OpportunityUpdateImpact
+  | IndustryUpdateImpact
+  | ScandalAddedImpact
   | AwardImpact
   | (BaseImpact & { type?: ImpactType });
 

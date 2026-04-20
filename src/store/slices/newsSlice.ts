@@ -1,6 +1,7 @@
 import { StateCreator } from 'zustand';
 import { NewsEvent, Headline, NewsState } from '@/engine/types';
 import { GameStore } from '../gameStore';
+import { type NewsId } from '@/engine/types/shared.types';
 
 export interface NewsSlice {
   news: NewsState;
@@ -19,7 +20,7 @@ export const createNewsSlice: StateCreator<GameStore, [], [], NewsSlice> = (set,
       
       const newEvent = {
         ...event,
-        id: `ne-${crypto.randomUUID()}`,
+        id: `ne-${crypto.randomUUID()}` as NewsId,
         week: s.gameState.week,
         type: event.type || 'STUDIO_EVENT',
         headline: event.headline || '',
@@ -45,7 +46,7 @@ export const createNewsSlice: StateCreator<GameStore, [], [], NewsSlice> = (set,
       if (!s.gameState) return s;
 
       const newHeadline: Headline = {
-        id: h.id || crypto.randomUUID(),
+        id: (h.id || crypto.randomUUID()) as NewsId,
         week: h.week || s.gameState.week,
         category: h.category || 'general',
         text: h.text || '',

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { GaugeChart } from '@/components/charts/GaugeChart';
 import { Card } from '@/components/ui/card';
 import { tokens } from '@/lib/tokens';
@@ -13,7 +13,7 @@ interface SlippageData {
   originalEndWeek: number;
   currentEndWeek: number;
   weeksSlipped: number;
-  reason: string;
+  isSlipping: boolean;
 }
 
 interface ProductionSlippageIndicatorProps {
@@ -26,10 +26,10 @@ export const ProductionSlippageIndicator: React.FC<ProductionSlippageIndicatorPr
   className,
 }) => {
   const gameState = useGameStore(s => s.gameState);
-  const projects = externalProjects || selectProductionSlippage(gameState);
-  const totalSlipped = projects.length;
+  const data = externalProjects || selectProductionSlippage(gameState);
+  const totalSlipped = data.length;
   const avgSlippage = totalSlipped > 0 
-    ? projects.reduce((sum, p) => sum + p.weeksSlipped, 0) / totalSlipped 
+    ? data.reduce((sum, p) => sum + p.weeksSlipped, 0) / totalSlipped 
     : 0;
   
   // Gauge value: 0 = perfect, 100 = disaster (based on avg slippage)
@@ -96,12 +96,12 @@ export const ProductionSlippageIndicator: React.FC<ProductionSlippageIndicatorPr
       </div>
 
       {/* Top slip reasons */}
-      {projects.length > 0 && (
+      {data.length > 0 && (
         <div className="mt-3 pt-3 border-t border-border/30">
           <p className={cn('text-[10px] font-medium mb-2', tokens.text.caption)}>
             Recent delays:
           </p>
-          {projects.slice(0, 3).map((p, idx) => (
+          {data.slice(0, 3).map((p, idx) => (
             <div key={idx} className="flex items-center justify-between text-[10px] py-1">
               <span className="truncate max-w-[100px]">{p.projectName}</span>
               <span className="text-red-500">+{p.weeksSlipped}w</span>

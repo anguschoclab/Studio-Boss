@@ -6,17 +6,10 @@ import { cn } from '@/lib/utils';
 import { AlertTriangle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useGameStore } from '@/store/gameStore';
-import { selectBudgetBurnData } from '@/store/selectors';
-
-interface BurnRateData {
-  week: number;
-  planned: number;
-  actual: number;
-  remaining: number;
-}
+import { selectBudgetBurnReport, type BudgetBurnData } from '@/store/chartSelectors';
 
 interface BudgetBurnRateProps {
-  data?: BurnRateData[];
+  data?: BudgetBurnData[];
   totalBudget?: number;
   projectId?: string;
   className?: string;
@@ -29,16 +22,20 @@ export const BudgetBurnRate: React.FC<BudgetBurnRateProps> = ({
   className,
 }) => {
   const gameState = useGameStore(s => s.gameState);
-  const selectorData = projectId ? selectBudgetBurnData(gameState, projectId) : null;
-  const data = externalData || selectorData || [];
-  const totalBudget = externalBudget || (selectorData && selectorData[0]?.remaining + selectorData.reduce((sum, d) => sum + d.actual, 0)) || 0;
-  const currentBurn = data[data.length - 1]?.actual || 0;
-  const plannedBurn = data[data.length - 1]?.planned || 0;
+  const selectorReport = projectId ? selectBudgetBurnReport(gameState, projectId) : null;
+  
+  const data = externalData || selectorReport?.history || [];
+  const totalBudget = externalBudget || selectorReport?.totalBudget || 0;
+  
+  const currentEntry = data[data.length - 1];
+  const currentBurn = currentEntry?.actual || 0;
+  const plannedBurn = currentEntry?.planned || 0;
   const variance = currentBurn - plannedBurn;
   const isOverBurn = variance > 0;
+  
   const totalSpent = data.reduce((sum, d) => sum + d.actual, 0);
   const remaining = totalBudget - totalSpent;
-  const percentUsed = (totalSpent / totalBudget) * 100;
+  const percentUsed = totalBudget > 0 ? (totalSpent / totalBudget) * 100 : 0;
 
   const formatCurrency = (value: number) => {
     if (Math.abs(value) >= 1000000) return `$${(value / 1000000).toFixed(1)}M`;
@@ -63,7 +60,7 @@ export const BudgetBurnRate: React.FC<BudgetBurnRateProps> = ({
         </div>
         <div className="flex items-center gap-2">
           {isOverBurn && (
-            <Badge className="text-[9px] bg-red-500/20 text-red-500">
+            <Badge className="text-[9px] bg-red-500/20 text-red-500 border-none">
               <AlertTriangle className="h-3 w-3 mr-1" />
               Over burn
             </Badge>

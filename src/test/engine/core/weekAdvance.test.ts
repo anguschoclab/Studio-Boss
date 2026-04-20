@@ -1,44 +1,22 @@
 import { describe, it, expect } from 'vitest';
-import { GameState, Talent } from '@/engine/types';
 import { advanceWeek } from '@/engine/core/weekAdvance';
 import { RandomGenerator } from '@/engine/utils/rng';
+import { createMockGameState } from '../../utils/mockFactories';
 
 describe('Week Advance Pipeline (Target A4)', () => {
-  const mockState = {
+  const mockState = createMockGameState({
     week: 1,
-    gameSeed: 1,
-    tickCount: 0,
-    game: { currentWeek: 1 },
-    entities: {
-      projects: {},
-      talents: {},
-      contracts: {},
-      rivals: {}
-    },
-    finance: { cash: 1_000_000, ledger: [], weeklyHistory: [], marketState: { baseRate: 0.05, savingsYield: 0.02, debtRate: 0.1, loanRate: 0.08, rateHistory: [], sentiment: 50, cycle: 'STABLE' } },
-    news: { headlines: [] },
-    ip: { vault: [], franchises: {} },
     studio: {
+      id: 'player-studio',
       name: 'Player Studio',
       archetype: 'major',
       prestige: 50,
       ownedPlatforms: [],
-      internal: { projectHistory: [] }
+      internal: { projectHistory: [] },
+      snapshotHistory: [],
+      activeCampaigns: {},
     },
-    market: { opportunities: [], buyers: [] },
-    industry: {
-      rivals: [],
-      families: [],
-      agencies: [],
-      agents: [],
-      talentPool: {} as Record<string, Talent>,
-      newsHistory: [],
-    },
-    culture: { genrePopularity: {} },
-    deals: { activeDeals: [], pendingOffers: [], expiredDeals: [] },
-    history: [],
-    eventHistory: []
-  } as unknown as GameState;
+  });
 
   it('should process the week and return a summarized result', () => {
     const rng = new RandomGenerator(mockState.gameSeed);
@@ -54,33 +32,19 @@ describe('Week Advance Pipeline (Target A4)', () => {
 
   describe('Edge Cases', () => {
     it('advances weeks safely with an empty pipeline', () => {
-      const emptyState = {
+      const emptyState = createMockGameState({
         week: 1,
-        tickCount: 0,
-        gameSeed: 123,
-        entities: {
-          projects: {},
-          talents: {},
-          contracts: {},
-          rivals: {}
+        studio: {
+          id: 'empty-studio',
+          name: 'Empty',
+          prestige: 50,
+          archetype: 'indie',
+          ownedPlatforms: [],
+          internal: { projectHistory: [] },
+          snapshotHistory: [],
+          activeCampaigns: {},
         },
-        finance: { 
-          cash: 1000000, 
-          ledger: [], 
-          weeklyHistory: [],
-          marketState: { baseRate: 0.05, savingsYield: 0.02, debtRate: 0.1, loanRate: 0.08, rateHistory: [], sentiment: 50, cycle: 'STABLE' }
-        },
-        studio: { name: 'Empty', prestige: 50, archetype: 'indie', ownedPlatforms: [], internal: { projectHistory: [] } },
-        deals: { activeDeals: [], pendingOffers: [], expiredDeals: [] },
-        market: { opportunities: [], buyers: [] },
-        industry: { rivals: [], talentPool: {}, newsHistory: [], families: [], agencies: [], agents: [] },
-        ip: { vault: [], franchises: {} },
-        news: { headlines: [] },
-        game: { currentWeek: 1 },
-        culture: { genrePopularity: {} },
-        history: [],
-        eventHistory: []
-      } as any;
+      });
 
       const localRng = new RandomGenerator(123);
       const { newState, summary } = advanceWeek(emptyState, localRng);

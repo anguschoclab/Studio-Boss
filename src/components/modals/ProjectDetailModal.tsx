@@ -3,12 +3,10 @@ import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { formatMoney } from '@/engine/utils';
 import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
-import { evaluateGreenlight } from '@/engine/systems/greenlight';
-import { FESTIVALS } from '@/engine/systems/festivals';
-import { RandomGenerator } from '@/engine/utils/rng';
-import { AwardBody, Talent, ScriptedProject, SeriesProject } from '@/engine/types';
+import { GreenlightReport, evaluateGreenlight } from '@/engine/systems/greenlight';
+import { Talent, ScriptedProject } from '@/engine/types';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select } from '@radix-ui/react-select';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -18,28 +16,13 @@ import {
   Users, 
   Clapperboard, 
   Trophy, 
-  TrendingUp, 
-  DollarSign, 
-  Calendar,
-  AlertCircle,
-  Megaphone,
-  ShieldAlert,
-  Brain,
-  Type,
   Activity,
-  Package,
-  CheckCircle2
+  Type,
+  CheckCircle2,
+  ShieldAlert,
+  AlertCircle,
+  Megaphone
 } from 'lucide-react';
-import { 
-  AreaChart, 
-  Area, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  ResponsiveContainer 
-} from 'recharts';
-import { cn } from '@/lib/utils';
 import { DevelopmentLog } from './DevelopmentLog';
 import { TalentAttachmentPanel } from '../talent/TalentAttachmentPanel';
 import { ProjectOverviewTab } from './tabs/ProjectOverviewTab';
@@ -69,10 +52,10 @@ export const ProjectDetailModal = () => {
     project && project.format !== 'unscripted' ? project as ScriptedProject : null
   ), [project]);
   const seriesProject = useMemo(() => (
-    project && project.type === 'SERIES' && 'tvDetails' in project ? project as SeriesProject : null
+    project && project.type === 'SERIES' && 'tvDetails' in project ? project : null
   ), [project]);
 
-  const greenlightReport = useMemo(() => {
+  const greenlightReport = useMemo<GreenlightReport | null>(() => {
     if (!project || project.state !== 'needs_greenlight' || !gameState) return null;
     const projectContracts = contracts.filter(c => c.projectId === project.id);
     const attachedTalent = projectContracts.reduce((acc, c) => {
@@ -263,7 +246,10 @@ export const ProjectDetailModal = () => {
                          <div className="pt-6 border-t border-white/5">
                             <Button 
                               className="w-full h-14 bg-primary text-black hover:bg-primary/90 font-black text-sm uppercase tracking-[0.2em] rounded-xl shadow-2xl" 
-                              onClick={() => { greenlightProject(project.id); selectProject(null); }}
+                              onClick={() => { 
+                                void greenlightProject(project.id); 
+                                selectProject(null); 
+                              }}
                             >
                               Execute Authorization & Release Budgets
                             </Button>

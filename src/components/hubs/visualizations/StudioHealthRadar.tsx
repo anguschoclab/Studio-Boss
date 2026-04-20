@@ -6,17 +6,13 @@ import { cn } from '@/lib/utils';
 import { useGameStore } from '@/store/gameStore';
 import { selectStudioHealthMetrics } from '@/store/selectors';
 
-interface StudioHealthMetrics {
-  metric: string;
-  score: number; // 0-100
-  fullMark?: number;
-}
+import { StudioHealthMetric } from '@/store/chartSelectors';
 
 interface StudioHealthRadarProps {
-  metrics?: StudioHealthMetrics[];
+  metrics?: StudioHealthMetric[];
   className?: string;
   showComparison?: boolean;
-  previousMetrics?: StudioHealthMetrics[];
+  previousMetrics?: StudioHealthMetric[];
 }
 
 export const StudioHealthRadar: React.FC<StudioHealthRadarProps> = ({

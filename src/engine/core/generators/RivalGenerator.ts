@@ -4,7 +4,8 @@ import { BrandSystem } from '../../generators/BrandSystem';
 import { generateMotto, generateProjectName } from '../../generators/names';
 import { RandomGenerator } from '../../utils/rng';
 import { ALL_GENRES } from '../../systems/trends';
-import { StudioMotivation, TalentPact, Contract } from '@/engine/types';
+import { StudioMotivation, TalentPact, Contract, Project } from '@/engine/types';
+import { type ProjectId, type StudioId, type PactId, type TalentId, type ContractId } from '@/engine/types/shared.types';
 
 interface RivalGeneratorOptions {
   count?: number;
@@ -36,20 +37,20 @@ export function generateRivals(
 
     const motivations: StudioMotivation[] = ['CASH_CRUNCH', 'AWARD_CHASE', 'FRANCHISE_BUILDING', 'MARKET_DISRUPTION', 'STABILITY'];
 
-    const rProjects: Record<string, import('@/engine/types').Project> = {};
+    const rProjects: Record<ProjectId, Project> = {};
     const projCount = rng.rangeInt(2, 5);
     for (let i = 0; i < projCount; i++) {
-      const pId = rng.uuid('PRJ');
+      const pId = rng.uuid<ProjectId>('PRJ');
       const isProd = rng.next() < 0.5;
       const isTv = rng.next() < 0.3;
       const genre = rng.pick(ALL_GENRES);
-      const format = isTv ? 'tv' : 'film';
+      const hostFormat = isTv ? 'tv' : 'film';
 
-      const project: any = { // Temporary partial to satisfy Project union
+      const project: Project = { 
         id: pId,
-        title: generateProjectName(format, genre, rng),
+        title: generateProjectName(hostFormat, genre, rng),
         type: isTv ? 'SERIES' : 'FILM',
-        format,
+        format: hostFormat,
         genre,
         budgetTier: 'indie', // default
         budget: rng.rangeInt(10, 150) * 1_000_000,
@@ -70,11 +71,11 @@ export function generateRivals(
         momentum: 50,
         ownerId: '', // set later
         reviewScore: 50
-      };
+      } as Project;
 
       if (isTv) {
-        project.tvFormat = 'Scripted';
-        project.tvDetails = {
+        (project as any).tvFormat = 'Scripted';
+        (project as any).tvDetails = {
           currentSeason: 1,
           episodesOrdered: 10,
           episodesCompleted: 0,
@@ -82,19 +83,19 @@ export function generateRivals(
           averageRating: 0,
           status: 'IN_DEVELOPMENT'
         };
-        project.activeRoles = [];
-        project.scriptEvents = [];
+        (project as any).activeRoles = [];
+        (project as any).scriptEvents = [];
       } else {
-        project.activeRoles = [];
-        project.scriptEvents = [];
+        (project as any).activeRoles = [];
+        (project as any).scriptEvents = [];
       }
 
-      rProjects[pId] = project as import('@/engine/types').Project;
+      rProjects[pId] = project;
     }
 
-    const rivalId = rng.uuid('RIV');
+    const rivalId = rng.uuid<StudioId>('RIV');
     // Set ownerId for projects
-    Object.values(rProjects).forEach(p => { p.ownerId = rivalId; });
+    Object.values(rProjects).forEach(p => { (p as any).ownerId = rivalId; });
 
     return {
       id: rivalId,
@@ -110,10 +111,10 @@ export function generateRivals(
       projectCount: projCount,
       motivationProfile,
       currentMotivation: rng.pick(motivations),
-      projects: rProjects,
+      projects: rProjects as any, // Dictionary needs to match structure
       contracts: [],
       ownedPlatforms: [],
-      projectIds: Object.keys(rProjects),
+      projectIds: Object.keys(rProjects) as ProjectId[],
       contractIds: [],
       ipAssetIds: [],
       archetypeId: rArchData.id || rArch
@@ -144,9 +145,9 @@ export function assignInitialPactsToRivals(
 
       if (topTalent) {
         const pact: TalentPact = {
-          id: rng.uuid('PCT'),
-          talentId: topTalent.id,
-          studioId: rival.id,
+          id: rng.uuid<PactId>('PCT'),
+          talentId: topTalent.id as TalentId,
+          studioId: rival.id as StudioId,
           type: 'first_look',
           exclusivity: true,
           weeklyOverhead: topTalent.fee * 0.05,

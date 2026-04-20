@@ -18,6 +18,8 @@ import {
   PremiumPlatform,
   NetworkPlatform,
   ProjectBase,
+  ProjectType,
+  ScriptMetrics,
 } from '@/engine/types';
 
 export const createMockTalent = (overrides: Partial<Talent> = {}): Talent => ({
@@ -76,34 +78,43 @@ export const createMockProject = (overrides: Partial<Project> = {}): Project => 
     industryNarrativeScore: 0
   };
 
-  const baseProperties: Omit<ProjectBase, 'type' | 'format'> = {
+  const baseProperties: ProjectBase = {
     id,
     title,
-    genre: 'Drama',
-    budgetTier: 'mid',
-    budget: 10000000,
-    weeklyCost: 250000,
-    targetAudience: 'General',
-    flavor: 'A mock project.',
-    state: 'development',
-    buzz: 50,
-    weeksInPhase: 0,
-    developmentWeeks: 10,
-    productionWeeks: 20,
-    revenue: 0,
-    weeklyRevenue: 0,
-    releaseWeek: null,
-    activeCrisis: null,
-    momentum: 50,
-    quality: 50,
-    scriptHeat: 50,
-    progress: 0,
-    accumulatedCost: 0,
-    ownerId: 'player',
-    awards: [],
-    reception: commonReception,
-    awardsProfile: commonAwardsProfile,
-    ...overrides as any // Temporarily keep as any for the spread of Partial<Project> into Omit<ProjectBase>
+    type: (type as ProjectType), // Discriminated later
+    format: 'film', // Default, overwritten by subtypes
+    genre: overrides.genre || 'Drama',
+    budgetTier: overrides.budgetTier || 'mid',
+    budget: overrides.budget || 10000000,
+    weeklyCost: overrides.weeklyCost || 250000,
+    targetAudience: overrides.targetAudience || 'General',
+    flavor: overrides.flavor || 'A mock project.',
+    state: overrides.state || 'development',
+    buzz: overrides.buzz || 50,
+    weeksInPhase: overrides.weeksInPhase || 0,
+    developmentWeeks: overrides.developmentWeeks || 10,
+    productionWeeks: overrides.productionWeeks || 20,
+    revenue: overrides.revenue || 0,
+    weeklyRevenue: overrides.weeklyRevenue || 0,
+    releaseWeek: overrides.releaseWeek !== undefined ? overrides.releaseWeek : null,
+    activeCrisis: overrides.activeCrisis !== undefined ? overrides.activeCrisis : null,
+    momentum: overrides.momentum || 50,
+    quality: overrides.quality || 50,
+    scriptHeat: overrides.scriptHeat || 50,
+    progress: overrides.progress || 0,
+    accumulatedCost: overrides.accumulatedCost || 0,
+    ownerId: overrides.ownerId || 'player',
+    reviewScore: overrides.reviewScore || 50,
+    buzz: overrides.buzz || 50,
+    genre: overrides.genre || 'Drama',
+    budgetTier: overrides.budgetTier || 'mid',
+    budget: overrides.budget || 10000000,
+    targetAudience: overrides.targetAudience || 'General',
+    state: overrides.state || 'development',
+    awards: overrides.awards || [],
+    reception: overrides.reception || commonReception,
+    awardsProfile: overrides.awardsProfile || commonAwardsProfile,
+    ...overrides
   };
 
   if (type === 'SERIES') {
@@ -111,7 +122,7 @@ export const createMockProject = (overrides: Partial<Project> = {}): Project => 
     const series: SeriesProject = {
       ...baseProperties,
       type: 'SERIES',
-      format: 'tv',
+      format: seriesOverrides.format || 'tv',
       activeRoles: seriesOverrides.activeRoles || [],
       scriptEvents: seriesOverrides.scriptEvents || [],
       tvDetails: {
@@ -285,13 +296,12 @@ export const createMockBuyer = (overrides: Partial<Buyer> = {}): Buyer => {
     const streamer: StreamerPlatform = {
       ...baseDefaults,
       archetype: 'streamer',
-      subscribers: 1000000,
-      churnRate: 0.05,
-      contentLibraryQuality: 50,
-      marketingSpend: 10000,
-      subscriberHistory: [],
-      activeLicenses: [],
-      ...streamerOverrides
+      subscribers: streamerOverrides.subscribers || 1000000,
+      churnRate: streamerOverrides.churnRate || 0.05,
+      contentLibraryQuality: streamerOverrides.contentLibraryQuality || 50,
+      marketingSpend: streamerOverrides.marketingSpend || 10000,
+      subscriberHistory: streamerOverrides.subscriberHistory || [],
+      activeLicenses: streamerOverrides.activeLicenses || [],
     };
     return streamer;
   }
@@ -301,8 +311,7 @@ export const createMockBuyer = (overrides: Partial<Buyer> = {}): Buyer => {
     const premium: PremiumPlatform = {
       ...baseDefaults,
       archetype: 'premium',
-      prestigeBonus: 20,
-      ...premiumOverrides
+      prestigeBonus: premiumOverrides.prestigeBonus || 20,
     };
     return premium;
   }
@@ -311,7 +320,6 @@ export const createMockBuyer = (overrides: Partial<Buyer> = {}): Buyer => {
   const network: NetworkPlatform = {
     ...baseDefaults,
     archetype: 'network',
-    ...networkOverrides
   };
   return network;
 };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { StackedBarChart } from '@/components/charts/StackedBarChart';
 import { Card } from '@/components/ui/card';
 import { tokens } from '@/lib/tokens';
@@ -8,12 +8,12 @@ import { useGameStore } from '@/store/gameStore';
 import { selectProjectTimelineData } from '@/store/selectors';
 
 interface TimelineData {
-  week: string;
+  week: number;
   development: number;
   preProduction: number;
   production: number;
   postProduction: number;
-  release: number;
+  released: number;
 }
 
 interface ProjectTimelineProps {
@@ -38,18 +38,20 @@ export const ProjectTimeline: React.FC<ProjectTimelineProps> = ({
   ];
 
   const totalProjects = data.reduce((sum, d) => 
-    sum + d.development + d.preProduction + d.production + d.postProduction + d.release, 0
+    sum + d.development + d.preProduction + d.production + d.postProduction + d.released, 0
   );
 
-  // Transform data to include label property
-  const chartData = data.map(d => ({
-    label: d.week,
-    development: d.development,
-    preProduction: d.preProduction,
-    production: d.production,
-    postProduction: d.postProduction,
-    release: d.release,
-  }));
+  // Transform data to ensure string weeks for Recharts
+  const chartData = useMemo(() => {
+    return data.map(d => ({
+      label: String(d.week),
+      development: d.development,
+      preProduction: d.preProduction,
+      production: d.production,
+      postProduction: d.postProduction,
+      release: d.released,
+    }));
+  }, [data]);
 
   return (
     <Card className={cn('p-4', tokens.border.default, className)}>
