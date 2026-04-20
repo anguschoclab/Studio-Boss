@@ -1,0 +1,3 @@
+## 2024-04-20 - Adding explicit types to buttons
+**Learning:** Found several buttons in `FranchiseHub` that did not specify a `type` attribute. Relying on default button types can cause issues such as accidental form submissions when inside `<form>` elements. In addition, interactive buttons lacked standard keyboard focus indicators using Tailwind CSS (`focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2`).
+**Action:** When creating new components that contain buttons, always ensure to explicitly set `type="button"` unless they are intended to submit forms, and always include `focus-visible` classes to ensure full keyboard navigation support.
