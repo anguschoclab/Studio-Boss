@@ -25,18 +25,18 @@ export function generatePlayerProjects(
     const genre = rng.pick(ALL_GENRES);
     const format = rng.next() < 0.3 ? 'tv' : 'film';
     
-    const project: Project = { 
+    const projectBase = {
       id: pId,
       title: generateProjectName(format, genre, rng),
-      type: format === 'tv' ? 'SERIES' : 'FILM',
-      format,
+      type: (format === 'tv' ? 'SERIES' : 'FILM') as ProjectType,
+      format: format as ProjectFormat,
       genre,
-      budgetTier: archetype === 'major' ? 'high' : 'mid',
+      budgetTier: (archetype === 'major' ? 'high' : 'mid') as BudgetTierKey,
       budget: (archetype === 'major' ? 100 : 40) * 1_000_000,
       weeklyCost: 0,
       targetAudience: 'four_quadrant',
       flavor: 'Standard',
-      state: 'production',
+      state: 'production' as ProjectStatus,
       weeksInPhase: rng.rangeInt(1, 4),
       productionWeeks: rng.rangeInt(12, 20),
       developmentWeeks: rng.rangeInt(4, 8),
@@ -49,24 +49,33 @@ export function generatePlayerProjects(
       buzz: 40,
       momentum: 50,
       ownerId: playerStudioId,
-      reviewScore: 0
-    } as Project;
+      reviewScore: 0,
+      releaseWeek: null,
+      activeCrisis: null,
+      activeRoles: [],
+      scriptEvents: []
+    };
 
+    let project: Project;
     if (format === 'tv') {
-      (project as any).tvFormat = 'Scripted';
-      (project as any).tvDetails = {
-        currentSeason: 1,
-        episodesOrdered: 10,
-        episodesCompleted: 0,
-        episodesAired: 0,
-        averageRating: 0,
-        status: 'IN_PRODUCTION'
-      };
-      (project as any).activeRoles = [];
-      (project as any).scriptEvents = [];
+      project = {
+        ...projectBase,
+        type: 'SERIES',
+        tvFormat: 'Scripted',
+        tvDetails: {
+          currentSeason: 1,
+          episodesOrdered: 10,
+          episodesCompleted: 0,
+          episodesAired: 0,
+          averageRating: 0,
+          status: 'IN_PRODUCTION'
+        }
+      } as SeriesProject;
     } else {
-      (project as any).activeRoles = [];
-      (project as any).scriptEvents = [];
+      project = {
+        ...projectBase,
+        type: 'FILM'
+      } as FilmProject;
     }
 
     playerProjects[pId] = project;

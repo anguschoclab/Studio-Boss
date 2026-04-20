@@ -6,16 +6,16 @@ import { GameState, StateImpact, Franchise } from '@/engine/types';
  */
 
 export function handleIndustryUpdate(state: GameState, impact: StateImpact): GameState {
-  const payload = impact.payload as any; // Using any for transition, but internal logic is guarded
+  const payload = impact.payload as Record<string, any>; 
   if (!payload || typeof payload !== 'object') return state;
   let nextState = { ...state };
   
   // 1. Batch Project Updates
   if (Array.isArray(payload.projects)) {
     const nextProjects = { ...nextState.entities.projects };
-    payload.projects.forEach((u: { projectId: string; update: any }) => {
+    payload.projects.forEach((u: { projectId: import('@/engine/shared.types').ProjectId; update: Partial<import('@/engine/types').Project> }) => {
       if (nextProjects[u.projectId]) {
-        nextProjects[u.projectId] = { ...nextProjects[u.projectId], ...u.update };
+        nextProjects[u.projectId] = { ...nextProjects[u.projectId], ...u.update } as import('@/engine/types').Project;
       }
     });
     nextState = { ...nextState, entities: { ...nextState.entities, projects: nextProjects } };
@@ -24,7 +24,7 @@ export function handleIndustryUpdate(state: GameState, impact: StateImpact): Gam
   // 2. Batch Rival Updates
   if (Array.isArray(payload.rivals)) {
     const nextRivals = { ...nextState.entities.rivals };
-    payload.rivals.forEach((u: { rivalId: string; update: any }) => {
+    payload.rivals.forEach((u: { rivalId: import('@/engine/shared.types').StudioId; update: Partial<import('@/engine/types').RivalStudio> }) => {
       if (nextRivals[u.rivalId]) {
         nextRivals[u.rivalId] = { ...nextRivals[u.rivalId], ...u.update };
       }
@@ -35,7 +35,7 @@ export function handleIndustryUpdate(state: GameState, impact: StateImpact): Gam
   // 3. Batch Talent Updates
   if (Array.isArray(payload.talents)) {
     const nextTalents = { ...nextState.entities.talents };
-    payload.talents.forEach((u: { talentId: string; update: any }) => {
+    payload.talents.forEach((u: { talentId: import('@/engine/shared.types').TalentId; update: Partial<import('@/engine/types').Talent> }) => {
       if (nextTalents[u.talentId]) {
         nextTalents[u.talentId] = { ...nextTalents[u.talentId], ...u.update };
       }
@@ -43,16 +43,15 @@ export function handleIndustryUpdate(state: GameState, impact: StateImpact): Gam
     nextState = { ...nextState, entities: { ...nextState.entities, talents: nextTalents } };
   }
 
-  // 4. Legacy Generic Deep-Path Updates
+  // 4. Generic Deep-Path Updates (for dynamic events)
   const update = payload.update;
   if (update && typeof update === 'object' && !Array.isArray(update)) {
     for (const [path, value] of Object.entries(update)) {
       const parts = path.split('.');
-      let current: Record<string, any> = nextState as any;
+      let current: any = nextState;
 
       for (let i = 0; i < parts.length - 1; i++) {
         const part = parts[i];
-        
         if (part === '__proto__' || part === 'constructor' || part === 'prototype') break;
 
         if (Array.isArray(current[part])) {
@@ -62,7 +61,6 @@ export function handleIndustryUpdate(state: GameState, impact: StateImpact): Gam
         } else {
           current[part] = {};
         }
-        
         current = current[part];
       }
 
@@ -74,13 +72,11 @@ export function handleIndustryUpdate(state: GameState, impact: StateImpact): Gam
   }
 
   // Merger Logic
-  const industryPayload = payload as { mergedRivalId?: string; acquirerId?: string };
-  const { mergedRivalId, acquirerId } = industryPayload;
+  const { mergedRivalId, acquirerId } = payload as { mergedRivalId?: string; acquirerId?: string };
   if (mergedRivalId && acquirerId) {
     const target = state.entities.rivals[mergedRivalId];
     if (target) {
       if (acquirerId === 'player') {
-        const mergedProjects = { ...nextState.entities.projects };
         const mergedVault = nextState.ip.vault.map(asset => {
           if (asset.ownerStudioId === mergedRivalId) {
             return { ...asset, rightsOwner: 'STUDIO' as const, ownerStudioId: undefined };
@@ -90,10 +86,6 @@ export function handleIndustryUpdate(state: GameState, impact: StateImpact): Gam
 
         nextState = {
           ...nextState,
-          entities: {
-            ...nextState.entities,
-            projects: mergedProjects
-          },
           ip: { ...nextState.ip, vault: mergedVault }
         };
       } else {
@@ -109,18 +101,15 @@ export function handleIndustryUpdate(state: GameState, impact: StateImpact): Gam
 
         const mergedVault = nextState.ip.vault.map(asset => {
           if (asset.ownerStudioId === mergedRivalId) {
-            return { ...asset, rightsOwner: 'RIVAL' as const, ownerStudioId: acquirerId };
+            return { ...asset, rightsOwner: 'RIVAL' as const, ownerStudioId: acquirerId as import('@/engine/shared.types').StudioId };
           }
           return asset;
         });
-
-        const mergedProjects = { ...nextState.entities.projects };
 
         nextState = { 
             ...nextState, 
             entities: {
               ...nextState.entities,
-              projects: mergedProjects,
               rivals
             },
             ip: { ...nextState.ip, vault: mergedVault }
@@ -129,19 +118,12 @@ export function handleIndustryUpdate(state: GameState, impact: StateImpact): Gam
 
       const rivals = { ...nextState.entities.rivals };
       delete rivals[mergedRivalId];
-      nextState = {
-        ...nextState,
-        entities: {
-          ...nextState.entities,
-          rivals
-        }
-      };
+      nextState = { ...nextState, entities: { ...nextState.entities, rivals } };
     }
   }
 
-  const marketPayload = payload as Record<string, any>;
-  if (marketPayload['market.opportunities']) {
-    nextState = { ...nextState, market: { ...nextState.market, opportunities: marketPayload['market.opportunities'] } };
+  if (payload['market.opportunities']) {
+    nextState = { ...nextState, market: { ...nextState.market, opportunities: payload['market.opportunities'] } };
   }
 
   return nextState;

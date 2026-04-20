@@ -61,6 +61,8 @@ export interface WeekSummary {
   newHeadlines: Headline[];
   events: string[];
   newsEvents?: NewsEvent[];
+  totalBailouts?: number; // artificial studio rescues
+  retiredCount?: number;   // count of talent who retired this week
 }
 
 export interface FinanceRecord {

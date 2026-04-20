@@ -35,10 +35,10 @@ export class MetricsCollector {
   
   public record(state: GameState, summary: WeekSummary): void {
     const rivalsList = Object.values(state.entities.rivals || {});
-    const platforms = state.market.buyers.filter(b => b.archetype === 'streamer') as any[];
+    const platforms = state.market.buyers.filter(b => b.archetype === 'streamer') as import('@/engine/types').StreamerPlatform[];
     
     // Total bails tracking (Phase 2 hardening)
-    const currentBailouts = (summary as any).totalBailouts || 0;
+    const currentBailouts = summary.totalBailouts || 0;
     this.totalBailoutCash += currentBailouts;
     
     const rivalTotalCash = rivalsList.reduce((sum, r) => sum + (Number(r.cash) || 0), 0);
@@ -46,7 +46,7 @@ export class MetricsCollector {
     const playerCash = Number(state.finance.cash) || 0;
     
     // Increment total retirements
-    this.totalRetired += (summary as any).retiredCount || 0;
+    this.totalRetired += summary.retiredCount || 0;
 
     // Track total completed & Genre ROI
     let worldCompletedCount = 0;
@@ -131,7 +131,9 @@ export class MetricsCollector {
     allStudios.forEach(studio => {
         studio.projects.forEach(p => {
             const formatMatch = (p.format || '').toLowerCase();
-            const nProfile = (p as any).nielsenProfile;
+            const isSeries = p.type === 'SERIES';
+            const nProfile = isSeries ? (p as import('@/engine/types').SeriesProject).nielsenProfile : undefined;
+            
             if ((formatMatch === 'tv' || formatMatch === 'series') && nProfile) {
                 totalNielsenDemo += Number(nProfile.seasonAvgKeyDemo) || 0;
                 tvProjectCount++;
