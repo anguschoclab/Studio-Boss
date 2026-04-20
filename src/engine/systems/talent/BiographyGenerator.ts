@@ -109,6 +109,7 @@ function generateCareerSummary(talent: Talent, state: GameState): string {
   // Star meter/prestige
   const starMeter = talent.starMeter || 50;
   const prestige = talent.prestige || 50;
+  void prestige;
 
   if (starMeter > 80) {
     parts.push(`Currently at the peak of their fame with a Star Meter of ${starMeter}, they are one of the most sought-after talents in the industry.`);
