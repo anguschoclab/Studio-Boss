@@ -7,7 +7,7 @@ import {
 } from '../../../engine/systems/mergers';
 import { GameState, RivalStudio, Talent, Project } from '../../../engine/types';
 import { RandomGenerator } from '../../../engine/utils/rng';
-import { createMockGameState } from '../../utils/mockFactories';
+import { createMockGameState, createMockRival } from '../../utils/mockFactories';
 
 describe('Mergers and Sabotage System', () => {
   let mockState: GameState;

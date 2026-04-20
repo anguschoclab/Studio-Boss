@@ -37,7 +37,11 @@ describe('Week Advance Pipeline (Target A4)', () => {
     culture: { genrePopularity: {} },
     deals: { activeDeals: [], pendingOffers: [], expiredDeals: [] },
     history: [],
-    eventHistory: []
+    eventHistory: [],
+    relationships: {
+      cliques: [],
+      discovery: { hiddenTalentPool: {}, generationTicks: 0 }
+    }
   } as unknown as GameState;
 
   it('should process the week and return a summarized result', () => {
@@ -79,7 +83,8 @@ describe('Week Advance Pipeline (Target A4)', () => {
         game: { currentWeek: 1 },
         culture: { genrePopularity: {} },
         history: [],
-        eventHistory: []
+        eventHistory: [],
+        relationships: { discovery: { hiddenTalentPool: {}, generationTicks: 0 } }
       } as any;
 
       const localRng = new RandomGenerator(123);

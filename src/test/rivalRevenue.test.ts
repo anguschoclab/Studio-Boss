@@ -58,8 +58,9 @@ describe('RivalRevenueCalculator', () => {
       }
     };
     
+    const state = { entities: { projects: rival.projects } };
     const revenue = RivalRevenueCalculator.calculateWeeklyRevenue(
-      rival as RivalStudio, 2, { next: () => 0.5, rangeInt: () => 10, uuid: () => 'id' } as any
+      rival as RivalStudio, 2, { next: () => 0.5, rangeInt: () => 10, uuid: () => 'id' } as any, state as any
     );
     
     expect(revenue.boxOffice).toBeGreaterThan(0);
@@ -79,8 +80,9 @@ describe('RivalRevenueCalculator', () => {
       }
     };
     
+    const state = { entities: { projects: rival.projects } };
     const revenue = RivalRevenueCalculator.calculateWeeklyRevenue(
-      rival as RivalStudio, 1, { next: () => 0.5, rangeInt: () => 10, uuid: () => 'id' } as any
+      rival as RivalStudio, 1, { next: () => 0.5, rangeInt: () => 10, uuid: () => 'id' } as any, state as any
     );
     
     expect(revenue.streaming).toBeGreaterThan(0);
@@ -100,8 +102,9 @@ describe('RivalRevenueCalculator', () => {
       }
     };
     
+    const state = { entities: { projects: rival.projects } };
     const revenue = RivalRevenueCalculator.calculateWeeklyRevenue(
-      rival as RivalStudio, 1, { next: () => 0.5, rangeInt: () => 10, uuid: () => 'id' } as any
+      rival as RivalStudio, 1, { next: () => 0.5, rangeInt: () => 10, uuid: () => 'id' } as any, state as any
     );
     
     expect(revenue.merch).toBeGreaterThan(0);
@@ -119,8 +122,9 @@ describe('RivalRevenueCalculator', () => {
       }
     };
     
+    const state = { entities: { projects: rival.projects } };
     const revenue = RivalRevenueCalculator.calculateWeeklyRevenue(
-      rival as RivalStudio, 1, { next: () => 0.5, rangeInt: () => 10, uuid: () => 'id' } as any
+      rival as RivalStudio, 1, { next: () => 0.5, rangeInt: () => 10, uuid: () => 'id' } as any, state as any
     );
     
     expect(revenue.merch).toBe(0); // Buzz below 70 threshold
@@ -151,12 +155,14 @@ describe('RivalRevenueCalculator', () => {
       }
     };
     
+    const stateTVMA = { entities: { projects: rivalTVMA.projects } };
     const revenueTVMA = RivalRevenueCalculator.calculateWeeklyRevenue(
-      rivalTVMA as RivalStudio, 1, { next: () => 0.5, rangeInt: () => 10, uuid: () => 'id' } as any
+      rivalTVMA as RivalStudio, 1, { next: () => 0.5, rangeInt: () => 10, uuid: () => 'id' } as any, stateTVMA as any
     );
     
+    const statePG13 = { entities: { projects: rivalPG13.projects } };
     const revenuePG13 = RivalRevenueCalculator.calculateWeeklyRevenue(
-      rivalPG13 as RivalStudio, 1, { next: () => 0.5, rangeInt: () => 10, uuid: () => 'id' } as any
+      rivalPG13 as RivalStudio, 1, { next: () => 0.5, rangeInt: () => 10, uuid: () => 'id' } as any, statePG13 as any
     );
     
     expect(revenueTVMA.streaming).toBeGreaterThan(revenuePG13.streaming); // TV-MA has premium
