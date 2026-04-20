@@ -10,8 +10,8 @@ import { tickAuctions, tickTalentCompetition } from '../../systems/ai/biddingEng
  * AI Filter
  * Handles AI decision-making for rival studios, agencies, and talent competition
  */
-export class AIFilter implements WeekFilter {
-  name = 'AIFilter';
+export const AIFilter: WeekFilter = {
+  name: 'AIFilter',
 
   execute(state: GameState, context: TickContext): void {
     context.impacts.push(...tickAIMinds(state, context.rng));
@@ -19,4 +19,4 @@ export class AIFilter implements WeekFilter {
     context.impacts.push(...tickAuctions(state, context.rng));
     context.impacts.push(...tickTalentCompetition(state, context.rng));
   }
-}
+};

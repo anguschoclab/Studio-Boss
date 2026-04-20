@@ -1,11 +1,11 @@
-import { GameState, StateImpact } from '../../types';
+import { GameState, StateImpact } from '@/engine/types';
 import { RandomGenerator } from '../../utils/rng';
 
 /**
  * IndustryRegulator - Anti-Trust & Economic Replenishment
  */
-export class RegulatorSystem {
-  static tick(state: GameState, rng: RandomGenerator): StateImpact[] {
+export const RegulatorSystem = {
+  tick(state: GameState, rng: RandomGenerator): StateImpact[] {
     const impacts: StateImpact[] = [];
     
     // 1. Calculate Trailing 4-Week Revenue for all studios
@@ -13,64 +13,74 @@ export class RegulatorSystem {
       return (history || []).slice(0, 4).reduce((sum, h) => sum + (h.revenue?.theatrical || 0) + (h.revenue?.streaming || 0), 0);
     };
 
-    const rivalsList = Object.values(state.entities.rivals || {});
-
     const studios = [
-      { 
-        id: 'player', 
-        name: state.studio.name, 
-        revenue: calculateTrailingRevenue(state.finance.weeklyHistory), 
-        type: state.studio.archetype 
-      },
-      ...rivalsList.map(r => ({ 
-        id: r.id, 
-        name: r.name, 
-        revenue: calculateTrailingRevenue(r.weeklyHistory || []), 
-        type: r.archetype 
+      { id: 'player', revenue: calculateTrailingRevenue(state.finance.weeklyHistory) },
+      ...Object.values(state.entities.rivals || {}).map(r => ({
+        id: r.id,
+        revenue: calculateTrailingRevenue(r.weeklyHistory || [])
       }))
     ];
 
-    const totalIndustryRevenue = studios.reduce((sum, s) => sum + s.revenue, 1);
-    const threshold = 0.40; 
+    const totalIndustryRevenue = studios.reduce((sum, s) => sum + s.revenue, 0);
 
-    studios.forEach(s => {
-      const share = s.revenue / totalIndustryRevenue;
-      if (share > threshold && s.type === 'major' && totalIndustryRevenue > 50_000_000) {
-        const fine = 25_000_000; 
-
+    // 2. Identify Monopolies/Dominant Players (>40% share)
+    studios.forEach(studio => {
+      const share = studio.revenue / (totalIndustryRevenue || 1);
+      
+      if (share > 0.40 && totalIndustryRevenue > 100_000_000) {
+        // Enforce anti-trust fine or penalty
         impacts.push({
-          type: 'FINANCE_TRANSACTION',
-          payload: {
-            amount: -fine,
-            category: 'EXPENSE',
-            description: `Anti-Trust Fine: ${s.name} Market Share (${Math.round(share * 100)}%)`,
-            week: state.week,
-            targetId: s.id // Route to the specific studio
-          }
+          type: 'STUDIO_IMPACT',
+          studioId: studio.id,
+          notifications: [
+            {
+              id: `reg-fine-${studio.id}-${state.week}`,
+              title: 'Anti-Trust Investigation',
+              message: `The regulator has identified ${studio.id === 'player' ? 'your studio' : studio.id} as a dominant market force. A market correction fine of $1M has been applied.`,
+              type: 'critical',
+              week: state.week
+            }
+          ]
         });
 
+        // Apply financial impact
         impacts.push({
-          type: 'NEWS_ADDED',
-          payload: {
-            id: rng.uuid('NWS'),
-            headline: `Federal Trade Commission Fines ${s.name}`,
-            description: `Cited for market dominance (${Math.round(share * 100)}%), ${s.name} has been issued a $25M penalty.`,
-            category: 'market',
-            publication: 'Financial Journal',
-            week: state.week
-          }
+          type: 'FINANCE_IMPACT',
+          amount: -1000000,
+          category: 'other',
+          studioId: studio.id
+        });
+      }
+    });
+
+    // 3. Periodic Economic Stimulus for smaller players
+    studios.forEach(studio => {
+      const share = studio.revenue / (totalIndustryRevenue || 1);
+      if (share < 0.05 && totalIndustryRevenue > 50_000_000 && rng.next() < 0.1) {
+        impacts.push({
+          type: 'STUDIO_IMPACT',
+          studioId: studio.id,
+          notifications: [
+            {
+              id: `reg-grant-${studio.id}-${state.week}`,
+              title: 'Independent Production Grant',
+              message: 'Your studio has qualified for an independent production replenishment grant of $500k.',
+              type: 'positive',
+              week: state.week
+            }
+          ]
         });
       }
     });
 
     return impacts;
-  }
+  },
 
   /**
    * 🌌 PHASE 2: Consolidation Check.
    * prevents M&A that would result in >40% market share.
    */
-  static isBlocked(
+  isBlocked(
     state: GameState, 
     acquirerId: string, 
     targetId: string, 
@@ -104,25 +114,29 @@ export class RegulatorSystem {
     }
 
     return { blocked: false };
-  }
+  },
 
   /**
    * Calculate market share for a specific studio.
    */
-  static getMarketShare(state: GameState, studioId: string): number {
+  getMarketShare(state: GameState, studioId: string): number {
     const calculateTrailingRevenue = (history: import('../types/state.types').FinancialSnapshot[]) => {
       return (history || []).slice(0, 4).reduce((sum, h) => sum + (h.revenue?.theatrical || 0) + (h.revenue?.streaming || 0), 0);
     };
 
     const rivalsList = Object.values(state.entities.rivals || {});
+    const totalIndustryRevenue = calculateTrailingRevenue(state.finance.weeklyHistory) + 
+                                rivalsList.reduce((sum, r) => sum + calculateTrailingRevenue(r.weeklyHistory || []), 0);
 
     const studios = [
       { id: 'player', revenue: calculateTrailingRevenue(state.finance.weeklyHistory) },
-      ...rivalsList.map(r => ({ id: r.id, revenue: calculateTrailingRevenue(r.weeklyHistory || []) }))
+      ...rivalsList.map(r => ({
+        id: r.id,
+        revenue: calculateTrailingRevenue(r.weeklyHistory || [])
+      }))
     ];
 
-    const totalIndustryRevenue = studios.reduce((sum, s) => sum + s.revenue, 1);
     const target = studios.find(s => s.id === studioId);
     return (target?.revenue || 0) / (totalIndustryRevenue || 1);
   }
-}
+};

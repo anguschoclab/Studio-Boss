@@ -7,8 +7,14 @@ import { generateOpportunity } from '../../generators/opportunities';
  * Opportunity System
  * Handles the resolution of expired project auctions.
  */
-export class OpportunitySystem {
-  static tick(state: GameState, rng: RandomGenerator): StateImpact[] {
+import { CreateProjectParams } from '../../../store/storeUtils';
+
+/**
+ * Opportunity System
+ * Handles the resolution of expired project auctions.
+ */
+export const OpportunitySystem = {
+  tick(state: GameState, rng: RandomGenerator): StateImpact[] {
     const impacts: StateImpact[] = [];
     const expired = state.market.opportunities.filter(o => o.expirationWeek <= state.week);
 
@@ -29,7 +35,7 @@ export class OpportunitySystem {
       const [winnerId, bidData] = sortedBids[0];
 
       // 2. Build Project
-      const params = {
+      const params: CreateProjectParams = {
         title: opp.title,
         format: opp.format,
         genre: opp.genre,
@@ -44,7 +50,7 @@ export class OpportunitySystem {
         attachedTalentIds: opp.attachedTalentIds
       };
 
-      const { project, newContracts } = buildProjectAndContracts(state, params as any, rng);
+      const { project, newContracts } = buildProjectAndContracts(state, params, rng);
       
       // Update project with auction specific data
       const winnerProject = { 
@@ -60,10 +66,10 @@ export class OpportunitySystem {
           payload: { amount: bidData.amount }
         });
         impacts.push({
-          type: 'PROJECT_ADDED_FROM_AUCTION', // Custom type just for clarity
+          type: 'PROJECT_UPDATED', // Just a placeholder type, fields below do the work
           newProjects: [winnerProject],
-          newContracts: (newContracts as any)
-        } as any);
+          newContracts: newContracts
+        });
         impacts.push({
           type: 'NEWS_ADDED',
           payload: {
@@ -117,4 +123,4 @@ export class OpportunitySystem {
 
     return impacts;
   }
-}
+};

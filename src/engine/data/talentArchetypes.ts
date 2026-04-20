@@ -1028,3 +1028,82 @@ export function generateCareerTrajectory(tier: TalentTier, rng: { next(): number
     return 'rising'; // Tier 4 is always rising
   }
 }
+
+/**
+ * Archetype Transition Mappings
+ * Defines valid "jumps" for each archetype during drift
+ */
+export const ARCHETYPE_TRANSITIONS: Record<string, Record<string, string[]>> = {
+  actor: {
+    movie_star: ['veteran', 'character_actor', 'prestige_actor'],
+    tv_star: ['movie_star', 'character_actor', 'veteran'],
+    character_actor: ['veteran', 'prestige_actor'],
+    action_hero: ['character_actor', 'movie_star', 'veteran'],
+    comedy_star: ['character_actor', 'tv_star', 'movie_star'],
+    prestige_actor: ['character_actor', 'veteran'],
+    indie_darling: ['prestige_actor', 'movie_star', 'character_actor'],
+    viral_sensation: ['tv_star', 'character_actor', 'comedy_star'],
+    kid_actor: ['young_adult', 'tv_star', 'character_actor'],
+    young_adult: ['movie_star', 'tv_star', 'character_actor', 'action_hero', 'comedy_star'],
+    veteran: ['character_actor']
+  },
+  writer: {
+    showrunner: ['producer', 'prestige_writer'],
+    screenwriter: ['showrunner', 'script_doctor', 'prestige_writer', 'genre_specialist'],
+    script_doctor: ['screenwriter', 'prestige_writer'],
+    novelist: ['screenwriter', 'prestige_writer'],
+    comedy_writer: ['showrunner', 'screenwriter'],
+    genre_specialist: ['screenwriter', 'prestige_writer'],
+    prestige_writer: ['showrunner', 'screenwriter']
+  },
+  producer: {
+    blockbuster_producer: ['studio_exec', 'creative_producer'],
+    indie_producer: ['creative_producer', 'studio_exec'],
+    studio_exec: ['blockbuster_producer'],
+    packager: ['studio_exec', 'creative_producer'],
+    line_producer: ['indie_producer', 'studio_exec'],
+    creative_producer: ['studio_exec', 'indie_producer']
+  },
+  personality: {
+    influencer: ['reality_star', 'talk_show_host', 'viral_creator'],
+    reality_star: ['influencer', 'talk_show_host', 'legacy_personality'],
+    talk_show_host: ['legacy_personality', 'news_anchor'],
+    news_anchor: ['talk_show_host', 'legacy_personality'],
+    viral_creator: ['influencer', 'reality_star'],
+    legacy_personality: ['talk_show_host']
+  },
+  director: {
+    auteur: ['visionary', 'journeyman'],
+    journeyman: ['commercial_hack', 'visionary'],
+    visionary: ['auteur', 'journeyman'],
+    commercial_hack: ['journeyman']
+  }
+};
+
+/**
+ * Personality Transition Mappings
+ */
+export const PERSONALITY_TRANSITIONS: Record<string, string[]> = {
+  perfectionist: ['difficult', 'artistic', 'ambitious'],
+  collaborative: ['pragmatic', 'loyal', 'charismatic'],
+  difficult: ['perfectionist', 'ambitious', 'method'],
+  charismatic: ['commercial', 'ambitious', 'collaborative'],
+  method: ['perfectionist', 'difficult', 'artistic'],
+  pragmatic: ['collaborative', 'commercial', 'loyal'],
+  artistic: ['perfectionist', 'method', 'difficult'],
+  commercial: ['pragmatic', 'charismatic', 'ambitious'],
+  loyal: ['collaborative', 'pragmatic'],
+  ambitious: ['difficult', 'charismatic', 'commercial']
+};
+
+/**
+ * Career Trajectory Transition Mappings
+ */
+export const CAREER_TRAJECTORY_TRANSITIONS: Record<string, string[]> = {
+  rising: ['peak', 'plateau', 'declining'],
+  peak: ['declining', 'plateau', 'resurgent'],
+  declining: ['resurgent', 'plateau', 'comeback'],
+  resurgent: ['peak', 'peak', 'plateau'],
+  plateau: ['declining', 'resurgent', 'peak'],
+  comeback: ['resurgent', 'peak', 'peak']
+};

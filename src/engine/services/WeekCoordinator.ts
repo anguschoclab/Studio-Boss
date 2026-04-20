@@ -18,9 +18,9 @@ import { SummaryBuilder } from './filters/SummaryBuilder';
 /**
  * The "Pipe and Filter" Orchestrator.
  */
-export class WeekCoordinator {
+export const WeekCoordinator = {
 
-  static execute(state: GameState, rng: RandomGenerator): { newState: GameState; summary: WeekSummary; impacts: StateImpact[] } {
+  execute(state: GameState, rng: RandomGenerator): { newState: GameState; summary: WeekSummary; impacts: StateImpact[] } {
     const context: TickContext = {
       week: state.week + 1,
       tickCount: (state.tickCount || 0) + 1,
@@ -32,14 +32,14 @@ export class WeekCoordinator {
 
     // 1. Run Filters
     const filters: WeekFilter[] = [
-      new MarketFilter(),
-      new ProductionFilter(),
-      new AIFilter(),
-      new IndustryFilter(),
-      new TalentFilter(),
-      new MediaFilter(),
-      new ScandalFilter(),
-      new FinanceFilter(),
+      MarketFilter,
+      ProductionFilter,
+      AIFilter,
+      IndustryFilter,
+      TalentFilter,
+      MediaFilter,
+      ScandalFilter,
+      FinanceFilter,
     ];
 
     for (const filter of filters) {
@@ -84,4 +84,4 @@ export class WeekCoordinator {
       impacts: context.impacts
     };
   }
-}
+};

@@ -63,7 +63,7 @@ export const createTalentContractSlice: StateCreator<GameStore, [], [], TalentCo
         startWeek: state.week,
         endWeek: state.week + (p.productionWeeks || estimatedWeeks),
         role: contract.role,
-        format: p.format === 'film' ? 'feature' : (p.format === 'tv' ? 'series' : p.format as any)
+        format: p.format === 'film' ? 'feature' : (p.format === 'tv' ? 'series' : 'unscripted')
       };
 
       const updatedTalent: Talent = {
@@ -147,6 +147,7 @@ export const createTalentContractSlice: StateCreator<GameStore, [], [], TalentCo
             description: `${talent.name} has signed an exclusive first-look deal.`,
           });
           
+          const currentDeals = state.deals?.activeDeals || [];
           return {
             gameState: {
               ...state,
@@ -165,7 +166,7 @@ export const createTalentContractSlice: StateCreator<GameStore, [], [], TalentCo
        } else {
           const newNewsHistory = [...state.industry.newsHistory];
           newNewsHistory.unshift({
-            id: rng.uuid('NWS'),
+            id: rng.uuid('NWS') as NewsId,
             week: state.week,
             type: 'STUDIO_EVENT' as const,
             headline: `${talent.name} passes on first-look deal with ${state.studio.name}.`,

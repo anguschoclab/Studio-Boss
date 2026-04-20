@@ -9,7 +9,7 @@ import { Project, GameState, ProjectContractType, StateImpact, NewsId } from '@/
 import { type ProjectId, type BuyerId, type StudioId } from '@/engine/types/shared.types';
 
 export interface ProjectWorkflowSlice {
-  greenlightProject: (projectId: ProjectId) => void;
+  greenlightProject: (projectId: ProjectId) => Promise<void>;
   pitchProject: (projectId: ProjectId, buyerId: BuyerId, contractType: ProjectContractType) => Promise<boolean>;
   _updateProjectToProduction: (state: GameState, projectId: ProjectId, project: Project, headlineText: string, extraProjectUpdates?: Partial<Project>) => void;
 }

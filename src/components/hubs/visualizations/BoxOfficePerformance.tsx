@@ -7,15 +7,7 @@ import { TrendingUp } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useGameStore } from '@/store/gameStore';
 import { selectBoxOfficeData } from '@/store/selectors';
-
-interface BoxOfficeData {
-  projectTitle: string;
-  openingWeekend: number;
-  totalGross: number;
-  theaters?: number;
-  perTheater?: number;
-  trend: 'blockbuster' | 'hit' | 'average' | 'flop' | 'bomb';
-}
+import { BoxOfficeData } from '@/store/chartSelectors';
 
 interface BoxOfficePerformanceProps {
   projects?: BoxOfficeData[];

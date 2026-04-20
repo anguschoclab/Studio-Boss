@@ -1,5 +1,5 @@
 import { Talent, ActorArchetype, WriterArchetype, ProducerArchetype, PersonalityArchetype, DirectorArchetype, TalentPersonality, CareerTrajectory } from '../../types/talent.types';
-import { ACTOR_ARCHETYPES, WRITER_ARCHETYPES, PRODUCER_ARCHETYPES, PERSONALITY_ARCHETYPES, PERSONALITY_TRAITS, generateCareerTrajectory } from '../../data/talentArchetypes';
+import { ARCHETYPE_TRANSITIONS, PERSONALITY_TRANSITIONS, CAREER_TRAJECTORY_TRANSITIONS } from '../../data/talentArchetypes';
 import { RandomGenerator } from '../../utils/rng';
 
 /**
@@ -25,89 +25,6 @@ export const DEFAULT_DRIFT_CONFIG: DriftConfig = {
 };
 
 /**
- * Archetype transition matrix - defines which archetypes can transition to which
- * This represents realistic career evolution paths
- */
-export const ARCHETYPE_TRANSITIONS: {
-  actor: Record<ActorArchetype, ActorArchetype[]>;
-  writer: Record<WriterArchetype, WriterArchetype[]>;
-  producer: Record<ProducerArchetype, ProducerArchetype[]>;
-  personality: Record<PersonalityArchetype, PersonalityArchetype[]>;
-  director: Record<DirectorArchetype, DirectorArchetype[]>;
-} = {
-  actor: {
-    movie_star: ['tv_star', 'prestige_actor', 'veteran'],
-    tv_star: ['movie_star', 'character_actor', 'prestige_actor', 'veteran'],
-    character_actor: ['prestige_actor', 'indie_darling', 'veteran'],
-    action_hero: ['movie_star', 'prestige_actor', 'veteran'],
-    comedy_star: ['tv_star', 'prestige_actor', 'veteran'],
-    prestige_actor: ['movie_star', 'indie_darling', 'veteran'],
-    indie_darling: ['prestige_actor', 'movie_star', 'veteran'],
-    viral_sensation: ['tv_star', 'comedy_star', 'young_adult'],
-    kid_actor: ['young_adult', 'tv_star', 'character_actor'],
-    young_adult: ['movie_star', 'tv_star', 'character_actor', 'action_hero', 'comedy_star'],
-    veteran: ['prestige_actor', 'character_actor']
-  },
-  writer: {
-    showrunner: ['screenwriter', 'prestige_writer'],
-    screenwriter: ['showrunner', 'script_doctor', 'prestige_writer'],
-    script_doctor: ['screenwriter', 'prestige_writer'],
-    novelist: ['prestige_writer', 'screenwriter'],
-    comedy_writer: ['screenwriter', 'prestige_writer'],
-    genre_specialist: ['prestige_writer', 'screenwriter'],
-    prestige_writer: ['showrunner', 'screenwriter']
-  },
-  producer: {
-    blockbuster_producer: ['studio_exec', 'creative_producer'],
-    indie_producer: ['creative_producer', 'line_producer'],
-    studio_exec: ['blockbuster_producer'],
-    packager: ['studio_exec', 'creative_producer'],
-    line_producer: ['indie_producer', 'creative_producer'],
-    creative_producer: ['indie_producer', 'blockbuster_producer']
-  },
-  personality: {
-    influencer: ['talk_show_host', 'legacy_personality'],
-    reality_star: ['talk_show_host', 'influencer'],
-    talk_show_host: ['legacy_personality', 'influencer'],
-    news_anchor: ['legacy_personality'],
-    viral_creator: ['influencer', 'talk_show_host'],
-    legacy_personality: []
-  },
-  director: {
-    auteur: ['visionary', 'journeyman'],
-    journeyman: ['visionary', 'commercial_hack'],
-    visionary: ['auteur', 'journeyman'],
-    commercial_hack: ['journeyman']
-  }
-};
-
-/**
- * Personality trait transition matrix
- */
-export const PERSONALITY_TRANSITIONS: Record<TalentPersonality, TalentPersonality[]> = {
-  perfectionist: ['collaborative', 'difficult'],
-  collaborative: ['pragmatic', 'loyal'],
-  difficult: ['charismatic', 'pragmatic'],
-  charismatic: ['collaborative', 'ambitious'],
-  method: ['artistic', 'difficult'],
-  pragmatic: ['collaborative', 'commercial'],
-  artistic: ['perfectionist', 'pragmatic'],
-  commercial: ['ambitious', 'pragmatic'],
-  loyal: ['collaborative', 'pragmatic'],
-  ambitious: ['commercial', 'difficult']
-};
-
-/**
- * Career trajectory transitions
- */
-export const CAREER_TRAJECTORY_TRANSITIONS: Record<CareerTrajectory, CareerTrajectory[]> = {
-  rising: ['peak', 'peak'],
-  peak: ['declining', 'resurgent'],
-  declining: ['resurgent', 'declining'],
-  resurgent: ['peak', 'peak']
-};
-
-/**
  * Drift result
  */
 export interface DriftResult {
@@ -128,11 +45,11 @@ export interface DriftResult {
  * Talent Drift Engine
  * Handles the gradual evolution of talent personalities, archetypes, and career trajectories
  */
-export class TalentDriftEngine {
+export const TalentDriftEngine = {
   /**
    * Process drift for a single talent
    */
-  static processDrift(
+  processDrift(
     talent: Talent,
     config: DriftConfig = DEFAULT_DRIFT_CONFIG,
     rng: RandomGenerator
@@ -187,13 +104,13 @@ export class TalentDriftEngine {
     }
 
     return result;
-  }
+  },
 
   /**
    * Process age-based archetype transitions for actors
    * This handles transitions like kid_actor -> young_adult -> veteran
    */
-  private static processAgeBasedArchetypeTransition(
+  processAgeBasedArchetypeTransition(
     talent: Talent,
     rng: RandomGenerator
   ): { old: string; new: string } | null {
@@ -253,12 +170,12 @@ export class TalentDriftEngine {
     }
 
     return null;
-  }
+  },
 
   /**
    * Drift archetype based on role and current archetype
    */
-  private static driftArchetype(
+  driftArchetype(
     talent: Talent,
     intensity: number,
     rng: RandomGenerator
@@ -299,12 +216,12 @@ export class TalentDriftEngine {
 
     const newArchetype = rng.pick(validTransitions);
     return { old: currentArchetype, new: newArchetype };
-  }
+  },
 
   /**
    * Drift personality trait
    */
-  private static driftPersonality(
+  driftPersonality(
     currentPersonality: TalentPersonality,
     intensity: number,
     rng: RandomGenerator
@@ -321,18 +238,18 @@ export class TalentDriftEngine {
 
     const newPersonality = rng.pick(transitions);
     return { old: currentPersonality, new: newPersonality };
-  }
+  },
 
   /**
    * Drift career trajectory
    */
-  private static driftCareerTrajectory(
+  driftCareerTrajectory(
     talent: Talent,
     intensity: number,
     rng: RandomGenerator
   ): { old: string; new: string } | null {
     const currentTrajectory = talent.careerTrajectory || 'rising';
-    const transitions = CAREER_TRAJECTORY_TRANSITIONS[currentTrajectory];
+    const transitions = (CAREER_TRAJECTORY_TRANSITIONS as any)[currentTrajectory];
     if (!transitions || transitions.length === 0) {
       return null;
     }
@@ -347,13 +264,13 @@ export class TalentDriftEngine {
 
     const newTrajectory = rng.pick(transitions);
     return { old: currentTrajectory, new: newTrajectory };
-  }
+  },
 
   /**
    * Calculate performance factor based on recent talent performance
    * Used to influence career trajectory drift
    */
-  private static calculatePerformanceFactor(talent: Talent): number {
+  calculatePerformanceFactor(talent: Talent): number {
     let factor = 1.0;
 
     // Momentum affects trajectory
@@ -378,12 +295,12 @@ export class TalentDriftEngine {
     }
 
     return Math.min(2.0, Math.max(0.5, factor));
-  }
+  },
 
   /**
    * Apply drift changes to a talent
    */
-  static applyDriftChanges(talent: Talent, driftResult: DriftResult): Talent {
+  applyDriftChanges(talent: Talent, driftResult: DriftResult): Talent {
     const updated = { ...talent };
 
     if (driftResult.changes.newArchetype) {
@@ -410,12 +327,12 @@ export class TalentDriftEngine {
     }
 
     return updated;
-  }
+  },
 
   /**
    * Process drift for all talents in a game state
    */
-  static processAllDrift(
+  processAllDrift(
     talents: Record<string, Talent>,
     config: DriftConfig = DEFAULT_DRIFT_CONFIG,
     rng: RandomGenerator
@@ -433,4 +350,4 @@ export class TalentDriftEngine {
 
     return { updatedTalents, driftResults };
   }
-}
+};

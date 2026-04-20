@@ -9,8 +9,8 @@ import { advanceDeals } from '../../systems/deals';
  * Media Filter
  * Handles rumors and deal advancement
  */
-export class MediaFilter implements WeekFilter {
-  name = 'MediaFilter';
+export const MediaFilter: WeekFilter = {
+  name: 'MediaFilter',
 
   execute(state: GameState, context: TickContext): void {
     context.impacts.push(advanceRumors(state, context.rng));

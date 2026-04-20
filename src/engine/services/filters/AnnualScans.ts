@@ -10,8 +10,8 @@ import { generateRebootProposal } from '../../systems/ip/ipRebootEngine';
  * Annual Scans
  * Handles annual events like IP scans and M&A activity
  */
-export class AnnualScans {
-  static execute(state: GameState, context: TickContext): void {
+export const AnnualScans = {
+  execute(state: GameState, context: TickContext): void {
     const weekOfYear = context.week % 52 || 52;
 
     // Annual IP Scan — Week 1
@@ -23,13 +23,13 @@ export class AnnualScans {
     if (weekOfYear === 52) {
       this.runAnnualMAScan(state, context);
     }
-  }
+  },
 
   /**
    * Annual scan for hostile takeover attempts between rivals.
    * Fires once per year (week % 52 === 0).
    */
-  private static runAnnualMAScan(state: GameState, context: TickContext) {
+  runAnnualMAScan(state: GameState, context: TickContext) {
     const rivalsObj = state.entities.rivals || {};
     const rivalKeys = Object.keys(rivalsObj);
     for (let i = 0; i < rivalKeys.length; i++) {
@@ -68,12 +68,12 @@ export class AnnualScans {
         }
       }
     }
-  }
+  },
 
   /**
    * Annual scan for Cult Classics and Reboot opportunities.
    */
-  private static runAnnualIPScan(state: GameState, context: TickContext) {
+  runAnnualIPScan(state: GameState, context: TickContext) {
     // 1. Cult Classic Scan
     const vault = state.ip.vault || [];
 
@@ -119,4 +119,4 @@ export class AnnualScans {
        }
     }
   }
-}
+};

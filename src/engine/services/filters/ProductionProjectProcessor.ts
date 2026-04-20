@@ -10,20 +10,22 @@ import { generateMarketBanScandal } from '../../systems/scandals';
 import { resolveCrisisWithHandlers } from '../../systems/production/crisisEvaluator';
 import { calculateAudienceIndex } from '../../systems/demographics';
 
+const ACTIVE_STAGES = new Set(['prep', 'production', 'post_production', 'marketing']);
+
 /**
  * Production Project Processor
  * Handles individual project logic during production filter
  */
-export class ProductionProjectProcessor {
+export const ProductionProjectProcessor = {
   /**
    * Process a single project's weekly production logic
    */
-  static processProject(project: Project, state: GameState, context: TickContext): void {
+  processProject(project: Project, state: GameState, context: TickContext): void {
     // 1. Script drafting and crisis triggering
     if (project.state === 'development') {
       const impacts = tickScriptDevelopment(project, context.rng);
       context.impacts.push(...impacts);
-    } else if (!project.activeCrisis && this.ACTIVE_STAGES.has(project.state)) {
+    } else if (!project.activeCrisis && ACTIVE_STAGES.has(project.state)) {
       const impact = checkAndTriggerCrisis(project, state, context.rng);
       if (impact) context.impacts.push(impact);
 
@@ -120,6 +122,4 @@ export class ProductionProjectProcessor {
        });
     }
   }
-
-  private static readonly ACTIVE_STAGES = new Set(['prep', 'production', 'post_production', 'marketing']);
-}
+};

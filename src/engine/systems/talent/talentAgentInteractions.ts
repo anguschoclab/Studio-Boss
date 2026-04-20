@@ -111,11 +111,11 @@ export interface CompatibilityScore {
  * Talent-Agent Interaction Engine
  * Manages the compatibility, relationships, and synergy between talents and their agents
  */
-export class TalentAgentInteractionEngine {
+export const TalentAgentInteractionEngine = {
   /**
    * Calculate compatibility between talent personality and agent personality
    */
-  static calculateCompatibility(
+  calculateCompatibility(
     talentPersonality: TalentPersonality,
     agentPersonality: AgentPersonality,
     agencyArchetype?: string
@@ -185,13 +185,13 @@ export class TalentAgentInteractionEngine {
       factors,
       synergy
     };
-  }
+  },
 
   /**
    * Get agency archetype compatibility bonus for a talent personality
    * Enhanced with more nuanced archetype matching
    */
-  private static getAgencyArchetypeCompatibility(talentPersonality: TalentPersonality, agencyArchetype?: string): number {
+  getAgencyArchetypeCompatibility(talentPersonality: TalentPersonality, agencyArchetype?: string): number {
     // Enhanced archetype compatibility matrix
     const archetypeCompatibility: Record<TalentPersonality, number> = {
       perfectionist: 5,
@@ -220,12 +220,12 @@ export class TalentAgentInteractionEngine {
     }
     
     return baseBonus;
-  }
+  },
 
   /**
    * Calculate synergy between talent and agent based on their relationship history
    */
-  static calculateSynergy(relationship: TalentAgentRelationship): number {
+  calculateSynergy(relationship: TalentAgentRelationship): number {
     const { relationshipScore, history } = relationship;
 
     // Base synergy from relationship score
@@ -243,12 +243,12 @@ export class TalentAgentInteractionEngine {
     }
 
     return Math.min(50, Math.max(-50, synergy));
-  }
+  },
 
   /**
    * Update relationship based on a deal outcome
    */
-  static updateRelationship(
+  updateRelationship(
     relationship: TalentAgentRelationship,
     success: boolean,
     dealValue?: number
@@ -273,12 +273,12 @@ export class TalentAgentInteractionEngine {
     updated.synergy = this.calculateSynergy(updated);
 
     return updated;
-  }
+  },
 
   /**
    * Generate a new relationship between talent and agent
    */
-  static createRelationship(
+  createRelationship(
     talentId: string,
     agentId: string,
     talentPersonality: TalentPersonality,
@@ -299,13 +299,13 @@ export class TalentAgentInteractionEngine {
       },
       synergy: compatibility.synergy
     };
-  }
+  },
 
   /**
    * Evolve relationship over time
    * Relationships naturally decay or grow based on activity
    */
-  static evolveRelationship(
+  evolveRelationship(
     relationship: TalentAgentRelationship,
     weeksSinceLastInteraction: number,
     rng: RandomGenerator
@@ -330,33 +330,33 @@ export class TalentAgentInteractionEngine {
     updated.synergy = this.calculateSynergy(updated);
 
     return updated;
-  }
+  },
 
   /**
    * Get negotiation bonus based on relationship and synergy
    */
-  static getNegotiationBonus(relationship: TalentAgentRelationship): number {
+  getNegotiationBonus(relationship: TalentAgentRelationship): number {
     const relationshipBonus = (relationship.relationshipScore - 50) / 5; // -10 to +10
     const synergyBonus = relationship.synergy / 5; // -10 to +10
 
     return Math.min(20, Math.max(-20, relationshipBonus + synergyBonus));
-  }
+  },
 
   /**
    * Get loyalty bonus based on relationship and synergy
    */
-  static getLoyaltyBonus(relationship: TalentAgentRelationship): number {
+  getLoyaltyBonus(relationship: TalentAgentRelationship): number {
     const relationshipBonus = (relationship.relationshipScore - 50) / 4; // -12.5 to +12.5
     const synergyBonus = relationship.synergy / 4; // -12.5 to +12.5
     const yearsBonus = Math.min(10, relationship.history.yearsTogether * 2);
 
     return Math.min(30, Math.max(0, relationshipBonus + synergyBonus + yearsBonus));
-  }
+  },
 
   /**
    * Calculate talent-agent compatibility matrix for all talents and agents
    */
-  static calculateCompatibilityMatrix(
+  calculateCompatibilityMatrix(
     talents: Record<string, Talent>,
     agents: Record<string, Agent>,
     agencies: Record<string, Agency>
@@ -387,12 +387,12 @@ export class TalentAgentInteractionEngine {
     }
 
     return matrix;
-  }
+  },
 
   /**
    * Map agency archetype to agent personality
    */
-  private static mapArchetypeToPersonality(archetypeKey: string): AgentPersonality {
+  mapArchetypeToPersonality(archetypeKey: string): AgentPersonality {
     const mapping: Record<string, AgentPersonality> = {
       powerhouse: 'shark',
       boutique: 'visionary',
@@ -406,4 +406,4 @@ export class TalentAgentInteractionEngine {
 
     return mapping[archetypeKey] || 'diplomat';
   }
-}
+};

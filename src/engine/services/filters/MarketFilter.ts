@@ -17,8 +17,8 @@ import { OpportunitySystem } from '../../systems/market/OpportunitySystem';
  * Market Filter
  * Handles market-wide dynamics including platforms, interest rates, world events, trends, and opportunities
  */
-export class MarketFilter implements WeekFilter {
-  name = 'MarketFilter';
+export const MarketFilter: WeekFilter = {
+  name: 'MarketFilter',
 
   execute(state: GameState, context: TickContext): void {
     context.impacts.push(...tickPlatforms(state, context.rng));

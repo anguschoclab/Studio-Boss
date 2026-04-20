@@ -7,8 +7,8 @@ import { TalentDriftEngine, DEFAULT_DRIFT_CONFIG } from './driftEngine';
  * Talent Lifecycle System
  * Handles aging, retirement, and recruitment to maintain a steady-state talent pool.
  */
-export class TalentLifecycleSystem {
-  static tick(state: GameState, rng: RandomGenerator): StateImpact[] {
+export const TalentLifecycleSystem = {
+  tick(state: GameState, rng: RandomGenerator): StateImpact[] {
     const impacts: StateImpact[] = [];
     const isYearEnd = state.week % 52 === 0;
 

@@ -15,8 +15,8 @@ import { InterestRateSimulator } from '../../systems/market/InterestRateSimulato
  * Industry Filter
  * Handles industry-wide events including rival advancement, awards, festivals, and annual scans
  */
-export class IndustryFilter implements WeekFilter {
-  name = 'IndustryFilter';
+export const IndustryFilter: WeekFilter = {
+  name: 'IndustryFilter',
 
   execute(state: GameState, context: TickContext): void {
     // Advance rival studios (cash, strength, revenue, poaching)

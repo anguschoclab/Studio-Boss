@@ -11,12 +11,12 @@ import { type TalentId, type ProjectId, type ContractId } from '@/engine/types/s
  * - Scandals significantly tank mood.
  * - Working with "Conflict" talent (Ego clashes) reduces mood.
  */
-export class TalentMoraleSystem {
+export const TalentMoraleSystem = {
   /**
    * Calculates the production speed multiplier based on the moods of attached talent.
    * If any major talent (Actor/Director) has very low mood (< 30), production slows down.
    */
-  static getProductionSpeedMultiplier(talent: Talent[]): number {
+  getProductionSpeedMultiplier(talent: Talent[]): number {
     if (talent.length === 0) return 1.0;
 
     const lowMoraleTalent = talent.filter(t => t.psychology.mood < 30);
@@ -26,13 +26,13 @@ export class TalentMoraleSystem {
     }
 
     return 1.0;
-  }
+  },
 
   /**
    * Calculates a quality multiplier for the final review score.
    * Low trust/morale leads to "onset friction" and a lower ceiling.
    */
-  static getQualityMultiplier(talent: Talent[]): number {
+  getQualityMultiplier(talent: Talent[]): number {
     if (talent.length === 0) return 1.0;
 
     const avgMood = talent.reduce((acc, t) => acc + t.psychology.mood, 0) / talent.length;
@@ -42,12 +42,12 @@ export class TalentMoraleSystem {
     if (avgMood > 85) return 1.1;
     
     return 1.0;
-  }
+  },
 
   /**
    * Updates talent psychology based on the current week's events.
    */
-  static processWeeklyMorale(
+  processWeeklyMorale(
     talentDict: Record<TalentId, Talent>,
     projectsDict: Record<ProjectId, Project>,
     contractsDict: Record<ContractId, Contract>
@@ -107,4 +107,4 @@ export class TalentMoraleSystem {
 
     return updates;
   }
-}
+};

@@ -8,7 +8,6 @@ import {
   selectReleasedProjects,
 } from '@/store/selectors';
 import { SubNav } from '@/components/navigation/SubNav';
-import { Badge } from '@/components/ui/badge';
 import {
   Building2,
   Trophy,
@@ -33,11 +32,11 @@ const RivalsPanel = () => {
 
   const yourReleases = useMemo(() => releasedProjects
     .filter(p => p.releaseWeek != null)
-    .map(p => ({ week: p.releaseWeek!, title: p.title }))
+    .map(p => ({ week: p.releaseWeek ?? 0, title: p.title }))
     .slice(-12), [releasedProjects]);
 
   const rivalReleases = useMemo(() => rivals.flatMap(r =>
-    (r.projectIds || []).map(pid => ({
+    (r.projectIds || []).map(() => ({
       studioId: r.id,
       studioName: r.name,
       projectTitle: `${r.name} Project`,
@@ -81,7 +80,7 @@ const AwardsPanel = () => {
     return {
       projectId: p.id,
       projectTitle: p.title,
-      format: (p.format === 'tv' ? 'tv' : 'film') as 'film' | 'tv',
+      format: (p.format === 'tv' ? 'tv' : 'film'),
       nominations,
       wins: projectAwards.filter(a => a.status === 'won').length,
       totalNominations: nominations.length,

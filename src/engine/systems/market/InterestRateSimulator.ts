@@ -8,15 +8,15 @@ import { RandomGenerator } from '../../utils/rng';
  * Global Market Simulation: Interest Rate Simulator.
  * Handles the background "Economy" that dictates yields and debt costs.
  */
-export class InterestRateSimulator {
-  private static BASE_RATE_MIN = 0.0025; // 0.25%
-  private static BASE_RATE_MAX = 0.15;   // 15.0%
-  private static VOLATILITY = 0.0015;    // 0.15% max move per week
+export const InterestRateSimulator = {
+  BASE_RATE_MIN: 0.0025, // 0.25%
+  BASE_RATE_MAX: 0.15,   // 15.0%
+  VOLATILITY: 0.0015,    // 0.15% max move per week
 
   /**
    * Initializes the market state if it doesn't exist.
    */
-  static initialize(): MarketState {
+  initialize(): MarketState {
     const baseRate = 0.045; // Start at 4.5%
     return {
       baseRate,
@@ -27,12 +27,12 @@ export class InterestRateSimulator {
       sentiment: 50,
       cycle: 'STABLE'
     };
-  }
+  },
 
   /**
    * Weekly Tick: Fluctuates the base rate and derives other rates.
    */
-  static advance(state: GameState, rng: RandomGenerator): StateImpact {
+  advance(state: GameState, rng: RandomGenerator): StateImpact {
     const market = state.finance.marketState || this.initialize();
     const currentRate = market.baseRate;
     
@@ -74,14 +74,14 @@ export class InterestRateSimulator {
     }
 
     return impact;
-  }
+  },
 
   /**
    * Helper: Returns week and year for display.
    */
-  static getWeekDisplay(week: number): { week: number; year: number } {
+  getWeekDisplay(week: number): { week: number; year: number } {
     const year = Math.floor((week - 1) / 52) + 1;
     const weekInYear = ((week - 1) % 52) + 1;
     return { week: weekInYear, year };
-  }
-}
+  },
+};

@@ -1,13 +1,13 @@
-import { GameState, Talent, Project, Contract, Award, Opportunity } from '@/engine/types';
-import { StateImpact, TalentUpdate } from '../../types/state.types';
+import { GameState, Talent, Project, Contract, Award } from '@/engine/types';
+import { StateImpact } from '../../types/state.types';
 import { RandomGenerator } from '../../utils/rng';
 import { BardResolver } from '../bardResolver';
 import { advanceTalentLifecycle } from './LifecycleModule';
 import { advanceOpportunityLifecycle } from './OpportunityModule';
 import { applyProjectResults } from './PerformanceModule';
 
-export class TalentSystem {
-  static advance(state: GameState, rng: RandomGenerator): StateImpact {
+export const TalentSystem = {
+  advance(state: GameState, rng: RandomGenerator): StateImpact {
     const talentUpdates = advanceTalentLifecycle(state, rng);
     const { updatedOpportunities, uiNotifications } = advanceOpportunityLifecycle(state, rng);
     
@@ -27,9 +27,9 @@ export class TalentSystem {
       talentUpdates,
       uiNotifications: notificationsWithBard
     };
-  }
+  },
 
-  static applyProjectResults(
+  applyProjectResults(
     project: Project,
     contracts: Contract[],
     talentPool: Record<string, Talent> | Talent[],
@@ -37,4 +37,4 @@ export class TalentSystem {
   ): Talent[] {
     return applyProjectResults(project, contracts, talentPool, projectAwards);
   }
-}
+};

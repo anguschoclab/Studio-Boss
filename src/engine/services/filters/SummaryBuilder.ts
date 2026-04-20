@@ -5,11 +5,11 @@ import { TickContext } from './types';
  * Summary Builder
  * Builds the weekly summary from state changes and impacts
  */
-export class SummaryBuilder {
+export const SummaryBuilder = {
   /**
    * Build a week summary from before/after states and context impacts
    */
-  static build(before: GameState, after: GameState, context: TickContext): WeekSummary {
+  build(before: GameState, after: GameState, context: TickContext): WeekSummary {
     const allHeadlines: import('../../types/engine.types').Headline[] = [];
     const newsEvents: import('../../types/engine.types').NewsEvent[] = [];
     

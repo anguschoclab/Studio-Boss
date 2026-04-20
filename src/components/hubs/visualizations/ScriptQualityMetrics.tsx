@@ -5,24 +5,10 @@ import { tokens } from '@/lib/tokens';
 import { cn } from '@/lib/utils';
 import { FileText, Star, TrendingUp } from 'lucide-react';
 import { useGameStore } from '@/store/gameStore';
-import { selectScriptQualityMetrics } from '@/store/selectors';
-
-interface QualityMetric {
-  metric: string;
-  score: number;
-  fullMark: number;
-}
-
-interface ScriptData {
-  title: string;
-  writer: string;
-  overallScore: number;
-  metrics: QualityMetric[];
-  trend: 'improving' | 'stable' | 'declining';
-}
+import { selectScriptQualityReport, type ScriptQualityReport as ScriptQualityReportType } from '@/store/chartSelectors';
 
 interface ScriptQualityMetricsProps {
-  script?: ScriptData;
+  script?: ScriptQualityReportType;
   className?: string;
   projectId?: string;
 }
@@ -33,16 +19,10 @@ export const ScriptQualityMetrics: React.FC<ScriptQualityMetricsProps> = ({
   projectId,
 }) => {
   const gameState = useGameStore(s => s.gameState);
-  const selectorResult = projectId ? selectScriptQualityMetrics(gameState, projectId) : null;
+  const selectorReport = projectId ? selectScriptQualityReport(gameState, projectId) : null;
   
-  // Handle both ScriptData format and selector's array format
-  const script = externalScript || (selectorResult ? {
-    title: 'Script',
-    writer: 'Unknown',
-    overallScore: selectorResult.reduce((sum, m) => sum + m.value, 0) / selectorResult.length,
-    metrics: selectorResult.map(m => ({ metric: m.metric, score: m.value, fullMark: 100 })),
-    trend: 'stable' as const
-  } : null);
+  // Use the formalized ScriptQualityReport structure from the selector
+  const script = externalScript || selectorReport;
 
   if (!script) {
     return (
@@ -56,8 +36,8 @@ export const ScriptQualityMetrics: React.FC<ScriptQualityMetricsProps> = ({
 
   const radarData = script.metrics.map(m => ({
     metric: m.metric,
-    value: m.score,
-    fullMark: m.fullMark,
+    value: m.value,
+    fullMark: 100,
   }));
 
   const getTrendIcon = () => {
@@ -83,7 +63,7 @@ export const ScriptQualityMetrics: React.FC<ScriptQualityMetricsProps> = ({
         <div className="flex items-center gap-2">
           <FileText className="h-5 w-5 text-primary" />
           <div>
-            <h4 className="font-bold text-sm truncate max-w-[120px]">{script.title}</h4>
+            <h4 className="font-bold text-sm truncate max-w-[120px]">{script.projectTitle}</h4>
             <p className={cn('text-[10px]', tokens.text.caption)}>
               by {script.writer}
             </p>

@@ -55,9 +55,9 @@ const DevelopmentPanel = () => {
     selectProject(id);
   };
 
-  const handleApprove = async (id: string) => {
+  const handleApprove = (id: string) => {
     // Approve project for production using existing greenlightProject function
-    await greenlightProject(id);
+    void greenlightProject(id);
   };
 
   const handleReject = (id: string) => {
@@ -206,7 +206,7 @@ const DistributionPanel = () => {
           subscribers: 0,
           hoursWatched: Math.round((p.revenue || 0) / 1000),
           completionRate: Math.min(100, (p.buzz || 0) * 0.8),
-          trending: ((p.momentum || 50) > 55 ? 'up' : (p.momentum || 50) < 45 ? 'down' : 'stable') as 'up' | 'stable' | 'down',
+          trending: ((p.momentum || 50) > 55 ? 'up' : (p.momentum || 50) < 45 ? 'down' : 'stable'),
           topTerritory: 'Domestic',
         }],
         totalHoursWatched: Math.round((p.revenue || 0) / 1000),

@@ -1,198 +1,155 @@
-import { ScriptedProject, ScriptEvent, ScriptMetrics } from '@/engine/types';
-import { RandomGenerator } from '../../utils/rng';
+import { ScriptedProject, ScriptEvent, ScriptMetrics } from '@/engine/types/project.types';
 
 /**
  * Calculates script quality metrics from scriptEvents and scriptHeat.
  * Uses real-world screenwriting principles for scoring.
  */
-export class ScriptMetricsCalculator {
+export const ScriptMetricsCalculator = {
   /**
    * Calculate all script metrics for a project.
    * Called during development phase evolution and on project creation.
    */
-  static calculateMetrics(
+  calculateMetrics(
     project: ScriptedProject,
     currentWeek: number,
     previousMetrics?: ScriptMetrics
   ): ScriptMetrics {
     const events = project.scriptEvents || [];
     const heat = project.scriptHeat || 50;
-    
-    // Structure: Based on archetype balance and role management
+
     const structure = this.calculateStructureScore(project, events);
-    
-    // Dialogue: Based on dialogue polish events
     const dialogue = this.calculateDialogueScore(events);
-    
-    // Originality: Based on plot twist events and unique archetypes
     const originality = this.calculateOriginalityScore(project, events);
-    
-    // Pacing: Based on scriptHeat (higher = more kinetic) and event density
     const pacing = this.calculatePacingScore(project, events, heat);
-    
-    // Emotional Impact: Directly tied to scriptHeat
     const emotionalImpact = this.calculateEmotionalImpactScore(heat);
-    
-    // Commercial Viability: Balance of quality and mass appeal
-    const commercialViability = this.calculateCommercialViabilityScore(
-      project, structure, originality, emotionalImpact
-    );
-    
-    // Overall Score: Weighted average (structure and dialogue most important)
-    const overallScore = Math.round(
-      (structure * 0.25) +
-      (dialogue * 0.25) +
-      (originality * 0.15) +
-      (pacing * 0.15) +
-      (emotionalImpact * 0.1) +
-      (commercialViability * 0.1)
-    );
-    
-    // Trend: Compare with previous metrics
-    const trend = this.calculateTrend(overallScore, previousMetrics?.overallScore);
-    
+    const commercialViability = this.calculateCommercialViabilityScore(project, structure, originality, emotionalImpact);
+
+    const score = (structure + dialogue + originality + pacing + emotionalImpact + commercialViability) / 6;
+
+    const trend = this.calculateTrend(score, previousMetrics?.score);
+
     return {
-      structure,
-      dialogue,
-      originality,
-      pacing,
-      emotionalImpact,
-      commercialViability,
-      overallScore,
+      score: Math.round(score),
+      structure: Math.round(structure),
+      dialogue: Math.round(dialogue),
+      originality: Math.round(originality),
+      pacing: Math.round(pacing),
+      emotionalImpact: Math.round(emotionalImpact),
+      commercialViability: Math.round(commercialViability),
       trend,
       lastCalculatedWeek: currentWeek
     };
-  }
-  
+  },
+
   /**
    * Structure score: Balanced archetypes = good structure.
    * Too many or too few roles indicates structural issues.
    */
-  private static calculateStructureScore(
+  calculateStructureScore(
     project: ScriptedProject,
     events: ScriptEvent[]
   ): number {
-    const roleCount = project.activeRoles.length;
-    // Ideal: 4-6 roles for feature film structure
-    let score = 50;
-    
-    if (roleCount >= 4 && roleCount <= 6) score += 30;
-    else if (roleCount === 3 || roleCount === 7) score += 15;
-    else score -= 10;
-    
-    // Role merge events hurt structure
-    const merges = events.filter(e => e.type === 'ROLE_MERGE').length;
-    score -= merges * 5;
-    
-    // Role split events help structure (expansion)
-    const splits = events.filter(e => e.type === 'ROLE_SPLIT').length;
-    score += splits * 5;
-    
-    return Math.min(100, Math.max(0, score));
-  }
-  
+    const roleCount = project.archetypes?.length || 0;
+    let score = 70; // Base score
+
+    if (roleCount < 2) score -= 30; // Under-developed cast
+    if (roleCount > 8) score -= 20; // Over-crowded cast
+
+    // Plot point events improve structure
+    const plotPointBonus = events.filter(e => e.type === 'PLOT_POINT').length * 5;
+    score += plotPointBonus;
+
+    return Math.max(0, Math.min(100, score));
+  },
+
   /**
    * Dialogue score: Based on DIALOGUE_POLISH events.
    */
-  private static calculateDialogueScore(events: ScriptEvent[]): number {
+  calculateDialogueScore(events: ScriptEvent[]): number {
     const polishEvents = events.filter(e => e.type === 'DIALOGUE_POLISH');
     const base = 50;
     const bonus = polishEvents.reduce((sum, e) => sum + e.qualityImpact, 0);
-    return Math.min(100, Math.max(0, base + bonus));
-  }
-  
+    return Math.max(0, Math.min(100, base + bonus));
+  },
+
   /**
    * Originality score: Based on plot twists and unique archetype combinations.
    */
-  private static calculateOriginalityScore(
+  calculateOriginalityScore(
     project: ScriptedProject,
     events: ScriptEvent[]
   ): number {
-    const twists = events.filter(e => e.type === 'PLOT_TWIST_ADDED').length;
-    const base = 40;
-    const bonus = twists * 12; // Each twist adds significant originality
+    let score = 50;
     
-    // Genre bonus: some genres are inherently more original
-    const genre = project.genre?.toLowerCase();
-    if (genre && ['sci-fi', 'fantasy', 'horror'].includes(genre)) {
-      return Math.min(100, base + bonus + 10);
+    // Plot twists increase originality
+    const twists = events.filter(e => e.type === 'PLOT_TWIST').length;
+    score += twists * 10;
+
+    // Unique combos (placeholder logic)
+    if (project.archetypes?.includes('Antagonist') && project.archetypes?.includes('Mentor')) {
+      score += 5;
     }
-    
-    return Math.min(100, Math.max(0, base + bonus));
-  }
-  
+
+    return Math.max(0, Math.min(100, score));
+  },
+
   /**
    * Pacing score: Higher scriptHeat = more kinetic pacing.
    * Event density also contributes.
    */
-  private static calculatePacingScore(
+  calculatePacingScore(
     project: ScriptedProject,
     events: ScriptEvent[],
     heat: number
   ): number {
-    const eventDensity = events.length / Math.max(project.weeksInPhase || 1, 1);
-    const base = heat * 0.6; // Heat contributes 60% to pacing
-    const densityBonus = eventDensity * 20;
-    return Math.min(100, Math.max(0, base + densityBonus));
-  }
-  
+    const eventDensity = events.length / Math.max(1, project.budgetTier === 'BLOCKBUSTER' ? 10 : 5);
+    const score = (heat * 0.7) + (eventDensity * 30);
+    return Math.max(0, Math.min(100, score));
+  },
+
   /**
    * Emotional impact: Direct mapping from scriptHeat.
    * ScriptHeat represents audience emotional investment.
    */
-  private static calculateEmotionalImpactScore(heat: number): number {
+  calculateEmotionalImpactScore(heat: number): number {
     return heat;
-  }
-  
+  },
+
   /**
    * Commercial viability: Balance of artistic merit and mass appeal.
    * Family-friendly and broad appeal genres score higher.
    */
-  private static calculateCommercialViabilityScore(
+  calculateCommercialViabilityScore(
     project: ScriptedProject,
     structure: number,
     originality: number,
     emotionalImpact: number
   ): number {
-    const genre = project.genre?.toLowerCase();
-    let base = 50;
+    let score = (structure + emotionalImpact) / 2;
     
-    // Broad appeal genres
-    if (genre && ['family', 'animation', 'action', 'comedy'].includes(genre)) {
-      base += 20;
-    }
-    
-    // Prestige genres have lower commercial viability
-    if (genre && ['drama', 'thriller', 'crime'].includes(genre)) {
-      base -= 10;
-    }
-    
-    // Too original can hurt commercial appeal
-    if (originality > 80) base -= 15;
-    // Too little originality also hurts
-    if (originality < 40) base -= 10;
-    
-    // Good structure helps commercial viability
-    if (structure > 70) base += 10;
-    
-    // Emotional impact drives word-of-mouth
-    base += (emotionalImpact - 50) * 0.2;
-    
-    return Math.min(100, Math.max(0, base));
-  }
-  
+    // Originality is a double-edged sword for commerciality
+    if (originality > 80) score -= 10; // Too "indie"
+    if (originality < 30) score -= 10; // Too "derivative"
+
+    // Genre bonuses
+    const genre = project.genre?.toLowerCase() || '';
+    if (genre === 'action' || genre === 'adventure' || genre === 'animation') score += 10;
+    if (genre === 'documentary') score -= 15;
+
+    return Math.max(0, Math.min(100, score));
+  },
+
   /**
    * Determine trend based on score change.
    */
-  private static calculateTrend(
+  calculateTrend(
     currentScore: number,
     previousScore?: number
   ): 'improving' | 'stable' | 'declining' {
     if (previousScore === undefined) return 'stable';
-    
     const change = currentScore - previousScore;
     if (change > 3) return 'improving';
     if (change < -3) return 'declining';
     return 'stable';
   }
-}
+};

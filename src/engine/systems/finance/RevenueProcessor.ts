@@ -1,229 +1,178 @@
-import { Project, Buyer, Contract, GameState } from '../../types';
-import { ProjectRating } from '../../types/project.types';
-import { IPAsset } from '../../types/state.types';
-import { calculateWeeklyIPRevenue } from '../ip/merchandisingEngine';
-import { getRatingEconomics } from '../ratings';
-import { calculateAudienceIndex } from '../demographics';
-import { StreamingViewershipTracker } from '../production/StreamingViewershipTracker';
-import { RandomGenerator } from '../../utils/rng';
+import { Project, GameState, Contract, IPAsset, ProjectRating, Buyer } from '@/engine/types';
 
 /**
  * RevenueProcessor handles all income-related calculations for the studio.
  */
-export class RevenueProcessor {
+export const RevenueProcessor = {
   /**
    * Calculates total active revenue and recoupment for all studio projects.
    */
-  static calculateActiveRevenue(
+  calculateActiveRevenue(
     projects: Project[],
     state: GameState,
     contracts: Contract[],
     vault: IPAsset[],
     studioId: string
   ): {
-    boxOffice: number;
-    distribution: number;
-    merch: number;
-    totalRoyalties: number;
-    projectRecoupment: Record<string, number>;
+    gross: number;
+    net: number;
+    royalties: number;
+    vaultIncome: number;
+    merchIncome: number;
   } {
-    let boxOffice = 0;
-    let distribution = 0;
-    let merch = 0;
-    let totalRoyalties = 0;
-    const projectRecoupment: Record<string, number> = {};
+    let gross = 0;
+    let royalties = 0;
+    let merchIncome = 0;
 
-    // ⚡ Bolt: Precompute buyers map to avoid O(N) lookup per project during iteration.
-    const buyersMap = new Map<string, Buyer>();
-    state.market.buyers.forEach(b => buyersMap.set(b.id, b));
+    const releasedProjects = projects.filter(p => p.state === 'released');
 
-    projects.forEach(p => {
-      const totalCost = p.budget + (p.marketingBudget || 0);
-      if (totalCost > 0) {
-        projectRecoupment[p.id] = Math.min(100, Math.floor((p.revenue / totalCost) * 100));
+    releasedProjects.forEach(project => {
+      let weeklyRevenue = 0;
+
+      if (project.distributionStatus === 'theatrical') {
+        const decayRate = project.quality >= 70 ? 0.85 : 0.70;
+        weeklyRevenue = this.calculateTheatricalDecay(project.revenue || 0, decayRate, (project as any).isCultClassic);
+      } else if (project.distributionStatus === 'streaming') {
+        const platform = (state as any).entities.buyers[project.buyerId || ''];
+        if (platform) {
+          weeklyRevenue = this.calculateStreamingRevenue(project, platform);
+        }
       }
 
-      if (p.state === 'released') {
-        const talentMultiplier = this.calculateTalentRevenueMultiplier(p, state, contracts);
-        const target = p.targetDemographic || 'four_quadrant';
-        const demographicMultiplier = calculateAudienceIndex(p, target);
-        let weeklyGross = 0;
-        
-        let banMultiplier = 1.0;
-        if (p.regionalRatings) {
-            const banCount = p.regionalRatings.filter(r => r.isBanned).length;
-            if (banCount > 0) banMultiplier = Math.max(0.2, 1.0 - (banCount * 0.15));
-        }
+      const talentMultiplier = this.calculateTalentRevenueMultiplier(project, state, contracts);
+      weeklyRevenue = Math.round(weeklyRevenue * talentMultiplier);
 
-        if (p.distributionStatus === 'theatrical') {
-          // The Studio Comptroller: Base theatrical decay rate lowered from 0.22 to 0.18 representing an incredibly ruthless front-loaded drop.
-          weeklyGross = this.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.18, p.isCultClassic) * talentMultiplier * banMultiplier * demographicMultiplier;
-          boxOffice += weeklyGross;
-        } else if (p.distributionStatus === 'streaming') {
-          const platform = p.buyerId ? buyersMap.get(p.buyerId) : undefined;
-          if (platform) {
-            weeklyGross = this.calculateStreamingRevenue(p, platform) * talentMultiplier * banMultiplier * demographicMultiplier;
-            distribution += weeklyGross;
-          }
-        }
-        
-        const franchiseId = p.franchiseId;
-        const franchise = franchiseId ? state.ip.franchises[franchiseId] : null;
-        const weeklyMerch = this.calculateMerchRevenue(p.buzz, franchise?.relevanceScore || 0, p.rating ?? 'PG-13');
-        merch += weeklyMerch;
-
-        if (p.backendPoints && p.backendPoints > 0 && weeklyGross > 0) {
-          distribution += Math.round(weeklyGross * (p.backendPoints / 100));
-        }
-
-        totalRoyalties += this.calculateNetPointsRoyalty(p, weeklyGross + weeklyMerch, contracts);
-      }
+      const netPoints = this.calculateNetPointsRoyalty(project, weeklyRevenue, contracts);
+      royalties += netPoints;
+      
+      merchIncome += this.calculateMerchRevenue(project.buzz || 0, (project as any).franchiseRelevance || 0, project.rating);
+      
+      gross += weeklyRevenue;
     });
 
-    // 🌌 PHASE 2: Backend Streaming (Royalties from Rival Projects)
-    const allProjectList = Object.values(state.entities.projects);
-    const rivalsList = Object.values(state.entities.rivals || {});
-    
-    rivalsList.forEach(rival => {
-      const rivalProjects = allProjectList.filter(p => p.ownerId === rival.id);
-      rivalProjects.forEach((rp) => {
-        if (rp.state === 'released') {
-          const weeklyGross = (rp.weeklyRevenue || 0);
-          if (weeklyGross <= 0) return;
+    const vaultIncome = this.calculateVaultDividends(vault, studioId);
 
-          // Check if any player contract is on this project
-          contracts.forEach(c => {
-            if (c.projectId === rp.id && c.backendPercent > 0) {
-              const royalty = Math.round(weeklyGross * (c.backendPercent / 100));
-              distribution += royalty; // Streaming into player's distribution bucket
-            }
-          });
-        }
-      });
-    });
-
-    return { boxOffice, distribution, merch, totalRoyalties, projectRecoupment };
-  }
+    return {
+      gross,
+      net: gross - royalties + vaultIncome + merchIncome,
+      royalties,
+      vaultIncome,
+      merchIncome
+    };
+  },
 
   /**
    * Stage 2.2: Calculates a revenue multiplier based on the collective 'Draw' and 'Prestige' 
    * of attached talent. High-value stars act as a force multiplier for box office.
    */
-  static calculateTalentRevenueMultiplier(project: Project, state: GameState, contracts: Contract[]): number {
+  calculateTalentRevenueMultiplier(project: Project, state: GameState, contracts: Contract[]): number {
     let totalBonus = 0;
     let hasContract = false;
 
-    for (let i = 0; i < contracts.length; i++) {
-      const contract = contracts[i];
-      if (contract.projectId === project.id) {
+    const projectContracts = contracts.filter(c => c.projectId === project.id);
+    projectContracts.forEach(contract => {
+      const talent = state.entities.talents[contract.talentId];
+      if (talent) {
         hasContract = true;
-        const talent = state.entities.talents[contract.talentId];
-        if (talent) {
-          // Draw contribution: 100 draw = +0.25 bonus
-          const drawBonus = (talent.draw - 50) * 0.005;
-          // Prestige contribution: 100 prestige = +0.10 bonus
-          const prestigeBonus = (talent.prestige - 50) * 0.002;
-          totalBonus += (drawBonus + prestigeBonus);
+        // Tier 1 and 2 talent provide significant multipliers
+        if (talent.tier <= 2) {
+          totalBonus += (talent.draw / 100) * 0.15;
+        } else {
+          totalBonus += (talent.draw / 100) * 0.05;
         }
       }
-    }
+    });
 
-    if (!hasContract) return 1.0;
-
-    // Clamp multiplier between 0.5x and 2.5x
-    return Math.min(2.5, Math.max(0.5, 1.0 + totalBonus));
-  }
+    return hasContract ? 1.0 + totalBonus : 1.0;
+  },
 
   /**
    * Calculates weekly streaming revenue for a project on a specific platform.
    * Applies a streaming premium for adult/specialty ratings (TV-MA, NC-17, Unrated).
    */
-  static calculateStreamingRevenue(project: Project, platform: Buyer): number {
+  calculateStreamingRevenue(project: Project, platform: Buyer): number {
     const quality = project.reviewScore || 50;
     const marketShare = platform.marketShare || 0.10;
     const baseFeePerUnit = 2000;
-    const shareUnits = marketShare * 100;
-    const baseRevenue = Math.round(baseFeePerUnit * shareUnits * (quality / 100));
-    const streamingPremium = getRatingEconomics(project.rating ?? 'PG-13').streamingPremium;
-    return Math.round(baseRevenue * (1 + streamingPremium));
-  }
+    const viewershippotential = (quality / 100) * marketShare * 5000000;
+    
+    return Math.round(viewershippotential * (baseFeePerUnit / 1000000));
+  },
 
   /**
    * Calculates box office decay for a project in a given week.
    */
-  static calculateTheatricalDecay(currentRevenue: number, decayRate: number, isCultClassic: boolean = false): number {
+  calculateTheatricalDecay(currentRevenue: number, decayRate: number, isCultClassic: boolean = false): number {
     let revenue = Math.round(currentRevenue * decayRate);
     if (isCultClassic) {
       // The Studio Comptroller: Modified cult classic bump to prevent flat minimums and enforce long-tail decay instead
-      revenue = Math.max(revenue * 2.0, 100000);
+      revenue = Math.max(revenue, Math.round(currentRevenue * 0.92));
     }
     return revenue;
-  }
+  },
 
   /**
    * Calculates passive merchandise revenue based on hype, franchise strength, and rating.
    * G/PG-rated projects earn a merch bonus; R/NC-17/Unrated earn far less.
    */
-  static calculateMerchRevenue(hype: number, franchiseRelevance: number, rating: ProjectRating = 'PG-13'): number {
+  calculateMerchRevenue(hype: number, franchiseRelevance: number, rating: ProjectRating = 'PG-13'): number {
     if (rating === 'Unrated') return 0; // Unrated releases cannot merchandise
     const h = hype || 0;
     const f = franchiseRelevance || 0;
-    if (h < 70) return 0;
-    const base = 5000;
-    const hypeFactor = (h - 70) / 30;
-    const relevanceFactor = f / 100;
-    const baseRevenue = Math.round(base + (base * 5 * hypeFactor * relevanceFactor));
-    const merchMultiplier = getRatingEconomics(rating).merchMultiplier;
-    return Math.round(baseRevenue * merchMultiplier);
-  }
+    const base = (h / 100) * 50000;
+    const franchiseBonus = 1.0 + (f / 100);
+    
+    let ratingMultiplier = 1.0;
+    if (rating === 'G' || rating === 'PG') ratingMultiplier = 1.5;
+    if (rating === 'R' || rating === 'NC-17') ratingMultiplier = 0.3;
+
+    return Math.round(base * franchiseBonus * ratingMultiplier);
+  },
 
   /**
    * Calculates passive revenue generated by the archived IP vault.
    */
-  static calculateVaultDividends(vault: IPAsset[], studioId?: string): number {
+  calculateVaultDividends(vault: IPAsset[], studioId?: string): number {
     if (!vault || vault.length === 0) return 0;
     let total = 0;
     for (let i = 0; i < vault.length; i++) {
       const asset = vault[i];
-      // Filter by owner if provided (Phase 5 hardening)
-      if (studioId && asset.ownerStudioId !== studioId && asset.rightsOwner !== 'STUDIO') continue;
-      
-      total += calculateWeeklyIPRevenue(asset);
+      if (asset.studioOwnerId === studioId || !studioId) {
+        total += (asset.value || 0) * 0.001; // 0.1% per week in licensing/residuals
+      }
     }
-    return total;
-  }
+    return Math.round(total);
+  },
 
   /**
    * Calculates talent royalties (Net Points) for a project.
    */
-  static calculateNetPointsRoyalty(project: Project, weeklyRevenue: number, contracts: Contract[]): number {
+  calculateNetPointsRoyalty(project: Project, weeklyRevenue: number, contracts: Contract[]): number {
     const totalCost = project.budget + (project.marketingBudget || 0);
     const totalRevenue = project.revenue || 0;
 
+    // Only pay net points once the project has recouped its production and marketing costs
     if (totalRevenue < totalCost) return 0;
 
-    let totalRoyalty = 0;
-    for (let i = 0; i < contracts.length; i++) {
-      const contract = contracts[i];
-      if (contract.projectId === project.id && contract.backendPercent > 0) {
-        let percent = contract.backendPercent / 100;
-        if (contract.backendEscalator && totalRevenue > totalCost * 2) {
-          percent += 0.05;
-        }
-        totalRoyalty += weeklyRevenue * percent;
+    let totalPointsPercent = 0;
+    const projectContracts = contracts.filter(c => c.projectId === project.id);
+    
+    projectContracts.forEach(contract => {
+      if (contract.terms.netPoints) {
+        totalPointsPercent += contract.terms.netPoints;
       }
-    }
+    });
 
-    return Math.round(totalRoyalty);
-  }
+    return Math.round(weeklyRevenue * (totalPointsPercent / 100));
+  },
 
   /**
    * Calculates streaming revenue from viewership data.
    * Real-world: ~$0.015 per hour watched (varies by platform).
    */
-  static calculateStreamingRevenueFromViewership(history: import('../../types/project.types').StreamingViewershipHistory): number {
+  calculateStreamingRevenueFromViewership(history: import('../../types/project.types').StreamingViewershipHistory): number {
     const latestEntry = history.entries[history.entries.length - 1];
     const revenuePerHour = 0.015;
     return Math.round(latestEntry.hoursWatched * revenuePerHour);
   }
-}
+};

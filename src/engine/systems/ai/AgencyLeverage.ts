@@ -19,11 +19,11 @@ export interface LeverageResult {
   explanation: string[];
 }
 
-export class AgencyLeverageEngine {
+export const AgencyLeverageEngine = {
   /**
    * Calculates the total leverage score for a specific negotiation.
    */
-  static calculateNegotiationLeverage(
+  calculateNegotiationLeverage(
     talent: Talent,
     agency: Agency | undefined,
     agent: Agent | undefined,
@@ -152,14 +152,14 @@ export class AgencyLeverageEngine {
       },
       explanation
     };
-  }
+  },
 
   /**
    * Applies leverage to a proposed fee.
    * Higher leverage results in higher minimum fee demands.
    */
-  static getRequiredFee(baseFee: number, leverage: LeverageResult): number {
+  getRequiredFee(baseFee: number, leverage: LeverageResult): number {
     const multiplier = 1.0 + (leverage.score - 0.5) * 0.5; // Ranges from 0.75x to 1.25x of base fee
     return Math.floor(baseFee * multiplier);
   }
-}
+};

@@ -1,8 +1,8 @@
 import { Project, Contract, Talent, TalentPact, GameState, StateImpact } from '@/engine/types';
 import { RandomGenerator } from '../utils/rng';
 
-export class SchedulingEngine {
-  static tick(state: GameState, rng: RandomGenerator): StateImpact[] {
+export const SchedulingEngine = {
+  tick(state: GameState, rng: RandomGenerator): StateImpact[] {
     const impacts: StateImpact[] = [];
     const projects = Object.values(state.entities.projects);
     const contractsList = Object.values(state.entities.contracts || {});
@@ -37,9 +37,9 @@ export class SchedulingEngine {
     });
 
     return impacts;
-  }
+  },
 
-  static evaluateSchedulingConflicts(
+  evaluateSchedulingConflicts(
     project: Project,
     contracts: Contract[],
     talentPool: Record<string, Talent>,
@@ -67,14 +67,14 @@ export class SchedulingEngine {
       }
     }
     return { hasConflict: conflicts.length > 0, conflicts };
-  }
+  },
 
-  static processPacts(pacts: TalentPact[]): TalentPact[] {
+  processPacts(pacts: TalentPact[]): TalentPact[] {
     return (pacts || []).map(p => ({ ...p, weeksRemaining: p.weeksRemaining - 1 })).filter(p => p.weeksRemaining > 0);
-  }
+  },
 
-  static updateTalentFatigue(talent: Talent, isWorking: boolean): number {
+  updateTalentFatigue(talent: Talent, isWorking: boolean): number {
     const f = talent.fatigue || 0;
     return isWorking ? Math.min(100, f + 5) : Math.max(0, f - 10);
   }
-}
+};

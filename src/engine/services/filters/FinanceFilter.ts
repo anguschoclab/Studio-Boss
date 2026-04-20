@@ -8,8 +8,8 @@ import { tickFinance } from '../../systems/finance/financeTick';
  * Finance Filter
  * Handles weekly financial calculations and reporting
  */
-export class FinanceFilter implements WeekFilter {
-  name = 'FinanceFilter';
+export const FinanceFilter: WeekFilter = {
+  name: 'FinanceFilter',
 
   execute(state: GameState, context: TickContext): void {
     // Pass context.impacts so the Weekly Report can account for news/awards/festival transactions

@@ -37,7 +37,7 @@ export const CreateProjectModal = () => {
       setTitle(generateProjectTitle(genre));
     }
 
-  }, [showCreateProject, genre, title]);
+  }, [showCreateProject, genre]);
 
   const tier = BUDGET_TIERS[budgetTier];
   let calculatedWeeklyCost = tier.weeklyCost;
@@ -121,7 +121,7 @@ export const CreateProjectModal = () => {
               {format === 'tv' ? (
               <div className="space-y-2 col-span-2 sm:col-span-1">
                 <Label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground/80">TV Format</Label>
-                <Select value={tvFormat} onValueChange={(v) => setTvFormat(v as TvFormatKey)}>
+                <Select value={tvFormat} onValueChange={setTvFormat}>
                   <SelectTrigger className="bg-background/50 border-border/50"><SelectValue /></SelectTrigger>
                   <SelectContent className="max-h-80">
                     {TV_FORMAT_TAXONOMY.map(category => (
@@ -144,7 +144,7 @@ export const CreateProjectModal = () => {
               ) : (
               <div className="space-y-2 col-span-2 sm:col-span-1">
                 <Label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground/80">Unscripted Format</Label>
-                <Select value={unscriptedFormat} onValueChange={(v) => setUnscriptedFormat(v as UnscriptedFormatKey)}>
+                <Select value={unscriptedFormat} onValueChange={setUnscriptedFormat}>
                   <SelectTrigger className="bg-background/50 border-border/50"><SelectValue /></SelectTrigger>
                   <SelectContent className="max-h-80">
                     {UNSCRIPTED_FORMAT_TAXONOMY.map(category => (

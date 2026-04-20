@@ -12,8 +12,8 @@ import { SchedulingEngine } from '../../systems/schedulingEngine';
  * Production Filter
  * Handles project production logic including script drafting, crises, and release simulation
  */
-export class ProductionFilter implements WeekFilter {
-  name = 'ProductionFilter';
+export const ProductionFilter: WeekFilter = {
+  name: 'ProductionFilter',
 
   execute(state: GameState, context: TickContext): void {
     context.impacts.push(...tickProduction(state, context.rng));

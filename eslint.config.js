@@ -35,8 +35,6 @@ export default tseslint.config(
                 projectService: true,
                 tsconfigRootDir: import.meta.dirname,
             },
-        },
-        languageOptions: {
             ecmaVersion: 2020,
             globals: globals.browser,
         },
@@ -48,17 +46,7 @@ export default tseslint.config(
             // Standard React Hooks enforcement
             ...reactHooks.configs.recommended.rules,
 
-            // Temporary downgrades for CI passing
-            '@typescript-eslint/no-explicit-any': 'warn',
-            '@typescript-eslint/no-unused-vars': 'warn',
-            '@typescript-eslint/no-non-null-assertion': 'warn',
-
-            // Temporary downgrades for CI passing
-            '@typescript-eslint/no-explicit-any': 'warn',
-            '@typescript-eslint/no-unused-vars': 'warn',
-            '@typescript-eslint/no-non-null-assertion': 'warn',
-
-            // Temporary downgrades for CI passing
+            // Core Hardening Rules
             '@typescript-eslint/no-explicit-any': 'warn',
             '@typescript-eslint/no-unused-vars': 'warn',
             '@typescript-eslint/no-non-null-assertion': 'warn',
@@ -69,14 +57,11 @@ export default tseslint.config(
                 { allowConstantExport: true },
             ],
 
-            '@typescript-eslint/no-explicit-any': 'off',
-            '@typescript-eslint/no-unused-vars': 'off',
+            // Legacy overrides (to be enabled gradually)
             '@typescript-eslint/ban-ts-comment': 'off',
-            '@typescript-eslint/no-non-null-assertion': 'off',
             '@typescript-eslint/no-extraneous-class': 'off',
             '@typescript-eslint/no-dynamic-delete': 'off',
             'no-case-declarations': 'off',
-            'react-refresh/only-export-components': 'off',
             '@typescript-eslint/no-require-imports': 'off',
             'prefer-const': 'off',
             '@typescript-eslint/no-non-null-asserted-optional-chain': 'off'
