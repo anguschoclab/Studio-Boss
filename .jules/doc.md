@@ -12,3 +12,18 @@
 * `docs/marketing_mechanics.md`: Document the current single primary angle approach and the missing secondary strategy, updating the angles to match what is currently implemented vs the design bible.
 * **Code Paths Covered:** `src/engine/systems/marketing/efficiencyEvaluator.ts`
 * **Key Knowledge Gaps Addressed:** Clarifies the divergence between the current marketing angle matching system and the target design outlined in the design bible.
+
+### 📝 Daily Progress & Docs Update
+
+#### 🏗️ Codebase Status:
+* Reorganized core systems and improved state impact structures across the app.
+* Current focus involves tracking the project progression pipelines via systems like `evaluateGreenlight` which determines if a project goes into production or stays in development.
+
+#### 📖 Design Bible Alignment:
+* ✅ **Aligned:** `evaluateGreenlight` appropriately checks Market Saturation, Finance, Talent Package, and Buzz, aligning well with the core game loop for evaluating projects against the studio's and market's state.
+* ⚠️ **Missing/Deviations:** According to section 35.13 of the Design Bible, the greenlight logic is missing the "Role Completeness Score" (checking if all mandatory creative leadership and performance slots are filled) and an evaluation of "Schedule Certainty".
+
+#### 📄 Proposed Documentation Updates:
+* `docs/greenlight_mechanics.md`: Documented the current greenlight evaluation criteria (Market Saturation, Finance, Talent Package, Buzz) and noted the deviations from the Master Design Bible.
+* **Code Paths Covered:** `src/engine/systems/greenlight.ts`
+* **Key Knowledge Gaps Addressed:** Outlines the specific math used to generate the Greenlight Recommendation, and clearly defines the unimplemented features from the Design Bible.

@@ -37,20 +37,20 @@ export function evaluateRenewal(
   const retention = project.nielsenProfile?.audienceRetention;
   if (typeof retention === 'number') {
     if (retention < 40) {
-      dynamicThreshold += 2.5; // Huge penalty for hemorrhaging viewers
+      dynamicThreshold += 3.5; // Huge penalty for hemorrhaging viewers
     } else if (retention < 60) {
-      dynamicThreshold += 1.0; // Penalty for dropping off
+      dynamicThreshold += 1.5; // Penalty for dropping off
     } else if (retention >= 90) {
-      dynamicThreshold -= 1.5; // Big leniency for sticky shows that retain audience week-to-week
+      dynamicThreshold -= 2.0; // Big leniency for sticky shows that retain audience week-to-week
     } else if (retention >= 80) {
-      dynamicThreshold -= 0.5; // Leniency for good retention
+      dynamicThreshold -= 1.0; // Leniency for good retention
     }
   }
 
   if (project.budgetTier === 'blockbuster') {
-    dynamicThreshold += 8.5; // 📺 The Syndication Baron: Cancel expensive shows faster (streaming wars penalty)
+    dynamicThreshold += 10.0; // 📺 The Syndication Baron: Cancel expensive shows faster (streaming wars penalty)
   } else if (project.budgetTier === 'high') {
-    dynamicThreshold += 6.5; // 📺 The Syndication Baron: Cancel expensive shows faster
+    dynamicThreshold += 8.0; // 📺 The Syndication Baron: Cancel expensive shows faster
   } else if (project.budgetTier === 'indie') {
     dynamicThreshold -= 2.0; // Give leniency to cheap shows
   } else if (project.budgetTier === 'low') {
@@ -71,6 +71,14 @@ export function evaluateRenewal(
   } else if (project.tvDetails && project.tvDetails.currentSeason >= 4) {
     dynamicThreshold -= 2.5; // Massive reward for reaching syndication milestone
     if (project.reviewScore && project.reviewScore >= 80) {
+      dynamicThreshold -= 1.0;
+    }
+  } else if (project.tvDetails && project.tvDetails.currentSeason >= 3) {
+    dynamicThreshold -= 2.0; // 📺 The Syndication Baron: Reward consistent season-over-season quality
+    if (project.reviewScore && project.reviewScore >= 85) {
+      dynamicThreshold -= 1.5; // Consistent high quality over 3+ seasons is highly protected
+    }
+    if (project.reviewScore && project.reviewScore >= 90) {
       dynamicThreshold -= 1.0;
     }
   } else if (project.tvDetails && project.tvDetails.currentSeason > 1) {

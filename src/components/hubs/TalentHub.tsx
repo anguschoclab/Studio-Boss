@@ -37,7 +37,7 @@ const RosterPanel = () => {
   const [filter, setFilter] = useState<TalentRole | 'all'>('all');
   const [search, setSearch] = useState('');
   
-  const talentPool = useMemo(() => selectTalentPool(state), [state?.entities?.talents]);
+  const talentPool = useMemo(() => selectTalentPool(state), [state]);
 
   const moraleData = useMemo(() => {
     const low = selectLowMoraleTalent(state);

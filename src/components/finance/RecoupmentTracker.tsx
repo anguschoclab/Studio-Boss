@@ -1,5 +1,5 @@
 import React from 'react';
-import { cn, formatCurrency } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 import { TrendingUp, AlertCircle, CheckCircle2, Clock } from 'lucide-react';
 import { Section } from '@/components/layout/Section';
 import { Card } from '@/components/ui/card';

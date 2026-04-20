@@ -39,7 +39,7 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
   const [showMatchesOnly, setShowMatchesOnly] = useState(false);
   const [hoveredTalentId, setHoveredTalentId] = useState<string | null>(null);
 
-  const talentPool = useMemo(() => selectTalentPool(gameState), [gameState?.entities?.talents]);
+  const talentPool = useMemo(() => selectTalentPool(gameState), [gameState]);
   const contracts = useMemo(() => Object.values(gameState?.entities.contracts || {}), [gameState?.entities.contracts]);
   
   const attachedTalentIds = useMemo(() => {

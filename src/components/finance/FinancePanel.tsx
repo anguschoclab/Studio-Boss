@@ -21,8 +21,9 @@ import { useShallow } from 'zustand/react/shallow';
 import { formatMoney } from '@/engine/utils';
 import { selectProjects } from '@/store/selectors';
 import { useFinanceHistory } from '@/hooks/useFinanceHistory';
+import { FinancialSnapshot } from '@/engine/types/state.types';
 
-const EMPTY_HISTORY: import('@/engine/types/state.types').FinancialSnapshot[] = [];
+const EMPTY_HISTORY: FinancialSnapshot[] = [];
 const EMPTY_PROJECTS: import('@/engine/types').Project[] = [];
 
 export const FinancePanel = () => {
@@ -110,7 +111,7 @@ export const FinancePanel = () => {
     if (!financeHistory || financeHistory.length === 0) return [];
     
     // Convert snapshots to chart format
-    const history = financeHistory.map((h: any) => ({
+    const history = financeHistory.map((h: FinancialSnapshot) => ({
       week: h.week,
       isForecast: false,
       histCash: h.cash,
@@ -136,7 +137,7 @@ export const FinancePanel = () => {
         projRevenue: last.histRevenue,
         projCosts: last.histCosts,
         isForecast: true,
-      } as any);
+      } as unknown as typeof projected[0]);
     }
 
     return [...history, ...projected];
