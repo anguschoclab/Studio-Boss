@@ -33,11 +33,11 @@ export const CreateProjectModal = () => {
   const [releaseModel, setReleaseModel] = useState<ReleaseModelKey>('weekly');
 
   useEffect(() => {
-    if (showCreateProject && !title) {
+    if (showCreateProject && title === "") {
       setTitle(generateProjectTitle(genre));
     }
 
-  }, [showCreateProject, genre, title]);
+  }, [showCreateProject]);
 
   const tier = BUDGET_TIERS[budgetTier];
   let calculatedWeeklyCost = tier.weeklyCost;
@@ -286,7 +286,7 @@ export const CreateProjectModal = () => {
 
         <DialogFooter className="relative z-10 pt-4 border-t border-border/40 mt-6 sm:justify-between">
           <Button variant="ghost" onClick={closeCreateProject} className="font-medium hover:bg-destructive/10 hover:text-destructive transition-colors">Cancel</Button>
-          <Button onClick={handleCreate} disabled={!title.trim()} className="font-display font-bold tracking-wide shadow-sm hover:shadow-[0_0_15px_rgba(234,179,8,0.4)] transition-all">
+          <Button onClick={handleCreate} disabled={!title || !title.trim()} className="font-display font-bold tracking-wide shadow-sm hover:shadow-[0_0_15px_rgba(234,179,8,0.4)] transition-all">
             Greenlight Project
           </Button>
         </DialogFooter>

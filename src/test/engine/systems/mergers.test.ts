@@ -25,7 +25,7 @@ describe('Mergers and Sabotage System', () => {
       genreFocus: 'Horror',
     });
 
-    mockState = createMockGameState, createMockRival({
+    mockState = createMockGameState({
       week: 10,
       finance: { 
         cash: 100_000_000, 

@@ -153,7 +153,7 @@ export function tickTalentDiscoverySystem(state: GameState, rng: RandomGenerator
   }
 
   // 3. Maintain hidden talent pool
-  const discoveryState = state.relationships.discovery || {};
+  const discoveryState = state.relationships?.discovery || {};
   let hiddenPool = discoveryState.hiddenTalentPool || {};
 
   // Replenish pool if low
