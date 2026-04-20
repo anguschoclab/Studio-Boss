@@ -52,11 +52,33 @@ export const createMockProject = (overrides: Partial<Project> = {}): Project => 
   const type = overrides.type || 'FILM';
   const title = overrides.title || 'Mock Project';
   
-  const base: ProjectBase = {
+  const commonReception: CriticConsensus = {
+    metaScore: 0,
+    audienceScore: 0,
+    reviews: [],
+    status: 'Mixed',
+    isCultPotential: false
+  };
+
+  const commonAwardsProfile: AwardsProfile = {
+    criticScore: 0,
+    audienceScore: 0,
+    prestigeScore: 0,
+    craftScore: 0,
+    culturalHeat: 0,
+    campaignStrength: 0,
+    controversyRisk: 0,
+    festivalBuzz: 0,
+    academyAppeal: 0,
+    guildAppeal: 0,
+    populistAppeal: 0,
+    indieCredibility: 0,
+    industryNarrativeScore: 0
+  };
+
+  const baseProperties: Omit<ProjectBase, 'type' | 'format'> = {
     id,
     title,
-    type,
-    format: type === 'SERIES' ? 'tv' : 'film',
     genre: 'Drama',
     budgetTier: 'mid',
     budget: 10000000,
@@ -79,37 +101,19 @@ export const createMockProject = (overrides: Partial<Project> = {}): Project => 
     accumulatedCost: 0,
     ownerId: 'player',
     awards: [],
-    reception: {
-      metaScore: 0,
-      audienceScore: 0,
-      reviews: [],
-      status: 'Mixed',
-      isCultPotential: false
-    } as CriticConsensus,
-    awardsProfile: {
-      criticScore: 0,
-      audienceScore: 0,
-      prestigeScore: 0,
-      craftScore: 0,
-      culturalHeat: 0,
-      campaignStrength: 0,
-      controversyRisk: 0,
-      festivalBuzz: 0,
-      academyAppeal: 0,
-      guildAppeal: 0,
-      populistAppeal: 0,
-      indieCredibility: 0,
-      industryNarrativeScore: 0
-    } as AwardsProfile,
-    ...overrides
+    reception: commonReception,
+    awardsProfile: commonAwardsProfile,
+    ...overrides as any // Temporarily keep as any for the spread of Partial<Project> into Omit<ProjectBase>
   };
 
   if (type === 'SERIES') {
-    const seriesOverrides = (overrides.type === 'SERIES' ? overrides : {}) as Partial<SeriesProject>;
-    return {
-      ...base,
-      activeRoles: base.type === 'SERIES' ? (base as SeriesProject).activeRoles || [] : [],
-      scriptEvents: base.type === 'SERIES' ? (base as SeriesProject).scriptEvents || [] : [],
+    const seriesOverrides = overrides as Partial<SeriesProject>;
+    const series: SeriesProject = {
+      ...baseProperties,
+      type: 'SERIES',
+      format: 'tv',
+      activeRoles: seriesOverrides.activeRoles || [],
+      scriptEvents: seriesOverrides.scriptEvents || [],
       tvDetails: {
         currentSeason: 1,
         episodesOrdered: 10,
@@ -118,16 +122,20 @@ export const createMockProject = (overrides: Partial<Project> = {}): Project => 
         averageRating: 0,
         status: 'IN_DEVELOPMENT',
         ...seriesOverrides.tvDetails
-      } as TVSeasonDetails
-    } as SeriesProject;
+      }
+    };
+    return series;
   }
 
-  const filmOverrides = (overrides.type === 'FILM' ? overrides : {}) as Partial<FilmProject>;
-  return {
-    ...base,
+  const filmOverrides = overrides as Partial<FilmProject>;
+  const film: FilmProject = {
+    ...baseProperties,
+    type: 'FILM',
+    format: 'film',
     activeRoles: filmOverrides.activeRoles || [],
     scriptEvents: filmOverrides.scriptEvents || [],
-  } as FilmProject;
+  };
+  return film;
 };
 
 export const createMockGameState = (overrides: Partial<GameState> = {}): GameState => ({
@@ -263,20 +271,20 @@ export const createMockRival = (overrides: Partial<RivalStudio> = {}): RivalStud
 
 export const createMockBuyer = (overrides: Partial<Buyer> = {}): Buyer => {
   const archetype = overrides.archetype || 'streamer';
-  const base = {
+  const baseDefaults = {
     id: 'mock-buyer',
     name: 'Mock Buyer',
     archetype,
     foundedWeek: 1,
     marketShare: 0.1,
     reach: 50,
-    ...overrides
   };
 
   if (archetype === 'streamer') {
     const streamerOverrides = overrides as Partial<StreamerPlatform>;
-    return {
-      ...base,
+    const streamer: StreamerPlatform = {
+      ...baseDefaults,
+      archetype: 'streamer',
       subscribers: 1000000,
       churnRate: 0.05,
       contentLibraryQuality: 50,
@@ -284,23 +292,28 @@ export const createMockBuyer = (overrides: Partial<Buyer> = {}): Buyer => {
       subscriberHistory: [],
       activeLicenses: [],
       ...streamerOverrides
-    } as StreamerPlatform;
+    };
+    return streamer;
   }
 
   if (archetype === 'premium') {
     const premiumOverrides = overrides as Partial<PremiumPlatform>;
-    return {
-      ...base,
+    const premium: PremiumPlatform = {
+      ...baseDefaults,
+      archetype: 'premium',
       prestigeBonus: 20,
       ...premiumOverrides
-    } as PremiumPlatform;
+    };
+    return premium;
   }
 
   const networkOverrides = overrides as Partial<NetworkPlatform>;
-  return {
-    ...base,
+  const network: NetworkPlatform = {
+    ...baseDefaults,
+    archetype: 'network',
     ...networkOverrides
-  } as NetworkPlatform;
+  };
+  return network;
 };
 
 export const createMockMarketState = (overrides: Partial<MarketState> = {}): MarketState => ({
