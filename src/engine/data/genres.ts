@@ -111,7 +111,7 @@ export const TARGET_AUDIENCES = [
 ] as const;
 
 export const CROSSOVER_AFFINITY: Record<string, string[]> = {
-  'Superhero': ['Action', 'Sci-Fi', 'Fantasy', 'Comedy', 'Animation', 'Crime', 'Horror', 'Multiverse', 'IP Mashup', 'Anime'], // 🌌 The Universe Builder: Added Anime crossover affinity.
+  'Superhero': ['Action', 'Sci-Fi', 'Fantasy', 'Comedy', 'Animation', 'Crime', 'Horror', 'Multiverse', 'IP Mashup', 'Anime', 'Cyberpunk', 'Space Opera'], // 🌌 The Universe Builder: Added Cyberpunk and Space Opera to reflect massive modern franchise crossovers.
   'Action': ['Sci-Fi', 'Thriller', 'Crime', 'Superhero', 'Comedy', 'Video Game Adaptation'],
   'Sci-Fi': ['Action', 'Horror', 'Fantasy', 'Animation', 'Thriller', 'Video Game Adaptation', 'Multiverse', 'Space Opera', 'Cyberpunk'],
   'Horror': ['Sci-Fi', 'Thriller', 'Comedy', 'Fantasy', 'Documentary', 'Elevated Horror'],
@@ -145,7 +145,7 @@ export const CROSSOVER_AFFINITY: Record<string, string[]> = {
 };
 
 export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
-  'Superhero': 2.10, // 🌌 The Universe Builder: Increased superhero fatigue to represent severe modern burnout.
+  'Superhero': 2.50, // 🌌 The Universe Builder: Severely increased superhero fatigue to represent modern market exhaustion.
   'Action': 0.50,
   'Sci-Fi': 0.45,
   'Fantasy': 0.30,
@@ -159,7 +159,7 @@ export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
   'Crime': 0.20,
   'Musical': 0.25,
   'Unscripted': 0.40, // Reality/Unscripted can fatigue quickly if over-saturated
-  'Multiverse': 1.80, // 🌌 The Universe Builder: Extremely high fatigue risk if overdone. Increased to reflect hyper-saturation.
+  'Multiverse': 2.20, // 🌌 The Universe Builder: Fatal fatigue risk if overdone. Market hyper-saturation causes complete audience rejection.
   'Elevated Horror': 0.20,
   'IP Mashup': 0.85, // 🌌 The Universe Builder: High burnout potential
   'Legacy Sequel': 0.45, // 🌌 The Universe Builder: Nostalgia can wear thin if overused

@@ -60,6 +60,11 @@ export function calculateFranchiseEquity(
       crossoverBonus += 0.20;
     }
 
+    // 🌌 The Universe Builder: Apex Transmedia Event. Combining Superhero, Multiverse, and Video Game Adaptation yields unprecedented synergy.
+    if (genres.includes('Superhero') && genres.includes('Multiverse') && genres.includes('Video Game Adaptation')) {
+      crossoverBonus += 0.60;
+    }
+
     // Avengers-style crossover event check
     if (assets.length >= 3 && genres.some(g => g === 'Multiverse' || g === 'IP Mashup')) {
       crossoverBonus += 0.45;
@@ -131,7 +136,8 @@ export function calculateFranchiseEquity(
   const overSaturationPenalty = franchise.activeProjectIds && franchise.activeProjectIds.length >= 4 ? 0.8 : 1.0;
 
   // Massive penalty to valuation if the franchise is heavily fatigued
-  const fatiguePenalty = franchise.fatigueLevel > 0.8 ? 0.5 : 1.0;
+  // 🌌 The Universe Builder: Severe valuation collapse if fatigue crosses the critical 0.85 threshold.
+  const fatiguePenalty = franchise.fatigueLevel > 0.85 ? 0.25 : franchise.fatigueLevel > 0.8 ? 0.5 : 1.0;
 
   return Math.floor(baseEquity * crossoverBonus * multiplier * megaFranchisePremium * overSaturationPenalty * fatiguePenalty);
 }

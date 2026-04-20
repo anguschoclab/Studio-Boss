@@ -77,6 +77,11 @@ export function calculateFranchiseFatigue(
     currentFatigue *= 4.0;
   }
 
+  // 🌌 The Universe Builder: Absolute Oversaturation. When superhero or multiverse franchises push past 5 active entries, the market utterly rejects them.
+  if (activeCount >= 5 && (normalizedGenre === 'Superhero' || normalizedGenre === 'Multiverse')) {
+    currentFatigue *= 3.5;
+  }
+
   // 🌌 The Universe Builder: B-Tier Character Fatigue.
   if (activeCount >= 3 && franchise.audienceLoyalty < 60 && (normalizedGenre === 'Superhero' || normalizedGenre === 'Space Opera')) {
     currentFatigue *= 2.5;
@@ -120,12 +125,12 @@ export function calculateFranchiseFatigue(
   // 3. Rival Saturation (The 'Poison the Well' effect)
   // If genre is severely oversaturated, penalty multiplier increases heavily.
   // 🌌 The Universe Builder: The market rejects trend-chasing much faster now.
-  const oversaturationMultiplier = genreSaturation > 10 ? 3.0 : genreSaturation > 6 ? 1.5 : 1.0;
-  const rivalPenalty = (genreSaturation / 10) * 0.15 * oversaturationMultiplier;
+  const oversaturationMultiplier = genreSaturation > 10 ? 4.5 : genreSaturation > 6 ? 2.0 : 1.0;
+  const rivalPenalty = (genreSaturation / 10) * 0.25 * oversaturationMultiplier;
 
   // 🌌 The Universe Builder: Trend Chaser Penalty. Aggressively penalizes low-loyalty franchises jumping on over-saturated bandwagons.
   if (genreSaturation > 12 && franchise.audienceLoyalty < 40) {
-    currentFatigue *= 2.0;
+    currentFatigue *= 3.0;
   }
   
   // 4. Audience Loyalty (Protective Shield)
