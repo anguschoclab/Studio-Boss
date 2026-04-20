@@ -53,6 +53,23 @@ describe("ReviewSystem", () => {
       // Since RNG is seeded and the only difference is the +5 bias
       expect(scoreIndie).toBeGreaterThan(scoreMid);
     });
+
+    it("clamps scores with massive momentum and negative prestige (Guild Auditor)", () => {
+      const extremeProject = createMockProject({ ...mockProject, momentum: 200 }); // Very high momentum
+      const extremeTalent = [
+        createMockTalent({
+          id: "dir-1",
+          name: "Bad Director",
+          roles: ["director"],
+          prestige: -50 // Negative prestige
+        })
+      ];
+
+      const score = ReviewSystem.calculateMetaScore(extremeProject, extremeTalent, rng);
+      // Math: base=200, director=(-50-50)/5 = -20. rng is around ~0. 180, clamped to 100.
+      expect(score).toBeLessThanOrEqual(100);
+      expect(score).toBeGreaterThanOrEqual(0);
+    });
   });
 
   describe("calculateAudienceScore", () => {
@@ -65,6 +82,16 @@ describe("ReviewSystem", () => {
       const scoreLow = ReviewSystem.calculateAudienceScore(lowBuzz, meta, rng);
       
       expect(scoreHigh).toBeGreaterThan(scoreLow);
+    });
+
+    it("safely handles negative buzz and clamps correctly (Guild Auditor)", () => {
+      const meta = 70;
+      const negativeBuzzProject = createMockProject({ ...mockProject, buzz: -50 });
+
+      const score = ReviewSystem.calculateAudienceScore(negativeBuzzProject, meta, rng);
+      // Math: (70 * 0.6) + ((-50 / 2) * 0.4) = 42 - 10 = 32 +/- rng(15).
+      expect(score).toBeLessThanOrEqual(100);
+      expect(score).toBeGreaterThanOrEqual(0);
     });
   });
 

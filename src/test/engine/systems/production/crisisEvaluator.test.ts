@@ -26,7 +26,7 @@ describe('Crisis Evaluator (Target A3)', () => {
           }
         ],
         resolved: false
-      } as any
+      }
     });
     
     const state = createMockGameState();
@@ -58,7 +58,7 @@ describe('Crisis Evaluator - Edge Cases', () => {
      const project = createMockProject({ 
        id: 'p1', 
        state: 'production', 
-       activeCrisis: { resolved: true, crisisId: '1', title: 'test', description: 'test', type: 'DELAY', resolvedWeek: 1, options: [] } as any
+       activeCrisis: { resolved: true, crisisId: '1', title: 'test', description: 'test', type: 'DELAY', resolvedWeek: 1, options: [] }
      });
      const state = createMockGameState();
      state.entities.projects['p1'] = project;
@@ -71,7 +71,7 @@ describe('Crisis Evaluator - Edge Cases', () => {
      const project = createMockProject({ 
        id: 'p1', 
        state: 'production', 
-       activeCrisis: { resolved: false, crisisId: '1', title: 'test', description: 'test', type: 'DELAY', resolvedWeek: 1, options: [] } as any
+       activeCrisis: { resolved: false, crisisId: '1', title: 'test', description: 'test', type: 'DELAY', resolvedWeek: 1, options: [] }
      });
      const state = createMockGameState();
      state.entities.projects['p1'] = project;
@@ -84,7 +84,7 @@ describe('Crisis Evaluator - Edge Cases', () => {
      const project = createMockProject({ 
        id: 'p1', 
        state: 'production', 
-       activeCrisis: { resolved: false, crisisId: '1', title: 'test', description: 'test', type: 'DELAY', resolvedWeek: 1, options: [{ text: 'Do nothing' }] } as any
+       activeCrisis: { resolved: false, crisisId: '1', title: 'test', description: 'test', type: 'DELAY', resolvedWeek: 1, options: [{ text: 'Do nothing' }] }
      });
      const state = createMockGameState();
      state.entities.projects['p1'] = project;
@@ -93,5 +93,44 @@ describe('Crisis Evaluator - Edge Cases', () => {
      // Should still emit NEWS_ADDED and PROJECT_UPDATED (resolved: true)
      expect(impacts.some(i => i.type === 'NEWS_ADDED')).toBe(true);
      expect(impacts.some(i => i.type === 'PROJECT_UPDATED')).toBe(true);
+  });
+
+  it('should safely process negative penalties and delays without crashing (Guild Auditor)', () => {
+     const project = createMockProject({
+       id: 'p1',
+       state: 'production',
+       productionWeeks: 10,
+       buzz: 50,
+       activeCrisis: {
+         resolved: false,
+         crisisId: '1',
+         title: 'test',
+         description: 'test',
+         type: 'DELAY',
+         resolvedWeek: 1,
+         options: [{
+           text: 'Negative penalties',
+           cashPenalty: -500000,
+           weeksDelay: -2,
+           buzzPenalty: -20,
+           reputationPenalty: -10
+         }]
+       }
+     });
+     const state = createMockGameState();
+     state.entities.projects['p1'] = project;
+
+     const impacts = resolveCrisisWithHandlers(state, 'p1', 0);
+
+     const fundsImpact = impacts.find(i => i.type === 'FUNDS_CHANGED');
+     expect(fundsImpact?.payload.amount).toBe(500000); // -(-500000)
+
+     const prestigeImpact = impacts.find(i => i.type === 'PRESTIGE_CHANGED');
+     expect(prestigeImpact?.payload.amount).toBe(10); // -(-10)
+
+     const projectUpdate = impacts.find(i => i.type === 'PROJECT_UPDATED') as StateImpact & { payload: { update: any } };
+     expect(projectUpdate).toBeDefined();
+     expect(projectUpdate.payload.update.productionWeeks).toBe(8); // 10 + (-2)
+     expect(projectUpdate.payload.update.buzz).toBe(70); // max(0, 50 - (-20)) = 70
   });
 });
