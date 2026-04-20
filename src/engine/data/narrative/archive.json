@@ -251,6 +251,13 @@
         "Major studio lot fire disrupts production schedules city-wide.",
         "Virtual Reality pioneer announces a 'cinema killer' platform."
       ]
+    },
+    "Trend": {
+      "Standard": [
+        "Audiences are increasingly drawn to {{genre}} stories this season.",
+        "The latest box office data shows a significant surge in {{genre}} interest.",
+        "Cultural shifts are making {{genre}} films the talk of the town."
+      ]
     }
   },
   "Crisis": {
