@@ -8,7 +8,6 @@ import {
   selectReleasedProjects,
 } from '@/store/selectors';
 import { SubNav } from '@/components/navigation/SubNav';
-import { Badge } from '@/components/ui/badge';
 import {
   Building2,
   Trophy,
@@ -37,7 +36,7 @@ const RivalsPanel = () => {
     .slice(-12), [releasedProjects]);
 
   const rivalReleases = useMemo(() => rivals.flatMap(r =>
-    (r.projectIds || []).map(pid => ({
+    (r.projectIds || []).map(() => ({
       studioId: r.id,
       studioName: r.name,
       projectTitle: `${r.name} Project`,

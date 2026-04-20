@@ -1,6 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
-import { formatMoney } from '@/engine/utils';
 
 interface Metric {
   label: string;

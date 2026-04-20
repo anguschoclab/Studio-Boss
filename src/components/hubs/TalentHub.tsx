@@ -2,7 +2,6 @@ import React, { useState, useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore, TalentSubTab } from '@/store/uiStore';
 import { SubNav } from '@/components/navigation/SubNav';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
   Users,
@@ -37,7 +36,7 @@ const RosterPanel = () => {
   const [filter, setFilter] = useState<TalentRole | 'all'>('all');
   const [search, setSearch] = useState('');
   
-  const talentPool = useMemo(() => selectTalentPool(state), [state?.entities?.talents]);
+  const talentPool = useMemo(() => selectTalentPool(state), [state]);
 
   const moraleData = useMemo(() => {
     const low = selectLowMoraleTalent(state);
@@ -401,7 +400,7 @@ const ScandalsPanel = () => {
       weeksRemaining: s.weeksRemaining,
       publicSentiment: s.severity > 60 ? 'outraged' as const : 'divided' as const,
       pressCoverage: Math.round(s.severity * 0.5),
-      effects: [] as any[],
+      effects: [] as import('@/engine/types').StateImpact[],
       hasInsurance: false,
     };
   }), [gameState, talents]);
