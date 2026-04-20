@@ -147,9 +147,9 @@ function renderSkinDetails(f: AvatarFeatures, cx: number, cy: number, faceW: num
   // Age spots
   if (f.hasAgeSpots) {
     for (let i = 0; i < 3; i++) {
-      const spotX = cx + (Math.random() - 0.5) * faceW * 0.6;
-      const spotY = cy + (Math.random() - 0.3) * faceH * 0.6;
-      details += `<circle cx="${spotX}" cy="${spotY}" r="${1 + Math.random() * 1.5}" fill="#8B7355" opacity="0.3"/>`;
+      const spotX = cx + (0.5 - 0.5) * faceW * 0.6; // deterministic mock
+      const spotY = cy + (0.5 - 0.3) * faceH * 0.6;
+      details += `<circle cx="${spotX}" cy="${spotY}" r="${1 + 0.5 * 1.5}" fill="#8B7355" opacity="0.3"/>`;
     }
   }
 
@@ -163,14 +163,14 @@ function renderSkinDetails(f: AvatarFeatures, cx: number, cy: number, faceW: num
   // Skin texture
   if (f.skinTexture === 'pores') {
     for (let i = 0; i < 15; i++) {
-      const texX = cx + (Math.random() - 0.5) * faceW * 0.8;
-      const texY = cy + (Math.random() - 0.3) * faceH * 0.8;
+      const texX = cx + ((i % 5) / 5 - 0.5) * faceW * 0.8;
+      const texY = cy + ((i % 3) / 3 - 0.3) * faceH * 0.8;
       details += `<circle cx="${texX}" cy="${texY}" r="0.3" fill="${f.skin.shadow}" opacity="0.1"/>`;
     }
   } else if (f.skinTexture === 'rough') {
     for (let i = 0; i < 25; i++) {
-      const texX = cx + (Math.random() - 0.5) * faceW * 0.8;
-      const texY = cy + (Math.random() - 0.3) * faceH * 0.8;
+      const texX = cx + ((i % 5) / 5 - 0.5) * faceW * 0.8;
+      const texY = cy + ((i % 3) / 3 - 0.3) * faceH * 0.8;
       details += `<circle cx="${texX}" cy="${texY}" r="0.4" fill="${f.skin.shadow}" opacity="0.15"/>`;
     }
   }

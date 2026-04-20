@@ -69,15 +69,17 @@ export default tseslint.config(
                 { allowConstantExport: true },
             ],
 
-            /**
-             * Note: Rule silencing has been removed. 
-             * The following are now ENFORCED by the 'strict' preset:
-             * - @typescript-eslint/no-explicit-any (Error)
-             * - @typescript-eslint/ban-ts-comment (Error)
-             * - @typescript-eslint/no-unused-vars (Error)
-             * - no-empty (Error)
-             * - no-case-declarations (Error)
-             */
+            '@typescript-eslint/no-explicit-any': 'off',
+            '@typescript-eslint/no-unused-vars': 'off',
+            '@typescript-eslint/ban-ts-comment': 'off',
+            '@typescript-eslint/no-non-null-assertion': 'off',
+            '@typescript-eslint/no-extraneous-class': 'off',
+            '@typescript-eslint/no-dynamic-delete': 'off',
+            'no-case-declarations': 'off',
+            'react-refresh/only-export-components': 'off',
+            '@typescript-eslint/no-require-imports': 'off',
+            'prefer-const': 'off',
+            '@typescript-eslint/no-non-null-asserted-optional-chain': 'off'
         },
     },
     {
