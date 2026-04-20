@@ -142,7 +142,7 @@ function generateCareerSummary(talent: Talent, state: GameState): string {
 
   // Career trajectory
   if (talent.careerTrajectory) {
-    const trajectoryDescriptions: Partial<Record<CareerTrajectory, string>> = {
+    const trajectoryDescriptions: Record<CareerTrajectory, string> = {
       'rising': 'Their career is on a clear upward trajectory.',
       'peak': 'Currently at the absolute height of their power and influence.',
       'plateau': 'They have maintained consistent success over the years.',
@@ -150,7 +150,7 @@ function generateCareerSummary(talent: Talent, state: GameState): string {
       'resurgent': 'Experiencing a significant return to form after a quiet period.',
       'comeback': 'In the midst of an impressive career resurgence.',
     };
-    parts.push(trajectoryDescriptions[talent.careerTrajectory] || '');
+    parts.push(trajectoryDescriptions[talent.careerTrajectory]);
   }
 
   return parts.filter(p => p).join(' ');
