@@ -5,12 +5,13 @@ import * as projectsEngine from '@/engine/systems/projects';
 import { updateCultureFromProject } from '@/engine/systems/culture';
 import { negotiateContract } from '@/engine/systems/buyers';
 import { RandomGenerator } from '@/engine/utils/rng';
-import { Project, GameState, ProjectContractType, StateImpact } from '@/engine/types';
+import { Project, GameState, ProjectContractType, StateImpact, NewsId } from '@/engine/types';
+import { type ProjectId, type BuyerId, type StudioId } from '@/engine/types/shared.types';
 
 export interface ProjectWorkflowSlice {
-  greenlightProject: (projectId: string) => void;
-  pitchProject: (projectId: string, buyerId: string, contractType: ProjectContractType) => Promise<boolean>;
-  _updateProjectToProduction: (state: GameState, projectId: string, project: Project, headlineText: string, extraProjectUpdates?: Partial<Project>) => void;
+  greenlightProject: (projectId: ProjectId) => void;
+  pitchProject: (projectId: ProjectId, buyerId: BuyerId, contractType: ProjectContractType) => Promise<boolean>;
+  _updateProjectToProduction: (state: GameState, projectId: ProjectId, project: Project, headlineText: string, extraProjectUpdates?: Partial<Project>) => void;
 }
 
 export const createProjectWorkflowSlice: StateCreator<GameStore, [], [], ProjectWorkflowSlice> = (set, get) => ({
@@ -99,7 +100,7 @@ export const createProjectWorkflowSlice: StateCreator<GameStore, [], [], Project
       {
         type: 'NEWS_ADDED',
         payload: {
-          id: rng.uuid('NWS'),
+          id: rng.uuid('NWS') as NewsId,
           headline: headlineText,
           description: `Strategic shift: ${project.title} enters production.`
         }
