@@ -23,52 +23,20 @@ export function tickTelevision(state: GameState, rng: RandomGenerator): StateImp
     impacts.push(...runUpfronts(state, rng));
   }
   
-  // Refactored array .find() inside map to a Set/Map lookup, improving performance from O(n^2) to O(n).
-  // Loop fusion: We collect allSeries, airingShows, and identify player/rival ownership in a single pass.
+  // Refactored to a single O(N) loop over all projects, identifying player/rival series in one pass.
   const allSeries: SeriesProject[] = [];
   const airingShows: SeriesProject[] = [];
-
-  // Track ownership to avoid O(N) lookups later
-  const isPlayerMap = new Map<string, boolean>();
-  const rivalIdMap = new Map<string, string>();
-
-  const playerProjects = state.entities.projects;
-  for (const key in playerProjects) {
-    if (!Object.prototype.hasOwnProperty.call(playerProjects, key)) continue;
-    const p = playerProjects[key];
-    if (p.type === 'SERIES' && 'tvDetails' in p) {
-      const seriesProject = p as SeriesProject;
-      allSeries.push(seriesProject);
-      isPlayerMap.set(p.id, true);
-      if (seriesProject.tvDetails.status === 'ON_AIR') {
-        airingShows.push(seriesProject);
-      }
-    }
-  }
-
+  
+  const projectsMap = state.entities.projects;
   const rivalsMap = state.entities.rivals || {};
-  const rivalsList = Object.values(rivalsMap);
 
-  // Use unified storage for rival projects
-  const rivalProjects: SeriesProject[] = [];
-  const projectsDict = state.entities.projects;
-  const rivalIds = new Set(rivalsList.map(r => r.id));
-
-  for (const key in projectsDict) {
-    if (!Object.prototype.hasOwnProperty.call(projectsDict, key)) continue;
-    const p = projectsDict[key];
-    if (p.ownerId && rivalIds.has(p.ownerId)) {
-      rivalProjects.push(p as SeriesProject);
-    }
-  }
-
-  for (const p of rivalProjects) {
+  for (const id in projectsMap) {
+    const p = projectsMap[id];
     if (p.type === 'SERIES' && 'tvDetails' in p) {
-      const seriesProject = p as SeriesProject;
-      allSeries.push(seriesProject);
-      rivalIdMap.set(p.id, p.ownerId || '');
-      if (seriesProject.tvDetails.status === 'ON_AIR') {
-        airingShows.push(seriesProject);
+      const series = p as SeriesProject;
+      allSeries.push(series);
+      if (series.tvDetails.status === 'ON_AIR') {
+        airingShows.push(series);
       }
     }
   }
@@ -114,11 +82,10 @@ export function tickTelevision(state: GameState, rng: RandomGenerator): StateImp
     const updatedSnapshots = [...existingSnapshots, snapshot];
     const nielsenProfile = buildNielsenProfile(updatedSnapshots, timeSlot);
 
-    const isPlayer = isPlayerMap.get(project.id);
-    const rivalId = rivalIdMap.get(project.id);
-    const rival = rivalId ? rivalsMap[rivalId] : undefined;
+    const isPlayer = project.ownerId === 'player';
+    const isRival = project.ownerId && rivalsMap[project.ownerId];
 
-    if (isPlayer || rival) {
+    if (isPlayer || isRival) {
       impacts.push({
         type: 'PROJECT_UPDATED',
         payload: {

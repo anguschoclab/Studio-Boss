@@ -506,6 +506,10 @@ $ eslint .
   93:11  error  'director' is assigned a value but never used  @typescript-eslint/no-unused-vars
   93:28  error  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
 
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/rivals.ts
+  124:32  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  141:33  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
 /Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/rivals/RivalRevenueCalculator.ts
   8:14  error  Unexpected class with only static properties  @typescript-eslint/no-extraneous-class
 
@@ -531,24 +535,18 @@ $ eslint .
     6:10  error  'TVShowRecommendation' is defined but never used  @typescript-eslint/no-unused-vars
    14:11  error  'BioSection' is defined but never used            @typescript-eslint/no-unused-vars
   111:9   error  'prestige' is assigned a value but never used     @typescript-eslint/no-unused-vars
-  382:3   error  'state' is defined but never used                 @typescript-eslint/no-unused-vars
+  390:3   error  'state' is defined but never used                 @typescript-eslint/no-unused-vars
 
 /Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/talent/CastingConstraintSystem.ts
-    7:3   error  'ScriptRequirementType' is defined but never used   @typescript-eslint/no-unused-vars
-    8:3   error  'ScriptRequirementLevel' is defined but never used  @typescript-eslint/no-unused-vars
-   16:3   error  'RISK_PREMIUM_RATES' is defined but never used      @typescript-eslint/no-unused-vars
-   17:3   error  'ComfortLevelNudity' is defined but never used      @typescript-eslint/no-unused-vars
-   18:3   error  'ComfortLevelStunts' is defined but never used      @typescript-eslint/no-unused-vars
-   19:3   error  'ComfortLevelIntimacy' is defined but never used    @typescript-eslint/no-unused-vars
-   20:3   error  'ComfortLevelRisk' is defined but never used        @typescript-eslint/no-unused-vars
-   22:10  error  'getTalentRelationships' is defined but never used  @typescript-eslint/no-unused-vars
-   22:34  error  'areRomantic' is defined but never used             @typescript-eslint/no-unused-vars
-  205:23  error  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
-  365:16  error  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
-  391:16  error  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
-  404:16  error  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
-  423:30  error  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
-  424:35  error  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+   7:3   error  'ScriptRequirementType' is defined but never used   @typescript-eslint/no-unused-vars
+   8:3   error  'ScriptRequirementLevel' is defined but never used  @typescript-eslint/no-unused-vars
+  16:3   error  'RISK_PREMIUM_RATES' is defined but never used      @typescript-eslint/no-unused-vars
+  17:3   error  'ComfortLevelNudity' is defined but never used      @typescript-eslint/no-unused-vars
+  18:3   error  'ComfortLevelStunts' is defined but never used      @typescript-eslint/no-unused-vars
+  19:3   error  'ComfortLevelIntimacy' is defined but never used    @typescript-eslint/no-unused-vars
+  20:3   error  'ComfortLevelRisk' is defined but never used        @typescript-eslint/no-unused-vars
+  22:10  error  'getTalentRelationships' is defined but never used  @typescript-eslint/no-unused-vars
+  22:34  error  'areRomantic' is defined but never used             @typescript-eslint/no-unused-vars
 
 /Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/talent/CliqueSystem.ts
     5:3   error  'CliqueStatus' is defined but never used            @typescript-eslint/no-unused-vars
@@ -639,7 +637,7 @@ $ eslint .
 
 /Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/talent/TalentMoraleSystem.ts
    1:37  error  'StateImpact' is defined but never used       @typescript-eslint/no-unused-vars
-  13:14  error  Unexpected class with only static properties  @typescript-eslint/no-extraneous-class
+  14:14  error  Unexpected class with only static properties  @typescript-eslint/no-extraneous-class
 
 /Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/talent/TalentSystemIndex.ts
   1:55  error  'Opportunity' is defined but never used       @typescript-eslint/no-unused-vars
@@ -666,19 +664,7 @@ $ eslint .
     2:68   error  'PERSONALITY_ARCHETYPES' is defined but never used    @typescript-eslint/no-unused-vars
     2:92   error  'PERSONALITY_TRAITS' is defined but never used        @typescript-eslint/no-unused-vars
     2:112  error  'generateCareerTrajectory' is defined but never used  @typescript-eslint/no-unused-vars
-   39:73   error  Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
-   49:67   error  Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
-   63:58   error  Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
   131:14   error  Unexpected class with only static properties          @typescript-eslint/no-extraneous-class
-  227:61   error  Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
-  291:75   error  Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
-  391:70   error  Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
-  393:71   error  Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
-  395:73   error  Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
-  397:76   error  Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
-  399:73   error  Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
-  404:67   error  Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
-  408:77   error  Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
 
 /Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/systems/talent/relationshipFormation.ts
   3:33  error  'RomanceData' is defined but never used  @typescript-eslint/no-unused-vars
@@ -710,14 +696,17 @@ $ eslint .
   1:10  error  'pick' is defined but never used  @typescript-eslint/no-unused-vars
 
 /Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/types/state.types.ts
-    4:71  error  'CriticConsensus' is defined but never used  @typescript-eslint/no-unused-vars
-  238:50  error  Unexpected any. Specify a different type     @typescript-eslint/no-explicit-any
+   4:71  error  'CriticConsensus' is defined but never used  @typescript-eslint/no-unused-vars
+  14:8   error  'AwardId' is defined but never used          @typescript-eslint/no-unused-vars
 
 /Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/types/studio.types.ts
   4:20  error  'TalentPact' is defined but never used  @typescript-eslint/no-unused-vars
 
 /Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/utils.ts
   47:5  error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+
+/Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/utils/impactUtils.ts
+  14:32  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
 
 /Users/amauricia/Documents/GitHub/Studio-Boss/src/engine/utils/projectUtils.ts
   73:65  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
@@ -790,35 +779,43 @@ $ eslint .
 /Users/amauricia/Documents/GitHub/Studio-Boss/src/store/slices/projectEventsSlice.ts
   8:10  error  'Project' is defined but never used    @typescript-eslint/no-unused-vars
   8:19  error  'GameState' is defined but never used  @typescript-eslint/no-unused-vars
+  9:46  error  'TalentId' is defined but never used   @typescript-eslint/no-unused-vars
 
 /Users/amauricia/Documents/GitHub/Studio-Boss/src/store/slices/projectIPSlice.ts
-  7:10  error  'Project' is defined but never used    @typescript-eslint/no-unused-vars
-  7:19  error  'GameState' is defined but never used  @typescript-eslint/no-unused-vars
+   7:10  error  'Project' is defined but never used       @typescript-eslint/no-unused-vars
+   7:19  error  'GameState' is defined but never used     @typescript-eslint/no-unused-vars
+   8:45  error  'StudioId' is defined but never used      @typescript-eslint/no-unused-vars
+   8:60  error  'ContractId' is defined but never used    @typescript-eslint/no-unused-vars
+  91:36  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
 
 /Users/amauricia/Documents/GitHub/Studio-Boss/src/store/slices/projectUtilsSlice.ts
   4:19  error  'GameState' is defined but never used  @typescript-eslint/no-unused-vars
 
 /Users/amauricia/Documents/GitHub/Studio-Boss/src/store/slices/projectWorkflowSlice.ts
-  77:29  error  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+   9:45  error  'StudioId' is defined but never used  @typescript-eslint/no-unused-vars
+  78:29  error  Forbidden non-null assertion          @typescript-eslint/no-non-null-assertion
 
 /Users/amauricia/Documents/GitHub/Studio-Boss/src/store/slices/rivalSlice.ts
   26:21  error  Do not delete dynamically computed property keys  @typescript-eslint/no-dynamic-delete
 
 /Users/amauricia/Documents/GitHub/Studio-Boss/src/store/slices/talentContractSlice.ts
-    3:44   error  'Talent' is defined but never used                @typescript-eslint/no-unused-vars
-   14:102  error  'get' is defined but never used                   @typescript-eslint/no-unused-vars
-   65:95   error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
-  245:35   error  Do not delete dynamically computed property keys  @typescript-eslint/no-dynamic-delete
+   15:102  error  'get' is defined but never used                   @typescript-eslint/no-unused-vars
+   66:95   error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  251:35   error  Do not delete dynamically computed property keys  @typescript-eslint/no-dynamic-delete
 
 /Users/amauricia/Documents/GitHub/Studio-Boss/src/store/slices/talentMarketplaceSlice.ts
-   3:10   error  'Opportunity' is defined but never used  @typescript-eslint/no-unused-vars
-  13:108  error  'get' is defined but never used          @typescript-eslint/no-unused-vars
-
-/Users/amauricia/Documents/GitHub/Studio-Boss/src/store/slices/talentStatsSlice.ts
-  46:48  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+    3:10   error  'Opportunity' is defined but never used   @typescript-eslint/no-unused-vars
+    3:43   error  'StateImpact' is defined but never used   @typescript-eslint/no-unused-vars
+    4:66   error  'TalentId' is defined but never used      @typescript-eslint/no-unused-vars
+   14:108  error  'get' is defined but never used           @typescript-eslint/no-unused-vars
+   20:75   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   97:75   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  111:22   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
 
 /Users/amauricia/Documents/GitHub/Studio-Boss/src/store/storeUtils.ts
-  59:33  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  12:8   error  'StudioId' is defined but never used      @typescript-eslint/no-unused-vars
+  14:8   error  'AssetId' is defined but never used       @typescript-eslint/no-unused-vars
+  68:33  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
 
 /Users/amauricia/Documents/GitHub/Studio-Boss/src/test/WeekSummaryModal.test.tsx
   35:41  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
@@ -1294,31 +1291,31 @@ $ eslint .
   28:43  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
 
 /Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/mergers.test.ts
-    1:44  error  'vi' is defined but never used            @typescript-eslint/no-unused-vars
-    8:34  error  'Talent' is defined but never used        @typescript-eslint/no-unused-vars
-   90:14  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-   96:14  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
-   99:14  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
-  100:14  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
-  100:14  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
-  101:14  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
-  101:14  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
-  102:14  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
-  102:14  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
-  105:14  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
-  106:14  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
-  106:14  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
-  107:14  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
-  107:14  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
-  109:14  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
-  110:24  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
-  110:24  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
-  118:14  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
-  119:14  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
-  126:14  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
-  127:14  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
-  128:14  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
-  128:14  error  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+    1:44  error  'vi' is defined but never used       @typescript-eslint/no-unused-vars
+    8:34  error  'Talent' is defined but never used   @typescript-eslint/no-unused-vars
+    8:42  error  'Project' is defined but never used  @typescript-eslint/no-unused-vars
+  102:14  error  Forbidden non-null assertion         @typescript-eslint/no-non-null-assertion
+  105:14  error  Forbidden non-null assertion         @typescript-eslint/no-non-null-assertion
+  106:14  error  Forbidden non-null assertion         @typescript-eslint/no-non-null-assertion
+  106:14  error  Forbidden non-null assertion         @typescript-eslint/no-non-null-assertion
+  107:14  error  Forbidden non-null assertion         @typescript-eslint/no-non-null-assertion
+  107:14  error  Forbidden non-null assertion         @typescript-eslint/no-non-null-assertion
+  108:14  error  Forbidden non-null assertion         @typescript-eslint/no-non-null-assertion
+  108:14  error  Forbidden non-null assertion         @typescript-eslint/no-non-null-assertion
+  111:14  error  Forbidden non-null assertion         @typescript-eslint/no-non-null-assertion
+  112:14  error  Forbidden non-null assertion         @typescript-eslint/no-non-null-assertion
+  112:14  error  Forbidden non-null assertion         @typescript-eslint/no-non-null-assertion
+  113:14  error  Forbidden non-null assertion         @typescript-eslint/no-non-null-assertion
+  113:14  error  Forbidden non-null assertion         @typescript-eslint/no-non-null-assertion
+  115:14  error  Forbidden non-null assertion         @typescript-eslint/no-non-null-assertion
+  116:24  error  Forbidden non-null assertion         @typescript-eslint/no-non-null-assertion
+  116:24  error  Forbidden non-null assertion         @typescript-eslint/no-non-null-assertion
+  124:14  error  Forbidden non-null assertion         @typescript-eslint/no-non-null-assertion
+  125:14  error  Forbidden non-null assertion         @typescript-eslint/no-non-null-assertion
+  132:14  error  Forbidden non-null assertion         @typescript-eslint/no-non-null-assertion
+  133:14  error  Forbidden non-null assertion         @typescript-eslint/no-non-null-assertion
+  134:14  error  Forbidden non-null assertion         @typescript-eslint/no-non-null-assertion
+  134:14  error  Forbidden non-null assertion         @typescript-eslint/no-non-null-assertion
 
 /Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/processors/processProduction.test.ts
    3:38  error  'ProjectUpdateImpact' is defined but never used  @typescript-eslint/no-unused-vars
@@ -1452,7 +1449,7 @@ $ eslint .
   175:46  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
 
 /Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/talent/RelationshipSystem.test.ts
-  328:16  error  Parsing error: ',' expected
+  12:15  error  'GameState' is defined but never used  @typescript-eslint/no-unused-vars
 
 /Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/talent/driftEngine.test.ts
    41:19  error  'personality' is assigned a value but never used  @typescript-eslint/no-unused-vars
@@ -1584,10 +1581,7 @@ $ eslint .
   164:20   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
   179:100  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
 
-/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/utils/mockFactories.ts
-  113:57  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-
-✖ 1065 problems (1048 errors, 17 warnings)
+✖ 1059 problems (1042 errors, 17 warnings)
   3 errors and 0 warnings potentially fixable with the `--fix` option.
 
 error: script "lint" exited with code 1

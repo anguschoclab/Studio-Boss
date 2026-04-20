@@ -1,4 +1,4 @@
-import { GameState, StateImpact, Talent } from '../../types';
+import { GameState, StateImpact, Talent, CareerTrajectory, TalentPersonality } from '../../types';
 import { RandomGenerator } from '../../utils/rng';
 import { TalentRelationship } from '../../types/relationship.types';
 import { BreakoutStar } from '../../types/discovery.types';
@@ -141,10 +141,12 @@ function generateCareerSummary(talent: Talent, state: GameState): string {
 
   // Career trajectory
   if (talent.careerTrajectory) {
-    const trajectoryDescriptions: Record<string, string> = {
+    const trajectoryDescriptions: Partial<Record<CareerTrajectory, string>> = {
       'rising': 'Their career is on a clear upward trajectory.',
+      'peak': 'Currently at the absolute height of their power and influence.',
       'plateau': 'They have maintained consistent success over the years.',
       'declining': 'Recently facing career challenges but with potential for a comeback.',
+      'resurgent': 'Experiencing a significant return to form after a quiet period.',
       'comeback': 'In the midst of an impressive career resurgence.',
     };
     parts.push(trajectoryDescriptions[talent.careerTrajectory] || '');
@@ -297,11 +299,17 @@ function generatePersonalitySection(talent: Talent): string {
   const personality = talent.personality;
   if (!personality) return '';
 
-  const descriptions: Record<string, string> = {
+  const descriptions: Partial<Record<TalentPersonality, string>> = {
     'charismatic': 'Known for their magnetic screen presence and ability to light up any set.',
     'difficult': 'Their intense dedication to craft sometimes creates on-set tension, but yields powerful results.',
     'perfectionist': 'A meticulous artist who demands excellence from themselves and their collaborators.',
     'collaborative': 'Prized for their team-first attitude and ability to elevate everyone around them.',
+    'method': 'A dedicated practitioner of method acting, staying in character throughout production.',
+    'pragmatic': 'Known for a professional, no-nonsense approach to the business of acting.',
+    'artistic': 'Driven by creative vision and artistic integrity over commercial concerns.',
+    'commercial': 'A reliable box-office draw with a keen sense for market appeal.',
+    'loyal': 'Valued for their long-standing industry relationships and loyalty to collaborators.',
+    'ambitious': 'Consistently pushing for bigger roles and greater industry influence.',
   };
 
   return descriptions[personality] || '';

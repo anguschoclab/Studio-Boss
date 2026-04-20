@@ -4,7 +4,7 @@ import { RandomGenerator } from '../utils/rng';
 export class SchedulingEngine {
   static tick(state: GameState, rng: RandomGenerator): StateImpact[] {
     const impacts: StateImpact[] = [];
-    const projects = Object.values(state.entities.projects) as Project[];
+    const projects = Object.values(state.entities.projects);
     const contractsList = Object.values(state.entities.contracts || {});
     const talentPool = state.entities.talents;
 

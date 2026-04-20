@@ -34,7 +34,7 @@ export type PersonalityArchetype = 'influencer' | 'reality_star' | 'talk_show_ho
 export type TalentPersonality = 'perfectionist' | 'collaborative' | 'difficult' | 'charismatic' | 'method' | 'pragmatic' | 'artistic' | 'commercial' | 'loyal' | 'ambitious';
 
 // Career trajectory for talent lifecycle
-export type CareerTrajectory = 'rising' | 'peak' | 'declining' | 'resurgent';
+export type CareerTrajectory = 'rising' | 'peak' | 'declining' | 'resurgent' | 'plateau' | 'comeback';
 
 export type TalentTier = 1 | 2 | 3 | 4;
 
@@ -267,18 +267,6 @@ export interface Talent {
   // Discovery System: Breakout star tracking
   isBreakout?: boolean; // True if currently experiencing breakout hype
 
-  // Casting Constraint System: Comfort levels for script requirements
-  comfortLevel?: {
-    nudity: 'none' | 'tasteful' | 'partial' | 'full';
-    stunts: 'none' | 'minor' | 'moderate' | 'extreme';
-    intimacy: 'none' | 'tasteful' | 'passionate';
-    risk: 'conservative' | 'moderate' | 'adventurous';
-  };
-  comfortPremiumRates?: {
-    nudityMultiplier: number;
-    stuntMultiplier: number;
-    intimacyMultiplier: number;
-  };
 }
 
 export interface Contract {

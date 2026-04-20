@@ -41,7 +41,7 @@ export interface RivalStudio {
   // Consolidation & Vertical Integration
   ownedPlatforms?: string[]; // IDs of platforms this studio owns
   parentBrand?: string;
-  marketShare?: number; // 0-100: Calculated based on revenue and prestige
+  marketShare?: number; // 0.0 to 1.0: Calculated based on revenue and prestige
   strategy?: RivalStrategy;
   genreFocus?: string;
   acquisitionTarget?: string;
