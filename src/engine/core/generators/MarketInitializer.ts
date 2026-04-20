@@ -3,6 +3,7 @@ import { BrandSystem } from '../../generators/BrandSystem';
 import { generateBuyers } from '../../generators/buyers';
 import { RandomGenerator } from '../../utils/rng';
 import { StreamerPlatform } from '@/engine/types';
+import { type StudioId, type BuyerId } from '@/engine/types/shared.types';
 
 interface MarketInitializerOptions {
   networks?: number;
@@ -13,13 +14,13 @@ interface MarketInitializerOptions {
 export function initializeMarket(
   rng: RandomGenerator,
   rivals: RivalStudio[],
-  playerStudioId: string,
+  playerStudioId: StudioId,
   playerArchetype: ArchetypeKey,
   studioName: string,
   options: MarketInitializerOptions = {}
 ): {
   initialBuyers: import('@/engine/types').Buyer[];
-  playerOwnedPlatforms: string[];
+  playerOwnedPlatforms: BuyerId[];
 } {
   const { networks = 4, premium = 4, streamers = 5 } = options;
 
@@ -30,7 +31,7 @@ export function initializeMarket(
   if (playerArchetype !== 'indie') {
     const playerBrand = { core: studioName.split(' ')[0], isConglomerate: true };
     const playerStreamer: StreamerPlatform = {
-      id: rng.uuid('BUY'),
+      id: rng.uuid<BuyerId>('BUY'),
       name: BrandSystem.getStreamingName(playerBrand, rng),
       archetype: 'streamer',
       foundedWeek: 1,
@@ -54,12 +55,12 @@ export function initializeMarket(
     if (rival.archetype !== 'indie' && rng.next() < 0.7) {
       const rivalBrand = { core: rival.parentBrand!, isConglomerate: true };
       const rivalStreamer: StreamerPlatform = {
-        id: rng.uuid('BUY'),
+        id: rng.uuid<BuyerId>('BUY'),
         name: BrandSystem.getStreamingName(rivalBrand, rng),
         archetype: 'streamer',
         foundedWeek: 1,
         parentBrand: rivalBrand.core,
-        ownerId: rival.id,
+        ownerId: rival.id as StudioId,
         subscribers: rival.archetype === 'major' ? 20_000_000 : 8_000_000,
         churnRate: 0.05,
         contentLibraryQuality: 50,

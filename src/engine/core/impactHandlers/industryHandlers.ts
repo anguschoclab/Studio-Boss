@@ -6,12 +6,45 @@ import { GameState, StateImpact, Franchise } from '@/engine/types';
  */
 
 export function handleIndustryUpdate(state: GameState, impact: StateImpact): GameState {
-  const payload = impact.payload;
+  const payload = impact.payload as any; // Using any for transition, but internal logic is guarded
   if (!payload || typeof payload !== 'object') return state;
   let nextState = { ...state };
   
-  const update = (payload as { update?: Record<string, any> }).update;
-  // Generic Deep-Path Updates
+  // 1. Batch Project Updates
+  if (Array.isArray(payload.projects)) {
+    const nextProjects = { ...nextState.entities.projects };
+    payload.projects.forEach((u: { projectId: string; update: any }) => {
+      if (nextProjects[u.projectId]) {
+        nextProjects[u.projectId] = { ...nextProjects[u.projectId], ...u.update };
+      }
+    });
+    nextState = { ...nextState, entities: { ...nextState.entities, projects: nextProjects } };
+  }
+
+  // 2. Batch Rival Updates
+  if (Array.isArray(payload.rivals)) {
+    const nextRivals = { ...nextState.entities.rivals };
+    payload.rivals.forEach((u: { rivalId: string; update: any }) => {
+      if (nextRivals[u.rivalId]) {
+        nextRivals[u.rivalId] = { ...nextRivals[u.rivalId], ...u.update };
+      }
+    });
+    nextState = { ...nextState, entities: { ...nextState.entities, rivals: nextRivals } };
+  }
+
+  // 3. Batch Talent Updates
+  if (Array.isArray(payload.talents)) {
+    const nextTalents = { ...nextState.entities.talents };
+    payload.talents.forEach((u: { talentId: string; update: any }) => {
+      if (nextTalents[u.talentId]) {
+        nextTalents[u.talentId] = { ...nextTalents[u.talentId], ...u.update };
+      }
+    });
+    nextState = { ...nextState, entities: { ...nextState.entities, talents: nextTalents } };
+  }
+
+  // 4. Legacy Generic Deep-Path Updates
+  const update = payload.update;
   if (update && typeof update === 'object' && !Array.isArray(update)) {
     for (const [path, value] of Object.entries(update)) {
       const parts = path.split('.');

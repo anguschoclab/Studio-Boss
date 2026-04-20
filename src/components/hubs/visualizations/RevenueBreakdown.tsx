@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { PieChart } from '@/components/charts/PieChart';
 import { Card } from '@/components/ui/card';
 import { tokens } from '@/lib/tokens';
@@ -24,7 +24,17 @@ export const RevenueBreakdown: React.FC<RevenueBreakdownProps> = ({
   className,
 }) => {
   const gameState = useGameStore(s => s.gameState);
-  const sources = externalSources || selectRevenueBreakdown(gameState);
+  const sources = useMemo(() => {
+    const rawSources = externalSources || selectRevenueBreakdown(gameState);
+    return rawSources.map(s => {
+      // Standardize to the local RevenueSource interface
+      const name = 'name' in s ? String(s.name) : 'source' in s ? String(s.source) : 'Unknown';
+      const value = s.value;
+      const color = 'color' in s ? String(s.color) : undefined;
+      return { name, value, color };
+    });
+  }, [externalSources, gameState]);
+
   const totalRevenue = externalTotal || sources.reduce((sum, s) => sum + s.value, 0);
   const defaultColors = [
     '#3b82f6', // Theatrical

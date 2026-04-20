@@ -1,4 +1,5 @@
 import { Talent } from '@/engine/types';
+import { type TalentId, type AgencyId, type AgentId, type FamilyId } from '@/engine/types/shared.types';
 import { generateFamilies, generateTalentPool } from '../../generators/talent';
 import { generateAgencies, generateAgents } from '../../generators/agencies';
 import { RandomGenerator } from '../../utils/rng';
@@ -15,7 +16,7 @@ export function generateTalentPoolWithRelationships(
   rng: RandomGenerator,
   options: TalentPoolGeneratorOptions = {}
 ): {
-  talentPool: Record<string, Talent>;
+  talentPool: Record<TalentId, Talent>;
   talentPoolArray: Talent[];
   agencies: import('../../types/talent.types').Agency[];
   agents: import('../../types/talent.types').Agent[];
@@ -39,9 +40,9 @@ export function generateTalentPoolWithRelationships(
 
   const talentPoolArray = generateTalentPool(rng, talentCount);
   const talentPool = talentPoolArray.reduce((acc, t) => {
-    acc[t.id] = t;
+    acc[t.id as TalentId] = t;
     return acc;
-  }, {} as Record<string, Talent>);
+  }, {} as Record<TalentId, Talent>);
 
   // Initialize talent-agent relationships
   const talentAgentRelationships: Record<string, import('./talentAgentInteractions').TalentAgentRelationship> = {};

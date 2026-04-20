@@ -1,14 +1,25 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { tickProduction, evaluateActiveMergers } from '@/engine/systems/productionEngine';
 import { RandomGenerator } from '@/engine/utils/rng';
 import { createMockGameState, createMockProject, createMockTalent, createMockContract, createMockRival } from '../../utils/mockFactories';
 import * as projectsModule from '@/engine/systems/projects';
+import { IndustryUpdateImpact, TalentUpdateImpact, Project, Contract, Talent, StateImpact } from '@/engine/types';
+import { RandomGenerator } from '@/engine/utils/rng';
 
-vi.mock('@/engine/systems/projects', async (importOriginal) => {
-  const actual = await importOriginal() as any;
-  return {
-    ...actual,
-    advanceProject: vi.fn((project, currentWeek, studioPrestige, projectContracts, talentPoolMap, rng) => {
+describe('Production Engine - Normalization', () => {
+  const rng = new RandomGenerator(555);
+
+  const originalAdvance = projectsModule.advanceProject;
+
+  beforeEach(() => {
+    vi.spyOn(projectsModule, 'advanceProject').mockImplementation((
+      project: Project, 
+      currentWeek: number, 
+      studioPrestige: number, 
+      projectContracts: Contract[], 
+      talentPoolMap: Record<string, Talent>, 
+      rng: RandomGenerator
+    ): StateImpact[] => {
       if (project.id === 'scandal-project') {
         return [{
           type: 'SCANDAL_ADDED',
@@ -21,13 +32,13 @@ vi.mock('@/engine/systems/projects', async (importOriginal) => {
           }
         }];
       }
-      return actual.advanceProject(project, currentWeek, studioPrestige, projectContracts, talentPoolMap, rng);
-    })
-  };
-});
+      return originalAdvance(project, currentWeek, studioPrestige, projectContracts, talentPoolMap, rng);
+    });
+  });
 
-describe('Production Engine - Normalization', () => {
-  const rng = new RandomGenerator(555);
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
 
   it('should return INDUSTRY_UPDATE impact for Player and Rival projects', () => {
     const playerProject = createMockProject({ id: 'player-p1', state: 'production', weeksInPhase: 5, productionWeeks: 20, progress: 25, ownerId: 'player' });
@@ -41,11 +52,12 @@ describe('Production Engine - Normalization', () => {
 
     const impacts = tickProduction(state, rng);
 
-    const industryUpdate = impacts.find(i => i.type === 'INDUSTRY_UPDATE') as any;
+    const industryUpdate = impacts.find(i => i.type === 'INDUSTRY_UPDATE') as IndustryUpdateImpact;
     expect(industryUpdate).toBeDefined();
     
     // Verify both projects were updated
     const updatedProjects = industryUpdate.payload.update['entities.projects'];
+    if (!updatedProjects) throw new Error('Entities.projects missing');
     expect(updatedProjects['player-p1']).toBeDefined();
     expect(updatedProjects['rival-p1']).toBeDefined();
   });
@@ -59,7 +71,7 @@ describe('Production Engine - Normalization', () => {
 
     const impacts = tickProduction(state, rng);
 
-    const industryUpdate = impacts.find(i => i.type === 'INDUSTRY_UPDATE') as any;
+    const industryUpdate = impacts.find(i => i.type === 'INDUSTRY_UPDATE');
     expect(industryUpdate).toBeUndefined(); // Should not emit update if empty
 
     // Verify no crashes occurred
@@ -74,12 +86,14 @@ describe('Production Engine - Normalization', () => {
     const impacts = tickProduction(state, rng);
 
     // Test that tickProduction safely handles and produces standard impacts despite negative budget
-    const industryUpdate = impacts.find(i => i.type === 'INDUSTRY_UPDATE') as any;
+    const industryUpdate = impacts.find(i => i.type === 'INDUSTRY_UPDATE') as IndustryUpdateImpact;
     expect(industryUpdate).toBeDefined();
 
-    const updatedProject = industryUpdate.payload.update['entities.projects']['neg-budget-p1'];
+    const updatedProjects = industryUpdate.payload.update['entities.projects'];
+    if (!updatedProjects) throw new Error('Entities.projects missing');
+    const updatedProject = updatedProjects['neg-budget-p1'];
     expect(updatedProject).toBeDefined();
-    expect(updatedProject.progress).toBeGreaterThan(10);
+    expect(updatedProject?.progress).toBeGreaterThan(10);
   });
 
   it('handles a project with a talent who has 0 skill but 100 ego (Guild Auditor)', () => {
@@ -100,10 +114,10 @@ describe('Production Engine - Normalization', () => {
     const impacts = tickProduction(state, rng);
 
     // Verify progress happened, though potentially slower due to low mood (checked by TalentMoraleSystem)
-    const industryUpdate = impacts.find(i => i.type === 'INDUSTRY_UPDATE') as any;
+    const industryUpdate = impacts.find(i => i.type === 'INDUSTRY_UPDATE') as IndustryUpdateImpact;
     expect(industryUpdate).toBeDefined();
 
-    const talentUpdate = impacts.find(i => i.type === 'TALENT_UPDATED' && i.payload.talentId === 'ego-t1') as any;
+    const talentUpdate = impacts.find(i => i.type === 'TALENT_UPDATED' && (i as TalentUpdateImpact).payload.talentId === 'ego-t1') as TalentUpdateImpact;
     expect(talentUpdate).toBeDefined();
     expect(talentUpdate.payload.update.fatigue).toBeDefined();
   });
@@ -114,10 +128,13 @@ describe('Production Engine - Normalization', () => {
     state.entities.projects['long-p1'] = project;
 
     const impacts = tickProduction(state, rng);
-    const industryUpdate = impacts.find(i => i.type === 'INDUSTRY_UPDATE') as any;
+    const industryUpdate = impacts.find(i => i.type === 'INDUSTRY_UPDATE') as IndustryUpdateImpact;
 
     // Progress should be based on targetWeeks bounded to 30 as defined in tickProject
-    const updatedProject = industryUpdate.payload.update['entities.projects']['long-p1'];
+    const updatedProjects = industryUpdate.payload.update['entities.projects'];
+    if (!updatedProjects) throw new Error('Entities.projects missing');
+    const updatedProject = updatedProjects['long-p1'];
+    if (!updatedProject) throw new Error('Updated project missing');
     const expectedBaseProgressIncrement = (1 / 30) * 100;
 
     // With variance (0.8 to 1.2), progress should be somewhat close to 10 + 3.33

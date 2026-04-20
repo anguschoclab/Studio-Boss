@@ -94,7 +94,7 @@ export const StreamingViewershipTracker = {
    */
   calculateStreamingDecay(weeksSinceRelease: number, project: Project): number {
     // Binge releases: sharp drop after week 1-2, then long tail
-    const isBinge = (project as any).releaseModel === 'binge';
+    const isBinge = project.type === 'SERIES' && project.releaseModel === 'binge';
     
     if (weeksSinceRelease === 1) return isBinge ? 0.7 : 0.9;
     if (weeksSinceRelease === 2) return isBinge ? 0.5 : 0.85;
@@ -127,7 +127,7 @@ export const StreamingViewershipTracker = {
     if (weeksSinceRelease <= 2) return currentRate;
     
     // Gradual improvement due to word-of-mouth
-    const improvement = currentRate > 70 ? 0.5 : -0.2;
+    const improvement = currentRate >= 70 ? 0.5 : -0.2;
     return Math.min(95, currentRate + improvement);
   }
 };

@@ -6,14 +6,10 @@ import { useGameStore } from '@/store/gameStore';
 import { selectMarketShareData } from '@/store/selectors';
 import { Building2, Trophy } from 'lucide-react';
 
-interface StudioShare {
-  name: string;
-  share: number; // percentage
-  isPlayer?: boolean;
-}
+import { MarketSharePoint } from '@/store/chartSelectors';
 
 interface MarketShareComparisonProps {
-  studios?: StudioShare[];
+  studios?: MarketSharePoint[];
   className?: string;
 }
 

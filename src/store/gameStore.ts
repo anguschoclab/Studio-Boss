@@ -62,7 +62,7 @@ interface Impact {
   payload: {
     modalType: ModalType;
     priority?: number;
-    payload?: Record<string, unknown>;
+    payload?: any; // Keep any here for loosely typed UI payloads if necessary, or brand it if we have a type
   };
 }
 

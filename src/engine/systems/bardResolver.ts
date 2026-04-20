@@ -1,5 +1,5 @@
 import archiveData from '../data/narrative/archive.json';
-import { ResolutionRequest } from '../data/narrative/archive';
+import { ResolutionRequest, NarrativeArchive } from '../data/narrative/archive';
 import { RandomGenerator } from '../utils/rng';
 
 /**
@@ -12,7 +12,7 @@ export const BardResolver = {
    */
   resolve(request: ResolutionRequest): string {
     const { domain, subDomain, intensity, context, tone = 'Standard', variant } = request;
-    const archive = archiveData as any;
+    const archive = archiveData as NarrativeArchive;
 
     const domainData = archive[domain];
     if (!domainData) return `[MISSING DOMAIN: ${domain}]`;
@@ -20,68 +20,61 @@ export const BardResolver = {
     const subDomainData = domainData[subDomain];
     if (!subDomainData) return `[MISSING SUB-DOMAIN: ${subDomain}]`;
 
+    // Helper to pick and interpolate
+    const pickAndResolve = (templates: string[] | undefined): string | null => {
+      if (!templates || templates.length === 0) return null;
+      return this.interpolate(this.pick(templates, request.rng), context || {}, request.rng);
+    };
+
     // 0. Handle Flat Dictionary/Tier Entry
     if (Array.isArray(subDomainData)) {
-      return this.interpolate(this.pick(subDomainData, request.rng), context || {}, request.rng);
+      return pickAndResolve(subDomainData) || `[EMPTY ARCHIVE: ${domain}.${subDomain}]`;
     }
 
     // 1. Variant-Specific Resolution (High Priority)
-    // If a specific variant key is requested (e.g. for Options or specific story arcs)
-    if (variant && subDomainData[variant]) {
-      const templates = subDomainData[variant];
-      return this.interpolate(this.pick(templates, request.rng), context || {}, request.rng);
+    if (variant && typeof subDomainData === 'object' && variant in subDomainData) {
+      const variantData = (subDomainData as Record<string, any>)[variant];
+      if (Array.isArray(variantData)) {
+        return pickAndResolve(variantData) || `[EMPTY VARIANT: ${variant}]`;
+      }
     }
 
     // 2. Find Tier Data
-    // A tone can be: specified in request, 'Standard' (default), or inferred.
-    let templates: string[] = [];
     const tierKey = this.getTier(domain, intensity);
+    const data = subDomainData as unknown as Record<string, Record<string, string[]>>;
 
     // Try finding templates in order of specificity:
-    // 1. Specified tone OR 'Standard'
-    if (subDomainData[tone] && subDomainData[tone][tierKey]) {
-      templates = subDomainData[tone][tierKey];
-    } 
-    // 2. 'Trade' fallback (the industry standard)
-    else if (subDomainData['Trade'] && subDomainData['Trade'][tierKey]) {
-      templates = subDomainData['Trade'][tierKey];
-    }
-    // 3. 'Standard' fallback
-    else if (subDomainData['Standard'] && subDomainData['Standard'][tierKey]) {
-      templates = subDomainData['Standard'][tierKey];
-    }
-    // 4. Flat structure (domain[subDomain][tier])
-    else if (subDomainData[tierKey]) {
-      templates = subDomainData[tierKey];
+    const templates = 
+      (data[tone] && typeof data[tone] === 'object' && data[tone][tierKey]) ||
+      (data['Trade'] && typeof data['Trade'] === 'object' && data['Trade'][tierKey]) ||
+      (data['Standard'] && typeof data['Standard'] === 'object' && data['Standard'][tierKey]) ||
+      (data[tierKey] as unknown as string[]);
+
+    if (Array.isArray(templates)) {
+      const result = pickAndResolve(templates);
+      if (result) return result;
     }
 
-    if (!templates || templates.length === 0) {
-      // 5. Extreme fallback: Pick any valid tier in any available tone
-      const allPossibleKeys = Object.keys(subDomainData);
-      for (const key of allPossibleKeys) {
-        const potentialTierData = subDomainData[key];
-        if (typeof potentialTierData === 'object' && !Array.isArray(potentialTierData)) {
-          // It's a tone/bucket object, check its tiers
-          const nestedTiers = Object.keys(potentialTierData);
-          const firstValidTier = nestedTiers.find(t => Array.isArray(potentialTierData[t]) && potentialTierData[t].length > 0);
-          if (firstValidTier) {
-            templates = potentialTierData[firstValidTier];
-            break;
+    // 3. Extreme fallback: Pick any valid tier
+    const allPossibleKeys = Object.keys(data);
+    for (const key of allPossibleKeys) {
+      const potentialTierData = data[key] as unknown;
+      if (Array.isArray(potentialTierData)) {
+        const result = pickAndResolve(potentialTierData);
+        if (result) return result;
+      } else if (typeof potentialTierData === 'object' && potentialTierData !== null) {
+        const nestedTiers = Object.keys(potentialTierData);
+        const folder = potentialTierData as Record<string, string[]>;
+        for (const t of nestedTiers) {
+          if (Array.isArray(folder[t])) {
+            const result = pickAndResolve(folder[t]);
+            if (result) return result;
           }
-        } else if (Array.isArray(potentialTierData) && potentialTierData.length > 0) {
-          // It's a flat tier array
-          templates = potentialTierData;
-          break;
         }
       }
     }
 
-    if (!templates || templates.length === 0) {
-      return `[EMPTY ARCHIVE: ${domain}.${subDomain}]`;
-    }
-
-    const template = this.pick(templates, request.rng);
-    return this.interpolate(template, context || {}, request.rng);
+    return `[EMPTY ARCHIVE: ${domain}.${subDomain}]`;
   },
 
   /**
@@ -115,25 +108,26 @@ export const BardResolver = {
    * If a key is missing from context, it checks the Dictionary domain in the archive.
    */
   interpolate(template: string, context: Record<string, any>, rng?: RandomGenerator): string {
-    const archive = archiveData as any;
-    const dictionary = archive['Dictionary'] || {};
+    const archive = archiveData as NarrativeArchive;
+    const dictionary = (archive['Dictionary'] as unknown as Record<string, string[]>) || {};
 
     // Use a loop or iterative replacement to handle potential recursive tags
     let result = template;
     let limit = 5; // Prevent infinite loops
 
     while (result.includes('{{') && limit > 0) {
-      const nextResult = result.replace(/\{\{(.*?)\}\}/g, (match, key) => {
+      const nextResult = result.replace(/\{\{(.*?)\}\}/g, (match: string, key: string) => {
         const trimmedKey = key.trim();
         
         // 1. Check direct context
         if (context[trimmedKey] !== undefined) {
-          return context[trimmedKey];
+          return String(context[trimmedKey]);
         }
 
         // 2. Check Dictionary
-        if (dictionary[trimmedKey] && Array.isArray(dictionary[trimmedKey])) {
-          return this.pick(dictionary[trimmedKey], rng);
+        const entry = dictionary[trimmedKey];
+        if (entry && Array.isArray(entry)) {
+          return this.pick(entry, rng);
         }
 
         // 3. Keep as is if not found

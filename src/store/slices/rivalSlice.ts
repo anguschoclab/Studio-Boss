@@ -4,11 +4,13 @@ import { executeAcquisition, executeSabotage, executePoach } from '@/engine/syst
 import { RandomGenerator } from '@/engine/utils/rng';
 import { applyImpacts } from '@/engine/core/impactReducer';
 
+import { type StudioId } from '@/engine/types/shared.types';
+
 export interface RivalSlice {
-  acquireRival: (targetId: string) => void;
-  corporateSabotage: (targetId: string) => void;
-  poachExec: (targetId: string) => void;
-  attemptTakeover: (targetId: string) => void;
+  acquireRival: (targetId: StudioId) => void;
+  corporateSabotage: (targetId: StudioId) => void;
+  poachExec: (targetId: StudioId) => void;
+  attemptTakeover: (targetId: StudioId) => void;
 }
 
 export const createRivalSlice: StateCreator<GameStore, [], [], RivalSlice> = (set, get) => ({
@@ -23,7 +25,7 @@ export const createRivalSlice: StateCreator<GameStore, [], [], RivalSlice> = (se
       const newState = applyImpacts(state, [impact]);
       
       const rivals = { ...newState.entities.rivals };
-      delete rivals[targetId];
+      delete rivals[targetId as StudioId];
 
       return { 
         gameState: {

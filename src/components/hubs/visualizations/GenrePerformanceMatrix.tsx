@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { HeatMap } from '@/components/charts/HeatMap';
 import { Card } from '@/components/ui/card';
 import { tokens } from '@/lib/tokens';
@@ -9,7 +9,7 @@ import { selectGenrePerformanceMatrix } from '@/store/selectors';
 interface GenrePerformanceData {
   genre: string;
   metric: string;
-  value: number; // ROI percentage or performance score
+  value: number;
 }
 
 interface GenrePerformanceMatrixProps {
