@@ -4,7 +4,8 @@ import { ALL_GENRES, initializeTrends } from '../systems/trends';
 import { ARCHETYPES } from '../data/archetypes';
 import { RandomGenerator } from '../utils/rng';
 import { generateOpportunity } from '../generators/opportunities';
-import { Talent } from '@/engine/types';
+import { Talent, Project, NewsId } from '@/engine/types';
+import { type StudioId, type ProjectId, type TalentId } from '@/engine/types/shared.types';
 import {
   generateRivals,
   assignInitialPactsToRivals,
@@ -16,7 +17,7 @@ import {
 
 export function initializeGame(studioName: string, archetype: ArchetypeKey, seed: number): GameState {
   const rng = new RandomGenerator(seed);
-  const playerStudioId = rng.uuid('PLR'); // 🌌 Standardized player ID
+  const playerStudioId = rng.uuid<StudioId>('PLR'); // 🌌 Standardized player ID
   const arch = ARCHETYPES[archetype];
   const rivalArchetypes: ArchetypeKey[] = ['major', 'mid-tier', 'indie'];
   const usedNames = new Set<string>([studioName]);
@@ -79,7 +80,7 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
     news: {
       headlines: [
         {
-          id: rng.uuid('NWS'),
+          id: rng.uuid<NewsId>('NWS'),
           text: `${studioName} launches operations — the industry takes notice.`,
           week: 1,
           category: 'general' as const,
@@ -112,19 +113,17 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
     entities: {
       projects: {
         ...playerProjects,
-        ...Object.values(rivals).reduce((acc, r) => {
-          // Backward compatibility for projects field
-          const rivalProjects = ('projects' in r && r.projects) ? (r as any).projects : {};
-          Object.assign(acc, rivalProjects);
+        ...rivals.reduce((acc, r) => {
+          Object.assign(acc, r.projects || {});
           return acc;
-        }, {} as Record<string, any>)
+        }, {} as Record<ProjectId, Project>)
       },
       contracts: {},
       talents: talentPool,
       rivals: rivals.reduce((acc, r) => {
-        acc[r.id] = r;
+        acc[r.id as StudioId] = r;
         return acc;
-      }, {} as Record<string, RivalStudio>),
+      }, {} as Record<StudioId, RivalStudio>),
     },
     deals: {
       activeDeals: [],
