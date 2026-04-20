@@ -6,6 +6,15 @@ import { getFilmStats, getTvStats, getUnscriptedStats } from '@/engine/systems/s
 import { RandomGenerator } from '@/engine/utils/rng';
 import { applyImpacts } from '@/engine/core/impactReducer';
 
+import { 
+  type ProjectId, 
+  type TalentId, 
+  type StudioId, 
+  type FranchiseId, 
+  type AssetId, 
+  type ContractId 
+} from '@/engine/types/shared.types';
+
 export interface CreateProjectParams {
     title: string;
     format: ProjectFormat;
@@ -13,15 +22,15 @@ export interface CreateProjectParams {
     budgetTier: BudgetTierKey;
     targetAudience: string;
     flavor: string;
-    attachedTalentIds?: string[];
+    attachedTalentIds?: TalentId[];
     tvFormat?: TvFormatKey;
     unscriptedFormat?: UnscriptedFormatKey;
     episodes?: number;
     releaseModel?: ReleaseModelKey;
-    parentProjectId?: string;
+    parentProjectId?: ProjectId;
     isSpinoff?: boolean;
     initialBuzzBonus?: number;
-    franchiseId?: string;
+    franchiseId?: FranchiseId;
 }
 
 function getProjectStats(params: CreateProjectParams, tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS]) {
@@ -35,8 +44,8 @@ function getProjectStats(params: CreateProjectParams, tier: typeof BUDGET_TIERS[
 
 function prepareTalentAndContracts(
     state: GameState,
-    attachedTalentIds: string[] | undefined,
-    projectId: string,
+    attachedTalentIds: TalentId[] | undefined,
+    projectId: ProjectId,
     rng: RandomGenerator
 ) {
     const ids = attachedTalentIds || [];
@@ -51,7 +60,7 @@ function prepareTalentAndContracts(
             attachedTalent.push(t);
             talentFees += t.fee || 0;
             newContracts.push({
-                id: rng.uuid('CON'),
+                id: rng.uuid('CON') as ContractId,
                 talentId: t.id,
                 projectId,
                 fee: t.fee,
@@ -69,7 +78,7 @@ export function buildProjectAndContracts(state: GameState, params: CreateProject
     const stats = getProjectStats(params, tier);
     const { budget, weeklyCost, developmentWeeks, productionWeeks, renewable } = stats;
 
-    const projectId = rng.uuid('PRJ');
+    const projectId = rng.uuid('PRJ') as ProjectId;
     const { talentFees, newContracts } = prepareTalentAndContracts(state, params.attachedTalentIds, projectId, rng);
 
     const totalBudget = budget + talentFees;

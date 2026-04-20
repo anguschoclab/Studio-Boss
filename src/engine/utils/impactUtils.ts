@@ -10,7 +10,9 @@ export function getCrisisData(id: string): CrisisTemplate | undefined {
  * Arrays are concatenated, numbers are summed, and other fields are prioritized by the last non-undefined value.
  */
 export function mergeImpacts(...impacts: (StateImpact | undefined)[]): StateImpact {
-    const result: StateImpact = {};
+    const result: StateImpact = {
+        type: 'SYSTEM_TICK' as any // Initial type cast for merging
+    } as BaseImpact;
 
     for (const impact of impacts) {
         if (!impact) continue;
