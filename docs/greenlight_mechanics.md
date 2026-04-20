@@ -28,7 +28,7 @@ The studio's current cash reserves are compared against the project's budget.
 
 **Impact:**
 - `cash < project.budget`: -40 points.
-- `cash < project.budget * 2`: -15 points.
+- `project.budget <= cash < project.budget * 2`: -15 points.
 - `cash > project.budget * 5`: +10 points.
 
 ### 3. Talent Package
