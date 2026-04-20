@@ -41,6 +41,8 @@ export function advanceMarketEvents(state: GameState, rng: RandomGenerator): Sta
     const id = rng.uuid('EVT');
     const intensity = type === 'BOOM' ? 80 : 20;
 
+    const randomGenre = rng.pick(['Action', 'Comedy', 'Drama', 'Horror', 'Sci-Fi', 'Thriller', 'Romance', 'Animation', 'Documentary', 'Fantasy']);
+
     const newEvent: MarketEvent = {
         id,
         type: type === 'BOOM' ? 'streaming_boom' : 'market_crash',
@@ -48,14 +50,14 @@ export function advanceMarketEvents(state: GameState, rng: RandomGenerator): Sta
             domain: 'Market',
             subDomain: 'Headline',
             intensity,
-            context: {},
+            context: { genre: randomGenre },
             rng
         }),
         description: BardResolver.resolve({
             domain: 'Market',
             subDomain: 'Event',
             intensity,
-            context: {},
+            context: { genre: randomGenre },
             rng
         }),
         weeksRemaining: Math.floor(rng.range(12, 52)),

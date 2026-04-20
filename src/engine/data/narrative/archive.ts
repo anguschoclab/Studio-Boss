@@ -28,8 +28,8 @@ export type ReviewSubDomain = 'Standard' | 'Critic';
 export type GreenlightSubDomain = 'Finance' | 'Talent' | 'MarketSat' | 'Marketing';
 export type TalentSubDomain = 'Career' | 'Health' | 'Scandal';
 export type IndustrySubDomain = 'Merger' | 'Rumor' | 'Scandal' | 'Award';
-export type MarketSubDomain = 'Headline' | 'Event';
-export type CrisisSubDomain = 'PR' | 'Production';
+export type MarketSubDomain = 'Headline' | 'Event' | 'Trend';
+export type CrisisSubDomain = 'PR' | 'Production' | 'PR.Options' | 'Production.Options';
 export type ProjectSubDomain = 'Title';
 export type DictionarySubDomain = 'ADJECTIVE' | 'NOUN' | 'VERB' | 'PLACE' | 'STUDIO_SUFFIX' | 'FIRST_NAME_MALE' | 'FIRST_NAME_FEMALE';
 

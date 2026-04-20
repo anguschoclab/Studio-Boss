@@ -17,8 +17,16 @@ export const BardResolver = {
     const domainData = archive[domain];
     if (!domainData) return `[MISSING DOMAIN: ${domain}]`;
 
-    const subDomainData = (domainData as Record<string, unknown>)[subDomain];
-    if (!subDomainData) return `[MISSING SUB-DOMAIN: ${subDomain}]`;
+    let subDomainData: any = domainData;
+    const subDomainParts = subDomain.split('.');
+    
+    for (const part of subDomainParts) {
+      if (subDomainData && typeof subDomainData === 'object' && part in subDomainData) {
+        subDomainData = (subDomainData as Record<string, unknown>)[part];
+      } else {
+        return `[MISSING SUB-DOMAIN: ${subDomain}]`;
+      }
+    }
 
     // Helper to pick and interpolate
     const pickAndResolve = (templates: string[] | undefined): string | null => {
