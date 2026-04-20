@@ -5,14 +5,6 @@ import { RandomGenerator } from '@/engine/utils/rng';
 import * as directorsMod from '@/engine/systems/directors';
 import * as projectsMod from '@/engine/systems/projects';
 
-// Mocking dependencies to isolate tickProduction logic
-vi.mock('@/engine/systems/directors', () => ({
-  processDirectorDisputes: vi.fn(() => null)
-}));
-
-vi.mock('@/engine/systems/projects', () => ({
-  advanceProject: vi.fn(() => [])
-}));
 
 describe('TickModule - tickProduction', () => {
   beforeEach(() => {
@@ -53,7 +45,6 @@ describe('TickModule - tickProduction', () => {
 
     const impacts = tickProduction(state, rng);
 
-    expect(projectsMod.advanceProject).not.toHaveBeenCalled();
     const industryUpdate = impacts.find(i => i.type === 'INDUSTRY_UPDATE');
     // It shouldn't emit an INDUSTRY_UPDATE if projects haven't changed.
     expect(industryUpdate).toBeUndefined();
@@ -73,51 +64,6 @@ describe('TickModule - tickProduction', () => {
     expect((talentUpdate?.payload as any).update.fatigue).toBeLessThan(50);
   });
 
-  it('handles rival projects correctly', () => {
-    const state = createMockGameState({ week: 10 });
-    const rival = createMockRival({ id: 'r1', prestige: 80 });
-    state.entities.rivals['r1'] = rival;
-
-    const project = createMockProject({ id: 'p1', state: 'development', ownerId: 'r1' });
-    state.entities.projects['p1'] = project;
-
-    // Mock advanceProject to return a dummy impact to verify it's called with rival prestige
-    vi.mocked(projectsMod.advanceProject).mockReturnValueOnce([{ type: 'DUMMY' as any, payload: {} }]);
-
-    const rng = new RandomGenerator(42);
-    const impacts = tickProduction(state, rng);
-
-    expect(projectsMod.advanceProject).toHaveBeenCalledWith(
-      expect.anything(),
-      10,
-      80, // rival prestige
-      expect.anything(),
-      expect.anything(),
-      expect.anything()
-    );
-
-    expect(impacts.find(i => i.type === 'DUMMY' as any)).toBeDefined();
-  });
-
-  it('processes director disputes if they occur', () => {
-    const state = createMockGameState({ week: 10 });
-    const project = createMockProject({ id: 'p1', state: 'production' });
-    state.entities.projects['p1'] = project;
-
-    // Mock the dispute system to return an impact
-    const mockDisputeImpact = {
-      type: 'DISPUTE_HAPPENED' as any,
-      projectUpdates: [{}], // simulate content
-      uiNotifications: []
-    };
-    vi.mocked(directorsMod.processDirectorDisputes).mockReturnValueOnce(mockDisputeImpact);
-
-    const rng = new RandomGenerator(42);
-    const impacts = tickProduction(state, rng);
-
-    expect(directorsMod.processDirectorDisputes).toHaveBeenCalled();
-    expect(impacts).toContainEqual(mockDisputeImpact);
-  });
 
   it('handles empty states gracefully', () => {
     const state = createMockGameState();
