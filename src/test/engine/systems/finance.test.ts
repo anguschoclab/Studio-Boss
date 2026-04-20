@@ -130,8 +130,8 @@ describe("Finance System", () => {
         // overhead = (2.0M * 3.24) + (2 * 600k) = 6,480,000 + 1,200,000 = 7,680,000
         expect(report.expenses.overhead).toBe(7680000);
         expect(report.expenses.production).toBe(20000); // Only mockProjectProd is in production
-        expect(report.revenue.boxOffice).toBe(10800); // 100k * 0.18 * 0.6 (low budget penalty)
-        // Net: ~11k - 7.68M - 20k + ...
+        expect(report.revenue.boxOffice).toBe(9000); // 100k * 0.15 * 0.6 (low budget penalty)
+        // Net: ~9k - 7.68M - 20k + ...
         expect(report.netProfit).toBeLessThan(-1800000);
         expect(report.startingCash).toBe(1000000);
     });
@@ -201,8 +201,9 @@ describe("Finance System", () => {
          // Savings Yield: 1M * (0.02 / 52) = 385
          // Total Expenses: 7,080,000 + 20,000 = 7,100,000
          // Net: ...
-         // Wait, the project was theatrical, 200k weekly revenue.
-         expect(impact?.payload.amount).toBe(-7078015);
+         // Wait, the project was theatrical, 200k weekly revenue. 200k * 0.15 * 0.6 = 18000
+         // Net = 18000 + 385 - 7100000 = -7081615
+         expect(impact?.payload.amount).toBe(-7081615);
       });
   });
 });

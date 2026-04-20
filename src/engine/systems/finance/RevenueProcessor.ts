@@ -56,8 +56,8 @@ export class RevenueProcessor {
         }
 
         if (p.distributionStatus === 'theatrical') {
-          // The Studio Comptroller: Base theatrical decay rate lowered from 0.22 to 0.18 representing an incredibly ruthless front-loaded drop.
-          weeklyGross = this.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.18, p.isCultClassic) * talentMultiplier * banMultiplier * demographicMultiplier;
+          // The Studio Comptroller: Base theatrical decay rate lowered from 0.18 to 0.15 representing an incredibly ruthless front-loaded drop for modern box office.
+          weeklyGross = this.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.15, p.isCultClassic) * talentMultiplier * banMultiplier * demographicMultiplier;
           boxOffice += weeklyGross;
         } else if (p.distributionStatus === 'streaming') {
           const platform = p.buyerId ? buyersMap.get(p.buyerId) : undefined;
