@@ -3,6 +3,8 @@ import { ARCHETYPES } from '../../data/archetypes';
 import { generateProjectName } from '../../generators/names';
 import { RandomGenerator } from '../../utils/rng';
 import { ALL_GENRES } from '../../systems/trends';
+import { type StudioId, type ProjectId } from '@/engine/types/shared.types';
+import { Project, PlayerStudio } from '@/engine/types';
 
 interface PlayerProjectOptions {
   startingProjectCount?: number;
@@ -11,19 +13,19 @@ interface PlayerProjectOptions {
 
 export function generatePlayerProjects(
   rng: RandomGenerator,
-  playerStudioId: string,
+  playerStudioId: StudioId,
   archetype: ArchetypeKey,
   options: PlayerProjectOptions = {}
-): Record<string, import('@/engine/types').Project> {
+): Record<ProjectId, Project> {
   const { startingProjectCount = archetype === 'major' ? 3 : (archetype === 'mid-tier' ? 1 : 0) } = options;
   
-  const playerProjects: Record<string, import('@/engine/types').Project> = {};
+  const playerProjects: Record<ProjectId, Project> = {};
   for (let i = 0; i < startingProjectCount; i++) {
-    const pId = rng.uuid('PRJ');
+    const pId = rng.uuid<ProjectId>('PRJ');
     const genre = rng.pick(ALL_GENRES);
     const format = rng.next() < 0.3 ? 'tv' : 'film';
     
-    const project: any = { // Partial to satisfy union
+    const project: Project = { 
       id: pId,
       title: generateProjectName(format, genre, rng),
       type: format === 'tv' ? 'SERIES' : 'FILM',
@@ -48,11 +50,11 @@ export function generatePlayerProjects(
       momentum: 50,
       ownerId: playerStudioId,
       reviewScore: 0
-    };
+    } as Project;
 
     if (format === 'tv') {
-      project.tvFormat = 'Scripted';
-      project.tvDetails = {
+      (project as any).tvFormat = 'Scripted';
+      (project as any).tvDetails = {
         currentSeason: 1,
         episodesOrdered: 10,
         episodesCompleted: 0,
@@ -60,14 +62,14 @@ export function generatePlayerProjects(
         averageRating: 0,
         status: 'IN_PRODUCTION'
       };
-      project.activeRoles = [];
-      project.scriptEvents = [];
+      (project as any).activeRoles = [];
+      (project as any).scriptEvents = [];
     } else {
-      project.activeRoles = [];
-      project.scriptEvents = [];
+      (project as any).activeRoles = [];
+      (project as any).scriptEvents = [];
     }
 
-    playerProjects[pId] = project as import('@/engine/types').Project;
+    playerProjects[pId] = project;
   }
 
   return playerProjects;
@@ -76,9 +78,9 @@ export function generatePlayerProjects(
 export function initializePlayerStudio(
   studioName: string,
   archetype: ArchetypeKey,
-  playerStudioId: string,
+  playerStudioId: StudioId,
   arch: import('../../data/archetypes').StudioArchetype
-): import('@/engine/types').PlayerStudio {
+): PlayerStudio {
   return {
     id: playerStudioId,
     name: studioName,

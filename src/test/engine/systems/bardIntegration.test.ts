@@ -81,8 +81,9 @@ describe('Bard Engine Integration', () => {
 
     it('should return a descriptive error string for an invalid domain', () => {
       const resolved = BardResolver.resolve({
-        // @ts-expect-error - Testing invalid domain lookup
+        // @ts-expect-error - Testing invalid domain
         domain: 'NonExistent',
+        // @ts-expect-error - Testing invalid subdomain
         subDomain: 'Standard',
         intensity: 50,
         context: {}
