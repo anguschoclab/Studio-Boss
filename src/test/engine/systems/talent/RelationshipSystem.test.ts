@@ -11,16 +11,16 @@ import {
 import { RandomGenerator } from '@/engine/utils/rng';
 import type { GameState } from '@/engine/types';
 
-import { createMockGameState, createMockProject, createMockTalent, createMockContract } from '../../utils/mockFactories';
+import { createMockGameState, createMockProject, createMockTalent, createMockContract } from '../../../utils/mockFactories';
 
 describe('RelationshipSystem - Award Nominee Tracking', () => {
   it('should return false when no awards exist', () => {
-    const state = createTestGameState();
+    const state = createMockGameState();
     expect(haveCompeted('talent-1', 'talent-2', state)).toBe(false);
   });
 
   it('should return false when awards exist but talents are not on the same project', () => {
-    const state = createTestGameState({
+    const state = createMockGameState({
       entities: {
         projects: {
           'project-1': createMockProject({
@@ -72,7 +72,7 @@ describe('RelationshipSystem - Award Nominee Tracking', () => {
   });
 
   it('should return true when talents worked on the same award-winning project', () => {
-    const state = createTestGameState({
+    const state = createMockGameState({
       entities: {
         projects: {
           'project-1': {
@@ -324,7 +324,7 @@ describe('RelationshipSystem - Query Functions', () => {
             history: [],
             formedWeek: 1,
             lastUpdatedWeek: 1,
-          }
+          },
           'talent-1-talent-3': {
             id: 'talent-1-talent-3',
             talentAId: 'talent-1',
@@ -335,7 +335,7 @@ describe('RelationshipSystem - Query Functions', () => {
             history: [],
             formedWeek: 1,
             lastUpdatedWeek: 1,
-          }
+          },
           'talent-2-talent-3': {
             id: 'talent-2-talent-3',
             talentAId: 'talent-2',
@@ -527,7 +527,7 @@ describe('RelationshipSystem - tickRelationshipSystem', () => {
     const state = createMockGameState({
       entities: {
         talents: {
-          'talent-1': {
+          'talent-1': createMockTalent({
             id: 'talent-1',
             name: 'Actor 1',
             demographics: { age: 30, country: 'USA' },
@@ -535,7 +535,7 @@ describe('RelationshipSystem - tickRelationshipSystem', () => {
             prestige: 70,
             draw: 60,
             starMeter: 65,
-          }
+          }),
           'talent-2': createMockTalent({
             id: 'talent-2',
             name: 'Actor 2',

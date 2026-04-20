@@ -34,6 +34,12 @@ describe('Week Advance Pipeline (Target A4)', () => {
       talentPool: {} as Record<string, Talent>,
       newsHistory: [],
     },
+    relationships: {
+      discovery: {
+        hiddenTalentPool: {},
+        guestStarBookings: {}
+      }
+    },
     culture: { genrePopularity: {} },
     deals: { activeDeals: [], pendingOffers: [], expiredDeals: [] },
     history: [],
@@ -74,6 +80,7 @@ describe('Week Advance Pipeline (Target A4)', () => {
         deals: { activeDeals: [], pendingOffers: [], expiredDeals: [] },
         market: { opportunities: [], buyers: [] },
         industry: { rivals: [], talentPool: {}, newsHistory: [], families: [], agencies: [], agents: [] },
+        relationships: { discovery: { hiddenTalentPool: {}, guestStarBookings: {} } },
         ip: { vault: [], franchises: {} },
         news: { headlines: [] },
         game: { currentWeek: 1 },

@@ -26,12 +26,14 @@ describe("festivals system", () => {
   describe("resolveFestivals", () => {
     it("resolves festivals and updates state", () => {
       const state = createMockGameState({ week: 3 }); // Sundance is weeks [3, 4]
+      state.studio.prestige = 100; // guarantee acceptance via prestige/score
       state.entities.projects["p1"] = createMockProject({ 
         id: "p1", 
         state: "released",
         format: "film",
         buzz: 10,
-        reviewScore: 90
+        reviewScore: 100,
+        ownerId: "PLAYER"
       });
       
       const submission: FestivalSubmission = {
