@@ -60,7 +60,7 @@ export function resolveFestivals(state: GameState, rng: RandomGenerator, rivalAr
           continue;
       }
 
-      const ownerId = project.ownerId || 'PLAYER';
+      const ownerId = (project.ownerId === 'player' ? 'PLAYER' : project.ownerId) || 'PLAYER';
       const rival = ownerId !== 'PLAYER' ? rivalsList.find(r => r.id === ownerId) : null;
 
       const ownerPrestige = ownerId === 'PLAYER' ? state.studio.prestige : (rival?.prestige || 50);

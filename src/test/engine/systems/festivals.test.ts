@@ -28,7 +28,7 @@ describe("festivals system", () => {
       const state = createMockGameState({ week: 3 }); // Sundance is weeks [3, 4]
       state.entities.projects["p1"] = createMockProject({ 
         id: "p1", 
-        state: "released",
+        state: "production",
         format: "film",
         buzz: 10,
         reviewScore: 90
