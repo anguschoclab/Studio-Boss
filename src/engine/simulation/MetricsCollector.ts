@@ -115,12 +115,13 @@ export class MetricsCollector {
     // totalSystemCash = player + rivals + platforms + (active budgets estimate)
     let activeBudgets = 0;
     let activeProjectsCount = 0;
-    playerProjectsList.forEach(p => {
-        if (!['released', 'archived', 'post_release'].includes(p.state)) {
+    for (const p of playerProjectsList) {
+        const s = p.state;
+        if (s !== 'released' && s !== 'archived' && s !== 'post_release') {
             activeBudgets += p.budget || 0;
-            activeProjectsCount += 1;
+            activeProjectsCount++;
         }
-    });
+    }
 
     // Nielsen & Cut Analytics
     let totalNielsenDemo = 0;
