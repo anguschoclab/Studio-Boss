@@ -29,8 +29,9 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
         let rival = rivalsObj[rivalKey];
 
         if (agency.currentMotivation === 'VOLUME_RETAIL') {
-           const vulnerableRivals = rivalKeys.filter(k => rivalsObj[k].prestige < 50);
-           if (vulnerableRivals.length > 0 && rng.next() < 0.7) {
+           // 🎭 The Method Actor Tuning: Agencies are ruthless. They heavily target vulnerable studios (prestige < 40) for poaching, smelling blood in the water.
+           const vulnerableRivals = rivalKeys.filter(k => rivalsObj[k].prestige < 40);
+           if (vulnerableRivals.length > 0 && rng.next() < 0.9) {
              rivalKey = pick(vulnerableRivals, rng);
              rival = rivalsObj[rivalKey];
            }

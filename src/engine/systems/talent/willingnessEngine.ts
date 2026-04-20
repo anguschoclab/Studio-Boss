@@ -125,6 +125,11 @@ export function calculateWillingness(
   if (talent.psychology?.ego && talent.psychology.ego > 80) {
     score -= 10;
     reasons.push(`${talent.name} is being notoriously difficult during negotiations.`);
+    // 🎭 The Method Actor Tuning: High-ego talent will severely penalize low-buzz or low-prestige projects, considering them beneath their stature.
+    if (project.buzz < 50 || studioPrestige < 50) {
+      score -= 25;
+      reasons.push(`${talent.name}'s massive ego prevents them from taking a chance on a low-buzz project or studio.`);
+    }
   }
 
   // 8. Personality Trait Influence

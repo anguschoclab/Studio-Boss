@@ -8,7 +8,14 @@ import { RandomGenerator } from '../../utils/rng';
 const MotivationScores: Record<StudioMotivation, (rival: RivalStudio, state: GameState) => number> = {
   // 🎭 Method Actor Tuning: Adjusted motivation scores to create more emergent and realistic studio behavior.
   CASH_CRUNCH: (rival) => (rival.cash < 1000000 ? 100 : 0),
-  AWARD_CHASE: (rival) => (rival.prestige < 60 && rival.cash > 5000000 ? 95 : (rival.prestige > 80 ? 85 : 30)) + (rival.motivationProfile.prestige > 70 ? 20 : 0),
+  AWARD_CHASE: (rival) => {
+    let score = (rival.prestige < 60 && rival.cash > 5000000 ? 95 : (rival.prestige > 80 ? 85 : 30)) + (rival.motivationProfile.prestige > 70 ? 20 : 0);
+    // 🎭 The Method Actor Tuning: Implement "prestige panic". Rivals with plummeting prestige and high cash reserves will aggressively pivot to award chasing to save their brand.
+    if (rival.prestige < 40 && rival.cash > 20000000) {
+      score += 50;
+    }
+    return score;
+  },
   FRANCHISE_BUILDING: (rival) => {
     let score = rival.cash > 4000000 && rival.projectCount < 2 ? 120 : (rival.projectCount > 4 ? 80 : 40);
     // 🎭 The Method Actor Tuning: Prioritize franchise potential by adding 20 to the score when the rival studio cash reserves are low.
