@@ -73,8 +73,8 @@ export interface Scandal {
 
 export type AgencyArchetype = 'powerhouse' | 'boutique' | 'shark' | 'comedy_specialist' | 'lit_agency' | 'mega_corp' | 'streaming_titan' | 'indie_darling' | 'nepotism_mill' | 'international_broker' | 'legacy_defenders' | 'genre_kings' | 'influencer_syndicate' | 'talent_agency_arm';
 export type AccessLevel = 'outsider' | 'soft-access' | 'legacy' | 'dynasty' | 'comeback';
-export type ProjectRole = 'actor' | 'director' | 'writer' | 'producer' | 'showrunner' | 'personality';
-export type TalentRole = 'actor' | 'director' | 'writer' | 'producer' | 'personality' | 'showrunner';
+export type TalentRole = 'actor' | 'director' | 'writer' | 'producer' | 'showrunner' | 'personality';
+export type ProjectRole = TalentRole;
 export type AgencyTier = 'powerhouse' | 'major' | 'mid-tier' | 'boutique' | 'specialist';
 export type AgencyCulture = 'shark' | 'family' | 'volume' | 'prestige';
 export type AgentSpecialty = 'film_packaging' | 'tv_packaging' | 'literary' | 'talent' | 'comedy' | 'unscripted';
