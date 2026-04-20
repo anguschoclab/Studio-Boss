@@ -7,7 +7,12 @@ import {
 } from '../../../engine/systems/mergers';
 import { GameState, RivalStudio, Talent, Project } from '../../../engine/types';
 import { RandomGenerator } from '../../../engine/utils/rng';
-import { createMockGameState } from '../../utils/mockFactories';
+import { 
+  createMockGameState, 
+  createMockRival, 
+  createMockProject, 
+  createMockIPAsset 
+} from '../../utils/mockFactories';
 
 describe('Mergers and Sabotage System', () => {
   let mockState: GameState;
@@ -22,7 +27,6 @@ describe('Mergers and Sabotage System', () => {
       cash: 5_000_000,
       prestige: 20,
       archetype: 'indie',
-      genreFocus: 'Horror',
     });
 
     mockState = createMockGameState({
@@ -46,7 +50,7 @@ describe('Mergers and Sabotage System', () => {
     });
 
     it('calculates viable acquisition for major target', () => {
-      const majorTarget = { ...mockTarget, archetype: 'major' as const };
+      const majorTarget = createMockRival({ ...mockTarget, archetype: 'major' });
       const result = evaluateAcquisitionTarget(majorTarget, 100_000_000);
       expect(result.viable).toBe(true);
       // Major price = basePrice * 2.0. basePrice = 25m. 25m * 2 = 50m.
@@ -68,27 +72,29 @@ describe('Mergers and Sabotage System', () => {
 
     it('successfully executes acquisition impact with project and IP transfer', () => {
       // Add a project to the state, owned by target
-      const rivalProject = { id: 'p-1', title: 'Rival Hit', state: 'production', budget: 50_000_000, ownerId: 'rival-1' } as Project;
+      const rivalProject = createMockProject({ 
+        id: 'p-1', 
+        title: 'Rival Hit', 
+        state: 'production', 
+        budget: 50_000_000, 
+        ownerId: 'rival-1' 
+      });
       mockState.entities.projects['p-1'] = rivalProject;
       
       // Add a rival IP to the state
       mockState.ip.vault = [
-        { 
+        createMockIPAsset({ 
           id: 'ip-1', 
           title: 'Rival IP', 
-          rightsOwner: 'RIVAL', 
-          ownerStudioId: 'rival-1', 
+          rightsOwner: 'STUDIO', // In the system, IP transfer usually means setting it to STUDIO
+          ownerId: 'rival-1', 
           originalProjectId: 'p-1', 
           baseValue: 10_000_000, 
           decayRate: 1,
           quality: 50,
-          merchandisingMultiplier: 1.1,
-          syndicationStatus: 'NONE',
-          syndicationTier: 'NONE',
-          totalEpisodes: 0,
-          rightsExpirationWeek: 100
-        } as any
+        })
       ];
+
 
       const impact = executeAcquisition(mockState, mockTarget.id, rng);
 

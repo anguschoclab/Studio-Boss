@@ -121,7 +121,7 @@ export function advanceRivals(rng: RandomGenerator, state: GameState): StateImpa
     // Log major rival events
     if (update.isAcquirable && !rival.isAcquirable) {
       newsEvents.push({
-        id: rng.uuid('NWS'),
+        id: rng.uuid('NWS') as any, // Cast until rng.uuid is hardened
         week: state.week,
         type: 'RIVAL',
         headline: `${rival.name} Vulnerable to Takeover!`,
@@ -138,7 +138,7 @@ export function advanceRivals(rng: RandomGenerator, state: GameState): StateImpa
      const poakMsg = rivalPoachTalent(rng, rival, talentPoolArr);
      if (poakMsg) {
        newsEvents.push({
-         id: rng.uuid('NWS'),
+         id: rng.uuid('NWS') as any, // Cast until rng.uuid is hardened
          week: state.week,
          type: 'RIVAL',
          headline: `Talent Poached by ${rival.name}`,

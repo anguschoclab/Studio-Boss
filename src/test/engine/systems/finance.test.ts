@@ -52,11 +52,25 @@ describe("Finance System", () => {
     });
 
     it("adds 100% of catalogValue if rightsOwner is 'studio'", () => {
-       const p1 = createMockProject({ ...mockProjectReleased, ipRights: { rightsOwner: 'studio', catalogValue: 200000 } });
+       const p1 = createMockProject({ ...mockProjectReleased });
        const state = { 
          ...mockState, 
          entities: { ...mockState.entities, projects: { 'p1': p1 } },
-         ip: { ...mockState.ip, vault: [{ id: 'v1', baseValue: 200000, decayRate: 1.0, originalProjectId: 'p1', quality: 50, ownerStudioId: 'player-studio', rightsOwner: 'STUDIO' as const, title: 'V1', tier: 'ORIGINAL', merchandisingMultiplier: 1, syndicationStatus: 'NONE', syndicationTier: 'NONE', totalEpisodes: 0, rightsExpirationWeek: 100 }] } 
+         ip: { 
+           ...mockState.ip, 
+           vault: [
+             createMockIPAsset({ 
+               id: 'v1', 
+               baseValue: 200000, 
+               decayRate: 1.0, 
+               originalProjectId: 'p1', 
+               quality: 50, 
+               ownerId: 'player', 
+               rightsOwner: 'STUDIO', 
+               title: 'V1' 
+             })
+           ] 
+         } 
        };
        expect(calculateStudioNetWorth(state)).toBe(700000);
     });
@@ -109,7 +123,7 @@ describe("Finance System", () => {
           }
         };
 
-        const contractsList = Object.values(stateWithDist.entities.contracts || {});
+        const contractsList = Object.values(stateWithDist.entities.contracts);
 
         const rng = new RandomGenerator(12345);
         const { report } = generateWeeklyFinancialReport(
@@ -119,7 +133,7 @@ describe("Finance System", () => {
           stateWithDist.finance.cash,
           stateWithDist.studio.archetype,
           stateWithDist.studio.prestige,
-          contractsList as Contract[],
+          contractsList,
           [],
           rng
         );
@@ -204,6 +218,7 @@ describe("Finance System", () => {
          // Wait, the project was theatrical, 200k weekly revenue.
          expect(impact?.payload.amount).toBe(-7078015);
       });
+
   });
 });
 

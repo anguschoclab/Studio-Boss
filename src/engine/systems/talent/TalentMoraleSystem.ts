@@ -1,5 +1,6 @@
 import { Talent, Project, Contract, StateImpact } from '@/engine/types';
 import { TalentUpdate } from '@/engine/types/state.types';
+import { type TalentId, type ProjectId, type ContractId } from '@/engine/types/shared.types';
 
 /**
  * Talent Morale & Behavioral Psychology System
@@ -47,17 +48,17 @@ export class TalentMoraleSystem {
    * Updates talent psychology based on the current week's events.
    */
   static processWeeklyMorale(
-    talentDict: Record<string, Talent>,
-    projectsDict: Record<string, Project>,
-    contractsDict: Record<string, Contract>
+    talentDict: Record<TalentId, Talent>,
+    projectsDict: Record<ProjectId, Project>,
+    contractsDict: Record<ContractId, Contract>
   ): TalentUpdate[] {
     const updates: TalentUpdate[] = [];
 
     // Pre-compute O(1) lookups to avoid O(N*M) nested filtering
-    const contractsByTalent = new Map<string, Contract[]>();
+    const contractsByTalent = new Map<TalentId, Contract[]>();
     for (const key in contractsDict) {
       if (!Object.prototype.hasOwnProperty.call(contractsDict, key)) continue;
-      const c = contractsDict[key];
+      const c = contractsDict[key as ContractId];
       const arr = contractsByTalent.get(c.talentId);
       if (arr) {
         arr.push(c);
@@ -70,7 +71,7 @@ export class TalentMoraleSystem {
     // ⚡ The Framerate Fanatic: Direct iteration over dictionaries avoids Array allocations
     for (const talentId in talentDict) {
       if (!Object.prototype.hasOwnProperty.call(talentDict, talentId)) continue;
-      const t = talentDict[talentId];
+      const t = talentDict[talentId as TalentId];
       let moodChange = 0;
       
       // 1. Natural drift toward 50
