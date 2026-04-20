@@ -1804,3 +1804,352 @@ Could not parse CSS stylesheet
  ✓ src/test/engine/systems/marketing/territoryDistributor.test.ts (2 tests) 2ms
  ✓ src/test/example.test.ts (1 test) 2ms
  ✓ src/test/engine/systems/finance_cultclassic.test.ts (1 test) 2ms
+ ✓ src/test/engine/determinism.test.ts (2 tests) 112278ms
+   ✓ Simulation Determinism > should produce identical results after 10 weeks of simulation  112236ms
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/test/engine/systems/talent/RelationshipSystem.test.ts [ src/test/engine/systems/talent/RelationshipSystem.test.ts ]
+Error: Failed to resolve import "../../utils/mockFactories" from "src/test/engine/systems/talent/RelationshipSystem.test.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/amauricia/Documents/GitHub/Studio-Boss/src/test/engine/systems/talent/RelationshipSystem.test.ts:14:93
+  2  |  import { haveCompeted, areFriends, areRivals, areRomantic, getTalentRelationships, getCastingChemistry, tickRelationshipSystem } from '@/engine/systems/talent/RelationshipSystem';
+  3  |  import { RandomGenerator } from '@/engine/utils/rng';
+  4  |  import { createMockGameState, createMockProject, createMockTalent, createMockContract } from '../../utils/mockFactories';
+     |                                                                                                ^
+  5  |  describe('RelationshipSystem - Award Nominee Tracking', ()=>{
+  6  |      it('should return false when no awards exist', ()=>{
+ ❯ _formatError node_modules/vitest/node_modules/vite/dist/node/chunks/dep-C6uTJdX2.js:49258:45
+ ❯ error node_modules/vitest/node_modules/vite/dist/node/chunks/dep-C6uTJdX2.js:49253:16
+ ❯ <anonymous> node_modules/vitest/node_modules/vite/dist/node/chunks/dep-C6uTJdX2.js:64423:45
+ ❯ transform node_modules/vitest/node_modules/vite/dist/node/chunks/dep-C6uTJdX2.js:64350:21
+ ❯ processTicksAndRejections native:7:39
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/21]⎯
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 20 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/test/rivalRevenue.test.ts > RivalRevenueCalculator > calculates theatrical revenue with decay
+AssertionError: expected 0 to be greater than 0
+ ❯ src/test/rivalRevenue.test.ts:65:31
+     63|     );
+     64|     
+     65|     expect(revenue.boxOffice).toBeGreaterThan(0);
+       |                               ^
+     66|     expect(revenue.boxOffice).toBeLessThan(10000000); // Should be les…
+     67|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/21]⎯
+
+ FAIL  src/test/rivalRevenue.test.ts > RivalRevenueCalculator > calculates streaming revenue for streaming projects
+AssertionError: expected 0 to be greater than 0
+ ❯ src/test/rivalRevenue.test.ts:86:31
+     84|     );
+     85|     
+     86|     expect(revenue.streaming).toBeGreaterThan(0);
+       |                               ^
+     87|     expect(revenue.boxOffice).toBe(0); // Not theatrical
+     88|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/21]⎯
+
+ FAIL  src/test/rivalRevenue.test.ts > RivalRevenueCalculator > calculates merch revenue for high-buzz projects
+AssertionError: expected 0 to be greater than 0
+ ❯ src/test/rivalRevenue.test.ts:107:27
+    105|     );
+    106|     
+    107|     expect(revenue.merch).toBeGreaterThan(0);
+       |                           ^
+    108|   });
+    109|   
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/21]⎯
+
+ FAIL  src/test/rivalRevenue.test.ts > RivalRevenueCalculator > applies rating premium to streaming revenue
+AssertionError: expected 0 to be greater than 0
+ ❯ src/test/rivalRevenue.test.ts:162:35
+    160|     );
+    161|     
+    162|     expect(revenueTVMA.streaming).toBeGreaterThan(revenuePG13.streamin…
+       |                                   ^
+    163|   });
+    164| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/21]⎯
+
+ FAIL  src/test/persistence/saveLoad.test.ts > saveLoad > returns null when loading an empty slot
+TypeError: vi.mocked(persistenceService.load).mockResolvedValue is not a function. (In 'vi.mocked(persistenceService.load).mockResolvedValue(null)', 'vi.mocked(persistenceService.load).mockResolvedValue' is undefined)
+ ❯ src/test/persistence/saveLoad.test.ts:21:40
+     19| 
+     20|   it("returns null when loading an empty slot", async () => {
+     21|     vi.mocked(persistenceService.load).mockResolvedValue(null);
+       |                                        ^
+     22|     const result = await loadGame(1);
+     23|     expect(result).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/21]⎯
+
+ FAIL  src/test/persistence/saveLoad.test.ts > saveLoad > handles malformed or missing save data from persistence service
+TypeError: vi.mocked(persistenceService.load).mockRejectedValue is not a function. (In 'vi.mocked(persistenceService.load).mockRejectedValue(new Error("Disk Error"))', 'vi.mocked(persistenceService.load).mockRejectedValue' is undefined)
+ ❯ src/test/persistence/saveLoad.test.ts:27:40
+     25| 
+     26|   it("handles malformed or missing save data from persistence service"…
+     27|     vi.mocked(persistenceService.load).mockRejectedValue(new Error("Di…
+       |                                        ^
+     28|     const result = await loadGame(1);
+     29|     expect(result).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/21]⎯
+
+ FAIL  src/test/persistence/saveLoad.test.ts > saveLoad > saves and loads game state correctly
+TypeError: vi.mocked(persistenceService.save).mockResolvedValue is not a function. (In 'vi.mocked(persistenceService.save).mockResolvedValue(true)', 'vi.mocked(persistenceService.save).mockResolvedValue' is undefined)
+ ❯ src/test/persistence/saveLoad.test.ts:34:40
+     32|   it("saves and loads game state correctly", async () => {
+     33|     const mockState = initializeGame("Save Studio", "major", 42);
+     34|     vi.mocked(persistenceService.save).mockResolvedValue(true);
+       |                                        ^
+     35|     vi.mocked(persistenceService.load).mockResolvedValue(mockState);
+     36| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/21]⎯
+
+ FAIL  src/test/persistence/saveLoad.test.ts > saveLoad > retrieves save slots info asynchronously
+TypeError: vi.mocked(persistenceService.load).mockImplementation is not a function. (In 'vi.mocked(persistenceService.load).mockImplementation(async (slot)=>{
+            if (slot === 1) return mockState;
+            return null;
+        })', 'vi.mocked(persistenceService.load).mockImplementation' is undefined)
+ ❯ src/test/persistence/saveLoad.test.ts:49:40
+     47|     
+     48|     // Setup: Slot 1 exists, Slot 0 and 2 do not
+     49|     vi.mocked(persistenceService.load).mockImplementation(async (slot:…
+       |                                        ^
+     50|         if (slot === 1) return mockState;
+     51|         return null;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/21]⎯
+
+ FAIL  src/test/persistence/saveLoad.test.ts > saveLoad > logs errors when save fails
+TypeError: vi.mocked(persistenceService.save).mockRejectedValue is not a function. (In 'vi.mocked(persistenceService.save).mockRejectedValue(new Error("Write failure"))', 'vi.mocked(persistenceService.save).mockRejectedValue' is undefined)
+ ❯ src/test/persistence/saveLoad.test.ts:65:40
+     63|   it("logs errors when save fails", async () => {
+     64|     const mockState = initializeGame("Error Studio", "indie", 42);
+     65|     vi.mocked(persistenceService.save).mockRejectedValue(new Error("Wr…
+       |                                        ^
+     66|     
+     67|     const consoleSpy = vi.spyOn(console, "error").mockImplementation((…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/21]⎯
+
+ FAIL  src/test/components/modals/CreateProjectModal.test.tsx > CreateProjectModal > disables Greenlight button if title is empty
+Error: expect(element).toBeDisabled()
+
+Received element is not disabled:
+  <button
+  class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 active:scale-95 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 font-display font-bold tracking-wide shadow-sm hover:shadow-[0_0_15px_rgba(234,179,8,0.4)] transition-all"
+/>
+ ❯ src/test/components/modals/CreateProjectModal.test.tsx:149:27
+    147| 
+    148|     const greenlightBtn = screen.getByText('Greenlight Project');
+    149|     expect(greenlightBtn).toBeDisabled();
+       |                           ^
+    150|   });
+    151| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/21]⎯
+
+ FAIL  src/test/engine/core/weekAdvance.test.ts > Week Advance Pipeline (Target A4) > should process the week and return a summarized result
+TypeError: undefined is not an object (evaluating 'state.relationships.discovery')
+ ❯ tickTalentDiscoverySystem src/engine/systems/talent/TalentDiscoverySystem.ts:156:32
+    154| 
+    155|   // 3. Maintain hidden talent pool
+    156|   const discoveryState = state.relationships.discovery || {};
+       |                                ^
+    157|   let hiddenPool = discoveryState.hiddenTalentPool || {};
+    158| 
+ ❯ execute src/engine/services/filters/TalentFilter.ts:39:29
+ ❯ advanceWeek src/engine/services/WeekCoordinator.ts:46:14
+ ❯ src/test/engine/core/weekAdvance.test.ts:45:35
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/21]⎯
+
+ FAIL  src/test/engine/core/weekAdvance.test.ts > Edge Cases > advances weeks safely with an empty pipeline
+TypeError: undefined is not an object (evaluating 'state.relationships.discovery')
+ ❯ tickTalentDiscoverySystem src/engine/systems/talent/TalentDiscoverySystem.ts:156:32
+    154| 
+    155|   // 3. Maintain hidden talent pool
+    156|   const discoveryState = state.relationships.discovery || {};
+       |                                ^
+    157|   let hiddenPool = discoveryState.hiddenTalentPool || {};
+    158| 
+ ❯ execute src/engine/services/filters/TalentFilter.ts:39:29
+ ❯ advanceWeek src/engine/services/WeekCoordinator.ts:46:14
+ ❯ src/test/engine/core/weekAdvance.test.ts:86:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/21]⎯
+
+ FAIL  src/test/engine/systems/festivals.test.ts > festivals system > resolveFestivals > resolves festivals and updates state
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/test/engine/systems/festivals.test.ts:50:64
+     48|       
+     49|       // Should have PROJECT_UPDATED (buzz), PRESTIGE_CHANGED, NEWS_AD…
+     50|       expect(impacts.some(i => i.type === 'PRESTIGE_CHANGED')).toBe(tr…
+       |                                                                ^
+     51|       expect(impacts.some(i => i.type === 'PROJECT_UPDATED')).toBe(tru…
+     52|       
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/21]⎯
+
+ FAIL  src/test/engine/systems/mergers.test.ts > Mergers and Sabotage System > executeAcquisition > successfully executes acquisition impact with project and IP transfer
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ src/test/engine/systems/mergers.test.ts:111:35
+    109| 
+    110|       // Verify IP Transfer
+    111|       expect(impact!.newIPAssets).toHaveLength(1);
+       |                                   ^
+    112|       expect(impact!.newIPAssets![0].id).toBe('ip-1');
+    113|       expect(impact!.newIPAssets![0].rightsOwner).toBe('STUDIO');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/21]⎯
+
+ FAIL  src/test/engine/systems/finance.test.ts > Finance System > calculateStudioNetWorth > adds 100% of catalogValue if rightsOwner is 'studio'
+ReferenceError: createMockIPAsset is not defined
+ ❯ src/test/engine/systems/finance.test.ts:62:14
+     60|            ...mockState.ip, 
+     61|            vault: [
+     62|              createMockIPAsset({ 
+       |              ^
+     63|                id: 'v1', 
+     64|                baseValue: 200000, 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/21]⎯
+
+ FAIL  src/test/engine/systems/production/ScriptDraftingSystem.test.ts > ScriptDraftingSystem - Edge Cases > should force ROLE_MERGE on low heat
+AssertionError: expected +0 to be 3 // Object.is equality
+
+- Expected
++ Received
+
+- 3
++ 0
+
+ ❯ src/test/engine/systems/production/ScriptDraftingSystem.test.ts:57:43
+     55|        const impacts = tickScriptDevelopment(p, rng);
+     56|        const update = impacts.find(i => i.type === 'PROJECT_UPDATED')?…
+     57|        expect(update?.activeRoles.length).toBe(3); // 4 -> 3
+       |                                           ^
+     58|        expect(update?.scriptEvents[0].type).toBe('ROLE_MERGE');
+     59|        expect(update?.buzz).toBe(5); // 10 - 5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/21]⎯
+
+ FAIL  src/test/engine/systems/production/ScriptDraftingSystem.test.ts > ScriptDraftingSystem - Edge Cases > should force ROLE_SPLIT on high heat
+AssertionError: expected 1 to be 4 // Object.is equality
+
+- Expected
++ Received
+
+- 4
++ 1
+
+ ❯ src/test/engine/systems/production/ScriptDraftingSystem.test.ts:82:43
+     80|        const impacts = tickScriptDevelopment(p, rng);
+     81|        const update = impacts.find(i => i.type === 'PROJECT_UPDATED')?…
+     82|        expect(update?.activeRoles.length).toBe(4);
+       |                                           ^
+     83|        expect(update?.scriptEvents[0].type).toBe('ROLE_SPLIT');
+     84|        expect(update?.buzz).toBe(20); // 10 + 10
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/21]⎯
+
+ FAIL  src/test/engine/systems/production/ScriptMetricsCalculator.test.ts > ScriptMetricsCalculator > calculateMetrics > calculates metrics correctly for a basic project
+AssertionError: expected 40 to be 80 // Object.is equality
+
+- Expected
++ Received
+
+- 80
++ 40
+
+ ❯ src/test/engine/systems/production/ScriptMetricsCalculator.test.ts:18:33
+     16|       const metrics = ScriptMetricsCalculator.calculateMetrics(project…
+     17| 
+     18|       expect(metrics.structure).toBe(80); // base 50 + 30 for 4-6 roles
+       |                                 ^
+     19|       expect(metrics.dialogue).toBe(50); // base 50 + 0 bonus
+     20|       expect(metrics.originality).toBe(40); // base 40 + 0 bonus
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/21]⎯
+
+ FAIL  src/test/engine/systems/production/ScriptMetricsCalculator.test.ts > ScriptMetricsCalculator > calculateMetrics > handles negative events and 0 roles properly (edge case)
+AssertionError: expected 40 to be 30 // Object.is equality
+
+- Expected
++ Received
+
+- 30
++ 40
+
+ ❯ src/test/engine/systems/production/ScriptMetricsCalculator.test.ts:65:33
+     63| 
+     64|       // Structure: 50 base - 10 (0 roles) - 10 (2 merges) = 30
+     65|       expect(metrics.structure).toBe(30);
+       |                                 ^
+     66|       expect(metrics.emotionalImpact).toBe(-10); // Directly tied to h…
+     67|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/21]⎯
+
+ FAIL  src/test/engine/systems/production/ScriptMetricsCalculator.test.ts > ScriptMetricsCalculator > calculateMetrics > handles many roles and complex script events properly (edge case)
+AssertionError: expected 40 to be 50 // Object.is equality
+
+- Expected
++ Received
+
+- 50
++ 40
+
+ ❯ src/test/engine/systems/production/ScriptMetricsCalculator.test.ts:91:33
+     89| 
+     90|       // Structure: 50 base - 10 (15 roles) + 10 (2 splits) = 50
+     91|       expect(metrics.structure).toBe(50);
+       |                                 ^
+     92|       // Dialogue: 50 base + 100 polish = 150 -> maxed to 100
+     93|       expect(metrics.dialogue).toBe(100);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/21]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 1 unhandled error during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-worker]: Timeout calling "onTaskUpdate"
+ ❯ onTimeoutError node_modules/vitest/dist/chunks/rpc.-pEldfrD.js:53:13
+ ❯ node_modules/vitest/dist/chunks/index.B521nVV-.js:59:45
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  10 failed | 127 passed (137)
+      Tests  20 failed | 814 passed (834)
+     Errors  1 error
+   Start at  08:24:51
+   Duration  114.54s (transform 3.02s, setup 9.25s, collect 20.47s, tests 123.04s, environment 58.07s, prepare 5.49s)
+
+error: script "test" exited with code 1

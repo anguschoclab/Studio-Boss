@@ -209,7 +209,7 @@ function evolveClique(
   rng: RandomGenerator
 ): { updated: Clique; impacts: StateImpact[] } {
   const impacts: StateImpact[] = [];
-  let updated = { ...clique };
+  const updated = { ...clique };
 
   // Get current members (filter out deceased)
   const livingMembers = clique.members
