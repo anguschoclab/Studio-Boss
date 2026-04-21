@@ -9,11 +9,11 @@ export const MADashboard: React.FC = () => {
   if (!state) return null;
   
   const industryData = useMemo(() => {
-    const rivals = state.industry.rivals;
+    const rivals = Object.values(state.entities?.rivals || {});
     const playerShare = RegulatorSystem.getMarketShare(state, 'player');
     
     const allStudios = [
-      { id: 'player', name: state.studio.name, share: playerShare, isPlayer: true, archetype: state.studio.archetype },
+      { id: state.studio.id, name: state.studio.name, share: playerShare, isPlayer: true, archetype: state.studio.archetype },
       ...rivals.map(r => ({
         id: r.id,
         name: r.name,

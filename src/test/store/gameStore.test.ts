@@ -43,7 +43,7 @@ describe("gameStore", () => {
     const state = useGameStore.getState().gameState!;
     // Ensure the necessary structures are present
     state.studio.internal.contracts = [];
-    state.industry.talentPool = {};
+    state.entities.talents = {};
     useGameStore.setState({ gameState: state });
 
     const summary = useGameStore.getState().doAdvanceWeek();
@@ -63,7 +63,7 @@ describe("gameStore", () => {
     });
 
     const state = useGameStore.getState().gameState;
-    const projects = Object.values(state?.studio.internal.projects || {});
+    const projects = Object.values(state?.entities.projects || {});
     expect(projects).toHaveLength(1);
     expect(projects[0].title).toBe("Test Project");
   });
@@ -78,13 +78,13 @@ describe("gameStore", () => {
     await useGameStore.getState().newGame("My Studio", "major");
     const state = useGameStore.getState().gameState!;
     state.finance.cash = 1000000;
-    state.industry.talentPool = {
+    state.entities.talents = {
       "t1": { 
           id: "t1", name: "Star", roles: ["actor"], prestige: 85, draw: 80, fee: 100000, 
           agencyId: 'a1'
       } as any
     };
-    state.studio.internal.projects = {
+    state.entities.projects = {
       "p1": { 
         id: "p1", title: "Test", format: "film", genre: "Action", budgetTier: "low", budget: 500000, weeklyCost: 10000,
         state: "development", weeksInPhase: 0, productionWeeks: 10, developmentWeeks: 10,

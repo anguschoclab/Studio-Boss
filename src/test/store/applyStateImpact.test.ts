@@ -5,39 +5,45 @@ import { GameState, Project, StateImpact } from "../../engine/types";
 describe("applyStateImpact utility", () => {
   const getInitialMockState = (): GameState => ({
     week: 1,
+    entities: {
+      projects: { 
+        "proj-1": {
+          id: "proj-1",
+          title: "Test Project",
+          state: "development",
+          buzz: 50,
+          weeksInPhase: 0,
+          developmentWeeks: 10,
+          productionWeeks: 10,
+          budget: 5000000,
+          budgetTier: 'mid',
+          format: 'film',
+          genre: 'Action',
+          targetAudience: 'General',
+          flavor: 'Test',
+          weeklyCost: 100000,
+          revenue: 0,
+          weeklyRevenue: 0,
+          releaseWeek: null
+        } as Project 
+      },
+      talents: {},
+      contracts: {},
+      rivals: {}
+    },
     studio: {
       name: "Test Studio",
       archetype: "major",
       prestige: 50,
       internal: {
-        projects: { 
-          "proj-1": {
-            id: "proj-1",
-            title: "Test Project",
-            state: "development",
-            buzz: 50,
-            weeksInPhase: 0,
-            developmentWeeks: 10,
-            productionWeeks: 10,
-            budget: 5000000,
-            budgetTier: 'mid',
-            format: 'film',
-            genre: 'Action',
-            targetAudience: 'General',
-            flavor: 'Test',
-            weeklyCost: 100000,
-            revenue: 0,
-            weeklyRevenue: 0,
-            releaseWeek: null
-          } as Project 
-        },
-        contracts: [],
+        projectHistory: [],
       }
     },
     industry: {
-      rivals: [],
+      families: [],
+      agencies: [],
+      agents: [],
       newsHistory: [],
-      talentPool: {},
     },
     market: {
         opportunities: [],
@@ -67,7 +73,7 @@ describe("applyStateImpact utility", () => {
       }
     };
     const newState = applyStateImpact(getInitialMockState(), impact);
-    const updatedProject = newState.studio.internal.projects["proj-1"];
+    const updatedProject = newState.entities.projects["proj-1"];
     expect(updatedProject?.state).toBe("production");
     expect(updatedProject?.buzz).toBe(70);
   });

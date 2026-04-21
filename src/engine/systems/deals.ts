@@ -1,5 +1,5 @@
 import { Talent, GameState, Project, FirstLookDeal, Agency, StateImpact } from '@/engine/types';
-import { secureRandom } from '../utils';
+import { rand, generateId } from '../utils';
 
 export function evaluateFirstLookDeal(talent: Talent, state: GameState): boolean {
   // A simple AI to determine if talent accepts a first-look deal based on studio prestige vs talent prestige
@@ -20,7 +20,7 @@ export function evaluateFirstLookDeal(talent: Talent, state: GameState): boolean
   // Clamp between 5 and 95
   acceptanceChance = Math.max(5, Math.min(95, acceptanceChance));
   
-  return secureRandom() * 100 <= acceptanceChance;
+  return rand() * 100 <= acceptanceChance;
 }
 
 export function offerFirstLookDeal(state: GameState, talentId: string, weeksRemaining: number, exclusivity: boolean = true): StateImpact[] {
@@ -40,7 +40,7 @@ export function offerFirstLookDeal(state: GameState, talentId: string, weeksRema
     ];
   }
   
-  const dealId = crypto.randomUUID();
+  const dealId = generateId('DEAL');
   // Note: We need a STUDIO_DEAL_ADDED type or similar if we want to store this in state.
   // For now, we'll just return the news impact to pass the tests and signal implementation gap.
   return [

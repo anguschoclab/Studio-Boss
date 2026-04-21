@@ -81,4 +81,59 @@ export class RevenueProcessor {
 
     return Math.round(totalRoyalty);
   }
+
+  /**
+   * Aggregates revenue across all active projects for a studio.
+   */
+  static calculateActiveRevenue(
+    projects: Project[],
+    state: import('../../types').GameState,
+    contracts: import('../../types').Contract[],
+    vault: import('../../types/state.types').IPAsset[],
+    studioId: string
+  ) {
+    let boxOffice = 0;
+    let distribution = 0;
+    let merch = 0;
+    let totalRoyalties = 0;
+    const projectRecoupment: Record<string, number> = {};
+
+    projects.forEach(p => {
+      if (p.state === 'released') {
+        let weeklyGross = 0;
+        
+        // 1. Theatrical vs Streaming
+        if (p.distributionStatus === 'theatrical') {
+          weeklyGross = this.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.5);
+          boxOffice += weeklyGross;
+        } else if (p.distributionStatus === 'streaming') {
+          const platform = state.market.buyers.find(b => b.id === p.buyerId);
+          if (platform) {
+            weeklyGross = this.calculateStreamingRevenue(p, platform);
+            distribution += weeklyGross;
+          }
+        }
+        
+        // 2. Merchandise
+        const franchise = p.franchiseId ? state.ip.franchises[p.franchiseId] : null;
+        const weeklyMerch = this.calculateMerchRevenue(p.buzz, franchise?.relevanceScore || 0);
+        merch += weeklyMerch;
+
+        // 3. Royalties
+        const projRoyalties = this.calculateNetPointsRoyalty(p, weeklyGross + weeklyMerch, contracts);
+        totalRoyalties += projRoyalties;
+
+        // 4. Track Recoupment Status
+        projectRecoupment[p.id] = (p.revenue || 0) / (p.budget + (p.marketingBudget || 0));
+      }
+    });
+
+    return {
+      boxOffice,
+      distribution,
+      merch,
+      totalRoyalties,
+      projectRecoupment
+    };
+  }
 }

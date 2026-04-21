@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest';
 import { initializeGame } from '@/engine/core/gameInit';
-import { RandomGenerator } from '@/engine/utils/rng';
 import { advanceWeek } from '@/engine/core/weekAdvance';
 
 /**
@@ -16,25 +15,31 @@ describe('Simulation Determinism', () => {
     const stateA = initializeGame(STUDIO_NAME, ARCHETYPE, SEED);
     const stateB = initializeGame(STUDIO_NAME, ARCHETYPE, SEED);
 
-    // Filter out rngState if it fluctuates, but ideally it shouldn't
+    // Initial states must be identical
     expect(stateA).toEqual(stateB);
   });
 
   it('should produce identical results after 10 weeks of simulation', { timeout: 240000 }, () => {
-    const rngA = new RandomGenerator(SEED);
-    const rngB = new RandomGenerator(SEED);
     let stateA = initializeGame(STUDIO_NAME, ARCHETYPE, SEED);
     let stateB = initializeGame(STUDIO_NAME, ARCHETYPE, SEED);
 
     for (let i = 0; i < 10; i++) {
-        stateA = advanceWeek(stateA, rngA).newState;
-        stateB = advanceWeek(stateB, rngB).newState;
+        stateA = advanceWeek(stateA).newState;
+        stateB = advanceWeek(stateB).newState;
     }
 
-    // Compare core metrics to avoid stack overflow in massive object graph diffing
+    // Compare core metrics
     expect(stateA.week).toBe(stateB.week);
     expect(stateA.finance.cash).toBe(stateB.finance.cash);
-    expect(Object.keys(stateA.entities.projects).length).toBe(Object.keys(stateB.entities.projects).length);
     expect(stateA.studio.prestige).toBe(stateB.studio.prestige);
+    
+    // Compare entity counts
+    expect(Object.keys(stateA.entities.talents).length).toBe(Object.keys(stateB.entities.talents).length);
+    expect(Object.keys(stateA.entities.projects).length).toBe(Object.keys(stateB.entities.projects).length);
+    expect(Object.keys(stateA.entities.rivals).length).toBe(Object.keys(stateB.entities.rivals).length);
+
+    // Deep equality check for stable properties
+    expect(stateA.finance).toEqual(stateB.finance);
+    expect(stateA.studio).toEqual(stateB.studio);
   });
 });

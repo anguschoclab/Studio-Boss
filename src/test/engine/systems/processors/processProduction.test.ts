@@ -50,7 +50,7 @@ describe('tickProduction', () => {
   it('ignores projects not in production/development state in the core tick (if logic specifies)', () => {
     const state = getInitialState();
     const releasedProject = createBaseProject('p1', 'released');
-    state.studio.internal.projects['p1'] = releasedProject;
+    state.entities.projects['p1'] = releasedProject;
 
     const impacts = tickProduction(state, rng);
     
@@ -61,7 +61,7 @@ describe('tickProduction', () => {
   it('generates PROJECT_UPDATED impact for production projects', () => {
     const state = getInitialState();
     const prodProject = createBaseProject('p1', 'production');
-    state.studio.internal.projects['p1'] = prodProject;
+    state.entities.projects['p1'] = prodProject;
 
     const impacts = tickProduction(state, rng);
     

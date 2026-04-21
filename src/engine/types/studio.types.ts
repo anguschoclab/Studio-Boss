@@ -62,14 +62,20 @@ export interface GameState {
   finance: FinanceState;
   news: NewsState;
   ip: IPState;
+  entities: {
+    projects: Record<string, Project>;
+    talents: Record<string, Talent>;
+    contracts: Record<string, Contract>;
+    rivals: Record<string, RivalStudio>;
+  };
   studio: {
+    id: string;
     name: string;
     archetype: ArchetypeKey;
     prestige: number;
     culture?: StudioCulture;
     internal: {
-      projects: Record<string, Project>;
-      contracts: Contract[];
+      projectHistory: string[]; // List of project IDs
       firstLookDeals?: FirstLookDeal[];
     };
     ownedPlatforms?: string[];
@@ -81,11 +87,9 @@ export interface GameState {
     buyers: Buyer[];
   };
   industry: {
-    rivals: RivalStudio[];
     families: Family[];
     agencies: Agency[];
     agents: Agent[];
-    talentPool: Record<string, Talent>;
     awards?: Award[];
     festivalSubmissions?: FestivalSubmission[];
     rumors?: Rumor[];

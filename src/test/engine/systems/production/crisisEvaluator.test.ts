@@ -5,29 +5,27 @@ import { resolveCrisisWithHandlers } from '@/engine/systems/production/crisisEva
 describe('Crisis Evaluator (Target A3)', () => {
   const mockState = {
     week: 1,
-    studio: {
-      internal: {
-        projects: {
-          'p1': {
-            id: 'p1',
-            title: 'Star Wars Clone',
-            state: 'production',
-            productionWeeks: 20,
-            buzz: 50,
-            activeCrisis: {
-              description: 'Actor walkout',
-              options: [
-                {
-                  text: 'Bribe them',
-                  cashPenalty: 100000,
-                  weeksDelay: 2,
-                  buzzPenalty: -10
-                }
-              ],
-              resolved: false
-            }
-          } as unknown as Project
-        }
+    entities: {
+      projects: {
+        'p1': {
+          id: 'p1',
+          title: 'Star Wars Clone',
+          state: 'production',
+          productionWeeks: 20,
+          buzz: 50,
+          activeCrisis: {
+            description: 'Actor walkout',
+            options: [
+              {
+                text: 'Bribe them',
+                cashPenalty: 100000,
+                weeksDelay: 2,
+                buzzPenalty: -10
+              }
+            ],
+            resolved: false
+          }
+        } as unknown as Project
       }
     }
   } as unknown as GameState;

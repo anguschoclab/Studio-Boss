@@ -1,45 +1,30 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { updateRival, advanceRivals } from "../../../engine/systems/rivals";
-import { RivalStudio, GameState, Talent } from "../../../engine/types";
-import * as utils from '../../../engine/utils';
-
-const mockRival: RivalStudio = {
-  id: "rival-1",
-  name: "Test Studio",
-  motto: "The standard.",
-  archetype: "major",
-  strength: 50,
-  cash: 100_000_000,
-  prestige: 50,
-  foundedWeek: 0,
-  recentActivity: "Doing nothing",
-  projectCount: 5,
-  strategy: 'acquirer',
-  projects: {},
-  contracts: [],
-  motivationProfile: { financial: 50, prestige: 50, legacy: 50, aggression: 50 },
-  currentMotivation: 'STABILITY'
-};
+import { createMockGameState, createMockRival } from "../generators/mockFactory";
+import { setDeterministicSeed } from '../../../engine/utils';
 
 describe("rivals system", () => {
   beforeEach(() => {
-    vi.spyOn(utils, 'secureRandom').mockReturnValue(0.5);
-  });
-
-  afterEach(() => {
-    vi.restoreAllMocks();
+    // Seed 777: first rand() is approx 0.787
+    setDeterministicSeed(777);
   });
 
   describe("updateRival", () => {
     it("returns partial updates for strength and cash", () => {
+      const mockRival = createMockRival({ strength: 50, cash: 100_000_000 });
       const update = updateRival(mockRival);
-      expect(update.strength).toBe(50); // 50 + (0.5 * 6 - 3) = 50
-      expect(update.cash).toBe(110_000_000); // 100M + (0.5 * 40M - 10M) = 110M
+      
+      // Seed 777 first rand() -> 0.686378...
+      // 50 + (0.686378 * 6 - 3) = 50 + (4.1182 - 3) = 51.1182
+      expect(update.strength).toBeCloseTo(51.12, 1);
+      
+      // Seed 777 second rand() -> 0.03445...
+      // 100M + (0.03445 * 20M - 5M) = 100M + 0.689M - 5M = 95.689M
+      expect(update.cash).toBeCloseTo(95_689_000, -3);
     });
 
     it("sets isAcquirable correctly on cash crunch", () => {
-      vi.spyOn(utils, 'secureRandom').mockReturnValue(0); // lowest values
-      const brokeRival = { ...mockRival, cash: -50_000_000, strength: 30 };
+      const brokeRival = createMockRival({ cash: -50_000_000, strength: 30 });
       const update = updateRival(brokeRival);
       expect(update.isAcquirable).toBe(true);
       expect(update.recentActivity).toContain("buyer");
@@ -48,13 +33,9 @@ describe("rivals system", () => {
 
   describe("advanceRivals", () => {
     it("returns StateImpact with rivalUpdates for all rivals in state", () => {
-      const state = {
-        industry: {
-          rivals: [mockRival],
-          talentPool: {} as Record<string, Talent>,
-          newsHistory: []
-        }
-      } as unknown as GameState;
+      const mockRival = createMockRival({ id: 'rival-1' });
+      const state = createMockGameState();
+      state.entities.rivals = { [mockRival.id]: mockRival };
 
       const impact = advanceRivals(state);
 
@@ -64,15 +45,14 @@ describe("rivals system", () => {
     });
 
     it("triggers news events for newly acquirable rivals", () => {
-      vi.spyOn(utils, 'secureRandom').mockReturnValue(0);
-      const brokeRival = { ...mockRival, cash: -50_000_000, strength: 30, isAcquirable: false };
-      const state = {
-        industry: {
-          rivals: [brokeRival],
-          talentPool: {},
-          newsHistory: []
-        }
-      } as unknown as GameState;
+      const brokeRival = createMockRival({ 
+        id: 'broke-1', 
+        cash: -50_000_000, 
+        strength: 30, 
+        isAcquirable: false 
+      });
+      const state = createMockGameState();
+      state.entities.rivals = { [brokeRival.id]: brokeRival };
 
       const impact = advanceRivals(state);
 

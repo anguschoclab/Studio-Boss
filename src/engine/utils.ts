@@ -45,23 +45,33 @@ export function setDeterministicSeed(seed: number) {
 
 /**
  * The primary random function for the engine.
+ * Defaults to non-deterministic unless setDeterministicSeed is called.
  */
 export function rand(): number {
   return currentRandomSource();
 }
 
 /**
- * Centralized ID generation for engine entities.
+ * Centralized, deterministic ID generation for engine entities.
+ * Uses the active PRNG to ensure bit-identical results when seeded.
  */
 export function generateId(prefix: string = ''): string {
-  const id = crypto.randomUUID();
+  // Simple deterministic UUID-like string based on our rand() source
+  const hex = '0123456789abcdef';
+  let id = '';
+  for (let i = 0; i < 32; i++) {
+    const r = Math.floor(rand() * 16);
+    if (i === 8 || i === 12 || i === 16 || i === 20) id += '-';
+    id += hex[r];
+  }
   return prefix ? `${prefix}-${id}` : id;
 }
 
+/**
+ * Legacy secureRandom — avoided in core simulation for determinism.
+ */
 export function secureRandom(): number {
-  const array = new Uint32Array(1);
-  crypto.getRandomValues(array);
-  return array[0] / (0xffffffff + 1);
+  return rand(); // Redirect to our seedable source for unified determinism
 }
 
 export function pick<T>(arr: T[]): T {

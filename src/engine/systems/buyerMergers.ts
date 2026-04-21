@@ -1,6 +1,6 @@
 import { Buyer, StreamerPlatform, GameState } from '@/engine/types';
 import { StateImpact } from '../types/state.types';
-import { pick, secureRandom, randRange } from '../utils';
+import { pick, rand, generateId, randRange } from '../utils';
 
 const MERGER_HEADLINES = [
   (a: string, b: string) => `BREAKING: ${a} acquires ${b} in landmark media deal!`,
@@ -60,9 +60,9 @@ export function advanceBuyers(state: GameState): StateImpact {
       const performance = (revenue - costs) / 1_000_000;
       update.strength = Math.max(10, Math.min(100, currentStrength + performance));
 
-      if (secureRandom() < 0.02) {
+      if (rand() < 0.02) {
         impact.newHeadlines!.push({
-          id: `headline-${crypto.randomUUID()}`,
+          id: generateId('HL'),
           week: currWeek,
           category: 'market',
           text: pick(performance > 0 ? STREAMER_GROWTH_EVENTS : STREAMER_DECLINE_EVENTS)(buyer.name),
@@ -82,7 +82,7 @@ export function advanceBuyers(state: GameState): StateImpact {
       if (!buyer.isAcquirable) {
         update.isAcquirable = true;
         impact.newHeadlines!.push({
-          id: `headline-${crypto.randomUUID()}`,
+          id: generateId('HL'),
           week: currWeek,
           category: 'market',
           text: pick(VULNERABILITY_HEADLINES)(buyer.name),
@@ -96,7 +96,7 @@ export function advanceBuyers(state: GameState): StateImpact {
   }
 
   // M&A Execution
-  if (secureRandom() < 0.08) { 
+  if (rand() < 0.08) { 
     const vulnerable = activeBuyers.filter(b => b.isAcquirable);
     const strong = activeBuyers.filter(b => !b.isAcquirable && (b.strength ?? 60) > 70);
 
@@ -130,7 +130,7 @@ export function advanceBuyers(state: GameState): StateImpact {
         });
 
         impact.newHeadlines!.push({
-          id: `headline-${crypto.randomUUID()}`,
+          id: generateId('HL'),
           week: currWeek,
           category: 'market',
           text: pick(MERGER_HEADLINES)(acquirer.name, target.name),

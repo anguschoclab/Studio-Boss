@@ -44,7 +44,7 @@ export function tickIPVault(state: GameState, archetype?: import('../../data/aiA
     }
 
     if (Object.keys(genreFocusBonus).length > 0) {
-      const sourceProject = state.studio.internal.projectHistory.find(p => p.id === updatedAsset.originalProjectId);
+      const sourceProject = Object.values(state.entities.projects).find(p => p.id === updatedAsset.originalProjectId);
       if (sourceProject && sourceProject.genre) {
         const genreBonus = genreFocusBonus[sourceProject.genre.toLowerCase()] || 0;
         if (genreBonus > 0) {
@@ -64,7 +64,7 @@ export function tickIPVault(state: GameState, archetype?: import('../../data/aiA
     }
 
     if (updatedAsset.totalEpisodes > 0) {
-      const sourceProject = state.studio.internal.projectHistory.find(p => p.id === updatedAsset.originalProjectId);
+      const sourceProject = Object.values(state.entities.projects).find(p => p.id === updatedAsset.originalProjectId);
       const genre = sourceProject?.genre || 'DRAMA';
       
       const newTier = determineSyndicationTier(updatedAsset.totalEpisodes, genre);
@@ -99,7 +99,7 @@ export function tickIPVault(state: GameState, archetype?: import('../../data/aiA
   Object.values(state.ip.franchises).forEach(franchise => {
     const firstAssetId = franchise.assetIds[0];
     const firstAsset = state.ip.vault.find(a => a.id === firstAssetId);
-    const sourceProject = firstAsset?.originalProjectId ? (state.entities.projects[firstAsset.originalProjectId] || state.studio.internal.projectHistory.find(p => p.id === firstAsset.originalProjectId)) : undefined;
+    const sourceProject = firstAsset?.originalProjectId ? state.entities.projects[firstAsset.originalProjectId] : undefined;
     
     const genre = sourceProject?.genre || 'Action';
     const saturation = genreSaturation[genre.toUpperCase()] || 0;

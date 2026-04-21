@@ -1,5 +1,5 @@
 import { Buyer, BuyerArchetype, NetworkPlatform, PremiumPlatform, StreamerPlatform } from '@/engine/types';
-import { pick, randRange, secureRandom } from '../utils';
+import { pick, randRange, secureRandom, generateId, rand } from '../utils';
 import { 
   NETWORK_PREFIXES, NETWORK_SUFFIXES,
   PREMIUM_PREFIXES, PREMIUM_SUFFIXES,
@@ -30,7 +30,7 @@ export function generateBuyers(config?: { networks?: number; premium?: number; s
     const name = generateBuyerName('network', usedNames);
     usedNames.add(name);
     const buyer: NetworkPlatform = {
-      id: `buyer-net-${i}-${Date.now()}`,
+      id: generateId('BUY'),
       name,
       archetype: 'network',
       foundedWeek: 1,
@@ -45,7 +45,7 @@ export function generateBuyers(config?: { networks?: number; premium?: number; s
     const name = generateBuyerName('premium', usedNames);
     usedNames.add(name);
     const buyer: PremiumPlatform = {
-      id: `buyer-prem-${i}-${Date.now()}`,
+      id: generateId('BUY'),
       name,
       archetype: 'premium',
       foundedWeek: 1,
@@ -61,12 +61,12 @@ export function generateBuyers(config?: { networks?: number; premium?: number; s
     const name = generateBuyerName('streamer', usedNames);
     usedNames.add(name);
     const buyer: StreamerPlatform = {
-      id: `buyer-str-${i}-${Date.now()}`,
+      id: generateId('BUY'),
       name,
       archetype: 'streamer',
       foundedWeek: 1,
       subscribers: Math.floor(randRange(5_000_000, 80_000_000)),
-      churnRate: parseFloat((secureRandom() * 0.09 + 0.01).toFixed(3)),
+      churnRate: parseFloat((rand() * 0.09 + 0.01).toFixed(3)),
       contentLibraryQuality: Math.floor(randRange(30, 90)),
       marketingSpend: Math.floor(randRange(500_000, 5_000_000)),
       marketShare: randRange(0.2, 0.4),

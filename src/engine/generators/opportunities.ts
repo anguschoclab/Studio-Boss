@@ -1,6 +1,6 @@
 import { Opportunity, BudgetTierKey, TvFormatKey } from '@/engine/types';
 import { GENRES, TARGET_AUDIENCES } from '../data/genres';
-import { pick, randRange, secureRandom } from '../utils';
+import { pick, randRange, secureRandom, generateId, rand } from '../utils';
  // Reuse some generation logic if needed, or build new one
 
 const PROJECT_ADJECTIVES = [
@@ -202,20 +202,19 @@ function generateFlavor(genre: string, type: string, budgetTier: BudgetTierKey, 
 }
 
 export function generateProjectTitle(): string {
-  if (secureRandom() > 0.5) {
+  if (rand() > 0.5) {
     return `The ${pick(PROJECT_ADJECTIVES)} ${pick(PROJECT_NOUNS)}`;
   }
   return `${pick(PROJECT_ADJECTIVES)} ${pick(PROJECT_NOUNS)}`;
 }
 
-export function generateOpportunity(talentIds?: string[]): Opportunity;
 export function generateOpportunity(_weekOrTalentIds?: number | string[]): Opportunity {
   // Support both old signature (week, prestige) and new (talentIds)
   let talentIds: string[] | undefined;
   if (Array.isArray(_weekOrTalentIds)) {
     talentIds = _weekOrTalentIds;
   }
-  const isFilm = secureRandom() > 0.4;
+  const isFilm = rand() > 0.4;
   const genre: string = pick([...GENRES]);
   const targetAudience: string = pick([...TARGET_AUDIENCES]);
   const budgetTier = pick(['low', 'mid', 'high', 'blockbuster'] as BudgetTierKey[]);
@@ -225,7 +224,7 @@ export function generateOpportunity(_weekOrTalentIds?: number | string[]): Oppor
 
   const weeksUntilExpiry = Math.floor(randRange(4, 12));
   const opt: Opportunity = {
-    id: `opp-${crypto.randomUUID()}`,
+    id: generateId('OPP'),
     type,
     title: generateProjectTitle(),
     format: isFilm ? 'film' : 'tv',
@@ -236,7 +235,7 @@ export function generateOpportunity(_weekOrTalentIds?: number | string[]): Oppor
     origin,
     costToAcquire: Math.floor(randRange(10, 500)) * 1000,
     weeksUntilExpiry,
-    attachedTalentIds: talentIds && talentIds.length > 0 && secureRandom() > 0.5 ? [pick(talentIds)] : undefined,
+    attachedTalentIds: talentIds && talentIds.length > 0 && rand() > 0.5 ? [pick(talentIds)] : undefined,
     bids: {},
     bidHistory: [],
     expirationWeek: weeksUntilExpiry,

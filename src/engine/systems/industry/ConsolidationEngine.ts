@@ -8,7 +8,7 @@ import { pick, secureRandom, randRange } from '../../utils';
  */
 export function tickConsolidation(state: GameState): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const rivals = state.industry.rivals;
+  const rivals = Object.values(state.entities.rivals || {});
   const buyers = state.market.buyers;
 
   // Potential Acquirers: Majors with surplus cash

@@ -1,6 +1,7 @@
 import { GameState, StateImpact, WeekSummary, GameEvent } from '../types';
 import { RandomGenerator } from '../utils/rng';
 import { applyImpacts } from '../core/impactReducer';
+import { setDeterministicSeed } from '../utils';
 
 // System Imports
 import { tickProduction } from '../systems/productionEngine';
@@ -44,13 +45,16 @@ export class WeekCoordinator {
   /**
    * Main entry point for the weekly simulation tick.
    */
-  static execute(state: GameState): { newState: GameState; summary: WeekSummary } {
+  static execute(state: GameState): { newState: GameState; summary: WeekSummary; impacts: StateImpact[] } {
     // 1. Preparation Phase (The Valve)
+    const tickSeed = (state.gameSeed || 12345) + (state.tickCount || 0);
+    setDeterministicSeed(tickSeed);
+
     const context: TickContext = {
       week: state.week + 1,
       tickCount: (state.tickCount || 0) + 1,
-      rng: new RandomGenerator((state.gameSeed || 12345) + (state.tickCount || 0)),
-      timestamp: Date.now(),
+      rng: new RandomGenerator(tickSeed),
+      timestamp: 1713552000000 + (state.week * 604800000), // Deterministic: 2024-04-20 + weeks
       impacts: [],
       events: []
     };
@@ -61,6 +65,12 @@ export class WeekCoordinator {
     this.runAIFilter(state, context);
     this.runScandalFilter(state, context);
     this.runFinanceFilter(state, context);
+
+    // 2.5 Weekly Summary Trigger
+    context.impacts.push({
+      type: 'MODAL_TRIGGERED',
+      payload: { modalType: 'SUMMARY' }
+    });
 
     // 3. Consolidation Phase (The Merge)
     const nextState = applyImpacts(state, context.impacts);
@@ -74,7 +84,8 @@ export class WeekCoordinator {
 
     return {
       newState: finalizedState,
-      summary: this.buildSummary(state, finalizedState, context)
+      summary: this.buildSummary(state, finalizedState, context),
+      impacts: context.impacts
     };
   }
 
@@ -97,7 +108,7 @@ export class WeekCoordinator {
     context.impacts.push(...tickProduction(state, context.rng));
     
     // 2. Script Evolution Tick (Only for Studio Projects in Development)
-    Object.values(state.studio.internal.projects).forEach(project => {
+    Object.values(state.entities.projects).forEach(project => {
       if (project.state === 'development') {
         const result = tickScriptDevelopment(project, context.rng);
         if (result.project !== project) {

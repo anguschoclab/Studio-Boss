@@ -10,8 +10,19 @@ import { generateWeeklyFinancialReport } from '../finance';
 export function tickFinance(state: GameState, rng: RandomGenerator, pendingImpacts: StateImpact[] = []): StateImpact[] {
   const impacts: StateImpact[] = [];
   
-  // Use the robust report generator
-  const { report, snapshot } = generateWeeklyFinancialReport(state, pendingImpacts);
+  // Use the robust report generator for the player studio
+  const { report, snapshot } = generateWeeklyFinancialReport(
+    state,
+    'player',
+    state.entities.projects,
+    state.finance.cash,
+    state.studio.archetype,
+    state.studio.prestige,
+    state.entities.contracts ? Object.values(state.entities.contracts) : [],
+    [], // Talent pacts (TBD if player has them in entities)
+    rng,
+    pendingImpacts
+  );
   
   // 1. Funds change (Already consolidated in report.netProfit)
   impacts.push({

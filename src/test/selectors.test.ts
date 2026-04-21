@@ -23,64 +23,7 @@ import {
 } from '@/store/selectors';
 import type { GameState, Project, Talent } from '@/engine/types';
 
-// Helper to create mock game state
-const createMockGameState = (overrides: Partial<GameState> = {}): GameState => ({
-  week: 10,
-  gameSeed: 12345,
-  tickCount: 100,
-  rngState: 42,
-  game: { currentWeek: 10 },
-  entities: {
-    projects: {},
-    contracts: {},
-    talents: {},
-    rivals: {},
-  },
-  finance: {
-    cash: 5000000,
-    ledger: [],
-    weeklyHistory: [],
-    marketState: {
-      cycle: 'STABLE',
-      sentiment: 50,
-      baseRate: 0.05,
-      debtRate: 0.08,
-      savingsYield: 0.02,
-      loanRate: 0.07,
-      rateHistory: [],
-    },
-  },
-  news: { headlines: [] },
-  ip: { vault: [], franchises: {} },
-  studio: {
-    id: 'studio-1',
-    name: 'Test Studio',
-    archetype: 'mid-tier',
-    prestige: 75,
-    internal: { projectHistory: [] },
-    snapshotHistory: [],
-    activeCampaigns: {},
-  },
-  market: {
-    opportunities: [],
-    trends: [],
-    activeMarketEvents: [],
-    buyers: [],
-  },
-  industry: {
-    families: [],
-    agencies: [],
-    agents: [],
-    newsHistory: [],
-  },
-  deals: {
-    activeDeals: [],
-    pendingOffers: [],
-    expiredDeals: [],
-  },
-  eventHistory: [],
-  ...overrides,
-} as any); // Type assertion to avoid strict type checking in tests
+import { createMockGameState } from './mockFactory';
 
 describe('Phase 1: Financial Selectors', () => {
   describe('selectCashFlowTrends', () => {
@@ -537,7 +480,7 @@ describe('Phase 2: Project Status Selectors', () => {
               flavor: 'Drama',
               state: 'production',
               buzz: 70,
-              weeksInPhase: 8,
+              weeksInPhase: 12,
               developmentWeeks: 5,
               productionWeeks: 10,
               revenue: 0,

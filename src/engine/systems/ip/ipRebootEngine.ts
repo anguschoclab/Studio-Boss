@@ -18,3 +18,23 @@ export function applyRebootNostalgia(project: Project, sourceAsset: IPAsset): Pr
     title: project.title || `Untitled ${sourceAsset.title} Reboot`
   };
 }
+
+/**
+ * Generates a reboot proposal from a list of internal IP assets.
+ */
+export function generateRebootProposal(vault: IPAsset[], rng: any): any {
+  if (!vault || vault.length === 0) return null;
+  
+  const candidates = vault.filter(v => v.rightsOwner === 'STUDIO');
+  if (candidates.length === 0) return null;
+
+  const asset = rng.pick(candidates);
+  
+  return {
+    ipId: asset.id,
+    ipTitle: asset.title,
+    suggestedBudget: Math.max(50_000_000, asset.baseValue * 0.5),
+    estimatedNostalgiaBonus: 15,
+    description: `Nostalgia is at an all-time high for "${asset.title}". Execs suggest a modern reimagining for the new generation.`
+  };
+}

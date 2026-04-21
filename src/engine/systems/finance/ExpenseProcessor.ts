@@ -73,4 +73,41 @@ export class ExpenseProcessor {
 
     return Math.round(totalBurn);
   }
+
+  /**
+   * Consolidates all expenses for a studio in a single call.
+   */
+  static calculateConsolidatedExpenses(
+    projects: Project[],
+    state: import('../../types').GameState,
+    market: import('../../types/state.types').FinancialMarketState,
+    archetype: string,
+    cash: number,
+    prestige: number,
+    pacts: import('../../types').TalentPact[]
+  ) {
+    // Determine active projects for overhead (exclude released/archived/completed)
+    const activeProjects = projects.filter(p => 
+        p.state !== 'released' && 
+        p.state !== 'archived' && 
+        p.state !== 'completed'
+    );
+
+    // Get studio level from archetype
+    const studioLevel = archetype === 'major' ? 3 : archetype === 'mid-tier' ? 2 : 1;
+
+    const overhead = this.calculateStudioBurn(studioLevel, activeProjects.length);
+    const production = this.calculateProductionBurn(projects);
+    const marketing = this.calculateMarketingBurn(projects);
+    const interest = this.calculateDebtInterest(cash, market.debtRate);
+    const pactsCost = pacts.reduce((acc, p) => acc + (p.weeklyFee || 0), 0);
+
+    return {
+        overhead,
+        production,
+        marketing,
+        interest,
+        pacts: pactsCost
+    };
+  }
 }

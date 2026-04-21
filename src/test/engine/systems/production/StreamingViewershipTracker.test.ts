@@ -61,9 +61,9 @@ describe('StreamingViewershipTracker', () => {
       const comedyHistory = StreamingViewershipTracker.initializeViewership(comedyProject, 'p1', platform, 1, rng);
       const neutralHistory = StreamingViewershipTracker.initializeViewership(neutralProject, 'p1', platform, 1, rng);
 
-      const dramaComp = dramaHistory.entries[0].completionRate;
-      const comedyComp = comedyHistory.entries[0].completionRate;
-      const neutralComp = neutralHistory.entries[0].completionRate;
+      const dramaComp = dramaHistory.completionRate;
+      const comedyComp = comedyHistory.completionRate;
+      const neutralComp = neutralHistory.completionRate;
 
       expect(dramaComp).toBeGreaterThan(neutralComp);
       expect(neutralComp).toBeGreaterThan(comedyComp);
@@ -153,9 +153,8 @@ describe('StreamingViewershipTracker', () => {
       history = StreamingViewershipTracker.updateViewership(history, 12, project, rng);
 
       expect(history.entries).toHaveLength(3);
-      expect(history.totalHoursWatched).toBe(
-        history.entries[0].hoursWatched + history.entries[1].hoursWatched + history.entries[2].hoursWatched
-      );
+      const calculatedTotal = history.entries.reduce((sum, entry) => sum + entry.hoursWatched, 0);
+      expect(history.totalHoursWatched).toBe(calculatedTotal);
 
       expect(history.peakViewers).toBeGreaterThanOrEqual(history.entries[0].viewers);
     });

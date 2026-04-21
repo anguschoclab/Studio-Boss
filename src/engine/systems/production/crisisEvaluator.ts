@@ -37,7 +37,7 @@ const CrisisHandlers: Record<string, (project: Project, option: any) => StateImp
  * Kept under 50 lines per mandate.
  */
 export function resolveCrisisWithHandlers(state: GameState, projectId: string, optionIndex: number): StateImpact[] {
-  const project = state.studio.internal.projects[projectId];
+  const project = state.entities.projects[projectId];
   if (!project?.activeCrisis || project.activeCrisis.resolved) return [];
 
   const option = project.activeCrisis.options[optionIndex];

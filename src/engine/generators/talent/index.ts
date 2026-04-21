@@ -1,8 +1,8 @@
-import { Talent, TalentRole, Family, Agency, Agent } from '../../types/talent.types';
+import { Talent, TalentRole, Family, Agency, Agent, TalentTier } from '../../types/talent.types';
 import { generateDemographics } from './demographicsGenerator';
-import { generatePsychology } from './psychologyGenerator';
+import { psychologyGenerator } from './psychologyGenerator';
 import { generateDemographicName } from '../names';
-import { randRange, secureRandom, pick } from '../../utils';
+import { randRange, secureRandom, pick, rand, generateId } from '../../utils';
 
 
 const TALENT_QUIRKS = [
@@ -24,16 +24,16 @@ const TALENT_QUIRKS = [
   'Demands exclusive gym trailer'
 ];
 
-export function generateTalent(params: { role: TalentRole; tier: string; localCountry?: string }): Talent {
+export function generateTalent(params: { role: TalentRole; tier: TalentTier; localCountry?: string }): Talent {
 
-  const isGlobalSuperstar = params.tier === 'A-List' || params.tier === 'S-List';
+  const isGlobalSuperstar = params.tier === 'A_LIST';
   
   const demographics = generateDemographics(isGlobalSuperstar, params.localCountry);
-  const psychology = generatePsychology(params.tier);
+  const psychology = psychologyGenerator(params.tier);
   const name = generateDemographicName(demographics.gender, demographics.country, demographics.ethnicity);
 
   // Stats Logic (reusing bits from old generator)
-  const isNepo = secureRandom() < 0.1; // Reduced for default pool
+  const isNepo = rand() < 0.1; // Reduced for default pool
   const nepoBump = isNepo ? 15 : 0;
   const prestige = Math.floor(randRange(10, 80)) + nepoBump;
   const draw = Math.floor(randRange(10, 80)) + nepoBump;
@@ -41,7 +41,7 @@ export function generateTalent(params: { role: TalentRole; tier: string; localCo
 
 
   // Generate random perks
-  const perksCount = Math.floor(Math.random() * 3);
+  const perksCount = Math.floor(rand() * 3);
   const perksPool = [...TALENT_QUIRKS];
   const perks: string[] = [];
   for (let i = 0; i < perksCount; i++) {
@@ -56,12 +56,11 @@ export function generateTalent(params: { role: TalentRole; tier: string; localCo
   }
 
   return {
-
-    id: `talent-${crypto.randomUUID()}`,
+    id: generateId('TAL'),
     name,
     role: params.role,
     roles: [params.role],
-    tier: params.tier as import('../../types/talent.types').TalentTier,
+    tier: params.tier,
     demographics,
     psychology,
     prestige: Math.min(100, prestige),
@@ -87,13 +86,13 @@ export function generateTalent(params: { role: TalentRole; tier: string; localCo
 
 export function generateFamilies(count: number): Family[] {
   return Array.from({ length: count }).map((_, i) => ({
-    id: `family-${i}`,
+    id: generateId('FAM'),
     name: `Family ${i}`, // Improved naming in future turns
-    recognition: Math.floor(Math.random() * 100),
-    prestigeLegacy: Math.floor(Math.random() * 100),
-    commercialLegacy: Math.floor(Math.random() * 100),
-    scandalLegacy: Math.floor(Math.random() * 100),
-    volatility: Math.floor(Math.random() * 100),
+    recognition: Math.floor(rand() * 100),
+    prestigeLegacy: Math.floor(rand() * 100),
+    commercialLegacy: Math.floor(rand() * 100),
+    scandalLegacy: Math.floor(rand() * 100),
+    volatility: Math.floor(rand() * 100),
     status: 'active'
   }));
 }
@@ -106,16 +105,15 @@ export function generateTalentPool(
   localCountry?: string
 ): Talent[] {
     const roles: TalentRole[] = ['actor', 'director', 'writer', 'producer'];
-    const tiers = ['S-List', 'A-List', 'B-List', 'C-List', 'D-List'];
     
     return Array.from({ length: count }).map(() => {
         const role = pick(roles);
-        const tierRoll = Math.random();
-        let tier = 'C-List';
-        if (tierRoll > 0.98) tier = 'S-List';
-        else if (tierRoll > 0.90) tier = 'A-List';
-        else if (tierRoll > 0.70) tier = 'B-List';
-        else if (tierRoll < 0.20) tier = 'D-List';
+        const tierRoll = rand();
+        let tier: TalentTier = 'C_LIST';
+        if (tierRoll > 0.98) tier = 'A_LIST'; // Simplified for simulation start
+        else if (tierRoll > 0.90) tier = 'A_LIST';
+        else if (tierRoll > 0.70) tier = 'B_LIST';
+        else if (tierRoll < 0.20) tier = 'NEWCOMER';
 
         return generateTalent({ role, tier, localCountry });
     });

@@ -1,5 +1,5 @@
 import { Project, ActiveCrisis, GameState } from '@/engine/types';
-import { pick, secureRandom } from '../utils';
+import { pick, rand, generateId } from '../utils';
 import { StateImpact } from '../types/state.types';
 import { CRISIS_POOLS } from '../data/crises.data';
 
@@ -8,7 +8,7 @@ export function generateCrisis(project: Project): StateImpact | null {
   if (!template) return null;
 
   const crisis: ActiveCrisis = {
-    crisisId: `crisis-${crypto.randomUUID()}`,
+    crisisId: generateId('CRI'),
     triggeredWeek: 0,
     haltedProduction: false,
     description: template.description,
@@ -28,14 +28,14 @@ export function generateCrisis(project: Project): StateImpact | null {
 
 export function checkAndTriggerCrisis(project: Project): StateImpact | null {
   // 3% base chance of a production crisis per week
-  if (secureRandom() < 0.03) {
+  if (rand() < 0.03) {
     return generateCrisis(project);
   }
   return null;
 }
 
 export function resolveCrisis(state: GameState, projectId: string, optionIndex: number): StateImpact {
-  const project = state.studio.internal.projects[projectId];
+  const project = state.entities.projects[projectId];
   if (!project || !project.activeCrisis || project.activeCrisis.resolved) {
     return {};
   }
@@ -77,14 +77,14 @@ export function resolveCrisis(state: GameState, projectId: string, optionIndex: 
   }
 
   impact.newHeadlines!.push({
-    id: `headline-${crypto.randomUUID()}`,
+    id: generateId('HL'),
     week: state.week,
     category: 'general',
     text: `Crisis resolved for "${project.title}": ${option.text}`
   });
 
   impact.newsEvents!.push({
-    id: `news-${crypto.randomUUID()}`,
+    id: generateId('NEWS'),
     week: state.week,
     type: 'CRISIS',
     headline: `Crisis at ${project.title}`,

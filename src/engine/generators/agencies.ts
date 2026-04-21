@@ -1,5 +1,5 @@
 import { Agency, Agent, AgencyTier, AgencyCulture, AgentSpecialty, AgencyArchetype, AgencyMotivation, MotivationProfile } from '@/engine/types';
-import { pick, randRange, secureRandom } from '../utils';
+import { pick, randRange, secureRandom, generateId } from '../utils';
 
 const POWERHOUSE_PREFIXES = ['United Global', 'Apex', 'Titan', 'Creative Artists', 'William Morrison', 'Monolith', 'Apex Predators', 'Colossal', 'Leviathan'];
 const BOUTIQUE_PREFIXES = ['Silver Lake', 'Artisan', 'Lighthouse', 'Indie', 'Auteur', 'Visionary', 'Underground', 'Echo Park', 'Canyon'];
@@ -216,7 +216,7 @@ export function generateAgencies(count: number): Agency[] {
     };
 
     agencies.push({
-      id: `agency-${crypto.randomUUID()}`,
+      id: generateId('AGY'),
       name: actualName,
       archetype,
       tier,
@@ -257,7 +257,7 @@ export function generateAgents(agencies: Agency[], countPerAgency: number): Agen
       }
 
       agents.push({
-        id: `agent-${crypto.randomUUID()}`,
+        id: generateId('AGT'),
         agencyId: agency.id,
         name: `${firstName} ${lastName}`,
         specialty,

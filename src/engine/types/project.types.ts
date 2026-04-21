@@ -475,7 +475,14 @@ export interface ProjectBase {
   marketingBudget?: number;
   marketingLevel?: 'none' | 'basic' | 'blockbuster';
   marketingDomesticSplit?: number;
+  marketingDomesticSplitValue?: number;
   marketingAngle?: string;
+  marketingStats?: {
+    weeksActive: number;
+    totalSpend: number;
+    buzzGained: number;
+    viralHits: number;
+  };
   // IP Rights
   ipRights?: IPRights;
   // Common Sprint H / I additions
@@ -488,6 +495,8 @@ export interface ProjectBase {
   isAcquired?: boolean;
   distributionStatus?: 'theatrical' | 'streaming' | 'syndicated';
   buyerId?: string;
+  ownerId?: string;
+  nielsenProfile?: import('../systems/television/nielsenSystem').NielsenProfile;
 }
 
 export interface ScriptedProject extends ProjectBase {
@@ -509,7 +518,6 @@ export interface SeriesProject extends ScriptedProject {
   tvFormat?: TvFormatKey;
   tvDetails: TVSeasonDetails;
   releaseModel?: ReleaseModelKey;
-  nielsenProfile?: import('../systems/television/nielsenSystem').NielsenProfile;
 }
 
 export type Project = FilmProject | SeriesProject | (UnscriptedProject & { type: 'SERIES' });

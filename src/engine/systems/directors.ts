@@ -1,7 +1,8 @@
 import { GameState, Project, Talent, Contract, ActiveCrisis } from '@/engine/types';
 type TalentProfile = Talent;
 type Crisis = ActiveCrisis;
-import { secureRandom } from '../utils';
+import { RandomGenerator } from '../utils/rng';
+import { pick, randRange, secureRandom, generateId } from '../utils';
 
 export interface DirectorDispute {
   projectId: string;
@@ -15,9 +16,9 @@ export interface DirectorDispute {
  * Checks if the director for a given project has final cut / creative control.
  */
 export function hasCreativeControl(projectId: string, state: GameState): boolean {
-  const directorContract = state.studio.internal.contracts.find(c => 
+  const directorContract = Object.values(state.entities.contracts).find(c => 
     c.projectId === projectId && 
-    state.industry.talentPool[c.talentId]?.roles.includes('director')
+    state.entities.talents[c.talentId]?.roles.includes('director')
   );
   
   if (!directorContract) return false;
@@ -35,7 +36,8 @@ export function hasCreativeControl(projectId: string, state: GameState): boolean
 export function processDirectorDisputes(
   project: Project,
   projectContracts: Contract[],
-  talentPoolMap: Map<string, TalentProfile>
+  talentPoolMap: Map<string, TalentProfile>,
+  rng: RandomGenerator
 ): { updates: string[], newCrises: { projectId: string; crisis: Crisis }[] } {
   const updates: string[] = [];
   const newCrises: { projectId: string; crisis: Crisis }[] = [];
@@ -56,12 +58,12 @@ export function processDirectorDisputes(
                  archetype === 'visionary' ? 0.04 :
                  0.01;
 
-  if (secureRandom() < chance && !project.activeCrisis) {
+  if (rng.next() < chance && !project.activeCrisis) {
      // Spawn a dispute crisis
      newCrises.push({
        projectId: project.id,
        crisis: {
-         crisisId: `crisis-${crypto.randomUUID()}`,
+         crisisId: generateId('CRI'),
          triggeredWeek: 0,
          haltedProduction: false,
          description: `Director ${director.name} is demanding an immediate $5M budget increase to shoot a highly ambitious sequence, threatening to walk off set!`,

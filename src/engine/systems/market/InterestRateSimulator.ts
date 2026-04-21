@@ -1,7 +1,7 @@
 import { MarketState, StateImpact } from '../../types/state.types';
 import { Headline } from '../../types/engine.types';
 import { GameState } from '../../types/studio.types';
-import { clamp, secureRandom } from '../../utils';
+import { clamp, rand, generateId } from '../../utils';
 
 /**
  * Global Market Simulation: Interest Rate Simulator.
@@ -27,6 +27,17 @@ export class InterestRateSimulator {
   }
 
   /**
+   * Converts a week number into a readable Year/Month structure.
+   */
+  static getWeekDisplay(week: number): { year: number; month: number; weekInMonth: number } {
+    const year = Math.floor((week - 1) / 52) + 1;
+    const remainingWeeks = (week - 1) % 52;
+    const month = Math.floor(remainingWeeks / 4) + 1;
+    const weekInMonth = (remainingWeeks % 4) + 1;
+    return { year, month, weekInMonth };
+  }
+
+  /**
    * Weekly Tick: Fluctuates the base rate and derives other rates.
    */
   static advance(state: GameState): StateImpact {
@@ -34,7 +45,7 @@ export class InterestRateSimulator {
     const currentRate = market.baseRate;
     
     // Random Walk
-    const delta = (secureRandom() - 0.5) * this.VOLATILITY;
+    const delta = (rand() - 0.5) * this.VOLATILITY;
     const newRate = clamp(currentRate + delta, this.BASE_RATE_MIN, this.BASE_RATE_MAX);
     
     const updatedMarket: MarketState = {
@@ -54,16 +65,11 @@ export class InterestRateSimulator {
       payload: { marketState: updatedMarket }
     };
 
-    // Headline generation for significant shifts (cumulative > 0.5% shift or crossing thresholds)
-    if (Math.abs(newRate - currentRate) > 0.001) {
-       // Only add a headline if it's a "big" enough weekly move (rare for random walk, usually via events)
-       // But for now, let's just trigger a notification if we hit historical highs/lows
-    }
-
-    if (secureRandom() < 0.05) { // 5% chance of a "Market Analysis" headline
+    // Headline generation for significant shifts
+    if (rand() < 0.05) { // 5% chance of a "Market Analysis" headline
       const trend = newRate > currentRate ? 'rising' : 'falling';
       impact.newHeadlines = [{
-        id: crypto.randomUUID(),
+        id: generateId('HL'),
         week: state.week,
         category: 'market',
         text: `Market Brief: Interest rates are ${trend} as the global economy shifts.`

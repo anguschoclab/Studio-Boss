@@ -1,5 +1,5 @@
 import { GameState, FestivalSubmission, AwardBody, Project } from '@/engine/types';
-import { randRange } from '../utils';
+import { randRange, generateId, rand } from '../utils';
 import { StateImpact } from '../types/state.types';
 
 export const FESTIVALS: { body: AwardBody, name: string, weeks: number[], cost: number, prestigeNeeded: number, buzzReward: number }[] = [
@@ -15,14 +15,14 @@ export function submitToFestival(
   festivalBody: AwardBody
 ): StateImpact | null {
   const fest = FESTIVALS.find(f => f.body === festivalBody);
-  const project = state.studio.internal.projects[projectId];
+  const project = state.entities.projects[projectId];
   
   if (!fest || !project || state.finance.cash < fest.cost) return null;
   
   if (project.state === 'development' || project.state === 'pitching') return null;
   
   const submission: FestivalSubmission = {
-    id: crypto.randomUUID(),
+    id: generateId('SUB'),
     projectId,
     festivalBody,
     status: 'submitted',
@@ -35,7 +35,7 @@ export function submitToFestival(
     newFestivalSubmissions: [...(state.industry.festivalSubmissions || []), submission],
     newHeadlines: [
       {
-        id: `headline-${crypto.randomUUID()}`,
+        id: generateId('HL'),
         week: state.week,
         category: 'awards' as const,
         text: `"${project.title}" officially submitted for consideration at ${fest.name}.`
@@ -69,7 +69,7 @@ export function resolveFestivals(state: GameState): StateImpact {
     }
     
     if (fest.weeks.includes(state.week % 52)) {
-      const project = state.studio.internal.projects[sub.projectId];
+      const project = state.entities.projects[sub.projectId];
       if (!project) {
           updatedSubmissions.push(sub);
           continue;
@@ -86,7 +86,7 @@ export function resolveFestivals(state: GameState): StateImpact {
         impact.prestigeChange! += 2;
         
         impact.newHeadlines!.push({
-          id: `headline-${crypto.randomUUID()}`,
+          id: generateId('HL'),
           week: state.week,
           category: 'awards' as const,
           text: `Massive buzz out of ${fest.name} as "${project.title}" premieres to standing ovation!`

@@ -8,27 +8,29 @@ describe("awards system", () => {
     week: 1,
     gameSeed: 1,
     tickCount: 0,
-    projects: { active: [] },
     game: { currentWeek: 1 },
     finance: { cash: 1_000_000, ledger: [] },
     news: { headlines: [] },
     ip: { vault: [], franchises: {} },
+    entities: {
+      projects: {},
+      talents: {},
+      contracts: {},
+      rivals: {}
+    },
     studio: {
       name: 'Test Studio',
       archetype: 'major',
       prestige: 50,
       internal: {
-        projects: {}, 
-        contracts: []
+        projectHistory: [],
       }
     },
     market: { opportunities: [], buyers: [] },
     industry: {
-      rivals: [],
       families: [],
       agencies: [],
       agents: [],
-      talentPool: {},
       newsHistory: [],
       rumors: []
     },
@@ -89,7 +91,7 @@ describe("awards system", () => {
   describe("runAwardsCeremony", () => {
     it("awards 'won' status for high scores at Academy Awards (Week 10)", () => {
       const state = getInitialState();
-      state.studio.internal.projects = { [eligibleProject.id]: eligibleProject };
+      state.entities.projects = { [eligibleProject.id]: eligibleProject };
       state.week = 10;
 
       const impact = runAwardsCeremony(state, 10, 2024);
@@ -101,7 +103,7 @@ describe("awards system", () => {
 
     it("accumulates prestige change", () => {
       const state = getInitialState();
-      state.studio.internal.projects = { [eligibleProject.id]: eligibleProject };
+      state.entities.projects = { [eligibleProject.id]: eligibleProject };
       state.week = 10;
 
       const impact = runAwardsCeremony(state, 10, 2024);
@@ -122,7 +124,7 @@ describe("awards system", () => {
               releaseWeek: 5
           } as Project;
           const state = getInitialState();
-          state.studio.internal.projects = { [badFilm.id]: badFilm };
+          state.entities.projects = { [badFilm.id]: badFilm };
           state.week = 4;
 
           const impact = processRazzies(state, 4);

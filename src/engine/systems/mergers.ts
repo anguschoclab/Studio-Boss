@@ -1,4 +1,5 @@
 import { GameState, RivalStudio, Project, Opportunity } from '@/engine/types';
+import { generateId } from '../utils';
 
 export function evaluateAcquisitionTarget(target: RivalStudio, buyerCash: number): { viable: boolean; price: number; reason?: string } {
   let basePrice = Math.max(10_000_000, (target.strength * 2_000_000) + target.cash);
@@ -12,28 +13,26 @@ export function evaluateAcquisitionTarget(target: RivalStudio, buyerCash: number
 }
 
 export function executeAcquisition(state: GameState, targetId: string): GameState {
-  const targetIndex = state.industry.rivals.findIndex(r => r.id === targetId);
-  if (targetIndex === -1) return state;
-  const target = state.industry.rivals[targetIndex];
+  const target = state.entities.rivals[targetId];
+  if (!target) return state;
   const evalResult = evaluateAcquisitionTarget(target, state.finance.cash);
   if (!evalResult.viable) return state;
 
-  const updatedRivals = [...state.industry.rivals];
-  updatedRivals.splice(targetIndex, 1);
+  const updatedRivals = { ...state.entities.rivals };
+  delete updatedRivals[targetId];
   
   // Consolidation Logic: Deep-merge library and talent rosters
-  const playerProjects = { ...state.studio.internal.projects };
-  const targetProjects = target.projects || {};
-  Object.keys(targetProjects).forEach(id => {
-    // Avoid overwriting if ID exists (though it shouldn't)
-    if (!playerProjects[id]) {
-      playerProjects[id] = { ...targetProjects[id], isAcquired: true };
-    }
+  const updatedProjects = { ...state.entities.projects };
+  const targetProjects = Object.values(state.entities.projects).filter(p => p.ownerId === targetId);
+  targetProjects.forEach(p => {
+      updatedProjects[p.id] = { ...p, ownerId: 'player', isAcquired: true };
   });
 
-  const playerContracts = [...state.studio.internal.contracts];
-  const targetContracts = target.contracts || [];
-  playerContracts.push(...targetContracts);
+  const updatedContracts = { ...state.entities.contracts };
+  const targetContracts = Object.values(state.entities.contracts).filter(c => c.ownerId === targetId);
+  targetContracts.forEach(c => {
+      updatedContracts[c.id] = { ...c, ownerId: 'player' };
+  });
 
   const newPrestige = Math.min(100, state.studio.prestige + (target.strength * 0.2));
 
@@ -46,18 +45,18 @@ export function executeAcquisition(state: GameState, targetId: string): GameStat
     studio: { 
       ...state.studio, 
       prestige: newPrestige,
-      internal: {
-        ...state.studio.internal,
-        projects: playerProjects,
-        contracts: playerContracts,
-      }
+    },
+    entities: {
+      ...state.entities,
+      projects: updatedProjects,
+      contracts: updatedContracts,
+      rivals: updatedRivals
     },
     industry: {
       ...state.industry,
-      rivals: updatedRivals,
       newsHistory: [
         {
-          id: crypto.randomUUID(),
+          id: generateId('NEWS'),
           week: state.week,
           type: 'STUDIO_EVENT' as const,
           headline: `CONSOLIDATED: ${state.studio.name} absorbs ${target.name}!`,
@@ -70,7 +69,7 @@ export function executeAcquisition(state: GameState, targetId: string): GameStat
 }
 
 export function executeSabotage(state: GameState, targetId: string): GameState {
-  const target = state.industry.rivals.find(r => r.id === targetId);
+  const target = state.entities.rivals[targetId];
   if (!target || state.finance.cash < 1_000_000) return state;
 
   return {
@@ -80,7 +79,7 @@ export function executeSabotage(state: GameState, targetId: string): GameState {
       ...state.industry,
       rumors: [
         {
-          id: crypto.randomUUID(),
+          id: generateId('RUM'),
           week: state.week,
           text: `Rumors swirl that ${target.name}'s upcoming blockbuster is facing massive reshoots.`,
           truthful: false,
@@ -94,24 +93,28 @@ export function executeSabotage(state: GameState, targetId: string): GameState {
 }
 
 export function executePoach(state: GameState, targetId: string): GameState {
-  const targetIndex = state.industry.rivals.findIndex(r => r.id === targetId);
-  if (targetIndex === -1 || state.finance.cash < 3_000_000) return state;
+  const target = state.entities.rivals[targetId];
+  if (!target || state.finance.cash < 3_000_000) return state;
 
-  const updatedRivals = [...state.industry.rivals];
-  const target = updatedRivals[targetIndex];
   const stealAmount = Math.min(5, target.strength);
-  updatedRivals[targetIndex] = { ...target, strength: target.strength - stealAmount };
+  const updatedRivals = {
+    ...state.entities.rivals,
+    [targetId]: { ...target, strength: target.strength - stealAmount }
+  };
 
   return {
     ...state,
     finance: { ...state.finance, cash: state.finance.cash - 3_000_000 },
     studio: { ...state.studio, prestige: Math.min(100, state.studio.prestige + stealAmount) },
+    entities: {
+      ...state.entities,
+      rivals: updatedRivals
+    },
     industry: {
       ...state.industry,
-      rivals: updatedRivals,
       newsHistory: [
         {
-          id: crypto.randomUUID(),
+          id: generateId('NEWS'),
           week: state.week,
           type: 'STUDIO_EVENT' as const,
           headline: `${state.studio.name} poaches top executive from ${target.name}!`,

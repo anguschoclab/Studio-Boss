@@ -3,7 +3,7 @@ import { TickContext } from './types';
 
 // System Imports
 import { detectCultClassic } from '../../systems/ip/ipValuation';
-import { shouldAttemptHostileTakeover } from '../../systems/ai/AgentBrain';
+import { shouldAttemptHostileTakeover } from '../../systems/ai/BehaviorEngine';
 import { generateRebootProposal } from '../../systems/ip/ipRebootEngine';
 
 /**

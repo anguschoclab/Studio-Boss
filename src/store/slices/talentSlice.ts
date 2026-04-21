@@ -4,6 +4,7 @@ import { Contract, Opportunity, StateImpact } from '@/engine/types';
 import { buildProjectAndContracts, CreateProjectParams, applyStateImpact } from '../storeUtils';
 import { calculateLiveCounterBid } from '@/engine/systems/ai/biddingEngine';
 import { RandomGenerator } from '@/engine/utils/rng';
+import { generateId, rand } from '@/engine/utils';
 
 export interface TalentSlice {
   signContract: (talentId: string, projectId: string) => void;
@@ -21,10 +22,10 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       const state = s.gameState;
       if (!state) return s;
 
-      const talent = state.industry.talentPool[talentId];
+      const talent = state.entities.talents[talentId];
       if (!talent) return s;
       
-      const p = state.studio.internal.projects[projectId];
+      const p = state.entities.projects[projectId];
       if (!p) return s;
       
       let finalFee = talent.fee;
@@ -37,7 +38,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       const newCash = state.finance.cash - finalFee;
       
       const contract: Contract = {
-        id: crypto.randomUUID(),
+        id: generateId('CNT'),
         projectId,
         talentId,
         fee: finalFee,
@@ -51,12 +52,9 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
         gameState: {
           ...state,
           finance: { ...state.finance, cash: newCash },
-          studio: {
-            ...state.studio,
-            internal: {
-              ...state.studio.internal,
-              contracts: [...state.studio.internal.contracts, contract]
-            }
+          entities: {
+            ...state.entities,
+            contracts: { ...state.entities.contracts, [contract.id]: contract }
           }
         }
       };
@@ -69,19 +67,19 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       const state = s.gameState;
       if (!state) return s;
       
-      const talent = state.industry.talentPool[talentId];
+      const talent = state.entities.talents[talentId];
       if (!talent) return s;
       
       const lockFee = (talent.fee * 2);
       if (state.finance.cash < lockFee) return s;
       
-      // Simplified: just create the deal directly
-      const accepted = Math.random() > 0.3; // 70% acceptance
+      // Use deterministic rand() instead of Math.random()
+      const accepted = rand() > 0.3; // 70% acceptance
       
       if (accepted) {
          success = true;
          const deal = {
-           id: crypto.randomUUID(),
+           id: generateId('PCT'),
            talentId,
            weeksRemaining: duration,
            exclusivity: true,
@@ -89,7 +87,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
          const currentDeals = state.studio.internal.firstLookDeals || [];
          const newNewsHistory = [...state.industry.newsHistory];
          newNewsHistory.unshift({
-           id: crypto.randomUUID(),
+           id: generateId('NWS'),
            week: state.week,
            type: 'STUDIO_EVENT' as const,
            headline: `${talent.name} signs first-look pact with ${state.studio.name}.`,
@@ -116,7 +114,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       } else {
          const newNewsHistory = [...state.industry.newsHistory];
          newNewsHistory.unshift({
-           id: crypto.randomUUID(),
+           id: generateId('NWS'),
            week: state.week,
            type: 'STUDIO_EVENT' as const,
            headline: `${talent.name} passes on first-look deal with ${state.studio.name}.`,
@@ -150,7 +148,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       // Auction requirement: Only acquire if player is highest bidder and auction expired
       // OR if it's a non-auction acquisition (costToAcquire > 0)
       const currentHighest = Object.values(opp.bids || {}).reduce((max: number, b) => Math.max(max, (b as any).amount || 0), 0);
-      const isWinner = opp.highestBidderId === 'PLAYER';
+      const isWinner = opp.highestBidderId === state.studio.id || opp.highestBidderId === 'PLAYER';
       const isExpired = state.week >= opp.expirationWeek;
 
       if (opp.costToAcquire === 0 && (!isWinner || !isExpired)) return s;
@@ -177,7 +175,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
 
       // Initialize new project roles & script state if scripted
       if (params.format !== 'unscripted') {
-        const scripted = project as any; // Temporary cast to handle the fact that we know it's scripted
+        const scripted = project as any; 
         scripted.scriptHeat = 50;
         scripted.activeRoles = ['protagonist', 'antagonist', 'mentor', 'love_interest'].slice(0, project.budgetTier === 'blockbuster' ? 4 : 3);
         scripted.scriptEvents = [];
@@ -189,12 +187,12 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
         gameState: {
           ...state,
           finance: { ...state.finance, cash: state.finance.cash - cost - talentFees },
-          studio: {
-            ...state.studio,
-            internal: {
-              ...state.studio.internal,
-              projects: { ...state.studio.internal.projects, [project.id]: project },
-              contracts: [...state.studio.internal.contracts, ...newContracts]
+          entities: {
+            ...state.entities,
+            projects: { ...state.entities.projects, [project.id]: project },
+            contracts: {
+              ...state.entities.contracts,
+              ...newContracts.reduce((acc, c) => ({ ...acc, [c.id]: c }), {})
             }
           },
           market: {
@@ -218,22 +216,23 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
       if (state.finance.cash < amount) return s;
 
       // Update player bid
-      const updatedBids = { ...opp.bids, PLAYER: { amount, terms: 'standard' } };
-      const bidHistory = [...(opp.bidHistory || []), { rivalId: 'PLAYER', amount, week: state.week }];
+      const updatedBids = { ...opp.bids, [state.studio.id]: { amount, terms: 'standard' } };
+      const bidHistory = [...(opp.bidHistory || []), { rivalId: state.studio.id, amount, week: state.week }];
       
-      let nextState = {
+      let nextState: GameState = {
         ...state,
         market: {
           ...state.market,
           opportunities: state.market.opportunities.map(o => 
-            o.id === oppId ? { ...o, bids: updatedBids, highestBidderId: 'PLAYER', bidHistory } : o
+            o.id === oppId ? { ...o, bids: updatedBids, highestBidderId: state.studio.id, bidHistory } : o
           )
         }
       };
 
       // Live Counter Bid Logic
       const rng = new RandomGenerator(state.gameSeed + state.week + amount);
-      const aggressiveRivals = state.industry.rivals.filter(r => r.cash > amount * 1.5 && r.prestige > 40);
+      const ALL_RIVALS = Object.values(state.entities.rivals);
+      const aggressiveRivals = ALL_RIVALS.filter(r => r.cash > amount * 1.5 && r.prestige > 40);
       
       if (aggressiveRivals.length > 0) {
         const rival = aggressiveRivals[Math.floor(rng.next() * aggressiveRivals.length)];
@@ -251,14 +250,14 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
   getTalentFilmography: (talentId) => {
     const s = get();
     if (!s.gameState) return [];
-    const talent = s.gameState.industry.talentPool[talentId];
+    const talent = s.gameState.entities.talents[talentId];
     return talent?.filmography || [];
   },
 
   getTalentCareerStats: (talentId) => {
     const s = get();
     if (!s.gameState) return null;
-    const talent = s.gameState.industry.talentPool[talentId];
+    const talent = s.gameState.entities.talents[talentId];
     if (!talent) return null;
     
     return {
@@ -272,7 +271,7 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
   calculateStarMeter: (talentId) => {
     const s = get();
     if (!s.gameState) return 50;
-    const talent = s.gameState.industry.talentPool[talentId];
+    const talent = s.gameState.entities.talents[talentId];
     if (!talent) return 50;
 
     const filmography = talent.filmography || [];

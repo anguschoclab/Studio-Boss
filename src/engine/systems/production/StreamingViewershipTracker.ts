@@ -25,19 +25,22 @@ export const StreamingViewershipTracker = {
     const buzzMultiplier = 1.0 + (buzz / 100);
     const initialViewers = Math.round(platformPotential * buzzMultiplier * (0.8 + rng.next() * 0.4));
 
+    const startHours = Math.round(initialViewers * 4);
+    
     return {
       platformId,
       platformName: platform.name,
       startWeek: currentWeek,
-      totalHoursWatched: 0,
+      totalHoursWatched: startHours,
       peakViewers: initialViewers,
       completionRate: this.calculateInitialCompletionRate(quality, project.genre || 'Action'),
       entries: [
         {
           week: currentWeek,
           viewers: initialViewers,
-          hoursWatched: initialViewers * 4, // Assume average 4 hours per viewer in first week
-          retention: 1.0
+          hoursWatched: startHours,
+          retention: 1.0,
+          completionRate: this.calculateInitialCompletionRate(quality, project.genre || 'Action')
         }
       ]
     };
@@ -76,7 +79,8 @@ export const StreamingViewershipTracker = {
       week: currentWeek,
       viewers: newViewers,
       hoursWatched: Math.round(hoursWatched),
-      retention
+      retention,
+      completionRate: newCompletionRate
     };
 
     return {
@@ -112,11 +116,15 @@ export const StreamingViewershipTracker = {
     let base = quality * 0.8; // Quality is primary driver
     
     const genreLower = genre.toLowerCase();
-    if (genreLower.includes('drama') || genreLower.includes('thriller')) base += 10;
-    if (genreLower.includes('comedy')) base += 5;
-    if (genreLower.includes('horror')) base -= 5;
+    if (genreLower.includes('drama') || genreLower.includes('crime') || genreLower.includes('mystery') || genreLower.includes('thriller')) {
+      base += 10;
+    } else if (genreLower.includes('comedy') || genreLower.includes('variety')) {
+      base -= 5;
+    } else if (genreLower.includes('horror')) {
+      base -= 5;
+    }
     
-    return Math.min(95, Math.max(10, base));
+    return Math.round(Math.min(95, Math.max(10, base)));
   },
 
   /**

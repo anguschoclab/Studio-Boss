@@ -5,7 +5,7 @@ import { TickContext, WeekFilter } from './types';
 import { tickProduction } from '../../systems/productionEngine';
 import { ProductionProjectProcessor } from './ProductionProjectProcessor';
 import { tickTelevision } from '../../systems/television/televisionTick';
-import { calculateFranchiseEvolutionImpacts, tickIPVault } from '../../systems/ip/franchiseCoordinator';
+import { calculateFranchiseEvolutionImpacts, tickIPVault } from '../../systems/ip';
 import { SchedulingEngine } from '../../systems/schedulingEngine';
 
 /**

@@ -25,15 +25,16 @@ interface LiveAuctionDashboardProps {
 
 export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ opportunity: opp, onClose }) => {
   const { placeBid, acquireOpportunity, gameState } = useGameStore();
-  const rivals = gameState?.industry.rivals || [];
+  const rivalsMap = gameState?.entities?.rivals || {};
+  const playerStudioId = gameState?.studio?.id;
   
   const currentHighest = useMemo(() => {
     return Object.values(opp.bids || {}).reduce((max, b) => Math.max(max, b.amount), 0);
   }, [opp.bids]);
 
-  const isPlayerWinning = opp.highestBidderId === 'PLAYER';
-  const playerBid = opp.bids['PLAYER']?.amount || 0;
-  const highestBidder = isPlayerWinning ? { name: 'YOU' } : rivals.find(r => r.id === opp.highestBidderId);
+  const isPlayerWinning = opp.highestBidderId === playerStudioId || opp.highestBidderId === 'PLAYER';
+  const playerBid = opp.bids[playerStudioId || 'PLAYER']?.amount || 0;
+  const highestBidder = isPlayerWinning ? { name: 'YOU' } : rivalsMap[opp.highestBidderId];
 
   const [bidAmount, setBidAmount] = useState(currentHighest + 1_000_000);
 
@@ -230,11 +231,11 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ oppo
                     )}
                   >
                     <div className="flex items-center gap-2.5">
-                       <div className={cn("w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black", bid.rivalId === 'PLAYER' ? "bg-primary text-black" : "bg-white/5 text-muted-foreground")}>
-                          {bid.rivalId === 'PLAYER' ? 'P' : 'R'}
+                       <div className={cn("w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black", (bid.rivalId === playerStudioId || bid.rivalId === 'PLAYER') ? "bg-primary text-black" : "bg-white/5 text-muted-foreground")}>
+                          {(bid.rivalId === playerStudioId || bid.rivalId === 'PLAYER') ? 'P' : 'R'}
                        </div>
                        <div>
-                          <div className="text-[10px] font-black uppercase tracking-tight">{bid.rivalId === 'PLAYER' ? 'YOUR STUDIO' : rivals.find(r => r.id === bid.rivalId)?.name || 'RIVAL'}</div>
+                          <div className="text-[10px] font-black uppercase tracking-tight">{(bid.rivalId === playerStudioId || bid.rivalId === 'PLAYER') ? 'YOUR STUDIO' : rivalsMap[bid.rivalId]?.name || 'RIVAL'}</div>
                           <div className="text-[8px] font-bold text-muted-foreground/60 uppercase tracking-widest">Week {bid.week}</div>
                        </div>
                     </div>

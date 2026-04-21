@@ -1,4 +1,5 @@
 import { TalentDemographics } from '../../types/talent.types';
+import { rand } from '../../utils';
 
 export type Ethnicity = 'Caucasian' | 'Black' | 'Hispanic' | 'Asian' | 'South Asian' | 'Middle Eastern' | 'Mixed';
 
@@ -52,11 +53,11 @@ const COUNTRY_PROFILES: Record<string, CountryProfile> = {
 const GENDERS = ['MALE', 'FEMALE', 'NON_BINARY'] as const;
 
 function pick<T>(arr: readonly T[] | T[]): T {
-  return arr[Math.floor(Math.random() * arr.length)];
+  return arr[Math.floor(rand() * arr.length)];
 }
 
 function randRange(min: number, max: number): number {
-  return Math.random() * (max - min) + min;
+  return rand() * (max - min) + min;
 }
 
 export function generateDemographics(isGlobalStar: boolean = false, localCountry?: string): TalentDemographics {
@@ -64,14 +65,14 @@ export function generateDemographics(isGlobalStar: boolean = false, localCountry
   let finalCountry = pick(COUNTRIES);
   
   // Bias for local country if not a global star
-  if (!isGlobalStar && localCountry && Math.random() < 0.8) {
+  if (!isGlobalStar && localCountry && rand() < 0.8) {
     finalCountry = localCountry;
   }
 
   const profile = COUNTRY_PROFILES[finalCountry] || COUNTRY_PROFILES['Default'];
   
   // Weighted ethnicity pick
-  const roll = Math.random() * 100;
+  const roll = rand() * 100;
   let cumulative = 0;
   let ethnicity: Ethnicity = 'Mixed';
   

@@ -1,6 +1,6 @@
 import { GameState, MarketEvent, MarketEventType } from '@/engine/types';
 import { StateImpact } from '../types/state.types';
-import { pick, randRange, secureRandom } from '../utils';
+import { pick, randRange, rand, generateId } from '../utils';
 
 const EVENT_TEMPLATES: Omit<MarketEvent, 'id' | 'weeksRemaining'>[] = [
   {
@@ -75,12 +75,12 @@ export function advanceMarketEvents(state: GameState): StateImpact[] {
   }
   
   // Chance to spawn new event if none active
-  if (activeEvents.length === 0 && secureRandom() < 0.02) {
+  if (activeEvents.length === 0 && rand() < 0.02) {
     const template = pick(EVENT_TEMPLATES);
     const newEvent: MarketEvent = {
       ...template,
-      id: crypto.randomUUID(),
-      weeksRemaining: randRange(12, 52)
+      id: generateId('ME'),
+      weeksRemaining: Math.floor(randRange(12, 52))
     };
     
     activeEvents.push(newEvent);
@@ -100,4 +100,3 @@ export function advanceMarketEvents(state: GameState): StateImpact[] {
 
   return impacts;
 }
-

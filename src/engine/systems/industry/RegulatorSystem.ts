@@ -1,4 +1,5 @@
-import { GameState, RivalStudio, Buyer } from '@/engine/types';
+import { GameState } from '@/engine/types';
+import { rand } from '../../utils';
 
 /**
  * Studio Boss - Regulator System (Anti-Trust)
@@ -10,17 +11,21 @@ export class RegulatorSystem {
    * Market share is a weighted average of prestige and subscriber counts.
    */
   static getMarketShare(state: GameState, studioId: string | 'player'): number {
-    const totalPrestige = state.industry.rivals.reduce((acc, r) => acc + r.prestige, state.studio.prestige);
-    const studioPrestige = studioId === 'player' 
+    const ALL_RIVALS = Object.values(state.entities.rivals);
+    const playerStudioId = state.studio.id;
+    const isTargetPlayer = studioId === 'player' || studioId === playerStudioId;
+
+    const totalPrestige = ALL_RIVALS.reduce((acc, r) => acc + r.prestige, state.studio.prestige);
+    const studioPrestige = isTargetPlayer 
       ? state.studio.prestige 
-      : state.industry.rivals.find(r => r.id === studioId)?.prestige || 0;
+      : state.entities.rivals[studioId]?.prestige || 0;
 
     const totalSubs = state.market.buyers
       .filter(b => b.archetype === 'streamer')
       .reduce((acc, b) => acc + ((b as any).subscribers || 0), 0);
     
     const studioSubs = state.market.buyers
-      .filter(b => b.archetype === 'streamer' && b.ownerId === studioId)
+      .filter(b => b.archetype === 'streamer' && b.ownerId === (isTargetPlayer ? playerStudioId : studioId))
       .reduce((acc, b) => acc + ((b as any).subscribers || 0), 0);
 
     const prestigeShare = (studioPrestige / totalPrestige) * 100;
@@ -47,7 +52,7 @@ export class RegulatorSystem {
       blockChance = 0.4 + (combinedShare - 25) * 0.05; // Sliding scale
     }
 
-    if (Math.random() < blockChance) {
+    if (rand() < blockChance) {
       return { 
         blocked: true, 
         sharePreview: combinedShare, 
@@ -56,5 +61,28 @@ export class RegulatorSystem {
     }
 
     return { blocked: false, sharePreview: combinedShare };
+  }
+
+  /**
+   * Weekly Tick: Evaluates market conditions and potential anti-trust warnings.
+   */
+  static tick(state: GameState, rng: any): import('../../types/state.types').StateImpact[] {
+    const impacts: import('../../types/state.types').StateImpact[] = [];
+    const playerShare = this.getMarketShare(state, 'player');
+
+    // If player is too powerful, regulators issue a headline
+    if (playerShare > 30 && rng.next() < 0.05) { // 5% chance if > 30% share
+      impacts.push({
+        type: 'HEADLINE_POSTED',
+        payload: {
+          id: `HL-${state.week}-REG`,
+          week: state.week,
+          category: 'industry',
+          text: `REGULATORY WATCH: Regulators express concern over ${state.studio.name}'s growing market dominance.`
+        }
+      });
+    }
+
+    return impacts;
   }
 }

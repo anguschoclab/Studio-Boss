@@ -9,12 +9,12 @@ import { RandomGenerator } from '../../utils/rng';
 export function tickScriptDevelopment(
   project: Project,
   rng: RandomGenerator
-): { project: Project; impact?: StateImpact } {
+): StateImpact[] {
+  const impacts: StateImpact[] = [];
   // Only evolve during development phase
-  if (project.state !== 'development') return { project };
-
+  if (project.state !== 'development') return [];
   // Only evolve scripted projects
-  if (!('scriptHeat' in project)) return { project };
+  if (!('scriptHeat' in project)) return [];
 
   const p = { ...project } as import('@/engine/types').ScriptedProject;
   const roll = rng.next();
@@ -80,5 +80,18 @@ export function tickScriptDevelopment(
     }
   }
 
-  return { project: p as import('@/engine/types').Project };
+  impacts.push({
+    type: 'PROJECT_UPDATED',
+    payload: {
+      projectId: p.id,
+      update: {
+        scriptHeat: p.scriptHeat,
+        activeRoles: p.activeRoles,
+        scriptEvents: p.scriptEvents,
+        buzz: p.buzz
+      }
+    }
+  });
+
+  return impacts;
 }

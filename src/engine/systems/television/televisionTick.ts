@@ -11,7 +11,7 @@ export type TVStatus = 'IN_DEVELOPMENT' | 'ON_AIR' | 'ON_BUBBLE' | 'RENEWED' | '
  */
 export function tickTelevision(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const series = Object.values(state.studio.internal.projects).filter(
+  const series = Object.values(state.entities.projects).filter(
     (p): p is SeriesProject => p.type === 'SERIES' && 'tvDetails' in p
   );
 

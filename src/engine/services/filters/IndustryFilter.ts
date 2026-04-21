@@ -20,14 +20,14 @@ export const IndustryFilter: WeekFilter = {
 
   execute(state: GameState, context: TickContext): void {
     // Advance rival studios (cash, strength, revenue, poaching)
-    const rivalImpacts = advanceRivals(context.rng, state);
+    const rivalImpacts = advanceRivals(state);
     context.impacts.push(rivalImpacts);
 
     const { year } = InterestRateSimulator.getWeekDisplay(context.week);
-    const awardsImpacts = runAwardsCeremony(state, context.week, year, context.rng);
-    context.impacts.push(...awardsImpacts);
+    const awardsImpacts = runAwardsCeremony(state, context.week, year);
+    context.impacts.push(awardsImpacts);
     
-    const allNewAwards = awardsImpacts.reduce((acc, imp) => [...acc, ...(imp.newAwards || [])], [] as import('../../types').Award[]);
+    const allNewAwards = awardsImpacts.newAwards || [];
     
     if (allNewAwards.length > 0) {
       context.impacts.push({
@@ -47,10 +47,10 @@ export const IndustryFilter: WeekFilter = {
     
     const weekDisplay = context.week % 52 === 0 ? 52 : context.week % 52;
     if (weekDisplay === 4) {
-      context.impacts.push(...processRazzies(state, context.week, context.rng));
+      context.impacts.push(processRazzies(state, context.week));
     }
 
-    context.impacts.push(...resolveFestivals(state, context.rng));
+    context.impacts.push(resolveFestivals(state));
     context.impacts.push(...RegulatorSystem.tick(state, context.rng));
 
     // Festival market auction at Sundance (w4), Cannes (w20), TIFF (w36)

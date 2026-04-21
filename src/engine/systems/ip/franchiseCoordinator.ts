@@ -106,31 +106,26 @@ export function updateFranchiseHub(state: GameState, project: Project): GameStat
         synergyMultiplier: clamp(hub.synergyMultiplier + 0.1, 1.0, 2.5) 
       };
 
-      // Recalculate Enterprise Value
       updatedFranchises[franchiseId].totalEquity = calculateFranchiseEquity(
         updatedFranchises[franchiseId],
         relevantAssets,
-        state.studio.internal.projects
+        state.entities.projects
       );
     }
   }
 
   // Update projects in the state with their new franchiseId if a hub was created
-  const activeProjects = Object.fromEntries(
-    Object.entries(state.studio.internal.projects).map(([id, existingProject]) => [
-      id,
-      existingProject.id === project.id ? { ...existingProject, franchiseId } : existingProject
-    ])
-  );
+  const allProjects = { ...state.entities.projects };
+  if (allProjects[project.id]) {
+    allProjects[project.id] = { ...allProjects[project.id], franchiseId };
+  }
 
   return {
     ...state,
-    studio: {
-      ...state.studio,
-      internal: {
-        ...state.studio.internal,
-        projects: activeProjects
-      }
+    entities: {
+      ...state.entities,
+      projects: allProjects,
+      rivals: state.entities.rivals // Keep rivals as is
     },
     ip: {
       ...state.ip,

@@ -1,8 +1,12 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { processRazzies } from '../../../engine/systems/awards';
-import { GameState, Project, Talent } from '../../../engine/types';
+import { Project, NewsImpact, PrestigeImpact, ProjectUpdateImpact } from '../../../engine/types';
+import { createMockGameState } from '../../mockFactory';
+import { RandomGenerator } from '../../../engine/utils/rng';
 
 describe('Razzies Award System', () => {
+  const rng = new RandomGenerator(42);
+
   const createProject = (id: string, budget: number, score: number, flavor: string, genre: string): Project => ({
     id, 
     title: `Title ${id}`, 
@@ -38,48 +42,48 @@ describe('Razzies Award System', () => {
     const cheapFlop = createProject('cheap', 10_000_000, 10, '', 'Action');
     const bigFlop = createProject('big', 60_000_000, 20, '', 'Action');
 
-    const state = {
+    const state = createMockGameState({
       week: 4,
-      studio: { 
-        internal: { 
-          projects: { 
-            good: goodProject, 
-            cheap: cheapFlop, 
-            big: bigFlop 
-          }, 
-          contracts: [] 
-        } 
-      },
-      industry: { 
-        talentPool: {} as Record<string, Talent>
+      entities: {
+        projects: {
+          good: goodProject, 
+          cheap: cheapFlop, 
+          big: bigFlop 
+        },
+        talents: {},
+        contracts: {},
+        rivals: {},
       }
-    } as unknown as GameState;
+    });
 
-    const result = processRazzies(state, 4);
+    const impacts = processRazzies(state, 4, rng);
 
     // Only the bigFlop is eligible. Worst Picture should trigger a headline mentioning it.
-    expect(result.newHeadlines![0].text).toContain('Title big');
-    expect(result.prestigeChange).toBe(-10);
+    const newsImpact = impacts.find(i => i.type === 'NEWS_ADDED') as NewsImpact;
+    expect(newsImpact.payload.headline).toContain('Title big');
+    
+    const prestigeImpact = impacts.find(i => i.type === 'PRESTIGE_CHANGED') as PrestigeImpact;
+    expect(prestigeImpact.payload).toBeLessThan(0);
   });
 
   it('Razzie win triggers Studio Prestige penalty and marks cult classic if absurd', () => {
     const absurdFlop = createProject('absurd', 60_000_000, 20, 'a bizarre and absurd mess', 'Action');
-    const state = {
+    const state = createMockGameState({
       week: 4,
-      studio: { 
-        internal: { 
-          projects: { absurd: absurdFlop }, 
-          contracts: [] 
-        } 
-      },
-      industry: { 
-        talentPool: {} as Record<string, Talent>
+      entities: {
+        projects: { absurd: absurdFlop },
+        talents: {},
+        contracts: {},
+        rivals: {},
       }
-    } as unknown as GameState;
+    });
 
-    const result = processRazzies(state, 4);
+    const impacts = processRazzies(state, 4, rng);
 
-    expect(result.prestigeChange).toBe(-10);
-    expect(result.cultClassicProjectIds).toContain('absurd');
+    const prestigeImpact = impacts.find(i => i.type === 'PRESTIGE_CHANGED') as PrestigeImpact;
+    expect(prestigeImpact.payload).toBeLessThan(0);
+    
+    const projectImpact = impacts.find(i => i.type === 'PROJECT_UPDATED' && i.payload.update.isCultClassic) as ProjectUpdateImpact;
+    expect(projectImpact.payload.projectId).toBe('absurd');
   });
 });

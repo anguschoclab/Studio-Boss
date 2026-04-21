@@ -1,4 +1,4 @@
-import { pick } from '../utils';
+import { pick, rand } from '../utils';
 import { 
   CONGLOMERATE_PREFIXES, 
   PREFIXES, 
@@ -25,7 +25,7 @@ export class BrandSystem {
    */
   static generateIdentity(existing: Set<string>): BrandIdentity {
     let core: string;
-    const isConglomerate = Math.random() > 0.5;
+    const isConglomerate = rand() > 0.5;
     let attempts = 0;
 
     do {

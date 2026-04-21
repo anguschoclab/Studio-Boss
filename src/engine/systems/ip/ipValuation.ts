@@ -65,3 +65,29 @@ export function applyIPDecay(asset: IPAsset): IPAsset {
     decayRate: clamp(asset.decayRate - effectiveDecay, 0.05, 1.0)
   };
 }
+
+/**
+ * Detects if a project should become a "Cult Classic" during the annual scan.
+ * Based on profit ratio, awards, and genre niche.
+ */
+export function detectCultClassic(project: Project, currentWeek: number): boolean {
+  // A project must be at least 1 year old to be considered a cult classic
+  const age = currentWeek - (project.releaseWeek || 0);
+  if (age < 52) return false;
+
+  const isNicheGenre = ['SCI-FI', 'HORROR', 'FANTASY', 'CULT'].includes(project.genre.toUpperCase());
+  const boxOfficeSuccess = project.revenue > (project.budget * 1.5);
+  const awardWinner = project.awardsProfile && project.awardsProfile.prestigeScore > 60;
+
+  // Logic: Niche genre + Moderate success + Aging = Chance of Cult Classic
+  if (isNicheGenre && boxOfficeSuccess && age > 104) {
+    return true;
+  }
+
+  // Purely prestige based cult classic
+  if (awardWinner && age > 156) {
+    return true;
+  }
+
+  return false;
+}

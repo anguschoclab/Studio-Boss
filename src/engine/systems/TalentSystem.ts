@@ -45,11 +45,11 @@ export class TalentSystem {
     // Talent-specific opportunity (using existing studio talent)
     if (secureRandom() < 0.25) {
       const activeTalentIds = new Set<string>();
-      for (let i = 0; i < state.studio.internal.contracts.length; i++) {
-        activeTalentIds.add(state.studio.internal.contracts[i].talentId);
-      }
+      Object.values(state.entities.contracts).forEach(c => {
+        if (c.ownerId === 'player') activeTalentIds.add(c.talentId);
+      });
       const availableTalentIds: string[] = [];
-      for (const talent of Object.values(state.industry.talentPool)) {
+      for (const talent of Object.values(state.entities.talents)) {
         const id = talent.id;
         if (!activeTalentIds.has(id)) availableTalentIds.push(id);
       }

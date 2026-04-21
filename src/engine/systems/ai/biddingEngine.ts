@@ -19,17 +19,18 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
   const impacts: StateImpact[] = [];
   const currWeek = state.week;
   const opportunities = state.market.opportunities.filter(o => (o.expirationWeek || 0) >= currWeek);
+  const ALL_RIVALS = Object.values(state.entities.rivals);
 
   opportunities.forEach(opportunity => {
     // Current highest bid tracking
     const currentHighest = Object.values(opportunity.bids || {}).reduce((max: number, b) => Math.max(max, b.amount), 0);
     
-    state.industry.rivals.forEach(rival => {
+    ALL_RIVALS.forEach(rival => {
       const myBid = opportunity.bids[rival.id]?.amount || 0;
 
       // Logic for should rebid: Outbid if highest is better AND rival has cash
       // If the player is the highest bidder, AI is more aggressive
-      const isPlayerLeading = opportunity.highestBidderId === 'PLAYER';
+      const isPlayerLeading = opportunity.highestBidderId === state.studio.id || opportunity.highestBidderId === 'PLAYER';
       const aggressionFactor = isPlayerLeading ? 1.2 : 1.0;
 
       // 🎭 The Method Actor Tuning: Rivals with FRANCHISE_BUILDING motivation will aggressively outbid for IP-driven genres, tolerating higher caps. CASH_CRUNCH rivals will be highly conservative.

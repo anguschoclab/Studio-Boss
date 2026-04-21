@@ -3,7 +3,7 @@ import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
 import { TV_FORMATS } from '@/engine/data/tvFormats';
 import { UNSCRIPTED_FORMATS } from '@/engine/data/unscriptedFormats';
 import { getFilmStats, getTvStats, getUnscriptedStats } from '@/engine/systems/stats';
-import { randRange } from '@/engine/utils';
+import { randRange, generateId } from '@/engine/utils';
 import { applyImpacts } from '@/engine/core/impactReducer';
 
 export interface CreateProjectParams {
@@ -39,7 +39,7 @@ function prepareTalentAndContracts(
     projectId: string
 ) {
     const ids = attachedTalentIds || [];
-    const talentPool = state.industry.talentPool;
+    const talentPool = state.entities.talents;
     const attachedTalent: Talent[] = [];
     let talentFees = 0;
     const newContracts: Contract[] = [];
@@ -50,7 +50,7 @@ function prepareTalentAndContracts(
             attachedTalent.push(t);
             talentFees += t.fee || 0;
             newContracts.push({
-                id: `contract-${crypto.randomUUID()}`,
+                id: generateId('CNT'),
                 talentId: t.id,
                 projectId,
                 fee: t.fee,
@@ -67,7 +67,7 @@ export function buildProjectAndContracts(state: GameState, params: CreateProject
     const stats = getProjectStats(params, tier);
     const { budget, weeklyCost, developmentWeeks, productionWeeks, renewable } = stats;
 
-    const projectId = crypto.randomUUID();
+    const projectId = generateId('PRJ');
     const { talentFees, newContracts } = prepareTalentAndContracts(state, params.attachedTalentIds, projectId);
 
     const totalBudget = budget + talentFees;

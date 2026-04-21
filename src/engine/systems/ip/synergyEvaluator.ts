@@ -68,3 +68,22 @@ export function calculateSynergyGains(
 
   return gains;
 }
+
+/**
+ * Evaluates the total synergy multiplier for the entire IP vault.
+ * Returns the modified vault assets to be processed by the manager.
+ */
+export function evaluateVaultSynergy(activeProjects: any[], vault: IPAsset[]): IPAsset[] {
+  if (!vault || vault.length < 2) return vault || [];
+  
+  // Calculate synergy based on franchise density
+  const franchiseGroups = new Set(vault.map(v => v.franchiseId).filter(Boolean));
+  
+  // Base 1.0 + 5% per unique franchise + 1% per unique asset
+  const multiplier = 1.0 + (franchiseGroups.size * 0.05) + (vault.length * 0.01);
+  
+  return vault.map(asset => ({
+    ...asset,
+    baseValue: Math.floor(asset.baseValue * multiplier)
+  }));
+}
