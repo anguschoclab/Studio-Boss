@@ -8,6 +8,7 @@ import { selectProjects } from '@/store/selectors';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { useShallow } from 'zustand/react/shallow';
 
 const COLUMNS: { status: ProjectStatus[]; title: string; color: string; description: string }[] = [
   { status: ['development', 'needs_greenlight'], title: 'Development', color: 'bg-secondary', description: 'Scripts & Concept' },
@@ -17,7 +18,7 @@ const COLUMNS: { status: ProjectStatus[]; title: string; color: string; descript
 ];
 
 export const PipelineBoard = () => {
-  const projects = useGameStore(s => selectProjects(s.gameState));
+  const projects = useGameStore(useShallow(s => selectProjects(s.gameState)));
   const { openCreateProject } = useUIStore();
 
   return (
