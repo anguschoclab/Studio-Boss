@@ -48,8 +48,8 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
       }
 
       if (myBid < currentHighest && rival.cash > currentHighest * adjustedCashThreshold) {
-        const multiplier = (ArchetypeMultipliers[rival.archetype]?.(opportunity.genre) || 1.0) * aggressionFactor * motivationMultiplier;
-        const newBid = Math.floor(currentHighest * rng.range(1.05, 1.2) * multiplier);
+        const totalMultiplier = (ArchetypeMultipliers[rival.archetype]?.(opportunity.genre) || 1.0) * aggressionFactor * motivationMultiplier;
+        const newBid = Math.floor(currentHighest * (1 + rng.range(0.05, 0.20) * totalMultiplier));
 
         // Cap bid at adjusted percentage of total rival cash for "Strategic" behavior
         if (newBid < rival.cash * bidCapPercentage) {
