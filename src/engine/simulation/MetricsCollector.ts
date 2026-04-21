@@ -98,7 +98,7 @@ export class MetricsCollector {
             const isSeries = p.type === 'SERIES';
             const nProfile = isSeries ? (p as import('@/engine/types').SeriesProject).nielsenProfile : undefined;
 
-            if ((formatMatch === 'tv' || formatMatch === 'series') && nProfile) {
+            if ((formatMatch === 'tv' || isSeries) && nProfile) {
                 totalNielsenDemo += Number(nProfile.seasonAvgKeyDemo) || 0;
                 tvProjectCount++;
             }
