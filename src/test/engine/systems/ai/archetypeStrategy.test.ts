@@ -1,9 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { 
   evaluatePackageOffer, 
-  generateFestivalBid, 
-  shouldAttemptHostileTakeover 
+  generateFestivalBid
 } from '../../../../engine/systems/ai/AgentBrain';
+import {
+  shouldAttemptHostileTakeover
+} from '../../../../engine/systems/ai/BehaviorEngine';
 import { mockRandomSeed } from '../../../utils/mockRandom';
 import { 
   createMockAgency, 

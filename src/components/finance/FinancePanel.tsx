@@ -1,4 +1,5 @@
 import { calculateWeeklyCosts, calculateWeeklyRevenue, calculateStudioNetWorth, generateCashflowForecast, calculateProjectROI } from '@/engine/systems/finance';
+import { useShallow } from 'zustand/react/shallow';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Area, XAxis, YAxis, Tooltip, ResponsiveContainer, ComposedChart, Line } from 'recharts';
 import { Badge } from '@/components/ui/badge';
@@ -20,12 +21,9 @@ import { formatMoney } from '@/engine/utils';
 export const FinancePanel = () => {
   const gameState = useGameStore(s => s.gameState);
 
-  const cash = gameState?.finance?.cash ?? 0;
-  const rawFinanceHistory = gameState?.finance?.weeklyHistory; // Use new structured history
-  const rawProjects = Object.values(gameState?.studio.internal.projects || {});
-
-  const projectsMemo = useMemo(() => rawProjects ?? [], [rawProjects]);
-  const financeHistory = useMemo(() => rawFinanceHistory ?? [], [rawFinanceHistory]);
+  const cash = useGameStore(s => s.gameState?.finance?.cash ?? 0);
+  const financeHistory = useGameStore(useShallow(s => s.gameState?.finance?.weeklyHistory ?? []));
+  const projectsMemo = useGameStore(useShallow(s => Object.values(s.gameState?.studio.internal.projects || {})));
 
   const weeklyCosts = useMemo(() => calculateWeeklyCosts(projectsMemo), [projectsMemo]);
   const weeklyRevenue = useMemo(() => calculateWeeklyRevenue(projectsMemo), [projectsMemo]);

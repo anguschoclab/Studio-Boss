@@ -50,6 +50,9 @@ export function generateWeeklyFinancialReport(
   let merch = 0;
   let totalRoyalties = 0;
 
+  // ⚡ The Framerate Fanatic: Refactored array .find() inside map to a Map lookup, improving performance from O(n^2) to O(n).
+  const buyerMap = new Map((state.market.buyers || []).map(b => [b.id, b]));
+
   projects.forEach(p => {
     if (p.state === 'released') {
       let weeklyGross = 0;
@@ -59,7 +62,7 @@ export function generateWeeklyFinancialReport(
         weeklyGross = RevenueProcessor.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.5);
         boxOffice += weeklyGross;
       } else if (p.distributionStatus === 'streaming') {
-        const platform = state.market.buyers.find(b => b.id === p.buyerId);
+        const platform = p.buyerId ? buyerMap.get(p.buyerId) : undefined;
         if (platform) {
           weeklyGross = RevenueProcessor.calculateStreamingRevenue(p, platform);
           distribution += weeklyGross;
@@ -159,12 +162,15 @@ export function calculateWeeklyRevenue(projects: Project[], buyers: Buyer[] = []
   let boxOffice = 0;
   let distribution = 0;
 
+  // ⚡ The Framerate Fanatic: Refactored array .find() inside map to a Map lookup, improving performance from O(n^2) to O(n).
+  const buyerMap = new Map((buyers || []).map(b => [b.id, b]));
+
   projects.forEach(p => {
     if (p.state === 'released') {
       if (p.distributionStatus === 'theatrical') {
         boxOffice += RevenueProcessor.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.5);
       } else if (p.distributionStatus === 'streaming') {
-        const platform = buyers.find(b => b.id === p.buyerId);
+        const platform = p.buyerId ? buyerMap.get(p.buyerId) : undefined;
         if (platform) {
           distribution += RevenueProcessor.calculateStreamingRevenue(p, platform);
         }
