@@ -41,10 +41,10 @@ export function tickPlatforms(state: GameState, rng: RandomGenerator): StateImpa
     if (buyer.archetype === 'streamer') {
       const platform = buyer as StreamerPlatform;
 
-      const platformSeries = allProjects.filter(p => p.type === 'SERIES' && p.buyerId === platform.id) as SeriesProject[];
+      const platformSeries = allProjects.filter(p => p.type === 'SERIES' && p.buyerId === platform.id && (p as SeriesProject).nielsenProfile?.audienceRetention !== undefined) as SeriesProject[];
       let averageRetention = 60;
       if (platformSeries.length > 0) {
-        const retentionSum = platformSeries.reduce((sum, p) => sum + (p.nielsenProfile?.audienceRetention || 60), 0);
+        const retentionSum = platformSeries.reduce((sum, p) => sum + p.nielsenProfile!.audienceRetention, 0);
         averageRetention = retentionSum / platformSeries.length;
       }
 
