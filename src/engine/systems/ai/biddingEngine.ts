@@ -32,12 +32,27 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
       const isPlayerLeading = opportunity.highestBidderId === 'PLAYER';
       const aggressionFactor = isPlayerLeading ? 1.2 : 1.0;
 
-      if (myBid < currentHighest && rival.cash > currentHighest * 1.3) {
-        const multiplier = (ArchetypeMultipliers[rival.archetype]?.(opportunity.genre) || 1.0) * aggressionFactor;
-        const newBid = Math.floor(currentHighest * rng.range(1.05, 1.2) * multiplier);
+      // 🎭 The Method Actor Tuning: Rivals with FRANCHISE_BUILDING motivation will aggressively outbid for IP-driven genres, tolerating higher caps. CASH_CRUNCH rivals will be highly conservative.
+      let adjustedCashThreshold = 1.3;
+      let bidCapPercentage = 0.35;
+      let motivationMultiplier = 1.0;
 
-        // Cap bid at 35% of total rival cash for "Strategic" behavior
-        if (newBid < rival.cash * 0.35) {
+      if (rival.currentMotivation === 'FRANCHISE_BUILDING' && (opportunity.genre === 'Sci-Fi' || opportunity.genre === 'Action')) {
+        adjustedCashThreshold = 1.1; // More willing to bid with less cash buffer
+        bidCapPercentage = 0.60; // Tolerate a much higher portion of their cash
+        motivationMultiplier = 1.4; // Bid more aggressively
+      } else if (rival.currentMotivation === 'CASH_CRUNCH') {
+        adjustedCashThreshold = 2.0; // Needs double the cash to bid
+        bidCapPercentage = 0.15; // Only use a tiny fraction of cash
+        motivationMultiplier = 0.8; // Bid weakly
+      }
+
+      if (myBid < currentHighest && rival.cash > currentHighest * adjustedCashThreshold) {
+        const totalMultiplier = (ArchetypeMultipliers[rival.archetype]?.(opportunity.genre) || 1.0) * aggressionFactor * motivationMultiplier;
+        const newBid = Math.floor(currentHighest * (1 + rng.range(0.05, 0.20) * totalMultiplier));
+
+        // Cap bid at adjusted percentage of total rival cash for "Strategic" behavior
+        if (newBid < rival.cash * bidCapPercentage) {
           impacts.push({
             type: 'OPPORTUNITY_UPDATED',
             payload: {
