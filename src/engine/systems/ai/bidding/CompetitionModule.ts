@@ -70,6 +70,13 @@ export function tickTalentCompetition(state: GameState, rng: RandomGenerator): S
       let lockFeeMultiplier = 1.5;
       if (isMoneyGrabber) {
         lockFeeMultiplier = 2.0;
+        // 🎭 The Method Actor Tuning: Money grabbers will extort low-prestige rivals for massive lock fees.
+        if (rival.prestige < 50) {
+          lockFeeMultiplier = 3.0;
+        }
+      } else if (isAuteur && rival.prestige > 80) {
+        // 🎭 The Method Actor Tuning: Auteurs will offer a discount to high-prestige rivals to work on prestige projects.
+        lockFeeMultiplier = 1.0;
       }
 
       const lockFee = target.fee * (lockFeeMultiplier + rng.next() + prestigePenalty);
