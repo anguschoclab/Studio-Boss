@@ -1,60 +1,18 @@
-import { pick } from '../utils';
 import { Project, ActiveCrisis, GameState } from '@/engine/types';
+import { pick, secureRandom } from '../utils';
 import { StateImpact } from '../types/state.types';
 import { CRISIS_POOLS } from '../data/crises.data';
-import { RandomGenerator } from '../utils/rng';
-import { BardResolver } from './bardResolver';
-import { StudioArchetype } from '../data/aiArchetypes';
-import { calculateSocialCrisisModifier } from './talent/OrganicEventEnhancer';
 
-/**
- * Procedural Crisis Generation (Hardened)
- * Returns a StateImpact that adds a crisis to a project.
- * Uses archetype strategy to determine crisis type preferences if archetype is provided.
- */
-export function generateCrisis(project: Project, rng: RandomGenerator, archetype?: StudioArchetype): StateImpact | null {
-  // Use archetype strategy to determine crisis type preferences
-  let crisisPool = CRISIS_POOLS;
-
-  if (archetype) {
-    // Risk-averse archetypes avoid production crises (prefer PR/financial crises)
-    // Production crises have descriptions containing "PRODUCTION" or "SAFETY"
-    if (archetype.strategy === 'prestige_chaser' || archetype.riskAppetite < 40) {
-      crisisPool = crisisPool.filter(c => !c.description.includes('PRODUCTION') && !c.description.includes('SAFETY'));
-    }
-    // Risk-seeking archetypes have higher chance of production crises
-    else if (archetype.strategy === 'acquirer' || archetype.riskAppetite > 60) {
-      // Give higher weight to production crises by duplicating them in the pool
-      const productionCrises = crisisPool.filter(c => c.description.includes('PRODUCTION') || c.description.includes('SAFETY'));
-      crisisPool = [...crisisPool, ...productionCrises];
-    }
-  }
-
-  const template = pick(crisisPool, rng);
+export function generateCrisis(project: Project): StateImpact | null {
+  const template = pick(CRISIS_POOLS);
   if (!template) return null;
 
   const crisis: ActiveCrisis = {
-    id: rng.uuid('CRS'),
-    crisisId: template.id,
+    crisisId: `crisis-${crypto.randomUUID()}`,
     triggeredWeek: 0,
     haltedProduction: false,
-    description: BardResolver.resolve({
-      domain: 'Crisis',
-      subDomain: template.description, // e.g., 'PR' or 'Production'
-      intensity: 75,
-      context: { project: project.title },
-      rng
-    }),
-    options: template.options.map(opt => ({
-      ...opt,
-      text: BardResolver.resolve({
-        domain: 'Crisis',
-        subDomain: `${template.description}.Options`, // e.g., 'PR.Options'
-        variant: opt.text, // e.g., 'Aggressive'
-        intensity: 50,
-        rng
-      })
-    })),
+    description: template.description,
+    options: template.options,
     resolved: false,
     severity: 'medium'
   };
@@ -68,42 +26,16 @@ export function generateCrisis(project: Project, rng: RandomGenerator, archetype
   };
 }
 
-/**
- * Weekly roll for a production crisis.
- * Integrated into the WeekCoordinator pipeline.
- * Uses archetype riskAppetite to adjust crisis probability if archetype is provided.
- */
-export function checkAndTriggerCrisis(project: Project, state: GameState, rng: RandomGenerator, archetype?: StudioArchetype): StateImpact | null {
-  const studioProjectsCount = Object.keys(state.entities.projects || {}).length;
-  const contractCount = Object.keys(state.entities.contracts || {}).length;
-
-  // The PR Spin Doctor: Heavily scale crises with studio size
-  // Adjusted: Base 5% chance, plus 5.0% for every concurrent project and 2.5% for every contract
-  let baseChance = Math.min(0.8, 0.05 + (studioProjectsCount * 0.050) + (contractCount * 0.025));
-
-  // Adjust crisis probability based on archetype riskAppetite (0-100)
-  // Higher riskAppetite = higher crisis probability
-  if (archetype) {
-    const riskMultiplier = 0.5 + (archetype.riskAppetite / 100); // 0.5x to 1.5x multiplier
-    baseChance = Math.min(0.9, baseChance * riskMultiplier);
-  }
-
-  // Apply social crisis modifier (feuds, toxic cliques increase crisis chance)
-  const socialModifier = calculateSocialCrisisModifier(project.id, state);
-  baseChance = Math.min(0.95, baseChance * socialModifier);
-
-  if (rng.next() < baseChance) {
-    return generateCrisis(project, rng, archetype);
+export function checkAndTriggerCrisis(project: Project): StateImpact | null {
+  // 3% base chance of a production crisis per week
+  if (secureRandom() < 0.03) {
+    return generateCrisis(project);
   }
   return null;
 }
 
-/**
- * Resolves a crisis through player (or AI) choice.
- * Always returns a deterministic impact based on the selected option.
- */
-export function resolveCrisis(state: GameState, projectId: string, optionIndex: number, rng: RandomGenerator): StateImpact {
-  const project = state.entities.projects[projectId];
+export function resolveCrisis(state: GameState, projectId: string, optionIndex: number): StateImpact {
+  const project = state.studio.internal.projects[projectId];
   if (!project || !project.activeCrisis || project.activeCrisis.resolved) {
     return {};
   }
@@ -132,7 +64,7 @@ export function resolveCrisis(state: GameState, projectId: string, optionIndex: 
   }
 
   if (option.buzzPenalty) {
-    projectUpdate.buzz = Math.max(0, (project.buzz || 0) - option.buzzPenalty);
+    projectUpdate.buzz = Math.max(0, project.buzz - option.buzzPenalty);
   }
 
   impact.projectUpdates!.push({
@@ -145,14 +77,14 @@ export function resolveCrisis(state: GameState, projectId: string, optionIndex: 
   }
 
   impact.newHeadlines!.push({
-    id: rng.uuid('NWS'),
+    id: `headline-${crypto.randomUUID()}`,
     week: state.week,
     category: 'general',
     text: `Crisis resolved for "${project.title}": ${option.text}`
   });
 
   impact.newsEvents!.push({
-    id: rng.uuid('NWS'),
+    id: `news-${crypto.randomUUID()}`,
     week: state.week,
     type: 'CRISIS',
     headline: `Crisis at ${project.title}`,

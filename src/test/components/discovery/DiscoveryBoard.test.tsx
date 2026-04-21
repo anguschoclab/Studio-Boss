@@ -3,58 +3,51 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { DiscoveryBoard } from '../../../components/discovery/DiscoveryBoard';
 import { useGameStore } from '../../../store/gameStore';
-import { useUIStore } from '@/store/uiStore';
+import { useUIStore } from '../../../store/uiStore';
 import { Opportunity } from '../../../engine/types';
-import { TooltipProvider } from '@/components/ui/tooltip';
 
-vi.mock('@/store/uiStore', () => ({
+vi.mock('../../../store/uiStore', () => ({
   useUIStore: vi.fn(),
 }));
 
-// Mock NewsFeed and TrendBoard to avoid nested store dependency issues
-vi.mock('@/components/news/NewsFeed', () => ({ NewsFeed: () => <div data-testid="news-feed">News Feed</div> }));
-vi.mock('@/components/trends/TrendBoard', () => ({ TrendBoard: () => <div data-testid="trend-board">Trend Board</div> }));
-
 describe('DiscoveryBoard', () => {
   const mockOpenCreateProject = vi.fn();
+  const mockAcquireOpportunity = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(useUIStore).mockReturnValue({
+    (useUIStore as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
       openCreateProject: mockOpenCreateProject,
-    } as unknown as ReturnType<typeof useUIStore>);
-  });
-
-  const getBaseGameState = (opportunities: Opportunity[] = []) => ({
-    market: { opportunities, trends: [] },
-    industry: { newsHistory: [] },
-    finance: { cash: 1000000, ledger: [], marketState: { interestRate: 0.05, inflation: 0.02, consumerConfidence: 0.8, rateHistory: [] } },
-    studio: { internal: { projects: {} } }
+    });
   });
 
   it('renders empty state when there are no opportunities', () => {
-    const gameState = getBaseGameState([]);
     useGameStore.setState({
-      gameState,
-      finance: gameState.finance,
-    } as unknown as Parameters<typeof useGameStore.setState>[0]);
+      gameState: {
+        market: { opportunities: [], trends: [] },
+        industry: { newsHistory: [] }
+      },
+      acquireOpportunity: mockAcquireOpportunity
+    } as any);
 
-    render(<TooltipProvider><DiscoveryBoard /></TooltipProvider>);
+    render(<DiscoveryBoard />);
 
     expect(screen.getByText('The Trades')).toBeDefined();
-    expect(screen.getByText(/No active scripts/i)).toBeDefined();
+    expect(screen.getByText('The town is quiet')).toBeDefined();
   });
 
   it('calls openCreateProject when Create Original button is clicked', () => {
-    const gameState = getBaseGameState([]);
     useGameStore.setState({
-      gameState,
-      finance: gameState.finance,
-    } as unknown as Parameters<typeof useGameStore.setState>[0]);
+      gameState: {
+        market: { opportunities: [], trends: [] },
+        industry: { newsHistory: [] }
+      },
+      acquireOpportunity: mockAcquireOpportunity
+    } as any);
 
-    render(<TooltipProvider><DiscoveryBoard /></TooltipProvider>);
+    render(<DiscoveryBoard />);
 
-    const createButton = screen.getByText('Original IP Concept');
+    const createButton = screen.getByText('Original Concept');
     fireEvent.click(createButton);
 
     expect(mockOpenCreateProject).toHaveBeenCalledTimes(1);
@@ -79,22 +72,48 @@ describe('DiscoveryBoard', () => {
         expirationWeek: 10,
         bidHistory: []
       },
+      {
+        id: '2',
+        title: 'Comedy Show',
+        type: 'pitch',
+        genre: 'Comedy',
+        format: 'tv',
+        budgetTier: 'low',
+        flavor: 'Laugh out loud.',
+        weeksUntilExpiry: 3,
+        targetAudience: 'Niche',
+        qualityBonus: 0,
+        origin: 'agency_package',
+        costToAcquire: 10000,
+        bids: {},
+        expirationWeek: 8,
+        bidHistory: []
+      },
     ];
 
-    const gameState = getBaseGameState(mockOpportunities);
     useGameStore.setState({
-      gameState,
-      finance: gameState.finance,
-    } as unknown as Parameters<typeof useGameStore.setState>[0]);
+      gameState: {
+        market: { opportunities: mockOpportunities, trends: [] },
+        industry: { newsHistory: [] }
+      },
+      acquireOpportunity: mockAcquireOpportunity
+    } as any);
 
-    render(<TooltipProvider><DiscoveryBoard /></TooltipProvider>);
+    render(<DiscoveryBoard />);
 
     expect(screen.getByText('Action Movie')).toBeDefined();
+    expect(screen.getByText('Comedy Show')).toBeDefined();
+    // Updated to match actual component case
     expect(screen.getAllByText(/Action/i)).toBeDefined();
+    expect(screen.getAllByText(/FILM/i)).toBeDefined();
+    expect(screen.getAllByText(/BUDGET/i)).toBeDefined();
     expect(screen.getByText('"Explosions everywhere."')).toBeDefined();
+    expect(screen.getByText('"Laugh out loud."')).toBeDefined();
+    expect(screen.getByText('Expiring in 5w')).toBeDefined();
+    expect(screen.getByText('Expiring in 3w')).toBeDefined();
   });
 
-  it('opens auction dashboard when Enter War button is clicked on a card', () => {
+  it('calls acquireOpportunity when Acquire button is clicked on a card', () => {
     const mockOpportunities: Opportunity[] = [
       {
         id: 'opp-123',
@@ -115,21 +134,19 @@ describe('DiscoveryBoard', () => {
       },
     ];
 
-    const gameState = getBaseGameState(mockOpportunities);
     useGameStore.setState({
-      gameState,
-      finance: gameState.finance,
-    } as unknown as Parameters<typeof useGameStore.setState>[0]);
+      gameState: {
+        market: { opportunities: mockOpportunities, trends: [] },
+        industry: { newsHistory: [] }
+      },
+      acquireOpportunity: mockAcquireOpportunity
+    } as any);
 
-    render(<TooltipProvider><DiscoveryBoard /></TooltipProvider>);
+    render(<DiscoveryBoard />);
 
-    const acquireButton = screen.getByText('Enter War');
+    const acquireButton = screen.getByText('Acquire IP');
     fireEvent.click(acquireButton);
 
-    // LiveAuctionDashboard should appear in the DOM
-    expect(screen.getByText('Market Valuation')).toBeInTheDocument();
-    expect(screen.getByText('Your Action')).toBeInTheDocument();
-    // Select the one in the auction header (h2) to be specific
-    expect(screen.getByRole('heading', { level: 2, name: 'Drama Film' })).toBeInTheDocument();
+    expect(mockAcquireOpportunity).toHaveBeenCalledWith('opp-123');
   });
 });

@@ -1,10 +1,11 @@
 import { Talent } from '../../types/talent.types';
-import {
-  AvatarFeatures, AgeBracket
+import { 
+  AvatarFeatures, AgeBracket, Gender, 
+  ColorPalette, HairColor 
 } from './types';
-import {
-  hashString, seededRandom, seededRange, seededPick,
-  blendColor
+import { 
+  hashString, seededRandom, seededRange, seededPick, 
+  blendColor, darkenColor, lightenColor
 } from './utils';
 import { 
   SKIN_PALETTES, HAIR_COLORS, GRAY_HAIR, WHITE_HAIR, 
@@ -13,9 +14,8 @@ import {
 
 /**
  * Derives visual features from talent demographics and state.
- * Optional parentTalent parameter for family resemblance.
  */
-export function deriveFeatures(talent: Talent, currentWeek: number = 1, parentTalent?: Talent): AvatarFeatures {
+export function deriveFeatures(talent: Talent, currentWeek: number = 1): AvatarFeatures {
   const { demographics, psychology } = talent;
   const seed = hashString(talent.id);
   const rand = seededRandom(seed);
@@ -32,32 +32,89 @@ export function deriveFeatures(talent: Talent, currentWeek: number = 1, parentTa
   const hairPool = HAIR_COLORS[ethnicity] || HAIR_COLORS['Caucasian'];
   let hairColor = seededPick(rand, hairPool);
   
-  // Aging effects on hair
-  if (visualAge > 35) {
-    const grayFactor = Math.min(1, (visualAge - 35) / 45) * (0.5 + rand() * 0.5);
-    if (grayFactor > 0.8) hairColor = WHITE_HAIR;
-    else if (grayFactor > 0.4) hairColor = GRAY_HAIR;
-    else if (grayFactor > 0.1) {
+  // ── Aging effects on hair ──
+  // Gradual greying curve. Each talent gets a personal "grey onset" age
+  // between 38–52 (driven by their seed) so siblings/peers don't all grey
+  // at the same time. Greying then progresses linearly until ~75, where
+  // it caps at full white. Pre-onset hair stays the natural color.
+  const greyOnset = 38 + rand() * 14;          // 38–52
+  const fullWhiteAge = greyOnset + 35;          // ~73–87
+  if (visualAge > greyOnset) {
+    // 0 at onset, 1 at fullWhiteAge
+    const greyProgress = Math.min(1, (visualAge - greyOnset) / (fullWhiteAge - greyOnset));
+    if (greyProgress >= 0.95) {
+      hairColor = WHITE_HAIR;
+    } else {
+      // Blend toward grey first (until ~0.6), then toward white past that.
+      const targetIsWhite = greyProgress > 0.6;
+      const target = targetIsWhite ? WHITE_HAIR : GRAY_HAIR;
+      // Re-map progress so 0.6→0 and 1.0→1 when blending into white
+      const blendAmount = targetIsWhite
+        ? (greyProgress - 0.6) / 0.4
+        : greyProgress / 0.6;
+      const fromColor = targetIsWhite ? GRAY_HAIR : hairColor;
       hairColor = {
-        primary: blendColor(hairColor.primary, GRAY_HAIR.primary, grayFactor),
-        secondary: blendColor(hairColor.secondary, GRAY_HAIR.secondary, grayFactor),
-        shine: blendColor(hairColor.shine || hairColor.secondary, GRAY_HAIR.shine || GRAY_HAIR.secondary, grayFactor),
+        primary: blendColor(fromColor.primary, target.primary, blendAmount),
+        secondary: blendColor(fromColor.secondary, target.secondary, blendAmount),
+        shine: blendColor(
+          fromColor.shine || fromColor.secondary,
+          target.shine || target.secondary,
+          blendAmount
+        ),
       };
     }
   }
 
-  // Hair Style Selection (expanded with ethnic diversity)
-  const maleStyles = ['short-crop', 'side-part', 'textured-fade', 'buzz-cut', 'slick-back', 'top-knot', 'bald', 'cornrows', 'dreadlocks', 'mohawk', 'undercut', 'afro-short'];
-  const femaleStyles = ['long-straight', 'shoulder-bob', 'pixie', 'ponytail', 'curls-medium', 'wavy-shoulder', 'short-crop', 'box-braids', 'cornrows', 'dreadlocks', 'bun', 'double-bun', 'long-curly', 'bangs'];
+  // ── Hair Style Selection ──
+  // Style pools are weighted per ethnicity so that South/East Asian, Black,
+  // and Caucasian/Mixed talent draw from culturally appropriate distributions
+  // and don't all share the same silhouette. Including a style multiple times
+  // is the lightweight way to weight it more heavily.
+  // NOTE: 'bald' is intentionally excluded — it produces a featureless
+  // silhouette. Recession is expressed via `hairLine` instead.
+  const baseMaleStyles = ['short-crop', 'side-part', 'textured-fade', 'buzz-cut', 'slick-back', 'top-knot'];
+  const baseFemaleStyles = ['long-straight', 'shoulder-bob', 'pixie', 'ponytail', 'curls-medium', 'wavy-shoulder', 'short-crop'];
+
+  const maleStylesByEthnicity: Record<string, string[]> = {
+    'South Asian': [
+      'thick-wave', 'thick-wave', 'side-part', 'middle-part',
+      'short-crop', 'textured-fade', 'undercut', 'pompadour', 'slick-back',
+    ],
+    'Asian': [
+      'middle-part', 'middle-part', 'mop-top', 'spiky', 'spiky',
+      'undercut', 'short-crop', 'textured-fade', 'side-part', 'top-knot',
+    ],
+    'Black': [
+      'textured-fade', 'textured-fade', 'buzz-cut', 'short-crop',
+      'top-knot', 'slick-back', 'undercut',
+    ],
+    'Hispanic': [
+      'short-crop', 'side-part', 'textured-fade', 'slick-back',
+      'pompadour', 'thick-wave', 'undercut',
+    ],
+    'Middle Eastern': [
+      'thick-wave', 'side-part', 'short-crop', 'textured-fade',
+      'slick-back', 'pompadour',
+    ],
+    'Caucasian': [
+      ...baseMaleStyles, 'pompadour', 'middle-part', 'undercut',
+    ],
+    'Mixed': [
+      ...baseMaleStyles, 'thick-wave', 'undercut', 'middle-part', 'pompadour',
+    ],
+  };
+
+  const malePool = maleStylesByEthnicity[ethnicity] || baseMaleStyles;
+  const femalePool = baseFemaleStyles;
   const hairStyle = demographics.gender === 'MALE'
-    ? seededPick(rand, maleStyles)
+    ? seededPick(rand, malePool)
     : demographics.gender === 'FEMALE'
-      ? seededPick(rand, femaleStyles)
-      : seededPick(rand, [...maleStyles, ...femaleStyles]);
+      ? seededPick(rand, femalePool)
+      : seededPick(rand, [...malePool, ...femalePool]);
 
   // ── Facial Hair ──
   const hasFacialHair = demographics.gender === 'MALE' && visualAge >= 18 && rand() < 0.4;
-  const facialHairStyle = seededPick(rand, ['full-beard', 'goatee', 'stubble', 'mustache', 'soul-patch', 'mutton-chops', 'van-dyke', 'sideburns', 'chin-strap', 'circle-beard']);
+  const facialHairStyle = seededPick(rand, ['full-beard', 'goatee', 'stubble', 'mustache']);
 
   // ── Eyes ──
   const eyeColor = seededPick(rand, EYE_COLORS);
@@ -71,143 +128,13 @@ export function deriveFeatures(talent: Talent, currentWeek: number = 1, parentTa
   else if (rand() < 0.05) expression = 'surprised';
 
   // ── Clothing ──
-  const clothingType = seededPick(rand, ['casual', 'formal', 'creative', 'high_fashion']) as AvatarFeatures['clothingType'];
-  const clothingColor = seededPick(rand, CLOTHING_PALETTES[clothingType]);
-  const necklineStyle = seededPick(rand, ['round', 'v-neck', 'collar', 'hoodie']) as AvatarFeatures['necklineStyle'];
-
-  // ── Family Resemblance (if parent provided) ──
-  const inheritedFeatures: AvatarFeatures['inheritedFeatures'] = {};
-  let parentFeatures: AvatarFeatures | null = null;
-  
-  if (parentTalent) {
-    parentFeatures = deriveFeatures(parentTalent, currentWeek);
-    const inheritanceChance = 0.5; // 50% chance to inherit each feature
-    
-    if (rand() < inheritanceChance) {
-      inheritedFeatures.faceShape = true;
-    }
-    if (rand() < inheritanceChance) {
-      inheritedFeatures.eyeColor = true;
-    }
-    if (rand() < inheritanceChance) {
-      inheritedFeatures.noseShape = true;
-    }
-    if (rand() < inheritanceChance) {
-      inheritedFeatures.hairColor = true;
-    }
-    if (rand() < inheritanceChance) {
-      inheritedFeatures.skinTone = true;
-    }
-  }
-
-  // ── Ethnicity-Specific Feature Tendencies ──
-  const ethnicityFaceShapes: Record<string, string[]> = {
-    'Asian': ['round', 'oval', 'square', 'oblong'],
-    'South Asian': ['oval', 'round', 'heart', 'square'],
-    'Caucasian': ['oval', 'heart', 'square', 'oblong'],
-    'Black': ['oval', 'round', 'square', 'heart'],
-    'Hispanic': ['oval', 'round', 'heart', 'square'],
-    'Middle Eastern': ['oval', 'square', 'oblong', 'heart'],
-    'Mixed': ['oval', 'square', 'heart', 'round', 'oblong']
-  };
-  
-  const ethnicityNoseBridges: Record<string, string[]> = {
-    'Middle Eastern': ['roman', 'straight', 'humped'],
-    'Caucasian': ['straight', 'roman', 'button'],
-    'Asian': ['straight', 'button', 'concave'],
-    'South Asian': ['straight', 'roman', 'button'],
-    'Black': ['straight', 'button', 'concave'],
-    'Hispanic': ['straight', 'roman', 'button'],
-    'Mixed': ['straight', 'roman', 'button', 'concave']
-  };
-
-  const ethnicityEyeShapes: Record<string, string[]> = {
-    'Asian': ['almond', 'monolid', 'upturned'],
-    'South Asian': ['almond', 'round', 'hooded'],
-    'Caucasian': ['almond', 'round', 'hooded', 'upturned'],
-    'Black': ['almond', 'round', 'deep-set'],
-    'Hispanic': ['almond', 'round', 'hooded'],
-    'Middle Eastern': ['almond', 'round', 'hooded'],
-    'Mixed': ['almond', 'round', 'hooded', 'upturned', 'deep-set']
-  };
-
-  // Select face shape with ethnicity bias
-  const ethnicityShapeOptions = ethnicityFaceShapes[ethnicity] || ethnicityFaceShapes['Mixed'];
-  const allFaceShapes = ['oval', 'square', 'heart', 'round', 'oblong', 'diamond', 'pear', 'inverted-triangle', 'rectangular'];
-  const faceShape = inheritedFeatures.faceShape && parentFeatures
-    ? parentFeatures.faceShape
-    : (rand() < 0.7 ? seededPick(rand, ethnicityShapeOptions) : seededPick(rand, allFaceShapes)) as AvatarFeatures['faceShape'];
-
-  // Select eye shape with ethnicity bias
-  const ethnicityEyeOptions = ethnicityEyeShapes[ethnicity] || ethnicityEyeShapes['Mixed'];
-  const allEyeShapes = ['almond', 'round', 'hooded', 'monolid', 'deep-set', 'upturned'];
-  const eyeShape = inheritedFeatures.faceShape && parentFeatures
-    ? (parentFeatures.eyeShape || seededPick(rand, ethnicityEyeOptions))
-    : (rand() < 0.6 ? seededPick(rand, ethnicityEyeOptions) : seededPick(rand, allEyeShapes)) as AvatarFeatures['eyeShape'];
-
-  // Select nose bridge with ethnicity bias
-  const ethnicityNoseOptions = ethnicityNoseBridges[ethnicity] || ethnicityNoseBridges['Mixed'];
-  const allNoseBridges = ['straight', 'roman', 'button', 'concave', 'humped'];
-  const noseBridgeShape = inheritedFeatures.noseShape && parentFeatures
-    ? (parentFeatures.noseBridgeShape || seededPick(rand, ethnicityNoseOptions))
-    : (rand() < 0.5 ? seededPick(rand, ethnicityNoseOptions) : seededPick(rand, allNoseBridges)) as AvatarFeatures['noseBridgeShape'];
-
-  // Select eye color (inherit if applicable)
-  const finalEyeColor = inheritedFeatures.eyeColor && parentFeatures
-    ? parentFeatures.eyeColor
-    : eyeColor;
-
-  // Select nose tip shape
-  const allNoseTips = ['round', 'pointed', 'flat', 'bulbous', 'upturned', 'hooked'];
-  const noseTipShape = seededPick(rand, allNoseTips) as AvatarFeatures['noseTipShape'];
-
-  // Select lip shape
-  const allLipShapes = ['cupid-bow', 'heart-shaped', 'thin', 'full', 'uneven'];
-  const lipShape = seededPick(rand, allLipShapes) as AvatarFeatures['lipShape'];
-
-  // Select hair color (inherit if applicable)
-  const finalHairColor = inheritedFeatures.hairColor && parentFeatures
-    ? parentFeatures.hairColor
-    : hairColor;
-
-  // Select skin tone (inherit if applicable)
-  const finalSkin = inheritedFeatures.skinTone && parentFeatures
-    ? parentFeatures.skin
-    : skin;
-
-  // ── Asymmetry ──
-  const eyeSizeAsymmetry = seededRange(rand, -0.05, 0.05);
-  const browHeightAsymmetry = seededRange(rand, -0.05, 0.05);
-  const smileAsymmetry = seededRange(rand, -0.03, 0.03);
-
-  // ── Skin Details ──
-  const hasBeautyMark = rand() < 0.1;
-  const beautyMarkPosition = hasBeautyMark
-    ? { x: seededRange(rand, 0.3, 0.7), y: seededRange(rand, 0.4, 0.8) }
-    : { x: 0, y: 0 };
-  const hasAgeSpots = visualAge > 50 && rand() < 0.4;
-  const hasRosyCheeks = rand() < 0.2;
-  const skinTextureOptions: AvatarFeatures['skinTexture'][] = ['smooth', 'pores', 'rough'];
-  const skinTexture: AvatarFeatures['skinTexture'] = visualAge > 40
-    ? (rand() < 0.5 ? 'pores' : seededPick(rand, skinTextureOptions))
-    : seededPick(rand, skinTextureOptions);
-
-  // ── New Accessories ──
-  const hasHat = rand() < 0.05;
-  const hatStyle = hasHat ? seededPick(rand, ['cap', 'beanie', 'fedora']) as AvatarFeatures['hatStyle'] : 'none';
-
-  const hasPiercing = rand() < 0.08;
-  const piercingStyle = hasPiercing ? seededPick(rand, ['nose-ring', 'lip-ring', 'eyebrow']) as AvatarFeatures['piercingStyle'] : 'none';
-  
-  const hasScars = rand() < 0.03;
-  const scarPositions = hasScars 
-    ? [`${seededRange(rand, 0.2, 0.8).toFixed(2)},${seededRange(rand, 0.3, 0.7).toFixed(2)}`]
-    : [];
-  
-  const hasMole = rand() < 0.12;
-  const molePosition = hasMole 
-    ? { x: seededRange(rand, 0.3, 0.7), y: seededRange(rand, 0.4, 0.8) }
-    : { x: 0, y: 0 };
+  // Wardrobe hints at personality: bias clothing type by role + motivation,
+  // then tint the picked color (bold ↔ muted) so two creatives don't look
+  // identical to two executives.
+  const clothingType = pickClothingTypeForTalent(talent, rand);
+  const baseColor = seededPick(rand, CLOTHING_PALETTES[clothingType]);
+  const clothingColor = tintClothingForPersonality(baseColor, talent, rand);
+  const necklineStyle = pickNecklineForTalent(talent, clothingType, rand);
 
   return {
     seed,
@@ -215,62 +142,42 @@ export function deriveFeatures(talent: Talent, currentWeek: number = 1, parentTa
     age: visualAge,
     ageBracket,
     gender: demographics.gender,
-    faceShape,
+    faceShape: seededPick(rand, ['oval', 'square', 'heart', 'round', 'oblong']),
     faceWidth: seededRange(rand, 0.9, 1.1),
     faceHeight: seededRange(rand, 0.9, 1.1),
     jawWidth: seededRange(rand, 0.8, 1.2),
     chinPointiness: rand(),
     cheekBones: rand(),
-    skin: finalSkin,
+    skin,
     hasFreckles: rand() < 0.15,
     freckleSeeds: Array.from({ length: 12 }).map(() => rand()),
     eyeSize: seededRange(rand, 0.4, 0.8),
     eyeSpacing: seededRange(rand, 0.2, 0.6),
     eyeSlant: seededRange(rand, -0.5, 0.5),
-    eyeColor: finalEyeColor,
+    eyeColor,
     hasEpicanthicFold,
     browThickness: rand(),
     browArch: rand(),
-    isBlinking: false,
-    eyeShape,
+    isBlinking: false, // controlled by CSS/animation
     noseWidth: rand(),
     noseLength: rand(),
     noseBridge: rand(),
-    noseTipShape,
-    noseBridgeShape,
+    noseTipShape: seededPick(rand, ['round', 'pointed', 'flat']),
     mouthWidth: rand(),
     lipFullness: rand(),
     expression,
-    lipShape,
     hairStyle,
-    hairColor: finalHairColor,
+    hairColor,
     hairLine: demographics.gender === 'MALE' ? Math.max(0, (visualAge - 30) * 0.015 * rand()) : 0,
     hasFacialHair,
     facialHairStyle,
-    facialHairColor: finalHairColor,
+    facialHairColor: hairColor,
     clothingType,
     clothingColor,
     necklineStyle,
     hasGlasses: rand() < 0.25,
     glassesStyle: seededPick(rand, ['round', 'square', 'rimless']),
     hasEarrings: demographics.gender === 'FEMALE' && rand() < 0.6,
-    hasHat,
-    hatStyle,
-    hasPiercing,
-    piercingStyle,
-    hasScars,
-    scarPositions,
-    hasMole,
-    molePosition,
-    inheritedFeatures,
-    eyeSizeAsymmetry,
-    browHeightAsymmetry,
-    smileAsymmetry,
-    hasBeautyMark,
-    beautyMarkPosition,
-    hasAgeSpots,
-    hasRosyCheeks,
-    skinTexture,
     lightingProfile: seededPick(rand, ['studio', 'dramatic', 'natural']),
     wrinkleOpacity: visualAge > 35 ? Math.min(1, (visualAge - 35) / 50) : 0,
     jowlAmount: visualAge > 55 ? Math.min(1, (visualAge - 55) / 30) : 0,
@@ -284,4 +191,122 @@ function getAgeBracket(age: number): AgeBracket {
   if (age <= 55) return 'adult';
   if (age <= 70) return 'mature';
   return 'senior';
+}
+
+/**
+ * Picks a clothing archetype that matches the talent's role + drive.
+ * Returns a weighted pick so identity still varies but trends correctly:
+ *   • producers / showrunners → mostly formal, some creative
+ *   • directors / writers     → mostly creative, some casual
+ *   • actors                  → mix; high prestige skews high_fashion
+ * The talent's motivation profile (legacy=artistry, financial=business)
+ * nudges the weights further.
+ */
+function pickClothingTypeForTalent(
+  talent: Talent,
+  rand: () => number
+): AvatarFeatures['clothingType'] {
+  const role = (talent.role || '').toLowerCase();
+  const m = talent.motivationProfile;
+  // Default weights
+  const w: Record<AvatarFeatures['clothingType'], number> = {
+    casual: 1, formal: 1, creative: 1, high_fashion: 1,
+  };
+
+  if (role.includes('producer') || role.includes('showrunner')) {
+    w.formal += 3; w.high_fashion += 1; w.creative += 0.5; w.casual -= 0.5;
+  } else if (role.includes('director')) {
+    w.creative += 2.5; w.casual += 1.5; w.formal -= 0.3;
+  } else if (role.includes('writer')) {
+    w.casual += 2; w.creative += 2; w.formal -= 0.5;
+  } else if (role.includes('actor')) {
+    w.high_fashion += 1.5; w.creative += 1; w.casual += 0.8;
+  }
+
+  // Motivation nudges
+  if (m) {
+    if (m.legacy >= 70) w.creative += 1;        // artistry → expressive
+    if (m.financial >= 70) w.formal += 1;        // money → business attire
+    if (m.prestige >= 70) w.high_fashion += 1.2; // awards → red carpet
+    if (m.aggression >= 70) w.formal += 0.5;
+  }
+  if (talent.tier === 'A_LIST') w.high_fashion += 1;
+  if (talent.tier === 'NEWCOMER') { w.casual += 1; w.high_fashion -= 0.5; }
+
+  // Weighted pick
+  const types: AvatarFeatures['clothingType'][] = ['casual', 'formal', 'creative', 'high_fashion'];
+  const weights = types.map(t => Math.max(0.1, w[t]));
+  const total = weights.reduce((a, b) => a + b, 0);
+  let roll = rand() * total;
+  for (let i = 0; i < types.length; i++) {
+    roll -= weights[i];
+    if (roll <= 0) return types[i];
+  }
+  return 'casual';
+}
+
+/**
+ * Tints a base clothing color so two characters in the same archetype
+ * still read as different personalities:
+ *   • bold (creative / high legacy / high mood) → saturate + slight lift
+ *   • muted (executive / financial / formal)    → desaturate + darken
+ * Effect is intentionally subtle (≤ ~25% shift) so palette identity holds.
+ */
+function tintClothingForPersonality(
+  baseColor: string,
+  talent: Talent,
+  rand: () => number
+): string {
+  const m = talent.motivationProfile;
+  const role = (talent.role || '').toLowerCase();
+  let boldness = 0; // -1 (muted) ↔ +1 (bold)
+
+  if (role.includes('producer') || role.includes('showrunner')) boldness -= 0.4;
+  if (role.includes('director') || role.includes('writer')) boldness += 0.3;
+  if (role.includes('actor')) boldness += 0.15;
+
+  if (m) {
+    boldness += (m.legacy - 50) / 120;     // artistry → bolder
+    boldness -= (m.financial - 50) / 140;  // money-driven → more muted
+    boldness += (m.prestige - 50) / 200;
+  }
+  // Mood gives a small lift/dampen
+  if (talent.psychology) {
+    boldness += (talent.psychology.mood - 50) / 250;
+  }
+  // Personal jitter so siblings/peers still differ slightly
+  boldness += (rand() - 0.5) * 0.15;
+
+  // Clamp
+  boldness = Math.max(-0.6, Math.min(0.6, boldness));
+
+  if (boldness > 0.05) {
+    // Bold → lift toward white *slightly* then re-saturate via shadow blend
+    // Simpler: lighten a touch (more vivid on dark bases, more pastel on bright)
+    return lightenColor(baseColor, boldness * 0.18);
+  }
+  if (boldness < -0.05) {
+    // Muted → darken + blend toward neutral grey
+    const darkened = darkenColor(baseColor, Math.abs(boldness) * 0.22);
+    return blendColor(darkened, '#5C5C5C', Math.abs(boldness) * 0.25);
+  }
+  return baseColor;
+}
+
+/**
+ * Picks a neckline that matches the chosen clothing archetype.
+ * Keeps producers in collars/v-necks, writers in hoodies/round, etc.
+ */
+function pickNecklineForTalent(
+  talent: Talent,
+  clothingType: AvatarFeatures['clothingType'],
+  rand: () => number
+): AvatarFeatures['necklineStyle'] {
+  const pools: Record<AvatarFeatures['clothingType'], AvatarFeatures['necklineStyle'][]> = {
+    formal: ['collar', 'collar', 'v-neck'],
+    high_fashion: ['v-neck', 'collar', 'round'],
+    creative: ['round', 'v-neck', 'hoodie'],
+    casual: ['round', 'round', 'hoodie', 'v-neck'],
+  };
+  return seededPick(rand, pools[clothingType]);
 }

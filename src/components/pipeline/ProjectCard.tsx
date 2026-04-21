@@ -10,15 +10,13 @@ import { cn } from '@/lib/utils';
 import { formatMoney } from '@/engine/utils';
 import { DistributionBadge } from '../shared/DistributionBadge';
 import { RecoupmentStatus } from '../shared/RecoupmentStatus';
-import { isSeriesProject } from '@/engine/utils/projectUtils';
-
 
 interface ProjectCardProps {
   project: Project;
 }
 
 export const ProjectCard = ({ project }: ProjectCardProps) => {
-  const { selectProject, openPitchProject, enqueueModal } = useUIStore();
+  const { selectProject, openPitchProject, openCrisisModal } = useUIStore();
   const gameState = useGameStore(s => s.gameState);
   const tier = BUDGET_TIERS[project.budgetTier];
   
@@ -34,8 +32,8 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
     ? Math.floor(project.budget * 0.03)
     : 0;
 
-  const displayFormat = isSeriesProject(project)
-      ? `S${project.tvDetails.currentSeason || 1}`
+  const displayFormat = project.type === 'SERIES'
+      ? `S${(project as any).tvDetails?.currentSeason || 1}`
       : project.format.toUpperCase();
 
   const hasUnresolvedCrisis = project.activeCrisis && !project.activeCrisis.resolved;
@@ -47,18 +45,19 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
 
   return (
     <TooltipWrapper tooltip="View Project Management Deck" side="right">
-      <button
-        type="button"
+      <div
+        role="button"
+        tabIndex={0}
         onClick={() => selectProject(project.id)}
-        aria-label={`View details for ${project.title}`}
-        data-testid={`project-card-${project.id}`}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
             selectProject(project.id);
           }
         }}
-        className="w-full text-left p-4 rounded-xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-transparent backdrop-blur-md hover:bg-white/[0.12] hover:border-primary/40 transition-all duration-500 space-y-4 group relative overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl hover:-translate-y-1 animate-in fade-in slide-in-from-bottom-2 duration-500"
+        aria-label={`View details for ${project.title}`}
+        data-testid={`project-card-${project.id}`}
+        className="w-full text-left p-4 rounded-xl border border-white/5 bg-gradient-to-br from-white/[0.05] to-transparent backdrop-blur-md hover:bg-white/[0.08] hover:border-primary/30 transition-all duration-500 space-y-4 group relative overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl hover:-translate-y-1"
       >
         {/* Visual Accent */}
         <div className={cn(
@@ -72,7 +71,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
             <h4 className="font-display font-black text-sm text-foreground/90 uppercase tracking-tight truncate group-hover:text-primary transition-colors drop-shadow-sm">{project.title}</h4>
             <div className="flex items-center gap-1.5 mt-0.5">
               <span className="text-[10px] font-bold text-muted-foreground/80 uppercase tracking-[0.2em] group-hover:text-muted-foreground transition-colors">{project.genre}</span>
-              <span className="text-[10px] text-muted-foreground/50">•</span>
+              <span className="text-[10px] text-muted-foreground/30">•</span>
               <span className="text-[10px] font-bold text-muted-foreground/80 uppercase tracking-[0.2em] group-hover:text-muted-foreground transition-colors">{tier.label}</span>
             </div>
           </div>
@@ -87,9 +86,9 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
           {project.state !== 'archived' && (
             <TooltipWrapper tooltip="Market anticipation and social sentiment for this title." side="top">
               <div className="space-y-1">
-                <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground/80">
+                <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground/60 group-hover:text-muted-foreground/80 transition-colors">
                   <span className="flex items-center gap-1"><TrendingUp className="h-2.5 w-2.5 group-hover:text-secondary transition-colors" /> Market Buzz</span>
-                  <span className="text-secondary drop-shadow-[0_0_8px_hsl(var(--secondary) / 0.6)] font-mono">{Math.round(project.buzz)}%</span>
+                  <span className="text-secondary drop-shadow-[0_0_8px_rgba(var(--secondary),0.6)] font-mono">{Math.round(project.buzz)}%</span>
                 </div>
                 <div className="h-1 bg-black/40 rounded-full overflow-hidden border border-white/5">
                   <div
@@ -107,7 +106,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
           {(project.state === 'development' || project.state === 'production') && (
             <TooltipWrapper tooltip={`Current Phase: ${project.state.toUpperCase()}. Progress tracks estimated time to completion.`} side="top">
               <div className="space-y-1">
-                <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground/80">
+                <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground/60 group-hover:text-muted-foreground/80 transition-colors">
                   <span className="flex items-center gap-1"><Activity className={cn("h-2.5 w-2.5 transition-colors", hasUnresolvedCrisis ? "group-hover:text-destructive" : "group-hover:text-primary")} /> {project.state.replace('_', ' ')}</span>
                   <span className="font-mono">{project.weeksInPhase}/{project.state === 'development' ? project.developmentWeeks : project.productionWeeks}w</span>
                 </div>
@@ -132,7 +131,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1.5">
                   <DistributionBadge status={project.distributionStatus} className="h-5" />
-                  <span className="text-[9px] font-bold text-muted-foreground/80 truncate max-w-[100px]">{buyer.name}</span>
+                  <span className="text-[9px] font-bold text-muted-foreground/60 truncate max-w-[100px]">{buyer.name}</span>
                 </div>
                 {weeklyRevenueForecast > 0 && (
                   <TooltipWrapper tooltip={`Projected weekly revenue from ${buyer.name} distribution deal`} side="top">
@@ -162,7 +161,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
               className="w-full h-8 text-[9px] font-black uppercase tracking-widest animate-pulse border border-white/20 bg-destructive/90 hover:bg-destructive shadow-[0_0_15px_rgba(239,68,68,0.4)] hover:shadow-[0_0_20px_rgba(239,68,68,0.6)] transition-all"
               onClick={(e) => {
                 e.stopPropagation();
-                enqueueModal('CRISIS', { projectId: project.id });
+                openCrisisModal(project.id);
               }}
             >
               <AlertTriangle className="w-3.5 h-3.5 mr-2 drop-shadow-sm" />
@@ -175,7 +174,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
               variant="default"
               size="sm"
               tooltip="Review final development packet for production greenlight"
-              className="w-full h-8 text-[9px] font-black uppercase tracking-widest bg-gradient-to-r from-primary to-primary/90 text-black hover:from-primary/90 hover:to-primary/80 shadow-[0_0_15px_hsl(var(--primary) / 0.3)] hover:shadow-[0_0_20px_hsl(var(--primary) / 0.5)] transition-all border border-primary/50"
+              className="w-full h-8 text-[9px] font-black uppercase tracking-widest bg-gradient-to-r from-primary to-primary/90 text-black hover:from-primary/90 hover:to-primary/80 shadow-[0_0_15px_rgba(var(--primary),0.3)] hover:shadow-[0_0_20px_rgba(var(--primary),0.5)] transition-all border border-primary/50"
               onClick={(e) => {
                 e.stopPropagation();
                 selectProject(project.id);
@@ -190,7 +189,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
             <Button
               size="sm"
               tooltip="Present project to distributors and streaming platforms"
-              className="w-full h-8 text-[9px] font-black uppercase tracking-widest bg-gradient-to-r from-secondary to-secondary/90 text-white hover:from-secondary/90 hover:to-secondary/80 shadow-[0_0_15px_hsl(var(--secondary) / 0.3)] hover:shadow-[0_0_20px_hsl(var(--secondary) / 0.5)] transition-all border border-secondary/50"
+              className="w-full h-8 text-[9px] font-black uppercase tracking-widest bg-gradient-to-r from-secondary to-secondary/90 text-white hover:from-secondary/90 hover:to-secondary/80 shadow-[0_0_15px_rgba(var(--secondary),0.3)] hover:shadow-[0_0_20px_rgba(var(--secondary),0.5)] transition-all border border-secondary/50"
               onClick={(e) => {
                 e.stopPropagation();
                 openPitchProject(project.id);
@@ -200,7 +199,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
             </Button>
           )}
         </div>
-      </button>
+      </div>
     </TooltipWrapper>
   );
 };

@@ -4,36 +4,24 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { RivalsPanel } from '@/components/rivals/RivalsPanel';
 import { useGameStore } from '@/store/gameStore';
 import { ArchetypeKey } from '@/engine/types';
-import { TooltipProvider } from '@/components/ui/tooltip';
-
-vi.mock('@/store/gameStore');
 
 describe('RivalsPanel', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-  });
-
-  const mockState = (rivalsArray: any[]) => ({
-    gameState: {
-      entities: {
-        rivals: rivalsArray.reduce((acc, r) => ({ ...acc, [r.id]: r }), {}),
-        projects: {},
-        talents: {},
-        contracts: {}
-      },
-      finance: { cash: 100000 },
-      industry: { rivals: [] } // For safety/legacy
-    }
+    useGameStore.setState({
+      gameState: {
+        industry: { rivals: [] }
+      }
+    } as any);
   });
 
   it('renders correctly with an empty rivals list', () => {
-    vi.mocked(useGameStore).mockImplementation((selector) => selector(mockState([]) as any));
-    render(<TooltipProvider><RivalsPanel /></TooltipProvider>);
-    expect(screen.getByText('Competitive Landscape')).toBeInTheDocument();
+    render(<RivalsPanel />);
+    expect(screen.getByText('Rival Studios')).toBeInTheDocument();
   });
 
   it('renders rivals correctly', () => {
-    const mockRivalsArray = [
+    const mockRivals = [
       {
         id: 'r1',
         name: 'Alpha Pictures',
@@ -55,29 +43,86 @@ describe('RivalsPanel', () => {
         cash: 50,
         prestige: 60,
         motto: 'Art first',
+      },
+      {
+        id: 'r3',
+        name: 'Gamma Mid',
+        archetype: 'mid-tier' as ArchetypeKey,
+        recentActivity: 'Signed a new director',
+        strength: 50,
+        projectCount: 3,
+        cash: 200,
+        prestige: 50,
+        motto: 'Middle of the road',
       }
     ];
 
-    vi.mocked(useGameStore).mockImplementation((selector) => selector(mockState(mockRivalsArray) as any));
-    render(<TooltipProvider><RivalsPanel /></TooltipProvider>);
+    useGameStore.setState({
+      gameState: {
+        industry: { rivals: mockRivals }
+      }
+    } as any);
+    render(<RivalsPanel />);
 
+    // Check text elements
     expect(screen.getByText('Alpha Pictures')).toBeInTheDocument();
-    expect(screen.getByText('major')).toBeInTheDocument();
-    expect(screen.getByText('Beta Indies')).toBeInTheDocument();
-    expect(screen.getByText('indie')).toBeInTheDocument();
+    expect(screen.getByText('Major Studio')).toBeInTheDocument();
     expect(screen.getByText('Released a blockbuster')).toBeInTheDocument();
+    // Replaced proj suffix assertions since the component might just use numbers or text
+    expect(screen.getByText('Beta Indies')).toBeInTheDocument();
+    expect(screen.getByText('Indie Studio')).toBeInTheDocument();
     expect(screen.getByText('Won a festival award')).toBeInTheDocument();
+
+    expect(screen.getByText('Gamma Mid')).toBeInTheDocument();
+    expect(screen.getByText('Mid-Tier Studio')).toBeInTheDocument();
+    expect(screen.getByText('Signed a new director')).toBeInTheDocument();
   });
 
+
   it('applies correct strength styling based on strength value', () => {
-    const mockRivalsArray = [
-      { id: 'r1', name: 'Strong Rival', archetype: 'major' as ArchetypeKey, strength: 75, projectCount: 1, recentActivity: 'Strong', cash: 100, prestige: 100, motto: '1' },
-      { id: 'r2', name: 'Medium Rival', archetype: 'mid-tier' as ArchetypeKey, strength: 50, projectCount: 1, recentActivity: 'Medium', cash: 100, prestige: 100, motto: '2' },
-      { id: 'r3', name: 'Weak Rival', archetype: 'indie' as ArchetypeKey, strength: 30, projectCount: 1, recentActivity: 'Weak', cash: 100, prestige: 100, motto: '3' }
+    const mockRivals = [
+      {
+        id: 'r1',
+        name: 'Strong Rival',
+        archetype: 'major' as ArchetypeKey,
+        strength: 75,
+        projectCount: 1,
+        recentActivity: 'Strong',
+        cash: 100,
+        prestige: 100,
+        motto: '1'
+      },
+      {
+        id: 'r2',
+        name: 'Medium Rival',
+        archetype: 'mid-tier' as ArchetypeKey,
+        strength: 50,
+        projectCount: 1,
+        recentActivity: 'Medium',
+        cash: 100,
+        prestige: 100,
+        motto: '2'
+      },
+      {
+        id: 'r3',
+        name: 'Weak Rival',
+        archetype: 'indie' as ArchetypeKey,
+        strength: 30,
+        projectCount: 1,
+        recentActivity: 'Weak',
+        cash: 100,
+        prestige: 100,
+        motto: '3'
+      }
     ];
 
-    vi.mocked(useGameStore).mockImplementation((selector) => selector(mockState(mockRivalsArray) as any));
-    const { container } = render(<TooltipProvider><RivalsPanel /></TooltipProvider>);
+    useGameStore.setState({
+      gameState: {
+        industry: { rivals: mockRivals }
+      }
+    } as any);
+
+    const { container } = render(<RivalsPanel />);
 
     const strengthBars = container.querySelectorAll('.bg-muted\\/50 .rounded-full.transition-all');
     expect(strengthBars).toHaveLength(3);
@@ -91,4 +136,5 @@ describe('RivalsPanel', () => {
     // Weak Rival < 45
     expect(strengthBars[2].className).toContain('from-muted-foreground');
   });
+
 });

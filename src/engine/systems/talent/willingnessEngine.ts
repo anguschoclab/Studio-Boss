@@ -1,5 +1,4 @@
-import { Talent, Project, GameState, CharacterArchetype, Contract } from '@/engine/types/index';
-import { ACTOR_ARCHETYPES, WRITER_ARCHETYPES, PRODUCER_ARCHETYPES, PERSONALITY_ARCHETYPES, PERSONALITY_TRAITS } from '../../data/talentArchetypes';
+import { Talent, Project, GameState, CharacterArchetype } from '@/engine/types/index';
 
 /**
  * Studio Boss - Willingness Engine
@@ -37,48 +36,25 @@ export function calculateWillingness(
     reasons.push(`${talent.name} feels this "low-budget horror" is beneath their current prestige level.`);
   }
 
-  // 🎭 The Method Actor Tuning: Auteur directors prioritize prestige over upfront cash, taking a pay cut for high-buzz projects but demanding a premium for low-buzz ones.
-  const isAuteurDirector = talent.directorArchetype === 'auteur' || (talent.roles.includes('director') && talent.prestige > 80);
-
   // 2. Prestige Gap
   const prestigeDiff = project.buzz - talent.prestige;
   if (prestigeDiff > 20) {
     score += 10;
     reasons.push(`The high buzz around "${project.title}" is a major draw.`);
-    if (isAuteurDirector) {
-      score += 20;
-      reasons.push(`${talent.name} considers this a guaranteed masterpiece.`);
-    }
   } else if (prestigeDiff < -30) {
     score -= 20;
     reasons.push(`${talent.name} is hesitant about a project with such low industry heat.`);
-    if (isAuteurDirector) {
-      score -= 30;
-      reasons.push(`${talent.name} refuses to tarnish their legacy with a low-buzz project.`);
-    }
   }
 
   // 3. Financial Incentive (Fee vs Star Meter)
   const starMeter = talent.starMeter || 50;
   if (talent.fee > project.budget * 0.4) {
-    // 🎭 The Method Actor Tuning: Auteur directors prioritize prestige over upfront cash, taking a pay cut for high-buzz projects but demanding a premium for low-buzz ones.
-    if (isAuteurDirector && prestigeDiff > 10) {
-      score += 10;
-      reasons.push(`The fee is high, but ${talent.name} is willing to take a pay cut for a guaranteed masterpiece.`);
-    } else if (isAuteurDirector && prestigeDiff < -10) {
-      score -= 30;
-      reasons.push(`${talent.name} demands a massive premium to work on such a low-buzz project.`);
-    } else if (isAuteurDirector && prestigeDiff > 0) {
-      score -= 5;
-      reasons.push(`The fee is high, but ${talent.name} is willing to negotiate for the sake of the art.`);
-    } else {
-      score -= 15;
-      reasons.push(`The talent's quote consumes ${Math.round((talent.fee / project.budget) * 100)}% of the production budget, causing friction.`);
-    }
+    score -= 15;
+    reasons.push(`The talent's quote consumes ${Math.round((talent.fee / project.budget) * 100)}% of the production budget, causing friction.`);
   }
 
   // 4. Script Heat
-  const scriptHeat = project.scriptHeat;
+  const scriptHeat = 'scriptHeat' in project ? project.scriptHeat : 50;
   if (scriptHeat > 80) {
     score += 15;
     reasons.push(`The script is considered a "Must-Read" in town.`);
@@ -97,24 +73,15 @@ export function calculateWillingness(
     reasons.push(`${talent.name}'s team is wary of the studio's current market standing.`);
   }
 
-  // 5b. Studio Infamy (Razzies & Bombs)
-  const studioProjects = Object.values(gameState.entities.projects);
-  const recentRazzie = studioProjects.some(p => 
-    p.awards?.some(a => a.body === 'The Razzies' && a.status === 'won')
-  );
-  
-  if (recentRazzie && talent.prestige > 70) {
-    score -= 20;
-    reasons.push(`${talent.name} is hesitant to work with a studio that recently took home a Razzie.`);
-  }
-
   // 6. Directorial Influence (Check if a director is already attached)
-  const contractsList = Object.values(gameState.entities.contracts || {});
-  const directorContract = contractsList.find(
-    c => c.projectId === project.id && gameState.entities.talents[c.talentId]?.roles.includes('director')
+  const isDirectorAttached = gameState.studio.internal.contracts.some(
+    c => c.projectId === project.id && gameState.industry.talentPool[c.talentId]?.roles.includes('director')
   );
-  if (directorContract) {
-    const director = gameState.entities.talents[directorContract.talentId];
+  if (isDirectorAttached) {
+    const directorId = gameState.studio.internal.contracts.find(
+      c => c.projectId === project.id && gameState.industry.talentPool[c.talentId]?.roles.includes('director')
+    )!.talentId;
+    const director = gameState.industry.talentPool[directorId];
     if (director && director.prestige > 80) {
       score += 20;
       reasons.push(`The chance to work with ${director.name} is a significant motivator.`);
@@ -125,64 +92,6 @@ export function calculateWillingness(
   if (talent.psychology?.ego && talent.psychology.ego > 80) {
     score -= 10;
     reasons.push(`${talent.name} is being notoriously difficult during negotiations.`);
-    // 🎭 The Method Actor Tuning: High-ego talent will severely penalize low-buzz or low-prestige projects, considering them beneath their stature.
-    const owner = project.ownerId === gameState.studio.id ? gameState.studio : gameState.entities.rivals[project.ownerId];
-    const effectiveStudioPrestige = owner?.prestige ?? 0;
-    if (project.buzz < 50 || effectiveStudioPrestige < 50) {
-      score -= 25;
-      reasons.push(`${talent.name}'s massive ego prevents them from taking a chance on a low-buzz project or studio.`);
-    }
-  }
-
-  // 8. Personality Trait Influence
-  if (talent.personality) {
-    const personalityTrait = PERSONALITY_TRAITS[talent.personality];
-    if (personalityTrait) {
-      // Adjust based on personality negotiation modifier
-      score += personalityTrait.negotiationModifier;
-      if (personalityTrait.negotiationModifier > 0) {
-        reasons.push(`${talent.name}'s ${talent.personality} nature makes them more open to this deal.`);
-      } else if (personalityTrait.negotiationModifier < 0) {
-        reasons.push(`${talent.name}'s ${talent.personality} nature makes them more cautious.`);
-      }
-    }
-  }
-
-  // 9. Archetype-Specific Preferences
-  let archetypeConfig: {
-    genrePreferences?: string[];
-    genreDislikes?: string[];
-    budgetPreferences?: string[];
-  } | undefined;
-  
-  if (talent.actorArchetype) {
-    archetypeConfig = ACTOR_ARCHETYPES[talent.actorArchetype];
-  } else if (talent.writerArchetype) {
-    archetypeConfig = WRITER_ARCHETYPES[talent.writerArchetype];
-  } else if (talent.producerArchetype) {
-    archetypeConfig = PRODUCER_ARCHETYPES[talent.producerArchetype];
-  } else if (talent.personalityArchetype) {
-    archetypeConfig = PERSONALITY_ARCHETYPES[talent.personalityArchetype];
-  }
-
-  if (archetypeConfig) {
-    // Check genre preferences
-    if (archetypeConfig.genrePreferences && archetypeConfig.genrePreferences.includes(project.genre)) {
-      score += 10;
-      reasons.push(`${talent.name}'s archetype favors this genre.`);
-    } else if (archetypeConfig.genreDislikes && archetypeConfig.genreDislikes.includes(project.genre)) {
-      score -= 15;
-      reasons.push(`${talent.name}'s archetype typically avoids this genre.`);
-    }
-
-    // Check budget tier preferences
-    if (archetypeConfig.budgetPreferences) {
-      const budgetMatch = archetypeConfig.budgetPreferences.includes(project.budgetTier);
-      if (budgetMatch) {
-        score += 5;
-        reasons.push(`This budget tier aligns with ${talent.name}'s archetype preferences.`);
-      }
-    }
   }
 
   // Final Bound and Verdict

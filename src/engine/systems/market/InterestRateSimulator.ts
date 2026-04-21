@@ -1,43 +1,40 @@
 import { MarketState, StateImpact } from '../../types/state.types';
 import { Headline } from '../../types/engine.types';
 import { GameState } from '../../types/studio.types';
-import { clamp } from '../../utils';
-import { RandomGenerator } from '../../utils/rng';
+import { clamp, secureRandom } from '../../utils';
 
 /**
  * Global Market Simulation: Interest Rate Simulator.
  * Handles the background "Economy" that dictates yields and debt costs.
  */
-export const InterestRateSimulator = {
-  BASE_RATE_MIN: 0.0025, // 0.25%
-  BASE_RATE_MAX: 0.15,   // 15.0%
-  VOLATILITY: 0.0015,    // 0.15% max move per week
+export class InterestRateSimulator {
+  private static BASE_RATE_MIN = 0.0025; // 0.25%
+  private static BASE_RATE_MAX = 0.15;   // 15.0%
+  private static VOLATILITY = 0.0015;    // 0.15% max move per week
 
   /**
    * Initializes the market state if it doesn't exist.
    */
-  initialize(): MarketState {
+  static initialize(): MarketState {
     const baseRate = 0.045; // Start at 4.5%
     return {
       baseRate,
       savingsYield: baseRate - 0.02, // 2.5%
       debtRate: baseRate + 0.05,     // 9.5%
       loanRate: baseRate + 0.025,    // 7.0%
-      rateHistory: [{ week: 1, rate: baseRate }],
-      sentiment: 50,
-      cycle: 'STABLE'
+      rateHistory: [{ week: 1, rate: baseRate }]
     };
-  },
+  }
 
   /**
    * Weekly Tick: Fluctuates the base rate and derives other rates.
    */
-  advance(state: GameState, rng: RandomGenerator): StateImpact {
+  static advance(state: GameState): StateImpact {
     const market = state.finance.marketState || this.initialize();
     const currentRate = market.baseRate;
     
     // Random Walk
-    const delta = (rng.next() - 0.5) * this.VOLATILITY;
+    const delta = (secureRandom() - 0.5) * this.VOLATILITY;
     const newRate = clamp(currentRate + delta, this.BASE_RATE_MIN, this.BASE_RATE_MAX);
     
     const updatedMarket: MarketState = {
@@ -63,10 +60,10 @@ export const InterestRateSimulator = {
        // But for now, let's just trigger a notification if we hit historical highs/lows
     }
 
-    if (rng.next() < 0.05) { // 5% chance of a "Market Analysis" headline
+    if (secureRandom() < 0.05) { // 5% chance of a "Market Analysis" headline
       const trend = newRate > currentRate ? 'rising' : 'falling';
       impact.newHeadlines = [{
-        id: rng.uuid('NWS'),
+        id: crypto.randomUUID(),
         week: state.week,
         category: 'market',
         text: `Market Brief: Interest rates are ${trend} as the global economy shifts.`
@@ -74,14 +71,5 @@ export const InterestRateSimulator = {
     }
 
     return impact;
-  },
-
-  /**
-   * Helper: Returns week and year for display.
-   */
-  getWeekDisplay(week: number): { week: number; year: number } {
-    const year = Math.floor((week - 1) / 52) + 1;
-    const weekInYear = ((week - 1) % 52) + 1;
-    return { week: weekInYear, year };
-  },
-};
+  }
+}

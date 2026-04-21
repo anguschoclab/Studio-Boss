@@ -1,7 +1,6 @@
-import { GameState, StateImpact, Project, RivalStudio, FestivalSubmission, AwardBody } from '@/engine/types';
-import { RandomGenerator } from '../utils/rng';
-import { BardResolver } from './bardResolver';
-import { StudioArchetype, AI_ARCHETYPES } from '../data/aiArchetypes';
+import { GameState, FestivalSubmission, AwardBody, Project } from '@/engine/types';
+import { randRange } from '../utils';
+import { StateImpact } from '../types/state.types';
 
 export const FESTIVALS: { body: AwardBody, name: string, weeks: number[], cost: number, prestigeNeeded: number, buzzReward: number }[] = [
   { body: 'Sundance Film Festival', name: 'Sundance', weeks: [3, 4], cost: 25000, prestigeNeeded: 40, buzzReward: 30 },
@@ -10,114 +9,89 @@ export const FESTIVALS: { body: AwardBody, name: string, weeks: number[], cost: 
   { body: 'Berlin International Film Festival', name: 'Berlinale', weeks: [8, 9], cost: 35000, prestigeNeeded: 50, buzzReward: 35 }
 ];
 
-export const FESTIVAL_BY_BODY = FESTIVALS.reduce((acc, f) => {
-  acc[f.body] = f;
-  return acc;
-}, {} as Partial<Record<AwardBody, typeof FESTIVALS[0]>>);
-
-/**
- * Helper function to get the StudioArchetype for a rival studio.
- */
-function getRivalArchetype(rival: RivalStudio): StudioArchetype | undefined {
-  const archetypeId = rival.archetypeId || ('behaviorId' in rival ? (rival as any).behaviorId : undefined);
-  if (archetypeId) {
-    const archetype = AI_ARCHETYPES.find(a => a.id === archetypeId);
-    if (archetype) return archetype;
-  }
-  return undefined;
+export function submitToFestival(
+  state: GameState,
+  projectId: string,
+  festivalBody: AwardBody
+): StateImpact | null {
+  const fest = FESTIVALS.find(f => f.body === festivalBody);
+  const project = state.studio.internal.projects[projectId];
+  
+  if (!fest || !project || state.finance.cash < fest.cost) return null;
+  
+  if (project.state === 'development' || project.state === 'pitching') return null;
+  
+  const submission: FestivalSubmission = {
+    id: crypto.randomUUID(),
+    projectId,
+    festivalBody,
+    status: 'submitted',
+    buzzGain: 0,
+    week: state.week
+  };
+  
+  return {
+    cashChange: -fest.cost,
+    newFestivalSubmissions: [...(state.industry.festivalSubmissions || []), submission],
+    newHeadlines: [
+      {
+        id: `headline-${crypto.randomUUID()}`,
+        week: state.week,
+        category: 'awards' as const,
+        text: `"${project.title}" officially submitted for consideration at ${fest.name}.`
+      }
+    ]
+  };
 }
 
-/**
- * Weekly Festival Resolver
- * Processes submissions from ALL studios.
- * Uses archetype properties to adjust festival behavior if archetypes are provided.
- */
-export function resolveFestivals(state: GameState, rng: RandomGenerator, rivalArchetypes?: Record<string, StudioArchetype>): StateImpact[] {
-  if (!state.industry.festivalSubmissions || state.industry.festivalSubmissions.length === 0) return [];
+export function resolveFestivals(state: GameState): StateImpact {
+  if (!state.industry.festivalSubmissions || state.industry.festivalSubmissions.length === 0) return {};
+  
+  const impact: StateImpact = {
+    newFestivalSubmissions: [],
+    projectUpdates: [],
+    prestigeChange: 0,
+    newHeadlines: []
+  };
 
-  const impacts: StateImpact[] = [];
   const updatedSubmissions: FestivalSubmission[] = [];
-  const rivalsList = Object.values(state.entities.rivals || {});
-
+  
   for (const sub of state.industry.festivalSubmissions) {
     if (sub.status !== 'submitted') {
         updatedSubmissions.push(sub);
         continue;
     }
-
-    const fest = FESTIVAL_BY_BODY[sub.festivalBody];
+    
+    const fest = FESTIVALS.find(f => f.body === sub.festivalBody);
     if (!fest) {
         updatedSubmissions.push(sub);
         continue;
     }
-
-    const weekOfCycle = state.week % 52 === 0 ? 52 : state.week % 52;
-    if (fest.weeks.includes(weekOfCycle)) {
-      // Find the project and its owner from unified storage
-      const project = state.entities.projects[sub.projectId];
+    
+    if (fest.weeks.includes(state.week % 52)) {
+      const project = state.studio.internal.projects[sub.projectId];
       if (!project) {
           updatedSubmissions.push(sub);
           continue;
       }
-
-      const ownerId = project.ownerId || 'PLAYER';
-      const rival = ownerId !== 'PLAYER' ? rivalsList.find(r => r.id === ownerId) : null;
-
-      const ownerPrestige = ownerId === 'PLAYER' ? state.studio.prestige : (rival?.prestige || 50);
-      const baseChance = (project.reviewScore || 50) + (ownerPrestige * 0.5);
-
-      // Use archetype properties to adjust acceptance chance if available
-      let adjustedChance = baseChance;
-      if (ownerId !== 'PLAYER' && rival && rivalArchetypes?.[rival.id]) {
-        const archetype = rivalArchetypes[rival.id];
-        // Higher awardObsession = higher acceptance chance
-        const awardMultiplier = 0.8 + (archetype.awardObsession / 250); // 0.8x to 1.2x multiplier
-        adjustedChance = baseChance * awardMultiplier;
-      }
-
-      const isAccepted = adjustedChance > (fest.prestigeNeeded + rng.range(-20, 20));
-
+      
+      const baseChance = (project.reviewScore || 50) + (state.studio.prestige * 0.5);
+      const isAccepted = baseChance > fest.prestigeNeeded + randRange(-20, 20);
+      
       if (isAccepted) {
-        // Success: Buzz and Prestige
-        const buzzGain = Math.min(100, project.buzz + fest.buzzReward);
-
-        if (ownerId === 'PLAYER') {
-            impacts.push({
-                type: 'PROJECT_UPDATED',
-                payload: { projectId: project.id, update: { buzz: buzzGain } }
-            });
-            impacts.push({ type: 'PRESTIGE_CHANGED', payload: 2 });
-        } else {
-            impacts.push({
-                type: 'PROJECT_UPDATED',
-                payload: { projectId: project.id, update: { buzz: buzzGain } }
-            });
-            impacts.push({
-                type: 'RIVAL_UPDATED',
-                payload: {
-                    rivalId: ownerId,
-                    update: {
-                        prestige: Math.min(100, (rival?.prestige || 50) + 2)
-                    }
-                }
-            });
-        }
-
-        impacts.push({
-            type: 'NEWS_ADDED',
-            payload: {
-                headline: `FESTIVALS: ${project.title}`,
-                description: BardResolver.resolve({
-                    domain: 'Festival',
-                    subDomain: 'Reaction',
-                    intensity: 90,
-                    context: { project: project.title, body: fest.body },
-                    rng
-                }),
-                category: 'awards'
-            }
+        impact.projectUpdates!.push({
+            projectId: sub.projectId,
+            update: { buzz: Math.min(100, project.buzz + fest.buzzReward) }
         });
-
+        impact.prestigeChange! += 2;
+        
+        impact.newHeadlines!.push({
+          id: `headline-${crypto.randomUUID()}`,
+          week: state.week,
+          category: 'awards' as const,
+          text: `Massive buzz out of ${fest.name} as "${project.title}" premieres to standing ovation!`
+        });
+        
         updatedSubmissions.push({ ...sub, status: 'selected' as const, buzzGain: fest.buzzReward });
       } else {
         updatedSubmissions.push({ ...sub, status: 'rejected' as const });
@@ -127,71 +101,6 @@ export function resolveFestivals(state: GameState, rng: RandomGenerator, rivalAr
     }
   }
   
-  // Update state with a rolling 8-week TTL for all submissions to prevent state bloat
-  impacts.push({
-    type: 'INDUSTRY_UPDATE',
-    payload: {
-        update: { 'industry.festivalSubmissions': updatedSubmissions.filter(s => (state.week - s.week) < 8) }
-    }
-  });
-
-  return impacts;
-}
-
-/**
- * Submits a project to a festival.
- * Phase 2: Deducts entry fee and adds to global submissions list.
- */
-export function submitToFestival(
-  state: GameState, 
-  projectId: string, 
-  festivalBody: AwardBody, 
-  rng: RandomGenerator
-): StateImpact[] | null {
-  const project = state.entities.projects[projectId];
-  const fest = FESTIVAL_BY_BODY[festivalBody];
-  
-  if (!project || !fest) return null;
-  if (state.finance.cash < fest.cost) return null;
-
-  const impacts: StateImpact[] = [
-    {
-      type: 'FUNDS_DEDUCTED',
-      payload: { amount: fest.cost }
-    },
-    {
-      type: 'INDUSTRY_UPDATE',
-      payload: {
-        update: {
-          'industry.festivalSubmissions': [
-            ...(state.industry.festivalSubmissions || []),
-            {
-              id: rng.uuid('SUB'),
-              projectId,
-              festivalBody,
-              status: 'submitted',
-              week: state.week
-            }
-          ]
-        }
-      }
-    },
-    {
-      type: 'NEWS_ADDED',
-      payload: {
-        id: rng.uuid('NWS'),
-        headline: `Submission: ${project.title}`,
-        description: BardResolver.resolve({
-            domain: 'Festival',
-            subDomain: 'Buzz',
-            intensity: 40,
-            context: { project: project.title, body: fest.body },
-            rng
-        }),
-        category: 'awards'
-      }
-    }
-  ];
-
-  return impacts;
+  impact.newFestivalSubmissions = updatedSubmissions.filter(s => s.status !== 'rejected' || state.week - s.week < 12);
+  return impact;
 }

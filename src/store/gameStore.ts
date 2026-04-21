@@ -1,7 +1,12 @@
 import { create } from 'zustand';
-import { GameState, WeekSummary, ArchetypeKey, NewsState, ModalType } from '@/engine/types';
+import { GameState, WeekSummary, ArchetypeKey, FinanceState, NewsState } from '@/engine/types';
+import { initializeGame } from '@/engine/core/gameInit';
+import { advanceWeek } from '@/engine/core/weekAdvance';
 import { saveGame, loadGame, getSaveSlots, SaveSlotInfo } from '@/persistence/saveLoad';
 import { useUIStore } from './uiStore';
+
+const EMPTY_FINANCE = { cash: 0, ledger: [] };
+const EMPTY_NEWS = { headlines: [] };
 
 import { createProjectSlice, ProjectSlice } from './slices/projectSlice';
 import { createFinanceSlice, FinanceSlice } from './slices/financeSlice';
@@ -9,17 +14,11 @@ import { createTalentSlice, TalentSlice } from './slices/talentSlice';
 import { createRivalSlice, RivalSlice } from './slices/rivalSlice';
 import { createNewsSlice, NewsSlice } from './slices/newsSlice';
 import { createSnapshotSlice, SnapshotSlice } from './slices/snapshotSlice';
-import { createMarketingSlice, MarketingSlice } from './slices/marketingSlice';
-import { DEFAULT_FINANCE_STATE } from './selectors';
 
-export interface GameStore extends ProjectSlice, FinanceSlice, TalentSlice, RivalSlice, NewsSlice, SnapshotSlice, MarketingSlice {
+export interface GameStore extends ProjectSlice, FinanceSlice, TalentSlice, RivalSlice, NewsSlice, SnapshotSlice {
   gameState: GameState | null;
-  _isProcessingTick: boolean;
-  _isSaving: boolean;
-  _saveNextState: GameState | null;
-
   newGame: (studioName: string, archetype: ArchetypeKey) => Promise<void>;
-  doAdvanceWeek: () => Promise<WeekSummary | null>;
+  doAdvanceWeek: () => WeekSummary;
   saveToSlot: (slot: number) => Promise<void>;
   loadFromSlot: (slot: number) => Promise<boolean>;
   getSaveSlots: () => Promise<SaveSlotInfo[]>;
@@ -27,67 +26,8 @@ export interface GameStore extends ProjectSlice, FinanceSlice, TalentSlice, Riva
   devAutoInit: (archetype?: ArchetypeKey) => void;
 }
 
-const INITIAL_FINANCE = DEFAULT_FINANCE_STATE;
-const INITIAL_NEWS: NewsState = { headlines: [] };
-
-// Check if running in Electron environment
-const isElectron = typeof window !== 'undefined' && 'electronAPI' in window;
-
-// Initialize Web Worker (used in renderer process)
-const engineWorker = new Worker(new URL('../engine/engine.worker.ts', import.meta.url), { type: 'module' });
-
-// Module-level background save queue
-let _saveQueue: GameState | null = null;
-let _isBackgroundSaving = false;
-
-// Shared background save queue handler (used by both Electron IPC and Web Worker paths)
-const triggerSave = async (stateToSave: GameState) => {
-  if (_isBackgroundSaving) {
-    _saveQueue = stateToSave;
-    return;
-  }
-
-  _isBackgroundSaving = true;
-  _saveQueue = null;
-  await saveGame(0, stateToSave);
-  _isBackgroundSaving = false;
-
-  if (_saveQueue) {
-    try { triggerSave(_saveQueue); } catch (e) { console.error('[triggerSave] tail-call failed:', e); }
-  }
-};
-
-interface Impact {
-  type: string;
-  payload: {
-    modalType: ModalType;
-    priority?: number;
-    payload?: any; // Keep any here for loosely typed UI payloads if necessary, or brand it if we have a type
-  };
-}
-
-// Shared modal processing logic
-const processModals = (impacts: Impact[]) => {
-  if (typeof useUIStore.getState !== 'function') return;
-  const ui = useUIStore.getState();
-  if (impacts && impacts.length > 0) {
-    const modalImpacts = impacts.filter(imp => imp.type === 'MODAL_TRIGGERED');
-    
-    if (modalImpacts.length > 0) {
-      modalImpacts.sort((a, b) => (b.payload.priority || 0) - (a.payload.priority || 0));
-      for (let i = 0; i < modalImpacts.length; i++) {
-        const imp = modalImpacts[i];
-        ui.enqueueModal(imp.payload.modalType, imp.payload.payload || null);
-      }
-    }
-  }
-};
-
 export const useGameStore = create<GameStore>((set, get, ...args) => ({
   gameState: null,
-  _isProcessingTick: false,
-  _isSaving: false,
-  _saveNextState: null,
 
   ...createProjectSlice(set, get, ...args),
   ...createFinanceSlice(set, get, ...args),
@@ -95,151 +35,95 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
   ...createRivalSlice(set, get, ...args),
   ...createNewsSlice(set, get, ...args),
   ...createSnapshotSlice(set, get, ...args),
-  ...createMarketingSlice(set, get, ...args),
 
-  newGame: (studioName: string, archetype: ArchetypeKey) => {
-    const seed = Math.floor(Math.random() * 1_000_000);
-    
-    return new Promise<void>((resolve) => {
-      const initElectron = async () => {
-        if (isElectron && window.electronAPI) {
-          try {
-            const gameState = await window.electronAPI.initGame(studioName, archetype, seed);
-            if (gameState) {
-              const state = gameState as GameState;
-              saveGame(0, state);
-              set({ 
-                gameState: state,
-                finance: state.finance,
-                news: state.news
-              });
-              resolve();
-              return true;
-            }
-          } catch (e) {
-            console.error('Electron IPC init-game failed, falling back to worker:', e);
-          }
-        }
-        return false;
-      };
-
-      initElectron().then((success) => {
-        if (success) return;
-
-        // Fallback to Web Worker — { once: true } prevents double-fire on concurrent newGame calls
-        const handler = (e: MessageEvent) => {
-          if (e.data.type === 'INIT_RESULT') {
-            const gameState = e.data.payload as GameState;
-            saveGame(0, gameState);
-            set({ 
-              gameState,
-              finance: gameState.finance,
-              news: gameState.news
-            });
-            resolve();
-          }
-        };
-        engineWorker.addEventListener('message', handler, { once: true });
-        engineWorker.postMessage({ type: 'INIT_GAME', payload: { studioName, archetype, seed } });
-      });
+  newGame: async (studioName, archetype) => {
+    const gameState = initializeGame(studioName, archetype);
+    await saveGame(0, gameState);
+    set({ 
+      gameState,
+      finance: gameState.finance,
+      news: gameState.news
     });
   },
 
   doAdvanceWeek: () => {
-    if (get()._isProcessingTick) {
-        return Promise.resolve(null);
-    }
+    let summary: WeekSummary | null = null;
+    let nextState: GameState | null = null;
 
-    const state = get().gameState;
-    if (!state) return Promise.reject(new Error('No game in progress'));
+    set((state) => {
+      if (!state.gameState) throw new Error('No game in progress');
+      const result = advanceWeek(state.gameState);
+      summary = result.summary;
+      nextState = result.newState;
 
-    set({ _isProcessingTick: true });
+      if (state.gameState === result.newState) return state; 
 
-    return new Promise<WeekSummary | null>((resolve, reject) => {
-      const advanceElectron = async () => {
-        if (isElectron && window.electronAPI) {
-          try {
-            const result = await window.electronAPI.advanceWeek(state);
-            if (result) {
-              const { newState: nextState, summary, impacts } = result as { newState: GameState, summary: WeekSummary, impacts: Impact[] };
-              const finalState = nextState;
+      // Trigger background save without blocking UI (Fire and forget)
+      saveGame(0, result.newState);
+      
+      return { 
+        gameState: result.newState,
+        finance: result.newState.finance,
+        news: result.newState.news
+      };
+    });
 
-              triggerSave(finalState);
-              
-              set({ 
-                gameState: finalState,
-                finance: finalState.finance,
-                news: finalState.news,
-                _isProcessingTick: false
-              });
+    if (!summary || !nextState) throw new Error('Failed to advance week');
 
-              processModals(impacts);
+    // --- Modal Queue Integration ---
+    const ui = useUIStore.getState();
+    const finalState = nextState as GameState;
 
-              if (summary && summary.fromWeek % 52 === 0 && summary.fromWeek > 0) {
-                get().captureSnapshot();
-              }
-
-              resolve(summary);
-              return true;
-            }
-          } catch (e) {
-            console.error('Electron IPC advance-week failed, falling back to worker:', e);
+    // 1. Crises/Scandals
+    const crisisTitles = new Set<string>();
+    const summaryCast = summary as WeekSummary;
+    if (summaryCast?.events) {
+      const events = summaryCast.events as string[];
+      for (let i = 0; i < events.length; i++) {
+        const ev = events[i];
+        if (ev.startsWith('CRISIS: "')) {
+          const firstQuote = ev.indexOf('"');
+          const secondQuote = ev.indexOf('"', firstQuote + 1);
+          if (firstQuote !== -1 && secondQuote !== -1) {
+            crisisTitles.add(ev.substring(firstQuote + 1, secondQuote));
           }
         }
-        return false;
-      };
+      }
+    }
 
-      advanceElectron().then((success) => {
-        if (success) return;
+    if (crisisTitles.size > 0) {
+      const projects = finalState.studio.internal.projects;
+      for (const key in projects) {
+        const p = projects[key];
+        if (p.activeCrisis && !p.activeCrisis.resolved && crisisTitles.has(p.title)) {
+          ui.enqueueModal('CRISIS', { projectId: p.id, crisis: p.activeCrisis });
+        }
+      }
+    }
 
-        // Fallback to Web Worker
-        const handler = async (e: MessageEvent) => {
-          if (e.data.type === 'ADVANCE_RESULT') {
-            clearTimeout(workerTimeout);
-            try {
-              const { newState: nextState, summary, impacts } = e.data.payload;
-              const finalState = nextState as GameState;
+    // 2. Awards Ceremony
+    const isAwardsWeek = finalState.week % 52 === 4 || finalState.week % 52 === 36;
+    if (isAwardsWeek) {
+      const year = Math.floor(finalState.week / 52) + 1;
+      const allAwards = finalState.industry.awards || [];
+      const currentAwards = [] as any[];
+      for (let i = 0; i < allAwards.length; i++) {
+        if (allAwards[i].year === year) {
+          currentAwards.push(allAwards[i]);
+        }
+      }
+      ui.enqueueModal('AWARDS', { week: finalState.week, year, awards: currentAwards });
+    }
 
-              triggerSave(finalState);
-              
-              set({ 
-                gameState: finalState,
-                finance: finalState.finance,
-                news: finalState.news,
-                _isProcessingTick: false
-              });
+    // 3. Week Summary
+    ui.enqueueModal('SUMMARY', summary);
 
-              processModals(impacts);
+    // 4. Yearly Snapshot (Sprint G)
+    if (summary && ((summary as any).fromWeek % 52 === 0) && (summary as any).fromWeek > 0) {
+      get().captureSnapshot();
+    }
 
-              if (summary && (summary as WeekSummary).fromWeek % 52 === 0 && (summary as WeekSummary).fromWeek > 0) {
-                get().captureSnapshot();
-              }
-
-              engineWorker.removeEventListener('message', handler);
-              resolve(summary as WeekSummary);
-            } catch (err) {
-              set({ _isProcessingTick: false });
-              engineWorker.removeEventListener('message', handler);
-              reject(err);
-            }
-          }
-        };
-
-        // 30-second safety net: if the worker never responds, unlock the tick flag
-        const workerTimeout = setTimeout(() => {
-          engineWorker.removeEventListener('message', handler);
-          set({ _isProcessingTick: false });
-          reject(new Error('Engine worker timed out after 30s'));
-        }, 30_000);
-
-        engineWorker.addEventListener('message', handler);
-        engineWorker.postMessage({ type: 'ADVANCE_WEEK', payload: { state } });
-      }).catch((err) => {
-        // Ensure the lock is cleared if advanceElectron itself throws unexpectedly
-        set({ _isProcessingTick: false });
-        reject(err);
-      });
-    });
+    return summary;
   },
 
   saveToSlot: async (slot) => {
@@ -266,25 +150,17 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
     if (state.gameState === null) return state;
     return { 
         gameState: null,
-        finance: INITIAL_FINANCE,
-        news: INITIAL_NEWS
+        finance: EMPTY_FINANCE as unknown as any,
+        news: EMPTY_NEWS as unknown as any
     };
   }),
 
   devAutoInit: (archetype = 'major') => {
-    const seed = 42;
-    const handler = (e: MessageEvent) => {
-      if (e.data.type === 'INIT_RESULT') {
-        const gameState = e.data.payload;
-        set({ 
-          gameState,
-          finance: gameState.finance,
-          news: gameState.news
-        });
-        engineWorker.removeEventListener('message', handler);
-      }
-    };
-    engineWorker.addEventListener('message', handler);
-    engineWorker.postMessage({ type: 'INIT_GAME', payload: { studioName: 'Alpha Studios', archetype, seed } });
+    const gameState = initializeGame('Alpha Studios', archetype);
+    set({ 
+      gameState,
+      finance: gameState.finance,
+      news: gameState.news
+    });
   },
 }));

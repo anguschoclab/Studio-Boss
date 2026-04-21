@@ -1,11 +1,9 @@
 // Types related to Studios, Rivals, and Game State
 
 import { Project, Opportunity, GenreTrend, FestivalSubmission, Award } from './project.types';
-import { Contract, TalentPact, Family, Agency, Agent, Talent, Scandal, MotivationProfile, RivalStrategy } from './talent.types';
+import { Contract, FirstLookDeal, Family, Agency, Agent, Talent, Scandal, MotivationProfile, RivalStrategy } from './talent.types';
 import { NewsEvent, Rumor, MarketEvent } from './engine.types';
-import { FinanceState, NewsState, IPState, DealsState } from './state.types';
-import { TalentAgentRelationship } from '../systems/talent/talentAgentInteractions';
-import { RelationshipsState } from './relationship.types';
+import { FinanceState, NewsState, IPState } from './state.types';
 
 export interface GameEvent {
   id: string;
@@ -34,30 +32,17 @@ export interface RivalStudio {
   // AI Motivations
   motivationProfile: MotivationProfile;
   currentMotivation: StudioMotivation;
-  // Dynamic State - Unified Storage: Store IDs instead of full objects
-  projectIds: string[]; // IDs of projects owned by this rival
-  contractIds: string[]; // IDs of contracts owned by this rival
-  ipAssetIds: string[]; // IDs of IP assets owned by this rival
+  // Dynamic State
+  projects: Record<string, Project>;
+  contracts: Contract[];
   // Consolidation & Vertical Integration
   ownedPlatforms?: string[]; // IDs of platforms this studio owns
   parentBrand?: string;
-  marketShare?: number; // 0.0 to 1.0: Calculated based on revenue and prestige
+  marketShare?: number; // 0-100: Calculated based on revenue and prestige
   strategy?: RivalStrategy;
   genreFocus?: string;
   acquisitionTarget?: string;
   isAcquirable?: boolean;
-  archetypeId?: string; // Links to unified StudioArchetype (replaces behaviorId)
-  weeklyHistory?: import('./state.types').FinancialSnapshot[];
-  // Phase 6: Revenue tracking for market share comparison
-  boxOfficeTotal?: number;        // Total annual box office revenue
-  annualRevenue?: number;          // Total annual revenue (all sources)
-  revenueHistory?: {              // Weekly revenue tracking
-    week: number;
-    revenue: number;
-    boxOffice: number;
-    streaming: number;
-    merch: number;
-  }[];
 }
 
 export interface StudioCulture {
@@ -65,20 +50,12 @@ export interface StudioCulture {
   talentFriendlyVsControlling: number; // -100 (friendly) to 100 (controlling)
   nicheVsBroad: number; // -100 (niche) to 100 (broad)
   filmFirstVsTvFirst: number; // -100 (film) to 100 (tv)
-  genrePopularity: Record<string, number>; // Global genre popularity shifts
 }
 
 export interface GameState {
-  entities: {
-    projects: Record<string, Project>;
-    contracts: Record<string, Contract>;
-    talents: Record<string, Talent>;
-    rivals: Record<string, RivalStudio>;
-  };
   week: number;
   gameSeed: number;
   tickCount: number;
-  rngState: number;
   game: {
     currentWeek: number;
   };
@@ -86,19 +63,16 @@ export interface GameState {
   news: NewsState;
   ip: IPState;
   studio: {
-    id: string; // 🌌 Standardized UUID for the player studio
     name: string;
     archetype: ArchetypeKey;
     prestige: number;
     culture?: StudioCulture;
     internal: {
-      projectHistory: Project[]; // 🌌 PHASE 2: The Vault
+      projects: Record<string, Project>;
+      contracts: Contract[];
+      firstLookDeals?: FirstLookDeal[];
     };
-    snapshotHistory: StudioSnapshot[]; // Renamed from history to avoid collision
     ownedPlatforms?: string[];
-    isAcquirable?: boolean;
-    marketShare?: number; // 🌌 PHASE 2: FTC Anti-Trust Cap (0.0 to 1.0)
-    activeCampaigns: Record<string, import('./state.types').CampaignData>;
   };
   market: {
     opportunities: Opportunity[];
@@ -107,23 +81,21 @@ export interface GameState {
     buyers: Buyer[];
   };
   industry: {
+    rivals: RivalStudio[];
     families: Family[];
     agencies: Agency[];
     agents: Agent[];
+    talentPool: Record<string, Talent>;
     awards?: Award[];
     festivalSubmissions?: FestivalSubmission[];
     rumors?: Rumor[];
     scandals?: Scandal[];
-    activeMergers?: Merger[];
     newsHistory: NewsEvent[];
   };
-  deals: DealsState;
-  talentAgentRelationships: Record<string, TalentAgentRelationship>;
-  relationships: RelationshipsState; // Talent-talent relationships
-  tvRecommendations?: {
-    recommendations: Record<string, import('./tv-recommendations.types').TVShowRecommendation>;
-  };
   // UI Data Vis Extensions (Epic 4)
+  culture: {
+    genrePopularity: Record<string, number>;
+  };
   history: StudioSnapshot[];
   eventHistory: GameEvent[];
 }
@@ -174,13 +146,6 @@ export interface PremiumPlatform extends BuyerBase {
   prestigeBonus: number; // 0-50: Influences review scores
 }
 
-export interface StreamingLicense {
-  projectId: string;
-  expiryWeek: number;
-  isAnchor: boolean; // If true, losing this causes mass churn
-  originalOwnerId: string;
-}
-
 export interface StreamerPlatform extends BuyerBase {
   archetype: 'streamer';
   subscribers: number;
@@ -188,7 +153,6 @@ export interface StreamerPlatform extends BuyerBase {
   contentLibraryQuality: number; // 0-100: Influences growth
   marketingSpend: number; // Weekly burn
   subscriberHistory: { week: number; count: number }[];
-  activeLicenses: StreamingLicense[];
 }
 
 export type Buyer = NetworkPlatform | PremiumPlatform | StreamerPlatform;
@@ -201,13 +165,4 @@ export interface StudioSnapshot {
   completedProjects: number;  // Count of projects in 'Released' state
   totalPrestige: number;      // Derived from studio prestige/awards
   timestamp: string;          // ISO string of when snapshot was taken
-}
-
-export interface Merger {
-  id: string;
-  buyerId: string;
-  targetId: string;
-  valuation: number;
-  activeUntilWeek: number;
-  status: 'pending' | 'completed' | 'cancelled';
 }

@@ -4,34 +4,34 @@ import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { TopBar } from '@/components/layout/TopBar';
 import { StudioSidebar } from '@/components/layout/StudioSidebar';
-import { QuickActionsDock } from '@/components/layout/QuickActionsDock';
-import { CommandPalette, useCommandPalette } from '@/components/navigation/CommandPalette';
-import { SkeletonPage } from '@/components/shared/SkeletonCard';
-import { m, AnimatePresence } from 'framer-motion';
+import { CommandCenter } from '@/components/dashboard/CommandCenter';
+import { PipelineBoard } from '@/components/pipeline/PipelineBoard';
+import { TalentHub } from '@/components/talent/TalentHub';
+import { FinancePanel } from '@/components/finance/FinancePanel';
+import { DiscoveryBoard } from '@/components/discovery/DiscoveryBoard';
+import { RivalsPanel } from '@/components/rivals/RivalsPanel';
+import { IPVault } from '@/components/ip/IPVault';
+import { DistributionHub } from '@/components/distribution/DistributionHub';
+import { AnimatePresence, motion } from 'framer-motion';
 
-// New 4-Hub Architecture (Phase 1)
-const StudioHQ = React.lazy(() => import('@/components/hubs/StudioHQ').then(m => ({ default: m.StudioHQ })));
-const ProductionHub = React.lazy(() => import('@/components/hubs/ProductionHub').then(m => ({ default: m.ProductionHub })));
-const TalentHub = React.lazy(() => import('@/components/hubs/TalentHub').then(m => ({ default: m.TalentHub })));
-const IntelligenceHub = React.lazy(() => import('@/components/hubs/IntelligenceHub').then(m => ({ default: m.IntelligenceHub })));
-
-
-// Modals & Overlays
-import { ModalManager } from '@/components/modals/ModalManager';
+// Modals
 import { CreateProjectModal } from '@/components/modals/CreateProjectModal';
+import { WeekSummaryModal } from '@/components/modals/WeekSummaryModal';
 import { ProjectDetailModal } from '@/components/modals/ProjectDetailModal';
 import { PitchProjectModal } from '@/components/modals/PitchProjectModal';
-import { AttachTalentModal } from '@/components/modals/AttachTalentModal';
+import { CrisisModal } from '@/components/modals/CrisisModal';
+import { AwardsCeremonyModal } from '@/components/modals/AwardsCeremonyModal';
 
 const Dashboard: React.FC = () => {
   const gameState = useGameStore(s => s.gameState);
-  const { activeHub } = useUIStore();
+  const { activeTab } = useUIStore();
   const devAutoInit = useGameStore(s => s.devAutoInit);
   const searchParams = new URLSearchParams(window.location.search);
   const isAutoStarting = searchParams.get('autoStart') === 'true';
 
   React.useEffect(() => {
     if (!gameState && isAutoStarting) {
+      console.log('[Dashboard] Auto-starting game...');
       devAutoInit();
     }
   }, [gameState, isAutoStarting, devAutoInit]);
@@ -40,12 +40,16 @@ const Dashboard: React.FC = () => {
   if (!gameState) return <div className="flex items-center justify-center h-screen font-sans">Initializing Studio...</div>;
 
   const renderContent = () => {
-    switch (activeHub) {
-      case 'hq': return <StudioHQ key="hq" />;
-      case 'production': return <ProductionHub key="production" />;
+    switch (activeTab) {
+      case 'command': return <CommandCenter key="command" />;
+      case 'pipeline': return <PipelineBoard key="pipeline" />;
+      case 'ip': return <IPVault key="ip" />;
+      case 'distribution': return <DistributionHub key="distribution" />;
+      case 'industry': return <RivalsPanel key="industry" />;
       case 'talent': return <TalentHub key="talent" />;
-      case 'intelligence': return <IntelligenceHub key="intelligence" />;
-      default: return <StudioHQ key="default" />;
+      case 'finance': return <FinancePanel key="finance" />;
+      case 'trades': return <DiscoveryBoard key="trades" />;
+      default: return <CommandCenter key="default" />;
     }
   };
 
@@ -59,40 +63,29 @@ const Dashboard: React.FC = () => {
           <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-secondary/5 rounded-full blur-[100px] -z-10 pointer-events-none" />
           <div className="container mx-auto max-w-[1600px] h-full flex flex-col">
             <AnimatePresence mode="wait">
-              <m.div
-                key={activeHub}
+              <motion.div
+                key={activeTab}
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.25, ease: "easeInOut" }}
                 className="h-full flex flex-col"
               >
-                <React.Suspense fallback={<SkeletonPage headerRows={2} contentCards={4} />}>
-                  {renderContent()}
-                </React.Suspense>
-              </m.div>
+                {renderContent()}
+              </motion.div>
             </AnimatePresence>
           </div>
         </main>
       </div>
       
       <CreateProjectModal />
+      <WeekSummaryModal />
       <ProjectDetailModal />
       <PitchProjectModal />
-      <AttachTalentModal />
-      
-      {/* Global UI Components */}
-      <ModalManager />
-      <CommandPaletteWrapper />
-      <QuickActionsDock />
+      <CrisisModal />
+      <AwardsCeremonyModal />
     </div>
   );
-};
-
-// CommandPalette wrapper with hook
-const CommandPaletteWrapper: React.FC = () => {
-  const { isOpen, close } = useCommandPalette();
-  return <CommandPalette isOpen={isOpen} onClose={close} />;
 };
 
 export default Dashboard;

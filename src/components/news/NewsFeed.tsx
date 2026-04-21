@@ -2,23 +2,21 @@ import { useGameStore } from '@/store/gameStore';
 import { NewsEventType } from '@/engine/types';
 import { Badge } from '@/components/ui/badge';
 import { useState } from 'react';
-import {
-  Trophy,
-  AlertTriangle,
-  TrendingUp,
+import { 
+  Trophy, 
+  AlertTriangle, 
+  TrendingUp, 
   Search,
-  History
+  History,
+  Filter
 } from 'lucide-react';
 
-const eventTypeConfig: Record<NewsEventType, { icon: React.ElementType, color: string, label: string }> = {
+const eventTypeConfig: Record<NewsEventType, { icon: any, color: string, label: string }> = {
   AWARD: { icon: Trophy, color: 'text-amber-500 bg-amber-500/10 border-amber-500/20', label: 'Awards' },
   CRISIS: { icon: AlertTriangle, color: 'text-destructive bg-destructive/10 border-destructive/20', label: 'Crises' },
   RELEASE: { icon: TrendingUp, color: 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20', label: 'Release' },
   STUDIO_EVENT: { icon: History, color: 'text-blue-400 bg-blue-400/10 border-blue-400/20', label: 'Studio' },
   RIVAL: { icon: History, color: 'text-red-400 bg-red-400/10 border-red-400/20', label: 'Rival' },
-  MILESTONE: { icon: Trophy, color: 'text-purple-400 bg-purple-400/10 border-purple-400/20', label: 'Milestone' },
-  SCANDAL: { icon: AlertTriangle, color: 'text-orange-500 bg-orange-500/10 border-orange-500/20', label: 'Scandal' },
-  LEGAL: { icon: AlertTriangle, color: 'text-slate-400 bg-slate-400/10 border-slate-400/20', label: 'Legal' },
 };
 
 export const NewsFeed = () => {
@@ -43,11 +41,9 @@ export const NewsFeed = () => {
           </Badge>
         </div>
 
-        {/* Switched from horizontal scroll to flex wrap for better mobile reflow. */}
-        <div className="flex flex-wrap gap-2 pb-2">
+        <div className="flex gap-1.5 overflow-x-auto pb-2 custom-scrollbar no-scrollbar">
           <button 
             onClick={() => setFilter('ALL')}
-            aria-pressed={filter === 'ALL'}
             className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-tighter transition-all border ${
               filter === 'ALL' ? 'bg-white text-black border-white' : 'bg-slate-900 text-slate-400 border-slate-800'
             }`}
@@ -58,12 +54,11 @@ export const NewsFeed = () => {
             <button 
               key={type}
               onClick={() => setFilter(type)}
-              aria-pressed={filter === type}
               className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-tighter transition-all border flex items-center gap-1.5 whitespace-nowrap ${
                 filter === type ? 'bg-blue-600 text-white border-blue-500' : 'bg-slate-900 text-slate-400 border-slate-800'
               }`}
             >
-              {eventTypeConfig[type].label}
+              {type}
             </button>
           ))}
         </div>
@@ -86,18 +81,11 @@ export const NewsFeed = () => {
               </div>
 
               <div className="space-y-1">
-                <div className="flex items-center justify-between mb-1">
+                <div className="flex items-center justify-between">
                    <span className="text-[9px] font-mono font-black text-slate-500 uppercase">Week {item.week}</span>
-                   <div className="flex gap-2 items-center">
-                    {item.publication && (
-                      <span className="text-[7px] font-black text-blue-400/60 uppercase tracking-widest border border-blue-400/20 px-1.5 py-0.5 rounded italic">
-                        {item.publication}
-                      </span>
-                    )}
-                    {item.impact && (
-                      <span className="text-[9px] font-black text-emerald-400 tracking-tighter">{item.impact}</span>
-                    )}
-                   </div>
+                   {item.impact && (
+                     <span className="text-[9px] font-black text-emerald-400 tracking-tighter">{item.impact}</span>
+                   )}
                 </div>
                 <h4 className="text-xs font-bold text-slate-100 group-hover:text-blue-400 transition-colors leading-tight">{item.headline}</h4>
                 <p className="text-[10px] text-slate-400 leading-relaxed font-medium line-clamp-2 group-hover:line-clamp-none transition-all duration-300">{item.description}</p>

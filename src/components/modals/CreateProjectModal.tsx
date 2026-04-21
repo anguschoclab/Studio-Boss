@@ -28,7 +28,7 @@ export const CreateProjectModal = () => {
   const [targetAudience, setTargetAudience] = useState<string>(TARGET_AUDIENCES[0]);
   const [flavor, setFlavor] = useState('');
   const [tvFormat, setTvFormat] = useState<TvFormatKey>('prestige_drama');
-  const [unscriptedFormat, setUnscriptedFormat] = useState<UnscriptedFormatKey>('USF-43d3c07f-53dd-c40f-c5dd-8c6b939b');
+  const [unscriptedFormat, setUnscriptedFormat] = useState<UnscriptedFormatKey>('competition');
   const [episodes, setEpisodes] = useState<number>(10);
   const [releaseModel, setReleaseModel] = useState<ReleaseModelKey>('weekly');
 
@@ -36,7 +36,7 @@ export const CreateProjectModal = () => {
     if (showCreateProject && !title) {
       setTitle(generateProjectTitle(genre));
     }
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showCreateProject, genre]);
 
   const tier = BUDGET_TIERS[budgetTier];
@@ -121,7 +121,7 @@ export const CreateProjectModal = () => {
               {format === 'tv' ? (
               <div className="space-y-2 col-span-2 sm:col-span-1">
                 <Label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground/80">TV Format</Label>
-                <Select value={tvFormat} onValueChange={setTvFormat}>
+                <Select value={tvFormat} onValueChange={(v) => setTvFormat(v as TvFormatKey)}>
                   <SelectTrigger className="bg-background/50 border-border/50"><SelectValue /></SelectTrigger>
                   <SelectContent className="max-h-80">
                     {TV_FORMAT_TAXONOMY.map(category => (
@@ -144,7 +144,7 @@ export const CreateProjectModal = () => {
               ) : (
               <div className="space-y-2 col-span-2 sm:col-span-1">
                 <Label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground/80">Unscripted Format</Label>
-                <Select value={unscriptedFormat} onValueChange={setUnscriptedFormat}>
+                <Select value={unscriptedFormat} onValueChange={(v) => setUnscriptedFormat(v as UnscriptedFormatKey)}>
                   <SelectTrigger className="bg-background/50 border-border/50"><SelectValue /></SelectTrigger>
                   <SelectContent className="max-h-80">
                     {UNSCRIPTED_FORMAT_TAXONOMY.map(category => (

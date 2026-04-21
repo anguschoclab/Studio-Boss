@@ -2,7 +2,6 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { WeekSummaryModal } from '@/components/modals/WeekSummaryModal';
-// import { generateRebootProposal } from '../systems/ip/ipRebootEngine';
 import { useUIStore } from '@/store/uiStore';
 import { formatMoney } from '@/engine/utils';
 import { WeekSummary } from '@/engine/types';
@@ -45,7 +44,6 @@ describe('WeekSummaryModal', () => {
       activeModal: {
         type: 'SUMMARY',
         payload: {
-          id: 'mock-wsum-1',
           fromWeek: 1,
           toWeek: 2,
           cashBefore: 1000,
@@ -82,7 +80,6 @@ describe('WeekSummaryModal', () => {
       activeModal: {
         type: 'SUMMARY',
         payload: {
-          id: 'mock-wsum-2',
           fromWeek: 1,
           toWeek: 2,
           cashBefore: 2000,
@@ -108,7 +105,6 @@ describe('WeekSummaryModal', () => {
       activeModal: {
         type: 'SUMMARY',
         payload: {
-          id: 'mock-wsum-3',
           fromWeek: 1,
           toWeek: 2,
           cashBefore: 1000,
@@ -134,8 +130,8 @@ describe('WeekSummaryModal', () => {
     expect(screen.getByText('Market crashed')).toBeDefined();
 
     // Headlines
-    expect(screen.getByText('📰 The Trades')).toBeDefined();
-    expect(screen.getByText('Studio hit with major controversy')).toBeDefined();
+    expect(screen.getByText('📰 Headlines')).toBeDefined();
+    expect(screen.getByText('— Studio hit with major controversy')).toBeDefined();
   });
 
   it('calls closeSummary when the Continue button is clicked', () => {
@@ -143,12 +139,11 @@ describe('WeekSummaryModal', () => {
       activeModal: {
         type: 'SUMMARY',
         payload: {
-          id: 'mock-wsum-1',
           fromWeek: 1,
-          toWeek: 1,
+          toWeek: 2,
           cashBefore: 1000,
-          cashAfter: 1200,
-          totalRevenue: 200,
+          cashAfter: 1000,
+          totalRevenue: 0,
           totalCosts: 0,
           projectUpdates: [],
           newHeadlines: [],

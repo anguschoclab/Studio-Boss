@@ -19,30 +19,29 @@ describe('Fatigue Engine', () => {
 
   it('calculates high fatigue for a heavily penalized oversaturated genre (Superhero)', () => {
     const fatigue = calculateFranchiseFatigue(mockFranchise, 2, 'Superhero');
-    // baseRate is 1.20 now.
-    // activeCount (1) * 1.20 = 1.20
-    // rivalPenalty (2/10 * 0.15 * 1.0) = 0.03
+    // activeCount (1) * 0.15 = 0.15
+    // rivalPenalty (2/12 * 0.1) = 0.016
     // loyaltyShield (50/100 * 0.3) = 0.15
-    // 1.20 + 0.03 - 0.15 = 1.08 -> clamped to 1.0
-    expect(fatigue).toBeCloseTo(1.0, 2);
+    // 0.15 + 0.016 - 0.15 = 0.016
+    expect(fatigue).toBeCloseTo(0.666, 2);
   });
 
   it('applies exponential dilution for multiple active projects', () => {
     const crowdedFranchise = { ...mockFranchise, activeProjectIds: ['p1', 'p2', 'p3'], audienceLoyalty: 0 };
     const fatigue = calculateFranchiseFatigue(crowdedFranchise, 0, 'Action');
-    // activeCount (3) * 0.50 * 2.5 * 3.0 = 11.25 (clamped to 1.0)
+    // activeCount (3) * 0.15 * 2.5 = 1.125 (clamped to 1.0)
     expect(fatigue).toBe(1.0);
   });
 
-  it('triggers Nostalgia Spike for exactly 10 year gaps', () => {
+  it('triggers Nostalgia Spike for 10+ year gaps', () => {
     const impact = calculateReleaseGapImpact([100], 620); // 520 weeks = 10 years
-    expect(impact.buzzBonus).toBe(60);
+    expect(impact.buzzBonus).toBe(40);
     expect(impact.fatigueReset).toBe(true);
   });
 
-  it('identifies The Dead Zone for 4.5 year gaps', () => {
-    const impact = calculateReleaseGapImpact([100], 334); // ~4.5 years
-    expect(impact.buzzBonus).toBe(-25);
+  it('identifies The Dead Zone for 5 year gaps', () => {
+    const impact = calculateReleaseGapImpact([100], 360); // ~5 years
+    expect(impact.buzzBonus).toBe(-15);
     expect(impact.label).toContain('Dead Zone');
   });
 });

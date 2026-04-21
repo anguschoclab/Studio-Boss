@@ -4,12 +4,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Tv, Minus, BarChart3, Radio, Trophy, ArrowUp, ArrowDown } from 'lucide-react';
+import { Tv, TrendingUp, TrendingDown, Minus, BarChart3, Users, Radio, Clock, Trophy, ArrowUp, ArrowDown } from 'lucide-react';
 import { SeriesProject, Project } from '@/engine/types';
 import { useShallow } from 'zustand/react/shallow';
 import { cn } from '@/lib/utils';
 import { NielsenSnapshot, NielsenProfile, NielsenDemographic, TIME_SLOTS } from '@/engine/systems/television/nielsenSystem';
-import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, Cell, CartesianGrid } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, Cell, CartesianGrid, Legend, LineChart, Line } from 'recharts';
 
 // Color map for demographics
 const DEMO_COLORS: Record<NielsenDemographic, string> = {
@@ -24,7 +24,7 @@ const DEMO_COLORS: Record<NielsenDemographic, string> = {
 };
 
 export const NielsenDashboard = () => {
-  const projects = useGameStore(useShallow(s => Object.values(s.gameState?.entities.projects || {})));
+  const projects = useGameStore(useShallow(s => Object.values(s.gameState?.studio.internal.projects || {})));
   const week = useGameStore(s => s.gameState?.week || 0);
   
   const tvShows = React.useMemo(() => 

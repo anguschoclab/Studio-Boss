@@ -9,10 +9,9 @@ import { FranchiseHub } from './FranchiseHub';
 import { IPAssetCard } from './IPAssetCard';
 
 export const IPVault = () => {
-  const gameState = useGameStore(useShallow(s => s.gameState));
-  const ipState = React.useMemo(() => gameState?.ip || { vault: [], franchises: {} }, [gameState?.ip]);
+  const ipState = useGameStore(useShallow(s => s.gameState?.ip)) || { vault: [], franchises: {} };
   const franchises = Object.values(ipState.franchises);
-
+  
   const { ownedIP, syndicatedIP, marketIP } = React.useMemo(() => {
     const vault = ipState.vault || [];
     const owned = vault.filter(a => a.rightsOwner === 'STUDIO');

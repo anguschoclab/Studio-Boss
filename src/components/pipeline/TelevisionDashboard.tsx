@@ -3,17 +3,17 @@ import { useGameStore } from '@/store/gameStore';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Tv, Activity, Star, AlertCircle, PlayCircle, Zap, BarChart3, TrendingUp, TrendingDown, Minus } from 'lucide-react';
+import { Tv, Activity, Star, AlertCircle, PlayCircle, Zap, BarChart3, Users, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { Project, SeriesProject } from '@/engine/types';
 import { useShallow } from 'zustand/react/shallow';
 import { cn } from '@/lib/utils';
 import { NielsenProfile } from '@/engine/systems/television/nielsenSystem';
 
 export const TelevisionDashboard = () => {
-  const activeProjects = useGameStore(useShallow(s => Object.values(s.gameState?.entities?.projects || {})));
+  const activeProjects = useGameStore(useShallow(s => Object.values(s.gameState?.studio.internal.projects || {})));
   
   const tvShows = React.useMemo(() => 
-    (activeProjects as Project[]).filter((p: Project) => p.type === 'SERIES' && 'tvDetails' in p),
+    activeProjects.filter((p: Project) => p.type === 'SERIES' && 'tvDetails' in p),
   [activeProjects]);
 
   if (tvShows.length === 0) {
@@ -42,7 +42,7 @@ export const TelevisionDashboard = () => {
 
       <ScrollArea className="flex-1 pr-4">
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 pb-10">
-          {(tvShows as Project[]).map((show: Project) => (
+          {tvShows.map((show: Project) => (
             <TVShowCard key={show.id} show={show} />
           ))}
         </div>

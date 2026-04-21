@@ -55,16 +55,14 @@ export const TalentCard: React.FC<TalentCardProps> = ({
 
   return (
     <TooltipWrapper tooltip={tooltip || `View ${talent.name} Profile`} side="top">
-      <button
-        type="button"
+      <div 
         onClick={handleClick}
         className={cn(
-          "w-full text-left p-4 rounded-xl border backdrop-blur-md transition-all duration-300 space-y-3 group relative overflow-hidden cursor-pointer",
+          "p-4 rounded-xl border backdrop-blur-md transition-all duration-300 space-y-3 group relative overflow-hidden cursor-pointer",
           talent.prestige >= 80 
             ? 'border-primary/50 shadow-[0_0_20px_rgba(234,179,8,0.15)] bg-card/80 bg-gradient-to-br from-primary/10 to-transparent' 
             : 'border-border/60 bg-card/60 bg-gradient-to-br from-card/80 to-transparent',
           "hover:shadow-[0_12px_40px_rgba(0,0,0,0.3)] hover:border-primary/50 hover:-translate-y-1 active:scale-[0.98]",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
           className
         )}
       >
@@ -164,7 +162,7 @@ export const TalentCard: React.FC<TalentCardProps> = ({
             <div className="font-semibold truncate text-foreground/90 capitalize">{talent.psychology?.mood > 70 ? 'Confident' : talent.psychology?.mood > 40 ? 'Steady' : 'Volatile'}</div>
           </div>
         </div>
-      </button>
+      </div>
     </TooltipWrapper>
   );
 };

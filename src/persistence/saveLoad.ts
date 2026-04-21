@@ -1,52 +1,18 @@
 import { GameState, SaveSlotMeta } from '@/engine/types';
+import { persistenceService } from './PersistenceService';
 
 /**
  * High-level orchestration for Game State Persistence.
- * This bridges the UI/Store to Electron file system via IPC.
+ * This bridges the UI/Store to the background Save Worker.
  */
-
-declare global {
-  interface Window {
-    electronAPI?: {
-      saveGame: (slot: number, state: GameState) => Promise<boolean>;
-      loadGame: (slot: number) => Promise<GameState | null>;
-      listSaves: () => Promise<number[]>;
-      deleteSave: (slot: number) => Promise<boolean>;
-      exportSave: (slot: number) => Promise<boolean>;
-      importSave: () => Promise<GameState | null>;
-      store: {
-        get: (key: string) => Promise<unknown>;
-        set: (key: string, value: unknown) => Promise<boolean>;
-        delete: (key: string) => Promise<boolean>;
-      };
-      showNotification: (options: { title: string; body: string }) => Promise<boolean>;
-      minimizeWindow: () => void;
-      maximizeWindow: () => void;
-      closeWindow: () => void;
-      initGame: (studioName: string, archetype: string, seed: number) => Promise<unknown>;
-      advanceWeek: (state: GameState) => Promise<unknown>;
-      getVersion: () => Promise<string>;
-      getPlatform: () => Promise<string>;
-    };
-  }
-}
-
-// Check if running in Electron environment
-const isElectron = typeof window !== 'undefined' && 'electronAPI' in window;
 
 export async function saveGame(slot: number, state: GameState): Promise<void> {
   try {
-    if (isElectron && window.electronAPI) {
-      // Use Electron IPC for file system operations
-      const success = await window.electronAPI.saveGame(slot, state);
-      if (!success) {
-        throw new Error('Failed to save game via Electron IPC');
-      }
-    } else {
-      // Fallback to OPFS for web version
-      const { persistenceService } = await import('./PersistenceService');
-      await persistenceService.save(slot, state);
-    }
+    // 1. Offload to background worker (OPFS)
+    await persistenceService.save(slot, state);
+
+    // 2. We skip synchronous metadata cache for now, or we could store it in OPFS too.
+    console.log(`[SaveLoad] State saved to slot ${slot} via OPFS.`);
   } catch (e) {
     console.error('[SaveLoad] Failed to save game state', e);
   }
@@ -54,18 +20,12 @@ export async function saveGame(slot: number, state: GameState): Promise<void> {
 
 export async function loadGame(slot: number): Promise<GameState | null> {
   try {
-    if (isElectron && window.electronAPI) {
-      // Use Electron IPC for file system operations
-      const state = await window.electronAPI.loadGame(slot);
-      if (!state) return null;
-      return state as GameState;
-    } else {
-      // Fallback to OPFS for web version
-      const { persistenceService } = await import('./PersistenceService');
-      const state = await persistenceService.load(slot);
-      if (!state) return null;
-      return state as GameState;
-    }
+    // 1. Fetch from background worker (OPFS)
+    const state = await persistenceService.load(slot);
+    if (!state) return null;
+
+    console.log(`[SaveLoad] State loaded from slot ${slot} via OPFS.`);
+    return state as GameState;
   } catch (e) {
     console.error('[SaveLoad] Failed to load game state', e);
     return null;

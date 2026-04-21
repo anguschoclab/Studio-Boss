@@ -1,15 +1,56 @@
-import { pick } from '../utils';
-import { GameState, MarketEvent } from '@/engine/types';
+import { GameState, MarketEvent, MarketEventType } from '@/engine/types';
 import { StateImpact } from '../types/state.types';
-import { RandomGenerator } from '../utils/rng';
-import { BardResolver } from './bardResolver';
+import { pick, randRange, secureRandom } from '../utils';
+
+const EVENT_TEMPLATES: Omit<MarketEvent, 'id' | 'weeksRemaining'>[] = [
+  {
+    type: 'streaming_boom',
+    name: 'Streaming Subscription Boom',
+    description: 'A global lock-down or tech shift leads to massive streaming growth.',
+    revenueMultiplier: 1.5,
+    costMultiplier: 1.2,
+    talentAvailabilityModifier: -0.1
+  },
+  {
+    type: 'theatrical_revival',
+    name: 'Theatrical Revival',
+    description: 'Audiences are flocking back to cinemas globally.',
+    revenueMultiplier: 1.4,
+    costMultiplier: 1.0,
+    talentAvailabilityModifier: 0.1
+  },
+  {
+    type: 'writers_strike',
+    name: 'WGA Strike',
+    description: 'Writers are striking for better streaming residuals.',
+    revenueMultiplier: 1.0,
+    costMultiplier: 1.5,
+    talentAvailabilityModifier: -0.8
+  },
+  {
+    type: 'actors_strike',
+    name: 'SAG-AFTRA Strike',
+    description: 'Actors hit the picket lines over AI replacement fears.',
+    revenueMultiplier: 0.8,
+    costMultiplier: 1.5,
+    talentAvailabilityModifier: -0.9
+  },
+  {
+    type: 'market_crash',
+    name: 'Economic Recession',
+    description: 'An economic downturn dries up credit and suppresses entertainment spending.',
+    revenueMultiplier: 0.7,
+    costMultiplier: 0.9,
+    talentAvailabilityModifier: 0.3
+  }
+];
 
 export function getActiveMarketEvent(state: GameState): MarketEvent | undefined {
   if (!state.market.activeMarketEvents || state.market.activeMarketEvents.length === 0) return undefined;
   return state.market.activeMarketEvents[0]; // For simplicity, only 1 global event at a time
 }
 
-export function advanceMarketEvents(state: GameState, rng: RandomGenerator): StateImpact[] {
+export function advanceMarketEvents(state: GameState): StateImpact[] {
   const impacts: StateImpact[] = [];
   let activeEvents = state.market.activeMarketEvents || [];
   
@@ -27,8 +68,6 @@ export function advanceMarketEvents(state: GameState, rng: RandomGenerator): Sta
     impacts.push({
       type: 'NEWS_ADDED',
       payload: {
-        id: rng.uuid('NWS'),
-        week: state.week,
         headline: 'Market Normalizes',
         description: `The ${exp.name} has finally ended.`,
       }
@@ -36,43 +75,18 @@ export function advanceMarketEvents(state: GameState, rng: RandomGenerator): Sta
   }
   
   // Chance to spawn new event if none active
-  if (activeEvents.length === 0 && rng.next() < 0.02) {
-    const type = rng.next() > 0.5 ? 'BOOM' : 'CRASH';
-    const id = rng.uuid('EVT');
-    const intensity = type === 'BOOM' ? 80 : 20;
-
-    const randomGenre = rng.pick(['Action', 'Comedy', 'Drama', 'Horror', 'Sci-Fi', 'Thriller', 'Romance', 'Animation', 'Documentary', 'Fantasy']);
-
+  if (activeEvents.length === 0 && secureRandom() < 0.02) {
+    const template = pick(EVENT_TEMPLATES);
     const newEvent: MarketEvent = {
-        id,
-        type: type === 'BOOM' ? 'streaming_boom' : 'market_crash',
-        name: BardResolver.resolve({
-            domain: 'Market',
-            subDomain: 'Headline',
-            intensity,
-            context: { genre: randomGenre },
-            rng
-        }),
-        description: BardResolver.resolve({
-            domain: 'Market',
-            subDomain: 'Event',
-            intensity,
-            context: { genre: randomGenre },
-            rng
-        }),
-        weeksRemaining: Math.floor(rng.range(12, 52)),
-        revenueMultiplier: type === 'BOOM' ? 1.5 : 0.7,
-        costMultiplier: type === 'BOOM' ? 1.2 : 0.9,
-        talentAvailabilityModifier: type === 'BOOM' ? -0.1 : 0.3,
-        economicShock: { sentimentShift: type === 'BOOM' ? 20 : -50, baseRateShift: type === 'BOOM' ? -0.01 : 0.04 }
+      ...template,
+      id: crypto.randomUUID(),
+      weeksRemaining: randRange(12, 52)
     };
     
     activeEvents.push(newEvent);
     impacts.push({
       type: 'NEWS_ADDED',
       payload: {
-        id: rng.uuid('NWS'),
-        week: state.week,
         headline: `MAJOR INDUSTRY EVENT: ${newEvent.name}`,
         description: newEvent.description,
       }
@@ -86,3 +100,4 @@ export function advanceMarketEvents(state: GameState, rng: RandomGenerator): Sta
 
   return impacts;
 }
+

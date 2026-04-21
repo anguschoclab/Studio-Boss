@@ -1,9 +1,7 @@
-import { Project, Talent, ActiveCrisis, MarketingCampaign, ProjectRating } from '@/engine/types';
-import { clamp } from '../utils';
+import { Project, Talent, ActiveCrisis, BoxOfficeResult, MarketingCampaign } from '@/engine/types';
+import { randRange, clamp } from '../utils';
 import { evaluateMarketingEfficiency } from './marketing/efficiencyEvaluator';
 import { calculateTerritorySplit } from './marketing/territoryDistributor';
-import { getRatingEconomics, calculateRegionalPenalties } from './ratings';
-import { RandomGenerator } from '../utils/rng';
 
 /**
  * Phase 3 & 4 Orchestrator for Release Simulation.
@@ -13,10 +11,9 @@ import { RandomGenerator } from '../utils/rng';
 export function calculateReviewScore(
   project: Project,
   attachedTalent: Talent[],
-  crises: ActiveCrisis | null | undefined,
-  rng: RandomGenerator
+  crises: ActiveCrisis | null | undefined
 ): number {
-  let baseScore = rng.range(40, 70);
+  let baseScore = randRange(40, 70);
 
   // 1. Talent Prestige Bonus
   if (attachedTalent.length > 0) {
@@ -26,26 +23,25 @@ export function calculateReviewScore(
 
   // 2. Production Crises Penalty
   if (crises) {
-    baseScore -= rng.range(10, 25);
+    baseScore -= randRange(10, 25);
   }
 
   // 3. Buzz Alignment (Expectation vs Reality)
   if (project.buzz > 80) {
-    baseScore += rng.range(5, 12);
+    baseScore += randRange(5, 12);
   } else if (project.buzz < 30) {
-    baseScore -= rng.range(5, 12);
+    baseScore -= randRange(5, 12);
   }
 
-  return clamp(Math.round(baseScore + rng.range(-5, 5)), 1, 100);
+  return clamp(Math.round(baseScore + randRange(-5, 5)), 1, 100);
 }
 
 export function calculateOpeningWeekend(
   project: Project,
   attachedTalent: Talent[],
   studioPrestige: number,
-  rng: RandomGenerator,
-  franchiseSynergy: number = 1.0, 
-  franchiseFatigue: number = 0 
+  franchiseSynergy: number = 1.0, // New: Halo Effect (1.0 - 2.5)
+  franchiseFatigue: number = 0 // New: Audience Saturation (0 - 1.0)
 ): { project: Project; feedback: string } {
   // If no campaign, it's a "silent release" - very poor performance
   const campaign = project.marketingCampaign || {
@@ -55,25 +51,14 @@ export function calculateOpeningWeekend(
     weeksInMarketing: 0
   } as MarketingCampaign;
 
+  // 1. Calculate Base Potential (based on Buzz and Talent Draw)
+  const talentDraw = attachedTalent.reduce((sum, t) => sum + t.draw, 0) / (attachedTalent.length || 1);
   const buzzFactor = project.buzz / 50;
-  const talentDraw = attachedTalent.reduce((sum, t) => sum + t.draw, 1);
-  const avgTalentDraw = attachedTalent.length > 0 ? talentDraw / attachedTalent.length : 0;
+  const prestigeFactor = 0.8 + (studioPrestige / 200);
   
-  // Base potential: roughly 5x budget for a perfect storm, 0.5x for a duds
-  let basePotential = (project.budget * 0.4) * buzzFactor * (0.8 + (studioPrestige / 200)) * (1 + (avgTalentDraw / 100));
-  
-  // Rating Cut Multipliers
-  if (project.activeCut === 'directors_cut') {
-      basePotential *= 1.15; // Critical darling/fan service boost
-      project.reviewScore = Math.min(100, (project.reviewScore || 50) + 15);
-  } else if (project.activeCut === 'sanitized') {
-      basePotential *= 0.9; // Fan backlash/compromised vision
-      project.reviewScore = Math.max(1, (project.reviewScore || 50) - 10);
-  } else if (project.activeCut === 'unrated') {
-      basePotential *= 1.25; // Cult/curiosity interest
-  }
-
-  const randomFactor = rng.range(0.85, 1.15);
+  // Base potential: roughly 5x budget for a perfect storm, 0.5x for a dud
+  const basePotential = (project.budget * 0.4) * buzzFactor * prestigeFactor * (1 + (talentDraw / 100));
+  const randomFactor = randRange(0.85, 1.15);
   
   let effectiveGross = basePotential * randomFactor * franchiseSynergy; // Apply Halo Effect
   effectiveGross *= (1 - franchiseFatigue); // Apply Fatigue Penalty
@@ -81,13 +66,6 @@ export function calculateOpeningWeekend(
   // 2. Apply Marketing Efficiency
   const { multiplier, feedbackText } = evaluateMarketingEfficiency(project, campaign);
   effectiveGross *= multiplier;
-
-  // 2.5. Apply Rating Economics (theater access, audience reach, regional penalties)
-  const ratingEcon = getRatingEconomics(project.rating ?? 'PG-13');
-  effectiveGross *= ratingEcon.theaterAccessPct;
-  effectiveGross *= ratingEcon.audienceReachMultiplier;
-  const regionalMultiplier = calculateRegionalPenalties(project);
-  effectiveGross *= regionalMultiplier;
 
   // 3. Distribute Territories
   const territoryResult = calculateTerritorySplit(effectiveGross, campaign, project.genre);
@@ -116,27 +94,16 @@ export function simulateWeeklyBoxOffice(
   previousWeeklyRevenue: number,
   rivalStrength: number,
   trendMultiplier: number = 1.0,
-  franchiseSynergy: number = 1.0,
-  franchiseFatigue: number = 0,
-  rating: ProjectRating = 'PG-13'
+  franchiseSynergy: number = 1.0 // New: Ongoing Halo Effect
 ): number {
   if (weekInRelease === 0) return previousWeeklyRevenue;
 
   // 1. Base Decay based on Word of Mouth (Review Score)
   let decayFactor = 0.6; // 40% drop
-
+  
   if (reviewScore > 80) decayFactor = 0.8; // Leggy
   else if (reviewScore > 60) decayFactor = 0.7;
   else if (reviewScore < 40) decayFactor = 0.4; // Front-loaded disaster
-
-  // 1.5. Rating-specific decay modifiers
-  // R-rated dramas with strong reviews have prestige legs (word-of-mouth driven)
-  if ((rating === 'R') && reviewScore > 70) {
-    const g = project.genre.toUpperCase();
-    if (g === 'DRAMA' || g === 'THRILLER' || g === 'CRIME') decayFactor += 0.05;
-  }
-  // NC-17 / Unrated are front-loaded (specialty audience turns out opening weekend)
-  if (rating === 'NC-17' || rating === 'Unrated') decayFactor -= 0.05;
 
   // 2. Genre Specifics
   const g = project.genre.toUpperCase();
@@ -147,7 +114,7 @@ export function simulateWeeklyBoxOffice(
   const competitionLoss = (rivalStrength / 100) * 0.1;
   const finalMultiplier = clamp(decayFactor - competitionLoss, 0.1, 0.95);
 
-  return Math.floor(previousWeeklyRevenue * finalMultiplier * trendMultiplier * franchiseSynergy * (1 - (franchiseFatigue * 0.5))); 
+  return Math.floor(previousWeeklyRevenue * finalMultiplier * trendMultiplier * franchiseSynergy);
 }
 
 export interface BoxOfficeEntry {
@@ -166,4 +133,3 @@ export function calculateBoxOfficeRanks(
   });
   return ranks;
 }
-

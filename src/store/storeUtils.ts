@@ -3,17 +3,8 @@ import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
 import { TV_FORMATS } from '@/engine/data/tvFormats';
 import { UNSCRIPTED_FORMATS } from '@/engine/data/unscriptedFormats';
 import { getFilmStats, getTvStats, getUnscriptedStats } from '@/engine/systems/stats';
-import { RandomGenerator } from '@/engine/utils/rng';
+import { randRange } from '@/engine/utils';
 import { applyImpacts } from '@/engine/core/impactReducer';
-
-import { 
-  type ProjectId, 
-  type TalentId, 
-  type StudioId, 
-  type FranchiseId, 
-  type AssetId, 
-  type ContractId 
-} from '@/engine/types/shared.types';
 
 export interface CreateProjectParams {
     title: string;
@@ -22,15 +13,15 @@ export interface CreateProjectParams {
     budgetTier: BudgetTierKey;
     targetAudience: string;
     flavor: string;
-    attachedTalentIds?: TalentId[];
+    attachedTalentIds?: string[];
     tvFormat?: TvFormatKey;
     unscriptedFormat?: UnscriptedFormatKey;
     episodes?: number;
     releaseModel?: ReleaseModelKey;
-    parentProjectId?: ProjectId;
+    parentProjectId?: string;
     isSpinoff?: boolean;
     initialBuzzBonus?: number;
-    franchiseId?: FranchiseId;
+    franchiseId?: string;
 }
 
 function getProjectStats(params: CreateProjectParams, tier: typeof BUDGET_TIERS[keyof typeof BUDGET_TIERS]) {
@@ -44,12 +35,11 @@ function getProjectStats(params: CreateProjectParams, tier: typeof BUDGET_TIERS[
 
 function prepareTalentAndContracts(
     state: GameState,
-    attachedTalentIds: TalentId[] | undefined,
-    projectId: ProjectId,
-    rng: RandomGenerator
+    attachedTalentIds: string[] | undefined,
+    projectId: string
 ) {
     const ids = attachedTalentIds || [];
-    const talentPool = state.entities.talents;
+    const talentPool = state.industry.talentPool;
     const attachedTalent: Talent[] = [];
     let talentFees = 0;
     const newContracts: Contract[] = [];
@@ -60,12 +50,11 @@ function prepareTalentAndContracts(
             attachedTalent.push(t);
             talentFees += t.fee || 0;
             newContracts.push({
-                id: rng.uuid('CON') as ContractId,
+                id: `contract-${crypto.randomUUID()}`,
                 talentId: t.id,
                 projectId,
                 fee: t.fee,
                 backendPercent: t.prestige > 80 ? 10 : 0,
-                role: t.role as any // Default to their base type
             });
         }
     }
@@ -73,16 +62,16 @@ function prepareTalentAndContracts(
     return { attachedTalent, talentFees, newContracts };
 }
 
-export function buildProjectAndContracts(state: GameState, params: CreateProjectParams, rng: RandomGenerator): { project: Project; newContracts: Contract[]; talentFees: number } {
+export function buildProjectAndContracts(state: GameState, params: CreateProjectParams): { project: Project; newContracts: Contract[]; talentFees: number } {
     const tier = BUDGET_TIERS[params.budgetTier];
     const stats = getProjectStats(params, tier);
     const { budget, weeklyCost, developmentWeeks, productionWeeks, renewable } = stats;
 
-    const projectId = rng.uuid('PRJ') as ProjectId;
-    const { talentFees, newContracts } = prepareTalentAndContracts(state, params.attachedTalentIds, projectId, rng);
+    const projectId = crypto.randomUUID();
+    const { talentFees, newContracts } = prepareTalentAndContracts(state, params.attachedTalentIds, projectId);
 
     const totalBudget = budget + talentFees;
-    const initialBuzz = Math.floor(rng.range(30, 70)) + (params.initialBuzzBonus || 0);
+    const initialBuzz = Math.floor(randRange(30, 70)) + (params.initialBuzzBonus || 0);
 
     const projectBase = {
         id: projectId,
@@ -109,10 +98,7 @@ export function buildProjectAndContracts(state: GameState, params: CreateProject
         contentFlags: [],
         franchiseId: params.franchiseId,
         parentProjectId: params.parentProjectId,
-        isSpinoff: params.isSpinoff,
-        isRecasting: false,
-        turnaroundStartWeek: undefined,
-        estimatedWindow: { startWeek: state.week + 1, endWeek: state.week + 1 + developmentWeeks + productionWeeks }
+        isSpinoff: params.isSpinoff
     };
 
     if (params.format === 'film') {

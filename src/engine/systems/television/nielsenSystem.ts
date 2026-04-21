@@ -1,5 +1,5 @@
-import { SeriesProject, Project } from '../../types/project.types';
-import { GameState, StateImpact } from '../../types';
+import { SeriesProject, Project } from '@/engine/types/project.types';
+import { GameState, StateImpact } from '@/engine/types';
 import { RandomGenerator } from '../../utils/rng';
 
 /**
@@ -62,11 +62,9 @@ export interface DemoRating {
 }
 
 export interface NielsenSnapshot {
-  id: string; // 🌌 Standardized UUID for this snapshot instance
   week: number;
   episodeNumber: number;
   householdRating: number;    // Overall household rating (% of all TV households)
-  // ...
   householdShare: number;     // Share (% of households watching TV at that time)
   totalViewers: number;       // In millions
   demoRatings: DemoRating[];
@@ -205,7 +203,6 @@ export function calculateNielsenRatings(
   else if (variance < 0.96) trend = 'DOWN';
 
   return {
-    id: rng.uuid('SNP'), // 🌌 Standardized UUID for snapshot
     week: 0, // Set by caller
     episodeNumber,
     householdRating: baseHHRating,

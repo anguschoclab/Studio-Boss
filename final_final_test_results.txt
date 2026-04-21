@@ -1,0 +1,489 @@
+
+ RUN  v3.2.4 /Users/amauricia/Documents/GitHub/Studio-Boss
+
+stderr | src/test/components/finance/FinancePanel.test.tsx > FinancePanel Component > renders gracefully with null/empty game state
+Warning: The tag <stop> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+    at stop
+    at linearGradient
+    at defs
+    at div
+    at ComposedChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:19:27)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:22:48)
+Warning: <linearGradient /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at linearGradient
+    at defs
+    at div
+    at ComposedChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:19:27)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:22:48)
+Warning: The tag <linearGradient> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+    at linearGradient
+    at defs
+    at div
+    at ComposedChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:19:27)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:22:48)
+Warning: <linearGradient /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at linearGradient
+    at defs
+    at div
+    at ComposedChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:19:27)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:22:48)
+Warning: The tag <defs> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+    at defs
+    at div
+    at ComposedChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:19:27)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:22:48)
+
+stderr | src/test/components/finance/FinancePanel.test.tsx > FinancePanel Component > renders correctly with positive cash flow and active projects
+Warning: <linearGradient /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at linearGradient
+    at defs
+    at div
+    at ComposedChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:19:27)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:22:48)
+Warning: <linearGradient /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at linearGradient
+    at defs
+    at div
+    at ComposedChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:19:27)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:22:48)
+
+ ✓ src/test/components/discovery/DiscoveryBoard.test.tsx > DiscoveryBoard > renders empty state when there are no opportunities 35ms
+ ✓ src/test/components/discovery/DiscoveryBoard.test.tsx > DiscoveryBoard > calls openCreateProject when Create Original button is clicked 8ms
+ ✓ src/test/components/discovery/DiscoveryBoard.test.tsx > DiscoveryBoard > renders opportunity cards when there are opportunities 10ms
+ ✓ src/test/components/discovery/DiscoveryBoard.test.tsx > DiscoveryBoard > calls acquireOpportunity when Acquire button is clicked on a card 4ms
+stderr | src/test/components/finance/FinancePanel.test.tsx > FinancePanel Component > renders correctly with negative cash flow and negative cash
+Warning: <linearGradient /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at linearGradient
+    at defs
+    at div
+    at ComposedChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:19:27)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:22:48)
+Warning: <linearGradient /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at linearGradient
+    at defs
+    at div
+    at ComposedChart (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:19:27)
+    at div
+    at ResponsiveContainer (/Users/amauricia/Documents/GitHub/Studio-Boss/src/test/components/finance/FinancePanel.test.tsx:3:33)
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:47:71
+    at div
+    at /Users/amauricia/Documents/GitHub/Studio-Boss/src/components/ui/card.tsx:7:64
+    at div
+    at div
+    at div
+    at FinancePanel (/Users/amauricia/Documents/GitHub/Studio-Boss/src/components/finance/FinancePanel.tsx:22:48)
+
+ ✓ src/test/components/finance/FinancePanel.test.tsx > FinancePanel Component > renders gracefully with null/empty game state 111ms
+ ✓ src/test/components/finance/FinancePanel.test.tsx > FinancePanel Component > renders correctly with positive cash flow and active projects 19ms
+ ✓ src/test/components/finance/FinancePanel.test.tsx > FinancePanel Component > renders correctly with negative cash flow and negative cash 13ms
+ ✓ src/test/components/pipeline/ProjectCard.test.tsx > ProjectCard > renders basic project details correctly 57ms
+ ✓ src/test/components/pipeline/ProjectCard.test.tsx > ProjectCard > calls selectProject when the main card is clicked 18ms
+stderr | src/test/WeekSummaryModal.test.tsx > WeekSummaryModal > renders correctly with positive net financial data
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ ✓ src/test/components/modals/CrisisModal.test.tsx > CrisisModal > renders nothing if gameState is missing 8ms
+ ✓ src/test/components/modals/CrisisModal.test.tsx > CrisisModal > renders nothing if crisisProjectId is missing 1ms
+ ✓ src/test/components/modals/CrisisModal.test.tsx > CrisisModal > renders nothing if project is not found 9ms
+ ✓ src/test/components/modals/CrisisModal.test.tsx > CrisisModal > renders nothing if project has no active crisis 1ms
+ ✓ src/test/components/modals/CrisisModal.test.tsx > CrisisModal > renders nothing if crisis is already resolved 1ms
+ ✓ src/test/components/modals/CrisisModal.test.tsx > CrisisModal > renders the modal with crisis details correctly 53ms
+ ✓ src/test/components/modals/CrisisModal.test.tsx > CrisisModal > calls resolveProjectCrisis and closeCrisisModal when an option is selected 22ms
+ ✓ src/test/components/modals/PitchProjectModal.test.tsx > PitchProjectModal > renders correctly when open 65ms
+ ✓ src/test/components/modals/PitchProjectModal.test.tsx > PitchProjectModal > does not render if gameState or pitchingProjectId is null 1ms
+ ✓ src/test/components/modals/PitchProjectModal.test.tsx > PitchProjectModal > does not render if project is not found 1ms
+ ✓ src/test/components/modals/PitchProjectModal.test.tsx > PitchProjectModal > selects a buyer when clicked 18ms
+stderr | src/test/WeekSummaryModal.test.tsx > WeekSummaryModal > renders correctly with negative net financial data
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+stderr | src/test/WeekSummaryModal.test.tsx > WeekSummaryModal > renders project updates, events, and headlines if they exist
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ ✓ src/test/WeekSummaryModal.test.tsx > WeekSummaryModal > renders nothing when weekSummary is null 7ms
+ ✓ src/test/WeekSummaryModal.test.tsx > WeekSummaryModal > renders nothing when showWeekSummary is false (Dialog handles open state, but if weekSummary is null it returns null anyway) 1ms
+ ✓ src/test/WeekSummaryModal.test.tsx > WeekSummaryModal > renders correctly with positive net financial data 65ms
+ ✓ src/test/WeekSummaryModal.test.tsx > WeekSummaryModal > renders correctly with negative net financial data 11ms
+ ✓ src/test/components/pipeline/ProjectCard.test.tsx > ProjectCard > shows Review Greenlight button for needs_greenlight status 36ms
+ ✓ src/test/components/pipeline/ProjectCard.test.tsx > ProjectCard > shows Plan Marketing button for marketing status 25ms
+ ✓ src/test/components/pipeline/ProjectCard.test.tsx > ProjectCard > shows Pitch to Network button for pitching status 34ms
+ ✓ src/test/components/pipeline/ProjectCard.test.tsx > ProjectCard > shows Resolve Crisis button when there is an unresolved crisis 28ms
+ ✓ src/test/components/pipeline/ProjectCard.test.tsx > ProjectCard > renders progress text for development status 2ms
+ ✓ src/test/components/pipeline/ProjectCard.test.tsx > ProjectCard > renders gross revenue for released status 2ms
+ ✓ src/test/components/pipeline/ProjectCard.test.tsx > ProjectCard > renders TV format correctly 2ms
+stderr | src/test/WeekSummaryModal.test.tsx > WeekSummaryModal > calls closeSummary when the Continue button is clicked
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ ✓ src/test/WeekSummaryModal.test.tsx > WeekSummaryModal > renders project updates, events, and headlines if they exist 20ms
+ ✓ src/test/WeekSummaryModal.test.tsx > WeekSummaryModal > calls closeSummary when the Continue button is clicked 22ms
+ ✓ src/test/components/modals/PitchProjectModal.test.tsx > PitchProjectModal > selects a deal structure when clicked 20ms
+ ✓ src/test/components/modals/CreateProjectModal.test.tsx > CreateProjectModal > does not render when showCreateProject is false 24ms
+ ✓ src/test/components/modals/CreateProjectModal.test.tsx > CreateProjectModal > renders correctly when showCreateProject is true 119ms
+ ✓ src/test/components/modals/CreateProjectModal.test.tsx > CreateProjectModal > generates a title when opening with an empty title 71ms
+ ✓ src/test/components/talent/TalentPanel.test.tsx > TalentPanel > renders talent roster 35ms
+ ✓ src/test/components/talent/TalentPanel.test.tsx > TalentPanel > filters talent by role 18ms
+ ✓ src/test/components/talent/TalentPanel.test.tsx > TalentPanel > shows empty state when no talent matches filter 12ms
+ ✓ src/test/components/modals/CreateProjectModal.test.tsx > CreateProjectModal > allows clicking Generate Random Title button 96ms
+stderr | src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > renders project details when a project is selected
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ ✓ src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > renders nothing when no project is selected 15ms
+ ✓ src/test/components/modals/CreateProjectModal.test.tsx > CreateProjectModal > conditionally renders TV fields when TV format is selected 188ms
+ ✓ src/test/engine/systems/franchises.test.ts > franchise system > exploitIP > returns null if source project is not released 1ms
+ ✓ src/test/engine/systems/franchises.test.ts > franchise system > exploitIP > returns null if project failed financially and is not fatigued 0ms
+ ✓ src/test/engine/systems/franchises.test.ts > franchise system > exploitIP > returns reboot option if franchise is severely fatigued and financial failure 1ms
+ ✓ src/test/engine/systems/franchises.test.ts > franchise system > exploitIP > returns null if franchise is severely fatigued, failed, but random check fails 0ms
+ ✓ src/test/engine/systems/franchises.test.ts > franchise system > exploitIP > generates a deconstructive meta-sequel if franchise is heavily fatigued and fails 0ms
+ ✓ src/test/engine/systems/franchises.test.ts > franchise system > exploitIP > generates crossover event if another huge hit exists in same genre 0ms
+ ✓ src/test/engine/systems/franchises.test.ts > franchise system > exploitIP > generates crossover event if another huge hit exists in a compatible crossover genre 0ms
+ ✓ src/test/engine/systems/franchises.test.ts > franchise system > exploitIP > generates a direct sequel 0ms
+ ✓ src/test/engine/systems/franchises.test.ts > franchise system > exploitIP > generates a prequel 0ms
+ ✓ src/test/engine/systems/franchises.test.ts > franchise system > exploitIP > generates a spinoff 0ms
+ ✓ src/test/engine/systems/franchises.test.ts > franchise system > exploitIP > clamps buzz bonus to -10 when completely saturated 0ms
+ ✓ src/test/engine/systems/franchises.test.ts > franchise system > exploitIP > applies steep fatigue curve for Superhero genre heavily saturated 0ms
+ ✓ src/test/engine/systems/franchises.test.ts > franchise system > exploitIP > generates an IP Rights Retention Rush Job if legacy franchise underperforms 0ms
+stderr | src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > shows greenlight button when project needs greenlight
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ ✓ src/test/components/rivals/RivalsPanel.test.tsx > RivalsPanel > renders correctly with an empty rivals list 25ms
+ ✓ src/test/components/rivals/RivalsPanel.test.tsx > RivalsPanel > renders rivals correctly 12ms
+ ✓ src/test/components/rivals/RivalsPanel.test.tsx > RivalsPanel > applies correct strength styling based on strength value 5ms
+stderr | src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > shows marketing configuration and handles launch campaign
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ ✓ src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > renders project details when a project is selected 160ms
+ ✓ src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > shows greenlight button when project needs greenlight 85ms
+stderr | src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > shows renew button for tv project and handles renewal
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ ✓ src/test/components/modals/CreateProjectModal.test.tsx > CreateProjectModal > conditionally renders Unscripted fields when Unscripted format is selected 156ms
+ ✓ src/test/components/modals/CreateProjectModal.test.tsx > CreateProjectModal > disables Greenlight button if title is empty 57ms
+stderr | src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > shows develop spinoff button for high revenue projects and handles exploitation
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ ✓ src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > shows marketing configuration and handles launch campaign 28ms
+ ✓ src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > shows renew button for tv project and handles renewal 10ms
+ ✓ src/test/components/modals/ProjectDetailModal.test.tsx > ProjectDetailModal > shows develop spinoff button for high revenue projects and handles exploitation 17ms
+ ✓ src/test/components/modals/CreateProjectModal.test.tsx > CreateProjectModal > submits the form correctly for a film 46ms
+ ✓ src/test/components/modals/CreateProjectModal.test.tsx > CreateProjectModal > allows selecting talent 61ms
+ ✓ src/test/store/gameStore.test.ts > gameStore > starts with null game state 1ms
+ ✓ src/test/store/gameStore.test.ts > gameStore > creates a new game 2ms
+ ✓ src/test/store/gameStore.test.ts > gameStore > advances week 2ms
+ ✓ src/test/store/gameStore.test.ts > gameStore > throws when advancing without game state 0ms
+ ✓ src/test/store/gameStore.test.ts > gameStore > creates a project 1ms
+ ✓ src/test/store/gameStore.test.ts > gameStore > handles creating project when no game state exists 0ms
+ ✓ src/test/store/gameStore.test.ts > gameStore > saves to slot 0ms
+ ✓ src/test/store/gameStore.test.ts > gameStore > loads from slot 0ms
+ ✓ src/test/store/gameStore.test.ts > gameStore > retrieves save slots 0ms
+ ✓ src/test/store/gameStore.test.ts > gameStore > signs a contract if sufficient funds 0ms
+ ✓ src/test/store/gameStore.test.ts > gameStore > fails to sign contract if insufficient funds 0ms
+ ✓ src/test/store/gameStore.test.ts > gameStore > should acquire an opportunity and convert it to a project 0ms
+ ✓ src/test/components/pipeline/PipelineBoard.test.tsx > PipelineBoard > renders title and New Project button 41ms
+ ✓ src/test/components/pipeline/PipelineBoard.test.tsx > PipelineBoard > calls openCreateProject when New Project button is clicked 5ms
+ ✓ src/test/components/pipeline/PipelineBoard.test.tsx > PipelineBoard > renders all pipeline columns 18ms
+ ✓ src/test/components/pipeline/PipelineBoard.test.tsx > PipelineBoard > distributes projects into correct columns 4ms
+ ✓ src/test/components/pipeline/PipelineBoard.test.tsx > PipelineBoard > shows "No projects" message for empty columns 3ms
+ ✓ src/test/persistence/saveLoad.test.ts > saveLoad > returns null when loading an empty slot 21ms
+ ✓ src/test/persistence/saveLoad.test.ts > saveLoad > handles malformed save data 0ms
+ ✓ src/test/persistence/saveLoad.test.ts > saveLoad > saves and loads game state 10ms
+ ✓ src/test/persistence/saveLoad.test.ts > saveLoad > retrieves save slots info 1ms
+ ✓ src/test/persistence/saveLoad.test.ts > saveLoad > interacts with localStorage correctly when saving a game 1ms
+ ✓ src/test/persistence/saveLoad.test.ts > saveLoad > preserves existing save slots when saving to a new slot 1ms
+ ✓ src/test/chart.test.tsx > ChartStyle > should securely escape malicious XSS payloads in color config 15ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > generateReviewScore > calculates base score clamped between 1 and 100 1ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > generateReviewScore > applies penalty for active, unresolved crises 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > generateReviewScore > ignores resolved crises 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > generateReviewScore > handles 0 prestige talent pool (edge case) 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > generateReviewScore > handles maximum prestige talent pool (edge case) 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > generateReviewScore > applies penalty for terrible buzz (<30) 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > generateReviewScore > applies bonus for excellent buzz (>80) 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > generateReviewScore > calculates talent bonus correctly for multiple attached talents 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > simulateWeeklyBoxOffice > applies standard drop off multipliers based on review score legs 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > simulateWeeklyBoxOffice > applies massive penalty for huge budget drop off week 1 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > simulateWeeklyBoxOffice > applies sharp second-weekend drop for tentpoles week 1 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > simulateWeeklyBoxOffice > applies strong word-of-mouth bonus for low budget anomalies 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > simulateWeeklyBoxOffice > handles extreme rival competition (100 strength) 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > simulateWeeklyBoxOffice > never drops below 0.05 absolute multiplier floor due to extreme competition 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > calculateBoxOfficeRanks > returns correctly sorted ranks map 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > calculateBoxOfficeRanks > handles empty array 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > calculateBoxOfficeRanks > handles identical revenues (preserves sort stability or ties appropriately) 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > calculateBoxOfficeRanks > does not mutate the original input array 1ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > calculateBoxOfficeRanks > handles negative and zero revenues correctly 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > calculateBoxOfficeRanks > handles fractional revenues correctly 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > Extreme Edge Cases (Guild Auditor) > handles extreme review scores (> 100 or < 0) 0ms
+ ✓ src/test/engine/systems/releaseSimulation.test.ts > releaseSimulation system > Extreme Edge Cases (Guild Auditor) > handles calculating rank with a single entry or empty 0ms
+ ✓ src/test/engine/systems/crises.test.ts > crises system > checkAndTriggerCrisis > returns undefined if project is not in production 1ms
+ ✓ src/test/engine/systems/crises.test.ts > crises system > checkAndTriggerCrisis > returns undefined if random check fails (>= 0.05) 0ms
+ ✓ src/test/engine/systems/crises.test.ts > crises system > checkAndTriggerCrisis > returns an ActiveCrisis if random check passes (< 0.05) 0ms
+ ✓ src/test/engine/systems/crises.test.ts > crises system > resolveCrisis > returns unchanged state if project not found 0ms
+ ✓ src/test/engine/systems/crises.test.ts > crises system > resolveCrisis > returns unchanged state if project has no active crisis 0ms
+ ✓ src/test/engine/systems/crises.test.ts > crises system > resolveCrisis > returns unchanged state if crisis is already resolved 0ms
+ ✓ src/test/engine/systems/crises.test.ts > crises system > resolveCrisis > returns unchanged state if optionIndex is invalid 0ms
+ ✓ src/test/engine/systems/crises.test.ts > crises system > resolveCrisis > applies cash penalty correctly 0ms
+ ✓ src/test/engine/systems/crises.test.ts > crises system > resolveCrisis > applies weeks delay and buzz penalty correctly, clamping buzz at 0 0ms
+ ✓ src/test/engine/systems/crises.test.ts > crises system > resolveCrisis > handles extreme negative cash penalty (edge case for data error / intentional gain) 0ms
+ ✓ src/test/engine/core/weekAdvance.test.ts > advanceWeek > advances the game by one week and generates a summary 3ms
+ ✓ src/test/engine/core/weekAdvance.test.ts > advanceWeek > decreases opportunity expiry weeks and removes expired ones 1ms
+ ✓ src/test/engine/core/weekAdvance.test.ts > advanceWeek > sometimes spawns new opportunities 2ms
+ ✓ src/test/engine/systems/festivals.test.ts > Festivals System > submits a project to a festival if cash is sufficient and status is valid 1ms
+ ✓ src/test/engine/systems/festivals.test.ts > Festivals System > declines submission if project cannot be found or cash is too low 0ms
+ ✓ src/test/engine/systems/festivals.test.ts > Festivals System > resolves festival results and correctly selects/rejects based on indie credibility and prestige 1ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > updateBuyers > generates specific headlines for all mandate types 2ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > updateBuyers > shifts mandate if buyer has no current mandate 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > updateBuyers > shifts mandate if current mandate is expired 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > updateBuyers > shifts mandate early due to random 5% chance 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > updateBuyers > maintains mandate if active and random chance fails 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > calculateFitScore > applies extreme market saturation penalty for 5 or more recent similar projects 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > calculateFitScore > matches genres correctly for sci-fi/fantasy, comedy, and drama 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > calculateFitScore > boosts score for prestige mandate based on budget tiers 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > calculateFitScore > boosts score for broad_appeal mandate with family audience and mid/high budget 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > calculateFitScore > penalizes low budget projects for premium archetype buyers 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > calculateFitScore > applies market saturation penalty for similar projects released within 52 weeks 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > calculateFitScore > returns exactly 50 if buyer has no mandate (early return check) 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > calculateFitScore > applies extreme buzz multipliers correctly with negative buzz 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > calculateFitScore > clamps score between 0 and 100 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > calculateFitScore > handles budget freeze mandate with extreme blockbuster budget 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > calculateFitScore > handles broad appeal mandate with niche indie project 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > calculateFitScore > applies archetype specific penalties (network vs blockbuster) 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > negotiateContract > requires a higher score (65) for upfront contracts 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > negotiateContract > requires a lower score (40) for standard/deficit contracts 0ms
+ ✓ src/test/engine/systems/buyers.test.ts > buyers system > negotiateContract > tests explicit fit score boundaries for contract acceptance 0ms
+ ✓ src/test/engine/core/gameInit.test.ts > initializeGame > initializes game state with correctly passed parameters 3ms
+ ✓ src/test/components/modals/PitchProjectModal.test.tsx > PitchProjectModal > handles a successful pitch 1529ms
+ ✓ src/test/components/modals/PitchProjectModal.test.tsx > PitchProjectModal > handles a failed pitch 22ms
+ ✓ src/test/components/modals/PitchProjectModal.test.tsx > PitchProjectModal > calls handleClose when dialog is closed 18ms
+ ✓ src/test/engine/generators/agencies.test.ts > agencies generator > generateAgencies > generates the requested number of agencies 1ms
+ ✓ src/test/engine/generators/agencies.test.ts > agencies generator > generateAgencies > makes the first two agencies powerhouses 1ms
+ ✓ src/test/engine/generators/agencies.test.ts > agencies generator > generateAgencies > assigns higher prestige and leverage to powerhouse agencies 0ms
+ ✓ src/test/engine/generators/agencies.test.ts > agencies generator > generateAgents > generates agents for each given agency 0ms
+ ✓ src/test/engine/generators/agencies.test.ts > agencies generator > generateAgents > assigns high aggression to agents in a shark culture 0ms
+ ✓ src/test/engine/generators/agencies.test.ts > agencies generator > generateAgents > assigns lower aggression to agents in non-shark cultures 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > does nothing for archived projects 1ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > advances development project normally 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > transitions from development to needs_greenlight 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > transitions from production to marketing 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > handleReleasePhaseEntry transitions to released 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > accumulates revenue and decays weekly revenue for released projects 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > archives released project after its run 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > transitions tv from development to pitching 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > transitions unscripted from development to pitching 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > drifts buzz with talent buzz bonus during dev 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > drifts buzz without talent during dev 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > TV & Unscripted Release Rules > advances episodes Released correctly 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > TV & Unscripted Release Rules > announces the finale when last episode drops 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > TV & Unscripted Release Rules > decays rapidly for weekly after finale and sets to post_release 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > TV & Unscripted Release Rules > post_release forces out after eps + 4 weeks 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > TV & Unscripted Release Rules > binge release model completes run early if below 50k 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > TV & Unscripted Release Rules > binge release model completes run after 8 weeks 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > TV & Unscripted Release Rules > split release model part 2 drops 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > TV & Unscripted Release Rules > split release decays normally before part 2 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > TV & Unscripted Release Rules > split release decays after part 2 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > TV & Unscripted Release Rules > split release finishes its run 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > Post-Release and Ancillary rules > calculates bidding war for prestige projects 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > Post-Release and Ancillary rules > calculates VOD drop for normal films 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > Post-Release and Ancillary rules > calculates higher ancillary for family and anim projects after week 1 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > Post-Release and Ancillary rules > archives project after 26 weeks of post_release 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > Handle Release Phase Entry edge cases > sets prestige multiplier correctly based on bounds 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > Handle Release Phase Entry edge cases > handles extreme negative budget or buzz values safely (clip to 0 logic check) 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > Handle Release Phase Entry edge cases > handles binge TV entry correctly 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > Handle Release Phase Entry edge cases > handles split TV entry correctly 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > Handle Release Phase Entry edge cases > handles weekly TV entry correctly 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > Extreme Edge Cases (Guild Auditor) > handles project with extremely long negative weeks in phase 0ms
+ ✓ src/test/engine/systems/projects.test.ts > advanceProject > Extreme Edge Cases (Guild Auditor) > does not crash or stall if all projects in an array are advanced correctly (pipeline simulation) 0ms
+ ✓ src/test/engine/systems/awards.test.ts > awards system > generateAwardsProfile > should generate a profile with all scores between 0 and 100 3ms
+ ✓ src/test/engine/systems/awards.test.ts > awards system > generateAwardsProfile > should have a default campaignStrength of 10 0ms
+ ✓ src/test/engine/systems/awards.test.ts > awards system > generateAwardsProfile > should be influenced by budget for prestigeScore 1ms
+ ✓ src/test/engine/systems/awards.test.ts > awards system > generateAwardsProfile > should give higher indieCredibility potential to low budget projects 0ms
+ ✓ src/test/engine/systems/awards.test.ts > awards system > runAwardsCeremony > should not return awards if no projects are eligible 1ms
+ ✓ src/test/engine/systems/awards.test.ts > awards system > runAwardsCeremony > should exclude projects released more than 52 weeks ago 0ms
+ ✓ src/test/engine/systems/awards.test.ts > awards system > runAwardsCeremony > should award 'won' status for high scores (> 150) 0ms
+ ✓ src/test/engine/systems/awards.test.ts > awards system > runAwardsCeremony > should award 'nominated' status for medium scores (> 100) 0ms
+ ✓ src/test/engine/systems/awards.test.ts > awards system > runAwardsCeremony > should correctly accumulate prestige change 0ms
+ ✓ src/test/engine/systems/awards.test.ts > awards system > runAwardsCeremony > should filter awards by project format 0ms
+ ✓ src/test/engine/systems/awards.test.ts > awards system > runAwardsCeremony > should award the highest scoring project when multiple are eligible 0ms
+ ✓ src/test/engine/systems/awards.test.ts > awards system > runAwardsCeremony > should exclude projects that are not released or archived 0ms
+ ✓ src/test/engine/systems/awards.test.ts > awards system > runAwardsCeremony > should include projects that are archived and within the 52 week window 0ms
+ ✓ src/test/engine/systems/awards.test.ts > awards system > runAwardsCeremony > should allow a project with high campaignStrength to win against an identical project with low campaignStrength 0ms
+ ✓ src/test/engine/systems/awards.test.ts > awards system > runAwardsCeremony > should exclude projects that do not have an awardsProfile 1ms
+ ✓ src/test/engine/systems/TalentSystem.test.ts > TalentSystem > applyProjectResults > returns empty array if no contracts provided 1ms
+ ✓ src/test/engine/systems/TalentSystem.test.ts > TalentSystem > applyProjectResults > applies massive hit modifiers (ROI > 4.0) 0ms
+ ✓ src/test/engine/systems/TalentSystem.test.ts > TalentSystem > applyProjectResults > applies solid success modifiers (ROI > 2.0) 0ms
+ ✓ src/test/engine/systems/TalentSystem.test.ts > TalentSystem > applyProjectResults > applies neutral/modest success modifiers (ROI > 1.0) 0ms
+ ✓ src/test/engine/systems/TalentSystem.test.ts > TalentSystem > applyProjectResults > applies bomb modifiers (ROI < 0.4) 0ms
+ ✓ src/test/engine/systems/TalentSystem.test.ts > TalentSystem > applyProjectResults > handles awards correctly for specific roles 0ms
+ ✓ src/test/engine/systems/TalentSystem.test.ts > TalentSystem > applyProjectResults > applies general award modifiers (Best Picture) to all roles with dilution 0ms
+ ✓ src/test/engine/systems/TalentSystem.test.ts > TalentSystem > applyProjectResults > clamps stats accurately 0ms
+ ✓ src/test/engine/systems/TalentSystem.test.ts > TalentSystem > advance > decrements opportunity expiry 1ms
+ ✓ src/test/engine/systems/TalentSystem.test.ts > TalentSystem > advance > removes expired opportunities 0ms
+ ✓ src/test/engine/systems/TalentSystem.test.ts > TalentSystem > advance > generates new opportunities based on random chance 1ms
+ ✓ src/test/engine/systems/trends.test.ts > Trends System > initializes with a set of default genre trends 1ms
+ ✓ src/test/engine/systems/trends.test.ts > Trends System > advances trends correctly over a week 0ms
+ ✓ src/test/engine/systems/trends.test.ts > Trends System > calculates the trend multiplier for a matching genre 0ms
+ ✓ src/test/engine/systems/trends.test.ts > Trends System > returns a multiplier of 1.0 for a missing genre 0ms
+ ✓ src/test/engine/systems/trends.test.ts > Trends System > shifts directions properly based on thresholds 1ms
+ ✓ src/test/engine/generators/talent.test.ts > talent generator > generateFamilies > generates the specified number of families 1ms
+ ✓ src/test/engine/generators/talent.test.ts > talent generator > generateFamilies > creates families with required attributes 0ms
+ ✓ src/test/engine/generators/talent.test.ts > talent generator > generateTalentPool > generates the specified number of talent profiles 0ms
+ ✓ src/test/engine/generators/talent.test.ts > talent generator > generateTalentPool > assigns multiple roles occasionally (multi-hyphenates) 1ms
+ ✓ src/test/engine/generators/talent.test.ts > talent generator > generateTalentPool > assigns nepo babies to families 0ms
+ ✓ src/test/engine/generators/talent.test.ts > talent generator > generateTalentPool > assigns talent to agents and agencies if available 0ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p 1500 $2K 1ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p 1000 $1K 0ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p 999 undefined 1ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p 1500000 $1.5M 0ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p 1000000 $1.0M 0ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p 1500000000 $1.5B 0ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p 1000000000 $1.0B 0ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p -1500 -$2K 0ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p -1500000 -$1.5M 1ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p -1500000000 -$1.5B 0ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p -500 -undefined 0ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p 0 +0 0ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p 50 undefined 0ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p 0 --0 0ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p NaN $NaN 0ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p Infinity $InfinityB 0ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p -Infinity -$InfinityB 0ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p 999.9 $1K 0ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p 999999.9 $1.0M 0ms
+ ✓ src/test/engine/utils.test.ts > utils > formatMoney > formats %p as %p 999999999.9 $1.0B 0ms
+ ✓ src/test/engine/utils.test.ts > utils > getWeekDisplay > calculates correct week and year 0ms
+ ✓ src/test/engine/utils.test.ts > utils > pick > picks an element from the array 0ms
+ ✓ src/test/engine/utils.test.ts > utils > randRange > returns a number within the range 0ms
+ ✓ src/test/engine/utils.test.ts > utils > clamp > returns the minimum when value is below min 0ms
+ ✓ src/test/engine/utils.test.ts > utils > clamp > returns the value when within range 0ms
+ ✓ src/test/engine/utils.test.ts > utils > clamp > returns the maximum when value is above max 0ms
+ ✓ src/test/engine/systems/rivals.test.ts > updateRival > updates strength and cash 1ms
+ ✓ src/test/engine/systems/rivals.test.ts > updateRival > updates strategy based on archetype 0ms
+ ✓ src/test/engine/systems/rivals.test.ts > updateRival > sets isAcquirable correctly 0ms
+ ✓ src/test/engine/generators/opportunities.test.ts > Opportunity Generator > should generate a valid opportunity 2ms
+ ✓ src/test/engine/generators/opportunities.test.ts > Opportunity Generator > should generate attached talent if provided 0ms
+ ✓ src/test/engine/generators/opportunities.test.ts > Opportunity Generator > should populate TV specific fields if format is TV 0ms
+ ✓ src/test/engine/generators/opportunities.test.ts > Opportunity Generator > should generate titles 0ms
+ ✓ src/test/engine/systems/stats.test.ts > stats system > getFilmStats > calculates film stats correctly for mid tier (budget < 100M) 13ms
+ ✓ src/test/engine/systems/stats.test.ts > stats system > getFilmStats > applies 1.25x risk multiplier for high tier (budget >= 100M) 0ms
+ ✓ src/test/engine/systems/stats.test.ts > stats system > getFilmStats > applies 1.5x risk multiplier for blockbuster tier (budget >= 200M) 0ms
+ ✓ src/test/engine/systems/stats.test.ts > stats system > getTvStats > calculates TV stats correctly for mid tier (budget <= 50M) 0ms
+ ✓ src/test/engine/systems/stats.test.ts > stats system > getTvStats > applies 1.3x scale multiplier for high tier (budget > 50M) 0ms
+ ✓ src/test/engine/systems/stats.test.ts > stats system > getTvStats > applies 1.5x scale multiplier for blockbuster tier (budget >= 100M) 0ms
+ ✓ src/test/engine/systems/stats.test.ts > stats system > getUnscriptedStats > calculates unscripted stats correctly for mid tier (budget <= 50M) 0ms
+ ✓ src/test/engine/systems/stats.test.ts > stats system > getUnscriptedStats > applies 1.2x scale multiplier for high tier (budget > 50M) for weekly cost only 0ms
+ ✓ src/test/engine/systems/stats.test.ts > stats system > getUnscriptedStats > applies 1.4x scale multiplier for blockbuster tier (budget >= 100M) 0ms
+ ✓ src/test/engine/systems/stats.test.ts > stats system > Extreme Edge Cases (Guild Auditor) > handles negative budget safely 0ms
+ ✓ src/test/engine/systems/stats.test.ts > stats system > Extreme Edge Cases (Guild Auditor) > handles 0 budget safely 0ms
+ ✓ src/test/engine/systems/unscripted.test.ts > Unscripted Projects > creates an unscripted project with correct stats 14ms
+ ✓ src/test/engine/systems/finance.test.ts > finance > calculateWeeklyCosts > sums costs of development and production projects only 1ms
+ ✓ src/test/engine/systems/finance.test.ts > finance > calculateWeeklyCosts > applies costMultiplier 0 for upfront contract type in production 0ms
+ ✓ src/test/engine/systems/finance.test.ts > finance > calculateWeeklyCosts > applies costMultiplier 0.5 for deficit contract type in production 0ms
+ ✓ src/test/engine/systems/finance.test.ts > finance > calculateWeeklyCosts > handles negative weeklyCost safely 0ms
+ ✓ src/test/engine/systems/finance.test.ts > finance > calculateWeeklyCosts > ignores contract types for development phase projects 0ms
+ ✓ src/test/engine/systems/finance.test.ts > finance > calculateWeeklyRevenue > sums revenue of released projects, factoring in backend percent 1ms
+ ✓ src/test/engine/systems/finance.test.ts > finance > calculateWeeklyRevenue > returns 0 if no released projects 0ms
+ ✓ src/test/engine/systems/finance.test.ts > finance > calculateWeeklyRevenue > sums revenue of multiple released projects without contracts 0ms
+ ✓ src/test/engine/systems/finance.test.ts > finance > calculateWeeklyRevenue > sums backend percentages from multiple contracts on the same project 0ms
+ ✓ src/test/engine/systems/finance.test.ts > finance > calculateWeeklyRevenue > ignores contracts that belong to a different project 0ms
+ ✓ src/test/engine/systems/finance.test.ts > finance > calculateWeeklyRevenue > handles a released project with zero weekly revenue 0ms
+ ✓ src/test/engine/systems/finance.test.ts > finance > calculateWeeklyRevenue > handles backend percentages greater than 100% 0ms
+ ✓ src/test/engine/systems/finance.test.ts > finance > calculateWeeklyRevenue > handles negative weeklyRevenue safely 0ms
+ ✓ src/test/engine/systems/finance.test.ts > finance > calculateWeeklyRevenue > returns 0 revenue for upfront contract type 0ms
+ ✓ src/test/engine/systems/finance.test.ts > finance > calculateWeeklyRevenue > calculates 100% of revenue for deficit contract type minus backend 0ms
+ ✓ src/test/engine/generators/headlines.test.ts > generateHeadlines > should generate between 1 and 3 headlines 1ms
+ ✓ src/test/engine/generators/headlines.test.ts > generateHeadlines > should return headlines with the correct structure 1ms
+ ✓ src/test/engine/generators/headlines.test.ts > generateHeadlines > should generate rival headlines if rivals are provided 0ms
+ ✓ src/test/engine/generators/headlines.test.ts > generateHeadlines > should NOT generate rival headlines if NO rivals are provided 0ms
+ ✓ src/test/engine/generators/names.test.ts > Names Generator > generateStudioName > returns a string 1ms
+ ✓ src/test/engine/generators/names.test.ts > Names Generator > generateStudioName > avoids existing names 0ms
+ ✓ src/test/engine/generators/names.test.ts > Names Generator > generateMotto > returns a string 0ms
+ ✓ src/test/engine/generators/names.test.ts > Names Generator > generateActorName > returns a string with two words (first and last name) 0ms
+ ✓ src/test/engine/generators/names.test.ts > Names Generator > generateActressName > returns a string with two words (first and last name) 0ms
+ ✓ src/test/engine/generators/names.test.ts > Names Generator > generateProjectName > returns a string for tv projects 0ms
+ ✓ src/test/engine/generators/names.test.ts > Names Generator > generateProjectName > returns a string for film projects 0ms
+ ✓ src/test/engine/generators/names.test.ts > Names Generator > generateProjectName > falls back to Drama genre if an unknown genre is passed 0ms
+ ✓ src/test/engine/systems/culture.test.ts > Culture System > initializes culture based on the studio archetype 1ms
+ ✓ src/test/engine/systems/culture.test.ts > Culture System > shifts culture correctly when greenlighting a high-budget commercial film 0ms
+ ✓ src/test/engine/systems/culture.test.ts > Culture System > shifts culture correctly when greenlighting an indie prestige drama 0ms
+ ✓ src/test/engine/systems/culture.test.ts > Culture System > clamps culture values between 0 and 100 0ms
+ ✓ src/test/engine/systems/deals.test.ts > Deals System > evaluates whether talent will accept a first-look deal based on prestige and access levels 1ms
+ ✓ src/test/engine/systems/deals.test.ts > Deals System > offers a deal and returns a valid FirstLookDeal object if accepted 1ms
+ ✓ src/test/store/uiStore.test.ts > uiStore > sets active tab 1ms
+ ✓ src/test/store/uiStore.test.ts > uiStore > opens and closes create project modal 0ms
+ ✓ src/test/store/uiStore.test.ts > uiStore > selects a project 0ms
+ ✓ src/test/store/uiStore.test.ts > uiStore > shows and closes week summary 0ms
+ ✓ src/test/example.test.ts > example > should pass 1ms
+
+ Test Files  39 passed (39)
+      Tests  312 passed (312)
+   Start at  21:30:05
+   Duration  4.69s (transform 1.79s, setup 2.63s, collect 7.93s, tests 3.81s, environment 15.36s, prepare 2.60s)
+

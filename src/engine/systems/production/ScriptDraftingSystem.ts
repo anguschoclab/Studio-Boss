@@ -1,7 +1,5 @@
-import { pick } from '../../utils';
 import { Project, ScriptEvent, CharacterArchetype, StateImpact } from '@/engine/types/index';
 import { RandomGenerator } from '../../utils/rng';
-import { ScriptMetricsCalculator } from './ScriptMetricsCalculator';
 
 /**
  * Studio Boss - Script Drafting System
@@ -11,24 +9,19 @@ import { ScriptMetricsCalculator } from './ScriptMetricsCalculator';
 export function tickScriptDevelopment(
   project: Project,
   rng: RandomGenerator
-): StateImpact[] {
-  const impacts: StateImpact[] = [];
-  
+): { project: Project; impact?: StateImpact } {
   // Only evolve during development phase
-  if (project.state !== 'development') return [];
+  if (project.state !== 'development') return { project };
 
   // Only evolve scripted projects
-  if (!('scriptHeat' in project)) return [];
+  if (!('scriptHeat' in project)) return { project };
 
-  const p = project as import('@/engine/types').ScriptedProject;
+  const p = { ...project } as import('@/engine/types').ScriptedProject;
   const roll = rng.next();
   
   // 1. Script Heat Drift
   const heatDrift = rng.rangeInt(-3, 5); // Slight upward bias
-  const newScriptHeat = Math.max(0, Math.min(100, p.scriptHeat + heatDrift));
-  let newBuzz = p.buzz;
-  let newActiveRoles = [...p.activeRoles];
-  const newScriptEvents = [...p.scriptEvents];
+  p.scriptHeat = Math.max(0, Math.min(100, p.scriptHeat + heatDrift));
 
   // 2. Evolution Events (Low Probability)
   if (roll < 0.15) {
@@ -39,8 +32,8 @@ export function tickScriptDevelopment(
       if (p.scriptHeat < 40) {
         const r1 = p.activeRoles[p.activeRoles.length - 1];
         const r2 = p.activeRoles[p.activeRoles.length - 2];
-        newActiveRoles = p.activeRoles.slice(0, -2);
-        newActiveRoles.push(r1); // Merge r2 into r1
+        p.activeRoles = p.activeRoles.slice(0, -2);
+        p.activeRoles.push(r1); // Merge r2 into r1
 
         const event: import('@/engine/types').ScriptEvent = {
           week: p.weeksInPhase,
@@ -49,15 +42,15 @@ export function tickScriptDevelopment(
           qualityImpact: -5,
           heatGain: -2
         };
-        newScriptEvents.push(event);
-        newBuzz = Math.max(0, p.buzz - 5);
+        p.scriptEvents.push(event);
+        p.buzz = Math.max(0, p.buzz - 5);
       }
     } 
     // ROLE SPLIT (High Heat)
     else if (evolutionRoll > 0.8 && p.activeRoles.length < 6) {
       if (p.scriptHeat > 70) {
-        const archetype: CharacterArchetype = pick(['sidekick', 'love_interest', 'loose_cannon', 'femme_fatale'], rng);
-        newActiveRoles = [...p.activeRoles, archetype];
+        const archetype: CharacterArchetype = rng.pick(['sidekick', 'love_interest', 'loose_cannon', 'femme_fatale']);
+        p.activeRoles.push(archetype);
 
         const event: import('@/engine/types').ScriptEvent = {
           week: p.weeksInPhase,
@@ -66,8 +59,8 @@ export function tickScriptDevelopment(
           qualityImpact: 10,
           heatGain: 5
         };
-        newScriptEvents.push(event);
-        newBuzz = p.buzz + 10;
+        p.scriptEvents.push(event);
+        p.buzz += 10;
       }
     }
     // PLOT TWIST / DIALOGUE POLISH
@@ -82,31 +75,10 @@ export function tickScriptDevelopment(
         qualityImpact: impact,
         heatGain: type === 'PLOT_TWIST_ADDED' ? 8 : 3
       };
-      newScriptEvents.push(event);
-      newBuzz = p.buzz + impact;
+      p.scriptEvents.push(event);
+      p.buzz += impact;
     }
   }
 
-  // Calculate script metrics
-  const newScriptMetrics = ScriptMetricsCalculator.calculateMetrics(
-    p as import('@/engine/types').ScriptedProject,
-    p.weeksInPhase,
-    (p as any).scriptMetrics
-  );
-
-  impacts.push({
-    type: 'PROJECT_UPDATED',
-    payload: {
-      projectId: project.id,
-      update: {
-        scriptHeat: newScriptHeat,
-        buzz: newBuzz,
-        activeRoles: newActiveRoles,
-        scriptEvents: newScriptEvents,
-        scriptMetrics: newScriptMetrics
-      }
-    }
-  });
-
-  return impacts;
+  return { project: p as import('@/engine/types').Project };
 }

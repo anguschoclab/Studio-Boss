@@ -1,110 +1,76 @@
-import { Project, GameState, TalentPact } from '@/engine/types';
+import { Project } from '../../types';
 
 /**
  * ExpenseProcessor handles all loss-related calculations for the studio.
  */
-export const ExpenseProcessor = {
+export class ExpenseProcessor {
   /**
    * Calculates studio burn based on studio level and the number of active projects.
+   * Non-linear scaling for late-game challenge.
    */
-  calculateStudioBurn(level: number, activeProjectsCount: number): number {
-    // The Studio Comptroller: Increased base rent to 2M, project penalty to 600k, and level scale to 1.8 to mathematically crush passive studio empires.
-    const baseRent = 2000000;
-    const levelScale = Math.pow(1.8, Math.max(0, level - 1));
-    const projectPenalty = activeProjectsCount * 600000;
-    return Math.round(baseRent * levelScale + projectPenalty);
-  },
+  static calculateStudioBurn(level: number, activeProjectsCount: number): number {
+    const baseRent = 500000; // $500k base weekly overhead
+    
+    // Non-linear scaling: Base * (1.25 ^ (Level-1))
+    const levelScale = Math.pow(1.25, Math.max(0, level - 1));
+    const projectPenalty = 75000; // $75k penalty per active project
+    
+    const burn = (baseRent * levelScale) + (activeProjectsCount * projectPenalty);
+    return Math.round(burn);
+  }
 
   /**
-   * Calculates the 'Credit Spread'.
+   * Calculates weekly interest penalty for negative cash balances.
    */
-  calculateCreditSpread(prestige: number, awards: import('../../types').Award[] = []): number {
-    let spread = (100 - Math.min(100, Math.max(0, prestige))) / 1000;
-    const oscarWins = (awards || []).filter(a => a.body === 'Academy Awards' && a.category === 'Best Picture' && a.status === 'won').length;
-    spread -= Math.min(0.03, oscarWins * 0.01);
-    return Math.max(0.01, spread);
-  },
-
-  /**
-   * Calculates weekly interest penalty for negative balances.
-   */
-  calculateDebtInterest(cash: number, debtRate: number, prestige: number = 70, awards: import('../../types').Award[] = []): number {
+  static calculateDebtInterest(cash: number, debtRate: number): number {
     if (cash >= 0) return 0;
-    const riskPremium = this.calculateCreditSpread(prestige, awards);
-    const effectiveAnnualRate = debtRate + riskPremium;
-    const weeklyRate = effectiveAnnualRate / 52;
-    return Math.round(Math.abs(cash) * weeklyRate);
-  },
+    
+    // Weekly interest = (Balance * AnnualRate) / 52
+    const weeklyRate = debtRate / 52;
+    return Math.abs(Math.round(cash * weeklyRate));
+  }
 
   /**
-   * Calculates weekly interest yield for positive balances.
+   * Calculates weekly interest yield for positive cash balances.
    */
-  calculateSavingsYield(cash: number, savingsYield: number): number {
+  static calculateSavingsYield(cash: number, savingsYield: number): number {
     if (cash <= 0) return 0;
+    
+    // Weekly yield = (Balance * AnnualRate) / 52
     const weeklyRate = savingsYield / 52;
     return Math.round(cash * weeklyRate);
-  },
+  }
 
   /**
-   * Calculates weekly marketing burn.
+   * Calculates weekly marketing burn from active projects in the marketing phase.
    */
-  calculateMarketingBurn(projects: Project[]): number {
+  static calculateMarketingBurn(projects: Project[]): number {
     let totalBurn = 0;
+    
     projects.forEach((p) => {
       if (p.state === 'marketing' && p.marketingBudget) {
-        totalBurn += p.marketingBudget / 4; // Marketing spans 4 weeks
+        // Marketing budget is usually spent over 4-8 weeks
+        // Weekly burn is a fraction of the total budget
+        const weeklyMarketingBurn = p.marketingBudget / 6; 
+        totalBurn += weeklyMarketingBurn;
       }
     });
+
     return Math.round(totalBurn);
-  },
+  }
 
   /**
-   * Calculates production costs.
-   * Phase 2: TV projects use fractional burn (budget / episodes).
+   * Calculates production costs for projects in production.
    */
-  calculateProductionBurn(projects: Project[]): number {
+  static calculateProductionBurn(projects: Project[]): number {
     let totalBurn = 0;
+    
     projects.forEach((p) => {
       if (p.state === 'production') {
-        const episodeCount = (p as any).episodeCount || 1;
-        totalBurn += p.budget / episodeCount;
+        totalBurn += p.weeklyCost;
       }
     });
+
     return Math.round(totalBurn);
-  },
-
-  /**
-   * Calculates weekly overhead for TalentPacts.
-   */
-  calculatePactOverhead(pacts: TalentPact[]): number {
-    return (pacts || []).reduce((total, pact) => total + (pact.weeklyOverhead || 0), 0);
-  },
-
-  /**
-   * Calculates total consolidated expenses for the studio.
-   */
-  calculateConsolidatedExpenses(
-    projects: Project[],
-    state: GameState,
-    market: import('../../types/state.types').MarketState,
-    studioArchetype: string,
-    studioCash: number,
-    studioPrestige: number,
-    pacts: TalentPact[]
-  ): {
-    production: number;
-    marketing: number;
-    overhead: number;
-    interest: number;
-    pacts: number;
-  } {
-    const activeProjects = projects.filter(p => p.state === 'production' || p.state === 'marketing');
-    const production = this.calculateProductionBurn(activeProjects);
-    const marketing = this.calculateMarketingBurn(activeProjects);
-    const interest = this.calculateDebtInterest(studioCash, market.debtRate, studioPrestige);
-    const overhead = this.calculateStudioBurn(state.studio.level, activeProjects.length);
-    const pactsBurn = this.calculatePactOverhead(pacts);
-
-    return { production, marketing, overhead, interest, pacts: pactsBurn };
   }
-};
+}

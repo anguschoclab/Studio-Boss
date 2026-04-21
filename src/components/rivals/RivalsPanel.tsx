@@ -2,6 +2,7 @@ import React from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { Button } from '@/components/ui/button';
 import { Building2, MoreVertical, Zap, UserPlus, ShieldAlert } from 'lucide-react';
+import { ARCHETYPES } from '@/engine/data/archetypes';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,13 +25,10 @@ const strengthColor = (s: number) => {
 export const RivalsPanel = () => {
   const [activeSubTab, setActiveSubTab] = React.useState<'intel' | 'market'>('intel');
   const gameState = useGameStore(s => s.gameState);
-  const rivalsMap = gameState?.entities?.rivals || {};
-  const rivalsList = Object.values(rivalsMap);
+  const rivals = gameState?.industry.rivals || [];
   const playerCash = gameState?.finance?.cash || 0;
   
-  const corporateSabotage = useGameStore(s => s.corporateSabotage);
-  const poachExec = useGameStore(s => s.poachExec);
-  const attemptTakeover = useGameStore(s => s.attemptTakeover);
+  const { corporateSabotage, poachExec, attemptTakeover } = useGameStore();
 
   return (
     <div className="h-full flex flex-col overflow-hidden p-4">
@@ -74,16 +72,16 @@ export const RivalsPanel = () => {
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {rivalsList.map(rival => (
+              {rivals.map(rival => (
                 <div key={rival.id} className="p-4 rounded-xl border border-border/60 bg-card/60 backdrop-blur-md space-y-3.5 shadow-sm hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:border-destructive/40 transition-all duration-300 group relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-br from-destructive/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
                   
                   <div className="flex items-center justify-between relative z-10">
-                    <TooltipWrapper tooltip={`Studio Archetype: ${rival.archetype}. This studio priority and decision making is driven by this profile.`} side="top">
+                    <TooltipWrapper tooltip={`Studio Archetype: ${ARCHETYPES[rival.archetype]?.name}. This studio priority and decision making is driven by this profile.`} side="top">
                       <div className="flex flex-col cursor-help">
                         <h4 className="font-display text-[15px] font-black text-foreground group-hover:text-destructive transition-colors tracking-tight drop-shadow-sm">{rival.name}</h4>
                         <span className="text-[9px] font-black tracking-widest text-muted-foreground/90 uppercase">
-                          {rival.archetype}
+                          {ARCHETYPES[rival.archetype]?.name}
                         </span>
                       </div>
                     </TooltipWrapper>
@@ -161,7 +159,7 @@ export const RivalsPanel = () => {
                     </div>
                     <div className="flex justify-between items-center text-[9px] text-muted-foreground/60 pt-1 font-bold italic tracking-tight">
                         <TooltipWrapper tooltip="Number of properties this studio currently has in production." side="bottom">
-                          <span className="cursor-help">{rival.projectIds?.length || 0} active projects</span>
+                          <span className="cursor-help">{rival.projectCount} active projects</span>
                         </TooltipWrapper>
                         {rival.cash > 0 && (
                           <TooltipWrapper tooltip="Projected studio valuation based on current cash reserves and IP assets." side="bottom">

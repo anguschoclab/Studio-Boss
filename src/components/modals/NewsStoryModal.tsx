@@ -1,9 +1,13 @@
-import React from 'react';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import React, { useMemo } from 'react';
+import { useGameStore } from '@/store/gameStore';
+import { useUIStore } from '@/store/uiStore';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Headline } from '@/engine/types';
+import { Newspaper, ExternalLink, X } from 'lucide-react';
+import { Headline, NewsEvent } from '@/engine/types';
+import { TalentNameLink } from '@/components/shared/TalentNameLink';
 import { cn } from '@/lib/utils';
 
 interface NewsStoryModalProps {

@@ -1,9 +1,8 @@
 import { Project } from '../../types';
 
 /**
- * Standalone single-project progress calculator.
- * Used for UI-layer simulations and unit tests.
- * The engine tick loop uses TickModule for batch progress.
+ * Pure function to advance production progress and calculate costs.
+ * Respects crisis states (halted production).
  */
 export function advanceProjectProgress(project: Project): Project {
   // Use momentum to modify base progress/burn

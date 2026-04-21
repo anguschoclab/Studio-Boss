@@ -1,6 +1,5 @@
 import { advanceWeek } from '../../engine/core/weekAdvance';
 import { GameState, Project, Contract } from '../../engine/types';
-import { RandomGenerator } from '../../engine/utils/rng';
 
 function createMockState(projectCount: number, contractsPerProject: number): GameState {
   const projects: Record<string, Project> = {};
@@ -72,13 +71,12 @@ function createMockState(projectCount: number, contractsPerProject: number): Gam
 const PROJECT_COUNT = 100;
 const CONTRACTS_PER_PROJECT = 50;
 const state = createMockState(PROJECT_COUNT, CONTRACTS_PER_PROJECT);
-const rng = new RandomGenerator(42);
 
 console.log(`Benchmarking advanceWeek with ${PROJECT_COUNT} projects and ${PROJECT_COUNT * CONTRACTS_PER_PROJECT} total contracts...`);
 
 const start = performance.now();
 for (let i = 0; i < 100; i++) {
-  advanceWeek(state, rng);
+  advanceWeek(state);
 }
 const end = performance.now();
 

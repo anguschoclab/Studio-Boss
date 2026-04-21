@@ -1,14 +1,8 @@
 // Types related to the Simulation Engine, News, and Events
 
-export type ModalType = 'CRISIS' | 'AWARDS' | 'SUMMARY' | 'DIRECTORS_CUT_AVAILABLE' | 'UPFRONTS' | 'FESTIVAL_MARKET' | 'BIDDING_WAR' | 'BREAKOUT_BIDDING_WAR' | 'CREATE_PACKAGE' | 'PACKAGE_DETAIL' | 'REBOOT_OPPORTUNITY';
+export type HeadlineCategory = 'rival' | 'market' | 'talent' | 'awards' | 'general' | 'rumor';
 
-export type HeadlineCategory = 'rival' | 'market' | 'talent' | 'awards' | 'general' | 'rumor' | 'box_office' | 'streaming' | 'scandal' | 'dispute'
-  | 'acquisition' | 'development' | 'production' | 'casting' | 'deal'
-  | 'festival' | 'ratings' | 'cancellation' | 'renewal' | 'premiere' | 'unscripted';
-
-export type NewsEventType = 'CRISIS' | 'AWARD' | 'RELEASE' | 'STUDIO_EVENT' | 'RIVAL' | 'MILESTONE' | 'SCANDAL' | 'LEGAL';
-
-export type PublicationType = 'Variety' | 'Deadline' | 'TMZ' | 'The Hollywood Reporter' | 'Financial Journal' | 'IndieWire';
+export type NewsEventType = 'CRISIS' | 'AWARD' | 'RELEASE' | 'STUDIO_EVENT' | 'RIVAL';
 
 export interface NewsEvent {
   id: string;
@@ -17,7 +11,6 @@ export interface NewsEvent {
   headline: string;
   description: string;
   impact?: string;
-  publication?: PublicationType;
 }
 
 export interface CrisisOption {
@@ -31,7 +24,6 @@ export interface CrisisOption {
 }
 
 export interface ActiveCrisis {
-  id?: string; // 🌌 Standardized UUID for this specific crisis instance
   crisisId: string;
   triggeredWeek: number;
   haltedProduction: boolean;
@@ -42,15 +34,13 @@ export interface ActiveCrisis {
 }
 
 export interface Headline {
-  id?: string;
+  id: string;
   text: string;
   week: number;
   category: HeadlineCategory;
-  publication?: PublicationType;
 }
 
 export interface WeekSummary {
-  id?: string; // 🌌 Unique ID for this summary
   fromWeek: number;
   toWeek: number;
   cashBefore: number;
@@ -61,12 +51,9 @@ export interface WeekSummary {
   newHeadlines: Headline[];
   events: string[];
   newsEvents?: NewsEvent[];
-  totalBailouts?: number; // artificial studio rescues
-  retiredCount?: number;   // count of talent who retired this week
 }
 
 export interface FinanceRecord {
-  id: string; // 🌌 Unique ID for this record
   week: number;
   cash: number;
   revenue: number;
@@ -84,10 +71,6 @@ export interface MarketEvent {
   revenueMultiplier: number;
   costMultiplier: number;
   talentAvailabilityModifier: number; // -1 to 1
-  economicShock?: {
-    sentimentShift: number; // e.g. -20
-    baseRateShift: number;  // e.g. 0.02 for +2%
-  };
 }
 
 export interface Rumor {

@@ -22,65 +22,65 @@ export interface TvFormatTaxonomyItem {
 
 export const TV_FORMAT_TAXONOMY: TvFormatTaxonomyItem[] = [
   {
-    id: 'FRM-4699bd27-e511-e44c-f049-add1f162',
+    id: 'comedy',
     name: 'Comedy',
     formats: ['sitcom', 'sketch_comedy', 'animated_comedy', 'satirical_comedy', 'workplace_comedy', 'mockumentary', 'workplace_mockumentary', 'retro_sitcom', 'spy_comedy', 'high_concept_comedy', 'docu_comedy', 'sports_comedy', 'vampire_sitcom', 'fantasy_workplace_comedy', 'satirical_news_show']
   },
   {
-    id: 'FRM-f07cedac-9b8e-99a4-57ef-4ae8b62d',
+    id: 'drama',
     name: 'Drama',
     formats: ['procedural', 'prestige_drama', 'limited_series', 'prestige_limited_series', 'teen_drama', 'historical_drama', 'medical_procedural', 'legal_drama', 'family_drama', 'neo_western', 'daytime_soap', 'telenovela', 'musical_dramedy', 'dark_academia', 'music_industry_drama', 'prestige_biopic', 'historical_romance', 'teen_mystery_box']
   },
   {
-    id: 'FRM-3c36ded0-484e-afc3-3ac6-22f5db28',
+    id: 'thriller_crime',
     name: 'Thriller & Crime',
     formats: ['espionage_thriller', 'mystery_box', 'political_thriller', 'binge_thriller', 'international_thriller', 'heist_thriller', 'dark_comedy_thriller', 'workplace_thriller', 'neo_noir_procedural', 'true_crime_dramatization', 'true_crime_miniseries', 'erotic_thriller']
   },
   {
-    id: 'FRM-9932bb3e-6c85-8db2-4e52-a8dcbabc',
+    id: 'scifi_fantasy',
     name: 'Sci-Fi & Fantasy',
     formats: ['sci_fi_epic', 'fantasy_epic', 'cyberpunk_dystopia', 'space_opera', 'high_fantasy_epic', 'tech_dystopia', 'sci_fi_noir', 'scifi_procedural', 'retro_sci_fi', 'cyberpunk_anime', 'cyberpunk_satire', 'steampunk_fantasy', 'space_western', 'sci_fi_anthology', 'fantasy_prequel', 'multiverse_anthology', 'time_travel_romance', 'mecha_anime']
   },
   {
-    id: 'FRM-36016f89-2533-2bd4-1e35-8b380772',
+    id: 'horror_supernatural',
     name: 'Horror & Supernatural',
     formats: ['vampire_romance', 'zombie_apocalypse', 'gothic_horror', 'paranormal_romance', 'supernatural_teen_drama', 'supernatural_procedural', 'prestige_horror_anthology', 'post_apocalyptic_survival']
   },
   {
-    id: 'FRM-40413b8c-6323-1080-824d-e6dc697f',
+    id: 'action_military',
     name: 'Action & Military',
     formats: ['superhero_serial', 'superhero_origin', 'superhero_teamup', 'superhero_parody', 'military_action', 'action_comedy', 'western_procedural']
   },
   {
-    id: 'FRM-e3e052db-2a4a-6a09-1ea6-c1e802b8',
+    id: 'animation',
     name: 'Animation',
     formats: ['animated_comedy', 'animated_prestige', 'adult_animation', 'cyberpunk_anime', 'sports_anime', 'live_action_anime']
   },
   {
-    id: 'FRM-a223eba8-3b32-fc5a-8159-d15d4cd6',
+    id: 'anthology_limited',
     name: 'Anthology & Limited',
     formats: ['anthology_series', 'limited_series', 'prestige_limited_series', 'sci_fi_anthology', 'prestige_horror_anthology', 'holiday_miniseries', 'true_crime_miniseries', 'micro_series']
   },
   {
-    id: 'FRM-c9cdd78a-388f-b2b5-8d7e-de0e0b87',
+    id: 'variety_talk',
     name: 'Variety & Talk',
     formats: ['late_night_talk', 'sketch_comedy', 'sketch_show_revival', 'satirical_news', 'satirical_news_show', 'standup_comedy_series', 'musical_competition', 'cooking_showdown', 'interactive_special', 'live_event_series']
   },
   {
-    id: 'FRM-5f11f0da-da72-b9bb-fbfe-78ca3183',
+    id: 'sports',
     name: 'Sports',
     formats: ['sports_drama', 'sports_comedy', 'sports_docudrama', 'sports_anime', 'sports_soap_opera']
   },
   {
-    id: 'FRM-1a2325e6-e0e1-e73a-704c-c7f1e093',
+    id: 'historical',
     name: 'Historical & Period',
     formats: ['historical_drama', 'historical_fiction_epic', 'historical_romance', 'historical_heist', 'docudrama']
   },
   {
-    id: 'FRM-26e36d8a-7a2b-e8f6-1091-744012e8',
+    id: 'trending_niche',
     name: 'Trending & Niche',
     formats: ['k_drama_adaptation', 'foreign_language_hit', 'nostalgia_reunion', 'gritty_reboot', 'franchise_spinoff', 'vr_immersive_show', 'musical_soap', 'post_apocalyptic_soap', 'true_crime_spoof']
-  },
+  }
 ];
 
 export const TV_FORMATS: Record<TvFormatKey, TvFormatData> = {
@@ -1572,135 +1572,4 @@ export const TV_FORMATS: Record<TvFormatKey, TvFormatData> = {
     revenueDecayBinge: 0.3,
     revenueDecayWeekly: 0.75,
   },
-
-  medical_soap: {
-    key: 'medical_soap',
-    name: 'Medical Soap Opera',
-    defaultEpisodes: 50,
-    minEpisodes: 20,
-    maxEpisodes: 100,
-    productionCostMultiplier: 0.4,
-    developmentWeeksModifier: 0.6,
-    productionWeeksPerEpisode: 0.3,
-    renewable: true,
-    revenueDecayBinge: 0.3,
-    revenueDecayWeekly: 0.95,
-  },
-  alien_invasion_thriller: {
-    key: 'alien_invasion_thriller',
-    name: 'Alien Invasion Thriller',
-    defaultEpisodes: 10,
-    minEpisodes: 6,
-    maxEpisodes: 16,
-    productionCostMultiplier: 2.0,
-    developmentWeeksModifier: 1.5,
-    productionWeeksPerEpisode: 1.8,
-    renewable: true,
-    revenueDecayBinge: 0.5,
-    revenueDecayWeekly: 0.88,
-  },
-  political_family_drama: {
-    key: 'political_family_drama',
-    name: 'Political Family Drama',
-    defaultEpisodes: 10,
-    minEpisodes: 8,
-    maxEpisodes: 14,
-    productionCostMultiplier: 1.1,
-    developmentWeeksModifier: 1.2,
-    productionWeeksPerEpisode: 1.1,
-    renewable: true,
-    revenueDecayBinge: 0.6,
-    revenueDecayWeekly: 0.9,
-  },
-  historical_comedy: {
-    key: 'historical_comedy',
-    name: 'Historical Comedy',
-    defaultEpisodes: 10,
-    minEpisodes: 6,
-    maxEpisodes: 14,
-    productionCostMultiplier: 1.4,
-    developmentWeeksModifier: 1.1,
-    productionWeeksPerEpisode: 1.2,
-    renewable: true,
-    revenueDecayBinge: 0.55,
-    revenueDecayWeekly: 0.85,
-  },
-  superhero_parody_sitcom: {
-    key: 'superhero_parody_sitcom',
-    name: 'Superhero Parody Sitcom',
-    defaultEpisodes: 13,
-    minEpisodes: 8,
-    maxEpisodes: 22,
-    productionCostMultiplier: 1.3,
-    developmentWeeksModifier: 1.2,
-    productionWeeksPerEpisode: 1.1,
-    renewable: true,
-    revenueDecayBinge: 0.65,
-    revenueDecayWeekly: 0.88,
-  },
-  prestige_espionage_miniseries: {
-    key: 'prestige_espionage_miniseries',
-    name: 'Prestige Espionage Miniseries',
-    defaultEpisodes: 6,
-    minEpisodes: 4,
-    maxEpisodes: 8,
-    productionCostMultiplier: 2.2,
-    developmentWeeksModifier: 1.6,
-    productionWeeksPerEpisode: 1.7,
-    renewable: false,
-    revenueDecayBinge: 0.75,
-    revenueDecayWeekly: 0.9,
-  },
-  lawyer_comedy: {
-    key: 'lawyer_comedy',
-    name: 'Lawyer Workplace Comedy',
-    defaultEpisodes: 16,
-    minEpisodes: 10,
-    maxEpisodes: 22,
-    productionCostMultiplier: 0.7,
-    developmentWeeksModifier: 0.9,
-    productionWeeksPerEpisode: 0.8,
-    renewable: true,
-    revenueDecayBinge: 0.6,
-    revenueDecayWeekly: 0.92,
-  },
-  gothic_romance: {
-    key: 'gothic_romance',
-    name: 'Gothic Romance Drama',
-    defaultEpisodes: 8,
-    minEpisodes: 6,
-    maxEpisodes: 12,
-    productionCostMultiplier: 1.2,
-    developmentWeeksModifier: 1.3,
-    productionWeeksPerEpisode: 1.4,
-    renewable: true,
-    revenueDecayBinge: 0.5,
-    revenueDecayWeekly: 0.85,
-  },
-  tech_startup_thriller: {
-    key: 'tech_startup_thriller',
-    name: 'Tech Startup Thriller',
-    defaultEpisodes: 8,
-    minEpisodes: 6,
-    maxEpisodes: 10,
-    productionCostMultiplier: 0.9,
-    developmentWeeksModifier: 1.2,
-    productionWeeksPerEpisode: 1.0,
-    renewable: true,
-    revenueDecayBinge: 0.7,
-    revenueDecayWeekly: 0.85,
-  },
-  suburban_mystery: {
-    key: 'suburban_mystery',
-    name: 'Suburban Mystery',
-    defaultEpisodes: 10,
-    minEpisodes: 8,
-    maxEpisodes: 16,
-    productionCostMultiplier: 0.8,
-    developmentWeeksModifier: 1.0,
-    productionWeeksPerEpisode: 0.9,
-    renewable: true,
-    revenueDecayBinge: 0.6,
-    revenueDecayWeekly: 0.88,
-  }
 };

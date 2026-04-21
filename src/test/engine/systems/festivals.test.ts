@@ -1,57 +1,130 @@
-import { describe, it, expect, beforeEach } from "vitest";
-import { resolveFestivals, submitToFestival } from "../../../engine/systems/festivals";
-import { GameState, Project, FestivalSubmission } from "../../../engine/types";
-import { createMockGameState, createMockProject } from "../../utils/mockFactories";
-import { RandomGenerator } from "../../../engine/utils/rng";
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { FESTIVALS, submitToFestival, resolveFestivals } from '../../../engine/systems/festivals';
+import { Project, GameState, FestivalSubmission, ContentFlag } from '../../../engine/types';
+import * as utils from '../../../engine/utils';
 
-describe("festivals system", () => {
-  const rng = new RandomGenerator(42);
+const mockProject: Project = {
+  id: "proj-1",
+  title: "Arthouse Darling",
+  type: 'FILM',
+  format: "film",
+  genre: "Drama",
+  budgetTier: "low",
+  budget: 5_000_000,
+  weeklyCost: 100_000,
+  targetAudience: "Niche",
+  flavor: "Deep",
+  state: "post_release",
+  buzz: 10,
+  weeksInPhase: 0,
+  developmentWeeks: 10,
+  productionWeeks: 10,
+  revenue: 0,
+  weeklyRevenue: 0,
+  releaseWeek: 20,
+  accumulatedCost: 0,
+  momentum: 50,
+  progress: 0,
+  activeCrisis: null,
+  reviewScore: 100,
+  awardsProfile: {
+    criticScore: 90,
+    audienceScore: 80,
+    prestigeScore: 85,
+    craftScore: 80,
+    culturalHeat: 40,
+    campaignStrength: 20,
+    controversyRisk: 5,
+    festivalBuzz: 0,
+    academyAppeal: 80,
+    guildAppeal: 75,
+    populistAppeal: 30,
+    indieCredibility: 95,
+    industryNarrativeScore: 60
+  }
+} as Project;
 
-  describe("submitToFestival", () => {
-    it("deducts cash and records submission", () => {
-      const state = createMockGameState({ 
-        finance: { cash: 1_000_000, ledger: [] } as any 
-      });
-      state.entities.projects["p1"] = createMockProject({ id: "p1" });
-      
-      const impacts = submitToFestival(state, "p1", "Sundance Film Festival", rng);
-      
-      expect(impacts).not.toBeNull();
-      expect(impacts).toHaveLength(3); // FUNDS_DEDUCTED, INDUSTRY_UPDATE, NEWS_ADDED
-      expect(impacts?.find(i => i.type === 'FUNDS_DEDUCTED')).toBeDefined();
-      expect(impacts?.find(i => i.type === 'INDUSTRY_UPDATE')).toBeDefined();
-    });
+describe('Festivals System', () => {
+  let mockState: GameState;
+
+  beforeEach(() => {
+    vi.spyOn(crypto, 'randomUUID').mockReturnValue('test-uuid-1234' as `${string}-${string}-${string}-${string}-${string}`);
+
+    mockState = {
+      week: 1,
+      gameSeed: 1,
+      tickCount: 0,
+      projects: { active: [] },
+      game: { currentWeek: 1 },
+      finance: { cash: 1_000_000, ledger: [] },
+      news: { headlines: [] },
+      ip: { vault: [], franchises: {} },
+      studio: {
+        name: "Test",
+        archetype: 'major',
+        prestige: 50,
+        internal: {
+          projects: { [mockProject.id]: { ...mockProject } },
+          contracts: []
+        }
+      },
+      market: { opportunities: [], buyers: [] },
+      industry: {
+        rivals: [],
+        families: [],
+        agencies: [],
+        agents: [],
+        talentPool: {},
+        newsHistory: [],
+        festivalSubmissions: [],
+        rumors: []
+      },
+      culture: { genrePopularity: {} },
+      history: [],
+      eventHistory: []
+    } as unknown as GameState;
   });
 
-  describe("resolveFestivals", () => {
-    it("resolves festivals and updates state", () => {
-      const state = createMockGameState({ week: 3 }); // Sundance is weeks [3, 4]
-      state.entities.projects["p1"] = createMockProject({ 
-        id: "p1", 
-        state: "released",
-        format: "film",
-        buzz: 10,
-        reviewScore: 90
-      });
-      
-      const submission: FestivalSubmission = {
-        id: "sub-1",
-        projectId: "p1",
-        festivalBody: "Sundance Film Festival",
-        status: "submitted",
-        week: 1,
-        buzzGain: 0
-      };
-      state.industry.festivalSubmissions = [submission];
+  it('submits a project to a festival if cash is sufficient', () => {
+    const festival = FESTIVALS[0]; // Sundance
+    const impact = submitToFestival(mockState, mockProject.id, festival.body);
+    
+    expect(impact).not.toBeNull();
+    expect(impact!.cashChange).toBe(-festival.cost);
+    expect(impact!.newFestivalSubmissions?.length).toBe(1);
+    expect(impact!.newFestivalSubmissions![0].projectId).toBe(mockProject.id);
+    expect(impact!.newFestivalSubmissions![0].status).toBe('submitted');
+  });
 
-      const impacts = resolveFestivals(state, rng);
-      
-      // Should have PROJECT_UPDATED (buzz), PRESTIGE_CHANGED, NEWS_ADDED, and INDUSTRY_UPDATE (submissions update)
-      expect(impacts.some(i => i.type === 'PRESTIGE_CHANGED')).toBe(true);
-      expect(impacts.some(i => i.type === 'PROJECT_UPDATED')).toBe(true);
-      
-      const prestigeImpact = impacts.find(i => i.type === 'PRESTIGE_CHANGED');
-      expect((prestigeImpact as any).payload).toBe(2);
-    });
+  it('declines submission if cash is too low', () => {
+    const festival = FESTIVALS[0]; 
+    mockState.finance.cash = 0;
+    const impact = submitToFestival(mockState, mockProject.id, festival.body);
+    
+    expect(impact).toBeNull();
+  });
+
+  it('resolves festival results and awards rewards', () => {
+    const festival = FESTIVALS.find(f => f.body === "Sundance Film Festival")!;
+    const submission: FestivalSubmission = {
+      id: 'sub-1',
+      projectId: mockProject.id,
+      festivalBody: festival.body,
+      status: 'submitted',
+      buzzGain: 0,
+      week: 1
+    };
+    
+    mockState.industry.festivalSubmissions = [submission];
+    mockState.week = 3; // Sundance week
+
+    // Force acceptance
+    vi.spyOn(utils, 'randRange').mockReturnValue(0);
+    
+    const impact = resolveFestivals(mockState);
+    
+    expect(impact.newFestivalSubmissions?.some(s => s.status === 'selected')).toBe(true);
+    expect(impact.prestigeChange).toBeGreaterThan(0);
+    expect(impact.projectUpdates?.some(u => u.projectId === mockProject.id)).toBe(true);
   });
 });

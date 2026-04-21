@@ -1,178 +1,84 @@
-import { Project, GameState, Contract, IPAsset, ProjectRating, Buyer } from '@/engine/types';
+import { Project, Buyer, Contract } from '../../types';
+import { IPAsset } from '../../types/state.types';
+import { calculateWeeklyIPRevenue } from '../ip/merchandisingEngine';
 
 /**
  * RevenueProcessor handles all income-related calculations for the studio.
  */
-export const RevenueProcessor = {
-  /**
-   * Calculates total active revenue and recoupment for all studio projects.
-   */
-  calculateActiveRevenue(
-    projects: Project[],
-    state: GameState,
-    contracts: Contract[],
-    vault: IPAsset[],
-    studioId: string
-  ): {
-    gross: number;
-    net: number;
-    royalties: number;
-    vaultIncome: number;
-    merchIncome: number;
-  } {
-    let gross = 0;
-    let royalties = 0;
-    let merchIncome = 0;
-
-    const releasedProjects = projects.filter(p => p.state === 'released');
-
-    releasedProjects.forEach(project => {
-      let weeklyRevenue = 0;
-
-      if (project.distributionStatus === 'theatrical') {
-        const decayRate = project.quality >= 70 ? 0.85 : 0.70;
-        weeklyRevenue = this.calculateTheatricalDecay(project.revenue || 0, decayRate, (project as any).isCultClassic);
-      } else if (project.distributionStatus === 'streaming') {
-        const platform = (state as any).entities.buyers[project.buyerId || ''];
-        if (platform) {
-          weeklyRevenue = this.calculateStreamingRevenue(project, platform);
-        }
-      }
-
-      const talentMultiplier = this.calculateTalentRevenueMultiplier(project, state, contracts);
-      weeklyRevenue = Math.round(weeklyRevenue * talentMultiplier);
-
-      const netPoints = this.calculateNetPointsRoyalty(project, weeklyRevenue, contracts);
-      royalties += netPoints;
-      
-      merchIncome += this.calculateMerchRevenue(project.buzz || 0, (project as any).franchiseRelevance || 0, project.rating);
-      
-      gross += weeklyRevenue;
-    });
-
-    const vaultIncome = this.calculateVaultDividends(vault, studioId);
-
-    return {
-      gross,
-      net: gross - royalties + vaultIncome + merchIncome,
-      royalties,
-      vaultIncome,
-      merchIncome
-    };
-  },
-
-  /**
-   * Stage 2.2: Calculates a revenue multiplier based on the collective 'Draw' and 'Prestige' 
-   * of attached talent. High-value stars act as a force multiplier for box office.
-   */
-  calculateTalentRevenueMultiplier(project: Project, state: GameState, contracts: Contract[]): number {
-    let totalBonus = 0;
-    let hasContract = false;
-
-    const projectContracts = contracts.filter(c => c.projectId === project.id);
-    projectContracts.forEach(contract => {
-      const talent = state.entities.talents[contract.talentId];
-      if (talent) {
-        hasContract = true;
-        // Tier 1 and 2 talent provide significant multipliers
-        if (talent.tier <= 2) {
-          totalBonus += (talent.draw / 100) * 0.15;
-        } else {
-          totalBonus += (talent.draw / 100) * 0.05;
-        }
-      }
-    });
-
-    return hasContract ? 1.0 + totalBonus : 1.0;
-  },
-
+export class RevenueProcessor {
   /**
    * Calculates weekly streaming revenue for a project on a specific platform.
-   * Applies a streaming premium for adult/specialty ratings (TV-MA, NC-17, Unrated).
+   * Expected: Weekly Licensing Fee = $20,000 (at 100 quality, 10% market share).
    */
-  calculateStreamingRevenue(project: Project, platform: Buyer): number {
+  static calculateStreamingRevenue(project: Project, platform: Buyer): number {
     const quality = project.reviewScore || 50;
     const marketShare = platform.marketShare || 0.10;
-    const baseFeePerUnit = 2000;
-    const viewershippotential = (quality / 100) * marketShare * 5000000;
     
-    return Math.round(viewershippotential * (baseFeePerUnit / 1000000));
-  },
+    // Base fee is $2,000 per 1% market share at 100 quality
+    const baseFeePerUnit = 2000; 
+    const shareUnits = marketShare * 100;
+    
+    const revenue = baseFeePerUnit * shareUnits * (quality / 100);
+    return Math.round(revenue);
+  }
 
   /**
    * Calculates box office decay for a project in a given week.
    */
-  calculateTheatricalDecay(currentRevenue: number, decayRate: number, isCultClassic: boolean = false): number {
-    let revenue = Math.round(currentRevenue * decayRate);
-    if (isCultClassic) {
-      // The Studio Comptroller: Modified cult classic bump to prevent flat minimums and enforce long-tail decay instead
-      revenue = Math.max(revenue, Math.round(currentRevenue * 0.92));
-    }
-    return revenue;
-  },
+  static calculateTheatricalDecay(currentRevenue: number, decayRate: number): number {
+    return Math.round(currentRevenue * decayRate);
+  }
 
   /**
-   * Calculates passive merchandise revenue based on hype, franchise strength, and rating.
-   * G/PG-rated projects earn a merch bonus; R/NC-17/Unrated earn far less.
+   * Calculates passive merchandise revenue based on hype and franchise strength.
    */
-  calculateMerchRevenue(hype: number, franchiseRelevance: number, rating: ProjectRating = 'PG-13'): number {
-    if (rating === 'Unrated') return 0; // Unrated releases cannot merchandise
-    const h = hype || 0;
-    const f = franchiseRelevance || 0;
-    const base = (h / 100) * 50000;
-    const franchiseBonus = 1.0 + (f / 100);
+  static calculateMerchRevenue(hype: number, franchiseRelevance: number): number {
+    if (hype < 70) return 0;
     
-    let ratingMultiplier = 1.0;
-    if (rating === 'G' || rating === 'PG') ratingMultiplier = 1.5;
-    if (rating === 'R' || rating === 'NC-17') ratingMultiplier = 0.3;
-
-    return Math.round(base * franchiseBonus * ratingMultiplier);
-  },
+    // Revenue scales with hype and franchise relevance
+    const base = 5000;
+    const hypeFactor = (hype - 70) / 30; // 0 to 1
+    const relevanceFactor = franchiseRelevance / 100; // 0 to 1
+    
+    const revenue = base + (base * 5 * hypeFactor * relevanceFactor);
+    return Math.round(revenue);
+  }
 
   /**
    * Calculates passive revenue generated by the archived IP vault.
    */
-  calculateVaultDividends(vault: IPAsset[], studioId?: string): number {
-    if (!vault || vault.length === 0) return 0;
-    let total = 0;
-    for (let i = 0; i < vault.length; i++) {
-      const asset = vault[i];
-      if (asset.studioOwnerId === studioId || !studioId) {
-        total += (asset.value || 0) * 0.001; // 0.1% per week in licensing/residuals
-      }
-    }
-    return Math.round(total);
-  },
+  static calculateVaultDividends(vault: IPAsset[]): number {
+    return vault.reduce((total, asset) => total + calculateWeeklyIPRevenue(asset), 0);
+  }
 
   /**
    * Calculates talent royalties (Net Points) for a project.
+   * Royalties ONLY trigger after the project has recouped (Total Revenue >= Total Cost).
    */
-  calculateNetPointsRoyalty(project: Project, weeklyRevenue: number, contracts: Contract[]): number {
+  static calculateNetPointsRoyalty(project: Project, weeklyRevenue: number, contracts: Contract[]): number {
     const totalCost = project.budget + (project.marketingBudget || 0);
     const totalRevenue = project.revenue || 0;
 
-    // Only pay net points once the project has recouped its production and marketing costs
-    if (totalRevenue < totalCost) return 0;
+    // Recoupment check
+    if (totalRevenue < totalCost) {
+      return 0; // Negative cost has not been recovered yet
+    }
 
-    let totalPointsPercent = 0;
-    const projectContracts = contracts.filter(c => c.projectId === project.id);
-    
-    projectContracts.forEach(contract => {
-      if (contract.terms.netPoints) {
-        totalPointsPercent += contract.terms.netPoints;
+    // Payout logic: Gross points based on the current week's revenue
+    let totalRoyalty = 0;
+    contracts.forEach(contract => {
+      if (contract.projectId === project.id && contract.backendPercent > 0) {
+        let percent = contract.backendPercent / 100;
+
+        // Backend escalator: +5% if Revenue > 2x Cost
+        if (contract.backendEscalator && totalRevenue > totalCost * 2) {
+          percent += 0.05;
+        }
+
+        totalRoyalty += weeklyRevenue * percent;
       }
     });
 
-    return Math.round(weeklyRevenue * (totalPointsPercent / 100));
-  },
-
-  /**
-   * Calculates streaming revenue from viewership data.
-   * Real-world: ~$0.015 per hour watched (varies by platform).
-   */
-  calculateStreamingRevenueFromViewership(history: import('../../types/project.types').StreamingViewershipHistory): number {
-    const latestEntry = history.entries[history.entries.length - 1];
-    const revenuePerHour = 0.015;
-    return Math.round(latestEntry.hoursWatched * revenuePerHour);
+    return Math.round(totalRoyalty);
   }
-};
+}

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import type { ProjectContractType } from '@/engine/types';
 import { calculateFitScore } from '@/engine/systems/buyers';
-import { RandomGenerator } from '@/engine/utils/rng';
 
 export const PitchProjectModal = () => {
   const { showPitchProject, closePitchProject, pitchingProjectId } = useUIStore();
@@ -16,16 +15,10 @@ export const PitchProjectModal = () => {
   const [selectedBuyerId, setSelectedBuyerId] = useState<string>('');
   const [selectedContract, setSelectedContract] = useState<ProjectContractType>('upfront');
   const [feedback, setFeedback] = useState<string | null>(null);
-  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  // Clear any pending close timer on unmount
-  useEffect(() => () => {
-    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
-  }, []);
 
   if (!gameState || !pitchingProjectId) return null;
 
-  const project = gameState?.entities?.projects[pitchingProjectId];
+  const project = gameState.studio.internal.projects[pitchingProjectId];
   if (!project) return null;
 
   const handlePitch = async () => {
@@ -36,7 +29,7 @@ export const PitchProjectModal = () => {
 
     if (success) {
       setFeedback('Pitch Successful! Project picked up.');
-      closeTimerRef.current = setTimeout(() => {
+      setTimeout(() => {
         setFeedback(null);
         setSelectedBuyerId('');
         closePitchProject();
@@ -47,10 +40,6 @@ export const PitchProjectModal = () => {
   };
 
   const handleClose = () => {
-    if (closeTimerRef.current) {
-      clearTimeout(closeTimerRef.current);
-      closeTimerRef.current = null;
-    }
     setFeedback(null);
     setSelectedBuyerId('');
     closePitchProject();
@@ -71,8 +60,7 @@ export const PitchProjectModal = () => {
             <h4 className="font-semibold text-sm text-muted-foreground uppercase">1. Select Buyer</h4>
             <div className="space-y-2">
               {gameState.market.buyers.map(buyer => {
-                const rng = new RandomGenerator(gameState.gameSeed + gameState.week);
-                const fitScore = calculateFitScore(project, buyer, gameState.week, gameState.entities.projects, rng);
+                const fitScore = calculateFitScore(project, buyer);
                 return (
                   <button
                     key={buyer.id}

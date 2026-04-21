@@ -49,22 +49,10 @@ export class RandomGenerator {
   /**
    * Returns a deterministic UUID-like string.
    */
-  uuid<T extends string = string>(prefix: string = ''): T {
+  uuid(prefix: string = ''): string {
     const part = () => Math.floor(this.next() * 0xffffffff).toString(16).padStart(8, '0');
     const id = `${part()}-${part().slice(0, 4)}-${part().slice(0, 4)}-${part().slice(0, 4)}-${part().slice(0, 12)}`;
-    const lowerPrefix = prefix.toLowerCase();
-    return (lowerPrefix ? `${lowerPrefix}-${id}` : id) as T;
-  }
-
-  /**
-   * Shuffles an array in place (Fisher-Yates).
-   */
-  shuffle<T>(arr: T[]): T[] {
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(this.next() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
+    return prefix ? `${prefix}-${id}` : id;
   }
 
   /**

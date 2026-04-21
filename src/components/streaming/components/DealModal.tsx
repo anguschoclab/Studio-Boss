@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { Buyer, Project, ProjectContractType } from '@/engine/types';
-import { RandomGenerator } from '@/engine/utils/rng';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { 
@@ -35,7 +34,7 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
 
   const eligibleProjects = useMemo(() => {
     if (!gameState) return [];
-    return Object.values(gameState?.entities.projects || {}).filter(
+    return Object.values(gameState.studio.internal.projects).filter(
       (p: Project) => p.state === 'development' || p.state === 'production' || p.state === 'needs_greenlight'
     );
   }, [gameState]);
@@ -47,8 +46,7 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
 
   const fitScore = useMemo(() => {
     if (!selectedProjectObj || !gameState) return 0;
-    const rng = new RandomGenerator(gameState.gameSeed + gameState.week);
-    return calculateFitScore(selectedProjectObj, buyer, gameState.week, gameState.entities.projects, rng);
+    return calculateFitScore(selectedProjectObj, buyer, gameState.week, Object.values(gameState.studio.internal.projects));
   }, [selectedProjectObj, buyer, gameState]);
 
   const handlePitch = async () => {
@@ -71,12 +69,12 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-xl bg-card border-border shadow-2xl overflow-hidden p-0 text-left">
+      <DialogContent className="max-w-xl bg-card border-border shadow-2xl overflow-hidden p-0">
         <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-primary via-violet-500 to-primary/20" />
         
         <div className="p-6 space-y-6">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center shadow-inner text-left">
+            <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center shadow-inner">
                <Handshake className="w-6 h-6 text-primary" />
             </div>
             <div>
@@ -115,7 +113,7 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
                    </h4>
                    <div className="space-y-2 max-h-[240px] overflow-y-auto pr-1">
                       {eligibleProjects.map(p => (
-                        <button aria-pressed={selectedProject === p.id}
+                        <button
                           key={p.id}
                           onClick={() => setSelectedProject(p.id)}
                           className={cn(
@@ -132,7 +130,7 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
                 </div>
 
                 {/* Analysis Column */}
-                <div className="space-y-4 text-left">
+                <div className="space-y-4">
                    <div className="glass-panel p-5 rounded-2xl border border-white/5 bg-black/20 space-y-4">
                       <div className="flex items-center justify-between">
                          <TooltipWrapper tooltip="Algorithmic alignment score between your project's genre/talent and the platform's current executive mandate." side="top">
@@ -160,10 +158,10 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
                       <div className="flex gap-2">
                         {(['standard', 'deficit', 'upfront'] as ProjectContractType[]).map(t => (
                           <TooltipWrapper key={t} tooltip={DEAL_TYPE_TOOLTIPS[t]} side="bottom">
-                            <button aria-pressed={contractType === t}
+                            <button
                               onClick={() => setContractType(t)}
                               className={cn(
-                                "flex-1 h-11 p-2 rounded-lg border text-[9px] font-black uppercase tracking-widest transition-all",
+                                "flex-1 h-9 rounded-lg border text-[9px] font-black uppercase tracking-widest transition-all",
                                 contractType === t ? "bg-primary text-black border-primary shadow-lg" : "bg-white/5 border-white/5 text-muted-foreground hover:bg-white/10"
                               )}
                             >

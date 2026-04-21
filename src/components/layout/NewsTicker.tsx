@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Trophy, AlertTriangle, TrendingUp, History, Zap, Newspaper } from 'lucide-react';
+import { Newspaper, Trophy, AlertTriangle, TrendingUp, History, Zap } from 'lucide-react';
 import { useGameStore } from '@/store/gameStore';
-import { Headline } from '@/engine/types';
+import { NewsEvent, Headline, NewsEventType } from '@/engine/types';
 import { cn } from '@/lib/utils';
 import { NewsStoryModal } from '@/components/modals/NewsStoryModal';
 
-const eventTypeConfig: Record<string, { icon: React.ElementType, color: string, label: string }> = {
+const eventTypeConfig: Record<string, { icon: any, color: string, label: string }> = {
   AWARD: { icon: Trophy, color: 'text-amber-400', label: 'Awards' },
   CRISIS: { icon: AlertTriangle, color: 'text-destructive', label: 'Crisis' },
   RELEASE: { icon: TrendingUp, color: 'text-emerald-400', label: 'Release' },
@@ -13,7 +13,6 @@ const eventTypeConfig: Record<string, { icon: React.ElementType, color: string, 
   RIVAL: { icon: Zap, color: 'text-red-400', label: 'Rival' },
   GENERAL: { icon: Newspaper, color: 'text-primary', label: 'News' },
 };
-
 
 export const NewsTicker: React.FC = () => {
   const headlines = useGameStore(s => s.news.headlines);
@@ -52,9 +51,7 @@ export const NewsTicker: React.FC = () => {
                 <button
                   key={`${item.id}-${idx}`}
                   onClick={() => setSelectedHeadline(item)}
-                  type="button"
-                  aria-label={"Read full story: " + config.label + ": " + item.text}
-                  className="flex items-center gap-4 p-3 m-2 group/item hover:opacity-100 transition-opacity focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none rounded-md"
+                  className="flex items-center gap-4 group/item hover:opacity-100 transition-opacity"
                 >
                   <div className="flex items-center gap-2">
                       <Icon className={cn("h-3 w-3", config.color)} />

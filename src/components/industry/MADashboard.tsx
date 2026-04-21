@@ -1,21 +1,20 @@
 import React, { useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
+import { RivalStudio, Buyer } from '@/engine/types';
 import { RegulatorSystem } from '@/engine/systems/industry/RegulatorSystem';
 import { TrendingUp, ShieldAlert, History, Users, Activity } from 'lucide-react';
 
 export const MADashboard: React.FC = () => {
   const state = useGameStore(s => s.gameState);
-
+  if (!state) return null;
+  
   const industryData = useMemo(() => {
-    if (!state) {
-      return { allStudios: [], mnaEvents: [] };
-    }
-    const rivals = state.entities.rivals;
+    const rivals = state.industry.rivals;
     const playerShare = RegulatorSystem.getMarketShare(state, 'player');
-
+    
     const allStudios = [
       { id: 'player', name: state.studio.name, share: playerShare, isPlayer: true, archetype: state.studio.archetype },
-      ...Object.values(rivals).map(r => ({
+      ...rivals.map(r => ({
         id: r.id,
         name: r.name,
         share: RegulatorSystem.getMarketShare(state, r.id),
@@ -24,8 +23,8 @@ export const MADashboard: React.FC = () => {
       }))
     ].sort((a, b) => b.share - a.share);
 
-    const mnaEvents = state.industry.newsHistory.filter(n =>
-      n.headline.toLowerCase().includes('consolidation') ||
+    const mnaEvents = state.industry.newsHistory.filter(n => 
+      n.headline.toLowerCase().includes('consolidation') || 
       n.headline.toLowerCase().includes('acquisition') ||
       n.headline.toLowerCase().includes('merger') ||
       n.headline.toLowerCase().includes('vertical integration')
@@ -33,8 +32,6 @@ export const MADashboard: React.FC = () => {
 
     return { allStudios, mnaEvents };
   }, [state]);
-
-  if (!state) return null;
 
   return (
     <div className="p-6 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -131,7 +128,7 @@ export const MADashboard: React.FC = () => {
               </div>
             ) : (
               <div className="p-4 space-y-6">
-                {industryData.mnaEvents.map((event) => (
+                {industryData.mnaEvents.map((event, i) => (
                   <div key={event.id} className="relative pl-6 before:absolute before:left-0 before:top-2 before:bottom-0 before:w-px before:bg-slate-700">
                     <div className="absolute left-[-4px] top-2 w-2 h-2 rounded-full bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.5)]" />
                     <div className="text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-1">

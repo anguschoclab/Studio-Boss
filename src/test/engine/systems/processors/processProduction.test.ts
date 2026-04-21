@@ -11,25 +11,19 @@ describe('tickProduction', () => {
     gameSeed: 1,
     tickCount: 0,
     game: { currentWeek: 1 },
-    entities: {
-      projects: {},
-      talents: {},
-      contracts: {},
-      rivals: {}
-    },
-    finance: { cash: 1000000, ledger: [], weeklyHistory: [], marketState: { baseRate: 0.05, savingsYield: 0.02, debtRate: 0.1, loanRate: 0.08, rateHistory: [], sentiment: 50, cycle: 'STABLE' } },
+    finance: { cash: 1000000, ledger: [] },
     news: { headlines: [] },
     ip: { vault: [], franchises: {} },
     studio: {
       name: 'Test Studio',
       archetype: 'major',
       prestige: 50,
-      ownedPlatforms: [],
       internal: {
-        projectHistory: [],
+        projects: {}, 
+        contracts: [],
       }
     },
-    market: { opportunities: [], buyers: [] },
+    market: { opportunities: [], buyers: [], activeMarketEvents: [] },
     industry: {
       rivals: [],
       families: [],
@@ -37,9 +31,9 @@ describe('tickProduction', () => {
       agents: [],
       talentPool: {} as Record<string, Talent>,
       newsHistory: [],
+      rumors: []
     },
     culture: { genrePopularity: {} },
-    deals: { activeDeals: [], pendingOffers: [], expiredDeals: [] },
     history: [],
     eventHistory: []
     } as unknown as GameState);
@@ -53,33 +47,29 @@ describe('tickProduction', () => {
     contentFlags: [], scriptHeat: 50, activeRoles: [], scriptEvents: []
   } as Project);
 
-  it('ignores projects not in production/development state in the core tick', () => {
+  it('ignores projects not in production/development state in the core tick (if logic specifies)', () => {
     const state = getInitialState();
     const releasedProject = createBaseProject('p1', 'released');
-    state.entities.projects['p1'] = releasedProject;
+    state.studio.internal.projects['p1'] = releasedProject;
 
     const impacts = tickProduction(state, rng);
-
-    // Released projects are still ticked (advanceProject runs), producing INDUSTRY_UPDATE
-    expect(impacts).toHaveLength(1);
-    const industryUpdate = impacts.find(i => i.type === 'INDUSTRY_UPDATE') as any;
-    expect(industryUpdate).toBeDefined();
+    
+    // tickProject has a guard: if (project.state === 'released') return [];
+    expect(impacts).toHaveLength(0);
   });
 
-  it('generates INDUSTRY_UPDATE impact for production projects', () => {
+  it('generates PROJECT_UPDATED impact for production projects', () => {
     const state = getInitialState();
     const prodProject = createBaseProject('p1', 'production');
-    state.entities.projects['p1'] = prodProject;
+    state.studio.internal.projects['p1'] = prodProject;
 
     const impacts = tickProduction(state, rng);
-
-    // Player project updates are batched into INDUSTRY_UPDATE
+    
     expect(impacts).toHaveLength(1);
-    const industryUpdate = impacts.find(i => i.type === 'INDUSTRY_UPDATE') as any;
-    expect(industryUpdate).toBeDefined();
-    const updatedProject = industryUpdate?.payload?.update?.['entities.projects']?.['p1'];
-    expect(updatedProject).toBeDefined();
-    expect(updatedProject?.weeksInPhase).toBe(1);
-    expect(updatedProject?.progress).toBeGreaterThan(0);
+    const impact = impacts[0] as ProjectUpdateImpact;
+    expect(impact.type).toBe('PROJECT_UPDATED');
+    expect(impact.payload.projectId).toBe('p1');
+    expect(impact.payload.update.weeksInPhase).toBe(1);
+    expect(impact.payload.update.progress).toBeGreaterThan(0);
   });
 });

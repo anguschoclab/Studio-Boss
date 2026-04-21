@@ -2,12 +2,15 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { Opportunity } from '@/engine/types';
 import { formatMoney } from '@/engine/utils';
-import {
-  Gavel,
-  TrendingUp,
-  AlertCircle,
-  CheckCircle2,
+import { 
+  Gavel, 
+  TrendingUp, 
+  AlertCircle, 
+  CheckCircle2, 
+  ArrowUpRight, 
+  Clock,
   ShieldAlert,
+  ChevronRight,
   History as LucideHistory,
   X
 } from 'lucide-react';
@@ -69,7 +72,7 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ oppo
                  </div>
               </div>
            </div>
-           <button aria-label="Close auction" onClick={onClose} className="p-2 hover:bg-white/10 transition-colors duration-200 rounded-full">
+           <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-full transition-colors">
               <X className="w-6 h-6 text-slate-500" />
            </button>
         </div>

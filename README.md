@@ -24,45 +24,81 @@ This project is built using a modern frontend stack:
 - **TypeScript** - Type safety
 - **React + Vite** - UI Library and Build tool
 - **TanStack Router** - Navigation
-- **Zustand** - State Management with slice pattern
+- **Zustand + Immer** - State Management
 - **Zod** - Schema validation
-- **Web Workers** - Multithreading for simulation engine
-- **OPFS** - Origin Private File System for persistence
+- **Web Workers + Comlink** - Multithreading
+- **Dexie** - IndexedDB wrapper
 - **Tailwind CSS + Radix** - Styling and Headless UI
 - **Framer Motion** - Animations
+- **Ink.js** - Interactive narrative
 - **Lucide** - Icons
-- **Recharts** - Charts
+- **howler.js** - Audio
+- **Recharts** - Charts (with visx for advanced dashboards)
 - **Vitest + React Testing Library** - Unit and Integration Testing
 - **Playwright** - End-to-End Testing
-- **Electron** - Desktop application framework
 
 ---
 
-## Development
+## Welcome to your Lovable project
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for development setup instructions.
+### Project info
 
-## Environment Variables
+**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
 
-Create a `.env` file based on `.env.example`:
+### How can I edit this code?
 
-```bash
-cp .env.example .env
+There are several ways of editing your application.
+
+**Use Lovable**
+
+Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+
+Changes made via Lovable will be committed automatically to this repo.
+
+**Use your preferred IDE**
+
+If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+
+The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+
+Follow these steps:
+
+```sh
+# Step 1: Clone the repository using the project's Git URL.
+git clone <YOUR_GIT_URL>
+
+# Step 2: Navigate to the project directory.
+cd <YOUR_PROJECT_NAME>
+
+# Step 3: Install the necessary dependencies.
+npm i
+
+# Step 4: Start the development server with auto-reloading and an instant preview.
+npm run dev # (run in background)
 ```
 
-Required variables:
-- `GEMINI_API_KEY`: Google Generative AI API key for narrative generation
+**Edit a file directly in GitHub**
 
-## Scripts
+- Navigate to the desired file(s).
+- Click the "Edit" button (pencil icon) at the top right of the file view.
+- Make your changes and commit the changes.
 
-- `bun run dev` - Start development server
-- `bun run build` - Build for production
-- `bun run lint` - Run ESLint
-- `bun run format` - Format code with Prettier
-- `bun run test` - Run tests
-- `bun run analyze` - Analyze bundle size
-- `bun run electron:dev` - Run Electron app
+**Use GitHub Codespaces**
 
-## License
+- Navigate to the main page of your repository.
+- Click on the "Code" button (green button) near the top right.
+- Select the "Codespaces" tab.
+- Click on "New codespace" to launch a new Codespace environment.
+- Edit files directly within the Codespace and commit and push your changes once you're done.
 
-Private and proprietary.
+### How can I deploy this project?
+
+Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+
+### Can I connect a custom domain to my Lovable project?
+
+Yes, you can!
+
+To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+
+Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
