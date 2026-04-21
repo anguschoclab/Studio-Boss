@@ -14,13 +14,26 @@ export function evaluateRenewal(
     return 'ON_AIR';
   }
 
+  // 📺 The Syndication Baron: Tweaked streaming renewal thresholds: platforms now cancel expensive shows faster if subscriber growth flatlines.
+  let dynamicThreshold = threshold;
+
+  if (project.budgetTier === 'blockbuster') dynamicThreshold += 1.0;
+  else if (project.budgetTier === 'high') dynamicThreshold += 0.5;
+  else if (project.budgetTier === 'low') dynamicThreshold -= 0.5;
+
+  const audienceRetention = project.nielsenProfile?.audienceRetention;
+  if (audienceRetention !== undefined) {
+    if (audienceRetention >= 90) dynamicThreshold -= 0.5;
+    else if (audienceRetention <= 50) dynamicThreshold += 0.5;
+  }
+
   // Renewal decision logic
-  if (averageRating >= threshold) {
+  if (averageRating >= dynamicThreshold) {
     return 'RENEWED';
   }
 
   // Potential "Bubble" show logic
-  if (averageRating >= threshold - 0.5) {
+  if (averageRating >= dynamicThreshold - 0.5) {
     return 'ON_BUBBLE';
   }
 
