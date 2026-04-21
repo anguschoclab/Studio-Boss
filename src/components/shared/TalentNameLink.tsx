@@ -30,7 +30,7 @@ export const TalentNameLink: React.FC<TalentNameLinkProps> = ({ talentId, name, 
         }
       }}
       className={cn(
-        "text-primary hover:text-primary/80 cursor-pointer underline decoration-primary/30 hover:decoration-primary/60 transition-colors font-bold",
+        "text-primary hover:text-primary/80 cursor-pointer underline decoration-primary/30 hover:decoration-primary/60 transition-colors font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded",
         className
       )}
     >

@@ -113,7 +113,7 @@ const RosterPanel = () => {
                 }
               }}
               onClick={() => selectTalent(talent.id)}
-              className="group p-4 bg-card/40 border border-border/40 rounded-xl hover:border-primary/30 hover:bg-card/60 transition-all cursor-pointer"
+              className="group p-4 bg-card/40 border border-border/40 rounded-xl hover:border-primary/30 hover:bg-card/60 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               <div className="flex items-start gap-3">
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center text-lg font-black">
@@ -210,7 +210,7 @@ const MarketplacePanel = () => {
                   return (
                     <div 
                       key={opp.id}
-                      className="p-4 bg-card/40 border border-border/40 rounded-xl hover:border-primary/30 transition-all cursor-pointer"
+                      className="p-4 bg-card/40 border border-border/40 rounded-xl hover:border-primary/30 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                       role="button"
                       tabIndex={0}
                       onKeyDown={(e) => {
