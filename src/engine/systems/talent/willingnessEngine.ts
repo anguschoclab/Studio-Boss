@@ -46,20 +46,28 @@ export function calculateWillingness(
     reasons.push(`${talent.name} is hesitant about a project with such low industry heat.`);
   }
 
+  // 🎭 The Method Actor Tuning: Auteurs (high-prestige directors) heavily prioritize the script heat and artistic merit over upfront cash.
+  const isAuteur = talent.roles.includes('director') && talent.prestige > 80;
+  const scriptHeat = 'scriptHeat' in project ? project.scriptHeat : 50;
+
   // 3. Financial Incentive (Fee vs Star Meter)
   const starMeter = talent.starMeter || 50;
   if (talent.fee > project.budget * 0.4) {
-    score -= 15;
-    reasons.push(`The talent's quote consumes ${Math.round((talent.fee / project.budget) * 100)}% of the production budget, causing friction.`);
+    // Auteurs will forgive a low budget if the script is a masterpiece
+    if (isAuteur && scriptHeat > 85) {
+      reasons.push(`${talent.name} is willing to take a massive pay cut because the script is a masterpiece.`);
+    } else {
+      score -= 15;
+      reasons.push(`The talent's quote consumes ${Math.round((talent.fee / project.budget) * 100)}% of the production budget, causing friction.`);
+    }
   }
 
   // 4. Script Heat
-  const scriptHeat = 'scriptHeat' in project ? project.scriptHeat : 50;
   if (scriptHeat > 80) {
-    score += 15;
+    score += isAuteur ? 30 : 15; // Auteurs care twice as much about a great script
     reasons.push(`The script is considered a "Must-Read" in town.`);
   } else if (scriptHeat < 30) {
-    score -= 10;
+    score -= isAuteur ? 25 : 10; // Auteurs will violently reject a bad script
     reasons.push(`Word of mouth on the current draft is lukewarm.`);
   }
 

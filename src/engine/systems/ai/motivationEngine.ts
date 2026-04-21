@@ -6,11 +6,33 @@ import { RandomGenerator } from '../../utils/rng';
  * Each function returns a weight (0-100) based on the current context.
  */
 const MotivationScores: Record<StudioMotivation, (rival: RivalStudio, state: GameState) => number> = {
-  CASH_CRUNCH: (rival) => (rival.cash < 500000 ? 100 : 0),
-  AWARD_CHASE: (rival) => (rival.prestige > 70 ? 80 : 20),
-  FRANCHISE_BUILDING: (rival) => (Object.keys(rival.projects).length > 3 ? 90 : 30),
-  MARKET_DISRUPTION: (rival) => (rival.motivationProfile.aggression > 70 ? 70 : 10),
-  STABILITY: (rival) => (rival.cash > 2000000 ? 50 : 0),
+  // 🎭 The Method Actor Tuning: Studio motivations emerge dynamically from their material conditions.
+  // Desperate studios with low cash heavily index towards CASH_CRUNCH.
+  CASH_CRUNCH: (rival) => {
+    if (rival.cash < 1000000) return 100;
+    if (rival.cash < 3000000) return 60;
+    return 0;
+  },
+  // 🎭 The Method Actor Tuning: Wealthy or highly prestigious studios chase awards, but so do aggressive upstarts looking for credibility.
+  AWARD_CHASE: (rival) => {
+    let score = rival.prestige > 75 ? 85 : 30;
+    if (rival.prestige < 40 && rival.motivationProfile.aggression > 60) score += 40; // Desperate for credibility
+    return score;
+  },
+  // 🎭 The Method Actor Tuning: Cash-rich studios aggressively focus on building franchises to secure long-term revenue.
+  FRANCHISE_BUILDING: (rival) => {
+    let score = Object.keys(rival.projects).length > 3 ? 60 : 20;
+    if (rival.cash > 10000000) score += 50; // Got cash, want IP
+    return score;
+  },
+  // 🎭 The Method Actor Tuning: Highly aggressive studios naturally lean towards market disruption, especially if they have cash to burn.
+  MARKET_DISRUPTION: (rival) => {
+    let score = rival.motivationProfile.aggression > 70 ? 75 : 10;
+    if (rival.cash > 15000000) score += 20; // Enough cash to cause trouble
+    return score;
+  },
+  // 🎭 The Method Actor Tuning: Stability is the fallback for wealthy, low-aggression studios.
+  STABILITY: (rival) => (rival.cash > 5000000 && rival.motivationProfile.aggression < 50 ? 80 : 20),
 };
 
 /**

@@ -12,7 +12,9 @@ export function evaluatePackageOffer(
 ): { requiredTalentId?: string; packageDiscount?: number; reason: string } {
   const motivation = agency.currentMotivation || 'VOLUME_RETAIL';
   
-  if (motivation === 'THE_PACKAGER' || rng.next() < 0.15) {
+  // 🎭 The Method Actor Tuning: Agencies will aggressively leverage high-prestige lead talent to force package deals, carrying lesser-known clients to boost their roster's value.
+  const prestigeLeverage = leadTalent.prestige > 80 ? 0.4 : 0.15;
+  if (motivation === 'THE_PACKAGER' || rng.next() < prestigeLeverage) {
     const otherClients = talentPool.filter(t => t.agencyId === agency.id && t.id !== leadTalent.id);
     
     if (otherClients.length > 0) {
