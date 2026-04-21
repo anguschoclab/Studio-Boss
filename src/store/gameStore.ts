@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import { GameState, WeekSummary, ArchetypeKey, FinanceState, NewsState } from '@/engine/types';
+import { GameState, WeekSummary, ArchetypeKey, FinanceState, NewsState, Award } from '@/engine/types';
+import { type StudioId, type ProjectId, type NewsId } from '@/engine/types/shared.types';
 import { initializeGame } from '@/engine/core/gameInit';
 import { advanceWeek } from '@/engine/core/weekAdvance';
 import { saveGame, loadGame, getSaveSlots, SaveSlotInfo } from '@/persistence/saveLoad';
@@ -37,11 +38,11 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
   ...createSnapshotSlice(set, get, ...args),
 
   newGame: async (studioName, archetype) => {
-    const gameState = initializeGame(studioName, archetype);
+    const gameState = initializeGame(studioName, archetype, Date.now()); // Added seed
     await saveGame(0, gameState);
     set({ 
       gameState,
-      finance: gameState.finance,
+      finance: gameState.finance as any, // Cast for slice compatibility
       news: gameState.news
     });
   },
@@ -106,12 +107,7 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
     if (isAwardsWeek) {
       const year = Math.floor(finalState.week / 52) + 1;
       const allAwards = finalState.industry.awards || [];
-      const currentAwards = [] as any[];
-      for (let i = 0; i < allAwards.length; i++) {
-        if (allAwards[i].year === year) {
-          currentAwards.push(allAwards[i]);
-        }
-      }
+      const currentAwards: Award[] = allAwards.filter(a => a.year === year);
       ui.enqueueModal('AWARDS', { week: finalState.week, year, awards: currentAwards });
     }
 

@@ -17,10 +17,40 @@ export type CharacterArchetype =
 
 export interface ScriptEvent {
   week: number;
-  type: 'ROLE_MERGE' | 'ROLE_SPLIT' | 'ARCHETYPE_CHANGE' | 'PLOT_TWIST_ADDED' | 'DIALOGUE_POLISH';
+  type: 'ROLE_MERGE' | 'ROLE_SPLIT' | 'ARCHETYPE_CHANGE' | 'PLOT_TWIST_ADDED' | 'DIALOGUE_POLISH' | 'PLOT_POINT';
   description: string;
   qualityImpact: number;
   heatGain: number;
+}
+
+export interface StreamingViewershipEntry {
+  week: number;
+  viewers: number;
+  hoursWatched: number;
+  retention: number;
+  completionRate?: number;
+}
+
+export interface StreamingViewershipHistory {
+  platformId: string;
+  platformName: string;
+  startWeek: number;
+  totalHoursWatched: number;
+  peakViewers: number;
+  completionRate: number;
+  entries: StreamingViewershipEntry[];
+}
+
+export interface ScriptMetrics {
+  score: number;
+  structure: number;
+  dialogue: number;
+  originality: number;
+  pacing: number;
+  emotionalImpact: number;
+  commercialViability: number;
+  trend: 'improving' | 'stable' | 'declining';
+  lastCalculatedWeek: number;
 }
 
 export type MarketingAngle = 

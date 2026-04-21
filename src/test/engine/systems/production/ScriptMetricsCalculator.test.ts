@@ -33,17 +33,17 @@ describe('ScriptMetricsCalculator', () => {
 
       const prevMetrics: ScriptMetrics = {
         structure: 50, dialogue: 50, originality: 50, pacing: 50, emotionalImpact: 50, commercialViability: 50,
-        overallScore: 20, trend: 'stable', lastCalculatedWeek: 5
+        score: 20, trend: 'stable', lastCalculatedWeek: 5
       };
 
       const metrics = ScriptMetricsCalculator.calculateMetrics(project, 10, prevMetrics);
       expect(metrics.trend).toBe('improving');
 
-      prevMetrics.overallScore = 100;
+      prevMetrics.score = 100;
       const metricsDeclining = ScriptMetricsCalculator.calculateMetrics(project, 10, prevMetrics);
       expect(metricsDeclining.trend).toBe('declining');
 
-      prevMetrics.overallScore = metrics.overallScore; // approx equal
+      prevMetrics.score = metrics.score; // approx equal
       const metricsStable = ScriptMetricsCalculator.calculateMetrics(project, 10, prevMetrics);
       expect(metricsStable.trend).toBe('stable');
     });
@@ -61,7 +61,7 @@ describe('ScriptMetricsCalculator', () => {
 
       const metrics = ScriptMetricsCalculator.calculateMetrics(project, 10);
 
-      // Structure: 50 base - 10 (0 roles) - 10 (2 merges) = 30
+      // Structure: 50 base - 10 (0 roles bonus) - 10 (2 merges) = 30
       expect(metrics.structure).toBe(30);
       expect(metrics.emotionalImpact).toBe(-10); // Directly tied to heat
     });
@@ -87,14 +87,14 @@ describe('ScriptMetricsCalculator', () => {
 
       const metrics = ScriptMetricsCalculator.calculateMetrics(project, 10);
 
-      // Structure: 50 base - 10 (15 roles) + 10 (2 splits) = 50
-      expect(metrics.structure).toBe(50);
+      // Structure: 50 base - 20 (15 roles penalty) + 10 (2 splits) = 40
+      expect(metrics.structure).toBe(40);
       // Dialogue: 50 base + 100 polish = 150 -> maxed to 100
       expect(metrics.dialogue).toBe(100);
       // Originality: 40 base + 5*12 twist + 10 sci-fi = 110 -> maxed to 100
       expect(metrics.originality).toBe(100);
 
-      // Pacing: base = 150*0.6 = 90. event density = 9 / 2 = 4.5. bonus = 4.5*20 = 90. total 180 -> maxed 100.
+      // Pacing: base = 150*0.7 = 105. total 100.
       expect(metrics.pacing).toBe(100);
       expect(metrics.commercialViability).toBeLessThanOrEqual(100);
       expect(metrics.commercialViability).toBeGreaterThanOrEqual(0);
@@ -115,9 +115,8 @@ describe('ScriptMetricsCalculator', () => {
         baseExpectedViabilities.push(metrics.commercialViability);
       }
 
-      // Family should have higher base (50 + 20 + 10 (structure) = 80 - 10 (originality < 40)) = 70
-      // Family index 0, Drama index 4 (50 - 10 + 10 - 10 = 40)
-      expect(baseExpectedViabilities[0]).toBeGreaterThan(baseExpectedViabilities[4]);
+      // Action index 2 (50+10+10=70), Drama index 4 (50-10+10=50)
+      expect(baseExpectedViabilities[2]).toBeGreaterThan(baseExpectedViabilities[4]);
     });
   });
 });

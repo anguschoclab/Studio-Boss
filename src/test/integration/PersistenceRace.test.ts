@@ -1,9 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { persistenceService } from '@/persistence/PersistenceService';
+import { GameState } from '@/engine/types';
 
 // Mock Worker
 class MockWorker {
-    onmessage: ((e: any) => void) | null = null;
+    onmessage: ((e: { data: any }) => void) | null = null;
     postMessage = vi.fn((data) => {
         console.log(`[MockWorker] Received: ${data.type} (req: ${data.requestId})`);
         // Simulate background worker delay
@@ -45,7 +46,7 @@ describe('Persistence Layer Race Hardening', () => {
         (persistenceService as any).pendingResolves.clear();
 
         // ⚡ Manually attach the message handling logic since initWorker likely skipped it in Node
-        mock.onmessage = (e: any) => {
+        mock.onmessage = (e: { data: any }) => {
             const { requestId, state, type } = e.data;
             let result = state;
             if (type === 'SAVE_SUCCESS') result = true;
@@ -59,9 +60,9 @@ describe('Persistence Layer Race Hardening', () => {
     it('handles rapid concurrent saves with unique requestIds', async () => {
         console.log('[Test] Starting rapid save test');
         const results = await Promise.all([
-            persistenceService.save(0, { v: 1 }),
-            persistenceService.save(0, { v: 2 }),
-            persistenceService.save(0, { v: 3 })
+            persistenceService.save(0, { v: 1 } as unknown as GameState),
+            persistenceService.save(0, { v: 2 } as unknown as GameState),
+            persistenceService.save(0, { v: 3 } as unknown as GameState)
         ]);
         console.log('[Test] Save results received:', results);
 
