@@ -4,7 +4,8 @@ import { ALL_GENRES, initializeTrends } from '../systems/trends';
 import { ARCHETYPES } from '../data/archetypes';
 import { RandomGenerator } from '../utils/rng';
 import { generateOpportunity } from '../generators/opportunities';
-import { Talent } from '@/engine/types';
+import { Talent, Project, NewsId } from '@/engine/types';
+import { type StudioId, type ProjectId, type TalentId } from '@/engine/types/shared.types';
 import {
   generateRivals,
   assignInitialPactsToRivals,
@@ -16,13 +17,13 @@ import {
 
 export function initializeGame(studioName: string, archetype: ArchetypeKey, seed: number): GameState {
   const rng = new RandomGenerator(seed);
-  const playerStudioId = rng.uuid('PLR'); // 🌌 Standardized player ID
+  const playerStudioId = rng.uuid<StudioId>('PLR'); // 🌌 Standardized player ID
   const arch = ARCHETYPES[archetype];
   const rivalArchetypes: ArchetypeKey[] = ['major', 'mid-tier', 'indie'];
   const usedNames = new Set<string>([studioName]);
 
-  // Generate 10 Rivals
-  const rivals = generateRivals(rng, { rivalArchetypes, usedNames });
+  // Generate 10 Rivals and their projects
+  const { rivals, projects: rivalProjects } = generateRivals(rng, { rivalArchetypes, usedNames });
 
   // Generate talent pool with agencies, agents, families, and relationships
   const {
@@ -34,8 +35,8 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
     talentAgentRelationships
   } = generateTalentPoolWithRelationships(rng);
 
-  // Initialize some initial pacts for rivals to make the world feel alive
-  assignInitialPactsToRivals(rivals, talentPoolArray, rng);
+  // Initialize some initial pacts for rivals and ensure they are captured in the state
+  const initialRivalContracts = assignInitialPactsToRivals(rivals, talentPoolArray, rng);
   
   // Generate Player Projects based on Archetype
   const playerProjects = generatePlayerProjects(rng, playerStudioId, archetype);
@@ -79,7 +80,7 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
     news: {
       headlines: [
         {
-          id: rng.uuid('NWS'),
+          id: rng.uuid<NewsId>('NWS'),
           text: `${studioName} launches operations — the industry takes notice.`,
           week: 1,
           category: 'general' as const,
@@ -112,19 +113,17 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
     entities: {
       projects: {
         ...playerProjects,
-        ...Object.values(rivals).reduce((acc, r) => {
-          // Backward compatibility for projects field
-          const rivalProjects = ('projects' in r && r.projects) ? (r as any).projects : {};
-          Object.assign(acc, rivalProjects);
-          return acc;
-        }, {} as Record<string, any>)
+        ...rivalProjects
       },
-      contracts: {},
+      contracts: initialRivalContracts.reduce((acc, c) => {
+        acc[c.id as import('@/engine/shared.types').PactId] = c as any; // Cast for now, but pacts are in state
+        return acc;
+      }, {} as Record<import('@/engine/shared.types').PactId, import('@/engine/types').TalentPact>),
       talents: talentPool,
       rivals: rivals.reduce((acc, r) => {
-        acc[r.id] = r;
+        acc[r.id as StudioId] = r;
         return acc;
-      }, {} as Record<string, RivalStudio>),
+      }, {} as Record<StudioId, RivalStudio>),
     },
     deals: {
       activeDeals: [],

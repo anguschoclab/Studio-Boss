@@ -10,15 +10,23 @@ export const BardResolver = {
   /**
    * Resolves a narrative string based on domain, sub-domain, and intensity.
    */
-  resolve(request: ResolutionRequest): string {
+  resolve<D extends NarrativeDomainKey>(request: ResolutionRequest<D>): string {
     const { domain, subDomain, intensity, context, tone = 'Standard', variant } = request;
-    const archive = archiveData as NarrativeArchive;
+    const archive = archiveData as unknown as NarrativeArchive;
 
     const domainData = archive[domain];
     if (!domainData) return `[MISSING DOMAIN: ${domain}]`;
 
-    const subDomainData = domainData[subDomain];
-    if (!subDomainData) return `[MISSING SUB-DOMAIN: ${subDomain}]`;
+    let subDomainData: any = domainData;
+    const subDomainParts = subDomain.split('.');
+    
+    for (const part of subDomainParts) {
+      if (subDomainData && typeof subDomainData === 'object' && part in subDomainData) {
+        subDomainData = (subDomainData as Record<string, unknown>)[part];
+      } else {
+        return `[MISSING SUB-DOMAIN: ${subDomain}]`;
+      }
+    }
 
     // Helper to pick and interpolate
     const pickAndResolve = (templates: string[] | undefined): string | null => {
@@ -33,7 +41,7 @@ export const BardResolver = {
 
     // 1. Variant-Specific Resolution (High Priority)
     if (variant && typeof subDomainData === 'object' && variant in subDomainData) {
-      const variantData = (subDomainData as Record<string, any>)[variant];
+      const variantData = (subDomainData as Record<string, string[]>)[variant];
       if (Array.isArray(variantData)) {
         return pickAndResolve(variantData) || `[EMPTY VARIANT: ${variant}]`;
       }
@@ -41,14 +49,14 @@ export const BardResolver = {
 
     // 2. Find Tier Data
     const tierKey = this.getTier(domain, intensity);
-    const data = subDomainData as unknown as Record<string, Record<string, string[]>>;
+    const data = subDomainData as Record<string, unknown>;
 
     // Try finding templates in order of specificity:
     const templates = 
-      (data[tone] && typeof data[tone] === 'object' && data[tone][tierKey]) ||
-      (data['Trade'] && typeof data['Trade'] === 'object' && data['Trade'][tierKey]) ||
-      (data['Standard'] && typeof data['Standard'] === 'object' && data['Standard'][tierKey]) ||
-      (data[tierKey] as unknown as string[]);
+      (data[tone] && typeof data[tone] === 'object' && (data[tone] as Record<string, string[]>)[tierKey]) ||
+      (data['Trade'] && typeof data['Trade'] === 'object' && (data['Trade'] as Record<string, string[]>)[tierKey]) ||
+      (data['Standard'] && typeof data['Standard'] === 'object' && (data['Standard'] as Record<string, string[]>)[tierKey]) ||
+      (data[tierKey] as string[]);
 
     if (Array.isArray(templates)) {
       const result = pickAndResolve(templates);
@@ -58,13 +66,13 @@ export const BardResolver = {
     // 3. Extreme fallback: Pick any valid tier
     const allPossibleKeys = Object.keys(data);
     for (const key of allPossibleKeys) {
-      const potentialTierData = data[key] as unknown;
+      const potentialTierData = data[key];
       if (Array.isArray(potentialTierData)) {
         const result = pickAndResolve(potentialTierData);
         if (result) return result;
       } else if (typeof potentialTierData === 'object' && potentialTierData !== null) {
-        const nestedTiers = Object.keys(potentialTierData);
         const folder = potentialTierData as Record<string, string[]>;
+        const nestedTiers = Object.keys(folder);
         for (const t of nestedTiers) {
           if (Array.isArray(folder[t])) {
             const result = pickAndResolve(folder[t]);
@@ -80,7 +88,7 @@ export const BardResolver = {
   /**
    * Logic to map 0-100 score to a Tier name.
    */
-  getTier(domain: string, score: number): string {
+  getTier(domain: NarrativeDomainKey, score: number): string {
     if (domain === 'Review') {
       if (score >= 75) return 'Acclaimed';
       if (score >= 40) return 'Mixed';
@@ -92,10 +100,8 @@ export const BardResolver = {
       return 'Risky';
     }
     if (domain === 'Talent' || domain === 'Industry') {
-      // For these domains, subDomain often dictates the tier or we use boolean-like tiers
       if (score >= 80) return 'Elite';
-      if (score >= 50) return 'Standard';
-      return 'Standard'; // Default
+      return 'Standard';
     }
     // Default tiering behavior
     if (score >= 80) return 'Elite';
@@ -107,11 +113,10 @@ export const BardResolver = {
    * Interpolates templates using double curly braces {{key}}.
    * If a key is missing from context, it checks the Dictionary domain in the archive.
    */
-  interpolate(template: string, context: Record<string, any>, rng?: RandomGenerator): string {
-    const archive = archiveData as NarrativeArchive;
+  interpolate(template: string, context: NarrativeContext, rng?: RandomGenerator): string {
+    const archive = archiveData as unknown as NarrativeArchive;
     const dictionary = (archive['Dictionary'] as unknown as Record<string, string[]>) || {};
 
-    // Use a loop or iterative replacement to handle potential recursive tags
     let result = template;
     let limit = 5; // Prevent infinite loops
 
@@ -120,8 +125,10 @@ export const BardResolver = {
         const trimmedKey = key.trim();
         
         // 1. Check direct context
-        if (context[trimmedKey] !== undefined) {
-          return String(context[trimmedKey]);
+        const ctx = context as Record<string, unknown>;
+        const val = ctx[trimmedKey];
+        if (typeof val === 'string' || typeof val === 'number' || typeof val === 'boolean') {
+          return String(val);
         }
 
         // 2. Check Dictionary
@@ -144,13 +151,11 @@ export const BardResolver = {
 
   /**
    * Picks a random item from an array.
-   * If rng is provided, it uses the deterministic pool.
    */
   pick<T>(items: T[], rng?: RandomGenerator): T {
     if (rng) {
       return rng.pick(items);
     }
-    // 🌌 Enforcement: Return first element instead of using Math.random()
     return items[0];
   }
 };

@@ -1,7 +1,8 @@
 import { WeekCoordinator } from '@/engine/services/WeekCoordinator';
 import { initializeGame } from '@/engine/core/gameInit';
 import { RandomGenerator } from '@/engine/utils/rng';
-import { GameState } from '@/engine/types';
+import { GameState, Project, IPAsset } from '@/engine/types';
+import { type ProjectId, type AssetId, type TalentId } from '@/engine/types/shared.types';
 
 describe('System Connectivity - Phase 3 Integration', () => {
     let state: GameState;
@@ -14,7 +15,7 @@ describe('System Connectivity - Phase 3 Integration', () => {
 
     test('WeekCoordinator annual tick triggers IP scan', () => {
         // Mock a project in vault
-        const projId = 'proj-seed';
+        const projId = 'proj-seed' as ProjectId;
         state.studio.internal.projectHistory = [{
             id: projId,
             title: 'Cult Movie',
@@ -24,17 +25,18 @@ describe('System Connectivity - Phase 3 Integration', () => {
             revenue: 20000000,
             genre: 'DRAMA',
             state: 'archived',
-            isCultClassic: false
-        } as any];
+            isCultClassic: false,
+            ownerId: state.studio.id
+        } as Project];
         
         state.ip.vault = [{
-            id: 'asset-1',
+            id: 'asset-1' as AssetId,
             originalProjectId: projId,
             title: 'Cult Movie',
             tier: 'ORIGINAL',
             decayRate: 1.0,
             rightsOwner: 'STUDIO'
-        } as any];
+        } as IPAsset];
 
         // Advance to year 2, week 1 (week 53)
         state.week = 52;
@@ -48,7 +50,10 @@ describe('System Connectivity - Phase 3 Integration', () => {
     test('RevenueProcessor applies demographic resonance', () => {
         // Mock a released project
         const project = {
-            id: 'p1',
+            id: 'p1' as ProjectId,
+            title: 'Action Movie',
+            type: 'FILM',
+            format: 'film',
             state: 'released',
             weeklyRevenue: 1000000,
             targetDemographic: 'male_under_25',
@@ -56,10 +61,14 @@ describe('System Connectivity - Phase 3 Integration', () => {
             budget: 50000000,
             revenue: 0,
             buzz: 80,
-            distributionStatus: 'theatrical'
-        } as any;
+            distributionStatus: 'theatrical',
+            ownerId: state.studio.id,
+            budgetTier: 'mid',
+            releaseWeek: 0,
+            quality: 70
+        } as Project;
 
-        state.entities.projects = { p1: project };
+        state.entities.projects = { ['p1' as ProjectId]: project };
         
         // Manual revenue calculation check would be complex here due to snapshots,
         // but we can verify the WeeklyFinancialReport contains expected values.
