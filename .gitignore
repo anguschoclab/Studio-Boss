@@ -10,7 +10,11 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+dev-dist/
+release/
+sim-reports/
 *.local
+.env
 
 # Editor directories and files
 .vscode/*
@@ -28,3 +32,30 @@ coverage/
 playwright-report/
 test-results/
 bun_output.txt
+
+# AI Assistant Directories
+.agent/
+.claude/
+.jules/
+.gemini/
+.tanstack/
+
+# Temporary and generated reports
+*.txt
+*.patch
+*_report.json
+*_results.json
+*-results.json
+!package.json
+!package-lock.json
+!tsconfig*.json
+
+# Maintenance scripts and root-level benchmarks
+fix_type.js
+extract_crises.js
+final_generator.cjs
+test_style.js
+benchmark*.ts
+test_benchmark.ts
+test_mock.ts
+test_textcontent.html
