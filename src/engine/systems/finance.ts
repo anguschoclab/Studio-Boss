@@ -51,7 +51,8 @@ export function generateWeeklyFinancialReport(
   let totalRoyalties = 0;
 
   // ⚡ The Framerate Fanatic: Refactored array .find() inside map to a Map lookup, improving performance from O(n^2) to O(n).
-  const buyerMap = new Map((state.market.buyers || []).map(b => [b.id, b]));
+  const buyerMap = new Map<string, Buyer>();
+  state.market?.buyers?.forEach(b => buyerMap.set(b.id, b));
 
   projects.forEach(p => {
     if (p.state === 'released') {
