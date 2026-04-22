@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
-import { RivalStudio, Buyer } from '@/engine/types';
+import { Buyer } from '@/engine/types';
 import { RegulatorSystem } from '@/engine/systems/industry/RegulatorSystem';
 import { TrendingUp, ShieldAlert, History, Users, Activity } from 'lucide-react';
 

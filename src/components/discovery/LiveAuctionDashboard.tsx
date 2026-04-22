@@ -36,10 +36,10 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ oppo
 
   const highestBidder = isPlayerWinning ? { name: 'YOU' } : rivalsMap[opp.highestBidderId];
 
-  const [bidAmount, setBidAmount] = useState(currentHighest + 1_000_000);
+
 
   useEffect(() => {
-    setBidAmount(currentHighest + 1_000_000);
+
   }, [currentHighest]);
 
   const handleBid = (amount: number) => {
