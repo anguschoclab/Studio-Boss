@@ -42,7 +42,12 @@ export function calculateFranchiseFatigue(
   // 3. Rival Saturation (The 'Poison the Well' effect)
   // If genre is severely oversaturated, penalty multiplier increases heavily.
   const oversaturationMultiplier = genreSaturation > 10 ? 1.5 : 1.0;
-  const rivalPenalty = (genreSaturation / 12) * 0.1 * oversaturationMultiplier;
+  let rivalPenalty = (genreSaturation / 12) * 0.1 * oversaturationMultiplier;
+
+  // 🌌 The Universe Builder: Implemented "Superhero Fatigue" - 2x penalty if Superhero genre is oversaturated.
+  if (normalizedGenre === 'Superhero' && genreSaturation > 8) {
+    rivalPenalty *= 2.0;
+  }
   
   // 4. Audience Loyalty (Protective Shield)
   // High loyalty acts as a buffer against fatigue.
@@ -66,6 +71,15 @@ export function calculateReleaseGapImpact(
   const weeksSince = currentWeek - mostRecent;
   const yearsSince = weeksSince / 52;
   
+  // 🌌 The Universe Builder: Added massive buzz reset for rebooting dead franchises (15+ years).
+  if (yearsSince >= 15) {
+    return {
+      buzzBonus: 60,
+      label: 'Franchise Reboot',
+      fatigueReset: true
+    };
+  }
+
   // 1. The Nostalgia Spike (10+ years / 520+ weeks)
   // Real-life: Top Gun Maverick, The Force Awakens.
   if (yearsSince >= 10) {
