@@ -116,7 +116,7 @@ export const OfferHistoryLog: React.FC<OfferHistoryLogProps> = ({
       </div>
 
       {offer.status === 'pending' && (
-        <button
+        <button type="button"
           className="text-[10px] text-primary hover:underline"
           onClick={() => onViewOffer?.(offer.offerId)}
         >

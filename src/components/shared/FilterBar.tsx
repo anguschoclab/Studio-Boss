@@ -99,7 +99,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
             )}
           />
           {searchValue && (
-            <button
+            <button type="button"
               onClick={() => onSearchChange('')}
               className={cn(
                 'absolute right-2 top-1/2 -translate-y-1/2',

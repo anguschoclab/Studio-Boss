@@ -172,7 +172,7 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
                   const isSelected = selectedQuadrant === q.key;
                   const score = resonanceScores[q.key] || 1.0;
                   return (
-                    <button 
+                    <button type="button"
                       key={q.key}
                       onClick={() => campaignType === 'marketing' && setSelectedQuadrant(q.key)}
                       disabled={campaignType !== 'marketing'}

@@ -118,7 +118,7 @@ export function InstallPrompt() {
         >
           Update
         </Button>
-        <button
+        <button type="button"
           onClick={handleDismiss}
           className="p-1 hover:bg-white/10 rounded-lg transition-colors"
         >
@@ -147,7 +147,7 @@ export function InstallPrompt() {
         >
           Install
         </Button>
-        <button
+        <button type="button"
           onClick={handleDismiss}
           className="p-1 hover:bg-white/10 rounded-lg transition-colors"
         >

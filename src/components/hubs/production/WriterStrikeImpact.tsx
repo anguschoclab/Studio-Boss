@@ -189,13 +189,13 @@ export const WriterStrikeImpact: React.FC<WriterStrikeImpactProps> = ({
               )}
 
               <div className="flex gap-2">
-                <button
+                <button type="button"
                   className="text-[10px] text-primary hover:underline"
                   onClick={() => onAdjustSchedule?.(project.projectId)}
                 >
                   Adjust Schedule
                 </button>
-                <button
+                <button type="button"
                   className="text-[10px] text-red-500 hover:underline"
                   onClick={() => onHireScabs?.(project.projectId)}
                 >

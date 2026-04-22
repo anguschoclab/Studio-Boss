@@ -16,7 +16,7 @@ interface ArchetypeCardProps {
 
 export const ArchetypeCard = ({ arch, selected, onSelect }: ArchetypeCardProps) => {
   return (
-    <button
+    <button type="button"
       key={arch.key}
       onClick={() => onSelect(arch.key)}
       className={`relative p-6 rounded-xl border-2 text-left transition-all duration-300 group overflow-hidden ${

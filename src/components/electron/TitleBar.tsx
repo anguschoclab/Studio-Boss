@@ -36,21 +36,21 @@ export function TitleBar() {
 
       {/* Window controls - no-drag to make buttons clickable */}
       <div className="flex items-center electron-no-drag">
-        <button
+        <button type="button"
           onClick={handleMinimize}
           className="h-12 w-12 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-colors"
           title="Minimize"
         >
           <Minus className="w-4 h-4" />
         </button>
-        <button
+        <button type="button"
           onClick={handleMaximize}
           className="h-12 w-12 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-colors"
           title="Maximize"
         >
           <Square className="w-4 h-4" />
         </button>
-        <button
+        <button type="button"
           onClick={handleClose}
           className="h-12 w-12 flex items-center justify-center text-white/60 hover:text-white hover:bg-red-500/80 transition-colors"
           title="Close"

@@ -247,7 +247,7 @@ const SidebarRail = React.forwardRef<HTMLButtonElement, React.ComponentProps<"bu
     const { toggleSidebar } = useSidebar();
 
     return (
-      <button
+      <button type="button"
         ref={ref}
         data-sidebar="rail"
         aria-label="Toggle Sidebar"

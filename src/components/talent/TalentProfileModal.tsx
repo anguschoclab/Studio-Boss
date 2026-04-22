@@ -455,7 +455,7 @@ export const TalentModal = () => {
            </div>
            
            <div className="flex gap-4">
-              <button 
+              <button type="button"
                 onClick={() => selectTalent(null)}
                 className="px-12 py-3 bg-white text-black font-black uppercase text-xs rounded-2xl hover:bg-primary transition-all duration-300 shadow-[0_4px_20px_rgba(255,255,255,0.1)] hover:shadow-primary/20 hover:-translate-y-0.5 active:translate-y-0"
               >

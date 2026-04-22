@@ -355,7 +355,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                         const Icon = item.icon;
 
                         return (
-                          <button
+                          <button type="button"
                             key={item.id}
                             onClick={() => {
                               item.action();

@@ -41,8 +41,8 @@ export const NewsFeed = () => {
           </Badge>
         </div>
 
-        <div className="flex gap-1.5 overflow-x-auto pb-2 custom-scrollbar no-scrollbar">
-          <button 
+        <div className="flex gap-1.5 overflow-x-auto overflow-y-hidden pb-2 custom-scrollbar no-scrollbar">
+          <button type="button"
             onClick={() => setFilter('ALL')}
             className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-tighter transition-all border ${
               filter === 'ALL' ? 'bg-white text-black border-white' : 'bg-slate-900 text-slate-400 border-slate-800'
@@ -51,7 +51,7 @@ export const NewsFeed = () => {
             All
           </button>
           {(Object.keys(eventTypeConfig) as NewsEventType[]).map(type => (
-            <button 
+            <button type="button"
               key={type}
               onClick={() => setFilter(type)}
               className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-tighter transition-all border flex items-center gap-1.5 whitespace-nowrap ${

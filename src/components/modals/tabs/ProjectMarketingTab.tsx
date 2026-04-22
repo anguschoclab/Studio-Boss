@@ -116,7 +116,7 @@ export const ProjectMarketingTab: React.FC<ProjectMarketingTabProps> = ({
           { id: 'basic',       name: 'Targeted Digital', cost: project.budget * 0.1, buzz: 15, desc: 'Coordinated social campaign.' },
           { id: 'blockbuster', name: 'Global Blitz',   cost: project.budget * 0.5, buzz: 40, desc: 'Omnichannel market saturation.' }
         ].map(tier => (
-          <button
+          <button type="button"
             aria-pressed={project.marketingLevel === tier.id || selectedTier === tier.id}
             key={tier.id}
             disabled={isLocked || cash < tier.cost}
@@ -151,7 +151,7 @@ export const ProjectMarketingTab: React.FC<ProjectMarketingTabProps> = ({
         <div>
           <p className="text-[10px] font-black uppercase text-primary tracking-widest mb-2">Primary Marketing Angle</p>
           <div className="relative">
-            <button
+            <button type="button"
               disabled={isLocked}
               onClick={() => { setShowPrimaryPicker(v => !v); setShowSecondaryPicker(false); }}
               className={cn(
@@ -177,7 +177,7 @@ export const ProjectMarketingTab: React.FC<ProjectMarketingTabProps> = ({
             {showPrimaryPicker && !isLocked && (
               <div className="absolute z-20 w-full mt-1 border border-slate-700 bg-slate-950 rounded-xl overflow-hidden shadow-2xl max-h-72 overflow-y-auto">
                 {ALL_ANGLES.map(angle => (
-                  <button
+                  <button type="button"
                     key={angle.id}
                     onClick={() => handlePickPrimary(angle.id)}
                     className={cn(
@@ -200,7 +200,7 @@ export const ProjectMarketingTab: React.FC<ProjectMarketingTabProps> = ({
             Secondary Push <span className="normal-case font-medium">(Optional — contributes 30% of angle bonus)</span>
           </p>
           <div className="relative">
-            <button
+            <button type="button"
               disabled={isLocked || !activePrimary}
               onClick={() => { setShowSecondaryPicker(v => !v); setShowPrimaryPicker(false); }}
               className={cn(
@@ -222,7 +222,7 @@ export const ProjectMarketingTab: React.FC<ProjectMarketingTabProps> = ({
               </div>
               <div className="flex items-center gap-2 shrink-0">
                 {activeSecondary && !isLocked && (
-                  <button
+                  <button type="button"
                     onClick={(e) => { e.stopPropagation(); handlePickSecondary(null); }}
                     className="text-[10px] text-muted-foreground hover:text-destructive transition-colors font-bold uppercase tracking-wider"
                   >
@@ -236,7 +236,7 @@ export const ProjectMarketingTab: React.FC<ProjectMarketingTabProps> = ({
             {showSecondaryPicker && !isLocked && activePrimary && (
               <div className="absolute z-20 w-full mt-1 border border-slate-700 bg-slate-950 rounded-xl overflow-hidden shadow-2xl max-h-72 overflow-y-auto">
                 {secondaryOptions.map(angle => (
-                  <button
+                  <button type="button"
                     key={angle.id}
                     onClick={() => handlePickSecondary(angle.id)}
                     className={cn(

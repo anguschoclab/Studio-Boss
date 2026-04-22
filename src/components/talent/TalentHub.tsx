@@ -80,7 +80,7 @@ export const TalentHub = () => {
           <div className="flex gap-2 flex-wrap mb-4">
             {(['all', 'actor', 'director', 'writer', 'producer'] as (TalentRole | 'all')[]).map(type => (
               <TooltipWrapper key={type} tooltip={`Filter by ${type === 'all' ? 'all roles' : type}`} side="bottom">
-                <button
+                <button type="button"
                   onClick={() => setRosterFilter(type)}
                   className={cn(
                     "px-3.5 py-1.5 text-[10px] uppercase tracking-wider font-black rounded-full transition-all duration-300 border",

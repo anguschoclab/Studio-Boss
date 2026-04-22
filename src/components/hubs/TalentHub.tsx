@@ -71,7 +71,7 @@ const RosterPanel = () => {
       <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between bg-white/5 p-4 rounded-xl border border-white/5">
         <div className="flex gap-2 flex-wrap">
           {roleFilters.map(role => (
-            <button
+            <button type="button"
               key={role}
               onClick={() => setFilter(role)}
               className={cn(
@@ -104,6 +104,7 @@ const RosterPanel = () => {
           {filteredTalent.map((talent: Talent) => (
             <div 
               key={talent.id}
+              className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none "
               role="button"
               tabIndex={0}
               onKeyDown={(e) => {
@@ -167,7 +168,7 @@ const MarketplacePanel = () => {
   return (
     <div className="h-full flex flex-col">
       <div className="flex items-center gap-2 mb-4">
-        <button
+        <button type="button"
           onClick={() => setActiveTab('scripts')}
           className={cn(
             'px-4 py-3 text-[11px] font-bold uppercase tracking-wider rounded-lg transition-all',
@@ -179,7 +180,7 @@ const MarketplacePanel = () => {
           <Newspaper className="h-3.5 w-3.5 inline mr-2" />
           Script Marketplace
         </button>
-        <button
+        <button type="button"
           onClick={() => setActiveTab('talent')}
           className={cn(
             'px-4 py-2 text-[11px] font-bold uppercase tracking-wider rounded-lg transition-all',
@@ -210,7 +211,7 @@ const MarketplacePanel = () => {
                   return (
                     <div 
                       key={opp.id}
-                      className="p-4 bg-card/40 border border-border/40 rounded-xl hover:border-primary/30 transition-all cursor-pointer"
+                      className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none p-4 bg-card/40 border border-border/40 rounded-xl hover:border-primary/30 transition-all cursor-pointer"
                       role="button"
                       tabIndex={0}
                       onKeyDown={(e) => {

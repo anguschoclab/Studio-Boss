@@ -74,7 +74,7 @@ export const PitchProjectModal = () => {
               {gameState.market.buyers.map(buyer => {
                 const fitScore = calculateFitScore(project, buyer);
                 return (
-                  <button
+                  <button type="button"
                     key={buyer.id}
                     onClick={() => setSelectedBuyerId(buyer.id)}
                     aria-pressed={selectedBuyerId === buyer.id}
@@ -103,7 +103,7 @@ export const PitchProjectModal = () => {
           <div className="space-y-4">
             <h4 className="font-semibold text-sm text-muted-foreground uppercase">2. Deal Structure</h4>
             <div className="space-y-2">
-              <button
+              <button type="button"
                 onClick={() => setSelectedContract('upfront')}
                 aria-pressed={selectedContract === 'upfront'}
                 className={`w-full text-left p-3 rounded border transition-colors ${
@@ -118,7 +118,7 @@ export const PitchProjectModal = () => {
                 </p>
               </button>
 
-              <button
+              <button type="button"
                 onClick={() => setSelectedContract('deficit')}
                 aria-pressed={selectedContract === 'deficit'}
                 className={`w-full text-left p-3 rounded border transition-colors ${

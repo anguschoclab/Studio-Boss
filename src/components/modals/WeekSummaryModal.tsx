@@ -145,7 +145,7 @@ export const WeekSummaryModal = () => {
                 <div className="space-y-2">
                   <h4 className="text-[10px] font-display uppercase tracking-widest text-muted-foreground font-black">📰 The Trades</h4>
                   {newHeadlines.map((h: Headline) => (
-                    <button
+                    <button type="button"
                       key={h.id}
                       onClick={() => setSelectedHeadline(h)}
                       className="w-full text-left text-xs text-muted-foreground hover:text-primary transition-colors p-2 rounded-lg hover:bg-primary/5 border border-transparent hover:border-primary/20 group flex items-start gap-2"

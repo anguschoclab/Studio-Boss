@@ -59,7 +59,7 @@ export const SubNav: React.FC<SubNavProps> = ({
         const hasBadge = tab.badge && tab.badge > 0;
         
         return (
-          <button
+          <button type="button"
             key={tab.id}
             onClick={() => onChange(tab.id)}
             className={cn(

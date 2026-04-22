@@ -86,7 +86,7 @@ export const Heatmap: React.FC<HeatmapProps> = ({
   };
 
   return (
-    <div className={cn('overflow-x-auto custom-scrollbar w-full', className)}>
+    <div className={cn('overflow-x-auto overflow-y-hidden custom-scrollbar w-full', className)}>
       <div className="inline-block min-w-full">
         {/* Column headers */}
         <div className="flex">
@@ -123,7 +123,7 @@ export const Heatmap: React.FC<HeatmapProps> = ({
                       tooltip={cell?.tooltip || `${row} × ${col}: ${cell?.value ?? 0}`}
                       side="top"
                     >
-                      <button
+                      <button type="button"
                         onClick={() => cell && onCellClick?.(cell)}
                         className={cn(
                           'rounded transition-all duration-200 flex items-center justify-center font-bold',
