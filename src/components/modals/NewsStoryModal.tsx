@@ -89,7 +89,7 @@ export const NewsStoryModal: React.FC<NewsStoryModalProps> = ({ headline, open, 
             </Badge>
             <span className="text-[9px] font-mono text-muted-foreground">Week {headline.week}</span>
           </div>
-          <h2 className="font-display font-black text-xl leading-tight tracking-tight text-foreground">
+          <h2 className="font-display font-black text-xl leading-tight tracking-tight text-foreground uppercase">
             {headline.text}
           </h2>
           <p className="text-[10px] text-muted-foreground italic">The Trades • Exclusive Industry Report</p>

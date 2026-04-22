@@ -45,7 +45,7 @@ export const PackageDetailModal = ({ packageId: propPackageId }: PackageDetailMo
     <Dialog open={true} onOpenChange={handleClose}>
       <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-card/90 backdrop-blur-2xl border border-white/10">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+          <DialogTitle className="font-display font-black text-xl tracking-tight uppercase flex items-center gap-2">
             <Package className="h-5 w-5" />
             {packageData.title}
           </DialogTitle>

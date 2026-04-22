@@ -180,7 +180,7 @@ export const ProjectDetailModal = () => {
                  </DialogTitle>
               </div>
               <div className="flex items-center gap-2">
-                <Badge variant="outline" className="text-amber-500 border-amber-500/30 uppercase font-black text-[10px] tracking-widest">{project.state}</Badge>
+                <Badge variant="outline" className="text-secondary border-secondary/30 uppercase font-black text-[10px] tracking-widest">{project.state}</Badge>
                 <div className="h-1 w-1 rounded-full bg-slate-700" />
                 <span className="text-[10px] uppercase font-bold text-muted-foreground">{project.genre} • {project.format}</span>
               </div>

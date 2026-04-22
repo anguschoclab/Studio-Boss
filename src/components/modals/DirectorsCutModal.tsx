@@ -35,8 +35,8 @@ export const DirectorsCutModal: React.FC = () => {
       <DialogContent className="max-w-md bg-card/90 backdrop-blur-2xl border border-white/10">
         <DialogHeader>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 rounded-lg bg-amber-500/10">
-              <Film className="h-5 w-5 text-amber-500" />
+            <div className="p-2 rounded-lg bg-secondary/10">
+              <Film className="h-5 w-5 text-secondary" />
             </div>
             <DialogTitle className="text-lg font-black uppercase tracking-tight">
               Director's Cut Available
