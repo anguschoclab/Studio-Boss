@@ -1,4 +1,4 @@
-import { Talent, Project, GameState, CharacterArchetype } from '@/engine/types/index';
+import { Talent, Project, GameState } from '@/engine/types/index';
 
 /**
  * Studio Boss - Willingness Engine
@@ -15,8 +15,7 @@ export interface WillingnessReport {
 export function calculateWillingness(
   talent: Talent,
   project: Project,
-  gameState: GameState,
-  proposedRole?: CharacterArchetype
+  gameState: GameState
 ): WillingnessReport {
   let score = 60; // Baseline
   const reasons: string[] = [];
@@ -51,7 +50,6 @@ export function calculateWillingness(
   const scriptHeat = 'scriptHeat' in project ? project.scriptHeat : 50;
 
   // 3. Financial Incentive (Fee vs Star Meter)
-  const starMeter = talent.starMeter || 50;
   if (talent.fee > project.budget * 0.4) {
     // Auteurs will forgive a low budget if the script is a masterpiece
     if (isAuteur && scriptHeat > 85) {

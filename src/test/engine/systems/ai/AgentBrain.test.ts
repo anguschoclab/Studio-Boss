@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { Agency, NewsImpact } from '@/engine/types';
 import { tickAgencies, evaluatePackageOffer } from '@/engine/systems/ai/AgentBrain';
 import { RandomGenerator } from '@/engine/utils/rng';
@@ -39,11 +39,12 @@ describe('Agent Brain (Target C2)', () => {
 
   describe('evaluatePackageOffer', () => {
     it('returns a package deal if agency is THE_PACKAGER', () => {
+      // @ts-expect-error Mocking partial Agency object for test
       const agency: Agency = {
         id: 'packager-1',
         name: 'Pack House',
         currentMotivation: 'THE_PACKAGER'
-      } as any;
+      };
 
       const leadTalent = createMockTalent({ id: 'lead', name: 'Star' });
       const bundledTalent = createMockTalent({ id: 'bundle', name: 'B-Side', agencyId: 'packager-1' });
@@ -57,11 +58,12 @@ describe('Agent Brain (Target C2)', () => {
     });
 
     it('returns no deal if no other clients are available', () => {
+      // @ts-expect-error Mocking partial Agency object for test
       const agency: Agency = {
         id: 'packager-1',
         name: 'Pack House',
         currentMotivation: 'THE_PACKAGER'
-      } as any;
+      };
 
       const leadTalent = createMockTalent({ id: 'lead', name: 'Star' });
       const talentPool = [leadTalent];
