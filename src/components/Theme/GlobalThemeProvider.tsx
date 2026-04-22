@@ -19,7 +19,7 @@ interface GlobalThemeProviderProps {
   children: ReactNode;
 }
 
-export const GlobalThemeProvider: React.FC<GlobalThemeProviderProps> = ({ children }) => {
+const GlobalThemeProvider: React.FC<GlobalThemeProviderProps> = ({ children }) => {
   const archetype = useGameStore(s => s.gameState?.studio?.archetype);
 
   useEffect(() => {
@@ -39,4 +39,4 @@ export const GlobalThemeProvider: React.FC<GlobalThemeProviderProps> = ({ childr
   );
 };
 
-export { useTheme };
+export { useTheme, GlobalThemeProvider };

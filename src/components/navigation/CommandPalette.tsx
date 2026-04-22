@@ -50,7 +50,7 @@ interface CommandPaletteProps {
  * - Project/talent search
  * - Common actions (new project, etc.)
  */
-export const CommandPalette: React.FC<CommandPaletteProps> = ({
+const CommandPalette: React.FC<CommandPaletteProps> = ({
   isOpen,
   onClose,
 }) => {
@@ -445,6 +445,4 @@ const useCommandPalette = () => {
   };
 };
 
-export default CommandPalette;
-
-export { useCommandPalette };
+export { useCommandPalette, CommandPalette };
