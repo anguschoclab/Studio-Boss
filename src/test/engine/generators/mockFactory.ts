@@ -66,11 +66,13 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
   return { ...defaultState, ...overrides };
 };
 
+import { RandomGenerator } from '../../../engine/utils/rng';
+
 export const createMockTickContext = (overrides: Partial<import('../../../engine/services/WeekCoordinator').TickContext> = {}): import('../../../engine/services/WeekCoordinator').TickContext => {
   return {
     week: 1,
     tickCount: 0,
-    rng: new (require('../../../engine/utils/rng').RandomGenerator)(12345),
+    rng: new RandomGenerator(12345),
     timestamp: Date.now(),
     impacts: [],
     events: [],
