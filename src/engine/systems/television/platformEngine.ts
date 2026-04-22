@@ -7,17 +7,18 @@ import { RandomGenerator } from '../../utils/rng';
  * Churn = CurrentSubs * ChurnRate
  */
 function calculateSubChange(platform: StreamerPlatform, rng: RandomGenerator, averageRetention: number): number {
-  const baseGrowthRate = 0.02; // 2% weekly base potential
+  // 📺 The Syndication Baron: Streaming wars saturated market - lower base growth, higher marketing costs.
+  const baseGrowthRate = 0.015; // 1.5% weekly base potential
   const qualityFactor = platform.contentLibraryQuality / 100;
-  // Use a fallback for marketingSpend if not defined
-  const marketingFactor = (platform.marketingSpend || 0) / 500000; // Normalized to 500k
+  // Reduced marketing effectiveness (normalized to 1M, lower multiplier)
+  const marketingFactor = (platform.marketingSpend || 0) / 1000000;
   
   // Add 1% stochastic variance
   const variance = 1 + (rng.next() - 0.5) * 0.01;
-  const growth = (baseGrowthRate * qualityFactor + marketingFactor * 0.01) * platform.subscribers * variance;
+  const growth = (baseGrowthRate * qualityFactor + marketingFactor * 0.005) * platform.subscribers * variance;
 
-  // 📺 The Syndication Baron: Tweaked streaming renewal thresholds: platforms now cancel expensive shows faster if subscriber growth flatlines.
-  const retentionFactor = (100 - averageRetention) / 40;
+  // 📺 The Syndication Baron: Harsher churn penalties for platforms with poor audience retention.
+  const retentionFactor = (100 - averageRetention) / 30; // 30 divisor makes bad retention hurt more
   const adjustedChurnRate = platform.churnRate * (0.5 + retentionFactor * 0.5);
   const churn = platform.subscribers * adjustedChurnRate;
   
