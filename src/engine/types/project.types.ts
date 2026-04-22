@@ -53,23 +53,33 @@ export interface ScriptMetrics {
   lastCalculatedWeek: number;
 }
 
-export type MarketingAngle = 
-  | 'SELL_THE_SPECTACLE' 
-  | 'SELL_THE_STORY' 
-  | 'SELL_THE_STARS' 
-  | 'FAMILY_ADVENTURE' 
+export type MarketingAngle =
+  | 'SELL_THE_SPECTACLE'
+  | 'SELL_THE_STORY'
+  | 'SELL_THE_STARS'
+  | 'FAMILY_ADVENTURE'
   | 'AWARDS_PUSH'
   | 'GRASSROOTS'
   | 'GLOBAL_BLITZ'
-  | 'CONTROVERSY';
+  | 'CONTROVERSY'
+  | 'SELL_THE_SCARES'
+  | 'SELL_THE_ROMANCE'
+  | 'SELL_THE_WORLD_MYTHOLOGY'
+  | 'SELL_THE_TRUE_STORY_HOOK'
+  | 'SELL_THE_MUSIC'
+  | 'BROAD_FOUR_QUADRANT_MARKETING';
+
+export type ReleaseStrategy = 'theatrical' | 'streaming' | 'platform_exclusive' | 'limited_prestige';
 
 export interface MarketingCampaign {
   domesticBudget: number;
   foreignBudget: number;
   primaryAngle: MarketingAngle;
+  secondaryAngle?: MarketingAngle;
+  releaseStrategy?: ReleaseStrategy;
   efficiencyMultiplier?: number; // Calculated at release (e.g., 0.5 = bomb, 1.5 = viral hit)
   weeksInMarketing?: number; // For decay calculation
-  feedbackText?: string; 
+  feedbackText?: string;
 }
 
 export interface BoxOfficeResult {
@@ -80,7 +90,7 @@ export interface BoxOfficeResult {
   multiplier: number;
 }
 
-export type ProjectStatus = 'development' | 'needs_greenlight' | 'pitching' | 'production' | 'marketing' | 'released' | 'post_release' | 'archived';
+export type ProjectStatus = 'development' | 'needs_greenlight' | 'pitching' | 'production' | 'post_production' | 'marketing' | 'released' | 'post_release' | 'archived';
 export type ProjectFormat = 'film' | 'tv' | 'unscripted';
 export type BudgetTierKey = 'low' | 'mid' | 'high' | 'blockbuster';
 
@@ -497,6 +507,14 @@ export interface ProjectBase {
   buyerId?: string;
   ownerId?: string;
   nielsenProfile?: import('../systems/television/nielsenSystem').NielsenProfile;
+  // Post-production phase
+  postProductionWeeksRemaining?: number;
+  // Release strategy (set during marketing phase)
+  releaseStrategy?: ReleaseStrategy;
+  // Morale tracking for on-set talent
+  morale?: number; // 0-100
+  // Loan tracking
+  loanId?: string;
 }
 
 export interface ScriptedProject extends ProjectBase {

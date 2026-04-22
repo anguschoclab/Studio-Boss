@@ -1,6 +1,6 @@
 // Types related to Studios, Rivals, and Game State
 
-import { Project, Opportunity, GenreTrend, FestivalSubmission, Award } from './project.types';
+import { Project, Opportunity, GenreTrend, FestivalSubmission, Award, ReleaseStrategy } from './project.types';
 import { Contract, FirstLookDeal, Family, Agency, Agent, Talent, Scandal, MotivationProfile, RivalStrategy } from './talent.types';
 import { NewsEvent, Rumor, MarketEvent } from './engine.types';
 import { FinanceState, NewsState, IPState } from './state.types';
@@ -80,6 +80,16 @@ export interface GameState {
       firstLookDeals?: FirstLookDeal[];
     };
     ownedPlatforms?: string[];
+    // Loan system
+    loans?: import('./state.types').LoanRecord[];
+    isBankrupt?: boolean;
+    // Studio identity axes (prestige vs commercial, franchise vs original)
+    identity?: {
+      prestigeCommercial: number; // 0=commercial, 100=prestige
+      franchiseOriginal: number;  // 0=originals, 100=franchise
+    };
+    // Achievement tracking (array of unlocked achievement IDs)
+    achievements?: string[];
   };
   market: {
     opportunities: Opportunity[];

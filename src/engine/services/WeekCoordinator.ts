@@ -23,6 +23,7 @@ import { tickVerticalIntegration } from '../systems/industry/VerticalIntegration
 import { tickIndustryUpstarts } from '../systems/industry/IndustryUpstarts';
 import { tickConsolidation } from '../systems/industry/ConsolidationEngine';
 import { InterestRateSimulator } from '../systems/market/InterestRateSimulator';
+import { tickLoans } from '../systems/finance/LoanSystem';
 
 // Talent Lifecycle Systems
 import { tickRelationshipSystem } from '../systems/talent/RelationshipSystem';
@@ -38,6 +39,10 @@ import { tickTVRecommendationSystem } from '../systems/talent/TVRecommendationSy
 
 // Production Support Systems
 import { checkAndTriggerCrisis } from '../systems/crises';
+import { advanceDeals } from '../systems/deals';
+import { advanceRivals } from '../systems/rivals';
+import { runAwardsCeremony } from '../systems/awards/CeremonyRunner';
+import { processRazzies } from '../systems/awards/RazzieProcessor';
 import { tickPilots } from '../systems/television/pilotEvaluator';
 import { runUpfronts } from '../systems/television/upfrontsEngine';
 
@@ -183,6 +188,15 @@ export class WeekCoordinator {
     if (context.week % 52 === 0) {
       context.impacts.push(...runUpfronts(state, context.rng));
     }
+
+    // 6. Awards ceremonies — run every week (CeremonyRunner checks internal calendar)
+    const awardsYear = Math.floor(context.week / 52) + 1;
+    context.impacts.push(...runAwardsCeremony(state, context.week, awardsYear, context.rng));
+
+    // 7. Razzies — once per year
+    if (context.week % 52 === 2) {
+      context.impacts.push(...processRazzies(state, context.week, context.rng));
+    }
   }
 
   private static runTalentFilter(state: GameState, context: TickContext) {
@@ -212,10 +226,19 @@ export class WeekCoordinator {
 
     // Festival market
     context.impacts.push(...runFestivalMarket(state, context.rng));
+
+    // Rival studio status tick
+    context.impacts.push(advanceRivals(state));
+
+    // First-look deal expiry
+    const deals = (state.studio as any).firstLookDeals || [];
+    if (deals.length > 0) {
+      context.impacts.push(...advanceDeals(deals));
+    }
   }
 
   private static runScandalFilter(state: GameState, context: TickContext) {
-    context.impacts.push(...generateScandals(state));
+    context.impacts.push(...generateScandals(state, context.rng));
     context.impacts.push(...advanceScandals(state));
   }
 

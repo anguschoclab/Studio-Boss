@@ -46,6 +46,16 @@ export interface MarketState {
   rateHistory: { week: number; rate: number }[];
 }
 
+export interface LoanRecord {
+  id: string;
+  principal: number;
+  interestRate: number;
+  weeklyPayment: number;
+  weeksRemaining: number;
+  startWeek: number;
+  lenderName: string;
+}
+
 export interface FinanceState {
   cash: number;
   ledger: WeeklyFinancialReport[];
