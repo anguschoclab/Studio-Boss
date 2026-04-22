@@ -421,7 +421,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
 /**
  * Hook to manage command palette state
  */
-export const useCommandPalette = () => {
+const useCommandPalette = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -446,3 +446,5 @@ export const useCommandPalette = () => {
 };
 
 export default CommandPalette;
+
+export { useCommandPalette };

@@ -64,7 +64,7 @@ export function useKeyboardShortcuts() {
     switch (config.action) {
       case 'hub':
         if (config.target) {
-          setActiveHub(config.target as any);
+          setActiveHub(config.target as Parameters<typeof setActiveHub>[0]);
         }
         break;
         
