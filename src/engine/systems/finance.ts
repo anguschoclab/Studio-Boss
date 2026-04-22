@@ -20,7 +20,7 @@ export function calculateStudioNetWorth(state: GameState): number {
 
   // 2. Active Projects Inventory (Work in Progress value)
   // We value "Inventory" as 50% of the budget already spent
-  Object.values(state.studio.internal.projects).forEach(p => {
+  Object.values(state.studio?.internal?.projects || {}).forEach(p => {
     if (p.state !== 'released' && p.state !== 'archived') {
       netWorth += p.budget * 0.5;
     }
@@ -37,7 +37,7 @@ export function generateWeeklyFinancialReport(
   state: GameState, 
   pendingImpacts: StateImpact[] = []
 ): { report: WeeklyFinancialReport; snapshot: FinancialSnapshot } {
-  const projects = Object.values(state.studio.internal.projects);
+  const projects = Object.values(state.studio?.internal?.projects || {});
   const studioLevel = (state.studio as any).level || 1;
   const market = state.finance.marketState || InterestRateSimulator.initialize();
 
@@ -60,7 +60,7 @@ export function generateWeeklyFinancialReport(
       
       // Theatrical vs Streaming
       if (p.distributionStatus === 'theatrical') {
-        weeklyGross = RevenueProcessor.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.5);
+        weeklyGross = RevenueProcessor.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.45); // The Studio Comptroller: Increased theatrical decay to 0.45 to simulate modern front-loaded box office drops.
         boxOffice += weeklyGross;
       } else if (p.distributionStatus === 'streaming') {
         const platform = p.buyerId ? buyerMap.get(p.buyerId) : undefined;
@@ -170,7 +170,7 @@ export function calculateWeeklyRevenue(projects: Project[], buyers: Buyer[] = []
   projects.forEach(p => {
     if (p.state === 'released') {
       if (p.distributionStatus === 'theatrical') {
-        boxOffice += RevenueProcessor.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.5);
+        boxOffice += RevenueProcessor.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.45); // The Studio Comptroller: Increased theatrical decay to 0.45 to simulate modern front-loaded box office drops.
       } else if (p.distributionStatus === 'streaming') {
         const platform = p.buyerId ? buyerMap.get(p.buyerId) : undefined;
         if (platform) {
