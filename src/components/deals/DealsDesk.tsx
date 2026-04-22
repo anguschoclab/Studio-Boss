@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
-import { Handshake, Tv, Globe, Zap, BarChart3, Info, Target, Briefcase } from 'lucide-react';
+import { Handshake, Target, Briefcase } from 'lucide-react';
 import { Buyer, Project, MandateType } from '@/engine/types';
 import { calculateFitScore } from '@/engine/systems/buyers';
 import { cn } from '@/lib/utils';
