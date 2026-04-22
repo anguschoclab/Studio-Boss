@@ -74,11 +74,51 @@ export function calculateRivalMotivation(rival: RivalStudio, state: GameState, r
  * Weekly tick to update AI mindsets across the industry.
  */
 export function tickAIMinds(state: GameState, rng: RandomGenerator): StateImpact[] {
-  return Object.values(state.entities.rivals || {}).map(rival => ({
-    type: 'RIVAL_UPDATED',
-    payload: {
-      rivalId: rival.id,
-      update: { currentMotivation: calculateRivalMotivation(rival, state, rng) }
+  const impacts: StateImpact[] = [];
+
+  Object.values(state.entities.rivals || {}).forEach(rival => {
+    let newMotivation: StudioMotivation = calculateRivalMotivation(rival, state, rng);
+
+    // Fix 3: Prestige decay — rivals that haven't won an award in 2+ years drift toward AWARD_CHASE
+    const weeksSinceLastAward = (rival as any).lastAwardWin
+      ? (state.week - (rival as any).lastAwardWin)
+      : 999;
+    if (weeksSinceLastAward > 104 && newMotivation !== 'AWARD_CHASE' && rng.next() < 0.15) {
+      // 15% chance per week to switch to AWARD_CHASE if award-starved
+      newMotivation = 'AWARD_CHASE';
     }
-  }));
+
+    impacts.push({
+      type: 'RIVAL_UPDATED',
+      payload: {
+        rivalId: rival.id,
+        update: { currentMotivation: newMotivation }
+      }
+    });
+
+    // Fix 2: FRANCHISE_BUILDING rivals track IP syndication potential
+    if (rival.currentMotivation === 'FRANCHISE_BUILDING') {
+      const releasedProjects = Object.values(state.entities.projects || {})
+        .filter(p => p.ownerId === rival.id && p.state === 'released');
+
+      const syndicationEligible = releasedProjects.filter(p => {
+        // TV projects with enough aired episodes qualify for syndication
+        return p.format === 'tv' && ((p as any).tvDetails?.episodesAired || 0) >= 65;
+      });
+
+      if (syndicationEligible.length > 0) {
+        // Generate passive income for rival from syndicated IP
+        const syndicationRevenue = syndicationEligible.length * 200000; // $200k per show per week
+        impacts.push({
+          type: 'RIVAL_UPDATED',
+          payload: {
+            rivalId: rival.id,
+            update: { cash: rival.cash + syndicationRevenue }
+          }
+        });
+      }
+    }
+  });
+
+  return impacts;
 }

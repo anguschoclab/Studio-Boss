@@ -56,5 +56,29 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
     }
   });
 
+  // Fix 5: Simple rival crisis simulation — rivals with projects in production face occasional setbacks
+  Object.values(state.entities.rivals || {}).forEach(rival => {
+    if (rival.currentMotivation === 'CASH_CRUNCH') return; // already struggling
+
+    // 2% weekly chance a rival faces a production problem
+    if (rng.next() < 0.02) {
+      const crisisCost = rival.cash * 0.05; // costs 5% of cash
+      impacts.push({
+        type: 'RIVAL_UPDATED',
+        payload: {
+          rivalId: rival.id,
+          update: { cash: Math.max(0, rival.cash - crisisCost) }
+        }
+      });
+      impacts.push({
+        type: 'NEWS_ADDED',
+        payload: {
+          headline: `${rival.name} faces production setback, sources say costs have escalated.`,
+          description: `Industry sources confirm ${rival.name} is dealing with an unexpected production issue that has impacted their Q${Math.floor(state.week / 13) + 1} budget.`,
+        }
+      });
+    }
+  });
+
   return impacts;
 }

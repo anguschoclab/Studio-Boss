@@ -24,6 +24,37 @@ import { tickIndustryUpstarts } from '../systems/industry/IndustryUpstarts';
 import { tickConsolidation } from '../systems/industry/ConsolidationEngine';
 import { InterestRateSimulator } from '../systems/market/InterestRateSimulator';
 
+// Talent Lifecycle Systems
+import { tickRelationshipSystem } from '../systems/talent/RelationshipSystem';
+import { tickCliqueSystem } from '../systems/talent/CliqueSystem';
+import { tickTalentDiscoverySystem } from '../systems/talent/TalentDiscoverySystem';
+import { tickDeathSystem } from '../systems/talent/DeathSystem';
+import { tickDynastySystem } from '../systems/talent/DynastySystem';
+import { tickOrganicEvents } from '../systems/talent/OrganicEventEnhancer';
+import { tickMarketingPromotionSystem } from '../systems/talent/MarketingPromotionSystem';
+import { tickBiographyGenerator } from '../systems/talent/BiographyGenerator';
+import { tickProductionEnhancementSystem } from '../systems/talent/ProductionEnhancementSystem';
+import { tickTVRecommendationSystem } from '../systems/talent/TVRecommendationSystem';
+
+// Production Support Systems
+import { checkAndTriggerCrisis } from '../systems/crises';
+import { tickPilots } from '../systems/television/pilotEvaluator';
+import { runUpfronts } from '../systems/television/upfrontsEngine';
+
+// AI Competition Systems
+import { tickTalentCompetition } from '../systems/ai/bidding/CompetitionModule';
+import { runFestivalMarket } from '../systems/festivals/festivalAuctionEngine';
+
+// IP Systems
+import { tickIPVault } from '../systems/ip/IPVaultManager';
+import { advanceIPRights } from '../systems/ipRetention';
+
+// Market Systems
+import { advanceRumors } from '../systems/rumors';
+
+// Rival Systems
+import { RivalRevenueCalculator } from '../systems/rivals/RivalRevenueCalculator';
+
 /**
  * Studio Boss - Simulation Tick Context
  * Travels through the pipeline to ensure 100% determinism.
@@ -62,6 +93,8 @@ export class WeekCoordinator {
     // 2. The Filter Pipeline
     this.runMarketFilter(state, context);
     this.runProductionFilter(state, context);
+    this.runTalentFilter(state, context);
+    this.runIPFilter(state, context);
     this.runAIFilter(state, context);
     this.runScandalFilter(state, context);
     this.runFinanceFilter(state, context);
@@ -101,12 +134,26 @@ export class WeekCoordinator {
     context.impacts.push(...tickVerticalIntegration(state, context.rng));
     context.impacts.push(...tickIndustryUpstarts(state));
     context.impacts.push(...tickConsolidation(state));
+
+    // Rumors
+    context.impacts.push(advanceRumors(state, context.week, context.rng));
   }
 
   private static runProductionFilter(state: GameState, context: TickContext) {
+    // 0. Production Enhancement (on-set chemistry bonuses) — runs before core production
+    context.impacts.push(...tickProductionEnhancementSystem(state, context.rng));
+
     // 1. Core Production Tick
     context.impacts.push(...tickProduction(state, context.rng));
-    
+
+    // 1a. Crisis auto-trigger for active production projects
+    Object.values(state.entities.projects).forEach(project => {
+      if (project.state === 'production') {
+        const crisis = checkAndTriggerCrisis(project);
+        if (crisis) context.impacts.push(crisis);
+      }
+    });
+
     // 2. Script Evolution Tick (Only for Studio Projects in Development)
     Object.values(state.entities.projects).forEach(project => {
       if (project.state === 'development') {
@@ -125,12 +172,46 @@ export class WeekCoordinator {
     });
 
     context.impacts.push(...tickTelevision(state, context.rng));
+
+    // 3. Pilot Evaluator
+    context.impacts.push(...tickPilots(state, context.rng));
+
+    // 4. TV Recommendations
+    context.impacts.push(...tickTVRecommendationSystem(state, context.rng));
+
+    // 5. Upfronts — once per year (every 52 weeks)
+    if (context.week % 52 === 0) {
+      context.impacts.push(...runUpfronts(state, context.rng));
+    }
+  }
+
+  private static runTalentFilter(state: GameState, context: TickContext) {
+    // Talent lifecycle systems — all follow (state, rng) → StateImpact[] pattern
+    context.impacts.push(...tickRelationshipSystem(state, context.rng));
+    context.impacts.push(...tickCliqueSystem(state, context.rng));
+    context.impacts.push(...tickTalentDiscoverySystem(state, context.rng));
+    context.impacts.push(...tickDeathSystem(state, context.rng));
+    context.impacts.push(...tickDynastySystem(state, context.rng));
+    context.impacts.push(...tickOrganicEvents(state, context.rng));
+    context.impacts.push(...tickMarketingPromotionSystem(state, context.rng));
+    context.impacts.push(...tickBiographyGenerator(state, context.rng));
+  }
+
+  private static runIPFilter(state: GameState, context: TickContext) {
+    context.impacts.push(...tickIPVault(state));
+    context.impacts.push(advanceIPRights(Object.values(state.entities.projects), context.week));
   }
 
   private static runAIFilter(state: GameState, context: TickContext) {
     context.impacts.push(...tickAIMinds(state, context.rng));
     context.impacts.push(...tickAgencies(state, context.rng));
     context.impacts.push(...tickAuctions(state, context.rng));
+
+    // Talent competition between rivals
+    context.impacts.push(...tickTalentCompetition(state, context.rng));
+
+    // Festival market
+    context.impacts.push(...runFestivalMarket(state, context.rng));
   }
 
   private static runScandalFilter(state: GameState, context: TickContext) {
@@ -140,6 +221,22 @@ export class WeekCoordinator {
 
   private static runFinanceFilter(state: GameState, context: TickContext) {
     context.impacts.push(...tickFinance(state, context.rng));
+
+    // Calculate and update rival studio revenues
+    Object.values(state.entities.rivals || {}).forEach(rival => {
+      const revenue = RivalRevenueCalculator.calculateWeeklyRevenue(rival, context.week, context.rng, state);
+      if (revenue.total > 0) {
+        context.impacts.push({
+          type: 'RIVAL_UPDATED',
+          payload: {
+            rivalId: rival.id,
+            update: {
+              cash: (rival.cash || 0) + revenue.total,
+            }
+          }
+        });
+      }
+    });
   }
 
   private static buildSummary(before: GameState, after: GameState, context: TickContext): WeekSummary {

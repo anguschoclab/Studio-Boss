@@ -52,19 +52,32 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
         const totalMultiplier = (ArchetypeMultipliers[rival.archetype]?.(opportunity.genre) || 1.0) * aggressionFactor * motivationMultiplier;
         const newBid = Math.floor(currentHighest * (1 + rng.range(0.05, 0.20) * totalMultiplier));
 
+        // Apply genre trend multiplier based on market heat
+        let trendMultiplier = 1.0;
+        const genreTrend = state.market.trends?.find(t =>
+          t.genre?.toLowerCase() === opportunity.genre?.toLowerCase()
+        );
+        if (genreTrend) {
+          // heat >= 60 → trending up → rivals bid more aggressively (×1.2)
+          // heat <= 30 → trending down → rivals bid less (×0.8)
+          if (genreTrend.heat >= 60) trendMultiplier = 1.2;
+          else if (genreTrend.heat <= 30) trendMultiplier = 0.8;
+        }
+        const trendAdjustedBid = Math.floor(newBid * trendMultiplier);
+
         // Cap bid at adjusted percentage of total rival cash for "Strategic" behavior
-        if (newBid < rival.cash * bidCapPercentage) {
+        if (trendAdjustedBid < rival.cash * bidCapPercentage) {
           impacts.push({
             type: 'OPPORTUNITY_UPDATED',
             payload: {
               opportunityId: opportunity.id,
               rivalId: rival.id,
-              bid: { amount: newBid, terms: 'aggressive' }
+              bid: { amount: trendAdjustedBid, terms: 'aggressive' }
             }
           });
 
           // Industry News for significant bidding wars
-          if (newBid > 10_000_000 && rng.next() < 0.2) {
+          if (trendAdjustedBid > 10_000_000 && rng.next() < 0.2) {
             impacts.push({
               type: 'NEWS_ADDED',
               payload: {
