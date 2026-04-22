@@ -74,6 +74,7 @@ const RosterPanel = () => {
             <button
               key={role}
               onClick={() => setFilter(role)}
+              aria-pressed={filter === role}
               className={cn(
                 'px-3.5 py-2.5 text-[10px] uppercase tracking-wider font-black rounded-full transition-all duration-300 border',
                 filter === role
@@ -169,6 +170,7 @@ const MarketplacePanel = () => {
       <div className="flex items-center gap-2 mb-4">
         <button
           onClick={() => setActiveTab('scripts')}
+          aria-pressed={activeTab === 'scripts'}
           className={cn(
             'px-4 py-3 text-[11px] font-bold uppercase tracking-wider rounded-lg transition-all',
             activeTab === 'scripts'
@@ -181,6 +183,7 @@ const MarketplacePanel = () => {
         </button>
         <button
           onClick={() => setActiveTab('talent')}
+          aria-pressed={activeTab === 'talent'}
           className={cn(
             'px-4 py-2 text-[11px] font-bold uppercase tracking-wider rounded-lg transition-all',
             activeTab === 'talent'
