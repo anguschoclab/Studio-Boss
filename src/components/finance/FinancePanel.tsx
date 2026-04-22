@@ -72,7 +72,7 @@ export const FinancePanel = () => {
         projRevenue: last.histRevenue,
         projCosts: last.histCosts,
         isForecast: true,
-      } as any);
+      } as unknown as ReturnType<typeof mapHistoryToChartData>[0]);
     }
 
     return [...history, ...projected];
