@@ -48,6 +48,11 @@ export function calculateFranchiseEquity(
     }
     // Boost bonus significantly if diverse compatible genres cross over
     crossoverBonus += Math.min(0.5, synergyHits * 0.15);
+
+    // 🌌 The Universe Builder: Added a 15% synergy bonus when combining two Level 3 franchises in a crossover event.
+    if (assets.length >= 5) {
+      crossoverBonus += 0.15;
+    }
   }
   
   // 2. Format Diversity Multiplier
