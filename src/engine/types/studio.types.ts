@@ -43,6 +43,7 @@ export interface RivalStudio {
   genreFocus?: string;
   acquisitionTarget?: string;
   isAcquirable?: boolean;
+  archetypeId?: string;
 }
 
 export interface StudioCulture {
