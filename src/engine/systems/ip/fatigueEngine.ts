@@ -45,8 +45,10 @@ export function calculateFranchiseFatigue(
   let rivalPenalty = (genreSaturation / 12) * 0.1 * oversaturationMultiplier;
 
   // 🌌 The Universe Builder: Implemented "Superhero Fatigue" - 2x penalty if Superhero genre is oversaturated.
-  if (normalizedGenre === 'Superhero' && genreSaturation > 8) {
-    rivalPenalty *= 2.0;
+  const SUPERHERO_FATIGUE_THRESHOLD = 8;
+  const SUPERHERO_FATIGUE_PENALTY = 2.0;
+  if (normalizedGenre === 'Superhero' && genreSaturation > SUPERHERO_FATIGUE_THRESHOLD) {
+    rivalPenalty *= SUPERHERO_FATIGUE_PENALTY;
   }
   
   // 4. Audience Loyalty (Protective Shield)
