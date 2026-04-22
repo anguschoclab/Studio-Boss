@@ -41,7 +41,7 @@ export const FinancialOverviewWidget: React.FC = () => {
           </span>
           <span className="text-[9px] px-2 py-0.5 rounded bg-white/5 font-mono">LIVE</span>
         </CardTitle>
-        <div className="text-4xl font-black tracking-tighter mt-2 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">
+        <div className="text-4xl font-black tracking-tighter mt-2 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(var(--foreground),0.1)]">
           {formatCurrency(finance.cash)}
         </div>
         <CardDescription className="text-[10px] uppercase tracking-widest font-medium mt-1">

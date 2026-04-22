@@ -80,7 +80,7 @@ export const NewsStoryModal: React.FC<NewsStoryModalProps> = ({ headline, open, 
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-lg bg-card/95 backdrop-blur-xl border-border/50 shadow-2xl p-0 overflow-hidden">
+      <DialogContent className="max-w-lg bg-card/90 backdrop-blur-2xl border border-white/10 shadow-2xl p-0 overflow-hidden">
         {/* Article Header */}
         <div className="p-6 pb-4 space-y-3 border-b border-border/40 bg-gradient-to-br from-card to-background">
           <div className="flex items-center gap-2">

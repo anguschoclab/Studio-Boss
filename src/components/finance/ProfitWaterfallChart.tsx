@@ -24,7 +24,7 @@ export const ProfitWaterfallChart: React.FC<ProfitWaterfallChartProps> = ({ snap
     <div className="h-full w-full">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
-          <XAxis dataKey="name" fontSize={9} tickLine={false} axisLine={false} stroke="#64748b" interval={0} />
+          <XAxis dataKey="name" fontSize={9} tickLine={false} axisLine={false} stroke="hsl(var(--muted-foreground))" interval={0} />
           <YAxis fontSize={9} tickLine={false} axisLine={false} stroke="#64748b" tickFormatter={(v) => `$${v/1000}k`} />
           <Tooltip 
             cursor={{ fill: 'transparent' }}

@@ -36,8 +36,8 @@ export const AwardsCeremonyModal = () => {
 
   return (
     <Dialog open={true} onOpenChange={() => {}}>
-      <DialogContent 
-        className="max-w-4xl bg-stone-950 border-stone-800 shadow-[0_0_100px_rgba(212,175,55,0.15)] overflow-hidden p-0"
+      <DialogContent
+        className="max-w-4xl bg-card/90 backdrop-blur-2xl border border-white/10 shadow-[0_0_100px_rgba(var(--primary),0.15)] overflow-hidden p-0"
         onPointerDownOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
       >

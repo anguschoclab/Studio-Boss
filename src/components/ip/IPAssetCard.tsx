@@ -42,14 +42,14 @@ export const IPAssetCard = ({ asset, isMarket = false }: IPAssetCardProps) => {
                  )}
                  {isMarket && (
                    <TooltipWrapper tooltip="Publicly available intellectual property rights available for acquisition.">
-                     <Badge className="bg-amber-500/20 text-amber-400 border-amber-500/30 text-[8px] font-black uppercase tracking-widest px-1.5 h-4 cursor-help">
+                     <Badge className="bg-secondary/20 text-secondary border-secondary/30 text-[8px] font-black uppercase tracking-widest px-1.5 h-4 cursor-help">
                         Open Rights
                      </Badge>
                    </TooltipWrapper>
                  )}
                  {asset.syndicationTier === 'NONE' && asset.totalEpisodes > 40 && (
                    <TooltipWrapper tooltip="The library size and legacy status of this IP makes it a high-probability target for a successful modern reboot.">
-                     <Badge variant="outline" className="border-pink-500/30 text-pink-400 text-[8px] font-black uppercase tracking-widest px-1.5 h-4 cursor-help">
+                     <Badge variant="outline" className="border-primary/30 text-primary text-[8px] font-black uppercase tracking-widest px-1.5 h-4 cursor-help">
                         Reboot Potential
                      </Badge>
                    </TooltipWrapper>
@@ -63,7 +63,7 @@ export const IPAssetCard = ({ asset, isMarket = false }: IPAssetCardProps) => {
                </TooltipWrapper>
             </div>
             <div className="w-10 h-10 rounded bg-white/5 border border-white/10 flex items-center justify-center">
-              {isMarket ? <Globe className="h-5 w-5 text-amber-500/40" /> : <Lock className="h-5 w-5 text-primary/40" />}
+              {isMarket ? <Globe className="h-5 w-5 text-secondary/40" /> : <Lock className="h-5 w-5 text-primary/40" />}
             </div>
           </div>
 
@@ -72,7 +72,7 @@ export const IPAssetCard = ({ asset, isMarket = false }: IPAssetCardProps) => {
             <div className="space-y-1.5 cursor-help">
               <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-widest text-muted-foreground/80">
                 <span>Cultural Relevance</span>
-                 <span className={cn("font-mono", relevancePercent < 20 ? 'text-red-500' : 'text-primary')}>
+                 <span className={cn("font-mono", relevancePercent < 20 ? 'text-destructive' : 'text-primary')}>
                    {relevancePercent.toFixed(0)}%
                  </span>
               </div>
@@ -80,7 +80,7 @@ export const IPAssetCard = ({ asset, isMarket = false }: IPAssetCardProps) => {
                 <div 
                    className={cn(
                     "h-full transition-all duration-1000 rounded-full",
-                    relevancePercent < 20 ? 'bg-red-500' : (asset.syndicationTier !== 'NONE' ? 'bg-purple-500' : 'bg-primary')
+                    relevancePercent < 20 ? 'bg-destructive' : (asset.syndicationTier !== 'NONE' ? 'bg-primary' : 'bg-primary')
                   )} 
                   style={{ width: `${relevancePercent}%` }}
                 />
@@ -93,9 +93,9 @@ export const IPAssetCard = ({ asset, isMarket = false }: IPAssetCardProps) => {
              <TooltipWrapper tooltip="Estimated passive income generated per week from existing licensing deals." side="top">
                <div className="space-y-1 cursor-help">
                  <div className="text-[9px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-1.5">
-                   <DollarSign className="h-2.5 w-2.5 text-emerald-500" /> Weekly Revenue
+                   <DollarSign className="h-2.5 w-2.5 text-success" /> Weekly Revenue
                  </div>
-                 <div className="text-sm font-black tracking-tight text-emerald-400">
+                 <div className="text-sm font-black tracking-tight text-success">
                    {formatMoney(Math.floor((asset.baseValue * asset.merchandisingMultiplier) * asset.decayRate))}
                  </div>
                </div>
@@ -122,7 +122,7 @@ export const IPAssetCard = ({ asset, isMarket = false }: IPAssetCardProps) => {
                 size="sm"
                 variant="outline"
                 tooltip={`Spend ${formatMoney(asset.baseValue)} to acquire rights and initiate a modern reboot of ${asset.title}`}
-                className="h-7 text-[8px] font-black bg-amber-500/10 hover:bg-amber-500 text-amber-500 hover:text-black border border-amber-500/20 px-3 uppercase tracking-widest"
+                className="h-7 text-[8px] font-black bg-secondary/10 hover:bg-secondary text-secondary hover:text-black border border-secondary/20 px-3 uppercase tracking-widest"
                 onClick={(e) => {
                   e.stopPropagation();
                   acquireAndRebootIP(asset.id);

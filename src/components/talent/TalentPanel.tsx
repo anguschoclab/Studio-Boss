@@ -25,7 +25,7 @@ export const TalentPanel = () => {
                 onClick={() => setFilter(type)}
                 className={`px-3.5 py-1.5 text-[10px] uppercase tracking-wider font-black rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background ${
                   filter === type
-                    ? 'bg-primary text-primary-foreground shadow-[0_0_15px_rgba(234,179,8,0.4)] scale-105 border border-primary/50'
+                    ? 'bg-primary text-primary-foreground shadow-[0_0_15px_rgba(var(--primary),0.4)] scale-105 border border-primary/50'
                     : 'bg-muted/50 text-muted-foreground hover:bg-secondary/20 hover:text-foreground hover:-translate-y-0.5 border border-transparent hover:border-secondary/30'
                 }`}
               >

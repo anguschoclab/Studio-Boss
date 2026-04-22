@@ -169,7 +169,7 @@ export const ProjectDetailModal = () => {
 
   return (
     <Dialog open={!!selectedProjectId} onOpenChange={() => selectProject(null)}>
-      <DialogContent className="max-w-4xl h-[85vh] bg-slate-950 border-slate-800 text-slate-100 shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col p-0">
+      <DialogContent className="max-w-4xl h-[85vh] bg-card/90 backdrop-blur-2xl border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col p-0">
         <DialogHeader className="p-6 border-b border-slate-800 bg-black/40">
           <div className="flex items-center justify-between">
             <div className="space-y-1">

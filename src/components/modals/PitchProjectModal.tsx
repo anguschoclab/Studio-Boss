@@ -47,9 +47,9 @@ export const PitchProjectModal = () => {
 
   return (
     <Dialog open={showPitchProject} onOpenChange={handleClose}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-2xl bg-card/90 backdrop-blur-2xl border border-white/10">
         <DialogHeader>
-          <DialogTitle>Pitch Project: {project.title}</DialogTitle>
+          <DialogTitle className="font-display font-black text-xl tracking-tight uppercase">Pitch Project: {project.title}</DialogTitle>
           <DialogDescription>
             Select a network or streamer to pitch this series to, and propose a contract structure.
           </DialogDescription>

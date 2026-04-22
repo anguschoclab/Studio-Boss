@@ -40,7 +40,7 @@ export const BreakoutBiddingWarModal: React.FC = () => {
 
   return (
     <Dialog open onOpenChange={() => resolveCurrentModal()}>
-      <DialogContent className="max-w-md border border-primary/40 bg-background">
+      <DialogContent className="max-w-md bg-card/90 backdrop-blur-2xl border border-white/10">
         <DialogHeader>
           <div className="flex items-center gap-3 mb-2">
             <div className="p-2 rounded-lg bg-primary/10">

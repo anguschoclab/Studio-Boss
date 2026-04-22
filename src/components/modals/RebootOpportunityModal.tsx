@@ -57,7 +57,7 @@ export const RebootOpportunityModal: React.FC = () => {
 
   return (
     <Dialog open onOpenChange={handleDecline}>
-      <DialogContent className="max-w-lg bg-background border-border">
+      <DialogContent className="max-w-lg bg-card/90 backdrop-blur-2xl border border-white/10">
         <DialogHeader>
           <div className="flex items-center gap-2 mb-1">
             <Film className="h-5 w-5 text-primary" />
@@ -65,7 +65,7 @@ export const RebootOpportunityModal: React.FC = () => {
               IP Reboot Opportunity
             </span>
           </div>
-          <DialogTitle className="text-xl font-bold">{proposal.title}</DialogTitle>
+          <DialogTitle className="font-display font-black text-xl tracking-tight uppercase">{proposal.title}</DialogTitle>
           <DialogDescription className="text-muted-foreground text-sm leading-relaxed">
             {logline}
           </DialogDescription>

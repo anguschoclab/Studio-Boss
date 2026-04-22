@@ -81,7 +81,7 @@ export const TalentAvatar: React.FC<TalentAvatarProps> = React.memo(({
         "backdrop-blur-sm",
         BORDER_SIZE_MAP[size],
         "border-white/20",
-        "shadow-[0_8px_16px_-6px_rgba(0,0,0,0.5)]",
+        "shadow-[0_8px_16px_-6px_rgba(var(--foreground),0.5)]",
         "relative group transition-transform duration-500 hover:scale-105",
         className
       )}

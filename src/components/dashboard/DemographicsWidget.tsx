@@ -57,7 +57,7 @@ export const DemographicsWidget: React.FC = () => {
                   width={80}
                 />
                 <ChartTooltip
-                  cursor={{ fill: 'rgba(255,255,255,0.05)' }}
+                  cursor={{ fill: 'rgba(var(--foreground),0.05)' }}
                   content={<ChartTooltipContent className="bg-card/90 border-white/10 backdrop-blur-md text-xs font-mono uppercase" />}
                 />
                 <Bar 

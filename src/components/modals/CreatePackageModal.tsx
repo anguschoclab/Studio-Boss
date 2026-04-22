@@ -47,9 +47,9 @@ export const CreatePackageModal = ({ agencies: propAgencies, talents: propTalent
 
   return (
     <Dialog open={true} onOpenChange={handleClose}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-2xl bg-card/90 backdrop-blur-2xl border border-white/10">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+          <DialogTitle className="font-display font-black text-xl tracking-tight uppercase flex items-center gap-2">
             <Package className="h-5 w-5" />
             Create Talent Package
           </DialogTitle>

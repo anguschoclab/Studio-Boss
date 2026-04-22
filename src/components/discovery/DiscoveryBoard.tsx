@@ -24,11 +24,11 @@ export const DiscoveryBoard = () => {
     <div className="h-full flex flex-col lg:flex-row gap-8 animate-in fade-in slide-in-from-bottom-4 duration-700 overflow-hidden p-2">
       <div className="flex-1 flex flex-col space-y-6 overflow-hidden">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 bg-white/3 p-6 rounded-2xl border border-white/5 backdrop-blur-xl relative overflow-hidden group">
-          <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 via-transparent to-transparent opacity-50" />
+          <div className="absolute inset-0 bg-gradient-to-r from-secondary/5 via-transparent to-transparent opacity-50" />
           <div className="relative z-10">
             <div className="flex items-center gap-3 mb-1">
-              <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shadow-lg group-hover:bg-amber-500/20 transition-all duration-500">
-                <Newspaper className="h-6 w-6 text-amber-500 animate-pulse-slow" />
+              <div className="w-12 h-12 rounded-xl bg-secondary/10 border border-secondary/20 flex items-center justify-center shadow-lg group-hover:bg-secondary/20 transition-all duration-500">
+                <Newspaper className="h-6 w-6 text-secondary animate-pulse-slow" />
               </div>
               <div>
                 <h2 className="text-3xl font-black tracking-tighter uppercase italic leading-none drop-shadow-sm">The Trades</h2>
@@ -41,7 +41,7 @@ export const DiscoveryBoard = () => {
             <div className="relative w-56 hidden xl:block">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground/40" />
               <TooltipWrapper tooltip="Filter listings by property name, writer, or genre" side="bottom">
-                <Input aria-label="Search Listings" className="h-9 pl-10 text-[10px] bg-black/40 border-white/5 uppercase font-black tracking-widest focus:ring-amber-500/20" placeholder="Search Listings..." />
+                <Input aria-label="Search Listings" className="h-9 pl-10 text-[10px] bg-black/40 border-white/5 uppercase font-black tracking-widest focus:ring-secondary/20" placeholder="Search Listings..." />
               </TooltipWrapper>
             </div>
             <Button 
@@ -58,7 +58,7 @@ export const DiscoveryBoard = () => {
         <ScrollArea className="flex-1 pr-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-12">
             {opportunities.length === 0 ? (
-              <div className="col-span-full py-32 text-center glass-panel border-white/5 flex flex-col items-center justify-center space-y-6">
+              <div className="col-span-full py-32 text-center glass-card border-white/5 flex flex-col items-center justify-center space-y-6">
                 <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center text-muted-foreground/10 animate-pulse">
                   <Sparkles className="h-10 w-10" />
                 </div>

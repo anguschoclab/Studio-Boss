@@ -18,19 +18,19 @@ export const OpportunityCard = ({ opportunity: opp, onEnterAuction }: Opportunit
   
   return (
     <TooltipWrapper tooltip="View Opportunity Details & Bid History" side="top">
-      <div className="glass-panel p-6 rounded-2xl group relative overflow-hidden flex flex-col justify-between h-full border border-white/5 hover:border-amber-500/20 hover:bg-amber-500/3 transition-all duration-500 cursor-pointer active:scale-[0.99]">
+      <div className="glass-card p-6 rounded-2xl group relative overflow-hidden flex flex-col justify-between h-full border border-white/5 hover:border-secondary/20 hover:bg-secondary/3 transition-all duration-500 cursor-pointer active:scale-[0.99]">
         <div className="absolute top-0 right-0 p-3 opacity-20 group-hover:opacity-100 transition-opacity">
-           <Gavel className="w-5 h-5 text-amber-500" />
+           <Gavel className="w-5 h-5 text-secondary" />
         </div>
 
         <div className="space-y-4 relative z-10">
           <div className="flex justify-between items-start gap-4">
             <div className="min-w-0">
-              <h3 className="text-lg font-black uppercase tracking-tight truncate leading-tight group-hover:text-amber-400 transition-colors">
+              <h3 className="text-lg font-black uppercase tracking-tight truncate leading-tight group-hover:text-secondary transition-colors">
                 {opp.title}
               </h3>
               <div className="flex items-center gap-2 mt-1">
-                <Badge variant="outline" className="text-[8px] font-black uppercase tracking-widest bg-amber-500/10 text-amber-500 border-none px-1.5 h-4">
+                <Badge variant="outline" className="text-[8px] font-black uppercase tracking-widest bg-secondary/10 text-secondary border-none px-1.5 h-4">
                   {opp.genre}
                 </Badge>
                 <span className="text-[10px] font-black uppercase text-muted-foreground/40 tracking-widest">{opp.type}</span>
@@ -47,7 +47,7 @@ export const OpportunityCard = ({ opportunity: opp, onEnterAuction }: Opportunit
             </TooltipWrapper>
           </div>
 
-          <div className="p-4 rounded-xl bg-black/40 italic text-xs text-muted-foreground/80 leading-relaxed border-l-2 border-primary/20 group-hover:border-amber-500/40 transition-all shadow-inner">
+          <div className="p-4 rounded-xl bg-black/40 italic text-xs text-muted-foreground/80 leading-relaxed border-l-2 border-primary/20 group-hover:border-secondary/40 transition-all shadow-inner">
             "{opp.flavor}"
           </div>
           
@@ -62,7 +62,7 @@ export const OpportunityCard = ({ opportunity: opp, onEnterAuction }: Opportunit
               <TooltipWrapper tooltip="The entity currently holding the winning bid position." side="top">
                 <div className="space-y-1 text-right cursor-help">
                     <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">Leader</span>
-                    <div className={cn("text-[10px] font-black uppercase tracking-widest", highestBid === 'YOU' ? 'text-emerald-400' : 'text-rose-400')}>
+                    <div className={cn("text-[10px] font-black uppercase tracking-widest", highestBid === 'YOU' ? 'text-success' : 'text-destructive')}>
                        {highestBid}
                     </div>
                 </div>
@@ -74,10 +74,10 @@ export const OpportunityCard = ({ opportunity: opp, onEnterAuction }: Opportunit
           <TooltipWrapper tooltip="Time remaining before the auction concludes and rights are awarded. Bids placed in the final hour may extend the clock." side="top">
             <div className="flex flex-col cursor-help">
               <div className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2 mb-1">
-                <Clock className={cn("h-3 w-3", opp.weeksUntilExpiry <= 1 ? "text-rose-500 animate-pulse" : "text-amber-500/40")} />
+                <Clock className={cn("h-3 w-3", opp.weeksUntilExpiry <= 1 ? "text-destructive animate-pulse" : "text-secondary/40")} />
                 Closing Soon
               </div>
-              <span className={cn("text-[10px] font-black tabular-nums", opp.weeksUntilExpiry <= 1 ? "text-rose-500 underline decoration-rose-500/40 underline-offset-4" : "text-foreground")}>
+              <span className={cn("text-[10px] font-black tabular-nums", opp.weeksUntilExpiry <= 1 ? "text-destructive underline decoration-destructive/40 underline-offset-4" : "text-foreground")}>
                 {opp.weeksUntilExpiry} Wks Remaining
               </span>
             </div>
@@ -86,7 +86,7 @@ export const OpportunityCard = ({ opportunity: opp, onEnterAuction }: Opportunit
           <Button 
             size="sm" 
             tooltip="Join the high-stakes bidding war for these intellectual property rights"
-            className="h-10 text-[10px] px-6 font-black uppercase tracking-[0.2em] bg-white/5 hover:bg-amber-500 hover:text-black border border-white/10 hover:border-amber-500 transition-all shadow-xl group/btn active:scale-95" 
+            className="h-10 text-[10px] px-6 font-black uppercase tracking-[0.2em] bg-white/5 hover:bg-secondary hover:text-black border border-white/10 hover:border-secondary transition-all shadow-xl group/btn active:scale-95" 
             onClick={(e) => {
               e.stopPropagation();
               onEnterAuction();

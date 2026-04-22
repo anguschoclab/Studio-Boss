@@ -77,10 +77,10 @@ export const CreateProjectModal = () => {
 
   return (
     <Dialog open={showCreateProject} onOpenChange={closeCreateProject}>
-      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto bg-card/95 backdrop-blur-xl border-border/50 shadow-2xl animate-in fade-in zoom-in-95 duration-300">
+      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto bg-card/90 backdrop-blur-2xl border border-white/10 shadow-2xl animate-in fade-in zoom-in-95 duration-300">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-background/50 pointer-events-none rounded-lg" />
         <DialogHeader className="relative z-10 pb-4 border-b border-border/40">
-          <DialogTitle className="font-display font-black text-2xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">Greenlight New Project</DialogTitle>
+          <DialogTitle className="font-display font-black text-2xl tracking-tight uppercase">Greenlight New Project</DialogTitle>
           <DialogDescription className="text-muted-foreground font-medium">Commission a new project. Talent will be attached after greenlight.</DialogDescription>
         </DialogHeader>
 
@@ -286,7 +286,7 @@ export const CreateProjectModal = () => {
 
         <DialogFooter className="relative z-10 pt-4 border-t border-border/40 mt-6 sm:justify-between">
           <Button variant="ghost" onClick={closeCreateProject} className="font-medium hover:bg-destructive/10 hover:text-destructive transition-colors">Cancel</Button>
-          <Button onClick={handleCreate} disabled={!title.trim()} className="font-display font-bold tracking-wide shadow-sm hover:shadow-[0_0_15px_rgba(234,179,8,0.4)] transition-all">
+          <Button onClick={handleCreate} disabled={!title.trim()} className="font-display font-bold tracking-wide shadow-sm hover:shadow-[0_0_15px_rgba(var(--primary),0.4)] transition-all">
             Greenlight Project
           </Button>
         </DialogFooter>

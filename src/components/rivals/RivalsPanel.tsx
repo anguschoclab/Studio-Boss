@@ -17,7 +17,7 @@ import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
 import { cn } from '@/lib/utils';
 
 const strengthColor = (s: number) => {
-  if (s >= 70) return 'bg-gradient-to-r from-primary to-primary/80 shadow-[0_0_8px_rgba(234,179,8,0.5)]';
+  if (s >= 70) return 'bg-gradient-to-r from-primary to-primary/80 shadow-[0_0_8px_rgba(var(--primary),0.5)]';
   if (s >= 45) return 'bg-gradient-to-r from-secondary to-secondary/80';
   return 'bg-gradient-to-r from-muted-foreground to-muted-foreground/80';
 };
@@ -68,7 +68,7 @@ export const RivalsPanel = () => {
           <div className="space-y-4">
             <div className="flex items-center justify-between pb-2 border-b border-border/30">
               <div className="flex items-center gap-2">
-                <Building2 className="w-4 h-4 text-primary drop-shadow-[0_0_5px_rgba(234,179,8,0.5)]" />
+                <Building2 className="w-4 h-4 text-primary drop-shadow-[0_0_5px_rgba(var(--primary),0.5)]" />
                 <h3 className="font-display text-xs font-black uppercase tracking-widest text-foreground/80 drop-shadow-sm">
                   Competitive Landscape
                 </h3>
@@ -156,7 +156,7 @@ export const RivalsPanel = () => {
                     </TooltipWrapper>
                     <div className="h-1.5 bg-muted/50 rounded-full overflow-hidden shadow-inner ring-1 ring-inset ring-border/50">
                       <div
-                        className={`h-full rounded-full transition-all duration-1000 ease-out ${strengthColor(rival.strength)} shadow-sm group-hover:shadow-[0_0_10px_rgba(239,68,68,0.4)]`}
+                        className={`h-full rounded-full transition-all duration-1000 ease-out ${strengthColor(rival.strength)} shadow-sm group-hover:shadow-[0_0_10px_rgba(var(--destructive),0.4)]`}
                         style={{ width: `${rival.strength}%` }}
                       />
                     </div>

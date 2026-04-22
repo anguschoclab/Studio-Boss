@@ -42,15 +42,15 @@ const TitleScreen = () => {
 
       <div className="relative z-10 text-center space-y-12">
         <div className="space-y-4">
-          <h1 className="font-display text-8xl font-black tracking-tighter text-foreground leading-none">
+          <h1 className="font-display text-6xl font-black tracking-tighter uppercase text-foreground leading-none text-glow">
             STUDIO <span className="text-primary">BOSS</span>
           </h1>
-          <p className="text-muted-foreground text-lg tracking-[0.3em] uppercase font-light">
+          <p className="text-muted-foreground text-base font-medium italic">
             Build your empire. Control the narrative.
           </p>
         </div>
 
-        <div className="flex flex-col gap-3 w-72 mx-auto">
+        <div className="flex flex-col gap-3 w-full max-w-[480px] mx-auto">
           <Button
             onClick={() => navigate({ to: '/new-game' })}
             size="lg"
@@ -88,35 +88,35 @@ const TitleScreen = () => {
       </div>
 
       <Dialog open={showLoad} onOpenChange={setShowLoad}>
-        <DialogContent>
+        <DialogContent className="max-w-2xl bg-card/90 backdrop-blur-2xl border border-white/10">
           <DialogHeader>
-            <DialogTitle className="font-display">Load Game</DialogTitle>
+            <DialogTitle className="font-display font-black text-2xl tracking-tight uppercase">Load Game</DialogTitle>
           </DialogHeader>
-          <div className="space-y-3">
+          <div className="grid grid-cols-2 gap-4">
             {slots.map(slot => (
               <button
                 key={slot.slot}
                 disabled={!slot.exists}
                 onClick={() => handleLoad(slot.slot)}
-                className="w-full p-4 rounded-lg border border-border bg-accent/50 text-left hover:bg-accent transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                className="glass-card p-4 text-left hover:-translate-y-1 transition-all disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:translate-y-0"
               >
                 {slot.exists ? (
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <p className="font-display font-semibold text-foreground">{slot.studioName}</p>
-                      <p className="text-sm text-muted-foreground">
+                  <div className="space-y-2">
+                    <div className="flex items-start justify-between">
+                      <p className="font-display font-black text-sm text-foreground truncate">{slot.studioName}</p>
+                      <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">Slot {slot.slot + 1}</span>
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
                         Week {getWeekDisplay(slot.week).displayWeek}, Year {getWeekDisplay(slot.week).year}
                       </p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-primary font-semibold">{formatMoney(slot.cash)}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {new Date(slot.timestamp).toLocaleDateString()}
-                      </p>
+                      <p className="text-primary font-black text-sm">{formatMoney(slot.cash)}</p>
                     </div>
                   </div>
                 ) : (
-                  <p className="text-muted-foreground">Slot {slot.slot + 1} — Empty</p>
+                  <div className="flex items-center justify-center h-20">
+                    <p className="text-muted-foreground text-sm font-medium">Slot {slot.slot + 1} — Empty</p>
+                  </div>
                 )}
               </button>
             ))}

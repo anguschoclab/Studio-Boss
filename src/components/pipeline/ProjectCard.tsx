@@ -62,7 +62,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
         {/* Visual Accent */}
         <div className={cn(
           "absolute top-0 left-0 w-1 h-full opacity-60 transition-all duration-500 group-hover:w-1.5",
-          hasUnresolvedCrisis ? "bg-destructive shadow-[0_0_20px_rgba(239,68,68,0.8)]" : "bg-primary shadow-[0_0_20px_rgba(234,179,8,0.8)]"
+          hasUnresolvedCrisis ? "bg-destructive shadow-[0_0_20px_rgba(var(--destructive),0.8)]" : "bg-primary shadow-[0_0_20px_rgba(var(--primary),0.8)]"
         )} />
 
         {/* Header: Title & Format */}

@@ -52,20 +52,20 @@ export const CrisisModal = () => {
         if (!open) return;
       }}
     >
-      <DialogContent 
-        className="max-w-md bg-slate-950 border-2 border-red-600 shadow-[0_0_50px_rgba(220,38,38,0.3)] animate-in fade-in zoom-in duration-300"
+      <DialogContent
+        className="max-w-md bg-card/90 backdrop-blur-2xl border-2 border-destructive shadow-[0_0_50px_rgba(var(--destructive),0.3)] animate-in fade-in zoom-in duration-300"
         onPointerDownOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
       >
-        <div className="absolute inset-0 bg-red-950/20 animate-pulse pointer-events-none rounded-lg" />
+        <div className="absolute inset-0 bg-destructive/20 animate-pulse pointer-events-none rounded-lg" />
         
         <DialogHeader className="relative z-10">
           <div className="flex justify-center mb-4">
-            <div className="p-3 bg-red-600 rounded-full animate-bounce">
-              <AlertTriangle className="h-8 w-8 text-white" />
+            <div className="p-3 bg-destructive rounded-full animate-bounce">
+              <AlertTriangle className="h-8 w-8 text-destructive-foreground" />
             </div>
           </div>
-          <DialogTitle className="text-2xl font-black text-center uppercase tracking-tighter text-red-500">
+          <DialogTitle className="text-2xl font-black text-center uppercase tracking-tighter text-destructive">
             Phase 2: Production Crisis
           </DialogTitle>
           <DialogDescription className="text-slate-200 pt-4 text-base font-bold text-center leading-tight">

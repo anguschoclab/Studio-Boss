@@ -33,7 +33,7 @@ const NewGame = () => {
       <div className="w-full max-w-4xl space-y-10">
         {/* Header */}
         <div className="text-center space-y-2">
-          <h1 className="font-display text-4xl font-bold text-foreground">Found Your Studio</h1>
+          <h1 className="font-display text-4xl font-black tracking-tighter uppercase text-foreground">STUDIO SETUP</h1>
           <p className="text-muted-foreground">Name your studio and choose your starting identity.</p>
         </div>
 
@@ -59,6 +59,11 @@ const NewGame = () => {
             >
               <Dices className="h-6 w-6" />
             </Button>
+          </div>
+          <div className="flex justify-end">
+            <span className="text-[10px] text-muted-foreground font-medium">
+              {studioName.length}/30
+            </span>
           </div>
         </div>
 

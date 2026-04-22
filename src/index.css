@@ -86,10 +86,13 @@
   .font-body {
     font-family: 'Inter', sans-serif;
   }
-  
+  .font-tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+
   /* Modern Glassmorphism Utilities */
   .glass-card {
-    @apply bg-card/60 backdrop-blur-xl border border-white/5 shadow-2xl;
+    @apply bg-card/60 backdrop-blur-xl border border-white/5 shadow-2xl rounded-xl;
   }
   .glass-panel {
     @apply bg-background/40 backdrop-blur-2xl border-r border-white/5 shadow-2xl;

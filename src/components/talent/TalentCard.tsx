@@ -59,10 +59,10 @@ export const TalentCard: React.FC<TalentCardProps> = ({
         onClick={handleClick}
         className={cn(
           "p-4 rounded-xl border backdrop-blur-md transition-all duration-300 space-y-3 group relative overflow-hidden cursor-pointer",
-          talent.prestige >= 80 
-            ? 'border-primary/50 shadow-[0_0_20px_rgba(234,179,8,0.15)] bg-card/80 bg-gradient-to-br from-primary/10 to-transparent' 
+          talent.prestige >= 80
+            ? 'border-primary/50 shadow-[0_0_20px_rgba(var(--primary),0.15)] bg-card/80 bg-gradient-to-br from-primary/10 to-transparent'
             : 'border-border/60 bg-card/60 bg-gradient-to-br from-card/80 to-transparent',
-          "hover:shadow-[0_12px_40px_rgba(0,0,0,0.3)] hover:border-primary/50 hover:-translate-y-1 active:scale-[0.98]",
+          "hover:shadow-[0_12px_40px_rgba(var(--foreground),0.3)] hover:border-primary/50 hover:-translate-y-1 active:scale-[0.98]",
           className
         )}
       >
@@ -91,7 +91,7 @@ export const TalentCard: React.FC<TalentCardProps> = ({
                     {countryFlag} {talent.demographics.country}
                   </span>
                   {talent.accessLevel !== 'outsider' && talent.accessLevel !== 'soft-access' && (
-                    <span className="text-[8px] font-black tracking-widest text-secondary uppercase drop-shadow-[0_0_2px_rgba(255,161,22,0.4)]">
+                    <span className="text-[8px] font-black tracking-widest text-secondary uppercase drop-shadow-[0_0_2px_rgba(var(--secondary),0.4)]">
                       {talent.accessLevel}
                     </span>
                   )}

@@ -32,7 +32,7 @@ export const DirectorsCutModal: React.FC = () => {
 
   return (
     <Dialog open onOpenChange={() => resolveCurrentModal()}>
-      <DialogContent className="max-w-md border border-amber-500/30 bg-background">
+      <DialogContent className="max-w-md bg-card/90 backdrop-blur-2xl border border-white/10">
         <DialogHeader>
           <div className="flex items-center gap-3 mb-2">
             <div className="p-2 rounded-lg bg-amber-500/10">

@@ -35,11 +35,11 @@ export const WeekSummaryModal = () => {
     <>
       <Dialog open={true} onOpenChange={() => resolveCurrentModal()}>
         <DialogContent 
-          className="max-w-md border-border/50 bg-background/95 backdrop-blur-xl shadow-2xl"
+          className="max-w-md bg-card/90 backdrop-blur-2xl border border-white/10 shadow-2xl"
           onPointerDownOutside={(e) => e.preventDefault()}
         >
           <DialogHeader>
-            <DialogTitle className={`font-display text-2xl font-black tracking-tight bg-clip-text text-transparent ${isYearEnd ? 'bg-gradient-to-r from-amber-400 to-yellow-600' : 'bg-gradient-to-r from-primary to-primary/70'}`}>
+            <DialogTitle className={`font-display text-2xl font-black tracking-tight uppercase bg-clip-text text-transparent ${isYearEnd ? 'bg-gradient-to-r from-amber-400 to-yellow-600' : 'bg-gradient-to-r from-primary to-primary/70'}`}>
               {isYearEnd ? 'Yearly Studio Report' : `Week ${toWeek} Report`}
             </DialogTitle>
           </DialogHeader>
@@ -52,7 +52,7 @@ export const WeekSummaryModal = () => {
                 <div className="relative z-10 flex justify-between items-end">
                   <div>
                     <p className="text-[10px] text-muted-foreground uppercase font-black tracking-widest mb-1">Annual Net Results</p>
-                    <p className={`text-2xl font-display font-black tracking-tighter ${yearlyDelta >= 0 ? 'text-success drop-shadow-[0_0_8px_rgba(34,197,94,0.3)]' : 'text-destructive drop-shadow-[0_0_8px_rgba(239,68,68,0.3)]'}`}>
+                    <p className={`text-2xl font-display font-black tracking-tighter ${yearlyDelta >= 0 ? 'text-success drop-shadow-[0_0_8px_rgba(var(--success),0.3)]' : 'text-destructive drop-shadow-[0_0_8px_rgba(var(--destructive),0.3)]'}`}>
                       {yearlyDelta >= 0 ? '+' : ''}{formatMoney(yearlyDelta)}
                     </p>
                   </div>
@@ -102,7 +102,7 @@ export const WeekSummaryModal = () => {
                       return (
                         <p key={i} className="text-sm text-foreground">
                           • {parts[0]}
-                          <span className="text-emerald-400 font-bold">(+{parts[1]}</span>
+                          <span className="text-success font-bold">(+{parts[1]}</span>
                         </p>
                       );
                     }
@@ -160,7 +160,7 @@ export const WeekSummaryModal = () => {
           </div>
 
           <DialogFooter>
-            <Button onClick={resolveCurrentModal} className="w-full font-display font-bold tracking-wide transition-all hover:shadow-[0_0_15px_rgba(234,179,8,0.4)] hover:-translate-y-0.5">Continue →</Button>
+            <Button onClick={resolveCurrentModal} className="w-full font-display font-bold tracking-wide transition-all hover:shadow-[0_0_15px_rgba(var(--primary),0.4)] hover:-translate-y-0.5">Continue →</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

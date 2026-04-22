@@ -259,7 +259,7 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
                        <span className="text-emerald-400">{hoveredTalent.draw}%</span>
                     </div>
                     <div className="h-1 bg-slate-800 rounded-full overflow-hidden">
-                       <div className="h-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" style={{ width: `${hoveredTalent.draw}%` }} />
+                       <div className="h-full bg-success shadow-[0_0_10px_rgba(var(--success),0.5)]" style={{ width: `${hoveredTalent.draw}%` }} />
                     </div>
                  </div>
               </div>

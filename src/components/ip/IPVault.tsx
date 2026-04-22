@@ -57,10 +57,10 @@ export const IPVault = () => {
           <TabsTrigger value="owned" className="text-[10px] uppercase font-black tracking-widest px-6 h-8 data-[state=active]:bg-white/10 data-[state=active]:text-white">
             Owned Inventory ({ownedIP.length})
           </TabsTrigger>
-          <TabsTrigger value="market" className="text-[10px] uppercase font-black tracking-widest px-6 h-8 data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-500">
+          <TabsTrigger value="market" className="text-[10px] uppercase font-black tracking-widest px-6 h-8 data-[state=active]:bg-secondary/20 data-[state=active]:text-secondary">
             Market Rights ({marketIP.length})
           </TabsTrigger>
-          <TabsTrigger value="syndicated" className="text-[10px] uppercase font-black tracking-widest px-6 h-8 data-[state=active]:bg-purple-500/20 data-[state=active]:text-purple-500">
+          <TabsTrigger value="syndicated" className="text-[10px] uppercase font-black tracking-widest px-6 h-8 data-[state=active]:bg-primary/20 data-[state=active]:text-primary">
             Syndication ({syndicatedIP.length})
           </TabsTrigger>
         </TabsList>

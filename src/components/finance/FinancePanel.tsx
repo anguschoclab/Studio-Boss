@@ -166,9 +166,9 @@ export const FinancePanel = () => {
       {/* Summary Cards */}
       <div className="grid grid-cols-4 gap-4">
         {[
-          { label: 'Available Cash', value: formatMoney(cash), color: cash < 0 ? 'text-destructive drop-shadow-[0_0_8px_rgba(239,68,68,0.4)]' : 'text-primary drop-shadow-[0_0_8px_rgba(234,179,8,0.4)]', bg: 'from-card/80 to-card/40', tooltip: 'Total liquid capital available for studio operations and project funding.' },
+          { label: 'Available Cash', value: formatMoney(cash), color: cash < 0 ? 'text-destructive drop-shadow-[0_0_8px_rgba(var(--destructive),0.4)]' : 'text-primary drop-shadow-[0_0_8px_rgba(var(--primary),0.4)]', bg: 'from-card/80 to-card/40', tooltip: 'Total liquid capital available for studio operations and project funding.' },
           { label: 'Total Net Worth', value: formatMoney(studioNetWorth), color: 'text-foreground', bg: 'from-card/80 to-card/40', tooltip: 'Estimated total value of all studio assets, including cash, IP, and talent contracts.' },
-          { label: 'Projected Net Delta', value: `${netDelta >= 0 ? '+' : ''}${formatMoney(netDelta)}/wk`, color: netDelta >= 0 ? 'text-success drop-shadow-[0_0_8px_rgba(34,197,94,0.4)]' : 'text-destructive drop-shadow-[0_0_8px_rgba(239,68,68,0.4)]', bg: netDelta >= 0 ? 'from-success/5 to-transparent' : 'from-destructive/5 to-transparent', tooltip: 'Estimated weekly profit or loss based on current revenue streams and production burn.' },
+          { label: 'Projected Net Delta', value: `${netDelta >= 0 ? '+' : ''}${formatMoney(netDelta)}/wk`, color: netDelta >= 0 ? 'text-success drop-shadow-[0_0_8px_rgba(var(--success),0.4)]' : 'text-destructive drop-shadow-[0_0_8px_rgba(var(--destructive),0.4)]', bg: netDelta >= 0 ? 'from-success/5 to-transparent' : 'from-destructive/5 to-transparent', tooltip: 'Estimated weekly profit or loss based on current revenue streams and production burn.' },
           { label: '12-Wk Forecast Cash', value: formatMoney(forecast.length > 0 ? forecast[forecast.length - 1].projected : 0), color: 'text-purple-400 drop-shadow-[0_0_8px_rgba(192,132,252,0.4)]', bg: 'from-purple-500/5 to-transparent', tooltip: 'Projected cash position in 12 weeks based on current trajectory and known milestones.' },
         ].map((metric, i) => (
           <TooltipWrapper key={metric.label} tooltip={metric.tooltip} side="top">
@@ -207,12 +207,12 @@ export const FinancePanel = () => {
                 <ComposedChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <defs>
                      <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="hsl(142, 71%, 45%)" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="hsl(142, 71%, 45%)" stopOpacity={0} />
+                      <stop offset="5%" stopColor="hsl(var(--success))" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="hsl(var(--success))" stopOpacity={0} />
                     </linearGradient>
                     <linearGradient id="costGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="hsl(0, 84%, 60%)" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="hsl(0, 84%, 60%)" stopOpacity={0} />
+                      <stop offset="5%" stopColor="hsl(var(--destructive))" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="hsl(var(--destructive))" stopOpacity={0} />
                     </linearGradient>
                   </defs>
                   <XAxis dataKey="week" stroke="hsl(215, 20%, 35%)" fontSize={11} tickLine={false} axisLine={false} tickFormatter={v => `W${v}`} />
@@ -225,11 +225,11 @@ export const FinancePanel = () => {
                   />
                   
                   {/* Historical Stack */}
-                  <Area type="monotone" dataKey="histRevenue" stackId="1" stroke="hsl(142, 71%, 45%)" fill="url(#revGrad)" />
-                  <Area type="monotone" dataKey="histCosts" stackId="2" stroke="hsl(0, 84%, 60%)" fill="url(#costGrad)" />
+                  <Area type="monotone" dataKey="histRevenue" stackId="1" stroke="hsl(var(--success))" fill="url(#revGrad)" />
+                  <Area type="monotone" dataKey="histCosts" stackId="2" stroke="hsl(var(--destructive))" fill="url(#costGrad)" />
                   
                   {/* Historical Cash Line */}
-                  <Line type="monotone" dataKey="histCash" stroke="hsl(48, 96%, 53%)" strokeWidth={3} dot={false} style={{ filter: 'drop-shadow(0 0 4px rgba(234,179,8,0.4))' }} />
+                  <Line type="monotone" dataKey="histCash" stroke="hsl(var(--primary))" strokeWidth={3} dot={false} style={{ filter: 'drop-shadow(0 0 4px rgba(var(--primary),0.4))' }} />
                   
                   {/* Forecast Cash Line */}
                   <Line type="monotone" dataKey="projCash" stroke="#a855f7" strokeWidth={3} strokeDasharray="5 5" dot={false} style={{ filter: 'drop-shadow(0 0 4px rgba(168,85,247,0.4))' }} />
@@ -245,7 +245,7 @@ export const FinancePanel = () => {
             <CardHeader className="pb-3 border-b border-border/30 bg-background/40 backdrop-blur-sm shrink-0">
               <CardTitle className="text-xs font-display font-black uppercase tracking-widest text-foreground/80 drop-shadow-sm flex justify-between items-center">
                 <span>Active Costs</span>
-                <span className="text-destructive drop-shadow-[0_0_4px_rgba(239,68,68,0.3)] font-mono">-{formatMoney(weeklyCosts)}/wk</span>
+                <span className="text-destructive drop-shadow-[0_0_4px_rgba(var(--destructive),0.3)] font-mono">-{formatMoney(weeklyCosts)}/wk</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0 flex-1 overflow-y-auto custom-scrollbar">
@@ -255,7 +255,7 @@ export const FinancePanel = () => {
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 pointer-events-none" />
                     <div className="flex items-center justify-between relative z-10">
                       <span className="text-sm font-black text-foreground/90 group-hover:text-primary transition-colors tracking-tight">{p.title}</span>
-                      <span className="text-sm text-destructive font-bold drop-shadow-[0_0_2px_rgba(239,68,68,0.2)] font-mono">-{formatMoney(p.weeklyCost)}/wk</span>
+                      <span className="text-sm text-destructive font-bold drop-shadow-[0_0_2px_rgba(var(--destructive),0.2)] font-mono">-{formatMoney(p.weeklyCost)}/wk</span>
                     </div>
                     <div className="flex items-center gap-2 relative z-10">
                        <span className="text-[9px] font-bold tracking-widest text-muted-foreground uppercase bg-background/50 backdrop-blur-sm border border-border/40 px-2 py-0.5 rounded-full shadow-sm">{p.state}</span>
@@ -321,7 +321,7 @@ export const FinancePanel = () => {
                      <div className="flex items-start justify-between relative z-10 gap-2">
                        <h4 className="font-bold text-[15px] tracking-tight group-hover:text-primary transition-colors truncate">{p.title}</h4>
                        <div className="flex flex-col items-end gap-1 shrink-0">
-                         <Badge variant="outline" className={`text-[9px] uppercase font-black tracking-widest shadow-sm bg-background/50 backdrop-blur-sm ${isProfitable ? 'text-success border-success/30 shadow-[0_0_8px_rgba(34,197,94,0.2)]' : 'text-destructive border-destructive/30 shadow-[0_0_8px_rgba(239,68,68,0.2)]'}`}>
+                         <Badge variant="outline" className={`text-[9px] uppercase font-black tracking-widest shadow-sm bg-background/50 backdrop-blur-sm ${isProfitable ? 'text-success border-success/30 shadow-[0_0_8px_rgba(var(--success),0.2)]' : 'text-destructive border-destructive/30 shadow-[0_0_8px_rgba(var(--destructive),0.2)]'}`}>
                            {isProfitable ? 'Profit' : 'Loss'}
                          </Badge>
                          <DistributionBadge status={p.distributionStatus} className="scale-75 origin-right" />
@@ -331,13 +331,13 @@ export const FinancePanel = () => {
                       <TooltipWrapper tooltip="Total project earnings from box office receipts, distribution deals, and licensing." side="bottom">
                         <div className="flex justify-between text-[11px] font-medium cursor-help">
                            <span className="text-muted-foreground uppercase tracking-wider text-[9px] font-bold">Rev</span>
-                           <span className="font-mono text-success drop-shadow-[0_0_2px_rgba(34,197,94,0.3)]">{formatMoney(p.revenue)}</span>
+                           <span className="font-mono text-success drop-shadow-[0_0_2px_rgba(var(--success),0.3)]">{formatMoney(p.revenue)}</span>
                         </div>
                       </TooltipWrapper>
                       <TooltipWrapper tooltip="Total project expenditure including production budget, marketing spend, and talent fees." side="bottom">
                         <div className="flex justify-between text-[11px] font-medium cursor-help">
                            <span className="text-muted-foreground uppercase tracking-wider text-[9px] font-bold">Cost</span>
-                           <span className="font-mono text-destructive drop-shadow-[0_0_2px_rgba(239,68,68,0.3)]">{formatMoney(p.budget + (p.marketingBudget||0))}</span>
+                           <span className="font-mono text-destructive drop-shadow-[0_0_2px_rgba(var(--destructive),0.3)]">{formatMoney(p.budget + (p.marketingBudget||0))}</span>
                         </div>
                       </TooltipWrapper>
                       <TooltipWrapper tooltip="Return on Investment ratio. Values above 1.0x signify capital growth." side="top">
