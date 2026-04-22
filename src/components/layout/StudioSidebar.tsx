@@ -70,11 +70,9 @@ export const StudioSidebar = () => {
       {/* Brand Header */}
       <div className="p-5 flex items-center justify-between overflow-hidden">
         {!isCollapsed && (
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center font-black text-primary-foreground text-xl shadow-[0_0_15px_hsl(var(--primary)/0.3)]">
-              S
-            </div>
-            <span className="font-display font-black tracking-tighter text-xl">BOSS</span>
+          <div className="flex items-center gap-2">
+            <span className="font-display font-black tracking-widest text-lg uppercase text-primary">S</span>
+            <span className="font-display font-black tracking-widest text-lg uppercase">BOSS</span>
           </div>
         )}
         {isCollapsed && (
@@ -109,10 +107,10 @@ export const StudioSidebar = () => {
                 >
                   <item.icon className={cn("h-4.5 w-4.5 shrink-0", isActive && "drop-shadow-[0_0_8px_hsl(var(--primary)/0.5)]")} />
                   {!isCollapsed && (
-                    <span className="font-semibold truncate text-[13px] tracking-tight">{item.label}</span>
+                    <span className="font-medium truncate text-sm tracking-tight">{item.label}</span>
                   )}
                   {isActive && (
-                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 bg-primary rounded-r-full shadow-[0_0_10px_hsl(var(--primary)/0.5)]" />
+                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-6 bg-primary shadow-[0_0_10px_hsl(var(--primary)/0.5)]" />
                   )}
                 </Button>
               </TooltipTrigger>

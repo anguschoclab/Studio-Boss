@@ -55,7 +55,7 @@ export const StackedBarChart: React.FC<StackedBarChartProps> = ({
     <div className={cn('w-full', className)} style={{ height }}>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-          {showGrid && <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />}
+          {showGrid && <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" strokeOpacity={0.3} />}
           <XAxis 
             dataKey="label" 
             tick={{ fontSize: 10 }}
@@ -72,11 +72,11 @@ export const StackedBarChart: React.FC<StackedBarChartProps> = ({
             <Tooltip
               formatter={(value: number, name: string) => [valueFormatter(value), name]}
               contentStyle={{
-                backgroundColor: '#1f2937',
-                border: 'none',
+                backgroundColor: 'hsl(var(--card))',
+                border: '1px solid hsl(var(--border))',
                 borderRadius: '6px',
                 fontSize: '12px',
-                color: '#fff',
+                color: 'inherit',
               }}
             />
           )}

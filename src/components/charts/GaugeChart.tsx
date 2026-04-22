@@ -22,7 +22,7 @@ export const GaugeChart: React.FC<GaugeChartProps> = ({
   size = 120,
   strokeWidth = 10,
   color,
-  backgroundColor = '#e5e7eb',
+  backgroundColor = 'hsl(var(--border))',
   label,
   sublabel,
   valueFormatter = (v) => `${Math.round(v)}%`,
@@ -33,10 +33,10 @@ export const GaugeChart: React.FC<GaugeChartProps> = ({
   
   // Calculate color based on value if not provided
   const gaugeColor = color || (
-    percentage >= 80 ? '#10b981' :
-    percentage >= 60 ? '#3b82f6' :
-    percentage >= 40 ? '#f59e0b' :
-    '#ef4444'
+    percentage >= 80 ? 'hsl(var(--success))' :
+    percentage >= 60 ? 'hsl(var(--secondary))' :
+    percentage >= 40 ? 'hsl(var(--primary))' :
+    'hsl(var(--destructive))'
   );
 
   // SVG parameters
@@ -71,10 +71,10 @@ export const GaugeChart: React.FC<GaugeChartProps> = ({
           />
           
           {/* Min/Max labels */}
-          <text x={strokeWidth} y={center + 15} fontSize="8" fill="#6b7280" textAnchor="middle">
+          <text x={strokeWidth} y={center + 15} fontSize="8" fill="hsl(var(--muted-foreground))" textAnchor="middle">
             {min}
           </text>
-          <text x={size - strokeWidth} y={center + 15} fontSize="8" fill="#6b7280" textAnchor="middle">
+          <text x={size - strokeWidth} y={center + 15} fontSize="8" fill="hsl(var(--muted-foreground))" textAnchor="middle">
             {max}
           </text>
         </svg>

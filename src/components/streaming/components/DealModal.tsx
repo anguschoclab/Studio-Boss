@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { Buyer, Project, ProjectContractType } from '@/engine/types';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
@@ -32,6 +32,11 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
   const [isPitching, setIsPitching] = useState(false);
   const [dealResult, setDealResult] = useState<{ success: boolean; message: string } | null>(null);
 
+  const isMountedRef = useRef(true);
+  useEffect(() => {
+    return () => { isMountedRef.current = false; };
+  }, []);
+
   const eligibleProjects = useMemo(() => {
     if (!gameState) return [];
     return Object.values(gameState.studio.internal.projects).filter(
@@ -52,16 +57,20 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
   const handlePitch = async () => {
     if (!selectedProject) return;
     setIsPitching(true);
-    
+
     // Artificial delay for "Negotiation" feel
     await new Promise(resolve => setTimeout(resolve, 800));
-    
+
+    if (!isMountedRef.current) return;
+
     const success = await pitchProject(selectedProject, buyer.id, contractType);
-    
+
+    if (!isMountedRef.current) return;
+
     setDealResult({
       success,
-      message: success 
-        ? `${buyer.name} has greenlit "${selectedProjectObj?.title}" on a ${contractType} deal!` 
+      message: success
+        ? `${buyer.name} has greenlit "${selectedProjectObj?.title}" on a ${contractType} deal!`
         : `${buyer.name} passed on the pitch. The project's current fit score (${Math.round(fitScore)}) didn't meet their executive mandate.`
     });
     setIsPitching(false);

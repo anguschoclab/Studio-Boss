@@ -8,7 +8,8 @@
 
 class PersistenceService {
   private worker: Worker | null = null;
-  private pendingResolves: Map<string, (data: any) => void> = new Map();
+  private pendingPromises: Map<number, { resolve: (data: any) => void; reject: (err: Error) => void }> = new Map();
+  private requestCounter = 0;
 
   constructor() {
     this.initWorker();
@@ -22,27 +23,23 @@ class PersistenceService {
       });
 
       this.worker.onmessage = (e: MessageEvent) => {
-        const { type, slotId, state, message } = e.data;
+        const { type, requestId, state, message } = e.data;
+
+        const pending = this.pendingPromises.get(requestId);
+        if (!pending) return;
+        this.pendingPromises.delete(requestId);
 
         if (type === 'SAVE_SUCCESS') {
-          console.log(`[PersistenceService] Save successful: ${slotId}`);
-          this.resolvePromise(`save_${slotId}`, true);
+          console.log(`[PersistenceService] Save successful (requestId: ${requestId})`);
+          pending.resolve(true);
         } else if (type === 'LOAD_SUCCESS') {
-          console.log(`[PersistenceService] Load successful: ${slotId}`);
-          this.resolvePromise(`load_${slotId}`, state);
+          console.log(`[PersistenceService] Load successful (requestId: ${requestId})`);
+          pending.resolve(state);
         } else if (type === 'ERROR') {
-          console.error(`[PersistenceService] Worker error: ${message}`);
-          this.resolvePromise(`error`, message);
+          console.error(`[PersistenceService] Worker error (requestId: ${requestId}): ${message}`);
+          pending.reject(new Error(message));
         }
       };
-    }
-  }
-
-  private resolvePromise(key: string, result: any) {
-    const resolve = this.pendingResolves.get(key);
-    if (resolve) {
-      resolve(result);
-      this.pendingResolves.delete(key);
     }
   }
 
@@ -52,12 +49,14 @@ class PersistenceService {
   async save(slotId: string | number, state: any): Promise<boolean> {
     if (!this.worker) return false;
 
-    return new Promise((resolve) => {
-      this.pendingResolves.set(`save_${slotId}`, resolve);
+    const requestId = ++this.requestCounter;
+    return new Promise((resolve, reject) => {
+      this.pendingPromises.set(requestId, { resolve, reject });
       this.worker?.postMessage({
         type: 'SAVE_GAME',
         slotId,
-        state
+        state,
+        requestId,
       });
     });
   }
@@ -68,11 +67,13 @@ class PersistenceService {
   async load(slotId: string | number): Promise<any | null> {
     if (!this.worker) return null;
 
-    return new Promise((resolve) => {
-      this.pendingResolves.set(`load_${slotId}`, resolve);
+    const requestId = ++this.requestCounter;
+    return new Promise((resolve, reject) => {
+      this.pendingPromises.set(requestId, { resolve, reject });
       this.worker?.postMessage({
         type: 'LOAD_GAME',
-        slotId
+        slotId,
+        requestId,
       });
     });
   }

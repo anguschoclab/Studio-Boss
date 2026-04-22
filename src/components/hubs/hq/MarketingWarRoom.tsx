@@ -164,7 +164,7 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
           </div>
 
           {/* Right Column: Audience Resonance & Intelligence */}
-          <div className="bg-slate-900/40 border border-white/5 rounded-3xl p-8 space-y-8 shadow-inner">
+          <div className="glass-card rounded-3xl p-8 space-y-8 shadow-inner">
             <div className="space-y-4">
               <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Audience Intelligence</h4>
               <div className="grid grid-cols-2 gap-3">

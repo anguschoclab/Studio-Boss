@@ -31,7 +31,15 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ oppo
   
   const [playerBid, setPlayerBid] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
-  
+
+  const animationTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (animationTimerRef.current) clearTimeout(animationTimerRef.current);
+    };
+  }, []);
+
   const currentMaxBid = useMemo(() => {
     return Math.max(...Object.values(opportunity.bids || {}).map(bid => bid.amount), opportunity.costToAcquire);
   }, [opportunity.bids, opportunity.costToAcquire]);
@@ -48,7 +56,7 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ oppo
     if (gameState && gameState.finance.cash >= playerBid) {
       placeBid(opportunity.id, playerBid);
       setIsAnimating(true);
-      setTimeout(() => setIsAnimating(false), 1000);
+      animationTimerRef.current = setTimeout(() => setIsAnimating(false), 1000);
     }
   };
 

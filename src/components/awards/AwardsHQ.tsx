@@ -55,7 +55,7 @@ export const AwardsHQ: React.FC = () => {
            { label: 'Critically Acclaimed', val: eligibleProjects.filter(p => (p.reception?.metaScore || 0) >= 75).length, icon: Trophy, color: 'text-emerald-400' },
            { label: 'Academy Standing', val: `${gameState.studio.prestige}/100`, icon: Info, color: 'text-violet-400' }
          ].map(stat => (
-           <div key={stat.label} className="p-5 rounded-2xl bg-slate-900/30 border border-slate-800/50 space-y-2">
+           <div key={stat.label} className="glass-card p-5 rounded-2xl space-y-2">
               <div className="flex items-center justify-between">
                  <stat.icon className={cn("w-5 h-5", stat.color)} />
                  <span className="text-[9px] font-black uppercase text-slate-500 tracking-widest">{stat.label}</span>
@@ -77,7 +77,7 @@ export const AwardsHQ: React.FC = () => {
           ) : eligibleProjects.map(project => {
             const campaign = gameState.studio.activeCampaigns?.[project.id];
             return (
-              <div key={project.id} className="group relative p-6 rounded-3xl bg-slate-900/40 border border-slate-800 hover:border-primary/30 transition-all overflow-hidden">
+              <div key={project.id} className="group relative glass-card p-6 rounded-3xl hover:border-primary/30 transition-all overflow-hidden">
                 <div className="absolute top-0 left-0 w-1 h-full bg-slate-800 group-hover:bg-primary/50 transition-colors" />
                 
                 <div className="flex justify-between items-start mb-6">

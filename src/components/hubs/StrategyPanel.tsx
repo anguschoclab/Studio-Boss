@@ -25,8 +25,9 @@ export const StrategyPanel: React.FC = () => {
   return (
     <div className="h-full overflow-y-auto custom-scrollbar space-y-6 pb-4">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="bg-gradient-to-br from-primary/10 to-transparent border-primary/20">
-          <CardContent className="p-4">
+        <Card className="glass-card">
+          <CardContent className="p-4 relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent rounded-xl pointer-events-none" />
             <div className="flex items-center gap-2 mb-2">
               <Target className="h-4 w-4 text-primary" />
               <span className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">Current Goal</span>
@@ -44,8 +45,9 @@ export const StrategyPanel: React.FC = () => {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-secondary/10 to-transparent border-secondary/20">
-          <CardContent className="p-4">
+        <Card className="glass-card">
+          <CardContent className="p-4 relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 to-transparent rounded-xl pointer-events-none" />
             <div className="flex items-center gap-2 mb-2">
               <Award className="h-4 w-4 text-secondary" />
               <span className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">Next Milestone</span>
@@ -63,8 +65,9 @@ export const StrategyPanel: React.FC = () => {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-amber-500/10 to-transparent border-amber-500/20">
-          <CardContent className="p-4">
+        <Card className="glass-card">
+          <CardContent className="p-4 relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 to-transparent rounded-xl pointer-events-none" />
             <div className="flex items-center gap-2 mb-2">
               <TrendingUp className="h-4 w-4 text-amber-500" />
               <span className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">Market Position</span>
@@ -75,7 +78,7 @@ export const StrategyPanel: React.FC = () => {
         </Card>
       </div>
 
-      <div className="p-6 bg-card/40 border border-border/40 rounded-xl">
+      <div className="glass-card p-6">
         <h4 className="text-sm font-black uppercase tracking-wider mb-4">Strategic Recommendations</h4>
         <div className="space-y-3">
           {prestige < 80 && (

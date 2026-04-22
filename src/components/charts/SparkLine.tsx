@@ -15,7 +15,7 @@ export const SparkLine: React.FC<SparkLineProps> = ({
   data,
   width = 120,
   height = 30,
-  color = '#3b82f6',
+  color = 'hsl(var(--secondary))',
   showDots = false,
   className,
 }) => {
@@ -23,7 +23,7 @@ export const SparkLine: React.FC<SparkLineProps> = ({
 
   const chartData = data.map((value, index) => ({ index, value }));
   const trend = data[data.length - 1] > data[0] ? 'up' : 'down';
-  const trendColor = trend === 'up' ? '#10b981' : '#ef4444';
+  const trendColor = trend === 'up' ? 'hsl(var(--success))' : 'hsl(var(--destructive))';
   const finalColor = color === 'trend' ? trendColor : color;
 
   return (

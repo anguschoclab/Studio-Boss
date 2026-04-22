@@ -20,19 +20,19 @@ interface StatCardProps {
 const colorVariants = {
   primary: 'from-primary/20 via-primary/5 to-transparent text-primary border-primary/20',
   secondary: 'from-secondary/20 via-secondary/5 to-transparent text-secondary border-secondary/20',
-  success: 'from-emerald-500/20 via-emerald-500/5 to-transparent text-emerald-400 border-emerald-500/20',
-  destructive: 'from-red-500/20 via-red-500/5 to-transparent text-red-400 border-red-500/20',
-  warning: 'from-amber-500/20 via-amber-500/5 to-transparent text-amber-400 border-amber-500/20',
-  info: 'from-blue-500/20 via-blue-500/5 to-transparent text-blue-400 border-blue-500/20',
+  success: 'from-success/20 via-success/5 to-transparent text-success border-success/20',
+  destructive: 'from-destructive/20 via-destructive/5 to-transparent text-destructive border-destructive/20',
+  warning: 'from-warning/20 via-warning/5 to-transparent text-warning border-warning/20',
+  info: 'from-info/20 via-info/5 to-transparent text-info border-info/20',
 };
 
 const iconBgVariants = {
   primary: 'bg-primary/10 text-primary shadow-[0_0_20px_hsl(var(--primary)/0.3)]',
   secondary: 'bg-secondary/10 text-secondary shadow-[0_0_20px_hsl(var(--secondary)/0.3)]',
-  success: 'bg-emerald-500/10 text-emerald-400 shadow-[0_0_20px_rgba(34,197,94,0.3)]',
-  destructive: 'bg-red-500/10 text-red-400 shadow-[0_0_20px_rgba(239,68,68,0.3)]',
-  warning: 'bg-amber-500/10 text-amber-400 shadow-[0_0_20px_rgba(245,158,11,0.3)]',
-  info: 'bg-blue-500/10 text-blue-400 shadow-[0_0_20px_rgba(59,130,246,0.3)]',
+  success: 'bg-success/10 text-success shadow-[0_0_20px_hsl(var(--success)/0.3)]',
+  destructive: 'bg-destructive/10 text-destructive shadow-[0_0_20px_hsl(var(--destructive)/0.3)]',
+  warning: 'bg-warning/10 text-warning shadow-[0_0_20px_hsl(var(--warning)/0.3)]',
+  info: 'bg-info/10 text-info shadow-[0_0_20px_hsl(var(--info)/0.3)]',
 };
 
 const sizeVariants = {
@@ -49,7 +49,7 @@ const sizeVariants = {
     icon: 'w-10 h-10',
     iconSize: 20,
     title: 'text-[11px]',
-    value: 'text-2xl',
+    value: 'text-3xl',
     subtitle: 'text-[10px]',
   },
   lg: {
@@ -77,7 +77,7 @@ export const StatCard: React.FC<StatCardProps> = ({
 }) => {
   const sizes = sizeVariants[size];
   const TrendIcon = trend === 'up' ? TrendingUp : trend === 'down' ? TrendingDown : Minus;
-  const trendColor = trend === 'up' ? 'text-emerald-400' : trend === 'down' ? 'text-red-400' : 'text-muted-foreground';
+  const trendColor = trend === 'up' ? 'text-success' : trend === 'down' ? 'text-destructive' : 'text-muted-foreground';
 
   return (
     <Card className={cn(

@@ -6,19 +6,19 @@
  */
 
 self.onmessage = async (e: MessageEvent) => {
-  const { type, slotId, state } = e.data;
+  const { type, slotId, state, requestId } = e.data;
 
   try {
     if (type === 'SAVE_GAME') {
       await handleSave(slotId, state);
-      self.postMessage({ type: 'SAVE_SUCCESS', slotId });
+      self.postMessage({ type: 'SAVE_SUCCESS', slotId, requestId });
     } else if (type === 'LOAD_GAME') {
       const loadedState = await handleLoad(slotId);
-      self.postMessage({ type: 'LOAD_SUCCESS', slotId, state: loadedState });
+      self.postMessage({ type: 'LOAD_SUCCESS', slotId, state: loadedState, requestId });
     }
   } catch (error) {
     console.error(`SaveWorker Error [${type}]:`, error);
-    self.postMessage({ type: 'ERROR', message: (error as Error).message });
+    self.postMessage({ type: 'ERROR', message: (error as Error).message, requestId });
   }
 };
 

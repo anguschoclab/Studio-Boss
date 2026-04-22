@@ -12,7 +12,7 @@ interface ProjectROIAnalyticsProps {
 
 export const ProjectROIAnalytics = ({ releasedProjects }: ProjectROIAnalyticsProps) => {
   return (
-    <Card className="border-border/40 bg-card/60 backdrop-blur-md shadow-sm">
+    <Card className="glass-card">
       <CardHeader className="pb-4 border-b border-border/30 bg-background/40">
         <CardTitle className="text-xs font-display font-black uppercase tracking-widest text-foreground/80">
           Project ROI Performance

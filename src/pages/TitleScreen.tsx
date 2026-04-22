@@ -14,10 +14,12 @@ const TitleScreen = () => {
   const [hasSaves, setHasSaves] = useState(false);
 
   useEffect(() => {
+    let isMounted = true;
     const fetchSlots = async () => {
-    const result = await getSaveSlots();
-    setSlots(result);
-    setHasSaves(result.some((s: any) => s.exists));
+      const result = await getSaveSlots();
+      if (!isMounted) return;
+      setSlots(result);
+      setHasSaves(result.some((s: any) => s.exists));
     };
     fetchSlots();
 
@@ -26,6 +28,7 @@ const TitleScreen = () => {
     if (params.get('autoStart') === 'true' && useGameStore.getState().gameState) {
       navigate({ to: '/dashboard' });
     }
+    return () => { isMounted = false; };
   }, [getSaveSlots, navigate]);
 
   const handleLoad = async (slot: number) => {

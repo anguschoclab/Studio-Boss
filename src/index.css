@@ -33,6 +33,12 @@
     --success: 142 76% 45%;
     --success-foreground: 210 40% 98%;
 
+    --warning: 38 92% 50%;
+    --warning-foreground: 222 47% 5%;
+
+    --info: 199 89% 55%;
+    --info-foreground: 210 40% 98%;
+
     --border: 217 33% 16%;
     --input: 217 33% 12%;
     --ring: 48 96% 53%;
@@ -119,6 +125,10 @@
     --background: 222 47% 4%;
     --card: 222 47% 10%;
     --border: 222 47% 18%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 222 47% 5%;
+    --info: 199 89% 55%;
+    --info-foreground: 210 40% 98%;
   }
 
   .theme-mid-tier {
@@ -127,6 +137,10 @@
     --background: 240 10% 4%;
     --card: 240 10% 9%;
     --border: 240 10% 16%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 222 47% 5%;
+    --info: 199 89% 55%;
+    --info-foreground: 210 40% 98%;
   }
 
   .theme-indie {
@@ -134,6 +148,10 @@
     --background: 30 20% 6%;
     --card: 30 20% 11%;
     --border: 30 20% 18%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 222 47% 5%;
+    --info: 199 89% 55%;
+    --info-foreground: 210 40% 98%;
   }
 
   .theme-indie body::before {

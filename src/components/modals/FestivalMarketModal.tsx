@@ -68,6 +68,9 @@ export const FestivalMarketModal: React.FC = () => {
     }, 2000);
   }, [project, addProject, addFunds]);
 
+  const handleFinalizeRef = useRef(handleFinalize);
+  useEffect(() => { handleFinalizeRef.current = handleFinalize; }, [handleFinalize]);
+
   // AI Bidding Logic (Simulated ticks)
   useEffect(() => {
     if (isResolved || !project || !gameState) return;
@@ -76,7 +79,7 @@ export const FestivalMarketModal: React.FC = () => {
       setTimeLeft(prev => {
         if (prev <= 1) {
           clearInterval(timer);
-          handleFinalize();
+          handleFinalizeRef.current();
           return 0;
         }
         return prev - 1;

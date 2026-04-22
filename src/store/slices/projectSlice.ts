@@ -32,28 +32,22 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
   createProject: (params) => {
     set((s) => {
       if (!s.gameState) return s;
-      const { talentFees } = buildProjectAndContracts(s.gameState, params);
-      
-      return {
-        gameState: applyStateImpact(s.gameState, {
-          type: 'FUNDS_DEDUCTED',
-          payload: { amount: talentFees }
-        }) as any 
-      };
-    });
-    
-    set(s => {
-      if (!s.gameState) return s;
-      const { project, newContracts } = buildProjectAndContracts(s.gameState, params);
+      const { project, newContracts, talentFees } = buildProjectAndContracts(s.gameState, params);
+
+      const stateAfterFees = applyStateImpact(s.gameState, {
+        type: 'FUNDS_DEDUCTED',
+        payload: { amount: talentFees }
+      }) as any;
+
       return {
         gameState: {
-          ...s.gameState,
+          ...stateAfterFees,
           studio: {
-            ...s.gameState.studio,
+            ...stateAfterFees.studio,
             internal: {
-              ...s.gameState.studio.internal,
-              projects: { ...s.gameState.studio.internal.projects, [project.id]: project },
-              contracts: [...s.gameState.studio.internal.contracts, ...newContracts]
+              ...stateAfterFees.studio.internal,
+              projects: { ...stateAfterFees.studio.internal.projects, [project.id]: project },
+              contracts: [...stateAfterFees.studio.internal.contracts, ...newContracts]
             }
           }
         }

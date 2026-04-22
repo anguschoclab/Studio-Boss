@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
@@ -16,6 +16,16 @@ export const PitchProjectModal = () => {
   const [selectedContract, setSelectedContract] = useState<ProjectContractType>('upfront');
   const [feedback, setFeedback] = useState<string | null>(null);
 
+  const isMountedRef = useRef(true);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
   if (!gameState || !pitchingProjectId) return null;
 
   const project = gameState.studio.internal.projects[pitchingProjectId];
@@ -27,9 +37,11 @@ export const PitchProjectModal = () => {
 
     const success = await pitchProject(project.id, selectedBuyerId, selectedContract);
 
+    if (!isMountedRef.current) return;
     if (success) {
       setFeedback('Pitch Successful! Project picked up.');
-      setTimeout(() => {
+      timeoutRef.current = setTimeout(() => {
+        if (!isMountedRef.current) return;
         setFeedback(null);
         setSelectedBuyerId('');
         closePitchProject();

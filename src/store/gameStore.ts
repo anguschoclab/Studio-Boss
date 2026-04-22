@@ -60,7 +60,9 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
       if (state.gameState === result.newState) return state; 
 
       // Trigger background save without blocking UI (Fire and forget)
-      saveGame(0, result.newState);
+      saveGame(0, result.newState).catch((err) => {
+        console.error('[GameStore] Background autosave failed:', err);
+      });
       
       return { 
         gameState: result.newState,
