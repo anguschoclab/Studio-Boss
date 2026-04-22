@@ -74,9 +74,11 @@ export function calculateReleaseGapImpact(
   const yearsSince = weeksSince / 52;
   
   // 🌌 The Universe Builder: Added massive buzz reset for rebooting dead franchises (15+ years).
-  if (yearsSince >= 15) {
+  const REBOOT_YEARS_THRESHOLD = 15;
+  const REBOOT_BUZZ_BONUS = 60;
+  if (yearsSince >= REBOOT_YEARS_THRESHOLD) {
     return {
-      buzzBonus: 60,
+      buzzBonus: REBOOT_BUZZ_BONUS,
       label: 'Franchise Reboot',
       fatigueReset: true
     };
