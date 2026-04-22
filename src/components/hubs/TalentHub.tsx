@@ -2,7 +2,6 @@ import React, { useState, useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore, TalentSubTab } from '@/store/uiStore';
 import { SubNav } from '@/components/navigation/SubNav';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
   Users,
@@ -404,6 +403,7 @@ const ScandalsPanel = () => {
       weeksRemaining: s.weeksRemaining,
       publicSentiment: s.severity > 60 ? 'outraged' as const : 'divided' as const,
       pressCoverage: Math.round(s.severity * 0.5),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       effects: [] as any[],
       hasInsurance: false,
     };
