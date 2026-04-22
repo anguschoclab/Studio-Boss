@@ -97,7 +97,9 @@ export type ImpactType =
   | 'FINANCE_SNAPSHOT_ADDED'
   | 'SYNC_M_A_FUNDS'
   | 'INDUSTRY_UPDATE'
-  | 'SYSTEM_TICK';
+  | 'SYSTEM_TICK'
+  | 'MODAL_TRIGGERED'
+  | 'PILOT_GRADUATED';
 
 export interface ProjectUpdate { projectId: string; update: Partial<import('./project.types').Project> }
 export interface TalentUpdate { talentId: string; update: Partial<import('./talent.types').Talent> }
@@ -148,6 +150,8 @@ export interface FinanceTransactionImpact extends BaseImpact { type: 'FINANCE_TR
 export interface FinanceSnapshotImpact extends BaseImpact { type: 'FINANCE_SNAPSHOT_ADDED'; payload: { snapshot: FinancialSnapshot } }
 export interface SyncMAFundsImpact extends BaseImpact { type: 'SYNC_M_A_FUNDS'; payload: { amount: number } }
 export interface SystemTickImpact extends BaseImpact { type: 'SYSTEM_TICK'; payload: { week?: number; tickCount?: number } }
+export interface ModalTriggeredImpact extends BaseImpact { type: 'MODAL_TRIGGERED'; payload: { modalType: string; priority: number; payload: any } }
+export interface PilotGraduatedImpact extends BaseImpact { type: 'PILOT_GRADUATED'; payload: { projectId: string; nextState: 'production' } }
 export interface IndustryUpdateImpact extends BaseImpact { 
   type: 'INDUSTRY_UPDATE'; 
   payload: { 
@@ -177,5 +181,7 @@ export type StateImpact =
   | FinanceSnapshotImpact
   | SyncMAFundsImpact
   | SystemTickImpact
+  | ModalTriggeredImpact
+  | PilotGraduatedImpact
   | IndustryUpdateImpact
   | (BaseImpact & { type?: undefined }); // The "Bag" impact
