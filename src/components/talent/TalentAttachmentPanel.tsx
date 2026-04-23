@@ -21,6 +21,7 @@ import { cn } from '@/lib/utils';
 import { TalentAvatar } from './TalentAvatar';
 import { CastingFeedback } from './CastingFeedback';
 import { useUIStore } from '@/store/uiStore';
+import { useTalentMap } from '@/hooks/useTalentMap';
 
 interface TalentAttachmentPanelProps {
   project: Project;
@@ -70,7 +71,7 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
     });
   }, [talentPool, attachedTalentIds, project, searchQuery, selectedTier, selectedRole, showMatchesOnly]);
 
-  const talentMap = useMemo(() => new Map(talentPool.map(t => [t.id, t])), [talentPool]);
+  const talentMap = useTalentMap(talentPool);
   const hoveredTalent = hoveredTalentId ? talentMap.get(hoveredTalentId) : null;
 
   return (

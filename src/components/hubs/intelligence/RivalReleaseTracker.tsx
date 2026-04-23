@@ -1,5 +1,5 @@
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn, formatCompactCurrency } from '@/lib/utils';
 import { Building2, Calendar, Target, AlertTriangle } from 'lucide-react';
 import { Section } from '@/components/layout/Section';
 import { Card } from '@/components/ui/card';
@@ -34,12 +34,6 @@ export const RivalReleaseTracker: React.FC<RivalReleaseTrackerProps> = ({
   const sameWeekConflicts = releases.filter(r => 
     yourReleases.some(y => y.week === r.releaseDate)
   );
-
-  const formatCurrency = (value: number) => {
-    if (value >= 1000000) return `$${(value / 1000000).toFixed(1)}M`;
-    if (value >= 1000) return `$${(value / 1000).toFixed(1)}K`;
-    return `$${value}`;
-  };
 
   const getThreatBadge = (level: string) => {
     switch (level) {
@@ -190,7 +184,7 @@ export const RivalReleaseTracker: React.FC<RivalReleaseTrackerProps> = ({
                         <div className="flex items-center gap-3">
                           {getThreatBadge(release.threatLevel)}
                           <span className={cn('text-[10px]', tokens.text.caption)}>
-                            Est. {formatCurrency(release.projectedOpening)} opening
+                            Est. {formatCompactCurrency(release.projectedOpening)} opening
                           </span>
                         </div>
                       </div>

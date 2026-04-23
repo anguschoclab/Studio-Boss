@@ -11,6 +11,7 @@ import { useUIStore } from '@/store/uiStore';
 import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
 import { TalentAvatar } from './TalentAvatar';
 import { getTalentVisualAge, getCountryFlag } from '@/engine/generators/avatarGenerator';
+import { useAgencyMap } from '@/hooks/useTalentMap';
 
 interface TalentCardProps {
   talent: Talent;
@@ -30,7 +31,7 @@ export const TalentCard: React.FC<TalentCardProps> = ({
   const { selectTalent } = useUIStore();
   const gameState = useGameStore(s => s.gameState);
   const currentWeek = gameState?.week ?? 1;
-  const agencyMap = new Map(gameState?.industry.agencies.map(a => [a.id, a]) || []);
+  const agencyMap = useAgencyMap();
   const agency = talent.agencyId ? agencyMap.get(talent.agencyId) : null;
   const archetype = agency?.archetype ? AGENCY_ARCHETYPES[agency.archetype] : null;
 

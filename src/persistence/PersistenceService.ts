@@ -30,10 +30,8 @@ class PersistenceService {
         this.pendingPromises.delete(requestId);
 
         if (type === 'SAVE_SUCCESS') {
-          console.log(`[PersistenceService] Save successful (requestId: ${requestId})`);
           pending.resolve(true);
         } else if (type === 'LOAD_SUCCESS') {
-          console.log(`[PersistenceService] Load successful (requestId: ${requestId})`);
           pending.resolve(state);
         } else if (type === 'ERROR') {
           console.error(`[PersistenceService] Worker error (requestId: ${requestId}): ${message}`);

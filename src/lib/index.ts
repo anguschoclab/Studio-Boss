@@ -4,7 +4,7 @@
  * Centralized exports for utilities, tokens, and animations
  */
 
-export { tokens, patterns, combineTokens } from './tokens';
+export { tokens, patterns } from './tokens';
 export { 
   durations,
   easings,

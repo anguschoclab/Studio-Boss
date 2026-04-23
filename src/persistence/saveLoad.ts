@@ -12,7 +12,6 @@ export async function saveGame(slot: number, state: GameState): Promise<void> {
     await persistenceService.save(slot, state);
 
     // 2. We skip synchronous metadata cache for now, or we could store it in OPFS too.
-    console.log(`[SaveLoad] State saved to slot ${slot} via OPFS.`);
   } catch (e) {
     console.error('[SaveLoad] Failed to save game state', e);
   }
@@ -24,7 +23,6 @@ export async function loadGame(slot: number): Promise<GameState | null> {
     const state = await persistenceService.load(slot);
     if (!state) return null;
 
-    console.log(`[SaveLoad] State loaded from slot ${slot} via OPFS.`);
     return state as GameState;
   } catch (e) {
     console.error('[SaveLoad] Failed to load game state', e);

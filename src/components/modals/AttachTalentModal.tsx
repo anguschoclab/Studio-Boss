@@ -11,6 +11,7 @@ import { TalentAvatar } from '@/components/talent/TalentAvatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Users, Clapperboard, PenTool, Megaphone, Film, CheckCircle2, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useTalentMap } from '@/hooks/useTalentMap';
 
 type AttachmentPhase = 'producers_writers' | 'cast_directors';
 
@@ -70,7 +71,7 @@ export const AttachTalentModal = () => {
       .sort((a, b) => b.prestige - a.prestige);
   }, [talentPool, phaseConfig.roles, attachedTalentIds]);
 
-  const talentMap = useMemo(() => new Map(talentPool.map(t => [t.id, t])), [talentPool]);
+  const talentMap = useTalentMap(talentPool);
   
   const totalFees = selectedTalent.reduce((sum, id) => {
     const t = talentMap.get(id);
@@ -154,7 +155,7 @@ export const TalentAttachmentPanel: React.FC<{ project: Project }> = ({ project 
       .sort((a, b) => b.prestige - a.prestige);
   }, [talentPool, phaseConfig.roles, attachedTalentIds]);
 
-  const talentMap = useMemo(() => new Map(talentPool.map(t => [t.id, t])), [talentPool]);
+  const talentMap = useTalentMap(talentPool);
   
   const totalFees = selectedTalent.reduce((sum, id) => {
     const t = talentMap.get(id);

@@ -31,7 +31,6 @@ const Dashboard: React.FC = () => {
 
   React.useEffect(() => {
     if (!gameState && isAutoStarting) {
-      console.log('[Dashboard] Auto-starting game...');
       devAutoInit();
     }
   }, [gameState, isAutoStarting, devAutoInit]);

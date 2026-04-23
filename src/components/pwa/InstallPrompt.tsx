@@ -29,7 +29,6 @@ try {
   require('virtual:pwa-register/react');
 } catch {
   // PWA module not available (Electron or plugin removed)
-  console.log('PWA module not available (expected for Electron)');
 }
 
 export function InstallPrompt() {
