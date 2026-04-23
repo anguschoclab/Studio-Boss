@@ -91,7 +91,7 @@ export function calculateWillingness(
     if (director && director.prestige > 80) {
       score += 20;
       reasons.push(`The chance to work with ${director.name} is a significant motivator.`);
-    } else if (director && director.prestige < 40 && isActionStar) {
+    } else if (director && director.prestige < 40 && (isActionStar || isPrestigeActor)) {
       // 🎭 The Method Actor Tuning: Established stars fiercely protect their brand and will penalize projects helmed by unproven directors.
       score -= 25;
       reasons.push(`${talent.name} feels it's too risky for their brand to work with an unproven director.`);
