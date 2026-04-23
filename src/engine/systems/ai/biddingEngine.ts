@@ -33,19 +33,19 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
       const isPlayerLeading = opportunity.highestBidderId === state.studio.id || opportunity.highestBidderId === 'PLAYER';
       const aggressionFactor = isPlayerLeading ? 1.2 : 1.0;
 
-      // 🎭 The Method Actor Tuning: Rivals with FRANCHISE_BUILDING motivation will aggressively outbid for IP-driven genres, tolerating higher caps. CASH_CRUNCH rivals will be highly conservative.
+      // 🎭 The Method Actor Tuning: Rivals with FRANCHISE_BUILDING motivation will aggressively outbid for IP-driven genres, tolerating higher caps. CASH_CRUNCH rivals will be highly conservative. Multipliers shifted to create fiercer IP bidding wars.
       let adjustedCashThreshold = 1.3;
       let bidCapPercentage = 0.35;
       let motivationMultiplier = 1.0;
 
       if (rival.currentMotivation === 'FRANCHISE_BUILDING' && (opportunity.genre === 'Sci-Fi' || opportunity.genre === 'Action')) {
-        adjustedCashThreshold = 1.1; // More willing to bid with less cash buffer
-        bidCapPercentage = 0.60; // Tolerate a much higher portion of their cash
-        motivationMultiplier = 1.4; // Bid more aggressively
+        adjustedCashThreshold = 0.9; // More willing to bid with less cash buffer
+        bidCapPercentage = 0.85; // Tolerate a much higher portion of their cash
+        motivationMultiplier = 1.8; // Bid more aggressively
       } else if (rival.currentMotivation === 'CASH_CRUNCH') {
-        adjustedCashThreshold = 2.0; // Needs double the cash to bid
-        bidCapPercentage = 0.15; // Only use a tiny fraction of cash
-        motivationMultiplier = 0.8; // Bid weakly
+        adjustedCashThreshold = 2.5; // Needs double the cash to bid
+        bidCapPercentage = 0.10; // Only use a tiny fraction of cash
+        motivationMultiplier = 0.5; // Bid weakly
       }
 
       if (myBid < currentHighest && rival.cash > currentHighest * adjustedCashThreshold) {

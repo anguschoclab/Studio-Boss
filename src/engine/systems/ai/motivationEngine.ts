@@ -13,16 +13,16 @@ const MotivationScores: Record<StudioMotivation, (rival: RivalStudio, state: Gam
     if (rival.cash < 3000000) return 60;
     return 0;
   },
-  // 🎭 The Method Actor Tuning: Wealthy or highly prestigious studios chase awards, but so do aggressive upstarts looking for credibility.
+  // 🎭 The Method Actor Tuning: Wealthy or highly prestigious studios aggressively chase awards, pushing their scores higher.
   AWARD_CHASE: (rival) => {
-    let score = rival.prestige > 75 ? 85 : 30;
+    let score = rival.prestige > 75 ? 95 : 30;
     if (rival.prestige < 40 && rival.motivationProfile.aggression > 60) score += 40; // Desperate for credibility
     return score;
   },
-  // 🎭 The Method Actor Tuning: Cash-rich studios aggressively focus on building franchises to secure long-term revenue.
+  // 🎭 The Method Actor Tuning: Cash-rich studios are desperate to build franchises, increasing their desire to hoard IP.
   FRANCHISE_BUILDING: (rival) => {
     let score = Object.keys(rival.projects).length > 3 ? 60 : 20;
-    if (rival.cash > 10000000) score += 50; // Got cash, want IP
+    if (rival.cash > 10000000) score += 70; // Got cash, want IP
     return score;
   },
   // 🎭 The Method Actor Tuning: Highly aggressive studios naturally lean towards market disruption, especially if they have cash to burn.

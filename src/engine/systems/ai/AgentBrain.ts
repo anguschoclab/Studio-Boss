@@ -12,8 +12,8 @@ export function evaluatePackageOffer(
 ): { requiredTalentId?: string; packageDiscount?: number; reason: string } {
   const motivation = agency.currentMotivation || 'VOLUME_RETAIL';
   
-  // 🎭 The Method Actor Tuning: Agencies will aggressively leverage high-prestige lead talent to force package deals, carrying lesser-known clients to boost their roster's value.
-  const prestigeLeverage = leadTalent.prestige > 80 ? 0.4 : 0.15;
+  // 🎭 The Method Actor Tuning: Agencies will aggressively leverage high-prestige lead talent to force package deals, carrying lesser-known clients to boost their roster's value. Increased leverage and discount to reflect more cutthroat agency tactics.
+  const prestigeLeverage = leadTalent.prestige > 80 ? 0.6 : 0.25;
   if (motivation === 'THE_PACKAGER' || rng.next() < prestigeLeverage) {
     const otherClients = talentPool.filter(t => t.agencyId === agency.id && t.id !== leadTalent.id);
     
@@ -21,7 +21,7 @@ export function evaluatePackageOffer(
       const bundled = rng.pick(otherClients);
       return {
         requiredTalentId: bundled.id,
-        packageDiscount: 0.1,
+        packageDiscount: 0.15,
         reason: `Agency policy: To secure ${leadTalent.name}, we require ${bundled.name}.`
       };
     }

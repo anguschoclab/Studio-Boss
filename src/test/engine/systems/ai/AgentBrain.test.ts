@@ -53,7 +53,7 @@ describe('Agent Brain (Target C2)', () => {
       const result = evaluatePackageOffer(agency, leadTalent, talentPool, rng);
       
       expect(result.requiredTalentId).toBe('bundle');
-      expect(result.packageDiscount).toBe(0.1);
+      expect(result.packageDiscount).toBe(0.15);
       expect(result.reason).toContain('Agency policy');
     });
 

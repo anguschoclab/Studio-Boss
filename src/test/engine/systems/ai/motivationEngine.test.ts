@@ -24,7 +24,7 @@ describe('AI Motivation Engine (Target C1)', () => {
   it('should switch to AWARD_CHASE if prestige is high but cash is fine', () => {
     const mockRival = createMockRival({
         id: 'r1',
-        cash: 50_000_000,
+        cash: 5_000_000, // Enough to be stable but not trigger FRANCHISE_BUILDING which is heavily buffed now at 10_000_000
         prestige: 90
     });
     const state = createMockGameState();
