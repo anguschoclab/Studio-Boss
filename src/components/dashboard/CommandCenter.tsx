@@ -1,7 +1,6 @@
 import React from 'react';
 import { FinancialOverviewWidget } from './FinancialOverviewWidget';
 import { DemographicsWidget } from './DemographicsWidget';
-import { Card, CardContent } from '@/components/ui/card';
 import { useGameStore } from '@/store/gameStore';
 import { Badge } from '@/components/ui/badge';
 import { Clapperboard, Users, Building2, TrendingUp, Star, Zap } from 'lucide-react';

@@ -1,33 +1,9 @@
 $ eslint .
 
-/app/dev-dist/workbox-cffa4085.js
-    52:7   error  Definition for rule '@typescript-eslint/ban-types' was not found                @typescript-eslint/ban-types
-   419:5   error  Definition for rule '@typescript-eslint/ban-types' was not found                @typescript-eslint/ban-types
-   752:11  error  Definition for rule '@typescript-eslint/no-unsafe-member-access' was not found  @typescript-eslint/no-unsafe-member-access
-   754:13  error  Definition for rule '@typescript-eslint/no-unsafe-assignment' was not found     @typescript-eslint/no-unsafe-assignment
-   948:11  error  Definition for rule '@typescript-eslint/no-unsafe-assignment' was not found     @typescript-eslint/no-unsafe-assignment
-   964:13  error  Definition for rule '@typescript-eslint/no-unsafe-assignment' was not found     @typescript-eslint/no-unsafe-assignment
-  1511:5   error  Definition for rule '@typescript-eslint/ban-types' was not found                @typescript-eslint/ban-types
-  2544:5   error  Definition for rule '@typescript-eslint/ban-types' was not found                @typescript-eslint/ban-types
-  4182:9   error  Definition for rule '@typescript-eslint/no-unsafe-return' was not found         @typescript-eslint/no-unsafe-return
-  4229:9   error  Definition for rule '@typescript-eslint/no-unsafe-return' was not found         @typescript-eslint/no-unsafe-return
-
-/app/src/App.tsx
-  10:10  error  'useArchetypeTheme' is defined but never used  @typescript-eslint/no-unused-vars
-
-/app/src/components/deals/DealsDesk.tsx
-  8:21  error  'Tv' is defined but never used         @typescript-eslint/no-unused-vars
-  8:25  error  'Globe' is defined but never used      @typescript-eslint/no-unused-vars
-  8:32  error  'Zap' is defined but never used        @typescript-eslint/no-unused-vars
-  8:37  error  'BarChart3' is defined but never used  @typescript-eslint/no-unused-vars
-  8:48  error  'Info' is defined but never used       @typescript-eslint/no-unused-vars
-
 /app/src/components/discovery/LiveAuctionDashboard.tsx
-   3:23  error  'RivalStudio' is defined but never used         @typescript-eslint/no-unused-vars
-  10:3   error  'TrendingUp' is defined but never used          @typescript-eslint/no-unused-vars
-  11:3   error  'Users' is defined but never used               @typescript-eslint/no-unused-vars
-  36:9   error  'playerBid' is assigned a value but never used  @typescript-eslint/no-unused-vars
-  39:10  error  'bidAmount' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  10:3   error  'Users' is defined but never used               @typescript-eslint/no-unused-vars
+  35:9   error  'playerBid' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  38:10  error  'bidAmount' is assigned a value but never used  @typescript-eslint/no-unused-vars
 
 /app/src/components/finance/FinancePanel.tsx
   75:12  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
@@ -1440,6 +1416,6 @@ $ eslint .
    22:3  error  'ScriptMetrics' is defined but never used              @typescript-eslint/no-unused-vars
   319:9  error  'networkOverrides' is assigned a value but never used  @typescript-eslint/no-unused-vars
 
-✖ 922 problems (922 errors, 0 warnings)
+✖ 904 problems (904 errors, 0 warnings)
 
 error: script "lint" exited with code 1
