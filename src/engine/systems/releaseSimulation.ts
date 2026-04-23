@@ -93,8 +93,8 @@ export function calculateOpeningWeekend(
   const prestigeFactor = 0.8 + (studioPrestige / 200);
   
   // Base potential: roughly 5x budget for a perfect storm, 0.5x for a dud
-  const basePotential = (project.budget * 0.4) * buzzFactor * prestigeFactor * (1 + (talentDraw / 100));
-  const randomFactor = randRange(0.85, 1.15);
+  const basePotential = (project.budget * 1.85) * buzzFactor * prestigeFactor * (1 + (talentDraw / 100));
+  const randomFactor = randRange(0.5, 2.0);
   
   let effectiveGross = basePotential * randomFactor * franchiseSynergy; // Apply Halo Effect
   effectiveGross *= (1 - franchiseFatigue); // Apply Fatigue Penalty
@@ -109,7 +109,7 @@ export function calculateOpeningWeekend(
   effectiveGross *= multiplier;
 
   // Minimum revenue floor: prevent catastrophic 0-revenue flops
-  const minFloor = (project.budget || 0) * 0.5;
+  const minFloor = (project.budget || 0) * 0.25;
   if (effectiveGross < minFloor) {
     effectiveGross = minFloor;
   }
@@ -118,7 +118,8 @@ export function calculateOpeningWeekend(
   const territoryResult = calculateTerritorySplit(effectiveGross, campaign, project.genre);
 
   const openingGross = territoryResult.openingWeekendDomestic + territoryResult.openingWeekendForeign;
-  const theatricalTotal = applyTheatricalSplit(openingGross);
+  const fullRunGross = (territoryResult.totalDomestic || 0) + (territoryResult.totalForeign || 0);
+  const theatricalTotal = applyTheatricalSplit(fullRunGross);
 
   // 4. Update Project State
   const updatedProject = {

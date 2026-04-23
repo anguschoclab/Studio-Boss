@@ -31,7 +31,7 @@ export class HeadlessController {
     // 0. Auto-Pitch New Projects (for headless simulation)
     const activePlayerProjects = Object.values(state.entities.projects).filter(p => p.ownerId === 'PLAYER' && p.state !== 'archived');
     let newlyPitchedProject: any = null;
-    if (activePlayerProjects.length < 10 && rng.next() < 0.8) {
+    if (activePlayerProjects.length < 3 && rng.next() < 0.04) {
       const pitchResult = this.pitchNewProject(state, rng);
       if (pitchResult) {
         impacts.push(pitchResult);
@@ -134,8 +134,8 @@ export class HeadlessController {
             weeksInPhase: 0,
             marketingCampaign: {
               primaryAngle: 'SELL_THE_STORY' as const,
-              domesticBudget: project.budget * 0.25,
-              foreignBudget: project.budget * 0.15,
+              domesticBudget: project.budget * 0.13,
+              foreignBudget: project.budget * 0.07,
               weeksInMarketing: 0
             }
           };

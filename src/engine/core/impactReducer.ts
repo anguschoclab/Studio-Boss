@@ -91,18 +91,25 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     }
 
     case 'INDUSTRY_UPDATE': {
-      const { update } = impact.payload;
-      const newState = { ...state };
-      
-      // Deep merge the update into state
-      for (const key in update) {
-        if (update[key] !== undefined && typeof update[key] === 'object') {
-          newState[key] = { ...(newState as any)[key], ...update[key] };
-        } else {
-          (newState as any)[key] = update[key];
+      const { update, mergedRivalId, acquirerId } = impact.payload as any;
+      let newState = { ...state };
+
+      if (update) {
+        for (const key in update) {
+          if (update[key] !== undefined && typeof update[key] === 'object') {
+            (newState as any)[key] = { ...(newState as any)[key], ...update[key] };
+          } else {
+            (newState as any)[key] = update[key];
+          }
         }
       }
-      
+
+      if (mergedRivalId && acquirerId) {
+        const rivals = { ...newState.entities.rivals };
+        delete rivals[mergedRivalId];
+        newState = { ...newState, entities: { ...newState.entities, rivals } };
+      }
+
       return newState;
     }
 

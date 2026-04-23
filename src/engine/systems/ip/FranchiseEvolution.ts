@@ -37,13 +37,8 @@ export function calculateFranchiseEvolutionImpacts(state: GameState, rng: Random
         };
         
         impacts.push({
-          type: 'INDUSTRY_UPDATE',
-          payload: {
-            update: {
-              newFranchise: { id: franchiseId, franchise: newFranchise },
-              projectFranchiseUpdate: { projectId: project.id, franchiseId }
-            }
-          }
+          type: 'FRANCHISE_UPDATED',
+          payload: { franchiseId, update: newFranchise }
         });
 
         impacts.push({
@@ -74,23 +69,19 @@ export function calculateFranchiseEvolutionImpacts(state: GameState, rng: Random
           }
 
           impacts.push({
-            type: 'INDUSTRY_UPDATE',
+            type: 'FRANCHISE_UPDATED',
             payload: {
+              franchiseId,
               update: {
-                franchiseUpdate: {
-                  franchiseId,
-                  update: {
-                    assetIds: nextAssetIds,
-                    lastReleaseWeeks: nextReleaseWeeks,
-                    audienceLoyalty: updatedLoyalty,
-                    synergyMultiplier: clamp(newSynergy, 1.0, 3.0),
-                    relevanceScore: clamp(
-                      hub.relevanceScore - (hub.activeProjectIds.length >= 5 ? 15 : 0),
-                      0,
-                      100
-                    )
-                  }
-                }
+                assetIds: nextAssetIds,
+                lastReleaseWeeks: nextReleaseWeeks,
+                audienceLoyalty: updatedLoyalty,
+                synergyMultiplier: clamp(newSynergy, 1.0, 3.0),
+                relevanceScore: clamp(
+                  hub.relevanceScore - (hub.activeProjectIds.length >= 5 ? 15 : 0),
+                  0,
+                  100
+                )
               }
             }
           });

@@ -16,11 +16,9 @@ export function tickConsolidation(state: GameState): StateImpact[] {
 
   // Potential Acquirers: any rival with surplus cash ($1B+ proactive)
   const majors = rivals.filter(r => (r.archetype === 'major' && r.cash > 250_000_000) || r.cash > 1_000_000_000);
-  if (majors.length === 0 || secureRandom() < 0.20) return [];
+  if (majors.length === 0 || secureRandom() < 0.985) return [];
 
-  // Rivals with cash > $5B are forced to deploy (skip the probability gate)
-  const forcedDeployers = majors.filter(r => r.cash > 5_000_000_000);
-  const acquirer = forcedDeployers.length > 0 ? pick(forcedDeployers) : pick(majors);
+  const acquirer = pick(majors);
 
   // Target: any rival (proactive M&A — not just distressed ones)
   const targets = rivals.filter(r =>
@@ -36,11 +34,9 @@ export function tickConsolidation(state: GameState): StateImpact[] {
   // Choose acquisition type
   const roll = secureRandom();
   if (roll < 0.5 && targets.length > 0) {
-    // Studio Acquisition
     const target = pick(targets);
     const cost = target.cash + (target.strength * 2_000_000);
-    
-    // Check Regulators
+
     const reg = RegulatorSystem.isBlocked(state, acquirer.id, target.id);
     if (reg.blocked) {
       impacts.push({
@@ -56,11 +52,15 @@ export function tickConsolidation(state: GameState): StateImpact[] {
 
     // Execute Acquisition
     impacts.push({
+      type: 'RIVAL_UPDATED',
+      payload: { rivalId: acquirer.id, update: { cash: acquirer.cash - cost, prestige: Math.min(100, acquirer.prestige + 10) } }
+    });
+    impacts.push({
       type: 'INDUSTRY_UPDATE',
-      payload: { 
+      payload: {
         update: {},
-        rival: { rivalId: acquirer.id, update: { cash: acquirer.cash - cost, prestige: Math.min(100, acquirer.prestige + 10) } },
-        mergedRivalId: target.id 
+        mergedRivalId: target.id,
+        acquirerId: acquirer.id
       }
     });
 

@@ -79,7 +79,7 @@ export class StudioAutomation {
     rivalsList.forEach(rival => {
       const activeCount = rivalProjectCounts[rival.id] || 0;
       // Increased probability for headless simulation (30% vs 10%)
-      if (activeCount < 15 && rng.next() < 0.6) {
+      if (activeCount < 4 && rng.next() < 0.04) {
         const archetype = this.getRivalArchetype(rival);
         this.pitchNewProject(rival, state, rng, impacts, archetype);
       }

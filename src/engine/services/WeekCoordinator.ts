@@ -130,7 +130,7 @@ export class WeekCoordinator {
 
     // 3.5 Check for franchise breakouts on newly released projects
     const releasedProjects = Object.values(nextState.entities.projects).filter(
-      p => p.state === 'released' && p.releaseWeek === context.week
+      p => p.state === 'released' && (p.releaseWeek === context.week || p.releaseWeek === context.week - 1) && !p.franchiseId
     );
     for (const p of releasedProjects) {
       nextState = updateFranchiseHub(nextState, p);
