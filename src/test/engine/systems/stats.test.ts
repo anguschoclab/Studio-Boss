@@ -30,10 +30,10 @@ describe('stats system', () => {
       expect(stats.renewable).toBe(false);
     });
 
-    it('applies 12.0x risk multiplier for blockbuster tier (budget >= 200M)', () => {
+    it('applies 15.0x risk multiplier for blockbuster tier (budget >= 200M)', () => {
       const tier = BUDGET_TIERS.blockbuster;
       const stats = getFilmStats(tier);
-      const riskMultiplier = 12.0;
+      const riskMultiplier = 15.0;
 
       expect(stats.budget).toBe(tier.budget);
       expect(stats.weeklyCost).toBe(tier.weeklyCost * riskMultiplier);
@@ -80,11 +80,11 @@ describe('stats system', () => {
       expect(stats.budget).toBe(expectedBudget);
     });
 
-    it('applies 7.5x scale multiplier for blockbuster tier (budget >= 150M)', () => {
+    it('applies 10.0x scale multiplier for blockbuster tier (budget >= 150M)', () => {
       const tier = BUDGET_TIERS.blockbuster;
       const stats = getTvStats(tier, format, episodes);
 
-      const scaleMultiplier = 7.5;
+      const scaleMultiplier = 10.0;
       const expectedWeeklyCost = tier.weeklyCost * format.productionCostMultiplier * scaleMultiplier;
       const expectedProductionWeeks = Math.ceil(episodes * format.productionWeeksPerEpisode * scaleMultiplier);
       const expectedDevelopmentWeeks = Math.ceil(tier.developmentWeeks * format.developmentWeeksModifier * scaleMultiplier);
@@ -134,11 +134,11 @@ describe('stats system', () => {
       expect(stats.budget).toBe(expectedBudget);
     });
 
-    it('applies 6.0x scale multiplier for blockbuster tier (budget >= 100M)', () => {
+    it('applies 8.0x scale multiplier for blockbuster tier (budget >= 100M)', () => {
       const tier = BUDGET_TIERS.blockbuster;
       const stats = getUnscriptedStats(tier, format, episodes);
 
-      const scaleMultiplier = 6.0;
+      const scaleMultiplier = 8.0;
       const expectedWeeklyCost = tier.weeklyCost * format.productionCostMultiplier * scaleMultiplier;
       const expectedProductionWeeks = Math.ceil(episodes * format.productionWeeksPerEpisode);
       const expectedDevelopmentWeeks = Math.ceil(tier.developmentWeeks * format.developmentWeeksModifier);

@@ -9,10 +9,10 @@ describe('ExpenseProcessor', () => {
       expect(burn).toBe(500000); // 500k * (1.25^0) + (0 * 75k)
     });
 
-    it('should calculate $1.08M for studio level 3 with 4 active projects', () => {
+    it('should calculate $1.725M for studio level 3 with 4 active projects', () => {
       const burn = ExpenseProcessor.calculateStudioBurn(3, 4);
-      // (500,000 * 1.5625) + (4 * 75,000) = 781,250 + 300,000 = 1,081,250
-      expect(burn).toBe(1081250);
+      // (500,000 * 2.25) + (4 * 150,000) = 1,125,000 + 600,000 = 1,725,000
+      expect(burn).toBe(1725000);
     });
     
     it('should exceed base rent for higher levels', () => {

@@ -77,11 +77,11 @@ describe("Finance System", () => {
         });
 
         const { report } = generateWeeklyFinancialReport(state);
-        // ExpenseProcessor.calculateStudioBurn(level 1 (default mock), 2 active) = (500k * 1) + (2 * 75k) = 650k
-        expect(report.expenses.overhead).toBe(650000);
+        // ExpenseProcessor.calculateStudioBurn(level 1 (default mock), 2 active) = (500k * 1) + (2 * 150k) = 800k
+        expect(report.expenses.overhead).toBe(800000);
         expect(report.expenses.production).toBe(20000); // Only mockProjectProd is in production
-        expect(report.revenue.boxOffice).toBe(45000); // 100k * 0.45 decay = 45k
-        expect(report.netProfit).toBe(45000 - 670000); // 45k rev - (650k overhead + 20k prod)
+        expect(report.revenue.boxOffice).toBe(35000); // 100k * 0.35 decay = 35k
+        expect(report.netProfit).toBe(35000 - 820000); // 35k rev - (800k overhead + 20k prod)
         expect(report.startingCash).toBe(1000000);
     });
   });
@@ -112,10 +112,10 @@ describe("Finance System", () => {
          const impacts = tickFinance(state, rng);
          const impact = impacts.find(i => i.type === 'FUNDS_CHANGED');
          
-         // Revenue: 200k * 0.45 (decay) = 90k
-         // Expenses: 20k (prod) + [500k + (1 * 75k)] (overhead) = 595k
-         // Net: 90k - 595k = -505k
-         expect(impact?.payload.amount).toBe(-505000);
+         // Revenue: 200k * 0.35 (decay) = 70k
+         // Expenses: 20k (prod) + [500k + (1 * 150k)] (overhead) = 670k
+         // Net: 70k - 670k = -600k
+         expect(impact?.payload.amount).toBe(-600000);
       });
   });
 });

@@ -91,17 +91,17 @@ describe("releaseSimulation system", () => {
 
   describe("simulateWeeklyBoxOffice", () => {
     it("applies decay based on review score legs", () => {
-      // Excellent legs (score > 80) -> 0.8
+      // Excellent legs (score > 80) -> 0.7
       const excellentRevenue = simulateWeeklyBoxOffice(mockProject, 2, 90, 1_000_000, 0);
-      expect(excellentRevenue).toBe(800_000);
+      expect(excellentRevenue).toBe(700_000);
 
-      // Average legs (score > 60) -> 0.7
+      // Average legs (score > 60) -> 0.6
       const averageRevenue = simulateWeeklyBoxOffice(mockProject, 2, 70, 1_000_000, 0);
-      expect(averageRevenue).toBe(700_000);
+      expect(averageRevenue).toBe(600_000);
 
-      // Bad legs (score < 40) -> 0.4
+      // Bad legs (score < 40) -> 0.3
       const badRevenue = simulateWeeklyBoxOffice(mockProject, 2, 30, 100_000, 0);
-      expect(badRevenue).toBe(40_000);
+      expect(badRevenue).toBe(30_000);
     });
   });
 

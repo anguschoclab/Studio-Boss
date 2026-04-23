@@ -99,15 +99,15 @@ export function simulateWeeklyBoxOffice(
   if (weekInRelease === 0) return previousWeeklyRevenue;
 
   // 1. Base Decay based on Word of Mouth (Review Score)
-  let decayFactor = 0.6; // 40% drop
+  let decayFactor = 0.5; // The Studio Comptroller: Base 50% drop to emulate harsher reality
   
-  if (reviewScore > 80) decayFactor = 0.8; // Leggy
-  else if (reviewScore > 60) decayFactor = 0.7;
-  else if (reviewScore < 40) decayFactor = 0.4; // Front-loaded disaster
+  if (reviewScore > 80) decayFactor = 0.7; // Leggy
+  else if (reviewScore > 60) decayFactor = 0.6;
+  else if (reviewScore < 40) decayFactor = 0.3; // Front-loaded disaster
 
   // 2. Genre Specifics
   const g = project.genre.toUpperCase();
-  if (g === 'HORROR') decayFactor -= 0.15; // Horror drops fast
+  if (g === 'HORROR') decayFactor -= 0.20; // The Studio Comptroller: Horror drops even faster, but anomalies can be very profitable.
   if (g === 'FAMILY' || g === 'ANIMATION') decayFactor += 0.1; // Families have legs
 
   // 3. Competition Penalty

@@ -60,7 +60,7 @@ export function generateWeeklyFinancialReport(
       
       // Theatrical vs Streaming
       if (p.distributionStatus === 'theatrical') {
-        weeklyGross = RevenueProcessor.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.45); // The Studio Comptroller: Increased theatrical decay to 0.45 to simulate modern front-loaded box office drops.
+        weeklyGross = RevenueProcessor.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.35); // The Studio Comptroller: Decreased theatrical decay to 0.35 to mimic modern front-loaded box office dynamics, punishing lack of legs.
         boxOffice += weeklyGross;
       } else if (p.distributionStatus === 'streaming') {
         const platform = p.buyerId ? buyerMap.get(p.buyerId) : undefined;
@@ -170,7 +170,7 @@ export function calculateWeeklyRevenue(projects: Project[], buyers: Buyer[] = []
   projects.forEach(p => {
     if (p.state === 'released') {
       if (p.distributionStatus === 'theatrical') {
-        boxOffice += RevenueProcessor.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.45); // The Studio Comptroller: Increased theatrical decay to 0.45 to simulate modern front-loaded box office drops.
+        boxOffice += RevenueProcessor.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.35); // The Studio Comptroller: Decreased theatrical decay to 0.35 to mimic modern front-loaded box office dynamics, punishing lack of legs.
       } else if (p.distributionStatus === 'streaming') {
         const platform = p.buyerId ? buyerMap.get(p.buyerId) : undefined;
         if (platform) {
