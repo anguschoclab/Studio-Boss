@@ -50,6 +50,11 @@ export function calculateFranchiseFatigue(
   if (normalizedGenre === 'Superhero' && genreSaturation > SUPERHERO_FATIGUE_THRESHOLD) {
     rivalPenalty *= SUPERHERO_FATIGUE_PENALTY;
   }
+
+  // 🌌 The Universe Builder: Added severe 3x penalty for oversaturating Cinematic Universes.
+  if (normalizedGenre === 'Cinematic Universe' && genreSaturation > 5) {
+    rivalPenalty *= 3.0;
+  }
   
   // 4. Audience Loyalty (Protective Shield)
   // High loyalty acts as a buffer against fatigue.

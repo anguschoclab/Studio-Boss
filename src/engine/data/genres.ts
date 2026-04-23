@@ -18,7 +18,8 @@ export const GENRE_TAXONOMY: GenreCategory[] = [
       { id: 'superhero', name: 'Superhero' },
       { id: 'martial_arts', name: 'Martial Arts' },
       { id: 'epic', name: 'Epic' },
-      { id: 'video_game', name: 'Video Game Adaptation' }
+      { id: 'video_game', name: 'Video Game Adaptation' },
+      { id: 'cinematic_universe', name: 'Cinematic Universe' }
     ]
   },
   {
@@ -108,7 +109,8 @@ export const CROSSOVER_AFFINITY: Record<string, string[]> = {
   'Multiverse': ['Superhero', 'Sci-Fi', 'Fantasy', 'Action', 'Animation', 'IP Mashup'],
   'Elevated Horror': ['Horror', 'Thriller', 'Drama', 'Psychological Thriller'],
   'IP Mashup': ['Comedy', 'Action', 'Animation', 'Superhero', 'Multiverse'],
-  'Video Game Adaptation': ['Action', 'Sci-Fi', 'Fantasy', 'Animation']
+  'Video Game Adaptation': ['Action', 'Sci-Fi', 'Fantasy', 'Animation'],
+  'Cinematic Universe': ['Superhero', 'Sci-Fi', 'Fantasy', 'Action', 'Animation', 'IP Mashup', 'Multiverse']
 };
 
 export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
@@ -130,4 +132,5 @@ export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
   'Elevated Horror': 0.20,
   'IP Mashup': 0.70, // High burnout potential
   'Video Game Adaptation': 0.60,
+  'Cinematic Universe': 0.90, // Massive fatigue risk
 };

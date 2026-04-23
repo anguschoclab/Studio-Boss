@@ -53,6 +53,11 @@ export function calculateFranchiseEquity(
     if (assets.length >= 5) {
       crossoverBonus += 0.15;
     }
+
+    // 🌌 The Universe Builder: Added 20% crossover bonus for Cinematic Universe/Multiverse events.
+    if (uniqueGenres.has('Cinematic Universe') || uniqueGenres.has('Multiverse')) {
+      crossoverBonus += 0.20;
+    }
   }
   
   // 2. Format Diversity Multiplier
