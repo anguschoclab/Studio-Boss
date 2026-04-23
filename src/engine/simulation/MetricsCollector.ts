@@ -34,7 +34,7 @@ export class MetricsCollector {
   private totalTvAwards = 0;
   
   public record(state: GameState, summary: WeekSummary): void {
-    const rivalsList = Object.values(state.entities.rivals || {});
+    const rivalsList = Object.values(state.entities?.rivals || {});
     const platforms = state.market.buyers.filter(b => b.archetype === 'streamer') as import('@/engine/types').StreamerPlatform[];
     
     // Total bails tracking (Phase 2 hardening)
@@ -60,60 +60,75 @@ export class MetricsCollector {
     let tvProjectCount = 0;
     const cutCounts: Record<string, number> = { 'theatrical': 0, 'directors_cut': 0, 'sanitized': 0, 'unrated': 0 };
 
-    const playerProjectsList = Object.values(state.entities.projects).filter(p => p.ownerId === 'PLAYER');
-    const allStudios = [
-        { id: 'PLAYER', projects: playerProjectsList, cash: Number(state.finance.cash) || 0, name: state.studio.name },
-        ...rivalsList.map(r => ({ id: r.id, projects: Object.values(r.projects || {}), cash: Number(r.cash) || 0, name: r.name }))
-    ];
+    // ⚡ The Framerate Fanatic: Iterate using for...in loops to avoid array allocation
+    const processProject = (p: any, studioId: string) => {
+        const isFinished = p.state === 'released' || p.state === 'archived' || p.state === 'post_release';
+        if (isFinished) worldCompletedCount++;
 
-    // Single-pass project loop for performance
-    allStudios.forEach(studio => {
-        studio.projects.forEach(p => {
-            const isFinished = ['released', 'archived', 'post_release'].includes(p.state);
-            if (isFinished) worldCompletedCount++;
+        // Player active projects tracking
+        if (studioId === 'PLAYER' && !isFinished) {
+            activeBudgets += p.budget || 0;
+            activeProjectsCount++;
+        }
 
-            // Player active projects tracking
-            if (studio.id === 'PLAYER' && !isFinished) {
-                activeBudgets += p.budget || 0;
-                activeProjectsCount++;
-            }
+        // ROI Tracking
+        if (p.budget > 0 && (p.revenue > 0 || isFinished)) {
+            const genre = p.genre || 'Unknown';
+            if (!this.genreStats[genre]) this.genreStats[genre] = { cost: 0, revenue: 0 };
+            this.genreStats[genre].cost += p.budget;
+            this.genreStats[genre].revenue += p.revenue;
 
-            // ROI Tracking
-            if (p.budget > 0 && (p.revenue > 0 || isFinished)) {
-                const genre = p.genre || 'Unknown';
-                if (!this.genreStats[genre]) this.genreStats[genre] = { cost: 0, revenue: 0 };
-                this.genreStats[genre].cost += p.budget;
-                this.genreStats[genre].revenue += p.revenue;
-
-                const formatMatch = (p.format || '').toLowerCase();
-                if (formatMatch === 'tv' || formatMatch === 'series') {
-                  if (!this.tvGenreStats[genre]) this.tvGenreStats[genre] = { cost: 0, revenue: 0 };
-                  this.tvGenreStats[genre].cost += p.budget;
-                  this.tvGenreStats[genre].revenue += p.revenue;
-                }
-            }
-
-            // Nielsen & Cut Analytics
             const formatMatch = (p.format || '').toLowerCase();
-            const isSeries = p.type === 'SERIES';
-            const nProfile = isSeries ? (p as import('@/engine/types').SeriesProject).nielsenProfile : undefined;
+            if (formatMatch === 'tv' || formatMatch === 'series') {
+              if (!this.tvGenreStats[genre]) this.tvGenreStats[genre] = { cost: 0, revenue: 0 };
+              this.tvGenreStats[genre].cost += p.budget;
+              this.tvGenreStats[genre].revenue += p.revenue;
+            }
+        }
 
-            if ((formatMatch === 'tv' || isSeries) && nProfile) {
-                totalNielsenDemo += Number(nProfile.seasonAvgKeyDemo) || 0;
-                tvProjectCount++;
-            }
-            if (p.activeCut) {
-                cutCounts[p.activeCut] = (cutCounts[p.activeCut] || 0) + 1;
-            }
-        });
-    });
+        // Nielsen & Cut Analytics
+        const formatMatch = (p.format || '').toLowerCase();
+        const isSeries = p.type === 'SERIES';
+        const nProfile = isSeries ? (p as import('@/engine/types').SeriesProject).nielsenProfile : undefined;
+
+        if ((formatMatch === 'tv' || isSeries) && nProfile) {
+            totalNielsenDemo += Number(nProfile.seasonAvgKeyDemo) || 0;
+            tvProjectCount++;
+        }
+        if (p.activeCut) {
+            cutCounts[p.activeCut] = (cutCounts[p.activeCut] || 0) + 1;
+        }
+    };
+
+    const playerProjects = state.entities?.projects || {};
+    for (const key in playerProjects) {
+        const p = playerProjects[key];
+        if (p.ownerId === 'PLAYER') {
+            processProject(p, 'PLAYER');
+        }
+    }
+
+    let leaderName = state.studio.name;
+    let maxCash = Number(state.finance.cash) || 0;
+
+    for (const r of rivalsList) {
+        const rivalCash = Number(r.cash) || 0;
+        if (rivalCash > maxCash) {
+            maxCash = rivalCash;
+            leaderName = r.name;
+        }
+        const rProjects = r.projects || {};
+        for (const key in rProjects) {
+            processProject(rProjects[key], r.id);
+        }
+    }
 
     // Track TV Awards dominance
     const tvAwardEvents = (summary.newsEvents || []).filter(e => e.type === 'AWARD' && e.headline.includes('Best'));
     this.totalTvAwards += tvAwardEvents.length;
 
     // Find Industry Leader (Highest Cash)
-    const leader = allStudios.sort((a, b) => b.cash - a.cash)[0];
+    const leader = { name: leaderName };
 
     // Find Top Genre ROI
     let topGenre = 'None';
@@ -142,15 +157,18 @@ export class MetricsCollector {
     const marketShare = totalAssets > 0 ? (playerCash / totalAssets) * 100 : 0;
 
     // 10. Talent Pool Analysis (Optimized single-pass)
+    // ⚡ The Framerate Fanatic: Iterate using for...in to avoid intermediate array allocation
     let totalPrestige = 0;
     let aListCount = 0;
-    const talentValues = Object.values(state.entities.talents || {});
-    const talentPoolSize = talentValues.length;
+    let talentPoolSize = 0;
+    const talentsObj = state.entities?.talents || {};
     
-    talentValues.forEach(t => {
+    for (const key in talentsObj) {
+        const t = talentsObj[key];
+        talentPoolSize++;
         totalPrestige += t.prestige || 0;
         if (t.prestige >= 80) aListCount++;
-    });
+    }
 
     const metrics: SimulationMetrics = {
       week: state.week,

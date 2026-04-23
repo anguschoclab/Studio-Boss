@@ -50,7 +50,7 @@ export function tickProduction(state: GameState, rng: RandomGenerator): StateImp
   const allImpacts: StateImpact[] = [];
 
   // ⚡ Bolt: Iterate over global projects record to advance all active titles (Player & Rivals)
-  for (const key in state.entities.projects) {
+  for (const key in state.entities?.projects || {}) {
     const project = state.entities.projects[key];
     allImpacts.push(...tickProject(project, rng));
   }

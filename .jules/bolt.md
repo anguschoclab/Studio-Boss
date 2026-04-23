@@ -10,3 +10,6 @@
 ## 2026-04-01 - Avoid nested O(N^2) iterations with Object.values/flatMap in loops
 **Learning:** Combining \`Object.values\` and \`flatMap\` to create a unified array before an outer loop creates O(N^2) complexity and GC pressure because it executes the inner mapping operations across all entities every tick.
 **Action:** Replace nested array creation and mapping before loops with a single pass aggregation using a \`for...in\` loop directly into a hash map before iterating, preventing O(N^2) complexity.
+## 2026-04-23 - Avoid Object.values combined with .filter or .map
+**Learning:** Combining \`Object.values\` with operations like \`filter()\` and \`map()\` to aggregate state data (e.g., merging player and rival projects) forces intermediate allocations that drastically increase garbage collection pressure and latency on high-frequency metrics loops.
+**Action:** Replace inline array manipulations across Object dictionaries with unified \`for...in\` loops and explicitly managed pointers or closures, achieving substantial speedups in hot paths like simulation recording.
