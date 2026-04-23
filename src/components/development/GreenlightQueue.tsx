@@ -84,7 +84,7 @@ export const GreenlightQueue: React.FC<GreenlightQueueProps> = ({
 }) => {
   if (projects.length === 0) {
     return (
-      <div className={cn('text-center py-12', tokens.border.default, 'border-dashed rounded-xl')}>
+      <div className={cn('text-center py-12', tokens.border.default, 'border-dashed rounded-none')}>
         <CheckCircle className="h-12 w-12 mx-auto mb-4 opacity-20" />
         <p className={tokens.text.label}>No Projects Awaiting Greenlight</p>
         <p className={cn(tokens.text.caption, 'mt-2')}>
@@ -159,10 +159,10 @@ export const GreenlightQueue: React.FC<GreenlightQueueProps> = ({
                     <ShieldAlert className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
                     <span className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">Schedule</span>
                     {/* Mini progress bar */}
-                    <div className="w-16 h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                    <div className="w-16 h-1.5 bg-slate-800 rounded-none overflow-hidden">
                       <div
                         className={cn(
-                          'h-full rounded-full transition-all',
+                          'h-full rounded-none transition-all',
                           schedScore > 70  ? 'bg-success'      :
                           schedScore >= 40 ? 'bg-warning'      :
                           'bg-destructive'

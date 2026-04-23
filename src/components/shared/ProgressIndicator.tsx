@@ -7,9 +7,9 @@ const progressVariants = cva(
   {
     variants: {
       size: {
-        sm: 'h-1.5',
-        md: 'h-3',
-        lg: 'h-5',
+        sm: 'h-2',
+        md: 'h-4',
+        lg: 'h-6',
       },
       variant: {
         default: '',
@@ -25,17 +25,17 @@ const progressVariants = cva(
 );
 
 const barVariants = cva(
-  'h-full rounded-none transition-all duration-700 ease-out',
+  'h-full rounded-none transition-all duration-1000 ease-out',
   {
     variants: {
       color: {
-        primary: 'bg-primary shadow-[0_0_15px_rgba(var(--primary),0.3)]',
-        secondary: 'bg-secondary shadow-[0_0_15px_rgba(var(--secondary),0.3)]',
-        success: 'bg-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.3)]',
-        destructive: 'bg-red-400 shadow-[0_0_15px_rgba(244,63,94,0.3)]',
-        warning: 'bg-amber-400 shadow-[0_0_15px_rgba(251,191,36,0.3)]',
-        info: 'bg-blue-400 shadow-[0_0_15px_rgba(96,165,250,0.3)]',
-        gradient: 'bg-gradient-to-r from-primary via-primary to-secondary',
+        primary: 'bg-primary shadow-[0_0_20px_rgba(var(--primary),0.4)]',
+        secondary: 'bg-secondary shadow-[0_0_20px_rgba(var(--secondary),0.4)]',
+        success: 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.4)]',
+        destructive: 'bg-rose-500 shadow-[0_0_20px_rgba(244,63,94,0.4)]',
+        warning: 'bg-amber-400 shadow-[0_0_20px_rgba(251,191,36,0.4)]',
+        info: 'bg-blue-400 shadow-[0_0_20px_rgba(96,165,250,0.4)]',
+        gradient: 'bg-gradient-to-r from-primary via-primary to-secondary shadow-[0_0_30px_rgba(var(--primary),0.3)]',
       },
     },
     defaultVariants: {
@@ -77,11 +77,11 @@ export const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({
   const displayValue = formatValue ? formatValue(value, max) : defaultFormat(value, max);
 
   return (
-    <div className={cn('space-y-3', className)}>
+    <div className={cn('space-y-4', className)}>
       {(label || showValue) && (
-        <div className="flex items-center justify-between text-[9px] font-black uppercase tracking-[0.3em] italic">
-          {label && <span className="text-muted-foreground/40">{label}</span>}
-          {showValue && <span className="text-foreground font-display font-black tracking-tighter italic">{displayValue}</span>}
+        <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-[0.4em] italic">
+          {label && <span className="text-muted-foreground/30">{label.toUpperCase()}</span>}
+          {showValue && <span className="text-foreground font-display font-black tracking-tighter italic group-hover:text-primary transition-colors">{displayValue}</span>}
         </div>
       )}
       
@@ -95,7 +95,7 @@ export const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({
                 <div
                   key={i}
                   className={cn(
-                    'h-full rounded-none transition-all duration-700',
+                    'h-full rounded-none transition-all duration-1000 border-r border-black/20 last:border-r-0',
                     segment.color
                   )}
                   style={{ width: `${segPercentage}%` }}
@@ -115,7 +115,7 @@ export const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({
             style={{ width: `${percentage}%` }}
           >
             {variant === 'animated' && (
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer" />
             )}
           </div>
         )}
@@ -140,31 +140,31 @@ export const SegmentedProgress: React.FC<SegmentedProgressProps> = ({
 }) => {
   const sizeClasses = {
     sm: 'h-2',
-    md: 'h-4',
-    lg: 'h-6',
+    md: 'h-5',
+    lg: 'h-8',
   };
 
   return (
-    <div className={cn('space-y-4', className)}>
-      <div className={cn('flex w-full rounded-none overflow-hidden bg-white/5 border border-white/5', sizeClasses[size])}>
+    <div className={cn('space-y-6', className)}>
+      <div className={cn('flex w-full rounded-none overflow-hidden bg-white/5 border border-white/5 shadow-2xl', sizeClasses[size])}>
         {segments.map((seg, i) => {
           const percentage = Math.max(0, Math.min(100, (seg.value / total) * 100));
           return (
             <div
               key={i}
-              className={cn('h-full transition-all duration-700', seg.color)}
+              className={cn('h-full transition-all duration-1000 border-r border-black/40 last:border-r-0', seg.color)}
               style={{ width: `${percentage}%` }}
               title={`${seg.label}: ${seg.value}`}
             />
           );
         })}
       </div>
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-wrap gap-8">
         {segments.map((seg, i) => (
-          <div key={i} className="flex items-center gap-2">
-            <div className={cn('w-1.5 h-1.5 rounded-none', seg.color)} />
-            <span className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-[0.2em] italic">
-              {seg.label}: <span className="text-foreground font-display tracking-tighter">{seg.value}</span>
+          <div key={i} className="flex items-center gap-3">
+            <div className={cn('w-2 h-2 rounded-none shadow-xl', seg.color)} />
+            <span className="text-[10px] font-black text-muted-foreground/30 uppercase tracking-[0.3em] italic">
+              {seg.label.toUpperCase()}: <span className="text-foreground font-display tracking-tighter text-sm ml-2">{seg.value}</span>
             </span>
           </div>
         ))}
@@ -173,7 +173,7 @@ export const SegmentedProgress: React.FC<SegmentedProgressProps> = ({
   );
 };
 
-// Circular progress indicator
+// Circular progress indicator (Tactical Meter)
 interface CircularProgressProps {
   value: number;
   max?: number;
@@ -188,8 +188,8 @@ interface CircularProgressProps {
 export const CircularProgress: React.FC<CircularProgressProps> = ({
   value,
   max = 100,
-  size = 80,
-  strokeWidth = 6,
+  size = 100,
+  strokeWidth = 8,
   color = 'rgba(var(--primary), 1)',
   label,
   sublabel,
@@ -201,7 +201,7 @@ export const CircularProgress: React.FC<CircularProgressProps> = ({
   const offset = circumference - (percentage / 100) * circumference;
 
   return (
-    <div className={cn('relative flex items-center justify-center', className)} style={{ width: size, height: size }}>
+    <div className={cn('relative flex items-center justify-center p-4 border border-white/5 bg-white/[0.01] rounded-none shadow-2xl backdrop-blur-3xl', className)} style={{ width: size + 32, height: size + 32 }}>
       <svg className="transform -rotate-90" width={size} height={size}>
         <circle
           cx={size / 2}
@@ -221,15 +221,21 @@ export const CircularProgress: React.FC<CircularProgressProps> = ({
           strokeDasharray={circumference}
           strokeDashoffset={offset}
           strokeLinecap="butt"
-          className="transition-all duration-1000 ease-out drop-shadow-[0_0_10px_rgba(var(--primary),0.3)]"
+          className="transition-all duration-1000 ease-out drop-shadow-[0_0_20px_rgba(var(--primary),0.5)]"
         />
       </svg>
       {(label || sublabel) && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center space-y-1">
-          {label && <span className="text-xl font-display font-black italic tracking-tighter leading-none">{label}</span>}
-          {sublabel && <span className="text-[8px] font-black uppercase tracking-[0.3em] text-muted-foreground/20 italic leading-none">{sublabel}</span>}
+        <div className="absolute inset-0 flex flex-col items-center justify-center space-y-2">
+          {label && <span className="text-2xl font-display font-black italic tracking-tighter leading-none text-foreground">{label}</span>}
+          {sublabel && <span className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground/30 italic leading-none">{sublabel.toUpperCase()}</span>}
         </div>
       )}
+      
+      {/* Corner Accents */}
+      <div className="absolute top-0 left-0 w-4 h-4 border-t border-l border-white/20" />
+      <div className="absolute top-0 right-0 w-4 h-4 border-t border-r border-white/20" />
+      <div className="absolute bottom-0 left-0 w-4 h-4 border-b border-l border-white/20" />
+      <div className="absolute bottom-0 right-0 w-4 h-4 border-b border-r border-white/20" />
     </div>
   );
 };

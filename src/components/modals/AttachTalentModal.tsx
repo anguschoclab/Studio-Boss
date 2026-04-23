@@ -208,7 +208,7 @@ export const TalentAttachmentPanel: React.FC<{ project: Project }> = ({ project 
           </h4>
           <div className="flex flex-wrap gap-2">
             {attachedTalent.map(t => (
-              <div key={t.id} className="flex items-center gap-2 bg-emerald-500/10 px-2.5 py-1.5 rounded-lg border border-emerald-500/20">
+              <div key={t.id} className="flex items-center gap-2 bg-emerald-500/10 px-2.5 py-1.5 rounded-none border border-emerald-500/20">
                 <TalentAvatar talent={t} size="xs" />
                 <div>
                   <span className="text-[10px] font-bold text-foreground">{t.name}</span>
@@ -223,7 +223,7 @@ export const TalentAttachmentPanel: React.FC<{ project: Project }> = ({ project 
 
       {/* Phase Selector for scripted content */}
       {showPhaseSelector && (
-        <div className="flex gap-2 p-1 bg-muted/30 rounded-lg border border-border/40">
+        <div className="flex gap-2 p-1 bg-muted/30 rounded-none border border-border/40">
           <Button
             type="button"
             variant={phase === 'producers_writers' ? 'default' : 'ghost'}
@@ -248,7 +248,7 @@ export const TalentAttachmentPanel: React.FC<{ project: Project }> = ({ project 
       )}
 
       {/* Guidance */}
-      <div className="flex items-start gap-2 p-2.5 rounded-lg bg-primary/5 border border-primary/20">
+      <div className="flex items-start gap-2 p-2.5 rounded-none bg-primary/5 border border-primary/20">
         <Info className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
         <p className="text-[9px] text-muted-foreground leading-relaxed">{phaseConfig.description}</p>
       </div>
@@ -266,7 +266,7 @@ export const TalentAttachmentPanel: React.FC<{ project: Project }> = ({ project 
         <ScrollArea className="max-h-48">
           <div className="space-y-1.5 pr-2">
             {availableTalent.slice(0, 20).map(t => (
-              <label key={t.id} htmlFor={`attach-${t.id}`} className="flex items-center space-x-3 p-2 rounded-lg hover:bg-muted/50 cursor-pointer transition-colors group">
+              <label key={t.id} htmlFor={`attach-${t.id}`} className="flex items-center space-x-3 p-2 rounded-none hover:bg-muted/50 cursor-pointer transition-colors group">
                 <input
                   type="checkbox"
                   id={`attach-${t.id}`}

@@ -97,7 +97,7 @@ export const CompetitorComparison: React.FC<CompetitorComparisonProps> = ({ clas
     <div className={cn("space-y-4", className)}>
       {/* Rank Summary */}
       <div className="grid grid-cols-2 gap-3">
-        <div className="p-3 rounded-lg bg-primary/5 border border-primary/20">
+        <div className="p-3 rounded-none bg-primary/5 border border-primary/20">
           <div className="flex items-center gap-2 mb-2">
             <Wallet className="w-4 h-4 text-primary" />
             <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Cash Rank</span>
@@ -108,7 +108,7 @@ export const CompetitorComparison: React.FC<CompetitorComparisonProps> = ({ clas
           </div>
         </div>
         
-        <div className="p-3 rounded-lg bg-secondary/5 border border-secondary/20">
+        <div className="p-3 rounded-none bg-secondary/5 border border-secondary/20">
           <div className="flex items-center gap-2 mb-2">
             <Trophy className="w-4 h-4 text-secondary" />
             <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Prestige Rank</span>
@@ -146,7 +146,7 @@ export const CompetitorComparison: React.FC<CompetitorComparisonProps> = ({ clas
                     if (active && payload && payload.length) {
                       const data = payload[0].payload;
                       return (
-                        <div className="bg-card border border-border p-2 rounded-lg shadow-lg">
+                        <div className="bg-card border border-border p-2 rounded-none shadow-lg">
                           <p className={cn("text-xs font-bold", data.isPlayer ? "text-primary" : "text-foreground")}>
                             {data.name} {data.isPlayer && '(You)'}
                           </p>
@@ -230,7 +230,7 @@ export const CompetitorComparison: React.FC<CompetitorComparisonProps> = ({ clas
           {rivals.slice(0, 5).map((rival, i) => (
             <div 
               key={rival.id} 
-              className="flex items-center justify-between p-2 rounded-lg bg-background/50 hover:bg-background transition-colors"
+              className="flex items-center justify-between p-2 rounded-none bg-background/50 hover:bg-background transition-colors"
             >
               <div className="flex items-center gap-2">
                 <span className="text-xs font-mono text-muted-foreground">#{i + 1}</span>

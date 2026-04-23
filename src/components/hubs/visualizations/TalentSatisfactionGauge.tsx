@@ -76,10 +76,10 @@ export const TalentSatisfactionGauge: React.FC<TalentSatisfactionGaugeProps> = (
           <div key={cat.category} className="flex items-center justify-between text-[10px]">
             <span className={tokens.text.caption}>{cat.category}</span>
             <div className="flex items-center gap-2">
-              <div className="w-20 h-1.5 bg-muted rounded-full overflow-hidden">
+              <div className="w-20 h-1.5 bg-muted rounded-none overflow-hidden">
                 <div
                   className={cn(
-                    'h-full rounded-full',
+                    'h-full rounded-none',
                     cat.score >= 70 ? 'bg-emerald-500' :
                     cat.score >= 40 ? 'bg-amber-500' : 'bg-red-500'
                   )}

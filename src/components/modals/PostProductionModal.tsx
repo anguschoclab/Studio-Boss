@@ -81,7 +81,7 @@ export const PostProductionModal: React.FC = () => {
       <DialogContent className="max-w-lg bg-card/90 backdrop-blur-2xl border border-white/10">
         <DialogHeader>
           <div className="flex items-center gap-3 mb-1">
-            <div className="p-2 rounded-lg bg-secondary/10">
+            <div className="p-2 rounded-none bg-secondary/10">
               <Clapperboard className="h-5 w-5 text-secondary" />
             </div>
             <Badge
@@ -98,7 +98,7 @@ export const PostProductionModal: React.FC = () => {
 
         <div className="space-y-4">
           {/* Timeline */}
-          <div className="p-4 rounded-xl bg-card/60 border border-border/40 space-y-3">
+          <div className="p-4 rounded-none bg-card/60 border border-border/40 space-y-3">
             <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">
               Timeline — {weeksRemaining} week{weeksRemaining !== 1 ? 's' : ''} remaining
             </p>
@@ -145,7 +145,7 @@ export const PostProductionModal: React.FC = () => {
               type="button"
               onClick={() => setChoice(choice === 'rush' ? 'none' : 'rush')}
               className={cn(
-                'w-full glass-card hover-glow cursor-pointer p-3 rounded-xl border-2 text-left transition-all duration-200',
+                'w-full glass-card hover-glow cursor-pointer p-3 rounded-none border-2 text-left transition-all duration-200',
                 choice === 'rush'
                   ? 'border-warning shadow-[0_0_16px_rgba(var(--warning-rgb),0.3)]'
                   : 'border-white/10'
@@ -168,7 +168,7 @@ export const PostProductionModal: React.FC = () => {
               type="button"
               onClick={() => setChoice(choice === 'extended' ? 'none' : 'extended')}
               className={cn(
-                'w-full glass-card hover-glow cursor-pointer p-3 rounded-xl border-2 text-left transition-all duration-200',
+                'w-full glass-card hover-glow cursor-pointer p-3 rounded-none border-2 text-left transition-all duration-200',
                 choice === 'extended'
                   ? 'border-secondary shadow-[0_0_16px_rgba(var(--secondary-rgb),0.3)]'
                   : 'border-white/10'
@@ -193,7 +193,7 @@ export const PostProductionModal: React.FC = () => {
 
           {/* Director's cut sub-section */}
           {directorsCutPending && (
-            <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 space-y-1">
+            <div className="p-3 rounded-none bg-amber-500/10 border border-amber-500/30 space-y-1">
               <div className="flex items-center gap-2">
                 <Film className="h-4 w-4 text-amber-400" />
                 <p className="text-xs font-black uppercase tracking-widest text-amber-400">

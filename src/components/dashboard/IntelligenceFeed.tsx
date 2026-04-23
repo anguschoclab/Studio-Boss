@@ -9,8 +9,8 @@ interface IntelligenceFeedProps {
 
 export const IntelligenceFeed = ({ newsHistory }: IntelligenceFeedProps) => {
   return (
-    <Card aria-label="Studio Intelligence Feed" className={cn("animate-in fade-in duration-1000 relative overflow-hidden text-left group", "bg-white/[0.01] backdrop-blur-2xl border border-white/5 rounded-2xl shadow-2xl")}>
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[150px] pointer-events-none group-hover:bg-primary/10 transition-colors duration-1000" />
+    <Card aria-label="Studio Intelligence Feed" className={cn("animate-in fade-in duration-1000 relative overflow-hidden text-left group", "bg-white/[0.01] backdrop-blur-2xl border border-white/5 rounded-none shadow-2xl")}>
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-none blur-[150px] pointer-events-none group-hover:bg-primary/10 transition-colors duration-1000" />
       <CardContent className="p-0 relative z-10">
         <div className="flex items-center justify-between p-8 border-b border-white/5 bg-gradient-to-r from-white/[0.02] to-transparent">
           <h3 className="text-[10px] font-black tracking-[0.3em] uppercase flex items-center gap-4 text-muted-foreground/60 italic leading-none">

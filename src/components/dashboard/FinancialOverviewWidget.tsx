@@ -31,8 +31,8 @@ export const FinancialOverviewWidget: React.FC = () => {
   };
 
   return (
-    <Card className="col-span-1 lg:col-span-2 border-white/5 bg-white/[0.01] backdrop-blur-xl transition-all duration-700 overflow-hidden group rounded-2xl">
-      <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-[100px] pointer-events-none group-hover:bg-primary/10 transition-colors duration-1000" />
+    <Card className="col-span-1 lg:col-span-2 border-white/5 bg-white/[0.01] backdrop-blur-3xl transition-all duration-700 overflow-hidden group rounded-none">
+      <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-none blur-[100px] pointer-events-none group-hover:bg-primary/10 transition-colors duration-1000" />
       <CardHeader className="pb-8 border-b border-white/5 relative z-10 p-8">
         <CardTitle className="text-[10px] font-black text-muted-foreground/40 uppercase tracking-[0.3em] flex items-center justify-between italic leading-none">
           <span className="flex items-center gap-4">
@@ -73,7 +73,7 @@ export const FinancialOverviewWidget: React.FC = () => {
                 <YAxis hide domain={['auto', 'auto']} />
                 <ChartTooltip
                   cursor={{ stroke: 'rgba(var(--primary), 0.2)', strokeWidth: 1 }}
-                  content={<ChartTooltipContent className="bg-black/90 border-white/10 backdrop-blur-xl text-[9px] font-display font-black uppercase tracking-widest shadow-2xl rounded-none p-4" />}
+                  content={<ChartTooltipContent className="bg-black/90 border-white/10 backdrop-blur-3xl text-[9px] font-display font-black uppercase tracking-widest shadow-2xl rounded-none p-4" />}
                 />
                 <Area 
                   type="monotone" 

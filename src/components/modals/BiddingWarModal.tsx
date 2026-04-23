@@ -45,7 +45,7 @@ export const BiddingWarModal: React.FC = () => {
       <DialogContent className="max-w-md bg-card/90 backdrop-blur-2xl border border-white/10">
         <DialogHeader>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 rounded-lg bg-destructive/10">
+            <div className="p-2 rounded-none bg-destructive/10">
               <Swords className="h-5 w-5 text-destructive" />
             </div>
             <div>
@@ -58,7 +58,7 @@ export const BiddingWarModal: React.FC = () => {
         </DialogHeader>
 
         <div className="space-y-4">
-          <div className="p-4 rounded-xl bg-destructive/5 border border-destructive/20">
+          <div className="p-4 rounded-none bg-destructive/5 border border-destructive/20">
             <div className="flex items-center gap-2 mb-3">
               <AlertTriangle className="h-4 w-4 text-destructive" />
               <p className="text-sm font-bold text-destructive">Hostile Takeover in Progress</p>
@@ -70,19 +70,19 @@ export const BiddingWarModal: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <div className="p-3 rounded-lg bg-card/40 border border-border/40 text-center">
+            <div className="p-3 rounded-none bg-card/40 border border-border/40 text-center">
               <Building2 className="h-4 w-4 text-muted-foreground mx-auto mb-1" />
               <p className="text-[10px] text-muted-foreground uppercase font-bold">Acquirer</p>
               <p className="text-sm font-black">{attackerName}</p>
             </div>
-            <div className="p-3 rounded-lg bg-card/40 border border-border/40 text-center">
+            <div className="p-3 rounded-none bg-card/40 border border-border/40 text-center">
               <DollarSign className="h-4 w-4 text-emerald-500 mx-auto mb-1" />
               <p className="text-[10px] text-muted-foreground uppercase font-bold">Offer Value</p>
               <p className="text-sm font-black text-emerald-400">{formatMoney(offerAmount)}</p>
             </div>
           </div>
 
-          <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
+          <div className="p-3 rounded-none bg-amber-500/10 border border-amber-500/20">
             <p className="text-xs text-amber-400 font-bold">
               Accept: You receive {formatMoney(offerAmount)} and the rival absorbs {targetName}'s assets.
               Fight: The merger proceeds without your involvement — rivals grow stronger.

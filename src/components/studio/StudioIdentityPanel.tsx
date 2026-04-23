@@ -50,10 +50,10 @@ const AxisBar: React.FC<AxisBarProps> = ({ leftLabel, rightLabel, value, leftCol
         <span>{rightLabel}</span>
       </div>
       {/* Track */}
-      <div className="relative h-3 rounded-full bg-white/5 overflow-visible">
+      <div className="relative h-3 rounded-none bg-white/5 overflow-visible">
         {/* Fill */}
         <div
-          className={cn('absolute inset-y-0 left-0 rounded-full', leftColor, rightColor)}
+          className={cn('absolute inset-y-0 left-0 rounded-none', leftColor, rightColor)}
           style={{
             width: `${pct}%`,
             background: `linear-gradient(to right, var(--tw-gradient-stops))`,
@@ -61,7 +61,7 @@ const AxisBar: React.FC<AxisBarProps> = ({ leftLabel, rightLabel, value, leftCol
         />
         {/* Marker */}
         <div
-          className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-white border-2 border-primary shadow-md z-10"
+          className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-none bg-white border-2 border-primary shadow-md z-10"
           style={{ left: `calc(${pct}% - 6px)` }}
         />
       </div>

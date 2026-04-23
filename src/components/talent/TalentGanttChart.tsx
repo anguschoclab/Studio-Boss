@@ -19,7 +19,7 @@ export const TalentGanttChart: React.FC<TalentGanttChartProps> = ({ talent, curr
   };
 
   return (
-    <div className="talent-gantt-container p-4 bg-slate-900/50 rounded-xl border border-slate-700">
+    <div className="talent-gantt-container p-4 bg-black/40 rounded-none border border-slate-700">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400">Availability Schedule (Next 52 Weeks)</h3>
         {talent.onMedicalLeave && (
@@ -60,7 +60,7 @@ export const TalentGanttChart: React.FC<TalentGanttChartProps> = ({ talent, curr
               <div
                 key={week}
                 title={tooltip}
-                className={`relative flex items-center justify-center h-full ${bgColor} border-r border-slate-800/10 cursor-help group transition-all`}
+                className={`relative flex items-center justify-center h-full ${bgColor} border-r border-white/5/10 cursor-help group transition-all`}
               >
                 {icon}
                 {week === currentWeek && (
@@ -76,19 +76,19 @@ export const TalentGanttChart: React.FC<TalentGanttChartProps> = ({ talent, curr
 
       <div className="flex gap-6 mt-4 text-[10px] font-medium text-slate-500 uppercase tracking-tight">
         <div className="flex items-center gap-1.5">
-          <div className="w-2.5 h-2.5 bg-amber-500/60 rounded-sm" />
+          <div className="w-2.5 h-2.5 bg-amber-500/60 rounded-none" />
           <span>Feature Film</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <div className="w-2.5 h-2.5 bg-purple-500/60 rounded-sm" />
+          <div className="w-2.5 h-2.5 bg-purple-500/60 rounded-none" />
           <span>TV Series</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <div className="w-2.5 h-2.5 bg-blue-500/60 rounded-sm" />
+          <div className="w-2.5 h-2.5 bg-blue-500/60 rounded-none" />
           <span>Animation (Exempt)</span>
         </div>
         <div className="flex items-center gap-1.5 ml-auto">
-          <div className="w-2.5 h-2.5 bg-red-500/40 rounded-sm" />
+          <div className="w-2.5 h-2.5 bg-red-500/40 rounded-none" />
           <span>Medical Leave</span>
         </div>
       </div>

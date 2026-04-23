@@ -28,7 +28,7 @@ export const DemographicsWidget: React.FC = () => {
   };
 
   return (
-    <Card className="col-span-1 lg:col-span-1 border-white/5 bg-white/[0.01] backdrop-blur-xl transition-all duration-700 overflow-hidden group rounded-2xl">
+    <Card className="col-span-1 lg:col-span-1 border-white/5 bg-white/[0.01] backdrop-blur-3xl transition-all duration-700 overflow-hidden group rounded-none">
       <CardHeader className="pb-8 border-b border-white/5 p-8">
         <CardTitle className="text-[10px] font-black text-muted-foreground/40 uppercase tracking-[0.3em] flex items-center gap-4 italic leading-none group">
           <span className="w-2 h-2 rounded-none bg-primary shadow-[0_0_15px_rgba(var(--primary),0.6)] animate-pulse" />
@@ -58,7 +58,7 @@ export const DemographicsWidget: React.FC = () => {
                 />
                 <ChartTooltip
                   cursor={{ fill: 'rgba(255,255,255,0.02)' }}
-                  content={<ChartTooltipContent className="bg-black/90 border-white/10 backdrop-blur-xl text-[9px] font-display font-black uppercase tracking-widest shadow-2xl rounded-none p-4" />}
+                  content={<ChartTooltipContent className="bg-black/90 border-white/10 backdrop-blur-3xl text-[9px] font-display font-black uppercase tracking-widest shadow-2xl rounded-none p-4" />}
                 />
                 <Bar 
                   dataKey="popularity" 

@@ -103,7 +103,7 @@ export const GenreTrendLine: React.FC<GenreTrendLineProps> = ({
   };
 
   return (
-    <div className={cn('glass-card p-6 rounded-2xl group transition-all duration-700 hover:bg-white/[0.03]', className)}>
+    <div className={cn('glass-card p-6 rounded-none group transition-all duration-700 hover:bg-white/[0.03]', className)}>
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-4">
           <span className="font-display font-black text-lg italic tracking-tighter uppercase leading-none">{genre}</span>

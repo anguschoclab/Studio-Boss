@@ -127,7 +127,7 @@ export const PackageDetailModal = ({ packageId: propPackageId }: PackageDetailMo
                   type="number"
                   value={bidAmount}
                   onChange={(e) => setBidAmount(Number(e.target.value))}
-                  className="flex-1 px-3 py-2 border rounded-md"
+                  className="flex-1 px-3 py-2 border rounded-none"
                   placeholder="Enter bid amount"
                   min={0}
                   step={100000}
@@ -147,7 +147,7 @@ export const PackageDetailModal = ({ packageId: propPackageId }: PackageDetailMo
             <div className="space-y-2">
               <label className="text-sm font-medium">Bid Terms</label>
               <textarea
-                className="w-full px-3 py-2 border rounded-md"
+                className="w-full px-3 py-2 border rounded-none"
                 rows={3}
                 placeholder="Enter any special terms or conditions..."
               />

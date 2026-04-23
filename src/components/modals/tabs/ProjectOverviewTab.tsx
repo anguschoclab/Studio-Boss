@@ -14,7 +14,7 @@ interface ProjectOverviewTabProps {
 export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ project, scriptedProject }) => (
   <TabsContent value="overview" className="mt-0 space-y-6">
     <div className="grid grid-cols-2 gap-6">
-      <div className="bg-slate-900/40 p-5 rounded-2xl border border-slate-800/50 space-y-4">
+      <div className="bg-black/40 p-5 rounded-none border border-white/5/50 space-y-4">
         <div className="flex items-center gap-2">
           <TrendingUp className="w-4 h-4 text-primary" />
           <span className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Package Analysis</span>
@@ -24,18 +24,18 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ project,
             <span className="text-xs font-bold text-slate-400">Town Heat</span>
             <span className="text-sm font-black text-primary">{scriptedProject?.scriptHeat || 50}%</span>
           </div>
-          <div className="h-1.5 rounded-full bg-slate-800 overflow-hidden">
+          <div className="h-1.5 rounded-none bg-slate-800 overflow-hidden">
             <div className="h-full bg-primary" style={{ width: `${scriptedProject?.scriptHeat || 50}%` }} />
           </div>
           {project.flavor && (
-            <div className="relative p-4 rounded-xl bg-black/40 border-l-4 border-primary/40 italic text-sm text-slate-300">
+            <div className="relative p-4 rounded-none bg-black/40 border-l-4 border-primary/40 italic text-sm text-slate-300">
               "{project.flavor}"
             </div>
           )}
         </div>
       </div>
 
-      <div className="bg-slate-900/40 p-5 rounded-2xl border border-slate-800/50 space-y-4">
+      <div className="bg-black/40 p-5 rounded-none border border-white/5/50 space-y-4">
         <div className="flex items-center gap-2">
           <DollarSign className="w-4 h-4 text-emerald-400" />
           <span className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">P&L Forecast</span>
@@ -49,7 +49,7 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ project,
             <span className="text-slate-500">Weekly Burn</span>
             <span className="text-rose-400/60 font-bold">-{formatMoney(project.weeklyCost)}</span>
           </div>
-          <div className="pt-3 border-t border-slate-800/50 flex justify-between items-center">
+          <div className="pt-3 border-t border-white/5/50 flex justify-between items-center">
             <span className="text-xs font-black uppercase text-slate-400">Current Yield</span>
             <span className="text-xl font-black text-emerald-500">{formatMoney(project.revenue)}</span>
           </div>
@@ -63,8 +63,8 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ project,
         { label: 'Complexity', val: project.budgetTier.toUpperCase(), icon: Brain, color: 'text-emerald-400' },
         { label: 'Week', val: project.weeksInPhase, icon: Calendar, color: 'text-amber-400' }
       ].map(card => (
-        <div key={card.label} className="p-4 rounded-xl bg-slate-900/20 border border-slate-800/50 flex items-center gap-4">
-          <div className={cn("w-10 h-10 rounded-lg bg-black/40 flex items-center justify-center border border-white/5", card.color)}>
+        <div key={card.label} className="p-4 rounded-none bg-black/40 border border-white/5/50 flex items-center gap-4">
+          <div className={cn("w-10 h-10 rounded-none bg-black/40 flex items-center justify-center border border-white/5", card.color)}>
             <card.icon className="w-5 h-5" />
           </div>
           <div>
@@ -75,7 +75,7 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ project,
       ))}
     </div>
 
-    <div className="bg-slate-900/40 p-5 rounded-2xl border border-slate-800/50 space-y-4">
+    <div className="bg-black/40 p-5 rounded-none border border-white/5/50 space-y-4">
       <div className="flex items-center gap-2">
         <Users className="w-4 h-4 text-primary" />
         <span className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Audience Resonance Breakdown</span>
@@ -84,11 +84,11 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ project,
         {['male_under_25', 'female_under_25', 'male_over_25', 'female_over_25'].map(q => {
           const score = calculateAudienceIndex(project, q as import('@/engine/types').AudienceQuadrant);
           return (
-            <div key={q} className="p-3 rounded-xl bg-black/40 border border-white/5 space-y-1">
+            <div key={q} className="p-3 rounded-none bg-black/40 border border-white/5 space-y-1">
               <p className="text-[8px] font-black text-slate-500 uppercase tracking-tighter">{q.replace(/_/g, ' ')}</p>
               <div className="flex items-center justify-between">
                 <span className="text-sm font-black text-white">{score.toFixed(2)}x</span>
-                <div className={cn("w-1.5 h-1.5 rounded-full", score > 1.2 ? "bg-emerald-500" : score > 0.8 ? "bg-amber-500" : "bg-rose-500")} />
+                <div className={cn("w-1.5 h-1.5 rounded-none", score > 1.2 ? "bg-emerald-500" : score > 0.8 ? "bg-amber-500" : "bg-rose-500")} />
               </div>
             </div>
           );
@@ -97,7 +97,7 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ project,
     </div>
 
     {project.reception && (
-      <div className="mt-8 p-6 bg-black/60 border border-slate-800 rounded-3xl space-y-6 relative overflow-hidden group">
+      <div className="mt-8 p-6 bg-black/60 border border-white/5 rounded-none space-y-6 relative overflow-hidden group">
         <div className="absolute top-0 right-0 p-3">
           {project.reception.isCultPotential && (
             <Badge className="bg-fuchsia-600/20 text-fuchsia-400 border-fuchsia-600/50 animate-pulse font-black uppercase tracking-tighter">Cult Potential</Badge>
@@ -113,7 +113,7 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ project,
               <span className="text-4xl font-black italic tracking-tighter text-white">{project.reception.metaScore}</span>
               <span className="text-[10px] font-black uppercase text-slate-500 mb-1">MetaScore</span>
             </div>
-            <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+            <div className="h-2 bg-slate-800 rounded-none overflow-hidden">
               <div className={cn(
                 "h-full transition-all duration-1000",
                 project.reception.metaScore >= 75 ? 'bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.5)]' :
@@ -126,7 +126,7 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ project,
               <span className="text-4xl font-black italic tracking-tighter text-white">{project.reception.audienceScore}</span>
               <span className="text-[10px] font-black uppercase text-slate-500 mb-1">Audience</span>
             </div>
-            <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+            <div className="h-2 bg-slate-800 rounded-none overflow-hidden">
               <div className={cn(
                 "h-full bg-primary transition-all duration-1000",
                 project.reception.audienceScore >= 75 ? 'shadow-[0_0_15px_rgba(var(--primary),0.5)]' : ''
@@ -134,7 +134,7 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ project,
             </div>
           </div>
         </div>
-        <div className="pt-4 border-t border-slate-800/50">
+        <div className="pt-4 border-t border-white/5/50">
           <p className="text-xs font-bold text-slate-400">
             Status: <span className={cn(
               "uppercase font-black tracking-widest ml-1",

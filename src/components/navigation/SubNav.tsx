@@ -26,7 +26,7 @@ export const SubNav: React.FC<SubNavProps> = ({
   variant = 'default'
 }) => {
   const variantStyles = {
-    default: 'bg-white/[0.02] border border-white/5 p-1 rounded-none backdrop-blur-xl',
+    default: 'bg-white/[0.02] border border-white/5 p-1 rounded-none backdrop-blur-3xl',
     pills: 'bg-transparent gap-2',
     underline: 'bg-transparent border-b border-white/10 pb-0 gap-8'
   };

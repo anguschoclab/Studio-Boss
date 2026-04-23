@@ -65,7 +65,7 @@ const FranchiseCard = ({ franchise, assets }: { franchise: Franchise, assets: IP
                 Founded Week {franchise.creationWeek} • {assets.length} Persistent Assets
               </p>
             </div>
-            <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-none bg-primary/10 border border-primary/20 flex items-center justify-center">
               <Layers className="h-6 w-6 text-primary" />
             </div>
           </div>

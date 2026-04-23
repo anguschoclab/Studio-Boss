@@ -66,7 +66,7 @@ export const PassiveIncomePanel: React.FC<PassiveIncomePanelProps> = ({
     switch (trend) {
       case 'up': return <TrendingUp className="h-4 w-4 text-emerald-500" />;
       case 'down': return <TrendingUp className="h-4 w-4 text-red-500 rotate-180" />;
-      default: return <div className="h-4 w-4 rounded-full bg-slate-400" />;
+      default: return <div className="h-4 w-4 rounded-none bg-slate-400" />;
     }
   };
 
@@ -115,7 +115,7 @@ export const PassiveIncomePanel: React.FC<PassiveIncomePanelProps> = ({
         icon={Coins}
       >
         {streams.length === 0 ? (
-          <div className={cn('text-center py-8', tokens.border.default, 'border-dashed rounded-xl')}>
+          <div className={cn('text-center py-8', tokens.border.default, 'border-dashed rounded-none')}>
             <Coins className="h-10 w-10 mx-auto mb-3 opacity-20" />
             <p className={cn('text-sm', tokens.text.caption)}>
               No passive income streams yet
@@ -136,7 +136,7 @@ export const PassiveIncomePanel: React.FC<PassiveIncomePanelProps> = ({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className={cn(
-                      'p-2 rounded-lg',
+                      'p-2 rounded-none',
                       getTypeColor(stream.type).replace('bg-', 'bg-').replace('500', '500/10')
                     )}>
                       {React.cloneElement(getTypeIcon(stream.type) as React.ReactElement, {
@@ -185,7 +185,7 @@ export const PassiveIncomePanel: React.FC<PassiveIncomePanelProps> = ({
           subtitle="Distribution by category"
           icon={TrendingUp}
         >
-          <div className="h-4 bg-muted rounded-full overflow-hidden flex">
+          <div className="h-4 bg-muted rounded-none overflow-hidden flex">
             {streams.map((stream, idx) => {
               const percentage = (stream.weeklyRevenue / totalWeekly) * 100;
               return (
@@ -201,7 +201,7 @@ export const PassiveIncomePanel: React.FC<PassiveIncomePanelProps> = ({
           <div className="flex flex-wrap gap-3 mt-3">
             {streams.map((stream) => (
               <div key={stream.source} className="flex items-center gap-1 text-[10px]">
-                <div className={cn('w-2 h-2 rounded-full', getTypeColor(stream.type))} />
+                <div className={cn('w-2 h-2 rounded-none', getTypeColor(stream.type))} />
                 <span>{stream.source}</span>
               </div>
             ))}

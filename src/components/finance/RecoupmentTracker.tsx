@@ -59,7 +59,7 @@ export const RecoupmentTracker: React.FC<RecoupmentTrackerProps> = ({ projects }
     <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-1000">
       {/* Overall Summary */}
       <Card className="glass-card p-12 overflow-hidden group">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-[100px] pointer-events-none group-hover:bg-primary/10 transition-all duration-1000" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-none blur-[100px] pointer-events-none group-hover:bg-primary/10 transition-all duration-1000" />
         <div className="relative z-10 flex items-center justify-between mb-12">
           <div className="space-y-3">
             <h3 className="font-display font-black text-2xl uppercase tracking-tighter italic">Studio Recoupment Analytics</h3>

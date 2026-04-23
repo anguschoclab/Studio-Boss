@@ -60,7 +60,7 @@ export const WriterStrikeImpact: React.FC<WriterStrikeImpactProps> = ({
 
   if (!strike.isActive) {
     return (
-      <div className={cn('text-center py-12', tokens.border.default, 'border-dashed rounded-xl')}>
+      <div className={cn('text-center py-12', tokens.border.default, 'border-dashed rounded-none')}>
         <PenTool className="h-12 w-12 mx-auto mb-4 opacity-20" />
         <p className={tokens.text.label}>No Active Labor Disputes</p>
         <p className={cn('text-sm mt-2', tokens.text.caption)}>
@@ -73,7 +73,7 @@ export const WriterStrikeImpact: React.FC<WriterStrikeImpactProps> = ({
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Strike Alert Banner */}
-      <div className="bg-red-500/10 border border-red-500/50 rounded-lg p-4">
+      <div className="bg-red-500/10 border border-red-500/50 rounded-none p-4">
         <div className="flex items-start gap-3">
           <AlertOctagon className="h-6 w-6 text-red-500 flex-shrink-0" />
           <div className="flex-1">
@@ -90,7 +90,7 @@ export const WriterStrikeImpact: React.FC<WriterStrikeImpactProps> = ({
       <div className="grid grid-cols-4 gap-4">
         <Card className={cn('p-4', tokens.border.default)}>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-red-500/10">
+            <div className="p-2 rounded-none bg-red-500/10">
               <AlertTriangle className="h-5 w-5 text-red-500" />
             </div>
             <div>
@@ -102,7 +102,7 @@ export const WriterStrikeImpact: React.FC<WriterStrikeImpactProps> = ({
 
         <Card className={cn('p-4', tokens.border.default)}>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-amber-500/10">
+            <div className="p-2 rounded-none bg-amber-500/10">
               <Clock className="h-5 w-5 text-amber-500" />
             </div>
             <div>
@@ -114,7 +114,7 @@ export const WriterStrikeImpact: React.FC<WriterStrikeImpactProps> = ({
 
         <Card className={cn('p-4', tokens.border.default)}>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-purple-500/10">
+            <div className="p-2 rounded-none bg-purple-500/10">
               <DollarSign className="h-5 w-5 text-purple-500" />
             </div>
             <div>
@@ -126,7 +126,7 @@ export const WriterStrikeImpact: React.FC<WriterStrikeImpactProps> = ({
 
         <Card className={cn('p-4', tokens.border.default)}>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-blue-500/10">
+            <div className="p-2 rounded-none bg-blue-500/10">
               <Users className="h-5 w-5 text-blue-500" />
             </div>
             <div>

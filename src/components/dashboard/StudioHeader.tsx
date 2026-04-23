@@ -9,7 +9,7 @@ interface StudioHeaderProps {
 export const StudioHeader = ({ gameState }: StudioHeaderProps) => {
   return (
     <div className="flex flex-col md:flex-row md:items-end justify-between gap-12 border-b border-white/5 pb-12 relative overflow-hidden">
-      <div className="absolute -left-20 -top-20 w-80 h-80 bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute -left-20 -top-20 w-80 h-80 bg-primary/5 rounded-none blur-[100px] pointer-events-none" />
       <div className="relative z-10 space-y-6">
         <div className="flex items-center gap-6">
           <h1 className="text-5xl md:text-7xl font-display font-black tracking-tighter uppercase italic bg-gradient-to-br from-white via-white/90 to-white/40 bg-clip-text text-transparent leading-none">

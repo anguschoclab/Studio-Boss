@@ -35,7 +35,7 @@ export const DirectorsCutModal: React.FC = () => {
       <DialogContent className="max-w-md bg-card/90 backdrop-blur-2xl border border-white/10">
         <DialogHeader>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 rounded-lg bg-secondary/10">
+            <div className="p-2 rounded-none bg-secondary/10">
               <Film className="h-5 w-5 text-secondary" />
             </div>
             <DialogTitle className="text-lg font-black uppercase tracking-tight">
@@ -45,7 +45,7 @@ export const DirectorsCutModal: React.FC = () => {
         </DialogHeader>
 
         <div className="space-y-4">
-          <div className="p-4 rounded-xl bg-card/60 border border-border/40">
+          <div className="p-4 rounded-none bg-card/60 border border-border/40">
             <p className="text-sm font-bold text-foreground">{projectTitle}</p>
             <p className="text-xs text-muted-foreground mt-1">
               The sanitized theatrical cut has been in release for 4+ weeks. A director's cut can
@@ -54,17 +54,17 @@ export const DirectorsCutModal: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-3 gap-3">
-            <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-center">
+            <div className="p-3 rounded-none bg-emerald-500/10 border border-emerald-500/20 text-center">
               <DollarSign className="h-4 w-4 text-emerald-500 mx-auto mb-1" />
               <p className="text-[10px] text-muted-foreground uppercase font-bold">Est. Revenue</p>
               <p className="text-sm font-black text-emerald-400">{estimatedRevenue}</p>
             </div>
-            <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 text-center">
+            <div className="p-3 rounded-none bg-amber-500/10 border border-amber-500/20 text-center">
               <TrendingUp className="h-4 w-4 text-amber-500 mx-auto mb-1" />
               <p className="text-[10px] text-muted-foreground uppercase font-bold">Buzz</p>
               <p className="text-sm font-black text-amber-400">+15</p>
             </div>
-            <div className="p-3 rounded-lg bg-violet-500/10 border border-violet-500/20 text-center">
+            <div className="p-3 rounded-none bg-violet-500/10 border border-violet-500/20 text-center">
               <Sparkles className="h-4 w-4 text-violet-500 mx-auto mb-1" />
               <p className="text-[10px] text-muted-foreground uppercase font-bold">Prestige</p>
               <p className="text-sm font-black text-violet-400">+8</p>

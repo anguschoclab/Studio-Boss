@@ -74,9 +74,9 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
   const hoveredTalent = hoveredTalentId ? talentMap.get(hoveredTalentId) : null;
 
   return (
-    <div className="flex flex-col h-full bg-slate-950/50 rounded-2xl border border-slate-800 overflow-hidden text-left">
+    <div className="flex flex-col h-full bg-black/50 rounded-none border border-white/5 overflow-hidden text-left">
       {/* Header / Active Casting */}
-      <div className="p-4 border-b border-slate-800 bg-black/40 space-y-4">
+      <div className="p-4 border-b border-white/5 bg-black/40 space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-black uppercase tracking-widest text-white flex items-center gap-2">
             <Target className="w-4 h-4 text-primary" /> Active Production Slate
@@ -107,13 +107,13 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
 
       <div className="flex-1 flex overflow-hidden">
         {/* Left: Filters & List */}
-        <div className="w-full lg:w-3/5 flex flex-col border-r border-slate-800">
+        <div className="w-full lg:w-3/5 flex flex-col border-r border-white/5">
           <div className="p-4 space-y-4 bg-black/20">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
               <Input 
                 placeholder="Search industry database..." 
-                className="pl-10 bg-slate-900/50 border-slate-700 text-xs" 
+                className="pl-10 bg-black/40 border-slate-700 text-xs" 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -121,10 +121,10 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
 
             <div className="flex gap-2">
               <Select value={selectedTier} onValueChange={(v: string) => setSelectedTier(v)}>
-                <SelectTrigger className="flex-1 bg-slate-900 border-slate-700 h-9 text-[10px] font-bold uppercase">
+                <SelectTrigger className="flex-1 bg-black/60 border-slate-700 h-9 text-[10px] font-bold uppercase">
                   <SelectValue placeholder="Tier" />
                 </SelectTrigger>
-                <SelectContent className="bg-slate-950 border-slate-800 text-slate-200">
+                <SelectContent className="bg-black border-white/5 text-slate-200">
                   <SelectItem value="ALL">All Tiers</SelectItem>
                   <SelectItem value="4">S-List</SelectItem>
                   <SelectItem value="3">A-List</SelectItem>
@@ -134,10 +134,10 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
               </Select>
 
               <Select value={selectedRole} onValueChange={(v: any) => setSelectedRole(v)}>
-                <SelectTrigger className="flex-1 bg-slate-900 border-slate-700 h-9 text-[10px] font-bold uppercase">
+                <SelectTrigger className="flex-1 bg-black/60 border-slate-700 h-9 text-[10px] font-bold uppercase">
                   <SelectValue placeholder="Role" />
                 </SelectTrigger>
-                <SelectContent className="bg-slate-950 border-slate-800 text-slate-200">
+                <SelectContent className="bg-black border-white/5 text-slate-200">
                   <SelectItem value="ALL">All Roles</SelectItem>
                   <SelectItem value="actor">Actors</SelectItem>
                   <SelectItem value="director">Directors</SelectItem>
@@ -166,7 +166,7 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
                 <div 
                   key={t.id}
                   onMouseEnter={() => setHoveredTalentId(t.id)}
-                  className="group flex items-center gap-4 p-3 rounded-xl hover:bg-white/10 transition-all duration-200 border border-transparent hover:border-white/5 cursor-pointer"
+                  className="group flex items-center gap-4 p-3 rounded-none hover:bg-white/10 transition-all duration-200 border border-transparent hover:border-white/5 cursor-pointer"
                 >
                   <TalentAvatar talent={t} size="sm" />
                   <div className="flex-1 min-w-0">
@@ -228,7 +228,7 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
         </div>
 
         {/* Right: Feedback & Analysis */}
-        <div className="hidden lg:block lg:w-2/5 bg-slate-900/30 p-6">
+        <div className="hidden lg:block lg:w-2/5 bg-black/40 p-6">
           {hoveredTalent ? (
             <div className="h-full flex flex-col space-y-6">
               <div className="flex flex-col items-center text-center space-y-4">
@@ -253,12 +253,12 @@ export const TalentAttachmentPanel: React.FC<TalentAttachmentPanelProps> = ({ pr
               <CastingFeedback talent={hoveredTalent} project={project} />
               
               <div className="mt-auto space-y-4">
-                 <div className="p-4 rounded-xl bg-black/40 border border-white/5 space-y-3">
+                 <div className="p-4 rounded-none bg-black/40 border border-white/5 space-y-3">
                     <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-slate-500">
                        <span>Market Draw</span>
                        <span className="text-emerald-400">{hoveredTalent.draw}%</span>
                     </div>
-                    <div className="h-1 bg-slate-800 rounded-full overflow-hidden">
+                    <div className="h-1 bg-slate-800 rounded-none overflow-hidden">
                        <div className="h-full bg-success shadow-[0_0_10px_rgba(var(--success),0.5)]" style={{ width: `${hoveredTalent.draw}%` }} />
                     </div>
                  </div>

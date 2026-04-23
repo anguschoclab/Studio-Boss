@@ -104,7 +104,7 @@ export function InstallPrompt() {
     return (
       <div className={cn(
         'fixed bottom-6 left-1/2 -translate-x-1/2 z-[9999]',
-        'flex items-center gap-3 px-5 py-3 rounded-xl',
+        'flex items-center gap-3 px-5 py-3 rounded-none',
         'bg-indigo-950/95 border border-indigo-500/40 backdrop-blur-md shadow-2xl',
         'text-white'
       )}>
@@ -120,7 +120,7 @@ export function InstallPrompt() {
         </Button>
         <button
           onClick={handleDismiss}
-          className="p-1 hover:bg-white/10 rounded-lg transition-colors"
+          className="p-1 hover:bg-white/10 rounded-none transition-colors"
         >
           <X className="w-4 h-4" />
         </button>
@@ -133,7 +133,7 @@ export function InstallPrompt() {
     return (
       <div className={cn(
         'fixed bottom-6 left-1/2 -translate-x-1/2 z-[9999]',
-        'flex items-center gap-3 px-5 py-3 rounded-xl',
+        'flex items-center gap-3 px-5 py-3 rounded-none',
         'bg-indigo-950/95 border border-indigo-500/40 backdrop-blur-md shadow-2xl',
         'text-white'
       )}>
@@ -149,7 +149,7 @@ export function InstallPrompt() {
         </Button>
         <button
           onClick={handleDismiss}
-          className="p-1 hover:bg-white/10 rounded-lg transition-colors"
+          className="p-1 hover:bg-white/10 rounded-none transition-colors"
         >
           <X className="w-4 h-4" />
         </button>

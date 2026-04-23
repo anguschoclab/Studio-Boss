@@ -206,10 +206,11 @@ function handlePostReleasePhase(p: Project): { update: string | null; talentUpda
   return { update, talentUpdates: [] };
 }
 
-function handleMarketingPhase(p: Project): { update: string | null; talentUpdates: Talent[] } {
-  p.state = 'marketing';
+function handlePostProductionPhase(p: Project): { update: string | null; talentUpdates: Talent[] } {
+  p.state = 'post_production' as any;
   p.weeksInPhase = 0;
-  return { update: `"${p.title}" has wrapped production and is ready for marketing strategy.`, talentUpdates: [] };
+  (p as any).postProductionWeeksRemaining = 3; // Default 3 weeks
+  return { update: `"${p.title}" has wrapped production and entered post-production.`, talentUpdates: [] };
 }
 
 export function executeMarketing(
@@ -278,8 +279,12 @@ export function advanceProject(
     const result = handleDevelopmentPhase(p);
     update = result.update;
   } else if (p.state === 'production' && p.weeksInPhase >= p.productionWeeks) {
-    const result = handleMarketingPhase(p);
+    const result = handlePostProductionPhase(p);
     update = result.update;
+  } else if (p.state === 'post_production') {
+    // Handled externally by PostProductionSystem tick, but we don't advance the core phase here until it transitions
+  } else if (p.state === 'marketing') {
+    // Wait for manual or automatic transition to released
   } else if (p.state === 'released') {
     const result = handleReleasedPhase(p, projectContracts, talentPoolMap, rivalStrengthAvg, projectAwards, trendMultiplier, franchiseSynergy);
     update = result.update;

@@ -130,9 +130,9 @@ export const FilterBar: React.FC<FilterBarProps> = ({
                 'transition-all duration-700 appearance-none min-w-[120px]'
               )}
             >
-              <option value="" className="bg-slate-900">{filter.label.toUpperCase()}</option>
+              <option value="" className="bg-black/60">{filter.label.toUpperCase()}</option>
               {filter.options.map((option) => (
-                <option key={option.value} value={option.value} className="bg-slate-900">
+                <option key={option.value} value={option.value} className="bg-black/60">
                   {option.label.toUpperCase()}
                 </option>
               ))}
@@ -154,9 +154,9 @@ export const FilterBar: React.FC<FilterBarProps> = ({
             'transition-all duration-700 appearance-none min-w-[140px]'
           )}
         >
-          <option value="" className="bg-slate-900">SORT BY...</option>
+          <option value="" className="bg-black/60">SORT BY...</option>
           {sortOptions.map((option) => (
-            <option key={option.value} value={option.value} className="bg-slate-900">
+            <option key={option.value} value={option.value} className="bg-black/60">
               {option.label.toUpperCase()}
             </option>
           ))}

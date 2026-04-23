@@ -82,7 +82,7 @@ export const ProjectTimeline: React.FC<ProjectTimelineProps> = ({
         {series.map((s) => (
           <div key={s.key} className="flex items-center gap-1 text-[9px]">
             <div 
-              className="w-2 h-2 rounded-sm" 
+              className="w-2 h-2 rounded-none" 
               style={{ backgroundColor: s.color }}
             />
             <span>{s.name}</span>

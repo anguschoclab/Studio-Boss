@@ -71,7 +71,7 @@ export const SkeletonCard: React.FC<SkeletonCardProps> = ({
   return (
     <div
       className={cn(
-        'glass-card border-white/5 rounded-2xl overflow-hidden',
+        'glass-card border-white/5 rounded-none overflow-hidden',
         config.container,
         className
       )}
@@ -126,7 +126,7 @@ export const SkeletonStat: React.FC<{
   return (
     <div
       className={cn(
-        'glass-card border-white/5 rounded-2xl overflow-hidden',
+        'glass-card border-white/5 rounded-none overflow-hidden',
         sizes[size],
         className
       )}

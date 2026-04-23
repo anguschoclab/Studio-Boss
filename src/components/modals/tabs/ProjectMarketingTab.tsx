@@ -122,14 +122,14 @@ export const ProjectMarketingTab: React.FC<ProjectMarketingTabProps> = ({
             disabled={isLocked || cash < tier.cost}
             onClick={() => onSelectTier(tier.id as 'none' | 'basic' | 'blockbuster')}
             className={cn(
-              "p-6 rounded-2xl border text-left transition-all relative overflow-hidden flex flex-col justify-between group h-52",
+              "p-6 rounded-none border text-left transition-all relative overflow-hidden flex flex-col justify-between group h-52",
               project.marketingLevel === tier.id || selectedTier === tier.id
                 ? 'border-primary bg-primary/10 shadow-[0_0_30px_rgba(var(--primary),0.1)]'
-                : 'border-slate-800 bg-slate-900/40 hover:border-slate-700'
+                : 'border-white/5 bg-black/40 hover:border-slate-700'
             )}
           >
             {selectedTier === tier.id && (
-              <div className="absolute top-0 right-0 w-8 h-8 bg-primary rounded-bl-2xl flex items-center justify-center">
+              <div className="absolute top-0 right-0 w-8 h-8 bg-primary rounded-none-2xl flex items-center justify-center">
                 <CheckCircle2 className="w-4 h-4 text-black" />
               </div>
             )}
@@ -155,10 +155,10 @@ export const ProjectMarketingTab: React.FC<ProjectMarketingTabProps> = ({
               disabled={isLocked}
               onClick={() => { setShowPrimaryPicker(v => !v); setShowSecondaryPicker(false); }}
               className={cn(
-                "w-full flex items-center justify-between p-4 rounded-xl border text-left transition-all",
+                "w-full flex items-center justify-between p-4 rounded-none border text-left transition-all",
                 isLocked
-                  ? "opacity-60 cursor-not-allowed border-slate-800 bg-slate-900/30"
-                  : "border-slate-700 bg-slate-900/50 hover:border-primary/50"
+                  ? "opacity-60 cursor-not-allowed border-white/5 bg-black/40"
+                  : "border-slate-700 bg-black/40 hover:border-primary/50"
               )}
             >
               <div>
@@ -175,7 +175,7 @@ export const ProjectMarketingTab: React.FC<ProjectMarketingTabProps> = ({
             </button>
 
             {showPrimaryPicker && !isLocked && (
-              <div className="absolute z-20 w-full mt-1 border border-slate-700 bg-slate-950 rounded-xl overflow-hidden shadow-2xl max-h-72 overflow-y-auto">
+              <div className="absolute z-20 w-full mt-1 border border-slate-700 bg-black rounded-none overflow-hidden shadow-2xl max-h-72 overflow-y-auto">
                 {ALL_ANGLES.map(angle => (
                   <button
                     key={angle.id}
@@ -204,10 +204,10 @@ export const ProjectMarketingTab: React.FC<ProjectMarketingTabProps> = ({
               disabled={isLocked || !activePrimary}
               onClick={() => { setShowSecondaryPicker(v => !v); setShowPrimaryPicker(false); }}
               className={cn(
-                "w-full flex items-center justify-between p-4 rounded-xl border text-left transition-all",
+                "w-full flex items-center justify-between p-4 rounded-none border text-left transition-all",
                 isLocked || !activePrimary
-                  ? "opacity-50 cursor-not-allowed border-slate-800 bg-slate-900/20"
-                  : "border-slate-800 bg-slate-900/30 hover:border-slate-600"
+                  ? "opacity-50 cursor-not-allowed border-white/5 bg-black/40"
+                  : "border-white/5 bg-black/40 hover:border-slate-600"
               )}
             >
               <div>
@@ -234,7 +234,7 @@ export const ProjectMarketingTab: React.FC<ProjectMarketingTabProps> = ({
             </button>
 
             {showSecondaryPicker && !isLocked && activePrimary && (
-              <div className="absolute z-20 w-full mt-1 border border-slate-700 bg-slate-950 rounded-xl overflow-hidden shadow-2xl max-h-72 overflow-y-auto">
+              <div className="absolute z-20 w-full mt-1 border border-slate-700 bg-black rounded-none overflow-hidden shadow-2xl max-h-72 overflow-y-auto">
                 {secondaryOptions.map(angle => (
                   <button
                     key={angle.id}
@@ -255,7 +255,7 @@ export const ProjectMarketingTab: React.FC<ProjectMarketingTabProps> = ({
       </div>
 
       {/* ── Revenue projection chart ───────────────────────────────────── */}
-      <div className="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
+      <div className="bg-black/40 border border-white/5 rounded-none overflow-hidden shadow-2xl">
         <div className="p-5 border-b border-white/5 bg-white/3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <BarChart3 className="w-4 h-4 text-primary" />
@@ -285,14 +285,14 @@ export const ProjectMarketingTab: React.FC<ProjectMarketingTabProps> = ({
       {/* ── Lock / locked status ───────────────────────────────────────── */}
       {!isLocked ? (
         <Button
-          className="w-full h-16 bg-primary text-black hover:bg-primary/90 font-black text-sm uppercase tracking-[0.3em] rounded-xl shadow-2xl transition-all active:scale-[0.98]"
+          className="w-full h-16 bg-primary text-black hover:bg-primary/90 font-black text-sm uppercase tracking-[0.3em] rounded-none shadow-2xl transition-all active:scale-[0.98]"
           disabled={!selectedTier || cash < (selectedTier === 'basic' ? project.budget * 0.1 : selectedTier === 'blockbuster' ? project.budget * 0.5 : 0)}
           onClick={onLockCampaign}
         >
           Authorize Global Release & Dedicate Reserves
         </Button>
       ) : (
-        <div className="p-6 bg-slate-900/80 border border-slate-700 rounded-xl flex flex-col items-center justify-center gap-2">
+        <div className="p-6 bg-black/40 border border-slate-700 rounded-none flex flex-col items-center justify-center gap-2">
           <div className="flex items-center gap-3">
             <Megaphone className="h-6 w-6 text-primary animate-pulse" />
             <span className="text-base font-black uppercase text-white tracking-widest">Deployment: {project.marketingLevel} Initiative</span>

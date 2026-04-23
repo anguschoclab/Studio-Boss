@@ -172,7 +172,7 @@ export const LocationScoutPanel: React.FC<LocationScoutPanelProps> = ({
       <div className="grid grid-cols-2 gap-4">
         <Card className={cn('p-4', tokens.border.default)}>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-primary/10">
+            <div className="p-2 rounded-none bg-primary/10">
               <MapPin className="h-5 w-5 text-primary" />
             </div>
             <div>
@@ -184,7 +184,7 @@ export const LocationScoutPanel: React.FC<LocationScoutPanelProps> = ({
 
         <Card className={cn('p-4', tokens.border.default)}>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-emerald-500/10">
+            <div className="p-2 rounded-none bg-emerald-500/10">
               <DollarSign className="h-5 w-5 text-emerald-500" />
             </div>
             <div>
@@ -215,7 +215,7 @@ export const LocationScoutPanel: React.FC<LocationScoutPanelProps> = ({
         icon={MapPin}
       >
         {availableLocations.length === 0 ? (
-          <div className={cn('text-center py-8', tokens.border.default, 'border-dashed rounded-xl')}>
+          <div className={cn('text-center py-8', tokens.border.default, 'border-dashed rounded-none')}>
             <MapPin className="h-10 w-10 mx-auto mb-3 opacity-20" />
             <p className={cn('text-sm', tokens.text.caption)}>
               No locations currently available

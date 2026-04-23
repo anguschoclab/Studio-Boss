@@ -83,7 +83,7 @@ export const TalentTierDistribution: React.FC<TalentTierDistributionProps> = ({
           >
             <div className="flex items-center gap-1">
               <div 
-                className="w-2 h-2 rounded-full" 
+                className="w-2 h-2 rounded-none" 
                 style={{ backgroundColor: tierColors[tier.tier] }}
               />
               <span>{tier.tier}</span>

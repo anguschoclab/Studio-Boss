@@ -83,7 +83,7 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
         
         <div className="p-6 space-y-6">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center shadow-inner">
+            <div className="w-12 h-12 rounded-none bg-primary/10 border border-primary/20 flex items-center justify-center shadow-inner">
                <Handshake className="w-6 h-6 text-primary" />
             </div>
             <div>
@@ -94,7 +94,7 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
 
           {dealResult ? (
             <div className={cn(
-               "p-6 rounded-2xl border animate-in zoom-in-95 duration-300",
+               "p-6 rounded-none border animate-in zoom-in-95 duration-300",
                dealResult.success ? "bg-emerald-500/10 border-emerald-500/20" : "bg-rose-500/10 border-rose-500/20"
             )}>
               <div className="flex items-start gap-4">
@@ -126,7 +126,7 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
                           key={p.id}
                           onClick={() => setSelectedProject(p.id)}
                           className={cn(
-                            "w-full text-left p-3 rounded-xl border transition-all relative overflow-hidden group",
+                            "w-full text-left p-3 rounded-none border transition-all relative overflow-hidden group",
                             selectedProject === p.id ? "bg-primary/10 border-primary/40" : "bg-white/5 border-white/5 hover:border-white/10"
                           )}
                         >
@@ -140,7 +140,7 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
 
                 {/* Analysis Column */}
                 <div className="space-y-4">
-                   <div className="glass-panel p-5 rounded-2xl border border-white/5 bg-black/20 space-y-4">
+                   <div className="glass-panel p-5 rounded-none border border-white/5 bg-black/20 space-y-4">
                       <div className="flex items-center justify-between">
                          <TooltipWrapper tooltip="Algorithmic alignment score between your project's genre/talent and the platform's current executive mandate." side="top">
                            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground cursor-help">Strategic Fit</span>
@@ -149,7 +149,7 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
                            {Math.round(fitScore)}%
                          </span>
                       </div>
-                      <div className="h-1.5 rounded-full bg-white/5 overflow-hidden">
+                      <div className="h-1.5 rounded-none bg-white/5 overflow-hidden">
                         <div 
                           className={cn("h-full transition-all duration-700", fitScore >= 70 ? 'bg-emerald-500' : fitScore >= 50 ? 'bg-primary' : 'bg-rose-500')} 
                           style={{ width: `${fitScore}%` }}
@@ -170,7 +170,7 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
                             <button
                               onClick={() => setContractType(t)}
                               className={cn(
-                                "flex-1 h-9 rounded-lg border text-[9px] font-black uppercase tracking-widest transition-all",
+                                "flex-1 h-9 rounded-none border text-[9px] font-black uppercase tracking-widest transition-all",
                                 contractType === t ? "bg-primary text-black border-primary shadow-lg" : "bg-white/5 border-white/5 text-muted-foreground hover:bg-white/10"
                               )}
                             >
@@ -191,7 +191,7 @@ export const DealModal: React.FC<DealModalProps> = ({ buyer, open, onClose }) =>
                    tooltip="Officially present the content package to the executive board for greenlight review"
                    className="flex-1 h-12 bg-primary text-black hover:bg-primary/90 font-black text-xs uppercase tracking-[0.2em] shadow-xl shadow-primary/10 relative overflow-hidden"
                  >
-                   {isPitching ? <div className="flex items-center gap-2"><div className="w-3 h-3 border-2 border-black/30 border-t-black rounded-full animate-spin" /> Reviewing Package...</div> : 'Send Official Pitch'}
+                   {isPitching ? <div className="flex items-center gap-2"><div className="w-3 h-3 border-2 border-black/30 border-t-black rounded-none animate-spin" /> Reviewing Package...</div> : 'Send Official Pitch'}
                  </Button>
               </div>
             </>

@@ -148,7 +148,7 @@ export const StudioPulse: React.FC = () => {
   const healthColor = healthScore >= 80 ? 'success' : healthScore >= 50 ? 'warning' : 'destructive';
 
   return (
-    <Card className="rounded-2xl border-white/5 bg-white/[0.01] backdrop-blur-xl transition-all duration-700 overflow-hidden">
+    <Card className="rounded-none border-white/5 bg-white/[0.01] backdrop-blur-3xl transition-all duration-700 overflow-hidden">
       <CardHeader className="pb-6 border-b border-white/5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">

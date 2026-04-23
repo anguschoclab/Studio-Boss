@@ -201,7 +201,7 @@ export const ExecutiveDashboard: React.FC = () => {
               </div>
             ))}
           </div>
-        </Section>Section>
+        </Section>
       )}
 
       {/* Strategic Intelligence Grid */}

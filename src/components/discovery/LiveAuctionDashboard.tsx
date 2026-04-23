@@ -52,9 +52,9 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ oppo
   return (
     <div className="flex flex-col h-full space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
       {/* Header Info */}
-      <div className="flex items-center justify-between gap-4 p-5 rounded-2xl bg-gradient-to-br from-primary/10 via-black/40 to-transparent border border-primary/20 shadow-2xl relative overflow-hidden">
+      <div className="flex items-center justify-between gap-4 p-5 rounded-none bg-gradient-to-br from-primary/10 via-black/40 to-transparent border border-primary/20 shadow-2xl relative overflow-hidden">
         {/* Animated Glow */}
-        <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/20 rounded-full blur-[80px] animate-pulse" />
+        <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/20 rounded-none blur-[80px] animate-pulse" />
         
         <div className="relative z-10">
           <div className="flex items-center gap-2 mb-1">
@@ -97,7 +97,7 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ oppo
         {/* Left Column: Bid Control */}
         <div className="flex flex-col space-y-4">
            {/* Action Card */}
-           <div className="glass-panel p-6 rounded-2xl border border-white/5 flex flex-col justify-between h-full group">
+           <div className="glass-panel p-6 rounded-none border border-white/5 flex flex-col justify-between h-full group">
               <div className="space-y-6">
                 <div>
                   <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2 mb-4">
@@ -125,12 +125,12 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ oppo
                   </div>
                 </div>
 
-                <div className="p-4 rounded-xl bg-black/20 border border-white/5 space-y-4">
+                <div className="p-4 rounded-none bg-black/20 border border-white/5 space-y-4">
                    <div className="flex items-center justify-between">
                       <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">Your Liquidity</span>
                       <span className="text-[10px] font-black text-foreground">{formatMoney(gameState?.finance.cash || 0)}</span>
                    </div>
-                   <div className="h-1.5 rounded-full bg-white/5 overflow-hidden">
+                   <div className="h-1.5 rounded-none bg-white/5 overflow-hidden">
                       <div 
                         className="h-full bg-primary transition-all duration-1000" 
                         style={{ width: `${Math.min(100, (currentHighest / (gameState?.finance.cash || 1)) * 100)}%` }} 
@@ -146,7 +146,7 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ oppo
               {!isExpired ? (
                 <div className="mt-8 space-y-3">
                   <Button 
-                    className="w-full h-14 bg-primary text-black hover:bg-primary/90 font-black text-xs uppercase tracking-[0.2em] rounded-xl shadow-xl shadow-primary/20 transition-all active:scale-95 group/bid"
+                    className="w-full h-14 bg-primary text-black hover:bg-primary/90 font-black text-xs uppercase tracking-[0.2em] rounded-none shadow-xl shadow-primary/20 transition-all active:scale-95 group/bid"
                     onClick={() => handleBid(currentHighest + 1_000_000)}
                   >
                     <Gavel className="w-5 h-5 mr-3 group-hover:rotate-12 transition-transform" />
@@ -165,7 +165,7 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ oppo
                 <div className="mt-8">
                   {isPlayerWinning ? (
                     <Button 
-                      className="w-full h-14 bg-emerald-500 text-white hover:bg-emerald-600 font-black text-xs uppercase tracking-[0.2em] rounded-xl shadow-xl shadow-emerald-500/20"
+                      className="w-full h-14 bg-emerald-500 text-white hover:bg-emerald-600 font-black text-xs uppercase tracking-[0.2em] rounded-none shadow-xl shadow-emerald-500/20"
                       onClick={() => {
                         acquireOpportunity(opp.id);
                         onClose();
@@ -175,7 +175,7 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ oppo
                       Claim Rights
                     </Button>
                   ) : (
-                    <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-center">
+                    <div className="p-4 rounded-none bg-rose-500/10 border border-rose-500/20 text-center">
                        <p className="text-xs font-black uppercase tracking-widest text-rose-500 mb-1">Auction Closed</p>
                        <p className="text-[10px] font-bold text-muted-foreground uppercase leading-tight">Rights acquired by {highestBidder?.name}</p>
                        <Button variant="outline" size="sm" className="mt-3 w-full h-8 text-[9px] font-black uppercase bg-white/5" onClick={onClose}>Dismiss</Button>
@@ -189,7 +189,7 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ oppo
         {/* Right Column: Intensity & History */}
         <div className="flex flex-col space-y-4">
            {/* Interest Intensity Meter */}
-           <div className="glass-panel p-5 rounded-2xl border border-white/5 space-y-4">
+           <div className="glass-panel p-5 rounded-none border border-white/5 space-y-4">
               <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
                 <Target className="w-4 h-4 text-rose-400" /> Town Heat Level
               </h3>
@@ -199,7 +199,7 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ oppo
                     <div 
                       key={i} 
                       className={cn(
-                        "flex-1 rounded-t-sm transition-all duration-1000",
+                        "flex-1 rounded-none-sm transition-all duration-1000",
                         h > 80 ? "bg-rose-400/80 shadow-[0_0_10px_rgba(251,113,133,0.4)]" : 
                         h > 50 ? "bg-amber-400/60" : "bg-white/10"
                       )} 
@@ -213,7 +213,7 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ oppo
            </div>
 
            {/* Bid History */}
-           <div className="glass-panel rounded-2xl border border-white/5 overflow-hidden flex flex-col h-full min-h-[300px]">
+           <div className="glass-panel rounded-none border border-white/5 overflow-hidden flex flex-col h-full min-h-[300px]">
               <div className="p-4 bg-white/5 border-b border-white/5 flex items-center justify-between">
                  <h3 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                    <History className="w-4 h-4" /> Bid History
@@ -226,12 +226,12 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ oppo
                   <div 
                     key={i} 
                     className={cn(
-                      "flex items-center justify-between p-2.5 rounded-xl border transition-all",
+                      "flex items-center justify-between p-2.5 rounded-none border transition-all",
                       bid.rivalId === 'PLAYER' ? "bg-primary/10 border-primary/20" : "bg-white/2 border-white/5"
                     )}
                   >
                     <div className="flex items-center gap-2.5">
-                       <div className={cn("w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black", (bid.rivalId === playerStudioId || bid.rivalId === 'PLAYER') ? "bg-primary text-black" : "bg-white/5 text-muted-foreground")}>
+                       <div className={cn("w-6 h-6 rounded-none flex items-center justify-center text-[10px] font-black", (bid.rivalId === playerStudioId || bid.rivalId === 'PLAYER') ? "bg-primary text-black" : "bg-white/5 text-muted-foreground")}>
                           {(bid.rivalId === playerStudioId || bid.rivalId === 'PLAYER') ? 'P' : 'R'}
                        </div>
                        <div>

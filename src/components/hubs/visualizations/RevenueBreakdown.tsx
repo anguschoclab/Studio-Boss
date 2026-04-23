@@ -92,7 +92,7 @@ export const RevenueBreakdown: React.FC<RevenueBreakdownProps> = ({
           return (
             <div key={item.name} className="flex items-center gap-2 text-[10px]">
               <div 
-                className="w-3 h-3 rounded-full flex-shrink-0" 
+                className="w-3 h-3 rounded-none flex-shrink-0" 
                 style={{ backgroundColor: item.color }}
               />
               <span className="truncate">{item.name}</span>

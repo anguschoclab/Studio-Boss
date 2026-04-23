@@ -25,7 +25,7 @@ export const TalentBioTab: React.FC<TalentBioTabProps> = ({
   <TabsContent value="bio" className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300 focus-visible:outline-none">
     <div className="grid grid-cols-5 gap-8">
       <div className="col-span-3 space-y-8">
-        <div className="glass-panel p-8 rounded-3xl relative group overflow-hidden">
+        <div className="glass-panel p-8 rounded-none relative group overflow-hidden">
           <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
             <Quote className="w-20 h-20" />
           </div>
@@ -43,8 +43,8 @@ export const TalentBioTab: React.FC<TalentBioTabProps> = ({
           </h4>
           <div className="grid grid-cols-1 gap-3">
             {talent.trivia?.map((t, i) => (
-              <div key={i} className="bg-slate-900/30 p-5 rounded-2xl border border-white/5 hover:border-primary/20 transition-all duration-300 flex gap-4">
-                <div className="w-6 h-6 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+              <div key={i} className="bg-black/40 p-5 rounded-none border border-white/5 hover:border-primary/20 transition-all duration-300 flex gap-4">
+                <div className="w-6 h-6 rounded-none bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
                   <span className="text-[10px] font-black text-primary">{i + 1}</span>
                 </div>
                 <p className="text-sm text-slate-300 font-medium">{t}</p>
@@ -55,13 +55,13 @@ export const TalentBioTab: React.FC<TalentBioTabProps> = ({
       </div>
 
       <div className="col-span-2 space-y-6">
-        <div className="bg-slate-900/60 p-6 rounded-3xl border border-white/5 space-y-4 shadow-xl">
+        <div className="bg-black/40 p-6 rounded-none border border-white/5 space-y-4 shadow-xl">
           <h4 className="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
             <Briefcase className="h-4 w-4" /> Representation
           </h4>
           {agency ? (
             <div className="space-y-4">
-              <div className="p-4 rounded-2xl bg-white/5 border border-white/5">
+              <div className="p-4 rounded-none bg-white/5 border border-white/5">
                 <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Current Agency</p>
                 <p className="font-black text-white text-lg tracking-tight uppercase italic">{agency.name}</p>
                 <div className="flex gap-2 mt-2">
@@ -70,7 +70,7 @@ export const TalentBioTab: React.FC<TalentBioTabProps> = ({
                 </div>
               </div>
               {talent.contractId && (
-                <div className="p-4 rounded-2xl bg-rose-500/5 border border-rose-500/10">
+                <div className="p-4 rounded-none bg-rose-500/5 border border-rose-500/10">
                   <p className="text-[10px] font-bold text-rose-500/60 uppercase tracking-widest mb-1">Exclusive Pact</p>
                   <p className="text-xs font-black text-rose-400 uppercase italic">Active Industry Tie-up</p>
                   <p className="text-[9px] text-rose-400/60 font-bold mt-1 uppercase">Limited availability for outside projects</p>
@@ -85,19 +85,19 @@ export const TalentBioTab: React.FC<TalentBioTabProps> = ({
               )}
             </div>
           ) : (
-            <div className="p-10 text-center border-2 border-dashed border-white/5 rounded-2xl">
+            <div className="p-10 text-center border-2 border-dashed border-white/5 rounded-none">
               <p className="text-xs italic text-slate-500 font-bold uppercase tracking-widest opacity-40">Unrepresented</p>
             </div>
           )}
         </div>
 
         {family && (
-          <div className="bg-amber-500/5 p-6 border border-amber-500/10 rounded-3xl shadow-xl">
+          <div className="bg-amber-500/5 p-6 border border-amber-500/10 rounded-none shadow-xl">
             <h4 className="text-[11px] font-black text-amber-500 uppercase tracking-widest flex items-center gap-2 mb-4">
               <Heart className="h-4 w-4" /> Industry Heritage
             </h4>
             <div className="flex items-center gap-4 mb-4">
-              <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center font-black text-amber-500 text-2xl tracking-tighter">
+              <div className="w-12 h-12 rounded-none bg-amber-500/10 border border-amber-500/20 flex items-center justify-center font-black text-amber-500 text-2xl tracking-tighter">
                 {family.name[0]}
               </div>
               <div>
@@ -106,11 +106,11 @@ export const TalentBioTab: React.FC<TalentBioTabProps> = ({
               </div>
             </div>
             <div className="grid grid-cols-2 gap-3 mb-4">
-              <div className="bg-amber-950/20 p-2 rounded-xl text-center border border-amber-500/10">
+              <div className="bg-amber-950/20 p-2 rounded-none text-center border border-amber-500/10">
                 <p className="text-[8px] font-black text-amber-500/60 uppercase">Prestige</p>
                 <p className="text-sm font-black text-amber-200">{family.prestigeLegacy}</p>
               </div>
-              <div className="bg-amber-950/20 p-2 rounded-xl text-center border border-amber-500/10">
+              <div className="bg-amber-950/20 p-2 rounded-none text-center border border-amber-500/10">
                 <p className="text-[8px] font-black text-amber-500/60 uppercase">Recognition</p>
                 <p className="text-sm font-black text-amber-200">{family.recognition}</p>
               </div>
@@ -125,7 +125,7 @@ export const TalentBioTab: React.FC<TalentBioTabProps> = ({
                     <button
                       type="button"
                       key={member.id}
-                      className="flex items-center w-full sm:w-auto gap-2 bg-amber-950/30 px-2 py-1.5 rounded-xl border border-amber-500/10 hover:border-amber-500/30 transition-colors cursor-pointer text-left"
+                      className="flex items-center w-full sm:w-auto gap-2 bg-amber-950/30 px-2 py-1.5 rounded-none border border-amber-500/10 hover:border-amber-500/30 transition-colors cursor-pointer text-left"
                       onClick={() => onSelectTalent(member.id)}
                     >
                       <TalentAvatar talent={member} size="xs" className="border-amber-500/20" />

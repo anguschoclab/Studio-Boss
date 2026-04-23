@@ -71,7 +71,7 @@ export const AwardsCeremonyModal = () => {
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.1 }}
-                    className="bg-stone-900/50 border border-stone-800 p-4 rounded-xl flex flex-col gap-1 hover:border-amber-500/50 transition-colors"
+                    className="bg-stone-900/50 border border-stone-800 p-4 rounded-none flex flex-col gap-1 hover:border-amber-500/50 transition-colors"
                   >
                     <span className="text-xs font-black text-amber-500/60 uppercase tracking-tighter">{award.category}</span>
                     <span className="text-lg font-bold text-white leading-tight">{getProjectTitle(award.projectId)}</span>
@@ -81,7 +81,7 @@ export const AwardsCeremonyModal = () => {
 
               <Button 
                 onClick={() => setPhase('reveal')}
-                className="bg-amber-600 hover:bg-amber-500 text-black font-black uppercase tracking-widest px-12 py-6 h-auto text-lg rounded-full shadow-[0_0_30px_rgba(212,175,55,0.3)] transition-all hover:scale-105 active:scale-95"
+                className="bg-amber-600 hover:bg-amber-500 text-black font-black uppercase tracking-widest px-12 py-6 h-auto text-lg rounded-none shadow-[0_0_30px_rgba(212,175,55,0.3)] transition-all hover:scale-105 active:scale-95"
               >
                 Enter the Ballroom
               </Button>
@@ -118,7 +118,7 @@ export const AwardsCeremonyModal = () => {
                   transition={{ delay: 1.5, duration: 1 }}
                   className="space-y-4"
                 >
-                  <div className="inline-block p-1 rounded-sm bg-stone-800 text-amber-500 text-[10px] font-black uppercase tracking-widest px-3 mb-2">And the winner is...</div>
+                  <div className="inline-block p-1 rounded-none bg-stone-800 text-amber-500 text-[10px] font-black uppercase tracking-widest px-3 mb-2">And the winner is...</div>
                   
                   <motion.div
                     initial={{ scale: 0.8 }}

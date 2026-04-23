@@ -27,7 +27,7 @@ export const AwardsHQ: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div className="space-y-1">
           <div className="flex items-center gap-3">
-             <div className="p-2 rounded-lg bg-amber-500/10 border border-amber-500/20">
+             <div className="p-2 rounded-none bg-amber-500/10 border border-amber-500/20">
                 <Trophy className="w-6 h-6 text-amber-500" />
              </div>
              <h1 className="text-4xl font-black italic uppercase tracking-tighter text-white">Awards HQ</h1>
@@ -38,10 +38,10 @@ export const AwardsHQ: React.FC = () => {
         </div>
         
         <div className="flex gap-2">
-           <Badge variant="outline" className="h-10 px-4 border-slate-800 bg-slate-900/50 text-slate-400 font-black uppercase text-[10px] tracking-widest flex items-center gap-2">
+           <Badge variant="outline" className="h-10 px-4 border-white/5 bg-black/40 text-slate-400 font-black uppercase text-[10px] tracking-widest flex items-center gap-2">
               <Filter className="w-3 h-3" /> All Formats
            </Badge>
-           <Badge variant="outline" className="h-10 px-4 border-slate-800 bg-slate-900/50 text-slate-400 font-black uppercase text-[10px] tracking-widest flex items-center gap-2">
+           <Badge variant="outline" className="h-10 px-4 border-white/5 bg-black/40 text-slate-400 font-black uppercase text-[10px] tracking-widest flex items-center gap-2">
               <TrendingUp className="w-3 h-3" /> Season Rank: #14
            </Badge>
         </div>
@@ -55,7 +55,7 @@ export const AwardsHQ: React.FC = () => {
            { label: 'Critically Acclaimed', val: eligibleProjects.filter(p => (p.reception?.metaScore || 0) >= 75).length, icon: Trophy, color: 'text-emerald-400' },
            { label: 'Academy Standing', val: `${gameState.studio.prestige}/100`, icon: Info, color: 'text-violet-400' }
          ].map(stat => (
-           <div key={stat.label} className="glass-card p-5 rounded-2xl space-y-2">
+           <div key={stat.label} className="glass-card p-5 rounded-none space-y-2">
               <div className="flex items-center justify-between">
                  <stat.icon className={cn("w-5 h-5", stat.color)} />
                  <span className="text-[9px] font-black uppercase text-slate-500 tracking-widest">{stat.label}</span>
@@ -70,14 +70,14 @@ export const AwardsHQ: React.FC = () => {
         <h2 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500">Eligible Contenders (Last 52 Weeks)</h2>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {eligibleProjects.length === 0 ? (
-            <div className="col-span-full p-20 rounded-3xl border-2 border-dashed border-slate-800 flex flex-col items-center justify-center text-center space-y-4">
+            <div className="col-span-full p-20 rounded-none border-2 border-dashed border-white/5 flex flex-col items-center justify-center text-center space-y-4">
                <Trophy className="w-12 h-12 text-slate-700" />
                <p className="text-slate-500 font-bold uppercase tracking-widest text-sm">No projects released in the last year are eligible for honors.</p>
             </div>
           ) : eligibleProjects.map(project => {
             const campaign = gameState.studio.activeCampaigns?.[project.id];
             return (
-              <div key={project.id} className="group relative glass-card p-6 rounded-3xl hover:border-primary/30 transition-all overflow-hidden">
+              <div key={project.id} className="group relative glass-card p-6 rounded-none hover:border-primary/30 transition-all overflow-hidden">
                 <div className="absolute top-0 left-0 w-1 h-full bg-slate-800 group-hover:bg-primary/50 transition-colors" />
                 
                 <div className="flex justify-between items-start mb-6">
@@ -114,7 +114,7 @@ export const AwardsHQ: React.FC = () => {
 
                 <div className="grid grid-cols-1 gap-4">
                   {campaign ? (
-                    <div className="p-4 rounded-2xl bg-amber-500/5 border border-amber-500/20 flex items-center justify-between">
+                    <div className="p-4 rounded-none bg-amber-500/5 border border-amber-500/20 flex items-center justify-between">
                        <div className="flex items-center gap-3">
                           <Sparkles className="w-5 h-5 text-amber-500" />
                           <div>
@@ -132,7 +132,7 @@ export const AwardsHQ: React.FC = () => {
                             <Button 
                               key={key}
                                variant="outline" 
-                               className="h-16 flex flex-col items-center justify-center border-slate-800 hover:border-amber-500/50 bg-black/40 group/btn"
+                               className="h-16 flex flex-col items-center justify-center border-white/5 hover:border-amber-500/50 bg-black/40 group/btn"
                                onClick={() => launchAwardsCampaign(project.id, key as 'Grassroots' | 'Trade' | 'Blitz')}
                                disabled={gameState.finance.cash < tier.cost || (project.reception?.metaScore || 0) < 65}
                              >

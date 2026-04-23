@@ -21,7 +21,7 @@ export const SummaryCards = ({ metrics }: SummaryCardsProps) => {
         <TooltipWrapper key={metric.label} tooltip={metric.tooltip} side="top">
           <Card 
             className={cn(
-              "border-white/5 bg-white/[0.01] backdrop-blur-xl transition-all duration-700 relative overflow-hidden group cursor-help rounded-none hover:bg-white/[0.03] hover:border-primary/20 hover:shadow-[0_0_30px_rgba(var(--primary),0.05)]",
+              "border-white/5 bg-white/[0.01] backdrop-blur-3xl transition-all duration-700 relative overflow-hidden group cursor-help rounded-none hover:bg-white/[0.03] hover:border-primary/20 hover:shadow-[0_0_30px_rgba(var(--primary),0.05)]",
               metric.bg
             )}
             style={{ animationDelay: `${i * 100}ms` }}

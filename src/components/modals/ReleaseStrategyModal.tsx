@@ -134,7 +134,7 @@ export const ReleaseStrategyModal: React.FC = () => {
                 type="button"
                 onClick={() => setSelected(card.strategy)}
                 className={cn(
-                  'glass-card hover-glow cursor-pointer p-4 rounded-xl border-2 text-left transition-all duration-200',
+                  'glass-card hover-glow cursor-pointer p-4 rounded-none border-2 text-left transition-all duration-200',
                   'hover:scale-[1.02] active:scale-[0.99]',
                   isSelected
                     ? 'border-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.35)]'
@@ -201,7 +201,7 @@ export const ReleaseStrategyModal: React.FC = () => {
 
         {/* Description of selected */}
         {selected && (
-          <div className="p-3 rounded-lg bg-card/60 border border-border/40 text-xs text-muted-foreground">
+          <div className="p-3 rounded-none bg-card/60 border border-border/40 text-xs text-muted-foreground">
             {getReleaseStrategyEffect(selected, project ?? {}).description}
           </div>
         )}

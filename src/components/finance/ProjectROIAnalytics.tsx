@@ -75,7 +75,7 @@ export const ProjectROIAnalytics = ({ releasedProjects }: ProjectROIAnalyticsPro
             );
           }) : (
             <div className="col-span-full p-12 text-center bg-muted/5 opacity-70">
-              <p className="text-xs font-black uppercase tracking-widest text-muted-foreground border border-dashed border-border/40 inline-block px-6 py-3 rounded-xl">
+              <p className="text-xs font-black uppercase tracking-widest text-muted-foreground border border-dashed border-border/40 inline-block px-6 py-3 rounded-none">
                 No projects released yet
               </p>
             </div>

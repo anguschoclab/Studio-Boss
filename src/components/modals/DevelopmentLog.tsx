@@ -32,7 +32,7 @@ export const DevelopmentLog: React.FC<DevelopmentLogProps> = ({ project }) => {
   return (
     <div className="flex flex-col h-full space-y-4">
       {/* Script Heat Meter */}
-      <div className="glass-panel p-5 rounded-2xl border border-white/5 bg-gradient-to-br from-violet-500/10 via-black/20 to-transparent">
+      <div className="glass-panel p-5 rounded-none border border-white/5 bg-gradient-to-br from-violet-500/10 via-black/20 to-transparent">
          <div className="flex justify-between items-center mb-3">
             <h3 className="text-xs font-black uppercase tracking-[0.2em] text-white/60 flex items-center gap-2">
                <Zap className="w-4 h-4 text-primary" /> Executive Package Heat
@@ -42,7 +42,7 @@ export const DevelopmentLog: React.FC<DevelopmentLogProps> = ({ project }) => {
               heat >= 75 ? "text-primary drop-shadow-[0_0_10px_rgba(var(--primary),0.3)]" : "text-foreground"
             )}>{Math.round(heat)}%</span>
          </div>
-         <div className="h-2 rounded-full bg-black/40 overflow-hidden relative shadow-inner">
+         <div className="h-2 rounded-none bg-black/40 overflow-hidden relative shadow-inner">
             <div 
               className="h-full bg-gradient-to-r from-violet-500 to-primary transition-all duration-1000 ease-out" 
               style={{ width: `${heat}%` }} 
@@ -59,14 +59,14 @@ export const DevelopmentLog: React.FC<DevelopmentLogProps> = ({ project }) => {
       </div>
 
       {/* Role Manifest */}
-      <div className="glass-panel p-4 rounded-xl border border-white/5 space-y-3">
+      <div className="glass-panel p-4 rounded-none border border-white/5 space-y-3">
          <div className="flex items-center gap-2 mb-2">
             <Type className="w-4 h-4 text-primary" />
             <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">Character Matrix</span>
          </div>
          <div className="flex flex-wrap gap-2">
             {(scriptedProject?.activeRoles || []).map((role: string) => (
-               <div key={role} className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/5 text-[10px] font-black uppercase tracking-widest text-foreground/80 flex items-center gap-2 group hover:border-primary/40 transition-all">
+               <div key={role} className="px-3 py-1.5 rounded-none bg-white/5 border border-white/5 text-[10px] font-black uppercase tracking-widest text-foreground/80 flex items-center gap-2 group hover:border-primary/40 transition-all">
                   <Search className="w-3.5 h-3.5 text-muted-foreground/40 group-hover:text-primary transition-colors" />
                   {role.replace('_', ' ')}
                </div>
@@ -81,7 +81,7 @@ export const DevelopmentLog: React.FC<DevelopmentLogProps> = ({ project }) => {
          </h4>
          
          {events.length === 0 ? (
-           <div className="flex flex-col items-center justify-center py-12 opacity-20 border-2 border-dashed border-white/10 rounded-2xl">
+           <div className="flex flex-col items-center justify-center py-12 opacity-20 border-2 border-dashed border-white/10 rounded-none">
               <FileEdit className="w-10 h-10 mb-2" />
               <p className="text-[10px] font-black uppercase tracking-widest">Initial drafting phase</p>
            </div>
@@ -91,9 +91,9 @@ export const DevelopmentLog: React.FC<DevelopmentLogProps> = ({ project }) => {
                const config = EVENT_CONFIG[event.type as keyof typeof EVENT_CONFIG] || EVENT_CONFIG.DIALOGUE_POLISH;
                const EventIcon = config.icon;
                return (
-                 <div key={idx} className="glass-panel p-4 rounded-xl border border-white/5 animate-in slide-in-from-right-4 duration-500">
+                 <div key={idx} className="glass-panel p-4 rounded-none border border-white/5 animate-in slide-in-from-right-4 duration-500">
                     <div className="flex gap-4">
-                       <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center bg-black/40 border border-white/5", config.color)}>
+                       <div className={cn("w-10 h-10 rounded-none flex items-center justify-center bg-black/40 border border-white/5", config.color)}>
                           <EventIcon className="w-5 h-5" />
                        </div>
                        <div className="flex-1 min-w-0">
@@ -117,7 +117,7 @@ export const DevelopmentLog: React.FC<DevelopmentLogProps> = ({ project }) => {
          )}
       </div>
 
-      <div className="p-4 rounded-xl bg-primary/5 border border-primary/10 flex items-center gap-3">
+      <div className="p-4 rounded-none bg-primary/5 border border-primary/10 flex items-center gap-3">
          <Brain className="w-5 h-5 text-primary" />
          <p className="text-[9px] font-bold text-muted-foreground leading-snug">
             Drafting decisions are algorithmic. Script Evolution triggers as "Town Heat" accumulates, reflecting the creative dynamism of your writing room.

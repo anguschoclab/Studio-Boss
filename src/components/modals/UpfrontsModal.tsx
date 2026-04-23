@@ -39,7 +39,7 @@ export const UpfrontsModal: React.FC = () => {
       <DialogContent className="max-w-lg bg-card/90 backdrop-blur-2xl border border-white/10">
         <DialogHeader>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 rounded-lg bg-primary/10">
+            <div className="p-2 rounded-none bg-primary/10">
               <Tv className="h-5 w-5 text-primary" />
             </div>
             <div>
@@ -52,15 +52,15 @@ export const UpfrontsModal: React.FC = () => {
         </DialogHeader>
 
         <div className="grid grid-cols-3 gap-3 mb-4">
-          <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-center">
+          <div className="p-3 rounded-none bg-emerald-500/10 border border-emerald-500/20 text-center">
             <p className="text-2xl font-black text-emerald-400">{pickups.length}</p>
             <p className="text-[10px] text-muted-foreground uppercase font-bold">Full Orders</p>
           </div>
-          <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 text-center">
+          <div className="p-3 rounded-none bg-amber-500/10 border border-amber-500/20 text-center">
             <p className="text-2xl font-black text-amber-400">{limited.length}</p>
             <p className="text-[10px] text-muted-foreground uppercase font-bold">Limited</p>
           </div>
-          <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-center">
+          <div className="p-3 rounded-none bg-destructive/10 border border-destructive/20 text-center">
             <p className="text-2xl font-black text-destructive">{passes.length}</p>
             <p className="text-[10px] text-muted-foreground uppercase font-bold">Passed</p>
           </div>
@@ -73,7 +73,7 @@ export const UpfrontsModal: React.FC = () => {
               return (
                 <div
                   key={result.projectId}
-                  className="flex items-center justify-between p-3 rounded-lg bg-card/40 border border-border/40"
+                  className="flex items-center justify-between p-3 rounded-none bg-card/40 border border-border/40"
                 >
                   <div className="flex items-center gap-3">
                     {decisionIcon(result.decision)}

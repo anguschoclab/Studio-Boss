@@ -75,8 +75,8 @@ export const RivalsPanel = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {rivals.map(rival => (
-                <div key={rival.id} className="p-8 rounded-2xl glass-card border-white/5 bg-white/[0.01] space-y-8 hover:bg-white/[0.03] hover:border-destructive/30 transition-all duration-700 group relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-destructive/5 rounded-full blur-[60px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+                <div key={rival.id} className="p-8 rounded-none glass-card border-white/5 bg-white/[0.01] space-y-8 hover:bg-white/[0.03] hover:border-destructive/30 transition-all duration-700 group relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-destructive/5 rounded-none blur-[60px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
                   
                   <div className="flex items-start justify-between relative z-10">
                     <TooltipWrapper tooltip="STUDIO ARCHETYPE ANALYSIS" side="top">

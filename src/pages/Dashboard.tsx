@@ -59,8 +59,8 @@ const Dashboard: React.FC = () => {
       <div className="flex-1 flex flex-col h-screen overflow-hidden overflow-y-auto relative custom-scrollbar">
         <TopBar />
         <main className="flex-1 w-full bg-gradient-to-br from-background via-background to-primary/5 p-4 md:p-6 lg:p-8 relative">
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] -z-10 pointer-events-none" />
-          <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-secondary/5 rounded-full blur-[100px] -z-10 pointer-events-none" />
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-none blur-[150px] -z-10 pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-secondary/5 rounded-none blur-[120px] -z-10 pointer-events-none" />
           <div className="container mx-auto max-w-[1600px] h-full flex flex-col">
             <AnimatePresence mode="wait">
               <motion.div

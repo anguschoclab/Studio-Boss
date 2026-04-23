@@ -132,7 +132,7 @@ export const OfferHistoryLog: React.FC<OfferHistoryLogProps> = ({
       <div className="grid grid-cols-3 gap-4">
         <Card className={cn('p-4', tokens.border.default)}>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-amber-500/10">
+            <div className="p-2 rounded-none bg-amber-500/10">
               <Clock className="h-5 w-5 text-amber-500" />
             </div>
             <div>
@@ -144,7 +144,7 @@ export const OfferHistoryLog: React.FC<OfferHistoryLogProps> = ({
 
         <Card className={cn('p-4', tokens.border.default)}>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-emerald-500/10">
+            <div className="p-2 rounded-none bg-emerald-500/10">
               <CheckCircle2 className="h-5 w-5 text-emerald-500" />
             </div>
             <div>
@@ -158,7 +158,7 @@ export const OfferHistoryLog: React.FC<OfferHistoryLogProps> = ({
 
         <Card className={cn('p-4', tokens.border.default)}>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-blue-500/10">
+            <div className="p-2 rounded-none bg-blue-500/10">
               <History className="h-5 w-5 text-blue-500" />
             </div>
             <div>
@@ -189,7 +189,7 @@ export const OfferHistoryLog: React.FC<OfferHistoryLogProps> = ({
         icon={History}
       >
         {resolved.length === 0 ? (
-          <div className={cn('text-center py-8', tokens.border.default, 'border-dashed rounded-xl')}>
+          <div className={cn('text-center py-8', tokens.border.default, 'border-dashed rounded-none')}>
             <History className="h-10 w-10 mx-auto mb-3 opacity-20" />
             <p className={cn('text-sm', tokens.text.caption)}>
               No offer history yet

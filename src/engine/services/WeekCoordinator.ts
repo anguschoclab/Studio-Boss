@@ -24,6 +24,9 @@ import { tickIndustryUpstarts } from '../systems/industry/IndustryUpstarts';
 import { tickConsolidation } from '../systems/industry/ConsolidationEngine';
 import { InterestRateSimulator } from '../systems/market/InterestRateSimulator';
 import { tickLoans } from '../systems/finance/LoanSystem';
+import { tickReleaseStrategy } from '../systems/ReleaseStrategySystem';
+import { tickStudioIdentity } from '../systems/StudioIdentitySystem';
+import { checkAchievements } from '../systems/AchievementsSystem';
 
 // Talent Lifecycle Systems
 import { tickRelationshipSystem } from '../systems/talent/RelationshipSystem';
@@ -45,6 +48,7 @@ import { runAwardsCeremony } from '../systems/awards/CeremonyRunner';
 import { processRazzies } from '../systems/awards/RazzieProcessor';
 import { tickPilots } from '../systems/television/pilotEvaluator';
 import { runUpfronts } from '../systems/television/upfrontsEngine';
+import { tickPostProduction } from '../systems/PostProductionSystem';
 
 // AI Competition Systems
 import { tickTalentCompetition } from '../systems/ai/bidding/CompetitionModule';
@@ -53,6 +57,7 @@ import { runFestivalMarket } from '../systems/festivals/festivalAuctionEngine';
 // IP Systems
 import { tickIPVault } from '../systems/ip/IPVaultManager';
 import { advanceIPRights } from '../systems/ipRetention';
+import { updateFranchiseHub } from '../systems/ip/franchiseCoordinator';
 
 // Market Systems
 import { advanceRumors } from '../systems/rumors';
@@ -110,8 +115,19 @@ export class WeekCoordinator {
       payload: { modalType: 'SUMMARY' }
     });
 
+    // 2.6 Achievements Check
+    context.impacts.push(...checkAchievements(state));
+
     // 3. Consolidation Phase (The Merge)
-    const nextState = applyImpacts(state, context.impacts);
+    let nextState = applyImpacts(state, context.impacts);
+
+    // 3.5 Check for franchise breakouts on newly released projects
+    const releasedProjects = Object.values(nextState.entities.projects).filter(
+      p => p.state === 'released' && p.releaseWeek === context.week
+    );
+    for (const p of releasedProjects) {
+      nextState = updateFranchiseHub(nextState, p);
+    }
 
     const finalizedState: GameState = {
       ...nextState,
@@ -139,6 +155,8 @@ export class WeekCoordinator {
     context.impacts.push(...tickVerticalIntegration(state, context.rng));
     context.impacts.push(...tickIndustryUpstarts(state));
     context.impacts.push(...tickConsolidation(state));
+    context.impacts.push(...tickReleaseStrategy(state));
+    context.impacts.push(...tickStudioIdentity(state));
 
     // Rumors
     context.impacts.push(advanceRumors(state, context.week, context.rng));
@@ -147,6 +165,9 @@ export class WeekCoordinator {
   private static runProductionFilter(state: GameState, context: TickContext) {
     // 0. Production Enhancement (on-set chemistry bonuses) — runs before core production
     context.impacts.push(...tickProductionEnhancementSystem(state, context.rng));
+
+    // 0.5 Post-Production Tick
+    context.impacts.push(...tickPostProduction(state, context.rng));
 
     // 1. Core Production Tick
     context.impacts.push(...tickProduction(state, context.rng));

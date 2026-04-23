@@ -100,14 +100,14 @@ export const CreatePackageModal = ({ agencies: propAgencies, talents: propTalent
               <Users className="h-4 w-4" />
               Select Talent (max 5)
             </Label>
-            <div className="max-h-64 overflow-y-auto border rounded-md p-3 space-y-2">
+            <div className="max-h-64 overflow-y-auto border rounded-none p-3 space-y-2">
               {talentList.length === 0 ? (
                 <p className="text-sm text-muted-foreground">No available talent with contracts</p>
               ) : (
                 talentList.map(talent => (
                   <div
                     key={talent.id}
-                    className="flex items-center justify-between p-3 m-2 rounded-lg shadow-sm hover:shadow-md hover:bg-muted cursor-pointer transition-all"
+                    className="flex items-center justify-between p-3 m-2 rounded-none shadow-sm hover:shadow-md hover:bg-muted cursor-pointer transition-all"
                     role="button"
                     tabIndex={0}
                     onKeyDown={(e) => {

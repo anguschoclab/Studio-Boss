@@ -25,8 +25,8 @@ export const PipelineBoard = () => {
   return (
     <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 h-full flex flex-col">
       {/* Executive Slate Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 bg-white/[0.02] p-10 rounded-2xl border border-white/5 backdrop-blur-3xl relative overflow-hidden shadow-2xl">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] pointer-events-none -mr-48 -mt-48 opacity-40" />
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 bg-white/[0.02] p-10 rounded-none border border-white/5 backdrop-blur-3xl relative overflow-hidden shadow-2xl">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-none blur-[120px] pointer-events-none -mr-48 -mt-48 opacity-40" />
         <div className="flex items-center gap-8 relative z-10">
           <div className="w-20 h-20 rounded-none bg-primary/5 border border-primary/20 flex items-center justify-center shadow-[0_0_40px_rgba(var(--primary),0.15)]">
             <Layers className="h-10 w-10 text-primary" strokeWidth={1} />

@@ -99,8 +99,8 @@ export const CommandCenter: React.FC = () => {
       </div>
       
       {/* Recent Industry Intelligence */}
-      <div className="glass-card p-12 bg-gradient-to-br from-white/[0.03] to-transparent relative overflow-hidden rounded-2xl border border-white/5">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[150px] pointer-events-none -mr-48 -mt-48 opacity-50" />
+      <div className="glass-card p-12 bg-gradient-to-br from-white/[0.03] to-transparent relative overflow-hidden rounded-none border border-white/5">
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-none blur-[150px] pointer-events-none -mr-48 -mt-48 opacity-50" />
         
         <div className="flex items-center justify-between mb-12 pb-6 border-b border-white/5 relative z-10">
           <div className="flex items-center gap-6">

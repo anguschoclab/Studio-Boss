@@ -57,11 +57,11 @@ export const CrisisModal = () => {
         onPointerDownOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
       >
-        <div className="absolute inset-0 bg-destructive/20 animate-pulse pointer-events-none rounded-lg" />
+        <div className="absolute inset-0 bg-destructive/20 animate-pulse pointer-events-none rounded-none" />
         
         <DialogHeader className="relative z-10">
           <div className="flex justify-center mb-4">
-            <div className="p-3 bg-destructive rounded-full animate-bounce">
+            <div className="p-3 bg-destructive rounded-none animate-bounce">
               <AlertTriangle className="h-8 w-8 text-destructive-foreground" />
             </div>
           </div>

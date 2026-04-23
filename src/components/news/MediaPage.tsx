@@ -24,7 +24,7 @@ const OutletWidget = ({ title, description, icon, headlines, colorClass }: Outle
   <Card className="h-full flex flex-col border-border/40 bg-card/30 backdrop-blur-md shadow-lg transition-all duration-300 hover:shadow-xl hover:bg-card/40 hover:border-border/60">
     <CardHeader className="pb-3 border-b border-border/50">
       <div className="flex items-center gap-2">
-        <div className={`p-2 rounded-md ${colorClass} bg-opacity-20 flex items-center justify-center`}>
+        <div className={`p-2 rounded-none ${colorClass} bg-opacity-20 flex items-center justify-center`}>
           {icon}
         </div>
         <div>
@@ -37,7 +37,7 @@ const OutletWidget = ({ title, description, icon, headlines, colorClass }: Outle
       {headlines.length > 0 ? (
         <div className="space-y-4">
           {headlines.map((h, i) => (
-            <div key={h.id || i} className="space-y-2 pb-3.5 border-b border-border/30 last:border-0 last:pb-0 hover:bg-muted/10 p-2 -mx-2 rounded-lg transition-colors">
+            <div key={h.id || i} className="space-y-2 pb-3.5 border-b border-border/30 last:border-0 last:pb-0 hover:bg-muted/10 p-2 -mx-2 rounded-none transition-colors">
               <div className="flex justify-between items-start gap-2">
                 <span className="text-[10px] font-mono text-muted-foreground bg-muted px-1.5 py-0.5 rounded uppercase tracking-wider">
                   Wk {h.week}

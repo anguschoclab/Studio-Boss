@@ -4,7 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { formatMoney } from '@/engine/utils';
-import { Skull, Trophy, BarChart3, RefreshCw, Star } from 'lucide-react';
+import { Skull, Trophy, BarChart3, RefreshCw, Star, Terminal, ArrowRight, AlertTriangle } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 // ---------------------------------------------------------------------------
 // GameOverModal
@@ -54,84 +55,95 @@ export const GameOverModal = () => {
   if (!stats) return null;
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-background/95 backdrop-blur-2xl">
-      <div className="relative w-full max-w-2xl space-y-8 px-6 py-12 text-center">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/98 backdrop-blur-3xl overflow-y-auto py-20">
+      <div className="relative w-full max-w-4xl space-y-12 px-12 py-20 text-center">
+        
+        {/* Decorative Grid Lines */}
+        <div className="absolute inset-0 pointer-events-none opacity-5">
+           <div className="absolute inset-0" style={{ backgroundImage: 'linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+        </div>
 
         {/* ---------------------------------------------------------------- */}
         {/* Header                                                             */}
         {/* ---------------------------------------------------------------- */}
-        <div className="space-y-4">
-          <div className="flex justify-center">
-            <Skull className="h-16 w-16 text-destructive opacity-80" />
+        <div className="space-y-6 relative">
+          <div className="flex justify-center mb-10">
+            <div className="p-8 rounded-none border border-rose-500/20 bg-rose-500/5 shadow-[0_0_50px_rgba(244,63,94,0.2)]">
+              <Skull className="h-20 w-20 text-rose-500" strokeWidth={1} />
+            </div>
           </div>
 
-          <h1 className="font-display font-black text-6xl uppercase tracking-tighter text-destructive drop-shadow-[0_0_32px_rgba(var(--destructive),0.6)]">
-            Studio Bankrupt
+          <h1 className="font-display font-black text-8xl uppercase tracking-tighter text-rose-500 italic leading-none drop-shadow-[0_0_40px_rgba(244,63,94,0.6)]">
+            SYSTEM_TERMINATED
           </h1>
 
-          <p className="text-base text-muted-foreground">
-            The creditors have called. The lights are out. Your Hollywood dream has come to an end.
-          </p>
+          <div className="max-w-2xl mx-auto space-y-4">
+            <p className="text-[11px] font-black uppercase tracking-[0.5em] text-rose-500/60 italic">CRITICAL_FISCAL_FAILURE // UPLINK_OFFLINE</p>
+            <p className="text-sm font-medium text-muted-foreground/40 italic leading-relaxed uppercase tracking-tight">
+              THE CREDITORS HAVE SEIZED ALL ASSETS. PRODUCTION SLATE DISSOLVED. THE HOLLYWOOD DREAM HAS REACHED TERMINAL STATUS.
+            </p>
+          </div>
         </div>
 
         {/* ---------------------------------------------------------------- */}
         {/* Legacy Score                                                       */}
         {/* ---------------------------------------------------------------- */}
-        <Card className="glass-card border-primary/30 bg-primary/5">
-          <CardContent className="py-6">
-            <p className="text-[10px] font-display font-black uppercase tracking-widest text-muted-foreground">
-              Legacy Score
-            </p>
-            <p className="font-tabular-nums mt-2 font-display font-black text-6xl text-primary drop-shadow-[0_0_16px_rgba(var(--primary),0.5)]">
+        <div className="rounded-none border border-primary/20 bg-primary/5 p-12 relative overflow-hidden shadow-2xl group">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-50" />
+          <div className="relative z-10">
+            <p className="text-[11px] font-black uppercase tracking-[0.6em] text-primary italic mb-6">HISTORICAL_LEGACY_SCORE</p>
+            <p className="font-display font-black text-9xl text-primary italic drop-shadow-[0_0_50px_rgba(var(--primary),0.5)] transition-all duration-1000 group-hover:scale-105">
               {stats.legacyScore.toLocaleString()}
             </p>
-            <p className="mt-2 text-xs text-muted-foreground">
-              Prestige ({stats.prestige}) × 100 + Weeks Survived ({stats.weeksSurvived}) × 10
-            </p>
-          </CardContent>
-        </Card>
+            <div className="mt-8 flex items-center justify-center gap-6">
+               <div className="h-px bg-primary/20 w-12" />
+               <p className="text-[10px] font-black text-primary/40 uppercase tracking-[0.3em] italic">
+                 PRESTIGE [{stats.prestige}] × 100 + CYCLES_SURVIVED [{stats.weeksSurvived}] × 10
+               </p>
+               <div className="h-px bg-primary/20 w-12" />
+            </div>
+          </div>
+        </div>
 
         {/* ---------------------------------------------------------------- */}
         {/* Key Stats Grid                                                     */}
         {/* ---------------------------------------------------------------- */}
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           {[
             {
-              icon: <Star className="h-4 w-4" />,
-              label: 'Peak Cash',
-              value: formatMoney(stats.peakCash),
-              color: 'text-primary',
+              icon: <Star className="h-5 w-5" strokeWidth={3} />,
+              label: 'PEAK_CAPITAL',
+              value: formatMoney(stats.peakCash).toUpperCase(),
+              color: 'text-primary border-primary/20 bg-primary/5',
             },
             {
-              icon: <Trophy className="h-4 w-4" />,
-              label: 'Best Project',
-              value: stats.bestProject?.title ?? 'None',
-              color: 'text-success',
+              icon: <Trophy className="h-5 w-5" strokeWidth={3} />,
+              label: 'MAGNUM_OPUS',
+              value: (stats.bestProject?.title ?? 'NONE_RECORDED').toUpperCase(),
+              color: 'text-emerald-500 border-emerald-500/20 bg-emerald-500/5',
             },
             {
-              icon: <BarChart3 className="h-4 w-4" />,
-              label: 'Prestige Reached',
+              icon: <BarChart3 className="h-5 w-5" strokeWidth={3} />,
+              label: 'MAX_PRESTIGE',
               value: `${stats.prestige}`,
-              color: 'text-warning',
+              color: 'text-amber-500 border-amber-500/20 bg-amber-500/5',
             },
             {
-              icon: <RefreshCw className="h-4 w-4" />,
-              label: 'Weeks Survived',
+              icon: <RefreshCw className="h-5 w-5" strokeWidth={3} />,
+              label: 'CYCLES_SURVIVED',
               value: `${stats.weeksSurvived}`,
-              color: 'text-secondary',
+              color: 'text-secondary border-secondary/20 bg-secondary/5',
             },
           ].map((stat) => (
-            <Card key={stat.label} className="glass-card border-border/40">
-              <CardContent className="flex flex-col items-center gap-1 py-5">
-                <span className="text-muted-foreground">{stat.icon}</span>
-                <p className="text-[9px] font-display font-black uppercase tracking-widest text-muted-foreground">
-                  {stat.label}
-                </p>
-                <p className={`font-tabular-nums text-xl font-display font-black ${stat.color} truncate`}>
-                  {stat.value}
-                </p>
-              </CardContent>
-            </Card>
+            <div key={stat.label} className={cn("p-8 rounded-none border flex flex-col items-center gap-4 transition-all duration-700 hover:bg-white/[0.02]", stat.color)}>
+              <span className="opacity-40">{stat.icon}</span>
+              <p className="text-[9px] font-black uppercase tracking-[0.3em] italic opacity-40 text-center">
+                {stat.label}
+              </p>
+              <p className="text-xl font-display font-black italic tracking-tighter truncate w-full text-center">
+                {stat.value}
+              </p>
+            </div>
           ))}
         </div>
 
@@ -139,89 +151,75 @@ export const GameOverModal = () => {
         {/* Stats Breakdown (toggled)                                         */}
         {/* ---------------------------------------------------------------- */}
         {showBreakdown && (
-          <Card className="glass-card border-border/40 text-left">
-            <CardContent className="py-6">
-              <p className="mb-4 text-[10px] font-display font-black uppercase tracking-widest text-muted-foreground">
-                Full Breakdown
+          <div className="rounded-none border border-white/10 bg-black/40 p-12 text-left space-y-10 animate-in slide-in-from-bottom-10 duration-700">
+            <div>
+              <p className="mb-8 text-[11px] font-black uppercase tracking-[0.5em] text-primary italic border-b border-primary/20 pb-4">
+                FULL_METRIC_BREAKDOWN
               </p>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Final Cash Position</span>
-                  <span className="font-tabular-nums font-bold text-destructive">
-                    {formatMoney(stats.currentCash)}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Peak Cash Held</span>
-                  <span className="font-tabular-nums font-bold text-primary">
-                    {formatMoney(stats.peakCash)}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Projects Released</span>
-                  <span className="font-bold">{stats.releasedCount}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Best Project Revenue</span>
-                  <span className="font-tabular-nums font-bold text-success">
-                    {stats.bestProject ? formatMoney(stats.bestProject.revenue ?? 0) : 'N/A'}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Final Prestige</span>
-                  <span className="font-bold text-warning">{stats.prestige}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Weeks Active</span>
-                  <span className="font-bold">{stats.weeksSurvived}</span>
-                </div>
+              <div className="space-y-6">
+                {[
+                  { label: 'FINAL_CASH_POSITION', value: formatMoney(stats.currentCash).toUpperCase(), color: 'text-rose-500' },
+                  { label: 'PEAK_CASH_RESERVE', value: formatMoney(stats.peakCash).toUpperCase(), color: 'text-primary' },
+                  { label: 'PROPERTIES_RELEASED', value: stats.releasedCount, color: 'text-foreground' },
+                  { label: 'TOP_PROJECT_REVENUE', value: stats.bestProject ? formatMoney(stats.bestProject.revenue ?? 0).toUpperCase() : 'N/A', color: 'text-emerald-500' },
+                  { label: 'TERMINAL_PRESTIGE', value: stats.prestige, color: 'text-amber-500' },
+                  { label: 'TOTAL_CYCLES_ACTIVE', value: stats.weeksSurvived, color: 'text-secondary' },
+                ].map((item) => (
+                  <div key={item.label} className="flex justify-between items-center group">
+                    <span className="text-[10px] font-black text-muted-foreground/30 uppercase tracking-[0.4em] italic group-hover:text-muted-foreground transition-colors">{item.label}</span>
+                    <div className="h-px bg-white/5 flex-1 mx-8" />
+                    <span className={cn("text-xl font-display font-black italic tracking-tighter", item.color)}>
+                      {item.value}
+                    </span>
+                  </div>
+                ))}
               </div>
+            </div>
 
-              {/* Score formula breakdown */}
-              <div className="mt-6 rounded-lg border border-border/30 bg-background/30 p-4">
-                <p className="mb-3 text-[9px] font-display font-black uppercase tracking-widest text-muted-foreground">
-                  Legacy Score Formula
-                </p>
-                <div className="flex flex-wrap items-center gap-2 text-sm font-bold">
-                  <Badge variant="outline" className="font-tabular-nums border-primary/30 text-primary">
-                    {stats.prestige} prestige
-                  </Badge>
-                  <span className="text-muted-foreground">× 100</span>
-                  <span className="text-muted-foreground">+</span>
-                  <Badge variant="outline" className="font-tabular-nums border-secondary/30 text-secondary">
-                    {stats.weeksSurvived} weeks
-                  </Badge>
-                  <span className="text-muted-foreground">× 10</span>
-                  <span className="text-muted-foreground">=</span>
-                  <Badge className="font-tabular-nums bg-primary text-primary-foreground">
-                    {stats.legacyScore.toLocaleString()}
-                  </Badge>
+            {/* Score formula breakdown */}
+            <div className="mt-12 p-8 rounded-none border border-white/5 bg-white/[0.01]">
+              <p className="mb-6 text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground/40 italic flex items-center gap-3">
+                <Terminal className="h-3 w-3" />
+                LEGACY_CALCULATION_ALGORITHM
+              </p>
+              <div className="flex flex-wrap items-center gap-6">
+                <div className="px-4 py-2 border border-primary/20 bg-primary/5 text-primary text-sm font-black italic tracking-widest">
+                  {stats.prestige} PRESTIGE
+                </div>
+                <span className="text-muted-foreground/20 font-black">× 100</span>
+                <span className="text-muted-foreground/20 font-black">+</span>
+                <div className="px-4 py-2 border border-secondary/20 bg-secondary/5 text-secondary text-sm font-black italic tracking-widest">
+                  {stats.weeksSurvived} WEEKS
+                </div>
+                <span className="text-muted-foreground/20 font-black">× 10</span>
+                <span className="text-muted-foreground/20 font-black">=</span>
+                <div className="px-6 py-3 bg-primary text-black text-lg font-black italic tracking-[0.2em]">
+                  {stats.legacyScore.toLocaleString()}
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         )}
 
         {/* ---------------------------------------------------------------- */}
         {/* Action Buttons                                                     */}
         {/* ---------------------------------------------------------------- */}
-        <div className="flex justify-center gap-4">
-          <Button
-            size="lg"
-            variant="outline"
-            className="font-display font-black uppercase tracking-widest"
+        <div className="flex justify-center gap-8 pt-10">
+          <button
             onClick={() => setShowBreakdown((v) => !v)}
+            className="h-16 px-12 bg-white/5 border border-white/10 text-muted-foreground hover:text-primary hover:border-primary/40 hover:bg-primary/5 transition-all duration-700 font-black uppercase tracking-[0.5em] italic text-xs rounded-none group flex items-center gap-4"
           >
-            {showBreakdown ? 'Hide Stats' : 'Review Stats'}
-          </Button>
+            {showBreakdown ? 'CLOSE_METRICS' : 'REVIEW_METRICS'}
+            <ArrowRight className={cn("h-4 w-4 transition-transform duration-700", showBreakdown ? "rotate-90" : "")} />
+          </button>
 
-          <Button
-            size="lg"
-            className="font-display font-black uppercase tracking-widest bg-destructive text-destructive-foreground hover:bg-destructive/90"
+          <button
             onClick={clearGame}
+            className="h-16 px-16 bg-rose-600 text-black font-display font-black uppercase tracking-[0.6em] italic text-xs hover:bg-rose-500 hover:shadow-[0_0_80px_rgba(244,63,94,0.5)] hover:scale-[1.05] active:scale-95 transition-all duration-700 group relative overflow-hidden"
           >
-            Try Again
-          </Button>
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+            INITIATE_NEW_TIMELINE
+          </button>
         </div>
       </div>
     </div>

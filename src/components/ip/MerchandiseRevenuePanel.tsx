@@ -51,7 +51,7 @@ export const MerchandiseRevenuePanel: React.FC<MerchandiseRevenuePanelProps> = (
       <div className="grid grid-cols-3 gap-4">
         <Card className={cn('p-4', tokens.border.default)}>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-primary/10">
+            <div className="p-2 rounded-none bg-primary/10">
               <DollarSign className="h-5 w-5 text-primary" />
             </div>
             <div>
@@ -63,7 +63,7 @@ export const MerchandiseRevenuePanel: React.FC<MerchandiseRevenuePanelProps> = (
 
         <Card className={cn('p-4', tokens.border.default)}>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-emerald-500/10">
+            <div className="p-2 rounded-none bg-emerald-500/10">
               <Package className="h-5 w-5 text-emerald-500" />
             </div>
             <div>
@@ -75,7 +75,7 @@ export const MerchandiseRevenuePanel: React.FC<MerchandiseRevenuePanelProps> = (
 
         <Card className={cn('p-4', tokens.border.default)}>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-amber-500/10">
+            <div className="p-2 rounded-none bg-amber-500/10">
               <TrendingUp className="h-5 w-5 text-amber-500" />
             </div>
             <div>
@@ -95,7 +95,7 @@ export const MerchandiseRevenuePanel: React.FC<MerchandiseRevenuePanelProps> = (
         icon={ShoppingBag}
       >
         {byCategory.length === 0 ? (
-          <div className={cn('text-center py-8', tokens.border.default, 'border-dashed rounded-xl')}>
+          <div className={cn('text-center py-8', tokens.border.default, 'border-dashed rounded-none')}>
             <ShoppingBag className="h-10 w-10 mx-auto mb-3 opacity-20" />
             <p className={cn('text-sm', tokens.text.caption)}>
               No merchandise data available
@@ -134,7 +134,7 @@ export const MerchandiseRevenuePanel: React.FC<MerchandiseRevenuePanelProps> = (
         icon={Star}
       >
         {byFranchise.length === 0 ? (
-          <div className={cn('text-center py-8', tokens.border.default, 'border-dashed rounded-xl')}>
+          <div className={cn('text-center py-8', tokens.border.default, 'border-dashed rounded-none')}>
             <Star className="h-10 w-10 mx-auto mb-3 opacity-20" />
             <p className={cn('text-sm', tokens.text.caption)}>
               No franchise merchandise data
@@ -150,7 +150,7 @@ export const MerchandiseRevenuePanel: React.FC<MerchandiseRevenuePanelProps> = (
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className={cn(
-                      'w-3 h-3 rounded-full',
+                      'w-3 h-3 rounded-none',
                       getTierColor(franchise.tier)
                     )} />
                     <div>

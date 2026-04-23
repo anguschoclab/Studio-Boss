@@ -64,12 +64,12 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ oppo
   const history = [...(opportunity.bidHistory || [])].reverse().slice(0, 5);
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/90 backdrop-blur-md p-6 animate-in fade-in duration-300">
-      <div className="w-full max-w-4xl bg-slate-900 border border-slate-800 rounded-3xl shadow-[0_0_100px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col h-[75vh]">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md p-6 animate-in fade-in duration-300">
+      <div className="w-full max-w-4xl bg-black/60 border border-white/5 rounded-none shadow-[0_0_100px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col h-[75vh]">
         {/* Header */}
-        <div className="p-8 border-b border-slate-800 bg-black/40 flex items-center justify-between">
+        <div className="p-8 border-b border-white/5 bg-black/40 flex items-center justify-between">
            <div className="flex items-center gap-5">
-              <div className="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center group">
+              <div className="w-16 h-16 rounded-none bg-amber-500/10 border border-amber-500/20 flex items-center justify-center group">
                  <Gavel className={cn("w-8 h-8 text-amber-500 transition-transform duration-500", isAnimating ? "rotate-[-45deg]" : "")} />
               </div>
               <div>
@@ -80,7 +80,7 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ oppo
                  </div>
               </div>
            </div>
-           <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-full transition-colors">
+           <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-none transition-colors">
               <X className="w-6 h-6 text-slate-500" />
            </button>
         </div>
@@ -91,11 +91,11 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ oppo
               <div className="space-y-4">
                  <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Market Valuation</h3>
                  <div className="grid grid-cols-2 gap-6">
-                    <div className="p-6 rounded-2xl bg-black/40 border border-white/5 space-y-1">
+                    <div className="p-6 rounded-none bg-black/40 border border-white/5 space-y-1">
                        <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">Current High Bid</span>
                        <div className="text-3xl font-black text-white tabular-nums">{formatMoney(currentMaxBid)}</div>
                     </div>
-                    <div className="p-6 rounded-2xl bg-black/40 border border-white/5 space-y-1">
+                    <div className="p-6 rounded-none bg-black/40 border border-white/5 space-y-1">
                        <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">Status</span>
                        <div className={cn("text-xl font-black uppercase italic tracking-tighter flex items-center gap-2", isLeading ? "text-emerald-400" : "text-rose-400")}>
                           {isLeading ? <CheckCircle2 className="w-5 h-5" /> : <ShieldAlert className="w-5 h-5" />}
@@ -111,7 +111,7 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ oppo
                     <span className="text-[9px] font-black text-slate-500 uppercase">Available: {formatMoney(gameState?.finance.cash || 0)}</span>
                  </div>
                  
-                 <div className="p-8 rounded-3xl bg-slate-800/20 border-2 border-white/5 space-y-8">
+                 <div className="p-8 rounded-none bg-slate-800/20 border-2 border-white/5 space-y-8">
                     <div className="space-y-4">
                        <div className="flex justify-between items-end">
                           <span className="text-[11px] font-black uppercase text-slate-400">Proposed Counter</span>
@@ -133,7 +133,7 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ oppo
                     </div>
 
                     <Button 
-                      className="w-full h-16 bg-primary text-black hover:bg-primary/90 font-black text-sm uppercase tracking-[0.3em] rounded-2xl shadow-2xl shadow-primary/20 transition-all active:scale-95"
+                      className="w-full h-16 bg-primary text-black hover:bg-primary/90 font-black text-sm uppercase tracking-[0.3em] rounded-none shadow-2xl shadow-primary/20 transition-all active:scale-95"
                       onClick={handleBid}
                       disabled={playerBid <= currentMaxBid || (gameState ? gameState.finance.cash < playerBid : true)}
                     >
@@ -144,14 +144,14 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ oppo
            </div>
 
            {/* Sidebar: History & Intel */}
-           <div className="col-span-12 lg:col-span-5 bg-black/40 border-l border-slate-800 p-8 space-y-8">
+           <div className="col-span-12 lg:col-span-5 bg-black/40 border-l border-white/5 p-8 space-y-8">
               <div className="space-y-4">
                  <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 flex items-center gap-2">
                     <LucideHistory className="w-4 h-4" /> Bidding Tape
                  </h4>
                  <div className="space-y-3">
                     {history.map((entry, idx) => (
-                       <div key={idx} className="flex items-center justify-between p-3 rounded-xl bg-white/3 border border-white/5 animate-in slide-in-from-right-2" style={{ animationDelay: `${idx * 100}ms` }}>
+                       <div key={idx} className="flex items-center justify-between p-3 rounded-none bg-white/3 border border-white/5 animate-in slide-in-from-right-2" style={{ animationDelay: `${idx * 100}ms` }}>
                           <div className="flex flex-col">
                              <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">Wk {entry.week}</span>
                              <span className={cn("text-[10px] font-black uppercase", entry.rivalId === 'PLAYER' ? 'text-primary' : 'text-slate-300')}>
@@ -168,7 +168,7 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ oppo
                  <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 flex items-center gap-2">
                     <AlertCircle className="w-4 h-4 text-amber-500" /> Executive Intel
                  </h4>
-                 <div className="p-4 rounded-xl bg-amber-500/5 border border-amber-500/10 space-y-3">
+                 <div className="p-4 rounded-none bg-amber-500/5 border border-amber-500/10 space-y-3">
                     <p className="text-[11px] font-bold text-amber-200/60 leading-relaxed italic">
                        "Rival studios see high value in this {opportunity.genre} package. We expect aggressive counter-plays. Closing bid estimate is {formatMoney(opportunity.costToAcquire * 2.5)}."
                     </p>
@@ -178,7 +178,7 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ oppo
                  </div>
               </div>
 
-              <div className="mt-auto p-4 rounded-2xl bg-black/60 border border-white/5">
+              <div className="mt-auto p-4 rounded-none bg-black/60 border border-white/5">
                  <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-slate-500">
                     <span>Closing Multiplier</span>
                     <span>2.5x</span>

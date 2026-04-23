@@ -19,7 +19,7 @@ export const ArchetypeCard = ({ arch, selected, onSelect }: ArchetypeCardProps) 
     <button
       key={arch.key}
       onClick={() => onSelect(arch.key)}
-      className={`relative p-6 rounded-xl border-2 text-left transition-all duration-300 group overflow-hidden ${
+      className={`relative p-6 rounded-none border-2 text-left transition-all duration-300 group overflow-hidden ${
         selected
           ? 'border-primary bg-primary/10 shadow-[0_0_20px_rgba(var(--primary),0.2)] scale-[1.02]'
           : 'border-border/50 bg-card/40 backdrop-blur-md hover:border-primary/50 hover:shadow-xl hover:-translate-y-1'
@@ -29,7 +29,7 @@ export const ArchetypeCard = ({ arch, selected, onSelect }: ArchetypeCardProps) 
 
       <div className="space-y-4 relative z-10">
         <div className="flex items-start gap-4">
-          <div className={`p-3 rounded-xl flex items-center justify-center shrink-0 transition-colors duration-300 ${selected ? 'bg-primary/20 text-primary shadow-[0_0_10px_rgba(var(--primary),0.3)]' : 'bg-muted/50 group-hover:bg-primary/10'}`}>
+          <div className={`p-3 rounded-none flex items-center justify-center shrink-0 transition-colors duration-300 ${selected ? 'bg-primary/20 text-primary shadow-[0_0_10px_rgba(var(--primary),0.3)]' : 'bg-muted/50 group-hover:bg-primary/10'}`}>
              <span className="text-3xl drop-shadow-sm">{archetypeIcons[arch.key]}</span>
           </div>
           <div className="flex-1 min-w-0 pt-1">
@@ -52,8 +52,8 @@ export const ArchetypeCard = ({ arch, selected, onSelect }: ArchetypeCardProps) 
       </div>
       {selected && (
         <div className="absolute top-4 right-4 flex items-center justify-center">
-            <div className="absolute w-4 h-4 rounded-full bg-primary/40 animate-ping" />
-            <div className="w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_8px_rgba(var(--primary),0.8)] relative z-10" />
+            <div className="absolute w-4 h-4 rounded-none bg-primary/40 animate-ping" />
+            <div className="w-2.5 h-2.5 rounded-none bg-primary shadow-[0_0_8px_rgba(var(--primary),0.8)] relative z-10" />
         </div>
       )}
     </button>

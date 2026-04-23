@@ -66,7 +66,7 @@ export const MADashboard: React.FC = () => {
                <div 
                  key={studio.id}
                  className={cn(
-                   "relative overflow-hidden rounded-2xl p-8 border transition-all duration-700 group",
+                   "relative overflow-hidden rounded-none p-8 border transition-all duration-700 group",
                    studio.isPlayer 
                     ? 'bg-primary/5 border-primary/20 shadow-2xl' 
                     : 'bg-white/[0.01] border-white/5 hover:bg-white/[0.03] hover:border-white/10'

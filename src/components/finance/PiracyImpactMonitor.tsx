@@ -76,7 +76,7 @@ export const PiracyImpactMonitor: React.FC<PiracyImpactMonitorProps> = ({
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Risk Alert Banner */}
       {studioRiskLevel === 'high' && (
-        <div className="bg-red-500/10 border border-red-500/50 rounded-lg p-4 flex items-center gap-3">
+        <div className="bg-red-500/10 border border-red-500/50 rounded-none p-4 flex items-center gap-3">
           <AlertTriangle className="h-5 w-5 text-red-500" />
           <div>
             <p className="font-medium text-red-500">High Piracy Risk Detected</p>
@@ -91,7 +91,7 @@ export const PiracyImpactMonitor: React.FC<PiracyImpactMonitorProps> = ({
       <div className="grid grid-cols-3 gap-4">
         <Card className={cn('p-4', tokens.border.default)}>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-red-500/10">
+            <div className="p-2 rounded-none bg-red-500/10">
               <Download className="h-5 w-5 text-red-500" />
             </div>
             <div>
@@ -105,7 +105,7 @@ export const PiracyImpactMonitor: React.FC<PiracyImpactMonitorProps> = ({
 
         <Card className={cn('p-4', tokens.border.default)}>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-amber-500/10">
+            <div className="p-2 rounded-none bg-amber-500/10">
               <AlertTriangle className="h-5 w-5 text-amber-500" />
             </div>
             <div>
@@ -117,7 +117,7 @@ export const PiracyImpactMonitor: React.FC<PiracyImpactMonitorProps> = ({
 
         <Card className={cn('p-4', tokens.border.default)}>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-emerald-500/10">
+            <div className="p-2 rounded-none bg-emerald-500/10">
               <Lock className="h-5 w-5 text-emerald-500" />
             </div>
             <div>
@@ -216,7 +216,7 @@ export const PiracyImpactMonitor: React.FC<PiracyImpactMonitorProps> = ({
       </Section>
 
       {projects.length === 0 && (
-        <div className={cn('text-center py-12', tokens.border.default, 'border-dashed rounded-xl')}>
+        <div className={cn('text-center py-12', tokens.border.default, 'border-dashed rounded-none')}>
           <Lock className="h-12 w-12 mx-auto mb-4 opacity-20" />
           <p className={tokens.text.label}>No Piracy Data</p>
           <p className={cn('text-sm mt-2', tokens.text.caption)}>

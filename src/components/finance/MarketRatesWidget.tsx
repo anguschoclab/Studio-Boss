@@ -16,7 +16,7 @@ export const MarketRatesWidget: React.FC = () => {
 
   return (
     <div className="glass-card p-8 group relative overflow-hidden transition-all duration-700 hover:bg-white/[0.03] hover:border-primary/20 rounded-none">
-      <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl pointer-events-none group-hover:bg-primary/10 transition-all duration-1000" />
+      <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-none blur-3xl pointer-events-none group-hover:bg-primary/10 transition-all duration-1000" />
       
       <div className="flex items-center justify-between mb-8 relative z-10">
         <div className="flex items-center gap-6">

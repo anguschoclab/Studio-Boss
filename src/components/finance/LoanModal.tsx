@@ -95,7 +95,7 @@ export const LoanModal = () => {
       {/* Debt Warning Banner                                                  */}
       {/* ------------------------------------------------------------------ */}
       {isDebtWarning && (
-        <div className="flex items-start gap-3 rounded-xl border border-destructive/40 bg-destructive/10 px-5 py-4">
+        <div className="flex items-start gap-3 rounded-none border border-destructive/40 bg-destructive/10 px-5 py-4">
           <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-destructive" />
           <div>
             <p className="text-sm font-display font-black uppercase tracking-widest text-destructive">
@@ -246,9 +246,9 @@ export const LoanModal = () => {
 
                       {/* Progress bar */}
                       <div className="space-y-1">
-                        <div className="h-1.5 w-full overflow-hidden rounded-full bg-border/30">
+                        <div className="h-1.5 w-full overflow-hidden rounded-none bg-border/30">
                           <div
-                            className="h-full rounded-full bg-success transition-all duration-500"
+                            className="h-full rounded-none bg-success transition-all duration-500"
                             style={{ width: `${elapsedPct}%` }}
                           />
                         </div>

@@ -21,7 +21,7 @@ export const SubscriberTrendChart: React.FC<SubscriberTrendChartProps> = ({ plat
 
   if (data.length < 2) {
     return (
-      <div className="h-full flex items-center justify-center text-[10px] uppercase font-bold text-muted-foreground/40 bg-black/20 rounded-xl border border-white/5 border-dashed">
+      <div className="h-full flex items-center justify-center text-[10px] uppercase font-bold text-muted-foreground/40 bg-black/20 rounded-none border border-white/5 border-dashed">
         Insufficient data for trend analysis
       </div>
     );

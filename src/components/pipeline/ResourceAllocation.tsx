@@ -73,7 +73,7 @@ export const ResourceAllocation: React.FC<ResourceAllocationProps> = ({ classNam
   const isCritical = runway < 4;
 
   return (
-    <Card className={cn("rounded-2xl border-white/5 bg-white/[0.01] backdrop-blur-xl", className)}>
+    <Card className={cn("rounded-none border-white/5 bg-white/[0.01] backdrop-blur-3xl", className)}>
       <CardHeader className="pb-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -139,7 +139,7 @@ export const ResourceAllocation: React.FC<ResourceAllocationProps> = ({ classNam
                     if (active && payload && payload.length) {
                       const data = payload[0].payload as AllocationEntry;
                       return (
-                        <div className="bg-black/90 border border-white/10 p-4 backdrop-blur-xl">
+                        <div className="bg-black/90 border border-white/10 p-4 backdrop-blur-3xl">
                           <p className="text-[10px] font-display font-black uppercase italic mb-1 text-primary">{data.fullName}</p>
                           <p className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-widest mb-3">{data.state}</p>
                           <div className="space-y-2">

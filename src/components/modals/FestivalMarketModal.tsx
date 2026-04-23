@@ -130,9 +130,9 @@ export const FestivalMarketModal: React.FC = () => {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/80 backdrop-blur-md animate-in fade-in duration-300">
-      <div className="relative w-full max-w-2xl bg-slate-950 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden">
+      <div className="relative w-full max-w-2xl bg-black border border-white/5 rounded-none shadow-2xl overflow-hidden">
         {/* Header */}
-        <div className="p-6 border-b border-slate-800 bg-gradient-to-r from-amber-500/10 to-transparent">
+        <div className="p-6 border-b border-white/5 bg-gradient-to-r from-amber-500/10 to-transparent">
           <div className="flex items-center gap-3 mb-2">
             <Gavel className="w-5 h-5 text-amber-500" />
             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-500">Live Festival Auction</span>
@@ -148,7 +148,7 @@ export const FestivalMarketModal: React.FC = () => {
             <div className="text-6xl font-display font-black text-white tabular-nums tracking-tighter">
               ${(currentBid / 1000000).toFixed(2)}M
             </div>
-            <div className="flex items-center justify-center gap-2 mt-3 p-2 bg-slate-900 rounded-full border border-slate-800">
+            <div className="flex items-center justify-center gap-2 mt-3 p-2 bg-black/60 rounded-none border border-white/5">
               <Users className="w-3.5 h-3.5 text-slate-400" />
               <span className={`text-xs font-bold ${highestBidderId === 'PLAYER' ? 'text-green-400' : 'text-slate-200'}`}>
                 {highestBidderName}
@@ -157,7 +157,7 @@ export const FestivalMarketModal: React.FC = () => {
           </div>
 
           {/* Progress Bar / Timer */}
-          <div className="w-full max-w-md bg-slate-900 h-1.5 rounded-full overflow-hidden mb-8 border border-slate-800">
+          <div className="w-full max-w-md bg-black/60 h-1.5 rounded-none overflow-hidden mb-8 border border-white/5">
              <div 
                className={`h-full transition-all duration-1000 ease-linear ${timeLeft < 3 ? 'bg-red-500' : 'bg-amber-500'}`}
                style={{ width: `${(timeLeft / 10) * 100}%` }}
@@ -189,7 +189,7 @@ export const FestivalMarketModal: React.FC = () => {
         </div>
 
         {/* Footer / Info */}
-        <div className="p-4 bg-slate-900/50 border-t border-slate-800 flex justify-between items-center text-[9px] uppercase font-black tracking-widest text-slate-500">
+        <div className="p-4 bg-black/40 border-t border-white/5 flex justify-between items-center text-[9px] uppercase font-black tracking-widest text-slate-500">
           <div className="flex items-center gap-2">
             <Clock className="w-3 h-3" />
             <span>Time Remaining: {timeLeft}s</span>

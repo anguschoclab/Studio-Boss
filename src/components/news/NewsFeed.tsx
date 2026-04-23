@@ -28,34 +28,34 @@ export const NewsFeed = () => {
     : history.filter(h => h.type === filter);
 
   return (
-    <div className="flex flex-col h-full bg-slate-950/40 border-l border-slate-800/50 backdrop-blur-xl">
+    <div className="flex flex-col h-full bg-black/40 border-l border-white/5 backdrop-blur-3xl">
       {/* Header & Filter */}
-      <div className="p-4 border-b border-slate-800/50 space-y-4">
+      <div className="p-8 border-b border-white/5 space-y-6">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <History className="h-4 w-4 text-blue-400" />
-            <h3 className="font-display text-xs font-black uppercase tracking-widest text-slate-200">Industry History</h3>
+          <div className="flex items-center gap-4">
+            <History className="h-4 w-4 text-primary" strokeWidth={3} />
+            <h3 className="font-display text-xs font-black uppercase tracking-[0.4em] text-foreground italic leading-none">INDUSTRY_HISTORY</h3>
           </div>
-          <Badge variant="outline" className="text-[9px] font-black border-slate-700 bg-slate-800/50 text-slate-400">
-            {history.length} Events
+          <Badge variant="outline" className="text-[9px] font-black border-white/10 bg-white/5 text-muted-foreground/60 rounded-none italic">
+            {history.length} EVENTS
           </Badge>
         </div>
 
-        <div className="flex gap-1.5 overflow-x-auto pb-2 custom-scrollbar no-scrollbar">
+        <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar no-scrollbar">
           <button 
             onClick={() => setFilter('ALL')}
-            className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-tighter transition-all border ${
-              filter === 'ALL' ? 'bg-white text-black border-white' : 'bg-slate-900 text-slate-400 border-slate-800'
+            className={`px-4 py-2 rounded-none text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 border italic ${
+              filter === 'ALL' ? 'bg-primary text-black border-primary shadow-[0_0_15px_rgba(var(--primary),0.2)]' : 'bg-white/[0.02] text-muted-foreground/40 border-white/5 hover:border-white/20'
             }`}
           >
-            All
+            ALL
           </button>
           {(Object.keys(eventTypeConfig) as NewsEventType[]).map(type => (
             <button 
               key={type}
               onClick={() => setFilter(type)}
-              className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-tighter transition-all border flex items-center gap-1.5 whitespace-nowrap ${
-                filter === type ? 'bg-blue-600 text-white border-blue-500' : 'bg-slate-900 text-slate-400 border-slate-800'
+              className={`px-4 py-2 rounded-none text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 border flex items-center gap-2 italic whitespace-nowrap ${
+                filter === type ? 'bg-primary text-black border-primary shadow-[0_0_15px_rgba(var(--primary),0.2)]' : 'bg-white/[0.02] text-muted-foreground/40 border-white/5 hover:border-white/20'
               }`}
             >
               {type}
@@ -69,26 +69,26 @@ export const NewsFeed = () => {
         {filteredHistory.map((item, idx) => {
           const config = eventTypeConfig[item.type];
           return (
-            <div key={item.id} className="relative pl-6 group">
+            <div key={item.id} className="relative pl-10 group">
               {/* Vertical line connector */}
               {idx !== filteredHistory.length - 1 && (
-                <div className="absolute left-[7px] top-4 bottom-[-24px] w-[2px] bg-slate-800 pointer-events-none group-hover:bg-slate-700 transition-colors" />
+                <div className="absolute left-[7px] top-4 bottom-[-24px] w-[2px] bg-white/5 pointer-events-none group-hover:bg-primary/20 transition-colors" />
               )}
               
               {/* Timeline Dot/Icon */}
-              <div className={`absolute left-0 top-1 w-4 h-4 rounded-full border bg-slate-950 z-10 flex items-center justify-center transition-all group-hover:scale-110 ${config.color}`}>
-                <config.icon className="h-2 w-2" />
+              <div className={`absolute left-0 top-1 w-4 h-4 rounded-none border border-white/10 bg-black z-10 flex items-center justify-center transition-all group-hover:scale-110 group-hover:border-primary/40 ${config.color}`}>
+                <config.icon className="h-2 w-2" strokeWidth={3} />
               </div>
 
-              <div className="space-y-1">
+              <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                   <span className="text-[9px] font-mono font-black text-slate-500 uppercase">Week {item.week}</span>
+                   <span className="text-[9px] font-black text-muted-foreground/20 uppercase tracking-[0.2em] italic">WEEK {item.week}</span>
                    {item.impact && (
-                     <span className="text-[9px] font-black text-emerald-400 tracking-tighter">{item.impact}</span>
+                     <span className="text-[9px] font-black text-primary tracking-[0.1em] italic">{item.impact.toUpperCase()}</span>
                    )}
                 </div>
-                <h4 className="text-xs font-bold text-slate-100 group-hover:text-blue-400 transition-colors leading-tight">{item.headline}</h4>
-                <p className="text-[10px] text-slate-400 leading-relaxed font-medium line-clamp-2 group-hover:line-clamp-none transition-all duration-300">{item.description}</p>
+                <h4 className="text-xs font-black text-foreground group-hover:text-primary transition-all duration-700 leading-none uppercase italic tracking-tight">{item.headline}</h4>
+                <p className="text-[10px] text-muted-foreground/60 leading-relaxed font-black uppercase tracking-wider italic line-clamp-2 group-hover:line-clamp-none transition-all duration-700">{item.description}</p>
               </div>
             </div>
           );

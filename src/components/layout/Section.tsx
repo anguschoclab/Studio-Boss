@@ -27,17 +27,17 @@ interface SectionProps {
 const variantStyles = {
   default: {
     container: '',
-    header: 'pb-4 mb-4',
+    header: 'pb-6 mb-6',
     content: '',
   },
   card: {
-    container: 'bg-card/40 border border-white/5 rounded-xl p-6',
-    header: 'pb-4 mb-4 border-b border-white/5',
+    container: 'bg-white/[0.01] border border-white/5 rounded-none p-10 backdrop-blur-3xl shadow-2xl',
+    header: 'pb-6 mb-6 border-b border-white/5',
     content: '',
   },
   flush: {
     container: '',
-    header: 'pb-3 mb-3',
+    header: 'pb-4 mb-4',
     content: '',
   },
 };
@@ -66,33 +66,35 @@ export const Section: React.FC<SectionProps> = ({
       {/* Header */}
       <div
         className={cn(
-          'flex items-start justify-between gap-4',
+          'flex items-start justify-between gap-6',
           styles.header,
           divider && 'border-b border-white/5'
         )}
       >
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-6">
           {Icon && (
-            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-              <Icon className="w-5 h-5 text-primary" />
+            <div className="w-12 h-12 rounded-none bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0 shadow-2xl">
+              <Icon className="w-6 h-6 text-primary" strokeWidth={2.5} />
             </div>
           )}
           <div>
-            <h2 className={tokens.text.heading}>{title}</h2>
+            <h2 className={cn(tokens.text.heading, "text-2xl font-black uppercase italic tracking-tight leading-none mb-2")}>{title.toUpperCase()}</h2>
             {subtitle && (
-              <p className={cn(tokens.text.caption, 'mt-0.5')}>{subtitle}</p>
+              <p className={cn(tokens.text.caption, 'text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 italic leading-none')}>
+                {subtitle.toUpperCase()}
+              </p>
             )}
           </div>
         </div>
         {actions && (
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-4 shrink-0">
             {actions}
           </div>
         )}
       </div>
 
       {/* Content */}
-      <div className={cn(styles.content, contentClassName)}>
+      <div className={cn(styles.content, contentClassName, 'pt-4')}>
         {children}
       </div>
     </section>
@@ -108,9 +110,9 @@ export const SectionGroup: React.FC<{
   spacing?: 'sm' | 'md' | 'lg';
 }> = ({ children, className, spacing = 'lg' }) => {
   const spacingClass = {
-    sm: 'space-y-4',
-    md: 'space-y-6',
-    lg: 'space-y-8',
+    sm: 'space-y-8',
+    md: 'space-y-12',
+    lg: 'space-y-20',
   };
 
   return (
@@ -129,12 +131,16 @@ export const SubSection: React.FC<{
   className?: string;
   action?: React.ReactNode;
 }> = ({ title, children, className, action }) => (
-  <div className={cn('space-y-3', className)}>
-    <div className="flex items-center justify-between">
-      <h3 className={cn(tokens.text.label, 'text-foreground')}>{title}</h3>
+  <div className={cn('space-y-6', className)}>
+    <div className="flex items-center justify-between border-l-2 border-primary/40 pl-4 py-1">
+      <h3 className={cn(tokens.text.label, 'text-sm font-black uppercase italic tracking-widest text-foreground/80 leading-none')}>
+        {title.toUpperCase()}
+      </h3>
       {action}
     </div>
-    {children}
+    <div className="pl-4">
+      {children}
+    </div>
   </div>
 );
 

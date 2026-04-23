@@ -76,9 +76,9 @@ export const TalentModal = () => {
 
   return (
     <Dialog open={!!selectedTalentId} onOpenChange={() => selectTalent(null)}>
-      <DialogContent className="max-w-4xl bg-slate-950 border-slate-800 text-slate-100 shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col h-[90vh] p-0 rounded-3xl">
+      <DialogContent className="max-w-4xl bg-black border-white/5 text-slate-100 shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col h-[90vh] p-0 rounded-none">
         {/* Cinematic Header Section */}
-        <div className="relative h-72 bg-slate-900 shrink-0 overflow-hidden">
+        <div className="relative h-72 bg-black/60 shrink-0 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-transparent to-rose-500/10" />
           <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')] opacity-30" />
           
@@ -104,7 +104,7 @@ export const TalentModal = () => {
                 <h2 className="text-5xl font-black tracking-tighter text-white uppercase italic drop-shadow-2xl">
                   {talent.name}
                 </h2>
-                <div className="flex items-center gap-2 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 shadow-xl">
+                <div className="flex items-center gap-2 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-none border border-white/10 shadow-xl">
                   <Star className="w-4 h-4 text-primary fill-primary" />
                   <span className="text-xl font-black text-primary italic leading-none">{talent.starMeter || 50}</span>
                   <span className="text-[10px] uppercase font-black text-slate-500 tracking-widest ml-1">Star Meter</span>
@@ -145,17 +145,17 @@ export const TalentModal = () => {
 
         <div className="flex-1 overflow-y-auto px-10 pt-8 pb-10 custom-scrollbar">
           <Tabs defaultValue="bio" className="w-full">
-            <TabsList className="grid w-full grid-cols-4 bg-slate-900/40 p-1.5 border border-slate-800/50 rounded-2xl mb-10 shadow-inner">
-              <TabsTrigger value="bio" className="rounded-xl data-[state=active]:bg-primary data-[state=active]:text-black uppercase text-[11px] font-black tracking-widest transition-all duration-300">
+            <TabsList className="grid w-full grid-cols-4 bg-black/40 p-1.5 border border-white/5/50 rounded-none mb-10 shadow-inner">
+              <TabsTrigger value="bio" className="rounded-none data-[state=active]:bg-primary data-[state=active]:text-black uppercase text-[11px] font-black tracking-widest transition-all duration-300">
                 <History className="h-4 w-4 mr-2" /> Bio & Trivia
               </TabsTrigger>
-              <TabsTrigger value="stats" className="rounded-xl data-[state=active]:bg-primary data-[state=active]:text-black uppercase text-[11px] font-black tracking-widest transition-all duration-300">
+              <TabsTrigger value="stats" className="rounded-none data-[state=active]:bg-primary data-[state=active]:text-black uppercase text-[11px] font-black tracking-widest transition-all duration-300">
                 <BarChart3 className="h-4 w-4 mr-2" /> Career Stats
               </TabsTrigger>
-              <TabsTrigger value="knownFor" className="rounded-xl data-[state=active]:bg-primary data-[state=active]:text-black uppercase text-[11px] font-black tracking-widest transition-all duration-300">
+              <TabsTrigger value="knownFor" className="rounded-none data-[state=active]:bg-primary data-[state=active]:text-black uppercase text-[11px] font-black tracking-widest transition-all duration-300">
                 <Trophy className="h-4 w-4 mr-2" /> Top Projects
               </TabsTrigger>
-              <TabsTrigger value="filmography" className="rounded-xl data-[state=active]:bg-primary data-[state=active]:text-black uppercase text-[11px] font-black tracking-widest transition-all duration-300">
+              <TabsTrigger value="filmography" className="rounded-none data-[state=active]:bg-primary data-[state=active]:text-black uppercase text-[11px] font-black tracking-widest transition-all duration-300">
                 <Clapperboard className="h-4 w-4 mr-2" /> Filmography
               </TabsTrigger>
             </TabsList>
@@ -164,7 +164,7 @@ export const TalentModal = () => {
             <TabsContent value="bio" className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300 focus-visible:outline-none">
               <div className="grid grid-cols-5 gap-8">
                 <div className="col-span-3 space-y-8">
-                   <div className="glass-panel p-8 rounded-3xl relative group overflow-hidden">
+                   <div className="glass-panel p-8 rounded-none relative group overflow-hidden">
                       <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
                         <Quote className="w-20 h-20" />
                       </div>
@@ -182,8 +182,8 @@ export const TalentModal = () => {
                       </h4>
                       <div className="grid grid-cols-1 gap-3">
                         {talent.trivia?.map((t, i) => (
-                          <div key={i} className="bg-slate-900/30 p-5 rounded-2xl border border-white/5 hover:border-primary/20 transition-all duration-300 flex gap-4">
-                            <div className="w-6 h-6 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+                          <div key={i} className="bg-black/40 p-5 rounded-none border border-white/5 hover:border-primary/20 transition-all duration-300 flex gap-4">
+                            <div className="w-6 h-6 rounded-none bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
                                <span className="text-[10px] font-black text-primary">{i+1}</span>
                             </div>
                             <p className="text-sm text-slate-300 font-medium">{t}</p>
@@ -194,13 +194,13 @@ export const TalentModal = () => {
                 </div>
 
                 <div className="col-span-2 space-y-6">
-                  <div className="bg-slate-900/60 p-6 rounded-3xl border border-white/5 space-y-4 shadow-xl">
+                  <div className="bg-black/40 p-6 rounded-none border border-white/5 space-y-4 shadow-xl">
                     <h4 className="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
                       <Briefcase className="h-4 w-4" /> Representation
                     </h4>
                     {agency ? (
                       <div className="space-y-4">
-                        <div className="p-4 rounded-2xl bg-white/5 border border-white/5">
+                        <div className="p-4 rounded-none bg-white/5 border border-white/5">
                           <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Current Agency</p>
                           <p className="font-black text-white text-lg tracking-tight uppercase italic">{agency.name}</p>
                           <div className="flex gap-2 mt-2">
@@ -217,19 +217,19 @@ export const TalentModal = () => {
                         )}
                       </div>
                     ) : (
-                      <div className="p-10 text-center border-2 border-dashed border-white/5 rounded-2xl">
+                      <div className="p-10 text-center border-2 border-dashed border-white/5 rounded-none">
                         <p className="text-xs italic text-slate-500 font-bold uppercase tracking-widest opacity-40">Unrepresented</p>
                       </div>
                     )}
                   </div>
 
                   {family && (
-                    <div className="bg-amber-500/5 p-6 border border-amber-500/10 rounded-3xl shadow-xl">
+                    <div className="bg-amber-500/5 p-6 border border-amber-500/10 rounded-none shadow-xl">
                       <h4 className="text-[11px] font-black text-amber-500 uppercase tracking-widest flex items-center gap-2 mb-4">
                         <Heart className="h-4 w-4" /> Industry Heritage
                       </h4>
                       <div className="flex items-center gap-4 mb-4">
-                         <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center font-black text-amber-500 text-2xl tracking-tighter">
+                         <div className="w-12 h-12 rounded-none bg-amber-500/10 border border-amber-500/20 flex items-center justify-center font-black text-amber-500 text-2xl tracking-tighter">
                             {family.name[0]}
                          </div>
                          <div>
@@ -238,11 +238,11 @@ export const TalentModal = () => {
                          </div>
                       </div>
                       <div className="grid grid-cols-2 gap-3 mb-4">
-                         <div className="bg-amber-950/20 p-2 rounded-xl text-center border border-amber-500/10">
+                         <div className="bg-amber-950/20 p-2 rounded-none text-center border border-amber-500/10">
                             <p className="text-[8px] font-black text-amber-500/60 uppercase">Prestige</p>
                             <p className="text-sm font-black text-amber-200">{family.prestigeLegacy}</p>
                          </div>
-                         <div className="bg-amber-950/20 p-2 rounded-xl text-center border border-amber-500/10">
+                         <div className="bg-amber-950/20 p-2 rounded-none text-center border border-amber-500/10">
                             <p className="text-[8px] font-black text-amber-500/60 uppercase">Recognition</p>
                             <p className="text-sm font-black text-amber-200">{family.recognition}</p>
                          </div>
@@ -258,7 +258,7 @@ export const TalentModal = () => {
                             {familyMembers.slice(0, 4).map(member => (
                               <div 
                                 key={member.id} 
-                                className="flex items-center gap-2 bg-amber-950/30 px-2 py-1.5 rounded-xl border border-amber-500/10 hover:border-amber-500/30 transition-colors cursor-pointer"
+                                className="flex items-center gap-2 bg-amber-950/30 px-2 py-1.5 rounded-none border border-amber-500/10 hover:border-amber-500/30 transition-colors cursor-pointer"
                                 onClick={() => selectTalent(member.id)}
                               >
                                 <TalentAvatar talent={member} size="xs" className="border-amber-500/20" />
@@ -284,7 +284,7 @@ export const TalentModal = () => {
             {/* STATS TAB */}
             <TabsContent value="stats" className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300 focus-visible:outline-none">
                <div className="grid grid-cols-2 gap-8">
-                  <div className="bg-slate-900/40 p-8 rounded-3xl border border-white/5 shadow-2xl h-[400px] flex flex-col">
+                  <div className="bg-black/40 p-8 rounded-none border border-white/5 shadow-2xl h-[400px] flex flex-col">
                     <div className="flex items-center justify-between mb-8">
                        <h4 className="text-[11px] font-black text-primary uppercase tracking-widest">Market Metric Distribution</h4>
                        <Star className="w-4 h-4 text-primary opacity-30" />
@@ -319,12 +319,12 @@ export const TalentModal = () => {
                   </div>
 
                   <div className="space-y-6">
-                     <div className="bg-slate-900/40 p-8 rounded-3xl border border-white/5 shadow-xl flex flex-col items-center text-center">
+                     <div className="bg-black/40 p-8 rounded-none border border-white/5 shadow-xl flex flex-col items-center text-center">
                         <div className="relative mb-6">
-                           <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 border-2 border-white/10 flex items-center justify-center font-black text-4xl text-white shadow-[0_0_30px_rgba(var(--primary),0.2)]">
+                           <div className="w-24 h-24 rounded-none bg-gradient-to-br from-primary/20 to-secondary/20 border-2 border-white/10 flex items-center justify-center font-black text-4xl text-white shadow-[0_0_30px_rgba(var(--primary),0.2)]">
                               {talent.draw}
                            </div>
-                           <div className="absolute -bottom-2 -right-2 bg-primary text-black text-[10px] font-black px-2 py-1 rounded-lg border-2 border-slate-950">
+                           <div className="absolute -bottom-2 -right-2 bg-primary text-black text-[10px] font-black px-2 py-1 rounded-none border-2 border-slate-950">
                               DRAW
                            </div>
                         </div>
@@ -335,12 +335,12 @@ export const TalentModal = () => {
                      </div>
 
                      <div className="grid grid-cols-2 gap-4">
-                        <div className="bg-emerald-500/5 p-6 border border-emerald-500/10 rounded-2xl text-center">
+                        <div className="bg-emerald-500/5 p-6 border border-emerald-500/10 rounded-none text-center">
                            <DollarSign className="w-5 h-5 text-emerald-500 mx-auto mb-2 opacity-50" />
                            <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Total Career Gross</p>
                            <p className="text-xl font-black text-emerald-400 mt-1">{formatMoney(talent.careerGross || 0)}</p>
                         </div>
-                        <div className="bg-indigo-500/5 p-6 border border-indigo-500/10 rounded-2xl text-center">
+                        <div className="bg-indigo-500/5 p-6 border border-indigo-500/10 rounded-none text-center">
                            <TrendingUp className="w-5 h-5 text-indigo-500 mx-auto mb-2 opacity-50" />
                            <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Star Meter</p>
                            <p className="text-xl font-black text-indigo-400 mt-1">{talent.starMeter || 50}</p>
@@ -354,11 +354,11 @@ export const TalentModal = () => {
             <TabsContent value="knownFor" className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300 focus-visible:outline-none">
                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {talent.knownFor?.map((title, i) => (
-                    <div key={i} className="group relative glass-panel p-8 rounded-3xl hover:border-primary/40 transition-all duration-500 text-center overflow-hidden">
+                    <div key={i} className="group relative glass-panel p-8 rounded-none hover:border-primary/40 transition-all duration-500 text-center overflow-hidden">
                       <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-125 transition-transform duration-700">
                          <Star className="w-20 h-20" />
                       </div>
-                      <div className="w-12 h-12 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto mb-6 group-hover:bg-primary group-hover:text-black transition-all duration-300">
+                      <div className="w-12 h-12 rounded-none bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto mb-6 group-hover:bg-primary group-hover:text-black transition-all duration-300">
                          <span className="font-black italic text-xl">#</span>
                       </div>
                       <h4 className="text-2xl font-black tracking-tighter text-white uppercase italic truncate mb-2">{title}</h4>
@@ -366,14 +366,14 @@ export const TalentModal = () => {
                     </div>
                   ))}
                   {(!talent.knownFor || talent.knownFor.length === 0) && (
-                    <div className="col-span-3 py-20 text-center border-2 border-dashed border-white/5 rounded-3xl">
+                    <div className="col-span-3 py-20 text-center border-2 border-dashed border-white/5 rounded-none">
                        <p className="text-slate-500 font-black uppercase tracking-widest italic opacity-40">No Significant Hits Recorded</p>
                     </div>
                   )}
                </div>
                
                <div className="grid grid-cols-2 gap-6 mt-4">
-                  <div className="bg-slate-900/40 p-6 rounded-2xl border border-white/5">
+                  <div className="bg-black/40 p-6 rounded-none border border-white/5">
                     <h5 className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3">Highest Movie Payday</h5>
                     {talent.highestSalaryMovie ? (
                       <div className="flex items-center justify-between">
@@ -387,7 +387,7 @@ export const TalentModal = () => {
                       <p className="text-xs italic text-slate-600">No data recorded</p>
                     )}
                   </div>
-                  <div className="bg-slate-900/40 p-6 rounded-2xl border border-white/5">
+                  <div className="bg-black/40 p-6 rounded-none border border-white/5">
                     <h5 className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3">Highest TV Payday</h5>
                     {talent.highestSalaryTv ? (
                       <div className="flex items-center justify-between">
@@ -406,10 +406,10 @@ export const TalentModal = () => {
 
             {/* FILMOGRAPHY TAB */}
             <TabsContent value="filmography" className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300 focus-visible:outline-none">
-              <div className="bg-slate-950/80 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl">
+              <div className="bg-black/80 border border-white/5 rounded-none overflow-hidden shadow-2xl">
                 <table className="w-full text-left text-sm">
                   <thead>
-                    <tr className="bg-slate-900/50 border-b border-slate-800">
+                    <tr className="bg-black/40 border-b border-white/5">
                       <th className="px-8 py-5 font-black uppercase tracking-widest text-slate-500 text-[10px]">Year</th>
                       <th className="px-8 py-5 font-black uppercase tracking-widest text-slate-500 text-[10px]">Title</th>
                       <th className="px-8 py-5 font-black uppercase tracking-widest text-slate-500 text-[10px]">Format</th>
@@ -425,7 +425,7 @@ export const TalentModal = () => {
                            <p className="font-black text-white uppercase italic tracking-tight text-base group-hover:text-primary transition-colors">{f.title}</p>
                         </td>
                         <td className="px-8 py-5">
-                          <Badge variant="outline" className="text-[9px] border-slate-800 bg-slate-900 text-slate-400 font-black uppercase tracking-widest px-2 py-0.5">
+                          <Badge variant="outline" className="text-[9px] border-white/5 bg-black/60 text-slate-400 font-black uppercase tracking-widest px-2 py-0.5">
                             {f.type === 'movie' ? 'Film' : 'TV'}
                           </Badge>
                         </td>
@@ -448,7 +448,7 @@ export const TalentModal = () => {
         </div>
 
         {/* Footer Action Bar */}
-        <div className="px-10 py-8 bg-slate-950/90 border-t border-slate-900 flex justify-between items-center shrink-0 shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
+        <div className="px-10 py-8 bg-black/90 border-t border-slate-900 flex justify-between items-center shrink-0 shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
            <div className="flex flex-col">
               <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">RECORD ID</p>
               <p className="text-xs font-mono text-slate-300 opacity-50">{talent.id}</p>
@@ -457,7 +457,7 @@ export const TalentModal = () => {
            <div className="flex gap-4">
               <button 
                 onClick={() => selectTalent(null)}
-                className="px-12 py-3 bg-white text-black font-black uppercase text-xs rounded-2xl hover:bg-primary transition-all duration-300 shadow-[0_4px_20px_rgba(255,255,255,0.1)] hover:shadow-primary/20 hover:-translate-y-0.5 active:translate-y-0"
+                className="px-12 py-3 bg-white text-black font-black uppercase text-xs rounded-none hover:bg-primary transition-all duration-300 shadow-[0_4px_20px_rgba(255,255,255,0.1)] hover:shadow-primary/20 hover:-translate-y-0.5 active:translate-y-0"
               >
                 Close Profile
               </button>

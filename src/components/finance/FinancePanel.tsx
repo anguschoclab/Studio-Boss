@@ -208,7 +208,7 @@ export const FinancePanel = () => {
         <div className="xl:col-span-2 flex flex-col gap-16">
           <MarketRatesWidget />
           
-          <div className="glass-card p-12 flex flex-col h-[500px] border border-white/5 rounded-2xl bg-black/40 shadow-2xl">
+          <div className="glass-card p-12 flex flex-col h-[500px] border border-white/5 rounded-none bg-black/40 shadow-2xl">
             <div className="flex items-center justify-between mb-16 pb-8 border-b border-white/5">
               <div className="space-y-2">
                 <h3 className="text-3xl font-display font-black uppercase tracking-tighter italic leading-none text-foreground drop-shadow-[0_0_10px_rgba(255,255,255,0.05)]">LIQUIDITY CURVE</h3>
@@ -246,7 +246,7 @@ export const FinancePanel = () => {
 
         {/* Active Project Costs */}
         <div className="xl:col-span-1">
-          <div className="glass-card flex flex-col h-full overflow-hidden border border-white/5 rounded-2xl bg-black/40 shadow-2xl">
+          <div className="glass-card flex flex-col h-full overflow-hidden border border-white/5 rounded-none bg-black/40 shadow-2xl">
             <div className="p-10 border-b border-white/5 bg-white/[0.01]">
               <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/30 flex justify-between items-end italic">
                 <span>DIRECT BURN RATES</span>
@@ -287,7 +287,7 @@ export const FinancePanel = () => {
       
       {/* Deep Economic Analytics */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
-        <div className="glass-card p-12 bg-black/40 border border-white/5 rounded-2xl shadow-2xl">
+        <div className="glass-card p-12 bg-black/40 border border-white/5 rounded-none shadow-2xl">
            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/20 mb-12 pb-6 border-b border-white/5 italic flex items-center gap-4">
             <ArrowRightLeft className="w-4 h-4 text-primary/40" />
             REVENUE MIX // 12W ANALYSIS
@@ -297,7 +297,7 @@ export const FinancePanel = () => {
            </div>
         </div>
 
-        <div className="glass-card p-12 bg-black/40 border border-white/5 rounded-2xl shadow-2xl">
+        <div className="glass-card p-12 bg-black/40 border border-white/5 rounded-none shadow-2xl">
            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/20 mb-12 pb-6 border-b border-white/5 italic flex items-center gap-4">
             <TrendingUp className="w-4 h-4 text-emerald-400/40" />
             WEEKLY P&L WATERFALL
@@ -307,7 +307,7 @@ export const FinancePanel = () => {
            </div>
         </div>
 
-        <div className="glass-card p-12 bg-black/40 border border-white/5 rounded-2xl shadow-2xl">
+        <div className="glass-card p-12 bg-black/40 border border-white/5 rounded-none shadow-2xl">
            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/20 mb-12 pb-6 border-b border-white/5 italic flex items-center gap-4">
             <ShieldCheck className="w-4 h-4 text-secondary/40" />
             FISCAL EFFICIENCY COEFFICIENT
@@ -319,7 +319,7 @@ export const FinancePanel = () => {
       </div>
 
       {/* Project ROI Analytics */}
-      <div className="glass-card overflow-hidden border border-white/5 rounded-2xl bg-black/40 shadow-2xl">
+      <div className="glass-card overflow-hidden border border-white/5 rounded-none bg-black/40 shadow-2xl">
         <div className="p-10 border-b border-white/5 bg-white/[0.01]">
            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-foreground italic flex items-center gap-4">
             <ShieldCheck className="w-4 h-4 text-primary/40" />

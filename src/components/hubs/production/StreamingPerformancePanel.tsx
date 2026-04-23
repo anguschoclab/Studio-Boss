@@ -52,7 +52,7 @@ export const StreamingPerformancePanel: React.FC<StreamingPerformancePanelProps>
       <div className="grid grid-cols-3 gap-4">
         <Card className={cn('p-4', tokens.border.default)}>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-primary/10">
+            <div className="p-2 rounded-none bg-primary/10">
               <Users className="h-5 w-5 text-primary" />
             </div>
             <div>
@@ -64,7 +64,7 @@ export const StreamingPerformancePanel: React.FC<StreamingPerformancePanelProps>
 
         <Card className={cn('p-4', tokens.border.default)}>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-emerald-500/10">
+            <div className="p-2 rounded-none bg-emerald-500/10">
               <TrendingUp className="h-5 w-5 text-emerald-500" />
             </div>
             <div>
@@ -78,7 +78,7 @@ export const StreamingPerformancePanel: React.FC<StreamingPerformancePanelProps>
 
         <Card className={cn('p-4', tokens.border.default)}>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-amber-500/10">
+            <div className="p-2 rounded-none bg-amber-500/10">
               <Eye className="h-5 w-5 text-amber-500" />
             </div>
             <div>
@@ -96,7 +96,7 @@ export const StreamingPerformancePanel: React.FC<StreamingPerformancePanelProps>
         icon={Tv}
       >
         {projects.length === 0 ? (
-          <div className={cn('text-center py-8', tokens.border.default, 'border-dashed rounded-xl')}>
+          <div className={cn('text-center py-8', tokens.border.default, 'border-dashed rounded-none')}>
             <Tv className="h-10 w-10 mx-auto mb-3 opacity-20" />
             <p className={cn('text-sm', tokens.text.caption)}>
               No streaming projects currently
@@ -121,7 +121,7 @@ export const StreamingPerformancePanel: React.FC<StreamingPerformancePanelProps>
                   {project.platforms.map((platform) => (
                     <div
                       key={platform.platformName}
-                      className="p-3 bg-muted/30 rounded-lg"
+                      className="p-3 bg-muted/30 rounded-none"
                     >
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">

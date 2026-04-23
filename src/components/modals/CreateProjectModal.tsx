@@ -78,7 +78,7 @@ export const CreateProjectModal = () => {
   return (
     <Dialog open={showCreateProject} onOpenChange={closeCreateProject}>
       <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto bg-card/90 backdrop-blur-2xl border border-white/10 shadow-2xl animate-in fade-in zoom-in-95 duration-300">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-background/50 pointer-events-none rounded-lg" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-background/50 pointer-events-none rounded-none" />
         <DialogHeader className="relative z-10 pb-4 border-b border-border/40">
           <DialogTitle className="font-display font-black text-2xl tracking-tight uppercase">Greenlight New Project</DialogTitle>
           <DialogDescription className="text-muted-foreground font-medium">Commission a new project. Talent will be attached after greenlight.</DialogDescription>
@@ -100,7 +100,7 @@ export const CreateProjectModal = () => {
           {/* Format */}
           <div className="space-y-2">
             <Label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground/80">Format</Label>
-            <div className="flex gap-2 p-1 bg-muted/30 rounded-lg border border-border/40">
+            <div className="flex gap-2 p-1 bg-muted/30 rounded-none border border-border/40">
               {(['film', 'tv', 'unscripted'] as ProjectFormat[]).map(f => (
                 <Button
                   key={f}
@@ -126,7 +126,7 @@ export const CreateProjectModal = () => {
                   <SelectContent className="max-h-80">
                     {TV_FORMAT_TAXONOMY.map(category => (
                       <div key={category.id}>
-                        <div className="px-2 py-1.5 text-[10px] font-black uppercase tracking-widest text-primary/60 bg-primary/5 rounded-md my-1">
+                        <div className="px-2 py-1.5 text-[10px] font-black uppercase tracking-widest text-primary/60 bg-primary/5 rounded-none my-1">
                           {category.name}
                         </div>
                         {category.formats
@@ -149,7 +149,7 @@ export const CreateProjectModal = () => {
                   <SelectContent className="max-h-80">
                     {UNSCRIPTED_FORMAT_TAXONOMY.map(category => (
                       <div key={category.id}>
-                        <div className="px-2 py-1.5 text-[10px] font-black uppercase tracking-widest text-primary/60 bg-primary/5 rounded-md my-1">
+                        <div className="px-2 py-1.5 text-[10px] font-black uppercase tracking-widest text-primary/60 bg-primary/5 rounded-none my-1">
                           {category.name}
                         </div>
                         {category.formats
@@ -210,7 +210,7 @@ export const CreateProjectModal = () => {
                 <SelectContent className="max-h-80">
                   {GENRE_TAXONOMY.map(category => (
                     <div key={category.id}>
-                      <div className="px-2 py-1.5 text-[10px] font-black uppercase tracking-widest text-primary/60 bg-primary/5 rounded-md my-1">
+                      <div className="px-2 py-1.5 text-[10px] font-black uppercase tracking-widest text-primary/60 bg-primary/5 rounded-none my-1">
                         {category.name}
                       </div>
                       {category.subGenres.map(sub => (
@@ -249,7 +249,7 @@ export const CreateProjectModal = () => {
                 ))}
               </SelectContent>
             </Select>
-            <div className="bg-muted/30 border border-border/40 p-3 rounded-xl mt-2 grid grid-cols-2 gap-x-4 gap-y-2 shadow-inner">
+            <div className="bg-muted/30 border border-border/40 p-3 rounded-none mt-2 grid grid-cols-2 gap-x-4 gap-y-2 shadow-inner">
                 <div className="flex flex-col">
                   <span className="text-[9px] uppercase tracking-widest font-bold text-muted-foreground/70">Est. Base Budget</span>
                   <span className="text-sm font-semibold text-foreground/80">{formatMoney(calculatedBudget)}</span>
@@ -270,7 +270,7 @@ export const CreateProjectModal = () => {
           </div>
 
           {/* Talent Info Notice */}
-          <div className="flex items-start gap-2 p-3 rounded-xl bg-primary/5 border border-primary/20">
+          <div className="flex items-start gap-2 p-3 rounded-none bg-primary/5 border border-primary/20">
             <Info className="w-4 h-4 text-primary shrink-0 mt-0.5" />
             <p className="text-[10px] text-muted-foreground leading-relaxed">
               <span className="font-bold text-foreground">Talent attachment happens after greenlight.</span> First attach producers/writers during development, then cast acting talent and directors for production — just like real Hollywood.

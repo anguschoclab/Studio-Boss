@@ -170,7 +170,7 @@ export const ProjectDetailModal = () => {
   return (
     <Dialog open={!!selectedProjectId} onOpenChange={() => selectProject(null)}>
       <DialogContent className="max-w-4xl h-[85vh] bg-card/90 backdrop-blur-2xl border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col p-0">
-        <DialogHeader className="p-6 border-b border-slate-800 bg-black/40">
+        <DialogHeader className="p-6 border-b border-white/5 bg-black/40">
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <div className="flex items-center gap-3">
@@ -181,7 +181,7 @@ export const ProjectDetailModal = () => {
               </div>
               <div className="flex items-center gap-2">
                 <Badge variant="outline" className="text-secondary border-secondary/30 uppercase font-black text-[10px] tracking-widest">{project.state}</Badge>
-                <div className="h-1 w-1 rounded-full bg-slate-700" />
+                <div className="h-1 w-1 rounded-none bg-slate-700" />
                 <span className="text-[10px] uppercase font-bold text-muted-foreground">{project.genre} • {project.format}</span>
               </div>
             </div>
@@ -204,7 +204,7 @@ export const ProjectDetailModal = () => {
             (project.state === 'needs_greenlight' || project.state === 'development' || project.state === 'production') ? "production" :
             "overview"
           } className="flex-1 flex overflow-hidden">
-            <div className="w-16 border-r border-slate-800 bg-black/60 flex flex-col items-center py-6 space-y-8">
+            <div className="w-16 border-r border-white/5 bg-black/60 flex flex-col items-center py-6 space-y-8">
                <TabsList className="flex flex-col h-auto bg-transparent gap-6 p-0 border-none">
                  {[
                    { val: 'overview', icon: BarChart3, label: 'Intel' },
@@ -216,7 +216,7 @@ export const ProjectDetailModal = () => {
                    <TabsTrigger 
                      key={tab.val}
                      value={tab.val} 
-                     className="flex flex-col items-center gap-1 data-[state=active]:bg-primary/10 data-[state=active]:text-primary text-slate-500 hover:text-slate-300 transition-all p-2 rounded-xl border-none"
+                     className="flex flex-col items-center gap-1 data-[state=active]:bg-primary/10 data-[state=active]:text-primary text-slate-500 hover:text-slate-300 transition-all p-2 rounded-none border-none"
                      disabled={tab.val === 'marketing' && (project.state === 'development' || project.state === 'production' || project.state === 'needs_greenlight' || project.state === 'pitching')}
                    >
                      <tab.icon className="h-5 w-5" />
@@ -231,7 +231,7 @@ export const ProjectDetailModal = () => {
                 {/* OVERVIEW TAB */}
                 <TabsContent value="overview" className="mt-0 space-y-6">
                   <div className="grid grid-cols-2 gap-6">
-                    <div className="bg-slate-900/40 p-5 rounded-2xl border border-slate-800/50 space-y-4">
+                    <div className="bg-black/40 p-5 rounded-none border border-white/5/50 space-y-4">
                       <div className="flex items-center gap-2">
                         <TrendingUp className="w-4 h-4 text-primary" />
                         <span className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Package Analysis</span>
@@ -241,18 +241,18 @@ export const ProjectDetailModal = () => {
                            <span className="text-xs font-bold text-slate-400">Town Heat</span>
                             <span className="text-sm font-black text-primary">{scriptedProject?.scriptHeat || 50}%</span>
                         </div>
-                        <div className="h-1.5 rounded-full bg-slate-800 overflow-hidden">
+                        <div className="h-1.5 rounded-none bg-slate-800 overflow-hidden">
                            <div className="h-full bg-primary" style={{ width: `${scriptedProject?.scriptHeat || 50}%` }} />
                         </div>
                         {project.flavor && (
-                          <div className="relative p-4 rounded-xl bg-black/40 border-l-4 border-primary/40 italic text-sm text-slate-300">
+                          <div className="relative p-4 rounded-none bg-black/40 border-l-4 border-primary/40 italic text-sm text-slate-300">
                              "{project.flavor}"
                           </div>
                         )}
                       </div>
                     </div>
                     
-                    <div className="bg-slate-900/40 p-5 rounded-2xl border border-slate-800/50 space-y-4">
+                    <div className="bg-black/40 p-5 rounded-none border border-white/5/50 space-y-4">
                       <div className="flex items-center gap-2">
                         <DollarSign className="w-4 h-4 text-emerald-400" />
                         <span className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">P&L Forecast</span>
@@ -266,7 +266,7 @@ export const ProjectDetailModal = () => {
                           <span className="text-slate-500">Weekly Burn</span>
                           <span className="text-rose-400/60 font-bold">-{formatMoney(project.weeklyCost)}</span>
                         </div>
-                        <div className="pt-3 border-t border-slate-800/50 flex justify-between items-center">
+                        <div className="pt-3 border-t border-white/5/50 flex justify-between items-center">
                           <span className="text-xs font-black uppercase text-slate-400">Current Yield</span>
                           <span className="text-xl font-black text-emerald-500">{formatMoney(project.revenue)}</span>
                         </div>
@@ -280,8 +280,8 @@ export const ProjectDetailModal = () => {
                        { label: 'Complexity', val: project.budgetTier.toUpperCase(), icon: Brain, color: 'text-emerald-400' },
                        { label: 'Week', val: project.weeksInPhase, icon: Calendar, color: 'text-amber-400' }
                      ].map(card => (
-                       <div key={card.label} className="p-4 rounded-xl bg-slate-900/20 border border-slate-800/50 flex items-center gap-4">
-                          <div className={cn("w-10 h-10 rounded-lg bg-black/40 flex items-center justify-center border border-white/5", card.color)}>
+                       <div key={card.label} className="p-4 rounded-none bg-black/40 border border-white/5/50 flex items-center gap-4">
+                          <div className={cn("w-10 h-10 rounded-none bg-black/40 flex items-center justify-center border border-white/5", card.color)}>
                              <card.icon className="w-5 h-5" />
                           </div>
                           <div>
@@ -301,7 +301,7 @@ export const ProjectDetailModal = () => {
                            <DevelopmentLog project={project} />
                         </div>
                         <div className="space-y-4">
-                           <div className="glass-panel p-5 rounded-2xl border border-white/5 bg-black/40 space-y-4">
+                           <div className="glass-panel p-5 rounded-none border border-white/5 bg-black/40 space-y-4">
                               <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
                                  <Activity className="w-4 h-4 text-primary" /> Phase Status
                               </h3>
@@ -310,9 +310,9 @@ export const ProjectDetailModal = () => {
                                     <span className="text-slate-500">Drafting Progress</span>
                                     <span>{project.weeksInPhase}/{project.developmentWeeks} wks</span>
                                  </div>
-                                 <div className="h-4 bg-slate-800 rounded-full overflow-hidden border border-white/5 p-0.5">
+                                 <div className="h-4 bg-slate-800 rounded-none overflow-hidden border border-white/5 p-0.5">
                                     <div 
-                                      className="h-full bg-gradient-to-r from-violet-600 to-primary rounded-full transition-all duration-1000" 
+                                      className="h-full bg-gradient-to-r from-violet-600 to-primary rounded-none transition-all duration-1000" 
                                       style={{ width: `${(project.weeksInPhase / (project.developmentWeeks || 1)) * 100}%` }} 
                                     />
                                  </div>
@@ -325,8 +325,8 @@ export const ProjectDetailModal = () => {
                      </div>
                   ) : project.state === 'production' ? (
                      <div className="space-y-6">
-                        <div className="glass-panel p-8 rounded-2xl border border-primary/20 bg-primary/5 flex flex-col items-center text-center space-y-4">
-                           <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
+                        <div className="glass-panel p-8 rounded-none border border-primary/20 bg-primary/5 flex flex-col items-center text-center space-y-4">
+                           <div className="w-16 h-16 rounded-none bg-primary/10 flex items-center justify-center border border-primary/20">
                               <Clapperboard className="w-8 h-8 text-primary animate-bounce" />
                            </div>
                            <h3 className="text-2xl font-black uppercase italic tracking-tighter">Principal Photography Active</h3>
@@ -338,7 +338,7 @@ export const ProjectDetailModal = () => {
                                 <span>Shoot Completion</span>
                                 <span>{project.weeksInPhase} / {project.productionWeeks} Weeks</span>
                              </div>
-                             <div className="h-2 rounded-full bg-black/60 border border-white/5">
+                             <div className="h-2 rounded-none bg-black/60 border border-white/5">
                                 <div 
                                   className="h-full bg-primary shadow-[0_0_15px_rgba(var(--primary),0.4)] transition-all duration-1000" 
                                   style={{ width: `${(project.weeksInPhase / (project.productionWeeks || 1)) * 100}%` }} 
@@ -349,7 +349,7 @@ export const ProjectDetailModal = () => {
                      </div>
                   ) : project.state === 'needs_greenlight' && greenlightReport ? (
                     <div className="space-y-6">
-                       <div className="border border-primary/20 bg-primary/5 p-8 rounded-2xl space-y-6">
+                       <div className="border border-primary/20 bg-primary/5 p-8 rounded-none space-y-6">
                          <div className="flex items-center justify-between">
                            <div className="flex items-center gap-3">
                               <ShieldAlert className="w-8 h-8 text-primary" />
@@ -359,7 +359,7 @@ export const ProjectDetailModal = () => {
                               </div>
                            </div>
                            <div className={cn(
-                             "px-6 py-2 rounded-full text-xs font-black uppercase tracking-[0.2em] shadow-xl",
+                             "px-6 py-2 rounded-none text-xs font-black uppercase tracking-[0.2em] shadow-xl",
                              greenlightReport.score >= 60 ? 'bg-emerald-500 text-black shadow-emerald-500/20' : 'bg-rose-500 text-white shadow-rose-500/20'
                            )}>
                              {greenlightReport.recommendation}
@@ -369,17 +369,17 @@ export const ProjectDetailModal = () => {
                          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                            <div className="space-y-3">
                               <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest flex items-center gap-2"><CheckCircle2 className="w-3 h-3" /> Bull Case</span>
-                              <ul className="space-y-2">{greenlightReport.positives.map((p, i) => <li key={i} className="text-xs text-slate-300 flex gap-2"><div className="w-1 h-1 bg-emerald-500/40 rounded-full mt-1.5 shrink-0" /> {p}</li>)}</ul>
+                              <ul className="space-y-2">{greenlightReport.positives.map((p, i) => <li key={i} className="text-xs text-slate-300 flex gap-2"><div className="w-1 h-1 bg-emerald-500/40 rounded-none mt-1.5 shrink-0" /> {p}</li>)}</ul>
                            </div>
                            <div className="space-y-3">
                               <span className="text-[10px] font-black text-rose-400 uppercase tracking-widest flex items-center gap-2"><AlertCircle className="w-3 h-3" /> Bear Case</span>
-                              <ul className="space-y-2">{greenlightReport.negatives.map((n, i) => <li key={i} className="text-xs text-slate-300 flex gap-2"><div className="w-1 h-1 bg-rose-500/40 rounded-full mt-1.5 shrink-0" /> {n}</li>)}</ul>
+                              <ul className="space-y-2">{greenlightReport.negatives.map((n, i) => <li key={i} className="text-xs text-slate-300 flex gap-2"><div className="w-1 h-1 bg-rose-500/40 rounded-none mt-1.5 shrink-0" /> {n}</li>)}</ul>
                            </div>
                          </div>
 
                          <div className="pt-6 border-t border-white/5">
                             <Button 
-                              className="w-full h-14 bg-primary text-black hover:bg-primary/90 font-black text-sm uppercase tracking-[0.2em] rounded-xl shadow-2xl" 
+                              className="w-full h-14 bg-primary text-black hover:bg-primary/90 font-black text-sm uppercase tracking-[0.2em] rounded-none shadow-2xl" 
                               onClick={() => { greenlightProject(project.id); selectProject(null); }}
                             >
                               Execute Authorization & Release Budgets
@@ -406,12 +406,12 @@ export const ProjectDetailModal = () => {
                             const isFilled = group.attached.length > 0;
                             return (
                               <div key={role} className={cn(
-                                "p-5 rounded-2xl border transition-all relative overflow-hidden group",
-                                isFilled ? "bg-slate-900/40 border-slate-800" : "bg-white/2 border-white/5 border-dashed"
+                                "p-5 rounded-none border transition-all relative overflow-hidden group",
+                                isFilled ? "bg-black/40 border-white/5" : "bg-white/2 border-white/5 border-dashed"
                               )}>
                                 <div className="flex items-center justify-between gap-6">
                                   <div className="flex items-center gap-4 flex-1">
-                                     <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center border", isFilled ? "bg-primary/10 border-primary/20 text-primary" : "bg-white/5 border-white/5 text-muted-foreground/30")}>
+                                     <div className={cn("w-10 h-10 rounded-none flex items-center justify-center border", isFilled ? "bg-primary/10 border-primary/20 text-primary" : "bg-white/5 border-white/5 text-muted-foreground/30")}>
                                         <Users className="w-5 h-5" />
                                      </div>
                                      <div className="flex flex-col min-w-0">
@@ -429,8 +429,8 @@ export const ProjectDetailModal = () => {
                                   
                                   {(project.state === 'development' || project.state === 'needs_greenlight') && (
                                     <Select onValueChange={(val) => val && gameState && gameState.finance.cash >= (talentMap.get(val)?.fee || 0) && signContract(val, project.id)}>
-                                      <SelectTrigger className="w-[180px] bg-slate-900 border-slate-700 h-10 text-xs font-bold uppercase tracking-widest"><SelectValue placeholder="Cast Role..." /></SelectTrigger>
-                                      <SelectContent className="bg-slate-950 border-slate-800 text-slate-200">
+                                      <SelectTrigger className="w-[180px] bg-black/60 border-slate-700 h-10 text-xs font-bold uppercase tracking-widest"><SelectValue placeholder="Cast Role..." /></SelectTrigger>
+                                      <SelectContent className="bg-black border-white/5 text-slate-200">
                                         {group.available.map(t => (
                                           <SelectItem 
                                             key={t.id} 
@@ -456,7 +456,7 @@ export const ProjectDetailModal = () => {
 
                      <div className="lg:col-span-12 xl:col-span-5 h-full">
                         <div className="sticky top-0 space-y-6">
-                           <div className="glass-panel p-6 rounded-2xl border border-white/5 bg-black/40 h-full min-h-[300px] flex flex-col">
+                           <div className="glass-panel p-6 rounded-none border border-white/5 bg-black/40 h-full min-h-[300px] flex flex-col">
                               {hoveredTalentId && talentMap.has(hoveredTalentId) ? (
                                  <CastingFeedback 
                                     talent={talentMap.get(hoveredTalentId)!} 
@@ -489,13 +489,13 @@ export const ProjectDetailModal = () => {
                          disabled={!!project.marketingLevel || (gameState ? gameState.finance.cash < tier.cost : false)}
                          onClick={() => setSelectedTier(tier.id as any)}
                          className={cn(
-                           "p-6 rounded-2xl border text-left transition-all relative overflow-hidden flex flex-col justify-between group h-52",
+                           "p-6 rounded-none border text-left transition-all relative overflow-hidden flex flex-col justify-between group h-52",
                            project.marketingLevel === tier.id || selectedTier === tier.id 
                              ? 'border-primary bg-primary/10 shadow-[0_0_30px_rgba(var(--primary),0.1)]' 
-                             : 'border-slate-800 bg-slate-900/40 hover:border-slate-700'
+                             : 'border-white/5 bg-black/40 hover:border-slate-700'
                          )}
                        >
-                         {selectedTier === tier.id && <div className="absolute top-0 right-0 w-8 h-8 bg-primary rounded-bl-2xl flex items-center justify-center"><CheckCircle2 className="w-4 h-4 text-black" /></div>}
+                         {selectedTier === tier.id && <div className="absolute top-0 right-0 w-8 h-8 bg-primary rounded-none-2xl flex items-center justify-center"><CheckCircle2 className="w-4 h-4 text-black" /></div>}
                          
                          <div>
                             <p className="text-[10px] font-black uppercase text-primary tracking-widest mb-1">{tier.name}</p>
@@ -510,7 +510,7 @@ export const ProjectDetailModal = () => {
                      ))}
                    </div>
 
-                   <div className="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
+                   <div className="bg-black/40 border border-white/5 rounded-none overflow-hidden shadow-2xl">
                      <div className="p-5 border-b border-white/5 bg-white/3 flex items-center justify-between">
                         <div className="flex items-center gap-2">
                            <BarChart3 className="w-4 h-4 text-primary" />
@@ -539,14 +539,14 @@ export const ProjectDetailModal = () => {
 
                    {!project.marketingLevel ? (
                      <Button 
-                       className="w-full h-16 bg-primary text-black hover:bg-primary/90 font-black text-sm uppercase tracking-[0.3em] rounded-xl shadow-2xl transition-all active:scale-[0.98]"
+                       className="w-full h-16 bg-primary text-black hover:bg-primary/90 font-black text-sm uppercase tracking-[0.3em] rounded-none shadow-2xl transition-all active:scale-[0.98]"
                        disabled={!selectedTier || (gameState ? gameState.finance.cash < (selectedTier === 'basic' ? project.budget * 0.1 : selectedTier === 'blockbuster' ? project.budget * 0.5 : 0) : false)}
                        onClick={() => { lockMarketingCampaign(project.id, selectedTier); selectProject(null); }}
                      >
                        Authorize Global Release & Dedicate Reserves
                      </Button>
                    ) : (
-                     <div className="p-6 bg-slate-900/80 border border-slate-700 rounded-xl flex flex-col items-center justify-center gap-2">
+                     <div className="p-6 bg-black/40 border border-slate-700 rounded-none flex flex-col items-center justify-center gap-2">
                         <div className="flex items-center gap-3">
                            <Megaphone className="h-6 w-6 text-primary animate-pulse" />
                            <span className="text-base font-black uppercase text-white tracking-widest">Deployment: {project.marketingLevel} Initiative</span>
@@ -559,7 +559,7 @@ export const ProjectDetailModal = () => {
                 {/* CAMPAIGNS TAB */}
                 <TabsContent value="campaigns" className="mt-0 space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="bg-slate-900/40 border border-slate-800 p-6 rounded-2xl space-y-6">
+                    <div className="bg-black/40 border border-white/5 p-6 rounded-none space-y-6">
                       <div className="flex items-center gap-3">
                          <Trophy className="w-5 h-5 text-amber-500" />
                          <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Awards & Festivals Pipeline</span>
@@ -567,8 +567,8 @@ export const ProjectDetailModal = () => {
                       
                       <div className="space-y-4">
                         <Select onValueChange={(v) => { submitToFestival(project.id, v as AwardBody); selectProject(null); }}>
-                          <SelectTrigger className="h-12 bg-slate-950 border-slate-800 text-xs font-black uppercase tracking-widest"><SelectValue placeholder="Festival Submission..." /></SelectTrigger>
-                          <SelectContent className="bg-slate-950 border-slate-800 text-slate-200">
+                          <SelectTrigger className="h-12 bg-black border-white/5 text-xs font-black uppercase tracking-widest"><SelectValue placeholder="Festival Submission..." /></SelectTrigger>
+                          <SelectContent className="bg-black border-white/5 text-slate-200">
                              {FESTIVALS.map(f => <SelectItem key={f.body} value={f.body} className="font-bold flex items-center">
                                {f.name} <span className="ml-2 text-emerald-400">({formatMoney(f.cost)})</span>
                              </SelectItem>)}
@@ -585,13 +585,13 @@ export const ProjectDetailModal = () => {
                       </div>
                       
                       {project.awardsProfile && (
-                        <div className="grid grid-cols-1 gap-4 pt-4 border-t border-slate-800">
+                        <div className="grid grid-cols-1 gap-4 pt-4 border-t border-white/5">
                           <div className="space-y-2">
                             <div className="flex justify-between items-center text-[10px] font-black tracking-widest uppercase">
                                <span className="text-slate-500">Academy Sentiment</span>
                                <span className="text-amber-500">{project.awardsProfile.academyAppeal}%</span>
                             </div>
-                            <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden shadow-inner">
+                            <div className="h-1.5 bg-slate-800 rounded-none overflow-hidden shadow-inner">
                                <div className="h-full bg-amber-500" style={{ width: `${project.awardsProfile.academyAppeal}%` }} />
                             </div>
                           </div>
@@ -600,7 +600,7 @@ export const ProjectDetailModal = () => {
                                <span className="text-slate-500">Campaign Force</span>
                                <span className="text-white">{project.awardsProfile.campaignStrength}%</span>
                             </div>
-                            <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden shadow-inner">
+                            <div className="h-1.5 bg-slate-800 rounded-none overflow-hidden shadow-inner">
                                <div className="h-full bg-white shadow-[0_0_10px_white]" style={{ width: `${project.awardsProfile.campaignStrength}%` }} />
                             </div>
                           </div>
@@ -608,25 +608,25 @@ export const ProjectDetailModal = () => {
                       )}
                     </div>
 
-                    <div className="bg-slate-900/40 border border-slate-800 p-6 rounded-2xl space-y-6 flex flex-col justify-between">
+                    <div className="bg-black/40 border border-white/5 p-6 rounded-none space-y-6 flex flex-col justify-between">
                       <div className="space-y-6">
                          <div className="flex items-center gap-3">
                             <Package className="w-5 h-5 text-violet-400" />
                             <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">IP Vault & Catalog Properties</span>
                          </div>
                          <div className="space-y-4">
-                            <div className="flex justify-between items-center p-3 rounded-xl bg-black/40 border border-white/5">
+                            <div className="flex justify-between items-center p-3 rounded-none bg-black/40 border border-white/5">
                                <span className="text-xs font-bold text-slate-400">Governance</span>
                                <Badge variant="outline" className="text-[10px] font-black uppercase border-slate-700 bg-slate-800">{project.ipRights?.rightsOwner || 'Internal Development'}</Badge>
                             </div>
-                            <div className="flex justify-between items-center p-3 rounded-xl bg-black/40 border border-white/5">
+                            <div className="flex justify-between items-center p-3 rounded-none bg-black/40 border border-white/5">
                                <span className="text-xs font-bold text-slate-400">Franchise Asset ID</span>
                                <span className="text-xs font-mono text-slate-500 uppercase">{project.franchiseId || 'New/Standalone'}</span>
                             </div>
                          </div>
                       </div>
 
-                      <div className="pt-4 border-t border-slate-800/50 flex justify-between items-end">
+                      <div className="pt-4 border-t border-white/5/50 flex justify-between items-end">
                          <div className="space-y-1">
                             <span className="text-[9px] font-black uppercase text-slate-500 tracking-widest">Library Residual Valuation</span>
                             <div className="text-2xl font-black text-emerald-400 font-mono tracking-tighter tabular-nums">{formatMoney(project.ipRights?.catalogValue || project.budget * 0.15)}</div>
@@ -641,7 +641,7 @@ export const ProjectDetailModal = () => {
         </div>
 
         {/* Global Footer Controls */}
-        <div className="p-6 bg-black/80 border-t border-slate-800 flex items-center justify-between gap-4">
+        <div className="p-6 bg-black/80 border-t border-white/5 flex items-center justify-between gap-4">
            {((project.state === 'archived' || project.state === 'released' || project.state === 'post_release') && project.type === 'SERIES') ? (
              <Button onClick={() => { renewProject(project.id); selectProject(null); }} className="flex-1 max-w-sm h-12 bg-blue-600 hover:bg-blue-500 text-white font-black uppercase tracking-[0.2em] shadow-xl shadow-blue-900/20">
                 Order Next Season (Production)
@@ -658,7 +658,7 @@ export const ProjectDetailModal = () => {
               <Button variant="ghost" className="h-10 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-white" onClick={() => selectProject(null)}>Close Terminal</Button>
               <div className="h-8 w-[1px] bg-slate-800" />
               <div className="flex items-center gap-2">
-                 <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                 <div className="w-2 h-2 rounded-none bg-emerald-500 animate-pulse" />
                  <span className="text-[10px] font-black text-emerald-500/80 uppercase tracking-widest">Connection Stable</span>
               </div>
            </div>

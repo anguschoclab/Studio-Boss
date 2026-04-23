@@ -40,7 +40,7 @@ export const ScriptList: React.FC<ScriptListProps> = ({ scripts }) => {
 
   if (scripts.length === 0) {
     return (
-      <div className={cn('text-center py-12', tokens.border.default, 'border-dashed rounded-xl')}>
+      <div className={cn('text-center py-12', tokens.border.default, 'border-dashed rounded-none')}>
         <Scroll className="h-12 w-12 mx-auto mb-4 opacity-20" />
         <p className={tokens.text.label}>No Active Scripts</p>
         <p className={cn(tokens.text.caption, 'mt-2')}>
@@ -96,9 +96,9 @@ export const ScriptList: React.FC<ScriptListProps> = ({ scripts }) => {
 
                   <div className="mt-3 space-y-2">
                     {/* Progress bar */}
-                    <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+                    <div className="h-1.5 bg-muted rounded-none overflow-hidden">
                       <div
-                        className={cn('h-full rounded-full', config.color)}
+                        className={cn('h-full rounded-none', config.color)}
                         style={{ width: `${config.progress}%` }}
                       />
                     </div>
