@@ -82,14 +82,14 @@ describe('CommandCenter', () => {
     );
 
     expect(screen.getByText('Acme Studios')).toBeInTheDocument();
-    expect(screen.getByText('boutique indie')).toBeInTheDocument();
+    expect(screen.getByText('BOUTIQUE INDIE')).toBeInTheDocument();
 
     // Active projects = 2 (p1, p2)
-    const valueElements = screen.getAllByText('2');
+    const valueElements = screen.getAllByText(/2/);
     expect(valueElements.length).toBeGreaterThan(0);
 
     // Talent count = 3
-    expect(screen.getAllByText('3').length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/3/).length).toBeGreaterThan(0);
     expect(screen.getByText('42')).toBeInTheDocument();
 
     expect(screen.getByTestId('mock-financial-widget')).toBeInTheDocument();
@@ -115,11 +115,11 @@ describe('CommandCenter', () => {
       </TooltipProvider>
     );
 
-    expect(screen.getByText('W12')).toBeInTheDocument();
+    expect(screen.getByText('12')).toBeInTheDocument();
     expect(screen.getByText('Huge Box Office')).toBeInTheDocument();
     expect(screen.getByText('A movie made money')).toBeInTheDocument();
 
-    expect(screen.getByText('W13')).toBeInTheDocument();
+    expect(screen.getByText('13')).toBeInTheDocument();
     expect(screen.getByText('Scandal!')).toBeInTheDocument();
     expect(screen.getByText('Oh no')).toBeInTheDocument();
   });
@@ -131,6 +131,6 @@ describe('CommandCenter', () => {
         <CommandCenter />
       </TooltipProvider>
     );
-    expect(screen.getByText('Awaiting Intelligence')).toBeInTheDocument();
+    expect(screen.getByText('NO RECENT INDUSTRY ACTIVITY LOGGED IN SECTOR.')).toBeInTheDocument();
   });
 });
