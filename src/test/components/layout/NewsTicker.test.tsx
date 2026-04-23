@@ -11,7 +11,7 @@ describe('NewsTicker', () => {
       selector({ news: { headlines: [] } })
     );
     render(<NewsTicker />);
-    expect(screen.getByText(/ESTABLISHING_UPLINK_TO_INDUSTRY_DATABASE/i)).toBeInTheDocument();
+    expect(screen.getByText(/Industry steady as summer blockbuster season approaches/i)).toBeInTheDocument();
   });
 
   it('displays active news items from the store (doubled for marquee)', () => {

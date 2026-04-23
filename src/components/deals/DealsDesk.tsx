@@ -2,7 +2,6 @@ import React from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { selectBuyers, selectProjects } from '@/store/selectors';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Handshake, Tv, Globe, Zap, BarChart3, Info, Target, Briefcase, ShieldCheck } from 'lucide-react';

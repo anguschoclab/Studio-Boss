@@ -1,9 +1,7 @@
 import React from 'react';
 import { FinancialOverviewWidget } from './FinancialOverviewWidget';
 import { DemographicsWidget } from './DemographicsWidget';
-import { Card, CardContent } from '@/components/ui/card';
 import { useGameStore } from '@/store/gameStore';
-import { Badge } from '@/components/ui/badge';
 import { Clapperboard, Users, Building2, TrendingUp, Star, Zap, ShieldCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { KPIStatCard } from '@/components/shared/KPIStatCard';
@@ -15,12 +13,12 @@ export const CommandCenter: React.FC = () => {
   if (!gameState) return null;
 
   const { studio, industry } = gameState;
-  const projects = Object.values(studio.internal?.projects || {});
-  const { talentPool, rivals, newsHistory } = industry || {};
+  const projects = Object.values(studio.internal.projects);
+  const { talentPool, rivals, newsHistory } = industry;
 
   const activeProjectsCount = projects.filter(p => p.state !== 'released' && p.state !== 'post_release' && p.state !== 'archived').length;
-  const talentCount = Object.keys(talentPool || {}).length;
-  const rivalCount = rivals?.length || 0;
+  const talentCount = Object.keys(talentPool).length;
+  const rivalCount = rivals.length;
 
   return (
     <div className="space-y-16 animate-in fade-in slide-in-from-bottom-8 duration-1000">
