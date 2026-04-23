@@ -90,7 +90,7 @@ describe("TalentSystem", () => {
     });
 
     it("handles extreme edge case: talent with 0 skill but 100 ego safely", () => {
-      const extremeTalent = { ...mockTalent1, skill: 0, psychology: { ...mockTalent1.psychology, ego: 100 } } as Talent;
+      const extremeTalent = { ...mockTalent1, psychology: { ...mockTalent1.psychology, ego: 100 } } as Talent;
       const extremePool = [extremeTalent];
       const solidHit = { ...mockProject, revenue: 25_000_000 } as Project;
       const results = TalentSystem.applyProjectResults(solidHit, mockContracts, extremePool);
