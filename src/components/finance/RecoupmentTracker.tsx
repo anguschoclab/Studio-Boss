@@ -1,9 +1,10 @@
 import React from 'react';
-import { cn } from '@/lib/utils';
-import { TrendingUp, AlertCircle, CheckCircle2, Clock } from 'lucide-react';
+import { cn, formatCompactCurrency } from '@/lib/utils';
+import { TrendingUp, DollarSign, Target, AlertCircle } from 'lucide-react';
 import { Section } from '@/components/layout/Section';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { tokens } from '@/lib/tokens';
 
 interface ProjectRecoupment {
   projectId: string;

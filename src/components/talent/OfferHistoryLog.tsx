@@ -1,5 +1,5 @@
 import React from 'react';
-import { cn, formatCurrency } from '@/lib/utils';
+import { cn, formatCompactCurrency } from '@/lib/utils';
 import { History, DollarSign, CheckCircle2, XCircle, Clock } from 'lucide-react';
 import { Section } from '@/components/layout/Section';
 import { Card } from '@/components/ui/card';
@@ -40,12 +40,6 @@ export const OfferHistoryLog: React.FC<OfferHistoryLogProps> = ({
   const pending = offers.filter(o => o.status === 'pending');
   const resolved = offers.filter(o => o.status !== 'pending');
 
-  const formatCurrency = (value: number) => {
-    if (value >= 1000000) return `$${(value / 1000000).toFixed(1)}M`;
-    if (value >= 1000) return `$${(value / 1000).toFixed(1)}K`;
-    return `$${value}`;
-  };
-
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'accepted':
@@ -85,10 +79,10 @@ export const OfferHistoryLog: React.FC<OfferHistoryLogProps> = ({
           </p>
         </div>
         <div className="text-right">
-          <p className="text-lg font-bold">{formatCurrency(offer.initialOffer)}</p>
+          <p className="text-lg font-bold">{formatCompactCurrency(offer.initialOffer)}</p>
           {offer.finalAmount && offer.finalAmount !== offer.initialOffer && (
             <p className={cn('text-[10px]', tokens.text.caption)}>
-              Final: {formatCurrency(offer.finalAmount)}
+              Final: {formatCompactCurrency(offer.finalAmount)}
             </p>
           )}
         </div>
@@ -106,7 +100,7 @@ export const OfferHistoryLog: React.FC<OfferHistoryLogProps> = ({
               {action.by === 'player' ? 'You' : action.by}
             </span>
             <span>{action.type}</span>
-            <span className="font-medium">{formatCurrency(action.amount)}</span>
+            <span className="font-medium">{formatCompactCurrency(action.amount)}</span>
             <span className={tokens.text.caption}>• Week {action.date}</span>
             {action.note && (
               <span className="italic text-muted-foreground">"{action.note}"</span>

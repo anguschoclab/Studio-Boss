@@ -2,7 +2,7 @@ import React from 'react';
 import { TimeSeriesChart } from '@/components/charts/TimeSeriesChart';
 import { Card } from '@/components/ui/card';
 import { tokens } from '@/lib/tokens';
-import { cn } from '@/lib/utils';
+import { cn, formatCompactCurrency } from '@/lib/utils';
 import { AlertTriangle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useGameStore } from '@/store/gameStore';
@@ -36,12 +36,6 @@ export const BudgetBurnRate: React.FC<BudgetBurnRateProps> = ({
   const totalSpent = data.reduce((sum, d) => sum + d.actual, 0);
   const remaining = totalBudget - totalSpent;
   const percentUsed = totalBudget > 0 ? (totalSpent / totalBudget) * 100 : 0;
-
-  const formatCurrency = (value: number) => {
-    if (Math.abs(value) >= 1000000) return `$${(value / 1000000).toFixed(1)}M`;
-    if (Math.abs(value) >= 1000) return `$${(value / 1000).toFixed(0)}K`;
-    return `$${value}`;
-  };
 
   const chartData = data.map(d => ({
     date: `W${d.week}`,
@@ -77,7 +71,7 @@ export const BudgetBurnRate: React.FC<BudgetBurnRateProps> = ({
 
       <div className="grid grid-cols-3 gap-2 mb-4 text-center">
         <div className="p-2 bg-muted/30 rounded">
-          <p className="text-xs font-bold">{formatCurrency(totalSpent)}</p>
+          <p className="text-xs font-bold">{formatCompactCurrency(totalSpent)}</p>
           <p className={cn('text-[9px]', tokens.text.caption)}>Spent</p>
         </div>
         <div className="p-2 bg-muted/30 rounded">
@@ -85,12 +79,12 @@ export const BudgetBurnRate: React.FC<BudgetBurnRateProps> = ({
             'text-xs font-bold',
             isOverBurn ? 'text-red-500' : 'text-emerald-500'
           )}>
-            {formatCurrency(currentBurn)}
+            {formatCompactCurrency(currentBurn)}
           </p>
           <p className={cn('text-[9px]', tokens.text.caption)}>This week</p>
         </div>
         <div className="p-2 bg-muted/30 rounded">
-          <p className="text-xs font-bold">{formatCurrency(remaining)}</p>
+          <p className="text-xs font-bold">{formatCompactCurrency(remaining)}</p>
           <p className={cn('text-[9px]', tokens.text.caption)}>Remaining</p>
         </div>
       </div>
@@ -100,7 +94,7 @@ export const BudgetBurnRate: React.FC<BudgetBurnRateProps> = ({
         height={140}
         lineColor="#ef4444"
         secondaryLineColor="#3b82f6"
-        valueFormatter={formatCurrency}
+        valueFormatter={formatCompactCurrency}
         showGrid={false}
       />
 

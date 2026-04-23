@@ -1,5 +1,5 @@
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn, formatCompactCurrency } from '@/lib/utils';
 import { Globe, TrendingUp, Tv, ChevronRight, Zap, Target } from 'lucide-react';
 import { Section } from '@/components/layout/Section';
 import { Card } from '@/components/ui/card';
@@ -28,12 +28,6 @@ export const SyndicationRevenuePanel: React.FC<SyndicationRevenuePanelProps> = (
 }) => {
   const { byRegion, totalRevenue, totalDeals, topPerformingRegion } = syndicationData;
 
-  const formatCurrency = (value: number) => {
-    if (value >= 1000000) return `$${(value / 1000000).toFixed(1)}M`;
-    if (value >= 1000) return `$${(value / 1000).toFixed(1)}K`;
-    return `$${value}`;
-  };
-
   return (
     <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-1000">
       {/* Summary Cards */}
@@ -45,7 +39,7 @@ export const SyndicationRevenuePanel: React.FC<SyndicationRevenuePanelProps> = (
             </div>
             <div>
               <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 italic mb-2">TOTAL_REVENUE</p>
-              <p className="text-3xl font-display font-black italic tracking-tighter text-foreground group-hover:text-primary transition-colors">{formatCurrency(totalRevenue)}</p>
+              <p className="text-3xl font-display font-black italic tracking-tighter text-foreground group-hover:text-primary transition-colors">{formatCompactCurrency(totalRevenue)}</p>
             </div>
           </div>
         </div>
@@ -120,7 +114,7 @@ export const SyndicationRevenuePanel: React.FC<SyndicationRevenuePanelProps> = (
                   </div>
                   
                   <div className="text-right space-y-2">
-                    <p className="text-2xl font-display font-black italic tracking-tighter text-foreground leading-none">{formatCurrency(market.revenue)}</p>
+                    <p className="text-2xl font-display font-black italic tracking-tighter text-foreground leading-none">{formatCompactCurrency(market.revenue)}</p>
                     <p className={cn(
                       'text-[9px] font-black uppercase tracking-[0.2em] italic flex items-center justify-end gap-2',
                       market.trend === 'up' ? 'text-emerald-500' :

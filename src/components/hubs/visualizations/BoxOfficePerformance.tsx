@@ -2,7 +2,7 @@ import React from 'react';
 import { SimpleBarChart } from '@/components/charts/SimpleBarChart';
 import { Card } from '@/components/ui/card';
 import { tokens } from '@/lib/tokens';
-import { cn } from '@/lib/utils';
+import { cn, formatCompactCurrency } from '@/lib/utils';
 import { TrendingUp } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useGameStore } from '@/store/gameStore';
@@ -24,12 +24,6 @@ export const BoxOfficePerformance: React.FC<BoxOfficePerformanceProps> = ({
   const avgPerTheater = projects.length > 0
     ? projects.reduce((sum, p) => sum + (p.perTheater || 0), 0) / projects.length
     : 0;
-
-  const formatCurrency = (value: number) => {
-    if (value >= 1000000) return `$${(value / 1000000).toFixed(1)}M`;
-    if (value >= 1000) return `$${(value / 1000).toFixed(0)}K`;
-    return `$${value}`;
-  };
 
   const getTrendColor = (trend: string) => {
     switch (trend) {
@@ -72,11 +66,11 @@ export const BoxOfficePerformance: React.FC<BoxOfficePerformanceProps> = ({
 
       <div className="grid grid-cols-2 gap-2 mb-4">
         <div className="p-2 bg-muted/30 rounded text-center">
-          <p className="text-sm font-bold">{formatCurrency(totalGross)}</p>
+          <p className="text-sm font-bold">{formatCompactCurrency(totalGross)}</p>
           <p className={cn('text-[9px]', tokens.text.caption)}>Total Gross</p>
         </div>
         <div className="p-2 bg-muted/30 rounded text-center">
-          <p className="text-sm font-bold">{formatCurrency(avgPerTheater)}</p>
+          <p className="text-sm font-bold">{formatCompactCurrency(avgPerTheater)}</p>
           <p className={cn('text-[9px]', tokens.text.caption)}>Avg Per Theater</p>
         </div>
       </div>
@@ -85,7 +79,7 @@ export const BoxOfficePerformance: React.FC<BoxOfficePerformanceProps> = ({
         data={chartData}
         height={150}
         showGrid={false}
-        valueFormatter={formatCurrency}
+        valueFormatter={formatCompactCurrency}
       />
 
       {/* Performance legend */}

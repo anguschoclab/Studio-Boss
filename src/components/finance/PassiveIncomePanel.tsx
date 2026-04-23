@@ -1,5 +1,5 @@
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn, formatCompactCurrency } from '@/lib/utils';
 import { Coins, Film, Tv, Music, BookOpen, TrendingUp } from 'lucide-react';
 import { Section } from '@/components/layout/Section';
 import { Card } from '@/components/ui/card';
@@ -28,11 +28,6 @@ export const PassiveIncomePanel: React.FC<PassiveIncomePanelProps> = ({
   totalYTD,
   topPerformingSource,
 }) => {
-  const formatCurrency = (value: number) => {
-    if (value >= 1000000) return `$${(value / 1000000).toFixed(1)}M`;
-    if (value >= 1000) return `$${(value / 1000).toFixed(1)}K`;
-    return `$${value}`;
-  };
 
   const getTypeIcon = (type: string) => {
     switch (type) {
@@ -85,7 +80,7 @@ export const PassiveIncomePanel: React.FC<PassiveIncomePanelProps> = ({
             <div className="flex items-center gap-2">
               <Coins className="h-6 w-6 text-emerald-500" />
               <span className="text-3xl font-bold text-emerald-500">
-                {formatCurrency(totalWeekly)}
+                {formatCompactCurrency(totalWeekly)}
               </span>
             </div>
             <p className={cn('text-xs', tokens.text.caption)}>/week</p>
@@ -94,7 +89,7 @@ export const PassiveIncomePanel: React.FC<PassiveIncomePanelProps> = ({
 
         <div className="grid grid-cols-3 gap-4 text-center pt-4 border-t border-border/30">
           <div>
-            <p className="text-2xl font-bold text-emerald-500">{formatCurrency(totalYTD)}</p>
+            <p className="text-2xl font-bold text-emerald-500">{formatCompactCurrency(totalYTD)}</p>
             <p className={cn('text-[10px]', tokens.text.caption)}>Year to Date</p>
           </div>
           <div>
@@ -153,7 +148,7 @@ export const PassiveIncomePanel: React.FC<PassiveIncomePanelProps> = ({
 
                   <div className="text-right">
                     <div className="flex items-center gap-2 justify-end">
-                      <p className="text-lg font-bold">{formatCurrency(stream.weeklyRevenue)}</p>
+                      <p className="text-lg font-bold">{formatCompactCurrency(stream.weeklyRevenue)}</p>
                       {getTrendIcon(stream.trend)}
                     </div>
                     <p className={cn('text-[10px]', tokens.text.caption)}>
@@ -165,7 +160,7 @@ export const PassiveIncomePanel: React.FC<PassiveIncomePanelProps> = ({
                 <div className="mt-3 pt-3 border-t border-border/30">
                   <div className="flex items-center justify-between text-[10px]">
                     <span className={tokens.text.caption}>
-                      Total to date: {formatCurrency(stream.totalToDate)}
+                      Total to date: {formatCompactCurrency(stream.totalToDate)}
                     </span>
                     <Badge variant="outline" className="text-[9px]">
                       {((stream.weeklyRevenue / totalWeekly) * 100).toFixed(1)}% of total

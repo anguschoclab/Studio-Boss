@@ -1,6 +1,6 @@
 import React from 'react';
-import { cn } from '@/lib/utils';
-import { Download, AlertTriangle, Globe, Lock } from 'lucide-react';
+import { cn, formatCompactCurrency } from '@/lib/utils';
+import { AlertTriangle, Shield, TrendingDown, Download } from 'lucide-react';
 import { Section } from '@/components/layout/Section';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -33,13 +33,13 @@ interface PiracyImpactMonitorProps {
 }
 
 export const PiracyImpactMonitor: React.FC<PiracyImpactMonitorProps> = ({
-  projects,
-  totalLoss,
-  studioRiskLevel,
-  activeProtections,
+  regions,
+  totalRevenueLoss,
+  totalIllegalDownloads,
+  topAffectedRegion,
 }) => {
-  const highRiskProjects = projects.filter(p => 
-    p.byRegion.some(r => r.severity === 'high' || r.severity === 'critical')
+  const highRiskRegions = regions.filter(r => 
+    r.severity === 'high' || r.severity === 'critical'
   );
 
   const formatCurrency = (value: number) => {

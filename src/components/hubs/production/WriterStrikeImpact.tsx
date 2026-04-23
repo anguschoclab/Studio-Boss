@@ -1,5 +1,5 @@
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn, formatCompactCurrency } from '@/lib/utils';
 import { AlertTriangle, PenTool, Clock, DollarSign, Users, AlertOctagon } from 'lucide-react';
 import { Section } from '@/components/layout/Section';
 import { Card } from '@/components/ui/card';
@@ -41,12 +41,6 @@ export const WriterStrikeImpact: React.FC<WriterStrikeImpactProps> = ({
 }) => {
   const halted = affectedProjects.filter(p => p.status === 'halted');
   const delayed = affectedProjects.filter(p => p.status === 'delayed');
-
-  const formatCurrency = (value: number) => {
-    if (value >= 1000000) return `$${(value / 1000000).toFixed(1)}M`;
-    if (value >= 1000) return `$${(value / 1000).toFixed(1)}K`;
-    return `$${value}`;
-  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -119,7 +113,7 @@ export const WriterStrikeImpact: React.FC<WriterStrikeImpactProps> = ({
             </div>
             <div>
               <p className={cn('text-[10px] uppercase', tokens.text.caption)}>Cost Impact</p>
-              <p className="text-xl font-bold">{formatCurrency(totalCostImpact)}</p>
+              <p className="text-xl font-bold">{formatCompactCurrency(totalCostImpact)}</p>
             </div>
           </div>
         </Card>
@@ -167,7 +161,7 @@ export const WriterStrikeImpact: React.FC<WriterStrikeImpactProps> = ({
                 </div>
                 <div className="text-right">
                   <p className="text-lg font-bold text-red-500">
-                    {formatCurrency(project.costImpact)}
+                    {formatCompactCurrency(project.costImpact)}
                   </p>
                   <p className={cn('text-[10px]', tokens.text.caption)}>cost overrun</p>
                 </div>

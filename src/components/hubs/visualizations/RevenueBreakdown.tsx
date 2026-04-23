@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { PieChart } from '@/components/charts/PieChart';
 import { Card } from '@/components/ui/card';
 import { tokens } from '@/lib/tokens';
-import { cn } from '@/lib/utils';
+import { cn, formatCompactCurrency } from '@/lib/utils';
 import { useGameStore } from '@/store/gameStore';
 import { selectRevenueBreakdown } from '@/store/selectors';
 
@@ -52,12 +52,6 @@ export const RevenueBreakdown: React.FC<RevenueBreakdownProps> = ({
     color: s.color || defaultColors[i % defaultColors.length],
   }));
 
-  const formatCurrency = (value: number) => {
-    if (Math.abs(value) >= 1000000) return `$${(value / 1000000).toFixed(1)}M`;
-    if (Math.abs(value) >= 1000) return `$${(value / 1000).toFixed(0)}K`;
-    return `$${value}`;
-  };
-
   return (
     <Card className={cn('p-4', tokens.border.default, className)}>
       <div className="flex items-center justify-between mb-2">
@@ -69,7 +63,7 @@ export const RevenueBreakdown: React.FC<RevenueBreakdownProps> = ({
         </div>
         <div className="text-right">
           <p className="text-xl font-bold text-emerald-500">
-            {formatCurrency(totalRevenue)}
+            {formatCompactCurrency(totalRevenue)}
           </p>
           <p className={cn('text-[10px]', tokens.text.caption)}>Total</p>
         </div>
@@ -82,7 +76,7 @@ export const RevenueBreakdown: React.FC<RevenueBreakdownProps> = ({
         outerRadius={70}
         showTooltip={true}
         showLegend={false}
-        valueFormatter={formatCurrency}
+        valueFormatter={formatCompactCurrency}
       />
 
       {/* Custom legend */}
