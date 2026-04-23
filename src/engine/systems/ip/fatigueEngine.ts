@@ -55,8 +55,10 @@ export function calculateFranchiseFatigue(
   }
 
   // 🌌 The Universe Builder: Added severe 3x penalty for oversaturating Cinematic Universes.
-  if (normalizedGenre === "Cinematic Universe" && genreSaturation > 5) {
-    rivalPenalty *= 3.0;
+  const CINEMATIC_UNIVERSE_THRESHOLD = 5;
+  const CINEMATIC_UNIVERSE_PENALTY = 3.0;
+  if (normalizedGenre === 'Cinematic Universe' && genreSaturation > CINEMATIC_UNIVERSE_THRESHOLD) {
+    rivalPenalty *= CINEMATIC_UNIVERSE_PENALTY;
   }
 
   // 4. Audience Loyalty (Protective Shield)
