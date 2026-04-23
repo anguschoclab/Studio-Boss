@@ -44,6 +44,12 @@ describe("gameStore", () => {
     // Ensure the necessary structures are present
     state.studio.internal.contracts = [];
     state.entities.talents = {};
+    if (!state.industry.rivals) {
+      state.industry.rivals = [];
+    }
+    if (!state.relationships) {
+      state.relationships = { discovery: {} };
+    }
     useGameStore.setState({ gameState: state });
 
     const summary = useGameStore.getState().doAdvanceWeek();

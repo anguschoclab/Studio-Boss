@@ -27,6 +27,25 @@ export interface GameStore extends ProjectSlice, FinanceSlice, TalentSlice, Riva
   devAutoInit: (archetype?: ArchetypeKey) => void;
 }
 
+// The Tech Supervisor: Background save queue using a decoupled while-loop to avoid tail-call recursion/memory leaks
+const saveQueue: GameState[] = [];
+let isSaving = false;
+const processSaveQueue = async () => {
+  if (isSaving) return;
+  isSaving = true;
+  while (saveQueue.length > 0) {
+    const stateToSave = saveQueue.shift();
+    if (stateToSave) {
+      try {
+        await saveGame(0, stateToSave);
+      } catch (err) {
+        console.error('[GameStore] Background autosave failed:', err);
+      }
+    }
+  }
+  isSaving = false;
+};
+
 export const useGameStore = create<GameStore>((set, get, ...args) => ({
   gameState: null,
 
@@ -59,16 +78,20 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
 
       if (state.gameState === result.newState) return state; 
 
-      // Trigger background save without blocking UI (Fire and forget)
-      saveGame(0, result.newState).catch((err) => {
-        console.error('[GameStore] Background autosave failed:', err);
-      });
+      // The Tech Supervisor: Queue the save in the decoupled while-loop worker
+      saveQueue.push(result.newState);
+      processSaveQueue();
       
-      return { 
-        gameState: result.newState,
-        finance: result.newState.finance,
-        news: result.newState.news
-      };
+      // The Tech Supervisor: Maintain strict object references for unchanged slices
+      const newStateObj: Partial<GameStore> = { gameState: result.newState };
+      if (state.finance !== result.newState.finance) {
+        newStateObj.finance = result.newState.finance as any;
+      }
+      if (state.news !== result.newState.news) {
+        newStateObj.news = result.newState.news as any;
+      }
+
+      return newStateObj;
     });
 
     if (!summary || !nextState) throw new Error('Failed to advance week');
@@ -109,7 +132,13 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
     if (isAwardsWeek) {
       const year = Math.floor(finalState.week / 52) + 1;
       const allAwards = finalState.industry.awards || [];
-      const currentAwards: Award[] = allAwards.filter(a => a.year === year);
+      // The Tech Supervisor: Replace filter with standard for loop
+      const currentAwards: Award[] = [];
+      for (let i = 0; i < allAwards.length; i++) {
+        if (allAwards[i].year === year) {
+          currentAwards.push(allAwards[i]);
+        }
+      }
       ui.enqueueModal('AWARDS', { week: finalState.week, year, awards: currentAwards });
     }
 
