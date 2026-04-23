@@ -10,7 +10,8 @@ import { selectTalentPool } from '@/store/selectors';
  */
 export function useTalentMap(talentPool?: Talent[] | Record<string, Talent>): Map<string, Talent> {
   const gameState = useGameStore(s => s.gameState);
-  const pool = talentPool || selectTalentPool(gameState) || [];
+  const storePool = selectTalentPool(gameState) || [];
+  const pool = talentPool || storePool;
 
   return useMemo(() => {
     // Handle both array and Record<string, Talent> inputs
