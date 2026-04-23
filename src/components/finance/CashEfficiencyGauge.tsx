@@ -11,7 +11,7 @@ export const CashEfficiencyGauge: React.FC<CashEfficiencyGaugeProps> = ({ score 
     { name: 'Remaining', value: 100 - score },
   ];
 
-  const COLORS = ['#f59e0b', '#1e293b'];
+  const COLORS = ['rgba(var(--primary), 1)', 'rgba(255,255,255,0.02)'];
 
   return (
     <div className="h-full w-full">
@@ -21,8 +21,8 @@ export const CashEfficiencyGauge: React.FC<CashEfficiencyGaugeProps> = ({ score 
             data={data}
             cx="50%"
             cy="50%"
-            innerRadius="65%"
-            outerRadius="85%"
+            innerRadius="70%"
+            outerRadius="90%"
             startAngle={180}
             endAngle={0}
             paddingAngle={0}
@@ -30,12 +30,38 @@ export const CashEfficiencyGauge: React.FC<CashEfficiencyGaugeProps> = ({ score 
             stroke="none"
           >
             {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+              <Cell 
+                key={`cell-${index}`} 
+                fill={COLORS[index % COLORS.length]} 
+                className={index === 0 ? "drop-shadow-[0_0_15px_rgba(var(--primary),0.3)]" : ""}
+              />
             ))}
             <Label 
-              value={`${Math.round(score)}%`} 
-              position="center" 
-              className="fill-foreground font-display font-black text-2xl"
+              content={({ viewBox }) => {
+                const { cx, cy } = viewBox as any;
+                return (
+                  <g>
+                    <text
+                      x={cx}
+                      y={cy - 10}
+                      className="fill-foreground font-display font-black text-4xl italic"
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                    >
+                      {Math.round(score)}%
+                    </text>
+                    <text
+                      x={cx}
+                      y={cy + 25}
+                      className="fill-muted-foreground/20 font-black text-[8px] uppercase tracking-[0.3em] italic"
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                    >
+                      EFFICIENCY
+                    </text>
+                  </g>
+                );
+              }}
             />
           </Pie>
         </PieChart>
