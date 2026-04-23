@@ -42,7 +42,9 @@ export function calculateFlopSeverity(project: Project): FlopSeverity {
 export function calculateFlopPenalties(project: Project, severity: FlopSeverity): FlopResult {
   const revenue = project.revenue || 0;
   const budget = project.budget || 1;
-  
+  const marketingBudget = (project as any).marketingBudget || 0;
+  const totalCost = budget + marketingBudget;
+
   let writeOffCost = 0;
   let prestigePenalty = 0;
   let ipDevaluation = 0;
@@ -50,19 +52,19 @@ export function calculateFlopPenalties(project: Project, severity: FlopSeverity)
 
   switch (severity) {
     case FlopSeverity.MINOR:
-      writeOffCost = Math.floor((budget - revenue) * 0.3);
+      writeOffCost = Math.floor(totalCost * 0.3);
       prestigePenalty = -5;
-      ipDevaluation = 0.2; // 20% IP devaluation
+      ipDevaluation = 0.2;
       break;
     case FlopSeverity.MAJOR:
-      writeOffCost = Math.floor((budget - revenue) * 0.5);
+      writeOffCost = Math.floor(totalCost * 0.5);
       prestigePenalty = -10;
-      ipDevaluation = 0.4; // 40% IP devaluation
+      ipDevaluation = 0.4;
       break;
     case FlopSeverity.CATASTROPHIC:
-      writeOffCost = Math.floor((budget - revenue) * 0.7);
+      writeOffCost = Math.floor(totalCost * 0.7);
       prestigePenalty = -20;
-      ipDevaluation = 0.6; // 60% IP devaluation
+      ipDevaluation = 0.6;
       shouldRestructure = true;
       break;
   }

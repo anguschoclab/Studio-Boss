@@ -67,7 +67,7 @@ export class StudioAutomation {
       }
 
       // Project Recycling (Keep memory usage low)
-      if (p.state === 'released' && (state.week - (p.releaseWeek || 0)) > 4) {
+      if (p.state === 'released' && (state.week - (p.releaseWeek || 0)) > 1) {
         impacts.push({
           type: 'PROJECT_UPDATED',
           payload: { projectId: p.id, update: { state: 'archived' } }
@@ -79,7 +79,7 @@ export class StudioAutomation {
     rivalsList.forEach(rival => {
       const activeCount = rivalProjectCounts[rival.id] || 0;
       // Increased probability for headless simulation (30% vs 10%)
-      if (activeCount < 5 && rng.next() < 0.3) {
+      if (activeCount < 15 && rng.next() < 0.6) {
         const archetype = this.getRivalArchetype(rival);
         this.pitchNewProject(rival, state, rng, impacts, archetype);
       }
@@ -295,7 +295,7 @@ export class StudioAutomation {
     const update: Partial<Project> = {
       state: 'production',
       weeksInPhase: 0,
-      productionWeeks: rng.rangeInt(12, 26),
+      productionWeeks: rng.rangeInt(6, 12),
       budget: p.budget || rng.rangeInt(10, 80) * 1_000_000,
       buzz: p.buzz || 40,
     };

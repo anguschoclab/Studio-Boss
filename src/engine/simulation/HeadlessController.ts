@@ -5,6 +5,7 @@ import { executeGreenlight, executeMarketing } from '../systems/projects';
 import { BudgetTierKey } from '../types/project.types';
 import { StudioArchetype, AI_ARCHETYPES } from '../data/aiArchetypes';
 import { processFlops } from '../systems/finance/FlopMechanics';
+import { calculateOpeningWeekend } from '../systems/releaseSimulation';
 
 /**
  * Headless Controller (AI for the Player Studio)
@@ -30,7 +31,7 @@ export class HeadlessController {
     // 0. Auto-Pitch New Projects (for headless simulation)
     const activePlayerProjects = Object.values(state.entities.projects).filter(p => p.ownerId === 'PLAYER' && p.state !== 'archived');
     let newlyPitchedProject: any = null;
-    if (activePlayerProjects.length < 3 && rng.next() < 0.4) {
+    if (activePlayerProjects.length < 10 && rng.next() < 0.8) {
       const pitchResult = this.pitchNewProject(state, rng);
       if (pitchResult) {
         impacts.push(pitchResult);
@@ -70,7 +71,7 @@ export class HeadlessController {
         // In headless simulation, always greenlight projects
         const result = executeGreenlight(project);
         // Set productionWeeks for headless simulation (shorter duration)
-        const productionWeeks = 8 + Math.floor(Math.random() * 8); // 8-16 weeks
+        const productionWeeks = 4 + Math.floor(Math.random() * 4); // 4-8 weeks
         const updateWithProductionWeeks = {
           ...result.project,
           productionWeeks
@@ -100,7 +101,7 @@ export class HeadlessController {
             ...project,
             state: 'post_production' as const,
             weeksInPhase: 0,
-            postProductionWeeksRemaining: 3,
+            postProductionWeeksRemaining: 1,
             progress: 100
           };
           console.log(`[HeadlessController] Advancing ${project.title} from production to post_production`);
@@ -124,7 +125,7 @@ export class HeadlessController {
 
       // 1.6. Auto-advance post_production to marketing
       if (project.state === 'post_production') {
-        const weeksRemaining = (project as any).postProductionWeeksRemaining || 3;
+        const weeksRemaining = (project as any).postProductionWeeksRemaining || 1;
         if (project.weeksInPhase >= weeksRemaining) {
           // Transition to marketing
           const updateWithMarketing = {
@@ -133,8 +134,8 @@ export class HeadlessController {
             weeksInPhase: 0,
             marketingCampaign: {
               primaryAngle: 'SELL_THE_STORY' as const,
-              domesticBudget: project.budget * 0.1,
-              foreignBudget: project.budget * 0.05,
+              domesticBudget: project.budget * 0.25,
+              foreignBudget: project.budget * 0.15,
               weeksInMarketing: 0
             }
           };
@@ -161,23 +162,44 @@ export class HeadlessController {
         // In headless mode, we just release immediately once in marketing
         const campaign = {
           primaryAngle: 'SELL_THE_STORY',
-          domesticBudget: project.budget * 0.1,
-          foreignBudget: project.budget * 0.05,
+          domesticBudget: project.budget * 0.25,
+          foreignBudget: project.budget * 0.15,
           weeksInMarketing: 1
         };
         const result = executeMarketing(project, campaign as any);
+        const marketingBudget = campaign.domesticBudget + campaign.foreignBudget;
+        const projectWithMarketing = { ...result.project, marketingBudget };
+        const { project: releasedProject } = calculateOpeningWeekend(
+          projectWithMarketing,
+          [],
+          state.studio.prestige || 50
+        );
         impacts.push({
           type: 'PROJECT_UPDATED',
-          payload: { 
-            projectId: project.id, 
-            update: { 
-              ...result.project, 
+          payload: {
+            projectId: project.id,
+            update: {
+              ...releasedProject,
               state: 'released',
-              marketingBudget: campaign.domesticBudget + campaign.foreignBudget
-            } 
+              releaseWeek: state.week,
+              marketingBudget
+            }
           }
         });
-        console.log(`[HeadlessController] Released project: ${project.title}`);
+        const netCash = (releasedProject.revenue || 0) - (project.budget || 0) - marketingBudget;
+        impacts.push({
+          type: 'FUNDS_CHANGED',
+          payload: { amount: netCash }
+        });
+        console.log(`[HeadlessController] Released project: ${project.title}, net cash: $${(netCash/1_000_000).toFixed(1)}M`);
+      }
+
+      // Archive released player projects so the pitch gate isn't permanently saturated
+      if (project.ownerId === 'PLAYER' && project.state === 'released' && project.releaseWeek && (state.week - project.releaseWeek) > 1) {
+        impacts.push({
+          type: 'PROJECT_UPDATED',
+          payload: { projectId: project.id, update: { state: 'archived' } }
+        });
       }
     });
 

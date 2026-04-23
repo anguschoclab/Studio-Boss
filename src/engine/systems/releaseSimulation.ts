@@ -8,6 +8,19 @@ import { calculateTerritorySplit } from './marketing/territoryDistributor';
  * Handles Reviews, Opening Weekends, and Territory Distribution.
  */
 
+/**
+ * Studio share of theatrical gross across the release window.
+ * Opening week 55%, weeks 2-4 taper 45%, weeks 5+ tail 40%.
+ * Input is the opening-weekend gross; returns the modeled studio-share total
+ * across the full theatrical run, applied to domestic+foreign combined.
+ */
+export function applyTheatricalSplit(openingGross: number): number {
+  const week1 = openingGross * 0.55;
+  const weeks2to4 = openingGross * 0.6 * 0.45;
+  const weeks5plus = openingGross * 0.3 * 0.40;
+  return week1 + weeks2to4 + weeks5plus;
+}
+
 export function calculateReviewScore(
   project: Project,
   attachedTalent: Talent[],
@@ -95,15 +108,24 @@ export function calculateOpeningWeekend(
   const { multiplier, feedbackText } = evaluateMarketingEfficiency(project, campaign);
   effectiveGross *= multiplier;
 
+  // Minimum revenue floor: prevent catastrophic 0-revenue flops
+  const minFloor = (project.budget || 0) * 0.5;
+  if (effectiveGross < minFloor) {
+    effectiveGross = minFloor;
+  }
+
   // 3. Distribute Territories
   const territoryResult = calculateTerritorySplit(effectiveGross, campaign, project.genre);
+
+  const openingGross = territoryResult.openingWeekendDomestic + territoryResult.openingWeekendForeign;
+  const theatricalTotal = applyTheatricalSplit(openingGross);
 
   // 4. Update Project State
   const updatedProject = {
     ...project,
     boxOffice: territoryResult,
-    weeklyRevenue: (territoryResult.openingWeekendDomestic + territoryResult.openingWeekendForeign),
-    revenue: (territoryResult.openingWeekendDomestic + territoryResult.openingWeekendForeign)
+    weeklyRevenue: openingGross,
+    revenue: theatricalTotal
   };
 
   const fatigueFeedback = franchiseFatigue > 0.3 ? " Brand fatigue is chilling the audience." : "";

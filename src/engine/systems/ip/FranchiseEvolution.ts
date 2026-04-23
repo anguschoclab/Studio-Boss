@@ -12,11 +12,14 @@ export function calculateFranchiseEvolutionImpacts(state: GameState, rng: Random
   projects.forEach(project => {
     if (project.state === 'released' && !project.franchiseId) {
       let franchiseId = project.franchiseId;
-      const isBreakout = project.revenue > (project.budget * 1.5); // Lowered from 2.5x to 1.5x
-      const isPrestigeHit = (project.awardsProfile?.prestigeScore || 0) > 70; // Lowered from 85 to 70
+      const isBreakout = project.revenue > (project.budget * 1.0);
+      const isPrestigeHit = (project.awardsProfile?.prestigeScore || 0) > 50;
+      const isHighQuality = (project.quality || 0) > 70;
+      const genreUpper = (project.genre || '').toUpperCase();
+      const isFranchiseGenre = genreUpper === 'SCI-FI' || genreUpper === 'FANTASY' || genreUpper === 'SUPERHERO';
 
       // 1. Breakout Hub Creation
-      if (!franchiseId && (isBreakout || isPrestigeHit)) {
+      if (!franchiseId && (isBreakout || isPrestigeHit || isHighQuality || isFranchiseGenre)) {
         franchiseId = rng.uuid('IPH');
         const newFranchise: Franchise = {
           id: franchiseId,

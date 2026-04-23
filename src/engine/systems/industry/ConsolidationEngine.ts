@@ -14,18 +14,18 @@ export function tickConsolidation(state: GameState): StateImpact[] {
   // REMOVED: Financial stress simulation (ineffective and unrealistic)
   // Rivals now deploy capital proactively via FlopMechanics and other systems
 
-  // Potential Acquirers: Majors with surplus cash
-  const majors = rivals.filter(r => r.archetype === 'major' && r.cash > 250_000_000);
-  // Increased probability for headless simulation (40% vs 25% vs 8%)
-  if (majors.length === 0 || secureRandom() < 0.60) return [];
+  // Potential Acquirers: any rival with surplus cash ($1B+ proactive)
+  const majors = rivals.filter(r => (r.archetype === 'major' && r.cash > 250_000_000) || r.cash > 1_000_000_000);
+  if (majors.length === 0 || secureRandom() < 0.20) return [];
 
-  const acquirer = pick(majors);
+  // Rivals with cash > $5B are forced to deploy (skip the probability gate)
+  const forcedDeployers = majors.filter(r => r.cash > 5_000_000_000);
+  const acquirer = forcedDeployers.length > 0 ? pick(forcedDeployers) : pick(majors);
 
-  // Target: struggling Indie or Mid-tier studio
-  // Relaxed threshold for headless simulation (cash < $100M vs $50M)
-  const targets = rivals.filter(r => 
-    r.id !== acquirer.id && 
-    (r.cash < 100_000_000 || r.strength < 30)
+  // Target: any rival (proactive M&A — not just distressed ones)
+  const targets = rivals.filter(r =>
+    r.id !== acquirer.id &&
+    (acquirer.cash > 1_000_000_000 || r.cash < 100_000_000 || r.strength < 30)
   );
 
   // Target: unowned Streaming Platform
