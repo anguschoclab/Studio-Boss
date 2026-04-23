@@ -17,7 +17,9 @@ import {
   BarChart3,
   ShieldAlert,
   Target,
-  Monitor
+  Monitor,
+  Zap,
+  ArrowRight
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { formatMoney } from '@/engine/utils';
@@ -53,7 +55,7 @@ const RivalsPanel = () => {
   ).slice(0, 10), [rivals, gameState?.week]);
 
   return (
-    <div className="h-full overflow-y-auto custom-scrollbar pb-4 pr-4">
+    <div className="h-full overflow-y-auto custom-scrollbar pb-20 pr-6 animate-in fade-in duration-700">
       <RivalReleaseTracker releases={rivalReleases} yourReleases={yourReleases} />
     </div>
   );
@@ -95,7 +97,7 @@ const AwardsPanel = () => {
   const studioRank = Math.max(1, Math.round(10 - (gameState?.studio?.prestige || 50) / 10));
 
   return (
-    <div className="h-full overflow-y-auto custom-scrollbar pb-4 pr-4">
+    <div className="h-full overflow-y-auto custom-scrollbar pb-20 pr-6 animate-in fade-in duration-700">
       <AwardsTracker
         projects={awardsData}
         studioRank={studioRank}
@@ -117,7 +119,7 @@ const MarketPanel = () => {
   })), [gameState]);
 
   return (
-    <div className="h-full overflow-y-auto custom-scrollbar pb-4 pr-4">
+    <div className="h-full overflow-y-auto custom-scrollbar pb-20 pr-6 animate-in fade-in duration-700">
       <GenreTrendsPanel trends={trends} />
     </div>
   );
@@ -131,69 +133,72 @@ const FinancialsPanel = () => {
   const weeklyHistory = gameState?.finance?.weeklyHistory || [];
   
   return (
-    <div className="h-full overflow-y-auto custom-scrollbar space-y-10 pb-4 pr-4">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+    <div className="h-full overflow-y-auto custom-scrollbar space-y-12 pb-20 pr-6 animate-in fade-in duration-700">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
         <KPIStatCard 
-          label="Liquid Capital" 
+          label="LIQUID_CAPITAL" 
           value={formatMoney(cash)} 
-          subValue="Fiscal Reserves"
+          subValue="FISCAL_RESERVES"
           icon={DollarSign} 
           variant={cash > 10000000 ? 'secondary' : 'destructive'} 
         />
         <KPIStatCard 
-          label="Brand Prestige" 
+          label="BRAND_PRESTIGE" 
           value={prestige.toString()} 
-          subValue="Industry Standing"
+          subValue="INDUSTRY_STANDING"
           icon={Trophy} 
         />
         <KPIStatCard 
-          label="Market Pulse" 
+          label="MARKET_PULSE" 
           value={`${gameState?.finance?.marketState?.sentiment || 50}%`} 
-          subValue={gameState?.finance?.marketState?.cycle || 'STABLE'}
+          subValue={gameState?.finance?.marketState?.cycle?.toUpperCase() || 'STABLE'}
           icon={Activity} 
           variant="secondary"
         />
         <KPIStatCard 
-          label="Studio Output" 
+          label="STUDIO_OUTPUT" 
           value={selectActiveProjects(gameState).length.toString()} 
-          subValue="Active Slates"
+          subValue="ACTIVE_SLATES"
           icon={BarChart3} 
         />
       </div>
       
-      <div className="p-8 glass-card border-white/5 bg-white/[0.01]">
-        <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 mb-8">Fiscal Flow History</h4>
-        <div className="h-48 flex items-end gap-3">
+      <div className="p-10 bg-white/[0.01] border border-white/5 rounded-none backdrop-blur-3xl shadow-2xl relative overflow-hidden group">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-3xl -mr-16 -mt-16" />
+        <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/30 mb-10 italic">FISCAL_FLOW_HISTORY</h4>
+        <div className="h-64 flex items-end gap-3 px-4">
           {weeklyHistory.slice(-16).map((week, i) => {
             const maxCash = Math.max(...weeklyHistory.slice(-16).map(w => Math.abs(w.cash)), 1);
             const height = Math.max(10, (Math.abs(week.cash) / maxCash) * 100);
             return (
-              <div key={i} className="flex-1 flex flex-col items-center gap-2">
+              <div key={i} className="flex-1 flex flex-col items-center gap-4 group/bar">
                 <div 
                   className={cn(
-                    "w-full rounded-none min-h-[4px] transition-all duration-1000",
-                    week.cash >= 0 ? 'bg-primary/40 shadow-[0_0_10px_rgba(var(--primary),0.2)]' : 'bg-destructive/40 shadow-[0_0_10px_rgba(var(--destructive),0.2)]'
+                    "w-full rounded-none min-h-[4px] transition-all duration-1000 group-hover/bar:brightness-150",
+                    week.cash >= 0 ? 'bg-primary/40 shadow-[0_0_15px_rgba(var(--primary),0.2)]' : 'bg-destructive/40 shadow-[0_0_15px_rgba(var(--destructive),0.2)]'
                   )}
                   style={{ height: `${height}%` }}
                 />
-                <span className="text-[8px] font-black text-muted-foreground/30">W{week.week % 52 || 52}</span>
+                <span className="text-[9px] font-black text-muted-foreground/20 uppercase tracking-widest italic">W{week.week % 52 || 52}</span>
               </div>
             );
           })}
         </div>
       </div>
       
-      <div className="p-6 bg-primary/5 border border-primary/20 rounded-none relative overflow-hidden">
-        <div className="absolute top-0 right-0 p-6 opacity-10">
-          <ShieldAlert className="h-16 w-16 text-primary" />
+      <div className="p-10 bg-primary/5 border border-primary/20 rounded-none relative overflow-hidden shadow-2xl group">
+        <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
+          <ShieldAlert className="h-24 w-24 text-primary" strokeWidth={1} />
         </div>
-        <div className="flex items-start gap-4 relative z-10">
-          <ShieldAlert className="h-5 w-5 text-primary shrink-0" />
-          <div className="space-y-2">
-            <h5 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Strategic Advisory</h5>
-            <p className="text-[11px] text-muted-foreground/60 italic leading-relaxed border-l border-primary/20 pl-4 py-1 max-w-2xl">
-              Intelligence suggests M&A activity is cooling as macro conditions stabilize. 
-              Executive priority should shift toward securing rising talent agencies before the next fiscal cycle.
+        <div className="flex items-start gap-8 relative z-10">
+          <div className="w-12 h-12 bg-primary/10 border border-primary/20 flex items-center justify-center rounded-none shadow-[0_0_15px_rgba(var(--primary),0.1)]">
+             <ShieldAlert className="h-6 w-6 text-primary" />
+          </div>
+          <div className="space-y-4">
+            <h5 className="text-sm font-black uppercase tracking-[0.3em] text-primary italic leading-none">STRATEGIC_ADVISORY</h5>
+            <p className="text-xs text-muted-foreground/60 italic uppercase tracking-wider leading-relaxed border-l-2 border-primary/20 pl-6 py-2 max-w-3xl">
+              INTELLIGENCE SUGGESTS M&A ACTIVITY IS COOLING AS MACRO CONDITIONS STABILIZE. 
+              EXECUTIVE PRIORITY SHOULD SHIFT TOWARD SECURING RISING TALENT AGENCIES BEFORE THE NEXT FISCAL CYCLE.
             </p>
           </div>
         </div>
@@ -223,28 +228,28 @@ export const IntelligenceHub: React.FC = () => {
   const tabs = [
     { 
       id: 'rivals', 
-      label: 'Rivals', 
+      label: 'RIVALS', 
       icon: <Building2 className="h-3.5 w-3.5" />,
       badge: badgeCounts.rivals,
       description: 'Competitor analysis and M&A activity'
     },
     { 
       id: 'awards', 
-      label: 'Awards', 
+      label: 'AWARDS', 
       icon: <Trophy className="h-3.5 w-3.5" />,
       badge: badgeCounts.awards,
       description: 'FYC campaigns and eligible projects'
     },
     { 
       id: 'market', 
-      label: 'Market', 
+      label: 'MARKET', 
       icon: <TrendingUp className="h-3.5 w-3.5" />,
       badge: badgeCounts.market,
       description: 'Genre trends and audience analysis'
     },
     { 
       id: 'financials', 
-      label: 'Financials', 
+      label: 'FINANCIALS', 
       icon: <DollarSign className="h-3.5 w-3.5" />,
       badge: badgeCounts.financials,
       description: 'P&L, revenue, and cash flow'
@@ -255,27 +260,27 @@ export const IntelligenceHub: React.FC = () => {
     switch (activeSubTab) {
       case 'rivals':
         return {
-          icon: <Building2 className="h-6 w-6 text-destructive" />,
-          title: 'Strategic Intelligence',
-          subtitle: 'Rival Positioning • M&A activity • Market Threats'
+          icon: <Building2 className="h-8 w-8 text-destructive" />,
+          title: 'STRATEGIC INTELLIGENCE',
+          subtitle: 'RIVAL POSITIONING • M&A ACTIVITY • MARKET THREATS'
         };
       case 'awards':
         return {
-          icon: <Trophy className="h-6 w-6 text-amber-500" />,
-          title: 'Academy Headquarters',
-          subtitle: 'FYC Strategy • Industry Ceremonies • Prestige Audit'
+          icon: <Trophy className="h-8 w-8 text-amber-500" />,
+          title: 'ACADEMY HEADQUARTERS',
+          subtitle: 'FYC STRATEGY • INDUSTRY CEREMONIES • PRESTIGE AUDIT'
         };
       case 'market':
         return {
-          icon: <TrendingUp className="h-6 w-6 text-primary" />,
-          title: 'Macro Market Analysis',
-          subtitle: 'Genre Vectors • Audience Saturation • Sector Health'
+          icon: <TrendingUp className="h-8 w-8 text-primary" />,
+          title: 'MACRO MARKET ANALYSIS',
+          subtitle: 'GENRE VECTORS • AUDIENCE SATURATION • SECTOR HEALTH'
         };
       case 'financials':
         return {
-          icon: <DollarSign className="h-6 w-6 text-secondary" />,
-          title: 'Fiscal Surveillance',
-          subtitle: 'Liquidity Matrix • Revenue Performance • Cash Projection'
+          icon: <DollarSign className="h-8 w-8 text-secondary" />,
+          title: 'FISCAL SURVEILLANCE',
+          subtitle: 'LIQUIDITY MATRIX • REVENUE PERFORMANCE • CASH PROJECTION'
         };
       default:
         return { icon: null, title: '', subtitle: '' };
@@ -288,16 +293,17 @@ export const IntelligenceHub: React.FC = () => {
     <m.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="h-full flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-8"
+      className="h-full flex flex-col animate-in fade-in slide-in-from-bottom-8 duration-1000"
     >
-      {/* Header */}
-      <div className="flex items-center gap-6 border-b border-white/5 pb-8">
-        <div className="w-14 h-14 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shadow-2xl">
+      {/* Executive Header */}
+      <div className="flex items-center gap-8 mb-10 bg-white/[0.02] p-10 rounded-none border border-white/5 backdrop-blur-3xl shadow-2xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[120px] -mr-32 -mt-32" />
+        <div className="w-16 h-16 rounded-none bg-white/5 border border-white/10 flex items-center justify-center shadow-2xl relative z-10">
           {header.icon}
         </div>
-        <div>
-          <h2 className="text-4xl font-display font-black tracking-tighter uppercase italic leading-none mb-1">{header.title}</h2>
-          <p className="text-[10px] font-black uppercase text-muted-foreground/40 tracking-[0.25em]">
+        <div className="relative z-10">
+          <h2 className="text-5xl font-display font-black tracking-tighter uppercase italic leading-none mb-3 drop-shadow-[0_0_30px_rgba(255,255,255,0.1)]">{header.title}</h2>
+          <p className="text-[10px] font-black uppercase text-muted-foreground/30 tracking-[0.4em] italic">
             {header.subtitle}
           </p>
         </div>
@@ -313,8 +319,8 @@ export const IntelligenceHub: React.FC = () => {
         />
         
         {/* Content */}
-        <div className="flex-1 min-h-0 mt-8">
-          <React.Suspense fallback={<div className="flex items-center justify-center h-64 font-display font-black uppercase tracking-widest text-muted-foreground/20 italic">Initializing Surveillance...</div>}>
+        <div className="flex-1 min-h-0 mt-10">
+          <React.Suspense fallback={<div className="flex items-center justify-center h-64 font-display font-black uppercase tracking-[0.5em] italic text-muted-foreground/10 animate-pulse">INITIALIZING SURVEILLANCE...</div>}>
             {activeSubTab === 'rivals' && <RivalsPanel />}
             {activeSubTab === 'awards' && <AwardsPanel />}
             {activeSubTab === 'market' && <MarketPanel />}
@@ -325,7 +331,5 @@ export const IntelligenceHub: React.FC = () => {
     </m.div>
   );
 };
-
-export default IntelligenceHub;
 
 export default IntelligenceHub;

@@ -41,33 +41,33 @@ interface ContentCardProps {
 
 const variantStyles: Record<CardVariant, string> = {
   default: 'bg-white/[0.01] border-white/5',
-  interactive: 'bg-white/[0.01] border-white/5 hover:border-primary/20 hover:bg-white/[0.03] cursor-pointer shadow-sm hover:shadow-[0_0_20px_rgba(var(--primary),0.05)]',
-  active: 'bg-primary/5 border-primary/40 shadow-[0_0_30px_rgba(var(--primary),0.1)]',
-  glass: 'bg-white/[0.02] backdrop-blur-3xl border-white/5 shadow-xl',
+  interactive: 'bg-white/[0.01] border-white/5 hover:border-primary/40 hover:bg-white/[0.04] cursor-pointer shadow-2xl hover:shadow-[0_0_50px_rgba(0,0,0,0.5)]',
+  active: 'bg-primary/5 border-primary/40 shadow-[0_0_40px_rgba(var(--primary),0.15)]',
+  glass: 'bg-white/[0.02] backdrop-blur-3xl border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)]',
   subtle: 'bg-white/[0.01] border-transparent',
 };
 
 const sizeStyles: Record<CardSize, { container: string; content: string }> = {
   sm: {
-    container: 'p-4',
+    container: 'p-6',
     content: '',
   },
   md: {
-    container: 'p-8',
+    container: 'p-10',
     content: '',
   },
   lg: {
-    container: 'p-12',
+    container: 'p-16',
     content: '',
   },
 };
 
 const iconColorStyles = {
-  primary: 'bg-primary/5 text-primary border-primary/20',
-  secondary: 'bg-secondary/5 text-secondary border-secondary/20',
-  success: 'bg-emerald-400/5 text-emerald-400 border-emerald-400/20',
-  warning: 'bg-amber-400/5 text-amber-400 border-amber-400/20',
-  destructive: 'bg-red-400/5 text-red-400 border-red-400/20',
+  primary: 'bg-primary/5 text-primary border-primary/20 shadow-[0_0_20px_rgba(var(--primary),0.1)]',
+  secondary: 'bg-secondary/5 text-secondary border-secondary/20 shadow-[0_0_20px_rgba(var(--secondary),0.1)]',
+  success: 'bg-emerald-400/5 text-emerald-400 border-emerald-400/20 shadow-[0_0_20px_rgba(16,185,129,0.1)]',
+  warning: 'bg-amber-400/5 text-amber-400 border-amber-400/20 shadow-[0_0_20px_rgba(251,191,36,0.1)]',
+  destructive: 'bg-red-400/5 text-red-400 border-red-400/20 shadow-[0_0_20px_rgba(244,63,94,0.1)]',
 };
 
 /**
@@ -103,7 +103,7 @@ export const ContentCard: React.FC<ContentCardProps> = ({
       onClick={isInteractive ? onClick : undefined}
       {...(isInteractive && { type: "button" })}
       className={cn(
-        'rounded-2xl border overflow-hidden transition-all duration-700',
+        'rounded-2xl border overflow-hidden transition-all duration-1000',
         isInteractive && 'w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
         variantStyles[variant],
         sizeStyles[size].container,
@@ -118,29 +118,29 @@ export const ContentCard: React.FC<ContentCardProps> = ({
     >
       {/* Header */}
       {(header || title || Icon || badge) && (
-        <div className="flex items-start justify-between gap-6 mb-8">
+        <div className="flex items-start justify-between gap-8 mb-10">
           {header ? (
             <div className="flex-1">{header}</div>
           ) : (
-            <div className="flex items-center gap-6 flex-1 min-w-0">
+            <div className="flex items-center gap-8 flex-1 min-w-0">
               {Icon && (
                 <div
                   className={cn(
-                    'w-12 h-12 rounded-none border flex items-center justify-center shrink-0 transition-all duration-700',
+                    'w-14 h-14 rounded-none border flex items-center justify-center shrink-0 transition-all duration-1000 group-hover:scale-110',
                     iconColorStyles[iconColor]
                   )}
                 >
-                  <Icon className="w-6 h-6" />
+                  <Icon className="w-7 h-7" strokeWidth={1.5} />
                 </div>
               )}
               <div className="flex-1 min-w-0">
                 {title && (
-                  <h4 className="font-display font-black text-xl text-foreground truncate uppercase italic tracking-tighter leading-none mb-2">
+                  <h4 className="font-display font-black text-2xl text-foreground truncate uppercase italic tracking-tighter leading-none mb-3 drop-shadow-[0_0_20px_rgba(255,255,255,0.1)]">
                     {title}
                   </h4>
                 )}
                 {subtitle && (
-                  <p className="text-[10px] font-black uppercase text-muted-foreground/20 italic tracking-[0.2em] truncate">
+                  <p className="text-[10px] font-black uppercase text-muted-foreground/30 italic tracking-[0.3em] truncate">
                     {subtitle}
                   </p>
                 )}
@@ -148,9 +148,9 @@ export const ContentCard: React.FC<ContentCardProps> = ({
             </div>
           )}
           {badge && (
-            <Badge variant={badgeVariant} className="text-[8px] font-black tracking-[0.2em] uppercase rounded-none shrink-0 h-6 px-3 border-white/5">
+            <div className="px-4 py-1.5 bg-white/5 border border-white/10 text-[8px] font-black tracking-[0.3em] uppercase italic rounded-none shrink-0 h-fit transition-all duration-700 hover:bg-white/10 hover:border-white/20">
               {badge}
-            </Badge>
+            </div>
           )}
         </div>
       )}
@@ -160,7 +160,7 @@ export const ContentCard: React.FC<ContentCardProps> = ({
 
       {/* Footer */}
       {footer && (
-        <div className="mt-8 pt-8 border-t border-white/5">{footer}</div>
+        <div className="mt-10 pt-10 border-t border-white/5">{footer}</div>
       )}
     </CardWrapper>
   );
@@ -204,7 +204,7 @@ export const InfoCard: React.FC<{
     className={className}
   >
     <p className="text-[10px] font-black uppercase text-muted-foreground/20 italic tracking-[0.2em] leading-relaxed">
-      {description}
+      {description.toUpperCase()}
     </p>
   </ContentCard>
 );
@@ -220,22 +220,22 @@ export const StatRow: React.FC<{
   className?: string;
 }> = ({ label, value, trend, trendValue, className }) => {
   const trendColors = {
-    up: 'text-emerald-400',
-    down: 'text-red-400',
-    neutral: 'text-muted-foreground/20',
+    up: 'text-emerald-400 bg-emerald-400/5',
+    down: 'text-red-400 bg-red-400/5',
+    neutral: 'text-muted-foreground/10 bg-white/5',
   };
 
   return (
-    <div className={cn('flex items-center justify-between py-4 group', className)}>
-      <span className="text-[10px] font-black text-muted-foreground/20 uppercase tracking-[0.3em] italic group-hover:text-muted-foreground/40 transition-colors">
+    <div className={cn('flex items-center justify-between py-5 group border-b border-white/[0.03] last:border-0', className)}>
+      <span className="text-[10px] font-black text-muted-foreground/20 uppercase tracking-[0.4em] italic group-hover:text-muted-foreground/40 transition-colors duration-700">
         {label}
       </span>
-      <div className="flex items-center gap-4">
-        <span className="font-display font-black text-lg tracking-tighter italic text-foreground leading-none">
+      <div className="flex items-center gap-6">
+        <span className="font-display font-black text-xl tracking-tighter italic text-foreground leading-none drop-shadow-[0_0_10px_rgba(255,255,255,0.05)]">
           {value}
         </span>
         {trend && (
-          <span className={cn('text-[9px] font-black uppercase italic tracking-[0.2em]', trendColors[trend])}>
+          <span className={cn('text-[9px] font-black uppercase italic tracking-[0.2em] px-2 py-1 rounded-none border border-white/5', trendColors[trend])}>
             {trend === 'up' && '▲'}
             {trend === 'down' && '▼'}
             {trend === 'neutral' && '—'}
@@ -248,3 +248,4 @@ export const StatRow: React.FC<{
 };
 
 export default ContentCard;
+Card;

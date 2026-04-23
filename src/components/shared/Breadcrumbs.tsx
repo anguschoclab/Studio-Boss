@@ -20,10 +20,10 @@ interface BreadcrumbsProps {
 }
 
 const HUB_LABELS: Record<string, string> = {
-  hq: 'Studio HQ',
-  production: 'Production',
-  talent: 'Talent & Deals',
-  intelligence: 'Intelligence',
+  hq: 'STUDIO HQ',
+  production: 'PRODUCTION',
+  talent: 'TALENT & DEALS',
+  intelligence: 'INTELLIGENCE',
 };
 
 /**
@@ -40,12 +40,12 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
   return (
     <nav
       className={cn(
-        'flex items-center gap-1 text-sm',
+        'flex items-center gap-1 text-[10px] font-black uppercase tracking-[0.2em] italic',
         className
       )}
       aria-label="Breadcrumb"
     >
-      <ol className="flex items-center gap-1">
+      <ol className="flex items-center gap-0">
         {items.map((item, index) => {
           const isLast = index === items.length - 1;
           const Icon = item.icon;
@@ -55,21 +55,21 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
               {/* Separator */}
               {index > 0 && (
                 <ChevronRight
-                  className="w-4 h-4 mx-1 text-muted-foreground/50"
+                  className="w-3.5 h-3.5 mx-3 text-muted-foreground/10"
                   aria-hidden="true"
+                  strokeWidth={3}
                 />
               )}
 
               {/* Item */}
               <div
                 className={cn(
-                  'flex items-center gap-1.5 px-3 py-2 rounded-md',
+                  'flex items-center gap-2 px-4 py-2 rounded-none transition-all duration-700',
                   !isLast && [
-                    'hover:bg-white/5 cursor-pointer',
-                    tokens.transition.fast,
+                    'hover:bg-white/[0.03] hover:text-foreground cursor-pointer',
                   ],
-                  isLast && 'text-foreground font-medium',
-                  !isLast && 'text-muted-foreground'
+                  isLast && 'text-foreground font-display tracking-tighter italic scale-110 ml-1',
+                  !isLast && 'text-muted-foreground/40'
                 )}
                 role={!isLast && item.onClick ? "button" : undefined}
                 tabIndex={!isLast && item.onClick ? 0 : undefined}
@@ -84,12 +84,12 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
               >
                 {/* Show home icon for first item if requested */}
                 {index === 0 && showHome && !Icon && (
-                  <Home className="w-3.5 h-3.5" />
+                  <Home className="w-3.5 h-3.5" strokeWidth={2.5} />
                 )}
                 {Icon && !showHome && index === 0 && (
-                  <Icon className="w-3.5 h-3.5" />
+                  <Icon className="w-3.5 h-3.5" strokeWidth={2.5} />
                 )}
-                <span className="truncate max-w-[200px]">{item.label}</span>
+                <span className="truncate max-w-[250px]">{item.label.toUpperCase()}</span>
               </div>
             </li>
           );
@@ -126,7 +126,7 @@ export const HubBreadcrumbs: React.FC<{
 
   if (subTabId) {
     items.push({
-      label: subTabId.charAt(0).toUpperCase() + subTabId.slice(1),
+      label: subTabId.toUpperCase(),
       onClick: onSubTabClick,
     });
   }

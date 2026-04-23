@@ -1,13 +1,13 @@
 import { calculateWeeklyCosts, calculateWeeklyRevenue, calculateStudioNetWorth, generateCashflowForecast, calculateProjectROI } from '@/engine/systems/finance';
 import { useShallow } from 'zustand/react/shallow';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Area, XAxis, YAxis, Tooltip, ResponsiveContainer, ComposedChart, Line } from 'recharts';
+import { Area, XAxis, YAxis, Tooltip, ResponsiveContainer, ComposedChart, Line, CartesianGrid } from 'recharts';
 import { Badge } from '@/components/ui/badge';
 import { YearInReviewChart } from '@/components/finance/YearInReviewChart';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { History, LayoutDashboard, ReceiptText, TrendingUp, Package, Coins } from 'lucide-react';
+import { History, LayoutDashboard, ReceiptText, TrendingUp, Package, Coins, ShieldCheck, ArrowRightLeft } from 'lucide-react';
 import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
 import { RevenueStreamChart } from '@/components/finance/RevenueStreamChart';
 import { ProfitWaterfallChart } from '@/components/finance/ProfitWaterfallChart';
@@ -82,17 +82,17 @@ export const FinancePanel = () => {
   }, [financeHistory, forecast]);
 
   return (
-    <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 pb-20">
-      <div className="flex items-center justify-between border-b border-white/5 pb-12">
-        <div className="flex items-center gap-8">
-          <div className="w-16 h-16 rounded-none bg-primary/5 border border-primary/20 flex items-center justify-center shadow-[0_0_20px_rgba(var(--primary),0.1)]">
-            <Coins className="h-8 w-8 text-primary" />
+    <div className="space-y-16 animate-in fade-in slide-in-from-bottom-8 duration-1000 pb-32">
+      <div className="flex items-center justify-between border-b border-white/5 pb-16">
+        <div className="flex items-center gap-10">
+          <div className="w-20 h-20 rounded-none bg-primary/5 border border-primary/20 flex items-center justify-center shadow-[0_0_30px_rgba(var(--primary),0.15)]">
+            <Coins className="h-10 w-10 text-primary" strokeWidth={1} />
           </div>
-          <div>
-            <h2 className="text-5xl font-display font-black tracking-tighter uppercase italic leading-none mb-3">
-              Fiscal Intelligence
+          <div className="space-y-3">
+            <h2 className="text-7xl font-display font-black tracking-tighter uppercase italic leading-none drop-shadow-[0_0_30px_rgba(255,255,255,0.1)]">
+              FISCAL INTELLIGENCE
             </h2>
-            <p className="text-[10px] font-black uppercase text-muted-foreground/20 tracking-[0.4em] italic">TREASURY MANAGEMENT // PREDICTIVE FISCAL ANALYSIS</p>
+            <p className="text-[10px] font-black uppercase text-muted-foreground/20 tracking-[0.5em] italic">TREASURY MANAGEMENT // PREDICTIVE FISCAL ANALYSIS</p>
           </div>
         </div>
         
@@ -100,139 +100,144 @@ export const FinancePanel = () => {
           <SheetTrigger asChild>
             <Button 
               variant="outline" 
-              className="font-display font-black uppercase tracking-[0.2em] text-[10px] h-12 px-8 gap-4 bg-white/[0.02] border-white/5 hover:bg-primary/10 hover:text-primary transition-all rounded-none"
+              className="font-display font-black uppercase tracking-[0.3em] text-[10px] h-14 px-10 gap-6 bg-white/[0.02] border-white/10 hover:bg-white hover:text-black transition-all duration-700 rounded-none shadow-[0_0_20px_rgba(255,255,255,0.05)]"
             >
-              <ReceiptText className="w-4 h-4" />
+              <ReceiptText className="w-5 h-5" />
               GENERAL LEDGER
             </Button>
           </SheetTrigger>
-          <SheetContent className="w-[400px] sm:w-[540px] border-l border-white/5 bg-black/95 backdrop-blur-3xl p-12">
-            <SheetHeader className="border-b border-white/5 pb-12">
-              <SheetTitle className="font-display text-4xl font-black uppercase italic tracking-tighter flex items-center gap-4 text-foreground">
-                <Coins className="w-10 h-10 text-primary" />
+          <SheetContent className="w-[450px] sm:w-[600px] border-l border-white/5 bg-black/95 backdrop-blur-3xl p-16">
+            <SheetHeader className="border-b border-white/5 pb-16">
+              <SheetTitle className="font-display text-5xl font-black uppercase italic tracking-tighter flex items-center gap-6 text-foreground leading-none">
+                <Coins className="w-12 h-12 text-primary" />
                 STUDIO LEDGER
               </SheetTitle>
-              <SheetDescription className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/20 italic mt-4">
+              <SheetDescription className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/20 italic mt-6">
                 HISTORICAL BENCHMARK DATA // SECURE EXECUTIVE ACCESS
               </SheetDescription>
             </SheetHeader>
-            <div className="mt-12 space-y-8 overflow-y-auto max-h-[calc(100vh-300px)] pr-6 custom-scrollbar">
+            <div className="mt-16 space-y-10 overflow-y-auto max-h-[calc(100vh-350px)] pr-8 custom-scrollbar">
               {(useGameStore().snapshots || []).slice().reverse().map((s, i) => (
-                <div key={i} className="bg-white/[0.01] border border-white/5 p-8 group hover:bg-white/[0.03] hover:border-primary/20 transition-all duration-700 rounded-none">
-                  <div className="flex justify-between items-start mb-8">
-                    <div>
-                      <p className="text-[9px] text-muted-foreground/20 uppercase font-black tracking-[0.3em] leading-none mb-3 italic">FISCAL YEAR</p>
-                      <p className="text-4xl font-display font-black text-foreground italic leading-none">Y{s.year}</p>
+                <div key={i} className="bg-white/[0.01] border border-white/5 p-10 group hover:bg-white/[0.04] hover:border-primary/40 transition-all duration-700 rounded-none shadow-xl">
+                  <div className="flex justify-between items-start mb-10">
+                    <div className="space-y-3">
+                      <p className="text-[10px] text-muted-foreground/20 uppercase font-black tracking-[0.4em] leading-none italic">FISCAL YEAR</p>
+                      <p className="text-6xl font-display font-black text-foreground italic leading-none drop-shadow-[0_0_10px_rgba(255,255,255,0.1)]">Y{s.year}</p>
                     </div>
-                    <Badge variant="outline" className="text-[8px] font-black tracking-[0.2em] uppercase bg-primary/5 text-primary border-primary/20 h-7 px-4 rounded-none">
+                    <div className="flex items-center gap-3 px-4 py-2 border border-primary/20 bg-primary/5 text-[9px] font-black tracking-[0.3em] uppercase italic text-primary rounded-none shadow-[0_0_15px_rgba(var(--primary),0.1)]">
+                      <ShieldCheck className="w-3 h-3" />
                       VERIFIED SNAPSHOT
-                    </Badge>
-                  </div>
-                  <div className="grid grid-cols-2 gap-8">
-                    <div>
-                      <p className="text-[9px] text-muted-foreground/20 uppercase font-black tracking-[0.3em] mb-3 flex items-center gap-3 italic">
-                        <TrendingUp className="w-3 h-3 text-primary/40" /> TOTAL EQUITY
-                      </p>
-                      <p className="text-xl font-display font-black text-foreground tracking-tighter italic leading-none">{formatMoney(s.funds)}</p>
                     </div>
-                    <div>
-                      <p className="text-[9px] text-muted-foreground/20 uppercase font-black tracking-[0.3em] mb-3 flex items-center gap-3 italic">
-                        <Package className="w-3 h-3 text-primary/40" /> IP VOLUME
+                  </div>
+                  <div className="grid grid-cols-2 gap-10">
+                    <div className="space-y-4">
+                      <p className="text-[10px] text-muted-foreground/20 uppercase font-black tracking-[0.4em] flex items-center gap-4 italic">
+                        <TrendingUp className="w-3.5 h-3.5 text-primary/40" /> TOTAL EQUITY
                       </p>
-                      <p className="text-xl font-display font-black tracking-tighter text-foreground italic leading-none">{s.completedProjects} TITLES</p>
+                      <p className="text-2xl font-display font-black text-foreground tracking-tighter italic leading-none">{formatMoney(s.funds).toUpperCase()}</p>
+                    </div>
+                    <div className="space-y-4">
+                      <p className="text-[10px] text-muted-foreground/20 uppercase font-black tracking-[0.4em] flex items-center gap-4 italic">
+                        <Package className="w-3.5 h-3.5 text-primary/40" /> IP VOLUME
+                      </p>
+                      <p className="text-2xl font-display font-black tracking-tighter text-foreground italic leading-none">{s.completedProjects} TITLES</p>
                     </div>
                   </div>
                 </div>
               ))}
               {((useGameStore().snapshots || []).length === 0) && (
-                <EmptyState 
-                  icon={History} 
-                  title="NO HISTORICAL DATA" 
-                  message="Benchmarks are generated at the close of each fiscal year (Week 52)."
-                  className="bg-transparent border-none py-20"
-                />
+                <div className="py-32 flex flex-col items-center text-center space-y-8 opacity-20">
+                  <History className="w-16 h-16 text-muted-foreground" strokeWidth={1} />
+                  <div className="space-y-3">
+                    <p className="text-xs font-black uppercase tracking-[0.5em] italic">NO HISTORICAL DATA</p>
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] max-w-[240px] leading-relaxed">BENCHMARKS ARE GENERATED AT THE CLOSE OF EACH FISCAL YEAR (WEEK 52).</p>
+                  </div>
+                </div>
               )}
             </div>
           </SheetContent>
         </Sheet>
       </div>
 
-      <Tabs defaultValue="current" className="space-y-12">
-        <TabsList className="bg-white/[0.02] border border-white/5 p-1 h-14 rounded-none">
-          <TabsTrigger value="current" className="gap-4 font-display font-black uppercase tracking-[0.2em] text-[10px] h-12 px-10 data-[state=active]:bg-primary data-[state=active]:text-black transition-all rounded-none">
+      <Tabs defaultValue="current" className="space-y-16">
+        <TabsList className="bg-white/[0.02] border border-white/5 p-1 h-16 rounded-none w-fit">
+          <TabsTrigger value="current" className="gap-6 font-display font-black uppercase tracking-[0.3em] text-[10px] h-14 px-12 data-[state=active]:bg-primary data-[state=active]:text-black transition-all duration-700 rounded-none italic">
             <LayoutDashboard className="w-4 h-4" />
             ACTIVE OPERATIONS
           </TabsTrigger>
-          <TabsTrigger value="history" className="gap-4 font-display font-black uppercase tracking-[0.2em] text-[10px] h-12 px-10 data-[state=active]:bg-primary data-[state=active]:text-black transition-all rounded-none">
+          <TabsTrigger value="history" className="gap-6 font-display font-black uppercase tracking-[0.3em] text-[10px] h-14 px-12 data-[state=active]:bg-primary data-[state=active]:text-black transition-all duration-700 rounded-none italic">
             <History className="w-4 h-4" />
             PERFORMANCE AUDIT
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="current" className="space-y-12 m-0 outline-none">
+        <TabsContent value="current" className="space-y-16 m-0 outline-none animate-in fade-in duration-1000">
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-10">
         <KPIStatCard 
           label="AVAILABLE LIQUID CASH" 
-          value={formatMoney(cash)} 
+          value={formatMoney(cash).toUpperCase()} 
           variant={cash < 0 ? 'destructive' : 'primary'}
           tooltip="Total liquid capital available for studio operations."
         />
         <KPIStatCard 
           label="TOTAL STUDIO EQUITY" 
-          value={formatMoney(studioNetWorth)} 
+          value={formatMoney(studioNetWorth).toUpperCase()} 
           variant="muted"
           tooltip="Estimated total value of all studio assets."
         />
         <KPIStatCard 
           label="WEEKLY CASH BURN" 
-          value={`${netDelta >= 0 ? '+' : ''}${formatMoney(netDelta)}`} 
+          value={`${netDelta >= 0 ? '+' : ''}${formatMoney(netDelta).toUpperCase()}`} 
           subLabel="P&L MOMENTUM"
           variant={netDelta >= 0 ? 'success' : 'destructive'}
           tooltip="Estimated weekly profit or loss."
         />
         <KPIStatCard 
           label="FORECAST LIQUIDITY" 
-          value={formatMoney(forecast.length > 0 ? forecast[forecast.length - 1].projected : 0)} 
+          value={formatMoney(forecast.length > 0 ? forecast[forecast.length - 1].projected : 0).toUpperCase()} 
           subLabel="12-WEEK OUTLOOK"
           variant="secondary"
           tooltip="Projected cash position in 12 weeks."
         />
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-12">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-16">
         {/* Cash Flow Chart */}
-        <div className="xl:col-span-2 flex flex-col gap-12">
+        <div className="xl:col-span-2 flex flex-col gap-16">
           <MarketRatesWidget />
           
-          <div className="glass-card p-12 flex flex-col h-[450px]">
-            <div className="flex items-center justify-between mb-12 pb-6 border-b border-white/5">
-              <div>
-                <h3 className="text-2xl font-display font-black uppercase tracking-tighter italic leading-none mb-2 text-foreground">Liquidity Curve</h3>
-                <p className="text-[10px] font-black uppercase text-muted-foreground/20 tracking-[0.3em] italic">12-WEEK HISTORICAL VS 12-WEEK PROJECTED VECTOR</p>
+          <div className="glass-card p-12 flex flex-col h-[500px] border border-white/5 rounded-2xl bg-black/40 shadow-2xl">
+            <div className="flex items-center justify-between mb-16 pb-8 border-b border-white/5">
+              <div className="space-y-2">
+                <h3 className="text-3xl font-display font-black uppercase tracking-tighter italic leading-none text-foreground drop-shadow-[0_0_10px_rgba(255,255,255,0.05)]">LIQUIDITY CURVE</h3>
+                <p className="text-[10px] font-black uppercase text-muted-foreground/20 tracking-[0.4em] italic">12-WEEK HISTORICAL VS 12-WEEK PROJECTED VECTOR</p>
               </div>
-              <div className="flex items-center gap-8 text-[9px] font-black tracking-[0.2em] uppercase text-muted-foreground/40 italic">
-                 <div className="flex items-center gap-3"><div className="w-2.5 h-2.5 rounded-none bg-primary shadow-[0_0_10px_rgba(var(--primary),0.4)]"></div> HISTORY</div>
-                 <div className="flex items-center gap-3"><div className="w-3 h-0.5 bg-primary/40 border-t border-dashed border-primary"></div> FORECAST</div>
+              <div className="flex items-center gap-10 text-[9px] font-black tracking-[0.3em] uppercase text-muted-foreground/30 italic">
+                 <div className="flex items-center gap-4"><div className="w-3 h-3 rounded-none bg-primary shadow-[0_0_15px_rgba(var(--primary),0.5)]"></div> HISTORY</div>
+                 <div className="flex items-center gap-4"><div className="w-5 h-0.5 bg-primary/40 border-t border-dashed border-primary"></div> FORECAST</div>
               </div>
             </div>
             <div className="flex-1 min-h-0">
               <ResponsiveContainer width="100%" height="100%">
                 <ComposedChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                  <XAxis dataKey="week" stroke="rgba(255,255,255,0.05)" fontSize={10} fontWeight={900} tickLine={false} axisLine={false} tickFormatter={v => `W${v}`} />
-                  <YAxis stroke="rgba(255,255,255,0.05)" fontSize={10} fontWeight={900} tickFormatter={v => formatMoney(v)} tickLine={false} axisLine={false} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.02)" vertical={false} />
+                  <XAxis dataKey="week" stroke="rgba(255,255,255,0.1)" fontSize={9} fontWeight={900} tickLine={false} axisLine={false} tickFormatter={v => `W${v}`} />
+                  <YAxis stroke="rgba(255,255,255,0.1)" fontSize={9} fontWeight={900} tickFormatter={v => formatMoney(v).toUpperCase()} tickLine={false} axisLine={false} />
                   <Tooltip
-                    contentStyle={{ background: 'rgba(0, 0, 0, 0.95)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '0px', fontSize: '10px', backdropFilter: 'blur(32px)', padding: '16px' }}
-                    itemStyle={{ fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.2em', color: '#fff' }}
-                    formatter={(value: number, name: string) => [formatMoney(value), name === 'histCash' ? 'ACTUAL CASH' : 'PROJECTED CASH']}
+                    cursor={{ stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1 }}
+                    contentStyle={{ background: 'rgba(0, 0, 0, 0.95)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '0px', fontSize: '9px', backdropFilter: 'blur(40px)', padding: '20px', boxShadow: '0 20px 50px rgba(0,0,0,0.5)' }}
+                    itemStyle={{ fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.3em', color: '#fff', marginBottom: '8px' }}
+                    labelStyle={{ fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.4em', color: 'rgba(255,255,255,0.3)', marginBottom: '16px', fontStyle: 'italic' }}
+                    formatter={(value: number, name: string) => [formatMoney(value).toUpperCase(), name === 'histCash' ? 'ACTUAL CASH' : 'PROJECTED CASH']}
                   />
                   
                   {/* Historical Cash Area */}
-                  <Area type="monotone" dataKey="histCash" stroke="rgba(var(--primary), 1)" strokeWidth={2} fill="rgba(var(--primary), 0.05)" />
+                  <Area type="monotone" dataKey="histCash" stroke="rgba(var(--primary), 1)" strokeWidth={3} fill="rgba(var(--primary), 0.05)" />
                   
                   {/* Forecast Cash Line */}
-                  <Line type="monotone" dataKey="projCash" stroke="rgba(var(--primary), 0.4)" strokeWidth={2} strokeDasharray="8 8" dot={false} />
+                  <Line type="monotone" dataKey="projCash" stroke="rgba(var(--primary), 0.4)" strokeWidth={3} strokeDasharray="12 12" dot={false} />
                 </ComposedChart>
               </ResponsiveContainer>
             </div>
@@ -241,37 +246,38 @@ export const FinancePanel = () => {
 
         {/* Active Project Costs */}
         <div className="xl:col-span-1">
-          <div className="glass-card flex flex-col h-full overflow-hidden">
-            <div className="p-8 border-b border-white/5 bg-white/[0.01]">
-              <h3 className="text-xs font-display font-black uppercase tracking-[0.2em] text-foreground flex justify-between items-center italic">
+          <div className="glass-card flex flex-col h-full overflow-hidden border border-white/5 rounded-2xl bg-black/40 shadow-2xl">
+            <div className="p-10 border-b border-white/5 bg-white/[0.01]">
+              <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/30 flex justify-between items-end italic">
                 <span>DIRECT BURN RATES</span>
-                <span className="text-destructive tracking-tighter text-lg">-{formatMoney(weeklyCosts)}/WK</span>
+                <span className="text-red-400 tracking-tighter text-2xl font-display font-black">-{formatMoney(weeklyCosts).toUpperCase()}/WK</span>
               </h3>
             </div>
             <div className="flex-1 overflow-y-auto custom-scrollbar">
               <div className="flex flex-col divide-y divide-white/5">
                 {activeProjects.length > 0 ? activeProjects.map(p => (
-                  <div key={p.id} className="p-8 hover:bg-white/[0.02] transition-all group">
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="text-md font-display font-black uppercase tracking-tight group-hover:text-primary transition-colors italic leading-none">{p.title}</span>
-                      <span className="text-sm font-display font-black text-destructive tracking-tighter italic leading-none">-{formatMoney(p.weeklyCost)}</span>
+                  <div key={p.id} className="p-10 hover:bg-white/[0.03] transition-all duration-700 group">
+                    <div className="flex items-center justify-between mb-6">
+                      <span className="text-xl font-display font-black uppercase tracking-tight group-hover:text-primary transition-all duration-700 italic leading-none drop-shadow-[0_0_10px_rgba(255,255,255,0.05)]">{p.title}</span>
+                      <span className="text-md font-display font-black text-red-400 tracking-tighter italic leading-none">-{formatMoney(p.weeklyCost).toUpperCase()}</span>
                     </div>
-                    <div className="flex items-center gap-6">
-                       <Badge variant="outline" className="text-[8px] font-black tracking-[0.2em] text-muted-foreground/40 uppercase h-5 px-3 border-white/5 rounded-none">
-                         {p.state.replace('_', ' ')}
-                       </Badge>
-                       <div className="flex-1 h-0.5 bg-white/5 rounded-none overflow-hidden">
-                          <div className="h-full bg-destructive/40 w-1/2" />
+                    <div className="flex items-center gap-8">
+                       <div className="text-[9px] font-black tracking-[0.3em] text-muted-foreground/20 uppercase italic h-6 px-4 border border-white/5 bg-white/[0.01] flex items-center justify-center rounded-none group-hover:text-muted-foreground/60 transition-all duration-700">
+                         {p.state.replace('_', ' ').toUpperCase()}
+                       </div>
+                       <div className="flex-1 h-[2px] bg-white/5 rounded-none overflow-hidden">
+                          <div className="h-full bg-red-400/30 w-1/2 shadow-[0_0_10px_rgba(244,63,94,0.3)]" />
                        </div>
                     </div>
                   </div>
                 )) : (
-                  <EmptyState 
-                    icon={TrendingUp} 
-                    title="NO ACTIVE BURN" 
-                    message="Your studio currently has no active projects incurring weekly production costs."
-                    className="h-full py-24 bg-transparent border-none shadow-none backdrop-blur-none"
-                  />
+                  <div className="py-32 flex flex-col items-center text-center space-y-8 opacity-20">
+                    <TrendingUp className="w-16 h-16 text-muted-foreground" strokeWidth={1} />
+                    <div className="space-y-3 px-12">
+                      <p className="text-xs font-black uppercase tracking-[0.5em] italic">NO ACTIVE BURN</p>
+                      <p className="text-[10px] font-black uppercase tracking-[0.2em] leading-relaxed">YOUR STUDIO CURRENTLY HAS NO ACTIVE PROJECTS INCURRING WEEKLY PRODUCTION COSTS.</p>
+                    </div>
+                  </div>
                 )}
               </div>
             </div>
@@ -280,33 +286,43 @@ export const FinancePanel = () => {
       </div>
       
       {/* Deep Economic Analytics */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-        <div className="glass-card p-10 bg-white/[0.01]">
-           <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/20 mb-10 pb-5 border-b border-white/5 italic">REVENUE MIX // 12W ANALYSIS</h3>
-           <div className="h-[220px]">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
+        <div className="glass-card p-12 bg-black/40 border border-white/5 rounded-2xl shadow-2xl">
+           <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/20 mb-12 pb-6 border-b border-white/5 italic flex items-center gap-4">
+            <ArrowRightLeft className="w-4 h-4 text-primary/40" />
+            REVENUE MIX // 12W ANALYSIS
+           </h3>
+           <div className="h-[250px]">
               <RevenueStreamChart data={gameState?.finance?.weeklyHistory || []} />
            </div>
         </div>
 
-        <div className="glass-card p-10 bg-white/[0.01]">
-           <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/20 mb-10 pb-5 border-b border-white/5 italic">WEEKLY P&L WATERFALL</h3>
-           <div className="h-[220px]">
+        <div className="glass-card p-12 bg-black/40 border border-white/5 rounded-2xl shadow-2xl">
+           <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/20 mb-12 pb-6 border-b border-white/5 italic flex items-center gap-4">
+            <TrendingUp className="w-4 h-4 text-emerald-400/40" />
+            WEEKLY P&L WATERFALL
+           </h3>
+           <div className="h-[250px]">
               <ProfitWaterfallChart snapshot={gameState?.finance?.weeklyHistory?.slice(-1)[0]} />
            </div>
         </div>
 
-        <div className="glass-card p-10 bg-white/[0.01]">
-           <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/20 mb-10 pb-5 border-b border-white/5 italic">FISCAL EFFICIENCY COEFFICIENT</h3>
-           <div className="h-[220px] flex items-center justify-center">
+        <div className="glass-card p-12 bg-black/40 border border-white/5 rounded-2xl shadow-2xl">
+           <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/20 mb-12 pb-6 border-b border-white/5 italic flex items-center gap-4">
+            <ShieldCheck className="w-4 h-4 text-secondary/40" />
+            FISCAL EFFICIENCY COEFFICIENT
+           </h3>
+           <div className="h-[250px] flex items-center justify-center">
               <CashEfficiencyGauge score={gameState?.studio?.prestige || 75} />
            </div>
         </div>
       </div>
 
       {/* Project ROI Analytics */}
-      <div className="glass-card overflow-hidden">
-        <div className="p-8 border-b border-white/5 bg-white/[0.01]">
-           <h3 className="text-xs font-display font-black uppercase tracking-[0.2em] text-foreground italic">
+      <div className="glass-card overflow-hidden border border-white/5 rounded-2xl bg-black/40 shadow-2xl">
+        <div className="p-10 border-b border-white/5 bg-white/[0.01]">
+           <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-foreground italic flex items-center gap-4">
+            <ShieldCheck className="w-4 h-4 text-primary/40" />
             PROPERTY YIELD & ROI AUDIT
           </h3>
         </div>
@@ -316,31 +332,31 @@ export const FinancePanel = () => {
             const isProfitable = roi > 1;
             
             return (
-              <div key={p.id} className="p-8 hover:bg-white/[0.02] transition-all group">
-                  <div className="flex items-start justify-between mb-8">
-                    <div>
-                      <h4 className="font-display font-black text-xl tracking-tighter uppercase italic group-hover:text-primary transition-colors truncate max-w-[140px] leading-none">{p.title}</h4>
-                      <Badge variant="outline" className="text-[8px] font-black tracking-[0.2em] text-muted-foreground/20 uppercase mt-3 border-white/5 rounded-none h-5 px-2">
-                        {p.distributionStatus}
-                      </Badge>
+              <div key={p.id} className="p-10 hover:bg-white/[0.04] transition-all duration-700 group">
+                  <div className="flex items-start justify-between mb-10">
+                    <div className="space-y-4">
+                      <h4 className="font-display font-black text-2xl tracking-tighter uppercase italic group-hover:text-primary transition-all duration-700 truncate max-w-[180px] leading-none drop-shadow-[0_0_10px_rgba(255,255,255,0.05)]">{p.title}</h4>
+                      <div className="text-[9px] font-black tracking-[0.3em] text-muted-foreground/20 uppercase border border-white/5 bg-white/[0.01] px-3 py-1.5 rounded-none h-fit w-fit italic group-hover:text-muted-foreground/60 transition-all duration-700">
+                        {p.distributionStatus.toUpperCase()}
+                      </div>
                     </div>
-                    <Badge variant="outline" className={cn("text-[9px] font-black tracking-[0.2em] uppercase h-7 px-4 border-none rounded-none italic", isProfitable ? "bg-emerald-400/10 text-emerald-400" : "bg-red-400/10 text-red-400")}>
+                    <div className={cn("text-[9px] font-black tracking-[0.4em] uppercase h-8 px-5 flex items-center border border-transparent rounded-none italic shadow-lg", isProfitable ? "bg-emerald-400/10 text-emerald-400 border-emerald-400/20" : "bg-red-400/10 text-red-400 border-red-400/20")}>
                       {isProfitable ? 'YIELD' : 'LOSS'}
-                    </Badge>
+                    </div>
                   </div>
                   
-                  <div className="space-y-6">
+                  <div className="space-y-8">
                     <div className="flex justify-between items-end">
-                      <span className="text-[9px] font-black text-muted-foreground/20 uppercase tracking-[0.2em] italic">GROSS YIELD</span>
-                      <span className="text-md font-display font-black text-emerald-400 tracking-tight italic leading-none">{formatMoney(p.revenue)}</span>
+                      <span className="text-[10px] font-black text-muted-foreground/10 uppercase tracking-[0.3em] italic">GROSS YIELD</span>
+                      <span className="text-xl font-display font-black text-emerald-400 tracking-tighter italic leading-none drop-shadow-[0_0_10px_rgba(16,185,129,0.2)]">{formatMoney(p.revenue).toUpperCase()}</span>
                     </div>
                     <div className="flex justify-between items-end">
-                      <span className="text-[9px] font-black text-muted-foreground/20 uppercase tracking-[0.2em] italic">TOTAL SPEND</span>
-                      <span className="text-md font-display font-black text-red-400 tracking-tight italic leading-none">{formatMoney(p.budget + (p.marketingBudget||0))}</span>
+                      <span className="text-[10px] font-black text-muted-foreground/10 uppercase tracking-[0.3em] italic">TOTAL SPEND</span>
+                      <span className="text-xl font-display font-black text-red-400 tracking-tighter italic leading-none drop-shadow-[0_0_10px_rgba(244,63,94,0.2)]">{formatMoney(p.budget + (p.marketingBudget||0)).toUpperCase()}</span>
                     </div>
-                    <div className="pt-6 border-t border-white/5 flex justify-between items-center">
-                      <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 italic">YIELD RATIO</span>
-                      <span className={cn("text-3xl font-display font-black tracking-tighter italic leading-none", isProfitable ? "text-emerald-400" : "text-red-400")}>
+                    <div className="pt-8 border-t border-white/5 flex justify-between items-center">
+                      <span className="text-[11px] font-black uppercase tracking-[0.4em] text-muted-foreground/40 italic">YIELD RATIO</span>
+                      <span className={cn("text-4xl font-display font-black tracking-tighter italic leading-none", isProfitable ? "text-emerald-400 drop-shadow-[0_0_15px_rgba(16,185,129,0.3)]" : "text-red-400 drop-shadow-[0_0_15px_rgba(244,63,94,0.3)]")}>
                         {roi.toFixed(2)}x
                       </span>
                     </div>
@@ -349,12 +365,13 @@ export const FinancePanel = () => {
             )
           }) : (
              <div className="col-span-full">
-               <EmptyState 
-                 icon={Coins} 
-                 title="NO ACTIVE CATALOG" 
-                 message="Properties will appear here for ROI auditing once they have concluded their primary distribution windows."
-                 className="bg-transparent border-none py-24"
-               />
+               <div className="py-48 flex flex-col items-center text-center space-y-10 opacity-20">
+                 <Coins className="w-20 h-20 text-muted-foreground" strokeWidth={1} />
+                 <div className="space-y-4 px-12">
+                   <p className="text-sm font-black uppercase tracking-[0.6em] italic">NO ACTIVE CATALOG</p>
+                   <p className="text-xs font-black uppercase tracking-[0.3em] leading-relaxed max-w-[400px]">PROPERTIES WILL APPEAR HERE FOR ROI AUDITING ONCE THEY HAVE CONCLUDED THEIR PRIMARY DISTRIBUTION WINDOWS.</p>
+                 </div>
+               </div>
              </div>
           )}
         </div>
@@ -362,7 +379,7 @@ export const FinancePanel = () => {
 
         </TabsContent>
 
-        <TabsContent value="history" className="m-0 outline-none">
+        <TabsContent value="history" className="m-0 outline-none animate-in fade-in duration-1000">
           <YearInReviewChart />
         </TabsContent>
       </Tabs>

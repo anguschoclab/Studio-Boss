@@ -23,7 +23,10 @@ import {
   ArrowRight,
   Plus,
   AlertOctagon,
-  Monitor
+  Monitor,
+  Target,
+  BarChart3,
+  ShieldAlert
 } from 'lucide-react';
 
 // Lazy load heavy visualization components
@@ -63,10 +66,10 @@ export const ExecutiveDashboard: React.FC = () => {
         id: 'greenlight',
         type: 'warning',
         icon: <Zap className="h-4 w-4 text-amber-500" />,
-        title: `${needsGreenlight} PROJECT${needsGreenlight > 1 ? 'S' : ''} READY FOR GREENLIGHT`,
-        description: 'Review and approve projects to begin production',
+        title: `${needsGreenlight} PROJECT${needsGreenlight > 1 ? 'S' : ''}_READY_FOR_GREENLIGHT`,
+        description: 'REVIEW AND APPROVE PROJECTS TO BEGIN PRODUCTION',
         action: {
-          label: 'REVIEW QUEUE',
+          label: 'REVIEW_QUEUE',
           onClick: () => {
             setActiveHub('production');
             setActiveSubTab('slate');
@@ -83,10 +86,10 @@ export const ExecutiveDashboard: React.FC = () => {
         id: 'budget',
         type: 'critical',
         icon: <AlertOctagon className="h-4 w-4 text-red-500" />,
-        title: `${overBudget} PROJECT${overBudget > 1 ? 'S' : ''} OVER BUDGET`,
-        description: 'Budget overruns detected - immediate action required',
+        title: `${overBudget} PROJECT${overBudget > 1 ? 'S' : ''}_OVER_BUDGET`,
+        description: 'BUDGET OVERRUNS DETECTED - IMMEDIATE ACTION REQUIRED',
         action: {
-          label: 'VIEW DETAILS',
+          label: 'VIEW_DETAILS',
           onClick: () => {
             setActiveHub('production');
             setActiveSubTab('development');
@@ -103,10 +106,10 @@ export const ExecutiveDashboard: React.FC = () => {
         id: 'morale',
         type: 'warning',
         icon: <Activity className="h-4 w-4 text-amber-500" />,
-        title: `${lowMorale} TALENT MEMBER${lowMorale > 1 ? 'S' : ''} AT RISK`,
-        description: 'Talent morale is critically low - check roster',
+        title: `${lowMorale} TALENT_MEMBER${lowMorale > 1 ? 'S' : ''}_AT_RISK`,
+        description: 'TALENT MORALE IS CRITICALLY LOW - CHECK ROSTER',
         action: {
-          label: 'CHECK ROSTER',
+          label: 'CHECK_ROSTER',
           onClick: () => {
             setActiveHub('talent');
             setActiveSubTab('roster');
@@ -123,64 +126,64 @@ export const ExecutiveDashboard: React.FC = () => {
   const getAlertStyles = (type: string) => {
     switch (type) {
       case 'critical':
-        return 'bg-destructive/10 border-destructive/30 shadow-[0_0_15px_hsl(var(--destructive)/0.1)]';
+        return 'bg-red-500/[0.02] border-red-500/30 shadow-[0_0_20px_rgba(239,68,68,0.1)] border-l-[4px] border-l-red-500';
       case 'warning':
-        return 'bg-amber-500/10 border-amber-500/30 shadow-[0_0_15px_rgba(245,158,11,0.1)]';
+        return 'bg-amber-500/[0.02] border-amber-500/30 shadow-[0_0_20px_rgba(245,158,11,0.1)] border-l-[4px] border-l-amber-500';
       default:
-        return 'bg-blue-500/10 border-blue-500/30 shadow-[0_0_15px_rgba(59,130,246,0.1)]';
+        return 'bg-blue-500/[0.02] border-blue-500/30 shadow-[0_0_20px_rgba(59,130,246,0.1)] border-l-[4px] border-l-blue-500';
     }
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      {/* Quick Stats Row */}
-      <div className="grid grid-cols-4 gap-6">
+    <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 pb-20">
+      {/* KPI Command Bar */}
+      <div className="grid grid-cols-4 gap-8">
         <KPIStatCard 
-          label="Liquid Capital" 
+          label="LIQUID_CAPITAL" 
           value={`$${((gameState?.finance?.cash || 0) / 1000000).toFixed(1)}M`}
-          subValue="Fiscal Reserves"
+          subValue="FISCAL RESERVES"
           icon={DollarSign}
           variant="secondary"
         />
         <KPIStatCard 
-          label="Active Slate" 
+          label="ACTIVE_SLATE" 
           value={selectProjects(gameState).length.toString()}
-          subValue="Live Productions"
+          subValue="LIVE PRODUCTIONS"
           icon={Monitor}
         />
         <KPIStatCard 
-          label="Human Capital" 
+          label="HUMAN_CAPITAL" 
           value={selectTalentPool(gameState).length.toString()}
-          subValue="Contracted Assets"
+          subValue="CONTRACTED ASSETS"
           icon={Activity}
         />
         <KPIStatCard 
-          label="Fiscal Week" 
+          label="FISCAL_WEEK" 
           value={gameState?.week || 1}
-          subValue="Current Period"
+          subValue="CURRENT PERIOD"
           icon={TrendingUp}
         />
       </div>
 
-      {/* Alert Banner */}
+      {/* Critical Alert Stack */}
       {alerts.length > 0 && (
-        <Section title="EXECUTIVE ALERTS" icon={AlertTriangle}>
+        <Section title="EXECUTIVE_ALERTS" icon={AlertTriangle}>
           <div className="space-y-4">
             {alerts.map((alert) => (
               <div
                 key={alert.id}
                 className={cn(
-                  'flex items-center justify-between p-6 glass-card border-white/5 backdrop-blur-md transition-all duration-500 hover:bg-white/[0.03]',
+                  'flex items-center justify-between p-8 rounded-none backdrop-blur-3xl transition-all duration-700 hover:brightness-125 group border border-white/5',
                   getAlertStyles(alert.type)
                 )}
               >
-                <div className="flex items-center gap-6">
-                  <div className="w-10 h-10 flex items-center justify-center bg-black/40 border border-white/5">
+                <div className="flex items-center gap-10">
+                  <div className="w-12 h-12 flex items-center justify-center bg-black/60 border border-white/10 rounded-none shadow-2xl group-hover:border-primary/20 transition-colors">
                     {alert.icon}
                   </div>
                   <div>
-                    <p className="font-display font-black text-sm tracking-tight text-foreground/90 italic uppercase">{alert.title}</p>
-                    <p className="text-[10px] font-black uppercase text-muted-foreground/40 tracking-widest mt-1">
+                    <p className="text-lg font-display font-black tracking-tight text-foreground italic uppercase leading-none mb-3">{alert.title}</p>
+                    <p className="text-[10px] font-black uppercase text-muted-foreground/30 tracking-[0.4em] italic leading-none">
                       {alert.description}
                     </p>
                   </div>
@@ -188,101 +191,114 @@ export const ExecutiveDashboard: React.FC = () => {
                 {alert.action && (
                   <Button
                     size="sm"
-                    className="h-9 px-6 text-[10px] font-black uppercase tracking-[0.2em] bg-white/5 hover:bg-white/10 border border-white/10 text-foreground transition-all rounded-none"
+                    className="h-12 px-8 text-[10px] font-black uppercase tracking-[0.2em] bg-white/5 hover:bg-primary/10 border border-white/10 hover:border-primary/40 text-foreground transition-all duration-700 rounded-none italic"
                     onClick={alert.action.onClick}
                   >
                     {alert.action.label}
-                    <ArrowRight className="h-3 w-3 ml-2 opacity-50" />
+                    <ArrowRight className="h-4 w-4 ml-4 opacity-50 group-hover:opacity-100 transition-opacity" strokeWidth={3} />
                   </Button>
                 )}
               </div>
             ))}
           </div>
-        </Section>
+        </Section>Section>
       )}
 
-      {/* Main Dashboard Grid */}
-      <div className="grid grid-cols-12 gap-8">
-        {/* Left Column - Health & Sentiment */}
-        <div className="col-span-4 space-y-8">
-          <React.Suspense fallback={<SkeletonPage rows={4} />}>
-            <StudioHealthRadar className="h-full" />
-          </React.Suspense>
-
-          <React.Suspense fallback={<SkeletonPage rows={3} />}>
-            <MarketSentimentGauge
-              sentiment={marketMetrics.sentiment}
-              trend={marketMetrics.cycle === 'BOOM' || marketMetrics.cycle === 'RECOVERY' ? 'bullish' : 
-                    marketMetrics.cycle === 'BEAR' || marketMetrics.cycle === 'RECESSION' ? 'bearish' : 'neutral'}
-              volatility={Math.abs(marketMetrics.sentiment - 50) * 2}
-            />
-          </React.Suspense>
-
-          <React.Suspense fallback={<SkeletonPage rows={3} />}>
-            <CrisisRiskMeter />
-          </React.Suspense>
-        </div>
-
-        {/* Right Column - Financials */}
-        <div className="col-span-8 space-y-8">
-          <div className="grid grid-cols-2 gap-8">
-            <React.Suspense fallback={<SkeletonPage rows={5} />}>
-              <CashFlowChart weeks={6} />
-            </React.Suspense>
-
-            <React.Suspense fallback={<SkeletonPage rows={3} />}>
-              <WeeklyRevenueSpark label="WEEKLY PERFORMANCE" />
+      {/* Strategic Intelligence Grid */}
+      <div className="grid grid-cols-12 gap-10">
+        {/* Market Surveillance Column */}
+        <div className="col-span-4 space-y-10">
+          <div className="bg-white/[0.01] border border-white/5 p-8 rounded-none backdrop-blur-3xl shadow-2xl">
+            <React.Suspense fallback={<div className="h-64 flex items-center justify-center font-display font-black text-muted-foreground/10 uppercase tracking-widest italic animate-pulse">SURVEILLANCE_RADAR_INITIALIZING...</div>}>
+              <StudioHealthRadar className="h-full" />
             </React.Suspense>
           </div>
 
-          {/* Quick Actions */}
-          <div className="glass-card p-8 bg-white/[0.01] border-white/5 relative overflow-hidden">
-            <div className="flex items-center gap-3 mb-8">
-              <Zap className="h-4 w-4 text-primary" /> 
-              <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 italic">STRATEGIC VECTORS</h4>
+          <div className="bg-white/[0.01] border border-white/5 p-8 rounded-none backdrop-blur-3xl shadow-2xl">
+            <React.Suspense fallback={<div className="h-40 flex items-center justify-center font-display font-black text-muted-foreground/10 uppercase tracking-widest italic animate-pulse">SENTIMENT_ANALYSIS_RUNNING...</div>}>
+              <MarketSentimentGauge
+                sentiment={marketMetrics.sentiment}
+                trend={marketMetrics.cycle === 'BOOM' || marketMetrics.cycle === 'RECOVERY' ? 'bullish' : 
+                      marketMetrics.cycle === 'BEAR' || marketMetrics.cycle === 'RECESSION' ? 'bearish' : 'neutral'}
+                volatility={Math.abs(marketMetrics.sentiment - 50) * 2}
+              />
+            </React.Suspense>
+          </div>
+
+          <div className="bg-white/[0.01] border border-white/5 p-8 rounded-none backdrop-blur-3xl shadow-2xl">
+            <React.Suspense fallback={<div className="h-40 flex items-center justify-center font-display font-black text-muted-foreground/10 uppercase tracking-widest italic animate-pulse">CRISIS_MODELS_LOADING...</div>}>
+              <CrisisRiskMeter />
+            </React.Suspense>
+          </div>
+        </div>
+
+        {/* Fiscal Command Column */}
+        <div className="col-span-8 space-y-10">
+          <div className="grid grid-cols-2 gap-10">
+            <div className="bg-white/[0.01] border border-white/5 p-8 rounded-none backdrop-blur-3xl shadow-2xl">
+              <React.Suspense fallback={<div className="h-64 flex items-center justify-center font-display font-black text-muted-foreground/10 uppercase tracking-widest italic animate-pulse">CASH_FLOW_PROJECTION...</div>}>
+                <CashFlowChart weeks={6} />
+              </React.Suspense>
+            </div>
+
+            <div className="bg-white/[0.01] border border-white/5 p-8 rounded-none backdrop-blur-3xl shadow-2xl">
+              <React.Suspense fallback={<div className="h-64 flex items-center justify-center font-display font-black text-muted-foreground/10 uppercase tracking-widest italic animate-pulse">REVENUE_ANALYTICS...</div>}>
+                <WeeklyRevenueSpark label="WEEKLY_PERFORMANCE" />
+              </React.Suspense>
+            </div>
+          </div>
+
+          {/* Strategic Vector Control */}
+          <div className="p-10 bg-white/[0.02] border border-white/5 rounded-none backdrop-blur-3xl shadow-2xl relative overflow-hidden group">
+            <div className="absolute top-0 right-0 p-10 opacity-5 group-hover:opacity-10 transition-opacity">
+              <ShieldAlert className="h-32 w-32 text-primary" strokeWidth={1} />
+            </div>
+            <div className="flex items-center gap-4 mb-10 relative z-10">
+              <Target className="h-6 w-6 text-primary" strokeWidth={3} /> 
+              <h4 className="text-sm font-black uppercase tracking-[0.4em] italic text-primary/60">STRATEGIC_VECTOR_OVERRIDE</h4>
             </div>
             
-            <div className="grid grid-cols-4 gap-6 relative z-10">
+            <div className="grid grid-cols-4 gap-8 relative z-10">
               <Button
                 variant="outline"
-                className="h-auto py-6 flex flex-col items-center gap-3 bg-black/40 hover:bg-primary/10 border-white/5 hover:border-primary/40 transition-all duration-500 group rounded-none"
+                className="h-auto py-10 flex flex-col items-center gap-6 bg-black/40 hover:bg-primary/10 border-white/10 hover:border-primary/40 transition-all duration-700 group rounded-none"
                 onClick={openCreateProject}
               >
-                <Plus className="h-5 w-5 text-primary group-hover:scale-110 transition-transform" />
-                <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 group-hover:text-primary transition-colors">NEW PROJECT</span>
+                <Plus className="h-8 w-8 text-primary group-hover:scale-110 transition-transform duration-700" strokeWidth={3} />
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 group-hover:text-primary transition-colors italic">NEW_PROJECT</span>
               </Button>
               <Button
                 variant="outline"
-                className="h-auto py-6 flex flex-col items-center gap-3 bg-black/40 hover:bg-emerald-500/10 border-white/5 hover:border-emerald-500/40 transition-all duration-500 group rounded-none"
+                className="h-auto py-10 flex flex-col items-center gap-6 bg-black/40 hover:bg-emerald-500/10 border-white/10 hover:border-emerald-500/40 transition-all duration-700 group rounded-none"
                 onClick={() => {
                   setActiveHub('production');
                   setActiveSubTab('slate');
                 }}
               >
-                <Zap className="h-5 w-5 text-emerald-400 group-hover:scale-110 transition-transform" />
-                <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 group-hover:text-emerald-400 transition-colors">GREENLIGHT</span>
+                <Zap className="h-8 w-8 text-emerald-400 group-hover:scale-110 transition-transform duration-700" strokeWidth={3} />
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 group-hover:text-emerald-400 transition-colors italic">GREENLIGHT_CMD</span>
               </Button>
               <Button
                 variant="outline"
-                className="h-auto py-6 flex flex-col items-center gap-3 bg-black/40 hover:bg-secondary/10 border-white/5 hover:border-secondary/40 transition-all duration-500 group rounded-none"
+                className="h-auto py-10 flex flex-col items-center gap-6 bg-black/40 hover:bg-secondary/10 border-white/10 hover:border-secondary/40 transition-all duration-700 group rounded-none"
                 onClick={() => {
                   setActiveHub('talent');
                   setActiveSubTab('marketplace');
                 }}
               >
-                <TrendingUp className="h-5 w-5 text-secondary group-hover:scale-110 transition-transform" />
-                <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 group-hover:text-secondary transition-colors">MARKETPLACE</span>
+                <TrendingUp className="h-8 w-8 text-secondary group-hover:scale-110 transition-transform duration-700" strokeWidth={3} />
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 group-hover:text-secondary transition-colors italic">MARKET_PULSE</span>
               </Button>
               <Button
                 variant="outline"
-                className="h-auto py-6 flex flex-col items-center gap-3 bg-black/40 hover:bg-blue-500/10 border-white/5 hover:border-blue-500/40 transition-all duration-500 group rounded-none"
+                className="h-auto py-10 flex flex-col items-center gap-6 bg-black/40 hover:bg-blue-500/10 border-white/10 hover:border-blue-500/40 transition-all duration-700 group rounded-none"
                 onClick={() => {
                   setActiveHub('intelligence');
                   setActiveSubTab('financials');
                 }}
               >
-                <DollarSign className="h-5 w-5 text-blue-400 group-hover:scale-110 transition-transform" />
-                <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 group-hover:text-blue-400 transition-colors">FINANCIALS</span>
+                <BarChart3 className="h-8 w-8 text-blue-400 group-hover:scale-110 transition-transform duration-700" strokeWidth={3} />
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 group-hover:text-blue-400 transition-colors italic">FISCAL_AUDIT</span>
               </Button>
             </div>
           </div>
@@ -291,7 +307,5 @@ export const ExecutiveDashboard: React.FC = () => {
     </div>
   );
 };
-
-export default ExecutiveDashboard;
 
 export default ExecutiveDashboard;

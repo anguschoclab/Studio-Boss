@@ -111,7 +111,7 @@ export function DataList<T>({
       
       <ListWrapper
         className={cn(
-          'space-y-1',
+          'space-y-2',
           dividers && 'divide-y divide-white/5'
         )}
         {...(animate && {
@@ -126,10 +126,10 @@ export function DataList<T>({
               key={keyExtractor(item, index)}
               className={cn(
                 interactive && [
-                  'rounded-lg',
-                  'hover:bg-white/5',
+                  'rounded-none border border-transparent',
+                  'hover:bg-white/[0.03] hover:border-white/5',
                   'cursor-pointer',
-                  tokens.transition.fast,
+                  'transition-all duration-700',
                 ],
                 itemClassName
               )}
@@ -169,7 +169,7 @@ export function FilterableDataList<T>({
   items,
   searchQuery = '',
   filterFn,
-  searchPlaceholder = 'Search...',
+  searchPlaceholder = 'SEARCH DATABASE...',
   onSearchChange,
   showSearch = true,
   ...props
@@ -184,11 +184,11 @@ export function FilterableDataList<T>({
   const searchEmptyState = searchQuery
     ? {
         icon: Search,
-        title: 'No results found',
-        description: `No matches for "${searchQuery}"`,
+        title: 'NO RESULTS FOUND',
+        description: `NO MATCHES FOR "${searchQuery.toUpperCase()}"`,
         action: onSearchChange
           ? {
-              label: 'Clear search',
+              label: 'CLEAR SEARCH',
               onClick: () => onSearchChange(''),
             }
           : undefined,
@@ -196,21 +196,21 @@ export function FilterableDataList<T>({
     : props.emptyState;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-8">
       {showSearch && onSearchChange && (
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+        <div className="relative group">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/20 group-focus-within:text-primary transition-colors" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder={searchPlaceholder}
             className={cn(
-              'w-full pl-10 pr-4 py-2',
-              'bg-card/40 border border-white/10 rounded-lg',
-              'text-sm placeholder:text-muted-foreground',
-              'focus:outline-none focus:border-primary/50',
-              tokens.transition.colors
+              'w-full pl-12 pr-6 py-4',
+              'bg-white/[0.02] border border-white/5 rounded-none',
+              'text-[10px] font-black uppercase tracking-[0.3em] italic placeholder:text-muted-foreground/10',
+              'focus:outline-none focus:border-primary/40 focus:bg-white/[0.05]',
+              'transition-all duration-700'
             )}
           />
         </div>
@@ -246,7 +246,7 @@ export function CompactList<T>({
       interactive
       emptyState={{
         icon: AlertCircle,
-        title: 'No items',
+        title: 'NO ITEMS FOUND',
       }}
     />
   );

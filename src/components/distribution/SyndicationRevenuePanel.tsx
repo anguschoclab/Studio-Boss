@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { Globe, TrendingUp, Tv } from 'lucide-react';
+import { Globe, TrendingUp, Tv, ChevronRight, Zap, Target } from 'lucide-react';
 import { Section } from '@/components/layout/Section';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -35,101 +35,109 @@ export const SyndicationRevenuePanel: React.FC<SyndicationRevenuePanelProps> = (
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-1000">
       {/* Summary Cards */}
-      <div className="grid grid-cols-3 gap-4">
-        <Card className={cn('p-4', tokens.border.default)}>
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-primary/10">
-              <Globe className="h-5 w-5 text-primary" />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-white/[0.01] border border-white/5 p-6 rounded-none backdrop-blur-3xl shadow-2xl relative overflow-hidden group">
+          <div className="flex items-center gap-6">
+            <div className="p-3 bg-primary/10 border border-primary/20 rounded-none group-hover:bg-primary transition-colors duration-700">
+              <Globe className="h-6 w-6 text-primary group-hover:text-black transition-colors" />
             </div>
             <div>
-              <p className={cn('text-[10px] uppercase', tokens.text.caption)}>Total Revenue</p>
-              <p className="text-xl font-bold">{formatCurrency(totalRevenue)}</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 italic mb-2">TOTAL_REVENUE</p>
+              <p className="text-3xl font-display font-black italic tracking-tighter text-foreground group-hover:text-primary transition-colors">{formatCurrency(totalRevenue)}</p>
             </div>
           </div>
-        </Card>
+        </div>
 
-        <Card className={cn('p-4', tokens.border.default)}>
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-emerald-500/10">
-              <Tv className="h-5 w-5 text-emerald-500" />
+        <div className="bg-white/[0.01] border border-white/5 p-6 rounded-none backdrop-blur-3xl shadow-2xl relative overflow-hidden group">
+          <div className="flex items-center gap-6">
+            <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-none group-hover:bg-emerald-500 transition-colors duration-700">
+              <Tv className="h-6 w-6 text-emerald-500 group-hover:text-black transition-colors" />
             </div>
             <div>
-              <p className={cn('text-[10px] uppercase', tokens.text.caption)}>Active Deals</p>
-              <p className="text-xl font-bold">{totalDeals}</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 italic mb-2">ACTIVE_DEALS</p>
+              <p className="text-3xl font-display font-black italic tracking-tighter text-foreground group-hover:text-emerald-500 transition-colors">{totalDeals}</p>
             </div>
           </div>
-        </Card>
+        </div>
 
-        <Card className={cn('p-4', tokens.border.default)}>
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-amber-500/10">
-              <TrendingUp className="h-5 w-5 text-amber-500" />
+        <div className="bg-white/[0.01] border border-white/5 p-6 rounded-none backdrop-blur-3xl shadow-2xl relative overflow-hidden group">
+          <div className="flex items-center gap-6">
+            <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-none group-hover:bg-amber-500 transition-colors duration-700">
+              <TrendingUp className="h-6 w-6 text-amber-500 group-hover:text-black transition-colors" />
             </div>
             <div>
-              <p className={cn('text-[10px] uppercase', tokens.text.caption)}>Top Region</p>
-              <p className="text-xl font-bold">{topPerformingRegion || 'N/A'}</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 italic mb-2">TOP_PERFORMING_REGION</p>
+              <p className="text-3xl font-display font-black italic tracking-tighter text-foreground group-hover:text-amber-500 transition-colors">{topPerformingRegion.toUpperCase() || 'NULL'}</p>
             </div>
           </div>
-        </Card>
+        </div>
       </div>
 
       {/* Regional Breakdown */}
-      <Section
-        title="Syndication by Region"
-        subtitle="Revenue distribution across global markets"
-        icon={Globe}
-      >
+      <div className="space-y-6">
+        <div className="flex items-center gap-4 border-l-4 border-primary pl-6 py-2">
+          <Globe className="h-6 w-6 text-primary" strokeWidth={2} />
+          <div>
+            <h3 className="text-xl font-display font-black uppercase italic tracking-tighter text-foreground leading-none mb-2">REGIONAL_SYNDICATION_ARRAYS</h3>
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 italic">
+              GLOBAL_REVENUE_DISTRIBUTION_BY_MARKET_NODE
+            </p>
+          </div>
+        </div>
+
         {byRegion.length === 0 ? (
-          <div className={cn('text-center py-8', tokens.border.default, 'border-dashed rounded-xl')}>
-            <Globe className="h-10 w-10 mx-auto mb-3 opacity-20" />
-            <p className={cn('text-sm', tokens.text.caption)}>
-              No syndication deals active
+          <div className={cn('text-center py-20 bg-white/[0.01] border border-white/5 border-dashed rounded-none')}>
+            <Globe className="h-16 w-16 mx-auto mb-6 text-primary/20" strokeWidth={1} />
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/20 italic">
+              NO_SYNDICATION_DEALS_ACTIVE_IN_BUFFER
             </p>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {byRegion.map((market) => (
-              <Card
+              <div
                 key={market.region}
-                className={cn('p-4', tokens.border.default)}
+                className="bg-white/[0.02] border border-white/5 p-6 rounded-none backdrop-blur-3xl shadow-2xl hover:bg-white/[0.04] transition-all duration-700 group/row"
               >
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                      <Globe className="h-5 w-5 text-primary" />
+                  <div className="flex items-center gap-8">
+                    <div className="w-12 h-12 rounded-none bg-white/5 border border-white/10 flex items-center justify-center group-hover/row:border-primary/40 transition-colors duration-700">
+                      <Globe className="h-6 w-6 text-primary/40 group-hover/row:text-primary transition-colors" />
                     </div>
                     <div>
-                      <h4 className="font-bold text-sm">{market.region}</h4>
-                      <div className="flex items-center gap-2 mt-1">
-                        <Badge variant="outline" className="text-[9px]">
-                          {market.deals} deals
-                        </Badge>
-                        <span className={cn('text-[10px]', tokens.text.caption)}>
-                          {market.growth > 0 ? '+' : ''}{market.growth}% vs last period
+                      <h4 className="font-display font-black text-lg uppercase italic tracking-tight text-foreground group-hover/row:text-primary transition-colors leading-none mb-2">{market.region}</h4>
+                      <div className="flex items-center gap-6">
+                        <div className="px-2 py-0.5 border border-white/10 text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 italic">
+                          {market.deals}_ACTIVE_UNITS
+                        </div>
+                        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/30 italic">
+                          {market.growth > 0 ? '+' : ''}{market.growth}%_DELTA_VS_PERIOD_PREV
                         </span>
                       </div>
                     </div>
                   </div>
                   
-                  <div className="text-right">
-                    <p className="text-lg font-bold">{formatCurrency(market.revenue)}</p>
+                  <div className="text-right space-y-2">
+                    <p className="text-2xl font-display font-black italic tracking-tighter text-foreground leading-none">{formatCurrency(market.revenue)}</p>
                     <p className={cn(
-                      'text-[10px]',
+                      'text-[9px] font-black uppercase tracking-[0.2em] italic flex items-center justify-end gap-2',
                       market.trend === 'up' ? 'text-emerald-500' :
-                      market.trend === 'down' ? 'text-red-500' : 'text-muted-foreground'
+                      market.trend === 'down' ? 'text-rose-500' : 'text-muted-foreground/30'
                     )}>
-                      {market.trend === 'up' ? '↗ Growing' :
-                       market.trend === 'down' ? '↘ Declining' : '→ Stable'}
+                      {market.trend === 'up' && <Zap className="h-3 w-3 fill-current" />}
+                      {market.trend === 'up' ? 'STATUS_GROWING' :
+                       market.trend === 'down' ? 'STATUS_DECLINING' : 'STATUS_STABLE'}
+                      <ChevronRight className="h-3 w-3" />
                     </p>
                   </div>
                 </div>
-              </Card>
+              </div>
             ))}
           </div>
         )}
-      </Section>
+      </div>
     </div>
   );
 };

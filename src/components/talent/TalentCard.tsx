@@ -1,7 +1,7 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { HoverCard, HoverCardTrigger, HoverCardContent } from '@/components/ui/hover-card';
-import { Star, TrendingUp, TrendingDown, Package } from 'lucide-react';
+import { Star, TrendingUp, TrendingDown, Package, ShieldCheck, Target } from 'lucide-react';
 import { Talent } from '@/engine/types';
 import { formatMoney } from '@/engine/utils';
 import { AGENCY_ARCHETYPES } from '@/engine/data/archetypes';
@@ -54,63 +54,65 @@ export const TalentCard: React.FC<TalentCardProps> = ({
   };
 
   return (
-    <TooltipWrapper tooltip={tooltip || `View ${talent.name} Profile`} side="top">
+    <TooltipWrapper tooltip={tooltip || `VIEW ${talent.name.toUpperCase()} STRATEGIC PROFILE`} side="top">
       <div 
         onClick={handleClick}
         className={cn(
-          "p-5 border glass-card transition-all duration-500 group relative overflow-hidden cursor-pointer h-full flex flex-col",
+          "p-6 border rounded-none bg-white/[0.01] glass-card transition-all duration-700 group relative overflow-hidden cursor-pointer h-full flex flex-col shadow-2xl",
           talent.prestige >= 80
-            ? 'border-primary/30 shadow-2xl shadow-primary/5 bg-white/[0.03]'
-            : 'border-white/5 bg-white/[0.01]',
-          "hover:border-primary/50 hover:bg-white/[0.05] hover:-translate-y-1 active:scale-[0.98]",
+            ? 'border-primary/30 bg-white/[0.03] shadow-[0_0_40px_rgba(var(--primary),0.05)]'
+            : 'border-white/5',
+          "hover:border-primary/50 hover:bg-white/[0.05] active:scale-[0.98]",
           className
         )}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
         {/* Header: Portrait + Star Bar + Meta */}
-        <div className="flex gap-4 relative z-10 mb-6">
+        <div className="flex gap-6 relative z-10 mb-8">
           {/* Portrait Container */}
           <div className="relative shrink-0">
-            <TalentAvatar talent={talent} size="lg" className="rounded-xl border-white/10 group-hover:border-primary/30 transition-all duration-500" />
+            <TalentAvatar talent={talent} size="lg" className="rounded-none border border-white/10 group-hover:border-primary/40 transition-all duration-700 shadow-xl" />
             
             {/* Vertical Star Power Bar (Design Bible 13.1) */}
-            <div className="absolute -right-1 top-0 bottom-0 w-1.5 bg-white/5 rounded-full overflow-hidden border border-white/5">
+            <div className="absolute -right-2 top-0 bottom-0 w-2 bg-black/60 rounded-none overflow-hidden border border-white/5">
                <div 
-                 className="absolute bottom-0 left-0 right-0 bg-primary transition-all duration-1000 ease-out shadow-[0_0_8px_rgba(var(--primary),0.5)]" 
+                 className="absolute bottom-0 left-0 right-0 bg-primary transition-all duration-1000 ease-out shadow-[0_0_15px_rgba(var(--primary),0.6)]" 
                  style={{ height: `${starPower}%` }} 
-               />
+               >
+                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+               </div>
             </div>
           </div>
           
           <div className="flex-1 min-w-0 flex flex-col justify-between">
-            <div>
-              <div className="flex items-start justify-between gap-2 mb-1">
-                <h4 className="font-display font-black text-lg text-foreground tracking-tighter uppercase italic leading-none group-hover:text-primary transition-colors truncate">
+            <div className="space-y-3">
+              <div className="flex items-start justify-between gap-2">
+                <h4 className="font-display font-black text-xl text-foreground/90 tracking-tighter uppercase italic leading-none group-hover:text-primary transition-all duration-700 truncate drop-shadow-[0_0_10px_rgba(255,255,255,0.05)]">
                   {talent.name}
                 </h4>
               </div>
               
-              <div className="flex items-center gap-2 mb-3">
-                 <Badge className="bg-primary text-black font-black uppercase tracking-widest text-[8px] h-4 border-none px-1.5">
+              <div className="flex items-center gap-3">
+                 <div className="bg-primary text-black font-black uppercase tracking-[0.2em] text-[8px] h-5 border-none px-2 flex items-center justify-center rounded-none italic shadow-[0_0_10px_rgba(var(--primary),0.2)]">
                    {talent.roles[0]}
-                 </Badge>
+                 </div>
                  {talent.hasRazzie && (
-                    <Badge className="bg-destructive text-white font-black uppercase tracking-widest text-[8px] h-4 border-none px-1.5">RAZZIE</Badge>
+                    <div className="bg-red-500 text-white font-black uppercase tracking-[0.2em] text-[8px] h-5 border-none px-2 flex items-center justify-center rounded-none italic shadow-[0_0_10px_rgba(239,68,68,0.2)]">RAZZIE</div>
                  )}
               </div>
             </div>
 
-            <div className="space-y-1.5">
-               <div className="flex items-center gap-2">
-                 <span className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-[0.2em]">{visualAge}y {genderSymbol}</span>
-                 <span className="w-1 h-1 rounded-full bg-white/10" />
-                 <span className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-[0.2em] truncate">{talent.demographics.country}</span>
+            <div className="space-y-2">
+               <div className="flex items-center gap-3">
+                 <span className="text-[9px] font-black text-muted-foreground/30 uppercase tracking-[0.25em] italic">{visualAge}Y {genderSymbol}</span>
+                 <span className="w-1 h-1 bg-white/10" />
+                 <span className="text-[9px] font-black text-muted-foreground/30 uppercase tracking-[0.25em] truncate italic">{talent.demographics.country.toUpperCase()}</span>
                </div>
                {agency && (
-                  <p className="text-[9px] font-black text-secondary uppercase tracking-[0.15em] flex items-center gap-1.5 truncate">
-                    {agency.name}
-                    {isPackager && <Package className="w-2.5 h-2.5 text-secondary animate-pulse" />}
+                  <p className="text-[9px] font-black text-secondary uppercase tracking-[0.2em] flex items-center gap-2 truncate italic group-hover:text-secondary/80 transition-all duration-700">
+                    {agency.name.toUpperCase()}
+                    {isPackager && <Package className="w-3 h-3 text-secondary animate-pulse" />}
                   </p>
                )}
             </div>
@@ -118,22 +120,22 @@ export const TalentCard: React.FC<TalentCardProps> = ({
         </div>
 
         {/* Tactical Metrics Grid */}
-        <div className="grid grid-cols-2 gap-x-4 gap-y-4 pt-5 border-t border-white/5 relative z-10 mt-auto">
-          <div className="space-y-1">
-            <div className="text-[8px] uppercase font-black tracking-[0.2em] text-muted-foreground/40">Market Ask</div>
-            <div className="font-display font-black text-sm text-success tracking-tighter">{formatMoney(talent.fee)}</div>
+        <div className="grid grid-cols-2 gap-x-6 gap-y-6 pt-6 border-t border-white/5 relative z-10 mt-auto">
+          <div className="space-y-2">
+            <div className="text-[8px] uppercase font-black tracking-[0.3em] text-muted-foreground/20 italic">MARKET ASK</div>
+            <div className="font-display font-black text-sm text-emerald-400 tracking-tighter italic leading-none">{formatMoney(talent.fee).toUpperCase()}</div>
           </div>
-          <div className="space-y-1 text-right">
-            <div className="text-[8px] uppercase font-black tracking-[0.2em] text-muted-foreground/40">Prestige</div>
-            <div className="font-display font-black text-sm text-primary tracking-tighter">★ {talent.prestige}</div>
+          <div className="space-y-2 text-right">
+            <div className="text-[8px] uppercase font-black tracking-[0.3em] text-muted-foreground/20 italic">PRESTIGE</div>
+            <div className="font-display font-black text-sm text-primary tracking-tighter italic leading-none drop-shadow-[0_0_10px_rgba(var(--primary),0.3)]">★ {talent.prestige}</div>
           </div>
-          <div className="space-y-1">
-            <div className="text-[8px] uppercase font-black tracking-[0.2em] text-muted-foreground/40">BO Draw</div>
-            <div className="font-display font-black text-sm text-foreground/80 tracking-tighter">{talent.draw}</div>
+          <div className="space-y-2">
+            <div className="text-[8px] uppercase font-black tracking-[0.3em] text-muted-foreground/20 italic">BO DRAW</div>
+            <div className="font-display font-black text-sm text-foreground/70 tracking-tighter italic leading-none">{talent.draw}</div>
           </div>
-          <div className="space-y-1 text-right">
-            <div className="text-[8px] uppercase font-black tracking-[0.2em] text-muted-foreground/40">Vibe</div>
-            <div className="font-display font-black text-sm text-foreground/80 tracking-tighter uppercase italic">
+          <div className="space-y-2 text-right">
+            <div className="text-[8px] uppercase font-black tracking-[0.3em] text-muted-foreground/20 italic">VIBE</div>
+            <div className="font-display font-black text-sm text-foreground/70 tracking-tighter uppercase italic leading-none">
               {talent.psychology?.mood > 70 ? 'PEAK' : talent.psychology?.mood > 40 ? 'STEADY' : 'VOLATILE'}
             </div>
           </div>

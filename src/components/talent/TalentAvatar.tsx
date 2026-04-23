@@ -34,10 +34,10 @@ const BORDER_SIZE_MAP = {
 // Role → icon + tint mapping. Tints lean on existing semantic tokens
 // so they shift correctly with theme changes.
 const ROLE_BADGE: Record<string, { Icon: LucideIcon; label: string; tint: string }> = {
-  director:  { Icon: Clapperboard, label: 'Director',  tint: 'bg-primary text-primary-foreground' },
-  writer:    { Icon: PenLine,      label: 'Writer',    tint: 'bg-secondary text-secondary-foreground' },
-  actor:     { Icon: Mic,          label: 'Actor',     tint: 'bg-accent text-accent-foreground' },
-  producer:  { Icon: Briefcase,    label: 'Producer',  tint: 'bg-muted text-foreground' },
+  director:  { Icon: Clapperboard, label: 'Director',  tint: 'bg-primary text-black' },
+  writer:    { Icon: PenLine,      label: 'Writer',    tint: 'bg-secondary text-black' },
+  actor:     { Icon: Mic,          label: 'Actor',     tint: 'bg-accent text-black' },
+  producer:  { Icon: Briefcase,    label: 'Producer',  tint: 'bg-white text-black' },
 };
 
 const BADGE_SIZE_MAP = {
@@ -76,34 +76,34 @@ export const TalentAvatar: React.FC<TalentAvatarProps> = React.memo(({
   return (
     <div
       className={cn(
-        "rounded-full shrink-0",
-        "bg-gradient-to-br from-slate-800/80 to-slate-950/90",
-        "backdrop-blur-sm",
+        "rounded-none shrink-0",
+        "bg-gradient-to-br from-slate-900 to-black",
+        "backdrop-blur-3xl",
         BORDER_SIZE_MAP[size],
-        "border-white/20",
-        "shadow-[0_8px_16px_-6px_rgba(var(--foreground),0.5)]",
-        "relative group transition-transform duration-500 hover:scale-105",
+        "border-white/10",
+        "shadow-2xl",
+        "relative group transition-all duration-700 hover:border-primary/40",
         className
       )}
       style={{ width: pixelSize, height: pixelSize }}
       aria-label={`Avatar for ${talent.name}`}
     >
       <div
-        className="w-full h-full rounded-full overflow-hidden"
+        className="w-full h-full rounded-none overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-700"
         dangerouslySetInnerHTML={{ __html: svgMarkup }}
       />
       {showBadge && (
         <div
           className={cn(
-            "absolute -bottom-0.5 -right-0.5 rounded-full flex items-center justify-center",
-            "ring-2 ring-background shadow-md",
+            "absolute -bottom-1 -right-1 rounded-none flex items-center justify-center",
+            "ring-1 ring-white/10 shadow-2xl",
             badgeSize.box,
             badge.tint,
           )}
           title={badge.label}
           aria-label={badge.label}
         >
-          <badge.Icon className={badgeSize.icon} strokeWidth={2.5} />
+          <badge.Icon className={badgeSize.icon} strokeWidth={3} />
         </div>
       )}
     </div>

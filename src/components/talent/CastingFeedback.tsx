@@ -10,7 +10,8 @@ import {
   CheckCircle2,
   Brain,
   Star,
-  Zap
+  Zap,
+  ChevronRight
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -28,43 +29,44 @@ export const CastingFeedback: React.FC<CastingFeedbackProps> = ({ talent, projec
   const score = feedback.score;
 
   return (
-    <div className="glass-panel p-5 rounded-2xl border border-white/5 bg-black/40 space-y-5 animate-in slide-in-from-bottom-2 duration-300">
+    <div className="bg-white/[0.02] p-8 rounded-none border border-white/5 backdrop-blur-3xl space-y-8 animate-in slide-in-from-bottom-4 duration-700 shadow-2xl">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-           <Brain className="w-5 h-5 text-violet-400" />
-           <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">Talent Psychology Fit</span>
+        <div className="flex items-center gap-4">
+           <Brain className="w-4 h-4 text-primary" strokeWidth={3} />
+           <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 italic">PSYCHOLOGICAL_FIT_ANALYSIS</span>
         </div>
         <div className={cn(
-          "px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-xl",
-          score >= 70 ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" : 
-          score >= 40 ? "bg-amber-500/20 text-amber-500 border border-amber-500/30" : 
-          "bg-rose-500/20 text-rose-500 border border-rose-500/30"
+          "px-4 py-1.5 rounded-none text-[9px] font-black uppercase tracking-[0.2em] shadow-2xl italic border",
+          score >= 70 ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30" : 
+          score >= 40 ? "bg-amber-500/10 text-amber-500 border-amber-500/30" : 
+          "bg-rose-500/10 text-rose-500 border-rose-500/30"
         )}>
-          {score}% Agreement Likelihood
+          {score}%_CONTRACT_VELOCITY
         </div>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-4">
         {feedback.reasons.map((reason, idx) => (
-          <div key={idx} className="flex items-start gap-3 group">
-             <div className="mt-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-primary/40 group-hover:bg-primary transition-colors" />
+          <div key={idx} className="flex items-start gap-4 group">
+             <div className="mt-1.5">
+                <ChevronRight className="w-3 h-3 text-primary/40 group-hover:text-primary transition-colors" strokeWidth={3} />
              </div>
-             <p className="text-[11px] font-bold text-slate-400 leading-relaxed italic group-hover:text-slate-200 transition-colors">
-                "{reason}"
+             <p className="text-[11px] font-black text-muted-foreground/60 leading-relaxed italic group-hover:text-foreground transition-colors uppercase tracking-tight">
+                {reason.toUpperCase()}
              </p>
           </div>
         ))}
       </div>
 
       <div className={cn(
-        "p-4 rounded-xl border text-[10px] font-black uppercase tracking-widest flex items-center gap-3",
-        feedback.finalVerdict === 'willing' ? "bg-emerald-500/5 border-emerald-500/10 text-emerald-500/80" : 
-        feedback.finalVerdict === 'hesitant' ? "bg-amber-500/5 border-amber-500/10 text-amber-500/80" : 
-        "bg-rose-500/5 border-rose-500/10 text-rose-500/80"
+        "p-6 rounded-none border text-[10px] font-black uppercase tracking-[0.3em] flex items-center gap-4 italic shadow-2xl transition-all duration-700",
+        feedback.finalVerdict === 'willing' ? "bg-emerald-500/5 border-emerald-500/10 text-emerald-500" : 
+        feedback.finalVerdict === 'hesitant' ? "bg-amber-500/5 border-amber-500/10 text-amber-500" : 
+        "bg-rose-500/5 border-rose-500/10 text-rose-500"
       )}>
-        {feedback.finalVerdict === 'willing' ? <CheckCircle2 className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
-        Verdict: {feedback.finalVerdict === 'willing' ? 'Attached & Aggressive' : feedback.finalVerdict === 'hesitant' ? 'Soft Pass / Negotiation Required' : 'Hard Pass / Uninterested'}
+        {feedback.finalVerdict === 'willing' ? <Zap className="w-4 h-4 fill-current" /> : <AlertCircle className="w-4 h-4" />}
+        <span className="opacity-50">FINAL_VERDICT:</span>
+        {feedback.finalVerdict === 'willing' ? 'ATTACHED_&_AGGRESSIVE' : feedback.finalVerdict === 'hesitant' ? 'NEGOTIATION_REQUIRED' : 'CONTRACT_REJECTED'}
       </div>
     </div>
   );

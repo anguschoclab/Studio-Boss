@@ -2,18 +2,19 @@ import React from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Flame, TrendingUp, TrendingDown, Minus, Snowflake } from 'lucide-react';
+import { Flame, TrendingUp, TrendingDown, Minus, Snowflake, Activity, Zap } from 'lucide-react';
 import { GenreTrend } from '@/engine/types';
+import { cn } from '@/lib/utils';
 
 export function TrendBoard() {
   const trends = useGameStore(state => state.gameState?.market.trends) || [];
   
   if (trends.length === 0) {
     return (
-      <Card className="border-border/40 bg-card/40 backdrop-blur-md shadow-sm">
+      <Card className="rounded-none border-white/5 bg-white/[0.01] backdrop-blur-3xl shadow-2xl">
         <CardHeader>
-          <CardTitle className="font-display tracking-tight">Market Trends</CardTitle>
-          <CardDescription>Audience tastes are currently unpredictable.</CardDescription>
+          <CardTitle className="font-display font-black uppercase italic tracking-[0.2em] text-primary/60">MARKET_SENTIMENT_SCAN</CardTitle>
+          <CardDescription className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/30 italic">AUDIENCE_TASTES_CURRENTLY_UNPREDICTABLE.</CardDescription>
         </CardHeader>
       </Card>
     );
@@ -21,40 +22,45 @@ export function TrendBoard() {
 
   const getTrendIcon = (t: GenreTrend) => {
     switch(t.direction) {
-      case 'rising': return <TrendingUp className="w-4 h-4 text-green-500 drop-shadow-[0_0_4px_rgba(34,197,94,0.4)]" />;
-      case 'cooling': return <TrendingDown className="w-4 h-4 text-blue-400 drop-shadow-[0_0_4px_rgba(96,165,250,0.4)]" />;
-      case 'dead': return <Snowflake className="w-4 h-4 text-slate-300" />;
+      case 'rising': return <TrendingUp className="w-3.5 h-3.5 text-emerald-500 drop-shadow-[0_0_8px_rgba(16,185,129,0.4)]" strokeWidth={3} />;
+      case 'cooling': return <TrendingDown className="w-3.5 h-3.5 text-rose-500 drop-shadow-[0_0_8px_rgba(244,63,94,0.4)]" strokeWidth={3} />;
+      case 'dead': return <Snowflake className="w-3.5 h-3.5 text-slate-500" strokeWidth={3} />;
       case 'stable': 
-        if (t.heat > 80) return <Flame className="w-4 h-4 text-orange-500 drop-shadow-[0_0_4px_rgba(249,115,22,0.4)] animate-pulse" />;
-        return <Minus className="w-4 h-4 text-muted-foreground" />;
+        if (t.heat > 80) return <Flame className="w-3.5 h-3.5 text-orange-500 drop-shadow-[0_0_8px_rgba(249,115,22,0.4)] animate-pulse" strokeWidth={3} />;
+        return <Minus className="w-3.5 h-3.5 text-muted-foreground/40" strokeWidth={3} />;
       default: return null;
     }
   };
 
   const getHeatBadge = (heat: number) => {
-    if (heat > 80) return <Badge className="bg-orange-500/10 text-orange-500 border-orange-500/30 hover:bg-orange-500/20 text-[10px] uppercase font-bold tracking-widest px-1.5 py-0 shadow-[0_0_8px_rgba(249,115,22,0.2)]">Sizzling</Badge>;
-    if (heat > 50) return <Badge variant="secondary" className="text-[10px] uppercase font-bold tracking-widest px-1.5 py-0 bg-secondary/20 text-secondary hover:bg-secondary/30">Warm</Badge>;
-    if (heat > 20) return <Badge variant="outline" className="text-[10px] uppercase font-bold tracking-widest px-1.5 py-0 border-border/60">Cool</Badge>;
-    return <Badge variant="destructive" className="text-[10px] uppercase font-bold tracking-widest px-1.5 py-0 bg-destructive/10 text-destructive border-destructive/30 hover:bg-destructive/20 shadow-[0_0_8px_rgba(239,68,68,0.2)]">Cold</Badge>;
+    if (heat > 80) return <div className="px-2 py-0.5 bg-orange-500 text-black text-[8px] font-black uppercase tracking-[0.2em] italic shadow-2xl">SIZZLING</div>;
+    if (heat > 50) return <div className="px-2 py-0.5 bg-primary text-black text-[8px] font-black uppercase tracking-[0.2em] italic shadow-2xl">WARM</div>;
+    if (heat > 20) return <div className="px-2 py-0.5 bg-white/10 text-white/40 border border-white/10 text-[8px] font-black uppercase tracking-[0.2em] italic">STABLE</div>;
+    return <div className="px-2 py-0.5 bg-rose-950 text-rose-500 border border-rose-500/30 text-[8px] font-black uppercase tracking-[0.2em] italic shadow-2xl">COLLAPSED</div>;
   };
 
   return (
-    <Card className="h-full border-border/40 bg-card/40 backdrop-blur-md shadow-sm hover:shadow-md hover:bg-card/60 transition-all duration-300">
-      <CardHeader className="pb-3 border-b border-border/30">
-        <CardTitle className="text-sm font-display font-black uppercase tracking-widest text-foreground/80 flex items-center gap-2">
-          <Flame className="w-4 h-4 text-orange-400 drop-shadow-[0_0_5px_rgba(251,146,60,0.5)] animate-pulse" /> Market Pulse
+    <Card className="h-full rounded-none border-white/5 bg-white/[0.01] backdrop-blur-3xl shadow-2xl hover:bg-white/[0.03] transition-all duration-700 overflow-hidden relative group">
+      <div className="absolute top-0 right-0 p-8 opacity-[0.02] group-hover:opacity-[0.05] transition-opacity">
+        <Activity className="h-32 w-32 text-primary" strokeWidth={1} />
+      </div>
+      <CardHeader className="pb-6 border-b border-white/5 relative z-10">
+        <CardTitle className="text-sm font-display font-black uppercase italic tracking-[0.4em] text-primary/60 flex items-center gap-4">
+          <Zap className="w-4 h-4 text-primary fill-current" strokeWidth={3} /> MARKET_PULSE_ARRAY
         </CardTitle>
       </CardHeader>
-      <CardContent className="pt-3">
-        <div className="space-y-2">
+      <CardContent className="pt-8 relative z-10">
+        <div className="space-y-4">
           {trends.map(t => (
-            <div key={t.genre} className="flex items-center justify-between p-2.5 rounded-lg bg-card/50 border border-border/40 shadow-sm hover:border-primary/30 transition-colors group">
-              <div className="flex items-center gap-2.5">
-                <span className="font-semibold text-sm group-hover:text-primary transition-colors">{t.genre}</span>
+            <div key={t.genre} className="flex items-center justify-between p-4 rounded-none bg-white/[0.02] border border-white/5 hover:border-primary/40 transition-all duration-700 group/item">
+              <div className="flex items-center gap-4">
+                <span className="font-display font-black text-xs uppercase italic tracking-widest text-foreground/80 group-hover/item:text-primary transition-colors">{t.genre}</span>
                 {getTrendIcon(t)}
               </div>
-              <div className="flex items-center gap-3">
-                <span className="text-[11px] font-mono font-medium text-muted-foreground bg-muted/50 px-1.5 py-0.5 rounded shadow-inner">{(0.8 + ((t.heat / 100) * 0.7)).toFixed(2)}x</span>
+              <div className="flex items-center gap-6">
+                <span className="text-[10px] font-black text-muted-foreground/30 uppercase tracking-widest italic">
+                  VAL: <span className="text-foreground">{(0.8 + ((t.heat / 100) * 0.7)).toFixed(2)}X</span>
+                </span>
                 {getHeatBadge(t.heat)}
               </div>
             </div>

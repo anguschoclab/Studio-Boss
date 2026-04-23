@@ -3,7 +3,7 @@ import { TimeSeriesChart } from '@/components/charts/TimeSeriesChart';
 import { Card } from '@/components/ui/card';
 import { tokens } from '@/lib/tokens';
 import { cn } from '@/lib/utils';
-import { TrendingUp, TrendingDown, Flame, Snowflake } from 'lucide-react';
+import { TrendingUp, TrendingDown, Flame, Snowflake, Activity } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useGameStore } from '@/store/gameStore';
 import { selectMarketTrends } from '@/store/selectors';
@@ -39,7 +39,7 @@ export const GenreTrendLine: React.FC<GenreTrendLineProps> = ({
     heat: t.heat || 50
   }));
   
-  const genre = externalGenre || genreTrends[0]?.genre || 'Action';
+  const genre = externalGenre || genreTrends[0]?.genre || 'ACTION';
   
   // Determine trend from data
   const trend = externalTrend || (() => {
@@ -64,9 +64,9 @@ export const GenreTrendLine: React.FC<GenreTrendLineProps> = ({
 
   const getTrendIcon = () => {
     switch (trend) {
-      case 'rising': return <TrendingUp className="h-4 w-4 text-red-500" />;
-      case 'cooling': return <TrendingDown className="h-4 w-4 text-blue-500" />;
-      default: return <Snowflake className="h-4 w-4 text-slate-400" />;
+      case 'rising': return <TrendingUp className="h-4 w-4 text-emerald-400" strokeWidth={2.5} />;
+      case 'cooling': return <TrendingDown className="h-4 w-4 text-red-400" strokeWidth={2.5} />;
+      default: return <Activity className="h-4 w-4 text-muted-foreground/20" strokeWidth={2.5} />;
     }
   };
 
@@ -74,68 +74,80 @@ export const GenreTrendLine: React.FC<GenreTrendLineProps> = ({
     switch (trend) {
       case 'rising':
         return (
-          <Badge className="text-[9px] bg-red-500/20 text-red-500">
-            <Flame className="h-3 w-3 mr-1" />
-            Hot
-          </Badge>
+          <div className="px-2 py-1 bg-emerald-400/10 border border-emerald-400/20 text-emerald-400 text-[8px] font-black uppercase tracking-[0.2em] italic flex items-center gap-1.5 rounded-none">
+            <Flame className="h-3 w-3" />
+            HOT
+          </div>
         );
       case 'cooling':
         return (
-          <Badge className="text-[9px] bg-blue-500/20 text-blue-500">
-            <Snowflake className="h-3 w-3 mr-1" />
-            Cooling
-          </Badge>
+          <div className="px-2 py-1 bg-red-400/10 border border-red-400/20 text-red-400 text-[8px] font-black uppercase tracking-[0.2em] italic flex items-center gap-1.5 rounded-none">
+            <Snowflake className="h-3 w-3" />
+            COOLING
+          </div>
         );
       default:
-        return <Badge variant="outline" className="text-[9px]">Stable</Badge>;
+        return (
+          <div className="px-2 py-1 bg-white/5 border border-white/10 text-muted-foreground/40 text-[8px] font-black uppercase tracking-[0.2em] italic rounded-none">
+            STABLE
+          </div>
+        );
     }
   };
 
   const getHeatColor = (heat: number) => {
-    if (heat >= 80) return '#ef4444';
-    if (heat >= 60) return '#f59e0b';
-    if (heat >= 40) return '#3b82f6';
-    return '#94a3b8';
+    if (heat >= 80) return '#10b981'; // Hot = Emerald (Rising)
+    if (heat >= 60) return '#34d399';
+    if (heat >= 40) return 'rgba(var(--primary), 1)';
+    return '#ef4444'; // Cooling = Red
   };
 
   return (
-    <Card className={cn('p-3', tokens.border.default, className)}>
-      <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center gap-2">
-          <span className="font-bold text-sm">{genre}</span>
+    <div className={cn('glass-card p-6 rounded-2xl group transition-all duration-700 hover:bg-white/[0.03]', className)}>
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-4">
+          <span className="font-display font-black text-lg italic tracking-tighter uppercase leading-none">{genre}</span>
           {getTrendBadge()}
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex items-baseline gap-1.5">
           <span 
-            className="text-lg font-bold"
+            className="text-3xl font-display font-black italic tracking-tighter drop-shadow-[0_0_10px_rgba(255,255,255,0.1)]"
             style={{ color: getHeatColor(currentHeat) }}
           >
             {currentHeat}
           </span>
-          <span className="text-[10px] text-muted-foreground">/100</span>
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/10 italic">/ 100</span>
         </div>
       </div>
 
-      <TimeSeriesChart
-        data={chartData}
-        height={80}
-        lineColor={getHeatColor(currentHeat)}
-        showArea={true}
-        showGrid={false}
-        valueFormatter={(v) => `${v}`}
-      />
-
-      <div className="flex items-center justify-between mt-2 text-[10px]">
-        <span className={cn(
-          'font-medium',
-          change > 0 ? 'text-red-500' : change < 0 ? 'text-blue-500' : 'text-slate-400'
-        )}>
-          {change > 0 ? '+' : ''}{change} this week
-        </span>
-        {getTrendIcon()}
+      <div className="bg-white/[0.01] border border-white/5 p-4 mb-6 relative overflow-hidden">
+        <TimeSeriesChart
+          data={chartData}
+          height={100}
+          lineColor={getHeatColor(currentHeat)}
+          showArea={true}
+          showGrid={false}
+          valueFormatter={(v) => `${v}`}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
       </div>
-    </Card>
+
+      <div className="flex items-center justify-between text-[9px] font-black uppercase tracking-[0.3em] italic">
+        <span className={cn(
+          'transition-colors duration-700',
+          change > 0 ? 'text-emerald-400' : change < 0 ? 'text-red-400' : 'text-muted-foreground/10'
+        )}>
+          {change > 0 ? '+' : ''}{change} <span className="text-muted-foreground/20">THIS WEEK</span>
+        </span>
+        <div className="flex items-center gap-3">
+          <span className="text-muted-foreground/10">MKT TREND</span>
+          {getTrendIcon()}
+        </div>
+      </div>
+    </div>
   );
 };
+
+export default GenreTrendLine;
 
 export default GenreTrendLine;

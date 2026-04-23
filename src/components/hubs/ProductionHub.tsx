@@ -20,7 +20,10 @@ import {
   Handshake,
   Tv,
   BarChart3,
-  CheckCircle2
+  CheckCircle2,
+  Zap,
+  Target,
+  ArrowRight
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { StreamingPerformancePanel } from './production/StreamingPerformancePanel';
@@ -66,39 +69,40 @@ const DevelopmentPanel = () => {
   };
 
   return (
-    <Stack direction="vertical" gap="lg">
+    <Stack direction="vertical" gap="xl" className="animate-in fade-in duration-700">
       <div className={cn(
-        'flex items-center justify-between p-5 rounded-xl',
-        tokens.bg.secondary,
-        tokens.border.default
+        'flex items-center justify-between p-10 rounded-none border border-white/5 bg-white/[0.01] backdrop-blur-3xl shadow-2xl relative overflow-hidden',
       )}>
-        <Stack direction="vertical" gap="xs">
-          <h3 className={tokens.text.title}>Development Queue</h3>
-          <p className={tokens.text.caption}>
-            {developmentProjects.length} projects in development • {needsGreenlight} awaiting greenlight
+        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-3xl -mr-16 -mt-16" />
+        
+        <Stack direction="vertical" gap="sm" className="relative z-10">
+          <h3 className="text-xl font-display font-black uppercase italic tracking-tight text-foreground">DEVELOPMENT_QUEUE</h3>
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 italic">
+            {developmentProjects.length} PROJECTS IN DEVELOPMENT • {needsGreenlight} AWAITING GREENLIGHT
           </p>
         </Stack>
         <Button
           onClick={openCreateProject}
-          className={cn('h-10 px-5 gap-2', patterns.button.primary)}
+          className="h-14 px-10 bg-primary text-black hover:bg-primary/90 font-black uppercase italic tracking-[0.2em] text-[10px] rounded-none shadow-[0_0_20px_rgba(var(--primary),0.2)] group transition-all duration-700"
         >
-          <Plus className="h-4 w-4" />
-          <span className={tokens.text.label}>New IP Concept</span>
+          <Plus className="h-4 w-4 mr-3 group-hover:rotate-90 transition-transform" strokeWidth={3} />
+          NEW_IP_CONCEPT
         </Button>
       </div>
 
       {needsGreenlight > 0 && (
         <div className={cn(
-          'flex items-center gap-3 p-4 rounded-lg',
-          'bg-amber-500/10 border border-amber-500/20'
+          'flex items-center gap-6 p-8 rounded-none',
+          'bg-amber-500/5 border border-amber-500/20 shadow-[0_0_30px_rgba(245,158,11,0.05)] relative overflow-hidden animate-pulse'
         )}>
-          <AlertTriangle className="h-5 w-5 text-amber-500" />
-          <div>
-            <p className="text-sm font-bold text-amber-500">
-              {needsGreenlight} project{needsGreenlight > 1 ? 's' : ''} ready for greenlight
+           <div className="absolute top-0 left-0 w-1 h-full bg-amber-500" />
+          <AlertTriangle className="h-8 w-8 text-amber-500" strokeWidth={1} />
+          <div className="space-y-1">
+            <p className="text-sm font-black text-amber-500 uppercase tracking-[0.1em] italic leading-none">
+              {needsGreenlight} PROJECT{needsGreenlight > 1 ? 'S' : ''} READY FOR GREENLIGHT
             </p>
-            <p className={cn(tokens.text.caption, 'text-amber-500/70')}>
-              Review in Slate tab to approve
+            <p className="text-[9px] font-black uppercase tracking-[0.3em] text-amber-500/40 italic leading-none">
+              REVIEW IN SLATE TAB TO APPROVE
             </p>
           </div>
         </div>
@@ -106,22 +110,22 @@ const DevelopmentPanel = () => {
 
       {/* Script Pipeline */}
       <Section
-        title="Script Development Pipeline"
-        subtitle="Track scripts from concept to final draft"
+        title="SCRIPT_DEVELOPMENT_PIPELINE"
+        subtitle="TRACK SCRIPTS FROM CONCEPT TO FINAL DRAFT"
         icon={Film}
       >
-        <React.Suspense fallback={<SkeletonPage contentCards={2} />}>
+        <React.Suspense fallback={<div className="py-20 text-center font-display font-black text-muted-foreground/10 animate-pulse uppercase tracking-[0.5em] italic">INITIALIZING PIPELINE...</div>}>
           <ScriptList scripts={[]} />
         </React.Suspense>
       </Section>
 
       {/* Greenlight Queue */}
       <Section
-        title="Greenlight Queue"
-        subtitle={`${needsGreenlight} project${needsGreenlight > 1 ? 's' : ''} awaiting approval`}
+        title="GREENLIGHT_QUEUE"
+        subtitle={`${needsGreenlight} PROJECT${needsGreenlight > 1 ? 'S' : ''} AWAITING APPROVAL`}
         icon={CheckCircle2}
       >
-        <React.Suspense fallback={<SkeletonPage contentCards={2} />}>
+        <React.Suspense fallback={<div className="py-20 text-center font-display font-black text-muted-foreground/10 animate-pulse uppercase tracking-[0.5em] italic">INITIALIZING QUEUE...</div>}>
           <GreenlightQueue
             projects={developmentProjects.filter(p => p.state === 'needs_greenlight')}
             onReview={handleReview}
@@ -157,7 +161,7 @@ const SlatePanel = () => {
   const [showLocations, setShowLocations] = useState(false);
 
   return (
-    <div className="h-full flex flex-col gap-4 overflow-y-auto custom-scrollbar pb-4">
+    <div className="h-full flex flex-col gap-10 overflow-y-auto custom-scrollbar pr-6 pb-20 animate-in fade-in duration-700">
       {strikeEvent && (
         <WriterStrikeImpact
           strike={{
@@ -172,17 +176,17 @@ const SlatePanel = () => {
         />
       )}
       <div className="flex-1 min-h-0">
-        <React.Suspense fallback={<SkeletonPage contentCards={3} />}>
+        <React.Suspense fallback={<div className="py-20 text-center font-display font-black text-muted-foreground/10 animate-pulse uppercase tracking-[0.5em] italic">INITIALIZING SLATE...</div>}>
           <PipelineBoard />
         </React.Suspense>
       </div>
-      <div>
+      <div className="pt-10 border-t border-white/5">
         <button
-          className="text-xs font-bold uppercase tracking-wider text-muted-foreground hover:text-foreground flex items-center gap-1 mb-2"
+          className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 hover:text-primary flex items-center gap-4 mb-6 italic transition-all duration-700"
           onClick={() => setShowLocations(v => !v)}
         >
-          <AlertTriangle className="h-3.5 w-3.5" />
-          {showLocations ? 'Hide' : 'Show'} Location Scout
+          <Target className="h-4 w-4" strokeWidth={3} />
+          {showLocations ? 'CLOSE' : 'OPEN'} LOCATION_SCOUT_MODULE
         </button>
         {showLocations && <LocationScoutPanel locations={[]} selectedLocations={[]} />}
       </div>
@@ -215,28 +219,28 @@ const DistributionPanel = () => {
   }, [gameState]);
   
   const tabs = [
-    { id: 'deals', label: 'Deals Desk', icon: <Handshake className="h-3.5 w-3.5" /> },
-    { id: 'streaming', label: 'Streaming', icon: <Tv className="h-3.5 w-3.5" /> },
-    { id: 'nielsen', label: 'TV Ratings', icon: <BarChart3 className="h-3.5 w-3.5" /> },
-    { id: 'performance', label: 'Performance', icon: <BarChart3 className="h-3.5 w-3.5" /> },
+    { id: 'deals', label: 'DEALS DESK', icon: <Handshake className="h-3.5 w-3.5" /> },
+    { id: 'streaming', label: 'STREAMING', icon: <Tv className="h-3.5 w-3.5" /> },
+    { id: 'nielsen', label: 'TV RATINGS', icon: <BarChart3 className="h-3.5 w-3.5" /> },
+    { id: 'performance', label: 'PERFORMANCE', icon: <BarChart3 className="h-3.5 w-3.5" /> },
   ];
   
   return (
-    <div className="h-full flex flex-col space-y-4">
+    <div className="h-full flex flex-col space-y-10 animate-in fade-in duration-700">
       <SubNav 
-        tabs={tabs.map(t => ({ ...t, id: t.id }))}
+        tabs={tabs}
         activeTab={distTab}
         onChange={(id) => setDistTab(id as typeof distTab)}
         variant="pills"
       />
       
-      <div className="flex-1 min-h-0 overflow-hidden">
-        <React.Suspense fallback={<SkeletonPage contentCards={3} />}>
+      <div className="flex-1 min-h-0 overflow-hidden pr-6">
+        <React.Suspense fallback={<div className="py-20 text-center font-display font-black text-muted-foreground/10 animate-pulse uppercase tracking-[0.5em] italic">INITIALIZING DISTRIBUTION...</div>}>
           {distTab === 'deals' && <DealsDesk />}
           {distTab === 'streaming' && <StreamingPanel />}
           {distTab === 'nielsen' && <NielsenDashboard />}
           {distTab === 'performance' && (
-            <div className="h-full overflow-y-auto custom-scrollbar pb-4">
+            <div className="h-full overflow-y-auto custom-scrollbar pb-20">
               <StreamingPerformancePanel
                 projects={streamingProjects}
                 totalSubscribers={0}
@@ -282,25 +286,25 @@ export const ProductionHub: React.FC = () => {
   const tabs = [
     { 
       id: 'slate', 
-      label: 'Slate', 
+      label: 'SLATE', 
       badge: badgeCounts.slate,
       description: 'Active projects from development through release'
     },
     { 
       id: 'development', 
-      label: 'Development', 
+      label: 'DEVELOPMENT', 
       badge: badgeCounts.development,
       description: 'Script development and greenlight queue'
     },
     { 
       id: 'distribution', 
-      label: 'Distribution', 
+      label: 'DISTRIBUTION', 
       badge: badgeCounts.distribution,
       description: 'Active deals, streaming, and TV ratings'
     },
     { 
       id: 'catalog', 
-      label: 'Catalog', 
+      label: 'CATALOG', 
       badge: badgeCounts.catalog,
       description: 'Released projects, IP vault, and franchises'
     },
@@ -310,38 +314,38 @@ export const ProductionHub: React.FC = () => {
     switch (activeSubTab) {
       case 'slate':
         return {
-          icon: <LayoutGrid className="h-6 w-6 text-primary" />,
-          title: 'Production Slate',
-          subtitle: 'Active projects from development through release',
+          icon: <LayoutGrid className="h-8 w-8 text-primary" />,
+          title: 'PRODUCTION SLATE',
+          subtitle: 'ACTIVE PROJECTS FROM DEVELOPMENT THROUGH RELEASE',
           action: (
             <Button 
               onClick={openCreateProject}
-              className="h-9 px-4 font-display font-black uppercase tracking-widest text-[10px] gap-2"
+              className="h-12 px-8 bg-primary text-black hover:bg-primary/90 font-display font-black uppercase italic tracking-[0.2em] text-[10px] rounded-none shadow-[0_0_30px_rgba(var(--primary),0.2)] group transition-all duration-700"
             >
-              <Plus className="h-4 w-4" />
-              New Project
+              <Plus className="h-4 w-4 mr-3 group-hover:rotate-90 transition-transform" strokeWidth={3} />
+              NEW_PROJECT
             </Button>
           )
         };
       case 'development':
         return {
-          icon: <Film className="h-6 w-6 text-secondary" />,
-          title: 'Development Queue',
-          subtitle: 'Script development and greenlight review',
+          icon: <Film className="h-8 w-8 text-secondary" />,
+          title: 'DEVELOPMENT QUEUE',
+          subtitle: 'SCRIPT DEVELOPMENT AND GREENLIGHT REVIEW',
           action: null
         };
       case 'distribution':
         return {
-          icon: <Globe className="h-6 w-6 text-primary" />,
-          title: 'Distribution Hub',
-          subtitle: 'Deals desk, streaming platforms, and Nielsen ratings',
+          icon: <Globe className="h-8 w-8 text-primary" />,
+          title: 'DISTRIBUTION HUB',
+          subtitle: 'DEALS DESK, STREAMING PLATFORMS, AND NIELSEN RATINGS',
           action: null
         };
       case 'catalog':
         return {
-          icon: <Library className="h-6 w-6 text-secondary" />,
-          title: 'IP Catalog & Vault',
-          subtitle: 'Released projects, franchises, and library rights',
+          icon: <Library className="h-8 w-8 text-secondary" />,
+          title: 'IP CATALOG & VAULT',
+          subtitle: 'RELEASED PROJECTS, FRANCHISES, AND LIBRARY RIGHTS',
           action: null
         };
       default:
@@ -352,36 +356,37 @@ export const ProductionHub: React.FC = () => {
   const header = getHeaderContent();
   
   return (
-    <div className="h-full flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-500">
-      {/* Unified Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gradient-to-r from-white/5 to-transparent p-5 rounded-xl border border-white/5 backdrop-blur-md mb-4">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center shadow-[0_0_15px_hsl(var(--primary)/0.2)]">
+    <div className="h-full flex flex-col animate-in fade-in slide-in-from-bottom-8 duration-1000">
+      {/* Executive Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 bg-white/[0.02] p-10 rounded-none border border-white/5 backdrop-blur-3xl shadow-2xl relative overflow-hidden mb-10">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[120px] -mr-32 -mt-32" />
+        <div className="flex items-center gap-8 relative z-10">
+          <div className="w-16 h-16 rounded-none bg-primary/5 border border-primary/20 flex items-center justify-center shadow-2xl">
             {header.icon}
           </div>
           <div>
-            <h2 className="text-2xl font-black tracking-tighter uppercase leading-none">{header.title}</h2>
-            <p className="text-[11px] font-black uppercase text-muted-foreground/60 tracking-[0.2em] mt-1">
+            <h2 className="text-5xl font-display font-black tracking-tighter uppercase italic leading-none mb-3 drop-shadow-[0_0_30px_rgba(255,255,255,0.1)]">{header.title}</h2>
+            <p className="text-[10px] font-black uppercase text-muted-foreground/30 tracking-[0.4em] italic">
               {header.subtitle}
             </p>
           </div>
         </div>
         
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-6 relative z-10">
           {header.action}
-          <div className="hidden lg:block relative w-48">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+          <div className="hidden lg:block relative w-64">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/20" />
             <input 
               type="text" 
-              placeholder="Filter..."
-              className="w-full h-9 pl-9 pr-3 text-[11px] bg-black/40 border border-white/10 rounded-md uppercase font-bold tracking-wider focus:outline-none focus:border-primary/50"
+              placeholder="FILTER_SLATE..."
+              className="w-full h-12 pl-12 pr-4 text-[10px] bg-black/40 border border-white/10 rounded-none uppercase font-black tracking-[0.2em] italic focus:outline-none focus:border-primary/50 transition-all duration-700 placeholder:text-muted-foreground/5"
             />
           </div>
         </div>
       </div>
       
       {/* Sub Navigation */}
-      <div className="mb-4">
+      <div className="mb-10">
         <SubNav 
           tabs={tabs}
           activeTab={activeSubTab}
@@ -392,7 +397,7 @@ export const ProductionHub: React.FC = () => {
       
       {/* Content Area */}
       <div className="flex-1 min-h-0 overflow-hidden">
-        <React.Suspense fallback={<SkeletonPage contentCards={3} />}>
+        <React.Suspense fallback={<div className="flex items-center justify-center h-64 font-display font-black text-muted-foreground/10 animate-pulse uppercase tracking-[0.5em] italic">INITIALIZING MODULE...</div>}>
           {activeSubTab === 'slate' && <SlatePanel />}
           {activeSubTab === 'development' && <DevelopmentPanel />}
           {activeSubTab === 'distribution' && <DistributionPanel />}
