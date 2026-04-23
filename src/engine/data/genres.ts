@@ -11,123 +11,138 @@ export interface GenreCategory {
 
 export const GENRE_TAXONOMY: GenreCategory[] = [
   {
-    id: 'action_adventure',
-    name: 'Action & Adventure',
+    id: "action_adventure",
+    name: "Action & Adventure",
     subGenres: [
-      { id: 'action', name: 'Action' },
-      { id: 'superhero', name: 'Superhero' },
-      { id: 'martial_arts', name: 'Martial Arts' },
-      { id: 'epic', name: 'Epic' },
-      { id: 'video_game', name: 'Video Game Adaptation' }
-    ]
+      { id: "action", name: "Action" },
+      { id: "superhero", name: "Superhero" },
+      { id: "martial_arts", name: "Martial Arts" },
+      { id: "epic", name: "Epic" },
+      { id: "video_game", name: "Video Game Adaptation" },
+      { id: "cinematic_universe", name: "Cinematic Universe" },
+    ],
   },
   {
-    id: 'comedy',
-    name: 'Comedy',
+    id: "comedy",
+    name: "Comedy",
     subGenres: [
-      { id: 'rom_com', name: 'Rom-Com' },
-      { id: 'satire', name: 'Satire' },
-      { id: 'slapstick', name: 'Slapstick' },
-      { id: 'dark_comedy', name: 'Dark Comedy' },
-      { id: 'sitcom', name: 'Sitcom' },
-      { id: 'ip_mashup', name: 'IP Mashup' }
-    ]
+      { id: "rom_com", name: "Rom-Com" },
+      { id: "satire", name: "Satire" },
+      { id: "slapstick", name: "Slapstick" },
+      { id: "dark_comedy", name: "Dark Comedy" },
+      { id: "sitcom", name: "Sitcom" },
+      { id: "ip_mashup", name: "IP Mashup" },
+    ],
   },
   {
-    id: 'drama',
-    name: 'Drama',
+    id: "drama",
+    name: "Drama",
     subGenres: [
-      { id: 'biopic', name: 'Biopic' },
-      { id: 'historical', name: 'Historical' },
-      { id: 'legal', name: 'Legal' },
-      { id: 'melodrama', name: 'Melodrama' },
-      { id: 'drama_standard', name: 'Drama' }
-    ]
+      { id: "biopic", name: "Biopic" },
+      { id: "historical", name: "Historical" },
+      { id: "legal", name: "Legal" },
+      { id: "melodrama", name: "Melodrama" },
+      { id: "drama_standard", name: "Drama" },
+    ],
   },
   {
-    id: 'horror_thriller',
-    name: 'Horror & Thriller',
+    id: "horror_thriller",
+    name: "Horror & Thriller",
     subGenres: [
-      { id: 'slasher', name: 'Slasher' },
-      { id: 'psychological', name: 'Psychological Thriller' },
-      { id: 'paranormal', name: 'Paranormal' },
-      { id: 'true_crime', name: 'True Crime' },
-      { id: 'horror_standard', name: 'Horror' },
-      { id: 'thriller_standard', name: 'Thriller' },
-      { id: 'elevated_horror', name: 'Elevated Horror' }
-    ]
+      { id: "slasher", name: "Slasher" },
+      { id: "psychological", name: "Psychological Thriller" },
+      { id: "paranormal", name: "Paranormal" },
+      { id: "true_crime", name: "True Crime" },
+      { id: "horror_standard", name: "Horror" },
+      { id: "thriller_standard", name: "Thriller" },
+      { id: "elevated_horror", name: "Elevated Horror" },
+    ],
   },
   {
-    id: 'scifi_fantasy',
-    name: 'Sci-Fi & Fantasy',
+    id: "scifi_fantasy",
+    name: "Sci-Fi & Fantasy",
     subGenres: [
-      { id: 'cyberpunk', name: 'Cyberpunk' },
-      { id: 'space_opera', name: 'Space Opera' },
-      { id: 'high_fantasy', name: 'High Fantasy' },
-      { id: 'dystopian', name: 'Dystopian' },
-      { id: 'scifi_standard', name: 'Sci-Fi' },
-      { id: 'fantasy_standard', name: 'Fantasy' },
-      { id: 'multiverse', name: 'Multiverse' }
-    ]
+      { id: "cyberpunk", name: "Cyberpunk" },
+      { id: "space_opera", name: "Space Opera" },
+      { id: "high_fantasy", name: "High Fantasy" },
+      { id: "dystopian", name: "Dystopian" },
+      { id: "scifi_standard", name: "Sci-Fi" },
+      { id: "fantasy_standard", name: "Fantasy" },
+      { id: "multiverse", name: "Multiverse" },
+    ],
   },
   {
-    id: 'unscripted',
-    name: 'Unscripted',
+    id: "unscripted",
+    name: "Unscripted",
     subGenres: [
-      { id: 'reality_competition', name: 'Reality Competition' },
-      { id: 'docuseries', name: 'Docuseries' },
-      { id: 'talk_show', name: 'Talk Show' },
-      { id: 'variety', name: 'Variety' }
-    ]
-  }
+      { id: "reality_competition", name: "Reality Competition" },
+      { id: "docuseries", name: "Docuseries" },
+      { id: "talk_show", name: "Talk Show" },
+      { id: "variety", name: "Variety" },
+    ],
+  },
 ];
 
 // Flat lists for backward compatibility where needed (will migration later)
-export const GENRES = GENRE_TAXONOMY.flatMap(cat => cat.subGenres.map(sg => sg.name));
+export const GENRES = GENRE_TAXONOMY.flatMap((cat) => cat.subGenres.map((sg) => sg.name));
 
 export const TARGET_AUDIENCES = [
-  'General Audience', 'Young Adults', 'Adults 25-54',
-  'Prestige / Critics', 'Family', 'Genre Fans',
+  "General Audience",
+  "Young Adults",
+  "Adults 25-54",
+  "Prestige / Critics",
+  "Family",
+  "Genre Fans",
 ] as const;
 
 export const CROSSOVER_AFFINITY: Record<string, string[]> = {
-  'Superhero': ['Action', 'Sci-Fi', 'Fantasy', 'Comedy', 'Animation', 'Crime', 'Horror'],
-  'Action': ['Sci-Fi', 'Thriller', 'Crime', 'Superhero', 'Comedy'],
-  'Sci-Fi': ['Action', 'Horror', 'Fantasy', 'Animation', 'Thriller', 'Video Game Adaptation'],
-  'Horror': ['Sci-Fi', 'Thriller', 'Comedy', 'Fantasy', 'Documentary'],
-  'Fantasy': ['Action', 'Romance', 'Animation', 'Sci-Fi'],
-  'Comedy': ['Romance', 'Action', 'Animation', 'Superhero', 'Musical', 'Horror'],
-  'Crime': ['Thriller', 'Drama', 'Action', 'Horror', 'Documentary'],
-  'Thriller': ['Horror', 'Crime', 'Sci-Fi', 'Drama', 'Action'],
-  'Romance': ['Comedy', 'Drama', 'Musical', 'Fantasy'],
-  'Animation': ['Comedy', 'Family', 'Musical', 'Fantasy', 'Sci-Fi', 'Superhero', 'Action'],
-  'Drama': ['Romance', 'Crime', 'Thriller', 'Documentary'],
-  'Musical': ['Romance', 'Comedy', 'Animation', 'Drama'],
-  'Documentary': ['Drama', 'Crime', 'Horror'],
-  'Unscripted': ['Comedy', 'Documentary', 'Drama'],
-  'Multiverse': ['Superhero', 'Sci-Fi', 'Fantasy', 'Action', 'Animation', 'IP Mashup'],
-  'Elevated Horror': ['Horror', 'Thriller', 'Drama', 'Psychological Thriller'],
-  'IP Mashup': ['Comedy', 'Action', 'Animation', 'Superhero', 'Multiverse'],
-  'Video Game Adaptation': ['Action', 'Sci-Fi', 'Fantasy', 'Animation']
+  Superhero: ["Action", "Sci-Fi", "Fantasy", "Comedy", "Animation", "Crime", "Horror"],
+  Action: ["Sci-Fi", "Thriller", "Crime", "Superhero", "Comedy"],
+  "Sci-Fi": ["Action", "Horror", "Fantasy", "Animation", "Thriller", "Video Game Adaptation"],
+  Horror: ["Sci-Fi", "Thriller", "Comedy", "Fantasy", "Documentary"],
+  Fantasy: ["Action", "Romance", "Animation", "Sci-Fi"],
+  Comedy: ["Romance", "Action", "Animation", "Superhero", "Musical", "Horror"],
+  Crime: ["Thriller", "Drama", "Action", "Horror", "Documentary"],
+  Thriller: ["Horror", "Crime", "Sci-Fi", "Drama", "Action"],
+  Romance: ["Comedy", "Drama", "Musical", "Fantasy"],
+  Animation: ["Comedy", "Family", "Musical", "Fantasy", "Sci-Fi", "Superhero", "Action"],
+  Drama: ["Romance", "Crime", "Thriller", "Documentary"],
+  Musical: ["Romance", "Comedy", "Animation", "Drama"],
+  Documentary: ["Drama", "Crime", "Horror"],
+  Unscripted: ["Comedy", "Documentary", "Drama"],
+  Multiverse: ["Superhero", "Sci-Fi", "Fantasy", "Action", "Animation", "IP Mashup"],
+  "Elevated Horror": ["Horror", "Thriller", "Drama", "Psychological Thriller"],
+  "IP Mashup": ["Comedy", "Action", "Animation", "Superhero", "Multiverse"],
+  "Video Game Adaptation": ["Action", "Sci-Fi", "Fantasy", "Animation"],
+  "Cinematic Universe": [
+    "Superhero",
+    "Sci-Fi",
+    "Fantasy",
+    "Action",
+    "Animation",
+    "IP Mashup",
+    "Multiverse",
+  ],
 };
 
 export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
-  'Superhero': 0.80,
-  'Action': 0.50,
-  'Sci-Fi': 0.45,
-  'Fantasy': 0.30,
-  'Horror': 0.15,
-  'Animation': 0.15,
-  'Comedy': 0.25,
-  'Drama': 0.05,
-  'Thriller': 0.15,
-  'Romance': 0.10,
-  'Documentary': 0.05,
-  'Crime': 0.20,
-  'Musical': 0.25,
-  'Unscripted': 0.30, // Reality/Unscripted can fatigue quickly if over-saturated
-  'Multiverse': 0.85, // Extremely high fatigue risk if overdone
-  'Elevated Horror': 0.20,
-  'IP Mashup': 0.70, // High burnout potential
-  'Video Game Adaptation': 0.60,
+  Superhero: 0.8,
+  Action: 0.5,
+  "Sci-Fi": 0.45,
+  Fantasy: 0.3,
+  Horror: 0.15,
+  Animation: 0.15,
+  Comedy: 0.25,
+  Drama: 0.05,
+  Thriller: 0.15,
+  Romance: 0.1,
+  Documentary: 0.05,
+  Crime: 0.2,
+  Musical: 0.25,
+  Unscripted: 0.3, // Reality/Unscripted can fatigue quickly if over-saturated
+  Multiverse: 0.85, // Extremely high fatigue risk if overdone
+  "Elevated Horror": 0.2,
+  "IP Mashup": 0.7, // High burnout potential
+  "Video Game Adaptation": 0.6,
+  "Cinematic Universe": 0.9, // Massive fatigue risk
 };
