@@ -13,12 +13,18 @@ export function calculateReviewScore(
   attachedTalent: Talent[],
   crises: ActiveCrisis | null | undefined
 ): number {
-  let baseScore = randRange(40, 70);
+  let baseScore = project.quality || project.momentum || randRange(40, 70);
 
-  // 1. Talent Prestige Bonus
+  // 1. Talent Prestige Bonus & Director Modifier
   if (attachedTalent.length > 0) {
     const talentBonus = attachedTalent.reduce((sum, t) => sum + t.prestige, 0) / attachedTalent.length * 0.3;
     baseScore += talentBonus;
+    
+    // Director Modifier
+    const director = attachedTalent.find(t => t.roles?.includes('director') || t.role === 'director');
+    if (director) {
+      baseScore += (director.prestige - 50) / 5;
+    }
   }
 
   // 2. Production Crises Penalty
@@ -33,7 +39,24 @@ export function calculateReviewScore(
     baseScore -= randRange(5, 12);
   }
 
-  return clamp(Math.round(baseScore + randRange(-5, 5)), 1, 100);
+  // 4. Indie Bias
+  if (project.budgetTier === 'indie' || project.budgetTier === 'low') {
+    baseScore += 5;
+  }
+
+  return clamp(Math.round(baseScore + randRange(-8, 8)), 1, 100);
+}
+
+export function checkCultPotential(project: Project, metaScore: number, audienceScore: number): boolean {
+  const revenue = project.revenue || 0;
+  const budget = project.budget || 1;
+  const genre = (project.genre || '').toLowerCase();
+  
+  const isGenreMatch = genre.includes('sci-fi') || genre.includes('horror');
+  const isFinancialFailure = revenue < (budget * 0.8);
+  const isAudienceDisparity = audienceScore > (metaScore + 30);
+
+  return isFinancialFailure && isAudienceDisparity && isGenreMatch;
 }
 
 export function calculateOpeningWeekend(
@@ -62,6 +85,11 @@ export function calculateOpeningWeekend(
   
   let effectiveGross = basePotential * randomFactor * franchiseSynergy; // Apply Halo Effect
   effectiveGross *= (1 - franchiseFatigue); // Apply Fatigue Penalty
+
+  // Apply Release Strategy Multiplier if set
+  if ((project as any).releaseStrategyMultiplier) {
+    effectiveGross *= (project as any).releaseStrategyMultiplier;
+  }
 
   // 2. Apply Marketing Efficiency
   const { multiplier, feedbackText } = evaluateMarketingEfficiency(project, campaign);

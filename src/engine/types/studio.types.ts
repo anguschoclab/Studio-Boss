@@ -47,10 +47,11 @@ export interface RivalStudio {
 }
 
 export interface StudioCulture {
-  prestigeVsCommercial: number; // -100 (prestige) to 100 (commercial)
-  talentFriendlyVsControlling: number; // -100 (friendly) to 100 (controlling)
-  nicheVsBroad: number; // -100 (niche) to 100 (broad)
-  filmFirstVsTvFirst: number; // -100 (film) to 100 (tv)
+  prestigeVsCommercial: number; // 0 (commercial) to 100 (prestige)
+  talentFriendlyVsControlling: number; // 0 to 100
+  nicheVsBroad: number; // 0 to 100
+  filmFirstVsTvFirst: number; // 0 to 100
+  franchiseOriginal: number; // 0 (original) to 100 (franchise)
 }
 
 export interface GameState {
@@ -83,11 +84,6 @@ export interface GameState {
     // Loan system
     loans?: import('./state.types').LoanRecord[];
     isBankrupt?: boolean;
-    // Studio identity axes (prestige vs commercial, franchise vs original)
-    identity?: {
-      prestigeCommercial: number; // 0=commercial, 100=prestige
-      franchiseOriginal: number;  // 0=originals, 100=franchise
-    };
     // Achievement tracking (array of unlocked achievement IDs)
     achievements?: string[];
   };

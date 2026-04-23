@@ -7,21 +7,24 @@ export function initializeCulture(archetype: ArchetypeKey): StudioCulture {
         prestigeVsCommercial: 80, // High prestige
         talentFriendlyVsControlling: 70, // Talent friendly
         nicheVsBroad: 20, // Niche
-        filmFirstVsTvFirst: 90 // Film focused
+        filmFirstVsTvFirst: 90, // Film focused
+        franchiseOriginal: 20 // Mostly originals
       };
     case 'major':
       return {
         prestigeVsCommercial: 30, // Commercial
         talentFriendlyVsControlling: 30, // Controlling
         nicheVsBroad: 90, // Broad
-        filmFirstVsTvFirst: 60 // Slight film bias
+        filmFirstVsTvFirst: 60, // Slight film bias
+        franchiseOriginal: 80 // Franchise focused
       };
     default:
       return {
         prestigeVsCommercial: 50,
         talentFriendlyVsControlling: 50,
         nicheVsBroad: 50,
-        filmFirstVsTvFirst: 50
+        filmFirstVsTvFirst: 50,
+        franchiseOriginal: 50
       };
   }
 }

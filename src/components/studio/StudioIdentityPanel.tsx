@@ -1,6 +1,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { getIdentityLabel, StudioIdentityAxes } from '@/engine/systems/StudioIdentitySystem';
+import { getIdentityLabel } from '@/engine/systems/StudioIdentitySystem';
+import { StudioCulture } from '@/engine/types';
 
 // ---------------------------------------------------------------------------
 // Identity label tooltip copy
@@ -77,18 +78,21 @@ const AxisBar: React.FC<AxisBarProps> = ({ leftLabel, rightLabel, value, leftCol
 // Main panel
 // ---------------------------------------------------------------------------
 interface StudioIdentityPanelProps {
-  /** Pass state.studio.identity — defaults to 50/50 if missing */
-  identity?: Partial<StudioIdentityAxes>;
+  /** Pass state.studio.culture */
+  culture?: Partial<StudioCulture>;
   className?: string;
 }
 
 export const StudioIdentityPanel: React.FC<StudioIdentityPanelProps> = ({
-  identity,
+  culture,
   className,
 }) => {
-  const axes: StudioIdentityAxes = {
-    prestigeCommercial: identity?.prestigeCommercial ?? 50,
-    franchiseOriginal: identity?.franchiseOriginal ?? 50,
+  const axes: StudioCulture = {
+    prestigeVsCommercial: culture?.prestigeVsCommercial ?? 50,
+    franchiseOriginal: culture?.franchiseOriginal ?? 50,
+    talentFriendlyVsControlling: culture?.talentFriendlyVsControlling ?? 50,
+    nicheVsBroad: culture?.nicheVsBroad ?? 50,
+    filmFirstVsTvFirst: culture?.filmFirstVsTvFirst ?? 50,
   };
 
   const label = getIdentityLabel(axes);
@@ -117,7 +121,7 @@ export const StudioIdentityPanel: React.FC<StudioIdentityPanelProps> = ({
         <AxisBar
           leftLabel="Commercial"
           rightLabel="Art House"
-          value={axes.prestigeCommercial}
+          value={axes.prestigeVsCommercial}
           leftColor="from-amber-500/60"
           rightColor="to-violet-500/80"
         />

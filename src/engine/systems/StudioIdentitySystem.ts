@@ -1,36 +1,26 @@
-import { GameState, StateImpact } from '@/engine/types';
+import { GameState, StateImpact, StudioCulture } from '@/engine/types';
 
 /**
  * StudioIdentitySystem
  *
- * Tracks two strategic axes for the studio:
- *   prestigeCommercial — 0 = pure commercial, 100 = pure prestige/art
- *   franchiseOriginal  — 0 = pure originals, 100 = pure franchise
- *
- * Both axes shift weekly based on recent releases (last 26 weeks).
+ * Tracks the strategic axes for the studio based on recent releases (last 26 weeks).
+ * This dynamically updates the state.studio.culture object.
  */
-
-export interface StudioIdentityAxes {
-  prestigeCommercial: number; // 0-100
-  franchiseOriginal: number;  // 0-100
-}
-
-const DEFAULT_AXES: StudioIdentityAxes = {
-  prestigeCommercial: 50,
-  franchiseOriginal: 50,
-};
 
 const NUDGE = 2; // Points shifted per week
 const WINDOW = 26; // Weeks of history to evaluate
 
 /**
- * Called weekly — adjusts identity axes based on recent releases then returns
- * a SYSTEM_TICK impact carrying the updated axes in payload.studioIdentity.
+ * Called weekly — adjusts culture axes based on recent releases then returns
+ * a SYSTEM_TICK impact carrying the updated culture.
  */
 export function tickStudioIdentity(state: GameState): StateImpact[] {
-  const current: StudioIdentityAxes = {
-    ...DEFAULT_AXES,
-    ...((state.studio as any).identity ?? {}),
+  const current: StudioCulture = state.studio.culture || {
+    prestigeVsCommercial: 50,
+    talentFriendlyVsControlling: 50,
+    nicheVsBroad: 50,
+    filmFirstVsTvFirst: 50,
+    franchiseOriginal: 50
   };
 
   const currentWeek = state.week;
@@ -41,74 +31,67 @@ export function tickStudioIdentity(state: GameState): StateImpact[] {
       p.releaseWeek > currentWeek - WINDOW,
   );
 
+  let newPC = current.prestigeVsCommercial;
+  let newFO = current.franchiseOriginal;
+
   if (recentReleases.length === 0) {
     // No recent releases — gently drift toward centre
-    const driftPC = current.prestigeCommercial > 50 ? -1 : current.prestigeCommercial < 50 ? 1 : 0;
-    const driftFO = current.franchiseOriginal > 50 ? -1 : current.franchiseOriginal < 50 ? 1 : 0;
-    return [buildImpact(clampAxes({ prestigeCommercial: current.prestigeCommercial + driftPC, franchiseOriginal: current.franchiseOriginal + driftFO }))];
+    const driftPC = newPC > 50 ? -1 : newPC < 50 ? 1 : 0;
+    const driftFO = newFO > 50 ? -1 : newFO < 50 ? 1 : 0;
+    newPC += driftPC;
+    newFO += driftFO;
+  } else {
+    // --- Prestige vs Commercial ---
+    let prestigeCount = 0;
+    let commercialCount = 0;
+    for (const p of recentReleases) {
+      const isAwardsPush = p.marketingAngle === 'AWARDS_PUSH';
+      const reviewHigh = (p.reviewScore ?? 0) > 75;
+      const lowBudget = p.budget < 20_000_000;
+      const highBudget = p.budget > 80_000_000;
+      const spectacle = p.marketingAngle === 'SELL_THE_SPECTACLE';
+
+      if (isAwardsPush || reviewHigh || lowBudget) prestigeCount += 1;
+      if (highBudget || spectacle) commercialCount += 1;
+    }
+
+    if (prestigeCount > commercialCount) newPC += NUDGE;
+    else if (commercialCount > prestigeCount) newPC -= NUDGE;
+
+    // --- Franchise vs Original ---
+    let franchiseCount = 0;
+    let originalCount = 0;
+    for (const p of recentReleases) {
+      if (p.franchiseId) franchiseCount += 1;
+      else originalCount += 1;
+    }
+
+    if (franchiseCount > originalCount) newFO += NUDGE;
+    else if (originalCount > franchiseCount) newFO -= NUDGE;
   }
 
-  // --- Prestige vs Commercial ---
-  let prestigeCount = 0;
-  let commercialCount = 0;
-  for (const p of recentReleases) {
-    const isAwardsPush = p.marketingAngle === 'AWARDS_PUSH';
-    const reviewHigh = (p.reviewScore ?? 0) > 75;
-    const lowBudget = p.budget < 20_000_000;
-    const highBudget = p.budget > 80_000_000;
-    const spectacle = p.marketingAngle === 'SELL_THE_SPECTACLE';
+  const updatedCulture: StudioCulture = {
+    ...current,
+    prestigeVsCommercial: Math.max(0, Math.min(100, newPC)),
+    franchiseOriginal: Math.max(0, Math.min(100, newFO)),
+  };
 
-    if (isAwardsPush || reviewHigh || lowBudget) prestigeCount += 1;
-    if (highBudget || spectacle) commercialCount += 1;
-  }
-
-  let newPC = current.prestigeCommercial;
-  if (prestigeCount > commercialCount) newPC += NUDGE;
-  else if (commercialCount > prestigeCount) newPC -= NUDGE;
-
-  // --- Franchise vs Original ---
-  let franchiseCount = 0;
-  let originalCount = 0;
-  for (const p of recentReleases) {
-    if (p.franchiseId) franchiseCount += 1;
-    else originalCount += 1;
-  }
-
-  let newFO = current.franchiseOriginal;
-  if (franchiseCount > originalCount) newFO += NUDGE;
-  else if (originalCount > franchiseCount) newFO -= NUDGE;
-
-  const updated = clampAxes({ prestigeCommercial: newPC, franchiseOriginal: newFO });
-  return [buildImpact(updated)];
+  return [{
+    type: 'SYSTEM_TICK' as any,
+    payload: { studioCulture: updatedCulture },
+  } as StateImpact];
 }
 
 /**
  * Returns a human-readable label for the studio's current identity.
  */
-export function getIdentityLabel(axes: StudioIdentityAxes): string {
-  const { prestigeCommercial, franchiseOriginal } = axes;
+export function getIdentityLabel(culture: StudioCulture): string {
+  const pc = culture.prestigeVsCommercial;
+  const fo = culture.franchiseOriginal;
 
-  if (prestigeCommercial > 70 && franchiseOriginal < 30) return 'Auteur Studio';
-  if (prestigeCommercial > 70 && franchiseOriginal > 70) return 'Prestige Franchise Factory';
-  if (prestigeCommercial < 30 && franchiseOriginal > 70) return 'Blockbuster Machine';
-  if (prestigeCommercial < 30 && franchiseOriginal < 30) return 'Genre Indie';
+  if (pc > 70 && fo < 30) return 'Auteur Studio';
+  if (pc > 70 && fo > 70) return 'Prestige Franchise Factory';
+  if (pc < 30 && fo > 70) return 'Blockbuster Machine';
+  if (pc < 30 && fo < 30) return 'Genre Indie';
   return 'Balanced Studio';
-}
-
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
-function clampAxes(axes: StudioIdentityAxes): StudioIdentityAxes {
-  return {
-    prestigeCommercial: Math.max(0, Math.min(100, axes.prestigeCommercial)),
-    franchiseOriginal: Math.max(0, Math.min(100, axes.franchiseOriginal)),
-  };
-}
-
-function buildImpact(studioIdentity: StudioIdentityAxes): StateImpact {
-  return {
-    type: 'SYSTEM_TICK' as any,
-    payload: { studioIdentity },
-  } as StateImpact;
 }
