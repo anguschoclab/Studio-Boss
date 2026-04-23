@@ -16,7 +16,7 @@ export const PLATFORMS_REGISTRY: PlatformData[] = [
     archetype: 'streamer',
     baseMarketShare: 0.25,
     reach: 90,
-    description: 'The global leader in high-end streaming content.'
+    description: 'The global leader in high-end streaming content, ruthless with cancellations and demanding high retention.'
   },
   {
     id: 'critics_choice',
@@ -40,7 +40,7 @@ export const PLATFORMS_REGISTRY: PlatformData[] = [
     archetype: 'streamer',
     baseMarketShare: 0.08,
     reach: 40,
-    description: 'A growing platform dedicated to niche, low-budget, and cult content.'
+    description: 'A growing platform dedicated to niche, low-budget, and cult content, hoping to syndicate massive cult hits.'
   },
   {
     id: 'mega_corp',
@@ -48,6 +48,6 @@ export const PLATFORMS_REGISTRY: PlatformData[] = [
     archetype: 'streamer',
     baseMarketShare: 0.35,
     reach: 95,
-    description: 'Mass-market giant prioritizing broad appeal and blockbuster franchises.'
+    description: 'Mass-market giant prioritizing broad appeal and blockbuster franchises with cutthroat subscriber churn.'
   }
 ];
