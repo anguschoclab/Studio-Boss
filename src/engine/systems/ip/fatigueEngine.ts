@@ -1,6 +1,6 @@
-import { Franchise } from '../../types';
-import { clamp } from '../../utils';
-import { FRANCHISE_FATIGUE_RISK } from '../../data/genres';
+import { Franchise } from "../../types";
+import { clamp } from "../../utils";
+import { FRANCHISE_FATIGUE_RISK } from "../../data/genres";
 
 /**
  * Fatigue Logic Engine.
@@ -16,27 +16,30 @@ import { FRANCHISE_FATIGUE_RISK } from '../../data/genres';
  * 4. Genre Sensitivity (Spectacle vs Comfort Food).
  */
 export function calculateFranchiseFatigue(
-  franchise: Franchise, 
+  franchise: Franchise,
   genreSaturation: number, // Market-wide saturation for the genre (count of active rival projects)
-  genre: string = 'Action'
+  genre: string = "Action"
 ): number {
   const activeCount = franchise.activeProjectIds.length;
-  
+
   // Normalize genre string to match FRANCHISE_FATIGUE_RISK keys (e.g. "Action", "Sci-Fi", "Superhero")
   // Handle ALL CAPS or all lowercase variations
-  const normalizedGenre = Object.keys(FRANCHISE_FATIGUE_RISK).find(
-    k => k.toLowerCase() === genre.toLowerCase()
-  ) || genre;
+  const normalizedGenre =
+    Object.keys(FRANCHISE_FATIGUE_RISK).find((k) => k.toLowerCase() === genre.toLowerCase()) ||
+    genre;
 
   // 1. Base Fatigue Rate (Genre-specific)
-  const baseRate = FRANCHISE_FATIGUE_RISK[normalizedGenre] !== undefined ? FRANCHISE_FATIGUE_RISK[normalizedGenre] : 0.15;
+  const baseRate =
+    FRANCHISE_FATIGUE_RISK[normalizedGenre] !== undefined
+      ? FRANCHISE_FATIGUE_RISK[normalizedGenre]
+      : 0.15;
   let currentFatigue = activeCount * baseRate;
 
   // 2. Exponential Dilution (Spin-off of a spin-off)
   // If a franchise has 2 or more active entries, it becomes a "Factory" in the public eye.
   // In real terms: 2.5x fatigue acceleration once a universe is heavily mined.
   if (activeCount >= 2) {
-    currentFatigue *= 2.5; 
+    currentFatigue *= 2.5;
   }
 
   // 3. Rival Saturation (The 'Poison the Well' effect)
@@ -47,15 +50,15 @@ export function calculateFranchiseFatigue(
   // 🌌 The Universe Builder: Implemented "Superhero Fatigue" - 2x penalty if Superhero genre is oversaturated.
   const SUPERHERO_FATIGUE_THRESHOLD = 8;
   const SUPERHERO_FATIGUE_PENALTY = 2.0;
-  if (normalizedGenre === 'Superhero' && genreSaturation > SUPERHERO_FATIGUE_THRESHOLD) {
+  if (normalizedGenre === "Superhero" && genreSaturation > SUPERHERO_FATIGUE_THRESHOLD) {
     rivalPenalty *= SUPERHERO_FATIGUE_PENALTY;
   }
 
   // 🌌 The Universe Builder: Added severe 3x penalty for oversaturating Cinematic Universes.
-  if (normalizedGenre === 'Cinematic Universe' && genreSaturation > 5) {
+  if (normalizedGenre === "Cinematic Universe" && genreSaturation > 5) {
     rivalPenalty *= 3.0;
   }
-  
+
   // 4. Audience Loyalty (Protective Shield)
   // High loyalty acts as a buffer against fatigue.
   const loyaltyShield = (franchise.audienceLoyalty / 100) * 0.3; // Up to 30% reduction in fatigue gain
@@ -69,45 +72,45 @@ export function calculateFranchiseFatigue(
  * 2. The Nostalgia Spike (10+ years): Transformation into a 'Legacy Brand'.
  */
 export function calculateReleaseGapImpact(
-  lastReleaseWeeks: number[], 
+  lastReleaseWeeks: number[],
   currentWeek: number
 ): { buzzBonus: number; label: string; fatigueReset: boolean } {
-  if (lastReleaseWeeks.length === 0) return { buzzBonus: 0, label: '', fatigueReset: false };
-  
+  if (lastReleaseWeeks.length === 0) return { buzzBonus: 0, label: "", fatigueReset: false };
+
   const mostRecent = Math.max(...lastReleaseWeeks);
   const weeksSince = currentWeek - mostRecent;
   const yearsSince = weeksSince / 52;
-  
+
   // 🌌 The Universe Builder: Added massive buzz reset for rebooting dead franchises (15+ years).
   const REBOOT_YEARS_THRESHOLD = 15;
   const REBOOT_BUZZ_BONUS = 60;
   if (yearsSince >= REBOOT_YEARS_THRESHOLD) {
     return {
       buzzBonus: REBOOT_BUZZ_BONUS,
-      label: 'Franchise Reboot',
-      fatigueReset: true
+      label: "Franchise Reboot",
+      fatigueReset: true,
     };
   }
 
   // 1. The Nostalgia Spike (10+ years / 520+ weeks)
   // Real-life: Top Gun Maverick, The Force Awakens.
   if (yearsSince >= 10) {
-    return { 
-      buzzBonus: 40, 
-      label: 'Legacy Sequel (Nostalgia)',
-      fatigueReset: true // A legacy reset removes current fatigue as the brand is "re-introduced"
+    return {
+      buzzBonus: 40,
+      label: "Legacy Sequel (Nostalgia)",
+      fatigueReset: true, // A legacy reset removes current fatigue as the brand is "re-introduced"
     };
   }
 
   // 2. The Dead Zone (4-7 years / 208-364 weeks)
   // Real-life: Alice Through the Looking Glass, The LEGO Movie 2.
   if (yearsSince >= 4 && yearsSince <= 7) {
-    return { 
-      buzzBonus: -15, 
-      label: 'The Dead Zone (Apathy)',
-      fatigueReset: false
+    return {
+      buzzBonus: -15,
+      label: "The Dead Zone (Apathy)",
+      fatigueReset: false,
     };
   }
-  
-  return { buzzBonus: 0, label: '', fatigueReset: false };
+
+  return { buzzBonus: 0, label: "", fatigueReset: false };
 }
