@@ -310,37 +310,39 @@ export class WeekCoordinator {
   }
 
   private static buildSummary(before: GameState, after: GameState, context: TickContext): WeekSummary {
-    const newsImpacts = context.impacts.filter(i => i.type === 'NEWS_ADDED');
-    const ledgerImpact = context.impacts.find(i => i.type === 'LEDGER_UPDATED');
+    // ⚡ The Framerate Fanatic: Refactored array .find() and .filter() to a single O(n) pass.
+    const newsImpacts: import('../types/state.types').StateImpact[] = [];
+    const projectUpdatesSet = new Set<string>();
+    const narrativeEvents: import('../types/engine.types').NarrativeEvent[] = [];
     
     let totalRevenue = 0;
     let totalCosts = 0;
 
-    if (ledgerImpact && ledgerImpact.type === 'LEDGER_UPDATED') {
-       const payload = ledgerImpact.payload as import('../types/state.types').LedgerImpact['payload'];
-       const report = payload.report;
-       totalRevenue = report.revenue.boxOffice + report.revenue.distribution + report.revenue.other;
-       totalCosts = report.expenses.production + report.expenses.marketing + report.expenses.overhead;
-    }
+    for (const impact of context.impacts) {
+      if (impact.type === 'NEWS_ADDED') {
+        newsImpacts.push(impact);
+      } else if (impact.type === 'LEDGER_UPDATED') {
+        const payload = impact.payload as import('../types/state.types').LedgerImpact['payload'];
+        const report = payload.report;
+        totalRevenue += report.revenue.boxOffice + report.revenue.distribution + report.revenue.other;
+        totalCosts += report.expenses.production + report.expenses.marketing + report.expenses.overhead;
+      } else if (impact.type === 'PROJECT_UPDATED') {
+        projectUpdatesSet.add((impact as import('../types/state.types').ProjectUpdateImpact).payload.projectId);
+      }
 
-    const projectUpdates = context.impacts
-      .filter((i): i is import('../types/state.types').ProjectUpdateImpact => i.type === 'PROJECT_UPDATED')
-      .map(i => i.payload.projectId);
-
-    // Capture uiNotifications from impacts for narrative events
-    const narrativeEvents: import('../types/engine.types').NarrativeEvent[] = [];
-    context.impacts.forEach(impact => {
       if (impact.uiNotifications) {
-        impact.uiNotifications.forEach(notification => {
+        for (const notification of impact.uiNotifications) {
           narrativeEvents.push({
             type: notification.startsWith('CRISIS') ? 'crisis' : 'general',
             title: notification,
             description: notification,
             severity: notification.startsWith('CRISIS') ? 'high' : 'low'
           });
-        });
+        }
       }
-    });
+    }
+
+    const projectUpdates = Array.from(projectUpdatesSet);
 
     // Quiet week detection
     const isQuietWeek = 

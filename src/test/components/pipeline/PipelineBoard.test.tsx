@@ -30,8 +30,8 @@ describe('PipelineBoard', () => {
     vi.mocked(useGameStore).mockReturnValue([]);
     render(<PipelineBoard />);
 
-    expect(screen.getByText('Production Slate')).toBeInTheDocument();
-    expect(screen.getByText('New IP Venture')).toBeInTheDocument();
+    expect(screen.getByText('PRODUCTION SLATE')).toBeInTheDocument();
+    expect(screen.getByText('NEW IP VENTURE')).toBeInTheDocument();
   });
 
   it('calls openCreateProject when New Project button is clicked', () => {
@@ -48,10 +48,10 @@ describe('PipelineBoard', () => {
     vi.mocked(useGameStore).mockReturnValue([]);
     render(<PipelineBoard />);
 
-    expect(screen.getByText('Development')).toBeInTheDocument();
-    expect(screen.getByText('Pitching')).toBeInTheDocument();
-    expect(screen.getByText('Active Slate')).toBeInTheDocument();
-    expect(screen.getByText('Catalog')).toBeInTheDocument();
+    expect(screen.getByText('DEVELOPMENT')).toBeInTheDocument();
+    expect(screen.getByText('PITCHING')).toBeInTheDocument();
+    expect(screen.getByText('ACTIVE SLATE')).toBeInTheDocument();
+    expect(screen.getByText('CATALOG')).toBeInTheDocument();
   });
 
   it('distributes projects into correct columns', () => {

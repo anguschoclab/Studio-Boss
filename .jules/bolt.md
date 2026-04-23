@@ -10,3 +10,6 @@
 ## 2026-04-01 - Avoid nested O(N^2) iterations with Object.values/flatMap in loops
 **Learning:** Combining \`Object.values\` and \`flatMap\` to create a unified array before an outer loop creates O(N^2) complexity and GC pressure because it executes the inner mapping operations across all entities every tick.
 **Action:** Replace nested array creation and mapping before loops with a single pass aggregation using a \`for...in\` loop directly into a hash map before iterating, preventing O(N^2) complexity.
+2024-05-24: ⚡ The Framerate Fanatic
+- Consolidated separate `filter` and `find` iterations over the `impacts` array into a single O(n) pass in `WeekCoordinator.ts` (`buildSummary`).
+- Wrapped expensive map/filter operations inside `PipelineBoard.tsx` in a `useMemo` hook to prevent recalculation on every render.
