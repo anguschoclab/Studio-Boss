@@ -33,4 +33,20 @@ describe('advanceProjectProgress', () => {
     expect(result.progress).toBeGreaterThan(20); // Progress advanced
     expect(result.accumulatedCost).toBeGreaterThan(200000); // Budget burned
   });
+
+  it('handles negative budgets mathematically consistently (extreme edge case)', () => {
+    const project = {
+        id: '1',
+        state: 'production',
+        progress: 10,
+        budget: -500000,
+        accumulatedCost: 0,
+        activeCrisis: null,
+        momentum: 50
+    } as any as Project;
+
+    const result = advanceProjectProgress(project);
+    expect(result.progress).toBeGreaterThan(10);
+    expect(result.accumulatedCost).toBeLessThan(0); // Cost step scales with budget, so should be negative
+  });
 });

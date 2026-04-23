@@ -140,8 +140,8 @@ export const TalentDriftEngine = {
     if (!transitionRule) {
       // Check if talent is old enough to become a veteran
       if (age >= 50 && currentArchetype !== 'veteran') {
-        const veteranTransitions: string[] = ARCHETYPE_TRANSITIONS.actor.veteran;
-        if (veteranTransitions.includes(currentArchetype)) {
+        const currentTransitions: string[] = ARCHETYPE_TRANSITIONS.actor[currentArchetype as ActorArchetype] || [];
+        if (currentTransitions.includes('veteran')) {
           return { old: currentArchetype, new: 'veteran' };
         }
       }
@@ -249,6 +249,7 @@ export const TalentDriftEngine = {
     rng: RandomGenerator
   ): { old: string; new: string } | null {
     const currentTrajectory = talent.careerTrajectory || 'rising';
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const transitions = (CAREER_TRAJECTORY_TRANSITIONS as any)[currentTrajectory];
     if (!transitions || transitions.length === 0) {
       return null;

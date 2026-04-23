@@ -49,8 +49,12 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
             internal: {
               ...stateAfterFees.studio.internal,
               projects: { ...stateAfterFees.studio.internal.projects, [project.id]: project },
-              contracts: [...stateAfterFees.studio.internal.contracts, ...newContracts]
+              contracts: [...(stateAfterFees.studio.internal.contracts || []), ...newContracts]
             }
+          },
+          entities: {
+            ...stateAfterFees.entities,
+            projects: { ...stateAfterFees.entities.projects, [project.id]: project }
           }
         }
       };

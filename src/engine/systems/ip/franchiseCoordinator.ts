@@ -1,6 +1,6 @@
-import { GameState, Project, Franchise, IPAsset } from '../../types';
-import { generateId, clamp } from '../../utils';
-import { CROSSOVER_AFFINITY } from '../../data/genres';
+import { GameState, Project, Franchise, IPAsset } from "../../types";
+import { generateId, clamp } from "../../utils";
+import { CROSSOVER_AFFINITY } from "../../data/genres";
 
 /**
  * Franchise Coordinator.
@@ -16,21 +16,21 @@ export function calculateFranchiseEquity(
   assets: IPAsset[],
   sourceProjects?: Record<string, Project> // Pass projects to resolve genres
 ): number {
-  const baseEquity = assets.reduce((sum, a) => sum + (a.baseValue * a.decayRate), 0);
-  
+  const baseEquity = assets.reduce((sum, a) => sum + a.baseValue * a.decayRate, 0);
+
   // 1. Shared Universe Premium
-  let crossoverBonus = assets.length >= 3 ? 1.20 : 1.05;
+  let crossoverBonus = assets.length >= 3 ? 1.2 : 1.05;
 
   // 1b. Genre Crossover Events Hook
   if (sourceProjects && assets.length > 1) {
     const uniqueGenres = new Set<string>();
-    assets.forEach(a => {
+    assets.forEach((a) => {
       const p = sourceProjects[a.originalProjectId];
       if (p && p.genre) {
         // Normalize to Title Case to match CROSSOVER_AFFINITY keys (e.g. 'Action', 'Sci-Fi')
-        const normalizedGenre = Object.keys(CROSSOVER_AFFINITY).find(
-          k => k.toLowerCase() === p.genre!.toLowerCase()
-        ) || p.genre;
+        const normalizedGenre =
+          Object.keys(CROSSOVER_AFFINITY).find((k) => k.toLowerCase() === p.genre!.toLowerCase()) ||
+          p.genre;
         uniqueGenres.add(normalizedGenre);
       }
     });
@@ -53,11 +53,16 @@ export function calculateFranchiseEquity(
     if (assets.length >= 5) {
       crossoverBonus += 0.15;
     }
+
+    // 🌌 The Universe Builder: Added 20% crossover bonus for Cinematic Universe/Multiverse events.
+    if (uniqueGenres.has("Cinematic Universe") || uniqueGenres.has("Multiverse")) {
+      crossoverBonus += 0.2;
+    }
   }
-  
+
   // 2. Format Diversity Multiplier
   const multiplier = franchise.synergyMultiplier;
-  
+
   return Math.floor(baseEquity * crossoverBonus * multiplier);
 }
 
@@ -71,11 +76,11 @@ export function updateFranchiseHub(state: GameState, project: Project): GameStat
 
   // 1. Breakout Success Detection
   // If an original IP (no franchiseId) hits a high ROI or Prestige, it "Spawns" a Hub.
-  const isBreakout = project.revenue > (project.budget * 2.5);
+  const isBreakout = project.revenue > project.budget * 2.5;
   const isPrestigeHit = (project.awardsProfile?.prestigeScore || 0) > 85;
 
   if (!franchiseId && (isBreakout || isPrestigeHit)) {
-    franchiseId = generateId('hub');
+    franchiseId = generateId("hub");
     const newFranchise: Franchise = {
       id: franchiseId,
       name: project.title,
@@ -88,27 +93,27 @@ export function updateFranchiseHub(state: GameState, project: Project): GameStat
       assetIds: [`ip-${project.id}`],
       activeProjectIds: [],
       lastReleaseWeeks: [project.releaseWeek || state.week],
-      creationWeek: state.week
+      creationWeek: state.week,
     };
     updatedFranchises[franchiseId] = newFranchise;
-  } 
-  
+  }
+
   // 2. Existing Franchise Maintenance
   else if (franchiseId && updatedFranchises[franchiseId]) {
     const hub = updatedFranchises[franchiseId];
     const newAssetId = `ip-${project.id}`;
-    
+
     // Avoid duplicate links
     if (!hub.assetIds.includes(newAssetId)) {
       const nextAssetIds = [...hub.assetIds, newAssetId];
-      const relevantAssets = state.ip.vault.filter(a => nextAssetIds.includes(a.id));
+      const relevantAssets = state.ip.vault.filter((a) => nextAssetIds.includes(a.id));
 
       updatedFranchises[franchiseId] = {
         ...hub,
         assetIds: nextAssetIds,
         lastReleaseWeeks: [...hub.lastReleaseWeeks, project.releaseWeek || state.week],
         // Update synergy based on format diversity
-        synergyMultiplier: clamp(hub.synergyMultiplier + 0.1, 1.0, 2.5) 
+        synergyMultiplier: clamp(hub.synergyMultiplier + 0.1, 1.0, 2.5),
       };
 
       updatedFranchises[franchiseId].totalEquity = calculateFranchiseEquity(
@@ -130,11 +135,11 @@ export function updateFranchiseHub(state: GameState, project: Project): GameStat
     entities: {
       ...state.entities,
       projects: allProjects,
-      rivals: state.entities.rivals // Keep rivals as is
+      rivals: state.entities.rivals, // Keep rivals as is
     },
     ip: {
       ...state.ip,
-      franchises: updatedFranchises
-    }
+      franchises: updatedFranchises,
+    },
   };
 }

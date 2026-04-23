@@ -2,7 +2,6 @@ import React, { useState, useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore, TalentSubTab } from '@/store/uiStore';
 import { SubNav } from '@/components/navigation/SubNav';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
   Users,
@@ -79,6 +78,7 @@ const RosterPanel = () => {
             <button
               key={role}
               onClick={() => setFilter(role)}
+              aria-pressed={filter === role}
               className={cn(
                 'px-8 py-3 text-[10px] uppercase tracking-[0.3em] font-black rounded-none transition-all duration-700 border italic',
                 filter === role
@@ -180,6 +180,7 @@ const MarketplacePanel = () => {
       <div className="flex items-center gap-4 bg-white/[0.02] border border-white/5 p-2 rounded-none w-fit shadow-xl">
         <button
           onClick={() => setActiveTab('scripts')}
+          aria-pressed={activeTab === 'scripts'}
           className={cn(
             'px-10 py-3 text-[10px] font-black uppercase tracking-[0.3em] rounded-none transition-all duration-700 italic',
             activeTab === 'scripts'
@@ -192,6 +193,7 @@ const MarketplacePanel = () => {
         </button>
         <button
           onClick={() => setActiveTab('talent')}
+          aria-pressed={activeTab === 'talent'}
           className={cn(
             'px-10 py-3 text-[10px] font-black uppercase tracking-[0.3em] rounded-none transition-all duration-700 italic',
             activeTab === 'talent'
@@ -422,6 +424,7 @@ const ScandalsPanel = () => {
       weeksRemaining: s.weeksRemaining,
       publicSentiment: s.severity > 60 ? 'outraged' as const : 'divided' as const,
       pressCoverage: Math.round(s.severity * 0.5),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       effects: [] as any[],
       hasInsurance: false,
     };
