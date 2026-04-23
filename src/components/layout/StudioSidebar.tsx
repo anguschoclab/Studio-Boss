@@ -4,21 +4,19 @@ import { useGameStore } from '@/store/gameStore';
 import { selectActiveProjects } from '@/store/selectors';
 import { formatMoney } from '@/engine/utils';
 import { 
-  LayoutDashboard, 
-  Film, 
-  Library, 
-  Globe, 
-  Users, 
-  Briefcase, 
-  Newspaper,
   Building2,
+  Clapperboard,
+  Newspaper,
+  Users,
+  Tv2,
+  Archive,
+  TrendingUp,
+  DollarSign,
   ChevronLeft,
   ChevronRight,
   LogOut,
   Settings,
-  DollarSign,
-  Star,
-  Clapperboard
+  Star
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -34,14 +32,14 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { id: 'command', label: 'HQ', icon: LayoutDashboard, tooltip: 'Studio overview, alerts, and top-line metrics' },
-  { id: 'pipeline', label: 'Production', icon: Film, tooltip: 'Active projects from development through release' },
+  { id: 'command', label: 'Command Center', icon: Building2, tooltip: 'Studio overview, alerts, and top-line metrics' },
+  { id: 'pipeline', label: 'Production Pipeline', icon: Clapperboard, tooltip: 'Active projects from development through release' },
   { id: 'trades', label: 'The Trades', icon: Newspaper, tooltip: 'Scout IP opportunities, industry news, and market trends' },
-  { id: 'talent', label: 'Talent', icon: Users, tooltip: 'Talent roster and industry database (SBDB)' },
-  { id: 'distribution', label: 'Distribution', icon: Globe, tooltip: 'Deals desk, streaming platforms, and Nielsen ratings' },
-  { id: 'ip', label: 'IP Vault', icon: Library, tooltip: 'Owned intellectual property, franchises, and library rights' },
-  { id: 'industry', label: 'Industry', icon: Building2, tooltip: 'Rival studios, M&A activity, and market intelligence' },
-  { id: 'finance', label: 'Finance', icon: Briefcase, tooltip: 'P&L statements, revenue streams, and cash flow' },
+  { id: 'talent', label: 'Talent Hub', icon: Users, tooltip: 'Talent roster and industry database (SBDB)' },
+  { id: 'distribution', label: 'Distribution Hub', icon: Tv2, tooltip: 'Deals desk, streaming platforms, and Nielsen ratings' },
+  { id: 'ip', label: 'IP Vault', icon: Archive, tooltip: 'Owned intellectual property, franchises, and library rights' },
+  { id: 'industry', label: 'Industry Intelligence', icon: TrendingUp, tooltip: 'Rival studios, M&A activity, and market intelligence' },
+  { id: 'finance', label: 'Finance', icon: DollarSign, tooltip: 'P&L statements, revenue streams, and cash flow' },
 ];
 
 export const StudioSidebar = () => {
@@ -70,9 +68,9 @@ export const StudioSidebar = () => {
       {/* Brand Header */}
       <div className="p-5 flex items-center justify-between overflow-hidden">
         {!isCollapsed && (
-          <div className="flex items-center gap-2">
-            <span className="font-display font-black tracking-widest text-lg uppercase text-primary">S</span>
-            <span className="font-display font-black tracking-widest text-lg uppercase">BOSS</span>
+          <div className="flex items-center gap-2 pl-2">
+            <span className="font-display font-black tracking-[0.4em] text-lg uppercase text-primary">S</span>
+            <span className="font-display font-black tracking-[0.4em] text-lg uppercase">BOSS</span>
           </div>
         )}
         {isCollapsed && (
@@ -107,7 +105,7 @@ export const StudioSidebar = () => {
                 >
                   <item.icon className={cn("h-4.5 w-4.5 shrink-0", isActive && "drop-shadow-[0_0_8px_hsl(var(--primary)/0.5)]")} />
                   {!isCollapsed && (
-                    <span className="font-medium truncate text-sm tracking-tight">{item.label}</span>
+                    <span className="text-[10px] font-black uppercase tracking-[0.15em] truncate">{item.label}</span>
                   )}
                   {isActive && (
                     <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-6 bg-primary shadow-[0_0_10px_hsl(var(--primary)/0.5)]" />
@@ -128,25 +126,25 @@ export const StudioSidebar = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <DollarSign className="h-3.5 w-3.5 text-primary" />
-              <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Cash</span>
+              <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60">Cash</span>
             </div>
-            <span className={cn("text-xs font-mono font-bold", (gameState.finance?.cash ?? 0) < 0 ? "text-destructive" : "text-primary")}>
+            <span className={cn("text-[11px] font-display font-black tracking-tight", (gameState.finance?.cash ?? 0) < 0 ? "text-destructive" : "text-primary")}>
               {formatMoney(gameState.finance?.cash ?? 0)}
             </span>
           </div>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Star className="h-3.5 w-3.5 text-secondary" />
-              <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Prestige</span>
+              <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60">Prestige</span>
             </div>
-            <span className="text-xs font-mono font-bold text-secondary">{gameState.studio.prestige}</span>
+            <span className="text-[11px] font-display font-black text-secondary">{gameState.studio.prestige}</span>
           </div>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Clapperboard className="h-3.5 w-3.5 text-foreground/60" />
-              <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Active</span>
+              <Clapperboard className="h-3.5 w-3.5 text-foreground/40" />
+              <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60">Slate</span>
             </div>
-            <span className="text-xs font-mono font-bold text-foreground/80">
+            <span className="text-[11px] font-display font-black text-foreground/80">
               {Object.values(gameState.studio.internal.projects).filter(p => p.state !== 'released' && p.state !== 'post_release' && p.state !== 'archived').length}
             </span>
           </div>

@@ -27,11 +27,11 @@ export const StudioStatsGrid = ({
   cashTrend
 }: StudioStatsGridProps) => {
   return (
-    <div className="lg:col-span-2 grid grid-cols-2 gap-4">
+    <div className="lg:col-span-2 grid grid-cols-2 gap-8">
       <StatCard
-        title="Cash Reserves"
+        title="Liquidity Reserves"
         value={formatMoney(finance.cash)}
-        subtitle="Available liquidity"
+        subtitle="AVAILABLE FISCAL ASSETS"
         icon={DollarSign}
         color={finance.cash > 100000000 ? 'success' : finance.cash > 50000000 ? 'primary' : 'warning'}
         trend={cashTrend > 5 ? 'up' : cashTrend < -5 ? 'down' : 'neutral'}
@@ -41,8 +41,8 @@ export const StudioStatsGrid = ({
         {cashHistory.length > 1 && (
           <SparklineChart 
             data={cashHistory} 
-            width={200} 
-            height={30}
+            width={240} 
+            height={40}
             trend={cashTrend > 5 ? 'up' : cashTrend < -5 ? 'down' : 'neutral'}
           />
         )}
@@ -51,7 +51,7 @@ export const StudioStatsGrid = ({
       <StatCard
         title="Active Pipeline"
         value={activeProjectsCount}
-        subtitle={`${releasedProjectsCount} released to date`}
+        subtitle={`${releasedProjectsCount} ASSETS DEPLOYED TO DATE`}
         icon={Clapperboard}
         color="primary"
         trend="up"
@@ -61,7 +61,7 @@ export const StudioStatsGrid = ({
       <StatCard
         title="Prestige Rating"
         value={prestige}
-        subtitle="Industry reputation"
+        subtitle="GLOBAL REPUTATION INDEX"
         icon={Award}
         color="secondary"
         size="md"
@@ -72,13 +72,14 @@ export const StudioStatsGrid = ({
           size="sm" 
           color="secondary"
           showValue={false}
+          className="h-1 rounded-none mt-2"
         />
       </StatCard>
       
       <StatCard
         title="Talent Network"
         value={talentCount}
-        subtitle={`vs ${rivalCount} rival studios`}
+        subtitle={`VECTORS VS ${rivalCount} RIVAL STUDIOS`}
         icon={Users}
         color="info"
         size="md"

@@ -15,7 +15,9 @@ import {
   DollarSign,
   Activity,
   BarChart3,
-  ShieldAlert
+  ShieldAlert,
+  Target,
+  Monitor
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { formatMoney } from '@/engine/utils';
@@ -23,6 +25,7 @@ import { m } from 'framer-motion';
 import { GenreTrendsPanel } from './intelligence/GenreTrendsPanel';
 import { AwardsTracker } from './intelligence/AwardsTracker';
 import { RivalReleaseTracker } from './intelligence/RivalReleaseTracker';
+import { KPIStatCard } from '@/components/shared/KPIStatCard';
 
 // Rivals Panel
 const RivalsPanel = () => {
@@ -50,7 +53,7 @@ const RivalsPanel = () => {
   ).slice(0, 10), [rivals, gameState?.week]);
 
   return (
-    <div className="h-full overflow-y-auto custom-scrollbar pb-4">
+    <div className="h-full overflow-y-auto custom-scrollbar pb-4 pr-4">
       <RivalReleaseTracker releases={rivalReleases} yourReleases={yourReleases} />
     </div>
   );
@@ -92,7 +95,7 @@ const AwardsPanel = () => {
   const studioRank = Math.max(1, Math.round(10 - (gameState?.studio?.prestige || 50) / 10));
 
   return (
-    <div className="h-full overflow-y-auto custom-scrollbar pb-4">
+    <div className="h-full overflow-y-auto custom-scrollbar pb-4 pr-4">
       <AwardsTracker
         projects={awardsData}
         studioRank={studioRank}
@@ -114,72 +117,83 @@ const MarketPanel = () => {
   })), [gameState]);
 
   return (
-    <div className="h-full overflow-y-auto custom-scrollbar pb-4">
+    <div className="h-full overflow-y-auto custom-scrollbar pb-4 pr-4">
       <GenreTrendsPanel trends={trends} />
     </div>
   );
 };
 
-// Financials Panel (simplified from FinancePanel)
+// Financials Panel
 const FinancialsPanel = () => {
   const gameState = useGameStore(s => s.gameState);
   const cash = gameState?.finance?.cash ?? 0;
   const prestige = gameState?.studio?.prestige ?? 75;
   const weeklyHistory = gameState?.finance?.weeklyHistory || [];
   
-  const stats = [
-    { label: 'Cash Reserves', value: formatMoney(cash), icon: DollarSign, color: cash > 0 ? 'text-emerald-400' : 'text-destructive' },
-    { label: 'Prestige', value: prestige.toString(), icon: Trophy, color: 'text-amber-400' },
-    { label: 'Market Sentiment', value: `${gameState?.finance?.marketState?.sentiment || 50}%`, icon: Activity, color: 'text-primary' },
-    { label: 'Active Projects', value: selectActiveProjects(gameState).length.toString(), icon: BarChart3, color: 'text-secondary' },
-  ];
-  
   return (
-    <div className="h-full overflow-y-auto custom-scrollbar space-y-6 pb-4">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {stats.map(stat => (
-          <div key={stat.label} className="p-4 bg-card/40 border border-border/40 rounded-xl">
-            <div className="flex items-center justify-between mb-2">
-              <stat.icon className={cn("h-5 w-5", stat.color)} />
-              <span className="text-[9px] uppercase font-black text-muted-foreground tracking-wider">{stat.label}</span>
-            </div>
-            <div className={cn("text-2xl font-black font-mono", stat.color)}>
-              {stat.value}
-            </div>
-          </div>
-        ))}
+    <div className="h-full overflow-y-auto custom-scrollbar space-y-10 pb-4 pr-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <KPIStatCard 
+          label="Liquid Capital" 
+          value={formatMoney(cash)} 
+          subValue="Fiscal Reserves"
+          icon={DollarSign} 
+          variant={cash > 10000000 ? 'secondary' : 'destructive'} 
+        />
+        <KPIStatCard 
+          label="Brand Prestige" 
+          value={prestige.toString()} 
+          subValue="Industry Standing"
+          icon={Trophy} 
+        />
+        <KPIStatCard 
+          label="Market Pulse" 
+          value={`${gameState?.finance?.marketState?.sentiment || 50}%`} 
+          subValue={gameState?.finance?.marketState?.cycle || 'STABLE'}
+          icon={Activity} 
+          variant="secondary"
+        />
+        <KPIStatCard 
+          label="Studio Output" 
+          value={selectActiveProjects(gameState).length.toString()} 
+          subValue="Active Slates"
+          icon={BarChart3} 
+        />
       </div>
       
-      <div className="p-6 bg-card/40 border border-border/40 rounded-xl">
-        <h4 className="text-sm font-black uppercase tracking-wider mb-4">Cash Flow History</h4>
-        <div className="h-48 flex items-end gap-2">
-          {weeklyHistory.slice(-12).map((week, i) => {
-            const maxCash = Math.max(...weeklyHistory.slice(-12).map(w => Math.abs(w.cash)), 1);
+      <div className="p-8 glass-card border-white/5 bg-white/[0.01]">
+        <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40 mb-8">Fiscal Flow History</h4>
+        <div className="h-48 flex items-end gap-3">
+          {weeklyHistory.slice(-16).map((week, i) => {
+            const maxCash = Math.max(...weeklyHistory.slice(-16).map(w => Math.abs(w.cash)), 1);
             const height = Math.max(10, (Math.abs(week.cash) / maxCash) * 100);
             return (
-              <div key={i} className="flex-1 flex flex-col items-center gap-1">
+              <div key={i} className="flex-1 flex flex-col items-center gap-2">
                 <div 
                   className={cn(
-                    "w-full rounded-t-sm min-h-[4px]",
-                    week.cash >= 0 ? 'bg-primary/60' : 'bg-destructive/60'
+                    "w-full rounded-none min-h-[4px] transition-all duration-1000",
+                    week.cash >= 0 ? 'bg-primary/40 shadow-[0_0_10px_rgba(var(--primary),0.2)]' : 'bg-destructive/40 shadow-[0_0_10px_rgba(var(--destructive),0.2)]'
                   )}
                   style={{ height: `${height}%` }}
                 />
-                <span className="text-[8px] text-muted-foreground">W{week.week % 52 || 52}</span>
+                <span className="text-[8px] font-black text-muted-foreground/30">W{week.week % 52 || 52}</span>
               </div>
             );
           })}
         </div>
       </div>
       
-      <div className="p-4 bg-primary/5 border border-primary/20 rounded-xl">
-        <div className="flex items-start gap-3">
-          <ShieldAlert className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-          <div>
-            <h5 className="text-sm font-bold text-primary">Market Pulse</h5>
-            <p className="text-xs text-muted-foreground mt-1">
-              Industry insiders suggest major M&A activity is cooling off as interest rates stabilize. 
-              Focus on building relationships with rising talent agencies.
+      <div className="p-6 bg-primary/5 border border-primary/20 rounded-none relative overflow-hidden">
+        <div className="absolute top-0 right-0 p-6 opacity-10">
+          <ShieldAlert className="h-16 w-16 text-primary" />
+        </div>
+        <div className="flex items-start gap-4 relative z-10">
+          <ShieldAlert className="h-5 w-5 text-primary shrink-0" />
+          <div className="space-y-2">
+            <h5 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Strategic Advisory</h5>
+            <p className="text-[11px] text-muted-foreground/60 italic leading-relaxed border-l border-primary/20 pl-4 py-1 max-w-2xl">
+              Intelligence suggests M&A activity is cooling as macro conditions stabilize. 
+              Executive priority should shift toward securing rising talent agencies before the next fiscal cycle.
             </p>
           </div>
         </div>
@@ -242,26 +256,26 @@ export const IntelligenceHub: React.FC = () => {
       case 'rivals':
         return {
           icon: <Building2 className="h-6 w-6 text-destructive" />,
-          title: 'Competitive Intelligence',
-          subtitle: 'Rival studios, M&A activity, and market positioning'
+          title: 'Strategic Intelligence',
+          subtitle: 'Rival Positioning • M&A activity • Market Threats'
         };
       case 'awards':
         return {
           icon: <Trophy className="h-6 w-6 text-amber-500" />,
-          title: 'Awards HQ',
-          subtitle: 'FYC campaigns and industry ceremonies'
+          title: 'Academy Headquarters',
+          subtitle: 'FYC Strategy • Industry Ceremonies • Prestige Audit'
         };
       case 'market':
         return {
           icon: <TrendingUp className="h-6 w-6 text-primary" />,
-          title: 'Market Analysis',
-          subtitle: 'Genre trends, audience demographics, and saturation'
+          title: 'Macro Market Analysis',
+          subtitle: 'Genre Vectors • Audience Saturation • Sector Health'
         };
       case 'financials':
         return {
-          icon: <DollarSign className="h-6 w-6 text-emerald-400" />,
-          title: 'Financial Intelligence',
-          subtitle: 'P&L, revenue streams, and cash flow forecasts'
+          icon: <DollarSign className="h-6 w-6 text-secondary" />,
+          title: 'Fiscal Surveillance',
+          subtitle: 'Liquidity Matrix • Revenue Performance • Cash Projection'
         };
       default:
         return { icon: null, title: '', subtitle: '' };
@@ -274,42 +288,44 @@ export const IntelligenceHub: React.FC = () => {
     <m.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="h-full flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-500"
+      className="h-full flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-8"
     >
       {/* Header */}
-      <div className="flex items-center gap-4 mb-4 bg-gradient-to-r from-white/5 to-transparent p-5 rounded-xl border border-white/5">
-        <div className="w-12 h-12 rounded-lg bg-destructive/10 border border-destructive/20 flex items-center justify-center shadow-[0_0_15px_hsl(var(--destructive)/0.2)]">
+      <div className="flex items-center gap-6 border-b border-white/5 pb-8">
+        <div className="w-14 h-14 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shadow-2xl">
           {header.icon}
         </div>
         <div>
-          <h2 className="text-2xl font-black tracking-tighter uppercase leading-none">{header.title}</h2>
-          <p className="text-[11px] font-black uppercase text-muted-foreground/60 tracking-[0.2em] mt-1">
+          <h2 className="text-4xl font-display font-black tracking-tighter uppercase italic leading-none mb-1">{header.title}</h2>
+          <p className="text-[10px] font-black uppercase text-muted-foreground/40 tracking-[0.25em]">
             {header.subtitle}
           </p>
         </div>
       </div>
       
       {/* Sub Navigation */}
-      <div className="mb-4">
+      <div className="flex-1 flex flex-col min-h-0">
         <SubNav 
           tabs={tabs}
           activeTab={activeSubTab}
           onChange={(id) => setActiveSubTab(id as IntelligenceSubTab)}
           variant="pills"
         />
-      </div>
-      
-      {/* Content */}
-      <div className="flex-1 min-h-0 overflow-hidden">
-        <React.Suspense fallback={<div className="flex items-center justify-center h-64">Loading...</div>}>
-          {activeSubTab === 'rivals' && <RivalsPanel />}
-          {activeSubTab === 'awards' && <AwardsPanel />}
-          {activeSubTab === 'market' && <MarketPanel />}
-          {activeSubTab === 'financials' && <FinancialsPanel />}
-        </React.Suspense>
+        
+        {/* Content */}
+        <div className="flex-1 min-h-0 mt-8">
+          <React.Suspense fallback={<div className="flex items-center justify-center h-64 font-display font-black uppercase tracking-widest text-muted-foreground/20 italic">Initializing Surveillance...</div>}>
+            {activeSubTab === 'rivals' && <RivalsPanel />}
+            {activeSubTab === 'awards' && <AwardsPanel />}
+            {activeSubTab === 'market' && <MarketPanel />}
+            {activeSubTab === 'financials' && <FinancialsPanel />}
+          </React.Suspense>
+        </div>
       </div>
     </m.div>
   );
 };
+
+export default IntelligenceHub;
 
 export default IntelligenceHub;

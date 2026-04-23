@@ -22,30 +22,55 @@ export const RevenueStreamChart: React.FC<RevenueStreamChartProps> = ({ data }) 
         <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
           <defs>
             <linearGradient id="colorTheo" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.8}/>
-              <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
+              <stop offset="5%" stopColor="rgba(var(--primary), 1)" stopOpacity={0.8}/>
+              <stop offset="95%" stopColor="rgba(var(--primary), 0)" stopOpacity={0}/>
             </linearGradient>
             <linearGradient id="colorStream" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="hsl(var(--secondary))" stopOpacity={0.8}/>
-              <stop offset="95%" stopColor="hsl(var(--secondary))" stopOpacity={0}/>
+              <stop offset="5%" stopColor="#38bdf8" stopOpacity={0.8}/>
+              <stop offset="95%" stopColor="#38bdf8" stopOpacity={0}/>
             </linearGradient>
             <linearGradient id="colorMerch" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor="#a78bfa" stopOpacity={0.8}/>
               <stop offset="95%" stopColor="#a78bfa" stopOpacity={0}/>
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-          <XAxis dataKey="week" fontSize={10} tickLine={false} axisLine={false} stroke="hsl(var(--muted-foreground))" />
-          <YAxis fontSize={10} tickLine={false} axisLine={false} stroke="hsl(var(--muted-foreground))" tickFormatter={(v) => `$${v/1000}k`} />
+          <CartesianGrid strokeDasharray="8 8" stroke="rgba(255,255,255,0.02)" vertical={false} />
+          <XAxis 
+            dataKey="week" 
+            fontSize={9} 
+            fontWeight={900} 
+            tickLine={false} 
+            axisLine={false} 
+            stroke="rgba(255,255,255,0.2)" 
+          />
+          <YAxis 
+            fontSize={9} 
+            fontWeight={900} 
+            tickLine={false} 
+            axisLine={false} 
+            stroke="rgba(255,255,255,0.2)" 
+            tickFormatter={(v) => `$${v/1000}K`} 
+          />
           <Tooltip 
-            contentStyle={{ backgroundColor: 'hsl(var(--background))', border: '1px solid hsl(var(--border))', borderRadius: '8px' }}
-            itemStyle={{ fontSize: '10px', fontWeight: 'bold' }}
+            contentStyle={{ 
+              backgroundColor: 'rgba(0, 0, 0, 0.95)', 
+              border: '1px solid rgba(255,255,255,0.05)', 
+              borderRadius: '0px',
+              backdropFilter: 'blur(32px)',
+              padding: '12px'
+            }}
+            itemStyle={{ 
+              fontSize: '9px', 
+              fontWeight: 900, 
+              textTransform: 'uppercase', 
+              letterSpacing: '0.2em' 
+            }}
             formatter={(value: number) => formatMoney(value)}
           />
-          <Area type="monotone" dataKey="theatrical" stackId="1" stroke="hsl(var(--primary))" fillOpacity={1} fill="url(#colorTheo)" />
-          <Area type="monotone" dataKey="streaming" stackId="1" stroke="hsl(var(--secondary))" fillOpacity={1} fill="url(#colorStream)" />
+          <Area type="monotone" dataKey="theatrical" stackId="1" stroke="rgba(var(--primary), 1)" fillOpacity={1} fill="url(#colorTheo)" />
+          <Area type="monotone" dataKey="streaming" stackId="1" stroke="#38bdf8" fillOpacity={1} fill="url(#colorStream)" />
           <Area type="monotone" dataKey="merch" stackId="1" stroke="#a78bfa" fillOpacity={1} fill="url(#colorMerch)" />
-          <Area type="monotone" dataKey="passive" stackId="1" stroke="#34d399" fillOpacity={1} fill="#34d399" />
+          <Area type="monotone" dataKey="passive" stackId="1" stroke="#34d399" fillOpacity={0.1} fill="#34d399" />
         </AreaChart>
       </ResponsiveContainer>
     </div>

@@ -14,12 +14,15 @@ export const TopBar = () => {
   const saveToSlot = useGameStore(s => s.saveToSlot);
 
   const { showSummary } = useUIStore();
-
   const activeProjectsList = useGameStore(s => selectActiveProjects(s.gameState));
 
   if (!gameState) return null;
 
   const cash = gameState.finance.cash;
+  const history = gameState.finance.history || [];
+  const lastWeekCash = history.length > 0 ? history[history.length - 1].cash : cash;
+  const cashDelta = cash - lastWeekCash;
+
   const { week, studio } = gameState;
   const { displayWeek, year } = getWeekDisplay(week);
 
@@ -33,55 +36,65 @@ export const TopBar = () => {
   };
 
   return (
-    <header className="h-14 glass-header flex items-center px-6 gap-8 shrink-0 relative transition-all duration-300">
-      {/* Date & Urgency Indicator */}
-      <TooltipWrapper tooltip={`Current Year: ${year}, Week: ${displayWeek}. Business quarters cycle every 13 weeks.`} side="bottom">
+    <header className="h-16 glass-header flex items-center px-6 gap-8 shrink-0 relative transition-all duration-300">
+      {/* Date & Fiscal Period */}
+      <TooltipWrapper tooltip={`Current Year: ${year}, Week: ${displayWeek}. Business quarters cycle every 13 weeks.`}>
         <div className="flex items-center gap-4 cursor-default">
           <div className="flex flex-col">
-            <span className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em]">Fiscal Period</span>
-            <span className="font-mono font-bold text-sm tracking-tight">Week {displayWeek} · Year {year}</span>
+            <span className="text-[9px] text-muted-foreground/60 font-black uppercase tracking-[0.2em] leading-none mb-1.5">Fiscal Period</span>
+            <div className="flex items-center gap-2">
+              <span className="font-display font-black text-[15px] tracking-tighter uppercase">W{displayWeek}</span>
+              <span className="w-1 h-1 rounded-full bg-muted-foreground/30" />
+              <span className="font-display font-black text-[15px] tracking-tighter uppercase text-muted-foreground/60">Y{year}</span>
+            </div>
           </div>
-          <Badge variant="outline" className="bg-primary/5 border-primary/20 text-primary font-mono px-2 py-0 text-[10px]">Q{(Math.floor((displayWeek-1)/13) + 1)}</Badge>
+          <div className="h-8 w-px bg-white/5" />
+          <div className="flex flex-col">
+             <span className="text-[9px] text-muted-foreground/40 font-black uppercase tracking-widest leading-none mb-1">Quarter</span>
+             <span className="font-display font-black text-xs text-primary/80">Q{(Math.floor((displayWeek-1)/13) + 1)}</span>
+          </div>
         </div>
       </TooltipWrapper>
 
       {/* Global News Ticker */}
-      <NewsTicker />
+      <div className="flex-1 max-w-2xl">
+        <NewsTicker />
+      </div>
 
       {/* Primary Metrics Cluster */}
-      <div className="flex items-center gap-6 ml-auto">
+      <div className="flex items-center gap-8 ml-auto">
         {/* Cash Status */}
-        <TooltipWrapper tooltip="Total liquid capital available for acquisitions and project funding." side="bottom">
+        <TooltipWrapper tooltip="Total liquid capital available for acquisitions and project funding.">
           <div className="flex flex-col items-end cursor-default">
-            <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">Liquid Capital</span>
-            <span className={`font-mono font-bold text-sm ${cash < 0 ? 'text-destructive' : 'text-primary'} text-glow`}>
-              {formatMoney(cash)}
-            </span>
+            <span className="text-[9px] text-muted-foreground/60 font-black uppercase tracking-widest leading-none mb-1">Liquid Capital</span>
+            <div className="flex items-center gap-2">
+               {cashDelta !== 0 && (
+                 <span className={cn("text-[10px] font-display font-black", cashDelta > 0 ? "text-success" : "text-destructive")}>
+                   {cashDelta > 0 ? '+' : ''}{formatMoney(cashDelta).replace('$', '')}
+                 </span>
+               )}
+               <span className={cn("font-display font-black text-lg tracking-tighter", cash < 0 ? 'text-destructive' : 'text-primary')}>
+                {formatMoney(cash)}
+              </span>
+            </div>
           </div>
         </TooltipWrapper>
-
-        <div className="w-px h-6 bg-white/10" />
 
         {/* Reputation/Prestige */}
-        <TooltipWrapper tooltip="Studio reputation level. High prestige unlocks elite talent and better distribution terms." side="bottom">
-          <div className="flex flex-col items-end group cursor-default">
-            <div className="flex items-center gap-1.5">
-              <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">Prestige</span>
-              <TrendingUp className="h-2.5 w-2.5 text-secondary" />
-            </div>
-            <span className="font-mono font-bold text-sm text-secondary">
-              {studio.prestige}
+        <TooltipWrapper tooltip="Studio reputation level. High prestige unlocks elite talent and better distribution terms.">
+          <div className="flex flex-col items-end cursor-default">
+            <span className="text-[9px] text-muted-foreground/60 font-black uppercase tracking-widest leading-none mb-1">Prestige</span>
+            <span className="font-display font-black text-lg text-secondary tracking-tighter">
+              ★ {studio.prestige}
             </span>
           </div>
         </TooltipWrapper>
 
-        <div className="w-px h-6 bg-white/10" />
-
         {/* Project Pipeline Count */}
-        <TooltipWrapper tooltip="Total number of properties currently in active development or production phases." side="bottom">
+        <TooltipWrapper tooltip="Total number of properties currently in active development or production phases.">
           <div className="flex flex-col items-end cursor-default">
-            <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">Active Slate</span>
-            <span className="font-mono font-bold text-sm text-foreground/80">
+            <span className="text-[9px] text-muted-foreground/60 font-black uppercase tracking-widest leading-none mb-1">Slate</span>
+            <span className="font-display font-black text-lg text-foreground tracking-tighter">
               {activeProjectsList.length}
             </span>
           </div>
@@ -89,40 +102,22 @@ export const TopBar = () => {
       </div>
 
       {/* Functional Actions */}
-      <div className="flex items-center gap-3 ml-4">
-        {/* Market Event Alert */}
-        {gameState.market.activeMarketEvents && gameState.market.activeMarketEvents.length > 0 && (
-          <div className="relative group">
-            <AlertTriangle className="h-4 w-4 text-amber-500 animate-pulse cursor-help" />
-            <div className="absolute top-full right-0 mt-2 p-3 bg-card border border-amber-500/20 rounded shadow-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 w-64 text-xs">
-              <p className="font-bold text-amber-500 mb-1">Active Market Events</p>
-              <ul className="list-disc list-inside text-muted-foreground">
-                {gameState.market.activeMarketEvents.map(e => (
-                  <li key={e.id}>{e.name}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        )}
-
+      <div className="flex items-center gap-4 ml-4">
         <Button 
           variant="ghost" 
           size="icon" 
-          aria-label="Manual Cloud Save"
-          tooltip="Sync studio progress to cloud storage"
           onClick={handleSave} 
-          className="h-8 w-8 rounded-full hover:bg-white/5 text-muted-foreground hover:text-primary transition-colors"
+          className="h-9 w-9 rounded-xl hover:bg-white/5 text-muted-foreground/40 hover:text-primary transition-all active:scale-90"
         >
-          <Save className="h-4 w-4" />
+          <Save className="h-4.5 w-4.5" />
         </Button>
 
         <Button 
           onClick={handleAdvanceWeek} 
-          tooltip="Advance to next fiscal week and process all studio operations"
-          className="h-9 px-4 font-display font-black uppercase tracking-widest text-[10px] gap-2 transition-all duration-300 shadow-[0_0_20px_rgba(var(--primary),0.1)] hover:shadow-[0_0_25px_rgba(var(--primary),0.3)] hover:scale-105 active:scale-95 group overflow-hidden relative"
+          className="h-10 px-6 font-display font-black uppercase tracking-[0.15em] text-[10px] gap-3 transition-all duration-500 shadow-xl shadow-primary/5 hover:shadow-primary/15 hover:scale-[1.02] active:scale-95 group overflow-hidden relative"
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
-          <FastForward className="h-3.5 w-3.5" />
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+          <FastForward className="h-4 w-4" />
           Advance Week
         </Button>
       </div>

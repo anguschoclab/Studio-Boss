@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
-import { RivalStudio, Buyer } from '@/engine/types';
 import { RegulatorSystem } from '@/engine/systems/industry/RegulatorSystem';
 import { TrendingUp, ShieldAlert, History, Users, Activity } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 export const MADashboard: React.FC = () => {
   const state = useGameStore(s => s.gameState);
@@ -34,65 +34,70 @@ export const MADashboard: React.FC = () => {
   }, [state]);
 
   return (
-    <div className="p-6 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <header className="flex justify-between items-end">
+    <div className="p-0 space-y-12 animate-in fade-in duration-700">
+      <header className="flex justify-between items-end pb-8 border-b border-white/5">
         <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
-            Industry Consolidation Tracker
+          <h1 className="text-4xl font-display font-black text-foreground uppercase tracking-tighter italic leading-none">
+            Consolidation Intelligence
           </h1>
-          <p className="text-slate-400 mt-1">Market share analysis and anti-trust risk monitoring</p>
+          <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/40 mt-4">MARKET SHARE ANALYSIS & ANTI-TRUST RISK MONITORING</p>
         </div>
         <div className="flex gap-4">
-          <div className="bg-slate-800/50 border border-slate-700/50 rounded-xl p-3 px-5 flex items-center gap-3">
-             <Users className="text-blue-400 w-5 h-5" />
+          <div className="bg-white/[0.02] border border-white/5 p-4 px-8 flex items-center gap-4">
+             <Users className="text-primary w-5 h-5" />
              <div>
-               <div className="text-xs text-slate-500 uppercase tracking-wider font-bold">Active Studios</div>
-               <div className="text-xl font-mono text-white">{industryData.allStudios.length}</div>
+               <div className="text-[9px] text-muted-foreground/40 uppercase tracking-[0.2em] font-black">Active Studios</div>
+               <div className="text-xl font-display font-black italic text-foreground leading-none mt-1">{industryData.allStudios.length}</div>
              </div>
           </div>
         </div>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
         {/* Market Share Heatmap / Bubble View */}
-        <div className="lg:col-span-2 space-y-4">
-           <div className="flex items-center gap-2 mb-2">
-             <Activity className="text-indigo-400 w-5 h-5" />
-             <h2 className="text-xl font-semibold text-white">Market Share Heatmap</h2>
+        <div className="lg:col-span-2 space-y-8">
+           <div className="flex items-center gap-3 mb-4">
+             <Activity className="text-primary w-5 h-5" />
+             <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 italic">Market Share Matrix</h2>
            </div>
            
-           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+           <div className="grid grid-cols-2 md:grid-cols-2 gap-6">
              {industryData.allStudios.map((studio) => (
                <div 
                  key={studio.id}
-                 className={`relative overflow-hidden rounded-2xl p-5 border transition-all duration-300 hover:scale-[1.02] ${
+                 className={cn(
+                   "relative overflow-hidden rounded-2xl p-8 border transition-all duration-700 group",
                    studio.isPlayer 
-                    ? 'bg-blue-600/10 border-blue-500/50 shadow-lg shadow-blue-500/10' 
-                    : 'bg-slate-800/40 border-slate-700/50'
-                 }`}
+                    ? 'bg-primary/5 border-primary/20 shadow-2xl' 
+                    : 'bg-white/[0.01] border-white/5 hover:bg-white/[0.03] hover:border-white/10'
+                 )}
                >
-                 <div className="relative z-10">
-                   <div className="flex justify-between items-start mb-4">
-                     <span className={`text-[10px] uppercase font-black px-2 py-0.5 rounded-full ${
-                       studio.archetype === 'major' ? 'bg-amber-500/20 text-amber-500' :
-                       studio.archetype === 'mid-tier' ? 'bg-indigo-500/20 text-indigo-500' :
-                       'bg-slate-500/20 text-slate-400'
-                     }`}>
+                 <div className="relative z-10 space-y-6">
+                   <div className="flex justify-between items-start">
+                     <span className={cn(
+                       "text-[9px] uppercase font-black tracking-[0.2em] px-3 py-1 rounded-none border",
+                       studio.archetype === 'major' ? 'bg-amber-500/10 text-amber-500 border-amber-500/20' :
+                       studio.archetype === 'mid-tier' ? 'bg-blue-500/10 text-blue-500 border-blue-500/20' :
+                       'bg-white/5 text-muted-foreground/40 border-white/5'
+                     )}>
                        {studio.archetype}
                      </span>
-                     <span className="text-2xl font-mono font-bold text-white">
+                     <span className="text-4xl font-display font-black italic text-foreground tracking-tighter leading-none">
                        {studio.share.toFixed(1)}%
                      </span>
                    </div>
-                   <h3 className={`font-bold truncate text-lg ${studio.isPlayer ? 'text-blue-200' : 'text-slate-200'}`}>
-                     {studio.name} {studio.isPlayer && "(You)"}
+                   <h3 className={cn(
+                     "font-display font-black uppercase italic tracking-tighter text-xl truncate leading-none",
+                     studio.isPlayer ? "text-primary" : "text-foreground/80"
+                   )}>
+                     {studio.name} {studio.isPlayer && "(HQ)"}
                    </h3>
                    
                    {/* Danger Zone Indicator */}
                    {studio.share > 25 && (
-                     <div className="mt-4 flex items-center gap-2 text-[10px] text-rose-400 font-bold uppercase animate-pulse">
-                       <ShieldAlert className="w-3 h-3" />
-                       Anti-Trust High Risk
+                     <div className="flex items-center gap-2 text-[9px] text-destructive font-black uppercase tracking-widest animate-pulse border-t border-destructive/20 pt-4">
+                       <ShieldAlert className="w-3.5 h-3.5" />
+                       ANTI-TRUST VECTOR DETECTED
                      </div>
                    )}
                  </div>
@@ -102,8 +107,8 @@ export const MADashboard: React.FC = () => {
                    className="absolute bottom-0 left-0 h-1 transition-all duration-1000" 
                    style={{ 
                      width: `${studio.share}%`, 
-                     backgroundColor: studio.share > 25 ? '#f43f5e' : (studio.isPlayer ? '#3b82f6' : '#6366f1'),
-                     boxShadow: `0 0 10px ${studio.share > 25 ? '#f43f5e' : '#6366f1'}44`
+                     backgroundColor: studio.share > 25 ? '#ef4444' : (studio.isPlayer ? 'rgba(var(--primary),1)' : 'rgba(255,255,255,0.1)'),
+                     boxShadow: `0 0 20px ${studio.share > 25 ? '#ef4444' : 'rgba(var(--primary),0.3)'}`
                    }} 
                  />
                </div>
@@ -112,33 +117,33 @@ export const MADashboard: React.FC = () => {
         </div>
 
         {/* History / M&A Timeline */}
-        <div className="space-y-4">
-          <div className="flex items-center gap-2 mb-2">
-             <History className="text-amber-400 w-5 h-5" />
-             <h2 className="text-xl font-semibold text-white">Consolidation History</h2>
+        <div className="space-y-8">
+          <div className="flex items-center gap-3 mb-4">
+             <History className="text-secondary w-5 h-5" />
+             <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 italic">Consolidation History</h2>
           </div>
           
-          <div className="bg-slate-900/50 border border-slate-800 rounded-2xl h-[600px] overflow-y-auto custom-scrollbar">
+          <div className="bg-white/[0.01] border border-white/5 rounded-none h-[640px] overflow-y-auto custom-scrollbar p-8">
             {industryData.mnaEvents.length === 0 ? (
-              <div className="h-full flex flex-col items-center justify-center text-slate-600 p-8 text-center space-y-4">
-                 <div className="w-16 h-16 rounded-full bg-slate-800/50 flex items-center justify-center">
-                    <TrendingUp className="w-8 h-8 opacity-20" />
+              <div className="h-full flex flex-col items-center justify-center text-center space-y-6">
+                 <div className="w-16 h-16 bg-white/[0.02] border border-white/5 flex items-center justify-center">
+                    <TrendingUp className="w-8 h-8 opacity-10" />
                  </div>
-                 <p className="text-sm">No major mergers detected in recent history. The landscape remains fragmented.</p>
+                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/20 italic max-w-[200px]">NO RECENT CONSOLIDATION VECTORS DETECTED</p>
               </div>
             ) : (
-              <div className="p-4 space-y-6">
+              <div className="space-y-10 relative before:absolute before:left-[3px] before:top-2 before:bottom-2 before:w-[1px] before:bg-white/5">
                 {industryData.mnaEvents.map((event, i) => (
-                  <div key={event.id} className="relative pl-6 before:absolute before:left-0 before:top-2 before:bottom-0 before:w-px before:bg-slate-700">
-                    <div className="absolute left-[-4px] top-2 w-2 h-2 rounded-full bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.5)]" />
-                    <div className="text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-1">
-                      Week {event.week}
+                  <div key={event.id} className="relative pl-10 group">
+                    <div className="absolute left-0 top-1.5 w-2 h-2 bg-secondary group-hover:shadow-[0_0_15px_rgba(var(--secondary),0.6)] transition-all" />
+                    <div className="text-[9px] font-display font-black text-muted-foreground/40 uppercase tracking-[0.2em] mb-2">
+                      WEEK {event.week}
                     </div>
-                    <div className="text-sm font-semibold text-slate-200 mb-1 leading-tight">
+                    <div className="text-sm font-display font-black uppercase italic tracking-tighter text-foreground/90 mb-2 leading-tight group-hover:text-primary transition-colors">
                       {event.headline}
                     </div>
-                    <div className="text-xs text-slate-500 italic">
-                       Reported by The Trades
+                    <div className="text-[9px] font-black text-muted-foreground/20 uppercase tracking-widest">
+                       INTEL SOURCE: THE TRADES
                     </div>
                   </div>
                 ))}

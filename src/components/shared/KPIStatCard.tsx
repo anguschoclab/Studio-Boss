@@ -1,113 +1,95 @@
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { LucideIcon } from 'lucide-react';
+import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
 
 interface KPIStatCardProps {
   label: string;
   value: string | number;
-  icon: LucideIcon;
-  color?: 'primary' | 'secondary' | 'success' | 'destructive' | 'warning';
+  subLabel?: string;
+  icon?: React.ReactNode;
   trend?: {
-    direction: 'up' | 'down' | 'neutral';
-    value?: string;
+    value: number | string;
+    isPositive: boolean;
   };
+  variant?: 'primary' | 'secondary' | 'success' | 'destructive' | 'muted';
+  tooltip?: string;
   className?: string;
 }
 
-const colorVariants = {
-  primary: {
-    glow: 'from-primary/20 via-transparent to-transparent',
-    text: 'text-primary',
-    iconBg: 'bg-primary/10 text-primary',
-  },
-  secondary: {
-    glow: 'from-secondary/20 via-transparent to-transparent',
-    text: 'text-secondary',
-    iconBg: 'bg-secondary/10 text-secondary',
-  },
-  success: {
-    glow: 'from-success/20 via-transparent to-transparent',
-    text: 'text-success',
-    iconBg: 'bg-success/10 text-success',
-  },
-  destructive: {
-    glow: 'from-destructive/20 via-transparent to-transparent',
-    text: 'text-destructive',
-    iconBg: 'bg-destructive/10 text-destructive',
-  },
-  warning: {
-    glow: 'from-amber-500/20 via-transparent to-transparent',
-    text: 'text-amber-400',
-    iconBg: 'bg-amber-500/10 text-amber-400',
-  },
-};
-
-/**
- * KPI Stat Card - Design Bible Section 8.1
- * 
- * Standard KPI card with ambient glow blob, icon top-right, and proper typography.
- * Used across all dashboard screens for key performance indicators.
- */
 export const KPIStatCard: React.FC<KPIStatCardProps> = ({
   label,
   value,
-  icon: Icon,
-  color = 'primary',
+  subLabel,
+  icon,
   trend,
-  className,
+  variant = 'muted',
+  tooltip,
+  className
 }) => {
-  const variant = colorVariants[color];
+  const variantStyles = {
+    primary: 'text-primary',
+    secondary: 'text-secondary',
+    success: 'text-success',
+    destructive: 'text-destructive',
+    muted: 'text-foreground'
+  };
+
+  const glowStyles = {
+    primary: 'bg-primary/5',
+    secondary: 'bg-secondary/5',
+    success: 'bg-success/5',
+    destructive: 'bg-destructive/5',
+    muted: 'bg-white/5'
+  };
 
   return (
-    <Card
-      className={cn(
-        'relative overflow-hidden border border-white/5 bg-card/60 backdrop-blur-xl shadow-2xl rounded-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl group',
+    <TooltipWrapper tooltip={tooltip}>
+      <div className={cn(
+        "glass-card p-5 group hover-glow transition-all duration-300 relative overflow-hidden",
         className
-      )}
-    >
-      {/* Ambient Glow Blob */}
-      <div
-        className={cn(
-          'absolute inset-0 bg-gradient-to-br opacity-50 pointer-events-none',
-          variant.glow
-        )}
-      />
-      
-      <CardContent className="relative z-10 p-5">
-        <div className="flex items-start justify-between">
-          <div className="flex-1 min-w-0">
-            {/* Label */}
-            <p className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground mb-2">
+      )}>
+        {/* Glow effect */}
+        <div className={cn(
+          "absolute -top-12 -right-12 w-24 h-24 blur-3xl opacity-0 group-hover:opacity-40 transition-opacity duration-500 rounded-full",
+          glowStyles[variant]
+        )} />
+
+        <div className="flex flex-col h-full justify-between relative z-10">
+          <div className="flex justify-between items-start mb-4">
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 leading-none">
               {label}
-            </p>
-            
-            {/* Value */}
-            <p className="text-3xl font-display font-black tracking-tighter text-foreground">
+            </span>
+            {icon && <div className="text-muted-foreground/40">{icon}</div>}
+          </div>
+
+          <div>
+            <div className={cn(
+              "text-3xl font-display font-black tracking-tighter uppercase leading-none mb-1",
+              variantStyles[variant]
+            )}>
               {value}
-            </p>
+            </div>
             
-            {/* Trend indicator */}
-            {trend && (
-              <div className={cn(
-                'flex items-center gap-1 mt-1 text-[10px] font-bold',
-                trend.direction === 'up' ? 'text-success' : 
-                trend.direction === 'down' ? 'text-destructive' : 'text-muted-foreground'
-              )}>
-                {trend.value && <span>{trend.value}</span>}
+            {(subLabel || trend) && (
+              <div className="flex items-center gap-2">
+                {trend && (
+                  <span className={cn(
+                    "text-[10px] font-black tracking-widest uppercase",
+                    trend.isPositive ? 'text-success' : 'text-destructive'
+                  )}>
+                    {trend.isPositive ? '▲' : '▼'} {trend.value}
+                  </span>
+                )}
+                {subLabel && (
+                  <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground/40">
+                    {subLabel}
+                  </span>
+                )}
               </div>
             )}
           </div>
-          
-          {/* Icon */}
-          <div className={cn(
-            'rounded-xl flex items-center justify-center shrink-0 w-10 h-10',
-            variant.iconBg
-          )}>
-            <Icon className="w-5 h-5" strokeWidth={2} />
-          </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </TooltipWrapper>
   );
 };

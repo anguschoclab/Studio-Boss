@@ -14,9 +14,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Search, Filter, Users, Star } from 'lucide-react';
+import { Search, Filter, Users, Star, Database } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { EmptyState } from '@/components/shared/EmptyState';
 
 export const TalentHub = () => {
   const state = useGameStore(s => s.gameState);
@@ -53,109 +54,117 @@ export const TalentHub = () => {
   if (!state) return null;
 
   return (
-    <div className="h-full flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="h-full flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-8">
       {/* Header */}
-      <div className="flex items-center gap-3 mb-4">
-        <div className="w-10 h-10 rounded-lg bg-secondary/10 border border-secondary/20 flex items-center justify-center">
-          <Users className="h-5 w-5 text-secondary" />
+      <div className="flex items-center gap-4 border-b border-white/5 pb-6">
+        <div className="w-12 h-12 rounded-xl bg-secondary/10 border border-secondary/20 flex items-center justify-center">
+          <Users className="h-6 w-6 text-secondary" />
         </div>
         <div>
-          <h2 className="text-2xl font-black tracking-tighter uppercase leading-none">Talent</h2>
-          <p className="text-[11px] font-black uppercase text-muted-foreground/60 tracking-[0.2em]">Roster Management • Industry Database</p>
+          <h2 className="text-4xl font-display font-black tracking-tighter uppercase italic leading-none mb-1">Human Capital</h2>
+          <p className="text-[10px] font-black uppercase text-muted-foreground/40 tracking-[0.25em]">Global Roster • Studio Stable Management</p>
         </div>
       </div>
 
       <Tabs defaultValue="roster" className="flex-1 flex flex-col overflow-hidden">
-        <TabsList className="w-fit bg-muted/30 border border-border/40 mb-4">
-          <TabsTrigger value="roster" className="gap-2 text-xs font-bold uppercase tracking-wider">
+        <TabsList className="w-fit bg-white/5 border border-white/5 mb-8 p-1 h-12">
+          <TabsTrigger value="roster" className="gap-3 h-10 px-8 font-display font-black uppercase tracking-[0.15em] text-[10px] data-[state=active]:bg-secondary data-[state=active]:text-black transition-all">
             <Star className="h-3.5 w-3.5" /> Your Roster
           </TabsTrigger>
-          <TabsTrigger value="sbdb" className="gap-2 text-xs font-bold uppercase tracking-wider">
-            <Search className="h-3.5 w-3.5" /> SBDB
+          <TabsTrigger value="sbdb" className="gap-3 h-10 px-8 font-display font-black uppercase tracking-[0.15em] text-[10px] data-[state=active]:bg-primary data-[state=active]:text-black transition-all">
+            <Database className="h-3.5 w-3.5" /> Industry SBDB
           </TabsTrigger>
         </TabsList>
 
         {/* YOUR ROSTER */}
-        <TabsContent value="roster" className="flex-1 flex flex-col overflow-hidden mt-0">
-          <div className="flex gap-2 flex-wrap mb-4">
+        <TabsContent value="roster" className="flex-1 flex flex-col overflow-hidden mt-0 outline-none">
+          <div className="flex gap-3 flex-wrap mb-8">
             {(['all', 'actor', 'director', 'writer', 'producer'] as (TalentRole | 'all')[]).map(type => (
-              <TooltipWrapper key={type} tooltip={`Filter by ${type === 'all' ? 'all roles' : type}`} side="bottom">
-                <button
-                  onClick={() => setRosterFilter(type)}
-                  className={cn(
-                    "px-3.5 py-1.5 text-[10px] uppercase tracking-wider font-black rounded-full transition-all duration-300 border",
-                    rosterFilter === type
-                      ? 'bg-primary text-primary-foreground shadow-[0_0_15px_hsl(var(--primary)/0.4)] scale-105 border-primary/50'
-                      : 'bg-muted/50 text-muted-foreground hover:bg-secondary/20 hover:text-foreground border-transparent hover:border-secondary/30'
-                  )}
-                >
-                  {type}
-                </button>
-              </TooltipWrapper>
+              <button
+                key={type}
+                onClick={() => setRosterFilter(type)}
+                className={cn(
+                  "px-5 py-2 text-[10px] uppercase font-black tracking-[0.2em] border transition-all duration-300",
+                  rosterFilter === type
+                    ? 'bg-secondary text-black border-secondary shadow-xl shadow-secondary/10'
+                    : 'bg-white/5 text-muted-foreground/60 border-white/5 hover:bg-white/10 hover:text-foreground'
+                )}
+              >
+                {type}
+              </button>
             ))}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 overflow-y-auto pb-6 custom-scrollbar pr-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 overflow-y-auto pb-12 custom-scrollbar pr-4">
             {filteredRoster.map((talent: Talent) => (
               <TalentCard key={talent.id} talent={talent} />
             ))}
             {filteredRoster.length === 0 && (
-              <div className="col-span-full py-12 text-center text-muted-foreground">No talent found matching this filter.</div>
+              <div className="col-span-full">
+                <EmptyState 
+                  icon={Star} 
+                  title="Roster Empty" 
+                  message="No talent assets are currently contracted to your studio stable."
+                  className="py-24 bg-white/[0.01]"
+                />
+              </div>
             )}
           </div>
         </TabsContent>
 
         {/* SBDB DATABASE */}
-        <TabsContent value="sbdb" className="flex-1 flex flex-col overflow-hidden mt-0">
-          <div className="glass-panel p-4 flex flex-col md:flex-row gap-4 items-center justify-between mb-4">
-            <div className="relative w-full md:w-96">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+        <TabsContent value="sbdb" className="flex-1 flex flex-col overflow-hidden mt-0 outline-none">
+          <div className="glass-card p-6 flex flex-col md:flex-row gap-6 items-center justify-between mb-8 bg-white/[0.02]">
+            <div className="relative w-full md:w-96 group">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/40 group-focus-within:text-primary transition-colors" />
               <Input
-                placeholder="Search SBDB..."
-                className="pl-10 bg-muted/30 border-border/40"
+                placeholder="Search Database..."
+                className="pl-10 h-11 bg-black/40 border-white/5 focus-visible:border-primary/30 text-[10px] font-black uppercase tracking-widest"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
-            <div className="flex items-center gap-3 w-full md:w-auto">
+            <div className="flex items-center gap-4 w-full md:w-auto">
               <Select value={roleFilter} onValueChange={setRoleFilter}>
-                <SelectTrigger className="w-[140px] bg-muted/30 border-border/40">
+                <SelectTrigger className="w-[160px] h-11 bg-black/40 border-white/5 text-[10px] font-black uppercase tracking-widest">
                   <SelectValue placeholder="All Roles" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Roles</SelectItem>
-                  <SelectItem value="actor">Actors</SelectItem>
-                  <SelectItem value="director">Directors</SelectItem>
-                  <SelectItem value="writer">Writers</SelectItem>
-                  <SelectItem value="producer">Producers</SelectItem>
+                <SelectContent className="bg-black/90 backdrop-blur-xl border-white/10">
+                  <SelectItem value="all" className="text-[10px] font-black uppercase tracking-widest">All Roles</SelectItem>
+                  <SelectItem value="actor" className="text-[10px] font-black uppercase tracking-widest">Actors</SelectItem>
+                  <SelectItem value="director" className="text-[10px] font-black uppercase tracking-widest">Directors</SelectItem>
+                  <SelectItem value="writer" className="text-[10px] font-black uppercase tracking-widest">Writers</SelectItem>
+                  <SelectItem value="producer" className="text-[10px] font-black uppercase tracking-widest">Producers</SelectItem>
                 </SelectContent>
               </Select>
               <Select value={tierFilter} onValueChange={setTierFilter}>
-                <SelectTrigger className="w-[140px] bg-muted/30 border-border/40">
+                <SelectTrigger className="w-[160px] h-11 bg-black/40 border-white/5 text-[10px] font-black uppercase tracking-widest">
                   <SelectValue placeholder="All Tiers" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Tiers</SelectItem>
-                  <SelectItem value="a-list">A-List (80+)</SelectItem>
-                  <SelectItem value="b-list">B-List (60-79)</SelectItem>
-                  <SelectItem value="rising">Rising Star (40-59)</SelectItem>
-                  <SelectItem value="undiscovered">New Talent (&lt;40)</SelectItem>
+                <SelectContent className="bg-black/90 backdrop-blur-xl border-white/10">
+                  <SelectItem value="all" className="text-[10px] font-black uppercase tracking-widest">All Tiers</SelectItem>
+                  <SelectItem value="a-list" className="text-[10px] font-black uppercase tracking-widest">A-List (80+)</SelectItem>
+                  <SelectItem value="b-list" className="text-[10px] font-black uppercase tracking-widest">B-List (60-79)</SelectItem>
+                  <SelectItem value="rising" className="text-[10px] font-black uppercase tracking-widest">Rising Star (40-59)</SelectItem>
+                  <SelectItem value="undiscovered" className="text-[10px] font-black uppercase tracking-widest">New Talent (&lt;40)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
 
-          <ScrollArea className="flex-1">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-8">
+          <ScrollArea className="flex-1 pr-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 pb-12">
               {filteredSBDB.map((talent) => (
                 <TalentCard key={talent.id} talent={talent} showStarMeter={true} />
               ))}
             </div>
             {filteredSBDB.length === 0 && (
-              <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
-                <Users className="w-12 h-12 mb-4 opacity-20" />
-                <p className="text-lg font-medium">No talent found matching your criteria.</p>
-              </div>
+              <EmptyState 
+                icon={Database} 
+                title="No Records" 
+                message="Your surveillance filters returned zero matches from the industry database."
+                className="py-24 bg-white/[0.01]"
+              />
             )}
           </ScrollArea>
         </TabsContent>
