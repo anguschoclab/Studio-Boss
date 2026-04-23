@@ -11,17 +11,8 @@ export function tickConsolidation(state: GameState): StateImpact[] {
   const rivals = Object.values(state.entities.rivals || {});
   const buyers = state.market.buyers;
 
-  // Financial stress simulation: drain cash from rivals periodically to create acquisition targets
-  rivals.forEach(rival => {
-    // Aggressive cash drain for headless simulation (20% per week)
-    if (rival.cash > 100_000_000) {
-      const stressAmount = rival.cash * 0.20; // 20% cash drain per week
-      impacts.push({
-        type: 'RIVAL_UPDATED',
-        payload: { rivalId: rival.id, update: { cash: rival.cash - stressAmount } }
-      });
-    }
-  });
+  // REMOVED: Financial stress simulation (ineffective and unrealistic)
+  // Rivals now deploy capital proactively via FlopMechanics and other systems
 
   // Potential Acquirers: Majors with surplus cash
   const majors = rivals.filter(r => r.archetype === 'major' && r.cash > 250_000_000);

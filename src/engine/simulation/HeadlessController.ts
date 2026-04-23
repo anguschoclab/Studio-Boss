@@ -4,6 +4,7 @@ import { evaluateGreenlight } from '../systems/greenlight';
 import { executeGreenlight, executeMarketing } from '../systems/projects';
 import { BudgetTierKey } from '../types/project.types';
 import { StudioArchetype, AI_ARCHETYPES } from '../data/aiArchetypes';
+import { processFlops } from '../systems/finance/FlopMechanics';
 
 /**
  * Headless Controller (AI for the Player Studio)
@@ -243,6 +244,10 @@ export class HeadlessController {
         });
       }
     });
+
+    // Process flops for all released projects
+    const flopImpacts = processFlops(state);
+    impacts.push(...flopImpacts);
 
     return impacts;
   }

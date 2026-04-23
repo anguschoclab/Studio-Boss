@@ -99,7 +99,7 @@ export const WeekSummaryModal = () => {
               )}
 
               {/* The Hits - Positive Updates */}
-              {(positiveUpdates.length > 0 || projectUpdates.some((u: string) => u.includes('(+'))) || netDelta > 0) && (
+              {(positiveUpdates.length > 0 || projectUpdates.some((u: string) => u.includes('(+)')) || netDelta > 0) && (
                 <div className="space-y-6">
                   <div className="flex items-center gap-4">
                     <Trophy className="h-4 w-4 text-emerald-500" />
@@ -115,7 +115,7 @@ export const WeekSummaryModal = () => {
                         </div>
                       </div>
                     )}
-                    {projectUpdates.filter((u: string) => u.includes('(+')).map((u: string, i: number) => (
+                    {projectUpdates.filter((u: string) => u.includes('(+)')).map((u: string, i: number) => (
                       <div key={i} className="p-4 rounded-none border border-emerald-500/20 bg-emerald-500/5 flex items-center gap-4">
                         <div className="w-1 h-1 bg-emerald-500 shrink-0 rotate-45" />
                         <div className="flex-1 text-sm font-medium text-emerald-500 italic">
@@ -134,7 +134,7 @@ export const WeekSummaryModal = () => {
               )}
 
               {/* Problems - Crises and Issues */}
-              {(crises.length > 0 || projectUpdates.some((u: string) => u.includes('(-'))) || netDelta < -500_000) && (
+              {(crises.length > 0 || projectUpdates.some((u: string) => u.includes('(-)')) || netDelta < -500_000) && (
                 <div className="space-y-6">
                   <div className="flex items-center gap-4">
                     <AlertTriangle className="h-4 w-4 text-amber-500" />
@@ -156,11 +156,11 @@ export const WeekSummaryModal = () => {
                         <div className="flex-1 text-sm font-medium text-amber-500 italic">{e.title}</div>
                       </div>
                     ))}
-                    {projectUpdates.filter((u: string) => u.includes('(-')).map((u: string, i: number) => (
+                    {projectUpdates.filter((u: string) => u.includes('(-)')).map((u: string, i: number) => (
                       <div key={i} className="p-4 rounded-none border border-amber-500/20 bg-amber-500/5 flex items-center gap-4">
                         <div className="w-1 h-1 bg-amber-500 shrink-0 rotate-45" />
                         <div className="flex-1 text-sm font-medium text-amber-500 italic">
-                          {u.split('(-')[0]}<span className="ml-2"> (-{u.split('(-')[1]}</span>
+                          {u.split('(-)')[0]}<span className="ml-2"> (-{u.split('(-)')[1]}</span>
                         </div>
                       </div>
                     ))}

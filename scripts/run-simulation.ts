@@ -1,13 +1,13 @@
-import { SimulationRunner } from '../src/engine/simulation/SimulationRunner';
+import { SimulationRunner } from '../src/engine/simulation/SimulationRunner.js';
 
-// Run a 10-year simulation (520 weeks)
-const weeks = 520;
+// Run a 50-year simulation (2600 weeks)
+const weeks = 2600;
 const seed = 42;
 const archetype = 'major';
 const persona = 'balanced';
 const autoPilot = true;
 
-console.log(`Running ${weeks} week (10-year) headless simulation...`);
+console.log(`Running ${weeks} week (50-year) headless simulation...`);
 console.log(`Seed: ${seed}, Archetype: ${archetype}, Auto-pilot: ${autoPilot}\n`);
 
 let projectsCreated = 0;

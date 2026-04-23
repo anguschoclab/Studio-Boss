@@ -10,10 +10,10 @@ export function calculateFranchiseEvolutionImpacts(state: GameState, rng: Random
   const projects = Object.values(state.entities.projects);
   
   projects.forEach(project => {
-    if (project.state === 'released' && project.releaseWeek === state.week) {
+    if (project.state === 'released' && !project.franchiseId) {
       let franchiseId = project.franchiseId;
-      const isBreakout = project.revenue > (project.budget * 2.5);
-      const isPrestigeHit = (project.awardsProfile?.prestigeScore || 0) > 85;
+      const isBreakout = project.revenue > (project.budget * 1.5); // Lowered from 2.5x to 1.5x
+      const isPrestigeHit = (project.awardsProfile?.prestigeScore || 0) > 70; // Lowered from 85 to 70
 
       // 1. Breakout Hub Creation
       if (!franchiseId && (isBreakout || isPrestigeHit)) {
@@ -34,8 +34,13 @@ export function calculateFranchiseEvolutionImpacts(state: GameState, rng: Random
         };
         
         impacts.push({
-          type: 'FRANCHISE_UPDATED',
-          payload: { franchiseId, update: newFranchise }
+          type: 'INDUSTRY_UPDATE',
+          payload: {
+            update: {
+              newFranchise: { id: franchiseId, franchise: newFranchise },
+              projectFranchiseUpdate: { projectId: project.id, franchiseId }
+            }
+          }
         });
 
         impacts.push({
@@ -43,10 +48,7 @@ export function calculateFranchiseEvolutionImpacts(state: GameState, rng: Random
           payload: { projectId: project.id, update: { franchiseId } }
         });
 
-        impacts.push({
-          type: 'VAULT_ASSET_UPDATED',
-          payload: { assetId: `ip-${project.id}`, update: { franchiseId } }
-        });
+        // Vault update handled separately via IPVaultManager
       }
       
       // 2. Mainstream Hub Maintenance
@@ -69,27 +71,28 @@ export function calculateFranchiseEvolutionImpacts(state: GameState, rng: Random
           }
 
           impacts.push({
-            type: 'FRANCHISE_UPDATED',
+            type: 'INDUSTRY_UPDATE',
             payload: {
-              franchiseId,
               update: {
-                assetIds: nextAssetIds,
-                lastReleaseWeeks: nextReleaseWeeks,
-                audienceLoyalty: updatedLoyalty,
-                synergyMultiplier: clamp(newSynergy, 1.0, 3.0),
-                relevanceScore: clamp(
-                  hub.relevanceScore - (hub.activeProjectIds.length >= 5 ? 15 : 0),
-                  0,
-                  100
-                )
+                franchiseUpdate: {
+                  franchiseId,
+                  update: {
+                    assetIds: nextAssetIds,
+                    lastReleaseWeeks: nextReleaseWeeks,
+                    audienceLoyalty: updatedLoyalty,
+                    synergyMultiplier: clamp(newSynergy, 1.0, 3.0),
+                    relevanceScore: clamp(
+                      hub.relevanceScore - (hub.activeProjectIds.length >= 5 ? 15 : 0),
+                      0,
+                      100
+                    )
+                  }
+                }
               }
             }
           });
 
-          impacts.push({
-            type: 'VAULT_ASSET_UPDATED',
-            payload: { assetId: newAssetId, update: { franchiseId } }
-          });
+          // Vault update handled separately via IPVaultManager
         }
       }
     }
