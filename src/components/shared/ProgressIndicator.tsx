@@ -3,13 +3,13 @@ import { cn } from '@/lib/utils';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 const progressVariants = cva(
-  'relative overflow-hidden rounded-full bg-muted/30',
+  'relative overflow-hidden rounded-none bg-white/5 border border-white/5',
   {
     variants: {
       size: {
         sm: 'h-1.5',
-        md: 'h-2.5',
-        lg: 'h-4',
+        md: 'h-3',
+        lg: 'h-5',
       },
       variant: {
         default: '',
@@ -25,17 +25,17 @@ const progressVariants = cva(
 );
 
 const barVariants = cva(
-  'h-full rounded-full transition-all duration-500 ease-out',
+  'h-full rounded-none transition-all duration-700 ease-out',
   {
     variants: {
       color: {
-        primary: 'bg-primary shadow-[0_0_10px_hsl(var(--primary)/0.5)]',
-        secondary: 'bg-secondary shadow-[0_0_10px_hsl(var(--secondary)/0.5)]',
-        success: 'bg-emerald-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]',
-        destructive: 'bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]',
-        warning: 'bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)]',
-        info: 'bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]',
-        gradient: 'bg-gradient-to-r from-primary to-secondary',
+        primary: 'bg-primary shadow-[0_0_15px_rgba(var(--primary),0.3)]',
+        secondary: 'bg-secondary shadow-[0_0_15px_rgba(var(--secondary),0.3)]',
+        success: 'bg-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.3)]',
+        destructive: 'bg-red-400 shadow-[0_0_15px_rgba(244,63,94,0.3)]',
+        warning: 'bg-amber-400 shadow-[0_0_15px_rgba(251,191,36,0.3)]',
+        info: 'bg-blue-400 shadow-[0_0_15px_rgba(96,165,250,0.3)]',
+        gradient: 'bg-gradient-to-r from-primary via-primary to-secondary',
       },
     },
     defaultVariants: {
@@ -77,11 +77,11 @@ export const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({
   const displayValue = formatValue ? formatValue(value, max) : defaultFormat(value, max);
 
   return (
-    <div className={cn('space-y-1.5', className)}>
+    <div className={cn('space-y-3', className)}>
       {(label || showValue) && (
-        <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider">
-          {label && <span className="text-muted-foreground">{label}</span>}
-          {showValue && <span className="text-foreground/80 font-mono">{displayValue}</span>}
+        <div className="flex items-center justify-between text-[9px] font-black uppercase tracking-[0.3em] italic">
+          {label && <span className="text-muted-foreground/40">{label}</span>}
+          {showValue && <span className="text-foreground font-display font-black tracking-tighter italic">{displayValue}</span>}
         </div>
       )}
       
@@ -95,7 +95,7 @@ export const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({
                 <div
                   key={i}
                   className={cn(
-                    'h-full first:rounded-l-full last:rounded-r-full transition-all duration-500',
+                    'h-full rounded-none transition-all duration-700',
                     segment.color
                   )}
                   style={{ width: `${segPercentage}%` }}
@@ -115,7 +115,7 @@ export const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({
             style={{ width: `${percentage}%` }}
           >
             {variant === 'animated' && (
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer" />
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
             )}
           </div>
         )}
@@ -140,31 +140,31 @@ export const SegmentedProgress: React.FC<SegmentedProgressProps> = ({
 }) => {
   const sizeClasses = {
     sm: 'h-2',
-    md: 'h-3',
-    lg: 'h-4',
+    md: 'h-4',
+    lg: 'h-6',
   };
 
   return (
-    <div className={cn('space-y-2', className)}>
-      <div className={cn('flex w-full rounded-full overflow-hidden bg-muted/30', sizeClasses[size])}>
+    <div className={cn('space-y-4', className)}>
+      <div className={cn('flex w-full rounded-none overflow-hidden bg-white/5 border border-white/5', sizeClasses[size])}>
         {segments.map((seg, i) => {
           const percentage = Math.max(0, Math.min(100, (seg.value / total) * 100));
           return (
             <div
               key={i}
-              className={cn('h-full transition-all duration-500', seg.color)}
+              className={cn('h-full transition-all duration-700', seg.color)}
               style={{ width: `${percentage}%` }}
               title={`${seg.label}: ${seg.value}`}
             />
           );
         })}
       </div>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-4">
         {segments.map((seg, i) => (
-          <div key={i} className="flex items-center gap-1.5">
-            <div className={cn('w-2 h-2 rounded-full', seg.color)} />
-            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
-              {seg.label}: {seg.value}
+          <div key={i} className="flex items-center gap-2">
+            <div className={cn('w-1.5 h-1.5 rounded-none', seg.color)} />
+            <span className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-[0.2em] italic">
+              {seg.label}: <span className="text-foreground font-display tracking-tighter">{seg.value}</span>
             </span>
           </div>
         ))}
@@ -188,9 +188,9 @@ interface CircularProgressProps {
 export const CircularProgress: React.FC<CircularProgressProps> = ({
   value,
   max = 100,
-  size = 60,
-  strokeWidth = 4,
-  color = 'hsl(var(--primary))',
+  size = 80,
+  strokeWidth = 6,
+  color = 'rgba(var(--primary), 1)',
   label,
   sublabel,
   className,
@@ -207,10 +207,9 @@ export const CircularProgress: React.FC<CircularProgressProps> = ({
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          stroke="currentColor"
+          stroke="rgba(255,255,255,0.05)"
           strokeWidth={strokeWidth}
           fill="none"
-          className="text-muted/20"
         />
         <circle
           cx={size / 2}
@@ -221,14 +220,14 @@ export const CircularProgress: React.FC<CircularProgressProps> = ({
           fill="none"
           strokeDasharray={circumference}
           strokeDashoffset={offset}
-          strokeLinecap="round"
-          className="transition-all duration-500 ease-out"
+          strokeLinecap="butt"
+          className="transition-all duration-1000 ease-out drop-shadow-[0_0_10px_rgba(var(--primary),0.3)]"
         />
       </svg>
       {(label || sublabel) && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          {label && <span className="text-lg font-bold font-display">{label}</span>}
-          {sublabel && <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">{sublabel}</span>}
+        <div className="absolute inset-0 flex flex-col items-center justify-center space-y-1">
+          {label && <span className="text-xl font-display font-black italic tracking-tighter leading-none">{label}</span>}
+          {sublabel && <span className="text-[8px] font-black uppercase tracking-[0.3em] text-muted-foreground/20 italic leading-none">{sublabel}</span>}
         </div>
       )}
     </div>

@@ -2,7 +2,6 @@ import React from 'react';
 import { LucideIcon } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { tokens } from '@/lib/tokens';
 import { Badge } from '@/components/ui/badge';
 import { cardHover } from '@/lib/animations';
 
@@ -41,34 +40,34 @@ interface ContentCardProps {
 }
 
 const variantStyles: Record<CardVariant, string> = {
-  default: 'bg-card/40 border-white/10',
-  interactive: 'bg-card/40 border-white/10 hover:border-white/20 hover:bg-card/60 cursor-pointer',
-  active: 'bg-primary/15 border-primary/30 shadow-[0_0_15px_hsl(var(--primary)/0.15)]',
-  glass: 'bg-card/60 backdrop-blur-xl border-white/5',
-  subtle: 'bg-white/5 border-transparent',
+  default: 'bg-white/[0.01] border-white/5',
+  interactive: 'bg-white/[0.01] border-white/5 hover:border-primary/20 hover:bg-white/[0.03] cursor-pointer shadow-sm hover:shadow-[0_0_20px_rgba(var(--primary),0.05)]',
+  active: 'bg-primary/5 border-primary/40 shadow-[0_0_30px_rgba(var(--primary),0.1)]',
+  glass: 'bg-white/[0.02] backdrop-blur-3xl border-white/5 shadow-xl',
+  subtle: 'bg-white/[0.01] border-transparent',
 };
 
 const sizeStyles: Record<CardSize, { container: string; content: string }> = {
   sm: {
-    container: 'p-3',
-    content: '',
-  },
-  md: {
     container: 'p-4',
     content: '',
   },
+  md: {
+    container: 'p-8',
+    content: '',
+  },
   lg: {
-    container: 'p-6',
+    container: 'p-12',
     content: '',
   },
 };
 
 const iconColorStyles = {
-  primary: 'bg-primary/10 text-primary',
-  secondary: 'bg-secondary/10 text-secondary',
-  success: 'bg-emerald-500/10 text-emerald-400',
-  warning: 'bg-amber-500/10 text-amber-400',
-  destructive: 'bg-red-500/10 text-red-400',
+  primary: 'bg-primary/5 text-primary border-primary/20',
+  secondary: 'bg-secondary/5 text-secondary border-secondary/20',
+  success: 'bg-emerald-400/5 text-emerald-400 border-emerald-400/20',
+  warning: 'bg-amber-400/5 text-amber-400 border-amber-400/20',
+  destructive: 'bg-red-400/5 text-red-400 border-red-400/20',
 };
 
 /**
@@ -104,9 +103,8 @@ export const ContentCard: React.FC<ContentCardProps> = ({
       onClick={isInteractive ? onClick : undefined}
       {...(isInteractive && { type: "button" })}
       className={cn(
-        'rounded-xl border overflow-hidden',
+        'rounded-2xl border overflow-hidden transition-all duration-700',
         isInteractive && 'w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
-        tokens.transition.normal,
         variantStyles[variant],
         sizeStyles[size].container,
         disabled && 'opacity-50 pointer-events-none',
@@ -120,29 +118,29 @@ export const ContentCard: React.FC<ContentCardProps> = ({
     >
       {/* Header */}
       {(header || title || Icon || badge) && (
-        <div className="flex items-start justify-between gap-3 mb-4">
+        <div className="flex items-start justify-between gap-6 mb-8">
           {header ? (
             <div className="flex-1">{header}</div>
           ) : (
-            <div className="flex items-center gap-3 flex-1 min-w-0">
+            <div className="flex items-center gap-6 flex-1 min-w-0">
               {Icon && (
                 <div
                   className={cn(
-                    'w-10 h-10 rounded-lg flex items-center justify-center shrink-0',
+                    'w-12 h-12 rounded-none border flex items-center justify-center shrink-0 transition-all duration-700',
                     iconColorStyles[iconColor]
                   )}
                 >
-                  <Icon className="w-5 h-5" />
+                  <Icon className="w-6 h-6" />
                 </div>
               )}
               <div className="flex-1 min-w-0">
                 {title && (
-                  <h4 className="font-bold text-sm text-foreground truncate">
+                  <h4 className="font-display font-black text-xl text-foreground truncate uppercase italic tracking-tighter leading-none mb-2">
                     {title}
                   </h4>
                 )}
                 {subtitle && (
-                  <p className="text-xs text-muted-foreground truncate">
+                  <p className="text-[10px] font-black uppercase text-muted-foreground/20 italic tracking-[0.2em] truncate">
                     {subtitle}
                   </p>
                 )}
@@ -150,7 +148,7 @@ export const ContentCard: React.FC<ContentCardProps> = ({
             </div>
           )}
           {badge && (
-            <Badge variant={badgeVariant} className="text-[9px] shrink-0">
+            <Badge variant={badgeVariant} className="text-[8px] font-black tracking-[0.2em] uppercase rounded-none shrink-0 h-6 px-3 border-white/5">
               {badge}
             </Badge>
           )}
@@ -162,7 +160,7 @@ export const ContentCard: React.FC<ContentCardProps> = ({
 
       {/* Footer */}
       {footer && (
-        <div className="mt-4 pt-4 border-t border-white/5">{footer}</div>
+        <div className="mt-8 pt-8 border-t border-white/5">{footer}</div>
       )}
     </CardWrapper>
   );
@@ -205,7 +203,9 @@ export const InfoCard: React.FC<{
     title={title}
     className={className}
   >
-    <p className="text-sm text-muted-foreground">{description}</p>
+    <p className="text-[10px] font-black uppercase text-muted-foreground/20 italic tracking-[0.2em] leading-relaxed">
+      {description}
+    </p>
   </ContentCard>
 );
 
@@ -222,19 +222,23 @@ export const StatRow: React.FC<{
   const trendColors = {
     up: 'text-emerald-400',
     down: 'text-red-400',
-    neutral: 'text-muted-foreground',
+    neutral: 'text-muted-foreground/20',
   };
 
   return (
-    <div className={cn('flex items-center justify-between py-2', className)}>
-      <span className="text-sm text-muted-foreground">{label}</span>
-      <div className="flex items-center gap-2">
-        <span className="font-mono font-bold text-sm">{value}</span>
+    <div className={cn('flex items-center justify-between py-4 group', className)}>
+      <span className="text-[10px] font-black text-muted-foreground/20 uppercase tracking-[0.3em] italic group-hover:text-muted-foreground/40 transition-colors">
+        {label}
+      </span>
+      <div className="flex items-center gap-4">
+        <span className="font-display font-black text-lg tracking-tighter italic text-foreground leading-none">
+          {value}
+        </span>
         {trend && (
-          <span className={cn('text-xs', trendColors[trend])}>
-            {trend === 'up' && '↑'}
-            {trend === 'down' && '↓'}
-            {trend === 'neutral' && '→'}
+          <span className={cn('text-[9px] font-black uppercase italic tracking-[0.2em]', trendColors[trend])}>
+            {trend === 'up' && '▲'}
+            {trend === 'down' && '▼'}
+            {trend === 'neutral' && '—'}
             {trendValue}
           </span>
         )}

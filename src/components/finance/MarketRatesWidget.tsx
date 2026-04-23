@@ -1,6 +1,7 @@
 import React from 'react';
 import { TrendingUp, TrendingDown, Percent, Landmark, Wallet, AlertCircle } from 'lucide-react';
 import { useGameStore } from '@/store/gameStore';
+import { cn } from '@/lib/utils';
 
 export const MarketRatesWidget: React.FC = () => {
   const finance = useGameStore(state => state.finance);
@@ -14,55 +15,57 @@ export const MarketRatesWidget: React.FC = () => {
   const formatRate = (rate: number) => (rate * 100).toFixed(2) + '%';
 
   return (
-    <div className="bg-slate-900/50 border border-slate-700/50 rounded-xl p-4 backdrop-blur-md shadow-xl overflow-hidden relative group transition-all hover:bg-slate-900/80 hover:border-blue-500/30">
-      {/* Background Decor */}
-      <div className="absolute -top-12 -right-12 w-24 h-24 bg-blue-500/10 rounded-full blur-3xl group-hover:bg-blue-500/20 transition-colors" />
+    <div className="glass-card p-8 group relative overflow-hidden transition-all duration-700 hover:bg-white/[0.03] hover:border-primary/20 rounded-none">
+      <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl pointer-events-none group-hover:bg-primary/10 transition-all duration-1000" />
       
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <div className="p-2 bg-blue-500/20 rounded-lg">
-            <Landmark className="w-4 h-4 text-blue-400" />
+      <div className="flex items-center justify-between mb-8 relative z-10">
+        <div className="flex items-center gap-6">
+          <div className="w-12 h-12 bg-primary/10 border border-primary/20 flex items-center justify-center rounded-none group-hover:bg-primary/20 transition-all duration-700">
+            <Landmark className="w-6 h-6 text-primary" />
           </div>
           <div>
-            <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Global Market</h3>
-            <p className="text-lg font-bold text-slate-100 flex items-center gap-2">
+            <h3 className="text-[10px] font-black text-muted-foreground/40 uppercase tracking-[0.3em] italic leading-none mb-3">EXCHANGE PROTOCOL // MARKET</h3>
+            <p className="text-4xl font-display font-black text-foreground flex items-center gap-4 tracking-tighter italic leading-none">
               {formatRate(market.baseRate)}
               {isRising ? (
-                <TrendingUp className="w-4 h-4 text-emerald-400 animate-pulse" />
+                <TrendingUp className="w-6 h-6 text-red-400 animate-pulse" />
               ) : (
-                <TrendingDown className="w-4 h-4 text-rose-400 animate-bounce" />
+                <TrendingDown className="w-6 h-6 text-emerald-400 animate-bounce" />
               )}
             </p>
           </div>
         </div>
         
         <div className="text-right">
-          <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${isRising ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'}`}>
-            {isRising ? 'Hawkish' : 'Dovish'}
+          <span className={cn(
+            "text-[9px] px-4 py-1.5 font-black uppercase tracking-[0.2em] italic rounded-none border leading-none transition-all duration-700",
+            isRising ? 'bg-red-400/10 text-red-400 border-red-400/20' : 'bg-emerald-400/10 text-emerald-400 border-emerald-400/20'
+          )}>
+            {isRising ? 'HAWKISH' : 'DOVISH'}
           </span>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
-        <div className="bg-slate-800/40 p-2.5 rounded-lg border border-slate-700/30">
-          <div className="flex items-center gap-1.5 mb-1">
-            <Wallet className="w-3 h-3 text-emerald-400" />
-            <span className="text-[10px] font-medium text-slate-400">Savings APY</span>
+      <div className="grid grid-cols-2 gap-6 relative z-10">
+        <div className="bg-white/[0.01] p-6 border border-white/5 rounded-none group-hover:bg-white/[0.02] transition-all duration-700">
+          <div className="flex items-center gap-3 mb-3">
+            <Wallet className="w-3.5 h-3.5 text-emerald-400" />
+            <span className="text-[9px] font-black text-muted-foreground/20 uppercase tracking-[0.3em] italic leading-none">SAVINGS APY</span>
           </div>
-          <p className="text-sm font-bold text-emerald-400">{formatRate(market.savingsYield)}</p>
+          <p className="text-2xl font-display font-black text-emerald-400 italic leading-none tracking-tighter">{formatRate(market.savingsYield)}</p>
         </div>
 
-        <div className="bg-slate-800/40 p-2.5 rounded-lg border border-slate-700/30">
-          <div className="flex items-center gap-1.5 mb-1">
-            <AlertCircle className="w-3 h-3 text-rose-400" />
-            <span className="text-[10px] font-medium text-slate-400">Debt Penalty</span>
+        <div className="bg-white/[0.01] p-6 border border-white/5 rounded-none group-hover:bg-white/[0.02] transition-all duration-700">
+          <div className="flex items-center gap-3 mb-3">
+            <AlertCircle className="w-3.5 h-3.5 text-red-400" />
+            <span className="text-[9px] font-black text-muted-foreground/20 uppercase tracking-[0.3em] italic leading-none">DEBT PENALTY</span>
           </div>
-          <p className="text-sm font-bold text-rose-400">{formatRate(market.debtRate)}</p>
+          <p className="text-2xl font-display font-black text-red-400 italic leading-none tracking-tighter">{formatRate(market.debtRate)}</p>
         </div>
       </div>
 
-      {/* Mini Trend Sparkline Hint */}
-      <div className="mt-4 flex items-end gap-1 h-6">
+      {/* Mini Trend Sparkline */}
+      <div className="mt-8 flex items-end gap-1.5 h-10 relative z-10">
         {market.rateHistory.slice(-12).map((h, i) => {
           const max = Math.max(...market.rateHistory.slice(-12).map(rh => rh.rate));
           const min = Math.min(...market.rateHistory.slice(-12).map(rh => rh.rate));
@@ -70,16 +73,16 @@ export const MarketRatesWidget: React.FC = () => {
           return (
             <div 
               key={i} 
-              className="flex-1 bg-slate-700/50 rounded-t-sm hover:bg-blue-400/50 transition-colors"
-              style={{ height: `${Math.max(20, height)}%` }}
+              className="flex-1 bg-white/5 rounded-none hover:bg-primary/40 transition-all duration-300"
+              style={{ height: `${Math.max(10, height)}%` }}
               title={`Week ${h.week}: ${formatRate(h.rate)}`}
             />
           );
         })}
       </div>
-      <div className="flex justify-between mt-1 text-[8px] text-slate-500 px-0.5">
-        <span>12W HISTORY</span>
-        <Percent className="w-2 h-2" />
+      <div className="flex justify-between mt-3 text-[8px] font-black text-muted-foreground/20 uppercase tracking-[0.4em] px-0.5 relative z-10 italic">
+        <span>12W HISTORY audit</span>
+        <Percent className="w-2.5 h-2.5 text-primary/40" />
       </div>
     </div>
   );

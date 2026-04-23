@@ -24,25 +24,25 @@ export const PanelHeader: React.FC<PanelHeaderProps> = ({
   className,
 }) => {
   return (
-    <div className={cn('flex items-center justify-between mb-6', className)}>
-      <div className="flex items-center gap-3">
+    <div className={cn('flex items-center justify-between mb-12', className)}>
+      <div className="flex items-center gap-6">
         {Icon && (
-          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
-            <Icon className="w-5 h-5" strokeWidth={2} />
+          <div className="w-14 h-14 rounded-none bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0 transition-all duration-700 hover:bg-primary/20">
+            <Icon className="w-7 h-7" strokeWidth={2.5} />
           </div>
         )}
         <div>
-          <h2 className="text-4xl font-black tracking-tighter uppercase bg-gradient-to-br from-foreground to-foreground/50 bg-clip-text text-transparent">
+          <h2 className="text-6xl font-display font-black tracking-tighter uppercase italic bg-gradient-to-br from-foreground via-foreground to-foreground/30 bg-clip-text text-transparent leading-none mb-3">
             {title}
           </h2>
           {subtitle && (
-            <p className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground mt-1">
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/20 italic leading-none">
               {subtitle}
             </p>
           )}
         </div>
       </div>
-      {action && <div className="flex items-center gap-2">{action}</div>}
+      {action && <div className="flex items-center gap-4">{action}</div>}
     </div>
   );
 };

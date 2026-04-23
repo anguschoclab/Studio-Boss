@@ -39,9 +39,9 @@ export const SparklineChart: React.FC<SparklineChartProps> = ({
 
   const trendColor = color || (() => {
     switch (detectedTrend) {
-      case 'up': return '#22c55e';
+      case 'up': return '#10b981';
       case 'down': return '#ef4444';
-      default: return 'hsl(var(--primary))';
+      default: return 'rgba(var(--primary), 1)';
     }
   })();
 
@@ -65,7 +65,7 @@ export const SparklineChart: React.FC<SparklineChartProps> = ({
               stroke={trendColor}
               strokeWidth={strokeWidth}
               fill={`url(#sparklineGradient-${trendColor.replace(/[^a-zA-Z0-9]/g, '')})`}
-              animationDuration={animate ? 1000 : 0}
+              animationDuration={animate ? 1500 : 0}
               dot={false}
             />
           </AreaChart>
@@ -84,7 +84,7 @@ export const SparklineChart: React.FC<SparklineChartProps> = ({
             dataKey="value"
             stroke={trendColor}
             strokeWidth={strokeWidth}
-            animationDuration={animate ? 1000 : 0}
+            animationDuration={animate ? 1500 : 0}
             dot={false}
           />
         </LineChart>
@@ -118,7 +118,7 @@ export const MultiSparkline: React.FC<MultiSparklineProps> = ({
   });
 
   return (
-    <div className={cn('space-y-2', className)}>
+    <div className={cn('space-y-4', className)}>
       <div style={{ width, height }}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={chartData}>
@@ -140,11 +140,11 @@ export const MultiSparkline: React.FC<MultiSparklineProps> = ({
       </div>
       
       {/* Legend */}
-      <div className="flex flex-wrap gap-3">
+      <div className="flex flex-wrap gap-4">
         {data.map(series => (
-          <div key={series.label} className="flex items-center gap-1.5">
-            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: series.color }} />
-            <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">
+          <div key={series.label} className="flex items-center gap-2">
+            <div className="w-1.5 h-1.5 rounded-none" style={{ backgroundColor: series.color }} />
+            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 italic">
               {series.label}
             </span>
           </div>
@@ -168,7 +168,7 @@ export const BarSparkline: React.FC<BarSparklineProps> = ({
   data,
   width = 100,
   height = 30,
-  barColor = 'hsl(var(--primary))',
+  barColor = 'rgba(var(--primary), 1)',
   className,
   maxBarWidth = 8,
 }) => {
@@ -177,7 +177,7 @@ export const BarSparkline: React.FC<BarSparklineProps> = ({
 
   return (
     <div 
-      className={cn('flex items-end gap-0.5', className)} 
+      className={cn('flex items-end gap-1', className)} 
       style={{ width, height }}
     >
       {data.map((value, i) => {
@@ -185,12 +185,12 @@ export const BarSparkline: React.FC<BarSparklineProps> = ({
         return (
           <div
             key={i}
-            className="rounded-t-sm transition-all duration-500"
+            className="rounded-none transition-all duration-700"
             style={{
               width: barWidth,
               height: barHeight,
               backgroundColor: barColor,
-              opacity: 0.6 + (i / data.length) * 0.4,
+              opacity: 0.2 + (i / data.length) * 0.8,
             }}
           />
         );
