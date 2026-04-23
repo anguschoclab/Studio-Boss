@@ -179,6 +179,9 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
       archetype,
       prestige: arch.startingPrestige,
       internal: {
+        projects: {},
+        contracts: [],
+        firstLookDeals: [],
         projectHistory: [],
       },
       ownedPlatforms: playerOwnedPlatforms

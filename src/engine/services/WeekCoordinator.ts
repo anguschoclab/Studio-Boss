@@ -28,6 +28,13 @@ import { tickReleaseStrategy } from '../systems/ReleaseStrategySystem';
 import { tickStudioIdentity } from '../systems/StudioIdentitySystem';
 import { checkAchievements } from '../systems/AchievementsSystem';
 
+// New Game Systems
+import { tickReleaseStrategy } from '../systems/ReleaseStrategySystem';
+import { tickPostProduction } from '../systems/PostProductionSystem';
+import { tickStudioIdentity } from '../systems/StudioIdentitySystem';
+import { checkAchievements } from '../systems/AchievementsSystem';
+import { tickMorale } from '../systems/talent/MoraleTick';
+
 // Talent Lifecycle Systems
 import { tickRelationshipSystem } from '../systems/talent/RelationshipSystem';
 import { tickCliqueSystem } from '../systems/talent/CliqueSystem';
@@ -171,6 +178,8 @@ export class WeekCoordinator {
 
     // 1. Core Production Tick
     context.impacts.push(...tickProduction(state, context.rng));
+    context.impacts.push(...tickPostProduction(state, context.rng));
+    context.impacts.push(...tickReleaseStrategy(state));
 
     // 1a. Crisis auto-trigger for active production projects
     Object.values(state.entities.projects).forEach(project => {
@@ -230,6 +239,7 @@ export class WeekCoordinator {
     context.impacts.push(...tickOrganicEvents(state, context.rng));
     context.impacts.push(...tickMarketingPromotionSystem(state, context.rng));
     context.impacts.push(...tickBiographyGenerator(state, context.rng));
+    context.impacts.push(...tickMorale(state, context.rng));
   }
 
   private static runIPFilter(state: GameState, context: TickContext) {
@@ -265,6 +275,22 @@ export class WeekCoordinator {
 
   private static runFinanceFilter(state: GameState, context: TickContext) {
     context.impacts.push(...tickFinance(state, context.rng));
+    context.impacts.push(...tickStudioIdentity(state));
+    context.impacts.push(...checkAchievements(state));
+
+    // Loan payments + bankruptcy check
+    context.impacts.push(...tickLoans(state, context.rng));
+    // Decrement weeksRemaining on loans and remove paid-off ones
+    const currentLoans: any[] = (state.studio as any).loans || [];
+    if (currentLoans.length > 0) {
+      const updatedLoans = currentLoans
+        .map((l: any) => ({ ...l, weeksRemaining: l.weeksRemaining - 1 }))
+        .filter((l: any) => l.weeksRemaining > 0);
+      context.impacts.push({
+        type: 'SYSTEM_TICK' as any,
+        payload: { __studioUpdate: { loans: updatedLoans } }
+      });
+    }
 
     // Calculate and update rival studio revenues
     Object.values(state.entities.rivals || {}).forEach(rival => {

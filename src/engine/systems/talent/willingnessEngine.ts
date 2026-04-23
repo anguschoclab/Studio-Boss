@@ -1,4 +1,4 @@
-import { Talent, Project, GameState, CharacterArchetype } from '@/engine/types/index';
+import { Talent, Project, GameState } from '@/engine/types/index';
 
 /**
  * Studio Boss - Willingness Engine
@@ -15,8 +15,7 @@ export interface WillingnessReport {
 export function calculateWillingness(
   talent: Talent,
   project: Project,
-  gameState: GameState,
-  proposedRole?: CharacterArchetype
+  gameState: GameState
 ): WillingnessReport {
   let score = 60; // Baseline
   const reasons: string[] = [];
@@ -51,7 +50,6 @@ export function calculateWillingness(
   const scriptHeat = 'scriptHeat' in project ? project.scriptHeat : 50;
 
   // 3. Financial Incentive (Fee vs Star Meter)
-  const starMeter = talent.starMeter || 50;
   if (talent.fee > project.budget * 0.4) {
     // Auteurs will forgive a low budget if the script is a masterpiece
     if (isAuteur && scriptHeat > 85) {
@@ -93,6 +91,10 @@ export function calculateWillingness(
     if (director && director.prestige > 80) {
       score += 20;
       reasons.push(`The chance to work with ${director.name} is a significant motivator.`);
+    } else if (director && director.prestige < 40 && (isActionStar || isPrestigeActor)) {
+      // 🎭 The Method Actor Tuning: Established stars fiercely protect their brand and will penalize projects helmed by unproven directors.
+      score -= 25;
+      reasons.push(`${talent.name} feels it's too risky for their brand to work with an unproven director.`);
     }
   }
 

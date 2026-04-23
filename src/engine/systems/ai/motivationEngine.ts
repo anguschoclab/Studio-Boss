@@ -96,6 +96,22 @@ export function tickAIMinds(state: GameState, rng: RandomGenerator): StateImpact
       }
     });
 
+    // CASH_CRUNCH rivals seek emergency financing when nearly broke
+    if (newMotivation === 'CASH_CRUNCH' && rival.cash < 2_000_000 && rng.next() < 0.12) {
+      const loanAmount = rng.range(5_000_000, 15_000_000);
+      impacts.push({
+        type: 'RIVAL_UPDATED',
+        payload: { rivalId: rival.id, update: { cash: rival.cash + loanAmount } }
+      });
+      impacts.push({
+        type: 'NEWS_ADDED',
+        payload: {
+          headline: `${rival.name} SECURES EMERGENCY FINANCING`,
+          description: `${rival.name} draws on a credit facility to stabilise operations amid cash pressure.`,
+        }
+      } as StateImpact);
+    }
+
     // Fix 2: FRANCHISE_BUILDING rivals track IP syndication potential
     if (rival.currentMotivation === 'FRANCHISE_BUILDING') {
       const releasedProjects = Object.values(state.entities.projects || {})

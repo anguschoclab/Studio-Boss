@@ -185,6 +185,7 @@ export const MarketingWarRoom: React.FC<MarketingWarRoomProps> = ({ projectId, o
                       key={q.key}
                       onClick={() => campaignType === 'marketing' && setSelectedQuadrant(q.key)}
                       disabled={campaignType !== 'marketing'}
+                      aria-pressed={isSelected}
                       className={cn(
                         "p-5 rounded-none border transition-all duration-700 text-left space-y-2 relative group/btn",
                         isSelected ? "bg-primary/10 border-primary shadow-[0_0_20px_rgba(var(--primary),0.1)] scale-[1.02] z-10" : "bg-black/40 border-white/5 hover:border-white/20",

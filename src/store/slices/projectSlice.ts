@@ -10,6 +10,7 @@ import { resolveCrisis } from '@/engine/systems/crises';
 import * as festivalsEngine from '@/engine/systems/festivals';
 import * as awardsEngine from '@/engine/systems/awards';
 import { Project, GameState, AwardBody, ProjectContractType, MarketingCampaign, StateImpact, SeriesProject } from '@/engine/types';
+import { ReleaseStrategy } from '@/engine/types/project.types';
 
 export interface ProjectSlice {
   createProject: (params: CreateProjectParams) => void;
@@ -26,6 +27,7 @@ export interface ProjectSlice {
   addProject: (project: any) => void;
   advanceProjectPhase: (projectId: string, newState: string) => void;
   updateProject: (projectId: string, update: Partial<Project>) => void;
+  setReleaseStrategy: (projectId: string, strategy: ReleaseStrategy) => void;
 }
 
 export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> = (set, get) => ({
@@ -47,8 +49,12 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
             internal: {
               ...stateAfterFees.studio.internal,
               projects: { ...stateAfterFees.studio.internal.projects, [project.id]: project },
-              contracts: [...stateAfterFees.studio.internal.contracts, ...newContracts]
+              contracts: [...(stateAfterFees.studio.internal.contracts || []), ...newContracts]
             }
+          },
+          entities: {
+            ...stateAfterFees.entities,
+            projects: { ...stateAfterFees.entities.projects, [project.id]: project }
           }
         }
       };
@@ -420,10 +426,19 @@ export const createProjectSlice: StateCreator<GameStore, [], [], ProjectSlice> =
       return {
         gameState: applyStateImpact(s.gameState, {
           type: 'PROJECT_UPDATED',
-          payload: {
-            projectId,
-            update
-          }
+          payload: { projectId, update }
+        }) as any
+      };
+    });
+  },
+
+  setReleaseStrategy: (projectId, strategy) => {
+    set((s) => {
+      if (!s.gameState) return s;
+      return {
+        gameState: applyStateImpact(s.gameState, {
+          type: 'PROJECT_UPDATED',
+          payload: { projectId, update: { releaseStrategy: strategy } }
         }) as any
       };
     });

@@ -32,20 +32,38 @@ export function tickPlatforms(state: GameState, rng: RandomGenerator): StateImpa
   const impacts: StateImpact[] = [];
   const currWeek = state.week;
 
-  const allProjects = [
-    ...Object.values(state.studio.internal.projects),
-    ...state.industry.rivals.flatMap(rival => Object.values(rival.projects))
-  ];
+  // ⚡ The Framerate Fanatic: Optimize project iteration using for...in loops and single pass to prevent O(N^2) complexity and GC pressure from Object.values/flatMap
+  const platformRetentionStats: Record<string, { count: number, sum: number }> = {};
+
+  for (const pid in state.studio.internal.projects) {
+    const p = state.studio.internal.projects[pid];
+    if (p.type === 'SERIES' && p.buyerId && (p as SeriesProject).nielsenProfile?.audienceRetention !== undefined) {
+      if (!platformRetentionStats[p.buyerId]) platformRetentionStats[p.buyerId] = { count: 0, sum: 0 };
+      platformRetentionStats[p.buyerId].count++;
+      platformRetentionStats[p.buyerId].sum += (p as SeriesProject).nielsenProfile!.audienceRetention;
+    }
+  }
+
+  for (let i = 0; i < state.industry.rivals.length; i++) {
+    const rival = state.industry.rivals[i];
+    for (const pid in rival.projects) {
+      const p = rival.projects[pid];
+      if (p.type === 'SERIES' && p.buyerId && (p as SeriesProject).nielsenProfile?.audienceRetention !== undefined) {
+        if (!platformRetentionStats[p.buyerId]) platformRetentionStats[p.buyerId] = { count: 0, sum: 0 };
+        platformRetentionStats[p.buyerId].count++;
+        platformRetentionStats[p.buyerId].sum += (p as SeriesProject).nielsenProfile!.audienceRetention;
+      }
+    }
+  }
 
   state.market.buyers.forEach(buyer => {
     if (buyer.archetype === 'streamer') {
       const platform = buyer as StreamerPlatform;
 
-      const platformSeries = allProjects.filter(p => p.type === 'SERIES' && p.buyerId === platform.id && (p as SeriesProject).nielsenProfile?.audienceRetention !== undefined) as SeriesProject[];
+      const stats = platformRetentionStats[platform.id];
       let averageRetention = 60;
-      if (platformSeries.length > 0) {
-        const retentionSum = platformSeries.reduce((sum, p) => sum + p.nielsenProfile!.audienceRetention, 0);
-        averageRetention = retentionSum / platformSeries.length;
+      if (stats && stats.count > 0) {
+        averageRetention = stats.sum / stats.count;
       }
 
       const subChange = calculateSubChange(platform, rng, averageRetention);
