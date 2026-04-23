@@ -1,7 +1,22 @@
 import { create } from 'zustand';
 import { WeekSummary } from '@/engine/types';
 
-export type ModalType = 'CRISIS' | 'AWARDS' | 'SUMMARY';
+export type ModalType =
+  | 'CRISIS'
+  | 'AWARDS'
+  | 'SUMMARY'
+  | 'GAME_OVER'
+  | 'RELEASE_STRATEGY'
+  | 'POST_PRODUCTION'
+  | 'ACHIEVEMENT_UNLOCKED'
+  | 'FESTIVAL_MARKET'
+  | 'CREATE_PACKAGE'
+  | 'PACKAGE_DETAIL'
+  | 'DIRECTORS_CUT_AVAILABLE'
+  | 'UPFRONTS'
+  | 'BIDDING_WAR'
+  | 'BREAKOUT_BIDDING_WAR'
+  | 'REBOOT_OPPORTUNITY';
 
 export interface QueuedModal {
   id: string;

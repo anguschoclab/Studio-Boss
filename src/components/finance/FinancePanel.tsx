@@ -1,4 +1,5 @@
 import { calculateWeeklyCosts, calculateWeeklyRevenue, calculateStudioNetWorth, generateCashflowForecast, calculateProjectROI } from '@/engine/systems/finance';
+import { LoanModal } from '@/components/finance/LoanModal';
 import { useShallow } from 'zustand/react/shallow';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Area, XAxis, YAxis, Tooltip, ResponsiveContainer, ComposedChart, Line, CartesianGrid } from 'recharts';
@@ -7,7 +8,7 @@ import { YearInReviewChart } from '@/components/finance/YearInReviewChart';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { History, LayoutDashboard, ReceiptText, TrendingUp, Package, Coins, ShieldCheck, ArrowRightLeft } from 'lucide-react';
+import { History, LayoutDashboard, ReceiptText, TrendingUp, Package, Coins, ShieldCheck, ArrowRightLeft, Banknote } from 'lucide-react';
 import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
 import { RevenueStreamChart } from '@/components/finance/RevenueStreamChart';
 import { ProfitWaterfallChart } from '@/components/finance/ProfitWaterfallChart';
@@ -165,9 +166,13 @@ export const FinancePanel = () => {
             <LayoutDashboard className="w-4 h-4" />
             ACTIVE OPERATIONS
           </TabsTrigger>
-          <TabsTrigger value="history" className="gap-6 font-display font-black uppercase tracking-[0.3em] text-[10px] h-14 px-12 data-[state=active]:bg-primary data-[state=active]:text-black transition-all duration-700 rounded-none italic">
+            <TabsTrigger value="history" className="gap-6 font-display font-black uppercase tracking-[0.3em] text-[10px] h-14 px-12 data-[state=active]:bg-primary data-[state=active]:text-black transition-all duration-700 rounded-none italic">
             <History className="w-4 h-4" />
             PERFORMANCE AUDIT
+          </TabsTrigger>
+          <TabsTrigger value="capital" className="gap-6 font-display font-black uppercase tracking-[0.3em] text-[10px] h-14 px-12 data-[state=active]:bg-primary data-[state=active]:text-black transition-all duration-700 rounded-none italic">
+            <Banknote className="w-4 h-4" />
+            CAPITAL MARKETS
           </TabsTrigger>
         </TabsList>
 
@@ -381,6 +386,10 @@ export const FinancePanel = () => {
 
         <TabsContent value="history" className="m-0 outline-none animate-in fade-in duration-1000">
           <YearInReviewChart />
+        </TabsContent>
+
+        <TabsContent value="capital" className="m-0 outline-none animate-in fade-in duration-1000">
+          <LoanModal />
         </TabsContent>
       </Tabs>
     </div>

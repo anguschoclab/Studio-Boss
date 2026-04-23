@@ -15,8 +15,9 @@ import { createTalentSlice, TalentSlice } from './slices/talentSlice';
 import { createRivalSlice, RivalSlice } from './slices/rivalSlice';
 import { createNewsSlice, NewsSlice } from './slices/newsSlice';
 import { createSnapshotSlice, SnapshotSlice } from './slices/snapshotSlice';
+import { createLoanSlice, LoanSlice } from './slices/loanSlice';
 
-export interface GameStore extends ProjectSlice, FinanceSlice, TalentSlice, RivalSlice, NewsSlice, SnapshotSlice {
+export interface GameStore extends ProjectSlice, FinanceSlice, TalentSlice, RivalSlice, NewsSlice, SnapshotSlice, LoanSlice {
   gameState: GameState | null;
   newGame: (studioName: string, archetype: ArchetypeKey) => Promise<void>;
   doAdvanceWeek: () => WeekSummary;
@@ -36,6 +37,7 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
   ...createRivalSlice(set, get, ...args),
   ...createNewsSlice(set, get, ...args),
   ...createSnapshotSlice(set, get, ...args),
+  ...createLoanSlice(set, get, ...args),
 
   newGame: async (studioName, archetype) => {
     const gameState = initializeGame(studioName, archetype, Date.now()); // Added seed

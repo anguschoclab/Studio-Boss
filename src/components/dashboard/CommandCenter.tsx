@@ -7,6 +7,8 @@ import { Badge } from '@/components/ui/badge';
 import { Clapperboard, Users, Building2, TrendingUp, Star, Zap, ShieldCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { KPIStatCard } from '@/components/shared/KPIStatCard';
+import { StudioIdentityPanel } from '@/components/studio/StudioIdentityPanel';
+import { AchievementsPanel } from '@/components/achievements/AchievementsPanel';
 
 export const CommandCenter: React.FC = () => {
   const gameState = useGameStore((state) => state.gameState);
@@ -98,6 +100,16 @@ export const CommandCenter: React.FC = () => {
         </div>
       </div>
       
+      {/* Studio Identity & Achievements Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="glass-card p-12 bg-black/40 border border-white/5 rounded-none shadow-2xl">
+          <StudioIdentityPanel culture={studio.culture} />
+        </div>
+        <div className="glass-card p-12 bg-black/40 border border-white/5 rounded-none shadow-2xl">
+          <AchievementsPanel />
+        </div>
+      </div>
+
       {/* Recent Industry Intelligence */}
       <div className="glass-card p-12 bg-gradient-to-br from-white/[0.03] to-transparent relative overflow-hidden rounded-none border border-white/5">
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-none blur-[150px] pointer-events-none -mr-48 -mt-48 opacity-50" />

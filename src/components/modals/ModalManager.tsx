@@ -12,6 +12,10 @@ const UpfrontsModal = React.lazy(() => import('./UpfrontsModal').then(m => ({ de
 const BiddingWarModal = React.lazy(() => import('./BiddingWarModal').then(m => ({ default: m.BiddingWarModal })));
 const BreakoutBiddingWarModal = React.lazy(() => import('./BreakoutBiddingWarModal').then(m => ({ default: m.BreakoutBiddingWarModal })));
 const RebootOpportunityModal = React.lazy(() => import('./RebootOpportunityModal').then(m => ({ default: m.RebootOpportunityModal })));
+const GameOverModal = React.lazy(() => import('./GameOverModal').then(m => ({ default: m.GameOverModal })));
+const ReleaseStrategyModal = React.lazy(() => import('./ReleaseStrategyModal').then(m => ({ default: m.ReleaseStrategyModal })));
+const PostProductionModal = React.lazy(() => import('./PostProductionModal').then(m => ({ default: m.PostProductionModal })));
+const AchievementUnlockedModal = React.lazy(() => import('./AchievementUnlockedModal').then(m => ({ default: m.AchievementUnlockedModal })));
 
 /**
  * Unified Modal Manager.
@@ -48,6 +52,14 @@ export const ModalManager: React.FC = () => {
             return <BreakoutBiddingWarModal key={activeModal.id} />;
           case 'REBOOT_OPPORTUNITY':
             return <RebootOpportunityModal key={activeModal.id} />;
+          case 'GAME_OVER':
+            return <GameOverModal key={activeModal.id} />;
+          case 'RELEASE_STRATEGY':
+            return <ReleaseStrategyModal key={activeModal.id} payload={activeModal.payload} />;
+          case 'POST_PRODUCTION':
+            return <PostProductionModal key={activeModal.id} payload={activeModal.payload} />;
+          case 'ACHIEVEMENT_UNLOCKED':
+            return <AchievementUnlockedModal key={activeModal.id} payload={activeModal.payload} />;
           default:
             return null;
         }
