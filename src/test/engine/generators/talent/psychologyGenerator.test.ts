@@ -3,8 +3,8 @@ import { psychologyGenerator } from '../../../../engine/generators/talent/psycho
 
 describe('generatePsychology', () => {
   it('generates psychological profiles where A-listers have higher base ego', () => {
-    const psychologyAList = psychologyGenerator('A-List');
-    const psychologyCList = psychologyGenerator('C-List');
+    const psychologyAList = psychologyGenerator('A_LIST');
+    const psychologyCList = psychologyGenerator('C_LIST');
 
     // A-List ego base is 50, C-List is 10.
     // Expect A-List ego to generally be higher than C-List
