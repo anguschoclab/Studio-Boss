@@ -83,17 +83,20 @@ function tickProject(
       qualityShift = rng.range(-2, 3);
     }
 
-    const progressUpdateImpact = {
-      type: 'PROJECT_UPDATED' as const,
-      payload: {
-        projectId: project.id,
-        update: {
-          progress: newProgress,
-          reviewScore: Math.min(100, Math.max(0, (project.reviewScore || 50) + qualityShift))
+    // Only push progress update if not transitioning to post_production this week
+    if ((project.weeksInPhase + 1) < targetWeeks) {
+      const progressUpdateImpact = {
+        type: 'PROJECT_UPDATED' as const,
+        payload: {
+          projectId: project.id,
+          update: {
+            progress: newProgress,
+            reviewScore: Math.min(100, Math.max(0, (project.reviewScore || 50) + qualityShift))
+          }
         }
-      }
-    };
-    impacts.push(progressUpdateImpact);
+      };
+      impacts.push(progressUpdateImpact);
+    }
   }
 
   return impacts;

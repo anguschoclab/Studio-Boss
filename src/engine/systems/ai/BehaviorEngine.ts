@@ -9,8 +9,9 @@ function getAgencyArchetype(agency: Agency) {
   return AGENCY_ARCHETYPES[key] || AGENCY_ARCHETYPES.boutique;
 }
 
-export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpact[] {
+export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpact {
   const impacts: StateImpact[] = [];
+  const uiNotifications: string[] = [];
 
   state.industry.agencies.forEach(agency => {
     const archetype = getAgencyArchetype(agency);
@@ -45,10 +46,18 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
               description: `Industry whispers suggest ${agency.name} is making aggressive overtures to talent currently under contract at ${rival.name}.`,
             }
           });
+
+          // Add to narrative events for weekly summary
+          uiNotifications.push(`AGENCY: ${agency.name} is poaching talent from ${rival.name}`);
         }
       }
     }
   });
+
+  // Add uiNotifications to the first impact
+  if (uiNotifications.length > 0 && impacts.length > 0) {
+    impacts[0].uiNotifications = uiNotifications;
+  }
 
   return impacts;
 }

@@ -362,13 +362,13 @@ function shouldUpdateBio(talent: Talent, state: GameState): boolean {
   if (talent.isBreakout) return true;
 
   // Update if relationship status changed recently
-  const relationships = Object.values(state.relationships.relationships || {})
+  const relationships = Object.values(state.relationships?.relationships || {})
     .filter((r) => (r.talentAId === talent.id || r.talentBId === talent.id) && r.formedWeek > state.week - 4);
-    
+
   if (relationships.length > 0) return true;
 
   // Update if clique membership changed
-  const recentCliqueActivity = Object.values(state.relationships.cliques?.cliques || {})
+  const recentCliqueActivity = Object.values(state.relationships?.cliques?.cliques || {})
     .some((c) => c.memberIds?.includes(talent.id) && c.formedWeek > state.week - 4);
   if (recentCliqueActivity) return true;
 

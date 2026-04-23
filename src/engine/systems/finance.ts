@@ -3,6 +3,7 @@ import { StateImpact, FinancialSnapshot } from '../types/state.types';
 import { RevenueProcessor } from './finance/RevenueProcessor';
 import { ExpenseProcessor } from './finance/ExpenseProcessor';
 import { InterestRateSimulator } from './market/InterestRateSimulator';
+import { formatMoney } from '../utils';
 
 export function calculateProjectROI(project: Project): number {
   const totalCost = project.budget + (project.marketingBudget || 0);
@@ -41,6 +42,9 @@ export function generateWeeklyFinancialReport(
   const studioLevel = (state.studio as any).level || 1;
   const market = state.finance.marketState || InterestRateSimulator.initialize();
 
+  // Track causality for financial changes
+  const causality: import('../types/state.types').FinancialCausalityEntry[] = [];
+
   // 1. Calculate Passive Income from Vault
   const passive = RevenueProcessor.calculateVaultDividends(state.ip.vault);
   
@@ -57,23 +61,67 @@ export function generateWeeklyFinancialReport(
   projects.forEach(p => {
     if (p.state === 'released') {
       let weeklyGross = 0;
-      
+      let trendMultiplier = 1.0;
+
+      // Check for genre trend
+      const genreTrend = state.market.trends?.find(t =>
+        t.genre?.toLowerCase() === p.genre?.toLowerCase()
+      );
+      if (genreTrend) {
+        trendMultiplier = genreTrend.heat >= 60 ? 1.2 : (genreTrend.heat <= 30 ? 0.8 : 1.0);
+        if (trendMultiplier !== 1.0) {
+          causality.push({
+            factor: `Genre Trend: ${p.genre}`,
+            effect: `${trendMultiplier > 1 ? '+' : ''}${Math.round((trendMultiplier - 1) * 100)}%`,
+            magnitude: trendMultiplier - 1,
+            description: genreTrend.heat >= 60 ? `${p.genre} is trending hot this season` : `${p.genre} has gone stale in the market`
+          });
+        }
+      }
+
       // Theatrical vs Streaming
       if (p.distributionStatus === 'theatrical') {
         weeklyGross = RevenueProcessor.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.45); // The Studio Comptroller: Increased theatrical decay to 0.45 to simulate modern front-loaded box office drops.
         boxOffice += weeklyGross;
+
+        // Track theatrical decay causality
+        if (p.weeksInPhase && p.weeksInPhase > 1) {
+          causality.push({
+            factor: `Theatrical Decay: ${p.title}`,
+            effect: `-45% weekly drop`,
+            magnitude: -0.45,
+            description: "Front-loaded box office drops significantly after opening week"
+          });
+        }
       } else if (p.distributionStatus === 'streaming') {
         const platform = p.buyerId ? buyerMap.get(p.buyerId) : undefined;
         if (platform) {
           weeklyGross = RevenueProcessor.calculateStreamingRevenue(p, platform);
           distribution += weeklyGross;
+
+          // Track platform causality
+          causality.push({
+            factor: `Streaming Platform: ${platform.name}`,
+            effect: `${platform.archetype} revenue model`,
+            magnitude: 0,
+            description: `Revenue calculated based on ${platform.name}'s subscriber base and content library quality`
+          });
         }
       }
-      
+
       // Base Merch
       const franchise = p.franchiseId ? state.ip.franchises[p.franchiseId] : null;
       const weeklyMerch = RevenueProcessor.calculateMerchRevenue(p.buzz, franchise?.relevanceScore || 0);
       merch += weeklyMerch;
+
+      if (franchise && franchise.relevanceScore > 50) {
+        causality.push({
+          factor: `Franchise Synergy: ${franchise.name}`,
+          effect: `+${franchise.relevanceScore}% merch boost`,
+          magnitude: franchise.relevanceScore / 100,
+          description: `The ${franchise.name} franchise drives strong merchandising revenue`
+        });
+      }
 
       // Deduct Talent Royalties (Net Points Logic)
       totalRoyalties += RevenueProcessor.calculateNetPointsRoyalty(p, weeklyGross + weeklyMerch, state.studio.internal.contracts);
@@ -87,9 +135,21 @@ export function generateWeeklyFinancialReport(
 
   // 4. Calculate Interest (Debt or Savings)
   const isDebt = state.finance.cash < 0;
-  const interest = isDebt 
+  const interest = isDebt
     ? ExpenseProcessor.calculateDebtInterest(state.finance.cash, market.debtRate)
     : -ExpenseProcessor.calculateSavingsYield(state.finance.cash, market.savingsYield); // Negative expense = income
+
+  // Track interest causality
+  if (interest !== 0) {
+    causality.push({
+      factor: isDebt ? 'Debt Interest' : 'Savings Yield',
+      effect: isDebt ? `-${formatMoney(Math.abs(interest))}` : `+${formatMoney(Math.abs(interest))}`,
+      magnitude: isDebt ? -1 : 1,
+      description: isDebt
+        ? `Interest on debt at ${(market.debtRate * 100).toFixed(1)}% annual rate`
+        : `Yield on cash reserves at ${(market.savingsYield * 100).toFixed(1)}% annual rate`
+    });
+  }
 
   // 5. Consolidated One-off Impacts (Awards, Festivals, Acquisitions)
   let otherRevenue = 0;
@@ -145,7 +205,8 @@ export function generateWeeklyFinancialReport(
       interest: interest
     },
     net: netProfit,
-    cash: state.finance.cash + netProfit
+    cash: state.finance.cash + netProfit,
+    causality
   };
 
   return { report, snapshot };

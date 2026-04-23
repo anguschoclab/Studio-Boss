@@ -40,6 +40,15 @@ export interface Headline {
   category: HeadlineCategory;
 }
 
+export interface NarrativeEvent {
+  type: 'crisis' | 'project_update' | 'rival_action' | 'market_event' | 'general';
+  projectId?: string;
+  title: string;
+  description: string;
+  severity?: 'low' | 'medium' | 'high';
+  isPositive?: boolean;
+}
+
 export interface WeekSummary {
   fromWeek: number;
   toWeek: number;
@@ -51,6 +60,8 @@ export interface WeekSummary {
   newHeadlines: Headline[];
   events: string[];
   newsEvents?: NewsEvent[];
+  narrativeEvents?: NarrativeEvent[];
+  isQuietWeek?: boolean;
 }
 
 export interface FinanceRecord {

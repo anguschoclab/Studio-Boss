@@ -1,5 +1,6 @@
 import { Headline } from './engine.types';
 import { Franchise } from './franchise.types';
+import { Project } from './project.types';
 
 export interface WeeklyFinancialReport {
   week: number;
@@ -19,6 +20,13 @@ export interface WeeklyFinancialReport {
   netProfit: number;
 }
 
+export interface FinancialCausalityEntry {
+  factor: string;
+  effect: string;
+  magnitude: number;
+  description: string;
+}
+
 export interface FinancialSnapshot {
   week: number;
   revenue: {
@@ -36,6 +44,7 @@ export interface FinancialSnapshot {
   };
   net: number;
   cash: number;
+  causality?: FinancialCausalityEntry[];
 }
 
 export interface MarketState {
@@ -143,6 +152,7 @@ export interface BaseImpact {
 
 export interface FundsImpact extends BaseImpact { type: 'FUNDS_CHANGED'; payload: { amount: number } }
 export interface FundsDeductedImpact extends BaseImpact { type: 'FUNDS_DEDUCTED'; payload: { amount: number } }
+export interface ProjectCreatedImpact extends BaseImpact { type: 'PROJECT_CREATED'; payload: { project: Project } }
 export interface ProjectUpdateImpact extends BaseImpact { type: 'PROJECT_UPDATED'; payload: ProjectUpdate }
 export type ProjectRemovedImpact = BaseImpact & { type: 'PROJECT_REMOVED'; payload: { projectId: string } };
 export type NewsImpact = BaseImpact & { type: 'NEWS_ADDED'; payload: { headline: string; description: string; category?: import('./engine.types').HeadlineCategory } };
@@ -174,6 +184,7 @@ export interface IndustryUpdateImpact extends BaseImpact {
 export type StateImpact = 
   | FundsImpact
   | FundsDeductedImpact
+  | ProjectCreatedImpact
   | ProjectUpdateImpact
   | ProjectRemovedImpact
   | NewsImpact

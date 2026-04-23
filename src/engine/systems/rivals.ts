@@ -32,7 +32,15 @@ export function rivalPoachTalent(rival: RivalStudio, talentPool: TalentProfile[]
       const stars = talentPool.filter(t => t.prestige > 80);
       if (stars.length > 0) {
         const star = pick(stars);
-        return `${rival.name} just poached ${star.name} with a massive overall deal!`;
+
+        // Add personality based on archetype
+        const personalityPrefix = rival.archetype === 'major'
+          ? 'Deep-pocketed'
+          : rival.archetype === 'indie'
+          ? 'Prestige-focused'
+          : 'Strategic';
+
+        return `${personalityPrefix} ${rival.name} just poached ${star.name} with a massive overall deal!`;
       }
     }
   }
@@ -81,6 +89,7 @@ export function updateRival(rival: RivalStudio): Partial<RivalStudio> {
 export function advanceRivals(state: GameState): StateImpact {
   const rivalUpdates: RivalUpdate[] = [];
   const newsEvents: NewsEvent[] = [];
+  const uiNotifications: string[] = [];
   const ALL_RIVALS = Object.values(state.entities.rivals);
   
   for (const rival of ALL_RIVALS) {
@@ -93,14 +102,23 @@ export function advanceRivals(state: GameState): StateImpact {
     
     // Log major rival events
     if (update.isAcquirable && !rival.isAcquirable) {
+      const archetypeContext = rival.archetype === 'major'
+        ? 'Once-mighty'
+        : rival.archetype === 'indie'
+        ? 'Critically-acclaimed'
+        : 'Mid-tier';
+
       newsEvents.push({
         id: generateId('NWS'),
         week: state.week,
         type: 'RIVAL',
-        headline: `${rival.name} Vulnerable to Takeover!`,
+        headline: `${archetypeContext} ${rival.name} Vulnerable to Takeover!`,
         description: `${rival.name} has hit a critical cash shortage. Strategy: ${update.recentActivity || rival.recentActivity}`,
         impact: 'Available for acquisition'
       });
+
+      // Add to narrative events for weekly summary
+      uiNotifications.push(`RIVAL: ${archetypeContext} ${rival.name} is vulnerable to takeover due to cash crunch`);
     }
   }
 
@@ -116,11 +134,15 @@ export function advanceRivals(state: GameState): StateImpact {
          description: poakMsg,
          impact: 'Pool updated'
        });
+
+       // Add to narrative events for weekly summary
+       uiNotifications.push(`RIVAL: ${poakMsg}`);
      }
   }
 
   return {
     rivalUpdates,
-    newsEvents
+    newsEvents,
+    uiNotifications
   };
 }

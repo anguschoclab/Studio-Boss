@@ -5,10 +5,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useState } from 'react';
-import { Headline } from '@/engine/types';
+import { Headline, NarrativeEvent } from '@/engine/types';
 import { NewsStoryModal } from './NewsStoryModal';
 import { cn } from '@/lib/utils';
-import { ArrowRight, TrendingUp, DollarSign, Activity, Newspaper } from 'lucide-react';
+import { ArrowRight, TrendingUp, DollarSign, Activity, Newspaper, AlertTriangle, Trophy, MessageSquare } from 'lucide-react';
 
 export const WeekSummaryModal = () => {
   const { activeModal, resolveCurrentModal } = useUIStore();
@@ -18,8 +18,13 @@ export const WeekSummaryModal = () => {
   if (!activeModal || activeModal.type !== 'SUMMARY') return null;
 
   const weekSummary = activeModal.payload;
-  const { toWeek, cashBefore, cashAfter, totalRevenue, totalCosts, projectUpdates, newHeadlines, events } = weekSummary;
+  const { toWeek, cashBefore, cashAfter, totalRevenue, totalCosts, projectUpdates, newHeadlines, events, narrativeEvents, isQuietWeek } = weekSummary;
   const netDelta = cashAfter - cashBefore;
+
+  // Categorize narrative events
+  const crises = narrativeEvents?.filter((e: NarrativeEvent) => e.type === 'crisis') || [];
+  const positiveUpdates = narrativeEvents?.filter((e: NarrativeEvent) => e.isPositive) || [];
+  const generalChatter = narrativeEvents?.filter((e: NarrativeEvent) => e.type === 'general' && !e.isPositive) || [];
 
   const isYearEnd = (toWeek - 1) % 52 === 0 && toWeek > 1;
   const currentSnapshot = isYearEnd ? snapshots[snapshots.length - 1] : null;
@@ -80,6 +85,108 @@ export const WeekSummaryModal = () => {
                 </div>
               )}
 
+              {/* Quiet Week Notice */}
+              {isQuietWeek && (
+                <div className="p-8 rounded-none bg-white/[0.01] border border-white/5 shadow-2xl relative overflow-hidden">
+                  <div className="flex items-center gap-4 mb-4">
+                    <MessageSquare className="h-5 w-5 text-muted-foreground/40" />
+                    <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-muted-foreground/40 italic">WEEKLY_BRIEFING</h4>
+                  </div>
+                  <p className="text-sm text-muted-foreground/60 italic leading-relaxed">
+                    Production continues on schedule. No major news. Your CFO notes that cash reserves look healthy.
+                  </p>
+                </div>
+              )}
+
+              {/* The Hits - Positive Updates */}
+              {(positiveUpdates.length > 0 || projectUpdates.some((u: string) => u.includes('(+'))) || netDelta > 0) && (
+                <div className="space-y-6">
+                  <div className="flex items-center gap-4">
+                    <Trophy className="h-4 w-4 text-emerald-500" />
+                    <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-emerald-500 italic">THE_HITS</h4>
+                    <div className="h-px bg-emerald-500/20 flex-1" />
+                  </div>
+                  <div className="space-y-3">
+                    {netDelta > 0 && (
+                      <div className="p-4 rounded-none border border-emerald-500/20 bg-emerald-500/5 flex items-center gap-4">
+                        <div className="w-1 h-1 bg-emerald-500 shrink-0 rotate-45" />
+                        <div className="flex-1 text-sm font-medium text-emerald-500 italic">
+                          Net cash flow positive: +{formatMoney(netDelta).toUpperCase()}
+                        </div>
+                      </div>
+                    )}
+                    {projectUpdates.filter((u: string) => u.includes('(+')).map((u: string, i: number) => (
+                      <div key={i} className="p-4 rounded-none border border-emerald-500/20 bg-emerald-500/5 flex items-center gap-4">
+                        <div className="w-1 h-1 bg-emerald-500 shrink-0 rotate-45" />
+                        <div className="flex-1 text-sm font-medium text-emerald-500 italic">
+                          {u.split('(+')[0]}<span className="ml-2"> (+{u.split('(+')[1]}</span>
+                        </div>
+                      </div>
+                    ))}
+                    {positiveUpdates.map((e: NarrativeEvent, i: number) => (
+                      <div key={i} className="p-4 rounded-none border border-emerald-500/20 bg-emerald-500/5 flex items-center gap-4">
+                        <div className="w-1 h-1 bg-emerald-500 shrink-0 rotate-45" />
+                        <div className="flex-1 text-sm font-medium text-emerald-500 italic">{e.title}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Problems - Crises and Issues */}
+              {(crises.length > 0 || projectUpdates.some((u: string) => u.includes('(-'))) || netDelta < -500_000) && (
+                <div className="space-y-6">
+                  <div className="flex items-center gap-4">
+                    <AlertTriangle className="h-4 w-4 text-amber-500" />
+                    <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-amber-500 italic">REQUIRES_ATTENTION</h4>
+                    <div className="h-px bg-amber-500/20 flex-1" />
+                  </div>
+                  <div className="space-y-3">
+                    {netDelta < -500_000 && (
+                      <div className="p-4 rounded-none border border-amber-500/20 bg-amber-500/5 flex items-center gap-4">
+                        <div className="w-1 h-1 bg-amber-500 shrink-0 rotate-45" />
+                        <div className="flex-1 text-sm font-medium text-amber-500 italic">
+                          Significant cash burn: {formatMoney(netDelta).toUpperCase()}
+                        </div>
+                      </div>
+                    )}
+                    {crises.map((e: NarrativeEvent, i: number) => (
+                      <div key={i} className="p-4 rounded-none border border-amber-500/30 bg-amber-500/10 flex items-center gap-4">
+                        <div className="w-1 h-1 bg-amber-500 shrink-0 rotate-45" />
+                        <div className="flex-1 text-sm font-medium text-amber-500 italic">{e.title}</div>
+                      </div>
+                    ))}
+                    {projectUpdates.filter((u: string) => u.includes('(-')).map((u: string, i: number) => (
+                      <div key={i} className="p-4 rounded-none border border-amber-500/20 bg-amber-500/5 flex items-center gap-4">
+                        <div className="w-1 h-1 bg-amber-500 shrink-0 rotate-45" />
+                        <div className="flex-1 text-sm font-medium text-amber-500 italic">
+                          {u.split('(-')[0]}<span className="ml-2"> (-{u.split('(-')[1]}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Staff Chatter - Narrative Events */}
+              {generalChatter.length > 0 && (
+                <div className="space-y-6">
+                  <div className="flex items-center gap-4">
+                    <MessageSquare className="h-4 w-4 text-secondary" />
+                    <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-secondary italic">STAFF_CHATTER</h4>
+                    <div className="h-px bg-secondary/20 flex-1" />
+                  </div>
+                  <div className="space-y-3">
+                    {generalChatter.map((e: NarrativeEvent, i: number) => (
+                      <div key={i} className="p-4 rounded-none border border-white/5 bg-white/[0.01] flex items-center gap-4 hover:border-white/10 transition-colors">
+                        <div className="w-1 h-1 bg-secondary shrink-0 rotate-45" />
+                        <div className="flex-1 text-sm font-medium text-foreground/70 italic">{e.title}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Financial Summary */}
               <div className="space-y-6">
                 <div className="flex items-center gap-4">
@@ -124,59 +231,6 @@ export const WeekSummaryModal = () => {
                 </div>
               </div>
 
-              {/* Project Updates */}
-              {projectUpdates.length > 0 && (
-                <div className="space-y-6">
-                  <div className="flex items-center gap-4">
-                    <Activity className="h-4 w-4 text-secondary" />
-                    <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-secondary italic">PRODUCTION_SLATE_UPDATES</h4>
-                    <div className="h-px bg-secondary/20 flex-1" />
-                  </div>
-                  <div className="space-y-3">
-                    {projectUpdates.map((u: string, i: number) => {
-                      const hasPositiveTrend = u.includes('(+');
-                      const hasNegativeTrend = u.includes('(-');
-                      
-                      return (
-                        <div key={i} className="flex items-center gap-4 text-sm font-medium text-foreground/70 bg-white/[0.01] p-4 border border-white/5 hover:border-white/10 transition-colors">
-                          <div className="w-1 h-1 bg-secondary shrink-0 rotate-45" />
-                          <div className="flex-1 italic tracking-tight">
-                            {hasPositiveTrend ? (
-                              <>
-                                {u.split('(+')[0]}
-                                <span className="text-emerald-500 font-black ml-2"> (+{u.split('(+')[1]}</span>
-                              </>
-                            ) : hasNegativeTrend ? (
-                              <>
-                                {u.split('(-')[0]}
-                                <span className="text-rose-500 font-black ml-2"> (-{u.split('(-')[1]}</span>
-                              </>
-                            ) : u}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-
-              {/* Events */}
-              {events.length > 0 && (
-                <div className="space-y-6">
-                  <div className="flex items-center gap-4">
-                    <Activity className="h-4 w-4 text-primary" />
-                    <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-primary italic">SYSTEM_EVENTS</h4>
-                    <div className="h-px bg-primary/20 flex-1" />
-                  </div>
-                  <div className="space-y-3">
-                    {events.map((e: string, i: number) => (
-                      <div key={i} className="text-xs font-black uppercase tracking-[0.1em] text-foreground/40 p-5 rounded-none bg-white/[0.02] border border-white/5 hover:border-primary/40 hover:text-foreground transition-all duration-700 italic">
-                        {e}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
 
               {/* Headlines */}
               {newHeadlines.length > 0 && (

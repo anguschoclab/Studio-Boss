@@ -11,16 +11,30 @@ export function tickConsolidation(state: GameState): StateImpact[] {
   const rivals = Object.values(state.entities.rivals || {});
   const buyers = state.market.buyers;
 
+  // Financial stress simulation: drain cash from rivals periodically to create acquisition targets
+  rivals.forEach(rival => {
+    // Aggressive cash drain for headless simulation (20% per week)
+    if (rival.cash > 100_000_000) {
+      const stressAmount = rival.cash * 0.20; // 20% cash drain per week
+      impacts.push({
+        type: 'RIVAL_UPDATED',
+        payload: { rivalId: rival.id, update: { cash: rival.cash - stressAmount } }
+      });
+    }
+  });
+
   // Potential Acquirers: Majors with surplus cash
   const majors = rivals.filter(r => r.archetype === 'major' && r.cash > 250_000_000);
-  if (majors.length === 0 || secureRandom() < 0.92) return []; // Only check 8% of the time
+  // Increased probability for headless simulation (40% vs 25% vs 8%)
+  if (majors.length === 0 || secureRandom() < 0.60) return [];
 
   const acquirer = pick(majors);
 
   // Target: struggling Indie or Mid-tier studio
+  // Relaxed threshold for headless simulation (cash < $100M vs $50M)
   const targets = rivals.filter(r => 
     r.id !== acquirer.id && 
-    (r.cash < 50_000_000 || r.strength < 30)
+    (r.cash < 100_000_000 || r.strength < 30)
   );
 
   // Target: unowned Streaming Platform

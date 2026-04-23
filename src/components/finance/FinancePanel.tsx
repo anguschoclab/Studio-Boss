@@ -19,6 +19,7 @@ import { useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { formatMoney } from '@/engine/utils';
 import { KPIStatCard } from '@/components/shared/KPIStatCard';
+import { CausalityTooltip } from '@/components/shared/CausalityTooltip';
 import { cn } from '@/lib/utils';
 import { EmptyState } from '@/components/shared/EmptyState';
 
@@ -32,9 +33,13 @@ export const FinancePanel = () => {
   const weeklyCosts = useMemo(() => calculateWeeklyCosts(projectsMemo), [projectsMemo]);
   const weeklyRevenue = useMemo(() => calculateWeeklyRevenue(projectsMemo), [projectsMemo]);
   const netDelta = useMemo(() => weeklyRevenue - weeklyCosts, [weeklyRevenue, weeklyCosts]);
-  
+
   const studioNetWorth = useMemo(() => gameState ? calculateStudioNetWorth(gameState) : 0, [gameState]);
   const forecast = useMemo(() => gameState ? generateCashflowForecast(gameState, 12) : [], [gameState]);
+
+  // Get latest snapshot causality data
+  const latestSnapshot = financeHistory?.[financeHistory.length - 1];
+  const causality = latestSnapshot?.causality;
 
   const activeProjects = useMemo(() =>
     projectsMemo.filter(p => p.state === 'development' || p.state === 'production'),
@@ -180,25 +185,37 @@ export const FinancePanel = () => {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-10">
-        <KPIStatCard 
-          label="AVAILABLE LIQUID CASH" 
-          value={formatMoney(cash).toUpperCase()} 
-          variant={cash < 0 ? 'destructive' : 'primary'}
-          tooltip="Total liquid capital available for studio operations."
-        />
-        <KPIStatCard 
-          label="TOTAL STUDIO EQUITY" 
-          value={formatMoney(studioNetWorth).toUpperCase()} 
+        <CausalityTooltip
+          value={cash}
+          causality={causality}
+          label="AVAILABLE LIQUID CASH"
+        >
+          <KPIStatCard
+            label="AVAILABLE LIQUID CASH"
+            value={formatMoney(cash).toUpperCase()}
+            variant={cash < 0 ? 'destructive' : 'primary'}
+            tooltip="Total liquid capital available for studio operations."
+          />
+        </CausalityTooltip>
+        <KPIStatCard
+          label="TOTAL STUDIO EQUITY"
+          value={formatMoney(studioNetWorth).toUpperCase()}
           variant="muted"
           tooltip="Estimated total value of all studio assets."
         />
-        <KPIStatCard 
-          label="WEEKLY CASH BURN" 
-          value={`${netDelta >= 0 ? '+' : ''}${formatMoney(netDelta).toUpperCase()}`} 
-          subLabel="P&L MOMENTUM"
-          variant={netDelta >= 0 ? 'success' : 'destructive'}
-          tooltip="Estimated weekly profit or loss."
-        />
+        <CausalityTooltip
+          value={netDelta}
+          causality={causality}
+          label="WEEKLY CASH BURN"
+        >
+          <KPIStatCard
+            label="WEEKLY CASH BURN"
+            value={`${netDelta >= 0 ? '+' : ''}${formatMoney(netDelta).toUpperCase()}`}
+            subLabel="P&L MOMENTUM"
+            variant={netDelta >= 0 ? 'success' : 'destructive'}
+            tooltip="Weekly profit or loss from operations."
+          />
+        </CausalityTooltip>
         <KPIStatCard 
           label="FORECAST LIQUIDITY" 
           value={formatMoney(forecast.length > 0 ? forecast[forecast.length - 1].projected : 0).toUpperCase()} 

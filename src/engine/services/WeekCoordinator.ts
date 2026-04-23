@@ -327,6 +327,28 @@ export class WeekCoordinator {
       .filter((i): i is import('../types/state.types').ProjectUpdateImpact => i.type === 'PROJECT_UPDATED')
       .map(i => i.payload.projectId);
 
+    // Capture uiNotifications from impacts for narrative events
+    const narrativeEvents: import('../types/engine.types').NarrativeEvent[] = [];
+    context.impacts.forEach(impact => {
+      if (impact.uiNotifications) {
+        impact.uiNotifications.forEach(notification => {
+          narrativeEvents.push({
+            type: notification.startsWith('CRISIS') ? 'crisis' : 'general',
+            title: notification,
+            description: notification,
+            severity: notification.startsWith('CRISIS') ? 'high' : 'low'
+          });
+        });
+      }
+    });
+
+    // Quiet week detection
+    const isQuietWeek = 
+      projectUpdates.length === 0 &&
+      narrativeEvents.length === 0 &&
+      newsImpacts.length <= 2 &&
+      Math.abs(totalRevenue - totalCosts) < 500_000;
+
     return {
       fromWeek: before.week,
       toWeek: after.week,
@@ -346,6 +368,8 @@ export class WeekCoordinator {
         };
       }).filter((h): h is import('../types/engine.types').Headline => h !== null),
       events: context.events.map(e => e.title),
+      narrativeEvents,
+      isQuietWeek
     };
   }
 }

@@ -77,6 +77,35 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
       };
     }
 
+    case 'PROJECT_CREATED': {
+      const { project } = impact.payload;
+      const projects = { ...state.entities.projects };
+      projects[project.id] = project;
+      return {
+        ...state,
+        entities: {
+          ...state.entities,
+          projects
+        }
+      };
+    }
+
+    case 'INDUSTRY_UPDATE': {
+      const { update } = impact.payload;
+      const newState = { ...state };
+      
+      // Deep merge the update into state
+      for (const key in update) {
+        if (update[key] !== undefined && typeof update[key] === 'object') {
+          newState[key] = { ...(newState as any)[key], ...update[key] };
+        } else {
+          (newState as any)[key] = update[key];
+        }
+      }
+      
+      return newState;
+    }
+
     case 'NEWS_ADDED': {
       const { headline, description } = impact.payload;
       const newsEvent: NewsEvent = {
