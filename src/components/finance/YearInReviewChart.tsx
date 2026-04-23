@@ -105,7 +105,7 @@ export const YearInReviewChart = () => {
               }}
               labelStyle={{ color: 'rgba(255,255,255,0.2)', fontWeight: 900, fontSize: '9px', textTransform: 'uppercase', marginBottom: '12px', letterSpacing: '0.2em', fontStyle: 'italic' }}
               itemStyle={{ fontSize: '11px', fontWeight: 900, padding: '4px 0', textTransform: 'uppercase', letterSpacing: '0.1em' }}
-              formatter={(value: any) => [formatMoney(value as number), '']}
+              formatter={(value: number) => [formatMoney(value), '']}
             />
             <ReferenceLine y={0} stroke="rgba(255,255,255,0.05)" strokeWidth={1} strokeDasharray="8 8" />
             <Area 
