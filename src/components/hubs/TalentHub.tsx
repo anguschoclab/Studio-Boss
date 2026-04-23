@@ -76,11 +76,12 @@ const RosterPanel = () => {
         <div className="flex gap-4 flex-wrap relative z-10">
           {roleFilters.map(role => (
             <button
+              type="button"
               key={role}
               onClick={() => setFilter(role)}
               aria-pressed={filter === role}
               className={cn(
-                'px-8 py-3 text-[10px] uppercase tracking-[0.3em] font-black rounded-none transition-all duration-700 border italic',
+                'px-8 py-3 text-[10px] uppercase tracking-[0.3em] font-black rounded-none transition-all duration-700 border italic focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none',
                 filter === role
                   ? 'bg-primary text-black shadow-[0_0_20px_rgba(var(--primary),0.2)] border-primary'
                   : 'bg-white/[0.02] text-muted-foreground/40 hover:bg-white/10 hover:text-white border-white/5'
@@ -179,10 +180,11 @@ const MarketplacePanel = () => {
     <div className="h-full flex flex-col space-y-10 animate-in fade-in duration-700">
       <div className="flex items-center gap-4 bg-white/[0.02] border border-white/5 p-2 rounded-none w-fit shadow-xl">
         <button
+          type="button"
           onClick={() => setActiveTab('scripts')}
           aria-pressed={activeTab === 'scripts'}
           className={cn(
-            'px-10 py-3 text-[10px] font-black uppercase tracking-[0.3em] rounded-none transition-all duration-700 italic',
+            'px-10 py-3 text-[10px] font-black uppercase tracking-[0.3em] rounded-none transition-all duration-700 italic focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none',
             activeTab === 'scripts'
               ? 'bg-primary text-black shadow-lg shadow-primary/10'
               : 'text-muted-foreground/40 hover:text-white hover:bg-white/5'
@@ -192,10 +194,11 @@ const MarketplacePanel = () => {
           SCRIPT MARKETPLACE
         </button>
         <button
+          type="button"
           onClick={() => setActiveTab('talent')}
           aria-pressed={activeTab === 'talent'}
           className={cn(
-            'px-10 py-3 text-[10px] font-black uppercase tracking-[0.3em] rounded-none transition-all duration-700 italic',
+            'px-10 py-3 text-[10px] font-black uppercase tracking-[0.3em] rounded-none transition-all duration-700 italic focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none',
             activeTab === 'talent'
               ? 'bg-primary text-black shadow-lg shadow-primary/10'
               : 'text-muted-foreground/40 hover:text-white hover:bg-white/5'
