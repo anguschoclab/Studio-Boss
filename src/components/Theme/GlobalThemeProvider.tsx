@@ -1,19 +1,6 @@
-import React, { createContext, useContext, useEffect, ReactNode } from 'react';
+import React, { useEffect, ReactNode } from 'react';
 import { useGameStore } from '../../store/gameStore';
-
-interface ThemeContextType {
-  archetype: string | undefined;
-}
-
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
-
-export const useTheme = () => {
-  const context = useContext(ThemeContext);
-  if (!context) {
-    throw new Error('useTheme must be used within a GlobalThemeProvider');
-  }
-  return context;
-};
+import { ThemeContext } from './ThemeContext';
 
 interface GlobalThemeProviderProps {
   children: ReactNode;

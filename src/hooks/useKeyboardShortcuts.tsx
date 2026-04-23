@@ -1,28 +1,6 @@
 import React, { useEffect, useCallback } from 'react';
 import { useUIStore } from '@/store/uiStore';
-
-/**
- * Keyboard shortcut definitions
- */
-export const KEYBOARD_SHORTCUTS = {
-  // Navigation
-  'cmd+1': { action: 'hub', target: 'hq', description: 'Go to Studio HQ' },
-  'cmd+2': { action: 'hub', target: 'production', description: 'Go to Production' },
-  'cmd+3': { action: 'hub', target: 'talent', description: 'Go to Talent & Deals' },
-  'cmd+4': { action: 'hub', target: 'intelligence', description: 'Go to Intelligence' },
-  
-  // Command palette
-  'cmd+k': { action: 'commandPalette', description: 'Open command palette' },
-  
-  // Actions
-  'cmd+n': { action: 'createProject', description: 'Create new project' },
-  
-  // Quick actions dock
-  'cmd+shift+a': { action: 'toggleQuickActions', description: 'Toggle quick actions dock' },
-  
-  // Escape
-  'escape': { action: 'escape', description: 'Close modals/panels' },
-} as const;
+import { KEYBOARD_SHORTCUTS } from '@/constants/keyboardShortcuts';
 
 type ShortcutKey = keyof typeof KEYBOARD_SHORTCUTS;
 
@@ -93,13 +71,5 @@ export function useKeyboardShortcuts() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
 }
-
-/**
- * Component wrapper that enables keyboard shortcuts
- */
-export const KeyboardShortcuts: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  useKeyboardShortcuts();
-  return <>{children}</>;
-};
 
 export default useKeyboardShortcuts;
