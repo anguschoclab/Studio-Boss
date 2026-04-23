@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -52,7 +53,7 @@ interface CommandPaletteProps {
  * - Common actions (new project, etc.)
  * - Full Design Bible v1.0 Compliance
  */
-export const CommandPalette: React.FC<CommandPaletteProps> = ({
+const CommandPalette: React.FC<CommandPaletteProps> = ({
   isOpen,
   onClose,
 }) => {
@@ -432,7 +433,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
 /**
  * Hook to manage command palette state
  */
-export const useCommandPalette = () => {
+const useCommandPalette = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -456,4 +457,4 @@ export const useCommandPalette = () => {
   };
 };
 
-export default CommandPalette;
+export { useCommandPalette, CommandPalette };

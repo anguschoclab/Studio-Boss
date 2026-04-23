@@ -66,7 +66,7 @@ export const TalentAvatar: React.FC<TalentAvatarProps> = React.memo(({
   
   const svgMarkup = useMemo(() => {
     return generateAvatarSVG(talent, effectiveWeek);
-  }, [talent.id, talent.demographics.age, talent.demographics.gender, talent.demographics.ethnicity, talent.familyId, effectiveWeek]);
+  }, [talent, effectiveWeek]);
 
   const primaryRole = (talent.roles?.[0] || talent.role || '').toLowerCase();
   const badge = ROLE_BADGE[primaryRole];
