@@ -71,4 +71,17 @@ describe('TickModule - tickProduction', () => {
     const impacts = tickProduction(state, rng);
     expect(impacts).toHaveLength(0); // No projects, no talent
   });
+
+  it('advances weeks cleanly with an empty pipeline (no projects/contracts/talent)', () => {
+    const state = createMockGameState({ week: 10 });
+    state.entities.projects = {};
+    state.entities.contracts = {};
+    state.entities.talents = {};
+    const rng = new RandomGenerator(42);
+
+    const impacts = tickProduction(state, rng);
+
+    expect(impacts).toBeDefined();
+    expect(impacts).toHaveLength(0);
+  });
 });

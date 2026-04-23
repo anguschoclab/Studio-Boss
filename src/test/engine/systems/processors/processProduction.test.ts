@@ -14,22 +14,26 @@ describe('tickProduction', () => {
     finance: { cash: 1000000, ledger: [] },
     news: { headlines: [] },
     ip: { vault: [], franchises: {} },
+    entities: {
+      projects: {},
+      talents: {},
+      contracts: {},
+      rivals: {}
+    },
     studio: {
+      id: 'player',
       name: 'Test Studio',
       archetype: 'major',
       prestige: 50,
       internal: {
-        projects: {}, 
-        contracts: [],
+        projectHistory: [],
       }
     },
     market: { opportunities: [], buyers: [], activeMarketEvents: [] },
     industry: {
-      rivals: [],
       families: [],
       agencies: [],
       agents: [],
-      talentPool: {} as Record<string, Talent>,
       newsHistory: [],
       rumors: []
     },

@@ -88,6 +88,19 @@ describe("TalentSystem", () => {
       expect(t1.draw).toBe(56); // 50 + 6
       expect(t1.prestige).toBe(53); // 50 + 3
     });
+
+    it("handles extreme edge case: talent with 0 skill but 100 ego safely", () => {
+      const extremeTalent = { ...mockTalent1, psychology: { ...mockTalent1.psychology, ego: 100 } } as Talent;
+      const extremePool = [extremeTalent];
+      const solidHit = { ...mockProject, revenue: 25_000_000 } as Project;
+      const results = TalentSystem.applyProjectResults(solidHit, mockContracts, extremePool);
+
+      const t1 = results.find(t => t.id === "t1")!;
+      expect(t1).toBeDefined();
+      expect(t1.psychology?.ego).toBe(100); // Clamped at 100
+      expect(t1.draw).toBe(56);
+      expect(t1.prestige).toBe(53);
+    });
   });
 
   describe("advance", () => {
