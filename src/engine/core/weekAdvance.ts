@@ -21,7 +21,8 @@ export function advanceWeek(state: GameState): { newState: GameState; summary: W
   const result = WeekCoordinator.execute(state);
 
   lastAdvancedStateRef = state;
-  lastResultRef = result;
+  // ⚡ The Tech Supervisor: Enforce immutability on cached wrapper to guarantee strict equality integrity
+  lastResultRef = Object.freeze(result);
 
-  return result;
+  return lastResultRef;
 }

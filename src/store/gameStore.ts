@@ -1,6 +1,5 @@
 import { create } from 'zustand';
-import { GameState, WeekSummary, ArchetypeKey, FinanceState, NewsState, Award } from '@/engine/types';
-import { type StudioId, type ProjectId, type NewsId } from '@/engine/types/shared.types';
+import { GameState, WeekSummary, ArchetypeKey, Award } from '@/engine/types';
 import { initializeGame } from '@/engine/core/gameInit';
 import { advanceWeek } from '@/engine/core/weekAdvance';
 import { saveGame, loadGame, getSaveSlots, SaveSlotInfo } from '@/persistence/saveLoad';
@@ -84,13 +83,22 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
       saveQueue.push(result.newState);
       processSaveQueue();
       
-      // The Tech Supervisor: Maintain strict object references for unchanged slices
+      // ⚡ The Tech Supervisor: Optimize Zustand selectors by maintaining strict object references for all slices
       const newStateObj: Partial<GameStore> = { gameState: result.newState };
       if (state.finance !== result.newState.finance) {
         newStateObj.finance = result.newState.finance as any;
       }
       if (state.news !== result.newState.news) {
         newStateObj.news = result.newState.news as any;
+      }
+      if (state.projects !== result.newState.entities.projects) {
+        newStateObj.projects = result.newState.entities.projects as any;
+      }
+      if (state.talents !== result.newState.entities.talents) {
+        newStateObj.talents = result.newState.entities.talents as any;
+      }
+      if (state.rivals !== result.newState.entities.rivals) {
+        newStateObj.rivals = result.newState.entities.rivals as any;
       }
 
       return newStateObj;
@@ -121,8 +129,10 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
 
     if (crisisTitles.size > 0) {
       const projects = finalState.studio.internal.projects;
-      for (const key in projects) {
-        const p = projects[key];
+      // ⚡ The Tech Supervisor: Optimize for...in with Object.values iteration
+      const projectValues = Object.values(projects);
+      for (let i = 0; i < projectValues.length; i++) {
+        const p = projectValues[i];
         if (p.activeCrisis && !p.activeCrisis.resolved && crisisTitles.has(p.title)) {
           ui.enqueueModal('CRISIS', { projectId: p.id, crisis: p.activeCrisis });
         }
@@ -134,13 +144,16 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
     if (isAwardsWeek) {
       const year = Math.floor(finalState.week / 52) + 1;
       const allAwards = finalState.industry.awards || [];
-      // The Tech Supervisor: Replace filter with standard for loop
+      // ⚡ The Tech Supervisor: O(1) reverse traversal with push/reverse to avoid O(N^2) unshift in loop
       const currentAwards: Award[] = [];
-      for (let i = 0; i < allAwards.length; i++) {
+      for (let i = allAwards.length - 1; i >= 0; i--) {
         if (allAwards[i].year === year) {
           currentAwards.push(allAwards[i]);
+        } else if (allAwards[i].year < year) {
+          break;
         }
       }
+      currentAwards.reverse();
       ui.enqueueModal('AWARDS', { week: finalState.week, year, awards: currentAwards });
     }
 
