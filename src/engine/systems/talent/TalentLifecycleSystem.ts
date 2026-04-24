@@ -121,20 +121,24 @@ export const TalentLifecycleSystem = {
 
       // 1. Annual Aging & Prestige Decay
       if (isYearEnd) {
-        // Prestige Decay: -2 per year if no projects released in the last 52 weeks
+        // Gentle idle decay — the marquee-breakout goal needs the curve to lean up,
+        // not down. Legacy prestige (sticky floor below) makes prior hits permanent.
         const weeksSinceLastRelease = state.week - (talent.lastReleaseWeek || 0);
         let decay = 0;
         if (weeksSinceLastRelease > 52) {
-          decay = talent.tier === 1 ? -4 : -2;
+          decay = talent.tier === 1 ? -1 : -0.5;
         }
+        const legacy = (talent as any).legacyPrestige || 0;
+        const raw = (talent.prestige || 50) + decay;
+        const nextPrestige = Math.max(legacy, Math.max(0, raw));
 
         impacts.push({
           type: 'TALENT_UPDATED',
           payload: {
             talentId: talent.id,
-            update: { 
+            update: {
               demographics: { ...talent.demographics, age: (talent.demographics.age || 40) + 1 },
-              prestige: Math.max(0, (talent.prestige || 50) + decay)
+              prestige: nextPrestige
             }
           }
         });

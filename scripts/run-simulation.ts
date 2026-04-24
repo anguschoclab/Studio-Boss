@@ -91,7 +91,8 @@ if (tvReleases.length > 0) {
 }
 
 // Top talent by prestige
-const topTalents = [...talents].sort((a, b) => (b.prestige || 0) - (a.prestige || 0)).slice(0, 10);
+const _talentsForTop = Object.values(finalState.entities.talents || {});
+const topTalents = [..._talentsForTop].sort((a, b) => (b.prestige || 0) - (a.prestige || 0)).slice(0, 10);
 console.log('\n--- TOP 10 TALENTS BY PRESTIGE ---');
 topTalents.forEach((t, i) => {
   console.log(`  ${i+1}. ${t.name} — prestige ${(t.prestige||0).toFixed(1)}, role=${t.role}, draw=${(t.draw||0).toFixed(0)}, momentum=${(t.momentum||0).toFixed(0)}`);

@@ -40,33 +40,43 @@ export class SimulationRunner {
       headlines: [] 
     });
 
+    let cashLast = state.finance.cash || 0;
+    const CASH_DEBUG = process.env.CASH_DEBUG === '1';
     for (let i = 0; i < weeks; i++) {
       const rng = new RandomGenerator(state.gameSeed + state.week + (state.tickCount || 0));
-      
+
       // 1. Core Engine Tick
       const { newState: steppedState, summary, impacts: engineImpacts } = WeekCoordinator.execute(state, rng);
       state = steppedState;
 
       // 3. Studio Automation (Greenlights, Pitches, Releases)
-      // This handles the operational "blocking" states for both player and rivals
-      const playerAutomation = autoPilot ? StudioAutomation.tick(state, rng) : [];
-      const rivalAutomation = StudioAutomation.tick(state, rng);
-      
+      // Note: called ONCE; StudioAutomation.tick iterates every rival internally.
+      const automationImpacts = StudioAutomation.tick(state, rng);
+
       // 4. Headless Bidding/Buying for Player
       const playerBidding = autoPilot ? HeadlessController.tick(state, rng) : [];
-      
-      // 5. Talent Lifecycle (Aging/Retirement)
+
+      // 5. Talent Lifecycle (Aging/Retirement). Applied BEFORE player bidding in the
+      // batch so the player's attributeTalent prestige gains aren't stomped by the
+      // yearly decay (both emit TALENT_UPDATED; last-writer-wins on shallow merge).
       const lifecycleImpacts = TalentLifecycleSystem.tick(state, rng);
 
       // 6. Consolidate and Apply side-effect impacts ONLY
-      // Note: engineImpacts are already applied inside WeekCoordinator.execute
+      // Order: automation -> lifecycle -> player bidding (so attribution survives year-end decay).
       const allImpacts = [
-          ...playerAutomation, 
-          ...rivalAutomation, 
-          ...playerBidding, 
-          ...lifecycleImpacts
+          ...automationImpacts,
+          ...lifecycleImpacts,
+          ...playerBidding
       ];
       state = applyImpacts(state, allImpacts);
+      if (CASH_DEBUG) {
+        const now = state.finance.cash || 0;
+        const delta = now - cashLast;
+        if (Math.abs(delta) > 5_000_000) {
+          console.log(`[CASH] w${state.week} cash=${(now/1e6).toFixed(1)}M Δ=${(delta/1e6).toFixed(1)}M`);
+        }
+        cashLast = now;
+      }
 
       // 7. Update Metrics (Inject summary data for reporting)
       metrics.record(state, summary);

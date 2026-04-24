@@ -5,6 +5,7 @@ import { calculateOpeningWeekend } from '../systems/releaseSimulation';
 import { StreamingViewershipTracker } from '../systems/production/StreamingViewershipTracker';
 import { StudioArchetype, AI_ARCHETYPES } from '../data/aiArchetypes';
 import { getMarketHeat, getBudgetInflation } from '../systems/industry/MacroCycle';
+import { HeadlessController } from './HeadlessController';
 
 export class StudioAutomation {
   /**
@@ -179,6 +180,17 @@ export class StudioAutomation {
           }
         }
       });
+
+      // Attribute prestige to the crew on rival releases too — without this the
+      // talent pool only gains prestige from ~1/week player releases and the whole
+      // A-list never emerges.
+      const rivRev = releasedProject.revenue || 0;
+      const totalCost = (p.budget || 0) + marketingBudget;
+      const roi = totalCost > 0 ? rivRev / totalCost : 0;
+      const isTv = p.format === 'tv' || p.type === 'SERIES';
+      const rivIsHit = isTv ? (roi > 1.1) : (roi > 2.0);
+      const rivRating = isTv ? Math.round(50 + (roi - 1) * 25) : 0;
+      impacts.push(...HeadlessController.attributeTalent(state, p, rivRev, rng, rivIsHit, rivRating));
     }
   }
 

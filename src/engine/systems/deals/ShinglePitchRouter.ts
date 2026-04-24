@@ -68,14 +68,28 @@ function studioDecides(
     if (studioInDistressStage3Plus(state, studioId)) return { accept: false, reason: 'distress-exit' };
     return { accept: true, reason: 'overall-mandate' };
   }
+  // Bucket C: NPC AI heuristic — accept if cash > overhead*20 and project fit is strong.
+  // Fit proxies: owner prestige (higher = better fit) + macro/genre heat (skipped for now — owner
+  // prestige captures most of the signal for the pass-through router).
+  const cash = studioId === 'PLAYER' ? (state.finance.cash || 0) : (state.entities.rivals[studioId]?.cash || 0);
+  const owner = state.entities.talents[shingle.ownerTalentId];
+  const ownerPrestige = owner?.prestige || 0;
+  const overhead = shingle.overheadPerYear || 1;
+  const cashGate = cash > overhead * 20;
+  // Fit score: 0-1, derived from talent prestige (>50 = solid pitch, >75 = marquee).
+  const fitScore = Math.min(1, Math.max(0, (ownerPrestige - 30) / 50));
+  const fitGate = fitScore > 0.25;
+
   if (shingle.dealType === 'FIRST_LOOK') {
-    // Accept probability scales with studio cash + macro fit. Heuristic: richer studios say yes more.
-    const cash = studioId === 'PLAYER' ? (state.finance.cash || 0) : (state.entities.rivals[studioId]?.cash || 0);
-    const prob = 0.35 + Math.min(0.4, cash / 5_000_000_000);
-    return { accept: rng.next() < prob, reason: rng.next() < prob ? 'first-look-yes' : 'first-look-pass' };
+    if (!cashGate) return { accept: false, reason: 'first-look-cash-gate' };
+    if (!fitGate) return { accept: false, reason: 'first-look-fit-gate' };
+    // Soft accept: rich studio + good fit => ~70%+, marginal => ~35%.
+    const prob = 0.45 + fitScore * 0.4;
+    return { accept: rng.next() < prob, reason: 'first-look-yes-heuristic' };
   }
-  // HOUSEKEEPING: no obligation — low chance to pick it up (loose dev deal).
-  return { accept: rng.next() < 0.2, reason: 'housekeeping' };
+  // HOUSEKEEPING: loose dev deal; accept more readily when cash is fine.
+  const prob = cashGate ? 0.3 + fitScore * 0.2 : 0.1;
+  return { accept: rng.next() < prob, reason: 'housekeeping-heuristic' };
 }
 
 function openMarketBuyer(state: GameState, rng: RandomGenerator, excludeId: string | null): string | null {

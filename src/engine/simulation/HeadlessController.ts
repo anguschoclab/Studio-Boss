@@ -168,9 +168,21 @@ export class HeadlessController {
           const tvDetails: any = (project as any).tvDetails || { episodesOrdered: 10, currentSeason: 1 };
           const episodes = tvDetails.episodesOrdered || 10;
           const ownsPlatform = ((state.studio?.ownedPlatforms || []).length > 0);
-          const perEpLicense = ownsPlatform
-            ? rng.range(1_800_000, 4_500_000) // streamer-owned: subscriber-value proxy per ep
-            : rng.range(1_200_000, 3_000_000); // license fee from network/cable/streamer
+          // License fees must track budget inflation or TV projects become guaranteed losers
+          // late in the sim (budgets scale 5.6x over 50 years, revenue must too).
+          const inflation = getBudgetInflation(state.week);
+          // Scale per-ep license to budget tier so blockbuster TV can recoup. Real-world
+          // Sheridan/Murphy-tier shows clear $8-12M/ep license. Base floor tracks cable rate.
+          const tier = (project as any).budgetTier || 'mid';
+          const tierPerEp: Record<string, [number, number]> = {
+            low: [1_200_000, 2_500_000],
+            mid: [2_500_000, 5_000_000],
+            high: [4_500_000, 8_000_000],
+            blockbuster: [8_000_000, 14_000_000]
+          };
+          const [loLic, hiLic] = tierPerEp[tier] || tierPerEp.mid;
+          const ownershipBoost = ownsPlatform ? 1.15 : 1.0;
+          const perEpLicense = rng.range(loLic, hiLic) * inflation * ownershipBoost;
           const buzzMult = 0.6 + ((project.buzz || 40) / 100);
           const heatMult = 0.8 + getMarketHeat(state.week) * 0.4;
           const revenue = Math.round(episodes * perEpLicense * buzzMult * heatMult);
@@ -423,7 +435,7 @@ export class HeadlessController {
    * release, bumps their lastReleaseWeek + prestige by ROI, and lets marquee careers
    * actually break out into the 80-99 band over 50 years.
    */
-  private static attributeTalent(
+  static attributeTalent(
     state: GameState,
     project: any,
     revenue: number,
@@ -444,16 +456,16 @@ export class HeadlessController {
     let basePrestige = 0;
     if (isTv) {
       // TV: prestige tied to ratingScore rather than ROI.
-      if (ratingScore >= 85) basePrestige = 6;
-      else if (ratingScore >= 70) basePrestige = 3;
-      else if (ratingScore >= 50) basePrestige = 1;
+      if (ratingScore >= 85) basePrestige = 10;
+      else if (ratingScore >= 70) basePrestige = 6;
+      else if (ratingScore >= 50) basePrestige = 2;
       else if (ratingScore >= 30) basePrestige = -1;
       else basePrestige = -3;
     } else {
-      if (ROI > 6.0) basePrestige = 8;
-      else if (ROI > 4.0) basePrestige = 5;
-      else if (ROI > 2.0) basePrestige = 3;
-      else if (ROI > 1.0) basePrestige = 1;
+      if (ROI > 6.0) basePrestige = 14;
+      else if (ROI > 4.0) basePrestige = 9;
+      else if (ROI > 2.0) basePrestige = 5;
+      else if (ROI > 1.0) basePrestige = 2;
       else if (ROI < 0.4) basePrestige = -4;
       else if (ROI < 0.8) basePrestige = -2;
     }
@@ -463,7 +475,15 @@ export class HeadlessController {
     // Pick 3-5 attached talents weighted by existing prestige (so the already-rising ones
     // keep accumulating — mirrors the real industry's winner-take-most dynamic).
     const crewSize = rng.rangeInt(3, 5);
-    const weights = pool.map(t => 1 + (t.prestige || 0) * 0.04);
+    // Heavier prestige concentration (winner-take-most): high-prestige talents get
+    // repeat picks, driving breakout careers into the 80-99 band. For big-budget
+    // projects, the top ~10 talents get weighted even harder (A-list attachment).
+    const isBlockbuster = (project.budget || 0) > 80_000_000;
+    const weights = pool.map(t => {
+      const p = t.prestige || 0;
+      const base = 1 + Math.pow(p / 10, 2.2);
+      return isBlockbuster && p >= 50 ? base * 3 : base;
+    });
     const picked: typeof pool = [];
     for (let i = 0; i < crewSize && pool.length > 0; i++) {
       const total = weights.reduce((s, w) => s + w, 0);
@@ -484,21 +504,43 @@ export class HeadlessController {
       // Streak/momentum-aware bonus. Talents above 70 with strong momentum get
       // outsized prestige pushes on hits (Spielberg/Sheridan dynamic).
       let bonus = 0;
-      if (isHit && (t.momentum || 50) > 60) {
-        if ((t.prestige || 0) >= 70) bonus += 2;
-        if ((t.prestige || 0) >= 85) bonus += 2;
+      if (isHit && (t.momentum || 50) > 50) {
+        if ((t.prestige || 0) >= 50) bonus += 3;
+        if ((t.prestige || 0) >= 65) bonus += 4;
+        if ((t.prestige || 0) >= 80) bonus += 5;
       }
-      const newPrestige = Math.max(0, Math.min(100, (t.prestige || 50) + delta + bonus));
+      // Franchise-launch / marquee uncap: an outsized hit on an already-strong talent
+      // pushes into the 90-99 band (Spielberg/Shonda/Sheridan). Only a handful of picks
+      // clear all three gates over a 50-year run.
+      if (isHit && ROI > 3.0 && (t.prestige || 0) >= 60) {
+        bonus += 4;
+      }
+      // Mid-career bump: any hit moves a mid-career talent (40-65 prestige) up meaningfully.
+      if (isHit && (t.prestige || 0) >= 40 && (t.prestige || 0) < 60) {
+        bonus += 2;
+      }
+      const newPrestige = Math.max(0, Math.min(99, (t.prestige || 50) + delta + bonus));
       const newMomentum = Math.max(0, Math.min(100, (t.momentum || 50) + (isHit ? 6 : (delta < 0 ? -4 : 1))));
+      // Sticky legacy: each hit locks in a fraction of the current peak as a non-decayable
+      // floor. Mirrors real Oscar/Emmy/franchise-creator credit — once earned, never lost.
+      const priorLegacy = (t as any).legacyPrestige || 0;
+      let legacyGain = 0;
+      if (isHit) {
+        if (ROI > 3.0 && newPrestige >= 60) legacyGain = 3;
+        else if (isTv && ratingScore >= 85) legacyGain = 3;
+        else if (newPrestige >= 50) legacyGain = 1;
+      }
+      const newLegacy = Math.min(90, priorLegacy + legacyGain);
       impacts.push({
         type: 'TALENT_UPDATED',
         payload: {
           talentId: t.id,
           update: {
-            prestige: newPrestige,
+            prestige: Math.max(newPrestige, newLegacy),
             momentum: newMomentum,
-            lastReleaseWeek: state.week
-          }
+            lastReleaseWeek: state.week,
+            legacyPrestige: newLegacy
+          } as any
         }
       });
     }
@@ -511,8 +553,15 @@ export class HeadlessController {
     const genre = genres[Math.floor(rng.next() * genres.length)];
     const formats = ['film', 'tv'];
     const format = formats[Math.floor(rng.next() * formats.length)] as 'film' | 'tv';
-    const budgetTiers: BudgetTierKey[] = ['low', 'mid', 'high', 'blockbuster'];
-    const budgetTier = budgetTiers[Math.floor(rng.next() * budgetTiers.length)] as BudgetTierKey;
+    // Player tier bias: majority low/mid, occasional high, rare blockbuster.
+    // Uniform roll was losing money every week because blockbuster TV is a 5x loss
+    // after inflation. Real studios skew their slate similarly — mostly mids + some tentpoles.
+    const tierRoll = rng.next();
+    let budgetTier: BudgetTierKey;
+    if (tierRoll < 0.40) budgetTier = 'low';
+    else if (tierRoll < 0.80) budgetTier = 'mid';
+    else if (tierRoll < 0.95) budgetTier = 'high';
+    else budgetTier = 'blockbuster';
 
     // Map budget tiers to actual budget values
     const budgetMap: Record<BudgetTierKey, number> = {

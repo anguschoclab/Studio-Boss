@@ -219,6 +219,14 @@ function createShingle(
   // Player owns a streamer at launch for major/mid-tier archetypes — treat as streamer owner too.
   if ((state.studio?.ownedPlatforms || []).length > 0) streamerOwners.add('PLAYER');
 
+  // D1 Player-preference: if the player studio has an active Contract with this talent
+  // within the last 2 years, it should score a +20M-equivalent shingle bonus (studios
+  // lock up talent they already work with).
+  const twoYearWeek = Math.max(0, state.week - 104);
+  const playerHasRecentContractWithOwner = Object.values(state.entities.contracts || {}).some(
+    (c: any) => c.talentId === owner.id && (c.ownerId === 'PLAYER' || !c.ownerId) && ((c.signedWeek || 0) >= twoYearWeek || (c.weeksRemaining || 0) > 0)
+  );
+
   for (const b of bidders) {
     if (medium === 'TV' && b.archetype === 'indie') continue;
     const existing = countDealsByStudio(state, b.id);
@@ -244,8 +252,27 @@ function createShingle(
     const streamerBias = medium === 'TV' && streamerOwners.has(b.id)
       ? (streamingEraWeek(state.week) ? 20_000_000 : 5_000_000)
       : 0;
-    const score = overhead * archetypeWeight + b.prestige * 50_000 + streamerBias + rng.next() * 500_000;
+    const existingContractBias = (b.id === 'PLAYER' && playerHasRecentContractWithOwner) ? 20_000_000 : 0;
+    const score = overhead * archetypeWeight + b.prestige * 50_000 + streamerBias + existingContractBias + rng.next() * 500_000;
     offers.push({ id: b.id, dealType, overhead, score });
+  }
+  // D3 Housekeeping fallback — when an owner's prestige is low and no top-tier bidder
+  // wanted them at OVERALL/FIRST_LOOK, mid-tiers/indies will still throw a cheap
+  // housekeeping dev deal to keep them close (real-world backlot housekeeping).
+  // Also fire when existing offers are all top-tier but the owner is only mid-prestige —
+  // a housekeeping bid is the realistic outcome for a marginal A-list hopeful.
+  const topTierOfferExists = offers.some(o => o.dealType === 'OVERALL' || o.dealType === 'FIRST_LOOK');
+  const wantsFallback = medium === 'FILM' && (owner.prestige || 0) < 60 && (offers.length === 0 || !topTierOfferExists);
+  if (wantsFallback) {
+    for (const b of bidders) {
+      if (b.cash < 20_000_000) continue;
+      if (countDealsByStudio(state, b.id) >= 4) continue;
+      if (rng.next() > 0.55) continue;
+      const overhead = rollOverhead(rng, 'HOUSEKEEPING', owner.prestige || 0, 'FILM');
+      if (overhead * 3 > b.cash) continue;
+      const archetypeWeight = b.archetype === 'major' ? 1.2 : b.archetype === 'mid-tier' ? 1.0 : 0.8;
+      offers.push({ id: b.id, dealType: 'HOUSEKEEPING', overhead, score: overhead * archetypeWeight + rng.next() * 500_000 });
+    }
   }
   if (offers.length === 0) return null;
   offers.sort((a, b) => b.score - a.score);
@@ -342,8 +369,21 @@ function handleExpiry(state: GameState, s: ProducerShingle, rng: RandomGenerator
     let dealType = proposeDealType(b.archetype, b.cash, b.prestige, owner.prestige || 0, existing, rng);
     // Home studio gets a guaranteed renewal bid — real studios rarely let an overhead deal lapse silently.
     if (!dealType && b.id === s.baseStudioId && b.cash > s.overheadPerYear * 3) dealType = s.dealType;
+    // Tier preservation: the home studio does NOT reroll a fresh tier on renewal — it
+    // preserves the current dealType (OVERALL stays OVERALL) as long as the studio can
+    // cover the overhead. Losing the deal entirely is the realistic alternative to downgrade.
+    if (b.id === s.baseStudioId && dealType && dealType !== s.dealType) {
+      dealType = s.dealType;
+    }
     if (!dealType) continue;
-    const overhead = rollOverhead(rng, dealType, owner.prestige || 0, medium);
+    let overhead = rollOverhead(rng, dealType, owner.prestige || 0, medium);
+    // Renewals within the SAME tier scale off the prior overhead with a slight escalation
+    // (+5-15% for hits, flat for steady), not a fresh roll that can collapse a $30M/yr OVERALL
+    // into $2M on bad luck.
+    if (b.id === s.baseStudioId && dealType === s.dealType) {
+      const escalation = hasHits ? 1 + 0.05 + rng.next() * 0.10 : 1 + rng.next() * 0.03;
+      overhead = Math.max(overhead, Math.round(s.overheadPerYear * escalation / 100_000) * 100_000);
+    }
     if (overhead * 3 > b.cash) continue;
     const archetypeWeight = b.archetype === 'major' ? 1.4 : b.archetype === 'mid-tier' ? 1.0 : 0.6;
     // Strong renewal bias: real studios keep their overhead homes ~80% of cycles; churn is the exception.
@@ -430,6 +470,142 @@ function spawnShingles(state: GameState, rng: RandomGenerator, impacts: StateImp
     const owner = rng.pick(eligible);
     if (owner) createShingle(state, owner, rng, impacts, 'FILM');
   }
+  // Housekeeping-tier spawn: a lower-prestige eligibility path runs occasionally so the
+  // fallback D3 housekeeping bids actually get a supply of sub-A-list owners. This keeps
+  // 3-6 HOUSEKEEPING formations across a 50-year run (realistic Carsey-Werner-style
+  // backlot dev-deal presence).
+  const lowProspect = Object.values(state.entities.talents || {}).filter(t => {
+    const ownedBy = new Set(Object.values(state.entities.shingles || {}).map(s => s.ownerTalentId));
+    if (ownedBy.has(t.id)) return false;
+    const p = t.prestige || 0;
+    return p >= 30 && p < 50 && (t.roles || [t.role]).some(r => r === 'director' || r === 'actor' || r === 'producer' || r === 'writer');
+  });
+  if (lowProspect.length > 0 && activeTotal < 14 && rng.next() < 0.004) {
+    const owner = rng.pick(lowProspect);
+    if (owner) createHousekeepingShingle(state, owner, rng, impacts);
+  }
+
+  // POD (Producer-On-Deal) path — writer-specialty mid-prestige talent get cheap
+  // exclusive dev deals. Targets 1-3 per decade (~0.0006/wk baseline).
+  const podOwned = new Set(Object.values(state.entities.shingles || {}).map(s => s.ownerTalentId));
+  const podEligible = Object.values(state.entities.talents || {}).filter(t => {
+    if (podOwned.has(t.id)) return false;
+    const p = t.prestige || 0;
+    if (p < 50 || p > 75) return false;
+    const roles = t.roles || [t.role];
+    return roles.some(r => r === 'writer');
+  });
+  if (podEligible.length > 0 && activeTotal < 16 && rng.next() < 0.0008) {
+    const owner = rng.pick(podEligible);
+    if (owner) createPodShingle(state, owner, rng, impacts);
+  }
+}
+
+function createPodShingle(state: GameState, owner: Talent, rng: RandomGenerator, impacts: StateImpact[]): ProducerShingle | null {
+  const bidders = rankBidders(state);
+  type Offer = { id: string; overhead: number; score: number };
+  const offers: Offer[] = [];
+  for (const b of bidders) {
+    if (b.archetype === 'indie') continue;
+    if (b.cash < 30_000_000) continue;
+    if (countDealsByStudio(state, b.id) >= 5) continue;
+    if (rng.next() > 0.5) continue;
+    const overhead = rollOverhead(rng, 'POD', owner.prestige || 0, 'FILM');
+    if (overhead * 3 > b.cash) continue;
+    const archetypeWeight = b.archetype === 'major' ? 1.3 : 1.0;
+    offers.push({ id: b.id, overhead, score: overhead * archetypeWeight + rng.next() * 500_000 });
+  }
+  if (offers.length === 0) return null;
+  offers.sort((a, b) => b.score - a.score);
+  const winner = offers[0];
+  const termWeeks = rollTermWeeks(rng, 'POD', 'FILM');
+  const shingle: ProducerShingle = {
+    id: rng.uuid('shingle'),
+    name: makeShingleName(owner.name, rng),
+    ownerTalentId: owner.id,
+    baseStudioId: winner.id,
+    dealType: 'POD',
+    overheadPerYear: winner.overhead,
+    termWeeksRemaining: termWeeks,
+    exclusivity: true,
+    foundedWeek: state.week,
+    pitchesGenerated: 0,
+    pitchesAccepted: 0,
+    medium: 'FILM',
+    historyTrail: [{ week: state.week, studioId: winner.id, dealType: 'POD', overhead: winner.overhead }]
+  };
+  impacts.push({ type: 'SHINGLE_CREATED', payload: { shingle } } as any);
+  impacts.push({
+    type: 'NEWS_ADDED',
+    payload: {
+      headline: `${yearFromWeek(state.week)}: ${owner.name} signs POD deal with ${getStudioName(state, winner.id)}, $${(winner.overhead / 1e6).toFixed(1)}M/yr`,
+      description: `${owner.name} has an exclusive producer-on-deal arrangement at ${getStudioName(state, winner.id)}.`,
+      category: 'market'
+    }
+  });
+  shingleEventLog.push({
+    week: state.week, year: yearFromWeek(state.week),
+    kind: 'formed', shingleId: shingle.id, shingleName: shingle.name,
+    ownerName: owner.name, studioId: winner.id, studioName: getStudioName(state, winner.id),
+    dealType: 'POD', overheadPerYear: winner.overhead, termYears: Math.round(termWeeks / 52),
+    medium: 'FILM'
+  });
+  return shingle;
+}
+
+/**
+ * Creates a HOUSEKEEPING-only shingle (D3 housekeeping pipeline). Real studios maintain
+ * a stable of sub-A-list producers under cheap dev deals; this ensures 3-6 form over 50yr.
+ */
+function createHousekeepingShingle(state: GameState, owner: Talent, rng: RandomGenerator, impacts: StateImpact[]): ProducerShingle | null {
+  const bidders = rankBidders(state);
+  type Offer = { id: string; overhead: number; score: number };
+  const offers: Offer[] = [];
+  for (const b of bidders) {
+    if (b.cash < 20_000_000) continue;
+    if (countDealsByStudio(state, b.id) >= 4) continue;
+    if (rng.next() > 0.4) continue;
+    const overhead = rollOverhead(rng, 'HOUSEKEEPING', owner.prestige || 0, 'FILM');
+    if (overhead * 3 > b.cash) continue;
+    const archetypeWeight = b.archetype === 'major' ? 1.2 : b.archetype === 'mid-tier' ? 1.1 : 0.9;
+    offers.push({ id: b.id, overhead, score: overhead * archetypeWeight + rng.next() * 500_000 });
+  }
+  if (offers.length === 0) return null;
+  offers.sort((a, b) => b.score - a.score);
+  const winner = offers[0];
+  const termWeeks = rollTermWeeks(rng, 'HOUSEKEEPING', 'FILM');
+  const shingle: ProducerShingle = {
+    id: rng.uuid('shingle'),
+    name: makeShingleName(owner.name, rng),
+    ownerTalentId: owner.id,
+    baseStudioId: winner.id,
+    dealType: 'HOUSEKEEPING',
+    overheadPerYear: winner.overhead,
+    termWeeksRemaining: termWeeks,
+    exclusivity: false,
+    foundedWeek: state.week,
+    pitchesGenerated: 0,
+    pitchesAccepted: 0,
+    medium: 'FILM',
+    historyTrail: [{ week: state.week, studioId: winner.id, dealType: 'HOUSEKEEPING', overhead: winner.overhead }]
+  };
+  impacts.push({ type: 'SHINGLE_CREATED', payload: { shingle } } as any);
+  impacts.push({
+    type: 'NEWS_ADDED',
+    payload: {
+      headline: `${yearFromWeek(state.week)}: ${owner.name} signs housekeeping with ${getStudioName(state, winner.id)}, $${(winner.overhead / 1e6).toFixed(1)}M/yr`,
+      description: `${owner.name} has set up a cheap dev deal at ${getStudioName(state, winner.id)}.`,
+      category: 'market'
+    }
+  });
+  shingleEventLog.push({
+    week: state.week, year: yearFromWeek(state.week),
+    kind: 'formed', shingleId: shingle.id, shingleName: shingle.name,
+    ownerName: owner.name, studioId: winner.id, studioName: getStudioName(state, winner.id),
+    dealType: 'HOUSEKEEPING', overheadPerYear: winner.overhead, termYears: Math.round(termWeeks / 52),
+    medium: 'FILM'
+  });
+  return shingle;
 }
 
 export function tickShingleSystem(state: GameState, rng: RandomGenerator): StateImpact[] {
