@@ -1,14 +1,14 @@
 ### 📝 Daily Progress & Docs Update
 
 #### 🏗️ Codebase Status:
-* Implemented the new `marketing` phase logic and `executeMarketing` function in `src/engine/systems/projects.ts` to support marketing budgets, domestic/foreign splits, and marketing angle strategies. The `advanceProject` flow was updated to pause at the `marketing` phase after production wraps.
-* Current focus appears to be on expanding the project lifecycle into deeper marketing and release planning before a project officially hits the box office, aligning with the "Audience Strategy and Advertising Focus Planner" goals.
+* We recently added new files for types relating to marketing (`marketing.types.ts`), updated `efficiencyEvaluator.ts` in `src/engine/systems/marketing/`, updated `ProjectMarketingTab.tsx` and created a `MarketingWarRoom.tsx` to handle the marketing strategy and execution process. The most recent commit was "economy", updating various financial aspects.
+* The current WIP focus appears to be on completing the Marketing and Audience strategy features.
 
 #### 📖 Design Bible Alignment:
-* ✅ **Aligned:** The codebase now correctly uses angle-based marketing matched to genres (e.g. 'spectacle' mapping well to 'Action') with corresponding buzz bonuses and mismatch penalties as described in Section 36.39.2. Marketing budget tiers also dynamically affect buzz scaling.
-* ⚠️ **Missing/Deviations:** While angles are implemented, the simulation currently misses the content/rating tone restriction logic mentioned in Section 36.39.2 (e.g. "family marketing is blocked by harsh rating tone"). The `domesticPct` split is also currently recorded but not fully simulated into differential region returns.
+* ✅ **Aligned:** We have built the marketing slider and a marketing panel. We are correctly tracking `MarketingCampaign` properties, and have correctly implemented a system in `efficiencyEvaluator.ts` that provides an `efficiencyMultiplier`.
+* ⚠️ **Missing/Deviations:** We are missing the exact "mismatch penalty" logic explicitly linked to the interaction between "target demographic/audience" and "marketing message" as described in section 36.39.2. `efficiencyEvaluator.ts` currently calculates mismatch penalty based on `genre` and `primaryAngle`, rather than the project`s `targetDemographic` or `targetAudience` as specified in the master design document ("A mismatch between audience and message should waste money."). Additionally, many angles listed in section 36.39.2 (like `sell the comedy`, `sell the world / mythology`, `sell the true-story hook`, `sell the music`) are missing from `MarketingAngle` in `project.types.ts`.
 
 #### 📄 Proposed Documentation Updates:
-* `docs/marketing_mechanics.md`: Document the new `executeMarketing` parameters, angle mappings, and how marketing budgets convert to pre-release project buzz.
-* **Code Paths Covered:** `src/engine/systems/projects.ts` (`executeMarketing`, `handleMarketingPhase`)
-* **Key Knowledge Gaps Addressed:** Explains the transition from production to the new marketing phase, how the `marketingAngle` impacts final project heat, and the math behind budget-driven buzz bonuses.
+* `docs/marketing_mechanics.md`: Add a section detailing how target audience mismatches will interact with specific marketing angles.
+* **Code Paths Covered:** `evaluateMarketingEfficiency` in `src/engine/systems/marketing/efficiencyEvaluator.ts`.
+* **Key Knowledge Gaps Addressed:** Addresses the discrepancy between the genre-based mismatch logic implemented and the audience-based mismatch logic specified in the design bible.
