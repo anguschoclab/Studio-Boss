@@ -231,6 +231,17 @@ console.log(`  $0..$250M (thin): ${cashBuckets.thin}`);
 console.log(`  $250M..$2B (healthy): ${cashBuckets.healthy}`);
 console.log(`  > $2B (dominant): ${cashBuckets.rich}`);
 
+console.log('\n--- TV SHOWRUNNER OVERALL DEALS ---');
+const tvFormations = shingleEventLog.filter(e => e.kind === 'formed' && (e as any).medium === 'TV');
+const filmFormations = shingleEventLog.filter(e => e.kind === 'formed' && (e as any).medium !== 'TV');
+console.log(`Total TV showrunner deals formed: ${tvFormations.length}`);
+console.log(`Total film shingles formed: ${filmFormations.length}`);
+tvFormations.forEach(e => {
+  const overhead = e.overheadPerYear ? ` $${(e.overheadPerYear / 1e6).toFixed(1)}M/yr` : '';
+  const term = e.termYears ? ` ${e.termYears}yr` : '';
+  console.log(`  ${e.year} (w${e.week}) TV-${e.dealType}: ${e.ownerName}'s ${e.shingleName} @ ${e.studioName}${overhead}${term}`);
+});
+
 console.log('\n--- SHINGLE FORMATION LOG ---');
 if (shingleEventLog.length === 0) {
   console.log('(no shingles formed)');

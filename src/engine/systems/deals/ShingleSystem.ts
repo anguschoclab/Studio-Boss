@@ -1,5 +1,5 @@
 import { GameState, StateImpact, RivalStudio, Talent } from '@/engine/types';
-import { ProducerShingle, ShingleDealType } from '@/engine/types/talent.types';
+import { ProducerShingle, ShingleDealType, ShingleMedium } from '@/engine/types/talent.types';
 import { RandomGenerator } from '@/engine/utils/rng';
 
 /**
@@ -30,6 +30,7 @@ export interface ShingleLogEntry {
   dealType?: ShingleDealType;
   overheadPerYear?: number;
   termYears?: number;
+  medium?: ShingleMedium;
   note?: string;
 }
 
@@ -46,12 +47,34 @@ const OVERHEAD_RANGES: Record<ShingleDealType, [number, number]> = {
   POD: [1_000_000, 5_000_000]
 };
 
+// TV showrunner overall deals run an order of magnitude above film shingles.
+// Shondaland/Netflix, Ryan Murphy/Netflix, Sheridan/Paramount all cleared $25M+/yr
+// in real-world overhead. Top-tier (prestige >= 85) trends toward the $75M-$100M band.
+const TV_OVERHEAD_RANGES: Record<ShingleDealType, [number, number]> = {
+  FIRST_LOOK: [8_000_000, 25_000_000],
+  OVERALL: [25_000_000, 75_000_000],
+  HOUSEKEEPING: [1_500_000, 5_000_000],
+  POD: [4_000_000, 15_000_000]
+};
+
 const TERM_YEARS: Record<ShingleDealType, [number, number]> = {
   FIRST_LOOK: [2, 3],
   OVERALL: [3, 5],
   HOUSEKEEPING: [1, 2],
   POD: [2, 3]
 };
+
+const TV_TERM_YEARS: Record<ShingleDealType, [number, number]> = {
+  FIRST_LOOK: [3, 4],
+  OVERALL: [3, 7],
+  HOUSEKEEPING: [1, 2],
+  POD: [2, 4]
+};
+
+function streamingEraWeek(week: number): boolean {
+  // Netflix original content era begins ~2010 (week 35 * 52 = 1820).
+  return week >= 35 * 52;
+}
 
 function yearFromWeek(week: number): number {
   return 1975 + Math.floor(week / 52);
@@ -69,15 +92,17 @@ function getStudioCash(state: GameState, studioId: string | null): number {
   return state.entities.rivals[studioId]?.cash || 0;
 }
 
-function rollOverhead(rng: RandomGenerator, dealType: ShingleDealType, ownerPrestige: number): number {
-  const [lo, hi] = OVERHEAD_RANGES[dealType];
+function rollOverhead(rng: RandomGenerator, dealType: ShingleDealType, ownerPrestige: number, medium: ShingleMedium = 'FILM'): number {
+  const ranges = medium === 'TV' ? TV_OVERHEAD_RANGES : OVERHEAD_RANGES;
+  const [lo, hi] = ranges[dealType];
   const prestigeBias = Math.max(0, Math.min(1, (ownerPrestige - 60) / 40));
   const raw = lo + rng.next() * (hi - lo);
   return Math.round((raw * (0.75 + prestigeBias * 0.5)) / 100_000) * 100_000;
 }
 
-function rollTermWeeks(rng: RandomGenerator, dealType: ShingleDealType): number {
-  const [lo, hi] = TERM_YEARS[dealType];
+function rollTermWeeks(rng: RandomGenerator, dealType: ShingleDealType, medium: ShingleMedium = 'FILM'): number {
+  const ranges = medium === 'TV' ? TV_TERM_YEARS : TERM_YEARS;
+  const [lo, hi] = ranges[dealType];
   return rng.rangeInt(lo, hi) * 52;
 }
 
@@ -91,6 +116,19 @@ function makeShingleName(ownerName: string, rng: RandomGenerator): string {
   return `${rng.pick(prefixes)} ${rng.pick(prefixes)} ${rng.pick(suffixes)}`;
 }
 
+function getTVEligibleTalent(state: GameState): Talent[] {
+  // TV showrunner deals go to writers/producers with prestige > 70 who don't already
+  // have a shingle. Real-world comps: Shonda Rhimes, Ryan Murphy, Taylor Sheridan, Kenya Barris.
+  const shingles = Object.values(state.entities.shingles || {});
+  const ownedBy = new Set(shingles.map(s => s.ownerTalentId));
+  return Object.values(state.entities.talents || {}).filter(t => {
+    if (ownedBy.has(t.id)) return false;
+    if ((t.prestige || 0) < 40) return false;
+    const roles = t.roles || [t.role];
+    return roles.some(r => r === 'writer' || r === 'producer');
+  });
+}
+
 function getEligibleTalent(state: GameState): Talent[] {
   const shingles = Object.values(state.entities.shingles || {});
   const ownedBy = new Set(shingles.map(s => s.ownerTalentId));
@@ -100,7 +138,11 @@ function getEligibleTalent(state: GameState): Talent[] {
     // rarely grows talent that high, so we accept >= 65 prestige and require a director/producer/actor role.
     if ((t.prestige || 0) < 45) return false;
     const roles = t.roles || [t.role];
-    return roles.some(r => r === 'director' || r === 'producer' || r === 'actor');
+    // Pure writer-only or producer-only talents are reserved for TV showrunner deals —
+    // exclude them from the film pool so TV has a supply post-2010.
+    const hasDirOrActor = roles.some(r => r === 'director' || r === 'actor');
+    if (!hasDirOrActor) return false;
+    return true;
   });
 }
 
@@ -156,28 +198,55 @@ function createShingle(
   state: GameState,
   owner: Talent,
   rng: RandomGenerator,
-  impacts: StateImpact[]
+  impacts: StateImpact[],
+  medium: ShingleMedium = 'FILM'
 ): ProducerShingle | null {
   // Rank bidders, filter by solvency + antitrust isn't our concern here.
   const bidders = rankBidders(state);
   // Each bidder evaluates whether it wants to bid — collect their offers.
   type Offer = { id: string; dealType: ShingleDealType; overhead: number; score: number };
   const offers: Offer[] = [];
+  // TV deals gravitate toward majors with streamers; for TV we skip indies entirely.
+  const streamerOwners = new Set<string>(
+    Object.values(state.entities.rivals || {})
+      .filter(r => (r.ownedPlatforms || []).length > 0)
+      .map(r => r.id)
+  );
+  // Player owns a streamer at launch for major/mid-tier archetypes — treat as streamer owner too.
+  if ((state.studio?.ownedPlatforms || []).length > 0) streamerOwners.add('PLAYER');
+
   for (const b of bidders) {
+    if (medium === 'TV' && b.archetype === 'indie') continue;
     const existing = countDealsByStudio(state, b.id);
-    const dealType = proposeDealType(b.archetype, b.cash, b.prestige, owner.prestige || 0, existing, rng);
+    let dealType = proposeDealType(b.archetype, b.cash, b.prestige, owner.prestige || 0, existing, rng);
+    if (medium === 'TV') {
+      // TV showrunner deals skew overall/first-look. Reroll toward OVERALL for high-prestige owners.
+      if (!dealType) {
+        if (b.cash > 300_000_000 && rng.next() < 0.5) dealType = 'OVERALL';
+        else if (b.cash > 100_000_000 && rng.next() < 0.4) dealType = 'FIRST_LOOK';
+      } else if (dealType === 'HOUSEKEEPING' || dealType === 'POD') {
+        dealType = 'FIRST_LOOK';
+      }
+    }
     if (!dealType) continue;
-    const overhead = rollOverhead(rng, dealType, owner.prestige || 0);
-    if (overhead * 3 > b.cash) continue; // must cover at least 3yrs overhead
+    const overhead = rollOverhead(rng, dealType, owner.prestige || 0, medium);
+    // TV deals have bigger overhead; require 2-yr coverage instead of 3 to keep mid-tier bidders in the race.
+    const coverYears = medium === 'TV' ? 2 : 3;
+    if (overhead * coverYears > b.cash) continue;
     // Score: higher cash + archetype weight + willingness => stronger bidder; overhead ties break by amount.
     const archetypeWeight = b.archetype === 'major' ? 1.4 : b.archetype === 'mid-tier' ? 1.0 : 0.6;
-    const score = overhead * archetypeWeight + b.prestige * 50_000 + rng.next() * 500_000;
+    // TV streaming-era bias: streamer-owning rivals are the aggressive post-2010 bidders
+    // (Netflix/Shondaland, Netflix/Murphy, Paramount/Sheridan).
+    const streamerBias = medium === 'TV' && streamerOwners.has(b.id)
+      ? (streamingEraWeek(state.week) ? 20_000_000 : 5_000_000)
+      : 0;
+    const score = overhead * archetypeWeight + b.prestige * 50_000 + streamerBias + rng.next() * 500_000;
     offers.push({ id: b.id, dealType, overhead, score });
   }
   if (offers.length === 0) return null;
   offers.sort((a, b) => b.score - a.score);
   const winner = offers[0];
-  const termWeeks = rollTermWeeks(rng, winner.dealType);
+  const termWeeks = rollTermWeeks(rng, winner.dealType, medium);
   const shingle: ProducerShingle = {
     id: rng.uuid('shingle'),
     name: makeShingleName(owner.name, rng),
@@ -190,14 +259,16 @@ function createShingle(
     foundedWeek: state.week,
     pitchesGenerated: 0,
     pitchesAccepted: 0,
+    medium,
     historyTrail: [{ week: state.week, studioId: winner.id, dealType: winner.dealType, overhead: winner.overhead }]
   };
   impacts.push({ type: 'SHINGLE_CREATED', payload: { shingle } } as any);
+  const mediumLabel = medium === 'TV' ? 'TV showrunner ' : '';
   impacts.push({
     type: 'NEWS_ADDED',
     payload: {
-      headline: `${yearFromWeek(state.week)}: ${owner.name}'s ${shingle.name} signs ${winner.dealType.replace('_', '-').toLowerCase()} with ${getStudioName(state, winner.id)}, $${(winner.overhead / 1e6).toFixed(1)}M/yr, ${Math.round(termWeeks / 52)}yr`,
-      description: `${owner.name} (prestige ${Math.round(owner.prestige || 0)}) has anchored ${shingle.name} at ${getStudioName(state, winner.id)}.`,
+      headline: `${yearFromWeek(state.week)}: ${owner.name}'s ${shingle.name} signs ${mediumLabel}${winner.dealType.replace('_', '-').toLowerCase()} with ${getStudioName(state, winner.id)}, $${(winner.overhead / 1e6).toFixed(1)}M/yr, ${Math.round(termWeeks / 52)}yr`,
+      description: `${owner.name} (prestige ${Math.round(owner.prestige || 0)}) has anchored ${shingle.name} at ${getStudioName(state, winner.id)}${medium === 'TV' ? ' as an exclusive TV showrunner' : ''}.`,
       category: 'market'
     }
   });
@@ -205,7 +276,8 @@ function createShingle(
     week: state.week, year: yearFromWeek(state.week),
     kind: 'formed', shingleId: shingle.id, shingleName: shingle.name,
     ownerName: owner.name, studioId: winner.id, studioName: getStudioName(state, winner.id),
-    dealType: winner.dealType, overheadPerYear: winner.overhead, termYears: Math.round(termWeeks / 52)
+    dealType: winner.dealType, overheadPerYear: winner.overhead, termYears: Math.round(termWeeks / 52),
+    medium
   });
   return shingle;
 }
@@ -257,15 +329,17 @@ function handleExpiry(state: GameState, s: ProducerShingle, rng: RandomGenerator
   // Reopen bidding. Home studio gets a renewal bonus; rival majors may steal with higher overhead.
   const bidders = rankBidders(state);
   const hasHits = (owner.prestige || 0) >= 70 && (owner.momentum || 0) > 40;
+  const medium: ShingleMedium = (s as any).medium === 'TV' ? 'TV' : 'FILM';
   type Offer = { id: string; dealType: ShingleDealType; overhead: number; score: number };
   const offers: Offer[] = [];
   for (const b of bidders) {
+    if (medium === 'TV' && b.archetype === 'indie') continue;
     const existing = countDealsByStudio(state, b.id);
     let dealType = proposeDealType(b.archetype, b.cash, b.prestige, owner.prestige || 0, existing, rng);
     // Home studio gets a guaranteed renewal bid — real studios rarely let an overhead deal lapse silently.
     if (!dealType && b.id === s.baseStudioId && b.cash > s.overheadPerYear * 3) dealType = s.dealType;
     if (!dealType) continue;
-    const overhead = rollOverhead(rng, dealType, owner.prestige || 0);
+    const overhead = rollOverhead(rng, dealType, owner.prestige || 0, medium);
     if (overhead * 3 > b.cash) continue;
     const archetypeWeight = b.archetype === 'major' ? 1.4 : b.archetype === 'mid-tier' ? 1.0 : 0.6;
     // Strong renewal bias: real studios keep their overhead homes ~80% of cycles; churn is the exception.
@@ -285,7 +359,7 @@ function handleExpiry(state: GameState, s: ProducerShingle, rng: RandomGenerator
   }
   offers.sort((a, b) => b.score - a.score);
   const winner = offers[0];
-  const termWeeks = rollTermWeeks(rng, winner.dealType);
+  const termWeeks = rollTermWeeks(rng, winner.dealType, medium);
   const churned = winner.id !== s.baseStudioId;
   const trail = [...(s.historyTrail || []), { week: state.week, studioId: winner.id, dealType: winner.dealType, overhead: winner.overhead }];
   impacts.push({
@@ -320,22 +394,38 @@ function handleExpiry(state: GameState, s: ProducerShingle, rng: RandomGenerator
     shingleId: s.id, shingleName: s.name, ownerName: owner.name,
     studioId: winner.id, studioName: now,
     dealType: winner.dealType, overheadPerYear: winner.overhead, termYears: Math.round(termWeeks / 52),
+    medium,
     note: churned ? `Left ${prior}` : undefined
   });
 }
 
 function spawnShingles(state: GameState, rng: RandomGenerator, impacts: StateImpact[]) {
-  // Throttle: try at most a couple formation checks per week and gate on rng — with ~2 a-list additions
-  // the industry should form roughly 1-3 shingles per simulated year.
-  const eligible = getEligibleTalent(state);
-  if (eligible.length === 0) return;
-  // Cap industry active so the field stays legible — a bloated 30-shingle industry reads wrong.
   const activeTotal = Object.values(state.entities.shingles || {}).filter(s => s.baseStudioId).length;
-  if (activeTotal >= 8) return;
-  // One formation-attempt per tick, gated tight. Tuned toward the 8-20-over-50-years target.
-  if (rng.next() > 0.006) return;
-  const owner = rng.pick(eligible);
-  if (owner) createShingle(state, owner, rng, impacts);
+
+  // TV showrunner overall deals first so writer/producer prestige talent has a shot at TV
+  // before the film spawn claims them. Clustered post-2000 when streaming era unlocks
+  // aggressive streamer bidding (Shondaland/Netflix, Murphy/Netflix, Sheridan/Paramount).
+  const tvEligible = getTVEligibleTalent(state);
+  const activeTV = Object.values(state.entities.shingles || {}).filter(s => s.baseStudioId && (s as any).medium === 'TV').length;
+  const year = 1975 + Math.floor(state.week / 52);
+  let tvGate = 0.0005;
+  if (year >= 2010) tvGate = 0.008;
+  else if (year >= 2000) tvGate = 0.0035;
+  else if (year >= 1990) tvGate = 0.001;
+  if (tvEligible.length > 0 && activeTV < 6 && rng.next() < tvGate) {
+    const owner = rng.pick(tvEligible);
+    if (owner) {
+      const made = createShingle(state, owner, rng, impacts, 'TV');
+      if (made) return; // one formation-attempt per tick keeps the news cycle legible
+    }
+  }
+
+  // Film shingles: spawn target ~8-20 over 50 years.
+  const eligible = getEligibleTalent(state);
+  if (eligible.length > 0 && activeTotal < 12 && rng.next() < 0.008) {
+    const owner = rng.pick(eligible);
+    if (owner) createShingle(state, owner, rng, impacts, 'FILM');
+  }
 }
 
 export function tickShingleSystem(state: GameState, rng: RandomGenerator): StateImpact[] {

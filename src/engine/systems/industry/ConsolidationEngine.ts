@@ -36,7 +36,7 @@ export function tickConsolidation(state: GameState): StateImpact[] {
   // Downturns = distressed assets = M&A waves. Invert heat into gate probability.
   // Lowered thresholds so we see 3-7 regular M&A over 50 years — prior 0.985 produced ~0.
   const heat = getMarketHeat(state.week);
-  const gateThreshold = heat > 1.1 ? 0.995 : heat < 0.9 ? 0.982 : 0.99;
+  const gateThreshold = heat > 1.1 ? 0.994 : heat < 0.9 ? 0.978 : 0.988;
   if (majors.length === 0 || secureRandom() < gateThreshold) return [];
 
   // Prefer non-antitrust-frozen acquirers so a single dominant frozen player doesn't

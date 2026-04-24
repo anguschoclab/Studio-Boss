@@ -127,12 +127,19 @@ function stage1IPFireSale(
       payload: { franchiseId: franchise.id, update: { ownerId: buyer.id } } as any
     });
   } else {
-    const asset = pick(ownedAssets);
+    // Only sell named vault assets. If the asset has no real title, skip —
+    // we refuse to emit phantom "catalog rights" labels.
+    const named = ownedAssets.filter(a => {
+      const t = (a as any).title || (a as any).name;
+      return typeof t === 'string' && t.trim().length > 0;
+    });
+    if (named.length === 0) return [];
+    const asset = pick(named);
     const newVault = (state.ip.vault || []).map(a =>
       a.id === asset.id ? { ...a, ownerStudioId: buyer.id as any } : a
     );
     impacts.push({ type: 'INDUSTRY_UPDATE', payload: { update: { 'ip.vault': newVault } } as any });
-    franchiseName = (asset as any).title || (asset as any).name || 'catalog title';
+    franchiseName = `'${(asset as any).title || (asset as any).name}'`;
   }
 
   impacts.push({

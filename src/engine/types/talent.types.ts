@@ -168,6 +168,8 @@ export interface FirstLookDeal {
 // PLAYER studio id is the string 'PLAYER'; rivals use their rival id.
 export type ShingleDealType = 'FIRST_LOOK' | 'OVERALL' | 'HOUSEKEEPING' | 'POD';
 
+export type ShingleMedium = 'FILM' | 'TV';
+
 export interface ProducerShingle {
   id: string;
   name: string;
@@ -182,4 +184,8 @@ export interface ProducerShingle {
   pitchesGenerated?: number;
   pitchesAccepted?: number;
   historyTrail?: { week: number; studioId: string; dealType: ShingleDealType; overhead: number }[];
+  // Film shingles (Bad Robot, Plan B) vs TV showrunner overall deals
+  // (Shondaland/Netflix, Ryan Murphy/Netflix). TV deals spawn around writer/producer
+  // talent with prestige > 70 and draw much larger overhead from streamers post-2010.
+  medium?: ShingleMedium;
 }
