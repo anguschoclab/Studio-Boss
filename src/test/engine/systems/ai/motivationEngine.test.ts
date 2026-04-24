@@ -1,5 +1,4 @@
 import { describe, it, expect } from 'vitest';
-import { RivalStudio } from '@/engine/types';
 import { calculateRivalMotivation } from '@/engine/systems/ai/motivationEngine';
 import { RandomGenerator } from '@/engine/utils/rng';
 import { createMockGameState, createMockRival } from '../../generators/mockFactory';
