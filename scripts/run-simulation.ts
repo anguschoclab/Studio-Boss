@@ -10,10 +10,6 @@ const autoPilot = true;
 console.log(`Running ${weeks} week (50-year) headless simulation...`);
 console.log(`Seed: ${seed}, Archetype: ${archetype}, Auto-pilot: ${autoPilot}\n`);
 
-let projectsCreated = 0;
-let projectsReleased = 0;
-let maEvents = 0;
-
 const result = SimulationRunner.run(weeks, seed, archetype, persona, autoPilot);
 
 console.log('Simulation complete!');
@@ -87,5 +83,4 @@ console.log(`A-List Talents (80+ Prestige): ${aListCount}`);
 console.log(`Avg Prestige: ${(talents.reduce((sum, t) => sum + t.prestige, 0) / talents.length).toFixed(1)}`);
 
 // Analyze news events over time
-const newsEvents = history.flatMap(h => []);
 console.log('\n--- SIMULATION COMPLETE ---');
