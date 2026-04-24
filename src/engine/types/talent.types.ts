@@ -162,3 +162,24 @@ export interface FirstLookDeal {
   weeksRemaining: number;
   exclusivity: boolean;
 }
+
+// Vanity shingle / production company — producer or A-list talent-owned banner
+// with a structural home-studio deal (Bad Robot / Plan B / LuckyChap parallels).
+// PLAYER studio id is the string 'PLAYER'; rivals use their rival id.
+export type ShingleDealType = 'FIRST_LOOK' | 'OVERALL' | 'HOUSEKEEPING' | 'POD';
+
+export interface ProducerShingle {
+  id: string;
+  name: string;
+  ownerTalentId: string;
+  baseStudioId: string | null; // null = free-agent / between deals
+  dealType: ShingleDealType;
+  overheadPerYear: number;
+  termWeeksRemaining: number;
+  exclusivity: boolean;
+  foundedWeek: number;
+  lastPitchWeek?: number;
+  pitchesGenerated?: number;
+  pitchesAccepted?: number;
+  historyTrail?: { week: number; studioId: string; dealType: ShingleDealType; overhead: number }[];
+}

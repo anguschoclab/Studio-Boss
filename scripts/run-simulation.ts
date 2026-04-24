@@ -2,9 +2,15 @@ import { SimulationRunner } from '../src/engine/simulation/SimulationRunner.js';
 import { getMarketHeat, getMarketRegime, getActiveShock, getBudgetInflation } from '../src/engine/systems/industry/MacroCycle.js';
 import { antitrustEventLog, resetAntitrustState } from '../src/engine/systems/industry/Antitrust.js';
 import { distressEventLog, resetDistressState } from '../src/engine/systems/industry/DistressCascade.js';
+import { shingleEventLog, resetShingleState } from '../src/engine/systems/deals/ShingleSystem.js';
+import { pitchOutcomeLog, resetPitchState } from '../src/engine/systems/deals/ShinglePitchRouter.js';
+import { consolidationEventLog, resetConsolidationState } from '../src/engine/systems/industry/ConsolidationEngine.js';
 
 resetAntitrustState();
 resetDistressState();
+resetShingleState();
+resetPitchState();
+resetConsolidationState();
 
 // Run a 50-year simulation (2600 weeks)
 const weeks = 2600;
@@ -163,6 +169,20 @@ console.log(`\n--- M&A + HARD-BANKRUPTCY COUNTS (from retained news, capped) ---
 console.log(`M&A events (in retained news window): ${maCount}`);
 console.log(`Hard bankruptcies (in retained news window): ${hardBankrupt}`);
 
+console.log('\n--- CONSOLIDATION ENGINE EVENT LOG ---');
+const regularMA = consolidationEventLog.filter(e => e.motive === 'strategic').length;
+const distressedMAviaConsol = consolidationEventLog.filter(e => e.motive === 'distressed').length;
+const platformMA = consolidationEventLog.filter(e => e.motive === 'platform').length;
+const distressedMAviaCascade = distressEventLog.filter(e => e.kind === 'distressed-ma').length;
+console.log(`Regular (strategic) M&A: ${regularMA}`);
+console.log(`Distressed M&A (ConsolidationEngine): ${distressedMAviaConsol}`);
+console.log(`Distressed M&A (DistressCascade stage 3): ${distressedMAviaCascade}`);
+console.log(`Total distressed M&A: ${distressedMAviaConsol + distressedMAviaCascade}`);
+console.log(`Platform acquisitions: ${platformMA}`);
+consolidationEventLog.forEach(e => {
+  console.log(`  ${e.year} (w${e.week}) ${e.motive.toUpperCase()}: ${e.acquirerName} -> ${e.targetName} $${(e.cost / 1e6).toFixed(0)}M`);
+});
+
 console.log('\n--- ANTITRUST EVENT LOG ---');
 if (antitrustEventLog.length === 0) {
   console.log('(no antitrust events triggered)');
@@ -210,5 +230,50 @@ console.log(`  -$300M..0 (stressed): ${cashBuckets.negative}`);
 console.log(`  $0..$250M (thin): ${cashBuckets.thin}`);
 console.log(`  $250M..$2B (healthy): ${cashBuckets.healthy}`);
 console.log(`  > $2B (dominant): ${cashBuckets.rich}`);
+
+console.log('\n--- SHINGLE FORMATION LOG ---');
+if (shingleEventLog.length === 0) {
+  console.log('(no shingles formed)');
+} else {
+  shingleEventLog.forEach(e => {
+    const overhead = e.overheadPerYear ? ` $${(e.overheadPerYear / 1e6).toFixed(1)}M/yr` : '';
+    const term = e.termYears ? ` ${e.termYears}yr` : '';
+    const studio = e.studioName ? ` @ ${e.studioName}` : '';
+    const extra = e.note ? ` (${e.note})` : '';
+    console.log(`  ${e.year} (w${e.week}) ${e.kind.toUpperCase()}: ${e.ownerName}'s ${e.shingleName}${studio} ${e.dealType || ''}${overhead}${term}${extra}`);
+  });
+}
+
+console.log('\n--- SHINGLE PER-DECADE COUNTS ---');
+for (let d = 0; d < 5; d++) {
+  const lo = d * 520;
+  const hi = (d + 1) * 520;
+  // Active shingles at end of decade: spawned before hi and not dissolved/expired-orphan before hi
+  const active = Object.values(finalState.entities.shingles || {});
+  // formations and churns during decade
+  const formed = shingleEventLog.filter(e => e.kind === 'formed' && e.week >= lo && e.week < hi).length;
+  const churned = shingleEventLog.filter(e => e.kind === 'churned' && e.week >= lo && e.week < hi).length;
+  const renewed = shingleEventLog.filter(e => e.kind === 'renewed' && e.week >= lo && e.week < hi).length;
+  const cancelled = shingleEventLog.filter(e => e.kind === 'cancelled' && e.week >= lo && e.week < hi).length;
+  const expired = shingleEventLog.filter(e => e.kind === 'expired' && e.week >= lo && e.week < hi).length;
+  console.log(`Decade ${1975 + d * 10}s: formed=${formed}, renewed=${renewed}, churned=${churned}, cancelled=${cancelled}, expired=${expired}`);
+}
+
+const finalShingles = Object.values(finalState.entities.shingles || {});
+const byDealType = { FIRST_LOOK: 0, OVERALL: 0, HOUSEKEEPING: 0, POD: 0 } as any;
+finalShingles.forEach(s => { byDealType[s.dealType] = (byDealType[s.dealType] || 0) + 1; });
+console.log(`\n--- FINAL ACTIVE SHINGLES: ${finalShingles.length} ---`);
+console.log(`  FIRST_LOOK=${byDealType.FIRST_LOOK}, OVERALL=${byDealType.OVERALL}, HOUSEKEEPING=${byDealType.HOUSEKEEPING}, POD=${byDealType.POD}`);
+
+const totalOverhead = shingleEventLog
+  .filter(e => e.kind === 'formed' || e.kind === 'renewed' || e.kind === 'churned')
+  .reduce((s, e) => s + (e.overheadPerYear || 0) * (e.termYears || 1), 0);
+console.log(`\nTotal overhead contracted (sum of overhead x term across formations/renewals): $${(totalOverhead / 1e6).toFixed(0)}M`);
+
+console.log(`\nTotal pitches generated: ${pitchOutcomeLog.length}`);
+const accepted = pitchOutcomeLog.filter(p => p.accepted).length;
+const passthroughs = pitchOutcomeLog.filter(p => p.note && p.note.startsWith('pass-through')).length;
+const passed = pitchOutcomeLog.filter(p => p.passed).length;
+console.log(`  accepted=${accepted}, pass-throughs (first-look rejected, picked up by rival)=${passthroughs}, fully-passed=${passed}`);
 
 console.log('\n--- SIMULATION COMPLETE ---');

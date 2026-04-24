@@ -88,9 +88,15 @@ visible stage per rival every ~6 months:
    franchise or catalog to a rival with >$500M cash at ~0.35× value. Expect 3–8
    over 50 years — these are the bargain windows. If you've got dry powder when
    a major's cash hits -$50M, watch the news for catalog going up.
-2. **ASSET LIQUIDATION** (cash < -$75M): backlot sale (-10 prestige, +$50–200M),
-   talent contract releases (recover ~20% of book value), or platform divestiture
-   for platform-owners ($500M–$2B one-shot). Expect 5–10 events.
+2. **ASSET LIQUIDATION** (cash < -$75M): the rival picks one real-studio distress
+   move — backlot sale (-10 prestige, +$50–200M), shelving an in-production project
+   for a 40% sunk-cost write-off (-5 prestige, $20M+), selling back-catalog library
+   rights to a rival for a $100–500M lump sum (those titles' ongoing revenue flips
+   to the buyer), selling a backend/participation stake on future franchise revenue
+   for $50–300M (studio keeps ownership, financier takes a cut of upside),
+   overhead/executive layoffs (-5 prestige, $20–80M), or — for platform-owners —
+   divesting the platform itself ($500M–$2B one-shot). Talent are free-agent and
+   contracted per project, so there is no payroll to shed. Expect 5–10 events.
 3. **DISTRESSED M&A** (cash < -$200M after stage-2 budget spent): target shops
    itself to the richest non-antitrust-frozen acquirer at 0.3–0.5× book. This
    flows through the same `ConsolidationEngine` path as regular M&A, so

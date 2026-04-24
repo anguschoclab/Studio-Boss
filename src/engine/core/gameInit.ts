@@ -9,6 +9,7 @@ import { generateBuyers } from '../generators/buyers';
 import { generateAgencies, generateAgents } from '../generators/agencies';
 import { pick, randRange, setDeterministicSeed, rand, generateId } from '../utils';
 import { generateOpportunity } from '../generators/opportunities';
+import { generateProjectTitle } from '../generators/titles';
 
 export function initializeGame(studioName: string, archetype: ArchetypeKey, seed?: number): GameState {
   // 1. Initialize PRNG for determinism
@@ -128,6 +129,31 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
       return acc;
   }, {} as Record<string, RivalStudio>);
 
+  // Seed each rival with 2-4 starter vault assets so Stage 1 distress IP sales
+  // have concrete named catalog titles to trade (no more phantom "catalog rights").
+  const starterVault: import('@/engine/types').IPAsset[] = [];
+  rivals.forEach(rival => {
+    const count = 2 + Math.floor(rand() * 3); // 2..4
+    for (let i = 0; i < count; i++) {
+      const genre = pick(ALL_GENRES);
+      const title = generateProjectTitle(genre);
+      starterVault.push({
+        id: generateId('IPA'),
+        originalProjectId: `seed-${rival.id}-${i}`,
+        title,
+        baseValue: 40_000_000 + Math.floor(rand() * 120_000_000),
+        decayRate: 0.0005,
+        merchandisingMultiplier: 1 + rand() * 0.5,
+        syndicationStatus: 'NONE',
+        syndicationTier: 'NONE',
+        totalEpisodes: 0,
+        rightsExpirationWeek: 99999,
+        rightsOwner: 'RIVAL',
+        ownerStudioId: rival.id as any,
+      } as any);
+    }
+  });
+
   const studioId = generateId('PLR');
 
   // Fix ownerId for player streamer
@@ -164,14 +190,15 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
       ],
     },
     ip: {
-      vault: [],
+      vault: starterVault,
       franchises: {},
     },
     entities: {
       projects: {},
       talents: talentPool,
       contracts: {},
-      rivals: rivalsRecord
+      rivals: rivalsRecord,
+      shingles: {}
     },
     studio: {
       id: studioId,

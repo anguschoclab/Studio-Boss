@@ -118,7 +118,10 @@ export type ImpactType =
   | 'INDUSTRY_UPDATE'
   | 'SYSTEM_TICK'
   | 'MODAL_TRIGGERED'
-  | 'PILOT_GRADUATED';
+  | 'PILOT_GRADUATED'
+  | 'SHINGLE_CREATED'
+  | 'SHINGLE_UPDATED'
+  | 'SHINGLE_DISSOLVED';
 
 export interface ProjectUpdate { projectId: string; update: Partial<import('./project.types').Project> }
 export interface TalentUpdate { talentId: string; update: Partial<import('./talent.types').Talent> }
@@ -172,6 +175,9 @@ export interface SyncMAFundsImpact extends BaseImpact { type: 'SYNC_M_A_FUNDS'; 
 export interface SystemTickImpact extends BaseImpact { type: 'SYSTEM_TICK'; payload: { week?: number; tickCount?: number } }
 export interface ModalTriggeredImpact extends BaseImpact { type: 'MODAL_TRIGGERED'; payload: { modalType: string; priority: number; payload: any } }
 export interface PilotGraduatedImpact extends BaseImpact { type: 'PILOT_GRADUATED'; payload: { projectId: string; nextState: 'production' } }
+export interface ShingleCreatedImpact extends BaseImpact { type: 'SHINGLE_CREATED'; payload: { shingle: import('./talent.types').ProducerShingle } }
+export interface ShingleUpdatedImpact extends BaseImpact { type: 'SHINGLE_UPDATED'; payload: { shingleId: string; update: Partial<import('./talent.types').ProducerShingle> } }
+export interface ShingleDissolvedImpact extends BaseImpact { type: 'SHINGLE_DISSOLVED'; payload: { shingleId: string } }
 export interface IndustryUpdateImpact extends BaseImpact { 
   type: 'INDUSTRY_UPDATE'; 
   payload: { 
@@ -207,4 +213,7 @@ export type StateImpact =
   | ModalTriggeredImpact
   | PilotGraduatedImpact
   | IndustryUpdateImpact
+  | ShingleCreatedImpact
+  | ShingleUpdatedImpact
+  | ShingleDissolvedImpact
   | (BaseImpact & { type?: undefined }); // The "Bag" impact

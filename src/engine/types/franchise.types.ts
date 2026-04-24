@@ -6,6 +6,7 @@ export interface Franchise {
   id: string;
   name: string;
   description?: string;
+  ownerId?: string; // Rival/Player id that controls the franchise; transferred via FRANCHISE_UPDATED.
   
   // State 
   relevanceScore: number; // 0-100 (Overall brand equity)

@@ -2,6 +2,7 @@ import { GameState, StateImpact, RivalStudio, StreamerPlatform } from '@/engine/
 import { pick, secureRandom } from '../../utils';
 import { getMarketHeat } from './MacroCycle';
 import { isAcquirerBlockedByAntitrust } from './Antitrust';
+import { cancelHighestOverheadDeal } from '../deals/ShingleSystem';
 
 /**
  * DistressCascade — stepwise collapse ladder for insolvent rivals.
@@ -17,7 +18,7 @@ export interface DistressEvent {
   week: number;
   year: number;
   stage: 1 | 2 | 3 | 4;
-  kind: 'ip-sale' | 'talent-release' | 'backlot-sale' | 'platform-sale' | 'distressed-ma' | 'bankruptcy';
+  kind: 'ip-sale' | 'shelve-project' | 'library-sale' | 'backend-sale' | 'layoffs' | 'backlot-sale' | 'platform-sale' | 'distressed-ma' | 'bankruptcy';
   studioId: string;
   studioName: string;
   counterpartyId?: string;
@@ -93,17 +94,19 @@ function logEvent(e: DistressEvent) {
   distressEventLog.push(e);
 }
 
-// Placeholder franchise names used when the seller has no explicit vault ownership —
-// the abstract sale still reads as a real news event for the player-facing log.
-const ABSTRACT_FRANCHISE_LABELS = [
-  'catalog rights', 'library titles', 'franchise package', 'back-catalog bundle', 'flagship IP'
-];
-
 function stage1IPFireSale(
   state: GameState,
   seller: RivalStudio
 ): StateImpact[] {
   const impacts: StateImpact[] = [];
+
+  // Need either a named franchise or vault asset to sell. Otherwise skip Stage 1 —
+  // distressed rivals with no concrete IP fall through to Stage 2 liquidation.
+  const ownedFranchises = Object.values(state.ip?.franchises || {}).filter(
+    (f: any) => f.ownerId === seller.id
+  );
+  const ownedAssets = (state.ip?.vault || []).filter(a => a.ownerStudioId === (seller.id as any));
+  if (ownedFranchises.length === 0 && ownedAssets.length === 0) return impacts;
 
   const rivals = Object.values(state.entities.rivals || {});
   const buyers = rivals.filter(r => r.id !== seller.id && (r.cash || 0) > 500_000_000);
@@ -111,24 +114,25 @@ function stage1IPFireSale(
 
   const buyer = pick(buyers);
   const heat = getMarketHeat(state.week);
-  // Price scales with seller prestige/strength as franchise-value proxy — a beaten-down
-  // major still carries real catalog weight; a cold indie commands the floor.
   const franchiseProxy = Math.max(100_000_000, (seller.prestige || 30) * 3_000_000 + (seller.strength || 30) * 2_000_000);
   const basePrice = Math.max(50_000_000, franchiseProxy * 0.5 * heat);
   const price = Math.round(basePrice * 0.7);
 
-  // If the seller does own vault assets, transfer the top one — else run a cash-only transfer.
-  const ownedAssets = (state.ip?.vault || []).filter(a => a.ownerStudioId === (seller.id as any));
   let franchiseName: string;
-  if (ownedAssets.length > 0) {
+  if (ownedFranchises.length > 0) {
+    const franchise: any = pick(ownedFranchises);
+    franchiseName = `franchise '${franchise.name}'`;
+    impacts.push({
+      type: 'FRANCHISE_UPDATED',
+      payload: { franchiseId: franchise.id, update: { ownerId: buyer.id } } as any
+    });
+  } else {
     const asset = pick(ownedAssets);
     const newVault = (state.ip.vault || []).map(a =>
       a.id === asset.id ? { ...a, ownerStudioId: buyer.id as any } : a
     );
     impacts.push({ type: 'INDUSTRY_UPDATE', payload: { update: { 'ip.vault': newVault } } as any });
-    franchiseName = asset.title;
-  } else {
-    franchiseName = pick(ABSTRACT_FRANCHISE_LABELS);
+    franchiseName = (asset as any).title || (asset as any).name || 'catalog title';
   }
 
   impacts.push({
@@ -163,12 +167,31 @@ function stage1IPFireSale(
 function stage2AssetLiquidation(state: GameState, seller: RivalStudio): StateImpact[] {
   const impacts: StateImpact[] = [];
 
-  // Choose one of: talent release, backlot sale, or platform-stake sale.
-  // Platform sale is the biggest hit and only available to platform-owners.
+  // Menu: shelve in-production project, library-catalog sale, backend-participation sale,
+  // layoffs, backlot sale, or platform divestiture. Talent are free-agents on per-project
+  // contracts (see talent.types.ts Contract) — there is no studio payroll to shed.
   const ownsPlatform = (seller.ownedPlatforms || []).length > 0;
   const roll = secureRandom();
 
-  if (ownsPlatform && roll < 0.25) {
+  // Shingle-cancellation branch: if the rival has an overhead deal, there's a real-world
+  // precedent (WB dropping first-looks during 2023 cuts) to use it as the first-stage-2 move.
+  if (roll < 0.15) {
+    const cancelImpacts = cancelHighestOverheadDeal(state, seller.id);
+    if (cancelImpacts) {
+      impacts.push(...cancelImpacts);
+      logEvent({
+        week: state.week, year: Math.floor(state.week / 52) + 1975,
+        stage: 2, kind: 'layoffs',
+        studioId: seller.id, studioName: seller.name,
+        note: 'Shingle deal cancelled'
+      });
+      counts(seller.id).s2++;
+      return impacts;
+    }
+    // No shingle to cancel — fall through to other stage-2 actions.
+  }
+
+  if (ownsPlatform && roll < 0.18) {
     // Sell platform stake — large one-time injection, strips owned platform.
     const platformId = (seller.ownedPlatforms || [])[0];
     const platform = state.market.buyers.find(b => b.id === platformId) as StreamerPlatform | undefined;
@@ -204,7 +227,7 @@ function stage2AssetLiquidation(state: GameState, seller: RivalStudio): StateImp
     return impacts;
   }
 
-  if (roll < 0.6) {
+  if (roll < 0.36) {
     // Backlot / facility sale — flat one-time, prestige tax.
     const proceeds = Math.round(50_000_000 + secureRandom() * 150_000_000);
     impacts.push({
@@ -235,35 +258,146 @@ function stage2AssetLiquidation(state: GameState, seller: RivalStudio): StateImp
     return impacts;
   }
 
-  // Talent contract release: recover ~20% of outstanding contract value as cash.
-  const contracts = Object.values(state.entities.contracts || {}).filter(
-    (c: any) => c.studioId === seller.id || c.ownerId === seller.id
-  ) as any[];
-  const releaseCount = Math.max(1, Math.floor(contracts.length * (0.3 + secureRandom() * 0.2)));
-  const toRelease = contracts.slice(0, releaseCount);
-  const recovered = toRelease.reduce(
-    (sum, c) => sum + (Number(c.totalValue || c.fee || c.weeklyRate * 10 || 1_000_000)) * 0.2,
-    0
-  );
-  // Fallback floor — even if no contracts are trackable on the rival, the studio still gets some recovery.
-  const proceeds = Math.max(25_000_000, Math.round(recovered));
+  if (roll < 0.58) {
+    // Shelve an in-production project — Batgirl-style tax write-down. Cancel the most
+    // expensive active project, recover ~40% of sunk cost as salvage + write-off value.
+    const projects = Object.values(state.entities.projects || {})
+      .filter((p: any) => p.ownerId === seller.id)
+      .filter((p: any) => p.state === 'development' || p.state === 'pitching' || p.state === 'needs_greenlight' || p.state === 'production' || p.state === 'post_production');
+    if (projects.length > 0) {
+      const target: any = projects.sort((a: any, b: any) => (b.accumulatedCost || b.budget || 0) - (a.accumulatedCost || a.budget || 0))[0];
+      const sunk = Math.max(target.accumulatedCost || 0, (target.budget || 0) * 0.4);
+      const proceeds = Math.max(20_000_000, Math.round(sunk * 0.4));
+      impacts.push({
+        type: 'PROJECT_UPDATED',
+        payload: { projectId: target.id, update: { state: 'archived', weeklyCost: 0, weeklyRevenue: 0 } } as any
+      });
+      impacts.push({
+        type: 'RIVAL_UPDATED',
+        payload: { rivalId: seller.id, update: { cash: (seller.cash || 0) + proceeds, prestige: Math.max(0, (seller.prestige || 0) - 5) } } as any
+      });
+      impacts.push({
+        type: 'NEWS_ADDED',
+        payload: {
+          headline: `SHELVED: ${seller.name} scraps ${target.title} mid-production, claims $${(proceeds / 1e6).toFixed(0)}M write-off`,
+          description: `${seller.name} has abandoned ${target.title} and will book the sunk cost as a tax write-down.`,
+          category: 'market'
+        }
+      });
+      logEvent({
+        week: state.week, year: Math.floor(state.week / 52) + 1975,
+        stage: 2, kind: 'shelve-project',
+        studioId: seller.id, studioName: seller.name, amount: proceeds,
+        note: `Shelved ${target.title}`
+      });
+      counts(seller.id).s2++;
+      return impacts;
+    }
+    // Fall through to library sale if no active projects.
+  }
+
+  if (roll < 0.78) {
+    // Library / back-catalog sale — flip future streaming & ancillary revenue on released titles
+    // to a rival or financial buyer for a lump sum. Those IP assets transfer ownership.
+    const ownedAssets = (state.ip?.vault || []).filter(a => a.ownerStudioId === (seller.id as any));
+    if (ownedAssets.length >= 2) {
+      const rivals = Object.values(state.entities.rivals || {});
+      const buyers = rivals.filter(r => r.id !== seller.id && (r.cash || 0) > 300_000_000);
+      const buyer = buyers.length > 0 ? pick(buyers) : undefined;
+      const bundleSize = Math.min(ownedAssets.length, 3 + Math.floor(secureRandom() * 4));
+      const bundle = ownedAssets.slice(0, bundleSize);
+      const rawValue = bundle.reduce((s, a) => s + (a.baseValue || 50_000_000), 0);
+      const prestigeMult = 0.8 + (seller.prestige || 30) / 100;
+      const proceeds = Math.max(100_000_000, Math.min(500_000_000, Math.round(rawValue * 0.45 * prestigeMult)));
+      const buyerIdForVault = (buyer?.id as any);
+      const newVault = (state.ip.vault || []).map(a =>
+        bundle.find(b => b.id === a.id) ? { ...a, ownerStudioId: buyerIdForVault } : a
+      );
+      impacts.push({ type: 'INDUSTRY_UPDATE', payload: { update: { 'ip.vault': newVault } } as any });
+      impacts.push({
+        type: 'RIVAL_UPDATED',
+        payload: { rivalId: seller.id, update: { cash: (seller.cash || 0) + proceeds, prestige: Math.max(0, (seller.prestige || 0) - 3) } } as any
+      });
+      if (buyer) {
+        impacts.push({
+          type: 'RIVAL_UPDATED',
+          payload: { rivalId: buyer.id, update: { cash: (buyer.cash || 0) - proceeds } } as any
+        });
+      }
+      impacts.push({
+        type: 'NEWS_ADDED',
+        payload: {
+          headline: `LIBRARY SALE: ${seller.name} offloads ${bundleSize} back-catalog titles${buyer ? ` to ${buyer.name}` : ''} for $${(proceeds / 1e6).toFixed(0)}M`,
+          description: `${seller.name} has sold ongoing streaming and ancillary rights on ${bundleSize} released titles to raise cash.`,
+          category: 'market'
+        }
+      });
+      logEvent({
+        week: state.week, year: Math.floor(state.week / 52) + 1975,
+        stage: 2, kind: 'library-sale',
+        studioId: seller.id, studioName: seller.name,
+        counterpartyId: buyer?.id, counterpartyName: buyer?.name,
+        amount: proceeds, note: `${bundleSize} titles`
+      });
+      counts(seller.id).s2++;
+      return impacts;
+    }
+    // Not enough catalog depth — fall through to backend sale.
+  }
+
+  if (roll < 0.92) {
+    // Backend / participation sale — sell a % of future franchise cashflow (not ownership)
+    // for immediate cash. Franchise stays with studio; proceeds scale with franchise value proxy.
+    const franchiseProxy = (seller.prestige || 30) * 2_000_000 + (seller.strength || 30) * 1_500_000;
+    const proceeds = Math.max(50_000_000, Math.min(300_000_000, Math.round(franchiseProxy * (0.4 + secureRandom() * 0.4))));
+    impacts.push({
+      type: 'RIVAL_UPDATED',
+      payload: { rivalId: seller.id, update: { cash: (seller.cash || 0) + proceeds } } as any
+    });
+    impacts.push({
+      type: 'NEWS_ADDED',
+      payload: {
+        headline: `SLATE FINANCING: ${seller.name} sells backend stake on franchise slate for $${(proceeds / 1e6).toFixed(0)}M`,
+        description: `${seller.name} has sold a share of future franchise revenue to outside financiers. The studio keeps ownership; backers collect the upside.`,
+        category: 'market'
+      }
+    });
+    logEvent({
+      week: state.week, year: Math.floor(state.week / 52) + 1975,
+      stage: 2, kind: 'backend-sale',
+      studioId: seller.id, studioName: seller.name, amount: proceeds,
+      note: 'Slate-backend financing'
+    });
+    counts(seller.id).s2++;
+    return impacts;
+  }
+
+  // Layoffs / overhead cuts — trim non-talent staff (execs, dev, marketing, post).
+  // Smaller cash recovery than asset sales, prestige and morale tax.
+  const proceeds = Math.round(20_000_000 + secureRandom() * 60_000_000);
   impacts.push({
     type: 'RIVAL_UPDATED',
-    payload: { rivalId: seller.id, update: { cash: (seller.cash || 0) + proceeds } } as any
+    payload: {
+      rivalId: seller.id,
+      update: {
+        cash: (seller.cash || 0) + proceeds,
+        prestige: Math.max(0, (seller.prestige || 0) - 5)
+      }
+    } as any
   });
   impacts.push({
     type: 'NEWS_ADDED',
     payload: {
-      headline: `RELEASE: ${seller.name} releases ${releaseCount || 'several'} talent contracts, recovers $${(proceeds / 1e6).toFixed(0)}M`,
-      description: `${seller.name} has torn up talent deals to free cash as losses mount.`,
+      headline: `LAYOFFS: ${seller.name} cuts overhead staff, saves $${(proceeds / 1e6).toFixed(0)}M annualized`,
+      description: `${seller.name} has laid off executives, development, and marketing staff in a company-wide restructuring.`,
       category: 'market'
     }
   });
   logEvent({
     week: state.week, year: Math.floor(state.week / 52) + 1975,
-    stage: 2, kind: 'talent-release',
+    stage: 2, kind: 'layoffs',
     studioId: seller.id, studioName: seller.name, amount: proceeds,
-    note: `${releaseCount} contracts released`
+    note: 'Overhead layoffs'
   });
   counts(seller.id).s2++;
   return impacts;

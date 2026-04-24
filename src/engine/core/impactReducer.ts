@@ -308,6 +308,57 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
       return applySingleImpact(state, { type: 'FUNDS_CHANGED', payload: { amount } });
     }
 
+    case 'SHINGLE_CREATED': {
+      const { shingle } = impact.payload as any;
+      const existing = (state.entities as any).shingles || {};
+      return {
+        ...state,
+        entities: {
+          ...state.entities,
+          shingles: { ...existing, [shingle.id]: shingle }
+        } as any
+      };
+    }
+
+    case 'SHINGLE_UPDATED': {
+      const { shingleId, update } = impact.payload as any;
+      const existing = (state.entities as any).shingles || {};
+      const cur = existing[shingleId];
+      if (!cur) return state;
+      return {
+        ...state,
+        entities: {
+          ...state.entities,
+          shingles: { ...existing, [shingleId]: { ...cur, ...update } }
+        } as any
+      };
+    }
+
+    case 'SHINGLE_DISSOLVED': {
+      const { shingleId } = impact.payload as any;
+      const existing = { ...((state.entities as any).shingles || {}) };
+      delete existing[shingleId];
+      return {
+        ...state,
+        entities: {
+          ...state.entities,
+          shingles: existing
+        } as any
+      };
+    }
+
+    case 'FRANCHISE_UPDATED': {
+      const { franchiseId, update } = impact.payload as any;
+      const franchises = { ...state.ip.franchises };
+      const existing = franchises[franchiseId];
+      if (existing) {
+        franchises[franchiseId] = { ...existing, ...update };
+      } else if (update && update.id) {
+        franchises[franchiseId] = update;
+      }
+      return { ...state, ip: { ...state.ip, franchises } };
+    }
+
     case 'SYSTEM_TICK': {
       const { week, tickCount } = impact.payload;
       return {

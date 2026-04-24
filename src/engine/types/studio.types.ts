@@ -69,6 +69,7 @@ export interface GameState {
     talents: Record<string, Talent>;
     contracts: Record<string, Contract>;
     rivals: Record<string, RivalStudio>;
+    shingles?: Record<string, import('./talent.types').ProducerShingle>;
   };
   studio: {
     id: string;

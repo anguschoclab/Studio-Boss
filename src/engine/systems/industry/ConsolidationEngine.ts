@@ -4,6 +4,20 @@ import { pick, secureRandom, randRange } from '../../utils';
 import { getMarketHeat } from './MacroCycle';
 import { isAcquirerBlockedByAntitrust } from './Antitrust';
 
+export interface ConsolidationEvent {
+  week: number;
+  year: number;
+  motive: 'strategic' | 'distressed' | 'platform';
+  acquirerId: string;
+  acquirerName: string;
+  targetId: string;
+  targetName: string;
+  cost: number;
+}
+
+export const consolidationEventLog: ConsolidationEvent[] = [];
+export function resetConsolidationState() { consolidationEventLog.length = 0; }
+
 /**
  * Studio Boss - Consolidation Engine
  * Automates the mergers and acquisitions process for Rival Studios and Platforms.
@@ -16,14 +30,19 @@ export function tickConsolidation(state: GameState): StateImpact[] {
   // REMOVED: Financial stress simulation (ineffective and unrealistic)
   // Rivals now deploy capital proactively via FlopMechanics and other systems
 
-  // Potential Acquirers: any rival with surplus cash ($1B+ proactive)
-  const majors = rivals.filter(r => (r.archetype === 'major' && r.cash > 250_000_000) || r.cash > 1_000_000_000);
+  // Potential Acquirers: any rival with surplus cash ($500M+ proactive).
+  // Broadened from $1B so mid-tiers with cash can still pursue strategic tuck-ins.
+  const majors = rivals.filter(r => (r.archetype === 'major' && r.cash > 200_000_000) || r.cash > 500_000_000);
   // Downturns = distressed assets = M&A waves. Invert heat into gate probability.
+  // Lowered thresholds so we see 3-7 regular M&A over 50 years — prior 0.985 produced ~0.
   const heat = getMarketHeat(state.week);
-  const gateThreshold = heat > 1.1 ? 0.992 : heat < 0.9 ? 0.965 : 0.985;
+  const gateThreshold = heat > 1.1 ? 0.995 : heat < 0.9 ? 0.982 : 0.99;
   if (majors.length === 0 || secureRandom() < gateThreshold) return [];
 
-  const acquirer = pick(majors);
+  // Prefer non-antitrust-frozen acquirers so a single dominant frozen player doesn't
+  // starve the whole engine for years.
+  const freeAcquirers = majors.filter(r => !isAcquirerBlockedByAntitrust(r.id, state.week));
+  const acquirer = pick(freeAcquirers.length > 0 ? freeAcquirers : majors);
 
   // Antitrust block: dominant players face M&A freeze.
   if (isAcquirerBlockedByAntitrust(acquirer.id, state.week)) {
@@ -38,10 +57,15 @@ export function tickConsolidation(state: GameState): StateImpact[] {
     return impacts;
   }
 
-  // Target: any rival (proactive M&A — not just distressed ones)
+  // Strategic targets: healthy-but-stagnant mid-tiers in the $100M-$2B cash range
+  // are real-world acquisition targets (Disney/Fox, Amazon/MGM). Distress cascade
+  // handles <$0 cash cases separately. Skip targets the acquirer can't afford.
+  const STRATEGIC_CEILING = 2_000_000_000;
   const targets = rivals.filter(r =>
     r.id !== acquirer.id &&
-    (acquirer.cash > 1_000_000_000 || r.cash < 100_000_000 || r.strength < 30)
+    r.cash > 0 && r.cash < STRATEGIC_CEILING &&
+    r.strength < 75 &&
+    acquirer.cash > r.cash + (r.strength * 2_000_000)
   );
 
   // Target: unowned Streaming Platform
@@ -82,13 +106,22 @@ export function tickConsolidation(state: GameState): StateImpact[] {
       }
     });
 
+    const motive: 'strategic' | 'distressed' = target.cash < 100_000_000 ? 'distressed' : 'strategic';
+    const motiveLabel = motive === 'distressed' ? 'DISTRESSED M&A' : 'STRATEGIC M&A';
     impacts.push({
       type: 'NEWS_ADDED',
       payload: {
-        headline: `CONSOLIDATION: ${acquirer.name} acquires ${target.name} for $${(cost / 1_000_000).toFixed(1)}M`,
+        headline: `${motiveLabel}: ${acquirer.name} acquires ${target.name} for $${(cost / 1_000_000).toFixed(1)}M`,
         description: `In a major industry move, ${acquirer.name} today finalized the acquisition of ${target.name}, further consolidating the ${acquirer.archetype} tier.`,
         category: 'general'
       }
+    });
+    consolidationEventLog.push({
+      week: state.week, year: Math.floor(state.week / 52) + 1975,
+      motive,
+      acquirerId: acquirer.id, acquirerName: acquirer.name,
+      targetId: target.id, targetName: target.name,
+      cost
     });
   } else if (platforms.length > 0) {
     // Platform Acquisition (Vertical Integration)
@@ -138,6 +171,13 @@ export function tickConsolidation(state: GameState): StateImpact[] {
         description: `In a strategic shift toward vertical integration, ${acquirer.name} has acquired the ${platform.name} streaming platform to secure direct audience access.`,
         category: 'market'
       }
+    });
+    consolidationEventLog.push({
+      week: state.week, year: Math.floor(state.week / 52) + 1975,
+      motive: 'platform',
+      acquirerId: acquirer.id, acquirerName: acquirer.name,
+      targetId: platform.id, targetName: platform.name,
+      cost
     });
   }
 
