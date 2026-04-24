@@ -7,11 +7,10 @@ import {
   AlertTriangle, 
   TrendingUp, 
   Search,
-  History,
-  Filter
+  History
 } from 'lucide-react';
 
-const eventTypeConfig: Record<NewsEventType, { icon: any, color: string, label: string }> = {
+const eventTypeConfig: Record<NewsEventType, { icon: React.ElementType, color: string, label: string }> = {
   AWARD: { icon: Trophy, color: 'text-amber-500 bg-amber-500/10 border-amber-500/20', label: 'Awards' },
   CRISIS: { icon: AlertTriangle, color: 'text-destructive bg-destructive/10 border-destructive/20', label: 'Crises' },
   RELEASE: { icon: TrendingUp, color: 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20', label: 'Release' },
@@ -41,10 +40,13 @@ export const NewsFeed = () => {
           </Badge>
         </div>
 
-        <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar no-scrollbar">
+        {/* The Pixel Perfectionist: Switched from overflow-x-auto to flex-wrap for better mobile reflow to fix horizontal scrolling issues. */}
+        <div className="flex flex-wrap gap-2 pb-2">
           <button 
+            type="button"
+            aria-pressed={filter === 'ALL'}
             onClick={() => setFilter('ALL')}
-            className={`px-4 py-2 rounded-none text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 border italic ${
+            className={`px-4 py-2 rounded-md text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 border italic ${
               filter === 'ALL' ? 'bg-primary text-black border-primary shadow-[0_0_15px_rgba(var(--primary),0.2)]' : 'bg-white/[0.02] text-muted-foreground/40 border-white/5 hover:border-white/20'
             }`}
           >
@@ -53,8 +55,10 @@ export const NewsFeed = () => {
           {(Object.keys(eventTypeConfig) as NewsEventType[]).map(type => (
             <button 
               key={type}
+              type="button"
+              aria-pressed={filter === type}
               onClick={() => setFilter(type)}
-              className={`px-4 py-2 rounded-none text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 border flex items-center gap-2 italic whitespace-nowrap ${
+              className={`px-4 py-2 rounded-md text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 border flex items-center gap-2 italic whitespace-nowrap ${
                 filter === type ? 'bg-primary text-black border-primary shadow-[0_0_15px_rgba(var(--primary),0.2)]' : 'bg-white/[0.02] text-muted-foreground/40 border-white/5 hover:border-white/20'
               }`}
             >

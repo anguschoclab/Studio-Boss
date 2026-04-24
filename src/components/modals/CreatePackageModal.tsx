@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Package, Building2, Users } from 'lucide-react';
-import type { Agency, Talent, Opportunity, BudgetTierKey, ProjectFormat } from '@/engine/types';
+import type { Agency, Talent } from '@/engine/types';
 
 interface CreatePackageModalProps {
   agencies?: Agency[];
@@ -100,16 +100,18 @@ export const CreatePackageModal = ({ agencies: propAgencies, talents: propTalent
               <Users className="h-4 w-4" />
               Select Talent (max 5)
             </Label>
-            <div className="max-h-64 overflow-y-auto border rounded-none p-3 space-y-2">
+            {/* The Pixel Perfectionist: Enhanced talent selection rows with proper touch targets and ARIA states. */}
+            <div className="max-h-64 overflow-y-auto border rounded-md p-3 space-y-2">
               {talentList.length === 0 ? (
                 <p className="text-sm text-muted-foreground">No available talent with contracts</p>
               ) : (
                 talentList.map(talent => (
                   <div
                     key={talent.id}
-                    className="flex items-center justify-between p-3 m-2 rounded-none shadow-sm hover:shadow-md hover:bg-muted cursor-pointer transition-all"
+                    className="flex items-center justify-between p-3 m-2 rounded-md shadow-sm hover:shadow-md hover:bg-muted cursor-pointer transition-all"
                     role="button"
                     tabIndex={0}
+                    aria-pressed={selectedTalents.includes(talent.id)}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
@@ -126,6 +128,7 @@ export const CreatePackageModal = ({ agencies: propAgencies, talents: propTalent
                     </div>
                     <input
                       type="checkbox"
+                      aria-label={`Select talent ${talent.id}`}
                       checked={selectedTalents.includes(talent.id)}
                       onChange={() => handleToggleTalent(talent.id)}
                       onClick={(e) => e.stopPropagation()}

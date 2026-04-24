@@ -2,10 +2,9 @@ import { Project } from '@/engine/types';
 import { useUIStore } from '@/store/uiStore';
 import { useGameStore } from '@/store/gameStore';
 import { BUDGET_TIERS } from '@/engine/data/budgetTiers';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
-import { AlertTriangle, TrendingUp, Activity, Zap, DollarSign, Target } from 'lucide-react';
+import { AlertTriangle, Activity, Zap, DollarSign, Target } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { formatMoney } from '@/engine/utils';
 import { DistributionBadge } from '../shared/DistributionBadge';
@@ -33,7 +32,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
     : 0;
 
   const displayFormat = project.type === 'SERIES'
-      ? `S${(project as any).tvDetails?.currentSeason || 1}`
+      ? `S${(project as unknown as { tvDetails?: { currentSeason?: number } }).tvDetails?.currentSeason || 1}`
       : project.format.toUpperCase();
 
   const hasUnresolvedCrisis = project.activeCrisis && !project.activeCrisis.resolved;
@@ -57,7 +56,8 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
         }}
         aria-label={`View details for ${project.title}`}
         data-testid={`project-card-${project.id}`}
-        className="w-full text-left p-8 rounded-none border border-white/5 bg-white/[0.01] backdrop-blur-3xl hover:bg-white/[0.04] hover:border-primary/40 transition-all duration-700 space-y-8 group relative overflow-hidden cursor-pointer shadow-2xl"
+        // The Pixel Perfectionist: Upgraded card and buttons from rounded-none to modern rounded defaults.
+        className="w-full text-left p-8 rounded-xl border border-white/5 bg-white/[0.01] backdrop-blur-3xl hover:bg-white/[0.04] hover:border-primary/40 transition-all duration-700 space-y-8 group relative overflow-hidden cursor-pointer shadow-2xl"
       >
         {/* Visual Accent */}
         <div className={cn(
@@ -155,9 +155,10 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
         <div className="pt-6 flex flex-col gap-4 relative z-10 border-t border-white/5 mt-2">
           {hasUnresolvedCrisis && (
             <Button
+              type="button"
               variant="destructive"
               size="sm"
-              className="w-full h-12 text-[10px] font-black uppercase tracking-[0.3em] animate-pulse border border-red-400/30 bg-red-400/10 hover:bg-red-400 text-red-400 hover:text-white transition-all duration-700 rounded-none italic"
+              className="w-full h-12 text-[10px] font-black uppercase tracking-[0.3em] animate-pulse border border-red-400/30 bg-red-400/10 hover:bg-red-400 text-red-400 hover:text-white transition-all duration-700 rounded-md italic"
               onClick={(e) => {
                 e.stopPropagation();
                 openCrisisModal(project.id);
@@ -170,9 +171,10 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
 
           {project.state === 'needs_greenlight' && (
             <Button
+              type="button"
               variant="default"
               size="sm"
-              className="w-full h-12 text-[10px] font-black uppercase tracking-[0.3em] bg-primary text-black hover:bg-white transition-all duration-700 rounded-none italic shadow-[0_0_20px_rgba(var(--primary),0.2)]"
+              className="w-full h-12 text-[10px] font-black uppercase tracking-[0.3em] bg-primary text-black hover:bg-white transition-all duration-700 rounded-md italic shadow-[0_0_20px_rgba(var(--primary),0.2)]"
               onClick={(e) => {
                 e.stopPropagation();
                 selectProject(project.id);
@@ -185,8 +187,9 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
 
           {project.state === 'pitching' && (
             <Button
+              type="button"
               size="sm"
-              className="w-full h-12 text-[10px] font-black uppercase tracking-[0.3em] bg-amber-400 text-black hover:bg-white transition-all duration-700 rounded-none italic shadow-[0_0_20px_rgba(251,191,36,0.2)]"
+              className="w-full h-12 text-[10px] font-black uppercase tracking-[0.3em] bg-amber-400 text-black hover:bg-white transition-all duration-700 rounded-md italic shadow-[0_0_20px_rgba(251,191,36,0.2)]"
               onClick={(e) => {
                 e.stopPropagation();
                 openPitchProject(project.id);
