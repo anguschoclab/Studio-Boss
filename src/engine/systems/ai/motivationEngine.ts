@@ -113,7 +113,7 @@ export function tickAIMinds(state: GameState, rng: RandomGenerator): StateImpact
           headline: `${rival.name} SECURES EMERGENCY FINANCING`,
           description: `${rival.name} draws on a credit facility to stabilise operations amid cash pressure.`,
         }
-      } as StateImpact);
+      } as import('@/engine/types').StateImpact);
     }
 
     // Fix 2: FRANCHISE_BUILDING rivals track IP syndication potential
