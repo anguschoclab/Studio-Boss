@@ -47,7 +47,7 @@ describe('FlopMechanics', () => {
 
   describe('calculateFlopPenalties', () => {
     it('calculates correct penalties for MINOR severity', () => {
-      const project = createMockProject({ budget: 1000000, marketingBudget: 500000 } as unknown as import('../../../../engine/types').Project);
+      const project = createMockProject({ budget: 1000000, marketingBudget: 500000 });
       const penalties = calculateFlopPenalties(project, FlopSeverity.MINOR);
       expect(penalties.severity).toBe(FlopSeverity.MINOR);
       expect(penalties.writeOffCost).toBe(Math.floor(1500000 * 0.3));
