@@ -31,9 +31,14 @@ describe('CommandCenter', () => {
         name: 'Acme Studios',
         archetype: 'boutique-indie',
         prestige: 42,
+        internal: {
+          projects: {}
+        }
       },
       industry: {
-        newsHistory: []
+        newsHistory: [],
+        talentPool: {},
+        rivals: {}
       },
       finance: { cash: 1000000 },
       ...overrides
@@ -54,22 +59,35 @@ describe('CommandCenter', () => {
     vi.mocked(useGameStore).mockImplementation((selector: any) => {
       const state = mockState({
         entities: {
-          projects: {
-            p1: { id: 'p1', state: 'development' },
-            p2: { id: 'p2', state: 'pre_production' },
-            p3: { id: 'p3', state: 'released' },
-            p4: { id: 'p4', state: 'archived' }
-          },
-          talents: {
+          projects: {},
+          talents: {},
+          rivals: {},
+          contracts: {}
+        },
+        studio: {
+          name: 'Acme Studios',
+          archetype: 'boutique-indie',
+          prestige: 42,
+          internal: {
+            projects: {
+              p1: { id: 'p1', state: 'development' },
+              p2: { id: 'p2', state: 'production' },
+              p3: { id: 'p3', state: 'released' },
+              p4: { id: 'p4', state: 'archived' }
+            }
+          }
+        },
+        industry: {
+          newsHistory: [],
+          talentPool: {
             t1: { id: 't1', name: 'Actor 1' },
             t2: { id: 't2', name: 'Actor 2' },
             t3: { id: 't3', name: 'Director 1' }
           },
-          rivals: {
-            r1: { id: 'r1' },
-            r2: { id: 'r2' }
-          },
-          contracts: {}
+          rivals: [
+            { id: 'r1' },
+            { id: 'r2' }
+          ]
         }
       });
       return selector(state);
@@ -82,7 +100,7 @@ describe('CommandCenter', () => {
     );
 
     expect(screen.getByText('Acme Studios')).toBeInTheDocument();
-    expect(screen.getByText('boutique indie')).toBeInTheDocument();
+    expect(screen.getByText('BOUTIQUE INDIE')).toBeInTheDocument();
 
     // Active projects = 2 (p1, p2)
     const valueElements = screen.getAllByText('2');
@@ -103,7 +121,9 @@ describe('CommandCenter', () => {
           newsHistory: [
             { id: 'n1', week: 12, headline: 'Huge Box Office', description: 'A movie made money' },
             { id: 'n2', week: 13, headline: 'Scandal!', description: 'Oh no' }
-          ]
+          ],
+          talentPool: {},
+          rivals: {}
         }
       });
       return selector(state);
@@ -115,11 +135,11 @@ describe('CommandCenter', () => {
       </TooltipProvider>
     );
 
-    expect(screen.getByText('W12')).toBeInTheDocument();
+    expect(screen.getByText('12')).toBeInTheDocument();
     expect(screen.getByText('Huge Box Office')).toBeInTheDocument();
     expect(screen.getByText('A movie made money')).toBeInTheDocument();
 
-    expect(screen.getByText('W13')).toBeInTheDocument();
+    expect(screen.getByText('13')).toBeInTheDocument();
     expect(screen.getByText('Scandal!')).toBeInTheDocument();
     expect(screen.getByText('Oh no')).toBeInTheDocument();
   });
@@ -131,6 +151,6 @@ describe('CommandCenter', () => {
         <CommandCenter />
       </TooltipProvider>
     );
-    expect(screen.getByText('Awaiting Intelligence')).toBeInTheDocument();
+    expect(screen.getByText('NO RECENT INDUSTRY ACTIVITY LOGGED IN SECTOR.')).toBeInTheDocument();
   });
 });
