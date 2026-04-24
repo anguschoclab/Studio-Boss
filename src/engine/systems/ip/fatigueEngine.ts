@@ -20,7 +20,7 @@ export function calculateFranchiseFatigue(
   genreSaturation: number, // Market-wide saturation for the genre (count of active rival projects)
   genre: string = "Action"
 ): number {
-  const activeCount = franchise.activeProjectIds.length;
+  const activeCount = (franchise.activeProjectIds || []).length;
 
   // Normalize genre string to match FRANCHISE_FATIGUE_RISK keys (e.g. "Action", "Sci-Fi", "Superhero")
   // Handle ALL CAPS or all lowercase variations
