@@ -22,10 +22,6 @@ const autoPilot = true;
 console.log(`Running ${weeks} week (50-year) headless simulation...`);
 console.log(`Seed: ${seed}, Archetype: ${archetype}, Auto-pilot: ${autoPilot}\n`);
 
-let projectsCreated = 0;
-let projectsReleased = 0;
-let maEvents = 0;
-
 const result = SimulationRunner.run(weeks, seed, archetype, persona, autoPilot);
 
 console.log('Simulation complete!');
@@ -79,14 +75,15 @@ console.log(`Successful Projects (ROI > 1.0): ${successfulProjects.length} (${((
 console.log(`Player Projects: ${playerProjects.length} total`);
 
 // Split releases by medium
-const filmReleases = releasedProjects.filter(p => (p as any).format !== 'tv');
-const tvReleases = releasedProjects.filter(p => (p as any).format === 'tv');
+const filmReleases = releasedProjects.filter(p => p.type !== 'SERIES');
+const tvReleases = releasedProjects.filter(p => p.type === 'SERIES');
 console.log(`  Film releases: ${filmReleases.length}`);
 console.log(`  TV series releases: ${tvReleases.length}`);
 if (tvReleases.length > 0) {
   console.log('  TV sample:');
-  tvReleases.slice(0, 5).forEach((p: any) => {
-    console.log(`    - ${p.title}: seasons=${p.tvDetails?.currentSeason ?? '?'}, eps=${p.tvDetails?.episodesOrdered ?? '?'}, budget=$${((p.budget||0)/1e6).toFixed(0)}M, revenue=$${((p.revenue||0)/1e6).toFixed(0)}M`);
+  tvReleases.slice(0, 5).forEach(p => {
+    const seriesP = p as import('@/engine/types').SeriesProject;
+    console.log(`    - ${seriesP.title}: seasons=${seriesP.tvDetails?.currentSeason ?? '?'}, eps=${seriesP.tvDetails?.episodesOrdered ?? '?'}, budget=$${((seriesP.budget||0)/1e6).toFixed(0)}M, revenue=$${((seriesP.revenue||0)/1e6).toFixed(0)}M`);
   });
 }
 
@@ -119,7 +116,6 @@ console.log(`A-List Talents (80+ Prestige): ${aListCount}`);
 console.log(`Avg Prestige: ${(talents.reduce((sum, t) => sum + t.prestige, 0) / talents.length).toFixed(1)}`);
 
 // Analyze news events over time
-const newsEvents = history.flatMap(h => []);
 // Decade breakdown
 console.log('\n--- DECADE BREAKDOWN ---');
 const byDecade: Record<number, { releases: number; franchises: number; bankruptcies: number; heat: number; shocks: Set<string> }> = {};
@@ -252,8 +248,8 @@ console.log(`  $250M..$2B (healthy): ${cashBuckets.healthy}`);
 console.log(`  > $2B (dominant): ${cashBuckets.rich}`);
 
 console.log('\n--- TV SHOWRUNNER OVERALL DEALS ---');
-const tvFormations = shingleEventLog.filter(e => e.kind === 'formed' && (e as any).medium === 'TV');
-const filmFormations = shingleEventLog.filter(e => e.kind === 'formed' && (e as any).medium !== 'TV');
+const tvFormations = shingleEventLog.filter(e => e.kind === 'formed' && (e as import('@/engine/types').ShingleEvent).medium === 'TV');
+const filmFormations = shingleEventLog.filter(e => e.kind === 'formed' && (e as import('@/engine/types').ShingleEvent).medium !== 'TV');
 console.log(`Total TV showrunner deals formed: ${tvFormations.length}`);
 console.log(`Total film shingles formed: ${filmFormations.length}`);
 tvFormations.forEach(e => {
@@ -280,7 +276,7 @@ for (let d = 0; d < 5; d++) {
   const lo = d * 520;
   const hi = (d + 1) * 520;
   // Active shingles at end of decade: spawned before hi and not dissolved/expired-orphan before hi
-  const active = Object.values(finalState.entities.shingles || {});
+
   // formations and churns during decade
   const formed = shingleEventLog.filter(e => e.kind === 'formed' && e.week >= lo && e.week < hi).length;
   const churned = shingleEventLog.filter(e => e.kind === 'churned' && e.week >= lo && e.week < hi).length;
@@ -291,7 +287,7 @@ for (let d = 0; d < 5; d++) {
 }
 
 const finalShingles = Object.values(finalState.entities.shingles || {});
-const byDealType = { FIRST_LOOK: 0, OVERALL: 0, HOUSEKEEPING: 0, POD: 0 } as any;
+const byDealType: Record<string, number> = { FIRST_LOOK: 0, OVERALL: 0, HOUSEKEEPING: 0, POD: 0 };
 finalShingles.forEach(s => { byDealType[s.dealType] = (byDealType[s.dealType] || 0) + 1; });
 console.log(`\n--- FINAL ACTIVE SHINGLES: ${finalShingles.length} ---`);
 console.log(`  FIRST_LOOK=${byDealType.FIRST_LOOK}, OVERALL=${byDealType.OVERALL}, HOUSEKEEPING=${byDealType.HOUSEKEEPING}, POD=${byDealType.POD}`);
