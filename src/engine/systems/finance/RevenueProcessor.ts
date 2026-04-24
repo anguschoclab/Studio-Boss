@@ -104,7 +104,7 @@ export class RevenueProcessor {
         
         // 1. Theatrical vs Streaming
         if (p.distributionStatus === 'theatrical') {
-          weeklyGross = this.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.5);
+          weeklyGross = this.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.33); // The Studio Comptroller: Increased theatrical decay to 0.33 to simulate modern front-loaded box office drops.
           boxOffice += weeklyGross;
         } else if (p.distributionStatus === 'streaming') {
           const platform = state.market.buyers.find(b => b.id === p.buyerId);
