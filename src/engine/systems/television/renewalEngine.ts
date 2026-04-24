@@ -14,12 +14,16 @@ export function evaluateRenewal(
     return 'ON_AIR';
   }
 
-  // 📺 The Syndication Baron: Tweaked streaming renewal thresholds: platforms now cancel expensive shows faster if subscriber growth flatlines.
+  // 📺 The Syndication Baron: reward consistent season-over-season quality
+  if ((project.tvDetails?.currentSeason || 1) >= 3) threshold -= 0.5;
+
+  // 📺 The Syndication Baron: Tweaked streaming renewal thresholds: platforms now cancel expensive shows faster if subscriber growth flatlines. Adjusted budget tier penalties to be more cutthroat for blockbusters.
   let dynamicThreshold = threshold;
 
-  if (project.budgetTier === 'blockbuster') dynamicThreshold += 1.0;
+  if (project.budgetTier === 'blockbuster') dynamicThreshold += 1.5;
   else if (project.budgetTier === 'high') dynamicThreshold += 0.5;
   else if (project.budgetTier === 'low') dynamicThreshold -= 0.5;
+  else if (project.budgetTier === 'indie') dynamicThreshold -= 0.25;
 
   const audienceRetention = project.nielsenProfile?.audienceRetention;
   if (audienceRetention !== undefined) {

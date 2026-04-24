@@ -18,7 +18,11 @@ function calculateSubChange(platform: StreamerPlatform, rng: RandomGenerator, av
 
   // 📺 The Syndication Baron: Tweaked streaming renewal thresholds: platforms now cancel expensive shows faster if subscriber growth flatlines.
   const retentionFactor = (100 - averageRetention) / 40;
-  const adjustedChurnRate = platform.churnRate * (0.5 + retentionFactor * 0.5);
+  let adjustedChurnRate = platform.churnRate * (0.5 + retentionFactor * 0.5);
+  // 📺 The Syndication Baron: Tweaked streaming subscriber churn rates to heavily penalize low content quality.
+  if (platform.contentLibraryQuality < 50) {
+    adjustedChurnRate *= 1.5;
+  }
   const churn = platform.subscribers * adjustedChurnRate;
   
   return Math.floor(growth - churn);
@@ -35,7 +39,7 @@ export function tickPlatforms(state: GameState, rng: RandomGenerator): StateImpa
   // ⚡ The Framerate Fanatic: Optimize project iteration using for...in loops and single pass to prevent O(N^2) complexity and GC pressure from Object.values/flatMap
   const platformRetentionStats: Record<string, { count: number, sum: number }> = {};
 
-  for (const pid in state.entities.projects) {
+  for (const pid in state.entities?.projects || {}) {
     const p = state.entities.projects[pid];
     if (p.type === 'SERIES' && p.buyerId && (p as SeriesProject).nielsenProfile?.audienceRetention !== undefined) {
       if (!platformRetentionStats[p.buyerId]) platformRetentionStats[p.buyerId] = { count: 0, sum: 0 };
@@ -44,7 +48,7 @@ export function tickPlatforms(state: GameState, rng: RandomGenerator): StateImpa
     }
   }
 
-  for (const rivalId in state.entities.rivals) {
+  for (const rivalId in state.entities?.rivals || {}) {
     const rival = state.entities.rivals[rivalId];
     for (const pid in rival.projects || {}) {
       const p = rival.projects[pid];
