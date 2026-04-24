@@ -47,6 +47,32 @@ describe('Production Engine (Target A2) - Symmetry', () => {
         }
       ],
       talentPool: {}
+    },
+    entities: {
+      projects: {
+        'player-p1': {
+          id: 'player-p1',
+          type: 'FILM',
+          state: 'production',
+          weeksInPhase: 5,
+          productionWeeks: 20,
+          progress: 25,
+          scriptHeat: 50,
+          activeRoles: [],
+          scriptEvents: []
+        },
+        'rival-p1': {
+          id: 'rival-p1',
+          type: 'FILM',
+          state: 'production',
+          weeksInPhase: 5,
+          productionWeeks: 20,
+          progress: 25,
+          scriptHeat: 50,
+          activeRoles: [],
+          scriptEvents: []
+        }
+      }
     }
   } as unknown as GameState;
 
