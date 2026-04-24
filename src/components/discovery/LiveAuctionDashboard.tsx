@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useGameStore } from '@/store/gameStore';
-import { Opportunity, RivalStudio } from '@/engine/types';
+import { Opportunity } from '@/engine/types';
 import { formatMoney } from '@/engine/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
