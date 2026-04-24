@@ -1,3 +1,4 @@
+import { TooltipProvider } from "@/components/ui/tooltip";
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
@@ -30,7 +31,7 @@ describe('DiscoveryBoard', () => {
       acquireOpportunity: mockAcquireOpportunity
     } as any);
 
-    render(<DiscoveryBoard />);
+    render(<TooltipProvider><DiscoveryBoard /></TooltipProvider>);
 
     expect(screen.getByText('The Trades')).toBeDefined();
     expect(screen.getByText('The town is quiet')).toBeDefined();
@@ -45,7 +46,7 @@ describe('DiscoveryBoard', () => {
       acquireOpportunity: mockAcquireOpportunity
     } as any);
 
-    render(<DiscoveryBoard />);
+    render(<TooltipProvider><DiscoveryBoard /></TooltipProvider>);
 
     const createButton = screen.getByText('Original Concept');
     fireEvent.click(createButton);
@@ -99,7 +100,7 @@ describe('DiscoveryBoard', () => {
       acquireOpportunity: mockAcquireOpportunity
     } as any);
 
-    render(<DiscoveryBoard />);
+    render(<TooltipProvider><DiscoveryBoard /></TooltipProvider>);
 
     expect(screen.getByText('Action Movie')).toBeDefined();
     expect(screen.getByText('Comedy Show')).toBeDefined();
@@ -142,7 +143,7 @@ describe('DiscoveryBoard', () => {
       acquireOpportunity: mockAcquireOpportunity
     } as any);
 
-    render(<DiscoveryBoard />);
+    render(<TooltipProvider><DiscoveryBoard /></TooltipProvider>);
 
     const acquireButton = screen.getByText('Acquire IP');
     fireEvent.click(acquireButton);

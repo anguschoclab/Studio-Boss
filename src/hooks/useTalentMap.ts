@@ -9,14 +9,14 @@ import { selectTalentPool } from '@/store/selectors';
  * @returns Map of talent ID to talent object
  */
 export function useTalentMap(talentPool?: Talent[] | Record<string, Talent>): Map<string, Talent> {
-  const gameState = useGameStore(s => s.gameState);
-  const pool = talentPool || selectTalentPool(gameState) || [];
+  const statePool = useGameStore(s => selectTalentPool(s.gameState));
 
   return useMemo(() => {
+    const pool = talentPool || statePool || [];
     // Handle both array and Record<string, Talent> inputs
     const poolArray = Array.isArray(pool) ? pool : Object.values(pool);
     return new Map(poolArray.map((t: Talent) => [t.id, t]));
-  }, [pool]);
+  }, [talentPool, statePool]);
 }
 
 /**
