@@ -97,7 +97,7 @@ export function tickIPVault(state: GameState, archetype?: import('../../data/aiA
   });
 
   Object.values(state.ip.franchises).forEach(franchise => {
-    const firstAssetId = franchise.assetIds[0];
+    const firstAssetId = (franchise.assetIds || [])[0];
     const firstAsset = state.ip.vault.find(a => a.id === firstAssetId);
     const sourceProject = firstAsset?.originalProjectId ? state.entities.projects[firstAsset.originalProjectId] : undefined;
     
