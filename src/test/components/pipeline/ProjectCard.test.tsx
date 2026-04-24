@@ -1,3 +1,4 @@
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ProjectCard } from '@/components/pipeline/ProjectCard';
@@ -49,7 +50,7 @@ describe('ProjectCard', () => {
   });
 
   it('renders basic project details correctly', () => {
-    render(<ProjectCard project={baseProject} />);
+    render(<TooltipProvider><ProjectCard project={baseProject} /></TooltipProvider>);
 
     expect(screen.getByText('Test Movie')).toBeInTheDocument();
     expect(screen.getByText('Action')).toBeInTheDocument();
@@ -58,7 +59,7 @@ describe('ProjectCard', () => {
   });
 
   it('calls selectProject when the main card is clicked', () => {
-    render(<ProjectCard project={baseProject} />);
+    render(<TooltipProvider><ProjectCard project={baseProject} /></TooltipProvider>);
 
     const card = screen.getByRole('button');
     fireEvent.click(card);
@@ -68,7 +69,7 @@ describe('ProjectCard', () => {
 
   it('shows Executive Review button for needs_greenlight state', () => {
      const project = { ...baseProject, state: 'needs_greenlight' as const };
-    render(<ProjectCard project={project} />);
+    render(<TooltipProvider><ProjectCard project={project} /></TooltipProvider>);
 
     const button = screen.getByRole('button', { name: /Executive Review/i });
     expect(button).toBeInTheDocument();
@@ -79,7 +80,7 @@ describe('ProjectCard', () => {
 
   it('shows Pitch Pipeline button for pitching state', () => {
     const project = { ...baseProject, state: 'pitching' as const };
-    render(<ProjectCard project={project} />);
+    render(<TooltipProvider><ProjectCard project={project} /></TooltipProvider>);
 
     const button = screen.getByRole('button', { name: /Pitch Pipeline/i });
     expect(button).toBeInTheDocument();
@@ -100,7 +101,7 @@ describe('ProjectCard', () => {
         weekTriggered: 1,
       },
     } as any;
-    render(<ProjectCard project={project} />);
+    render(<TooltipProvider><ProjectCard project={project} /></TooltipProvider>);
 
     const button = screen.getByRole('button', { name: /Neutralize Crisis/i });
     expect(button).toBeInTheDocument();
@@ -110,7 +111,7 @@ describe('ProjectCard', () => {
   });
 
   it('renders progress text for development state', () => {
-    render(<ProjectCard project={baseProject} />);
+    render(<TooltipProvider><ProjectCard project={baseProject} /></TooltipProvider>);
     const devElements = screen.getAllByText((content, element) => element?.textContent?.includes('development') ?? false);
     expect(devElements.length).toBeGreaterThan(0);
     expect(screen.getByText('4/8w')).toBeInTheDocument();
@@ -118,7 +119,7 @@ describe('ProjectCard', () => {
 
   it('renders gross revenue for released state', () => {
     const project = { ...baseProject, state: 'released' as const, revenue: 150000000 };
-    render(<ProjectCard project={project} />);
+    render(<TooltipProvider><ProjectCard project={project} /></TooltipProvider>);
 
     const lifetimeElements = screen.getAllByText((content, element) => element?.textContent?.includes('Lifetime') ?? false);
     expect(lifetimeElements.length).toBeGreaterThan(0);
@@ -140,7 +141,7 @@ describe('ProjectCard', () => {
       },
       tvFormat: 'sitcom' as const,
     } as any;
-    render(<ProjectCard project={tvProject} />);
+    render(<TooltipProvider><ProjectCard project={tvProject} /></TooltipProvider>);
 
     expect(screen.getByText('S2')).toBeInTheDocument();
   });
