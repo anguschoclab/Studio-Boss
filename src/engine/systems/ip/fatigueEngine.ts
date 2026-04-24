@@ -42,10 +42,20 @@ export function calculateFranchiseFatigue(
     currentFatigue *= 2.5;
   }
 
+  // 🌌 The Universe Builder: "Comedy Sequel Curse" - Increases fatigue acceleration for multiple active Comedy entries.
+  if (activeCount >= 2 && normalizedGenre === "Comedy") {
+    currentFatigue *= 1.5;
+  }
+
   // 3. Rival Saturation (The 'Poison the Well' effect)
   // If genre is severely oversaturated, penalty multiplier increases heavily.
   const oversaturationMultiplier = genreSaturation > 10 ? 1.5 : 1.0;
   let rivalPenalty = (genreSaturation / 12) * 0.1 * oversaturationMultiplier;
+
+  // 🌌 The Universe Builder: "Horror Sequel Immunity" - Audiences tolerate Horror saturation better.
+  if (normalizedGenre === "Horror") {
+    rivalPenalty *= 0.5;
+  }
 
   // 🌌 The Universe Builder: Implemented "Superhero Fatigue" - 2x penalty if Superhero genre is oversaturated.
   const SUPERHERO_FATIGUE_THRESHOLD = 8;
@@ -101,6 +111,15 @@ export function calculateReleaseGapImpact(
       buzzBonus: 40,
       label: "Legacy Sequel (Nostalgia)",
       fatigueReset: true, // A legacy reset removes current fatigue as the brand is "re-introduced"
+    };
+  }
+
+  // 🌌 The Universe Builder: "IP Retention Rush" - Severe buzz penalty for cynical, rushed IP retention attempts.
+  if (yearsSince >= 8 && yearsSince < 10) {
+    return {
+      buzzBonus: -25,
+      label: "Rushed IP Retention",
+      fatigueReset: false,
     };
   }
 

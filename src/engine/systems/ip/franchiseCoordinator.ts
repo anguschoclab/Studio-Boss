@@ -24,14 +24,20 @@ export function calculateFranchiseEquity(
   // 1b. Genre Crossover Events Hook
   if (sourceProjects && assets.length > 1) {
     const uniqueGenres = new Set<string>();
+    const uniqueFormats = new Set<string>(); // 🌌 Added by The Universe Builder
     assets.forEach((a) => {
       const p = sourceProjects[a.originalProjectId];
-      if (p && p.genre) {
-        // Normalize to Title Case to match CROSSOVER_AFFINITY keys (e.g. 'Action', 'Sci-Fi')
-        const normalizedGenre =
-          Object.keys(CROSSOVER_AFFINITY).find((k) => k.toLowerCase() === p.genre!.toLowerCase()) ||
-          p.genre;
-        uniqueGenres.add(normalizedGenre);
+      if (p) {
+        if (p.genre) {
+          // Normalize to Title Case to match CROSSOVER_AFFINITY keys (e.g. 'Action', 'Sci-Fi')
+          const normalizedGenre =
+            Object.keys(CROSSOVER_AFFINITY).find((k) => k.toLowerCase() === p.genre!.toLowerCase()) ||
+            p.genre;
+          uniqueGenres.add(normalizedGenre);
+        }
+        if (p.format) {
+          uniqueFormats.add(p.format);
+        }
       }
     });
 
@@ -57,6 +63,16 @@ export function calculateFranchiseEquity(
     // 🌌 The Universe Builder: Added 20% crossover bonus for Cinematic Universe/Multiverse events.
     if (uniqueGenres.has("Cinematic Universe") || uniqueGenres.has("Multiverse")) {
       crossoverBonus += 0.2;
+    }
+
+    // 🌌 The Universe Builder: Transmedia Empire synergy bonus (+30%) if a franchise spans 3 or more distinct formats.
+    if (uniqueFormats.size >= 3) {
+      crossoverBonus += 0.3;
+    }
+
+    // 🌌 The Universe Builder: Animation/Live-Action synergy bonus (+25%) when crossover events bridge Animation with Action/Superhero.
+    if ((uniqueFormats.has('film') || uniqueFormats.has('tv')) && uniqueGenres.has('Animation') && (uniqueGenres.has('Action') || uniqueGenres.has('Superhero'))) {
+      crossoverBonus += 0.25;
     }
   }
 

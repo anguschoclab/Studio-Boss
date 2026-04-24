@@ -113,7 +113,7 @@ export const CROSSOVER_AFFINITY: Record<string, string[]> = {
   Multiverse: ["Superhero", "Sci-Fi", "Fantasy", "Action", "Animation", "IP Mashup"],
   "Elevated Horror": ["Horror", "Thriller", "Drama", "Psychological Thriller"],
   "IP Mashup": ["Comedy", "Action", "Animation", "Superhero", "Multiverse"],
-  "Video Game Adaptation": ["Action", "Sci-Fi", "Fantasy", "Animation"],
+  "Video Game Adaptation": ["Action", "Sci-Fi", "Fantasy", "Animation", "Horror", "Drama"], // 🌌 The Universe Builder: Expanded affinity
   "Cinematic Universe": [
     "Superhero",
     "Sci-Fi",
@@ -130,9 +130,9 @@ export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
   Action: 0.5,
   "Sci-Fi": 0.45,
   Fantasy: 0.3,
-  Horror: 0.15,
+  Horror: 0.10, // 🌌 The Universe Builder: Adjusted for Horror Immunity
   Animation: 0.15,
-  Comedy: 0.25,
+  Comedy: 0.35, // 🌌 The Universe Builder: Adjusted for Comedy Curse
   Drama: 0.05,
   Thriller: 0.15,
   Romance: 0.1,
@@ -141,7 +141,7 @@ export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
   Musical: 0.25,
   Unscripted: 0.3, // Reality/Unscripted can fatigue quickly if over-saturated
   Multiverse: 0.85, // Extremely high fatigue risk if overdone
-  "Elevated Horror": 0.2,
+  "Elevated Horror": 0.25, // 🌌 The Universe Builder: Adjusted risk
   "IP Mashup": 0.7, // High burnout potential
   "Video Game Adaptation": 0.6,
   "Cinematic Universe": 0.9, // Massive fatigue risk
