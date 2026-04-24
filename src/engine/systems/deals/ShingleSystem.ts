@@ -51,10 +51,12 @@ const OVERHEAD_RANGES: Record<ShingleDealType, [number, number]> = {
 // Shondaland/Netflix, Ryan Murphy/Netflix, Sheridan/Paramount all cleared $25M+/yr
 // in real-world overhead. Top-tier (prestige >= 85) trends toward the $75M-$100M band.
 const TV_OVERHEAD_RANGES: Record<ShingleDealType, [number, number]> = {
-  FIRST_LOOK: [8_000_000, 25_000_000],
-  OVERALL: [25_000_000, 75_000_000],
+  FIRST_LOOK: [8_000_000, 30_000_000],
+  // Top-tier marquee showrunners (prestige 85+, post-2010) command $75M-$150M/yr.
+  // The prestige bias multiplier (up to ~1.25x) pushes the ceiling into that band.
+  OVERALL: [30_000_000, 120_000_000],
   HOUSEKEEPING: [1_500_000, 5_000_000],
-  POD: [4_000_000, 15_000_000]
+  POD: [4_000_000, 20_000_000]
 };
 
 const TERM_YEARS: Record<ShingleDealType, [number, number]> = {
@@ -96,8 +98,10 @@ function rollOverhead(rng: RandomGenerator, dealType: ShingleDealType, ownerPres
   const ranges = medium === 'TV' ? TV_OVERHEAD_RANGES : OVERHEAD_RANGES;
   const [lo, hi] = ranges[dealType];
   const prestigeBias = Math.max(0, Math.min(1, (ownerPrestige - 60) / 40));
+  // TV marquee deals reward top prestige more steeply (up to 1.4x on top-tier showrunners).
+  const mult = medium === 'TV' ? (0.75 + prestigeBias * 0.85) : (0.75 + prestigeBias * 0.5);
   const raw = lo + rng.next() * (hi - lo);
-  return Math.round((raw * (0.75 + prestigeBias * 0.5)) / 100_000) * 100_000;
+  return Math.round((raw * mult) / 100_000) * 100_000;
 }
 
 function rollTermWeeks(rng: RandomGenerator, dealType: ShingleDealType, medium: ShingleMedium = 'FILM'): number {

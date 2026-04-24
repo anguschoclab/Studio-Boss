@@ -78,6 +78,25 @@ console.log(`Total Projects Released: ${releasedProjects.length}`);
 console.log(`Successful Projects (ROI > 1.0): ${successfulProjects.length} (${((successfulProjects.length / releasedProjects.length) * 100).toFixed(1)}% success rate)`);
 console.log(`Player Projects: ${playerProjects.length} total`);
 
+// Split releases by medium
+const filmReleases = releasedProjects.filter(p => (p as any).format !== 'tv');
+const tvReleases = releasedProjects.filter(p => (p as any).format === 'tv');
+console.log(`  Film releases: ${filmReleases.length}`);
+console.log(`  TV series releases: ${tvReleases.length}`);
+if (tvReleases.length > 0) {
+  console.log('  TV sample:');
+  tvReleases.slice(0, 5).forEach((p: any) => {
+    console.log(`    - ${p.title}: seasons=${p.tvDetails?.currentSeason ?? '?'}, eps=${p.tvDetails?.episodesOrdered ?? '?'}, budget=$${((p.budget||0)/1e6).toFixed(0)}M, revenue=$${((p.revenue||0)/1e6).toFixed(0)}M`);
+  });
+}
+
+// Top talent by prestige
+const topTalents = [...talents].sort((a, b) => (b.prestige || 0) - (a.prestige || 0)).slice(0, 10);
+console.log('\n--- TOP 10 TALENTS BY PRESTIGE ---');
+topTalents.forEach((t, i) => {
+  console.log(`  ${i+1}. ${t.name} — prestige ${(t.prestige||0).toFixed(1)}, role=${t.role}, draw=${(t.draw||0).toFixed(0)}, momentum=${(t.momentum||0).toFixed(0)}`);
+});
+
 console.log('\n--- RIVAL PERFORMANCE RANKING ---');
 rivalPerformance.forEach((r, i) => {
   console.log(`${i + 1}. ${r.name} - Cash: $${(r.cash / 1000000).toFixed(1)}M, Prestige: ${r.prestige.toFixed(0)}, Archetype: ${r.archetype}${r.isAcquirable ? ' (ACQUIRABLE)' : ''}`);

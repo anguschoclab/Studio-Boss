@@ -161,42 +161,152 @@ export class HeadlessController {
 
       // 2. Auto-Release (Transition from marketing to released)
       if (project.state === 'marketing' && !project.releaseWeek) {
-        // In headless mode, we just release immediately once in marketing
-        const campaign = {
-          primaryAngle: 'SELL_THE_STORY',
-          domesticBudget: project.budget * 0.25,
-          foreignBudget: project.budget * 0.15,
-          weeksInMarketing: 1
-        };
-        const result = executeMarketing(project, campaign as any);
-        const marketingBudget = campaign.domesticBudget + campaign.foreignBudget;
-        const projectWithMarketing = { ...result.project, marketingBudget };
-        const { project: releasedProject } = calculateOpeningWeekend(
-          projectWithMarketing,
-          [],
-          state.studio.prestige || 50,
-          1.0,
-          0,
-          state.week
-        );
-        impacts.push({
-          type: 'PROJECT_UPDATED',
-          payload: {
-            projectId: project.id,
-            update: {
-              ...releasedProject,
-              state: 'released',
-              releaseWeek: state.week,
-              marketingBudget
+        const isTv = (project as any).format === 'tv' || project.type === 'SERIES';
+        if (isTv) {
+          // TV premiere: revenue = license fees (per-episode) or streamer subscriber-value proxy.
+          // Simpler than box office. Renewal can spawn a season-2 project.
+          const tvDetails: any = (project as any).tvDetails || { episodesOrdered: 10, currentSeason: 1 };
+          const episodes = tvDetails.episodesOrdered || 10;
+          const ownsPlatform = ((state.studio?.ownedPlatforms || []).length > 0);
+          const perEpLicense = ownsPlatform
+            ? rng.range(1_800_000, 4_500_000) // streamer-owned: subscriber-value proxy per ep
+            : rng.range(1_200_000, 3_000_000); // license fee from network/cable/streamer
+          const buzzMult = 0.6 + ((project.buzz || 40) / 100);
+          const heatMult = 0.8 + getMarketHeat(state.week) * 0.4;
+          const revenue = Math.round(episodes * perEpLicense * buzzMult * heatMult);
+          const marketingBudget = (project.budget || 0) * 0.05; // TV marketing much lighter
+
+          // Rating score = f(buzz, heat). Drives renewal probability.
+          const ratingScore = Math.max(5, Math.min(95, Math.round((project.buzz || 40) * 0.8 + rng.range(-15, 25))));
+          const renewalProb = ratingScore >= 75 ? 0.85 : ratingScore >= 60 ? 0.55 : ratingScore >= 40 ? 0.25 : 0.05;
+          const renewed = rng.next() < renewalProb;
+          const currentSeason = tvDetails.currentSeason || 1;
+          const isHit = ratingScore >= 70 && (revenue > (project.budget || 0) * 1.3);
+
+          impacts.push({
+            type: 'PROJECT_UPDATED',
+            payload: {
+              projectId: project.id,
+              update: {
+                state: 'released',
+                releaseWeek: state.week,
+                revenue,
+                marketingBudget,
+                tvDetails: {
+                  ...tvDetails,
+                  episodesAired: episodes,
+                  averageRating: ratingScore,
+                  status: renewed ? 'RENEWED' : 'CANCELLED'
+                },
+                isHit
+              }
+            }
+          });
+          const netCash = revenue - (project.budget || 0) - marketingBudget;
+          impacts.push({ type: 'FUNDS_CHANGED', payload: { amount: netCash } });
+          console.log(`[HeadlessController] Released TV: ${project.title} S${currentSeason}, rating=${ratingScore}, revenue=$${(revenue/1e6).toFixed(1)}M, net=$${(netCash/1e6).toFixed(1)}M, ${renewed ? 'RENEWED' : 'CANCELLED'}`);
+          impacts.push(...HeadlessController.attributeTalent(state, project, revenue, rng, isHit, ratingScore));
+
+          // Renewal spawns a follow-on season project (sequel-equivalent).
+          if (renewed && currentSeason < 8) {
+            const nextId = rng.uuid('PRJ');
+            const nextProject: any = {
+              id: nextId,
+              title: `${project.title} S${currentSeason + 1}`,
+              genre: project.genre,
+              format: 'tv',
+              type: 'SERIES',
+              state: 'needs_greenlight',
+              weeksInPhase: 0,
+              budgetTier: project.budgetTier,
+              budget: Math.round((project.budget || 0) * (isHit ? 1.15 : 1.05)),
+              buzz: Math.min(95, (project.buzz || 40) + (isHit ? 15 : 5)),
+              ownerId: 'PLAYER',
+              quality: 50,
+              scriptHeat: 55,
+              progress: 0,
+              accumulatedCost: 0,
+              weeksInDevelopment: 0,
+              parentProjectId: (project as any).parentProjectId || project.id,
+              franchiseId: (project as any).franchiseId,
+              tvDetails: {
+                status: 'IN_DEVELOPMENT',
+                episodesOrdered: episodes,
+                episodesAired: 0,
+                averageRating: 0,
+                currentSeason: currentSeason + 1,
+                episodesCompleted: 0
+              }
+            };
+            impacts.push({ type: 'PROJECT_CREATED' as any, payload: { project: nextProject } });
+
+            // On its 3rd season, promote the line to a franchise (if not already).
+            if (currentSeason + 1 >= 3 && !(project as any).franchiseId) {
+              const fid = rng.uuid('FR');
+              impacts.push({
+                type: 'INDUSTRY_UPDATE' as any,
+                payload: {
+                  update: {
+                    [`ip.franchises.${fid}`]: {
+                      id: fid,
+                      name: project.title,
+                      medium: 'TV',
+                      rootProjectId: (project as any).parentProjectId || project.id,
+                      creationWeek: state.week,
+                      entries: [project.id, nextId],
+                      heat: 70,
+                      fatigue: 0
+                    }
+                  }
+                }
+              } as any);
+              impacts.push({
+                type: 'PROJECT_UPDATED',
+                payload: { projectId: project.id, update: { franchiseId: fid } as any }
+              });
             }
           }
-        });
-        const netCash = (releasedProject.revenue || 0) - (project.budget || 0) - marketingBudget;
-        impacts.push({
-          type: 'FUNDS_CHANGED',
-          payload: { amount: netCash }
-        });
-        console.log(`[HeadlessController] Released project: ${project.title}, net cash: $${(netCash/1_000_000).toFixed(1)}M`);
+        } else {
+          // Film: existing box-office path.
+          const campaign = {
+            primaryAngle: 'SELL_THE_STORY',
+            domesticBudget: project.budget * 0.25,
+            foreignBudget: project.budget * 0.15,
+            weeksInMarketing: 1
+          };
+          const result = executeMarketing(project, campaign as any);
+          const marketingBudget = campaign.domesticBudget + campaign.foreignBudget;
+          const projectWithMarketing = { ...result.project, marketingBudget };
+          const { project: releasedProject } = calculateOpeningWeekend(
+            projectWithMarketing,
+            [],
+            state.studio.prestige || 50,
+            1.0,
+            0,
+            state.week
+          );
+          impacts.push({
+            type: 'PROJECT_UPDATED',
+            payload: {
+              projectId: project.id,
+              update: {
+                ...releasedProject,
+                state: 'released',
+                releaseWeek: state.week,
+                marketingBudget
+              }
+            }
+          });
+          const netCash = (releasedProject.revenue || 0) - (project.budget || 0) - marketingBudget;
+          impacts.push({
+            type: 'FUNDS_CHANGED',
+            payload: { amount: netCash }
+          });
+          console.log(`[HeadlessController] Released project: ${project.title}, net cash: $${(netCash/1_000_000).toFixed(1)}M`);
+          const filmRev = releasedProject.revenue || 0;
+          const filmHit = filmRev > (project.budget || 0) * 2;
+          impacts.push(...HeadlessController.attributeTalent(state, project, filmRev, rng, filmHit, 0));
+        }
       }
 
       // Archive released player projects so the pitch gate isn't permanently saturated
@@ -306,6 +416,95 @@ export class HeadlessController {
 
   private static _cashStreaks: Map<string, number> = new Map();
 
+  /**
+   * Headless has no contract pipeline, so releases would never move talent prestige
+   * and the weekly decay in TalentLifecycleSystem would drain everyone to zero. This
+   * proxy attaches a small crew (3-5 talents: director/actor/writer/producer) to each
+   * release, bumps their lastReleaseWeek + prestige by ROI, and lets marquee careers
+   * actually break out into the 80-99 band over 50 years.
+   */
+  private static attributeTalent(
+    state: GameState,
+    project: any,
+    revenue: number,
+    rng: RandomGenerator,
+    isHit: boolean,
+    ratingScore: number
+  ): StateImpact[] {
+    const impacts: StateImpact[] = [];
+    const pool = Object.values(state.entities.talents || {});
+    if (pool.length === 0) return impacts;
+    const totalCost = (project.budget || 0) + (project.marketingBudget || 0);
+    const ROI = totalCost > 0 ? revenue / totalCost : 0;
+    const isTv = project.format === 'tv' || project.type === 'SERIES';
+
+    // Budget factor — bigger project = bigger cultural footprint for its talent.
+    const budgetFactor = Math.log10(Math.max(10_000_000, project.budget || 10_000_000)) / 7.2;
+
+    let basePrestige = 0;
+    if (isTv) {
+      // TV: prestige tied to ratingScore rather than ROI.
+      if (ratingScore >= 85) basePrestige = 6;
+      else if (ratingScore >= 70) basePrestige = 3;
+      else if (ratingScore >= 50) basePrestige = 1;
+      else if (ratingScore >= 30) basePrestige = -1;
+      else basePrestige = -3;
+    } else {
+      if (ROI > 6.0) basePrestige = 8;
+      else if (ROI > 4.0) basePrestige = 5;
+      else if (ROI > 2.0) basePrestige = 3;
+      else if (ROI > 1.0) basePrestige = 1;
+      else if (ROI < 0.4) basePrestige = -4;
+      else if (ROI < 0.8) basePrestige = -2;
+    }
+    const delta = basePrestige * budgetFactor;
+    if (delta === 0) return impacts;
+
+    // Pick 3-5 attached talents weighted by existing prestige (so the already-rising ones
+    // keep accumulating — mirrors the real industry's winner-take-most dynamic).
+    const crewSize = rng.rangeInt(3, 5);
+    const weights = pool.map(t => 1 + (t.prestige || 0) * 0.04);
+    const picked: typeof pool = [];
+    for (let i = 0; i < crewSize && pool.length > 0; i++) {
+      const total = weights.reduce((s, w) => s + w, 0);
+      let r = rng.next() * total;
+      let idx = 0;
+      for (; idx < pool.length; idx++) {
+        r -= weights[idx];
+        if (r <= 0) break;
+      }
+      if (idx >= pool.length) idx = pool.length - 1;
+      picked.push(pool[idx]);
+      pool.splice(idx, 1);
+      weights.splice(idx, 1);
+    }
+
+    // Marquee breakout: repeated blockbuster hits compound (streak bonus).
+    for (const t of picked) {
+      // Streak/momentum-aware bonus. Talents above 70 with strong momentum get
+      // outsized prestige pushes on hits (Spielberg/Sheridan dynamic).
+      let bonus = 0;
+      if (isHit && (t.momentum || 50) > 60) {
+        if ((t.prestige || 0) >= 70) bonus += 2;
+        if ((t.prestige || 0) >= 85) bonus += 2;
+      }
+      const newPrestige = Math.max(0, Math.min(100, (t.prestige || 50) + delta + bonus));
+      const newMomentum = Math.max(0, Math.min(100, (t.momentum || 50) + (isHit ? 6 : (delta < 0 ? -4 : 1))));
+      impacts.push({
+        type: 'TALENT_UPDATED',
+        payload: {
+          talentId: t.id,
+          update: {
+            prestige: newPrestige,
+            momentum: newMomentum,
+            lastReleaseWeek: state.week
+          }
+        }
+      });
+    }
+    return impacts;
+  }
+
   private static pitchNewProject(state: GameState, rng: RandomGenerator): StateImpact | null {
     const id = rng.uuid('PRJ');
     const genres = ['Action', 'Drama', 'Comedy', 'Sci-Fi', 'Horror', 'Family'];
@@ -322,7 +521,22 @@ export class HeadlessController {
       high: 80_000_000,
       blockbuster: 150_000_000
     };
-    const budget = Math.floor(budgetMap[budgetTier] * getBudgetInflation(state.week));
+    let budget = Math.floor(budgetMap[budgetTier] * getBudgetInflation(state.week));
+    // TV total budget = episodeCount × perEpisodeBudget (2M indie, 8M cable, 15M+ streamer, 25M+ Sheridan-tier)
+    let tvEpisodes = 10;
+    let tvPerEpBudget = 0;
+    if (format === 'tv') {
+      tvEpisodes = rng.rangeInt(6, 13);
+      const year = 1975 + Math.floor(state.week / 52);
+      const perEpByTier: Record<BudgetTierKey, number> = {
+        low: 2_000_000,        // indie TV
+        mid: 8_000_000,        // cable
+        high: 15_000_000,      // premium streamer
+        blockbuster: year >= 2015 ? 25_000_000 : 18_000_000 // Sheridan-tier
+      };
+      tvPerEpBudget = Math.floor(perEpByTier[budgetTier] * getBudgetInflation(state.week));
+      budget = tvEpisodes * tvPerEpBudget;
+    }
 
     const project: any = {
       id,
@@ -346,12 +560,13 @@ export class HeadlessController {
     if (format === 'tv') {
       project.tvDetails = {
         status: 'IN_DEVELOPMENT',
-        episodesOrdered: rng.rangeInt(8, 13),
+        episodesOrdered: tvEpisodes,
         episodesAired: 0,
         averageRating: 0,
         currentSeason: 1,
         episodesCompleted: 0
       };
+      project.perEpisodeBudget = tvPerEpBudget;
     }
 
     // Use PROJECT_CREATED by directly adding to state via a custom approach
