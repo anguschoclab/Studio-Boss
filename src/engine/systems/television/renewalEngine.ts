@@ -14,21 +14,23 @@ export function evaluateRenewal(
     return 'ON_AIR';
   }
 
-  // 📺 The Syndication Baron: reward consistent season-over-season quality
-  if ((project.tvDetails?.currentSeason || 1) >= 3) threshold -= 0.5;
+  // 📺 The Syndication Baron: reward consistent season-over-season quality. The longer it runs, the stickier the syndication value.
+  const currentSeason = project.tvDetails?.currentSeason || 1;
+  if (currentSeason >= 3 && currentSeason < 5) threshold -= 0.5;
+  else if (currentSeason >= 5) threshold -= 1.0; // Deep syndication reward
 
   // 📺 The Syndication Baron: Tweaked streaming renewal thresholds: platforms now cancel expensive shows faster if subscriber growth flatlines. Adjusted budget tier penalties to be more cutthroat for blockbusters.
   let dynamicThreshold = threshold;
 
-  if (project.budgetTier === 'blockbuster') dynamicThreshold += 1.5;
-  else if (project.budgetTier === 'high') dynamicThreshold += 0.5;
+  if (project.budgetTier === 'blockbuster') dynamicThreshold += 2.0; // More ruthless
+  else if (project.budgetTier === 'high') dynamicThreshold += 1.0;
   else if (project.budgetTier === 'low') dynamicThreshold -= 0.5;
   else if (project.budgetTier === 'indie') dynamicThreshold -= 0.25;
 
   const audienceRetention = project.nielsenProfile?.audienceRetention;
   if (audienceRetention !== undefined) {
-    if (audienceRetention >= 90) dynamicThreshold -= 0.5;
-    else if (audienceRetention <= 50) dynamicThreshold += 0.5;
+    if (audienceRetention >= 90) dynamicThreshold -= 1.0; // Huge reward for sticky shows
+    else if (audienceRetention <= 50) dynamicThreshold += 1.0; // Immediate cancellation risk for poor retention
   }
 
   // Renewal decision logic
