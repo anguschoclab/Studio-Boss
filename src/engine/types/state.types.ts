@@ -178,7 +178,9 @@ export interface IndustryUpdateImpact extends BaseImpact {
     update: Record<string, unknown>;
     rival?: RivalUpdate;
     mergedRivalId?: string;
-  } 
+    acquirerId?: string;
+    bankruptRivalId?: string;
+  }
 }
 
 export type StateImpact = 

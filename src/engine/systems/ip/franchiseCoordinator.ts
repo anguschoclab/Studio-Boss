@@ -76,7 +76,7 @@ export function updateFranchiseHub(state: GameState, project: Project): GameStat
 
   // 1. Breakout Success Detection
   // If an original IP (no franchiseId) hits a high ROI or Prestige, it "Spawns" a Hub.
-  const isBreakout = project.revenue > project.budget * 2.5;
+  const isBreakout = project.revenue > project.budget * 1.6;
   const isPrestigeHit = (project.awardsProfile?.prestigeScore || 0) > 80;
 
   if (!franchiseId && (isBreakout || isPrestigeHit)) {

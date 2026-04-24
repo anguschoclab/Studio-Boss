@@ -22,6 +22,9 @@ import { advanceBuyers } from '../systems/buyerMergers';
 import { tickVerticalIntegration } from '../systems/industry/VerticalIntegrationProcessor';
 import { tickIndustryUpstarts } from '../systems/industry/IndustryUpstarts';
 import { tickConsolidation } from '../systems/industry/ConsolidationEngine';
+import { tickRivalSpawner, tickHardBankruptcy } from '../systems/industry/RivalSpawner';
+import { tickAntitrust } from '../systems/industry/Antitrust';
+import { tickDistressCascade } from '../systems/industry/DistressCascade';
 import { InterestRateSimulator } from '../systems/market/InterestRateSimulator';
 import { tickLoans } from '../systems/finance/LoanSystem';
 import { tickReleaseStrategy } from '../systems/ReleaseStrategySystem';
@@ -71,6 +74,7 @@ import { advanceRumors } from '../systems/rumors';
 
 // Rival Systems
 import { RivalRevenueCalculator } from '../systems/rivals/RivalRevenueCalculator';
+import { getMarketHeat, getBudgetInflation } from '../systems/industry/MacroCycle';
 
 /**
  * Studio Boss - Simulation Tick Context
@@ -162,6 +166,10 @@ export class WeekCoordinator {
     context.impacts.push(...tickVerticalIntegration(state, context.rng));
     context.impacts.push(...tickIndustryUpstarts(state));
     context.impacts.push(...tickConsolidation(state));
+    context.impacts.push(...tickRivalSpawner(state));
+    context.impacts.push(...tickDistressCascade(state));
+    context.impacts.push(...tickHardBankruptcy(state));
+    context.impacts.push(...tickAntitrust(state));
     context.impacts.push(...tickReleaseStrategy(state));
     context.impacts.push(...tickStudioIdentity(state));
 
@@ -292,16 +300,21 @@ export class WeekCoordinator {
       });
     }
 
-    // Calculate and update rival studio revenues
+    // Rival weekly revenue + overhead drain. Opening-weekend gross already bakes
+    // in macro heat, so here we only apply inflation to overhead.
+    const inflation = getBudgetInflation(context.week);
     Object.values(state.entities.rivals || {}).forEach(rival => {
       const revenue = RivalRevenueCalculator.calculateWeeklyRevenue(rival, context.week, context.rng, state);
-      if (revenue.total > 0) {
+      const archetypeMult = rival.archetype === 'major' ? 2.2 : rival.archetype === 'mid-tier' ? 1.0 : 0.4;
+      const overhead = 80_000 * archetypeMult * inflation;
+      const net = revenue.total - overhead;
+      if (net !== 0) {
         context.impacts.push({
           type: 'RIVAL_UPDATED',
           payload: {
             rivalId: rival.id,
             update: {
-              cash: (rival.cash || 0) + revenue.total,
+              cash: (rival.cash || 0) + net,
             }
           }
         });

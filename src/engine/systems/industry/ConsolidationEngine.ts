@@ -1,6 +1,8 @@
 import { GameState, RivalStudio, StateImpact, Buyer, StreamerPlatform } from '@/engine/types';
 import { RegulatorSystem } from './RegulatorSystem';
 import { pick, secureRandom, randRange } from '../../utils';
+import { getMarketHeat } from './MacroCycle';
+import { isAcquirerBlockedByAntitrust } from './Antitrust';
 
 /**
  * Studio Boss - Consolidation Engine
@@ -16,9 +18,25 @@ export function tickConsolidation(state: GameState): StateImpact[] {
 
   // Potential Acquirers: any rival with surplus cash ($1B+ proactive)
   const majors = rivals.filter(r => (r.archetype === 'major' && r.cash > 250_000_000) || r.cash > 1_000_000_000);
-  if (majors.length === 0 || secureRandom() < 0.985) return [];
+  // Downturns = distressed assets = M&A waves. Invert heat into gate probability.
+  const heat = getMarketHeat(state.week);
+  const gateThreshold = heat > 1.1 ? 0.992 : heat < 0.9 ? 0.965 : 0.985;
+  if (majors.length === 0 || secureRandom() < gateThreshold) return [];
 
   const acquirer = pick(majors);
+
+  // Antitrust block: dominant players face M&A freeze.
+  if (isAcquirerBlockedByAntitrust(acquirer.id, state.week)) {
+    impacts.push({
+      type: 'NEWS_ADDED',
+      payload: {
+        headline: `ANTITRUST FREEZE: ${acquirer.name} blocked from pursuing acquisitions`,
+        description: `Federal regulators have suspended M&A activity for ${acquirer.name} pending review of its market position.`,
+        category: 'market'
+      }
+    });
+    return impacts;
+  }
 
   // Target: any rival (proactive M&A — not just distressed ones)
   const targets = rivals.filter(r =>

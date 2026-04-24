@@ -6,6 +6,7 @@ import { BudgetTierKey } from '../types/project.types';
 import { StudioArchetype, AI_ARCHETYPES } from '../data/aiArchetypes';
 import { processFlops } from '../systems/finance/FlopMechanics';
 import { calculateOpeningWeekend } from '../systems/releaseSimulation';
+import { getMarketHeat, getBudgetInflation, BANKRUPTCY_CASH_FLOOR, BANKRUPTCY_WEEKS_REQUIRED } from '../systems/industry/MacroCycle';
 
 /**
  * Headless Controller (AI for the Player Studio)
@@ -31,7 +32,8 @@ export class HeadlessController {
     // 0. Auto-Pitch New Projects (for headless simulation)
     const activePlayerProjects = Object.values(state.entities.projects).filter(p => p.ownerId === 'PLAYER' && p.state !== 'archived');
     let newlyPitchedProject: any = null;
-    if (activePlayerProjects.length < 3 && rng.next() < 0.04) {
+    const heat = getMarketHeat(state.week);
+    if (activePlayerProjects.length < 3 && rng.next() < 0.04 * heat) {
       const pitchResult = this.pitchNewProject(state, rng);
       if (pitchResult) {
         impacts.push(pitchResult);
@@ -172,7 +174,10 @@ export class HeadlessController {
         const { project: releasedProject } = calculateOpeningWeekend(
           projectWithMarketing,
           [],
-          state.studio.prestige || 50
+          state.studio.prestige || 50,
+          1.0,
+          0,
+          state.week
         );
         impacts.push({
           type: 'PROJECT_UPDATED',
@@ -271,8 +276,35 @@ export class HeadlessController {
     const flopImpacts = processFlops(state);
     impacts.push(...flopImpacts);
 
+    // Bankruptcy check: cash below floor for 52+ consecutive weeks → failure.
+    // A failed rival is marked acquirable so ConsolidationEngine sweeps it next downturn.
+    const cashStreaks = HeadlessController._cashStreaks;
+    Object.values(state.entities.rivals || {}).forEach(r => {
+      const cash = Number(r.cash) || 0;
+      const prev = cashStreaks.get(r.id) || 0;
+      const next = cash < BANKRUPTCY_CASH_FLOOR ? prev + 1 : 0;
+      cashStreaks.set(r.id, next);
+      if (next >= BANKRUPTCY_WEEKS_REQUIRED && !r.isAcquirable) {
+        impacts.push({
+          type: 'RIVAL_UPDATED',
+          payload: { rivalId: r.id, update: { isAcquirable: true, strength: 5 } }
+        });
+        impacts.push({
+          type: 'NEWS_ADDED',
+          payload: {
+            headline: `BANKRUPTCY: ${r.name} files for protection after sustained losses`,
+            description: `${r.name} has posted negative cash for over a year and is now seeking a buyer or restructuring.`,
+            category: 'business'
+          }
+        });
+        cashStreaks.set(r.id, 0);
+      }
+    });
+
     return impacts;
   }
+
+  private static _cashStreaks: Map<string, number> = new Map();
 
   private static pitchNewProject(state: GameState, rng: RandomGenerator): StateImpact | null {
     const id = rng.uuid('PRJ');
@@ -290,7 +322,7 @@ export class HeadlessController {
       high: 80_000_000,
       blockbuster: 150_000_000
     };
-    const budget = budgetMap[budgetTier];
+    const budget = Math.floor(budgetMap[budgetTier] * getBudgetInflation(state.week));
 
     const project: any = {
       id,

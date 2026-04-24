@@ -91,12 +91,29 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
     }
 
     case 'INDUSTRY_UPDATE': {
-      const { update, mergedRivalId, acquirerId } = impact.payload as any;
+      const { update, mergedRivalId, acquirerId, rival, bankruptRivalId } = impact.payload as any;
       let newState = { ...state };
 
       if (update) {
         for (const key in update) {
-          if (update[key] !== undefined && typeof update[key] === 'object') {
+          // Dotted paths (e.g. "ip.vault") let DistressCascade rewrite nested arrays
+          // without needing per-field impact types for every asset mutation.
+          if (key.includes('.')) {
+            const parts = key.split('.');
+            let cur: any = newState;
+            for (let i = 0; i < parts.length - 1; i++) {
+              const p = parts[i];
+              if (p === '__proto__' || p === 'constructor' || p === 'prototype') { cur = null; break; }
+              cur[p] = Array.isArray(cur[p]) ? [...cur[p]] : { ...(cur[p] || {}) };
+              cur = cur[p];
+            }
+            if (cur) {
+              const last = parts[parts.length - 1];
+              if (last !== '__proto__' && last !== 'constructor' && last !== 'prototype') {
+                cur[last] = update[key];
+              }
+            }
+          } else if (update[key] !== undefined && typeof update[key] === 'object') {
             (newState as any)[key] = { ...(newState as any)[key], ...update[key] };
           } else {
             (newState as any)[key] = update[key];
@@ -107,6 +124,20 @@ function applySingleImpact(state: GameState, impact: StateImpact): GameState {
       if (mergedRivalId && acquirerId) {
         const rivals = { ...newState.entities.rivals };
         delete rivals[mergedRivalId];
+        newState = { ...newState, entities: { ...newState.entities, rivals } };
+      }
+
+      // New rival insertion (indie/disruptor spawn, divestiture spinoff)
+      if (rival && rival.rivalId && rival.update) {
+        const rivals = { ...newState.entities.rivals };
+        rivals[rival.rivalId] = { ...(rivals[rival.rivalId] || {}), ...rival.update } as RivalStudio;
+        newState = { ...newState, entities: { ...newState.entities, rivals } };
+      }
+
+      // Hard bankruptcy: remove rival from active pool entirely
+      if (bankruptRivalId) {
+        const rivals = { ...newState.entities.rivals };
+        delete rivals[bankruptRivalId];
         newState = { ...newState, entities: { ...newState.entities, rivals } };
       }
 

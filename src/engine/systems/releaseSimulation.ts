@@ -2,6 +2,7 @@ import { Project, Talent, ActiveCrisis, BoxOfficeResult, MarketingCampaign } fro
 import { randRange, clamp } from '../utils';
 import { evaluateMarketingEfficiency } from './marketing/efficiencyEvaluator';
 import { calculateTerritorySplit } from './marketing/territoryDistributor';
+import { getMarketHeat, getBudgetInflation } from './industry/MacroCycle';
 
 /**
  * Phase 3 & 4 Orchestrator for Release Simulation.
@@ -77,7 +78,8 @@ export function calculateOpeningWeekend(
   attachedTalent: Talent[],
   studioPrestige: number,
   franchiseSynergy: number = 1.0, // New: Halo Effect (1.0 - 2.5)
-  franchiseFatigue: number = 0 // New: Audience Saturation (0 - 1.0)
+  franchiseFatigue: number = 0, // New: Audience Saturation (0 - 1.0)
+  currentWeek: number = 0
 ): { project: Project; feedback: string } {
   // If no campaign, it's a "silent release" - very poor performance
   const campaign = project.marketingCampaign || {
@@ -92,9 +94,9 @@ export function calculateOpeningWeekend(
   const buzzFactor = project.buzz / 50;
   const prestigeFactor = 0.8 + (studioPrestige / 200);
   
-  // Base potential: roughly 5x budget for a perfect storm, 0.5x for a dud
-  const basePotential = (project.budget * 1.85) * buzzFactor * prestigeFactor * (1 + (talentDraw / 100));
-  const randomFactor = randRange(0.5, 2.0);
+  // Base potential: tighter distribution to match real industry (~40-55% profit theatrically)
+  const basePotential = (project.budget * 1.35) * buzzFactor * prestigeFactor * (1 + (talentDraw / 100));
+  const randomFactor = randRange(0.35, 1.9);
   
   let effectiveGross = basePotential * randomFactor * franchiseSynergy; // Apply Halo Effect
   effectiveGross *= (1 - franchiseFatigue); // Apply Fatigue Penalty
@@ -104,12 +106,25 @@ export function calculateOpeningWeekend(
     effectiveGross *= (project as any).releaseStrategyMultiplier;
   }
 
+  // Macro cycle: industry-wide boom/bust + shocks modulate gross
+  const heat = getMarketHeat(currentWeek);
+  effectiveGross *= heat;
+
   // 2. Apply Marketing Efficiency
   const { multiplier, feedbackText } = evaluateMarketingEfficiency(project, campaign);
   effectiveGross *= multiplier;
 
-  // Minimum revenue floor: prevent catastrophic 0-revenue flops
-  const minFloor = (project.budget || 0) * 0.25;
+  // Tier-dependent revenue floor. Big budgets carry real downside risk.
+  const tier = (project.budgetTier || 'mid') as string;
+  const floorByTier: Record<string, number> = {
+    indie: 0.55,
+    low: 0.5,
+    mid: 0.35,
+    high: 0.22,
+    blockbuster: 0.15
+  };
+  const floorMult = floorByTier[tier] ?? 0.25;
+  const minFloor = (project.budget || 0) * floorMult;
   if (effectiveGross < minFloor) {
     effectiveGross = minFloor;
   }

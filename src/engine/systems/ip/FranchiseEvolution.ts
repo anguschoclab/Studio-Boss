@@ -12,7 +12,7 @@ export function calculateFranchiseEvolutionImpacts(state: GameState, rng: Random
   projects.forEach(project => {
     if (project.state === 'released' && !project.franchiseId) {
       let franchiseId = project.franchiseId;
-      const isBreakout = project.revenue > (project.budget * 1.0);
+      const isBreakout = project.revenue > (project.budget * 0.85);
       const isPrestigeHit = (project.awardsProfile?.prestigeScore || 0) > 50;
       const isHighQuality = (project.quality || 0) > 70;
       const genreUpper = (project.genre || '').toUpperCase();

@@ -4,6 +4,7 @@ import { RandomGenerator } from '../utils/rng';
 import { calculateOpeningWeekend } from '../systems/releaseSimulation';
 import { StreamingViewershipTracker } from '../systems/production/StreamingViewershipTracker';
 import { StudioArchetype, AI_ARCHETYPES } from '../data/aiArchetypes';
+import { getMarketHeat, getBudgetInflation } from '../systems/industry/MacroCycle';
 
 export class StudioAutomation {
   /**
@@ -76,11 +77,15 @@ export class StudioAutomation {
     });
 
     // 3. Pitch New Projects (If slots available)
+    const heat = getMarketHeat(state.week);
     rivalsList.forEach(rival => {
       const activeCount = rivalProjectCounts[rival.id] || 0;
-      // Increased probability for headless simulation (30% vs 10%)
-      if (activeCount < 4 && rng.next() < 0.04) {
-        const archetype = this.getRivalArchetype(rival);
+      const archetype = this.getRivalArchetype(rival);
+      // Archetype bias: majors lean franchise/volume (more slots), indies less.
+      const slotCap = archetype.id === 'AI_SLOP' ? 6 : archetype.id?.includes('INDIE') ? 3 : 4;
+      // Heat-scaled pitch rate: boom = ~6%, bust = ~2%.
+      const basePitchRate = 0.04 * heat;
+      if (activeCount < slotCap && rng.next() < basePitchRate) {
         this.pitchNewProject(rival, state, rng, impacts, archetype);
       }
     });
@@ -103,11 +108,18 @@ export class StudioAutomation {
       }
     }
 
-    // 2. Resolve Greenlight (Immediate)
+    // 2. Resolve Greenlight (Immediate) — deduct production budget from rival cash
     if (p.state === 'needs_greenlight') {
       const { update, subImpacts } = this.initializeProduction(p, studioId, state, rng);
       impacts.push(...subImpacts);
       impacts.push(this.createUpdateImpact(studioId, p.id, update, state));
+      const rival = state.entities.rivals[studioId];
+      if (rival && update.budget) {
+        impacts.push({
+          type: 'RIVAL_UPDATED',
+          payload: { rivalId: studioId, update: { cash: (rival.cash || 0) - (update.budget as number) } }
+        });
+      }
     }
 
     // 3. Resolve Marketing -> Release
@@ -119,10 +131,12 @@ export class StudioAutomation {
 
       const rivalPrestige = studioId === 'PLAYER' ? state.studio.prestige : (state.entities.rivals[studioId]?.prestige || 50);
       const { project: releasedProject } = calculateOpeningWeekend(
-          { ...p, marketingLevel: tier, marketingBudget }, 
-          [], 
+          { ...p, marketingLevel: tier, marketingBudget },
+          [],
           rivalPrestige,
-          rng
+          1.0,
+          0,
+          state.week
       );
 
       // Status Transition (TV Special Case)
@@ -292,11 +306,20 @@ export class StudioAutomation {
 
   private static initializeProduction(p: Project, studioId: string, state: GameState, rng: RandomGenerator): { update: Partial<Project>; subImpacts: StateImpact[] } {
     const subImpacts: StateImpact[] = [];
+    const inflation = getBudgetInflation(state.week);
+    const tierBase: Record<string, number> = {
+      indie: 5_000_000,
+      low: 15_000_000,
+      mid: 40_000_000,
+      high: 80_000_000,
+      blockbuster: 180_000_000
+    };
+    const baseBudget = tierBase[(p.budgetTier as string) || 'mid'] || rng.rangeInt(10, 80) * 1_000_000;
     const update: Partial<Project> = {
       state: 'production',
       weeksInPhase: 0,
       productionWeeks: rng.rangeInt(6, 12),
-      budget: p.budget || rng.rangeInt(10, 80) * 1_000_000,
+      budget: p.budget || Math.floor(baseBudget * inflation),
       buzz: p.buzz || 40,
     };
     return { update, subImpacts };
