@@ -21,7 +21,10 @@ const CATEGORY_COLORS: Record<string, string> = {
 };
 
 export const AchievementsPanel: React.FC = () => {
-  const unlockedIds: string[] = useGameStore(s => (s.gameState?.studio as any)?.achievements ?? []);
+  const unlockedIds: string[] = useGameStore(s => {
+    const studio = s.gameState?.studio as import('@/engine/types').StudioData;
+    return studio?.achievements ?? [];
+  });
   const [activeCategory, setActiveCategory] = useState<Category>('all');
 
   const enriched: (Achievement & { earned: boolean })[] = useMemo(() => {
