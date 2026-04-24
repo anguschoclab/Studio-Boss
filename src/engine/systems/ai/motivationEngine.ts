@@ -58,7 +58,7 @@ export function calculateRivalMotivation(rival: RivalStudio, state: GameState, r
     // Add profile bias
     const baseScore = scorer(rival, state);
     const profileKey = profileMap[motivation as StudioMotivation];
-    const bias = (rival.motivationProfile as any)[profileKey] || 0;
+    const bias = Number(rival.motivationProfile[profileKey as keyof typeof rival.motivationProfile]) || 0;
     
     // Add small stochastic variance for strategy shifts
     const variance = rng.range(-5, 5);
@@ -83,8 +83,9 @@ export function tickAIMinds(state: GameState, rng: RandomGenerator): StateImpact
     let newMotivation: StudioMotivation = calculateRivalMotivation(rival, state, rng);
 
     // Fix 3: Prestige decay — rivals that haven't won an award in 2+ years drift toward AWARD_CHASE
-    const weeksSinceLastAward = (rival as any).lastAwardWin
-      ? (state.week - (rival as any).lastAwardWin)
+    const lastAwardWin = (rival as Record<string, unknown>).lastAwardWin as number | undefined;
+    const weeksSinceLastAward = lastAwardWin
+      ? (state.week - lastAwardWin)
       : 999;
     if (weeksSinceLastAward > 104 && newMotivation !== 'AWARD_CHASE' && rng.next() < 0.15) {
       // 15% chance per week to switch to AWARD_CHASE if award-starved
@@ -122,7 +123,7 @@ export function tickAIMinds(state: GameState, rng: RandomGenerator): StateImpact
 
       const syndicationEligible = releasedProjects.filter(p => {
         // TV projects with enough aired episodes qualify for syndication
-        return p.format === 'tv' && ((p as any).tvDetails?.episodesAired || 0) >= 65;
+        return p.format === 'tv' && (p as import('@/engine/types').SeriesProject).tvDetails?.episodesAired !== undefined && (p as import('@/engine/types').SeriesProject).tvDetails!.episodesAired >= 65;
       });
 
       if (syndicationEligible.length > 0) {

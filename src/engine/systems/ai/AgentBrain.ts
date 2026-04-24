@@ -1,4 +1,4 @@
-import { Agency, Agent, Talent, GameState, StateImpact } from '@/engine/types';
+import { Agency, Talent, GameState, StateImpact } from '@/engine/types';
 import { RandomGenerator } from '../../utils/rng';
 
 /**
