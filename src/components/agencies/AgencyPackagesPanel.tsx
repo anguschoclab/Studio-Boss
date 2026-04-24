@@ -1,11 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { Building2, Package, Eye, Star, DollarSign, Users, ChevronRight, Zap, Target } from 'lucide-react';
-import { Section } from '@/components/layout/Section';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { tokens } from '@/lib/tokens';
+import { Building2, Package, Eye, Star, DollarSign, Users, ChevronRight, Zap } from 'lucide-react';
 import { TalentNameLink } from '@/components/shared/TalentNameLink';
 import type { Agency, Opportunity } from '@/engine/types';
 
