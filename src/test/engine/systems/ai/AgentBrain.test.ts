@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { Agency, NewsImpact } from '@/engine/types';
+import { NewsImpact } from '@/engine/types';
 import { tickAgencies, evaluatePackageOffer } from '@/engine/systems/ai/AgentBrain';
 import { RandomGenerator } from '@/engine/utils/rng';
 import { createMockGameState, createMockTalent, createMockRival } from '../../generators/mockFactory';

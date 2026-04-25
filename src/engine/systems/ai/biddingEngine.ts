@@ -8,7 +8,7 @@ import { RandomGenerator } from '../../utils/rng';
 const ArchetypeMultipliers: Record<ArchetypeKey, (genre: string) => number> = {
   'indie': (genre) => (genre === 'Drama' || genre === 'Horror' ? 1.4 : 0.8),
   'major': (genre) => (genre === 'Sci-Fi' || genre === 'Action' ? 1.6 : 0.6),
-  'mid-tier': (genre) => 1.15, 
+  'mid-tier': () => 1.15,
 };
 
 /**
@@ -38,14 +38,22 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
       let bidCapPercentage = 0.35;
       let motivationMultiplier = 1.0;
 
-      if (rival.currentMotivation === 'FRANCHISE_BUILDING' && (opportunity.genre === 'Sci-Fi' || opportunity.genre === 'Action')) {
+      if (rival.currentMotivation === 'FRANCHISE_BUILDING' && (opportunity.genre === 'Sci-Fi' || opportunity.genre === 'Action' || opportunity.genre === 'Fantasy')) {
         adjustedCashThreshold = 1.1; // More willing to bid with less cash buffer
         bidCapPercentage = 0.60; // Tolerate a much higher portion of their cash
-        motivationMultiplier = 1.4; // Bid more aggressively
+        motivationMultiplier = 1.6; // Bid more aggressively
       } else if (rival.currentMotivation === 'CASH_CRUNCH') {
         adjustedCashThreshold = 2.0; // Needs double the cash to bid
         bidCapPercentage = 0.15; // Only use a tiny fraction of cash
         motivationMultiplier = 0.8; // Bid weakly
+      } else if (rival.currentMotivation === 'AWARD_CHASE' && (opportunity.genre === 'Drama' || opportunity.genre === 'Historical')) {
+        adjustedCashThreshold = 1.0; // Will spend almost to zero for prestige
+        bidCapPercentage = 0.50;
+        motivationMultiplier = 1.3;
+      } else if (rival.currentMotivation === 'MARKET_DISRUPTION' && isPlayerLeading) {
+        adjustedCashThreshold = 1.0; // Reckless spite bidding
+        bidCapPercentage = 0.40;
+        motivationMultiplier = 1.5;
       }
 
       if (myBid < currentHighest && rival.cash > currentHighest * adjustedCashThreshold) {
@@ -103,14 +111,24 @@ export function calculateLiveCounterBid(
   playerBid: number,
   rival: RivalStudio,
   rng: RandomGenerator,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   week: number
 ): StateImpact | null {
   // Only high-prestige or cash-rich rivals counter immediately to avoid spam
   if (rival.cash < playerBid * 2 || rival.prestige < 60) return null;
 
-  const multiplier = ArchetypeMultipliers[rival.archetype]?.(opportunity.genre) || 1.1;
-  const reactionThreshold = 0.3; // 30% chance for immediate response
+  let multiplier = ArchetypeMultipliers[rival.archetype]?.(opportunity.genre) || 1.1;
+  let reactionThreshold = 0.3; // 30% chance for immediate response
   
+  // 🎭 The Method Actor Tuning: Adjust reaction logic based on motivation
+  if (rival.currentMotivation === 'FRANCHISE_BUILDING' && (opportunity.genre === 'Sci-Fi' || opportunity.genre === 'Action' || opportunity.genre === 'Fantasy')) {
+    reactionThreshold = 0.6;
+    multiplier = 1.4;
+  } else if (rival.currentMotivation === 'MARKET_DISRUPTION') {
+    reactionThreshold = 0.5;
+    multiplier = 1.3;
+  }
+
   if (rng.next() < reactionThreshold) {
     const counterAmount = Math.floor(playerBid * rng.range(1.05, 1.15) * multiplier);
     if (counterAmount < rival.cash * 0.4) {

@@ -9,26 +9,29 @@ const MotivationScores: Record<StudioMotivation, (rival: RivalStudio, state: Gam
   // 🎭 The Method Actor Tuning: Studio motivations emerge dynamically from their material conditions.
   // Desperate studios with low cash heavily index towards CASH_CRUNCH.
   CASH_CRUNCH: (rival) => {
-    if (rival.cash < 1000000) return 100;
-    if (rival.cash < 3000000) return 60;
+    if (rival.cash < 5000000) return 100;
+    if (rival.cash < 10000000) return 60;
     return 0;
   },
   // 🎭 The Method Actor Tuning: Wealthy or highly prestigious studios chase awards, but so do aggressive upstarts looking for credibility.
   AWARD_CHASE: (rival) => {
     let score = rival.prestige > 75 ? 85 : 30;
     if (rival.prestige < 40 && rival.motivationProfile.aggression > 60) score += 40; // Desperate for credibility
+    if (rival.cash > 15000000 && rival.prestige > 70) score += 40; // Rich studios pivot to awards
     return score;
   },
   // 🎭 The Method Actor Tuning: Cash-rich studios aggressively focus on building franchises to secure long-term revenue.
   FRANCHISE_BUILDING: (rival) => {
     let score = Object.keys(rival.projects).length > 3 ? 60 : 20;
-    if (rival.cash > 10000000) score += 50; // Got cash, want IP
+    if (rival.cash > 10000000) score += 40; // Got cash, want IP
+    if (rival.cash > 20000000) score += 30; // Extreme cash makes them hoard IP
     return score;
   },
   // 🎭 The Method Actor Tuning: Highly aggressive studios naturally lean towards market disruption, especially if they have cash to burn.
   MARKET_DISRUPTION: (rival) => {
     let score = rival.motivationProfile.aggression > 70 ? 75 : 10;
     if (rival.cash > 15000000) score += 20; // Enough cash to cause trouble
+    if (rival.prestige > 75 && rival.motivationProfile.aggression > 70) score += 40; // Prestige bullies
     return score;
   },
   // 🎭 The Method Actor Tuning: Stability is the fallback for wealthy, low-aggression studios.
@@ -55,7 +58,7 @@ export function calculateRivalMotivation(rival: RivalStudio, state: GameState, r
     // Add profile bias
     const baseScore = scorer(rival, state);
     const profileKey = profileMap[motivation as StudioMotivation];
-    const bias = (rival.motivationProfile as any)[profileKey] || 0;
+    const bias = Number(rival.motivationProfile[profileKey as keyof typeof rival.motivationProfile]) || 0;
     
     // Add small stochastic variance for strategy shifts
     const variance = rng.range(-5, 5);
@@ -80,8 +83,9 @@ export function tickAIMinds(state: GameState, rng: RandomGenerator): StateImpact
     let newMotivation: StudioMotivation = calculateRivalMotivation(rival, state, rng);
 
     // Fix 3: Prestige decay — rivals that haven't won an award in 2+ years drift toward AWARD_CHASE
-    const weeksSinceLastAward = (rival as any).lastAwardWin
-      ? (state.week - (rival as any).lastAwardWin)
+    const lastAwardWin = (rival as Record<string, unknown>).lastAwardWin as number | undefined;
+    const weeksSinceLastAward = lastAwardWin
+      ? (state.week - lastAwardWin)
       : 999;
     if (weeksSinceLastAward > 104 && newMotivation !== 'AWARD_CHASE' && rng.next() < 0.15) {
       // 15% chance per week to switch to AWARD_CHASE if award-starved
@@ -109,7 +113,7 @@ export function tickAIMinds(state: GameState, rng: RandomGenerator): StateImpact
           headline: `${rival.name} SECURES EMERGENCY FINANCING`,
           description: `${rival.name} draws on a credit facility to stabilise operations amid cash pressure.`,
         }
-      } as StateImpact);
+      } as import('@/engine/types').StateImpact);
     }
 
     // Fix 2: FRANCHISE_BUILDING rivals track IP syndication potential
@@ -119,7 +123,7 @@ export function tickAIMinds(state: GameState, rng: RandomGenerator): StateImpact
 
       const syndicationEligible = releasedProjects.filter(p => {
         // TV projects with enough aired episodes qualify for syndication
-        return p.format === 'tv' && ((p as any).tvDetails?.episodesAired || 0) >= 65;
+        return p.format === 'tv' && (p as import('@/engine/types').SeriesProject).tvDetails?.episodesAired !== undefined && (p as import('@/engine/types').SeriesProject).tvDetails!.episodesAired >= 65;
       });
 
       if (syndicationEligible.length > 0) {

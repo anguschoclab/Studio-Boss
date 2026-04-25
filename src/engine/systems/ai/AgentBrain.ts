@@ -1,4 +1,4 @@
-import { Agency, Agent, Talent, GameState, StateImpact } from '@/engine/types';
+import { Agency, Talent, GameState, StateImpact } from '@/engine/types';
 import { RandomGenerator } from '../../utils/rng';
 
 /**
@@ -13,16 +13,23 @@ export function evaluatePackageOffer(
   const motivation = agency.currentMotivation || 'VOLUME_RETAIL';
   
   // 🎭 The Method Actor Tuning: Agencies will aggressively leverage high-prestige lead talent to force package deals, carrying lesser-known clients to boost their roster's value.
-  const prestigeLeverage = leadTalent.prestige > 80 ? 0.4 : 0.15;
+  const isAuteur = leadTalent.roles?.includes('director') && leadTalent.prestige > 85;
+  const prestigeLeverage = isAuteur ? 0.80 : (leadTalent.prestige > 80 ? 0.4 : 0.15);
+
   if (motivation === 'THE_PACKAGER' || rng.next() < prestigeLeverage) {
     const otherClients = talentPool.filter(t => t.agencyId === agency.id && t.id !== leadTalent.id);
     
     if (otherClients.length > 0) {
       const bundled = rng.pick(otherClients);
+      const discount = isAuteur ? 0.15 : 0.1;
+      const reason = isAuteur
+        ? `Creative Mandate: ${leadTalent.name} refuses to sign unless their frequent collaborator ${bundled.name} is attached.`
+        : `Agency policy: To secure ${leadTalent.name}, we require ${bundled.name}.`;
+
       return {
         requiredTalentId: bundled.id,
-        packageDiscount: 0.1,
-        reason: `Agency policy: To secure ${leadTalent.name}, we require ${bundled.name}.`
+        packageDiscount: discount,
+        reason
       };
     }
   }
@@ -44,8 +51,8 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
         const brands = Object.values(state.entities.rivals || {});
         let rival = rng.pick(brands);
 
-        // 🎭 The Method Actor Tuning: Shark agencies smell blood in the water and specifically target vulnerable studios for poaching.
-        const vulnerableRivals = brands.filter(r => r.prestige < 50 || r.currentMotivation === 'CASH_CRUNCH');
+        // 🎭 The Method Actor Tuning: Shark agencies smell blood in the water and specifically target vulnerable studios or "easy marks" (low prestige, high cash) for poaching.
+        const vulnerableRivals = brands.filter(r => r.prestige < 50 || r.currentMotivation === 'CASH_CRUNCH' || (r.prestige < 60 && r.cash > 10000000));
         if (vulnerableRivals.length > 0 && rng.next() < 0.8) {
           rival = rng.pick(vulnerableRivals);
         }
