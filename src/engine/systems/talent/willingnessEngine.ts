@@ -53,7 +53,9 @@ export function calculateWillingness(
   if (talent.fee > project.budget * 0.4) {
     // Auteurs will forgive a low budget if the script is a masterpiece
     if (isAuteur && scriptHeat > 85) {
-      reasons.push(`${talent.name} is willing to take a massive pay cut because the script is a masterpiece.`);
+      // 🎭 The Method Actor Tuning: Auteurs actively drawn to masterpiece scripts despite low budgets.
+      score += 15;
+      reasons.push(`${talent.name} is willing to take a massive pay cut because they consider the script a masterpiece of artistic merit.`);
     } else {
       score -= 15;
       reasons.push(`The talent's quote consumes ${Math.round((talent.fee / project.budget) * 100)}% of the production budget, causing friction.`);
@@ -102,6 +104,11 @@ export function calculateWillingness(
   if (talent.psychology?.ego && talent.psychology.ego > 80) {
     score -= 10;
     reasons.push(`${talent.name} is being notoriously difficult during negotiations.`);
+    // 🎭 The Method Actor Tuning: High ego talent absolutely refuses to work with low-prestige studios.
+    if (gameState.studio.prestige < 50) {
+      score -= 25;
+      reasons.push(`${talent.name}'s ego prevents them from "slumming it" with a low-prestige studio.`);
+    }
   }
 
   // Final Bound and Verdict
