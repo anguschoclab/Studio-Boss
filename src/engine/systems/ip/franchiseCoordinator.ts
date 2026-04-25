@@ -58,6 +58,14 @@ export function calculateFranchiseEquity(
     if (uniqueGenres.has("Cinematic Universe") || uniqueGenres.has("Multiverse")) {
       crossoverBonus += 0.2;
     }
+
+    // 🌌 The Universe Builder: Added a 15% synergy bonus when combining Video Game Adaptation with Sci-Fi or Fantasy.
+    if (
+      uniqueGenres.has("Video Game Adaptation") &&
+      (uniqueGenres.has("Sci-Fi") || uniqueGenres.has("Fantasy"))
+    ) {
+      crossoverBonus += 0.15;
+    }
   }
 
   // 2. Format Diversity Multiplier

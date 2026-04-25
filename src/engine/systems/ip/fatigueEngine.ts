@@ -57,8 +57,22 @@ export function calculateFranchiseFatigue(
   // 🌌 The Universe Builder: Added severe 3x penalty for oversaturating Cinematic Universes.
   const CINEMATIC_UNIVERSE_THRESHOLD = 5;
   const CINEMATIC_UNIVERSE_PENALTY = 3.0;
-  if (normalizedGenre === 'Cinematic Universe' && genreSaturation > CINEMATIC_UNIVERSE_THRESHOLD) {
+  if (normalizedGenre === "Cinematic Universe" && genreSaturation > CINEMATIC_UNIVERSE_THRESHOLD) {
     rivalPenalty *= CINEMATIC_UNIVERSE_PENALTY;
+  }
+
+  // 🌌 The Universe Builder: Implemented "Multiverse Fatigue" - 2.5x penalty.
+  const MULTIVERSE_THRESHOLD = 6;
+  const MULTIVERSE_PENALTY = 2.5;
+  if (normalizedGenre === "Multiverse" && genreSaturation > MULTIVERSE_THRESHOLD) {
+    rivalPenalty *= MULTIVERSE_PENALTY;
+  }
+
+  // 🌌 The Universe Builder: Implemented "IP Mashup Fatigue" - 2.2x penalty.
+  const IP_MASHUP_THRESHOLD = 7;
+  const IP_MASHUP_PENALTY = 2.2;
+  if (normalizedGenre === "IP Mashup" && genreSaturation > IP_MASHUP_THRESHOLD) {
+    rivalPenalty *= IP_MASHUP_PENALTY;
   }
 
   // 4. Audience Loyalty (Protective Shield)

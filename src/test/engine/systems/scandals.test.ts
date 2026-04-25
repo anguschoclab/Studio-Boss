@@ -10,6 +10,12 @@ describe("scandals system", () => {
   describe("advanceScandals", () => {
     const createMockState = (scandals: Scandal[]): GameState => ({
       industry: { scandals },
+      entities: {
+        projects: {},
+        contracts: {},
+        talents: {},
+        rivals: {}
+      },
       studio: {
         internal: {
           projects: {},
