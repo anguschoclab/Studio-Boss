@@ -62,13 +62,17 @@ export function calculateFranchiseFatigue(
   }
 
   // 🌌 The Universe Builder: Implemented "Multiverse Fatigue" - 2.5x penalty.
-  if (normalizedGenre === "Multiverse" && genreSaturation > 6) {
-    rivalPenalty *= 2.5;
+  const MULTIVERSE_THRESHOLD = 6;
+  const MULTIVERSE_PENALTY = 2.5;
+  if (normalizedGenre === "Multiverse" && genreSaturation > MULTIVERSE_THRESHOLD) {
+    rivalPenalty *= MULTIVERSE_PENALTY;
   }
 
   // 🌌 The Universe Builder: Implemented "IP Mashup Fatigue" - 2.2x penalty.
-  if (normalizedGenre === "IP Mashup" && genreSaturation > 7) {
-    rivalPenalty *= 2.2;
+  const IP_MASHUP_THRESHOLD = 7;
+  const IP_MASHUP_PENALTY = 2.2;
+  if (normalizedGenre === "IP Mashup" && genreSaturation > IP_MASHUP_THRESHOLD) {
+    rivalPenalty *= IP_MASHUP_PENALTY;
   }
 
   // 4. Audience Loyalty (Protective Shield)
