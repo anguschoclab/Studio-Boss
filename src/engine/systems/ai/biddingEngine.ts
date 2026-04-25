@@ -38,7 +38,7 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
       let bidCapPercentage = 0.35;
       let motivationMultiplier = 1.0;
 
-      if (rival.currentMotivation === 'FRANCHISE_BUILDING' && (opportunity.genre === 'Sci-Fi' || opportunity.genre === 'Action')) {
+      if (rival.currentMotivation === 'FRANCHISE_BUILDING' && (opportunity.genre === 'Sci-Fi' || opportunity.genre === 'Action' || opportunity.genre === 'Fantasy')) {
         adjustedCashThreshold = 1.1; // More willing to bid with less cash buffer
         bidCapPercentage = 0.60; // Tolerate a much higher portion of their cash
         motivationMultiplier = 1.6; // Bid more aggressively
