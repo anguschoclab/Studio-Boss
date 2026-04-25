@@ -18,8 +18,8 @@ function calculateSubChange(platform: StreamerPlatform, rng: RandomGenerator, av
 
   // 📺 The Syndication Baron: Tweaked streaming renewal thresholds: platforms now cancel expensive shows faster if subscriber growth flatlines.
   // Reward high retention (e.g., >80 average) with lower churn, but heavily penalize low retention (e.g., <50) with massive churn to reflect cutthroat streaming wars.
-  const retentionFactor = Math.max(0.2, Math.pow((100 - averageRetention) / 20, 1.5));
-  let adjustedChurnRate = platform.churnRate * (0.5 + retentionFactor * 0.75);
+  const retentionFactor = Math.pow(Math.max(0, 100 - averageRetention) / 20, 1.5);
+  let adjustedChurnRate = platform.churnRate * (0.5 + retentionFactor * 0.5);
   // 📺 The Syndication Baron: Tweaked streaming subscriber churn rates to heavily penalize low content quality.
   if (platform.contentLibraryQuality < 50) {
     adjustedChurnRate *= 3.0; // Cutthroat: triple the churn for low quality.
