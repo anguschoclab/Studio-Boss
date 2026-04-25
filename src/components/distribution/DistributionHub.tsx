@@ -3,7 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DealsDesk } from '@/components/deals/DealsDesk';
 import { StreamingPanel } from '@/components/streaming/StreamingPanel';
 import { NielsenDashboard } from '@/components/television/NielsenDashboard';
-import { Handshake, Tv, BarChart3, Globe, Zap, Target } from 'lucide-react';
+import { Handshake, Tv, BarChart3, Globe } from 'lucide-react';
 
 export const DistributionHub: React.FC = () => {
   return (

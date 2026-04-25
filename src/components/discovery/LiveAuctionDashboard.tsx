@@ -1,14 +1,12 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useGameStore } from '@/store/gameStore';
-import { Opportunity, RivalStudio } from '@/engine/types';
+import { Opportunity } from '@/engine/types';
 import { formatMoney } from '@/engine/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
   Gavel, 
   Clock, 
-  TrendingUp, 
-  Users, 
   History, 
   AlertCircle,
   Zap,
@@ -33,9 +31,11 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ oppo
   }, [opp.bids]);
 
   const isPlayerWinning = opp.highestBidderId === playerStudioId || opp.highestBidderId === 'PLAYER';
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const playerBid = opp.bids[playerStudioId || 'PLAYER']?.amount || 0;
   const highestBidder = isPlayerWinning ? { name: 'YOU' } : rivalsMap[opp.highestBidderId];
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [bidAmount, setBidAmount] = useState(currentHighest + 1_000_000);
 
   useEffect(() => {
