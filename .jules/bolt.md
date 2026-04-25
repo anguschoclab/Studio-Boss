@@ -10,3 +10,6 @@
 ## 2026-04-01 - Avoid nested O(N^2) iterations with Object.values/flatMap in loops
 **Learning:** Combining \`Object.values\` and \`flatMap\` to create a unified array before an outer loop creates O(N^2) complexity and GC pressure because it executes the inner mapping operations across all entities every tick.
 **Action:** Replace nested array creation and mapping before loops with a single pass aggregation using a \`for...in\` loop directly into a hash map before iterating, preventing O(N^2) complexity.
+## 2024-05-18 - Pre-grouping arrays for O(1) retrieval
+**Learning:** Nested iterations matching items by ID (e.g. O(Projects * Contracts) complexity) create large performance bottlenecks, especially since Array.filter() allocates a new array each loop.
+**Action:** Pre-group items using a `Record` or `Map` before iterating, reducing complexity to O(N+M) and minimizing GC pressure by eliminating inner-loop array allocations.
