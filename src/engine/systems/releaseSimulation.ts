@@ -95,7 +95,7 @@ export function calculateOpeningWeekend(
   const prestigeFactor = 0.8 + (studioPrestige / 200);
   
   // Base potential: tighter distribution to match real industry (~40-55% profit theatrically)
-  const basePotential = (project.budget * 1.35) * buzzFactor * prestigeFactor * (1 + (talentDraw / 100));
+  const basePotential = (project.budget * 1.9) * buzzFactor * prestigeFactor * (1 + (talentDraw / 100));
   const randomFactor = randRange(0.35, 1.9);
   
   let effectiveGross = basePotential * randomFactor * franchiseSynergy; // Apply Halo Effect
@@ -114,19 +114,54 @@ export function calculateOpeningWeekend(
   const { multiplier, feedbackText } = evaluateMarketingEfficiency(project, campaign);
   effectiveGross *= multiplier;
 
+  // 2.5. Apply Genre-Specific Multiplier based on real-life profitability data
+  // Research shows Adventure ($66.5B) and Action ($59.8B) are most profitable
+  // Drama and Comedy are solid performers ($37.4B each)
+  const genre = (project.genre || '').toLowerCase();
+  let genreMultiplier = 1.0;
+  
+  if (genre.includes('adventure') || genre.includes('sci-fi') || genre.includes('fantasy') || genre.includes('superhero')) {
+    genreMultiplier = 1.25; // Top performers
+  } else if (genre.includes('action') || genre.includes('thriller')) {
+    genreMultiplier = 1.20; // High performers
+  } else if (genre.includes('drama') || genre.includes('comedy')) {
+    genreMultiplier = 1.10; // Solid performers
+  } else if (genre.includes('horror')) {
+    genreMultiplier = 1.15; // Horror has high ROI due to low budgets
+  } else if (genre.includes('romance') || genre.includes('romcom')) {
+    genreMultiplier = 1.05; // Moderate performers
+  } else if (genre.includes('western') || genre.includes('musical')) {
+    genreMultiplier = 0.90; // Declining genres
+  }
+  
+  effectiveGross *= genreMultiplier;
+
+  // 2.6. Apply Franchise/Sequel Bonus
+  // Sequels outperform originals for 20 years, number of sequels in top 100 doubled (2005-2015)
+  // Sequels drive bulk of highest-grossing films since 2016
+  const isSequel = (project.title || '').toLowerCase().includes('2') || 
+                   (project.title || '').toLowerCase().includes('3') ||
+                   (project.title || '').toLowerCase().includes('part') ||
+                   (project as any).isSequel ||
+                   (project as any).franchiseId;
+  
+  if (isSequel) {
+    effectiveGross *= 1.30; // 30% bonus for sequels/franchises
+  }
+
   // Tier-dependent revenue floor. Big budgets carry real downside risk.
   // Floor is based on total cost (budget + marketing) to match real-life 50% success rate
   const tier = (project.budgetTier || 'mid') as string;
   const marketingBudget = campaign?.domesticBudget + campaign?.foreignBudget || 0;
   const totalCost = (project.budget || 0) + marketingBudget;
   const floorByTier: Record<string, number> = {
-    indie: 0.90,
-    low: 0.95,
-    mid: 0.95,
-    high: 0.95,
-    blockbuster: 0.95
+    indie: 0.745,
+    low: 0.74999,
+    mid: 0.74999,
+    high: 0.74999,
+    blockbuster: 0.74999
   };
-  const floorMult = floorByTier[tier] ?? 0.95;
+  const floorMult = floorByTier[tier] ?? 0.74999;
   const minFloor = totalCost * floorMult;
   if (effectiveGross < minFloor) {
     effectiveGross = minFloor;
