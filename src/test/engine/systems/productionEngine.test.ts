@@ -7,6 +7,32 @@ describe('Production Engine (Target A2) - Symmetry', () => {
   const rng = new RandomGenerator(555);
   const mockState = {
     week: 1,
+    entities: {
+      projects: {
+        'player-p1': {
+          id: 'player-p1',
+          type: 'FILM',
+          state: 'production',
+          weeksInPhase: 5,
+          productionWeeks: 20,
+          progress: 25,
+          scriptHeat: 50,
+          activeRoles: [],
+          scriptEvents: []
+        },
+        'rival-p1': {
+          id: 'rival-p1',
+          type: 'FILM',
+          state: 'production',
+          weeksInPhase: 5,
+          productionWeeks: 20,
+          progress: 25,
+          scriptHeat: 50,
+          activeRoles: [],
+          scriptEvents: []
+        }
+      }
+    },
     studio: {
       name: 'Player Studio',
       internal: {
@@ -62,5 +88,17 @@ describe('Production Engine (Target A2) - Symmetry', () => {
     // Assert weeksInPhase increment
     expect(playerImpact?.payload.update.weeksInPhase).toBe(6);
     expect(rivalImpact?.payload.update.weeksInPhase).toBe(6);
+  });
+
+  it('should handle advancing weeks with an empty pipeline safely', () => {
+    const emptyState = {
+      ...mockState,
+      entities: { ...mockState.entities, projects: {} },
+      studio: { ...mockState.studio, internal: { projects: {}, contracts: [] } },
+      industry: { rivals: [], talentPool: {} }
+    } as unknown as GameState;
+
+    const impacts = tickProduction(emptyState, rng);
+    expect(impacts).toHaveLength(0);
   });
 });

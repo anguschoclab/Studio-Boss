@@ -17,14 +17,24 @@ const mockProjectDev: import('../../../engine/types').Project = {
   type: 'FILM', scriptHeat: 50, activeRoles: [], scriptEvents: []
 } as import('../../../engine/types').FilmProject;
 
-const mockProjectProd: import('../../../engine/types').Project = { ...mockProjectDev, id: "proj-2", state: "production", weeklyCost: 20000 } as any;
-const mockProjectReleased: import('../../../engine/types').Project = { ...mockProjectDev, id: "proj-3", state: "released", weeklyCost: 0, weeklyRevenue: 100000 } as any;
+const mockProjectProd: import('../../../engine/types').Project = { ...mockProjectDev, id: "proj-2", state: "production", weeklyCost: 20000 } as import('../../../engine/types').FilmProject;
+const mockProjectReleased: import('../../../engine/types').Project = { ...mockProjectDev, id: "proj-3", state: "released", weeklyCost: 0, weeklyRevenue: 100000 } as import('../../../engine/types').FilmProject;
 
 describe("Finance System", () => {
   describe("calculateProjectROI", () => {
     it("returns correct ROI for a standard project", () => {
-      const proj = { ...mockProjectReleased, budget: 1000000, revenue: 2000000 } as any;
+      const proj: import('../../../engine/types').FilmProject = { ...mockProjectReleased, budget: 1000000, revenue: 2000000 } as import('../../../engine/types').FilmProject;
       expect(calculateProjectROI(proj)).toBe(2.0);
+    });
+
+    it("handles calculating ROI for a project with a negative budget", () => {
+      const proj: import('../../../engine/types').FilmProject = { ...mockProjectReleased, budget: -500000, marketingBudget: 0, revenue: 1000000 } as import('../../../engine/types').FilmProject;
+      expect(calculateProjectROI(proj)).toBe(-2);
+    });
+
+    it("returns 0 if totalCost is 0", () => {
+      const proj: import('../../../engine/types').FilmProject = { ...mockProjectReleased, budget: 0, marketingBudget: 0, revenue: 1000000 } as import('../../../engine/types').FilmProject;
+      expect(calculateProjectROI(proj)).toBe(0);
     });
   });
 
@@ -37,7 +47,7 @@ describe("Finance System", () => {
     });
 
     it("adds 100% of catalogValue if rightsOwner is 'studio'", () => {
-       const p1: Project = { ...mockProjectReleased, budget: 400000, ipRights: { rightsOwner: 'studio', catalogValue: 200000 } } as any;
+       const p1: import('../../../engine/types').FilmProject = { ...mockProjectReleased, budget: 400000, ipRights: { rightsOwner: 'studio', catalogValue: 200000 } } as import('../../../engine/types').FilmProject;
        const state = createMockGameState({
          finance: { ...createMockGameState().finance, cash: 500000 },
          studio: {
@@ -51,15 +61,22 @@ describe("Finance System", () => {
        // Cash (500k)
        expect(calculateStudioNetWorth(state)).toBe(500000);
     });
+
+    it("handles negative cash correctly", () => {
+      const state = createMockGameState({
+        finance: { ...createMockGameState().finance, cash: -100000 }
+      });
+      expect(calculateStudioNetWorth(state)).toBe(-100000);
+    });
   });
 
   describe("generateWeeklyFinancialReport", () => {
     it("properly calculates burns, overhead, and box office", () => {
-        const releasedWithDist = { 
+        const releasedWithDist: import('../../../engine/types').FilmProject = {
           ...mockProjectReleased, 
-          distributionStatus: 'theatrical' as const,
+          distributionStatus: 'theatrical',
           weeklyRevenue: 100000 
-        };
+        } as import('../../../engine/types').FilmProject;
         const state = createMockGameState({
           week: 1,
           finance: { ...createMockGameState().finance, cash: 1000000 },
@@ -89,11 +106,11 @@ describe("Finance System", () => {
   describe("tickFinance", () => {
       it("returns StateImpact for funds change", () => {
          const rng = new RandomGenerator(12345);
-         const releasedWithDist = { 
+         const releasedWithDist: import('../../../engine/types').FilmProject = {
            ...mockProjectReleased, 
-           distributionStatus: 'theatrical' as const,
+           distributionStatus: 'theatrical',
            weeklyRevenue: 200000 
-         };
+         } as import('../../../engine/types').FilmProject;
          const state = createMockGameState({
            week: 1,
            finance: { ...createMockGameState().finance, cash: 1000000 },

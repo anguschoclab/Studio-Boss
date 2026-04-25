@@ -90,9 +90,9 @@ describe("TalentSystem", () => {
     });
 
     it("handles extreme edge case: talent with 0 skill but 100 ego safely", () => {
-      const extremeTalent = { ...mockTalent1, psychology: { ...mockTalent1.psychology, ego: 100 } } as Talent;
+      const extremeTalent: Talent = { ...mockTalent1, psychology: { ...mockTalent1.psychology, ego: 100 } as import('../../../engine/types').TalentPsychology };
       const extremePool = [extremeTalent];
-      const solidHit = { ...mockProject, revenue: 25_000_000 } as Project;
+      const solidHit: Project = { ...mockProject, revenue: 25_000_000 } as Project;
       const results = TalentSystem.applyProjectResults(solidHit, mockContracts, extremePool);
 
       const t1 = results.find(t => t.id === "t1")!;
@@ -108,6 +108,15 @@ describe("TalentSystem", () => {
       week: 1,
       gameSeed: 1,
       tickCount: 0,
+      entities: {
+        projects: {},
+        talents: {
+            "t1": { ...mockTalent1 },
+            "t2": { ...mockTalent2 }
+        },
+        contracts: {},
+        rivals: {}
+      },
       projects: { active: [] },
       game: { currentWeek: 1 },
       finance: { cash: 1_000_000, ledger: [] },
@@ -165,6 +174,26 @@ describe("TalentSystem", () => {
       expect(impact.newOpportunities).toBeDefined();
       expect(impact.newOpportunities!).toHaveLength(1);
       expect(impact.newOpportunities![0].weeksUntilExpiry).toBe(1);
+    });
+  });
+
+  describe("Edge Cases", () => {
+    it("safely processes talent with missing psychological traits", () => {
+      const edgeTalent: Talent = { ...mockTalent1 };
+      delete edgeTalent.psychology; // Test the missing psychology explicitly without bypassing type checks with unknown.
+
+      const results = TalentSystem.applyProjectResults({ ...mockProject, revenue: 25_000_000 } as Project, mockContracts, [edgeTalent]);
+      expect(results[0]).toBeDefined();
+      expect(results[0].ego).toBe(50); // Checks the clamp((talent.psychology?.ego || 50) + egoBoost, 0, 100)
+    });
+
+    it("handles talent with 0 skill and 100 ego safely", () => {
+      const edgeTalent: Talent = { ...mockTalent1, skill: 0, psychology: { ...mockTalent1.psychology, ego: 100 } as import('../../../engine/types').TalentPsychology };
+      const results = TalentSystem.applyProjectResults({ ...mockProject, revenue: 25_000_000 } as Project, mockContracts, [edgeTalent]);
+      expect(results[0]).toBeDefined();
+      expect(results[0].ego).toBe(100);
+      expect(results[0].draw).toBe(56);
+      expect(results[0].prestige).toBe(53);
     });
   });
 });
