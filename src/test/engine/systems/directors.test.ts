@@ -3,7 +3,14 @@ import { hasCreativeControl } from "../../../engine/systems/directors";
 import { GameState, Talent, Contract } from "../../../engine/types";
 
 describe("hasCreativeControl", () => {
-  const createMockState = (talentPool: Record<string, Talent>, contracts: Contract[]): GameState => {
+  const createMockState = (
+    talentPool: Record<string, Talent>,
+    contracts: Contract[]
+  ): GameState => {
+    const contractsRecord: Record<string, Contract> = {};
+    contracts.forEach((c) => {
+      contractsRecord[c.id] = c;
+    });
     return {
       week: 1,
       gameSeed: 1,
@@ -13,10 +20,18 @@ describe("hasCreativeControl", () => {
       finance: { cash: 1_000_000, ledger: [] },
       news: { headlines: [] },
       ip: { vault: [], franchises: {} },
+      entities: {
+        projects: {},
+        talents: talentPool,
+        contracts: contractsRecord,
+        rivals: {},
+      },
       studio: {
-        name: 'Player Studio',
-        archetype: 'major',
+        name: "Player Studio",
+        id: "PLAYER",
+        archetype: "major",
         prestige: 50,
+        cash: 1_000_000,
         internal: {
           projects: {},
           contracts,
@@ -29,11 +44,11 @@ describe("hasCreativeControl", () => {
         agencies: [],
         agents: [],
         talentPool,
-        newsHistory: []
+        newsHistory: [],
       },
       culture: { genrePopularity: {} },
       history: [],
-      eventHistory: []
+      eventHistory: [],
     } as unknown as GameState;
   };
 
@@ -44,14 +59,28 @@ describe("hasCreativeControl", () => {
 
   it("should return false if the contract exists but the talent is not a director", () => {
     const talent: Talent = { id: "t-1", roles: ["actor"] } as Talent;
-    const contract: Contract = { id: "c-1", talentId: "t-1", projectId: "proj-1", creativeControl: true, fee: 100_000, backendPercent: 0 };
+    const contract: Contract = {
+      id: "c-1",
+      talentId: "t-1",
+      projectId: "proj-1",
+      creativeControl: true,
+      fee: 100_000,
+      backendPercent: 0,
+    };
     const state = createMockState({ "t-1": talent }, [contract]);
     expect(hasCreativeControl("proj-1", state)).toBe(false);
   });
 
   it("should return true if the contract exists, talent is a director, and creativeControl is true", () => {
     const talent: Talent = { id: "t-1", roles: ["director"] } as Talent;
-    const contract: Contract = { id: "c-1", talentId: "t-1", projectId: "proj-1", creativeControl: true, fee: 100_000, backendPercent: 0 };
+    const contract: Contract = {
+      id: "c-1",
+      talentId: "t-1",
+      projectId: "proj-1",
+      creativeControl: true,
+      fee: 100_000,
+      backendPercent: 0,
+    };
     const state = createMockState({ "t-1": talent }, [contract]);
     expect(hasCreativeControl("proj-1", state)).toBe(true);
   });
