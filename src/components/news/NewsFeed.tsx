@@ -46,7 +46,7 @@ export const NewsFeed = () => {
             type="button"
             aria-pressed={filter === 'ALL'}
             onClick={() => setFilter('ALL')}
-            className={`rounded-md text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 border italic focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none p-3 m-2 ${
+            className={`rounded-md text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 border italic focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none p-3 ${
               filter === 'ALL' ? 'bg-primary text-black border-primary shadow-[0_0_15px_rgba(var(--primary),0.2)]' : 'bg-white/[0.02] text-muted-foreground/40 border-white/5 hover:border-white/20'
             }`}
           >
