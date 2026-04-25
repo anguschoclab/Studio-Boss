@@ -105,7 +105,7 @@ export function calculateWillingness(
     score -= 10;
     reasons.push(`${talent.name} is being notoriously difficult during negotiations.`);
     // 🎭 The Method Actor Tuning: High ego talent absolutely refuses to work with low-prestige studios.
-    if (gameState.studio.prestige < 50) {
+    if (gameState.studio.prestige < 40) {
       score -= 25;
       reasons.push(`${talent.name}'s ego prevents them from "slumming it" with a low-prestige studio.`);
     }
