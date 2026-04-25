@@ -30,14 +30,10 @@ export function tickConsolidation(state: GameState): StateImpact[] {
   // REMOVED: Financial stress simulation (ineffective and unrealistic)
   // Rivals now deploy capital proactively via FlopMechanics and other systems
 
-  // Potential Acquirers: any rival with surplus cash ($500M+ proactive).
-  // Broadened from $1B so mid-tiers with cash can still pursue strategic tuck-ins.
-  const majors = rivals.filter(r => (r.archetype === 'major' && r.cash > 200_000_000) || r.cash > 500_000_000);
-  // Downturns = distressed assets = M&A waves. Invert heat into gate probability.
-  // Lowered thresholds so we see 3-7 regular M&A over 50 years — prior 0.985 produced ~0.
-  const heat = getMarketHeat(state.week);
-  const gateThreshold = heat > 1.1 ? 0.994 : heat < 0.9 ? 0.978 : 0.988;
-  if (majors.length === 0 || secureRandom() < gateThreshold) return [];
+  // Potential Acquirers: Majors with surplus cash
+  const majors = rivals.filter(r => r.archetype === 'major' && r.cash > 250_000_000);
+  // Reduced skip probability for headless simulation (20% vs 60%)
+  if (majors.length === 0 || secureRandom() < 0.20) return [];
 
   // Prefer non-antitrust-frozen acquirers so a single dominant frozen player doesn't
   // starve the whole engine for years.

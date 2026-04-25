@@ -1,10 +1,10 @@
-import { SimulationRunner } from '../src/engine/simulation/SimulationRunner.js';
-import { getMarketHeat, getMarketRegime, getActiveShock, getBudgetInflation } from '../src/engine/systems/industry/MacroCycle.js';
-import { antitrustEventLog, resetAntitrustState } from '../src/engine/systems/industry/Antitrust.js';
-import { distressEventLog, resetDistressState } from '../src/engine/systems/industry/DistressCascade.js';
-import { shingleEventLog, resetShingleState } from '../src/engine/systems/deals/ShingleSystem.js';
-import { pitchOutcomeLog, resetPitchState } from '../src/engine/systems/deals/ShinglePitchRouter.js';
-import { consolidationEventLog, resetConsolidationState } from '../src/engine/systems/industry/ConsolidationEngine.js';
+import { SimulationRunner } from '../src/engine/simulation/SimulationRunner.ts';
+import { getMarketHeat, getMarketRegime, getActiveShock, getBudgetInflation } from '../src/engine/systems/industry/MacroCycle.ts';
+import { antitrustEventLog, resetAntitrustState } from '../src/engine/systems/industry/Antitrust.ts';
+import { distressEventLog, resetDistressState } from '../src/engine/systems/industry/DistressCascade.ts';
+import { shingleEventLog, resetShingleState } from '../src/engine/systems/deals/ShingleSystem.ts';
+import { pitchOutcomeLog, resetPitchState } from '../src/engine/systems/deals/ShinglePitchRouter.ts';
+import { consolidationEventLog, resetConsolidationState } from '../src/engine/systems/industry/ConsolidationEngine.ts';
 
 resetAntitrustState();
 resetDistressState();

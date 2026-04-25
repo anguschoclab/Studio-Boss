@@ -82,10 +82,10 @@ export class StudioAutomation {
     rivalsList.forEach(rival => {
       const activeCount = rivalProjectCounts[rival.id] || 0;
       const archetype = this.getRivalArchetype(rival);
-      // Archetype bias: majors lean franchise/volume (more slots), indies less.
-      const slotCap = archetype.id === 'AI_SLOP' ? 6 : archetype.id?.includes('INDIE') ? 3 : 4;
-      // Heat-scaled pitch rate: boom = ~6%, bust = ~2%.
-      const basePitchRate = 0.04 * heat;
+      // Increased slot cap for headless simulation (15 vs 3-6)
+      const slotCap = 15;
+      // Increased pitch probability for headless simulation (60% vs 4% * heat)
+      const basePitchRate = 0.6;
       if (activeCount < slotCap && rng.next() < basePitchRate) {
         this.pitchNewProject(rival, state, rng, impacts, archetype);
       }
@@ -125,10 +125,9 @@ export class StudioAutomation {
 
     // 3. Resolve Marketing -> Release
     if (p.state === 'marketing') {
-      const tiers: ('none' | 'basic' | 'blockbuster')[] = ['none', 'basic', 'blockbuster'];
-      const tier = rng.pick(tiers);
-      const budgetMap = { 'none': 0, 'basic': 5000000, 'blockbuster': 25000000 };
-      const marketingBudget = budgetMap[tier];
+      // Percentage-based marketing costs (30% of budget for balanced economics)
+      const marketingBudget = Math.floor((p.budget || 40_000_000) * 0.3);
+      const tier = marketingBudget > 20_000_000 ? 'blockbuster' : marketingBudget > 5_000_000 ? 'basic' : 'none';
 
       const rivalPrestige = studioId === 'PLAYER' ? state.studio.prestige : (state.entities.rivals[studioId]?.prestige || 50);
       const { project: releasedProject } = calculateOpeningWeekend(
@@ -330,7 +329,7 @@ export class StudioAutomation {
     const update: Partial<Project> = {
       state: 'production',
       weeksInPhase: 0,
-      productionWeeks: rng.rangeInt(6, 12),
+      productionWeeks: rng.rangeInt(8, 16),
       budget: p.budget || Math.floor(baseBudget * inflation),
       buzz: p.buzz || 40,
     };

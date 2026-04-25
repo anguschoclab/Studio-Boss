@@ -9,17 +9,28 @@ export class RevenueProcessor {
   /**
    * Calculates weekly streaming revenue for a project on a specific platform.
    * Expected: Weekly Licensing Fee = $20,000 (at 100 quality, 10% market share).
+   * Applies revenue sharing: Studio keeps 60% (premium) or 50% (back-catalog).
    */
   static calculateStreamingRevenue(project: Project, platform: Buyer): number {
     const quality = project.reviewScore || 50;
     const marketShare = platform.marketShare || 0.10;
-    
+
     // Base fee is $2,000 per 1% market share at 100 quality
-    const baseFeePerUnit = 2000; 
+    const baseFeePerUnit = 2000;
     const shareUnits = marketShare * 100;
-    
-    const revenue = baseFeePerUnit * shareUnits * (quality / 100);
-    return Math.round(revenue);
+
+    const grossRevenue = baseFeePerUnit * shareUnits * (quality / 100);
+
+    // Apply revenue sharing based on project age and quality
+    const weeksSinceRelease = (project as any).releaseWeek ? (project as any).currentWeek - (project as any).releaseWeek : 0;
+    const isBackCatalog = weeksSinceRelease > 52; // 1 year = back-catalog
+    const isPremium = quality >= 70 && !isBackCatalog;
+
+    // Studio share: 60% for premium, 50% for back-catalog
+    const studioShare = isPremium ? 0.6 : 0.5;
+    const netRevenue = grossRevenue * studioShare;
+
+    return Math.round(netRevenue);
   }
 
   /**

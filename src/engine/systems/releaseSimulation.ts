@@ -77,8 +77,8 @@ export function calculateOpeningWeekend(
   project: Project,
   attachedTalent: Talent[],
   studioPrestige: number,
-  franchiseSynergy: number = 1.0, // New: Halo Effect (1.0 - 2.5)
-  franchiseFatigue: number = 0, // New: Audience Saturation (0 - 1.0)
+  franchiseSynergy: number = 1.0, 
+  franchiseFatigue: number = 0, 
   currentWeek: number = 0
 ): { project: Project; feedback: string } {
   // If no campaign, it's a "silent release" - very poor performance
@@ -115,16 +115,19 @@ export function calculateOpeningWeekend(
   effectiveGross *= multiplier;
 
   // Tier-dependent revenue floor. Big budgets carry real downside risk.
+  // Floor is based on total cost (budget + marketing) to match real-life 50% success rate
   const tier = (project.budgetTier || 'mid') as string;
+  const marketingBudget = campaign?.domesticBudget + campaign?.foreignBudget || 0;
+  const totalCost = (project.budget || 0) + marketingBudget;
   const floorByTier: Record<string, number> = {
-    indie: 0.55,
-    low: 0.5,
-    mid: 0.35,
-    high: 0.22,
-    blockbuster: 0.15
+    indie: 0.90,
+    low: 0.95,
+    mid: 0.95,
+    high: 0.95,
+    blockbuster: 0.95
   };
-  const floorMult = floorByTier[tier] ?? 0.25;
-  const minFloor = (project.budget || 0) * floorMult;
+  const floorMult = floorByTier[tier] ?? 0.95;
+  const minFloor = totalCost * floorMult;
   if (effectiveGross < minFloor) {
     effectiveGross = minFloor;
   }
