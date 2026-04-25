@@ -17,8 +17,8 @@ global.ResizeObserver = vi.fn().mockImplementation(() => ({
 // Mock recharts
 vi.mock('recharts', () => {
   return {
-    ResponsiveContainer: ({ children }: any) => <div data-testid="mock-responsive-container">{children}</div>,
-    LineChart: ({ children }: any) => <div data-testid="mock-line-chart">{children}</div>,
+    ResponsiveContainer: ({ children }: unknown) => <div data-testid="mock-responsive-container">{children}</div>,
+    LineChart: ({ children }: unknown) => <div data-testid="mock-line-chart">{children}</div>,
     Line: () => <div data-testid="mock-line" />
   };
 });
@@ -68,7 +68,7 @@ describe('StudioSidebar', () => {
     vi.clearAllMocks();
 
     // Default mocks
-    (useUIStore as any).mockImplementation((selector: any) => {
+    (useUIStore as unknown as any).mockImplementation((selector: unknown) => {
       if (typeof selector === 'function') {
         return selector({ activeTab: 'command', setActiveTab: vi.fn() });
       }
@@ -77,7 +77,7 @@ describe('StudioSidebar', () => {
   });
 
   it('renders without crashing when no game state', () => {
-    (useGameStore as any).mockImplementation((selector: any) => {
+    (useGameStore as unknown as any).mockImplementation((selector: unknown) => {
       if (typeof selector === 'function') {
         return selector({ gameState: null, clearGame: vi.fn() });
       }
@@ -89,7 +89,7 @@ describe('StudioSidebar', () => {
   });
 
   it('renders correctly with basic game state', () => {
-    (useGameStore as any).mockImplementation((selector: any) => {
+    (useGameStore as unknown as any).mockImplementation((selector: unknown) => {
       const mockState = {
         gameState: {
           entities: { projects: {}, talents: {}, contracts: {}, rivals: {} },
@@ -111,7 +111,7 @@ describe('StudioSidebar', () => {
   });
 
   it('renders sparkline when historical financial data is present', async () => {
-    (useGameStore as any).mockImplementation((selector: any) => {
+    (useGameStore as unknown as any).mockImplementation((selector: unknown) => {
       const mockState = {
         gameState: {
           entities: { projects: {}, talents: {}, contracts: {}, rivals: {} },

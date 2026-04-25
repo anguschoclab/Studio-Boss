@@ -18,7 +18,7 @@ describe('CommandCenter', () => {
     vi.clearAllMocks();
   });
 
-  const mockState = (overrides: any = {}) => ({
+  const mockState = (overrides: unknown = {}) => ({
     gameState: {
       week: 1,
       entities: {
@@ -41,7 +41,7 @@ describe('CommandCenter', () => {
   });
 
   it('renders null when state is missing', () => {
-    vi.mocked(useGameStore).mockImplementation((selector: any) => selector({ gameState: null }));
+    vi.mocked(useGameStore).mockImplementation((selector: unknown) => selector({ gameState: null }));
     const { container } = render(
       <TooltipProvider>
         <CommandCenter />
@@ -51,7 +51,7 @@ describe('CommandCenter', () => {
   });
 
   it('renders studio details and KPI values correctly', () => {
-    vi.mocked(useGameStore).mockImplementation((selector: any) => {
+    vi.mocked(useGameStore).mockImplementation((selector: unknown) => {
       const state = mockState({
         entities: {
           projects: {
@@ -97,7 +97,7 @@ describe('CommandCenter', () => {
   });
 
   it('renders news history when available', () => {
-    vi.mocked(useGameStore).mockImplementation((selector: any) => {
+    vi.mocked(useGameStore).mockImplementation((selector: unknown) => {
       const state = mockState({
         industry: {
           newsHistory: [
@@ -125,7 +125,7 @@ describe('CommandCenter', () => {
   });
 
   it('renders empty state for news history when empty', () => {
-    vi.mocked(useGameStore).mockImplementation((selector: any) => selector(mockState()));
+    vi.mocked(useGameStore).mockImplementation((selector: unknown) => selector(mockState()));
     render(
       <TooltipProvider>
         <CommandCenter />

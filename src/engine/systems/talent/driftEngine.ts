@@ -249,7 +249,7 @@ export const TalentDriftEngine = {
     rng: RandomGenerator
   ): { old: string; new: string } | null {
     const currentTrajectory = talent.careerTrajectory || 'rising';
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const transitions = (CAREER_TRAJECTORY_TRANSITIONS as any)[currentTrajectory];
     if (!transitions || transitions.length === 0) {
       return null;

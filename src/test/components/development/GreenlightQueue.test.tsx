@@ -23,7 +23,7 @@ describe('GreenlightQueue', () => {
       },
     ];
 
-    render(<GreenlightQueue projects={projects as any} />);
+    render(<GreenlightQueue projects={projects as unknown as any} />);
     
     expect(screen.getByText('Blockbuster Movie')).toBeInTheDocument();
     expect(screen.getByText('Action')).toBeInTheDocument();
@@ -41,7 +41,7 @@ describe('GreenlightQueue', () => {
       },
     ];
 
-    render(<GreenlightQueue projects={projects as any} />);
+    render(<GreenlightQueue projects={projects as unknown as any} />);
     
     expect(screen.getByText('Budget: $50.0M')).toBeInTheDocument();
   });
@@ -59,7 +59,7 @@ describe('GreenlightQueue', () => {
       },
     ];
 
-    render(<GreenlightQueue projects={projects as any} onApprove={handleApprove} />);
+    render(<GreenlightQueue projects={projects as unknown as any} onApprove={handleApprove} />);
     
     fireEvent.click(screen.getByText('Greenlight'));
     expect(handleApprove).toHaveBeenCalledWith('proj-1');
@@ -78,7 +78,7 @@ describe('GreenlightQueue', () => {
       },
     ];
 
-    render(<GreenlightQueue projects={projects as any} onReject={handleReject} />);
+    render(<GreenlightQueue projects={projects as unknown as any} onReject={handleReject} />);
     
     // The reject button has XCircle icon - find by the destructive button class
     const rejectButton = document.querySelector('button[class*="destructive"]') 
@@ -101,7 +101,7 @@ describe('GreenlightQueue', () => {
       },
     ];
 
-    render(<GreenlightQueue projects={projects as any} onReview={handleReview} />);
+    render(<GreenlightQueue projects={projects as unknown as any} onReview={handleReview} />);
     
     fireEvent.click(screen.getByText('Review'));
     expect(handleReview).toHaveBeenCalledWith('proj-1');

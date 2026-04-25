@@ -48,7 +48,7 @@ describe('TalentPanel', () => {
           }
         }
       };
-      return selector(state as any);
+      return selector(state as unknown as import('../../../store/gameStore').GameState);
     });
   });
 

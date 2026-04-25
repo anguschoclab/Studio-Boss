@@ -88,14 +88,14 @@ describe("gameStore", () => {
       "t1": { 
           id: "t1", name: "Star", roles: ["actor"], prestige: 85, draw: 80, fee: 100000, 
           agencyId: 'a1'
-      } as any
+      } as unknown as any
     };
     state.entities.projects = {
       "p1": { 
         id: "p1", title: "Test", format: "film", genre: "Action", budgetTier: "low", budget: 500000, weeklyCost: 10000,
         state: "development", weeksInPhase: 0, productionWeeks: 10, developmentWeeks: 10,
         revenue: 0, weeklyRevenue: 0, releaseWeek: null 
-      } as any
+      } as unknown as any
     };
     useGameStore.setState({ gameState: state });
 

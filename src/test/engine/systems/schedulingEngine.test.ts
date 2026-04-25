@@ -21,7 +21,7 @@ describe('SchedulingEngine Hardening Tests', () => {
         role: 'Lead'
       }
     ]
-  } as any;
+  } as unknown as any;
 
   const mockProject: Project = {
     id: 'p-current',
@@ -30,7 +30,7 @@ describe('SchedulingEngine Hardening Tests', () => {
     productionWeeks: 10,
     weeksInPhase: 1,
     budget: 50000000
-  } as any;
+  } as unknown as any;
 
   const mockContracts: Contract[] = [
     {
@@ -52,7 +52,7 @@ describe('SchedulingEngine Hardening Tests', () => {
       talents: { 't1': mockTalent },
       rivals: {}
     }
-  } as any;
+  } as unknown as any;
 
   it('should detect a conflict when the current week overlaps with another commitment', () => {
     // Week 10 is inside [5, 15]
@@ -81,7 +81,7 @@ describe('SchedulingEngine Hardening Tests', () => {
   });
 
   it('should reduce project progress (weeksInPhase) on tick when conflict exists', () => {
-    const rng = { uuid: () => 'news-id' } as any;
+    const rng = { uuid: () => 'news-id' } as unknown as any;
     const impacts = SchedulingEngine.tick(mockState, rng);
 
     const projectUpdate = impacts.find(i => i.type === 'PROJECT_UPDATED') as ProjectUpdateImpact;

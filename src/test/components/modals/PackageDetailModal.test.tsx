@@ -31,7 +31,7 @@ describe('PackageDetailModal', () => {
       activeModal: null,
     });
 
-    vi.mocked(useGameStore).mockImplementation((selector: any) => {
+    vi.mocked(useGameStore).mockImplementation((selector: unknown) => {
       const state = {
         gameState: {
           market: {
@@ -83,7 +83,7 @@ describe('PackageDetailModal', () => {
       },
     };
 
-    vi.mocked(useGameStore).mockImplementation((selector: any) => {
+    vi.mocked(useGameStore).mockImplementation((selector: unknown) => {
       const state = {
         gameState: {
           market: {
@@ -136,7 +136,7 @@ describe('PackageDetailModal', () => {
       },
     };
 
-    vi.mocked(useGameStore).mockImplementation((selector: any) => {
+    vi.mocked(useGameStore).mockImplementation((selector: unknown) => {
       const state = {
         gameState: {
           market: {
@@ -180,7 +180,7 @@ describe('PackageDetailModal', () => {
       ],
     };
 
-    vi.mocked(useGameStore).mockImplementation((selector: any) => {
+    vi.mocked(useGameStore).mockImplementation((selector: unknown) => {
       const state = {
         gameState: {
           market: {
@@ -222,7 +222,7 @@ describe('PackageDetailModal', () => {
       bidHistory: [],
     };
 
-    vi.mocked(useGameStore).mockImplementation((selector: any) => {
+    vi.mocked(useGameStore).mockImplementation((selector: unknown) => {
       const state = {
         gameState: {
           market: {
@@ -265,7 +265,7 @@ describe('PackageDetailModal', () => {
       bidHistory: [],
     };
 
-    vi.mocked(useGameStore).mockImplementation((selector: any) => {
+    vi.mocked(useGameStore).mockImplementation((selector: unknown) => {
       const state = {
         gameState: {
           market: {
@@ -306,7 +306,7 @@ describe('PackageDetailModal', () => {
       bidHistory: [],
     };
 
-    vi.mocked(useGameStore).mockImplementation((selector: any) => {
+    vi.mocked(useGameStore).mockImplementation((selector: unknown) => {
       const state = {
         gameState: {
           market: {
@@ -350,7 +350,7 @@ describe('PackageDetailModal', () => {
       bidHistory: [],
     };
 
-    vi.mocked(useGameStore).mockImplementation((selector: any) => {
+    vi.mocked(useGameStore).mockImplementation((selector: unknown) => {
       const state = {
         gameState: {
           market: {

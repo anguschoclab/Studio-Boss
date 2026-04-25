@@ -1,3 +1,4 @@
+
 import { describe, it, expect, beforeEach } from 'vitest';
 import { AnnualScans } from '@/engine/services/filters/AnnualScans';
 import { GameState } from '@/engine/types';
@@ -25,7 +26,7 @@ describe('AnnualScans', () => {
         internal: {
           projectHistory: [],
         },
-      } as any,
+      } as unknown as unknown as any,
       entities: {
         projects: {},
         rivals: {
@@ -48,15 +49,15 @@ describe('AnnualScans', () => {
         },
         talents: {},
         contracts: {},
-      } as any,
+      } as unknown as unknown as any,
       market: {
         trends: [],
         buyers: [],
         opportunities: [],
-      } as any,
+      } as unknown as unknown as any,
       industry: {
         agencies: [],
-      } as any,
+      } as unknown as unknown as any,
       finance: {
         cash: 10000000,
         ledger: [],
@@ -75,13 +76,13 @@ describe('AnnualScans', () => {
         vault: [],
         franchises: {},
       },
-      game: {} as any,
-      news: { headlines: [], events: [] } as any,
-      deals: { activeDeals: [], expiredDeals: [], pendingOffers: [] } as any,
-      talentAgentRelationships: {} as any,
-      eventHistory: [] as any,
-      relationships: {} as any,
-      history: [] as any,
+      game: {} as unknown as unknown as any,
+      news: { headlines: [], events: [] } as unknown as unknown as any,
+      deals: { activeDeals: [], expiredDeals: [], pendingOffers: [] } as unknown as unknown as any,
+      talentAgentRelationships: {} as unknown as unknown as any,
+      eventHistory: [] as unknown as unknown as any,
+      relationships: {} as unknown as unknown as any,
+      history: [] as unknown as unknown as any,
     } as GameState;
 
     mockContext = {

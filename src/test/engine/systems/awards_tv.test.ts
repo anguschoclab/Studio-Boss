@@ -7,7 +7,7 @@ import { createMockGameState } from '../../utils/mockFactories';
 describe('TV Awards Filtering & Taxonomy', () => {
   const rng = new RandomGenerator(123);
 
-  const createTvProject = (id: string, format: any, criticScore: number, genre: string = 'Comedy'): Project => ({
+  const createTvProject = (id: string, format: unknown, criticScore: number, genre: string = 'Comedy'): Project => ({
     id,
     title: `${id} Show`,
     type: 'SERIES' as const,
@@ -40,7 +40,7 @@ describe('TV Awards Filtering & Taxonomy', () => {
       isCultPotential: false
     },
     awards: []
-  } as any);
+  } as unknown as any);
 
   const baseState = (projects: Record<string, any>): GameState => {
     const state = createMockGameState({ week: 37 }); // Primetime Emmy Week
@@ -61,7 +61,7 @@ describe('TV Awards Filtering & Taxonomy', () => {
     const awardEntries = impacts
       .flatMap(i => Object.values(i.payload || {}));
       
-    const dramaAward = awardEntries.find((a: any) => a.category === 'Best Drama Series');
+    const dramaAward = awardEntries.find((a: unknown) => a.category === 'Best Drama Series');
 
     expect(dramaAward).toBeDefined();
     expect(dramaAward?.projectId).toBeTruthy();
@@ -79,7 +79,7 @@ describe('TV Awards Filtering & Taxonomy', () => {
       .filter(i => i.type === 'INDUSTRY_UPDATE')
       .flatMap(i => Object.values(i.payload || {}));
       
-    const comedyAward = awardEntries.find((a: any) => a.category === 'Best Comedy Series');
+    const comedyAward = awardEntries.find((a: unknown) => a.category === 'Best Comedy Series');
 
     expect(comedyAward).toBeDefined();
     expect(comedyAward?.projectId).toBe('sitcom_1');

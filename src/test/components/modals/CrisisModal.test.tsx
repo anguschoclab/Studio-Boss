@@ -56,7 +56,7 @@ describe('CrisisModal', () => {
     metrics: { buzz: 0, quality: 0, momentum: 0 },
     stats: { weeksInProduction: 0 },
     history: [],
-  } as any;
+  } as unknown as any;
 
   const mockGameState = {
     studio: {
@@ -64,7 +64,7 @@ describe('CrisisModal', () => {
         projects: { [mockProject.id]: mockProject }
       }
     }
-  } as any;
+  } as unknown as any;
 
   beforeEach(async () => {
     vi.clearAllMocks();
@@ -85,7 +85,7 @@ describe('CrisisModal', () => {
       ],
     });
 
-    (useGameStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector: any) => {
+    (useGameStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector: unknown) => {
       const state = {
         gameState: mockGameState,
         resolveProjectCrisis: mockResolveProjectCrisis,
@@ -95,7 +95,7 @@ describe('CrisisModal', () => {
   });
 
   it('renders nothing if gameState is missing', () => {
-    (useGameStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector: any) => {
+    (useGameStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector: unknown) => {
       const state = {
         gameState: null,
         resolveProjectCrisis: mockResolveProjectCrisis,
@@ -129,7 +129,7 @@ describe('CrisisModal', () => {
 
   it('renders nothing if project has no active crisis', () => {
     const projectWithoutCrisis = { ...mockProject, activeCrisis: undefined };
-    (useGameStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector: any) => {
+    (useGameStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector: unknown) => {
       const state = {
         gameState: { 
           studio: {
@@ -139,7 +139,7 @@ describe('CrisisModal', () => {
           }
         },
         resolveProjectCrisis: mockResolveProjectCrisis,
-      } as any;
+      } as unknown as any;
       return selector ? selector(state) : state;
     });
 

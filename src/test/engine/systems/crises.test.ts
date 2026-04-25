@@ -53,7 +53,7 @@ describe("crises system", () => {
               projects: { [mockProject.id]: mockProject }
           }
       }
-  } as any;
+  } as unknown as any;
 
   describe("checkAndTriggerCrisis", () => {
     it("should return null if project is not in production", () => {
@@ -97,7 +97,7 @@ describe("crises system", () => {
       const stateWithResolved = {
           ...mockGameState,
           studio: { internal: { projects: { [resolvedProject.id]: resolvedProject } } }
-      } as any;
+      } as unknown as any;
       const impact = resolveCrisis(stateWithResolved, resolvedProject.id, 0);
       expect(impact).toEqual({});
     });

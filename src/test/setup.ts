@@ -20,10 +20,10 @@ Object.defineProperty(window, "Worker", {
     onmessage: ((ev: MessageEvent) => any) | null = null;
     onerror: ((ev: ErrorEvent) => any) | null = null;
     constructor(stringUrl: string | URL, options?: WorkerOptions) {}
-    postMessage(message: any, transfer?: Transferable[]) {}
+    postMessage(message: unknown, transfer?: Transferable[]) {}
     terminate() {}
-    addEventListener(type: string, listener: any, options?: any) {}
-    removeEventListener(type: string, listener: any, options?: any) {}
+    addEventListener(type: string, listener: unknown, options?: unknown) {}
+    removeEventListener(type: string, listener: unknown, options?: unknown) {}
     dispatchEvent(event: Event) { return true; }
   }
 });

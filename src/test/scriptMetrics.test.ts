@@ -1,3 +1,4 @@
+
 import { describe, it, expect } from 'vitest';
 import { ScriptMetricsCalculator } from '@/engine/systems/production/ScriptMetricsCalculator';
 import { ScriptedProject } from '@/engine/types';
@@ -5,7 +6,7 @@ import { ScriptedProject } from '@/engine/types';
 describe('ScriptMetricsCalculator', () => {
   it('calculates structure score based on role count', () => {
     const project: Partial<ScriptedProject> = {
-      activeRoles: ['protagonist', 'antagonist', 'mentor', 'love_interest', 'sidekick'] as any,
+      activeRoles: ['protagonist', 'antagonist', 'mentor', 'love_interest', 'sidekick'] as unknown as any,
       scriptEvents: [],
       weeksInPhase: 10
     };
@@ -19,7 +20,7 @@ describe('ScriptMetricsCalculator', () => {
   
   it('penalizes too many or too few roles', () => {
     const project: Partial<ScriptedProject> = {
-      activeRoles: ['protagonist'] as any, // Only 1 role
+      activeRoles: ['protagonist'] as unknown as any, // Only 1 role
       scriptEvents: [],
       weeksInPhase: 10
     };
@@ -33,7 +34,7 @@ describe('ScriptMetricsCalculator', () => {
   
   it('calculates dialogue score based on polish events', () => {
     const project: Partial<ScriptedProject> = {
-      activeRoles: ['protagonist', 'antagonist'] as any,
+      activeRoles: ['protagonist', 'antagonist'] as unknown as any,
       scriptEvents: [
         { week: 1, type: 'DIALOGUE_POLISH', description: 'Polish', qualityImpact: 10, heatGain: 3 }
       ],
@@ -49,7 +50,7 @@ describe('ScriptMetricsCalculator', () => {
   
   it('calculates originality score based on plot twists', () => {
     const project: Partial<ScriptedProject> = {
-      activeRoles: ['protagonist', 'antagonist'] as any,
+      activeRoles: ['protagonist', 'antagonist'] as unknown as any,
       scriptEvents: [
         { week: 1, type: 'PLOT_TWIST_ADDED', description: 'Twist', qualityImpact: 12, heatGain: 8 }
       ],
@@ -66,7 +67,7 @@ describe('ScriptMetricsCalculator', () => {
   
   it('calculates emotional impact from scriptHeat', () => {
     const project: Partial<ScriptedProject> = {
-      activeRoles: ['protagonist', 'antagonist'] as any,
+      activeRoles: ['protagonist', 'antagonist'] as unknown as any,
       scriptEvents: [],
       scriptHeat: 75,
       weeksInPhase: 10
@@ -81,7 +82,7 @@ describe('ScriptMetricsCalculator', () => {
   
   it('calculates trend as improving when score increases', () => {
     const project: Partial<ScriptedProject> = {
-      activeRoles: ['protagonist', 'antagonist', 'mentor', 'love_interest', 'sidekick'] as any,
+      activeRoles: ['protagonist', 'antagonist', 'mentor', 'love_interest', 'sidekick'] as unknown as any,
       scriptEvents: [
         { week: 1, type: 'DIALOGUE_POLISH', description: 'Polish', qualityImpact: 10, heatGain: 3 }
       ],
@@ -111,7 +112,7 @@ describe('ScriptMetricsCalculator', () => {
   
   it('calculates trend as declining when score decreases', () => {
     const project: Partial<ScriptedProject> = {
-      activeRoles: ['protagonist'] as any, // Bad structure
+      activeRoles: ['protagonist'] as unknown as any, // Bad structure
       scriptEvents: [],
       scriptHeat: 40,
       weeksInPhase: 10
@@ -138,7 +139,7 @@ describe('ScriptMetricsCalculator', () => {
   
   it('calculates overall score as weighted average', () => {
     const project: Partial<ScriptedProject> = {
-      activeRoles: ['protagonist', 'antagonist', 'mentor', 'love_interest'] as any,
+      activeRoles: ['protagonist', 'antagonist', 'mentor', 'love_interest'] as unknown as any,
       scriptEvents: [
         { week: 1, type: 'DIALOGUE_POLISH', description: 'Polish', qualityImpact: 10, heatGain: 3 }
       ],
@@ -157,7 +158,7 @@ describe('ScriptMetricsCalculator', () => {
   
   it('handles projects with no script events', () => {
     const project: Partial<ScriptedProject> = {
-      activeRoles: ['protagonist', 'antagonist', 'mentor', 'love_interest'] as any,
+      activeRoles: ['protagonist', 'antagonist', 'mentor', 'love_interest'] as unknown as any,
       scriptEvents: [],
       scriptHeat: 50,
       weeksInPhase: 10,

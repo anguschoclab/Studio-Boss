@@ -50,7 +50,7 @@ describe('FinancialOverviewWidget Component', () => {
   });
 
   it('renders nothing when finance state is null', () => {
-    vi.mocked(useGameStore).mockImplementation((selector: any) => {
+    vi.mocked(useGameStore).mockImplementation((selector: unknown) => {
       const state = {
         gameState: {
           finance: null,
@@ -65,7 +65,7 @@ describe('FinancialOverviewWidget Component', () => {
   });
 
   it('renders nothing when history state is null', () => {
-    vi.mocked(useGameStore).mockImplementation((selector: any) => {
+    vi.mocked(useGameStore).mockImplementation((selector: unknown) => {
       const state = {
         gameState: {
           finance: { cash: 1000 },
@@ -90,7 +90,7 @@ describe('FinancialOverviewWidget Component', () => {
       ]
     };
 
-    vi.mocked(useGameStore).mockImplementation((selector: any) => {
+    vi.mocked(useGameStore).mockImplementation((selector: unknown) => {
       const state = {
         gameState: mockGameState,
       };

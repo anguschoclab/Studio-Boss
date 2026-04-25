@@ -1,3 +1,4 @@
+
 import { describe, it, expect, beforeEach } from 'vitest';
 import { SummaryBuilder } from '@/engine/services/filters/SummaryBuilder';
 import { GameState } from '@/engine/types';
@@ -23,21 +24,21 @@ describe('SummaryBuilder', () => {
         name: 'Test Studio',
         archetype: 'major',
         prestige: 50,
-      } as any,
+      } as unknown as unknown as any,
       entities: {
         projects: {},
         rivals: {},
         talents: {},
         contracts: {},
-      } as any,
+      } as unknown as unknown as any,
       market: {
         trends: [],
         buyers: [],
         opportunities: [],
-      } as any,
+      } as unknown as unknown as any,
       industry: {
         agencies: [],
-      } as any,
+      } as unknown as unknown as any,
       finance: {
         cash: 10000000,
         ledger: [],
@@ -52,14 +53,14 @@ describe('SummaryBuilder', () => {
           cycle: 'STABLE',
         },
       },
-      game: {} as any,
-      news: { headlines: [], events: [] } as any,
-      deals: { activeDeals: [], expiredDeals: [], pendingOffers: [] } as any,
-      talentAgentRelationships: {} as any,
-      eventHistory: [] as any,
-      ip: { vault: [], franchises: {} } as any,
-      relationships: {} as any,
-      history: [] as any,
+      game: {} as unknown as unknown as any,
+      news: { headlines: [], events: [] } as unknown as unknown as any,
+      deals: { activeDeals: [], expiredDeals: [], pendingOffers: [] } as unknown as unknown as any,
+      talentAgentRelationships: {} as unknown as unknown as any,
+      eventHistory: [] as unknown as unknown as any,
+      ip: { vault: [], franchises: {} } as unknown as unknown as any,
+      relationships: {} as unknown as unknown as any,
+      history: [] as unknown as unknown as any,
     } as GameState;
 
     mockAfterState = {
@@ -107,7 +108,7 @@ describe('SummaryBuilder', () => {
       type: 'NEWS_ADDED',
       payload: {
         headline: 'Breaking News',
-        category: 'general' as any,
+        category: 'general' as unknown as unknown as any,
         publication: 'Variety',
       },
     });
@@ -134,8 +135,8 @@ describe('SummaryBuilder', () => {
   });
 
   it('should handle events', () => {
-    mockContext.events.push({ title: 'Event 1' } as any);
-    mockContext.events.push({ title: 'Event 2' } as any);
+    mockContext.events.push({ title: 'Event 1' } as unknown as unknown as any);
+    mockContext.events.push({ title: 'Event 2' } as unknown as unknown as any);
     
     const summary = SummaryBuilder.build(mockBeforeState, mockAfterState, mockContext);
     expect(summary.events).toContain('Event 1');

@@ -1,3 +1,4 @@
+
 import { describe, it, expect, vi } from 'vitest';
 import { tickPilots } from '../../../../engine/systems/television/pilotEvaluator';
 import { GameState, SeriesProject } from '../../../../engine/types';
@@ -91,7 +92,7 @@ describe('Pilot Evaluator (Guild Auditor)', () => {
     const impacts = tickPilots(state, rng);
 
     expect(impacts.length).toBe(1);
-    const update = (impacts[0].payload as any).update;
+    const update = (impacts[0].payload as unknown as any).update;
     expect(update.weeksInPhase).toBe(1);
     expect(update.weeklyCost).toBe(30000); // 100k * 0.30
   });
@@ -117,7 +118,7 @@ describe('Pilot Evaluator (Guild Auditor)', () => {
 
     const newsImpact = impacts.find(i => i.type === 'NEWS_ADDED');
     expect(newsImpact).toBeDefined();
-    expect((newsImpact!.payload as any).category).toBe('development');
+    expect((newsImpact!.payload as unknown as any).category).toBe('development');
   });
 
   it('passes on pilot if quality is low and rng fails', () => {
@@ -137,11 +138,11 @@ describe('Pilot Evaluator (Guild Auditor)', () => {
     expect(impacts.length).toBe(2);
     const archiveImpact = impacts.find(i => i.type === 'PROJECT_UPDATED');
     expect(archiveImpact).toBeDefined();
-    expect((archiveImpact!.payload as any).update.state).toBe('archived');
+    expect((archiveImpact!.payload as unknown as any).update.state).toBe('archived');
 
     const newsImpact = impacts.find(i => i.type === 'NEWS_ADDED');
     expect(newsImpact).toBeDefined();
-    expect((newsImpact!.payload as any).category).toBe('cancellation');
+    expect((newsImpact!.payload as unknown as any).category).toBe('cancellation');
   });
 
   it('handles negative cost safely for weekly calculation (Guild Auditor)', () => {
@@ -155,7 +156,7 @@ describe('Pilot Evaluator (Guild Auditor)', () => {
     const rng = new RandomGenerator(42);
     const impacts = tickPilots(state, rng);
 
-    const update = (impacts[0].payload as any).update;
+    const update = (impacts[0].payload as unknown as any).update;
     expect(update.weeklyCost).toBe(-3000); // Should properly multiply negative
   });
 
@@ -174,6 +175,6 @@ describe('Pilot Evaluator (Guild Auditor)', () => {
     const impacts = tickPilots(state, rng);
     const archiveImpact = impacts.find(i => i.type === 'PROJECT_UPDATED');
     expect(archiveImpact).toBeDefined();
-    expect((archiveImpact!.payload as any).update.state).toBe('archived');
+    expect((archiveImpact!.payload as unknown as any).update.state).toBe('archived');
   });
 });

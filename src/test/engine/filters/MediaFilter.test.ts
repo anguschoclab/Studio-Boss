@@ -1,10 +1,11 @@
+
 import { describe, it, expect, beforeEach } from 'vitest';
 import { MediaFilter } from '@/engine/services/filters/MediaFilter';
 import { createMockGameState, createMockTickContext } from '../generators/mockFactory';
 
 describe('MediaFilter', () => {
-  let mockState: any;
-  let mockContext: any;
+  let mockState: unknown;
+  let mockContext: unknown;
 
   beforeEach(() => {
     mockState = createMockGameState();

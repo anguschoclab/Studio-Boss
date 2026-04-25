@@ -30,9 +30,9 @@ describe('ProjectDetailModal', () => {
     vi.mocked(useUIStore).mockReturnValue({
       selectedProjectId: null,
       selectProject: mockSelectProject,
-    } as any);
+    } as unknown as any);
 
-    vi.mocked(useGameStore).mockImplementation((selector: any) => {
+    vi.mocked(useGameStore).mockImplementation((selector: unknown) => {
       const state = {
         gameState: {
           studio: {
@@ -94,9 +94,9 @@ describe('ProjectDetailModal', () => {
     vi.mocked(useUIStore).mockReturnValue({
       selectedProjectId: 'P1',
       selectProject: mockSelectProject,
-    } as any);
+    } as unknown as any);
 
-    vi.mocked(useGameStore).mockImplementation((selector: any) => {
+    vi.mocked(useGameStore).mockImplementation((selector: unknown) => {
       const state = {
         gameState: {
           studio: {
@@ -127,9 +127,9 @@ describe('ProjectDetailModal', () => {
     vi.mocked(useUIStore).mockReturnValue({
       selectedProjectId: 'P1',
       selectProject: mockSelectProject,
-    } as any);
+    } as unknown as any);
 
-    vi.mocked(useGameStore).mockImplementation((selector: any) => {
+    vi.mocked(useGameStore).mockImplementation((selector: unknown) => {
       const state = {
         gameState: {
           studio: {
@@ -164,9 +164,9 @@ describe('ProjectDetailModal', () => {
     vi.mocked(useUIStore).mockReturnValue({
       selectedProjectId: 'P1',
       selectProject: mockSelectProject,
-    } as any);
+    } as unknown as any);
 
-    vi.mocked(useGameStore).mockImplementation((selector: any) => {
+    vi.mocked(useGameStore).mockImplementation((selector: unknown) => {
       const state = {
         gameState: {
           studio: {
@@ -213,9 +213,9 @@ describe('ProjectDetailModal', () => {
     vi.mocked(useUIStore).mockReturnValue({
       selectedProjectId: 'P1',
       selectProject: mockSelectProject,
-    } as any);
+    } as unknown as any);
 
-    vi.mocked(useGameStore).mockImplementation((selector: any) => {
+    vi.mocked(useGameStore).mockImplementation((selector: unknown) => {
       const state = {
         gameState: {
           studio: {

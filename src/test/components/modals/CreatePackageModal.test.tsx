@@ -72,7 +72,7 @@ describe('CreatePackageModal', () => {
       },
     };
 
-    render(<CreatePackageModal agencies={mockAgencies as any[]} talents={mockTalents as any} />);
+    render(<CreatePackageModal agencies={mockAgencies as unknown as any[]} talents={mockTalents as unknown as any} />);
 
     expect(screen.getByText('Create Talent Package')).toBeInTheDocument();
     expect(screen.getByText('Assemble a talent package to offer to agencies')).toBeInTheDocument();
@@ -108,7 +108,7 @@ describe('CreatePackageModal', () => {
       },
     };
 
-    render(<CreatePackageModal agencies={mockAgencies as any[]} talents={mockTalents as any} />);
+    render(<CreatePackageModal agencies={mockAgencies as unknown as any[]} talents={mockTalents as unknown as any} />);
 
     // Select agency - click the first select trigger (agency selection)
     const selects = screen.getAllByRole('combobox');
@@ -153,7 +153,7 @@ describe('CreatePackageModal', () => {
       },
     };
 
-    render(<CreatePackageModal agencies={mockAgencies as any[]} talents={mockTalents as any} />);
+    render(<CreatePackageModal agencies={mockAgencies as unknown as any[]} talents={mockTalents as unknown as any} />);
 
     // Select agency - click the first select trigger (agency selection)
     const selects = screen.getAllByRole('combobox');
@@ -185,7 +185,7 @@ describe('CreatePackageModal', () => {
       'talent-6': { id: 'talent-6', name: 'Actor Six', roles: ['actor'], tier: 1, contractId: 'contract-6' },
     };
 
-    render(<CreatePackageModal agencies={mockAgencies as any} talents={mockTalents as any} />);
+    render(<CreatePackageModal agencies={mockAgencies as unknown as any} talents={mockTalents as unknown as any} />);
 
     // Select agency - click the first select trigger (agency selection)
     const selects = screen.getAllByRole('combobox');

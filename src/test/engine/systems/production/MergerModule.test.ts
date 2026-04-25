@@ -16,7 +16,7 @@ describe('MergerModule', () => {
 
     it('returns empty array when active mergers is undefined', () => {
       const state = createMockGameState();
-      state.industry.activeMergers = undefined as any;
+      state.industry.activeMergers = undefined as unknown as any;
       const rng = new RandomGenerator(42);
 
       const impacts = evaluateActiveMergers(state, rng);
@@ -51,8 +51,8 @@ describe('MergerModule', () => {
 
       const newsImpact = impacts.find(i => i.type === 'NEWS_ADDED');
       expect(newsImpact).toBeDefined();
-      expect((newsImpact?.payload as any).headline).toBe('MERGER FINALIZED: merger-1');
-      expect((newsImpact?.payload as any).category).toBe('market');
+      expect((newsImpact?.payload as unknown as any).headline).toBe('MERGER FINALIZED: merger-1');
+      expect((newsImpact?.payload as unknown as any).category).toBe('market');
     });
 
     it('resolves mergers past their active week', () => {
@@ -74,7 +74,7 @@ describe('MergerModule', () => {
         { id: 'merger-1', activeUntilWeek: 15, acquirerId: 'acq1', targetId: 'tar1' },
         { id: 'merger-2', activeUntilWeek: 20, acquirerId: 'acq2', targetId: 'tar2' },
         { id: 'merger-3', activeUntilWeek: 25, acquirerId: 'acq3', targetId: 'tar3' },
-        { id: 'merger-no-week', acquirerId: 'acq4', targetId: 'tar4' } as any // Undefined activeUntilWeek defaults to 0
+        { id: 'merger-no-week', acquirerId: 'acq4', targetId: 'tar4' } as unknown as any // Undefined activeUntilWeek defaults to 0
       ];
       const rng = new RandomGenerator(42);
 
@@ -84,7 +84,7 @@ describe('MergerModule', () => {
       // 3 mergers resolved * 2 impacts per merger = 6 impacts
       expect(impacts).toHaveLength(6);
 
-      const resolvedIds = impacts.filter(i => i.type === 'MERGER_RESOLVED').map(i => (i.payload as any).mergerId);
+      const resolvedIds = impacts.filter(i => i.type === 'MERGER_RESOLVED').map(i => (i.payload as unknown as any).mergerId);
       expect(resolvedIds).toContain('merger-1');
       expect(resolvedIds).toContain('merger-2');
       expect(resolvedIds).toContain('merger-no-week');

@@ -1,10 +1,11 @@
+
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { persistenceService } from '@/persistence/PersistenceService';
 import { GameState } from '@/engine/types';
 
 // Mock Worker
 class MockWorker {
-    onmessage: ((e: { data: any }) => void) | null = null;
+    onmessage: ((e: { data: unknown }) => void) | null = null;
     postMessage = vi.fn((data) => {
         console.log(`[MockWorker] Received: ${data.type} (req: ${data.requestId})`);
         // Simulate background worker delay
@@ -41,17 +42,17 @@ describe('Persistence Layer Race Hardening', () => {
         vi.clearAllMocks();
 
         const mock = new MockWorker();
-        (persistenceService as any).worker = mock;
+        (persistenceService as unknown as any).worker = mock;
         // reset resolves
-        (persistenceService as any).pendingResolves.clear();
+        (persistenceService as unknown as any).pendingResolves.clear();
 
         // ⚡ Manually attach the message handling logic since initWorker likely skipped it in Node
-        mock.onmessage = (e: { data: any }) => {
+        mock.onmessage = (e: { data: unknown }) => {
             const { requestId, state, type } = e.data;
             let result = state;
             if (type === 'SAVE_SUCCESS') result = true;
             // reaching into private method for test purposes
-            (persistenceService as any).resolvePromise(requestId, result);
+            (persistenceService as unknown as any).resolvePromise(requestId, result);
         };
 
         console.log('[Test] Injected mock worker and attached handler');
@@ -67,10 +68,10 @@ describe('Persistence Layer Race Hardening', () => {
         console.log('[Test] Save results received:', results);
 
         expect(results).toEqual([true, true, true]);
-        expect((persistenceService as any).worker.postMessage).toHaveBeenCalledTimes(3);
+        expect((persistenceService as unknown as any).worker.postMessage).toHaveBeenCalledTimes(3);
 
-        const firstId = (persistenceService as any).worker.postMessage.mock.calls[0][0].requestId;
-        const secondId = (persistenceService as any).worker.postMessage.mock.calls[1][0].requestId;
+        const firstId = (persistenceService as unknown as any).worker.postMessage.mock.calls[0][0].requestId;
+        const secondId = (persistenceService as unknown as any).worker.postMessage.mock.calls[1][0].requestId;
         expect(firstId).not.toBe(secondId);
     });
 

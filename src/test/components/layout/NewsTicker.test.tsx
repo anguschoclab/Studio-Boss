@@ -7,7 +7,7 @@ vi.mock('../../../../src/store/gameStore');
 
 describe('NewsTicker', () => {
   it('returns default fallback state if there are no headlines', () => {
-    vi.spyOn(gameStore, 'useGameStore').mockImplementation((selector: any) => 
+    vi.spyOn(gameStore, 'useGameStore').mockImplementation((selector: unknown) =>
       selector({ news: { headlines: [] } })
     );
     render(<NewsTicker />);
@@ -15,7 +15,7 @@ describe('NewsTicker', () => {
   });
 
   it('displays active news items from the store (doubled for marquee)', () => {
-    vi.spyOn(gameStore, 'useGameStore').mockImplementation((selector: any) => 
+    vi.spyOn(gameStore, 'useGameStore').mockImplementation((selector: unknown) =>
       selector({ 
         news: { 
           headlines: [

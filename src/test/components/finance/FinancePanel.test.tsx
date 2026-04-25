@@ -31,8 +31,8 @@ vi.mock('@/engine/utils', () => ({
 
 // Mock finance calculation functions
 vi.mock('@/engine/systems/finance', () => ({
-  calculateWeeklyCosts: vi.fn((projects: any[]) => projects.reduce((acc: number, p: any) => acc + (p.weeklyCost || 0), 0)),
-  calculateWeeklyRevenue: vi.fn((projects: any[]) => projects.reduce((acc: number, p: any) => acc + (p.weeklyRevenue || 0), 0)),
+  calculateWeeklyCosts: vi.fn((projects: unknown[]) => projects.reduce((acc: number, p: unknown) => acc + (p.weeklyCost || 0), 0)),
+  calculateWeeklyRevenue: vi.fn((projects: unknown[]) => projects.reduce((acc: number, p: unknown) => acc + (p.weeklyRevenue || 0), 0)),
   calculateStudioNetWorth: vi.fn(() => 10000000),
   generateCashflowForecast: vi.fn(() => []),
   calculateProjectROI: vi.fn(() => 1.5)
@@ -48,9 +48,9 @@ describe('FinancePanel Component', () => {
   });
 
   it('renders gracefully with null/empty game state', () => {
-    vi.mocked(useGameStore).mockImplementation((selector: any) => {
+    vi.mocked(useGameStore).mockImplementation((selector: unknown) => {
       if (!selector) return { snapshots: [] };
-      return selector({ gameState: null, snapshots: [] } as any)
+      return selector({ gameState: null, snapshots: [] } as unknown as any)
     });
 
     render(<FinancePanel />);
@@ -80,9 +80,9 @@ describe('FinancePanel Component', () => {
       }
     };
 
-    vi.mocked(useGameStore).mockImplementation((selector: any) => {
+    vi.mocked(useGameStore).mockImplementation((selector: unknown) => {
       if (!selector) return { snapshots: [] };
-      return selector({ gameState: mockGameState, snapshots: [] } as any)
+      return selector({ gameState: mockGameState, snapshots: [] } as unknown as any)
     });
 
     render(<FinancePanel />);
@@ -109,9 +109,9 @@ describe('FinancePanel Component', () => {
       }
     };
 
-    vi.mocked(useGameStore).mockImplementation((selector: any) => {
+    vi.mocked(useGameStore).mockImplementation((selector: unknown) => {
       if (!selector) return { snapshots: [] };
-      return selector({ gameState: mockGameState, snapshots: [] } as any)
+      return selector({ gameState: mockGameState, snapshots: [] } as unknown as any)
     });
 
     render(<FinancePanel />);

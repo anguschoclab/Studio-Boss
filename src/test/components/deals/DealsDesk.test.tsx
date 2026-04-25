@@ -20,7 +20,7 @@ describe('DealsDesk', () => {
       id, title: `${id} Project`, state, genre, budgetTier: tier, budget: 1000000
   } as Project);
 
-  const generateMockBuyer = (id: string, name: string, archetype: string, mandate?: any) => ({
+  const generateMockBuyer = (id: string, name: string, archetype: string, mandate?: unknown) => ({
       id, name, archetype, currentMandate: mandate
   } as Buyer);
 
@@ -33,7 +33,7 @@ describe('DealsDesk', () => {
           market: { buyers: [] }
         }
       };
-      return selector(state as any);
+      return selector(state as unknown as any);
     });
 
     render(<DealsDesk />);
@@ -56,7 +56,7 @@ describe('DealsDesk', () => {
           }
         }
       };
-      return selector(state as any);
+      return selector(state as unknown as any);
     });
 
     render(<DealsDesk />);
@@ -87,7 +87,7 @@ describe('DealsDesk', () => {
           market: { buyers: [] }
         }
       };
-      return selector(state as any);
+      return selector(state as unknown as any);
     });
 
     render(<DealsDesk />);
@@ -120,7 +120,7 @@ describe('DealsDesk', () => {
           }
         }
       };
-      return selector(state as any);
+      return selector(state as unknown as any);
     });
 
     render(<DealsDesk />);

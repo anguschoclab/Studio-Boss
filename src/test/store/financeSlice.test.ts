@@ -11,7 +11,7 @@ describe('financeSlice', () => {
           cash: 100000000,
           ledger: [],
         }
-      } as any
+      } as unknown as any
     });
   });
 
@@ -32,7 +32,7 @@ describe('financeSlice', () => {
     };
 
     // Assuming we add an action to the store
-    (useGameStore.getState() as any).addLedgerEntry(mockReport);
+    (useGameStore.getState() as unknown as any).addLedgerEntry(mockReport);
 
     const state = useGameStore.getState().gameState;
     expect(state?.finance.ledger).toHaveLength(1);

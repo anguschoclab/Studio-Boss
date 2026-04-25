@@ -424,7 +424,7 @@ const ScandalsPanel = () => {
       weeksRemaining: s.weeksRemaining,
       publicSentiment: s.severity > 60 ? 'outraged' as const : 'divided' as const,
       pressCoverage: Math.round(s.severity * 0.5),
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       effects: [] as any[],
       hasInsurance: false,
     };

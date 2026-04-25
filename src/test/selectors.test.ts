@@ -491,7 +491,7 @@ describe('Phase 2: Project Status Selectors', () => {
               progress: 50,
               accumulatedCost: 6000000,
               estimatedWindow: { startWeek: 1, endWeek: 10 },
-            } as any, // Type assertion for test mock
+            } as unknown as any, // Type assertion for test mock
           },
           contracts: {},
           talents: {},
@@ -717,7 +717,7 @@ describe('Phase 4: Talent Selectors', () => {
                 { rivalId: 'RIVAL-1', amount: 4500000, week: 1 },
               ],
               bids: {},
-            } as any,
+            } as unknown as any,
             {
               id: 'opp-2',
               talentId: 'talent-2',
@@ -726,7 +726,7 @@ describe('Phase 4: Talent Selectors', () => {
                 { rivalId: 'PLAYER', amount: 3000000, week: 2 },
               ],
               bids: {},
-            } as any,
+            } as unknown as any,
             {
               id: 'opp-3',
               talentId: 'talent-3',
@@ -735,7 +735,7 @@ describe('Phase 4: Talent Selectors', () => {
                 { rivalId: 'RIVAL-1', amount: 4000000, week: 3 },
               ],
               bids: {},
-            } as any,
+            } as unknown as any,
           ],
           trends: [],
           activeMarketEvents: [],
@@ -831,7 +831,7 @@ describe('Phase 5: Studio Health & Crisis Selectors', () => {
               scriptHeat: 50,
               activeRoles: ['protagonist'],
               scriptEvents: [],
-            } as any, // Type assertion for test mock
+            } as unknown as any, // Type assertion for test mock
           },
           contracts: {},
           talents: {},

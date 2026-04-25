@@ -1,3 +1,4 @@
+
 import { WeekCoordinator } from '@/engine/services/WeekCoordinator';
 import { initializeGame } from '@/engine/core/gameInit';
 import { RandomGenerator } from '@/engine/utils/rng';
@@ -43,7 +44,7 @@ describe('System Connectivity - Phase 3 Integration', () => {
         const result = WeekCoordinator.execute(state, rng);
         
         // Check for cult classic news or impact
-        const hasCultImpact = result.impacts.some(i => i.type === 'VAULT_ASSET_UPDATED' && (i.payload as any).update.tier === 'CULT_CLASSIC');
+        const hasCultImpact = result.impacts.some(i => i.type === 'VAULT_ASSET_UPDATED' && (i.payload as unknown as any).update.tier === 'CULT_CLASSIC');
         expect(hasCultImpact).toBe(true);
     });
 

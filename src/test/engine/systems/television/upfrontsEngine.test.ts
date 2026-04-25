@@ -1,3 +1,4 @@
+
 import { describe, it, expect, vi } from 'vitest';
 import { runUpfronts } from '../../../../engine/systems/television/upfrontsEngine';
 import { GameState, SeriesProject, StateImpact } from '../../../../engine/types';
@@ -101,7 +102,7 @@ describe('Upfronts Engine (Guild Auditor)', () => {
     // We only get a MODAL_TRIGGERED, but no pickups means no news and no project updates
     expect(impacts.length).toBe(1);
     expect(impacts[0].type).toBe('MODAL_TRIGGERED');
-    const payload = impacts[0].payload as any;
+    const payload = impacts[0].payload as unknown as any;
     expect(payload.payload.results[0].decision).toBe('pass');
   });
 
@@ -126,12 +127,12 @@ describe('Upfronts Engine (Guild Auditor)', () => {
     const updateImpact = impacts.find(i => i.type === 'PROJECT_UPDATED');
     expect(updateImpact).toBeDefined();
 
-    const projectUpdate = (updateImpact!.payload as any).update;
+    const projectUpdate = (updateImpact!.payload as unknown as any).update;
     expect(projectUpdate.state).toBe('production');
     expect(projectUpdate.tvDetails.episodesOrdered).toBe(5);
 
     const modalImpact = impacts.find(i => i.type === 'MODAL_TRIGGERED');
-    expect((modalImpact!.payload as any).payload.results[0].decision).toBe('limited_order');
+    expect((modalImpact!.payload as unknown as any).payload.results[0].decision).toBe('limited_order');
   });
 
   it('gives a full pickup to amazing projects', () => {
@@ -154,12 +155,12 @@ describe('Upfronts Engine (Guild Auditor)', () => {
     const updateImpact = impacts.find(i => i.type === 'PROJECT_UPDATED');
     expect(updateImpact).toBeDefined();
 
-    const projectUpdate = (updateImpact!.payload as any).update;
+    const projectUpdate = (updateImpact!.payload as unknown as any).update;
     expect(projectUpdate.state).toBe('production');
     expect(projectUpdate.tvDetails.episodesOrdered).toBe(10);
 
     const modalImpact = impacts.find(i => i.type === 'MODAL_TRIGGERED');
-    expect((modalImpact!.payload as any).payload.results[0].decision).toBe('pickup');
+    expect((modalImpact!.payload as unknown as any).payload.results[0].decision).toBe('pickup');
   });
 
   it('handles negative stats properly (guild auditor check)', () => {
@@ -175,6 +176,6 @@ describe('Upfronts Engine (Guild Auditor)', () => {
     const impacts = runUpfronts(state, rng);
 
     expect(impacts.length).toBe(1); // just the modal with 'pass'
-    expect((impacts[0].payload as any).payload.results[0].decision).toBe('pass');
+    expect((impacts[0].payload as unknown as any).payload.results[0].decision).toBe('pass');
   });
 });

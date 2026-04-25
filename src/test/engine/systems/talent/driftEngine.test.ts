@@ -1,3 +1,4 @@
+
 import { describe, it, expect } from 'vitest';
 import { TalentDriftEngine, DEFAULT_DRIFT_CONFIG } from '@/engine/systems/talent/driftEngine';
 import { ARCHETYPE_TRANSITIONS, PERSONALITY_TRANSITIONS, CAREER_TRAJECTORY_TRANSITIONS } from '@/engine/data/talentArchetypes';
@@ -79,7 +80,7 @@ describe('TalentDriftEngine', () => {
         actorArchetype: 'movie_star',
         personality: 'collaborative',
         careerTrajectory: 'peak',
-        accessLevel: 'outsider' as any
+        accessLevel: 'outsider' as unknown as any
       };
 
       const mockRng = new RandomGenerator(12345);
@@ -116,7 +117,7 @@ describe('TalentDriftEngine', () => {
         fatigue: 0,
         preferredGenres: ['Drama'],
         actorArchetype: 'movie_star',
-        accessLevel: 'outsider' as any
+        accessLevel: 'outsider' as unknown as any
       };
 
       const mockRng = new RandomGenerator(99999);
@@ -151,7 +152,7 @@ describe('TalentDriftEngine', () => {
         fatigue: 0,
         preferredGenres: ['Drama'],
         actorArchetype: 'movie_star',
-        accessLevel: 'outsider' as any
+        accessLevel: 'outsider' as unknown as any
       };
 
       const driftResult = {
@@ -192,7 +193,7 @@ describe('TalentDriftEngine', () => {
         fatigue: 0,
         preferredGenres: ['Drama'],
         personality: 'collaborative',
-        accessLevel: 'outsider' as any
+        accessLevel: 'outsider' as unknown as any
       };
 
       const driftResult = {
@@ -233,7 +234,7 @@ describe('TalentDriftEngine', () => {
         fatigue: 0,
         preferredGenres: ['Drama'],
         careerTrajectory: 'peak',
-        accessLevel: 'outsider' as any
+        accessLevel: 'outsider' as unknown as any
       };
 
       const driftResult = {
@@ -277,7 +278,7 @@ describe('TalentDriftEngine', () => {
           fatigue: 0,
           preferredGenres: ['Drama'],
           actorArchetype: 'movie_star',
-          accessLevel: 'outsider' as any
+          accessLevel: 'outsider' as unknown as any
         },
         'talent-2': {
           id: 'talent-2',
@@ -301,7 +302,7 @@ describe('TalentDriftEngine', () => {
           fatigue: 0,
           preferredGenres: ['Drama'],
           writerArchetype: 'showrunner',
-          accessLevel: 'outsider' as any
+          accessLevel: 'outsider' as unknown as any
         }
       };
 
@@ -339,7 +340,7 @@ describe('TalentDriftEngine', () => {
         fatigue: 0,
         preferredGenres: ['Drama'],
         actorArchetype: 'kid_actor',
-        accessLevel: 'outsider' as any
+        accessLevel: 'outsider' as unknown as any
       };
 
       const mockRng = new RandomGenerator(99999);
@@ -375,7 +376,7 @@ describe('TalentDriftEngine', () => {
         fatigue: 0,
         preferredGenres: ['Drama'],
         actorArchetype: 'kid_actor',
-        accessLevel: 'outsider' as any
+        accessLevel: 'outsider' as unknown as any
       };
 
       const mockRng = new RandomGenerator(99999);
@@ -409,7 +410,7 @@ describe('TalentDriftEngine', () => {
         fatigue: 0,
         preferredGenres: ['Drama'],
         actorArchetype: 'prestige_actor',
-        accessLevel: 'outsider' as any
+        accessLevel: 'outsider' as unknown as any
       };
 
       const mockRng = new RandomGenerator(99999);
@@ -444,7 +445,7 @@ describe('TalentDriftEngine', () => {
         fatigue: 0,
         preferredGenres: ['Drama'],
         writerArchetype: 'showrunner',
-        accessLevel: 'outsider' as any
+        accessLevel: 'outsider' as unknown as any
       };
 
       const mockRng = new RandomGenerator(99999);
@@ -478,7 +479,7 @@ describe('TalentDriftEngine', () => {
         fatigue: 0,
         preferredGenres: ['Drama'],
         actorArchetype: 'kid_actor',
-        accessLevel: 'outsider' as any
+        accessLevel: 'outsider' as unknown as any
       };
 
       const mockRng = new RandomGenerator(99999);

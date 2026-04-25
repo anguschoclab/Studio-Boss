@@ -1,10 +1,10 @@
 import { createMarketingSlice } from "../../store/slices/marketingSlice";
 
 describe("marketingSlice", () => {
-  let store: any;
-  let slice: any;
-  let set: any;
-  let get: any;
+  let store: unknown;
+  let slice: unknown;
+  let set: unknown;
+  let get: unknown;
 
   beforeEach(() => {
     store = {
@@ -33,13 +33,13 @@ describe("marketingSlice", () => {
       }
     };
 
-    set = (fn: any) => {
+    set = (fn: unknown) => {
       const result = typeof fn === 'function' ? fn(store) : fn;
       store = { ...store, ...result };
     };
     get = () => store;
 
-    slice = createMarketingSlice(set, get, {} as any);
+    slice = createMarketingSlice(set, get, {} as unknown as any);
   });
 
   it("deducts funds and adds campaign data on launchAwardsCampaign", () => {

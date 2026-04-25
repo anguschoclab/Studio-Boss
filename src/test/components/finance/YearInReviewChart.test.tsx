@@ -15,7 +15,7 @@ global.ResizeObserver = vi.fn().mockImplementation(() => ({
 
 describe('YearInReviewChart', () => {
   it('renders initializing state message when ledger is empty', () => {
-    vi.spyOn(gameStore, 'useGameStore').mockImplementation((selector: any) => 
+    vi.spyOn(gameStore, 'useGameStore').mockImplementation((selector: unknown) =>
       selector({ finance: { ledger: [], cash: 0 } })
     );
 
@@ -35,7 +35,7 @@ describe('YearInReviewChart', () => {
         expenses: { production: 1000000, marketing: 0, overhead: 0 } 
       }
     ];
-    vi.spyOn(gameStore, 'useGameStore').mockImplementation((selector: any) => 
+    vi.spyOn(gameStore, 'useGameStore').mockImplementation((selector: unknown) =>
       selector({ finance: { ledger: mockLedger, cash: 110 } })
     );
 

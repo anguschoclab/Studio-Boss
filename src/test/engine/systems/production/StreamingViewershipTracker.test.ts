@@ -76,7 +76,7 @@ describe('StreamingViewershipTracker', () => {
       project.reviewScore = 50;
       project.buzz = 50;
       project.type = 'SERIES';
-      (project as any).releaseModel = 'binge';
+      (project as unknown as any).releaseModel = 'binge';
 
       const platform = createMockBuyer();
       const rng = new RandomGenerator(42);
@@ -98,7 +98,7 @@ describe('StreamingViewershipTracker', () => {
       project.reviewScore = 50;
       project.buzz = 50;
       project.type = 'SERIES';
-      (project as any).releaseModel = 'weekly';
+      (project as unknown as any).releaseModel = 'weekly';
       const platform = createMockBuyer();
       const rng = new RandomGenerator(42);
 

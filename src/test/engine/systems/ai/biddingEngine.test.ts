@@ -51,7 +51,7 @@ describe('AI Bidding Engine (Target C2 Refactor)', () => {
       id: 'script-1',
       bids: { 'rival-1': { amount: 2_000_000, terms: 'standard' } },
       expirationWeek: 10
-    } as any;
+    } as unknown as any;
 
     const state = createMockGameState();
     state.week = 1;
@@ -69,7 +69,7 @@ describe('AI Bidding Engine (Target C2 Refactor)', () => {
       costToAcquire: 2_000_000,
       bids: { 'player-1': { amount: 2_500_000, terms: 'standard' } },
       expirationWeek: 10
-    } as any;
+    } as unknown as any;
 
     const state = createMockGameState();
     state.week = 1;

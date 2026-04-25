@@ -1,3 +1,4 @@
+
 import { describe, it, expect } from 'vitest';
 import { TalentAgentInteractionEngine, AGENT_PERSONALITIES } from '@/engine/systems/talent/talentAgentInteractions';
 import { Talent, Agent, Agency } from '@/engine/types';
@@ -352,7 +353,7 @@ describe('TalentAgentInteractionEngine', () => {
           fatigue: 0,
           preferredGenres: ['Drama'],
           personality: 'collaborative',
-          accessLevel: 'outsider' as any
+          accessLevel: 'outsider' as unknown as any
         }
       };
 
@@ -363,7 +364,7 @@ describe('TalentAgentInteractionEngine', () => {
           agencyId: 'agency-1',
           negotiationTactic: 'DIPLOMAT',
           reputation: 60
-        } as any
+        } as unknown as any
       };
 
       const agencies: Record<string, Agency> = {
@@ -371,10 +372,10 @@ describe('TalentAgentInteractionEngine', () => {
           id: 'agency-1',
           name: 'Agency 1',
           tier: 'major',
-          culture: 'BOUTIQUE' as any,
+          culture: 'BOUTIQUE' as unknown as any,
           reputation: 70,
           cash: 10000000
-        } as any
+        } as unknown as any
       };
 
       const matrix = TalentAgentInteractionEngine.calculateCompatibilityMatrix(talents, agents, agencies);

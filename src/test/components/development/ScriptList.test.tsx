@@ -35,7 +35,7 @@ describe('ScriptList', () => {
       },
     ];
 
-    render(<ScriptList scripts={scripts as any} />);
+    render(<ScriptList scripts={scripts as unknown as any} />);
     
     expect(screen.getByText('Space Adventure')).toBeInTheDocument();
     expect(screen.getByText('Love Story')).toBeInTheDocument();
@@ -58,7 +58,7 @@ describe('ScriptList', () => {
       },
     ];
 
-    render(<ScriptList scripts={scripts as any} />);
+    render(<ScriptList scripts={scripts as unknown as any} />);
     
     expect(screen.getByText('Quality: 90/100')).toBeInTheDocument();
     expect(screen.getByText('5 revisions')).toBeInTheDocument();
@@ -79,7 +79,7 @@ describe('ScriptList', () => {
       },
     ];
 
-    const { container } = render(<ScriptList scripts={scripts as any} />);
+    const { container } = render(<ScriptList scripts={scripts as unknown as any} />);
     
     // Progress bar should exist
     expect(container.querySelector('.h-full.rounded-full')).toBeInTheDocument();

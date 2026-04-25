@@ -1,10 +1,11 @@
+
 import { describe, it, expect, beforeEach } from 'vitest';
 import { TalentFilter } from '@/engine/services/filters/TalentFilter';
 import { createMockGameState, createMockTickContext, createMockTalent } from '../generators/mockFactory';
 
 describe('TalentFilter', () => {
-  let mockState: any;
-  let mockContext: any;
+  let mockState: unknown;
+  let mockContext: unknown;
 
   beforeEach(() => {
     mockState = createMockGameState();
@@ -34,7 +35,7 @@ describe('TalentFilter', () => {
   it('should generate impacts for talent updates', () => {
     TalentFilter.execute(mockState, mockContext);
     // At minimum, TalentMoraleSystem usually processes morale
-    const talentImpacts = mockContext.impacts.filter((i: any) => i.type === 'TALENT_UPDATED');
+    const talentImpacts = mockContext.impacts.filter((i: unknown) => i.type === 'TALENT_UPDATED');
     expect(talentImpacts.length).toBeGreaterThanOrEqual(0);
   });
 
@@ -46,7 +47,7 @@ describe('TalentFilter', () => {
   it('should correctly process morale updates for active talents', () => {
     // Morale updates occur even if no projects are active (base decay/regen)
     TalentFilter.execute(mockState, mockContext);
-    const talentImpacts = mockContext.impacts.filter((i: any) => i.type === 'TALENT_UPDATED');
+    const talentImpacts = mockContext.impacts.filter((i: unknown) => i.type === 'TALENT_UPDATED');
     // Depending on the TalentMoraleSystem implementation, there might be impacts
     expect(talentImpacts).toBeDefined();
   });

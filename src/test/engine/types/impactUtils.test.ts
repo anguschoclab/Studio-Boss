@@ -19,7 +19,7 @@ describe('Impact Reducer (Target A1)', () => {
         status: 'production',
         buzz: 50,
         ownerId: mockState.studio.id
-    } as any;
+    } as unknown as any;
   });
 
   it('should accurately process FUNDS_CHANGED impact', () => {

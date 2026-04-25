@@ -23,7 +23,7 @@ describe('PipelineBoard', () => {
     vi.clearAllMocks();
     vi.mocked(useUIStore).mockReturnValue({
       openCreateProject: mockOpenCreateProject,
-    } as any);
+    } as unknown as any);
   });
 
   it('renders title and New Project button', () => {

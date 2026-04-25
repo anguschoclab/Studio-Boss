@@ -1,3 +1,4 @@
+
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { tickProduction } from '@/engine/systems/production/TickModule';
 import { createMockGameState, createMockProject, createMockTalent, createMockContract, createMockRival } from '@/test/utils/mockFactories';
@@ -28,11 +29,11 @@ describe('TickModule - tickProduction', () => {
     const industryUpdate = impacts.find(i => i.type === 'INDUSTRY_UPDATE');
     expect(industryUpdate).toBeDefined();
 
-    const updatedProject = (industryUpdate?.payload as any).update['entities.projects']['p1'];
+    const updatedProject = (industryUpdate?.payload as unknown as any).update['entities.projects']['p1'];
     expect(updatedProject.progress).toBeGreaterThan(50);
 
     // We should also see TALENT_UPDATED because fatigue increases
-    const talentUpdate = impacts.find(i => i.type === 'TALENT_UPDATED' && (i.payload as any).talentId === 't1');
+    const talentUpdate = impacts.find(i => i.type === 'TALENT_UPDATED' && (i.payload as unknown as any).talentId === 't1');
     expect(talentUpdate).toBeDefined();
   });
 
@@ -59,9 +60,9 @@ describe('TickModule - tickProduction', () => {
     const rng = new RandomGenerator(42);
     const impacts = tickProduction(state, rng);
 
-    const talentUpdate = impacts.find(i => i.type === 'TALENT_UPDATED' && (i.payload as any).talentId === 't1');
+    const talentUpdate = impacts.find(i => i.type === 'TALENT_UPDATED' && (i.payload as unknown as any).talentId === 't1');
     expect(talentUpdate).toBeDefined();
-    expect((talentUpdate?.payload as any).update.fatigue).toBeLessThan(50);
+    expect((talentUpdate?.payload as unknown as any).update.fatigue).toBeLessThan(50);
   });
 
 

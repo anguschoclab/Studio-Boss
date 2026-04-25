@@ -6,9 +6,8 @@ import { cn } from '@/lib/utils';
 
 export const MADashboard: React.FC = () => {
   const state = useGameStore(s => s.gameState);
-  if (!state) return null;
-  
   const industryData = useMemo(() => {
+    if (!state) return { allStudios: [], consolidationEvents: [], dominantCount: 0, highestShare: 0, concentration: 'low' };
     const rivals = Object.values(state.entities?.rivals || {});
     const playerShare = RegulatorSystem.getMarketShare(state, 'player');
     

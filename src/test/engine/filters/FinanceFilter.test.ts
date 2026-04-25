@@ -1,10 +1,11 @@
+
 import { describe, it, expect, beforeEach } from 'vitest';
 import { FinanceFilter } from '@/engine/services/filters/FinanceFilter';
 import { createMockGameState, createMockTickContext } from '../generators/mockFactory';
 
 describe('FinanceFilter', () => {
-  let mockState: any;
-  let mockContext: any;
+  let mockState: unknown;
+  let mockContext: unknown;
 
   beforeEach(() => {
     mockState = createMockGameState();
@@ -27,8 +28,8 @@ describe('FinanceFilter', () => {
 
   it('should generate ledger and snapshot impacts', () => {
     FinanceFilter.execute(mockState, mockContext);
-    const ledgerImpact = mockContext.impacts.find((i: any) => i.type === 'LEDGER_UPDATED');
-    const snapshotImpact = mockContext.impacts.find((i: any) => i.type === 'FINANCE_SNAPSHOT_ADDED' || i.type === 'HISTORY_SNAPSHOT_ADDED');
+    const ledgerImpact = mockContext.impacts.find((i: unknown) => i.type === 'LEDGER_UPDATED');
+    const snapshotImpact = mockContext.impacts.find((i: unknown) => i.type === 'FINANCE_SNAPSHOT_ADDED' || i.type === 'HISTORY_SNAPSHOT_ADDED');
     
     expect(ledgerImpact).toBeDefined();
     expect(snapshotImpact).toBeDefined();

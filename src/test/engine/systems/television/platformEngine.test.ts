@@ -55,7 +55,7 @@ describe('Platform Engine (Target B1)', () => {
       isGlobal: true,
       territories: ['USA', 'UK'],
       ratingHistory: []
-    } as any;
+    } as unknown as any;
 
     const state = getInitialState([streamer]);
     const impacts = tickPlatforms(state, rng);

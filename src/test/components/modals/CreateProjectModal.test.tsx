@@ -28,11 +28,11 @@ global.ResizeObserver = class ResizeObserver {
 
 // Also mock PointerEvent as some Radix components use it
 if (typeof window !== 'undefined') {
-  (window as any).PointerEvent = class PointerEvent extends Event {
+  (window as unknown as any).PointerEvent = class PointerEvent extends Event {
     button: number;
     ctrlKey: boolean;
     pointerType: string;
-    constructor(type: string, props: any = {}) {
+    constructor(type: string, props: unknown = {}) {
       super(type, props);
       this.button = props.button ?? 0;
       this.ctrlKey = props.ctrlKey ?? false;
@@ -60,19 +60,19 @@ describe('CreateProjectModal', () => {
     vi.clearAllMocks();
 
     // Default mock implementation
-    (useUIStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector: any) => selector ? selector({
+    (useUIStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector: unknown) => selector ? selector({
       showCreateProject: true,
       closeCreateProject: mockCloseCreateProject,
     }) : { showCreateProject: true, closeCreateProject: mockCloseCreateProject });
 
-    (useGameStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector: any) => selector ? selector({
+    (useGameStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector: unknown) => selector ? selector({
       createProject: mockCreateProject,
       gameState: mockGameState,
     }) : { createProject: mockCreateProject, gameState: mockGameState });
   });
 
   it('does not render when showCreateProject is false', () => {
-    (useUIStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector: any) => selector ? selector({
+    (useUIStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector: unknown) => selector ? selector({
       showCreateProject: false,
       closeCreateProject: mockCloseCreateProject,
     }) : { showCreateProject: false, closeCreateProject: mockCloseCreateProject });

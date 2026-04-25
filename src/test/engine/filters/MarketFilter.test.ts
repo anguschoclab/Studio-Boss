@@ -1,10 +1,11 @@
+
 import { describe, it, expect, beforeEach } from 'vitest';
 import { MarketFilter } from '@/engine/services/filters/MarketFilter';
 import { createMockGameState, createMockTickContext } from '../generators/mockFactory';
 
 describe('MarketFilter', () => {
-  let mockState: any;
-  let mockContext: any;
+  let mockState: unknown;
+  let mockContext: unknown;
 
   beforeEach(() => {
     mockState = createMockGameState();
@@ -27,7 +28,7 @@ describe('MarketFilter', () => {
 
   it('should generate interest rate impact', () => {
       MarketFilter.execute(mockState, mockContext);
-      const interestRateImpact = mockContext.impacts.find((i: any) => i.type === 'MARKET_EVENT_UPDATED');
+      const interestRateImpact = mockContext.impacts.find((i: unknown) => i.type === 'MARKET_EVENT_UPDATED');
       expect(interestRateImpact).toBeDefined();
   });
 

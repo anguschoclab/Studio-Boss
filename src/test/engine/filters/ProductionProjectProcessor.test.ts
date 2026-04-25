@@ -1,3 +1,4 @@
+
 import { describe, it, expect, beforeEach } from 'vitest';
 import { ProductionProjectProcessor } from '@/engine/services/filters/ProductionProjectProcessor';
 import { GameState } from '@/engine/types';
@@ -22,21 +23,21 @@ describe('ProductionProjectProcessor', () => {
         name: 'Test Studio',
         archetype: 'major',
         prestige: 50,
-      } as any,
+      } as unknown as unknown as any,
       entities: {
         projects: {},
         rivals: {},
         talents: {},
         contracts: {},
-      } as any,
+      } as unknown as unknown as any,
       market: {
         trends: [],
         buyers: [],
         opportunities: [],
-      } as any,
+      } as unknown as unknown as any,
       industry: {
         agencies: [],
-      } as any,
+      } as unknown as unknown as any,
       finance: {
         cash: 10000000,
         ledger: [],
@@ -55,13 +56,13 @@ describe('ProductionProjectProcessor', () => {
         vault: [],
         franchises: {},
       },
-      game: {} as any,
-      news: { headlines: [], events: [] } as any,
-      deals: { activeDeals: [], expiredDeals: [], pendingOffers: [] } as any,
-      talentAgentRelationships: {} as any,
-      eventHistory: [] as any,
-      relationships: {} as any,
-      history: [] as any,
+      game: {} as unknown as unknown as any,
+      news: { headlines: [], events: [] } as unknown as unknown as any,
+      deals: { activeDeals: [], expiredDeals: [], pendingOffers: [] } as unknown as unknown as any,
+      talentAgentRelationships: {} as unknown as unknown as any,
+      eventHistory: [] as unknown as unknown as any,
+      relationships: {} as unknown as unknown as any,
+      history: [] as unknown as unknown as any,
     } as GameState;
 
     mockContext = {
@@ -79,7 +80,7 @@ describe('ProductionProjectProcessor', () => {
       id: 'project-1',
       title: 'Test Project',
       state: 'development',
-    } as any;
+    } as unknown as unknown as any;
     expect(() => ProductionProjectProcessor.processProject(project, mockState, mockContext)).not.toThrow();
   });
 
@@ -88,7 +89,7 @@ describe('ProductionProjectProcessor', () => {
       id: 'project-1',
       title: 'Test Project',
       state: 'development',
-    } as any;
+    } as unknown as unknown as any;
     const stateBefore = mockRng.getState();
     ProductionProjectProcessor.processProject(project, mockState, mockContext);
     const stateAfter = mockRng.getState();
@@ -100,7 +101,7 @@ describe('ProductionProjectProcessor', () => {
       id: 'project-1',
       title: 'Test Project',
       state: 'development',
-    } as any;
+    } as unknown as unknown as any;
     ProductionProjectProcessor.processProject(project, mockState, mockContext);
     // Should generate script development impacts
     expect(mockContext.impacts.length).toBeGreaterThanOrEqual(0);
@@ -113,7 +114,7 @@ describe('ProductionProjectProcessor', () => {
       state: 'released',
       directorsCutNotified: false,
       momentum: 50,
-    } as any;
+    } as unknown as unknown as any;
     ProductionProjectProcessor.processProject(project, mockState, mockContext);
     // Should check director's cut eligibility
     expect(mockContext.impacts.length).toBeGreaterThanOrEqual(0);
@@ -125,7 +126,7 @@ describe('ProductionProjectProcessor', () => {
       title: 'Test Project',
       state: 'shopping',
       shoppingExpiresWeek: 1,
-    } as any;
+    } as unknown as unknown as any;
     mockContext.week = 2;
     ProductionProjectProcessor.processProject(project, mockState, mockContext);
     const projectUpdates = mockContext.impacts.filter(i => i.type === 'PROJECT_UPDATED');
@@ -139,7 +140,7 @@ describe('ProductionProjectProcessor', () => {
       state: 'released',
       contentFlags: ['violence', 'language'],
       rating: null,
-    } as any;
+    } as unknown as unknown as any;
     ProductionProjectProcessor.processProject(project, mockState, mockContext);
     const projectUpdates = mockContext.impacts.filter(i => i.type === 'PROJECT_UPDATED');
     expect(projectUpdates.length).toBeGreaterThan(0);

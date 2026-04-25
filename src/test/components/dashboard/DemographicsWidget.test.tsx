@@ -7,10 +7,10 @@ import { DemographicsWidget } from '@/components/dashboard/DemographicsWidget';
 
 vi.mock('recharts', () => {
   return {
-    ResponsiveContainer: ({ children }: any) => <div>{children}</div>,
-    BarChart: ({ data, children }: any) => (
+    ResponsiveContainer: ({ children }: unknown) => <div>{children}</div>,
+    BarChart: ({ data, children }: unknown) => (
       <div data-testid="mock-barchart">
-        {data?.map((d: any, i: number) => (
+        {data?.map((d: unknown, i: number) => (
           <div key={i} data-testid={`mock-bar-${i}`} data-genre={d.genre} data-popularity={d.popularity}>
             {d.genre}: {d.popularity}
           </div>
@@ -27,18 +27,18 @@ vi.mock('recharts', () => {
 });
 
 vi.mock('@/components/ui/chart', () => ({
-  ChartContainer: ({ children }: any) => <div data-testid="chart-container">{children}</div>,
+  ChartContainer: ({ children }: unknown) => <div data-testid="chart-container">{children}</div>,
   ChartTooltip: () => null,
   ChartTooltipContent: () => null,
 }));
 
 const mockUseGameStore = vi.fn();
 vi.mock('@/store/gameStore', () => ({
-  useGameStore: (selector: any) => mockUseGameStore(selector),
+  useGameStore: (selector: unknown) => mockUseGameStore(selector),
 }));
 
 vi.mock('zustand/react/shallow', () => ({
-  useShallow: (fn: any) => fn,
+  useShallow: (fn: unknown) => fn,
 }));
 
 describe('DemographicsWidget', () => {
@@ -64,7 +64,7 @@ describe('DemographicsWidget', () => {
       },
     };
 
-    mockUseGameStore.mockImplementation((selector: any) => {
+    mockUseGameStore.mockImplementation((selector: unknown) => {
       return selector({ gameState: { culture: mockCulture } });
     });
 

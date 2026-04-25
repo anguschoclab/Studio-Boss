@@ -17,9 +17,9 @@ vi.mock('@/store/uiStore', () => ({
 // Mock Framer Motion
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+    div: ({ children, ...props }: unknown) => <div {...props}>{children}</div>,
   },
-  AnimatePresence: ({ children }: any) => <>{children}</>,
+  AnimatePresence: ({ children }: unknown) => <>{children}</>,
 }));
 
 // Mock Lucide icons
@@ -44,12 +44,12 @@ describe('AwardsCeremonyModal', () => {
         'proj-2': { title: 'Another Great Movie' },
       }
     }
-  } as any;
+  } as unknown as any;
 
   beforeEach(() => {
     vi.clearAllMocks();
 
-    (useGameStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector: any) => {
+    (useGameStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector: unknown) => {
       const state = {
         gameState: mockGameState,
       };

@@ -1,3 +1,4 @@
+
 import { describe, it, expect } from 'vitest';
 import { useGameStore } from '@/store/gameStore';
 
@@ -19,7 +20,7 @@ describe('Unscripted Projects', () => {
     });
 
     const state = useGameStore.getState().gameState;
-    const project = Object.values(state?.entities.projects || {}).find(p => p.title === 'Real World Test') as any;
+    const project = Object.values(state?.entities.projects || {}).find(p => p.title === 'Real World Test') as unknown as any;
 
     expect(project).toBeDefined();
     expect(project?.format).toBe('unscripted');

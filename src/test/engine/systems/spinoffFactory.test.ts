@@ -22,9 +22,9 @@ describe('Spinoff Factory', () => {
     const proposal = generateSpinoffProposal(mockProject, 'FATIGUED', 0);
     // At least some fatigue choices should be available
     expect(proposal.flavor).toBeDefined();
-    if ((proposal as any).title?.includes('True Story')) {
-        expect((proposal as any).format).toBe('unscripted');
-        expect((proposal as any).unscriptedFormat).toBe('docuseries');
+    if ((proposal as unknown as any).title?.includes('True Story')) {
+        expect((proposal as unknown as any).format).toBe('unscripted');
+        expect((proposal as unknown as any).unscriptedFormat).toBe('docuseries');
     }
   });
 

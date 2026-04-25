@@ -1,3 +1,4 @@
+
 import { describe, it, expect } from 'vitest';
 import { RivalRevenueCalculator } from '@/engine/systems/rivals/RivalRevenueCalculator';
 import { RivalStudio } from '@/engine/types';
@@ -9,7 +10,7 @@ describe('RivalRevenueCalculator', () => {
     };
     
     const revenue = RivalRevenueCalculator.calculateWeeklyRevenue(
-      rival as RivalStudio, 1, { next: () => 0.5, rangeInt: () => 10, uuid: () => 'id' } as any
+      rival as RivalStudio, 1, { next: () => 0.5, rangeInt: () => 10, uuid: () => 'id' } as unknown as any
     );
     
     expect(revenue.total).toBe(0);
@@ -54,12 +55,12 @@ describe('RivalRevenueCalculator', () => {
           releaseWeek: 1,
           boxOffice: { openingWeekendDomestic: 10000000, openingWeekendForeign: 5000000, totalDomestic: 50000000, totalForeign: 25000000, multiplier: 1.5 },
           reviewScore: 75
-        } as any
+        } as unknown as any
       }
     };
     
     const revenue = RivalRevenueCalculator.calculateWeeklyRevenue(
-      rival as RivalStudio, 2, { next: () => 0.5, rangeInt: () => 10, uuid: () => 'id' } as any
+      rival as RivalStudio, 2, { next: () => 0.5, rangeInt: () => 10, uuid: () => 'id' } as unknown as any
     );
     
     expect(revenue.boxOffice).toBeGreaterThan(0);
@@ -75,12 +76,12 @@ describe('RivalRevenueCalculator', () => {
           distributionStatus: 'streaming',
           reviewScore: 80,
           rating: 'TV-MA'
-        } as any
+        } as unknown as any
       }
     };
     
     const revenue = RivalRevenueCalculator.calculateWeeklyRevenue(
-      rival as RivalStudio, 1, { next: () => 0.5, rangeInt: () => 10, uuid: () => 'id' } as any
+      rival as RivalStudio, 1, { next: () => 0.5, rangeInt: () => 10, uuid: () => 'id' } as unknown as any
     );
     
     expect(revenue.streaming).toBeGreaterThan(0);
@@ -96,12 +97,12 @@ describe('RivalRevenueCalculator', () => {
           buzz: 85,
           franchiseId: 'franchise1',
           rating: 'PG'
-        } as any
+        } as unknown as any
       }
     };
     
     const revenue = RivalRevenueCalculator.calculateWeeklyRevenue(
-      rival as RivalStudio, 1, { next: () => 0.5, rangeInt: () => 10, uuid: () => 'id' } as any
+      rival as RivalStudio, 1, { next: () => 0.5, rangeInt: () => 10, uuid: () => 'id' } as unknown as any
     );
     
     expect(revenue.merch).toBeGreaterThan(0);
@@ -115,12 +116,12 @@ describe('RivalRevenueCalculator', () => {
           state: 'released',
           buzz: 50,
           rating: 'PG-13'
-        } as any
+        } as unknown as any
       }
     };
     
     const revenue = RivalRevenueCalculator.calculateWeeklyRevenue(
-      rival as RivalStudio, 1, { next: () => 0.5, rangeInt: () => 10, uuid: () => 'id' } as any
+      rival as RivalStudio, 1, { next: () => 0.5, rangeInt: () => 10, uuid: () => 'id' } as unknown as any
     );
     
     expect(revenue.merch).toBe(0); // Buzz below 70 threshold
@@ -135,7 +136,7 @@ describe('RivalRevenueCalculator', () => {
           distributionStatus: 'streaming',
           reviewScore: 70,
           rating: 'TV-MA'
-        } as any
+        } as unknown as any
       }
     };
     
@@ -147,16 +148,16 @@ describe('RivalRevenueCalculator', () => {
           distributionStatus: 'streaming',
           reviewScore: 70,
           rating: 'PG-13'
-        } as any
+        } as unknown as any
       }
     };
     
     const revenueTVMA = RivalRevenueCalculator.calculateWeeklyRevenue(
-      rivalTVMA as RivalStudio, 1, { next: () => 0.5, rangeInt: () => 10, uuid: () => 'id' } as any
+      rivalTVMA as RivalStudio, 1, { next: () => 0.5, rangeInt: () => 10, uuid: () => 'id' } as unknown as any
     );
     
     const revenuePG13 = RivalRevenueCalculator.calculateWeeklyRevenue(
-      rivalPG13 as RivalStudio, 1, { next: () => 0.5, rangeInt: () => 10, uuid: () => 'id' } as any
+      rivalPG13 as RivalStudio, 1, { next: () => 0.5, rangeInt: () => 10, uuid: () => 'id' } as unknown as any
     );
     
     expect(revenueTVMA.streaming).toBeGreaterThan(revenuePG13.streaming); // TV-MA has premium

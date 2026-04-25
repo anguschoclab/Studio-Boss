@@ -1,3 +1,4 @@
+
 import { describe, it, expect, vi } from 'vitest';
 import { tickTelevision } from '../../../../engine/systems/television/televisionTick';
 import { GameState, SeriesProject, StateImpact } from '../../../../engine/types';
@@ -92,7 +93,7 @@ describe('Television Tick System (Guild Auditor)', () => {
     expect(impacts.length).toBe(1);
     expect(impacts[0].type).toBe('PROJECT_UPDATED');
 
-    const update = (impacts[0].payload as any).update;
+    const update = (impacts[0].payload as unknown as any).update;
     expect(update.tvDetails.episodesAired).toBe(1);
     expect(update.tvDetails.averageRating).toBeGreaterThan(0);
     expect(update.nielsenProfile).toBeDefined();
@@ -131,7 +132,7 @@ describe('Television Tick System (Guild Auditor)', () => {
     const removeImpact = impacts.find(i => i.type === 'PROJECT_REMOVED');
 
     expect(updateImpact).toBeDefined();
-    expect((updateImpact!.payload as any).update.tvDetails.status).toBe('CANCELLED');
+    expect((updateImpact!.payload as unknown as any).update.tvDetails.status).toBe('CANCELLED');
     expect(removeImpact).toBeDefined();
   });
 
@@ -157,7 +158,7 @@ describe('Television Tick System (Guild Auditor)', () => {
     const updateImpact = impacts.find(i => i.type === 'PROJECT_UPDATED');
 
     expect(updateImpact).toBeDefined();
-    expect((updateImpact!.payload as any).update.tvDetails.status).toBe('RENEWED');
+    expect((updateImpact!.payload as unknown as any).update.tvDetails.status).toBe('RENEWED');
   });
 
   it('ignores shows that are not ON_AIR', () => {
