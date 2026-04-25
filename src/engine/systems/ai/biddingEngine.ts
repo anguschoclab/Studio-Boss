@@ -51,9 +51,10 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
         bidCapPercentage = 0.50;
         motivationMultiplier = 1.3;
       } else if (rival.currentMotivation === 'MARKET_DISRUPTION' && isPlayerLeading) {
-        adjustedCashThreshold = 1.0; // Reckless spite bidding
+        // 🎭 The Method Actor Tuning: Rivals with MARKET_DISRUPTION motivation will aggressively spite-bid when the player is leading, overextending themselves just to steal the opportunity.
+        adjustedCashThreshold = 0.8; // Actually reckless spite bidding (bidding even when short on cash reserves)
         bidCapPercentage = 0.40;
-        motivationMultiplier = 1.5;
+        motivationMultiplier = 1.8; // Massively aggressive bidding
       }
 
       if (myBid < currentHighest && rival.cash > currentHighest * adjustedCashThreshold) {
