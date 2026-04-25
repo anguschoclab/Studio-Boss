@@ -16,7 +16,7 @@ export function evaluatePackageOffer(
   const isAuteur = leadTalent.roles?.includes('director') && leadTalent.prestige > 85;
   const prestigeLeverage = isAuteur ? 0.80 : (leadTalent.prestige > 80 ? 0.4 : 0.15);
 
-  if (isAuteur || motivation === 'THE_PACKAGER' || rng.next() < prestigeLeverage) {
+  if (motivation === 'THE_PACKAGER' || rng.next() < prestigeLeverage) {
     const otherClients = talentPool.filter(t => t.agencyId === agency.id && t.id !== leadTalent.id);
     
     if (otherClients.length > 0) {
