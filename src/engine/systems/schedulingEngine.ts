@@ -22,7 +22,8 @@ export const SchedulingEngine = {
     projects.forEach(project => {
       if (project.state !== 'production') return;
 
-      const projectContracts = contractsByProject[project.id] || [];
+      const projectContracts = contractsByProject[project.id];
+      if (!projectContracts) return;
       const { hasConflict, conflicts } = this.evaluateSchedulingConflicts(project, projectContracts, talentPool, state.week);
       
       if (hasConflict) {
