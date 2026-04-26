@@ -58,12 +58,12 @@ function buildOffers(loanRate: number): LoanOffer[] {
 
 export const LoanModal = () => {
   const gameState = useGameStore((s) => s.gameState);
-  const addLoan = useGameStore((s) => (s as any).addLoan as (amount: number, termWeeks: number) => void);
-  const repayLoanEarly = useGameStore((s) => (s as any).repayLoanEarly as (id: string) => void);
+  const addLoan = useGameStore((s) => (s as { addLoan: (amount: number, termWeeks: number) => void }).addLoan);
+  const repayLoanEarly = useGameStore((s) => (s as { repayLoanEarly: (id: string) => void }).repayLoanEarly);
 
   const loanRate = gameState?.finance?.marketState?.loanRate ?? 0.08;
   const loans: Loan[] = useMemo(
-    () => ((gameState?.studio as any)?.loans || []) as Loan[],
+    () => ((gameState?.studio as { loans?: Loan[] })?.loans || []),
     [gameState],
   );
 
