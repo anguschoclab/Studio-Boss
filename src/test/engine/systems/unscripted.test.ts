@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { useGameStore } from '@/store/gameStore';
+import { vi } from 'vitest';
+vi.spyOn(saveLoad, 'saveGame').mockResolvedValue();
+import * as saveLoad from '@/persistence/saveLoad';
 
 describe('Unscripted Projects', () => {
   it('creates an unscripted project with correct stats', async () => {

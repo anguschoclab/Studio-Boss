@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore, TalentSubTab } from '@/store/uiStore';
 import { SubNav } from '@/components/navigation/SubNav';
-import { Badge } from '@/components/ui/badge';
+
 import {
   Users,
   Search,
@@ -17,7 +17,7 @@ import {
   AlertTriangle,
   Zap,
   Target,
-  ArrowRight
+
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Talent, TalentRole, Opportunity } from '@/engine/types';

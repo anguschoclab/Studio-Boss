@@ -19,6 +19,9 @@ vi.mock('recharts', () => ({
   Bar: () => <div data-testid="bar" />,
   ReferenceLine: () => <div data-testid="reference-line" />,
   Cell: () => <div data-testid="cell" />,
+  PieChart: ({ children }: { children: React.ReactNode }) => <div data-testid="pie-chart">{children}</div>,
+  Pie: ({ children }: { children: React.ReactNode }) => <div data-testid="pie">{children}</div>,
+  Label: () => <div data-testid="label" />,
 }));
 
 // Mock the Zustand store
@@ -55,12 +58,12 @@ describe('FinancePanel Component', () => {
   it('renders gracefully with null/empty game state', () => {
     vi.mocked(useGameStore).mockImplementation((selector: any) => {
       if (!selector) return { snapshots: [] };
-      return selector({ gameState: null, snapshots: [] } as any)
+      return selector({ gameState: null, snapshots: [], finance: { marketState: { baseRate: 0.05, rateHistory: [] } } } as any)
     });
 
     render(<FinancePanel />);
 
-    expect(screen.getByText((content) => content.includes('FISCAL INTELLIGENCE') || content.includes('FISCAL'))).toBeDefined();
+    expect(screen.getAllByText((content) => content.includes('FISCAL INTELLIGENCE') || content.includes('FISCAL')).length).toBeGreaterThan(0);
   });
 
   it('renders correctly with positive cash flow and active projects', () => {
@@ -85,12 +88,12 @@ describe('FinancePanel Component', () => {
 
     vi.mocked(useGameStore).mockImplementation((selector: any) => {
       if (!selector) return { snapshots: [] };
-      return selector({ gameState: mockGameState, snapshots: [] } as any)
+      return selector({ gameState: mockGameState, snapshots: [], finance: { marketState: { baseRate: 0.05, rateHistory: [] } } } as any)
     });
 
     render(<FinancePanel />);
 
-    expect(screen.getByText((content) => content.includes('FISCAL INTELLIGENCE') || content.includes('FISCAL'))).toBeDefined();
+    expect(screen.getAllByText((content) => content.includes('FISCAL INTELLIGENCE') || content.includes('FISCAL')).length).toBeGreaterThan(0);
   });
 
   it('renders correctly with negative cash flow and negative cash', () => {
@@ -113,11 +116,11 @@ describe('FinancePanel Component', () => {
 
     vi.mocked(useGameStore).mockImplementation((selector: any) => {
       if (!selector) return { snapshots: [] };
-      return selector({ gameState: mockGameState, snapshots: [] } as any)
+      return selector({ gameState: mockGameState, snapshots: [], finance: { marketState: { baseRate: 0.05, rateHistory: [] } } } as any)
     });
 
     render(<FinancePanel />);
 
-    expect(screen.getByText((content) => content.includes('FISCAL INTELLIGENCE') || content.includes('FISCAL'))).toBeDefined();
+    expect(screen.getAllByText((content) => content.includes('FISCAL INTELLIGENCE') || content.includes('FISCAL')).length).toBeGreaterThan(0);
   });
 });

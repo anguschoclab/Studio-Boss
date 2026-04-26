@@ -1,6 +1,6 @@
 import { GameState, RivalStudio, StateImpact, Buyer, StreamerPlatform } from '@/engine/types';
 import { BrandSystem } from '../../generators/BrandSystem';
-import { pick, secureRandom, randRange } from '../../utils';
+import { pick, secureRandom, randRange, generateId } from '../../utils';
 import { ARCHETYPES } from '../../data/archetypes';
 import { generateMotto } from '../../generators/names';
 
@@ -29,7 +29,7 @@ export function tickIndustryUpstarts(state: GameState): StateImpact[] {
     const archData = ARCHETYPES[archetype];
 
     const newStudio: RivalStudio = {
-      id: `upstart-studio-${Date.now()}`,
+      id: `upstart-studio-${generateId("new")}`,
       name,
       motto: generateMotto(),
       archetype: archetype as any,
