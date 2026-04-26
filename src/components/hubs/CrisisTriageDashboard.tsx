@@ -2,14 +2,12 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
-import { tokens } from '@/lib/tokens';
 import {
   selectProjects,
   selectOverBudgetProjects,
   selectLowMoraleTalent
 } from '@/store/selectors';
 import { Section } from '@/components/layout/Section';
-import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
@@ -22,17 +20,14 @@ import {
   DollarSign,
   Users,
   Film,
-  CheckCircle2,
   XCircle,
   Zap,
-  ShieldAlert,
-  Target
+  ShieldAlert
 } from 'lucide-react';
 
 // Lazy load crisis components
 const CrisisAlertPanel = React.lazy(() => import('@/components/crisis/CrisisAlertPanel'));
 const BudgetOverrunAlert = React.lazy(() => import('@/components/production/BudgetOverrunAlert'));
-const SkeletonPage = React.lazy(() => import('@/components/shared/SkeletonCard'));
 
 interface CrisisItem {
   id: string;
