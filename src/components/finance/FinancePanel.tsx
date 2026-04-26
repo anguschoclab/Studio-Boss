@@ -1,19 +1,15 @@
 import { calculateWeeklyCosts, calculateWeeklyRevenue, calculateStudioNetWorth, generateCashflowForecast, calculateProjectROI } from '@/engine/systems/finance';
 import { LoanModal } from '@/components/finance/LoanModal';
 import { useShallow } from 'zustand/react/shallow';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Area, XAxis, YAxis, Tooltip, ResponsiveContainer, ComposedChart, Line, CartesianGrid } from 'recharts';
-import { Badge } from '@/components/ui/badge';
 import { YearInReviewChart } from '@/components/finance/YearInReviewChart';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { History, LayoutDashboard, ReceiptText, TrendingUp, Package, Coins, ShieldCheck, ArrowRightLeft, Banknote } from 'lucide-react';
-import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
 import { RevenueStreamChart } from '@/components/finance/RevenueStreamChart';
 import { ProfitWaterfallChart } from '@/components/finance/ProfitWaterfallChart';
 import { CashEfficiencyGauge } from '@/components/finance/CashEfficiencyGauge';
-import { DistributionBadge } from '@/components/shared/DistributionBadge';
 import { MarketRatesWidget } from '@/components/finance/MarketRatesWidget';
 import { useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
@@ -21,7 +17,6 @@ import { formatMoney } from '@/engine/utils';
 import { KPIStatCard } from '@/components/shared/KPIStatCard';
 import { CausalityTooltip } from '@/components/shared/CausalityTooltip';
 import { cn } from '@/lib/utils';
-import { EmptyState } from '@/components/shared/EmptyState';
 
 export const FinancePanel = () => {
   const gameState = useGameStore(s => s.gameState);
@@ -81,7 +76,7 @@ export const FinancePanel = () => {
         projRevenue: last.histRevenue,
         projCosts: last.histCosts,
         isForecast: true,
-      } as any);
+      } as unknown as { week: number; projCash?: number; projRevenue?: number; projCosts?: number; histCash?: number; histRevenue?: number; histCosts?: number; isForecast?: boolean });
     }
 
     return [...history, ...projected];

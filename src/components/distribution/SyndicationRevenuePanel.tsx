@@ -1,10 +1,6 @@
 import React from 'react';
 import { cn, formatCompactCurrency } from '@/lib/utils';
-import { Globe, TrendingUp, Tv, ChevronRight, Zap, Target } from 'lucide-react';
-import { Section } from '@/components/layout/Section';
-import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { tokens } from '@/lib/tokens';
+import { Globe, TrendingUp, Tv, ChevronRight, Zap } from 'lucide-react';
 
 interface SyndicationMarket {
   region: string;
