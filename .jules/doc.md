@@ -1,14 +1,14 @@
 ### 📝 Daily Progress & Docs Update
 
 #### 🏗️ Codebase Status:
-* Implemented the new `marketing` phase logic and `executeMarketing` function in `src/engine/systems/projects.ts` to support marketing budgets, domestic/foreign splits, and marketing angle strategies. The `advanceProject` flow was updated to pause at the `marketing` phase after production wraps.
-* Current focus appears to be on expanding the project lifecycle into deeper marketing and release planning before a project officially hits the box office, aligning with the "Audience Strategy and Advertising Focus Planner" goals.
+* Expanded the Franchise System in `fatigueEngine.ts` and `franchiseCoordinator.ts` to incorporate genre-specific fatigue scaling, superhero/cinematic universe saturation mechanics, and crossover synergies based on the new `CROSSOVER_AFFINITY` and `FRANCHISE_FATIGUE_RISK` data.
+* Current focus appears to be on deepening IP/franchise mechanics, specifically adding realistic market consequences for genre oversaturation and brand synergy during shared universe crossover events.
 
 #### 📖 Design Bible Alignment:
-* ✅ **Aligned:** The codebase now correctly uses angle-based marketing matched to genres (e.g. 'spectacle' mapping well to 'Action') with corresponding buzz bonuses and mismatch penalties as described in Section 36.39.2. Marketing budget tiers also dynamically affect buzz scaling.
-* ⚠️ **Missing/Deviations:** While angles are implemented, the simulation currently misses the content/rating tone restriction logic mentioned in Section 36.39.2 (e.g. "family marketing is blocked by harsh rating tone"). The `domesticPct` split is also currently recorded but not fully simulated into differential region returns.
+* ✅ **Aligned:** The implementation aligns with the Master Design Bible's vision for a living ecosystem, adding real stakes to franchise management by dynamically penalizing oversaturation (e.g., "Superhero Fatigue", "Multiverse Fatigue") and rewarding genre synergies ("Shared Universe Premium").
+* ⚠️ **Missing/Deviations:** While the new mechanics calculate fatigue and equity bonuses well, they currently lack the detailed PR consequences, multi-season TV evolution constraints, and specific "Fatigue State" UI representations mentioned in the design bible for fully matured legacy franchises.
 
 #### 📄 Proposed Documentation Updates:
-* `docs/marketing_mechanics.md`: Document the new `executeMarketing` parameters, angle mappings, and how marketing budgets convert to pre-release project buzz.
-* **Code Paths Covered:** `src/engine/systems/projects.ts` (`executeMarketing`, `handleMarketingPhase`)
-* **Key Knowledge Gaps Addressed:** Explains the transition from production to the new marketing phase, how the `marketingAngle` impacts final project heat, and the math behind budget-driven buzz bonuses.
+* `path/to/franchise_mechanics.md`: Document the new genre-based fatigue modifiers and crossover synergy calculations that determine franchise equity.
+* **Code Paths Covered:** `src/engine/systems/ip/fatigueEngine.ts` (`calculateFranchiseFatigue`), `src/engine/systems/ip/franchiseCoordinator.ts` (`calculateFranchiseEquity`)
+* **Key Knowledge Gaps Addressed:** Explains how genre saturation dynamically impacts brand fatigue and how multi-format crossover events calculate synergistic equity bonuses.
