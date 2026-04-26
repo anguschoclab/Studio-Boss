@@ -1,5 +1,4 @@
 import { describe, it, expect } from 'vitest';
-import { GameState } from '@/engine/types';
 import { advanceWeek } from '@/engine/core/weekAdvance';
 import { createMockGameState } from '../generators/mockFactory';
 

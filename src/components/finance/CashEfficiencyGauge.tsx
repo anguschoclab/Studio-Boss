@@ -38,7 +38,7 @@ export const CashEfficiencyGauge: React.FC<CashEfficiencyGaugeProps> = ({ score 
             ))}
             <Label 
               content={({ viewBox }) => {
-                const { cx, cy } = viewBox as any;
+                const { cx, cy } = viewBox as { cx: number, cy: number };
                 return (
                   <g>
                     <text

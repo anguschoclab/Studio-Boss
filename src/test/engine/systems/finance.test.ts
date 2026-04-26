@@ -1,11 +1,11 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { 
   calculateProjectROI, 
   calculateStudioNetWorth, 
   generateWeeklyFinancialReport 
 } from "../../../engine/systems/finance";
 import { tickFinance } from "../../../engine/systems/finance/financeTick";
-import { Project, GameState } from "../../../engine/types";
+import { Project } from "../../../engine/types";
 import { RandomGenerator } from "../../../engine/utils/rng";
 import { createMockGameState } from "../../mockFactory";
 
@@ -17,13 +17,13 @@ const mockProjectDev: import('../../../engine/types').Project = {
   type: 'FILM', scriptHeat: 50, activeRoles: [], scriptEvents: []
 } as import('../../../engine/types').FilmProject;
 
-const mockProjectProd: import('../../../engine/types').Project = { ...mockProjectDev, id: "proj-2", state: "production", weeklyCost: 20000 } as any;
-const mockProjectReleased: import('../../../engine/types').Project = { ...mockProjectDev, id: "proj-3", state: "released", weeklyCost: 0, weeklyRevenue: 100000 } as any;
+const mockProjectProd: import('../../../engine/types').Project = { ...mockProjectDev, id: "proj-2", state: "production", weeklyCost: 20000 } as unknown as import('../../../engine/types').Project;
+const mockProjectReleased: import('../../../engine/types').Project = { ...mockProjectDev, id: "proj-3", state: "released", weeklyCost: 0, weeklyRevenue: 100000 } as unknown as import('../../../engine/types').Project;
 
 describe("Finance System", () => {
   describe("calculateProjectROI", () => {
     it("returns correct ROI for a standard project", () => {
-      const proj = { ...mockProjectReleased, budget: 1000000, revenue: 2000000 } as any;
+      const proj = { ...mockProjectReleased, budget: 1000000, revenue: 2000000 } as unknown as import('../../../engine/types').Project;
       expect(calculateProjectROI(proj)).toBe(2.0);
     });
 
@@ -47,7 +47,7 @@ describe("Finance System", () => {
     });
 
     it("adds 100% of catalogValue if rightsOwner is 'studio'", () => {
-       const p1: Project = { ...mockProjectReleased, budget: 400000, ipRights: { rightsOwner: 'studio', catalogValue: 200000 } } as any;
+       const p1: Project = { ...mockProjectReleased, budget: 400000, ipRights: { rightsOwner: 'studio', catalogValue: 200000 } } as unknown as Project;
        const state = createMockGameState({
          finance: { ...createMockGameState().finance, cash: 500000 },
          studio: {
