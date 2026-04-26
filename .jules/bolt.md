@@ -13,3 +13,6 @@
 ## 2024-05-18 - Pre-grouping arrays for O(1) retrieval
 **Learning:** Nested iterations matching items by ID (e.g. O(Projects * Contracts) complexity) create large performance bottlenecks, especially since Array.filter() allocates a new array each loop.
 **Action:** Pre-group items using a `Record` or `Map` before iterating, reducing complexity to O(N+M) and minimizing GC pressure by eliminating inner-loop array allocations.
+## 2026-04-26 - Eliminate multiple .filter() array allocations using a single loop pass
+**Learning:** Chaining `Object.values().filter()` creates unnecessary intermediate array allocations per tick, significantly increasing memory overhead and GC pressure when iterating over large datasets like the global projects entity record.
+**Action:** Replace `Object.values().filter()` operations with a single `for...in` loop to traverse records directly and push matching entities into results arrays in a single pass.

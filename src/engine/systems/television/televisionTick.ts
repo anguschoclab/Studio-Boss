@@ -1,25 +1,49 @@
-import { GameState, StateImpact, SeriesProject } from '@/engine/types';
-import { calculateWeeklyRating } from './ratingsEvaluator';
-import { evaluateRenewal } from './renewalEngine';
-import { RandomGenerator } from '../../utils/rng';
-import { calculateNielsenRatings, buildNielsenProfile, rankShows, assignTimeSlot, NielsenSnapshot } from './nielsenSystem';
+import { GameState, StateImpact, SeriesProject } from "@/engine/types";
+import { calculateWeeklyRating } from "./ratingsEvaluator";
+import { evaluateRenewal } from "./renewalEngine";
+import { RandomGenerator } from "../../utils/rng";
+import {
+  calculateNielsenRatings,
+  buildNielsenProfile,
+  rankShows,
+  assignTimeSlot,
+  NielsenSnapshot,
+} from "./nielsenSystem";
 
-export type TVStatus = 'IN_DEVELOPMENT' | 'ON_AIR' | 'ON_BUBBLE' | 'RENEWED' | 'CANCELLED' | 'SYNDICATED';
+export type TVStatus =
+  | "IN_DEVELOPMENT"
+  | "ON_AIR"
+  | "ON_BUBBLE"
+  | "RENEWED"
+  | "CANCELLED"
+  | "SYNDICATED";
 
 /**
  * Weekly TV Tick with integrated Nielsen ratings system.
  */
 export function tickTelevision(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const series = Object.values(state.entities.projects).filter(
-    (p): p is SeriesProject => p.type === 'SERIES' && 'tvDetails' in p
-  );
 
-  const airingShows = series.filter(p => p.tvDetails.status === 'ON_AIR');
+  // ⚡ The Framerate Fanatic: Refactored Object.values() and multiple .filter() calls into a single O(n) loop
+  const series: SeriesProject[] = [];
+  const airingShows: SeriesProject[] = [];
+
+  for (const key in state.entities.projects) {
+    if (!Object.prototype.hasOwnProperty.call(state.entities.projects, key)) continue;
+    const p = state.entities.projects[key];
+    if (p.type === "SERIES" && "tvDetails" in p) {
+      const sp = p as SeriesProject;
+      series.push(sp);
+      if (sp.tvDetails.status === "ON_AIR") {
+        airingShows.push(sp);
+      }
+    }
+  }
+
   const weekSnapshots = new Map<string, NielsenSnapshot>();
 
   // Phase 1: Generate Nielsen snapshots for all airing shows
-  airingShows.forEach(project => {
+  airingShows.forEach((project) => {
     const aired = (project.tvDetails.episodesAired || 0) + 1;
     const snapshot = calculateNielsenRatings(project, aired, airingShows.length, rng);
     snapshot.week = state.week + 1;
@@ -30,8 +54,8 @@ export function tickTelevision(state: GameState, rng: RandomGenerator): StateImp
   const rankedSnapshots = rankShows(weekSnapshots);
 
   // Phase 3: Process each series
-  series.forEach(project => {
-    if (project.tvDetails.status !== 'ON_AIR') return;
+  series.forEach((project) => {
+    if (project.tvDetails.status !== "ON_AIR") return;
 
     const snapshot = rankedSnapshots.get(project.id);
     if (!snapshot) return;
@@ -40,7 +64,8 @@ export function tickTelevision(state: GameState, rng: RandomGenerator): StateImp
 
     // Legacy rating (keep backward compat)
     const newRating = calculateWeeklyRating(project, project.buzz || 0, rng);
-    const totalRatingSum = (project.tvDetails.averageRating * (project.tvDetails.episodesAired || 0)) + newRating;
+    const totalRatingSum =
+      project.tvDetails.averageRating * (project.tvDetails.episodesAired || 0) + newRating;
     const nextAverageRating = Math.round((totalRatingSum / aired) * 10) / 10;
 
     // Renewal logic
@@ -56,7 +81,7 @@ export function tickTelevision(state: GameState, rng: RandomGenerator): StateImp
     const nielsenProfile = buildNielsenProfile(updatedSnapshots, timeSlot);
 
     impacts.push({
-      type: 'PROJECT_UPDATED',
+      type: "PROJECT_UPDATED",
       payload: {
         projectId: project.id,
         update: {
@@ -64,17 +89,17 @@ export function tickTelevision(state: GameState, rng: RandomGenerator): StateImp
             ...project.tvDetails,
             episodesAired: aired,
             averageRating: nextAverageRating,
-            status: nextStatus
+            status: nextStatus,
           },
-          nielsenProfile
-        }
-      }
+          nielsenProfile,
+        },
+      },
     });
 
-    if (nextStatus === 'CANCELLED') {
+    if (nextStatus === "CANCELLED") {
       impacts.push({
-        type: 'PROJECT_REMOVED',
-        payload: { projectId: project.id }
+        type: "PROJECT_REMOVED",
+        payload: { projectId: project.id },
       });
     }
   });
