@@ -26,6 +26,16 @@ describe("Finance System", () => {
       const proj = { ...mockProjectReleased, budget: 1000000, revenue: 2000000 } as any;
       expect(calculateProjectROI(proj)).toBe(2.0);
     });
+
+    it("handles extreme edge case: negative budget gracefully", () => {
+      const proj: Project = {
+        ...mockProjectReleased,
+        budget: -1000000,
+        revenue: 2000000,
+        marketingBudget: 0
+      } as unknown as Project;
+      expect(calculateProjectROI(proj)).toBe(-2.0);
+    });
   });
 
   describe("calculateStudioNetWorth", () => {
