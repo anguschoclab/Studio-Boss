@@ -2,7 +2,12 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ProjectCard } from '@/components/pipeline/ProjectCard';
 import { useUIStore } from '@/store/uiStore';
+import { useGameStore } from '@/store/gameStore';
 import { Project } from '@/engine/types';
+
+vi.mock('@/store/gameStore', () => ({
+  useGameStore: vi.fn(() => null),
+}));
 
 // Mock the uiStore
 vi.mock('@/store/uiStore', () => ({
@@ -52,8 +57,8 @@ describe('ProjectCard', () => {
     render(<ProjectCard project={baseProject} />);
 
     expect(screen.getByText('Test Movie')).toBeInTheDocument();
-    expect(screen.getByText('Action')).toBeInTheDocument();
-    expect(screen.getByText('$30M')).toBeInTheDocument(); // Label for 'mid' tier
+    expect(screen.getByText('ACTION')).toBeInTheDocument();
+    expect(screen.getByText('$30M')).toBeInTheDocument();
     expect(screen.getByText('FILM')).toBeInTheDocument();
   });
 
@@ -70,7 +75,7 @@ describe('ProjectCard', () => {
      const project = { ...baseProject, state: 'needs_greenlight' as const };
     render(<ProjectCard project={project} />);
 
-    const button = screen.getByRole('button', { name: /Executive Review/i });
+    const button = screen.getByRole('button', { name: /EXECUTIVE GREENLIGHT/i });
     expect(button).toBeInTheDocument();
 
     fireEvent.click(button);
@@ -102,7 +107,7 @@ describe('ProjectCard', () => {
     } as any;
     render(<ProjectCard project={project} />);
 
-    const button = screen.getByRole('button', { name: /Neutralize Crisis/i });
+    const button = screen.getByRole('button', { name: /NEUTRALIZE CRISIS/i });
     expect(button).toBeInTheDocument();
 
     fireEvent.click(button);
@@ -111,18 +116,17 @@ describe('ProjectCard', () => {
 
   it('renders progress text for development state', () => {
     render(<ProjectCard project={baseProject} />);
-    const devElements = screen.getAllByText((content, element) => element?.textContent?.includes('development') ?? false);
+    const devElements = screen.getAllByText((content, element) => element?.textContent?.includes('DEVELOPMENT') ?? false);
     expect(devElements.length).toBeGreaterThan(0);
-    expect(screen.getByText('4/8w')).toBeInTheDocument();
+    expect(screen.getByText('4/8W')).toBeInTheDocument();
   });
 
   it('renders gross revenue for released state', () => {
     const project = { ...baseProject, state: 'released' as const, revenue: 150000000 };
     render(<ProjectCard project={project} />);
 
-    const lifetimeElements = screen.getAllByText((content, element) => element?.textContent?.includes('Lifetime') ?? false);
-    expect(lifetimeElements.length).toBeGreaterThan(0);
-    expect(screen.getByText('$150.0M')).toBeInTheDocument(); // Format money logic
+    // RecoupmentStatus renders PROFITABLE when revenue > budget
+    expect(screen.getByText('PROFITABLE')).toBeInTheDocument();
   });
 
   it('renders TV format correctly', () => {

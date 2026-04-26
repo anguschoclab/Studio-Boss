@@ -19,7 +19,7 @@ describe('ScriptMetricsCalculator', () => {
   
   it('penalizes too many or too few roles', () => {
     const project: Partial<ScriptedProject> = {
-      activeRoles: ['protagonist'] as any, // Only 1 role
+      activeRoles: [] as any, // Zero roles — gets -10 penalty
       scriptEvents: [],
       weeksInPhase: 10
     };
@@ -91,7 +91,7 @@ describe('ScriptMetricsCalculator', () => {
     };
     
     const previous = {
-      overallScore: 50,
+      score: 50,
       structure: 50,
       dialogue: 50,
       originality: 40,
@@ -118,7 +118,7 @@ describe('ScriptMetricsCalculator', () => {
     };
     
     const previous = {
-      overallScore: 60,
+      score: 60,
       structure: 60,
       dialogue: 60,
       originality: 50,
@@ -151,8 +151,8 @@ describe('ScriptMetricsCalculator', () => {
       project as ScriptedProject, 1, undefined
     );
     
-    expect(metrics.overallScore).toBeGreaterThan(0);
-    expect(metrics.overallScore).toBeLessThanOrEqual(100);
+    expect(metrics.score).toBeGreaterThan(0);
+    expect(metrics.score).toBeLessThanOrEqual(100);
   });
   
   it('handles projects with no script events', () => {

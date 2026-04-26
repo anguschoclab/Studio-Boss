@@ -42,16 +42,17 @@ describe('Persistence Layer Race Hardening', () => {
 
         const mock = new MockWorker();
         (persistenceService as any).worker = mock;
-        // reset resolves
-        (persistenceService as any).pendingResolves.clear();
+        // reset pending promises
+        (persistenceService as any).pendingPromises.clear();
 
-        // ⚡ Manually attach the message handling logic since initWorker likely skipped it in Node
+        // Manually attach the message handling logic since initWorker likely skipped it in Node
         mock.onmessage = (e: { data: any }) => {
             const { requestId, state, type } = e.data;
-            let result = state;
-            if (type === 'SAVE_SUCCESS') result = true;
-            // reaching into private method for test purposes
-            (persistenceService as any).resolvePromise(requestId, result);
+            const pending = (persistenceService as any).pendingPromises.get(requestId);
+            if (!pending) return;
+            (persistenceService as any).pendingPromises.delete(requestId);
+            if (type === 'SAVE_SUCCESS') pending.resolve(true);
+            else pending.resolve(state);
         };
 
         console.log('[Test] Injected mock worker and attached handler');

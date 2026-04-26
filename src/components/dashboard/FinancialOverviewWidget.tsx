@@ -11,6 +11,8 @@ export const FinancialOverviewWidget: React.FC = () => {
   
   const { finance, history } = gameState;
 
+  if (!finance || !history) return null;
+
   // Build history data from snapshots. If we don't have enough history, pad it.
   const historyData = history.slice(-12).map((snap) => ({
     week: `WK ${snap.week}`,

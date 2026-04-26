@@ -11,7 +11,7 @@ import {
 import { RandomGenerator } from '@/engine/utils/rng';
 import type { GameState } from '@/engine/types';
 
-import { createMockGameState, createMockProject, createMockTalent, createMockContract } from '../../utils/mockFactories';
+import { createMockGameState, createMockProject, createMockTalent, createMockContract } from '../../../utils/mockFactories';
 
 describe('RelationshipSystem - Award Nominee Tracking', () => {
   it('should return false when no awards exist', () => {
