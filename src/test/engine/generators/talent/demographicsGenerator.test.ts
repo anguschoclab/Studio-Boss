@@ -26,14 +26,20 @@ describe('generateDemographics', () => {
   });
 
   it('provides a sensible ethnicity based on country', () => {
-    const demoJapan = generateDemographics(false, 'Japan');
-    if (demoJapan.country === 'Japan') {
-        expect(demoJapan.ethnicity).toBe('Asian');
+    // Generate multiple times to ensure we hit the dominant demographic,
+    // since there's a 10% chance in Mexico for Caucasian and 2% in Japan for Mixed.
+    let japanAsianCount = 0;
+    let mexicoHispanicCount = 0;
+
+    for(let i=0; i<50; i++) {
+        const demoJapan = generateDemographics(false, 'Japan');
+        if (demoJapan.country === 'Japan' && demoJapan.ethnicity === 'Asian') japanAsianCount++;
+
+        const demoMexico = generateDemographics(false, 'Mexico');
+        if (demoMexico.country === 'Mexico' && demoMexico.ethnicity === 'Hispanic') mexicoHispanicCount++;
     }
 
-    const demoMexico = generateDemographics(false, 'Mexico');
-    if (demoMexico.country === 'Mexico') {
-        expect(demoMexico.ethnicity).toBe('Hispanic');
-    }
+    expect(japanAsianCount).toBeGreaterThan(10);
+    expect(mexicoHispanicCount).toBeGreaterThan(10);
   });
 });

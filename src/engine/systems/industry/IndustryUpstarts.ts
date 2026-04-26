@@ -71,7 +71,7 @@ export function tickIndustryUpstarts(state: GameState): StateImpact[] {
      const name = BrandSystem.getStreamingName(ident);
      
      const newStreamer: StreamerPlatform = {
-        id: `upstart-streamer-${Date.now()}`,
+        id: `upstart-streamer-${Math.floor(secureRandom() * 1000000)}`,
         name,
         archetype: 'streamer',
         foundedWeek: state.week,
