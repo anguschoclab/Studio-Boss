@@ -75,6 +75,13 @@ export function calculateFranchiseFatigue(
     rivalPenalty *= IP_MASHUP_PENALTY;
   }
 
+  // 🌌 The Universe Builder: Implemented "Live-Action Remake Fatigue" - 2.5x penalty.
+  const REMAKE_THRESHOLD = 4;
+  const REMAKE_PENALTY = 2.5;
+  if (normalizedGenre === "Live-Action Remake" && genreSaturation > REMAKE_THRESHOLD) {
+    rivalPenalty *= REMAKE_PENALTY;
+  }
+
   // 4. Audience Loyalty (Protective Shield)
   // High loyalty acts as a buffer against fatigue.
   const loyaltyShield = (franchise.audienceLoyalty / 100) * 0.3; // Up to 30% reduction in fatigue gain
@@ -124,6 +131,15 @@ export function calculateReleaseGapImpact(
     return {
       buzzBonus: -15,
       label: "The Dead Zone (Apathy)",
+      fatigueReset: false,
+    };
+  }
+
+  // 🌌 The Universe Builder: Rapid-Fire Sequel penalty. Burnout from churning out sequels under 1.5 years.
+  if (yearsSince > 0 && yearsSince <= 1.5) {
+    return {
+      buzzBonus: -20,
+      label: "Rapid-Fire Sequel (Burnout)",
       fatigueReset: false,
     };
   }

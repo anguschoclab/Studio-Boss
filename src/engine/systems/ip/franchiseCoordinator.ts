@@ -66,6 +66,20 @@ export function calculateFranchiseEquity(
     ) {
       crossoverBonus += 0.15;
     }
+
+    // 🌌 The Universe Builder: Added a 15% synergy bonus when combining Anime Adaptation with Sci-Fi or Action.
+    if (
+      uniqueGenres.has("Anime Adaptation") &&
+      (uniqueGenres.has("Sci-Fi") || uniqueGenres.has("Action"))
+    ) {
+      crossoverBonus += 0.15;
+    }
+  }
+
+  // 🌌 The Universe Builder: Implemented Brand Toxicity.
+  // Slashes crossover synergy by half if the brand is critically fatigued.
+  if (franchise.fatigueLevel > 0.8) {
+    crossoverBonus *= 0.5;
   }
 
   // 2. Format Diversity Multiplier

@@ -20,6 +20,8 @@ export const GENRE_TAXONOMY: GenreCategory[] = [
       { id: "epic", name: "Epic" },
       { id: "video_game", name: "Video Game Adaptation" },
       { id: "cinematic_universe", name: "Cinematic Universe" },
+      { id: "live_action_remake", name: "Live-Action Remake" },
+      { id: "anime_adaptation", name: "Anime Adaptation" },
     ],
   },
   {
@@ -123,6 +125,8 @@ export const CROSSOVER_AFFINITY: Record<string, string[]> = {
     "IP Mashup",
     "Multiverse",
   ],
+  "Live-Action Remake": ["Animation", "Action", "Fantasy", "Musical", "Family"],
+  "Anime Adaptation": ["Action", "Sci-Fi", "Fantasy", "Animation"],
 };
 
 export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
@@ -145,4 +149,6 @@ export const FRANCHISE_FATIGUE_RISK: Record<string, number> = {
   "IP Mashup": 0.7, // High burnout potential
   "Video Game Adaptation": 0.6,
   "Cinematic Universe": 0.9, // Massive fatigue risk
+  "Live-Action Remake": 0.75, // 🌌 The Universe Builder: High risk if over-done.
+  "Anime Adaptation": 0.55,
 };

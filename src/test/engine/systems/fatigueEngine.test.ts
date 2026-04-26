@@ -69,4 +69,20 @@ describe("Fatigue Engine", () => {
     // 0.7 + 0.146666 - 0.15 = 0.696666
     expect(fatigue).toBeCloseTo(0.697, 3);
   });
+
+  it("calculates high fatigue for a heavily penalized oversaturated genre (Live-Action Remake)", () => {
+    const fatigue = calculateFranchiseFatigue(mockFranchise, 5, "Live-Action Remake");
+    // activeCount (1) * 0.75 = 0.75
+    // rivalPenalty ((5/12) * 0.1) * 2.5 = 0.104166
+    // loyaltyShield (50/100 * 0.3) = 0.15
+    // 0.75 + 0.104166 - 0.15 = 0.704166
+    expect(fatigue).toBeCloseTo(0.704, 3);
+  });
+
+  it("applies Rapid-Fire Sequel penalty for gaps under 1.5 years", () => {
+    const impact = calculateReleaseGapImpact([100], 152); // 52 weeks = 1 year
+    expect(impact.buzzBonus).toBe(-20);
+    expect(impact.label).toContain("Rapid-Fire Sequel");
+    expect(impact.fatigueReset).toBe(false);
+  });
 });
