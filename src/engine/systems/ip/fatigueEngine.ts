@@ -136,7 +136,7 @@ export function calculateReleaseGapImpact(
   }
 
   // 🌌 The Universe Builder: Rapid-Fire Sequel penalty. Burnout from churning out sequels under 1.5 years.
-  if (yearsSince > 0 && yearsSince <= 1.5) {
+  if (yearsSince >= 0 && yearsSince <= 1.5) {
     return {
       buzzBonus: -20,
       label: "Rapid-Fire Sequel (Burnout)",
