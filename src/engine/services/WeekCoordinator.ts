@@ -70,6 +70,7 @@ import { runFestivalMarket } from '../systems/festivals/festivalAuctionEngine';
 import { tickIPVault } from '../systems/ip/IPVaultManager';
 import { advanceIPRights } from '../systems/ipRetention';
 import { updateFranchiseHub } from '../systems/ip/franchiseCoordinator';
+import { AnnualScans } from './filters/AnnualScans';
 
 // Market Systems
 import { advanceRumors } from '../systems/rumors';
@@ -257,6 +258,7 @@ export class WeekCoordinator {
   private static runIPFilter(state: GameState, context: TickContext) {
     context.impacts.push(...tickIPVault(state));
     context.impacts.push(advanceIPRights(Object.values(state.entities.projects), context.week));
+    AnnualScans.execute(state, context);
   }
 
   private static runAIFilter(state: GameState, context: TickContext) {

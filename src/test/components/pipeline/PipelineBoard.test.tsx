@@ -30,15 +30,15 @@ describe('PipelineBoard', () => {
     vi.mocked(useGameStore).mockReturnValue([]);
     render(<PipelineBoard />);
 
-    expect(screen.getByText('Production Slate')).toBeInTheDocument();
-    expect(screen.getByText('New IP Venture')).toBeInTheDocument();
+    expect(screen.getByText('PRODUCTION SLATE')).toBeInTheDocument();
+    expect(screen.getByText('NEW IP VENTURE')).toBeInTheDocument();
   });
 
   it('calls openCreateProject when New Project button is clicked', () => {
     vi.mocked(useGameStore).mockReturnValue([]);
     render(<PipelineBoard />);
 
-    const button = screen.getByRole('button', { name: /New IP Venture/i });
+    const button = screen.getByRole('button', { name: /NEW IP VENTURE/i });
     fireEvent.click(button);
 
     expect(mockOpenCreateProject).toHaveBeenCalledTimes(1);
@@ -48,10 +48,10 @@ describe('PipelineBoard', () => {
     vi.mocked(useGameStore).mockReturnValue([]);
     render(<PipelineBoard />);
 
-    expect(screen.getByText('Development')).toBeInTheDocument();
-    expect(screen.getByText('Pitching')).toBeInTheDocument();
-    expect(screen.getByText('Active Slate')).toBeInTheDocument();
-    expect(screen.getByText('Catalog')).toBeInTheDocument();
+    expect(screen.getByText('DEVELOPMENT')).toBeInTheDocument();
+    expect(screen.getByText('PITCHING')).toBeInTheDocument();
+    expect(screen.getByText('ACTIVE SLATE')).toBeInTheDocument();
+    expect(screen.getByText('CATALOG')).toBeInTheDocument();
   });
 
   it('distributes projects into correct columns', () => {
@@ -83,7 +83,7 @@ describe('PipelineBoard', () => {
     expect(screen.getByTestId('project-card-1')).toBeInTheDocument();
 
     // 3 columns should be empty
-    const noProjectsMessages = screen.queryAllByText(/No Projects/i);
+    const noProjectsMessages = screen.queryAllByText(/LANE EMPTY/i);
     expect(noProjectsMessages.length).toBe(3);
   });
 });

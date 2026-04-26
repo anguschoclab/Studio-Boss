@@ -1,12 +1,11 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { useGameStore } from '@/store/gameStore';
+import { initializeGame } from '@/engine/core/gameInit';
 
 describe('Historical Snapshots System', () => {
   beforeEach(() => {
-    // Start a new game
-    const store = useGameStore.getState();
-    store.clearGame();
-    store.newGame('Test Studio', 'major');
+    const gameState = initializeGame('Test Studio', 'major', 42);
+    useGameStore.setState({ gameState, finance: gameState.finance as any, news: gameState.news, snapshots: [] });
   });
 
   it('should capture a complete snapshot exactly on week 52', () => {
