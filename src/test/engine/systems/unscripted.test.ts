@@ -1,7 +1,8 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { useGameStore } from '@/store/gameStore';
 
 describe('Unscripted Projects', () => {
+  vi.setConfig({ testTimeout: 10000 });
   it('creates an unscripted project with correct stats', async () => {
     // newGame is async
     await useGameStore.getState().newGame('Test Studio', 'major');

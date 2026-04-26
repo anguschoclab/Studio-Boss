@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore, TalentSubTab } from '@/store/uiStore';
 import { SubNav } from '@/components/navigation/SubNav';
-import { Badge } from '@/components/ui/badge';
+
 import {
   Users,
   Search,

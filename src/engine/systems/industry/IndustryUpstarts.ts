@@ -29,7 +29,7 @@ export function tickIndustryUpstarts(state: GameState): StateImpact[] {
     const archData = ARCHETYPES[archetype];
 
     const newStudio: RivalStudio = {
-      id: `upstart-studio-${Date.now()}`,
+      id: `upstart-studio-${state.week}-${Math.floor(secureRandom() * 10000)}`,
       name,
       motto: generateMotto(),
       archetype: archetype as any,
@@ -71,7 +71,7 @@ export function tickIndustryUpstarts(state: GameState): StateImpact[] {
      const name = BrandSystem.getStreamingName(ident);
      
      const newStreamer: StreamerPlatform = {
-        id: `upstart-streamer-${Date.now()}`,
+        id: `upstart-streamer-${state.week}-${Math.floor(secureRandom() * 10000)}`,
         name,
         archetype: 'streamer',
         foundedWeek: state.week,
