@@ -46,7 +46,26 @@ export function tickTelevision(state: GameState, rng: RandomGenerator): StateImp
     // Renewal logic
     let nextStatus: TVStatus = project.tvDetails.status;
     if (aired >= project.tvDetails.episodesOrdered) {
-      nextStatus = evaluateRenewal(project, nextAverageRating) as TVStatus;
+      let threshold = 5.0; // Default base threshold
+
+      const buyer = state.market.buyers.find(b => b.id === project.buyerId);
+      if (buyer?.archetype === 'streamer') {
+        const platform = buyer as import('@/engine/types').StreamerPlatform;
+        if (platform.subscriberHistory && platform.subscriberHistory.length > 0) {
+          const currentSubs = platform.subscriberHistory[platform.subscriberHistory.length - 1].count;
+          const pastSubs = platform.subscriberHistory.length > 4
+            ? platform.subscriberHistory[platform.subscriberHistory.length - 5].count
+            : platform.subscriberHistory[0].count;
+
+          const growth = currentSubs - pastSubs;
+          if (growth <= 0) {
+            // 📺 The Syndication Baron: Tweaked streaming renewal thresholds: platforms now cancel expensive shows faster if subscriber growth flatlines.
+            threshold += 1.0;
+          }
+        }
+      }
+
+      nextStatus = evaluateRenewal(project, nextAverageRating, threshold) as TVStatus;
     }
 
     // Build updated Nielsen profile

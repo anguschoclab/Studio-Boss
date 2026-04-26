@@ -19,7 +19,7 @@ export function evaluateRenewal(
   if (currentSeason >= 3 && currentSeason < 5) threshold -= 0.5;
   else if (currentSeason >= 5) threshold -= 2.0; // Deep syndication reward
 
-  // 📺 The Syndication Baron: Tweaked streaming renewal thresholds: platforms now cancel expensive shows faster if subscriber growth flatlines. Adjusted budget tier penalties to be more cutthroat for blockbusters.
+  // 📺 The Syndication Baron: Adjusted budget tier penalties to be more cutthroat for blockbusters.
   let dynamicThreshold = threshold;
 
   if (project.budgetTier === 'blockbuster') dynamicThreshold += 3.0; // More ruthless
