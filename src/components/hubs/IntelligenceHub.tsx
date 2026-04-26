@@ -15,11 +15,7 @@ import {
   DollarSign,
   Activity,
   BarChart3,
-  ShieldAlert,
-  Target,
-  Monitor,
-  Zap,
-  ArrowRight
+  ShieldAlert
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { formatMoney } from '@/engine/utils';

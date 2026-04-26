@@ -7,8 +7,6 @@ import { SubNav } from '@/components/navigation/SubNav';
 import { Button } from '@/components/ui/button';
 import { Section } from '@/components/layout/Section';
 import { Stack } from '@/components/layout/Stack';
-import { SkeletonPage } from '@/components/shared/SkeletonCard';
-import { tokens, patterns } from '@/lib/tokens';
 import {
   LayoutGrid,
   Film,
@@ -21,9 +19,7 @@ import {
   Tv,
   BarChart3,
   CheckCircle2,
-  Zap,
-  Target,
-  ArrowRight
+  Target
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { StreamingPerformancePanel } from './production/StreamingPerformancePanel';

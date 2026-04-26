@@ -3,7 +3,6 @@ import { cn } from '@/lib/utils';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { Section } from '@/components/layout/Section';
-import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { KPIStatCard } from '@/components/shared/KPIStatCard';
 import {
@@ -14,7 +13,6 @@ import {
   selectTalentPool
 } from '@/store/selectors';
 import {
-  LayoutDashboard,
   AlertTriangle,
   Activity,
   DollarSign,
@@ -35,7 +33,6 @@ const CashFlowChart = React.lazy(() => import('@/components/hubs/visualizations/
 const CrisisRiskMeter = React.lazy(() => import('@/components/hubs/visualizations/CrisisRiskMeter'));
 const MarketSentimentGauge = React.lazy(() => import('@/components/hubs/visualizations/MarketSentimentGauge'));
 const WeeklyRevenueSpark = React.lazy(() => import('@/components/hubs/visualizations/WeeklyRevenueSpark'));
-const SkeletonPage = React.lazy(() => import('@/components/shared/SkeletonCard'));
 
 interface AlertItem {
   id: string;
