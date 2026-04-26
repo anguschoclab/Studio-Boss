@@ -29,7 +29,7 @@ export function tickIndustryUpstarts(state: GameState): StateImpact[] {
     const archData = ARCHETYPES[archetype];
 
     const newStudio: RivalStudio = {
-      id: `upstart-studio-${Date.now()}`,
+      id: `upstart-studio-${Math.floor(secureRandom() * 1000000)}`,
       name,
       motto: generateMotto(),
       archetype: archetype as any,

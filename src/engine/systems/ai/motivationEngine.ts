@@ -25,6 +25,7 @@ const MotivationScores: Record<StudioMotivation, (rival: RivalStudio, state: Gam
     let score = Object.keys(rival.projects).length > 3 ? 60 : 20;
     if (rival.cash > 10000000) score += 40; // Got cash, want IP
     if (rival.cash > 20000000) score += 30; // Extreme cash makes them hoard IP
+    if (rival.cash < 5000000) score += 20; // Desperate pivot to IP when broke
     return score;
   },
   // 🎭 The Method Actor Tuning: Highly aggressive studios naturally lean towards market disruption, especially if they have cash to burn.

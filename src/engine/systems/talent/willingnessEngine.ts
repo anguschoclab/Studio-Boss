@@ -54,7 +54,7 @@ export function calculateWillingness(
     // Auteurs will forgive a low budget if the script is a masterpiece
     if (isAuteur && scriptHeat > 85) {
       // 🎭 The Method Actor Tuning: Auteurs actively drawn to masterpiece scripts despite low budgets.
-      score += 15;
+      score += 25;
       reasons.push(`${talent.name} is willing to take a massive pay cut because they consider the script a masterpiece of artistic merit.`);
     } else {
       score -= 15;

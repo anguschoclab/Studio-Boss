@@ -42,6 +42,10 @@ export function tickAuctions(state: GameState, rng: RandomGenerator): StateImpac
         adjustedCashThreshold = 1.1; // More willing to bid with less cash buffer
         bidCapPercentage = 0.60; // Tolerate a much higher portion of their cash
         motivationMultiplier = 1.6; // Bid more aggressively
+        if (rival.cash < 5000000) {
+          adjustedCashThreshold -= 0.2; // Desperate for IP, ignore cash buffer
+          motivationMultiplier += 0.2; // Extremely aggressive
+        }
       } else if (rival.currentMotivation === 'CASH_CRUNCH') {
         adjustedCashThreshold = 2.0; // Needs double the cash to bid
         bidCapPercentage = 0.15; // Only use a tiny fraction of cash
