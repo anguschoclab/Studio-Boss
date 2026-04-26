@@ -7,7 +7,7 @@ export function processRazzies(state: GameState, week: number, rng: RandomGenera
   const projects = Object.values(state.entities.projects || {});
   
   const eligibleProjects = projects.filter(p => {
-    const score = p.reception?.metaScore || p.reviewScore || 100;
+    const score = p.reviewScore || 100;
     const budget = p.budget || 0;
     return p.state === 'released' && budget >= 50_000_000 && score <= 30 && p.releaseWeek !== null;
   });
@@ -15,15 +15,15 @@ export function processRazzies(state: GameState, week: number, rng: RandomGenera
   if (eligibleProjects.length === 0) return impacts;
 
   eligibleProjects.sort((a, b) => {
-    const scoreA = a.reception?.metaScore || a.reviewScore || 100;
-    const scoreB = b.reception?.metaScore || b.reviewScore || 100;
+    const scoreA = a.reviewScore || 100;
+    const scoreB = b.reviewScore || 100;
     return scoreA - scoreB;
   });
 
   const nominees = eligibleProjects.slice(0, 3);
 
   for (const project of nominees) {
-    const score = project.reception?.metaScore || project.reviewScore || 30;
+    const score = project.reviewScore || 30;
     const isPlayer = !!state.entities.projects[project.id];
     
     const flavor = (project.flavor || '').toLowerCase();
@@ -38,12 +38,12 @@ export function processRazzies(state: GameState, week: number, rng: RandomGenera
         update: {
           razzieWinner: true,
           razzieCategory: score <= 10 ? 'Worst Picture' : score <= 20 ? 'Worst Director' : 'Worst Screenplay'
-        }
+        } as any
       }
     });
 
     if (isPlayer) {
-      impacts.push({ type: 'PRESTIGE_CHANGED', payload: prestigePenalty });
+      impacts.push({ type: 'PRESTIGE_CHANGED', payload: { amount: prestigePenalty } });
     }
 
     if (isAbsurd) {
@@ -60,8 +60,6 @@ export function processRazzies(state: GameState, week: number, rng: RandomGenera
     impacts.push({
       type: 'NEWS_ADDED',
       payload: {
-        id: rng.uuid('NWS'),
-        week,
         headline: `RAZZIES: "${project.title}" nominated for ${razzieCategory}`,
         description: BardResolver.resolve({
           domain: 'Industry',
@@ -71,8 +69,7 @@ export function processRazzies(state: GameState, week: number, rng: RandomGenera
           context: { project: project.title, category: razzieCategory },
           rng
         }),
-        category: 'awards',
-        publication: 'The Hollywood Reporter'
+        category: 'awards'
       }
     });
 
@@ -80,12 +77,9 @@ export function processRazzies(state: GameState, week: number, rng: RandomGenera
       impacts.push({
         type: 'NEWS_ADDED',
         payload: {
-          id: rng.uuid('NWS'),
-          week,
           headline: `"${project.title}" gains ironic cult following`,
           description: `Despite its Razzie nomination, the film has developed a cult following among midnight movie audiences.`,
-          category: 'general',
-          publication: 'Variety'
+          category: 'general'
         }
       });
     }

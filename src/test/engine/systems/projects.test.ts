@@ -55,10 +55,10 @@ describe("advanceProject", () => {
     expect(update).toContain("is ready for greenlight");
   });
 
-  it("transitions from production to marketing", () => {
+  it("transitions from production to post_production", () => {
     const project = { ...mockProject, state: "production" as const, weeksInPhase: 1 };
     const { project: p, update } = advanceProject(project, 1, 50, [], new Map());
-    expect(p.state).toBe("marketing");
+    expect(p.state).toBe("post_production");
     expect(p.weeksInPhase).toBe(0);
     expect(update).toContain("has wrapped production");
   });

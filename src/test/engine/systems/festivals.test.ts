@@ -59,13 +59,19 @@ describe('Festivals System', () => {
       finance: { cash: 1_000_000, ledger: [] },
       news: { headlines: [] },
       ip: { vault: [], franchises: {} },
+      entities: {
+        projects: { [mockProject.id]: { ...mockProject } },
+        talents: {},
+        contracts: {},
+        rivals: {}
+      },
       studio: {
+        id: 'PLR-1',
         name: "Test",
         archetype: 'major',
         prestige: 50,
         internal: {
-          projects: { [mockProject.id]: { ...mockProject } },
-          contracts: []
+          projectHistory: []
         }
       },
       market: { opportunities: [], buyers: [] },

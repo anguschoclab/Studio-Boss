@@ -6,6 +6,7 @@ export {
 } from './AwardValidationSlice';
 
 export {
+  generateAwardsProfile,
   calculateNominationWeight,
   checkCampaignBacklash
 } from './NominationCalculator';

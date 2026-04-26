@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { processRazzies } from '../../../engine/systems/awards';
-import { Project, NewsImpact, PrestigeImpact, ProjectUpdateImpact } from '../../../engine/types';
-import { createMockGameState } from '../../mockFactory';
+import { Project, StateImpact } from '../../../engine/types';
+import { createMockGameState } from '../../engine/generators/mockFactory';
 import { RandomGenerator } from '../../../engine/utils/rng';
 
 describe('Razzies Award System', () => {
@@ -59,11 +59,11 @@ describe('Razzies Award System', () => {
     const impacts = processRazzies(state, 4, rng);
 
     // Only the bigFlop is eligible. Worst Picture should trigger a headline mentioning it.
-    const newsImpact = impacts.find(i => i.type === 'NEWS_ADDED') as NewsImpact;
-    expect(newsImpact.payload.headline).toContain('Title big');
+    const newsImpact = impacts.find(i => i.type === 'NEWS_ADDED') as StateImpact;
+    expect((newsImpact.payload as any).headline).toContain('Title big');
     
-    const prestigeImpact = impacts.find(i => i.type === 'PRESTIGE_CHANGED') as PrestigeImpact;
-    expect(prestigeImpact.payload).toBeLessThan(0);
+    const prestigeImpact = impacts.find(i => i.type === 'PRESTIGE_CHANGED') as StateImpact;
+    expect((prestigeImpact.payload as any).amount).toBeLessThan(0);
   });
 
   it('Razzie win triggers Studio Prestige penalty and marks cult classic if absurd', () => {
@@ -80,10 +80,10 @@ describe('Razzies Award System', () => {
 
     const impacts = processRazzies(state, 4, rng);
 
-    const prestigeImpact = impacts.find(i => i.type === 'PRESTIGE_CHANGED') as PrestigeImpact;
-    expect(prestigeImpact.payload).toBeLessThan(0);
+    const prestigeImpact = impacts.find(i => i.type === 'PRESTIGE_CHANGED') as StateImpact;
+    expect((prestigeImpact.payload as any).amount).toBeLessThan(0);
     
-    const projectImpact = impacts.find(i => i.type === 'PROJECT_UPDATED' && i.payload.update.isCultClassic) as ProjectUpdateImpact;
-    expect(projectImpact.payload.projectId).toBe('absurd');
+    const projectImpact = impacts.find(i => i.type === 'PROJECT_UPDATED' && (i.payload as any).update?.isCultClassic) as StateImpact;
+    expect((projectImpact.payload as any).projectId).toBe('absurd');
   });
 });
