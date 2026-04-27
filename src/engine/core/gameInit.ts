@@ -13,7 +13,7 @@ import { generateProjectTitle } from '../generators/titles';
 
 export function initializeGame(studioName: string, archetype: ArchetypeKey, seed?: number): GameState {
   // 1. Initialize PRNG for determinism
-  const gameSeed = seed ?? Math.floor(Math.random() * 1_000_000);
+  const gameSeed = seed ?? Math.floor(rand() * 1_000_000);
   setDeterministicSeed(gameSeed);
 
   const arch = ARCHETYPES[archetype];
