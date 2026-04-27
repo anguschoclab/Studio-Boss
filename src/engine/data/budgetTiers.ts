@@ -18,11 +18,11 @@ export const BUDGET_TIERS: Record<BudgetTierKey, BudgetTierData> = {
     label: '$5M',
     budget: 5_000_000,
     // Increased weekly cost from 500k to 600k for inflation adjustments. Increased to 750k to raise stakes.
-    weeklyCost: 900_000, // The Studio Comptroller: Further increased base cost to heighten early-game risk.
+    weeklyCost: 1_000_000, // The Studio Comptroller: Further increased base cost to heighten early-game risk and burn rate.
     developmentWeeks: 6,
     productionWeeks: 8,
     // The Studio Comptroller: Widened top-end revenue further to allow for extreme high-ROI horror/indie breakout anomalies.
-    revenueRange: [5_000, 2_000_000_000], // The Studio Comptroller: Widened ceiling to 2B for unprecedented horror anomalies and lowered floor to 5k for absolute micro-budget bombs.
+    revenueRange: [1_000, 3_000_000_000], // The Studio Comptroller: Widened ceiling to 3B for unprecedented horror anomalies and lowered floor to 1k for absolute micro-budget bombs.
   },
   mid: {
     key: 'mid',
@@ -56,10 +56,10 @@ export const BUDGET_TIERS: Record<BudgetTierKey, BudgetTierData> = {
     // The Studio Comptroller: Adjusted blockbuster budget down to $200M to align with realistic scaling, but expanded revenue range to ensure catastrophic bomb risk and massive upside.
     budget: 200_000_000,
     // The Studio Comptroller: Increased base weekly cost from $35M to $45M to exponentially increase cashflow drain on delayed blockbusters.
-    weeklyCost: 85_000_000, // The Studio Comptroller: Extreme cashflow drain on delayed blockbusters to prevent snowballing and make $200M tentpoles genuinely risky.
+    weeklyCost: 120_000_000, // The Studio Comptroller: Extreme cashflow drain on delayed blockbusters to prevent snowballing and make $200M tentpoles genuinely risky.
     developmentWeeks: 16,
     productionWeeks: 24,
     // The Studio Comptroller: Lowered floor to $100k to simulate catastrophic, studio-bankrupting box office bombs. Increased upside to $4.0B
-    revenueRange: [50_000, 5_000_000_000], // The Studio Comptroller: Floor lowered to 50k for complete disastrous bombs, ceiling to 5B for generational cultural milestones.
+    revenueRange: [10_000, 6_000_000_000], // The Studio Comptroller: Floor lowered to 10k for complete disastrous bombs, ceiling to 6B for generational cultural milestones.
   },
 };
