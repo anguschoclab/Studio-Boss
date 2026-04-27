@@ -1,7 +1,6 @@
 import React from 'react';
 import { useUIStore, TabId } from '@/store/uiStore';
 import { useGameStore } from '@/store/gameStore';
-import { selectActiveProjects } from '@/store/selectors';
 import { formatMoney } from '@/engine/utils';
 import { 
   Building2,
