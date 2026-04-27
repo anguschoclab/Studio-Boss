@@ -1,4 +1,8 @@
 import { describe, it, expect } from 'vitest';
+<<<<<<< Updated upstream
+=======
+import { RivalStudio } from '@/engine/types';
+>>>>>>> Stashed changes
 import { calculateRivalMotivation } from '@/engine/systems/ai/motivationEngine';
 import { RandomGenerator } from '@/engine/utils/rng';
 import { createMockGameState, createMockRival } from '../../generators/mockFactory';

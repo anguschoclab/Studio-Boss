@@ -23,7 +23,7 @@ export const FinancePanel = () => {
 
   const cash = useGameStore(s => s.gameState?.finance?.cash ?? 0);
   const financeHistory = useGameStore(useShallow(s => s.gameState?.finance?.weeklyHistory ?? []));
-  const projectsMemo = useGameStore(useShallow(s => Object.values(s.gameState?.studio.internal.projects || {})));
+  const projectsMemo = useGameStore(useShallow(s => Object.values(s.gameState?.entities?.projects || {})));
 
   const weeklyCosts = useMemo(() => calculateWeeklyCosts(projectsMemo), [projectsMemo]);
   const weeklyRevenue = useMemo(() => calculateWeeklyRevenue(projectsMemo), [projectsMemo]);
@@ -354,7 +354,7 @@ export const FinancePanel = () => {
                     <div className="space-y-4">
                       <h4 className="font-display font-black text-2xl tracking-tighter uppercase italic group-hover:text-primary transition-all duration-700 truncate max-w-[180px] leading-none drop-shadow-[0_0_10px_rgba(255,255,255,0.05)]">{p.title}</h4>
                       <div className="text-[9px] font-black tracking-[0.3em] text-muted-foreground/20 uppercase border border-white/5 bg-white/[0.01] px-3 py-1.5 rounded-none h-fit w-fit italic group-hover:text-muted-foreground/60 transition-all duration-700">
-                        {p.distributionStatus.toUpperCase()}
+                        {(p.distributionStatus ?? '').toUpperCase()}
                       </div>
                     </div>
                     <div className={cn("text-[9px] font-black tracking-[0.4em] uppercase h-8 px-5 flex items-center border border-transparent rounded-none italic shadow-lg", isProfitable ? "bg-emerald-400/10 text-emerald-400 border-emerald-400/20" : "bg-red-400/10 text-red-400 border-red-400/20")}>

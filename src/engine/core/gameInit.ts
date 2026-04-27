@@ -16,6 +16,14 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
   const gameSeed = seed ?? Math.floor(Math.random() * 1_000_000);
   setDeterministicSeed(gameSeed);
 
+<<<<<<< Updated upstream
+=======
+export function initializeGame(studioName: string, archetype: ArchetypeKey, seed?: number): GameState {
+  // 1. Initialize PRNG for determinism
+  const gameSeed = seed ?? Math.floor(Math.random() * 1_000_000);
+  setDeterministicSeed(gameSeed);
+
+>>>>>>> Stashed changes
   const arch = ARCHETYPES[archetype];
   const rivalArchetypes: ArchetypeKey[] = ['major', 'mid-tier', 'indie'];
   const usedNames = new Set<string>([studioName]);
@@ -129,6 +137,7 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
       return acc;
   }, {} as Record<string, RivalStudio>);
 
+<<<<<<< Updated upstream
   // Seed each rival with 2-4 starter vault assets so Stage 1 distress IP sales
   // have concrete named catalog titles to trade (no more phantom "catalog rights").
   const starterVault: import('@/engine/types').IPAsset[] = [];
@@ -154,6 +163,8 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
     }
   });
 
+=======
+>>>>>>> Stashed changes
   const studioId = generateId('PLR');
 
   // Fix ownerId for player streamer
@@ -197,8 +208,12 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
       projects: {},
       talents: talentPool,
       contracts: {},
+<<<<<<< Updated upstream
       rivals: rivalsRecord,
       shingles: {}
+=======
+      rivals: rivalsRecord
+>>>>>>> Stashed changes
     },
     studio: {
       id: studioId,
@@ -206,9 +221,12 @@ export function initializeGame(studioName: string, archetype: ArchetypeKey, seed
       archetype,
       prestige: arch.startingPrestige,
       internal: {
+<<<<<<< Updated upstream
         projects: {},
         contracts: [],
         firstLookDeals: [],
+=======
+>>>>>>> Stashed changes
         projectHistory: [],
       },
       ownedPlatforms: playerOwnedPlatforms

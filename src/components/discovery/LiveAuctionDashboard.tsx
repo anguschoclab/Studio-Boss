@@ -31,7 +31,10 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ oppo
   }, [opp.bids]);
 
   const isPlayerWinning = opp.highestBidderId === playerStudioId || opp.highestBidderId === 'PLAYER';
+<<<<<<< Updated upstream
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+=======
+>>>>>>> Stashed changes
   const playerBid = opp.bids[playerStudioId || 'PLAYER']?.amount || 0;
   const highestBidder = isPlayerWinning ? { name: 'YOU' } : rivalsMap[opp.highestBidderId];
 
@@ -231,7 +234,11 @@ export const LiveAuctionDashboard: React.FC<LiveAuctionDashboardProps> = ({ oppo
                     )}
                   >
                     <div className="flex items-center gap-2.5">
+<<<<<<< Updated upstream
                        <div className={cn("w-6 h-6 rounded-none flex items-center justify-center text-[10px] font-black", (bid.rivalId === playerStudioId || bid.rivalId === 'PLAYER') ? "bg-primary text-black" : "bg-white/5 text-muted-foreground")}>
+=======
+                       <div className={cn("w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black", (bid.rivalId === playerStudioId || bid.rivalId === 'PLAYER') ? "bg-primary text-black" : "bg-white/5 text-muted-foreground")}>
+>>>>>>> Stashed changes
                           {(bid.rivalId === playerStudioId || bid.rivalId === 'PLAYER') ? 'P' : 'R'}
                        </div>
                        <div>

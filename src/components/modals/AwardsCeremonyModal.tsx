@@ -13,9 +13,18 @@ export const AwardsCeremonyModal = () => {
   const [phase, setPhase] = useState<'nominees' | 'reveal'>('nominees');
   const [currentAwardIdx, setCurrentAwardIdx] = useState(0);
 
-  if (!gameState || !activeModal || activeModal.type !== 'AWARDS') return null;
+  const awards = (activeModal?.type === 'AWARDS' ? activeModal.payload?.awards : null) ?? [];
 
-  const { awards, body, year } = activeModal.payload;
+  useEffect(() => {
+    if (activeModal?.type === 'AWARDS' && awards.length === 0) {
+      resolveCurrentModal();
+    }
+  }, [activeModal, awards.length, resolveCurrentModal]);
+
+  if (!gameState || !activeModal || activeModal.type !== 'AWARDS') return null;
+  if (awards.length === 0) return null;
+  
+  const { body, year } = activeModal.payload;
   const currentAward = awards[currentAwardIdx];
 
   const handleNext = () => {
