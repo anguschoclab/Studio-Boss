@@ -1,10 +1,9 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
 import { useGameStore } from '@/store/gameStore';
-import { TrendingUp, DollarSign, History, Globe, Lock, Target, Zap } from 'lucide-react';
+import { TrendingUp, DollarSign, History, Globe, Lock } from 'lucide-react';
 import { formatMoney } from '@/engine/utils';
 import { IPAsset } from '@/engine/types';
 import { SYNDICATION_TIERS } from '@/engine/data/syndicationConfig';
