@@ -143,7 +143,11 @@ export function updateFranchiseHub(state: GameState, project: Project): GameStat
     entities: {
       ...state.entities,
       projects: allProjects,
+<<<<<<< Updated upstream
       rivals: state.entities.rivals, // Keep rivals as is
+=======
+      rivals: state.entities.rivals // Keep rivals as is
+>>>>>>> Stashed changes
     },
     ip: {
       ...state.ip,

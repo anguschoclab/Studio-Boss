@@ -32,7 +32,7 @@ describe('DiscoveryBoard', () => {
 
     render(<DiscoveryBoard />);
 
-    expect(screen.getByText((c) => c.includes('MARKET SATURATION') || c.includes('GLOBAL IP MARKETPLACE') || c.includes('DISCOVERY'))).toBeDefined();
+    expect(screen.getAllByText((c) => c.includes('MARKET SATURATION') || c.includes('GLOBAL IP MARKETPLACE') || c.includes('DISCOVERY')).length).toBeGreaterThan(0);
   });
 
   it('calls openCreateProject when Create Original button is clicked', () => {

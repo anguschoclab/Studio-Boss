@@ -49,7 +49,12 @@ vi.mock('lucide-react', () => {
     Settings: () => <div data-testid="icon" />,
     DollarSign: () => <div data-testid="icon" />,
     Star: () => <div data-testid="icon" />,
-    Clapperboard: () => <div data-testid="icon" />
+    Clapperboard: () => <div data-testid="icon" />,
+    Tv2: () => <div data-testid="icon" />,
+    TrendingUp: () => <div data-testid="icon" />,
+    TrendingDown: () => <div data-testid="icon" />,
+    Award: () => <div data-testid="icon" />,
+    Zap: () => <div data-testid="icon" />
   };
 });
 

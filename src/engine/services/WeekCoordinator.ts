@@ -129,9 +129,12 @@ export class WeekCoordinator {
       payload: { modalType: 'SUMMARY' }
     });
 
+<<<<<<< Updated upstream
     // 2.6 Achievements Check
     context.impacts.push(...checkAchievements(state));
 
+=======
+>>>>>>> Stashed changes
     // 3. Consolidation Phase (The Merge)
     let nextState = applyImpacts(state, context.impacts);
 

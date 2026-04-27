@@ -3,7 +3,6 @@ import { StateImpact, FinancialSnapshot } from '../types/state.types';
 import { RevenueProcessor } from './finance/RevenueProcessor';
 import { ExpenseProcessor } from './finance/ExpenseProcessor';
 import { InterestRateSimulator } from './market/InterestRateSimulator';
-import { formatMoney } from '../utils';
 
 export function calculateProjectROI(project: Project): number {
   const totalCost = project.budget + (project.marketingBudget || 0);
@@ -21,8 +20,8 @@ export function calculateStudioNetWorth(state: GameState): number {
 
   // 2. Active Projects Inventory (Work in Progress value)
   // We value "Inventory" as 50% of the budget already spent
-  Object.values(state.studio?.internal?.projects || {}).forEach(p => {
-    if (p.state !== 'released' && p.state !== 'archived') {
+  Object.values(state.entities.projects).forEach(p => {
+    if (p.ownerId === 'player' && p.state !== 'released' && p.state !== 'archived') {
       netWorth += p.budget * 0.5;
     }
   });
@@ -38,12 +37,10 @@ export function generateWeeklyFinancialReport(
   state: GameState, 
   pendingImpacts: StateImpact[] = []
 ): { report: WeeklyFinancialReport; snapshot: FinancialSnapshot } {
-  const projects = Object.values(state.studio?.internal?.projects || {});
+  const projects = Object.values(state.entities.projects).filter(p => p.ownerId === 'player');
+  const playerContracts = Object.values(state.entities.contracts).filter(c => c.ownerId === 'player');
   const studioLevel = (state.studio as any).level || 1;
   const market = state.finance.marketState || InterestRateSimulator.initialize();
-
-  // Track causality for financial changes
-  const causality: import('../types/state.types').FinancialCausalityEntry[] = [];
 
   // 1. Calculate Passive Income from Vault
   const passive = RevenueProcessor.calculateVaultDividends(state.ip.vault);
@@ -54,77 +51,29 @@ export function generateWeeklyFinancialReport(
   let merch = 0;
   let totalRoyalties = 0;
 
-  // ⚡ The Framerate Fanatic: Refactored array .find() inside map to a Map lookup, improving performance from O(n^2) to O(n).
-  const buyerMap = new Map<string, Buyer>();
-  state.market?.buyers?.forEach(b => buyerMap.set(b.id, b));
-
   projects.forEach(p => {
     if (p.state === 'released') {
       let weeklyGross = 0;
-      let trendMultiplier = 1.0;
-
-      // Check for genre trend
-      const genreTrend = state.market.trends?.find(t =>
-        t.genre?.toLowerCase() === p.genre?.toLowerCase()
-      );
-      if (genreTrend) {
-        trendMultiplier = genreTrend.heat >= 60 ? 1.2 : (genreTrend.heat <= 30 ? 0.8 : 1.0);
-        if (trendMultiplier !== 1.0) {
-          causality.push({
-            factor: `Genre Trend: ${p.genre}`,
-            effect: `${trendMultiplier > 1 ? '+' : ''}${Math.round((trendMultiplier - 1) * 100)}%`,
-            magnitude: trendMultiplier - 1,
-            description: genreTrend.heat >= 60 ? `${p.genre} is trending hot this season` : `${p.genre} has gone stale in the market`
-          });
-        }
-      }
-
+      
       // Theatrical vs Streaming
       if (p.distributionStatus === 'theatrical') {
-        weeklyGross = RevenueProcessor.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.35); // The Studio Comptroller: Severely increased theatrical decay to 0.35 to accurately model modern front-loaded box office drops.
+        weeklyGross = RevenueProcessor.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.5);
         boxOffice += weeklyGross;
-
-        // Track theatrical decay causality
-        if (p.weeksInPhase && p.weeksInPhase > 1) {
-          causality.push({
-            factor: `Theatrical Decay: ${p.title}`,
-            effect: `-65% weekly drop`,
-            magnitude: -0.65,
-            description: "Front-loaded box office drops significantly after opening week"
-          });
-        }
       } else if (p.distributionStatus === 'streaming') {
-        const platform = p.buyerId ? buyerMap.get(p.buyerId) : undefined;
+        const platform = state.market.buyers.find(b => b.id === p.buyerId);
         if (platform) {
           weeklyGross = RevenueProcessor.calculateStreamingRevenue(p, platform);
           distribution += weeklyGross;
-
-          // Track platform causality
-          causality.push({
-            factor: `Streaming Platform: ${platform.name}`,
-            effect: `${platform.archetype} revenue model`,
-            magnitude: 0,
-            description: `Revenue calculated based on ${platform.name}'s subscriber base and content library quality`
-          });
         }
       }
-
+      
       // Base Merch
       const franchise = p.franchiseId ? state.ip.franchises[p.franchiseId] : null;
       const weeklyMerch = RevenueProcessor.calculateMerchRevenue(p.buzz, franchise?.relevanceScore || 0);
       merch += weeklyMerch;
 
-      if (franchise && franchise.relevanceScore > 50) {
-        causality.push({
-          factor: `Franchise Synergy: ${franchise.name}`,
-          effect: `+${franchise.relevanceScore}% merch boost`,
-          magnitude: franchise.relevanceScore / 100,
-          description: `The ${franchise.name} franchise drives strong merchandising revenue`
-        });
-      }
-
       // Deduct Talent Royalties (Net Points Logic)
-      totalRoyalties += RevenueProcessor.calculateNetPointsRoyalty(p, weeklyGross + weeklyMerch, state.studio.internal.contracts);
+      totalRoyalties += RevenueProcessor.calculateNetPointsRoyalty(p, weeklyGross + weeklyMerch, playerContracts);
     }
   });
 
@@ -135,21 +84,9 @@ export function generateWeeklyFinancialReport(
 
   // 4. Calculate Interest (Debt or Savings)
   const isDebt = state.finance.cash < 0;
-  const interest = isDebt
+  const interest = isDebt 
     ? ExpenseProcessor.calculateDebtInterest(state.finance.cash, market.debtRate)
     : -ExpenseProcessor.calculateSavingsYield(state.finance.cash, market.savingsYield); // Negative expense = income
-
-  // Track interest causality
-  if (interest !== 0) {
-    causality.push({
-      factor: isDebt ? 'Debt Interest' : 'Savings Yield',
-      effect: isDebt ? `-${formatMoney(Math.abs(interest))}` : `+${formatMoney(Math.abs(interest))}`,
-      magnitude: isDebt ? -1 : 1,
-      description: isDebt
-        ? `Interest on debt at ${(market.debtRate * 100).toFixed(1)}% annual rate`
-        : `Yield on cash reserves at ${(market.savingsYield * 100).toFixed(1)}% annual rate`
-    });
-  }
 
   // 5. Consolidated One-off Impacts (Awards, Festivals, Acquisitions)
   let otherRevenue = 0;
@@ -205,8 +142,7 @@ export function generateWeeklyFinancialReport(
       interest: interest
     },
     net: netProfit,
-    cash: state.finance.cash + netProfit,
-    causality
+    cash: state.finance.cash + netProfit
   };
 
   return { report, snapshot };
@@ -224,16 +160,12 @@ export function calculateWeeklyRevenue(projects: Project[], buyers: Buyer[] = []
   let boxOffice = 0;
   let distribution = 0;
 
-  // ⚡ The Framerate Fanatic: Refactored array .find() inside map to a Map lookup, improving performance from O(n^2) to O(n).
-  const buyerMap = new Map<string, Buyer>();
-  buyers?.forEach(b => buyerMap.set(b.id, b));
-
   projects.forEach(p => {
     if (p.state === 'released') {
       if (p.distributionStatus === 'theatrical') {
-        boxOffice += RevenueProcessor.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.35); // The Studio Comptroller: Severely increased theatrical decay to 0.35 to accurately model modern front-loaded box office drops.
+        boxOffice += RevenueProcessor.calculateTheatricalDecay(p.weeklyRevenue || 0, 0.5);
       } else if (p.distributionStatus === 'streaming') {
-        const platform = p.buyerId ? buyerMap.get(p.buyerId) : undefined;
+        const platform = buyers.find(b => b.id === p.buyerId);
         if (platform) {
           distribution += RevenueProcessor.calculateStreamingRevenue(p, platform);
         }
@@ -245,7 +177,7 @@ export function calculateWeeklyRevenue(projects: Project[], buyers: Buyer[] = []
 }
 
 export function generateCashflowForecast(state: GameState, weeks: number = 12): { week: number; projected: number }[] {
-  const projects = Object.values(state.studio.internal.projects);
+  const projects = Object.values(state.entities.projects).filter(p => p.ownerId === 'player');
   const weeklyCosts = calculateWeeklyCosts(projects);
   const weeklyRevenue = calculateWeeklyRevenue(projects, state.market.buyers);
   const netPerWeek = weeklyRevenue - weeklyCosts;

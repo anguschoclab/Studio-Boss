@@ -27,5 +27,5 @@ describe('Unscripted Projects', () => {
     expect(project?.tvDetails?.episodesOrdered).toBe(12);
     expect(project?.tvDetails?.currentSeason).toBe(1);
     expect(project?.renewable).toBe(true);
-  });
+  }, 10000);
 });

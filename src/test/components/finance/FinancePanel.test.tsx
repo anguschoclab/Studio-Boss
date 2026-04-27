@@ -19,6 +19,8 @@ vi.mock('recharts', () => ({
   Bar: () => <div data-testid="bar" />,
   ReferenceLine: () => <div data-testid="reference-line" />,
   Cell: () => <div data-testid="cell" />,
+  PieChart: ({ children }: { children: React.ReactNode }) => <div data-testid="pie-chart">{children}</div>,
+  Pie: () => <div data-testid="pie" />,
 }));
 
 // Mock the Zustand store
@@ -76,10 +78,8 @@ describe('FinancePanel Component', () => {
           weeklyHistory: [],
           ledger: [],
       },
-      studio: {
-        internal: {
-          projects: mockProjects,
-        }
+      entities: {
+        projects: mockProjects,
       }
     };
 
@@ -104,10 +104,8 @@ describe('FinancePanel Component', () => {
           weeklyHistory: [],
           ledger: [],
       },
-      studio: {
-        internal: {
-          projects: mockProjects,
-        }
+      entities: {
+        projects: mockProjects,
       }
     };
 
