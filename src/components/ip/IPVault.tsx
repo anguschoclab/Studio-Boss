@@ -1,9 +1,8 @@
 import React from 'react';
 import { useGameStore } from '@/store/gameStore';
-import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Library, Archive, ShieldCheck, Target, Zap } from 'lucide-react';
+import { Library, Archive } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
 import { FranchiseHub } from './FranchiseHub';
 import { IPAssetCard } from './IPAssetCard';
