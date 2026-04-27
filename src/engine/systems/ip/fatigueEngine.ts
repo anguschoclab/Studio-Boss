@@ -75,6 +75,18 @@ export function calculateFranchiseFatigue(
     rivalPenalty *= IP_MASHUP_PENALTY;
   }
 
+  // 🌌 The Universe Builder: Implemented "Video Game Adaptation Fatigue" - 2.0x penalty.
+  const VG_ADAPTATION_THRESHOLD = 5;
+  const VG_ADAPTATION_PENALTY = 2.0;
+  if (normalizedGenre === "Video Game Adaptation" && genreSaturation > VG_ADAPTATION_THRESHOLD) {
+    rivalPenalty *= VG_ADAPTATION_PENALTY;
+  }
+
+  // 🌌 The Universe Builder: Implemented "Zombie Franchise Penalty" - 1.5x penalty if heavily mined with low loyalty.
+  if (activeCount >= 3 && franchise.audienceLoyalty < 30) {
+    currentFatigue *= 1.5;
+  }
+
   // 4. Audience Loyalty (Protective Shield)
   // High loyalty acts as a buffer against fatigue.
   const loyaltyShield = (franchise.audienceLoyalty / 100) * 0.3; // Up to 30% reduction in fatigue gain
@@ -105,6 +117,15 @@ export function calculateReleaseGapImpact(
       buzzBonus: REBOOT_BUZZ_BONUS,
       label: "Franchise Reboot",
       fatigueReset: true,
+    };
+  }
+
+  // 🌌 The Universe Builder: Added penalty for IP Retention plays (Cheap rushing to keep rights within 1 year).
+  if (yearsSince < 1.0) {
+    return {
+      buzzBonus: -20,
+      label: "IP Retention Fatigue",
+      fatigueReset: false,
     };
   }
 

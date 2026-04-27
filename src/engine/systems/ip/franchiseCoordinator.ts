@@ -66,6 +66,16 @@ export function calculateFranchiseEquity(
     ) {
       crossoverBonus += 0.15;
     }
+
+    // 🌌 The Universe Builder: Added 20% synergy bonus for Horror-Com crossovers.
+    if (uniqueGenres.has("Horror") && uniqueGenres.has("Comedy")) {
+      crossoverBonus += 0.2;
+    }
+
+    // 🌌 The Universe Builder: Cash Grab Penalty for forced crossovers with zero synergy.
+    if (synergyHits === 0 && assets.length >= 3) {
+      crossoverBonus -= 0.15;
+    }
   }
 
   // 2. Format Diversity Multiplier
