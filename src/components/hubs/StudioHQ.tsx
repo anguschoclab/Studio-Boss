@@ -9,10 +9,7 @@ import {
   AlertTriangle,
   Target,
   Newspaper,
-  Megaphone,
-  Zap,
-  ShieldAlert,
-  ArrowRight
+  Megaphone
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { formatMoney } from '@/engine/utils';
@@ -41,7 +38,7 @@ const MarketingPanel = () => {
     projectTitle: p.title,
     totalBuzz: p.buzz || 0,
     trend: (p.momentum || 50) > 55 ? 'rising' as const : (p.momentum || 50) < 45 ? 'falling' as const : 'stable' as const,
-    sources: [] as any[],
+    sources: [] as { type: 'social' | 'press' | 'awards' | 'talent' | 'controversy' | 'viral', value: number, description: string }[],
     audienceSentiment: (p.buzz || 0) > 60 ? 'positive' as const : (p.buzz || 0) > 30 ? 'mixed' as const : 'negative' as const,
     pressCoverage: Math.round((p.buzz || 0) * 0.3),
   })), [activeProjects]);

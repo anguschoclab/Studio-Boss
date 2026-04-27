@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { GaugeChart } from '@/components/charts/GaugeChart';
 import { Card } from '@/components/ui/card';
 import { tokens } from '@/lib/tokens';
