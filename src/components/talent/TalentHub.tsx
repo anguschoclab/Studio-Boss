@@ -86,6 +86,8 @@ export const TalentHub = () => {
             {(['all', 'actor', 'director', 'writer', 'producer'] as (TalentRole | 'all')[]).map(type => (
               <button
                 key={type}
+                type="button"
+                aria-pressed={rosterFilter === type}
                 onClick={() => setRosterFilter(type)}
                 className={cn(
                   "px-8 h-12 text-[10px] uppercase font-black tracking-[0.3em] border transition-all duration-700 rounded-none italic flex items-center justify-center min-w-[140px]",
