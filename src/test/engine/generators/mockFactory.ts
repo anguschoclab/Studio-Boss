@@ -36,13 +36,8 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
       archetype: 'major',
       prestige: 50,
       internal: {
-<<<<<<< Updated upstream
-        projects: {},
-        contracts: [],
+        projectHistory: [],
         firstLookDeals: [],
-=======
->>>>>>> Stashed changes
-        projectHistory: []
       }
     },
     market: {
@@ -55,20 +50,13 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
       families: [],
       agencies: [],
       agents: [],
-<<<<<<< Updated upstream
-      rivals: [],
       awards: [],
-=======
->>>>>>> Stashed changes
       newsHistory: [],
       rumors: [],
       scandals: []
     },
     culture: {
       genrePopularity: {}
-    },
-    relationships: {
-      discovery: {}
     },
     history: [],
     eventHistory: []
@@ -77,20 +65,13 @@ export const createMockGameState = (overrides: Partial<GameState> = {}): GameSta
   return { ...defaultState, ...overrides };
 };
 
-<<<<<<< Updated upstream
 import { RandomGenerator } from '../../../engine/utils/rng';
 
-=======
->>>>>>> Stashed changes
 export const createMockTickContext = (overrides: Partial<import('../../../engine/services/WeekCoordinator').TickContext> = {}): import('../../../engine/services/WeekCoordinator').TickContext => {
   return {
     week: 1,
     tickCount: 0,
-<<<<<<< Updated upstream
     rng: new RandomGenerator(12345),
-=======
-    rng: new (require('../../../engine/utils/rng').RandomGenerator)(12345),
->>>>>>> Stashed changes
     timestamp: Date.now(),
     impacts: [],
     events: [],

@@ -13,17 +13,6 @@ export function tickFinance(state: GameState, rng: RandomGenerator, pendingImpac
   // Use the robust report generator for the player studio
   const { report, snapshot } = generateWeeklyFinancialReport(
     state,
-<<<<<<< Updated upstream
-=======
-    'player',
-    state.entities.projects,
-    state.finance.cash,
-    state.studio.archetype,
-    state.studio.prestige,
-    state.entities.contracts ? Object.values(state.entities.contracts) : [],
-    [], // Talent pacts (TBD if player has them in entities)
-    rng,
->>>>>>> Stashed changes
     pendingImpacts
   );
   

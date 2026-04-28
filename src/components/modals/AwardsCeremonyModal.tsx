@@ -40,7 +40,7 @@ export const AwardsCeremonyModal = () => {
   };
 
   const getProjectTitle = (id: string) => {
-    return gameState.studio.internal.projects[id]?.title || "Unknown Project";
+    return gameState.entities?.projects[id]?.title || "Unknown Project";
   };
 
   return (

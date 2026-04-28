@@ -49,7 +49,6 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
     if (agency.culture === 'shark' || agency.currentMotivation === 'THE_SHARK') {
       if (rng.next() < 0.1) {
         const brands = Object.values(state.entities.rivals || {});
-<<<<<<< Updated upstream
         let rival = rng.pick(brands);
 
         // 🎭 The Method Actor Tuning: Shark agencies smell blood in the water and specifically target vulnerable studios or "easy marks" (low prestige, high cash) for poaching.
@@ -58,9 +57,6 @@ export function tickAgencies(state: GameState, rng: RandomGenerator): StateImpac
           rival = rng.pick(vulnerableRivals);
         }
 
-=======
-        const rival = rng.pick(brands);
->>>>>>> Stashed changes
         if (rival) {
           impacts.push({
             type: 'NEWS_ADDED',

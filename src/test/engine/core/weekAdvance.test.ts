@@ -1,8 +1,5 @@
 import { describe, it, expect } from 'vitest';
-<<<<<<< Updated upstream
-=======
 import { GameState } from '@/engine/types';
->>>>>>> Stashed changes
 import { advanceWeek } from '@/engine/core/weekAdvance';
 import { createMockGameState } from '../generators/mockFactory';
 
@@ -23,7 +20,6 @@ describe('Week Advance Pipeline (Target A4)', () => {
     // Ensure entities partition exists in new state
     expect(newState.entities).toBeDefined();
     expect(newState.entities.rivals).toBeDefined();
-<<<<<<< Updated upstream
   });
 
   it('handles extreme edge case: advancing weeks with an empty pipeline', () => {
@@ -50,7 +46,5 @@ describe('Week Advance Pipeline (Target A4)', () => {
     expect(summary.fromWeek).toBe(1);
     expect(summary.toWeek).toBe(2);
     expect(newState.studio.internal.projects).toEqual({});
-=======
->>>>>>> Stashed changes
   });
 });

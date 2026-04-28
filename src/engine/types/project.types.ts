@@ -507,7 +507,6 @@ export interface ProjectBase {
   buyerId?: string;
   ownerId?: string;
   nielsenProfile?: import('../systems/television/nielsenSystem').NielsenProfile;
-<<<<<<< Updated upstream
   // Post-production phase
   postProductionWeeksRemaining?: number;
   // Release strategy (set during marketing phase)
@@ -516,8 +515,6 @@ export interface ProjectBase {
   morale?: number; // 0-100
   // Loan tracking
   loanId?: string;
-=======
->>>>>>> Stashed changes
 }
 
 export interface ScriptedProject extends ProjectBase {

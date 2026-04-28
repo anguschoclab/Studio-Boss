@@ -1,5 +1,5 @@
 import { GameState, Scandal, ScandalType, Project } from '@/engine/types';
-import { secureRandom } from '../utils';
+import { secureRandom, generateId } from '../utils';
 import { StateImpact } from '../types/state.types';
 
 /**
@@ -24,7 +24,7 @@ export function generateScandals(state: GameState): StateImpact[] {
        const type = types[Math.floor(secureRandom() * types.length)];
        
        const s: Scandal = {
-         id: crypto.randomUUID(),
+         id: generateId('SCA'),
          talentId: talent.id,
          severity: 20 + Math.floor(secureRandom() * 80), // 20-100
          type,
@@ -53,7 +53,7 @@ export function generateScandals(state: GameState): StateImpact[] {
              projectId,
              update: {
                activeCrisis: {
-                  crisisId: `scandal-crisis-${crypto.randomUUID()}`,
+                  crisisId: generateId('CRI'),
                   triggeredWeek: state.week,
                   haltedProduction: false,
                  description: `BREAKING NEWS: ${talent.name.toUpperCase()} has been involved in a massive ${type} scandal while working on "${project.title}". The press is circling.`,

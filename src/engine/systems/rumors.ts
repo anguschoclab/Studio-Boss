@@ -1,6 +1,6 @@
 import { GameState, Rumor } from '@/engine/types';
 import { StateImpact } from '../types/state.types';
-import { pick, randRange, secureRandom } from '../utils';
+import { pick, randRange, secureRandom, generateId } from '../utils';
 
 export function advanceRumors(state: GameState): StateImpact {
   const newHeadlines: import('../types/engine.types').Headline[] = [];
@@ -66,7 +66,7 @@ export function advanceRumors(state: GameState): StateImpact {
     }
     
     const rumor: Rumor = {
-      id: crypto.randomUUID(),
+      id: generateId('RUM'),
       text,
       week: state.week,
       category,

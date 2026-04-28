@@ -1,10 +1,5 @@
-<<<<<<< Updated upstream
 import { describe, it, expect } from 'vitest';
-import { NewsImpact } from '@/engine/types';
-=======
-import { describe, it, expect, beforeEach } from 'vitest';
-import { Agency, NewsImpact } from '@/engine/types';
->>>>>>> Stashed changes
+import { NewsImpact, Agency } from '@/engine/types';
 import { tickAgencies, evaluatePackageOffer } from '@/engine/systems/ai/AgentBrain';
 import { RandomGenerator } from '@/engine/utils/rng';
 import { createMockGameState, createMockTalent, createMockRival } from '../../generators/mockFactory';
@@ -18,12 +13,13 @@ describe('Agent Brain (Target C2)', () => {
         id: 'a1',
         name: 'Shark Agency',
         archetype: 'powerhouse',
+        tier: 'A_TIER',
         culture: 'shark',
         prestige: 90,
         leverage: 80,
         currentMotivation: 'THE_SHARK',
         motivationProfile: { financial: 50, prestige: 50, legacy: 50, aggression: 50 }
-      };
+      } as any;
 
       const mockRival = createMockRival({ id: 'r1', name: 'Rival Studio' });
       const state = createMockGameState();
@@ -44,19 +40,12 @@ describe('Agent Brain (Target C2)', () => {
 
   describe('evaluatePackageOffer', () => {
     it('returns a package deal if agency is THE_PACKAGER', () => {
-<<<<<<< Updated upstream
       // @ts-expect-error Mocking partial Agency object for test
-=======
->>>>>>> Stashed changes
       const agency: Agency = {
         id: 'packager-1',
         name: 'Pack House',
         currentMotivation: 'THE_PACKAGER'
-<<<<<<< Updated upstream
       };
-=======
-      } as any;
->>>>>>> Stashed changes
 
       const leadTalent = createMockTalent({ id: 'lead', name: 'Star' });
       const bundledTalent = createMockTalent({ id: 'bundle', name: 'B-Side', agencyId: 'packager-1' });
@@ -70,19 +59,12 @@ describe('Agent Brain (Target C2)', () => {
     });
 
     it('returns no deal if no other clients are available', () => {
-<<<<<<< Updated upstream
       // @ts-expect-error Mocking partial Agency object for test
-=======
->>>>>>> Stashed changes
       const agency: Agency = {
         id: 'packager-1',
         name: 'Pack House',
         currentMotivation: 'THE_PACKAGER'
-<<<<<<< Updated upstream
       };
-=======
-      } as any;
->>>>>>> Stashed changes
 
       const leadTalent = createMockTalent({ id: 'lead', name: 'Star' });
       const talentPool = [leadTalent];

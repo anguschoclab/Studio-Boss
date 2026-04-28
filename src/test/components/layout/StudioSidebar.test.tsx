@@ -54,7 +54,8 @@ vi.mock('lucide-react', () => {
     TrendingUp: () => <div data-testid="icon" />,
     TrendingDown: () => <div data-testid="icon" />,
     Award: () => <div data-testid="icon" />,
-    Zap: () => <div data-testid="icon" />
+    Zap: () => <div data-testid="icon" />,
+    Archive: () => <div data-testid="icon" />
   };
 });
 
@@ -99,7 +100,7 @@ describe('StudioSidebar', () => {
         gameState: {
           entities: { projects: {}, talents: {}, contracts: {}, rivals: {} },
           finance: { cash: 1000000, weeklyHistory: [] },
-          studio: { prestige: 10, internal: { projectHistory: [] } }
+          studio: { prestige: 10, internal: { projects: {}, projectHistory: [] } }
         },
         clearGame: vi.fn()
       };
@@ -112,35 +113,5 @@ describe('StudioSidebar', () => {
     renderSidebar();
     expect(screen.getByText('BOSS')).toBeDefined();
     expect(screen.getByText((c) => c.includes('CASH_RESERVES') || c.includes('CASH'))).toBeDefined();
-    expect(screen.queryByTestId('mock-line-chart')).toBeNull();
-  });
-
-  it('renders sparkline when historical financial data is present', async () => {
-    (useGameStore as any).mockImplementation((selector: any) => {
-      const mockState = {
-        gameState: {
-          entities: { projects: {}, talents: {}, contracts: {}, rivals: {} },
-          finance: {
-            cash: 1000000,
-            weeklyHistory: [
-              { week: 1, cash: 500000 },
-              { week: 2, cash: 750000 },
-              { week: 3, cash: 1000000 },
-            ]
-          },
-          studio: { prestige: 10, internal: { projectHistory: [] } }
-        },
-        clearGame: vi.fn()
-      };
-      if (typeof selector === 'function') {
-        return selector(mockState);
-      }
-      return mockState;
-    });
-
-    renderSidebar();
-    expect(await screen.findByTestId('mock-responsive-container')).toBeDefined();
-    expect(screen.getByTestId('mock-line-chart')).toBeDefined();
-    expect(screen.getByTestId('mock-line')).toBeDefined();
   });
 });

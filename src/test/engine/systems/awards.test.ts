@@ -93,12 +93,8 @@ describe("awards system", () => {
     it("awards 'won' status for high scores at Critics Choice Awards (Week 4)", () => {
       const state = getInitialState();
       state.entities.projects = { [eligibleProject.id]: eligibleProject };
-<<<<<<< Updated upstream
       state.week = 4;
       const rng = new RandomGenerator(42);
-=======
-      state.week = 10;
->>>>>>> Stashed changes
 
       const impacts = runAwardsCeremony(state, 4, 2024, rng);
 
@@ -111,12 +107,8 @@ describe("awards system", () => {
     it("accumulates prestige change for high-scoring project", () => {
       const state = getInitialState();
       state.entities.projects = { [eligibleProject.id]: eligibleProject };
-<<<<<<< Updated upstream
       state.week = 4;
       const rng = new RandomGenerator(42);
-=======
-      state.week = 10;
->>>>>>> Stashed changes
 
       const impacts = runAwardsCeremony(state, 4, 2024, rng);
       const prestigeTotal = impacts

@@ -89,10 +89,7 @@ export function updateRival(rival: RivalStudio): Partial<RivalStudio> {
 export function advanceRivals(state: GameState): StateImpact {
   const rivalUpdates: RivalUpdate[] = [];
   const newsEvents: NewsEvent[] = [];
-<<<<<<< Updated upstream
   const uiNotifications: string[] = [];
-=======
->>>>>>> Stashed changes
   const ALL_RIVALS = Object.values(state.entities.rivals);
   
   for (const rival of ALL_RIVALS) {

@@ -77,7 +77,6 @@ export function calculateRivalMotivation(rival: RivalStudio, state: GameState, r
  * Weekly tick to update AI mindsets across the industry.
  */
 export function tickAIMinds(state: GameState, rng: RandomGenerator): StateImpact[] {
-<<<<<<< Updated upstream
   const impacts: StateImpact[] = [];
 
   Object.values(state.entities.rivals || {}).forEach(rival => {
@@ -95,13 +94,6 @@ export function tickAIMinds(state: GameState, rng: RandomGenerator): StateImpact
     if (weeksSinceLastAward > awardStarvedThreshold && newMotivation !== 'AWARD_CHASE' && rng.next() < 0.15) {
       // 15% chance per week to switch to AWARD_CHASE if award-starved
       newMotivation = 'AWARD_CHASE';
-=======
-  return Object.values(state.entities.rivals || {}).map(rival => ({
-    type: 'RIVAL_UPDATED',
-    payload: {
-      rivalId: rival.id,
-      update: { currentMotivation: calculateRivalMotivation(rival, state, rng) }
->>>>>>> Stashed changes
     }
 
     impacts.push({

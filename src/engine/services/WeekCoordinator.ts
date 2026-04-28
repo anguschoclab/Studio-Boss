@@ -34,10 +34,7 @@ import { tickStudioIdentity } from '../systems/StudioIdentitySystem';
 import { checkAchievements } from '../systems/AchievementsSystem';
 
 // New Game Systems
-import { tickReleaseStrategy } from '../systems/ReleaseStrategySystem';
 import { tickPostProduction } from '../systems/PostProductionSystem';
-import { tickStudioIdentity } from '../systems/StudioIdentitySystem';
-import { checkAchievements } from '../systems/AchievementsSystem';
 import { tickMorale } from '../systems/talent/MoraleTick';
 
 // Talent Lifecycle Systems
@@ -60,7 +57,6 @@ import { runAwardsCeremony } from '../systems/awards/CeremonyRunner';
 import { processRazzies } from '../systems/awards/RazzieProcessor';
 import { tickPilots } from '../systems/television/pilotEvaluator';
 import { runUpfronts } from '../systems/television/upfrontsEngine';
-import { tickPostProduction } from '../systems/PostProductionSystem';
 
 // AI Competition Systems
 import { tickTalentCompetition } from '../systems/ai/bidding/CompetitionModule';
@@ -129,12 +125,9 @@ export class WeekCoordinator {
       payload: { modalType: 'SUMMARY' }
     });
 
-<<<<<<< Updated upstream
     // 2.6 Achievements Check
     context.impacts.push(...checkAchievements(state));
 
-=======
->>>>>>> Stashed changes
     // 3. Consolidation Phase (The Merge)
     let nextState = applyImpacts(state, context.impacts);
 

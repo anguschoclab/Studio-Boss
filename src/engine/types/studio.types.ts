@@ -69,10 +69,7 @@ export interface GameState {
     talents: Record<string, Talent>;
     contracts: Record<string, Contract>;
     rivals: Record<string, RivalStudio>;
-<<<<<<< Updated upstream
     shingles?: Record<string, import('./talent.types').ProducerShingle>;
-=======
->>>>>>> Stashed changes
   };
   studio: {
     id: string;

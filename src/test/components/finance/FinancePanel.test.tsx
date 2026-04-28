@@ -21,6 +21,7 @@ vi.mock('recharts', () => ({
   Cell: () => <div data-testid="cell" />,
   PieChart: ({ children }: { children: React.ReactNode }) => <div data-testid="pie-chart">{children}</div>,
   Pie: () => <div data-testid="pie" />,
+  Label: () => <div data-testid="label" />,
 }));
 
 // Mock the Zustand store
@@ -62,7 +63,7 @@ describe('FinancePanel Component', () => {
 
     render(<FinancePanel />);
 
-    expect(screen.getByText((content) => content.includes('FISCAL INTELLIGENCE') || content.includes('FISCAL'))).toBeDefined();
+    expect(screen.getAllByText((content) => content.includes('FISCAL INTELLIGENCE')).length).toBeGreaterThan(0);
   });
 
   it('renders correctly with positive cash flow and active projects', () => {
@@ -90,7 +91,7 @@ describe('FinancePanel Component', () => {
 
     render(<FinancePanel />);
 
-    expect(screen.getByText((content) => content.includes('FISCAL INTELLIGENCE') || content.includes('FISCAL'))).toBeDefined();
+    expect(screen.getAllByText((content) => content.includes('FISCAL INTELLIGENCE')).length).toBeGreaterThan(0);
   });
 
   it('renders correctly with negative cash flow and negative cash', () => {
@@ -116,6 +117,6 @@ describe('FinancePanel Component', () => {
 
     render(<FinancePanel />);
 
-    expect(screen.getByText((content) => content.includes('FISCAL INTELLIGENCE') || content.includes('FISCAL'))).toBeDefined();
+    expect(screen.getAllByText((content) => content.includes('FISCAL INTELLIGENCE')).length).toBeGreaterThan(0);
   });
 });

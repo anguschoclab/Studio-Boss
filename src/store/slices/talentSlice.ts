@@ -52,16 +52,6 @@ export const createTalentSlice: StateCreator<GameStore, [], [], TalentSlice> = (
         gameState: {
           ...state,
           finance: { ...state.finance, cash: newCash },
-<<<<<<< Updated upstream
-          studio: {
-            ...state.studio,
-            internal: {
-              ...state.studio.internal,
-              contracts: [...(state.studio.internal.contracts || []), contract]
-            }
-          },
-=======
->>>>>>> Stashed changes
           entities: {
             ...state.entities,
             contracts: { ...state.entities.contracts, [contract.id]: contract }

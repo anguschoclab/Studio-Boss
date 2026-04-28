@@ -72,7 +72,7 @@ export class HeadlessController {
         // In headless simulation, always greenlight projects
         const result = executeGreenlight(project);
         // Set productionWeeks for headless simulation (shorter duration)
-        const productionWeeks = 4 + Math.floor(Math.random() * 4); // 4-8 weeks
+        const productionWeeks = rng.rangeInt(4, 8); // 4-8 weeks
         const updateWithProductionWeeks = {
           ...result.project,
           productionWeeks

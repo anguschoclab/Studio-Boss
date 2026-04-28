@@ -1,5 +1,5 @@
 import { AwardBody, AwardCategory, AwardsProfile, GameState, Project } from '@/engine/types';
-import { secureRandom } from '../utils';
+import { secureRandom, generateId } from '../utils';
 import { StateImpact } from '../types/state.types';
 import { 
   AWARDS_CALENDAR, 
@@ -64,7 +64,7 @@ export function launchAwardsCampaign(state: GameState, projectId: string, budget
       }
     }],
     newHeadlines: [{
-      id: `hl-${crypto.randomUUID()}`,
+      id: generateId('HL'),
       week: state.week,
       category: 'awards',
       text: `Studio launches massive FYC campaign for "${project.title}".`
@@ -125,7 +125,7 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
 
     if (bestScore > 150 && impact.newAwards) {
       impact.newAwards.push({
-        id: `award-${crypto.randomUUID()}`,
+        id: generateId('AWD'),
         projectId: bestProject.id,
         name: config.category,
         category: config.category,
@@ -149,7 +149,7 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
       }
       if (impact.newsEvents) {
         impact.newsEvents.push({
-          id: `news-${crypto.randomUUID()}`,
+          id: generateId('NEWS'),
           week: currentWeek,
           type: 'AWARD',
           headline: `${bestProject.title} Wins ${config.category}!`,
@@ -158,7 +158,7 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
       }
       if (impact.newHeadlines) {
         impact.newHeadlines.push({
-          id: `hl-${crypto.randomUUID()}`,
+          id: generateId('HL'),
           week: currentWeek,
           category: 'awards',
           text: `BREAKING: "${bestProject.title}" wins ${config.category} at the ${config.body}!`
@@ -166,7 +166,7 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
       }
     } else if (bestScore > 100 && impact.newAwards) {
       impact.newAwards.push({
-        id: `award-${crypto.randomUUID()}`,
+        id: generateId('AWD'),
         projectId: bestProject.id,
         name: config.category,
         category: config.category,
@@ -225,7 +225,7 @@ export function processRazzies(state: GameState, week: number): StateImpact {
   }
   if (impact.newHeadlines) {
     impact.newHeadlines.push({
-      id: `hl-${crypto.randomUUID()}`,
+      id: generateId('HL'),
       week,
       category: 'awards',
       text: `The Razzies Nominees Announced! "${worstPicture.title}" sweeps the board with a historic Worst Picture win.`
@@ -233,7 +233,7 @@ export function processRazzies(state: GameState, week: number): StateImpact {
   }
   if (impact.newsEvents) {
     impact.newsEvents.push({
-      id: `news-${crypto.randomUUID()}`,
+      id: generateId('NEWS'),
       week,
       type: 'AWARD',
       headline: `Razzies: ${worstPicture.title} Named Worst Picture`,
@@ -276,7 +276,7 @@ export function processRazzies(state: GameState, week: number): StateImpact {
           projectId: worstPicture.id,
           update: {
             activeCrisis: {
-              crisisId: `crisis-${crypto.randomUUID()}`,
+              crisisId: generateId('CRI'),
               triggeredWeek: week,
               haltedProduction: false,
               description: `The Razzies have destroyed ${worstLeadName}'s ego. They are having a meltdown on set of their next project, or refusing to promote this one.`,
