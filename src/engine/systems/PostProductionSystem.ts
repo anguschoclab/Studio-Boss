@@ -29,6 +29,7 @@ export function tickPostProduction(
   // ⚡ The Framerate Fanatic: Replaced Object.values() with a direct for...in loop
   // to avoid O(N) array allocation overhead every tick for high-frequency state records.
   for (const projectId in state.entities.projects) {
+    if (!Object.prototype.hasOwnProperty.call(state.entities.projects, projectId)) continue;
     const project = state.entities.projects[projectId];
     if (project.state !== 'post_production') continue;
 
