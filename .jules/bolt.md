@@ -13,3 +13,6 @@
 ## 2024-05-18 - Pre-grouping arrays for O(1) retrieval
 **Learning:** Nested iterations matching items by ID (e.g. O(Projects * Contracts) complexity) create large performance bottlenecks, especially since Array.filter() allocates a new array each loop.
 **Action:** Pre-group items using a `Record` or `Map` before iterating, reducing complexity to O(N+M) and minimizing GC pressure by eliminating inner-loop array allocations.
+## 2026-05-18 - Replacing Object.values().filter() in Game Ticks
+**Learning:** Using chained `Object.values().filter()` during every engine tick loop allocates intermediate arrays which are quickly discarded, causing unneeded O(N) memory allocation and subsequent garbage collection pauses.
+**Action:** Replace `Object.values(state.entities.projects)` with `for...in` loops when iterating over high-frequency state records in the simulation loop.

@@ -11,11 +11,23 @@ export type TVStatus = 'IN_DEVELOPMENT' | 'ON_AIR' | 'ON_BUBBLE' | 'RENEWED' | '
  */
 export function tickTelevision(state: GameState, rng: RandomGenerator): StateImpact[] {
   const impacts: StateImpact[] = [];
-  const series = Object.values(state.entities.projects).filter(
-    (p): p is SeriesProject => p.type === 'SERIES' && 'tvDetails' in p
-  );
 
-  const airingShows = series.filter(p => p.tvDetails.status === 'ON_AIR');
+  // ⚡ The Framerate Fanatic: Replaced Object.values().filter() with a direct for...in loop
+  // to avoid O(N) array allocation overhead every tick for high-frequency state records.
+  const series: SeriesProject[] = [];
+  const airingShows: SeriesProject[] = [];
+
+  for (const id in state.entities.projects) {
+    const p = state.entities.projects[id];
+    if (p.type === 'SERIES' && 'tvDetails' in p) {
+      const sp = p as SeriesProject;
+      series.push(sp);
+      if (sp.tvDetails.status === 'ON_AIR') {
+        airingShows.push(sp);
+      }
+    }
+  }
+
   const weekSnapshots = new Map<string, NielsenSnapshot>();
 
   // Phase 1: Generate Nielsen snapshots for all airing shows
