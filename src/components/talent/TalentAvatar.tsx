@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import DOMPurify from 'dompurify';
 import { Talent } from '@/engine/types';
 import { generateAvatarSVG } from '@/engine/generators/avatarGenerator';
 import { useGameStore } from '@/store/gameStore';
@@ -65,7 +66,8 @@ export const TalentAvatar: React.FC<TalentAvatarProps> = React.memo(({
   const pixelSize = SIZE_MAP[size];
   
   const svgMarkup = useMemo(() => {
-    return generateAvatarSVG(talent, effectiveWeek);
+    // Sanitize the procedural SVG to prevent XSS attacks
+    return DOMPurify.sanitize(generateAvatarSVG(talent, effectiveWeek));
   }, [talent, effectiveWeek]);
 
   const primaryRole = (talent.roles?.[0] || talent.role || '').toLowerCase();
