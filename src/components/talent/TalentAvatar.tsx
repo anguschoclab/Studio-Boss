@@ -67,7 +67,7 @@ export const TalentAvatar: React.FC<TalentAvatarProps> = React.memo(({
   
   const svgMarkup = useMemo(() => {
     // Sanitize the procedural SVG to prevent XSS attacks
-    return DOMPurify.sanitize(generateAvatarSVG(talent, effectiveWeek));
+    return DOMPurify.sanitize(generateAvatarSVG(talent, effectiveWeek), { USE_PROFILES: { svg: true, svgFilters: true } });
   }, [talent, effectiveWeek]);
 
   const primaryRole = (talent.roles?.[0] || talent.role || '').toLowerCase();
