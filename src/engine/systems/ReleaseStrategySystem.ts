@@ -77,8 +77,10 @@ const STRATEGY_DEFS: Record<
 export function tickReleaseStrategy(state: GameState): StateImpact[] {
   const impacts: StateImpact[] = [];
 
-  const projects = Object.values(state.entities.projects);
-  for (const project of projects) {
+  // ⚡ The Framerate Fanatic: Replaced Object.values() with a direct for...in loop
+  // to avoid O(N) array allocation overhead every tick for high-frequency state records.
+  for (const projectId in state.entities.projects) {
+    const project = state.entities.projects[projectId];
     if (
       project.state === 'marketing' &&
       !(project as any).releaseStrategy
