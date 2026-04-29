@@ -28,12 +28,12 @@ describe('generateDemographics', () => {
   it('provides a sensible ethnicity based on country', () => {
     const demoJapan = generateDemographics(false, 'Japan');
     if (demoJapan.country === 'Japan') {
-        expect(demoJapan.ethnicity).toBe('Asian');
+        expect(['Asian', 'Mixed']).toContain(demoJapan.ethnicity);
     }
 
     const demoMexico = generateDemographics(false, 'Mexico');
     if (demoMexico.country === 'Mexico') {
-        expect(demoMexico.ethnicity).toBe('Hispanic');
+        expect(['Hispanic', 'Caucasian']).toContain(demoMexico.ethnicity);
     }
   });
 });

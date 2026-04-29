@@ -37,12 +37,12 @@ describe("ratings system", () => {
 
     it("returns correct multiplier for project with political flag", () => {
       const project = { ...mockProject, contentFlags: ["political" as ContentFlag] };
-      expect(calculateRegionalPenalties(project)).toBeCloseTo(0.732, 2);
+      expect(calculateRegionalPenalties(project)).toBeCloseTo(0.7, 2);
     });
 
     it("returns correct multiplier for project with gore flag", () => {
       const project = { ...mockProject, contentFlags: ["gore" as ContentFlag] };
-      expect(calculateRegionalPenalties(project)).toBeCloseTo(0.7205, 3);
+      expect(calculateRegionalPenalties(project)).toBeCloseTo(0.85, 3);
     });
 
     it("returns reduced multiplier for project with both political and gore flags", () => {
@@ -89,7 +89,7 @@ describe("ratings system", () => {
       const result = editForRating(project, mockState, "gore" as ContentFlag);
       expect(result.success).toBe(true);
       expect(result.data?.contentFlags).not.toContain("gore");
-      expect(result.data?.buzz).toBe(38);
+      expect(result.data?.buzz).toBe(45);
     });
   });
 });

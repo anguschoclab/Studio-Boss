@@ -55,16 +55,14 @@ describe('TV Awards Filtering & Taxonomy', () => {
 
     const impacts = runAwardsCeremony(
       baseState({ drama_1: dramaShow, sitcom_1: sitcomShow }),
-      37, 2026, rng
+      37, 2026
     );
 
-    expect(Array.isArray(impacts)).toBe(true);
-    const industryUpdates = impacts.filter(i => i.type === 'INDUSTRY_UPDATE');
-    const awardEntries = industryUpdates.flatMap(i => Object.values((i.payload as any) || {}));
-    const bestSeries = awardEntries.find((a: any) => a?.category === 'Best Series');
+    expect(impacts.newAwards).toBeDefined();
+    const bestSeries = impacts.newAwards?.find((a: any) => a.category === 'Best Series');
 
     expect(bestSeries).toBeDefined();
-    expect((bestSeries as any)?.projectId).toBeTruthy();
+    expect(bestSeries?.projectId).toBeTruthy();
   });
 
   it('should award Best Series to the highest-scoring TV project at Emmys', () => {
@@ -72,16 +70,12 @@ describe('TV Awards Filtering & Taxonomy', () => {
 
     const impacts = runAwardsCeremony(
       baseState({ sitcom_1: sitcomShow }),
-      37, 2026, rng
+      37, 2026
     );
 
-    const awardEntries = impacts
-      .filter(i => i.type === 'INDUSTRY_UPDATE')
-      .flatMap(i => Object.values((i.payload as any) || {}));
-
-    const bestSeries = awardEntries.find((a: any) => a?.category === 'Best Series');
+    const bestSeries = impacts.newAwards?.find((a: any) => a.category === 'Best Series');
 
     expect(bestSeries).toBeDefined();
-    expect((bestSeries as any)?.projectId).toBe('sitcom_1');
+    expect(bestSeries?.projectId).toBe('sitcom_1');
   });
 });

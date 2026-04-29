@@ -22,11 +22,7 @@ describe('Store Slice Isolation', () => {
       if (!newState.gameState) throw new Error('Game missing after action');
       
       expect(newState.gameState.finance.cash).toBe(initialCash + 5000);
-<<<<<<< Updated upstream
-      expect(newState.gameState.entities.projects).toStrictEqual(initialProjects);
-=======
       expect(newState.gameState.entities.projects).toStrictEqual(initialProjects); // Deep equality check
->>>>>>> Stashed changes
     });
   });
 
@@ -35,14 +31,8 @@ describe('Store Slice Isolation', () => {
       const state = useGameStore.getState();
       state.addProject({ id: 'p_O1', title: 'O1 Project', state: 'development' });
       const newState = useGameStore.getState();
-<<<<<<< Updated upstream
-      const projects = (newState.gameState?.studio?.internal as any)?.projects || {};
-      expect(projects['p_O1']).toBeDefined();
-      expect(Object.keys(projects).includes('p_O1')).toBe(true);
-=======
       expect(newState.gameState?.entities.projects['p_O1']).toBeDefined();
       expect(Object.keys(newState.gameState?.entities.projects || {}).includes('p_O1')).toBe(true);
->>>>>>> Stashed changes
     });
     it('should advance a specific project status immutably', () => {
       useGameStore.getState().addProject({ id: 'p1', state: 'development', title: 'P1' });

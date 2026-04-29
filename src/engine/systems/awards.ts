@@ -46,7 +46,7 @@ export function generateAwardsProfile(project: Project): AwardsProfile {
 }
 
 export function launchAwardsCampaign(state: GameState, projectId: string, budget: number): StateImpact | null {
-  const project = state.studio.internal.projects[projectId];
+  const project = state.entities.projects[projectId];
   if (!project || state.finance.cash < budget || !project.awardsProfile) return null;
 
   const boost = (budget / 1_000_000) * 5;
@@ -91,8 +91,8 @@ export function runAwardsCeremony(state: GameState, currentWeek: number, year: n
   const eligibleFilm: Project[] = [];
   const eligibleTv: Project[] = [];
 
-  for (const projectId in state.studio.internal.projects) {
-    const p = state.studio.internal.projects[projectId];
+  for (const projectId in state.entities.projects) {
+    const p = state.entities.projects[projectId];
     if ((p.state === 'released' || p.state === 'post_release' || p.state === 'archived') &&
         p.releaseWeek !== null &&
         p.releaseWeek > currentWeek - 52 &&
@@ -205,8 +205,8 @@ export function processRazzies(state: GameState, week: number): StateImpact {
   };
 
   const eligibleProjects: Project[] = [];
-  for (const projectId in state.studio.internal.projects) {
-    const p = state.studio.internal.projects[projectId];
+  for (const projectId in state.entities.projects) {
+    const p = state.entities.projects[projectId];
     if (p.state === 'released' && p.budget >= 50_000_000 && (p.reviewScore !== undefined && p.reviewScore <= 30)) {
       eligibleProjects.push(p);
     }
@@ -247,15 +247,15 @@ export function processRazzies(state: GameState, week: number): StateImpact {
      impact.cultClassicProjectIds = [worstPicture.id];
   }
 
-  const projectContracts = state.studio.internal.contracts.filter(c => c.projectId === worstPicture.id);
+  const projectContracts = Object.values(state.entities.contracts || {}).filter(c => c.projectId === worstPicture.id);
   const contractTalentIds = new Set(projectContracts.map(c => c.talentId));
 
   let worstLeadId: string | null = null;
   let highestDraw = 0;
   let worstLeadName: string | null = null;
 
-  for (const talentId in state.industry.talentPool) {
-      const talent = state.industry.talentPool[talentId];
+  for (const talentId in state.entities.talents) {
+      const talent = state.entities.talents[talentId];
       if (contractTalentIds.has(talent.id)) {
           if (talent.draw > 70 && talent.draw > highestDraw) {
               worstLeadId = talent.id;

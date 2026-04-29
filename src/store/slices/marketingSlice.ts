@@ -2,7 +2,6 @@ import { StateCreator } from 'zustand';
 import { GameStore } from '../gameStore';
 import { CampaignData } from '@/engine/types/state.types';
 import { RandomGenerator } from '@/engine/utils/rng';
-import { checkCampaignBacklash } from '@/engine/systems/awards';
 import { AudienceQuadrant, MarketingAngle } from '@/engine/types';
 import { calculateAudienceIndex } from '@/engine/systems/demographics';
 import { applyImpacts } from '@/engine/core/impactReducer';
@@ -25,6 +24,13 @@ export const CAMPAIGN_TIERS: Record<string, CampaignTier> = {
   Tentpole: { cost: 10_000_000, buzz: 25, risk: 3, type: 'marketing' },
   Saturation: { cost: 50_000_000, buzz: 60, risk: 8, type: 'marketing' },
 };
+
+function checkCampaignBacklash(score: number, tier: string, rng: RandomGenerator): boolean {
+  if (tier === 'Grassroots') return false;
+  if (tier === 'Trade' && score < 70 && rng.next() < 0.1) return true;
+  if (tier === 'Blitz' && score < 80 && rng.next() < 0.2) return true;
+  return false;
+}
 
 export interface MarketingSlice {
   launchAwardsCampaign: (projectId: string, tierKey: 'Grassroots' | 'Trade' | 'Blitz') => void;

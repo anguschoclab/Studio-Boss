@@ -120,7 +120,7 @@ export const useGameStore = create<GameStore>((set, get, ...args) => ({
     }
 
     if (crisisTitles.size > 0) {
-      const projects = finalState.studio.internal.projects;
+      const projects = finalState.entities.projects || {};
       for (const key in projects) {
         const p = projects[key];
         if (p.activeCrisis && !p.activeCrisis.resolved && crisisTitles.has(p.title)) {

@@ -96,12 +96,11 @@ describe("awards system", () => {
       state.week = 4;
       const rng = new RandomGenerator(42);
 
-      const impacts = runAwardsCeremony(state, 4, 2024, rng);
+      const impacts = runAwardsCeremony(state, 4, 2024);
 
-      expect(Array.isArray(impacts)).toBe(true);
-      const newsImpacts = impacts.filter(i => i.type === 'NEWS_ADDED');
-      const prestigeImpacts = impacts.filter(i => i.type === 'PRESTIGE_CHANGED');
-      expect(newsImpacts.length + prestigeImpacts.length).toBeGreaterThanOrEqual(0);
+      expect(impacts.newAwards).toBeDefined();
+      expect(impacts.newHeadlines).toBeDefined();
+      expect(impacts.prestigeChange).toBeDefined();
     });
 
     it("accumulates prestige change for high-scoring project", () => {
@@ -110,11 +109,8 @@ describe("awards system", () => {
       state.week = 4;
       const rng = new RandomGenerator(42);
 
-      const impacts = runAwardsCeremony(state, 4, 2024, rng);
-      const prestigeTotal = impacts
-        .filter(i => i.type === 'PRESTIGE_CHANGED')
-        .reduce((sum: number, i: StateImpact) => sum + (i.payload as number), 0);
-      expect(prestigeTotal).toBeGreaterThanOrEqual(0);
+      const impacts = runAwardsCeremony(state, 4, 2024);
+      expect(impacts.prestigeChange).toBeGreaterThanOrEqual(0);
     });
   });
 
@@ -135,11 +131,11 @@ describe("awards system", () => {
           state.week = 4;
           const rng = new RandomGenerator(42);
 
-          const impacts = processRazzies(state, 4, rng);
+          const impacts = processRazzies(state, 4);
 
-          expect(Array.isArray(impacts)).toBe(true);
-          const projectUpdates = impacts.filter(i => i.type === 'PROJECT_UPDATED');
-          expect(projectUpdates.some((i: StateImpact) => (i.payload as any).update?.razzieCategory === 'Worst Picture')).toBe(true);
+          expect(impacts.prestigeChange).toBe(-10);
+          expect(impacts.newHeadlines!.length).toBeGreaterThan(0);
+          expect(impacts.newHeadlines![0].text).toContain("The Razzies Nominees Announced");
       });
   });
 });

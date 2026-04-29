@@ -4,8 +4,8 @@ import { TickContext } from './types';
 // System Imports
 import { tickScriptDevelopment } from '../../systems/production/ScriptDraftingSystem';
 import { checkAndTriggerCrisis } from '../../systems/crises';
-import { checkDirectorsCutEligibility } from '../../systems/ratings';
-import { evaluateRatingForProject, evaluateRegionalRatings } from '../../systems/ratings';
+import { checkDirectorsCutEligibility } from '../../systems/ratings/index';
+import { evaluateRatingForProject, evaluateRegionalRatings } from '../../systems/ratings/index';
 import { generateMarketBanScandal } from '../../systems/scandals';
 import { resolveCrisisWithHandlers } from '../../systems/production/crisisEvaluator';
 import { calculateAudienceIndex } from '../../systems/demographics';
