@@ -1,7 +1,8 @@
+import { Button } from '@/components/ui/button';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
 import { formatMoney, getWeekDisplay } from '@/engine/utils';
-import { Save, FastForward, Activity, Terminal } from 'lucide-react';
+import { Save, FastForward, AlertTriangle, TrendingUp, Activity, Terminal } from 'lucide-react';
 import { selectActiveProjects } from '@/store/selectors';
 import { Badge } from '@/components/ui/badge';
 import { TooltipWrapper } from '@/components/ui/tooltip-wrapper';
