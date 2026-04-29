@@ -12,13 +12,15 @@ export const CommandCenter: React.FC = () => {
   const gameState = useGameStore((state) => state.gameState);
   if (!gameState) return null;
 
-  const { studio, industry } = gameState;
-  const projects = Object.values(studio.internal?.projects || {});
-  const { talentPool, rivals, newsHistory } = industry || {};
+  const { studio, industry, entities } = gameState;
+  const projects = Object.values(entities?.projects || {});
+  const { newsHistory } = industry || {};
+  const talentPool = entities?.talents || {};
+  const rivals = Object.values(entities?.rivals || {});
 
   const activeProjectsCount = projects.filter(p => p.state !== 'released' && p.state !== 'post_release' && p.state !== 'archived').length;
-  const talentCount = Object.keys(talentPool || {}).length;
-  const rivalCount = rivals?.length || 0;
+  const talentCount = Object.keys(talentPool).length;
+  const rivalCount = rivals.length;
 
   return (
     <div className="space-y-16 animate-in fade-in slide-in-from-bottom-8 duration-1000">
