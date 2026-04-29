@@ -3,7 +3,7 @@ import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useGameStore } from '@/store/gameStore';
 import { useUIStore } from '@/store/uiStore';
-import { Trophy, Star, Award as AwardIcon, Sparkles, ChevronRight } from 'lucide-react';
+import { Trophy, Star, Sparkles, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export const AwardsCeremonyModal = () => {
@@ -74,7 +74,7 @@ export const AwardsCeremonyModal = () => {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
-                {awards.map((award: any, i: number) => (
+                {awards.map((award: { id: string; category: string; targetName: string; isPrestige?: boolean }, i: number) => (
                   <motion.div 
                     key={award.id}
                     initial={{ opacity: 0, x: -10 }}
