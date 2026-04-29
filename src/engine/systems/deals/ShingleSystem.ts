@@ -123,37 +123,62 @@ function makeShingleName(ownerName: string, rng: RandomGenerator): string {
 function getTVEligibleTalent(state: GameState): Talent[] {
   // TV showrunner deals go to writers/producers with prestige > 70 who don't already
   // have a shingle. Real-world comps: Shonda Rhimes, Ryan Murphy, Taylor Sheridan, Kenya Barris.
-  const shingles = Object.values(state.entities.shingles || {});
-  const ownedBy = new Set(shingles.map(s => s.ownerTalentId));
-  return Object.values(state.entities.talents || {}).filter(t => {
-    if (ownedBy.has(t.id)) return false;
-    if ((t.prestige || 0) < 40) return false;
+  // ⚡ The Framerate Fanatic: Extracted Set creation and used for...in loops to avoid O(N) array allocation overhead
+  const ownedBy = new Set<string>();
+  const shingles = state.entities.shingles || {};
+  for (const id in shingles) {
+    ownedBy.add(shingles[id].ownerTalentId);
+  }
+
+  const results: Talent[] = [];
+  const talents = state.entities.talents || {};
+  for (const id in talents) {
+    const t = talents[id];
+    if (ownedBy.has(t.id)) continue;
+    if ((t.prestige || 0) < 40) continue;
     const roles = t.roles || [t.role];
-    return roles.some(r => r === 'writer' || r === 'producer');
-  });
+    if (roles.some(r => r === 'writer' || r === 'producer')) {
+      results.push(t);
+    }
+  }
+  return results;
 }
 
 function getEligibleTalent(state: GameState): Talent[] {
-  const shingles = Object.values(state.entities.shingles || {});
-  const ownedBy = new Set(shingles.map(s => s.ownerTalentId));
-  return Object.values(state.entities.talents || {}).filter(t => {
-    if (ownedBy.has(t.id)) return false;
+  // ⚡ The Framerate Fanatic: Extracted Set creation and used for...in loops to avoid O(N) array allocation overhead
+  const ownedBy = new Set<string>();
+  const shingles = state.entities.shingles || {};
+  for (const id in shingles) {
+    ownedBy.add(shingles[id].ownerTalentId);
+  }
+
+  const results: Talent[] = [];
+  const talents = state.entities.talents || {};
+  for (const id in talents) {
+    const t = talents[id];
+    if (ownedBy.has(t.id)) continue;
     // Gate on "top tier of current field": the real A-list cutoff is ~75 but a developing sim-industry
     // rarely grows talent that high, so we accept >= 65 prestige and require a director/producer/actor role.
-    if ((t.prestige || 0) < 45) return false;
+    if ((t.prestige || 0) < 45) continue;
     const roles = t.roles || [t.role];
     // Pure writer-only or producer-only talents are reserved for TV showrunner deals —
     // exclude them from the film pool so TV has a supply post-2010.
     const hasDirOrActor = roles.some(r => r === 'director' || r === 'actor');
-    if (!hasDirOrActor) return false;
-    return true;
-  });
+    if (hasDirOrActor) {
+      results.push(t);
+    }
+  }
+  return results;
 }
 
 function rankBidders(state: GameState): { id: string; archetype: 'major' | 'mid-tier' | 'indie'; cash: number; prestige: number }[] {
   const bidders: { id: string; archetype: any; cash: number; prestige: number }[] = [];
   bidders.push({ id: 'PLAYER', archetype: state.studio?.archetype || 'major', cash: state.finance.cash || 0, prestige: state.studio?.prestige || 0 });
-  for (const r of Object.values(state.entities.rivals || {})) {
+
+  // ⚡ The Framerate Fanatic: Replaced Object.values with for...in loop
+  const rivals = state.entities.rivals || {};
+  for (const id in rivals) {
+    const r = rivals[id];
     bidders.push({ id: r.id, archetype: r.archetype, cash: r.cash || 0, prestige: r.prestige || 0 });
   }
   return bidders;
@@ -314,8 +339,10 @@ function createShingle(
 }
 
 function chargeOverhead(state: GameState, impacts: StateImpact[]) {
-  const shingles = Object.values(state.entities.shingles || {});
-  for (const s of shingles) {
+  // ⚡ The Framerate Fanatic: Replaced Object.values with for...in loop
+  const shingles = state.entities.shingles || {};
+  for (const id in shingles) {
+    const s = shingles[id];
     if (!s.baseStudioId) continue;
     const weekly = Math.round(s.overheadPerYear / 52);
     if (weekly === 0) continue;
@@ -334,8 +361,10 @@ function chargeOverhead(state: GameState, impacts: StateImpact[]) {
 }
 
 function decrementTerms(state: GameState, rng: RandomGenerator, impacts: StateImpact[]) {
-  const shingles = Object.values(state.entities.shingles || {});
-  for (const s of shingles) {
+  // ⚡ The Framerate Fanatic: Replaced Object.values with for...in loop
+  const shingles = state.entities.shingles || {};
+  for (const id in shingles) {
+    const s = shingles[id];
     const next = (s.termWeeksRemaining || 0) - 1;
     if (next > 0) {
       impacts.push({ type: 'SHINGLE_UPDATED', payload: { shingleId: s.id, update: { termWeeksRemaining: next } } } as any);
@@ -444,13 +473,22 @@ function handleExpiry(state: GameState, s: ProducerShingle, rng: RandomGenerator
 }
 
 function spawnShingles(state: GameState, rng: RandomGenerator, impacts: StateImpact[]) {
-  const activeTotal = Object.values(state.entities.shingles || {}).filter(s => s.baseStudioId).length;
+  // ⚡ The Framerate Fanatic: Replaced Object.values().filter() with a single for...in loop for active counts
+  let activeTotal = 0;
+  let activeTV = 0;
+  const shingles = state.entities.shingles || {};
+  for (const id in shingles) {
+    const s = shingles[id];
+    if (s.baseStudioId) {
+      activeTotal++;
+      if ((s as any).medium === 'TV') activeTV++;
+    }
+  }
 
   // TV showrunner overall deals first so writer/producer prestige talent has a shot at TV
   // before the film spawn claims them. Clustered post-2000 when streaming era unlocks
   // aggressive streamer bidding (Shondaland/Netflix, Murphy/Netflix, Sheridan/Paramount).
   const tvEligible = getTVEligibleTalent(state);
-  const activeTV = Object.values(state.entities.shingles || {}).filter(s => s.baseStudioId && (s as any).medium === 'TV').length;
   const year = 1975 + Math.floor(state.week / 52);
   let tvGate = 0.0005;
   if (year >= 2010) tvGate = 0.008;
@@ -474,12 +512,26 @@ function spawnShingles(state: GameState, rng: RandomGenerator, impacts: StateImp
   // fallback D3 housekeeping bids actually get a supply of sub-A-list owners. This keeps
   // 3-6 HOUSEKEEPING formations across a 50-year run (realistic Carsey-Werner-style
   // backlot dev-deal presence).
-  const lowProspect = Object.values(state.entities.talents || {}).filter(t => {
-    const ownedBy = new Set(Object.values(state.entities.shingles || {}).map(s => s.ownerTalentId));
-    if (ownedBy.has(t.id)) return false;
+  // ⚡ The Framerate Fanatic: Extracted Set creation and used for...in loop
+  const ownedBy = new Set<string>();
+  for (const id in shingles) {
+    ownedBy.add(shingles[id].ownerTalentId);
+  }
+
+  const lowProspect: Talent[] = [];
+  const talents = state.entities.talents || {};
+  for (const id in talents) {
+    const t = talents[id];
+    if (ownedBy.has(t.id)) continue;
     const p = t.prestige || 0;
-    return p >= 30 && p < 50 && (t.roles || [t.role]).some(r => r === 'director' || r === 'actor' || r === 'producer' || r === 'writer');
-  });
+    if (p >= 30 && p < 50) {
+      const roles = t.roles || [t.role];
+      if (roles.some(r => r === 'director' || r === 'actor' || r === 'producer' || r === 'writer')) {
+        lowProspect.push(t);
+      }
+    }
+  }
+
   if (lowProspect.length > 0 && activeTotal < 14 && rng.next() < 0.004) {
     const owner = rng.pick(lowProspect);
     if (owner) createHousekeepingShingle(state, owner, rng, impacts);
@@ -487,14 +539,19 @@ function spawnShingles(state: GameState, rng: RandomGenerator, impacts: StateImp
 
   // POD (Producer-On-Deal) path — writer-specialty mid-prestige talent get cheap
   // exclusive dev deals. Targets 1-3 per decade (~0.0006/wk baseline).
-  const podOwned = new Set(Object.values(state.entities.shingles || {}).map(s => s.ownerTalentId));
-  const podEligible = Object.values(state.entities.talents || {}).filter(t => {
-    if (podOwned.has(t.id)) return false;
+  // ⚡ The Framerate Fanatic: Extracted Set creation and used for...in loop (reusing ownedBy set)
+  const podEligible: Talent[] = [];
+  for (const id in talents) {
+    const t = talents[id];
+    if (ownedBy.has(t.id)) continue;
     const p = t.prestige || 0;
-    if (p < 50 || p > 75) return false;
+    if (p < 50 || p > 75) continue;
     const roles = t.roles || [t.role];
-    return roles.some(r => r === 'writer');
-  });
+    if (roles.some(r => r === 'writer')) {
+      podEligible.push(t);
+    }
+  }
+
   if (podEligible.length > 0 && activeTotal < 16 && rng.next() < 0.0008) {
     const owner = rng.pick(podEligible);
     if (owner) createPodShingle(state, owner, rng, impacts);
@@ -621,10 +678,17 @@ export function tickShingleSystem(state: GameState, rng: RandomGenerator): State
  * in hard cash pain. Returns impacts + a log note or null if the rival has none.
  */
 export function cancelHighestOverheadDeal(state: GameState, studioId: string): StateImpact[] | null {
-  const shingles = Object.values(state.entities.shingles || {}).filter(s => s.baseStudioId === studioId);
-  if (shingles.length === 0) return null;
-  shingles.sort((a, b) => b.overheadPerYear - a.overheadPerYear);
-  const target = shingles[0];
+  // ⚡ The Framerate Fanatic: Replaced Object.values().filter() with a for...in loop
+  const shinglesList: ProducerShingle[] = [];
+  const shingles = state.entities.shingles || {};
+  for (const id in shingles) {
+    if (shingles[id].baseStudioId === studioId) {
+      shinglesList.push(shingles[id]);
+    }
+  }
+  if (shinglesList.length === 0) return null;
+  shinglesList.sort((a, b) => b.overheadPerYear - a.overheadPerYear);
+  const target = shinglesList[0];
   const severance = Math.round(target.overheadPerYear / 52 * 4);
   const impacts: StateImpact[] = [];
   if (studioId === 'PLAYER') {
