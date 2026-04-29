@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Newspaper, Trophy, AlertTriangle, TrendingUp, History, Zap } from 'lucide-react';
 import { useGameStore } from '@/store/gameStore';
-import { NewsEvent, Headline, NewsEventType } from '@/engine/types';
+import { Headline } from '@/engine/types';
 import { cn } from '@/lib/utils';
 import { NewsStoryModal } from '@/components/modals/NewsStoryModal';
+import { LucideIcon } from 'lucide-react';
 
-const eventTypeConfig: Record<string, { icon: any, color: string, label: string }> = {
+const eventTypeConfig: Record<string, { icon: LucideIcon, color: string, label: string }> = {
   AWARD: { icon: Trophy, color: 'text-amber-400', label: 'AWARD_INTEL' },
   CRISIS: { icon: AlertTriangle, color: 'text-rose-500', label: 'CRITICAL_ALERT' },
   RELEASE: { icon: TrendingUp, color: 'text-emerald-500', label: 'MARKET_RELEASE' },
