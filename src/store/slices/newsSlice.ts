@@ -17,17 +17,16 @@ export const createNewsSlice: StateCreator<GameStore, [], [], NewsSlice> = (set,
     set((s) => {
       if (!s.gameState) return s;
       
+      const history = s.gameState.industry.newsHistory || [];
       const newEvent = {
         ...event,
-        id: `ne-${crypto.randomUUID()}`,
+        id: `ne-${s.gameState.week}-${history.length}`,
         week: s.gameState.week,
         type: event.type || 'STUDIO_EVENT',
         headline: event.headline || '',
         description: event.description || ''
       } as NewsEvent;
 
-      const history = s.gameState.industry.newsHistory || [];
-      
       return {
         gameState: {
           ...s.gameState,
@@ -45,7 +44,7 @@ export const createNewsSlice: StateCreator<GameStore, [], [], NewsSlice> = (set,
       if (!s.gameState) return s;
 
       const newHeadline: Headline = {
-        id: h.id || crypto.randomUUID(),
+        id: h.id || `hl-${s.gameState.week}-${s.news.headlines.length}`,
         week: h.week || s.gameState.week,
         category: h.category || 'general',
         text: h.text || '',

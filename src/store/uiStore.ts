@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { ModalType } from '@/engine/types';
 
+let modalIdCounter = 0;
+
 export interface QueuedModal {
   id: string;
   type: ModalType;
@@ -134,7 +136,7 @@ export const useUIStore = create<UIStore>((set) => ({
   activeModal: null,
 
   enqueueModal: (type, payload) => {
-    const newModal = { id: crypto.randomUUID(), type, payload };
+    const newModal = { id: `modal-${modalIdCounter++}`, type, payload };
     set((state) => {
       if (!state.activeModal) return { activeModal: newModal };
       return { modalQueue: [...state.modalQueue, newModal] };
