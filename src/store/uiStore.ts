@@ -18,6 +18,8 @@ export type ModalType =
   | 'BREAKOUT_BIDDING_WAR'
   | 'REBOOT_OPPORTUNITY';
 
+let modalIdCounter = 0;
+
 export interface QueuedModal {
   id: string;
   type: ModalType;
@@ -69,7 +71,7 @@ export const useUIStore = create<UIStore>((set) => ({
   activeModal: null,
 
   enqueueModal: (type, payload) => {
-    const newModal = { id: crypto.randomUUID(), type, payload };
+    const newModal = { id: `modal-${modalIdCounter++}`, type, payload };
     set((state) => {
       // If no modal is active, set it and return
       if (!state.activeModal) {
