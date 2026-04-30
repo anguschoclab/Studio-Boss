@@ -1,21 +1,5 @@
-## Performance Optimizations
+## 2025-04-18 - Optimized weekAdvance Performance Benchmark
 
-### Deals System (`advanceDeals`)
-- Transformed O(N) map + O(N) filter into a single O(N) `for` loop in `advanceDeals`.
-- Reduced memory allocations by eliminating the intermediate mapped array.
-- Measured a ~21% reduction in execution time for heavy loads (100k items, 100 iterations) from ~849ms to ~669ms.
-## 2026-03-31 - Iterate over State Records using for...in loops
-**Learning:** Using Object.values() on high-frequency State Records (like projects) causes O(N) array allocation per tick, leading to garbage collection spikes.
-**Action:** Replace Object.values() with for...in loops when iterating over high-frequency State Records in the engine to avoid O(N) array allocation overhead.
-## 2026-04-01 - Avoid nested O(N^2) iterations with Object.values/flatMap in loops
-**Learning:** Combining \`Object.values\` and \`flatMap\` to create a unified array before an outer loop creates O(N^2) complexity and GC pressure because it executes the inner mapping operations across all entities every tick.
-**Action:** Replace nested array creation and mapping before loops with a single pass aggregation using a \`for...in\` loop directly into a hash map before iterating, preventing O(N^2) complexity.
-## 2024-05-18 - Pre-grouping arrays for O(1) retrieval
-**Learning:** Nested iterations matching items by ID (e.g. O(Projects * Contracts) complexity) create large performance bottlenecks, especially since Array.filter() allocates a new array each loop.
-**Action:** Pre-group items using a `Record` or `Map` before iterating, reducing complexity to O(N+M) and minimizing GC pressure by eliminating inner-loop array allocations.
-## 2026-05-18 - Replacing Object.values().filter() in Game Ticks
-**Learning:** Using chained `Object.values().filter()` during every engine tick loop allocates intermediate arrays which are quickly discarded, causing unneeded O(N) memory allocation and subsequent garbage collection pauses.
-**Action:** Replace `Object.values(state.entities.projects)` with `for...in` loops when iterating over high-frequency state records in the simulation loop.
-## 2026-05-18 - Avoid O(N*M) nested array allocation in filters
-**Learning:** Creating a Set using `Object.values().map()` inside an Array `.filter()` operation on high-frequency State Records causes massive O(N*M) complexity and GC pressure because the Set is re-allocated for every entity.
-**Action:** Extract Set creation (like `ownedBy`) outside the loops and use `for...in` iteration for collections to eliminate intermediate array overhead and nested complexity.
+**Learning:** Manual performance benchmarking with `console.log` and `performance.now()` is less accurate and harder to maintain than standardized benchmarking utilities.
+
+**Action:** Refactored `weekAdvance.bench.ts` to use Vitest's `bench` utility, aligning it with other performance benchmarks in the codebase and removing leftover `console.log` statements.
